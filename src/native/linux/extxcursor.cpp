@@ -24,6 +24,7 @@ static void * loadHandle(const char * func_name) {
 }	
 
 static bool loadFunctionPointers(void) {
+        load_success = true;
 	XcursorSupportsARGB = (XcursorSupportsARGBPROC)loadHandle("XcursorSupportsARGB");
 	XcursorSupportsAnim = (XcursorSupportsAnimPROC)loadHandle("XcursorSupportsAnim");
 	XcursorImageCreate = (XcursorImageCreatePROC)loadHandle("XcursorImageCreate");
@@ -35,11 +36,11 @@ static bool loadFunctionPointers(void) {
 }
 
 bool loadXcursor(void) {
-        load_success = true;
+	load_success = false;
 	xcursor_handle = dlopen(xcursor_lib_name, RTLD_GLOBAL | RTLD_LAZY);
 	if (xcursor_handle == NULL) {
 		printf("Could not load %s: %s\n", xcursor_lib_name, dlerror());
-		return false;
+		return load_success;
 	}
 	loadFunctionPointers();
 	return load_success;
