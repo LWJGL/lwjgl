@@ -253,6 +253,7 @@ public class NetTest {
         FMOD.create();
       } catch (FMODException fmode) {
         error(fmode.getMessage());
+        fmode.printStackTrace();
         return false;
       }      
       
