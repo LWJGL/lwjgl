@@ -56,12 +56,12 @@ public class EXTFogCoord {
 	
 	public static native void glFogCoordfEXT(float coord);
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglFogCoordPointerEXT(GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer data, int data_offset);
 	public static void glFogCoordPointerEXT(int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglFogCoordPointerEXTVBO(type, stride, buffer_offset);
 	}
 	private static native void nglFogCoordPointerEXTVBO(int type, int stride, int buffer_offset);

@@ -763,16 +763,16 @@ public abstract class GL11 {
 	public static native void glCopyPixels(int x, int y, int width, int height, int type);
 	
 	public static void glColorPointer(int size, boolean unsigned, int stride, ByteBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glColorPointer(int size, int stride, FloatBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglColorPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglColorPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glColorPointer(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglColorPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglColorPointerVBO(int size, int type, int stride, int buffer_offset);
@@ -804,12 +804,12 @@ public abstract class GL11 {
 	public static native void glEnable(int cap);
 	public static native void glDisable(int cap);
 	public static void glEdgeFlagPointer(int stride, ByteBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglEdgeFlagPointer(stride, pointer, pointer.position());
 	}
 	private static native void nglEdgeFlagPointer(int stride, Buffer pointer, int pointer_offset);
 	public static void glEdgeFlagPointer(int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglEdgeFlagPointerVBO(stride, buffer_offset);
 	}
 	private static native void nglEdgeFlagPointerVBO(int stride, int buffer_offset);
@@ -834,20 +834,20 @@ public abstract class GL11 {
 	}
 	private static native void nglDrawPixels(int width, int height, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glDrawElements(int mode, ByteBuffer indices) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureElementVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
 	}
 	public static void glDrawElements(int mode, ShortBuffer indices) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureElementVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
 	public static void glDrawElements(int mode, IntBuffer indices) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureElementVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
 	private static native void nglDrawElements(int mode, int count, int type, Buffer indices, int indices_offset);
 	public static void glDrawElements(int mode, int count, int type, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureElementVBOenabled();
 		nglDrawElementsVBO(mode, count, type, buffer_offset);
 	}
 	private static native void nglDrawElementsVBO(int mode, int count, int type, int buffer_offset);
@@ -963,24 +963,24 @@ public abstract class GL11 {
 	public static native ByteBuffer glGetPointerv(int pname, int size);
 	public static native boolean glIsEnabled(int cap);
 	public static void glInterleavedArrays(int format, int stride, ByteBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position());
 	}
 	public static void glInterleavedArrays(int format, int stride, ShortBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 1);
 	}
 	public static void glInterleavedArrays(int format, int stride, IntBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	public static void glInterleavedArrays(int format, int stride, FloatBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglInterleavedArrays(int format, int stride, Buffer pointer, int pointer_offset);
 	public static void glInterleavedArrays(int format, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglInterleavedArraysVBO(format, stride, buffer_offset);
 	}
 	private static native void nglInterleavedArraysVBO(int format, int stride, int buffer_offset);
@@ -1155,20 +1155,20 @@ public abstract class GL11 {
 	public static native void glPassThrough(float token);
 	public static native void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar);
 	public static void glNormalPointer(int stride, ByteBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglNormalPointer(GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glNormalPointer(int stride, IntBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglNormalPointer(GL_INT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glNormalPointer(int stride, FloatBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglNormalPointer(GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglNormalPointer(int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glNormalPointer(int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglNormalPointerVBO(type, stride, buffer_offset);
 	}
 	private static native void nglNormalPointerVBO(int type, int stride, int buffer_offset);
@@ -1245,16 +1245,16 @@ public abstract class GL11 {
 	public static native void glPopAttrib();
 	public static native void glStencilFunc(int func, int ref, int mask);
 	public static void glVertexPointer(int size, int stride, FloatBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglVertexPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glVertexPointer(int size, int stride, IntBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglVertexPointer(size, GL_INT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglVertexPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glVertexPointer(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglVertexPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglVertexPointerVBO(int size, int type, int stride, int buffer_offset);
@@ -1390,12 +1390,12 @@ public abstract class GL11 {
 	}
 	private static native void nglTexEnviv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glTexCoordPointer(int size, int stride, FloatBuffer pointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglTexCoordPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglTexCoordPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glTexCoordPointer(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglTexCoordPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglTexCoordPointerVBO(int size, int type, int stride, int buffer_offset);

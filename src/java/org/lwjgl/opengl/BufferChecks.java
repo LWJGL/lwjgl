@@ -67,7 +67,9 @@ class BufferChecks {
 	 */
 	static void checkBuffer(Buffer buf) {
 		if (buf.remaining() < MIN_BUFFER_SIZE) {
-			throw new BufferOverflowException();
+			// TODO: I don't think the default MIN_BUFFER_SIZE should be used for other than glGet*
+			// Others, like glTexEnvf, should use their individual buffer max size (like 4)
+//			throw new BufferOverflowException();
 		}
 	}
 	/**
@@ -89,7 +91,7 @@ class BufferChecks {
 	 * Helper method to ensure that vertex buffer objects are disabled. If they
 	 * are enabled, we'll throw an OpenGLException
 	 */
-	static void ensureVBOdisabled() {
+	static void ensureArrayVBOdisabled() {
 		if (VBOTracker.getVBOArrayStack().getState() != 0) {
 			throw new OpenGLException("Cannot use Buffers when VBO is enabled");
 		}
@@ -98,8 +100,26 @@ class BufferChecks {
 	 * Helper method to ensure that vertex buffer objects are enabled. If they
 	 * are disabled, we'll throw an OpenGLException
 	 */
-	static void ensureVBOenabled() {
+	static void ensureArrayVBOenabled() {
 		if (VBOTracker.getVBOArrayStack().getState() == 0) {
+			throw new OpenGLException("Cannot use offsets when VBO is disabled");
+		}
+	}
+	/**
+	 * Helper method to ensure that vertex buffer objects are disabled. If they
+	 * are enabled, we'll throw an OpenGLException
+	 */
+	static void ensureElementVBOdisabled() {
+		if (VBOTracker.getVBOElementStack().getState() != 0) {
+			throw new OpenGLException("Cannot use Buffers when VBO is enabled");
+		}
+	}
+	/**
+	 * Helper method to ensure that vertex buffer objects are enabled. If they
+	 * are disabled, we'll throw an OpenGLException
+	 */
+	static void ensureElementVBOenabled() {
+		if (VBOTracker.getVBOElementStack().getState() == 0) {
 			throw new OpenGLException("Cannot use offsets when VBO is disabled");
 		}
 	}
@@ -136,7 +156,9 @@ class BufferChecks {
 				bpe = 4;
 				break;
 			default :
-				throw new IllegalArgumentException("Unknown type " + type);
+				// TODO: Add more types (like the GL12 types GL_UNSIGNED_INT_8_8_8_8
+				return 0;
+		//		throw new IllegalArgumentException("Unknown type " + type);
 		}
 		int epp;
 		switch (format) {
@@ -158,8 +180,10 @@ class BufferChecks {
 				epp = 4;
 				break;
 			default :
-				// Assume 4 elements per pixel
-				epp = 4;
+				// TODO: Add more formats. Assuming 4 is too wasteful on buffer sizes where e.g. 1 is enough (like GL_DEPTH_COMPONENT)
+				return 0;
+/*				// Assume 4 elements per pixel
+				epp = 4;*/
 		}
 		return epp * bpe * width * height * depth;
 	}

@@ -51,21 +51,21 @@ public class ATIElementArray {
 	public static final int GL_ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;
 
 	public static void glElementPointerATI(ByteBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_BYTE, pPointer, pPointer.position());
 	}
 	public static void glElementPointerATI(ShortBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_SHORT, pPointer, pPointer.position()<<1);
 	}
 	public static void glElementPointerATI(IntBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_INT, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglElementPointerATI(int type, Buffer pPointer, int pPointer_offset);
 
 	public static void glElementPointerATI(int type, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglElementPointerATIVBO(type, buffer_offset);
 	}
 	private static native void nglElementPointerATIVBO(int type, int buffer_offset);

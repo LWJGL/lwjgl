@@ -50,21 +50,21 @@ public class EXTDrawRangeElements {
 	public static final int GL_MAX_ELEMENTS_INDICES_EXT                             = 0x80E9;
 
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ByteBuffer pIndices) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_BYTE, pIndices, pIndices.position());
 	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ShortBuffer pIndices) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_SHORT, pIndices, pIndices.position()<<1);
 	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, IntBuffer pIndices) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_INT, pIndices, pIndices.position()<<2);
 	}
 	private static native void nglDrawRangeElementsEXT(int mode, int start, int end, int count, int type, Buffer pIndices, int pIndices_offset);
 
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, int type, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureElementVBOenabled();
 		nglDrawRangeElementsEXTVBO(mode, start, end, count, type, buffer_offset);
 	}
 	private static native void nglDrawRangeElementsEXTVBO(int mode, int start, int end, int count, int type, int buffer_offset);

@@ -61,12 +61,12 @@ public class EXTVertexWeighting {
 	public static native void glVertexWeightfEXT(float weight);
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglVertexWeightPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglVertexWeightPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 	public static void glVertexWeightPointerEXT(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglVertexWeightPointerEXTVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglVertexWeightPointerEXTVBO(int size, int type, int stride, int buffer_offset);

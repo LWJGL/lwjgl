@@ -381,7 +381,7 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer buffer) {
 
-  	BufferChecks.ensureVBOdisabled();
+  	BufferChecks.ensureArrayVBOdisabled();
 
     nglVertexAttribPointerNV(
       index,
@@ -395,8 +395,8 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer buffer) {
 
-  	BufferChecks.ensureVBOdisabled();
-  	
+  	BufferChecks.ensureArrayVBOdisabled();
+
     nglVertexAttribPointerNV(
       index,
       size,
@@ -409,16 +409,16 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer buffer) {
 
-  	BufferChecks.ensureVBOdisabled();
-  	
+  	BufferChecks.ensureArrayVBOdisabled();
+
     nglVertexAttribPointerNV(index, size, GL11.GL_FLOAT, stride, buffer, buffer.position() << 2);
 
   }
 
   public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer buffer) {
 
-  	BufferChecks.ensureVBOdisabled();
-  	
+  	BufferChecks.ensureArrayVBOdisabled();
+
     nglVertexAttribPointerNV(
       index,
       size,
@@ -441,8 +441,8 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, int type, int stride, int bufferOffset) {
 
-  	BufferChecks.ensureVBOenabled();
-  	
+  	BufferChecks.ensureArrayVBOenabled();
+
     nglVertexAttribPointerNVVBO(index, size, type, stride, bufferOffset);
 
   }

@@ -126,26 +126,26 @@ public class ARBVertexBlend {
 	private static native void nglWeightusvARB(int size, ShortBuffer psWeights, int psWeights_offset);
 
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 	public static void glWeightPointerARB(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglWeightPointerARBVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglWeightPointerARBVBO(int size, int type, int stride, int buffer_offset);
-    public static native void glVertexBlendARB(int count);
+	public static native void glVertexBlendARB(int count);
 }

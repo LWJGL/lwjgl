@@ -88,12 +88,12 @@ public abstract class GL14 extends GL13 {
 
 	public static native void glFogCoordf(float coord);
 	public static void glFogCoordPointer(int stride, FloatBuffer data) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglFogCoordPointer(GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglFogCoordPointer(int type, int stride, Buffer data, int data_offset);
 	public static void glFogCoordPointer(int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglFogCoordPointerVBO(type, stride, buffer_offset);
 	}
 	private static native void nglFogCoordPointerVBO(int type, int stride, int buffer_offset);
@@ -115,16 +115,16 @@ public abstract class GL14 extends GL13 {
 	public static native void glSecondaryColor3f (float red, float green, float blue);
 	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
 	public static void glSecondaryColorPointer(int size, boolean unsigned, int stride, ByteBuffer data) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, data, data.position());
 	}
 	public static void glSecondaryColorPointer(int size, int stride, FloatBuffer data) {
-		BufferChecks.ensureVBOdisabled();
+		BufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointer(size, GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglSecondaryColorPointer (int size, int type, int stride, Buffer data, int data_offset);
 	public static void glSecondaryColorPointer(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureVBOenabled();
+		BufferChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglSecondaryColorPointerVBO(int size, int type, int stride, int buffer_offset);
