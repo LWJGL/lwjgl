@@ -35,7 +35,7 @@ import java.util.WeakHashMap;
 import java.util.Map;
 
 /** Track Vertex Buffer Objects by context. */
-class VBOTracker {
+final class VBOTracker {
 
 	private static VBOTracker current_tracker;
 
@@ -43,12 +43,21 @@ class VBOTracker {
 
 	private final StateStack vbo_array_stack;
 	private final StateStack vbo_element_stack;
+
+	private final StateStack pbo_pack_stack;
+	private final StateStack pbo_unpack_stack;
+
 	private final StateStack attrib_stack;
 
 	private VBOTracker() {
 		int stack_size = Math.max(1, Util.glGetInteger(GL11.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH));
+
 		vbo_array_stack = new StateStack(stack_size, 0);
 		vbo_element_stack = new StateStack(stack_size, 0);
+
+		pbo_pack_stack = new StateStack(stack_size, 0);
+		pbo_unpack_stack = new StateStack(stack_size, 0);
+
 		attrib_stack = new StateStack(stack_size, 0);
 	}
 
@@ -58,6 +67,14 @@ class VBOTracker {
 
 	static StateStack getVBOElementStack() {
 		return current_tracker.vbo_element_stack;
+	}
+
+	static StateStack getPBOPackStack() {
+		return current_tracker.pbo_pack_stack;
+	}
+
+	static StateStack getPBOUnpackStack() {
+		return current_tracker.pbo_unpack_stack;
 	}
 
 	static StateStack getClientAttribStack() {

@@ -133,72 +133,84 @@ public final class ARBImaging {
 
 	static native void initNativeStubs() throws LWJGLException;
 
+	// ---------------------------
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(data, 256);
 		nglColorTable(target, internalFormat, width, format, type, data, data.position());
 	}
-
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(data, 256);
 		nglColorTable(target, internalFormat, width, format, type, data, data.position() << 2);
 	}
-
 	private static native void nglColorTable(int target, int internalFormat, int width, int format, int type, Buffer data, int data_offset);
 
+	public static void glColorTable(int target, int internalFormat, int width, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglColorTableBO(target, internalFormat, width, format, type, buffer_offset);
+	}
+	private static native void nglColorTableBO(int target, int internalFormat, int width, int format, int type, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glColorSubTable(int target, int start, int count, int format, int type, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(data, 256);
 		nglColorSubTable(target, start, count, format, type, data, data.position());
 	}
-
 	public static void glColorSubTable(int target, int start, int count, int format, int type, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(data, 256);
 		nglColorSubTable(target, start, count, format, type, data, data.position() << 2);
 	}
-
 	private static native void nglColorSubTable(int target, int start, int count, int format, int type, Buffer data, int data_offset);
+
+	public static void glColorSubTable(int target, int start, int count, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglColorSubTableBO(target, start, count, format, type, buffer_offset);
+	}
+	private static native void nglColorSubTableBO(int target, int start, int count, int format, int type, int buffer_offset);
+	// ---------------------------
 
 	public static void glColorTableParameter(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglColorTableParameteriv(target, pname, params, params.position());
 	}
-
 	private static native void nglColorTableParameteriv(int target, int pname, IntBuffer params, int data_offset);
 
 	public static void glColorTableParameter(int target, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglColorTableParameterfv(target, pname, params, params.position());
 	}
-
 	private static native void nglColorTableParameterfv(int target, int pname, FloatBuffer params, int data_offset);
 
 	public static native void glCopyColorSubTable(int target, int start, int x, int y, int width);
 
 	public static native void glCopyColorTable(int target, int internalformat, int x, int y, int width);
 
+	// ---------------------------
 	public static void glGetColorTable(int target, int format, int type, ByteBuffer data) {
 		BufferChecks.checkBuffer(data, 256);
 		nglGetColorTable(target, format, type, data, data.position());
 	}
-
 	public static void glGetColorTable(int target, int format, int type, FloatBuffer data) {
 		BufferChecks.checkBuffer(data, 256);
 		nglGetColorTable(target, format, type, data, data.position());
 	}
-
 	private static native void nglGetColorTable(int target, int format, int type, Buffer data, int data_offset);
+	// ---------------------------
 
 	public static void glGetColorTableParameter(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetColorTableParameteriv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetColorTableParameteriv(int target, int pname, IntBuffer params, int params_offset);
 
 	public static void glGetColorTableParameter(int target, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetColorTableParameterfv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetColorTableParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 
 	public static native void glBlendEquation(int mode);
@@ -209,120 +221,148 @@ public final class ARBImaging {
 
 	public static native void glResetHistogram(int target);
 
+	// ---------------------------
 	public static void glGetHistogram(int target, boolean reset, int format, int type, ByteBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position());
 	}
-
 	public static void glGetHistogram(int target, boolean reset, int format, int type, ShortBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position() << 1);
 	}
-
 	public static void glGetHistogram(int target, boolean reset, int format, int type, IntBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position() << 2);
 	}
-
 	public static void glGetHistogram(int target, boolean reset, int format, int type, FloatBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position() << 2);
 	}
-
 	private static native void nglGetHistogram(int target, boolean reset, int format, int type, Buffer values, int values_offset);
+
+	public static void glGetHistogram(int target, boolean reset, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensurePackPBOenabled();
+		nglGetHistogramBO(target, reset, format, type, buffer_offset);
+	}
+	private static native void nglGetHistogramBO(int target, boolean reset, int format, int type, int buffer_offset);
+	// ---------------------------
 
 	public static void glGetHistogramParameter(int target, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params, 256);
 		nglGetHistogramParameterfv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetHistogramParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 
 	public static void glGetHistogramParameter(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetHistogramParameteriv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetHistogramParameteriv(int target, int pname, IntBuffer params, int params_offset);
 
 	public static native void glMinmax(int target, int internalformat, boolean sink);
 
 	public static native void glResetMinmax(int target);
 
+	// ---------------------------
 	public static void glGetMinmax(int target, boolean reset, int format, int types, ByteBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position());
 	}
-
 	public static void glGetMinmax(int target, boolean reset, int format, int types, ShortBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position() << 1);
 	}
-
 	public static void glGetMinmax(int target, boolean reset, int format, int types, IntBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position() << 2);
 	}
-
 	public static void glGetMinmax(int target, boolean reset, int format, int types, FloatBuffer values) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position() << 2);
 	}
-
 	private static native void nglGetMinmax(int target, boolean reset, int format, int types, Buffer values, int values_offset);
+
+	public static void glGetMinmax(int target, boolean reset, int format, int types, int buffer_offset) {
+		GLBufferChecks.ensurePackPBOenabled();
+		nglGetMinmaxBO(target, reset, format, types, buffer_offset);
+	}
+	private static native void nglGetMinmaxBO(int target, boolean reset, int format, int types, int buffer_offset);
+	// ---------------------------
 
 	public static void glGetMinmaxParameter(int target, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetMinmaxParameterfv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetMinmaxParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 
 	public static void glGetMinmaxParameter(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetMinmaxParameteriv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetMinmaxParameteriv(int target, int pname, IntBuffer params, int params_offset);
 
+	// ---------------------------
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ByteBuffer image) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1));
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
-
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ShortBuffer image) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1) >> 1);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
-
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, IntBuffer image) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1) >> 2);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
-
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, FloatBuffer image) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1) >> 2);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
-
 	private static native void nglConvolutionFilter1D(int target, int internalformat, int width, int format, int type, Buffer image, int image_offset);
 
+	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglConvolutionFilter1DBO(target, internalformat, width, format, type, buffer_offset);
+	}
+	private static native void nglConvolutionFilter1DBO(int target, int internalformat, int width, int format, int type, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer image) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position());
 	}
-
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer image) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, height, 1) >> 1);
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() << 1);
 	}
-
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer image) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, height, 1) >> 2);
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() << 2);
 	}
-
 	private static native void nglConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image, int image_offset);
+
+	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglConvolutionFilter2DBO(target, internalformat, width, height, format, type, buffer_offset);
+	}
+	private static native void nglConvolutionFilter2DBO(int target, int internalformat, int width, int height, int format, int type, int buffer_offset);
+	// ---------------------------
 
 	public static native void glConvolutionParameterf(int target, int pname, float params);
 
@@ -330,7 +370,6 @@ public final class ARBImaging {
 		BufferChecks.checkBuffer(params);
 		nglConvolutionParameterfv(target, pname, params, params.position());
 	}
-
 	private static native void nglConvolutionParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 
 	public static native void glConvolutionParameteri(int target, int pname, int params);
@@ -339,70 +378,91 @@ public final class ARBImaging {
 		BufferChecks.checkBuffer(params);
 		nglConvolutionParameteriv(target, pname, params, params.position());
 	}
-
 	private static native void nglConvolutionParameteriv(int target, int pname, IntBuffer params, int params_offset);
 
 	public static native void glCopyConvolutionFilter1D(int target, int internalformat, int x, int y, int width);
 
 	public static native void glCopyConvolutionFilter2D(int target, int internalformat, int x, int y, int width, int height);
 
+	// ---------------------------
 	public static void glGetConvolutionFilter(int target, int format, int type, ByteBuffer image) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position());
 	}
-
 	public static void glGetConvolutionFilter(int target, int format, int type, ShortBuffer image) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position() << 1);
 	}
-
 	public static void glGetConvolutionFilter(int target, int format, int type, IntBuffer image) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position() << 2);
 	}
-
 	public static void glGetConvolutionFilter(int target, int format, int type, FloatBuffer image) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position() << 2);
 	}
-
 	private static native void nglGetConvolutionFilter(int target, int format, int type, Buffer image, int image_offset);
+
+	public static void glGetConvolutionFilter(int target, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensurePackPBOenabled();
+		nglGetConvolutionFilterBO(target, format, type, buffer_offset);
+	}
+	private static native void nglGetConvolutionFilterBO(int target, int format, int type, int buffer_offset);
+	// ---------------------------
 
 	public static void glGetConvolutionParameter(int target, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetConvolutionParameterfv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetConvolutionParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 
 	public static void glGetConvolutionParameter(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetConvolutionParameteriv(target, pname, params, params.position());
 	}
-
 	private static native void nglGetConvolutionParameteriv(int target, int pname, IntBuffer params, int params_offset);
 
+	// ---------------------------
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirectBuffer(row);
 		BufferChecks.checkDirectBuffer(column);
 		// TODO: check buffer size valid
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, BufferUtils.getOffset(row), column, BufferUtils.getOffset(column));
 	}
-
 	private static native void nglSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset);
 
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, int row_offset, int column_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglSeparableFilter2DBO(target, internalformat, width, height, format, type, row_offset, column_offset);
+	}
+	private static native void nglSeparableFilter2DBO(int target, int internalformat, int width, int height, int format, int type, int row_offset, int column_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirectBuffer(row);
 		BufferChecks.checkDirectBuffer(column);
 		BufferChecks.checkDirectBuffer(span);
 		// TODO: check buffer size valid
 		nglGetSeparableFilter(target, format, type, row, BufferUtils.getOffset(row), column, BufferUtils.getOffset(column), span, BufferUtils.getOffset(span));
 	}
-
 	private static native void nglGetSeparableFilter(int target, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset, Buffer span, int span_offset);
+
+	public static void glGetSeparableFilter(int target, int format, int type, int row_offset, int column_offset, int span_offset) {
+		GLBufferChecks.ensurePackPBOenabled();
+		nglGetSeparableFilterBO(target, format, type, row_offset, column_offset, span_offset);
+	}
+	private static native void nglGetSeparableFilterBO(int target, int format, int type, int row_offset, int column_offset, int span_offset);
+	// ---------------------------
 }
 

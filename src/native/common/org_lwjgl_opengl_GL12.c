@@ -87,20 +87,37 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
 {
 	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer, offset);
 	glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, buffer_ptr);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL12
+ * Method:    glTexImage3D
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3DBO
+  (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint format, jint type, jint buffer_offset)
+{
+	glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, offsetToPointer(buffer_offset));
 }
 
 /*
  * Class:     org_lwjgl_opengl_GL12
  * Method:    glTexSubImage3D
- * Signature: (IIIIIIIIIII)V
  */
 static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL12
+ * Method:    glTexSubImage3D
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3DBO
+  (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jint buffer_offset)
+{
+	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -123,7 +140,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_initNativeStubs(JNIEnv *env, j
 		{"nglDrawRangeElements", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglDrawRangeElements, "glDrawRangeElements", (void*)&glDrawRangeElements},
 		{"nglDrawRangeElementsVBO", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO, NULL, NULL},
 		{"nglTexImage3D", "(IIIIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglTexImage3D, "glTexImage3D", (void*)&glTexImage3D},
+		{"nglTexImage3DBO", "(IIIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_nglTexImage3DBO, NULL, NULL},
 		{"nglTexSubImage3D", "(IIIIIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglTexSubImage3D, "glTexSubImage3D", (void*)&glTexSubImage3D},
+		{"nglTexSubImage3DBO", "(IIIIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_nglTexSubImage3DBO, NULL, NULL},
 		{"glCopyTexSubImage3D", "(IIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D, "glCopyTexSubImage3D", (void*)&glCopyTexSubImage3D}
 	};
 	int num_functions = NUMFUNCTIONS(functions);

@@ -31,14 +31,10 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
-import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import org.lwjgl.LWJGLException;
+
+import java.nio.*;
 
 public abstract class ARBBufferObject {
 
@@ -75,11 +71,17 @@ public abstract class ARBBufferObject {
 
 	public static void glBindBufferARB(int target, int buffer) {
 		switch ( target ) {
+			case ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB:
+				VBOTracker.getVBOArrayStack().setState(buffer);
+				break;
 			case ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB:
 				VBOTracker.getVBOElementStack().setState(buffer);
 				break;
-			case ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB:
-				VBOTracker.getVBOArrayStack().setState(buffer);
+			case ARBPixelBufferObject.GL_PIXEL_PACK_BUFFER_ARB:
+				VBOTracker.getPBOPackStack().setState(buffer);
+				break;
+			case ARBPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_ARB:
+				VBOTracker.getPBOUnpackStack().setState(buffer);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported VBO target " + target);
@@ -92,10 +94,14 @@ public abstract class ARBBufferObject {
 	public static void glDeleteBuffersARB(IntBuffer buffers) {
 		for ( int i = buffers.position(); i < buffers.limit(); i++ ) {
 			int buffer_handle = buffers.get(i);
-			if ( VBOTracker.getVBOElementStack().getState() == buffer_handle )
-				VBOTracker.getVBOElementStack().setState(0);
 			if ( VBOTracker.getVBOArrayStack().getState() == buffer_handle )
 				VBOTracker.getVBOArrayStack().setState(0);
+			if ( VBOTracker.getVBOElementStack().getState() == buffer_handle )
+				VBOTracker.getVBOElementStack().setState(0);
+			if ( VBOTracker.getPBOPackStack().getState() == buffer_handle )
+				VBOTracker.getPBOPackStack().setState(0);
+			if ( VBOTracker.getPBOUnpackStack().getState() == buffer_handle )
+				VBOTracker.getPBOUnpackStack().setState(0);
 		}
 		BufferChecks.checkDirect(buffers);
 		nglDeleteBuffersARB(buffers.remaining(), buffers, buffers.position());
@@ -179,7 +185,10 @@ public abstract class ARBBufferObject {
 	private static native void nglGetBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);
 
 	/**
-	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in which case a new ByteBuffer will be created, pointing to the returned memory. If oldBuffer is non-null, it will be returned if it points to the same mapped memory, otherwise a new ByteBuffer is created. That way, an application will normally use glMapBufferARB like this:
+	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null,
+	 * in which case a new ByteBuffer will be created, pointing to the returned memory. If oldBuffer is non-null,
+	 * it will be returned if it points to the same mapped memory, otherwise a new ByteBuffer is created. That
+	 * way, an application will normally use glMapBufferARB like this:
 	 * <p/>
 	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBufferARB(..., ..., ..., null); ... // Another map on the same buffer mapped_buffer = glMapBufferARB(..., ..., ..., mapped_buffer);
 	 *

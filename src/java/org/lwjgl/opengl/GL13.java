@@ -161,157 +161,213 @@ public final class GL13 {
 
 	public static native void glClientActiveTexture(int texture);
 
+	// ---------------------------
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position());
 	}
-
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position() << 1);
 	}
-
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, IntBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position() << 2);
 	}
-
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position() << 2);
 	}
-
 	private static native void nglCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, Buffer data, int data_offset);
 
+	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglCompressedTexImage1DBO(target, level, internalformat, width, border, imageSize, buffer_offset);
+	}
+	private static native void nglCompressedTexImage1DBO(int target, int level, int internalformat, int width, int border, int imageSize, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position());
 	}
-
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position() << 1);
 	}
-
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, IntBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position() << 2);
 	}
-
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position() << 2);
 	}
-
 	private static native void nglCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer data, int data_offset);
 
+	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglCompressedTexImage2DBO(target, level, internalformat, width, height, border, imageSize, buffer_offset);
+	}
+	private static native void nglCompressedTexImage2DBO(int target, int level, int internalformat, int width, int height, int border, int imageSize, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position());
 	}
-
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position() << 1);
 	}
-
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, IntBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position() << 2);
 	}
-
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position() << 2);
 	}
-
 	private static native void nglCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, Buffer data, int data_offset);
 
+	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglCompressedTexImage3DBO(target, level, internalformat, width, height, depth, border, imageSize, buffer_offset);
+	}
+	private static native void nglCompressedTexImage3DBO(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position());
 	}
-
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, ShortBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position() << 1);
 	}
-
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, IntBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position() << 2);
 	}
-
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position() << 2);
 	}
-
 	private static native void nglCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, Buffer data, int data_offset);
 
+	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglCompressedTexSubImage1DBO(target, level, xoffset, width, format, imageSize, buffer_offset);
+	}
+	private static native void nglCompressedTexSubImage1DBO(int target, int level, int xoffset, int width, int format, int imageSize, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position());
 	}
-
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ShortBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position() << 1);
 	}
-
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, IntBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position() << 2);
 	}
-
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position() << 2);
 	}
-
 	private static native void nglCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, Buffer data, int data_offset);
 
+	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglCompressedTexSubImage2DBO(target, level, xoffset, yoffset, width, height, format, imageSize, buffer_offset);
+	}
+	private static native void nglCompressedTexSubImage2DBO(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ByteBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position());
 	}
-
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ShortBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position() << 1);
 	}
-
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, IntBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position() << 2);
 	}
-
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, FloatBuffer data) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(data);
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position() << 2);
 	}
-
 	private static native void nglCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, Buffer data, int data_offset);
 
+	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglCompressedTexSubImage3DBO(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, buffer_offset);
+	}
+	private static native void nglCompressedTexSubImage3DBO(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, int buffer_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glGetCompressedTexImage(int target, int lod, ByteBuffer img) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(img);
 		// TODO: check buffer size valid
 		nglGetCompressedTexImage(target, lod, img, img.position());
 	}
-
 	public static void glGetCompressedTexImage(int target, int lod, ShortBuffer img) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(img);
 		// TODO: check buffer size valid
 		nglGetCompressedTexImage(target, lod, img, img.position() << 1);
 	}
-
 	public static void glGetCompressedTexImage(int target, int lod, IntBuffer img) {
+		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(img);
 		// TODO: check buffer size valid
 		nglGetCompressedTexImage(target, lod, img, img.position() << 2);
 	}
-
 	private static native void nglGetCompressedTexImage(int target, int lod, Buffer img, int img_offset);
+
+	public static void glGetCompressedTexImage(int target, int lod, int buffer_offset) {
+		GLBufferChecks.ensurePackPBOenabled();
+		nglGetCompressedTexImageBO(target, lod, buffer_offset);
+	}
+	private static native void nglGetCompressedTexImageBO(int target, int lod, int buffer_offset);
+	// ---------------------------
 
 	public static native void glMultiTexCoord1f(int target, float s);
 

@@ -83,6 +83,18 @@ public interface IGL {
 	void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap);
 
 	/**
+	 *
+	 * @param width
+	 * @param height
+	 * @param xorig
+	 * @param yorig
+	 * @param xmove
+	 * @param ymove
+	 * @param buffer_offect
+	 */
+	void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, int buffer_offect);
+
+	/**
 	 * @param sfactor
 	 * @param dfactor
 	 */
@@ -397,6 +409,16 @@ public interface IGL {
 	void glDrawPixels(int width, int height, int format, int type, ShortBuffer pixels);
 
 	/**
+	 *
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glDrawPixels(int width, int height, int format, int type, int buffer_offset);
+
+	/**
 	 * @param flag
 	 */
 	void glEdgeFlag(boolean flag);
@@ -623,15 +645,33 @@ public interface IGL {
 
 	/**
 	 * @param map
+	 * @param buffer_offset
+	 */
+	void glGetPixelMapfv(int map, int buffer_offset);
+
+	/**
+	 * @param map
 	 * @param values
 	 */
 	void glGetPixelMap(int map, IntBuffer values);
 
 	/**
 	 * @param map
+	 * @param buffer_offset
+	 */
+	void glGetPixelMapuiv(int map, int buffer_offset);
+
+	/**
+	 * @param map
 	 * @param values
 	 */
 	void glGetPixelMap(int map, ShortBuffer values);
+
+	/**
+	 * @param map
+	 * @param buffer_offset
+	 */
+	void glGetPixelMapusv(int map, int buffer_offset);
 
 	/**
 	 * @param pname
@@ -645,6 +685,11 @@ public interface IGL {
 	 * @param mask
 	 */
 	void glGetPolygonStipple(ByteBuffer mask);
+
+	/**
+	 * @param buffer_offset
+	 */
+	void glGetPolygonStipple(int buffer_offset);
 
 	/**
 	 * @param name
@@ -707,6 +752,15 @@ public interface IGL {
 	 * @param pixels
 	 */
 	void glGetTexImage(int target, int level, int format, int type, ShortBuffer pixels);
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glGetTexImage(int target, int level, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -1059,6 +1113,30 @@ public interface IGL {
 	void glPixelMap(int map, ShortBuffer values);
 
 	/**
+	 *
+	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	void glPixelMapfv(int map, int mapsize, int buffer_offset);
+
+	/**
+	 *
+	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	void glPixelMapuiv(int map, int mapsize, int buffer_offset);
+
+	/**
+	 *
+	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	void glPixelMapusv(int map, int mapsize, int buffer_offset);
+
+	/**
 	 * @param pname
 	 * @param param
 	 */
@@ -1109,6 +1187,12 @@ public interface IGL {
 	 * @param mask
 	 */
 	void glPolygonStipple(ByteBuffer mask);
+
+	/**
+	 *
+	 * @param buffer_offset
+	 */
+	void glPolygonStipple(int buffer_offset);
 
 	/**
 	 *
@@ -1229,6 +1313,17 @@ public interface IGL {
 	 * @param pixels
 	 */
 	void glReadPixels(int x, int y, int width, int height, int format, int type, ShortBuffer pixels);
+
+	/**
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glReadPixels(int x, int y, int width, int height, int format, int type, int buffer_offset);
 
 	/**
 	 * @param x1
@@ -1453,6 +1548,18 @@ public interface IGL {
 	 */
 	void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ShortBuffer pixels);
 
+	/**
+	 *
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -1509,6 +1616,19 @@ public interface IGL {
 	 */
 	void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels);
 
+	/**
+	 *
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -1561,6 +1681,17 @@ public interface IGL {
 	 */
 	void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, IntBuffer pixels);
 
+	/**
+	 *
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -1615,6 +1746,19 @@ public interface IGL {
 	 */
 	void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ShortBuffer pixels);
 
+	/**
+	 *
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, int buffer_offset);
 
 	/**
 	 * @param x
@@ -1787,7 +1931,6 @@ public interface IGL {
 	 */
 	void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, IntBuffer pixels);
 
-
 	/**
 	 * @param target
 	 * @param level
@@ -1802,6 +1945,19 @@ public interface IGL {
 	 */
 	void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ShortBuffer pixels);
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalFormat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -1866,6 +2022,21 @@ public interface IGL {
 	 */
 	void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ShortBuffer pixels);
 
+	/**
+	 *
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int buffer_offset);
 
 	/**
 	 * @param texture
@@ -1924,6 +2095,16 @@ public interface IGL {
 	 */
 	void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer data);
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, int buffer_offset);
 
 	/**
 	 * @param target
@@ -1974,6 +2155,17 @@ public interface IGL {
 	 */
 	void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer data);
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, int buffer_offset);
 
 	/**
 	 * @param target
@@ -2027,6 +2219,18 @@ public interface IGL {
 	 */
 	void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer data);
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, int buffer_offset);
 
 	/**
 	 * @param target
@@ -2075,6 +2279,16 @@ public interface IGL {
 	 */
 	void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, ShortBuffer data);
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, int buffer_offset);
 
 	/**
 	 * @param target
@@ -2089,7 +2303,6 @@ public interface IGL {
 	 */
 	void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ByteBuffer data);
 
-
 	/**
 	 * @param target
 	 * @param level
@@ -2102,7 +2315,6 @@ public interface IGL {
 	 * @param data
 	 */
 	void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, FloatBuffer data);
-
 
 	/**
 	 * @param target
@@ -2131,6 +2343,18 @@ public interface IGL {
 	 */
 	void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ShortBuffer data);
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, int buffer_offset);
 
 	/**
 	 * @param target
@@ -2147,7 +2371,6 @@ public interface IGL {
 	 */
 	void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ByteBuffer data);
 
-
 	/**
 	 * @param target
 	 * @param level
@@ -2162,7 +2385,6 @@ public interface IGL {
 	 * @param data
 	 */
 	void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, FloatBuffer data);
-
 
 	/**
 	 * @param target
@@ -2179,7 +2401,6 @@ public interface IGL {
 	 */
 	void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, IntBuffer data);
 
-
 	/**
 	 * @param target
 	 * @param level
@@ -2195,6 +2416,20 @@ public interface IGL {
 	 */
 	void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ShortBuffer data);
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, int buffer_offset);
 
 	/**
 	 * @param target
@@ -2216,6 +2451,13 @@ public interface IGL {
 	 * @param img
 	 */
 	void glGetCompressedTexImage(int target, int lod, ShortBuffer img);
+
+	/**
+	 * @param target
+	 * @param lod
+	 * @param buffer_offset
+	 */
+	void glGetCompressedTexImage(int target, int lod, int buffer_offset);
 
 	/**
 	 * @param m
@@ -2846,6 +3088,16 @@ public interface IGL {
 
 	/**
 	 * @param target
+	 * @param start
+	 * @param count
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glColorSubTable(int target, int start, int count, int format, int type, int buffer_offset);
+
+	/**
+	 * @param target
 	 * @param internalFormat
 	 * @param width
 	 * @param format
@@ -2865,6 +3117,15 @@ public interface IGL {
 	 */
 	void glColorTable(int target, int internalFormat, int width, int format, int type, FloatBuffer data);
 
+	/**
+	 * @param target
+	 * @param internalFormat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glColorTable(int target, int internalFormat, int width, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -2890,7 +3151,6 @@ public interface IGL {
 	 */
 	void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ByteBuffer image);
 
-
 	/**
 	 * @param target
 	 * @param internalformat
@@ -2900,7 +3160,6 @@ public interface IGL {
 	 * @param image
 	 */
 	void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, FloatBuffer image);
-
 
 	/**
 	 * @param target
@@ -2912,7 +3171,6 @@ public interface IGL {
 	 */
 	void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, IntBuffer image);
 
-
 	/**
 	 * @param target
 	 * @param internalformat
@@ -2923,6 +3181,15 @@ public interface IGL {
 	 */
 	void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ShortBuffer image);
 
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -2935,7 +3202,6 @@ public interface IGL {
 	 */
 	void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer image);
 
-
 	/**
 	 * @param target
 	 * @param internalformat
@@ -2946,7 +3212,6 @@ public interface IGL {
 	 * @param image
 	 */
 	void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer image);
-
 
 	/**
 	 * @param target
@@ -2959,6 +3224,16 @@ public interface IGL {
 	 */
 	void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer image);
 
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -3091,6 +3366,14 @@ public interface IGL {
 
 	/**
 	 * @param target
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glGetConvolutionFilter(int target, int format, int type, int buffer_offset);
+
+	/**
+	 * @param target
 	 * @param pname
 	 * @param params
 	 */
@@ -3138,6 +3421,15 @@ public interface IGL {
 	 * @param values
 	 */
 	void glGetHistogram(int target, boolean reset, int format, int type, ShortBuffer values);
+
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	void glGetHistogram(int target, boolean reset, int format, int type, int buffer_offset);
 
 	/**
 	 * @param target
@@ -3191,6 +3483,15 @@ public interface IGL {
 
 	/**
 	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param types
+	 * @param buffer_offset
+	 */
+	void glGetMinmax(int target, boolean reset, int format, int types, int buffer_offset);
+
+	/**
+	 * @param target
 	 * @param pname
 	 * @param params
 	 */
@@ -3213,6 +3514,15 @@ public interface IGL {
 	 */
 	void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span);
 
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param row_offset
+	 * @param column_offset
+	 * @param span_offset
+	 */
+	void glGetSeparableFilter(int target, int format, int type, int row_offset, int column_offset, int span_offset);
 
 	/**
 	 * @param target
@@ -3251,6 +3561,17 @@ public interface IGL {
 	 */
 	void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column);
 
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param row_offset
+	 * @param column_offset
+	 */
+	void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, int row_offset, int column_offset);
 
 	/**
 	 * @param index
@@ -5204,7 +5525,7 @@ public interface IGL {
 	 * @param name
 	 */
 	void glGetActiveUniform(int program, int index,
-	                               IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name);
+	                        IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name);
 
 	/**
 	 * @param program
@@ -5243,7 +5564,7 @@ public interface IGL {
 	 * @param name
 	 */
 	void glGetActiveAttrib(int program, int index,
-	                              IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name);
+	                       IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name);
 
 	/**
 	 * @param program

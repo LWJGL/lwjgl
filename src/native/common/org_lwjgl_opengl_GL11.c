@@ -540,6 +540,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmap(JNIEnv * env, jclass cl
 
 /*
  * Class:     org_lwjgl_opengl_GL11
+ * Method:    glBitmap
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmapBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2, jfloat p3, jfloat p4, jfloat p5, jint buffer_offset)
+{
+	glBitmap((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5, offsetToPointer(buffer_offset));
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL11
  * Method:    glBindTexture
  */
 static void JNICALL Java_org_lwjgl_opengl_GL11_glBindTexture(JNIEnv * env, jclass clazz, jint p0, jint p1)
@@ -931,7 +940,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixels(JNIEnv * env, jclas
 {
 	const GLbyte *address = (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glDrawPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (const void *)(address + offset));
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glDrawPixels
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixelsBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint buffer_offset)
+{
+	glDrawPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1024,7 +1041,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfv(JNIEnv * env, jc
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPixelMapfv((GLint) p0, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glGetPixelMapfv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfvBO(JNIEnv * env, jclass clazz, jint p0, jint buffer_offset)
+{
+	glGetPixelMapfv((GLint) p0, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1035,7 +1060,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuiv(JNIEnv * env, j
 {
 	GLuint *address = offset + (GLuint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPixelMapuiv((GLint) p0, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glGetPixelMapuiv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuivBO(JNIEnv * env, jclass clazz, jint p0, jint buffer_offset)
+{
+	glGetPixelMapuiv((GLint) p0, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1046,7 +1079,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusv(JNIEnv * env, j
 {
 	GLushort *address = (GLushort *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPixelMapusv((GLint) p0, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glGetPixelMapusv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusvBO(JNIEnv * env, jclass clazz, jint p0, jint buffer_offset)
+{
+	glGetPixelMapusv((GLint) p0, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1402,9 +1443,16 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImage(JNIEnv * env, jcla
 {
 	void *address = (void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glGetTexImage((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, address);
-
 }
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glGetTexImage
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImageBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint buffer_offset)
+{
+	glGetTexImage((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, offsetToPointer(buffer_offset));
+}
 
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGenfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
@@ -1460,7 +1508,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple(JNIEnv * env
 {
 	GLubyte *address = offset + (GLubyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPolygonStipple(address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glGetPolygonStipple
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStippleBO(JNIEnv * env, jclass clazz, jint buffer_offset)
+{
+	glGetPolygonStipple(offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1748,7 +1804,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStipple(JNIEnv * env, j
 {
 	const GLubyte *address = offset + (const GLubyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glPolygonStipple(address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glPolygonStipple
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStippleBO(JNIEnv * env, jclass clazz, jint buffer_offset)
+{
+	glPolygonStipple(offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1839,7 +1903,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfv(JNIEnv * env, jclas
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glPixelMapfv((GLint) p0, (GLint) p1, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glPixelMapfv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfvBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
+{
+	glPixelMapfv((GLint) p0, (GLint) p1, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1850,7 +1922,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuiv(JNIEnv * env, jcla
 {
 	const GLuint *address = (const GLuint *)(offset + (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glPixelMapuiv((GLint) p0, (GLint) p1, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glPixelMapuiv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuivBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
+{
+	glPixelMapuiv((GLint) p0, (GLint) p1, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -1861,9 +1941,16 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusv(JNIEnv * env, jcla
 {
 	const GLushort *address = (const GLushort *)(offset + (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glPixelMapusv((GLint) p0, (GLint) p1, address);
-
 }
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glPixelMapusv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusvBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
+{
+	glPixelMapusv((GLint) p0, (GLint) p1, offsetToPointer(buffer_offset));
+}
 /*
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPassThrough
@@ -2058,7 +2145,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixels(JNIEnv * env, jclas
 {
 	void *address = (void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glReadPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glReadPixels
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixelsBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint buffer_offset)
+{
+	glReadPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -2323,7 +2418,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(JNIEnv * env, jc
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glTexSubImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glTexSubImage2D
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2DBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint buffer_offset)
+{
+	glTexSubImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -2334,7 +2437,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1D(JNIEnv * env, jc
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glTexSubImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, address);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glTexSubImage1D
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1DBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint buffer_offset)
+{
+	glTexSubImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, offsetToPointer(buffer_offset));
 }
 
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameterfv
@@ -2377,7 +2488,15 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv * env, jclas
 {
 	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer, offset);
 	glTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, buffer_ptr);
+}
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glTexImage2D
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2DBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint buffer_offset)
+{
+	glTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, offsetToPointer(buffer_offset));
 }
 
 /*
@@ -2388,9 +2507,16 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv * env, jclas
 {
 	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer, offset);
 	glTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, buffer_ptr);
-
 }
 
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    glTexImage1D
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1DBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint buffer_offset)
+{
+	glTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, offsetToPointer(buffer_offset));
+}
 
 /*
  * Class:     org_lwjgl_opengl_GL11
@@ -2585,6 +2711,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"glCallList", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_glCallList, "glCallList", (void*)&glCallList},
 		{"glBlendFunc", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_glBlendFunc, "glBlendFunc", (void*)&glBlendFunc},
 		{"nglBitmap", "(IIFFFFLjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglBitmap, "glBitmap", (void*)&glBitmap},
+		{"nglBitmapBO", "(IIFFFFI)V", (void*)&Java_org_lwjgl_opengl_GL11_nglBitmapBO, NULL, NULL},
 		{"glBindTexture", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_glBindTexture, "glBindTexture", (void*)&glBindTexture},
 		{"glBegin", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_glBegin, "glBegin", (void*)&glBegin},
 		{"glEnd", "()V", (void*)&Java_org_lwjgl_opengl_GL11_glEnd, "glEnd", (void*)&glEnd},
@@ -2625,6 +2752,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"nglEdgeFlagPointerVBO", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointerVBO, NULL, NULL},
 		{"glEdgeFlag", "(Z)V", (void*)&Java_org_lwjgl_opengl_GL11_glEdgeFlag, "glEdgeFlag", (void*)&glEdgeFlag},
 		{"nglDrawPixels", "(IIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglDrawPixels, "glDrawPixels", (void*)&glDrawPixels},
+		{"nglDrawPixelsBO", "(IIIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglDrawPixelsBO, NULL, NULL},
 		{"nglDrawElements", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglDrawElements, "glDrawElements", (void*)&glDrawElements},
 		{"nglDrawElementsVBO", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglDrawElementsVBO, NULL, NULL},
 		{"glDrawBuffer", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_glDrawBuffer, "glDrawBuffer", (void*)&glDrawBuffer},
@@ -2634,8 +2762,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"glDepthFunc", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_glDepthFunc, "glDepthFunc", (void*)&glDepthFunc},
 		{"nglFeedbackBuffer", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglFeedbackBuffer, "glFeedbackBuffer", (void*)&glFeedbackBuffer},
 		{"nglGetPixelMapfv", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPixelMapfv, "glGetPixelMapfv", (void*)&glGetPixelMapfv},
+		{"nglGetPixelMapfvBO", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPixelMapfvBO, NULL, NULL},
 		{"nglGetPixelMapuiv", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPixelMapuiv, "glGetPixelMapuiv", (void*)&glGetPixelMapuiv},
+		{"nglGetPixelMapuivBO", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPixelMapuivBO, NULL, NULL},
 		{"nglGetPixelMapusv", "(ILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPixelMapusv, "glGetPixelMapusv", (void*)&glGetPixelMapusv},
+		{"nglGetPixelMapusvBO", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPixelMapusvBO, NULL, NULL},
 		{"nglGetMaterialfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetMaterialfv, "glGetMaterialfv", (void*)&glGetMaterialfv},
 		{"nglGetMaterialiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetMaterialiv, "glGetMaterialiv", (void*)&glGetMaterialiv},
 		{"nglGetMapfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetMapfv, "glGetMapfv", (void*)&glGetMapfv},
@@ -2669,12 +2800,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"nglGetTexLevelParameterfv", "(IIILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameterfv, "glGetTexLevelParameterfv", (void*)&glGetTexLevelParameterfv},
 		{"nglGetTexLevelParameteriv", "(IIILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameteriv, "glGetTexLevelParameteriv", (void*)&glGetTexLevelParameteriv},
 		{"nglGetTexImage", "(IIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexImage, "glGetTexImage", (void*)&glGetTexImage},
+		{"nglGetTexImageBO", "(IIIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexImageBO, NULL, NULL},
 		{"nglGetTexGeniv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexGeniv, "glGetTexGeniv", (void*)&glGetTexGeniv},
 		{"nglGetTexGenfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexGenfv, "glGetTexGenfv", (void*)&glGetTexGenfv},
 		{"nglGetTexEnviv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexEnviv, "glGetTexEnviv", (void*)&glGetTexEnviv},
 		{"nglGetTexEnvfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetTexEnvfv, "glGetTexEnvfv", (void*)&glGetTexEnvfv},
 		{"glGetString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_opengl_GL11_glGetString, "glGetString", (void*)&glGetString},
 		{"nglGetPolygonStipple", "(Ljava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple, "glGetPolygonStipple", (void*)&glGetPolygonStipple},
+		{"nglGetPolygonStippleBO", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglGetPolygonStippleBO, NULL, NULL},
 		{"glIsList", "(I)Z", (void*)&Java_org_lwjgl_opengl_GL11_glIsList, "glIsList", (void*)&glIsList},
 		{"glMaterialf", "(IIF)V", (void*)&Java_org_lwjgl_opengl_GL11_glMaterialf, "glMaterialf", (void*)&glMaterialf},
 		{"glMateriali", "(III)V", (void*)&Java_org_lwjgl_opengl_GL11_glMateriali, "glMateriali", (void*)&glMateriali},
@@ -2702,6 +2835,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"glIsTexture", "(I)Z", (void*)&Java_org_lwjgl_opengl_GL11_glIsTexture, "glIsTexture", (void*)&glIsTexture},
 		{"glMatrixMode", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_glMatrixMode, "glMatrixMode", (void*)&glMatrixMode},
 		{"nglPolygonStipple", "(Ljava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPolygonStipple, "glPolygonStipple", (void*)&glPolygonStipple},
+		{"nglPolygonStippleBO", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPolygonStippleBO, NULL, NULL},
 		{"glPolygonOffset", "(FF)V", (void*)&Java_org_lwjgl_opengl_GL11_glPolygonOffset, "glPolygonOffset", (void*)&glPolygonOffset},
 		{"glPolygonMode", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_glPolygonMode, "glPolygonMode", (void*)&glPolygonMode},
 		{"glPointSize", "(F)V", (void*)&Java_org_lwjgl_opengl_GL11_glPointSize, "glPointSize", (void*)&glPointSize},
@@ -2711,8 +2845,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"glPixelStoref", "(IF)V", (void*)&Java_org_lwjgl_opengl_GL11_glPixelStoref, "glPixelStoref", (void*)&glPixelStoref},
 		{"glPixelStorei", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_glPixelStorei, "glPixelStorei", (void*)&glPixelStorei},
 		{"nglPixelMapfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPixelMapfv, "glPixelMapfv", (void*)&glPixelMapfv},
+		{"nglPixelMapfvBO", "(III)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPixelMapfvBO, NULL, NULL},
 		{"nglPixelMapuiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPixelMapuiv, "glPixelMapuiv", (void*)&glPixelMapuiv},
+		{"nglPixelMapuivBO", "(III)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPixelMapuivBO, NULL, NULL},
 		{"nglPixelMapusv", "(IILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPixelMapusv, "glPixelMapusv", (void*)&glPixelMapusv},
+		{"nglPixelMapusvBO", "(III)V", (void*)&Java_org_lwjgl_opengl_GL11_nglPixelMapusvBO, NULL, NULL},
 		{"glPassThrough", "(F)V", (void*)&Java_org_lwjgl_opengl_GL11_glPassThrough, "glPassThrough", (void*)&glPassThrough},
 		{"glOrtho", "(DDDDDD)V", (void*)&Java_org_lwjgl_opengl_GL11_glOrtho, "glOrtho", (void*)&glOrtho},
 		{"nglNormalPointer", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglNormalPointer, "glNormalPointer", (void*)&glNormalPointer},
@@ -2732,6 +2869,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"glRectf", "(FFFF)V", (void*)&Java_org_lwjgl_opengl_GL11_glRectf, "glRectf", (void*)&glRectf},
 		{"glRecti", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL11_glRecti, "glRecti", (void*)&glRecti},
 		{"nglReadPixels", "(IIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglReadPixels, "glReadPixels", (void*)&glReadPixels},
+		{"nglReadPixelsBO", "(IIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglReadPixelsBO, NULL, NULL},
 		{"glReadBuffer", "(I)V", (void*)&Java_org_lwjgl_opengl_GL11_glReadBuffer, "glReadBuffer", (void*)&glReadBuffer},
 		{"glRasterPos2f", "(FF)V", (void*)&Java_org_lwjgl_opengl_GL11_glRasterPos2f, "glRasterPos2f", (void*)&glRasterPos2f},
 		{"glRasterPos2i", "(II)V", (void*)&Java_org_lwjgl_opengl_GL11_glRasterPos2i, "glRasterPos2i", (void*)&glRasterPos2i},
@@ -2758,13 +2896,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, j
 		{"glVertex4i", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL11_glVertex4i, "glVertex4i", (void*)&glVertex4i},
 		{"glTranslatef", "(FFF)V", (void*)&Java_org_lwjgl_opengl_GL11_glTranslatef, "glTranslatef", (void*)&glTranslatef},
 		{"nglTexSubImage2D", "(IIIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexSubImage2D, "glTexSubImage2D", (void*)&glTexSubImage2D},
+		{"nglTexSubImage2DBO", "(IIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexSubImage2DBO, NULL, NULL},
 		{"nglTexSubImage1D", "(IIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexSubImage1D, "glTexSubImage1D", (void*)&glTexSubImage1D},
+		{"nglTexSubImage1DBO", "(IIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexSubImage1DBO, NULL, NULL},
 		{"glTexParameterf", "(IIF)V", (void*)&Java_org_lwjgl_opengl_GL11_glTexParameterf, "glTexParameterf", (void*)&glTexParameterf},
 		{"glTexParameteri", "(III)V", (void*)&Java_org_lwjgl_opengl_GL11_glTexParameteri, "glTexParameteri", (void*)&glTexParameteri},
 		{"nglTexParameterfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexParameterfv, "glTexParameterfv", (void*)&glTexParameterfv},
 		{"nglTexParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexParameteriv, "glTexParameteriv", (void*)&glTexParameteriv},
 		{"nglTexImage2D", "(IIIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexImage2D, "glTexImage2D", (void*)&glTexImage2D},
+		{"nglTexImage2DBO", "(IIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexImage2DBO, NULL, NULL},
 		{"nglTexImage1D", "(IIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexImage1D, "glTexImage1D", (void*)&glTexImage1D},
+		{"nglTexImage1DBO", "(IIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexImage1DBO, NULL, NULL},
 		{"glTexGenf", "(IIF)V", (void*)&Java_org_lwjgl_opengl_GL11_glTexGenf, "glTexGenf", (void*)&glTexGenf},
 		{"nglTexGenfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL11_nglTexGenfv, "glTexGenfv", (void*)&glTexGenfv},
 		{"glTexGeni", "(III)V", (void*)&Java_org_lwjgl_opengl_GL11_glTexGeni, "glTexGeni", (void*)&glTexGeni},

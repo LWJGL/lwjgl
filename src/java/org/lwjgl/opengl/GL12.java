@@ -126,54 +126,66 @@ public final class GL12 {
 
 	// ---------------------------
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ByteBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		if ( pixels != null )
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(format, type, width, height, depth, border));
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() : 0);
 	}
-
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ShortBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		if ( pixels != null )
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(format, type, width, height, depth, border) >> 1);
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 1 : 0);
 	}
-
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, IntBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		if ( pixels != null )
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(format, type, width, height, depth, border) >> 2);
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
 	}
-
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, FloatBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		if ( pixels != null )
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(format, type, width, height, depth, border) >> 2);
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
 	}
-
 	private static native void nglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, Buffer pixels, int pixels_offset);
+
+	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglTexImage3DBO(target, level, internalFormat, width, height, depth, border, format, type, buffer_offset);
+	}
+	private static native void nglTexImage3DBO(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int buffer_offset);
 	// ---------------------------
 
 	// ---------------------------
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ByteBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, depth));
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position());
 	}
-
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ShortBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, depth) >> 1);
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 1);
 	}
-
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, IntBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, depth) >> 2);
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2);
 	}
-
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, FloatBuffer pixels) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, depth) >> 2);
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2);
 	}
-
 	private static native void nglTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels, int pixels_offset);
+
+	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int buffer_offset) {
+		GLBufferChecks.ensureUnpackPBOenabled();
+		nglTexSubImage3DBO(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, buffer_offset);
+	}
+	private static native void nglTexSubImage3DBO(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int buffer_offset);
 	// ---------------------------
 
 	public static native void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);

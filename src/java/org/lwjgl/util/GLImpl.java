@@ -249,6 +249,20 @@ public class GLImpl implements IGL {
 	}
 
 	/**
+	 *
+	 * @param width
+	 * @param height
+	 * @param xorig
+	 * @param yorig
+	 * @param xmove
+	 * @param ymove
+	 * @param buffer_offect
+	 */
+	public void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, int buffer_offect) {
+		GL.glBitmap(width, height, xorig, yorig, xmove, ymove, buffer_offect);
+	}
+
+	/**
 	 * @param red
 	 * @param green
 	 * @param blue
@@ -6546,6 +6560,399 @@ public class GLImpl implements IGL {
 	 */
 	public void glStencilOpSeparate(int face, int sfail, int dpfail, int dppass) {
 		GL.glStencilOpSeparate(face, sfail, dpfail, dppass);
+	}
+
+	/**
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glDrawPixels(int width, int height, int format, int type, int buffer_offset) {
+		GL.glDrawPixels(width, height, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param map
+	 * @param buffer_offset
+	 */
+	public void glGetPixelMapfv(int map, int buffer_offset) {
+		GL.glGetPixelMapfv(map, buffer_offset);
+	}
+
+	/**
+	 * @param map
+	 * @param buffer_offset
+	 */
+	public void glGetPixelMapuiv(int map, int buffer_offset) {
+		GL.glGetPixelMapuiv(map, buffer_offset);
+	}
+
+	/**
+	 * @param map
+	 * @param buffer_offset
+	 */
+	public void glGetPixelMapusv(int map, int buffer_offset) {
+		GL.glGetPixelMapusv(map, buffer_offset);
+	}
+
+	/**
+	 * @param buffer_offset
+	 */
+	public void glGetPolygonStipple(int buffer_offset) {
+		GL.glGetPolygonStipple(buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glGetTexImage(int target, int level, int format, int type, int buffer_offset) {
+		GL.glGetTexImage(target, level, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	public void glPixelMapfv(int map, int mapsize, int buffer_offset) {
+		GL.glPixelMapfv(map, mapsize, buffer_offset);
+	}
+
+	/**
+	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	public void glPixelMapuiv(int map, int mapsize, int buffer_offset) {
+		GL.glPixelMapuiv(map, mapsize, buffer_offset);
+	}
+
+	/**
+	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	public void glPixelMapusv(int map, int mapsize, int buffer_offset) {
+		GL.glPixelMapusv(map, mapsize, buffer_offset);
+	}
+
+	/**
+	 * @param buffer_offset
+	 */
+	public void glPolygonStipple(int buffer_offset) {
+		GL.glPolygonStipple(buffer_offset);
+	}
+
+	/**
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glReadPixels(int x, int y, int width, int height, int format, int type, int buffer_offset) {
+		GL.glReadPixels(x, y, width, height, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, int buffer_offset) {
+		GL.glTexImage1D(target, level, internalformat, width, border, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, int buffer_offset) {
+		GL.glTexImage2D(target, level, internalformat, width, height, border, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, int buffer_offset) {
+		GL.glTexSubImage1D(target, level, xoffset, width, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, int buffer_offset) {
+		GL.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalFormat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int buffer_offset) {
+		GL.glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int buffer_offset) {
+		GL.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, int buffer_offset) {
+		GL.glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, int buffer_offset) {
+		GL.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, int buffer_offset) {
+		GL.glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, int buffer_offset) {
+		GL.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, int buffer_offset) {
+		GL.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, int buffer_offset) {
+		GL.glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param lod
+	 * @param buffer_offset
+	 */
+	public void glGetCompressedTexImage(int target, int lod, int buffer_offset) {
+		GL.glGetCompressedTexImage(target, lod, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param start
+	 * @param count
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glColorSubTable(int target, int start, int count, int format, int type, int buffer_offset) {
+		GL.glColorSubTable(target, start, count, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param internalFormat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glColorTable(int target, int internalFormat, int width, int format, int type, int buffer_offset) {
+		GL.glColorTable(target, internalFormat, width, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, int buffer_offset) {
+		GL.glConvolutionFilter1D(target, internalformat, width, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, int buffer_offset) {
+		GL.glConvolutionFilter2D(target, internalformat, width, height, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glGetConvolutionFilter(int target, int format, int type, int buffer_offset) {
+		GL.glGetConvolutionFilter(target, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public void glGetHistogram(int target, boolean reset, int format, int type, int buffer_offset) {
+		GL.glGetHistogram(target, reset, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param types
+	 * @param buffer_offset
+	 */
+	public void glGetMinmax(int target, boolean reset, int format, int types, int buffer_offset) {
+		GL.glGetMinmax(target, reset, format, types, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param row_offset
+	 * @param column_offset
+	 * @param span_offset
+	 */
+	public void glGetSeparableFilter(int target, int format, int type, int row_offset, int column_offset, int span_offset) {
+		GL.glGetSeparableFilter(target, format, type, row_offset, column_offset, span_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param row_offset
+	 * @param column_offset
+	 */
+	public void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, int row_offset, int column_offset) {
+		GL.glSeparableFilter2D(target, internalformat, width, height, format, type, row_offset, column_offset);
 	}
 
 }

@@ -50,32 +50,52 @@ class GLBufferChecks {
 	private GLBufferChecks() {
 	}
 
-	/** Helper method to ensure that vertex buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
+	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled() {
-		if ( VBOTracker.getVBOArrayStack().getState() != 0 ) {
-			throw new OpenGLException("Cannot use Buffers when VBO is enabled");
-		}
+		if ( VBOTracker.getVBOArrayStack().getState() != 0 )
+			throw new OpenGLException("Cannot use Buffers when Array Buffer Object is enabled");
 	}
 
-	/** Helper method to ensure that vertex buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
+	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled() {
-		if ( VBOTracker.getVBOArrayStack().getState() == 0 ) {
-			throw new OpenGLException("Cannot use offsets when VBO is disabled");
-		}
+		if ( VBOTracker.getVBOArrayStack().getState() == 0 )
+			throw new OpenGLException("Cannot use offsets when Array Buffer Object is disabled");
 	}
 
-	/** Helper method to ensure that vertex buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
+	/** Helper method to ensure that element array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled() {
-		if ( VBOTracker.getVBOElementStack().getState() != 0 ) {
-			throw new OpenGLException("Cannot use Buffers when VBO is enabled");
-		}
+		if ( VBOTracker.getVBOElementStack().getState() != 0 )
+			throw new OpenGLException("Cannot use Buffers when Element Array Buffer Object is enabled");
 	}
 
-	/** Helper method to ensure that vertex buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
+	/** Helper method to ensure that element array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled() {
-		if ( VBOTracker.getVBOElementStack().getState() == 0 ) {
-			throw new OpenGLException("Cannot use offsets when VBO is disabled");
-		}
+		if ( VBOTracker.getVBOElementStack().getState() == 0 )
+			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
+	}
+
+	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
+	static void ensurePackPBOdisabled() {
+		if ( VBOTracker.getPBOPackStack().getState() != 0 )
+			throw new OpenGLException("Cannot use Buffers when Pixel Pack Buffer Object is enabled");
+	}
+
+	/** Helper method to ensure that pixel pack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
+	static void ensurePackPBOenabled() {
+		if ( VBOTracker.getPBOPackStack().getState() == 0 )
+			throw new OpenGLException("Cannot use offsets when Pixel Pack Buffer Object is disabled");
+	}
+
+	/** Helper method to ensure that pixel unpack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
+	static void ensureUnpackPBOdisabled() {
+		if ( VBOTracker.getPBOUnpackStack().getState() != 0 )
+			throw new OpenGLException("Cannot use Buffers when Pixel Unpack Buffer Object is enabled");
+	}
+
+	/** Helper method to ensure that pixel unpack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
+	static void ensureUnpackPBOenabled() {
+		if ( VBOTracker.getPBOUnpackStack().getState() == 0 )
+			throw new OpenGLException("Cannot use offsets when Pixel Unpack Buffer Object is disabled");
 	}
 
 	/**

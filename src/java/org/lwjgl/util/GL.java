@@ -97,6 +97,19 @@ public class GL {
 	}
 
 	/**
+	 * @param width
+	 * @param height
+	 * @param xorig
+	 * @param yorig
+	 * @param xmove
+	 * @param ymove
+	 * @param buffer_offect
+	 */
+	public static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, int buffer_offect) {
+		GL11.glBitmap(width, height, xorig, yorig, xmove, ymove, buffer_offect);
+	}
+
+	/**
 	 * @param sfactor
 	 * @param dfactor
 	 */
@@ -467,6 +480,17 @@ public class GL {
 		GL11.glDrawPixels(width, height, format, type, pixels);
 	}
 
+	/**
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glDrawPixels(int width, int height, int format, int type, int buffer_offset) {
+		GL11.glDrawPixels(width, height, format, type, buffer_offset);
+	}
+
 	/** @param flag  */
 	public static void glEdgeFlag(boolean flag) {
 		GL11.glEdgeFlag(flag);
@@ -752,6 +776,14 @@ public class GL {
 
 	/**
 	 * @param map
+	 * @param buffer_offset
+	 */
+	public static void glGetPixelMapfv(int map, int buffer_offset) {
+		GL11.glGetPixelMapfv(map, buffer_offset);
+	}
+
+	/**
+	 * @param map
 	 * @param values
 	 */
 	public static void glGetPixelMap(int map, IntBuffer values) {
@@ -760,10 +792,26 @@ public class GL {
 
 	/**
 	 * @param map
+	 * @param buffer_offset
+	 */
+	public static void glGetPixelMapuiv(int map, int buffer_offset) {
+		GL11.glGetPixelMapuiv(map, buffer_offset);
+	}
+
+	/**
+	 * @param map
 	 * @param values
 	 */
 	public static void glGetPixelMap(int map, ShortBuffer values) {
 		GL11.glGetPixelMap(map, values);
+	}
+
+	/**
+	 * @param map
+	 * @param buffer_offset
+	 */
+	public static void glGetPixelMapusv(int map, int buffer_offset) {
+		GL11.glGetPixelMapusv(map, buffer_offset);
 	}
 
 	/**
@@ -779,6 +827,13 @@ public class GL {
 	/** @param mask  */
 	public static void glGetPolygonStipple(ByteBuffer mask) {
 		GL11.glGetPolygonStipple(mask);
+	}
+
+	/**
+	 * @param buffer_offset
+	 */
+	public static void glGetPolygonStipple(int buffer_offset) {
+		GL11.glGetPolygonStipple(buffer_offset);
 	}
 
 	/**
@@ -859,6 +914,16 @@ public class GL {
 		GL11.glGetTexImage(target, level, format, type, pixels);
 	}
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glGetTexImage(int target, int level, int format, int type, int buffer_offset) {
+		GL11.glGetTexImage(target, level, format, type, buffer_offset);
+	}
 	/**
 	 * @param target
 	 * @param level
@@ -1282,6 +1347,15 @@ public class GL {
 
 	/**
 	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	public static void glPixelMapfv(int map, int mapsize, int buffer_offset) {
+		GL11.glPixelMapfv(map, mapsize, buffer_offset);
+	}
+
+	/**
+	 * @param map
 	 * @param values
 	 */
 	public static void glPixelMap(int map, IntBuffer values) {
@@ -1290,10 +1364,28 @@ public class GL {
 
 	/**
 	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	public static void glPixelMapuiv(int map, int mapsize, int buffer_offset) {
+		GL11.glPixelMapuiv(map, mapsize, buffer_offset);
+	}
+
+	/**
+	 * @param map
 	 * @param values
 	 */
 	public static void glPixelMap(int map, ShortBuffer values) {
 		GL11.glPixelMap(map, values);
+	}
+
+	/**
+	 * @param map
+	 * @param mapsize
+	 * @param buffer_offset
+	 */
+	public static void glPixelMapusv(int map, int mapsize, int buffer_offset) {
+		GL11.glPixelMapusv(map, mapsize, buffer_offset);
 	}
 
 	/**
@@ -1360,6 +1452,13 @@ public class GL {
 	/** @param mask  */
 	public static void glPolygonStipple(ByteBuffer mask) {
 		GL11.glPolygonStipple(mask);
+	}
+
+	/**
+	 * @param buffer_offset
+	 */
+	public static void glPolygonStipple(int buffer_offset) {
+		GL11.glPolygonStipple(buffer_offset);
 	}
 
 	/**
@@ -1508,6 +1607,19 @@ public class GL {
 	 */
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, ShortBuffer pixels) {
 		GL11.glReadPixels(x, y, width, height, format, type, pixels);
+	}
+
+	/**
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glReadPixels(int x, int y, int width, int height, int format, int type, int buffer_offset) {
+		GL11.glReadPixels(x, y, width, height, format, type, buffer_offset);
 	}
 
 	/**
@@ -1785,6 +1897,20 @@ public class GL {
 	 * @param level
 	 * @param internalformat
 	 * @param width
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, int buffer_offset) {
+		GL11.glTexImage1D(target, level, internalformat, width, border, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
 	 * @param height
 	 * @param border
 	 * @param format
@@ -1838,6 +1964,21 @@ public class GL {
 	 */
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels) {
 		GL11.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, int buffer_offset) {
+		GL11.glTexImage2D(target, level, internalformat, width, height, border, format, type, buffer_offset);
 	}
 
 	/**
@@ -1919,6 +2060,19 @@ public class GL {
 	 * @param target
 	 * @param level
 	 * @param xoffset
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, int buffer_offset) {
+		GL11.glTexSubImage1D(target, level, xoffset, width, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
 	 * @param yoffset
 	 * @param width
 	 * @param height
@@ -1958,6 +2112,21 @@ public class GL {
 	 */
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ShortBuffer pixels) {
 		GL11.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, int buffer_offset) {
+		GL11.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, buffer_offset);
 	}
 
 	/**
@@ -2185,6 +2354,22 @@ public class GL {
 	/**
 	 * @param target
 	 * @param level
+	 * @param internalFormat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int buffer_offset) {
+		GL12.glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
+	 * @param level
 	 * @param xoffset
 	 * @param yoffset
 	 * @param zoffset
@@ -2248,6 +2433,23 @@ public class GL {
 	 */
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ShortBuffer pixels) {
 		GL12.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+	}
+
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int buffer_offset) {
+		GL12.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, buffer_offset);
 	}
 
 	/** @param texture  */
@@ -2317,6 +2519,18 @@ public class GL {
 	 * @param level
 	 * @param internalformat
 	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, int buffer_offset) {
+		GL13.glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, buffer_offset);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
 	 * @param height
 	 * @param border
 	 * @param imageSize
@@ -2368,6 +2582,19 @@ public class GL {
 		GL13.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 	}
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, int buffer_offset) {
+		GL13.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, buffer_offset);
+	}
 	/**
 	 * @param target
 	 * @param level
@@ -2431,6 +2658,20 @@ public class GL {
 	/**
 	 * @param target
 	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, int buffer_offset) {
+		GL13.glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, buffer_offset);
+	}
+	/**
+	 * @param target
+	 * @param level
 	 * @param xoffset
 	 * @param width
 	 * @param format
@@ -2480,6 +2721,18 @@ public class GL {
 		GL13.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
 	}
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, int buffer_offset) {
+		GL13.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, buffer_offset);
+	}
 	/**
 	 * @param target
 	 * @param level
@@ -2540,6 +2793,20 @@ public class GL {
 		GL13.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
 	}
 
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, int buffer_offset) {
+		GL13.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, buffer_offset);
+	}
 	/**
 	 * @param target
 	 * @param level
@@ -2610,6 +2877,22 @@ public class GL {
 
 	/**
 	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param format
+	 * @param imageSize
+	 * @param buffer_offset
+	 */
+	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, int buffer_offset) {
+		GL13.glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, buffer_offset);
+	}
+	/**
+	 * @param target
 	 * @param lod
 	 * @param img
 	 */
@@ -2633,6 +2916,15 @@ public class GL {
 	 */
 	public static void glGetCompressedTexImage(int target, int lod, ShortBuffer img) {
 		GL13.glGetCompressedTexImage(target, lod, img);
+	}
+
+	/**
+	 * @param target
+	 * @param lod
+	 * @param buffer_offset
+	 */
+	public static void glGetCompressedTexImage(int target, int lod, int buffer_offset) {
+		GL13.glGetCompressedTexImage(target, lod, buffer_offset);
 	}
 
 	/** @param m  */
@@ -3413,6 +3705,18 @@ public class GL {
 
 	/**
 	 * @param target
+	 * @param start
+	 * @param count
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glColorSubTable(int target, int start, int count, int format, int type, int buffer_offset) {
+		ARBImaging.glColorSubTable(target, start, count, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
 	 * @param internalFormat
 	 * @param width
 	 * @param format
@@ -3433,6 +3737,18 @@ public class GL {
 	 */
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, FloatBuffer data) {
 		ARBImaging.glColorTable(target, internalFormat, width, format, type, data);
+	}
+
+	/**
+	 * @param target
+	 * @param internalFormat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glColorTable(int target, int internalFormat, int width, int format, int type, int buffer_offset) {
+		ARBImaging.glColorTable(target, internalFormat, width, format, type, buffer_offset);
 	}
 
 	/**
@@ -3505,6 +3821,18 @@ public class GL {
 	 * @param target
 	 * @param internalformat
 	 * @param width
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, int buffer_offset) {
+		ARBImaging.glConvolutionFilter1D(target, internalformat, width, format, type, buffer_offset);
+
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
 	 * @param height
 	 * @param format
 	 * @param type
@@ -3538,6 +3866,19 @@ public class GL {
 	 */
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer image) {
 		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height, format, type, image);
+	}
+
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, int buffer_offset) {
+		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height, format, type, buffer_offset);
 	}
 
 	/**
@@ -3701,6 +4042,16 @@ public class GL {
 
 	/**
 	 * @param target
+	 * @param format
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glGetConvolutionFilter(int target, int format, int type, int buffer_offset) {
+		ARBImaging.glGetConvolutionFilter(target, format, type, buffer_offset);
+	}
+
+	/**
+	 * @param target
 	 * @param pname
 	 * @param params
 	 */
@@ -3759,6 +4110,10 @@ public class GL {
 	 */
 	public static void glGetHistogram(int target, boolean reset, int format, int type, ShortBuffer values) {
 		ARBImaging.glGetHistogram(target, reset, format, type, values);
+	}
+
+	public static void glGetHistogram(int target, boolean reset, int format, int type, int buffer_offset) {
+		ARBImaging.glGetHistogram(target, reset, format, type, buffer_offset);
 	}
 
 	/**
@@ -3825,6 +4180,17 @@ public class GL {
 
 	/**
 	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param types
+	 * @param buffer_offset
+	 */
+	public static void glGetMinmax(int target, boolean reset, int format, int types, int buffer_offset) {
+		ARBImaging.glGetMinmax(target, reset, format, types, buffer_offset);
+	}
+
+	/**
+	 * @param target
 	 * @param pname
 	 * @param params
 	 */
@@ -3850,8 +4216,19 @@ public class GL {
 	 * @param span
 	 */
 	public static void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
-		ARBImaging
-		        .glGetSeparableFilter(target, format, type, row, column, span);
+		ARBImaging.glGetSeparableFilter(target, format, type, row, column, span);
+	}
+
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param row_offset
+	 * @param column_offset
+	 * @param span_offset
+	 */
+	public static void glGetSeparableFilter(int target, int format, int type, int row_offset, int column_offset, int span_offset) {
+		ARBImaging.glGetSeparableFilter(target, format, type, row_offset, column_offset, span_offset);
 	}
 
 	/**
@@ -3895,6 +4272,20 @@ public class GL {
 	 */
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
 		ARBImaging.glSeparableFilter2D(target, internalformat, width, height, format, type, row, column);
+	}
+
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param row_offset
+	 * @param column_offset
+	 */
+	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, int row_offset, int column_offset) {
+		ARBImaging.glSeparableFilter2D(target, internalformat, width, height, format, type, row_offset, column_offset);
 	}
 
 	/** @param index  */
