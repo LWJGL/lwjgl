@@ -1,0 +1,14 @@
+Missing implementations:
+ FSOUND_File_SetCallbacks
+ FSOUND_Stream_Create
+ FSOUND_Stream_FindTagField
+ FSOUND_Stream_GetTagField
+ FSOUND_Stream_SetSubStreamSentence
+ FSOUND_Reverb_SetProperties
+ FSOUND_Reverb_GetProperties
+ FSOUND_Reverb_SetChannelProperties
+ FSOUND_Reverb_GetChannelProperties
+ 
+ - all create methods needs to be verified
+ - dynamic binding to vm
+ - cleanup with opaque pointers/handles
