@@ -39,6 +39,11 @@ package org.lwjgl;
  * @version $Revision$
  */
 class NativeSysImplementation extends DefaultSysImplementation {
+	
+	static {
+		Sys.initialize();
+	}
+	
 	public native long getTimerResolution();
 
 	public native long getTime();

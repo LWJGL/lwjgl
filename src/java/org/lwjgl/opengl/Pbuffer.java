@@ -31,12 +31,10 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.Sys;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-
-import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 
 /**
  * $Id$

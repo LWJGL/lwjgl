@@ -179,7 +179,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public boolean isCloseRequested() {
 		boolean result;
 		synchronized (this) {
-			result = close_requested;
+			result = close_requested || (frame != null && frame.syncIsCloseRequested());
 			close_requested = false;
 		}
 		return result;
