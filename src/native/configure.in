@@ -1,0 +1,80 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(acinclude.m4)
+
+dnl These should be changed =)
+LWJGL_MAJOR_VERSION=0
+LWJGL_MINOR_VERSION=0
+LWJGL_MICRO_VERSION=0
+LWJGL_INTERFACE_AGE=1
+LWJGL_BINARY_AGE=1
+LWJGL_VERSION=$LWJGL_MAJOR_VERSION.$LWJGL_MINOR_VERSION.$LWJGL_MICRO_VERSION
+
+AC_SUBST(LWJGL_MAJOR_VERSION)
+AC_SUBST(LWJGL_MINOR_VERSION)
+AC_SUBST(LWJGL_MICRO_VERSION)
+AC_SUBST(LWJGL_INTERFACE_AGE)
+AC_SUBST(LWJGL_BINARY_AGE)
+AC_SUBST(LWJGL_VERSION)
+
+# libtool versioning
+LT_RELEASE=$LWJGL_MAJOR_VERSION.$LWJGL_MINOR_VERSION
+LT_CURRENT=`expr $LWJGL_MICRO_VERSION - $LWJGL_INTERFACE_AGE`
+LT_REVISION=$LWJGL_INTERFACE_AGE
+LT_AGE=`expr $LWJGL_BINARY_AGE - $LWJGL_INTERFACE_AGE`
+
+AC_SUBST(LT_RELEASE)
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
+
+LIBS='-L/usr/X11R6/lib'
+
+AC_CONFIG_AUX_DIR(admin)
+
+AC_CONFIG_SRCDIR(common/org_lwjgl_opengl_CoreGL.cpp)
+
+AM_INIT_AUTOMAKE(lwjgl, $LWJGL_VERSION)
+
+AM_CONFIG_HEADER(config.h)
+
+dnl Checks for programs.
+AM_PROG_LIBTOOL
+AC_PROG_MAKE_SET
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+
+AC_MSG_CHECKING(for JAVA_HOME)
+if test "x$JAVA_HOME" = x; then
+  AC_MSG_ERROR([*** Please set the JAVA_HOME environment variable ])
+else
+  AC_MSG_RESULT($JAVA_HOME)
+  JAVA_HOME="$JAVA_HOME"
+  CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+  CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+fi
+
+dnl Checks for libraries.
+dnl Replace `main' with a function in -lGL:
+AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(GL is required))
+dnl Replace `main' with a function in -lGLU:
+AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU is required))
+dnl Replace `main' with a function in -lX11:
+AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is required))
+dnl Replace `main' with a function in -lXext:
+AC_CHECK_LIB(Xext, main,, AC_MSG_ERROR(Xext is required))
+dnl Replace `main' with a function in -lXxf86vm:
+AC_CHECK_LIB(Xxf86vm, main,, AC_MSG_ERROR(Xxf86vm is required))
+dnl Replace `main' with a function in -lopenal:
+AC_CHECK_LIB(openal, main,, AC_MSG_ERROR(openal is required))
+
+dnl Checks for header files.
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+
+dnl Checks for library functions.
+
+AC_OUTPUT([Makefile common/Makefile linux/Makefile])
