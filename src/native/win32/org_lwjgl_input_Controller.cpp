@@ -55,8 +55,11 @@ IDirectInputDevice2* lpDIDevice;    // DI Device instance
 DIJOYSTATE2 js;                     // State of Controller
 
 int buttoncount = 0;                // Temporary buttoncount
+bool hasx;                          // Temporary xaxis check
+bool hasy;                          // Temporary yaxis check
 bool hasz;                          // Temporary zaxis check
 bool haspov;                        // Temporary pov check
+bool hasslider;                     // Temporary slider check
 
 JNIEnv* environment;                // JNIEnvironment copy
 
@@ -65,13 +68,17 @@ bool create_success;                // bool used to determine successfull creati
 // Cached fields of Controller.java
 jclass clsController;
 jfieldID fidButtonCount;
+jfieldID fidHasXAxis;
+jfieldID fidHasYAxis;
 jfieldID fidHasZAxis;
 jfieldID fidHasPOV;
+jfieldID fidHasSlider;
 jfieldID fidButtons;
 jfieldID fidX;
 jfieldID fidY;
 jfieldID fidZ;
 jfieldID fidPOV;
+jfieldID fidSlider;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 void EnumerateCapabilities();
@@ -106,6 +113,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
   HRESULT hr;
   hr = DirectInputCreate(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &lpDI, NULL); 
   if (FAILED(hr)) {
+#if _DEBUG
+    printf("DirectInputCreate failed\n");
+#endif
     Shutdown();
     return JNI_FALSE;
   }
@@ -113,6 +123,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
   /*  Find all Controllers */
   EnumerateControllers();
   if (!create_success) {
+#if _DEBUG
+    printf("EnumerateControllers failed\n");
+#endif
     Shutdown();
     return JNI_FALSE;
   }
@@ -120,8 +133,16 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
   /* Enumerate capabilities of Controller */
   EnumerateCapabilities();
   if (!create_success) {
+#if _DEBUG
+    printf("EnumerateCapabilities failed\n");
+#endif
     Shutdown();
     return JNI_FALSE;
+  }
+
+  if(create_success) {
+    /* Do setup of Controller */
+    SetupController();
   }
 
   /* Initialize any fields on the Controller */
@@ -133,10 +154,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
   /* Aquire the Controller */
   hr = lpDIDevice->Acquire();
   if(FAILED(hr)) {
+#if _DEBUG
+    printf("Acquire failed\n");
+#endif
     Shutdown();
     return JNI_FALSE;
   }
-
   return create_success;
 }
 
@@ -193,6 +216,9 @@ void EnumerateCapabilities() {
   HRESULT hr;
   hr = lpDIDevice->EnumObjects(EnumControllerObjectsCallback, NULL, DIDFT_ALL);
   if FAILED(hr) { 
+#if _DEBUG
+    printf("EnumObjects failed\n");
+#endif
     create_success = false;
     return;
   }
@@ -206,6 +232,9 @@ void EnumerateControllers() {
   HRESULT hr;
   hr = lpDI->EnumDevices(DIDEVTYPE_JOYSTICK, EnumControllerCallback, 0, DIEDFL_ATTACHEDONLY);
   if FAILED(hr) { 
+#if _DEBUG
+    printf("EnumDevices failed\n");
+#endif
     create_success = false;
     return;
   } 
@@ -218,10 +247,6 @@ void EnumerateControllers() {
 BOOL CALLBACK EnumControllerCallback(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef) {
   /* Add the Controller */
   CreateController(pdinst);
-  if(create_success) {
-    /* Do setup of Controller */
-    SetupController();
-  }
 
   /* just stop after 1st Controller */
   return DIENUM_STOP;
@@ -231,16 +256,23 @@ BOOL CALLBACK EnumControllerCallback(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef) {
  * Callback from EnumObjects. Called for each "object" on the Controller.
  */
 BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
+#if _DEBUG
+  printf("found %s\n", lpddoi->tszName);
+#endif
   if(lpddoi->guidType == GUID_Button) {
     buttoncount++;
-  } else if(lpddoi->guidType == GUID_XAxis || lpddoi->guidType == GUID_YAxis) {
-    //do nothing
-  } else if(lpddoi->guidType == GUID_ZAxis || strcmp("Throttle", lpddoi->tszName) == 0){
+  } else if(lpddoi->guidType == GUID_XAxis) {
+    hasx = true;
+  } else if(lpddoi->guidType == GUID_YAxis) {
+	  hasy = true;
+  } else if(lpddoi->guidType == GUID_ZAxis){
     hasz = true;
   } else if (lpddoi->guidType == GUID_POV){
     haspov = true;
+  } else if (lpddoi->guidType == GUID_Slider){
+	  hasslider = true;
+#if _DEBUG
   } else {
-#ifdef _DEBUG
     printf("Unhandled object found: %s\n", lpddoi->tszName);
 #endif
   }
@@ -254,6 +286,9 @@ void CreateController(LPCDIDEVICEINSTANCE lpddi) {
   HRESULT hr;
   hr = lpDI->CreateDevice(lpddi->guidInstance, (LPDIRECTINPUTDEVICE*) &lpDIDevice, NULL);
   if FAILED(hr) {	
+#if _DEBUG
+    printf("CreateDevice failed\n");
+#endif
     create_success = false;
     return;
   }
@@ -266,12 +301,18 @@ void CreateController(LPCDIDEVICEINSTANCE lpddi) {
 void SetupController() {
   // set Controller data format
   if(lpDIDevice->SetDataFormat(&c_dfDIJoystick2) != DI_OK) {
+#if _DEBUG
+    printf("SetDataFormat failed\n");
+#endif
     create_success = false;
     return;
   }
 
   // set the cooperative level
   if(lpDIDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND) != DI_OK) {
+#if _DEBUG
+    printf("SetCooperativeLevel failed\n");
+#endif
     create_success = false;
     return;
   }
@@ -286,30 +327,56 @@ void SetupController() {
   diprg.lMin              = AXISMIN;
   diprg.lMax              = AXISMAX;
 
-  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-    create_success = false;
-    return;
+  if(hasx) {
+	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
+#if _DEBUG
+    printf("SetProperty(DIJOFS_X) failed\n");
+#endif
+		  create_success = false;
+		  return;
+	  }
   }
 
   //
   // And again for Y-axis range
   //
-  diprg.diph.dwObj        = DIJOFS_Y;
-
-  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK)
-  {
-    create_success = false;
-    return;
+  if(hasy) {
+	  diprg.diph.dwObj        = DIJOFS_Y;
+	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
+#if _DEBUG
+    printf("SetProperty(DIJOFS_Y) failed\n");
+#endif
+		  create_success = false;
+		  return;
+	  }
   }
 
   //
-  // And again for z-axis range (throttle)
+  // And again for Z-axis range
   //
-  diprg.diph.dwObj        = DIJOFS_Z;
+  if(hasz) {
+	  diprg.diph.dwObj        = DIJOFS_Z;
+	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
+#if _DEBUG
+    printf("SetProperty(DIJOFS_Z) failed\n");
+#endif
+		  create_success = false;
+		  return;
+	  }
+  }
 
-  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-    create_success = false;
-    return;
+  //
+  // Lastly slider
+  //
+  if(hasslider) {
+    diprg.diph.dwObj        = DIJOFS_Z;
+	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
+#if _DEBUG
+    printf("SetProperty(DIJOFS_Z(SLIDER)) failed\n");
+#endif
+		  create_success = false;
+		  return;
+	  }
   }
   create_success = true;
 }
@@ -338,15 +405,21 @@ void UpdateFields() {
     if(hRes == DIERR_INPUTLOST) {
       lpDIDevice->Acquire();
 #if _DEBUG
-      printf("DIERR_INPUTLOST, reaquiring input\n");
+      printf("DIERR_INPUTLOST, reaquiring input : create_success=%d\n", create_success);
 #endif
     }
     return;
   }
 
   //axis's
-  environment->SetStaticIntField(clsController, fidX, js.lX);
-  environment->SetStaticIntField(clsController, fidY, js.lY);
+  if(hasx) {
+	environment->SetStaticIntField(clsController, fidX, js.lX);
+  }
+
+  if(hasy) {
+	environment->SetStaticIntField(clsController, fidY, js.lY);
+  }
+
   if(hasz) {
     environment->SetStaticIntField(clsController, fidZ, js.lZ);
   }
@@ -361,6 +434,11 @@ void UpdateFields() {
   if(haspov) {
     environment->SetStaticIntField(clsController, fidPOV, js.rgdwPOV[0]);
   }
+
+  //slider
+  if(hasslider) {
+    environment->SetStaticIntField(clsController, fidSlider, js.lZ);
+  }
 }
 
 /**
@@ -370,11 +448,16 @@ void SetCapabilities() {
   //set buttoncount
   environment->SetStaticIntField(clsController, fidButtonCount, buttoncount);
 
-  //set z axis
+  //set axis
+  environment->SetStaticIntField(clsController, fidHasXAxis, hasx);
+  environment->SetStaticIntField(clsController, fidHasYAxis, hasy);
   environment->SetStaticIntField(clsController, fidHasZAxis, hasz);
 
   //set pov
   environment->SetStaticIntField(clsController, fidHasPOV, haspov);
+
+  //set slider
+  environment->SetStaticIntField(clsController, fidHasSlider, hasslider);
 }
 
 /**
@@ -382,11 +465,15 @@ void SetCapabilities() {
  */
 void CacheFields() {
   fidButtonCount  = environment->GetStaticFieldID(clsController, "buttonCount", "I");
+  fidHasXAxis     = environment->GetStaticFieldID(clsController, "hasXAxis", "Z");
+  fidHasYAxis     = environment->GetStaticFieldID(clsController, "hasYAxis", "Z");
   fidHasZAxis     = environment->GetStaticFieldID(clsController, "hasZAxis", "Z");
   fidHasPOV       = environment->GetStaticFieldID(clsController, "hasPOV", "Z");
+  fidHasSlider    = environment->GetStaticFieldID(clsController, "hasSlider", "Z");
   fidButtons      = environment->GetStaticFieldID(clsController, "buttons", "[Z");
   fidX            = environment->GetStaticFieldID(clsController, "x", "I");
   fidY            = environment->GetStaticFieldID(clsController, "y", "I");
   fidZ            = environment->GetStaticFieldID(clsController, "z", "I");
   fidPOV          = environment->GetStaticFieldID(clsController, "pov", "I");
+  fidSlider       = environment->GetStaticFieldID(clsController, "slider", "I");
 }
