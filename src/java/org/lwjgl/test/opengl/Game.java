@@ -45,7 +45,7 @@ import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.input.*;
 
-import java.nio.*;
+import java.nio.*; 
 
 public final class Game {
 	static {
@@ -63,131 +63,131 @@ public final class Game {
 			}
 
 			//select above found displaymode
-			Display.create(modes[mode], false);
+			Display.create(modes[mode], false, "LWJGL Game Example");
 			System.out.println("Created display.");
 		} catch (Exception e) {
 			System.err.println("Failed to create display due to " + e);
 			System.exit(1);
 		}
 	}
-
-	public static final GL gl = new GL();
-	public static final GLU glu = new GLU(gl);
-
-	static {
-		try {
-			gl.create();
-			System.out.println("Created OpenGL.");
-		} catch (Exception e) {
-			System.err.println("Failed to create OpenGL due to " + e);
-			System.exit(1);
-		}
-	}
-
-	/** Is the game finished? */
-	private static boolean finished;
-
-	/** A rotating square! */
-	private static float angle;
-
-	/**
-	  * No construction allowed
-	  */
-	private Game() {
-	}
-
-	public static void main(String[] arguments) {
-		try {
-			init();
-			while (!finished) {
-				Keyboard.poll();
-
-				mainLoop();
-
-				render();
-
-				gl.swapBuffers();
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		} finally {
-			cleanup();
-		}
-	}
-
-	/**
-	  * All calculations are done in here
-	  */
-	private static void mainLoop() {
-		angle += 1f;
-		if (angle > 360.0f)
-			angle = 0.0f;
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-			finished = true;
-		}
-	}
-
-	/**
-	  * All rendering is done in here
-	  */
-	private static void render() {
-		gl.clear(GL.COLOR_BUFFER_BIT);
-		gl.pushMatrix();
-		gl.translatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
-		gl.rotatef(angle, 0, 0, 1.0f);
-		gl.begin(GL.QUADS);
-		{
-			gl.vertex2i(-50, -50);
-			gl.vertex2i(50, -50);
-			gl.vertex2i(50, 50);
-			gl.vertex2i(-50, 50);
-		}
-		gl.end();
-		gl.popMatrix();
-	}
-
-	/**
-	  * Initialize
-	  */
-	private static void init() throws Exception {
-    System.out.println("Press the ESCAPE key to exit");
-    
-		Keyboard.create();
-
-		//reset time
-		Sys.setTime(0);
-
-		//set priority of this process
-		Sys.setProcessPriority(Sys.LOW_PRIORITY);
-
-		//print timer resolution info
-		System.out.println("Timer resolution: " + Sys.getTimerResolution() + " ticks per second");
-
-		// Go into orthographic projection mode.
-		gl.matrixMode(GL.PROJECTION);
-		gl.loadIdentity();
-		glu.ortho2D(0, Display.getWidth(), 0, Display.getHeight());
-		gl.matrixMode(GL.MODELVIEW);
-		gl.loadIdentity();
-		gl.viewport(0, 0, Display.getWidth(), Display.getHeight());
-
-		//lets print out some info
-		ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(4);
-		num_tex_units_buf.order(ByteOrder.nativeOrder());
-		int buf_addr = Sys.getDirectBufferAddress(num_tex_units_buf);
-		gl.getIntegerv(GL.MAX_TEXTURE_UNITS_ARB, buf_addr);
-
-		System.out.println(
-			"Number of texture units: " + num_tex_units_buf.getInt());
-	}
-
-	/**
-	  * Cleanup
-	  */
-	private static void cleanup() {
-		Keyboard.destroy();
-		gl.destroy();
-		Display.destroy();
-	}
-}
+ 
+    public static final GL gl = new GL();
+    public static final GLU glu = new GLU(gl);
+     static {
+         try {
+             gl.create();
+             System.out.println("Created OpenGL.");
+         } catch (Exception e) {
+             System.err.println("Failed to create OpenGL due to "+e);
+             System.exit(1);
+         }
+     }
+ 
+    /** Is the game finished? */
+     private static boolean finished;
+ 
+    /** A rotating square! */
+     private static float angle;
+ 
+    /**
+      * No construction allowed
+      */
+     private Game() {
+     }
+ 
+    public static void main(String[] arguments) {
+         try {
+             init();
+             while (!finished) {
+//                 Keyboard.poll();
+                 mainLoop();
+                 render();
+                 gl.swapBuffers();
+             }   
+         } catch (Throwable t) {
+             t.printStackTrace();
+         } finally {
+             cleanup();
+         }
+     }
+ 
+    /**
+      * All calculations are done in here
+      */
+     private static void mainLoop() {
+         angle += 1f;
+         if (angle > 360.0f)
+             angle = 0.0f;
+ 
+        Mouse.poll();
+        if (Mouse.dx != 0 || Mouse.dy != 0 || Mouse.dz != 0)
+            System.out.println("Mouse moved " + Mouse.dx + " " + Mouse.dy + " " + Mouse.dz);
+        for (int i = 0; i < 8; i++)
+            if (Mouse.isButtonDown(i))
+                System.out.println("Button " + i + " down");
+/*        Keyboard.poll(); 
+        if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+             finished = true;*/
+        Keyboard.read();
+        for (int i = 0; i < Keyboard.getNumKeyboardEvents(); i++) {
+            Keyboard.next();
+            if (Keyboard.key == Keyboard.KEY_ESCAPE && Keyboard.state)
+                finished = true;
+            if (Keyboard.key == Keyboard.KEY_T && Keyboard.state)
+                System.out.println("Current time: " + Sys.getTime());
+        }
+     }
+ 
+    /**
+      * All rendering is done in here
+      */
+     private static void render() {
+         gl.clear(GL.COLOR_BUFFER_BIT);
+         gl.pushMatrix();
+         gl.translatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+         gl.rotatef(angle, 0, 0, 1.0f);
+         gl.begin(GL.QUADS);
+         gl.vertex2i(-50, -50);
+         gl.vertex2i(50, -50);
+         gl.vertex2i(50, 50);
+         gl.vertex2i(-50, 50);
+         gl.end();
+         gl.popMatrix();
+     }
+ 
+    /**
+      * Initialize
+      */
+     private static void init() throws Exception {
+         Keyboard.create();
+         Keyboard.enableBuffer();
+         Mouse.create();
+         Sys.setTime(0);
+         Sys.setProcessPriority(Sys.HIGH_PRIORITY);
+         System.out.println("Timer resolution: " + Sys.getTimerResolution());
+         // Go into orthographic projection mode.
+         gl.matrixMode(GL.PROJECTION);
+         gl.loadIdentity();
+         glu.ortho2D(0, Display.getWidth(), 0, Display.getHeight());
+         gl.matrixMode(GL.MODELVIEW);
+         gl.loadIdentity();
+         gl.viewport(0, 0, Display.getWidth(), Display.getHeight());
+         ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(4);
+         num_tex_units_buf.order(ByteOrder.nativeOrder());
+         int buf_addr = Sys.getDirectBufferAddress(num_tex_units_buf);
+         gl.getIntegerv(GL.MAX_TEXTURE_UNITS_ARB, buf_addr);
+         System.out.println("Number of texture units: " + num_tex_units_buf.getInt());
+         // Fix the refresh rate to the display frequency.
+//         gl.wglSwapIntervalEXT(1);
+     }
+ 
+    /**
+      * Cleanup
+      */
+     private static void cleanup() {
+         Keyboard.destroy();
+         Mouse.destroy();
+         gl.destroy();
+         Display.destroy();
+     }
+ }

@@ -112,6 +112,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 							WPARAM wParam,
 							LPARAM lParam)
 {
+
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
 		case WM_SYSCOMMAND:
@@ -119,14 +120,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 			switch (wParam) {
 			case SC_SCREENSAVE:
 			case SC_MONITORPOWER:
-				return 0;
+				return 0L;
 				break;
 			default:
 				break;
 			}
 		}
-		case WM_PAINT:
-			return 0;
 	}
 
 	// default action
@@ -235,7 +234,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
   (JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq,
-  jint alphaBits, jint depthBits, jint stencilBits, jboolean fullscreen)
+  jint alphaBits, jint depthBits, jint stencilBits, jboolean fullscreen, jstring title)
 {
 #ifdef _DEBUG
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
@@ -269,29 +268,37 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		oneShotInitialised = true;
 	}
 
-	int windowflags;
+	int exstyle, windowflags;
 
 	if (fullscreen) {
-		windowflags = WS_POPUP;
+		exstyle = WS_EX_TOPMOST;
+		windowflags = WS_POPUP | WS_VISIBLE;
 	} else {
-		windowflags = WS_POPUP | WS_CAPTION;
+		exstyle = 0;
+		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_VISIBLE;
 	}
 
+	const char* titleString = env->GetStringUTFChars(title, NULL);
+
 	// Create the window now, using that class:
-	hwnd = CreateWindow(
-		WINDOWCLASSNAME,
-		"LWJGL",
-		windowflags,
-		0, 0,
-		width, height,
-		NULL,
-		NULL,
-		dll_handle,
-		NULL);
+	hwnd = CreateWindowEx (
+		 exstyle, 
+		 WINDOWCLASSNAME,
+		 titleString,
+		 windowflags,
+		 0, 0, width, height,
+		 NULL,
+		 NULL,
+		 dll_handle,
+		 NULL);
+	env->ReleaseStringUTFChars(title, titleString);
+
 	// And we never look at windowClass again...
 
 	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
+	SetForegroundWindow(hwnd);
+	SetFocus(hwnd);
 
 	hdc = GetWindowDC(hwnd);  
 

@@ -80,14 +80,16 @@ public final class Display {
 	 * already created then no action is taken - the display must first be
 	 * destroyed.
 	 * 
-	 * @param displayMode a display mode to choose
-	 * @param fullscreen whether to create the display fullscreen
+	 * @param displayMode A display mode to choose
+	 * @param fullscreen Whether to create the display fullscreen
+	 * @param title The title for the application
 	 * @throws Exception if the display mode could not be set
 	 * @see #destroy()
 	 */
 	public static void create(
 		DisplayMode displayMode,
-		boolean fullscreen)
+		boolean fullscreen,
+		String title)
 		throws Exception {
 
 		if (created)
@@ -100,7 +102,8 @@ public final class Display {
 			displayMode.alpha,
 			displayMode.depth,
 			displayMode.stencil,
-			fullscreen))
+			fullscreen,
+			title))
 			throw new Exception("Failed to set display mode to " + displayMode);
 
 		created = true;
@@ -121,7 +124,8 @@ public final class Display {
 		int alpha_bits,
 		int depth_bits,
 		int stencil_bits,
-		boolean fullscreen);
+		boolean fullscreen,
+		String title);
 
 	/**
 	 * Destroy the display and return it to normal. If the display has not yet

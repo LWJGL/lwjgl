@@ -98,7 +98,7 @@ public class ALCTest extends BasicTest {
         alc.processContext(context);
 
         //suspend
-        alc.suspendContext(context);
+       // alc.suspendContext(context);
         
         //query        
         System.out.println("DEFAULT_DEVICE_SPECIFIER: " + alc.getString(device, ALC.DEFAULT_DEVICE_SPECIFIER));
