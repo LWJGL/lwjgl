@@ -99,7 +99,7 @@ public final class Sys {
 	/**
 	 * @return the name of the native library to load
 	 */
-	public static String getLibraryName() {
+	private static String getLibraryName() {
 		return LIBRARY_NAME;
 	}
 
