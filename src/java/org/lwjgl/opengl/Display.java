@@ -93,6 +93,7 @@ public final class Display {
 		Sys.initialize();
 		display_impl = createDisplayImplementation();
 		current_mode = initial_mode = display_impl.init();
+		Sys.log("Initial mode: " + initial_mode);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				reset();
