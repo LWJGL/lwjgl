@@ -240,13 +240,14 @@ void handleMessages(void)
 	MSG msg;
 	while (PeekMessage(
 		&msg,         // message information
-		display_hwnd,           // handle to window
+		NULL,           // handle to window
 		0,  // first message
 		0,  // last message
 		PM_REMOVE      // removal options
 		))
 	{
-      	DispatchMessage(&msg);
+		if (display_hwnd != NULL && msg.hwnd == display_hwnd)
+	      	DispatchMessage(&msg);
 	};
 }
 
