@@ -431,6 +431,26 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilGetBoolean(JNIEnv *env, jcl
 
 /*
  * Class:     org_lwjgl_devil_IL
+ * Method:    nilGetBooleanv
+ * Signature: (ILjava/nio/ByteBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilGetBooleanv(JNIEnv *env, jclass clazz, jint mode, jobject param, jint param_offset) {
+    ILboolean *nParam = (ILboolean *) safeGetBufferAddress(env, param) + param_offset;
+    ilGetBooleanv(mode, nParam);
+}
+
+/*
+ * Class:     org_lwjgl_devil_IL
+ * Method:    nilGetIntegerv
+ * Signature: (ILjava/nio/IntBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilGetIntegerv(JNIEnv *env, jclass clazz, jint mode, jobject param, jint param_offset) {
+    ILint *nParam = (ILint *) safeGetBufferAddress(env, param) + param_offset;
+    ilGetIntegerv(mode, nParam);
+}
+
+/*
+ * Class:     org_lwjgl_devil_IL
  * Method:    ilGetData
  * Signature: ()[B
  */

@@ -351,6 +351,15 @@ public class IL {
 	public static native void ilModAlpha(int AlphaValue);
 	public static native void ilSetAlpha(int AlphaValue);
 	public static native boolean ilGetBoolean(int Mode);
+  public static void ilGetBooleanv(int mode, ByteBuffer param) {
+    nilGetBooleanv(mode, param, param.position());
+  }
+  private static native void nilGetBooleanv(int mode, ByteBuffer param, int position);
+  public static void ilGetIntegerv(int mode, IntBuffer param) {
+    nilGetIntegerv(mode, param, param.position());
+  }
+  private static native void nilGetIntegerv(int mode, IntBuffer param, int position);
+
 	public static native ByteBuffer ilGetData();
 	public static native int ilGetError();
 	public static native int ilGetInteger(int mode);
@@ -534,31 +543,23 @@ public class IL {
 	}
 	
 	//    public static native int ilGetDXTCData(ILvoid *Buffer, int BufferSize, int DXTCFormat);
-	//    public static native void ilGetBooleanv(int Mode, boolean *Param);
-	//    public static native void ilGetIntegerv(int Mode, int *Param);
-	// ilIsValidF() uses a Windows file handle so will not be implemented
 	//    public static native boolean ilIsValidF(int Type, ILHANDLE File);
-	// ilLoadF() uses a Windows file handle so will not be implemented
 	//    public static native boolean ilLoadF(int Type, ILHANDLE File);
-	// ilSaveF() uses a Windows file handle so will not be implemented
-	//    public static native int ilSaveF(int Type, ILHANDLE File);
+  //    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);
+  //    public static native int ilSaveF(int Type, ILHANDLE File);
 	//    public static native void ilRegisterFormat(int Format);
 	//    public static native boolean ilRegisterLoad(String Ext, IL_LOADPROC Load);
 	//    public static native boolean ilRegisterMipNum(int Num);
 	//    public static native boolean ilRegisterNumImages(int Num);
 	//    public static native void ilRegisterOrigin(int Origin);
-	//    public static void ilRegisterPal(ByteBuffer Pal, int Size, int Type) {
-	//        BufferChecks.checkDirect(Pal);
-	//        nilRegisterPal(Pal, Pal.position(), Size, Type);
-	//    }
+	//    public static void ilRegisterPal(ByteBuffer Pal, int Size, int Type);
 	//    public static native void nilRegisterPal(ByteBuffer Pal, int pal_position, int Size, int Type);
 	//    public static native boolean ilRegisterSave(String Ext, IL_SAVEPROC Save);
 	//    public static native void ilRegisterType(int Type);
 	//    public static native void ilSetMemory(mAlloc, mFree);
 	//    public static native void ilSetRead(fOpenRProc, fCloseRProc, fEofProc, fGetcProc, fReadProc, fSeekRProc, fTellRProc);
 	//    public static native void ilSetWrite(fOpenWProc, fCloseWProc, fPutcProc, fSeekWProc, fTellWProc, fWriteProc);
-	//    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);	
-	
+
 
 	static {
 		System.loadLibrary("lwjgl-devil");
