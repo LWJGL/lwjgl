@@ -46,8 +46,13 @@
 		<exclude name="**.*" />
 		<include name="org/lwjgl/fmod3/**" />
 	</fileset>
-
-
+	
+	<!-- Files to include in the lwjgl_devil.jar file -->
+	<fileset id="lwjgl_devil.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/devil/**"/>
+	</fileset>
+	
 	<!-- Files to make Javadoc from -->
 	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}/java">
 		<include name="**/*.java" />
@@ -140,6 +145,24 @@
 		<antcall target="-internal_clean" />
 	</target>
 
+	<!-- Performs all the tasks needed for a distribution of LWJGL -->
+	<target name="non-javadoc-build" description="Compile. Make jars. Javadoc and distribute">
+  
+	    <!-- Though we perform all targets, we do it in somewhat mixed. -->
+	    <!-- This is because we want the 'distribution_application' target to be -->
+	    <!-- executed as soon as possible, since this target is most likely to fail. -->
+	    <!-- That way we don't spend time doing javadocs, if the 'distribution_application' -->
+	    <!-- target is going to fail anyway. However we cannot call the 'distribution' before -->
+	    <!-- the javadoc target, since the 'distribution' target will try to create the javadoc -->
+	    <!-- archive. -->
+		<antcall target="clean"/>
+		<antcall target="-initialize"/>
+		<antcall target="compile_java"/>
+		<antcall target="compile_native"/>
+		<antcall target="-jars"/>
+		<antcall target="-distribution_application"/>
+	</target>
+
 	<!-- Cleans up any files created during the execution of this script -->
 	<target name="clean" description="Cleans the diectories controlled by this ant script">
 		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder" />
@@ -161,6 +184,7 @@
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" source="1.4" target="1.4" taskname="examples" />
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/**" source="1.4" target="1.4" taskname="util" />
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/fmod3/**" source="1.4" target="1.4" taskname="fmod" />
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/devil/**" source="1.4" target="1.4" taskname="devil" debug="on"/>
 	</target>
 
 	<!-- Compiles the native files -->
@@ -194,17 +218,23 @@
 		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
 			<arg line="/c build-fmod.bat" />
 		</exec>
-
+		
+		<!-- build devil -->
+		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
+			<arg line="/c build-devil.bat"/>
+		</exec>
+		
 		<!-- optimize using upx -->
 		<!-- <exec dir="${lwjgl.lib}" executable="upx">
 			<arg line="-9 -f win32/*.dll"/>
 		</exec> -->
 
 		<!-- copy to libs -->
-		<move file="platform_build/win32_ms_cmdline/lwjgl.dll" tofile="${lwjgl.lib}/lwjgl.dll" />
-		<move file="platform_build/win32_ms_cmdline/lwjgl-fmod3.dll" tofile="${lwjgl.lib}/lwjgl-fmod3.dll" />
-	</target>
-
+		<move file="platform_build/win32_ms_cmdline/lwjgl.dll" tofile="${lwjgl.lib}/lwjgl.dll"/>
+		<move file="platform_build/win32_ms_cmdline/lwjgl-fmod3.dll" tofile="${lwjgl.lib}/lwjgl-fmod3.dll"/>
+		<move file="platform_build/win32_ms_cmdline/lwjgl-devil.dll" tofile="${lwjgl.lib}/lwjgl-devil.dll"/>
+	</target>	
+	
 	<!-- Compiles LWJGL on Linux platforms -->
 	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<echo>Compiling Linux LWJGL version</echo>
@@ -228,6 +258,11 @@
 		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.lib}/lwjgl.jar" taskname="lwjgl.jar">
 			<fileset refid="lwjgl.fileset" />
+		</jar>
+		
+  		<!-- Create lwjgl.jar -->
+		<jar destfile="${lwjgl.lib}/lwjgl_devil.jar" taskname="lwjgl_devil.jar">
+			<fileset refid="lwjgl_devil.fileset"/>
 		</jar>
 
 		<!-- Create lwjgl_test.jar -->
@@ -311,6 +346,11 @@
 			<class name="org.lwjgl.fmod3.FMOD" />
 			<class name="org.lwjgl.fmod3.FMusic" />
 			<class name="org.lwjgl.fmod3.FSound" />
+		</javah>
+		
+		<!-- devil -->
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/devil" force="yes">
+			<class name="org.lwjgl.devil.IL"/>
 		</javah>
 	</target>
 
