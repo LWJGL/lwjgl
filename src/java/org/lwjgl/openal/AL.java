@@ -84,7 +84,6 @@ public abstract class AL {
 	 * Native method to create AL instance
 	 * 
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
-	 * @return true if the AL creation process succeeded
 	 */
 	protected static native void nCreate(String[] oalPaths) throws LWJGLException;
 

@@ -345,7 +345,11 @@ public class FSound {
    * PlayStation 2 NOTE! This function takes IOP function pointers, not EE pointers! It is for custom IOP file systems not EE based ones.
    * This function can only be called after FSOUND_Init on PlayStation 2, not before
    * </p>
-   * @param callback
+   * @param open Open callback
+   * @param close Close callback
+   * @param read Read callback
+   * @param seek Seek callback
+   * @param tell Tell callback
    */
 	public static void FSOUND_File_SetCallbacks(
       FSoundOpenCallback open, FSoundCloseCallback close, FSoundReadCallback read,
@@ -916,13 +920,13 @@ public class FSound {
    * </p> 
    * @param index Sample pool index. See remarks for more on the sample pool.
    * 0 or above - The absolute index into the sample pool. The pool will grow as the index gets larger. If a slot is already used it will be replaced.
-   * FSOUND_FREE - Let FSOUND select an arbitrary sample slot. 
+   * FSOUND_FREE - Let FSOUND select an arbitrary sample slot.
    * FSOUND_UNMANAGED - Dont have this sample managed within fsounds sample management system
-   * @param data Name of sound file or ByteBuffer to memory image to load.
-   * @param inputmode Description of the data format, OR in the bits defined in FSOUND_MODES to describe the data being loaded
-   * @param offset Optional. 0 by default. If &lt; 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used
-   * @param length Optional. 0 by default. If &lt; 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading
-   * @return
+   * @param name_or_data Name of sound file or pointer to memory image to load.
+   * @param inputmode Description of the data format, OR in the bits defined in FSOUND_MODES to describe the data being loaded.
+   * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used.
+   * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading.
+   * @return On success, a sample is returned. On failure, NULL is returned.
    */
   public static FSoundSample FSOUND_Sample_Load(int index, ByteBuffer name_or_data, int inputmode, int offset, int length) {
     long result = 0;
@@ -955,7 +959,7 @@ public class FSound {
    * @param sample sample definition
    * @param offset Offset in BYTES to the position you want to lock in the sample buffer.
    * @param length Number of BYTES you want to lock in the sample buffer.
-   * @param Sample lock object to contain lock info
+   * @param lock lock object to contain lock info
    * @return On success, true is is returned. On failure, false is returned.
    */
   public static boolean FSOUND_Sample_Lock(FSoundSample sample, int offset, int length, FSoundSampleLock lock) {
@@ -1396,7 +1400,7 @@ public class FSound {
    * @param surround Toggle value - TRUE enables surround sound on the channel, FALSE disables it. 
    * @return On success, TRUE is returned. On failure, FALSE is returned
    */
-  public static native boolean FSOUND_SetSurround(int channel, boolean sorround);  
+  public static native boolean FSOUND_SetSurround(int channel, boolean surround);  
   
   /**
    * Sets a channels volume linearly.
@@ -1518,7 +1522,7 @@ public class FSound {
    * @param offset The offset in SAMPLES from the start of the sound for the position to be set to.
    * @return On success, TRUE is returned. On failure, FALSE is returned.
    */
-  public static native boolean FSOUND_SetCurrentPosition(int channel, int pos);  
+  public static native boolean FSOUND_SetCurrentPosition(int channel, int offset);  
   
   /**
    * Returns the current playcursor position of the specified channel
@@ -1581,7 +1585,7 @@ public class FSound {
    * <b>Remarks</b>
    * This works for all channel types, whereas setting it will not work.
    * </p>
-   * @param The channel number/handle to get the loop mode from.
+   * @param channel The channel number/handle to get the loop mode from.
    * @return On success, the loop mode is returned. On failure, 0 is returned.
    */
   public static native int FSOUND_GetLoopMode(int channel);
@@ -1712,7 +1716,7 @@ public class FSound {
    * Returns the current min and max distance for a channel
    * 
    * @param channel Channel number/handle to retrieve min and max distance from.
-   * @param min_max_dist FloatBuffer to store min/max -distance.
+   * @param minmax FloatBuffer to store min/max -distance.
    * @return On success, TRUE is returned. On failure, FALSE is returned.
    */
   public static boolean FSOUND_3D_GetMinMaxDistance(int channel, FloatBuffer minmax) {
@@ -1925,7 +1929,7 @@ public class FSound {
    * NOTE: FMOD will always try to use native NTSCSI support to communicate with CD devices before trying to use ASPI. If FMOD is using ASPI then it can only access the first CD device it finds.
    * </p>
    * 
-   * @param name_or_data Name of the file to open, or pointer to data if FSOUND_LOADMEMORY is used.
+   * @param name Name of the file to open, or pointer to data if FSOUND_LOADMEMORY is used.
    * @param mode Simple description of how to play the file. For all formats except raw PCM,
    * FSOUND_LOOP*, FSOUND_HW3D, FSOUND_HW2D, FSOUND_2D, FSOUND_LOADMEMORY, FSOUND_LOADRAW, FSOUND_MPEGACCURATE, FSOUND_NONBLOCKING flags are the only ones supported.
    * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used.
@@ -1939,6 +1943,16 @@ public class FSound {
     }
     return null;    
   }
+  
+  /**
+   * @see #FSOUND_Stream_Open(String, int, int, int)
+   * @param data data when FSOUND_LOADMEMORY is used.
+   * @param mode Simple description of how to play the file. For all formats except raw PCM,
+   * FSOUND_LOOP*, FSOUND_HW3D, FSOUND_HW2D, FSOUND_2D, FSOUND_LOADMEMORY, FSOUND_LOADRAW, FSOUND_MPEGACCURATE, FSOUND_NONBLOCKING flags are the only ones supported.
+   * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used.
+   * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading.
+   * @return On success, a reference to an opened stream is returned. On failure, NULL is returned. 
+   */  
   public static FSoundStream FSOUND_Stream_Open(ByteBuffer data, int mode, int offset, int length) {
     long result = nFSOUND_Stream_Open(data, data.position(), mode, offset, length);
     if(result != 0) {
@@ -2070,9 +2084,10 @@ public class FSound {
    * 'lenbytes' may be rounded down to the nearest sample alignment in bytes. Ie if you specified 1001 bytes for a 16bit stereo sample stream, len would return 1000 in the callback. (250 samples * 4 bytes per sample)
    * PlayStation 2 IMPORTANT! : if FSOUND_SendData is NOT called from the stream callback the IOP will hang because it is waiting for this command to be executed before it can unlock its buffer.
    * </p>
-   * @param stream The stream to add a sync point to.
-   * @param pcmoffset Offset in SAMPLES (not bytes).
-   * @param name The name of the syncpoint, which will be passed into the sync callback when it is triggered.
+   * @param callbackHandler FSoundStreamCallback to be called back
+   * @param lenbytes Size of the data in BYTES the callback will require to be written to the buffer.
+   * @param mode Description of the raw sample data being opened. see FSOUND_MODES for a description of these modes.
+   * @param samplerate Rate of playback. Be careful you dont set the sample rate too high so that the stream servicer (ie the harddisk) may not keep up.
    * @return On success, a sync point handle is returned. On failure, NULL is returned.
    */
   public static FSoundStream FSOUND_Stream_Create(FSoundStreamCallback callbackHandler, int lenbytes, int mode, int samplerate) {
@@ -2291,8 +2306,9 @@ public class FSound {
    * <b>Remarks</b>
    * Do not attempt to modify or free any pointers returned by this function.
    * If this function returns successfully, "value" will contain a pointer to a piece of tag-field-specific data - do not assume it will always point to a null-terminated ASCII string.
-   * @param point handle to the sync point to retrieve information from
-   * @param pcmoffset An IntBuffer that will receive the sync point offset in pcm SAMPLES. A value of NULL will be ignored 
+   * @param stream The stream to get the tag field from.
+   * @param num The number of the tag field to retrieve.
+   * @param field TagField to receive data
    * @return On success, TRUE is returned. On failure, FALSE is returned. 
    */
   public static boolean FSOUND_Stream_GetTagField(FSoundStream stream, int num, FSoundTagField field) {
@@ -2848,8 +2864,15 @@ public class FSound {
    * system units take cpu-wise, by turning them on and off and seeing how they affect 
    * performance.
    * </p>
-   * @param stream to have its position set
-   * @param index The index of the stream within the FSB file   
+   * @param callbackHandler This is a reference to your DSP Unit callback, of type FSOUND_DSPCALLBACK.
+   * The prototype for a callback is declared in the following fashion.
+   * Callbacks must return a pointer to the buffer you work on, so that
+   * the next dsp unit can work on it. 
+   * See the definition of FSOUND_DSPCALLBACK for more.
+   * @param priority Order in the priority chain. Valid numbers are 0 to 1000, 0 being
+   * highest priority (first), with 1000 being lowest priority (last).
+   * Note that FSOUNDs soundeffects mixers and copy routines are considered
+   * part of this DSP unit chain which you can play with. 
    * @return On success, a new valid DSP unit is returned. On failure, NULL is returned.
    */
   public static FSoundDSPUnit FSOUND_DSP_Create(FSoundDSPCallback callbackHandler, int priority) {
@@ -3132,7 +3155,7 @@ public class FSound {
    * </p>
    * 
    * @param channel Channel number/handle to disable all fx for 
-   * @param fx A single fx enum value to enable certain effects. 
+   * @param fxtype A single fx enum value to enable certain effects. 
    * @return On success, an FX id is returned. On failure, -1 is returned 
    */
   public static native int FSOUND_FX_Enable(int channel, int fxtype);  
@@ -3381,7 +3404,11 @@ public class FSound {
    * To counter this you might adjust the playback frequency of the channel you are playing the record sample on while it plays, using FSOUND_GetCurrentPosition and FSOUND_Record_GetPosition as calibration points.
    * In the recording sample there is an example of trying to play back sound as it records, and the mechanism to try and keep the 2 cursors a safe distance from each other is employed.
    * </p>
-   * @param reverb reference to a FSoundReverbProperties.
+   * @param sample The sample to record into.
+   * @param loop TRUE or FALSE flag whether the recorder should keep recording once it has hit the end,
+   * and start from the start again, therefore creating a continuous recording session into that
+   * sample buffer. Looping the recording buffer is good for realtime processing of recorded
+   * information, as you can record and playback the sample at the same time.
    * @return TRUE or FALSE flag whether the recorder should keep recording once it has hit the end, 
    * and start from the start again, therefore creating a continuous recording session into that 
    * sample buffer. Looping the recording buffer is good for realtime processing of recorded

@@ -277,8 +277,6 @@ public class FMOD {
 
 	/**
    * Native method to create FMOD instance
-   * 
-   * @return true if the FMOD creation process succeeded
    */
   protected static native void nCreate(String[] paths);
   
