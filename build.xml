@@ -8,8 +8,7 @@
   <property name="lwjgl.docs"           value="./doc"/>
   <property name="lwjgl.temp"           value="./temp"/>
   <property name="lwjgl.res"            value="./res"/>
-  <property name="lwjgl.examples"       value="./examples"/>
-  <property name="lwjgl.version"        value="0.6"/>
+  <property name="lwjgl.version"        value="0.7"/>
   <property name="lwjgl.src.headers"    value="${lwjgl.src}/native/common"/>
   
   <!-- Creates a splash screen -->
@@ -66,7 +65,6 @@
        <javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" taskname="opengl"/>
        <javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" taskname="test"/>
        <javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/vector/**" source="1.4" taskname="vector"/>
-       <javac srcdir="${lwjgl.examples}" destdir="${lwjgl.bin}/" includes="**" source="1.4" taskname="examples"/>
   </target>
 
   <target name="package" depends="compile" description="packages the java source files">
@@ -86,26 +84,6 @@
           <include name="org/lwjgl/test/**"/>
         </fileset>
       </jar>
-      
-      <!-- Create examples.jar -->
-      <jar destfile="${lwjgl.lib}/examples.jar" taskname="examples.jar">
-        <fileset dir="${lwjgl.bin}">
-          <include name="**.class"/>
-        </fileset>
-        <fileset dir="${lwjgl.res}">
-          <include name="data/**"/>
-        </fileset>
-      </jar>
-      
-      <!-- copy dll/so to lib directory -->
-      <copy todir="${lwjgl.lib}" taskname="libraries">
-        <fileset dir="${lwjgl.bin}">
-            <include name="win32/lwjgl.dll"/>
-            <include name="win32/lwjgl_d.dll"/>
-            <include name="linux/liblwjgl.so"/>
-            <include name="linux/liblwjgl_d.so"/>
-        </fileset>
-      </copy>
   </target>
   
   <target name="javadoc" description="Creates javadoc from java source code">
@@ -134,7 +112,6 @@
     <fail if="lwjgl.preexistingfiles" message="Cannot perform webbuild from nonempty folder"/>
     <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/build.xml" dest="."/>
     <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/src" dest="."/>
-    <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/examples" dest="."/>
     <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/doc" dest="."/>
     <ant dir="LWJGL" target="package"/>
   </target>  
@@ -143,23 +120,13 @@
     <javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
       <class name="org.lwjgl.Display"/>
       <class name="org.lwjgl.Sys"/>
+      <class name="org.lwjgl.Window"/>
+      
       <class name="org.lwjgl.input.Controller"/>
+      <class name="org.lwjgl.input.Cursor"/>
       <class name="org.lwjgl.input.Keyboard"/>
       <class name="org.lwjgl.input.Mouse"/>
-      <class name="org.lwjgl.Math$MatrixOpAdd$MatrixOpSafe"/>
-      <class name="org.lwjgl.Math$MatrixOpAdd$MatrixOpDirect"/>
-      <class name="org.lwjgl.Math$MatrixOpCopy$MatrixOpSafe"/>
-      <class name="org.lwjgl.Math$MatrixOpCopy$MatrixOpDirect"/>
-      <class name="org.lwjgl.Math$MatrixOpInvert$MatrixOpSafe"/>
-      <class name="org.lwjgl.Math$MatrixOpInvert$MatrixOpDirect"/>
-      <class name="org.lwjgl.Math$MatrixOpMultiply$MatrixOpSafe"/>
-      <class name="org.lwjgl.Math$MatrixOpMultiply$MatrixOpDirect"/>
-      <class name="org.lwjgl.Math$MatrixOpNegate$MatrixOpSafe"/>
-      <class name="org.lwjgl.Math$MatrixOpNegate$MatrixOpDirect"/>
-      <class name="org.lwjgl.Math$MatrixOpNormalise$MatrixOpSafe"/>
-      <class name="org.lwjgl.Math$MatrixOpNormalise$MatrixOpDirect"/>
-      <class name="org.lwjgl.Math$MatrixOpSubtract$MatrixOpSafe"/>
-      <class name="org.lwjgl.Math$MatrixOpSubtract$MatrixOpDirect"/>
+      
       <class name="org.lwjgl.openal.ALC"/>
       <class name="org.lwjgl.openal.BaseAL"/>
       <class name="org.lwjgl.openal.CoreAL"/>
@@ -167,18 +134,24 @@
       <class name="org.lwjgl.openal.eax.CoreEAX"/>
       <class name="org.lwjgl.openal.eax.EAXBufferProperties"/>
       <class name="org.lwjgl.openal.eax.EAXListenerProperties"/>
-      <class name="org.lwjgl.opengl.BaseGL"/>
-      <class name="org.lwjgl.opengl.CoreGL"/>
+      
+      <class name="org.lwjgl.opengl.CoreGL11"/>
+      <class name="org.lwjgl.opengl.CoreGL12"/>
+      <class name="org.lwjgl.opengl.CoreGL13"/>
+      <class name="org.lwjgl.opengl.CoreGL14"/>
       <class name="org.lwjgl.opengl.GL"/>
       <class name="org.lwjgl.opengl.GLU"/>
+      <class name="org.lwjgl.opengl.GLCaps"/>
+      <class name="org.lwjgl.opengl.GLWindow"/>
+      <class name="org.lwjgl.opengl.Pbuffer"/>
     </javah>    
   </target>
   
   <!-- Creates a versioned distribution for all supported platforms -->
   <target name="distribution_application">
     <!-- check for file presence -->
-    <available file="${lwjgl.lib}/OpenAL32.dll" property="lwjgl.OpenAL32_dll.exists"/>
-    <fail unless="lwjgl.OpenAL32_dll.exists" message="Missing OpenAL32.dll in lib directory"/>
+    <available file="${lwjgl.lib}/lwjglaudio.dll" property="lwjgl.lwjglaudio_dll.exists"/>
+    <fail unless="lwjgl.lwjglaudio_dll.exists" message="Missing lwjglaudio.dll in lib directory"/>
     
     <available file="${lwjgl.lib}/libopenal.so" property="lwjgl.libopenal_so.exists"/>
     <fail unless="lwjgl.libopenal_so.exists" message="Missing libopenal.so in lib directory"/>    
@@ -200,9 +173,6 @@
 
     <available file="${lwjgl.lib}/lwjgl_test.jar" property="lwjgl.lwjgl_test_jar.exists"/>
     <fail unless="lwjgl.lwjgl_test_jar.exists" message="Missing lwjgl_test.jar in lib directory"/>
-
-    <available file="${lwjgl.lib}/examples.jar" property="lwjgl.examples_jar.exists"/>
-    <fail unless="lwjgl.examples_jar.exists" message="Missing examples.jar in lib directory"/>
     
     <mkdir dir="${lwjgl.temp}/lwjgl-${lwjgl.version}"/>
     
@@ -211,13 +181,12 @@
       <fileset dir="${lwjgl.lib}/">
         <include name="lwjgl.dll"/>
         <include name="lwjgl_d.dll"/>
-        <include name="OpenAL32.dll"/>
+        <include name="lwjglaudio.dll"/>
         <include name="liblwjgl.so"/>
         <include name="liblwjgl_d.so"/>
         <include name="libopenal.so"/>        
         <include name="lwjgl.jar"/>
         <include name="lwjgl_test.jar"/>
-        <include name="examples.jar"/>
       </fileset>
       <fileset dir="${lwjgl.docs}">
         <include name="CREDITS"/>
@@ -233,8 +202,8 @@
   <!-- Creates a versioned distribution for win32 -->
   <target name="distribution_application_win32">
     <!-- check for file presence -->
-    <available file="${lwjgl.lib}/OpenAL32.dll" property="lwjgl.OpenAL32_dll.exists"/>
-    <fail unless="lwjgl.OpenAL32_dll.exists" message="Missing OpenAL32.dll in lib directory"/>
+    <available file="${lwjgl.lib}/lwjglaudio.dll" property="lwjgl.lwjglaudio_dll.exists"/>
+    <fail unless="lwjgl.lwjglaudio_dll.exists" message="Missing lwjglaudio.dll in lib directory"/>
     
     <available file="${lwjgl.lib}/lwjgl.dll" property="lwjgl.lwjgl_dll.exists"/>
     <fail unless="lwjgl.lwjgl_dll.exists" message="Missing lwjgl.dll in lib directory"/>
@@ -247,9 +216,6 @@
 
     <available file="${lwjgl.lib}/lwjgl_test.jar" property="lwjgl.lwjgl_test_jar.exists"/>
     <fail unless="lwjgl.lwjgl_test_jar.exists" message="Missing lwjgl_test.jar in lib directory"/>
-
-    <available file="${lwjgl.lib}/examples.jar" property="lwjgl.examples_jar.exists"/>
-    <fail unless="lwjgl.examples_jar.exists" message="Missing examples.jar in lib directory"/>
     
     <mkdir dir="${lwjgl.temp}/lwjgl-${lwjgl.version}"/>
     
@@ -258,10 +224,9 @@
       <fileset dir="${lwjgl.lib}/">
         <include name="lwjgl.dll"/>
         <include name="lwjgl_d.dll"/>
-        <include name="OpenAL32.dll"/>
+        <include name="lwjglaudio.dll"/>
         <include name="lwjgl.jar"/>
         <include name="lwjgl_test.jar"/>
-        <include name="examples.jar"/>
       </fileset>
       <fileset dir="${lwjgl.docs}">
         <include name="CREDITS"/>
@@ -291,9 +256,6 @@
 
     <available file="${lwjgl.lib}/lwjgl_test.jar" property="lwjgl.lwjgl_test_jar.exists"/>
     <fail unless="lwjgl.lwjgl_test_jar.exists" message="Missing lwjgl_test.jar in lib directory"/>
-
-    <available file="${lwjgl.lib}/examples.jar" property="lwjgl.examples_jar.exists"/>
-    <fail unless="lwjgl.examples_jar.exists" message="Missing examples.jar in lib directory"/>
     
     <mkdir dir="${lwjgl.temp}/lwjgl-${lwjgl.version}"/>
     
@@ -305,7 +267,6 @@
         <include name="libopenal.so"/>
         <include name="lwjgl.jar"/>
         <include name="lwjgl_test.jar"/>
-        <include name="examples.jar"/>
       </fileset>
       <fileset dir="${lwjgl.docs}">
         <include name="CREDITS"/>
@@ -337,13 +298,6 @@
           <exclude name="**/.*"/>
         </patternset>        
       </fileset>    
-		<fileset dir=".">
-        <patternset>
-          <include name="examples/*.java"/>
-          <exclude name="**/*CVS*"/>
-          <exclude name="**/.*"/>
-        </patternset>        
-      </fileset>          
     </zip>
   </target>
   
