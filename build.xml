@@ -31,6 +31,12 @@
 		<include name="org/lwjgl/test/**"/>
 	</fileset>  
 
+	<!-- Files to include in the lwjgl_util.jar file -->
+	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/util/**"/>
+	</fileset>  
+
 	<!-- Files to make Javadoc from -->
 	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}/java">
 		<include name="**/*.java" />
@@ -149,6 +155,7 @@
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" taskname="opengl"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/vector/**" source="1.4" taskname="vector"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" taskname="test"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/**" source="1.4" taskname="util"/>
 	</target>
 	
 	<!-- Compiles the native files -->
@@ -208,6 +215,11 @@
 		<!-- Create lwjgl_test.jar -->
 		<jar destfile="${lwjgl.lib}/lwjgl_test.jar" taskname="lwjgl_test.jar">
 			<fileset refid="lwjgl_test.fileset"/>
+		</jar>
+
+		<!-- Create lwjgl_util.jar -->
+		<jar destfile="${lwjgl.lib}/lwjgl_util.jar" taskname="lwjgl_util.jar">
+			<fileset refid="lwjgl_util.fileset"/>
 		</jar>
 	</target>
   
