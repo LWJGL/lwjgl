@@ -189,8 +189,7 @@ public abstract class AL {
 				context = ALC.alcCreateContext(device.device,
 						ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized));
 			}
-			if (ALC.alcMakeContextCurrent(context.context) != 0)
-				throw new LWJGLException("Could not make ALC context current");
+			ALC.alcMakeContextCurrent(context.context);
 			created = true;
 		} catch (LWJGLException e) {
 			destroy();
