@@ -43,6 +43,7 @@
 #define DIRECTINPUT_VERSION 0x0300
 #include "Window.h"
 #include <dinput.h>
+#include "org_lwjgl_opengl_Win32Display.h"
 #include "org_lwjgl_input_Keyboard.h"
 
 #include "common_tools.h"
@@ -57,13 +58,8 @@ static bool translationEnabled;
 
 static bool useUnicode;
 
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    nCreate
- * Signature: ()Z
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
+  (JNIEnv * env, jobject self)
 {
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
@@ -112,8 +108,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyKeyboard
+  (JNIEnv * env, jobject self)
 {
 	// Release keyboard
 	if (lpdiKeyboard != NULL) {
@@ -134,8 +130,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
  * Method:    nPoll
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
-  (JNIEnv * env, jclass clazz, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollKeyboard
+  (JNIEnv * env, jobject self, jobject buffer)
 {
 	HRESULT ret;
 	do {
@@ -166,8 +162,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 	lpdiKeyboard->GetDeviceState((DWORD)buffer_size, keyboardBuffer);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
-  (JNIEnv * env, jclass clazz, jobject buffer_obj, jint buffer_position)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
+  (JNIEnv * env, jobject self, jobject buffer_obj, jint buffer_position)
 {
 	static DIDEVICEOBJECTDATA rgdod[KEYBOARD_BUFFER_SIZE];
 	wchar_t transBufUnicode[KEYBOARD_BUFFER_SIZE];
@@ -272,8 +268,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
  * Method:    nEnableTranslation
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
-  (JNIEnv *, jclass)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableTranslation
+  (JNIEnv *env, jobject self)
 {
 	// We can't do translation on DOS boxes it seems so we'll have to throw a wobbler
 	// here:
@@ -290,12 +286,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
 	translationEnabled = true;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableKeyboardBuffer
+  (JNIEnv * env, jobject self)
 {
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet(JNIEnv *env, jclass clazz, jint key)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_isStateKeySet(JNIEnv *env, jobject self, jint key)
 {
   int state = org_lwjgl_input_Keyboard_STATE_UNKNOWN;
   switch(key) {

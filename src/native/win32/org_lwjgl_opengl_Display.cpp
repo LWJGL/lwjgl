@@ -46,7 +46,7 @@
 #include "common_tools.h"
 #include "extgl_wgl.h"
 #include "display.h"
-#include "org_lwjgl_opengl_Display.h"
+#include "org_lwjgl_opengl_Win32Display.h"
 
 static bool				oneShotInitialised = false;     // Registers the LWJGL window class
 
@@ -525,8 +525,8 @@ HWND createWindow(int x, int y, int width, int height, bool fullscreen, bool und
  * Method:    nSetTitle
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
-  (JNIEnv * env, jclass clazz, jstring title_obj)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setTitle
+  (JNIEnv * env, jobject self, jstring title_obj)
 {
 	const char * title = env->GetStringUTFChars(title_obj, NULL);
 	SetWindowText(display_hwnd, title);
@@ -538,8 +538,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
  * Method:    update
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_update
+  (JNIEnv * env, jobject self)
 {
 	handleMessages();
 }
@@ -550,8 +550,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
  * Method:    swapBuffers
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_swapBuffers
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_swapBuffers
+  (JNIEnv * env, jobject self)
 {
 	isDirty = false;
 	SwapBuffers(display_hdc);
@@ -562,8 +562,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_swapBuffers
  * Method:    nIsDirty
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsDirty
-  (JNIEnv *env, jclass clazz) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isDirty
+  (JNIEnv *env, jobject self) {
 	bool result = isDirty;
 	isDirty = false;
 	return result ? JNI_TRUE : JNI_FALSE;
@@ -574,8 +574,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsDirty
  * Method:    nIsVisible
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsVisible
-  (JNIEnv *env, jclass clazz) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isVisible
+  (JNIEnv *env, jobject self) {
 	return isMinimized ? JNI_FALSE : JNI_TRUE;
 }
 
@@ -584,8 +584,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsVisible
  * Method:    nIsCloseRequested
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsCloseRequested
-  (JNIEnv *, jclass) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isCloseRequested
+  (JNIEnv *env, jobject self) {
 	bool saved = closerequested;
 	closerequested = false;
 	return saved;
@@ -596,8 +596,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsCloseRequested
  * Method:    nIsActive
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsActive
-  (JNIEnv *env, jclass clazz) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isActive
+  (JNIEnv *env, jobject self) {
 	return isFocused;
 }
 
@@ -606,8 +606,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsActive
  * Method:    nSetVSyncEnabled
  * Signature: (Z)Z
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetVSyncEnabled
-  (JNIEnv * env, jclass clazz, jboolean sync)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setVSyncEnabled
+  (JNIEnv * env, jobject self, jboolean sync)
 {
 	if (extgl_Extensions.WGL_EXT_swap_control) {
 		if (sync == JNI_TRUE) {
@@ -618,19 +618,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetVSyncEnabled
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
-  (JNIEnv *env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_makeCurrent
+  (JNIEnv *env, jobject self)
 {
 	BOOL result = wglMakeCurrent(display_hdc, display_hglrc);
 	if (!result)
 		throwException(env, "Could not make display context current");
 }
 
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Display_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz) {
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Win32Display_getAvailableDisplayModes(JNIEnv *env, jobject self) {
 	return getAvailableDisplayModes(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen, jint x, jint y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y) {
 	closerequested = false;
 	isMinimized = false;
 	isFocused = true;
@@ -668,35 +668,35 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, 
 	SetFocus(display_hwnd);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nDestroyWindow(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyWindow(JNIEnv *env, jobject self) {
 	closeWindow(display_hwnd, display_hdc);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jobject mode) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_switchDisplayMode(JNIEnv *env, jobject self, jobject mode) {
 	switchDisplayMode(env, mode);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_resetDisplayMode(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_resetDisplayMode(JNIEnv *env, jobject self) {
 	resetDisplayMode(env);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getGammaRampLength(JNIEnv *env, jobject self) {
 	return getGammaRampLength();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setGammaRamp(JNIEnv *env, jobject self, jobject gamma_buffer) {
 	setGammaRamp(env, gamma_buffer);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getAdapter(JNIEnv *env, jclass clazz) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_getAdapter(JNIEnv *env, jobject self) {
 	return getAdapter(env);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getVersion(JNIEnv *env, jclass clazz) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Win32Display_getVersion(JNIEnv *env, jobject self) {
 	return getVersion(env);
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Display_init(JNIEnv *env, jclass clazz) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_init(JNIEnv *env, jobject self) {
 	return initDisplay(env);
 }
 
@@ -727,7 +727,7 @@ static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_f
 	return true;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *env, jobject self, jobject pixel_format) {
 	HWND dummy_hwnd = createWindow(0, 0, 1, 1, false, false);
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
@@ -775,7 +775,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		closeWindow(dummy_hwnd, dummy_hdc);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyContext(JNIEnv *env, jobject self) {
 	wglMakeCurrent(NULL, NULL);
 
 	// Delete the rendering context
@@ -786,7 +786,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env,
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nReshape(JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_reshape(JNIEnv *env, jobject self, jint x, jint y, jint width, jint height) {
 	if (isFullScreen) {
 		return;
 	}

@@ -44,6 +44,7 @@
 #include "Window.h"
 #include <dinput.h>
 #include "common_tools.h"
+#include "org_lwjgl_opengl_Win32Display.h"
 #include "org_lwjgl_input_Mouse.h"
 
 extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
@@ -77,7 +78,7 @@ void ShutdownMouse();
 void CreateMouse();
 void SetupMouse();
 void InitializeMouseFields();
-void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj);
+void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject button_buffer_obj);
 
 static bool putMouseEvent(jint button, jint state, jint dx, jint dy, jint dz) {
 	jint event[] = {button, state, dx, -dy, dz};
@@ -95,18 +96,18 @@ static void resetCursorPos(void) {
 	accum_dx = accum_dy = 0;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_hasWheel(JNIEnv *env, jobject self) {
 	return mHaswheel;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jclass) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getButtonCount(JNIEnv *env, jobject self) {
 	return mButtoncount;
 }
 
 /**
  * Called when the Mouse instance is to be created
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *env, jobject self) {
 	HRESULT hr;
 
 	initEventQueue(&event_queue, 5);
@@ -149,7 +150,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableMouseBuffer(JNIEnv * env, jobject self) {
 	buffer_enabled = true;
 }
 
@@ -251,8 +252,8 @@ static void readDXBuffer()
 	}
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
-	(JNIEnv * env, jclass clazz, jobject buffer_obj, jint buffer_position)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readMouse
+	(JNIEnv * env, jobject self, jobject buffer_obj, jint buffer_position)
 {
 	jint* buffer_ptr = (jint *)env->GetDirectBufferAddress(buffer_obj) + buffer_position;
 	int buffer_size = (env->GetDirectBufferCapacity(buffer_obj))/sizeof(jint) - buffer_position;
@@ -264,14 +265,14 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
 	return copyEvents(&event_queue, buffer_ptr, buffer_size);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
-	(JNIEnv *env, jclass clazz)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getNativeCursorCaps
+	(JNIEnv *env, jobject self)
 {
 	return org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
-	(JNIEnv *env, jclass clazz, jobject handle_buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
+	(JNIEnv *env, jobject self, jobject handle_buffer)
 {
 	if (mDIDevice == NULL)
 		throwException(env, "null device!");
@@ -286,29 +287,29 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 	}
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
-	(JNIEnv *env, jclass clazz)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getMaxCursorSize
+	(JNIEnv *env, jobject self)
 {
 	return GetSystemMetrics(SM_CXCURSOR);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
-	(JNIEnv *env, jclass clazz)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getMinCursorSize
+	(JNIEnv *env, jobject self)
 {
 	return GetSystemMetrics(SM_CXCURSOR);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyMouse(JNIEnv *env, jobject self) {
 	ShutdownMouse();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollMouse(JNIEnv * env, jobject self, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	mDIDevice->Acquire();
-	UpdateMouseFields(env, clazz, coord_buffer_obj, button_buffer_obj);
+	UpdateMouseFields(env, coord_buffer_obj, button_buffer_obj);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
-  (JNIEnv * env, jclass clazz, jboolean grab) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
+  (JNIEnv * env, jobject self, jboolean grab) {
   
 	mDIDevice->Unacquire();
 	if(grab) {
@@ -443,7 +444,7 @@ static int cap(int val, int min, int max) {
 /**
  * Updates the fields on the Mouse
  */
-static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj) {
+static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	HRESULT								 hRes; 
 	DIMOUSESTATE diMouseState;						// State of Mouse
 
