@@ -117,33 +117,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jcl
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
   
-  // assert that window has been created
+	// assert that window has been created
 	if(hwnd == NULL) {
-    throwException(env, "Please create the window before initializing input devices");
-    return;
+		throwException(env, "Please create the window before initializing input devices");
+		return;
 	}
 	
 	// Create the DirectInput object. 
 	HRESULT hr;
 	hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &cDI, NULL); 
 	if (FAILED(hr)) {
-		printfDebug("DirectInputCreate failed\n");
 		ShutdownController();
+		throwException(env, "DirectInputCreate failed\n");
 		return;
 	}
 
 	/*	Find all Controllers */
 	EnumerateControllers();
 	if (!cCreate_success) {
-		throwException(env, "Failed to enumerate.");
 		ShutdownController();
+		throwException(env, "Failed to enumerate.");
 		return;
 	}
 
 	/* check that we got at least 1 controller */
 	if (cDIDevice == NULL) {
-		throwException(env, "No devices found.");
 		ShutdownController();
+		throwException(env, "No devices found.");
 		return;
 	}
 
@@ -154,8 +154,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jcla
 		/* Enumerate capabilities of Controller */
 		EnumerateControllerCapabilities();
 		if (!cCreate_success) {
-			throwException(env, "Falied to enumerate capabilities.");
 			ShutdownController();
+			throwException(env, "Falied to enumerate capabilities.");
 			return;
 		}
 
@@ -180,8 +180,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jcla
 	/* Aquire the Controller */
 	hr = cDIDevice->Acquire();
 	if(FAILED(hr)) {
-		throwException(env, "Acquire failed");
 		ShutdownController();
+		throwException(env, "Acquire failed");
 		return;
 	}
 }
