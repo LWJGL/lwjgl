@@ -4,7 +4,7 @@ if "%JAVA_HOME%" == "" goto errorjavahome
 if "%PLTSDKHOME%" == "" goto errorpltsdkhome
 if "%CHOME%" == "" goto errorchome
 if "%DEVILHOME%" == "" goto errordevilhome
-set COPTIONS=/I"%PLTSDKHOME%\include" /I"%CHOME%\include" /I"%JAVAHOME%\include" /I"%JAVAHOME%\include\win32" /I"%DEVILHOME%\include" /I..\..\src\native\common /O2 /nologo /c /EHsc
+set COPTIONS=/I"%DEVILHOME%\include" /I"%PLTSDKHOME%\include" /I"%CHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"..\..\src\native\common" /O2 /nologo /c /EHsc
 set LINKEROPTS=/link /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /LIBPATH:"%DEVILHOME%\Lib"
 set LIBS=user32.lib Gdi32.lib Advapi32.lib DevIL.lib
 
@@ -16,4 +16,48 @@ cl /LD /Felwjgl-devil.dll *.obj %LINKEROPTS% %LIBS%
 del *.obj *.exp *.lib
 
 copy lwjgl-devil.dll ..\..\libs\
-copy DevIL.dll ..\..\libs\
+
+goto end
+
+:errorjavahome
+echo -------------------------
+echo --     ** ERROR **     --
+echo -------------------------
+echo JAVA_HOME not set.
+echo.
+goto error
+
+:errorpltsdkhome
+echo -------------------------
+echo --     ** ERROR **     --
+echo -------------------------
+echo PLTSDKHOME not set.
+echo.
+goto error
+
+:errorchome
+echo -------------------------
+echo --     ** ERROR **     --
+echo -------------------------
+echo CHOME not set.
+echo.
+goto error
+
+:errordevilhome
+echo -------------------------
+echo --     ** ERROR **     --
+echo -------------------------
+echo DEVILHOME not set.
+echo.
+
+:error
+echo The following environment variables are required to be set.
+echo JAVA_HOME  The root directory where Java is installed
+echo PLTSDKHOME  "   "       "        "  Platform SDK is installed
+echo CHOME       "   "       "        "  Visual C++ toolkit is installed
+echo DEVILHOME   "   "       "        "  DevIL API is installed
+echo -------------------------
+echo --     ** ERROR **     --
+echo -------------------------
+
+:end

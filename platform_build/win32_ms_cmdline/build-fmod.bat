@@ -4,7 +4,7 @@ if "%JAVA_HOME%" == "" goto errorjavahome
 if "%PLTSDKHOME%" == "" goto errorpltsdkhome
 if "%CHOME%" == "" goto errorchome
 if "%FMODHOME%" == "" goto errorfmodhome
-set COPTIONS=-DWIN32 /I"%FMODHOME%\api\inc" /I"%PLTSDKHOME%\include" /I"%CHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"..\..\src\native\common" /O2 /nologo /c /EHsc
+set COPTIONS=/I"%FMODHOME%\api\inc" /I"%PLTSDKHOME%\include" /I"%CHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"..\..\src\native\common" /O2 /nologo /c /EHsc
 set LINKEROPTS=/link /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib"
 set LIBS=user32.lib Gdi32.lib Advapi32.lib
 

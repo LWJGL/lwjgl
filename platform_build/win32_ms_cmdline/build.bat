@@ -55,14 +55,6 @@ echo ALHOME not set.
 echo.
 goto error
 
-:errordevilhome
-echo -------------------------
-echo --     ** ERROR **     --
-echo -------------------------
-echo DEVILHOME not set.
-echo.
-goto error
-
 :erroreaxhome
 echo -------------------------
 echo --     ** ERROR **     --
@@ -85,7 +77,6 @@ echo JAVA_HOME  The root directory where Java is installed
 echo PLTSDKHOME  "   "       "        "  Platform SDK is installed
 echo CHOME       "   "       "        "  Visual C++ toolkit is installed
 echo ALHOME      "   "       "        "  OpenAl is installed
-echo DEVILHOME   "   "       "        "  DevIL is installed
 echo EAXHOME     "   "       "        "  EAX is installed
 echo DXHOME      "   "       "        "  DirectX is installed
 echo -------------------------
