@@ -32,7 +32,6 @@
 package org.lwjgl.test.fmod3;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -49,81 +48,107 @@ import org.lwjgl.fmod3.FSoundTagField;
  * @version $Revision$
  */
 public class TagFieldTest {
-	
+
+	/** Scratch buffer */
+	static IntBuffer	scratch	= BufferUtils.createIntBuffer(16);
+
+  /**
+   * Main entry point
+   * 
+   * @param args arguments for app
+   */
 	public static void main(String[] args) {
 		if (args.length < 1) {
-			System.out.println("Usage:\n TagFieldTest <file>");
-			
-			// default to phero.mp3
-			args = new String[] { "res\\phero.mp3"};
+			System.out.println("Usage:\n TagFieldTest <file|dir>");
+
+			// default to .
+			args = new String[] { "."};
 			System.out.println("Using default: " + args[0]);
 		}
-		
-		File file = new File(args[0]);
-		if (!file.exists()) {
-			System.out.println("No such file: " + args[0]);
-			return;
-		}
-		
+
+		// initialize fmod
 		try {
+			System.out.println("Initializing FMOD");
 			FMOD.create();
+
+			if (!FSound.FSOUND_Init(44100, 32, 0)) {
+				System.out.println("Failed to initialize FMOD");
+				System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
+				FMOD.destroy();
+				return;
+			}
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
 			return;
 		}
-		
-		System.out.println("Initializing FMOD");
-		if (!FSound.FSOUND_Init(44100, 32, 0)) {
-			System.out.println("Failed to initialize FMOD");
-			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-			return;
-		}
-		
-		System.out.println("Loading " + args[0]);
-		FSoundStream stream = FSound.FSOUND_Stream_Open(args[0], FSound.FSOUND_NORMAL, 0, 0);
-		
-		if (stream != null) {
-      //scratch buffer
-      IntBuffer scratch = BufferUtils.createIntBuffer(16);
-      
-			FSound.FSOUND_Stream_Play(0, stream);
-      
-      // find number of tags
-      FSound.FSOUND_Stream_GetNumTagFields(stream, scratch);
-      int tagCount = scratch.get(0);
-      System.out.println("Found: " + tagCount + " tag fields");
-      
-      // print each name value pair
-      FSoundTagField field;
-      for(int i=0; i<tagCount; i++) {
-      	field = new FSoundTagField();
-        if(FSound.FSOUND_Stream_GetTagField(stream, i, field)) {
-        	System.out.println("Field " + i + ": " + field.getName() + ", " + field.getType() + ", " + field.getValueAsString() + ", " + field.getLength());
-        }
-      }
-      
-      // trying to find the artist field
-      System.out.println("Looking for tag...");
-      field = new FSoundTagField(FSound.FSOUND_TAGFIELD_ID3V1, "ARTIST");
-      if(FSound.FSOUND_Stream_FindTagField(stream, field)) {
-      	System.out.println("Found field: " + field.getName() + ", " + field.getType() + ", " + field.getValueAsString() + ", " + field.getLength());
-      }
-      
-			System.out.println("Press enter to stop playing");
-			try {
-				System.in.read();
-			} catch (IOException ioe) {
-			}
-			
-			System.out.println("Done playing. Cleaning up");
-			FSound.FSOUND_Stream_Stop(stream);
-			FSound.FSOUND_Stream_Close(stream);
-		} else {
-			System.out.println("Unable to play: " + args[0]);
-			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-		}
-		
+
+		// scan the supplied arg 
+    System.out.println("Starting recursive scan from: " + args[0]);
+		scanPath(new File(args[0]));
+
+		// shutdown
 		FSound.FSOUND_Close();
 		FMOD.destroy();
+	}
+
+  /**
+   * Scans a path for files
+   * 
+   * @param path Path to scan
+   */
+	private static void scanPath(File path) {
+		// if we got supplied a file - scan it
+		if (path.isFile()) {
+			scanFile(path);
+			return;
+		}
+
+		// if we got a dir scan it for files and subfolders
+		if (path.isDirectory()) {
+			File[] files = path.listFiles();
+			if (files != null) {
+				// scan each entry, recursively calling scanPath
+				for (int i = 0; i < files.length; i++) {
+					scanPath(files[i]);
+				}
+			}
+			return;
+		}
+
+		System.out.println("Ignoring: " + path.getAbsolutePath());
+	}
+
+	/**
+	 * Scans a file for tag fields
+	 * @param file file to scan for tags
+	 */
+	private static void scanFile(File file) {
+		// if we got an mp3 or an ogg file, open it
+		if (file.getName().indexOf(".mp3") != -1 || file.getName().indexOf(".ogg") != -1) {
+			System.out.println("Opening " + file.getAbsolutePath());
+			FSoundStream stream = FSound.FSOUND_Stream_Open(file.getAbsolutePath(), FSound.FSOUND_NORMAL, 0, 0);
+      if(stream == null) {
+      	System.out.println("Unable to open file: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
+        return;
+      }
+			FSound.FSOUND_Stream_GetNumTagFields(stream, scratch);
+			int tagCount = scratch.get(0);
+
+			// print each name value pair
+			if (tagCount > 0) {
+				System.out.println("The following list of tags were found:");
+				FSoundTagField field;
+				for (int i = 0; i < tagCount; i++) {
+					field = new FSoundTagField();
+					if (FSound.FSOUND_Stream_GetTagField(stream, i, field)) {
+						System.out.println("  " + field.getName() + " = '" + field.getValueAsString() + "'");
+					}
+				}
+			} else {
+        System.out.println("Unable to locates any tags");
+      }
+      System.out.println();
+      FSound.FSOUND_Stream_Close(stream);
+		}
 	}
 }
