@@ -43,6 +43,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include "org_lwjgl_Sys.h"
+#include <signal.h>
 
 long int		hires_timer_freq;			// Hires timer frequency
 long int		hires_timer_start;			// Hires timer start

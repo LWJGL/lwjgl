@@ -222,3 +222,25 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
 {
 	return org_lwjgl_Display_PLATFORM_GLX;
 }
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    getGammaRamp
+ * Signature: ()[I
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_getGammaRamp
+  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
+{
+	return false;
+}
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    setGammaRamp
+ * Signature: ([I[I[I)V
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
+  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
+{
+	return false;
+}
