@@ -51,14 +51,16 @@ bool isXcursorLoaded(void) {
 }
 
 void closeXcursor(void) {
-	load_success = false;
-	dlclose(xcursor_handle);
-	xcursor_handle = NULL;
-	XcursorSupportsARGB = NULL;
-	XcursorSupportsAnim = NULL;
-	XcursorImageCreate = NULL;
-	XcursorImageDestroy = NULL;
-	XcursorImagesCreate = NULL;
-	XcursorImagesDestroy = NULL;
-	XcursorImagesLoadCursor = NULL;
+	if (load_success) {
+		load_success = false;
+		dlclose(xcursor_handle);
+		xcursor_handle = NULL;
+		XcursorSupportsARGB = NULL;
+		XcursorSupportsAnim = NULL;
+		XcursorImageCreate = NULL;
+		XcursorImageDestroy = NULL;
+		XcursorImagesCreate = NULL;
+		XcursorImagesDestroy = NULL;
+		XcursorImagesLoadCursor = NULL;
+	}
 }
