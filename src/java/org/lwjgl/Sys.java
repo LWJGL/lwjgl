@@ -47,7 +47,7 @@ import org.lwjgl.input.Mouse;
  */
 public final class Sys {
 
-	public static final String VERSION = "0.94";
+	public static final String VERSION = "0.95";
 
 	/** The native library name */
 	private static final String LIBRARY_NAME = "lwjgl";

@@ -200,7 +200,7 @@ public class FMOD {
   private static String FMOD_OSX_LIBRARY_NAME = "fmod";
 
   /** Version of FMOD */
-  public static final String VERSION = "0.94";
+  public static final String VERSION = "0.95";
   
   static {
     initialize();
