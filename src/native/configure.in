@@ -4,7 +4,7 @@
 AC_PREREQ(2.57)
 AC_INIT
 AM_INIT_AUTOMAKE(LWJGL, 0.7)
-AC_CONFIG_SRCDIR([autogen.sh])
+AC_CONFIG_SRCDIR([dummy.cpp])
 AM_CONFIG_HEADER([config.h])
 
 AC_DISABLE_STATIC
@@ -19,11 +19,31 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL 
 
+AC_REQUIRE_CPP
+
+case "$host_os" in
+        darwin*)        _BUILD_FLAG="-D_AGL"
+                        CPPFLAGS="$CPPFLAGS -Wall $_BUILD_FLAGS"
+                        CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
+                        ;;
+	bsdi* | linux* | solaris*) AC_PATH_XTRA
+                                   #LIBS='-L/usr/X11R6/lib'
+                                   _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
+                                   CPPFLAGS="$CPPFLAGS -Wall $_BUILD_FLAGS"
+                                   CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
+                                   LIBS="$LIBS $X_LIBS"
+                                   AC_CHECK_LIB(X11, XOpenDisplay,, AC_MSG_ERROR(X11 is required))
+#                                   AC_CHECK_LIB(Xext, ,, AC_MSG_ERROR(Xext is required))
+                                   AC_CHECK_LIB(Xxf86vm, main,, AC_MSG_ERROR(Xxf86vm is required))
+                                   AC_CHECK_LIB(pthread, pthread_create,, AC_MSG_ERROR(pthread is required))
+
+                                   ;;
+        *)              AC_MSG_ERROR([Unknow system $host_os]);;
+esac
 
 # Checks for libraries.
 
 # Checks for header files.
-AC_PATH_X
 AC_HEADER_STDC
 
 AC_JNI_INCLUDE_DIR
