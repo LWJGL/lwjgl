@@ -136,6 +136,9 @@ public class Mouse {
 	private static final int	EVENT_SIZE									= 5;
 
 	private static boolean		isGrabbed;
+  
+  /** Whether we're running windows - which need to manually update cursor animation */
+  private static final boolean isWindows = System.getProperty("os.name").startsWith("Win");
 
 	/**
 	 * Mouse cannot be constructed.
@@ -585,7 +588,7 @@ public class Mouse {
 	 * shouldn't be called otherwise
 	 */
 	public static void updateCursor() {
-		if (System.getProperty("os.name").startsWith("Win") && currentCursor != null && currentCursor.hasTimedOut()) {
+		if (isWindows && currentCursor != null && currentCursor.hasTimedOut()) {
 			currentCursor.nextCursor();
 			try {
 				setNativeCursor(currentCursor);
