@@ -143,6 +143,7 @@ public class MouseCreationTest {
     
     System.out.println("Test completed successfully!");
     System.out.print("Shutting down...");
+    Display.resetDisplayMode();
     Mouse.destroy();
     gl.destroy();
     System.out.println("shutdown complete");

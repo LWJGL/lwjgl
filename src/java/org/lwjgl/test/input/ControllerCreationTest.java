@@ -137,6 +137,7 @@ public class ControllerCreationTest {
     
     System.out.println("Test completed successfully!");
     System.out.print("Shutting down...");
+    Display.resetDisplayMode();
     Controller.destroy();
     gl.destroy();
     System.out.println("shutdown complete");
