@@ -82,7 +82,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				OutputFile="..\..\libs\win32\lwjgl-fmod.dll"
+				OutputFile="..\..\libs\win32\lwjgl-fmod3.dll"
 				LinkIncremental="1"
 				IgnoreAllDefaultLibraries="FALSE"
 				GenerateDebugInformation="FALSE"
@@ -123,16 +123,16 @@
 				RelativePath="..\..\src\native\common\common_tools.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\common\fmod\extfmod.cpp">
+				RelativePath="..\..\src\native\common\fmod3\extfmod3.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\common\fmod\org_lwjgl_fmod_FMOD.cpp">
+				RelativePath="..\..\src\native\common\fmod3\org_lwjgl_fmod3_FMOD.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\common\fmod\org_lwjgl_fmod_FMusic.cpp">
+				RelativePath="..\..\src\native\common\fmod3\org_lwjgl_fmod3_FMusic.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\common\fmod\org_lwjgl_fmod_FSound.cpp">
+				RelativePath="..\..\src\native\common\fmod3\org_lwjgl_fmod3_FSound.cpp">
 			</File>
 		</Filter>
 		<Filter

@@ -6,7 +6,7 @@ set COPTIONS=/I%FMODHOME% /I%JAVAHOME%\include /I%JAVAHOME%\include\win32 /I..\.
 set LINKEROPTS=/link
 set LIBS=user32.lib Gdi32.lib Advapi32.lib
 
-for %%x in (..\..\src\native\common\fmod\*.cpp) do cl %COPTIONS% %%x
+for %%x in (..\..\src\native\common\fmod3\*.cpp) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\*common*.cpp) do cl %COPTIONS% %%x
 
-cl /LD /Felwjgl-fmod.dll *.obj %LINKEROPTS% %LIBS%
+cl /LD /Felwjgl-fmod3.dll *.obj %LINKEROPTS% %LIBS%
