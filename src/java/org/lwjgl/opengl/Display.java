@@ -182,6 +182,7 @@ public final class Display {
 		current_mode = mode;
 		if (isCreated()) {
 			destroyWindow();
+			setFullscreen(mode.isFullscreen());
 			try {
 				if (fullscreen)
 					switchDisplayMode();
