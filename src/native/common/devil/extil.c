@@ -21,7 +21,6 @@ void *extil_GetProcAddress(const char *name) {
             printfDebug("Could not locate symbol %s\n", name);
         }
 
-    printf("\r\nget proc address %s %d", name, t);
 
     return t;
 #endif
@@ -42,8 +41,7 @@ bool extil_Open(JNIEnv *env) {
 
     if (devILhandle == NULL) {
         // load the dynamic libraries for DevIL
-        printf("\r\nattempting to load F:\\Apps\\DevIL\\lib\\DevIL.dll");
-        devILhandle = LoadLibrary("F:\\Apps\\DevIL\\lib\\DevIL.dll");
+        devILhandle = LoadLibrary("DevIL.dll");
         if (devILhandle == NULL) {
             printf("\r\nfailed to load DevIL");
             result = false;
