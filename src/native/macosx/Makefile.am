@@ -12,6 +12,6 @@ NATIVE = \
   hid.cpp \
   org_lwjgl_input_Mouse.cpp \
   org_lwjgl_input_Cursor.cpp \
-  org_lwjgl_opengl_Window.cpp
-#  org_lwjgl_opengl_Pbuffer.cpp
+  org_lwjgl_opengl_Window.cpp \
+  org_lwjgl_opengl_Pbuffer.cpp
   
