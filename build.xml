@@ -20,7 +20,7 @@
 	
 	<!-- Files to include in the lwjgl.jar file -->
 	<fileset id="lwjgl.fileset" dir="${lwjgl.bin}">
-		<include name="**"/>
+		<include name="**/*.java"/>
 		<exclude name="**.*"/>
 		<exclude name="org/lwjgl/fmod3/**"/>		
 		<exclude name="org/lwjgl/test/**"/>
@@ -89,6 +89,7 @@
 	<fileset id="lwjgl.source.fileset" dir=".">
 		<include name="build.xml"/>	
 		<include name="src/**"/>
+		<include name="platform_build/**"/>
 		<exclude name="**/*CVS*"/>
 		<exclude name="native/projb/**"/>
 	</fileset> 	
@@ -310,25 +311,14 @@
   
 	<!-- Creates a versioned distribution for all supported platforms -->
 	<target name="-distribution_application">
-		<!-- check each platform, and run their copy target -->
-        <condition property="lwjgl.platform.windows">
-          <os family="windows"/>
-        </condition>
-        <antcall target="-distribute_win32"/>
-
-        <condition property="lwjgl.platform.linux">
-          <os name="Linux"/>
-        </condition>
-        <antcall target="-distribute_linux"/>
-        
-        <condition property="lwjgl.platform.mac">
-          <os name="Mac OS X"/>
-        </condition>
-        <antcall target="-distribute_macosx"/>	
+    <!-- check each platform, and run their copy target -->
+    <antcall target="-distribute_win32"/>
+    <antcall target="-distribute_linux"/>
+    <antcall target="-distribute_macosx"/>	
 	</target>
 	
 	<!-- Distributes win32 files  -->
-	<target name="-distribute_win32" if="lwjgl.platform.windows">
+	<target name="-distribute_win32">
 		<!-- copy files from lib/platform to temp -->
 		<copy todir="${lwjgl.temp}/lwjgl-win32-${lwjgl.version}">
 			<fileset dir="${lwjgl.lib}">
@@ -339,11 +329,11 @@
 				<patternset refid="lwjgl-common.fileset"/>
 			</fileset>
 		</copy>	
-		<zip destfile="${lwjgl.dist}/lwjgl-win32-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="**"/>
+		<zip destfile="${lwjgl.dist}/lwjgl-win32-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="lwjgl-win32-${lwjgl.version}/**"/>
 	</target>	
 	
 	<!-- Distributes linux files  -->
-	<target name="-distribute_linux" if="lwjgl.platform.linux">
+	<target name="-distribute_linux">
 		<!-- copy files from lib/platform to temp -->
 		<copy todir="${lwjgl.temp}/lwjgl-linux-${lwjgl.version}">
 			<fileset dir="${lwjgl.lib}">
@@ -354,11 +344,11 @@
 				<patternset refid="lwjgl-common.fileset"/>
 			</fileset>
 		</copy>	
-		<zip destfile="${lwjgl.dist}/lwjgl-linux-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="**"/>
+		<zip destfile="${lwjgl.dist}/lwjgl-linux-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="lwjgl-linux-${lwjgl.version}/**"/>
 	</target>
 	
 	<!-- Distributes macosx files  -->
-	<target name="-distribute_macosx" if="lwjgl.platform.macosx">
+	<target name="-distribute_macosx">
 		<!-- copy files from lib/platform to temp -->
 		<copy todir="${lwjgl.temp}/lwjgl-macosx-${lwjgl.version}">
 			<fileset dir="${lwjgl.lib}">
@@ -369,7 +359,7 @@
 				<patternset refid="lwjgl-common.fileset"/>
 			</fileset>
 		</copy>	
-		<zip destfile="${lwjgl.dist}/lwjgl-macosx-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="**"/>		
+		<zip destfile="${lwjgl.dist}/lwjgl-macosx-${lwjgl.version}.zip" basedir="${lwjgl.temp}" includes="lwjgl-macosx-${lwjgl.version}/**"/>		
 	</target>		
     
 	<!-- Creates a versioned distribution of javadocs -->
