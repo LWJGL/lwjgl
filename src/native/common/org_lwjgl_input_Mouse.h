@@ -66,14 +66,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
 
 /*
  * Class:     org_lwjgl_input_Mouse
- * Method:    initIDs
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_input_Mouse
  * Method:    nHasWheel
  * Signature: ()Z
  */
