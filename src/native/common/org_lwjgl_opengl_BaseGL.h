@@ -32,22 +32,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
   (JNIEnv *, jobject);
 
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    makeContextCurrent
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_makeContextCurrent
-  (JNIEnv *, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    releaseContext
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_releaseContext
-  (JNIEnv *, jobject);
-
 #ifdef __cplusplus
 }
 #endif

@@ -169,15 +169,4 @@ public class BaseGL extends Window {
 	 * Natively destroy any GL-related stuff
 	 */
 	private native void nDestroyGL();
-
-	/**
-	 * Make the GL context current to the current thread
-	 */
-	public native void makeContextCurrent();
-
-	/**
-	 * Release the GL context
-	 */
-	public native void releaseContext();
-
 }

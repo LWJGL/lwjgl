@@ -184,25 +184,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jo
 {
 	glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());
 }
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nMakeCurrent
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_makeContextCurrent
-  (JNIEnv * env, jobject obj)
-{
-	makeCurrent();
-}
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nFreeContext
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_releaseContext
-  (JNIEnv *, jobject)
-{
-	releaseContext();
-}

@@ -218,25 +218,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
 {
 	SwapBuffers(wglGetCurrentDC());
 }
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nMakeCurrent
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_makeContextCurrent
-  (JNIEnv * env, jobject obj)
-{
-	wglMakeCurrent(hdc, hglrc);
-}
-
-/*
- *  * Class:     org_lwjgl_opengl_BaseGL
- *   * Method:    nFreeContext
- *    * Signature: ()V
- *     */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_releaseContext
-  (JNIEnv *, jobject)
-{
-	wglMakeCurrent(NULL, NULL);
-}
