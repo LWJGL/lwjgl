@@ -445,9 +445,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		return JNI_FALSE;
 	}
 
-	int flags = PFD_DRAW_TO_WINDOW |   // support window 
+	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window 
 		PFD_SUPPORT_OPENGL |   // support OpenGL 
-		PFD_GENERIC_ACCELERATED |
 		PFD_DOUBLEBUFFER;      // double buffered 
 
 	PIXELFORMATDESCRIPTOR pfd = { 
@@ -518,7 +517,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		return JNI_FALSE;
 	}
 
-	if ((desc.dwFlags & flags) == 0) {
+	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
+		printf("Mode not supported by hardware.\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
+	if ((desc.dwFlags & flags) != flags) {
 		printf("Capabilities not supported.\n");
 		destroyAll();
 		return JNI_FALSE;
