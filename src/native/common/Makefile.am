@@ -1,7 +1,7 @@
 noinst_LTLIBRARIES = libcommon.la
 
 libcommon_la_SOURCES = $(COMMON)
-liblwjgl_la_CPPFLAGS = -D_DEBUG
+libcommon_la_CPPFLAGS = -D_DEBUG
 
 COMMON = \
   extal.c \
