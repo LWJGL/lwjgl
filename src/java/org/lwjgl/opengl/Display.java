@@ -284,6 +284,28 @@ public final class Display {
 		}
 		timeThen = timeNow;
 	}
+	
+	/**
+	 * Alternative sync method which works better on triple-buffered GL displays.
+	 * @param fps The desired frame rate, in frames per second
+	 */
+	private static long timeLate;
+	public static void sync2(int fps) {
+		long gapTo = Sys.getTimerResolution() / fps + timeThen;
+		timeNow = Sys.getTime();
+
+		while (gapTo > timeNow + timeLate) {
+			Thread.yield();
+			timeNow = Sys.getTime();
+		}
+
+		if (gapTo < timeNow)
+			timeLate = timeNow - gapTo;
+		else
+			timeLate = 0;
+
+		timeThen = timeNow;
+	}
 
 	/**
 	 * Initialize and return the current display mode.
