@@ -43,12 +43,18 @@ import java.nio.ByteOrder;
  * @version $Revision$
  */
 public class EAXListenerProperties {
+  
+  /** Whether auto commit has been anabled */
+  private boolean autoCommit = true;  
 
   /** ByteBuffer representing EAXLISTENERPROPERTIES */
   protected ByteBuffer eaxListenerProperties;
 
   /** size needed by ByteBuffer to contain EAXLISTENERPROPERTIES */
   protected static int EAXLISTENERPROPERTIES_SIZE;
+  
+  // EAX values and offsets
+  // ========================================================  
 
   /** room effect level offset */
   protected static int room_offset;
@@ -201,6 +207,9 @@ public class EAXListenerProperties {
       | EAXLISTENERFLAGS_REVERBSCALE
       | EAXLISTENERFLAGS_REVERBDELAYSCALE
       | EAXLISTENERFLAGS_DECAYHFLIMIT);
+  
+  // -------------------------------------------------------
+    
   static {
     System.loadLibrary(org.lwjgl.Sys.getLibraryName());
     EAXLISTENERPROPERTIES_SIZE = sizeOfEaxListenerProperties();
@@ -212,36 +221,163 @@ public class EAXListenerProperties {
       ByteBuffer.allocateDirect(EAXLISTENERPROPERTIES_SIZE);
     eaxListenerProperties.order(ByteOrder.nativeOrder());
   }
-
+  
   /**
-   * Sets an EAX Value
-   *
-   * @param property property being queried
-   * @param source the source to be queried
+   * Loads current EAX values
    */
-  public void eaxSet(int property, int source) {
-    EAX.eaxSet(
-      CoreEAX.LISTENER_GUID,
-      property,
-      source,
-      eaxListenerProperties,
-      EAXLISTENERPROPERTIES_SIZE);
-  }
-
-  /**
-   * Gets an EAX Value
-   *
-   * @param property property being queried
-   * @param source the source to be queried
-   */
-  public void eaxGet(int property, int source) {
+  public void loadEAXValues() {
     EAX.eaxGet(
-      CoreEAX.LISTENER_GUID,
-      property,
-      source,
-      eaxListenerProperties,
-      EAXLISTENERPROPERTIES_SIZE);
+        CoreEAX.LISTENER_GUID,
+        EAXLISTENER_ALLPARAMETERS,
+        0,
+        eaxListenerProperties,
+        EAXLISTENERPROPERTIES_SIZE  );      
+  }  
+
+  /**
+   * Resets this buffer property to default values
+   */
+  public void reset() {
+    boolean commitValue = autoCommit;
+    
+    // disable autocommit
+    autoCommit = false;
+    
+    // set values
+    setRoom(EAXLISTENER_DEFAULTROOM);
+    setRoomHF(EAXLISTENER_DEFAULTROOMHF);
+    setRoomRolloffFactor(EAXLISTENER_DEFAULTROOMROLLOFFFACTOR);
+    setDecayTime(EAXLISTENER_DEFAULTDECAYTIME);
+    setDecayTimeHFRatio(EAXLISTENER_DEFAULTDECAYHFRATIO);
+    setReflections(EAXLISTENER_DEFAULTREFLECTIONS);
+    setReflectionsDelay(EAXLISTENER_DEFAULTREFLECTIONSDELAY);
+    setReverb(EAXLISTENER_DEFAULTREVERB);
+    setReverbDelay(EAXLISTENER_DEFAULTREVERBDELAY);
+    setEnvironment(EAXLISTENER_DEFAULTENVIRONMENT);
+    setEnvironmentSize(EAXLISTENER_DEFAULTENVIRONMENTSIZE);
+    setEnvironmentDiffusion(EAXLISTENER_DEFAULTENVIRONMENTDIFFUSION);
+    setAirAbsorptionFactor(EAXLISTENER_DEFAULTAIRABSORPTIONHF);
+    setFlags(EAXLISTENER_DEFAULTFLAGS);
+    
+    // reset auto commit
+    autoCommit = commitValue;
   }
+  
+  
+  /**
+   * Commits any changes
+   */
+  public void commit() {
+    // call eaxSet with Listener guid, setting all parameters
+    EAX.eaxSet(
+        CoreEAX.LISTENER_GUID, EAXLISTENER_ALLPARAMETERS | EAXLISTENER_IMMEDIATE, 
+        0, eaxListenerProperties, EAXLISTENERPROPERTIES_SIZE);      
+  }
+  
+  /**
+   * Tests whether auto commit is enabled or not
+   * 
+   * @return true if auto commit is inabled
+   */
+  public boolean isAutoCommitEnabled() {
+    return autoCommit;
+  }
+  
+  /**
+   * Enabled or disables auto commit
+   * 
+   * @param enabled True to enable, false to disable
+   */
+  public void setAutoCommit(boolean enabled) {
+    autoCommit = enabled;
+  }
+  
+  /**
+   * Performs auto commit, if enabled
+   */
+  private final void autoCommit() {
+    if(autoCommit) {
+      commit();
+    }
+  }
+
+  /**
+   * Retrieves the size of the containing ByteBuffer
+   */
+  public int getSize() {
+    return EAXLISTENERPROPERTIES_SIZE;
+  }
+  
+  /**
+   * Returns a String representation of the EAXBufferProperties object
+   * 
+   * @return String representation of the EAXBufferProperties object
+   */
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("EAXListenerProperties [");
+
+    sb.append("lRoom = ");
+    sb.append(getRoom());
+    sb.append(", ");
+    
+    sb.append("lRoomHF = ");
+    sb.append(getRoomHF());
+    sb.append(", ");
+    
+    sb.append("flRoomRolloffFactor = ");
+    sb.append(getRoomRolloffFactor());
+    sb.append(", ");
+    
+    sb.append("flDecayTime = ");
+    sb.append(getDecayTime());
+    sb.append(", ");
+    
+    sb.append("flDecayHFRatio = ");
+    sb.append(getDecayTimeHFRatio());
+    sb.append(", ");
+    
+    sb.append("lReflections = ");
+    sb.append(getReflections());
+    sb.append(", ");
+    
+    sb.append("flReflectionsDelay = ");
+    sb.append(getReflectionsDelay());
+    sb.append(", ");
+    
+    sb.append("lReverb = ");
+    sb.append(getReverb());
+    sb.append(", ");
+    
+    sb.append("flReverbDelay = ");
+    sb.append(getReverbDelay());
+    sb.append(", ");
+    
+    sb.append("dwEnvironment = ");
+    sb.append(getEnvironment());
+    sb.append(", ");
+    
+    sb.append("flEnvironmentSize = ");
+    sb.append(getEnvironmentSize());
+    sb.append(", ");
+    
+    sb.append("flEnvironmentDiffusion = ");
+    sb.append(getEnvironmentDiffusion());
+    sb.append(", ");
+    
+    sb.append("flAirAbsorptionHF = ");
+    sb.append(getAirAbsorptionHF());
+    sb.append(", ");
+    
+    sb.append("dwFlags = ");
+    sb.append(getFlags());
+    
+    sb.append("]");
+    return sb.toString();
+  }  
+
+  // Getters and Setters of struct
+  // ==========================================================================
 
   /**
    * Retireves the room effect level
@@ -259,6 +395,7 @@ public class EAXListenerProperties {
    */
   public void setRoom(int room) {
     eaxListenerProperties.putInt(room_offset, room);
+    autoCommit();
   }
 
   /**
@@ -277,6 +414,7 @@ public class EAXListenerProperties {
    */
   public void setRoomHF(int roomHF) {
     eaxListenerProperties.putInt(roomHF_offset, roomHF);
+    autoCommit();
   }
 
   /**
@@ -295,6 +433,7 @@ public class EAXListenerProperties {
    */
   public void setRoomRolloffFactor(float roomRolloffFactor) {
     eaxListenerProperties.putFloat(roomRolloffFactor_offset, roomRolloffFactor);
+    autoCommit();
   }
 
   /**
@@ -313,6 +452,7 @@ public class EAXListenerProperties {
    */
   public void setDecayTime(float decayTime) {
     eaxListenerProperties.putFloat(decayTime_offset, decayTime);
+    autoCommit();
   }
 
   /**
@@ -331,6 +471,7 @@ public class EAXListenerProperties {
    */
   public void setDecayTimeHFRatio(float decayTimeHFRatio) {
     eaxListenerProperties.putFloat(decayHFRatio_offset, decayTimeHFRatio);
+    autoCommit();
   }
 
   /**
@@ -349,6 +490,7 @@ public class EAXListenerProperties {
    */
   public void setReflections(int reflections) {
     eaxListenerProperties.putInt(reflections_offset, reflections);
+    autoCommit();
   }
 
   /**
@@ -367,6 +509,7 @@ public class EAXListenerProperties {
    */
   public void setReflectionsDelay(float reflectionsDelay) {
     eaxListenerProperties.putFloat(reflectionsDelay_offset, reflectionsDelay);
+    autoCommit();
   }
 
   /**
@@ -385,6 +528,7 @@ public class EAXListenerProperties {
    */
   public void setReverb(int reverb) {
     eaxListenerProperties.putInt(reverb_offset, reverb);
+    autoCommit();
   }
 
   /**
@@ -403,6 +547,7 @@ public class EAXListenerProperties {
    */
   public void setReverbDelay(float reverbDelay) {
     eaxListenerProperties.putFloat(reverbDelay_offset, reverbDelay);
+    autoCommit();
   }
 
   /**
@@ -421,6 +566,22 @@ public class EAXListenerProperties {
    */
   public void setEnvironment(int environment) {
     eaxListenerProperties.putInt(environment_offset, environment);
+    
+    // we need to handle environment differently than all other
+    // values on auto commit, since it cannot be single handely set
+    // using ALLPARAMETERS
+    //
+    // To set the environment specifically we need to pass
+    // only the environment value and its size. Also pass the
+    // EAXLISTENER_ENVIRONMENT value (and since we're committing IMMEDIATE too)
+    if (autoCommit) {
+      EAX.eaxSet(
+          CoreEAX.LISTENER_GUID, EAXLISTENER_ENVIRONMENT | EAXLISTENER_IMMEDIATE, 
+          0, eaxListenerProperties.position(environment_offset), 4);
+      
+      // rewind buffer
+      eaxListenerProperties.rewind();
+    }
   }
 
   /**
@@ -439,6 +600,22 @@ public class EAXListenerProperties {
    */
   public void setEnvironmentSize(float environmentSize) {
     eaxListenerProperties.putFloat(environmentSize_offset, environmentSize);
+    
+    // we need to handle environment size differently than all other
+    // values on auto commit, since it cannot be single handely set
+    // using ALLPARAMETERS
+    //
+    // To set the environment size specifically we need to pass
+    // only the environment size value and its size. Also pass the
+    // EAXLISTENER_ENVIRONMENTSIZE value (and since we're committing IMMEDIATE too)
+    if (autoCommit) {
+      EAX.eaxSet(
+          CoreEAX.LISTENER_GUID, EAXLISTENER_ENVIRONMENTSIZE | EAXLISTENER_IMMEDIATE, 
+          0, eaxListenerProperties.position(environmentSize_offset), 4);
+      
+      // rewind buffer
+      eaxListenerProperties.rewind();
+    }
   }
 
   /**
@@ -456,9 +633,8 @@ public class EAXListenerProperties {
    * @param environmentDiffusion environment diffusion to set to
    */
   public void setEnvironmentDiffusion(float environmentDiffusion) {
-    eaxListenerProperties.putFloat(
-      environmentDiffusion_offset,
-      environmentDiffusion);
+    eaxListenerProperties.putFloat(environmentDiffusion_offset, environmentDiffusion);
+    autoCommit();
   }
 
   /**
@@ -477,6 +653,7 @@ public class EAXListenerProperties {
    */
   public void setAirAbsorptionFactor(float airAbsorptionHF) {
     eaxListenerProperties.putFloat(airAbsorptionHF_offset, airAbsorptionHF);
+    autoCommit();
   }
 
   /**
@@ -495,14 +672,10 @@ public class EAXListenerProperties {
    */
   public void setFlags(int flags) {
     eaxListenerProperties.putInt(flags_offset, flags);
+    autoCommit();
   }
 
-  /**
-   * Retrieves the size of the containing ByteBuffer
-   */
-  public int getSize() {
-    return EAXLISTENERPROPERTIES_SIZE;
-  }
+  // --------------------------------------------------------------------------
 
   /**
    * Retrieves the size of the EAXLISTENERPROPERTIES

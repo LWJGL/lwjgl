@@ -8,8 +8,10 @@
 extern "C" {
 #endif
 /* Inaccessible static: created */
-/* Inaccessible static: BUFFER_GUID */
-/* Inaccessible static: LISTENER_GUID */
+#undef org_lwjgl_openal_eax_CoreEAX_BUFFER_GUID
+#define org_lwjgl_openal_eax_CoreEAX_BUFFER_GUID 1L
+#undef org_lwjgl_openal_eax_CoreEAX_LISTENER_GUID
+#define org_lwjgl_openal_eax_CoreEAX_LISTENER_GUID 2L
 /*
  * Class:     org_lwjgl_openal_eax_CoreEAX
  * Method:    determineAvailableExtensions
@@ -20,27 +22,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExten
 
 /*
  * Class:     org_lwjgl_openal_eax_CoreEAX
- * Method:    setGUID
- * Signature: ()V
+ * Method:    neaxGet
+ * Signature: (IIILjava/nio/Buffer;II)I
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID
-  (JNIEnv *, jclass);
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_neaxGet
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_eax_CoreEAX
- * Method:    eaxGet
- * Signature: (IIILjava/nio/Buffer;I)I
+ * Method:    neaxSet
+ * Signature: (IIILjava/nio/Buffer;II)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet
-  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
-
-/*
- * Class:     org_lwjgl_openal_eax_CoreEAX
- * Method:    eaxSet
- * Signature: (IIILjava/nio/Buffer;I)I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet
-  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_neaxSet
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint, jint);
 
 #ifdef __cplusplus
 }

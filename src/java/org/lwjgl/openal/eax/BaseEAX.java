@@ -53,12 +53,6 @@ public abstract class BaseEAX {
 	}
 
 	/**
-	 * Override to provide any initialization code after creation.
-	 */
-	protected static void init() {
-	}
-
-	/**
 	 * Static initialization
 	 */
 	private static void initialize() {
@@ -79,7 +73,7 @@ public abstract class BaseEAX {
 			throw new Exception("EAX instance could not be created.");
 		}
 		created = true;
-		init();
+		CoreEAX.init();
 	}
 
 	/**
@@ -104,4 +98,11 @@ public abstract class BaseEAX {
 	 * Native method the destroy the EAX
 	 */
 	protected static native void nDestroy();
+  
+  /**
+   * @return true if EAX has been created
+   */
+  public static boolean isCreated() {
+    return created;
+  }  
 }

@@ -45,12 +45,21 @@ import java.nio.ByteOrder;
  * @version $Revision$
  */
 public class EAXBufferProperties {
+  
+  /** Whether auto commit has been anabled */
+  private boolean autoCommit = true;
+  
+  /** Current source being operated on  */
+  private int currentSource = -1;
 
   /** ByteBuffer representing EAXBUFFERPROPERTIES */
   protected ByteBuffer eaxBufferProperties;
 
   /** size needed by ByteBuffer to contain EAXBUFFERPROPERTIES */
   protected static int EAXBUFFERPROPERTIES_SIZE;
+  
+  // EAX values and offsets
+  // ========================================================
 
   /** direct path level offset */
   protected static int direct_offset;
@@ -181,48 +190,193 @@ public class EAXBufferProperties {
     (EAXBUFFER_FLAGS_DIRECTHFAUTO
       | EAXBUFFER_FLAGS_ROOMAUTO
       | EAXBUFFER_FLAGS_ROOMHFAUTO);
+  
+  // -------------------------------------------------------
 
   static {
     System.loadLibrary(org.lwjgl.Sys.getLibraryName());
     EAXBUFFERPROPERTIES_SIZE = sizeOfEaxBufferProperties();
     assignOffsets();
   }
-
+  
+  /**
+   * Creates a new EAXBufferProperties object 
+   */
   public EAXBufferProperties() {
     eaxBufferProperties = ByteBuffer.allocateDirect(EAXBUFFERPROPERTIES_SIZE);
     eaxBufferProperties.order(ByteOrder.nativeOrder());
   }
-
+  
   /**
-   * Sets an EAX Value
-   *
-   * @param property property being queried
-   * @param source the source to be queried
+   * Sets the current source on which to perform effects
+   * 
+   * @param source Source on which to perform effects
    */
-  public void eaxSet(int property, int source) {
-    EAX.eaxSet(
-      CoreEAX.BUFFER_GUID,
-      property,
-      source,
-      eaxBufferProperties,
-      EAXBUFFERPROPERTIES_SIZE);
+  public void setCurrentSource(int source) {
+    currentSource = source;
   }
-
+  
   /**
-   * Sets an EAX Value
-   *
-   * @param property property being queried
-   * @param source the source to be queried
+   * Retrieves the current source
+   * 
+   * @return Source on which effects are being performed
    */
-  public void eaxGet(int property, int source) {
+  public int getCurrentSource() {
+    return currentSource;
+  }
+  
+  /**
+   * Loads current EAX values from current source
+   */
+  public void loadEAXValues() {
     EAX.eaxGet(
-      CoreEAX.BUFFER_GUID,
-      property,
-      source,
-      eaxBufferProperties,
-      EAXBUFFERPROPERTIES_SIZE);
+        CoreEAX.BUFFER_GUID,
+        EAXBUFFER_ALLPARAMETERS,
+        currentSource,
+        eaxBufferProperties,
+        EAXBUFFERPROPERTIES_SIZE);      
   }
+  
+  /**
+   * Resets this buffer property to default values
+   */
+  public void reset() {
+    boolean commitValue = autoCommit;
+    
+    // disable autocommit
+    autoCommit = false;
+    
+    // set values
+    setDirect(EAXBUFFER_DEFAULTDIRECT);
+    setDirectHF(EAXBUFFER_DEFAULTDIRECTHF);
+    setRoom(EAXBUFFER_DEFAULTROOM);
+    setRoomHF(EAXBUFFER_DEFAULTROOMHF);
+    setRoomRolloffFactor(EAXBUFFER_DEFAULTROOMROLLOFFFACTOR);
+    setObstruction(EAXBUFFER_DEFAULTOBSTRUCTION);
+    setObstructionLFRatio(EAXBUFFER_DEFAULTOBSTRUCTIONLFRATIO);
+    setOcclusion(EAXBUFFER_DEFAULTOCCLUSION);
+    setOcclusionLFRatio(EAXBUFFER_DEFAULTOCCLUSIONLFRATIO);
+    setOcclusionRoomRatio(EAXBUFFER_DEFAULTOCCLUSIONROOMRATIO);
+    setOutsideVolumeHF(EAXBUFFER_DEFAULTOUTSIDEVOLUMEHF);
+    setAirAbsorptionFactor(EAXBUFFER_DEFAULTAIRABSORPTIONFACTOR);
+    setFlags(EAXBUFFER_DEFAULTFLAGS);
+    
+    // reset auto commit
+    autoCommit = commitValue;
+  }
+  
+  
+  /**
+   * Commits any changes
+   */
+  public void commit() {
+    // call eaxSet with Buffer guid, setting all parameters
+    EAX.eaxSet(
+        CoreEAX.BUFFER_GUID, EAXBUFFER_ALLPARAMETERS, 
+        currentSource, eaxBufferProperties, EAXBUFFERPROPERTIES_SIZE);      
+  }
+  
+  /**
+   * Tests whether auto commit is enabled or not
+   * 
+   * @return true if auto commit is inabled
+   */
+  public boolean isAutoCommitEnabled() {
+    return autoCommit;
+  }
+  
+  /**
+   * Enabled or disables auto commit
+   * 
+   * @param enabled True to enable, false to disable
+   */
+  public void setAutoCommit(boolean enabled) {
+    autoCommit = enabled;
+  }
+  
+  /**
+   * Performs auto commit, if enabled
+   */
+  private final void autoCommit() {
+    if(autoCommit) {
+      commit();
+    }
+  }
+  
+  /**
+   * Retrieves the size of the containing ByteBuffer
+   */
+  public static int getSize() {
+    return EAXBUFFERPROPERTIES_SIZE;
+  }
+  
+  /**
+   * Returns a String representation of the EAXBufferProperties object
+   * 
+   * @return String representation of the EAXBufferProperties object
+   */
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("EAXBufferProperties [");
 
+    sb.append("lDirect = ");
+    sb.append(getDirect());
+    sb.append(", ");
+    
+    sb.append("lDirectHF = ");
+    sb.append(getDirectHF());
+    sb.append(", ");
+    
+    sb.append("lRoom = ");
+    sb.append(getRoom());
+    sb.append(", ");
+    
+    sb.append("lRoomHF = ");
+    sb.append(getRoomHF());
+    sb.append(", ");
+    
+    sb.append("flRoomRolloffFactor = ");
+    sb.append(getRoomRolloffFactor());
+    sb.append(", ");
+    
+    sb.append("lObstruction = ");
+    sb.append(getObstruction());
+    sb.append(", ");
+    
+    sb.append("flObstructionLFRatio = ");
+    sb.append(getObstructionLFRatio());
+    sb.append(", ");
+    
+    sb.append("lOcclusion = ");
+    sb.append(getOcclusion());
+    sb.append(", ");
+    
+    sb.append("flOcclusionLFRatio = ");
+    sb.append(getOcclusionLFRatio());
+    sb.append(", ");
+    
+    sb.append("flOcclusionRoomRatio = ");
+    sb.append(getOcclusionRoomRatio());
+    sb.append(", ");
+    
+    sb.append("lOutsideVolumeHF = ");
+    sb.append(getOutsideVolumeHF());
+    sb.append(", ");
+    
+    sb.append("flAirAbsorptionFactor = ");
+    sb.append(getAirAbsorptionFactor());
+    sb.append(", ");
+    
+    sb.append("dwFlags = ");
+    sb.append(getFlags());
+    
+    sb.append("]");
+    return sb.toString();
+  }  
+
+  // Getters and Setters of struct
+  // ==========================================================================
+  
   /**
    * Retireves the direct path level
    *
@@ -239,6 +393,7 @@ public class EAXBufferProperties {
    */
   public void setDirect(int direct) {
     eaxBufferProperties.putInt(direct_offset, direct);
+    autoCommit();
   }
 
   /**
@@ -257,6 +412,7 @@ public class EAXBufferProperties {
    */
   public void setDirectHF(int directHF) {
     eaxBufferProperties.putInt(directHF_offset, directHF);
+    autoCommit();
   }
 
   /**
@@ -275,6 +431,7 @@ public class EAXBufferProperties {
    */
   public void setRoom(int room) {
     eaxBufferProperties.putInt(room_offset, room);
+    autoCommit();
   }
 
   /**
@@ -293,6 +450,7 @@ public class EAXBufferProperties {
    */
   public void setRoomHF(int roomHF) {
     eaxBufferProperties.putInt(roomHF_offset, roomHF);
+    autoCommit();
   }
 
   /**
@@ -311,6 +469,7 @@ public class EAXBufferProperties {
    */
   public void setRoomRolloffFactor(float roomRolloffFactor) {
     eaxBufferProperties.putFloat(roomRolloffFactor_offset, roomRolloffFactor);
+    autoCommit();
   }
 
   /**
@@ -329,6 +488,7 @@ public class EAXBufferProperties {
    */
   public void setObstruction(int obstruction) {
     eaxBufferProperties.putInt(obstruction_offset, obstruction);
+    autoCommit();
   }
 
   /**
@@ -347,6 +507,7 @@ public class EAXBufferProperties {
    */
   public void setObstructionLFRatio(float obstructionLFRatio) {
     eaxBufferProperties.putFloat(obstructionLFRatio_offset, obstructionLFRatio);
+    autoCommit();
   }
 
   /**
@@ -365,6 +526,7 @@ public class EAXBufferProperties {
    */
   public void setOcclusion(int occlusion) {
     eaxBufferProperties.putInt(occlusion_offset, occlusion);
+    autoCommit();
   }
 
   /**
@@ -383,6 +545,7 @@ public class EAXBufferProperties {
    */
   public void setOcclusionLFRatio(float occlusionLFRatio) {
     eaxBufferProperties.putFloat(occlusionLFRatio_offset, occlusionLFRatio);
+    autoCommit();
   }
 
   /**
@@ -401,6 +564,7 @@ public class EAXBufferProperties {
    */
   public void setOcclusionRoomRatio(float occlusionRoomRatio) {
     eaxBufferProperties.putFloat(occlusionRoomRatio_offset, occlusionRoomRatio);
+    autoCommit();
   }
 
   /**
@@ -419,6 +583,7 @@ public class EAXBufferProperties {
    */
   public void setOutsideVolumeHF(int outsideVolumeHF) {
     eaxBufferProperties.putInt(outsideVolumeHF_offset, outsideVolumeHF);
+    autoCommit();
   }
 
   /**
@@ -436,9 +601,8 @@ public class EAXBufferProperties {
    * @param airAbsorptionFactor multiplier for DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF to set to
    */
   public void setAirAbsorptionFactor(float airAbsorptionFactor) {
-    eaxBufferProperties.putFloat(
-      airAbsorptionFactor_offset,
-      airAbsorptionFactor);
+    eaxBufferProperties.putFloat(airAbsorptionFactor_offset, airAbsorptionFactor);
+    autoCommit();
   }
 
   /**
@@ -457,15 +621,11 @@ public class EAXBufferProperties {
    */
   public void setFlags(int flags) {
     eaxBufferProperties.putInt(flags_offset, flags);
+    autoCommit();
   }
-
-  /**
-   * Retrieves the size of the containing ByteBuffer
-   */
-  public static int getSize() {
-    return EAXBUFFERPROPERTIES_SIZE;
-  }
-
+  
+  // --------------------------------------------------------------------------
+  
   /**
    * Retrieves the size of the EAXBUFFERPROPERTIES
    */
@@ -474,46 +634,5 @@ public class EAXBufferProperties {
   /**
    * Sets the offsets to the fields
    */
-  protected static native void assignOffsets();
-
-  /**
-     * Retrieves the size of the property
-     * 
-     * @param property Property to determine size of
-     * @return size of property
-     */
-  private static int getSizeOfProperty(int property) {
-    switch (property) {
-      case EAXBufferProperties.EAXBUFFER_NONE :
-        return 0;
-
-        /* long */
-      case EAXBufferProperties.EAXBUFFER_DIRECT :
-      case EAXBufferProperties.EAXBUFFER_DIRECTHF :
-      case EAXBufferProperties.EAXBUFFER_ROOM :
-      case EAXBufferProperties.EAXBUFFER_ROOMHF :
-      case EAXBufferProperties.EAXBUFFER_OBSTRUCTION :
-      case EAXBufferProperties.EAXBUFFER_OCCLUSION :
-      case EAXBufferProperties.EAXBUFFER_OUTSIDEVOLUMEHF :
-
-        /* float */
-      case EAXBufferProperties.EAXBUFFER_ROOMROLLOFFFACTOR :
-      case EAXBufferProperties.EAXBUFFER_OBSTRUCTIONLFRATIO :
-      case EAXBufferProperties.EAXBUFFER_OCCLUSIONLFRATIO :
-      case EAXBufferProperties.EAXBUFFER_OCCLUSIONROOMRATIO :
-      case EAXBufferProperties.EAXBUFFER_AIRABSORPTIONFACTOR :
-
-        /* unsigned long */
-      case EAXBufferProperties.EAXBUFFER_FLAGS :
-        return 4;
-
-      case EAXBufferProperties.EAXBUFFER_ALLPARAMETERS :
-        return EAXBufferProperties.EAXBUFFERPROPERTIES_SIZE;
-
-      default :
-        throw new IllegalArgumentException(
-          "No such property '" + property + "'");
-
-    }
-  }
+  protected static native void assignOffsets();  
 }

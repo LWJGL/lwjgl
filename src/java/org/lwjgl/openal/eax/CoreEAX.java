@@ -44,28 +44,22 @@ import java.nio.Buffer;
 public class CoreEAX extends BaseEAX implements BaseEAXConstants {  
     
     /** GUID for buffer */
-    public static int BUFFER_GUID;
+    public static final int BUFFER_GUID = 1;
     
     /** GUID for listener */
-    public static int LISTENER_GUID;    
+    public static final int LISTENER_GUID = 2;    
     
     /**
      * Load extensions
      */
-    protected static void init() {        
+    protected static void init() {
 		  determineAvailableExtensions();
-      setGUID();
     }
     
     /**
      * Determines available EAX extensions
      */
     protected static native void determineAvailableExtensions();
-    
-    /**
-     * Sets the GUID's for the buffer and listener objects
-     */
-    protected static native void setGUID();
     
     /**
      * Retrieves an EAX Value
@@ -77,7 +71,10 @@ public class CoreEAX extends BaseEAX implements BaseEAXConstants {
      * @param size size of area being written to
      * @return OpenAL Error code
      */
-    public static native int eaxGet(int propertySetID, int property, int source, Buffer data, int size);
+    public static int eaxGet(int propertySetID, int property, int source, Buffer data, int size) {
+      return neaxGet(propertySetID, property, source, data, data.position(), size);
+    }
+    private static native int neaxGet(int propertySetID, int property, int source, Buffer data, int position, int size);
     
     /**
      * Sets an EAX Value
@@ -89,5 +86,8 @@ public class CoreEAX extends BaseEAX implements BaseEAXConstants {
      * @param size size of area being written to
      * @return OpenAL Error code
      */
-    public static native int eaxSet(int propertySetID, int property, int source, Buffer data, int size);
+    public static int eaxSet(int propertySetID, int property, int source, Buffer data, int size) {
+      return neaxSet(propertySetID, property, source, data, data.position(), size);
+    }
+    private static native int neaxSet(int propertySetID, int property, int source, Buffer data, int position, int size);
 }

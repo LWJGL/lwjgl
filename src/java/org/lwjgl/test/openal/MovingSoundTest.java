@@ -185,10 +185,8 @@ public class MovingSoundTest extends BasicTest {
       if(Keyboard.isKeyDown(Keyboard.KEY_E)) {
           if(eaxApplied) {
             eaxListenerProp.setEnvironment(EAX.EAX_ENVIRONMENT_GENERIC);
-            eaxListenerProp.eaxSet(EAXListenerProperties.EAXLISTENER_ENVIRONMENT, 0); 
           } else {
             eaxListenerProp.setEnvironment(EAX.EAX_ENVIRONMENT_HANGAR);
-            eaxListenerProp.eaxSet(EAXListenerProperties.EAXLISTENER_ENVIRONMENT, 0); 
           }
           eaxApplied = !eaxApplied;
       }

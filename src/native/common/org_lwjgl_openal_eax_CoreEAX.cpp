@@ -42,26 +42,20 @@
 
 /* OpenAL includes */
 #include "checkALerror.h"
+#include "common_tools.h"
 #include "extal.h"
-
-/**
- * Throws an OAL exception with the specified message
- */
-void ThrowException(JNIEnv *env, const char* message) {
-	jclass cls = env->FindClass("org/lwjgl/openal/OpenALException");
-	env->ThrowNew(cls, message);
-}
 
 /*
  * Determines available EAX extensions
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExtensions (JNIEnv *env, jclass clazz) {
 #ifdef _WIN32    
+
 	bool EAXSupported = false;
 
 	//check that we have a current context
 	if(alcGetCurrentContext() == NULL) {
-		ThrowException(env, "Unable to determine EAX Extensions: No current context");
+		throwOpenALException(env, "Unable to determine EAX Extensions: No current context");
 	}
 
 	//check for extension, and assign if available
@@ -73,25 +67,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExten
 
 	//throw exception if no EAX support
 	if(EAXSupported != true) {
-		ThrowException(env, "Unable to determine EAX Extensions");
+		throwOpenALException(env, "Unable to determine EAX Extensions");
 	}
 #else
-	ThrowException(env, "EAX extensions not supported");
-#endif
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID (JNIEnv *env, jclass clazz) {
-#ifdef _WIN32
-	//get class/fields
-	jclass eax_class			= env->FindClass("org/lwjgl/openal/eax/CoreEAX");
-	jfieldID eaxBuffer_field	= env->GetStaticFieldID(eax_class, "BUFFER_GUID", "I");
-	jfieldID eaxListener_field	= env->GetStaticFieldID(eax_class, "LISTENER_GUID", "I");
-
-	//set fields
-	env->SetStaticIntField(eax_class, eaxBuffer_field, (jint) &DSPROPSETID_EAX20_BufferProperties);
-	env->SetStaticIntField(eax_class, eaxListener_field, (jint) &DSPROPSETID_EAX20_ListenerProperties);
-#else
-	ThrowException(env, "EAX extensions not supported");
+	throwOpenALException(env, "EAX extensions not supported");
 #endif
 }
 
@@ -102,18 +81,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID (JNIEnv *env, j
  * ALenum EAXGet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_neaxGet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint offset, jint size) {
 #ifdef _WIN32
-	/*
-	jint result = (jint) eaxGet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) env->GetDirectBufferAddress(value), (ALuint) size);
-	CHECK_AL_ERROR
+	jint result = 0;
 
+  // determine buffer or listener
+  if (propertySetID == org_lwjgl_openal_eax_CoreEAX_BUFFER_GUID) {
+    result = (jint) eaxGet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+	} else if (propertySetID == org_lwjgl_openal_eax_CoreEAX_LISTENER_GUID) {
+	  result = (jint) eaxGet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+	}
+  CHECK_AL_ERROR  
 	return result;
-	*/
-	printf("Method currently deactivated. Fixed soon\n");
-	return -1;
 #else
-	ThrowException(env, "EAX extensions not supported");
+	throwOpenALException(env, "EAX extensions not supported");
 	return 0;
 #endif
 }
@@ -125,18 +106,20 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jc
  * ALenum EAXSet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_neaxSet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint offset, jint size) {
 #ifdef _WIN32
-  /*
-	jint result = (jint) eaxSet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, env->GetDirectBufferAddress(value), (ALuint) size);
-	CHECK_AL_ERROR
-	
+  jint result = 0;
+  
+  // determine buffer or listener
+  if (propertySetID == org_lwjgl_openal_eax_CoreEAX_BUFFER_GUID) {
+    result = (jint) eaxSet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+	} else if (propertySetID == org_lwjgl_openal_eax_CoreEAX_LISTENER_GUID) {
+	  result = (jint) eaxSet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+	}	
+  CHECK_AL_ERROR
 	return result;
-	*/
-	printf("Method currently deactivated. Fixed soon\n");
-	return -1;	
 #else
-	ThrowException(env, "EAX extensions not supported");
+	throwOpenALException(env, "EAX extensions not supported");
 	return 0;
 #endif
 }
