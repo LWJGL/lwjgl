@@ -334,3 +334,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 	return JNI_TRUE;
 }
 
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
+  (JNIEnv * env, jclass clazz)
+{
+	return NULL;
+}
+
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
+  (JNIEnv * env, jclass clazz)
+{
+	return NULL;
+}
