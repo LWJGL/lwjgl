@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.nio.*;
 
+import org.lwjgl.BufferUtils;
+
 /**
  * Simple utility class.
  *
@@ -40,34 +42,28 @@ import java.nio.*;
  * @version $Revision$
  */
 
-abstract class Util {
+public final class Util {
 
-	static final IntBuffer int_buffer = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder()).asIntBuffer();
+	private static final IntBuffer int_buffer = BufferUtils.createIntBuffer(16);
 
 	/**
-	 * A helper function which is used to get the byte offset in an arbitrary buffer
-	 * based on its position
-	 * @return the position of the buffer, in BYTES
+	 * No c'tor
 	 */
-	static int getOffset(Buffer buffer) {
-		if (buffer instanceof FloatBuffer || buffer instanceof IntBuffer)
-			return buffer.position() << 2;
-		else if (buffer instanceof ShortBuffer || buffer instanceof CharBuffer)
-			return buffer.position() << 1;
-		else if (buffer instanceof DoubleBuffer || buffer instanceof LongBuffer)
-			return buffer.position() << 3;
-		else
-			return buffer.position();
-	}
-
-	static void checkGLError() {
+	private Util() {}
+	
+	public static void checkGLError() {
 		int err = GL11.glGetError();
 		if (err != GL11.GL_NO_ERROR) {
 			throw new OpenGLException(err);
 		}
 	}
-
-	static int getGLInteger(int gl_enum) {
+	
+	/**
+	 * Obtain a GL integer value from the driver
+	 * @param gl_enum The GL value you want
+	 * @return the integer value
+	 */
+	public static int glGetInteger(int gl_enum) {
 		GL11.glGetInteger(gl_enum, int_buffer);
 		return int_buffer.get(0);
 	}

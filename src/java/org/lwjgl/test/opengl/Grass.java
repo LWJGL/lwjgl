@@ -49,6 +49,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Random;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Keyboard;
@@ -137,21 +138,18 @@ public class Grass {
 	}
 
 	public static void main(String[] args) {
-		ByteBuffer byte_buf = ByteBuffer.allocateDirect(4);
-		byte_buf.order(ByteOrder.nativeOrder());
 		System.out.println("Vertex program supported: " + GLContext.GL_NV_vertex_program);
-		NVVertexProgram.glGenProgramsNV(byte_buf.asIntBuffer());
-		IntBuffer int_buf = byte_buf.asIntBuffer();
+		IntBuffer int_buf = BufferUtils.createIntBuffer(1);
+		NVVertexProgram.glGenProgramsNV(int_buf);
 		if (int_buf.get(0) == 0)
 			throw new RuntimeException("Could not allocate new vertex program id!");
 
 		program_handle = int_buf.get(0);
 		byte[] program = loadFile("cg_grass2.vp");
-		ByteBuffer program_buf = ByteBuffer.allocateDirect(program.length);
+		ByteBuffer program_buf = BufferUtils.createByteBuffer(program.length);
 		program_buf.order(ByteOrder.nativeOrder());
-		program_buf.rewind();
 		program_buf.put(program);
-		program_buf.rewind();
+		program_buf.flip();
 		NVVertexProgram.glLoadProgramNV(
 			NVVertexProgram.GL_VERTEX_PROGRAM_NV,
 			program_handle,
@@ -163,18 +161,17 @@ public class Grass {
 
 		float[] LightDiffuse = { 1.0f, 0.0f, 0.0f, 1.0f };
 		float[] LightPosition = { 1.0f, 1.0f, 1.0f, 0.0f };
-		ByteBuffer light_buf = ByteBuffer.allocateDirect(4 * 4);
-		light_buf.order(ByteOrder.nativeOrder());
-		FloatBuffer light_buf_f = light_buf.asFloatBuffer();
-		light_buf_f.rewind();
+		FloatBuffer light_buf_f = BufferUtils.createFloatBuffer(4);
 		light_buf_f.put(LightDiffuse);
+		light_buf_f.flip();
 
 		GL11.glLightfv(
 			GL11.GL_LIGHT0,
 			GL11.GL_DIFFUSE,
 			light_buf_f);
-		light_buf_f.rewind();
+		light_buf_f.clear();
 		light_buf_f.put(LightPosition);
+		light_buf_f.flip();
 		GL11.glLightfv(
 			GL11.GL_LIGHT0,
 			GL11.GL_POSITION,
@@ -196,23 +193,23 @@ public class Grass {
 		aslod.count = 0.0f;
 
 		while (!finished) {
+			if (Window.isCloseRequested()) {
+				finished = true;
+			} else if (!Window.isMinimized()) {
+				keyPoll();
+				float degree = (1.0f + (aslod.value * 20.0f)) * 0.01745329f;
+
+				degree *= (0.5 + myrand());
+
+				ptrAnimate(degree);
+				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+				//ptrDraw();
+
+				grsDraw();
+			}
 			Window.update();
-			keyPoll();
-			float degree = (1.0f + (aslod.value * 20.0f)) * 0.01745329f;
-
-			degree *= (0.5 + myrand());
-
-			ptrAnimate(degree);
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
-			//ptrDraw();
-
-			grsDraw();
-
-			Window.paint();
 		}
-		Mouse.destroy();
-		Keyboard.destroy();
 		Window.destroy();
 	}
 
@@ -448,7 +445,6 @@ public class Grass {
 	}
 
 	private static void keyPoll() {
-		Keyboard.read();
 		for (int i = 0; i < Keyboard.getNumKeyboardEvents(); i++) {
 			Keyboard.next();
 			if (!Keyboard.getEventKeyState())

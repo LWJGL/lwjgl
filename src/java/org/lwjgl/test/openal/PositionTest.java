@@ -242,7 +242,6 @@ public class PositionTest extends BasicTest {
       // render and paint if !minimized and not dirty
       if(Window.isFocused() || Window.isDirty()) {
         render();
-        Window.paint();
       } else {
         // sleeeeeep
         pause(100);

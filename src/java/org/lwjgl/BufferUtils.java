@@ -32,6 +32,7 @@
 
 package org.lwjgl;
 
+import java.nio.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -86,6 +87,22 @@ public final class BufferUtils {
 	 */
 	public static FloatBuffer createFloatBuffer(int size) {
 		return createByteBuffer(size << 2).asFloatBuffer();
+	}
+
+	/**
+	 * A helper function which is used to get the byte offset in an arbitrary buffer
+	 * based on its position
+	 * @return the position of the buffer, in BYTES
+	 */
+	public static int getOffset(Buffer buffer) {
+		if (buffer instanceof FloatBuffer || buffer instanceof IntBuffer)
+			return buffer.position() << 2;
+		else if (buffer instanceof ShortBuffer || buffer instanceof CharBuffer)
+			return buffer.position() << 1;
+		else if (buffer instanceof DoubleBuffer || buffer instanceof LongBuffer)
+			return buffer.position() << 3;
+		else
+			return buffer.position();
 	}
 
 }

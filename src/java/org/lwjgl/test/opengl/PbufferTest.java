@@ -118,41 +118,33 @@ public class PbufferTest {
     }
   }
 
-  /**
-   * Runs the main loop of the "test"
-   */
-  private void mainLoop() {
-    while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
-      && !Window.isCloseRequested()) {
-      // allow subsystem to get a chance to run too
-      Window.update();
-
-      if (!Window.isMinimized()) {
-        // check keyboard input
-        processKeyboard();
-
-        // do "game" logic, and render it
-        logic();
-        render();
-
-        // paint window
-        Window.paint();
-      } else {
-
-        // no need to render/paint if nothing has changed (ie. window dragged over)
-        if (Window.isDirty()) {
-          render();
-          Window.paint();
-        }
-
-        // don't waste cpu time, sleep more
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException inte) {
-        }
-      }
-    }
-  }
+	/**
+	 * Runs the main loop of the "test"
+	 */
+	private void mainLoop() {
+		while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !Window.isCloseRequested()) {
+			if (!Window.isMinimized()) {
+				// check keyboard input
+				processKeyboard();
+				// do "game" logic, and render it
+				logic();
+				render();
+			} else {
+				// no need to render/paint if nothing has changed (ie. window
+				// dragged over)
+				if (Window.isDirty()) {
+					render();
+				}
+				// don't waste cpu time, sleep more
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException inte) {
+				}
+			}
+			// Update window
+			Window.update();
+		}
+	}
 
   /**
    * Performs the logic

@@ -476,8 +476,6 @@ public class Keyboard {
 	 */
 	public static int getNumKeyboardEvents() {
 		assert created : "The keyboard has not been created.";
-		assert readBuffer != null : "Keyboard buffering has not been enabled.";
-
 		return numEvents;
 	}
 	

@@ -39,6 +39,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.BufferUtils;
+
 /**
  * $Id$
  *
@@ -321,12 +323,12 @@ public final class ARBImaging {
 	private static native void nglGetConvolutionParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
 		// TODO: check buffer size valid
-		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, Util.getOffset(row), column, Util.getOffset(column));
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, BufferUtils.getOffset(row), column, BufferUtils.getOffset(column));
 	}
 	private static native void nglSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset);
 	public static void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
 		// TODO: check buffer size valid
-		nglGetSeparableFilter(target, format, type, row, Util.getOffset(row), column, Util.getOffset(column), span, Util.getOffset(span));
+		nglGetSeparableFilter(target, format, type, row, BufferUtils.getOffset(row), column, BufferUtils.getOffset(column), span, BufferUtils.getOffset(span));
 	}
 	private static native void nglGetSeparableFilter(int target, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset, Buffer span, int span_offset);
 }
