@@ -39,10 +39,9 @@
  * @version $Revision$
  */
 
-#include <windows.h>
+#include "Window.h"
 #include "org_lwjgl_Sys.h"
 #include "common_tools.h"
-#include "Window.h"
 
 unsigned __int64		hires_timer_freq = 0;			// Hires timer frequency
 unsigned __int64		hires_timer = 0;				// Hires timer current time

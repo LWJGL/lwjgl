@@ -43,6 +43,11 @@
 	#define _LWJGL_WINDOW_H_INCLUDED_
 
 	#define WIN32_LEAN_AND_MEAN
+	#define _WIN32_WINDOWS 0x0410
+	#define WINVER 0x0410
+	#define _WIN32_WINNT 0x0400
+
+
 	#include <windows.h>
 	#include <jni.h>
 	#include "extgl.h"
@@ -65,6 +70,14 @@
 	WINDOW_H_API bool applyPixelFormat(HDC hdc, int iPixelFormat);
 
 	WINDOW_H_API void closeWindow(HWND hwnd, HDC hdc);
+
+	WINDOW_H_API void handleMouseMoved(int x, int y);
+
+	WINDOW_H_API void handleMouseScrolled(int dwheel);
+
+	WINDOW_H_API void handleMouseButton(int button, int state);
+
+	WINDOW_H_API void handleMessages(void);
 
 	/*
 	 * Find a suitable pixel format

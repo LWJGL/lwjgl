@@ -39,9 +39,8 @@
  * @version $Revision$
  */
 
-#include <windows.h>
-#include "org_lwjgl_input_Cursor.h"
 #include "Window.h"
+#include "org_lwjgl_input_Cursor.h"
 #include "common_tools.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor

@@ -40,13 +40,11 @@
  */
 
 
-#define WIN32_LEAN_AND_MEAN
-#include "org_lwjgl_input_Controller.h"
-#include <windows.h>
 #undef	DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0500
-#include <dinput.h>
 #include "Window.h"
+#include "org_lwjgl_input_Controller.h"
+#include <dinput.h>
 #include "common_tools.h"
 
 #define CONTROLLER_AXISMAX 1000			 // Maxmimum range to which we'll gauge the swing

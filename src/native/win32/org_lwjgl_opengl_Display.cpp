@@ -41,6 +41,7 @@
 
 #define _PRIVATE_WINDOW_H_
 #include "Window.h"
+#include <windowsx.h>
 #include "extgl_wgl.h"
 #include "common_tools.h"
 #include "extgl_wgl.h"
@@ -322,6 +323,49 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			}
 		}
 		break;
+		case WM_MOUSEMOVE:
+		{
+			int xPos = GET_X_LPARAM(lParam); 
+			int yPos = GET_Y_LPARAM(lParam);
+			handleMouseMoved(xPos, yPos);
+			return 0;
+		}
+		case WM_MOUSEWHEEL:
+		{
+			int dwheel = GET_WHEEL_DELTA_WPARAM(wParam);
+			handleMouseScrolled(dwheel);
+			return 0;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			handleMouseButton(0, 1);
+			return 0;
+		}
+		case WM_LBUTTONUP:
+		{
+			handleMouseButton(0, 0);
+			return 0;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			handleMouseButton(1, 1);
+			return 0;
+		}
+		case WM_RBUTTONUP:
+		{
+			handleMouseButton(1, 0);
+			return 0;
+		}
+		case WM_MBUTTONDOWN:
+		{
+			handleMouseButton(2, 1);
+			return 0;
+		}
+		case WM_MBUTTONUP:
+		{
+			handleMouseButton(2, 0);
+			return 0;
+		}
 		case WM_ACTIVATE:
 		{
 			switch(LOWORD(wParam)) {
@@ -398,7 +442,7 @@ static bool registerWindow()
 /*
  * Handle native Win32 messages
  */
-static void handleMessages(JNIEnv * env, jclass clazz)
+void handleMessages(void)
 {
 	/*
 	 * Now's our chance to deal with Windows messages that are
@@ -496,7 +540,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
   (JNIEnv * env, jclass clazz)
 {
-	handleMessages(env, clazz);
+	handleMessages();
 }
 
 

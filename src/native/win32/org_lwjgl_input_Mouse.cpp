@@ -39,14 +39,12 @@
  * @version $Revision$
  */
 
-#define WIN32_LEAN_AND_MEAN
-#include "org_lwjgl_input_Mouse.h"
-#include <windows.h>
 #undef	DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
-#include <dinput.h>
 #include "Window.h"
+#include <dinput.h>
 #include "common_tools.h"
+#include "org_lwjgl_input_Mouse.h"
 
 extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
 static LPDIRECTINPUT		lpdi = NULL;						          // DirectInput
@@ -57,9 +55,18 @@ static bool mHaswheel;											 // Temporary wheel check
 static bool mCreate_success;								 // bool used to determine successfull creation
 static bool mFirstTimeInitialization = true; // boolean to determine first time initialization
 
-static POINT cursorPos;
 static bool mouse_grabbed;
 static int mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
+
+/* These deltas track the cursor position from Windows messages */
+static int dx;
+static int dy;
+static int dwheel;
+static int last_x;
+static int last_y;
+
+static event_queue_t event_queue;
+static bool buffer_enabled;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 void EnumerateMouseCapabilities();
@@ -70,12 +77,22 @@ void SetupMouse();
 void InitializeMouseFields();
 void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj);
 
+static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
+	if (buffer_enabled) {
+		putEventElement(&event_queue, button);
+		putEventElement(&event_queue, state);
+		putEventElement(&event_queue, dx);
+		putEventElement(&event_queue, dy);
+		putEventElement(&event_queue, dz);
+	}
+}
+
 static void resetCursorPos(void) {
 	/* Reset cursor position to middle of the window */
 	RECT clientRect;
 	GetClientRect(getCurrentHWND(), &clientRect);
-	cursorPos.x = (clientRect.left + clientRect.right)/2;
-	cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
+	last_x = (clientRect.left + clientRect.right)/2;
+	last_y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
@@ -91,6 +108,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
 	HRESULT hr;
+
+	initEventQueue(&event_queue);
+
+	last_x = last_y = dx = dy = dwheel = 0;
+	buffer_enabled = false;
 
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
@@ -128,51 +150,76 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv * env, jclass clazz) {
+	buffer_enabled = true;
 }
 
-static unsigned char mapButton(DWORD button_id) {
-	switch (button_id) {
-	case DIMOFS_BUTTON0: return 0;
-	case DIMOFS_BUTTON1: return 1;
-	case DIMOFS_BUTTON2: return 2;
-	case DIMOFS_BUTTON3: return 3;
-/*	case DIMOFS_BUTTON4: return 4;
-	case DIMOFS_BUTTON5: return 5;
-	case DIMOFS_BUTTON6: return 6;
-	case DIMOFS_BUTTON7: return 7;*/
-	default: return mButtoncount;
-	}
+void handleMouseScrolled(int event_dwheel) {
+	dwheel += event_dwheel;
+	putEvent(-1, 0, 0, 0, event_dwheel);
 }
 
-static int bufferButtons(int num_di_events, DIDEVICEOBJECTDATA *di_buffer, unsigned char *buffer, int buffer_size) {
+void handleMouseMoved(int x, int y) {
+	int event_dx = x - last_x;
+	int event_dy = y - last_y;
+	dx += event_dx;
+	dy += event_dy;
+	putEvent(-1, 0, event_dx, -event_dy, 0);
+	last_x = x;
+	last_y = y;
+}
+
+void handleMouseButton(int button, int state) {
+	putEvent(button, state, 0, 0, 0);
+}
+
+static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
 	int buffer_index = 0;
+	int dx = 0, dy = 0, dwheel = 0;
 	for (int i = 0; i < num_di_events; i++) {
-		unsigned char button = mapButton(di_buffer[i].dwOfs);
-		if (button >= 0 && button < mButtoncount) {
-			unsigned char state = (unsigned char)di_buffer[i].dwData & 0x80;
-			if (state != 0)
-				state = 1;
-			if (buffer_index == buffer_size)
+		int button_state = (di_buffer[i].dwData & 0x80) != 0 ? 1 : 0;
+		switch (di_buffer[i].dwOfs) {
+			case DIMOFS_BUTTON0:
+				putEvent(0, button_state, dx, dy, dwheel);
+				dx = dy = dwheel = 0;
 				break;
-			buffer[buffer_index++] = button;
-			buffer[buffer_index++] = state;
+			case DIMOFS_BUTTON1:
+				putEvent(1, button_state, dx, dy, dwheel);
+				dx = dy = dwheel = 0;
+				break;
+			case DIMOFS_BUTTON2:
+				putEvent(2, button_state, dx, dy, dwheel);
+				dx = dy = dwheel = 0;
+				break;
+			case DIMOFS_BUTTON3:
+				putEvent(3, button_state, dx, dy, dwheel);
+				dx = dy = dwheel = 0;
+				break;
+			case DIMOFS_X:
+				dx += di_buffer[i].dwData;
+				break;
+			case DIMOFS_Y:
+				dy += di_buffer[i].dwData;
+				break;
+			case DIMOFS_Z:
+				dwheel += di_buffer[i].dwData;
+				break;
 		}
 	}
-	return buffer_index/2;
+	if (dx != 0 || dy != 0 || dwheel != 0)
+		putEvent(-1, 0, dx, -dy, dwheel);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
-	(JNIEnv * env, jclass clazz, jobject buffer_obj, jint buffer_position)
+static void readDXBuffer()
 {
 	
-	static DIDEVICEOBJECTDATA rgdod[EVENT_BUFFER_SIZE];
+	DIDEVICEOBJECTDATA rgdod[EVENT_BUFFER_SIZE];
 	DWORD num_di_events = EVENT_BUFFER_SIZE;
 
 	HRESULT ret;
 
 	ret = mDIDevice->Acquire();
 	if (ret != DI_OK && ret != S_FALSE)
-		return 0;
+		return;
 
 	ret = mDIDevice->GetDeviceData( 
 		sizeof(DIDEVICEOBJECTDATA), 
@@ -181,9 +228,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
 		0); 
 
 	if (ret == DI_OK) {
-		unsigned char *buffer_ptr = buffer_position + (unsigned char*)env->GetDirectBufferAddress(buffer_obj);
-		int buffer_size = (int)env->GetDirectBufferCapacity(buffer_obj) - buffer_position;
-		return bufferButtons(num_di_events, rgdod, buffer_ptr, buffer_size);
+		copyDXEvents(num_di_events, rgdod);
 	} else if (ret == DI_BUFFEROVERFLOW) { 
 		printfDebug("Buffer overflowed\n");
 	} else if (ret == DIERR_INPUTLOST) {
@@ -199,7 +244,19 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
 	} else {
 		printfDebug("unknown keyboard error\n");
 	}
-	return 0;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
+	(JNIEnv * env, jclass clazz, jobject buffer_obj, jint buffer_position)
+{
+	jint* buffer_ptr = (jint *)env->GetDirectBufferAddress(buffer_obj) + buffer_position;
+	int buffer_size = (env->GetDirectBufferCapacity(buffer_obj))/sizeof(jint) - buffer_position;
+	if (mouse_grabbed) {
+		readDXBuffer();
+	} else {
+		handleMessages();
+	}
+	return copyEvents(&event_queue, buffer_ptr, buffer_size, 5);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
@@ -378,7 +435,8 @@ static int cap(int val, int min, int max) {
 		return val;
 }
 
-static void getGDICursorDelta(int* return_dx, int* return_dy) {
+/*static void getGDICursorDelta(int* return_dx, int* return_dy) {
+
 	int dx;
 	int dy;
 
@@ -397,14 +455,15 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
 	*return_dx = dx;
 	*return_dy = dy;
 }
-
+*/
 /**
  * Updates the fields on the Mouse
  */
 static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	HRESULT								 hRes; 
 	DIMOUSESTATE diMouseState;						// State of Mouse
-	int dx, dy;
+
+	handleMessages();
 
 	int *coords = (int *)env->GetDirectBufferAddress(coord_buffer_obj);
 	int coords_length = (int)env->GetDirectBufferCapacity(coord_buffer_obj);
@@ -435,17 +494,16 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer
 	}
 
 	if (mouse_grabbed) {
-		dx = diMouseState.lX;
-		dy = diMouseState.lY;
+		coords[0] = diMouseState.lX;
+		coords[1] = -diMouseState.lY;
+		coords[2] = diMouseState.lZ;
 	} else {
-		getGDICursorDelta(&dx, &dy);
+		coords[0] = dx;
+		coords[1] = -dy;
+		coords[2] = dwheel;
+		dx = dy = dwheel = 0;
 	}
-	dy = -dy;
 
-	coords[0] = dx;
-	coords[1] = dy;
-	coords[2] = diMouseState.lZ;
-	
 	for (int i = 0; i < mButtoncount; i++) {
 		if (diMouseState.rgbButtons[i] != 0) {
 			diMouseState.rgbButtons[i] = JNI_TRUE;

@@ -65,7 +65,6 @@ static int dy;
 static int dz;
 static int last_x;
 static int last_y;
-static int last_z;
 static jbyte buttons[NUM_BUTTONS];
 static event_queue_t event_queue;
 static bool buffer_enabled;
@@ -84,14 +83,12 @@ static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
 }
 
 static void setCursorPos(int x, int y) {
-	int current_x = x;
-	int current_y = y;
-	jint event_dx = current_x - last_x;
-	jint event_dy = current_y - last_y;
+	jint event_dx = x - last_x;
+	jint event_dy = y - last_y;
 	dx += event_dx;
 	dy += event_dy;
-	last_x = current_x;
-	last_y = current_y;
+	last_x = x;
+	last_y = y;
 	putEvent(-1, 0, event_dx, -event_dy, 0);
 }
 
@@ -245,7 +242,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	if (disp == NULL)
 		return;
 	int i;
-	last_z = last_y = last_x = dx = dy = dz = 0;
+	last_y = last_x = dx = dy = dz = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {

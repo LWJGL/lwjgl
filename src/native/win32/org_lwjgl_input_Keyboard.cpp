@@ -39,13 +39,11 @@
  * @version $Revision$
  */
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
+#include "Window.h"
 #include <dinput.h>
 #include "org_lwjgl_input_Keyboard.h"
-#include "Window.h"
 
 #include "common_tools.h"
 
@@ -199,10 +197,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 		0); 
 
 	if (ret == DI_OK) {
-		unsigned char * buf = buffer_position + (unsigned char *)env->GetDirectBufferAddress(buffer_obj);
-		int buffer_size = (int)env->GetDirectBufferCapacity(buffer_obj) - buffer_position;
+		jint * buf = buffer_position + (jint *)env->GetDirectBufferAddress(buffer_obj);
+		int buffer_size = ((int)env->GetDirectBufferCapacity(buffer_obj))/sizeof(jint) - buffer_position;
 		int index = 0;
-		int event_size = translationEnabled ? 4 : 2;
+		int event_size = 3;
 		DWORD current_di_event = 0;
 		while (index + event_size <= buffer_size && current_di_event < num_di_events) {
 			num_events++;
@@ -232,25 +230,25 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 								buf[index++] = 0;
 								buf[index++] = 0;
 							}
+							jint ch_int;
 							if (useUnicode) {
 								wchar_t ch = transBufUnicode[current_char];
-								buf[index++] = (unsigned char) (ch & 0xff);
-								buf[index++] = (unsigned char) ((ch & 0xff00) >> 8);
+								ch_int = ((int)ch) & 0xFFFF;
 							} else {
-								buf[index++] = (unsigned char)transBufAscii[current_char];
-								buf[index++] = 0;
+								unsigned char ch = (unsigned char)transBufAscii[current_char];
+								ch_int = ((int)ch) & 0xFF;
 							}
+							buf[index++] = ch_int;
 							current_char++;
 						} while (index + event_size <= buffer_size && current_char < num_chars);
 					} else {
 						buf[index++] = 0;
-						buf[index++] = 0;
 					}
 				} else {
 					buf[index++] = 0;
-					buf[index++] = 0;
 				}
-			}
+			} else
+				buf[index++] = 0;
 			current_di_event++;
 		}
 	} else if (ret == DI_BUFFEROVERFLOW) { 
