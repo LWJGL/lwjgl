@@ -225,6 +225,8 @@ public class PositionTest extends BasicTest {
     System.out.println("Press LEFT/RIGHT to move along x axis");
     System.out.println("Press SHIFT and either UP/DOWN to move along y axis");
     System.out.println("Press UP/DOWN to move along z axis");
+    System.out.println("Move along the x and y axis with the mouse");
+    System.out.println("Press LEFT or RIGHT mouse button to move along z axis");
     System.out.println("Press ESC to exit demo");
 
     Sys.log(
