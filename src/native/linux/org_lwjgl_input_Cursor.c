@@ -43,11 +43,11 @@
 #include <X11/Xlib.h>
 #include <X11/Xcursor/Xcursor.h>
 #include "org_lwjgl_input_Cursor.h"
-//#include "extxcursor.h"
+#include "org_lwjgl_opengl_LinuxDisplay.h"
 #include "Window.h"
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
   (JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
 	if ((*env)->GetDirectBufferCapacity(env, handle_buffer) < sizeof(Cursor)) {
@@ -84,7 +84,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 	XcursorImagesDestroy(cursor_images);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay__destroyCursor
   (JNIEnv *env, jclass clazz, jobject cursor_handle_buffer)
 {
 	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle_buffer);

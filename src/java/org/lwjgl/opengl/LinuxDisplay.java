@@ -41,10 +41,14 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferUtils;
 
 final class LinuxDisplay implements DisplayImplementation {
+	private final static int CURSOR_HANDLE_SIZE = 8;
+
 	public native void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 	public native void destroyWindow();
 	public native void switchDisplayMode(DisplayMode mode) throws LWJGLException;
@@ -77,7 +81,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public native int readMouse(IntBuffer buffer, int buffer_position);
 	public native void grabMouse(boolean grab);
 	public native int getNativeCursorCaps();
-	public native void setNativeCursor(ByteBuffer handle) throws LWJGLException;
+	public native void setNativeCursor(Object handle) throws LWJGLException;
 	public native int getMinCursorSize();
 	public native int getMaxCursorSize();
 	/* Keyboard */
@@ -88,4 +92,14 @@ final class LinuxDisplay implements DisplayImplementation {
 	public native void enableTranslation() throws LWJGLException;
 	public native void enableKeyboardBuffer() throws LWJGLException;
 	public native int isStateKeySet(int key);
+
+	public native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
+
+	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
+		ByteBuffer handle = BufferUtils.createByteBuffer(CURSOR_HANDLE_SIZE);
+		nCreateCursor(handle, width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
+		return handle;
+	}
+
+	public native void destroyCursor(Object cursorHandle);
 }

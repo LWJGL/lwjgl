@@ -38,6 +38,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.BufferChecks;
 import org.lwjgl.Sys;
+import org.lwjgl.opengl.Display;
 
 /**
  * $Id$
@@ -50,7 +51,6 @@ import org.lwjgl.Sys;
  */
 
 public class Cursor {
-	private final static int HANDLE_SIZE = 8;
 	/** First element to display */
 	private final CursorElement[] cursors;
 	
@@ -115,8 +115,7 @@ public class Cursor {
 			// create our cursor elements
 			cursors = new CursorElement[numImages];
 			for(int i=0; i<numImages; i++) {
-				ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
-				nCreateCursor(handle, width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position(), null, 0);
+				Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
 				long delay = (delays != null) ? delays.get(i) : 0;
 				long timeout = System.currentTimeMillis();
 				cursors[i] = new CursorElement(handle, delay, timeout);
@@ -126,8 +125,7 @@ public class Cursor {
 			}
 		} else if (osName.startsWith("Lin")) {
 			// create our cursor elements
-			ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
-			nCreateCursor(handle, width, height, xHotspot, yHotspot, numImages, images_copy, images_copy.position(), delays, delays != null ? delays.position() : -1);
+			Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, numImages, images_copy, delays);
 			CursorElement cursor_element = new CursorElement(handle, -1, -1);
 			cursors = new CursorElement[]{cursor_element};
 		} else {
@@ -176,7 +174,7 @@ public class Cursor {
 	/**
 	 * Gets the native handle associated with the cursor object.
 	 */
-	ByteBuffer getHandle() {
+	Object getHandle() {
 		return cursors[index].cursorHandle;
 	}
 	
@@ -194,7 +192,7 @@ public class Cursor {
 			}
 		}
 		for(int i=0; i<cursors.length; i++) {
-			nDestroyCursor(cursors[i].cursorHandle);
+			Display.getImplementation().destroyCursor(cursors[i].cursorHandle);
 		}
 	}
 
@@ -221,21 +219,11 @@ public class Cursor {
 	}
 	
 	/**
-	 * Native method to create a native cursor
-	 */
-	private static native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
-
-	/**
-	 * Native method to destroy a native cursor
-	 */
-	private static native void nDestroyCursor(ByteBuffer cursorHandle);
-	
-	/**
 	 * A single cursor element, used when animating
 	 */
 	private static class CursorElement {
 		/** Handle to cursor */
-		final ByteBuffer cursorHandle;
+		final Object cursorHandle;
 		
 		/** How long a delay this element should have */
 		final long delay;
@@ -243,7 +231,7 @@ public class Cursor {
 		/** Absolute time this element times out */
 		long timeout;
 
-		CursorElement(ByteBuffer cursorHandle, long delay, long timeout) {
+		CursorElement(Object cursorHandle, long delay, long timeout) {
 			this.cursorHandle = cursorHandle;
 			this.delay = delay;
 			this.timeout = timeout;

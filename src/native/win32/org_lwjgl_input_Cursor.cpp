@@ -41,9 +41,10 @@
 
 #include "Window.h"
 #include "org_lwjgl_input_Cursor.h"
+#include "org_lwjgl_opengl_Win32Display.h"
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateCursor
   (JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
 	if (env->GetDirectBufferCapacity(handle_buffer) < sizeof(HCURSOR)) {
@@ -144,7 +145,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
  * Method:    nDestroyCursor
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyCursor
   (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
 //	HCURSOR cursor = (HCURSOR)cursor_handle;

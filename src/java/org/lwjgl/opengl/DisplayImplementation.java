@@ -180,7 +180,7 @@ public interface DisplayImplementation {
 	public int getNativeCursorCaps();
 
 	/** Native method to set the native cursor */
-	public void setNativeCursor(ByteBuffer handle) throws LWJGLException;
+	public void setNativeCursor(Object handle) throws LWJGLException;
 
 	/** Native method returning the minimum cursor size */
 	public int getMinCursorSize();
@@ -229,4 +229,9 @@ public interface DisplayImplementation {
 	public void enableKeyboardBuffer() throws LWJGLException;
 	
 	public int isStateKeySet(int key);
+	
+	/** Native cursor handles */
+	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException;
+
+	public void destroyCursor(Object cursor_handle);
 }
