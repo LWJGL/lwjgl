@@ -91,7 +91,6 @@ public final class Sys {
 	
 	private static boolean _debug;
 	static {
-                NULL = nGetNULLValue();
 		try {
 			assert false;
 			LIBRARY_NAME = "lwjgl";
@@ -104,6 +103,7 @@ public final class Sys {
 		} finally {
 			DEBUG = _debug;
 			initialize();
+                	NULL = nGetNULLValue();
 		}
 	}
 	
