@@ -2435,7 +2435,7 @@ public class FSound {
    * @param rebuffer_percent How much to rebuffer after a stream has suffered a buffer underrun. Values are expressed as a percentage from 1 to 99. (Default = 95)
    * @return On success, TRUE is returned. On failure, FALSE is returned.
    */
-  public static native String FSOUND_Stream_Net_SetBufferProperties(int buffersize, int prebuffer_percent, int rebuffer_percent);
+  public static native boolean FSOUND_Stream_Net_SetBufferProperties(int buffersize, int prebuffer_percent, int rebuffer_percent);
   
   /**
    * Set a metadata callback for an internet stream
@@ -2498,7 +2498,8 @@ public class FSound {
    * @return On success, a channel handle the stream is playing in is returned. On failure, -1 is returned. 
    */
   public static int FSOUND_Stream_PlayEx(int channel, FSoundStream stream, FSoundDSPUnit dspunit, boolean paused) {
-    return nFSOUND_Stream_PlayEx(channel, stream.streamHandle, dspunit.dspHandle, paused);
+    int res = nFSOUND_Stream_PlayEx(channel, stream.streamHandle, (dspunit != null) ? dspunit.dspHandle : null, paused);
+    return res;
   }
   private static native int nFSOUND_Stream_PlayEx(int channel, long stream, ByteBuffer dspunit, boolean paused);  
 
@@ -3586,12 +3587,12 @@ public class FSound {
    */
   private static void end_callback(long streamHandle) {
     // we got a callback - notify everybody
-    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_ENDCALLBACK, streamHandle);
-    for(int i=0; i<handlers.size(); i++) {
-      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
-      FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;  
-      callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, null, 0);
-    }
+  	ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_ENDCALLBACK, streamHandle);
+  	for(int i=0; i<handlers.size(); i++) {
+  		FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+  		FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;  
+  		callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, null, 0);
+  	}
   }
   
   /**
@@ -3684,6 +3685,23 @@ public class FSound {
     FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(0);   
     FSoundTellCallback callback = (FSoundTellCallback) wCallback.callback;  
     return callback.FSOUND_TELLCALLBACK(handle);
+  }  
+  
+  /**
+   * This is the callback rutine called by the native implementation whenever a
+   * register callback is notified.
+   * 
+   * @param handle Handle to native object being monitored
+   * @param param parameter passed to callback
+   */
+  private static void meta_callback(long streamHandle, ByteBuffer name, ByteBuffer value) {
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_METADATACALLBACK, streamHandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FSoundMetaDataCallback callback = (FSoundMetaDataCallback) wCallback.callback;  
+      callback.FSOUND_METADATACALLBACK(name, value);
+    }
   }  
   // ----------------------------------------------------------  
 }
