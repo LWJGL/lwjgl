@@ -125,13 +125,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		return JNI_FALSE;
 	}
 
+#ifdef _DEBUG
 	char * p = (char *) glGetString(GL_EXTENSIONS);
     if (NULL == p) {
         printf("NO extensions available\n");
     } else {
 		printf("Available extensions:\n%s\n", p);
 	}
-	
+#endif	
 	return JNI_TRUE;
 }
 
