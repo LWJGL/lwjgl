@@ -1177,9 +1177,6 @@ public class ALTest extends BasicTest {
             for (i = -100; i < 100; i++) {
                 al.listener3f(AL.POSITION, (float) -i, 0.0f, 0.0f);
                 delay_ms(100);
-                
-                al.getListenerfv(AL.POSITION, Sys.getDirectBufferAddress(tempFVect));
-                System.out.print("Position: " + tempFVect.get(0) + ", " + tempFVect.get(1) + ", " + tempFVect.get(2) + "\n");
             }
             al.listener3f(AL.POSITION, 0.0f, 0.0f, 0.0f);
             al.sourceStop(testSources.get(0));
