@@ -208,7 +208,7 @@ public class FMOD {
   /**
    * Initializes the FMOD binding
    */
-  public static void initialize() {  
+  static void initialize() {  
     if (initialized) {
       return;
     }
