@@ -51,7 +51,7 @@ import java.util.*;
  * @version $Revision$
  */
 public final class GLContext {
-	private static ThreadLocal current_capabilities = new ThreadLocal();
+	private final static ThreadLocal current_capabilities = new ThreadLocal();
 
 	/** Map of classes that have native stubs loaded */
 	private static int gl_ref_count;
@@ -181,9 +181,9 @@ public final class GLContext {
 	public static void useContext(Object context) throws LWJGLException {
 		if ( context == null ) {
 			ContextCapabilities.unloadAllStubs();
-			if ( did_auto_load )
+			setCapabilities(null);
+			if (did_auto_load)
 				unloadOpenGLLibrary();
-			current_capabilities = null;
 			BufferObjectTracker.setCurrent(null);
 			return;
 		}
