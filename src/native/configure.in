@@ -11,25 +11,25 @@ AC_DISABLE_STATIC
 AC_LIBTOOL_DLOPEN
 
 # Checks for programs.
-AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_CPP
+AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL 
 
-AC_REQUIRE_CPP
+#AC_REQUIRE_CPP
 
 case "$host_os" in
         darwin*)        _BUILD_FLAG="-D_AGL"
-                        CPPFLAGS="$CPPFLAGS -Wall $_BUILD_FLAGS"
+                        CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
                         CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
                         ;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    #LIBS='-L/usr/X11R6/lib'
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
-                                   CPPFLAGS="$CPPFLAGS -Wall $_BUILD_FLAGS"
+                                   CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
                                    CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
                                    LIBS="$LIBS $X_LIBS"
                                    AC_CHECK_LIB(X11, XOpenDisplay,, AC_MSG_ERROR(X11 is required))
@@ -50,7 +50,7 @@ AC_JNI_INCLUDE_DIR
 
 for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
 do
-    CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
+    CXXFLAGS="$CXXFLAGS -I$JNI_INCLUDE_DIR"
 done
 
 AC_CHECK_HEADER([stddef.h stdlib.h string.h sys/time.h])
