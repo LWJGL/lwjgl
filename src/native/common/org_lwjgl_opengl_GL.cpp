@@ -3650,7 +3650,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_glIsBufferARB(JNIEnv *env, j
  * Method:    glBufferDataARB
  * Signature: n(IIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglBufferDataARB(JNIEnv *env, jclass clazz, jint target, jint size, jobject buffer, jint usage, jint buffer_offset)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglBufferDataARB(JNIEnv *env, jclass clazz, jint target, jint size, jobject buffer, jint buffer_offset, jint usage)
 {
 	CHECK_EXISTS(glBufferDataARB)
 	const GLbyte *address = (const GLbyte *)safeGetBufferAddress(env, buffer);
