@@ -350,7 +350,7 @@ public final class Window {
 	 * the minimum requirements could not be met satisfactorily
 	 */
 	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws LWJGLException {
-		create(title, x, y, width, height, bpp, alpha, depth, stencil);
+		create(title, x, y, width, height, bpp, alpha, depth, stencil, 0);
 	}
 	
 	/**
@@ -375,8 +375,15 @@ public final class Window {
 	 */
 	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil, int samples)
 		throws LWJGLException {
-		
-		create(title, x, y, width, height, bpp, alpha, depth, stencil, samples);
+		if (isCreated())
+			throw new IllegalStateException("Only one LWJGL window may be instantiated at any one time.");
+		Window.fullscreen = false;
+		Window.x = x;
+		Window.y = y;
+		Window.width = width;
+		Window.height = height;
+		Window.title = title;
+		createWindow(bpp, alpha, depth, stencil, samples);
 	}
 
 	/**
