@@ -98,9 +98,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public void destroyWindow() {
 		if (MacOSXFrame.getDevice().getFullScreenWindow() != null)
 			MacOSXFrame.getDevice().setFullScreenWindow(null);
-		setView(null);
-		frame.syncDispose();
-		frame = null;
+		if (frame != null) {
+			setView(null);
+			frame.syncDispose();
+			frame = null;
+		}
 		hideUI(false);
 	}
 	
