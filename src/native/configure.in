@@ -20,15 +20,27 @@ AC_PROG_CXX
 CC="$CXX"
 AC_PROG_LIBTOOL 
 
+AC_ARG_ENABLE(debug,
+AC_HELP_STRING([--disable-foo], [Disable debug build]),
+[build_debug=$enableval], [build_debug=no])
+
+if test $build_debug = yes; then
+  DEBUG_FLAGS=-D_DEBUG
+else
+  DEBUG_FLAGS=
+fi
+
 case "$host_os" in
-        darwin*)        _BUILD_FLAG="-D_AGL"
-                        CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
-                        CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
+        darwin*)        _BUILD_FLAGS="-D_AGL"
+                        AC_SUBST(native_build_dir, [macosx])
+                        CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
+                        CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         ;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
-                                   CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
-                                   CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
+                                   AC_SUBST(native_build_dir, [linux])
+                                   CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
+                                   CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                                    LIBS="$LIBS $X_LIBS"
                                    AC_CHECK_LIB(X11, XOpenDisplay,, AC_MSG_ERROR(X11 is required))
                                    AC_CHECK_LIB(Xext, main,, AC_MSG_ERROR(Xext is required))
@@ -36,7 +48,7 @@ case "$host_os" in
                                    AC_CHECK_LIB(pthread, pthread_create,, AC_MSG_ERROR(pthread is required))
 
                                    ;;
-        *)              AC_MSG_ERROR([Unknow system $host_os]);;
+        *)              AC_MSG_ERROR([Unknown system $host_os]);;
 esac
 
 # Checks for libraries.

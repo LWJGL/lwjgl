@@ -1,4 +1,4 @@
-SUBDIRS = common linux
+SUBDIRS = common @native_build_dir@
 
 lib_LTLIBRARIES = liblwjgl.la
 liblwjgl_la_SOURCES = 
