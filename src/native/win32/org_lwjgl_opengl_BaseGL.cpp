@@ -198,6 +198,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
 
 	// Delete the rendering context
 	if (hglrc != NULL) {
+#ifdef _DEBUG
+		printf("Delete GL context\n");
+#endif
 		wglDeleteContext(hglrc); 
 		hglrc = NULL;
 	}

@@ -101,19 +101,31 @@ void closeWindow()
 {
 	// Release DirectInput
 	if (lpdi != NULL) {
+#ifdef _DEBUG
+		printf("Destroying directinput\n");
+#endif
 		lpdi->Release();
 		lpdi = NULL;
 	}
 
 	// Release device context
 	if (hdc != NULL && hwnd != NULL) {
+#ifdef _DEBUG
+		printf("Releasing DC\n");
+#endif
 		ReleaseDC(hwnd, hdc);
 	}
 
 	// Close the window
 	if (hwnd != NULL) {
+#ifdef _DEBUG
+		printf("Destroy window\n");
+#endif
 		// Vape the window
 		DestroyWindow(hwnd);
+#ifdef _DEBUG
+		printf("Destroyed window\n");
+#endif
 		hwnd = NULL;
 	}
 
@@ -144,7 +156,6 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     LPARAM lParam)
 {
 	if (environment == NULL) {
-		printf("No environment!\n");
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
@@ -227,7 +238,9 @@ bool registerWindow()
 			printf("Failed to register window class\n");
 			return false;
 		}
+#ifdef _DEBUG
 		printf("Window registered\n");
+#endif
 		oneShotInitialised = true;
 	}
 
@@ -308,7 +321,7 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 	// and then to issue commands to it, you need to call gl::makeCurrent().
 
 	// 3. Hide the mouse if necessary
-	isFullScreen = fullscreen;
+	isFullScreen = fullscreen == JNI_TRUE;
 	if (isFullScreen) {
 		ShowCursor(FALSE);
 	}
@@ -356,7 +369,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_swapBuffers
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_nDestroy
   (JNIEnv * env, jobject obj)
 {
+	// Cache env and obj
+	environment = env;
+	window = obj;
+
 	closeWindow();
+
+	environment = NULL;
+	window = NULL;
 }
 
 /*

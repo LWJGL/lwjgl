@@ -184,7 +184,7 @@ public abstract class Window {
 	/**
 	 * Destroy the window.
 	 */
-	public final void destroy() {
+	public final synchronized void destroy() {
 		if (!created)
 			return;
 		doDestroy();
@@ -239,4 +239,10 @@ public abstract class Window {
 		return "Window["+title+"]";
 	}
 
+	/**
+	 * @return the current window, or null, if there is no current window
+	 */
+	public static Window getCurrentWindow() {
+		return currentWindow;
+	}
 }

@@ -46,7 +46,7 @@
 
 jobjectArray GetAvailableDisplayModesNT(JNIEnv * env);
 jobjectArray GetAvailableDisplayModes9x(JNIEnv * env);
-
+bool modeSet = false; // Whether we've done a display mode change
 
 
 /*
@@ -254,6 +254,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 	env->DeleteLocalRef(newMode);
 
+	modeSet = true;
 }
 
 /*
@@ -264,11 +265,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
   (JNIEnv * env, jclass clazz)
 {
-	// Under Win32, all we have to do is:
-	ChangeDisplaySettings(NULL, 0);
+	if (modeSet) {
+		modeSet = false;
+		// Under Win32, all we have to do is:
+		ChangeDisplaySettings(NULL, 0);
 
-	// And we'll call init() again to put the correct mode back in Display
-	Java_org_lwjgl_Display_init(env, clazz);
+		// And we'll call init() again to put the correct mode back in Display
+		Java_org_lwjgl_Display_init(env, clazz);
+	}
 }
 
 /*

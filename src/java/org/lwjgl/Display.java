@@ -139,7 +139,7 @@ public final class Display {
 	 * Reset the display mode to whatever it was when LWJGL was initialized.
 	 * Fails silently.
 	 */
-	public static native void resetDisplayMode() throws Exception;
+	public static native void resetDisplayMode();
 
 	/**
 	 * Retrieves the width of the created display
