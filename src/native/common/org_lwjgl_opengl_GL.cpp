@@ -47,6 +47,8 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+extern HDC hdc;
+
 static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {
 	if (buffer == NULL)
 		return NULL;
@@ -3237,11 +3239,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetCurrentReadDCARB(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL
  * Method:    wglGetExtensionsStringARB
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringARB(JNIEnv * env, jclass clazz, jint p0)
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringARB(JNIEnv * env, jclass clazz)
 {
 #ifdef _WIN32
 	if (wglGetExtensionsStringARB)
-		return env->NewStringUTF(wglGetExtensionsStringARB(GetDC((HWND) p0)));
+		return env->NewStringUTF(wglGetExtensionsStringARB(hdc));
 	else
 		return NULL;
 #else
