@@ -32,9 +32,11 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.Sys;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 
 import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
 
 /**
  * $Id$
@@ -135,9 +137,14 @@ public final class Pbuffer {
 	public static final int DEPTH_BUFFER = RenderTexture.WGL_DEPTH_COMPONENT_NV;
 
 	/**
+	 * The maximum number of bytes in the native handle
+	 */
+	private final static int HANDLE_SIZE = 24;
+
+	/**
 	 * Handle to the native GL rendering context
 	 */
-	private final int handle;
+	private final ByteBuffer handle;
 
 	/**
 	 * Width
@@ -183,7 +190,7 @@ public final class Pbuffer {
 	public static Pbuffer createPbufferUsingDisplayContext(int width, int height, RenderTexture renderTexture) throws LWJGLException {
 		if (!Display.isCreated())
 			throw new IllegalStateException("The Display must be created before a shared Pbuffer can be created that use the Display context");
-		int handle = createPbuffer(true, width, height, null, renderTexture);
+		ByteBuffer handle = createPbuffer(true, width, height, null, renderTexture);
 		return new Pbuffer(width, height, Display.getContext(), handle);
 	}
 
@@ -206,26 +213,28 @@ public final class Pbuffer {
 	 * @param renderTexture
 	 */
 	public static Pbuffer createPbufferUsingUniqueContext(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
-		int handle = createPbuffer(false, width, height, pixel_format, renderTexture);
+		ByteBuffer handle = createPbuffer(false, width, height, pixel_format, renderTexture);
 		return new Pbuffer(width, height, null, handle);
 	}
 
-	private Pbuffer(int width, int height, Object display_context, int handle) {
+	private Pbuffer(int width, int height, Object display_context, ByteBuffer handle) {
 		this.width = width;
 		this.height = height;
 		this.display_context = display_context;
 		this.handle = handle;
 	}
 
-	private static int createPbuffer(boolean use_display_context, int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
+	private static ByteBuffer createPbuffer(boolean use_display_context, int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
 		GLContext.loadOpenGLLibrary();
 		try {
+			ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
 			if ( renderTexture == null )
-				return nCreate(use_display_context, width, height, pixel_format, null, null);
+				nCreate(handle, use_display_context, width, height, pixel_format, null, null);
 			else
-				return nCreate(use_display_context, width, height, pixel_format,
+				nCreate(handle, use_display_context, width, height, pixel_format,
 								renderTexture.pixelFormatCaps,
 								renderTexture.pBufferAttribs);
+			return handle;
 		} catch (LWJGLException e) {
 			GLContext.unloadOpenGLLibrary();
 			throw e;
@@ -246,7 +255,7 @@ public final class Pbuffer {
 	/**
 	 * Native method to test for buffer integrity
 	 */
-	private static native boolean nIsBufferLost(int handle);
+	private static native boolean nIsBufferLost(ByteBuffer handle);
 
 	/**
 	 * Method to make the Pbuffer context current. All subsequent OpenGL calls will go to this buffer.
@@ -263,7 +272,7 @@ public final class Pbuffer {
 	/**
 	 * Native method to make a pbuffer current.
 	 */
-	private static native void nMakeCurrent(int handle) throws LWJGLException;
+	private static native void nMakeCurrent(ByteBuffer handle) throws LWJGLException;
 
 	/**
 	 * Gets the Pbuffer capabilities.
@@ -275,7 +284,7 @@ public final class Pbuffer {
 	/**
 	 * Native method to create a Pbuffer
 	 */
-	private static native int nCreate(boolean shared, int width, int height, PixelFormat pixel_format,
+	private static native void nCreate(ByteBuffer handle, boolean shared, int width, int height, PixelFormat pixel_format,
 	                                  IntBuffer pixelFormatCaps,
 	                                  IntBuffer pBufferAttribs) throws LWJGLException;
 
@@ -300,7 +309,7 @@ public final class Pbuffer {
 	/**
 	 * Natively destroy any GL-related stuff
 	 */
-	private static native void nDestroy(int handle);
+	private static native void nDestroy(ByteBuffer handle);
 
 	// -----------------------------------------------------------------------------------------
 	// ------------------------------- Render-to-Texture Methods -------------------------------
@@ -322,7 +331,7 @@ public final class Pbuffer {
 		nSetAttrib(handle, attrib, value);
 	}
 
-	private static native void nSetAttrib(int handle, int attrib, int value);
+	private static native void nSetAttrib(ByteBuffer handle, int attrib, int value);
 
 	/**
 	 * Binds the currently bound texture to the buffer specified. The buffer can be one of the following:
@@ -335,7 +344,7 @@ public final class Pbuffer {
 		nBindTexImage(handle, buffer);
 	}
 
-	private static native void nBindTexImage(int handle, int buffer);
+	private static native void nBindTexImage(ByteBuffer handle, int buffer);
 
 	/**
 	 * Releases the currently bound texture from the buffer specified.
@@ -346,7 +355,7 @@ public final class Pbuffer {
 		nReleaseTexImage(handle, buffer);
 	}
 
-	private static native void nReleaseTexImage(int handle, int buffer);
+	private static native void nReleaseTexImage(ByteBuffer handle, int buffer);
 
 	/**
 	 * @return Returns the height.

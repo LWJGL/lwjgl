@@ -41,21 +41,23 @@ extern "C" {
 #define org_lwjgl_opengl_Pbuffer_BACK_RIGHT_BUFFER 8326L
 #undef org_lwjgl_opengl_Pbuffer_DEPTH_BUFFER
 #define org_lwjgl_opengl_Pbuffer_DEPTH_BUFFER 8359L
+#undef org_lwjgl_opengl_Pbuffer_HANDLE_SIZE
+#define org_lwjgl_opengl_Pbuffer_HANDLE_SIZE 24L
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nIsBufferLost
- * Signature: (I)Z
+ * Signature: (Ljava/nio/ByteBuffer;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nMakeCurrent
- * Signature: (I)V
+ * Signature: (Ljava/nio/ByteBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
@@ -68,42 +70,42 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
- * Signature: (ZIILorg/lwjgl/opengl/PixelFormat;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;)I
+ * Signature: (Ljava/nio/ByteBuffer;ZIILorg/lwjgl/opengl/PixelFormat;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;)V
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *, jclass, jboolean, jint, jint, jobject, jobject, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
+  (JNIEnv *, jclass, jobject, jboolean, jint, jint, jobject, jobject, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nDestroy
- * Signature: (I)V
+ * Signature: (Ljava/nio/ByteBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nSetAttrib
- * Signature: (III)V
+ * Signature: (Ljava/nio/ByteBuffer;II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
-  (JNIEnv *, jclass, jint, jint, jint);
+  (JNIEnv *, jclass, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nBindTexImage
- * Signature: (II)V
+ * Signature: (Ljava/nio/ByteBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
-  (JNIEnv *, jclass, jint, jint);
+  (JNIEnv *, jclass, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nReleaseTexImage
- * Signature: (II)V
+ * Signature: (Ljava/nio/ByteBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
-  (JNIEnv *, jclass, jint, jint);
+  (JNIEnv *, jclass, jobject, jint);
 
 #ifdef __cplusplus
 }

@@ -202,10 +202,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 	return caps;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor (JNIEnv *env, jclass clazz, jlong cursor_handle) {
-	if (cursor_handle != 0) {
-		Cursor cursor = (Cursor)cursor_handle;
-		current_cursor = cursor;
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor(JNIEnv *env, jclass clazz, jobject cursor_handle) {
+	if (cursor_handle != NULL) {
+		Cursor *cursor = (Cursor *)env->GetDirectBufferAddress(cursor_handle);
+//		Cursor cursor = (Cursor)cursor_handle;
+		current_cursor = *cursor;
 	} else
 		current_cursor = None;
 	updateCursor();

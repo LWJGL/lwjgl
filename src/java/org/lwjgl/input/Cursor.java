@@ -32,10 +32,10 @@
 package org.lwjgl.input;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 
 /**
@@ -49,8 +49,9 @@ import org.lwjgl.Sys;
  */
 
 public class Cursor {
+	private final static int HANDLE_SIZE = 8;
 	/** First element to display */
-	private CursorElement[] cursors = null;
+	private final CursorElement[] cursors;
 	
 	/** Index into list of cursors */
 	private int index = 0;
@@ -88,15 +89,15 @@ public class Cursor {
 		yHotspot = height - 1 - yHotspot;		
 		
 		// create cursor (or cursors if multiple images supplied)
-		createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
+		cursors = createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
 	}
 	
 	/**
 	 * Creates the actual cursor, using a platform specific class
 	 */
-	private void createCursors(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
+	private static CursorElement[] createCursors(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		// create copy and flip images to match ogl
-		IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+		IntBuffer images_copy = BufferUtils.createIntBuffer(images.remaining());
 		flipImages(width, height, numImages, images, images_copy);
 		
 		// Win32 doesn't (afaik) allow for animation based cursors, except when they're
@@ -107,25 +108,30 @@ public class Cursor {
 		// might want to split it into a X/Win/Mac cursor if it gets too cluttered
 		
 		String osName = System.getProperty("os.name", "");
+		CursorElement[] cursors;
 		if (osName.startsWith("Win")) {
 			// create our cursor elements
 			cursors = new CursorElement[numImages];
 			for(int i=0; i<numImages; i++) {
-				cursors[i] = new CursorElement();
-				cursors[i].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position(), null, 0);
-				cursors[i].delay = (delays != null) ? delays.get(i) : 0;
-				cursors[i].timeout = System.currentTimeMillis();
+				ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
+				nCreateCursor(handle, width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position(), null, 0);
+				long delay = (delays != null) ? delays.get(i) : 0;
+				long timeout = System.currentTimeMillis();
+				cursors[i] = new CursorElement(handle, delay, timeout);
 			
 				// offset to next image
 				images_copy.position(width*height*(i+1));
 			}
 		} else if (osName.startsWith("Lin")) {
 			// create our cursor elements
-			cursors = new CursorElement[1];
-			cursors[0] = new CursorElement();
-			cursors[0].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images_copy, images_copy.position(), delays, delays != null ? delays.position() : -1);
+			ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
+			nCreateCursor(handle, width, height, xHotspot, yHotspot, numImages, images_copy, images_copy.position(), delays, delays != null ? delays.position() : -1);
+			CursorElement cursor_element = new CursorElement(handle, -1, -1);
+			cursors = new CursorElement[]{cursor_element};
 		} else {
+			throw new RuntimeException("Unknown OS");
 		}
+		return cursors;
 	} 
 	
 	/**
@@ -168,7 +174,7 @@ public class Cursor {
 	/**
 	 * Gets the native handle associated with the cursor object.
 	 */
-	public long getHandle() {
+	ByteBuffer getHandle() {
 		return cursors[index].cursorHandle;
 	}
 	
@@ -215,24 +221,30 @@ public class Cursor {
 	/**
 	 * Native method to create a native cursor
 	 */
-  private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset);
+	private static native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	/**
 	 * Native method to destroy a native cursor
 	 */
-	private static native void nDestroyCursor(long cursorHandle);	
+	private static native void nDestroyCursor(ByteBuffer cursorHandle);
 	
 	/**
 	 * A single cursor element, used when animating
 	 */
-	protected class CursorElement {
+	private static class CursorElement {
 		/** Handle to cursor */
-		long cursorHandle;
+		final ByteBuffer cursorHandle;
 		
 		/** How long a delay this element should have */
-		long delay;
+		final long delay;
 		
 		/** Absolute time this element times out */
 		long timeout;
+
+		CursorElement(ByteBuffer cursorHandle, long delay, long timeout) {
+			this.cursorHandle = cursorHandle;
+			this.delay = delay;
+			this.timeout = timeout;
+		}
 	}
 }

@@ -7,21 +7,23 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef org_lwjgl_input_Cursor_HANDLE_SIZE
+#define org_lwjgl_input_Cursor_HANDLE_SIZE 8L
 /*
  * Class:     org_lwjgl_input_Cursor
  * Method:    nCreateCursor
- * Signature: (IIIIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)J
+ * Signature: (Ljava/nio/ByteBuffer;IIIIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
+  (JNIEnv *, jclass, jobject, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_input_Cursor
  * Method:    nDestroyCursor
- * Signature: (J)V
+ * Signature: (Ljava/nio/ByteBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor
-  (JNIEnv *, jclass, jlong);
+  (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }

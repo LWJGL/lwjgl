@@ -13,10 +13,19 @@ extern "C" {
 #define org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA 2L
 #undef org_lwjgl_input_Mouse_CURSOR_ANIMATION
 #define org_lwjgl_input_Mouse_CURSOR_ANIMATION 4L
+#undef org_lwjgl_input_Mouse_MAX_SENSITIVITY
+#define org_lwjgl_input_Mouse_MAX_SENSITIVITY 8L
+#undef org_lwjgl_input_Mouse_MIN_SENSITIVITY
+#define org_lwjgl_input_Mouse_MIN_SENSITIVITY 1L
+/* Inaccessible static: sensitivity */
+/* Inaccessible static: width */
+/* Inaccessible static: height */
 /* Inaccessible static: created */
 /* Inaccessible static: buttons */
 /* Inaccessible static: x */
 /* Inaccessible static: y */
+/* Inaccessible static: scrollX */
+/* Inaccessible static: scrollY */
 /* Inaccessible static: coord_buffer */
 /* Inaccessible static: dx */
 /* Inaccessible static: dy */
@@ -33,6 +42,7 @@ extern "C" {
 #undef org_lwjgl_input_Mouse_BUFFER_SIZE
 #define org_lwjgl_input_Mouse_BUFFER_SIZE 50L
 /* Inaccessible static: isGrabbed */
+/* Inaccessible static: trackingEnabled */
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nGetNativeCursorCaps
@@ -44,10 +54,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nSetNativeCursor
- * Signature: (J)V
+ * Signature: (Ljava/nio/ByteBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
-  (JNIEnv *, jclass, jlong);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_input_Mouse

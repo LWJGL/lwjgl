@@ -52,7 +52,7 @@ typedef struct _PbufferInfo {
 } PbufferInfo;
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
-  (JNIEnv *env, jclass clazz, jint handle)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
 	// The buffer is never lost, because of the GLX_PRESERVED_CONTENTS flag
 	return JNI_FALSE;
@@ -71,7 +71,7 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
 	glXDestroyPbuffer(getDisplay(), buffer);
 	if (!buffer_info->use_display_context)
 		glXDestroyContext(getDisplay(), context);
-	free(buffer_info);
+//	free(buffer_info);
 	decDisplay();
 }
 
@@ -147,17 +147,17 @@ static bool createPbufferUsingDisplayContext(JNIEnv *env, PbufferInfo *buffer_in
 	return true;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jboolean use_display_context, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jobject handle_buffer, jboolean use_display_context, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs)
 {
 	Display *disp = incDisplay(env);
 	if (disp == NULL) {
-		return -1;
+		return;
 	}
 	int current_screen = XDefaultScreen(disp);
 	if (!extgl_InitGLX(env, disp, current_screen)) {
 		decDisplay();
 		throwException(env, "Could not init GLX");
-		return -1;
+		return;
 	}
 
 	const int buffer_attribs[] = {GLX_PBUFFER_WIDTH, width,
@@ -166,7 +166,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 				      GLX_LARGEST_PBUFFER, False,
 					  None, None};
 
-	PbufferInfo *buffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
+	if (env->GetDirectBufferCapacity(handle_buffer) < sizeof(PbufferInfo)) {
+		throwException(env, "Handle buffer not large enough");
+		return;
+	}
+	PbufferInfo *buffer_info = (PbufferInfo *)env->GetDirectBufferAddress(handle_buffer);
+//	PbufferInfo *buffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
 	buffer_info->use_display_context = use_display_context;
 	bool result;
 	if (use_display_context) {
@@ -175,18 +180,18 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 		result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs);
 	}
 	if (!result)
-		return -1;
+		return;
 	if (!checkXError(env)) {
 		destroyPbuffer(buffer_info);
-		return -1;
+		return;
 	}
-	return (jint)buffer_info;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
-  (JNIEnv *env, jclass clazz, jint handle)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
-	PbufferInfo *buffer_info = (PbufferInfo *)handle;
+	PbufferInfo *buffer_info = (PbufferInfo *)env->GetDirectBufferAddress(handle_buffer);
+	//PbufferInfo *buffer_info = (PbufferInfo *)handle;
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
 	if (glXMakeContextCurrent(getDisplay(), buffer, buffer, context) == False) {
@@ -200,26 +205,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
-  (JNIEnv *env, jclass clazz, jint handle)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
-	PbufferInfo *buffer_info = (PbufferInfo *)handle;
+	PbufferInfo *buffer_info = (PbufferInfo *)env->GetDirectBufferAddress(handle_buffer);
+	//PbufferInfo *buffer_info = (PbufferInfo *)handle;
 	destroyPbuffer(buffer_info);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
-  (JNIEnv *env, jclass clazz, jint handle, jint attrib, jint value)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint attrib, jint value)
 {
 	throwException(env, "The render-to-texture extension is not supported.");
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
-  (JNIEnv *env, jclass clazz, jint handle, jint buffer)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint buffer)
 {
 	throwException(env, "The render-to-texture extension is not supported.");
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
-  (JNIEnv *env, jclass clazz, jint handle, jint buffer)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint buffer)
 {
 	throwException(env, "The render-to-texture extension is not supported.");
 }

@@ -44,17 +44,16 @@
 #include "Window.h"
 #include "common_tools.h"
 
-/*
- * Class:     org_lwjgl_input_Cursor
- * Method:    nCreateCursor
- * Signature: (IIIIIII)I
- */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
-  (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
+  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
+	if (env->GetDirectBufferCapacity(handle_buffer) < sizeof(Cursor)) {
+		throwException(env, "Handle buffer not large enough");
+		return;
+	}
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
-		return 0;
+		return;
 	const int *delays = NULL;
 	if (delay_buffer != NULL)
 		delays = (const int *)env->GetDirectBufferAddress(delay_buffer) + delays_offset;		
@@ -74,20 +73,16 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 			cursor_image->delay = delays[i];		
 		cursor_images->images[i] = cursor_image;
 	}
-	Cursor cursor = XcursorImagesLoadCursor(disp, cursor_images);
+	Cursor *cursor = (Cursor *)env->GetDirectBufferAddress(handle_buffer);
+	*cursor = XcursorImagesLoadCursor(disp, cursor_images);
 	XcursorImagesDestroy(cursor_images);
-	return (jlong)cursor;
 }
 
-/*
- * Class:     org_lwjgl_input_Cursor
- * Method:    nDestroyCursor
- * Signature: (I)V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor
-  (JNIEnv *env, jclass clazz, jlong cursor_handle)
+  (JNIEnv *env, jclass clazz, jobject cursor_handle_buffer)
 {
-	Cursor cursor = (Cursor)cursor_handle;
-	XFreeCursor(getDisplay(), cursor);
+	Cursor *cursor = (Cursor *)env->GetDirectBufferAddress(cursor_handle_buffer);
+//	Cursor cursor = (Cursor)cursor_handle;
+	XFreeCursor(getDisplay(), *cursor);
 	decDisplay();
 }

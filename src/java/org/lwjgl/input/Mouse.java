@@ -200,14 +200,14 @@ public class Mouse {
 				nSetNativeCursor(currentCursor.getHandle());
 				currentCursor.setTimeout();
 			} else {
-				nSetNativeCursor(0);
+				nSetNativeCursor(null);
 			}
 		}
 		return oldCursor;
 	}
 
 	/** Native method to set the native cursor */
-	private static native void nSetNativeCursor(long handle) throws LWJGLException;
+	private static native void nSetNativeCursor(ByteBuffer handle) throws LWJGLException;
 
 	/**
 	 * Gets the minimum size of a native cursor. Can only be called if
