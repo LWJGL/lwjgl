@@ -1,0 +1,16 @@
+<Combine fileversion="1.0" name="lwjgl-fmod3" description="">
+  <StartMode startupentry="lwjgl-fmod3" single="True">
+    <Execute entry="lwjgl-fmod3" type="None" />
+  </StartMode>
+  <Entries>
+    <Entry filename=".\.\lwjgl-fmod3.prjx" />
+  </Entries>
+  <Configurations active="Debug">
+    <Configuration name="Release">
+      <Entry name="lwjgl-fmod3" configurationname="Debug" build="False" />
+    </Configuration>
+    <Configuration name="Debug">
+      <Entry name="lwjgl-fmod3" configurationname="Debug" build="False" />
+    </Configuration>
+  </Configurations>
+</Combine>
