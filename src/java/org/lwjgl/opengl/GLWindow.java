@@ -170,6 +170,16 @@ public class GLWindow extends Window {
 	public boolean OpenGL13;
 	public boolean OpenGL14;
 
+	/*
+	 * Available WGL extensions
+	 */
+	public boolean WGL_ARB_buffer_region;
+	public boolean WGL_ARB_extensions_string;
+	public boolean WGL_ARB_pbuffer;
+	public boolean WGL_ARB_pixel_format;
+	public boolean WGL_ARB_render_texture;
+	public boolean WGL_EXT_extensions_string;
+	public boolean WGL_EXT_swap_control;
 		
 	/**
 	 * Determine which extensions are available
@@ -228,17 +238,6 @@ public class GLWindow extends Window {
 			}
 		}
 	}
-
-	/*
-	 * Available WGL extensions
-	 */
-	public static boolean WGL_ARB_buffer_region;
-	public static boolean WGL_ARB_extensions_string;
-	public static boolean WGL_ARB_pbuffer;
-	public static boolean WGL_ARB_pixel_format;
-	public static boolean WGL_ARB_render_texture;
-	public static boolean WGL_EXT_extensions_string;
-	public static boolean WGL_EXT_swap_control;
 
 	/**
 	 * Checks and sets WGL_EXT_extensions_string and WGL_ARB_extensions_string
@@ -300,7 +299,6 @@ public class GLWindow extends Window {
 
 		}
 	}
-
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());

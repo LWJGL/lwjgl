@@ -343,7 +343,7 @@ public class HWCursorTest {
     GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     //sync frame (only works on windows)
-    if (GLWindow.WGL_EXT_swap_control) {
+    if (gl.WGL_EXT_swap_control) {
       GL.wglSwapIntervalEXT(1);
     }
   }
