@@ -289,7 +289,7 @@ void closeWindow(HWND *hwnd, HDC *hdc)
 static void appActivate(bool active)
 {
 	static bool inAppActivate = false;
-
+	isFocused = active;
 	if (inAppActivate) {
 		return;
 	}
@@ -318,8 +318,6 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
         int xPos; 
         int yPos;
         int dwheel;
-        bool oldIsMinimized;
-        bool oldIsFocused;
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
 		case WM_SYSCOMMAND:
@@ -338,8 +336,6 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		}
 		break;
 		case WM_ACTIVATE:
-			// default action
-			//res = DefWindowProc(hWnd, msg, wParam, lParam);
 			switch (wParam) {
 				case WA_ACTIVE:
 				case WA_CLICKACTIVE:
@@ -347,6 +343,19 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 					break;
 				case WA_INACTIVE:
 					appActivate(false);
+					break;
+			}
+			return 0L;
+		case WM_SIZE:
+			switch (wParam) {
+				case SIZE_RESTORED:
+				case SIZE_MAXIMIZED:
+printf("BLAH************************** MAX\n");
+					isMinimized = false;
+					break;
+				case SIZE_MINIMIZED:
+printf("BLAH************************** MIN\n");
+					isMinimized = true;
 					break;
 			}
 			return 0L;
