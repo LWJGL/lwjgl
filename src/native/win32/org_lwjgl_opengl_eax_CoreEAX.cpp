@@ -57,30 +57,10 @@ void ThrowException(JNIEnv *env, const char* message) {
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExtensions (JNIEnv *env, jobject obj) {
 #ifdef _WIN32    
 	bool EAXSupported = false;
-	ALCcontext *Context;
-	ALCdevice *Device;
 
-	//open device
- 	Device = alcOpenDevice(NULL);
-	if(Device == NULL) {
-		ThrowException(env, "Unable to determine EAX Extensions");
-		return;
-	}
-
-	//create a context
-	Context = alcCreateContext(Device, NULL);
-	if(Context == NULL) {
-		alcCloseDevice(Device);
-		ThrowException(env, "Unable to determine EAX Extensions");
-		return;
-	}
-
-	//make current
-	alcMakeContextCurrent(Context);
-	if(alGetError() != AL_NO_ERROR) {
-		alcCloseDevice(Device);
-		ThrowException(env, "Unable to determine EAX Extensions");
-		return;
+	//check that we have a current context
+	if(alcGetCurrentContext() == NULL) {
+		ThrowException(env, "Unable to determine EAX Extensions: No current context");
 	}
 
 	//check for extension, and assign if available
@@ -89,11 +69,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExten
 		eaxGet = (EAXGet)alGetProcAddress((ALubyte*) "EAXGet");
 		EAXSupported = (eaxSet != NULL && eaxGet != NULL);
 	}
-
-	//clean up
-	alcMakeContextCurrent(NULL);
-	alcDestroyContext(Context);
-	alcCloseDevice(Device);
 
 	//throw exception if no EAX support
 	if(EAXSupported != true) {
@@ -130,7 +105,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jo
 #ifdef _WIN32
 	jint result = (jint) eaxGet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) value, (ALuint) size);
 	CHECK_AL_ERROR
-	
+
 	return result;
 #else
 	return AL_INVALID_OPERATION;
@@ -141,11 +116,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jo
  * This function sets an EAX value.
  * 
  * C Specification:
- * ALenum EAXGet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
+ * ALenum EAXSet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jobject obj, jint propertySetID, jint property, jint source, jint value, jint size) {
-#ifndef _WIN32
+#ifdef _WIN32
 	jint result = (jint) eaxSet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) value, (ALuint) size);
 	CHECK_AL_ERROR
 	
