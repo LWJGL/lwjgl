@@ -222,7 +222,7 @@ public class Keyboard {
 	}
 	
 	/** The number of keys supported */
-	public static final int keyCount = counter;
+	private static final int keyCount = counter;
 
 	/** Has the keyboard been created? */
 	private static boolean created;
@@ -244,13 +244,13 @@ public class Keyboard {
 	private static int numEvents;
 
 	/** The current keyboard character being examined */
-	public static char character;
+	private static char eventCharacter;
 	
 	/** The current keyboard event key being examined */
-	public static int key;
+	private static int eventKey;
 	
 	/** The current state of the key being examined in the event queue */
-	public static boolean state;
+	private static boolean eventState;
 	
 	/** One time initialization */
 	private static boolean initialized;
@@ -454,12 +454,45 @@ public class Keyboard {
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
 		
 		if (readBuffer.hasRemaining()) {
-			key = readBuffer.get() & 0xFF;
-			state = readBuffer.get() != 0;
-			if (translationEnabled)
-				character = readBuffer.getChar();
+			eventKey = readBuffer.get() & 0xFF;
+			eventState = readBuffer.get() != 0;
+			if (translationEnabled) {
+				eventCharacter = readBuffer.getChar();
+      }
 			return true;
-		} else
+		} else {
 			return false;
+    }
 	}
+
+	/**
+	 * @return Number of keys on this keyboard
+	 */
+  public static int getKeyCount() {
+    return keyCount;
+  }
+
+  /**
+   * @return The character from the current event
+   */
+  public static char getCharacter() {
+    return eventCharacter;
+  }
+
+  /**
+   * @return The key from the current event
+   */
+  public static int getEventKey() {
+    return eventKey;
+  }
+
+  /**
+   * Gets the state of the tkey that generated the
+   * current event
+   * 
+   * @return True if key was down, or false if released
+   */
+  public static boolean getEventKeyState() {
+    return eventState;
+  }
 }

@@ -165,14 +165,14 @@ public class ControllerCreationTest {
       Controller.poll();
 
       //controller is a bit fuzzy
-      if(Controller.x > 100) {
+      if(Controller.getX() > 100) {
         position.x += 1;
-      } else if (Controller.x < -100) {
+      } else if (Controller.getX() < -100) {
         position.x -= 1;
       }
-      if(Controller.y > 100) {
+      if(Controller.getY() > 100) {
         position.y -= 1;
-      } else if (Controller.y < -100) {
+      } else if (Controller.getY() < -100) {
         position.y += 1;
       }
 

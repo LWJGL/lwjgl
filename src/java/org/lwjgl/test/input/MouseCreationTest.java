@@ -166,8 +166,8 @@ public class MouseCreationTest {
 
 			Mouse.poll();
 
-			position.x += Mouse.dx;
-			position.y += Mouse.dy;
+			position.x += Mouse.getDX();
+			position.y += Mouse.getDY();
       
       if(position.x<0) {
         position.x = 0;
@@ -207,9 +207,9 @@ public class MouseCreationTest {
       float color = 1.0f;
       int buttonDown = 0;
       
-      for(int i=0;i<Mouse.buttonCount; i++) {
+      for(int i=0;i<Mouse.getButtonCount(); i++) {
         if(Mouse.isButtonDown(i)) {
-          color = (1.0f / Mouse.buttonCount) * (i+1); 
+          color = (1.0f / Mouse.getButtonCount()) * (i+1); 
           break; 
         }
       }

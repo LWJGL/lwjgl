@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -63,28 +63,28 @@ public class Controller {
 	private static boolean[] buttons;
 
 	/** X position, range -1000 to 1000 */
-	public static int x = 0;
+  private static int x = 0;
 
 	/** X rotational position, range -1000 to 1000 */
-	public static int rx = 0;
+  private static int rx = 0;
 
 	/** Y position, range -1000 to 1000 */
-	public static int y = 0;
+  private static int y = 0;
 
 	/** Y rotational position, range -1000 to 1000 */
-	public static int ry = 0;
+  private static int ry = 0;
 
 	/** Z position, range -1000 to 1000 */
-	public static int z = 0;
+  private static int z = 0;
 
 	/** Z rotational position, range -1000 to 1000 */
-	public static int rz = 0;
+  private static int rz = 0;
 
 	/** Position of Point of View from -1 to 27000 (360 degrees) */
-	public static int pov;
+  private static int pov;
 
 	/** Slider position, range -1000 to 1000 */
-	public static int slider = 0;
+  private static int slider = 0;
 
 	/** Constant specifying centered POV */
 	public static final int POV_CENTER = -1;
@@ -102,31 +102,31 @@ public class Controller {
 	public static final int POV_WEST = 9000;
 
 	/** Number of buttons on the controller */
-	public static int buttonCount = -1;
+  private static int buttonCount = -1;
 
 	/** Does this controller support a x axis */
-	public static boolean hasXAxis = false;
+  private static boolean hasXAxis = false;
 
 	/** Does this controller support a rotational x axis */
-	public static boolean hasRXAxis = false;
+  private static boolean hasRXAxis = false;
 
 	/** Does this controller support an y axis */
-	public static boolean hasYAxis = false;
+  private static boolean hasYAxis = false;
 
 	/** Does this controller support a rotational y axis */
-	public static boolean hasRYAxis = false;
+  private static boolean hasRYAxis = false;
 
 	/** Does this controller support a z axis */
-	public static boolean hasZAxis = false;
+  private static boolean hasZAxis = false;
 
 	/** Does this controller support a rotational z axis */
-	public static boolean hasRZAxis = false;
+  private static boolean hasRZAxis = false;
 
 	/** Does this controller support a Point-Of-View (hat) */
-	public static boolean hasPOV = false;
+  private static boolean hasPOV = false;
 
 	/** Does this controller support a slider */
-	public static boolean hasSlider = false;
+  private static boolean hasSlider = false;
 	
 	/** Button names. These are set upon create(), to names like BUTTON0, BUTTON1, etc. */
 	private static String[] buttonName;
@@ -258,4 +258,122 @@ public class Controller {
 	 * Register fields with the native library
 	 */
 	private static native void initIDs();
+  /**
+   * @return Returns the buttonCount.
+   */
+  public static int getButtonCount() {
+    return buttonCount;
+  }
+
+  /**
+   * @return Returns whether POV is supported
+   */
+  public static boolean hasPOV() {
+    return hasPOV;
+  }
+
+  /**
+   * @return Returns whether a rotational x axis is supported
+   */
+  public static boolean hasRXAxis() {
+    return hasRXAxis;
+  }
+
+  /**
+   * @return Returns whether a rotational y axis is supported
+   */
+  public static boolean hasRYAxis() {
+    return hasRYAxis;
+  }
+
+  /**
+   * @return Returns whether a rotational z axis is supported
+   */
+  public static boolean hasRZAxis() {
+    return hasRZAxis;
+  }
+
+  /**
+   * @return Returns whether a slider is supported
+   */
+  public static boolean hasSlider() {
+    return hasSlider;
+  }
+
+  /**
+   * @return Returns whether a x axis is supported
+   */
+  public static boolean hasXAxis() {
+    return hasXAxis;
+  }
+
+  /**
+   * @return Returns whether a y axis is supported
+   */
+  public static boolean hasYAxis() {
+    return hasYAxis;
+  }
+
+  /**
+   * @return Returns whether a z axis is supported
+   */
+  public static boolean hasZAxis() {
+    return hasZAxis;
+  }
+
+  /**
+   * @return Returns the POV value
+   */
+  public static int getPov() {
+    return pov;
+  }
+
+  /**
+   * @return Returns the rotational value of the x axis
+   */
+  public static int getRx() {
+    return rx;
+  }
+
+  /**
+   * @return Returns the rotational value of the y axis
+   */
+  public static int getRy() {
+    return ry;
+  }
+
+  /**
+   * @return Returns the rotational value of the z axis
+   */
+  public static int getRz() {
+    return rz;
+  }
+
+  /**
+   * @return Returns the slider value
+   */
+  public static int getSlider() {
+    return slider;
+  }
+
+  /**
+   * @return Returns the x axis value
+   */
+  public static int getX() {
+    return x;
+  }
+
+  /**
+   * @return Returns the y axis value
+   */
+  public static int getY() {
+    return y;
+  }
+
+  /**
+   * @return Returns the z axis value
+   */
+  public static int getZ() {
+    return z;
+  }
 }

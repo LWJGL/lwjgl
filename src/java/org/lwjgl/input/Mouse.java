@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -50,12 +50,20 @@ import org.lwjgl.*;
  * last position.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
 public class Mouse {
+  
+  /** 1 bit transparency for native cursor */
 	public final static int CURSOR_ONE_BIT_TRANSPARENCY = 1;
+  
+  /** 8 bit alhpa native cursor */
 	public final static int CURSOR_8_BIT_ALPHA = 2;
-	public final static int CURSOR_ANIMATION = 4;
+  
+  /** animation native cursor */
+  public final static int CURSOR_ANIMATION = 4;
 
 	/** Has the mouse been created? */
 	private static boolean created;
@@ -64,41 +72,40 @@ public class Mouse {
 	private static byte[] buttons;
 
 	/** Delta X */
-	public static int dx;
+	private static int dx;
 
 	/** Delta Y */
-	public static int dy;
+	private static int dy;
 
 	/** Delta Z */
-	public static int dwheel;
+	private static int dwheel;
 
 	/** Number of buttons supported by the mouse */
-	public static int buttonCount = -1;
+	private static int buttonCount = -1;
 
 	/** Does this mouse support a scroll wheel */
-	public static boolean hasWheel = false;
+	private static boolean hasWheel = false;
 
 	/** The current native cursor, if any */
 	private static Cursor currentCursor;
 
 	/** Button names. These are set upon create(), to names like BUTTON0, BUTTON1, etc. */
 	private static String[] buttonName;
+  
+  /** hashmap of button names, for fast lookup */
 	private static final Map buttonMap = new HashMap(16);
 
 	/** Lazy initialization */
 	private static boolean initialized;
 
-	 /**
-	 * The mouse button events from the last read: a sequence of pairs of button number,
-	 * followed by state.
-	 */
-	private static ByteBuffer readBuffer;
+	/** The mouse button events from the last read */
+	private static ByteBuffer readBuffer = null;
 
 	/** The current mouse event button being examined */
-	public static int button;
+	private static int eventButton;
 
 	/** The current state of the button being examined in the event queue */
-	public static boolean state;
+  private static boolean eventState;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -235,8 +242,10 @@ public class Mouse {
 		buttons = new byte[buttonCount];
 	}
 
+  /** Native query of wheel support */
 	private static native boolean nHasWheel();
 
+  /** Native query of button count */
 	private static native int nGetButtonCount();
 
 	/**
@@ -294,10 +303,10 @@ public class Mouse {
 	 */
 	public static boolean isButtonDown(int button) {
 		assert created : "The mouse has not been created.";
-		if (button >= buttonCount)
-			return false;
+		if (button >= buttonCount || button < 0)
+		  return false;
 		else
-			return buttons[button] == 1;
+		  return buttons[button] == 1;
 	}
 	
 	/**
@@ -306,7 +315,7 @@ public class Mouse {
 	 * @return a String with the button's human readable name in it or null if the button is unnamed
 	 */
 	public static String getButtonName(int button) {
-		if (button >= buttonName.length)
+		if (button >= buttonName.length || button < 0)
 			return null;
 		else
 			return buttonName[button];
@@ -371,10 +380,59 @@ public class Mouse {
 		assert readBuffer != null : "Mouse buffering has not been enabled.";
 
 		if (readBuffer.hasRemaining()) {
-			button = readBuffer.get() & 0xFF;
-			state = readBuffer.get() != 0;
+			eventButton = readBuffer.get() & 0xFF;
+			eventState = readBuffer.get() != 0;
 			return true;
 		} else
 			return false;
 	}
+  
+  /**
+   * @return Current events button
+   */
+  public static int getEventButton() {
+    return eventButton;
+  }
+  
+  /**
+   * @return Current events button state
+   */
+  public static boolean getEventButtonState() {
+    return eventState;
+  }
+
+  /**
+   * @return Movement on the x axis since last poll
+   */
+  public static int getDX() {
+    return dx;
+  }
+
+  /**
+   * @return Movement on the y axis since last poll
+   */
+  public static int getDY() {
+    return dy;
+  }
+
+  /**
+   * @return Movement of the wheel since last poll
+   */
+  public static int getDWheel() {
+    return dwheel;
+  }
+
+  /**
+   * @return Number of buttons on this mouse
+   */
+  public static int getButtonCount() {
+    return buttonCount;
+  }
+
+  /**
+   * @return Whether or not this mouse has wheel support
+   */
+  public static boolean hasWheel() {
+    return hasWheel;
+  }
 }

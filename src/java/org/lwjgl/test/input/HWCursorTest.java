@@ -208,9 +208,9 @@ public class HWCursorTest {
     Keyboard.poll();
     Mouse.poll();
 
-    if (Mouse.dx != 0 || Mouse.dy != 0) {
-        mouse_x += Mouse.dx;
-        mouse_y += Mouse.dy;
+    if (Mouse.getDX() != 0 || Mouse.getDY() != 0) {
+        mouse_x += Mouse.getDX();
+        mouse_y += Mouse.getDY();
         System.out.println("mouse_x " + mouse_x + " mouse_y " + mouse_y);
     }
 

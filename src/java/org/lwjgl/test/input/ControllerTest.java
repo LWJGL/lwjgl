@@ -131,19 +131,19 @@ public class ControllerTest {
         return;
       }
 
-      if (Controller.x > 200) {
+      if (Controller.getX() > 200) {
         position.x += 1;
       }
         
-      if (Controller.x < -200) {
+      if (Controller.getX() < -200) {
         position.x -= 1;
       }
         
-      if (Controller.y < -200) {
+      if (Controller.getY() < -200) {
         position.y += 1;
       }
       
-      if (Controller.y > 200) {
+      if (Controller.getY() > 200) {
         position.y -= 1;
       }
       
@@ -174,9 +174,9 @@ public class ControllerTest {
       float color = 1.0f;
       int buttonDown = 0;
       
-      for(int i=0;i<Controller.buttonCount; i++) {
+      for(int i=0;i<Controller.getButtonCount(); i++) {
         if(Controller.isButtonDown(i)) {
-          color = (1.0f / Controller.buttonCount) * (i+1);
+          color = (1.0f / Controller.getButtonCount()) * (i+1);
           System.out.println("Button " + i + " down"); 
         }
       }
