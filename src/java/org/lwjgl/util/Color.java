@@ -392,4 +392,103 @@ public final class Color implements ReadableColor, Serializable, WritableColor {
 		blue = src.getBlueByte();
 		alpha = src.getAlphaByte();
 	}
+	
+	/**
+	 * HSB to RGB conversion, pinched from java.awt.Color.
+	 * @param hue (0..360)
+	 * @param saturation (0..100)
+	 * @param brightness (0..100)
+	 */
+    public void fromHSB(float hue, float saturation, float brightness) {
+		if (saturation == 0.0F) {
+			red = green = blue = (byte) (brightness * 255F + 0.5F);
+		} else {
+			float f3 = (hue - (float) Math.floor(hue)) * 6F;
+			float f4 = f3 - (float) Math.floor(f3);
+			float f5 = brightness * (1.0F - saturation);
+			float f6 = brightness * (1.0F - saturation * f4);
+			float f7 = brightness * (1.0F - saturation * (1.0F - f4));
+			switch ((int) f3) {
+				case 0 :
+					red = (byte) (brightness * 255F + 0.5F);
+					green = (byte) (f7 * 255F + 0.5F);
+					blue = (byte) (f5 * 255F + 0.5F);
+					break;
+				case 1 :
+					red = (byte) (f6 * 255F + 0.5F);
+					green = (byte) (brightness * 255F + 0.5F);
+					blue = (byte) (f5 * 255F + 0.5F);
+					break;
+				case 2 :
+					red = (byte) (f5 * 255F + 0.5F);
+					green = (byte) (brightness * 255F + 0.5F);
+					blue = (byte) (f7 * 255F + 0.5F);
+					break;
+				case 3 :
+					red = (byte) (f5 * 255F + 0.5F);
+					green = (byte) (f6 * 255F + 0.5F);
+					blue = (byte) (brightness * 255F + 0.5F);
+					break;
+				case 4 :
+					red = (byte) (f7 * 255F + 0.5F);
+					green = (byte) (f5 * 255F + 0.5F);
+					blue = (byte) (brightness * 255F + 0.5F);
+					break;
+				case 5 :
+					red = (byte) (brightness * 255F + 0.5F);
+					green = (byte) (f5 * 255F + 0.5F);
+					blue = (byte) (f6 * 255F + 0.5F);
+					break;
+			}
+		}
+	}
+
+	/**
+	 * RGB to HSB conversion, pinched from java.awt.Color.
+	 * The HSB value is returned in dest[] if dest[] is supplied.
+	 * Hue is 0..360, saturation and brightness are 0..100.
+	 * @param dest[] Destination floats, or null
+	 * @return dest[], or a new float[]
+	 */
+	public float[] toHSB(float dest[]) {
+		int r = getRed();
+		int g = getGreen();
+		int b = getBlue();
+		if (dest == null)
+			dest = new float[3];
+		int l = r <= g ? g : r;
+		if (b > l)
+			l = b;
+		int i1 = r >= g ? g : r;
+		if (b < i1)
+			i1 = b;
+		float brightness = (float) l / 255F;
+		float saturation;
+		if (l != 0)
+			saturation = (float) (l - i1) / (float) l;
+		else
+			saturation = 0.0F;
+		float hue;
+		if (saturation == 0.0F) {
+			hue = 0.0F;
+		} else {
+			float f3 = (float) (l - r) / (float) (l - i1);
+			float f4 = (float) (l - g) / (float) (l - i1);
+			float f5 = (float) (l - b) / (float) (l - i1);
+			if (r == l)
+				hue = f5 - f4;
+			else if (g == l)
+				hue = (2.0F + f3) - f5;
+			else
+				hue = (4F + f4) - f3;
+			hue /= 6F;
+			if (hue < 0.0F)
+				hue++;
+		}
+		dest[0] = hue;
+		dest[1] = saturation;
+		dest[2] = brightness;
+		return dest;
+	}
+
 }
