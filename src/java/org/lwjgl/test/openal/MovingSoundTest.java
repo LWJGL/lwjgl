@@ -35,6 +35,7 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.eax.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLWindow;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
@@ -51,7 +52,7 @@ import java.nio.FloatBuffer;
 public class MovingSoundTest extends BasicTest {
   
   public static float MOVEMENT = 50.00f;
-  private GL gl = new GL("Moving Sound Test", 100, 100, 320, 240, 32, 0 ,0 ,0);
+  private GLWindow gl = new GLWindow("Moving Sound Test", 100, 100, 320, 240, 32, 0 ,0 ,0);
 
 	/**
 	 * Creates an instance of MovingSoundTest

@@ -35,6 +35,7 @@ import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLWindow;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
 
@@ -49,7 +50,7 @@ import org.lwjgl.vector.Vector2f;
 public class MouseTest {
 
   /** OpenGL instance */
-  private GL gl;
+  private GLWindow gl;
 
   /** GLU instance */
   private GLU glu;
@@ -78,7 +79,7 @@ public class MouseTest {
   
   private void setupDisplay(boolean fullscreen) {
     try {
-      gl = new GL("MouseTest", 50, 50, 640, 480, 16, 0, 0, 0);
+      gl = new GLWindow("MouseTest", 50, 50, 640, 480, 16, 0, 0, 0);
       gl.create();
 
     } catch (Exception e) {

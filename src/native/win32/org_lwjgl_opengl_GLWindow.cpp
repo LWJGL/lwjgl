@@ -40,7 +40,7 @@
  */
 
 #include <windows.h>
-#include "org_lwjgl_opengl_BaseGL.h"
+#include "org_lwjgl_opengl_GLWindow.h"
 #include "extgl.h"
 #include "Window.h"
 #include "jni.h"
@@ -131,11 +131,11 @@ static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, 
 }
 
 /*
- * Class:     org_lwjgl_opengl_BaseGL
+ * Class:     org_lwjgl_opengl_GLWindow
  * Method:    nCreate
  * Signature: (Ljava/lang/String;IIIIIIIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_nCreate
   (JNIEnv * env, jobject obj, 
 	jstring title, jint x, jint y, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jboolean fullscreen)
 {
@@ -185,11 +185,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 }
 
 /*
- * Class:     org_lwjgl_opengl_BaseGL
+ * Class:     org_lwjgl_opengl_GLWindow
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_nDestroyGL
   (JNIEnv * env, jobject obj)
 {
 	wglMakeCurrent(NULL, NULL);
@@ -207,11 +207,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
 }
 
 /*
- * Class:     org_lwjgl_opengl_BaseGL
+ * Class:     org_lwjgl_opengl_GLWindow
  * Method:    swapBuffers
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_swapBuffers
   (JNIEnv *, jobject) 
 {
 	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);

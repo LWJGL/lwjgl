@@ -8,6 +8,7 @@ package org.lwjgl.test;
 
 import org.lwjgl.*;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLWindow;
 
 /**
  * @author Brian
@@ -15,23 +16,18 @@ import org.lwjgl.opengl.GL;
 public class WindowCreationTest {
 
 	public static void main(String[] args) {
-    GL gl = null;
+    GLWindow gl = null;
     
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     System.out.println("Found " + modes.length + " display modes");
     
     try {
-      gl = new GL("WindowCreationTest", 50, 50, 320, 240, 16, 0, 0, 0);
-    } catch (Exception e) {
-			e.printStackTrace();
-		}
-    
-    try {
+      gl = new GLWindow("WindowCreationTest", 50, 50, 320, 240, 16, 0, 0, 0);
       gl.create();
     } catch (Exception e) {
 			e.printStackTrace();
 		}
-
+    
     System.out.println("Display created");
 
     while(!gl.isCloseRequested()) {    

@@ -72,7 +72,7 @@ public final class Game {
 		}
 	}
  
-    public static final GL gl = new GL("LWJGL Game Example", 16, 0, 0,0);
+    public static final GLWindow gl = new GLWindow("LWJGL Game Example", 16, 0, 0,0);
      static {
          try {
              gl.create();

@@ -36,6 +36,7 @@ import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLWindow;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
 
@@ -50,7 +51,7 @@ import org.lwjgl.vector.Vector2f;
 public class ControllerCreationTest {
 
   /** OpenGL instance */
-  private GL gl;
+  private GLWindow gl;
 
   /** position of quad to draw */
   private Vector2f position = new Vector2f(320.0f, 240.0f);
@@ -77,9 +78,9 @@ public class ControllerCreationTest {
     try {
       if(fullscreen) {
         Display.setDisplayMode(displayMode);
-        gl = new GL("MouseCreationTest", 16, 0, 0, 0);
+        gl = new GLWindow("ControllerCreationTest", 16, 0, 0, 0);
       } else {
-        gl = new GL("MouseCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+        gl = new GLWindow("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
       }
       gl.create();
 

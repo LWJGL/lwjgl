@@ -47,33 +47,7 @@ import java.nio.Buffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public class CoreGL extends BaseGL implements CoreGLConstants {
-	/**
-	 * @param title
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param bpp
-	 * @param alpha
-	 * @param depth
-	 * @param stencil
-	 */
-	public CoreGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
-		super(title, x, y, width, height, bpp, alpha, depth, stencil);
-	}
-
-	/**
-	 * @param title
-	 * @param bpp
-	 * @param alpha
-	 * @param depth
-	 * @param stencil
-	 */
-	public CoreGL(String title, int bpp, int alpha, int depth, int stencil) {
-		super(title, bpp, alpha, depth, stencil);
-	}
-
+public class CoreGL implements CoreGLConstants {
 	public static native void glAccum(int op, float value);
 	public static native void glAlphaFunc(int func, float ref);
 	public static native void glColorTable(

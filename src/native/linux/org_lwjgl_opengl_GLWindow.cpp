@@ -41,7 +41,7 @@
 
 #include "extgl.h"
 #include "Window.h"
-#include "org_lwjgl_opengl_BaseGL.h"
+#include "org_lwjgl_opengl_GLWindow.h"
 
 #define USEGLX13 true
 
@@ -204,11 +204,11 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
 }
 
 /*
- * Class:     org_lwjgl_opengl_BaseGL
+ * Class:     org_lwjgl_opengl_GLWindow
  * Method:    nCreate
  * Signature: (IIII)Z
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_nCreate
   (JNIEnv * env, jobject obj, jstring title, jint x, jint y, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jboolean fullscreen)
 {
 	int screen;
@@ -256,33 +256,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 }
 
 /*
- * Class:     org_lwjgl_opengl_BaseGL
+ * Class:     org_lwjgl_opengl_GLWindow
  * Method:    makeCurrent
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_makeCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_makeCurrent
   (JNIEnv *env, jobject obj)
 {
 	makeCurrent();
 }
 
 /*
- * Class:     org_lwjgl_opengl_BaseGL
+ * Class:     org_lwjgl_opengl_GLWindow
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_nDestroyGL
   (JNIEnv * env, jobject obj)
 {
 	destroy();
 }
 
 /*
- * Class:     org_lwjgl_opengl_BaseGL
+ * Class:     org_lwjgl_opengl_GLWindow
  * Method:    swapBuffers
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_swapBuffers(JNIEnv * env, jobject obj)
 {
 	if (USEGLX13 && extgl_Extensions.glx.GLX13)
 		glXSwapBuffers(getCurrentDisplay(), glx_window);

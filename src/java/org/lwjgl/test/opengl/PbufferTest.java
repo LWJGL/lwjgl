@@ -52,7 +52,7 @@ public class PbufferTest {
   private DisplayMode mode;
 
   /** GL instance */
-  private GL gl;
+  private GLWindow gl;
 
   /** GLU instance */
   private GLU glu;
@@ -98,8 +98,8 @@ public class PbufferTest {
       mode = findDisplayMode(800, 600, 16);
 
       // start of in windowed mode
-      gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
-//      gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+//      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
       gl.create();
       if ((Pbuffer.getPbufferCaps() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
           System.out.println("No Pbuffer support!");
@@ -262,7 +262,7 @@ public class PbufferTest {
         gl.destroy();
 
         Display.setDisplayMode(mode);
-        gl = new GL("Test", mode.bpp, 0, 0, 0);
+        gl = new GLWindow("Test", mode.bpp, 0, 0, 0);
         gl.create();
         glInit();
         initPbuffer();
@@ -283,7 +283,7 @@ public class PbufferTest {
         gl.destroy();
 
         Display.resetDisplayMode();
-        gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+        gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
         gl.create();
         glInit();
         initPbuffer();
@@ -391,10 +391,8 @@ public class PbufferTest {
    * Initializes OGL
    */
   private void glInit() {
-    // Go into orthographic projection mode.
-    gl.determineAvailableExtensions();
     //sync frame (only works on windows)
-    if (GL.WGL_EXT_swap_control) {
+    if (gl.WGL_EXT_swap_control) {
       GL.wglSwapIntervalEXT(1);
     }
     GL.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);

@@ -88,7 +88,7 @@ public class Grass {
 		}
 	}
 
-	public static final GL gl = new GL("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0);
+	public static final GLWindow gl = new GLWindow("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0);
 
 	static {
 		try {

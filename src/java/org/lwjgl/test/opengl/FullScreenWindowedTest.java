@@ -50,7 +50,7 @@ public class FullScreenWindowedTest {
   private DisplayMode mode;
 
   /** GL instance */
-  private GL gl;
+  private GLWindow gl;
 
   /** GLU instance */
   private GLU glu;
@@ -96,7 +96,7 @@ public class FullScreenWindowedTest {
       mode = findDisplayMode(800, 600, 16);
 
       // start of in windowed mode
-      gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
       gl.create();
 
       glInit();
@@ -205,7 +205,7 @@ public class FullScreenWindowedTest {
         gl.destroy();
 
         Display.setDisplayMode(mode);
-        gl = new GL("Test", mode.bpp, 0, 0, 0);
+        gl = new GLWindow("Test", mode.bpp, 0, 0, 0);
         gl.create();
 
         glInit();
@@ -223,7 +223,7 @@ public class FullScreenWindowedTest {
         gl.destroy();
 
         Display.resetDisplayMode();
-        gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+        gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
         gl.create();
 
         glInit();
@@ -310,7 +310,6 @@ public class FullScreenWindowedTest {
    */
   private void glInit() {
     // Go into orthographic projection mode.
-    gl.determineAvailableExtensions();
     GL.glMatrixMode(GL.GL_PROJECTION);
     GL.glLoadIdentity();
     GLU.gluOrtho2D(0, mode.width, 0, mode.height);
@@ -322,7 +321,7 @@ public class FullScreenWindowedTest {
     GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     //sync frame (only works on windows)
-    if (GL.WGL_EXT_swap_control) {
+    if (gl.WGL_EXT_swap_control) {
       GL.wglSwapIntervalEXT(1);
     }
   }
