@@ -39,11 +39,12 @@
  * @version $Revision$
  */
 
-#include <JavaVM/jni.h>
 #include <Carbon/Carbon.h>
+#include <JavaVM/jni.h>
 #include "org_lwjgl_opengl_Window.h"
 
 static WindowRef win_ref;
+static bool close_requested;
  
 /* 
  * Utility function to throw an Exception
@@ -55,24 +56,86 @@ static void throwException(JNIEnv * env, const char * err)
 	env->DeleteLocalRef(cls);
 }
 
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIII)V
- */
+static void setWindowTitle(JNIEnv *env, jstring title_obj) {
+	const char* title = env->GetStringUTFChars(title_obj, NULL);
+	int str_len = env->GetStringUTFLength(title_obj);
+	CFStringRef cf_title = CFStringCreateWithBytes(NULL, (const UInt8*)title, str_len, kCFStringEncodingUTF8, false);
+	if (cf_title == NULL) {
+#ifdef _DEBUG
+		printf("Could not set window title\n");
+#endif
+		return;
+	}
+	SetWindowTitleWithCFString(win_ref, cf_title);
+	CFRelease(cf_title);
+	env->ReleaseStringUTFChars(title_obj, title);
+}
+
+static pascal OSStatus doWindowClose(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	close_requested = true;
+	return noErr;
+}
+
+static void registerEventHandlers(void) {
+/*	EventTargetRef event_target = GetWindowEventTarget(win_ref);
+	status = InstallStandardEventHandler(event_target);
+	if (noErr != status) {
+		DisposeWindow(win_ref);
+		throwException(env, "Could not install default window event handler");
+		return;
+	}*/
+	EventTypeSpec eventType;
+	eventType.eventClass = kEventClassWindow;
+	eventType.eventKind  = kEventWindowClose;
+	EventHandlerUPP handlerUPP = NewEventHandlerUPP(doWindowClose);
+	InstallWindowEventHandler(win_ref, handlerUPP, 1, &eventType, NULL, NULL);
+	DisposeEventHandlerUPP(handlerUPP);
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv *, jclass) {
+	const bool saved = close_requested;
+	close_requested = false;
+	return saved;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil) {
-	const Rect rect = {y, x, y + height, x + width};
-/*	rect.top = y;
-	rect.left = x;
-	rect.bottom = y + height;
-	rect.right = x + width;*/
+	Rect rect;
 	OSStatus status;
+	const WindowAttributes window_attr = kWindowStandardDocumentAttributes/*kWindowCloseBoxAttribute|
+				       kWindowCollapseBoxAttribute*/|
+				       kWindowStandardHandlerAttribute;
+
+	SetRect(&rect, x, y, x + width, y + height);
+	close_requested = false;
 	
-	status = CreateNewWindow(kPlainWindowClass, kWindowNoAttributes, &rect, &win_ref);
+	status = CreateNewWindow(kDocumentWindowClass, window_attr, &rect, &win_ref);
 	if (noErr != status) {
 		throwException(env, "Could not create window");
 		return;
 	}
-	printf("yir\n");
+/*	setWindowTitle(env, title);
+	const RGBColor background_color = { 0, 0, 0 };
+	status = SetWindowContentColor(win_ref, &background_color);
+	if (noErr != status) {
+		DisposeWindow(win_ref);
+		throwException(env, "Could not alter window background color");
+		return;
+	}
+	registerEventHandlers();*/
+	status = TransitionWindow(win_ref, kWindowZoomTransitionEffect, kWindowShowTransitionAction, NULL);
+	if (noErr != status) {
+		DisposeWindow(win_ref);
+		throwException(env, "Could not show window");
+		return;
+	}
+//	SelectWindow(win_ref);
+	InitCursor();
+	RunApplicationEventLoop();
+	printf("Window creation succeeded\n");
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
+  (JNIEnv *env, jclass clazz)
+{
+	DisposeWindow(win_ref);
+}
