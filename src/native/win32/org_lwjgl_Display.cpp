@@ -166,7 +166,7 @@ static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
   
 	//enumerate all displaymodes
 	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
-		if (DevMode.dmBitsPerPel > 8) {
+		if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 			AvailableModes++;
 		}
 	}
@@ -183,7 +183,7 @@ static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	i = 0, j = 0, n = 0;
 	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
 		// Filter out indexed modes
-		if (DevMode.dmBitsPerPel > 8) {
+		if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 			jobject displayMode;
 			displayMode = env->NewObject(displayModeClass, displayModeConstructor,
 			                              DevMode.dmPelsWidth, DevMode.dmPelsHeight,
