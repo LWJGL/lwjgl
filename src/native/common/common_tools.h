@@ -43,6 +43,9 @@
 #include <jni.h>
 #include "org_lwjgl_Sys.h"
 
+// shared VM instance
+extern JavaVM *jvm;
+
 // Must be x * max_event_size + 1
 #define EVENT_BUFFER_SIZE (25 * 4 + 1)
 

@@ -42,6 +42,7 @@
 
 static bool debug = false;
 static const char* VERSION = "0.9pre";
+JavaVM *jvm;
 
 jstring getVersionString(JNIEnv *env) {
 	return env->NewStringUTF(VERSION);
@@ -206,4 +207,11 @@ bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
   jclass booleanClass = env->FindClass("java/lang/Boolean");
   jmethodID getBoolean = env->GetStaticMethodID(booleanClass, "getBoolean", "(Ljava/lang/String;)Z");
   return env->CallStaticBooleanMethod(booleanClass, getBoolean, property)? true : false;
+}
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+  jvm = vm;
+  return JNI_VERSION_1_4;
+}
+JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
