@@ -216,7 +216,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 				UINT virt_key = MapVirtualKey(rgdod[i].dwOfs, 1);
 				if (virt_key != 0) {
 					if (!GetKeyboardState(state))
-						return -1;
+						return 0;
 					num_chars = ToUnicode(virt_key, 
 										  rgdod[i].dwOfs,
 										  state,
