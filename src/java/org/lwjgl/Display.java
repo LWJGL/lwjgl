@@ -222,7 +222,7 @@ public final class Display {
 	 * 
 	 * If the underlying hardware does not support gamma then this command is a no-op.
 	 * 
-	 * When LWJGL exits, any gamma changes are automatically undone.
+	 * When resetDisplaMode is called, any gamma changes are automatically undone.
 	 *
 	 * @param red An array of ints to store red gamma in. Must be 256 in length.
 	 * @param green An array of ints to store green gamma in. Must be 256 in length.
