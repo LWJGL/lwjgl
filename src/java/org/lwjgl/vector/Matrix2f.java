@@ -75,6 +75,37 @@ public class Matrix2f {
 	}
 	
 	/**
+	 * Load from a float buffer. The buffer stores the matrix in column major
+	 * (OpenGL) order.
+	 * 
+	 * @param buf A float buffer to read from
+	 * @return this
+	 */
+	public Matrix2f load(FloatBuffer buf) {
+		
+		m00 = buf.get();
+		m10 = buf.get();
+		m01 = buf.get();
+		m11 = buf.get();
+		
+		return this;
+	}
+	
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in column
+	 * major (openGL) order.
+	 * @param buf The buffer to store this matrix in
+	 */
+	public void store(FloatBuffer buf) {
+		buf.put(m00);
+		buf.put(m10);
+		buf.put(m01);
+		buf.put(m11);
+	}
+	
+	
+	
+	/**
 	 * Add two matrices together and place the result in a third matrix.
 	 * @param left The left source matrix
 	 * @param right The right source matrix
@@ -165,14 +196,14 @@ public class Matrix2f {
 	}
 	
 	/**
-	 * Multiply a Vector by a matrix and return the result in a destination
+	 * Transform a Vector by a matrix and return the result in a destination
 	 * vector. 
 	 * @param left The left matrix
 	 * @param right The right vector
 	 * @param dest The destination vector, or null if a new one is to be created
 	 * @return the destination vector
 	 */
-	public static Vector2f mul(Matrix2f left, Vector2f right, Vector2f dest) {
+	public static Vector2f transform(Matrix2f left, Vector2f right, Vector2f dest) {
 		
 		Vector2f temp = null;
 		

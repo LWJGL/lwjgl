@@ -31,6 +31,8 @@
  */
 package org.lwjgl.vector;
 
+import java.nio.FloatBuffer;
+
 /**
  * Holds a 4x4 float matrix.
  *
@@ -124,6 +126,61 @@ public class Matrix4f {
 		
 		return this;
 	}
+	
+	/**
+	 * Load from a float buffer. The buffer stores the matrix in column major
+	 * (OpenGL) order.
+	 * 
+	 * @param buf A float buffer to read from
+	 * @return this
+	 */
+	public Matrix4f load(FloatBuffer buf) {
+		
+		m00 = buf.get();
+		m10 = buf.get();
+		m20 = buf.get();
+		m30 = buf.get();
+		m01 = buf.get();
+		m11 = buf.get();
+		m21 = buf.get();
+		m31 = buf.get();
+		m02 = buf.get();
+		m12 = buf.get();
+		m22 = buf.get();
+		m32 = buf.get();
+		m03 = buf.get();
+		m13 = buf.get();
+		m23 = buf.get();
+		m33 = buf.get();
+		
+		return this;
+	}
+	
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in column
+	 * major (openGL) order.
+	 * @param buf The buffer to store this matrix in
+	 */
+	public void store(FloatBuffer buf) {
+		buf.put(m00);
+		buf.put(m10);
+		buf.put(m20);
+		buf.put(m30);
+		buf.put(m01);
+		buf.put(m11);
+		buf.put(m21);
+		buf.put(m31);
+		buf.put(m02);
+		buf.put(m12);
+		buf.put(m22);
+		buf.put(m32);
+		buf.put(m03);
+		buf.put(m13);
+		buf.put(m23);
+		buf.put(m33);
+	}
+	
+	
 	/**
 	 * Add two matrices together and place the result in a third matrix.
 	 * @param left The left source matrix
@@ -253,14 +310,14 @@ public class Matrix4f {
 	}
 	
 	/**
-	 * Multiply a Vector by a matrix and return the result in a destination
+	 * Transform a Vector by a matrix and return the result in a destination
 	 * vector. 
 	 * @param left The left matrix
 	 * @param right The right vector
 	 * @param dest The destination vector, or null if a new one is to be created
 	 * @return the destination vector
 	 */
-	public static Vector4f mul(Matrix4f left, Vector4f right, Vector4f dest) {
+	public static Vector4f transform(Matrix4f left, Vector4f right, Vector4f dest) {
 		
 		Vector4f temp = null;
 		
