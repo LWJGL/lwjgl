@@ -53,7 +53,7 @@
 #include <jni.h>
 #include "common_tools.h"
 
-bool extal_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions);
+void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 
 #ifdef __cplusplus
 extern "C" {

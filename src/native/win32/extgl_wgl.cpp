@@ -89,7 +89,7 @@ static bool WGLQueryExtension(JNIEnv *env, const char *name)
 			extensions = (GLubyte*)wglGetExtensionsStringEXT();
 	else
 		extensions = (GLubyte*)wglGetExtensionsStringARB(wglGetCurrentDC());
-	return extgl_QueryExtension(env, NULL, extensions, name);
+	return extgl_QueryExtension(env, extensions, name);
 }
 
 static void extgl_InitWGLARBPbuffer(JNIEnv *env)

@@ -733,7 +733,8 @@ static void JNICALL Java_org_lwjgl_openal_AL10_alDopplerVelocity (JNIEnv *env, j
  *
  * @return true if all methods were loaded, false if one of the methods could not be loaded
  */
-bool LoadAL(JNIEnv *env) {
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"alEnable", "(I)V", (void*)&Java_org_lwjgl_openal_AL10_alEnable, "alEnable", (void**)&alEnable},
 		{"alDisable", "(I)V", (void*)&Java_org_lwjgl_openal_AL10_alDisable, "alDisable", (void**)&alDisable},
@@ -786,6 +787,6 @@ bool LoadAL(JNIEnv *env) {
 		{"alDopplerVelocity", "(F)V", (void*)&Java_org_lwjgl_openal_AL10_alDopplerVelocity, "alDopplerVelocity", (void**)&alDopplerVelocity}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/openal/AL10");
-	return extal_InitializeClass(env, clazz, NULL, NULL, num_functions, functions);
+	extal_InitializeClass(env, clazz, num_functions, functions);
+}
 }

@@ -165,10 +165,12 @@ public class ALC {
 		if (created) {
 			return;
 		}
-
+		initNativeStubs();
 		init();
 		created = true;
 	}
+
+	private static native void initNativeStubs();
 
 	/**
 	 * Calls whatever destruction rutines that are needed

@@ -149,16 +149,12 @@ void *extgl_GetProcAddress(const char *name)
 #endif
 }
 
-bool extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions) {
-	return ext_InitializeClass(env, clazz, NULL, NULL, &extgl_GetProcAddress, num_functions, functions);
+void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions) {
+	ext_InitializeClass(env, clazz, &extgl_GetProcAddress, num_functions, functions);
 }
 
 bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions) {
 	return ext_InitializeFunctions(&extgl_GetProcAddress, num_functions, functions);
-}
-
-static void insertExtension(JNIEnv *env, jobject ext_set, const char *ext) {
-	doExtension(env, ext_set, "add", ext);
 }
 
 #ifdef _AGL
@@ -232,7 +228,7 @@ static void aglUnloadFramework(CFBundleRef f)
 
 #endif
 
-bool extgl_QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name)
+bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *name)
 {
 	const GLubyte *start;
 	GLubyte *where, *terminator;
@@ -259,9 +255,6 @@ bool extgl_QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions
 		terminator = where + strlen(name);
 		if (where == start || *(where - 1) == ' ')
 			if (*terminator == ' ' || *terminator == '\0') {
-				if (ext_set != NULL) { 
-					insertExtension(env, ext_set, name);
-				}
 				return true;
 			}
 		start = terminator;
@@ -318,12 +311,6 @@ bool extgl_InitAGL(JNIEnv *env)
 /*-----------------------------------------------------*/
 /* AGL stuff END*/
 /*-----------------------------------------------------*/
-
-/** returns true if the extention is available */
-static bool GLQueryExtension(JNIEnv *env, jobject ext_set, const char *name)
-{
-	return extgl_QueryExtension(env, ext_set, glGetString(GL_EXTENSIONS), name);
-}
 
 #ifdef _AGL
 bool extgl_Open(void) {

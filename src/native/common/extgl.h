@@ -438,9 +438,9 @@ extern bool extgl_Open(void);
 extern bool extgl_InitAGL(JNIEnv *env);
 #endif
 extern void extgl_Close(void);
-extern bool extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
+extern void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions);
-extern bool extgl_QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name);
+extern bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *name);
 
 #ifdef __cplusplus
 }

@@ -170,6 +170,7 @@ public abstract class AL {
 		oalPaths[oalPaths.length - 1] = "";
 		nCreate(oalPaths);
 
+		AL10.initNativeStubs();
 		ALC.create();
 
 		device = ALC.alcOpenDevice(deviceArguments);

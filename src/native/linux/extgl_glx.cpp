@@ -77,7 +77,7 @@ glXSwapIntervalSGIPROC glXSwapIntervalSGI = NULL;
 static bool GLXQueryExtension(JNIEnv* env, Display *disp, int screen, const char *name)
 {
 	const GLubyte *exts = (const GLubyte *)glXQueryExtensionsString(disp, screen);
-	return extgl_QueryExtension(env, NULL, exts, name);
+	return extgl_QueryExtension(env, exts, name);
 }
 
 static void extgl_InitGLX13(JNIEnv *env)

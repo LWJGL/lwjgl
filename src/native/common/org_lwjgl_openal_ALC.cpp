@@ -352,7 +352,8 @@ static jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, jcl
  *
  * @return true if all methods were loaded, false if one of the methods could not be loaded
  */
-bool LoadALC(JNIEnv *env) {
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"nalcGetString", "(II)Ljava/lang/String;", (void*)&Java_org_lwjgl_openal_ALC_nalcGetString, "alcGetString", (void**)&alcGetString},
 		{"nalcGetIntegerv", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_openal_ALC_nalcGetIntegerv, "alcGetIntegerv", (void**)&alcGetIntegerv},
@@ -370,6 +371,6 @@ bool LoadALC(JNIEnv *env) {
 		{"nalcGetEnumValue", "(ILjava/lang/String;)I", (void*)&Java_org_lwjgl_openal_ALC_nalcGetEnumValue, "alcGetEnumValue", (void**)&alcGetEnumValue}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/openal/ALC");
-	return extal_InitializeClass(env, clazz, NULL, NULL, num_functions, functions);
+	extal_InitializeClass(env, clazz, num_functions, functions);
+}
 }

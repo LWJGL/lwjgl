@@ -139,33 +139,6 @@ void throwException(JNIEnv * env, const char * err) {
 	throwGeneralException(env, "org/lwjgl/LWJGLException", err);
 }
 
-void doExtension(JNIEnv *env, jobject ext_set, const char *method_name, const char *ext) {
-	jclass clazz = env->GetObjectClass(ext_set);
-	jmethodID id = env->GetMethodID(clazz, method_name, "(Ljava/lang/Object;)Z");
-	if (id == NULL)
-		return;
-	jstring ext_string = env->NewStringUTF(ext);
-	if (ext_string == NULL) {
-		printfDebug("Could not allocate java string from %s\n", ext);
-		return;
-	}
-	env->CallBooleanMethod(ext_set, id, ext_string);
-}
-
-static void ext_removeExtension(JNIEnv *env, jobject ext_set, const char *ext) {
-	doExtension(env, ext_set, "remove", ext);
-}
-
-jclass ext_ResetClass(JNIEnv *env, const char *class_name) {
-	jclass clazz = env->FindClass(class_name);
-	if (clazz == NULL)
-		return NULL;
-	jint result = env->UnregisterNatives(clazz);
-	if (result != 0)
-		printfDebug("Could not unregister natives for class %s\n", class_name);
-	return clazz;
-}
-
 bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions) {
 	for (int i = 0; i < num_functions; i++) {
 		ExtFunction *function = functions + i;
@@ -180,20 +153,17 @@ bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFu
 	return true;
 }
 
-bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
-	if (clazz == NULL)
+bool ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
+	if (clazz == NULL) {
+		throwException(env, "Null class");
 		return false;
+	}
 	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
 	for (int i = 0; i < num_functions; i++) {
 		JavaMethodAndExtFunction *function = functions + i;
 		if (function->ext_function_name != NULL) {
 			void *ext_func_pointer = gpa(function->ext_function_name);
 			if (ext_func_pointer == NULL) {
-				if (ext_name != NULL) {
-					printfDebug("NOTICE: %s disabled because of missing driver symbols\n", ext_name);
-					if (ext_set != NULL)
-						ext_removeExtension(env, ext_set, ext_name);
-				}
 				free(methods);
 				throwException(env, "Missing driver symbols");
 				return false;
@@ -209,8 +179,6 @@ bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char 
 	jint result = env->RegisterNatives(clazz, methods, num_functions);
 	free(methods);
 	if (result != 0) {
-		if (ext_name != NULL)
-			printfDebug("Could not register natives for extension %s\n", ext_name);
 		return false;
 	} else
 		return true;

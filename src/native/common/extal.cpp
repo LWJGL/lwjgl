@@ -76,12 +76,6 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths);
 /* Unloads OpenAL */
 static void UnLoadOpenAL(void);
 
-/* Loads OpenAL basic functions */
-extern bool LoadAL(JNIEnv *env);
-
-/* Loads OpenAL ALC functions */
-extern bool LoadALC(JNIEnv *env);
-
 static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _WIN32
 	return GetProcAddress(handleOAL, function);
@@ -235,19 +229,6 @@ void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 		throwException(env, "Could not load alGetProcAddress function pointer.");
 		return;
 	}
-	//load basic OpenAL functions
-	if(!LoadAL(env)) {
-		DeInitializeOpenAL();
-		throwException(env, "Could not load OpenAL function pointers.");
-		return;
-	}
-
-	//load OpenAL context functions
-	if(!LoadALC(env)) {
-		DeInitializeOpenAL();
-		throwException(env, "Could not load ALC function pointers.");
-		return;
-	}
 }
 
 /**
@@ -258,7 +239,7 @@ void DeInitializeOpenAL() {
 	handleOAL = 0;
 }
 
-bool extal_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions) {
-	return ext_InitializeClass(env, clazz, ext_set, ext_name, &extal_GetProcAddress, num_functions, functions);
+void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions) {
+	ext_InitializeClass(env, clazz, &extal_GetProcAddress, num_functions, functions);
 }
 
