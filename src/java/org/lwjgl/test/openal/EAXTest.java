@@ -73,6 +73,12 @@ public class EAXTest extends BasicTest {
    * Runs the actual test, using supplied arguments
    */
   protected void execute(String[] args) {
+    
+    if(!AL.isCreated()) {
+      System.out.println("Unable to continue with EAXTest, since OpenAL could not be initialized.");
+      return;
+    }
+    
     try {
       System.out.print("Testing EAX support...");
       EAX.create();
@@ -81,13 +87,6 @@ public class EAXTest extends BasicTest {
       System.out.println("not supported!");
     }
     
-    try {
-      AL.create();
-      AL.alGetError(); // clear any errors
-    } catch(Exception e) {
-      System.out.println("Unable to initialize OpenAL");
-    }
-
     // continue with test if EAX is supported
     if (EAX.isCreated() && AL.isCreated() && initialize()) {
       runTest();
@@ -102,8 +101,6 @@ public class EAXTest extends BasicTest {
 
     //shutdown
     alExit();
-
-    System.out.println("test done.");
   }
 
   private boolean initialize() {
