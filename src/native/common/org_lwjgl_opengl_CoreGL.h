@@ -28,6 +28,46 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_alphaFunc
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    colorTable
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_colorTable
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    colorSubTable
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_colorSubTable
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getColorTable
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getColorTable
+  (JNIEnv *, jobject, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getColorTableParameteriv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getColorTableParameteriv
+  (JNIEnv *, jobject, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getColorTableParameterfv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getColorTableParameterfv
+  (JNIEnv *, jobject, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
  * Method:    clearColor
  * Signature: (FFFF)V
  */

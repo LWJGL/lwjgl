@@ -3149,3 +3149,79 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_viewport(JNIEnv * env, jobje
 	CHECK_GL_ERROR
 }
 
+    void GetColorTableEXT(
+	enum target,
+	enum format,
+	enum type,
+	void *data);
+
+    void GetColorTableParameterivEXT(
+	enum target,
+	enum pname,
+	int *params);
+
+    void GetColorTableParameterfvEXT(
+	enum target,
+	enum pname,
+	float *params);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    colorTable
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_colorTable
+  (JNIEnv * env, jobject obj, jint target, jint internalFormat, jint width, jint format, jint type, jint data)
+{
+	glColorTable(target, internalFormat, width, format, type, (const void *) data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    colorSubTable
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_colorSubTable
+  (JNIEnv * env, jobject obj, jint target, jint start, jint count, jint format, jint type, jint data)
+{
+	glColorSubTable(target, start, count, format, type, (const void *) data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getColorTable
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getColorTable
+  (JNIEnv * env, jobject obj, jint target, jint format, jint type, jint data)
+{
+	glGetColorTable(target, format, type, (void *) data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getColorTableParameteriv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getColorTableParameteriv
+  (JNIEnv * env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetColorTableParameteriv(target, pname, (int *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getColorTableParameterfv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getColorTableParameterfv
+  (JNIEnv * env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetColorTableParameterfv(target, pname, (float *)params);
+	CHECK_GL_ERROR
+}
+

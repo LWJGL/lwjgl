@@ -1,6 +1,7 @@
 
 //#include <iostream>
 #include <jni.h>
+#include <memory.h>
 #include "MatrixOpCommon.h"
 
 bool Matrix::identicalDataSpaces(Matrix & other)
@@ -308,6 +309,11 @@ void subMatrix (const float * src, int side, float * dst , int col_omit, int row
 
 float determinant (const float * matrix , int side)
 {
+
+	// We'll keep a scratch bit of memory around for doing temporary calculations:
+	static int current_side_size = 0;
+	static float * temp_matrix = NULL;
+
     // we are assuming for this case that the data is in column major format
     
     float det = 0;
@@ -318,7 +324,13 @@ float determinant (const float * matrix , int side)
     else
     {
         int   temp_side  = side - 1;			// the dimensions of the sub matrix
-        float temp_matrix [temp_side * temp_side];	// hold a sub matrix of this matrix
+		if (temp_side > current_side_size) {
+			if (temp_matrix)
+				delete[] temp_matrix;
+			current_side_size = temp_side;
+			temp_matrix = new float[current_side_size * current_side_size];
+		}
+
         bool  sign_pos = 1;				// the sign is positive
         
         for (int row = 0; row < side; row++)
