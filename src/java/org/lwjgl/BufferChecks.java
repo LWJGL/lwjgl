@@ -59,6 +59,15 @@ public class BufferChecks {
 	private static final int DEFAULT_BUFFER_SIZE = 4;
 
 	/**
+	 * Helper methods to ensure a ByteBuffer is null-terminated
+	 */
+	public static void checkNullTerminated(ByteBuffer buf) {
+		if (buf.get(buf.limit() - 1) != 0) {
+			throw new IllegalArgumentException("Missing null termination");
+		}
+	}
+
+	/**
 	 * Helper methods to ensure a buffer is direct or null.
 	 */
 	public static void checkDirectOrNull(ByteBuffer buf) {
