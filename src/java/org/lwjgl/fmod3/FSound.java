@@ -2206,10 +2206,10 @@ public class FSound {
    * @param stream The stream to have its length returned
    * @return On success, the size of the stream in BYTES is returned. On failure, 0 is returned.
    */
-  public static boolean FSOUND_Stream_GetLength(FSoundStream stream) {
+  public static int FSOUND_Stream_GetLength(FSoundStream stream) {
    return nFSOUND_Stream_GetLength(stream.streamHandle);
   }
-  private static native boolean nFSOUND_Stream_GetLength(long streamHandle);  
+  private static native int nFSOUND_Stream_GetLength(long streamHandle);  
   
   /**
    * Returns the size of the stream in MILLISECONDS
@@ -2220,10 +2220,10 @@ public class FSound {
    * @param stream The stream to have its its total duration returned.
    * @return On success, the size of the stream in MILLISECONDS is returned. On failure, 0 is returned.
    */
-  public static boolean FSOUND_Stream_GetLengthMs(FSoundStream stream) {
+  public static int FSOUND_Stream_GetLengthMs(FSoundStream stream) {
    return nFSOUND_Stream_GetLengthMs(stream.streamHandle);
   }
-  private static native boolean nFSOUND_Stream_GetLengthMs(long streamHandle);
+  private static native int nFSOUND_Stream_GetLengthMs(long streamHandle);
   
   /**
    * Retrieves the mode of the stream
