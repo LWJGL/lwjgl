@@ -37,7 +37,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
-import org.lwjgl.test.openal.WaveData;
+import org.lwjgl.util.WaveData;
 
 
 /**
