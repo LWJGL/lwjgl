@@ -65,6 +65,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 		if (OS_NAME.startsWith("Linux")) {
 			class_name = "org.lwjgl.opengl.LinuxCanvasImplementation";
 		} else if (OS_NAME.startsWith("Windows")) {
+			System.loadLibrary("jawt");
 			class_name = "org.lwjgl.opengl.Win32CanvasImplementation";
 		} else if (OS_NAME.startsWith("Mac")) {
 			class_name = "org.lwjgl.opengl.MacOSXCanvasImplementation";
