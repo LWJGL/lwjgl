@@ -33,22 +33,28 @@
 /**
  * $Id$
  *
- * linux math library.
+ * math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpCopy_MatrixOpDirect.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#include "org_lwjgl_Math_MatrixOpNormalise_MatrixOpSafe.h"
 #include "MatrixOpCommon.h"
-#include <string.h>
+#include <cmath>
+
+//using namespace std;
 
 /*
- * Class:     org_lwjgl_Math_MatrixOpCopy_MatrixOpDirect
+ * Class:     org_lwjgl_Math_MatrixOpNormalise_MatrixOpSafe
  * Method:    execute
  * Signature: (IIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpCopy_00024MatrixOpDirect_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpSafe_execute
   (
 	JNIEnv * env,
 	jobject obj,
@@ -63,30 +69,30 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpCopy_00024MatrixOpDirect
 	jboolean transposeDest
   )
 {
-        if (transposeSource == transposeDest)
-        {
-            transposeSource = false;
-            transposeDest   = false;
-        }
-
-        MatrixSrc source (sourceAddress,  sourceStride, sourceWidth,  sourceHeight, numElements, transposeSource);
+        MatrixSrc source  (sourceAddress, sourceStride, sourceWidth,  sourceHeight, numElements,    transposeSource);
         MatrixDst dest  (destAddress,     destStride,   source.width, source.height, source.elements, transposeDest);
         
-        dest.configureBuffer(source);
-        
         float * srcMatrix, * destMatrix;
-        int matrixByteCount = source.width*source.height*sizeof(jfloat);
+        float magnitude, magnitude_squared;
         
-        for (int i = 0; i < source.elements; i++)
+        int i, j, matrixFloatCount = source.width * source.height;
+        
+        for (i = 0; i < source.elements; i++)
         {
+            magnitude_squared = 0;
             srcMatrix = source.nextMatrix();
             destMatrix = dest.nextMatrix();
             
-            // just do a straight memory copy
-            memcpy(destMatrix, srcMatrix, matrixByteCount);
+            j = matrixFloatCount;
+            while (j--)
+                magnitude_squared += srcMatrix[j] * srcMatrix[j];
+                
+            magnitude = (float) sqrt((double) magnitude_squared);
+                
+            j = matrixFloatCount;
+            while (j--)
+                destMatrix[j] = srcMatrix[j] / magnitude;
+            
             dest.writeComplete();
         }
 }
-
-
-

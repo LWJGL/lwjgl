@@ -33,20 +33,25 @@
 /**
  * $Id$
  *
- * linux math library.
+ * math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpSubtract_MatrixOpDirect.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#include "org_lwjgl_Math_MatrixOpMultiply_MatrixOpDirect.h"
 #include "MatrixOpCommon.h"
+#include <cstring>
 /*
- * Class:     org_lwjgl_Math_MatrixOpSubtract_MatrixOpDirect
+ * Class:     org_lwjgl_Math_MatrixOpMultiply_MatrixOpDirect
  * Method:    execute
  * Signature: (IIIIIZIIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpSubtract_00024MatrixOpDirect_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDirect_execute
   (
 	JNIEnv * env,
 	jobject obj,
@@ -74,18 +79,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpSubtract_00024MatrixOpDi
             transposeDest = !transposeDest;
         }
 
+
         MatrixSrc left  (leftSourceAddress,  leftSourceStride, 
                         leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
         MatrixSrc right (rightSourceAddress, leftSourceStride, 
                         rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
         MatrixDst dest  (destAddress,        destStride,       
-                        left.width, left.height, left.elements * right.elements, transposeDest);
+                        right.width, left.height, left.elements * right.elements, transposeDest);
         
         dest.configureBuffer(left, right);
         
         float * leftMatrix, * rightMatrix, * destMatrix;
         
-        left.rewind();
+        // check out discussions envolving ordering
+        
+        
+         left.rewind();
         for (int i = 0; i < left.elements; i++)
         {
             leftMatrix = left.nextMatrix();
@@ -96,13 +105,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpSubtract_00024MatrixOpDi
                 rightMatrix = right.nextMatrix();
                 destMatrix  =  dest.nextMatrix();
                 
-                int k = dest.width * dest.height;
-                while (k--)
-                    destMatrix[k] = leftMatrix[k] - rightMatrix[k];
+                // zero the elements of the destination matrix
+                for (int d = 0; d < dest.width * dest.height; d++)
+                    destMatrix[d] = 0;
                 
+                // loop through each column of the right matrix
+                int rightCell = 0;
+                for (int rightCol = 0; rightCol < right.width; rightCol++)
+                {
+                    // [RxC] * [RxC]
+                    // dest has same height as left
+                    // dest has same width as  right
+                    
+                    int leftCell = 0;
+                    for (int leftCol = 0; leftCol < left.width; leftCol++)
+                    {
+                        for (int leftRow = 0; leftRow < left.height; leftRow++)
+                        {	
+                            destMatrix[leftRow] += rightMatrix[rightCell] * leftMatrix[leftCell++];
+                        }
+                        rightCell ++ ;
+                    }
+                    
+                    //rightMatrix = &rightMatrix[right.height];
+                    destMatrix =  &destMatrix[dest.height];
+                    
+                }
                 dest.writeComplete();
             }
-        }
+        }        
 }
-
 

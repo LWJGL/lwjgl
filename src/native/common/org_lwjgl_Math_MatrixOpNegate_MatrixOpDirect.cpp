@@ -33,24 +33,23 @@
 /**
  * $Id$
  *
- * linux math library.
+ * math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include "org_lwjgl_Math_MatrixOpNegate_MatrixOpDirect.h"
 #include "MatrixOpCommon.h"
-#include <cmath>
-
-//using namespace std;
-
 /*
- * Class:     org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect
+ * Class:     org_lwjgl_Math_MatrixOpNegate_MatrixOpDirect
  * Method:    execute
  * Signature: (IIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpDirect_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNegate_00024MatrixOpDirect_execute
   (
 	JNIEnv * env,
 	jobject obj,
@@ -65,32 +64,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpD
 	jboolean transposeDest
   )
 {
-        MatrixSrc source  (sourceAddress, sourceStride, sourceWidth,  sourceHeight, numElements,    transposeSource);
-        MatrixDst dest  (destAddress,     destStride,   source.width, source.height, source.elements, transposeDest);
-        
+        MatrixSrc source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight,  numElements, transposeSource);
+        MatrixDst dest  (destAddress,      destStride,   source.width, source.height, numElements, transposeDest);
+    
         dest.configureBuffer(source);
-        
-        float * srcMatrix, * destMatrix;
-        float magnitude, magnitude_squared;
-        
-        int i, j, matrixFloatCount = source.width * source.height;
-        
-        for (i = 0; i < source.elements; i++)
+    
+        int * srcMatrix, * destMatrix;
+ 
+        for (int i = 0; i < source.elements; i++)
         {
-            magnitude_squared = 0;
-            srcMatrix = source.nextMatrix();
-            destMatrix = dest.nextMatrix();
+            srcMatrix = (int *) source.nextMatrix();
+            destMatrix =   (int *) dest.nextMatrix();
             
-            j = matrixFloatCount;
-            while (j--)
-                magnitude_squared += srcMatrix[j] * srcMatrix[j];
-                
-            magnitude = (float) sqrt((double) magnitude_squared);
-                
-            j = matrixFloatCount;
-            while (j--)
-                destMatrix[j] = srcMatrix[j] / magnitude;
+            // we can cheat and use the less expensive xor 
+            // to switch the sign bit of the float
+            // single precision format   1 - sign   8 - exponent (excess 127) 23 - mantisa
             
+            int j = source.width*source.height;
+            while (j--)
+                destMatrix[j] = srcMatrix[j] ^ 0x80000000;
+    
             dest.writeComplete();
         }
 }

@@ -33,67 +33,68 @@
 /**
  * $Id$
  *
- * linux math library.
+ * math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpAdd_MatrixOpSafe.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#include "org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect.h"
 #include "MatrixOpCommon.h"
+#include <cmath>
+
+//using namespace std;
+
 /*
- * Class:     org_lwjgl_Math_MatrixOpAdd_MatrixOpSafe
+ * Class:     org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect
  * Method:    execute
- * Signature: (IIIIIZIIIIIZIIZ)V
+ * Signature: (IIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpAdd_00024MatrixOpSafe_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpDirect_execute
   (
 	JNIEnv * env,
 	jobject obj,
-	jint leftSourceAddress,
-	jint leftSourceStride,
-	jint leftElements,
-	jint leftSourceWidth,
-	jint leftSourceHeight,
-	jboolean transposeLeftSource,
-	jint rightSourceAddress,
-	jint rightSourceStride,
-	jint rightElements,
-	jint rightSourceWidth,
-	jint rightSourceHeight,
-	jboolean transposeRightSource,
+	jint sourceAddress,
+	jint sourceStride,
+	jint numElements,
+	jint sourceWidth,
+	jint sourceHeight,
+	jboolean transposeSource,
 	jint destAddress,
 	jint destStride,
 	jboolean transposeDest
   )
 {
-        MatrixSrc left  (leftSourceAddress,  leftSourceStride, 
-                            leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
-        MatrixSrc right (rightSourceAddress, leftSourceStride, 
-                            rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
-        MatrixDst dest  (destAddress,        destStride,      
-                            left.width, left.height, left.elements * right.elements, transposeDest);
+        MatrixSrc source  (sourceAddress, sourceStride, sourceWidth,  sourceHeight, numElements,    transposeSource);
+        MatrixDst dest  (destAddress,     destStride,   source.width, source.height, source.elements, transposeDest);
         
-        float * leftMatrix, * rightMatrix, * destMatrix;
+        dest.configureBuffer(source);
         
-        left.rewind();
-        for (int i = 0; i < leftElements; i++)
+        float * srcMatrix, * destMatrix;
+        float magnitude, magnitude_squared;
+        
+        int i, j, matrixFloatCount = source.width * source.height;
+        
+        for (i = 0; i < source.elements; i++)
         {
-            leftMatrix = left.nextMatrix();
-            right.rewind();
+            magnitude_squared = 0;
+            srcMatrix = source.nextMatrix();
+            destMatrix = dest.nextMatrix();
             
-            for (int j = 0; j < rightElements; j++)
-            {
-                rightMatrix = right.nextMatrix();
-                destMatrix  =  dest.nextMatrix();
+            j = matrixFloatCount;
+            while (j--)
+                magnitude_squared += srcMatrix[j] * srcMatrix[j];
                 
-                int k = dest.width * dest.height;
-                while (k--)
-                    destMatrix[k] = leftMatrix[k] + rightMatrix[k];
+            magnitude = (float) sqrt((double) magnitude_squared);
                 
-                dest.writeComplete();
-            }
+            j = matrixFloatCount;
+            while (j--)
+                destMatrix[j] = srcMatrix[j] / magnitude;
+            
+            dest.writeComplete();
         }
 }
-
-

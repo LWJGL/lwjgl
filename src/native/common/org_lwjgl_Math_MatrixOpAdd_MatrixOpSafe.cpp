@@ -33,21 +33,23 @@
 /**
  * $Id$
  *
- * linux math library.
+ * math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpSubtract_MatrixOpSafe.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include "org_lwjgl_Math_MatrixOpAdd_MatrixOpSafe.h"
 #include "MatrixOpCommon.h"
-
 /*
- * Class:     org_lwjgl_Math_MatrixOpSubtract_MatrixOpSafe
+ * Class:     org_lwjgl_Math_MatrixOpAdd_MatrixOpSafe
  * Method:    execute
  * Signature: (IIIIIZIIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpSubtract_00024MatrixOpSafe_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpAdd_00024MatrixOpSafe_execute
   (
 	JNIEnv * env,
 	jobject obj,
@@ -68,41 +70,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpSubtract_00024MatrixOpSa
 	jboolean transposeDest
   )
 {
-        if (transposeLeftSource && transposeRightSource)
-        {
-            transposeLeftSource = false;
-            transposeRightSource = false;
-            transposeDest = !transposeDest;
-        }
-
         MatrixSrc left  (leftSourceAddress,  leftSourceStride, 
-                        leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
+                            leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
         MatrixSrc right (rightSourceAddress, leftSourceStride, 
-                        rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
-        MatrixDst dest  (destAddress,        destStride,       
-                        left.width, left.height, left.elements * right.elements, transposeDest);
+                            rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
+        MatrixDst dest  (destAddress,        destStride,      
+                            left.width, left.height, left.elements * right.elements, transposeDest);
         
         float * leftMatrix, * rightMatrix, * destMatrix;
         
         left.rewind();
-        for (int i = 0; i < left.elements; i++)
+        for (int i = 0; i < leftElements; i++)
         {
             leftMatrix = left.nextMatrix();
-            
             right.rewind();
-            for (int j = 0; j < right.elements; j++)
+            
+            for (int j = 0; j < rightElements; j++)
             {
                 rightMatrix = right.nextMatrix();
                 destMatrix  =  dest.nextMatrix();
                 
                 int k = dest.width * dest.height;
                 while (k--)
-                    destMatrix[k] = leftMatrix[k] - rightMatrix[k];
+                    destMatrix[k] = leftMatrix[k] + rightMatrix[k];
                 
                 dest.writeComplete();
             }
         }
 }
-
 
 

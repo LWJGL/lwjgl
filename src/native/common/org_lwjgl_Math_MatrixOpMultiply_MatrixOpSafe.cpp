@@ -33,21 +33,25 @@
 /**
  * $Id$
  *
- * linux math library.
+ * Win32 math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpMultiply_MatrixOpDirect.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include "org_lwjgl_Math_MatrixOpMultiply_MatrixOpSafe.h"
 #include "MatrixOpCommon.h"
 #include <cstring>
+
 /*
- * Class:     org_lwjgl_Math_MatrixOpMultiply_MatrixOpDirect
+ * Class:     org_lwjgl_Math_MatrixOpMultiply_MatrixOpSafe
  * Method:    execute
  * Signature: (IIIIIZIIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDirect_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpSafe_execute
   (
 	JNIEnv * env,
 	jobject obj,
@@ -83,14 +87,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDi
         MatrixDst dest  (destAddress,        destStride,       
                         right.width, left.height, left.elements * right.elements, transposeDest);
         
-        dest.configureBuffer(left, right);
-        
         float * leftMatrix, * rightMatrix, * destMatrix;
         
         // check out discussions envolving ordering
         
         
-         left.rewind();
+        left.rewind();
         for (int i = 0; i < left.elements; i++)
         {
             leftMatrix = left.nextMatrix();
@@ -129,6 +131,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDi
                 }
                 dest.writeComplete();
             }
-        }        
+        }
+        
 }
+
 

@@ -33,11 +33,14 @@
 /**
  * $Id$
  *
- * linux maths library.
+ * maths library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-
+#ifdef _WIN32
+#include <windows.h>
+#endif
 //#include "org_lwjgl_Math.h"
+#include "math.h"
 

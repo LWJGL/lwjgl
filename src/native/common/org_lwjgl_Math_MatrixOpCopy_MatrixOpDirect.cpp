@@ -33,70 +33,61 @@
 /**
  * $Id$
  *
- * Win32 math library.
+ * math library.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-
+#ifdef _WIN32
 #include <windows.h>
-#include "org_lwjgl_Math_MatrixOpAdd_MatrixOpDirect.h"
+#endif
+#include "org_lwjgl_Math_MatrixOpCopy_MatrixOpDirect.h"
 #include "MatrixOpCommon.h"
+#include <string.h>
 /*
- * Class:     org_lwjgl_Math_MatrixOpAdd_MatrixOpDirect
+ * Class:     org_lwjgl_Math_MatrixOpCopy_MatrixOpDirect
  * Method:    execute
- * Signature: (IIIIIZIIIIIZIIZ)V
+ * Signature: (IIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpAdd_00024MatrixOpDirect_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpCopy_00024MatrixOpDirect_execute
   (
 	JNIEnv * env,
 	jobject obj,
-	jint leftSourceAddress,
-	jint leftSourceStride,
-	jint leftElements,
-	jint leftSourceWidth,
-	jint leftSourceHeight,
-	jboolean transposeLeftSource,
-	jint rightSourceAddress,
-	jint rightSourceStride,
-	jint rightElements,
-	jint rightSourceWidth,
-	jint rightSourceHeight,
-	jboolean transposeRightSource,
+	jint sourceAddress,
+	jint sourceStride,
+	jint numElements,
+	jint sourceWidth,
+	jint sourceHeight,
+	jboolean transposeSource,
 	jint destAddress,
 	jint destStride,
 	jboolean transposeDest
   )
 {
-        MatrixSrc left  (leftSourceAddress,  leftSourceStride, 
-                            leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
-        MatrixSrc right (rightSourceAddress, leftSourceStride, 
-                            rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
-        MatrixDst dest  (destAddress,        destStride,      
-                            left.width, left.height, left.elements * right.elements, transposeDest);
-        
-        dest.configureBuffer(left, right);
-        
-        float * leftMatrix, * rightMatrix, * destMatrix;
-        
-        left.rewind();
-        for (int i = 0; i < left.elements; i++)
+        if (transposeSource == transposeDest)
         {
-            leftMatrix = left.nextMatrix();
-            
-            right.rewind();
-            for (int j = 0; j < right.elements; j++)
-            {
-                rightMatrix = right.nextMatrix();
-                destMatrix  =  dest.nextMatrix();
-                
-                int k = dest.width * dest.height;
-                while (k--)
-                    destMatrix[k] = leftMatrix[k] + rightMatrix[k];
-                
-                dest.writeComplete();
-            }
+            transposeSource = false;
+            transposeDest   = false;
         }
+
+        MatrixSrc source (sourceAddress,  sourceStride, sourceWidth,  sourceHeight, numElements, transposeSource);
+        MatrixDst dest  (destAddress,     destStride,   source.width, source.height, source.elements, transposeDest);
         
+        dest.configureBuffer(source);
+        
+        float * srcMatrix, * destMatrix;
+        int matrixByteCount = source.width*source.height*sizeof(jfloat);
+        
+        for (int i = 0; i < source.elements; i++)
+        {
+            srcMatrix = source.nextMatrix();
+            destMatrix = dest.nextMatrix();
+            
+            // just do a straight memory copy
+            memcpy(destMatrix, srcMatrix, matrixByteCount);
+            dest.writeComplete();
+        }
 }
+
+
 

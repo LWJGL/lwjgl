@@ -33,20 +33,24 @@
 /**
  * $Id$
  *
- * linux math library.
+ * math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpNegate_MatrixOpSafe.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include <string.h>
+#include "org_lwjgl_Math_MatrixOpCopy_MatrixOpSafe.h"
 #include "MatrixOpCommon.h"
 /*
- * Class:     org_lwjgl_Math_MatrixOpNegate_MatrixOpSafe
+ * Class:     org_lwjgl_Math_MatrixOpCopy_MatrixOpSafe
  * Method:    execute
  * Signature: (IIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNegate_00024MatrixOpSafe_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpCopy_00024MatrixOpSafe_execute
   (
 	JNIEnv * env,
 	jobject obj,
@@ -61,24 +65,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNegate_00024MatrixOpSafe
 	jboolean transposeDest
   )
 {
-        MatrixSrc source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight,  numElements, transposeSource);
-        MatrixDst dest  (destAddress,      destStride,   source.width, source.height, numElements, transposeDest);
-    
-        int * srcMatrix, * destMatrix;
- 
+        // remove any unnecessary copying
+        if (transposeSource == transposeDest)
+        {
+            transposeSource = false;
+            transposeDest   = false;
+        }
+
+        MatrixSrc source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight, numElements, transposeSource);
+        MatrixDst dest  (destAddress,    destStride,   source.width, source.height,  source.elements, transposeDest);
+        
+        float * srcMatrix, * destMatrix;
+        int matrixByteCount = source.width*source.height*sizeof(jfloat);
+        
         for (int i = 0; i < source.elements; i++)
         {
-            srcMatrix = (int *) source.nextMatrix();
-            destMatrix =   (int *) dest.nextMatrix();
+            srcMatrix = source.nextMatrix();
+            destMatrix = dest.nextMatrix();
             
-            // we can cheat and use the less expensive xor 
-            // to switch the sign bit of the float
-            // single precision format   1 - sign   8 - exponent (excess 127) 23 - mantisa
-            
-            int j = source.width*source.height;
-            while (j--)
-                destMatrix[j] = srcMatrix[j] ^ 0x80000000;
-    
+            // just do a straight memory copy
+            memcpy(destMatrix, srcMatrix, matrixByteCount);
             dest.writeComplete();
         }
 }

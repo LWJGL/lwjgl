@@ -33,20 +33,24 @@
 /**
  * $Id$
  *
- * linux math library.
+ * math library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "org_lwjgl_Math_MatrixOpNegate_MatrixOpDirect.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#include "org_lwjgl_Math_MatrixOpNegate_MatrixOpSafe.h"
 #include "MatrixOpCommon.h"
 /*
- * Class:     org_lwjgl_Math_MatrixOpNegate_MatrixOpDirect
+ * Class:     org_lwjgl_Math_MatrixOpNegate_MatrixOpSafe
  * Method:    execute
  * Signature: (IIIIIZIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNegate_00024MatrixOpDirect_execute
+JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNegate_00024MatrixOpSafe_execute
   (
 	JNIEnv * env,
 	jobject obj,
@@ -63,8 +67,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNegate_00024MatrixOpDire
 {
         MatrixSrc source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight,  numElements, transposeSource);
         MatrixDst dest  (destAddress,      destStride,   source.width, source.height, numElements, transposeDest);
-    
-        dest.configureBuffer(source);
     
         int * srcMatrix, * destMatrix;
  

@@ -43,8 +43,8 @@ GCC = gcc
 G++ = g++
 LINK = g++
 JAVAHOME=/usr/java/j2sdk1.4.1_01
-LIBCSRC=../common/extgl.c
-LIBCPPSRC=$(shell find . -name \*.cpp -print|grep -v CVS)
+LIBCSRC=$(shell find ../common -name \*.c -print|grep -v CVS)
+LIBCPPSRC=$(shell find . -name \*.cpp -print|grep -v CVS) $(shell find ../common -name \*.cpp -print|grep -v CVS)
 LIBCPPOBJS=$(LIBCPPSRC:.cpp=.o)
 LIBCOBJS=$(LIBCSRC:.c=.o)
 LIBOBJS=$(LIBCOBJS) $(LIBCPPOBJS)
@@ -76,5 +76,5 @@ testprog : main.o
 	$(LINK) -o $@ $< -L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU
 
 .PHONY clean:
-	rm -rf *.o *.so
-	rm -rf `find ../../ -name \*.class -print`
+	rm -rf *.so
+	rm -rf $(LIBOBJS)
