@@ -180,15 +180,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferS
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glMapBufferARB
 	(JNIEnv * env, jclass clazz, jint target, jint access, jint size, jobject oldBuffer)
 {
-        CHECK_EXISTS(glMapBufferARB)
-        void *buffer_address = glMapBufferARB((GLenum)target, (GLenum)access);
-        CHECK_GL_ERROR
-        if (oldBuffer != NULL) {
-                void *old_buffer_address = env->GetDirectBufferAddress(oldBuffer);
-                if (old_buffer_address == buffer_address)
-                        return oldBuffer;
-        }
-        return safeNewBuffer(env, buffer_address, size);
+	CHECK_EXISTS(glMapBufferARB)
+	void *buffer_address = glMapBufferARB((GLenum)target, (GLenum)access);
+	CHECK_GL_ERROR
+	void *old_buffer_address = safeGetBufferAddress(env, oldBuffer, 0);
+	if (old_buffer_address == buffer_address)
+		return oldBuffer;
+	else
+		return safeNewBuffer(env, buffer_address, size);
 }
 
 /*
