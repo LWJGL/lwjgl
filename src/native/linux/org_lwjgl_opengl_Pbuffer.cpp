@@ -216,6 +216,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 					  None, None};
 
 	if (env->GetDirectBufferCapacity(handle_buffer) < sizeof(PbufferInfo)) {
+		decDisplay();
 		throwException(env, "Handle buffer not large enough");
 		return;
 	}

@@ -249,6 +249,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
+		decDisplay();
 		throwException(env, "Could not create blank cursor");
 		return;
 	}

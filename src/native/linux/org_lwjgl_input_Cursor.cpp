@@ -60,8 +60,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 	XcursorPixel *pixels = (XcursorPixel *)env->GetDirectBufferAddress(image_buffer) + images_offset;
 	int stride = width*height;
 	XcursorImages *cursor_images = XcursorImagesCreate(num_images);
-	if (cursor_images == NULL)
+	if (cursor_images == NULL) {
+		decDisplay();
 		throwException(env, "Could not allocate cursor.");
+		return;
+	}
 	cursor_images->nimage = num_images;
 	for (int i = 0; i < num_images; i++) {
 		XcursorImage *cursor_image = XcursorImageCreate(width, height);
