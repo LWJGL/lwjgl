@@ -292,8 +292,24 @@ public class Matrix2f extends Matrix {
 	 * Invert this matrix
 	 * @return this
 	 */
-	public Matrix invert() {
-		assert false : "Not implemented yet!";
+	public Matrix invert() 
+        {
+		
+                /*
+                    inv(A) = 1/det(A) * adj(A);
+                */
+                
+                float determinant = m00 * m11 - m01*m10;
+                float t00 =  m11/determinant;
+                float t01 = -m01/determinant;
+                float t11 =  m00/determinant;
+                float t10 = -m10/determinant;
+                
+                m00 = t00;
+                m01 = t01;
+                m10 = t10;
+                m11 = t11;
+                
 		return this;
 	}
 	
@@ -357,8 +373,7 @@ public class Matrix2f extends Matrix {
 	 * @see org.lwjgl.vector.Matrix#determinant()
 	 */
 	public float determinant() {
-		assert false : "Not implemented yet!";
-		return 0;
+		return m00 * m11 - m01*m10;
 	}
 
 }

@@ -365,8 +365,55 @@ public class Matrix3f extends Matrix {
 	 * Invert this matrix
 	 * @return this
 	 */
-	public Matrix invert() {
-		assert false : "Not implemented yet!";
+	public Matrix invert() 
+        {
+		float determinant = m00 * (m11 * m22 - m12 * m21)
+				  + m01 * (m12 * m20 - m10 * m22)
+				  + m02 * (m10 * m21 - m11 * m20);
+                
+                if (determinant == 1)
+                    // matrix is proper orthogonal
+                    transpose();
+                else if (determinant == -1)
+                {   // matrix is improper orthogonal
+                    transpose();
+                    negate();
+                }
+                else if (determinant != 0)
+                {
+                    // do it the ordinary way
+                    
+                    /*  inv(A) = 1/det(A) * adj(T), where adj(T) = transpose(Conjugate Matrix)
+                    
+                        m00 m01 m02 
+                        m10 m11 m12
+                        m20 m21 m22  
+                    */
+                    
+                    // get the conjugate matrix
+                    float t00 = m11 * m22 - m12* m22;
+                    float t01 = - m10 * m22 + m12 *m20;
+                    float t02 = m10 * m21 - m11 * m20;
+                    float t10 = - m01 * m22 + m02 * m21;
+                    float t11 = m00 * m22 - m02 * m20;
+                    float t12 = - m00 * m21 + m01 * m20;
+                    float t20 = m01 * m12 - m02 * m11;
+                    float t21 = -m00 * m12 + m02 * m10;
+                    float t22 = m00 * m11 - m01 * m10;
+                    
+                    
+                    m00 = t00/determinant;
+                    m11 = t11/determinant;
+                    m22 = t22/determinant;
+                    m01 = t10/determinant;
+                    m10 = t01/determinant;
+                    m20 = t02/determinant;
+                    m02 = t20/determinant;
+                    m12 = t21/determinant;
+                    m21 = t12/determinant;
+                }
+                
+                    
 		return this;
 	}
 
