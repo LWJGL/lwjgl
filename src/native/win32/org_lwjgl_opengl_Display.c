@@ -707,37 +707,39 @@ static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_f
 	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
 	// of multisamples we want. If the extension is present we'll delete the existing
 	// rendering context and start over, using the ARB extension instead to pick the context.
-	if ( !extgl_Extensions.WGL_ARB_pixel_format )
+	if (!extgl_Extensions.WGL_ARB_pixel_format)
 		return false;
-
 	pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, true, true);
-	if ( pixel_format_index == -1 ) {
+	if (pixel_format_index == -1) {
 		pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, false, true);
-		if ( pixel_format_index == -1 )
+		if ( pixel_format_index == -1)
 			return false;
 	}
 	
 	arb_hwnd = createWindow(0, 0, 1, 1, false, false);
-	if ( arb_hwnd == NULL )
+	if (arb_hwnd == NULL)
 		return false;
 
 	arb_hdc = GetDC(arb_hwnd);
-	if ( !applyPixelFormat(arb_hdc, pixel_format_index) ) {
+	if (!applyPixelFormat(arb_hdc, pixel_format_index)) {
 		closeWindow(&arb_hwnd, &arb_hdc);
 		return false;
 	}	
 
 	arb_context = wglCreateContext(arb_hdc);
-	closeWindow(&arb_hwnd, &arb_hdc);
-	if ( arb_context == NULL )
+	if (arb_context == NULL) {
+		closeWindow(&arb_hwnd, &arb_hdc);
 		return false;
-
-	if ( !wglMakeCurrent(arb_hdc, arb_context) ) {
+	}
+	if (!wglMakeCurrent(arb_hdc, arb_context)) {
 		wglDeleteContext(arb_context);
+		closeWindow(&arb_hwnd, &arb_hdc);
 		return false;
 	}
 
 	extgl_InitWGL(env);
+	wglMakeCurrent(NULL, NULL);
+	closeWindow(&arb_hwnd, &arb_hdc);
 	*pixel_format_index_return = pixel_format_index;
 	*context_return = arb_context;
 
