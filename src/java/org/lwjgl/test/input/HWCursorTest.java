@@ -122,7 +122,7 @@ public class HWCursorTest {
 		cursor = new Cursor[3];
 		
 		int cursorImageCount = 1;
-		int cursorWidth = Mouse.getMaxCursorSize();
+		int cursorWidth = Cursor.getMaxCursorSize();
 		int cursorHeight = cursorWidth;
 		IntBuffer cursorImages;
 		IntBuffer cursorDelays;
@@ -138,7 +138,7 @@ public class HWCursorTest {
 			}
 		}
 		cursorImages.flip();
-		cursor[0] = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
+		cursor[0] = new Cursor(Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize()/2, Cursor.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
 		// ----------------------------------
 		
 		// Create 3 piece animation
@@ -179,7 +179,7 @@ public class HWCursorTest {
 		cursorDelays.flip();
 		cursorImages.flip();
 		
-		cursor[1] = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
+		cursor[1] = new Cursor(Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize()/2, Cursor.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
 		// ----------------------------------
 		
 		
@@ -207,7 +207,7 @@ public class HWCursorTest {
 		}
 		cursorImages.flip();
 		cursorDelays.flip();
-		cursor[2] = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);      
+		cursor[2] = new Cursor(Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize(), Cursor.getMaxCursorSize()/2, Cursor.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);      
 		// ----------------------------------
 		
 		Mouse.setNativeCursor(cursor[0]);
