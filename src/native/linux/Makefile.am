@@ -1,6 +1,6 @@
-noinst_LTLIBRARIES = liblinux.la
+noinst_LTLIBRARIES = libnative.la
 
-liblinux_la_SOURCES = $(NATIVE)
+libnative_la_SOURCES = $(NATIVE)
 INCLUDES = -I../common
 
 NATIVE = \

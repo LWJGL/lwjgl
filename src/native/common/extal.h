@@ -61,12 +61,11 @@ extern "C" {
 
  #define ALCAPIENTRY __cdecl
 #else
- #ifdef TARGET_OS_MAC
-  #if TARGET_OS_MAC
+ #ifdef _AGL
+  #if _AGL
  typedef struct ALCdevice_struct ALCdevice;
  typedef struct ALCcontext_struct ALCcontext;
  
-   #pragma export on
   #endif
  #endif
  #define ALCAPI
@@ -116,11 +115,6 @@ typedef void ALCvoid;
  #define ALAPIENTRY __cdecl
  #define AL_CALLBACK
 #else
- #ifdef TARGET_OS_MAC
-  #if TARGET_OS_MAC
-   #pragma export on
-  #endif
- #endif
  #define ALAPI
  #define ALAPIENTRY
  #define AL_CALLBACK

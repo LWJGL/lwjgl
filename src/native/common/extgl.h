@@ -324,7 +324,7 @@ extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
 
 #endif /* X11 */
 
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
 #include <Carbon/Carbon.h>
 #include <OpenGL/gliContext.h>
 #include <OpenGL/gliDispatch.h>
@@ -337,10 +337,10 @@ typedef struct __AGLContextRec       *AGLContext;
 typedef GDHandle AGLDevice;
 typedef CGrafPtr AGLDrawable;
 
-OSStatus aglInitEntryPoints(void);
+/*OSStatus aglInitEntryPoints(void);
 void aglDellocEntryPoints (void);
 void * aglGetProcAddress (char * pszProc);
-
+*/
 typedef AGLPixelFormat (APIENTRY * aglChoosePixelFormatEXTPROC)(const AGLDevice *gdevs, GLint ndev, const GLint *attribs);
 typedef void (APIENTRY * aglDestroyPixelFormatEXTPROC)(AGLPixelFormat pix);
 typedef AGLPixelFormat (APIENTRY * aglNextPixelFormatEXTPROC)(AGLPixelFormat pix);
@@ -593,7 +593,7 @@ extern aglSurfaceTextureEXTPROC aglSurfaceTexture;
 
 /************************************************************************/
 
-#endif /* TARGET_OS_MAC */
+#endif /* _AGL */
 
 /*************************************************************/
 /* GLU functions */
@@ -5829,11 +5829,11 @@ struct GLXExtensionTypes
 };
 #endif /* X11 */
 
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
 struct AGLExtensionTypes
 {
 };
-#endif /* TARGET_OS_MAC */
+#endif /* _AGL */
 
 struct GLUExtensionTypes
 {
@@ -5851,9 +5851,9 @@ struct ExtensionTypes
 #ifdef _X11
     struct GLXExtensionTypes glx;
 #endif /* X11 */
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
     struct AGLExtensionTypes agl;
-#endif /* TARGET_OS_MAC */
+#endif /* _AGL */
     
     struct GLUExtensionTypes glu;
     int ARB_imaging;
@@ -5951,17 +5951,9 @@ extern struct ExtensionTypes extgl_Extensions;
 
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
 int extgl_Initialize();
+int extgl_Open(void);
 #ifdef _X11
-int extgl_Open(void);
 int extgl_InitGLX(Display *disp, int screen);
-#endif
-
-#ifdef _WIN32
-int extgl_Open(void);
-#endif
-
-#ifdef TARGET_OS_MAC
-int extgl_Open(void);
 #endif
 
 void extgl_Close(void);

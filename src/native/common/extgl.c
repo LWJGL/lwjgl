@@ -774,9 +774,9 @@ glXAllocateMemoryNVPROC glXAllocateMemoryNV = NULL;
 glXFreeMemoryNVPROC glXFreeMemoryNV = NULL;
 #endif /* X11 */
 
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
 // TODO: find the OSX equivalent of these functions
-#endif /* TARGET_OS_MAC */
+#endif /* _AGL */
 
 #endif /* GL_NV_vertex_array_range */
 
@@ -1359,10 +1359,93 @@ void * lib_gl_handle = NULL;
 void * lib_glu_handle = NULL;
 #endif
 
-#ifdef TARGET_OS_MAC
-// Note: Not used, there is a CFBundleRef in the header file that handles the
-// dynamic load from the GL Framework bundle and this framework include gl
-// and glu in the same library
+#ifdef _AGL
+CFBundleRef gBundleRefOpenGL = NULL;
+#endif
+
+#ifdef _AGL
+// -------------------------
+OSStatus aglInitEntryPoints (void)
+{
+    OSStatus err = noErr;
+    const Str255 frameworkName = "\pOpenGL.framework";
+    FSRefParam fileRefParam;
+    FSRef fileRef;
+    CFURLRef bundleURLOpenGL;
+    memset(&fileRefParam, 0, sizeof(fileRefParam));
+    memset(&fileRef, 0, sizeof(fileRef));
+    fileRefParam.ioNamePtr  = frameworkName;
+    fileRefParam.newRef = &fileRef;
+
+    // Frameworks directory/folder
+    //
+    err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
+    if (noErr != err)
+    {
+        DebugStr ("\pCould not find frameworks folder");
+        return err;
+    }
+
+    // make FSRef for folder
+    //
+    err = PBMakeFSRefSync (&fileRefParam);
+
+
+    if (noErr != err)
+    {
+        DebugStr ("\pCould make FSref to frameworks folder");
+        return err;
+    }
+
+    // create URL to folder
+    //
+    bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
+    if (!bundleURLOpenGL)
+    {
+        DebugStr ("\pCould create OpenGL Framework bundle URL");
+        return paramErr;
+    }
+
+    // create ref to GL's bundle
+    //
+    gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
+    if (!gBundleRefOpenGL)
+    {
+        DebugStr ("\pCould not create OpenGL Framework bundle");
+        return paramErr;
+    }
+
+    // release created bundle
+    //
+    CFRelease (bundleURLOpenGL);
+
+    // if the code was successfully loaded, look for our function.
+    if (!CFBundleLoadExecutable (gBundleRefOpenGL))
+    {
+        DebugStr ("\pCould not load MachO executable");
+        return paramErr;
+    }
+
+    return err;
+}
+
+
+static void aglDellocEntryPoints (void)
+{
+    if (gBundleRefOpenGL != NULL)
+    {
+        // unload the bundle's code.
+        CFBundleUnloadExecutable (gBundleRefOpenGL);
+        CFRelease (gBundleRefOpenGL);
+        gBundleRefOpenGL = NULL;
+    }
+}
+
+
+static void * aglGetProcAddress (char * pszProc)
+{
+    return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
+}
 #endif
 
 /* getProcAddress */
@@ -1400,7 +1483,7 @@ static void *extgl_GetProcAddress(char *name)
     return t;
 #endif
 
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
     void *t =(void *)aglGetProcAddress(name);
 
     return t;
@@ -1560,7 +1643,7 @@ static int extgl_InitializeWGL()
 /*-----------------------------------------------------*/
 /* AGL stuff BEGIN*/
 /*-----------------------------------------------------*/
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
 
 static int extgl_InitializeAGL()
 {
@@ -3286,7 +3369,7 @@ int extgl_Initialize()
     extgl_InitializeWGL();
 #endif
 
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
     /* load AGL extensions */
     extgl_InitializeAGL();
 #endif
@@ -3331,7 +3414,7 @@ int extgl_Open(void)
 }
 #endif /* WIN32 */
 
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
 int extgl_Open(void)
 {
     OSStatus err = aglInitEntryPoints();
@@ -3347,7 +3430,7 @@ int extgl_Open(void)
     //
     return 0;
 }
-#endif /* TARGET_OS_MAC */
+#endif /* _AGL */
 
 void extgl_Close(void)
 {
@@ -3359,96 +3442,10 @@ void extgl_Close(void)
 	FreeLibrary(lib_gl_handle);
 	FreeLibrary(lib_glu_handle);
 #endif
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
         aglDellocEntryPoints();
 #endif 
 }
-
-#ifdef TARGET_OS_MAC
-CFBundleRef gBundleRefOpenGL = NULL;
-// -------------------------
-OSStatus aglInitEntryPoints (void)
-{
-    OSStatus err = noErr;
-    const Str255 frameworkName = "\pOpenGL.framework";
-    FSRefParam fileRefParam;
-    FSRef fileRef;
-    CFURLRef bundleURLOpenGL;
-    memset(&fileRefParam, 0, sizeof(fileRefParam));
-    memset(&fileRef, 0, sizeof(fileRef));
-    fileRefParam.ioNamePtr  = frameworkName;
-    fileRefParam.newRef = &fileRef;
-
-    // Frameworks directory/folder
-    //
-    err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
-    if (noErr != err)
-    {
-        DebugStr ("\pCould not find frameworks folder");
-        return err;
-    }
-
-    // make FSRef for folder
-    //
-    err = PBMakeFSRefSync (&fileRefParam);
-
-
-    if (noErr != err)
-    {
-        DebugStr ("\pCould make FSref to frameworks folder");
-        return err;
-    }
-
-    // create URL to folder
-    //
-    bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
-    if (!bundleURLOpenGL)
-    {
-        DebugStr ("\pCould create OpenGL Framework bundle URL");
-        return paramErr;
-    }
-
-    // create ref to GL's bundle
-    //
-    gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
-    if (!gBundleRefOpenGL)
-    {
-        DebugStr ("\pCould not create OpenGL Framework bundle");
-        return paramErr;
-    }
-
-    // release created bundle
-    //
-    CFRelease (bundleURLOpenGL);
-
-    // if the code was successfully loaded, look for our function.
-    if (!CFBundleLoadExecutable (gBundleRefOpenGL))
-    {
-        DebugStr ("\pCould not load MachO executable");
-        return paramErr;
-    }
-
-    return err;
-}
-
-
-static void aglDellocEntryPoints (void)
-{
-    if (gBundleRefOpenGL != NULL)
-    {
-        // unload the bundle's code.
-        CFBundleUnloadExecutable (gBundleRefOpenGL);
-        CFRelease (gBundleRefOpenGL);
-        gBundleRefOpenGL = NULL;
-    }
-}
-
-
-static void * aglGetProcAddress (char * pszProc)
-{
-    return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
-}
-#endif
 
 /* turn on the warning for the borland compiler*/
 #ifdef __BORLANDC__

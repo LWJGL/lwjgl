@@ -127,7 +127,7 @@ HMODULE handleOAL;
 #ifdef _X11
 void* handleOAL;
 #endif
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
 #include <Carbon/Carbon.h>
 OSStatus oalInitEntryPoints (void);
 void oalDellocEntryPoints (void);
@@ -165,7 +165,7 @@ void* GetFunctionPointer(const char* function) {
 #ifdef _X11
   return dlsym(handleOAL, function);
 #endif
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
     return CFBundleGetFunctionPointerForName (handleOAL,CFStringCreateWithCStringNoCopy (NULL, function, CFStringGetSystemEncoding (), NULL));
 #endif 
 }
@@ -191,7 +191,7 @@ void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 #ifdef _X11
     handleOAL = dlopen(path_str, RTLD_LAZY);
 #endif
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
     // NOTE: This totally ignores the input array! - SWP
     oalInitEntryPoints();
 #endif
@@ -215,7 +215,7 @@ void UnLoadOpenAL() {
 #ifdef _X11
   dlclose(handleOAL);
 #endif
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
     oalDellocEntryPoints();
 #endif
 }
@@ -431,7 +431,7 @@ int LoadALExtensions() {
   return JNI_TRUE;
 }
 
-#ifdef TARGET_OS_MAC
+#ifdef _AGL
 // -------------------------
 OSStatus oalInitEntryPoints (void)
 {

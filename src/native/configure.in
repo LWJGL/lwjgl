@@ -31,16 +31,17 @@ AC_LIBTOOL_DLOPEN
 AC_PROG_LIBTOOL 
 
 case "$host_os" in
-        darwin*)        _BUILD_FLAGS="-D_AGL"
-                        AC_CHECK_HEADERS([altypes.h alctypes.h],, AC_MSG_ERROR([OpenAL headers required1]))
-                        AC_SUBST(native_build_dir, [macosx])
+        darwin*)        _BUILD_FLAGS="-D_AGL -fpascal-strings -I/Library/Frameworks/OpenAL.framework/Headers"
+                        AC_CHECK_HEADER([/Library/Frameworks/OpenAL.framework/Headers/altypes.h],, AC_MSG_ERROR([OpenAL headers required]))
+                        AC_CHECK_HEADER([/Library/Frameworks/OpenAL.framework/Headers/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
+			NATIVE_BUILD_DIR=macosx
                         CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         ;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
                                    AC_CHECK_HEADERS([AL/altypes.h AL/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
-                                   AC_SUBST(native_build_dir, [linux])
+				   NATIVE_BUILD_DIR=linux
                                    CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                                    CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                                    LIBS="$LIBS $X_LIBS"
@@ -50,8 +51,10 @@ case "$host_os" in
                                    AC_CHECK_LIB(pthread, pthread_create,, AC_MSG_ERROR(pthread is required))
 
                                    ;;
-        *)              AC_MSG_ERROR([Unknown system $host_os]);;
+        *)              AC_MSG_ERROR([Unsupported system $host_os]);;
 esac
+
+AC_SUBST(native_build_dir, [$NATIVE_BUILD_DIR])
 
 # Checks for libraries.
 
@@ -79,5 +82,6 @@ AC_CHECK_FUNCS([gettimeofday memset strchr strstr])
 
 AC_CONFIG_FILES([Makefile
                  common/Makefile
-                 linux/Makefile])
+                 linux/Makefile
+		 macosx/Makefile])
 AC_OUTPUT
