@@ -40,7 +40,6 @@
  */
 
 #include "Window.h"
-#include "org_lwjgl_Sys.h"
 #include "org_lwjgl_NativeSysImplementation.h"
 #include "common_tools.h"
 #include <malloc.h>
