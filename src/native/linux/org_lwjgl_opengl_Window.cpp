@@ -475,7 +475,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		return;
 	}
 	screen = XDefaultScreen(disp);
-	if (!extgl_InitGLX(env, ext_set, disp, screen)) {
+	if (!extgl_InitGLX(env, disp, screen)) {
 		XCloseDisplay(disp);
 		extgl_Close();
 		throwException(env, "Could not init GLX");
