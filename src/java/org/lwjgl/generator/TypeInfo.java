@@ -140,6 +140,7 @@ public class TypeInfo {
 	private static Collection<TypeInfo> getTypeInfos(TypeMap type_map, Declaration param, TypeMirror decl_type) {
 		Collection<AnnotationMirror> annotations = Utils.getSortedAnnotations(param.getAnnotationMirrors());
 		Map<Class, TypeInfo> types = new HashMap<Class, TypeInfo>();
+		Collection<TypeInfo> multityped_result = new ArrayList<TypeInfo>();
 		boolean add_default_type = true;
 		for (AnnotationMirror annotation : annotations) {
 			NativeType native_type_annotation = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
@@ -150,12 +151,14 @@ public class TypeInfo {
 				String auto_type = type_map.getAutoTypeFromAnnotation(annotation);
 				if (inverse_type != null) {
 					if (types.containsKey(inverse_type)) {
-						String inverse_auto_type = types.get(inverse_type).getAutoType();
+						TypeInfo inverse_type_info = types.get(inverse_type);
+						String inverse_auto_type = inverse_type_info.getAutoType();
 						auto_type = signedness == Signedness.UNSIGNED ? auto_type + " : " + inverse_auto_type :
 							inverse_auto_type + " : " + auto_type;
 						auto_type = UNSIGNED_PARAMETER_NAME + " ? " + auto_type;
 						signedness = Signedness.BOTH;
 						types.remove(inverse_type);
+						multityped_result.remove(inverse_type_info);
 					}
 				}
 				Class type;
@@ -164,7 +167,9 @@ public class TypeInfo {
 					type = getBufferTypeFromPrimitiveKind(kind);
 				else
 					type = getTypeFromPrimitiveKind(kind);
-				types.put(annotation_type, new TypeInfo(type, signedness, auto_type));
+				TypeInfo type_info = new TypeInfo(type, signedness, auto_type);
+				types.put(annotation_type, type_info);
+				multityped_result.add(type_info);
 				add_default_type = false;
 			}
 		}
@@ -174,7 +179,7 @@ public class TypeInfo {
 			result.add(default_type_info);
 			return result;
 		} else
-			return types.values();
+			return multityped_result;
 	}
 
 	private static Map<ParameterDeclaration, Collection<TypeInfo>> getTypeInfoMap(TypeMap type_map, MethodDeclaration method) {

@@ -41,12 +41,6 @@ public final class NVVertexArrayRange {
 	}
 	private static native void nglFlushVertexArrayRangeNV(long function_pointer);
 
-	public static void glVertexArrayRangeNV(ShortBuffer pPointer) {
-		BufferChecks.checkDirect(pPointer);
-		long function_pointer = GLContext.getCapabilities().NV_vertex_array_range_glVertexArrayRangeNV_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglVertexArrayRangeNV((pPointer.remaining() << 1), pPointer, pPointer.position() << 1, function_pointer);
-	}
 	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().NV_vertex_array_range_glVertexArrayRangeNV_pointer;
@@ -64,6 +58,12 @@ public final class NVVertexArrayRange {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_array_range_glVertexArrayRangeNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglVertexArrayRangeNV((pPointer.remaining() << 2), pPointer, pPointer.position() << 2, function_pointer);
+	}
+	public static void glVertexArrayRangeNV(ShortBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
+		long function_pointer = GLContext.getCapabilities().NV_vertex_array_range_glVertexArrayRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexArrayRangeNV((pPointer.remaining() << 1), pPointer, pPointer.position() << 1, function_pointer);
 	}
 	private static native void nglVertexArrayRangeNV(int size, Buffer pPointer, int pPointer_position, long function_pointer);
 }

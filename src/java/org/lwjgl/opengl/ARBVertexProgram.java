@@ -67,13 +67,6 @@ public final class ARBVertexProgram extends ARBProgram {
 	}
 	private static native void nglEnableVertexAttribArrayARB(int index, long function_pointer);
 
-	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
-		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
-	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean normalized, int stride, FloatBuffer buffer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(buffer);
@@ -87,6 +80,13 @@ public final class ARBVertexProgram extends ARBProgram {
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, normalized, stride, buffer, buffer.position(), function_pointer);
+	}
+	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
 	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
 		GLBufferChecks.ensureArrayVBOdisabled();

@@ -62,13 +62,6 @@ public final class ARBVertexBlend {
 	}
 	private static native void nglVertexBlendARB(int count, long function_pointer);
 
-	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
-		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pPointer, pPointer.position() << 2, function_pointer);
-	}
 	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pPointer);
@@ -82,6 +75,13 @@ public final class ARBVertexBlend {
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position(), function_pointer);
+	}
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
 		GLBufferChecks.ensureArrayVBOdisabled();

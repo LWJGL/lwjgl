@@ -47,19 +47,19 @@ public final class ARBMatrixPalette {
 	}
 	private static native void nglMatrixIndexubvARB(int size, ByteBuffer pIndices, int pIndices_position, long function_pointer);
 
-	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
-		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_INT, stride, pPointer, pPointer.position() << 2, function_pointer);
-	}
 	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_BYTE, stride, pPointer, pPointer.position(), function_pointer);
+	}
+	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_INT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, ShortBuffer pPointer) {
 		GLBufferChecks.ensureArrayVBOdisabled();

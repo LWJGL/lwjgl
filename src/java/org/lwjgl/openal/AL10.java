@@ -581,9 +581,9 @@ public final class AL10 {
 	 * @param data location of data
 	 * @param freq frequency of data
 	 */
-	public static void alBufferData(int buffer, int format, ShortBuffer data, int freq) {
+	public static void alBufferData(int buffer, int format, ByteBuffer data, int freq) {
 		BufferChecks.checkDirect(data);
-		nalBufferData(buffer, format, data, data.position() << 1, (data.remaining() << 1), freq);
+		nalBufferData(buffer, format, data, data.position(), (data.remaining()), freq);
 		Util.checkALError();
 	}
 	/**
@@ -643,9 +643,9 @@ public final class AL10 {
 	 * @param data location of data
 	 * @param freq frequency of data
 	 */
-	public static void alBufferData(int buffer, int format, ByteBuffer data, int freq) {
+	public static void alBufferData(int buffer, int format, ShortBuffer data, int freq) {
 		BufferChecks.checkDirect(data);
-		nalBufferData(buffer, format, data, data.position(), (data.remaining()), freq);
+		nalBufferData(buffer, format, data, data.position() << 1, (data.remaining() << 1), freq);
 		Util.checkALError();
 	}
 	private static native void nalBufferData(int buffer, int format, Buffer data, int data_position, int size, int freq);
