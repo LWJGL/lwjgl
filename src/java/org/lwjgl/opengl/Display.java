@@ -426,8 +426,20 @@ public final class Display {
 	}
 
 	/**
-	 * Update the window. This processes operating system events, and if the window is visible
-	 * clears the dirty flag and swaps the buffers.
+	 * Process operating system events. Call this to update the Display's state and make sure the
+	 * input devices receive events. This method is called from update(), and should normally not be called by
+	 * the application.
+	 */
+	public static void processMessages() {
+		if (!isCreated())
+			throw new IllegalStateException("Cannot update uncreated window");
+		
+		display_impl.update();
+	}
+
+	/**
+	 * Update the window. This calls processMessages(), and if the window is visible
+	 * clears the dirty flag and swaps the buffers and polls the input devices.
 	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void update() {
@@ -440,7 +452,7 @@ public final class Display {
 			display_impl.swapBuffers();
 		}
 		
-		display_impl.update();
+		processMessages();
 
 		// Poll the input devices while we're here
 		if (Mouse.isCreated()) {
