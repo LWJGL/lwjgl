@@ -267,6 +267,10 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 	peer_info->glx13 = extension_flags.GLX13;
 	if (peer_info->glx13) {
 		GLXFBConfig *configs = chooseVisualGLX13(env, display, screen, pixel_format, use_display_bpp, drawable_type, double_buffered);
+		if (configs == NULL) {
+			throwException(env, "Could not choose GLX13 config");
+			return false;
+		}
 		if (isDebugEnabled()) {
 			XVisualInfo *vis_info = _glXGetVisualFromFBConfig(display, configs[0]);
 			if (vis_info != NULL) {
@@ -278,7 +282,7 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 		int result = _glXGetFBConfigAttrib(display, configs[0], GLX_FBCONFIG_ID, &config_id);
 		XFree(configs);
 		if (result != Success) {
-			throwException(env, "Could not choose GLX13 config");
+			throwException(env, "Could not get GLX_FBCONFIG_ID from GLXFBConfig");
 			return false;
 		}
 		peer_info->config.glx13_config.config_id = config_id;
