@@ -45,9 +45,7 @@ public class FSoundTagField {
 	/** Name of tagfield */
 	String			name;
 
-	/** 
-	 * ByteBuffer that will point to the tagfield data
-	 */
+	/**  ByteBuffer that will point to the tagfield data */
 	ByteBuffer	value;
 
 	/** Length of tagfield data */
@@ -112,12 +110,12 @@ public class FSoundTagField {
 	}
   
   /**
-   * @value as string
+   * @return value as a <b>trimmed</b> string
    */
   public String getValueAsString() {
     byte[] buffer = new byte[value.capacity()];
     value.get(buffer);
     value.rewind();
-    return new String(buffer);
+    return new String(buffer).trim();
   }  
 }
