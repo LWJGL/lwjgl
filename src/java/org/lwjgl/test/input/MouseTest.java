@@ -116,6 +116,7 @@ public class MouseTest {
     wiggleMouse();
 
     Mouse.destroy();
+    Keyboard.destroy();
     gl.destroy();
     Display.destroy();
   }
