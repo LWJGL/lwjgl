@@ -54,6 +54,8 @@ bool translationEnabled;
 extern LPDIRECTINPUT lpdi;
 extern HWND hwnd;
 
+extern void handleMessages(void);
+
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    initIDs
@@ -185,7 +187,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 	
 	static DIDEVICEOBJECTDATA rgdod[KEYBOARD_BUFFER_SIZE];
 	wchar_t transBuf[KEYBOARD_BUFFER_SIZE];
-	MSG msg;
 
 	BYTE state[256];
 	DWORD bufsize = KEYBOARD_BUFFER_SIZE;
@@ -211,8 +212,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 			*buf++ = (unsigned char) rgdod[i].dwOfs;
 			*buf++ = (unsigned char) rgdod[i].dwData;
 			if (translationEnabled) {
-				while (PeekMessage(&msg, hwnd, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
-					; // Flush keyboard messages to update keyboard state
+				handleMessages();
 				UINT virt_key = MapVirtualKey(rgdod[i].dwOfs, 1);
 				if (virt_key != 0) {
 					if (!GetKeyboardState(state))
