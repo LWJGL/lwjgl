@@ -75,6 +75,11 @@ void destroyWindow(void)
 	if (isFullscreen)
 		ChangeDisplaySettings(NULL, 0);
 
+  //release dc
+  if (hdc != NULL) {
+    ReleaseDC(hwnd, hdc);
+  }
+
 	if (hwnd != NULL) {
 		// Vape the window
 		DestroyWindow(hwnd);
@@ -163,7 +168,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 		}
 		case WM_ACTIVATE:
 		{
-
       switch(LOWORD(wParam)) {
         case WA_ACTIVE:
         case WA_CLICKACTIVE:
