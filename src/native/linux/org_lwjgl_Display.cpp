@@ -169,6 +169,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclass clazz, jobject mode) {
+	if (mode == NULL) {
+		throwException(env, "mode must be non-null");
+		return;
+	}
 	jclass cls_displayMode = env->FindClass("org/lwjgl/DisplayMode");
 	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
 	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
