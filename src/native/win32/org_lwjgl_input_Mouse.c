@@ -325,8 +325,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollMouse(JNIEnv * env
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
-  (JNIEnv * env, jobject self, jboolean grab) {
-        IDirectInputDevice_Unacquire(mDIDevice);
+(JNIEnv * env, jobject self, jboolean grab) {
+	HRESULT di_res;
+	IDirectInputDevice_Unacquire(mDIDevice);
 	if(grab) {
 		if (!mouse_grabbed) {
 			mouse_grabbed = true;
@@ -340,12 +341,29 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 			mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
 		}	
 	}
-        IDirectInputDevice_Unacquire(mDIDevice);
-        if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask) != DI_OK) {
-	  throwException(env, "Could not set the CooperativeLevel.");
+	IDirectInputDevice_Unacquire(mDIDevice);
+	di_res = IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask);
+	switch (di_res) {
+		case DI_OK:
+			break;
+		case DIERR_INVALIDPARAM:
+			throwException(env, "Could not set the CooperativeLevel (DIERR_INVALIDPARAM).");
+			return;
+		case DIERR_NOTINITIALIZED:
+			throwException(env, "Could not set the CooperativeLevel (DIERR_NOTINITIALIZED).");
+			return;
+		case E_HANDLE:
+			throwException(env, "Could not set the CooperativeLevel (E_HANDLE).");
+			return;
+		default:
+			throwException(env, "Could not set the CooperativeLevel (Unkown error code).");
+			return;
+	}
+	if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask) != DI_OK) {
+		throwException(env, "Could not set the CooperativeLevel.");
 		return;
 	}
-        IDirectInputDevice_Acquire(mDIDevice);
+	IDirectInputDevice_Acquire(mDIDevice);
 	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
