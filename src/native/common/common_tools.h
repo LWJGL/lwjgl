@@ -43,9 +43,6 @@
 #include <jni.h>
 #include "org_lwjgl_Sys.h"
 
-// shared VM instance
-extern JavaVM *jvm;
-
 #define EVENT_BUFFER_SIZE 256
 #define ATTRIB_LIST_SIZE (256)
 
@@ -61,10 +58,8 @@ typedef struct {
 	int attribs[ATTRIB_LIST_SIZE];
 } attrib_list_t;
 
-#ifndef __cplusplus
-typedef unsigned char bool;
-#define true 1
-#define false 0
+#ifdef _X11
+typedef enum {false, true} bool;
 #endif
 
 #ifdef _WIN32
@@ -118,6 +113,7 @@ typedef struct {
 extern "C" {
 #endif
 
+extern JavaVM *getJVM();
 extern void initAttribList(attrib_list_t *list);
 extern void putAttrib(attrib_list_t *list, int attrib);
 

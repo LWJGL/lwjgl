@@ -499,7 +499,7 @@ void attachMixerThread() {
   jfieldID highPriority;
   jint highPriorityValue;
   jmethodID priority;
-  
+  JavaVM *jvm = getJVM();
   (*jvm)->AttachCurrentThreadAsDaemon(jvm, (void*)&mixer_jnienv, NULL);
   
   // set to high priority

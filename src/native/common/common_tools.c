@@ -43,7 +43,7 @@
 
 static bool debug = false;
 static const char* VERSION = "0.93";
-JavaVM *jvm;
+static JavaVM *jvm;
 
 void initAttribList(attrib_list_t *list) {
 	list->current_index = 0;
@@ -217,9 +217,14 @@ bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
   return (*env)->CallStaticBooleanMethod(env, booleanClass, getBoolean, property) ? true : false;
 }
 
+JavaVM *getJVM() {
+	return jvm;
+}
+
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
   jvm = vm;
   return JNI_VERSION_1_4;
 }
+
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
 }

@@ -1870,7 +1870,7 @@ void attachStreamThread() {
   jfieldID highPriority;
   jint highPriorityValue;
   jmethodID priority;
-    
+  JavaVM jvm = getJVM();
   (*jvm)->AttachCurrentThreadAsDaemon(jvm, (void*)&stream_jnienv, NULL);
   
   // set to high priority
