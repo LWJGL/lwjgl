@@ -192,6 +192,7 @@ public class MouseTest {
         handleKeyboard();
         handleMouse();
         
+        System.out.println(Mouse.getX() + ", " + Mouse.getY());        
         
         // pause and continue if minimized
         if(!Display.isVisible()) {
