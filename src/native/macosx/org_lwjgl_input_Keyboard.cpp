@@ -241,9 +241,9 @@ static pascal OSStatus doKeyModifier(EventHandlerCallRef next_handler, EventRef 
 }
 
 bool registerKeyboardHandler(JNIEnv* env, WindowRef win_ref) {
-	bool error = registerHandler(env, win_ref, doKeyUp, kEventRawKeyUp);
-	error = error || registerHandler(env, win_ref, doKeyDown, kEventRawKeyDown);
-	error = error || registerHandler(env, win_ref, doKeyModifier, kEventRawKeyModifiersChanged);
+	bool error = registerHandler(env, win_ref, doKeyUp, kEventClassKeyboard, kEventRawKeyUp);
+	error = error || registerHandler(env, win_ref, doKeyDown, kEventClassKeyboard, kEventRawKeyDown);
+	error = error || registerHandler(env, win_ref, doKeyModifier, kEventClassKeyboard, kEventRawKeyModifiersChanged);
 	return !error;
 }
 

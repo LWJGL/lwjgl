@@ -8,10 +8,10 @@ void throwException(JNIEnv* env, const char* msg) {
 	env->ThrowNew(cls, msg);
 }
 
-bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_kind) {
+bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_class, UInt32 event_kind) {
 	EventTypeSpec event_type;
 	EventHandlerUPP handler_upp = NewEventHandlerUPP(func);
-	event_type.eventClass = kEventClassKeyboard;
+	event_type.eventClass = event_class;
 	event_type.eventKind  = event_kind;
 	OSStatus err = InstallWindowEventHandler(win_ref, handler_upp, 1, &event_type, NULL, NULL);
 	DisposeEventHandlerUPP(handler_upp);
@@ -21,7 +21,6 @@ bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, U
 	}
         return false;
 }
-
 
 bool initLock(JNIEnv* env) {
 	OSStatus err = MPCreateCriticalRegion(&critical_region);

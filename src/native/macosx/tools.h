@@ -8,7 +8,7 @@
 #define unlock() unlockLWJGL();}
 
 extern void throwException(JNIEnv* env, const char* msg);
-extern bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_kind);
+extern bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_class, UInt32 event_kind);
 extern bool initLock(JNIEnv* env);
 extern void destroyLock(void);
 extern void lockLWJGL(void);

@@ -109,11 +109,11 @@ static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, 
 
 static bool registerEventHandlers(JNIEnv *env) {
 	bool error;
-	error = registerHandler(env, win_ref, doQuit, kEventWindowClose);
-	error = error || registerHandler(env, win_ref, doActivate, kEventWindowActivated);
-	error = error || registerHandler(env, win_ref, doDeactivate, kEventWindowDeactivated);
-	error = error || registerHandler(env, win_ref, doMiniaturized, kEventWindowCollapsed);
-	error = error || registerHandler(env, win_ref, doMaximize, kEventWindowExpanded);
+	error = registerHandler(env, win_ref, doQuit, kEventClassWindow, kEventWindowClose);
+	error = error || registerHandler(env, win_ref, doActivate, kEventClassWindow, kEventWindowActivated);
+	error = error || registerHandler(env, win_ref, doDeactivate, kEventClassWindow, kEventWindowDeactivated);
+	error = error || registerHandler(env, win_ref, doMiniaturized, kEventClassWindow, kEventWindowCollapsed);
+	error = error || registerHandler(env, win_ref, doMaximize, kEventClassWindow, kEventWindowExpanded);
 	return !error && registerKeyboardHandler(env, win_ref) && registerMouseHandler(env, win_ref);
 }
 

@@ -43,9 +43,52 @@
 #include "tools.h"
 #include "org_lwjgl_input_Mouse.h"
 
-bool registerMouseHandler(JNIEnv* env, WindowRef win_ref) {
+#define NUM_BUTTONS 7
+
+static unsigned char button_state[NUM_BUTTONS];
+
+static pascal OSStatus doMouseDragged(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+printf("Mouse dragged\n");
+	return eventNotHandledErr; // allow the event to propagate
 }
 
+static pascal OSStatus doMouseMoved(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+printf("Mouse moved\n");
+	return eventNotHandledErr; // allow the event to propagate
+}
+
+static pascal OSStatus doMouseDown(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+printf("Mouse down\n");
+	return eventNotHandledErr; // allow the event to propagate
+}
+
+static pascal OSStatus doMouseUp(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+printf("Mouse up\n");
+	return eventNotHandledErr; // allow the event to propagate
+}
+
+static pascal OSStatus doMouseWheel(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+printf("Mouse wheel\n");
+	return eventNotHandledErr; // allow the event to propagate
+}
+
+bool registerMouseHandler(JNIEnv* env, WindowRef win_ref) {
+	bool error = registerHandler(env, win_ref, doMouseDown, kEventClassMouse, kEventMouseDown);
+	error = error || registerHandler(env, win_ref, doMouseUp, kEventClassMouse, kEventMouseUp);
+	error = error || registerHandler(env, win_ref, doMouseMoved, kEventClassMouse, kEventMouseMoved);
+	error = error || registerHandler(env, win_ref, doMouseDragged, kEventClassMouse, kEventMouseDragged);
+	error = error || registerHandler(env, win_ref, doMouseWheel, kEventClassMouse, kEventMouseWheelMoved);
+	return !error;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
+	return JNI_TRUE;
+}
+  
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jclass) {
+	return NUM_BUTTONS;
+}
+    
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass clazz) {
 }
 
@@ -68,4 +111,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass 
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
+	CGMouseDelta x;
+	CGMouseDelta y;
+	CGGetLastMouseDelta(&x, &y);
+	if (x != 0 || y != 0)
+		printf("delta x %d y %d\n", x, y);
 }
