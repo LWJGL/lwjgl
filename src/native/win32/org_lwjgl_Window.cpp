@@ -204,17 +204,12 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			switch(LOWORD(wParam)) {
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
-				isMinimized = false;
-
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "focused", "Z"), JNI_TRUE);
 				break;
 			case WA_INACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
-				isMinimized = true;
-
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "focused", "Z"), JNI_FALSE);
 				break;
 			}
-			appActivate(!isMinimized);
 		}
 		break;
 		case WM_QUIT:
@@ -228,7 +223,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		}
 	}
 
-	// default action
+	  // default action
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
