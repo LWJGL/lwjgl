@@ -72,7 +72,7 @@ public class SysTest {
       LWJGLUtil.log("Debug is enabled, you should now see output from LWJGL during the following tests.");
     } else {
       System.out.println("Debug is not enabled. Please set the org.lwjgl.Sys.debug property to true to enable debugging");
-      System.out.println("Example:\n  java -Dorg.lwjgl.Sys.debug=true ...");
+      System.out.println("Example:\n  java -Dorg.lwjgl.util.Debug=true ...");
       System.out.println("You will not see any debug output in the following tests.");
     }    
     
