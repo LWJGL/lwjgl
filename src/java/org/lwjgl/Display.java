@@ -80,13 +80,13 @@ public final class Display {
 	 */
 	public static DisplayMode[] getAvailableDisplayModes() {
     DisplayMode[] unfilteredModes = nGetAvailableDisplayModes();
-    
-    // We'll use a HashSet to filter out the duplicated modes
-    HashSet modes = new HashSet(unfilteredModes.length);    
-    
+
     if (unfilteredModes == null) {
       return new DisplayMode[0];
     }
+    
+    // We'll use a HashSet to filter out the duplicated modes
+    HashSet modes = new HashSet(unfilteredModes.length);    
     
     modes.addAll(Arrays.asList(unfilteredModes));
     DisplayMode[] filteredModes = new DisplayMode[modes.size()];
