@@ -55,23 +55,21 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener {
 	}
 
 	public void paint(Graphics g) {
-		// Do nothing
+		synchronized ( this ) {
+			dirty = true;
+		}
 	}
 
 	/**
-	  * This initializes the canvas and binds the context to it. Should only
-	  * be called from the AWT dispatch thread.
+	  * This initializes the canvas and binds the context to it.
 	  */
 	public void initializeCanvas() {
-		synchronized ( this ) {
-			dirty = true;
-			setFocusTraversalKeysEnabled(false);
-			/* Input methods are not enabled in fullscreen anyway, so disable always */
-			enableInputMethods(false);
-			addComponentListener(this);
-			((MacOSXDisplay)Display.getImplementation()).setView(this);
-			setUpdate();
-		}
+		setFocusTraversalKeysEnabled(false);
+		/* Input methods are not enabled in fullscreen anyway, so disable always */
+		enableInputMethods(false);
+		addComponentListener(this);
+		((MacOSXDisplay)Display.getImplementation()).setView(this);
+		setUpdate();
 	}
 
 	public boolean syncIsDirty() {

@@ -78,23 +78,25 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 			/** For some strange reason, the display mode is sometimes silently capped even though the mode is reported as supported */
 			if ( requested_mode.getWidth() != real_mode.getWidth() || requested_mode.getHeight() != real_mode.getHeight() ) {
 				getDevice().setFullScreenWindow(null);
-				syncDispose();
+				if (isDisplayable())
+					dispose();
 				throw new LWJGLException("AWT capped mode: requested mode = " + requested_mode.getWidth() + "x" + requested_mode.getHeight() +
 				                         " but got " + real_mode.getWidth() + " " + real_mode.getHeight());
 			}
 		}
 		pack();
-		syncReshape(x, y, mode.getWidth(), mode.getHeight());
-		invokeAWT(new Runnable() {
-			public void run() {
-				setVisible(true);
-				requestFocus();
-				canvas.requestFocus();
-				canvas.initializeCanvas();
-			}
-		});
+		resize(x, y, mode.getWidth(), mode.getHeight());
+		setVisible(true);
+		requestFocus();
+		canvas.requestFocus();
+		canvas.initializeCanvas();
 	}
 
+	public void resize(int x, int y, int width, int height) {
+		Insets insets = getInsets();
+		setBounds(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);
+	}
+	
 	public Rectangle syncGetBounds() {
 		synchronized ( this ) {
 			return bounds;
@@ -164,32 +166,6 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		}
 	}
 
-	public void syncDispose() {
-		invokeAWT(new Runnable() {
-			public void run() {
-				if ( isDisplayable() )
-					dispose();
-			}
-		});
-	}
-
-	private class TitleSetter implements Runnable {
-
-		private final String title;
-
-		TitleSetter(String title) {
-			this.title = title;
-		}
-
-		public void run() {
-			setTitle(title);
-		}
-	}
-
-	public void syncSetTitle(String title) {
-		invokeAWT(new TitleSetter(title));
-	}
-
 	public boolean syncIsCloseRequested() {
 		boolean result;
 		synchronized ( this ) {
@@ -222,60 +198,5 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 			should_update = false;
 		}
 		return result;
-	}
-
-	private class Reshaper implements Runnable {
-
-		private final int x;
-		private final int y;
-		private final int width;
-		private final int height;
-
-		Reshaper(int x, int y, int width, int height) {
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
-		}
-
-		public void run() {
-			Insets insets = getInsets();
-			setBounds(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);
-		}
-	}
-
-	private void invokeAWT(Runnable r) {
-		try {
-			if (java.awt.EventQueue.isDispatchThread()) {
-				r.run();
-			} else {
-				java.awt.EventQueue.invokeAndWait(r);
-			}
-		} catch (InterruptedException e) {
-			// ignore
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void syncReshape(int x, int y, int width, int height) {
-		invokeAWT(new Reshaper(x, y, width, height));
-	}
-
-	private class CursorSetter implements Runnable {
-
-		private final java.awt.Cursor awt_cursor;
-
-		CursorSetter(java.awt.Cursor awt_cursor) {
-			this.awt_cursor = awt_cursor;
-		}
-
-		public void run() {
-			canvas.setCursor(awt_cursor);
-		}
-	}
-
-	public void syncSetCursor(java.awt.Cursor awt_cursor) {
-		invokeAWT(new CursorSetter(awt_cursor));
 	}
 }

@@ -92,11 +92,12 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void destroyWindow() {
-		if (MacOSXFrame.getDevice().getFullScreenWindow() != null)
-			MacOSXFrame.getDevice().setFullScreenWindow(null);
 		if (frame != null) {
+			if (MacOSXFrame.getDevice().getFullScreenWindow() == frame)
+				MacOSXFrame.getDevice().setFullScreenWindow(null);
 			setView(null);
-			frame.syncDispose();
+			if (frame.isDisplayable())
+				frame.dispose();
 			frame = null;
 		}
 		hideUI(false);
@@ -172,7 +173,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void setTitle(String title) {
-		frame.syncSetTitle(title);
+		frame.setTitle(title);
 	}
 
 	public boolean isCloseRequested() {
@@ -238,7 +239,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public native void setVSyncEnabled(boolean sync);
 
 	public void reshape(int x, int y, int width, int height) {
-		frame.syncReshape(x, y, width, height);
+		frame.resize(x, y, width, height);
 	}
 
 	/* Mouse */
@@ -307,7 +308,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		Cursor awt_cursor = (Cursor)handle;
-		frame.syncSetCursor(awt_cursor);
+		frame.setCursor(awt_cursor);
 	}
 
 	public int getMinCursorSize() {
