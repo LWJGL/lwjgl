@@ -17,4 +17,5 @@ SRC = org_lwjgl_opengl_ARBProgram.cpp \
       org_lwjgl_opengl_ARBWindowPos.cpp \
       org_lwjgl_opengl_ARBOcclusionQuery.cpp \
       org_lwjgl_opengl_ARBShaderObjects.cpp \
-      org_lwjgl_opengl_ARBVertexShader.cpp
+      org_lwjgl_opengl_ARBVertexShader.cpp \
+      org_lwjgl_opengl_ARBImaging.cpp
