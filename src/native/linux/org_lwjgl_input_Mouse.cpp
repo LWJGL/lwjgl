@@ -59,6 +59,7 @@ extern bool isFullscreen(void);
 extern bool isFocused(void);
 extern int getWindowWidth(void);
 extern int getWindowHeight(void);
+extern void handleMessages(void);
 
 static bool pointer_grabbed;
 
@@ -140,7 +141,7 @@ void ungrabPointer(void) {
 	XUngrabPointer(disp, CurrentTime);
 }
 
-int updatePointerGrab(void) {
+int updatePointerGrab(JNIEnv *env, jclass clazz) {
 	if (isFullscreen()) {
 		if (!pointer_grabbed)
 			return grabPointer();
@@ -179,7 +180,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 #endif
 		return JNI_FALSE;
 	}
-	if (updatePointerGrab() != GrabSuccess) {
+	if (updatePointerGrab(env, clazz) != GrabSuccess) {
 #ifdef _DEBUG
 		printf("Could not grab pointer\n");
 #endif
@@ -201,58 +202,48 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 	XFreeCursor(disp, blank_cursor);
 }
 
-int checkPointer() {
-	XEvent event;
-	int count = 0;
-	updatePointerGrab();
-	while (XCheckMaskEvent(disp, ButtonPressMask | ButtonReleaseMask | PointerMotionMask, &event)) {
-		count++;
-		switch (event.type) {
-			case ButtonPress:
-				switch (event.xbutton.button) {
-					case Button1:
-						buttons[0] = JNI_TRUE;
-						break;
-					case Button2:
-						buttons[1] = JNI_TRUE;
-						break;
-					case Button3:
-						buttons[2] = JNI_TRUE;
-						break;
-					case Button4:
-						current_z--;
-						break;
-					case Button5:
-						current_z++;
-						break;
-					default: assert(0);
-				}
-				break;
-			case ButtonRelease:
-				switch (event.xbutton.button) {
-					case Button1:
-						buttons[0] = JNI_FALSE;
-						break;
-					case Button2:
-						buttons[1] = JNI_FALSE;
-						break;
-					case Button3:
-						buttons[2] = JNI_FALSE;
-						break;
-					case Button4: /* Fall through */
-					case Button5:
-						break;
-					default: assert(0);
-				}
-				break;
-			case MotionNotify:
-				current_x = event.xmotion.x;
-				current_y = event.xmotion.y;
-				break;
-			default: assert(0);
-		}
+void handleButtonPress(XButtonEvent *event) {
+	switch (event->button) {
+		case Button1:
+			buttons[0] = JNI_TRUE;
+			break;
+		case Button2:
+			buttons[1] = JNI_TRUE;
+			break;
+		case Button3:
+			buttons[2] = JNI_TRUE;
+			break;
+		case Button4:
+			current_z--;
+			break;
+		case Button5:
+			current_z++;
+			break;
+		default: assert(0);
 	}
-	return count;
+}
+
+void handleButtonRelease(XButtonEvent *event) {
+	switch (event->button) {
+		case Button1:
+			buttons[0] = JNI_FALSE;
+			break;
+		case Button2:
+			buttons[1] = JNI_FALSE;
+			break;
+		case Button3:
+			buttons[2] = JNI_FALSE;
+			break;
+		case Button4: /* Fall through */
+		case Button5:
+			break;
+		default: assert(0);
+	}
+}
+
+void handlePointerMotion(XMotionEvent *event) {
+	current_x = event->x;
+	current_y = event->y;
 }
 
 void warpPointer(void) {
@@ -291,7 +282,8 @@ void warpPointer(void) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv * env, jclass clazz)
 {
-	checkPointer();
+	updatePointerGrab(env, clazz);
+	handleMessages();
 	int moved_x = current_x - last_x;
 	int moved_y = current_y - last_y;
 	int moved_z = current_z - last_z;

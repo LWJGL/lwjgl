@@ -48,7 +48,7 @@
 
 #define KEYBOARD_BUFFER_SIZE 50
 #define KEYBOARD_SIZE 256
-#define KEY_EVENT_BACKLOG 20
+#define KEY_EVENT_BACKLOG 40
 
 static unsigned char readBuffer[KEYBOARD_BUFFER_SIZE * 2];
 static jfieldID fid_readBuffer;
@@ -69,6 +69,7 @@ extern Window win;
 extern bool isFullscreen(void);
 
 extern bool isFocused(void);
+extern void handleMessages(void);
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -100,7 +101,7 @@ void ungrabKeyboard(void) {
 	XUngrabKeyboard(disp, CurrentTime);
 }
 
-int updateKeyboardGrab(void) {
+int updateKeyboardGrab() {
 	if (isFullscreen()) {
 		if (!keyboard_grabbed)
 			return grabKeyboard();
@@ -233,6 +234,14 @@ unsigned char eventState(XKeyEvent *event) {
 		assert(0);
 }
 
+void handleKeyEvent(XKeyEvent *event) {
+	unsigned char keycode = getKeycode(event);
+	unsigned char state = eventState(event);
+	key_buf[keycode] = state;
+	if (buffer_enabled)
+		putEventElement(event);
+}
+
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nPoll
@@ -245,14 +254,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 	unsigned char state;
 	
 	updateKeyboardGrab();
+	handleMessages();
 
-	while (XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
-		unsigned char keycode = getKeycode(&(event.xkey));
-		state = eventState(&(event.xkey));
-		key_buf[keycode] = state;
-		if (buffer_enabled)
-			putEventElement(&(event.xkey));
-	}
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
@@ -271,6 +274,7 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 	int num_events = 0;
 
 	updateKeyboardGrab();
+	handleMessages();
 
 	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && (key_event = nextEventElement()) != NULL) {
 		num_events++;
@@ -283,17 +287,6 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 			num_events += translateEvent(&buf_count, key_event);
 	}
 
-	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
-		num_events++;
-		unsigned char keycode = getKeycode(&(event.xkey));
-		unsigned char state = eventState(&(event.xkey));
-//		printf("Reading a key %d %d count %d\n", (int)keycode, (int)state, num_events);
-		key_buf[keycode] = state;
-		readBuffer[buf_count++] = keycode;
-		readBuffer[buf_count++] = state;
-		if (translation_enabled)
-			num_events += translateEvent(&buf_count, &(event.xkey));
-	}
 	return num_events;
 }
 
