@@ -581,7 +581,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetFrequency(JNIE
 * Signature: (IIIIIII)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetLevels(JNIEnv * env, jclass clazz, jint, jint, jint, jint, jint, jint, jint) {
-  //XBOX only
+  //XBOX only - snowballs chance in hell we will get to support that!
   return false;
 }
 
@@ -875,9 +875,16 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1GetMinMaxDis
 * Method:    nFSOUND_3D_Listener_GetAttributes
 * Signature: (Ljava/nio/FloatBuffer;ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;I)V
 */
-JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1Listener_1GetAttributes(JNIEnv * env, jclass clazz, jobject, jint, jobject, jint, jobject, jint, jobject, jint, jobject, jint, jobject, jint, jobject, jint, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1Listener_1GetAttributes(JNIEnv * env, jclass clazz, jobject pos, jint posOffset, jobject vel, jint velOffset, jobject fx, jint fxOffset, jobject fy, jint fyOffset, jobject fz, jint fzOffset, jobject tx, jint txOffset, jobject ty, jint tyOffset, jobject tz, jint tzOffset) {
+	float* nPos 	= (pos != NULL) ? posOffset + (float *) env->GetDirectBufferAddress(pos) 	: NULL;
+	float* nVel 	= (vel != NULL) 	? velOffset 	+ (float *) env->GetDirectBufferAddress(vel) 		: NULL;
+	float* nFx 		= (fx != NULL) 	? fxOffset 	+ (float *) env->GetDirectBufferAddress(fx) 		: NULL;
+	float* nFy 		= (fy != NULL) 	? fyOffset 	+ (float *) env->GetDirectBufferAddress(fy) 		: NULL;
+	float* nFz 		= (fz != NULL) 	? fzOffset 	+ (float *) env->GetDirectBufferAddress(fz) 		: NULL;
+	float* nTx 		= (tx != NULL) 	? txOffset 	+ (float *) env->GetDirectBufferAddress(tx) 		: NULL;
+	float* nTy 		= (ty != NULL) 	? tyOffset 	+ (float *) env->GetDirectBufferAddress(ty) 		: NULL;
+	float* nTz 		= (tz != NULL) 	? tzOffset 	+ (float *) env->GetDirectBufferAddress(tz) 		: NULL;
+	fmod_instance->FSOUND_3D_Listener_GetAttributes(nPos, nVel, nFx, nFy, nFz, nTx, nTy, nTz);	
 }
 
 /*
@@ -885,9 +892,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1Listener_1GetAtt
 * Method:    nFSOUND_3D_Listener_SetAttributes
 * Signature: (Ljava/nio/FloatBuffer;ILjava/nio/FloatBuffer;IFFFFFF)V
 */
-JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1Listener_1SetAttributes(JNIEnv * env, jclass clazz, jobject, jint, jobject, jint, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat) {
-  //XXX
-  throwFMODException(env, "missing implementation");
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1Listener_1SetAttributes(JNIEnv * env, jclass clazz, jobject pos, jint posOffset, jobject vel, jint velOffset, jfloat fx, jfloat fy, jfloat fz, jfloat tx, jfloat ty, jfloat tz) {
+	float* nPos = posOffset + (float *) env->GetDirectBufferAddress(pos);
+	float* nVel = velOffset + (float *) env->GetDirectBufferAddress(vel);
+  fmod_instance->FSOUND_3D_Listener_SetAttributes(nPos, nVel, fx, fy, fz, tx, ty, tz);
 }
 
 /*
