@@ -75,26 +75,60 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_makePbufferCurrent(JN
 	[pool release];
 }
 
-static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, NSOpenGLContext *shared_context) {
-	if (!checkCapacity(env, pbuffer_handle))
-		return;
-	NSOpenGLPixelBuffer *pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_2D textureInternalFormat:GL_RGBA textureMaxMipMapLevel:0 pixelsWide:width pixelsHigh:height];
-	if (pbuffer == nil) {
-		throwException(env, "Could not allocate Pbuffer");
-		return;
-	}
-	NSOpenGLContext *context = createContext(env, pixel_format, false, false, NSOpenGLPFAPixelBuffer, shared_context);
-	if (context == nil)
-		return;
-	int screen;
-	if (getDisplayContext() != NULL)
-		screen = [getDisplayContext() currentVirtualScreen];
-	else
-		screen = 0;
-	[context setPixelBuffer:pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:screen];
-	PbufferInfo *pbuffer_handle_ptr = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, pbuffer_handle);
-	pbuffer_handle_ptr->pbuffer = pbuffer;
-	pbuffer_handle_ptr->context = context;
+static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, NSOpenGLContext *shared_context)
+{
+    if (!checkCapacity(env, pbuffer_handle))
+        return;
+
+    NSOpenGLPixelBuffer *pbuffer = nil;
+
+    // check if the texture is power of 2
+    if ( (( width > 0 ) && ( width & ( width-1)) == 0) || (( height > 0 ) && ( height & ( height-1)) == 0) )
+    {
+        pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_2D
+                                                textureInternalFormat:GL_RGBA
+                                                textureMaxMipMapLevel:0
+                                                pixelsWide:width
+                                                pixelsHigh:height];
+    }
+    else
+    {
+        pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_RECTANGLE_EXT
+                                                textureInternalFormat:GL_RGBA
+                                                textureMaxMipMapLevel:0
+                                                pixelsWide:width
+                                                pixelsHigh:height];
+    }
+
+
+    if (pbuffer == nil)
+    {
+        throwException(env, "Could not allocate Pbuffer");
+        return;
+    }
+
+    NSOpenGLContext *context = createContext(env, pixel_format, false, false, NSOpenGLPFAPixelBuffer, shared_context);
+
+    if (context == nil)
+    {
+        return;
+    }
+
+    int screen;
+    if (getDisplayContext() != NULL)
+    {
+        screen = [getDisplayContext() currentVirtualScreen];
+    }
+    else
+    {
+        screen = 0;
+    }
+
+    [context setPixelBuffer:pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:screen];
+
+    PbufferInfo *pbuffer_handle_ptr = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, pbuffer_handle);
+    pbuffer_handle_ptr->pbuffer = pbuffer;
+    pbuffer_handle_ptr->context = context;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreatePbuffer(JNIEnv *env, jobject this, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs, jobject shared_context_handle_buffer) {
