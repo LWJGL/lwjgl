@@ -93,7 +93,8 @@ public class BufferChecks {
 		scratchInt.value = enum;
 		Util.IntValue ret = (Util.IntValue) getMap.get(scratchInt);
 		if (ret == null) {
-			throw new OpenGLException("Unknown enum glGet* "+enum);
+                        // TODO: add missing enums before re-enabling this anal check
+			//throw new OpenGLException("Unknown enum glGet* "+enum);
 		} else if (buf.remaining() < ret.value) {
 			throw new BufferOverflowException();
 		}
