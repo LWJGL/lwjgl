@@ -62,11 +62,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    getDirectBufferAddress
- * Signature: (Ljava/nio/Buffer;)I
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
-  (JNIEnv *, jclass, jobject);
+ * Method:    openURL
+ * Signature: (Ljava/lang/String;)V
  */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_openURL
+  (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
 }

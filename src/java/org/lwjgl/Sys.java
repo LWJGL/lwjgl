@@ -213,4 +213,17 @@ public final class Sys {
 	 *
 	public static native int getDirectBufferAddress(Buffer buf);
 	 */
+	
+	/**
+	 * Open the system web browser and point it at the specified URL. It is recommended
+	 * that this not be called whilst your game is running, but on application exit in
+	 * a shutdown hook, as the screen resolution will not be reset when the browser is
+	 * brought into view.
+	 * 
+	 * There is no guarantee that this will work, nor that we can detect if it has
+	 * failed - hence we don't return success code or throw an Exception. This is just a
+	 * best attempt at opening the URL given - don't rely on it to work!
+	 * @param url The URL
+	 */
+	public static native void openURL(String url);
 } 

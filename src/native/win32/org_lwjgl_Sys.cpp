@@ -153,3 +153,50 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
 	return (jint) env->GetDirectBufferAddress(buf);
 }
  */
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    openURL
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_openURL
+  (JNIEnv * env, jclass clazz, jstring url)
+{
+	const char * urlString = env->GetStringUTFChars(url, NULL);
+
+	char command[256];
+	strcpy(command, "");
+	strcat(command, "rundll32 url.dll,FileProtocolHandler ");
+	strncat(command, urlString, 200); // Prevent buffer overflow
+	env->ReleaseStringUTFChars(url, urlString);
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+    // Start the child process. 
+    if( !CreateProcess( NULL, // No module name (use command line). 
+        command,		  // Command line. 
+        NULL,             // Process handle not inheritable. 
+        NULL,             // Thread handle not inheritable. 
+        FALSE,            // Set handle inheritance to FALSE. 
+        0,                // No creation flags. 
+        NULL,             // Use parent's environment block. 
+        NULL,             // Use parent's starting directory. 
+        &si,              // Pointer to STARTUPINFO structure.
+        &pi )             // Pointer to PROCESS_INFORMATION structure.
+    ) 
+    {
+#ifdef _DEBUG
+		printf("Failed to open URL %s\n", urlString);
+#endif
+    }
+
+    // Close process and thread handles. 
+    CloseHandle( pi.hProcess );
+    CloseHandle( pi.hThread );
+
+}

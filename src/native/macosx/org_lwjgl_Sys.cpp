@@ -42,6 +42,7 @@
 #include <sched.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <Carbon/Carbon.h>
 #include "org_lwjgl_Sys.h"
 
 long int		hires_timer_freq;			// Hires timer frequency
@@ -106,7 +107,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 (JNIEnv * env, jclass clazz, jint priority)
 {
-    printf("Unsupported");
+#ifdef _DEBUG
+    printf("Unsupported\n");
+#endif
 }
 
 /*
@@ -123,4 +126,32 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert(JNIEnv * env, jclass clazz, jstr
 
     env->ReleaseStringUTFChars(message, eMessageText);
     env->ReleaseStringUTFChars(title, cTitleBarText);
+}
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    openURL
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_openURL
+  (JNIEnv * env, jclass clazz, jstring url)
+{
+	const char * urlString = env->GetStringUTFChars(url, NULL);
+
+	OSStatus err;
+	ICInstance inst;
+	long startSel;
+	long endSel;
+	Str255  urlStr;
+
+	CopyCStringToPascal(urlString, urlStr);
+	env->ReleaseStringUTFChars(url, urlString);
+
+    err = ICStart(&inst, '????'); // Use your creator code if you have one!
+	if (err == noErr) {
+		startSel = 0;
+		endSel = urlStr[0];
+		err = ICLaunchURL(inst, "\p", (char *) &urlStr[1], urlStr[0], &startSel, &endSel);
+		(void) ICStop(inst);
+	}
 }
