@@ -46,7 +46,7 @@ import org.lwjgl.Sys;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public abstract class AL {
+public final class AL {
 
 	/** ALC instance. */
 	protected static ALC alc;

@@ -67,7 +67,7 @@ import org.lwjgl.BufferChecks;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class ALC {
+public final class ALC {
 	/** Bad value */
 	public static final int ALC_INVALID = -1;
 
