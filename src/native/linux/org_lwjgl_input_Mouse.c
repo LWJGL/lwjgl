@@ -340,6 +340,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
 	int coords_length = (*env)->GetDirectBufferCapacity(env, coord_buffer_obj);
 	unsigned char *buttons_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, button_buffer_obj);
 	int buttons_length = (*env)->GetDirectBufferCapacity(env, button_buffer_obj);
+	handleMessages();
 	if (coords_length < 3) {
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
@@ -365,6 +366,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, jcl
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass clazz, jobject buffer, jint buffer_position) {
 	unsigned char* buffer_ptr = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = (*env)->GetDirectBufferCapacity(env, buffer) - buffer_position;
+	handleMessages();
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, 2);
 }
 

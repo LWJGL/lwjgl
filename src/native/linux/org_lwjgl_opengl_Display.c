@@ -247,7 +247,8 @@ static void checkInput(void) {
 		focused = true;
 	}
 }
-static void handleMessages() {
+
+void handleMessages(void) {
 	XEvent event;
 	Window win;
 	int revert_mode;

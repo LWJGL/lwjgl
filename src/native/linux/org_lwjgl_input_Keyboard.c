@@ -196,11 +196,13 @@ void handleKeyEvent(XKeyEvent *event) {
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll(JNIEnv * env, jclass clazz, jobject buffer) {
 	unsigned char *new_keyboard_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
+	handleMessages();
 	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
 JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead(JNIEnv * env, jclass clazz, jobject buffer, jint buffer_position) {
 	int event_size;
+	handleMessages();
 	if (translation_enabled)
 		event_size = 4;
 	else

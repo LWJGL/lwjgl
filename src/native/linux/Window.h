@@ -54,6 +54,7 @@
 	 * release input (keyboard, mouse)
 	 */
 	extern bool releaseInput(void);
+	extern void handleMessages(void);
 
 	extern bool checkXError(JNIEnv *env);
 	extern Atom getWarpAtom(void);
