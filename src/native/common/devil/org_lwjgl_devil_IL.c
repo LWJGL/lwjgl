@@ -39,7 +39,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveMipmap(JNIEnv *env, j
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyPal(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilApplyPal((const ILstring)strFileName);
 	free(strFileName);
 
@@ -424,7 +424,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoad(JNIEnv *env, jclass cl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilLoadImage((const ILstring)strFileName);
 	free(strFileName);
 
@@ -498,7 +498,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilPushAttrib(JNIEnv *env, jclass 
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jclass clazz, jstring ext) {
-	char *strExt = GetStringNativeChars(env, ext, 0);
+	char *strExt = GetStringNativeChars(env, ext);
 	jboolean result = ilRemoveLoad((const ILstring)strExt);
 	free(strExt);
 
@@ -511,7 +511,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jcl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveSave(JNIEnv *env, jclass clazz, jstring ext) {
-	char *strExt = GetStringNativeChars(env, ext, 0);
+	char *strExt = GetStringNativeChars(env, ext);
 	jboolean result = ilRemoveSave((const ILstring)strExt);
 	free(strExt);
 
