@@ -288,14 +288,21 @@ void DstMatrix::writeRecord()
 void subMatrix (const float * src, int side, float * dst , int col_omit, int row_omit)
 {
     int index = 0;
+    int src_index = 0;
 
     for (int c = 0; c < side; c++)
     {
-        if (c == col_omit) continue;
+        if (c == col_omit)
+        {   src_index += side;
+            continue;
+        }
         for (int r = 0; r < side; r++)
         {
-            if (r == row_omit) continue;
-            dst[index++] = src[r + c * side];
+            if (r == row_omit)
+            {	src_index++;
+                continue;
+            }
+            dst[index++] = src[src_index++];
         }
     }
 } 
@@ -311,20 +318,21 @@ float determinant (const float * matrix , int side)
         det = matrix[0] * matrix[3] - matrix[2] * matrix[1];	
     else
     {
-        int   temp_side  = side - 1;
-        float temp_matrix [temp_side * temp_side];
-        float sign = 1;
+        int   temp_side  = side - 1;			// the dimensions of the sub matrix
+        float temp_matrix [temp_side * temp_side];	// hold a sub matrix of this matrix
+        bool  sign_pos = 1;				// the sign is positive
         
-        for (int i = 0; i < side; i++)
+        for (int row = 0; row < side; row++)
         {
-            // get a sub matrix by eliminating the ith row and the 0th column
-            subMatrix(matrix, side, temp_matrix, 0, i);
+            // get a sub matrix by eliminating the 0th col and the specified row
+            subMatrix(matrix, side, temp_matrix, 0, row);
             
             // add to the determinant sign * [a]i0 * [M]i0
-            det += sign * matrix[i] * determinant (temp_matrix, temp_side);
+            det += ((sign_pos) ? matrix[row] : 
+                                -matrix[row]) * determinant (temp_matrix, temp_side);
             
             // alternate the sign
-            sign = (sign == 1) ? -1 : 1;
+            sign_pos ^= 1;
         }
     }
     

@@ -91,33 +91,45 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDi
         // check out discussions envolving ordering
         
         
-        left.rewind();
-        for (int i = 0; i < leftElements; i++)
+         left.rewind();
+        for (int i = 0; i < left.elements; i++)
         {
             leftRecord = left.nextRecord();
             
             right.rewind();
-            for (int j = 0; j < rightElements; j++)
+            for (int j = 0; j < right.elements; j++)
             {
                 rightRecord = right.nextRecord();
                 destRecord  =  dest.nextRecord();
                 
-                memset(destRecord, 0, dest.width * dest.height * sizeof(jfloat));
+                // zero the elements of the destination matrix
+                for (int d = 0; d < dest.width * dest.height; d++)
+                    destRecord[d] = 0;
                 
+                // loop through each column of the right matrix
+                int rightCell = 0;
                 for (int rightCol = 0; rightCol < right.width; rightCol++)
                 {
-                    for (int leftIndex = 0; leftIndex < left.width*left.height; leftIndex++)
+                    // [RxC] * [RxC]
+                    // dest has same height as left
+                    // dest has same width as  right
+                    
+                    int leftCell = 0;
+                    for (int leftCol = 0; leftCol < left.width; leftCol++)
                     {
-                        destRecord[i % dest.height] += leftRecord[i] * rightRecord[i / leftSourceHeight];
+                        for (int leftRow = 0; leftRow < left.height; leftRow++)
+                        {	
+                            destRecord[leftRow] += rightRecord[rightCell] * leftRecord[leftCell++];
+                        }
+                        rightCell ++ ;
                     }
                     
-                    rightRecord = &rightRecord[right.height];
+                    //rightRecord = &rightRecord[right.height];
                     destRecord =  &destRecord[dest.height];
                     
                 }
                 dest.writeRecord();
             }
-        }
-        
+        }        
 }
 

@@ -77,25 +77,41 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpDire
         int   temp_side = source.width-1;
         float temp_matrix [temp_side*temp_side];
  
-        for (int i = 0; i < source.elements; i++)
+       for (int i = 0; i < source.elements; i++)
         {
             sourceRecord = source.nextRecord();
             destRecord   = dest.nextRecord();
 
-            float det = determinant(sourceRecord, sourceWidth);
+            // calculate the determinant
+            float det = determinant(sourceRecord, source.width);
+            
+#ifdef _DEBUG
+            printf("Determinant: %f\n", det);
+#endif
+
             float sign;
             
-            for (int c = 0; c < source.width; c++)
+            for (int col = 0; col < source.width; col++)
             {
-                sign = (c & 1) ? 1.0f : -1.0f;
+                /*
+                    Maintain sign:
+                    
+                    + - + - ...
+                    - + - + ..
+                    + - + - ..
+                    - + - + ..
+                    : : : : \
+                */
+            
+                sign = (col & 1) ? -1.0f : 1.0f;
                 
-                for (int r = 0; r < source.width; r++)
+                for (int row = 0; row < source.height; row++)
                 {
                     // get the sub matrix
-                    subMatrix(sourceRecord, source.width, temp_matrix, c, r);
+                    subMatrix(sourceRecord, source.width, temp_matrix, col, row);
                     
                     // transpose the result
-                    destRecord[r + c * source.width] 
+                    destRecord[col + row * source.height] 
                             = (sign / det) * determinant(temp_matrix, temp_side); 
                     
                     // swap signs
