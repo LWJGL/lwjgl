@@ -212,6 +212,11 @@ int loadGL(Display *disp, int screen) {
 	return JNI_TRUE;
 }
 
+void closeGL(void) {
+	gl_loaded = 0;
+	extgl_Close();
+}
+
 int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
 	int event_base, error_base, xvid_ver, xvid_rev;
 	
@@ -326,7 +331,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 	XFree(avail_modes);
 	XFree(vis_info);
 	XCloseDisplay(disp);
-	extgl_Close();
+	closeGL();
 #ifdef _DEBUG
 	printf("Closed X connection\n");
 #endif
