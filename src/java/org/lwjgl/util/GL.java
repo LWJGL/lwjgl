@@ -32,27 +32,26 @@
 
 package org.lwjgl.util;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL14;
-import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.*;
 
 /**
  * $Id$
  *
- * An extensible GL class that contains all the GL11 through GL15 methods.
+ * An extensible GL class that contains all the GL11 through GL15 methods,
+ * and all the ARB and EXT extension methods.
  * 
  * @author $Author$
  * @version $Revision$
  */
 public class GL {
+	
 	/**
 	 * C'tor
 	 */
@@ -3066,5 +3065,2815 @@ public class GL {
 	 */
 	public static boolean glUnmapBuffer(int target) {
 		return GL15.glUnmapBuffer(target);
+	}
+	/**
+	 * @param target
+	 * @param buffer
+	 */
+	public static void glBindBufferARB(int target, int buffer) {
+		ARBBufferObject.glBindBufferARB(target, buffer);
+	}
+	/**
+	 * @param target
+	 * @param size
+	 * @param data
+	 * @param usage
+	 */
+	public static void glBufferDataARB(int target, int size, ByteBuffer data,
+			int usage) {
+		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	}
+	/**
+	 * @param target
+	 * @param size
+	 * @param data
+	 * @param usage
+	 */
+	public static void glBufferDataARB(int target, int size, FloatBuffer data,
+			int usage) {
+		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	}
+	/**
+	 * @param target
+	 * @param size
+	 * @param data
+	 * @param usage
+	 */
+	public static void glBufferDataARB(int target, int size, IntBuffer data,
+			int usage) {
+		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	}
+	/**
+	 * @param target
+	 * @param size
+	 * @param data
+	 * @param usage
+	 */
+	public static void glBufferDataARB(int target, int size, ShortBuffer data,
+			int usage) {
+		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glBufferSubDataARB(int target, int offset,
+			ByteBuffer data) {
+		ARBBufferObject.glBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glBufferSubDataARB(int target, int offset,
+			FloatBuffer data) {
+		ARBBufferObject.glBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glBufferSubDataARB(int target, int offset, IntBuffer data) {
+		ARBBufferObject.glBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glBufferSubDataARB(int target, int offset,
+			ShortBuffer data) {
+		ARBBufferObject.glBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param buffers
+	 */
+	public static void glDeleteBuffersARB(IntBuffer buffers) {
+		ARBBufferObject.glDeleteBuffersARB(buffers);
+	}
+	/**
+	 * @param buffers
+	 */
+	public static void glGenBuffersARB(IntBuffer buffers) {
+		ARBBufferObject.glGenBuffersARB(buffers);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetBufferParameterARB(int target, int pname,
+			IntBuffer params) {
+		ARBBufferObject.glGetBufferParameterARB(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param size
+	 * @return
+	 */
+	public static ByteBuffer glGetBufferPointerARB(int target, int pname,
+			int size) {
+		return ARBBufferObject.glGetBufferPointerARB(target, pname, size);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glGetBufferSubDataARB(int target, int offset,
+			ByteBuffer data) {
+		ARBBufferObject.glGetBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glGetBufferSubDataARB(int target, int offset,
+			FloatBuffer data) {
+		ARBBufferObject.glGetBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glGetBufferSubDataARB(int target, int offset,
+			IntBuffer data) {
+		ARBBufferObject.glGetBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param target
+	 * @param offset
+	 * @param data
+	 */
+	public static void glGetBufferSubDataARB(int target, int offset,
+			ShortBuffer data) {
+		ARBBufferObject.glGetBufferSubDataARB(target, offset, data);
+	}
+	/**
+	 * @param buffer
+	 * @return
+	 */
+	public static boolean glIsBufferARB(int buffer) {
+		return ARBBufferObject.glIsBufferARB(buffer);
+	}
+	/**
+	 * @param target
+	 * @param access
+	 * @param size
+	 * @param oldBuffer
+	 * @return
+	 */
+	public static ByteBuffer glMapBufferARB(int target, int access, int size,
+			ByteBuffer oldBuffer) {
+		return ARBBufferObject.glMapBufferARB(target, access, size, oldBuffer);
+	}
+	/**
+	 * @param target
+	 * @return
+	 */
+	public static boolean glUnmapBufferARB(int target) {
+		return ARBBufferObject.glUnmapBufferARB(target);
+	}
+	/**
+	 * @param target
+	 * @param program
+	 */
+	public static void glBindProgramARB(int target, int program) {
+		ARBFragmentProgram.glBindProgramARB(target, program);
+	}
+	/**
+	 * @param programs
+	 */
+	public static void glDeleteProgramsARB(IntBuffer programs) {
+		ARBFragmentProgram.glDeleteProgramsARB(programs);
+	}
+	/**
+	 * @param programs
+	 */
+	public static void glGenProgramsARB(IntBuffer programs) {
+		ARBFragmentProgram.glGenProgramsARB(programs);
+	}
+	/**
+	 * @param target
+	 * @param parameterName
+	 * @param params
+	 */
+	public static void glGetProgramARB(int target, int parameterName,
+			IntBuffer params) {
+		ARBFragmentProgram.glGetProgramARB(target, parameterName, params);
+	}
+	/**
+	 * @param target
+	 * @param index
+	 * @param params
+	 */
+	public static void glGetProgramEnvParameterARB(int target, int index,
+			FloatBuffer params) {
+		ARBFragmentProgram.glGetProgramEnvParameterARB(target, index, params);
+	}
+	/**
+	 * @param target
+	 * @param index
+	 * @param params
+	 */
+	public static void glGetProgramLocalParameterARB(int target, int index,
+			FloatBuffer params) {
+		ARBFragmentProgram.glGetProgramLocalParameterARB(target, index, params);
+	}
+	/**
+	 * @param target
+	 * @param parameterName
+	 * @param paramString
+	 */
+	public static void glGetProgramStringARB(int target, int parameterName,
+			ByteBuffer paramString) {
+		ARBFragmentProgram.glGetProgramStringARB(target, parameterName,
+				paramString);
+	}
+	/**
+	 * @param program
+	 * @return
+	 */
+	public static boolean glIsProgramARB(int program) {
+		return ARBFragmentProgram.glIsProgramARB(program);
+	}
+	/**
+	 * @param target
+	 * @param index
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param w
+	 */
+	public static void glProgramEnvParameter4fARB(int target, int index,
+			float x, float y, float z, float w) {
+		ARBFragmentProgram
+				.glProgramEnvParameter4fARB(target, index, x, y, z, w);
+	}
+	/**
+	 * @param target
+	 * @param index
+	 * @param params
+	 */
+	public static void glProgramEnvParameterARB(int target, int index,
+			FloatBuffer params) {
+		ARBFragmentProgram.glProgramEnvParameterARB(target, index, params);
+	}
+	/**
+	 * @param target
+	 * @param index
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param w
+	 */
+	public static void glProgramLocalParameter4fARB(int target, int index,
+			float x, float y, float z, float w) {
+		ARBFragmentProgram.glProgramLocalParameter4fARB(target, index, x, y, z,
+				w);
+	}
+	/**
+	 * @param target
+	 * @param index
+	 * @param params
+	 */
+	public static void glProgramLocalParameterARB(int target, int index,
+			FloatBuffer params) {
+		ARBFragmentProgram.glProgramLocalParameterARB(target, index, params);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param string
+	 */
+	public static void glProgramStringARB(int target, int format,
+			ByteBuffer string) {
+		ARBFragmentProgram.glProgramStringARB(target, format, string);
+	}
+	/**
+	 * @param target
+	 * @param start
+	 * @param count
+	 * @param format
+	 * @param type
+	 * @param data
+	 */
+	public static void glColorSubTable(int target, int start, int count,
+			int format, int type, ByteBuffer data) {
+		ARBImaging.glColorSubTable(target, start, count, format, type, data);
+	}
+	/**
+	 * @param target
+	 * @param start
+	 * @param count
+	 * @param format
+	 * @param type
+	 * @param data
+	 */
+	public static void glColorSubTable(int target, int start, int count,
+			int format, int type, FloatBuffer data) {
+		ARBImaging.glColorSubTable(target, start, count, format, type, data);
+	}
+	/**
+	 * @param target
+	 * @param internalFormat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param data
+	 */
+	public static void glColorTable(int target, int internalFormat, int width,
+			int format, int type, ByteBuffer data) {
+		ARBImaging.glColorTable(target, internalFormat, width, format, type,
+				data);
+	}
+	/**
+	 * @param target
+	 * @param internalFormat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param data
+	 */
+	public static void glColorTable(int target, int internalFormat, int width,
+			int format, int type, FloatBuffer data) {
+		ARBImaging.glColorTable(target, internalFormat, width, format, type,
+				data);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glColorTableParameter(int target, int pname,
+			FloatBuffer params) {
+		ARBImaging.glColorTableParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glColorTableParameter(int target, int pname,
+			IntBuffer params) {
+		ARBImaging.glColorTableParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glConvolutionFilter1D(int target, int internalformat,
+			int width, int format, int type, ByteBuffer image) {
+		ARBImaging.glConvolutionFilter1D(target, internalformat, width, format,
+				type, image);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glConvolutionFilter1D(int target, int internalformat,
+			int width, int format, int type, FloatBuffer image) {
+		ARBImaging.glConvolutionFilter1D(target, internalformat, width, format,
+				type, image);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glConvolutionFilter1D(int target, int internalformat,
+			int width, int format, int type, IntBuffer image) {
+		ARBImaging.glConvolutionFilter1D(target, internalformat, width, format,
+				type, image);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glConvolutionFilter1D(int target, int internalformat,
+			int width, int format, int type, ShortBuffer image) {
+		ARBImaging.glConvolutionFilter1D(target, internalformat, width, format,
+				type, image);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glConvolutionFilter2D(int target, int internalformat,
+			int width, int height, int format, int type, ByteBuffer image) {
+		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height,
+				format, type, image);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glConvolutionFilter2D(int target, int internalformat,
+			int width, int height, int format, int type, IntBuffer image) {
+		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height,
+				format, type, image);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glConvolutionFilter2D(int target, int internalformat,
+			int width, int height, int format, int type, ShortBuffer image) {
+		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height,
+				format, type, image);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glConvolutionParameter(int target, int pname,
+			FloatBuffer params) {
+		ARBImaging.glConvolutionParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glConvolutionParameterf(int target, int pname,
+			float params) {
+		ARBImaging.glConvolutionParameterf(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glConvolutionParameteri(int target, int pname, int params) {
+		ARBImaging.glConvolutionParameteri(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glConvolutionParameteriv(int target, int pname,
+			IntBuffer params) {
+		ARBImaging.glConvolutionParameteriv(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param start
+	 * @param x
+	 * @param y
+	 * @param width
+	 */
+	public static void glCopyColorSubTable(int target, int start, int x, int y,
+			int width) {
+		ARBImaging.glCopyColorSubTable(target, start, x, y, width);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param x
+	 * @param y
+	 * @param width
+	 */
+	public static void glCopyColorTable(int target, int internalformat, int x,
+			int y, int width) {
+		ARBImaging.glCopyColorTable(target, internalformat, x, y, width);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param x
+	 * @param y
+	 * @param width
+	 */
+	public static void glCopyConvolutionFilter1D(int target,
+			int internalformat, int x, int y, int width) {
+		ARBImaging.glCopyConvolutionFilter1D(target, internalformat, x, y,
+				width);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
+	public static void glCopyConvolutionFilter2D(int target,
+			int internalformat, int x, int y, int width, int height) {
+		ARBImaging.glCopyConvolutionFilter2D(target, internalformat, x, y,
+				width, height);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param data
+	 */
+	public static void glGetColorTable(int target, int format, int type,
+			ByteBuffer data) {
+		ARBImaging.glGetColorTable(target, format, type, data);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param data
+	 */
+	public static void glGetColorTable(int target, int format, int type,
+			FloatBuffer data) {
+		ARBImaging.glGetColorTable(target, format, type, data);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetColorTableParameter(int target, int pname,
+			FloatBuffer params) {
+		ARBImaging.glGetColorTableParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetColorTableParameter(int target, int pname,
+			IntBuffer params) {
+		ARBImaging.glGetColorTableParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glGetConvolutionFilter(int target, int format, int type,
+			ByteBuffer image) {
+		ARBImaging.glGetConvolutionFilter(target, format, type, image);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glGetConvolutionFilter(int target, int format, int type,
+			FloatBuffer image) {
+		ARBImaging.glGetConvolutionFilter(target, format, type, image);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glGetConvolutionFilter(int target, int format, int type,
+			IntBuffer image) {
+		ARBImaging.glGetConvolutionFilter(target, format, type, image);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param image
+	 */
+	public static void glGetConvolutionFilter(int target, int format, int type,
+			ShortBuffer image) {
+		ARBImaging.glGetConvolutionFilter(target, format, type, image);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetConvolutionParameter(int target, int pname,
+			FloatBuffer params) {
+		ARBImaging.glGetConvolutionParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetConvolutionParameter(int target, int pname,
+			IntBuffer params) {
+		ARBImaging.glGetConvolutionParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param type
+	 * @param values
+	 */
+	public static void glGetHistogram(int target, boolean reset, int format,
+			int type, ByteBuffer values) {
+		ARBImaging.glGetHistogram(target, reset, format, type, values);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param type
+	 * @param values
+	 */
+	public static void glGetHistogram(int target, boolean reset, int format,
+			int type, FloatBuffer values) {
+		ARBImaging.glGetHistogram(target, reset, format, type, values);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param type
+	 * @param values
+	 */
+	public static void glGetHistogram(int target, boolean reset, int format,
+			int type, IntBuffer values) {
+		ARBImaging.glGetHistogram(target, reset, format, type, values);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param type
+	 * @param values
+	 */
+	public static void glGetHistogram(int target, boolean reset, int format,
+			int type, ShortBuffer values) {
+		ARBImaging.glGetHistogram(target, reset, format, type, values);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetHistogramParameter(int target, int pname,
+			FloatBuffer params) {
+		ARBImaging.glGetHistogramParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetHistogramParameter(int target, int pname,
+			IntBuffer params) {
+		ARBImaging.glGetHistogramParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param types
+	 * @param values
+	 */
+	public static void glGetMinmax(int target, boolean reset, int format,
+			int types, ByteBuffer values) {
+		ARBImaging.glGetMinmax(target, reset, format, types, values);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param types
+	 * @param values
+	 */
+	public static void glGetMinmax(int target, boolean reset, int format,
+			int types, FloatBuffer values) {
+		ARBImaging.glGetMinmax(target, reset, format, types, values);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param types
+	 * @param values
+	 */
+	public static void glGetMinmax(int target, boolean reset, int format,
+			int types, IntBuffer values) {
+		ARBImaging.glGetMinmax(target, reset, format, types, values);
+	}
+	/**
+	 * @param target
+	 * @param reset
+	 * @param format
+	 * @param types
+	 * @param values
+	 */
+	public static void glGetMinmax(int target, boolean reset, int format,
+			int types, ShortBuffer values) {
+		ARBImaging.glGetMinmax(target, reset, format, types, values);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetMinmaxParameter(int target, int pname,
+			FloatBuffer params) {
+		ARBImaging.glGetMinmaxParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetMinmaxParameter(int target, int pname,
+			IntBuffer params) {
+		ARBImaging.glGetMinmaxParameter(target, pname, params);
+	}
+	/**
+	 * @param target
+	 * @param format
+	 * @param type
+	 * @param row
+	 * @param column
+	 * @param span
+	 */
+	public static void glGetSeparableFilter(int target, int format, int type,
+			Buffer row, Buffer column, Buffer span) {
+		ARBImaging
+				.glGetSeparableFilter(target, format, type, row, column, span);
+	}
+	/**
+	 * @param target
+	 * @param width
+	 * @param internalformat
+	 * @param sink
+	 */
+	public static void glHistogram(int target, int width, int internalformat,
+			boolean sink) {
+		ARBImaging.glHistogram(target, width, internalformat, sink);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param sink
+	 */
+	public static void glMinmax(int target, int internalformat, boolean sink) {
+		ARBImaging.glMinmax(target, internalformat, sink);
+	}
+	/**
+	 * @param target
+	 */
+	public static void glResetHistogram(int target) {
+		ARBImaging.glResetHistogram(target);
+	}
+	/**
+	 * @param target
+	 */
+	public static void glResetMinmax(int target) {
+		ARBImaging.glResetMinmax(target);
+	}
+	/**
+	 * @param target
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param format
+	 * @param type
+	 * @param row
+	 * @param column
+	 */
+	public static void glSeparableFilter2D(int target, int internalformat,
+			int width, int height, int format, int type, Buffer row,
+			Buffer column) {
+		ARBImaging.glSeparableFilter2D(target, internalformat, width, height,
+				format, type, row, column);
+	}
+	/**
+	 * @param index
+	 */
+	public static void glCurrentPaletteMatrixARB(int index) {
+		ARBMatrixPalette.glCurrentPaletteMatrixARB(index);
+	}
+	/**
+	 * @param size
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glMatrixIndexPointerARB(int size, int stride,
+			ByteBuffer pPointer) {
+		ARBMatrixPalette.glMatrixIndexPointerARB(size, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param type
+	 * @param stride
+	 * @param buffer_offset
+	 */
+	public static void glMatrixIndexPointerARB(int size, int type, int stride,
+			int buffer_offset) {
+		ARBMatrixPalette.glMatrixIndexPointerARB(size, type, stride,
+				buffer_offset);
+	}
+	/**
+	 * @param size
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glMatrixIndexPointerARB(int size, int stride,
+			IntBuffer pPointer) {
+		ARBMatrixPalette.glMatrixIndexPointerARB(size, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glMatrixIndexPointerARB(int size, int stride,
+			ShortBuffer pPointer) {
+		ARBMatrixPalette.glMatrixIndexPointerARB(size, stride, pPointer);
+	}
+	/**
+	 * @param pIndices
+	 */
+	public static void glMatrixIndexuARB(ByteBuffer pIndices) {
+		ARBMatrixPalette.glMatrixIndexuARB(pIndices);
+	}
+	/**
+	 * @param piIndices
+	 */
+	public static void glMatrixIndexuARB(IntBuffer piIndices) {
+		ARBMatrixPalette.glMatrixIndexuARB(piIndices);
+	}
+	/**
+	 * @param psIndices
+	 */
+	public static void glMatrixIndexuARB(ShortBuffer psIndices) {
+		ARBMatrixPalette.glMatrixIndexuARB(psIndices);
+	}
+	/**
+	 * @param value
+	 * @param invert
+	 */
+	public static void glSampleCoverageARB(float value, boolean invert) {
+		ARBMultisample.glSampleCoverageARB(value, invert);
+	}
+	/**
+	 * @param texture
+	 */
+	public static void glActiveTextureARB(int texture) {
+		ARBMultitexture.glActiveTextureARB(texture);
+	}
+	/**
+	 * @param texture
+	 */
+	public static void glClientActiveTextureARB(int texture) {
+		ARBMultitexture.glClientActiveTextureARB(texture);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 */
+	public static void glMultiTexCoord1fARB(int target, float s) {
+		ARBMultitexture.glMultiTexCoord1fARB(target, s);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 */
+	public static void glMultiTexCoord1iARB(int target, int s) {
+		ARBMultitexture.glMultiTexCoord1iARB(target, s);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 */
+	public static void glMultiTexCoord1sARB(int target, short s) {
+		ARBMultitexture.glMultiTexCoord1sARB(target, s);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 */
+	public static void glMultiTexCoord2fARB(int target, float s, float t) {
+		ARBMultitexture.glMultiTexCoord2fARB(target, s, t);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 */
+	public static void glMultiTexCoord2iARB(int target, int s, int t) {
+		ARBMultitexture.glMultiTexCoord2iARB(target, s, t);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 */
+	public static void glMultiTexCoord2sARB(int target, short s, short t) {
+		ARBMultitexture.glMultiTexCoord2sARB(target, s, t);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 * @param r
+	 */
+	public static void glMultiTexCoord3fARB(int target, float s, float t,
+			float r) {
+		ARBMultitexture.glMultiTexCoord3fARB(target, s, t, r);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 * @param r
+	 */
+	public static void glMultiTexCoord3iARB(int target, int s, int t, int r) {
+		ARBMultitexture.glMultiTexCoord3iARB(target, s, t, r);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 * @param r
+	 */
+	public static void glMultiTexCoord3sARB(int target, short s, short t,
+			short r) {
+		ARBMultitexture.glMultiTexCoord3sARB(target, s, t, r);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 * @param r
+	 * @param q
+	 */
+	public static void glMultiTexCoord4fARB(int target, float s, float t,
+			float r, float q) {
+		ARBMultitexture.glMultiTexCoord4fARB(target, s, t, r, q);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 * @param r
+	 * @param q
+	 */
+	public static void glMultiTexCoord4iARB(int target, int s, int t, int r,
+			int q) {
+		ARBMultitexture.glMultiTexCoord4iARB(target, s, t, r, q);
+	}
+	/**
+	 * @param target
+	 * @param s
+	 * @param t
+	 * @param r
+	 * @param q
+	 */
+	public static void glMultiTexCoord4sARB(int target, short s, short t,
+			short r, short q) {
+		ARBMultitexture.glMultiTexCoord4sARB(target, s, t, r, q);
+	}
+	/**
+	 * @param target
+	 * @param id
+	 */
+	public static void glBeginQueryARB(int target, int id) {
+		ARBOcclusionQuery.glBeginQueryARB(target, id);
+	}
+	/**
+	 * @param ids
+	 */
+	public static void glDeleteQueriesARB(IntBuffer ids) {
+		ARBOcclusionQuery.glDeleteQueriesARB(ids);
+	}
+	/**
+	 * @param target
+	 */
+	public static void glEndQueryARB(int target) {
+		ARBOcclusionQuery.glEndQueryARB(target);
+	}
+	/**
+	 * @param ids
+	 */
+	public static void glGenQueriesARB(IntBuffer ids) {
+		ARBOcclusionQuery.glGenQueriesARB(ids);
+	}
+	/**
+	 * @param target
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetQueryARB(int target, int pname, IntBuffer params) {
+		ARBOcclusionQuery.glGetQueryARB(target, pname, params);
+	}
+	/**
+	 * @param id
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetQueryObjectiARB(int id, int pname, IntBuffer params) {
+		ARBOcclusionQuery.glGetQueryObjectiARB(id, pname, params);
+	}
+	/**
+	 * @param id
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetQueryObjectuiARB(int id, int pname, IntBuffer params) {
+		ARBOcclusionQuery.glGetQueryObjectuiARB(id, pname, params);
+	}
+	/**
+	 * @param id
+	 * @return
+	 */
+	public static boolean glIsQueryARB(int id) {
+		return ARBOcclusionQuery.glIsQueryARB(id);
+	}
+	/**
+	 * @param pname
+	 * @param pfParams
+	 */
+	public static void glPointParameterARB(int pname, FloatBuffer pfParams) {
+		ARBPointParameters.glPointParameterARB(pname, pfParams);
+	}
+	/**
+	 * @param pname
+	 * @param param
+	 */
+	public static void glPointParameterfARB(int pname, float param) {
+		ARBPointParameters.glPointParameterfARB(pname, param);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage1DARB(int target, int level,
+			int internalformat, int width, int border, int imageSize,
+			ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage1DARB(target, level,
+				internalformat, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage1DARB(int target, int level,
+			int internalformat, int width, int border, int imageSize,
+			FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage1DARB(target, level,
+				internalformat, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage1DARB(int target, int level,
+			int internalformat, int width, int border, int imageSize,
+			IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage1DARB(target, level,
+				internalformat, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage1DARB(int target, int level,
+			int internalformat, int width, int border, int imageSize,
+			ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage1DARB(target, level,
+				internalformat, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage2DARB(int target, int level,
+			int internalformat, int width, int height, int border,
+			int imageSize, ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage2DARB(target, level,
+				internalformat, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage2DARB(int target, int level,
+			int internalformat, int width, int height, int border,
+			int imageSize, FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage2DARB(target, level,
+				internalformat, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage2DARB(int target, int level,
+			int internalformat, int width, int height, int border,
+			int imageSize, IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage2DARB(target, level,
+				internalformat, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage2DARB(int target, int level,
+			int internalformat, int width, int height, int border,
+			int imageSize, ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage2DARB(target, level,
+				internalformat, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage3DARB(int target, int level,
+			int internalformat, int width, int height, int depth, int border,
+			int imageSize, ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target, level,
+				internalformat, width, height, depth, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage3DARB(int target, int level,
+			int internalformat, int width, int height, int depth, int border,
+			int imageSize, FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target, level,
+				internalformat, width, height, depth, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage3DARB(int target, int level,
+			int internalformat, int width, int height, int depth, int border,
+			int imageSize, IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target, level,
+				internalformat, width, height, depth, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param internalformat
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexImage3DARB(int target, int level,
+			int internalformat, int width, int height, int depth, int border,
+			int imageSize, ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target, level,
+				internalformat, width, height, depth, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage1DARB(int target, int level,
+			int xoffset, int width, int border, int imageSize, ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level,
+				xoffset, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage1DARB(int target, int level,
+			int xoffset, int width, int border, int imageSize, FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level,
+				xoffset, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage1DARB(int target, int level,
+			int xoffset, int width, int border, int imageSize, IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level,
+				xoffset, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param width
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage1DARB(int target, int level,
+			int xoffset, int width, int border, int imageSize, ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level,
+				xoffset, width, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage2DARB(int target, int level,
+			int xoffset, int yoffset, int width, int height, int border,
+			int imageSize, ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level,
+				xoffset, yoffset, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage2DARB(int target, int level,
+			int xoffset, int yoffset, int width, int height, int border,
+			int imageSize, FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level,
+				xoffset, yoffset, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage2DARB(int target, int level,
+			int xoffset, int yoffset, int width, int height, int border,
+			int imageSize, IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level,
+				xoffset, yoffset, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage2DARB(int target, int level,
+			int xoffset, int yoffset, int width, int height, int border,
+			int imageSize, ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level,
+				xoffset, yoffset, width, height, border, imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage3DARB(int target, int level,
+			int xoffset, int yoffset, int zoffset, int width, int height,
+			int depth, int border, int imageSize, ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level,
+				xoffset, yoffset, zoffset, width, height, depth, border,
+				imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage3DARB(int target, int level,
+			int xoffset, int yoffset, int zoffset, int width, int height,
+			int depth, int border, int imageSize, FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level,
+				xoffset, yoffset, zoffset, width, height, depth, border,
+				imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage3DARB(int target, int level,
+			int xoffset, int yoffset, int zoffset, int width, int height,
+			int depth, int border, int imageSize, IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level,
+				xoffset, yoffset, zoffset, width, height, depth, border,
+				imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param level
+	 * @param xoffset
+	 * @param yoffset
+	 * @param zoffset
+	 * @param width
+	 * @param height
+	 * @param depth
+	 * @param border
+	 * @param imageSize
+	 * @param pData
+	 */
+	public static void glCompressedTexSubImage3DARB(int target, int level,
+			int xoffset, int yoffset, int zoffset, int width, int height,
+			int depth, int border, int imageSize, ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level,
+				xoffset, yoffset, zoffset, width, height, depth, border,
+				imageSize, pData);
+	}
+	/**
+	 * @param target
+	 * @param lod
+	 * @param pImg
+	 */
+	public static void glGetCompressedTexImageARB(int target, int lod,
+			ByteBuffer pImg) {
+		ARBTextureCompression.glGetCompressedTexImageARB(target, lod, pImg);
+	}
+	/**
+	 * @param target
+	 * @param lod
+	 * @param pImg
+	 */
+	public static void glGetCompressedTexImageARB(int target, int lod,
+			IntBuffer pImg) {
+		ARBTextureCompression.glGetCompressedTexImageARB(target, lod, pImg);
+	}
+	/**
+	 * @param target
+	 * @param lod
+	 * @param pImg
+	 */
+	public static void glGetCompressedTexImageARB(int target, int lod,
+			ShortBuffer pImg) {
+		ARBTextureCompression.glGetCompressedTexImageARB(target, lod, pImg);
+	}
+	/**
+	 * @param pfMtx
+	 */
+	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
+		ARBTransposeMatrix.glLoadTransposeMatrixARB(pfMtx);
+	}
+	/**
+	 * @param pfMtx
+	 */
+	public static void glMultTransposeMatrixfARB(FloatBuffer pfMtx) {
+		ARBTransposeMatrix.glMultTransposeMatrixfARB(pfMtx);
+	}
+	/**
+	 * @param count
+	 */
+	public static void glVertexBlendARB(int count) {
+		ARBVertexBlend.glVertexBlendARB(count);
+	}
+	/**
+	 * @param pWeights
+	 */
+	public static void glWeightARB(ByteBuffer pWeights) {
+		ARBVertexBlend.glWeightARB(pWeights);
+	}
+	/**
+	 * @param pfWeights
+	 */
+	public static void glWeightARB(FloatBuffer pfWeights) {
+		ARBVertexBlend.glWeightARB(pfWeights);
+	}
+	/**
+	 * @param piWeights
+	 */
+	public static void glWeightARB(IntBuffer piWeights) {
+		ARBVertexBlend.glWeightARB(piWeights);
+	}
+	/**
+	 * @param psWeights
+	 */
+	public static void glWeightARB(ShortBuffer psWeights) {
+		ARBVertexBlend.glWeightARB(psWeights);
+	}
+	/**
+	 * @param size
+	 * @param unsigned
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glWeightPointerARB(int size, boolean unsigned,
+			int stride, ByteBuffer pPointer) {
+		ARBVertexBlend.glWeightPointerARB(size, unsigned, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param unsigned
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glWeightPointerARB(int size, boolean unsigned,
+			int stride, IntBuffer pPointer) {
+		ARBVertexBlend.glWeightPointerARB(size, unsigned, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param unsigned
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glWeightPointerARB(int size, boolean unsigned,
+			int stride, ShortBuffer pPointer) {
+		ARBVertexBlend.glWeightPointerARB(size, unsigned, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glWeightPointerARB(int size, int stride,
+			FloatBuffer pPointer) {
+		ARBVertexBlend.glWeightPointerARB(size, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param type
+	 * @param stride
+	 * @param buffer_offset
+	 */
+	public static void glWeightPointerARB(int size, int type, int stride,
+			int buffer_offset) {
+		ARBVertexBlend.glWeightPointerARB(size, type, stride, buffer_offset);
+	}
+	/**
+	 * @param pWeights
+	 */
+	public static void glWeightuARB(ByteBuffer pWeights) {
+		ARBVertexBlend.glWeightuARB(pWeights);
+	}
+	/**
+	 * @param piWeights
+	 */
+	public static void glWeightuARB(IntBuffer piWeights) {
+		ARBVertexBlend.glWeightuARB(piWeights);
+	}
+	/**
+	 * @param psWeights
+	 */
+	public static void glWeightuARB(ShortBuffer psWeights) {
+		ARBVertexBlend.glWeightuARB(psWeights);
+	}
+	/**
+	 * @param programObj
+	 * @param index
+	 * @param name
+	 */
+	public static void glBindAttribLocationARB(int programObj, int index,
+			ByteBuffer name) {
+		ARBVertexShader.glBindAttribLocationARB(programObj, index, name);
+	}
+	/**
+	 * @param programObj
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	public static void glGetActiveAttribARB(int programObj, int index,
+			IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		ARBVertexShader.glGetActiveAttribARB(programObj, index, length, size,
+				type, name);
+	}
+	/**
+	 * @param programObj
+	 * @param name
+	 * @return
+	 */
+	public static int glGetAttribLocationARB(int programObj, ByteBuffer name) {
+		return ARBVertexShader.glGetAttribLocationARB(programObj, name);
+	}
+	/**
+	 * @param x
+	 * @param y
+	 */
+	public static void glWindowPos2fARB(float x, float y) {
+		ARBWindowPos.glWindowPos2fARB(x, y);
+	}
+	/**
+	 * @param x
+	 * @param y
+	 */
+	public static void glWindowPos2iARB(int x, int y) {
+		ARBWindowPos.glWindowPos2iARB(x, y);
+	}
+	/**
+	 * @param x
+	 * @param y
+	 */
+	public static void glWindowPos2sARB(short x, short y) {
+		ARBWindowPos.glWindowPos2sARB(x, y);
+	}
+	/**
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public static void glWindowPos3fARB(float x, float y, float z) {
+		ARBWindowPos.glWindowPos3fARB(x, y, z);
+	}
+	/**
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public static void glWindowPos3iARB(int x, int y, int z) {
+		ARBWindowPos.glWindowPos3iARB(x, y, z);
+	}
+	/**
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public static void glWindowPos3sARB(short x, short y, short z) {
+		ARBWindowPos.glWindowPos3sARB(x, y, z);
+	}
+	/**
+	 * @param containerObj
+	 * @param obj
+	 */
+	public static void glAttachObjectARB(int containerObj, int obj) {
+		ARBShaderObjects.glAttachObjectARB(containerObj, obj);
+	}
+	/**
+	 * @param shaderObj
+	 */
+	public static void glCompileShaderARB(int shaderObj) {
+		ARBShaderObjects.glCompileShaderARB(shaderObj);
+	}
+	/**
+	 * @return
+	 */
+	public static int glCreateProgramObjectARB() {
+		return ARBShaderObjects.glCreateProgramObjectARB();
+	}
+	/**
+	 * @param shaderType
+	 * @return
+	 */
+	public static int glCreateShaderObjectARB(int shaderType) {
+		return ARBShaderObjects.glCreateShaderObjectARB(shaderType);
+	}
+	/**
+	 * @param obj
+	 */
+	public static void glDeleteObjectARB(int obj) {
+		ARBShaderObjects.glDeleteObjectARB(obj);
+	}
+	/**
+	 * @param containerObj
+	 * @param attachedObj
+	 */
+	public static void glDetachObjectARB(int containerObj, int attachedObj) {
+		ARBShaderObjects.glDetachObjectARB(containerObj, attachedObj);
+	}
+	/**
+	 * @param programObj
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	public static void glGetActiveUniformARB(int programObj, int index,
+			IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		ARBShaderObjects.glGetActiveUniformARB(programObj, index, length, size,
+				type, name);
+	}
+	/**
+	 * @param containerObj
+	 * @param count
+	 * @param obj
+	 */
+	public static void glGetAttachedObjectsARB(int containerObj,
+			IntBuffer count, IntBuffer obj) {
+		ARBShaderObjects.glGetAttachedObjectsARB(containerObj, count, obj);
+	}
+	/**
+	 * @param pname
+	 * @return
+	 */
+	public static int glGetHandleARB(int pname) {
+		return ARBShaderObjects.glGetHandleARB(pname);
+	}
+	/**
+	 * @param obj
+	 * @param length
+	 * @param infoLog
+	 */
+	public static void glGetInfoLogARB(int obj, IntBuffer length,
+			ByteBuffer infoLog) {
+		ARBShaderObjects.glGetInfoLogARB(obj, length, infoLog);
+	}
+	/**
+	 * @param obj
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetObjectParameterARB(int obj, int pname,
+			FloatBuffer params) {
+		ARBShaderObjects.glGetObjectParameterARB(obj, pname, params);
+	}
+	/**
+	 * @param obj
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetObjectParameterARB(int obj, int pname,
+			IntBuffer params) {
+		ARBShaderObjects.glGetObjectParameterARB(obj, pname, params);
+	}
+	/**
+	 * @param obj
+	 * @param length
+	 * @param source
+	 */
+	public static void glGetShaderSourceARB(int obj, IntBuffer length,
+			ByteBuffer source) {
+		ARBShaderObjects.glGetShaderSourceARB(obj, length, source);
+	}
+	/**
+	 * @param programObj
+	 * @param location
+	 * @param params
+	 */
+	public static void glGetUniformARB(int programObj, int location,
+			FloatBuffer params) {
+		ARBShaderObjects.glGetUniformARB(programObj, location, params);
+	}
+	/**
+	 * @param programObj
+	 * @param location
+	 * @param params
+	 */
+	public static void glGetUniformARB(int programObj, int location,
+			IntBuffer params) {
+		ARBShaderObjects.glGetUniformARB(programObj, location, params);
+	}
+	/**
+	 * @param programObj
+	 * @param name
+	 * @return
+	 */
+	public static int glGetUniformLocationARB(int programObj, ByteBuffer name) {
+		return ARBShaderObjects.glGetUniformLocationARB(programObj, name);
+	}
+	/**
+	 * @param programObj
+	 */
+	public static void glLinkProgramARB(int programObj) {
+		ARBShaderObjects.glLinkProgramARB(programObj);
+	}
+	/**
+	 * @param shaderObj
+	 * @param string
+	 */
+	public static void glShaderSourceARB(int shaderObj, ByteBuffer string) {
+		ARBShaderObjects.glShaderSourceARB(shaderObj, string);
+	}
+	/**
+	 * @param shaderObj
+	 * @param strings
+	 */
+	public static void glShaderSourceARB(int shaderObj, ByteBuffer[] strings) {
+		ARBShaderObjects.glShaderSourceARB(shaderObj, strings);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform1ARB(int location, FloatBuffer values) {
+		ARBShaderObjects.glUniform1ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform1ARB(int location, IntBuffer values) {
+		ARBShaderObjects.glUniform1ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	public static void glUniform1fARB(int location, float v0) {
+		ARBShaderObjects.glUniform1fARB(location, v0);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	public static void glUniform1iARB(int location, int v0) {
+		ARBShaderObjects.glUniform1iARB(location, v0);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform2ARB(int location, FloatBuffer values) {
+		ARBShaderObjects.glUniform2ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform2ARB(int location, IntBuffer values) {
+		ARBShaderObjects.glUniform2ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	public static void glUniform2fARB(int location, float v0, float v1) {
+		ARBShaderObjects.glUniform2fARB(location, v0, v1);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	public static void glUniform2iARB(int location, int v0, int v1) {
+		ARBShaderObjects.glUniform2iARB(location, v0, v1);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform3ARB(int location, FloatBuffer values) {
+		ARBShaderObjects.glUniform3ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform3ARB(int location, IntBuffer values) {
+		ARBShaderObjects.glUniform3ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	public static void glUniform3fARB(int location, float v0, float v1, float v2) {
+		ARBShaderObjects.glUniform3fARB(location, v0, v1, v2);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	public static void glUniform3iARB(int location, int v0, int v1, int v2) {
+		ARBShaderObjects.glUniform3iARB(location, v0, v1, v2);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform4ARB(int location, FloatBuffer values) {
+		ARBShaderObjects.glUniform4ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform4ARB(int location, IntBuffer values) {
+		ARBShaderObjects.glUniform4ARB(location, values);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	public static void glUniform4fARB(int location, float v0, float v1,
+			float v2, float v3) {
+		ARBShaderObjects.glUniform4fARB(location, v0, v1, v2, v3);
+	}
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	public static void glUniform4iARB(int location, int v0, int v1, int v2,
+			int v3) {
+		ARBShaderObjects.glUniform4iARB(location, v0, v1, v2, v3);
+	}
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public static void glUniformMatrix2ARB(int location, boolean transpose,
+			FloatBuffer matrices) {
+		ARBShaderObjects.glUniformMatrix2ARB(location, transpose, matrices);
+	}
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public static void glUniformMatrix3ARB(int location, boolean transpose,
+			FloatBuffer matrices) {
+		ARBShaderObjects.glUniformMatrix3ARB(location, transpose, matrices);
+	}
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public static void glUniformMatrix4ARB(int location, boolean transpose,
+			FloatBuffer matrices) {
+		ARBShaderObjects.glUniformMatrix4ARB(location, transpose, matrices);
+	}
+	/**
+	 * @param programObj
+	 */
+	public static void glUseProgramObjectARB(int programObj) {
+		ARBShaderObjects.glUseProgramObjectARB(programObj);
+	}
+	/**
+	 * @param programObj
+	 */
+	public static void glValidateProgramARB(int programObj) {
+		ARBShaderObjects.glValidateProgramARB(programObj);
+	}
+	/**
+	 * @param index
+	 */
+	public static void glDisableVertexAttribArrayARB(int index) {
+		ARBVertexProgram.glDisableVertexAttribArrayARB(index);
+	}
+	/**
+	 * @param index
+	 */
+	public static void glEnableVertexAttribArrayARB(int index) {
+		ARBVertexProgram.glEnableVertexAttribArrayARB(index);
+	}
+	/**
+	 * @param index
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetVertexAttribARB(int index, int pname,
+			FloatBuffer params) {
+		ARBVertexProgram.glGetVertexAttribARB(index, pname, params);
+	}
+	/**
+	 * @param index
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetVertexAttribARB(int index, int pname,
+			IntBuffer params) {
+		ARBVertexProgram.glGetVertexAttribARB(index, pname, params);
+	}
+	/**
+	 * @param index
+	 * @param pname
+	 * @param size
+	 * @return
+	 */
+	public static ByteBuffer glGetVertexAttribPointerARB(int index, int pname,
+			int size) {
+		return ARBVertexProgram.glGetVertexAttribPointerARB(index, pname, size);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 */
+	public static void glVertexAttrib1fARB(int index, float x) {
+		ARBVertexProgram.glVertexAttrib1fARB(index, x);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 */
+	public static void glVertexAttrib1sARB(int index, short x) {
+		ARBVertexProgram.glVertexAttrib1sARB(index, x);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 * @param y
+	 */
+	public static void glVertexAttrib2fARB(int index, float x, float y) {
+		ARBVertexProgram.glVertexAttrib2fARB(index, x, y);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 * @param y
+	 */
+	public static void glVertexAttrib2sARB(int index, short x, short y) {
+		ARBVertexProgram.glVertexAttrib2sARB(index, x, y);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public static void glVertexAttrib3fARB(int index, float x, float y, float z) {
+		ARBVertexProgram.glVertexAttrib3fARB(index, x, y, z);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public static void glVertexAttrib3sARB(int index, short x, short y, short z) {
+		ARBVertexProgram.glVertexAttrib3sARB(index, x, y, z);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param w
+	 */
+	public static void glVertexAttrib4fARB(int index, float x, float y,
+			float z, float w) {
+		ARBVertexProgram.glVertexAttrib4fARB(index, x, y, z, w);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param w
+	 */
+	public static void glVertexAttrib4NubARB(int index, byte x, byte y, byte z,
+			byte w) {
+		ARBVertexProgram.glVertexAttrib4NubARB(index, x, y, z, w);
+	}
+	/**
+	 * @param index
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param w
+	 */
+	public static void glVertexAttrib4sARB(int index, short x, short y,
+			short z, short w) {
+		ARBVertexProgram.glVertexAttrib4sARB(index, x, y, z, w);
+	}
+	/**
+	 * @param index
+	 * @param size
+	 * @param unsigned
+	 * @param normalized
+	 * @param stride
+	 * @param buffer
+	 */
+	public static void glVertexAttribPointerARB(int index, int size,
+			boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
+		ARBVertexProgram.glVertexAttribPointerARB(index, size, unsigned,
+				normalized, stride, buffer);
+	}
+	/**
+	 * @param index
+	 * @param size
+	 * @param unsigned
+	 * @param normalized
+	 * @param stride
+	 * @param buffer
+	 */
+	public static void glVertexAttribPointerARB(int index, int size,
+			boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
+		ARBVertexProgram.glVertexAttribPointerARB(index, size, unsigned,
+				normalized, stride, buffer);
+	}
+	/**
+	 * @param index
+	 * @param size
+	 * @param unsigned
+	 * @param normalized
+	 * @param stride
+	 * @param buffer
+	 */
+	public static void glVertexAttribPointerARB(int index, int size,
+			boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
+		ARBVertexProgram.glVertexAttribPointerARB(index, size, unsigned,
+				normalized, stride, buffer);
+	}
+	/**
+	 * @param index
+	 * @param size
+	 * @param normalized
+	 * @param stride
+	 * @param buffer
+	 */
+	public static void glVertexAttribPointerARB(int index, int size,
+			boolean normalized, int stride, FloatBuffer buffer) {
+		ARBVertexProgram.glVertexAttribPointerARB(index, size, normalized,
+				stride, buffer);
+	}
+	/**
+	 * @param index
+	 * @param size
+	 * @param type
+	 * @param normalized
+	 * @param stride
+	 * @param bufferOffset
+	 */
+	public static void glVertexAttribPointerARB(int index, int size, int type,
+			boolean normalized, int stride, int bufferOffset) {
+		ARBVertexProgram.glVertexAttribPointerARB(index, size, type,
+				normalized, stride, bufferOffset);
+	}
+	/**
+	 * @param sfactorRGB
+	 * @param dfactorRGB
+	 * @param sfactorAlpha
+	 * @param dfactorAlpha
+	 */
+	public static void glBlendFuncSeparateEXT(int sfactorRGB, int dfactorRGB,
+			int sfactorAlpha, int dfactorAlpha) {
+		EXTBlendFuncSeparate.glBlendFuncSeparateEXT(sfactorRGB, dfactorRGB,
+				sfactorAlpha, dfactorAlpha);
+	}
+	/**
+	 * @param first
+	 * @param count
+	 */
+	public static void glLockArraysEXT(int first, int count) {
+		EXTCompiledVertexArray.glLockArraysEXT(first, count);
+	}
+	/**
+	 * 
+	 */
+	public static void glUnlockArraysEXT() {
+		EXTCompiledVertexArray.glUnlockArraysEXT();
+	}
+	/**
+	 * @param zmin
+	 * @param zmax
+	 */
+	public static void glDepthBoundsEXT(float zmin, float zmax) {
+		EXTDepthBoundsTest.glDepthBoundsEXT(zmin, zmax);
+	}
+	/**
+	 * @param mode
+	 * @param start
+	 * @param end
+	 * @param pIndices
+	 */
+	public static void glDrawRangeElementsEXT(int mode, int start, int end,
+			ByteBuffer pIndices) {
+		EXTDrawRangeElements.glDrawRangeElementsEXT(mode, start, end, pIndices);
+	}
+	/**
+	 * @param mode
+	 * @param start
+	 * @param end
+	 * @param count
+	 * @param type
+	 * @param buffer_offset
+	 */
+	public static void glDrawRangeElementsEXT(int mode, int start, int end,
+			int count, int type, int buffer_offset) {
+		EXTDrawRangeElements.glDrawRangeElementsEXT(mode, start, end, count,
+				type, buffer_offset);
+	}
+	/**
+	 * @param mode
+	 * @param start
+	 * @param end
+	 * @param pIndices
+	 */
+	public static void glDrawRangeElementsEXT(int mode, int start, int end,
+			IntBuffer pIndices) {
+		EXTDrawRangeElements.glDrawRangeElementsEXT(mode, start, end, pIndices);
+	}
+	/**
+	 * @param mode
+	 * @param start
+	 * @param end
+	 * @param pIndices
+	 */
+	public static void glDrawRangeElementsEXT(int mode, int start, int end,
+			ShortBuffer pIndices) {
+		EXTDrawRangeElements.glDrawRangeElementsEXT(mode, start, end, pIndices);
+	}
+	/**
+	 * @param coord
+	 */
+	public static void glFogCoordfEXT(float coord) {
+		EXTFogCoord.glFogCoordfEXT(coord);
+	}
+	/**
+	 * @param stride
+	 * @param data
+	 */
+	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
+		EXTFogCoord.glFogCoordPointerEXT(stride, data);
+	}
+	/**
+	 * @param type
+	 * @param stride
+	 * @param buffer_offset
+	 */
+	public static void glFogCoordPointerEXT(int type, int stride,
+			int buffer_offset) {
+		EXTFogCoord.glFogCoordPointerEXT(type, stride, buffer_offset);
+	}
+	/**
+	 * @param mode
+	 * @param piFirst
+	 * @param piCount
+	 */
+	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst,
+			IntBuffer piCount) {
+		EXTMultiDrawArrays.glMultiDrawArraysEXT(mode, piFirst, piCount);
+	}
+	/**
+	 * @param pname
+	 * @param pfParams
+	 */
+	public static void glPointParameterEXT(int pname, FloatBuffer pfParams) {
+		EXTPointParameters.glPointParameterEXT(pname, pfParams);
+	}
+	/**
+	 * @param pname
+	 * @param param
+	 */
+	public static void glPointParameterfEXT(int pname, float param) {
+		EXTPointParameters.glPointParameterfEXT(pname, param);
+	}
+	/**
+	 * @param red
+	 * @param green
+	 * @param blue
+	 */
+	public static void glSecondaryColor3bEXT(byte red, byte green, byte blue) {
+		EXTSecondaryColor.glSecondaryColor3bEXT(red, green, blue);
+	}
+	/**
+	 * @param red
+	 * @param green
+	 * @param blue
+	 */
+	public static void glSecondaryColor3fEXT(float red, float green, float blue) {
+		EXTSecondaryColor.glSecondaryColor3fEXT(red, green, blue);
+	}
+	/**
+	 * @param red
+	 * @param green
+	 * @param blue
+	 */
+	public static void glSecondaryColor3ubEXT(byte red, byte green, byte blue) {
+		EXTSecondaryColor.glSecondaryColor3ubEXT(red, green, blue);
+	}
+	/**
+	 * @param size
+	 * @param unsigned
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glSecondaryColorPointerEXT(int size, boolean unsigned,
+			int stride, ByteBuffer pPointer) {
+		EXTSecondaryColor.glSecondaryColorPointerEXT(size, unsigned, stride,
+				pPointer);
+	}
+	/**
+	 * @param size
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glSecondaryColorPointerEXT(int size, int stride,
+			FloatBuffer pPointer) {
+		EXTSecondaryColor.glSecondaryColorPointerEXT(size, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param type
+	 * @param stride
+	 * @param buffer_offset
+	 */
+	public static void glSecondaryColorPointerEXT(int size, int type,
+			int stride, int buffer_offset) {
+		EXTSecondaryColor.glSecondaryColorPointerEXT(size, type, stride,
+				buffer_offset);
+	}
+	/**
+	 * @param face
+	 */
+	public static void glActiveStencilFaceEXT(int face) {
+		EXTStencilTwoSide.glActiveStencilFaceEXT(face);
+	}
+	/**
+	 * 
+	 */
+	public static void glBeginVertexShaderEXT() {
+		EXTVertexShader.glBeginVertexShaderEXT();
+	}
+	/**
+	 * @param light
+	 * @param value
+	 * @return
+	 */
+	public static int glBindLightParameterEXT(int light, int value) {
+		return EXTVertexShader.glBindLightParameterEXT(light, value);
+	}
+	/**
+	 * @param face
+	 * @param value
+	 * @return
+	 */
+	public static int glBindMaterialParameterEXT(int face, int value) {
+		return EXTVertexShader.glBindMaterialParameterEXT(face, value);
+	}
+	/**
+	 * @param value
+	 * @return
+	 */
+	public static int glBindParameterEXT(int value) {
+		return EXTVertexShader.glBindParameterEXT(value);
+	}
+	/**
+	 * @param unit
+	 * @param coord
+	 * @param value
+	 * @return
+	 */
+	public static int glBindTexGenParameterEXT(int unit, int coord, int value) {
+		return EXTVertexShader.glBindTexGenParameterEXT(unit, coord, value);
+	}
+	/**
+	 * @param unit
+	 * @param value
+	 * @return
+	 */
+	public static int glBindTextureUnitParameterEXT(int unit, int value) {
+		return EXTVertexShader.glBindTextureUnitParameterEXT(unit, value);
+	}
+	/**
+	 * @param id
+	 */
+	public static void glBindVertexShaderEXT(int id) {
+		EXTVertexShader.glBindVertexShaderEXT(id);
+	}
+	/**
+	 * @param id
+	 */
+	public static void glDeleteVertexShaderEXT(int id) {
+		EXTVertexShader.glDeleteVertexShaderEXT(id);
+	}
+	/**
+	 * @param id
+	 */
+	public static void glDisableVariantClientStateEXT(int id) {
+		EXTVertexShader.glDisableVariantClientStateEXT(id);
+	}
+	/**
+	 * @param id
+	 */
+	public static void glEnableVariantClientStateEXT(int id) {
+		EXTVertexShader.glEnableVariantClientStateEXT(id);
+	}
+	/**
+	 * 
+	 */
+	public static void glEndVertexShaderEXT() {
+		EXTVertexShader.glEndVertexShaderEXT();
+	}
+	/**
+	 * @param res
+	 * @param src
+	 * @param num
+	 */
+	public static void glExtractComponentEXT(int res, int src, int num) {
+		EXTVertexShader.glExtractComponentEXT(res, src, num);
+	}
+	/**
+	 * @param dataType
+	 * @param storageType
+	 * @param range
+	 * @param components
+	 * @return
+	 */
+	public static int glGenSymbolsEXT(int dataType, int storageType, int range,
+			int components) {
+		return EXTVertexShader.glGenSymbolsEXT(dataType, storageType, range,
+				components);
+	}
+	/**
+	 * @param range
+	 * @return
+	 */
+	public static int glGenVertexShadersEXT(int range) {
+		return EXTVertexShader.glGenVertexShadersEXT(range);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param pbData
+	 */
+	public static void glGetInvariantBooleanEXT(int id, int value,
+			ByteBuffer pbData) {
+		EXTVertexShader.glGetInvariantBooleanEXT(id, value, pbData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param pfData
+	 */
+	public static void glGetInvariantFloatEXT(int id, int value,
+			FloatBuffer pfData) {
+		EXTVertexShader.glGetInvariantFloatEXT(id, value, pfData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param piData
+	 */
+	public static void glGetInvariantIntegerEXT(int id, int value,
+			IntBuffer piData) {
+		EXTVertexShader.glGetInvariantIntegerEXT(id, value, piData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param pbData
+	 */
+	public static void glGetLocalConstantBooleanEXT(int id, int value,
+			ByteBuffer pbData) {
+		EXTVertexShader.glGetLocalConstantBooleanEXT(id, value, pbData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param pfData
+	 */
+	public static void glGetLocalConstantFloatEXT(int id, int value,
+			FloatBuffer pfData) {
+		EXTVertexShader.glGetLocalConstantFloatEXT(id, value, pfData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param piData
+	 */
+	public static void glGetLocalConstantIntegerEXT(int id, int value,
+			IntBuffer piData) {
+		EXTVertexShader.glGetLocalConstantIntegerEXT(id, value, piData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param pbData
+	 */
+	public static void glGetVariantBooleanEXT(int id, int value,
+			ByteBuffer pbData) {
+		EXTVertexShader.glGetVariantBooleanEXT(id, value, pbData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param pfData
+	 */
+	public static void glGetVariantFloatEXT(int id, int value,
+			FloatBuffer pfData) {
+		EXTVertexShader.glGetVariantFloatEXT(id, value, pfData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param piData
+	 */
+	public static void glGetVariantIntegerEXT(int id, int value,
+			IntBuffer piData) {
+		EXTVertexShader.glGetVariantIntegerEXT(id, value, piData);
+	}
+	/**
+	 * @param id
+	 * @param value
+	 * @param size
+	 * @return
+	 */
+	public static ByteBuffer glGetVariantPointerEXT(int id, int value, int size) {
+		return EXTVertexShader.glGetVariantPointerEXT(id, value, size);
+	}
+	/**
+	 * @param res
+	 * @param src
+	 * @param num
+	 */
+	public static void glInsertComponentEXT(int res, int src, int num) {
+		EXTVertexShader.glInsertComponentEXT(res, src, num);
+	}
+	/**
+	 * @param id
+	 * @param cap
+	 * @return
+	 */
+	public static boolean glIsVariantEnabledEXT(int id, int cap) {
+		return EXTVertexShader.glIsVariantEnabledEXT(id, cap);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param pAddr
+	 */
+	public static void glSetInvariantEXT(int id, boolean unsigned,
+			ByteBuffer pAddr) {
+		EXTVertexShader.glSetInvariantEXT(id, unsigned, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param pAddr
+	 */
+	public static void glSetInvariantEXT(int id, boolean unsigned,
+			IntBuffer pAddr) {
+		EXTVertexShader.glSetInvariantEXT(id, unsigned, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param pAddr
+	 */
+	public static void glSetInvariantEXT(int id, boolean unsigned,
+			ShortBuffer pAddr) {
+		EXTVertexShader.glSetInvariantEXT(id, unsigned, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param pAddr
+	 */
+	public static void glSetInvariantEXT(int id, FloatBuffer pAddr) {
+		EXTVertexShader.glSetInvariantEXT(id, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param pAddr
+	 */
+	public static void glSetLocalConstantEXT(int id, boolean unsigned,
+			ByteBuffer pAddr) {
+		EXTVertexShader.glSetLocalConstantEXT(id, unsigned, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param pAddr
+	 */
+	public static void glSetLocalConstantEXT(int id, boolean unsigned,
+			IntBuffer pAddr) {
+		EXTVertexShader.glSetLocalConstantEXT(id, unsigned, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param pAddr
+	 */
+	public static void glSetLocalConstantEXT(int id, boolean unsigned,
+			ShortBuffer pAddr) {
+		EXTVertexShader.glSetLocalConstantEXT(id, unsigned, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param pAddr
+	 */
+	public static void glSetLocalConstantEXT(int id, FloatBuffer pAddr) {
+		EXTVertexShader.glSetLocalConstantEXT(id, pAddr);
+	}
+	/**
+	 * @param op
+	 * @param res
+	 * @param arg1
+	 */
+	public static void glShaderOp1EXT(int op, int res, int arg1) {
+		EXTVertexShader.glShaderOp1EXT(op, res, arg1);
+	}
+	/**
+	 * @param op
+	 * @param res
+	 * @param arg1
+	 * @param arg2
+	 */
+	public static void glShaderOp2EXT(int op, int res, int arg1, int arg2) {
+		EXTVertexShader.glShaderOp2EXT(op, res, arg1, arg2);
+	}
+	/**
+	 * @param op
+	 * @param res
+	 * @param arg1
+	 * @param arg2
+	 * @param arg3
+	 */
+	public static void glShaderOp3EXT(int op, int res, int arg1, int arg2,
+			int arg3) {
+		EXTVertexShader.glShaderOp3EXT(op, res, arg1, arg2, arg3);
+	}
+	/**
+	 * @param res
+	 * @param in
+	 * @param outX
+	 * @param outY
+	 * @param outZ
+	 * @param outW
+	 */
+	public static void glSwizzleEXT(int res, int in, int outX, int outY,
+			int outZ, int outW) {
+		EXTVertexShader.glSwizzleEXT(res, in, outX, outY, outZ, outW);
+	}
+	/**
+	 * @param id
+	 * @param pAddr
+	 */
+	public static void glVariantEXT(int id, ByteBuffer pAddr) {
+		EXTVertexShader.glVariantEXT(id, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param pfAddr
+	 */
+	public static void glVariantEXT(int id, FloatBuffer pfAddr) {
+		EXTVertexShader.glVariantEXT(id, pfAddr);
+	}
+	/**
+	 * @param id
+	 * @param piAddr
+	 */
+	public static void glVariantEXT(int id, IntBuffer piAddr) {
+		EXTVertexShader.glVariantEXT(id, piAddr);
+	}
+	/**
+	 * @param id
+	 * @param psAddr
+	 */
+	public static void glVariantEXT(int id, ShortBuffer psAddr) {
+		EXTVertexShader.glVariantEXT(id, psAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param stride
+	 * @param pAddr
+	 */
+	public static void glVariantPointerEXT(int id, boolean unsigned,
+			int stride, ByteBuffer pAddr) {
+		EXTVertexShader.glVariantPointerEXT(id, unsigned, stride, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param stride
+	 * @param pAddr
+	 */
+	public static void glVariantPointerEXT(int id, boolean unsigned,
+			int stride, IntBuffer pAddr) {
+		EXTVertexShader.glVariantPointerEXT(id, unsigned, stride, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param unsigned
+	 * @param stride
+	 * @param pAddr
+	 */
+	public static void glVariantPointerEXT(int id, boolean unsigned,
+			int stride, ShortBuffer pAddr) {
+		EXTVertexShader.glVariantPointerEXT(id, unsigned, stride, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param stride
+	 * @param pAddr
+	 */
+	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
+		EXTVertexShader.glVariantPointerEXT(id, stride, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param type
+	 * @param stride
+	 * @param buffer_offset
+	 */
+	public static void glVariantPointerEXT(int id, int type, int stride,
+			int buffer_offset) {
+		EXTVertexShader.glVariantPointerEXT(id, type, stride, buffer_offset);
+	}
+	/**
+	 * @param id
+	 * @param pAddr
+	 */
+	public static void glVariantuEXT(int id, ByteBuffer pAddr) {
+		EXTVertexShader.glVariantuEXT(id, pAddr);
+	}
+	/**
+	 * @param id
+	 * @param piAddr
+	 */
+	public static void glVariantuEXT(int id, IntBuffer piAddr) {
+		EXTVertexShader.glVariantuEXT(id, piAddr);
+	}
+	/**
+	 * @param id
+	 * @param psAddr
+	 */
+	public static void glVariantuEXT(int id, ShortBuffer psAddr) {
+		EXTVertexShader.glVariantuEXT(id, psAddr);
+	}
+	/**
+	 * @param res
+	 * @param in
+	 * @param outX
+	 * @param outY
+	 * @param outZ
+	 * @param outW
+	 */
+	public static void glWriteMaskEXT(int res, int in, int outX, int outY,
+			int outZ, int outW) {
+		EXTVertexShader.glWriteMaskEXT(res, in, outX, outY, outZ, outW);
+	}
+	/**
+	 * @param weight
+	 */
+	public static void glVertexWeightfEXT(float weight) {
+		EXTVertexWeighting.glVertexWeightfEXT(weight);
+	}
+	/**
+	 * @param size
+	 * @param stride
+	 * @param pPointer
+	 */
+	public static void glVertexWeightPointerEXT(int size, int stride,
+			FloatBuffer pPointer) {
+		EXTVertexWeighting.glVertexWeightPointerEXT(size, stride, pPointer);
+	}
+	/**
+	 * @param size
+	 * @param type
+	 * @param stride
+	 * @param buffer_offset
+	 */
+	public static void glVertexWeightPointerEXT(int size, int type, int stride,
+			int buffer_offset) {
+		EXTVertexWeighting.glVertexWeightPointerEXT(size, type, stride,
+				buffer_offset);
 	}
 }
