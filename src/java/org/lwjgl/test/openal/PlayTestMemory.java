@@ -50,6 +50,8 @@ import java.nio.IntBuffer;
  */
 public class PlayTestMemory extends BasicTest {
     
+  private boolean usingVorbis;
+  
     /**
      * Creates an instance of PlayTestMemory
      */
@@ -65,6 +67,18 @@ public class PlayTestMemory extends BasicTest {
           System.out.println("no argument supplied, assuming Footsteps.wav");
           args = new String[] {"Footsteps.wav"};
         }        
+        
+        if(args[0].endsWith(".ogg")) {
+          System.out.print("Attempting to load Ogg Vorbis file, checking for extension...");
+          if(AL.alIsExtensionPresent("AL_EXT_vorbis")) {
+            System.out.println("found");
+            usingVorbis = true;
+          } else {
+            System.out.println("not supported");
+            alExit();
+            System.exit(-1);
+          }
+        }
         
         int lastError;
         
@@ -92,18 +106,29 @@ public class PlayTestMemory extends BasicTest {
             System.exit(-1);
         }
         
+        System.out.println("loaded " + filebuffer.capacity());
+        
         //ALUTLoadWAVData file = alut.loadWAVMemory(Sys.getDirectBufferAddress(filebuffer));
-        WaveData wavefile = WaveData.create(filebuffer.array());
+        if(usingVorbis) {
+          // pass directly to buffer data
+          AL.alBufferData(buffers.get(0), AL.AL_FORMAT_VORBIS_EXT, filebuffer, filebuffer.capacity(), -1);
+          filebuffer.clear();
+        } else {
+          // load wave data from buffer
+          WaveData wavefile = WaveData.create(filebuffer.array());
+
+          //copy to buffers
+          AL.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
         
+          //unload file again
+          wavefile.dispose();        
+        }
         
-        //copy to buffers
-        AL.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
+        // check for errors
         if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }
   
-        //unload file again
-        wavefile.dispose();        
         
         //set up source input            
         AL.alSourcei(sources.get(0), AL.AL_BUFFER, buffers.get(0));
@@ -179,9 +204,15 @@ public class PlayTestMemory extends BasicTest {
             //done reading, close
             bis.close();
             
-            buffer = ByteBuffer.allocate(baos.size());
+            // if ogg vorbis data, we need to pass it unmodified to alBufferData
+            if(usingVorbis) {
+              buffer = ByteBuffer.allocateDirect(baos.size());
+            } else {
+              buffer = ByteBuffer.allocate(baos.size());
+            }
             buffer.order(ByteOrder.nativeOrder());
             buffer.put(baos.toByteArray());
+            buffer.rewind();
         } catch (Exception ioe) {
             ioe.printStackTrace();
         }

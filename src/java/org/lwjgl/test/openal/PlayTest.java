@@ -33,7 +33,11 @@ package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.AL;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
 
 /**
  * $Id$
@@ -46,6 +50,8 @@ import java.nio.IntBuffer;
  */
 public class PlayTest extends BasicTest {
     
+  private boolean usingVorbis;  
+  
     /**
      * Creates an instance of PlayTest
      */
@@ -60,6 +66,18 @@ public class PlayTest extends BasicTest {
         if(args.length < 1) {
           System.out.println("no argument supplied, assuming Footsteps.wav");
           args = new String[] {"Footsteps.wav"};
+        }
+        
+        if(args[0].endsWith(".ogg")) {
+          System.out.print("Attempting to load Ogg Vorbis file, checking for extension...");
+          if(AL.alIsExtensionPresent("AL_EXT_vorbis")) {
+            System.out.println("found");
+            usingVorbis = true;
+          } else {
+            System.out.println("not supported");
+            alExit();
+            System.exit(-1);
+          }
         }        
         
         int lastError;
@@ -81,18 +99,27 @@ public class PlayTest extends BasicTest {
             exit(lastError);
         }
         
-        //load wave data
-        WaveData wavefile = WaveData.create(args[0]);
+        if(usingVorbis) {
+          ByteBuffer filebuffer = getData(args[0]);
+          
+          // pass directly to buffer data
+          AL.alBufferData(buffers.get(0), AL.AL_FORMAT_VORBIS_EXT, filebuffer, filebuffer.capacity(), -1);
+          filebuffer.clear();
+        } else {
+          // load wave data from buffer
+          WaveData wavefile = WaveData.create(args[0]);
+
+          //copy to buffers
+          AL.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
+          
+          //unload file again
+          wavefile.dispose();        
+        }
         
-        //copy to buffers
-        AL.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
         if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }        
-        
-        //unload file again
-        wavefile.dispose();
-        
+
         //set up source input
         AL.alSourcei(sources.get(0), AL.AL_BUFFER, buffers.get(0));
         if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
@@ -141,6 +168,43 @@ public class PlayTest extends BasicTest {
         //shutdown
         alExit();
     }
+    
+    /**
+     * Reads the file into a ByteBuffer
+     *
+     * @param filename Name of file to load
+     * @return ByteBuffer containing file data
+     */
+    protected ByteBuffer getData(String filename) {
+      ByteBuffer buffer = null;
+
+      System.out.println("Attempting to load: " + filename);
+      
+      try {
+        BufferedInputStream bis = new BufferedInputStream(WaveData.class.getClassLoader().getResourceAsStream(filename));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        int bufferLength = 4096;
+        byte[] readBuffer = new byte[bufferLength];
+        int read = -1;
+        
+        while((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
+          baos.write(readBuffer, 0, read);
+        }
+        
+        //done reading, close
+        bis.close();
+        
+        // if ogg vorbis data, we need to pass it unmodified to alBufferData
+        buffer = ByteBuffer.allocateDirect(baos.size());
+        buffer.order(ByteOrder.nativeOrder());
+        buffer.put(baos.toByteArray());
+        buffer.rewind();
+      } catch (Exception ioe) {
+        ioe.printStackTrace();
+      }
+      return buffer;
+    }    
     
     /**
      * main entry point
