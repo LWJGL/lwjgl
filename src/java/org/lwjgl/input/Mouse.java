@@ -181,11 +181,10 @@ public class Mouse {
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
 		if (currentCursor != null) {
-			nSetNativeCursor(currentCursor.getHandle());
-			currentCursor.setTimeout();
-			x = Window.getWidth() / 2;
-			y = Window.getHeight() / 2;
-			isGrabbed = false;
+      if(currentCursor != oldCursor) {
+  			nSetNativeCursor(currentCursor.getHandle());
+  			currentCursor.setTimeout();
+      }
 		} else {
 			nSetNativeCursor(0);
 		}
@@ -255,7 +254,9 @@ public class Mouse {
 		created = true;
 		currentCursor = null;
 		dx = dy = dwheel = 0;
-
+    x = Window.getWidth() / 2;
+    y = Window.getHeight() / 2;      
+    
 		// set mouse buttons
 		buttonCount = nGetButtonCount();
 		buttons = BufferUtils.createByteBuffer(buttonCount);
@@ -351,7 +352,7 @@ public class Mouse {
 		dx += poll_dx;
 		dy += poll_dy;
 		dwheel += poll_dwheel;
-
+    
 		// if window has been created, clamp to edges
 		if (Window.isCreated()) {
 			// clamp x, y
@@ -551,14 +552,20 @@ public class Mouse {
 	 * (and thus hidden).
 	 */
 	public static void setGrabbed(boolean grab) {
-		isGrabbed = grab;
+    isGrabbed = grab;
 		nGrabMouse(isGrabbed);
+    
+    if(!grab) {
+      x = Window.getWidth() / 2;
+      y = Window.getHeight() / 2;      
+    }
 	}
 	private static native void nGrabMouse(boolean grab);
 
 	/**
 	 * Updates the cursor, so that animation can be changed if needed.
-	 * This method is called automatically by the window on its update. 
+	 * This method is called automatically by the window on its update, and 
+   * shouldn't be called otherwise
 	 */
 	public static void updateCursor() {
 		if (Display.getPlatform() == Display.PLATFORM_WGL && currentCursor != null && currentCursor.hasTimedOut()) {

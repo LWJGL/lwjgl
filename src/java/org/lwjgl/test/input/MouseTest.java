@@ -238,26 +238,31 @@ public class MouseTest {
   private void updateState() {
     direction = -1;
 
+    int dx = Mouse.getDX();
+    int dy = Mouse.getDY();
+    int dw = Mouse.getDWheel();
+    
+    
     // get out if no movement
-    if (Mouse.getDX() == Mouse.getDY() && Mouse.getDX() == 0 && Mouse.getDWheel() == 0) {
+    if (dx == dy && dx == 0 && dw == 0) {
       return;
     }
     
     // determine direction moved
     // ============================
-    if(Mouse.getDX() > 0) {
+    if(dx > 0) {
       direction = 3;
     }
     
-    if(Mouse.getDX() < 0) {
+    if(dx < 0) {
       direction = 1;
     }
     
-    if(Mouse.getDY() > 0) {
+    if(dy > 0) {
       direction = 0;
     }
     
-    if(Mouse.getDY() < 0) {
+    if(dy < 0) {
       direction = 2;
     }
     
@@ -287,11 +292,11 @@ public class MouseTest {
     }
     
     // get direction to update in
-    if (Mouse.getDWheel() > 0) {
+    if (dw > 0) {
       lastScrollDirection++;
-    } else if (Mouse.getDWheel() < 0) {
+    } else if (dw < 0) {
       lastScrollDirection--;
-    } else if (Mouse.getDWheel() == 0) {
+    } else if (dw == 0) {
       return;
     }
     
@@ -313,13 +318,16 @@ public class MouseTest {
    * Handles the keyboard
    */
   private void handleKeyboard() {
-    // closing on ESCAPE
-    if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-      closing = true;
-    }
     
-    if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-    	Mouse.setGrabbed(!Mouse.isGrabbed());
+    while(Keyboard.next()) {
+      // closing on ESCAPE
+      if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()) {
+        closing = true;
+      }
+      
+      if(Keyboard.getEventKey() == Keyboard.KEY_SPACE && Keyboard.getEventKeyState()) {
+      	Mouse.setGrabbed(!Mouse.isGrabbed());
+      }
     }
   }
   

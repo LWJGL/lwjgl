@@ -227,32 +227,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 		SetClassLong(hwnd, GCL_HCURSOR, (LONG)cursor);
 		SetCursor(cursor);
 		if (!usingNativeCursor) {
-			mDIDevice->Unacquire();
-			if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-				throwException(env, "Could not set the CooperativeLevel.");
-				return;
-			}
-			/* Reset cursor position to middle of the window */
-			RECT clientRect;
-			GetWindowRect(hwnd, &windowRect);
-			getScreenClientRect(&clientRect, &windowRect);
-			cursorPos.x = (clientRect.left + clientRect.right)/2;
-			cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
-			SetCursorPos(cursorPos.x, cursorPos.y);
 			usingNativeCursor = true;
 		}
 	} else {
 		if (usingNativeCursor) {
 			SetClassLong(hwnd, GCL_HCURSOR, (LONG)NULL);
 			SetCursor(LoadCursor(NULL, IDC_ARROW));
-			mDIDevice->Unacquire();
-			if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
-				throwException(env, "Could not set the CooperativeLevel.");
-				return;
-			}
 			usingNativeCursor = false;
-			mDIDevice->Acquire();
-			ShowCursor(TRUE);
 		}
 	}
 }
@@ -308,8 +289,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
   
   if(grab) {
     mouseMask = DISCL_EXCLUSIVE | DISCL_FOREGROUND;
+    ShowCursor(false);
   } else {
     mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
+    ShowCursor(true);
+			
+	  /* Reset cursor position to middle of the window */
+		RECT clientRect;
+		GetWindowRect(hwnd, &windowRect);
+		getScreenClientRect(&clientRect, &windowRect);
+		cursorPos.x = (clientRect.left + clientRect.right)/2;
+		cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
+		SetCursorPos(cursorPos.x, cursorPos.y);    
   }
   mDIDevice->Unacquire();
 	if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
@@ -408,6 +399,14 @@ void SetupMouse() {
 		return;
 	}
 	mCreate_success = true;
+	
+	 /* Reset cursor position to middle of the window */
+	RECT clientRect;
+	GetWindowRect(hwnd, &windowRect);
+	getScreenClientRect(&clientRect, &windowRect);
+	cursorPos.x = (clientRect.left + clientRect.right)/2;
+	cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
+  SetCursorPos(cursorPos.x, cursorPos.y);	
 }
 
 static int cap(int val, int min, int max) {
@@ -487,6 +486,7 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer
 	coords[0] = dx;
 	coords[1] = dy;
 	coords[2] = diMouseState.lZ;
+	
 	for (int i = 0; i < mButtoncount; i++) {
 		if (diMouseState.rgbButtons[i] != 0) {
 			diMouseState.rgbButtons[i] = JNI_TRUE;

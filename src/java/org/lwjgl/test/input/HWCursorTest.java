@@ -89,8 +89,6 @@ public class HWCursorTest {
 
       glInit();
 
-      Keyboard.create();
-      Mouse.create();
       initNativeCursors();
 
     } catch (Exception e) {
@@ -105,10 +103,6 @@ public class HWCursorTest {
       }
 
       cursor = new Cursor[3];
-      
-      // center
-      mouse_x = 400;
-      mouse_y = 300;
       
       int cursorImageCount = 1;
       int cursorWidth = Mouse.getMaxCursorSize();
@@ -214,6 +208,7 @@ public class HWCursorTest {
       if (Window.isVisible()) {
         // check keyboard input
         processKeyboard();
+        processMouse();
 
         render();
       } else {
@@ -255,29 +250,33 @@ public class HWCursorTest {
     }
     GL11.glPopMatrix();
   }
+  
+  private void processMouse() {
+    int dx = Mouse.getDX();
+    int dy = Mouse.getDY();
+    
+    if (dx != 0 || dy != 0) {
+      //mouse_x += dx;
+      //mouse_y += dy;
+    }
+    mouse_x = Mouse.getX();
+    mouse_y = Mouse.getY();
+
+    while(Mouse.next()) {
+      if(Mouse.getEventButtonState() && Mouse.getEventButton() < 3) {
+        mouse_btn = Mouse.getEventButton();
+      }
+    }
+  }
 
   /**
    * Processes keyboard input
    */
   private void processKeyboard() {
-    if (Mouse.getDX() != 0 || Mouse.getDY() != 0) {
-        mouse_x += Mouse.getDX() / 2;
-        mouse_y += Mouse.getDY() / 2;
-    }
-    
-    if(Mouse.isButtonDown(0)) {
-    	mouse_btn = 0;
-    } else if(Mouse.isButtonDown(1)) {
-      mouse_btn = 1;
-    } else if(Mouse.isButtonDown(2)) {
-      mouse_btn = 2;
-    }
-
     //check for fullscreen key
     if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 
       try {
-        Keyboard.destroy();
         try {
             Mouse.setNativeCursor(null);
         } catch (Exception e) {
@@ -287,7 +286,6 @@ public class HWCursorTest {
         for(int i=0; i<cursor.length; i++) {
         	cursor[i].destroy();
         }
-        Mouse.destroy();
         Window.destroy();
 
         Display.setDisplayMode(mode);
@@ -295,7 +293,6 @@ public class HWCursorTest {
         
         glInit();
 
-        Keyboard.create();
         initNativeCursors();
       } catch (Exception e) {
         e.printStackTrace();
@@ -305,7 +302,6 @@ public class HWCursorTest {
     //check for window key
     if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
       try {
-        Keyboard.destroy();
         try {
             Mouse.setNativeCursor(null);
         } catch (Exception e) {
@@ -315,7 +311,6 @@ public class HWCursorTest {
         for(int i=0; i<cursor.length; i++) {
           cursor[i].destroy();
         }
-        Mouse.destroy();
         Window.destroy();
 
         Display.resetDisplayMode();
@@ -323,7 +318,6 @@ public class HWCursorTest {
 
         glInit();
 
-        Keyboard.create();
         initNativeCursors();
       } catch (Exception e) {
         e.printStackTrace();
@@ -340,24 +334,25 @@ public class HWCursorTest {
 
     if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
         try {
-            cursor[mouse_btn].resetAnimation();
             Mouse.setNativeCursor(cursor[mouse_btn]);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-      Mouse.setGrabbed(!Mouse.isGrabbed());
-      System.out.println("Grabbed: " + Mouse.isGrabbed());
-    }    
+    while(Keyboard.next()) {
+      if(Keyboard.getEventKey() == Keyboard.KEY_SPACE && Keyboard.getEventKeyState()) {
+        Mouse.setGrabbed(!Mouse.isGrabbed());
+        //mouse_x = Mouse.getX();
+        //mouse_y = Mouse.getY();        
+      }    
+    }
   }
 
   /**
    *  Cleans up the test
    */
   private void cleanup() {
-    Keyboard.destroy();
     try {
         Mouse.setNativeCursor(null);
     } catch (Exception e) {
@@ -367,7 +362,6 @@ public class HWCursorTest {
     for(int i=0; i<cursor.length; i++) {
       cursor[i].destroy();
     }
-    Mouse.destroy();
     Display.resetDisplayMode();
     Window.destroy();
   }
