@@ -584,9 +584,7 @@
 		</javah>
 		<!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
-			<class name="org.lwjgl.opengl.AWTGLCanvas" />
 			<class name="org.lwjgl.opengl.AWTSurfaceLock" />
-			<class name="org.lwjgl.Sys" />
 			<class name="org.lwjgl.DefaultSysImplementation" />
 			<class name="org.lwjgl.input.Cursor" />
 			<class name="org.lwjgl.input.Keyboard" />
