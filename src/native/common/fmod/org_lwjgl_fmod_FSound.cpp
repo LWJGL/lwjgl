@@ -1300,8 +1300,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetTime(JNIEn
 * Method:    FSOUND_CD_Eject
 * Signature: (C)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1Eject(JNIEnv * env, jclass clazz, jchar drive) {
-  return fmod_instance->FSOUND_CD_Eject(drive);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1OpenTray(JNIEnv * env, jclass clazz, jchar drive, jboolean open) {
+  return fmod_instance->FSOUND_CD_OpenTray(drive, open);
 }
 
 /*

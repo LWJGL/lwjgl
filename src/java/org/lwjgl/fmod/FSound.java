@@ -317,6 +317,24 @@ public class FSound {
 																																					| FSOUND_REVERB_FLAGS_DECAYHFLIMIT
 																																					| FSOUND_REVERB_FLAGS_CORE0 | FSOUND_REVERB_FLAGS_CORE1);
 
+  /** A vorbis comment */
+  public static final int FSOUND_TAGFIELD_VORBISCOMMENT = 0;
+  
+  /** Part of an ID3v1 tag */
+  public static final int FSOUND_TAGFIELD_ID3V1 = 1;
+  
+  /** An ID3v2 frame */
+  public static final int FSOUND_TAGFIELD_ID3V2 = 2;
+  
+  /** A SHOUTcast header line */
+  public static final int FSOUND_TAGFIELD_SHOUTCAST = 3;
+  
+  /** An Icecast header line */
+  public static final int FSOUND_TAGFIELD_ICECAST = 4;
+  
+  /** An Advanced Streaming Format header line */
+  public static final int FSOUND_TAGFIELD_ASF = 5;  
+
   // Pre Initialization / Initialization / Enumeration
   // ======================================================
 	/**
@@ -2656,16 +2674,12 @@ public class FSound {
   // ==========================================================
   /**
    * Opens/Closes the CD tray
-   * <p>
-   * <b>Remarks</b>
-   * Calling this when the CD tray is open will cause it to close.
-   * Calling this when the CD tray is closed will cause it to open.
-   * </p>
    *
-   * @param drive the drive ID to use. 0 is the default CD drive. Using D or E in single quotes would be D: or E: for example. 
+   * @param drive The drive ID to use. 0 is the default CD drive. Using D or E in single quotes would be D: or E: for example. 
+   * @param open If open is set to true, the CD tray will be opened. If open is set to false, the CD tray will be closed. 
    * @return On success, true is is returned. On failure, false is returned.
    */
-  public static native boolean FSOUND_CD_Eject(char drive);
+  public static native boolean FSOUND_CD_OpenTray(char drive, boolean open);
   
   /**
    * Returns the number of tracks on the currently inserted CD

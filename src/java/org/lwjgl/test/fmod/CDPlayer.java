@@ -88,7 +88,7 @@ public class CDPlayer {
 						running = false;
 						break;
 					case 1:
-						FSound.FSOUND_CD_Eject(st.nextToken().charAt(0));
+						FSound.FSOUND_CD_OpenTray(st.nextToken().charAt(0), true);
 						break;
 					case 2:
 						FSound.FSOUND_CD_Play(st.nextToken().charAt(0), Integer.parseInt(st.nextToken()));
