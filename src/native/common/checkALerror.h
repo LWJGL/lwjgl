@@ -37,7 +37,8 @@
 
 #else
 
-#define CHECK_GL_ERROR
+#define CHECK_AL_ERROR
+#define CHECK_ALC_ERROR
 
 #endif /* _DEBUG */
 
