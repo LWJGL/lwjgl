@@ -162,8 +162,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 				//don't continue processing this command since this 
 				//would shutdown the window, which the application might not want to
 				return 0L;
-			default:
-				return 0L; // don't allow the window menu to show
 			}
 		}
 		break;
