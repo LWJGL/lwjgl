@@ -1,40 +1,40 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.opengl.glu;
 
-import java.nio.ByteBuffer;
-
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+
+import java.nio.ByteBuffer;
 
 /**
  * MipMap.java
@@ -57,39 +57,24 @@ public class MipMap extends Util {
 	 * @param data
 	 * @return int
 	 */
-	public static int gluBuild2DMipmaps(
-		int target,
-		int components,
-		int width,
-		int height,
-		int format,
-		int type,
-		ByteBuffer data) {
+	public static int gluBuild2DMipmaps(final int target,
+	                                    final int components, final int width, final int height,
+	                                    final int format, final int type, final ByteBuffer data) {
+		if ( width < 1 || height < 1 ) return GLU.GLU_INVALID_VALUE;
 
-		int retVal = 0;
-		int error;
-		int w, h, maxSize;
-		ByteBuffer image, newimage;
-		int neww, newh, level, bpp;
-		boolean done;
-
-		if (width < 1 || height < 1) return GLU.GLU_INVALID_VALUE;
-
-		maxSize = glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE);
-
-		w = nearestPower(width);
-		if (w > maxSize) {
-			w = maxSize;
-		}
-		h = nearestPower(height);
-		if (h > maxSize) {
-			h = maxSize;
-		}
-
-		bpp = bytesPerPixel(format, type);
-		if (bpp == 0) {
+		final int bpp = bytesPerPixel(format, type);
+		if ( bpp == 0 )
 			return GLU.GLU_INVALID_ENUM;
-		}
+
+		final int maxSize = glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE);
+
+		int w = nearestPower(width);
+		if ( w > maxSize )
+			w = maxSize;
+
+		int h = nearestPower(height);
+		if ( h > maxSize )
+			h = maxSize;
 
 		// Get current glPixelStore state
 		PixelStoreState pss = new PixelStoreState();
@@ -100,49 +85,62 @@ public class MipMap extends Util {
 		GL11.glPixelStorei(GL11.GL_PACK_SKIP_ROWS, 0);
 		GL11.glPixelStorei(GL11.GL_PACK_SKIP_PIXELS, 0);
 
-		done = false;
+		ByteBuffer image;
+		int retVal = 0;
+		boolean done = false;
 
-		if (w != width || h != height) {
+		if ( w != width || h != height ) {
 			// must rescale image to get "top" mipmap texture image
 			image = BufferUtils.createByteBuffer((w + 4) * h * bpp);
-			error = gluScaleImage(format, width, height, type, data, w, h, type, image);
-			if (error != 0) {
+			int error = gluScaleImage(format, width, height, type, data, w, h, type, image);
+			if ( error != 0 ) {
 				retVal = error;
 				done = true;
 			}
+
+			/* set pixel unpacking */
+			GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, 0);
+			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+			GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_ROWS, 0);
+			GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_PIXELS, 0);
 		} else {
 			image = data;
 		}
 
-		level = 0;
-		while (!done) {
-			if (image != data) {
-				/* set pixel unpacking */
-				GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, 0);
-				GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_ROWS, 0);
-				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_PIXELS, 0);
-			}
+		ByteBuffer bufferA = null;
+		ByteBuffer bufferB = null;
 
+		int level = 0;
+		while ( !done ) {
 			GL11.glTexImage2D(target, level, components, w, h, 0, format, type, image);
 
-			if (w == 1 && h == 1)
+			if ( w == 1 && h == 1 )
 				break;
 
-			neww = (w < 2) ? 1 : w / 2;
-			newh = (h < 2) ? 1 : h / 2;
-			newimage = BufferUtils.createByteBuffer((neww + 4) * newh * bpp);
+			final int newW = (w < 2) ? 1 : w >> 1;
+			final int newH = (h < 2) ? 1 : h >> 1;
 
-			error = gluScaleImage(format, w, h, type, image, neww, newh, type, newimage);
-			if (error != 0) {
+			final ByteBuffer newImage;
+
+			if ( bufferA == null )
+				newImage = (bufferA = BufferUtils.createByteBuffer((newW + 4) * newH * bpp));
+			else if ( bufferB == null )
+				newImage = (bufferB = BufferUtils.createByteBuffer((newW + 4) * newH * bpp));
+			else
+				newImage = bufferB;
+
+			int error = gluScaleImage(format, w, h, type, image, newW, newH, type, newImage);
+			if ( error != 0 ) {
 				retVal = error;
 				done = true;
 			}
 
-			image = newimage;
+			image = newImage;
+			if ( bufferB != null )
+				bufferB = bufferA;
 
-			w = neww;
-			h = newh;
+			w = newW;
+			h = newH;
 			level++;
 		}
 
@@ -165,48 +163,39 @@ public class MipMap extends Util {
 	 * @param dataOut
 	 * @return int
 	 */
-	public static int gluScaleImage(
-		int format,
-		int widthIn,
-		int heightIn,
-		int typein,
-		ByteBuffer dataIn,
-		int widthOut,
-		int heightOut,
-		int typeOut,
-		ByteBuffer dataOut) {
+	public static int gluScaleImage(int format,
+	                                int widthIn, int heightIn, int typein, ByteBuffer dataIn,
+	                                int widthOut, int heightOut, int typeOut, ByteBuffer dataOut) {
 
-		int components, i, j, k;
-		float[] tempin, tempout;
+		final int components = compPerPix(format);
+		if ( components == -1 )
+			return GLU.GLU_INVALID_ENUM;
+
+		int i, j, k;
+		float[] tempIn, tempOut;
 		float sx, sy;
 		int sizein, sizeout;
 		int rowstride, rowlen;
 
-		components = compPerPix(format);
-		if (components == -1) {
-			return GLU.GLU_INVALID_ENUM;
-		}
-
 		// temp image data
-		tempin = new float[widthIn * heightIn * components];
-		tempout = new float[widthOut * heightOut * components];
+		tempIn = new float[widthIn * heightIn * components];
+		tempOut = new float[widthOut * heightOut * components];
 
 		// Determine bytes per input type
-		switch (typein) {
-			case GL11.GL_UNSIGNED_BYTE :
+		switch ( typein ) {
+			case GL11.GL_UNSIGNED_BYTE:
 				sizein = 1;
 				break;
-			default :
+			default:
 				return GL11.GL_INVALID_ENUM;
 		}
 
 		// Determine bytes per output type
-		switch (typeOut) {
-			case GL11.GL_UNSIGNED_BYTE :
+		switch ( typeOut ) {
+			case GL11.GL_UNSIGNED_BYTE:
 				sizeout = 1;
 				break;
-
-			default :
+			default:
 				return GL11.GL_INVALID_ENUM;
 		}
 
@@ -214,62 +203,60 @@ public class MipMap extends Util {
 		PixelStoreState pss = new PixelStoreState();
 
 		//Unpack the pixel data and convert to floating point
-		if (pss.unpackRowLength > 0) {
+		if ( pss.unpackRowLength > 0 )
 			rowlen = pss.unpackRowLength;
-		} else {
+		else
 			rowlen = widthIn;
-		}
-		if (sizein >= pss.unpackAlignment) {
-			rowstride = components * rowlen;
-		} else {
-			rowstride = pss.unpackAlignment / sizein * ceil(components * rowlen * sizein, pss.unpackAlignment);
-		}
 
-		switch (typein) {
-			case GL11.GL_UNSIGNED_BYTE :
+		if ( sizein >= pss.unpackAlignment )
+			rowstride = components * rowlen;
+		else
+			rowstride = pss.unpackAlignment / sizein * ceil(components * rowlen * sizein, pss.unpackAlignment);
+
+		switch ( typein ) {
+			case GL11.GL_UNSIGNED_BYTE:
 				k = 0;
 				dataIn.rewind();
-				for (i = 0; i < heightIn; i++) {
+				for ( i = 0; i < heightIn; i++ ) {
 					int ubptr = i * rowstride + pss.unpackSkipRows * rowstride + pss.unpackSkipPixels * components;
-					for (j = 0; j < widthIn * components; j++) {
-						tempin[k++] = (float) ((int) dataIn.get(ubptr++) & 0xff);
+					for ( j = 0; j < widthIn * components; j++ ) {
+						tempIn[k++] = (float)((int)dataIn.get(ubptr++) & 0xff);
 					}
 				}
 				break;
-
-			default :
+			default:
 				return GLU.GLU_INVALID_ENUM;
 		}
 
 		// Do scaling
-		sx = (float) widthIn / (float) widthOut;
-		sy = (float) heightIn / (float) heightOut;
+		sx = (float)widthIn / (float)widthOut;
+		sy = (float)heightIn / (float)heightOut;
 
 		float[] c = new float[components];
 		int src, dst;
 
-		for (int iy = 0; iy < heightOut; iy++) {
-			for (int ix = 0; ix < widthOut; ix++) {
-				int x0 = (int) (ix * sx);
-				int x1 = (int) ((ix + 1) * sx);
-				int y0 = (int) (iy * sy);
-				int y1 = (int) ((iy + 1) * sy);
+		for ( int iy = 0; iy < heightOut; iy++ ) {
+			for ( int ix = 0; ix < widthOut; ix++ ) {
+				int x0 = (int)(ix * sx);
+				int x1 = (int)((ix + 1) * sx);
+				int y0 = (int)(iy * sy);
+				int y1 = (int)((iy + 1) * sy);
 
 				int readPix = 0;
 
 				// reset weighted pixel
-				for (int ic = 0; ic < components; ic++) {
+				for ( int ic = 0; ic < components; ic++ ) {
 					c[ic] = 0;
 				}
 
 				// create weighted pixel
-				for (int ix0 = x0; ix0 < x1; ix0++) {
-					for (int iy0 = y0; iy0 < y1; iy0++) {
+				for ( int ix0 = x0; ix0 < x1; ix0++ ) {
+					for ( int iy0 = y0; iy0 < y1; iy0++ ) {
 
 						src = (iy0 * widthIn + ix0) * components;
 
-						for (int ic = 0; ic < components; ic++) {
-							c[ic] += tempin[src + ic];
+						for ( int ic = 0; ic < components; ic++ ) {
+							c[ic] += tempIn[src + ic];
 						}
 
 						readPix++;
@@ -279,47 +266,45 @@ public class MipMap extends Util {
 				// store weighted pixel
 				dst = (iy * widthOut + ix) * components;
 
-				if (readPix == 0) { 
-				    // Image is sized up, caused by non power of two texture as input 
-				    src = (y0 * widthIn + x0) * components; 
-				    for (int ic = 0; ic < components; ic++) { 
-				        tempout[dst++] = tempin[src + ic]; 
-				    } 
+				if ( readPix == 0 ) {
+					// Image is sized up, caused by non power of two texture as input
+					src = (y0 * widthIn + x0) * components;
+					for ( int ic = 0; ic < components; ic++ ) {
+						tempOut[dst++] = tempIn[src + ic];
+					}
 				} else {
-				    // sized down
-				    for (k = 0; k < components; k++) { 
-				        tempout[dst++] = c[k] / readPix; 
-				    } 
-				} 
+					// sized down
+					for ( k = 0; k < components; k++ ) {
+						tempOut[dst++] = c[k] / readPix;
+					}
+				}
 			}
 		}
 
 
 		// Convert temp output
-		if (pss.packRowLength > 0) {
+		if ( pss.packRowLength > 0 )
 			rowlen = pss.packRowLength;
-		} else {
+		else
 			rowlen = widthOut;
-		}
-		if (sizeout >= pss.packAlignment) {
-			rowstride = components * rowlen;
-		} else {
-			rowstride = pss.packAlignment / sizeout * ceil(components * rowlen * sizeout, pss.packAlignment);
-		}
 
-		switch (typeOut) {
-			case GL11.GL_UNSIGNED_BYTE :
+		if ( sizeout >= pss.packAlignment )
+			rowstride = components * rowlen;
+		else
+			rowstride = pss.packAlignment / sizeout * ceil(components * rowlen * sizeout, pss.packAlignment);
+
+		switch ( typeOut ) {
+			case GL11.GL_UNSIGNED_BYTE:
 				k = 0;
-				for (i = 0; i < heightOut; i++) {
+				for ( i = 0; i < heightOut; i++ ) {
 					int ubptr = i * rowstride + pss.packSkipRows * rowstride + pss.packSkipPixels * components;
 
-					for (j = 0; j < widthOut * components; j++) {
-						dataOut.put(ubptr++, (byte) tempout[k++]);
+					for ( j = 0; j < widthOut * components; j++ ) {
+						dataOut.put(ubptr++, (byte)tempOut[k++]);
 					}
 				}
 				break;
-
-			default :
+			default:
 				return GLU.GLU_INVALID_ENUM;
 		}
 
