@@ -272,10 +272,10 @@ public class Game {
    * Sets the display mode for fullscreen mode
 	 */
 	private boolean setDisplayMode() {
-    // get modes
-    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(width, height, -1, -1, -1, -1, 60, 60);
-    
     try {
+		// get modes
+		DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(width, height, -1, -1, -1, -1, 60, 60);
+
       org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
           "width=" + width,
           "height=" + height,

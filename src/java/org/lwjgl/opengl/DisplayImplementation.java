@@ -87,7 +87,7 @@ public interface DisplayImplementation {
 	/**
 	 * Initialize and return the current display mode.
 	 */
-	DisplayMode init();
+	DisplayMode init() throws LWJGLException;
 
 	/**
 	 * Implementation of setTitle(). This will read the window's title member
@@ -103,22 +103,12 @@ public interface DisplayImplementation {
 	boolean isDirty();
 
 	/**
-	 * Swap double buffers.
-	 */
-	void swapBuffers();
-
-	/**
-	 * Make the window the current rendering context for GL calls.
-	 */
-	void makeCurrent() throws LWJGLException;
-
-	/**
-	 * Create the native OpenGL context.
+	 * Create the native PeerInfo.
 	 * @throws LWJGLException
 	 */
-	void createContext(PixelFormat pixel_format) throws LWJGLException;
+	PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException;
 
-	void destroyContext();
+	void destroyPeerInfo();
 
 	/**
 	 * Updates the windows internal state. This must be called at least once per video frame
@@ -126,14 +116,12 @@ public interface DisplayImplementation {
 	 */
 	void update();
 
-	void setVSyncEnabled(boolean sync);
-
 	void reshape(int x, int y, int width, int height);
 
 	/**
 	 * Method for getting displaymodes
 	 */
-	DisplayMode[] getAvailableDisplayModes();
+	DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
 
 	/*
 	 * Mouse methods
@@ -147,7 +135,7 @@ public interface DisplayImplementation {
 	/**
 	 * Method to create the mouse.
 	 */
-	void createMouse();
+	void createMouse() throws LWJGLException;
 
 	/**
 	 * Method the destroy the mouse
@@ -224,28 +212,23 @@ public interface DisplayImplementation {
 	/**
 	 * Method to test for buffer integrity
 	 */
-	public boolean isBufferLost(ByteBuffer handle);
-
-	/**
-	 * Method to make a pbuffer current.
-	 */
-	public void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
+	public boolean isBufferLost(PeerInfo handle);
 
 	/**
 	 * Method to create a Pbuffer
 	 */
-	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
+	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
-			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
+			IntBuffer pBufferAttribs) throws LWJGLException;
 
 	/**
 	 * Destroy pbuffer
 	 */
-	public void destroyPbuffer(ByteBuffer handle);
+	public void destroyPbuffer(PeerInfo handle);
 
-	public void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
+	public void setPbufferAttrib(PeerInfo handle, int attrib, int value);
 
-	public void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
+	public void bindTexImageToPbuffer(PeerInfo handle, int buffer);
 
-	public void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
+	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer);
 }

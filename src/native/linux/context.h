@@ -39,70 +39,45 @@
  * @version $Revision$
  */
 
-#ifndef _LWJGL_WINDOW_H_INCLUDED_
-	#define _LWJGL_WINDOW_H_INCLUDED_
+#ifndef _LWJGL_CONTEXT_H_INCLUDED_
+#define _LWJGL_CONTEXT_H_INCLUDED_
 
-	#include <jni.h>
-	#include <X11/X.h>
-	#include <X11/Xlib.h>
-	#include <X11/Xutil.h>
-	#include "extgl.h"
-	#include "extgl_glx.h"
+#include <jni.h>
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include "extgl_glx.h"
 
-	/*
-	 * release input (keyboard, mouse)
-	 */
-	extern void handleMessages(JNIEnv *env);
+typedef struct {
+	VisualID visualid;
+	int depth;
+} GLXConfig;
 
-	extern bool checkXError(JNIEnv *env, Display *display);
-	extern Atom getWarpAtom(void);
-	/*
-	 * Various functions to release/acquire keyboard and mouse
-	 */
-	extern void handleWarpEvent(XClientMessageEvent *);
-	extern void handlePointerMotion(XMotionEvent *);
-	extern void handleButtonPress(XButtonEvent *);
-	extern void handleButtonRelease(XButtonEvent *);
-	extern void handleKeyEvent(XKeyEvent *);
-	extern void updatePointerGrab(void);
-	extern void updateKeyboardGrab(void);
-	extern void setGrab(bool);
-	extern bool isGrabbed(void);
-	extern bool shouldGrab(void);
+typedef struct {
+	GLXFBConfigID config_id;
+} GLX13Config;
 
-	/*
-	 * get the current window width
-	 */
-	extern int getWindowWidth(void);
-	
-	/*
-	 * get the current window height
-	 */
-	extern int getWindowHeight(void);
-	
-	/*
-	 * get the current display
-	 */
-	extern Display *getDisplay(void);
-	
-	/*
-	 * get the current screen
-	 */
-	extern int getCurrentScreen(void);
-	
-	/*
-	 * get the current window
-	 */
-	extern Window getCurrentWindow(void);
+typedef struct {
+	Display *display;
+	int screen;
+	GLXDrawable drawable;
+	// This flag determines the appropriate glx struct
+	bool glx13;
+	union {
+		GLXConfig glx_config;
+		GLX13Config glx13_config;
+	} config;
+} X11PeerInfo;
 
-	/*
-	 * Return true if we are in fullscreen mode
-	 */
-	extern bool isFullscreen(void);
-	
-	/*
-	 * Return true if we are in exclusive fullscreen mode
-	 */
-	extern bool isLegacyFullscreen(void);
+/* GLX 1.3 chooser */
+extern GLXFBConfig *chooseVisualGLX13(JNIEnv *env, Display *disp, int screen, jobject pixel_format, bool use_display_bpp, int drawable_type, bool double_buffer);
 
-#endif /* _LWJGL_WINDOW_H_INCLUDED_ */
+/* Default GLX chooser*/
+extern XVisualInfo *chooseVisualGLX(JNIEnv *env, Display *disp, int screen, jobject pixel_format, bool use_display_bpp, bool double_buffer);
+
+extern XVisualInfo *getVisualInfoFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info);
+extern GLXFBConfig *getFBConfigFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info);
+
+extern bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int screen, jobject pixel_format, bool use_display_bpp, int drawable_type, bool double_buffered, bool force_glx13);
+
+#endif /* _LWJGL_CONTEXT_H_INCLUDED_ */

@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -45,37 +47,88 @@ import org.lwjgl.Sys;
  * @version $Revision$
  * @author $Author$
  */
-public class AWTGLCanvas extends Canvas {
+public class AWTGLCanvas extends Canvas implements Drawable {
+	private final static AWTCanvasImplementation implementation;
 
 	static {
 		System.loadLibrary("jawt");
 		Sys.initialize();
+		String class_name;
+		String OS_NAME = System.getProperty("os.name");
+		if (OS_NAME.startsWith("Linux")) {
+			class_name = "org.lwjgl.opengl.LinuxCanvasImplementation";
+		} else if (OS_NAME.startsWith("Windows")) {
+			class_name = "org.lwjgl.opengl.DefaultCanvasImplementation";
+		} else if (OS_NAME.startsWith("Mac")) {
+			class_name = "org.lwjgl.opengl.DefaultCanvasImplementation";
+		} else
+			throw new IllegalStateException("The platform " + OS_NAME + " is not supported");
+		try {
+			Class impl_class = Class.forName(class_name);
+			implementation = (AWTCanvasImplementation)impl_class.newInstance();
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/** The requested pixel format */
-	private PixelFormat pixelFormat;
+	private final PeerInfo peer_info;
+
+	/** The drawable to share context with */
+	private final Drawable drawable;
 	
 	/** Context handle */
-	private long context;
+	private Context context;
+	
+	/**
+	 * This method should only be called internally.
+	 */
+	public Context getContext() {
+		return context;
+	}
 	
 	/**
 	 * Constructor using the default PixelFormat.
 	 */
-	public AWTGLCanvas() {
+	public AWTGLCanvas() throws LWJGLException {
 		this(new PixelFormat());
 	}
 	
 	/**
-	 * Create an AWTGLCanvas with the requested PixelFormat. Construction is always
-	 * successful, however, when the time comes to actually realise the component on the
-	 * screen 
+	 * Create an AWTGLCanvas with the requested PixelFormat on the default GraphicsDevice.
+	 *
 	 * @param pixelFormat The desired pixel format. May not be null
+	 * @param device the device to create the canvas on.
 	 */
-	public AWTGLCanvas(PixelFormat pixelFormat) {
-		if (pixelFormat == null) {
-			throw new IllegalArgumentException("Pixel format may not be null");
-		}
-		this.pixelFormat = pixelFormat;
+	public AWTGLCanvas(PixelFormat pixel_format) throws LWJGLException {
+		this(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(), pixel_format);
+	}
+
+	/**
+	 * Create an AWTGLCanvas with the requested PixelFormat on the default GraphicsDevice.
+	 *
+	 * @param pixelFormat The desired pixel format. May not be null
+	 * @param device the device to create the canvas on.
+	 */
+	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
+		this(device, pixel_format, null);
+	}
+
+	/**
+	 * Create an AWTGLCanvas with the requested PixelFormat on the specified GraphicsDevice.
+	 *
+	 * @param device the device to create the canvas on.
+	 * @param pixelFormat The desired pixel format. May not be null
+	 * @param shared_drawable The Drawable to share context with
+	 */
+	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format, Drawable drawable) throws LWJGLException {
+		super(implementation.findConfiguration(device, pixel_format));
+		this.peer_info = implementation.createPeerInfo(this);
+		this.drawable = drawable;
 	}
 	
 	/* (non-Javadoc)
@@ -94,64 +147,74 @@ public class AWTGLCanvas extends Canvas {
 	 * @see java.awt.Component#removeNotify()
 	 */
 	public void removeNotify() {
-		super.removeNotify();
 		try {
 			destroyContext();
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
 		}
+		super.removeNotify();
 	} 
+	
+	/**
+	 * Enable vsync
+	 */
+	public synchronized void setVSyncEnabled(boolean enabled) throws LWJGLException {
+		if (context == null)
+			throw new IllegalStateException("Canvas not yet displayable");
+		context.setVSync(enabled);
+	}
+	
+	/**
+	 * Swap the canvas' buffer
+	 */
+	public synchronized void swapBuffers() throws LWJGLException {
+		if (context == null)
+			throw new IllegalStateException("Canvas not yet displayable");
+		context.swapBuffers();
+	}
+	
+	public synchronized void releaseContext() throws LWJGLException {
+		if (context == null)
+			throw new IllegalStateException("Canvas not yet displayable");
+		if (context.isCurrent())
+			Context.releaseCurrentContext();
+	}
+	
+	/**
+	 * Make the canvas' context current. It is highly recommended that the context
+	 * is only made current inside the AWT thread (for example in an overridden paint()).
+	 */
+	public synchronized void makeCurrent() throws LWJGLException {
+		if (context == null)
+			throw new IllegalStateException("Canvas not yet displayable");
+		context.makeCurrent();
+	}
 	
 	/**
 	 * Create the OpenGL context. This occurs when the component becomes displayable
 	 * @throws LWJGLException
 	 */
 	private synchronized void createContext() throws LWJGLException {
-		nCreateContext();
+		if (context == null)
+			context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
 	}
-	private native void nCreateContext() throws LWJGLException;
 	
 	/**
-	 * Destroy the OpenGL context. This occurs when the component is no longer displayable.
+	 * Destroy the OpenGL context. This happens when the component becomes undisplayable
 	 */
 	private synchronized void destroyContext() throws LWJGLException {
-		nDestroyContext();
+		context.forceDestroy();
+		context = null;
 	}
-	private native void nDestroyContext() throws LWJGLException;
-	
-	/* (non-Javadoc)
-	 * @see java.awt.Canvas#paint(java.awt.Graphics)
-	 */
-	public synchronized final void paint(Graphics g) {
-		try {
-			nPaint();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-	private native void nPaint() throws Exception;
 
-	
 	/**
-	 * Paint callback from native code
+	 * Empty paint to avoid clearing
 	 */
-	private final void cPaint() {
-		try {
-			GLContext.useContext(this);
-		} catch (LWJGLException e) {
-			throw new RuntimeException(e);
-		}
-		doPaint();
+	public void paint(Graphics g) {
 	}
-	
+
 	/**
-	 * Do painting. Override this method to call GL commands.
-	 */
-	protected void doPaint() {
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.awt.Canvas#update(java.awt.Graphics)
+	 * override update to avoid clearing
 	 */
 	public void update(Graphics g) {
 		paint(g);

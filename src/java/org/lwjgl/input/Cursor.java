@@ -64,6 +64,8 @@ public class Cursor {
 	
 	/** Index into list of cursors */
 	private int index = 0;
+
+	private boolean destroyed;
 	
 	/**
 	 * Constructs a new Cursor, with the given parameters. Mouse must have been created before you can create
@@ -219,15 +221,23 @@ public class Cursor {
 	 * Gets the native handle associated with the cursor object.
 	 */
 	Object getHandle() {
+		checkValid();
 		return cursors[index].cursorHandle;
 	}
 	
+	private void checkValid() {
+		if (destroyed)
+			throw new IllegalStateException("The cursor is destroyed");
+	}
+			
 	/**
 	 * Destroy the native cursor. If the cursor is current,
 	 * the current native cursor is set to null (the default
 	 * OS cursor)
 	 */
 	public void destroy() {
+		if (destroyed)
+			return;
 		if (Mouse.getNativeCursor() == this) {
 			try {
 				Mouse.setNativeCursor(null);
@@ -238,12 +248,14 @@ public class Cursor {
 		for(int i=0; i<cursors.length; i++) {
 			Display.getImplementation().destroyCursor(cursors[i].cursorHandle);
 		}
+		destroyed = true;
 	}
 
 	/**
 	 * Sets the timout property to the time it should be changed
 	 */
 	protected void setTimeout() {
+		checkValid();
 		cursors[index].timeout = System.currentTimeMillis() + cursors[index].delay;
 	}
 
@@ -252,6 +264,7 @@ public class Cursor {
 	 * @return true if the this cursor has timed out, false if not
 	 */
 	protected boolean hasTimedOut() {
+		checkValid();
 		return cursors.length > 1 && cursors[index].timeout < System.currentTimeMillis();
 	}
 
@@ -259,6 +272,7 @@ public class Cursor {
 	 * Changes to the next cursor 
 	 */
 	protected void nextCursor() {
+		checkValid();
 		index = ++index % cursors.length;
 	}
 	

@@ -119,11 +119,8 @@ static void setupIMEventMask() {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
-  (JNIEnv * env, jobject this)
+  (JNIEnv * env, jclass clazz)
 {
-	Display *disp = incDisplay(env);
-	if (disp == NULL)
-		return;
 	int i;
 	for (i =  0; i < KEYBOARD_SIZE; i++)
 		key_map[i] = i;
@@ -169,12 +166,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyKeyboard
-  (JNIEnv * env, jobject this)
+  (JNIEnv * env, jclass clazz)
 {
 	closeUnicodeStructs();
 	ungrabKeyboard();
 	created = false;
-	decDisplay();
 }
 
 static unsigned char getKeycode(XKeyEvent *event) {
@@ -280,13 +276,13 @@ void handleKeyEvent(XKeyEvent *event) {
 	bufferEvent(event);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollKeyboard(JNIEnv * env, jobject this, jobject buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollKeyboard(JNIEnv * env, jclass clazz, jobject buffer) {
 	unsigned char *new_keyboard_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
 	handleMessages(env);
 	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
-JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadKeyboard(JNIEnv * env, jobject this, jobject buffer, jint buffer_position) {
+JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadKeyboard(JNIEnv * env, jclass clazz, jobject buffer, jint buffer_position) {
 	handleMessages(env);
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;

@@ -86,20 +86,41 @@ public final class Display {
 	private static boolean vsync;
 
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
-	private static Display context;
+	private static Context context;
 
 	private static boolean window_created = false;
 
 	static {
 		Sys.initialize();
 		display_impl = createDisplayImplementation();
-		current_mode = initial_mode = display_impl.init();
-		Sys.log("Initial mode: " + initial_mode);
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				reset();
-			}
-		});
+		try {
+			current_mode = initial_mode = display_impl.init();
+			Sys.log("Initial mode: " + initial_mode);
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				public void run() {
+					reset();
+				}
+			});
+		} catch (LWJGLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Fetch the Drawable from the Display.
+	 *
+	 * @return the Drawable corresponding to the Display context, or null it display is
+	 *			not created.
+	 */
+	public static Drawable getDrawable() {
+		if (context != null) {
+			return new Drawable() {
+				public Context getContext() {
+					return context;
+				}
+			};
+		} else
+			return null;
 	}
 
 	private static DisplayImplementation createDisplayImplementation() {
@@ -141,7 +162,7 @@ public final class Display {
 	 *
 	 * @return an array of all display modes the system reckons it can handle.
 	 */
-	public static DisplayMode[] getAvailableDisplayModes() {
+	public static DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		DisplayMode[] unfilteredModes = display_impl.getAvailableDisplayModes();
 
 		if (unfilteredModes == null) {
@@ -192,7 +213,7 @@ public final class Display {
 					switchDisplayMode();
 				createWindow();
 			} catch (LWJGLException e) {
-				display_impl.destroyContext();
+				destroyContext();
 				display_impl.resetDisplayMode();
 				throw e;
 			}
@@ -385,7 +406,7 @@ public final class Display {
 				}
 				createWindow();
 			} catch (LWJGLException e) {
-				display_impl.destroyContext();
+				destroyContext();
 				display_impl.resetDisplayMode();
 				throw e;
 			}
@@ -483,7 +504,11 @@ public final class Display {
 		// We paint only when the window is visible or dirty
 		if (isVisible() || isDirty()) {
 			Util.checkGLError();
-			display_impl.swapBuffers();
+			try {
+				context.swapBuffers();
+			} catch (LWJGLException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		processMessages();
@@ -505,8 +530,7 @@ public final class Display {
 	public static void makeCurrent() throws LWJGLException {
 		if (!isCreated())
 			throw new IllegalStateException("No window created to make current");
-		display_impl.makeCurrent();
-		GLContext.useContext(context);
+		context.makeCurrent();
 	}
 
 	/**
@@ -537,25 +561,35 @@ public final class Display {
 	 * @throws LWJGLException
 	 */
 	public static void create(PixelFormat pixel_format) throws LWJGLException {
+		create(pixel_format, null);
+	}
+
+	/**
+	 * Create the OpenGL context with the given minimum parameters. If isFullscreen() is true or if windowed
+	 * context are not supported on the platform, the display mode will be switched to the mode returned by
+	 * getDisplayMode(), and a fullscreen context will be created. If isFullscreen() is false, a windowed context
+	 * will be created with the dimensions given in the mode returned by getDisplayMode(). If a context can't be
+	 * created with the given parameters, a LWJGLException will be thrown.
+	 *
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
+	 *
+	 * @param pixel_format Describes the minimum specifications the context must fulfill.
+	 * @param shared_drawable The Drawable to share context with.
+	 * @throws LWJGLException
+	 */
+	public static void create(PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
 		if (isCreated())
 			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
 		if (fullscreen)
 			switchDisplayMode();
 		try {
-			GLContext.loadOpenGLLibrary();
+			PeerInfo peer_info = display_impl.createPeerInfo(pixel_format);
+			context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
 			try {
-				display_impl.createContext(pixel_format);
-				try {
-					context = new Display();
-					createWindow();
-					initContext();
-				} catch (LWJGLException e) {
-					display_impl.destroyContext();
-					context = null;
-					throw e;
-				}
+				createWindow();
+				initContext();
 			} catch (LWJGLException e) {
-				GLContext.unloadOpenGLLibrary();
+				destroyContext();
 				throw e;
 			}
 		} catch (LWJGLException e) {
@@ -617,16 +651,20 @@ public final class Display {
 		}
 
 		destroyWindow();
-		display_impl.destroyContext();
-		GLContext.unloadOpenGLLibrary();
-		context = null;
-    x = y = -1;
-		try {
-			GLContext.useContext(null);
-		} catch (LWJGLException e) {
-			Sys.log("Failed to reset GLContext due to: " + e);
-		}
+		destroyContext();
+		x = y = -1;
 		reset();
+	}
+
+	private static void destroyContext() {
+		try {
+			context.forceDestroy();
+		} catch (LWJGLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			context = null;
+			display_impl.destroyPeerInfo();
+		}
 	}
 
 	/*
@@ -641,7 +679,7 @@ public final class Display {
 	/**
 	 * @return the unique Display context (or null, if the Display has not been created)
 	 */
-	public static Object getContext() {
+	public static Context getContext() {
 		return context;
 	}
 
@@ -660,7 +698,7 @@ public final class Display {
 	public static void setVSyncEnabled(boolean sync) {
 		vsync = sync;
 		if (isCreated())
-			display_impl.setVSyncEnabled(vsync);
+			context.setVSync(vsync);
 	}
 
 	/**

@@ -345,7 +345,7 @@ public final class PbufferTest {
 	 *
 	 * @return
 	 */
-	private DisplayMode findDisplayMode(int width, int height, int bpp) {
+	private DisplayMode findDisplayMode(int width, int height, int bpp) throws LWJGLException {
 		DisplayMode[] modes = Display.getAvailableDisplayModes();
 		for ( int i = 0; i < modes.length; i++ ) {
 			if ( modes[i].getWidth() == width

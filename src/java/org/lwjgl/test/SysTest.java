@@ -33,6 +33,7 @@ package org.lwjgl.test;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -75,7 +76,11 @@ public class SysTest {
     }    
     
     // get some display modes, to force some debug info
-    Display.getAvailableDisplayModes();
+	try {
+		Display.getAvailableDisplayModes();
+	} catch (LWJGLException e) {
+		throw new RuntimeException(e);
+	}
     
     System.out.println("---- Test Debug ----\n");
   }

@@ -122,19 +122,19 @@ public final class ShadersTest {
 		if ( args.length != 1 )
 			argsError();
 
-		DisplayMode[] modes = Display.getAvailableDisplayModes();
-
-		DisplayMode displayMode;
-
-		displayMode = chooseMode(modes, 1024, 768);
-		if ( displayMode == null )
-			displayMode = chooseMode(modes, 800, 600);
-		if ( displayMode == null )
-			displayMode = chooseMode(modes, 640, 480);
-		if ( displayMode == null )
-			kill("Failed to set an appropriate display mode.");
-
 		try {
+			DisplayMode[] modes = Display.getAvailableDisplayModes();
+
+			DisplayMode displayMode;
+
+			displayMode = chooseMode(modes, 1024, 768);
+			if ( displayMode == null )
+				displayMode = chooseMode(modes, 800, 600);
+			if ( displayMode == null )
+				displayMode = chooseMode(modes, 640, 480);
+			if ( displayMode == null )
+				kill("Failed to set an appropriate display mode.");
+
 			System.out.println("Setting display mode to: " + displayMode);
 			Display.setDisplayMode(displayMode);
 			Display.create(new PixelFormat(8, 24, 0));

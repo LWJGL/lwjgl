@@ -48,23 +48,19 @@
 #include "common_tools.h"
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetNativeCursorCapabilities
-  (JNIEnv *env, jobject this) {
+  (JNIEnv *env, jclass clazz) {
 	int caps = 0;
-	Display *disp = incDisplay(env);
-	if (disp == NULL)
-		return caps;
 	XcursorBool argb_supported = XcursorSupportsARGB(getDisplay());
 	XcursorBool anim_supported = XcursorSupportsAnim(getDisplay());
 	if (argb_supported)
 		caps |= org_lwjgl_input_Cursor_CURSOR_8_BIT_ALPHA | org_lwjgl_input_Cursor_CURSOR_ONE_BIT_TRANSPARENCY;
 	if (anim_supported)
 		caps |= org_lwjgl_input_Cursor_CURSOR_ANIMATION;
-	decDisplay();
 	return caps;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMinCursorSize
-  (JNIEnv *env, jobject this)
+  (JNIEnv *env, jclass clazz)
 {
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
@@ -73,7 +69,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMinCursorSize
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMaxCursorSize
-  (JNIEnv *env, jobject this)
+  (JNIEnv *env, jclass clazz)
 {
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
@@ -82,15 +78,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMaxCursorSize
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
-  (JNIEnv *env, jobject this, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
 	if ((*env)->GetDirectBufferCapacity(env, handle_buffer) < sizeof(Cursor)) {
 		throwException(env, "Handle buffer not large enough");
 		return;
 	}
-	Display *disp = incDisplay(env);
-	if (disp == NULL)
-		return;
 	const int *delays = NULL;
 	if (delay_buffer != NULL)
 		delays = (const int *)(*env)->GetDirectBufferAddress(env, delay_buffer) + delays_offset;		
@@ -98,7 +91,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
 	int stride = width*height;
 	XcursorImages *cursor_images = XcursorImagesCreate(num_images);
 	if (cursor_images == NULL) {
-		decDisplay();
 		throwException(env, "Could not allocate cursor.");
 		return;
 	}
@@ -114,14 +106,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
 		cursor_images->images[i] = cursor_image;
 	}
 	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, handle_buffer);
-	*cursor = XcursorImagesLoadCursor(disp, cursor_images);
+	*cursor = XcursorImagesLoadCursor(getDisplay(), cursor_images);
 	XcursorImagesDestroy(cursor_images);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyCursor
-  (JNIEnv *env, jobject this, jobject cursor_handle_buffer)
+  (JNIEnv *env, jclass clazz, jobject cursor_handle_buffer)
 {
 	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle_buffer);
 	XFreeCursor(getDisplay(), *cursor);
-	decDisplay();
 }

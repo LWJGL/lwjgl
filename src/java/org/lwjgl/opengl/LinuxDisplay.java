@@ -42,6 +42,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.Sys;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -51,41 +52,62 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int NUM_BUTTONS = 3;
 
+	private static PeerInfo peer_info;
+
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
-	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements LockAWT and UnlockAWT(), to
+	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements LockAWT and UnlockAWT() to
 	 * do just that.
 	 */
-	private native void lockAWT();
-	private native void unlockAWT();
-	
+	static native void lockAWT();
+	static native void unlockAWT();
+
+	/**
+	 * increment and decrement display usage.
+	 */
+	static native void incDisplay() throws LWJGLException;
+	static native void decDisplay();
+
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		lockAWT();
-		nCreateWindow(mode, fullscreen, x, y);
-		unlockAWT();
+		try {
+			ByteBuffer handle = peer_info.lockAndGetHandle();
+			try {
+				nCreateWindow(handle, mode, fullscreen, x, y);
+			} finally {
+				peer_info.unlock();
+			}
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
-
+	private static native void nCreateWindow(ByteBuffer peer_info_handle, DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 
 	public void destroyWindow() {
 		lockAWT();
 		nDestroyWindow();
 		unlockAWT();
 	}
-	public native void nDestroyWindow();
+	private static native void nDestroyWindow();
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
 		lockAWT();
-		nSwitchDisplayMode(mode);
-		unlockAWT();
+		try {
+			nSwitchDisplayMode(mode);
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native void nSwitchDisplayMode(DisplayMode mode) throws LWJGLException;
-	
+	private static native void nSwitchDisplayMode(DisplayMode mode) throws LWJGLException;
+
 	public void resetDisplayMode() {
 		lockAWT();
-		nResetDisplayMode();
-		unlockAWT();
+		try {
+			nResetDisplayMode();
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native void nResetDisplayMode();
+	private static native void nResetDisplayMode();
 
 	public int getGammaRampLength() {
 		lockAWT();
@@ -93,126 +115,130 @@ final class LinuxDisplay implements DisplayImplementation {
 		unlockAWT();
 		return length;
 	}
-	public native int nGetGammaRampLength();
-	
+	private static native int nGetGammaRampLength();
+
 	public void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException {
 		lockAWT();
-		nSetGammaRamp(gammaRamp);
-		unlockAWT();
+		try {
+			nSetGammaRamp(gammaRamp);
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native void nSetGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
+	private static native void nSetGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
 
 	public String getAdapter() {
 		return null;
 	}
-	
+
 	public String getVersion() {
 		return null;
 	}
-	
-	public DisplayMode init() {
+
+	public DisplayMode init() throws LWJGLException {
 		lockAWT();
-		DisplayMode mode = nInit();
-		unlockAWT();
-		return mode;
+		try {
+			DisplayMode mode = nInit();
+			return mode;
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native DisplayMode nInit();
+	private static native DisplayMode nInit() throws LWJGLException;
 
 	public void setTitle(String title) {
 		lockAWT();
 		nSetTitle(title);
 		unlockAWT();
 	}
-	public native void nSetTitle(String title);
-	
+	private static native void nSetTitle(String title);
+
 	public boolean isCloseRequested() {
 		lockAWT();
 		boolean result = nIsCloseRequested();
 		unlockAWT();
 		return result;
 	}
-	public native boolean nIsCloseRequested();
-	
+	private static native boolean nIsCloseRequested();
+
 	public boolean isVisible() {
 		lockAWT();
 		boolean result = nIsVisible();
 		unlockAWT();
 		return result;
 	}
-	public native boolean nIsVisible();
-	
+	private static native boolean nIsVisible();
+
 	public boolean isActive() {
 		lockAWT();
 		boolean result = nIsActive();
 		unlockAWT();
 		return result;
 	}
-	public native boolean nIsActive();
-	
+	private static native boolean nIsActive();
+
 	public boolean isDirty() {
 		lockAWT();
 		boolean result = nIsDirty();
 		unlockAWT();
 		return result;
 	}
-	public native boolean nIsDirty();
-	
-	public void swapBuffers() {
-		lockAWT();
-		nSwapBuffers();
-		unlockAWT();
-	}
-	public native void nSwapBuffers();
+	private static native boolean nIsDirty();
 
-	public void makeCurrent() throws LWJGLException {
+	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		lockAWT();
-		nMakeCurrent();
-		unlockAWT();
+		try {
+			incDisplay();
+			try {
+				GLContext.loadOpenGLLibrary();
+				try {
+					peer_info = new LinuxDisplayPeerInfo(pixel_format);
+					return peer_info;
+				} catch (LWJGLException e) {
+					GLContext.unloadOpenGLLibrary();
+					throw e;
+				}
+			} catch (LWJGLException e) {
+				decDisplay();
+				throw e;
+			}
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native void nMakeCurrent() throws LWJGLException;
-
-	public void createContext(PixelFormat pixel_format) throws LWJGLException {
-		lockAWT();
-		nCreateContext(pixel_format);
-		unlockAWT();
-	}
-	public native void nCreateContext(PixelFormat pixel_format) throws LWJGLException;
 	
-	public void destroyContext() {
+	public void destroyPeerInfo() {
 		lockAWT();
-		nDestroyContext();
+		peer_info = null;
+		GLContext.unloadOpenGLLibrary();
+		decDisplay();
 		unlockAWT();
 	}
-	public native void nDestroyContext();
 
 	public void update() {
 		lockAWT();
 		nUpdate();
 		unlockAWT();
 	}
-	public native void nUpdate();
-
-	public void setVSyncEnabled(boolean sync) {
-		lockAWT();
-		nSetVSyncEnabled(sync);
-		unlockAWT();
-	}
-	public native void nSetVSyncEnabled(boolean sync);
+	private static native void nUpdate();
 
 	public void reshape(int x, int y, int width, int height) {
 		lockAWT();
 		nReshape(x, y, width, height);
 		unlockAWT();
 	}
-	public native void nReshape(int x, int y, int width, int height);
+	private static native void nReshape(int x, int y, int width, int height);
 
-	public DisplayMode[] getAvailableDisplayModes() {
+	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		lockAWT();
-		DisplayMode[] modes = nGetAvailableDisplayModes();
-		unlockAWT();
-		return modes;
+		try {
+			DisplayMode[] modes = nGetAvailableDisplayModes();
+			return modes;
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native DisplayMode[] nGetAvailableDisplayModes();
+	private static native DisplayMode[] nGetAvailableDisplayModes() throws LWJGLException;
 
 	/* Mouse */
 	public boolean hasWheel() {
@@ -228,20 +254,20 @@ final class LinuxDisplay implements DisplayImplementation {
 		nCreateMouse();
 		unlockAWT();
 	}
-	public native void nCreateMouse();
+	private static native void nCreateMouse();
 	public void destroyMouse() {
 		lockAWT();
 		nDestroyMouse();
 		unlockAWT();
 	}
-	public native void nDestroyMouse();
+	private static native void nDestroyMouse();
 	
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons) {
 		lockAWT();
 		nPollMouse(coord_buffer, buttons);
 		unlockAWT();
 	}
-	public native void nPollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
+	private static native void nPollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 	
 	public int readMouse(IntBuffer buffer, int buffer_position) {
 		lockAWT();
@@ -249,29 +275,36 @@ final class LinuxDisplay implements DisplayImplementation {
 		unlockAWT();
 		return count;
 	}
-	public native int nReadMouse(IntBuffer buffer, int buffer_position);
+	private static native int nReadMouse(IntBuffer buffer, int buffer_position);
 	
 	public void grabMouse(boolean grab) {
 		lockAWT();
 		nGrabMouse(grab);
 		unlockAWT();
 	}
-	public native void nGrabMouse(boolean grab);
+	private static native void nGrabMouse(boolean grab);
 	
 	public int getNativeCursorCapabilities() {
 		lockAWT();
-		int caps = nGetNativeCursorCapabilities();
-		unlockAWT();
-		return caps;
+		try {
+			incDisplay();
+			int caps = nGetNativeCursorCapabilities();
+			decDisplay();
+			return caps;
+		} catch (LWJGLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native int nGetNativeCursorCapabilities();
+	private static native int nGetNativeCursorCapabilities() throws LWJGLException;
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		lockAWT();
 		nSetNativeCursor(handle);
 		unlockAWT();
 	}
-	public native void nSetNativeCursor(Object handle) throws LWJGLException;
+	private static native void nSetNativeCursor(Object handle) throws LWJGLException;
 	
 	public int getMinCursorSize() {
 		lockAWT();
@@ -279,7 +312,7 @@ final class LinuxDisplay implements DisplayImplementation {
 		unlockAWT();
 		return min_size;
 	}
-	public native int nGetMinCursorSize();
+	private static native int nGetMinCursorSize();
 
 	public int getMaxCursorSize() {
 		lockAWT();
@@ -287,29 +320,32 @@ final class LinuxDisplay implements DisplayImplementation {
 		unlockAWT();
 		return max_size;
 	}
-	public native int nGetMaxCursorSize();
+	private static native int nGetMaxCursorSize();
 	
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
 		lockAWT();
-		nCreateKeyboard();
-		unlockAWT();
+		try {
+			nCreateKeyboard();
+		} finally {
+			unlockAWT();
+		}
 	}
-	public native void nCreateKeyboard() throws LWJGLException;
+	private static native void nCreateKeyboard() throws LWJGLException;
 	
 	public void destroyKeyboard() {
 		lockAWT();
 		nDestroyKeyboard();
 		unlockAWT();
 	}
-	public native void nDestroyKeyboard();
+	private static native void nDestroyKeyboard();
 	
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
 		lockAWT();
 		nPollKeyboard(keyDownBuffer);
 		unlockAWT();
 	}
-	public native void nPollKeyboard(ByteBuffer keyDownBuffer);
+	private static native void nPollKeyboard(ByteBuffer keyDownBuffer);
 
 	public int readKeyboard(IntBuffer buffer, int buffer_position) {
 		lockAWT();
@@ -317,28 +353,38 @@ final class LinuxDisplay implements DisplayImplementation {
 		unlockAWT();
 		return count;
 	}
-	public native int nReadKeyboard(IntBuffer buffer, int buffer_position);
+	private static native int nReadKeyboard(IntBuffer buffer, int buffer_position);
 	
 	public int isStateKeySet(int key) {
 		return Keyboard.STATE_UNKNOWN;
 	}
 
-	public native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
+	private static native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		lockAWT();
-		ByteBuffer handle = BufferUtils.createByteBuffer(CURSOR_HANDLE_SIZE);
-		nCreateCursor(handle, width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
-		unlockAWT();
-		return handle;
+		try {
+			incDisplay();
+			try {
+				ByteBuffer handle = BufferUtils.createByteBuffer(CURSOR_HANDLE_SIZE);
+				nCreateCursor(handle, width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
+				return handle;
+			} catch (LWJGLException e) {
+				decDisplay();
+				throw e;
+			}
+		} finally {
+			unlockAWT();
+		}
 	}
 
 	public void destroyCursor(Object cursorHandle) {
 		lockAWT();
 		nDestroyCursor(cursorHandle);
+		decDisplay();
 		unlockAWT();
 	}
-	public native void nDestroyCursor(Object cursorHandle);
+	private static native void nDestroyCursor(Object cursorHandle);
 	
 	public int getPbufferCapabilities() {
 		lockAWT();
@@ -346,50 +392,87 @@ final class LinuxDisplay implements DisplayImplementation {
 		unlockAWT();
 		return caps;
 	}
-	public native int nGetPbufferCapabilities();
+	private static native int nGetPbufferCapabilities();
 
-	public boolean isBufferLost(ByteBuffer handle) {
+	public boolean isBufferLost(PeerInfo handle) {
 		return false;
 	}
 
-	public void makePbufferCurrent(ByteBuffer handle) throws LWJGLException {
+/*	public void makePbufferCurrent(ByteBuffer handle) throws LWJGLException {
 		lockAWT();
-		nMakePbufferCurrent(handle);
-		unlockAWT();
+		try {
+			nMakePbufferCurrent(handle);
+		} finally {
+			unlockAWT();
+		}
 	}
 	
-	public native void nMakePbufferCurrent(ByteBuffer handle) throws LWJGLException;
-
-	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
+	private static native void nMakePbufferCurrent(ByteBuffer handle) throws LWJGLException;
+*/
+/*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
 		lockAWT();
-		ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
-		nCreatePbuffer(handle, width, height, pixel_format, pixelFormatCaps, pBufferAttribs, shared_pbuffer_handle);
-		unlockAWT();
-		return handle;
+		try {
+			ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
+			incDisplay();
+			try {
+				nCreatePbuffer(handle, width, height, pixel_format, pixelFormatCaps, pBufferAttribs, shared_pbuffer_handle);
+				return handle;
+			} catch (LWJGLException e) {
+				decDisplay();
+				throw e;
+			}
+		} finally {
+			unlockAWT();
+		}
 	}
 
-	private native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
+	private static native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
-
-	public void destroyPbuffer(ByteBuffer handle) {
+*/
+	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs) throws LWJGLException {
 		lockAWT();
-		nDestroyPbuffer(handle);
+		try {
+			incDisplay();
+			try {
+				GLContext.loadOpenGLLibrary();
+				try {
+					PeerInfo peer_info = new LinuxPbufferPeerInfo(width, height, pixel_format);
+					return peer_info;
+				} catch (LWJGLException e) {
+					GLContext.unloadOpenGLLibrary();
+					throw e;
+				}
+			} catch (LWJGLException e) {
+				decDisplay();
+				throw e;
+			}
+		} finally {
+			unlockAWT();
+		}
+	}
+
+	public void destroyPbuffer(PeerInfo handle) {
+		lockAWT();
+		((LinuxPbufferPeerInfo)handle).destroy();
+		decDisplay();
+		GLContext.unloadOpenGLLibrary();
 		unlockAWT();
 	}
-	public native void nDestroyPbuffer(ByteBuffer handle);
 
-	public void setPbufferAttrib(ByteBuffer handle, int attrib, int value) {
+	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void bindTexImageToPbuffer(ByteBuffer handle, int buffer) {
+	public void bindTexImageToPbuffer(PeerInfo handle, int buffer) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer) {
+	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -41,14 +41,13 @@ import org.lwjgl.Sys;
  * <p/>
  * Pbuffer encapsulates an OpenGL pbuffer.
  * <p/>
- * Each instance of GL is only valid in the thread that creates it. In addition, only one instance of an OpenGL window or
- * Pbuffer may be the current GL context in any one thread. To make a GL instance the current context, use makeCurrent().
+ *
+ * This class is thread-safe.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public final class Pbuffer {
-
+public final class Pbuffer implements Drawable {
 	/**
 	 * Indicates that Pbuffers can be created.
 	 */
@@ -137,7 +136,7 @@ public final class Pbuffer {
 	/**
 	 * Handle to the native GL rendering context
 	 */
-	private final ByteBuffer handle;
+	private final PeerInfo peer_info;
 
 	/**
 	 * Width
@@ -148,6 +147,10 @@ public final class Pbuffer {
 	 * Height
 	 */
 	private final int height;
+
+	private final Context context;
+
+	private boolean destroyed;
 
 	static {
 		Sys.initialize();
@@ -169,29 +172,40 @@ public final class Pbuffer {
 	 * @param height        Pbuffer height
 	 * @param pixel_format  Minimum Pbuffer context properties
 	 * @param renderTexture
-	 * @param shared_context If non-null the Pbuffer will share display lists and textures with it. Otherwise, the Pbuffer will share
+	 * @param shared_drawable If non-null the Pbuffer will share display lists and textures with it. Otherwise, the Pbuffer will share
 	 * 						 with the Display context (if created).
 	 */
-	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Pbuffer shared_context) throws LWJGLException {
+	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Drawable shared_drawable) throws LWJGLException {
 		this.width = width;
 		this.height = height;
-		this.handle = createPbuffer(width, height, pixel_format, renderTexture, shared_context != null ? shared_context.handle : null);
+		this.peer_info = createPbuffer(width, height, pixel_format, renderTexture);
+		Context shared_context = null;
+		if (shared_drawable != null) {
+			shared_context = shared_drawable.getContext();
+		} else {
+			Drawable display_drawable = Display.getDrawable();
+			if (display_drawable != null)
+				shared_context = display_drawable.getContext();
+		}
+		this.context = new Context(peer_info, shared_context);
 	}
 
-	private static ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, ByteBuffer shared_context_handle) throws LWJGLException {
-		GLContext.loadOpenGLLibrary();
-		try {
-			if ( renderTexture == null )
-				return Display.getImplementation().createPbuffer(width, height, pixel_format, null, null, shared_context_handle);
-			else
-				return Display.getImplementation().createPbuffer(width, height, pixel_format,
-								renderTexture.pixelFormatCaps,
-								renderTexture.pBufferAttribs,
-								shared_context_handle);
-		} catch (LWJGLException e) {
-			GLContext.unloadOpenGLLibrary();
-			throw e;
-		}
+	private static PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
+		if ( renderTexture == null )
+			return Display.getImplementation().createPbuffer(width, height, pixel_format, null, null);
+		else
+			return Display.getImplementation().createPbuffer(width, height, pixel_format,
+					renderTexture.pixelFormatCaps,
+					renderTexture.pBufferAttribs);
+	}
+
+	public Context getContext() {
+		return context;
+	}
+	
+	private void checkDestroyed() {
+		if (destroyed)
+			throw new IllegalStateException("Pbuffer is destroyed");
 	}
 
 	/**
@@ -201,17 +215,18 @@ public final class Pbuffer {
 	 *
 	 * @return true if the buffer is lost and destroyed, false if the buffer is valid.
 	 */
-	public boolean isBufferLost() {
-		return Display.getImplementation().isBufferLost(handle);
+	public synchronized boolean isBufferLost() {
+		checkDestroyed();
+		return Display.getImplementation().isBufferLost(peer_info);
 	}
 
 	/**
 	 * Method to make the Pbuffer context current. All subsequent OpenGL calls will go to this buffer.
 	 * @throws LWJGLException if the context could not be made current
 	 */
-	public void makeCurrent() throws LWJGLException {
-		Display.getImplementation().makePbufferCurrent(handle);
-		GLContext.useContext(this);
+	public synchronized void makeCurrent() throws LWJGLException {
+		checkDestroyed();
+		context.makeCurrent();
 	}
 
 	/**
@@ -227,17 +242,15 @@ public final class Pbuffer {
 	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context - regardless of whether this Pbuffer was
 	 * the current rendering context or not.
 	 */
-	public void destroy() {
+	public synchronized void destroy() {
+		if (destroyed)
+			return;
 		try {
-			makeCurrent();
-			int error = GL11.glGetError();
-			Display.getImplementation().destroyPbuffer(handle);
-			GLContext.useContext(null);
-			GLContext.unloadOpenGLLibrary();
-			if (error != GL11.GL_NO_ERROR)
-				throw new OpenGLException(error);
+			context.forceDestroy();
+			Display.getImplementation().destroyPbuffer(peer_info);
+			destroyed = true;
 		} catch (LWJGLException e) {
-			// ignore exception
+			Sys.log("Exception occurred while destroying pbuffer: " + e);
 		}
 	}
 
@@ -257,8 +270,9 @@ public final class Pbuffer {
 	 * @param attrib
 	 * @param value
 	 */
-	public void setAttrib(int attrib, int value) {
-		Display.getImplementation().setPbufferAttrib(handle, attrib, value);
+	public synchronized void setAttrib(int attrib, int value) {
+		checkDestroyed();
+		Display.getImplementation().setPbufferAttrib(peer_info, attrib, value);
 	}
 
 	/**
@@ -268,8 +282,9 @@ public final class Pbuffer {
 	 *
 	 * @param buffer
 	 */
-	public void bindTexImage(int buffer) {
-		Display.getImplementation().bindTexImageToPbuffer(handle, buffer);
+	public synchronized void bindTexImage(int buffer) {
+		checkDestroyed();
+		Display.getImplementation().bindTexImageToPbuffer(peer_info, buffer);
 	}
 
 	/**
@@ -277,21 +292,24 @@ public final class Pbuffer {
 	 *
 	 * @param buffer
 	 */
-	public void releaseTexImage(int buffer) {
-		Display.getImplementation().releaseTexImageFromPbuffer(handle, buffer);
+	public synchronized void releaseTexImage(int buffer) {
+		checkDestroyed();
+		Display.getImplementation().releaseTexImageFromPbuffer(peer_info, buffer);
 	}
 
 	/**
 	 * @return Returns the height.
 	 */
-	public int getHeight() {
+	public synchronized int getHeight() {
+		checkDestroyed();
 		return height;
 	}
 
 	/**
 	 * @return Returns the width.
 	 */
-	public int getWidth() {
+	public synchronized int getWidth() {
+		checkDestroyed();
 		return width;
 	}
 }

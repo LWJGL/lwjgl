@@ -51,10 +51,12 @@
 #include "extgl.h"
 #include "extgl_glx.h"
 #include "Window.h"
+#include "context.h"
 #include "display.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
+#include "org_lwjgl_opengl_LinuxDisplayPeerInfo.h"
 
-#define USEGLX13 extension_flags.GLX13
+//#define USEGLX13 extension_flags.GLX13
 #define ERR_MSG_SIZE 1024
 
 typedef struct {
@@ -69,10 +71,10 @@ typedef struct {
 
 typedef enum {FULLSCREEN_LEGACY, FULLSCREEN_NETWM, WINDOWED} window_mode;
 
-static GLXContext display_context = NULL; // OpenGL rendering context
-static GLXFBConfig *configs = NULL;
-static GLXWindow glx_window;
-static XVisualInfo *vis_info = NULL;
+//static GLXContext display_context = NULL; // OpenGL rendering context
+//static GLXFBConfig *configs = NULL;
+static GLXWindow glx_window = None;
+//static XVisualInfo *vis_info = NULL;
 
 static Atom delete_atom;
 static Colormap cmap;
@@ -97,20 +99,16 @@ static bool async_x_error;
 static char error_message[ERR_MSG_SIZE];
 static Atom warp_atom;
 
-GLXFBConfig getCurrentGLXFBConfig(void) {
-	return configs[0];
-}
-
-GLXContext getDisplayContext(void) {
+/*GLXContext getDisplayContext(void) {
 	return display_context;
 }
-
+*/
 int getCurrentScreen(void) {
 	return current_screen;
 }
 
-bool checkXError(JNIEnv *env) {
-	XSync(getDisplay(), False);
+bool checkXError(JNIEnv *env, Display *disp) {
+	XSync(disp, False);
 	if (async_x_error) {
 		async_x_error = false;
 		if (env != NULL)
@@ -137,7 +135,7 @@ Display *getDisplay(void) {
 	return display_connection;
 }
 
-Display *incDisplay(JNIEnv *env) {
+static Display *incDisplay(JNIEnv *env) {
 	if (display_connection_usage == 0) {
 		async_x_error = false;
 		XSetErrorHandler(errorHandler);
@@ -149,6 +147,7 @@ Display *incDisplay(JNIEnv *env) {
 				printfDebugJava(env, "Could not open X display connection");
 			return NULL;
 		}
+		current_screen = XDefaultScreen(getDisplay());
 		warp_atom = XInternAtom(display_connection, "_LWJGL_WARP", False);
 	}
 	async_x_error = false;
@@ -160,7 +159,7 @@ Atom getWarpAtom(void) {
 	return warp_atom;
 }
 
-void decDisplay(void) {
+static void decDisplay(void) {
 	display_connection_usage--;
 	if (display_connection_usage == 0) {
 		XCloseDisplay(display_connection);
@@ -318,15 +317,37 @@ static void setWindowTitle(const char *title) {
 	XStoreName(getDisplay(), current_win, title);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jobject this, jstring title_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_incDisplay(JNIEnv *env, jclass clazz) {
+	incDisplay(env);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_decDisplay(JNIEnv *env, jclass clazz) {
+	decDisplay();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDrawable(JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
+	if (peer_info->glx13)
+		peer_info->drawable = glx_window;
+	else
+		peer_info->drawable = getCurrentWindow();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPeerInfo(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject pixel_format) {
+	initPeerInfo(env, peer_info_handle, getDisplay(), getCurrentScreen(), pixel_format, true, GLX_WINDOW_BIT, true, false);
+}
+  
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jclass clazz, jstring title_obj) {
 	char * title = GetStringNativeChars(env, title_obj);
 	setWindowTitle(title);
 	free(title);
 }
 
 static void destroyWindow(JNIEnv *env) {
-	if (USEGLX13)
+	if (glx_window != None) {
 		glXDestroyWindow(getDisplay(), glx_window);
+		glx_window = None;
+	}
 	XDestroyWindow(getDisplay(), current_win);
 	XFreeColormap(getDisplay(), cmap);
 	setRepeatMode(env, AutoRepeatModeDefault);
@@ -357,11 +378,11 @@ static bool isNetWMFullscreenSupported(JNIEnv *env) {
 	return supported;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height) {
 	XMoveWindow(getDisplay(), getCurrentWindow(), x, y);
 }
 
-static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
+static bool createWindow(JNIEnv* env, X11PeerInfo *peer_info, int x, int y, int width, int height) {
 	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	dirty = true;
 	focused = true;
@@ -378,6 +399,9 @@ static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 	current_width = width;
 	current_height = height;
 	root_win = RootWindow(getDisplay(), getCurrentScreen());
+	XVisualInfo *vis_info = getVisualInfoFromPeerInfo(env, peer_info);
+	if (vis_info == NULL)
+		return false;
 	cmap = XCreateColormap(getDisplay(), root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
 	attribs.event_mask = ExposureMask | /*FocusChangeMask | */VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
@@ -389,7 +413,8 @@ static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 		attribs.override_redirect = True;
 	}
 	win = XCreateWindow(getDisplay(), root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
-	if (!checkXError(env)) {
+	XFree(vis_info);
+	if (!checkXError(env, getDisplay())) {
 		XFreeColormap(getDisplay(), cmap);
 		return false;
 	}
@@ -418,7 +443,7 @@ static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
 	setRepeatMode(env, AutoRepeatModeOff);
-	if (!checkXError(env)) {
+	if (!checkXError(env, getDisplay())) {
 		destroyWindow(env);
 		return false;
 	}
@@ -438,12 +463,12 @@ int getWindowHeight(void) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
-  (JNIEnv *env, jobject this)
+  (JNIEnv *env, jclass clazz)
 {
 	handleMessages(env);
 }
 
-bool releaseContext(GLXContext context) {
+/*bool releaseContext(GLXContext context) {
 	if (glXGetCurrentContext() != context)
 		return true;
 	if (USEGLX13)
@@ -460,145 +485,13 @@ static bool makeCurrent(void) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nMakeCurrent
-  (JNIEnv *env, jobject this)
+  (JNIEnv *env, jclass clazz)
 {
 	if (!makeCurrent())
 		throwException(env, "Could not make display context current");
 }
-
-int convertToBPE(int bpp) {
-	int bpe;
-	switch (bpp) {
-		case 32:
-		case 24:
-			bpe = 8;
-			break;
-		case 16: /* Fall through */
-		default:
-			bpe = 4;
-			break;
-	}
-	return bpe;
-}
-
-static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, jobject pixel_format, int bpp, int drawable_type, bool double_buffer) {
-	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
-	int alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "alpha", "I"));
-	int depth = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "depth", "I"));
-	int stencil = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stencil", "I"));
-	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
-	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
-	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
-	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
-	bool stereo = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
-
-	int bpe = convertToBPE(bpp);
-	int accum_bpe = convertToBPE(accum_bpp);
-	attrib_list_t attrib_list;
-	initAttribList(&attrib_list);
-	putAttrib(&attrib_list, GLX_RENDER_TYPE); putAttrib(&attrib_list, GLX_RGBA_BIT);
-	putAttrib(&attrib_list, GLX_DOUBLEBUFFER); putAttrib(&attrib_list, double_buffer ? True : False);
-	putAttrib(&attrib_list, GLX_DRAWABLE_TYPE); putAttrib(&attrib_list, drawable_type);
-	putAttrib(&attrib_list, GLX_DEPTH_SIZE); putAttrib(&attrib_list, depth);
-	putAttrib(&attrib_list, GLX_RED_SIZE); putAttrib(&attrib_list, bpe);
-	putAttrib(&attrib_list, GLX_GREEN_SIZE); putAttrib(&attrib_list, bpe);
-	putAttrib(&attrib_list, GLX_BLUE_SIZE); putAttrib(&attrib_list, bpe);
-	putAttrib(&attrib_list, GLX_ALPHA_SIZE); putAttrib(&attrib_list, alpha);
-	putAttrib(&attrib_list, GLX_STENCIL_SIZE); putAttrib(&attrib_list, stencil);
-	putAttrib(&attrib_list, GLX_AUX_BUFFERS); putAttrib(&attrib_list, num_aux_buffers);
-	putAttrib(&attrib_list, GLX_ACCUM_RED_SIZE); putAttrib(&attrib_list, accum_bpe);
-	putAttrib(&attrib_list, GLX_ACCUM_GREEN_SIZE); putAttrib(&attrib_list, accum_bpe);
-	putAttrib(&attrib_list, GLX_ACCUM_BLUE_SIZE); putAttrib(&attrib_list, accum_bpe);
-	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
-	putAttrib(&attrib_list, GLX_STEREO); putAttrib(&attrib_list, stereo ? True : False);
-	if (samples > 0 && extension_flags.GLX_ARB_multisample) {
-		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
-		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
-	}
-	putAttrib(&attrib_list, None); putAttrib(&attrib_list, None);
-	int num_formats = 0;
-	GLXFBConfig* configs = glXChooseFBConfig(getDisplay(), getCurrentScreen(), attrib_list.attribs, &num_formats);
-	if (num_formats > 0) {
-		return configs;
-	} else {
-		if (configs != NULL)
-			XFree(configs);
-		return NULL;
-	}
-}
-
-GLXFBConfig *chooseVisualGLX13(JNIEnv *env, jobject pixel_format, bool use_display_bpp, int drawable_type, bool double_buffer) {
-	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
-	int bpp;
-	if (use_display_bpp) {
-		bpp = XDefaultDepthOfScreen(XScreenOfDisplay(getDisplay(), getCurrentScreen()));
-		GLXFBConfig *configs = chooseVisualGLX13FromBPP(env, pixel_format, bpp, drawable_type, double_buffer);
-		if (configs != NULL)
-			return configs;
-		else
-			bpp = 16;
-	} else
-		bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
-	return chooseVisualGLX13FromBPP(env, pixel_format, bpp, drawable_type, double_buffer);
-}
-
-static XVisualInfo *chooseVisualGLX(JNIEnv *env, jobject pixel_format) {
-	int bpp = XDefaultDepthOfScreen(XScreenOfDisplay(getDisplay(), getCurrentScreen()));
-	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
-	int alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "alpha", "I"));
-	int depth = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "depth", "I"));
-	int stencil = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stencil", "I"));
-	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
-	int num_aux_buffers = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "num_aux_buffers", "I"));
-	int accum_bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_bpp", "I"));
-	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
-	bool stereo = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
-
-	int bpe = convertToBPE(bpp);
-	int accum_bpe = convertToBPE(accum_bpp);
-	attrib_list_t attrib_list;
-	initAttribList(&attrib_list);
-	putAttrib(&attrib_list, GLX_RGBA);
-	putAttrib(&attrib_list, GLX_DOUBLEBUFFER);
-	putAttrib(&attrib_list, GLX_DEPTH_SIZE); putAttrib(&attrib_list, depth);
-	putAttrib(&attrib_list, GLX_RED_SIZE); putAttrib(&attrib_list, bpe);
-	putAttrib(&attrib_list, GLX_GREEN_SIZE); putAttrib(&attrib_list, bpe);
-	putAttrib(&attrib_list, GLX_BLUE_SIZE); putAttrib(&attrib_list, bpe);
-	putAttrib(&attrib_list, GLX_ALPHA_SIZE); putAttrib(&attrib_list, alpha);
-	putAttrib(&attrib_list, GLX_STENCIL_SIZE); putAttrib(&attrib_list, stencil);
-	putAttrib(&attrib_list, GLX_AUX_BUFFERS); putAttrib(&attrib_list, num_aux_buffers);
-	putAttrib(&attrib_list, GLX_ACCUM_RED_SIZE); putAttrib(&attrib_list, accum_bpe);
-	putAttrib(&attrib_list, GLX_ACCUM_GREEN_SIZE); putAttrib(&attrib_list, accum_bpe);
-	putAttrib(&attrib_list, GLX_ACCUM_BLUE_SIZE); putAttrib(&attrib_list, accum_bpe);
-	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
-	if (stereo)
-		putAttrib(&attrib_list, GLX_STEREO);
-	if (samples > 0 && extension_flags.GLX_ARB_multisample) {
-		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
-		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
-	}
-	putAttrib(&attrib_list, None);
-	return glXChooseVisual(getDisplay(), getCurrentScreen(), attrib_list.attribs);
-}
-
-static void dumpVisualInfo(JNIEnv *env, XVisualInfo *vis_info) {
-	int alpha, depth, stencil, r, g, b;
-	int sample_buffers = 0;
-	int samples = 0;
-	glXGetConfig(getDisplay(), vis_info, GLX_RED_SIZE, &r);
-	glXGetConfig(getDisplay(), vis_info, GLX_GREEN_SIZE, &g);
-	glXGetConfig(getDisplay(), vis_info, GLX_BLUE_SIZE, &b);
-	glXGetConfig(getDisplay(), vis_info, GLX_ALPHA_SIZE, &alpha);
-	glXGetConfig(getDisplay(), vis_info, GLX_DEPTH_SIZE, &depth);
-	glXGetConfig(getDisplay(), vis_info, GLX_STENCIL_SIZE, &stencil);
-	if (extension_flags.GLX_ARB_multisample) {
-		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
-		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLES_ARB, &samples);
-	}
-	printfDebugJava(env, "Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d", r, g, b, alpha, depth, stencil, sample_buffers, samples);
-}
-
-static void destroyContext(void) {
+*/
+/*static void destroyContext(void) {
 	if (USEGLX13) {
 		XFree(configs);
 		configs = NULL;
@@ -609,9 +502,9 @@ static void destroyContext(void) {
 	glXDestroyContext(getDisplay(), display_context);
 	display_context = NULL;
 }
-
-static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
-	configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT, true);
+*/
+/*static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
+	configs = chooseVisualGLX13(env, getDisplay(), getCurrentScreen(), pixel_format, true, GLX_WINDOW_BIT, true);
 	if (configs == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
@@ -636,7 +529,7 @@ static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
 		throwException(env, "Could not get visual from FB config");
 		return false;
 	}
-	if (!checkXError(env)) {
+	if (!checkXError(env, getDisplay())) {
 		glXDestroyContext(getDisplay(), display_context);
 		XFree(configs);
 		XFree(vis_info);
@@ -646,13 +539,11 @@ static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
 }
 
 static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
-	vis_info = chooseVisualGLX(env, pixel_format);
+	vis_info = chooseVisualGLX(env, getDisplay(), getCurrentScreen(), pixel_format, true, true);
 	if (vis_info == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
 	}
-	if (isDebugEnabled())
-		dumpVisualInfo(env, vis_info);
 	display_context = glXCreateContext(getDisplay(), vis_info, NULL, True);
 	if (display_context == NULL) {
 		XFree(vis_info);
@@ -666,39 +557,39 @@ static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
-	if (!checkXError(env)) {
+	if (!checkXError(env, getDisplay())) {
 		glXDestroyContext(getDisplay(), display_context);
 		XFree(vis_info);
 		return false;
 	}
 	return true;
 }
-
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jobject this) {
+*/
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz) {
 	return getAvailableDisplayModes(env, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jobject this, jobject mode) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jobject mode) {
 	switchDisplayMode(env, mode, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jclass clazz) {
 	resetDisplayMode(env, getCurrentScreen(), false);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jobject this) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jclass clazz) {
 	return (jint)getGammaRampLength(env, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jobject this, jobject gamma_buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
 	setGammaRamp(env, gamma_buffer, getCurrentScreen());
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInit(JNIEnv *env, jobject this) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInit(JNIEnv *env, jclass clazz) {
 	return initDisplay(env, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateContext(JNIEnv *env, jobject this, jobject pixel_format) {
+/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
 	Display *disp = incDisplay(env);
 	if (disp == NULL) {
 		return;
@@ -719,13 +610,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateContext(JNIEnv 
 	if (!result)
 		decDisplay();
 }
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyContext(JNIEnv *env, jobject this) {
+*/
+/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyContext(JNIEnv *env, jclass clazz) {
 	destroyContext();
 	decDisplay();
 }
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jobject this, jobject mode, jboolean fullscreen, int x, int y) {
+*/
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject mode, jboolean fullscreen, jint x, jint y) {
 	bool current_fullscreen = fullscreen == JNI_TRUE;
 	if (current_fullscreen) {
 		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported(env)) {
@@ -737,30 +628,37 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *
 		}
 	} else
 		current_window_mode = WINDOWED;
+	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
+	GLXFBConfig *fb_config = NULL;
+	if (peer_info->glx13) {
+		fb_config = getFBConfigFromPeerInfo(env, peer_info);
+		if (fb_config == NULL)
+			return;
+	}
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
 	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	bool window_created = createWindow(env, x, y, width, height);
+	bool window_created = createWindow(env, peer_info, x, y, width, height);
 	if (!window_created) {
 		return;
 	}
-	if (isDebugEnabled())
-		dumpVisualInfo(env, vis_info);
-	if (USEGLX13)
-		glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
-	if (!checkXError(env)) {
+	if (peer_info->glx13) {
+		glx_window = glXCreateWindow(getDisplay(), *fb_config, getCurrentWindow(), NULL);
+		XFree(fb_config);
+	}
+	if (!checkXError(env, getDisplay())) {
 		glXDestroyWindow(getDisplay(), glx_window);
 		destroyWindow(env);
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyWindow(JNIEnv *env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyWindow(JNIEnv *env, jclass clazz) {
 	destroyWindow(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwapBuffers(JNIEnv * env, jobject this)
+/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwapBuffers(JNIEnv * env, jclass clazz)
 {
 	dirty = false;
 	if (USEGLX13)
@@ -768,33 +666,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwapBuffers(JNIEnv * 
 	else
 		glXSwapBuffers(getDisplay(), getCurrentWindow());
 }
-
+*/
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsDirty
-  (JNIEnv *env, jobject this) {
+  (JNIEnv *env, jclass clazz) {
 	bool result = dirty;
 	dirty = false;
 	return result ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsVisible
-  (JNIEnv *env, jobject this) {
+  (JNIEnv *env, jclass clazz) {
 	return minimized ? JNI_FALSE : JNI_TRUE;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsCloseRequested
-  (JNIEnv *env, jobject this) {
+  (JNIEnv *env, jclass clazz) {
 	bool saved = closerequested;
 	closerequested = false;
 	return saved;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsActive
-  (JNIEnv *env, jobject this) {
+  (JNIEnv *env, jclass clazz) {
 	return focused || isLegacyFullscreen() ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetVSyncEnabled
-  (JNIEnv *env, jobject this, jboolean sync)
+/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetVSyncEnabled
+  (JNIEnv *env, jclass clazz, jboolean sync)
 {
 	if (extension_flags.GLX_SGI_swap_control) {
 		bool vsync = sync == JNI_TRUE ? true : false;
@@ -805,8 +703,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetVSyncEnabled
 		}
 	}
 }
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_lockAWT(JNIEnv *env, jobject this) {
+*/
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_lockAWT(JNIEnv *env, jclass clazz) {
 	JAWT jawt;
 	jawt.version = JAWT_VERSION_1_4;
 	if (JAWT_GetAWT(env, &jawt) != JNI_TRUE) {
@@ -816,7 +714,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_lockAWT(JNIEnv *env, j
 	jawt.Lock(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_unlockAWT(JNIEnv *env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_unlockAWT(JNIEnv *env, jclass clazz) {
 	JAWT jawt;
 	jawt.version = JAWT_VERSION_1_4;
 	if (JAWT_GetAWT(env, &jawt) != JNI_TRUE) {

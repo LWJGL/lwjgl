@@ -40,38 +40,38 @@
  */
 
 #include <stdlib.h>
-#include "org_lwjgl_opengl_LinuxDisplay.h"
+#include "org_lwjgl_opengl_LinuxPbufferPeerInfo.h"
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "extgl.h"
+#include "context.h"
 #include "Window.h"
 #include "common_tools.h"
-
+/*
 typedef struct _PbufferInfo {
 	GLXPbuffer buffer;
 	GLXContext context;
 } PbufferInfo;
-
+*/
 static bool isPbuffersSupported() {
 	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
 	return extension_flags.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities
-  (JNIEnv *env, jobject this)
+  (JNIEnv *env, jclass clazz)
 {
 	return isPbuffersSupported() ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
-static void destroyPbuffer(PbufferInfo *buffer_info) {
+/*static void destroyPbuffer(PbufferInfo *buffer_info) {
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
 	glXDestroyPbuffer(getDisplay(), buffer);
 	releaseContext(context);
 	glXDestroyContext(getDisplay(), context);
-	decDisplay();
 }
-
-static bool checkPbufferCaps(JNIEnv *env, GLXFBConfig config, int width, int height) {
+*/
+/*static bool checkPbufferCaps(JNIEnv *env, GLXFBConfig config, int width, int height) {
 	int max;
 	int result = glXGetFBConfigAttrib(getDisplay(), config, GLX_MAX_PBUFFER_WIDTH, &max);
 	if (result != Success) {
@@ -95,7 +95,7 @@ static bool checkPbufferCaps(JNIEnv *env, GLXFBConfig config, int width, int hei
 }
 
 static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_info, jobject pixel_format, int width, int height, const int *buffer_attribs, GLXContext shared_context) {
-	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
+	GLXFBConfig *configs = chooseVisualGLX13(env, getDisplay(), getCurrentScreen(), pixel_format, false, GLX_PBUFFER_BIT, false);
 	if (configs == NULL) {
 		throwException(env, "No matching pixel format");
 		return false;
@@ -123,16 +123,43 @@ static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_in
 	pbuffer_info->buffer = buffer;
 	return true;
 }
+*/
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nInitHandle
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint width, jint height, jobject pixel_format) {
+	if (!extgl_InitGLX(env, getDisplay(), getCurrentScreen()) || !isPbuffersSupported()) {
+		throwException(env, "No Pbuffer support");
+		return;
+	}
+	bool result = initPeerInfo(env, peer_info_handle, getDisplay(), getCurrentScreen(), pixel_format, false, GLX_PBUFFER_BIT, false, true);
+	if (!result)
+		return;
+	const int buffer_attribs[] = {GLX_PBUFFER_WIDTH, width,
+				      GLX_PBUFFER_HEIGHT, height,
+				      GLX_PRESERVED_CONTENTS, True,
+				      GLX_LARGEST_PBUFFER, False,
+					  None, None};
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv *env, jobject this, jobject handle_buffer, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs, jobject shared_context_handle_buffer)
+	X11PeerInfo *peer_info = (X11PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	GLXFBConfig *config = getFBConfigFromPeerInfo(env, peer_info);
+	GLXPbuffer buffer = glXCreatePbuffer(peer_info->display, *config, buffer_attribs);
+	XFree(config);
+	peer_info->drawable = buffer;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nDestroy
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	X11PeerInfo *peer_info = (X11PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	glXDestroyPbuffer(peer_info->display, peer_info->drawable);
+}
+/*
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs, jobject shared_context_handle_buffer)
 {
-	Display *disp = incDisplay(env);
-	if (disp == NULL) {
+	if ((*env)->GetDirectBufferCapacity(env, handle_buffer) < sizeof(PbufferInfo)) {
+		throwException(env, "Handle buffer not large enough");
 		return;
 	}
 	int current_screen = getCurrentScreen();
-	if (!extgl_InitGLX(env, disp, current_screen) || !isPbuffersSupported()) {
-		decDisplay();
+	if (!extgl_InitGLX(env, getDisplay(), current_screen) || !isPbuffersSupported()) {
 		throwException(env, "No Pbuffer support");
 		return;
 	}
@@ -143,11 +170,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv 
 				      GLX_LARGEST_PBUFFER, False,
 					  None, None};
 
-	if ((*env)->GetDirectBufferCapacity(env, handle_buffer) < sizeof(PbufferInfo)) {
-		decDisplay();
-		throwException(env, "Handle buffer not large enough");
-		return;
-	}
 	GLXContext shared_context = getDisplayContext();
 	if (shared_context_handle_buffer != NULL) {
 		PbufferInfo *shared_buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, shared_context_handle_buffer);
@@ -156,18 +178,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv 
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	bool result;
 	result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs, shared_context);
-	if (!result) {
-		decDisplay();
+	if (!result)
 		return;
-	}
-	if (!checkXError(env)) {
+	if (!checkXError(env, getDisplay())) {
 		destroyPbuffer(buffer_info);
 		return;
 	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nMakePbufferCurrent
-  (JNIEnv *env, jobject this, jobject handle_buffer)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	GLXPbuffer buffer = buffer_info->buffer;
@@ -178,8 +198,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nMakePbufferCurrent
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyPbuffer
-  (JNIEnv *env, jobject this, jobject handle_buffer)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	destroyPbuffer(buffer_info);
-}
+}*/

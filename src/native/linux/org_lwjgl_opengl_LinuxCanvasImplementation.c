@@ -29,80 +29,36 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
- *
- * Include file to access public window features
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-#ifndef _LWJGL_WINDOW_H_INCLUDED_
-	#define _LWJGL_WINDOW_H_INCLUDED_
+#include <jni.h>
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include "org_lwjgl_opengl_LinuxCanvasImplementation.h"
+#include "extgl_glx.h"
+#include "context.h"
+#include "Window.h"
 
-	#include <jni.h>
-	#include <X11/X.h>
-	#include <X11/Xlib.h>
-	#include <X11/Xutil.h>
-	#include "extgl.h"
-	#include "extgl_glx.h"
-
-	/*
-	 * release input (keyboard, mouse)
-	 */
-	extern void handleMessages(JNIEnv *env);
-
-	extern bool checkXError(JNIEnv *env, Display *display);
-	extern Atom getWarpAtom(void);
-	/*
-	 * Various functions to release/acquire keyboard and mouse
-	 */
-	extern void handleWarpEvent(XClientMessageEvent *);
-	extern void handlePointerMotion(XMotionEvent *);
-	extern void handleButtonPress(XButtonEvent *);
-	extern void handleButtonRelease(XButtonEvent *);
-	extern void handleKeyEvent(XKeyEvent *);
-	extern void updatePointerGrab(void);
-	extern void updateKeyboardGrab(void);
-	extern void setGrab(bool);
-	extern bool isGrabbed(void);
-	extern bool shouldGrab(void);
-
-	/*
-	 * get the current window width
-	 */
-	extern int getWindowWidth(void);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxCanvasImplementation_nFindVisualIDFromFormat
+	(JNIEnv *env, jclass clazz, jint screen, jobject pixel_format) {
+	if (!extgl_InitGLX(env, getDisplay(), screen)) {
+		throwException(env, "Could not initialize GLX");
+		return -1;
+	}
+	XVisualInfo *vis_info = chooseVisualGLX(env, getDisplay(), screen, pixel_format, true, true);
+	if (vis_info == NULL) {
+		throwException(env, "Could not choose a VisualInfo");
+		return -1;
+	}
 	
-	/*
-	 * get the current window height
-	 */
-	extern int getWindowHeight(void);
-	
-	/*
-	 * get the current display
-	 */
-	extern Display *getDisplay(void);
-	
-	/*
-	 * get the current screen
-	 */
-	extern int getCurrentScreen(void);
-	
-	/*
-	 * get the current window
-	 */
-	extern Window getCurrentWindow(void);
-
-	/*
-	 * Return true if we are in fullscreen mode
-	 */
-	extern bool isFullscreen(void);
-	
-	/*
-	 * Return true if we are in exclusive fullscreen mode
-	 */
-	extern bool isLegacyFullscreen(void);
-
-#endif /* _LWJGL_WINDOW_H_INCLUDED_ */
+	VisualID vis_id = vis_info->visualid;
+	XFree(vis_info);
+	return vis_id;
+}

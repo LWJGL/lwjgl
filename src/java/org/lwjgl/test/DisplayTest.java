@@ -54,7 +54,7 @@ public class DisplayTest {
   /**
    * Runs the tests
    */
-  public void executeTest() {
+  public void executeTest() throws LWJGLException {
     currentTest();
     queryModesTest();
     setDisplayModeTest();
@@ -80,7 +80,7 @@ public class DisplayTest {
   /**
    * Tests querying for modes
    */
-  private void queryModesTest() {
+  private void queryModesTest() throws LWJGLException {
     DisplayMode[] modes = null;
     
     System.out.println("==== Test query ====");
@@ -109,7 +109,7 @@ public class DisplayTest {
   /**
    * Tests setting display modes
    */
-  private void setDisplayModeTest() {
+  private void setDisplayModeTest() throws LWJGLException {
     DisplayMode mode = null;
     DisplayMode[] modes = null;
     
@@ -241,7 +241,7 @@ public class DisplayTest {
    * 
    * @param args ignored
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws LWJGLException {
     new DisplayTest().executeTest();
   }
 }

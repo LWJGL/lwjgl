@@ -50,7 +50,7 @@ public class WindowCreationTest {
    * 
    * @param args ignored params to app
    */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws LWJGLException {
     // get avaialble modes, and print out
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     System.out.println("Found " + modes.length + " display modes");
@@ -138,10 +138,10 @@ public class WindowCreationTest {
    * Sets the display mode for fullscreen mode
    */
   protected static boolean setDisplayMode() {
-    // get modes
-    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
-    
     try {
+		// get modes
+		DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+
       org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
           "width=" + 640,
           "height=" + 480,

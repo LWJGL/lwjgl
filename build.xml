@@ -559,6 +559,11 @@
 		<!-- platform specific classes -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
 			<class name="org.lwjgl.opengl.LinuxDisplay" />
+			<class name="org.lwjgl.opengl.LinuxPbufferPeerInfo" />
+			<class name="org.lwjgl.opengl.LinuxDisplayPeerInfo" />
+			<class name="org.lwjgl.opengl.LinuxAWTGLCanvasPeerInfo" />
+			<class name="org.lwjgl.opengl.LinuxContextImplementation" />
+			<class name="org.lwjgl.opengl.LinuxCanvasImplementation" />
 		</javah>
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
 			<class name="org.lwjgl.opengl.Win32Display" />
@@ -569,6 +574,7 @@
 		</javah>
 		<!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
+			<class name="org.lwjgl.opengl.AWTSurfaceLock" />
 			<class name="org.lwjgl.DefaultSysImplementation" />
 			<class name="org.lwjgl.input.Cursor" />
 			<class name="org.lwjgl.input.Keyboard" />
@@ -577,7 +583,6 @@
 			<class name="org.lwjgl.openal.ALC" />
 			<class name="org.lwjgl.openal.AL" />
 
-			<class name="org.lwjgl.opengl.AWTGLCanvas" />
 			<class name="org.lwjgl.opengl.GLContext" />
 			<class name="org.lwjgl.opengl.Pbuffer" />
 		</javah>

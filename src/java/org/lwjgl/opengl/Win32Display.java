@@ -58,25 +58,29 @@ final class Win32Display implements DisplayImplementation {
 	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
 	public native String getAdapter();
 	public native String getVersion();
-	public native DisplayMode init();
+	public native DisplayMode init() throws LWJGLException;
 	public native void setTitle(String title);
 	public native boolean isCloseRequested();
 	public native boolean isVisible();
 	public native boolean isActive();
 	public native boolean isDirty();
-	public native void swapBuffers();
-	public native void makeCurrent() throws LWJGLException;
-	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
-	public native void destroyContext();
+//	public native void swapBuffers();
+//	public native void makeCurrent() throws LWJGLException;
+	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+		throw new RuntimeException("Not supported yet");
+	}
+//	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
+//	public native void destroyContext();
+	public native void destroyPeerInfo();
 	public native void update();
 	public native void setVSyncEnabled(boolean sync);
 	public native void reshape(int x, int y, int width, int height);
-	public native DisplayMode[] getAvailableDisplayModes();
+	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
 
 	/* Mouse */
 	public native boolean hasWheel();
 	public native int getButtonCount();
-	public native void createMouse();
+	public native void createMouse() throws LWJGLException;
 	public native void destroyMouse();
 	public native void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 	public native int readMouse(IntBuffer buffer, int buffer_position);
@@ -106,10 +110,17 @@ final class Win32Display implements DisplayImplementation {
 
 	public native void destroyCursor(Object cursorHandle);
 	public native int getPbufferCapabilities();
-	public native boolean isBufferLost(ByteBuffer handle);
-	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
+	public native boolean isBufferLost(PeerInfo handle);
+//	public native boolean isBufferLost(ByteBuffer handle);
+//	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
 
-	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
+	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs) throws LWJGLException {
+		throw new RuntimeException("Not yet supported");
+	}
+	
+/*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
 		ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
@@ -120,10 +131,14 @@ final class Win32Display implements DisplayImplementation {
 	private native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
+*/
+	public native void destroyPbuffer(PeerInfo handle);
+//	public native void destroyPbuffer(ByteBuffer handle);
 
-	public native void destroyPbuffer(ByteBuffer handle);
-
-	public native void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
+	public native void setPbufferAttrib(PeerInfo handle, int attrib, int value);
+	public native void bindTexImageToPbuffer(PeerInfo handle, int buffer);
+	public native void releaseTexImageFromPbuffer(PeerInfo handle, int buffer);
+/*	public native void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
 	public native void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
-	public native void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
+	public native void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);*/
 }

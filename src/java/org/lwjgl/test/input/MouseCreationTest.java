@@ -72,10 +72,10 @@ public class MouseCreationTest {
    * Sets the display mode for fullscreen mode
    */
   protected boolean setDisplayMode() {
-    // get modes
-    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
-    
     try {
+		// get modes
+		DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+
       org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
           "width=" + 640,
           "height=" + 480,

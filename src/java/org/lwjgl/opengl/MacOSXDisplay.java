@@ -157,11 +157,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return new DisplayMode(awt_mode.getWidth(), awt_mode.getHeight(), bit_depth, refresh_rate);
 	}
 
-	public DisplayMode init() {
+	public DisplayMode init() throws LWJGLException {
 		return createLWJGLDisplayMode(MacOSXFrame.getDevice().getDisplayMode());
 	}
 
-	public DisplayMode[] getAvailableDisplayModes() {
+	public DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
 		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
 		List modes = new ArrayList();
 		for (int i = 0; i < awt_modes.length; i++)
@@ -199,13 +199,17 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public native void setView(MacOSXGLCanvas canvas);
 
-	public native void swapBuffers();
+//	public native void swapBuffers();
 
-	public native void makeCurrent() throws LWJGLException;
+//	public native void makeCurrent() throws LWJGLException;
 
-	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
+	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+		throw new RuntimeException("Not supported yet");
+	}
+//	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
 
-	public native void destroyContext();
+	public native void destroyPeerInfo();
+//	public native void destroyContext();
 
 	public void update() {
 		if (frame.syncShouldUpdateContext()) {
@@ -251,7 +255,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return MouseEventQueue.NUM_BUTTONS;
 	}
 
-	public void createMouse() {
+	public void createMouse() throws LWJGLException {
 		MacOSXGLCanvas canvas = frame.getCanvas();
 		this.mouse_queue = new MouseEventQueue(canvas.getWidth(), canvas.getHeight());
 		canvas.addMouseListener(mouse_queue);
@@ -409,13 +413,19 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 	}
 
-	public boolean isBufferLost(ByteBuffer handle) {
+	public boolean isBufferLost(PeerInfo handle) {
 		return false;
 	}
 	
-	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
+//	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
 
-	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
+	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs) throws LWJGLException {
+		throw new RuntimeException("Not yet supported");
+	}
+
+/*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
 		ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
@@ -426,18 +436,19 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
+*/
+//	public native void destroyPbuffer(ByteBuffer handle);
+	public native void destroyPbuffer(PeerInfo handle);
 
-	public native void destroyPbuffer(ByteBuffer handle);
-
-	public void setPbufferAttrib(ByteBuffer handle, int attrib, int value) {
+	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void bindTexImageToPbuffer(ByteBuffer handle, int buffer) {
+	public void bindTexImageToPbuffer(PeerInfo handle, int buffer) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer) {
+	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		throw new UnsupportedOperationException();
 	}
 }
