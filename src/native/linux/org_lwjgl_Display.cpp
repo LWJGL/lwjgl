@@ -454,7 +454,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 		return NULL;
 	}
 	
-	int screen = DefaultScreen(disp);
+	screen = DefaultScreen(disp);
 	
 	if (!loadGL(disp, screen)) {
 #ifdef _DEBUG
