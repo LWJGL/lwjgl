@@ -47,22 +47,19 @@ import org.lwjgl.input.Mouse;
  */
 public final class Sys {
 
+  /** Current version of library */
 	public static final String VERSION = "0.95";
 
 	/** The native library name */
 	private static final String LIBRARY_NAME = "lwjgl";
 
-	/** The platform adapter class name */
-	private static final String PLATFORM;
-
-	/**
-	 * Debug flag.
-	 */
+	/** Debug flag. */
 	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.Sys.debug");
+  
+  /** OS Name */
+  private final static String OS_NAME = System.getProperty("os.name");
 
-	/**
-	  * The implementation instance to delegate platform specific behavior to
-	  */
+	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
 
 	static {
@@ -71,23 +68,20 @@ public final class Sys {
 		String native_version = implementation.getNativeLibraryVersion();
 		if (!native_version.equals(VERSION))
 			throw new LinkageError("Version mismatch: jar version is '" + VERSION +
-                                                        "', native libary version is '" + native_version + "'");
+                             "', native libary version is '" + native_version + "'");
 		implementation.setDebug(DEBUG);
-
-		PLATFORM = System.getProperty("org.lwjgl.Sys.platform", "org.lwjgl.SwingAdapter");
 	}
 
 	private static SysImplementation createImplementation() {
 		String class_name;
-		String os_name = System.getProperty("os.name");
-		if (os_name.startsWith("Linux")) {
+		if (OS_NAME.startsWith("Linux")) {
 			class_name = "org.lwjgl.LinuxSysImplementation";
-		} else if (os_name.startsWith("Windows")) {
+		} else if (OS_NAME.startsWith("Windows")) {
 			class_name = "org.lwjgl.Win32SysImplementation";
-		} else if (os_name.startsWith("Mac")) {
+		} else if (OS_NAME.startsWith("Mac")) {
 			class_name = "org.lwjgl.MacOSXSysImplementation";
 		} else
-			throw new IllegalStateException("The platform " + os_name + " is not supported");
+			throw new IllegalStateException("The platform " + OS_NAME + " is not supported");
 		try {
 			Class impl_class = Class.forName(class_name);
 			return (SysImplementation)impl_class.newInstance();
@@ -169,7 +163,6 @@ public final class Sys {
 			title = "";
 		if (message == null)
 			message = "";
-		String osName = System.getProperty("os.name");
 		implementation.alert(title, message);
 		if (grabbed) {
 			Mouse.setGrabbed(true);
