@@ -116,6 +116,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jcl
  * Called when the Controller instance is to be created
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
+  
+  // assert that window has been created
+	if(hwnd == NULL) {
+    throwException(env, "Please create the window before initializing input devices\n");
+    return;
+	}
+	
 	// Create the DirectInput object. 
 	HRESULT hr;
 	hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &cDI, NULL); 
