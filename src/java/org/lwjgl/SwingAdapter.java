@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,22 +31,39 @@
  */
 package org.lwjgl;
 
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  * $Id$
- *
- * Interface for adapting to window environments.
+ * <p>
+ * A Swing adapter for using Swing to take care of things on platforms where we
+ * know Swing is present.
+ * <p><em>Note</em> To compile LWJGL applications with Excelsior JET that use JetPerfect
+ * and that have no dependencies on Swing, do not include this class in your
+ * JET project.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public interface Adapter {
-	
+final class SwingAdapter implements PlatformAdapter {
+	/**
+	 * Constructs a new SwingAdapter
+	 */
+	SwingAdapter() {
+	}
+  
 	/**
 	 * Spawn a "modal" dialog in the centre of the screen with a message in it
 	 * and an OK button. This method blocks until the dialog is dismissed.
-	 * @param title
-	 * @param message
+	 * @param title Title of alert
+	 * @param message Message to show in alert
 	 */
-	public void alert(String title, String message);
+	public void alert(String title, String message) {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch(Exception e) {
+    }
+    JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
+	}
 }

@@ -78,6 +78,9 @@ public final class Sys {
 
 	/** The native library name */
 	private static String LIBRARY_NAME = "lwjgl";
+  
+  /** The platform being executed on */
+  private static String PLATFORM;
 	
 	/**
 	 * Debug flag.
@@ -86,6 +89,12 @@ public final class Sys {
 
 	static {
 		initialize();
+
+    // check platform name, and default to awt
+    PLATFORM = System.getProperty("org.lwjgl.Sys.platform");
+    if(PLATFORM == null) {
+      PLATFORM = "org.lwjgl.SwingAdapter";
+    }
 	}
 
 	/**
@@ -208,10 +217,10 @@ public final class Sys {
 			nAlert(title, message);
 		} else {
 			try {
-				Adapter adapter = (Adapter) Class.forName("org.lwjgl.AWTAdapter").newInstance(); // This avoids a Jet error message
+				PlatformAdapter adapter = (PlatformAdapter) Class.forName(PLATFORM).newInstance(); // This avoids a Jet error message
 				adapter.alert(title, message);
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				Sys.log("Unable to display alert using: " + PLATFORM);
 			}
 		}
 	}

@@ -31,26 +31,16 @@
  */
 package org.lwjgl;
 
-import javax.swing.JOptionPane;
 
 /**
  * $Id$
  *
- * An AWT adapter for using AWT to take care of things on platforms where we
- * know AWT is present.
- * <p><em>Note</em> To compile LWJGL applications with Excelsior JET that use JetPerfect
- * and that have no dependencies on AWT, do not include this class in your
- * JET project.
+ * Interface for adapting to window environments.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-final class AWTAdapter implements Adapter {
-	/**
-	 * C'tor
-	 */
-	AWTAdapter() {
-	}
+public interface PlatformAdapter {
 	
 	/**
 	 * Spawn a "modal" dialog in the centre of the screen with a message in it
@@ -58,7 +48,5 @@ final class AWTAdapter implements Adapter {
 	 * @param title
 	 * @param message
 	 */
-	public void alert(String title, String message) {
-		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
-	}
+	public void alert(String title, String message);
 }
