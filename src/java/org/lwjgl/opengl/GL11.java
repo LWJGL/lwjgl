@@ -739,7 +739,7 @@ public final class GL11 {
 	public static native void glCallList(int list);
 	public static native void glBlendFunc(int sfactor, int dfactor);
 	public static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap) {
-		if (bitmap.remaining() < width * height) {
+		if (bitmap.remaining() < ((width+7)/8) * height) { 
 			throw new BufferUnderflowException();
 		}
 		nglBitmap(width, height, xorig, yorig, xmove, ymove, bitmap, bitmap.position());
