@@ -98,7 +98,7 @@ static void setCursorPos(int x, int y) {
 	accum_dy += dy;
 	last_x = x;
 	last_y = y;
-	if (pointer_grabbed) {
+	if (shouldGrab()) {
 		putMouseEventWithCoords(-1, 0, dx, dy, 0);
 	} else {
 		putMouseEventWithCoords(-1, 0, x, y, 0);
