@@ -311,7 +311,7 @@
       
       <echo>Compiling Mac OS X LWJGL version</echo>   
       <exec dir="${lwjgl.src.native}/macosx" executable="make" failonerror="true">
-         <env key="AL" path="${openal.home}/include/AL/" />
+         <env key="AL" path="${openal.home}" />
       </exec>
    
       <move file="${lwjgl.src.native}/macosx/liblwjgl.jnilib" tofile="${lwjgl.lib}/liblwjgl.jnilib" />   
