@@ -262,7 +262,6 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	attribs.background_pixel = 0xFF000000;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
 	if (fullscreen || undecorated) {
-	printf("Depth: %d\n", vis_info->depth);
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
