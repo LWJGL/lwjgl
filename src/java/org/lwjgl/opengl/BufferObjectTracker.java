@@ -81,6 +81,19 @@ final class BufferObjectTracker {
 		}
 	}
 
+	static void bindVBOBuffer(int target, int buffer) {
+		switch ( target ) {
+			case GL15.GL_ELEMENT_ARRAY_BUFFER:
+				getVBOElementStack().setState(buffer);
+				break;
+			case GL15.GL_ARRAY_BUFFER:
+				getVBOArrayStack().setState(buffer);
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported VBO target " + target);
+		}
+	}
+
 	static StateStack getVBOArrayStack() {
 		return current_tracker.vbo_array_stack;
 	}
