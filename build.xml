@@ -155,6 +155,23 @@
 	    <!-- target is going to fail anyway. However we cannot call the 'distribution' before -->
 	    <!-- the javadoc target, since the 'distribution' target will try to create the javadoc -->
 	    <!-- archive. -->
+		<antcall target="-initialize"/>
+		<antcall target="compile"/>
+		<antcall target="compile_native"/>
+		<antcall target="jars"/>
+		<antcall target="-distribution_application"/>
+	</target>
+
+	<!-- Performs all the tasks needed for a distribution of LWJGL -->
+	<target name="non-javadoc-rebuild" description="Compile. Make jars. Javadoc and distribute">
+  
+	    <!-- Though we perform all targets, we do it in somewhat mixed. -->
+	    <!-- This is because we want the 'distribution_application' target to be -->
+	    <!-- executed as soon as possible, since this target is most likely to fail. -->
+	    <!-- That way we don't spend time doing javadocs, if the 'distribution_application' -->
+	    <!-- target is going to fail anyway. However we cannot call the 'distribution' before -->
+	    <!-- the javadoc target, since the 'distribution' target will try to create the javadoc -->
+	    <!-- archive. -->
 		<antcall target="clean"/>
 		<antcall target="-initialize"/>
 		<antcall target="compile"/>
@@ -167,6 +184,7 @@
 	<target name="clean" description="Cleans the diectories controlled by this ant script">
 		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder" />
 		<delete dir="${lwjgl.dist}" quiet="true" failonerror="false" taskname="cleaning dist folder" />
+		<delete dir="${lwjgl.lib}" quiet="true" failonerror="false" taskname="cleaning libs folder" />
 		<delete dir="${lwjgl.docs}/javadoc" quiet="true" failonerror="false" taskname="cleaning javadoc folder" />
 		<delete dir="${lwjgl.bin}/org" quiet="true" failonerror="false" taskname="cleaning bin folder" />
 		<delete taskname="cleaning bin folder" failonerror="false">
@@ -206,23 +224,33 @@
 		<antcall target="-compile_native_mac" />
 	</target>
 
+	<uptodate property="lwjgl.main.built" targetfile="${lwjgl.lib}/lwjgl.dll" >
+	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c*"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/arb" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/nv" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/ext" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/ati" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/win32" includes="*.cpp"/>
+	</uptodate>	
+	
+	<uptodate property="lwjgl.fmod.built" targetfile="${lwjgl.lib}/lwjgl-fmod3.dll" >
+	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/fmod3" includes="*.c"/>
+	</uptodate>	
+	
+	<uptodate property="lwjgl.devil.built" targetfile="${lwjgl.lib}/lwjgl-devil.dll" >
+	    <srcfiles dir= "${lwjgl.src.native}/common" includes="*.c"/>
+	    <srcfiles dir= "${lwjgl.src.native}/common/devil" includes="*.c"/>
+	</uptodate>	
+	
 	<!-- Compiles LWJGL on Win32 platforms  -->
 	<target name="-compile_native_win32" if="lwjgl.platform.windows">
 		<echo>Compiling Win32 LWJGL version</echo>
-		<!-- build main -->
-		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
-			<arg line="/c build.bat" />
-		</exec>
+		<antcall target="-compile_native_win32_main" />
 
-		<!-- build fmod -->
-		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
-			<arg line="/c build-fmod.bat" />
-		</exec>
+		<antcall target="-compile_native_win32_fmod" />
 		
-		<!-- build devil -->
-		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
-			<arg line="/c build-devil.bat"/>
-		</exec>
+		<antcall target="-compile_native_win32_devil" />
 		
 		<!-- optimize using upx -->
 		<!-- <exec dir="${lwjgl.lib}" executable="upx">
@@ -230,11 +258,32 @@
 		</exec> -->
 
 		<!-- copy to libs -->
-		<move file="platform_build/win32_ms_cmdline/lwjgl.dll" tofile="${lwjgl.lib}/lwjgl.dll"/>
-		<move file="platform_build/win32_ms_cmdline/lwjgl-fmod3.dll" tofile="${lwjgl.lib}/lwjgl-fmod3.dll"/>
-		<move file="platform_build/win32_ms_cmdline/lwjgl-devil.dll" tofile="${lwjgl.lib}/lwjgl-devil.dll"/>
 	</target>	
-	
+
+	<target name="-compile_native_win32_main" unless="lwjgl.main.built">
+		<!-- build main -->
+		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
+			<arg line="/c build.bat" />
+		</exec>
+		<move file="platform_build/win32_ms_cmdline/lwjgl.dll" tofile="${lwjgl.lib}/lwjgl.dll"/>
+	</target>
+
+	<target name="-compile_native_win32_fmod" unless="lwjgl.fmod.built">
+		<!-- build fmod -->
+		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
+			<arg line="/c build-fmod.bat" />
+		</exec>
+		<move file="platform_build/win32_ms_cmdline/lwjgl-fmod3.dll" tofile="${lwjgl.lib}/lwjgl-fmod3.dll"/>
+	</target>
+
+	<target name="-compile_native_win32_devil" unless="lwjgl.devil.built">
+		<!-- build devil -->
+		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
+			<arg line="/c build-devil.bat"/>
+		</exec>
+		<move file="platform_build/win32_ms_cmdline/lwjgl-devil.dll" tofile="${lwjgl.lib}/lwjgl-devil.dll"/>
+	</target>
+
 	<!-- Compiles LWJGL on Linux platforms -->
 	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<echo>Compiling Linux LWJGL version</echo>
