@@ -443,7 +443,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 	int num_modes, i;
 
 	Display *disp = XOpenDisplay(NULL);
-	int screen = DefaultScreen(disp);
+	int screen;
 	XF86VidModeModeInfo **avail_modes;
 
 	if (disp == NULL) {
@@ -453,6 +453,9 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 		XCloseDisplay(disp);
 		return NULL;
 	}
+	
+	int screen = DefaultScreen(disp);
+	
 	if (!loadGL(disp, screen)) {
 #ifdef _DEBUG
 		printf("Could not load GL\n");
