@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -52,6 +52,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.lwjgl.LWJGLException;
 
 final class MacOSXFrame extends Frame implements WindowListener, ComponentListener {
+
 	private final MacOSXGLCanvas canvas;
 	private boolean close_requested;
 
@@ -61,24 +62,24 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	private boolean active;
 	private boolean visible;
 	private boolean minimized;
-	
-	public MacOSXFrame(DisplayMode mode, java.awt.DisplayMode requested_mode, boolean fullscreen, int x, int y) throws LWJGLException {
+
+	MacOSXFrame(DisplayMode mode, java.awt.DisplayMode requested_mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		setResizable(false);
 		addWindowListener(this);
 		addComponentListener(this);
 		canvas = new MacOSXGLCanvas();
 		add(canvas, BorderLayout.CENTER);
 		setUndecorated(fullscreen);
-		if (fullscreen) {
+		if ( fullscreen ) {
 			getDevice().setFullScreenWindow(this);
 			getDevice().setDisplayMode(requested_mode);
 			java.awt.DisplayMode real_mode = getDevice().getDisplayMode();
 			/** For some strange reason, the display mode is sometimes silently capped even though the mode is reported as supported */
-			if (requested_mode.getWidth() != real_mode.getWidth() || requested_mode.getHeight() != real_mode.getHeight()) {
+			if ( requested_mode.getWidth() != real_mode.getWidth() || requested_mode.getHeight() != real_mode.getHeight() ) {
 				getDevice().setFullScreenWindow(null);
 				syncDispose();
 				throw new LWJGLException("AWT capped mode: requested mode = " + requested_mode.getWidth() + "x" + requested_mode.getHeight() +
-										 " but got " + real_mode.getWidth() + " " + real_mode.getHeight());
+				                         " but got " + real_mode.getWidth() + " " + real_mode.getHeight());
 			}
 		}
 		pack();
@@ -94,11 +95,11 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	}
 
 	public Rectangle syncGetBounds() {
-		synchronized (this) {
+		synchronized ( this ) {
 			return bounds;
 		}
 	}
-	
+
 	public void componentShown(ComponentEvent e) {
 	}
 
@@ -106,7 +107,7 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	}
 
 	private void updateBounds() {
-		synchronized (this) {
+		synchronized ( this ) {
 			bounds = getBounds();
 		}
 	}
@@ -119,20 +120,20 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		updateBounds();
 	}
 
-	public final static GraphicsDevice getDevice() {
+	public static GraphicsDevice getDevice() {
 		GraphicsEnvironment g_env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice device = g_env.getDefaultScreenDevice();
 		return device;
 	}
 
 	public void windowIconified(WindowEvent e) {
-		synchronized (this) {
+		synchronized ( this ) {
 			minimized = true;
 		}
 	}
 
 	public void windowDeiconified(WindowEvent e) {
-		synchronized (this) {
+		synchronized ( this ) {
 			minimized = false;
 		}
 	}
@@ -144,19 +145,19 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	}
 
 	public void windowClosing(WindowEvent e) {
-		synchronized (this) {
+		synchronized ( this ) {
 			close_requested = true;
 		}
 	}
-	
+
 	public void windowDeactivated(WindowEvent e) {
-		synchronized (this) {
+		synchronized ( this ) {
 			active = false;
 		}
 	}
 
 	public void windowActivated(WindowEvent e) {
-		synchronized (this) {
+		synchronized ( this ) {
 			should_update = true;
 			active = true;
 		}
@@ -165,16 +166,17 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	public void syncDispose() {
 		invokeAWT(new Runnable() {
 			public void run() {
-				if (isDisplayable())
+				if ( isDisplayable() )
 					dispose();
 			}
 		});
 	}
 
 	private class TitleSetter implements Runnable {
+
 		private final String title;
 
-		public TitleSetter(String title) {
+		TitleSetter(String title) {
 			this.title = title;
 		}
 
@@ -182,14 +184,14 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 			setTitle(title);
 		}
 	}
-	
+
 	public void syncSetTitle(String title) {
 		invokeAWT(new TitleSetter(title));
 	}
-	
+
 	public boolean syncIsCloseRequested() {
 		boolean result;
-		synchronized (this) {
+		synchronized ( this ) {
 			result = close_requested;
 			close_requested = false;
 		}
@@ -197,24 +199,24 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	}
 
 	public boolean syncIsVisible() {
-		synchronized (this) {
+		synchronized ( this ) {
 			return !minimized;
 		}
 	}
-	
+
 	public boolean syncIsActive() {
-		synchronized (this) {
+		synchronized ( this ) {
 			return active;
 		}
 	}
-	
+
 	public MacOSXGLCanvas getCanvas() {
 		return canvas;
 	}
 
 	public boolean syncShouldUpdateContext() {
 		boolean result;
-		synchronized (this) {
+		synchronized ( this ) {
 			result = canvas.syncShouldUpdateContext() || should_update;
 			should_update = false;
 		}
@@ -222,12 +224,13 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	}
 
 	private class Reshaper implements Runnable {
+
 		private final int x;
 		private final int y;
 		private final int width;
 		private final int height;
 
-		public Reshaper(int x, int y, int width, int height) {
+		Reshaper(int x, int y, int width, int height) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
@@ -255,9 +258,10 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	}
 
 	private class CursorSetter implements Runnable {
+
 		private final java.awt.Cursor awt_cursor;
 
-		public CursorSetter(java.awt.Cursor awt_cursor) {
+		CursorSetter(java.awt.Cursor awt_cursor) {
 			this.awt_cursor = awt_cursor;
 		}
 

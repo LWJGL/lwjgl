@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -49,9 +49,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
 
 final class MouseEventQueue extends EventQueue implements MouseListener, MouseMotionListener, MouseWheelListener {
-	private final static int WHEEL_SCALE = 120;
-	public final static int NUM_BUTTONS = 3;
-	private final static int EVENT_SIZE = 5;
+
+	private static final int WHEEL_SCALE = 120;
+	public static final int NUM_BUTTONS = 3;
+	private static final int EVENT_SIZE = 5;
 
 	private final int width;
 	private final int height;
@@ -75,7 +76,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	/** Buttons array */
 	private final byte[] buttons = new byte[NUM_BUTTONS];
 
-	public MouseEventQueue(int width, int height) {
+	MouseEventQueue(int width, int height) {
 		super(EVENT_SIZE);
 		this.width = width;
 		this.height = height;
@@ -103,7 +104,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 
 	private boolean putMouseEvent(int button, int state, int dz) {
-		if (grabbed)
+		if ( grabbed )
 			return putMouseEventWithCoords(button, state, 0, 0, dz);
 		else
 			return putMouseEventWithCoords(button, state, last_x, last_y, dz);
@@ -119,7 +120,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 
 	public synchronized void poll(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
-		if (grabbed) {
+		if ( grabbed ) {
 			coord_buffer.put(0, accum_dx);
 			coord_buffer.put(1, accum_dy);
 		} else {
@@ -135,7 +136,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	private synchronized void setCursorPos(int x, int y) {
 		y = transformY(y);
-		if (grabbed)
+		if ( grabbed )
 			return;
 		int dx = x - last_x;
 		int dy = y - last_y;
@@ -148,16 +149,16 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	public void mouseClicked(MouseEvent e) {
 	}
-	
+
 	public void mouseEntered(MouseEvent e) {
 	}
-	
+
 	public void mouseExited(MouseEvent e) {
 	}
-	
+
 	private void handleButton(MouseEvent e) {
 		byte button;
-		switch (e.getButton()) {
+		switch ( e.getButton() ) {
 			case MouseEvent.BUTTON1:
 				button = (byte)0;
 				break;
@@ -171,7 +172,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 				throw new IllegalArgumentException("Not a valid button: " + e.getButton());
 		}
 		byte state;
-		switch (e.getID()) {
+		switch ( e.getID() ) {
 			case MouseEvent.MOUSE_PRESSED:
 				state = 1;
 				break;
@@ -192,13 +193,13 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		buttons[button] = state;
 		putMouseEvent(button, state, 0);
 	}
-	
+
 	public void mouseReleased(MouseEvent e) {
 		handleButton(e);
 	}
-	
+
 	private void handleMotion(MouseEvent e) {
-		if (grabbed) {
+		if ( grabbed ) {
 			updateDeltas();
 		} else {
 			setCursorPos(e.getX(), e.getY());
@@ -208,24 +209,24 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	public void mouseDragged(MouseEvent e) {
 		handleMotion(e);
 	}
-	
-	public void	mouseMoved(MouseEvent e) {
+
+	public void mouseMoved(MouseEvent e) {
 		handleMotion(e);
 	}
-	
+
 	private synchronized void handleWheel(int amount) {
 		accum_dz += amount;
 		putMouseEvent(-1, 0, amount);
 	}
-	
+
 	private void updateDeltas() {
-		if (!grabbed)
+		if ( !grabbed )
 			return;
-		synchronized (this) {
+		synchronized ( this ) {
 			((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
 			int dx = delta_buffer.get(0);
 			int dy = -delta_buffer.get(1);
-			if (dx != 0 || dy != 0) {
+			if ( dx != 0 || dy != 0 ) {
 				putMouseEventWithCoords(-1, 0, dx, dy, 0);
 				accum_dx += dx;
 				accum_dy += dy;
@@ -233,8 +234,8 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		}
 	}
 
-	public void	mouseWheelMoved(MouseWheelEvent e) {
-		int wheel_amount = -e.getWheelRotation()*WHEEL_SCALE;
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		int wheel_amount = -e.getWheelRotation() * WHEEL_SCALE;
 		handleWheel(wheel_amount);
 	}
 }

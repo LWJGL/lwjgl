@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -34,12 +34,12 @@ package org.lwjgl.opengl;
 /**
  * This is the abstract class for a Display in LWJGL. LWJGL displays have some
  * peculiar characteristics:
- * 
+ *
  * - the display may be closeable by the user or operating system, and may be minimized
  * by the user or operating system
  * - only one display may ever be open at once
  * - the operating system may or may not be able to do fullscreen or windowed displays.
- * 
+ *
  * @author foo
  */
 
@@ -57,11 +57,11 @@ import org.lwjgl.input.Mouse;
 public final class Display {
 
 	/** The display implementor */
-	private final static DisplayImplementation display_impl;
+	private static final DisplayImplementation display_impl;
 
 	/** The initial display mode */
-	private final static DisplayMode initial_mode;
-	
+	private static final DisplayMode initial_mode;
+
 	/** The current display mode, if created */
 	private static DisplayMode current_mode;
 
@@ -85,10 +85,10 @@ public final class Display {
 
 	/** VSync */
 	private static boolean vsync;
-	
+
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static Display context;
-	
+
 	static {
 		Sys.initialize();
 		display_impl = createDisplayImplementation();
@@ -100,7 +100,7 @@ public final class Display {
 		});
 	}
 
-	private final static DisplayImplementation createDisplayImplementation() {
+	private static DisplayImplementation createDisplayImplementation() {
 		String class_name;
 		String os_name = System.getProperty("os.name");
 		if (os_name.startsWith("Linux")) {
@@ -284,12 +284,14 @@ public final class Display {
 		}
 		timeThen = timeNow;
 	}
-	
+
+	private static long timeLate;
+
 	/**
 	 * Alternative sync method which works better on triple-buffered GL displays.
+	 *
 	 * @param fps The desired frame rate, in frames per second
 	 */
-	private static long timeLate;
 	public static void sync2(int fps) {
 		long gapTo = Sys.getTimerResolution() / fps + timeThen;
 		timeNow = Sys.getTime();
@@ -321,7 +323,7 @@ public final class Display {
 		return (fullscreen) ? 0 :  y;
 	}*/
 
-	
+
 	/**
 	 * @return the title of the window
 	 */
@@ -417,7 +419,7 @@ public final class Display {
 	 * every frame regardless, you can ignore this flag altogether. If you are
 	 * trying to be kind to other processes you can check this flag and only
 	 * redraw when it returns true. The flag is cleared when update() or isDirty() is called.
-	 * 
+	 *
 	 * @return true if the window has been damaged by external changes
 	 * and needs to repaint itself
 	 */
@@ -436,7 +438,7 @@ public final class Display {
 	public static void processMessages() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot update uncreated window");
-		
+
 		display_impl.update();
 	}
 
@@ -448,13 +450,13 @@ public final class Display {
 	public static void update() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot update uncreated window");
-		
+
 		// We paint only when the window is visible or dirty
 		if (isVisible() || isDirty()) {
 			Util.checkGLError();
 			display_impl.swapBuffers();
 		}
-		
+
 		processMessages();
 
 		// Poll the input devices while we're here
@@ -480,7 +482,7 @@ public final class Display {
 		display_impl.makeCurrent();
 		GLContext.useContext(context);
 	}
-	
+
 	/**
 	 * Create the OpenGL context. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
@@ -602,7 +604,7 @@ public final class Display {
 		if (!isCreated()) {
 			return;
 		}
-		
+
 		destroyWindow();
 		display_impl.destroyContext();
 		GLContext.unloadOpenGLLibrary();
@@ -623,7 +625,7 @@ public final class Display {
 		display_impl.resetDisplayMode();
 		current_mode = initial_mode;
 	}
-	
+
 	/**
 	 * @return the unique Display context (or null, if the Display has not been created)
 	 */
@@ -654,7 +656,7 @@ public final class Display {
 	 * The window is clamped to remain entirely on the screen. If you attempt
 	 * to position the window such that it would extend off the screen, the window
 	 * is simply placed as close to the edge as possible.
-	 * @param x, y The new window location
+	 * @param x , y The new window location
 	 */
 	public static void setLocation(int x, int y) {
 		if (fullscreen) {
@@ -670,9 +672,9 @@ public final class Display {
 
 		// cache position
 		Display.x = x;
-		Display.y = y;   
+		Display.y = y;
 	}
-	
+
 	/**
 	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",
 	 * "Radeon9700". If the adapter cannot be determined, this function returns null.

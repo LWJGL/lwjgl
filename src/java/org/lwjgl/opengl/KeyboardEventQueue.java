@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -44,14 +44,15 @@ import java.nio.ByteBuffer;
 import org.lwjgl.input.Keyboard;
 
 final class KeyboardEventQueue extends EventQueue implements KeyListener {
-	private final static int[] KEY_MAP = new int[0xffff];
-	private final static int EVENT_SIZE = 3;
+
+	private static final int[] KEY_MAP = new int[0xffff];
+	private static final int EVENT_SIZE = 3;
 
 	private final byte[] key_states = new byte[Keyboard.KEYBOARD_SIZE];
-	
+
 	/** Event scratch array */
 	private final int[] event = new int[EVENT_SIZE];
-	
+
 	static {
 		KEY_MAP[KeyEvent.VK_0] = Keyboard.KEY_0;
 		KEY_MAP[KeyEvent.VK_1] = Keyboard.KEY_1;
@@ -255,13 +256,13 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		key_down_buffer.put(key_states);
 		key_down_buffer.position(old_position);
 	}
-	
+
 	private synchronized void handleKey(int key_code, byte state, char character) {
 		int key_code_mapped = KEY_MAP[key_code];
-		if (character == KeyEvent.CHAR_UNDEFINED)
+		if ( character == KeyEvent.CHAR_UNDEFINED )
 			character = Keyboard.CHAR_NONE;
 		/* Ignore repeating presses */
-		if (key_states[key_code_mapped] == state)
+		if ( key_states[key_code_mapped] == state )
 			return;
 		key_states[key_code_mapped] = state;
 		int key_int_char = ((int)character) & 0xffff;

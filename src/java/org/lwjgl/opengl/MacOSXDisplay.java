@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -51,7 +51,6 @@ import java.lang.reflect.Proxy;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +58,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 final class MacOSXDisplay implements DisplayImplementation {
-	private final static int GAMMA_LENGTH = 256;
+	private static final int GAMMA_LENGTH = 256;
 
 	private MacOSXFrame frame;
 	private MouseEventQueue mouse_queue;
@@ -68,11 +67,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	/* States */
 	private boolean close_requested;
-	
-	public MacOSXDisplay() {
+
+	MacOSXDisplay() {
 		new MacOSXApplicationListener();
 	}
-	
+
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		hideUI(fullscreen);
 		close_requested = false;
@@ -100,7 +99,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		}
 		hideUI(false);
 	}
-	
+
 	public int getGammaRampLength() {
 		return GAMMA_LENGTH;
 	}
@@ -110,11 +109,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public String getAdapter() {
 		return null;
 	}
-	
+
 	public String getVersion() {
 		return null;
 	}
-	
+
 	private boolean equals(java.awt.DisplayMode awt_mode, DisplayMode mode) {
 		return awt_mode.getWidth() == mode.getWidth() && awt_mode.getHeight() == mode.getHeight()
 			&& awt_mode.getBitDepth() == mode.getBitsPerPixel() && awt_mode.getRefreshRate() == mode.getFrequency();
@@ -129,7 +128,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			}
 		throw new LWJGLException(mode + " is not supported");
 	}
-	
+
 	public void resetDisplayMode() {
 		if (MacOSXFrame.getDevice().getFullScreenWindow() != null)
 			MacOSXFrame.getDevice().setFullScreenWindow(null);
@@ -138,7 +137,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	private native void restoreGamma();
-	
+
 	private DisplayMode createLWJGLDisplayMode(java.awt.DisplayMode awt_mode) {
 		int bit_depth;
 		int refresh_rate;
@@ -154,11 +153,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 			refresh_rate = 0;
 		return new DisplayMode(awt_mode.getWidth(), awt_mode.getHeight(), bit_depth, refresh_rate);
 	}
-	
+
 	public DisplayMode init() {
 		return createLWJGLDisplayMode(MacOSXFrame.getDevice().getDisplayMode());
 	}
-	
+
 	public DisplayMode[] getAvailableDisplayModes() {
 		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
 		List modes = new ArrayList();
@@ -169,11 +168,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 		modes.toArray(mode_list);
 		return mode_list;
 	}
-	
+
 	public void setTitle(String title) {
 		frame.syncSetTitle(title);
 	}
-	
+
 	public boolean isCloseRequested() {
 		boolean result;
 		synchronized (this) {
@@ -186,11 +185,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public boolean isVisible() {
 		return frame.syncIsVisible();
 	}
-	
+
 	public boolean isActive() {
 		return frame.syncIsActive();
 	}
-	
+
 	public boolean isDirty() {
 		return frame.getCanvas().syncIsDirty();
 	}
@@ -213,7 +212,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			warpCursor();
 		}
 	}
-	
+
 	private void warpCursor() {
 		if (mouse_queue != null && mouse_queue.isGrabbed()) {
 			Rectangle bounds = frame.syncGetBounds();
@@ -248,7 +247,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public int getButtonCount() {
 		return MouseEventQueue.NUM_BUTTONS;
 	}
-	
+
 	public void createMouse() {
 		MacOSXGLCanvas canvas = frame.getCanvas();
 		this.mouse_queue = new MouseEventQueue(canvas.getWidth(), canvas.getHeight());
@@ -264,14 +263,14 @@ final class MacOSXDisplay implements DisplayImplementation {
 		canvas.removeMouseMotionListener(mouse_queue);
 		this.mouse_queue = null;
 	}
-	
+
 	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
 		mouse_queue.poll(coord_buffer, buttons_buffer);
 	}
-	
+
 	public void enableMouseBuffer() throws LWJGLException {
 	}
-	
+
 	public int readMouse(IntBuffer buffer, int buffer_position) {
 		assert buffer_position == buffer.position();
 		return mouse_queue.copyEvents(buffer);
@@ -300,13 +299,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 		      Componennt, it is reset to the default pointer cursor when the window is de-
 			  activated and the re-activated. The Cursor can not be reset to the custom cursor,
 			  with another setCursor.
-		   2. When the cursor is moving in the top pixel row (y = 0 in AWT coordinates) in fullscreen 
+		   2. When the cursor is moving in the top pixel row (y = 0 in AWT coordinates) in fullscreen
 		   	  mode, no mouse moved events are reported, even though mouse pressed/released and dragged
 			  events are reported
 		*/
 		return 0;
 	}
-	
+
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		Cursor awt_cursor = (Cursor)handle;
 		frame.syncSetCursor(awt_cursor);
@@ -328,7 +327,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		this.keyboard_queue = new KeyboardEventQueue();
 		canvas.addKeyListener(keyboard_queue);
 	}
-	
+
 	public void destroyKeyboard() {
 		/*
 		 * This line is commented out to work around AWT bug 4867453:
@@ -338,11 +337,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 		this.keyboard_queue = null;
 	}
-	
+
 	public void pollKeyboard(ByteBuffer keyDownBuffer) {
 		keyboard_queue.poll(keyDownBuffer);
 	}
-	
+
 	public int readKeyboard(IntBuffer buffer, int buffer_position) {
 		assert buffer_position == buffer.position();
 		return keyboard_queue.copyEvents(buffer);
@@ -350,7 +349,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void enableTranslation() throws LWJGLException {
 	}
-	
+
 	public void enableKeyboardBuffer() throws LWJGLException {
 	}
 
@@ -387,7 +386,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * This class captures com.apple.eawt.ApplicationEvents through reflection
 	 * to enable compilation on other platforms than Mac OS X
