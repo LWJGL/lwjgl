@@ -330,8 +330,11 @@ public final class GLContext {
 
 	private static void unloadStubs() {
 		Iterator exts_it = exts.keySet().iterator();
-		while (exts_it.hasNext())
-			resetNativeStubs((Class)exts_it.next());
+		while (exts_it.hasNext()) {
+			Class ext_class = (Class)exts_it.next();
+			resetNativeStubs(ext_class);
+		}
+		resetNativeStubs(org.lwjgl.opengl.GL11.class);
 	}
 
 	/**

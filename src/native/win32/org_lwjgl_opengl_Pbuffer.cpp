@@ -174,7 +174,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
   (JNIEnv *env, jclass clazz, jint handle)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)handle;
-	wglMakeCurrent(Pbuffer_info->Pbuffer_dc, Pbuffer_info->Pbuffer_context);
+	if (!wglMakeCurrent(Pbuffer_info->Pbuffer_dc, Pbuffer_info->Pbuffer_context))
+		throwException(env, "Could not make pbuffer context current");
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy

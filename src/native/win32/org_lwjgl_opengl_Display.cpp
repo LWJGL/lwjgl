@@ -561,7 +561,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetVSyncEnabled
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
   (JNIEnv *env, jclass clazz)
 {
-	wglMakeCurrent(hdc, hglrc);
+	BOOL result = wglMakeCurrent(hdc, hglrc);
+	if (!result)
+		throwException(env, "Could not make display context current");
 }
 
 /*
