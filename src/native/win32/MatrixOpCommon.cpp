@@ -90,9 +90,7 @@ MatrixSrc::MatrixSrc ( jint addr, jint s,
     record = new float[width * height];
     
     // vectors do not need to be transposed 
-    transpose = (t == JNI_TRUE) 
-                && (w != 1) 
-                && (h != 1);
+    transpose = (t == JNI_TRUE) && (w != 1) && (h != 1);
     
     if (transpose && (width != height))
         // only need temp storage for transpose if the matrix is not square
@@ -175,7 +173,7 @@ MatrixDst::MatrixDst (jint addr, jint s, jint w, jint h, jint e, jboolean t):
     else
         transpose_record = 0;
         
-    data_buffered = JNI_FALSE;
+    data_buffered   = JNI_FALSE;
     record_buffered = JNI_FALSE;
         
     record_offset = address - stride;
@@ -244,8 +242,9 @@ void MatrixDst::createBuffer()
 float * MatrixDst::nextMatrix()
 {
     record_offset = &record_offset[stride];
+    int alignment = ((unsigned int)(record_offset)) & FLOAT_ALIGNMENT;
     
-    if ((((unsigned int)(record_offset)) & FLOAT_ALIGNMENT) || transpose || record_buffered)
+    if (transpose || record_buffered || alignment)
     {
         last_record_in_temp = JNI_TRUE;
         return record;
@@ -276,7 +275,7 @@ void MatrixDst::writeComplete()
         }
         else if (transpose)
         {
-            transposeMatrix(record, (float *) record_offset,  width, height);
+            transposeMatrix(record, (float *) &record_offset[0],  width, height);
         }
         else
             memcpy (record_offset, record, record_size * sizeof(jfloat));

@@ -9,10 +9,30 @@
  
 
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Utility Functions
+////////////////////////////////////////////////////////////////////////////////////////
+
 #define FLOAT_ALIGNMENT 0x00000003
 
+// 23 bit mantisa on a float (we need error for checking if two nums are equal)
+// for now use error of 1/2^18, this could be refined up to 1/2^22 if needed
+#define FLOATING_POINT_ERROR (1.0f/262144.0f)
+
+// check if two numbers are approximately equal, used when floating point errors
+// occur.  Should NEVER check to see if two floats are identical
+
+inline bool approxEqual(float a, float b)
+{
+    a -= b;
+    a = (a < 0) ? -a: a;
+    return (a < FLOATING_POINT_ERROR);
+}
+
 float determinant (const float * matrix , int side);
-void subMatrix (const float * src, int side, float * dst , int col_omit, int row_omit);
+void subMatrix    (const float * src, int side, float * dst , int col_omit, int row_omit);
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Matrix

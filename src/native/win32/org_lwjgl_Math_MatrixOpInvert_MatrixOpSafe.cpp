@@ -39,14 +39,13 @@
  * @version $Revision$
  */
  
- 
-#ifdef _DEBUG
-#include <stdio.h>
-#endif
-
 #include <windows.h>
 #include "org_lwjgl_Math_MatrixOpInvert_MatrixOpSafe.h"
 #include "MatrixOpCommon.h"
+
+#ifdef _DEBUG
+#include <stdio.h>
+#endif
 
 /*
  * Class:     org_lwjgl_Math_MatrixOpInvert_MatrixOpSafe
@@ -68,6 +67,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpSafe
 	jboolean transposeDest
   )
 {
+
+        if (transposeSource == transposeDest)
+        {
+            transposeSource = JNI_FALSE;
+            transposeDest   = JNI_FALSE;
+        }
+        
         // We are under the assumption that sourceWidth == sourceHeight and the matrix 
         // defined within is invertable
         
@@ -90,39 +96,82 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpSafe
             float det = determinant(srcMatrix, source.width);
             
 #ifdef _DEBUG
-            printf("Determinant: %f\n", det);
+            printf("Matrix Determinant: %f\n", det);
+            printf("Matrix Determinant - 1: %f\n", det-1);
+            printf("FLOATING POINT ERROR: %f\n", FLOATING_POINT_ERROR);
 #endif
-
-            float sign;
             
-            for (int col = 0; col < source.width; col++)
+            // use approxEqual to avoid direct comparisons
+            if (approxEqual(det,1) || approxEqual(det, -1))
             {
-                /*
-                    Maintain sign:
-                    
-                    + - + - ...
-                    - + - + ..
-                    + - + - ..
-                    - + - + ..
-                    : : : : \
-                */
             
-                sign = (col & 1) ? -1.0f : 1.0f;
+#ifdef _DEBUG
+                printf("Matrix is Orthogonal\n");
+#endif
+                /* this matrix is orthogonal
                 
-                for (int row = 0; row < source.height; row++)
+                    since   inv(M) * M = I
+                    when orthogonal
+                            trans(M) * M = I
+                            
+                    proper orthogonal
+                            inv(M) = trans(M)
+                    improper orthogonal
+                            inv(M) = -trans(M)
+                */
+                
+                if (approxEqual(det, 1))
                 {
-                    // get the sub matrix
-                    subMatrix(srcMatrix, source.width, temp_matrix, col, row);
-                    
-                    // transpose the result
-                    destMatrix[col + row * source.height] 
-                            = (sign / det) * determinant(temp_matrix, temp_side); 
-                    
-                    // swap signs
-                    sign = (sign == 1) ? -1.0f : 1.0f;
+                    // proper orthogonal
+                    int srcIndex = 0;
+                    for (int col = 0; col < source.width; col++)
+                        for (int row = 0; row < source.height; row++)
+                            destMatrix[col + row * source.width] = srcMatrix[srcIndex++];
+                }
+                else
+                {
+                    // improper orthogonal
+                    int srcIndex = 0;
+                    for (int col = 0; col < source.width; col++)
+                        for (int row = 0; row < source.height; row++)
+                            destMatrix[col + row * source.width] = -srcMatrix[srcIndex++];
                 }
             }
-    
+            else
+            {
+                
+                float sign;
+                
+                for (int col = 0; col < source.width; col++)
+                {
+                    /*
+                        Maintain sign:
+                        
+                        + - + - ...
+                        - + - + ..
+                        + - + - ..
+                        - + - + ..
+                        : : : : \
+                    */
+                
+                    sign = (col & 1) ? -1.0f : 1.0f;
+                    
+                    for (int row = 0; row < source.height; row++)
+                    {
+                        // get the sub matrix
+                        subMatrix(srcMatrix, source.width, temp_matrix, col, row);
+                        
+                        // transpose the result
+                        destMatrix[col + row * source.height] 
+                                = (sign / det) * determinant(temp_matrix, temp_side); 
+                        
+                        // swap signs
+                        sign = (sign == 1) ? -1.0f : 1.0f;
+                    }
+                }
+        
+            }
             dest.writeComplete();
+
         }
 }
