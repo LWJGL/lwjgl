@@ -290,7 +290,6 @@ public final class GLContext {
 			int gl_prefix_index = extension_string.indexOf("GL_");
 			if (gl_prefix_index == -1)
 				continue;
-			System.out.println(extension_string);
 			if (extension_string.equals("GL_EXT_texture_compression_s3tc")) {
 				// Special workaround
 				addExtensionClass(exts, exts_names, "EXTTextureCompressionS3TC", "GL_EXT_texture_compression_s3tc");
