@@ -1,0 +1,432 @@
+2003-03-16  elias_naur
+	* native/common/org_lwjgl_opengl_GL.cpp 1.6:
+	* native/configure.in 1.8:
+	* native/configure.in 1.9:
+		Fixed runtime breakage on linux
+
+2003-03-16  matzon
+	* java/org/lwjgl/test/openal/OpenALCreationTest.java 1.1:
+		initial commit of OpenAL create/destroy test
+
+	* java/org/lwjgl/test/input/MouseTest.java 1.4:
+		fix: escape testing
+
+	* java/org/lwjgl/test/input/MouseTest.java 1.5:
+		fix: destroy keyboard upon exit
+
+	* java/org/lwjgl/test/input/MouseCreationTest.java 1.2:
+		fix: get 60Hz
+		fix: keep polygon within window
+
+	* java/org/lwjgl/test/input/MouseCreationTest.java 1.3:
+		fix: stop checking Hz
+
+2003-03-16  cix_foo
+	* native/common/extal.c 1.8:
+	* native/common/org_lwjgl_opengl_CoreGL.cpp 1.7:
+		*** empty log message ***
+
+2003-03-13  cix_foo
+	* native/common/checkGLerror.h 1.7:
+	* native/common/org_lwjgl_opengl_GL.cpp 1.3:
+	* native/common/org_lwjgl_opengl_GL.cpp 1.5:
+		*** empty log message ***
+
+2003-03-13  matzon
+	* native/common/org_lwjgl_opengl_GL.cpp 1.4:
+		fix: compile bug, since glx* didn't return value
+
+2003-03-08  elias_naur
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.16:
+		Disable linux key repeat while Keyboard is created - match
+		win32 behavior
+
+	* native/linux/org_lwjgl_Display.cpp 1.23:
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.17:
+		Moved disabling of repeat rate to Display
+
+2003-03-07  matzon
+	* native/win32/org_lwjgl_input_Controller.cpp 1.8:
+		fix: removed GlobalRef
+		fix: now sets fields to JNI_TRUE/JNI_FALSE respectively
+
+2003-03-07  cix_foo
+	* native/common/org_lwjgl_opengl_CoreGL.cpp 1.6:
+		*** empty log message ***
+
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.14:
+		Tweaked but little else
+
+2003-03-06  matzon
+	* native/win32/org_lwjgl_input_Controller.cpp 1.7:
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.12:
+		wip fix: buttons array now being ref'ed from native side to
+		avoid GC'ing
+
+2003-03-06  cix_foo
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.13:
+		*** empty log message ***
+
+2003-03-06  elias_naur
+	* java/org/lwjgl/opengl/GL.java 1.17:
+	* native/common/org_lwjgl_opengl_GL.cpp 1.2:
+	* native/common/org_lwjgl_opengl_GL.h 1.3:
+	* native/win32/org_lwjgl_Display.cpp 1.28:
+		added glXAllocateMemoryNV/glXFreeMemoryNV
+
+	* native/common/org_lwjgl_opengl_CoreGL.cpp 1.5:
+		*** empty log message ***
+
+2003-03-04  matzon
+	* native/win32/org_lwjgl_Display.cpp 1.27:
+		fix: won't be needing hashmaps from native side
+
+2003-03-03  cix_foo
+	* java/org/lwjgl/DisplayMode.java 1.8:
+		*** empty log message ***
+
+2003-03-03  matzon
+	* native/common/org_lwjgl_Display.h 1.7:
+	* native/win32/org_lwjgl_Display.cpp 1.26:
+		fix: small beautification
+
+	* java/org/lwjgl/Display.java 1.17:
+		fix: possible NPE evaded
+
+	* java/org/lwjgl/Display.java 1.16:
+	* native/common/org_lwjgl_Display.h 1.6:
+	* native/linux/org_lwjgl_Display.cpp 1.22:
+	* native/win32/org_lwjgl_Display.cpp 1.25:
+		fix: now enumerates multiple displaydevices, if available
+
+2003-03-02  matzon
+	* java/org/lwjgl/opengl/GL.java 1.16:
+		fix: only output wgl if debug
+
+	* java/org/lwjgl/test/input/MouseTest.java 1.3:
+		simple mouse test added
+
+2003-03-01  matzon
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.13:
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.11:
+		fix: no longer fatal to not acquire input
+
+2003-02-26  elias_naur
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.17:
+		Linux mouse buttons now match those on win32
+
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.18:
+		Linux mouse buttons now match those on win32 (again)
+
+2003-02-24  elias_naur
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.16:
+		linux scroller now match win32 behaviour more precisely -
+		scrolling reversed and scaled 120
+
+2003-02-20  cix_foo
+	* java/org/lwjgl/vector/Vector3f.java 1.10:
+	* native/common/org_lwjgl_opengl_CoreGL.cpp 1.4:
+		*** empty log message ***
+
+2003-02-20  elias_naur
+	* native/linux/org_lwjgl_Display.cpp 1.20:
+		Fixed bug when a X display connection cannot be established
+
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.12:
+		Fixed a buffer overflow problem in dåz
+
+	* native/linux/org_lwjgl_Display.cpp 1.21:
+		Fixed bug when a X display connection cannot be established (
+		again)
+
+2003-02-17  elias_naur
+	* java/org/lwjgl/opengl/CoreGL.java 1.11:
+	* native/common/org_lwjgl_opengl_CoreGL.cpp 1.3:
+	* native/common/org_lwjgl_opengl_CoreGL.h 1.7:
+		Added glMultiDrawArrays and glMultiDrawElements
+
+2003-02-14  elias_naur
+	* native/linux/org_lwjgl_Display.cpp 1.19:
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.15:
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.15:
+	* native/linux/org_lwjgl_opengl_BaseGL.cpp 1.8:
+		Don't fail create if grab doesn't succeed on the first try
+
+2003-02-13  elias_naur
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.11:
+		replaced PeekMessage() -> handleMessages()
+
+2003-02-12  elias_naur
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.10:
+		Don't allow the mouse to drift when failing poll
+
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.10:
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.9:
+		Don't return -1 on keyboard read failure
+
+	* native/win32/org_lwjgl_Display.cpp 1.23:
+		added check for software only modes
+
+	* native/win32/org_lwjgl_Display.cpp 1.24:
+		Don't allow to show the window menu
+
+	* native/linux/org_lwjgl_Display.cpp 1.18:
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.14:
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.14:
+		Added preliminary alt-tab support on linux
+
+	* native/win32/org_lwjgl_opengl_BaseGL.cpp 1.13:
+		replaced wglSwapLayerBuffers -> SwapBuffers
+
+2003-02-10  matzon
+	* java/org/lwjgl/Display.java 1.15:
+	* java/org/lwjgl/DisplayMode.java 1.7:
+	* java/org/lwjgl/input/Controller.java 1.3:
+	* java/org/lwjgl/input/Mouse.java 1.13:
+		formatting and better javadoc
+
+	* native/win32/org_lwjgl_Display.cpp 1.22:
+		fix: releasing device context for window, as per msdn docs
+
+2003-02-10  cix_foo
+	* native/common/org_lwjgl_opengl_CoreGL.cpp 1.2:
+		Fixed CHECK ERROR bug
+
+2003-02-09  elias_naur
+	* native/linux/org_lwjgl_Display.cpp 1.16:
+		linux windows can't be resized now
+
+	* native/linux/org_lwjgl_Display.cpp 1.17:
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.13:
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.13:
+	* native/linux/org_lwjgl_opengl_BaseGL.cpp 1.7:
+		Added closeRequested support to linux
+
+2003-02-09  matzon
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.9:
+		fix: behave with Controller
+
+	* native/win32/org_lwjgl_input_Controller.cpp 1.6:
+		fix: using own DI instance since we've been horking the one created from display, which when not horked cannot be used, since it does not work with dx3+
+		fix: changed to use firstime initialization logic like mouse
+
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.8:
+		mod: some formatting
+		fix: allow creation of mouse more than one time
+
+	* java/org/lwjgl/Display.java 1.14:
+		mod: changed closeRequested to follow isMinimized()
+
+	* java/org/lwjgl/test/input/MouseCreationTest.java 1.1:
+	* java/org/lwjgl/test/input/MouseTest.java 1.2:
+		MouseTest renamed to MouseCreationTest
+
+	* java/org/lwjgl/test/input/ControllerCreationTest.java 1.1:
+		add: simple controller test that tests multiple creation
+
+	* java/org/lwjgl/test/input/MouseTest.java 1.1:
+		add: simple mouse test that tests multiple creation
+
+2003-02-08  elias_naur
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.12:
+		Updated linux files to recent mouse and display changes
+
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.8:
+		Removed dead code
+
+	* native/linux/org_lwjgl_Display.cpp 1.15:
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.12:
+	* native/linux/org_lwjgl_input_Mouse.cpp 1.11:
+	* native/linux/org_lwjgl_opengl_BaseGL.cpp 1.6:
+		Added isMinimized to linux
+
+2003-02-08  matzon
+	* java/org/lwjgl/Display.java 1.13:
+	* native/common/org_lwjgl_Display.h 1.5:
+	* native/win32/org_lwjgl_Display.cpp 1.20:
+		add: close button enabled
+
+	* native/win32/org_lwjgl_Display.cpp 1.21:
+	* native/win32/org_lwjgl_opengl_BaseGL.cpp 1.12:
+		fix: moved handleMessages to its rightfull place
+
+	* native/win32/org_lwjgl_input_Controller.cpp 1.5:
+		mod: renaming of most methods/fields due to name clashes with Mouse
+		fix: check for DIERR_NOTACQUIRED when loosing focus
+		fix: check for controller failed, and would crash VM if no controller could be found
+
+	* java/org/lwjgl/input/Mouse.java 1.12:
+	* native/common/org_lwjgl_input_Mouse.h 1.3:
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.7:
+		new Mouse implementation, rewritten to better fit Controller structure
+
+	* native/win32/org_lwjgl_Display.cpp 1.18:
+		added minimize button, disabling close button since we have no
+		mechnism to notify the user of a close
+
+	* native/win32/org_lwjgl_Display.cpp 1.19:
+		fix: make mouse actually behave!
+
+	* java/org/lwjgl/test/opengl/Game.java 1.9:
+		fix: updated to reflect changes in new mouse
+
+2003-02-07  cix_foo
+	* java/org/lwjgl/Display.java 1.12:
+	* native/common/org_lwjgl_Display.h 1.4:
+	* native/win32/org_lwjgl_Display.cpp 1.16:
+	* native/win32/org_lwjgl_Display.cpp 1.17:
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.7:
+	* native/win32/org_lwjgl_input_Mouse.cpp 1.6:
+	* native/win32/org_lwjgl_opengl_BaseGL.cpp 1.11:
+		*** empty log message ***
+
+2003-02-06  elias_naur
+	* native/linux/org_lwjgl_Display.cpp 1.14:
+		Added window title bars to linux
+
+2003-02-06  cix_foo
+	* java/org/lwjgl/Display.java 1.11:
+	* java/org/lwjgl/test/openal/ALCTest.java 1.5:
+	* java/org/lwjgl/test/openal/MovingSoundTest.java 1.6:
+	* java/org/lwjgl/test/opengl/Game.java 1.8:
+	* java/org/lwjgl/test/opengl/Grass.java 1.8:
+	* native/common/org_lwjgl_Display.h 1.3:
+	* native/win32/org_lwjgl_Display.cpp 1.15:
+		*** empty log message ***
+
+2003-02-02  elias_naur
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.11:
+		Added missing linux keyboard mapping
+
+2003-01-31  elias_naur
+	* native/win32/org_lwjgl_Display.cpp 1.14:
+		Added win32 alpha check
+
+2003-01-30  gregorypierce
+	* native/macosx/RenderingContext.cpp 1.6:
+	* native/macosx/RenderingContext.h 1.6:
+	* native/macosx/org_lwjgl_Display.cpp 1.8:
+	* native/macosx/org_lwjgl_opengl_BaseGL.cpp 1.5:
+		Added changes to support the selection of display modes on OSX in multiple monitor configurations. Currently defaults to only getting the display modes of display[0] - the primary display since lwjgl doesn't yet support clean multi monitor configuration programatically.
+		This code based off the Apple provided sample code at http://developer.apple.com/samplecode/Sample_Code/Graphics_2D/Mode.htm
+
+2003-01-29  matzon
+	* java/org/lwjgl/test/opengl/Game.java 1.7:
+		cleaned up
+		removed some stuff (specifically buffered mouse mode)
+
+2003-01-23  matzon
+	* java/org/lwjgl/test/input/ControllerTest.java 1.2:
+	* native/win32/org_lwjgl_input_Controller.cpp 1.2:
+		new and improved version - w00t
+
+	* native/win32/org_lwjgl_input_Controller.cpp 1.3:
+		small comment on using z axis as slider
+
+	* java/org/lwjgl/input/Controller.java 1.2:
+	* java/org/lwjgl/test/input/ControllerTest.java 1.3:
+	* native/win32/org_lwjgl_input_Controller.cpp 1.4:
+		added rotational axis too
+
+2003-01-12  elias_naur
+	* native/linux/org_lwjgl_Display.cpp 1.13:
+		Bug fix
+
+2003-01-12  matzon
+	* java/org/lwjgl/test/openal/WaveData.java 1.5:
+		rem: not needed import
+
+2003-01-11  elias_naur
+	* native/linux/Makefile.am 1.2:
+	* native/linux/org_lwjgl_input_Controller.cpp 1.1:
+	* native/linux/org_lwjgl_input_GamePad.cpp 1.2:
+	* native/linux/org_lwjgl_input_Joystick.cpp 1.2:
+	* native/linux/org_lwjgl_input_Keyboard.cpp 1.10:
+		Fixed linux compile
+
+	* java/org/lwjgl/input/Keyboard.java 1.16:
+	* native/common/org_lwjgl_input_Keyboard.h 1.2:
+	* native/win32/org_lwjgl_input_Keyboard.cpp 1.6:
+		Added keyboard translation to linux and win32
+
+2003-01-03  matzon
+	* java/org/lwjgl/input/Controller.java 1.1:
+	* java/org/lwjgl/input/GamePad.java 1.8:
+	* java/org/lwjgl/input/Joystick.java 1.13:
+	* java/org/lwjgl/test/input/ControllerTest.java 1.1:
+	* java/org/lwjgl/test/input/JoystickTest.java 1.3:
+	* native/common/org_lwjgl_input_Controller.h 1.1:
+	* native/common/org_lwjgl_input_GamePad.h 1.3:
+	* native/common/org_lwjgl_input_Joystick.h 1.6:
+	* native/win32/org_lwjgl_input_Controller.cpp 1.1:
+	* native/win32/org_lwjgl_input_GamePad.cpp 1.3:
+	* native/win32/org_lwjgl_input_Joystick.cpp 1.7:
+		Joystick replaced by Controller
+		GamePad no modelled as a controller
+
+	* java/org/lwjgl/test/openal/WaveData.java 1.4:
+		fix: better comments on create(filepath)
+
+	* java/org/lwjgl/test/openal/WaveData.java 1.3:
+		mod: now using getResourceAsStream to load, since this enables
+		us to load from ./ and from classpath
+
+2003-01-02  gregorypierce
+	* native/common/extal.h 1.15:
+	* native/common/extgl.c 1.7:
+	* native/common/extgl.h 1.9:
+	* native/macosx/RenderingContext.cpp 1.5:
+	* native/macosx/RenderingContext.h 1.5:
+		Clean OSX release, changed the platform flag to TARGET_OS_MAC
+		to match what's in OpenAL so everything builds smootly together.
+
+	* native/macosx/org_lwjgl_Sys.cpp 1.3:
+		Added in timer support
+
+2003-01-01  gregorypierce
+	* native/common/extgl.h 1.8:
+	* native/macosx/RenderingContext.cpp 1.4:
+	* native/macosx/RenderingContext.h 1.4:
+		Moved typedefs into extgl.h so that OpenGL symbols not multiply
+		defined - removes 650 warnings. Removed all imports of agl.h
+		and gl.h. Removed OpenGL.framework from the project
+
+	* native/common/extal.h 1.14:
+		Quick change for OSX support
+
+	* native/common/extgl.c 1.6:
+	* native/common/extgl.h 1.7:
+		Changes to support dynamic loads on the mac and finish the
+		initial build
+
+2002-12-30  gregorypierce
+	* native/macosx/RenderingContext.cpp 1.2:
+	* native/macosx/RenderingContext.h 1.2:
+	* native/macosx/org_lwjgl_Display.cpp 1.5:
+	* native/macosx/org_lwjgl_Sys.cpp 1.2:
+	* native/macosx/org_lwjgl_input_Keyboard.cpp 1.3:
+	* native/macosx/org_lwjgl_input_Mouse.cpp 1.2:
+	* native/macosx/org_lwjgl_opengl_BaseGL.cpp 1.2:
+		Changes to bring in minimal functionality of the OSX port. 
+		Still needs virtual function definitions before GL functions
+		can be called properly.
+
+	* native/common/extgl.c 1.4:
+	* native/common/extgl.h 1.4:
+		Changes to allow more than just Windows and UNIX build targets
+		 Adds in the _X11 define for the Unix boys and will include the
+		_OSX define to handle stuff for OSX.
+
+	* native/common/extgl.h 1.6:
+		Removed typo - sorry
+
+	* native/common/extgl.c 1.5:
+	* native/common/extgl.h 1.5:
+	* native/macosx/org_lwjgl_Display.cpp 1.6:
+	* native/macosx/org_lwjgl_opengl_BaseGL.cpp 1.3:
+		Updated to include the dynamic loading of the OpenGL.framework
+		and use function pointers so OpenGL functions can be called.
+
+2002-12-30  elias_naur
+	* native/configure.in 1.7:
+		Added -D_X11 to c flags in linux
