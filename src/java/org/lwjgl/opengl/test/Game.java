@@ -39,6 +39,8 @@
  * @version $Revision$
  */
 
+package org.lwjgl.opengl.test;
+
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.input.*;
