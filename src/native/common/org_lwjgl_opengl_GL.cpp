@@ -4080,10 +4080,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightusvARB(JNIEnv * env, jobje
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_glXAllocateMemoryNV(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jfloat p3)
 {
 #ifdef _X11
+	CHECK_EXISTS(glXAllocateMemoryNV)
 	jint ret = (jint) glXAllocateMemoryNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	return ret;
 #else
-  return -1;
+	CHECK_EXISTS(NULL)
+	return 0;
 #endif
 }
 
@@ -4095,6 +4097,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glXFreeMemoryNV(JNIEnv * env, jc
 {
 #ifdef _X11
 	glXFreeMemoryNV((void *) p0);
+#else
+	CHECK_EXISTS(NULL)
 #endif
 }
 
@@ -4108,6 +4112,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglAllocateMemoryNV(JNIEnv * env
 	CHECK_EXISTS(wglAllocateMemoryNV)
 	jint ret = (jint) wglAllocateMemoryNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	return ret;
+#else
+	CHECK_EXISTS(NULL)
+	return 0;
 #endif
 }
 
@@ -4121,6 +4128,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglBindTexImageARB(JNIEnv * 
 	CHECK_EXISTS(wglBindTexImageARB)
 	jboolean ret = (jboolean) wglBindTexImageARB((HPBUFFERARB) p0, (GLint) p1);
 	return ret;
+#else
+	CHECK_EXISTS(NULL)
+	return JNI_FALSE;
 #endif
 }
 
