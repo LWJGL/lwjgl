@@ -46,6 +46,13 @@ public class OpenGLException extends RuntimeException {
 	/**
 	 * Constructor for OpenGLException.
 	 */
+	public OpenGLException(int gl_error_code) {
+		super("GL error code: " + gl_error_code);
+	}
+
+	/**
+	 * Constructor for OpenGLException.
+	 */
 	public OpenGLException() {
 		super();
 	}

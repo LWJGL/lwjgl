@@ -20,7 +20,9 @@
 			int err = glGetError(); \
 			if (err != GL_NO_ERROR) { \
 				jclass cls = env->FindClass("org/lwjgl/opengl/OpenGLException"); \
-				env->ThrowNew(cls, (const char *)gluErrorString(err)); \
+				jmethodID ctor = env->GetMethodID(cls, "<init>", "(I)V"); \
+			        jthrowable exception = (jthrowable)env->NewObject(cls, ctor, err); \
+				env->Throw(exception); \
 				env->DeleteLocalRef(cls); \
 			} \
 		} \

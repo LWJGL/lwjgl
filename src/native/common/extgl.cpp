@@ -128,66 +128,6 @@ aglResetLibraryPROC aglResetLibrary = NULL;
 aglSurfaceTexturePROC aglSurfaceTexture = NULL; 
 #endif
 
-gluBeginCurvePROC gluBeginCurve = NULL;
-gluBeginPolygonPROC gluBeginPolygon = NULL;
-gluBeginSurfacePROC gluBeginSurface = NULL;
-gluBeginTrimPROC gluBeginTrim = NULL;
-gluBuild1DMipmapLevelsPROC gluBuild1DMipmapLevels = NULL;
-gluBuild1DMipmapsPROC gluBuild1DMipmaps = NULL;
-gluBuild2DMipmapLevelsPROC gluBuild2DMipmapLevels = NULL;
-gluBuild2DMipmapsPROC gluBuild2DMipmaps = NULL;
-gluBuild3DMipmapLevelsPROC gluBuild3DMipmapLevels = NULL;
-gluBuild3DMipmapsPROC gluBuild3DMipmaps = NULL;
-gluCheckExtensionPROC gluCheckExtension = NULL;
-gluCylinderPROC gluCylinder = NULL;
-gluDeleteNurbsRendererPROC gluDeleteNurbsRenderer = NULL;
-gluDeleteQuadricPROC gluDeleteQuadric = NULL;
-gluDeleteTessPROC gluDeleteTess = NULL;
-gluDiskPROC gluDisk = NULL;
-gluEndCurvePROC gluEndCurve = NULL;
-gluEndPolygonPROC gluEndPolygon = NULL;
-gluEndSurfacePROC gluEndSurface = NULL;
-gluEndTrimPROC gluEndTrim = NULL;
-gluErrorStringPROC gluErrorString = NULL;
-gluGetNurbsPropertyPROC gluGetNurbsProperty = NULL;
-gluGetStringPROC gluGetString = NULL;
-gluGetTessPropertyPROC gluGetTessProperty = NULL;
-gluLoadSamplingMatricesPROC gluLoadSamplingMatrices = NULL;
-gluLookAtPROC gluLookAt = NULL;
-gluNewNurbsRendererPROC gluNewNurbsRenderer = NULL;
-gluNewQuadricPROC gluNewQuadric = NULL;
-gluNewTessPROC gluNewTess = NULL;
-gluNextContourPROC gluNextContour = NULL;
-gluNurbsCallbackPROC gluNurbsCallback = NULL;
-gluNurbsCallbackDataPROC gluNurbsCallbackData = NULL;
-gluNurbsCallbackDataEXTPROC gluNurbsCallbackDataEXT = NULL;
-gluNurbsCurvePROC gluNurbsCurve = NULL;
-gluNurbsPropertyPROC gluNurbsProperty = NULL;
-gluNurbsSurfacePROC gluNurbsSurface = NULL;
-gluOrtho2DPROC gluOrtho2D = NULL;
-gluPartialDiskPROC gluPartialDisk = NULL;
-gluPerspectivePROC gluPerspective = NULL;
-gluPickMatrixPROC gluPickMatrix = NULL;
-gluProjectPROC gluProject = NULL;
-gluPwlCurvePROC gluPwlCurve = NULL;
-gluQuadricCallbackPROC gluQuadricCallback = NULL;
-gluQuadricDrawStylePROC gluQuadricDrawStyle = NULL;
-gluQuadricNormalsPROC gluQuadricNormals = NULL;
-gluQuadricOrientationPROC gluQuadricOrientation = NULL;
-gluQuadricTexturePROC gluQuadricTexture = NULL;
-gluScaleImagePROC gluScaleImage = NULL;
-gluSpherePROC gluSphere = NULL;
-gluTessBeginContourPROC gluTessBeginContour = NULL;
-gluTessBeginPolygonPROC gluTessBeginPolygon = NULL;
-gluTessCallbackPROC gluTessCallback = NULL;
-gluTessEndContourPROC gluTessEndContour = NULL;
-gluTessEndPolygonPROC gluTessEndPolygon = NULL;
-gluTessNormalPROC gluTessNormal = NULL;
-gluTessPropertyPROC gluTessProperty = NULL;
-gluTessVertexPROC gluTessVertex = NULL;
-gluUnProjectPROC gluUnProject = NULL;
-gluUnProject4PROC gluUnProject4 = NULL;
-
 /* function variables */
 
 /*glAccumPROC glAccum = NULL;
@@ -643,12 +583,10 @@ struct ExtensionTypes extgl_Extensions;
 
 #ifdef _WIN32
 HMODULE lib_gl_handle = NULL;
-HMODULE lib_glu_handle = NULL;
 #endif
 
 #ifdef _X11
 void * lib_gl_handle = NULL;
-void * lib_glu_handle = NULL;
 #endif
 
 #ifdef _AGL
@@ -759,11 +697,8 @@ void *extgl_GetProcAddress(const char *name)
 		t = GetProcAddress(lib_gl_handle, name);
 		if (t == NULL)
 		{
-			t = GetProcAddress(lib_glu_handle, name);
-			if (t == NULL) {
-				printfDebug("Could not locate symbol %s\n", name);
-				extgl_error = true;
-			}
+			printfDebug("Could not locate symbol %s\n", name);
+			extgl_error = true;
 		}
 	}
 	return t;
@@ -776,11 +711,8 @@ void *extgl_GetProcAddress(const char *name)
 		t = dlsym(lib_gl_handle, name);
 		if (t == NULL)
 		{
-			t = dlsym(lib_glu_handle, name);
-			if (t == NULL) {
-				printfDebug("Could not locate symbol %s\n", name);
-				extgl_error = true;
-			}
+			printfDebug("Could not locate symbol %s\n", name);
+			extgl_error = true;
 		}
 	}
 	return t;
@@ -1050,12 +982,6 @@ static bool GLXQueryExtension(JNIEnv* env, jobject ext_set, Display *disp, int s
 #endif
 
 /** returns true if the extention is available */
-static bool GLUQueryExtension(JNIEnv *env, jobject ext_set, const char *name)
-{
-	return QueryExtension(env, ext_set, gluGetString(GLU_EXTENSIONS), name);
-}
-
-/** returns true if the extention is available */
 static bool GLQueryExtension(JNIEnv *env, jobject ext_set, const char *name)
 {
 	return QueryExtension(env, ext_set, glGetString(GL_EXTENSIONS), name);
@@ -1093,83 +1019,6 @@ static void extgl_InitEXTCullVertex(JNIEnv *env, jobject ext_set)
 }
 */
 
-static void extgl_InitGLU12(void)
-{
-	gluBeginCurve = (gluBeginCurvePROC) extgl_GetProcAddress("gluBeginCurve");
-	gluBeginPolygon = (gluBeginPolygonPROC) extgl_GetProcAddress("gluBeginPolygon");
-	gluBeginSurface = (gluBeginSurfacePROC) extgl_GetProcAddress("gluBeginSurface");
-	gluBeginTrim = (gluBeginTrimPROC) extgl_GetProcAddress("gluBeginTrim");
-	gluBuild1DMipmaps = (gluBuild1DMipmapsPROC) extgl_GetProcAddress("gluBuild1DMipmaps");
-	gluBuild2DMipmaps = (gluBuild2DMipmapsPROC) extgl_GetProcAddress("gluBuild2DMipmaps");
-	gluCylinder = (gluCylinderPROC) extgl_GetProcAddress("gluCylinder");
-	gluDeleteNurbsRenderer = (gluDeleteNurbsRendererPROC) extgl_GetProcAddress("gluDeleteNurbsRenderer");
-	gluDeleteQuadric = (gluDeleteQuadricPROC) extgl_GetProcAddress("gluDeleteQuadric");
-	gluDeleteTess = (gluDeleteTessPROC) extgl_GetProcAddress("gluDeleteTess");
-	gluDisk = (gluDiskPROC) extgl_GetProcAddress("gluDisk");
-	gluEndCurve = (gluEndCurvePROC) extgl_GetProcAddress("gluEndCurve");
-	gluEndPolygon = (gluEndPolygonPROC) extgl_GetProcAddress("gluEndPolygon");
-	gluEndSurface = (gluEndSurfacePROC) extgl_GetProcAddress("gluEndSurface");
-	gluEndTrim = (gluEndTrimPROC) extgl_GetProcAddress("gluEndTrim");
-	gluErrorString = (gluErrorStringPROC) extgl_GetProcAddress("gluErrorString");
-	gluGetNurbsProperty = (gluGetNurbsPropertyPROC) extgl_GetProcAddress("gluGetNurbsProperty");
-	gluGetString = (gluGetStringPROC) extgl_GetProcAddress("gluGetString");
-	gluGetTessProperty = (gluGetTessPropertyPROC) extgl_GetProcAddress("gluGetTessProperty");
-	gluLoadSamplingMatrices = (gluLoadSamplingMatricesPROC) extgl_GetProcAddress("gluLoadSamplingMatrices");
-	gluLookAt = (gluLookAtPROC) extgl_GetProcAddress("gluLookAt");
-	gluNewNurbsRenderer = (gluNewNurbsRendererPROC) extgl_GetProcAddress("gluNewNurbsRenderer");
-	gluNewQuadric = (gluNewQuadricPROC) extgl_GetProcAddress("gluNewQuadric");
-	gluNewTess = (gluNewTessPROC) extgl_GetProcAddress("gluNewTess");
-	gluNextContour = (gluNextContourPROC) extgl_GetProcAddress("gluNextContour");
-	gluNurbsCallback = (gluNurbsCallbackPROC) extgl_GetProcAddress("gluNurbsCallback");
-	gluNurbsCurve = (gluNurbsCurvePROC) extgl_GetProcAddress("gluNurbsCurve");
-	gluNurbsProperty = (gluNurbsPropertyPROC) extgl_GetProcAddress("gluNurbsProperty");
-	gluNurbsSurface = (gluNurbsSurfacePROC) extgl_GetProcAddress("gluNurbsSurface");
-	gluOrtho2D = (gluOrtho2DPROC) extgl_GetProcAddress("gluOrtho2D");
-	gluPartialDisk = (gluPartialDiskPROC) extgl_GetProcAddress("gluPartialDisk");
-	gluPerspective = (gluPerspectivePROC) extgl_GetProcAddress("gluPerspective");
-	gluPickMatrix = (gluPickMatrixPROC) extgl_GetProcAddress("gluPickMatrix");
-	gluProject = (gluProjectPROC) extgl_GetProcAddress("gluProject");
-	gluPwlCurve = (gluPwlCurvePROC) extgl_GetProcAddress("gluPwlCurve");
-	gluQuadricCallback = (gluQuadricCallbackPROC) extgl_GetProcAddress("gluQuadricCallback");
-	gluQuadricDrawStyle = (gluQuadricDrawStylePROC) extgl_GetProcAddress("gluQuadricDrawStyle");
-	gluQuadricNormals = (gluQuadricNormalsPROC) extgl_GetProcAddress("gluQuadricNormals");
-	gluQuadricOrientation = (gluQuadricOrientationPROC) extgl_GetProcAddress("gluQuadricOrientation");
-	gluQuadricTexture = (gluQuadricTexturePROC) extgl_GetProcAddress("gluQuadricTexture");
-	gluScaleImage = (gluScaleImagePROC) extgl_GetProcAddress("gluScaleImage");
-	gluSphere = (gluSpherePROC) extgl_GetProcAddress("gluSphere");
-	gluTessBeginContour = (gluTessBeginContourPROC) extgl_GetProcAddress("gluTessBeginContour");
-	gluTessBeginPolygon = (gluTessBeginPolygonPROC) extgl_GetProcAddress("gluTessBeginPolygon");
-	gluTessCallback = (gluTessCallbackPROC) extgl_GetProcAddress("gluTessCallback");
-	gluTessEndContour = (gluTessEndContourPROC) extgl_GetProcAddress("gluTessEndContour");
-	gluTessEndPolygon = (gluTessEndPolygonPROC) extgl_GetProcAddress("gluTessEndPolygon");
-	gluTessNormal = (gluTessNormalPROC) extgl_GetProcAddress("gluTessNormal");
-	gluTessProperty = (gluTessPropertyPROC) extgl_GetProcAddress("gluTessProperty");
-	gluTessVertex = (gluTessVertexPROC) extgl_GetProcAddress("gluTessVertex");
-	gluUnProject = (gluUnProjectPROC) extgl_GetProcAddress("gluUnProject");
-}
-
-static void extgl_InitGLU13(JNIEnv *env, jobject ext_set)
-{
-	if (extgl_Extensions.GLU13 != 1)
-		return;
-	gluUnProject4 = (gluUnProject4PROC) extgl_GetProcAddress("gluUnProject4");
-	gluBuild1DMipmapLevels = (gluBuild1DMipmapLevelsPROC) extgl_GetProcAddress("gluBuild1DMipmapLevels");
-	gluBuild2DMipmapLevels = (gluBuild2DMipmapLevelsPROC) extgl_GetProcAddress("gluBuild2DMipmapLevels");
-	gluBuild3DMipmapLevels = (gluBuild3DMipmapLevelsPROC) extgl_GetProcAddress("gluBuild3DMipmapLevels");
-	gluBuild3DMipmaps = (gluBuild3DMipmapsPROC) extgl_GetProcAddress("gluBuild3DMipmaps");
-	gluNurbsCallbackData = (gluNurbsCallbackDataPROC) extgl_GetProcAddress("gluNurbsCallbackData");
-	gluCheckExtension = (gluCheckExtensionPROC) extgl_GetProcAddress("gluCheckExtension");
-	EXTGL_SANITY_CHECK(env, ext_set, GLU13)
-}
-
-/*static void extgl_InitEXTNurbsTesselator(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GLU_EXT_nurbs_tessellator)
-		return;
-	gluNurbsCallbackDataEXT = (gluNurbsCallbackDataEXTPROC) extgl_GetProcAddress("gluNurbsCallbackDataEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GLU_EXT_nurbs_tessellator)
-}
-*/
 #ifdef _X11
 static void extgl_InitGLX13(JNIEnv *env, jobject ext_set)
 {
@@ -1257,30 +1106,6 @@ bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen)
 }
 #endif
 
-
-static void extgl_InitGLUSupportedExtensions(JNIEnv *env, jobject ext_set)
-{
-	const char *s = (const char *)gluGetString(GLU_VERSION);
-	if (!s)
-		return;
-	s = strstr(s, "1.");
-	extgl_Extensions.GLU12 = 0;
-	extgl_Extensions.GLU13 = 0;
-	if (s != NULL)
-	{
-		if( s[2] >= '3' )
-		{
-			extgl_Extensions.GLU12 = 1;
-			extgl_Extensions.GLU13 = 1;
-		}
-		if( s[2] == '2' )
-		{
-			extgl_Extensions.GLU12 = 1;
-		}
-	}
-	extgl_Extensions.GLU_EXT_nurbs_tessellator = GLUQueryExtension(env, ext_set, "GLU_EXT_nurbs_tessellator");
-	extgl_Extensions.GLU_EXT_object_space_tess = GLUQueryExtension(env, ext_set, "GLU_EXT_object_space_tess");
-}
 
 static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 {
@@ -1471,11 +1296,9 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 {
 	extgl_error = false;
 	extgl_InitOpenGL1_1();
-	extgl_InitGLU12();
 	if (extgl_error)
 		return false;
 
-	extgl_InitGLUSupportedExtensions(env, ext_set);
 	extgl_InitSupportedExtensions(env, ext_set);
 	
 	//extgl_InitEXTNurbsTesselator(env, ext_set);
@@ -1541,8 +1364,6 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitOpenGL1_3(env, ext_set);
 	extgl_InitOpenGL1_4(env, ext_set);
 	
-	extgl_InitGLU13(env, ext_set);
-
 #ifdef _WIN32
 	/* load WGL extensions */
 	extgl_InitializeWGL(env, ext_set);
@@ -1572,12 +1393,6 @@ bool extgl_Open()
 		printfDebug("Error loading libGL.so.1: %s\n", dlerror());
 		return false;
 	}
-	lib_glu_handle = dlopen("libGLU.so.1", RTLD_LAZY | RTLD_GLOBAL);
-	if (lib_glu_handle == NULL) {
-		printfDebug("Error loading libGLU.so.1: %s\n", dlerror());
-		dlclose(lib_gl_handle);
-		return false;
-	}
 	return true;
 }
 
@@ -1591,11 +1406,6 @@ bool extgl_Open(void)
 	lib_gl_handle = LoadLibrary("opengl32.dll");
 	if (lib_gl_handle == NULL)
 		return false;
-	lib_glu_handle = LoadLibrary("glu32.dll");
-	if (lib_glu_handle == NULL) {
-		FreeLibrary(lib_gl_handle);
-		return false;
-	}
 	return true;
 }
 #endif /* WIN32 */
@@ -1603,12 +1413,10 @@ bool extgl_Open(void)
 void extgl_Close(void)
 {
 #ifdef _X11
-	dlclose(lib_glu_handle);
 	dlclose(lib_gl_handle);
 #endif
 #ifdef _WIN32
 	FreeLibrary(lib_gl_handle);
-	FreeLibrary(lib_glu_handle);
 #endif
 #ifdef _AGL
 	aglUnloadFramework(opengl_bundle_ref);
