@@ -36,9 +36,6 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL10;
-import org.lwjgl.openal.eax.EAX;
-import org.lwjgl.openal.eax.EAX20;
-import org.lwjgl.openal.eax.EAXListenerProperties;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -82,8 +79,6 @@ public class MovingSoundTest extends BasicTest {
 		int lastError;
     Vector3f sourcePosition = new Vector3f();
     Vector3f listenerPosition = new Vector3f();
-    boolean eaxApplied = false;
-    EAXListenerProperties eaxListenerProp = null;
     
     //initialize keyboard
     try {
@@ -147,16 +142,7 @@ public class MovingSoundTest extends BasicTest {
 			exit(lastError);
 		}
     
-    //setup EAX if possible
-    if (AL10.alIsExtensionPresent("EAX")) {
-      try {
-          EAX.create();
-          eaxListenerProp = new EAXListenerProperties();          
-      } catch (Exception e) {
-      }
-    }    
-    
-    System.out.println("Move source with arrow keys\nMove listener with right shift and arrowkeys\nEnable EAX effect by pressing e (if available)\nExit with ESC");
+    System.out.println("Move source with arrow keys\nMove listener with right shift and arrowkeys\nExit with ESC");
 
 		while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
       Display.update();
@@ -183,15 +169,6 @@ public class MovingSoundTest extends BasicTest {
           AL10.alSource3f(sources.get(0), AL10.AL_POSITION, sourcePosition.x, sourcePosition.y, sourcePosition.z);
           System.out.println("sourcex: " + sourcePosition.x);
         }
-      }
-      
-      if(Keyboard.isKeyDown(Keyboard.KEY_E)) {
-          if(eaxApplied) {
-            eaxListenerProp.setEnvironment(EAX20.EAX_ENVIRONMENT_GENERIC);
-          } else {
-            eaxListenerProp.setEnvironment(EAX20.EAX_ENVIRONMENT_HANGAR);
-          }
-          eaxApplied = !eaxApplied;
       }
       
       if(Display.isCloseRequested()) {

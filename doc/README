@@ -28,7 +28,6 @@ To run some of the included tests:
   org.lwjgl.test.input.KeyboardTest
   
   org.lwjgl.test.openal.ALCTest
-  org.lwjgl.test.openal.EAXTest (Requires EAX compatible hardware)
   org.lwjgl.test.openal.OpenALCreationTest
   org.lwjgl.test.openal.MovingSoundTest
   org.lwjgl.test.openal.PlayTest

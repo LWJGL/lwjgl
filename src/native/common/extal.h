@@ -96,14 +96,6 @@ extern "C" {
 void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths);
 void DeInitializeOpenAL();
 
-#ifdef _WIN32
-typedef ALenum (*EAXSet)(const GUID*, ALuint, ALuint, ALvoid*, ALuint);
-typedef ALenum (*EAXGet)(const GUID*, ALuint, ALuint, ALvoid*, ALuint);
-
-extern EAXSet  eaxSet;
-extern EAXGet  eaxGet;
-#endif
-
 typedef ALvoid      (ALAPIENTRY *alEnablePROC)( ALenum capability );
 typedef ALboolean   (ALAPIENTRY *alIsExtensionPresentPROC)( ALubyte* fname );
 typedef ALvoid*	    (ALAPIENTRY *alGetProcAddressPROC)( ALubyte* fname );

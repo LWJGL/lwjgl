@@ -4,11 +4,10 @@ if "%JAVA_HOME%" == "" goto errorjavahome
 if "%PLTSDKHOME%" == "" goto errorpltsdkhome
 if "%CHOME%" == "" goto errorchome
 if "%ALHOME%" == "" goto erroralhome
-if "%EAXHOME%" == "" goto erroreaxhome
 if "%DXHOME%" == "" goto errordxhome
-set COPTIONS=/I"%DXHOME%\include" /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"%ALHOME%\include" /I"%EAXHOME%\include" /I"..\..\src\native\common" /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "LWJGL_EXPORTS" /D "_WINDLL"
-set LINKEROPTS=/link /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%EAXHOME%\Libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL
-set LIBS=dinput.lib dxguid.lib eaxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib
+set COPTIONS=/I"%DXHOME%\include" /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"%ALHOME%\include" /I"..\..\src\native\common" /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "LWJGL_EXPORTS" /D "_WINDLL"
+set LINKEROPTS=/link /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL
+set LIBS=dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib
 
 for %%x in (..\..\src\native\win32\*.c) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\*.c) do cl %COPTIONS% %%x
@@ -57,14 +56,6 @@ echo ALHOME not set.
 echo.
 goto error
 
-:erroreaxhome
-echo -------------------------
-echo --     ** ERROR **     --
-echo -------------------------
-echo EAXHOME not set.
-echo.
-goto error
-
 :errordxhome
 echo -------------------------
 echo --     ** ERROR **     --
@@ -79,7 +70,6 @@ echo JAVA_HOME  The root directory where Java is installed
 echo PLTSDKHOME  "   "       "        "  Platform SDK is installed
 echo CHOME       "   "       "        "  Visual C++ toolkit is installed
 echo ALHOME      "   "       "        "  OpenAl is installed
-echo EAXHOME     "   "       "        "  EAX is installed
 echo DXHOME      "   "       "        "  DirectX is installed
 echo -------------------------
 echo --     ** ERROR **     --

@@ -49,9 +49,6 @@
  * @version $Revision$
  */
 #ifdef _WIN32
-EAXSet	eaxSet;																				 // EAXSet function, ret$
-EAXGet	eaxGet;																				 // EAXGet function, ret$
-
 /* Handle to OpenAL Library */
 HMODULE handleOAL;
 #endif
