@@ -179,6 +179,19 @@ public class Joystick {
 	}
 	
 	/**
+	 * See if a particular mouse button is down.
+	 * 
+	 * @param button The index of the button you wish to test (0..getNumButtons())
+	 * @return true if the specified button is down
+	 * @see #getNumButtons()
+	 */
+	public static boolean isButtonDown(int button) {
+		assert created : "The joystick has not been created.";
+		return Joystick.button[button];
+	}
+	
+	
+	/**
 	 * Native implementation of hasZValue()
 	 */
 	private static native boolean nHasZValue();

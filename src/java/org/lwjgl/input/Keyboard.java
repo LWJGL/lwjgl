@@ -173,6 +173,128 @@ public class Keyboard {
 	public static final int KEY_POWER           = 0xDE;
 	public static final int KEY_SLEEP           = 0xDF;
 
+	// Maps keycodes to ascii characters
+	private static final char map[] =
+		{
+			0,
+			0,
+			'1',
+			'2',
+			'3',
+			'4',
+			'5',
+			'6',
+			'7',
+			'8',
+			'9',
+			'0',
+			'-',
+			'=',
+			0,
+			0,
+			'q',
+			'w',
+			'e',
+			'r',
+			't',
+			'y',
+			'u',
+			'i',
+			'o',
+			'p',
+			'[',
+			']',
+			'*',
+			'*',
+			'a',
+			's',
+			'd',
+			'f',
+			'g',
+			'h',
+			'j',
+			'k',
+			'l',
+			';',
+			'\'',
+			'#',
+			'*',
+			'\\',
+			'z',
+			'x',
+			'c',
+			'v',
+			'b',
+			'n',
+			'm',
+			',',
+			'.',
+			'/',
+			'*',
+			'*',
+			'*',
+			' ' };
+	private static final char shiftMap[] =
+		{
+			0,
+			0,
+			'!',
+			'"',
+			'*',
+			'$',
+			'%',
+			'^',
+			'&',
+			'*',
+			'(',
+			')',
+			'_',
+			'+',
+			'*',
+			'*',
+			'Q',
+			'W',
+			'E',
+			'R',
+			'T',
+			'Y',
+			'U',
+			'I',
+			'O',
+			'P',
+			'{',
+			'}',
+			0,
+			0,
+			'A',
+			'S',
+			'D',
+			'F',
+			'G',
+			'H',
+			'J',
+			'K',
+			'L',
+			':',
+			'@',
+			'~',
+			0,
+			'|',
+			'Z',
+			'X',
+			'C',
+			'V',
+			'B',
+			'N',
+			'M',
+			'<',
+			'>',
+			'?',
+			0,
+			0,
+			0,
+			' ' };
+			
 	static {
 		initialize();
 	}
@@ -343,5 +465,23 @@ public class Keyboard {
 		} else
 			return false;
 		
+	}
+	
+	/**
+	 * Maps a keycode to a character.
+	 * @param keyCode The keycode
+	 * @return the corresponding ASCII character or 0 if no mapping is possible
+	 */
+	public static char map(int keyCode) {
+		char c;
+
+		if (keyCode < 0 || keyCode >= map.length)
+			return 0;
+		else if (isKeyDown(KEY_LSHIFT) || isKeyDown(KEY_RSHIFT)) {
+			c = shiftMap[keyCode];
+		} else {
+			c = map[keyCode];
+		}
+		return c;
 	}
 }

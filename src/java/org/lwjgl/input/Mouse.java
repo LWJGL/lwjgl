@@ -182,6 +182,18 @@ public class Mouse {
 	private static native boolean nHasZValue();
 	
 	/**
+	 * See if a particular mouse button is down.
+	 * 
+	 * @param button The index of the button you wish to test (0..getNumButtons())
+	 * @return true if the specified button is down
+	 * @see #getNumButtons()
+	 */
+	public static boolean isButtonDown(int button) {
+		assert created : "The mouse has not been created.";
+		return Mouse.button[button];
+	}
+	
+	/**
 	 * Enable mouse buffering. Must be called after the mouse is created.
 	 * @return the size of the mouse buffer in events, or 0 if no buffering
 	 * can be enabled for any reason
