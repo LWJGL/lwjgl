@@ -9,34 +9,34 @@ extern "C" {
 #endif
 /*
  * Class:     org_lwjgl_openal_ALUT
- * Method:    alutInit
+ * Method:    init
  * Signature: ([Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutInit
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init
   (JNIEnv *, jobject, jobjectArray);
 
 /*
  * Class:     org_lwjgl_openal_ALUT
- * Method:    alutLoadWAVFile
+ * Method:    loadWAVFile
  * Signature: (Ljava/lang/String;)Lorg/lwjgl/openal/ALUTLoadWAVFile;
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_alutLoadWAVFile
+JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     org_lwjgl_openal_ALUT
- * Method:    alutUnloadWAV
+ * Method:    unloadWAV
  * Signature: (IIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutUnloadWAV
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV
   (JNIEnv *, jobject, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_ALUT
- * Method:    alutExit
+ * Method:    exit
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutExit
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_exit
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

@@ -34,29 +34,29 @@ public class OpenALTest {
         int[] sources   = new int[1];
         
         /* initialize */
-        alut.alutInit(args);
+        alut.init(args);
         
         /* create buffers and sources */
-        al.alGenBuffers(1, buffers);
-        al.alGenSources(1, sources);
+        al.genBuffers(1, buffers);
+        al.genSources(1, sources);
         
         /* load data */
-        ALUTLoadWAVFile file = alut.alutLoadWAVFile("footsteps.wav");
+        ALUTLoadWAVFile file = alut.loadWAVFile("footsteps.wav");
         
         /* copy to buffers */
-        al.alBufferData(buffers[0], file.format, file.data, file.size, file.freq);
+        al.bufferData(buffers[0], file.format, file.data, file.size, file.freq);
         
         /* unload file again */
-        alut.alutUnloadWAV(file.format, file.data, file.size, file.freq);
+        alut.unloadWAV(file.format, file.data, file.size, file.freq);
         
         /* set up source input */
-        al.alSourcei(sources[0], AL.AL_BUFFER, buffers[0]);
+        al.sourcei(sources[0], AL.BUFFER, buffers[0]);
         
         /* lets loop the sound */
-        al.alSourcei(sources[0], AL.AL_LOOPING, AL.AL_TRUE);
+        al.sourcei(sources[0], AL.LOOPING, AL.TRUE);
         
         /* play source 0 */
-        al.alSourcePlay(sources[0]);
+        al.sourcePlay(sources[0]);
         
         System.out.println("will exit in 5 seconds (so we don't crash if weird stuff has happened with file...)\n");
         for(int i=0; i<5; i++) {
@@ -68,13 +68,13 @@ public class OpenALTest {
         }
         
         /* stop source 0 */
-        al.alSourceStop(sources[0]);
+        al.sourceStop(sources[0]);
         
         /* delete buffers and sources */
-        al.alDeleteSources(1, sources);
-        al.alDeleteBuffers(1, buffers);
+        al.deleteSources(1, sources);
+        al.deleteBuffers(1, buffers);
         
         /* shutdown */
-        alut.alutExit();
+        alut.exit();
     }
 }

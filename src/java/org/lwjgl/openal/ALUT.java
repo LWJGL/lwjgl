@@ -29,7 +29,7 @@ public class ALUT {
      *
      * @param args String array of arguments to engine
      */
-    public native void                  alutInit(String[] args);
+    public native void                  init(String[] args);
     
     /**
      * Loads a wave file into memory
@@ -37,7 +37,7 @@ public class ALUT {
      * @param file name of file to load (in current working directory)
      * @return ALUTLoadWAVFile object containing information regarding file loaded
      */
-    public native ALUTLoadWAVFile       alutLoadWAVFile(String file);
+    public native ALUTLoadWAVFile       loadWAVFile(String file);
     
     /**
      * Unloads the specified file from memory
@@ -47,10 +47,10 @@ public class ALUT {
      * @param size size of the data in bytes
      * @param freq frequency of the data
      */
-    public native void                  alutUnloadWAV(int format, int data, int size, int freq);
+    public native void                  unloadWAV(int format, int data, int size, int freq);
     
     /**
      * Deinitializes the OpenAL engine
      */
-    public native void                  alutExit();
+    public native void                  exit();
 }

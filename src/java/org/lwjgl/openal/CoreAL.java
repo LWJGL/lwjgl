@@ -20,7 +20,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      *
      * @return current error state
      */
-    public native int           alGetError();
+    public native int           getError();
     
     /**
      * Retrieve an OpenAL string property.
@@ -28,7 +28,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param param The property to be returned
      * @return OpenAL String property
      */
-    public native String        alGetString(int param);
+    public native String        getString(int param);
     
     /**
      * Generate one or more buffers.
@@ -36,7 +36,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of buffers to generate
      * @param buffers array holding buffers
      */
-    public native void          alGenBuffers(int n, int[] buffers);
+    public native void          genBuffers(int n, int[] buffers);
     
     /**
      * Generate one or more sources.
@@ -44,7 +44,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of sources to generate
      * @param sources array holding sources
      */
-    public native void          alGenSources(int n, int[] sources);
+    public native void          genSources(int n, int[] sources);
     
     /**
      * Fill a buffer with audio data.
@@ -55,7 +55,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param size size of data segment
      * @param freq frequency of data
      */
-    public native void          alBufferData(int buffer, int format, int data, int size, int freq);
+    public native void          bufferData(int buffer, int format, int data, int size, int freq);
     
     /**
      * Set an integer property of a source.
@@ -64,21 +64,21 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param param property to set
      * @param value value of property
      */
-    public native void          alSourcei(int source, int param, int value);
+    public native void          sourcei(int source, int param, int value);
     
     /**
      * Play a source.
      *
      * @param source Source to play
      */
-    public native void          alSourcePlay(int source);
+    public native void          sourcePlay(int source);
     
     /**
      * Stops a source.
      *
      * @param source Source to stop
      */
-    public native void          alSourceStop(int source);
+    public native void          sourceStop(int source);
     
     /**
      * Delete one or more sources.
@@ -86,7 +86,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n Number of sources to delete
      * @param source Source array to delete from
      */
-    public native void          alDeleteSources(int n, int[] source);
+    public native void          deleteSources(int n, int[] source);
     
     
     /**
@@ -95,5 +95,5 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n Number of buffers to delete
      * @param buffers Buffer array to delete from
      */
-    public native void          alDeleteBuffers(int n, int[] buffers);
+    public native void          deleteBuffers(int n, int[] buffers);
 }

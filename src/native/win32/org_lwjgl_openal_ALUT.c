@@ -18,7 +18,7 @@
  * C Specification:
  * void alutInit(int *argc, char *argv[]);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutInit (JNIEnv *env, jobject obj, jobjectArray jargv) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init (JNIEnv *env, jobject obj, jobjectArray jargv) {
 	/* obtain the size the array  */
 	jsize argc = (*env)->GetArrayLength(env, jargv);
 
@@ -53,7 +53,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutInit (JNIEnv *env, jobject
  * ALboolean alutLoadWAVFile(const char *fname, ALsizei *format, ALsizei *size, ALsizei *bits,
  * ALsizei *freq, ALboolean *loop );
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_alutLoadWAVFile (JNIEnv *env, jobject obj, jstring file) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, jobject obj, jstring file) {
 	
 	/*
 	 * NOTE: Since Java doesn't support modification of supplied 
@@ -100,7 +100,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_alutLoadWAVFile (JNIEnv *en
  * ALvoid alutLoadWAVMemory(ALbyte *memory,ALenum *format,ALvoid **data,ALsizei
  * *size,ALsizei *freq,ALboolean *loop)
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutUnloadWAV (JNIEnv *env, jobject obj, jint format, jint data, jint size, jint freq) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV (JNIEnv *env, jobject obj, jint format, jint data, jint size, jint freq) {
 	alutUnloadWAV(format, (void**) data, size, freq);
 }
 /**
@@ -109,6 +109,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutUnloadWAV (JNIEnv *env, jo
  * C Specification:
  * void alutExit(ALvoid);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_alutExit (JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_exit (JNIEnv *env, jobject obj) {
 	alutExit();
 }

@@ -9,82 +9,82 @@ extern "C" {
 #endif
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alGetError
+ * Method:    getError
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetError
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getError
   (JNIEnv *, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alGetString
+ * Method:    getString
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_alGetString
+JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_getString
   (JNIEnv *, jobject, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alGenBuffers
+ * Method:    genBuffers
  * Signature: (I[I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGenBuffers
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genBuffers
   (JNIEnv *, jobject, jint, jintArray);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alGenSources
+ * Method:    genSources
  * Signature: (I[I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGenSources
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genSources
   (JNIEnv *, jobject, jint, jintArray);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alBufferData
+ * Method:    bufferData
  * Signature: (IIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alBufferData
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_bufferData
   (JNIEnv *, jobject, jint, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alSourcei
+ * Method:    sourcei
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcei
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcei
   (JNIEnv *, jobject, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alSourcePlay
+ * Method:    sourcePlay
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePlay
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlay
   (JNIEnv *, jobject, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alSourceStop
+ * Method:    sourceStop
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceStop
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStop
   (JNIEnv *, jobject, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alDeleteSources
+ * Method:    deleteSources
  * Signature: (I[I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDeleteSources
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteSources
   (JNIEnv *, jobject, jint, jintArray);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    alDeleteBuffers
+ * Method:    deleteBuffers
  * Signature: (I[I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDeleteBuffers
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteBuffers
   (JNIEnv *, jobject, jint, jintArray);
 
 #ifdef __cplusplus
