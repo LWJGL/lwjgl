@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'LWJGL' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -28,14 +28,6 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-/*
- * Created by IntelliJ IDEA.
- * User: nj
- * Date: 12-08-2002
- * Time: 15:18:42
- * To change template for new interface use
- * Code Style | Class Templates options (Tools | IDE Options).
  */
 package org.lwjgl.opengl;
 

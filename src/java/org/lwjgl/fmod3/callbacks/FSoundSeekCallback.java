@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2004 LWJGL Project
+ * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.fmod3.callbacks;
-
 
 /**
  * This interface describes a callback interface to Fmod music
