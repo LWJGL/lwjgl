@@ -129,7 +129,7 @@ OSErr aehandler(const AppleEvent * theAppleEvent, AppleEvent * reply, SInt32 han
 	return noErr;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jobject ext_set) {
 	Rect rect;
 	OSStatus status;
 	const WindowAttributes window_attr = kWindowCloseBoxAttribute|

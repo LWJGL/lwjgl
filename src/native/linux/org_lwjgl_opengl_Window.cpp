@@ -51,7 +51,7 @@
 #include "Window.h"
 #include "org_lwjgl_opengl_Window.h"
 
-#define USEGLX13 true
+#define USEGLX13 extgl_Extensions.GLX13
 
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
@@ -286,14 +286,14 @@ void throwRuntimeException(JNIEnv * env, const char * err)
 }
 
 void makeCurrent(void) {
-	if (USEGLX13 && extgl_Extensions.glx.GLX13)
+	if (USEGLX13)
 		glXMakeContextCurrent(getCurrentDisplay(), glx_window, glx_window, context);
 	else
 		glXMakeCurrent(getCurrentDisplay(), getCurrentWindow(), context);
 }
 
 static void releaseContext(void) {
-	if (USEGLX13 && extgl_Extensions.glx.GLX13)
+	if (USEGLX13)
 		glXMakeContextCurrent(getCurrentDisplay(), None, None, NULL);
 	else
 		glXMakeCurrent(getCurrentDisplay(), None, NULL);
@@ -367,7 +367,7 @@ static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
 
 static void destroy(void) {
 	releaseContext();
-	if (USEGLX13 && extgl_Extensions.glx.GLX13)
+	if (USEGLX13)
 		glXDestroyWindow(getCurrentDisplay(), glx_window);
 	glXDestroyContext(getCurrentDisplay(), context); 
 	context = NULL;
@@ -446,7 +446,7 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
  * Signature: (IIII)Z
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jobject ext_set)
 {
 	int screen;
 	Display *disp;
@@ -454,7 +454,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	if (fullscreen == JNI_TRUE)
 		fscreen = true;
 
-	if (extgl_Open() != 0) {
+	if (!extgl_Open()) {
 		throwException(env, "Could not load gl libs");
 		return;
 	}
@@ -464,14 +464,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		return;
 	}
 	screen = XDefaultScreen(disp);
-	if (extgl_InitGLX(disp, screen) != 0) {
+	if (!extgl_InitGLX(env, ext_set, disp, screen)) {
 		XCloseDisplay(disp);
 		extgl_Close();
 		throwException(env, "Could not init GLX");
 		return;
 	}
 	bool create_success;
-	if (USEGLX13 && extgl_Extensions.glx.GLX13) {
+	if (USEGLX13) {
 		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
 	} else {
 		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
@@ -481,7 +481,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		extgl_Close();
 		return;
 	}
-	if (extgl_Initialize() != 0) {
+	if (!extgl_Initialize(env, ext_set)) {
 		destroy();
 		throwException(env, "Could not init gl function pointers");
 		return;
@@ -511,7 +511,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz)
 {
 	dirty = false;
-	if (USEGLX13 && extgl_Extensions.glx.GLX13)
+	if (USEGLX13)
 		glXSwapBuffers(getCurrentDisplay(), glx_window);
 	else
 		glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());

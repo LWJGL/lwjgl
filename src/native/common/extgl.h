@@ -165,6 +165,8 @@ WGL_NV_render_texture_rectangle
 #ifndef __EXTGL_H__
 #define __EXTGL_H__
 
+#include <jni.h>
+
 
 /*-----------------------------------------*/
 /*-----------------------------------------*/
@@ -598,9 +600,6 @@ extern aglSurfaceTextureEXTPROC aglSurfaceTexture;
 /*************************************************************/
 /* GLU functions */
 
-/* Extensions */
-#define GLU_EXT_object_space_tess          1
-#define GLU_EXT_nurbs_tessellator          1
 
 /* Boolean */
 #define GLU_FALSE                          0
@@ -2153,9 +2152,6 @@ extern glViewportPROC glViewport;
 
 /* OpenGL 1.2 */
 
-#ifndef GL_VERSION_1_2
-#define GL_ARB_imaging 1
-#define GL_VERSION_1_2 1
 #define GL_RESCALE_NORMAL                                       0x803A
 #define GL_CLAMP_TO_EDGE                                        0x812F
 #define GL_MAX_ELEMENTS_VERTICES                                0x80E8
@@ -2351,12 +2347,9 @@ extern glDrawRangeElementsPROC glDrawRangeElements;
 extern glTexImage3DPROC glTexImage3D;
 extern glTexSubImage3DPROC glTexSubImage3D;
 extern glCopyTexSubImage3DPROC glCopyTexSubImage3D;
-#endif /* GL_VERSION_1_2 */
 
 /* OpenGL 1.3 */
 
-#ifndef GL_VERSION_1_3
-#define GL_VERSION_1_3 1
 #define GL_TEXTURE0                                             0x84C0
 #define GL_TEXTURE1                                             0x84C1
 #define GL_TEXTURE2                                             0x84C2
@@ -2553,12 +2546,7 @@ extern glCompressedTexSubImage1DPROC glCompressedTexSubImage1D;
 extern glGetCompressedTexImagePROC glGetCompressedTexImage;
 extern glSampleCoveragePROC glSampleCoverage;
 
-#endif /* GL_VERSION_1_3 */
-
 /* OpenGL 1.4 */
-
-#ifndef GL_VERSION_1_4
-#define GL_VERSION_1_4
 
 #define GL_GENERATE_MIPMAP                                      0x8191
 #define GL_GENERATE_MIPMAP_HINT                                 0x8192
@@ -2688,8 +2676,6 @@ extern glWindowPos3fvPROC glWindowPos3fv;
 extern glWindowPos3ivPROC glWindowPos3iv;
 extern glWindowPos3svPROC glWindowPos3sv;
 
-#endif /* GL_VERSION_1_4 */
-
 /*-------------------------------------------------------------------*/
 /*------------EXTENSIONS---------------------------------------------*/
 /*-------------------------------------------------------------------*/
@@ -2698,8 +2684,6 @@ extern glWindowPos3svPROC glWindowPos3sv;
 /*------------ARB_MULTITEXTURE---------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_multitexture
-#define GL_ARB_multitexture 1
 #define GL_TEXTURE0_ARB                                         0x84C0
 #define GL_TEXTURE1_ARB                                         0x84C1
 #define GL_TEXTURE2_ARB                                         0x84C2
@@ -2806,14 +2790,9 @@ extern glMultiTexCoord4ivARBPROC glMultiTexCoord4ivARB;
 extern glMultiTexCoord4sARBPROC glMultiTexCoord4sARB;
 extern glMultiTexCoord4svARBPROC glMultiTexCoord4svARB;
 
-#endif /* GL_ARB_multitexture */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_TRANSPOSE_MATRIX-----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_transpose_matrix
-#define GL_ARB_transpose_matrix 1
 
 #define GL_TRANSPOSE_MODELVIEW_MATRIX_ARB                       0x84E3
 #define GL_TRANSPOSE_PROJECTION_MATRIX_ARB                      0x84E4
@@ -2830,14 +2809,9 @@ extern glLoadTransposeMatrixdARBPROC glLoadTransposeMatrixdARB;
 extern glMultTransposeMatrixfARBPROC glMultTransposeMatrixfARB;
 extern glMultTransposeMatrixdARBPROC glMultTransposeMatrixdARB;
 
-#endif /* GL_ARB_transpose_matrix */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_TEXTURE_COMPRESSION--------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_texture_compression
-#define GL_ARB_texture_compression 1
 
 #define GL_COMPRESSED_ALPHA_ARB                                 0x84E9
 #define GL_COMPRESSED_LUMINANCE_ARB                             0x84EA
@@ -2867,14 +2841,9 @@ extern glCompressedTexSubImage2DARBPROC glCompressedTexSubImage2DARB;
 extern glCompressedTexSubImage1DARBPROC glCompressedTexSubImage1DARB;
 extern glGetCompressedTexImageARBPROC glGetCompressedTexImageARB;
 
-#endif /* GL_ARB_texture_compression */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_CUBE_MAP-------------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_texture_cube_map
-#define GL_ARB_texture_cube_map 1
 
 #define GL_NORMAL_MAP_ARB                                       0x8511
 #define GL_REFLECTION_MAP_ARB                                   0x8512
@@ -2889,41 +2858,26 @@ extern glGetCompressedTexImageARBPROC glGetCompressedTexImageARB;
 #define GL_PROXY_TEXTURE_CUBE_MAP_ARB                           0x851B
 #define GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB                        0x851C
 
-#endif /* GL_ARB_texture_cube_map */
-
 /*-------------------------------------------------------------------*/
 /*------------SGIX_SHADOW--------------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_SGIX_shadow
-#define GL_SGIX_shadow 1
 
 #define GL_TEXTURE_COMPARE_SGIX                                  0x819A
 #define GL_TEXTURE_COMPARE_OPERATOR_SGIX                         0x819B
 #define GL_TEXTURE_LEQUAL_R_SGIX                                 0x819C
 #define GL_TEXTURE_GEQUAL_R_SGIX                                 0x819D
 
-#endif /* GL_SGIX_shadow */
-
 /*-------------------------------------------------------------------*/
 /*------------SGIX_DEPTH_TEXTURE-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_SGIX_depth_texture
-#define GL_SGIX_depth_texture 1
 
 #define GL_DEPTH_COMPONENT16_SGIX                                0x81A5
 #define GL_DEPTH_COMPONENT24_SGIX                                0x81A6
 #define GL_DEPTH_COMPONENT32_SGIX                                0x81A7
 
-#endif /* GL_SGIX_depth_texture */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_COMPILED_VERTEX_ARRAY------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_compiled_vertex_array
-#define GL_EXT_compiled_vertex_array 1
 
 #define GL_ARRAY_ELEMENT_LOCK_FIRST_EXT                         0x81A8
 #define GL_ARRAY_ELEMENT_LOCK_COUNT_EXT                         0x81A9
@@ -2934,14 +2888,9 @@ typedef void (APIENTRY * glUnlockArraysEXTPROC) ();
 extern glLockArraysEXTPROC glLockArraysEXT;
 extern glUnlockArraysEXTPROC glUnlockArraysEXT;
 
-#endif /* GL_EXT_compiled_vertex_array */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_TEXTURE_ENV_COMBINE--------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_texture_env_combine
-#define GL_ARB_texture_env_combine 1
 
 #define GL_COMBINE_ARB                                          0x8570
 #define GL_COMBINE_RGB_ARB                                      0x8571
@@ -2965,47 +2914,26 @@ extern glUnlockArraysEXTPROC glUnlockArraysEXT;
 #define GL_OPERAND1_ALPHA_ARB                                   0x8599
 #define GL_OPERAND2_ALPHA_ARB                                   0x859A
 
-#endif /* GL_ARB_texture_env_combine */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_TEXTURE_ENV_DOT3-----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_texture_env_dot3
-#define GL_ARB_texture_env_dot3 1
-
 #define GL_DOT3_RGB_ARB                                         0x86AE
 #define GL_DOT3_RGBA_ARB                                        0x86AF
-
-#endif /* GL_ARB_texture_env_dot3 */
 
 /*-------------------------------------------------------------------*/
 /*------------ARB_TEXTURE_BORDER_CLAMP-------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_texture_border_clamp
-#define GL_ARB_texture_border_clamp 1
-
 #define GL_CLAMP_TO_BORDER_ARB                                  0x812D
-
-#endif /* GL_ARB_texture_border_clamp */
 
 /*-------------------------------------------------------------------*/
 /*------------ARB_TEXTURE_ENV_ADD------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_texture_env_add
-#define GL_ARB_texture_env_add 1
-
-
-#endif /* GL_ARB_texture_env_add */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_SECONDARY_COLOR------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_secondary_color
-#define GL_EXT_secondary_color 1
 
 #define GL_COLOR_SUM_EXT                                        0x8458
 #define GL_CURRENT_SECONDARY_COLOR_EXT                          0x8459
@@ -3051,14 +2979,9 @@ extern glSecondaryColor3usEXTPROC glSecondaryColor3usEXT;
 extern glSecondaryColor3usvEXTPROC glSecondaryColor3usvEXT;
 extern glSecondaryColorPointerEXTPROC glSecondaryColorPointerEXT;
 
-#endif /* GL_EXT_secondary_color */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_FOG_COORD------------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_fog_coord
-#define GL_EXT_fog_coord 1
 
 #define GL_FOG_COORDINATE_SOURCE_EXT                            0x8450
 #define GL_FOG_COORDINATE_EXT                                   0x8451
@@ -3081,14 +3004,9 @@ extern glFogCoorddEXTPROC glFogCoorddEXT;
 extern glFogCoorddvEXTPROC glFogCoorddvEXT;
 extern glFogCoordPointerEXTPROC glFogCoordPointerEXT;
 
-#endif /* GL_EXT_fog_coord */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_VERTEX_ARRAY_RANGE----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_vertex_array_range
-#define GL_NV_vertex_array_range 1
 
 #define GL_VERTEX_ARRAY_RANGE_NV                                0x851D
 #define GL_VERTEX_ARRAY_RANGE_LENGTH_NV                         0x851E
@@ -3122,25 +3040,15 @@ extern glXFreeMemoryNVPROC glXFreeMemoryNV;
 
 #endif /* X11 */
 
-#endif /* GL_NV_vertex_array_range */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_VERTEX_ARRAY_RANGE2---------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_vertex_array_range2
-#define GL_NV_vertex_array_range2 1
-
 #define GL_VERTEX_ARRAY_RANGE_WITHOUT_FLUSH_NV                  0x8533
-
-#endif /* GL_NV_vertex_array_range2 */
 
 /*-------------------------------------------------------------------*/
 /*------------EXT_POINT_PARAMETERS-----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_point_parameters
-#define GL_EXT_point_parameters 1
 
 #define GL_POINT_SIZE_MIN_EXT                                   0x8126
 #define GL_POINT_SIZE_MAX_EXT                                   0x8127
@@ -3153,14 +3061,9 @@ typedef void (APIENTRY * glPointParameterfvEXTPROC) (GLenum pname, const GLfloat
 extern glPointParameterfEXTPROC glPointParameterfEXT;
 extern glPointParameterfvEXTPROC glPointParameterfvEXT;
 
-#endif /* GL_EXT_point_parameters */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_REGISTER_COMBINERS----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_register_combiners
-#define GL_NV_register_combiners 1
 
 #define GL_REGISTER_COMBINERS_NV                                0x8522
 #define GL_COMBINER0_NV                                         0x8550
@@ -3242,14 +3145,9 @@ extern glGetCombinerOutputParameterivNVPROC glGetCombinerOutputParameterivNV;
 extern glGetFinalCombinerInputParameterfvNVPROC glGetFinalCombinerInputParameterfvNV;
 extern glGetFinalCombinerInputParameterivNVPROC glGetFinalCombinerInputParameterivNV;
 
-#endif /* GL_NV_register_combiners */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_VERTEX_BUFFER_OBJECT----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_vertex_buffer_object
-#define GL_ARB_vertex_buffer_object 1
 
 #define GL_ARRAY_BUFFER_ARB                             0x8892
 #define GL_ELEMENT_ARRAY_BUFFER_ARB                     0x8893
@@ -3310,14 +3208,9 @@ extern glUnmapBufferARBPROC glUnmapBufferARB;
 extern glGetBufferParameterivARBPROC glGetBufferParameterivARB;
 extern glGetBufferPointervARBPROC glGetBufferPointervARB;
 
-#endif /* GL_ARB_vertex_buffer_object */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_MULTISAMPLE----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_multisample
-#define GL_ARB_multisample 1
 
 #define GL_MULTISAMPLE_ARB                                      0x809D
 #define GL_SAMPLE_ALPHA_TO_COVERAGE_ARB                         0x809E
@@ -3333,14 +3226,9 @@ typedef void (APIENTRY * glSampleCoverageARBPROC) (GLclampf value, GLboolean inv
 
 extern glSampleCoverageARBPROC glSampleCoverageARB;
 
-#endif /* GL_ARB_multisample */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_TEXTURE_SHADER--------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_texture_shader
-#define GL_NV_texture_shader 1
 
 #define GL_TEXTURE_SHADER_NV                                    0x86DE
 #define GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV                 0x86D9
@@ -3413,28 +3301,18 @@ extern glSampleCoverageARBPROC glSampleCoverageARB;
 #define GL_TEXTURE_DT_SIZE_NV                                   0x871E
 #define GL_TEXTURE_MAG_SIZE_NV                                  0x871F
 
-#endif /* GL_NV_texture_shader */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_NV_TEXTURE_RECTANGLE--------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_texture_rectangle
-#define GL_NV_texture_rectangle 1
 
 #define GL_TEXTURE_RECTANGLE_NV                                 0x84F5
 #define GL_TEXTURE_BINDING_RECTANGLE_NV                         0x84F6
 #define GL_PROXY_TEXTURE_RECTANGLE_NV                           0x84F7
 #define GL_MAX_RECTANGLE_TEXTURE_SIZE_NV                        0x84F8
 
-#endif /* GL_NV_texture_recrangle */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_TEXTURE_ENV_COMBINE4--------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_texture_env_combine4
-#define GL_NV_texture_env_combine4 1
 
 #define GL_COMBINE4_NV                                          0x8503
 #define GL_SOURCE3_RGB_NV                                       0x8583
@@ -3442,63 +3320,38 @@ extern glSampleCoverageARBPROC glSampleCoverageARB;
 #define GL_OPERAND3_RGB_NV                                      0x8593
 #define GL_OPERAND3_ALPHA_NV                                    0x859B
 
-#endif /* GL_NV_texture_env_combine */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_FOG_DISTANCE----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_fog_distance
-#define GL_NV_fog_distance 1
 
 #define GL_FOG_DISTANCE_MODE_NV                                 0x855A
 #define GL_EYE_RADIAL_NV                                        0x855B
 #define GL_EYE_PLANE_ABSOLUTE_NV                                0x855C
 
-#endif /* GL_NV_fog_distance */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_TEXTURE_FILTER_ANISOTROPIC-------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_EXT_texture_filter_anisotropic
-#define GL_EXT_texture_filter_anisotropic 1
-
 #define GL_TEXTURE_MAX_ANISOTROPY_EXT                           0x84FE
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT                       0x84FF
-
-#endif /* GL_EXT_texture_filter_anisotropic */
 
 /*-------------------------------------------------------------------*/
 /*------------SGIS_GENERATE_MIPMAP-----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_SGIS_generate_mipmap
-#define GL_SGIS_generate_mipmap 1
-
 #define GL_GENERATE_MIPMAP_SGIS                                 0x8191
 #define GL_GENERATE_MIPMAP_HINT_SGIS                            0x8192
-
-#endif /* GL_SGIS_generate_mipmap */
 
 /*-------------------------------------------------------------------*/
 /*------------NV_TEXGEN_REFLECTION-----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_texgen_reflection
-#define GL_NV_texgen_reflection 1
-
 #define GL_NORMAL_MAP_NV                                        0x8511
 #define GL_REFLECTION_MAP_NV                                    0x8512
-
-#endif /* GL_NV_texgen_reflection */
 
 /*-------------------------------------------------------------------*/
 /*------------EXT_VERTEX_WEIGHTING-----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_vertex_weighting
-#define GL_EXT_vertex_weighting 1
 
 #define GL_MODELVIEW0_STACK_DEPTH_EXT                           0x0BA3  /* alias to GL_MODELVIEW_STACK_DEPTH */
 #define GL_MODELVIEW1_STACK_DEPTH_EXT                           0x8502
@@ -3522,14 +3375,9 @@ extern glVertexWeightfEXTPROC glVertexWeightfEXT;
 extern glVertexWeightfvEXTPROC glVertexWeightfvEXT;
 extern glVertexWeightPointerEXTPROC glVertexWeightPointerEXT;
 
-#endif /* GL_EXT_vertex_weighting */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_VERTEX_PROGRAM--------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_vertex_program
-#define GL_NV_vertex_program 1
 
 #define GL_VERTEX_PROGRAM_NV                                    0x8620
 #define GL_VERTEX_PROGRAM_POINT_SIZE_NV                         0x8642
@@ -3745,14 +3593,9 @@ extern glVertexAttribs4fvNVPROC glVertexAttribs4fvNV;
 extern glVertexAttribs4dvNVPROC glVertexAttribs4dvNV;
 extern glVertexAttribs4ubvNVPROC glVertexAttribs4ubvNV;
 
-#endif /* GL_NV_vertex_program */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_FENCE-----------------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_fence
-#define GL_NV_fence 1
 
 #define GL_ALL_COMPLETED_NV                                     0x84F2
 #define GL_FENCE_STATUS_NV                                      0x84F3
@@ -3774,14 +3617,9 @@ extern glFinishFenceNVPROC glFinishFenceNV;
 extern glIsFenceNVPROC glIsFenceNV;
 extern glGetFenceivNVPROC glGetFenceivNV;
 
-#endif /* GL_NV_fence */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_TEXTURE_SHADER2-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_texture_shader2
-#define GL_NV_texture_shader2
 
 #define GL_DOT_PRODUCT_TEXTURE_3D_NV                            0x86EF
 #define GL_HILO_NV                                              0x86F4
@@ -3812,47 +3650,27 @@ extern glGetFenceivNVPROC glGetFenceivNV;
 #define GL_DSDT_MAG_INTENSITY_NV                                0x86DC
 #define GL_DSDT8_MAG8_INTENSITY8_NV                             0x870B 
 
-#endif /* GL_NV_texture_shader2 */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_BLEND_SQUARE----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_blend_square
-#define GL_NV_blend_square 1
-
-#endif /* GL_NV_blend_square */
 
 /*-------------------------------------------------------------------*/
 /*------------NV_LIGHT_MAX_EXPONENT----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_light_max_exponent
-#define GL_NV_light_max_exponent 1
-
 #define GL_MAX_SHININESS_NV                                     0x8504
 #define GL_MAX_SPOT_EXPONENT_NV                                 0x8505
-
-#endif /* GL_NV_light_max_exponent */
 
 /*-------------------------------------------------------------------*/
 /*------------NV_PACKED_DEPTH_STENCIL--------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_packed_depth_stencil
-#define GL_NV_packed_depth_stencil 1
-
 #define GL_DEPTH_STENCIL_NV                                     0x84F9
 #define GL_UNSIGNED_INT_24_8_NV                                 0x84FA
-
-#endif /* GL_NV_packed_depth_stencil */
 
 /*-------------------------------------------------------------------*/
 /*------------NV_REGISTER_COMBINERS2---------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_register_combiners2
-#define GL_NV_register_combiners2
 
 #define GL_PER_STAGE_CONSTANTS_NV                               0x8535
 
@@ -3862,50 +3680,30 @@ typedef void (APIENTRY * glGetCombinerStageParameterfvNVPROC) (GLenum stage, GLe
 extern glCombinerStageParameterfvNVPROC glCombinerStageParameterfvNV;
 extern glGetCombinerStageParameterfvNVPROC glGetCombinerStageParameterfvNV;
 
-#endif /* GL_NV_register_combiners2 */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_ABGR-----------------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_EXT_abgr
-#define GL_EXT_abgr 1
-
 #define GL_ABGR_EXT                                             0x8000
-
-#endif /* GL_EXT_abgr */
 
 /*-------------------------------------------------------------------*/
 /*------------EXT_STENCIL_WRAP---------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_EXT_stencil_wrap
-#define GL_EXT_stencil_wrap 1
-
 #define GL_INCR_WRAP_EXT                                        0x8507
 #define GL_DECR_WRAP_EXT                                        0x8508
-
-#endif /* GL_EXT_stencil_wrap */
 
 /*-------------------------------------------------------------------*/
 /*------------EXT_TEXTURE_LOD_BIAS-----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_EXT_texture_lod_bias
-#define GL_EXT_texture_lod_bias 1
-
 #define GL_TEXTURE_FILTER_CONTROL_EXT                           0x8500
 #define GL_TEXTURE_LOD_BIAS_EXT                                 0x8501
 #define GL_MAX_TEXTURE_LOD_BIAS_EXT                             0x84FD
 
-#endif /* GL_EXT_texture_lod_bias */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_EVALUATORS------------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_evaluators
-#define GL_NV_evaluators 1
 
 #define GL_EVAL_2D_NV                                           0x86C0
 #define GL_EVAL_TRIANGULAR_2D_NV                                0x86C1
@@ -3952,26 +3750,16 @@ extern glGetMapAttribParameterivNVPROC glGetMapAttribParameterivNV;
 extern glGetMapAttribParameterfvNVPROC glGetMapAttribParameterfvNV;
 extern glEvalMapsNVPROC glEvalMapsNV;
 
-#endif /* GL_NV_evaluators */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_COPY_DEPTH_TO_COLOR---------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_copy_depth_to_color
-#define GL_NV_copy_depth_to_color 1
-
 #define GL_DEPTH_STENCIL_TO_RGBA_NV                             0x886E
 #define GL_DEPTH_STENCIL_TO_BGRA_NV                             0x886F
-
-#endif /* GL_NV_copy_depth_to_color */
 
 /*-------------------------------------------------------------------*/
 /*------------ATI_PN_TRIANGLES---------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_pn_triangles
-#define GL_ATI_pn_triangles 1
 
 #define GL_PN_TRIANGLES_ATI                                     0x87F0
 #define GL_MAX_PN_TRIANGLES_TESSELATION_LEVEL_ATI               0x87F1
@@ -3989,14 +3777,9 @@ typedef void (APIENTRY * glPNTrianglesfATIPROC) (GLenum pname, GLfloat param);
 extern glPNTrianglesiATIPROC glPNTrianglesiATI;
 extern glPNTrianglesfATIPROC glPNTrianglesfATI;
 
-#endif /* GL_ATI_pn_triangles */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_POINT_PARAMETERS-----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_point_parameters
-#define GL_ARB_point_parameters 1
 
 #define GL_POINT_SIZE_MIN_ARB                                   0x8126
 #define GL_POINT_SIZE_MAX_ARB                                   0x8127
@@ -4009,23 +3792,13 @@ typedef void (APIENTRY * glPointParameterfvARBPROC) (GLenum pname, GLfloat *para
 extern glPointParameterfARBPROC glPointParameterfARB;
 extern glPointParameterfvARBPROC glPointParameterfvARB;
 
-#endif /* GL_ARB_point_parameters */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_TEXTURE_ENV_CROSSBAR-------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_texture_env_crossbar
-#define GL_ARB_texture_env_crossbar 1
-
-#endif
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_VERTEX_BLEND---------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_vertex_blend
-#define GL_ARB_vertex_blend 1
 
 #define GL_MAX_VERTEX_UNITS_ARB                                 0x86A4
 #define GL_ACTIVE_VERTEX_UNITS_ARB                              0x86A5
@@ -4092,14 +3865,9 @@ extern glWeightuivARBPROC glWeightuivARB;
 extern glWeightPointerARBPROC glWeightPointerARB;
 extern glVertexBlendARBPROC glVertexBlendARB;
 
-#endif /* GL_ARB_vertex_blend */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_MULTI_DRAW_ARRAYS----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_multi_draw_arrays
-#define GL_EXT_multi_draw_arrays 1
 
 typedef void (APIENTRY * glMultiDrawArraysEXTPROC) (GLenum mode, GLint *first, GLsizei *count, GLsizei primcount);
 typedef void (APIENTRY * glMultiDrawElementsEXTPROC) (GLenum mode, GLsizei *count, GLenum type, const GLvoid **indices, GLsizei primcount);
@@ -4107,14 +3875,9 @@ typedef void (APIENTRY * glMultiDrawElementsEXTPROC) (GLenum mode, GLsizei *coun
 extern glMultiDrawArraysEXTPROC glMultiDrawArraysEXT;
 extern glMultiDrawElementsEXTPROC glMultiDrawElementsEXT;
 
-#endif /* GL_EXT_multi_draw_arrays */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_MATRIX_PALETTE-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_matrix_palette
-#define GL_ARB_matrix_palette 1
 
 #define GL_MATRIX_PALETTE_ARB                                   0x8840
 #define GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB                   0x8841
@@ -4139,14 +3902,9 @@ extern glMatrixIndexusvARBPROC glMatrixIndexusvARB;
 extern glMatrixIndexuivARBPROC glMatrixIndexuivARB;
 extern glMatrixIndexPointerARBPROC glMatrixIndexPointerARB;
 
-#endif /* GL_ARB_matrix_palette */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_VERTEX_SHADER--------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_vertex_shader
-#define GL_EXT_vertex_shader 1
 
 #define GL_VERTEX_SHADER_EXT                                    0x8780
 #define GL_VERTEX_SHADER_BINDING_EXT                            0x8781
@@ -4345,14 +4103,9 @@ extern glGetLocalConstantBooleanvEXTPROC glGetLocalConstantBooleanvEXT;
 extern glGetLocalConstantIntegervEXTPROC glGetLocalConstantIntegervEXT;
 extern glGetLocalConstantFloatvEXTPROC glGetLocalConstantFloatvEXT;
 
-#endif /* GL_EXT_vertex_shader */
-
 /*-------------------------------------------------------------------*/
 /*------------ATI_ENVMAP_BUMPMAP-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_envmap_bumpmap
-#define GL_ATI_envmap_bumpmap 1
 
 #define GL_BUMP_ROT_MATRIX_ATI                                  0x8775
 #define GL_BUMP_ROT_MATRIX_SIZE_ATI                             0x8776
@@ -4373,14 +4126,9 @@ extern glTexBumpParameterfvATIPROC glTexBumpParameterfvATI;
 extern glGetTexBumpParameterivATIPROC glGetTexBumpParameterivATI;
 extern glGetTexBumpParameterfvATIPROC glGetTexBumpParameterfvATI;
 
-#endif /* GL_ATI_envmap_bumpmap */
-
 /*-------------------------------------------------------------------*/
 /*------------ATI_FRAGMENT_SHADER------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_fragment_shader
-#define GL_ATI_fragment_shader 1
 
 #define GL_FRAGMENT_SHADER_ATI                                  0x8920
 #define GL_REG_0_ATI                                            0x8921
@@ -4517,26 +4265,16 @@ extern glAlphaFragmentOp2ATIPROC glAlphaFragmentOp2ATI;
 extern glAlphaFragmentOp3ATIPROC glAlphaFragmentOp3ATI;
 extern glSetFragmentShaderConstantATIPROC glSetFragmentShaderConstantATI;
 
-#endif /* GL_ATI_fragment_shader */
-
 /*-------------------------------------------------------------------*/
 /*------------ATI_TEXTURE_MIRROR_ONCE--------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ATI_texture_mirror_once
-#define GL_ATI_texture_mirror_once 1
-
 #define GL_MIRROR_CLAMP_ATI                                     0x8742
 #define GL_MIRROR_CLAMP_TO_EDGE_ATI                             0x8743
-
-#endif
 
 /*-------------------------------------------------------------------*/
 /*------------ATI_ELEMENT_ARRAY--------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_element_array
-#define GL_ATI_element_array 1
 
 #define GL_ELEMENT_ARRAY_ATI                                    0x8768
 #define GL_ELEMENT_ARRAY_TYPE_ATI                               0x8769
@@ -4550,14 +4288,9 @@ extern glElementPointerATIPROC glElementPointerATI;
 extern glDrawElementArrayATIPROC glDrawElementArrayATI;
 extern glDrawRangeElementArrayATIPROC glDrawRangeElementArrayATI;
 
-#endif /* GL_ATI_element_array */
-
 /*-------------------------------------------------------------------*/
 /*------------ATI_VERTEX_STREAMS-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_vertex_streams 
-#define GL_ATI_vertex_streams 1
 
 #define GL_MAX_VERTEX_STREAMS_ATI                               0x876B  
 #define GL_VERTEX_SOURCE_ATI                                    0x876C
@@ -4647,14 +4380,9 @@ extern glNormalStream3fvATIPROC glNormalStream3fvATI;
 extern glNormalStream3dATIPROC glNormalStream3dATI;
 extern glNormalStream3dvATIPROC glNormalStream3dvATI;
 
-#endif /* GL_ATI_vertex_streams */
-
 /*-------------------------------------------------------------------*/
 /*------------ATI_VERTEX_ARRAY_OBJECT--------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_vertex_array_object
-#define GL_ATI_vertex_array_object 1
 
 #define GL_STATIC_ATI                                           0x8760
 #define GL_DYNAMIC_ATI                                          0x8761
@@ -4691,26 +4419,16 @@ extern glVariantArrayObjectATIPROC glVariantArrayObjectATI;
 extern glGetVariantArrayObjectfvATIPROC glGetVariantArrayObjectfvATI;
 extern glGetVariantArrayObjectivATIPROC glGetVariantArrayObjectivATI;
 
-#endif /* GL_ATI_vertex_array_object */
-
 /*-------------------------------------------------------------------*/
 /*------------HP_OCCLUSION_TEST--------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_HP_occlusion_test
-#define GL_HP_occlusion_test 1
-
 #define GL_OCCLUSION_TEST_HP                                    0x8165;
 #define GL_OCCLUSION_TEST_RESULT_HP                             0x8166;
-
-#endif /* GL_HP_occlusion_test */
 
 /*-------------------------------------------------------------------*/
 /*------------ATIX_POINT_SPRITES-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATIX_point_sprites
-#define GL_ATIX_point_sprites 1
 
 #define GL_TEXTURE_POINT_MODE_ATIX                               0x60b0
 #define	GL_TEXTURE_POINT_ONE_COORD_ATIX                          0x60b1
@@ -4719,43 +4437,26 @@ extern glGetVariantArrayObjectivATIPROC glGetVariantArrayObjectivATI;
 #define GL_POINT_SPRITE_CULL_CENTER_ATIX                         0x60b4
 #define GL_POINT_SPRITE_CULL_CLIP_ATIX                           0x60b5
 
-#endif /* GL_ATIX_point_sprites */
-
 /*-------------------------------------------------------------------*/
 /*------------ATIX_TEXTURE_ENV_ROUTE---------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATIX_texture_env_route
-#define GL_ATIX_texture_env_route 1
 
 #define GL_SECONDARY_COLOR_ATIX                                  0x8747
 #define GL_TEXTURE_OUTPUT_RGB_ATIX                               0x8748
 #define GL_TEXTURE_OUTPUT_ALPHA_ATIX                             0x8749
 
-#endif /* GL_ATIX_texture_env_route */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_DEPTH_CLAMP-----------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_depth_clamp
-#define GL_NV_depth_clamp 1
-
 #define GL_DEPTH_CLAMP_NV                                       0x864F
-
-#endif /* GL_NV_depth_clamp */
 
 /*-------------------------------------------------------------------*/
 /*------------NV_OCCLUSION_QUERY-------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_occlusion_query
-#define GL_NV_occlusion_query 1
-
-#ifndef GL_HP_occlusion_test
-#define GL_OCCLUSION_TEST_HP                                    0x8165
-#define GL_OCCLUSION_TEST_RESULT_HP                             0x8166
-#endif /* GL_HP_occlusion_test */
+/*#define GL_OCCLUSION_TEST_HP                                    0x8165
+#define GL_OCCLUSION_TEST_RESULT_HP                             0x8166*/
 #define GL_PIXEL_COUNTER_BITS_NV                                0x8864
 #define GL_CURRENT_OCCLUSION_QUERY_ID_NV                        0x8865
 #define GL_PIXEL_COUNT_NV                                       0x8866
@@ -4777,14 +4478,9 @@ extern glEndOcclusionQueryNVPROC glEndOcclusionQueryNV;
 extern glGetOcclusionQueryivNVPROC glGetOcclusionQueryivNV;
 extern glGetOcclusionQueryuivNVPROC glGetOcclusionQueryuivNV;
 
-#endif /* GL_NV_occlusion_query */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_POINT_SPRITE----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_point_sprite
-#define GL_NV_point_sprite 1
 
 #define GL_POINT_SPRITE_NV                                      0x8861
 #define GL_COORD_REPLACE_NV                                     0x8862
@@ -4796,14 +4492,9 @@ typedef void (APIENTRY * glPointParameterivNVPROC) (GLenum pname, const GLint *p
 extern glPointParameteriNVPROC glPointParameteriNV;
 extern glPointParameterivNVPROC glPointParameterivNV;
 
-#endif /* GL_NV_point_sprite */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_TEXTURE_SHADER3-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_texture_shader3
-#define GL_NV_texture_shader3 1
 
 #define GL_OFFSET_PROJECTIVE_TEXTURE_2D_NV                      0x8850
 #define GL_OFFSET_PROJECTIVE_TEXTURE_2D_SCALE_NV                0x8851
@@ -4823,58 +4514,34 @@ extern glPointParameterivNVPROC glPointParameterivNV;
 #define GL_SIGNED_HILO8_NV                                      0x885F
 #define GL_FORCE_BLUE_TO_ONE_NV                                 0x8860
 
-#endif /* GL_NV_texture_shader3 */
-
 /*-------------------------------------------------------------------*/
 /*------------NV_VERTEX_PROGRAM1_1-----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_vertex_program1_1
-#define GL_NV_vertex_program1_1
-
-#endif /* GL_NV_vertex_program1_1 */
 
 /*-------------------------------------------------------------------*/
 /*------------ARB_TEXTURE_MIRRORED_REPEAT----------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_texture_mirrored_repeat
-#define GL_ARB_texture_mirrored_repeat 1
-
 #define GL_GL_MIRRORED_REPEAT_ARB                               0x8370
-
-#endif /* GL_ARB_texture_mirrored_repeat */
 
 /*-------------------------------------------------------------------*/
 /*------------ARB_SHADOW---------------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_shadow
-#define GL_ARB_shadow 1
-
 #define GL_TEXTURE_COMPARE_MODE_ARB                             0x884C
 #define GL_TEXTURE_COMPARE_FUNC_ARB                             0x884D
 #define GL_COMPARE_R_TO_TEXTURE_ARB                             0x884E
-
-#endif /* GL_ARB_shadow */
 
 /*-------------------------------------------------------------------*/
 /*------------ARB_SHADOW_AMBIENT-------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ARB_shadow_ambient
-#define GL_ARB_shadow_ambient 1
-
 #define GL_TEXTURE_COMPARE_FAIL_VALUE_ARB                       0x80BF 
-
-#endif /* GL_ARB_shadow_ambient */
 
 /*-------------------------------------------------------------------*/
 /*------------ARB_DEPTH_TEXTURE--------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_depth_texture
-#define GL_ARB_depth_texture 1
 
 #define GL_DEPTH_COMPONENT16_ARB                                0x81A5
 #define GL_DEPTH_COMPONENT24_ARB                                0x81A6
@@ -4882,14 +4549,9 @@ extern glPointParameterivNVPROC glPointParameterivNV;
 #define GL_TEXTURE_DEPTH_SIZE_ARB                               0x884A
 #define GL_DEPTH_TEXTURE_MODE_ARB                               0x884B
 
-#endif /* GL_ARB_depth_texture */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_WINDOW_POS-----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_window_pos
-#define GL_ARB_window_pos 1
 
 typedef void (APIENTRY * glWindowPos2dARBPROC) (GLdouble x, GLdouble y);
 typedef void (APIENTRY * glWindowPos2fARBPROC) (GLfloat x, GLfloat y);
@@ -4925,25 +4587,15 @@ extern glWindowPos3fvARBPROC glWindowPos3fvARB;
 extern glWindowPos3ivARBPROC glWindowPos3ivARB;
 extern glWindowPos3svARBPROC glWindowPos3svARB;
 
-#endif /* GL_ARB_window_pos */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_SHADOW_FUNCS---------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_shadow_funcs
-#define GL_EXT_shadow_funcs 1
-
-#endif /* GL_EXT_shadow_funcs */
 
 
 /*-------------------------------------------------------------------*/
 /*------------EXT_draw_range_elements--------------------------------*/
 /*-------------------------------------------------------------------*/
 
-
-#ifndef GL_EXT_draw_range_elements
-#define GL_EXT_draw_range_elements 1
 
 typedef void (APIENTRY * glDrawRangeElementsEXTPROC) ( GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices);
 
@@ -4952,28 +4604,18 @@ extern glDrawRangeElementsEXTPROC glDrawRangeElementsEXT;
 #define GL_MAX_ELEMENTS_VERTICES_EXT                            0x80E8
 #define GL_MAX_ELEMENTS_INDICES_EXT                             0x80E9
 
-#endif
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_texture_compression_s3tc---------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_texture_compression_s3tc
-#define GL_EXT_texture_compression_s3tc 1
 
 #define GL_COMPRESSED_RGB_S3TC_DXT1_EXT                         0x83F0
 #define GL_COMPRESSED_RGBA_S3TC_DXT1_EXT                        0x83F1
 #define GL_COMPRESSED_RGBA_S3TC_DXT3_EXT                        0x83F2
 #define GL_COMPRESSED_RGBA_S3TC_DXT5_EXT                        0x83F3
 
-#endif /* GL_EXT_texture_compression_s3tc */
-
 /*-------------------------------------------------------------------*/
 /*------------EXT_stencil_two_side-----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_stencil_two_side
-#define GL_EXT_stencil_two_side 1
 
 typedef void (APIENTRY * glActiveStencilFaceEXTPROC) (GLenum face);
 
@@ -4982,14 +4624,9 @@ extern glActiveStencilFaceEXTPROC glActiveStencilFaceEXT;
 #define GL_STENCIL_TEST_TWO_SIDE_EXT                            0x8910
 #define GL_ACTIVE_STENCIL_FACE_EXT                              0x8911
 
-#endif /* GL_EXT_stencil_two_side */
-
 /*-------------------------------------------------------------------*/
 /*------------ARB_vertex_program-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_vertex_program
-#define GL_ARB_vertex_program 1
 
 typedef void (APIENTRY * glVertexAttrib1sARBPROC) (GLuint index, GLshort x);
 typedef void (APIENTRY * glVertexAttrib1fARBPROC) (GLuint index, GLfloat x);
@@ -5197,26 +4834,16 @@ extern glIsProgramARBPROC glIsProgramARB;
 #define GL_MATRIX30_ARB                                         0x88DE
 #define GL_MATRIX31_ARB                                         0x88DF
 
-#endif /* GL_ARB_vertex_program */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_EXT_BGRA--------------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_EXT_bgra
-#define GL_EXT_bgra 1
-
 #define GL_BGR_EXT                                              0x80E0
 #define GL_BGRA_EXT                                             0x80E1
-
-#endif /* GL_EXT_bgra */
 
 /*-------------------------------------------------------------------*/
 /*------------EXT_CULL_VERTEX----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_cull_vertex
-#define GL_EXT_cull_vertex 1
 
 #define GL_CULL_VERTEX_EXT                                      0x81AA
 #define GL_CULL_VERTEX_EYE_POSITION_EXT                         0x81AB
@@ -5228,28 +4855,17 @@ typedef void (APIENTRY * glCullParameterdvEXTPROC) (GLenum pname, GLdouble *para
 extern glCullParameterfvEXTPROC glCullParameterfvEXT;
 extern glCullParameterdvEXTPROC glCullParameterdvEXT;
  
-
-#endif /* GL_EXT_cull_vertex */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_ATI_POINT_CULL_MODE---------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_point_cull_mode
-#define GL_ATI_point_cull_mode 1
 
 #define GL_POINT_CULL_MODE_ATI                                  0x60b3
 #define GL_POINT_CULL_CENTER_ATI                                0x60b4
 #define GL_POINT_CLIP_ATI                                       0x60b5
 
-#endif /* GL_ATI_point_cull_mode */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_BLEND_FUNC_SEPARATE---------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_blend_func_separate
-#define GL_EXT_blend_func_separate 1
 
 #define GL_BLEND_DST_RGB_EXT                                    0x80C8
 #define GL_BLEND_SRC_RGB_EXT                                    0x80C9
@@ -5260,27 +4876,17 @@ typedef void (APIENTRY * glBlendFuncSeparateEXTPROC) (GLenum sfactorRGB, GLenum 
 
 extern glBlendFuncSeparateEXTPROC glBlendFuncSeparateEXT;
 
-#endif /* GL_EXT_blend_func_separate */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_EXT_SEPARATE_SPECULAR_COLOR-------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_separate_specular_color
-#define GL_EXT_separate_specular_color 1
 
 #define GL_LIGHT_MODEL_COLOR_CONTROL_EXT                        0x81F8
 #define GL_SINGLE_COLOR_EXT                                     0x81F9
 #define GL_SEPARATE_SPECULAR_COLOR_EXT                          0x81FA
 
-#endif /* GL_EXT_separate_specular_color */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_NV_ELEMENT_ARRAY------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_element_array
-#define GL_NV_element_array 1
 
 #define GL_ELEMENT_ARRAY_TYPE_NV                                0x8769
 #define GL_ELEMENT_ARRAY_POINTER_NV                             0x876A
@@ -5297,14 +4903,9 @@ extern glDrawRangeElementArrayNVPROC glDrawRangeElementArrayNV;
 extern glMultiDrawElementArrayNVPROC glMultiDrawElementArrayNV;
 extern glMultiDrawRangeElementArrayNVPROC glMultiDrawRangeElementArrayNV;
 
-#endif /* GL_NV_element_array */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_NV_FLOAT_BUFFER-------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_float_buffer
-#define GL_NV_float_buffer 1
 
 #define GL_FLOAT_R_NV                                           0x8880
 #define GL_FLOAT_RG_NV                                          0x8881
@@ -5335,14 +4936,9 @@ extern glMultiDrawRangeElementArrayNVPROC glMultiDrawRangeElementArrayNV;
 #define WGL_TEXTURE_FLOAT_RGBA_NV                               0x20B8
 #endif /* _WIN32 */
 
-#endif /* GL_NV_float_buffer */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_NV_FRAGMENT_PROGRAM---------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_fragment_program
-#define GL_NV_fragment_program 1
 
 #define GL_FRAGMENT_PROGRAM_NV                                  0x8870
 #define GL_MAX_TEXTURE_COORDS_NV                                0x8871
@@ -5358,14 +4954,12 @@ typedef void (APIENTRY * glProgramNamedParameter4dvNVPROC) (GLuint id, GLsizei l
 typedef void (APIENTRY * glGetProgramNamedParameterfvNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLfloat *params);
 typedef void (APIENTRY * glGetProgramNamedParameterdvNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLdouble *params);
 
-#ifndef GL_ARB_vertex_program
 typedef void (APIENTRY * glProgramLocalParameter4dARBPROC) (GLenum target, GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w);
 typedef void (APIENTRY * glProgramLocalParameter4dvARBPROC) (GLenum target, GLuint index, const GLdouble *params);
 typedef void (APIENTRY * glProgramLocalParameter4fARBPROC) (GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 typedef void (APIENTRY * glProgramLocalParameter4fvARBPROC) (GLenum target, GLuint index, const GLfloat *params);
 typedef void (APIENTRY * glGetProgramLocalParameterdvARBPROC) (GLenum target, GLuint index, GLdouble *params);
 typedef void (APIENTRY * glGetProgramLocalParameterfvARBPROC) (GLenum target, GLuint index, GLfloat *params);
-#endif /* GL_ARB_vertex_program */
 
 extern glProgramNamedParameter4fNVPROC glProgramNamedParameter4fNV;
 extern glProgramNamedParameter4dNVPROC glProgramNamedParameter4dNV;
@@ -5374,23 +4968,16 @@ extern glProgramNamedParameter4dvNVPROC glProgramNamedParameter4dvNV;
 extern glGetProgramNamedParameterfvNVPROC glGetProgramNamedParameterfvNV;
 extern glGetProgramNamedParameterdvNVPROC glGetProgramNamedParameterdvNV;
 
-#ifndef GL_ARB_vertex_program
 extern glProgramLocalParameter4dARBPROC glProgramLocalParameter4dARB;
 extern glProgramLocalParameter4dvARBPROC glProgramLocalParameter4dvARB;
 extern glProgramLocalParameter4fARBPROC glProgramLocalParameter4fARB;
 extern glProgramLocalParameter4fvARBPROC glProgramLocalParameter4fvARB;
 extern glGetProgramLocalParameterdvARBPROC glGetProgramLocalParameterdvARB;
 extern glGetProgramLocalParameterfvARBPROC glGetProgramLocalParameterfvARB;
-#endif /* GL_ARB_vertex_program */
-
-#endif /* GL_NV_fragment_program */
 
 /*-------------------------------------------------------------------*/
 /*------------GL_NV_PRIMITIVE_RESTART--------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_NV_primitive_restart
-#define GL_NV_primitive_restart 1
 
 #define GL_PRIMITIVE_RESTART_NV                                 0x8558
 #define GL_PRIMITIVE_RESTART_INDEX_NV                           0x8559
@@ -5401,27 +4988,13 @@ typedef void (APIENTRY * glPrimitiveRestartIndexNVPROC) (GLuint index);
 extern glPrimitiveRestartNVPROC glPrimitiveRestartNV;
 extern glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV;
 
-#endif /* GL_NV_primitive_restart */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_NV_VERTEX_PROGRAM2----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_NV_vertex_program2
-#define GL_NV_vertex_program2 1
-
-#endif /* GL_NV_vertex_program2 */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_ARB_FRAGMENT_PROGRAM--------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ARB_fragment_program
-#define GL_ARB_fragment_program
-
-#ifndef GL_ARB_vertex_program
-#error ARB_vertex_program not defined
-#endif
 
 /* no new entry points, all of ARB_vertex_program reused */
 
@@ -5441,14 +5014,9 @@ extern glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV;
 #define GL_MAX_TEXTURE_COORDS_ARB                               0x8871
 #define GL_MAX_TEXTURE_IMAGE_UNITS_ARB                          0x8872
 
-#endif /* GL_ARB_fragment_program */
-
 /*-------------------------------------------------------------------*/
 /*------------ATI_separate_stencil---------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_ATI_separate_stencil
-#define GL_ATI_separate_stencil 1
 
 #define GL_STENCIL_BACK_FUNC_ATI				0x8800
 #define GL_STENCIL_BACK_FAIL_ATI				0x8801
@@ -5461,25 +5029,15 @@ typedef void (APIENTRY * glStencilFuncSeparateATIPROC) (GLenum frontfunc, GLenum
 extern glStencilOpSeparateATIPROC glStencilOpSeparateATI;
 extern glStencilFuncSeparateATIPROC glStencilFuncSeparateATI;
 
-#endif /* GL_ATI_separate_stencil */
-
 /*-------------------------------------------------------------------*/
 /*------------GL_ATI_TEXT_FRAGMENT_SHADER----------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef GL_ATI_text_fragment_shader
-#define GL_ATI_text_fragment_shader 1
-
 #define GL_TEXT_FRAGMENT_SHADER_ATI                             0x8200
-
-#endif /* GL_ATI_text_fragment_shader */
 
 /*-------------------------------------------------------------------*/
 /*------------GL_EXT_textzre_env_combine-----------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef GL_EXT_texture_env_combine
-#define GL_EXT_texture_env_combine 1
 
 #define GL_COMBINE_EXT                                          0x8570
 #define GL_COMBINE_RGB_EXT                                      0x8571
@@ -5503,8 +5061,6 @@ extern glStencilFuncSeparateATIPROC glStencilFuncSeparateATI;
 #define GL_OPERAND1_ALPHA_EXT                                   0x8599
 #define GL_OPERAND2_ALPHA_EXT                                   0x859A
 
-#endif /* GL_EXT_texture_env_combine */
-
 /*-------------------------------------------------------------------*/
 /*------------END GL EXTENSIONS--------------------------------------*/
 /*-------------------------------------------------------------------*/
@@ -5519,22 +5075,13 @@ extern glStencilFuncSeparateATIPROC glStencilFuncSeparateATI;
 /*------------WGL_EXT_EXTENSION_STRING-------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef WGL_EXT_extensions_string
-#define WGL_EXT_extensions_string 1
-
 typedef const char* (APIENTRY * wglGetExtensionsStringEXTPROC) ();
 
 extern wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
 
-#endif /* WGL_EXT_extensions_string */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_BUFFER_REGION----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_ARB_buffer_region
-#define WGL_ARB_buffer_region 1
-
 
 #define WGL_FRONT_COLOR_BUFFER_BIT_ARB                          0x00000001
 #define WGL_BACK_COLOR_BUFFER_BIT_ARB                           0x00000002
@@ -5551,27 +5098,17 @@ extern wglDeleteBufferRegionARBPROC wglDeleteBufferRegionARB;
 extern wglSaveBufferRegionARBPROC wglSaveBufferRegionARB;
 extern wglRestoreBufferRegionARBPROC wglRestoreBufferRegionARB;
 
-#endif /* WGL_ARB_buffer_region */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_EXTENSION_STRING-------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_ARB_extensions_string
-#define WGL_ARB_extensions_string 1
 
 typedef const char* (APIENTRY * wglGetExtensionsStringARBPROC) (HDC hdc);
 
 extern wglGetExtensionsStringARBPROC wglGetExtensionsStringARB;
 
-#endif /* WGL_ARB_extensions_string */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_PBUFFER----------------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_ARB_pbuffer
-#define WGL_ARB_pbuffer 1
 
 #define WGL_DRAW_TO_PBUFFER_ARB                                 0x202D
 #define WGL_DRAW_TO_PBUFFER_ARB                                 0x202D
@@ -5597,14 +5134,9 @@ extern wglReleasePbufferDCARBPROC wglReleasePbufferDCARB;
 extern wglDestroyPbufferARBPROC wglDestroyPbufferARB;
 extern wglQueryPbufferARBPROC wglQueryPbufferARB;
 
-#endif /* WGL_ARB_pbuffer */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_PIXEL_FORMAT-----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_ARB_pixel_format
-#define WGL_ARB_pixel_format 1
 
 #define WGL_NUMBER_PIXEL_FORMATS_ARB                            0x2000
 #define WGL_DRAW_TO_WINDOW_ARB                                  0x2001
@@ -5664,14 +5196,9 @@ extern wglGetPixelFormatAttribivARBPROC wglGetPixelFormatAttribivARB;
 extern wglGetPixelFormatAttribfvARBPROC wglGetPixelFormatAttribfvARB;
 extern wglChoosePixelFormatARBPROC wglChoosePixelFormatARB;
 
-#endif /* WGL_ARB_pixel_format */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_RENDER_TEXTURE---------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_ARB_render_texture
-#define WGL_ARB_render_texture 1
 
 #define WGL_BIND_TO_TEXTURE_RGB_ARB                             0x2070
 #define WGL_BIND_TO_TEXTURE_RGBA_ARB                            0x2071
@@ -5716,14 +5243,9 @@ extern wglBindTexImageARBPROC wglBindTexImageARB;
 extern wglReleaseTexImageARBPROC wglReleaseTexImageARB;
 extern wglSetPbufferAttribARBPROC wglSetPbufferAttribARB;
 
-#endif /*WGL_ARB_render_texture */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_EXT_SWAP_CONTROL-----------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_EXT_swap_control
-#define WGL_EXT_swap_control 1
 
 typedef BOOL (APIENTRY * wglSwapIntervalEXTPROC) (int interval);
 typedef int (APIENTRY * wglGetSwapIntervalEXTPROC) (void);
@@ -5731,14 +5253,9 @@ typedef int (APIENTRY * wglGetSwapIntervalEXTPROC) (void);
 extern wglSwapIntervalEXTPROC wglSwapIntervalEXT;
 extern wglGetSwapIntervalEXTPROC wglGetSwapIntervalEXT;
 
-#endif /* WGL_EXT_swap_control */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_MAKE_CURRENT_READ------------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_ARB_make_current_read
-#define WGL_ARB_make_current_read 1
 
 #define ERROR_INVALID_PIXEL_TYPE_ARB                            0x2043
 #define ERROR_INCOMPATIBLE_DEVICE_CONTEXTS_ARB	                0x2054
@@ -5749,26 +5266,16 @@ typedef HDC (APIENTRY * wglGetCurrentReadDCARBPROC) (void);
 extern wglMakeContextCurrentARBPROC wglMakeContextCurrentARB;
 extern wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
 
-#endif /* WGL_ARB_make_current_read */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_MULTISAMPLE------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef WGL_ARB_multisample
-#define WGL_ARB_multisample 1
-
 #define WGL_SAMPLE_BUFFERS_ARB                                  0x2041
 #define WGL_SAMPLES_ARB                                         0x2042
-
-#endif /* WGL_ARB_multisample */
 
 /*-------------------------------------------------------------------*/
 /*------------WGL_NV_RENDER_DEPTH_TEXTURE----------------------------*/
 /*-------------------------------------------------------------------*/
-
-#ifndef WGL_NV_render_depth_texture
-#define WGL_NV_render_depth_texture 1
 
 #define WGL_BIND_TO_TEXTURE_DEPTH_NV                            0x20A3
 #define WGL_BIND_TO_TEXTURE_RECTANGLE_DEPTH_NV                  0x20A4
@@ -5777,20 +5284,13 @@ extern wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
 #define WGL_NO_TEXTURE_ARB                                      0x2077
 #define WGL_DEPTH_COMPONENT_NV                                  0x20A7
 
-#endif /* WGL_NV_render_depth_texture */
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_NV_RENDER_TEXTURE_RECTANGLE-----------------------*/
 /*-------------------------------------------------------------------*/
 
-#ifndef WGL_NV_render_texture_rectangle 
-#define WGL_NV_render_texture_rectangle 1
-
 #define WGL_BIND_TO_TEXTURE_RECTANGLE_RGB_NV                    0x20A0
 #define WGL_BIND_TO_TEXTURE_RECTANGLE_RGBA_NV                   0x20A1
 #define WGL_TEXTURE_RECTANGLE_NV                                0x20A2
-
-#endif /* WGL_NV_render_texture_rectangle */
 
 /*-------------------------------------------------------------------*/
 /*------------END WGL EXTENSIONS-------------------------------------*/
@@ -5800,165 +5300,133 @@ extern wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
 
 /* helper stuff */
 
-/* I use int here because C does not know bool */
-
-#ifdef _WIN32
-struct WGLExtensionTypes
-{
-    int ARB_buffer_region;
-    int ARB_extensions_string;
-    int ARB_make_current_read;
-    int ARB_multisample;
-    int ARB_pbuffer;
-    int ARB_pixel_format;
-    int ARB_render_texture;
-    int EXT_extensions_string;
-    int EXT_swap_control;
-    int NV_render_depth_texture;
-    int NV_render_texture_rectangle;
-};
-#endif /* WIN32 */
-
-#ifdef _X11
-struct GLXExtensionTypes
-{
-    int GLX12;
-    int GLX13;
-    int EXT_visual_info;
-    int EXT_visual_rating;
-};
-#endif /* X11 */
-
-#ifdef _AGL
-struct AGLExtensionTypes
-{
-};
-#endif /* _AGL */
-
-struct GLUExtensionTypes
-{
-    int GLU12;
-    int GLU13;
-    int EXT_nurbs_tessellator;
-    int EXT_object_space_tess;
-};
-
 struct ExtensionTypes
 {
 #ifdef _WIN32 /* WGL extensions */   
-    struct WGLExtensionTypes wgl;
+    bool WGL_ARB_buffer_region;
+    bool WGL_ARB_extensions_string;
+    bool WGL_ARB_make_current_read;
+    bool WGL_ARB_multisample;
+    bool WGL_ARB_pbuffer;
+    bool WGL_ARB_pixel_format;
+    bool WGL_ARB_render_texture;
+    bool WGL_EXT_extensions_string;
+    bool WGL_EXT_swap_control;
+    bool WGL_NV_render_depth_texture;
+    bool WGL_NV_render_texture_rectangle;
 #endif /* WIN32 */
 #ifdef _X11
-    struct GLXExtensionTypes glx;
+    bool GLX12;
+    bool GLX13;
+    bool GLX_EXT_visual_info;
+    bool GLX_EXT_visual_rating;
 #endif /* X11 */
-#ifdef _AGL
-    struct AGLExtensionTypes agl;
-#endif /* _AGL */
     
-    struct GLUExtensionTypes glu;
-    int ARB_imaging;
-    int ARB_depth_texture;
-    int ARB_fragment_program;
-    int ARB_matrix_palette;
-    int ARB_multisample;
-    int ARB_multitexture;
-    int ARB_point_parameters;
-    int ARB_shadow;
-    int ARB_shadow_ambient;
-    int ARB_texture_border_clamp;
-    int ARB_texture_compression;
-    int ARB_texture_cube_map;
-    int ARB_texture_env_add;
-    int ARB_texture_env_dot3;
-    int ARB_texture_env_combine;
-    int ARB_texture_env_crossbar;
-    int ARB_texture_mirrored_repeat;
-    int ARB_transpose_matrix;
-    int ARB_vertex_blend;
-    int ARB_vertex_buffer_object;
-    int ARB_vertex_program;
-    int ARB_window_pos;
-    int EXT_abgr;
-    int EXT_bgra;
-    int EXT_blend_func_separate;
-    int EXT_compiled_vertex_array;
-    int EXT_cull_vertex;
-    int EXT_fog_coord;
-    int EXT_multi_draw_arrays;
-    int EXT_point_parameters;
-    int EXT_secondary_color;
-    int EXT_separate_specular_color;
-    int EXT_shadow_funcs;
-    int EXT_stencil_two_side;
-    int EXT_stencil_wrap;
-    int EXT_texture_compression_s3tc;
-    int EXT_texture_env_combine;
-    int EXT_texture_filter_anisotropic;
-    int EXT_texture_lod_bias;
-    int EXT_vertex_shader;
-    int EXT_vertex_weighting;
-    int EXT_draw_range_elements;
-    int ATI_element_array;
-    int ATI_envmap_bumpmap;
-    int ATI_fragment_shader;
-    int ATI_pn_triangles;
-    int ATI_point_cull_mode;
-    int ATI_separate_stencil;
-    int ATI_text_fragment_shader;
-    int ATI_texture_mirror_once;
-    int ATI_vertex_array_object;
-    int ATI_vertex_streams;
-    int ATIX_point_sprites;
-    int ATIX_texture_env_route;
-    int HP_occlusion_test;
-    int NV_blend_square;
-    int NV_copy_depth_to_color;
-    int NV_depth_clamp;
-    int NV_element_array;
-    int NV_evaluators;
-    int NV_fence;
-    int NV_float_buffer;
-    int NV_fog_distance;
-    int NV_fragment_program;
-    int NV_light_max_exponent;
-    int NV_occlusion_query;
-    int NV_packed_depth_stencil;
-    int NV_point_sprite;
-    int NV_primitive_restart;
-    int NV_register_combiners;
-    int NV_register_combiners2;
-    int NV_texgen_reflection;
-    int NV_texture_env_combine4;
-    int NV_texture_rectangle;
-    int NV_texture_shader;
-    int NV_texture_shader2;
-    int NV_texture_shader3;
-    int NV_vertex_array_range;
-    int NV_vertex_array_range2;
-    int NV_vertex_program;
-    int NV_vertex_program1_1;
-    int NV_vertex_program2;
-    int SGIS_generate_mipmap;
-    int SGIX_shadow;
-    int SGIX_depth_texture;
-    int OpenGL12;
-    int OpenGL13;
-    int OpenGL14;
+    bool OpenGL12;
+    bool OpenGL13;
+    bool OpenGL14;
+    bool GLU12;
+    bool GLU13;
+    bool GLU_EXT_nurbs_tessellator;
+    bool GLU_EXT_object_space_tess;
+
+    bool GL_ARB_imaging;
+    bool GL_ARB_depth_texture;
+    bool GL_ARB_fragment_program;
+    bool GL_ARB_matrix_palette;
+    bool GL_ARB_multisample;
+    bool GL_ARB_multitexture;
+    bool GL_ARB_point_parameters;
+    bool GL_ARB_shadow;
+    bool GL_ARB_shadow_ambient;
+    bool GL_ARB_texture_border_clamp;
+    bool GL_ARB_texture_compression;
+    bool GL_ARB_texture_cube_map;
+    bool GL_ARB_texture_env_add;
+    bool GL_ARB_texture_env_dot3;
+    bool GL_ARB_texture_env_combine;
+    bool GL_ARB_texture_env_crossbar;
+    bool GL_ARB_texture_mirrored_repeat;
+    bool GL_ARB_transpose_matrix;
+    bool GL_ARB_vertex_blend;
+    bool GL_ARB_vertex_buffer_object;
+    bool GL_ARB_vertex_program;
+    bool GL_ARB_window_pos;
+    bool GL_EXT_abgr;
+    bool GL_EXT_bgra;
+    bool GL_EXT_blend_func_separate;
+    bool GL_EXT_compiled_vertex_array;
+    bool GL_EXT_cull_vertex;
+    bool GL_EXT_fog_coord;
+    bool GL_EXT_multi_draw_arrays;
+    bool GL_EXT_point_parameters;
+    bool GL_EXT_secondary_color;
+    bool GL_EXT_separate_specular_color;
+    bool GL_EXT_shadow_funcs;
+    bool GL_EXT_stencil_two_side;
+    bool GL_EXT_stencil_wrap;
+    bool GL_EXT_texture_compression_s3tc;
+    bool GL_EXT_texture_env_combine;
+    bool GL_EXT_texture_filter_anisotropic;
+    bool GL_EXT_texture_lod_bias;
+    bool GL_EXT_vertex_shader;
+    bool GL_EXT_vertex_weighting;
+    bool GL_EXT_draw_range_elements;
+    bool GL_ATI_element_array;
+    bool GL_ATI_envmap_bumpmap;
+    bool GL_ATI_fragment_shader;
+    bool GL_ATI_pn_triangles;
+    bool GL_ATI_point_cull_mode;
+    bool GL_ATI_separate_stencil;
+    bool GL_ATI_text_fragment_shader;
+    bool GL_ATI_texture_mirror_once;
+    bool GL_ATI_vertex_array_object;
+    bool GL_ATI_vertex_streams;
+    bool GL_ATIX_point_sprites;
+    bool GL_ATIX_texture_env_route;
+    bool GL_HP_occlusion_test;
+    bool GL_NV_blend_square;
+    bool GL_NV_copy_depth_to_color;
+    bool GL_NV_depth_clamp;
+    bool GL_NV_element_array;
+    bool GL_NV_evaluators;
+    bool GL_NV_fence;
+    bool GL_NV_float_buffer;
+    bool GL_NV_fog_distance;
+    bool GL_NV_fragment_program;
+    bool GL_NV_light_max_exponent;
+    bool GL_NV_occlusion_query;
+    bool GL_NV_packed_depth_stencil;
+    bool GL_NV_point_sprite;
+    bool GL_NV_primitive_restart;
+    bool GL_NV_register_combiners;
+    bool GL_NV_register_combiners2;
+    bool GL_NV_texgen_reflection;
+    bool GL_NV_texture_env_combine4;
+    bool GL_NV_texture_rectangle;
+    bool GL_NV_texture_shader;
+    bool GL_NV_texture_shader2;
+    bool GL_NV_texture_shader3;
+    bool GL_NV_vertex_array_range;
+    bool GL_NV_vertex_array_range2;
+    bool GL_NV_vertex_program;
+    bool GL_NV_vertex_program1_1;
+    bool GL_NV_vertex_program2;
+    bool GL_SGIS_generate_mipmap;
+    bool GL_SGIX_shadow;
+    bool GL_SGIX_depth_texture;
 };
 
 extern struct ExtensionTypes extgl_Extensions;
 
-
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
-int extgl_Initialize();
-int extgl_Open(void);
+bool extgl_Initialize(JNIEnv *env, jobject gl_extensions);
+bool extgl_Open(void);
 #ifdef _X11
-int extgl_InitGLX(Display *disp, int screen);
+bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen);
 #endif
 
 void extgl_Close(void);
-
-int glInitialize(); /* deprecated, please do not use */
 
 #ifdef __cplusplus
 }

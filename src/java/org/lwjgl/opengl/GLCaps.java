@@ -36,7 +36,8 @@ import org.lwjgl.Sys;
 import java.lang.reflect.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * $Id$
@@ -137,7 +138,6 @@ public abstract class GLCaps {
 	public static boolean GL_SGIS_generate_mipmap;
 	public static boolean GL_SGIX_shadow;
 	public static boolean GL_SGIX_depth_texture;
-	public static boolean OpenGL10;
 	public static boolean OpenGL11;
 	public static boolean OpenGL12;
 	public static boolean OpenGL13;
@@ -158,10 +158,13 @@ public abstract class GLCaps {
 		System.loadLibrary(Sys.getLibraryName());
 	}
 
-	private static void setExtensionFields(String exts, HashMap field_map) {
-		StringTokenizer st = new StringTokenizer(exts);
-		while (st.hasMoreTokens()) {
-			String ext = st.nextToken();
+	private static void setExtensionFields(HashSet exts, HashMap field_map) {
+		if(org.lwjgl.Sys.DEBUG) {
+			System.out.println("Available extensions:");
+		}
+		Iterator it = exts.iterator();
+		while (it.hasNext()) {
+			String ext = (String)it.next();
 			if(org.lwjgl.Sys.DEBUG) {
 				System.out.println(ext);
 			}
@@ -182,8 +185,7 @@ public abstract class GLCaps {
 	 * Determine which extensions are available. Use this to initialize capability fields.
 	 * Can only be called _after_ a GLWindow or Pbuffer has been created.
 	 */
-	public static void determineAvailableExtensions() {
-
+	public static void determineAvailableExtensions(HashSet exts) {
 		// Grab all the public static booleans out of this class
 		Field[] fields = GLCaps.class.getDeclaredFields();
 		HashMap map = new HashMap(fields.length);
@@ -200,67 +202,6 @@ public abstract class GLCaps {
 			}
 		}
 
-		determineAvailableWGLExtensions(map);
-		String exts = CoreGL11.glGetString(CoreGL11.GL_EXTENSIONS);
-		if(org.lwjgl.Sys.DEBUG) {
-			System.out.println("Available GL extensions:");
-		}
 		setExtensionFields(exts, map);
-
-		// Let's see what openGL version we are too:
-		String version = CoreGL11.glGetString(CoreGL11.GL_VERSION);
-		int i = version.indexOf("1.");
-		if (i > -1) {
-			char c = version.charAt(i + 2);
-			// Each case intentionally falls through!
-			switch (c) {
-				case '4':
-					OpenGL14 = true;
-				case '3':
-					OpenGL13 = true;
-				case '2':
-					OpenGL12 = true;
-				case '1':
-					OpenGL11 = true;
-				case '0':
-					OpenGL10 = true;
-					break ;
-				default:
-					// Unexpected character - ignore
-			}
-		}
-	}
-
-	private static native boolean isWGLEXTExtensionsStringAvailable();
-
-	private static native boolean isWGLARBExtensionsStringAvailable();
-
-	/**
-	 * Determine which WGL extensions are available
-	 */
-	private static void determineAvailableWGLExtensions(HashMap field_map) {
-
-		// First we must determine if WGL_EXT_extensions_string is available
-		WGL_ARB_extensions_string = isWGLARBExtensionsStringAvailable();
-		WGL_EXT_extensions_string = isWGLEXTExtensionsStringAvailable();
-		if (!WGL_EXT_extensions_string && !WGL_ARB_extensions_string)
-			return;
-		final String exts;
-
-		if (WGL_ARB_extensions_string)
-			exts = GL.wglGetExtensionsStringARB();
-		// Remember - this is an HWND not an HDC, which is what's required. The native
-		// code on the other side of wglGetExtensionsStringARB gets the HDC from the HWND
-		// behind the scenes.
-		else
-			exts = GL.wglGetExtensionsStringEXT();
-
-		if (exts == null)
-			return;
-
-		if(org.lwjgl.Sys.DEBUG) {
-			System.out.println("Available WGL extensions:");
-		}
-		setExtensionFields(exts, field_map);
 	}
 }

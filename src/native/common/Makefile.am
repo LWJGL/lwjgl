@@ -5,7 +5,7 @@ libcommon_la_SOURCES = $(COMMON)
 COMMON = \
   extal.cpp \
   extal.h \
-  extgl.c \
+  extgl.cpp \
   extgl.h \
   org_lwjgl_Display.h \
   org_lwjgl_Sys.h \

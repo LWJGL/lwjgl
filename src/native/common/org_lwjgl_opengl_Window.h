@@ -88,10 +88,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIII)V
+ * Signature: (Ljava/lang/String;IIIIZIIIILjava/util/Vector;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Window

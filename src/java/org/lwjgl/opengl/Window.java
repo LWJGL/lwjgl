@@ -24,6 +24,8 @@ package org.lwjgl.opengl;
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
 
+import java.util.HashSet;
+
 public final class Window {
 
 	static {
@@ -119,13 +121,13 @@ public final class Window {
 		return title;
 	}
   
-  /**
-   * @return whether this window is in fullscreen mode
-   */
-  public static boolean isFullscreen() {
-    assert isCreated() : "Cannot determine state of uncreated window";
-    return fullscreen;
-  }
+	/**
+	 * @return whether this window is in fullscreen mode
+	 */
+	public static boolean isFullscreen() {
+		assert isCreated() : "Cannot determine state of uncreated window";
+		return fullscreen;
+	}
 
 	/**
 	 * Set the title of the window. This may be ignored by the underlying OS.
@@ -298,11 +300,14 @@ public final class Window {
 		int bpp,
 		int alpha,
 		int depth,
-		int stencil)
+		int stencil,
+		HashSet extensions)
 		throws Exception;
 
 	private static void createWindow() throws Exception {
-		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil);
+		HashSet extensions = new HashSet();
+		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil, extensions);
+		GLCaps.determineAvailableExtensions(extensions);
 		created = true;
 	}
 

@@ -386,7 +386,6 @@ public class PbufferTest {
    */
   private void glInit() {
     //sync frame (only works on windows)
-    GLCaps.determineAvailableExtensions();
     if (GLCaps.WGL_EXT_swap_control) {
       GL.wglSwapIntervalEXT(1);
     }

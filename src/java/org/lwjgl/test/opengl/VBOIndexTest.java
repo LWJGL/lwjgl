@@ -189,7 +189,6 @@ public final class VBOIndexTest {
          Sys.setProcessPriority(Sys.HIGH_PRIORITY);
          System.out.println("Timer resolution: " + Sys.getTimerResolution());
          // Go into orthographic projection mode.
-	GLCaps.determineAvailableExtensions();
        GL.glMatrixMode(GL.GL_PROJECTION);
        GL.glLoadIdentity();
          GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());

@@ -29,7 +29,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
   (JNIEnv *env, jclass clazz)
 {
 	// Only support thw GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
-	return extgl_Extensions.glx.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
+	return extgl_Extensions.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
 /*

@@ -166,7 +166,7 @@ static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, 
 	}
 
 	// 4. Initialise other things now
-	if (extgl_Open() != 0) {
+	if (!extgl_Open()) {
 		throwException(env, "Failed to open extgl");
 		return -1;
 	}
@@ -538,7 +538,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
  * Signature: (Ljava/lang/String;IIIIZIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jobject ext_set)
 {
 	closerequested = false;
 	minimized = false;
@@ -577,7 +577,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	wglMakeCurrent(hdc, hglrc);
 
 	// Initialise GL extensions
-	if (extgl_Initialize() != 0) {
+	if (!extgl_Initialize(env, ext_set)) {
 		closeWindow();
 		throwException(env, "Failed to initialize GL extensions");
 		return;

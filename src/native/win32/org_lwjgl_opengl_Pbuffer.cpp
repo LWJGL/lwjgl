@@ -17,7 +17,7 @@ typedef struct _PbufferInfo {
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
   (JNIEnv *env, jclass clazz)
 {
-	return extgl_Extensions.wgl.ARB_pbuffer ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
+	return extgl_Extensions.WGL_ARB_pbuffer ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
 /*
