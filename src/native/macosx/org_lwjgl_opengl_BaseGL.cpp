@@ -38,7 +38,8 @@
  * @author Gregory Pierce <me@gregorypierce.com>
  * @version $Revision$
  */
-
+ 
+#include "extgl.h"
 #include "org_lwjgl_opengl_BaseGL.h"
 #include <ApplicationServices/ApplicationServices.h>
 #include <OpenGL/OpenGL.h>
@@ -46,6 +47,16 @@
 
 static CGLContextObj			contextObj;
 static CGDirectDisplayID		displayID = kCGDirectMainDisplay;
+
+/* TODO: move this to Window.cpp when it is ported
+ * Utility function to throw an Exception
+ */
+void throwException(JNIEnv * env, const char * err)
+{
+	jclass cls = env->FindClass("java/lang/Exception");
+	env->ThrowNew(cls, err);
+	env->DeleteLocalRef(cls);
+}
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
@@ -57,8 +68,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 {
     CGLPixelFormatObj pixelFormatObj;
     long numPixelFormats;
-
     CFDictionaryRef displayMode;
+    
+    if( extgl_Open() != 0 )
+    {
+	throwException( env, "Could not load gl libs" );
+	return;
+    }
     displayMode = CGDisplayBestModeForParametersAndRefreshRate( displayID,
                                                                 bpp,
                                                                 width, height,
@@ -85,6 +101,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 
     CGLSetCurrentContext( contextObj );
     CGLSetFullScreen( contextObj );
+    
+    if (extgl_Initialize() != 0)
+    {
+    // TODO: destroy stuff created this far
+	throwException( env, "Could not init gl function pointers\n");
+        return;
+    }
+
 }
 
 /*
