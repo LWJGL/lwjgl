@@ -451,9 +451,12 @@ public class IL {
 		 */
     public static void create() throws LWJGLException {
     	if (!created) {
+            nCreate();
     		IL.initNativeStubs();
     		IL.ilInit();
     		created = true;
     	}
     }
+    
+    public static native void nCreate();
 }
