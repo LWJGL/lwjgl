@@ -64,7 +64,6 @@ final class MacOSXContextImplementation implements ContextImplementation {
 	private static native void nSwapBuffers(ByteBuffer context_handle) throws LWJGLException;
 
 	public void update(ByteBuffer context_handle) {
-System.out.println("context_handle = " + context_handle);
 		nUpdate(context_handle);
 	}
 	private static native void nUpdate(ByteBuffer context_handle);
