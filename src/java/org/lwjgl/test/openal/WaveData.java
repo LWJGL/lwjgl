@@ -85,7 +85,7 @@ public class WaveData {
 	/**
 	 * Creates a WaveData container from the specified filename
 	 * 
-	 * @param filepath path to file 
+	 * @param filepath path to file (relative, and in classpath) 
 	 * @return WaveData containing data, or null if a failure occured
 	 */
 	public static WaveData create(String filepath) {
