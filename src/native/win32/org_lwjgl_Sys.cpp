@@ -176,17 +176,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nSetClipboard
-  (JNIEnv * env, jclass clazz, jstring clipboard)
-{
-	const char * clipboardString = env->GetStringUTFChars(clipboard, NULL);
-	// TODO
-	env->ReleaseStringUTFChars(clipboardString);
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getClipboard
-  (JNIEnv * env, jclass clazz)
-{
-	return NULL;
-}
 

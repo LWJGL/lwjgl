@@ -153,6 +153,11 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env
 	return getVersionString(env);
 }
 
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    openURL
+ * Signature: (Ljava/lang/String;)V
+ */
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
   (JNIEnv * env, jclass clazz, jstring url)
 {
@@ -161,18 +166,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 	env->ReleaseStringUTFChars(url, urlString);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nSetClipboard
-  (JNIEnv * env, jclass clazz, jstring clipboard)
-{
-	const char * clipboard_string = env->GetStringUTFChars(clipboard, NULL);
-	const jsize clipboard_size = env->GetStringUTFLength(clipboard);
-	printf("string %s, size %d\n", clipboard_string, clipboard_size);
-	env->ReleaseStringUTFChars(clipboard, clipboard_string);
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getClipboard
-  (JNIEnv * env, jclass clazz)
-{
-	return NULL;
-}
 
