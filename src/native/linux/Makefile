@@ -50,6 +50,7 @@ LIBCOBJS=$(LIBCSRC:.c=.o)
 LIBOBJS=$(LIBCOBJS) $(LIBCPPOBJS)
 #DEBUG_FLAGS=-D_DEBUG
 LINKOPTS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU -lopenal
+BUILDOPTS=-O3 -Wall
 
 all: liblwjgl.so
 
@@ -65,7 +66,7 @@ liblwjgl.so: $(LIBOBJS)
 .SUFFIXES:      .cpp .so .o .java .h .class .c
 
 %.o : %.cpp
-	$(G++) $(DEBUG_FLAGS) -Wall -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
+	$(G++) $(DEBUG_FLAGS) $(BUILDOPTS) -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
 
 %.o : %.c
 	$(GCC) $(DEBUG_FLAGS) -Wall -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
