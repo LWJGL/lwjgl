@@ -37,6 +37,8 @@ import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
 import org.lwjgl.openal.ALUT;
 import org.lwjgl.openal.ALUTLoadWAVData;
+import org.lwjgl.openal.eax.EAX;
+import org.lwjgl.openal.eax.EAXBufferProperties;
 import org.lwjgl.Sys;
 
 import java.nio.ByteBuffer;
@@ -212,6 +214,9 @@ public class ALTest extends BasicTest {
         AL.INVERSE_DISTANCE,
         AL.INVERSE_DISTANCE_CLAMPED
     };
+    
+    /** Whether or not EAX is supported */
+    protected boolean eaxAvailable = false;
     
     /**
      * Creates an instance of ALTest
@@ -523,6 +528,9 @@ public class ALTest extends BasicTest {
             System.exit(-1);
         }
         
+        //do EAX check (can only be performed after device / context creation
+        eaxAvailable = al.isExtensionPresent("EAX");
+        
         do {
             System.out.print("\n\n\nAutomated Test Series:\n\n");
             System.out.print("A) Run Fully Automated Tests\n");
@@ -530,7 +538,7 @@ public class ALTest extends BasicTest {
             System.out.print("\nInteractive Tests:\n\n");
             System.out.print("1 Position Test\n");
             System.out.print("2 Looping Test\n");
-            System.out.print("*3 EAX 2.0 Test\n");
+            System.out.print("3 EAX 2.0 Test\n");
             System.out.print("4 Queue Test\n");
             System.out.print("5 Buffer Test\n");
             System.out.print("6 Frequency Test\n");
@@ -560,7 +568,11 @@ public class ALTest extends BasicTest {
                     i_LoopingTest();
                     break;
                 case '3':
-                    i_EAXTest();
+                    if(eaxAvailable) {
+                        i_EAXTest();
+                    } else {
+                        System.out.println("EAX not supported");
+                    }
                     break;
                 case '4':
                     i_QueueTest();
@@ -1255,8 +1267,207 @@ public class ALTest extends BasicTest {
     }
     
     protected void i_EAXTest() {
-        System.out.println("i_EAXTest");
-        delay_ms(3000);
+        
+        int	error;
+        int	ch = -1;
+        IntBuffer source = createIntBuffer(2);
+        
+        IntBuffer Env           = createIntBuffer(1);
+        IntBuffer Room          = createIntBuffer(1);
+        IntBuffer Occlusion     = createIntBuffer(1);
+        IntBuffer Obstruction   = createIntBuffer(1);
+        EAXBufferProperties eaxBufferProp0 = new EAXBufferProperties();
+        
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {-2.0f, 0.0f, 2.0f});
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});
+        
+        FloatBuffer source1Pos = createFloatBuffer(3);
+        source1Pos.put(new float[] {2.0f, 0.0f, -2.0f});
+        FloatBuffer source1Vel = createFloatBuffer(3);
+        source1Vel.put(new float[] {0.0f, 0.0f, 0.0f});
+        
+        EAX eax = new EAX();
+        try {
+            eax.create();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        
+        // Clear Error Code
+        al.getError();
+        
+        al.genSources(2, Sys.getDirectBufferAddress(source));
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alGenSources 2 : ", error);
+            return;
+        }
+        
+        al.sourcef(source.get(0),AL.PITCH,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_PITCH : \n", error);
+        
+        al.sourcef(source.get(0),AL.GAIN,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_GAIN : \n", error);
+        
+        al.sourcefv(source.get(0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_POSITION : \n", error);
+        
+        al.sourcefv(source.get(0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
+        
+        al.sourcei(source.get(0),AL.BUFFER, buffers.get(0));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 0 AL_BUFFER buffer 0 : \n", error);
+        
+        al.sourcei(source.get(0),AL.LOOPING,AL.TRUE);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 0 AL_LOOPING true: \n", error);
+        
+        
+        al.sourcef(source.get(1),AL.PITCH,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 1 AL_PITCH : \n", error);
+        
+        al.sourcef(source.get(1),AL.GAIN,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 1 AL_GAIN : \n", error);
+        
+        al.sourcefv(source.get(1),AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 1 AL_POSITION : \n", error);
+        
+        al.sourcefv(source.get(1),AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 1 AL_VELOCITY : \n", error);
+        
+        al.sourcei(source.get(1),AL.BUFFER, buffers.get(1));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 1 AL_BUFFER buffer 1 : \n", error);
+        
+        al.sourcei(source.get(1),AL.LOOPING,AL.FALSE);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 1 AL_LOOPING false: \n", error);
+        
+        System.out.print("EAX Test\n\n");
+        System.out.print("Press '1' to play source 0 (looping)\n");
+        System.out.print("Press '2' to play source 1 once (single shot)\n");
+        System.out.print("Press '3' to stop source 0\n");
+        System.out.print("Press '4' to stop source 1\n");
+        System.out.print("Press '5' to add Hangar reverb (DEFERRED)\n");
+        System.out.print("Press '6' to remove reverb (DEFERRED)\n");
+        System.out.print("Press '7' to occlude source 0 (DEFERRED)\n");
+        System.out.print("Press '8' to remove occlusion from source 0 (DEFERRED)\n");
+        System.out.print("Press '9' to obstruct source 1 (IMMEDIATE)\n");
+        System.out.print("Press '0' to remove obstruction from source 1 (IMMEDIATE)\n");
+        System.out.print("Press 'c' to COMMIT EAX settings\n");
+        System.out.print("Press 'q' to quit\n\n");
+        
+        do {
+            try {
+                ch = System.in.read();
+            } catch (IOException ioe) {
+            }
+            switch (ch) {
+                case '1':
+                    al.sourcePlay(source.get(0));
+                    break;
+                case '2':
+                    al.sourcePlay(source.get(1));
+                    break;
+                case '3':
+                    al.sourceStop(source.get(0));
+                    break;
+                case '4':
+                    al.sourceStop(source.get(1));
+                    break;
+                case '5':
+                    Env.put(0, EAX.ENVIRONMENT_HANGAR);
+                    eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_ENVIRONMENT | EAX.DSPROPERTY_EAXLISTENER_DEFERRED,
+                    	0, Sys.getDirectBufferAddress(Env), 4);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXLISTENER_ENVIRONMENT | EAXLISTENER_DEFERRED : \n", error);
+                    break;
+                    
+                case '6':
+                    Room.put(-10000);
+                    eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_ROOM | EAX.DSPROPERTY_EAXLISTENER_DEFERRED, 0,
+                    	Sys.getDirectBufferAddress(Room), 4);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXLISTENER_ROOM | EAXLISTENER_DEFERRED : \n", error);
+                    break;
+                    
+                case '7':
+                    eax.eaxGet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_ALLPARAMETERS, source.get(0),
+                        eaxBufferProp0.getAddress(), eaxBufferProp0.getSize());
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxGet EAXBUFFER_ALLPARAMETERS : \n", error);
+                    eaxBufferProp0.setOcclusion(-5000);
+                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_ALLPARAMETERS | EAX.DSPROPERTY_EAXBUFFER_DEFERRED, source.get(0),
+                    	eaxBufferProp0.getAddress(), eaxBufferProp0.getSize());
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXBUFFER_ALLPARAMETERS | EAXBUFFER_DEFERRED : \n", error);
+                    break;
+                    
+                case '8':
+                    Occlusion.put(0, 0);
+                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_OCCLUSION | EAX.DSPROPERTY_EAXBUFFER_DEFERRED, source.get(0),
+                    	Sys.getDirectBufferAddress(Occlusion), 4);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXBUFFER_OCCLUSION | EAXBUFFER_DEFERRED : \n", error);
+                    break;
+                    
+                case '9':
+                    Obstruction.put(0, -5000);
+                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_OBSTRUCTION, source.get(1),
+                    	Sys.getDirectBufferAddress(Obstruction), 4);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXBUFFER_OBSTRUCTION : \n", error);
+                    break;
+                    
+                case '0':
+                    Obstruction.put(0, 0);
+                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_OBSTRUCTION, source.get(1),
+                    	Sys.getDirectBufferAddress(Obstruction), 4);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXBUFFER_OBSTRUCTION : \n", error);
+                    break;
+                    
+                case 'C':
+                    // Commit settings on source 0
+                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_COMMITDEFERREDSETTINGS,
+                    	source.get(0), 0, 0);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXBUFFER_COMMITDEFERREDSETTINGS : \n", error);
+                    
+                    // Commit Listener settings
+                    eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_COMMITDEFERREDSETTINGS,
+                    	0, 0, 0);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("eaxSet EAXLISTENER_COMMITDEFERREDSETTINGSENVIRONMENT : \n", error);
+                    break;
+            }
+        } while (ch != 'Q');
+        
+        // reset EAX level
+        Room.put(0, -10000);
+        eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_ROOM, 0, Sys.getDirectBufferAddress(Room), 4);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("eaxSet EAXLISTENER_ROOM : \n", error);
+        
+        // Release resources
+        al.sourceStopv(2, Sys.getDirectBufferAddress(source));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourceStopv 2 : ", error);
+        
+        al.deleteSources(2, Sys.getDirectBufferAddress(source));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alDeleteSources 2 : ", error);
     }
     
     protected void i_QueueTest() {
