@@ -56,6 +56,16 @@
 #define USEGLX13 extgl_Extensions.GLX13
 #define ERR_MSG_SIZE 1024
 
+typedef struct {
+	unsigned long flags;
+	unsigned long functions;
+	unsigned long decorations;
+	long input_mode;
+	unsigned long status;
+} MotifWmHints;
+
+#define MWM_HINTS_DECORATIONS   (1L << 1)
+
 typedef enum {FULLSCREEN_LEGACY, FULLSCREEN_NETWM, WINDOWED} window_mode;
 
 static GLXContext context = NULL; // OpenGL rendering context
@@ -334,7 +344,7 @@ static bool isNetWMFullscreenSupported() {
 }
 
 static bool createWindow(JNIEnv* env, int width, int height) {
-//	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
+	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	dirty = true;
 	focused = true;
 	minimized = false;
@@ -368,6 +378,14 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	}
 	printfDebug("Created window\n");
 	current_win = win;
+	if (undecorated && current_window_mode == WINDOWED) {
+		// Use Motif decoration hint property and hope the window manager respects them
+		Atom motif_hints_atom = XInternAtom(getDisplay(), "_MOTIF_WM_HINTS", False);
+		MotifWmHints motif_hints;
+		motif_hints.flags = MWM_HINTS_DECORATIONS;
+		motif_hints.decorations = 0;
+		XChangeProperty (getDisplay(), getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
+	}
 	XSizeHints * size_hints = XAllocSizeHints();
 	size_hints->flags = PMinSize | PMaxSize;
 	size_hints->min_width = width;
