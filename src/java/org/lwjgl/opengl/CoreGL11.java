@@ -40,55 +40,22 @@ import java.nio.DoubleBuffer;
 import java.nio.Buffer;
 
 /**
- * $Id$
+ * $Id: CoreGL.java,v 1.23 2003/07/23 14:51:19 elias_naur Exp $
  *
- * The core OpenGL1.4 API, with no extensions.
+ * The core OpenGL1.1 API.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
- * @version $Revision$
+ * @version $Revision: 1.23 $
  */
-public class CoreGL implements CoreGLConstants {
+public class CoreGL11 implements CoreGL11Constants {
 	public static native void glAccum(int op, float value);
 	public static native void glAlphaFunc(int func, float ref);
-	public static native void glColorTable(
-		int target,
-		int internalFormat,
-		int width,
-		int format,
-		int type,
-		Buffer data);
-
-	public static native void glColorSubTable(
-		int target,
-		int start,
-		int count,
-		int format,
-		int type,
-		Buffer data);
-
-	public static native void glGetColorTable(
-		int target,
-		int format,
-		int type,
-		Buffer data);
-
-	public static native void glGetColorTableParameteriv(
-		int target,
-		int pname,
-		IntBuffer params);
-
-	public static native void glGetColorTableParameterfv(
-		int target,
-		int pname,
-		FloatBuffer params);
-
 	public static native void glClearColor(float red, float green, float blue, float alpha);
 	public static native void glClearAccum(float red, float green, float blue, float alpha);
 	public static native void glClear(int mask);
 	public static native void glCallLists(int n, int type, Buffer lists);
 	public static native void glCallList(int list);
 	public static native void glBlendFunc(int sfactor, int dfactor);
-	public static native void glBlendColor(float red, float green, float blue, float alpha);
 	public static native void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap);
 	public static native void glBindTexture(int target, int texture);
 	public static native void glBegin(int mode);
@@ -103,70 +70,6 @@ public class CoreGL implements CoreGLConstants {
 	public static native void glCopyTexSubImage1D(int target, int level, int xoffset, int x, int y, int width);
 	public static native void glCopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height, int border);
 	public static native void glCopyTexImage1D(int target, int level, int internalFormat, int x, int y, int width, int border);
-        /* OpenGL 1.2 functions */
-	public static native void glColorTableParameteriv(int target, int pname, IntBuffer params);
-	public static native void glColorTableParameterfv(int target, int pname, FloatBuffer params);
-	public static native void glCopyColorSubTable(int target, int start, int x, int y, int width);
-	public static native void glCopyColorTable(int target, int internalformat, int x, int y, int width);
-	public static native void glBlendEquation(int mode);
-	public static native void glHistogram(int target, int width, int internalformat, boolean sink);
-	public static native void glResetHistogram(int target);
-	public static native void glGetHistogram(int target, boolean reset, int format, int type, Buffer values);
-	public static native void glGetHistogramParameterfv(int target, int pname, FloatBuffer params);
-	public static native void glGetHistogramParameteriv(int target, int pname, IntBuffer params);
-	public static native void glMinmax(int target, int internalformat, boolean sink);
-	public static native void glResetMinmax(int target);
-	public static native void glGetMinmax(int target, boolean reset, int format, int types, Buffer values);
-	public static native void glGetMinmaxParameterfv(int target, int pname, FloatBuffer params);
-	public static native void glGetMinmaxParameteriv(int target, int pname, IntBuffer params);
-	public static native void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, Buffer image);
-	public static native void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image);
-	public static native void glConvolutionParameterf(int target, int pname, float params);
-	public static native void glConvolutionParameterfv(int target, int pname, FloatBuffer params);
-	public static native void glConvolutionParameteri(int target, int pname, int params);
-	public static native void glConvolutionParameteriv(int target, int pname, IntBuffer params);
-	public static native void glCopyConvolutionFilter1D(int target, int internalformat, int x, int y, int width);
-	public static native void glCopyConvolutionFilter2D(int target, int internalformat, int x, int y, int width, int height);
-	public static native void glGetConvolutionFilter(int target, int format, int type, Buffer image);
-	public static native void glGetConvolutionParameterfv(int target, int pname, FloatBuffer params);
-	public static native void glGetConvolutionParameteriv(int target, int pname, IntBuffer params);
-	public static native void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column);
-	public static native void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span);
-	public static native void glDrawRangeElements(int mode, int start, int end, int count, int type, Buffer indices);
-	public static native void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, Buffer pixels);
-	public static native void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels);
-	public static native void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);
-        /* OpenGL 1.3 funstions */
-	public static native void glActiveTexture(int texture);
-	public static native void glClientActiveTexture(int texture);
-	public static native void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, Buffer data);
-	public static native void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer data);
-	public static native void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, Buffer data);
-	public static native void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, Buffer data);
-	public static native void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, Buffer data);
-	public static native void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, Buffer data);
-	public static native void glGetCompressedTexImage(int target, int lod, Buffer img);
-	public static native void glMultiTexCoord1d(int target, double s);
-	public static native void glMultiTexCoord1f(int target, float s);
-	public static native void glMultiTexCoord1i(int target, int s);
-	public static native void glMultiTexCoord1s(int target, short s);
-	public static native void glMultiTexCoord2d(int target, double s, double t);
-	public static native void glMultiTexCoord2f(int target, float s, float t);
-	public static native void glMultiTexCoord2i(int target, int s, int t);
-	public static native void glMultiTexCoord2s(int target, short s, short t);
-	public static native void glMultiTexCoord3d(int target, double s, double t, double r);
-	public static native void glMultiTexCoord3f(int target, float s, float t, float r);
-	public static native void glMultiTexCoord3i(int target, int s, int t, int r);
-	public static native void glMultiTexCoord3s(int target, short s, short t, short r);
-	public static native void glMultiTexCoord4d(int target, double s, double t, double r, double q);
-	public static native void glMultiTexCoord4f(int target, float s, float t, float r, float q);
-	public static native void glMultiTexCoord4i(int target, int s, int t, int r, int q);
-	public static native void glMultiTexCoord4s(int target, short s, short t, short r, short q);
-	public static native void glLoadTransposeMatrixd(DoubleBuffer m);
-	public static native void glLoadTransposeMatrixf(FloatBuffer m);
-	public static native void glMultTransposeMatrixd(DoubleBuffer m);
-	public static native void glMultTransposeMatrixf(FloatBuffer m);
-	public static native void glSampleCoverage(float value, boolean invert);
 	public static native void glCopyPixels(int x, int y, int width, int height, int type);
 	public static native void glColorPointer(int size, int type, int stride, Buffer pointer);
 	public static native void glColorMaterial(int face, int mode);
@@ -411,18 +314,6 @@ public class CoreGL implements CoreGLConstants {
 	public static native void glStencilOp(int fail, int zfail, int zpass);
 	public static native void glStencilMask(int mask);
 	public static native void glViewport(int x, int y, int width, int height);
-        public static native void glMultiDrawArrays(
-                int mode,
-                IntBuffer piFirst,
-                IntBuffer piCount,
-                int primcount);
-
-/*        public static native void glMultiDrawElements(
-                int mode,
-                int piCount,
-                int type,
-                int pIndices,
-                int primcount);*/
 }
 
 

@@ -40,7 +40,7 @@ package org.lwjgl.opengl;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public interface CoreGLConstants {
+public interface CoreGL11Constants {
 	/* AccumOp */
 	public static final int GL_ACCUM                          = 0x0100;
 	public static final int GL_LOAD                           = 0x0101;
@@ -109,6 +109,11 @@ public interface CoreGLConstants {
 	public static final int GL_DST_COLOR                      = 0x0306;
 	public static final int GL_ONE_MINUS_DST_COLOR            = 0x0307;
 	public static final int GL_SRC_ALPHA_SATURATE             = 0x0308;
+	public static final int GL_CONSTANT_COLOR                 = 0x8001;
+	public static final int GL_ONE_MINUS_CONSTANT_COLOR       = 0x8002;
+	public static final int GL_CONSTANT_ALPHA                 = 0x8003;
+	public static final int GL_ONE_MINUS_CONSTANT_ALPHA       = 0x8004;
+
 	/*      GL_SRC_ALPHA */
 	/*      GL_ONE_MINUS_SRC_ALPHA */
 	/*      GL_DST_ALPHA */
@@ -175,9 +180,9 @@ public interface CoreGLConstants {
 	public static final int GL_INT                            = 0x1404;
 	public static final int GL_UNSIGNED_INT                   = 0x1405;
 	public static final int GL_FLOAT                          = 0x1406;
-	public static final int GL__2_BYTES                        = 0x1407;
-	public static final int GL__3_BYTES                        = 0x1408;
-	public static final int GL__4_BYTES                        = 0x1409;
+	public static final int GL_2_BYTES                        = 0x1407;
+	public static final int GL_3_BYTES                        = 0x1408;
+	public static final int GL_4_BYTES                        = 0x1409;
 	public static final int GL_DOUBLE                         = 0x140A;
 
 	/* DepthFunction */
@@ -284,11 +289,11 @@ public interface CoreGLConstants {
 	public static final int GL_OUT_OF_MEMORY                  = 0x0505;
 
 	/* FeedBackMode */
-	public static final int GL__2D                             = 0x0600;
-	public static final int GL__3D                             = 0x0601;
-	public static final int GL__3D_COLOR                       = 0x0602;
-	public static final int GL__3D_COLOR_TEXTURE               = 0x0603;
-	public static final int GL__4D_COLOR_TEXTURE               = 0x0604;
+	public static final int GL_2D                             = 0x0600;
+	public static final int GL_3D                             = 0x0601;
+	public static final int GL_3D_COLOR                       = 0x0602;
+	public static final int GL_3D_COLOR_TEXTURE               = 0x0603;
+	public static final int GL_4D_COLOR_TEXTURE               = 0x0604;
 
 	/* FeedBackToken */
 	public static final int GL_PASS_THROUGH_TOKEN             = 0x0700;
@@ -926,227 +931,6 @@ public interface CoreGLConstants {
 	/*      GL_TEXTURE_BORDER_COLOR */
 	/*      GL_TEXTURE_PRIORITY */
 
-        /* OpenGL 1.2 constants */
-	public static final int GL_RESCALE_NORMAL                 = 0x803A;
-	public static final int GL_CLAMP_TO_EDGE                  = 0x812F;
-	public static final int GL_MAX_ELEMENTS_VERTICES          = 0x80E8;
-	public static final int GL_MAX_ELEMENTS_INDICES           = 0x80E9;
-	public static final int GL_BGR                            = 0x80E0;
-	public static final int GL_BGRA                           = 0x80E1;
-	public static final int GL_UNSIGNED_BYTE_3_3_2            = 0x8032;
-	public static final int GL_UNSIGNED_BYTE_2_3_3_REV        = 0x8362;
-	public static final int GL_UNSIGNED_SHORT_5_6_5           = 0x8363;
-	public static final int GL_UNSIGNED_SHORT_5_6_5_REV       = 0x8364;
-	public static final int GL_UNSIGNED_SHORT_4_4_4_4         = 0x8033;
-	public static final int GL_UNSIGNED_SHORT_4_4_4_4_REV     = 0x8365;
-	public static final int GL_UNSIGNED_SHORT_5_5_5_1         = 0x8034;
-	public static final int GL_UNSIGNED_SHORT_1_5_5_5_REV     = 0x8366;
-	public static final int GL_UNSIGNED_INT_8_8_8_8           = 0x8035;
-	public static final int GL_UNSIGNED_INT_8_8_8_8_REV       = 0x8367;
-	public static final int GL_UNSIGNED_INT_10_10_10_2        = 0x8036;
-	public static final int GL_UNSIGNED_INT_2_10_10_10_REV    = 0x8368;
-	public static final int GL_LIGHT_MODEL_COLOR_CONTROL      = 0x81F8;
-	public static final int GL_SINGLE_COLOR                   = 0x81F9;
-	public static final int GL_SEPARATE_SPECULAR_COLOR        = 0x81FA;
-	public static final int GL_TEXTURE_MIN_LOD                = 0x813A;
-	public static final int GL_TEXTURE_MAX_LOD                = 0x813B;
-	public static final int GL_TEXTURE_BASE_LEVEL             = 0x813C;
-	public static final int GL_TEXTURE_MAX_LEVEL              = 0x813D;
-	public static final int GL_SMOOTH_POINT_SIZE_RANGE        = 0x0B12;
-	public static final int GL_SMOOTH_POINT_SIZE_GRANULARITY  = 0x0B13;
-	public static final int GL_SMOOTH_LINE_WIDTH_RANGE        = 0x0B22;
-	public static final int GL_SMOOTH_LINE_WIDTH_GRANULARITY  = 0x0B23;
-	public static final int GL_ALIASED_POINT_SIZE_RANGE       = 0x846D;
-	public static final int GL_ALIASED_LINE_WIDTH_RANGE       = 0x846E;
-	public static final int GL_PACK_SKIP_IMAGES               = 0x806B;
-	public static final int GL_PACK_IMAGE_HEIGHT              = 0x806C;
-	public static final int GL_UNPACK_SKIP_IMAGES             = 0x806D;
-	public static final int GL_UNPACK_IMAGE_HEIGHT            = 0x806E;
-	public static final int GL_TEXTURE_3D                     = 0x806F;
-	public static final int GL_PROXY_TEXTURE_3D               = 0x8070;
-	public static final int GL_TEXTURE_DEPTH                  = 0x8071;
-	public static final int GL_TEXTURE_WRAP_R                 = 0x8072;
-	public static final int GL_MAX_3D_TEXTURE_SIZE            = 0x8073;
-	public static final int GL_TEXTURE_BINDING_3D             = 0x806A;
-	public static final int GL_COLOR_TABLE                    = 0x80D0;
-	public static final int GL_POST_CONVOLUTION_COLOR_TABLE   = 0x80D1;
-	public static final int GL_POST_COLOR_MATRIX_COLOR_TABLE  = 0x80D2;
-	public static final int GL_PROXY_COLOR_TABLE              = 0x80D3;
-	public static final int GL_PROXY_POST_CONVOLUTION_COLOR_TABLE = 0x80D4;
-	public static final int GL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE = 0x80D5;
-	public static final int GL_COLOR_TABLE_SCALE              = 0x80D6;
-	public static final int GL_COLOR_TABLE_BIAS               = 0x80D7;
-	public static final int GL_COLOR_TABLE_FORMAT             = 0x80D8;
-	public static final int GL_COLOR_TABLE_WIDTH              = 0x80D9;
-	public static final int GL_COLOR_TABLE_RED_SIZE           = 0x80DA;
-	public static final int GL_COLOR_TABLE_GREEN_SIZE         = 0x80DB;
-	public static final int GL_COLOR_TABLE_BLUE_SIZE          = 0x80DC;
-	public static final int GL_COLOR_TABLE_ALPHA_SIZE         = 0x80DD;
-	public static final int GL_COLOR_TABLE_LUMINANCE_SIZE     = 0x80DE;
-	public static final int GL_COLOR_TABLE_INTENSITY_SIZE     = 0x80DF;
-	public static final int GL_CONVOLUTION_1D                 = 0x8010;
-	public static final int GL_CONVOLUTION_2D                 = 0x8011;
-	public static final int GL_SEPARABLE_2D                   = 0x8012;
-	public static final int GL_CONVOLUTION_BORDER_MODE        = 0x8013;
-	public static final int GL_CONVOLUTION_FILTER_SCALE       = 0x8014;
-	public static final int GL_CONVOLUTION_FILTER_BIAS        = 0x8015;
-	public static final int GL_REDUCE                         = 0x8016;
-	public static final int GL_CONVOLUTION_FORMAT             = 0x8017;
-	public static final int GL_CONVOLUTION_WIDTH              = 0x8018;
-	public static final int GL_CONVOLUTION_HEIGHT             = 0x8019;
-	public static final int GL_MAX_CONVOLUTION_WIDTH          = 0x801A;
-	public static final int GL_MAX_CONVOLUTION_HEIGHT         = 0x801B;
-	public static final int GL_POST_CONVOLUTION_RED_SCALE     = 0x801C;
-	public static final int GL_POST_CONVOLUTION_GREEN_SCALE   = 0x801D;
-	public static final int GL_POST_CONVOLUTION_BLUE_SCALE    = 0x801E;
-	public static final int GL_POST_CONVOLUTION_ALPHA_SCALE   = 0x801F;
-	public static final int GL_POST_CONVOLUTION_RED_BIAS      = 0x8020;
-	public static final int GL_POST_CONVOLUTION_GREEN_BIAS    = 0x8021;
-	public static final int GL_POST_CONVOLUTION_BLUE_BIAS     = 0x8022;
-	public static final int GL_POST_CONVOLUTION_ALPHA_BIAS    = 0x8023;
-	public static final int GL_CONSTANT_BORDER                = 0x8151;
-	public static final int GL_REPLICATE_BORDER               = 0x8153;
-	public static final int GL_CONVOLUTION_BORDER_COLOR       = 0x8154;
-	public static final int GL_COLOR_MATRIX                   = 0x80B1;
-	public static final int GL_COLOR_MATRIX_STACK_DEPTH       = 0x80B2;
-	public static final int GL_MAX_COLOR_MATRIX_STACK_DEPTH   = 0x80B3;
-	public static final int GL_POST_COLOR_MATRIX_RED_SCALE    = 0x80B4;
-	public static final int GL_POST_COLOR_MATRIX_GREEN_SCALE  = 0x80B5;
-	public static final int GL_POST_COLOR_MATRIX_BLUE_SCALE   = 0x80B6;
-	public static final int GL_POST_COLOR_MATRIX_ALPHA_SCALE  = 0x80B7;
-	public static final int GL_POST_COLOR_MATRIX_RED_BIAS     = 0x80B8;
-	public static final int GL_POST_COLOR_MATRIX_GREEN_BIAS   = 0x80B9;
-	public static final int GL_POST_COLOR_MATRIX_BLUE_BIAS    = 0x80BA;
-	public static final int GL_POST_COLOR_MATRIX_ALPHA_BIAS   = 0x80BB;
-	public static final int GL_HISTOGRAM                      = 0x8024;
-	public static final int GL_PROXY_HISTOGRAM                = 0x8025;
-	public static final int GL_HISTOGRAM_WIDTH                = 0x8026;
-	public static final int GL_HISTOGRAM_FORMAT               = 0x8027;
-	public static final int GL_HISTOGRAM_RED_SIZE             = 0x8028;
-	public static final int GL_HISTOGRAM_GREEN_SIZE           = 0x8029;
-	public static final int GL_HISTOGRAM_BLUE_SIZE            = 0x802A;
-	public static final int GL_HISTOGRAM_ALPHA_SIZE           = 0x802B;
-	public static final int GL_HISTOGRAM_LUMINANCE_SIZE       = 0x802C;
-	public static final int GL_HISTOGRAM_SINK                 = 0x802D;
-	public static final int GL_MINMAX                         = 0x802E;
-	public static final int GL_MINMAX_FORMAT                  = 0x802F;
-	public static final int GL_MINMAX_SINK                    = 0x8030;
-	public static final int GL_TABLE_TOO_LARGE                = 0x8031;
-	public static final int GL_BLEND_EQUATION                 = 0x8009;
-	public static final int GL_MIN                            = 0x8007;
-	public static final int GL_MAX                            = 0x8008;
-	public static final int GL_FUNC_ADD                       = 0x8006;
-	public static final int GL_FUNC_SUBTRACT                  = 0x800A;
-	public static final int GL_FUNC_REVERSE_SUBTRACT          = 0x800B;
-	public static final int GL_BLEND_COLOR                    = 0x8005;
-	public static final int GL_CONSTANT_COLOR                 = 0x8001;
-	public static final int GL_ONE_MINUS_CONSTANT_COLOR       = 0x8002;
-	public static final int GL_CONSTANT_ALPHA                 = 0x8003;
-	public static final int GL_ONE_MINUS_CONSTANT_ALPHA       = 0x8004;
-
-        /* OpenGL 1.3 constants */
-	public static final int GL_TEXTURE0                    = 0x84C0;
-	public static final int GL_TEXTURE1                    = 0x84C1;
-	public static final int GL_TEXTURE2                    = 0x84C2;
-	public static final int GL_TEXTURE3                    = 0x84C3;
-	public static final int GL_TEXTURE4                    = 0x84C4;
-	public static final int GL_TEXTURE5                    = 0x84C5;
-	public static final int GL_TEXTURE6                    = 0x84C6;
-	public static final int GL_TEXTURE7                    = 0x84C7;
-	public static final int GL_TEXTURE8                    = 0x84C8;
-	public static final int GL_TEXTURE9                    = 0x84C9;
-	public static final int GL_TEXTURE10                   = 0x84CA;
-	public static final int GL_TEXTURE11                   = 0x84CB;
-	public static final int GL_TEXTURE12                   = 0x84CC;
-	public static final int GL_TEXTURE13                   = 0x84CD;
-	public static final int GL_TEXTURE14                   = 0x84CE;
-	public static final int GL_TEXTURE15                   = 0x84CF;
-	public static final int GL_TEXTURE16                   = 0x84D0;
-	public static final int GL_TEXTURE17                   = 0x84D1;
-	public static final int GL_TEXTURE18                   = 0x84D2;
-	public static final int GL_TEXTURE19                   = 0x84D3;
-	public static final int GL_TEXTURE20                   = 0x84D4;
-	public static final int GL_TEXTURE21                   = 0x84D5;
-	public static final int GL_TEXTURE22                   = 0x84D6;
-	public static final int GL_TEXTURE23                   = 0x84D7;
-	public static final int GL_TEXTURE24                   = 0x84D8;
-	public static final int GL_TEXTURE25                   = 0x84D9;
-	public static final int GL_TEXTURE26                   = 0x84DA;
-	public static final int GL_TEXTURE27                   = 0x84DB;
-	public static final int GL_TEXTURE28                   = 0x84DC;
-	public static final int GL_TEXTURE29                   = 0x84DD;
-	public static final int GL_TEXTURE30                   = 0x84DE;
-	public static final int GL_TEXTURE31                   = 0x84DF;
-	public static final int GL_ACTIVE_TEXTURE              = 0x84E0;
-	public static final int GL_CLIENT_ACTIVE_TEXTURE       = 0x84E1;
-	public static final int GL_MAX_TEXTURE_UNITS           = 0x84E2;
-
-	public static final int GL_NORMAL_MAP                  = 0x8511;
-	public static final int GL_REFLECTION_MAP              = 0x8512;
-	public static final int GL_TEXTURE_CUBE_MAP            = 0x8513;
-	public static final int GL_TEXTURE_BINDING_CUBE_MAP    = 0x8514;
-	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515;
-	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_X = 0x8516;
-	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Y = 0x8517;
-	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Y = 0x8518;
-	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Z = 0x8519;
-	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z = 0x851A;
-	public static final int GL_PROXY_TEXTURE_CUBE_MAP      = 0x851B;
-	public static final int GL_MAX_CUBE_MAP_TEXTURE_SIZE   = 0x851C;
-
-	public static final int GL_COMPRESSED_ALPHA            = 0x84E9;
-	public static final int GL_COMPRESSED_LUMINANCE        = 0x84EA;
-	public static final int GL_COMPRESSED_LUMINANCE_ALPHA  = 0x84EB;
-	public static final int GL_COMPRESSED_INTENSITY        = 0x84EC;
-	public static final int GL_COMPRESSED_RGB           = 0x84ED;
-	public static final int GL_COMPRESSED_RGBA          = 0x84EE;
-	public static final int GL_TEXTURE_COMPRESSION_HINT = 0x84EF;
-	public static final int GL_TEXTURE_COMPRESSED_IMAGE_SIZE = 0x86A0;
-	public static final int GL_TEXTURE_COMPRESSED       = 0x86A1;
-	public static final int GL_NUM_COMPRESSED_TEXTURE_FORMATS = 0x86A2;
-	public static final int GL_COMPRESSED_TEXTURE_FORMATS = 0x86A3;
-
-	public static final int GL_MULTISAMPLE              = 0x809D;
-	public static final int GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
-	public static final int GL_SAMPLE_ALPHA_TO_ONE      = 0x809F;
-	public static final int GL_SAMPLE_COVERAGE          = 0x80A0;
-	public static final int GL_SAMPLE_BUFFERS           = 0x80A8;
-	public static final int GL_SAMPLES                  = 0x80A9;
-	public static final int GL_SAMPLE_COVERAGE_VALUE    = 0x80AA;
-	public static final int GL_SAMPLE_COVERAGE_INVERT   = 0x80AB;
-	public static final int GL_MULTISAMPLE_BIT          = 0x20000000;
-
-	public static final int GL_TRANSPOSE_MODELVIEW_MATRIX = 0x84E3;
-	public static final int GL_TRANSPOSE_PROJECTION_MATRIX = 0x84E4;
-	public static final int GL_TRANSPOSE_TEXTURE_MATRIX = 0x84E5;
-	public static final int GL_TRANSPOSE_COLOR_MATRIX   = 0x84E6;
-
-	public static final int GL_COMBINE                  = 0x8570;
-	public static final int GL_COMBINE_RGB              = 0x8571;
-	public static final int GL_COMBINE_ALPHA            = 0x8572;
-	public static final int GL_SOURCE0_RGB              = 0x8580;
-	public static final int GL_SOURCE1_RGB              = 0x8581;
-	public static final int GL_SOURCE2_RGB              = 0x8582;
-	public static final int GL_SOURCE0_ALPHA            = 0x8588;
-	public static final int GL_SOURCE1_ALPHA            = 0x8589;
-	public static final int GL_SOURCE2_ALPHA            = 0x858A;
-	public static final int GL_OPERAND0_RGB             = 0x8590;
-	public static final int GL_OPERAND1_RGB             = 0x8591;
-	public static final int GL_OPERAND2_RGB             = 0x8592;
-	public static final int GL_OPERAND0_ALPHA           = 0x8598;
-	public static final int GL_OPERAND1_ALPHA           = 0x8599;
-	public static final int GL_OPERAND2_ALPHA           = 0x859A;
-	public static final int GL_RGB_SCALE                = 0x8573;
-	public static final int GL_ADD_SIGNED               = 0x8574;
-	public static final int GL_INTERPOLATE              = 0x8575;
-	public static final int GL_SUBTRACT                 = 0x84E7;
-	public static final int GL_CONSTANT                 = 0x8576;
-	public static final int GL_PRIMARY_COLOR            = 0x8577;
-	public static final int GL_PREVIOUS                 = 0x8578;
-	public static final int GL_DOT3_RGB                 = 0x86AE;
-	public static final int GL_DOT3_RGBA                = 0x86AF;
-	public static final int GL_CLAMP_TO_BORDER          = 0x812D;
-
 	/* TextureTarget */
 	/*      GL_TEXTURE_1D */
 	/*      GL_TEXTURE_2D */
@@ -1265,76 +1049,6 @@ public interface CoreGLConstants {
 	public static final int GL_T2F_N3F_V3F                    = 0x2A2B;
 	public static final int GL_T2F_C4F_N3F_V3F                = 0x2A2C;
 	public static final int GL_T4F_C4F_N3F_V4F                = 0x2A2D;
-
-
-	/* EXT_vertex_array */
-	public static final int GL_VERTEX_ARRAY_EXT               = 0x8074;
-	public static final int GL_NORMAL_ARRAY_EXT               = 0x8075;
-	public static final int GL_COLOR_ARRAY_EXT                = 0x8076;
-	public static final int GL_INDEX_ARRAY_EXT                = 0x8077;
-	public static final int GL_TEXTURE_COORD_ARRAY_EXT        = 0x8078;
-	public static final int GL_EDGE_FLAG_ARRAY_EXT            = 0x8079;
-	public static final int GL_VERTEX_ARRAY_SIZE_EXT          = 0x807A;
-	public static final int GL_VERTEX_ARRAY_TYPE_EXT          = 0x807B;
-	public static final int GL_VERTEX_ARRAY_STRIDE_EXT        = 0x807C;
-	public static final int GL_VERTEX_ARRAY_COUNT_EXT         = 0x807D;
-	public static final int GL_NORMAL_ARRAY_TYPE_EXT          = 0x807E;
-	public static final int GL_NORMAL_ARRAY_STRIDE_EXT        = 0x807F;
-	public static final int GL_NORMAL_ARRAY_COUNT_EXT         = 0x8080;
-	public static final int GL_COLOR_ARRAY_SIZE_EXT           = 0x8081;
-	public static final int GL_COLOR_ARRAY_TYPE_EXT           = 0x8082;
-	public static final int GL_COLOR_ARRAY_STRIDE_EXT         = 0x8083;
-	public static final int GL_COLOR_ARRAY_COUNT_EXT          = 0x8084;
-	public static final int GL_INDEX_ARRAY_TYPE_EXT           = 0x8085;
-	public static final int GL_INDEX_ARRAY_STRIDE_EXT         = 0x8086;
-	public static final int GL_INDEX_ARRAY_COUNT_EXT          = 0x8087;
-	public static final int GL_TEXTURE_COORD_ARRAY_SIZE_EXT   = 0x8088;
-	public static final int GL_TEXTURE_COORD_ARRAY_TYPE_EXT   = 0x8089;
-	public static final int GL_TEXTURE_COORD_ARRAY_STRIDE_EXT = 0x808A;
-	public static final int GL_TEXTURE_COORD_ARRAY_COUNT_EXT  = 0x808B;
-	public static final int GL_EDGE_FLAG_ARRAY_STRIDE_EXT     = 0x808C;
-	public static final int GL_EDGE_FLAG_ARRAY_COUNT_EXT      = 0x808D;
-	public static final int GL_VERTEX_ARRAY_POINTER_EXT       = 0x808E;
-	public static final int GL_NORMAL_ARRAY_POINTER_EXT       = 0x808F;
-	public static final int GL_COLOR_ARRAY_POINTER_EXT        = 0x8090;
-	public static final int GL_INDEX_ARRAY_POINTER_EXT        = 0x8091;
-	public static final int GL_TEXTURE_COORD_ARRAY_POINTER_EXT = 0x8092;
-	public static final int GL_EDGE_FLAG_ARRAY_POINTER_EXT    = 0x8093;
-	public static final int GL_DOUBLE_EXT                     = GL_DOUBLE;
-
-	/* EXT_bgra */
-	public static final int GL_BGR_EXT                        = 0x80E0;
-	public static final int GL_BGRA_EXT                       = 0x80E1;
-
-	/* EXT_paletted_texture */
-
-	/* These must match the GL_COLOR_TABLE_*_SGI enumerants */
-	public static final int GL_COLOR_TABLE_FORMAT_EXT         = 0x80D8;
-	public static final int GL_COLOR_TABLE_WIDTH_EXT          = 0x80D9;
-	public static final int GL_COLOR_TABLE_RED_SIZE_EXT       = 0x80DA;
-	public static final int GL_COLOR_TABLE_GREEN_SIZE_EXT     = 0x80DB;
-	public static final int GL_COLOR_TABLE_BLUE_SIZE_EXT      = 0x80DC;
-	public static final int GL_COLOR_TABLE_ALPHA_SIZE_EXT     = 0x80DD;
-	public static final int GL_COLOR_TABLE_LUMINANCE_SIZE_EXT = 0x80DE;
-	public static final int GL_COLOR_TABLE_INTENSITY_SIZE_EXT = 0x80DF;
-
-	public static final int GL_COLOR_INDEX1_EXT               = 0x80E2;
-	public static final int GL_COLOR_INDEX2_EXT               = 0x80E3;
-	public static final int GL_COLOR_INDEX4_EXT               = 0x80E4;
-	public static final int GL_COLOR_INDEX8_EXT               = 0x80E5;
-	public static final int GL_COLOR_INDEX12_EXT              = 0x80E6;
-	public static final int GL_COLOR_INDEX16_EXT              = 0x80E7;
-
-	/* WIN_draw_range_elements */
-	public static final int GL_MAX_ELEMENTS_VERTICES_WIN      = 0x80E8;
-	public static final int GL_MAX_ELEMENTS_INDICES_WIN       = 0x80E9;
-
-	/* WIN_phong_shading */
-	public static final int GL_PHONG_WIN                      = 0x80EA ;
-	public static final int GL_PHONG_HINT_WIN                 = 0x80EB ;
-
-	/* WIN_specular_fog */
-	public static final int GL_FOG_SPECULAR_TEXTURE_WIN       = 0x80EC;
 
 	/* For compatibility with OpenGL v1.0 */
 	public static final int GL_LOGIC_OP = GL_INDEX_LOGIC_OP;

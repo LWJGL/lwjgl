@@ -63,7 +63,6 @@ import org.lwjgl.opengl.wgl.WGLMakeCurrentRead;
 
 public interface GLConstants
 	extends
-		CoreGLConstants,
 		ARBCubeMap,
 		ARBDepthTexture,
 		ARBMatrixPalette,
@@ -99,6 +98,7 @@ public interface GLConstants
 		EXTFogCoord,
 		EXTLightMaxExponent,
 		EXTPackedPixels,
+		EXTPalettedTexture,
 		EXTPointParameters,
 		EXTRescaleNormal,
 		EXTSecondaryColor,

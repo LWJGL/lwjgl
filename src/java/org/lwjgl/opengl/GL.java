@@ -47,7 +47,7 @@ import java.nio.Buffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public class GL extends CoreGL implements GLConstants {
+public class GL extends CoreGL14 implements GLConstants {
 	public static native void glActiveStencilFaceEXT(int face);
 
 	public static native void glActiveTextureARB(int texture);

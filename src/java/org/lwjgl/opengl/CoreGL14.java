@@ -29,15 +29,27 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
- package org.lwjgl.opengl.ext;
+
+package org.lwjgl.opengl;
+
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.Buffer;
 
 /**
- * EXT_bgra_constants
+ * $Id: CoreGL.java,v 1.23 2003/07/23 14:51:19 elias_naur Exp $
+ *
+ * The core OpenGL1.4 API.
  * 
- * @author cas
+ * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @version $Revision: 1.23 $
  */
-public interface EXTBgra {
-	public static final int GL_BGR_EXT                          = 0x80E0;
-	public static final int GL_BGRA_EXT                         = 0x80E1;
+public class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
+        public static native void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount, int primcount);
+/*        public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);*/
 }
+
+

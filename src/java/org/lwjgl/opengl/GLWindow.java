@@ -187,7 +187,7 @@ public class GLWindow extends Window {
 				map.put(fields[i].getName(), fields[i]);
 		}
 
-		String exts = CoreGL.glGetString(CoreGL.GL_EXTENSIONS);
+		String exts = CoreGL11.glGetString(CoreGL11.GL_EXTENSIONS);
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
@@ -206,7 +206,7 @@ public class GLWindow extends Window {
 		}
 
 		// Let's see what openGL version we are too:
-		String version = CoreGL.glGetString(CoreGL.GL_VERSION);
+		String version = CoreGL11.glGetString(CoreGL11.GL_VERSION);
 		int i = version.indexOf("1.");
 		if (i > -1) {
 			char c = version.charAt(i + 2);

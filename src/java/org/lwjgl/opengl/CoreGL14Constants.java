@@ -29,15 +29,16 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
- package org.lwjgl.opengl.ext;
+
+package org.lwjgl.opengl;
 
 /**
- * EXT_bgra_constants
+ * $Id$
+ *
+ * Core OpenGL 1.1 constants.
  * 
- * @author cas
+ * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @version $Revision$
  */
-public interface EXTBgra {
-	public static final int GL_BGR_EXT                          = 0x80E0;
-	public static final int GL_BGRA_EXT                         = 0x80E1;
+public interface CoreGL14Constants extends CoreGL13Constants {
 }
