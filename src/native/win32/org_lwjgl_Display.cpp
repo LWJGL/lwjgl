@@ -68,7 +68,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	GetVersionEx(&osvi);
 	
 	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ||
-            osvi.swPlatformId == VER_PLATFORM_WIN32_WINDOWS && osvi.dwMinorVersion >= 10) {
+            osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS && osvi.dwMinorVersion >= 10) {
 #ifdef _DEBUG
 		printf("Selecting extended display mode check\n");
 #endif	
