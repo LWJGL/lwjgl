@@ -113,3 +113,4 @@ void extil_Close(void) {
 #endif
 	devILhandle = NULL;
 }
+

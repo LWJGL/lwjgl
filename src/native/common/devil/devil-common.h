@@ -9,6 +9,10 @@
 #include "org_lwjgl_devil_ILUT.h"
 #include "common_tools.h"
 
+#ifdef _X11
+#include <dlfcn.h>
+#endif
+
 /*-----------------------------------------*/
 typedef unsigned int GLuint;
 
@@ -107,6 +111,27 @@ typedef struct ILpointi
 #define IL_IMAGE_HEIGHT						0x0DE5
 #define IL_IMAGE_BYTES_PER_PIXEL			0x0DE8
 
+// Callback functions for file reading
+typedef ILvoid		(ILAPIENTRY *fCloseRProc)(ILHANDLE);
+typedef ILboolean	(ILAPIENTRY *fEofProc)   (ILHANDLE);
+typedef ILint		(ILAPIENTRY *fGetcProc)  (ILHANDLE);
+typedef ILHANDLE	(ILAPIENTRY *fOpenRProc) (const ILstring);
+typedef ILint		(ILAPIENTRY *fReadProc)  (void*, ILuint, ILuint, ILHANDLE);
+typedef ILint		(ILAPIENTRY *fSeekRProc) (ILHANDLE, ILint, ILint);
+typedef ILint		(ILAPIENTRY *fTellRProc) (ILHANDLE);
+
+// Callback functions for file writing
+typedef ILvoid		(ILAPIENTRY *fCloseWProc)(ILHANDLE);
+typedef ILHANDLE	(ILAPIENTRY *fOpenWProc) (const ILstring);
+typedef ILint		(ILAPIENTRY *fPutcProc)  (ILubyte, ILHANDLE);
+typedef ILint		(ILAPIENTRY *fSeekWProc) (ILHANDLE, ILint, ILint);
+typedef ILint		(ILAPIENTRY *fTellWProc) (ILHANDLE);
+typedef ILint		(ILAPIENTRY *fWriteProc) (const void*, ILuint, ILuint, ILHANDLE);
+
+// Callback functions for allocation and deallocation
+typedef ILvoid*		(ILAPIENTRY *mAlloc)(ILuint);
+typedef ILvoid		(ILAPIENTRY *mFree) (ILvoid*);
+
 // Registered format procedures
 typedef ILenum		(ILAPIENTRY *IL_LOADPROC)(const ILstring);
 typedef ILenum		(ILAPIENTRY *IL_SAVEPROC)(const ILstring);
@@ -122,3 +147,4 @@ typedef ILenum		(ILAPIENTRY *IL_SAVEPROC)(const ILstring);
 #endif
 
 #endif /* __EXTIL_H__ */
+

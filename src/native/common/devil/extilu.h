@@ -8,3 +8,4 @@ extern void extilu_Close(void);
 extern void extilu_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 
 #endif
+

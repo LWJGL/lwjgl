@@ -8,3 +8,4 @@ extern void extil_Close(void);
 extern void extil_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 
 #endif
+

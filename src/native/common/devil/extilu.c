@@ -113,3 +113,4 @@ void extilu_Close(void) {
 #endif
 	devILUhandle = NULL;
 }
+
