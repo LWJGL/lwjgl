@@ -1,0 +1,344 @@
+/* 
+ * Copyright (c) 2004 LWJGL Project
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are 
+ * met:
+ * 
+ * * Redistributions of source code must retain the above copyright 
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of 
+ *   its contributors may be used to endorse or promote products derived 
+ *   from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.fmod;
+
+import java.io.File;
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
+/**
+ * $Id$
+ * <br>
+ * @author Brian Matzon <brian@matzon.dk>
+ * @version $Revision$
+ */
+public class FMOD {
+  
+	/** Array of hashmaps for callbacks */
+  private static HashMap[] callbacks = new HashMap[14];
+   
+  /** FMOD System level clear dsp unit */
+  static FSoundDSPUnit fmodClearUnit;
+  
+  /** FMOD System level clip and copy dsp unit */
+  static FSoundDSPUnit fmodClipAndCopyUnit;
+  
+  /** FMOD System level music dsp unit */
+  static FSoundDSPUnit fmodMusicUnit;
+  
+  /** FMOD System level sound effects dsp unit */
+  static FSoundDSPUnit fmodSFXUnit;
+  
+  /** FMOD System level FFT dsp unit */
+  static FSoundDSPUnit fmodFFTUnit;
+  
+  /** FMOD System level FFT buffer */
+  static FloatBuffer fmodFFTBuffer;  
+  
+  /** Type defining the music callback entries in callback hashmap array */
+  public static final int FMUSIC_CALLBACK = 0;
+  
+  /** Type defining the dsp callback entries in callback hashmap array */
+  public static final int FSOUND_DSPCALLBACK = 1;
+  
+  /** Type defining the stream callback entries in callback hashmap array */
+  public static final int FSOUND_STREAMCALLBACK = 2;
+  
+  /** Type defining the alloc callback entries in callback hashmap array */
+  public static final int FSOUND_ALLOCCALLBACK = 3;
+  
+  /** Type defining the realloc callback entries in callback hashmap array */
+  public static final int FSOUND_REALLOCCALLBACK = 4;
+  
+  /** Type defining the free callback entries in callback hashmap array */
+  public static final int FSOUND_FREECALLBACK = 5;
+  
+  /** Type defining the open callback entries in callback hashmap array */
+  public static final int FSOUND_OPENCALLBACK = 6;
+  
+  /** Type defining the close callback entries in callback hashmap array */
+  public static final int FSOUND_CLOSECALLBACK = 7;
+  
+  /** Type defining the metadata callback entries in callback hashmap array */
+  public static final int FSOUND_METADATACALLBACK = 8;
+  
+  /** Type defining the read callback entries in callback hashmap array */
+  public static final int FSOUND_READCALLBACK = 9;
+  
+  /** Type defining the seek callback entries in callback hashmap array */
+  public static final int FSOUND_SEEKCALLBACK = 10;
+  
+  /** Type defining the tell callback entries in callback hashmap array */
+  public static final int FSOUND_TELLCALLBACK = 11;
+  
+  /** Type defining the "end" callback entries in callback hashmap array */
+  public static final int FSOUND_ENDCALLBACK = 12;
+  
+  /** Type defining the "sync" callback entries in callback hashmap array */
+  public static final int FSOUND_SYNCCALLBACK = 13;  
+
+  /** Have we been created? */
+  protected static boolean created;  
+
+  /** No errors */
+  public static final int FMOD_ERR_NONE             = 0;
+
+  /** Cannot call this command after FSOUND_Init.  Call FSOUND_Close first. */
+  public static final int FMOD_ERR_BUSY             = 1;
+
+  /** This command failed because FSOUND_Init was not called */
+  public static final int FMOD_ERR_UNINITIALIZED    = 2;
+
+  /** Error initializing output device. */
+  public static final int FMOD_ERR_INIT             = 3;
+
+  /** Error initializing output device, but more specifically, the output device is already in use and cannot be reused. */
+  public static final int FMOD_ERR_ALLOCATED        = 4;
+
+  /** Playing the sound failed. */
+  public static final int FMOD_ERR_PLAY             = 5;
+
+  /** Soundcard does not support the features needed for this soundsystem (16bit stereo output) */
+  public static final int FMOD_ERR_OUTPUT_FORMAT    = 6;
+
+  /** Error setting cooperative level for hardware. */
+  public static final int FMOD_ERR_COOPERATIVELEVEL = 7;
+
+  /** Error creating hardware sound buffer. */
+  public static final int FMOD_ERR_CREATEBUFFER     = 8;
+
+  /** File not found */
+  public static final int FMOD_ERR_FILE_NOTFOUND    = 9;
+
+  /** Unknown file format */
+  public static final int FMOD_ERR_FILE_FORMAT      = 10;
+
+  /** Error loading file */
+  public static final int FMOD_ERR_FILE_BAD         = 11;
+
+  /** Not enough memory */
+  public static final int FMOD_ERR_MEMORY           = 12;
+
+  /** The version number of this file format is not supported */
+  public static final int FMOD_ERR_VERSION          = 13;
+
+  /** An invalid parameter was passed to this function */
+  public static final int FMOD_ERR_INVALID_PARAM    = 14;
+
+  /** Tried to use an EAX command on a non EAX enabled channel or output. */
+  public static final int FMOD_ERR_NO_EAX           = 15;
+
+  /** Failed to allocate a new channel */
+  public static final int FMOD_ERR_CHANNEL_ALLOC    = 17;
+
+  /** Recording is not supported on this machine */
+  public static final int FMOD_ERR_RECORD           = 18;
+
+  /** Required Mediaplayer codec is not installed */
+  public static final int FMOD_ERR_MEDIAPLAYER      = 19;
+
+  /** An error occured trying to open the specified CD device */
+  public static final int FMOD_ERR_CDDEVICE         = 20;
+  
+  /** Whether we have been initialized */
+  private static boolean initialized;
+  
+  /** The native JNI library name */
+  private static String JNI_LIBRARY_NAME = "lwjgl-fmod";
+  
+  /** The native library name on win32 */
+  private static String FMOD_WIN32_LIBRARY_NAME = "fmod.dll";
+  
+  /** The native library name on win32 */
+  private static String FMOD_LINUX_LIBRARY_NAME = "libfmod.so.0";
+
+  /** The native library name on win32 */
+  private static String FMOD_OSX_LIBRARY_NAME = "fmod_cfm.shlb";
+
+  /** Version of FMOD */
+  public static final String VERSION = "0.9a";
+  
+  static {
+    initialize();
+  }  
+  
+  /**
+   * Initializes the FMOD binding
+   */
+  public static void initialize() {  
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+    
+    System.loadLibrary(JNI_LIBRARY_NAME);    
+    
+    // check for mismatch
+    String nativeVersion = getNativeLibraryVersion();
+    if (!nativeVersion.equals(VERSION)) {
+      throw new LinkageError(
+          "Version mismatch: jar version is '" + VERSION + 
+					"', native libary version is '" + nativeVersion + "'");
+    }
+    
+    // Initialize callback hashmaps
+    for(int i=0; i<callbacks.length; i++) {
+     callbacks[i] = new HashMap();
+    }
+  }
+  
+  /**
+   * Return the version of the native library
+   */
+  private static native String getNativeLibraryVersion();  
+  
+  /**
+   * @return true if AL has been created
+   */
+  public static boolean isCreated() {
+    return created;
+  }   
+  
+  /**
+   * Creates an FMOD instance.
+   */
+  public static void create() throws FMODException {
+    if (created) {
+      return;
+    }
+    
+    // create, passing potential locations for native fmod library
+    nCreate(constructFMODSearchPaths());
+    created = true;
+  }
+  
+  /**
+   * Retrieves an array of strings, with potential locations for
+   * the native fmod library
+	 * @return array of strings, with potential locations for the native fmod library
+	 */
+	private static String[] constructFMODSearchPaths() {
+    // miscellaneous values
+    String libpath = System.getProperty("java.library.path");
+    String seperator = System.getProperty("path.separator");
+    String osName = System.getProperty("os.name");
+
+    // determine os library name
+    String dllName = FMOD_WIN32_LIBRARY_NAME;
+    if (osName.startsWith("Mac OS")) {
+      dllName = FMOD_OSX_LIBRARY_NAME;
+    } else if (osName.startsWith("Linux")) {
+      dllName = FMOD_LINUX_LIBRARY_NAME;
+    }
+    
+    // split, and rebuild library path to path + dll
+    StringTokenizer st = new StringTokenizer(libpath, seperator);
+    String[] paths = new String[st.countTokens() + 1];
+
+    //build paths
+    for (int i = 0; i < paths.length - 1; i++) {
+      paths[i] = st.nextToken() + File.separator + dllName;
+    }
+
+    //add cwd path
+    paths[paths.length - 1] = dllName;    
+		return paths;
+	}
+
+	/**
+   * Native method to create FMOD instance
+   * 
+   * @return true if the FMOD creation process succeeded
+   */
+  protected static native void nCreate(String[] paths);
+  
+  /**
+   * Exit cleanly by calling destroy.
+   */
+  public static void destroy() {
+    if(!created) {
+      return;
+    }
+    
+    created = false;
+    nDestroy();
+  }
+
+  /**
+   * Native method the destroy the FMOD
+   */
+  protected static native void nDestroy();  
+  
+  /**
+   * Registers a callback by its handle
+   * 
+   * @param handle Handle to native object being monitored
+   * @param callbackHandler Object to register as the call back handler
+   */
+  static void registerCallback(int type, long handle, Object handled, Object callbackHandler) {
+    if(callbackHandler == null) {
+    	callbacks[type].remove(new Long(handle)); 
+    } else {
+    	callbacks[type].put(new Long(handle), new FMOD.WrappedCallback(handled, callbackHandler));
+    }
+  }
+  
+  /**
+   * Retrieves a call back handler by its native handle
+   * @param handle Handle to native object being monitored
+   * @return Call back handler, or null if no such handler
+   */
+  static WrappedCallback getCallback(int type, long handle) {
+   return (WrappedCallback) callbacks[type].get(new Long(handle));
+  }
+
+  /**
+   * Retrieves the errorcode desription for specified code
+   * 
+   * @param errorcode errorcode to lookup
+   * @return Description of errorcode
+   */
+  public static native String FMOD_ErrorString(int errorcode);
+  
+  /**
+   * Wrapper class for a callback handler, and the object associated 
+   */
+  static class WrappedCallback {
+   Object handled;
+   Object callback;
+   WrappedCallback(Object handled, Object callback) {
+    this.handled  = handled;
+    this.callback = callback;
+   }
+  }
+}
