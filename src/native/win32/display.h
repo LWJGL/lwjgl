@@ -39,6 +39,9 @@
  * @version $Revision$
  */
 
+#ifndef _DISPLAY_H
+#define _DISPLAY_H
+
 #include <jni.h>
 
 extern jobjectArray getAvailableDisplayModes(JNIEnv *env);
@@ -49,3 +52,5 @@ extern void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer);
 extern jobject initDisplay(JNIEnv * env);
 extern jstring getAdapter(JNIEnv * env);
 extern jstring getVersion(JNIEnv * env);
+
+#endif
