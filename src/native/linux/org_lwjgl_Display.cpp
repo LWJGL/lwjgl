@@ -46,6 +46,7 @@
 #include <X11/extensions/xf86vmode.h>
 #include <X11/Xutil.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <jni.h>
 #include "org_lwjgl_Display.h"
 
@@ -59,6 +60,42 @@ int win_width;
 int win_height;
 XF86VidModeModeInfo **avail_modes;
 XVisualInfo * vis_info;
+
+struct pixelformat {
+	int depth;
+	int alpha;
+	int stencil;
+};
+
+struct pixelformat * getAvailablePixelFormats(int *length) {
+	*length = 8;
+	struct pixelformat *formats = (struct pixelformat *)malloc((*length)*sizeof(struct pixelformat));
+	formats[0].depth = 24;
+	formats[0].alpha = 8;
+	formats[0].stencil = 8;
+	formats[1].depth = 16;
+	formats[1].alpha = 8;
+	formats[1].stencil = 8;
+	formats[2].depth = 24;
+	formats[2].alpha = 0;
+	formats[2].stencil = 8;
+	formats[3].depth = 16;
+	formats[3].alpha = 0;
+	formats[3].stencil = 8;
+	formats[4].depth = 24;
+	formats[4].alpha = 8;
+	formats[4].stencil = 0;
+	formats[5].depth = 16;
+	formats[5].alpha = 8;
+	formats[5].stencil = 0;
+	formats[6].depth = 24;
+	formats[6].alpha = 0;
+	formats[6].stencil = 0;
+	formats[7].depth = 16;
+	formats[7].alpha = 0;
+	formats[7].stencil = 0;
+	return formats;
+}
 
 void waitMapped(Display *disp, Window win) {
 	XEvent event;
@@ -265,15 +302,20 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 #endif
 		return NULL;
 	}
+	int num_pixelformats;
+	struct pixelformat *formats = getAvailablePixelFormats(&num_pixelformats);
 	// Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
-	jobjectArray ret = env->NewObjectArray(num_modes, displayModeClass, NULL);
-	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
+	jobjectArray ret = env->NewObjectArray(num_modes*num_pixelformats, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");
 	
 	for (i = 0; i < num_modes; i++) {
-		jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, depth, 0);
-		env->SetObjectArrayElement(ret, i, displayMode);
+		for (int j = 0; j < num_pixelformats; j++) {
+			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, depth, 0, formats[j].alpha, formats[j].depth, formats[j].stencil);
+			env->SetObjectArrayElement(ret, i*num_pixelformats + j, displayMode);
+		}
 	}
+	free(formats);
 	XFree(avail_modes);
 	XCloseDisplay(disp);
 	return ret;
