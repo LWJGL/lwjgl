@@ -254,7 +254,7 @@ public final class Pbuffer {
 	 */
 	public synchronized void makeCurrent() throws LWJGLException {
 		if (display_context != null && display_context != Display.getContext())
-			throw new IllegalStateException("Cannot make a Pbuffer invalid after the Display has been destroyed");
+			throw new IllegalStateException("Cannot make a Pbuffer current after the Display has been destroyed");
 		nMakeCurrent(handle);
 		if (display_context == null)
 			GLContext.useContext(this);
