@@ -299,7 +299,7 @@ public class ALTest extends BasicTest {
         
         // Initialize Open AL manually
         //Open device
-        device = alc.openDevice("DirectSound3D");
+        device = alc.openDevice(null);
         //Create context(s)
         context = alc.createContext(device, 0);
         //Set active context
@@ -341,7 +341,7 @@ public class ALTest extends BasicTest {
         
         // Load in samples to be used by Test functions
         // Load footsteps.wav
-        ALUTLoadWAVData data = alut.loadWAVFile("footsteps.wav");
+        ALUTLoadWAVData data = alut.loadWAVFile("Footsteps.wav");
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alutLoadWAVFile footsteps.wav : ", error);
             // Delete Buffers
@@ -395,7 +395,7 @@ public class ALTest extends BasicTest {
         }
         
         // Load wave1.wav
-        data = alut.loadWAVFile("wave1.wav");
+        data = alut.loadWAVFile("Wave1.WAV");
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alutLoadWAVFile wave1.wav : ", error);
             // Delete Buffers
@@ -422,7 +422,7 @@ public class ALTest extends BasicTest {
         }
         
         // Load Wave2.wav
-        data = alut.loadWAVFile("Wave2.wav");
+        data = alut.loadWAVFile("Wave2.WAV");
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alutLoadWAVFile Wave2.wav : ", error);
             // Delete Buffers
@@ -449,7 +449,7 @@ public class ALTest extends BasicTest {
         }
         
         // Load wave3.wav
-        data = alut.loadWAVFile("wave3.wav");
+        data = alut.loadWAVFile("Wave3.WAV");
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alutLoadWAVFile wave3.wav : ", error);
             // Delete Buffers
@@ -476,7 +476,7 @@ public class ALTest extends BasicTest {
         }
         
         // Load wave4.wav
-        data = alut.loadWAVFile("wave4.wav");
+        data = alut.loadWAVFile("Wave4.WAV");
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alutLoadWAVFile wave4.wav : ", error);
             // Delete Buffers
