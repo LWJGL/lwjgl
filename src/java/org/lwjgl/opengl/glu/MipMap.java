@@ -247,9 +247,18 @@ public class MipMap extends Util {
 				// store weighted pixel
 				dst = (iy * widthOut + ix) * components;
 
-				for (k = 0; k < components; k++) {
-					tempout[dst++] = c[k] / readPix;
-				}
+				if (readPix == 0) { 
+				    // Image is sized up, caused by non power of two texture as input 
+				    src = (y0 * widthIn + x0) * components; 
+				    for (int ic = 0; ic < components; ic++) { 
+				        tempout[dst++] = tempin[src + ic]; 
+				    } 
+				} else {
+				    // sized down
+				    for (k = 0; k < components; k++) { 
+				        tempout[dst++] = c[k] / readPix; 
+				    } 
+				} 
 			}
 		}
 
