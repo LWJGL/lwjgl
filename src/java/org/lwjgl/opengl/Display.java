@@ -370,9 +370,9 @@ public final class Display {
 			try {
 				if (fullscreen) {
 					switchDisplayMode();
-        } else {
+				} else {
 					resetDisplayMode();
-        }
+				}
 				createWindow();
 			} catch (LWJGLException e) {
 				destroyContext();

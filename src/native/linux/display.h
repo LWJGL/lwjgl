@@ -50,12 +50,11 @@ extern int getScreenModeWidth(void);
 extern int getScreenModeHeight(void);
 extern jobject initDisplay(JNIEnv *env, int screen);
 extern void switchDisplayMode(JNIEnv * env, jobject mode, int screen);
-extern void resetDisplayMode(JNIEnv * env, int screen);
+extern void resetDisplayMode(int screen);
 extern jobjectArray getAvailableDisplayModes(JNIEnv * env, int screen);
 extern int getGammaRampLength(int screen);
 extern void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer, int screen);
 extern extension getCurrentDisplayModeExtension();
-extern void temporaryResetMode(int screen);
 extern void temporaryRestoreMode(int screen);
 
 #endif
