@@ -234,6 +234,7 @@ public final class GLContext {
 			if (did_auto_load)
 				unloadOpenGLLibrary();
 			currentContext = null;
+			VBOTracker.setCurrent(null);
 			return;
 		}
 		// Is this the same as last time?

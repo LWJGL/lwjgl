@@ -71,7 +71,11 @@ class VBOTracker {
 	 * @param context
 	 */
 	static synchronized void setCurrent(Object context) {
-		current_tracker = (VBOTracker) contextToTracker.get(context);
+		if (context == null) {
+			current_tracker = null;
+			return;
+		}
+		current_tracker = (VBOTracker)contextToTracker.get(context);
 		if (current_tracker == null) {
 			current_tracker = new VBOTracker();
 			contextToTracker.put(context, current_tracker);
