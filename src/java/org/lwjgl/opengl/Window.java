@@ -361,7 +361,7 @@ public final class Window {
 		nSetVSyncEnabled(sync);
 	}
 
-	private static native boolean nSetVSyncEnabled(boolean sync);
+	private static native void nSetVSyncEnabled(boolean sync);
 
 
 }

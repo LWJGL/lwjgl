@@ -122,9 +122,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nSetVSyncEnabled
- * Signature: (Z)Z
+ * Signature: (Z)V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
   (JNIEnv *, jclass, jboolean);
 
 #ifdef __cplusplus
