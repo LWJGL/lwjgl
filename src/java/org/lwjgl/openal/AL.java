@@ -37,7 +37,7 @@ import java.util.StringTokenizer;
 
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
-import org.lwjgl.LWJGLErrorException;
+import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -87,7 +87,7 @@ public abstract class AL {
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
 	 * @return true if the AL creation process succeeded
 	 */
-	protected static native void nCreate(String[] oalPaths) throws LWJGLErrorException;
+	protected static native void nCreate(String[] oalPaths) throws LWJGLException;
 
 	/**
 	 * Native method the destroy the AL
@@ -112,7 +112,7 @@ public abstract class AL {
 	 * @param contextSynchronized Flag, indicating a synchronous context.* 
 	 */
 	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized)
-		throws LWJGLErrorException {
+		throws LWJGLException {
 			
 		if (created) {
 			return;
@@ -131,7 +131,7 @@ public abstract class AL {
 	 * Creates an OpenAL instance. The empty create will cause OpenAL to
 	 * open the default device, and create a context using default values. 
 	 */
-	public static void create() throws LWJGLErrorException {
+	public static void create() throws LWJGLException {
 		if(created) {
 			return;
 		}
@@ -152,7 +152,7 @@ public abstract class AL {
 				jwsLibname = "openal";
 				break;
 			default:
-				throw new LWJGLErrorException("Unknown platform");
+				throw new LWJGLException("Unknown platform");
 		}
 		
 		String jwsPath = getPathFromJWS(jwsLibname);

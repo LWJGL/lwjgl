@@ -37,7 +37,7 @@ import java.util.Map;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.LWJGLErrorException;
+import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -164,9 +164,9 @@ public class Controller {
 
 	/**
 	 * "Create" the controller. The display must first have been created.
-	 * @throws LWJGLErrorException if the controller could not be created for any reason
+	 * @throws LWJGLException if the controller could not be created for any reason
 	 */
-	public static void create() throws LWJGLErrorException {
+	public static void create() throws LWJGLException {
 		if (!Window.isCreated())
 			throw new IllegalStateException("Window must be created before you can create Controller");
 		initialize();
@@ -268,7 +268,7 @@ public class Controller {
 	/**
 	 * Native method to create the controller
 	 */
-	private static native void nCreate() throws LWJGLErrorException;
+	private static native void nCreate() throws LWJGLException;
 
 	/**
 	* Native method the destroy the controller

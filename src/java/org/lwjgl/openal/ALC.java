@@ -35,7 +35,7 @@ import java.nio.Buffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.Sys;
-import org.lwjgl.LWJGLErrorException;
+import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -159,9 +159,9 @@ public class ALC {
 	/**
 	* Creates the ALC instance
 	* 
-	* @throws LWJGLErrorException if a failiure occured in the ALC creation process
+	* @throws LWJGLException if a failiure occured in the ALC creation process
 	*/
-	protected static void create() throws LWJGLErrorException {
+	protected static void create() throws LWJGLException {
 		if (created) {
 			return;
 		}

@@ -128,7 +128,7 @@ public final class Sys {
 		System.loadLibrary(LIBRARY_NAME);
 		String native_version = getNativeLibraryVersion();
 		if (!native_version.equals(VERSION))
-			throw new IllegalStateException("Version mismatch: jar version is '" + VERSION + 
+			throw new LinkageError("Version mismatch: jar version is '" + VERSION + 
                                                         "', native libary version is '" + native_version + "'");
 		setDebug(DEBUG);
 		setTime(0);

@@ -52,7 +52,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.LWJGLErrorException;
+import org.lwjgl.LWJGLException;
 
 public final class Window {
 
@@ -287,33 +287,33 @@ public final class Window {
 	 * buffer, probably no alpha buffer, and probably no multisampling.
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title
-	 * @throws LWJGLErrorException
+	 * @throws LWJGLException
 	 */
-	public static void create(String title) throws LWJGLErrorException {
+	public static void create(String title) throws LWJGLException {
 		create(title, Display.getDepth(), 0, 16, 8, 0);
 	}
 
 	/**
 	 * Create a fullscreen window. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
-	 * fails too then an LWJGLErrorException will be thrown.
+	 * fails too then an LWJGLException will be thrown.
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title The title of the window
 	 * @param bpp Minimum bits per pixel
 	 * @param alpha Minimum bits per pixel in alpha buffer
 	 * @param depth Minimum bits per pixel in depth buffer
 	 * @param stencil Minimum bits per pixel in stencil buffer
-	 * @throws LWJGLErrorException if the window could not be created for any reason; typically because
+	 * @throws LWJGLException if the window could not be created for any reason; typically because
 	 * the minimum requirements could not be met satisfactorily
 	 */
-	public static void create(String title, int bpp, int alpha, int depth, int stencil) throws LWJGLErrorException {
+	public static void create(String title, int bpp, int alpha, int depth, int stencil) throws LWJGLException {
 		create(title, bpp, alpha, depth, stencil, 0);
 	}
 	
 	/**
 	 * Create a fullscreen window. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
-	 * fails too then an LWJGLErrorException will be thrown.
+	 * fails too then an LWJGLException will be thrown.
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title The title of the window
 	 * @param bpp Minimum bits per pixel
@@ -322,10 +322,10 @@ public final class Window {
 	 * @param stencil Minimum bits per pixel in stencil buffer
 	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
 			  Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
-	 * @throws LWJGLErrorException if the window could not be created for any reason; typically because
+	 * @throws LWJGLException if the window could not be created for any reason; typically because
 	 * the minimum requirements could not be met satisfactorily
 	 */
-	public static void create(String title, int bpp, int alpha, int depth, int stencil, int samples) throws LWJGLErrorException {
+	public static void create(String title, int bpp, int alpha, int depth, int stencil, int samples) throws LWJGLException {
 		if (isCreated())
 			throw new IllegalStateException("Only one LWJGL window may be instantiated at any one time.");
 		Window.fullscreen = true;
@@ -339,7 +339,7 @@ public final class Window {
 
 	/**
 	 * Create a window. If the underlying OS does not have "floating" windows, then a fullscreen
-	 * display will be created instead. If this fails too then an LWJGLErrorException will be thrown.
+	 * display will be created instead. If this fails too then an LWJGLException will be thrown.
 	 * If the window is created fullscreen, then its size may not match the specified size
 	 * here.
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
@@ -353,16 +353,16 @@ public final class Window {
 	 * @param depth Minimum bits per pixel in depth buffer
 	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
 			  Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
-	 * @throws LWJGLErrorException if the window could not be created for any reason; typically because
+	 * @throws LWJGLException if the window could not be created for any reason; typically because
 	 * the minimum requirements could not be met satisfactorily
 	 */
-	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws LWJGLErrorException {
+	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws LWJGLException {
 		create(title, x, y, width, height, bpp, alpha, depth, stencil, 0);
 	}
 
 	/**
 	 * Create a window. If the underlying OS does not have "floating" windows, then a fullscreen
-	 * display will be created instead. If this fails too then an LWJGLErrorException will be thrown.
+	 * display will be created instead. If this fails too then an LWJGLException will be thrown.
 	 * If the window is created fullscreen, then its size may not match the specified size
 	 * here.
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
@@ -377,11 +377,11 @@ public final class Window {
 	 * @param stencil Minimum bits per pixel in stencil buffer
 	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
 			  Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
-	 * @throws LWJGLErrorException if the window could not be created for any reason; typically because
+	 * @throws LWJGLException if the window could not be created for any reason; typically because
 	 * the minimum requirements could not be met satisfactorily
 	 */
 	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil, int samples)
-		throws LWJGLErrorException {
+		throws LWJGLException {
 		if (isCreated())
 			throw new IllegalStateException("Only one LWJGL window may be instantiated at any one time.");
 		Window.fullscreen = false;
@@ -395,7 +395,7 @@ public final class Window {
 
 	/**
 	 * Create the native window peer.
-	 * @throws LWJGLErrorException
+	 * @throws LWJGLException
 	 */
 	private static native void nCreate(
 		String title,
@@ -409,9 +409,9 @@ public final class Window {
 		int depth,
 		int stencil,
 		int samples)
-		throws LWJGLErrorException;
+		throws LWJGLException;
 
-	private static void createWindow(int bpp, int alpha, int depth, int stencil, int samples) throws LWJGLErrorException {
+	private static void createWindow(int bpp, int alpha, int depth, int stencil, int samples) throws LWJGLException {
 		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples);
 		context = new Window();
 		makeCurrent();
@@ -431,7 +431,7 @@ public final class Window {
 				Mouse.create();
 				createdMouse = true;
 				Mouse.enableBuffer();
-			} catch (LWJGLErrorException e) {
+			} catch (LWJGLException e) {
 				if (Sys.DEBUG) {
 					e.printStackTrace(System.err);
 				} else {
@@ -445,7 +445,7 @@ public final class Window {
 				createdKeyboard = true;
 				Keyboard.enableBuffer();
 				Keyboard.enableTranslation();
-			} catch (LWJGLErrorException e) {
+			} catch (LWJGLException e) {
 				if (Sys.DEBUG) {
 					e.printStackTrace(System.err);
 				} else {
@@ -457,7 +457,7 @@ public final class Window {
 			try {
 				Controller.create();
 				createdController = true;
-			} catch (LWJGLErrorException e) {
+			} catch (LWJGLException e) {
 				if (Sys.DEBUG) {
 					e.printStackTrace(System.err);
 				} else {
