@@ -63,8 +63,6 @@ public final class Sys {
 	private final static SysImplementation implementation;
 
 	static {
-		System.loadLibrary("awt");
-		System.loadLibrary("jawt");
 		System.loadLibrary(LIBRARY_NAME);
 		implementation = createImplementation();
 		String native_version = implementation.getNativeLibraryVersion();
