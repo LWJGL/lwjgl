@@ -354,7 +354,7 @@ void UpdateFields() {
   //buttons
   jbooleanArray buttonsArray = (jbooleanArray) environment->GetStaticObjectField(clsJoystick, fidButtons);
   BYTE * buttons = (BYTE *) environment->GetPrimitiveArrayCritical(buttonsArray, NULL);
-  memcpy(buttons, js.rgbButtons, 4);
+  memcpy(buttons, js.rgbButtons, buttoncount);
   environment->ReleasePrimitiveArrayCritical(buttonsArray, buttons, 0);
 
   //pov
