@@ -149,18 +149,18 @@ void closeWindow()
  */
 void appActivate(bool active)
 {
-	if (!active) {
-		tempResetDisplayMode();
-	}
+//	if (!active) {
+//		tempResetDisplayMode();
+//	}
 	if (active) {
 		SetForegroundWindow(hwnd);
 		ShowWindow(hwnd, SW_RESTORE);
 	} else if (isFullScreen) {
 		ShowWindow(hwnd, SW_MINIMIZE);
 	}
-	if (active) {
-		tempRestoreDisplayMode();
-	}
+//	if (active) {
+//		tempRestoreDisplayMode();
+//	}
 }
 
 /*
@@ -185,11 +185,11 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 				return 0L;
 			case SC_MINIMIZE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
-				appActivate(true);
+				appActivate(false);
 				break;
 			case SC_RESTORE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
-				appActivate(false);
+				appActivate(true);
 				break;
 			case SC_CLOSE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), JNI_TRUE);
@@ -204,12 +204,17 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			switch(LOWORD(wParam)) {
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "focused", "Z"), JNI_TRUE);
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
+				isMinimized = false;
+
 				break;
 			case WA_INACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "focused", "Z"), JNI_FALSE);
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
+				isMinimized = true;
+
 				break;
 			}
+			appActivate(!isMinimized);
 		}
 		break;
 		case WM_QUIT:
@@ -223,7 +228,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		}
 	}
 
-	  // default action
+	// default action
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
@@ -319,8 +324,8 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 	printf("Created window\n");
 #endif
 
-	ShowWindow(hwnd, SW_SHOWNORMAL);
-	//ShowWindow(hwnd, SW_SHOW);
+//	ShowWindow(hwnd, SW_SHOWNORMAL);
+	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
@@ -410,7 +415,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
 	if (isMinimized)
 		return;
 	ShowWindow(hwnd, SW_MINIMIZE);
-	tempResetDisplayMode();
 }
 
 /*
@@ -424,6 +428,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
 	if (!isMinimized)
 		return;
 
-	tempRestoreDisplayMode();
 	ShowWindow(hwnd, SW_RESTORE);
 }
