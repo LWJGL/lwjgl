@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
  * 
@@ -3205,6 +3205,946 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getColorTableParameterfv
   (JNIEnv * env, jobject obj, jint target, jint pname, jint params)
 {
 	glGetColorTableParameterfv(target, pname, (float *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    colorTableParameteriv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_colorTableParameteriv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glColorTableParameteriv(target, pname, (int *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    colorTableParameterfv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_colorTableParameterfv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glColorTableParameterfv(target, pname, (float *)params);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    copyColorSubTable
+ * Signature: (IIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_copyColorSubTable
+  (JNIEnv *env, jobject obj, jint target, jint start, jint x, jint y, jint width)
+{
+	glCopyColorSubTable(target, start, x, y, width);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    copyColorTable
+ * Signature: (IIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_copyColorTable
+  (JNIEnv *env, jobject obj, jint target, jint internalformat, jint x, jint y, jint width)
+{
+	glCopyColorTable(target, internalformat, x, y, width);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    blendEquation
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_blendEquation
+  (JNIEnv *env, jobject obj, jint mode)
+{
+	glBlendEquation(mode);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    histogram
+ * Signature: (IIIZ)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_histogram
+  (JNIEnv *env, jobject obj, jint target, jint width, jint internalformat, jboolean sink)
+{
+	glHistogram(target, width, internalformat, sink);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    resetHistogram
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_resetHistogram
+  (JNIEnv *env, jobject obj, jint target)
+{
+	glResetHistogram(target);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getHistogram
+ * Signature: (IZIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getHistogram
+  (JNIEnv *env, jobject obj, jint target, jboolean reset, jint format, jint type, jint values)
+{
+	glGetHistogram(target, reset, format, type, (void *)values);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getHistogramParameterfv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getHistogramParameterfv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetHistogramParameterfv(target, pname, (float *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getHistogramParameteriv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getHistogramParameteriv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetHistogramParameteriv(target, pname, (int *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    minmax
+ * Signature: (IIZ)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_minmax
+  (JNIEnv *env, jobject obj, jint target, jint internalformat, jboolean sink)
+{
+	glMinmax(target, internalformat, sink);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    resetMinmax
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_resetMinmax
+  (JNIEnv *env, jobject obj, jint target)
+{
+	glResetMinmax(target);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getMinmax
+ * Signature: (IZIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getMinmax
+  (JNIEnv *env, jobject obj, jint target, jboolean reset, jint format, jint type, jint values)
+{
+	glGetMinmax(target, reset, format, type, (void *)values);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getMinmaxParameterfv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getMinmaxParameterfv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetMinmaxParameterfv(target, pname, (float *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getMinmaxParameteriv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getMinmaxParameteriv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetMinmaxParameteriv(target, pname, (int *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    convolutionFilter1D
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_convolutionFilter1D
+  (JNIEnv *env, jobject obj, jint target, jint internalformat, jint width, jint format, jint type, jint image)
+{
+	glConvolutionFilter1D(target, internalformat, width, format, type, (void *)image);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    convolutionFilter2D
+ * Signature: (IIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_convolutionFilter2D
+  (JNIEnv *env, jobject obj, jint target, jint internalformat, jint width, jint height, jint format, jint type, jint image)
+{
+	glConvolutionFilter2D(target, internalformat, width, height, format, type, (void *)image);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    convolutionParameterf
+ * Signature: (IIF)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_convolutionParameterf
+  (JNIEnv *env, jobject obj, jint target, jint pname, jfloat params)
+{
+	glConvolutionParameterf(target, pname, params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    convolutionParameterfv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_convolutionParameterfv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glConvolutionParameterfv(target, pname, (float *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    convolutionParameteri
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_convolutionParameteri
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glConvolutionParameteri(target, pname, params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    convolutionParameteriv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_convolutionParameteriv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glConvolutionParameteriv(target, pname, (int *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    copyConvolutionFilter1D
+ * Signature: (IIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_copyConvolutionFilter1D
+  (JNIEnv *env, jobject obj, jint target, jint internalformat, jint x, jint y, jint width)
+{
+	glCopyConvolutionFilter1D(target, internalformat, x, y, width);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    copyConvolutionFilter2D
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_copyConvolutionFilter2D
+  (JNIEnv *env, jobject obj, jint target, jint internalformat, jint x, jint y, jint width, jint height)
+{
+	glCopyConvolutionFilter2D(target, internalformat, x, y, width, height);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getConvolutionFilter
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getConvolutionFilter
+  (JNIEnv *env, jobject obj, jint target, jint format, jint type, jint image)
+{
+	glGetConvolutionFilter(target, format, type, (void *)image);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getConvolutionParameterfv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getConvolutionParameterfv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetConvolutionParameterfv(target, pname, (float *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getConvolutionParameteriv
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getConvolutionParameteriv
+  (JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	glGetConvolutionParameteriv(target, pname, (int *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    separableFilter2D
+ * Signature: (IIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_separableFilter2D
+  (JNIEnv *env, jobject obj, jint target, jint internalformat, jint width, jint height, jint format, jint type, jint row, jint column)
+{
+	glSeparableFilter2D(target, internalformat, width, height, format, type, (void *)row, (void *)column);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getSeparableFilter
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getSeparableFilter
+  (JNIEnv *env, jobject obj, jint target, jint format, jint type, jint row, jint column, jint span)
+{
+	glGetSeparableFilter(target, format, type, (void *)row, (void *)column, (void *)span);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    drawRangeElements
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_drawRangeElements
+  (JNIEnv *env, jobject obj, jint mode, jint start, jint end, jint count, jint type, jint indices)
+{
+	glDrawRangeElements(mode, start, end, count, type, (void *)indices);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    texImage3D
+ * Signature: (IIIIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_texImage3D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint format, jint type, jint pixels)
+{
+	glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, (void *)pixels);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    texSubImage3D
+ * Signature: (IIIIIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_texSubImage3D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jint pixels)
+{
+	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, (void *)pixels);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    copyTexSubImage3D
+ * Signature: (IIIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_copyTexSubImage3D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint x, jint y, jint width, jint height)
+{
+	glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    activeTexture
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_activeTexture
+  (JNIEnv *env, jobject obj, jint texture)
+{
+	glActiveTexture(texture);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    clientActiveTexture
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_clientActiveTexture
+  (JNIEnv *env, jobject obj, jint texture)
+{
+	glClientActiveTexture(texture);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    compressedTexImage1D
+ * Signature: (IIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_compressedTexImage1D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint internalformat, jint width, jint border, jint imagesize, jint data)
+{
+	glCompressedTexImage1D(target, level, internalformat, width, border, imagesize, (void *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    compressedTexImage2D
+ * Signature: (IIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_compressedTexImage2D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint internalformat, jint width, jint height, jint border, jint imagesize, jint data)
+{
+	glCompressedTexImage2D(target, level, internalformat, width, height, border, imagesize, (void *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    compressedTexImage3D
+ * Signature: (IIIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_compressedTexImage3D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint imagesize, jint data)
+{
+	glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imagesize, (void *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    compressedTexSubImage1D
+ * Signature: (IIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_compressedTexSubImage1D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint xoffset, jint width, jint format, jint imagesize, jint data)
+{
+	glCompressedTexSubImage1D(target, level, xoffset, width, format, imagesize, (void *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    compressedTexSubImage2D
+ * Signature: (IIIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_compressedTexSubImage2D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint xoffset, jint yoffset, jint width, jint height, jint format, jint imagesize, jint data)
+{
+	glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imagesize, (void *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    compressedTexSubImage3D
+ * Signature: (IIIIIIIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_compressedTexSubImage3D
+  (JNIEnv *env, jobject obj, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint imagesize, jint data)
+{
+	glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imagesize, (void *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    getCompressedTexImage
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getCompressedTexImage
+  (JNIEnv *env, jobject obj, jint target, jint lod, jint img)
+{
+	glGetCompressedTexImage(target, lod, (void *)img);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1d
+ * Signature: (ID)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1d
+  (JNIEnv *env, jobject obj, jint target, jdouble s)
+{
+	glMultiTexCoord1d(target, s);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1dv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1dv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord1dv(target, (double *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1f
+ * Signature: (IF)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1f
+  (JNIEnv *env, jobject obj, jint target, jfloat s)
+{
+	glMultiTexCoord1f(target, s);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1fv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1fv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord1fv(target, (float *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1i
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1i
+  (JNIEnv *env, jobject obj, jint target, jint s)
+{
+	glMultiTexCoord1i(target, s);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1iv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1iv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord1iv(target, (int *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1s
+ * Signature: (IS)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1s
+  (JNIEnv *env, jobject obj, jint target, jshort s)
+{
+	glMultiTexCoord1s(target, s);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord1sv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord1sv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord1sv(target, (short *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2d
+ * Signature: (IDD)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2d
+  (JNIEnv *env, jobject obj, jint target, jdouble s, jdouble t)
+{
+	glMultiTexCoord2d(target, s, t);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2dv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2dv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord2dv(target, (double *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2f
+ * Signature: (IFF)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2f
+  (JNIEnv *env, jobject obj, jint target, jfloat s, jfloat t)
+{
+	glMultiTexCoord2f(target, s, t);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2fv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2fv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord2fv(target, (float *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2i
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2i
+  (JNIEnv *env, jobject obj, jint target, jint s, jint t)
+{
+	glMultiTexCoord2i(target, s, t);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2iv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2iv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord2iv(target, (int *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2s
+ * Signature: (ISS)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2s
+  (JNIEnv *env, jobject obj, jint target, jshort s, jshort t)
+{
+	glMultiTexCoord2s(target, s, t);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord2sv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord2sv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord2sv(target, (short *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3d
+ * Signature: (IDDD)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3d
+  (JNIEnv *env, jobject obj, jint target, jdouble s, jdouble t, jdouble r)
+{
+	glMultiTexCoord3d(target, s, t, r);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3dv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3dv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord3dv(target, (double *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3f
+ * Signature: (IFFF)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3f
+  (JNIEnv *env, jobject obj, jint target, jfloat s, jfloat t, jfloat r)
+{
+	glMultiTexCoord3f(target, s, t, r);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3fv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3fv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord3fv(target, (float *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3i
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3i
+  (JNIEnv *env, jobject obj, jint target, jint s, jint t, jint r)
+{
+	glMultiTexCoord3i(target, s, t, r);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3iv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3iv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord3iv(target, (int *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3s
+ * Signature: (ISSS)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3s
+  (JNIEnv *env, jobject obj, jint target, jshort s, jshort t, jshort r)
+{
+	glMultiTexCoord3s(target, s, t, r);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord3sv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord3sv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord3sv(target, (short *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4d
+ * Signature: (IDDDD)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4d
+  (JNIEnv *env, jobject obj, jint target, jdouble s, jdouble t, jdouble r, jdouble q)
+{
+	glMultiTexCoord4d(target, s, t, r, q);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4dv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4dv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord4dv(target, (double *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4f
+ * Signature: (IFFFF)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4f
+  (JNIEnv *env, jobject obj, jint target, jfloat s, jfloat t, jfloat r, jfloat q)
+{
+	glMultiTexCoord4f(target, s, t, r, q);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4fv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4fv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord4fv(target, (float *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4i
+ * Signature: (IIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4i
+  (JNIEnv *env, jobject obj, jint target, jint s, jint t, jint r, jint q)
+{
+	glMultiTexCoord4i(target, s, t, r, q);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4iv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4iv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord4iv(target, (int *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4s
+ * Signature: (ISSSS)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4s
+  (JNIEnv *env, jobject obj, jint target, jshort s, jshort t, jshort r, jshort q)
+{
+	glMultiTexCoord4s(target, s, t, r, q);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiTexCoord4sv
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiTexCoord4sv
+  (JNIEnv *env, jobject obj, jint target, jint v)
+{
+	glMultiTexCoord4sv(target, (short *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    loadTransposeMatrixd
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_loadTransposeMatrixd
+  (JNIEnv *env, jobject obj, jint m)
+{
+	glLoadTransposeMatrixd((double *)m);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    loadTransposeMatrixf
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_loadTransposeMatrixf
+  (JNIEnv *env, jobject obj, jint m)
+{
+	glLoadTransposeMatrixf((float *)m);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multTransposeMatrixd
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multTransposeMatrixd
+  (JNIEnv *env, jobject obj, jint m)
+{
+	glMultTransposeMatrixd((double *)m);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multTransposeMatrixf
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multTransposeMatrixf
+  (JNIEnv *env, jobject obj, jint m)
+{
+	glMultTransposeMatrixf((float *)m);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    sampleCoverage
+ * Signature: (FZ)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_sampleCoverage
+  (JNIEnv *env, jobject obj, jfloat value, jboolean invert)
+{
+	glSampleCoverage(value, invert);
 	CHECK_GL_ERROR
 }
 
