@@ -515,7 +515,7 @@ public class ALTest extends BasicTest {
             System.out.print("1 Position Test\n");
             System.out.print("2 Looping Test\n");
             System.out.print("*3 EAX 2.0 Test\n");
-            System.out.print("*4 Queue Test\n");
+            System.out.print("4 Queue Test\n");
             System.out.print("5 Buffer Test\n");
             System.out.print("6 Frequency Test\n");
             System.out.print("7 Stereo Test\n");
@@ -1245,15 +1245,15 @@ public class ALTest extends BasicTest {
     }
     
     protected void i_QueueTest() {
-        System.out.println("i_QueueTest");
-        delay_ms(3000);  
-        
-        /*
         int     error;
-        int[]   source = new int[1];
+        ByteBuffer source = ByteBuffer.allocateDirect(4);
+        source.order(ByteOrder.nativeOrder());
         int     ch = -1;
-        int[]  tbuffers = new int[5];
-        int[]  buffersremoved;
+        ByteBuffer tbuffers = ByteBuffer.allocateDirect(4*5);
+        tbuffers.order(ByteOrder.nativeOrder());
+
+        ByteBuffer buffersremoved = ByteBuffer.allocateDirect(4*5);
+        buffersremoved.order(ByteOrder.nativeOrder());
         int bLooping;
         
         ByteBuffer BuffersInQueue = ByteBuffer.allocateDirect(4);
@@ -1281,33 +1281,33 @@ public class ALTest extends BasicTest {
         // Clear Error Code
         al.getError();
         
-        al.genSources(1,source);
+        al.genSources(1,Sys.getDirectBufferAddress(source));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alGenSources 1 : ", error);
             return;
         }
         
-        al.sourcef(source[0],AL.PITCH,1.0f);
+        al.sourcef(source.getInt(4*0),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_PITCH : ", error);
         }
         
-        al.sourcef(source[0],AL.GAIN,1.0f);
+        al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_GAIN : ", error);
         }
         
-        al.sourcefv(source[0],AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        al.sourcefv(source.getInt(4*0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_POSITION : ", error);
         }
         
-        al.sourcefv(source[0],AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        al.sourcefv(source.getInt(4*0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_VELOCITY : ", error);
         }
         
-        al.sourcei(source[0],AL.LOOPING,AL.FALSE);
+        al.sourcei(source.getInt(4*0),AL.LOOPING,AL.FALSE);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 0 AL_LOOPING false: ", error);
         }
@@ -1337,11 +1337,11 @@ public class ALTest extends BasicTest {
         
         System.out.print("Source 0 not looping\n");
         
-        tbuffers[0] = buffers[2];
-        tbuffers[1] = buffers[3];
-        tbuffers[2] = buffers[4];
-        tbuffers[3] = buffers[5];
-        tbuffers[4] = 0;
+        tbuffers.putInt(4*0, buffers.getInt(4*2));
+        tbuffers.putInt(4*1, buffers.getInt(4*3));
+        tbuffers.putInt(4*2, buffers.getInt(4*4));
+        tbuffers.putInt(4*3, buffers.getInt(4*5));
+        tbuffers.putInt(4*4, 0);
         
         do {
             try {
@@ -1350,12 +1350,12 @@ public class ALTest extends BasicTest {
             }
             switch (ch) {
             case '1':
-                al.sourcePlay(source[0]);
+                al.sourcePlay(source.getInt(4*0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcePlay source 0 : ", error);
                 break;
             case '2':
-                al.sourceStop(source[0]);
+                al.sourceStop(source.getInt(4*0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceStop source 0 : ", error);
                 break;
@@ -1370,70 +1370,69 @@ public class ALTest extends BasicTest {
                     bLooping = AL.TRUE;
                     System.out.print("Source 0 looping    \n");
                 }
-                al.sourcei(source[0], AL.LOOPING, bLooping);
+                al.sourcei(source.getInt(4*0), AL.LOOPING, bLooping);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei AL_LOOPING : ", error);
                 break;
             case '4':
-                al.sourceQueueBuffers(source[0], 4, buffers);
+                al.sourceQueueBuffers(source.getInt(4*0), 4, Sys.getDirectBufferAddress(buffers));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 4 : ", error);
                 break;
             case '5':
-                //al.sourceQueueBuffers(source[0], 1, buffers[0]);
+                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '6':
-                //al.sourceQueueBuffers(source[0], 1, buffers[1]);
+                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '7':
-                //al.sourceQueueBuffers(source[0], 1, buffers[2]);
+                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*2));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '8':
-                //al.sourceQueueBuffers(source[0], 1, buffers[3]);
+                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*3));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '9':
                 // Queue buffer 0
-                //al.sourceQueueBuffers(source[0], 1, buffers[4]);
+                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*4));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 (buffer 0) : ", error);
                 break;
             case 'A':
                 // Unqueue first Buffer
-                buffersremoved = new int[1];
-                al.sourceUnqueueBuffers(source[0], 1, buffersremoved);
+                buffersremoved.clear();
+                al.sourceUnqueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 1 : ", error);
                 } else
                 {
-                    if (buffersremoved[0] == buffers[0])
-                        buffersremoved[0] = 1;
-                    else if (buffersremoved[0] == buffers[1])
-                        buffersremoved[0] = 2;
-                    else if (buffersremoved[0] == buffers[2])
-                        buffersremoved[0] = 3;
-                    else if (buffersremoved[0] == buffers[3])
-                        buffersremoved[0] = 4;
+                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*0))
+                        buffersremoved.putInt(4*0, 1);
+                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*1))
+                        buffersremoved.putInt(4*0, 2);
+                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*2))
+                        buffersremoved.putInt(4*0, 3);
+                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*3))
+                        buffersremoved.putInt(4*0, 4);
                     else
-                        buffersremoved[0] = 0;
+                        buffersremoved.putInt(4*0, 0);
                           
-                    System.out.print("\nRemoved Buffer " + buffersremoved[0] + " from queue\n");
+                    System.out.print("\nRemoved Buffer " + buffersremoved.getInt(4*0) + " from queue\n");
                 }
-                buffersremoved = null;
                 break;
             case 'B':
                 // Unqueue first 2 Buffers
-                buffersremoved = new int[2];
-                al.sourceUnqueueBuffers(source[0], 2, buffersremoved);
+                buffersremoved.clear();
+                al.sourceUnqueueBuffers(source.getInt(4*0), 2, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
@@ -1442,81 +1441,77 @@ public class ALTest extends BasicTest {
                 {
                     for (i = 0; i < 2; i++)
                     {
-                        if (buffersremoved[i] == buffers[0])
-                            buffersremoved[i] = 1;
-                        else if (buffersremoved[i] == buffers[1])
-                            buffersremoved[i] = 2;
-                        else if (buffersremoved[i] == buffers[2])
-                            buffersremoved[i] = 3;
-                        else if (buffersremoved[i] == buffers[3])
-                            buffersremoved[i] = 4;
+                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
+                            buffersremoved.putInt(4*i, 1);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
+                            buffersremoved.putInt(4*i, 2);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
+                            buffersremoved.putInt(4*i, 3);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
+                            buffersremoved.putInt(4*i, 4);
                         else
-                            buffersremoved[i] = 0;
+                            buffersremoved.putInt(4*i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + " and " + buffersremoved[1] + " from queue\n");
+                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + " and " + buffersremoved.getInt(4*1) + " from queue\n");
                 }
-                          
-                buffersremoved = null;
                 break;
             case 'C':
                 // Unqueue first 3 Buffers
-                buffersremoved = new int[3];
-                al.sourceUnqueueBuffers(source[0], 3, buffersremoved);
+                buffersremoved.clear();
+                al.sourceUnqueueBuffers(source.getInt(0), 3, Sys.getDirectBufferAddress(buffersremoved));
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 3 : ", error);
                 } else
                 {
-                    for (i = 0; i < 3; i++)
+                    for (i = 0; i < 2; i++)
                     {
-                        if (buffersremoved[i] == buffers[0])
-                            buffersremoved[i] = 1;
-                        else if (buffersremoved[i] == buffers[1])
-                            buffersremoved[i] = 2;
-                        else if (buffersremoved[i] == buffers[2])
-                            buffersremoved[i] = 3;
-                        else if (buffersremoved[i] == buffers[3])
-                            buffersremoved[i] = 4;
+                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
+                            buffersremoved.putInt(4*i, 1);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
+                            buffersremoved.putInt(4*i, 2);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
+                            buffersremoved.putInt(4*i, 3);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
+                            buffersremoved.putInt(4*i, 4);
                         else
-                            buffersremoved[i] = 0;
+                            buffersremoved.putInt(4*i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + 
-                                     ", " + buffersremoved[1] + " and " +
-                                     buffersremoved[2] +" from queue\n");
+                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + 
+                                     ", " + buffersremoved.getInt(4*1) + " and " +
+                                     buffersremoved.getInt(4*2) +" from queue\n");
                 }
-                          
-                buffersremoved = null;
                 break;
             case 'D':
                 // Unqueue first 4 Buffers
-                buffersremoved = new int[4];
-                al.sourceUnqueueBuffers(source[0], 4, buffersremoved);
+                buffersremoved.clear();
+                al.sourceUnqueueBuffers(source.getInt(4*0), 4, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 1 : ", error);
                 } else
                 {
-                    for (i = 0; i < 4; i++)
+                    for (i = 0; i < 2; i++)
                     {
-                        if (buffersremoved[i] == buffers[0])
-                            buffersremoved[i] = 1;
-                        else if (buffersremoved[i] == buffers[1])
-                            buffersremoved[i] = 2;
-                        else if (buffersremoved[i] == buffers[2])
-                            buffersremoved[i] = 3;
-                        else if (buffersremoved[i] == buffers[3])
-                            buffersremoved[i] = 4;
+                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
+                            buffersremoved.putInt(4*i, 1);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
+                            buffersremoved.putInt(4*i, 2);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
+                            buffersremoved.putInt(4*i, 3);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
+                            buffersremoved.putInt(4*i, 4);
                         else
-                            buffersremoved[i] = 0;
+                            buffersremoved.putInt(4*i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + 
-                                     ", " + buffersremoved[1] + 
-                                     ", " + buffersremoved[2] + 
-                                     "and " + buffersremoved[3] + 
+                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + 
+                                     ", " + buffersremoved.getInt(4*1) + 
+                                     ", " + buffersremoved.getInt(4*2) + 
+                                     "and " + buffersremoved.getInt(4*3) + 
                                      " from queue\n");
                 }
                           
@@ -1524,80 +1519,81 @@ public class ALTest extends BasicTest {
                 break;
             case 'E':
                 // Unqueue first 5 Buffers
-                buffersremoved = new int[5];
-                al.sourceUnqueueBuffers(source[0], 5, buffersremoved);
+                buffersremoved.clear();
+                al.sourceUnqueueBuffers(source.getInt(4*0), 5, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 1 : ", error);
                 } else
                 {
-                    for (i = 0; i < 5; i++)
+                    for (i = 0; i < 2; i++)
                     {
-                        if (buffersremoved[i] == buffers[0])
-                            buffersremoved[i] = 1;
-                        else if (buffersremoved[i] == buffers[1])
-                            buffersremoved[i] = 2;
-                        else if (buffersremoved[i] == buffers[2])
-                            buffersremoved[i] = 3;
-                        else if (buffersremoved[i] == buffers[3])
-                            buffersremoved[i] = 4;
+                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
+                            buffersremoved.putInt(4*i, 1);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
+                            buffersremoved.putInt(4*i, 2);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
+                            buffersremoved.putInt(4*i, 3);
+                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
+                            buffersremoved.putInt(4*i, 4);
                         else
-                            buffersremoved[i] = 0;
+                            buffersremoved.putInt(4*i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + 
-                                     ", " + buffersremoved[1] + 
-                                     ", " + buffersremoved[2] + 
-                                     ", " + buffersremoved[3] + 
-                                     "and " + buffersremoved[4] + 
+                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + 
+                                     ", " + buffersremoved.getInt(4*1) + 
+                                     ", " + buffersremoved.getInt(4*2) + 
+                                     ", " + buffersremoved.getInt(4*3) + 
+                                     "and " + buffersremoved.getInt(4*4) + 
                                      " from queue\n");
                 }
                           
                 buffersremoved = null;
                 break;
             case 'F':
-                al.sourcei(source[0], AL.BUFFER, 0);
+                al.sourcei(source.getInt(4*0), AL.BUFFER, 0);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSource AL_BUFFER NULL : ", error);
                 break;
             case '0':
                 // Retrieve number of buffers in queue
-                al.getSourcei(source[0], AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
+                al.getSourcei(source.getInt(4*0), AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
                 
                 // Retrieve number of processed buffers
-                al.getSourcei(source[0], AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
+                al.getSourcei(source.getInt(4*0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
                 
                 // Retrieve current buffer
-                al.getSourcei(source[0], AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
+                al.getSourcei(source.getInt(4*0), AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
                 
                 int address = Buffer.getInt();
-                if (address == buffers[0])
+                if (address == buffers.getInt(4*0))
                     address = 1;
-                else if (address == buffers[1])
+                else if (address == buffers.getInt(4*1))
                     address = 2;
-                else if (address == buffers[2])
+                else if (address == buffers.getInt(4*2))
                     address = 3;
-                else if (address == buffers[3])
+                else if (address == buffers.getInt(4*3))
                     address = 4;
                 else
                     address = 0;
                           
                 System.out.print("Current Buffer is " + address + ", " + BuffersInQueue.getInt() + " Buffers in queue, " + BuffersProcessed.getInt() + " Processed\n");
-                          
+                Buffer.clear();
+                BuffersProcessed.clear();
+                BuffersInQueue.clear();                          
                 break;
             }
         } while (ch != 'Q');
         
         // Release resources
-        al.sourceStop(source[0]);
+        al.sourceStop(source.getInt(4*0));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourceStop : ", error);
         
-        al.deleteSources(1, source);
+        al.deleteSources(1, Sys.getDirectBufferAddress(source));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alDeleteSources 1 : ", error);
-         */
     }
     
     
@@ -1833,8 +1829,8 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        tbuffers.putInt(0, buffers.getInt(4*6));
-        tbuffers.putInt(1, buffers.getInt(4*6));
+        tbuffers.putInt(4*0, buffers.getInt(4*6));
+        tbuffers.putInt(4*1, buffers.getInt(4*6));
         
         System.out.print("Stereo Test\n");
         System.out.print("Press '1' to play a stereo buffer on source 0 (looping)\n");
