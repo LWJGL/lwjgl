@@ -40,8 +40,8 @@
 package org.lwjgl.opengl.ati;
 
 public interface ATISeparateStencil {
-	public static final int STENCIL_BACK_FUNC_ATI				= 0x8800;
-	public static final int STENCIL_BACK_FAIL_ATI				= 0x8801;
-	public static final int STENCIL_BACK_PASS_DEPTH_FAIL_ATI		= 0x8802;
-	public static final int STENCIL_BACK_PASS_DEPTH_PASS_ATI		= 0x8803;
+	public static final int GL_STENCIL_BACK_FUNC_ATI			= 0x8800;
+	public static final int GL_STENCIL_BACK_FAIL_ATI			= 0x8801;
+	public static final int GL_STENCIL_BACK_PASS_DEPTH_FAIL_ATI		= 0x8802;
+	public static final int GL_STENCIL_BACK_PASS_DEPTH_PASS_ATI		= 0x8803;
 }
