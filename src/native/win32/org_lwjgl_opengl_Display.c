@@ -121,7 +121,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	putAttrib(&attrib_list, WGL_ALPHA_BITS_ARB); putAttrib(&attrib_list, alpha);
 	putAttrib(&attrib_list, WGL_DEPTH_BITS_ARB); putAttrib(&attrib_list, depth);
 	putAttrib(&attrib_list, WGL_STENCIL_BITS_ARB); putAttrib(&attrib_list, stencil);
-	if (samples > 0 && extgl_Extensions.WGL_ARB_multisample) {
+	if (samples > 0 && extension_flags.WGL_ARB_multisample) {
 		putAttrib(&attrib_list, WGL_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, WGL_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
@@ -130,7 +130,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	putAttrib(&attrib_list, WGL_STEREO_ARB); putAttrib(&attrib_list, stereo ? TRUE : FALSE);
 	putAttrib(&attrib_list, WGL_AUX_BUFFERS_ARB); putAttrib(&attrib_list, num_aux_buffers);
 	if ( pixelFormatCaps != NULL ) {
-		if ( !extgl_Extensions.WGL_ARB_render_texture ) {
+		if ( !extension_flags.WGL_ARB_render_texture ) {
 			return -1;
 		}
 
@@ -620,7 +620,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isActive
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setVSyncEnabled
   (JNIEnv * env, jobject self, jboolean sync)
 {
-	if (extgl_Extensions.WGL_EXT_swap_control) {
+	if (extension_flags.WGL_EXT_swap_control) {
 		if (sync == JNI_TRUE) {
 			wglSwapIntervalEXT(1);
 		} else {
@@ -714,7 +714,7 @@ bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, 
 	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
 	// of multisamples we want. If the extension is present we'll delete the existing
 	// rendering context and start over, using the ARB extension instead to pick the context.
-	if (!extgl_Extensions.WGL_ARB_pixel_format)
+	if (!extension_flags.WGL_ARB_pixel_format)
 		return false;
 	pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, true, true);
 	if (pixel_format_index == -1) {

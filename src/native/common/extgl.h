@@ -158,35 +158,6 @@ typedef unsigned short GLhalf;
 
 /* helper stuff */
 
-#ifndef _MACOSX
-struct ExtensionTypes
-{
-#ifdef _WIN32 /* WGL extensions */
-    bool WGL_ARB_buffer_region;
-    bool WGL_ARB_extensions_string;
-    bool WGL_ARB_make_current_read;
-    bool WGL_ARB_multisample;
-    bool WGL_ARB_pbuffer;
-    bool WGL_ARB_pixel_format;
-    bool WGL_ARB_render_texture;
-    bool WGL_EXT_extensions_string;
-    bool WGL_EXT_swap_control;
-    bool WGL_NV_render_depth_texture;
-    bool WGL_NV_render_texture_rectangle;
-#endif /* WIN32 */
-#ifdef _X11
-    bool GLX12;
-    bool GLX13;
-    bool GLX_EXT_visual_info;
-    bool GLX_EXT_visual_rating;
-    bool GLX_SGI_swap_control;
-    bool GLX_ARB_multisample;
-#endif /* X11 */
-};
-
-extern struct ExtensionTypes extgl_Extensions;
-#endif
-
 /* initializes everything, call this right after the rc is created. the function returns true if successful */
 extern bool extgl_Open(JNIEnv *env);
 extern void extgl_Close(void);

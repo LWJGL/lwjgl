@@ -39,6 +39,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "extgl_wgl.h"
 #include "common_tools.h"
 
+WGLExtensions extension_flags;
+
 /* WGL_EXT_etxension_string */
 
 wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT = NULL;
@@ -100,8 +102,8 @@ static void extgl_InitWGLARBPbuffer(JNIEnv *env)
 		{"wglReleasePbufferDCARB", (void **)&wglReleasePbufferDCARB},
 		{"wglDestroyPbufferARB", (void **)&wglDestroyPbufferARB},
 		{"wglQueryPbufferARB", (void **)&wglQueryPbufferARB}};
-	if (extgl_Extensions.WGL_ARB_pbuffer)
-		extgl_Extensions.WGL_ARB_pbuffer = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+	if (extension_flags.WGL_ARB_pbuffer)
+		extension_flags.WGL_ARB_pbuffer = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBPixelFormat(JNIEnv *env)
@@ -110,8 +112,8 @@ static void extgl_InitWGLARBPixelFormat(JNIEnv *env)
 		{"wglGetPixelFormatAttribivARB", (void **)&wglGetPixelFormatAttribivARB},
 		{"wglGetPixelFormatAttribfvARB", (void **)&wglGetPixelFormatAttribfvARB},
 		{"wglChoosePixelFormatARB", (void **)&wglChoosePixelFormatARB}};
-	if (extgl_Extensions.WGL_ARB_pixel_format)
-		extgl_Extensions.WGL_ARB_pixel_format = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+	if (extension_flags.WGL_ARB_pixel_format)
+		extension_flags.WGL_ARB_pixel_format = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBRenderTexture(JNIEnv *env)
@@ -120,8 +122,8 @@ static void extgl_InitWGLARBRenderTexture(JNIEnv *env)
 		{"wglBindTexImageARB", (void **)&wglBindTexImageARB},
 		{"wglReleaseTexImageARB", (void **)&wglReleaseTexImageARB},
 		{"wglSetPbufferAttribARB", (void **)&wglSetPbufferAttribARB}};
-	if (extgl_Extensions.WGL_ARB_render_texture)
-		extgl_Extensions.WGL_ARB_render_texture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+	if (extension_flags.WGL_ARB_render_texture)
+		extension_flags.WGL_ARB_render_texture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLEXTSwapControl(JNIEnv *env)
@@ -129,8 +131,8 @@ static void extgl_InitWGLEXTSwapControl(JNIEnv *env)
 	ExtFunction functions[] = {
 		{"wglSwapIntervalEXT", (void **)&wglSwapIntervalEXT},
 		{"wglGetSwapIntervalEXT", (void **)&wglGetSwapIntervalEXT}};
-	if (extgl_Extensions.WGL_EXT_swap_control)
-		extgl_Extensions.WGL_EXT_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+	if (extension_flags.WGL_EXT_swap_control)
+		extension_flags.WGL_EXT_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env)
@@ -138,21 +140,21 @@ static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env)
 	ExtFunction functions[] = {
 		{"wglMakeContextCurrentARB", (void **)&wglMakeContextCurrentARB},
 		{"wglGetCurrentReadDCARB", (void **)&wglGetCurrentReadDCARB}};
-	if (extgl_Extensions.WGL_ARB_make_current_read)
-		extgl_Extensions.WGL_ARB_make_current_read = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+	if (extension_flags.WGL_ARB_make_current_read)
+		extension_flags.WGL_ARB_make_current_read = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
 static void extgl_InitSupportedWGLExtensions(JNIEnv *env)
 {
-	extgl_Extensions.WGL_ARB_buffer_region = WGLQueryExtension(env, "WGL_ARB_buffer_region");
-	extgl_Extensions.WGL_ARB_make_current_read = WGLQueryExtension(env, "WGL_ARB_make_current_read");
-	extgl_Extensions.WGL_ARB_multisample = WGLQueryExtension(env, "WGL_ARB_multisample");
-	extgl_Extensions.WGL_ARB_pbuffer = WGLQueryExtension(env, "WGL_ARB_pbuffer");
-	extgl_Extensions.WGL_ARB_pixel_format = WGLQueryExtension(env, "WGL_ARB_pixel_format");
-	extgl_Extensions.WGL_ARB_render_texture = WGLQueryExtension(env, "WGL_ARB_render_texture");
-	extgl_Extensions.WGL_EXT_swap_control = WGLQueryExtension(env, "WGL_EXT_swap_control");
-	extgl_Extensions.WGL_NV_render_depth_texture = WGLQueryExtension(env, "WGL_NV_render_depth_texture");
-	extgl_Extensions.WGL_NV_render_texture_rectangle = WGLQueryExtension(env, "WGL_NV_render_texture_rectangle");
+	extension_flags.WGL_ARB_buffer_region = WGLQueryExtension(env, "WGL_ARB_buffer_region");
+	extension_flags.WGL_ARB_make_current_read = WGLQueryExtension(env, "WGL_ARB_make_current_read");
+	extension_flags.WGL_ARB_multisample = WGLQueryExtension(env, "WGL_ARB_multisample");
+	extension_flags.WGL_ARB_pbuffer = WGLQueryExtension(env, "WGL_ARB_pbuffer");
+	extension_flags.WGL_ARB_pixel_format = WGLQueryExtension(env, "WGL_ARB_pixel_format");
+	extension_flags.WGL_ARB_render_texture = WGLQueryExtension(env, "WGL_ARB_render_texture");
+	extension_flags.WGL_EXT_swap_control = WGLQueryExtension(env, "WGL_EXT_swap_control");
+	extension_flags.WGL_NV_render_depth_texture = WGLQueryExtension(env, "WGL_NV_render_depth_texture");
+	extension_flags.WGL_NV_render_texture_rectangle = WGLQueryExtension(env, "WGL_NV_render_texture_rectangle");
 }
 
 void extgl_InitWGL(JNIEnv *env)
@@ -161,8 +163,8 @@ void extgl_InitWGL(JNIEnv *env)
 		{"wglGetExtensionsStringARB", (void **)&wglGetExtensionsStringARB},
 		{"wglGetExtensionsStringEXT", (void **)&wglGetExtensionsStringEXT}};
 	extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
-	extgl_Extensions.WGL_ARB_extensions_string = wglGetExtensionsStringARB != NULL;
-	extgl_Extensions.WGL_EXT_extensions_string = wglGetExtensionsStringEXT != NULL;
+	extension_flags.WGL_ARB_extensions_string = wglGetExtensionsStringARB != NULL;
+	extension_flags.WGL_EXT_extensions_string = wglGetExtensionsStringEXT != NULL;
 
 	extgl_InitSupportedWGLExtensions(env);
 

@@ -54,7 +54,7 @@
 #include "display.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 
-#define USEGLX13 extgl_Extensions.GLX13
+#define USEGLX13 extension_flags.GLX13
 #define ERR_MSG_SIZE 1024
 
 typedef struct {
@@ -511,7 +511,7 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, jobject pixel_format, 
 	putAttrib(&attrib_list, GLX_ACCUM_BLUE_SIZE); putAttrib(&attrib_list, accum_bpe);
 	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
 	putAttrib(&attrib_list, GLX_STEREO); putAttrib(&attrib_list, stereo ? True : False);
-	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
+	if (samples > 0 && extension_flags.GLX_ARB_multisample) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
@@ -573,7 +573,7 @@ static XVisualInfo *chooseVisualGLX(JNIEnv *env, jobject pixel_format) {
 	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
 	if (stereo)
 		putAttrib(&attrib_list, GLX_STEREO);
-	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
+	if (samples > 0 && extension_flags.GLX_ARB_multisample) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
@@ -591,7 +591,7 @@ static void dumpVisualInfo(JNIEnv *env, XVisualInfo *vis_info) {
 	glXGetConfig(getDisplay(), vis_info, GLX_ALPHA_SIZE, &alpha);
 	glXGetConfig(getDisplay(), vis_info, GLX_DEPTH_SIZE, &depth);
 	glXGetConfig(getDisplay(), vis_info, GLX_STENCIL_SIZE, &stencil);
-	if (extgl_Extensions.GLX_ARB_multisample) {
+	if (extension_flags.GLX_ARB_multisample) {
 		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
 		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLES_ARB, &samples);
 	}
@@ -793,7 +793,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsActive
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetVSyncEnabled
   (JNIEnv *env, jobject this, jboolean sync)
 {
-	if (extgl_Extensions.GLX_SGI_swap_control) {
+	if (extension_flags.GLX_SGI_swap_control) {
 		bool vsync = sync == JNI_TRUE ? true : false;
 		if (vsync != vsync_enabled) {
 			int interval = vsync ? 1 : 0;

@@ -312,6 +312,17 @@ typedef const char * (APIENTRY * glXQueryExtensionsStringPROC) (Display *dpy, in
 /* GLX_SGI_swap_control */
 typedef void (APIENTRY * glXSwapIntervalSGIPROC)(int interval);
 
+typedef struct {
+    bool GLX12;
+    bool GLX13;
+    bool GLX_EXT_visual_info;
+    bool GLX_EXT_visual_rating;
+    bool GLX_SGI_swap_control;
+    bool GLX_ARB_multisample;
+} GLXExtensions;
+
+extern GLXExtensions extension_flags;
+
 extern glXGetFBConfigsPROC glXGetFBConfigs;
 extern glXChooseFBConfigPROC glXChooseFBConfig;
 extern glXGetFBConfigAttribPROC glXGetFBConfigAttrib;

@@ -38,6 +38,21 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <windows.h>
 
+typedef struct {
+    bool WGL_ARB_buffer_region;
+    bool WGL_ARB_extensions_string;
+    bool WGL_ARB_make_current_read;
+    bool WGL_ARB_multisample;
+    bool WGL_ARB_pbuffer;
+    bool WGL_ARB_pixel_format;
+    bool WGL_ARB_render_texture;
+    bool WGL_EXT_extensions_string;
+    bool WGL_EXT_swap_control;
+    bool WGL_NV_render_depth_texture;
+    bool WGL_NV_render_texture_rectangle;
+} WGLExtensions;
+
+extern WGLExtensions extension_flags;
 
 extern void extgl_InitWGL(JNIEnv *env);
 

@@ -49,10 +49,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <dlfcn.h>
 #endif
 
-#ifndef _MACOSX
-struct ExtensionTypes extgl_Extensions;
-#endif
-
 #ifdef _WIN32
 HMODULE lib_gl_handle = NULL;
 #endif

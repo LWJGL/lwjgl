@@ -56,7 +56,7 @@ typedef struct _PbufferInfo {
 } PbufferInfo;
 
 static bool isPbuffersSupported() {
-	return extgl_Extensions.WGL_ARB_pixel_format && extgl_Extensions.WGL_ARB_pbuffer;
+	return extension_flags.WGL_ARB_pixel_format && extension_flags.WGL_ARB_pbuffer;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCapabilities
@@ -66,13 +66,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCapabilities
 	if (isPbuffersSupported())
 		caps |= org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED;
 
-	if (extgl_Extensions.WGL_ARB_render_texture)
+	if (extension_flags.WGL_ARB_render_texture)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED;
 
-	if (extgl_Extensions.WGL_NV_render_texture_rectangle)
+	if (extension_flags.WGL_NV_render_texture_rectangle)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED;
 
-	if (extgl_Extensions.WGL_NV_render_depth_texture)
+	if (extension_flags.WGL_NV_render_depth_texture)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED;
 
 	return caps;

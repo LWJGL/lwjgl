@@ -53,7 +53,7 @@ typedef struct _PbufferInfo {
 
 static bool isPbuffersSupported() {
 	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
-	return extgl_Extensions.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
+	return extension_flags.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities
