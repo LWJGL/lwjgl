@@ -70,7 +70,6 @@ JNIEnv* cEnvironment;                 // JNIEnvironment copy
 
 bool cCreate_success;                 // bool used to determine successfull creation
 bool cFirstTimeInitialization = true; // boolean to determine first time initialization
-jobject cButtonsReference = NULL;     // reference to buttons array so it won't get GC'ed
 
 // Cached fields of Controller.java
 jclass clsController;
@@ -166,10 +165,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
     return JNI_FALSE;
   }
 
-  if(cCreate_success) {
-    /* Do setup of Controller */
-    SetupController();
-  }
+  /* Do setup of Controller */
+  SetupController();
 
   /* Initialize any fields on the Controller */
   InitializeControllerFields();
@@ -195,7 +192,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
     ShutdownController();
     return JNI_FALSE;
   }
-  return cCreate_success;
+  return cCreate_success ? JNI_TRUE : JNI_FALSE;
 }
 
 /*
@@ -245,9 +242,6 @@ void ShutdownController() {
     cDIDevice->Release();
     cDIDevice = NULL;
   }
-  
-  //delete global reference, since we're done
-  cEnvironment->DeleteGlobalRef(cButtonsReference);  
 }
 
 /**
@@ -471,11 +465,8 @@ void InitializeControllerFields() {
   //create buttons array
   jbooleanArray cButtonsArray = cEnvironment->NewBooleanArray(cButtoncount);
   
-  //create reference so it won't get GC'ed
-  cButtonsReference = cEnvironment->NewGlobalRef(cButtonsArray);
-
   //set buttons array  
-  cEnvironment->SetStaticObjectField(clsController, fidCButtons, (jbooleanArray) cButtonsReference);
+  cEnvironment->SetStaticObjectField(clsController, fidCButtons, cButtonsArray);
 }
 
 /**
@@ -529,10 +520,15 @@ void UpdateControllerFields() {
   }
 
   //buttons
+  for (int i = 0; i < cButtoncount; i++) {
+    if (cJS.rgbButtons[i] != 0) {
+      cJS.rgbButtons[i] = JNI_TRUE;
+    } else {
+				cJS.rgbButtons[i] = JNI_FALSE;
+    }
+  }
   jbooleanArray buttonsArray = (jbooleanArray) cEnvironment->GetStaticObjectField(clsController, fidCButtons);
-  BYTE * buttons = (BYTE *) cEnvironment->GetPrimitiveArrayCritical(buttonsArray, NULL);
-  memcpy(buttons, cJS.rgbButtons, cButtoncount);
-  cEnvironment->ReleasePrimitiveArrayCritical(buttonsArray, buttons, 0);
+  cEnvironment->SetBooleanArrayRegion(buttonsArray, 0, cButtoncount, cJS.rgbButtons);  
 
   //pov
   if(cHaspov) {
