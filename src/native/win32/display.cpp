@@ -193,7 +193,6 @@ static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 
 void switchDisplayMode(JNIEnv * env, jobject mode)
 {
-
 	jclass cls_displayMode = env->GetObjectClass(mode);
 	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
 	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
@@ -214,7 +213,6 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 	devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFLAGS;
 	if (freq != 0)
 		devmode.dmFields |= DM_DISPLAYFREQUENCY;
-
 
 	LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
