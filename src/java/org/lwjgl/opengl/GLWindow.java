@@ -189,7 +189,7 @@ public class GLWindow extends Window {
 			determineAvailableWGLExtensions();
 
 		// Grab all the public booleans out of this class
-		Field[] fields = GL.class.getDeclaredFields();
+		Field[] fields = GLWindow.class.getDeclaredFields();
 		HashMap map = new HashMap(fields.length);
 		for (int i = 0; i < fields.length; i++) {
 			if (!Modifier.isStatic(fields[i].getModifiers())
@@ -256,10 +256,10 @@ public class GLWindow extends Window {
 			return;
 
 		// Grab all the public booleans out of this class
-		Field[] fields = GL.class.getDeclaredFields();
+		Field[] fields = GLWindow.class.getDeclaredFields();
 		HashMap map = new HashMap(fields.length);
 		for (int i = 0; i < fields.length; i++) {
-			if (Modifier.isStatic(fields[i].getModifiers())
+			if (!Modifier.isStatic(fields[i].getModifiers())
 				&& fields[i].getType() == boolean.class)
 				map.put(fields[i].getName(), fields[i]);
 		}
@@ -291,7 +291,7 @@ public class GLWindow extends Window {
 			Field f = (Field) map.get(ext);
 			if (f != null) {
 				try {
-					f.setBoolean(GL.class, true);
+					f.setBoolean(this, true);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace(System.err);
 				}
