@@ -156,46 +156,12 @@ public final class Pbuffer {
 	 */
 	private final int height;
 
-	/*
-	 * The Display context that this buffer shares or null
-	 */
-	private final Object display_context;
-
 	static {
 		Sys.initialize();
 	}
 
 	/**
-	 * Determine whether the Pbuffer is using the Display context.
-	 *
-	 * @return true of the Pbuffer is using the Display context, false if not.
-	 */
-	public boolean isUsingDisplayContext() {
-		return display_context != null;
-	}
-
-	/**
-	 * Create an instance of a Pbuffer using the Display context. The buffer is single-buffered if possible.
-	 * <p/>
-	 * NOTE: The Pbuffer will use the same context as the Display and requires that the Display has been created. Therefore,
-	 * no separate pixel format can be specified. All OpenGL state,
-	 * including display lists, textures etc. is shared between the Pbuffer and the Display. If the Display is destroyed,
-	 * the Pbuffer will not be usable, even if the Display is created again.
-	 * <p/>
-	 * This kind of Pbuffer is the fastest, because the context switch overhead is minimum.
-	 * 
-	 * @param width         Pbuffer width
-	 * @param height        Pbuffer height
-	 */
-	public static Pbuffer createPbufferUsingDisplayContext(int width, int height, RenderTexture renderTexture) throws LWJGLException {
-		if (!Display.isCreated())
-			throw new IllegalStateException("The Display must be created before a shared Pbuffer can be created that use the Display context");
-		ByteBuffer handle = createPbuffer(true, width, height, null, renderTexture);
-		return new Pbuffer(width, height, Display.getContext(), handle);
-	}
-
-	/**
-	 * Create an instance of a Pbuffer with a unique OpenGL context. The buffer is single-buffered if possible.
+	 * Create an instance of a Pbuffer with a unique OpenGL context. The buffer is single-buffered.
 	 * <p/>
 	 * NOTE: The Pbuffer will have its own context that shares display lists and textures with the Display context (if it is created),
 	 * but it will have its own OpenGL state. Therefore, state changes to a pbuffer will not be seen in the window context and vice versa.
@@ -212,26 +178,20 @@ public final class Pbuffer {
 	 * @param pixel_format  Minimum Pbuffer context properties
 	 * @param renderTexture
 	 */
-	public static Pbuffer createPbufferUsingUniqueContext(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
-		ByteBuffer handle = createPbuffer(false, width, height, pixel_format, renderTexture);
-		return new Pbuffer(width, height, null, handle);
-	}
-
-	private Pbuffer(int width, int height, Object display_context, ByteBuffer handle) {
+	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
 		this.width = width;
 		this.height = height;
-		this.display_context = display_context;
-		this.handle = handle;
+		this.handle = createPbuffer(width, height, pixel_format, renderTexture);
 	}
 
-	private static ByteBuffer createPbuffer(boolean use_display_context, int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
+	private static ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
 		GLContext.loadOpenGLLibrary();
 		try {
 			ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
 			if ( renderTexture == null )
-				nCreate(handle, use_display_context, width, height, pixel_format, null, null);
+				nCreate(handle, width, height, pixel_format, null, null);
 			else
-				nCreate(handle, use_display_context, width, height, pixel_format,
+				nCreate(handle, width, height, pixel_format,
 								renderTexture.pixelFormatCaps,
 								renderTexture.pBufferAttribs);
 			return handle;
@@ -262,11 +222,8 @@ public final class Pbuffer {
 	 * @throws LWJGLException if the context could not be made current
 	 */
 	public void makeCurrent() throws LWJGLException {
-		if (display_context != null && display_context != Display.getContext())
-			throw new IllegalStateException("Cannot make a Pbuffer current after the Display has been destroyed");
 		nMakeCurrent(handle);
-		if (display_context == null)
-			GLContext.useContext(this);
+		GLContext.useContext(this);
 	}
 
 	/**
@@ -284,7 +241,7 @@ public final class Pbuffer {
 	/**
 	 * Native method to create a Pbuffer
 	 */
-	private static native void nCreate(ByteBuffer handle, boolean shared, int width, int height, PixelFormat pixel_format,
+	private static native void nCreate(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
 	                                  IntBuffer pixelFormatCaps,
 	                                  IntBuffer pBufferAttribs) throws LWJGLException;
 

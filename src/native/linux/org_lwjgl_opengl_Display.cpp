@@ -535,13 +535,10 @@ static void destroyContext(void) {
 }
 
 static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
-	configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT | GLX_PBUFFER_BIT, true);
+	configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT, true);
 	if (configs == NULL) {
-		configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT, true);
-		if (configs == NULL) {
-			throwException(env, "Could not find a matching pixel format");
-			return false;
-		}
+		throwException(env, "Could not find a matching pixel format");
+		return false;
 	}
 	context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, NULL, True);
 	if (context == NULL) {

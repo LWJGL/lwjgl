@@ -48,7 +48,6 @@
 typedef struct _PbufferInfo {
 	GLXPbuffer buffer;
 	GLXContext context;
-	bool use_display_context;
 } PbufferInfo;
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
@@ -69,8 +68,7 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
 	glXDestroyPbuffer(getDisplay(), buffer);
-	if (!buffer_info->use_display_context)
-		glXDestroyContext(getDisplay(), context);
+	glXDestroyContext(getDisplay(), context);
 	decDisplay();
 }
 
@@ -100,11 +98,8 @@ static bool checkPbufferCaps(JNIEnv *env, GLXFBConfig config, int width, int hei
 static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_info, jobject pixel_format, int width, int height, const int *buffer_attribs) {
 	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
 	if (configs == NULL) {
-		GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, true);
-		if (configs == NULL) {
-			throwException(env, "No matching pixel format");
-			return false;
-		}
+		throwException(env, "No matching pixel format");
+		return false;
 	}
 	if (!checkPbufferCaps(env, configs[0], width, height)) {
 		XFree(configs);
@@ -174,29 +169,7 @@ static GLXFBConfig chooseSingleBufferedConfigFromConfig(const GLXFBConfig orig_c
 	return NULL;
 }
 
-static bool createPbufferUsingDisplayContext(JNIEnv *env, PbufferInfo *buffer_info, int width, int height, const int *buffer_attribs) {
-	if (!checkPbufferCaps(env, getCurrentGLXFBConfig(), width, height)) {
-		return false;
-	}
-	int drawable_type;
-	if (glXGetFBConfigAttrib(getDisplay(), getCurrentGLXFBConfig(), GLX_DRAWABLE_TYPE, &drawable_type) != Success) {
-		throwException(env, "Could not get GLX_DRAWABLE_TYPE attribute from Display context");
-		return false;
-	}
-	if (drawable_type & GLX_PBUFFER_BIT == 0) {
-		throwException(env, "Display context does not support Pbuffers");
-		return false;
-	}
-	GLXFBConfig config = chooseSingleBufferedConfigFromConfig(getCurrentGLXFBConfig());
-	if (config == NULL)
-		config = getCurrentGLXFBConfig();
-	GLXPbuffer buffer = glXCreatePbuffer(getDisplay(), config, buffer_attribs);
-	buffer_info->buffer = buffer;
-	buffer_info->context = getCurrentGLXContext();
-	return true;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jobject handle_buffer, jboolean use_display_context, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs)
 {
 	Display *disp = incDisplay(env);
 	if (disp == NULL) {
@@ -221,13 +194,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 		return;
 	}
 	PbufferInfo *buffer_info = (PbufferInfo *)env->GetDirectBufferAddress(handle_buffer);
-	buffer_info->use_display_context = use_display_context;
 	bool result;
-	if (use_display_context) {
-		result = createPbufferUsingDisplayContext(env, buffer_info, width, height, buffer_attribs);
-	} else {
-		result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs);
-	}
+	result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs);
 	if (!result || !checkXError(env)) {
 		decDisplay();
 		destroyPbuffer(buffer_info);
