@@ -71,7 +71,8 @@ public class MouseCreationTest {
 		for (int i = 0; i < modes.length; i++) {
 			if (modes[i].width == 640
 				&& modes[i].height == 480
-				&& modes[i].bpp >= 16) {
+				&& modes[i].bpp >= 16
+        && modes[i].freq == 60) {
 				displayMode = modes[i];
 				break;
 			}
@@ -167,6 +168,18 @@ public class MouseCreationTest {
 
 			position.x += Mouse.dx;
 			position.y -= Mouse.dy;
+      
+      if(position.x<0) {
+        position.x = 0;
+      } else if (position.x>Display.getWidth()-60) {
+        position.x = Display.getWidth()-60;
+      }
+      
+      if(position.y < 0) {
+        position.y = 0;
+      } else if (position.y>Display.getHeight()-30) {
+        position.y = Display.getHeight()-30;
+      }      
 
 			render();
 
