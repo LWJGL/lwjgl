@@ -41,17 +41,15 @@ package org.lwjgl.generator;
  * @version $Revision$
  */
 
-import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.io.*;
 import java.util.*;
 import java.nio.*;
 
 public class ALTypeMap implements TypeMap {
-	private final static Map<Class, PrimitiveType.Kind> native_types_to_primitive;
+	private static final Map<Class, PrimitiveType.Kind> native_types_to_primitive;
 
 	static {
 		native_types_to_primitive = new HashMap<Class, PrimitiveType.Kind>();
@@ -173,7 +171,7 @@ public class ALTypeMap implements TypeMap {
 	public String getTypedefPrefix() {
 		return "ALAPIENTRY";
 	}
-	
+
 	public void printNativeIncludes(PrintWriter writer) {
 		writer.println("#include \"checkALerror.h\"");
 		writer.println("#include \"extal.h\"");
@@ -182,7 +180,7 @@ public class ALTypeMap implements TypeMap {
 	public Class getStringElementType()	{
 		return ALubyte.class;
 	}
-	
+
 	public Class[] getValidAnnotationTypes(Class type) {
 		Class[] valid_types;
 		if (Buffer.class.isAssignableFrom(type))

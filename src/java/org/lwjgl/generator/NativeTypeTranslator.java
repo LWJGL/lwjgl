@@ -35,25 +35,19 @@ package org.lwjgl.generator;
 /**
  * $Id$
  *
- * A TypeVisitor that translates types (and optional native type 
+ * A TypeVisitor that translates types (and optional native type
  * annotations) to the native type string.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.File;
 
 import java.nio.*;
 
@@ -73,7 +67,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 	private boolean is_indirect;
 	private final Declaration declaration;
 	private final TypeMap type_map;
-	
+
 	public NativeTypeTranslator(TypeMap type_map, Declaration declaration) {
 		this.declaration = declaration;
 		this.type_map = type_map;
@@ -100,7 +94,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 	public void visitArrayType(ArrayType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public static PrimitiveType.Kind getPrimitiveKindFromBufferClass(Class c) {
 		if (IntBuffer.class.equals(c))
 			return PrimitiveType.Kind.INT;
@@ -145,7 +139,7 @@ public class NativeTypeTranslator implements TypeVisitor {
 			throw new RuntimeException(t + " is not allowed");
 		is_indirect = true;
 	}
-	
+
 	public void visitPrimitiveType(PrimitiveType t) {
 		getNativeTypeFromAnnotatedPrimitiveType(t.getKind());
 	}
@@ -153,21 +147,21 @@ public class NativeTypeTranslator implements TypeVisitor {
 	public void visitDeclaredType(DeclaredType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitEnumType(EnumType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitInterfaceType(InterfaceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	// Check if the annotation is itself annotated with a certain annotation type
 	public static <T extends Annotation> T getAnnotation(AnnotationMirror annotation, Class<T> type) {
 		return annotation.getAnnotationType().getDeclaration().getAnnotation(type);
 	}
 
-	private Class translateAnnotation(AnnotationMirror annotation) {
+	private static Class translateAnnotation(AnnotationMirror annotation) {
 		NativeType native_type = getAnnotation(annotation, NativeType.class);
 		if (native_type != null) {
 			return getClassFromType(annotation.getAnnotationType());
@@ -193,17 +187,17 @@ public class NativeTypeTranslator implements TypeVisitor {
 	public void visitTypeMirror(TypeMirror t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeVariable(TypeVariable t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitVoidType(VoidType t) {
 		native_types = translateAnnotations();
 		if (native_types.size() == 0)
 			native_types.add(void.class);
 	}
-	
+
 	public void visitWildcardType(WildcardType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}

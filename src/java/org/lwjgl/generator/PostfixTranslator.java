@@ -42,27 +42,17 @@ package org.lwjgl.generator;
  * @version $Revision$
  */
 
-import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.File;
-
 import java.nio.*;
-
-import java.lang.annotation.Annotation;
 
 public class PostfixTranslator implements TypeVisitor {
 	private final StringBuilder signature = new StringBuilder();
 	private final Declaration declaration;
 	private final TypeMap type_map;
-	
+
 	public PostfixTranslator(TypeMap type_map, Declaration declaration) {
 		this.declaration = declaration;
 		this.type_map = type_map;
@@ -79,7 +69,7 @@ public class PostfixTranslator implements TypeVisitor {
 	public void visitArrayType(ArrayType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	private static PrimitiveType.Kind getPrimitiveKindFromBufferClass(Class c) {
 		if (IntBuffer.class.equals(c))
 			return PrimitiveType.Kind.INT;
@@ -100,19 +90,19 @@ public class PostfixTranslator implements TypeVisitor {
 		PrimitiveType.Kind kind = getPrimitiveKindFromBufferClass(c);
 		visitPrimitiveTypeKind(kind);
 	}
-	
+
 	public void visitDeclaredType(DeclaredType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitEnumType(EnumType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitInterfaceType(InterfaceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	private boolean translateAnnotation(AnnotationMirror annotation) {
 		NativeType native_type = NativeTypeTranslator.getAnnotation(annotation, NativeType.class);
 		if (native_type != null) {
@@ -165,22 +155,22 @@ public class PostfixTranslator implements TypeVisitor {
 		}
 		signature.append(type);
 	}
-	
+
 	public void visitReferenceType(ReferenceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeMirror(TypeMirror t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeVariable(TypeVariable t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitVoidType(VoidType t) {
 	}
-	
+
 	public void visitWildcardType(WildcardType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}

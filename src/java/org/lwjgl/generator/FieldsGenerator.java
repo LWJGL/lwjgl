@@ -32,14 +32,11 @@
 
 package org.lwjgl.generator;
 
-import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.io.*;
 import java.util.*;
-import java.nio.*;
 
 public class FieldsGenerator {
 	private static void validateField(FieldDeclaration field) {
@@ -61,7 +58,7 @@ public class FieldsGenerator {
 	private static void generateField(PrintWriter writer, FieldDeclaration field) {
 		Integer field_value = (Integer)field.getConstantValue();
 		validateField(field);
-		String field_value_string = Integer.toHexString(field_value.intValue());
+		String field_value_string = Integer.toHexString(field_value);
 		Utils.printDocComment(writer, field);
 		// Print field declaration
 		writer.println("\tpublic static final " + field.getType().toString() + " " + field.getSimpleName() + " = 0x" + field_value_string + ";");

@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.File;
 
 import java.nio.*;
-import java.lang.annotation.Annotation;
 
 /**
  * $Id$
@@ -55,7 +54,7 @@ import java.lang.annotation.Annotation;
  * @version $Revision$
  */
 public class GeneratorVisitor extends SimpleDeclarationVisitor {
-	private final static String STUB_INITIALIZER_NAME = "initNativeStubs";
+	private static final String STUB_INITIALIZER_NAME = "initNativeStubs";
 
 	private final AnnotationProcessorEnvironment env;
 	private final TypeMap type_map;
@@ -66,12 +65,12 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		this.type_map = type_map;
 		this.generate_error_checks = generate_error_checks;
 	}
-	
+
 	private void validateMethods(InterfaceDeclaration d) {
 		for (MethodDeclaration method : d.getMethods())
 			validateMethod(method);
 	}
-	
+
 	private void validateMethod(MethodDeclaration method) {
 		if (method.isVarArgs())
 			throw new RuntimeException("Method " + method.getSimpleName() + " is variadic");
@@ -102,7 +101,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		for (int i = 0; i < valid_types.length; i++)
 			if (valid_types[i].equals(annotation_type))
 				return;
-		throw new RuntimeException(type + " is annotated with invalid native type " + annotation_type + 
+		throw new RuntimeException(type + " is annotated with invalid native type " + annotation_type +
 				" in method " + method);
 	}
 
@@ -129,7 +128,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 					boolean found_auto_size_param = false;
 					for (ParameterDeclaration inner_param : method.getParameters()) {
 						AutoSize auto_size_annotation = inner_param.getAnnotation(AutoSize.class);
-						if (auto_size_annotation != null && 
+						if (auto_size_annotation != null &&
 								auto_size_annotation.value().equals(param.getSimpleName())) {
 							found_auto_size_param = true;
 							break;
@@ -150,7 +149,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		}
 	}
 
-	private void generateMethodsNativePointers(PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
+	private static void generateMethodsNativePointers(PrintWriter writer, Collection<? extends MethodDeclaration> methods) {
 		for (MethodDeclaration method : methods)
 			generateMethodNativePointers(writer, method);
 	}

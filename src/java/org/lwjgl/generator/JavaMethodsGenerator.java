@@ -44,7 +44,6 @@ package org.lwjgl.generator;
 import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.io.*;
 import java.util.*;
@@ -170,6 +169,7 @@ public class JavaMethodsGenerator {
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		String method_name = method.getSimpleName();
 		if (strip_annotation != null) {
+            // TODO: This is not used, is it necessary? (keep Utils.findParameter only?)
 			ParameterDeclaration postfix_parameter = Utils.findParameter(method, strip_annotation.value());
 			if (mode == Mode.NORMAL)
 				method_name = getPostfixStrippedName(type_map, interface_decl, method);
@@ -233,7 +233,7 @@ public class JavaMethodsGenerator {
 		}
 		return null;
 	}
-	
+
 	private static boolean hasAnyParameterAutoTypeAnnotation(MethodDeclaration method, ParameterDeclaration target_param) {
 		for (ParameterDeclaration param : method.getParameters()) {
 			AutoType auto_type_annotation = param.getAnnotation(AutoType.class);
@@ -354,7 +354,6 @@ public class JavaMethodsGenerator {
 	}
 
 	private static void printMethodCallArguments(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode) {
-		Collection<ParameterDeclaration> params = method.getParameters();
 		boolean first_parameter = true;
 		for (ParameterDeclaration param : method.getParameters())
 			if (param.getAnnotation(Result.class) == null) {
@@ -369,7 +368,7 @@ public class JavaMethodsGenerator {
 	private static void printParameterChecks(PrintWriter writer, MethodDeclaration method, Mode mode) {
 		for (ParameterDeclaration param : method.getParameters()) {
 			Class java_type = Utils.getJavaType(param.getType());
-			if (Utils.isAddressableType(java_type) && 
+			if (Utils.isAddressableType(java_type) &&
 					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
 					(mode != Mode.AUTOS || getAutoTypeParameter(method, param) == null) &&
 					param.getAnnotation(Result.class) == null) {
@@ -399,7 +398,7 @@ public class JavaMethodsGenerator {
 			writer.print("\t");
 		}
 		writer.print("\t\tBufferChecks.check");
-		if (check_value != null && !check_value.equals("")) {
+		if (check_value != null && !"".equals(check_value) ) {
 			writer.print("Buffer(" + name + ", " + check_value);
 		} else {
 			writer.print("Direct");

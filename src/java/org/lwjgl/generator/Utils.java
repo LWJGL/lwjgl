@@ -45,18 +45,15 @@ import java.nio.Buffer;
 import java.io.*;
 import java.util.*;
 
-import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 public class Utils {
-	public final static String BUFFER_OBJECT_METHOD_POSTFIX = "BO";
-	public final static String BUFFER_OBJECT_PARAMETER_POSTFIX = "_buffer_offset";
-	public final static String RESULT_SIZE_NAME = "result_size";
-	public final static String RESULT_VAR_NAME = "__result";
-	public final static String CACHED_BUFFER_NAME = "old_buffer";
-	private final static String OVERLOADED_METHOD_PREFIX = "n";
+	public static final String BUFFER_OBJECT_METHOD_POSTFIX = "BO";
+	public static final String BUFFER_OBJECT_PARAMETER_POSTFIX = "_buffer_offset";
+	public static final String RESULT_SIZE_NAME = "result_size";
+	public static final String RESULT_VAR_NAME = "__result";
+	public static final String CACHED_BUFFER_NAME = "old_buffer";
+	private static final String OVERLOADED_METHOD_PREFIX = "n";
 
 	private static class AnnotationMirrorComparator implements Comparator<AnnotationMirror> {
 		public int compare(AnnotationMirror a1, AnnotationMirror a2) {
@@ -80,11 +77,11 @@ public class Utils {
 	public static boolean isAddressableType(TypeMirror type) {
 		return isAddressableType(getJavaType(type));
 	}
-	
+
 	public static boolean isAddressableType(Class type) {
 		return Buffer.class.isAssignableFrom(type) || String.class.equals(type);
 	}
-	
+
 	public static Class getJavaType(TypeMirror type_mirror) {
 		JavaTypeTranslator translator = new JavaTypeTranslator();
 		type_mirror.accept(translator);
@@ -105,7 +102,7 @@ public class Utils {
 			throw new RuntimeException(param + " not defined as java.nio.Buffer but has multiple types");
 		return result;
 	}
-	
+
 	public static ParameterDeclaration findParameter(MethodDeclaration method, String name) {
 		for (ParameterDeclaration param : method.getParameters())
 			if (param.getSimpleName().equals(name))
@@ -176,7 +173,7 @@ public class Utils {
 			result_type = method.getReturnType();
 		return result_type;
 	}
-	
+
 	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method) {
 		writer.print(", " + RESULT_SIZE_NAME);
 		if (method.getAnnotation(CachedResult.class) != null) {
@@ -186,7 +183,7 @@ public class Utils {
 
 	private static String getClassName(InterfaceDeclaration interface_decl, String opengl_name) {
 		Extension extension_annotation = interface_decl.getAnnotation(Extension.class);
-		if (extension_annotation != null && !extension_annotation.className().equals("")) {
+		if (extension_annotation != null && !"".equals(extension_annotation.className())) {
 			return extension_annotation.className();
 		}
 		StringBuilder result = new StringBuilder();

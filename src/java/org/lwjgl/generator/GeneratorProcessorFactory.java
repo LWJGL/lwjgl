@@ -34,18 +34,11 @@ package org.lwjgl.generator;
 
 import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Arrays;
-
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.File;
 
 import static java.util.Collections.*;
 import static com.sun.mirror.util.DeclarationVisitors.*;
@@ -61,7 +54,7 @@ import static com.sun.mirror.util.DeclarationVisitors.*;
  */
 public class GeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
 	private static boolean first_round = true;
-	
+
 	// Process any set of annotations
 	private static final Collection<String> supportedAnnotations =
 		unmodifiableCollection(Arrays.asList("*"));
@@ -108,7 +101,7 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 					if (k.startsWith("-Atypemap")) {
 						typemap_classname = k.substring(delimiter + 1);
 					}
-				} else if (k.equals("-Ageneratechecks")) {
+				} else if ( "-Ageneratechecks".equals(k)) {
 					generate_error_checks = true;
 				}
 			}

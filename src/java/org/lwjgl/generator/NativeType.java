@@ -41,7 +41,6 @@ package org.lwjgl.generator;
  * @version $Revision$
  */
 
-import com.sun.mirror.type.PrimitiveType;
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 

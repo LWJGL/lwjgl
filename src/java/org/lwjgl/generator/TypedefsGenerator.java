@@ -41,16 +41,14 @@ package org.lwjgl.generator;
  * @version $Revision$
  */
 
-import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.io.*;
 import java.util.*;
 
 public class TypedefsGenerator {
-	public final static String TYPEDEF_POSTFIX = "PROC";
+	public static final String TYPEDEF_POSTFIX = "PROC";
 
 	private static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, MethodDeclaration method) {
 		TypeMirror return_type = method.getReturnType();

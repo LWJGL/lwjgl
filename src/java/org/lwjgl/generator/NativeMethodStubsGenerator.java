@@ -44,15 +44,14 @@ package org.lwjgl.generator;
 import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.io.*;
 import java.util.*;
 import java.nio.*;
 
 public class NativeMethodStubsGenerator {
-	private final static String BUFFER_ADDRESS_POSTFIX = "_address";
-	public final static String BUFFER_POSITION_POSTFIX = "_position";
+	private static final String BUFFER_ADDRESS_POSTFIX = "_address";
+	public static final String BUFFER_POSITION_POSTFIX = "_position";
 
 	public static void generateNativeMethodStubs(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks) {
 		for (MethodDeclaration method : d.getMethods()) {
@@ -61,7 +60,7 @@ public class NativeMethodStubsGenerator {
 				generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.BUFFEROBJECT, generate_error_checks);
 		}
 	}
-	
+
 	private static void generateParameters(PrintWriter writer, Collection<ParameterDeclaration> params, Mode mode) {
 		for (ParameterDeclaration param : params)
 			if (param.getAnnotation(Result.class) == null)

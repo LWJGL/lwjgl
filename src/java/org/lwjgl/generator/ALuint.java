@@ -40,7 +40,6 @@ package org.lwjgl.generator;
 
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
-import com.sun.mirror.type.PrimitiveType;
 
 @NativeType
 @Target({ElementType.PARAMETER, ElementType.METHOD})

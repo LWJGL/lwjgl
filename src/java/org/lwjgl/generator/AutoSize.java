@@ -34,7 +34,7 @@ package org.lwjgl.generator;
 /**
  * $Id$
  *
- * @AutoSize specifies that a parameter should be pre-computed
+ * AutoSize specifies that a parameter should be pre-computed
  * according to the remaining() of a Buffer parameter.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>

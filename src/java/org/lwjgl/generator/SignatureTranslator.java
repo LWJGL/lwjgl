@@ -41,8 +41,6 @@ package org.lwjgl.generator;
  * @version $Revision$
  */
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
 
@@ -52,7 +50,7 @@ class SignatureTranslator implements TypeVisitor {
 	private final boolean add_position_signature;
 	private final StringBuilder signature = new StringBuilder();
 
-	public SignatureTranslator(boolean add_position_signature) {
+	SignatureTranslator(boolean add_position_signature) {
 		this.add_position_signature = add_position_signature;
 	}
 
@@ -71,7 +69,7 @@ class SignatureTranslator implements TypeVisitor {
 	public void visitArrayType(ArrayType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitClassType(ClassType t) {
 		String type_name = getNativeNameFromClassName(t.getDeclaration().getQualifiedName());
 		signature.append("L");
@@ -81,21 +79,20 @@ class SignatureTranslator implements TypeVisitor {
 			signature.append("I");
 		}
 	}
-	
+
 	public void visitDeclaredType(DeclaredType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitEnumType(EnumType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitInterfaceType(InterfaceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitPrimitiveType(PrimitiveType t) {
-		String type;
 		switch (t.getKind()) {
 			case BOOLEAN:
 				signature.append("Z");
@@ -122,23 +119,23 @@ class SignatureTranslator implements TypeVisitor {
 				throw new RuntimeException("Unsupported type " + t);
 		}
 	}
-	
+
 	public void visitReferenceType(ReferenceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeMirror(TypeMirror t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeVariable(TypeVariable t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitVoidType(VoidType t) {
 		signature.append("V");
 	}
-	
+
 	public void visitWildcardType(WildcardType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}

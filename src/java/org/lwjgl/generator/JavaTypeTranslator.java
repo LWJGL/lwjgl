@@ -32,22 +32,8 @@
 
 package org.lwjgl.generator;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
-
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.File;
-
-import java.nio.*;
-
-import java.lang.annotation.Annotation;
 
 /**
  * $Id$
@@ -64,7 +50,7 @@ public class JavaTypeTranslator implements TypeVisitor {
 	public Class getType() {
 		return type;
 	}
-	
+
 	public void visitAnnotationType(AnnotationType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
@@ -72,7 +58,7 @@ public class JavaTypeTranslator implements TypeVisitor {
 	public void visitArrayType(ArrayType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitPrimitiveType(PrimitiveType t) {
 		switch (t.getKind()) {
 			case INT:
@@ -101,35 +87,35 @@ public class JavaTypeTranslator implements TypeVisitor {
 	public void visitDeclaredType(DeclaredType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitEnumType(EnumType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitClassType(ClassType t) {
 		type = NativeTypeTranslator.getClassFromType(t);
 	}
-	
+
 	public void visitInterfaceType(InterfaceType t) {
 		type = NativeTypeTranslator.getClassFromType(t);
 	}
-	
+
 	public void visitReferenceType(ReferenceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeMirror(TypeMirror t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeVariable(TypeVariable t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitVoidType(VoidType t) {
 		type = void.class;
 	}
-	
+
 	public void visitWildcardType(WildcardType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}

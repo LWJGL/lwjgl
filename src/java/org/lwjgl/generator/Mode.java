@@ -32,14 +32,6 @@
 
 package org.lwjgl.generator;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
-import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
-
-import java.io.*;
-import java.util.*;
-
 public enum Mode {
 	BUFFEROBJECT,
 	AUTOS,

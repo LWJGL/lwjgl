@@ -32,19 +32,8 @@
 
 package org.lwjgl.generator;
 
-import com.sun.mirror.apt.*;
-import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
 import com.sun.mirror.util.*;
-
-import java.util.Collection;
-import java.util.Iterator;
-
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.File;
-
-import java.lang.annotation.Annotation;
 
 /**
  * $Id$
@@ -69,23 +58,23 @@ public class JNITypeTranslator implements TypeVisitor {
 	public void visitArrayType(ArrayType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitClassType(ClassType t) {
 		signature.append("jobject");
 	}
-	
+
 	public void visitDeclaredType(DeclaredType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitEnumType(EnumType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitInterfaceType(InterfaceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitPrimitiveType(PrimitiveType t) {
 		String type;
 		switch (t.getKind()) {
@@ -112,23 +101,23 @@ public class JNITypeTranslator implements TypeVisitor {
 		}
 		signature.append(type);
 	}
-	
+
 	public void visitReferenceType(ReferenceType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeMirror(TypeMirror t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitTypeVariable(TypeVariable t) {
 		throw new RuntimeException(t + " is not allowed");
 	}
-	
+
 	public void visitVoidType(VoidType t) {
 		signature.append(t.toString());
 	}
-	
+
 	public void visitWildcardType(WildcardType t) {
 		throw new RuntimeException(t + " is not allowed");
 	}

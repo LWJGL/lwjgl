@@ -41,14 +41,11 @@ package org.lwjgl.generator;
  * @version $Revision$
  */
 
-import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.*;
-import com.sun.mirror.util.*;
 
 import java.io.*;
 import java.util.*;
-import java.nio.*;
 
 public class RegisterStubsGenerator {
 	public static void generateMethodsNativeStubBind(PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks) {
@@ -79,7 +76,7 @@ public class RegisterStubsGenerator {
 		type.accept(v);
 		return v.getSignature();
 	}
-	
+
 	private static String getMethodSignature(MethodDeclaration method, Mode mode) {
 		Collection<ParameterDeclaration> params = method.getParameters();
 		String signature = "(";

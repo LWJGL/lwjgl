@@ -48,7 +48,7 @@ import java.util.*;
 import java.nio.*;
 
 public class TypeInfo {
-	public final static String UNSIGNED_PARAMETER_NAME = "unsigned";
+	public static final String UNSIGNED_PARAMETER_NAME = "unsigned";
 
 	private final Signedness signedness;
 	private final Class type;
@@ -67,7 +67,7 @@ public class TypeInfo {
 	public Signedness getSignedness() {
 		return signedness;
 	}
-	
+
 	public String getAutoType() {
 		if (auto_type == null)
 			throw new RuntimeException("No auto type assigned");
