@@ -617,7 +617,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, 
 
 	BOOL result = wglMakeCurrent(hdc, hglrc);
 	if (!result) {
-		printf("Could not bind context to window %d %d\n", GetLastError(), pixel_format_index);
 		throwException(env, "Could not bind context to window");
 		closeWindow();
 		return;
@@ -704,7 +703,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 	extgl_InitWGL(env);
 	if (extgl_Extensions.WGL_ARB_pixel_format) {
 		pixel_format_index = findPixelFormatARB(env, pixel_format, NULL, true, true, true);
-		printf("pixel format %d\n", pixel_format_index);
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
 		hglrc = wglCreateContext(hdc);
