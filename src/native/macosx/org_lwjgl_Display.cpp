@@ -42,59 +42,32 @@
 #include <JavaVM/jni.h>
 #include "org_lwjgl_Display.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
-  (JNIEnv * env, jclass clazz)
-{
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_init(JNIEnv * env, jclass clazz) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclass clazz, jobject mode) {
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    nGetAvailableDisplayModes
- * Signature: ()[Lorg/lwjgl/DisplayMode;
- */
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
-  (JNIEnv * env, jclass clazz)
-{
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes(JNIEnv * env, jclass clazz) {
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    getPlatform
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
-  (JNIEnv * env, jclass clazz)
-{
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform(JNIEnv * env, jclass clazz) {
 	return org_lwjgl_Display_PLATFORM_AGL;
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    getGammaRampLength
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
-  (JNIEnv *env, jclass clazz)
-{
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    setGammaRamp
- * Signature: (I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer)
-{
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer) {
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    resetDisplayMode
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv *, jclass) {
+}
+
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter(JNIEnv * , jclass) {
+	return NULL;
+}
+
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion(JNIEnv * , jclass) {
+	return NULL;
 }

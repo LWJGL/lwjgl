@@ -141,7 +141,7 @@ static bool registerEventHandlers(JNIEnv *env) {
 	error = error || registerHandler(env, win_ref, doMiniaturized, kEventClassWindow, kEventWindowCollapsed);
 	error = error || registerHandler(env, win_ref, doMaximize, kEventClassWindow, kEventWindowExpanded);
 	error = error || registerHandler(env, win_ref, doBoundsChanged, kEventClassWindow, kEventWindowBoundsChanged);
-	return !error && registerKeyboardHandler(env, win_ref) && registerMouseHandler(env, win_ref);
+	return !error && registerKeyboardHandler(env, win_ref)/* && registerMouseHandler(env, win_ref)*/;
 }
 
 static void destroyWindow(void) {

@@ -493,9 +493,6 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
 			printf("Error getting mouse state: %d\n", hRes);
 #endif
 		}
-
-		// Leave anyway and come back next time
-		return;
 	}
 
 	if (usingNativeCursor) {
