@@ -58,7 +58,7 @@ typedef struct {
 	int attribs[ATTRIB_LIST_SIZE];
 } attrib_list_t;
 
-#ifdef _X11
+#ifdef _cplusplus
 typedef enum {false, true} bool;
 #endif
 
