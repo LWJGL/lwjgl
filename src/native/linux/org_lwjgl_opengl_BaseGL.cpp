@@ -47,6 +47,10 @@ extern XVisualInfo * vis_info;
 extern Window win;
 extern Display * disp;
 
+void makeCurrent(void) {
+	glXMakeCurrent(disp, win, context);
+}
+
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
@@ -70,6 +74,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		return JNI_FALSE;
 	}
 	
+	makeCurrent();
 	if (extgl_Initialize() != 0) {
 #ifdef _DEBUG
 		printf("Could not init gl function pointers\n");
@@ -112,6 +117,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jo
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
   (JNIEnv * env, jobject obj)
 {
-	glXMakeCurrent(disp, win, context);
+	makeCurrent();
 }
 
