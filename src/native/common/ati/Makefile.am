@@ -3,7 +3,6 @@ noinst_LTLIBRARIES = libati.la
 libati_la_SOURCES = $(SRC)
 INCLUDES=-I..
 SRC=org_lwjgl_opengl_ATIElementArray.cpp \
-    org_lwjgl_opengl_ATIElementArray.cpp \
     org_lwjgl_opengl_ATIEnvmapBumpmap.cpp \
     org_lwjgl_opengl_ATIFragmentShader.cpp \
     org_lwjgl_opengl_ATIPnTriangles.cpp \
