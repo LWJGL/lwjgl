@@ -69,6 +69,15 @@ public class CoreAL extends BaseAL implements BaseALConstants {
     public native boolean       isEnabled(int capability);
     
     /**
+     * Hinting for implementation
+     * NOTE: This method is a NOP, but is provided for completeness.
+     *
+     * @param target FIXME
+     * @param mode FIXME
+     */
+    public native void          hint(int target, int mode);    
+    
+    /**
      * Returns a boolean OpenAL state.
      *
      * @param parameter state to be queried
@@ -100,13 +109,45 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      */    
     public native double        getDouble(int pname);
     
+   /**
+     * Returns a boolean OpenAL state.
+     *
+     * @param parameter state to be queried
+     * @return boolean state described by pname will be returned.
+     */    
+    public native boolean       getBooleanv(int pname);
+    
+   /**
+     * Returns an integer OpenAL state.
+     *
+     * @param parameter state to be queried
+     * @return integer state described by pname will be returned.
+     */    
+    public native int           getIntegerv(int pname);
+    
+   /**
+     * Returns a floating point OpenAL state.
+     *
+     * @param parameter state to be queried
+     * @return floating point state described by pname will be returned.
+     */    
+    public native float         getFloatv(int pname);
+    
+   /**
+     * Returns a double OpenAL state.
+     *
+     * @param parameter state to be queried
+     * @return double state described by pname will be returned.
+     */    
+    public native double        getDoublev(int pname);    
+    
     /**
      * Retrieve an OpenAL string property.
      *
-     * @param param The property to be returned
+     * @param pname The property to be returned
      * @return OpenAL String property
      */
-    public native String        getString(int param);    
+    public native String        getString(int pname);    
     
     /**
      * Retrieve the current error state and then clears the error state.
@@ -166,6 +207,14 @@ public class CoreAL extends BaseAL implements BaseALConstants {
     public native void          listener3f(int pname, float v1, float v2, float v3); 
     
     /**
+     * Sets a floating point vector property of the listener
+     *
+     * @param pname name of the attribute to be set
+     * @param vector floating point values representing vector
+     */     
+    public native void          listenerfv(int pname, float[] vector);     
+    
+    /**
      * Gets an integer property of the listener.
      *
      * @param pname name of the attribute to be retrieved
@@ -180,6 +229,23 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @return floating point value of property
      */    
     public native float        getListenerf(int pname);
+    
+    /**
+     * Retrieves a set of three floating point values from a 
+     * property of the listener.
+     *
+     * @param pname name of the attribute to be retrieved
+     * @return array of floats containing floating point values
+     */
+    public native float[]       getListener3f(int pname); 
+    
+    /**
+     * Retrieves a floating point vector property of the listener.
+     *
+     * @param pname name of the attribute to be retrieved
+     * @return array of floats representing vector
+     */
+    public native float[]       getListenerfv(int pname); 
     
     /**
      * Generate one or more sources.
@@ -209,30 +275,39 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * Set an integer property of a source.
      *
      * @param source Source to det property on
-     * @param param property to set
+     * @param pname property to set
      * @param value value of property
      */
-    public native void          sourcei(int source, int param, int value);
+    public native void          sourcei(int source, int pname, int value);
     
     /**
      * Set a floating point property of a source.
      *
      * @param source Source to det property on
-     * @param param property to set
+     * @param pname property to set
      * @param value value of property
      */    
-    public native void          sourcef(int source, int param, float value); 
+    public native void          sourcef(int source, int pname, float value); 
     
     /**
      * Sets a source property requiring three floating point values.
      *
-     * @param source Source to det property on
-     * @param param property to set
+     * @param source Source to set property on
+     * @param pname property to set
      * @param v1 value 1 of property
      * @param v2 value 2 of property
      * @param v3 value 3 of property
      */
-    public native void          source3f(int source, int param, float v1, float v2, float v3);
+    public native void          source3f(int source, int pname, float v1, float v2, float v3);
+    
+    /**
+     * Sets a floating point vector property of a source.
+     *
+     * @param source source whichs attribute is being set
+     * @param pname name of the attribute being set 
+     * @param vector float array (representing vector) to set the attribute to
+     */
+    public native void          sourcefv(int source, int pname, float[] vector); 
     
     /**
      * Retrieves an integer property of a source.
@@ -241,7 +316,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param pname name of property
      * @return integer value of pname
      */
-    public native int           getSourcei(int source, int param);
+    public native int           getSourcei(int source, int pname);
     
     /**
      * Retrieves a floating point property of a source.
@@ -250,7 +325,25 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param pname name of property
      * @return integer value of pname
      */    
-    public native float         getSourcef(int source, int param);
+    public native float         getSourcef(int source, int pname);
+    
+    /**
+     * Gets a set of three floating point values from a source.
+     *
+     * @param source Source to get property from
+     * @param pname property to get
+     * @return floating point array containing values
+     */    
+    public native float[]       getSource3f(int source, int pname);
+    
+    /**
+     * Gets a floating point vector property from a Source object.
+     *
+     * @param source Source to get property from
+     * @param pname property to get
+     * @return floating point array representing vector
+     */    
+    public native float[]       getSourcefv(int source, int pname);    
     
     /**
      * Plays a set of sources.
@@ -348,6 +441,24 @@ public class CoreAL extends BaseAL implements BaseALConstants {
     public native void          bufferData(int buffer, int format, int data, int size, int freq);
     
     /**
+     * Retrieves an integer property from a buffer.
+     *
+     * @param buffer buffer to get property from
+     * @param pname name of property to retrieve
+     * @return integer property of buffer
+     */
+    public native int           getBufferi(int buffer, int pname);
+
+    /**
+     * Retrieves a floating point property from a buffer.
+     *
+     * @param buffer buffer to get property from
+     * @param pname name of property to retrieve
+     * @return floating point property of buffer
+     */    
+    public native float         getBufferf(int buffer, int pname);     
+    
+    /**
      * Queues a set of buffers on a source.
      *
      * @param source source to queue buffers onto
@@ -385,20 +496,4 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param value Doppler velocity value to set
      */
     public native void          dopplerVelocity(float value);
-    
-    //non implemented methods:
-    //===========================================
-    //public native void          getBooleanv(int pname, boolean* data);
-    //public native void          fetIntegerv(int pname, int* data);
-    //public native void          getFloatv(int pname, float* data);
-    //public native void          getDoublev(int pname, double* data);
-    //public native float         listenerfv(int pname, float* values); 
-    //public native void          getListener3f(int pname, ALfloat* v1, ALfloat* v2, ALfloat* v3); 
-    //public native void          getListenerfv(int pname, ALfloat* values); 
-    //public native void          hint(int target, int mode);
-    //public native void          sourcefv(int source, int param, ALfloat* values); 
-    //public native void          getSource3f(int source,  int param, ALfloat* v1, ALfloat* v2, ALfloat* v3 ;
-    //public native void          getSourcefv(int source, int param, ALfloat* values);
-    //public native void          getBufferi(int buffer, int param, ALint*   value);
-    //public native void          getBufferf(int buffer, int param, ALfloat* value);        
 }
