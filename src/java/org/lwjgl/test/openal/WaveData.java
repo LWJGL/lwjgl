@@ -91,7 +91,7 @@ public class WaveData {
     try {
       return create(
         AudioSystem.getAudioInputStream(
-          new BufferedInputStream(ClassLoader.getSystemClassLoader().getResourceAsStream(filepath))));
+          new BufferedInputStream(WaveData.class.getClassLoader().getResourceAsStream(filepath))));
     } catch (Exception e) {
       e.printStackTrace();
       return null;

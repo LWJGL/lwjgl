@@ -45,7 +45,6 @@ import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.*;
 
-import java.net.*;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
@@ -115,9 +114,8 @@ public class Grass {
 		int next;
 		java.util.Vector bytes = new java.util.Vector();
 		try {
-			ClassLoader loader = ClassLoader.getSystemClassLoader();
-			URL url = loader.getResource(file);
-			InputStream stream = new BufferedInputStream(url.openStream());
+			ClassLoader loader = Grass.class.getClassLoader();
+			InputStream stream = new BufferedInputStream(loader.getResourceAsStream(file));
 			while ((next = (stream.read())) != -1)
 				bytes.add(new Byte((byte) next));
 			stream.close();
