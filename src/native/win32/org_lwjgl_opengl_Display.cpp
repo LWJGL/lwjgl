@@ -260,6 +260,7 @@ static void closeWindow()
 	if (hdc != NULL && hwnd != NULL) {
 		printfDebug("Releasing DC\n");
 		ReleaseDC(hwnd, hdc);
+		hdc = NULL;
 	}
 
 	// Close the window
@@ -719,10 +720,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		pixel_format_index = findPixelFormatARB(env, pixel_format, NULL, true, true, true);
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
+		closeWindow();
 		if (pixel_format_index == -1) {
 			extgl_Close();
 			return;
 		}
+		if (!createWindow(env, 1, 1, false, false)) {
+			extgl_Close();
+			return;
+		}
+		if (!applyPixelFormat(env, hdc, pixel_format_index)) {
+			closeWindow();
+			extgl_Close();
+			return;
+		}	
 		hglrc = wglCreateContext(hdc);
 		closeWindow();
 		if (hglrc == NULL) {
@@ -740,7 +751,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env,
 	// Delete the rendering context
 	if (hglrc != NULL) {
 		printfDebug("Deleting GL context\n");
-		wglDeleteContext(hglrc); 
+		wglDeleteContext(hglrc);
 		hglrc = NULL;
 	}
 	extgl_Close();
