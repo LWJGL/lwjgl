@@ -54,7 +54,7 @@ extern Window win;
 extern int screen;
 extern int current_fullscreen;
 
-int pointer_grabbed;
+bool pointer_grabbed;
 
 jfieldID fid_button;
 jfieldID fid_dx;
@@ -132,12 +132,12 @@ int grabPointer(void) {
 	} else
 		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, None, blank_cursor, CurrentTime);
 	if (result == GrabSuccess)
-		pointer_grabbed = 1;
+		pointer_grabbed = true;
 	return result;
 }
 
 void ungrabPointer(void) {
-	pointer_grabbed = 0;
+	pointer_grabbed = false;
 	XUngrabPointer(disp, CurrentTime);
 }
 

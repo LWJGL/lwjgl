@@ -47,12 +47,12 @@
 
 #define KEYBOARD_BUFFER_SIZE 50
 #define KEYBOARD_SIZE 256
-short readBuffer[KEYBOARD_BUFFER_SIZE];
+unsigned char readBuffer[KEYBOARD_BUFFER_SIZE * 2];
 jfieldID fid_readBuffer;
 jfieldID fid_readBufferAddress;
 unsigned char key_buf[KEYBOARD_SIZE];
 
-int keyboard_grabbed;
+bool keyboard_grabbed;
 
 extern Display *disp;
 extern Window win;
@@ -82,12 +82,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 int grabKeyboard(void) {
 	int result = XGrabKeyboard(disp, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
 	if (result == GrabSuccess)
-		keyboard_grabbed = 1;
+		keyboard_grabbed = true;
 	return result;
 }
 
 void ungrabKeyboard(void) {
-	keyboard_grabbed = 0;
+	keyboard_grabbed = false;
 	XUngrabKeyboard(disp, CurrentTime);
 }
 
@@ -134,27 +134,32 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-	ungrabKeyboard();
+	if (keyboard_grabbed)
+		ungrabKeyboard();
 }
 
 int checkKeyEvents(unsigned char *result_buf) {
 	XEvent event;
 	int count = 0;
 	int buf_count = 0;
+	int state;
 	updateKeyboardGrab();
 	while (XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
-		unsigned char keycode = (unsigned char)((event.xkey.keycode - 8) & 0xff);
-		if (result_buf != NULL) {
-			result_buf[buf_count++] = keycode;
-			result_buf[buf_count++] = 1;
-		}
 		count++;
+		unsigned char keycode = (unsigned char)((event.xkey.keycode - 8) & 0xff);
 		if (event.type == KeyPress) {
-			key_buf[keycode] = 1;
+			state = 1;
 		} else if (event.type == KeyRelease) {
-			key_buf[keycode] = 0;
+			state = 0;
 		} else
 			assert(0);
+		key_buf[keycode] = state;
+		if (result_buf != NULL) {
+			result_buf[buf_count++] = keycode;
+			result_buf[buf_count++] = state;
+			if (buf_count >= KEYBOARD_BUFFER_SIZE * 2)
+				break;
+		}
 	}
 	return count;
 }
@@ -190,7 +195,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv * env, jclass clazz)
 {
-	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE);
+	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE * 2);
 	env->SetStaticObjectField(clazz, fid_readBuffer, newBuffer);
 	env->SetStaticIntField(clazz, fid_readBufferAddress, (jint) (&readBuffer));
 	return KEYBOARD_BUFFER_SIZE;
