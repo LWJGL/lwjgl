@@ -40,6 +40,7 @@
  */
 
 #include <sys/time.h>
+#include <sys/resource.h>
 #include "org_lwjgl_Sys.h"
 
 long int		hires_timer_freq;			// Hires timer frequency
@@ -128,29 +129,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
   (JNIEnv * env, jclass clazz, jint priority)
 {
-/*	HANDLE me = GetCurrentProcess();
-	int win32priority;
-
+	int linux_priority;
 	switch (priority) {
 	case org_lwjgl_Sys_REALTIME_PRIORITY:
-		win32priority = REALTIME_PRIORITY_CLASS;
+		linux_priority = -20;
 		break;
 	case org_lwjgl_Sys_HIGH_PRIORITY:
-		win32priority = HIGH_PRIORITY_CLASS;
+		linux_priority = -10;
 		break;
 	case org_lwjgl_Sys_NORMAL_PRIORITY:
-		win32priority = NORMAL_PRIORITY_CLASS;
+		linux_priority = 0;
 		break;
 	case org_lwjgl_Sys_LOW_PRIORITY:
-		win32priority = IDLE_PRIORITY_CLASS;
+		linux_priority = 20;
 		break;
 	default:
 		return;
 	}
 
-	if (!SetPriorityClass(me, win32priority)) {
+	if (setpriority(PRIO_PROCESS, 0, linux_priority) == -1) {
 #ifdef _DEBUG
-		printf("Failed to set priority class.\n");
+		printf("Failed to set priority.\n");
 #endif
-	}*/
+	}
 }

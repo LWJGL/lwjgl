@@ -54,6 +54,7 @@
 
 Display * disp;
 int screen;
+int current_fullscreen;
 Window win;
 XF86VidModeModeInfo **avail_modes;
 XVisualInfo * vis_info;
@@ -92,6 +93,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	int attriblist[] = {GLX_RGBA, GLX_DOUBLEBUFFER, GLX_DEPTH_SIZE, 24, GLX_RED_SIZE, bpe, GLX_GREEN_SIZE, bpe, GLX_BLUE_SIZE, bpe, GLX_ALPHA_SIZE, bpe, None};
 	int num_modes, i;
 
+	current_fullscreen = fullscreen;
 	disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 #ifdef _DEBUG
@@ -159,13 +161,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass clazz) {
 	XDestroyWindow(disp, win);
-	if (!XF86VidModeSwitchToMode(disp, screen, avail_modes[0])) {
+	if (current_fullscreen) {
+		if (!XF86VidModeSwitchToMode(disp, screen, avail_modes[0])) {
 #ifdef _DEBUG
-		printf("Could not switch mode\n");
+			printf("Could not switch mode\n");
 #endif
+		}
+		XFree(avail_modes);
 	}
 	XFree(vis_info);
-	XFree(avail_modes);
 	XCloseDisplay(disp);
 #ifdef _DEBUG
 	printf("Closed X connection\n");
