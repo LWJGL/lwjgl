@@ -44,9 +44,9 @@
 #include <sys/resource.h>
 #include "org_lwjgl_Sys.h"
 
-long int		hires_timer_freq;			// Hires timer frequency
-long int		hires_timer_start;			// Hires timer start
-long int		hires_timer;				// Hires timer current time
+static long int		hires_timer_freq;			// Hires timer frequency
+static long int		hires_timer_start;			// Hires timer start
+static long int		hires_timer;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
@@ -59,7 +59,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 	return hires_timer_freq;
 }
 
-long queryTime(void) {
+static long queryTime(void) {
 	struct timeval tv;
 	if (gettimeofday(&tv, NULL) == -1) {
 #ifdef _DEBUG
