@@ -108,11 +108,16 @@
 	 * get the current window
 	 */
 	extern Window getCurrentWindow(void);
+	
+	/*
+	 * Release the context if it is current
+	 */
+	extern bool releaseContext(GLXContext context);
 
 	/*
 	 * get the current context
 	 */
-	extern GLXContext getCurrentGLXContext(void);
+	extern GLXContext getDisplayContext(void);
 
 	/*
 	 * get the current GLXFBConfig for the current context

@@ -69,7 +69,7 @@ typedef struct {
 
 typedef enum {FULLSCREEN_LEGACY, FULLSCREEN_NETWM, WINDOWED} window_mode;
 
-static GLXContext context = NULL; // OpenGL rendering context
+static GLXContext display_context = NULL; // OpenGL rendering context
 static GLXFBConfig *configs = NULL;
 static GLXWindow glx_window;
 static XVisualInfo *vis_info = NULL;
@@ -101,8 +101,8 @@ GLXFBConfig getCurrentGLXFBConfig(void) {
 	return configs[0];
 }
 
-GLXContext getCurrentGLXContext(void) {
-	return context;
+GLXContext getDisplayContext(void) {
+	return display_context;
 }
 
 int getCurrentScreen(void) {
@@ -443,11 +443,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
 	handleMessages(env);
 }
 
+bool releaseContext(GLXContext context) {
+	if (glXGetCurrentContext() != context)
+		return true;
+	if (USEGLX13)
+		return glXMakeContextCurrent(getDisplay(), None, None, NULL) == True;
+	else
+		return glXMakeCurrent(getDisplay(), None, NULL) == True;
+}
+
 static bool makeCurrent(void) {
 	if (USEGLX13)
-		return glXMakeContextCurrent(getDisplay(), glx_window, glx_window, context) == True;
+		return glXMakeContextCurrent(getDisplay(), glx_window, glx_window, display_context) == True;
 	else
-		return glXMakeCurrent(getDisplay(), getCurrentWindow(), context) == True;
+		return glXMakeCurrent(getDisplay(), getCurrentWindow(), display_context) == True;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nMakeCurrent
@@ -470,10 +479,6 @@ int convertToBPE(int bpp) {
 			break;
 	}
 	return bpe;
-}
-
-GLXContext getCurrentContext(void) {
-	return context;
 }
 
 static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, jobject pixel_format, int bpp, int drawable_type, bool double_buffer) {
@@ -600,8 +605,9 @@ static void destroyContext(void) {
 	}
 	XFree(vis_info);
 	vis_info = NULL;
-	glXDestroyContext(getDisplay(), context);
-	context = NULL;
+	releaseContext(display_context);
+	glXDestroyContext(getDisplay(), display_context);
+	display_context = NULL;
 }
 
 static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
@@ -610,28 +616,28 @@ static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
 	}
-	context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, NULL, True);
-	if (context == NULL) {
+	display_context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, NULL, True);
+	if (display_context == NULL) {
 		XFree(configs);
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
 	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
-	if (!allow_software_acceleration && (glXIsDirect(getDisplay(), context) == False)) {
-		glXDestroyContext(getDisplay(), context);
+	if (!allow_software_acceleration && (glXIsDirect(getDisplay(), display_context) == False)) {
+		glXDestroyContext(getDisplay(), display_context);
 		XFree(configs);
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
 	vis_info = glXGetVisualFromFBConfig(getDisplay(), configs[0]);
 	if (vis_info == NULL) {
-		glXDestroyContext(getDisplay(), context);
+		glXDestroyContext(getDisplay(), display_context);
 		XFree(configs);
 		throwException(env, "Could not get visual from FB config");
 		return false;
 	}
 	if (!checkXError(env)) {
-		glXDestroyContext(getDisplay(), context);
+		glXDestroyContext(getDisplay(), display_context);
 		XFree(configs);
 		XFree(vis_info);
 		return false;
@@ -647,21 +653,21 @@ static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
 	}
 	if (isDebugEnabled())
 		dumpVisualInfo(env, vis_info);
-	context = glXCreateContext(getDisplay(), vis_info, NULL, True);
-	if (context == NULL) {
+	display_context = glXCreateContext(getDisplay(), vis_info, NULL, True);
+	if (display_context == NULL) {
 		XFree(vis_info);
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
 	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
-	if (!allow_software_acceleration && glXIsDirect(getDisplay(), context) == False) {
-		glXDestroyContext(getDisplay(), context);
+	if (!allow_software_acceleration && glXIsDirect(getDisplay(), display_context) == False) {
+		glXDestroyContext(getDisplay(), display_context);
 		XFree(vis_info);
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
 	if (!checkXError(env)) {
-		glXDestroyContext(getDisplay(), context);
+		glXDestroyContext(getDisplay(), display_context);
 		XFree(vis_info);
 		return false;
 	}
@@ -741,7 +747,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *
 		dumpVisualInfo(env, vis_info);
 	if (USEGLX13)
 		glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
-	if (!makeCurrent() || !checkXError(env)) {
+	if (!checkXError(env)) {
 		glXDestroyWindow(getDisplay(), glx_window);
 		destroyWindow(env);
 	}

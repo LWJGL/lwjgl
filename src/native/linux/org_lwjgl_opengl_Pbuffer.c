@@ -62,6 +62,7 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
 	glXDestroyPbuffer(getDisplay(), buffer);
+	releaseContext(context);
 	glXDestroyContext(getDisplay(), context);
 	decDisplay();
 }
@@ -143,7 +144,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv 
 		throwException(env, "Handle buffer not large enough");
 		return;
 	}
-	GLXContext shared_context = getCurrentGLXContext();
+	GLXContext shared_context = getDisplayContext();
 	if (shared_context_handle_buffer != NULL) {
 		PbufferInfo *shared_buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, shared_context_handle_buffer);
 		shared_context = shared_buffer_info->context;
