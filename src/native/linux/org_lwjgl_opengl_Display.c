@@ -223,6 +223,10 @@ static void acquireInput(void) {
 	}
 }
 
+bool isFullscreen(void) {
+	return current_window_mode == FULLSCREEN_LEGACY || current_window_mode == FULLSCREEN_NETWM;
+}
+
 bool isLegacyFullscreen(void) {
 	return current_window_mode == FULLSCREEN_LEGACY;
 }

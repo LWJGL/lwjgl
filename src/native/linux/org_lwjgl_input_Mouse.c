@@ -168,7 +168,7 @@ static void ungrabPointer(void) {
 void updatePointerGrab(void) {
 	if (!created)
 		return;
-	if (isLegacyFullscreen() || shouldGrab()) {
+	if (isFullscreen() || shouldGrab()) {
 		grabPointer();
 	} else {
 		ungrabPointer();

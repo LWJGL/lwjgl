@@ -122,6 +122,11 @@
 	/*
 	 * Return true if we are in fullscreen mode
 	 */
+	extern bool isFullscreen(void);
+	
+	/*
+	 * Return true if we are in exclusive fullscreen mode
+	 */
 	extern bool isLegacyFullscreen(void);
 
 	/*
