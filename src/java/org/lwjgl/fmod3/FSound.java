@@ -32,6 +32,7 @@
 package org.lwjgl.fmod3;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -3137,7 +3138,7 @@ public class FSound {
    * @return FloatBuffer containing 512 floats
    */
   public static FloatBuffer FSOUND_DSP_GetSpectrum() {
-    return nFSOUND_DSP_GetSpectrum().asFloatBuffer();
+    return nFSOUND_DSP_GetSpectrum().order(ByteOrder.nativeOrder()).asFloatBuffer();
    }
    private static native ByteBuffer nFSOUND_DSP_GetSpectrum();
    
