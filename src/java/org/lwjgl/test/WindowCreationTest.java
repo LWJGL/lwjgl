@@ -74,9 +74,22 @@ public class WindowCreationTest {
     System.out.println("Window created");
     System.out.println(Display.getDisplayMode().getHeight() + ", " + Display.getDisplayMode().getWidth() + ", " + Display.getTitle());
     
+	Display.setVSyncEnabled(true);
+	Display.setTitle("WindowCreationTest");
+	float color = 0f;
+	int direction = 1;
     // wait for user to close window
     while(!Display.isCloseRequested()) {
+		GL11.glClearColor(color, color, color, 1f);
       GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+	  color += direction*.05f;
+	  if (color > 1f) {
+		  color = 1f;
+		  direction = -1*direction;
+	  } else if (color < 0f) {
+		  direction = -1*direction;
+		  color = 0f;
+	  }
       Display.update();
       try {
         Thread.sleep(100);

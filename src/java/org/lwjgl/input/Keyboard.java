@@ -197,6 +197,8 @@ public class Keyboard {
 	public static final int STATE_OFF						 = 1;
 	public static final int STATE_UNKNOWN				 = 2;
 
+	public final static int KEYBOARD_SIZE = 256;
+
 	/** Buffer size in events */
 	private final static int BUFFER_SIZE = 50;
 	/** Event size in elements */
@@ -237,7 +239,7 @@ public class Keyboard {
 	private static boolean created;
 	
 	/** The keys status from the last poll */
-	private static final ByteBuffer keyDownBuffer = BufferUtils.createByteBuffer(256);
+	private static final ByteBuffer keyDownBuffer = BufferUtils.createByteBuffer(KEYBOARD_SIZE);
 	
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,

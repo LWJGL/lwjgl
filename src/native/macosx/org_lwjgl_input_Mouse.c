@@ -29,19 +29,44 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <CoreServices/CoreServices.h>
-#include "tools.h"
+ 
+/**
+ * $Id$
+ *
+ * Mac OS X mouse handling.
+ *
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @version $Revision$
+ */
+
+#include <jni.h>
+#include <ApplicationServices/ApplicationServices.h>
 #include "common_tools.h"
 
-MPCriticalRegionID critical_region;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGrabMouse(JNIEnv *env, jobject this, jboolean grab) {
+	CGAssociateMouseAndMouseCursorPosition(grab == JNI_TRUE ? FALSE : TRUE);
+	if (grab == JNI_TRUE)
+		CGDisplayHideCursor(kCGDirectMainDisplay);
+	else
+		CGDisplayShowCursor(kCGDirectMainDisplay);
+}
 
-bool getDictLong(CFDictionaryRef dict, CFStringRef key, long *key_value) {
-	CFTypeRef val = CFDictionaryGetValue(dict, key);
-	if (val != NULL) {
-		CFTypeID type = CFGetTypeID(val);
-		if (type == CFNumberGetTypeID())
-			if (CFNumberGetValue((CFNumberRef)val, kCFNumberLongType, key_value))
-				return true;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nWarpCursor(JNIEnv *env, jobject this, jint x, jint y) {
+	CGPoint p;
+	p.x = x;
+	p.y = y;
+	CGWarpMouseCursorPosition(p);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_getMouseDeltas(JNIEnv *env, jobject this, jobject delta_buffer) {
+	CGMouseDelta dx, dy;
+	CGGetLastMouseDelta(&dx, &dy);
+	int buffer_length = (*env)->GetDirectBufferCapacity(env, delta_buffer);
+	if (buffer_length != 2) {
+		printfDebug("Delta buffer not large enough!\n");
+		return;
 	}
-	return false;
+	jint *buffer = (*env)->GetDirectBufferAddress(env, delta_buffer);
+	buffer[0] = dx;
+	buffer[1] = dy;
 }

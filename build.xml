@@ -332,6 +332,9 @@
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
 			<class name="org.lwjgl.opengl.Win32Display" />
 		</javah>
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
+			<class name="org.lwjgl.opengl.MacOSXDisplay" />
+		</javah>
 		<!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
 			<class name="org.lwjgl.Sys" />

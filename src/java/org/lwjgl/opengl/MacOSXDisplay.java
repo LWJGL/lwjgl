@@ -1,0 +1,399 @@
+/* 
+ * Copyright (c) 2002-2004 LWJGL Project
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are 
+ * met:
+ * 
+ * * Redistributions of source code must retain the above copyright 
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of 
+ *   its contributors may be used to endorse or promote products derived 
+ *   from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.opengl;
+
+/**
+ * This is the Display implementation interface. Display delegates
+ * to implementors of this interface. There is one DisplayImplementation
+ * for each supported platform.
+ * @author elias_naur
+ */
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Mouse;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.awt.BorderLayout;
+import java.awt.Frame;
+import javax.swing.JFrame;
+import java.awt.Insets;
+import java.awt.Cursor;
+import java.awt.Rectangle;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.GraphicsEnvironment;
+import java.awt.GraphicsDevice;
+import java.awt.image.BufferedImage;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import com.apple.eawt.Application;
+import com.apple.eawt.ApplicationListener;
+import com.apple.eawt.ApplicationEvent;
+
+final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation, ApplicationListener {
+	private JFrame frame;
+	private MacOSXGLCanvas canvas;
+	private boolean close_requested;
+	private MouseEventQueue mouse_queue;
+	private KeyboardEventQueue keyboard_queue;
+	private java.awt.DisplayMode requested_mode;
+	
+	public MacOSXDisplay() {
+		Application.getApplication().addApplicationListener(this);
+System.out.println("getMaxCursorSize = " + getMaxCursorSize());
+	}
+	
+	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
+		close_requested = false;
+		frame = new JFrame();
+		frame.setResizable(false);
+		frame.addWindowListener(this);
+		canvas = new MacOSXGLCanvas();
+		frame.getContentPane().add(canvas, BorderLayout.CENTER);
+		frame.setUndecorated(fullscreen);
+		if (fullscreen) {
+			getDevice().setFullScreenWindow(frame);
+			getDevice().setDisplayMode(requested_mode);
+			/** For some strange reason, the display mode is sometimes silently capped even though the mode is reported as supported */
+			if (requested_mode.getWidth() != getDevice().getDisplayMode().getWidth() || requested_mode.getHeight() != getDevice().getDisplayMode().getHeight()) {
+				destroyWindow();
+				throw new LWJGLException("AWT capped mode");
+			}
+		}
+		frame.pack();
+		reshape(x, y, mode.getWidth(), mode.getHeight());
+		frame.setVisible(true);
+		frame.requestFocus();
+		canvas.requestFocus();
+		canvas.waitForCanvasCreated();
+	}
+
+	private GraphicsDevice getDevice() {
+		GraphicsEnvironment g_env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice device = g_env.getDefaultScreenDevice();
+		return device;
+	}
+
+	public void handleAbout(ApplicationEvent event) {
+	}
+	
+	public void handleOpenApplication(ApplicationEvent event) {
+	}
+	
+	public void handleOpenFile(ApplicationEvent event) {
+	}
+	
+	public void handlePreferences(ApplicationEvent event) {
+	}
+	
+	public void handlePrintFile(ApplicationEvent event) {
+	}
+	
+	public void handleQuit(ApplicationEvent event) {
+		handleQuit();
+	}
+	
+	public void handleReOpenApplication(ApplicationEvent event) {
+	}
+
+	private void handleQuit() {
+		synchronized (this) {
+			close_requested = true;
+		}
+	}
+
+	public void windowClosing(WindowEvent e) {
+		handleQuit();
+	}
+	
+	public void windowActivated(WindowEvent e) {
+		warpCursor();
+	}
+
+	public void destroyWindow() {
+		if (getDevice().getFullScreenWindow() != null)
+			getDevice().setFullScreenWindow(null);
+		setView(null);
+		frame.dispose();
+		frame = null;
+		canvas = null;
+	}
+	
+	public native int getGammaRampLength();
+	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
+
+	public String getAdapter() {
+		return null;
+	}
+	
+	public String getVersion() {
+		return null;
+	}
+	
+	private boolean equals(java.awt.DisplayMode awt_mode, DisplayMode mode) {
+		return awt_mode.getWidth() == mode.getWidth() && awt_mode.getHeight() == mode.getHeight()
+			&& awt_mode.getBitDepth() == mode.getBitsPerPixel() && awt_mode.getRefreshRate() == mode.getFrequency();
+	}
+
+	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
+		java.awt.DisplayMode[] awt_modes = getDevice().getDisplayModes();
+		for (int i = 0; i < awt_modes.length; i++)
+			if (equals(awt_modes[i], mode)) {
+				requested_mode = awt_modes[i];
+				return;
+			}
+		throw new LWJGLException(mode + " is not supported");
+	}
+	
+	public void resetDisplayMode() {
+		if (getDevice().getFullScreenWindow() != null)
+			getDevice().setFullScreenWindow(null);
+		requested_mode = null;
+	}
+	
+	private DisplayMode createLWJGLDisplayMode(java.awt.DisplayMode awt_mode) {
+		int bit_depth;
+		int refresh_rate;
+		int awt_bit_depth = awt_mode.getBitDepth();
+		int awt_refresh_rate = awt_mode.getRefreshRate();
+		if (awt_bit_depth != java.awt.DisplayMode.BIT_DEPTH_MULTI)
+			bit_depth = awt_bit_depth;
+		else
+			bit_depth = 32; // Assume the best bit depth
+		if (awt_refresh_rate != java.awt.DisplayMode.REFRESH_RATE_UNKNOWN)
+			refresh_rate = awt_refresh_rate;
+		else
+			refresh_rate = 0;
+		return new DisplayMode(awt_mode.getWidth(), awt_mode.getHeight(), bit_depth, refresh_rate);
+	}
+	
+	public DisplayMode init() {
+		return createLWJGLDisplayMode(getDevice().getDisplayMode());
+	}
+	
+	public DisplayMode[] getAvailableDisplayModes() {
+		java.awt.DisplayMode[] awt_modes = getDevice().getDisplayModes();
+		List modes = new ArrayList();
+		for (int i = 0; i < awt_modes.length; i++)
+			if (awt_modes[i].getBitDepth() >= 16)
+				modes.add(createLWJGLDisplayMode(awt_modes[i]));
+		DisplayMode[] mode_list = new DisplayMode[modes.size()];
+		modes.toArray(mode_list);
+		return mode_list;
+	}
+	
+	public void setTitle(String title) {
+		frame.setTitle(title);
+	}
+	
+	public boolean isCloseRequested() {
+		boolean result;
+		synchronized (this) {
+			result = close_requested;
+			close_requested = false;
+		}
+		return result;
+	}
+
+	public boolean isVisible() {
+		return frame.isShowing();
+	}
+	
+	public boolean isActive() {
+		return frame.isFocused();
+	}
+	
+	public boolean isDirty() {
+		return canvas.isDirty();
+	}
+
+	public native void setView(MacOSXGLCanvas canvas);
+
+	public native void swapBuffers();
+
+	public native void makeCurrent() throws LWJGLException;
+
+	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
+
+	public native void destroyContext();
+
+	public void update() {
+		if (canvas.shouldUpdateContext()) {
+			updateContext();
+			/* This is necessary to make sure the context won't "forget" about the view size */
+			GL11.glViewport(0, 0, canvas.getWidth(), canvas.getHeight());
+			warpCursor();
+		}
+		mouse_queue.updateDeltas();
+	}
+	
+	private void warpCursor() {
+		if (mouse_queue != null && mouse_queue.isGrabbed()) {
+			Rectangle bounds = frame.getBounds();
+			int x = bounds.x + bounds.width/2;
+			int y = bounds.y + bounds.height/2;
+			nWarpCursor(x, y);
+		}
+	}
+
+	native void getMouseDeltas(IntBuffer delta_buffer);
+
+	private native void updateContext();
+
+	public native void setVSyncEnabled(boolean sync);
+
+	public void reshape(int x, int y, int width, int height) {
+		Insets insets = frame.getInsets();
+		frame.setBounds(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);
+	}
+
+	/* Mouse */
+	public boolean hasWheel() {
+		return true;
+	}
+
+	public int getButtonCount() {
+		return MouseEventQueue.NUM_BUTTONS;
+	}
+	
+	public void createMouse() {
+		this.mouse_queue = new MouseEventQueue(canvas.getWidth(), canvas.getHeight());
+		canvas.addMouseListener(mouse_queue);
+		canvas.addMouseMotionListener(mouse_queue);
+		canvas.addMouseWheelListener(mouse_queue);
+	}
+
+	public void destroyMouse() {
+		canvas.removeMouseListener(mouse_queue);
+		canvas.removeMouseWheelListener(mouse_queue);
+		canvas.removeMouseMotionListener(mouse_queue);
+		this.mouse_queue = null;
+	}
+	
+	public void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
+		mouse_queue.poll(coord_buffer, buttons_buffer);
+	}
+	
+	public void enableMouseBuffer() throws LWJGLException {
+	}
+	
+	public int readMouse(IntBuffer buffer, int buffer_position) {
+		assert buffer_position == buffer.position();
+		return mouse_queue.copyEvents(buffer);
+	}
+
+	public void grabMouse(boolean grab) {
+		nGrabMouse(grab);
+		mouse_queue.setGrabbed(grab);
+		warpCursor();
+	}
+
+	private native void nWarpCursor(int x, int y);
+
+	private native void nGrabMouse(boolean grab);
+
+	public int getNativeCursorCaps() {
+		int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
+		boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
+		int caps = supported ? Mouse.CURSOR_8_BIT_ALPHA | Mouse.CURSOR_ONE_BIT_TRANSPARENCY: 0;
+		return caps;
+	}
+	
+	public void setNativeCursor(Object handle) throws LWJGLException {
+		Cursor awt_cursor = (Cursor)handle;
+		canvas.setCursor(awt_cursor);
+	}
+
+	public int getMinCursorSize() {
+		Dimension min_size = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
+		return Math.max(min_size.width, min_size.height);
+	}
+
+	public int getMaxCursorSize() {
+		Dimension max_size = Toolkit.getDefaultToolkit().getBestCursorSize(10000, 10000);
+		return Math.min(max_size.width, max_size.height);
+	}
+
+	/* Keyboard */
+	public void createKeyboard() throws LWJGLException {
+		this.keyboard_queue = new KeyboardEventQueue();
+		canvas.addKeyListener(keyboard_queue);
+	}
+	
+	public void destroyKeyboard() {
+		/*
+		 * This line is commented out to work around AWT bug 4867453:
+		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4867453
+		 */
+//		canvas.removeKeyListener(keyboard_queue);
+
+		this.keyboard_queue = null;
+	}
+	
+	public void pollKeyboard(ByteBuffer keyDownBuffer) {
+		keyboard_queue.poll(keyDownBuffer);
+	}
+	
+	public int readKeyboard(IntBuffer buffer, int buffer_position) {
+		assert buffer_position == buffer.position();
+		return keyboard_queue.copyEvents(buffer);
+	}
+
+	public void enableTranslation() throws LWJGLException {
+	}
+	
+	public void enableKeyboardBuffer() throws LWJGLException {
+	}
+
+	public native int isStateKeySet(int key);
+
+	/** Native cursor handles */
+	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
+		BufferedImage cursor_image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		int[] pixels = new int[images.remaining()];
+		int old_position = images.position();
+		images.get(pixels);
+		images.position(old_position);
+		cursor_image.setRGB(0, 0, width, height, pixels, 0, width);
+		return Toolkit.getDefaultToolkit().createCustomCursor(cursor_image, new Point(xHotspot, yHotspot), "LWJGL Custom cursor");
+	}
+
+	public void destroyCursor(Object cursor_handle) {
+	}
+}
