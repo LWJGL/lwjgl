@@ -65,7 +65,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
  * Method:    openURL
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_openURL
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
   (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus

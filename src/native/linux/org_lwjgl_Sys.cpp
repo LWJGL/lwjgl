@@ -180,7 +180,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert(JNIEnv * env, jclass clazz, jstr
  * Method:    openURL
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_openURL
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
   (JNIEnv * env, jclass clazz, jstring url)
 {
 	const char * urlString = env->GetStringUTFChars(url, NULL);

@@ -32,6 +32,8 @@
 
 package org.lwjgl;
 
+import java.io.IOException;
+
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -225,5 +227,32 @@ public final class Sys {
 	 * best attempt at opening the URL given - don't rely on it to work!
 	 * @param url The URL
 	 */
-	public static native void openURL(String url);
+	public static void openURL(String url) {
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Mac OS") || osName.startsWith("Windows")) {
+			// Mac and Windows both do this nicely from native code.
+			nOpenURL(url);
+			return;
+		}
+		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
+		// right anyway.
+
+		String[] browsers = {"mozilla", "opera", "konqueror", "galeon", "netscape", "lynx"};
+
+		for (int i = 0; i < browsers.length; i ++) {				
+			try {
+				Runtime.getRuntime().exec(new String[] { browsers[i], url });
+				break;
+			} catch (IOException e) {
+				// Ignore
+				e.printStackTrace(System.err);
+			}
+		}
+	}
+	
+	
+	/*
+	 * Where necessary, we use a native implementation of openURL.
+	 */
+	private static native void nOpenURL(String url);
 } 
