@@ -32,6 +32,10 @@
 
 package org.lwjgl;
 
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
 /**
  * $Id$
  *
@@ -124,6 +128,19 @@ public final class Sys {
 	private static void initialize() {
 		System.loadLibrary(LIBRARY_NAME);
 		setTime(0);
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				Display.resetDisplayMode();
+				if (Keyboard.isCreated())
+					Keyboard.destroy();
+				if (Mouse.isCreated())
+					Mouse.destroy();
+				if (Controller.isCreated())
+					Controller.destroy();
+			}
+		});
+		
 	}
 
 	/**
