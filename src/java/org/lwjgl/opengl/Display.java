@@ -62,7 +62,6 @@ public final class Display {
 	static {
 		Sys.initialize();
 		current_mode = init();
-		assert current_mode != null;
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				reset();
@@ -82,8 +81,8 @@ public final class Display {
 	 */
 //	private static int y;
 
-	/** Title of the window */
-	private static String title;
+	/** Title of the window (never null) */
+	private static String title = "Game";
 
 	/** Fullscreen */
 	private static boolean fullscreen;
@@ -171,8 +170,7 @@ public final class Display {
 	 */
 	private static void createWindow() throws LWJGLException {
 		nCreateWindow(current_mode, fullscreen);
-		if (title != null)
-			nSetTitle(title);
+		nSetTitle(title);
 		initControls();
 		nSetVSyncEnabled(vsync);
 	}
@@ -212,6 +210,9 @@ public final class Display {
 	 * @param contrast The contrast, larger than 0.0.
 	 */
 	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws LWJGLException {
+		if (!isCreated()) {
+			throw new LWJGLException("Display not yet created.");
+		}
 		if (brightness < -1.0f || brightness > 1.0f)
 			throw new IllegalArgumentException("Invalid brightness value");
 		if (contrast < 0.0f)
@@ -268,11 +269,13 @@ public final class Display {
 	public static native String getVersion();
 	
 	/**
-	 * Synchronize the display to a capped frame rate.
+	 * Synchronize the display to a capped frame rate. Note that we are being "smart" about the
+	 * desired results in our implementation; we automatically subtract 1 from the desired framerate
+	 * to prevent just missing the frame time if vsync is set.
 	 * @param fps The desired frame rate, in frames per second
 	 */
 	public static void sync(int fps) {
-		float frameTime = 1.0f / (float) fps;
+		float frameTime = 1.0f / (float) (fps > 1 ? fps - 1 : 1);
 		timeNow = Sys.getTime();
 		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
 			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
@@ -310,8 +313,6 @@ public final class Display {
 	 * @return the title of the window
 	 */
 	public static String getTitle() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot get title on uncreated window");
 		return title;
 	}
 
@@ -363,6 +364,9 @@ public final class Display {
 	 * @param newTitle The new window title
 	 */
 	public static void setTitle(String newTitle) {
+		if (newTitle == null) {
+			newTitle = "";
+		}
 		title = newTitle;
 		if (isCreated())
 			nSetTitle(title);
