@@ -258,20 +258,21 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		key_down_buffer.position(old_position);
 	}
 	
-	private synchronized void handleKey(int key_code, int state, char character) {
+	private synchronized void handleKey(int key_code, byte state, char character) {
 		int key_code_mapped = KEY_MAP[key_code];
 		if (character == KeyEvent.CHAR_UNDEFINED)
 			character = Keyboard.CHAR_NONE;
+		key_states[key_code_mapped] = state;
 		int key_int_char = ((int)character) & 0xffff;
 		putKeyboardEvent(key_code_mapped, state, key_int_char);
 	}
 
 	public void keyPressed(KeyEvent e) {
-		handleKey(e.getKeyCode(), 1, e.getKeyChar());
+		handleKey(e.getKeyCode(), (byte)1, e.getKeyChar());
 	}
 
 	public void keyReleased(KeyEvent e) {
-		handleKey(e.getKeyCode(), 0, Keyboard.CHAR_NONE);
+		handleKey(e.getKeyCode(), (byte)0, Keyboard.CHAR_NONE);
 	}
 
 	public void keyTyped(KeyEvent e) {
