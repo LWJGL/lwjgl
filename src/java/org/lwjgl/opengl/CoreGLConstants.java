@@ -1166,7 +1166,7 @@ public interface CoreGLConstants {
 	/* ClientAttribMask */
 	public static final int CLIENT_PIXEL_STORE_BIT         = 0x00000001;
 	public static final int CLIENT_VERTEX_ARRAY_BIT        = 0x00000002;
-	public static final int CLIENT_ALL_ATTRIB_BITS         = 0xffffffff;
+	public static final int ALL_CLIENT_ATTRIB_BITS         = 0xffffffff;
 
 	/* polygon_offset */
 	public static final int POLYGON_OFFSET_FACTOR          = 0x8038;
