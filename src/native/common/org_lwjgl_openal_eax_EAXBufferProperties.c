@@ -60,58 +60,58 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAXBufferProperties_assignOffse
 	jfieldID field;
 
 	//get class/fields
-	listener_class						= env->FindClass("org/lwjgl/openal/eax/EAXBufferProperties");
+	listener_class						= (*env)->FindClass(env, "org/lwjgl/openal/eax/EAXBufferProperties");
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "direct_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, lDirect));
+	field = (*env)->GetStaticFieldID(env, listener_class, "direct_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, lDirect));
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "directHF_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, lDirectHF));
+	field = (*env)->GetStaticFieldID(env, listener_class, "directHF_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, lDirectHF));
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "room_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, lRoom));
+	field = (*env)->GetStaticFieldID(env, listener_class, "room_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, lRoom));
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "roomHF_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, lRoomHF));
+	field = (*env)->GetStaticFieldID(env, listener_class, "roomHF_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, lRoomHF));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "roomRolloffFactor_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, flRoomRolloffFactor));
+	field = (*env)->GetStaticFieldID(env, listener_class, "roomRolloffFactor_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, flRoomRolloffFactor));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "obstruction_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, lObstruction));
+	field = (*env)->GetStaticFieldID(env, listener_class, "obstruction_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, lObstruction));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "obstructionLFRatio_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, flObstructionLFRatio));
+	field = (*env)->GetStaticFieldID(env, listener_class, "obstructionLFRatio_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, flObstructionLFRatio));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "occlusion_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, lOcclusion));
+	field = (*env)->GetStaticFieldID(env, listener_class, "occlusion_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, lOcclusion));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "occlusionLFRatio_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, flOcclusionLFRatio));
+	field = (*env)->GetStaticFieldID(env, listener_class, "occlusionLFRatio_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, flOcclusionLFRatio));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "occlusionRoomRatio_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, flOcclusionRoomRatio));
+	field = (*env)->GetStaticFieldID(env, listener_class, "occlusionRoomRatio_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, flOcclusionRoomRatio));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "outsideVolumeHF_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, lOutsideVolumeHF));
+	field = (*env)->GetStaticFieldID(env, listener_class, "outsideVolumeHF_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, lOutsideVolumeHF));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "airAbsorptionFactor_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, flAirAbsorptionFactor));
+	field = (*env)->GetStaticFieldID(env, listener_class, "airAbsorptionFactor_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, flAirAbsorptionFactor));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "flags_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXBUFFERPROPERTIES, dwFlags));
+	field = (*env)->GetStaticFieldID(env, listener_class, "flags_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXBUFFERPROPERTIES, dwFlags));
 #endif
 }

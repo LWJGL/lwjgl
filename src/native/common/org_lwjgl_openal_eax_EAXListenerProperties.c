@@ -61,62 +61,62 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAXListenerProperties_assignOff
 	jfieldID field;
 
 	//get class/fields
-	listener_class						= env->FindClass("org/lwjgl/openal/eax/EAXListenerProperties");
+	listener_class						= (*env)->FindClass(env, "org/lwjgl/openal/eax/EAXListenerProperties");
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "room_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, lRoom));
+	field = (*env)->GetStaticFieldID(env, listener_class, "room_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, lRoom));
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "roomHF_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, lRoomHF));
+	field = (*env)->GetStaticFieldID(env, listener_class, "roomHF_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, lRoomHF));
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "roomRolloffFactor_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flRoomRolloffFactor));
+	field = (*env)->GetStaticFieldID(env, listener_class, "roomRolloffFactor_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flRoomRolloffFactor));
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "decayTime_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flDecayTime));
+	field = (*env)->GetStaticFieldID(env, listener_class, "decayTime_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flDecayTime));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "decayHFRatio_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flDecayHFRatio));
+	field = (*env)->GetStaticFieldID(env, listener_class, "decayHFRatio_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flDecayHFRatio));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "reflections_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, lReflections));
+	field = (*env)->GetStaticFieldID(env, listener_class, "reflections_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, lReflections));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "reflectionsDelay_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flReflectionsDelay));
+	field = (*env)->GetStaticFieldID(env, listener_class, "reflectionsDelay_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flReflectionsDelay));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "reverb_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, lReverb));
+	field = (*env)->GetStaticFieldID(env, listener_class, "reverb_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, lReverb));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "reverbDelay_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flReverbDelay));
+	field = (*env)->GetStaticFieldID(env, listener_class, "reverbDelay_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flReverbDelay));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "environment_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, dwEnvironment));
+	field = (*env)->GetStaticFieldID(env, listener_class, "environment_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, dwEnvironment));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "environmentSize_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flEnvironmentSize));
+	field = (*env)->GetStaticFieldID(env, listener_class, "environmentSize_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flEnvironmentSize));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "environmentDiffusion_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flEnvironmentDiffusion));
+	field = (*env)->GetStaticFieldID(env, listener_class, "environmentDiffusion_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flEnvironmentDiffusion));
 	
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "airAbsorptionHF_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, flAirAbsorptionHF));
+	field = (*env)->GetStaticFieldID(env, listener_class, "airAbsorptionHF_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, flAirAbsorptionHF));
 
 	//set environmentDiffusion_offset
-	field = env->GetStaticFieldID(listener_class, "flags_offset", "I");
-	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, dwFlags));
+	field = (*env)->GetStaticFieldID(env, listener_class, "flags_offset", "I");
+	(*env)->SetStaticIntField(env, listener_class, field, offsetof(EAXLISTENERPROPERTIES, dwFlags));
 #endif
 }
