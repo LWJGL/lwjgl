@@ -255,4 +255,15 @@ public final class AL {
 	}
 
 	private static native void resetNativeStubs(Class clazz);
+	
+	/**
+	 * Gets a handle to the current openAL context. The handle is "opaque" right now
+	 * because, realistically, there is nothing you can actually do with it. If it turns
+	 * out that there are useful things you can do with it then it'll return an instance
+	 * of ALCcontext (which will have to become a public class)
+	 * @return an opaque handle to the AL context.
+	 */
+	public static Object getContext() {
+		return context;
+	}
 }
