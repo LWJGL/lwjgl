@@ -1,9 +1,9 @@
 CC=gcc
 LINKER=gcc
 STRIP=strip
-CFLAGS_LINK=-shared -Wall
+CFLAGS_LINK=-dynamiclib -Wall
 LIBS=-lpthread
-CFLAGS_O=-fPIC -O2 -D_MACOSX -Wall -c -I.. -I. -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers
+CFLAGS_O=-fPIC -O2 -D_MACOSX -Wall -c -I.. -I. -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -framework JavaVM
 SRC=$(wildcard *.c) ../common_tools.c
 OBJECTS=$(subst .c,.o,$(SRC))
 LIBRARY=liblwjgl-devil.so
