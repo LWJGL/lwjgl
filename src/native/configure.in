@@ -29,7 +29,6 @@ case "$host_os" in
 								   LDFLAGS="-Wl,-static,-lXcursor,-lXrender,-lXrandr,-call_shared"
                                    AC_CHECK_HEADERS([AL/altypes.h AL/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
 								   NATIVE_BUILD_DIR=linux
-                                   CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
                                    CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
                                    LIBS="$LIBS $X_LIBS"
                                    AC_CHECK_LIB(X11, XOpenDisplay,, AC_MSG_ERROR(X11 is required))
