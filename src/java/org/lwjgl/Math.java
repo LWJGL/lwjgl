@@ -905,7 +905,10 @@ public final class Math {
 					return this;
 				else
 					return MATRIXOP_UNSAFE;
-			} else {
+			} else if (leftSourceElements == 1 && rightSourceElements == 1) {
+                            return this;	// even though this seems silly it is needed
+                        } 
+                        else {
 				return MATRIXOP_UNSAFE;
 			}
 		}
@@ -994,7 +997,7 @@ public final class Math {
 
 		// Calculate actual strides
 		if (sourceStride == 0)
-			sourceStride = sourceWidth * sourceHeight;
+			sourceStride = (sourceWidth * sourceHeight) << 2;
 		if (destStride == 0)
 			destStride = sourceStride;
 
@@ -1087,9 +1090,9 @@ public final class Math {
 
 		// Calculate actual strides
 		if (leftSourceStride == 0)
-			leftSourceStride = leftSourceWidth * leftSourceHeight;
+			leftSourceStride = (leftSourceWidth * leftSourceHeight) << 2;
 		if (rightSourceStride == 0)
-			rightSourceStride = rightSourceWidth * rightSourceHeight;
+			rightSourceStride = (rightSourceWidth * rightSourceHeight) << 2;
 
 		// Ensure the source and destination matrices are compatible
 		int minStride = operation.checkCompatibility(
@@ -1097,7 +1100,7 @@ public final class Math {
 			leftSourceHeight,
 			transposeLeftSource,
 			rightSourceWidth,
-			rightSourceWidth,
+			rightSourceHeight,
 			transposeRightSource,
 			transposeDest);
 
