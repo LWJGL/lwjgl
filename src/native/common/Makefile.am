@@ -55,8 +55,6 @@ COMMON = \
   org_lwjgl_Math_MatrixOpSubtract_MatrixOpSafe.h \
   org_lwjgl_openal_ALC.cpp \
   org_lwjgl_openal_ALC.h \
-  org_lwjgl_openal_ALUT.cpp \
-  org_lwjgl_openal_ALUT.h \
   org_lwjgl_openal_BaseAL.cpp \
   org_lwjgl_openal_BaseAL.h \
   org_lwjgl_openal_CoreAL.cpp \
