@@ -5559,7 +5559,7 @@ struct GLXExtensionTypes
 struct AGLExtensionTypes
 {
 };
-#endif;
+#endif /* OSX */
 
 struct GLUExtensionTypes
 {
