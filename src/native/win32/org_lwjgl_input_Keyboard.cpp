@@ -331,3 +331,17 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
 	env->SetStaticObjectField(clazz, fid_readBuffer, newBuffer);
 	return KEYBOARD_BUFFER_SIZE;
 }
+
+/*
+ * Class:     org_lwjgl_input_Keyboard
+ * Method:    nisStateKeySet
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet(JNIEnv *env, jclass clazz, jint key)
+{
+  switch(key) {
+    case org_lwjgl_input_Keyboard_KEY_CAPITAL: return GetKeyState(VK_CAPITAL);
+    case org_lwjgl_input_Keyboard_KEY_NUMLOCK: return GetKeyState(VK_NUMLOCK);
+    case org_lwjgl_input_Keyboard_KEY_SCROLL: return GetKeyState(VK_SCROLL);    
+  }
+}

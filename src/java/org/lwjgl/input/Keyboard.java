@@ -397,6 +397,18 @@ public class Keyboard {
 		assert created : "The keyboard has not been created.";
 		return keyDownBuffer.get(key) != 0;
 	}
+  
+  /**
+   * Checks whether one of the state keys are "active"
+   * 
+   * @param key State key to test (KEY_CAPITAL | KEY_NUMLOCK | KEY_SYSRQ)
+   * @return true if state key is on
+   */
+  public static boolean isStateKeySet(int key) {
+    assert created : "The keyboard has not been created.";
+    return nisStateKeySet(key);
+  }
+  private static native boolean nisStateKeySet(int key);
 	
 	/**
 	 * Gets a key's name

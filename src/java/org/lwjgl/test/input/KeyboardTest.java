@@ -133,7 +133,6 @@ public class KeyboardTest {
       Keyboard.read();
 
       int count = Keyboard.getNumKeyboardEvents();
-      System.out.println("Read " + count + " events");
       while(Keyboard.next()) {
         System.out.println("Checking key:" + Keyboard.getKeyName(Keyboard.key));
         if(Keyboard.key == Keyboard.KEY_ESCAPE) {
@@ -160,6 +159,17 @@ public class KeyboardTest {
           position.y -= 1;
         }
         
+        if(Keyboard.isStateKeySet(Keyboard.KEY_SCROLL)) {
+          System.out.println("SCROLL lock on");
+        }
+        
+        if(Keyboard.isStateKeySet(Keyboard.KEY_CAPITAL)) {
+          System.out.println("CAPS lock on");
+        }
+        
+        if(Keyboard.isStateKeySet(Keyboard.KEY_NUMLOCK)) {
+          System.out.println("NUM lock on");
+        }
       }
       if (count > 0) {
         System.out.println();

@@ -323,6 +323,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv *, jclass);
+  
+/*
+ * Class:     org_lwjgl_input_Keyboard
+ * Method:    nisStateKeySet
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet
+  (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus
 }
