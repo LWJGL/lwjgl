@@ -60,7 +60,7 @@ public class Project extends Util {
 			out[i] =
 				in[0] * finalMatrix[0][i]
 					+ in[1] * finalMatrix[1][i]
-					+ in[2] * finalMatrix[2][1]
+					+ in[2] * finalMatrix[2][i]
 					+ in[3] * finalMatrix[3][i];
 
 		}
