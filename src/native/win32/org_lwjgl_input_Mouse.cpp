@@ -135,7 +135,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 		printf("Failed to acquire mouse\n");
 #endif
 	}
-	printf("Acquired mouse\n");
 	return JNI_TRUE;
 }
 
