@@ -208,7 +208,7 @@ public final class Window {
 	 * If you are writing a straightforward game rendering loop and simply paint
 	 * every frame regardless, you can ignore this flag altogether. If you are
 	 * trying to be kind to other processes you can check this flag and only
-	 * redraw when it returns true. The flag is cleared when swapBuffers() is caleld.
+	 * redraw when it returns true. The flag is cleared when update() or isDirty() is called.
 	 * 
 	 * @return true if the window has been damaged by external changes
 	 * and needs to repaint itself
