@@ -63,11 +63,6 @@ public final class Math {
 	}
 	
 	/**
-	 * @return a random float between 0 and 1.
-	 */
-	public static native float random();
-	
-	/**
 	 * Return the sine of theta
 	 *
 	 * @param theta angle in degrees

@@ -102,7 +102,7 @@ abstract class BaseGL {
 	/**
 	 * Destroy the GL context. Does nothing if the GL has not yet been created.
 	 */
-	public void destroy() {
+	public final void destroy() {
 		if (!created)
 			return;
 		cleanup();
@@ -144,6 +144,11 @@ abstract class BaseGL {
 		currentContext = this;
 		nMakeCurrent();
 	}
+	
+	/**
+	 * Swap the buffers
+	 */
+	public native void swapBuffers();
 	
 	/**
 	 * Native method to make this the current thread

@@ -23,13 +23,30 @@ public final class Sys {
 	/** Low process priority. @see #setProcessPriority() */
 	public static final int LOW_PRIORITY = -1;
 
-	/** Normal process priority. @see #setProcessPriority() */
+	/**
+	 * Normal process priority. This priority equates to the priority that the
+	 * JVM has when it is started up normally. Note that if the JVM is started
+	 * inside a process which is already a different priority then this will not
+	 * be the initial priority.
+	 * 
+	 * @see #setProcessPriority()
+	 */
 	public static final int NORMAL_PRIORITY = 0;
 
 	/** High process priority. @see #setProcessPriority() */
 	public static final int HIGH_PRIORITY = 1;
 
-	/** Realtime priority. Use at your own risk. @see #setProcessPriority() */
+	/**
+	 * Realtime priority. Use at your own risk. This will set the java process
+	 * priority to the highest priority the OS will normally allow. It is likely
+	 * that this puts it at a higher priority than many OS critical tasks, such
+	 * as disk writes or mouse input and the like. Hence it is quite possible to
+	 * completely freeze your machine if you have an errant thread.
+	 * 
+	 * This priority is <strong>not</strong> recommended for gaming applications.
+	 * 
+	 * @see #setProcessPriority()
+	 */
 	public static final int REALTIME_PRIORITY = 2;
 
 	static {
@@ -50,7 +67,7 @@ public final class Sys {
 	 */
 	private static void initialize() {
 		System.loadLibrary(LIBRARY_NAME);
-		setTime(0.0f);
+		setTime(0);
 	}		
 
 	/**
@@ -76,47 +93,29 @@ public final class Sys {
 		throws IllegalArgumentException;
 
 	/**
-	 * Obtains the order of resolution of the hires system timer. The returned resolution
-	 * <i>n</i> describes the worst-case resolution in fractions of a second <i>1/10^n</i>.
-	 * For example, a system timer which ticks every 1/5000th of a second will return 3
-	 * to indicate that the resolution is at least as good as 1/1000th of a second.
-	 * The reason for this simplistic measurement of resolution is to cut down on
-	 * the temptation to code to too many specific timer resolutions arbitrarily.
-	 * If no hires timer is available then this method returns -1. Any system incapable of
-	 * a resolution of at least 3 is deemed not to have a hires timer and so this method will
-	 * never return 0, 1, or 2. Furthermore this method will never advertise a
-	 * resolution which cannot be accurately measured by a float.
+	 * Obtains the number of ticks that the hires timer does in a second.
 	 *
-	 * @return the order of resolution or -1 if no timer is present.
+	 * @return timer resolution in ticks per second or 0 if no timer is present.
 	 */
-	public static native int getTimerResolution();
+	public static native long getTimerResolution();
 	
 	/**
-	 * Gets the current value of the hires timer, in seconds. When the Sys class is first loaded
-	 * the hires timer is reset to 0.0f. If no hires timer is present then this method will always
+	 * Gets the current value of the hires timer, in ticks. When the Sys class is first loaded
+	 * the hires timer is reset to 0. If no hires timer is present then this method will always
 	 * return whatever value the timer was last set to.
-	 * 
-	 * Because the time is returned as a float, after a certain length of time the
-	 * hires timer can no longer represent time to the accuracy claimed by getTimerResolution().
-	 * Therefore the time is guaranteed only to be accurate for up to 100 seconds.
-	 * After 100 seconds has elapsed it is advisable to reset the timer. In reality
-	 * you should reset the timer every iteration of your game loop and simply use the
-	 * elapsed time for the iteration to increment your own, possibly more accurate
-	 * timers.
 	 *
-	 * @return the current hires time, in seconds.
+	 * @return the current hires time, in ticks.
 	 */
-	public static native float getTime();
+	public static native long getTime();
 	
 	/**
-	 * Sets the hires timer to a new time. This time may be rounded by the available
-	 * hires timer resolution; if the hires timer resolution is 3, and you specify
-	 * a time of 0.0002f then the time will in fact be set to 0.0f.
-	 * @param time the new time, in seconds
+	 * Sets the hires timer to a new time, specified in ticks.
+	 * 
+	 * @param time The new time, in ticks
 	 * @see #getTime()
 	 * @see #getTimerResolution()
 	 */
-	public static native void setTime(float time);
+	public static native void setTime(long time);
 	
 	/**
 	 * Set the process priority in a system independent way. Because of the various

@@ -43,7 +43,7 @@ public class CoreGL11 extends BaseGL implements CoreGL11Constants {
 	public native void glBegin(int mode);
 	public native void glEnd();
 	public native void glArrayElement(int i);
-	public native boolean glAreTexturesResident(int n, int residences);
+	public native boolean glAreTexturesResident(int n, int textureNames, int residences);
 	public native void glClearDepth(double depth);
 	public native void glDeleteLists(int list, int range);
 	public native void glDeleteTextures(int n, int textures);
@@ -217,7 +217,7 @@ public class CoreGL11 extends BaseGL implements CoreGL11Constants {
 	public native void glEndList();
 	public native void glMultMatrixd(int m);
 	public native void glMultMatrixf(int m);
-	public native void glPrioritizeTextures(int n, int priorities);
+	public native void glPrioritizeTextures(int n, int textureNames, int priorities);
 	public native void glShadeModel(int mode);
 	public native void glSelectBuffer(int size, int buffer);
 	public native void glScissor(int x, int y, int width, int height);
@@ -230,10 +230,10 @@ public class CoreGL11 extends BaseGL implements CoreGL11Constants {
 	public native void glRectf(float x1, float y1, float x2, float y2);
 	public native void glRecti(int x1, int y1, int x2, int y2);
 	public native void glRects(short x1, short y1, short x2, short y2);
-	public native void glRectdv(int v2);
-	public native void glRectfv(int v2);
-	public native void glRectiv(int v2);
-	public native void glRectsv(int v2);
+	public native void glRectdv(int v1, int v2);
+	public native void glRectfv(int v1, int v2);
+	public native void glRectiv(int v1, int v2);
+	public native void glRectsv(int v1, int v2);
 	public native void glReadPixels(int x, int y, int width, int height, int format, int type, int pixels);
 	public native void glReadBuffer(int mode);
 	public native void glRasterPos2d(double x, double y);
