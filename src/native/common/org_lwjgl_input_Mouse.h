@@ -68,6 +68,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 
 /*
  * Class:     org_lwjgl_input_Mouse
+ * Method:    nHasWheel
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGetButtonCount
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
  * Method:    nCreate
  * Signature: ()V
  */

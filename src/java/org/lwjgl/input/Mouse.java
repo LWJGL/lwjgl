@@ -211,12 +211,18 @@ public class Mouse {
 			return;
 		}
 		nCreate();
+		hasWheel = nHasWheel();
 		created = true;
 		currentCursor = null;
 
 		// set mouse buttons
+		buttonCount = nGetButtonCount();
 		buttons = new boolean[buttonCount];
 	}
+
+	private static native boolean nHasWheel();
+
+	private static native int nGetButtonCount();
 
 	/**
 	 * Native method to create the mouse.

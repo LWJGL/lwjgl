@@ -56,12 +56,10 @@ static bool mFirstTimeInitialization = true; // boolean to determine first time 
 
 // Cached fields of Mouse.java
 static jclass clsMouse;
-static jfieldID fidMButtonCount;
 static jfieldID fidMButtons;
 static jfieldID fidMDX;
 static jfieldID fidMDY;
 static jfieldID fidMDWheel;
-static jfieldID fidMHasWheel;
 
 static POINT cursorPos;
 static RECT windowRect;
@@ -76,7 +74,6 @@ void SetupMouse();
 void InitializeMouseFields();
 void CacheMouseFields();
 void UpdateMouseFields();
-void SetMouseCapabilities();
 
 static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
 {
@@ -97,6 +94,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass c
 
   /* Cache fields in Mouse */
   CacheMouseFields();
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
+	return mHasWheel;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jclass) {
+	return mButtonCount
 }
 
 /**
@@ -126,9 +131,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 		}
 		/* Do setup of Mouse */
 		SetupMouse();
-
-		/* Set capabilities */
-		SetMouseCapabilities();
 	} else {
 		if(mCreate_success) {
 			/* Do setup of Mouse */
@@ -432,22 +434,9 @@ void UpdateMouseFields() {
 }
 
 /**
- * Sets the capabilities of the Mouse
- */
-void SetMouseCapabilities() {
-  //set buttoncount
-  mEnvironment->SetStaticIntField(clsMouse, fidMButtonCount, mButtoncount);
-
-  //set wheel
-  mEnvironment->SetStaticBooleanField(clsMouse, fidMHasWheel, mHaswheel);
-}
-
-/**
  * Caches the field ids for quicker access
  */
 void CacheMouseFields() {
-  fidMButtonCount  = mEnvironment->GetStaticFieldID(clsMouse, "buttonCount", "I");
-  fidMHasWheel     = mEnvironment->GetStaticFieldID(clsMouse, "hasWheel", "Z");
   fidMButtons      = mEnvironment->GetStaticFieldID(clsMouse, "buttons", "[Z");
   fidMDX           = mEnvironment->GetStaticFieldID(clsMouse, "dx", "I");
   fidMDY           = mEnvironment->GetStaticFieldID(clsMouse, "dy", "I");

@@ -61,8 +61,6 @@ static bool created = false;
 static bool should_grab = false;
 static bool native_cursor = false;
 
-static jfieldID fid_has_wheel = NULL;
-static jfieldID fid_button_count = NULL;
 static jfieldID fid_buttons = NULL;
 static jfieldID fid_dx = NULL;
 static jfieldID fid_dy = NULL;
@@ -102,10 +100,6 @@ static void setCursorPos(int x, int y) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
   (JNIEnv * env, jclass clazz)
 {
-	if (fid_has_wheel == NULL)
-		fid_has_wheel = env->GetStaticFieldID(clazz, "hasWheel", "Z");
-	if (fid_button_count == NULL)
-		fid_button_count = env->GetStaticFieldID(clazz, "buttonCount", "I");
 	if (fid_buttons == NULL)
 		fid_buttons = env->GetStaticFieldID(clazz, "buttons", "[Z");
 	if (fid_dx == NULL)
@@ -260,6 +254,14 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
 	return width_return > height_return ? height_return : width_return;
 }
 
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
+	return JNI_TRUE;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jclass) {
+	return NUM_BUTTONS;
+}
+
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nCreate
@@ -269,8 +271,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	int i;
-	env->SetStaticIntField(clazz, fid_button_count, NUM_BUTTONS);
-	env->SetStaticBooleanField(clazz, fid_has_wheel, JNI_TRUE);
 	setCursorPos(0, 0);
 	current_z = last_x = last_y = last_z = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
