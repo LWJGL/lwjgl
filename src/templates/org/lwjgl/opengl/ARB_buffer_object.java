@@ -107,8 +107,8 @@ public interface ARB_buffer_object {
 	 * <p/>
 	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBufferARB(..., ..., ..., null); ... // Another map on the same buffer mapped_buffer = glMapBufferARB(..., ..., ..., mapped_buffer);
 	 *
-	 * @param size      The size of the buffer area.
-	 * @param oldBuffer A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and no new buffer will be created. In that case, size is ignored.
+	 * @param result_size   The size of the buffer area.
+	 * @param old_buffer    A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and no new buffer will be created. In that case, size is ignored.
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
