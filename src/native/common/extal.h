@@ -46,8 +46,8 @@
 #include <alctypes.h>
 #endif
 #ifdef _MACOSX
-#include <OpenAL/alctypes.h>
-#include <OpenAL/altypes.h>
+#include <AL/alctypes.h>
+#include <AL/altypes.h>
 #endif
 
 #include <jni.h>
@@ -59,7 +59,7 @@ void extal_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMet
 extern "C" {
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32)
  #ifdef _OPENAL32LIB
   #define ALCAPI __declspec(dllexport)
  #else
@@ -71,49 +71,43 @@ extern "C" {
 
  #define ALCAPIENTRY __cdecl
 #else
- #ifdef _MACOSX
-  #if _MACOSX
- typedef struct ALCdevice_struct ALCdevice;
- typedef struct ALCcontext_struct ALCcontext;
- 
+  #define ALCAPI
+  #define ALCAPIENTRY
+
+  #ifdef _X11
+   /** ALC boolean type. */
+   typedef char ALCboolean;
+
+   /** ALC 8bit signed byte. */
+   typedef char ALCbyte;
+
+   /** ALC 8bit unsigned byte. */
+   typedef unsigned char ALCubyte;
+
+   /** ALC 16bit signed short integer type. */
+   typedef short ALCshort;
+
+   /** ALC 16bit unsigned short integer type. */
+   typedef unsigned short ALCushort;
+
+   /** ALC 32bit unsigned integer type. */
+   typedef unsigned ALCuint;
+
+   /** ALC 32bit signed integer type. */
+   typedef int ALCint;
+
+   /** ALC 32bit floating point type. */
+   typedef float ALCfloat;
+
+   /** ALC 64bit double point type. */
+   typedef double ALCdouble;
+
+   /** ALC 32bit type. */
+   typedef unsigned int ALCsizei;
+
+   /** ALC void type */
+   typedef void ALCvoid;
   #endif
- #endif
- #define ALCAPI
- #define ALCAPIENTRY
-
-/** ALC boolean type. */
-typedef char ALCboolean;
-
-/** ALC 8bit signed byte. */
-typedef char ALCbyte;
-
-/** ALC 8bit unsigned byte. */
-typedef unsigned char ALCubyte;
-
-/** ALC 16bit signed short integer type. */
-typedef short ALCshort;
-
-/** ALC 16bit unsigned short integer type. */
-typedef unsigned short ALCushort;
-
-/** ALC 32bit unsigned integer type. */
-typedef unsigned ALCuint;
-
-/** ALC 32bit signed integer type. */
-typedef int ALCint;
-
-/** ALC 32bit floating point type. */
-typedef float ALCfloat;
-
-/** ALC 64bit double point type. */
-typedef double ALCdouble;
-
-/** ALC 32bit type. */
-typedef unsigned int ALCsizei;
-
-/** ALC void type */
-typedef void ALCvoid;
-
 #endif
 
 #ifdef _WIN32

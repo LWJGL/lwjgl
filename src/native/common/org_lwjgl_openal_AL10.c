@@ -98,11 +98,11 @@ typedef ALvoid	    (ALAPIENTRY *alDistanceModelPROC)( ALenum value );
 typedef ALvoid	    (ALAPIENTRY *alDopplerFactorPROC)( ALfloat value );
 typedef ALvoid	    (ALAPIENTRY *alDopplerVelocityPROC)( ALfloat value );
 
-alIsExtensionPresentPROC alIsExtensionPresent;
-alGetStringPROC alGetString;
-alGetErrorPROC alGetError;
+alIsExtensionPresentPROC alIsExtensionPresent = NULL;
+alGetStringPROC alGetString = NULL;
+alGetErrorPROC alGetError = NULL;
 
-alEnablePROC alEnable;
+alEnablePROC alEnable = NULL;
 static alDisablePROC alDisable;
 static alIsEnabledPROC alIsEnabled;
 //static alHintPROC alHint;

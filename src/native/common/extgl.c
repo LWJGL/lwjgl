@@ -85,7 +85,6 @@ aglResetLibraryPROC aglResetLibrary = NULL;
 aglSurfaceTexturePROC aglSurfaceTexture = NULL;
 #endif
 
-
 struct ExtensionTypes extgl_Extensions;
 
 #ifdef _WIN32
@@ -269,7 +268,8 @@ bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *nam
 /*-----------------------------------------------------*/
 #ifdef _MACOSX
 
-bool extgl_InitAGL(JNIEnv *env)
+// Commecnted out as AGL is not needed
+/*bool extgl_InitAGL(JNIEnv *env)
 {
 	aglChoosePixelFormat = (aglChoosePixelFormatPROC)extgl_GetProcAddress("aglChoosePixelFormat");
 	aglDestroyPixelFormat = (aglDestroyPixelFormatPROC)extgl_GetProcAddress("aglDestroyPixelFormat");
@@ -306,7 +306,7 @@ bool extgl_InitAGL(JNIEnv *env)
 	aglSurfaceTexture = (aglSurfaceTexturePROC)extgl_GetProcAddress("aglSurfaceTexture");
 	return !extgl_error; // Split out AGL into extgl_agl.cpp like wgl and glx and replace with InitializeFunctions
 }
-
+*/
 #endif
 /*-----------------------------------------------------*/
 /* AGL stuff END*/

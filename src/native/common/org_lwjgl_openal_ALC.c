@@ -59,7 +59,7 @@ typedef ALCboolean  (ALCAPIENTRY *alcIsExtensionPresentPROC)(ALCdevice *device,A
 //typedef ALCvoid*    (ALCAPIENTRY *alcGetProcAddressPROC)(ALCdevice *device,ALCubyte *funcName);
 typedef ALCenum	    (ALCAPIENTRY *alcGetEnumValuePROC)(ALCdevice *device,ALCubyte *enumName);
 
-alcGetCurrentContextPROC alcGetCurrentContext;
+alcGetCurrentContextPROC alcGetCurrentContext = NULL;
 static alcGetStringPROC alcGetString;
 static alcGetIntegervPROC alcGetIntegerv;
 static alcOpenDevicePROC alcOpenDevice;

@@ -65,10 +65,10 @@ void* handleOAL;
 #include <mach-o/dyld.h>
 #include <stdlib.h>
 #include <string.h>
-const struct mach_header* handleOAL;
+const struct mach_header* handleOAL = NULL;
 #endif
 
-alGetProcAddressPROC alGetProcAddress;
+alGetProcAddressPROC alGetProcAddress = NULL;
 
 /* Loads OpenAL */
 static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths);
