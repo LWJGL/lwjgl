@@ -785,7 +785,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isCloseRequested
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isActive
   (JNIEnv *env, jobject this) {
-	return focused ? JNI_TRUE : JNI_FALSE;
+	return focused || isLegacyFullscreen() ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setVSyncEnabled

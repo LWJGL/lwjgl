@@ -130,6 +130,7 @@ extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void throwFMODException(JNIEnv * env, const char * err);
 extern void setDebugEnabled(bool enable);
+extern void printfDebugJava(JNIEnv *env, const char *format, ...);
 extern void printfDebug(const char *format, ...);
 extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
 extern char * GetStringNativeChars(JNIEnv *env, jstring jstr);
