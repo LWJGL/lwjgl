@@ -121,9 +121,11 @@ int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, i
 }
 
 static void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err) {
+	jclass cls;
+
 	if ((*env)->ExceptionCheck(env) == JNI_TRUE)
 		return; // The JVM crashes if we try to throw two exceptions from one native call
-	jclass cls = (*env)->FindClass(env, exception_name);
+	cls = (*env)->FindClass(env, exception_name);
 	(*env)->ThrowNew(env, cls, err);
 	(*env)->DeleteLocalRef(env, cls);
 }
@@ -142,13 +144,14 @@ void throwException(JNIEnv * env, const char * err) {
 
 bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions) {
 	int i;
+	void **ext_function_pointer_pointer;
 	for (i = 0; i < num_functions; i++) {
 		ExtFunction *function = functions + i;
 		if (function->ext_function_name != NULL) {
 			void *ext_func_pointer = gpa(function->ext_function_name);
 			if (ext_func_pointer == NULL)
 				return false;
-			void **ext_function_pointer_pointer = function->ext_function_pointer;
+			ext_function_pointer_pointer = function->ext_function_pointer;
 			*ext_function_pointer_pointer = ext_func_pointer;
 		}
 	}
@@ -156,25 +159,30 @@ bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFu
 }
 
 void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
+	JNINativeMethod *methods;
+	JavaMethodAndExtFunction *function;
+	void *ext_func_pointer;
+	void **ext_function_pointer_pointer;
+	JNINativeMethod *method;
+	int i;
 	if (clazz == NULL) {
 		throwException(env, "Null class");
 		return;
 	}
-	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
-	int i;
+	methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
 	for (i = 0; i < num_functions; i++) {
-		JavaMethodAndExtFunction *function = functions + i;
+		function = functions + i;
 		if (function->ext_function_name != NULL) {
-			void *ext_func_pointer = gpa(function->ext_function_name);
+			ext_func_pointer = gpa(function->ext_function_name);
 			if (ext_func_pointer == NULL) {
 				free(methods);
 				throwException(env, "Missing driver symbols");
 				return;
 			}
-			void **ext_function_pointer_pointer = function->ext_function_pointer;
+			ext_function_pointer_pointer = function->ext_function_pointer;
 			*ext_function_pointer_pointer = ext_func_pointer;
 		}
-		JNINativeMethod *method = methods + i;
+		method = methods + i;
 		method->name = function->method_name;
 		method->signature = function->signature;
 		method->fnPtr = function->method_pointer;

@@ -83,11 +83,13 @@ static alcGetEnumValuePROC alcGetEnumValue;
  */
 static jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString (JNIEnv *env, jclass clazz, jint deviceaddress, jint token) {
 	const char* alcString = (const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token);
+	jstring string;
+
 	if(alcString == NULL) {
 		return NULL;
 	}
 
-	jstring string = (*env)->NewStringUTF(env, alcString);
+	string = (*env)->NewStringUTF(env, alcString);
 
 	CHECK_ALC_ERROR
 	return string;
@@ -116,6 +118,11 @@ static void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, jcla
  */
 static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jclass clazz, jstring tokstr) {
 	const char * tokenstring;
+	ALCdevice* device;
+	/* get ready to create ALCdevice instance */
+	jobject alcDevice_object	= NULL;
+	jclass alcDevice_class		= NULL;
+	jmethodID alcDevice_method	= NULL;
 
 	jboolean isCopy = JNI_FALSE;
 	if(tokstr != NULL) {
@@ -125,7 +132,7 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jcl
 	}
 
 	/* get device */
-	ALCdevice* device = alcOpenDevice((ALubyte *) tokenstring);
+	device = alcOpenDevice((ALubyte *) tokenstring);
 
 	/* if error - cleanup and get out */
 	if(device == NULL) {
@@ -134,11 +141,6 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jcl
 		}
 		return NULL;
 	}
-
-	/* get ready to create ALCdevice instance */
-	jobject alcDevice_object	= NULL;
-	jclass alcDevice_class		= NULL;
-	jmethodID alcDevice_method	= NULL;
 
 	/* find class and constructor */
 	alcDevice_class		= (*env)->FindClass(env, "org/lwjgl/openal/ALCdevice");
@@ -172,21 +174,22 @@ static void JNICALL Java_org_lwjgl_openal_ALC_alcCloseDevice (JNIEnv *env, jclas
  * ALCcontext* alcCreateContext( ALCdevice *dev, ALint* attrlist );
  */
 static jobject JNICALL Java_org_lwjgl_openal_ALC_alcCreateContext (JNIEnv *env, jclass clazz, jint deviceaddress, jobject attrlist) {
-  ALint* address = NULL;
-  if (attrlist != NULL) {
-    address = (ALint*) (*env)->GetDirectBufferAddress(env, attrlist);
-  }
-	ALCcontext* context = alcCreateContext((ALCdevice*) deviceaddress, address); 
+	ALint* address = NULL;
+	ALCcontext* context;
+	/* get ready to create ALCcontext instance */
+	jobject alcContext_object	= NULL;
+	jclass alcContext_class		= NULL;
+	jmethodID alcContext_method	= NULL;
+
+	if (attrlist != NULL) {
+		address = (ALint*) (*env)->GetDirectBufferAddress(env, attrlist);
+	}
+	context = alcCreateContext((ALCdevice*) deviceaddress, address); 
 	
 	/* if error - get out */
 	if(context == NULL) {
 		return NULL;
 	}
-
-	/* get ready to create ALCcontext instance */
-	jobject alcContext_object	= NULL;
-	jclass alcContext_class		= NULL;
-	jmethodID alcContext_method	= NULL;
 
 	/* find class and constructor */
 	alcContext_class	= (*env)->FindClass(env, "org/lwjgl/openal/ALCcontext");
@@ -233,17 +236,16 @@ static void JNICALL Java_org_lwjgl_openal_ALC_nalcProcessContext (JNIEnv *env, j
  * ALCcontext* alcGetCurrentContext( ALvoid );
  */
 static jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetCurrentContext (JNIEnv *env, jclass clazz) {
-
 	ALCcontext* context = alcGetCurrentContext();
-	if(context == NULL) {
-		return NULL;
-	}
 
 	/* get ready to create ALCcontext instance */
 	jobject alcContext_object	= NULL;
 	jclass alcContext_class		= NULL;
 	jmethodID alcContext_method	= NULL;
 
+	if(context == NULL) {
+		return NULL;
+	}
 	/* find class and constructor */
 	alcContext_class	= (*env)->FindClass(env, "org/lwjgl/openal/ALCcontext");
 	alcContext_method	= (*env)->GetMethodID(env, alcContext_class, "<init>", "(I)V");
@@ -263,14 +265,14 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetCurrentContext (JNIEnv *e
 static jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetContextsDevice (JNIEnv *env, jclass clazz, jint contextaddress) {
 
 	ALCdevice* device = alcGetContextsDevice((ALCcontext*) contextaddress); 
-	if(device == NULL) {
-		return NULL;
-	}
-
 	/* get ready to create ALCdevice instance */
 	jobject alcDevice_object	= NULL;
 	jclass alcDevice_class		= NULL;
 	jmethodID alcDevice_method	= NULL;
+
+	if(device == NULL) {
+		return NULL;
+	}
 
 	/* find class and constructor */
 	alcDevice_class		= (*env)->FindClass(env, "org/lwjgl/openal/ALCdevice");

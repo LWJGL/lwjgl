@@ -146,14 +146,18 @@ static void closeVorbisLibs(void) {
 static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 
 	jsize pathcount = (*env)->GetArrayLength(env, oalPaths);
-	printfDebug("Found %d OpenAL paths\n", (int)pathcount);
 	int i;
+	jstring path;
+	const char *path_str;
+	char *lib_str;
+
+	printfDebug("Found %d OpenAL paths\n", (int)pathcount);
 	for(i=0;i<pathcount;i++) {
-		jstring path = (jstring) (*env)->GetObjectArrayElement(env, oalPaths, i);
-		const char *path_str = (*env)->GetStringUTFChars(env, path, NULL);
+		path = (jstring) (*env)->GetObjectArrayElement(env, oalPaths, i);
+		path_str = (*env)->GetStringUTFChars(env, path, NULL);
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
-		char *lib_str = concatenate(path_str, "lwjglaudio.dll");
+		lib_str = concatenate(path_str, "lwjglaudio.dll");
 		handleOAL = LoadLibrary(lib_str);
                 free(lib_str);
 #endif

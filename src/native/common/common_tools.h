@@ -68,34 +68,30 @@ typedef unsigned char bool;
 #define false 0
 #endif
 
-extern void initAttribList(attrib_list_t *list);
-extern void putAttrib(attrib_list_t *list, int attrib);
-
-extern bool isDebugEnabled(void);
-extern jstring getVersionString(JNIEnv *env);
-extern void initEventQueue(event_queue_t *event_queue);
-extern int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, int buffer_size, int event_size);
-extern void putEventElement(event_queue_t *queue, unsigned char byte);
-extern unsigned char *getOutputList(event_queue_t *queue);
-extern void throwException(JNIEnv *env, const char *msg);
-extern void throwOpenALException(JNIEnv * env, const char * err);
-extern void throwFMODException(JNIEnv * env, const char * err);
-extern void setDebugEnabled(bool enable);
-extern void printfDebug(const char *format, ...);
-extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
+#ifdef _WIN32
+#define inline __inline
+#endif
 
 static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer, int offset) {
-	if (buffer == NULL)
-		return NULL;
-	else
+	if (buffer != NULL) {
+#ifdef __cplusplus
+		return (void *)((char *)env->GetDirectBufferAddress(buffer) + offset);
+#else
 		return (void *)((char *)(*env)->GetDirectBufferAddress(env, buffer) + offset);
+#endif
+	} else
+		return NULL;
 }
 
 static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
-	if (p == NULL)
-		return NULL;
-	else
+	if (p != NULL) {
+#ifdef __cplusplus
+		return env->NewDirectByteBuffer(p, size);
+#else
 		return (*env)->NewDirectByteBuffer(env, p, size);
+#endif
+	} else
+		return NULL;
 }
 
 static inline const void *offsetToPointer(jint offset) {
@@ -119,7 +115,33 @@ typedef struct {
 
 #define NUMFUNCTIONS(x) (sizeof(x)/sizeof(JavaMethodAndExtFunction));
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void initAttribList(attrib_list_t *list);
+extern void putAttrib(attrib_list_t *list, int attrib);
+
+extern bool isDebugEnabled(void);
+extern jstring getVersionString(JNIEnv *env);
+extern void initEventQueue(event_queue_t *event_queue);
+extern int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, int buffer_size, int event_size);
+extern void putEventElement(event_queue_t *queue, unsigned char byte);
+extern unsigned char *getOutputList(event_queue_t *queue);
+extern void throwException(JNIEnv *env, const char *msg);
+extern void throwOpenALException(JNIEnv * env, const char * err);
+extern void throwFMODException(JNIEnv * env, const char * err);
+extern void setDebugEnabled(bool enable);
+extern void printfDebug(const char *format, ...);
+extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
+
+
 extern void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions);
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+

@@ -45,6 +45,13 @@
 #include "common_tools.h"
 #include "extal.h"
 
+// EAX 2.0 GUIDs
+static const GUID DSPROPSETID_EAX20_ListenerProperties
+				= { 0x306a6a8, 0xb224, 0x11d2, { 0x99, 0xe5, 0x0, 0x0, 0xe8, 0xd8, 0xc7, 0x22 } };
+
+static const GUID DSPROPSETID_EAX20_BufferProperties
+				= { 0x306a6a7, 0xb224, 0x11d2, {0x99, 0xe5, 0x0, 0x0, 0xe8, 0xd8, 0xc7, 0x22 } };
+
 /*
  * Determines available EAX extensions
  */
@@ -86,9 +93,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAX20_neaxGet (JNIEnv *env, jcl
 
   // determine buffer or listener
   if (propertySetID == org_lwjgl_openal_eax_EAX20_BUFFER_GUID) {
-    result = (jint) eaxGet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+    result = (jint) eaxGet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*)(*env)->GetDirectBufferAddress(env, value)), (ALuint) size);
 	} else if (propertySetID == org_lwjgl_openal_eax_EAX20_LISTENER_GUID) {
-	  result = (jint) eaxGet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+	  result = (jint) eaxGet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*)(*env)->GetDirectBufferAddress(env, value)), (ALuint) size);
 	}
   CHECK_AL_ERROR  
 	return result;
@@ -111,9 +118,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAX20_neaxSet (JNIEnv *env, jcl
   
   // determine buffer or listener
   if (propertySetID == org_lwjgl_openal_eax_EAX20_BUFFER_GUID) {
-    result = (jint) eaxSet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+    result = (jint) eaxSet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*)(*env)->GetDirectBufferAddress(env, value)), (ALuint) size);
 	} else if (propertySetID == org_lwjgl_openal_eax_EAX20_LISTENER_GUID) {
-	  result = (jint) eaxSet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
+	  result = (jint) eaxSet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*)(*env)->GetDirectBufferAddress(env, value)), (ALuint) size);
 	}	
   CHECK_AL_ERROR
 	return result;
