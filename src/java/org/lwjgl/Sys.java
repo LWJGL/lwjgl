@@ -82,10 +82,16 @@ public final class Sys {
 	 * the library, and whether assertions are enabled or not.
 	 */
 	public static final boolean DEBUG;
+
+	/**
+	 * The integer equivalent of the native NULL constant
+	 */
+	public static final int NULL;
 	
 	
 	private static boolean _debug;
 	static {
+                NULL = nGetNULLValue();
 		try {
 			assert false;
 			LIBRARY_NAME = "lwjgl";
@@ -122,6 +128,11 @@ public final class Sys {
 		System.loadLibrary(LIBRARY_NAME);
 		setTime(0);
 	}		
+
+        /**
+         * Gets the native NULL constant value
+         */
+        private static native int nGetNULLValue();
 
 	/**
 	 * Gets the address of a buffer. If the address cannot be obtained for any reason

@@ -51,6 +51,17 @@ __int64		hires_timer;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
+ * Method:    nGetNULLValue
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_nGetNULLValue
+  (JNIEnv *, jclass)
+{
+	return (jint)NULL;
+}
+
+/*
+ * Class:     org_lwjgl_Sys
  * Method:    getDirectBufferAddress
  * Signature: (Ljava/nio/Buffer;)I
  */
