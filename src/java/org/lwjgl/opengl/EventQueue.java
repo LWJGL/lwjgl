@@ -1,0 +1,90 @@
+/* 
+ * Copyright (c) 2002-2004 LWJGL Project
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are 
+ * met:
+ * 
+ * * Redistributions of source code must retain the above copyright 
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of 
+ *   its contributors may be used to endorse or promote products derived 
+ *   from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.opengl;
+
+/**
+ * A java implementation of a LWJGL compatible event queue.
+ * Currently only used by the Mac OS X implementation.
+ * @author elias_naur
+ */
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+abstract class EventQueue {
+	private final static int QUEUE_SIZE = 200;
+	private final int event_size;
+	private final IntBuffer queue;
+
+	public EventQueue(int event_size) {
+		this.event_size = event_size;
+		this.queue = ByteBuffer.allocateDirect(QUEUE_SIZE*event_size).asIntBuffer();
+	}
+	
+	protected synchronized void clearEvents() {
+		queue.clear();
+	}
+
+	/**
+	 * Copy available events into the specified buffer.
+	 * Note that the buffer position is maintained, to emulate
+	 * the behaviour of the native event queues.
+	 * @return the number of events copied
+	 */
+	public synchronized int copyEvents(IntBuffer dest) {
+		int old_position = dest.position();
+		queue.flip();
+		int old_limit = queue.limit();
+		if (dest.remaining() < queue.remaining())
+			queue.limit(dest.remaining() + queue.position());
+		dest.put(queue);
+		queue.limit(old_limit);
+		queue.compact();
+		int num_events = (dest.position() - old_position)/event_size;
+		dest.position(old_position);
+		return num_events;
+	}
+
+	/**
+	 * Put an event into the queue.
+	 * @return true if the event fitted into the queue, false otherwise
+	 */
+	public synchronized boolean putEvent(int[] event) {
+		if (event.length != event_size)
+			throw new IllegalArgumentException("Internal error: event size " + event_size + " does not equals the given event size " + event.length);
+		if (queue.remaining() >= event.length) {
+			queue.put(event);
+			return true;
+		} else
+			return false;
+	}
+}
