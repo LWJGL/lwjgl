@@ -31,24 +31,59 @@
  */
 package org.lwjgl.util.model;
 
+import java.io.Serializable;
+
 /**
  * $Id$
  * @author $Author$
  * @version $Revision$
  */
-public class Triangle {
+public class Triangle implements Serializable {
 	
 	public static final long serialVersionUID = 1L;
 	
 	/** Vertex indices: these look up into the parent Mesh's vertex array */
-	private int a, b, c;
+	private final int a, b, c;
 	
 	/** Adjacency, for stripification */
-	private int adjacency;
+	private final int adjacency;
 	
 	/**
 	 * C'tor
+	 * @param a
+	 * @param b
+	 * @param c
+	 * @param adjacency
 	 */
-	public Triangle() {
+	public Triangle(int a, int b, int c, int adjacency) {
+		this.a = a;
+		this.b = b;
+		this.c = c;
+		this.adjacency = adjacency;
+	}
+	
+	/**
+	 * @return Returns the 'a' vertex index
+	 */
+	public int getA() {
+		return a;
+	}
+	/**
+	 * @return Returns the 'b' vertex index
+	 */
+	public int getB() {
+		return b;
+	}
+	/**
+	 * @return Returns the 'c' vertex index
+	 */
+	public int getC() {
+		return c;
+	}
+	/**
+	 * @return Returns the adjacency.
+	 */
+	public int getAdjacency() {
+		return adjacency;
 	}
 }

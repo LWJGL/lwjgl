@@ -34,6 +34,7 @@ package org.lwjgl.util.model.renderer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lwjgl.util.model.Frame;
 import org.lwjgl.util.model.Model;
 
 /**
@@ -63,11 +64,24 @@ public class Renderer {
 	/**
 	 * Render a Model
 	 * @param model The model to render
+	 * @param animation The name of the animation
+	 * @param time The time for the animation
 	 */
-	public void render(Model model) {
+	public void render(Model model, String animation, float time) {
 		
 		// 1. Set up GL state from the Model's material
-		Renderable material = (Renderable) materials.get(model.getMesh().getMaterial());
+		Renderable material = (Renderable) materials.get(model.getMaterial());
+		if (material != null) {
+			material.render();
+		}
+		
+		// 2. Get the animation
+		Frame[] frame = model.getAnimation(animation);
+		if (frame == null) {
+			return;
+		}
+		
+		// 3. Work out what the nearest frame is to the specified time
 		
 	}
 	

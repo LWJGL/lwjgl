@@ -43,7 +43,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Vector3f extends Vector implements Serializable, ReadableVector3f {
+public class Vector3f extends Vector implements Serializable, ReadableVector3f, WritableVector3f {
 
 	public float x, y, z;
 
@@ -68,15 +68,21 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f {
 		set(x, y, z);
 	}
 
-	/**
-	 * Set values
-	 * @return this
+	/* (non-Javadoc)
+	 * @see org.lwjgl.util.vector.WritableVector2f#set(float, float)
 	 */
-	public Vector3f set(float x, float y, float z) {
+	public void set(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.lwjgl.util.vector.WritableVector3f#set(float, float, float)
+	 */
+	public void set(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		return this;
 	}
 
 	/**
@@ -123,7 +129,8 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f {
     	if (dest == null)
     		return new Vector3f(left.x + right.x, left.y + right.y, left.z + right.z);
     	else {
-			return dest.set(left.x + right.x, left.y + right.y, left.z + right.z);
+			dest.set(left.x + right.x, left.y + right.y, left.z + right.z);
+			return dest;
     	}
     }
 
@@ -139,7 +146,8 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f {
     	if (dest == null)
     		return new Vector3f(left.x - right.x, left.y - right.y, left.z - right.z);
     	else {
-			return dest.set(left.x - right.x, left.y - right.y, left.z - right.z);
+			dest.set(left.x - right.x, left.y - right.y, left.z - right.z);
+			return dest;
     	}
     }
     

@@ -51,23 +51,34 @@ public class Model implements Serializable {
 	
 	public static final long serialVersionUID = 1L;
 	
-	/** The Mesh */
-	private final Mesh mesh;
+	/** Material */
+	private final String material;
+	
+	/** Vertices */
+	private final Vertex[] vertex;
+	
+	/** Triangles */
+	private final Triangle[] triangle;
 	
 	/** The animations: a Map of string names to Frame[] arrays */
 	private final Map animation;
 	
 	/**
 	 * C'tor
-	 * @param mesh
-	 * @param frame
+	 * @param material
+	 * @param vertex
+	 * @param triangle
+	 * @param animation
 	 */
-	public Model(Mesh mesh, Map animation) {
-		this.mesh = mesh;
+	public Model(String material, Vertex[] vertex, Triangle[] triangle, Map animation) {
+		this.material = material;
+		this.vertex = vertex;
+		this.triangle = triangle;
 		this.animation = animation;
 	}
 	
 	/**
+	 * Get a named animation from the Model
 	 * @param name The name of the animation
 	 * @return the Frames of an animation (or null, if no such animation exists)
 	 */
@@ -76,10 +87,25 @@ public class Model implements Serializable {
 	}
 	
 	/**
-	 * @return the Mesh
+	 * @return Returns the material.
 	 */
-	public Mesh getMesh() {
-		return mesh;
+	public String getMaterial() {
+		return material;
 	}
 	
+	/**
+	 * @return Returns the triangles.
+	 */
+	public Triangle[] getTriangle() {
+		return triangle;
+	}
+	
+	/**
+	 * @return Returns the vertices
+	 */
+	public Vertex[] getVertex() {
+		return vertex;
+	}
+	
+
 }

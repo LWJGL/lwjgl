@@ -43,7 +43,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Vector4f extends Vector implements Serializable, ReadableVector4f {
+public class Vector4f extends Vector implements Serializable, ReadableVector4f, WritableVector4f {
 
 	public float x, y, z, w;
 
@@ -68,16 +68,31 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f {
 		set(x, y, z, w);
 	}
 
-	/**
-	 * Set values
-	 * @return this
+	/* (non-Javadoc)
+	 * @see org.lwjgl.util.vector.WritableVector2f#set(float, float)
 	 */
-	public Vector4f set(float x, float y, float z, float w) {
+	public void set(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.lwjgl.util.vector.WritableVector3f#set(float, float, float)
+	 */
+	public void set(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.lwjgl.util.vector.WritableVector4f#set(float, float, float, float)
+	 */
+	public void set(float x, float y, float z, float w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.w = w;
-		return this;
 	}
 
 	/**
@@ -126,7 +141,8 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f {
     	if (dest == null)
     		return new Vector4f(left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w);
     	else {
-			return dest.set(left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w);
+			dest.set(left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w);
+			return dest;
     	}
     }
 
@@ -142,7 +158,8 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f {
     	if (dest == null)
     		return new Vector4f(left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w);
     	else {
-			return dest.set(left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w);
+			dest.set(left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w);
+			return dest;
     	}
     }
       	
@@ -293,6 +310,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f {
 	public void setZ(float z) {
 		this.z = z;
 	}
+
 
 	/* (Overrides)
 	 * @see org.lwjgl.vector.ReadableVector3f#getZ()

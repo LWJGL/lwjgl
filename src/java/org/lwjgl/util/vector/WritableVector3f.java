@@ -29,45 +29,27 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.model;
+package org.lwjgl.util.vector;
 
-import java.io.Serializable;
-
-import org.lwjgl.util.vector.Matrix4f;
 
 /**
- * A Frame describes a set of new positions for Bones.
+ * $Id$
+ * Writable interface to Vector3fs
+ * @author $author$
+ * @version $revision$
  */
-public class Frame implements Serializable {
-	
-	public static final long serialVersionUID = 1L;
-	
-	/** The new transformations for each Bone in the Skeleton */
-	private final Matrix4f[] bone;
-	
-	/** Frame time */
-	private final float time;
+public interface WritableVector3f extends WritableVector2f {
+
+	/**
+	 * Set the Z value
+	 * @param z
+	 */
+	public void setZ(float z);
 	
 	/**
-	 * C'tor
-	 * @param bone[]
+	 * Set the X,Y,Z values
+	 * @param x, y, z
 	 */
-	public Frame(float time, Matrix4f[] bone) {
-		this.time = time;
-		this.bone = bone;
-	}
+	public void set(float x, float y, float z);
 	
-	/**
-	 * @return the Bones
-	 */
-	public Matrix4f[] getBone() {
-		return bone;
-	}
-	
-	/**
-	 * @return the frame time
-	 */
-	public float getTime() {
-		return time;
-	}
 }

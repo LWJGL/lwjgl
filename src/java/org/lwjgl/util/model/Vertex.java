@@ -33,10 +33,13 @@ package org.lwjgl.util.model;
 
 import java.io.Serializable;
 
+import org.lwjgl.util.vector.ReadableVector2f;
+import org.lwjgl.util.vector.ReadableVector3f;
+
 /**
  * $Id$
  * 
- * A single vertex in a Triangle
+ * A single vertex in a mesh.
  * 
  * @author $Author$
  * @version $Revision$
@@ -46,44 +49,56 @@ public class Vertex implements Serializable {
 	public static final long serialVersionUID = 1L;
 	
 	/** Coordinates */
-	private final float x, y, z;
+	private final ReadableVector3f coords;
 	
 	/** Normal */
-	private final float nx, ny, nz;
+	private final ReadableVector3f normal;
 	
 	/** Texture coordinates */
-	private final float u, v;
+	private final ReadableVector2f texCoords;
 	
-	/** Bone indices: these look up into the current Frame's bone array */
-	private final int[] bone;
-	
-	/** Bone weights (always sum to 1.0f) */
-	private final float[] weight;
-	
+	/** Skin */
+	private final Skin[] skin;
+
 	/**
 	 * C'tor
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param nx
-	 * @param ny
-	 * @param nz
-	 * @param u
-	 * @param v
-	 * @param bone
-	 * @param weight
+	 * @param coords
+	 * @param normal
+	 * @param texCoords
+	 * @param skin
 	 */
-	public Vertex(float x, float y, float z, float nx, float ny, float nz,
-			float u, float v, int[] bone, float[] weight) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.nx = nx;
-		this.ny = ny;
-		this.nz = nz;
-		this.u = u;
-		this.v = v;
-		this.bone = bone;
-		this.weight = weight;
+	public Vertex(ReadableVector3f coords, ReadableVector3f normal, ReadableVector2f texCoords, Skin[] skin) {
+		this.coords = coords;
+		this.normal = normal;
+		this.texCoords = texCoords;
+		this.skin = skin;
+	}
+
+	/**
+	 * @return Returns the coords.
+	 */
+	public ReadableVector3f getCoords() {
+		return coords;
+	}
+	
+	/**
+	 * @return Returns the normal.
+	 */
+	public ReadableVector3f getNormal() {
+		return normal;
+	}
+	
+	/**
+	 * @return Returns the skin.
+	 */
+	public Skin[] getSkin() {
+		return skin;
+	}
+	
+	/**
+	 * @return Returns the texCoords.
+	 */
+	public ReadableVector2f getTexCoords() {
+		return texCoords;
 	}
 }

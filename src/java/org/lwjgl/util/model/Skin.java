@@ -35,58 +35,39 @@ import java.io.Serializable;
 
 /**
  * $Id$
- * 
- * A Mesh is a collection of Triangles that all share the same material (ie. rendering
- * state).
- * 
+ * Describes how a bone influences a vertex.
  * @author $Author$
  * @version $Revision$
  */
-public class Mesh implements Serializable {
+public class Skin implements Serializable {
 	
 	public static final long serialVersionUID = 1L;
 	
-	/** Material */
-	private final String material;
+	/** Bone index */
+	private final int bone;
 	
-	/** Vertices */
-	private final Vertex[] vertex;
-	
-	/** Triangles */
-	private final Triangle[] triangle;
-	
+	/** Weight */
+	private final float weight;
 	
 	/**
 	 * C'tor
-	 * @param material
-	 * @param vertex
-	 * @param triangle
 	 */
-	public Mesh(String material, Vertex[] vertex, Triangle[] triangle) {
-		this.material = material;
-		this.vertex = vertex;
-		this.triangle = triangle;
+	public Skin(int bone, float weight) {
+		this.bone = bone;
+		this.weight = weight;
 	}
 	
 	/**
-	 * @return Returns the material.
+	 * @return Returns the bone index.
 	 */
-	public String getMaterial() {
-		return material;
+	public int getBone() {
+		return bone;
 	}
 	
 	/**
-	 * @return Returns the triangles.
+	 * @return Returns the weight.
 	 */
-	public Triangle[] getTriangle() {
-		return triangle;
+	public float getWeight() {
+		return weight;
 	}
-	
-	/**
-	 * @return Returns the vertices
-	 */
-	public Vertex[] getVertex() {
-		return vertex;
-	}
-	
 }

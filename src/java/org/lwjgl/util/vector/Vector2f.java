@@ -43,7 +43,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Vector2f extends Vector implements Serializable, ReadableVector2f {
+public class Vector2f extends Vector implements Serializable, ReadableVector2f, WritableVector2f {
 	
 	public float x, y;
 
@@ -68,14 +68,12 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f {
 		set(x, y);
 	}
 
-	/**
-	 * Set values
-	 * @return this
+	/* (non-Javadoc)
+	 * @see org.lwjgl.util.vector.WritableVector2f#set(float, float)
 	 */
-	public Vector2f set(float x, float y) {
+	public void set(float x, float y) {
 		this.x = x;
 		this.y = y;
-		return this;
 	}
 
 	/**
@@ -188,7 +186,8 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f {
     	if (dest == null)
     		return new Vector2f(left.x + right.x, left.y + right.y);
     	else {
-			return dest.set(left.x + right.x, left.y + right.y);
+			dest.set(left.x + right.x, left.y + right.y);
+			return dest;
     	}
     }
 
@@ -204,7 +203,8 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f {
     	if (dest == null)
     		return new Vector2f(left.x - right.x, left.y - right.y);
     	else {
-			return dest.set(left.x - right.x, left.y - right.y);
+			dest.set(left.x - right.x, left.y - right.y);
+			return dest;
     	}
     }
       
