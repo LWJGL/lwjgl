@@ -720,7 +720,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		pixel_format_index = pixel_format_index_arb;
 	} else if (samples > 0) {
 		wglDeleteContext(display_hglrc);
-		throwException(env, "Samples > 0 but could not finc a suitable ARB pixel format");
+		throwException(env, "Samples > 0 but could not find a suitable ARB pixel format");
 	}
 }
 
