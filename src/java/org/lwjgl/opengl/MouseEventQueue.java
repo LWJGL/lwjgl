@@ -185,7 +185,6 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 
 	public void mousePressed(MouseEvent e) {
-		updateDeltas();
 		handleButton(e);
 	}
 
@@ -195,16 +194,23 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 	
 	public void mouseReleased(MouseEvent e) {
-		updateDeltas();
 		handleButton(e);
 	}
 	
+	private void handleMotion(MouseEvent e) {
+		if (grabbed) {
+			updateDeltas();
+		} else {
+			setCursorPos(e.getX(), e.getY());
+		}
+	}
+
 	public void mouseDragged(MouseEvent e) {
-		setCursorPos(e.getX(), e.getY());
+		handleMotion(e);
 	}
 	
 	public void	mouseMoved(MouseEvent e) {
-		setCursorPos(e.getX(), e.getY());
+		handleMotion(e);
 	}
 	
 	private synchronized void handleWheel(int amount) {
@@ -212,7 +218,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		putMouseEvent(-1, 0, amount);
 	}
 	
-	public void updateDeltas() {
+	private void updateDeltas() {
 		if (!grabbed)
 			return;
 		synchronized (this) {
@@ -229,7 +235,6 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	public void	mouseWheelMoved(MouseWheelEvent e) {
 		int wheel_amount = -e.getWheelRotation()*WHEEL_SCALE;
-		updateDeltas();
 		handleWheel(wheel_amount);
 	}
 }

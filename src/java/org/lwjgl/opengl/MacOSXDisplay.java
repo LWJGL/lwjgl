@@ -211,7 +211,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 			GL11.glViewport(0, 0, frame.getCanvas().syncGetWidth(), frame.getCanvas().syncGetHeight());
 			warpCursor();
 		}
-		mouse_queue.updateDeltas();
 	}
 	
 	private void warpCursor() {
