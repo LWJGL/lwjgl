@@ -9,6 +9,7 @@ SRC=org_lwjgl_opengl_EXTBlendEquationSeparate.c \
     org_lwjgl_opengl_EXTDrawRangeElements.c \
     org_lwjgl_opengl_EXTFogCoord.c \
     org_lwjgl_opengl_EXTMultiDrawArrays.c \
+    org_lwjgl_opengl_EXTPalettedTexture.c \
     org_lwjgl_opengl_EXTPointParameters.c \
     org_lwjgl_opengl_EXTSecondaryColor.c \
     org_lwjgl_opengl_EXTStencilTwoSide.c \

@@ -31,53 +31,14 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-
-public final class ARBColorBufferFloat {
+public final class SUNSliceAccum {
 
 	/*
-     * Accepted by the <pname> parameters of GetBooleanv, GetIntegerv,
-     * GetFloatv, and GetDoublev:
+	 * Accepted by the <op> parameter of Accum,
      */
-	public static final int RGBA_FLOAT_MODE_ARB = 0x8820;
+	public static final int GL_SLICE_ACCUM_SUN = 0x85CC;
 
-	/*
-     * Accepted by the <target> parameter of ClampColorARB and the <pname>
-     * parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev.
-	 */
-	public static final int CLAMP_VERTEX_COLOR_ARB = 0x891A;
-	public static final int CLAMP_FRAGMENT_COLOR_ARB = 0x891B;
-	public static final int CLAMP_READ_COLOR_ARB = 0x891C;
-
-	/*
-	 * Accepted by the <clamp> parameter of ClampColorARB.
-	 */
-	public static final int FIXED_ONLY_ARB = 0x891D;
-
-	/*
-	 * Accepted as a value in the <piAttribIList> and <pfAttribFList>
-	 * parameter arrays of wglChoosePixelFormatARB, and returned in the
-	 * <piValues> parameter array of wglGetPixelFormatAttribivARB, and the
-	 * <pfValues> parameter array of wglGetPixelFormatAttribfvARB:
-	 */
-	static final int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
-
-	/*
-	 * Accepted as values of the <render_type> arguments in the
-	 * glXCreateNewContext and glXCreateContext functions
-	 */
-	static final int GLX_RGBA_FLOAT_TYPE = 0x20B9;
-
-	/*
-	 * Accepted as a bit set in the GLX_RENDER_TYPE variable
-	 */
-	static final int GLX_RGBA_FLOAT_BIT = 0x00000004;
-
-	private ARBColorBufferFloat() {
+	private SUNSliceAccum() {
 	}
-
-	static native void initNativeStubs() throws LWJGLException;
-
-	public static native void glClampColorARB(int target, int clamp);
 
 }

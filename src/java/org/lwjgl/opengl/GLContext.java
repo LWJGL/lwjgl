@@ -52,9 +52,7 @@ import java.util.*;
  */
 public final class GLContext {
 
-	/**
-	 * The currently initialised context
-	 */
+	/** The currently initialised context */
 	private static WeakReference currentContext;
 
 	/*
@@ -108,6 +106,7 @@ public final class GLContext {
 	public static boolean GL_EXT_fog_coord;
 	public static boolean GL_EXT_multi_draw_arrays;
 	public static boolean GL_EXT_packed_pixels;
+	public static boolean GL_EXT_paletted_texture;
 	public static boolean GL_EXT_pixel_buffer_object;
 	public static boolean GL_EXT_point_parameters;
 	public static boolean GL_EXT_rescale_normal;
@@ -117,6 +116,7 @@ public final class GLContext {
 	public static boolean GL_EXT_shared_texture_palette;
 	public static boolean GL_EXT_stencil_two_side;
 	public static boolean GL_EXT_stencil_wrap;
+	public static boolean GL_EXT_texture_3D;
 	public static boolean GL_EXT_texture_compression_s3tc;
 	public static boolean GL_EXT_texture_env_combine;
 	public static boolean GL_EXT_texture_env_dot3;
@@ -140,6 +140,10 @@ public final class GLContext {
 	public static boolean GL_ATI_vertex_array_object;
 	public static boolean GL_ATI_vertex_streams;
 	public static boolean GL_ATI_vertex_attrib_array_object;
+
+	public static boolean GL_HP_occlusion_test;
+
+	public static boolean GL_IBM_rasterpos_clip;
 
 	public static boolean GL_NV_blend_square;
 	public static boolean GL_NV_copy_depth_to_color;
@@ -177,6 +181,8 @@ public final class GLContext {
 	public static boolean GL_NV_vertex_program2_option;
 	public static boolean GL_NV_vertex_program3;
 
+	public static boolean GL_SUN_slice_accum;
+
 	public static boolean OpenGL11;
 	public static boolean OpenGL12;
 	public static boolean OpenGL13;
@@ -184,9 +190,7 @@ public final class GLContext {
 	public static boolean OpenGL15;
 	public static boolean OpenGL20;
 
-	/**
-	 * Map of classes that have native stubs loaded
-	 */
+	/** Map of classes that have native stubs loaded */
 	private static Map exts;
 	private static int gl_ref_count;
 	private static boolean did_auto_load;
@@ -395,9 +399,7 @@ public final class GLContext {
 		resetNativeStubs(org.lwjgl.opengl.GL11.class);
 	}
 
-	/**
-	 * If the OpenGL reference count is 0, the library is loaded. The reference count is then incremented.
-	 */
+	/** If the OpenGL reference count is 0, the library is loaded. The reference count is then incremented. */
 	public static void loadOpenGLLibrary() throws LWJGLException {
 		if ( gl_ref_count == 0 )
 			nLoadOpenGLLibrary();
@@ -406,9 +408,7 @@ public final class GLContext {
 
 	private static native void nLoadOpenGLLibrary() throws LWJGLException;
 
-	/**
-	 * The OpenGL library reference count is decremented, and if it reaches 0, the library is unloaded.
-	 */
+	/** The OpenGL library reference count is decremented, and if it reaches 0, the library is unloaded. */
 	public static void unloadOpenGLLibrary() {
 		gl_ref_count--;
 		if ( gl_ref_count == 0 )
@@ -417,8 +417,6 @@ public final class GLContext {
 
 	private static native void nUnloadOpenGLLibrary();
 
-	/**
-	 * Native method to clear native stub bindings
-	 */
+	/** Native method to clear native stub bindings */
 	private static native void resetNativeStubs(Class clazz);
 }
