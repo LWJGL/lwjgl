@@ -52,7 +52,7 @@
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init (JNIEnv *env, jobject obj, jobjectArray jargv) {
 	/* obtain the size the array  */
-	jsize argc = (*env)->GetArrayLength(env, jargv);
+	jsize argc = env->GetArrayLength(jargv);
 
 	/* Declare a char array for argv */
 	const char* argv[128];
@@ -60,23 +60,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init (JNIEnv *env, jobject obj
 
 	for (i=0;i<argc;i++) {
 		/* obtain the current object from the object array */
-		jobject string = (*env)->GetObjectArrayElement(env, jargv, i);
+		jstring string = (jstring) env->GetObjectArrayElement(jargv, i);
 
 		/* Convert the object just obtained into a String */
-		const char *str = (*env)->GetStringUTFChars(env, string, 0);
+		const char *str = env->GetStringUTFChars(string, 0);
 
 		/* Build the argv array */
 		argv[i] = str;
 
 		/* Free up memory to prevent memory leaks */
-		(*env)->ReleaseStringUTFChars(env, string, str); 
+		env->ReleaseStringUTFChars(string, str); 
 	}
 
 	/* Increment argc to adjust the difference between Java and C arguments */
 	argc++;
 
 	/* call the actual implementation */
-	alutInit(&((int)argc),(char**) argv);
+	alutInit((ALint*) &argc,(char**) argv);
 }
 /*
  * This function loads a WAV file into memory from a file.
@@ -109,19 +109,19 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
 	jint format, size, freq;
 	jboolean loop;
 	void* data;
-	ALbyte* filename = (ALbyte*) ((*env)->GetStringUTFChars(env, file, 0));
+	ALbyte* filename = (ALbyte*) (env->GetStringUTFChars(file, 0));
 	
 	/* load wave file */
-	alutLoadWAVFile(filename, &format, (void**) &data, &size, &freq, &loop);
+	alutLoadWAVFile(filename, (ALenum*) &format, (void**) &data, (ALsizei*) &size, (ALsizei*) &freq, (ALboolean*) &loop);
 
 	/* get class */
-	alutLoadWAVFile_class = (*env)->FindClass(env, "org/lwjgl/openal/ALUTLoadWAVFile");
+	alutLoadWAVFile_class = env->FindClass("org/lwjgl/openal/ALUTLoadWAVFile");
 
 	/* get constructor */
-	methodID = (*env)->GetMethodID(env, alutLoadWAVFile_class, "<init>", "(IIIIZ)V");
+	methodID = env->GetMethodID(alutLoadWAVFile_class, "<init>", "(IIIIZ)V");
 
 	/* create object */
-	alutLoadWAVFile_object = (*env)->NewObject(env, alutLoadWAVFile_class, methodID, format, (int) data, size, freq, loop);
+	alutLoadWAVFile_object = env->NewObject(alutLoadWAVFile_class, methodID, format, (int) data, size, freq, loop);
 
 	return alutLoadWAVFile_object;
 }
