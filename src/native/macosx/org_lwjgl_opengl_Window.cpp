@@ -45,6 +45,7 @@
 #include "extgl.h"
 
 static WindowRef win_ref;
+static AGLContext context;
 static bool close_requested;
  
 /* 
@@ -59,7 +60,7 @@ static void throwException(JNIEnv * env, const char * err)
 
 static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 	const char* title = env->GetStringUTFChars(title_obj, NULL);
-	CFStringRef cf_title = CFStringCreateWithCStringNoCopy(NULL, title, kCFStringEncodingUTF8, kCFAllocatorNull);
+	CFStringRef cf_title = CFStringCreateWithCString(NULL, title, kCFStringEncodingUTF8);
 	if (cf_title == NULL) {
 #ifdef _DEBUG
 		printf("Could not set window title\n");
@@ -93,17 +94,20 @@ static void registerEventHandlers(JNIEnv *env) {
 }
 
 static void destroy(void) {
+	aglSetCurrentContext(NULL);
+	aglDestroyContext(context);
 	DisposeWindow(win_ref);
 	extgl_Close();
 }
 
 static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
-	SetPort(GetWindowPort(win_ref));
+	AGLDrawable drawable = GetWindowPort(win_ref);
+	SetPort(drawable);
 	GLint attrib[] = {AGL_RGBA, 
 			  AGL_DOUBLEBUFFER, 
 			  AGL_ACCELERATED,
-			  AGL_SINGLE_RENDERER,
-			  AGL_FULLSCREEN,
+			  //AGL_FULLSCREEN,
+			  AGL_NO_RECOVERY,
 			  AGL_MINIMUM_POLICY,
 			  AGL_PIXEL_SIZE, bpp,
 			  AGL_DEPTH_SIZE, depth, 
@@ -115,8 +119,23 @@ static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint st
 		throwException(env, "Could not find matching pixel format");
 		return false;
 	}
-printf("Found matching pixel format\n ");
+	context = aglCreateContext (format, NULL);
 	aglDestroyPixelFormat(format);
+	if (context == NULL) {
+		throwException(env, "Could not create context");
+		return false;
+	}
+	//if (aglSetFullScreen(context, 800, 600, 85, 0) == GL_FALSE) {
+	if (aglSetDrawable(context, drawable) == GL_FALSE) {
+		aglDestroyContext(context);
+		throwException(env, "Could not attach context");
+		return false;
+	}
+	if (aglSetCurrentContext(context) == GL_FALSE) {
+		aglDestroyContext(context);
+		throwException(env, "Could not set current context");
+		return false;
+	}
 	return true;
 }
 
@@ -139,7 +158,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		return;
 	}
 	if (!extgl_InitAGL(env, ext_set)) {
-		throwException(env, "Could not load agl function pointers");
+		throwException(env, "Could not load agl symbols");
 		return;
 	}
 	status = CreateNewWindow(kDocumentWindowClass, window_attr, &rect, &win_ref);
@@ -168,6 +187,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv *env, jclass clazz) 
 {
+	aglSwapBuffers(context);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy

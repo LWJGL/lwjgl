@@ -1286,7 +1286,8 @@ void * lib_glu_handle = NULL;
 #endif
 
 #ifdef _AGL
-CFBundleRef gBundleRefOpenGL = NULL;
+CFBundleRef opengl_bundle_ref = NULL;
+CFBundleRef agl_bundle_ref = NULL;
 #endif
 
 #define EXTGL_SANITY_CHECK(e,h,x) 	if (extgl_error) { \
@@ -1319,13 +1320,14 @@ static void insertExtension(JNIEnv *env, jobject ext_set, const char *ext) {
 
 #ifdef _AGL
 // -------------------------
-OSStatus aglInitEntryPoints (void)
+static CFBundleRef loadBundle(const Str255 frameworkName)
 {
 	OSStatus err = noErr;
-	const Str255 frameworkName = "\pOpenGL.framework";
 	FSRefParam fileRefParam;
 	FSRef fileRef;
 	CFURLRef bundleURLOpenGL;
+	CFBundleRef bundle_ref;
+
 	memset(&fileRefParam, 0, sizeof(fileRefParam));
 	memset(&fileRef, 0, sizeof(fileRef));
 	fileRefParam.ioNamePtr  = frameworkName;
@@ -1336,8 +1338,10 @@ OSStatus aglInitEntryPoints (void)
 	err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
 	if (noErr != err)
 	{
-		DebugStr ("\pCould not find frameworks folder");
-		return err;
+#ifdef _DEBUG
+		printf("Could not find frameworks folder\n");
+#endif
+		return NULL;
 	}
 
 	// make FSRef for folder
@@ -1350,7 +1354,7 @@ OSStatus aglInitEntryPoints (void)
 #ifdef _DEBUG
 		printf("Could make FSref to frameworks folder\n");
 #endif
-		return err;
+		return NULL;
 	}
 
 	// create URL to folder
@@ -1359,58 +1363,40 @@ OSStatus aglInitEntryPoints (void)
 	if (!bundleURLOpenGL)
 	{
 #ifdef _DEBUG
-		printf("Could create OpenGL Framework bundle URL\n");
+		printf("Could create framework URL\n");
 #endif
-		return paramErr;
+		return NULL;
 	}
 
-	// create ref to GL's bundle
-	//
-	gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
-	if (!gBundleRefOpenGL)
+	bundle_ref = CFBundleCreate(kCFAllocatorDefault,bundleURLOpenGL);
+	CFRelease (bundleURLOpenGL);
+	if (bundle_ref == NULL)
 	{
 #ifdef _DEBUG
-		printf("Could not create OpenGL Framework bundle\n");
+		printf("Could not load framework\n");
 #endif
-		return paramErr;
+		return NULL;
 	}
 
-	// release created bundle
-	//
-	CFRelease (bundleURLOpenGL);
-
 	// if the code was successfully loaded, look for our function.
-	if (!CFBundleLoadExecutable (gBundleRefOpenGL))
+	if (!CFBundleLoadExecutable(bundle_ref))
 	{
 #ifdef _DEBUG
 		printf("Could not load MachO executable\n");
 #endif
-		return paramErr;
+		CFRelease(bundle_ref);
+		return NULL;
 	}
 
-	return err;
+	return bundle_ref;
 }
 
-
-static void aglDellocEntryPoints (void)
+static void aglUnloadFramework(CFBundleRef f)
 {
-	if (gBundleRefOpenGL != NULL)
-	{
-		// unload the bundle's code.
-		CFBundleUnloadExecutable (gBundleRefOpenGL);
-		CFRelease (gBundleRefOpenGL);
-		gBundleRefOpenGL = NULL;
-	}
+	CFBundleUnloadExecutable(f);
+	CFRelease(f);
 }
 
-
-static void * aglGetProcAddress (char * pszProc)
-{
-	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, pszProc, kCFStringEncodingUTF8, kCFAllocatorNull);
-	void *func_pointer = CFBundleGetFunctionPointerForName(gBundleRefOpenGL, str);
-	CFRelease(str);
-	return func_pointer;
-}
 #endif
 
 /* getProcAddress */
@@ -1456,14 +1442,19 @@ static void *extgl_GetProcAddress(char *name)
 #endif
 
 #ifdef _AGL
-	void *t = aglGetProcAddress(name);
-	if (t == NULL) {
+	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNull);
+	void *func_pointer = CFBundleGetFunctionPointerForName(opengl_bundle_ref, str);
+	if (func_pointer == NULL) {
+		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
+		if (func_pointer == NULL) {
 #ifdef _DEBUG
-		printf("Could not locate symbol %s\n", name);
+			printf("Could not locate symbol %s\n", name);
 #endif
-		extgl_error = true;
+			extgl_error = true;
+		}
 	}
-	return t;
+	CFRelease(str);
+	return func_pointer;
 #endif 
 }
 
@@ -3298,6 +3289,20 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	return true;
 }
 
+#ifdef _AGL
+bool extgl_Open(void) {
+	opengl_bundle_ref = loadBundle("\pOpenGL.framework");
+	if (opengl_bundle_ref == NULL)
+		return false;
+	agl_bundle_ref = loadBundle("\pAGL.framework");
+	if (agl_bundle_ref == NULL) {
+		aglUnloadFramework(opengl_bundle_ref);
+		return false;
+	}
+	return true;
+}
+#endif
+
 #ifdef _X11
 bool extgl_Open()
 {
@@ -3313,6 +3318,7 @@ bool extgl_Open()
 #ifdef _DEBUG
 	printf("Error loading libGLU.so.1: %s\n", dlerror());
 #endif
+		dlclose(lib_gl_handle);
 		return false;
 	}
 	return true;
@@ -3329,29 +3335,13 @@ bool extgl_Open(void)
 	if (lib_gl_handle == NULL)
 		return false;
 	lib_glu_handle = LoadLibrary("glu32.dll");
-	if (lib_glu_handle == NULL)
+	if (lib_glu_handle == NULL) {
+		FreeLibrary(lib_gl_handle);
 		return false;
+	}
 	return true;
 }
 #endif /* WIN32 */
-
-#ifdef _AGL
-bool extgl_Open(void)
-{
-	OSStatus err = aglInitEntryPoints();
-	if ( noErr != err )
-	{
-		// if we encountered an error while initializing OpenGL
-		// we're hosed - return
-		//
-		return false;
-	}
-
-	// open gl framework initialized just fine
-	//
-	return true;
-}
-#endif /* _AGL */
 
 void extgl_Close(void)
 {
@@ -3364,7 +3354,8 @@ void extgl_Close(void)
 	FreeLibrary(lib_glu_handle);
 #endif
 #ifdef _AGL
-	aglDellocEntryPoints();
+	aglUnloadFramework(opengl_bundle_ref);
+	aglUnloadFramework(agl_bundle_ref);
 #endif 
 }
 
