@@ -38,7 +38,11 @@
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_eax_BaseEAX_nCreate (JNIEnv *env, jobject obj) {
+#ifdef _WIN32
 	return true;
+#else
+	return false;
+#endif
 }
 
 /*

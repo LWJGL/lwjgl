@@ -31,8 +31,11 @@
  */
 
 #include "org_lwjgl_openal_eax_EAXListenerProperties.h"
-#include <eax.h>
 #include <stddef.h>
+
+#ifdef _WIN32
+#include <eax.h>
+#endif
 
 /*
  * Class:     org_lwjgl_openal_eax_EAXListenerProperties
@@ -40,7 +43,9 @@
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAXListenerProperties_sizeOfEaxListenerProperties(JNIEnv *env, jobject obj) {
+#ifdef _WIN32
 	return sizeof(EAXLISTENERPROPERTIES);
+#endif
 }
 
 /*
@@ -49,6 +54,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAXListenerProperties_sizeOfEax
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAXListenerProperties_assignOffsets (JNIEnv *env, jobject obj) {
+#ifdef _WIN32
 	jclass listener_class;
 	jfieldID field;
 
@@ -110,4 +116,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAXListenerProperties_assignOff
 	//set environmentDiffusion_offset
 	field = env->GetStaticFieldID(listener_class, "flags_offset", "I");
 	env->SetStaticIntField(listener_class, field, offsetof(EAXLISTENERPROPERTIES, dwFlags));
+#endif
 }

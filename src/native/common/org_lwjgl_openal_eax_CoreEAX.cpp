@@ -108,7 +108,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jo
 
 	return result;
 #else
-	return AL_INVALID_OPERATION;
+	ThrowException(env, "EAX extensions not supported");
 #endif
 }
 
@@ -126,6 +126,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jo
 	
 	return result;
 #else
-	return AL_INVALID_OPERATION;
+	ThrowException(env, "EAX extensions not supported");
 #endif
 }
