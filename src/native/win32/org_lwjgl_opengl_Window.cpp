@@ -499,7 +499,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	// of multisamples we want. If the extension is present we'll delete the existing
 	// rendering context and start over, using the ARB extension instead to pick the context.
 	extgl_InitWGL(env);
-	if (extgl_Extensions.WGL_ARB_pixel_format) {
+	if (extgl_Extensions.WGL_ARB_pixel_format && samples > 0) {
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
 		closeWindow();
