@@ -394,9 +394,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
   (JNIEnv * env, jclass clazz, jobject gammaRampBuffer)
 {
-
-	return JNI_FALSE;
-
 	const float *gammaRamp = (const float *)env->GetDirectBufferAddress(gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
 
