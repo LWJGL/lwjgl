@@ -205,7 +205,7 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
-	if (fullscreen) {
+	if (fullscreen && undecorated) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
@@ -227,7 +227,6 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
 	XClearWindow(disp, win);
-//	XSetInputFocus(current_disp, current_win, RevertToParent, CurrentTime);
 	XSync(disp, True);
 }
 
@@ -605,4 +604,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
   (JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height)
 {
+	XMoveResizeWindow(current_disp, current_win, x, y, width, height);
 }
