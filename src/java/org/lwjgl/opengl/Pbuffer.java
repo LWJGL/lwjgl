@@ -159,6 +159,15 @@ public final class Pbuffer {
 	}
 
 	/**
+	 * Determine whether the Pbuffer is using the Display context.
+	 *
+	 * @return true of the Pbuffer is using the Display context, false if not.
+	 */
+	public boolean isUsingDisplayContext() {
+		return display_context != null;
+	}
+
+	/**
 	 * Create an instance of a Pbuffer using the Display context. The buffer is double-buffered, like the Display.
 	 * <p/>
 	 * NOTE: The Pbuffer will use the same context as the Display and requires that the Display has been created. Therefore,
