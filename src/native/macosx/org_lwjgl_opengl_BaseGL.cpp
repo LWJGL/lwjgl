@@ -55,11 +55,6 @@ static CGDirectDisplayID		displayID = kCGDirectMainDisplay;
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 (JNIEnv * env, jobject obj, jstring title, jint x, jint y, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jboolean fullscreen)
 {
-    if ( CGDisplayCapture( displayID ) != kCGErrorSuccess )
-    {
-        return;
-    }
-
     CGLPixelFormatObj pixelFormatObj;
     long numPixelFormats;
 
@@ -102,10 +97,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
         CGLDestroyContext( contextObj );
 
         contextObj = NULL;
-    }
-
-
-    CGReleaseAllDisplays();        
+    }      
 }
 
 /*

@@ -142,6 +142,12 @@ jobjectArray GetAvailableDisplayModesOSX(JNIEnv * env)
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 (JNIEnv * env, jclass clazz)
 {
+    if ( CGDisplayCapture( kCGDirectMainDisplay ) != kCGErrorSuccess )
+    {
+        printf("Unable to capture the display. Without capturing the display - this application cannot run");
+        return;
+    }
+    
     //Get the current display mode from the system
     //
     int width = CGDisplayPixelsWide( kCGDirectMainDisplay );
@@ -207,6 +213,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
     // the purpose of this method is to return the display mode to whatever it was before
     // the application takes over. OSX is smart enough to not require any of this
     // foolishness :)
+
+    //release the display that we captured so other applications will still work
+    //
+    CGReleaseAllDisplays();      
 }
 
 /*
