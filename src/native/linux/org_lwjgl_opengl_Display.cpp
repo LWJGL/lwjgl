@@ -187,6 +187,9 @@ bool releaseInput(void) {
 	input_released = true;
 	setRepeatMode(AutoRepeatModeDefault);
 	updateInputGrab();
+/*	if (current_fullscreen) {
+		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
+	}*/
 	return true;
 }
 
@@ -323,7 +326,8 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	attribs.colormap = cmap;
 	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
-	attribmask = CWColormap | CWBackPixel | CWEventMask;
+	attribs.win_gravity = NorthWestGravity;
+	attribmask = CWColormap | CWBackPixel | CWEventMask | CWWinGravity;
 	if (current_fullscreen || undecorated) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
@@ -345,6 +349,11 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	XFree(size_hints);
 	delete_atom = XInternAtom(getDisplay(), "WM_DELETE_WINDOW", False);
 	XSetWMProtocols(getDisplay(), win, &delete_atom, 1);
+/*	if (current_fullscreen) {
+		Atom fullscreen_atom = XInternAtom(getDisplay(), "_NET_WM_STATE_FULLSCREEN", False);
+		XChangeProperty(getDisplay(), getCurrentWindow(), XInternAtom(getDisplay(), "_NET_WM_STATE", False),
+						XInternAtom(getDisplay(), "ATOM", False), 32, PropModeReplace, (const unsigned char*)&fullscreen_atom, 1);
+	}*/
 	XMapRaised(getDisplay(), win);
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
@@ -368,11 +377,6 @@ int getWindowHeight(void) {
 	return current_height;
 }
 
-/*
- * Class:     org_lwjgl_Window
- * Method:    nUpdate
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
   (JNIEnv *env, jclass clazz)
 {

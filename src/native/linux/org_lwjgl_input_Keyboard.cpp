@@ -80,18 +80,13 @@ static void ungrabKeyboard(void) {
 void updateKeyboardGrab(void) {
 	if (!created)
 		return;
-	if (isFullscreen() || shouldGrab()) {
+	if (isFullscreen()/* || shouldGrab()*/) {
 		grabKeyboard();
 	} else {
 		ungrabKeyboard();
 	}
 }
 
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    nCreate
- * Signature: ()Z
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
@@ -128,11 +123,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	updateKeyboardGrab();
 }
 
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    nDestroy
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
   (JNIEnv * env, jclass clazz)
 {
@@ -199,17 +189,6 @@ void handleKeyEvent(XKeyEvent *event) {
 	unsigned char keycode = getKeycode(event);
 	unsigned char state = eventState(event);
 	key_buf[keycode] = state;
-	if (key_buf[org_lwjgl_input_Keyboard_KEY_LMENU] == 1 ||
-			key_buf[org_lwjgl_input_Keyboard_KEY_RMENU] == 1) {
-		if (key_buf[org_lwjgl_input_Keyboard_KEY_TAB] == 1) {
-			if (releaseInput()) {
-				key_buf[org_lwjgl_input_Keyboard_KEY_RMENU] = 0;
-				key_buf[org_lwjgl_input_Keyboard_KEY_LMENU] = 0;
-				key_buf[org_lwjgl_input_Keyboard_KEY_TAB] = 0;
-				return;
-			}
-		}
-	}
 	if (buffer_enabled)
 		bufferEvent(event);
 }
