@@ -1669,8 +1669,10 @@ public class GL extends CoreGL implements GLConstants {
 		final String exts;
 
 		if (WGL_ARB_extensions_string)
-			exts = wglGetExtensionsStringARB(Display.getHandle());
-		// Remember - this is an HWND not an HDC, which is what's required
+			exts = wglGetExtensionsStringARB(getHandle());
+		// Remember - this is an HWND not an HDC, which is what's required. The native
+		// code on the other side of wglGetExtensionsStringARB gets the HDC from the HWND
+		// behind the scenes.
 		else
 			exts = wglGetExtensionsStringEXT();
 

@@ -49,7 +49,7 @@ HDC					hdc = NULL;							// Device context
 LPDIRECTINPUT		lpdi = NULL;						// DirectInput
 bool				isFullScreen = false;				// Whether we're fullscreen or not
 bool				isMinimized = false;				// Whether we're minimized or not
-JNIEnv *			environment;						// Cached environment
+JNIEnv *			environment = NULL;					// Cached environment
 jobject				window;								// Cached Java Window instance handle
 extern HINSTANCE	dll_handle;							// Handle to the LWJGL dll
 
@@ -106,7 +106,7 @@ void closeWindow()
 	}
 
 	// Release device context
-	if (hdc != NULL) {
+	if (hdc != NULL && hwnd != NULL) {
 		ReleaseDC(hwnd, hdc);
 	}
 
@@ -143,6 +143,10 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     WPARAM wParam,
 							     LPARAM lParam)
 {
+	if (environment == NULL) {
+		printf("No environment!\n");
+		return DefWindowProc(hWnd, msg, wParam, lParam);
+	}
 
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
@@ -289,6 +293,10 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 		return false;
 	}
 
+#ifdef _DEBUG
+	printf("Created window\n");
+#endif
+
 	ShowWindow(hwnd, SW_SHOWNORMAL);
 	UpdateWindow(hwnd);
 	SetForegroundWindow(hwnd);
@@ -298,9 +306,6 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 
 	// Success! Now you need to initialize a GL object, which creates a GL rendering context;
 	// and then to issue commands to it, you need to call gl::makeCurrent().
-#ifdef _DEBUG
-	printf("Created window\n");
-#endif
 
 	// 3. Hide the mouse if necessary
 	isFullScreen = fullscreen;

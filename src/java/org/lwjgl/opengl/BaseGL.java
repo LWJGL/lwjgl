@@ -131,13 +131,14 @@ public class BaseGL extends Window {
 	}
 	
 	protected void doCreate() throws Exception {
-		nCreate(x, y, getWidth(), getHeight(), color, alpha, depth, stencil, fullscreen);
+		nCreate(getTitle(), x, y, getWidth(), getHeight(), color, alpha, depth, stencil, fullscreen);
 	}
 	
 	/**
 	 * Native method to create a windowed GL
 	 */
 	private native void nCreate(
+		String title,
 		int x,
 		int y,
 		int width,

@@ -11,10 +11,10 @@ extern "C" {
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
- * Signature: (IIIIIIIIZ)V
+ * Signature: (Ljava/lang/String;IIIIIIIIZ)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint, jint, jint, jboolean);
+  (JNIEnv *, jobject, jstring, jint, jint, jint, jint, jint, jint, jint, jint, jboolean);
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
