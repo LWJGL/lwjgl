@@ -200,8 +200,8 @@ public final class Display {
 	 * A native context must exist, and it will be attached to the window.
 	 */
 	private static void createWindow() throws LWJGLException {
-		x = Math.max(0, Math.min(initial_mode.getWidth() - current_mode.getWidth(), x));
-		y = Math.max(0, Math.min(initial_mode.getHeight() - current_mode.getHeight(), y));
+		x = Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
+		y = Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2);
 		display_impl.createWindow(current_mode, fullscreen, (fullscreen) ? 0 : x, (fullscreen) ? 0 : y);
 		setTitle(title);
 		initControls();
