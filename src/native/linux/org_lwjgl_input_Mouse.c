@@ -65,10 +65,8 @@ static bool created;
 static int accum_dx;
 static int accum_dy;
 static int accum_dz;
-static int last_poll_x;
-static int last_poll_y;
-static int last_event_x;
-static int last_event_y;
+static int last_x;
+static int last_y;
 static jbyte buttons[NUM_BUTTONS];
 static event_queue_t event_queue;
 static bool buffer_enabled;
@@ -76,35 +74,32 @@ static bool buffer_enabled;
 static Cursor blank_cursor;
 static Cursor current_cursor;
 
-static bool putMouseEvent(jint button, jint state, jint dx, jint dy, jint dz) {
-	jint event[] = {button, state, dx, dy, dz};
+static bool putMouseEvent(jint button, jint state, jint coord1, jint coord2, jint dz) {
+	jint event[] = {button, state, coord1, coord2, dz};
 	return putEvent(&event_queue, event);
-}
-
-static void setCursorPos(int x, int y) {
-	jint poll_dx = x - last_poll_x;
-	jint poll_dy = y - last_poll_y;
-	accum_dx += poll_dx;
-	accum_dy += poll_dy;
-	last_poll_x = x;
-	last_poll_y = y;
-	jint event_dx = x - last_event_x;
-	jint event_dy = y - last_event_y;
-	if (putMouseEvent(-1, 0, event_dx, -event_dy, 0)) {
-		last_event_x = x;
-		last_event_y = y;
-	}
 }
 
 static int transformY(int y) {
 	return getWindowHeight() - 1 - y;
 }
 
+static void setCursorPos(int x, int y) {
+	jint dx = x - last_x;
+	jint dy = y - last_y;
+	accum_dx += dx;
+	accum_dy += dy;
+	last_x = x;
+	last_y = y;
+	if (pointer_grabbed) {
+		putMouseEvent(-1, 0, dx, -dy, 0);
+	} else {
+		putMouseEvent(-1, 0, x, transformY(y), 0);
+	}
+}
+
 static void resetCursor(int x, int y) {
-	last_poll_x = x;
-	last_poll_y = y;
-	last_event_x = x;
-	last_event_y = y;
+	last_x = x;
+	last_y = y;
 }
 
 static bool blankCursor(void) {
@@ -241,8 +236,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getButtonCount(JNIEnv 
 	return NUM_BUTTONS;
 }
 
-static void resetCursorToCenter(void) {
-	resetCursor(getWindowWidth()/2, transformY(getWindowHeight()/2));
+static void reset(void) {
 	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
@@ -253,8 +247,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createMouse
 	if (disp == NULL)
 		return;
 	int i;
-	last_poll_y = last_poll_x = last_event_x = last_event_y = accum_dx = accum_dy = accum_dz = 0;
-	resetCursorToCenter();
+	last_y = last_x = accum_dx = accum_dy = accum_dz = 0;
+	reset();
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -368,8 +362,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollMouse(JNIEnv * env
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
 	}
-	coords[0] = accum_dx;
-	coords[1] = -accum_dy;
+	if (pointer_grabbed) {
+		coords[0] = accum_dx;
+		coords[1] = -accum_dy;
+	} else {
+		coords[0] = last_x;
+		coords[1] = transformY(last_y);
+	}
 	coords[2] = accum_dz;
 	accum_dx = accum_dy = accum_dz = 0;
 	int num_buttons = NUM_BUTTONS;
@@ -397,7 +396,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_grabMouse(JNIEnv * env
 	unsigned int mask_return;
 	
 	setGrab(new_grab == JNI_TRUE ? true : false);
-	resetCursorToCenter();
+	reset();
 	accum_dx = accum_dy = 0;
 	XQueryPointer(getDisplay(), getCurrentWindow(), &root_return, &child_return, &root_x, &root_y, &win_x, &win_y, &mask_return);
 	doHandlePointerMotion(root_x, root_y, win_x, win_y);

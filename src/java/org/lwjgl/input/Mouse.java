@@ -68,13 +68,6 @@ public class Mouse {
 	/** animation native cursor */
 	public final static int		CURSOR_ANIMATION						= 4;
 
-	/** Mouse minimum and maximum sensitivity */
-	public static final int MAX_SENSITIVITY = 8;
-	public static final int MIN_SENSITIVITY = 1;
-
-	/** Mouse sensitivity: 1...8 */
-	private static int sensitivity = MAX_SENSITIVITY;
-
 	/** Mouse constraint */
 	private static int width, height;
 	
@@ -84,17 +77,11 @@ public class Mouse {
 	/** The mouse buttons status from the last poll */
 	private static ByteBuffer	buttons;
 
-	/** Mouse absolute X position in 16:16FP */
+	/** Mouse absolute X position in pixels */
 	private static int				x;
 
-	/** Mouse absolute Y position in 16:16FP */
+	/** Mouse absolute Y position in pixels */
 	private static int				y;
-
-	/** Mouse X scroll position in 16:16FP */
-	private static int				scrollX;
-
-	/** Mouse Y scroll position in 16:16FP */
-	private static int				scrollY;
 
 	/** Buffer to hold the deltas dx, dy and dwheel */
 	private static IntBuffer	coord_buffer;
@@ -139,6 +126,9 @@ public class Mouse {
 	private static int			event_dx;
 	private static int			event_dy;
 	private static int			event_dwheel;
+	/** The current absolute position of the mouse in the event queue */
+	private static int			event_x;
+	private static int			event_y;
 
 	/** Buffer size in events */
 	private final static int	BUFFER_SIZE									= 50;
@@ -147,9 +137,6 @@ public class Mouse {
 
 	private static boolean		isGrabbed;
 
-	/** Whether absolute mouse tracking is enabled */
-	private static boolean		trackingEnabled								= true;
-	
 	/**
 	 * Mouse cannot be constructed.
 	 */
@@ -248,10 +235,12 @@ public class Mouse {
 
 	private static void resetMouse() {
 		dx = dy = dwheel = 0;
-		width = Display.getDisplayMode().getWidth() << 16;
-		height = Display.getDisplayMode().getHeight() << 16;
+		width = Display.getDisplayMode().getWidth();
+		height = Display.getDisplayMode().getHeight();
 		x = width / 2;
 		y = height / 2;
+		if (readBuffer != null)
+			readBuffer.clear();
 	}
   
 	/**
@@ -266,7 +255,7 @@ public class Mouse {
 
 		if (!initialized)
 			initialize();
-		if (created) { return; }
+		if (created) return;
 		Display.getImplementation().createMouse();
 		hasWheel = Display.getImplementation().hasWheel();
 		created = true;
@@ -334,47 +323,26 @@ public class Mouse {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can poll it");
 		Display.getImplementation().pollMouse(coord_buffer, buttons);
 
-		int poll_dx = coord_buffer.get(0);
-		int poll_dy = coord_buffer.get(1);
+		/* If we're grabbed, poll returns mouse deltas, if not it returns absolute coordinates */
+		int poll_coord1 = coord_buffer.get(0);
+		int poll_coord2 = coord_buffer.get(1);
+		/* The wheel is always relative */
 		int poll_dwheel = coord_buffer.get(2);
 
-		dx += poll_dx;
-		dy += poll_dy;
-		dwheel += poll_dwheel;
-
-		// Calculate the new absolute position unless tracking is disabled
-		if (trackingEnabled) {
-			x += ((poll_dx * sensitivity) << 16) / MAX_SENSITIVITY;
-			y += ((poll_dy * sensitivity) << 16) / MAX_SENSITIVITY;
-
-			// clamp x, y
-			if (x < 0) {
-				scrollX = x;
-				x = 0;
-			} else if (x >= width) {
-				scrollX = x - width;
-				x = width - 1;
-			} else {
-				scrollX = 0;
-			}
-
-			if (y < 0) {
-				scrollY = y;
-				y = 0;
-			} else if (y >= height) {
-				scrollY = y - height;
-				y = height - 1;
-			} else {
-				scrollY = 0;
-			}
+		if (isGrabbed()) {
+			dx += poll_coord1;
+			dy += poll_coord2;
+			x += poll_coord1;
+			y += poll_coord2;
 		} else {
-			scrollX = 0;
-			scrollY = 0;
+			x = poll_coord1;
+			y = poll_coord2;
 		}
-		
-		if (readBuffer != null) {
+		x = Math.min(width - 1, Math.max(0, x));
+		y = Math.min(height - 1, Math.max(0, y));
+		dwheel += poll_dwheel;
+		if (readBuffer != null)
 			read();
-		}
 	}
 
 	private static void read() {
@@ -449,8 +417,17 @@ public class Mouse {
 		if (readBuffer.hasRemaining()) {
 			eventButton = readBuffer.get();
 			eventState = readBuffer.get() != 0;
-			event_dx = readBuffer.get();
-			event_dy = readBuffer.get();
+			if (isGrabbed()) {
+				event_dx = readBuffer.get();
+				event_dy = readBuffer.get();
+				event_x += event_dx;
+				event_y += event_dy;
+			} else {
+				event_x = readBuffer.get();
+				event_y = readBuffer.get();
+			}
+			event_x = Math.min(width - 1, Math.max(0, event_x));
+			event_y = Math.min(height - 1, Math.max(0, event_y));
 			event_dwheel = readBuffer.get();
 			return true;
 		} else
@@ -476,17 +453,35 @@ public class Mouse {
 	}
 
 	/**
-	 * @return Current events delta x
+	 * @return Current events delta x. Only valid when the mouse is grabbed.
 	 */
 	public static int getEventDX() {
+		if (!isGrabbed())
+			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		return event_dx;
 	}
 
 	/**
-	 * @return Current events delta y
+	 * @return Current events delta y. Only valid when the mouse is grabbed.
 	 */
 	public static int getEventDY() {
+		if (!isGrabbed())
+			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		return event_dy;
+	}
+
+	/**
+	 * @return Current events absolute x. Only valid when the mouse is not grabbed.
+	 */
+	public static int getEventX() {
+		return event_x;
+	}
+
+	/**
+	 * @return Current events absolute y. Only valid when the mouse is not grabbed.
+	 */
+	public static int getEventY() {
+		return event_y;
 	}
 
 	/**
@@ -503,7 +498,7 @@ public class Mouse {
 	 * @return Absolute x axis position of mouse
 	 */
 	public static int getX() {
-		return x >> 16;
+		return x;
 	}
 
 	/**
@@ -513,22 +508,26 @@ public class Mouse {
 	 * @return Absolute y axis position of mouse
 	 */
 	public static int getY() {
-		return y >> 16;
+		return y;
 	}
 
 	/**
-	 * @return Movement on the x axis since last time getDX() was called
+	 * @return Movement on the x axis since last time getDX() was called. Only valid when the mouse is grabbed.
 	 */
 	public static int getDX() {
+		if (!isGrabbed())
+			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		int result = dx;
 		dx = 0;
 		return result;
 	}
 
 	/**
-	 * @return Movement on the y axis since last time getDY() was called
+	 * @return Movement on the y axis since last time getDY() was called. Only valid when the mouse is grabbed.
 	 */
 	public static int getDY() {
+		if (!isGrabbed())
+			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		int result = dy;
 		dy = 0;
 		return result;
@@ -550,20 +549,6 @@ public class Mouse {
 		return buttonCount;
 	}
 	
-	/**
-	 * @return the amount the mouse tried to move past its constraints on the X axis since the last poll
-	 */
-	public static int getScrollX() {
-		return scrollX >> 16;
-	}
-
-	/**
-	 * @return the amount the mouse tried to move past its constraints on the Y axis since the last poll
-	 */
-	public static int getScrollY() {
-		return scrollY >> 16;
-	}
-
 	/**
 	 * @return Whether or not this mouse has wheel support
 	 */
@@ -608,69 +593,5 @@ public class Mouse {
 				if (Sys.DEBUG) e.printStackTrace();
 			}
 		}
-	}
-	
-	/**
-	 * Sets the mouse sensitivity, which is expressed as a value from 1 to 8.
-	 * Values outside this range are clamped to [1..8]. 8 is the most sensitive;
-	 * other values slow down the mouse to a minimum of 1/8th its original speed.
-	 * @param newSensitivity The mouse sensitivity
-	 */
-	public static void setSensitivity(int newSensitivity) {
-		sensitivity = Math.min(MAX_SENSITIVITY, Math.max(MIN_SENSITIVITY, newSensitivity));
-	}
-
-	/**
-	 * @return the current mouse sensitivity (guaranteed in the range 1..8)
-	 */
-	public static int getSensitivity() {
-		return sensitivity;
-	}
-	
-	/**
-	 * Sets the absolute position of the mouse. The position is capped to the
-	 * current size.
-	 * 
-	 * @param newx
-	 * @param newy
-	 */
-	public static void setPosition(int newx, int newy) {
-		x = Math.min(Math.max(0, newx << 16), width - 1);
-		y = Math.min(Math.max(0, newy << 16), height - 1);
-	}
-	
-
-	/**
-	 * Sets the dimensions of the mouse's constraint.
-	 * @param width
-	 * @param height
-	 */
-	public static void setDimensions(int width, int height) {
-		Mouse.width = width << 16;
-		Mouse.height = height << 16;
-		
-		// Clamp the mouse absolute coordinates just in case
-		if (x >= Mouse.width) {
-			x = Mouse.width - 1;
-		}
-		if (y >= Mouse.height) {
-			y = Mouse.height - 1;
-		}
-	}
-
-	/**
-	 * Enable or disable absolute mouse coordinate tracking.
-	 * @param enabled
-	 */
-	public static void setTrackingEnabled(boolean enabled) {
-		Mouse.trackingEnabled = enabled;
-	}
-	
-	/**
-	 * Determine if mouse coordinate tracking is enabled
-	 * @return boolean
-	 */
-	public static boolean isTrackingEnabled() {
-		return trackingEnabled;
 	}
 }
