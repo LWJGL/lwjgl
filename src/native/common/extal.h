@@ -40,6 +40,7 @@
 #include <windows.h>
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <AL/alut.h>
 #include <eax.h>
 
 EAXSet	eaxSet;						// EAXSet function, retrieved if EAX Extension is supported
