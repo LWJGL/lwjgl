@@ -568,6 +568,7 @@
 			<class name="org.lwjgl.openal.ALC" />
 			<class name="org.lwjgl.openal.AL" />
 
+			<class name="org.lwjgl.opengl.AWTGLCanvas" />
 			<class name="org.lwjgl.opengl.GLContext" />
 			<class name="org.lwjgl.opengl.Pbuffer" />
 		</javah>

@@ -705,7 +705,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_init(JNIEnv *env, j
 	return initDisplay(env);
 }
 
-static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, int *pixel_format_index_return, HGLRC *context_return) {
+bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, int *pixel_format_index_return, HGLRC *context_return) {
 	int pixel_format_index;
 	HWND arb_hwnd;
 	HDC arb_hdc;
