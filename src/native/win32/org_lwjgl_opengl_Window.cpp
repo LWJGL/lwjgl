@@ -394,7 +394,7 @@ static bool createWindow(JNIEnv *env, jstring title_obj, int x, int y, int width
 		return false;
 	}
 
-	hdc = GetWindowDC(hwnd);  
+	hdc = GetDC(hwnd);  
 
 	return true;
 }
