@@ -32,6 +32,8 @@
  
 package org.lwjgl.input;
 
+import java.nio.ByteBuffer;
+
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
 
@@ -71,6 +73,20 @@ public class Joystick {
 	/** Z position, range 0.0f to 1.0f */
 	public static float z;
 
+	/**
+	 * The joystick events from the last read: a sequence of Events
+	 */
+	private static ByteBuffer readBuffer;
+	
+	/** Address of the read buffer */
+	private static int readBufferAddress;
+	
+	/** The size in bytes of a single joystick event */
+	private static final int JOYSTICK_EVENT_SIZE = 20;
+	
+	/** The stride in bytes of a single joystick event */
+	private static final int JOYSTICK_EVENT_STRIDE = 32;
+		
 	/**
 	 * Joystick cannot be constructed.
 	 */
@@ -166,4 +182,66 @@ public class Joystick {
 	 * Native implementation of hasZValue()
 	 */
 	private static native boolean nHasZValue();
+
+	/**
+	 * Enable joystick buffering. Must be called after the joystick is created.
+	 * @return the size of the joystick buffer in events, or 0 if no buffering
+	 * can be enabled for any reason
+	 */
+	public static int enableBuffer() {
+		assert created : "The joystick has not been created.";
+		return nEnableBuffer();
+	}
+	
+	/**
+	 * Native method to read the joystick buffer
+	 * 
+	 * @param readBufferAddress the address of the joystick buffer
+	 * @return the number of joystick events read
+	 */
+	private static native int nRead(int readBufferAddress);
+	
+	/**
+	 * Reads the joystick buffer.
+	 */
+	public static void read() {
+		assert created : "The joystick has not been created.";
+		assert readBuffer != null : "Joystick buffering has not been enabled.";
+		readBuffer.clear();
+		readBuffer.limit(nRead(readBufferAddress) << 1);
+	}
+	
+	/**
+	 * Native method to enable the buffer
+	 * @return the size of the buffer allocated, in events (1 event is 2 bytes),
+	 * or 0 if no buffer can be allocated
+	 */
+	private static native int nEnableBuffer();
+
+	/**
+	 * Gets the next joystick event. This returns its results as if a poll() had
+	 * been called.
+	 * 
+	 * @return true if a joystick event was read, false otherwise
+	 */
+	public static boolean next() {
+		assert created : "The joystick has not been created.";
+		assert readBuffer != null : "Joystick buffering has not been enabled.";
+		
+		if (readBuffer.hasRemaining()) {
+			x = readBuffer.getFloat();
+			y = readBuffer.getFloat();
+			z = readBuffer.getFloat();
+			for (int i = 0; i < button.length; i ++)
+				button[i] = readBuffer.get() != (byte)0;
+			readBuffer.position(readBuffer.position() + (JOYSTICK_EVENT_STRIDE - JOYSTICK_EVENT_SIZE));
+			return true;
+		} else
+			return false;
+		
+	}
+
+
+
+
 }

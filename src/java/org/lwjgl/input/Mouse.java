@@ -32,6 +32,8 @@
  
 package org.lwjgl.input;
 
+import java.nio.ByteBuffer;
+
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
 
@@ -40,7 +42,6 @@ import org.lwjgl.Sys;
  *
  * A raw Mouse interface. This can be used to poll the current state of the
  * mouse buttons, and determine the mouse movement delta since the last poll.
- * No buffering is available.
  * 
  * Up to 8 buttons are available. A scrolly wheel, if present, is the z
  * value. This will be in the range of -10000 to +10000.
@@ -68,6 +69,21 @@ public class Mouse {
 	
 	/** Delta Z */
 	public static int dz;
+
+	/**
+	 * The mouse events from the last read: a sequence of Events
+	 */
+	private static ByteBuffer readBuffer;
+	
+	/** Address of the read buffer */
+	private static int readBufferAddress;
+		
+	/** The size in bytes of a single mouse event */
+	private static final int MOUSE_EVENT_SIZE = 20;
+	
+	/** The stride in bytes of a single mouse event */
+	private static final int MOUSE_EVENT_STRIDE = 32;
+	
 
 	/**
 	 * Mouse cannot be constructed.
@@ -164,4 +180,69 @@ public class Mouse {
 	 * Native implementation of hasZValue()
 	 */
 	private static native boolean nHasZValue();
+	
+	/**
+	 * Enable mouse buffering. Must be called after the mouse is created.
+	 * @return the size of the mouse buffer in events, or 0 if no buffering
+	 * can be enabled for any reason
+	 */
+	public static int enableBuffer() {
+		assert created : "The mouse has not been created.";
+		return nEnableBuffer();
+	}
+	
+
+	/**
+	 * Native method to enable the buffer
+	 * @return the size of the buffer allocated, in events (1 event is 2 bytes),
+	 * or 0 if no buffer can be allocated
+	 */
+	private static native int nEnableBuffer();
+	
+
+	/**
+	 * Gets the next mouse event. This returns its results as if a poll() had
+	 * been called.
+	 * 
+	 * @return true if a mouse event was read, false otherwise
+	 */
+	public static boolean next() {
+		assert created : "The mouse has not been created.";
+		assert readBuffer != null : "Mouse buffering has not been enabled.";
+		
+		if (readBuffer.hasRemaining()) {
+			dx = readBuffer.getInt();
+			dy = readBuffer.getInt();
+			dz = readBuffer.getInt();
+			for (int i = 0; i < button.length; i ++)
+				button[i] = readBuffer.get() != (byte)0;
+			readBuffer.position(readBuffer.position() + (MOUSE_EVENT_STRIDE - MOUSE_EVENT_SIZE));
+			return true;
+		} else
+			return false;
+		
+	}
+
+
+	/**
+	 * Native method to read the gamepad buffer
+	 * 
+	 * @param readBufferAddress the address of the mouse buffer
+	 * @return the number of mouse events read
+	 */
+	private static native int nRead(int readBufferAddress);
+	
+
+	/**
+	 * Reads the mouse buffer.
+	 */
+	public static void read() {
+		assert created : "The mouse has not been created.";
+		assert readBuffer != null : "Mouse buffering has not been enabled.";
+		readBuffer.clear();
+		readBuffer.limit(nRead(readBufferAddress) * MOUSE_EVENT_SIZE);
+	}
+	
+
+	
 }

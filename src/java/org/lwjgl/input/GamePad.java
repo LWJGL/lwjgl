@@ -167,7 +167,8 @@ public class GamePad {
 	private static native void nPoll(int keyDownBufferAddress);
 	
 	/**
-	 * Reads the gamepad buffer.
+	 * Reads the gamepad buffer. Call next() to read the events one by one.
+	 * @see #next()
 	 */
 	public static void read() {
 		assert created : "The gamepad has not been created.";
