@@ -64,12 +64,6 @@
 	
 	WINDOW_H_API HDC getCurrentHDC();
 
-//	WINDOW_H_API HGLRC getCurrentContext();
-
-//	WINDOW_H_API bool applyPixelFormat(HDC hdc, int iPixelFormat);
-
-//	WINDOW_H_API void closeWindow(HWND *hwnd, HDC *hdc);
-
 	WINDOW_H_API void handleMouseMoved(int x, int y);
 
 	WINDOW_H_API void handleMouseScrolled(int dwheel);
@@ -77,17 +71,6 @@
 	WINDOW_H_API void handleMouseButton(int button, int state);
 
 	WINDOW_H_API void handleMessages(void);
-
-	/*
-	 * Find a suitable pixel format
-	 */
-//	WINDOW_H_API int findPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format);
-
-	/*
-	 * Find a suitable pixel format using the WGL_ARB_pixel_format extension
-	 */
-//	WINDOW_H_API int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer);
-
 
 	/*
 	 * Handle native Win32 messages
