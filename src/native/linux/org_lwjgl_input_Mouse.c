@@ -326,17 +326,13 @@ static int min(int v1, int v2) {
 	return v1 < v2 ? v1 : v2;
 }
 
-void handlePointerMotion(XMotionEvent *event) {
-	int x = event->x;
-	int y = event->y;
-	setCursorPos(x, y);
+static void doHandlePointerMotion(int root_x, int root_y, int win_x, int win_y) {
+	setCursorPos(win_x, win_y);
 	if (!pointer_grabbed || !shouldGrab())
 		return;
-	int x_root = event->x_root;
-	int y_root = event->y_root;
 	// find the window position in root coordinates
-	int win_left = x_root - x;
-	int win_top = y_root - y;
+	int win_left = root_x - win_x;
+	int win_top = root_y - win_y;
 	int win_right = win_left + getWindowWidth();
 	int win_bottom = win_top + getWindowHeight();
 	// cap the window position to the screen dimensions
@@ -345,14 +341,18 @@ void handlePointerMotion(XMotionEvent *event) {
 	int border_right = min(getScreenModeWidth(), win_right);
 	int border_bottom = min(getScreenModeHeight(), win_bottom);
 	// determine whether the cursor is outside the bounds
-	bool outside_limits = 	x_root < border_left + POINTER_WARP_BORDER || y_root < border_top + POINTER_WARP_BORDER ||
-							x_root > border_right - POINTER_WARP_BORDER || y_root > border_bottom - POINTER_WARP_BORDER;
+	bool outside_limits = 	root_x < border_left + POINTER_WARP_BORDER || root_y < border_top + POINTER_WARP_BORDER ||
+							root_x > border_right - POINTER_WARP_BORDER || root_y > border_bottom - POINTER_WARP_BORDER;
 	if (outside_limits) {
 		// Find the center of the limits in window coordinates
 		int center_x = (border_right - border_left)/2;
 		int center_y = (border_bottom - border_top)/2;
 		doWarpPointer(center_x, center_y);
 	}
+}
+
+void handlePointerMotion(XMotionEvent *event) {
+	doHandlePointerMotion(event->x_root, event->y_root, event->x, event->y);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
@@ -389,7 +389,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass claz
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
+	Window root_return, child_return;
+	int root_x, root_y, win_x, win_y;
+	unsigned int mask_return;
+	
 	setGrab(new_grab == JNI_TRUE ? true : false);
 	resetCursorToCenter();
+	XQueryPointer(getDisplay(), getCurrentWindow(), &root_return, &child_return, &root_x, &root_y, &win_x, &win_y, &mask_return);
+	doHandlePointerMotion(root_x, root_y, win_x, win_y);
 	accum_dx = accum_dy = 0;
 }
