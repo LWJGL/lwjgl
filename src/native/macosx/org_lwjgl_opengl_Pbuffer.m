@@ -75,7 +75,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_makePbufferCurrent(JN
 	[pool release];
 }
 
-static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, NSOpenGLContext shared_context) {
+static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, NSOpenGLContext *shared_context) {
 	if (!checkCapacity(env, pbuffer_handle))
 		return;
 	NSOpenGLPixelBuffer *pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_2D textureInternalFormat:GL_RGBA textureMaxMipMapLevel:0 pixelsWide:width pixelsHigh:height];
@@ -87,8 +87,8 @@ static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint 
 	if (context == nil)
 		return;
 	int screen;
-	if (display_context != NULL)
-		screen = [display_context currentVirtualScreen];
+	if (getDisplayContext() != NULL)
+		screen = [getDisplayContext() currentVirtualScreen];
 	else
 		screen = 0;
 	[context setPixelBuffer:pbuffer cubeMapFace:0 mipMapLevel:0 currentVirtualScreen:screen];
@@ -99,7 +99,7 @@ static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint 
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreatePbuffer(JNIEnv *env, jobject this, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs, jobject shared_context_handle_buffer) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSOpenGLContext shared_context = getDisplayContext();
+	NSOpenGLContext *shared_context = getDisplayContext();
 	if (shared_context_handle_buffer != NULL) {
 		PbufferInfo *pbuffer_handle_ptr = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, shared_context_handle_buffer);
 		shared_context = pbuffer_handle_ptr->context;
