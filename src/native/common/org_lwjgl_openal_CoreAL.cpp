@@ -43,7 +43,7 @@
 
 /* OpenAL includes */
 #include "checkALerror.h"
-#include <AL/al.h>
+#include "extal.h"
 
 /**
  * This function enables a feature of the OpenAL driver.

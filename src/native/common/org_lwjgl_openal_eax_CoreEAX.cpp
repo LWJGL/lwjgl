@@ -41,9 +41,8 @@
 #include "org_lwjgl_openal_eax_CoreEAX.h"
 
 /* OpenAL includes */
-#include "extal.h"
 #include "checkALerror.h"
-#include <AL/alc.h>
+#include "extal.h"
 
 /**
  * Throws an OAL exception with the specified message

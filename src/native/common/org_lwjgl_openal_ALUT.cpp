@@ -42,10 +42,11 @@
 #include "org_lwjgl_openal_ALUT.h"
 
 #include <stdlib.h>
+#include <windows.h>
 
 /* OpenAL includes */
 #include "checkALerror.h"
-#include <AL/alut.h>
+#include "AL/alut.h"
 
 /*
  * Class:     org_lwjgl_openal_ALUT
@@ -53,7 +54,7 @@
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALUT_nCreate (JNIEnv *env, jobject obj) {
-	return true;
+  return InitializeOpenAL();
 }
 
 /*
@@ -64,41 +65,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALUT_nCreate (JNIEnv *env, jobj
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_nDestroy (JNIEnv *env, jobject obj) {
 }
 
-/**
- * This function initializes OpenAL.
- * 
- * C Specification:
- * void alutInit(int *argc, char *argv[]);
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init (JNIEnv *env, jobject obj, jobjectArray jargv) {
-	/* obtain the size the array  */
-	jsize argc = env->GetArrayLength(jargv);
-
-	/* Declare a char array for argv */
-	const char* argv[128];
-	int i;
-
-	for (i=0;i<argc;i++) {
-		/* obtain the current object from the object array */
-		jstring string = (jstring) env->GetObjectArrayElement(jargv, i);
-
-		/* Convert the object just obtained into a String */
-		const char *str = env->GetStringUTFChars(string, 0);
-
-		/* Build the argv array */
-		argv[i] = str;
-
-		/* Free up memory to prevent memory leaks */
-		env->ReleaseStringUTFChars(string, str); 
-	}
-
-	/* Increment argc to adjust the difference between Java and C arguments */
-	argc++;
-
-	/* call the actual implementation */
-	alutInit((ALint*) &argc,(char**) argv);
-	CHECK_AL_ERROR
-}
 /*
  * This function loads a WAV file into memory from a file.
  *
@@ -209,14 +175,4 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env,
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV (JNIEnv *env, jobject obj, jint format, jint data, jint size, jint freq) {
 	alutUnloadWAV(format, (void**) data, size, freq);
 	CHECK_AL_ERROR
-}
-
-/**
- * This function exits OpenAL.
- * 
- * C Specification:
- * void alutExit(ALvoid);
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_exit (JNIEnv *env, jobject obj) {
-	alutExit();
 }

@@ -29,8 +29,11 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "org_lwjgl_openal_BaseAL.h"
+
+/* OpenAL includes */
+#include "checkALerror.h"
+#include "extal.h"
 
 /*
  * Class:     org_lwjgl_openal_BaseAL
@@ -38,7 +41,7 @@
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_BaseAL_nCreate (JNIEnv *env, jobject obj) {
-	return true;
+  return InitializeOpenAL();
 }
 
 /*
@@ -47,4 +50,5 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_BaseAL_nCreate (JNIEnv *env, jo
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_BaseAL_nDestroy(JNIEnv *env, jobject obj) {
+  DeInitializeOpenAL();
 }

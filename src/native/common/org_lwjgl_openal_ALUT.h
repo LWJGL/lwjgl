@@ -39,6 +39,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern int InitializeOpenAL();
 /*
  * Class:     org_lwjgl_openal_ALUT
  * Method:    nCreate
@@ -54,13 +56,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALUT_nCreate
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_nDestroy
   (JNIEnv *, jobject);
-/*
- * Class:     org_lwjgl_openal_ALUT
- * Method:    init
- * Signature: ([Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init
-  (JNIEnv *, jobject, jobjectArray);
 
 /*
  * Class:     org_lwjgl_openal_ALUT
@@ -85,14 +80,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV
   (JNIEnv *, jobject, jint, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_openal_ALUT
- * Method:    exit
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_exit
-  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }

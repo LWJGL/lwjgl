@@ -42,7 +42,7 @@
 
 /* OpenAL includes */
 #include "checkALerror.h"
-#include <AL/alc.h>
+#include "extal.h"
 
 /*
  * Class:     org_lwjgl_openal_ALC
@@ -50,7 +50,14 @@
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nCreate (JNIEnv *env, jobject obj) {
-	return true;
+  //check that our methods have been loaded
+  if(alEnable == NULL) {
+    jclass cls = env->FindClass("org/lwjgl/openal/OpenALException");
+		env->ThrowNew(cls, (const char*) "Unable to loacate OpenAL Methods. Please assert that AL was created successfully.");
+		env->DeleteLocalRef(cls);
+    return false;
+  }
+  return true;
 }
 
 /*

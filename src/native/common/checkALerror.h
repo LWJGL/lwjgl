@@ -13,7 +13,7 @@
 #ifdef _DEBUG
 
 #include <jni.h>
-#include <AL/al.h>
+#include "extal.h"
 
 #define CHECK_AL_ERROR \
 	{ \
