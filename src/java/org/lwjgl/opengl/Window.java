@@ -1,31 +1,31 @@
-/*
+/* 
  * Copyright (c) 2002-2004 Light Weight Java Game Library Project
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
+ * modification, are permitted provided that the following conditions are 
  * met:
- *
- * * Redistributions of source code must retain the above copyright
+ * 
+ * * Redistributions of source code must retain the above copyright 
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of
- *   its contributors may be used to endorse or promote products derived
+ * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -35,7 +35,7 @@ package org.lwjgl.opengl;
 /**
  * This is the abstract class for a Window in LWJGL. LWJGL windows have some
  * peculiar characteristics:
- *
+ * 
  * - width and height are always fixed and cannot be changed
  * - the position of the window may or may not be programmable but once specified
  * cannot be changed programmatically
@@ -43,7 +43,7 @@ package org.lwjgl.opengl;
  * by the user or operating system
  * - only one window may ever be open at once
  * - the operating system may or may not be able to do fullscreen or windowed windows.
- *
+ * 
  * @author foo
  */
 
@@ -83,10 +83,10 @@ public final class Window {
 
 	/** Tracks VBO state for the window context */
 	private static VBOTracker vbo_tracker;
-
+	
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static Window context;
-
+	
 	/** Whether we created the Mouse */
 	private static boolean createdMouse;
 
@@ -128,7 +128,7 @@ public final class Window {
 			throw new IllegalStateException("Cannot get title on uncreated window");
 		return title;
 	}
-
+  
 	/**
 	 * @return whether this window is in fullscreen mode
 	 */
@@ -192,7 +192,7 @@ public final class Window {
 	 * Minimize the game and allow the operating system's default display to become
 	 * visible. It is the responsibility of LWJGL's native code to restore the display
 	 * to its normal display settings.
-	 *
+	 * 
 	 * If the display is already minimized then this is a no-op.
 	 */
 	public static native void minimize();
@@ -200,7 +200,7 @@ public final class Window {
 	/**
 	 * Restore the game and hide the operating system away. It is the responsibility of
 	 * LWJGL's native code to restore the display to its game display settings.
-	 *
+	 * 
 	 * If the display is not minimized then this is a no-op/
 	 */
 	public static native void restore();
@@ -211,7 +211,7 @@ public final class Window {
 	 * every frame regardless, you can ignore this flag altogether. If you are
 	 * trying to be kind to other processes you can check this flag and only
 	 * redraw when it returns true. The flag is cleared when you call paint().
-	 *
+	 * 
 	 * @return true if the window has been damaged by external changes
 	 * and needs to repaint itself
 	 */
@@ -262,7 +262,7 @@ public final class Window {
 	 * Swap double buffers.
 	 */
 	private static native void swapBuffers();
-
+	
 	/**
 	 * Make the Window the current rendering context for GL calls.
 	 */
@@ -272,12 +272,12 @@ public final class Window {
 		nMakeCurrent();
 		GLContext.useContext(context);
 	}
-
+	
 	/**
 	 * Make the window the current rendering context for GL calls.
 	 */
 	private static native void nMakeCurrent();
-
+	
 	/**
 	 * Create a fullscreen window that matches the current display depth. Default common values are chosen
 	 * for common OpenGL rendering operations: you will get at least a 16-bit depth buffer, an 8 bit stencil
@@ -306,7 +306,7 @@ public final class Window {
 	public static void create(String title, int bpp, int alpha, int depth, int stencil) throws LWJGLException {
 		create(title, bpp, alpha, depth, stencil, 0);
 	}
-
+	
 	/**
 	 * Create a fullscreen window. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
@@ -421,42 +421,44 @@ public final class Window {
 		GL11.glViewport(0, 0, width, height);
 
 		// Automatically create mouse, keyboard and controller
-		if (!Mouse.isCreated()) {
-			try {
-				Mouse.create();
-				createdMouse = true;
-				Mouse.enableBuffer();
-			} catch (LWJGLException e) {
-				if (Sys.DEBUG) {
-					e.printStackTrace(System.err);
-				} else {
-					Sys.log("Failed to create Mouse: "+e);
+		if (!Boolean.getBoolean("org.lwjgl.opengl.Window.noinput")) {
+			if (!Mouse.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Window.nomouse")) {
+				try {
+					Mouse.create();
+					createdMouse = true;
+					Mouse.enableBuffer();
+				} catch (LWJGLException e) {
+					if (Sys.DEBUG) {
+						e.printStackTrace(System.err);
+					} else {
+						Sys.log("Failed to create Mouse: "+e);
+					}
 				}
 			}
-		}
-		if (!Keyboard.isCreated()) {
-			try {
-				Keyboard.create();
-				createdKeyboard = true;
-				Keyboard.enableBuffer();
-				Keyboard.enableTranslation();
-			} catch (LWJGLException e) {
-				if (Sys.DEBUG) {
-					e.printStackTrace(System.err);
-				} else {
-					Sys.log("Failed to create Keyboard: "+e);
+			if (!Keyboard.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Window.nokeyboard")) {
+				try {
+					Keyboard.create();
+					createdKeyboard = true;
+					Keyboard.enableBuffer();
+					Keyboard.enableTranslation();
+				} catch (LWJGLException e) {
+					if (Sys.DEBUG) {
+						e.printStackTrace(System.err);
+					} else {
+						Sys.log("Failed to create Keyboard: "+e);
+					}
 				}
 			}
-		}
-		if (!Controller.isCreated()) {
-			try {
-				Controller.create();
-				createdController = true;
-			} catch (LWJGLException e) {
-				if (Sys.DEBUG) {
-					e.printStackTrace(System.err);
-				} else {
-					Sys.log("Failed to create Controller: "+e);
+			if (!Controller.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Window.nocontroller")) {
+				try {
+					Controller.create();
+					createdController = true;
+				} catch (LWJGLException e) {
+					if (Sys.DEBUG) {
+						e.printStackTrace(System.err);
+					} else {
+						Sys.log("Failed to create Controller: "+e);
+					}
 				}
 			}
 		}
@@ -470,7 +472,7 @@ public final class Window {
 		if (context == null) {
 			return;
 		}
-
+		
 		// Automatically destroy keyboard, mouse, and controller
 		if (createdMouse && Mouse.isCreated()) {
 			Mouse.destroy();
@@ -484,12 +486,12 @@ public final class Window {
 			Controller.destroy();
 			createdController = false;
 		}
-
+		
 		makeCurrent();
 		nDestroy();
 		context = null;
 	}
-
+	
 	/**
 	 * @return the unique Window context (or null, if the Window has not been created)
 	 */
@@ -531,7 +533,7 @@ public final class Window {
 	}
 
 	private static native boolean nIsVSyncEnabled();
-
+	
 	/**
 	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
 	 * the vertical refresh synchronization of the monitor, and is not guaranteed to be successful.
@@ -545,4 +547,6 @@ public final class Window {
 	}
 
 	private static native void nSetVSyncEnabled(boolean sync);
+
+
 }
