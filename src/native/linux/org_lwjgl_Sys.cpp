@@ -49,7 +49,6 @@ long int		hires_timer_start;			// Hires timer start
 long int		hires_timer;				// Hires timer current time
 
 /*
-/*
  * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution
  * Signature: ()J
