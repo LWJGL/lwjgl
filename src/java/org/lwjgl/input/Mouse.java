@@ -329,7 +329,7 @@ public class Mouse {
       if (y < 0) {
         y = 0;
       } else if (y > Window.getHeight()) {
-        y = Window.getWidth();
+        y = Window.getHeight();
       }
     }
 	}
