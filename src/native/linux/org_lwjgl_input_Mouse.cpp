@@ -219,7 +219,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
   (JNIEnv *env, jclass clazz)
 {
-	return 0;
+	return 1;
 }
 
 /*
