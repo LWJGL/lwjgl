@@ -185,6 +185,7 @@ public final class GLContext {
 	private static Map exts;
 	private static int gl_ref_count = 0;
 	private static boolean did_auto_load = false;
+	private static boolean loaded_stubs = false;
 
 	static {
 		Sys.initialize();
@@ -250,7 +251,6 @@ public final class GLContext {
 			did_auto_load = true;
 		}
 		try {
-			GL11.initNativeStubs();
 			loadStubs();
 			currentContext = new WeakReference(context);
 			VBOTracker.setCurrent(context);
@@ -340,7 +340,10 @@ public final class GLContext {
 		}
 	}
 
-	private static void loadStubs() {
+	private static void loadStubs() throws LWJGLException {
+		if (loaded_stubs)
+			return;
+		GL11.initNativeStubs();
 		exts = new HashMap();
 		Set exts_names = new HashSet();
 		getExtensionClassesAndNames(exts, exts_names);
@@ -359,9 +362,13 @@ public final class GLContext {
 			}
 		}
 		determineAvailableExtensions(exts_names);
+		loaded_stubs = true;
 	}
 
 	private static void unloadStubs() {
+		if (!loaded_stubs)
+			return;
+		loaded_stubs = false;
 		Iterator exts_it = exts.keySet().iterator();
 		while (exts_it.hasNext()) {
 			Class ext_class = (Class)exts_it.next();
