@@ -35,7 +35,6 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include <OpenGL/OpenGL.h>
 
-bool modeSet = false;
 
 static long _getDictLong (CFDictionaryRef refDict, CFStringRef key)
 {
@@ -94,8 +93,8 @@ jobjectArray GetAvailableDisplayModesOSX(JNIEnv * env)
     //
     for ( i = 0; i < count; i++ )
     {
-        CFDictionaryRef modeDict = CFArrayGetValueAtIndex( displayModes, i );
-        long bpp = _getDictLong( modeDict, kCGDisplayBitsPerPixel );
+        CFDictionaryRef mode = CFArrayGetValueAtIndex( displayModes, i );
+        long bpp = _getDictLong( mode, kCGDisplayBitsPerPixel );
 
         if ( bpp > 8 )
         {
@@ -143,11 +142,11 @@ jobjectArray GetAvailableDisplayModesOSX(JNIEnv * env)
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 (JNIEnv * env, jclass clazz)
 {
-    //TODO Get the current display mode from the system
+    //Get the current display mode from the system
     //
-    int width = 640;
-    int height = 480;
-    int bpp = 32;
+    int width = CGDisplayPixelsWide( kCGDirectMainDisplay );
+    int height = CGDisplayPixelsHigh( kCGDirectMainDisplay );
+    int bpp = CGDisplayBitsPerPixel( kCGDirectMainDisplay );
     int freq = 60;
     
     jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
@@ -195,9 +194,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
     jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
     env->SetStaticObjectField(clazz, fid_initialMode, newMode);
     env->DeleteLocalRef(newMode);
-
-    modeSet = true;
-
 }
 
 /*
