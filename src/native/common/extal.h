@@ -74,40 +74,6 @@ extern "C" {
   #define ALCAPI
   #define ALCAPIENTRY
 
-  #ifdef _X11
-   /** ALC boolean type. */
-   typedef char ALCboolean;
-
-   /** ALC 8bit signed byte. */
-   typedef char ALCbyte;
-
-   /** ALC 8bit unsigned byte. */
-   typedef unsigned char ALCubyte;
-
-   /** ALC 16bit signed short integer type. */
-   typedef short ALCshort;
-
-   /** ALC 16bit unsigned short integer type. */
-   typedef unsigned short ALCushort;
-
-   /** ALC 32bit unsigned integer type. */
-   typedef unsigned ALCuint;
-
-   /** ALC 32bit signed integer type. */
-   typedef int ALCint;
-
-   /** ALC 32bit floating point type. */
-   typedef float ALCfloat;
-
-   /** ALC 64bit double point type. */
-   typedef double ALCdouble;
-
-   /** ALC 32bit type. */
-   typedef unsigned int ALCsizei;
-
-   /** ALC void type */
-   typedef void ALCvoid;
-  #endif
 #endif
 
 #ifdef _WIN32
