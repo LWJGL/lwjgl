@@ -203,13 +203,29 @@ static void waitMapped(Display *disp, Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
+static void setRepeatMode(int mode) {
+	XKeyboardControl repeat_mode;
+	repeat_mode.auto_repeat_mode = mode;
+	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
+}
+
 bool releaseInput(void) {
 	if (current_fullscreen)
 		return false;
 	releaseKeyboard();
 	releasePointer();
 	input_released = true;
+	setRepeatMode(AutoRepeatModeDefault);
 	return true;
+}
+
+static void acquireInput(void) {
+	if (input_released) {
+		setRepeatMode(AutoRepeatModeOff);
+		acquireKeyboard();
+		acquirePointer();
+		input_released = false;
+	}
 }
 
 void handleMessages(void) {
@@ -222,10 +238,7 @@ void handleMessages(void) {
 					saved_env->SetStaticBooleanField(saved_clazz, fid_close, JNI_TRUE);
 				break;
 			case FocusIn:
-				if (input_released) {
-					acquireKeyboard();
-					acquirePointer();
-				}
+				acquireInput();
 				break;
 			case MapNotify:
 				current_minimized = false;
@@ -410,11 +423,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		XF86VidModeSetViewPort(disp, screen, 0, 0);
 	}
 	XClearWindow(disp, win);
+	setRepeatMode(AutoRepeatModeOff);
 	XSync(disp, True);
 	return JNI_TRUE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass clazz) {
+	setRepeatMode(AutoRepeatModeDefault);
 	XDestroyWindow(disp, win);
 	if (current_fullscreen) {
 		if (!XF86VidModeSwitchToMode(disp, screen, avail_modes[0])) {
