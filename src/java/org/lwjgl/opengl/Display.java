@@ -59,9 +59,12 @@ public final class Display {
 	/** The current display mode, if created */
 	private static DisplayMode current_mode;
 
+	/** The initial display mode */
+	private final static DisplayMode initial_mode;
+	
 	static {
 		Sys.initialize();
-		current_mode = init();
+		current_mode = initial_mode = init();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				reset();
@@ -155,13 +158,18 @@ public final class Display {
 	public static void setDisplayMode(DisplayMode mode) throws LWJGLException {
 		if (mode == null)
 			throw new NullPointerException("mode must be non-null");
-		current_mode = mode;
 		if (isCreated()) {
 			destroyWindow();
 			if (fullscreen)
 				switchDisplayMode(current_mode);
-			createWindow();
+			try {
+				createWindow();
+			} catch (LWJGLException e) {
+				reset();
+				throw e;
+			}
 		}
+		current_mode = mode;
 	}
 
 	/**
@@ -203,7 +211,7 @@ public final class Display {
 
 	/**
 	 * Set the display configuration to the specified gamma, brightness and contrast.
-	 * The configuration changes will be reset when resetDisplayMode is called.
+	 * The configuration changes will be reset when destroy() is called.
 	 *
 	 * @param gamma The gamma value
 	 * @param brightness The brightness value between -1.0 and 1.0, inclusive
@@ -361,14 +369,13 @@ public final class Display {
 					throw e;
 				}
 			} else {
-				resetDisplayMode();
+				reset();
 			}
 			try {
 				createWindow();
 			} catch (LWJGLException e) {
 				destroyContext();
-				if (fullscreen)
-					resetDisplayMode();
+				reset();
 				throw e;
 			}
 		}
@@ -557,8 +564,7 @@ public final class Display {
 				throw e;
 			}
 		} catch (LWJGLException e) {
-			if (fullscreen)
-				resetDisplayMode();
+			reset();
 			throw e;
 		}
 	}
@@ -650,8 +656,9 @@ public final class Display {
 	 * in the static constructor
 	 */
 	private static void reset() {
-		if (fullscreen)
+		if (!current_mode.equals(initial_mode))
 			resetDisplayMode();
+		current_mode = initial_mode;
 	}
 	
 	/**
