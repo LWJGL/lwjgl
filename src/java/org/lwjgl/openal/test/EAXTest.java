@@ -59,7 +59,9 @@ public class EAXTest extends BasicTest {
             eax.create();
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
+        System.out.println("EAX supported...");
     }
     
     /**
