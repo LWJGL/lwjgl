@@ -116,7 +116,7 @@ public class GamePad {
 	 * "Create" the gamepad. The display must first have been created. The
 	 * reason for this is so the gamepad has a window to "focus" in.
 	 * 
-	 * @throw Exception if the gamepad could not be created for any reason
+	 * @throws Exception if the gamepad could not be created for any reason
 	 */
 	public static void create() throws Exception {
 		if (created)

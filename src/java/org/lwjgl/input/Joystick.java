@@ -92,7 +92,7 @@ public class Joystick {
 	
 	/**
 	 * "Create" the joystick. The display must first have been created.
-	 * @throw Exception if the joystick could not be created for any reason
+	 * @throws Exception if the joystick could not be created for any reason
 	 */
 	public static void create() throws Exception {
 		if (created)

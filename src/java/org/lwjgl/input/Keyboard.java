@@ -224,7 +224,7 @@ public class Keyboard {
 	 * "Create" the keyboard. The display must first have been created. The
 	 * reason for this is so the keyboard has a window to "focus" in.
 	 * 
-	 * @throw Exception if the keyboard could not be created for any reason
+	 * @throws Exception if the keyboard could not be created for any reason
 	 */
 	public static void create() throws Exception {
 		if (created)
