@@ -434,9 +434,9 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer
 	int dx, dy;
 
 	int *coords = (int *)env->GetDirectBufferAddress(coord_buffer_obj);
-	int coords_length = env->GetDirectBufferCapacity(coord_buffer_obj);
+	int coords_length = (int)env->GetDirectBufferCapacity(coord_buffer_obj);
 	unsigned char *buttons_buffer = (unsigned char *)env->GetDirectBufferAddress(button_buffer_obj);
-	int buttons_length = env->GetDirectBufferCapacity(button_buffer_obj);
+	int buttons_length = (int)env->GetDirectBufferCapacity(button_buffer_obj);
 	if (coords_length < 3) {
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
@@ -467,8 +467,8 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer
 	dy = -dy;
 
 	coords[0] = dx;
-	coords[0] = dy;
-	coords[0] = diMouseState.lZ;
+	coords[1] = dy;
+	coords[2] = diMouseState.lZ;
 	for (int i = 0; i < mButtoncount; i++) {
 		if (diMouseState.rgbButtons[i] != 0) {
 			diMouseState.rgbButtons[i] = JNI_TRUE;
@@ -479,6 +479,6 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer
 	int num_buttons = mButtoncount;
 	if (num_buttons > buttons_length)
 		num_buttons = buttons_length;
-	for (int i = 0; i < num_buttons; i++)
-		buttons_buffer[i] = (unsigned char)diMouseState.rgbButtons[i];
+	for (int j = 0; j < num_buttons; j++)
+		buttons_buffer[j] = (unsigned char)diMouseState.rgbButtons[j];
 }
