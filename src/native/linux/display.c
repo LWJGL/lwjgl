@@ -147,31 +147,30 @@ static extension getBestDisplayModeExtension(JNIEnv *env, Display *disp) {
 static mode_info *getXrandrDisplayModes(Display *disp, int screen, int *num_modes) {
 	int num_randr_sizes;
 	XRRScreenSize *sizes = XRRSizes(disp, screen, &num_randr_sizes);
+	mode_info *avail_modes = NULL;
+	int list_size = 0;
 	/* Count number of modes */
-	int num_randr_modes = 0;
 	int i;
-	for (i = 0; i < num_randr_sizes; i++) {
-		int num_randr_rates;
-		XRRRates(disp, screen, i, &num_randr_rates);
-		num_randr_modes += num_randr_rates;
-	}
-	mode_info *avail_modes = (mode_info *)malloc(sizeof(mode_info)*num_randr_modes);
-	if (avail_modes == NULL)
-		return NULL;
-	int mode = 0;
+	int mode_index = 0;
 	for (i = 0; i < num_randr_sizes; i++) {
 		int num_randr_rates;
 		short *freqs = XRRRates(disp, screen, i, &num_randr_rates);
 		int j;
 		for (j = 0; j < num_randr_rates; j++) {
-			avail_modes[mode].width = sizes[i].width;
-			avail_modes[mode].height = sizes[i].height;
-			avail_modes[mode].freq = freqs[j];
-			avail_modes[mode].mode_data.size_index = i;
-			mode++;
+			if (list_size <= mode_index) {
+				list_size += 1;
+				avail_modes = (mode_info *)realloc(avail_modes, sizeof(mode_info)*list_size);
+				if (avail_modes == NULL)
+					return NULL;
+			}
+			avail_modes[mode_index].width = sizes[i].width;
+			avail_modes[mode_index].height = sizes[i].height;
+			avail_modes[mode_index].freq = freqs[j];
+			avail_modes[mode_index].mode_data.size_index = i;
+			mode_index++;
 		}
 	}
-	*num_modes = num_randr_modes;
+	*num_modes = mode_index;
 	return avail_modes;
 }
 
