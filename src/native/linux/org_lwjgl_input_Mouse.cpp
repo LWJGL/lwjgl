@@ -229,7 +229,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
 	XQueryBestCursor(getCurrentDisplay(), getCurrentWindow(), 1, 1, &width_return, &height_return);
-	return width_return > height_return ? height_return : width_return;
+	return width_return > height_return ? width_return : height_return;
 }
 
 /*
