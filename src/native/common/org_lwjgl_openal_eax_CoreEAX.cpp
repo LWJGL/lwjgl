@@ -59,7 +59,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExten
 	}
 
 	//check for extension, and assign if available
-	if(alIsExtensionPresent((ALubyte*) "EAX")) {
+	if(alIsExtensionPresent((ALubyte*) "EAX") == AL_TRUE) {
 		eaxSet = (EAXSet)alGetProcAddress((ALubyte*) "EAXSet");
 		eaxGet = (EAXGet)alGetProcAddress((ALubyte*) "EAXGet");
 		EAXSupported = (eaxSet != NULL && eaxGet != NULL);
