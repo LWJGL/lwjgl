@@ -56,7 +56,7 @@ typedef struct {
 
 extern WGLExtensions extension_flags;
 
-extern void extgl_InitWGL(JNIEnv *env);
+extern void extgl_InitWGL();
 
 /*-------------------------------------------------------------------*/
 /*------------WGL_EXT_EXTENSION_STRING-------------------------------*/
