@@ -31,27 +31,11 @@
  */
 package org.lwjgl.opengl;
 
-public final class ARBFragmentShader {
+public final class ARBShadingLanguage100 {
 
 	/*
-	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
-	 * returned by the <params> parameter of GetObjectParameter{fi}vARB:
-	*/
-	public static final int GL_FRAGMENT_SHADER_ARB = 0x8B30;
-
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	 * GetFloatv, and GetDoublev:
-	*/
-
-	public static final int GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB = 0x8B49;
-	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
-	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
-
-	/*
-	 * Accepted by the <target> parameter of Hint and the <pname> parameter of
-	 * GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev:
-	*/
-	public static final int GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB = 0x8B8B;
+     * Accepted by the <name> parameter of GetString:
+    */
+	public static final int GL_SHADING_LANGUAGE_VERSION_ARB = 0x8B8C;
 
 }

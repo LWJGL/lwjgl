@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -66,9 +66,11 @@ public final class ARBShaderObjects {
 	/*
 	* Returned by the <type> parameter of GetActiveUniformARB:
 	*/
+	public static final int GL_FLOAT = 0x1406;
 	public static final int GL_FLOAT_VEC2_ARB = 0x8B50;
 	public static final int GL_FLOAT_VEC3_ARB = 0x8B51;
 	public static final int GL_FLOAT_VEC4_ARB = 0x8B52;
+	public static final int GL_INT = 0x1404;
 	public static final int GL_INT_VEC2_ARB = 0x8B53;
 	public static final int GL_INT_VEC3_ARB = 0x8B54;
 	public static final int GL_INT_VEC4_ARB = 0x8B55;
@@ -79,6 +81,14 @@ public final class ARBShaderObjects {
 	public static final int GL_FLOAT_MAT2_ARB = 0x8B5A;
 	public static final int GL_FLOAT_MAT3_ARB = 0x8B5B;
 	public static final int GL_FLOAT_MAT4_ARB = 0x8B5C;
+	public static final int GL_SAMPLER_1D_ARB = 0x8B5D;
+	public static final int GL_SAMPLER_2D_ARB = 0x8B5E;
+	public static final int GL_SAMPLER_3D_ARB = 0x8B5F;
+	public static final int GL_SAMPLER_CUBE_ARB = 0x8B60;
+	public static final int GL_SAMPLER_1D_SHADOW_ARB = 0x8B61;
+	public static final int GL_SAMPLER_2D_SHADOW_ARB = 0x8B62;
+	public static final int GL_SAMPLER_2D_RECT_ARB = 0x8B63;
+	public static final int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8B64;
 
 	public static native void glDeleteObjectARB(int obj);
 
