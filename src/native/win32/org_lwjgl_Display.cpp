@@ -200,7 +200,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
 
 	// Note the * 32 - this is because we are manufacturing available alpha/depth/stencil combos.
-	jobjectArray ret = env->NewObjectArray(n * 32, displayModeClass, NULL);
+	jobjectArray ret = env->NewObjectArray(n * 16, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");
 
 	i = n = 0;
