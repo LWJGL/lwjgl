@@ -92,7 +92,12 @@ public abstract class BaseAL {
         : "OpenAL32.dll";
 
     // try to get path from JWS (if possible)
-    String jwsPath = getPathFromJWS(libname);
+    String jwsLibname = 
+      (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
+      ? "openal.so"
+      : "OpenAL32.dll";
+    
+    String jwsPath = getPathFromJWS(jwsLibname);
     if (jwsPath != null) {
       libpath += seperator
         + jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
