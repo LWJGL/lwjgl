@@ -512,7 +512,6 @@ public final class Window {
 	/**
 	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
 	 * the vertical refresh synchronization of the monitor, and is not guaranteed to be successful.
-	 * To check whether the call <em>might</em> have been successful, call isVSyncEnabled().
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setVSyncEnabled(boolean sync) {
