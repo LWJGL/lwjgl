@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'Light Weight Java Game Library' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -39,20 +39,20 @@ import org.lwjgl.Sys;
  *
  * Pbuffer encapsulates an OpenGL pbuffer.
  *
- * Each instance of GL is only valid in the thread that creates it. 
+ * Each instance of GL is only valid in the thread that creates it.
  * In addition, only one instance of an OpenGL window or Pbuffer may be
- * the current GL context in any one thread. To make a GL instance the 
+ * the current GL context in any one thread. To make a GL instance the
  * current context, use makeCurrent().
- * 
+ *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 public class Pbuffer {
-	public final static int PBUFFER_SUPPORTED = 1;
-		
+	public static final int PBUFFER_SUPPORTED = 1;
+
 	/** Current Pbuffer */
 	private static Pbuffer currentBuffer = null;
-	
+
 	/** Handle to the native GL rendering context */
 	private final int handle;
 
@@ -62,7 +62,7 @@ public class Pbuffer {
 	static {
 		System.loadLibrary(Sys.getLibraryName());
 	}
-	
+
 	/**
 	 * Construct an instance of a Pbuffer. If this fails then an Exception will be thrown.
 	 * The buffer is single-buffered.
@@ -74,7 +74,7 @@ public class Pbuffer {
 	 *
 	 * NOTE: Some OpenGL implementations requires the shared contexts to use the same pixel format.
 	 * So if possible, use the same bpp, alpha, depth and stencil values used to create the main window.
-	 *  
+	 *
 	 * @param width Pbuffer width
 	 * @param height Pbuffer height
 	 * @param bpp Minimum bits per pixel
@@ -142,7 +142,7 @@ public class Pbuffer {
 	 * @return a bitmask of Pbuffer capabilities.
 	 */
 	public static native int getPbufferCaps();
-	
+
 	/**
 	 * Native method to create a Pbuffer
 	 */
@@ -154,7 +154,7 @@ public class Pbuffer {
 		int depth,
 		int stencil,
 		int samples) throws Exception;
-	
+
 	/**
 	 * Destroys the Pbuffer. The buffer must not be current.
 	 */
