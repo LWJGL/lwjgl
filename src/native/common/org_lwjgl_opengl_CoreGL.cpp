@@ -3890,8 +3890,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getCompressedTexImage
  * Signature: (IIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiDrawArrays
-  (JNIEnv *, jobject, jint mode, jint first, jint count, jint primcount) {
+  (JNIEnv *env, jobject obj, jint mode, jint first, jint count, jint primcount) {
 	glMultiDrawArrays(mode, (GLint *)first, (GLsizei *)count, primcount);
+	CHECK_GL_ERROR
 }
   
 /*
@@ -3900,10 +3901,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiDrawArrays
  * Signature: (IIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiDrawElements
-  (JNIEnv *, jobject, jint mode, jint count, jint type, jint indices, jint primcount) {
+  (JNIEnv *env, jobject obj, jint mode, jint count, jint type, jint indices, jint primcount) {
 	glMultiDrawElements(mode, (GLsizei *)count, type, (const void **)indices, primcount);
+	CHECK_GL_ERROR
 }
-    
     
 /*
  * Class:     org_lwjgl_opengl_CoreGL
