@@ -44,6 +44,8 @@
 #include <X11/Xutil.h>
 #include <string.h>
 #include <assert.h>
+#include <iconv.h>
+#include <errno.h>
 #include "Window.h"
 #include "common_tools.h"
 #include "org_lwjgl_input_Keyboard.h"
@@ -61,6 +63,11 @@ static bool keyboard_grabbed;
 static bool buffer_enabled;
 static bool translation_enabled;
 static bool created = false;
+
+// X input manager values
+static iconv_t iconv_descriptor;
+static XIM xim = NULL;
+static XIC xic = NULL;
 
 static void grabKeyboard(void) {
 	if (!keyboard_grabbed) {
@@ -84,6 +91,19 @@ void updateKeyboardGrab(void) {
 		grabKeyboard();
 	} else {
 		ungrabKeyboard();
+	}
+}
+
+static void closeUnicodeStructs() {
+	if (iconv_descriptor != (iconv_t)-1)
+		iconv_close(iconv_descriptor);
+	if (xic != NULL) {
+		XDestroyIC(xic);
+		xic = NULL;
+	}
+	if (xim != NULL) {
+		XCloseIM(xim);
+		xim = NULL;
 	}
 }
 
@@ -122,11 +142,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	buffer_enabled = false;
 	initEventQueue(&event_queue, 3);
 	updateKeyboardGrab();
+	
+	// Allocate unicode structures
+	iconv_descriptor = iconv_open("UCS-2", "UTF-8");
+	if (iconv_descriptor != (iconv_t)-1) {
+		xim = XOpenIM(getDisplay(), NULL, NULL, NULL);
+		if (xim != NULL) {
+			xic = XCreateIC(xim,  XNClientWindow, getCurrentWindow(), XNFocusWindow, getCurrentWindow(), XNInputStyle, XIMPreeditNothing | XIMStatusNothing, NULL);
+			if (xic == NULL) {
+				closeUnicodeStructs();
+			}
+		} else
+			closeUnicodeStructs();
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
   (JNIEnv * env, jclass clazz)
 {
+	closeUnicodeStructs();
 	ungrabKeyboard();
 	created = false;
 	decDisplay();
@@ -143,9 +177,56 @@ static void putKeyboardEvent(jint keycode, jint state, jint ch) {
 	putEvent(&event_queue, event_list);
 }
 
-static void translateEvent(XKeyEvent *event, jint keycode, jint state) {
+static int lookupStringISO88591(XKeyEvent *event, jint *translation_buffer) {
 	static XComposeStatus status;
-	char temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
+	char char_translation_buffer[KEYBOARD_BUFFER_SIZE];
+	int i;
+	
+	int num_chars = XLookupString(event, char_translation_buffer, KEYBOARD_BUFFER_SIZE*sizeof(char), NULL, &status);
+	for (i = 0; i < num_chars; i++)
+		translation_buffer[i] = ((jint)char_translation_buffer[i]) & 0xff;
+	return num_chars;
+}
+
+static int lookupStringUnicode(XKeyEvent *event, jint *translation_buffer) {
+	char utf8_translation_buffer[KEYBOARD_BUFFER_SIZE];
+	jchar ucs2_translation_buffer[KEYBOARD_BUFFER_SIZE];
+	char *utf8_buf = utf8_translation_buffer;
+	jchar *ucs2_buf = ucs2_translation_buffer;
+	size_t ucs2_bytes = KEYBOARD_BUFFER_SIZE*sizeof(jchar); 
+	Status status;
+	int i;
+	
+	XSetICFocus(xic);
+	size_t utf8_bytes = Xutf8LookupString(xic, event, utf8_translation_buffer, KEYBOARD_BUFFER_SIZE*sizeof(char), NULL, &status);
+	if (status != XLookupChars && status != XLookupBoth)
+		return 0;
+	XUnsetICFocus(xic);
+	// reset converter
+	iconv(iconv_descriptor, NULL, NULL, NULL, NULL);
+	// convert from UTF-8 to UCS-2
+	size_t iconv_result = iconv(iconv_descriptor, &utf8_buf, &utf8_bytes, (void *)&ucs2_buf, &ucs2_bytes);
+	// compute number of characters converted
+	int num_chars_converted = KEYBOARD_BUFFER_SIZE - ucs2_bytes/sizeof(jchar);
+	if (iconv_result == (size_t)-1) {
+		errno = 0; // ignore conversion error and return no chars converted
+		return 0;
+	}
+	for (i = 0; i < num_chars_converted; i++) {
+		translation_buffer[i] = ((jint)ucs2_translation_buffer[i]) & 0xffff;
+	}
+	return num_chars_converted;
+}
+
+static int lookupString(XKeyEvent *event, jint *translation_buffer) {
+	if (xic != NULL) {
+		return lookupStringUnicode(event, translation_buffer);
+	} else
+		return lookupStringISO88591(event, translation_buffer);
+}
+				
+static void translateEvent(XKeyEvent *event, jint keycode, jint state) {
+	jint temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
 	int num_chars, i;
 	jint ch;
 
@@ -153,12 +234,12 @@ static void translateEvent(XKeyEvent *event, jint keycode, jint state) {
 		putKeyboardEvent(keycode, state, 0);
 		return;
 	}
-	num_chars = XLookupString(event, temp_translation_buffer, KEYBOARD_BUFFER_SIZE, NULL, &status);
+	num_chars = lookupString(event, temp_translation_buffer);
 	if (num_chars > 0) {
-		ch = ((jint)temp_translation_buffer[0]) & 0xFF;
+		ch = temp_translation_buffer[0];
 		putKeyboardEvent(keycode, state, ch);
 		for (i = 1; i < num_chars; i++) {
-			ch = ((jint)temp_translation_buffer[i]) & 0xFF;
+			ch = temp_translation_buffer[i];
 			putKeyboardEvent(0, 0, ch);
 		}
 	} else {
