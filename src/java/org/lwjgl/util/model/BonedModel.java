@@ -65,8 +65,8 @@ public class BonedModel extends Model {
 	 * @param animation
 	 * @param vertex
 	 */
-	public BonedModel(String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation, BonedVertex[] vertex) {
-		super(material, triangle, skin, color, animation);
+	public BonedModel(String name, String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation, BonedVertex[] vertex) {
+		super(name, material, triangle, skin, color, animation);
 		this.vertex = vertex;
 	}
 	

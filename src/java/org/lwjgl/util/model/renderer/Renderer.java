@@ -31,11 +31,15 @@
  */
 package org.lwjgl.util.model.renderer;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.util.model.BoneFrame;
-import org.lwjgl.util.model.BonedModel;
+import org.lwjgl.util.Renderable;
+import org.lwjgl.util.Timer;
+import org.lwjgl.util.model.Frame;
+import org.lwjgl.util.model.Model;
 
 /**
  * $Id$
@@ -46,14 +50,35 @@ import org.lwjgl.util.model.BonedModel;
  * Material lookups are performed by mapping the material name to a Renderable thing. You must
  * suppy appropriate Renderables - typically something that binds a 2D texture and sets up some
  * GL state.
+ * <p>
+ * To animate things, you will need to call Timer.tick() every frame to update the timers in your
+ * Renderables. Then they'll just animate themselves. Hurrah!
  * 
  * @author $Author$
  * @version $Revision$
  */
-public class Renderer {
+public class Renderer implements Renderable {
 	
 	/** Material map: String name->Renderable */
-	private final Map materials = new HashMap();
+	private static final Map materials = new HashMap();
+	
+	/** The model we're rendering */
+	private Model model;
+	
+	/** The current material */
+	private Renderable material;
+	
+	/** The animation currently being animated */
+	private Frame[] frame;
+	
+	/** The current time */
+	private final Timer timer = new Timer();
+	
+	/** Last frame rendered */
+	private Frame lastFrame;
+	
+	/** Visibility */
+	private boolean visible;
 	
 	/**
 	 * C'tor
@@ -62,27 +87,72 @@ public class Renderer {
 	}
 	
 	/**
-	 * Render a Model
-	 * @param model The model to render
-	 * @param animation The name of the animation
-	 * @param time The time for the animation
+	 * @param model The model to set.
 	 */
-	public void render(BonedModel model, String animation, float time) {
+	public void setModel(Model model) {
+		if (this.model == model) {
+			return;
+		}
+		this.model = model;
+		material = (Renderable) materials.get(model.getMaterial());
+		frame = null;
+	}
+	
+	/**
+	 * @return the Model we're rendering with this Renderer
+	 */
+	public Model getModel() {
+		return model;
+	}
+	
+	/**
+	 * Set the animation
+	 * @param animation
+	 */
+	public void setAnimation(String animation) {
+		if (model == null) {
+			return;
+		}
+		frame = model.getAnimation(animation);
+		timer.reset();
+		lastFrame = null;
+	}
+	
+	/**
+	 * Render a Model
+	 */
+	public void render() {
+		
+		// Don't do anything if there's no model or no animation
+		if (model == null || frame == null) {
+			return;
+		}
 		
 		// 1. Set up GL state from the Model's material
-		Renderable material = (Renderable) materials.get(model.getMaterial());
 		if (material != null) {
 			material.render();
 		}
 		
-		// 2. Get the animation
-		BoneFrame[] frame = model.getAnimation(animation);
-		if (frame == null) {
-			return;
+		// 2. Work out what frame to show
+		Frame frame = findFrame();
+		if (frame != lastFrame) {
+			lastFrame = frame;
+			processFrame();
 		}
 		
-		// 3. Work out what the nearest frame is to the specified time
+		// 3. Render the processed frame
 		
+	}
+	
+	/**
+	 * Find the nearest frame to the current time
+	 * @return the Frame nearest the current time
+	 */
+	private Frame findFrame() {
+		float time = timer.getTime();
+		
+		// Use a binary search to find the frame
+		int a = 0, b = 
 	}
 	
 	/**
@@ -90,8 +160,62 @@ public class Renderer {
 	 * @param name The material's name
 	 * @param renderable The renderable object
 	 */
-	public void putMaterial(String name, Renderable renderable) {
+	public static void putMaterial(String name, Renderable renderable) {
 		materials.put(name, renderable);
+	}
+	
+	/**
+	 * Remove a material
+	 * @param name The material's name
+	 * @return a Renderable
+	 */
+	public static Renderable removeMaterial(String name) {
+		return (Renderable) materials.remove(name);
+	}
+	
+	/**
+	 * Determine if this Renderer is visible
+	 * @return boolean
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	/**
+	 * Sets the visibility of this Renderer
+	 * @param visible
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
+	/**
+	 * Determines if the animation is paused
+	 * @return boolean
+	 */
+	public boolean isPaused() {
+		return timer.isPaused();
+	}
+	
+	/**
+	 * Pause the animation
+	 */
+	public void pause() {
+		timer.pause();
+	}
+	
+	/**
+	 * Rewind the animation
+	 */
+	public void rewind() {
+		timer.reset();
+	}
+	
+	/**
+	 * Resume a paused animation
+	 */
+	public void resume() {
+		timer.resume();
 	}
 	
 }

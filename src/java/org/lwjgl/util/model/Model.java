@@ -52,6 +52,9 @@ public abstract class Model implements Serializable {
 	
 	public static final long serialVersionUID = 1L;
 	
+	/** Model name */
+	private final String name;
+	
 	/** Material */
 	private final String material;
 	
@@ -69,13 +72,15 @@ public abstract class Model implements Serializable {
 	
 	/**
 	 * C'tor
+	 * @param name
 	 * @param material
 	 * @param triangle
 	 * @param skin[]
 	 * @param color[]
 	 * @param animation
 	 */
-	public Model(String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation) {
+	public Model(String name, String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation) {
+		this.name = name;
 		this.material = material;
 		this.triangle = triangle;
 		this.skin = skin;
@@ -88,8 +93,8 @@ public abstract class Model implements Serializable {
 	 * @param name The name of the animation
 	 * @return the Frames of an animation (or null, if no such animation exists)
 	 */
-	public final BoneFrame[] getAnimation(String name) {
-		return (BoneFrame[]) animation.get(name);
+	public final Frame[] getAnimation(String name) {
+		return (Frame[]) animation.get(name);
 	}
 	
 	/**
@@ -120,5 +125,17 @@ public abstract class Model implements Serializable {
 		return color;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "Model["+name+"]";
+	}
 	
+	/**
+	 * @return Returns the name.
+	 */
+	public final String getName() {
+		return name;
+	}
 }

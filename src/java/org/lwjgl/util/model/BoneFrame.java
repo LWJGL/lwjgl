@@ -49,10 +49,11 @@ public class BoneFrame extends Frame {
 	/**
 	 * C'tor
 	 * @param time
+	 * @param action
 	 * @param bone[]
 	 */
-	public BoneFrame(float time, Matrix4f[] bone) {
-		super(time);
+	public BoneFrame(float time, String action, Matrix4f[] bone) {
+		super(time, action);
 		this.bone = bone;
 	}
 	

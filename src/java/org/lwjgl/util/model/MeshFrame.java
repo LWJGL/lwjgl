@@ -48,10 +48,11 @@ public class MeshFrame extends Frame {
 	/**
 	 * C'tor
 	 * @param time
+	 * @param action
 	 * @param bone[]
 	 */
-	public MeshFrame(float time, Vertex[] vertex) {
-		super(time);
+	public MeshFrame(float time, String action, Vertex[] vertex) {
+		super(time, action);
 		this.vertex = vertex;
 	}
 	

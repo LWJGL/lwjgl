@@ -29,8 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.model.loader;
+package org.lwjgl.util.model.loaders;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +61,7 @@ import org.w3c.dom.Element;
  * @author $Author$
  * @version $Revision$
  */
-public class Loader {
+public class XMLLoader {
 	
 	/** The source document */
 	private final Document src;
@@ -74,7 +75,7 @@ public class Loader {
 	/**
 	 * C'tor
 	 */
-	public Loader(Document src) {
+	public XMLLoader(Document src) {
 		this.src = src;
 	}
 	
@@ -84,12 +85,14 @@ public class Loader {
 	 * @throws Exception
 	 */
 	public Model load() throws Exception {
+		String name = XMLUtil.getString(src.getDocumentElement(), "name");
 		String material = XMLUtil.getString(src.getDocumentElement(), "material");
 		numVertices = XMLUtil.getInt(src.getDocumentElement(), "vertices");
 		if (XMLUtil.getString(src.getDocumentElement(), "type").equals("boned")) {
 			// It's a boned model
 			numBones = XMLUtil.getInt(src.getDocumentElement(), "bones", 0);
 			return new BonedModel(
+					name,
 					material,
 					loadTriangles(),
 					loadSkin(),
@@ -100,6 +103,7 @@ public class Loader {
 		} else if (XMLUtil.getString(src.getDocumentElement(), "type").equals("meshed")) {
 			// It's a mesh keyframe model
 			return new MeshedModel(
+					name,
 					material,
 					loadTriangles(),
 					loadSkin(),
@@ -371,6 +375,7 @@ public class Loader {
 			Element frameElement = (Element) i.next();
 			frames[frameCount++] = loadBoneFrame(frameElement);
 		}
+		Arrays.sort(frames);
 		return frames;
 	}
 	
@@ -388,6 +393,7 @@ public class Loader {
 			Element frameElement = (Element) i.next();
 			frames[frameCount++] = loadMeshFrame(frameElement);
 		}
+		Arrays.sort(frames);
 		return frames;
 	}
 	
@@ -409,7 +415,8 @@ public class Loader {
 			bones[boneCount++] = loadBone(boneElement);
 		}
 		return new BoneFrame(
-				XMLUtil.getFloat(element, "time", 0.0f),
+				XMLUtil.getFloat(element, "time"),
+				XMLUtil.getString(element, "action", null),
 				bones
 			);
 	}
@@ -432,7 +439,8 @@ public class Loader {
 			vertices[vertexCount++] = loadMeshVertex(vertexElement);
 		}
 		return new MeshFrame(
-				XMLUtil.getFloat(element, "time", 0.0f),
+				XMLUtil.getFloat(element, "time"),
+				XMLUtil.getString(element, "action", null),
 				vertices
 			);
 	}

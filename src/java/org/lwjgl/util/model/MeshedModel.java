@@ -61,8 +61,8 @@ public class MeshedModel extends Model {
 	 * @param color[]
 	 * @param animation
 	 */
-	public MeshedModel(String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation) {
-		super(material, triangle, skin, color, animation);
+	public MeshedModel(String name, String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation) {
+		super(name, material, triangle, skin, color, animation);
 	}
 
 }
