@@ -107,6 +107,8 @@ public final class Display {
 			class_name = "org.lwjgl.opengl.LinuxDisplay";
 		} else if (os_name.startsWith("Windows")) {
 			class_name = "org.lwjgl.opengl.Win32Display";
+		} else if (os_name.startsWith("Mac")) {
+			class_name = "org.lwjgl.opengl.MacOSXDisplay";
 		} else
 			throw new IllegalStateException("The platform " + os_name + " is not supported");
 		try {
@@ -577,7 +579,7 @@ public final class Display {
 					}
 				}
 			}
-			if (!Controller.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nocontroller")) {
+			if (System.getProperty("os.name").startsWith("Win") && !Controller.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nocontroller")) {
 				try {
 					Controller.create();
 				} catch (LWJGLException e) {
