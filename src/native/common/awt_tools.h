@@ -51,3 +51,4 @@ typedef struct {
 } AWTSurfaceLock;
 
 #endif
+
