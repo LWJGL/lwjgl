@@ -41,13 +41,15 @@
 
 #include "Window.h"
 #include <QuickTime/Movies.h>
+#include <OpenGL/OpenGL.h>
 #include "org_lwjgl_opengl_Window.h"
 #include "extgl.h"
 #include "tools.h"
 #include "common_tools.h"
 
 static WindowRef win_ref;
-static AGLContext context;
+static AGLContext windowed_context;
+static CGLContextObj fullscreen_context;
 static bool close_requested;
 static Ptr fullscreen_ptr;
 static bool current_fullscreen;
@@ -152,14 +154,19 @@ static void destroyWindow(void) {
 }
 
 static void destroy(void) {
-	aglSetCurrentContext(NULL);
-	aglDestroyContext(context);
+	if (current_fullscreen) {
+		CGLSetCurrentContext(NULL);
+		CGLDestroyContext(fullscreen_context);
+	} else {
+		aglSetCurrentContext(NULL);
+		aglDestroyContext(windowed_context);
+	}
 	destroyWindow();
 	extgl_Close();
 	destroyLock();
 }
 
-static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
+static bool createWindowedContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
 	AGLDrawable drawable = GetWindowPort(win_ref);
 	SetPort(drawable);
 	GLint attrib[] = {AGL_RGBA,
@@ -177,22 +184,57 @@ static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint st
 		throwException(env, "Could not find matching pixel format");
 		return false;
 	}
-	context = aglCreateContext (format, NULL);
+	windowed_context = aglCreateContext (format, NULL);
 	aglDestroyPixelFormat(format);
-	if (context == NULL) {
+	if (windowed_context == NULL) {
 		throwException(env, "Could not create context");
 		return false;
 	}
-	if (aglSetDrawable(context, drawable) == GL_FALSE) {
-		aglDestroyContext(context);
+	if (aglSetDrawable(windowed_context, drawable) == GL_FALSE) {
+		aglDestroyContext(windowed_context);
 		throwException(env, "Could not attach context");
 		return false;
 	}
-	if (aglSetCurrentContext(context) == GL_FALSE) {
-		aglDestroyContext(context);
+	if (aglSetCurrentContext(windowed_context) == GL_FALSE) {
+		aglDestroyContext(windowed_context);
 		throwException(env, "Could not set current context");
 		return false;
 	}
+	return true;
+}
+
+static bool createFullscreenContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
+	CGOpenGLDisplayMask display_mask = CGDisplayIDToOpenGLDisplayMask(kCGDirectMainDisplay);
+	CGLPixelFormatObj pixel_format;
+	long num_formats;
+	CGLPixelFormatAttribute attribs[] = {kCGLPFAFullScreen,
+					     kCGLPFADoubleBuffer,
+					     kCGLPFAMinimumPolicy,
+					     kCGLPFAAccelerated,
+					     kCGLPFADisplayMask,
+					     (CGLPixelFormatAttribute)display_mask,
+					     kCGLPFAColorSize,
+					     (CGLPixelFormatAttribute)bpp,
+					     kCGLPFAAlphaSize,
+					     (CGLPixelFormatAttribute)alpha,
+					     kCGLPFADepthSize,
+					     (CGLPixelFormatAttribute)depth,
+					     kCGLPFAStencilSize,
+					     (CGLPixelFormatAttribute)stencil,
+					     (CGLPixelFormatAttribute)NULL};
+	CGLChoosePixelFormat(attribs, &pixel_format, &num_formats);
+	if (pixel_format == NULL) {
+		throwException(env, "Could not find matching pixel format");
+		return false;
+	}
+	CGLCreateContext(pixel_format, NULL, &fullscreen_context);
+	CGLDestroyPixelFormat(pixel_format);
+	if (fullscreen_context == NULL) {
+		throwException(env, "Could not create fullscreen context");
+		return false;
+	}
+	CGLSetFullScreen(fullscreen_context);
+	CGLSetCurrentContext(fullscreen_context);
 	return true;
 }
 
@@ -235,12 +277,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not create window");
 		return;
 	}
-	if (!registerEventHandlers(env)) {
+	if (!initLock(env)) {
 		destroyWindow();
 		extgl_Close();
 		return;
 	}
-	if (!initLock(env)) {
+	if (!registerEventHandlers(env)) {
 		destroyWindow();
 		extgl_Close();
 		return;
@@ -248,7 +290,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 	setWindowTitle(env, title);
 	const RGBColor background_color = {0, 0, 0};
 	SetWindowContentColor(win_ref, &background_color);
-	if (!createContext(env, bpp, alpha, depth, stencil)) {
+	bool success;
+	if (current_fullscreen) {
+		success = createFullscreenContext(env, bpp, alpha, depth, stencil);
+	} else {
+		success = createWindowedContext(env, bpp, alpha, depth, stencil);
+	}
+	if (!success) {
 		destroyLock();
 		destroyWindow();
 		extgl_Close();
@@ -275,7 +323,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update(JNIEnv *env, jclass c
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz) {
-	aglSwapBuffers(context);
+	if (current_fullscreen) {
+		CGLFlushDrawable(fullscreen_context);
+	} else {
+		aglSwapBuffers(windowed_context);
+	}
 }
                                                                                                                                                                 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_minimize(JNIEnv *env, jclass clazz) {
