@@ -18,8 +18,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilBindImage(JNIEnv *env, jclass c
  * Signature: (I[I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilDeleteImages(JNIEnv * env, jclass clazz, jint num, jobject lists_buffer, jint lists_offset) {
-	ILbyte *lists = (ILbyte *)(*env)->GetDirectBufferAddress(env, lists_buffer);
-	ilDeleteImages((ILsizei)num, (ILuint *)(lists + lists_offset));
+	ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
+	ilDeleteImages((ILsizei)num, (ILuint *)lists);
 }
 
 /*
@@ -28,8 +28,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilDeleteImages(JNIEnv * env, jcl
  * Signature: (I[I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilGenImages(JNIEnv *env , jclass clazz, jint num, jobject lists_buffer, jint lists_offset) {
-	ILbyte *lists = (ILbyte *)(*env)->GetDirectBufferAddress(env, lists_buffer);
-	ilGenImages((ILsizei)num, (ILuint *)(lists + lists_offset));
+	ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
+	ilGenImages((ILsizei)num, (ILuint *)lists);
 }
 
 /*
@@ -83,8 +83,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilInit(JNIEnv * env, jclass clazz
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jclass clazz, jstring fileName) {
 	const char *str = (*env)->GetStringUTFChars(env, fileName, 0);
-
-	return ilLoadImage((char *)str);
+	jboolean result = ilLoadImage((char *)str);
+	(*env)->ReleaseStringUTFChars(env, fileName, str);
+	return result;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jclass clazz) {
