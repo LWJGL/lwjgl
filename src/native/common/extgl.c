@@ -43,15 +43,9 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #pragma warn -8065
 #endif /* __BORLANDC__	*/
 
-#ifndef _WIN32
+#ifdef _X11
 
-/*wglGetProcAddressPROC wglGetProcAddress = NULL;
-
-#else
-*/
-/* GLX functions */
 #include <dlfcn.h>
-
 
 glXGetFBConfigsPROC glXGetFBConfigs = NULL;
 glXChooseFBConfigPROC glXChooseFBConfig = NULL;
@@ -71,15 +65,7 @@ glXGetCurrentDisplayPROC glXGetCurrentDisplay = NULL;
 glXQueryContextPROC glXQueryContext = NULL;
 glXSelectEventPROC glXSelectEvent = NULL;
 glXGetSelectedEventPROC glXGetSelectedEvent = NULL;
-
-/*glXGetContextIDEXTPROC glXGetContextIDEXT = NULL;
-glXGetCurrentDrawableEXTPROC glXGetCurrentDrawableEXT = NULL;
-glXImportContextEXTPROC glXImportContextEXT = NULL;
-glXFreeContextEXTPROC glXFreeContextEXT = NULL;
-glXQueryContextInfoEXTPROC glXQueryContextInfoEXT = NULL;
-*/
 glXGetProcAddressARBPROC glXGetProcAddressARB = NULL;
-
 glXChooseVisualPROC glXChooseVisual = NULL;
 glXCopyContextPROC glXCopyContext = NULL;
 glXCreateContextPROC glXCreateContext = NULL;
@@ -783,10 +769,12 @@ glVertexArrayRangeNVPROC glVertexArrayRangeNV = NULL;
 #ifdef _WIN32
 wglAllocateMemoryNVPROC wglAllocateMemoryNV = NULL;
 wglFreeMemoryNVPROC wglFreeMemoryNV = NULL;
-#else
+#endif /* WIN32 */
+
+#ifdef _X11
 glXAllocateMemoryNVPROC glXAllocateMemoryNV = NULL;
 glXFreeMemoryNVPROC glXFreeMemoryNV = NULL;
-#endif /* WIN32 */
+#endif /* X11 */
 
 #endif /* GL_NV_vertex_array_range */
 
@@ -1251,10 +1239,6 @@ glBlendFuncSeparateINGRPROC glBlendFuncSeparateINGR = NULL;
 #endif /* GL_EXT_blend_func_separate */
 
 #ifdef GL_VERSION_1_4
-/*#ifndef GL_VERSION_1_2
-glBlendColorPROC glBlendColor = NULL;
-glBlendEquationPROC glBlendEquation = NULL;
-#endif *//* GL_VERSION_1_2 */
 glFogCoordfPROC glFogCoordf = NULL;
 glFogCoordfvPROC glFogCoordfv = NULL;
 glFogCoorddPROC glFogCoordd = NULL;
@@ -1346,7 +1330,9 @@ struct ExtensionTypes SupportedExtensions; /* deprecated, please do not use */
 #ifdef _WIN32
 HMODULE lib_gl_handle = NULL;
 HMODULE lib_glu_handle = NULL;
-#else
+#endif
+
+#ifdef _X11
 void * lib_gl_handle = NULL;
 void * lib_glu_handle = NULL;
 #endif
@@ -1368,7 +1354,9 @@ void *extgl_GetProcAddress(char *name)
 		}
     }
     return t;
-#else
+#endif
+    
+#ifdef _X11
     void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
     if (t == NULL)
     {
@@ -1562,7 +1550,7 @@ int QueryExtension(const GLubyte*extensions, const char *name)
     return 0;
 }
 
-#ifndef _WIN32
+#ifdef _X11
 /** returns true if the extention is available */
 int GLXQueryExtension(Display *disp, int screen, const char *name)
 {
@@ -2214,10 +2202,11 @@ void extgl_InitNVVertexArrayRange()
 #ifdef _WIN32
     wglAllocateMemoryNV = (wglAllocateMemoryNVPROC) extgl_GetProcAddress("wglAllocateMemoryNV");
     wglFreeMemoryNV = (wglFreeMemoryNVPROC) extgl_GetProcAddress("wglFreeMemoryNV");
-#else
+#endif /* WIN32 */
+#ifdef _X11
     glXAllocateMemoryNV = (glXAllocateMemoryNVPROC) extgl_GetProcAddress("glXAllocateMemoryNV");
     glXFreeMemoryNV = (glXFreeMemoryNVPROC) extgl_GetProcAddress("glXFreeMemoryNV");
-#endif /* WIN32 */
+#endif /* X11 */
 #endif
 }
  
@@ -2415,7 +2404,7 @@ int extgl_InitEXTNurbsTesselator(void)
 	return 0;
 }
 
-#ifndef _WIN32
+#ifdef _X11
 int extgl_InitGLX13(void)
 {
 	if (extgl_Extensions.glx.GLX13 == 0)
@@ -2443,12 +2432,6 @@ int extgl_InitGLX13(void)
 
 int extgl_InitGLX12(void)
 {
-/*	glXGetContextIDEXT = (glXGetContextIDEXTPROC) extgl_GetProcAddress("glXGetContextIDEXT");
-	glXGetCurrentDrawableEXT = (glXGetCurrentDrawableEXTPROC) extgl_GetProcAddress("glXGetCurrentDrawableEXT");
-	glXImportContextEXT = (glXImportContextEXTPROC) extgl_GetProcAddress("glXImportContextEXT");
-	glXFreeContextEXT = (glXFreeContextEXTPROC) extgl_GetProcAddress("glXFreeContextEXT");
-	glXQueryContextInfoEXT = (glXQueryContextInfoEXTPROC) extgl_GetProcAddress("glXQueryContextInfoEXT");
-*/
 	glXChooseVisual = (glXChooseVisualPROC) extgl_GetProcAddress("glXChooseVisual");
 	glXCopyContext = (glXCopyContextPROC) extgl_GetProcAddress("glXCopyContext");
 	glXCreateContext = (glXCreateContextPROC) extgl_GetProcAddress("glXCreateContext");
@@ -2472,7 +2455,7 @@ int extgl_InitGLX12(void)
 	return extgl_error;
 }
 
-#ifndef _WIN32
+#ifdef _X11
 void extgl_InitGLXSupportedExtensions(Display *disp, int screen)
 {
 	extgl_Extensions.glx.EXT_visual_info = GLXQueryExtension(disp, screen, "GLX_EXT_visual_info");
@@ -3220,7 +3203,7 @@ int extgl_Initialize()
     return extgl_error;
 }
 
-#ifndef _WIN32
+#ifdef _X11
 int extgl_Open(Display *disp, int screen)
 {
     lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
@@ -3234,7 +3217,9 @@ int extgl_Open(Display *disp, int screen)
 	    return 1;
     return 0;
 }
-#else
+#endif
+
+#ifdef _WIN32
 int extgl_Open(void)
 {
 
@@ -3250,10 +3235,11 @@ int extgl_Open(void)
 
 void extgl_Close(void)
 {
-#ifndef _WIN32
+#ifdef _X11
 	dlclose(lib_glu_handle);
 	dlclose(lib_gl_handle);
-#else
+#endif
+#ifdef _WIN32
 	FreeLibrary(lib_gl_handle);
 	FreeLibrary(lib_glu_handle);
 #endif

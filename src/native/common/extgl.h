@@ -169,59 +169,7 @@ WGL_NV_render_texture_rectangle
 #if defined(_WIN32) && !defined(APIENTRY)
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
-/*
-typedef int                 BOOL;
-typedef void *PVOID;
-typedef float               FLOAT;
-typedef void VOID;
-typedef unsigned int        UINT;
-typedef unsigned long       DWORD;
-typedef unsigned char       BYTE;
-typedef unsigned short      WORD;
 
-#ifdef STRICT
-typedef void *HANDLE;
-#define DECLARE_HANDLE(name) struct name##__ { int unused; }; typedef struct name##__ *name
-#else
-typedef PVOID HANDLE;
-#define DECLARE_HANDLE(name) typedef HANDLE name
-#endif
-typedef HANDLE *PHANDLE;
-
-DECLARE_HANDLE(HDC);
-DECLARE_HANDLE(HGLRC);
-DECLARE_HANDLE(HWND);
-
-typedef struct tagPIXELFORMATDESCRIPTOR
-{
-    WORD  nSize;
-    WORD  nVersion;
-    DWORD dwFlags;
-    BYTE  iPixelType;
-    BYTE  cColorBits;
-    BYTE  cRedBits;
-    BYTE  cRedShift;
-    BYTE  cGreenBits;
-    BYTE  cGreenShift;
-    BYTE  cBlueBits;
-    BYTE  cBlueShift;
-    BYTE  cAlphaBits;
-    BYTE  cAlphaShift;
-    BYTE  cAccumBits;
-    BYTE  cAccumRedBits;
-    BYTE  cAccumGreenBits;
-    BYTE  cAccumBlueBits;
-    BYTE  cAccumAlphaBits;
-    BYTE  cDepthBits;
-    BYTE  cStencilBits;
-    BYTE  cAuxBuffers;
-    BYTE  iLayerType;
-    BYTE  bReserved;
-    DWORD dwLayerMask;
-    DWORD dwVisibleMask;
-    DWORD dwDamageMask;
-} PIXELFORMATDESCRIPTOR, *PPIXELFORMATDESCRIPTOR, FAR *LPPIXELFORMATDESCRIPTOR;
-*/
 #endif
 
 #define __glext_h_
@@ -265,14 +213,8 @@ typedef double GLdouble;
 typedef double GLclampd;
 typedef void GLvoid;
 
-#ifndef _WIN32
+#ifdef _X11
 
-/*typedef void (* (APIENTRY * wglGetProcAddressPROC) (const GLubyte *procName))(void);
-
-extern wglGetProcAddressPROC wglGetProcAddress;
-
-#else
-*/
 #include <X11/Xutil.h>
 #include <GL/glxtokens.h>
 
@@ -354,12 +296,6 @@ extern glXQueryContextPROC glXQueryContext;
 extern glXSelectEventPROC glXSelectEvent;
 extern glXGetSelectedEventPROC glXGetSelectedEvent;
 
-/*extern glXGetContextIDEXTPROC glXGetContextIDEXT;
-extern glXGetCurrentDrawableEXTPROC glXGetCurrentDrawableEXT;
-extern glXImportContextEXTPROC glXImportContextEXT;
-extern glXFreeContextEXTPROC glXFreeContextEXT;
-extern glXQueryContextInfoEXTPROC glXQueryContextInfoEXT;
-*/
 extern glXGetProcAddressARBPROC glXGetProcAddressARB;
 
 extern glXChooseVisualPROC glXChooseVisual;
@@ -382,6 +318,7 @@ extern glXWaitXPROC glXWaitX;
 extern glXGetClientStringPROC glXGetClientString;
 extern glXQueryServerStringPROC glXQueryServerString;
 extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
+
 #endif
 
 /*************************************************************/
@@ -2349,20 +2286,6 @@ extern glSampleCoveragePROC glSampleCoverage;
 #ifndef GL_VERSION_1_4
 #define GL_VERSION_1_4
 
-/*#ifndef GL_VERSION_1_2
-#define GL_BLEND_EQUATION                                       0x8009
-#define GL_MIN                                                  0x8007
-#define GL_MAX                                                  0x8008
-#define GL_FUNC_ADD                                             0x8006
-#define GL_FUNC_SUBTRACT                                        0x800A
-#define GL_FUNC_REVERSE_SUBTRACT                                0x800B
-#define GL_BLEND_COLOR                                          0x8005
-#define GL_CONSTANT_COLOR                                       0x8001
-#define GL_ONE_MINUS_CONSTANT_COLOR                             0x8002
-#define GL_CONSTANT_ALPHA                                       0x8003
-#define GL_ONE_MINUS_CONSTANT_ALPHA                             0x8004
-#endif *//* GL_VERSION_1_2 */
-
 #define GL_GENERATE_MIPMAP                                      0x8191
 #define GL_GENERATE_MIPMAP_HINT                                 0x8192
 #define GL_DEPTH_COMPONENT16                                    0x81A5
@@ -2403,10 +2326,6 @@ extern glSampleCoveragePROC glSampleCoverage;
 #define GL_MAX_TEXTURE_LOD_BIAS                                 0x84FD
 #define GL_GL_MIRRORED_REPEAT                                   0x8370
 
-/*#ifndef GL_VERSION_1_2
-typedef void (APIENTRY * glBlendEquationPROC) (GLenum mode );
-typedef void (APIENTRY * glBlendColorPROC) (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha );
-#endif *//* GL_VERSION_1_2 */
 typedef void (APIENTRY * glFogCoordfPROC) (GLfloat coord);
 typedef void (APIENTRY * glFogCoordfvPROC) (const GLfloat *coord);
 typedef void (APIENTRY * glFogCoorddPROC) (GLdouble coord);
@@ -2450,11 +2369,6 @@ typedef void (APIENTRY * glWindowPos3dvPROC) (const GLdouble *p);
 typedef void (APIENTRY * glWindowPos3fvPROC) (const GLfloat *p);
 typedef void (APIENTRY * glWindowPos3ivPROC) (const GLint *p);
 typedef void (APIENTRY * glWindowPos3svPROC) (const GLshort *p);
-
-/*#ifndef GL_VERSION_1_2
-extern glBlendColorPROC glBlendColor;
-extern glBlendEquationPROC glBlendEquation;
-#endif *//* GL_VERSION_1_2 */
 
 extern glFogCoordfPROC glFogCoordf;
 extern glFogCoordfvPROC glFogCoordfv;
@@ -2922,7 +2836,9 @@ typedef void (APIENTRY * wglFreeMemoryNVPROC) (void *pointer);
 extern wglAllocateMemoryNVPROC wglAllocateMemoryNV;
 extern wglFreeMemoryNVPROC wglFreeMemoryNV;
 
-#else
+#endif /* WIN32 */
+
+#ifdef _X11
 
 typedef void * (APIENTRY * glXAllocateMemoryNVPROC) (GLsizei size, GLfloat readFrequency, GLfloat writeFrequency, GLfloat priority);
 typedef void (APIENTRY * glXFreeMemoryNVPROC) (void *pointer);
@@ -2930,7 +2846,7 @@ typedef void (APIENTRY * glXFreeMemoryNVPROC) (void *pointer);
 extern glXAllocateMemoryNVPROC glXAllocateMemoryNV;
 extern glXFreeMemoryNVPROC glXFreeMemoryNV;
 
-#endif /* WIN32 */
+#endif /* X11 */
 
 #endif /* GL_NV_vertex_array_range */
 
@@ -5541,7 +5457,9 @@ struct WGLExtensionTypes
     int NV_render_texture_rectangle;
 };
 
-#else /* No WIN32 */
+#endif /* WIN32 */
+
+#ifdef _X11
 
 struct GLXExtensionTypes
 {
@@ -5551,7 +5469,7 @@ struct GLXExtensionTypes
     int EXT_visual_rating;
 };
 
-#endif /* WIN32 */
+#endif /* X11 */
 
 struct GLUExtensionTypes
 {
@@ -5565,9 +5483,10 @@ struct ExtensionTypes
 {
 #ifdef _WIN32 /* WGL extensions */   
     struct WGLExtensionTypes wgl;
-#else /* no WIN32 */
-    struct GLXExtensionTypes glx;
 #endif /* WIN32 */
+#ifdef _X11
+    struct GLXExtensionTypes glx;
+#endif /* X11 */
     struct GLUExtensionTypes glu;
     int ARB_imaging;
     int ARB_depth_texture;
@@ -5663,11 +5582,14 @@ extern struct ExtensionTypes SupportedExtensions; /* deprecated, please do not u
 
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
 int extgl_Initialize();
-#ifndef _WIN32
+#ifdef _X11
 int extgl_Open(Display *disp, int screen);
-#else
+#endif
+
+#ifdef _WIN32
 int extgl_Open(void);
 #endif
+
 void extgl_Close(void);
 
 int glInitialize(); /* deprecated, please do not use */
