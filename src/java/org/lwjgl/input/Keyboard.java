@@ -344,18 +344,20 @@ public class Keyboard {
 	/**
 	 * Enable keyboard translation. Must be called after the keyboard is created,
 	 * and keyboard buffering must be enabled.
+	 * @return false if translation cannot be enabled; true if it can
 	 */
-	public static void enableTranslation() {
+	public static boolean enableTranslation() {
 		assert created : "The keyboard has not been created.";
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
-                nEnableTranslation();
-		translationEnabled = true;
+        
+        translationEnabled = nEnableTranslation();
+		return translationEnabled;
 	}
 	
 	/**
 	 * Native method to enable the translation buffer
 	 */
-	private static native void nEnableTranslation();
+	private static native boolean nEnableTranslation();
 	
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.

@@ -120,6 +120,7 @@ public abstract class Window {
 	 * @param newTitle The new window title
 	 */
 	public final void setTitle(String newTitle) {
+		assert isCreated();
 		title = newTitle;
 		nSetTitle(title);
 	}
@@ -134,6 +135,7 @@ public abstract class Window {
 	 * @return true if the user or operating system has asked the window to close
 	 */
 	public final boolean isCloseRequested() {
+		assert isCreated();
 		return closeRequested;
 	}
 	
@@ -141,6 +143,7 @@ public abstract class Window {
 	 * @return true if the window is minimized or otherwise not visible
 	 */
 	public final boolean isMinimized() {
+		assert isCreated();
 		return minimized;
 	}
 	
@@ -172,6 +175,7 @@ public abstract class Window {
 	 * and needs to repaint itself
 	 */
 	public final boolean isDirty() {
+		assert isCreated();
 		return dirty;
 	}
 	
@@ -179,6 +183,7 @@ public abstract class Window {
 	 * Paint the window. This clears the dirty flag and swaps the buffers.
 	 */
 	public final void paint() {
+		assert isCreated();
 		dirty = false;
 		doPaint();
 	}
@@ -194,7 +199,8 @@ public abstract class Window {
 		doCreate();
 		currentWindow = this;
 		created = true;
-	}
+		
+  	}
 	
 	/**
 	 * Create the window (derived classes).
@@ -205,7 +211,7 @@ public abstract class Window {
 	/**
 	 * Destroy the window.
 	 */
-	public final synchronized void destroy() {
+	public final void destroy() {
 		if (!created)
 			return;
 		doDestroy();
@@ -237,16 +243,7 @@ public abstract class Window {
 	 * 'Tick' the window. This must be called at least once per video frame
 	 * to handle window close requests, moves, paints, etc.
 	 */
-	public final native void tick();
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#finalize()
-	 */
-	protected void finalize() throws Throwable {
-		super.finalize();
-		
-		destroy();
-	}
+	public native void tick();
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

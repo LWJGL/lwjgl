@@ -63,13 +63,14 @@ static bool translationEnabled;
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
   (JNIEnv * env, jclass clazz)
 {
+	/*
 	// Get a global class instance, just to be sure
 	static jobject globalClassLock = NULL;
 
 	if (globalClassLock == NULL) {
 		globalClassLock = env->NewGlobalRef(clazz);
 	}
-
+	*/
 	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
 }
 
@@ -208,17 +209,23 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 
 	if (ret == DI_OK) {
 		unsigned char * buf = readBuffer;
+//#ifdef _DEBUG
+//		if (bufsize > 0) {
+//			printf("Got %d keyboard events.\n", bufsize);
+//		}
+//#endif
 		for (unsigned int i = 0; i < bufsize; i ++) {
 			num_events++;
 			*buf++ = (unsigned char) rgdod[i].dwOfs;
 			*buf++ = (unsigned char) rgdod[i].dwData;
 			if (translationEnabled) {
-				// Cas: shouldn't need to call handleMessages any more
-				// handleMessages();
 				UINT virt_key = MapVirtualKey(rgdod[i].dwOfs, 1);
 				if (virt_key != 0) {
-					if (!GetKeyboardState(state))
-						return 0;
+					if (!GetKeyboardState(state)) {
+						*buf++ = 0;
+						*buf++ = 0;
+						continue;
+					}
 					num_chars = ToUnicode(virt_key, 
 										  rgdod[i].dwOfs,
 										  state,
@@ -283,10 +290,23 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
  * Method:    nEnableTranslation
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
   (JNIEnv *, jclass)
 {
-	translationEnabled = true;
+	// We can't do translation on DOS boxes it seems so we'll have to throw a wobbler
+	// here:
+	OSVERSIONINFO osvi;
+
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	GetVersionEx(&osvi);
+	
+	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
+		translationEnabled = true;
+		return JNI_TRUE;
+	} else {
+		translationEnabled = false;
+		return JNI_FALSE;
+	}
 }
 
 /*

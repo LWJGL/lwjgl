@@ -313,7 +313,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
  * Method:    nEnableTranslation
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
   (JNIEnv *, jclass);
 
 /*
