@@ -218,17 +218,17 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * Gets an integer property of the listener.
      *
      * @param pname name of the attribute to be retrieved
-     * @return integer value of property
+     * @param integerdata bytebuffer address to write integer to
      */
-    public native int           getListeneri(int pname);
+    public native void           getListeneri(int pname, int integerdata);
     
     /**
      * Gets a floating point property of the listener.
      *
      * @param pname name of the attribute to be retrieved
-     * @return floating point value of property
+     * @param floatdata bytebuffer address to write float to
      */    
-    public native float         getListenerf(int pname);
+    public native void         getListenerf(int pname, int floatdata);
     
     /**
      * Retrieves a set of three floating point values from a 
@@ -238,7 +238,6 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param v1 bytebuffer address to write float 1 to
      * @param v2 bytebuffer address to write float 2 to
      * @param v3 bytebuffer address to write float 3 to
-     * @return array of floats containing floating point values
      */
     public native void          getListener3f(int pname, int v1, int v2, int v3); 
     
@@ -317,27 +316,29 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      *
      * @param source source to get property from
      * @param pname name of property
-     * @return integer value of pname
+     * @param integerdata bytebuffer address to write integer to
      */
-    public native int           getSourcei(int source, int pname);
+    public native void           getSourcei(int source, int pname, int integerdata);
     
     /**
      * Retrieves a floating point property of a source.
      *
      * @param source source to get property from
      * @param pname name of property
-     * @return integer value of pname
+     * @param floatdata bytebuffer address to write float to
      */    
-    public native float         getSourcef(int source, int pname);
+    public native void          getSourcef(int source, int pname, int floatdata);
     
     /**
      * Gets a set of three floating point values from a source.
      *
      * @param source Source to get property from
      * @param pname property to get
-     * @param floatdata bytebuffer address to write floats to
+     * @param v1 bytebuffer address to write float 1 to
+     * @param v2 bytebuffer address to write float 2 to
+     * @param v3 bytebuffer address to write float 3 to
      */    
-    public native void          getSource3f(int source, int pname, int floatdata);
+    public native void          getSource3f(int source, int pname, int v1, int v2, int v3);
     
     /**
      * Gets a floating point vector property from a Source object.
@@ -448,18 +449,18 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      *
      * @param buffer buffer to get property from
      * @param pname name of property to retrieve
-     * @return integer property of buffer
+     * @param integerdata bytebuffer address to write integer to
      */
-    public native int           getBufferi(int buffer, int pname);
+    public native void           getBufferi(int buffer, int pname, int integerdata);
 
     /**
      * Retrieves a floating point property from a buffer.
      *
      * @param buffer buffer to get property from
      * @param pname name of property to retrieve
-     * @return floating point property of buffer
+     * @param floatdata bytebuffer address to write float to
      */    
-    public native float         getBufferf(int buffer, int pname);     
+    public native void         getBufferf(int buffer, int pname, int floatdata);     
     
     /**
      * Queues a set of buffers on a source.
