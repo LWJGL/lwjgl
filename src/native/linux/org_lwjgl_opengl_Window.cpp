@@ -76,6 +76,7 @@ static bool grab;
 static bool ignore_motion_events;
 
 static Display *display_connection = NULL;
+static Atom warp_atom;
 static int display_connection_usage = 0;
 
 Display *getDisplay(void) {
@@ -89,9 +90,14 @@ Display *incDisplay(JNIEnv *env) {
 			throwException(env, "Could not open X display");
 			return NULL;
 		}
+		warp_atom = XInternAtom(getDisplay(), "ignore_warp_atom", False);
 	}
 	display_connection_usage++;
 	return display_connection;
+}
+
+Atom getWarpAtom(void) {
+	return warp_atom;
 }
 
 void decDisplay(void) {
@@ -140,12 +146,8 @@ bool isFullscreen(void) {
 	return current_fullscreen;
 }
 
-bool isGrabbed(void) {
-	return grab;
-}
-
 bool shouldGrab(void) {
-	return current_fullscreen || (!input_released && grab);
+	return !input_released && grab;
 }
 
 void setGrab(bool new_grab) {
@@ -154,16 +156,22 @@ void setGrab(bool new_grab) {
 }
 
 static void handleMotion(XMotionEvent *event) {
-	if (event->send_event == True) {
-		// We got a warp ignore message
-		ignore_motion_events = event->state == 1 ? true : false;
-	} else if (ignore_motion_events) {
+	if (ignore_motion_events) {
 		resetCursor(event->x, event->y);
 	} else {
 		handlePointerMotion(event);
 	}
 }
 
+static void checkInput(void) {
+	Window win;
+	int revert_mode;
+	XGetInputFocus(getDisplay(), &win, &revert_mode);
+	if (win == current_win) {
+		acquireInput();
+		focused = true;
+	}
+}
 static void handleMessages() {
 	XEvent event;
 	Window win;
@@ -172,7 +180,9 @@ static void handleMessages() {
 		XNextEvent(getDisplay(), &event);
 		switch (event.type) {
 			case ClientMessage:
-				if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
+				if (event.xclient.message_type == warp_atom) {
+					ignore_motion_events = event.xclient.data.b[0] == 1 ? true : false;
+				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					closerequested = true;
 				break;
 			case FocusOut:
@@ -183,11 +193,7 @@ static void handleMessages() {
 				}
 				break;
 			case FocusIn:
-				XGetInputFocus(getDisplay(), &win, &revert_mode);
-				if (win == current_win) {
-					acquireInput();
-					focused = true;
-				}
+				checkInput();
 				break;
 			case MapNotify:
 				dirty = true;
@@ -200,6 +206,7 @@ static void handleMessages() {
 				dirty = true;
 				break;
 			case ButtonPress:
+				checkInput();
 				handleButtonPress(&(event.xbutton));
 				break;
 			case ButtonRelease:

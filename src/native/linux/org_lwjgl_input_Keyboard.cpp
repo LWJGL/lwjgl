@@ -80,7 +80,7 @@ static void ungrabKeyboard(void) {
 void updateKeyboardGrab(void) {
 	if (!created)
 		return;
-	if (shouldGrab()) {
+	if (isFullscreen() || shouldGrab()) {
 		grabKeyboard();
 	} else {
 		ungrabKeyboard();

@@ -56,6 +56,8 @@
 
 	extern void resetCursor(int x, int y);
 
+	extern Atom getWarpAtom(void);
+
 	/*
 	 * Various functions to release/acquire keyboard and mouse
 	 */
@@ -67,7 +69,6 @@
 	extern void updateKeyboardGrab(void);
 	extern void setGrab(bool);
 	extern bool shouldGrab(void);
-	extern bool isGrabbed(void);
 
 	/*
 	 * get the current window width

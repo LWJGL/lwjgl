@@ -119,7 +119,7 @@ static bool blankCursor(void) {
 
 static void updateCursor(void) {
 	Cursor cursor;
-	if (isGrabbed())
+	if (shouldGrab())
 		cursor = blank_cursor;
 	else
 		cursor = current_cursor;
@@ -152,7 +152,7 @@ static void ungrabPointer(void) {
 void updatePointerGrab(void) {
 	if (!created)
 		return;
-	if (shouldGrab()) {
+	if (isFullscreen() || shouldGrab()) {
 		grabPointer();
 	} else {
 		ungrabPointer();
@@ -162,13 +162,15 @@ void updatePointerGrab(void) {
 
 static void doWarpPointer(void ) {
 	XEvent ignore_warp_guard;
-	ignore_warp_guard.type = MotionNotify;
+	ignore_warp_guard.type = ClientMessage;
+	ignore_warp_guard.xclient.message_type = getWarpAtom();
+	ignore_warp_guard.xclient.format = 8;
 	// Tell event loop to start ignoring motion events
-	ignore_warp_guard.xmotion.state = 1;
+	ignore_warp_guard.xclient.data.b[0] = 1;
 	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
 	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, getWindowWidth()/2, getWindowHeight()/2);
 	// Tell event loop to stop ignoring motion events
-	ignore_warp_guard.xmotion.state = 0;
+	ignore_warp_guard.xclient.data.b[0] = 0;
 	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
 
 /*	centerCursor();
@@ -189,7 +191,7 @@ static void doWarpPointer(void ) {
 }
 
 static void warpPointer(void) {
-	if (!pointer_grabbed || !isGrabbed())
+	if (!pointer_grabbed || !shouldGrab())
 		return;
 	// Reset pointer to middle of screen if outside a certain inner border
 	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
