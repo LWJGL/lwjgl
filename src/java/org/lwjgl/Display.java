@@ -202,9 +202,8 @@ public final class Display {
 
 	/**
 	 * Obtains the display's gamma ramp. The gamma ramp returned is an array of
-	 * 16:16 fixed point values representing 0.0...1.0. The gamma ramp consists of three consecutive
-	 * arrays, one for red, one for green, and one for blue. The length of the
-	 * array is 768 values (so red will be 0..255, green 256...511, and blue 512..767)
+	 * 16:16 fixed point values representing 0.0...1.0. The gamma ramp consists of three
+	 * arrays, one for red, one for green, and one for blue. The array lengths must be 256.
 	 * 
 	 * If gamma is not supported by the underlying hardware then false is returned.
 	 * 
@@ -218,7 +217,7 @@ public final class Display {
 	/**
 	 * Sets the display's gamma ramp. The gamma ramp should be an array of ints
 	 * in 16:16 fixed point format, arranged as for getGammaRamp().
-	 * The length of the array must be 768.
+	 * The length of the arrays must be 256.
 	 * 
 	 * If the underlying hardware does not support gamma then this command is a no-op.
 	 * 
