@@ -11,24 +11,6 @@ To run some of the included tests:
  Extract the archive, and cd into directory
  Extract the media files into lwjgl folder (only needed for openal tests)
 
- NeHe ports:
-  java -cp .;examples.jar;lwjgl.jar; DEMO 
- where DEMO is one of the following: 
-  BitmapFonts
-  Blending
-  DisplayLists
-  FiltersLightingAndControl
-  FirstPersonWorld
-  FlagEffect
-  Fog
-  MovingStarBitmaps
-  Polygon
-  PolygonColored
-  PolygonColoredRotating3D
-  PolygonColoredRotating
-  Quadrics
-  TextureMapping
-  
  LWJGL Tests:
   java -cp .;lwjgl_test.jar;lwjgl.jar; DEMO
  where DEMO is one of the following: 
@@ -37,7 +19,6 @@ To run some of the included tests:
   org.lwjgl.test.input.MouseCreationTest
   org.lwjgl.test.input.MouseTest
   org.lwjgl.test.openal.ALCTest
-  org.lwjgl.test.openal.ALTest
   org.lwjgl.test.openal.ALCTest
   org.lwjgl.test.openal.EAXTest (Requires EAX compatible hardware)
   org.lwjgl.test.openal.MovingSoundTest
@@ -47,6 +28,8 @@ To run some of the included tests:
   org.lwjgl.test.openal.StressTest
   org.lwjgl.test.opengl.Grass (Requires nVidia hardware)
   org.lwjgl.test.opengl.Game
-  org.lwjgl.test.vector.MathTest
   
-Project Webpage: http://sourceforge.net/projects/java-game-lib
+Please read this thread, for upgrading issues:
+http://www.puppygames.net/forums/viewtopic.php?t=204
+  
+Project Webpage: www.lwjgl.org
