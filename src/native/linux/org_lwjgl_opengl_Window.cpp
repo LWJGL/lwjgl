@@ -420,7 +420,7 @@ static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring titl
 	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
 	glx_window = glXCreateWindow(disp, configs[0], getCurrentWindow(), NULL);
 	makeCurrent();
-	if (ISDEBUGENABLED())
+	if (isDebugEnabled())
 		dumpVisualInfo(disp, vis_info);
 	XFree(configs);
 	XFree(vis_info);
@@ -433,7 +433,7 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
 		throwException(env, "Could not find a matching pixel format");
 		return false;
 	}
-	if (ISDEBUGENABLED())
+	if (isDebugEnabled())
 		dumpVisualInfo(disp, vis_info);
 	context = glXCreateContext(disp, vis_info, NULL, True);
 	if (context == NULL) {

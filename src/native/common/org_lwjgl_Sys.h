@@ -16,7 +16,17 @@ extern "C" {
 #undef org_lwjgl_Sys_REALTIME_PRIORITY
 #define org_lwjgl_Sys_REALTIME_PRIORITY 2L
 /* Inaccessible static: LIBRARY_NAME */
+/* Inaccessible static: PLATFORM */
 /* Inaccessible static: DEBUG */
+/* Inaccessible static: initialized */
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    getNativeLibraryVersion
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion
+  (JNIEnv *, jclass);
+
 /*
  * Class:     org_lwjgl_Sys
  * Method:    setDebug

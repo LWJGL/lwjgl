@@ -40,7 +40,16 @@
 #include <stdlib.h>
 #include "common_tools.h"
 
-bool debug = false;
+static bool debug = false;
+static const char* VERSION = "0.9pre";
+
+jstring getVersionString(JNIEnv *env) {
+	return env->NewStringUTF(VERSION);
+}
+
+bool isDebugEnabled(void) {
+	return debug;
+}
 
 void setDebugEnabled(bool enable) {
 	debug = enable;
@@ -49,7 +58,7 @@ void setDebugEnabled(bool enable) {
 void printfDebug(const char *format, ...) {
 	va_list ap;
 	va_start(ap, format);
-	if (ISDEBUGENABLED())
+	if (isDebugEnabled())
 		vfprintf(stderr, format, ap);
 	va_end(ap);
 }

@@ -165,6 +165,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jst
 	env->ReleaseStringUTFChars(title, cTitleBarText);
 }
 
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
+	return getVersionString(env);
+}
+
 /*
  * Class:     org_lwjgl_Sys
  * Method:    openURL

@@ -88,6 +88,10 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
     return hires_timer;
 }
 
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
+	return getVersionString(env);
+}
+
 /*
  * Class:     org_lwjgl_Sys
  * Method:    setTime

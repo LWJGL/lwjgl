@@ -16,7 +16,7 @@
 
 #define CHECK_AL_ERROR \
 	{ \
-		if (ISDEBUGENABLED()) { \
+		if (isDebugEnabled()) { \
 			int err = alGetError(); \
 			if (err != AL_NO_ERROR) { \
 				jclass cls = env->FindClass("org/lwjgl/openal/OpenALException"); \
@@ -28,7 +28,7 @@
 /* only available if deviceaddress is specified in method */
 #define CHECK_ALC_ERROR \
 	{ \
-		if (ISDEBUGENABLED()) { \
+		if (isDebugEnabled()) { \
 			int err = alcGetError((ALCdevice*) deviceaddress); \
 			if (err != AL_NO_ERROR) { \
 				jclass cls = env->FindClass("org/lwjgl/openal/OpenALException"); \

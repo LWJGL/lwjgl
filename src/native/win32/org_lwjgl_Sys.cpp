@@ -65,6 +65,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebug(JNIEnv *env, jclass clazz, jb
 	setDebugEnabled(enabled == JNI_TRUE ? true : false);
 }
 
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
+	return getVersionString(env);
+}
+
 /*
  * Class:     org_lwjgl_Sys
  * Method:    getTime

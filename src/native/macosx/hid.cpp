@@ -202,7 +202,7 @@ bool findDevice(hid_device_t *hid_dev, long device_usage_page, long device_usage
 			long usage_page;
 			if (getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsageKey), &usage) &&
 			    getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey), &usage_page)) {
-				if (ISDEBUGENABLED()) {
+				if (isDebugEnabled()) {
 					printf("Considering device '");
 					printProperty(dev_props, CFSTR(kIOHIDProductKey));
 					printf("', usage page %ld usage %ld\n", usage_page, usage);

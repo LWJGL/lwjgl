@@ -47,6 +47,8 @@ import org.lwjgl.input.Mouse;
  * @version $Revision$
  */
 public final class Sys {
+	public static final String VERSION = "0.9pre";
+
 	/** Low process priority. @see #setProcessPriority() */
 	public static final int LOW_PRIORITY = -1;
 
@@ -78,9 +80,9 @@ public final class Sys {
 
 	/** The native library name */
 	private static String LIBRARY_NAME = "lwjgl";
-  
-  /** The platform being executed on */
-  private static String PLATFORM;
+
+	/** The platform being executed on */
+	private static String PLATFORM;
 	
 	/**
 	 * Debug flag.
@@ -91,12 +93,6 @@ public final class Sys {
 
 	static {
 		initialize();
-
-    // check platform name, and default to awt
-    PLATFORM = System.getProperty("org.lwjgl.Sys.platform");
-    if(PLATFORM == null) {
-      PLATFORM = "org.lwjgl.SwingAdapter";
-    }
 	}
 
 	/**
@@ -130,8 +126,18 @@ public final class Sys {
 			return;
 		initialized = true;
 		System.loadLibrary(LIBRARY_NAME);
+		String native_version = getNativeLibraryVersion();
+		if (!native_version.equals(VERSION))
+			throw new IllegalStateException("Version mismatch: jar version is '" + VERSION + 
+                                                        "', native libary version is '" + native_version + "'");
 		setDebug(DEBUG);
 		setTime(0);
+
+		// check platform name, and default to awt
+		PLATFORM = System.getProperty("org.lwjgl.Sys.platform");
+		if(PLATFORM == null) {
+			PLATFORM = "org.lwjgl.SwingAdapter";
+		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
@@ -148,7 +154,12 @@ public final class Sys {
 	}
 
 	/**
-     * Set the debug level of the native library
+	 * Return the version of the native library
+	 */
+	private static native String getNativeLibraryVersion();
+
+	/**
+	 * Set the debug level of the native library
 	 */
 	private static native void setDebug(boolean debug);
 

@@ -43,11 +43,8 @@
 #include <jni.h>
 #include "org_lwjgl_Sys.h"
 
-extern bool debug;
-
 // Must be x * max_event_size + 1
 #define EVENT_BUFFER_SIZE (25 * 4 + 1)
-#define ISDEBUGENABLED() (debug)
 
 typedef struct {
 	unsigned char input_event_buffer[EVENT_BUFFER_SIZE];
@@ -56,6 +53,8 @@ typedef struct {
 	int list_end;
 } event_queue_t;
 
+extern bool isDebugEnabled(void);
+extern jstring getVersionString(JNIEnv *env);
 extern void initEventQueue(event_queue_t *event_queue);
 extern int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, int buffer_size, int event_size);
 extern void putEventElement(event_queue_t *queue, unsigned char byte);
