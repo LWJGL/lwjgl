@@ -81,8 +81,8 @@ static bool getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidMo
 }
 
 static bool setMode(Display *disp, int screen, int width, int height, bool lock_mode) {
-        int num_modes, i;
-        XF86VidModeModeInfo **avail_modes;
+	int num_modes, i;
+	XF86VidModeModeInfo **avail_modes;
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 		printfDebug("Could not get display modes\n");
 		return false;
@@ -191,6 +191,7 @@ void switchDisplayMode(JNIEnv * env, jobject mode) {
 void resetDisplayMode(JNIEnv *env) {
 	int screen;
 	Display *disp = XOpenDisplay(NULL);
+//	Display *disp = incDisplay(env);
 	if (disp == NULL)
 		return;
 	screen = DefaultScreen(disp);
@@ -201,6 +202,7 @@ void resetDisplayMode(JNIEnv *env) {
 		XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp);
 		freeSavedGammaRamps();
 	}
+//	decDisplay();
 	XCloseDisplay(disp);
 }
 

@@ -39,7 +39,6 @@
  * @version $Revision$
  */
 
-
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -59,8 +58,8 @@
 
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
-static XVisualInfo * vis_info;
-static GLXFBConfig *configs;
+static XVisualInfo *vis_info = NULL;
+static GLXFBConfig *configs = NULL;
 
 static Atom delete_atom;
 static Colormap cmap;
@@ -87,11 +86,11 @@ static char error_message[ERR_MSG_SIZE];
 static Atom warp_atom;
 
 Atom getWarpAtom(void) {
-	        return warp_atom;
+	return warp_atom;
 }
 
 int getCurrentScreen(void) {
-	        return current_screen;
+	return current_screen;
 }
 
 bool checkXError(JNIEnv *env) {
@@ -273,7 +272,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
 	env->ReleaseStringUTFChars(title_obj, title);
 }
 
-static void destroyWindow() {
+static void destroyWindow(void) {
 	setRepeatMode(AutoRepeatModeDefault);
 	XDestroyWindow(getDisplay(), current_win);
 	XFreeColormap(getDisplay(), cmap);
@@ -517,13 +516,15 @@ static void dumpVisualInfo(XVisualInfo *vis_info) {
 
 static void destroyContext(void) {
 	releaseContext();
-	context = NULL;
 	if (USEGLX13) {
 		glXDestroyWindow(getDisplay(), glx_window);
 		XFree(configs);
+		configs = NULL;
 	}
 	XFree(vis_info);
+	vis_info = NULL;
 	glXDestroyContext(getDisplay(), context);
+	context = NULL;
 }
 
 static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
