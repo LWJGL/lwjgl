@@ -36,7 +36,7 @@ org.lwjgl.openal.AL;<br>
 import org.lwjgl.openal.ALC;<br>
 import org.lwjgl.openal.ALCcontext;<br>
 import org.lwjgl.openal.ALCdevice;<br>
-import org.lwjgl.openal.ALUT;<code></code><br>
+<br>
 <br>
 public class PlayTest {<br>
     <br>
@@ -45,9 +45,6 @@ public class PlayTest {<br>
     <br>
   /** OpenAL Context instance */<br>
   protected ALC alc;<br>
-    <br>
-  /** OpenAL Util library instance */<br>
-  protected ALUT alut;<br>
     <br>
   /** OpenAL context */<br>
   protected ALCcontext context;<br>
@@ -60,13 +57,12 @@ public class PlayTest {<br>
    */<br>
   public PlayTest() {<br>
     try {<br>
-</tt>          <tt> al      = new AL();<br>
+</tt>          
+<tt> al      = new AL();<br>
       alc     = new ALC();<br>
-      alut    = new ALUT();<br>
 <br>
       al.create();<br>
       alc.create();<br>
-      alut.create();<br>
    } catch (Exception e) {<br>
       e.printStackTrace();<br>
     }</tt><tt><br>
@@ -76,7 +72,6 @@ We need instances of the following classes:<br>
 <ul>
   <li><tt>AL  </tt>- basic source, buffer and listener interaction</li>
   <li><tt>ALC </tt>- context and device creatiuon</li>
-  <li><tt>ALUT </tt>- OpenAL utility class</li>
 </ul>
 <b>1.3 OpenAL initialization</b><br>
 Now that we have created a basic class containing instances of the relevant
@@ -129,21 +124,21 @@ Lets start of by creating one source, and one buffer:</p>
 <b>1.5 Loading sounddata and setting up a buffer</b><br>
 Now that we have a buffer, we need to load some sound data into this buffer.
 This is done using the <tt>al.bufferData</tt> method. In our example we will
-cheat a bit, by using the <tt>ALUT </tt>method <tt>loadWAVFile</tt> to load
+"cheat" a bit, by using the <tt>WaveData</tt> class to load
 a wave file, and copy this into the buffer:<br>
 <p
  style="border-style: solid; border-width: 1px; padding: 3px; background-color: rgb(255,255,204);"><tt> 
 //load wave data<br>
-  ALUTLoadWAVData file = alut.loadWAVFile("myfile.wav");<br>
+  WaveData wavefile = WaveData.create("mywavefile.wav");<br>
         <br>
   //copy to buffer<br>
-  al.bufferData(buffers.get(0), file.format, file.data, file.size, file.freq);<br>
+  al.bufferData(buffers.get(0), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);<br>
         <br>
   //unload file again<br>
-  alut.unloadWAV(file.format, file.data, file.size, file.freq);        <br>
+  wavefile.dispose();        <br>
 </tt></p>
 Having loaded the data, we pass it to <tt>bufferData</tt>. Once the buffer
-has been filled with sounddata, we unload it from the system using <tt>alut.unloadWAV</tt>.
+has been filled with sounddata, we unload it from the system using <tt>wavefile.dispose()</tt>.
 Don't worry about deleting it this soon - the sounddata has been <b>copied</b>
 to the buffer.<br>
 <br>
@@ -202,7 +197,7 @@ as is shown here:<b><br>
   alc.closeDevice(device);</tt></p>
 There, all set. Now you should be able to play some basic sound!<br>
 This tutorial is rather short, and the above examples feature no error checking.
-For the complete source code, look at:<br>
-<tt>org.lwjgl.openal.BasicTest</tt> in the repository.<br>
+For the complete source code, look at the classes in the <br>
+<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/java-game-lib/LWJGL/src/java/org/lwjgl/test/openal/" target="_blank"><tt>org.lwjgl.test.openal</tt></a> package.<br>
 </body>
 </html>
