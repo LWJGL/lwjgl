@@ -434,11 +434,8 @@ typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
 extern glGetErrorPROC glGetError;
 extern glGetStringPROC glGetString;
 
-/* initializes everything, call this right after the rc is created. the function returns 0 if successful */
-extern bool extgl_Open(void);
-#ifdef _MACOSX
-extern bool extgl_InitAGL(JNIEnv *env);
-#endif
+/* initializes everything, call this right after the rc is created. the function returns true if successful */
+extern bool extgl_Open(JNIEnv *env);
 extern void extgl_Close(void);
 extern void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions);

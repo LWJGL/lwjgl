@@ -34,10 +34,7 @@
 #include "extgl.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nLoadOpenGLLibrary(JNIEnv * env, jclass clazz) {
-	if (!extgl_Open()) {
-		throwException(env, "Failed to load OpenGL library");
-		return;
-	}
+	extgl_Open(env);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nUnloadOpenGLLibrary(JNIEnv * env, jclass clazz) {

@@ -204,27 +204,36 @@ bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *nam
 /*-----------------------------------------------------*/
 
 #ifdef _MACOSX
-bool extgl_Open(void) {
+bool extgl_Open(JNIEnv *env) {
 	if (opengl_lib_handle != NULL)
 		return true;
 	opengl_lib_handle = loadImage("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib");
-	return opengl_lib_handle != NULL;
+	if (opengl_lib_handle != NULL) {
+		throwException(env, "Could not load OpenGL library");
+		return true;
+	} else
+		return false;
 }
 #endif
 
 #ifdef _X11
-bool extgl_Open()
+bool extgl_Open(JNIEnv *env)
 {
+#define BUFFER_SIZE 2000
+	static char buffer[BUFFER_SIZE];
 	if (lib_gl_handle != NULL)
 		return true;
 	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
 	if (lib_gl_handle == NULL) {
-		printfDebug("Error loading libGL.so.1: %s\n", dlerror());
+		snprintf(buffer, BUFFER_SIZE, "Error loading libGL.so.1: %s", dlerror());
+		buffer[BUFFER_SIZE - 1] = '\0';
+		throwException(env, buffer);
 		return false;
 	}
-	glXGetProcAddressARB = (glXGetProcAddressARBPROC) dlsym(lib_gl_handle, "glXGetProcAddressARB");
+	glXGetProcAddressARB = (glXGetProcAddressARBPROC)dlsym(lib_gl_handle, "glXGetProcAddressARB");
 	if (glXGetProcAddressARB == NULL) {
 		extgl_Close();
+		throwException(env, "Could not get address of glXGetProcAddressARB");
 		return false;
 	}
 	return true;
@@ -233,14 +242,16 @@ bool extgl_Open()
 #endif /* X11 */
 
 #ifdef _WIN32
-bool extgl_Open(void)
+bool extgl_Open(JNIEnv *env)
 {
 	if (lib_gl_handle != NULL)
 		return true;
 	// load the dynamic libraries for OpenGL
 	lib_gl_handle = LoadLibrary("opengl32.dll");
-	if (lib_gl_handle == NULL)
+	if (lib_gl_handle == NULL) {
+		throwException(env, "Could not load OpenGL library");
 		return false;
+	}
 	return true;
 }
 #endif /* WIN32 */
