@@ -1,0 +1,47 @@
+
+<!-- Designed using ant 1.4  -->
+
+<project name="LWJGL" default="build website" basedir=".">
+
+
+  <!-- set global properties for this build -->
+  <property name="src"			value="./src"/>
+  <property name="bin"			value="./bin"/>
+  <property name="lib"  		value="./lib"/>
+  <property name="finish"  		value="."/>
+  <property name="docs"  		value="./docs"/>  
+  <property name="website"  	value="./website"/>
+  <property name="resources"  	value="./content"/>
+  <property name="ver"  		value="0_0_1"/>
+  
+  <!-- Temporary directorys -->
+  <property name="build" 		value="./tmp"/>
+  <property name="dist"  		value="./dist/tmp"/>
+
+ <target name="build website">
+    <echo> Generating Docs / Website files </echo>
+    
+    <delete>
+    	<fileset dir="${website}">
+    		<include name="*.html"/>
+    	</fileset>
+    </delete>
+    
+	<style basedir="${resources}" destdir="${website}" extension=".html" style="${resources}/simple.xsl">
+		<include name="*.xml"/>
+	</style>
+ </target>
+
+
+<!-- Targets below could be used to build the main project -->
+
+  <target name="compile" >
+    <echo>Not Implemented</echo>
+  </target>
+
+  <target name="build distribution" depends="compile">
+    <echo>Not Implemented</echo>
+  </target>
+  
+	
+</project>
