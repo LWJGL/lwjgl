@@ -168,10 +168,10 @@ static int bufferButtons(int num_di_events, DIDEVICEOBJECTDATA *di_buffer, unsig
 			unsigned char state = (unsigned char)di_buffer[i].dwData & 0x80;
 			if (state != 0)
 				state = 1;
-			buffer[buffer_index++] = button;
-			buffer[buffer_index++] = state;
 			if (buffer_index == buffer_size)
 				break;
+			buffer[buffer_index++] = button;
+			buffer[buffer_index++] = state;
 		}
 	}
 	return buffer_index/2;
