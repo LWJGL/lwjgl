@@ -167,7 +167,7 @@ public final class GLContext {
 	public static boolean OpenGL15;
 
 	static {
-		System.loadLibrary(Sys.getLibraryName());
+		Sys.initialize();
 	}
 
 	/**

@@ -56,7 +56,7 @@ import org.lwjgl.input.Mouse;
 public final class Window {
 
 	static {
-		System.loadLibrary(Sys.getLibraryName());
+		Sys.initialize();
 	}
 
 	/** X coordinate of the window */

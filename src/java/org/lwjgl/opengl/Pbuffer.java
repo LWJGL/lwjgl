@@ -155,7 +155,7 @@ public final class Pbuffer {
 	private final int height;
 
 	static {
-		System.loadLibrary(Sys.getLibraryName());
+		Sys.initialize();
 	}
 
 	/**

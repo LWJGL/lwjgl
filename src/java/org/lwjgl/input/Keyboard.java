@@ -268,7 +268,9 @@ public class Keyboard {
 	 * Static initialization
 	 */
 	private static void initialize() {
-		System.loadLibrary(Sys.getLibraryName());
+		if (initialized)
+			return;
+		Sys.initialize();
 		initIDs();
 		initialized = true;
 	}

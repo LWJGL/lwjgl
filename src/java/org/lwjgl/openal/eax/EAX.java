@@ -29,7 +29,10 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal.eax;
+
+package org.lwjgl.openal.eax;
+
+import org.lwjgl.Sys;
 
 /**
  * $Id$
@@ -40,65 +43,57 @@
  * @version $Revision$
  */
 public class EAX {
+	/** Has the EAX object been created? */
+	protected static boolean created;
+	
+	static {
+		Sys.initialize();
+	}
 
-  /** Has the EAX object been created? */
-  protected static boolean created;
-  
-  static {
-    initialize();
-  }
+	/**
+	 * Loads the EAX functions
+	 * 
+	 * @throws Exception if the EAX extensions couldn't be loaded
+	 */
+	public static void create() throws Exception {
+		if (created) {
+			return;
+		}
 
-  /**
-   * Static initialization
-   */
-  private static void initialize() {
-    System.loadLibrary(org.lwjgl.Sys.getLibraryName());
-  }
+		if (!nCreate()) {
+			throw new Exception("EAX instance could not be created.");
+		}
+		EAX20.init();
+		created = true;
+	}
 
-  /**
-   * Loads the EAX functions
-   * 
-   * @throws Exception if the EAX extensions couldn't be loaded
-   */
-  public static void create() throws Exception {
-    if (created) {
-      return;
-    }
+	/**
+	 * Native method to create EAX instance
+	 * 
+	 * @return true if the EAX extensions could be found
+	 */
+	protected static native boolean nCreate();
 
-    if (!nCreate()) {
-      throw new Exception("EAX instance could not be created.");
-    }
-    EAX20.init();
-    created = true;
-  }
+	/**
+	 * "Destroy" the EAX object
+	 */
+	public static void destroy() {
+		if (!created) {
+			return;
+		}
+		created = false;
+		nDestroy();
+	}
 
-  /**
-   * Native method to create EAX instance
-   * 
-   * @return true if the EAX extensions could be found
-   */
-  protected static native boolean nCreate();
-
-  /**
-   * "Destroy" the EAX object
-   */
-  public static void destroy() {
-    if (!created) {
-      return;
-    }
-    created = false;
-    nDestroy();
-  }
-
-  /**
-   * Native method the destroy the EAX
-   */
-  protected static native void nDestroy();
-  
-  /**
-   * @return true if EAX has been created
-   */
-  public static boolean isCreated() {
-    return created;
-  }  
+	/**
+	 * Native method the destroy the EAX
+	 */
+	protected static native void nDestroy();
+	
+	/**
+	 * @return true if EAX has been created
+	 */
+	public static boolean isCreated() {
+		return created;
+	}	
 }

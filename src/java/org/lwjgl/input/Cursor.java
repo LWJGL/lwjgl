@@ -49,10 +49,6 @@ import org.lwjgl.Sys;
  */
 
 public class Cursor {
-  
-	/** Lazy initialization */
-	private static boolean initialized = false;
-	
 	/** First element to display */
 	private CursorElement[] cursors = null;
 	
@@ -86,10 +82,7 @@ public class Cursor {
 		if (yHotspot >= height || yHotspot < 0)
 			throw new IllegalArgumentException("yHotspot > height || yHotspot < 0");
 		
-		// initialize
-		if (!initialized) {
-			initialize();
-		}
+		Sys.initialize();
 		
 		// Hmm 
 		yHotspot = height - 1 - yHotspot;		
@@ -98,14 +91,6 @@ public class Cursor {
 		createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
 	}
 	
-	/**
-	 * Initializes the cursor class
-	 */
-	private static void initialize() {
-		System.loadLibrary(Sys.getLibraryName());
-		initialized = true;
-	}	
-
 	/**
 	 * Creates the actual cursor, using a platform specific class
 	 */

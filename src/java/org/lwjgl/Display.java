@@ -75,7 +75,7 @@ public final class Display {
 	public static final int PLATFORM_AGL = 2;
 
 	static {
-		System.loadLibrary(Sys.getLibraryName());
+		Sys.initialize();
 		init();
 		Sys.log("Adapter: "+getAdapter()+" Version: "+getVersion());
 	}

@@ -87,6 +87,8 @@ public final class Sys {
 	 */
 	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.Sys.debug");
 
+	private static boolean initialized = false;
+
 	static {
 		initialize();
 
@@ -123,7 +125,10 @@ public final class Sys {
 	/**
 	 * Initialization.
 	 */
-	private static void initialize() {
+	public static void initialize() {
+		if (initialized)
+			return;
+		initialized = true;
 		System.loadLibrary(LIBRARY_NAME);
 		setDebug(DEBUG);
 		setTime(0);

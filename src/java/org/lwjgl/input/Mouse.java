@@ -217,7 +217,7 @@ public class Mouse {
 	 * Static initialization
 	 */
 	private static void initialize() {
-		System.loadLibrary(Sys.getLibraryName());
+		Sys.initialize();
 		initIDs();
 		
 		// Assign names to all the buttons
@@ -245,9 +245,7 @@ public class Mouse {
 		if (!Window.isCreated())
 			throw new IllegalStateException("Window must be created prior to creating mouse");
 		
-		if (!initialized) {
-			initialize();
-		}
+		initialize();
 		if (created) {
 			return;
 		}

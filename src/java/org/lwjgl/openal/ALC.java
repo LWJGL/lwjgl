@@ -34,6 +34,8 @@ package org.lwjgl.openal;
 import java.nio.Buffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.Sys;
+
 /**
  * $Id$
  * 
@@ -140,7 +142,7 @@ public class ALC {
 	public static final int ALC_OUT_OF_MEMORY = 0xA005;
 
 	static {
-		initialize();
+		Sys.initialize();
 	}
 
 	/** Creates a new instance of ALC */
@@ -151,13 +153,6 @@ public class ALC {
 	* Override to provide any initialization code after creation.
 	*/
 	protected static void init() {
-	}
-
-	/**
-	 * Static initialization
-	 */
-	private static void initialize() {
-		System.loadLibrary(org.lwjgl.Sys.getLibraryName());
 	}
 
 	/**

@@ -146,7 +146,9 @@ public class Controller {
 	 * Static initialization
 	 */
 	private static void initialize() {
-		System.loadLibrary(Sys.getLibraryName());
+		if (initialized)
+			return;
+		Sys.initialize();
 		initIDs();
 		
 		// Assign names to all the buttons
@@ -166,9 +168,7 @@ public class Controller {
 	public static void create() throws Exception {
 		if (!Window.isCreated())
 			throw new IllegalStateException("Window must be created before you can create Controller");
-		if (!initialized) {
-			initialize();
-		}
+		initialize();
 		
 		if (created) {
 			return;

@@ -77,14 +77,7 @@ public abstract class AL {
 	protected static boolean created;
 
 	static {
-		initialize();
-	}
-
-	/**
-	 * Static initialization
-	 */
-	private static void initialize() {
-		System.loadLibrary(org.lwjgl.Sys.getLibraryName());
+		Sys.initialize();
 	}
 
 	/**
