@@ -146,7 +146,7 @@ public class Mouse {
 	}
 
 	/** Native method to set the native cursor */
-	private static native void nSetNativeCursor(int handle);
+	private static native void nSetNativeCursor(int handle) throws Exception;
 
 	/**
 	 * Gets the minimum size of a native cursor. Can only be called if
@@ -210,9 +210,7 @@ public class Mouse {
 		if (created) {
 			return;
 		}
-		if (!nCreate()) {
-			throw new Exception("The mouse could not be created.");
-		}
+		nCreate();
 		created = true;
 		currentCursor = null;
 
@@ -225,7 +223,7 @@ public class Mouse {
 	 * 
 	 * @return true if the mouse was created
 	 */
-	private static native boolean nCreate();
+	private static native void nCreate();
 
 	/**
 	 * @return true if the mouse has been created

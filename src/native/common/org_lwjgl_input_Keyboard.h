@@ -276,8 +276,8 @@ extern "C" {
 /* Inaccessible static: character */
 /* Inaccessible static: key */
 /* Inaccessible static: state */
-/* Inaccessible static: class_000240 */
-/* Inaccessible static: class_000241 */
+/* Inaccessible static: initialized */
+/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Keyboard */
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    initIDs
@@ -289,9 +289,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate
- * Signature: ()Z
+ * Signature: ()V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv *, jclass);
 
 /*
@@ -321,9 +321,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nEnableTranslation
- * Signature: ()Z
+ * Signature: ()V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
   (JNIEnv *, jclass);
 
 /*

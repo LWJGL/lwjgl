@@ -24,6 +24,7 @@ extern "C" {
 /* Inaccessible static: currentCursor */
 /* Inaccessible static: buttonName */
 /* Inaccessible static: buttonMap */
+/* Inaccessible static: initialized */
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Mouse */
 /*
  * Class:     org_lwjgl_input_Mouse
@@ -68,9 +69,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nCreate
- * Signature: ()Z
+ * Signature: ()V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv *, jclass);
 
 /*

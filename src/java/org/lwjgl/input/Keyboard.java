@@ -286,17 +286,14 @@ public class Keyboard {
 			initialize();
 		if (created)
 			return;
-		if (!nCreate())
-			throw new Exception("The keyboard could not be created.");
+		nCreate();
 		created = true;
 	}
 	
 	/**
 	 * Native method to create the keyboard
-	 * 
-	 * @return true if the keyboard was created
 	 */
-	private static native boolean nCreate();
+	private static native void nCreate() throws Exception;
 
 	/**
 	 * @return true if the keyboard has been created
@@ -359,27 +356,26 @@ public class Keyboard {
 	/**
 	 * Enable keyboard translation. Must be called after the keyboard is created,
 	 * and keyboard buffering must be enabled.
-	 * @return false if translation cannot be enabled; true if it can
 	 */
-	public static boolean enableTranslation() {
+	public static void enableTranslation() throws Exception {
 		assert created : "The keyboard has not been created.";
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
         
-		translationEnabled = nEnableTranslation();
-		return translationEnabled;
+		nEnableTranslation();
+		translationEnabled = true;
 	}
 	
 	/**
 	 * Native method to enable the translation buffer
 	 */
-	private static native boolean nEnableTranslation();
+	private static native void nEnableTranslation() throws Exception;
 	
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
 	 * @return the size of the keyboard buffer in events, or 0 if no buffering
 	 * can be enabled for any reason
 	 */
-	public static int enableBuffer() {
+	public static int enableBuffer() throws Exception {
 		assert created : "The keyboard has not been created.";
 		int buf_len = nEnableBuffer();
 		if (readBuffer != null)
@@ -392,7 +388,7 @@ public class Keyboard {
 	 * @return the size of the buffer allocated, in events (1 event is 2 bytes),
 	 * or 0 if no buffer can be allocated
 	 */
-	private static native int nEnableBuffer();
+	private static native int nEnableBuffer() throws Exception;
 	
 	/**
 	 * Checks to see if a key is down.

@@ -73,24 +73,22 @@ static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 }
 
 static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-printf("Close requested\n");
 	close_requested = true;
 	return noErr;
 }
 
 static void registerEventHandlers(JNIEnv *env) {
-	EventTypeSpec event_type;
+	EventTypeSpec event_types[2];
 	OSStatus err;
 	EventHandlerUPP handler_upp = NewEventHandlerUPP(doQuit);
-	event_type.eventClass = kEventClassWindow;
-	event_type.eventKind  = kEventWindowClose;
-	err = InstallWindowEventHandler(win_ref, handler_upp, 1, &event_type, NULL, NULL);
+	event_types[0].eventClass = kEventClassWindow;
+	event_types[0].eventKind  = kEventWindowClose;
+	err = InstallWindowEventHandler(win_ref, handler_upp, 1, event_types, NULL, NULL);
+	DisposeEventHandlerUPP(handler_upp);
 	if (noErr != err) {
-		DisposeEventHandlerUPP(handler_upp);
 		throwException(env, "Could not register window event handler");
 		return;
 	}
-	DisposeEventHandlerUPP(handler_upp);
 }
 
 static void destroy(void) {
@@ -125,7 +123,6 @@ static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint st
 		throwException(env, "Could not create context");
 		return false;
 	}
-	//if (aglSetFullScreen(context, 800, 600, 85, 0) == GL_FALSE) {
 	if (aglSetDrawable(context, drawable) == GL_FALSE) {
 		aglDestroyContext(context);
 		throwException(env, "Could not attach context");
@@ -180,15 +177,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not load gl function pointers");
 		return;
 	}
-	TransitionWindow(win_ref, kWindowZoomTransitionEffect, kWindowShowTransitionAction, NULL);
+	ShowWindow(win_ref);
 	SelectWindow(win_ref);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv *env, jclass clazz) 
 {
+	RunApplicationEventLoop();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz)
+{                                                                                                                                                                                              
 	aglSwapBuffers(context);
 }
+                                                                                                                                                                
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
   (JNIEnv *env, jclass clazz)

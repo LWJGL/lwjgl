@@ -39,11 +39,11 @@
  * @version $Revision$
  */
 
-#include <Carbon/Carbon.h>
-#include <assert.h>
 #include "org_lwjgl_input_Keyboard.h"
 
-KeyMap keyMap;
+#define KEYBOARD_BUFFER_SIZE 50
+#define KEYBOARD_SIZE 256
+#define KEY_EVENT_BACKLOG 40
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -53,32 +53,16 @@ KeyMap keyMap;
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
   (JNIEnv * env, jclass clazz)
 {
-	// Get a global class instance, just to be sure
-	static jobject globalClassLock = NULL;
-
-	if (globalClassLock == NULL) {
-		globalClassLock = env->NewGlobalRef(clazz);
-	}
-
-	//fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
-	//fid_readBufferAddress = env->GetStaticFieldID(clazz, "readBufferAddress", "I");
 }
-
 
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
-
-#ifdef _DEBUG
-	printf("Creating OSX Carbon keyboard interface\n");
-#endif
-
-	return JNI_TRUE;
 }
 
 /*
@@ -89,12 +73,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-	// no specific methodology for doing this in OSX input system
-#ifdef _DEBUG
-	printf("Destroying OSX Carbon keyboard interface\n");
-#endif	
 }
-
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -102,11 +81,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
-  (JNIEnv * env, jclass clazz, jint buf)
+  (JNIEnv * env, jclass clazz, jobject buffer)
 {
-	// get the keymap from the operating system's carbon layer
-	//
-	GetKeys( keyMap );
 }
 
 /*
@@ -114,10 +90,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
  * Method:    nRead
  * Signature: (I)V
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
-  (JNIEnv * env, jclass clazz, jint keys)
+JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
+  (JNIEnv * env, jclass clazz)
 {
-      return 0;
+
+/*
+ * Class:     org_lwjgl_input_Keyboard
+ * Method:    nEnableTranslation
+ * Signature: ()I
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+  (JNIEnv *env, jclass clazz)
+{
 }
 
 /*
@@ -128,7 +112,14 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv * env, jclass clazz)
 {
-	printf("Buffered input is currently not available\n");
-	
-	return JNI_FALSE;
+}
+
+/*
+ * Class:     org_lwjgl_input_Keyboard
+ * Method:    nisStateKeySet
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet(JNIEnv *env, jclass clazz, jint key)
+{
+  return org_lwjgl_input_Keyboard_STATE_UNKNOWN;
 }

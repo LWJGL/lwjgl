@@ -11,9 +11,13 @@ extern "C" {
 /* Inaccessible static: created */
 /* Inaccessible static: buttons */
 /* Inaccessible static: x */
+/* Inaccessible static: rx */
 /* Inaccessible static: y */
+/* Inaccessible static: ry */
 /* Inaccessible static: z */
+/* Inaccessible static: rz */
 /* Inaccessible static: pov */
+/* Inaccessible static: slider */
 #undef org_lwjgl_input_Controller_POV_CENTER
 #define org_lwjgl_input_Controller_POV_CENTER -1L
 #undef org_lwjgl_input_Controller_POV_NORTH
@@ -25,8 +29,17 @@ extern "C" {
 #undef org_lwjgl_input_Controller_POV_WEST
 #define org_lwjgl_input_Controller_POV_WEST 9000L
 /* Inaccessible static: buttonCount */
+/* Inaccessible static: hasXAxis */
+/* Inaccessible static: hasRXAxis */
+/* Inaccessible static: hasYAxis */
+/* Inaccessible static: hasRYAxis */
 /* Inaccessible static: hasZAxis */
+/* Inaccessible static: hasRZAxis */
 /* Inaccessible static: hasPOV */
+/* Inaccessible static: hasSlider */
+/* Inaccessible static: buttonName */
+/* Inaccessible static: buttonMap */
+/* Inaccessible static: initialized */
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Controller */
 /*
  * Class:     org_lwjgl_input_Controller
@@ -39,9 +52,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nPoll
 /*
  * Class:     org_lwjgl_input_Controller
  * Method:    nCreate
- * Signature: ()Z
+ * Signature: ()V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate
   (JNIEnv *, jclass);
 
 /*

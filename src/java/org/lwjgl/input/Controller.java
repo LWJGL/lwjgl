@@ -171,9 +171,7 @@ public class Controller {
 			return;
 		}
 
-		if (!nCreate()) {
-			throw new Exception("The controller could not be created.");
-		}
+		nCreate();
 		
 		created = true;
 	}
@@ -248,10 +246,8 @@ public class Controller {
 
 	/**
 	 * Native method to create the controller
-	 * 
-	 * @return true if the controller was created
 	 */
-	private static native boolean nCreate();
+	private static native void nCreate() throws Exception;
 
 	/**
 	* Native method the destroy the controller

@@ -107,6 +107,8 @@ public class KeyboardTest {
   private void createKeyboard() {
     try {
       Keyboard.create();
+      Keyboard.enableBuffer();
+      Keyboard.enableTranslation();
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -114,8 +116,6 @@ public class KeyboardTest {
   }
 
   private void wiggleKeyboard() {
-    Keyboard.enableBuffer();
-    Keyboard.enableTranslation();
 
     while (!Window.isCloseRequested()) {
       Window.update();
