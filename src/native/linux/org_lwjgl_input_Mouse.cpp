@@ -51,6 +51,8 @@
 
 #define POINTER_WARP_BORDER 10
 #define WARP_RETRY 5
+// scale the mouse wheel according to win32
+#define WHEEL_SCALE 120 
 
 extern Display *disp;
 extern Window win;
@@ -217,10 +219,10 @@ void handleButtonPress(XButtonEvent *event) {
 			buttons[2] = JNI_TRUE;
 			break;
 		case Button4:
-			current_z--;
+			current_z += WHEEL_SCALE;
 			break;
 		case Button5:
-			current_z++;
+			current_z -= WHEEL_SCALE;
 			break;
 		default: assert(0);
 	}
