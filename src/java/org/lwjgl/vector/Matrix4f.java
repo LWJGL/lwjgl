@@ -635,30 +635,35 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @return the transposed matrix
 	 */
 	public Matrix4f transpose(Matrix4f dest) {
-		if (dest == null) {
-			dest = new Matrix4f();
-			dest.m00 = m00;
-			dest.m01 = m10;
-			dest.m02 = m20;
-			dest.m03 = m30;
-			dest.m10 = m01;
-			dest.m11 = m11;
-			dest.m12 = m21;
-			dest.m13 = m31;
-			dest.m20 = m02;
-			dest.m21 = m12;
-			dest.m22 = m22;
-			dest.m23 = m32;
-			dest.m30 = m03;
-			dest.m31 = m13;
-			dest.m32 = m23;
-			dest.m33 = m33;
-			return dest;
-		} else {
-			transpose();
-			return this;
-		}
-	}
+		if (dest == null) { 
+		   // New matrix needed to store transpose 
+		   dest = new Matrix4f(); 
+		} 
+		if (this == dest) { 
+		   // Destination and source are the same!  Run the in-place 
+		   // transpose instead as the copy transpose will be destructive. 
+		   transpose(); 
+		} else { 
+		   // Destination differs from source.  Perform copy transpose 
+		   dest.m00 = m00; 
+		   dest.m01 = m10; 
+		   dest.m02 = m20; 
+		   dest.m03 = m30; 
+		   dest.m10 = m01; 
+		   dest.m11 = m11; 
+		   dest.m12 = m21; 
+		   dest.m13 = m31; 
+		   dest.m20 = m02; 
+		   dest.m21 = m12; 
+		   dest.m22 = m22; 
+		   dest.m23 = m32; 
+		   dest.m30 = m03; 
+		   dest.m31 = m13; 
+		   dest.m32 = m23; 
+		   dest.m33 = m33; 
+		} 
+		return dest; 
+ 	}
 
 	/**
 	 * @return the determinant of the matrix

@@ -5,6 +5,7 @@ AC_PREREQ(2.57)
 AC_INIT
 AM_INIT_AUTOMAKE(LWJGL, 0.7)
 AC_CONFIG_SRCDIR([autogen.sh])
+AM_CONFIG_HEADER([config.h])
 
 AC_DISABLE_STATIC
 AC_LIBTOOL_DLOPEN
@@ -24,7 +25,15 @@ AC_PROG_LIBTOOL
 # Checks for header files.
 AC_PATH_X
 AC_HEADER_STDC
-AC_CHECK_HEADERS([stddef.h stdlib.h string.h sys/time.h])
+
+AC_JNI_INCLUDE_DIR
+
+for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+do
+    CPPFLAGS="$CPPFLAGS -I$JNI_INCLUDE_DIR"
+done
+
+AC_CHECK_HEADER([stddef.h stdlib.h string.h sys/time.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL

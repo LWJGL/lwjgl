@@ -330,22 +330,27 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return the transposed matrix
 	 */
 	public Matrix3f transpose(Matrix3f dest) {
-		if (dest == null) {
-			dest = new Matrix3f();
-			dest.m00 = m00;
-			dest.m01 = m10;
-			dest.m02 = m20;
-			dest.m10 = m01;
-			dest.m11 = m11;
-			dest.m12 = m21;
-			dest.m20 = m02;
-			dest.m21 = m12;
-			dest.m22 = m22;
-			return dest;
-		} else {
-			transpose();
-			return this;
-		}
+		if (dest == null) { 
+		   // New matrix needed to store transpose 
+		   dest = new Matrix3f(); 
+		} 
+		if (this == dest) { 
+		   // Destination and source are the same!  Run the in-place 
+		   // transpose instead as the copy transpose will be destructive. 
+		   transpose(); 
+		} else { 
+		   // Destination differs from source.  Perform copy transpose 
+		   dest.m00 = m00; 
+		   dest.m01 = m10; 
+		   dest.m02 = m20; 
+		   dest.m10 = m01; 
+		   dest.m11 = m11; 
+		   dest.m12 = m21; 
+		   dest.m20 = m02; 
+		   dest.m21 = m12; 
+		   dest.m22 = m22; 
+		} 
+		return dest; 
 	}
 
 	/**

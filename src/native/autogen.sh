@@ -2,7 +2,8 @@
 #WANT_AUTOMAKE_1_5=1
 
 #autoheader linux
-libtoolize --force
 aclocal
-automake --foreign --include-deps --add-missing --copy
+autoheader
+libtoolize --force
 autoconf
+automake --foreign --include-deps --add-missing --copy
