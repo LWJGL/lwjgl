@@ -32,6 +32,8 @@
 package org.lwjgl.opengl;
 
 public final class ARBWindowPos {
+	static native void initNativeStubs();
+
         public static native void glWindowPos2fARB(float x, float y);
 
         public static native void glWindowPos2iARB(int x, int y);

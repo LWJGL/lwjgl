@@ -150,6 +150,8 @@ public final class EXTVertexShader {
 	public static final int GL_LOCAL_CONSTANT_VALUE_EXT                             = 0x87EC;
 	public static final int GL_LOCAL_CONSTANT_DATATYPE_EXT                          = 0x87ED;
 
+	static native void initNativeStubs();
+
 	public static native void glBeginVertexShaderEXT();
 	public static native void glEndVertexShaderEXT();
 

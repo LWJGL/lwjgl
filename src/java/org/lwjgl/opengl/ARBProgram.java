@@ -129,6 +129,8 @@ public class ARBProgram {
 	public static final int GL_MATRIX31_ARB = 0x88DF;
 
 
+	static native void initNativeStubs();
+
 	// ---------------------------
 	public static void glProgramStringARB(int target, int format, ByteBuffer string) {
 		nglProgramStringARB(target, format, string.remaining(), string, string.position());

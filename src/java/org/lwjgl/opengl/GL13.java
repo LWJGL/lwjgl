@@ -148,6 +148,8 @@ public final class GL13 {
 	public static final int GL_DOT3_RGBA                = 0x86AF;
 	public static final int GL_CLAMP_TO_BORDER          = 0x812D;
 
+	static native void initNativeStubs();
+
 	public static native void glActiveTexture(int texture);
 	public static native void glClientActiveTexture(int texture);
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer data) {

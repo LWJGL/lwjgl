@@ -87,6 +87,8 @@ public final class ARBVertexProgram extends ARBProgram {
 	*/
 	public static final int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
 
+	static native void initNativeStubs();
+
 	public static native void glVertexAttrib1sARB(int index, short x);
 
 	public static native void glVertexAttrib1fARB(int index, float x);

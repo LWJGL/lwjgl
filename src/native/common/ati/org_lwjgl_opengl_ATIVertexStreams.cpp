@@ -286,8 +286,8 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexBlendEnviATI
 	
 }
 
-void extgl_InitATIVertexStreams(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glVertexStream1fATI", "(IF)V", (void*)&Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1fATI, "glVertexStream1fATI", (void**)&glVertexStream1fATI},
 		{"glVertexStream1iATI", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1iATI, "glVertexStream1iATI", (void**)&glVertexStream1iATI},
@@ -310,7 +310,7 @@ void extgl_InitATIVertexStreams(JNIEnv *env, jobject ext_set)
 		{"glVertexBlendEnviATI", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIVertexStreams_glVertexBlendEnviATI, "glVertexBlendEnviATI", (void**)&glVertexBlendEnviATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIVertexStreams");
-	if (extgl_Extensions.GL_ATI_vertex_streams)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_vertex_streams", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

@@ -49,6 +49,8 @@ public final class ARBMatrixPalette {
 	public static final int GL_MATRIX_INDEX_ARRAY_STRIDE_ARB                        = 0x8848;
 	public static final int GL_MATRIX_INDEX_ARRAY_POINTER_ARB                       = 0x8849;
 
+	static native void initNativeStubs();
+
 	public static native void glCurrentPaletteMatrixARB(int index);
 	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
 		BufferChecks.ensureArrayVBOdisabled();

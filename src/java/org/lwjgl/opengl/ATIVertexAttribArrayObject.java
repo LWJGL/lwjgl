@@ -36,6 +36,8 @@ import java.nio.IntBuffer;
 
 public final class ATIVertexAttribArrayObject {
 
+	static native void initNativeStubs();
+
 	public static native void glVertexAttribArrayObjectATI(int index, int size, int type,
 	                                                       boolean normalized, int stride, int buffer,
 	                                                       int offset);

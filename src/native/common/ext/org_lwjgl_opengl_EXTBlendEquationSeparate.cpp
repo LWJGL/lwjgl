@@ -50,13 +50,13 @@ static void JNICALL Java_org_lwjgl_opengl_EXTBlendEquationSeparate_glBlendEquati
 	glBlendEquationSeparateEXT(modeRGB, modeAlpha);
 }
 
-void extgl_InitEXTBlendEquationSeparate(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTBlendEquationSeparate_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glBlendEquationSeparateEXT", "(II)V", (void*)&Java_org_lwjgl_opengl_EXTBlendEquationSeparate_glBlendEquationSeparateEXT, "glBlendEquationSeparateEXT", (void**)&glBlendEquationSeparateEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTBlendEquationSeparate");
-	if (extgl_Extensions.GL_EXT_blend_equation_separate)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_blend_equation_separate", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

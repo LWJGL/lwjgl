@@ -60,6 +60,8 @@ public final class NVPixelDataRange {
 	public static final int GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV = 0x887C;
 	public static final int GL_READ_PIXEL_DATA_RANGE_POINTER_NV = 0x887D;
 
+	static native void initNativeStubs();
+
 	// ---------------------------
 	public static void glPixelDataRangeNV(int target, ByteBuffer data) {
 		nglPixelDataRangeNV(target, data.remaining(), data, data.position());

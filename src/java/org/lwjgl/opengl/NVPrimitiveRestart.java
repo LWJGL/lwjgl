@@ -47,6 +47,8 @@ public final class NVPrimitiveRestart {
 	*/
 	public static final int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
 
+	static native void initNativeStubs();
+
 	public static native void glPrimitiveRestartNV();
 
 	public static native void glPrimitiveRestartIndexNV(int index);

@@ -46,6 +46,8 @@ public final class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_ARRAY_EXT                             = 0x8457;
 
 	
+	static native void initNativeStubs();
+
 	public static native void glFogCoordfEXT(float coord);
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
 		BufferChecks.ensureArrayVBOdisabled();

@@ -87,6 +87,8 @@ public final class NVRegisterCombiners {
 	public static final int GL_COLOR_SUM_CLAMP_NV                                   = 0x854F;
 	public static final int GL_MAX_GENERAL_COMBINERS_NV                             = 0x854D;
 
+	static native void initNativeStubs();
+
 	public static native void glCombinerParameterfNV(int pname, float param);
 
 	public static void glCombinerParameterNV(int pname, FloatBuffer pfParams) {

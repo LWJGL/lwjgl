@@ -71,6 +71,8 @@ public final class GL15 {
 	public static final int GL_BUFFER_MAPPED = 0x88BC;
 	public static final int GL_BUFFER_MAP_POINTER = 0x88BD;
 
+	static native void initNativeStubs();
+
 	public static void glBindBuffer(int target, int buffer) {
 		switch ( target ) {
 			case GL_ELEMENT_ARRAY_BUFFER:

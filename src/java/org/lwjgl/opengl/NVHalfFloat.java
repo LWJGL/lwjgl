@@ -44,6 +44,8 @@ public final class NVHalfFloat {
 	*/
 	public static final int GL_HALF_FLOAT_NV = 0x140B;
 
+	static native void initNativeStubs();
+
 	public static native void glVertex2hNV(short x, short y);
 
 	public static native void glVertex3hNV(short x, short y, short z);

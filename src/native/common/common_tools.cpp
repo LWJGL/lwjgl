@@ -195,6 +195,7 @@ bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char 
 						ext_removeExtension(env, ext_set, ext_name);
 				}
 				free(methods);
+				throwException(env, "Missing driver symbols");
 				return false;
 			}
 			void **ext_function_pointer_pointer = function->ext_function_pointer;

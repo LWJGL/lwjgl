@@ -65,14 +65,14 @@ static void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSepara
 	
 }
 
-void extgl_InitATISeparateStencil(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glStencilOpSeparateATI", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSeparateATI, "glStencilOpSeparateATI", (void**)&glStencilOpSeparateATI},
 		{"glStencilFuncSeparateATI", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSeparateATI, "glStencilFuncSeparateATI", (void**)&glStencilFuncSeparateATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATISeparateStencil");
-	if (extgl_Extensions.GL_ATI_separate_stencil)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_separate_stencil", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

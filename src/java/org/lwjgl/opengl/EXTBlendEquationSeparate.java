@@ -40,6 +40,8 @@ public final class EXTBlendEquationSeparate {
 	public static final int GL_BLEND_EQUATION_RGB_EXT = 0x8009;
 	public static final int GL_BLEND_EQUATION_ALPHA_EXT = 0x883D;
 
+	static native void initNativeStubs();
+
 	public static native void glBlendEquationSeparateEXT(int modeRGB, int modeAlpha);
 
 }

@@ -144,6 +144,7 @@ public final class ATIFragmentShader {
 	public static final int GL_NEGATE_BIT_ATI                                       = 0x00000004;
 	public static final int GL_BIAS_BIT_ATI                                         = 0x00000008;
 
+	static native void initNativeStubs();
 
 	public static native int glGenFragmentShadersATI(int range);
 

@@ -58,6 +58,8 @@ public final class ATIDrawBuffers {
 	public static final int GL_DRAW_BUFFER15_ATI = 0x8834;
 
 
+	static native void initNativeStubs();
+
 	// ---------------------------
 	public static void glDrawBuffersATI(IntBuffer buffers) {
 		if (buffers.remaining() == 0) {

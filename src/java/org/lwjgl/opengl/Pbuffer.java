@@ -207,17 +207,18 @@ public final class Pbuffer {
 
 	/**
 	 * Method to make the Pbuffer context current. All subsequent OpenGL calls will go to this buffer.
+	 * @throws LWJGLException of the context could not be made current
 	 */
-	public synchronized void makeCurrent() {
+	public synchronized void makeCurrent() throws LWJGLException {
 		currentBuffer = this;
 		nMakeCurrent(handle);
-		VBOTracker.setCurrent(this);
+		GLContext.useContext(this);
 	}
 
 	/**
 	 * Native method to make a pbuffer current.
 	 */
-	private static native void nMakeCurrent(int handle);
+	private static native void nMakeCurrent(int handle) throws LWJGLException;
 
 	/**
 	 * Gets the Pbuffer capabilities.
@@ -238,12 +239,17 @@ public final class Pbuffer {
 	 * the current rendering context or not.
 	 */
 	public synchronized void destroy() {
-		makeCurrent();
-		int error = GL11.glGetError();
 		VBOTracker.remove(this);
-		nDestroy(handle);
-		if (error != GL11.GL_NO_ERROR)
-			throw new OpenGLException(error);
+		try {
+			makeCurrent();
+			int error = GL11.glGetError();
+			nDestroy(handle);
+			GLContext.useContext(null);
+			if (error != GL11.GL_NO_ERROR)
+				throw new OpenGLException(error);
+		} catch (LWJGLException e) {
+			// ignore exception
+		}
 	}
 
 	/**

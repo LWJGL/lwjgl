@@ -55,6 +55,8 @@ public final class NVFragmentProgram extends NVProgram {
 	public static final int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;
 	public static final int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;
 
+	static native void initNativeStubs();
+
 	// ---------------------------
 
 	public static void glProgramNamedParameter4fNV(int id, ByteBuffer name, float x, float y, float z, float w) {

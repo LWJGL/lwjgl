@@ -52,13 +52,13 @@ static void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceE
 	
 }
 
-void extgl_InitEXTStencilTwoSide(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glActiveStencilFaceEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT, "glActiveStencilFaceEXT", (void**)&glActiveStencilFaceEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTStencilTwoSide");
-	if (extgl_Extensions.GL_EXT_stencil_two_side)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_stencil_two_side", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

@@ -352,22 +352,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
 	handleMessages();
 }
 
-/*
- * Class:     org_lwjgl_Window
- * Method:    nMakeCurrent
- * Signature: ()V
- */
+static bool makeCurrent(void) {
+	if (USEGLX13)
+		return glXMakeContextCurrent(getDisplay(), glx_window, glx_window, context) == True;
+	else
+		return glXMakeCurrent(getDisplay(), getCurrentWindow(), context) == True;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
   (JNIEnv *env, jclass clazz)
 {
-	makeCurrent();
-}
-
-void makeCurrent(void) {
-	if (USEGLX13)
-		glXMakeContextCurrent(getDisplay(), glx_window, glx_window, context);
-	else
-		glXMakeCurrent(getDisplay(), getCurrentWindow(), context);
+	if (!makeCurrent())
+		throwException(env, "Could not make display context current");
 }
 
 static void releaseContext(void) {
@@ -668,8 +664,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, 
 		dumpVisualInfo(vis_info);
 	if (USEGLX13)
 		glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
-	makeCurrent();
-	if (!checkXError(env)) {
+	if (!makeCurrent() || !checkXError(env)) {
 		glXDestroyWindow(getDisplay(), glx_window);
 		destroyWindow();
 	}

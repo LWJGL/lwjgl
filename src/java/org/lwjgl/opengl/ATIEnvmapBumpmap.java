@@ -44,6 +44,8 @@ public final class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_ENVMAP_ATI                                      = 0x877B;
 	public static final int GL_BUMP_TARGET_ATI                                      = 0x877C;
 
+	static native void initNativeStubs();
+
 	public static void glTexBumpParameterATI(int pname, FloatBuffer pfParam) {
 		BufferChecks.checkBuffer(pfParam);
 		nglTexBumpParameterfvATI(pname, pfParam, pfParam.position());

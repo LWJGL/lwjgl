@@ -37,6 +37,8 @@ public final class NVRegisterCombiners2
 {
 	public static final int GL_PER_STAGE_CONSTANTS_NV                               = 0x8535;
 
+	static native void initNativeStubs();
+
 	public static void glCombinerStageParameterNV(int stage, int pname, FloatBuffer pfParams) {
 		BufferChecks.checkBuffer(pfParams);
 		nglCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());

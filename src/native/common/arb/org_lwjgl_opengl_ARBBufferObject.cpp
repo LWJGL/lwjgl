@@ -199,8 +199,8 @@ static jobject JNICALL Java_org_lwjgl_opengl_ARBBufferObject_glGetBufferPointerA
         return safeNewBuffer(env, pointer, size);
 }
 
-void extgl_InitARBBufferObject(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"nglBindBufferARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBBufferObject_nglBindBufferARB, "glBindBufferARB", (void**)&glBindBufferARB},
 		{"nglDeleteBuffersARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBBufferObject_nglDeleteBuffersARB, "glDeleteBuffersARB", (void**)&glDeleteBuffersARB},
@@ -216,7 +216,7 @@ void extgl_InitARBBufferObject(JNIEnv *env, jobject ext_set)
 	};
 
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBBufferObject");
-
-	extgl_InitializeClass(env, clazz, NULL, "<ARBBufferObject>", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

@@ -273,8 +273,8 @@ static jobject JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glGetVertexAttribP
         return safeNewBuffer(env, address, size);
 }
 
-void extgl_InitARBVertexProgram(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glVertexAttrib1sARB", "(IS)V", (void*)&Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib1sARB, "glVertexAttrib1sARB", (void**)&glVertexAttrib1sARB},
 		{"glVertexAttrib1fARB", "(IF)V", (void*)&Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib1fARB, "glVertexAttrib1fARB", (void**)&glVertexAttrib1fARB},
@@ -294,8 +294,7 @@ void extgl_InitARBVertexProgram(JNIEnv *env, jobject ext_set)
 		{"glGetVertexAttribPointerARB", "(III)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_ARBVertexProgram_glGetVertexAttribPointerARB, "glGetVertexAttribPointervARB", (void**)&glGetVertexAttribPointervARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBVertexProgram");
-	if (extgl_Extensions.GL_ARB_vertex_program)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_vertex_program", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
 }
 

@@ -37,6 +37,8 @@ public final class ATISeparateStencil {
 	public static final int GL_STENCIL_BACK_PASS_DEPTH_FAIL_ATI		= 0x8802;
 	public static final int GL_STENCIL_BACK_PASS_DEPTH_PASS_ATI		= 0x8803;
 
+	static native void initNativeStubs();
+
 	public static native void glStencilOpSeparateATI(int face, int sfail, int dpfail, int dppass);
 	public static native void glStencilFuncSeparateATI(int frontfunc, int backfunc, int ref, int mask);
 }

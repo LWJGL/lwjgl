@@ -205,8 +205,8 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArra
 	
 }
 
-void extgl_InitATIVertexArrayObject(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"nglNewObjectBufferATI", "(ILjava/nio/Buffer;II)I", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBufferATI, "glNewObjectBufferATI", (void**)&glNewObjectBufferATI},
 		{"glIsObjectBufferATI", "(I)Z", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObjectBufferATI, "glIsObjectBufferATI", (void**)&glIsObjectBufferATI},
@@ -222,7 +222,7 @@ void extgl_InitATIVertexArrayObject(JNIEnv *env, jobject ext_set)
 		{"nglGetVariantArrayObjectivATI", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectivATI, "glGetVariantArrayObjectivATI", (void**)&glGetVariantArrayObjectivATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIVertexArrayObject");
-	if (extgl_Extensions.GL_ATI_vertex_array_object)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_vertex_array_object", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

@@ -2571,8 +2571,8 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glViewport(JNIEnv * env, jclass c
 	
 }
 
-bool extgl_InitOpenGL1_1(JNIEnv *env)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glAccum", "(IF)V", (void*)&Java_org_lwjgl_opengl_GL11_glAccum, "glAccum", (void**)&glAccum},
 		{"glAlphaFunc", "(IF)V", (void*)&Java_org_lwjgl_opengl_GL11_glAlphaFunc, "glAlphaFunc", (void**)&glAlphaFunc},
@@ -2782,7 +2782,7 @@ bool extgl_InitOpenGL1_1(JNIEnv *env)
 		{"glViewport", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL11_glViewport, "glViewport", (void**)&glViewport}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/GL11");
-	return extgl_InitializeClass(env, clazz, NULL, "GL11", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
 }
 

@@ -82,6 +82,8 @@ public final class ARBVertexBlend {
 	public static final int GL_MODELVIEW30_ARB                                      = 0x873E;
 	public static final int GL_MODELVIEW31_ARB                                      = 0x873F;
 	
+	static native void initNativeStubs();
+
 	public static void glWeightARB(ByteBuffer pWeights) {
 		nglWeightbvARB(pWeights.remaining(), pWeights, pWeights.position());
 	}

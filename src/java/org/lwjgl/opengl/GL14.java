@@ -85,6 +85,8 @@ public final class GL14 {
 	public static final int GL_MAX_TEXTURE_LOD_BIAS                                 = 0x84FD;
 	public static final int GL_GL_MIRRORED_REPEAT                                   = 0x8370;
 
+	static native void initNativeStubs();
+
         public static native void glBlendEquation(int mode);
         public static native void glBlendColor(float red, float green, float blue, float alpha);
 	public static native void glFogCoordf(float coord);

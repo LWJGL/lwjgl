@@ -41,5 +41,7 @@ public final class EXTBlendFuncSeparate {
 	public static final int GL_BLEND_DST_ALPHA_EXT              = 0x80CA;
 	public static final int GL_BLEND_SRC_ALPHA_EXT              = 0x80CB;
 
+	static native void initNativeStubs();
+
 	public static native void glBlendFuncSeparateEXT(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha);
 }

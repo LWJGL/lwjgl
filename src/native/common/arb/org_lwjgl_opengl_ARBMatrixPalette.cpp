@@ -119,8 +119,8 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB
 	
 }
 
-void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glCurrentPaletteMatrixARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB, "glCurrentPaletteMatrixARB", (void**)&glCurrentPaletteMatrixARB},
 		{"nglMatrixIndexPointerARB", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB, "glMatrixIndexPointerARB", (void**)&glMatrixIndexPointerARB},
@@ -130,8 +130,7 @@ void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set)
 		{"nglMatrixIndexusvARB", "(ILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB, "glMatrixIndexusvARB", (void**)&glMatrixIndexusvARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBMatrixPalette");
-	if (extgl_Extensions.GL_ARB_matrix_palette)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_matrix_palette", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
 }
 

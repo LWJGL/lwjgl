@@ -67,15 +67,14 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMat
 	
 }
 
-void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"nglLoadTransposeMatrixfARB", "(Ljava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTransposeMatrixfARB, "glLoadTransposeMatrixfARB", (void**)&glLoadTransposeMatrixfARB},
 		{"nglMultTransposeMatrixfARB", "(Ljava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMatrixfARB, "glMultTransposeMatrixfARB", (void**)&glMultTransposeMatrixfARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBTransposeMatrix");
-	if (extgl_Extensions.GL_ARB_transpose_matrix)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_transpose_matrix", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
 }
 

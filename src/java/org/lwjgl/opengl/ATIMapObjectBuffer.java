@@ -35,6 +35,8 @@ import java.nio.ByteBuffer;
 
 public final class ATIMapObjectBuffer {
 
+	static native void initNativeStubs();
+
 	/**
 	 * glMapObjectBufferATI maps a gl object buffer to a ByteBuffer. The oldBuffer argument can be
 	 * null, in which case a new ByteBuffer will be created, pointing to the returned memory. If

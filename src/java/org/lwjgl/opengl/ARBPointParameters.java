@@ -39,6 +39,7 @@ public final class ARBPointParameters {
 	public static final int GL_POINT_FADE_THRESHOLD_SIZE_ARB                        = 0x8128;
 	public static final int GL_POINT_DISTANCE_ATTENUATION_ARB                       = 0x8129;
 
+	static native void initNativeStubs();
 
 	public static native void glPointParameterfARB(int pname, float param);
 

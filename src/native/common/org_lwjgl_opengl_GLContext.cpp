@@ -34,20 +34,13 @@
 #include "extgl.h"
 #include "common_tools.h"
 
-/*
- * Class:     org_lwjgl_opengl_GLContext
- * Method:    init
- * Signature: (Ljava/util/Set;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_init
-  (JNIEnv * env, jclass clazz, jobject exts)
-{
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_loadOpenGLLibrary(JNIEnv * env, jclass clazz) {
 	if (!extgl_Open()) {
 		throwException(env, "Failed to load OpenGL library");
 		return;
 	}
-	if (!extgl_Initialize(env, exts)) {
-		throwException(env, "Failed to initialize GL extensions");
-		return;
-	}
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_resetNativeStubs(JNIEnv *env, jclass clazz, jclass gl_class) {
+	env->UnregisterNatives(gl_class);
 }

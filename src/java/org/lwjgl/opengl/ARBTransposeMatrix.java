@@ -39,6 +39,8 @@ public final class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
 	
+	static native void initNativeStubs();
+
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
 		BufferChecks.checkBuffer(pfMtx, 16);
 		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position());

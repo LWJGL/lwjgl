@@ -35,6 +35,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -176,7 +177,11 @@ public class PbufferTest {
         pbuffer.destroy();
         initPbuffer();
     }
-    pbuffer.makeCurrent();
+	try {
+	    pbuffer.makeCurrent();
+	} catch (LWJGLException e) {
+		throw new RuntimeException(e);
+	}
     // Pbuffer rendering
     //clear background
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
@@ -198,7 +203,11 @@ public class PbufferTest {
     }
     GL11.glPopMatrix();
     GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 0, 0, 512, 512, 0);
-    Display.makeCurrent();
+	try {
+		Display.makeCurrent();
+	} catch (LWJGLException e) {
+		throw new RuntimeException(e);
+	}
 
     // OpenGL window rendering
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);

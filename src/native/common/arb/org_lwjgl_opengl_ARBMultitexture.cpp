@@ -221,8 +221,8 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4sARB
 	
 }
 
-void extgl_InitARBMultitexture(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glClientActiveTextureARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBMultitexture_glClientActiveTextureARB, "glClientActiveTextureARB", (void**)&glClientActiveTextureARB},
 		{"glActiveTextureARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBMultitexture_glActiveTextureARB, "glActiveTextureARB", (void**)&glActiveTextureARB},
@@ -240,8 +240,7 @@ void extgl_InitARBMultitexture(JNIEnv *env, jobject ext_set)
 		{"glMultiTexCoord4sARB", "(ISSSS)V", (void*)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4sARB, "glMultiTexCoord4sARB", (void**)&glMultiTexCoord4sARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBMultitexture");
-	if (extgl_Extensions.GL_ARB_multitexture)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_multitexture", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
 }
 

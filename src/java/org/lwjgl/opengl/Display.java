@@ -462,9 +462,10 @@ public final class Display {
 	private static native void swapBuffers();
 	
 	/**
-	 * Make the Display the current rendering context for GL calls.
+	 * Make the Display the current rendering context for GL calls. Also initialize native stubs.
+	 * @throws LWJGLException If the context could not be made current
 	 */
-	public static synchronized void makeCurrent() {
+	public static synchronized void makeCurrent() throws LWJGLException {
 		if (!isCreated())
 			throw new IllegalStateException("No window created to make current");
 		nMakeCurrent();
@@ -474,7 +475,7 @@ public final class Display {
 	/**
 	 * Make the window the current rendering context for GL calls.
 	 */
-	private static native void nMakeCurrent();
+	private static native void nMakeCurrent() throws LWJGLException;
 
 	/**
 	 * Create the OpenGL context. If isFullscreen() is true or if windowed
@@ -596,6 +597,11 @@ public final class Display {
 		destroyWindow();
 		destroyContext();
 		context = null;
+		try {
+			GLContext.useContext(null);
+		} catch (LWJGLException e) {
+			// ignore exception
+		}
 		reset();
 	}
 

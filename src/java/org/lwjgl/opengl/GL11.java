@@ -719,7 +719,9 @@ public final class GL11 {
 	/* For compatibility with OpenGL v1.0 */
 	public static final int GL_LOGIC_OP = GL_INDEX_LOGIC_OP;
 	public static final int GL_TEXTURE_COMPONENTS = GL_TEXTURE_INTERNAL_FORMAT;
-	
+
+	static native void initNativeStubs();
+
 	public static native void glAccum(int op, float value);
 	public static native void glAlphaFunc(int func, float ref);
 	public static native void glClearColor(float red, float green, float blue, float alpha);

@@ -46,6 +46,8 @@ public final class EXTDepthBoundsTest {
 	*/
 	public static final int DEPTH_BOUNDS_EXT = 0x8891;
 
+	static native void initNativeStubs();
+
 	public static native void glDepthBoundsEXT(float zmin, float zmax);
 
 }

@@ -50,13 +50,13 @@ static void JNICALL Java_org_lwjgl_opengl_EXTDepthBoundsTest_glDepthBoundsEXT
 	glDepthBoundsEXT(zmin, zmax);
 }
 
-void extgl_InitEXTDepthBoundsTest(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDepthBoundsTest_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glDepthBoundsEXT", "(FF)V", (void*)&Java_org_lwjgl_opengl_EXTDepthBoundsTest_glDepthBoundsEXT, "glDepthBoundsEXT", (void**)&glDepthBoundsEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTDepthBoundsTest");
-	if (extgl_Extensions.GL_EXT_depth_bounds_test)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_depth_bounds_test", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

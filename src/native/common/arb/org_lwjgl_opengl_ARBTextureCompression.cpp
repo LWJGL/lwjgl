@@ -137,8 +137,8 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglGetCompressed
 	
 }
 
-void extgl_InitARBTextureCompression(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"nglCompressedTexImage1DARB", "(IIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage1DARB, "glCompressedTexImage1DARB", (void**)&glCompressedTexImage1DARB},
 		{"nglCompressedTexImage2DARB", "(IIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage2DARB, "glCompressedTexImage2DARB", (void**)&glCompressedTexImage2DARB},
@@ -149,8 +149,6 @@ void extgl_InitARBTextureCompression(JNIEnv *env, jobject ext_set)
 		{"nglGetCompressedTexImageARB", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBTextureCompression_nglGetCompressedTexImageARB, "glGetCompressedTexImageARB", (void**)&glGetCompressedTexImageARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBTextureCompression");
-	if (extgl_Extensions.GL_ARB_texture_compression)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_texture_compression", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
-
+}

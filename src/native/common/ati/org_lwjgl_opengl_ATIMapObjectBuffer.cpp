@@ -72,14 +72,13 @@ static void JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBuffer
 	
 }
 
-void extgl_InitATIMapObjectBuffer(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glMapObjectBufferATI", "(IILjava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBufferATI, "glMapObjectBufferATI", (void**)&glMapObjectBufferATI},
 		{"glUnmapObjectBufferATI", "(I)V", (void*)&Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBufferATI, "glUnmapObjectBufferATI", (void**)&glUnmapObjectBufferATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIMapObjectBuffer");
-	if (extgl_Extensions.GL_ATI_map_object_buffer)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_map_object_buffer", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
 }

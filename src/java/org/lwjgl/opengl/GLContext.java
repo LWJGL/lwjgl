@@ -36,8 +36,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+import java.lang.reflect.Method;
 
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -174,6 +181,9 @@ public final class GLContext {
 	public static boolean OpenGL14;
 	public static boolean OpenGL15;
 
+	/** Map of classes that have native stubs loaded */
+	private static Map exts;
+
 	static {
 		Sys.initialize();
 	}
@@ -204,18 +214,21 @@ public final class GLContext {
 	/**
 	 * Makes a GL context the current context. This method does not make the context current though!
 	 * Instead it simply ensures that the current context is reflected accurately by GLContext's
-	 * extension caps and function pointers.
+	 * extension caps and function pointers. Use useContext(null) when no context is active.
 	 * <p>If the context is the same as last time, then this is a no-op.
 	 * <p>If the context has not been encountered before it will be fully initialized from scratch.
 	 * Otherwise a cached set of caps and function pointers will be used.
 	 * <p>The reference to the context is held in a weak reference; therefore if no strong reference
 	 * exists to the GL context it will automatically be forgotten by the VM at an indeterminate point
 	 * in the future, freeing up a little RAM.
-	 * @param context The context object, which uniquely identifies a GL context
+	 * @param context The context object, which uniquely identifies a GL context. If context is null,
+	 * 		  the native stubs are unloaded.
+	 * @throws LWJGLException if context non-null, and the gl library can't be loaded or the basic GL11 functions can't be loaded
 	 */
-	public static synchronized void useContext(Object context) {
+	public static synchronized void useContext(Object context) throws LWJGLException {
 		if (context == null) {
-			throw new NullPointerException("Can't use a null context");
+			unloadStubs();
+			return;
 		}
 		// Is this the same as last time?
 		Object current = currentContext == null ? null : currentContext.get();
@@ -223,18 +236,111 @@ public final class GLContext {
 			// Yes, so we don't need to do anything. Our caps and function pointers are still valid.
 			return;
 		}
-
+		
 		// Ok, now it's the current context.
+		loadOpenGLLibrary();
+		GL11.initNativeStubs();
+		loadStubs();
 		currentContext = new WeakReference(context);
-		HashSet exts = new HashSet();
-		init(exts);
-		determineAvailableExtensions(exts);
 		VBOTracker.setCurrent(currentContext);
 	}
 
+	private static void getExtensionClassesAndNames(Map exts, Set exts_names) {
+		String version_string = GL11.glGetString(GL11.GL_VERSION);
+		int version_index = version_string.indexOf("1.");
+		if (version_index != -1) {
+			String version = version_string.substring(version_index);
+			char minor_version = version_string.charAt(2);
+			switch (minor_version) {
+				case '5':
+					addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
+					// Fall through
+				case '4':
+					addExtensionClass(exts, exts_names, "GL14", "OpenGL14");
+					// Fall through
+				case '3':
+					addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
+					// Fall through
+				case '2':
+					addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
+					// Fall through
+				default:
+					break;
+			}
+				
+		}
+		String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
+		StringTokenizer tokenizer = new StringTokenizer(extensions_string);
+		while (tokenizer.hasMoreTokens()) {
+			String extension_string = tokenizer.nextToken();
+			StringBuffer converted_name = new StringBuffer();
+			int gl_prefix_index = extension_string.indexOf("GL_");
+			if (gl_prefix_index == -1)
+				continue;
+			for (int i = gl_prefix_index + 3; i < extension_string.length(); i++) {
+				char c;
+				if (extension_string.charAt(i) == '_') {
+					i++;
+					c = Character.toUpperCase(extension_string.charAt(i));
+				} else
+					c = extension_string.charAt(i);
+				converted_name.append(c);
+			}
+			addExtensionClass(exts, exts_names, converted_name.toString(), extension_string);
+		}
+		addExtensionClass(exts, exts_names, "ARBBufferObject", null);
+		addExtensionClass(exts, exts_names, "ARBProgram", null);
+		addExtensionClass(exts, exts_names, "NVProgram", null);
+	}
+
+	private static void addExtensionClass(Map exts, Set exts_names, String ext_class_name, String ext_name) {
+		if (ext_name != null)
+			exts_names.add(ext_name);
+		try {
+			Class extension_class = Class.forName("org.lwjgl.opengl." + ext_class_name);
+			extension_class.getDeclaredMethod("initNativeStubs", null); // check for existance of initNativeStubs method
+			exts.put(extension_class, ext_name);
+		} catch (ClassNotFoundException e) {
+			// ignore
+		} catch (NoSuchMethodException e) {
+			// ignore
+		}
+	}
+
+	private static void loadStubs() {
+		exts = new HashMap();
+		Set exts_names = new HashSet();
+		getExtensionClassesAndNames(exts, exts_names);
+		Iterator exts_it = exts.keySet().iterator();
+		while (exts_it.hasNext()) {
+			Class extension_class = (Class)exts_it.next();
+			resetNativeStubs(extension_class);
+			try {
+				Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
+				init_stubs_method.invoke(null, null);
+				String ext_name = (String)exts.get(extension_class);
+			} catch (Exception e) {
+				Sys.log("Failed to initialize extension " + extension_class);
+				exts_it.remove();
+				exts_names.remove(exts.get(extension_class));
+			}
+		}
+		determineAvailableExtensions(exts_names);
+	}
+
+	private static void unloadStubs() {
+		Iterator exts_it = exts.keySet().iterator();
+		while (exts_it.hasNext())
+			resetNativeStubs((Class)exts_it.next());
+	}
+
 	/**
-	 * Native method to initialize a context
-	 * @param exts An empty Set of Strings that will be filled with the names of enabled extensions
+	 * Native method to load the OpenGL library
 	 */
-	private static native void init(Set exts);
+	private static native void loadOpenGLLibrary();
+
+	/**
+	 * Native method to clear native stub bindings
+	 */
+	private static native void resetNativeStubs(Class clazz);
 }

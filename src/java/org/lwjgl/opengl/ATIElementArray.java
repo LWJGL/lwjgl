@@ -42,6 +42,8 @@ public final class ATIElementArray {
 	public static final int GL_ELEMENT_ARRAY_TYPE_ATI                               = 0x8769;
 	public static final int GL_ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;
 
+	static native void initNativeStubs();
+
 	public static void glElementPointerATI(ByteBuffer pPointer) {
 		BufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_BYTE, pPointer, pPointer.position());

@@ -47,6 +47,8 @@ public final class ATIVertexArrayObject {
 	public static final int GL_ARRAY_OBJECT_BUFFER_ATI                              = 0x8766;
 	public static final int GL_ARRAY_OBJECT_OFFSET_ATI                              = 0x8767;
 	
+	static native void initNativeStubs();
+
 	public static int glNewObjectBufferATI(int size, ByteBuffer pPointer, int usage) {
 		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position() : 0, usage);
 	}

@@ -94,6 +94,8 @@ public final class ARBVertexShader {
 	public static final int GL_FLOAT_MAT3_ARB = 0x8B5B;
 	public static final int GL_FLOAT_MAT4_ARB = 0x8B5C;
 
+	static native void initNativeStubs();
+
 	// ---------------------------
 	public static void glBindAttribLocationARB(int programObj, int index, ByteBuffer name) {
 		if ( name.get(name.limit() - 1) != 0 ) {

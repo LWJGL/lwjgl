@@ -60,6 +60,8 @@ public class NVProgram {
 	 */
 	public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
 
+	static native void initNativeStubs();
+
 	// ---------------------------
 	public static void glLoadProgramNV(int target, int programID, ByteBuffer string) {
 		nglLoadProgramNV(target, programID, string.remaining(), string, string.position());

@@ -122,11 +122,6 @@
 	extern int convertToBPE(int bpp);
 
 	/*
-	 * Make the window context current
-	 */
-	void makeCurrent(void);
-
-	/*
 	 * Return the current OpenGL window context
 	 */
 	GLXContext getCurrentContext(void);

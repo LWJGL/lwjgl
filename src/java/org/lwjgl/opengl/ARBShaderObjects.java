@@ -90,6 +90,8 @@ public final class ARBShaderObjects {
 	public static final int GL_SAMPLER_2D_RECT_ARB = 0x8B63;
 	public static final int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8B64;
 
+	static native void initNativeStubs();
+
 	public static native void glDeleteObjectARB(int obj);
 
 	public static native int glGetHandleARB(int pname);

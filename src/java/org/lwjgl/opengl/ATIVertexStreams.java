@@ -43,6 +43,8 @@ public final class ATIVertexStreams {
 	public static final int GL_VERTEX_STREAM6_ATI                                   = 0x8773;
 	public static final int GL_VERTEX_STREAM7_ATI                                   = 0x8774;
 
+	static native void initNativeStubs();
+
 	public static native void glVertexStream1fATI(int stream, float x);
 	public static native void glVertexStream1iATI(int stream, int x);
 	public static native void glVertexStream1sATI(int stream, short x);

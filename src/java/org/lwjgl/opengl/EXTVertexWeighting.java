@@ -50,6 +50,8 @@ public final class EXTVertexWeighting {
 	public static final int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT                       = 0x850F;
 	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT                      = 0x8510;
 
+	static native void initNativeStubs();
+
 	public static native void glVertexWeightfEXT(float weight);
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {

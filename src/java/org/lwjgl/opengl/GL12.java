@@ -89,6 +89,8 @@ public final class GL12 {
 	public static final int GL_ALIASED_POINT_SIZE_RANGE       = 0x846D;
 	public static final int GL_ALIASED_LINE_WIDTH_RANGE       = 0x846E;
 
+	static native void initNativeStubs();
+
 	public static void glDrawRangeElements(int mode, int start, int end, ByteBuffer indices) {
 		BufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElements(mode, start, end, indices.remaining(), GL11.GL_UNSIGNED_BYTE, indices, indices.position());

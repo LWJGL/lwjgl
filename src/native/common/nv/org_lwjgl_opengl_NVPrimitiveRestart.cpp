@@ -65,14 +65,14 @@ static void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartI
 	
 }
 
-void extgl_InitNVPrimitiveRestart(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glPrimitiveRestartNV", "()V", (void*)&Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartNV, "glPrimitiveRestartNV", (void**)&glPrimitiveRestartNV},
 		{"glPrimitiveRestartIndexNV", "(I)V", (void*)&Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartIndexNV, "glPrimitiveRestartIndexNV", (void**)&glPrimitiveRestartIndexNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVPrimitiveRestart");
-	if (extgl_Extensions.GL_NV_primitive_restart)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_primitive_restart", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+

@@ -68,6 +68,8 @@ public final class ARBBufferObject {
 	public static final int GL_BUFFER_MAPPED_ARB                            = 0x88BC;
 	public static final int GL_BUFFER_MAP_POINTER_ARB                       = 0x88BD;
 
+	static native void initNativeStubs();
+
 	public static void glBindBufferARB(int target, int buffer) {
 		switch (target) {
 			case ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB:

@@ -65,14 +65,14 @@ static void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI
 	
 }
 
-void extgl_InitATIPNTriangles(JNIEnv *env, jobject ext_set)
-{
+extern "C" {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
 		{"glPNTrianglesfATI", "(IF)V", (void*)&Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI, "glPNTrianglesfATI", (void**)&glPNTrianglesfATI},
 		{"glPNTrianglesiATI", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI, "glPNTrianglesiATI", (void**)&glPNTrianglesiATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIPnTriangles");
-	if (extgl_Extensions.GL_ATI_pn_triangles)
-		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_pn_triangles", num_functions, functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
+}
+
