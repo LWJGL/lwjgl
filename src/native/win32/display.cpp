@@ -52,8 +52,8 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
 static jobjectArray GetAvailableDisplayModes(JNIEnv * env);
 static char * getDriver();
 static bool modeSet = false; // Whether we've done a display mode change
-static WORD originalGamma[256 * 3]; // Original gamma settings
-static WORD currentGamma[256 * 3]; // Current gamma settings
+static WORD originalGamma[GAMMA_SIZE]; // Original gamma settings
+static WORD currentGamma[GAMMA_SIZE]; // Current gamma settings
 static DEVMODE devmode; // Now we'll remember this value for the future
 extern HWND				display_hwnd;						              // Handle to the window
 extern RECT clientSize;
