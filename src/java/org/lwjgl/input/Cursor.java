@@ -111,7 +111,7 @@ public class Cursor {
 		
 		String osName = System.getProperty("os.name", "");
 		CursorElement[] cursors;
-		if (osName.startsWith("Win")) {
+		if (osName.startsWith("Win") || osName.startsWith("Mac")) {
 			// create our cursor elements
 			cursors = new CursorElement[numImages];
 			for(int i=0; i<numImages; i++) {
