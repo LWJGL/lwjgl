@@ -160,8 +160,12 @@ WGL_EXT_swap_control
 WGL_NV_render_depth_texture
 WGL_NV_render_texture_rectangle
 */
+
+//#define _OSX
+
 #ifndef __EXTGL_H__
 #define __EXTGL_H__
+
 
 /*-----------------------------------------*/
 /*-----------------------------------------*/
@@ -324,89 +328,10 @@ extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
 #ifdef _OSX
 #include <Carbon/Carbon.h>
 
-CFBundleRef gBundleRefOpenGL = NULL;
-// -------------------------
-OSStatus aglInitEntryPoints (void)
-{
-    OSStatus err = noErr;
-    const Str255 frameworkName = "\pOpenGL.framework";
-    FSRefParam fileRefParam;
-    FSRef fileRef;
-    CFURLRef bundleURLOpenGL;
-    memset(&fileRefParam, 0, sizeof(fileRefParam));
-    memset(&fileRef, 0, sizeof(fileRef));
-    fileRefParam.ioNamePtr  = frameworkName;
-    fileRefParam.newRef = &fileRef;
+OSStatus aglInitEntryPoints(void);
+void aglDellocEntryPoints (void);
+void * aglGetProcAddress (char * pszProc);
 
-    // Frameworks directory/folder
-    //
-    err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
-    if (noErr != err)
-    {
-        DebugStr ("\pCould not find frameworks folder");
-        return err;
-    }
-
-    // make FSRef for folder
-    //
-    err = PBMakeFSRefSync (&fileRefParam); 
-
-    
-    if (noErr != err)
-    {
-        DebugStr ("\pCould make FSref to frameworks folder");
-        return err;
-    }
-    
-    // create URL to folder
-    //
-    bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
-    if (!bundleURLOpenGL)
-    {
-        DebugStr ("\pCould create OpenGL Framework bundle URL");
-        return paramErr;
-    }
-    
-    // create ref to GL's bundle
-    //
-    gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
-    if (!gBundleRefOpenGL)
-    {
-        DebugStr ("\pCould not create OpenGL Framework bundle");
-        return paramErr;
-    }
-
-    // release created bundle
-    //
-    CFRelease (bundleURLOpenGL);
-
-    // if the code was successfully loaded, look for our function.
-    if (!CFBundleLoadExecutable (gBundleRefOpenGL))
-    {
-        DebugStr ("\pCould not load MachO executable");
-        return paramErr;
-    }
-    
-    return err;
-}
-
-
-void aglDellocEntryPoints (void)
-{
-    if (gBundleRefOpenGL != NULL)
-    {
-        // unload the bundle's code.
-        CFBundleUnloadExecutable (gBundleRefOpenGL);
-        CFRelease (gBundleRefOpenGL);
-        gBundleRefOpenGL = NULL;
-    }
-}
-
-
-void * aglGetProcAddress (char * pszProc)
-{
-    return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
-}
 #endif /* OSX */
 
 /*************************************************************/
@@ -5672,7 +5597,6 @@ struct ExtensionTypes
 
 extern struct ExtensionTypes extgl_Extensions;
 
-extern struct ExtensionTypes SupportedExtensions; /* deprecated, please do not use */
 
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
 int extgl_Initialize();

@@ -32,7 +32,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
     http://www.uni-karlsruhe.de/~uli2/
 
 */                         
-      
+
 #include "extgl.h"
 #include <stdio.h>
 #include <string.h>
@@ -1540,7 +1540,7 @@ int extgl_InitializeWGL()
 /*-----------------------------------------------------*/
 #ifdef _OSX
 
-int extgl_InitializeWGL()
+int extgl_InitializeAGL()
 {
     // add in AGL extensions here
 
@@ -3299,6 +3299,92 @@ void extgl_Close(void)
         aglDellocEntryPoints();
 #endif 
 }
+
+#ifdef _OSX
+CFBundleRef gBundleRefOpenGL = NULL;
+// -------------------------
+OSStatus aglInitEntryPoints (void)
+{
+    OSStatus err = noErr;
+    const Str255 frameworkName = "\pOpenGL.framework";
+    FSRefParam fileRefParam;
+    FSRef fileRef;
+    CFURLRef bundleURLOpenGL;
+    memset(&fileRefParam, 0, sizeof(fileRefParam));
+    memset(&fileRef, 0, sizeof(fileRef));
+    fileRefParam.ioNamePtr  = frameworkName;
+    fileRefParam.newRef = &fileRef;
+
+    // Frameworks directory/folder
+    //
+    err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
+    if (noErr != err)
+    {
+        DebugStr ("\pCould not find frameworks folder");
+        return err;
+    }
+
+    // make FSRef for folder
+    //
+    err = PBMakeFSRefSync (&fileRefParam);
+
+
+    if (noErr != err)
+    {
+        DebugStr ("\pCould make FSref to frameworks folder");
+        return err;
+    }
+
+    // create URL to folder
+    //
+    bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
+    if (!bundleURLOpenGL)
+    {
+        DebugStr ("\pCould create OpenGL Framework bundle URL");
+        return paramErr;
+    }
+
+    // create ref to GL's bundle
+    //
+    gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
+    if (!gBundleRefOpenGL)
+    {
+        DebugStr ("\pCould not create OpenGL Framework bundle");
+        return paramErr;
+    }
+
+    // release created bundle
+    //
+    CFRelease (bundleURLOpenGL);
+
+    // if the code was successfully loaded, look for our function.
+    if (!CFBundleLoadExecutable (gBundleRefOpenGL))
+    {
+        DebugStr ("\pCould not load MachO executable");
+        return paramErr;
+    }
+
+    return err;
+}
+
+
+void aglDellocEntryPoints (void)
+{
+    if (gBundleRefOpenGL != NULL)
+    {
+        // unload the bundle's code.
+        CFBundleUnloadExecutable (gBundleRefOpenGL);
+        CFRelease (gBundleRefOpenGL);
+        gBundleRefOpenGL = NULL;
+    }
+}
+
+
+void * aglGetProcAddress (char * pszProc)
+{
+    return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
+}
+#endif
 
 /* turn on the warning for the borland compiler*/
 #ifdef __BORLANDC__
