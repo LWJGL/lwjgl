@@ -187,12 +187,8 @@ public interface GL20 {
 			boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("params")
-	void glGetShaderfv(@GLuint int shader, @GLenum int pname, @Check FloatBuffer params);
-	@StripPostfix("params")
 	void glGetShaderiv(@GLuint int shader, @GLenum int pname, @Check IntBuffer params);
 
-	@StripPostfix("params")
-	void glGetProgramfv(@GLuint int program, @GLenum int pname, @Check FloatBuffer params);
 	@StripPostfix("params")
 	void glGetProgramiv(@GLuint int program, @GLenum int pname, @Check IntBuffer params);
 

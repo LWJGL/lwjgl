@@ -3165,7 +3165,7 @@ public class GL {
 	 * @param target
 	 * @param size
 	 * @param usage
-	 */ 
+	 */
 	public static void glBufferData(int target, int size, int usage) {
 		GL15.glBufferData(target, size, usage);
 	}
@@ -6574,26 +6574,8 @@ public class GL {
 	 * @param pname
 	 * @param params
 	 */
-	public static void glGetShader(int shader, int pname, FloatBuffer params) {
-		GL20.glGetShader(shader, pname, params);
-	}
-
-	/**
-	 * @param shader
-	 * @param pname
-	 * @param params
-	 */
 	public static void glGetShader(int shader, int pname, IntBuffer params) {
 		GL20.glGetShader(shader, pname, params);
-	}
-
-	/**
-	 * @param program
-	 * @param pname
-	 * @param params
-	 */
-	public static void glGetProgram(int program, int pname, FloatBuffer params) {
-		GL20.glGetProgram(program, pname, params);
 	}
 
 	/**

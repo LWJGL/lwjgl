@@ -5470,21 +5470,7 @@ public interface IGL {
 	 * @param pname
 	 * @param params
 	 */
-	void glGetShader(int shader, int pname, FloatBuffer params);
-
-	/**
-	 * @param shader
-	 * @param pname
-	 * @param params
-	 */
 	void glGetShader(int shader, int pname, IntBuffer params);
-
-	/**
-	 * @param program
-	 * @param pname
-	 * @param params
-	 */
-	void glGetProgram(int program, int pname, FloatBuffer params);
 
 	/**
 	 * @param program

@@ -6405,26 +6405,8 @@ public class GLImpl implements IGL {
 	 * @param pname
 	 * @param params
 	 */
-	public void glGetShader(int shader, int pname, FloatBuffer params) {
-		GL.glGetShader(shader, pname, params);
-	}
-
-	/**
-	 * @param shader
-	 * @param pname
-	 * @param params
-	 */
 	public void glGetShader(int shader, int pname, IntBuffer params) {
 		GL.glGetShader(shader, pname, params);
-	}
-
-	/**
-	 * @param program
-	 * @param pname
-	 * @param params
-	 */
-	public void glGetProgram(int program, int pname, FloatBuffer params) {
-		GL.glGetProgram(program, pname, params);
 	}
 
 	/**
