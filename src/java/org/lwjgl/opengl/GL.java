@@ -34,9 +34,8 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.CharBuffer;
+import java.nio.ShortBuffer;
 import java.nio.FloatBuffer;
-import java.nio.DoubleBuffer;
 import java.nio.Buffer;
 
 /**
@@ -85,10 +84,10 @@ public class GL extends CoreGL14 implements GLConstants {
 		int arg3Rep,
 		int arg3Mod);
 
-	public static native boolean glAreProgramsResidentNV(
-		int n,
-		IntBuffer piIDs,
-		ByteBuffer pbResidences);
+	public static boolean glAreProgramsResidentNV(int n, IntBuffer piIDs, ByteBuffer pbResidences) {
+		return nglAreProgramsResidentNV(n, piIDs, piIDs.position(), pbResidences, pbResidences.position());
+	}
+	private static native boolean nglAreProgramsResidentNV(int n, IntBuffer piIDs, int piIDs_offset, ByteBuffer pbResidences, int pbResidences_offset);
 
 	public static native void glArrayObjectATI(
 		int array,
@@ -184,91 +183,112 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glCombinerParameterfNV(int pname, float param);
 
-	public static native void glCombinerParameterfvNV(int pname, FloatBuffer pfParams);
+	public static void glCombinerParameterfvNV(int pname, FloatBuffer pfParams) {
+		nglCombinerParameterfvNV(pname, pfParams, pfParams.position());
+	}
+	private static native void nglCombinerParameterfvNV(int pname, FloatBuffer pfParams, int pfParams_offset);
 
 	public static native void glCombinerParameteriNV(int pname, int param);
 
-	public static native void glCombinerParameterivNV(int pname, IntBuffer piParams);
+	public static void glCombinerParameterivNV(int pname, IntBuffer piParams) {
+		nglCombinerParameterivNV(pname, piParams, piParams.position());
+	}
+	private static native void nglCombinerParameterivNV(int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glCombinerStageParameterfvNV(
-		int stage,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams) {
+		nglCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
+	}
+	private static native void nglCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glCompressedTexImage1DARB(
-		int target,
-		int level,
-		int internalformat,
-		int width,
-		int border,
-		int imageSize,
-		Buffer pData);
+	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer pData) {
+		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position());
+	}
+	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer pData) {
+		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position()<<1);
+	}
+	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, IntBuffer pData) {
+		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position()<<2);
+	}
+	private static native void nglCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, Buffer pData, int pData_offset);
 
-	public static native void glCompressedTexImage2DARB(
-		int target,
-		int level,
-		int internalformat,
-		int width,
-		int height,
-		int border,
-		int imageSize,
-		Buffer pData);
+	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer pData) {
+		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position());
+	}
+	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer pData) {
+		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position()<<1);
+	}
+	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, IntBuffer pData) {
+		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position()<<2);
+	}
+	private static native void nglCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer pData, int pData_offset);
 
-	public static native void glCompressedTexImage3DARB(
-		int target,
-		int level,
-		int internalformat,
-		int width,
-		int height,
-		int depth,
-		int border,
-		int imageSize,
-		Buffer pData);
+	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
+		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position());
+	}
+	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
+		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position()<<1);
+	}
+	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, IntBuffer pData) {
+		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position()<<2);
+	}
+	private static native void nglCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, Buffer pData, int pData_offset);
 
-	public static native void glCompressedTexSubImage1DARB(
-		int target,
-		int level,
-		int xoffset,
-		int width,
-		int format,
-		int imageSize,
-		Buffer pData);
+	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, ByteBuffer pData) {
+		nglCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData, pData.position());
+	}
+	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, ShortBuffer pData) {
+		nglCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData, pData.position()<<1);
+	}
+	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, IntBuffer pData) {
+		nglCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData, pData.position()<<2);
+	}
+	private static native void nglCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, Buffer pData, int pData_offset);
 
-	public static native void glCompressedTexSubImage2DARB(
-		int target,
-		int level,
-		int xoffset,
-		int yoffset,
-		int width,
-		int height,
-		int format,
-		int imageSize,
-		Buffer pData);
+	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, ByteBuffer pData) {
+		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData, pData.position());
+	}
+	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, ShortBuffer pData) {
+		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData, pData.position()<<1);
+	}
+	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, IntBuffer pData) {
+		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData, pData.position()<<2);
+	}
+	private static native void nglCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, Buffer pData, int pData_offset);
 
-	public static native void glCompressedTexSubImage3DARB(
-		int target,
-		int level,
-		int xoffset,
-		int yoffset,
-		int zoffset,
-		int width,
-		int height,
-		int depth,
-		int format,
-		int imageSize,
-		Buffer pData);
+	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
+		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData, pData.position());
+	}
+	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
+		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData, pData.position()<<1);
+	}
+	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, IntBuffer pData) {
+		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData, pData.position()<<2);
+	}
+	private static native void nglCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, Buffer pData, int pData_offset);
 
 	public static native void glCurrentPaletteMatrixARB(int index);
 
-	public static native void glDeleteFencesNV(int n, IntBuffer piFences);
+	public static void glDeleteFencesNV(int n, IntBuffer piFences) {
+		nglDeleteFencesNV(n, piFences, piFences.position());
+	}
+	private static native void nglDeleteFencesNV(int n, IntBuffer piFences, int piFences_offset);
 
 	public static native void glDeleteFragmentShaderATI(int id);
 
-	public static native void glDeleteOcclusionQueriesNV(int n, IntBuffer piIDs);
+	public static void glDeleteOcclusionQueriesNV(int n, IntBuffer piIDs) {
+		nglDeleteOcclusionQueriesNV(n, piIDs, piIDs.position());
+	}
+	private static native void nglDeleteOcclusionQueriesNV(int n, IntBuffer piIDs, int piIDs_offset);
 
-	public static native void glDeleteProgramsARB(int n, IntBuffer piPrograms);
+	public static void glDeleteProgramsARB(int n, IntBuffer piPrograms) {
+		nglDeleteProgramsARB(n, piPrograms, piPrograms.position());
+	}
+	private static native void nglDeleteProgramsARB(int n, IntBuffer piPrograms, int piPrograms_offset);
 
-	public static native void glDeleteProgramsNV(int n, IntBuffer piIDs);
+	public static void glDeleteProgramsNV(int n, IntBuffer piIDs) {
+		nglDeleteProgramsNV(n, piIDs, piIDs.position());
+	}
+	private static native void nglDeleteProgramsNV(int n, IntBuffer piIDs, int piIDs_offset);
 
 	public static native void glDeleteVertexShaderEXT(int id);
 
@@ -284,15 +304,27 @@ public class GL extends CoreGL14 implements GLConstants {
 		int end,
 		int count);
 
-	public static native void glDrawRangeElementsEXT(
-		int mode,
-		int start,
-		int end,
-		int count,
-		int type,
-		Buffer pIndices);
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, ByteBuffer pIndices) {
+		nglDrawRangeElementsEXT(mode, start, end, count, GL_UNSIGNED_BYTE, pIndices, pIndices.position());
+	}
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, ShortBuffer pIndices) {
+		nglDrawRangeElementsEXT(mode, start, end, count, GL_UNSIGNED_SHORT, pIndices, pIndices.position()<<1);
+	}
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, IntBuffer pIndices) {
+		nglDrawRangeElementsEXT(mode, start, end, count, GL_UNSIGNED_INT, pIndices, pIndices.position()<<2);
+	}
+	private static native void nglDrawRangeElementsEXT(int mode, int start, int end, int count, int type, Buffer pIndices, int pIndices_offset);
 
-	public static native void glElementPointerATI(int type, Buffer pPointer);
+	public static void glElementPointerATI(ByteBuffer pPointer) {
+		nglElementPointerATI(GL_UNSIGNED_BYTE, pPointer, pPointer.position());
+	}
+	public static void glElementPointerATI(ShortBuffer pPointer) {
+		nglElementPointerATI(GL_UNSIGNED_SHORT, pPointer, pPointer.position()<<1);
+	}
+	public static void glElementPointerATI(IntBuffer pPointer) {
+		nglElementPointerATI(GL_UNSIGNED_INT, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglElementPointerATI(int type, Buffer pPointer, int pPointer_offset);
 
 	public static native void glEnableVariantClientStateEXT(int id);
 
@@ -306,7 +338,10 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glEvalMapsNV(int target, int mode);
 
-	public static native void glExecuteProgramNV(int target, int id, FloatBuffer pfParams);
+	public static void glExecuteProgramNV(int target, int id, FloatBuffer pfParams) {
+		nglExecuteProgramNV(target, id, pfParams, pfParams.position());
+	}
+	private static native void nglExecuteProgramNV(int target, int id, FloatBuffer pfParams, int pfParams_offset);
 
 	public static native void glExtractComponentEXT(int res, int src, int num);
 
@@ -320,23 +355,36 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glFlushVertexArrayRangeNV();
 
-	public static native void glFogCoorddEXT(double coord);
-
 	public static native void glFogCoordfEXT(float coord);
 
-	public static native void glFogCoordPointerEXT(int type, int stride, Buffer pPointer);
+	public static void glFogCoordPointerEXT(int stride, FloatBuffer pPointer) {
+		nglFogCoordPointerEXT(GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer pPointer, int pPointer_offset);
 
 	public static native void glFreeObjectBufferATI(int buffer);
 
-	public static native void glGenFencesNV(int n, IntBuffer piFences);
+	public static void glGenFencesNV(int n, IntBuffer piFences) {
+		nglGenFencesNV(n, piFences, piFences.position());
+	}
+	private static native void nglGenFencesNV(int n, IntBuffer piFences, int piFences_offset);
 
 	public static native int glGenFragmentShadersATI(int range);
 
-	public static native void glGenOcclusionQueriesNV(int n, IntBuffer piIDs);
+	public static void glGenOcclusionQueriesNV(int n, IntBuffer piIDs) {
+		nglGenOcclusionQueriesNV(n, piIDs, piIDs.position());
+	}
+	private static native void nglGenOcclusionQueriesNV(int n, IntBuffer piIDs, int piIDs_offset);
 
-	public static native void glGenProgramsARB(int n, IntBuffer piPrograms);
+	public static void glGenProgramsARB(int n, IntBuffer piPrograms) {
+		nglGenProgramsARB(n, piPrograms, piPrograms.position());
+	}
+	private static native void nglGenProgramsARB(int n, IntBuffer piPrograms, int piPrograms_offset);
 
-	public static native void glGenProgramsNV(int n, IntBuffer piIDs);
+	public static void glGenProgramsNV(int n, IntBuffer piIDs) {
+		nglGenProgramsNV(n, piIDs, piIDs.position());
+	}
+	private static native void nglGenProgramsNV(int n, IntBuffer piIDs, int piIDs_offset);
 
 	public static native int glGenSymbolsEXT(
 		int dataType,
@@ -346,191 +394,238 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native int glGenVertexShadersEXT(int range);
 
-	public static native void glGetArrayObjectfvATI(int array, int pname, FloatBuffer pfParams);
+	public static void glGetArrayObjectfvATI(int array, int pname, FloatBuffer pfParams) {
+		nglGetArrayObjectfvATI(array, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetArrayObjectfvATI(int array, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetArrayObjectivATI(int array, int pname, IntBuffer piParams);
+	public static void glGetArrayObjectivATI(int array, int pname, IntBuffer piParams) {
+		nglGetArrayObjectivATI(array, pname, piParams, piParams.position());
+	}
+	private static native void nglGetArrayObjectivATI(int array, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetCombinerInputParameterfvNV(
-		int stage,
-		int portion,
-		int variable,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetCombinerInputParameterfvNV(int stage, int portion, int variable, int pname, FloatBuffer pfParams) {
+		nglGetCombinerInputParameterfvNV(stage, portion, variable, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetCombinerInputParameterfvNV(int stage, int portion, int variable, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetCombinerInputParameterivNV(
-		int stage,
-		int portion,
-		int variable,
-		int pname,
-		IntBuffer piParams);
+	public static void glGetCombinerInputParameterivNV(int stage, int portion, int variable, int pname, IntBuffer piParams) {
+		nglGetCombinerInputParameterivNV(stage, portion, variable, pname, piParams, piParams.position());
+	}
+	private static native void nglGetCombinerInputParameterivNV(int stage, int portion, int variable, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetCombinerOutputParameterfvNV(
-		int stage,
-		int portion,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetCombinerOutputParameterfvNV(int stage, int portion, int pname, FloatBuffer pfParams) {
+		nglGetCombinerOutputParameterfvNV(stage, portion, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetCombinerOutputParameterfvNV(int stage, int portion, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetCombinerOutputParameterivNV(
-		int stage,
-		int portion,
-		int pname,
-		IntBuffer piParams);
+	public static void glGetCombinerOutputParameterivNV(int stage, int portion, int pname, IntBuffer piParams) {
+		nglGetCombinerOutputParameterivNV(stage, portion, pname, piParams, piParams.position());
+	}
+	private static native void nglGetCombinerOutputParameterivNV(int stage, int portion, int pname, IntBuffer piParams, int pfParams_offset);
 
-	public static native void glGetCombinerStageParameterfvNV(
-		int stage,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams) {
+		nglGetCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetCompressedTexImageARB(int target, int lod, Buffer pImg);
+	public static void glGetCompressedTexImageARB(int target, int lod, ByteBuffer pImg) {
+		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position());
+	}
+	public static void glGetCompressedTexImageARB(int target, int lod, ShortBuffer pImg) {
+		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position()<<1);
+	}
+	public static void glGetCompressedTexImageARB(int target, int lod, IntBuffer pImg) {
+		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position()<<2);
+	}
+	private static native void nglGetCompressedTexImageARB(int target, int lod, Buffer pImg, int pImg_offset);
 
-	public static native void glGetFenceivNV(int fence, int pname, IntBuffer piParams);
+	public static void glGetFenceivNV(int fence, int pname, IntBuffer piParams) {
+		nglGetFenceivNV(fence, pname, piParams, piParams.position());
+	}
+	private static native void nglGetFenceivNV(int fence, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetFinalCombinerInputParameterfvNV(
-		int variable,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetFinalCombinerInputParameterfvNV(int variable, int pname, FloatBuffer pfParams) {
+		nglGetFinalCombinerInputParameterfvNV(variable, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetFinalCombinerInputParameterfvNV(int variable, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetFinalCombinerInputParameterivNV(
-		int variable,
-		int pname,
-		IntBuffer piParams);
+	public static void glGetFinalCombinerInputParameterivNV(int variable, int pname, IntBuffer piParams) {
+		nglGetFinalCombinerInputParameterivNV(variable, pname, piParams, piParams.position());
+	}
+	private static native void nglGetFinalCombinerInputParameterivNV(int variable, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetInvariantBooleanvEXT(int id, int value, ByteBuffer pbData);
+	public static void glGetInvariantBooleanvEXT(int id, int value, ByteBuffer pbData) {
+		nglGetInvariantBooleanvEXT(id, value, pbData, pbData.position());
+	}
+	private static native void nglGetInvariantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
 
-	public static native void glGetInvariantFloatvEXT(int id, int value, FloatBuffer pfData);
+	public static void glGetInvariantFloatvEXT(int id, int value, FloatBuffer pfData) {
+		nglGetInvariantFloatvEXT(id, value, pfData, pfData.position());
+	}
+	private static native void nglGetInvariantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
 
-	public static native void glGetInvariantIntegervEXT(int id, int value, IntBuffer piData);
+	public static void glGetInvariantIntegervEXT(int id, int value, IntBuffer piData) {
+		nglGetInvariantIntegervEXT(id, value, piData, piData.position());
+	}
+	private static native void nglGetInvariantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
 
-	public static native void glGetLocalConstantBooleanvEXT(
-		int id,
-		int value,
-		ByteBuffer pbData);
+	public static void glGetLocalConstantBooleanvEXT(int id, int value, ByteBuffer pbData) {
+		nglGetLocalConstantBooleanvEXT(id, value, pbData, pbData.position());
+	}
+	private static native void nglGetLocalConstantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
 
-	public static native void glGetLocalConstantFloatvEXT(int id, int value, FloatBuffer pfData);
+	public static void glGetLocalConstantFloatvEXT(int id, int value, FloatBuffer pfData) {
+		nglGetLocalConstantFloatvEXT(id, value, pfData, pfData.position());
+	}
+	private static native void nglGetLocalConstantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
 
-	public static native void glGetLocalConstantIntegervEXT(
-		int id,
-		int value,
-		IntBuffer piData);
+	public static void glGetLocalConstantIntegervEXT(int id, int value, IntBuffer piData) {
+		nglGetLocalConstantIntegervEXT(id, value, piData, piData.position());
+	}	
+	private static native void nglGetLocalConstantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
 
-	public static native void glGetMapAttribParameterfvNV(
-		int target,
-		int index,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetMapAttribParameterfvNV(int target, int index, int pname, FloatBuffer pfParams) {
+		nglGetMapAttribParameterfvNV(target, index, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetMapAttribParameterfvNV(int target, int index, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetMapAttribParameterivNV(
-		int target,
-		int index,
-		int pname,
-		IntBuffer piParams);
+	public static void glGetMapAttribParameterivNV(int target, int index, int pname, IntBuffer piParams) {
+		nglGetMapAttribParameterivNV(target, index, pname, piParams, piParams.position());
+	}
+	private static native void nglGetMapAttribParameterivNV(int target, int index, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetMapControlPointsNV(
-		int target,
-		int index,
-		int type,
-		int ustride,
-		int vstride,
-		boolean packed,
-		Buffer pPoints);
+	public static void glGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, FloatBuffer pPoints) {
+		nglGetMapControlPointsNV(target, index, type, ustride, vstride, packed, pPoints, pPoints.position()<<2);
+	}
+	private static native void nglGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, Buffer pPoints, int pPoints_offset);
 
-	public static native void glGetMapParameterfvNV(int target, int pname, FloatBuffer pfParams);
+	public static void glGetMapParameterfvNV(int target, int pname, FloatBuffer pfParams) {
+		nglGetMapParameterfvNV(target, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetMapParameterfvNV(int target, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetMapParameterivNV(int target, int pname, IntBuffer piParams);
+	public static void glGetMapParameterivNV(int target, int pname, IntBuffer piParams) {
+		nglGetMapParameterivNV(target, pname, piParams, piParams.position());
+	}
+	private static native void nglGetMapParameterivNV(int target, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetObjectBufferfvATI(
-		int buffer,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetObjectBufferfvATI(int buffer, int pname, FloatBuffer pfParams) {
+		nglGetObjectBufferfvATI(buffer, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetObjectBufferfvATI(int buffer, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetObjectBufferivATI(
-		int buffer,
-		int pname,
-		IntBuffer piParams);
+	public static void glGetObjectBufferivATI(int buffer, int pname, IntBuffer piParams) {
+		nglGetObjectBufferivATI(buffer, pname, piParams, piParams.position());
+	}
+	private static native void nglGetObjectBufferivATI(int buffer, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetOcclusionQueryivNV(int id, int pname, IntBuffer piParams);
+	public static void glGetOcclusionQueryivNV(int id, int pname, IntBuffer piParams) {
+		nglGetOcclusionQueryivNV(id, pname, piParams, piParams.position());
+	}
+	private static native void nglGetOcclusionQueryivNV(int id, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetOcclusionQueryuivNV(int id, int pname, IntBuffer piParams);
+	public static void glGetOcclusionQueryuivNV(int id, int pname, IntBuffer piParams) {
+		nglGetOcclusionQueryuivNV(id, pname, piParams, piParams.position());
+	}
+	private static native void nglGetOcclusionQueryuivNV(int id, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetProgramEnvParameterdvARB(
-		int target,
-		int index,
-		DoubleBuffer pdParams);
+	public static void glGetProgramEnvParameterfvARB(int target, int index, FloatBuffer pfParams) {
+		nglGetProgramEnvParameterfvARB(target, index, pfParams, pfParams.position());
+	}
+	private static native void nglGetProgramEnvParameterfvARB(int target, int index, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetProgramEnvParameterfvARB(
-		int target,
-		int index,
-		FloatBuffer pfParams);
+	public static void glGetProgramivARB(int target, int pname, IntBuffer piParams) {
+		nglGetProgramivARB(target, pname, piParams, piParams.position());
+	}
+	private static native void nglGetProgramivARB(int target, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetProgramivARB(int target, int pname, IntBuffer piParams);
+	public static void glGetProgramivNV(int id, int pname, IntBuffer piParams) {
+		nglGetProgramivNV(id, pname, piParams, piParams.position());
+	}
+	private static native void nglGetProgramivNV(int id, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetProgramivNV(int id, int pname, IntBuffer piParams);
+	public static void glGetProgramLocalParameterfvARB(int target, int index, FloatBuffer pfParams) {
+		nglGetProgramLocalParameterfvARB(target, index, pfParams, pfParams.position());
+	}
+	private static native void nglGetProgramLocalParameterfvARB(int target, int index, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetProgramLocalParameterdvARB(
-		int target,
-		int index,
-		DoubleBuffer pdParams);
+	public static void glGetProgramParameterfvNV(int target, int index, int pname, FloatBuffer pfParams) {
+		nglGetProgramParameterfvNV(target, index, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetProgramParameterfvNV(int target, int index, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetProgramLocalParameterfvARB(
-		int target,
-		int index,
-		FloatBuffer pfParams);
+	public static void glGetProgramStringARB(int target, int pname, ByteBuffer pString) {
+		nglGetProgramStringARB(target, pname, pString, pString.position());
+	}
+	private static native void nglGetProgramStringARB(int target, int pname, Buffer pString, int pString_offset);
 
-	public static native void glGetProgramParameterdvNV(
-		int target,
-		int index,
-		int pname,
-		DoubleBuffer pdParams);
+	public static void glGetProgramStringNV(int id, int pname, ByteBuffer pProgram) {
+		nglGetProgramStringNV(id, pname, pProgram, pProgram.position());
+	}
+	private static native void nglGetProgramStringNV(int id, int pname, ByteBuffer pProgram, int pProgram_offset);
 
-	public static native void glGetProgramParameterfvNV(
-		int target,
-		int index,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetTexBumpParameterfvATI(int pname, FloatBuffer pfParam) {
+		nglGetTexBumpParameterfvATI(pname, pfParam, pfParam.position());
+	}
+	private static native void nglGetTexBumpParameterfvATI(int pname, FloatBuffer pfParam, int pfParam_offset);
 
-	public static native void glGetProgramStringARB(int target, int pname, Buffer pString);
+	public static void glGetTexBumpParameterivATI(int pname, FloatBuffer piParam) {
+		nglGetTexBumpParameterivATI(pname, piParam, piParam.position());
+	}
+	private static native void nglGetTexBumpParameterivATI(int pname, FloatBuffer piParam, int piParam_offset);
 
-	public static native void glGetProgramStringNV(int id, int pname, ByteBuffer pProgram);
+	public static void glGetTrackMatrixivNV(int target, int address, int pname, IntBuffer piParams) {
+		nglGetTrackMatrixivNV(target, address, pname, piParams, piParams.position());
+	}
+	private static native void nglGetTrackMatrixivNV(int target, int address, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetTexBumpParameterfvATI(int pname, FloatBuffer pfParam);
+	public static void glGetVariantArrayObjectfvATI(int id, int pname, FloatBuffer pfParams) {
+		nglGetVariantArrayObjectfvATI(id, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetVariantArrayObjectfvATI(int id, int pname, FloatBuffer pfParams, int pfParams_offset_offset);
 
-	public static native void glGetTexBumpParameterivATI(int pname, FloatBuffer piParam);
+	public static void glGetVariantArrayObjectivATI(int id, int pname, IntBuffer piParams) {
+		nglGetVariantArrayObjectivATI(id, pname, piParams, piParams.position());
+	}
+	private static native void nglGetVariantArrayObjectivATI(int id, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetTrackMatrixivNV(
-		int target,
-		int address,
-		int pname,
-		IntBuffer piParams);
+	public static void glGetVariantBooleanvEXT(int id, int value, ByteBuffer pbData) {
+		nglGetVariantBooleanvEXT(id, value, pbData, pbData.position());
+	}
+	private static native void nglGetVariantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
 
-	public static native void glGetVariantArrayObjectfvATI(
-		int id,
-		int pname,
-		FloatBuffer pfParams);
+	public static void glGetVariantFloatvEXT(int id, int value, FloatBuffer pfData) {
+		nglGetVariantFloatvEXT(id, value, pfData, pfData.position());
+	}
+	private static native void nglGetVariantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
 
-	public static native void glGetVariantArrayObjectivATI(
-		int id,
-		int pname,
-		IntBuffer piParams);
-
-	public static native void glGetVariantBooleanvEXT(int id, int value, ByteBuffer pbData);
-
-	public static native void glGetVariantFloatvEXT(int id, int value, FloatBuffer pfData);
-
-	public static native void glGetVariantIntegervEXT(int id, int value, IntBuffer piData);
+	public static void glGetVariantIntegervEXT(int id, int value, IntBuffer piData) {
+		nglGetVariantIntegervEXT(id, value, piData, piData.position());
+	}
+	private static native void nglGetVariantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
 
 	public static native ByteBuffer glGetVariantPointervEXT(int id, int value, int size);
 
-	public static native void glGetVertexAttribdvARB(int index, int pname, DoubleBuffer pdParams);
+	public static void glGetVertexAttribfvARB(int index, int pname, FloatBuffer pfParams) {
+		nglGetVertexAttribfvARB(index, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetVertexAttribfvARB(int index, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetVertexAttribdvNV(int index, int pname, DoubleBuffer pdParams);
+	public static void glGetVertexAttribfvNV(int index, int pname, FloatBuffer pfParams) {
+		nglGetVertexAttribfvNV(index, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetVertexAttribfvNV(int index, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glGetVertexAttribfvARB(int index, int pname, FloatBuffer pfParams);
+	public static void glGetVertexAttribivARB(int index, int pname, IntBuffer piParams) {
+		nglGetVertexAttribivARB(index, pname, piParams, piParams.position());
+	}
+	private static native void nglGetVertexAttribivARB(int index, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glGetVertexAttribfvNV(int index, int pname, FloatBuffer pfParams);
-
-	public static native void glGetVertexAttribivARB(int index, int pname, IntBuffer piParams);
-
-	public static native void glGetVertexAttribivNV(int index, int pname, IntBuffer piParams);
+	public static void glGetVertexAttribivNV(int index, int pname, IntBuffer piParams) {
+		nglGetVertexAttribivNV(index, pname, piParams, piParams.position());
+	}
+	private static native void nglGetVertexAttribivNV(int index, int pname, IntBuffer piParams, int piParams_offset);
 
 	public static native ByteBuffer glGetVertexAttribPointervARB(
 		int index,
@@ -558,55 +653,65 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native boolean glIsVariantEnabledEXT(int id, int cap);
 
-	public static native void glLoadProgramNV(int target, int id, int len, ByteBuffer pProgram);
+	public static void glLoadProgramNV(int target, int id, int len, ByteBuffer pProgram) {
+		nglLoadProgramNV(target, id, len, pProgram, pProgram.position());
+	}
+	private static native void nglLoadProgramNV(int target, int id, int len, ByteBuffer pProgram, int pProgram_offset);
 
-	public static native void glLoadTransposeMatrixdARB(DoubleBuffer pdMtx); // m[16]
-
-	public static native void glLoadTransposeMatrixfARB(FloatBuffer pfMtx); // m[16]
+	public static void glLoadTransposeMatrixfARB(FloatBuffer pfMtx) {
+		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position());
+	}
+	private static native void nglLoadTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);
 
 	public static native void glLockArraysEXT(int first, int count);
 
-	public static native void glMapControlPointsNV(
-		int target,
-		int index,
-		int type,
-		int ustride,
-		int vstride,
-		int uorder,
-		int vorder,
-		boolean packed,
-		Buffer pPoints);
+	public static void glMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, FloatBuffer pPoints) {
+		nglMapControlPointsNV(target, index, type, ustride, vstride, uorder, vorder, packed, pPoints, pPoints.position()<<2);
+	}
+	private static native void nglMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, Buffer pPoints, int pPoints_offset);
 
-	public static native void glMapParameterfvNV(int target, int pname, FloatBuffer pfParams);
+	public static void glMapParameterfvNV(int target, int pname, FloatBuffer pfParams) {
+		nglMapParameterfvNV(target, pname, pfParams, pfParams.position());
+	}
+	private static native void nglMapParameterfvNV(int target, int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glMapParameterivNV(int target, int pname, IntBuffer piParams);
+	public static void glMapParameterivNV(int target, int pname, IntBuffer piParams) {
+		nglMapParameterivNV(target, pname, piParams, piParams.position());
+	}
+	private static native void nglMapParameterivNV(int target, int pname, IntBuffer piParams, int piParams_offset);
 
-	public static native void glMatrixIndexPointerARB(
-		int size,
-		int type,
-		int stride,
-		Buffer pPointer);
+	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
+		nglMatrixIndexPointerARB(size, GL_UNSIGNED_BYTE, stride, pPointer, pPointer.position());
+	}
+	public static void glMatrixIndexPointerARB(int size, int stride, ShortBuffer pPointer) {
+		nglMatrixIndexPointerARB(size, GL_UNSIGNED_SHORT, stride, pPointer, pPointer.position()<<1);
+	}
+	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
+		nglMatrixIndexPointerARB(size, GL_UNSIGNED_INT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglMatrixIndexPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 
-	public static native void glMatrixIndexubvARB(int size, ByteBuffer pIndices);
+	public static void glMatrixIndexubvARB(int size, ByteBuffer pIndices) {
+		nglMatrixIndexubvARB(size, pIndices, pIndices.position());
+	}
+	private static native void nglMatrixIndexubvARB(int size, ByteBuffer pIndices, int pIndices_offset);
 
-	public static native void glMatrixIndexuivARB(int size, IntBuffer piIndices);
+	public static void glMatrixIndexuivARB(int size, IntBuffer piIndices) {
+		nglMatrixIndexuivARB(size, piIndices, piIndices.position());
+	}
+	private static native void nglMatrixIndexuivARB(int size, IntBuffer piIndices, int piIndices_offset);
 
-	public static native void glMatrixIndexusvARB(int size, CharBuffer psIndices);
+	public static void glMatrixIndexusvARB(int size, ShortBuffer psIndices) {
+		nglMatrixIndexusvARB(size, psIndices, psIndices.position());
+	}
+	private static native void nglMatrixIndexusvARB(int size, ShortBuffer psIndices, int psIndices_offset);
 
-	public static native void glMultiDrawArraysEXT(
-		int mode,
-		IntBuffer piFirst,
-		IntBuffer piCount,
-		int primcount);
+	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst, IntBuffer piCount, int primcount) {
+		nglMultiDrawArraysEXT(mode, piFirst, piFirst.position(), piCount, piCount.position());
+	}
+	private static native void nglMultiDrawArraysEXT(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset);
 
-/*	public static native void glMultiDrawElementsEXT(
-		int mode,
-		int piCount,
-		int type,
-		int pIndices,
-		int primcount);
-*/
-	public static native void glMultiTexCoord1dARB(int target, double s);
+//	public static native void glMultiDrawElementsEXT(int mode, int piCount, int type, int pIndices, int primcount);
 
 	public static native void glMultiTexCoord1fARB(int target, float s);
 
@@ -614,19 +719,11 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glMultiTexCoord1sARB(int target, short s);
 
-	public static native void glMultiTexCoord2dARB(int target, double s, double t);
-
 	public static native void glMultiTexCoord2fARB(int target, float s, float t);
 
 	public static native void glMultiTexCoord2iARB(int target, int s, int t);
 
 	public static native void glMultiTexCoord2sARB(int target, short s, short t);
-
-	public static native void glMultiTexCoord3dARB(
-		int target,
-		double s,
-		double t,
-		double r);
 
 	public static native void glMultiTexCoord3fARB(
 		int target,
@@ -641,13 +738,6 @@ public class GL extends CoreGL14 implements GLConstants {
 		short s,
 		short t,
 		short r);
-
-	public static native void glMultiTexCoord4dARB(
-		int target,
-		double s,
-		double t,
-		double r,
-		double q);
 
 	public static native void glMultiTexCoord4fARB(
 		int target,
@@ -670,19 +760,26 @@ public class GL extends CoreGL14 implements GLConstants {
 		short r,
 		short q);
 
-	public static native void glMultTransposeMatrixdARB(DoubleBuffer pdMtx); // m[16]
+	public static void glMultTransposeMatrixfARB(FloatBuffer pfMtx) {
+		nglMultTransposeMatrixfARB(pfMtx, pfMtx.position());
+	}
+	private static native void nglMultTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);
 
-	public static native void glMultTransposeMatrixfARB(FloatBuffer pfMtx); // m[16]
-
-	public static native int glNewObjectBufferATI(int size, Buffer pPointer, int usage);
+	public static int glNewObjectBufferATI(int size, ByteBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer.position(), usage);
+	}
+	public static int glNewObjectBufferATI(int size, ShortBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer.position()<<1, usage);
+	}
+	public static int glNewObjectBufferATI(int size, FloatBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer.position()<<2, usage);
+	}
+	public static int glNewObjectBufferATI(int size, IntBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer.position()<<2, usage);
+	}
+	private static native int nglNewObjectBufferATI(int size, Buffer pPointer, int pPointer_offset, int usage);
 
 	public static native void glNormalStream3bATI(int stream, byte x, byte y, byte z);
-
-	public static native void glNormalStream3dATI(
-		int stream,
-		double x,
-		double y,
-		double z);
 
 	public static native void glNormalStream3fATI(int stream, float x, float y, float z);
 
@@ -700,21 +797,22 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glPointParameterfEXT(int pname, float param);
 
-	public static native void glPointParameterfvARB(int pname, FloatBuffer pfParams);
+	public static void glPointParameterfvARB(int pname, FloatBuffer pfParams) {
+		nglPointParameterfvARB(pname, pfParams, pfParams.position());
+	}
+	private static native void nglPointParameterfvARB(int pname, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glPointParameterfvEXT(int pname, FloatBuffer pfParams);
+	public static void glPointParameterfvEXT(int pname, FloatBuffer pfParams) {
+		nglPointParameterfvEXT(pname, pfParams, pfParams.position());
+	}
+	private static native void nglPointParameterfvEXT(int pname, FloatBuffer pfParams, int pfParams_offset);
 
 	public static native void glPointParameteriNV(int pname, int param);
 
-	public static native void glPointParameterivNV(int pname, IntBuffer piParams);
-
-	public static native void glProgramEnvParameter4dARB(
-		int target,
-		int index,
-		double x,
-		double y,
-		double z,
-		double w);
+	public static void glPointParameterivNV(int pname, IntBuffer piParams) {
+		nglPointParameterivNV(pname, piParams, piParams.position());
+	}
+	private static native void nglPointParameterivNV(int pname, IntBuffer piParams, int piParams_offset);
 
 	public static native void glProgramEnvParameter4fARB(
 		int target,
@@ -724,14 +822,6 @@ public class GL extends CoreGL14 implements GLConstants {
 		float z,
 		float w);
 
-	public static native void glProgramLocalParameter4dARB(
-		int target,
-		int index,
-		double x,
-		double y,
-		double z,
-		double w);
-
 	public static native void glProgramLocalParameter4fARB(
 		int target,
 		int index,
@@ -739,14 +829,6 @@ public class GL extends CoreGL14 implements GLConstants {
 		float y,
 		float z,
 		float w);
-
-	public static native void glProgramParameter4dNV(
-		int target,
-		int index,
-		double x,
-		double y,
-		double z,
-		double w);
 
 	public static native void glProgramParameter4fNV(
 		int target,
@@ -756,25 +838,20 @@ public class GL extends CoreGL14 implements GLConstants {
 		float z,
 		float w);
 
-	public static native void glProgramParameters4dvNV(
-		int target,
-		int index,
-		int num,
-		DoubleBuffer pdParams);
+	public static void glProgramParameters4fvNV(int target, int index, int num, FloatBuffer pfParams) {
+		nglProgramParameters4fvNV(target, index, num, pfParams, pfParams.position());
+	}
+	private static native void nglProgramParameters4fvNV(int target, int index, int num, FloatBuffer pfParams, int pfParams_offset);
 
-	public static native void glProgramParameters4fvNV(
-		int target,
-		int index,
-		int num,
-		FloatBuffer pfParams);
+	public static void glProgramStringARB(int target, int format, int len, ByteBuffer pString) {
+		nglProgramStringARB(target, format, len, pString, pString.position());
+	}
+	private static native void nglProgramStringARB(int target, int format, int len, Buffer pString, int pString_offset);
 
-	public static native void glProgramStringARB(
-		int target,
-		int format,
-		int len,
-		Buffer pString);
-
-	public static native void glRequestResidentProgramsNV(int n, IntBuffer piIDs);
+	public static void glRequestResidentProgramsNV(int n, IntBuffer piIDs) {
+		nglRequestResidentProgramsNV(n, piIDs, piIDs.position());
+	}
+	private static native void nglRequestResidentProgramsNV(int n, IntBuffer piIDs, int piIDs_offset);
 
 	public static native void glSampleCoverageARB(float value, boolean invert);
 
@@ -782,36 +859,52 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 
-	public static native void glSecondaryColor3dEXT(
-		double red,
-		double green,
-		double blue);
-
 	public static native void glSecondaryColor3fEXT(float red, float green, float blue);
-
-	public static native void glSecondaryColor3iEXT(int red, int green, int blue);
-
-	public static native void glSecondaryColor3sEXT(short red, short green, short blue);
 
 	public static native void glSecondaryColor3ubEXT(byte red, byte green, byte blue);
 
-	public static native void glSecondaryColor3uiEXT(int red, int green, int blue);
-
-	public static native void glSecondaryColor3usEXT(short red, short green, short blue);
-
-	public static native void glSecondaryColorPointerEXT(
-		int size,
-		int type,
-		int stride,
-		Buffer pPointer);
+	public static void glSecondaryColorPointerEXT(int size, int type, int stride, ByteBuffer pPointer) {
+		nglSecondaryColorPointerEXT(size, type, stride, pPointer, pPointer.position());
+	}
+	public static void glSecondaryColorPointerEXT(int size, int type, int stride, FloatBuffer pPointer) {
+		nglSecondaryColorPointerEXT(size, type, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglSecondaryColorPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 
 	public static native void glSetFenceNV(int fence, int condition);
 
-	public static native void glSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue);
+	public static void glSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue) {
+		nglSetFragmentShaderConstantATI(dst, pfValue, pfValue.position());
+	}
+	private static native void nglSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue, int pfValue_offset);
 
-	public static native void glSetInvariantEXT(int id, int type, Buffer pAddr);
+	public static void glSetInvariantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
+		nglSetInvariantEXT(id, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, pAddr, pAddr.position());
+	}
+	public static void glSetInvariantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+		nglSetInvariantEXT(id, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, pAddr, pAddr.position()<<1);
+	}
+	public static void glSetInvariantEXT(int id, FloatBuffer pAddr) {
+		nglSetInvariantEXT(id, GL_FLOAT, pAddr, pAddr.position()<<2);
+	}
+	public static void glSetInvariantEXT(int id, boolean unsigned, IntBuffer pAddr) {
+		nglSetInvariantEXT(id, unsigned ? GL_UNSIGNED_INT : GL_INT, pAddr, pAddr.position()<<2);
+	}
+	private static native void nglSetInvariantEXT(int id, int type, Buffer pAddr, int pAddr_offset);
 
-	public static native void glSetLocalConstantEXT(int id, int type, Buffer pAddr);
+	public static void glSetLocalConstantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
+		nglSetLocalConstantEXT(id, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, pAddr, pAddr.position());
+	}
+	public static void glSetLocalConstantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+		nglSetLocalConstantEXT(id, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, pAddr, pAddr.position()<<1);
+	}
+	public static void glSetLocalConstantEXT(int id, FloatBuffer pAddr) {
+		nglSetLocalConstantEXT(id, GL_FLOAT, pAddr, pAddr.position()<<2);
+	}
+	public static void glSetLocalConstantEXT(int id, boolean unsigned, IntBuffer pAddr) {
+		nglSetLocalConstantEXT(id, unsigned ? GL_UNSIGNED_INT : GL_INT, pAddr, pAddr.position()<<2);
+	}
+	private static native void nglSetLocalConstantEXT(int id, int type, Buffer pAddr, int pAddr_offset);
 
 	public static native void glShaderOp1EXT(int op, int res, int arg1);
 
@@ -834,9 +927,15 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native boolean glTestFenceNV(int fence);
 
-	public static native void glTexBumpParameterfvATI(int pname, FloatBuffer pfParam);
+	public static void glTexBumpParameterfvATI(int pname, FloatBuffer pfParam) {
+		nglTexBumpParameterfvATI(pname, pfParam, pfParam.position());
+	}
+	private static native void nglTexBumpParameterfvATI(int pname, FloatBuffer pfParam, int pfParam_offset);
 
-	public static native void glTexBumpParameterivATI(int pname, IntBuffer piParam);
+	public static void glTexBumpParameterivATI(int pname, IntBuffer piParam) {
+		nglTexBumpParameterivATI(pname, piParam, piParam.position());
+	}
+	private static native void nglTexBumpParameterivATI(int pname, IntBuffer piParam, int piParam_offset);
 
 	public static native void glTrackMatrixNV(
 		int target,
@@ -846,12 +945,19 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glUnlockArraysEXT();
 
-	public static native void glUpdateObjectBufferATI(
-		int buffer,
-		int offset,
-		int size,
-		Buffer pPointer,
-		int preserve);
+	public static void glUpdateObjectBufferATI(int buffer, int offset, int size, ByteBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, size, pPointer, pPointer.position(), preserve);
+	}
+	public static void glUpdateObjectBufferATI(int buffer, int offset, int size, ShortBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, size, pPointer, pPointer.position()<<1, preserve);
+	}
+	public static void glUpdateObjectBufferATI(int buffer, int offset, int size, FloatBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, size, pPointer, pPointer.position()<<2, preserve);
+	}
+	public static void glUpdateObjectBufferATI(int buffer, int offset, int size, IntBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, size, pPointer, pPointer.position()<<2, preserve);
+	}
+	private static native void nglUpdateObjectBufferATI(int buffer, int offset, int size, Buffer pPointer, int pPointer_offset, int preserve);
 
 	public static native void glVariantArrayObjectATI(
 		int id,
@@ -860,33 +966,59 @@ public class GL extends CoreGL14 implements GLConstants {
 		int buffer,
 		int offset);
 
-	public static native void glVariantbvEXT(int id, ByteBuffer pAddr);
+	public static void glVariantbvEXT(int id, ByteBuffer pAddr) {
+		nglVariantbvEXT(id, pAddr, pAddr.position());
+	}
+	private static native void nglVariantbvEXT(int id, ByteBuffer pAddr, int pAddr_offset);
 
-	public static native void glVariantdvEXT(int id, DoubleBuffer pdAddr);
+	public static void glVariantfvEXT(int id, FloatBuffer pfAddr) {
+		nglVariantfvEXT(id, pfAddr, pfAddr.position());
+	}
+	private static native void nglVariantfvEXT(int id, FloatBuffer pfAddr, int pfAddr_offset);
 
-	public static native void glVariantfvEXT(int id, FloatBuffer pfAddr);
+	public static void glVariantivEXT(int id, IntBuffer piAddr) {
+		nglVariantivEXT(id, piAddr, piAddr.position());
+	}
+	private static native void nglVariantivEXT(int id, IntBuffer piAddr, int piAddr_offset);
 
-	public static native void glVariantivEXT(int id, IntBuffer piAddr);
+	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ByteBuffer pAddr) {
+		nglVariantPointerEXT(id, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pAddr, pAddr.position());
+	}
+	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ShortBuffer pAddr) {
+		nglVariantPointerEXT(id, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, stride, pAddr, pAddr.position()<<1);
+	}
+	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
+		nglVariantPointerEXT(id, GL_FLOAT, stride, pAddr, pAddr.position()<<2);
+	}
+	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, IntBuffer pAddr) {
+		nglVariantPointerEXT(id, unsigned ? GL_UNSIGNED_INT : GL_INT, stride, pAddr, pAddr.position()<<2);
+	}
+	private static native void nglVariantPointerEXT(int id, int type, int stride, Buffer pAddr, int pAddr_offset);
 
-	public static native void glVariantPointerEXT(
-		int id,
-		int type,
-		int stride,
-		Buffer pAddr);
+	public static void glVariantsvEXT(int id, ShortBuffer psAddr) {
+		nglVariantsvEXT(id, psAddr, psAddr.position());
+	}
+	private static native void nglVariantsvEXT(int id, ShortBuffer psAddr, int psAddr_offset);
 
-	public static native void glVariantsvEXT(int id, CharBuffer psAddr);
+	public static void glVariantubvEXT(int id, ByteBuffer pAddr) {
+		nglVariantubvEXT(id, pAddr, pAddr.position());
+	}
+	private static native void nglVariantubvEXT(int id, ByteBuffer pAddr, int pAddr_offset);
 
-	public static native void glVariantubvEXT(int id, ByteBuffer pAddr);
+	public static void glVariantuivEXT(int id, IntBuffer piAddr) {
+		nglVariantuivEXT(id, piAddr, piAddr.position());
+	}
+	private static native void nglVariantuivEXT(int id, IntBuffer piAddr, int piAddr_offset);
 
-	public static native void glVariantuivEXT(int id, IntBuffer piAddr);
+	public static void glVariantusvEXT(int id, ShortBuffer psAddr) {
+		nglVariantusvEXT(id, psAddr, psAddr.position());
+	}
+	private static native void nglVariantusvEXT(int id, ShortBuffer psAddr, int psAddr_offset);
 
-	public static native void glVariantusvEXT(int id, CharBuffer psAddr);
-
-	public static native void glVertexArrayRangeNV(int size, Buffer pPointer);
-
-	public static native void glVertexAttrib1dARB(int index, double x);
-
-	public static native void glVertexAttrib1dNV(int index, double x);
+	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {
+		nglVertexArrayRangeNV(pPointer.capacity(), pPointer, pPointer.position());
+	}
+	private static native void nglVertexArrayRangeNV(int size, Buffer pPointer, int pPointer_offset);
 
 	public static native void glVertexAttrib1fARB(int index, float x);
 
@@ -896,10 +1028,6 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glVertexAttrib1sNV(int index, short x);
 
-	public static native void glVertexAttrib2dARB(int index, double x, double y);
-
-	public static native void glVertexAttrib2dNV(int index, double x, double y);
-
 	public static native void glVertexAttrib2fARB(int index, float x, float y);
 
 	public static native void glVertexAttrib2fNV(int index, float x, float y);
@@ -907,18 +1035,6 @@ public class GL extends CoreGL14 implements GLConstants {
 	public static native void glVertexAttrib2sARB(int index, short x, short y);
 
 	public static native void glVertexAttrib2sNV(int index, short x, short y);
-
-	public static native void glVertexAttrib3dARB(
-		int index,
-		double x,
-		double y,
-		double z);
-
-	public static native void glVertexAttrib3dNV(
-		int index,
-		double x,
-		double y,
-		double z);
 
 	public static native void glVertexAttrib3fARB(int index, float x, float y, float z);
 
@@ -928,21 +1044,10 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glVertexAttrib3sNV(int index, short x, short y, short z);
 
-	public static native void glVertexAttrib4bvARB(int index, ByteBuffer pV);
-
-	public static native void glVertexAttrib4dARB(
-		int index,
-		double x,
-		double y,
-		double z,
-		double w);
-
-	public static native void glVertexAttrib4dNV(
-		int index,
-		double x,
-		double y,
-		double z,
-		double w);
+	public static void glVertexAttrib4bvARB(int index, ByteBuffer pV) {
+		nglVertexAttrib4bvARB(index, pV, pV.position());
+	}
+	private static native void nglVertexAttrib4bvARB(int index, ByteBuffer pV, int pV_offset);
 
 	public static native void glVertexAttrib4fARB(
 		int index,
@@ -958,13 +1063,25 @@ public class GL extends CoreGL14 implements GLConstants {
 		float z,
 		float w);
 
-	public static native void glVertexAttrib4ivARB(int index, IntBuffer piV);
+	public static void glVertexAttrib4ivARB(int index, IntBuffer piV) {
+		nglVertexAttrib4ivARB(index, piV, piV.position());
+	}
+	private static native void nglVertexAttrib4ivARB(int index, IntBuffer piV, int piV_offset);
 
-	public static native void glVertexAttrib4NbvARB(int index, ByteBuffer pV);
+	public static void glVertexAttrib4NbvARB(int index, ByteBuffer pV) {
+		nglVertexAttrib4NbvARB(index, pV, pV.position());
+	}
+	private static native void nglVertexAttrib4NbvARB(int index, ByteBuffer pV, int pV_offset);
 
-	public static native void glVertexAttrib4NivARB(int index, IntBuffer piV);
+	public static void glVertexAttrib4NivARB(int index, IntBuffer piV) {
+		nglVertexAttrib4NivARB(index, piV, piV.position());
+	}
+	private static native void nglVertexAttrib4NivARB(int index, IntBuffer piV, int piV_offset);
 
-	public static native void glVertexAttrib4NsvARB(int index, CharBuffer psV);
+	public static void glVertexAttrib4NsvARB(int index, ShortBuffer psV) {
+		nglVertexAttrib4NsvARB(index, psV, psV.position());
+	}
+	private static native void nglVertexAttrib4NsvARB(int index, ShortBuffer psV, int psV_offset);
 
 	public static native void glVertexAttrib4NubARB(
 		int index,
@@ -973,11 +1090,20 @@ public class GL extends CoreGL14 implements GLConstants {
 		byte z,
 		byte w);
 
-	public static native void glVertexAttrib4NubvARB(int index, ByteBuffer pV);
+	public static void glVertexAttrib4NubvARB(int index, ByteBuffer pV) {
+		nglVertexAttrib4NubvARB(index, pV, pV.position());
+	}
+	private static native void nglVertexAttrib4NubvARB(int index, ByteBuffer pV, int pV_offset);
 
-	public static native void glVertexAttrib4NuivARB(int index, IntBuffer piV);
+	public static void glVertexAttrib4NuivARB(int index, IntBuffer piV) {
+		nglVertexAttrib4NuivARB(index, piV, piV.position());
+	}
+	private static native void nglVertexAttrib4NuivARB(int index, IntBuffer piV, int piV_offset);
 
-	public static native void glVertexAttrib4NusvARB(int index, CharBuffer psV);
+	public static void glVertexAttrib4NusvARB(int index, ShortBuffer psV) {
+		nglVertexAttrib4NusvARB(index, psV, psV.position());
+	}
+	private static native void nglVertexAttrib4NusvARB(int index, ShortBuffer psV, int psV_offset);
 
 	public static native void glVertexAttrib4sARB(
 		int index,
@@ -1000,54 +1126,98 @@ public class GL extends CoreGL14 implements GLConstants {
 		byte z,
 		byte w);
 
-	public static native void glVertexAttrib4ubvARB(int index, ByteBuffer pV);
+	public static void glVertexAttrib4ubvARB(int index, ByteBuffer pV) {
+		nglVertexAttrib4ubvARB(index, pV, pV.position());
+	}
+	private static native void nglVertexAttrib4ubvARB(int index, ByteBuffer pV, int pV_offset);
 
-	public static native void glVertexAttrib4ubvNV(int index, ByteBuffer pV);
+	public static void glVertexAttrib4ubvNV(int index, ByteBuffer pV) {
+		nglVertexAttrib4ubvNV(index, pV, pV.position());
+	}
+	private static native void nglVertexAttrib4ubvNV(int index, ByteBuffer pV, int pV_offset);
 
-	public static native void glVertexAttrib4uivARB(int index, IntBuffer piV);
+	public static void glVertexAttrib4uivARB(int index, IntBuffer piV) {
+		nglVertexAttrib4uivARB(index, piV, piV.position());
+	}
+	private static native void nglVertexAttrib4uivARB(int index, IntBuffer piV, int piV_offset);
 
-	public static native void glVertexAttrib4usvARB(int index, CharBuffer psV);
+	public static void glVertexAttrib4usvARB(int index, ShortBuffer psV) {
+		nglVertexAttrib4usvARB(index, psV, psV.position());
+	}
+	private static native void nglVertexAttrib4usvARB(int index, ShortBuffer psV, int psV_offset);
 
-	public static native void glVertexAttribPointerARB(
-		int index,
-		int size,
-		int type,
-		boolean normalized,
-		int stride,
-		Buffer pPointer);
+	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer pPointer) {
+		nglVertexAttribPointerARB(index, size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, normalized, stride, pPointer, pPointer.position());
+	}
+	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer pPointer) {
+		nglVertexAttribPointerARB(index, size, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, normalized, stride, pPointer, pPointer.position()<<1);
+	}
+	public static void glVertexAttribPointerARB(int index, int size, boolean normalized, int stride, FloatBuffer pPointer) {
+		nglVertexAttribPointerARB(index, size, GL_FLOAT, normalized, stride, pPointer, pPointer.position()<<2);
+	}
+	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer pPointer) {
+		nglVertexAttribPointerARB(index, size, unsigned ? GL_UNSIGNED_INT : GL_INT, normalized, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglVertexAttribPointerARB(int index, int size, int type, boolean normalized, int stride, Buffer pPointer, int pPointer_offset);
 
-	public static native void glVertexAttribPointerNV(
-		int index,
-		int size,
-		int type,
-		int stride,
-		Buffer pPointer);
+	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		nglVertexAttribPointerNV(index, size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pPointer, pPointer.position());
+	}
+	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer pPointer) {
+		nglVertexAttribPointerNV(index, size, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, stride, pPointer, pPointer.position()<<1);
+	}
+	public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer pPointer) {
+		nglVertexAttribPointerNV(index, size, GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+	}
+	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer pPointer) {
+		nglVertexAttribPointerNV(index, size, unsigned ? GL_UNSIGNED_INT : GL_INT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglVertexAttribPointerNV(int index, int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 
-	public static native void glVertexAttribs1dvNV(int index, int n, DoubleBuffer pdV);
+	public static void glVertexAttribs1fvNV(int index, int n, FloatBuffer pfV) {
+		nglVertexAttribs1fvNV(index, n, pfV, pfV.position());
+	}
+	private static native void nglVertexAttribs1fvNV(int index, int n, FloatBuffer pfV, int pfV_offset);
 
-	public static native void glVertexAttribs1fvNV(int index, int n, FloatBuffer pfV);
+	public static void glVertexAttribs1svNV(int index, int n, ShortBuffer psV) {
+		nglVertexAttribs1svNV(index, n, psV, psV.position());
+	}
+	private static native void nglVertexAttribs1svNV(int index, int n, ShortBuffer psV, int psV_offset);
 
-	public static native void glVertexAttribs1svNV(int index, int n, CharBuffer psV);
+	public static void glVertexAttribs2fvNV(int index, int n, FloatBuffer pfV) {
+		nglVertexAttribs2fvNV(index, n, pfV, pfV.position());
+	}
+	private static native void nglVertexAttribs2fvNV(int index, int n, FloatBuffer pfV, int pfV_offset);
 
-	public static native void glVertexAttribs2dvNV(int index, int n, DoubleBuffer pdV);
+	public static void glVertexAttribs2svNV(int index, int n, ShortBuffer psV) {
+		nglVertexAttribs2svNV(index, n, psV, psV.position());
+	}
+	private static native void nglVertexAttribs2svNV(int index, int n, ShortBuffer psV, int psV_offset);
 
-	public static native void glVertexAttribs2fvNV(int index, int n, FloatBuffer pfV);
+	public static void glVertexAttribs3fvNV(int index, int n, FloatBuffer pfV) {
+		nglVertexAttribs3fvNV(index, n, pfV, pfV.position());
+	}
+	private static native void nglVertexAttribs3fvNV(int index, int n, FloatBuffer pfV, int pfV_offset);
 
-	public static native void glVertexAttribs2svNV(int index, int n, CharBuffer psV);
+	public static void glVertexAttribs3svNV(int index, int n, ShortBuffer psV) {
+		nglVertexAttribs3svNV(index, n, psV, psV.position());
+	}
+	private static native void nglVertexAttribs3svNV(int index, int n, ShortBuffer psV, int psV_offset);
 
-	public static native void glVertexAttribs3dvNV(int index, int n, DoubleBuffer pdV);
+	public static void glVertexAttribs4fvNV(int index, int n, FloatBuffer pfV) {
+		nglVertexAttribs4fvNV(index, n, pfV, pfV.position());
+	}
+	private static native void nglVertexAttribs4fvNV(int index, int n, FloatBuffer pfV, int pfV_offset);
 
-	public static native void glVertexAttribs3fvNV(int index, int n, FloatBuffer pfV);
+	public static void glVertexAttribs4svNV(int index, int n, ShortBuffer psV) {
+		nglVertexAttribs4svNV(index, n, psV, psV.position());
+	}
+	private static native void nglVertexAttribs4svNV(int index, int n, ShortBuffer psV, int psV_offset);
 
-	public static native void glVertexAttribs3svNV(int index, int n, CharBuffer psV);
-
-	public static native void glVertexAttribs4dvNV(int index, int n, DoubleBuffer pdV);
-
-	public static native void glVertexAttribs4fvNV(int index, int n, FloatBuffer pfV);
-
-	public static native void glVertexAttribs4svNV(int index, int n, CharBuffer psV);
-
-	public static native void glVertexAttribs4ubvNV(int index, int n, ByteBuffer pV);
+	public static void glVertexAttribs4ubvNV(int index, int n, ByteBuffer pV) {
+		nglVertexAttribs4ubvNV(index, n, pV, pV.position());
+	}
+	private static native void nglVertexAttribs4ubvNV(int index, int n, ByteBuffer pV, int pV_offset);
 
 	public static native void glVertexBlendARB(int count);
 
@@ -1055,32 +1225,17 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glVertexBlendEnviATI(int pname, int param);
 
-	public static native void glVertexStream2dATI(int stream, double x, double y);
-
 	public static native void glVertexStream2fATI(int stream, float x, float y);
 
 	public static native void glVertexStream2iATI(int stream, int x, int y);
 
 	public static native void glVertexStream2sATI(int stream, short x, short y);
 
-	public static native void glVertexStream3dATI(
-		int stream,
-		double x,
-		double y,
-		double z);
-
 	public static native void glVertexStream3fATI(int stream, float x, float y, float z);
 
 	public static native void glVertexStream3iATI(int stream, int x, int y, int z);
 
 	public static native void glVertexStream3sATI(int stream, short x, short y, short z);
-
-	public static native void glVertexStream4dATI(
-		int stream,
-		double x,
-		double y,
-		double z,
-		double w);
 
 	public static native void glVertexStream4fATI(
 		int stream,
@@ -1105,33 +1260,59 @@ public class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glVertexWeightfEXT(float weight);
 
-	public static native void glVertexWeightPointerEXT(
-		int size,
-		int type,
-		int stride,
-		Buffer pPointer);
+	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
+		nglVertexWeightPointerEXT(size, GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglVertexWeightPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 
-	public static native void glWeightbvARB(int size, ByteBuffer pWeights);
+	public static void glWeightbvARB(int size, ByteBuffer pWeights) {
+		nglWeightbvARB(size, pWeights, pWeights.position());
+	}
+	private static native void nglWeightbvARB(int size, ByteBuffer pWeights, int pWeights_offset);
 
-	public static native void glWeightdvARB(int size, DoubleBuffer pdWeights);
+	public static void glWeightfvARB(int size, FloatBuffer pfWeights) {
+		nglWeightfvARB(size, pfWeights, pfWeights.position());
+	}
+	private static native void nglWeightfvARB(int size, FloatBuffer pfWeights, int pfWeights_offset);
 
-	public static native void glWeightfvARB(int size, FloatBuffer pfWeights);
+	public static void glWeightivARB(int size, IntBuffer piWeights) {
+		nglWeightivARB(size, piWeights, piWeights.position());
+	}
+	private static native void nglWeightivARB(int size, IntBuffer piWeights, int piWeights_offset);
 
-	public static native void glWeightivARB(int size, IntBuffer piWeights);
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		nglWeightPointerARB(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pPointer, pPointer.position());
+	}
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
+		nglWeightPointerARB(size, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, stride, pPointer, pPointer.position()<<1);
+	}
+	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
+		nglWeightPointerARB(size, GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+	}
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
+		nglWeightPointerARB(size, unsigned ? GL_UNSIGNED_INT : GL_INT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 
-	public static native void glWeightPointerARB(
-		int size,
-		int type,
-		int stride,
-		Buffer pPointer);
+	public static void glWeightsvARB(int size, ShortBuffer psWeights) {
+		nglWeightsvARB(size, psWeights, psWeights.position());
+	}
+	private static native void nglWeightsvARB(int size, ShortBuffer psWeights, int psWeights_offset);
 
-	public static native void glWeightsvARB(int size, CharBuffer psWeights);
+	public static void glWeightubvARB(int size, ByteBuffer pWeights) {
+		nglWeightubvARB(size, pWeights, pWeights.position());
+	}
+	private static native void nglWeightubvARB(int size, ByteBuffer pWeights, int pWeights_offset);
 
-	public static native void glWeightubvARB(int size, ByteBuffer pWeights);
+	public static void glWeightuivARB(int size, IntBuffer piWeights) {
+		nglWeightuivARB(size, piWeights, piWeights.position());
+	}
+	private static native void nglWeightuivARB(int size, IntBuffer piWeights, int piWeights_offset);
 
-	public static native void glWeightuivARB(int size, IntBuffer piWeights);
-
-	public static native void glWeightusvARB(int size, CharBuffer psWeights);
+	public static void glWeightusvARB(int size, ShortBuffer psWeights) {
+		nglWeightusvARB(size, psWeights, psWeights.position());
+	}
+	private static native void nglWeightusvARB(int size, ShortBuffer psWeights, int psWeights_offset);
 
 	public static native ByteBuffer glXAllocateMemoryNV(
 		int size,
@@ -1139,7 +1320,10 @@ public class GL extends CoreGL14 implements GLConstants {
 		float writeFrequency,
 		float priority);
 
-	public static native void glXFreeMemoryNV(ByteBuffer pointer);
+	public static void glXFreeMemoryNV(ByteBuffer pointer) {
+		nglXFreeMemoryNV(pointer, pointer.position());
+	}
+	private static native void nglXFreeMemoryNV(ByteBuffer pointer, int pointer_offset);
 
 	// #ifdef _WIN32
 
@@ -1159,11 +1343,11 @@ public class GL extends CoreGL14 implements GLConstants {
 		int piFormats,
 		int piNumFormats);
 */
-	public static native int wglCreateBufferRegionARB(
+/*	public static native int wglCreateBufferRegionARB(
 		int hdc,
 		int iLayerPlane,
 		int uType);
-
+*/
 /*	public static native int wglCreatePbufferARB(
 		int hDC,
 		int iPixelFormat,
@@ -1171,7 +1355,7 @@ public class GL extends CoreGL14 implements GLConstants {
 		int iHeight,
 		int piAttribList);
 */
-	public static native void wglDeleteBufferRegionARB(Buffer hRegion);
+//	public static native void wglDeleteBufferRegionARB(Buffer hRegion);
 
 /*	public static native boolean wglDestroyPbufferARB(int hPbuffer);*/
 
@@ -1219,7 +1403,7 @@ public class GL extends CoreGL14 implements GLConstants {
 		int hPbuffer,
 		int iBuffer);
 
-	public static native boolean wglRestoreBufferRegionARB(
+/*	public static native boolean wglRestoreBufferRegionARB(
 		Buffer hRegion,
 		int x,
 		int y,
@@ -1234,22 +1418,18 @@ public class GL extends CoreGL14 implements GLConstants {
 		int y,
 		int width,
 		int height);
-
+*/
 /*	public static native boolean wglSetPbufferAttribARB(
 		int hPbuffer,
 		int piAttribList);
 */
 	public static native boolean wglSwapIntervalEXT(int interval);
 
-	public static native void glWindowPos2dARB(double x, double y);
-
 	public static native void glWindowPos2fARB(float x, float y);
 
 	public static native void glWindowPos2iARB(int x, int y);
 
 	public static native void glWindowPos2sARB(short x, short y);
-
-	public static native void glWindowPos3dARB(double x, double y, double z);
 
 	public static native void glWindowPos3fARB(float x, float y, float z);
 
@@ -1266,11 +1446,41 @@ public class GL extends CoreGL14 implements GLConstants {
 		int outW);
 
 	public static native void glBindBufferARB(int target, int buffer);
-	public static native void glDeleteBuffersARB(int n, IntBuffer buffers);
-	public static native void glGenBuffersARB(int n, IntBuffer buffers);
+	public static void glDeleteBuffersARB(int n, IntBuffer buffers) {
+		nglDeleteBuffersARB(n, buffers, buffers.position());
+	}
+	private static native void nglDeleteBuffersARB(int n, IntBuffer buffers, int buffers_offset);
+	public static void glGenBuffersARB(int n, IntBuffer buffers) {
+		nglGenBuffersARB(n, buffers, buffers.position());
+	}
+	private static native void nglGenBuffersARB(int n, IntBuffer buffers, int buffers_offset);
 	public static native boolean glIsBufferARB(int buffer);
-	public static native void glBufferDataARB(int target, int size, Buffer data, int usage);
-	public static native void glBufferSubDataARB(int target, int offset, int size, Buffer data);
+	public static void glBufferDataARB(int target, int size, ByteBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data.position(), usage);
+	}
+	public static void glBufferDataARB(int target, int size, ShortBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data.position()<<1, usage);
+	}
+	public static void glBufferDataARB(int target, int size, FloatBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data.position()<<2, usage);
+	}
+	public static void glBufferDataARB(int target, int size, IntBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data.position()<<2, usage);
+	}
+	private static native void nglBufferDataARB(int target, int size, Buffer data, int data_offset, int usage);
+	public static void glBufferSubDataARB(int target, int offset, int size, ByteBuffer data) {
+		nglBufferSubDataARB(target, offset, size, data, data.position());
+	}
+	public static void glBufferSubDataARB(int target, int offset, int size, ShortBuffer data) {
+		nglBufferSubDataARB(target, offset, size, data, data.position()<<1);
+	}
+	public static void glBufferSubDataARB(int target, int offset, int size, FloatBuffer data) {
+		nglBufferSubDataARB(target, offset, size, data, data.position()<<2);
+	}
+	public static void glBufferSubDataARB(int target, int offset, int size, IntBuffer data) {
+		nglBufferSubDataARB(target, offset, size, data, data.position()<<2);
+	}
+	private static native void nglBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);
 	public static native void glGetBufferSubDataARB(int target, int offset, int size, Buffer data);
 	/**
 	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in
@@ -1291,6 +1501,9 @@ public class GL extends CoreGL14 implements GLConstants {
 	 */
 	public static native ByteBuffer glMapBufferARB(int target, int access, int size, ByteBuffer oldBuffer);
 	public static native boolean glUnmapBufferARB(int target);
-	public static native void glGetBufferParameterivARB(int target, int pname, IntBuffer params);
+	public static void glGetBufferParameterivARB(int target, int pname, IntBuffer params) {
+		nglGetBufferParameterivARB(target, pname, params, params.position());
+	}
+	private static native void nglGetBufferParameterivARB(int target, int pname, IntBuffer params, int params_offset);
 	public static native ByteBuffer glGetBufferPointervARB(int target, int pname, int size);
 }
