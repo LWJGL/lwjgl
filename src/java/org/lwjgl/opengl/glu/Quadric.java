@@ -22,10 +22,10 @@ public class Quadric implements GLUConstants {
 	public Quadric() {
 		super();
 		
-		drawStyle = this.GLU_FILL;
-		orientation = this.GLU_OUTSIDE;
+		drawStyle = GLUConstants.GLU_FILL;
+		orientation = GLUConstants.GLU_OUTSIDE;
 		textureFlag = false;
-		normals = this.GLU_SMOOTH;
+		normals = GLUConstants.GLU_SMOOTH;
 	}
 
 	/**
