@@ -41,7 +41,7 @@ import javax.sound.sampled.*;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
+//import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -89,14 +89,14 @@ public class WaveData {
 	 * @return WaveData containing data, or null if a failure occured
 	 */
 	public static WaveData create(String filepath) {
-		try {
-			return create(
-				AudioSystem.getAudioInputStream(
-					new BufferedInputStream(new FileInputStream(filepath))));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+    try {
+      return create(
+        AudioSystem.getAudioInputStream(
+          new BufferedInputStream(ClassLoader.getSystemClassLoader().getResourceAsStream(filepath))));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }    
 	}
   
   /**
