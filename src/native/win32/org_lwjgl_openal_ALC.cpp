@@ -182,6 +182,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_createContext (JNIEnv *env, 
  * ALCboolean alcMakeContextCurrent(ALCcontext *context);
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_makeContextCurrent (JNIEnv *env, jobject obj, jobject context) {
+	if(context == NULL) {
+		return alcMakeContextCurrent(NULL);
+	}
+	
 	/* get context address */
 	jclass context_class	= env->GetObjectClass(context);
 	jfieldID context_field	= env->GetFieldID(context_class, "context", "I");
