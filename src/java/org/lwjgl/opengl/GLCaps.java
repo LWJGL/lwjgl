@@ -108,6 +108,7 @@ public abstract class GLCaps {
 	public static boolean GL_ATI_texture_mirror_once;
 	public static boolean GL_ATI_vertex_array_object;
 	public static boolean GL_ATI_vertex_streams;
+	public static boolean GL_ATI_separate_stencil;
 	public static boolean GL_ATIX_point_sprites;
 	public static boolean GL_ATIX_texture_env_route;
 	public static boolean GL_HP_occlusion_test;

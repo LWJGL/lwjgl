@@ -83,6 +83,7 @@ public interface GLConstants
 		ATITextureMirrorOnce,
 		ATIVertexArrayObject,
 		ATIVertexStreams,
+		ATISeparateStencil,
 		ATIXPointSprites,
 		ATIXTextureEnvRoute,
 		EXTAbgr,
