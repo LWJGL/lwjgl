@@ -39,6 +39,9 @@ public class PositionTest extends BasicTest {
 
   /** Whether the demo is done */
   private boolean finished = false;
+  
+  /** Whether in pause mode */
+  private boolean pauseMode = false;
 
   // OpenAL stuff
   // ===================================================
@@ -243,29 +246,61 @@ public class PositionTest extends BasicTest {
     while (!finished) {
       // handle any input
       handleInput();
-
-      // render the scene
-      render();
-
+      
+      // render and paint if !minimized and not dirty
+      if(!Window.isMinimized() || Window.isDirty()) {
+        render();
+        Window.paint();
+      } else {
+        // sleeeeeep
+        pause(100);
+      }
+      
       // allow window to process internal messages
       Window.update();
 
-      // paint the content and flip buffer
-      Window.paint();
-
+      // act on pause mode
+      paused(Window.isMinimized());
+      
       // start sound after first paint, since we don't want
       // the delay before something is painted on the screen
-      if (firstRun) {
+      if (firstRun && !pauseMode) {
         firstRun = false;
 
         // start sounds with delays
-        AL.alSourcePlay(soundSources.get(LEFT));
-        pause(300);
-        AL.alSourcePlay(soundSources.get(CENTER));
-        pause(500);
-        AL.alSourcePlay(soundSources.get(RIGHT));
+        startSounds();
       }
     }
+  }
+  
+  /**
+   * Starts playing the sounds at different times
+   */
+  private void startSounds() {
+    AL.alSourcePlay(soundSources.get(LEFT));
+    pause(300);
+    AL.alSourcePlay(soundSources.get(CENTER));
+    pause(500);
+    AL.alSourcePlay(soundSources.get(RIGHT));    
+  }
+  
+  /**
+   * Handles any changes in pause mode
+   * 
+   * @param paused Which pause mode to enter
+   */
+  private void paused(boolean paused) {
+    // if requesting pause, and not paused - pause and stop sound
+    if(paused && !pauseMode) {
+      pauseMode = true;
+      AL.alSourcePause(soundSources);
+    } 
+    
+    // else go out of pause mode and start sounds
+    else if(!paused && pauseMode) {
+      pauseMode = false;
+      startSounds();
+    }    
   }
 
   /**
@@ -374,6 +409,7 @@ public class PositionTest extends BasicTest {
     {
       GL.glRotatef(20.0f, 1.0f, 1.0f, 0.0f);
 
+      // left
       GL.glPushMatrix();
       {
         GL.glTranslatef(leftPosition.get(0), leftPosition.get(1), leftPosition.get(2));
@@ -382,6 +418,7 @@ public class PositionTest extends BasicTest {
       }
       GL.glPopMatrix();
 
+      // center
       GL.glPushMatrix();
       {
         GL.glTranslatef(centerPosition.get(0), centerPosition.get(1), centerPosition.get(2));
@@ -390,6 +427,7 @@ public class PositionTest extends BasicTest {
       }
       GL.glPopMatrix();
 
+      // right
       GL.glPushMatrix();
       {
         GL.glTranslatef(rightPosition.get(0), rightPosition.get(1), rightPosition.get(2));
@@ -398,7 +436,7 @@ public class PositionTest extends BasicTest {
       }
       GL.glPopMatrix();
 
-      //the listener
+      // listener
       GL.glPushMatrix();
       {
         GL.glTranslatef(listenerPosition.get(0), listenerPosition.get(1), listenerPosition.get(2));
