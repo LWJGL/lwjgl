@@ -70,7 +70,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 //		KEY_MAP[KeyEvent.VK_AGAIN] = Keyboard.KEY_AGAIN;
 //		KEY_MAP[KeyEvent.VK_ALL_CANDIDATES] = Keyboard.KEY_ALL_CANDIDATES;
 //		KEY_MAP[KeyEvent.VK_ALPHANUMERIC] = Keyboard.KEY_ALPHANUMERIC;
-		KEY_MAP[KeyEvent.VK_ALT] = Keyboard.KEY_LMENU;
+//		KEY_MAP[KeyEvent.VK_ALT] = Keyboard.KEY_LMENU; manually mapped
 		KEY_MAP[KeyEvent.VK_ALT_GRAPH] = Keyboard.KEY_RMENU;
 //		KEY_MAP[KeyEvent.VK_AMPERSAND] = Keyboard.KEY_AMPERSAND;
 //		KEY_MAP[KeyEvent.VK_ASTERISK] = Keyboard.KEY_ASTERISK;
@@ -91,7 +91,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		KEY_MAP[KeyEvent.VK_COLON] = Keyboard.KEY_COLON;
 		KEY_MAP[KeyEvent.VK_COMMA] = Keyboard.KEY_COMMA;
 //		KEY_MAP[KeyEvent.VK_COMPOSE] = Keyboard.KEY_COMPOSE;
-		KEY_MAP[KeyEvent.VK_CONTROL] = Keyboard.KEY_LCONTROL;
+//		KEY_MAP[KeyEvent.VK_CONTROL] = Keyboard.KEY_LCONTROL; manually mapped
 		KEY_MAP[KeyEvent.VK_CONVERT] = Keyboard.KEY_CONVERT;
 //		KEY_MAP[KeyEvent.VK_COPY] = Keyboard.KEY_COPY;
 //		KEY_MAP[KeyEvent.VK_CUT] = Keyboard.KEY_CUT;
@@ -181,7 +181,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 //		KEY_MAP[KeyEvent.VK_LEFT_PARENTHESIS] = Keyboard.KEY_LEFT_PARENTHESIS;
 //		KEY_MAP[KeyEvent.VK_LESS] = Keyboard.KEY_LESS;
 		KEY_MAP[KeyEvent.VK_M] = Keyboard.KEY_M;
-//		KEY_MAP[KeyEvent.VK_META] = Keyboard.KEY_META;
+//		KEY_MAP[KeyEvent.VK_META] = Keyboard.KEY_LMENU; manually mapped
 		KEY_MAP[KeyEvent.VK_MINUS] = Keyboard.KEY_MINUS;
 //		KEY_MAP[KeyEvent.VK_MODECHANGE] = Keyboard.KEY_MODECHANGE;
 		KEY_MAP[KeyEvent.VK_MULTIPLY] = Keyboard.KEY_MULTIPLY;
@@ -222,7 +222,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		KEY_MAP[KeyEvent.VK_SCROLL_LOCK] = Keyboard.KEY_SCROLL;
 		KEY_MAP[KeyEvent.VK_SEMICOLON] = Keyboard.KEY_SEMICOLON;
 		KEY_MAP[KeyEvent.VK_SEPARATOR] = Keyboard.KEY_DECIMAL;
-		KEY_MAP[KeyEvent.VK_SHIFT] = Keyboard.KEY_LSHIFT;
+//		KEY_MAP[KeyEvent.VK_SHIFT] = Keyboard.KEY_LSHIFT; manually mapped
 		KEY_MAP[KeyEvent.VK_SLASH] = Keyboard.KEY_SLASH;
 		KEY_MAP[KeyEvent.VK_SPACE] = Keyboard.KEY_SPACE;
 		KEY_MAP[KeyEvent.VK_STOP] = Keyboard.KEY_STOP;
@@ -257,8 +257,7 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		key_down_buffer.position(old_position);
 	}
 
-	private synchronized void handleKey(int key_code, byte state, char character) {
-		int key_code_mapped = KEY_MAP[key_code];
+	private synchronized void handleKey(int key_code_mapped, byte state, char character) {
 		if ( character == KeyEvent.CHAR_UNDEFINED )
 			character = Keyboard.CHAR_NONE;
 		/* Ignore repeating presses */
@@ -269,12 +268,36 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		putKeyboardEvent(key_code_mapped, state, key_int_char);
 	}
 
+	private int getMappedKeyCode(int key_code, int position) {
+		// manually map positioned keys
+		switch (key_code) {
+			case KeyEvent.VK_ALT: // fall through
+			case KeyEvent.VK_META:
+				if (position == KeyEvent.KEY_LOCATION_RIGHT)
+					return Keyboard.KEY_RMENU;
+				else
+					return Keyboard.KEY_LMENU;
+			case KeyEvent.VK_SHIFT:
+				if (position == KeyEvent.KEY_LOCATION_RIGHT)
+					return Keyboard.KEY_RSHIFT;
+				else
+					return Keyboard.KEY_LSHIFT;
+			case KeyEvent.VK_CONTROL:
+				if (position == KeyEvent.KEY_LOCATION_RIGHT)
+					return Keyboard.KEY_RCONTROL;
+				else
+					return Keyboard.KEY_LCONTROL;
+			default:
+				return KEY_MAP[key_code];
+		}
+	}
+
 	public void keyPressed(KeyEvent e) {
-		handleKey(e.getKeyCode(), (byte)1, e.getKeyChar());
+		handleKey(getMappedKeyCode(e.getKeyCode(), e.getKeyLocation()), (byte)1, e.getKeyChar());
 	}
 
 	public void keyReleased(KeyEvent e) {
-		handleKey(e.getKeyCode(), (byte)0, Keyboard.CHAR_NONE);
+		handleKey(getMappedKeyCode(e.getKeyCode(), e.getKeyLocation()), (byte)0, Keyboard.CHAR_NONE);
 	}
 
 	public void keyTyped(KeyEvent e) {
