@@ -11,6 +11,8 @@ extern "C" {
 /* Inaccessible static: initial_mode */
 /* Inaccessible static: timeNow */
 /* Inaccessible static: timeThen */
+/* Inaccessible static: x */
+/* Inaccessible static: y */
 /* Inaccessible static: title */
 /* Inaccessible static: fullscreen */
 /* Inaccessible static: vsync */
@@ -27,10 +29,10 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Display_nGetAvailableDispla
 /*
  * Class:     org_lwjgl_opengl_Display
  * Method:    nCreateWindow
- * Signature: (Lorg/lwjgl/opengl/DisplayMode;Z)V
+ * Signature: (Lorg/lwjgl/opengl/DisplayMode;ZII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow
-  (JNIEnv *, jclass, jobject, jboolean);
+  (JNIEnv *, jclass, jobject, jboolean, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_Display
@@ -183,6 +185,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetVSyncEnabled
   (JNIEnv *, jclass, jboolean);
+
+/*
+ * Class:     org_lwjgl_opengl_Display
+ * Method:    nReshape
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nReshape
+  (JNIEnv *, jclass, jint, jint, jint, jint);
 
 #ifdef __cplusplus
 }

@@ -343,7 +343,11 @@ static bool isNetWMFullscreenSupported() {
 	return supported;
 }
 
-static bool createWindow(JNIEnv* env, int width, int height) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nReshape(JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height) {
+	XMoveWindow(getDisplay(), getCurrentWindow(), x, y);
+}
+
+static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	dirty = true;
 	focused = true;
@@ -370,7 +374,7 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
-	win = XCreateWindow(getDisplay(), root_win, 0, 0, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
+	win = XCreateWindow(getDisplay(), root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
 	if (!checkXError(env)) {
 		XFreeColormap(getDisplay(), cmap);
 		return false;
@@ -706,7 +710,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env,
 	decDisplay();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen, int x, int y) {
 	bool current_fullscreen = fullscreen == JNI_TRUE;
 	if (current_fullscreen) {
 		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported())
@@ -720,7 +724,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, 
 	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
 	int width = (*env)->GetIntField(env, mode, fid_width);
 	int height = (*env)->GetIntField(env, mode, fid_height);
-	bool window_created = createWindow(env, width, height);
+	bool window_created = createWindow(env, x, y, width, height);
 	if (!window_created) {
 		return;
 	}
