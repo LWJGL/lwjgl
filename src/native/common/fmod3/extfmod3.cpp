@@ -78,15 +78,20 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
  * @param path path to try to load dll
  */
 void fmod_create(JNIEnv *env, char* path) {
+  // try to create an instance using the supplied path
   fmod_instance = FMOD_CreateInstance(path);
   
+  // if we got one, we need to locate and cache jni stuff used for callbacks
   if (fmod_instance != NULL) {
+    
+    // fmusic specific callbacks
     fmusic = env->FindClass("org/lwjgl/fmod3/FMusic");
     music_instcallback = env->GetStaticMethodID(fmusic, "music_instcallback", "(JI)V");
     music_ordercallback = env->GetStaticMethodID(fmusic, "music_ordercallback", "(JI)V");
     music_rowcallback = env->GetStaticMethodID(fmusic, "music_rowcallback", "(JI)V");
     music_zxxcallback = env->GetStaticMethodID(fmusic, "music_zxxcallback", "(JI)V");
 		
+    // fsound specefic callbacks
 		fsound = env->FindClass("org/lwjgl/fmod3/FSound");
 		sound_dspcallback = env->GetStaticMethodID(fsound, "dsp_callback", "(JLjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;I)Ljava/nio/ByteBuffer;");
 		sound_stream_endcallback = env->GetStaticMethodID(fsound, "end_callback", "(J)V");
@@ -94,7 +99,8 @@ void fmod_create(JNIEnv *env, char* path) {
 		sound_stream_callback = env->GetStaticMethodID(fsound, "stream_callback", "(JLjava/nio/ByteBuffer;I)V");
 		sound_metadata_callback = env->GetStaticMethodID(fsound, "meta_callback", "(JLjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;)V");
 		
-		// cache some data
+		// we need the size of the mix buffer, so we start out by caching it and
+		// update it accordingly on changes
 		switch(fmod_instance->FSOUND_GetMixer()) {
 			case FSOUND_MIXER_AUTODETECT:
 			case FSOUND_MIXER_BLENDMODE:

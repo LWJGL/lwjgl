@@ -39,19 +39,23 @@
 #include "fmoddyn.h"
 #include "fmod_errors.h"
 
+// Called to create an FMOD instance
 void fmod_create(JNIEnv *env, char*);
+
+// Called to destroy our FMOD instance
 void fmod_destroy();
 
-extern void attachMixerThread();
-extern void attachStreamThread();
+// Actual FMOD instance to invoke methods on
 extern FMOD_INSTANCE * fmod_instance;
 
 // Setup for callback. The callbacks don't have access to a JNIEnv pointer, so we have to provide
-// one. Unfortunately we cannot cache one, since JNIEnv er thread local copies. We can however
+// one. Unfortunately we cannot cache one, since JNIEnv are thread local copies. We can however
 // aquire one, using AttachCurrent<ThreadAsDaemon>. However we need a VM instance for that.
 // so we supply 1 VM instance for use by threads (in common_tools) (VM instances are shared across threads), and
 // 1 JNIEnv pointer per thread. At this time, 2 threads have been identified - the Stream thread
-// and the mixer thread.
+// and the Mixer thread.
+extern void attachMixerThread();
+extern void attachStreamThread();
 extern JNIEnv *mixer_jnienv;
 extern JNIEnv *stream_jnienv;
 
