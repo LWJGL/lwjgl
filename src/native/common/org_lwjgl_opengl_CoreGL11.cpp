@@ -47,17 +47,6 @@
 #include "checkGLerror.h"
 #include "extgl.h"
 
-static inline jobject newBuffer(JNIEnv *env, void *p, int size) {
-	if (p == NULL)
-		return NULL;
-	else
-		return env->NewDirectByteBuffer(p, size);
-}
-
-static inline const void *offsetToPointer(jint offset) {
-	return (const char *)NULL + offset;
-}
-
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glAccum
@@ -906,7 +895,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_CoreGL11_glGetPointerv(JNIEnv * 
 	void *pointer;
 	glGetPointerv((GLint) p0, &pointer);
 	CHECK_GL_ERROR
-	return newBuffer(env, pointer, size);
+	return safeNewBuffer(env, pointer, size);
 }
 
 /*

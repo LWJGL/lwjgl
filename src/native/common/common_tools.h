@@ -67,4 +67,22 @@ extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void setDebugEnabled(bool enable);
 extern void printfDebug(const char *format, ...);
 
+static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {
+	if (buffer == NULL)
+		return NULL;
+	else
+		return env->GetDirectBufferAddress(buffer);
+}
+
+static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
+	if (p == NULL)
+		return NULL;
+	else
+		return env->NewDirectByteBuffer(p, size);
+}
+
+static inline const void *offsetToPointer(jint offset) {
+	return (const char *)NULL + offset;
+}
+
 #endif

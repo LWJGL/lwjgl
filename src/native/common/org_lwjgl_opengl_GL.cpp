@@ -51,24 +51,6 @@
 extern HDC hdc;
 #endif
 
-static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {
-	if (buffer == NULL)
-		return NULL;
-	else
-		return env->GetDirectBufferAddress(buffer);
-}
-
-static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
-	if (p == NULL)
-		return NULL;
-	else
-		return env->NewDirectByteBuffer(p, size);
-}
-
-static inline const void *offsetToPointer(jint offset) {
-        return (const char *)NULL + offset;
-}
-
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    glActiveStencilFaceEXT

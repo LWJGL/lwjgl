@@ -47,10 +47,6 @@
 #include "checkGLerror.h"
 #include "extgl.h"
 
-static inline const void *offsetToPointer(jint offset) {
-        return (const char *)NULL + offset;
-}
-
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
  * Method:    glFogCoordf
