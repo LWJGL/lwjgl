@@ -187,10 +187,10 @@ public class ILUT {
 				platform_lib_name = "ILUT.dll";
 			} else if (osName.startsWith("Lin")) {
 				libname = "ILUT";
-				platform_lib_name = "ILUT.so";
+				platform_lib_name = "libILUT.so";
 			} else if (osName.startsWith("Mac")) {
 				libname = "ILUT";
-				platform_lib_name = "ILUT.dylib";
+				platform_lib_name = "libILUT.dylib";
 			} else {
 				throw new LWJGLException("Unknown platform: " + osName);
 			}

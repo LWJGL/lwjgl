@@ -634,10 +634,10 @@ public class IL {
 			platform_lib_name = "DevIL.dll";
 		} else if (osName.startsWith("Lin")) {
 			libname = "DevIL";
-			platform_lib_name = "DevIL.so";
+			platform_lib_name = "libIL.so";
 		} else if (osName.startsWith("Mac")) {
 			libname = "DevIL";
-			platform_lib_name = "DevIL.dylib";
+			platform_lib_name = "libIL.dylib";
 		} else {
 			throw new LWJGLException("Unknown platform: " + osName);
 		}

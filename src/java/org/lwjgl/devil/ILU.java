@@ -222,10 +222,10 @@ public class ILU {
 				platform_lib_name = "ILU.dll";
 			} else if (osName.startsWith("Lin")) {
 				libname = "ILU";
-				platform_lib_name = "ILU.so";
+				platform_lib_name = "libILU.so";
 			} else if (osName.startsWith("Mac")) {
 				libname = "ILU";
-				platform_lib_name = "ILU.dylib";
+				platform_lib_name = "libILU.dylib";
 			} else {
 				throw new LWJGLException("Unknown platform: " + osName);
 			}
