@@ -32,8 +32,12 @@
 package org.lwjgl.devil;
 
 /**
- * @author Mark Bernard
- * date:	3-Jan-2005
+ * $Id$
+ *
+ * ILpointi information holding class.
+ * 
+ * @author captainjester <captainjester@users.sourceforge.net>
+ * @version $Revision$
  */
 public class ILpointi {
     public int x;

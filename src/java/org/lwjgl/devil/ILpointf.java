@@ -32,8 +32,12 @@
 package org.lwjgl.devil;
 
 /**
- * @author Mark Bernard
- * date:	3-Jan-2005
+ * $Id$
+ *
+ * ILpointf information holding class.
+ * 
+ * @author captainjester <captainjester@users.sourceforge.net>
+ * @version $Revision$
  */
 public class ILpointf {
     public float x;

@@ -32,25 +32,29 @@
 package org.lwjgl.devil;
 
 /**
- * @author Mark Bernard
- * date:	3-Jan-2005
+ * $Id$
+ *
+ * ILinfo information holding class.
+ * 
+ * @author captainjester <captainjester@users.sourceforge.net>
+ * @version $Revision$
  */
 public class ILinfo {
-    public int Id;                 // the image's id
-    public byte Data[];              // the image's data
-    public int Width;              // the image's width
-    public int Height;             // the image's height
-    public int Depth;              // the image's depth
-    public byte Bpp;                // bytes per pixel (not bits) of the image
-    public int SizeOfData;         // the total size of the data (in bytes)
-    public int Format;             // image format (in IL enum style)
-    public int Type;               // image type (in IL enum style)
-    public int Origin;             // origin of the image
-    public byte Palette[];           // the image's palette
-    public int PalType;            // palette type
-    public int PalSize;            // palette size
-    public int CubeFlags;          // flags for what cube map sides are present
-    public int NumNext;            // number of images following
-    public int NumMips;            // number of mipmaps
-    public int NumLayers;          // number of layers
+    public int id;                 // the image's id
+    public byte data[];              // the image's data
+    public int width;              // the image's width
+    public int height;             // the image's height
+    public int depth;              // the image's depth
+    public byte bpp;                // bytes per pixel (not bits) of the image
+    public int sizeOfData;         // the total size of the data (in bytes)
+    public int format;             // image format (in IL enum style)
+    public int type;               // image type (in IL enum style)
+    public int origin;             // origin of the image
+    public byte palette[];           // the image's palette
+    public int palType;            // palette type
+    public int palSize;            // palette size
+    public int cubeFlags;          // flags for what cube map sides are present
+    public int numNext;            // number of images following
+    public int numMips;            // number of mipmaps
+    public int numLayers;          // number of layers
 }

@@ -39,7 +39,7 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 /**
  * $Id$
- * <p>The core DevIL API.</p>
+ * <p>The core DevIL and ILU API.</p>
  * 
  * @author Mark Bernard <captainjester@users.sourceforge.net>
  * @version $Revision$
@@ -54,8 +54,7 @@ public class BasicTest {
             e.printStackTrace();
             System.exit(0);
         }
-        String err = ILU.iluErrorString(IL.ilGetError());
-        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
+        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
         System.out.println("ilGenImages");
         IntBuffer im =  ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
         IL.ilGenImages(1, im);
@@ -63,21 +62,18 @@ public class BasicTest {
         IL.ilBindImage(im.get(0));
         IL.ilEnable(IL.IL_ORIGIN_SET);
         IL.ilOriginFunc(IL.IL_ORIGIN_UPPER_LEFT);
-        err = ILU.iluErrorString(IL.ilGetError());
-        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
+        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
         String imageFile = "F:/Apps/Java/eclipse/workspace/LWJGL/res/ILtest.tga";
         URL imageURL = BasicTest.class.getResource("/res/ILtest.tga");
         System.out.println("ilLoadFromURL " + imageURL);
         System.out.println("load lump = " + IL.ilLoadFromURL(imageURL));
-        err = ILU.iluErrorString(IL.ilGetError());
-        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
+        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
         int newIm = IL.ilCloneCurImage();
         IL.ilCopyImage(im.get(0));
         IL.ilBindImage(newIm);
         ByteBuffer buf = IL.ilGetData();
         System.out.println("ilGetData");
-        err = ILU.iluErrorString(IL.ilGetError());
-        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
+        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
         int limit = buf.limit();
         System.out.println("limit = " + limit);
         for(int i=0;i<buf.limit();i+=3) {
@@ -86,7 +82,30 @@ public class BasicTest {
         
         System.out.println("current image = " + im.get(0) + " IL.ilGetInteger(IL.IL_ACTIVE_IMAGE) = " + IL.ilGetInteger(IL.IL_ACTIVE_IMAGE));
         System.out.println("Version: " + IL.ilGetInteger(IL.IL_VERSION_NUM));
-        err = ILU.iluErrorString(IL.ilGetError());
-        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
+        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+        
+        ILinfo info = new ILinfo();
+        ILU.iluGetImageInfo(info);
+        System.out.println("info.id         = " + info.id);
+        System.out.println("info.width      = " + info.width);
+        System.out.println("info.height     = " + info.height);
+        System.out.println("info.depth      = " + info.depth);
+        System.out.println("info.bpp        = " + info.bpp);
+        System.out.println("info.sizeOfData = " + info.sizeOfData);
+        System.out.println("info.format     = " + info.format);
+        System.out.println("info.type       = " + info.type);
+        System.out.println("info.origin     = " + info.origin);
+        System.out.println("info.palType    = " + info.palType);
+        System.out.println("info.palSize    = " + info.palSize);
+        System.out.println("info.numNext    = " + info.numNext);
+        System.out.println("info.numMips    = " + info.numMips);
+        System.out.println("info.numLayers  = " + info.numLayers);
+        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+        
+//        ILpointf pointf[] = new ILpointf[3];
+//        ILU.iluRegionfv(pointf, pointf.length);
+//        for(int i=0;i<pointf.length;i++) {
+//            System.out.println("point[" + i + "] x = " + pointf[i].x + " y = " + pointf[i].y);
+//        }
     }
 }

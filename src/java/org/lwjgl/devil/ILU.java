@@ -37,8 +37,12 @@ import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
 
 /**
- * @author Mark Bernard
- * date:	3-Jan-2005
+ * $Id$
+ *
+ * The DevIL ILU API.
+ * 
+ * @author captainjester <captainjester@users.sourceforge.net>
+ * @version $Revision$
  */
 public class ILU {
     /** Have we been created? */
@@ -111,9 +115,7 @@ public class ILU {
     public static native boolean iluFlipImage();
     public static native boolean iluGammaCorrect(float gamma);
     public static native int iluGenImage();
-    // TODO result placed in a pointer
-    // TODO implement
-//    public static native void iluGetImageInfo(ILinfo info[]);
+    public static native void iluGetImageInfo(ILinfo info);
     public static native int iluGetInteger(int mode);
     public static void iluGetIntegerv(int mode, IntBuffer param) {
         BufferChecks.checkDirect(param);
@@ -130,11 +132,9 @@ public class ILU {
     public static native boolean iluNoisify(float tolerance);
     public static native boolean iluPixelize(int pixSize);
     // TODO result placed in a pointer
-    // TODO implement
 //    public static native void iluRegionfv(ILpointf points[], int n);
     // TODO result placed in a pointer
-    // TODO implement
-//  public static native void iluRegioniv(ILpointi points[], int n);
+//    public static native void iluRegioniv(ILpointi points[], int n);
     public static native boolean iluReplaceColour(byte red, byte green, byte blue, float tolerance);
     public static native boolean iluRotate(float angle);
     
