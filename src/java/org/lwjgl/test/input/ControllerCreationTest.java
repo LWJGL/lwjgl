@@ -34,10 +34,9 @@ package org.lwjgl.test.input;
 import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
-import org.lwjgl.Window;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLWindow;
+import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
 
@@ -50,10 +49,6 @@ import org.lwjgl.vector.Vector2f;
  * @version $Revision$
  */
 public class ControllerCreationTest {
-
-  /** OpenGL instance */
-  private GLWindow gl;
-
   /** position of quad to draw */
   private Vector2f position = new Vector2f(320.0f, 240.0f);
   
@@ -79,11 +74,10 @@ public class ControllerCreationTest {
     try {
       if(fullscreen) {
         Display.setDisplayMode(displayMode);
-        gl = new GLWindow("ControllerCreationTest", 16, 0, 0, 0);
+        Window.create("ControllerCreationTest", 16, 0, 0, 0);
       } else {
-        gl = new GLWindow("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+        Window.create("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
       }
-      gl.create();
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -115,12 +109,12 @@ public class ControllerCreationTest {
     
     // recreate display in fullscreen mode
     System.out.print("Destroying display...");
-    gl.destroy();
+    Window.destroy();
     System.out.println("success");
     
     System.out.print("Entering fullscreen mode...");
     try {
-      gl.destroy();
+      Window.destroy();
       initialize(true);
       Display.setDisplayMode(displayMode);
     } catch (Exception e) {
@@ -143,7 +137,7 @@ public class ControllerCreationTest {
     System.out.print("Shutting down...");
     Display.resetDisplayMode();
     Controller.destroy();
-    gl.destroy();
+    Window.destroy();
     System.out.println("shutdown complete");
   }
 

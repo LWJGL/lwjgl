@@ -34,10 +34,9 @@ package org.lwjgl.test.input;
 import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
-import org.lwjgl.Window;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLWindow;
+import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
 
@@ -50,10 +49,6 @@ import org.lwjgl.vector.Vector2f;
  * @version $Revision$
  */
 public class MouseCreationTest {
-
-	/** OpenGL instance */
-	private GLWindow gl;
-
 	/** GLU instance */
 	private GLU glu;
 
@@ -82,11 +77,10 @@ public class MouseCreationTest {
     try {
       if(fullscreen) {
         Display.setDisplayMode(displayMode);
-        gl = new GLWindow("MouseCreationTest", 16, 0, 0, 0);
+        Window.create("MouseCreationTest", 16, 0, 0, 0);
       } else {
-        gl = new GLWindow("MouseCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+        Window.create("MouseCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
       }
-      gl.create();
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -123,7 +117,7 @@ public class MouseCreationTest {
     
     System.out.print("Entering fullscreen mode...");
     try {
-      gl.destroy();
+      Window.destroy();
       initialize(true);
       Display.setDisplayMode(displayMode);
     } catch (Exception e) {
@@ -146,7 +140,7 @@ public class MouseCreationTest {
     System.out.print("Shutting down...");
     Display.resetDisplayMode();
     Mouse.destroy();
-    gl.destroy();
+    Window.destroy();
     System.out.println("shutdown complete");
 	}
 

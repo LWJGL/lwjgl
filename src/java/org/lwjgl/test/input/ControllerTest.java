@@ -32,11 +32,10 @@
 package org.lwjgl.test.input;
 
 import org.lwjgl.DisplayMode;
-import org.lwjgl.Window;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLWindow;
+import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
 
@@ -49,9 +48,6 @@ import org.lwjgl.vector.Vector2f;
  * @version $Revision$
  */
 public class ControllerTest {
-
-  /** OpenGL instance */
-  private GLWindow gl;
 
   /** GLU instance */
   private GLU glu;
@@ -80,8 +76,7 @@ public class ControllerTest {
   
   private void setupDisplay(boolean fullscreen) {
     try {
-      gl = new GLWindow("ControllerTest", 50, 50, 640, 480, 16, 0, 0, 0);
-      gl.create();
+      Window.create("ControllerTest", 50, 50, 640, 480, 16, 0, 0, 0);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -104,7 +99,7 @@ public class ControllerTest {
 
     Controller.destroy();
     Keyboard.destroy();
-    gl.destroy();
+    Window.destroy();
   }
 
   private void createController() {

@@ -51,9 +51,6 @@ public class PbufferTest {
   /** Intended deiplay mode */
   private DisplayMode mode;
 
-  /** GL instance */
-  private GLWindow gl;
-
   /** GLU instance */
   private GLU glu;
 
@@ -98,9 +95,8 @@ public class PbufferTest {
       mode = findDisplayMode(800, 600, 16);
 
       // start of in windowed mode
-      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
 //      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
-      gl.create();
       if ((Pbuffer.getPbufferCaps() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
           System.out.println("No Pbuffer support!");
           System.exit(1);
@@ -259,11 +255,10 @@ public class PbufferTest {
         Keyboard.destroy();
 	Pbuffer.releaseContext();
 	pbuffer.destroy();
-        gl.destroy();
+        Window.destroy();
 
         Display.setDisplayMode(mode);
-        gl = new GLWindow("Test", mode.bpp, 0, 0, 0);
-        gl.create();
+        Window.create("Test", mode.bpp, 0, 0, 0);
         glInit();
         initPbuffer();
 
@@ -280,11 +275,10 @@ public class PbufferTest {
         Keyboard.destroy();
 	Pbuffer.releaseContext();
 	pbuffer.destroy();
-        gl.destroy();
+        Window.destroy();
 
         Display.resetDisplayMode();
-        gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
-        gl.create();
+        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
         glInit();
         initPbuffer();
 
@@ -352,7 +346,7 @@ public class PbufferTest {
     Keyboard.destroy();
     Pbuffer.releaseContext();
     pbuffer.destroy();
-    gl.destroy();
+    Window.destroy();
   }
 
   /**

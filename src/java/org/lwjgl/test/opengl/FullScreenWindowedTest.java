@@ -49,9 +49,6 @@ public class FullScreenWindowedTest {
   /** Intended deiplay mode */
   private DisplayMode mode;
 
-  /** GL instance */
-  private GLWindow gl;
-
   /** GLU instance */
   private GLU glu;
 
@@ -96,8 +93,7 @@ public class FullScreenWindowedTest {
       mode = findDisplayMode(800, 600, 16);
 
       // start of in windowed mode
-      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
-      gl.create();
+      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
 
       glInit();
 
@@ -202,11 +198,10 @@ public class FullScreenWindowedTest {
 
       try {
         Keyboard.destroy();
-        gl.destroy();
+        Window.destroy();
 
         Display.setDisplayMode(mode);
-        gl = new GLWindow("Test", mode.bpp, 0, 0, 0);
-        gl.create();
+        Window.create("Test", mode.bpp, 0, 0, 0);
 
         glInit();
 
@@ -220,11 +215,10 @@ public class FullScreenWindowedTest {
     if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
       try {
         Keyboard.destroy();
-        gl.destroy();
+        Window.destroy();
 
         Display.resetDisplayMode();
-        gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
-        gl.create();
+        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
 
         glInit();
 
@@ -282,7 +276,7 @@ public class FullScreenWindowedTest {
    */
   private void cleanup() {
     Keyboard.destroy();
-    gl.destroy();
+    Window.destroy();
   }
 
   /**

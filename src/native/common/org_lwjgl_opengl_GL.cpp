@@ -47,7 +47,9 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+#ifdef _WIN32
 extern HDC hdc;
+#endif
 
 static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {
 	if (buffer == NULL)

@@ -72,10 +72,9 @@ public final class VBOTest {
 		}
 	}
  
-    public static final GLWindow gl = new GLWindow("LWJGL Game Example", 16, 0, 0,0);
      static {
          try {
-             gl.create();
+             Window.create("LWJGL Game Example", 16, 0, 0,0);
              System.out.println("Created OpenGL.");
          } catch (Exception e) {
              System.err.println("Failed to create OpenGL due to "+e);
@@ -210,7 +209,7 @@ public final class VBOTest {
 	GL.glDeleteBuffersARB(int_buffer);
          Keyboard.destroy();
          Mouse.destroy();
-         gl.destroy();
+         Window.destroy();
          try {
          	Display.resetDisplayMode();
          } catch (Exception e) {

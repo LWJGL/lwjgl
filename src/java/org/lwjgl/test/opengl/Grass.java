@@ -88,11 +88,9 @@ public class Grass {
 		}
 	}
 
-	public static final GLWindow gl = new GLWindow("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0);
-
 	static {
 		try {
-			gl.create();
+			Window.create("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0);
 			Keyboard.create();
 			Keyboard.enableBuffer();
 			Mouse.create();
@@ -149,7 +147,7 @@ public class Grass {
 			GL.GL_VERTEX_PROGRAM_NV,
 			program_handle,
 			program_buf);
-		/*gl.getIntegerv(GL.PROGRAM_ERROR_POSITION_NV, Sys.getDirectBufferAddress(int_buf));
+		/*GL.glGetInteger(GL.PROGRAM_ERROR_POSITION_NV, int_buf);
 		System.out.println("error position: " + int_buf.get(0));*/
 
 		genMesh();
@@ -205,7 +203,7 @@ public class Grass {
 		}
 		Mouse.destroy();
 		Keyboard.destroy();
-		gl.destroy();
+		Window.destroy();
 	}
 
 	private static float myrand() {
@@ -433,27 +431,6 @@ public class Grass {
 
 	}
 
-	/*	private static void ptrDraw()
-		{
-			glRotatef((aslod.angle * 180.0f) / 3.1415f, 0, 1, 0);
-			glTranslatef(0, 4.5, -7.5);
-			glRotatef(-90, 0, 1, 0);
-			glRotatef(-45, 0, 0, 1);
-	
-			glMaterialfv(GL.FRONT, GL.AMBIENT, vec4f(.1f,.1f,0,1).v);
-			glMaterialfv(GL.FRONT, GL.DIFFUSE, vec4f(.6f,.6f,.1f,1).v);
-			glMaterialfv(GL.FRONT, GL.SPECULAR, vec4f(1,1,.75f,1).v);
-			glMaterialf(GL.FRONT, GL.SHININESS, 128.f);
-	
-			glutSolidTeapot(aslod.value*5);
-	
-			gl.rotatef(45, 0, 0, 1);
-			gl.totatef(90, 0, 1, 0);
-			gl.translatef(0, -4.5, 7.5);
-			gl.rotatef(-(aslod.angle * 180.0f) / 3.1415f, 0f, 1f, 0f);
-	
-		}
-	*/
 	private static void ptrAnimate(float degree) {
 		aslod.count += degree;
 		aslod.ripple = (float) (java.lang.Math.cos(aslod.count) / 80.0);

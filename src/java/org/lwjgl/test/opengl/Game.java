@@ -72,10 +72,9 @@ public final class Game {
 		}
 	}
  
-    public static final GLWindow gl = new GLWindow("LWJGL Game Example", 16, 0, 0,0);
      static {
          try {
-             gl.create();
+             Window.create("LWJGL Game Example", 16, 0, 0,0);
              System.out.println("Created OpenGL.");
          } catch (Exception e) {
              System.err.println("Failed to create OpenGL due to "+e);
@@ -184,7 +183,7 @@ public final class Game {
        GL.glGetInteger(GL.GL_MAX_TEXTURE_UNITS_ARB, num_tex_units_buf.asIntBuffer());
          System.out.println("Number of texture units: " + num_tex_units_buf.getInt());
          // Fix the refresh rate to the display frequency.
-//         gl.wglSwapIntervalEXT(1);
+//         GL.wglSwapIntervalEXT(1);
      }
  
     /**
@@ -193,7 +192,7 @@ public final class Game {
      private static void cleanup() {
          Keyboard.destroy();
          Mouse.destroy();
-         gl.destroy();
+         Window.destroy();
          try {
          	Display.resetDisplayMode();
          } catch (Exception e) {

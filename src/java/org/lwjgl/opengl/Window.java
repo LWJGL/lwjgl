@@ -4,7 +4,7 @@
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code Template
  */
-package org.lwjgl;
+package org.lwjgl.opengl;
 
 /**
  * This is the abstract class for a Window in LWJGL. LWJGL windows have some
@@ -20,6 +20,10 @@ package org.lwjgl;
  * 
  * @author foo
  */
+
+import org.lwjgl.Display;
+import org.lwjgl.Sys;
+
 public final class Window {
 
 	static {
@@ -28,18 +32,6 @@ public final class Window {
 
 	/** Whether the window is currently created, ie. has a native peer */
 	private static boolean created;
-
-	/** Whether the window is currently minimized */
-	private static boolean minimized;
-
-	/** Whether the window has focus */
-	private static boolean focused = true;
-
-	/** Whether the window has been asked to close by the user or underlying OS */
-	private static boolean closeRequested;
-
-	/** Whether the window is dirty, ie. needs painting */
-	private static boolean dirty;
 
 	/** X coordinate of the window */
 	private static int x;
@@ -142,27 +134,30 @@ public final class Window {
 	 */
 	public static boolean isCloseRequested() {
 		assert isCreated();
-
-		boolean currentValue = closeRequested;
-		closeRequested = false;
-		return currentValue;
+		return nIsCloseRequested();
 	}
+
+	private static native boolean nIsCloseRequested();
 
 	/**
 	 * @return true if the window is minimized or otherwise not visible
 	 */
 	public static boolean isMinimized() {
 		assert isCreated();
-		return minimized;
+		return nIsMinimized();
 	}
+
+	private static native boolean nIsMinimized();
 
 	/**
 	 * @return true if window is focused
 	 */
 	public static boolean isFocused() {
 		assert isCreated();
-		return focused;
+		return nIsFocused();
 	}
+
+	private static native boolean nIsFocused();
 
 	/**
 	 * Minimize the game and allow the operating system's default display to become
@@ -193,15 +188,16 @@ public final class Window {
 	 */
 	public static boolean isDirty() {
 		assert isCreated();
-		return dirty;
+		return nIsDirty();
 	}
+
+	private static native boolean nIsDirty();
 
 	/**
 	 * Paint the window. This clears the dirty flag and swaps the buffers.
 	 */
 	public static void paint() {
 		assert isCreated();
-		dirty = false;
 		swapBuffers();
 	}
 

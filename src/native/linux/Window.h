@@ -71,16 +71,6 @@
 	extern void acquirePointer(void);
 
 	/*
-	 * destroy the window
-	 */
-	extern void destroyWindow(void);
-
-	/*
-	 * create a new X window with the specified visual
-	 */
-	extern void createWindow(JNIEnv *env, Display *disp, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen);
-
-	/*
 	 * get the current window width
 	 */
 	extern int getWindowWidth(void);
