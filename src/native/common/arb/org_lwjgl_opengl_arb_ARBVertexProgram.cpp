@@ -38,6 +38,83 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glVertexAttrib1sARBPROC) (GLuint index, GLshort x);
+typedef void (APIENTRY * glVertexAttrib1fARBPROC) (GLuint index, GLfloat x);
+typedef void (APIENTRY * glVertexAttrib2sARBPROC) (GLuint index, GLshort x, GLshort y);
+typedef void (APIENTRY * glVertexAttrib2fARBPROC) (GLuint index, GLfloat x, GLfloat y);
+typedef void (APIENTRY * glVertexAttrib3sARBPROC) (GLuint index, GLshort x, GLshort y, GLshort z);
+typedef void (APIENTRY * glVertexAttrib3fARBPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY * glVertexAttrib4sARBPROC) (GLuint index, GLshort x, GLshort y, GLshort z, GLshort w);
+typedef void (APIENTRY * glVertexAttrib4fARBPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glVertexAttrib4NubARBPROC) (GLuint index, GLubyte x, GLubyte y, GLubyte z, GLubyte w);
+typedef void (APIENTRY * glVertexAttrib1svARBPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib1fvARBPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib2svARBPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib2fvARBPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib2dvARBPROC) (GLuint index, const GLdouble *v);
+typedef void (APIENTRY * glVertexAttrib3svARBPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib3fvARBPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib3dvARBPROC) (GLuint index, const GLdouble *v);
+typedef void (APIENTRY * glVertexAttrib4bvARBPROC) (GLuint index, const GLbyte *v);
+typedef void (APIENTRY * glVertexAttrib4svARBPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib4ivARBPROC) (GLuint index, const GLint *v);
+typedef void (APIENTRY * glVertexAttrib4ubvARBPROC) (GLuint index, const GLubyte *v);
+typedef void (APIENTRY * glVertexAttrib4usvARBPROC) (GLuint index, const GLushort *v);
+typedef void (APIENTRY * glVertexAttrib4uivARBPROC) (GLuint index, const GLuint *v);
+typedef void (APIENTRY * glVertexAttrib4fvARBPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib4dvARBPROC) (GLuint index, const GLdouble *v);
+typedef void (APIENTRY * glVertexAttrib4NbvARBPROC) (GLuint index, const GLbyte *v);
+typedef void (APIENTRY * glVertexAttrib4NsvARBPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib4NivARBPROC) (GLuint index, const GLint *v);
+typedef void (APIENTRY * glVertexAttrib4NubvARBPROC) (GLuint index, const GLubyte *v);
+typedef void (APIENTRY * glVertexAttrib4NusvARBPROC) (GLuint index, const GLushort *v);
+typedef void (APIENTRY * glVertexAttrib4NuivARBPROC) (GLuint index, const GLuint *v);
+typedef void (APIENTRY * glVertexAttribPointerARBPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
+typedef void (APIENTRY * glEnableVertexAttribArrayARBPROC) (GLuint index);
+typedef void (APIENTRY * glDisableVertexAttribArrayARBPROC) (GLuint index);
+typedef void (APIENTRY * glGetVertexAttribdvARBPROC) (GLuint index, GLenum pname, GLdouble *params);
+typedef void (APIENTRY * glGetVertexAttribfvARBPROC) (GLuint index, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetVertexAttribivARBPROC) (GLuint index, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetVertexAttribPointervARBPROC) (GLuint index, GLenum pname, GLvoid **pointer);
+
+static glVertexAttrib1sARBPROC glVertexAttrib1sARB;
+static glVertexAttrib1fARBPROC glVertexAttrib1fARB;
+static glVertexAttrib2sARBPROC glVertexAttrib2sARB;
+static glVertexAttrib2fARBPROC glVertexAttrib2fARB;
+static glVertexAttrib3sARBPROC glVertexAttrib3sARB;
+static glVertexAttrib3fARBPROC glVertexAttrib3fARB;
+static glVertexAttrib4sARBPROC glVertexAttrib4sARB;
+static glVertexAttrib4fARBPROC glVertexAttrib4fARB;
+static glVertexAttrib4NubARBPROC glVertexAttrib4NubARB;
+static glVertexAttribPointerARBPROC glVertexAttribPointerARB;
+static glEnableVertexAttribArrayARBPROC glEnableVertexAttribArrayARB;
+static glDisableVertexAttribArrayARBPROC glDisableVertexAttribArrayARB;
+static glGetVertexAttribfvARBPROC glGetVertexAttribfvARB;
+static glGetVertexAttribivARBPROC glGetVertexAttribivARB;
+static glGetVertexAttribPointervARBPROC glGetVertexAttribPointervARB;
+
+void extgl_InitARBVertexProgram(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_vertex_program)
+		return;
+	glVertexAttrib1sARB = (glVertexAttrib1sARBPROC) extgl_GetProcAddress("glVertexAttrib1sARB");
+	glVertexAttrib1fARB = (glVertexAttrib1fARBPROC) extgl_GetProcAddress("glVertexAttrib1fARB");
+	glVertexAttrib2sARB = (glVertexAttrib2sARBPROC) extgl_GetProcAddress("glVertexAttrib2sARB");
+	glVertexAttrib2fARB = (glVertexAttrib2fARBPROC) extgl_GetProcAddress("glVertexAttrib2fARB");
+	glVertexAttrib3sARB = (glVertexAttrib3sARBPROC) extgl_GetProcAddress("glVertexAttrib3sARB");
+	glVertexAttrib3fARB = (glVertexAttrib3fARBPROC) extgl_GetProcAddress("glVertexAttrib3fARB");
+	glVertexAttrib4sARB = (glVertexAttrib4sARBPROC) extgl_GetProcAddress("glVertexAttrib4sARB");
+	glVertexAttrib4fARB = (glVertexAttrib4fARBPROC) extgl_GetProcAddress("glVertexAttrib4fARB");
+	glVertexAttrib4NubARB = (glVertexAttrib4NubARBPROC) extgl_GetProcAddress("glVertexAttrib4NubARB");
+	glVertexAttribPointerARB = (glVertexAttribPointerARBPROC) extgl_GetProcAddress("glVertexAttribPointerARB");
+	glEnableVertexAttribArrayARB = (glEnableVertexAttribArrayARBPROC) extgl_GetProcAddress("glEnableVertexAttribArrayARB");
+	glDisableVertexAttribArrayARB = (glDisableVertexAttribArrayARBPROC) extgl_GetProcAddress("glDisableVertexAttribArrayARB");
+	glGetVertexAttribfvARB = (glGetVertexAttribfvARBPROC) extgl_GetProcAddress("glGetVertexAttribfvARB");
+	glGetVertexAttribivARB = (glGetVertexAttribivARBPROC) extgl_GetProcAddress("glGetVertexAttribivARB");
+	glGetVertexAttribPointervARB = (glGetVertexAttribPointervARBPROC) extgl_GetProcAddress("glGetVertexAttribPointervARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_vertex_program)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
  * Method:	glVertexAttrib1sARB
@@ -143,253 +220,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_glVertexAttrib
 {
 	CHECK_EXISTS(glVertexAttrib4NubARB)
 	glVertexAttrib4NubARB(index, x, y, z, w);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib1svARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib1svARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib1svARB)
-	GLshort *values_ptr = (GLshort *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib1svARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib1fvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib1fvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib1fvARB)
-	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib1fvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib2svARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib2svARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib2svARB)
-	GLshort *values_ptr = (GLshort *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib2svARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib2fvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib2fvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib2fvARB)
-	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib2fvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib3svARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib3svARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib3svARB)
-	GLshort *values_ptr = (GLshort *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib3svARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib3fvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib3fvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib3fvARB)
-	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib3fvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4bvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4bvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4bvARB)
-	GLbyte *values_ptr = (GLbyte *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4bvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4svARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4svARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4svARB)
-	GLshort *values_ptr = (GLshort *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4svARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4ivARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4ivARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4ivARB)
-	GLint *values_ptr = (GLint *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4ivARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4ubvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4ubvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4ubvARB)
-	GLubyte *values_ptr = (GLubyte *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4ubvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4usvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4usvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4usvARB)
-	GLushort *values_ptr = (GLushort *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4usvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4uivARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4uivARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4uivARB)
-	GLuint *values_ptr = (GLuint *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4uivARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4fvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4fvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4fvARB)
-	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4fvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4NbvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4NbvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4NbvARB)
-	GLbyte *values_ptr = (GLbyte *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4NbvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4NsvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4NsvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4NsvARB)
-	GLshort *values_ptr = (GLshort *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4NsvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4NivARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4NivARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4NivARB)
-	GLint *values_ptr = (GLint *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4NivARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4NubvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4NubvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4NubvARB)
-	GLubyte *values_ptr = (GLubyte *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4NubvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4NusvARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4NusvARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4NusvARB)
-	GLushort *values_ptr = (GLushort *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4NusvARB(index, values_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.arb.ARBVertexProgram
- * Method:	nglVertexAttrib4NuivARB
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexProgram_nglVertexAttrib4NuivARB
-	(JNIEnv * env, jclass clazz, jint index, jobject values, jint valuesOffset)
-{
-	CHECK_EXISTS(glVertexAttrib4NuivARB)
-	GLuint *values_ptr = (GLuint *)env->GetDirectBufferAddress(values) + valuesOffset;
-	glVertexAttrib4NuivARB(index, values_ptr);
 	CHECK_GL_ERROR
 }
 

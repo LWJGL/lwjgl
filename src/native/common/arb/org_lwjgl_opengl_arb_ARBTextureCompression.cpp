@@ -38,6 +38,36 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glCompressedTexImage1DARBPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLint border, GLsizei imageSize, const GLvoid *data );
+typedef void (APIENTRY * glCompressedTexImage2DARBPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid *data );
+typedef void (APIENTRY * glCompressedTexImage3DARBPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid *data );
+typedef void (APIENTRY * glCompressedTexSubImage1DARBPROC) (GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const GLvoid *data );
+typedef void (APIENTRY * glCompressedTexSubImage2DARBPROC) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const GLvoid *data );
+typedef void (APIENTRY * glCompressedTexSubImage3DARBPROC) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const GLvoid *data );
+typedef void (APIENTRY * glGetCompressedTexImageARBPROC) (GLenum target, GLint lod, GLvoid *img );
+
+static glCompressedTexImage3DARBPROC glCompressedTexImage3DARB;
+static glCompressedTexImage2DARBPROC glCompressedTexImage2DARB;
+static glCompressedTexImage1DARBPROC glCompressedTexImage1DARB; 
+static glCompressedTexSubImage3DARBPROC glCompressedTexSubImage3DARB;
+static glCompressedTexSubImage2DARBPROC glCompressedTexSubImage2DARB;
+static glCompressedTexSubImage1DARBPROC glCompressedTexSubImage1DARB;
+static glGetCompressedTexImageARBPROC glGetCompressedTexImageARB;
+
+void extgl_InitARBTextureCompression(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_texture_compression)
+		return;
+	glCompressedTexImage3DARB = (glCompressedTexImage3DARBPROC) extgl_GetProcAddress("glCompressedTexImage3DARB");
+	glCompressedTexImage2DARB = (glCompressedTexImage2DARBPROC) extgl_GetProcAddress("glCompressedTexImage2DARB");
+	glCompressedTexImage1DARB = (glCompressedTexImage1DARBPROC) extgl_GetProcAddress("glCompressedTexImage1DARB");
+	glCompressedTexSubImage3DARB = (glCompressedTexSubImage3DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage3DARB");
+	glCompressedTexSubImage2DARB = (glCompressedTexSubImage2DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage2DARB");
+	glCompressedTexSubImage1DARB = (glCompressedTexSubImage1DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage1DARB");
+	glGetCompressedTexImageARB = (glGetCompressedTexImageARBPROC) extgl_GetProcAddress("glGetCompressedTexImageARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_texture_compression)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBTextureCompression
  * Method:	nglCompressedTexImage1DARB

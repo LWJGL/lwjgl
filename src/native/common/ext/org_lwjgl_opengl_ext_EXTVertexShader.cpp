@@ -38,6 +38,141 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glBeginVertexShaderEXTPROC) ();
+typedef void (APIENTRY * glEndVertexShaderEXTPROC) ();
+typedef void (APIENTRY * glBindVertexShaderEXTPROC) (GLuint id);
+typedef GLuint (APIENTRY * glGenVertexShadersEXTPROC) (GLuint range);
+typedef void (APIENTRY * glDeleteVertexShaderEXTPROC) (GLuint id);
+typedef void (APIENTRY * glShaderOp1EXTPROC) (GLenum op, GLuint res, GLuint arg1);
+typedef void (APIENTRY * glShaderOp2EXTPROC) (GLenum op, GLuint res, GLuint arg1, GLuint arg2);
+typedef void (APIENTRY * glShaderOp3EXTPROC) (GLenum op, GLuint res, GLuint arg1, GLuint arg2, GLuint arg3);
+typedef void (APIENTRY * glSwizzleEXTPROC) (GLuint res, GLuint in, GLenum outX, GLenum outY, GLenum outZ, GLenum outW);
+typedef void (APIENTRY * glWriteMaskEXTPROC) (GLuint res, GLuint in, GLenum outX, GLenum outY, GLenum outZ, GLenum outW);
+typedef void (APIENTRY * glInsertComponentEXTPROC) (GLuint res, GLuint src, GLuint num);
+typedef void (APIENTRY * glExtractComponentEXTPROC) (GLuint res, GLuint src, GLuint num);
+typedef GLuint (APIENTRY * glGenSymbolsEXTPROC) (GLenum dataType, GLenum storageType, GLenum range, GLuint components);
+typedef void (APIENTRY * glSetInvariantEXTPROC) (GLuint id, GLenum type, GLvoid *addr);
+typedef void (APIENTRY * glSetLocalConstantEXTPROC) (GLuint id, GLenum type, GLvoid *addr);
+typedef void (APIENTRY * glVariantbvEXTPROC) (GLuint id, GLbyte *addr);
+typedef void (APIENTRY * glVariantsvEXTPROC) (GLuint id, GLshort *addr);
+typedef void (APIENTRY * glVariantivEXTPROC) (GLuint id, GLint *addr);
+typedef void (APIENTRY * glVariantfvEXTPROC) (GLuint id, GLfloat *addr);
+typedef void (APIENTRY * glVariantdvEXTPROC) (GLuint id, GLdouble *addr);
+typedef void (APIENTRY * glVariantubvEXTPROC) (GLuint id, GLubyte *addr);
+typedef void (APIENTRY * glVariantusvEXTPROC) (GLuint id, GLushort *addr);
+typedef void (APIENTRY * glVariantuivEXTPROC) (GLuint id, GLuint *addr);
+typedef void (APIENTRY * glVariantPointerEXTPROC) (GLuint id, GLenum type, GLuint stride, GLvoid *addr);
+typedef void (APIENTRY * glEnableVariantClientStateEXTPROC) (GLuint id);
+typedef void (APIENTRY * glDisableVariantClientStateEXTPROC) (GLuint id);
+typedef GLuint (APIENTRY * glBindLightParameterEXTPROC) (GLenum light, GLenum value);
+typedef GLuint (APIENTRY * glBindMaterialParameterEXTPROC) (GLenum face, GLenum value);
+typedef GLuint (APIENTRY * glBindTexGenParameterEXTPROC) (GLenum unit, GLenum coord, GLenum value);
+typedef GLuint (APIENTRY * glBindTextureUnitParameterEXTPROC) (GLenum unit, GLenum value);
+typedef GLuint (APIENTRY * glBindParameterEXTPROC) (GLenum value);
+typedef GLboolean (APIENTRY * glIsVariantEnabledEXTPROC) (GLuint id, GLenum cap);
+typedef void (APIENTRY * glGetVariantBooleanvEXTPROC) (GLuint id, GLenum value, GLboolean *data);
+typedef void (APIENTRY * glGetVariantIntegervEXTPROC) (GLuint id, GLenum value, GLint *data);
+typedef void (APIENTRY * glGetVariantFloatvEXTPROC) (GLuint id, GLenum value, GLfloat *data);
+typedef void (APIENTRY * glGetVariantPointervEXTPROC) (GLuint id, GLenum value, GLvoid **data);
+typedef void (APIENTRY * glGetInvariantBooleanvEXTPROC) (GLuint id, GLenum value, GLboolean *data);
+typedef void (APIENTRY * glGetInvariantIntegervEXTPROC) (GLuint id, GLenum value, GLint *data);
+typedef void (APIENTRY * glGetInvariantFloatvEXTPROC) (GLuint id, GLenum value, GLfloat *data);
+typedef void (APIENTRY * glGetLocalConstantBooleanvEXTPROC) (GLuint id, GLenum value, GLboolean *data);
+typedef void (APIENTRY * glGetLocalConstantIntegervEXTPROC) (GLuint id, GLenum value, GLint *data);
+typedef void (APIENTRY * glGetLocalConstantFloatvEXTPROC) (GLuint id, GLenum value, GLfloat *data);
+
+static glBeginVertexShaderEXTPROC glBeginVertexShaderEXT;
+static glEndVertexShaderEXTPROC glEndVertexShaderEXT;
+static glBindVertexShaderEXTPROC glBindVertexShaderEXT;
+static glGenVertexShadersEXTPROC glGenVertexShadersEXT;
+static glDeleteVertexShaderEXTPROC glDeleteVertexShaderEXT;
+static glShaderOp1EXTPROC glShaderOp1EXT;
+static glShaderOp2EXTPROC glShaderOp2EXT;
+static glShaderOp3EXTPROC glShaderOp3EXT;
+static glSwizzleEXTPROC glSwizzleEXT;
+static glWriteMaskEXTPROC glWriteMaskEXT;
+static glInsertComponentEXTPROC glInsertComponentEXT;
+static glExtractComponentEXTPROC glExtractComponentEXT;
+static glGenSymbolsEXTPROC glGenSymbolsEXT;
+static glSetInvariantEXTPROC glSetInvariantEXT;
+static glSetLocalConstantEXTPROC glSetLocalConstantEXT;
+static glVariantbvEXTPROC glVariantbvEXT;
+static glVariantsvEXTPROC glVariantsvEXT;
+static glVariantivEXTPROC glVariantivEXT;
+static glVariantfvEXTPROC glVariantfvEXT;
+static glVariantdvEXTPROC glVariantdvEXT;
+static glVariantubvEXTPROC glVariantubvEXT;
+static glVariantusvEXTPROC glVariantusvEXT;
+static glVariantuivEXTPROC glVariantuivEXT;
+static glVariantPointerEXTPROC glVariantPointerEXT;
+static glEnableVariantClientStateEXTPROC glEnableVariantClientStateEXT;
+static glDisableVariantClientStateEXTPROC glDisableVariantClientStateEXT;
+static glBindLightParameterEXTPROC glBindLightParameterEXT;
+static glBindMaterialParameterEXTPROC glBindMaterialParameterEXT;
+static glBindTexGenParameterEXTPROC glBindTexGenParameterEXT;
+static glBindTextureUnitParameterEXTPROC glBindTextureUnitParameterEXT;
+static glBindParameterEXTPROC glBindParameterEXT;
+static glIsVariantEnabledEXTPROC glIsVariantEnabledEXT;
+static glGetVariantBooleanvEXTPROC glGetVariantBooleanvEXT;
+static glGetVariantIntegervEXTPROC glGetVariantIntegervEXT;
+static glGetVariantFloatvEXTPROC glGetVariantFloatvEXT;
+static glGetVariantPointervEXTPROC glGetVariantPointervEXT;
+static glGetInvariantBooleanvEXTPROC glGetInvariantBooleanvEXT;
+static glGetInvariantIntegervEXTPROC glGetInvariantIntegervEXT;
+static glGetInvariantFloatvEXTPROC glGetInvariantFloatvEXT;
+static glGetLocalConstantBooleanvEXTPROC glGetLocalConstantBooleanvEXT;
+static glGetLocalConstantIntegervEXTPROC glGetLocalConstantIntegervEXT;
+static glGetLocalConstantFloatvEXTPROC glGetLocalConstantFloatvEXT;
+
+void extgl_InitEXTVertexShader(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_vertex_shader)
+		return;
+	glBeginVertexShaderEXT = (glBeginVertexShaderEXTPROC) extgl_GetProcAddress("glBeginVertexShaderEXT");
+	glEndVertexShaderEXT = (glEndVertexShaderEXTPROC) extgl_GetProcAddress("glEndVertexShaderEXT");
+	glBindVertexShaderEXT = (glBindVertexShaderEXTPROC) extgl_GetProcAddress("glBindVertexShaderEXT");
+	glGenVertexShadersEXT = (glGenVertexShadersEXTPROC) extgl_GetProcAddress("glGenVertexShadersEXT");
+	glDeleteVertexShaderEXT = (glDeleteVertexShaderEXTPROC) extgl_GetProcAddress("glDeleteVertexShaderEXT");
+	glShaderOp1EXT = (glShaderOp1EXTPROC) extgl_GetProcAddress("glShaderOp1EXT");
+	glShaderOp2EXT = (glShaderOp2EXTPROC) extgl_GetProcAddress("glShaderOp2EXT");
+	glShaderOp3EXT = (glShaderOp3EXTPROC) extgl_GetProcAddress("glShaderOp3EXT");
+	glSwizzleEXT = (glSwizzleEXTPROC) extgl_GetProcAddress("glSwizzleEXT");
+	glWriteMaskEXT = (glWriteMaskEXTPROC) extgl_GetProcAddress("glWriteMaskEXT");
+	glInsertComponentEXT = (glInsertComponentEXTPROC) extgl_GetProcAddress("glInsertComponentEXT");
+	glExtractComponentEXT = (glExtractComponentEXTPROC) extgl_GetProcAddress("glExtractComponentEXT");
+	glGenSymbolsEXT = (glGenSymbolsEXTPROC) extgl_GetProcAddress("glGenSymbolsEXT");
+	glSetInvariantEXT = (glSetInvariantEXTPROC) extgl_GetProcAddress("glSetInvarianceEXT");
+	glSetLocalConstantEXT = (glSetLocalConstantEXTPROC) extgl_GetProcAddress("glSetLocalConstantEXT");
+	glVariantbvEXT = (glVariantbvEXTPROC) extgl_GetProcAddress("glVariantbvEXT");
+	glVariantsvEXT = (glVariantsvEXTPROC) extgl_GetProcAddress("glVariantsvEXT");
+	glVariantivEXT = (glVariantivEXTPROC) extgl_GetProcAddress("glVariantivEXT");
+	glVariantfvEXT = (glVariantfvEXTPROC) extgl_GetProcAddress("glVariantfvEXT");
+	glVariantdvEXT = (glVariantdvEXTPROC) extgl_GetProcAddress("glVariantdvEXT");
+	glVariantubvEXT = (glVariantubvEXTPROC) extgl_GetProcAddress("glVariantubvEXT");
+	glVariantusvEXT = (glVariantusvEXTPROC) extgl_GetProcAddress("glVariantusvEXT");
+	glVariantuivEXT = (glVariantuivEXTPROC) extgl_GetProcAddress("glVariantuivEXT");
+	glVariantPointerEXT = (glVariantPointerEXTPROC) extgl_GetProcAddress("glVariantPointerEXT");
+	glEnableVariantClientStateEXT = (glEnableVariantClientStateEXTPROC) extgl_GetProcAddress("glEnableVariantClientStateEXT");
+	glDisableVariantClientStateEXT = (glDisableVariantClientStateEXTPROC) extgl_GetProcAddress("glDisableVariantClientStateEXT");
+	glBindLightParameterEXT = (glBindLightParameterEXTPROC) extgl_GetProcAddress("glBindLightParameterEXT");
+	glBindMaterialParameterEXT = (glBindMaterialParameterEXTPROC) extgl_GetProcAddress("glBindMaterialParameterEXT");
+	glBindTexGenParameterEXT = (glBindTexGenParameterEXTPROC) extgl_GetProcAddress("glBindTexGenParameterEXT");
+	glBindTextureUnitParameterEXT = (glBindTextureUnitParameterEXTPROC) extgl_GetProcAddress("glBindTextureUnitParameterEXT");
+	glBindParameterEXT = (glBindParameterEXTPROC) extgl_GetProcAddress("glBindParameterEXT");
+	glIsVariantEnabledEXT = (glIsVariantEnabledEXTPROC) extgl_GetProcAddress("glIsVariantEnabledEXT");
+	glGetVariantBooleanvEXT = (glGetVariantBooleanvEXTPROC) extgl_GetProcAddress("glGetVariantBooleanvEXT");
+	glGetVariantIntegervEXT = (glGetVariantIntegervEXTPROC) extgl_GetProcAddress("glGetVariantIntegervEXT");
+	glGetVariantFloatvEXT = (glGetVariantFloatvEXTPROC) extgl_GetProcAddress("glGetVariantFloatvEXT");
+	glGetVariantPointervEXT = (glGetVariantPointervEXTPROC) extgl_GetProcAddress("glGetVariantPointervEXT");
+	glGetInvariantBooleanvEXT = (glGetInvariantBooleanvEXTPROC) extgl_GetProcAddress("glGetInvariantBooleanvEXT");
+	glGetInvariantIntegervEXT = (glGetInvariantIntegervEXTPROC) extgl_GetProcAddress("glGetInvariantIntegervEXT");
+	glGetInvariantFloatvEXT = (glGetInvariantFloatvEXTPROC) extgl_GetProcAddress("glGetInvariantFloatvEXT");
+	glGetLocalConstantBooleanvEXT = (glGetLocalConstantBooleanvEXTPROC) extgl_GetProcAddress("glGetLocalConstantBooleanvEXT");
+	glGetLocalConstantIntegervEXT = (glGetLocalConstantIntegervEXTPROC) extgl_GetProcAddress("glGetLocalConstantIntegervEXT");
+	glGetLocalConstantFloatvEXT = (glGetLocalConstantFloatvEXTPROC) extgl_GetProcAddress("glGetLocalConstantFloatvEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_vertex_shader)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTVertexShader
  * Method:	glBeginVertexShaderEXT

@@ -38,6 +38,21 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glPNTrianglesiATIPROC) (GLenum pname, GLint param);
+typedef void (APIENTRY * glPNTrianglesfATIPROC) (GLenum pname, GLfloat param);
+
+static glPNTrianglesiATIPROC glPNTrianglesiATI;
+static glPNTrianglesfATIPROC glPNTrianglesfATI;
+
+void extgl_InitATIPNTriangles(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ATI_pn_triangles)
+		return;
+	glPNTrianglesiATI = (glPNTrianglesiATIPROC) extgl_GetProcAddress("glPNTrianglesiATI");
+	glPNTrianglesfATI = (glPNTrianglesfATIPROC) extgl_GetProcAddress("glPNTrianglesfATI");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_pn_triangles)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ati.ATIPnTriangles
  * Method:	glPNTrianglesfATI

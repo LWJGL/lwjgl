@@ -38,6 +38,57 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef GLuint (APIENTRY * glGenFragmentShadersATIPROC) (GLuint range);
+typedef void (APIENTRY * glBindFragmentShaderATIPROC) (GLuint id);
+typedef void (APIENTRY * glDeleteFragmentShaderATIPROC) (GLuint id);
+typedef void (APIENTRY * glBeginFragmentShaderATIPROC) (GLvoid);
+typedef void (APIENTRY * glEndFragmentShaderATIPROC) (GLvoid);
+typedef void (APIENTRY * glPassTexCoordATIPROC) (GLuint dst, GLuint coord, GLenum swizzle);
+typedef void (APIENTRY * glSampleMapATIPROC) (GLuint dst, GLuint interp, GLenum swizzle);
+typedef void (APIENTRY * glColorFragmentOp1ATIPROC) (GLenum op, GLuint dst, GLuint dstMask, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod);
+typedef void (APIENTRY * glColorFragmentOp2ATIPROC) (GLenum op, GLuint dst, GLuint dstMask, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod, GLuint arg2, GLuint arg2Rep, GLuint arg2Mod);
+typedef void (APIENTRY * glColorFragmentOp3ATIPROC) (GLenum op, GLuint dst, GLuint dstMask, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod, GLuint arg2, GLuint arg2Rep, GLuint arg2Mod, GLuint arg3, GLuint arg3Rep, GLuint arg3Mod);
+typedef void (APIENTRY * glAlphaFragmentOp1ATIPROC) (GLenum op, GLuint dst, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod);
+typedef void (APIENTRY * glAlphaFragmentOp2ATIPROC) (GLenum op, GLuint dst, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod, GLuint arg2, GLuint arg2Rep, GLuint arg2Mod);
+typedef void (APIENTRY * glAlphaFragmentOp3ATIPROC) (GLenum op, GLuint dst, GLuint dstMod, GLuint arg1, GLuint arg1Rep, GLuint arg1Mod, GLuint arg2, GLuint arg2Rep, GLuint arg2Mod, GLuint arg3, GLuint arg3Rep, GLuint arg3Mod);
+typedef void (APIENTRY * glSetFragmentShaderConstantATIPROC) (GLuint dst, const GLfloat *value);
+
+static glGenFragmentShadersATIPROC glGenFragmentShadersATI;
+static glBindFragmentShaderATIPROC glBindFragmentShaderATI;
+static glDeleteFragmentShaderATIPROC glDeleteFragmentShaderATI;
+static glBeginFragmentShaderATIPROC glBeginFragmentShaderATI;
+static glEndFragmentShaderATIPROC glEndFragmentShaderATI;
+static glPassTexCoordATIPROC glPassTexCoordATI;
+static glSampleMapATIPROC glSampleMapATI;
+static glColorFragmentOp1ATIPROC glColorFragmentOp1ATI;
+static glColorFragmentOp2ATIPROC glColorFragmentOp2ATI;
+static glColorFragmentOp3ATIPROC glColorFragmentOp3ATI;
+static glAlphaFragmentOp1ATIPROC glAlphaFragmentOp1ATI;
+static glAlphaFragmentOp2ATIPROC glAlphaFragmentOp2ATI;
+static glAlphaFragmentOp3ATIPROC glAlphaFragmentOp3ATI;
+static glSetFragmentShaderConstantATIPROC glSetFragmentShaderConstantATI;
+
+void extgl_InitATIFragmentShader(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ATI_fragment_shader)
+		return;
+	glGenFragmentShadersATI = (glGenFragmentShadersATIPROC) extgl_GetProcAddress("glGenFragmentShadersATI");
+	glBindFragmentShaderATI = (glBindFragmentShaderATIPROC) extgl_GetProcAddress("glBindFragmentShaderATI");
+	glDeleteFragmentShaderATI = (glDeleteFragmentShaderATIPROC) extgl_GetProcAddress("glDeleteFragmentShaderATI");
+	glBeginFragmentShaderATI = (glBeginFragmentShaderATIPROC) extgl_GetProcAddress("glBeginFragmentShaderATI");
+	glEndFragmentShaderATI = (glEndFragmentShaderATIPROC) extgl_GetProcAddress("glEndFragmentShaderATI");
+	glPassTexCoordATI = (glPassTexCoordATIPROC) extgl_GetProcAddress("glPassTexCoordATI");
+	glSampleMapATI = (glSampleMapATIPROC) extgl_GetProcAddress("glSampleMapATI");
+	glColorFragmentOp1ATI = (glColorFragmentOp1ATIPROC) extgl_GetProcAddress("glColorFragmentOp1ATI");
+	glColorFragmentOp2ATI = (glColorFragmentOp2ATIPROC) extgl_GetProcAddress("glColorFragmentOp2ATI");
+	glColorFragmentOp3ATI = (glColorFragmentOp3ATIPROC) extgl_GetProcAddress("glColorFragmentOp3ATI");
+	glAlphaFragmentOp1ATI = (glAlphaFragmentOp1ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp1ATI");
+	glAlphaFragmentOp2ATI = (glAlphaFragmentOp2ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp2ATI");
+	glAlphaFragmentOp3ATI = (glAlphaFragmentOp3ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp3ATI");
+	glSetFragmentShaderConstantATI = (glSetFragmentShaderConstantATIPROC) extgl_GetProcAddress("glSetFragmentShaderConstantATI");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_fragment_shader)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ati.ATIFragmentShader
  * Method:	glGenFragmentShadersATI

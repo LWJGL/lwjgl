@@ -38,6 +38,51 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef int GLintptrARB;
+typedef unsigned int GLsizeiptrARB;
+
+typedef void (APIENTRY * glBindBufferARBPROC) (GLenum target, GLuint buffer);
+typedef void (APIENTRY * glDeleteBuffersARBPROC) (GLsizei n, const GLuint *buffers);
+typedef void (APIENTRY * glGenBuffersARBPROC) (GLsizei n, GLuint *buffers);
+typedef GLboolean (APIENTRY * glIsBufferARBPROC) (GLuint buffer);
+typedef void (APIENTRY * glBufferDataARBPROC) (GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
+typedef void (APIENTRY * glBufferSubDataARBPROC) (GLenum target, GLintptrARB offset, GLsizeiptrARB size, const GLvoid *data);
+typedef void (APIENTRY * glGetBufferSubDataARBPROC) (GLenum target, GLintptrARB offset, GLsizeiptrARB size, GLvoid *data);
+typedef void * (APIENTRY * glMapBufferARBPROC) (GLenum target, GLenum access);
+typedef GLboolean (APIENTRY * glUnmapBufferARBPROC) (GLenum target);
+typedef void (APIENTRY * glGetBufferParameterivARBPROC) (GLenum target, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetBufferPointervARBPROC) (GLenum target, GLenum pname, GLvoid **params);
+					    
+static glBindBufferARBPROC glBindBufferARB;
+static glDeleteBuffersARBPROC glDeleteBuffersARB;
+static glGenBuffersARBPROC glGenBuffersARB;
+static glIsBufferARBPROC glIsBufferARB;
+static glBufferDataARBPROC glBufferDataARB;
+static glBufferSubDataARBPROC glBufferSubDataARB;
+static glGetBufferSubDataARBPROC glGetBufferSubDataARB;
+static glMapBufferARBPROC glMapBufferARB;
+static glUnmapBufferARBPROC glUnmapBufferARB;
+static glGetBufferParameterivARBPROC glGetBufferParameterivARB;
+static glGetBufferPointervARBPROC glGetBufferPointervARB;
+
+void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_vertex_buffer_object)
+		return;
+	glBindBufferARB = (glBindBufferARBPROC) extgl_GetProcAddress("glBindBufferARB");
+	glDeleteBuffersARB = (glDeleteBuffersARBPROC) extgl_GetProcAddress("glDeleteBuffersARB");
+	glGenBuffersARB = (glGenBuffersARBPROC) extgl_GetProcAddress("glGenBuffersARB");
+	glIsBufferARB = (glIsBufferARBPROC) extgl_GetProcAddress("glIsBufferARB");
+	glBufferDataARB = (glBufferDataARBPROC) extgl_GetProcAddress("glBufferDataARB");
+	glBufferSubDataARB = (glBufferSubDataARBPROC) extgl_GetProcAddress("glBufferSubDataARB");
+	glGetBufferSubDataARB = (glGetBufferSubDataARBPROC) extgl_GetProcAddress("glGetBufferSubDataARB");
+	glMapBufferARB = (glMapBufferARBPROC) extgl_GetProcAddress("glMapBufferARB");
+	glUnmapBufferARB = (glUnmapBufferARBPROC) extgl_GetProcAddress("glUnmapBufferARB");
+	glGetBufferParameterivARB = (glGetBufferParameterivARBPROC) extgl_GetProcAddress("glGetBufferParameterivARB");
+	glGetBufferPointervARB = (glGetBufferPointervARBPROC) extgl_GetProcAddress("glGetBufferPointervARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_vertex_buffer_object)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBVertexBufferObject
  * Method:	nglBindBufferARB

@@ -38,6 +38,42 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glMapControlPointsNVPROC) (GLenum target, GLuint index, GLenum type, GLsizei ustride, GLsizei vstride, GLint uorder, GLint vorder, GLboolean packed, const GLvoid *points);
+typedef void (APIENTRY * glMapParameterivNVPROC) (GLenum target, GLenum pname, const GLint *params);
+typedef void (APIENTRY * glMapParameterfvNVPROC) (GLenum target, GLenum pname, const GLfloat *params);
+typedef void (APIENTRY * glGetMapControlPointsNVPROC) (GLenum target, GLuint index, GLenum type, GLsizei ustride, GLsizei vstride, GLboolean packed, GLvoid *points);
+typedef void (APIENTRY * glGetMapParameterivNVPROC) (GLenum target, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetMapParameterfvNVPROC) (GLenum target, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetMapAttribParameterivNVPROC) (GLenum target, GLuint index, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetMapAttribParameterfvNVPROC) (GLenum target, GLuint index, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glEvalMapsNVPROC) (GLenum target, GLenum mode);
+
+static glMapControlPointsNVPROC glMapControlPointsNV;
+static glMapParameterivNVPROC glMapParameterivNV;
+static glMapParameterfvNVPROC glMapParameterfvNV;
+static glGetMapControlPointsNVPROC glGetMapControlPointsNV;
+static glGetMapParameterivNVPROC glGetMapParameterivNV;
+static glGetMapParameterfvNVPROC glGetMapParameterfvNV;
+static glGetMapAttribParameterivNVPROC glGetMapAttribParameterivNV;
+static glGetMapAttribParameterfvNVPROC glGetMapAttribParameterfvNV;
+static glEvalMapsNVPROC glEvalMapsNV;
+
+void extgl_InitNVEvaluators(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_evaluators)
+		return;
+	glMapControlPointsNV = (glMapControlPointsNVPROC) extgl_GetProcAddress("glMapControlPointsNV");
+	glMapParameterivNV = (glMapParameterivNVPROC) extgl_GetProcAddress("glMapParameterivNV");
+	glMapParameterfvNV = (glMapParameterfvNVPROC) extgl_GetProcAddress("glMapParameterfvNV");
+	glGetMapControlPointsNV = (glGetMapControlPointsNVPROC) extgl_GetProcAddress("glGetMapControlPointsNV");
+	glGetMapParameterivNV = (glGetMapParameterivNVPROC) extgl_GetProcAddress("glGetMapParameterivNV");
+	glGetMapParameterfvNV = (glGetMapParameterfvNVPROC) extgl_GetProcAddress("glGetMapParameterfvNV");
+	glGetMapAttribParameterivNV = (glGetMapAttribParameterivNVPROC) extgl_GetProcAddress("glGetMapAttribParameterivNV");
+	glGetMapAttribParameterfvNV = (glGetMapAttribParameterfvNVPROC) extgl_GetProcAddress("glGetMapAttribParameterfvNV");
+	glEvalMapsNV = (glEvalMapsNVPROC) extgl_GetProcAddress("glEvalMapsNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_evaluators)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVEvaluators
  * Method:	nglGetMapControlPointsNV

@@ -38,6 +38,36 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glGenOcclusionQueriesNVPROC) (GLsizei n, GLuint *ids);
+typedef void (APIENTRY * glDeleteOcclusionQueriesNVPROC) (GLsizei n, const GLuint *ids);
+typedef GLboolean (APIENTRY * glIsOcclusionQueryNVPROC) (GLuint id);
+typedef void (APIENTRY * glBeginOcclusionQueryNVPROC) (GLuint id);
+typedef void (APIENTRY * glEndOcclusionQueryNVPROC) (void);
+typedef void (APIENTRY * glGetOcclusionQueryivNVPROC) (GLuint id, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetOcclusionQueryuivNVPROC) (GLuint id, GLenum pname, GLuint *params);
+
+static glGenOcclusionQueriesNVPROC glGenOcclusionQueriesNV;
+static glDeleteOcclusionQueriesNVPROC glDeleteOcclusionQueriesNV;
+static glIsOcclusionQueryNVPROC glIsOcclusionQueryNV;
+static glBeginOcclusionQueryNVPROC glBeginOcclusionQueryNV;
+static glEndOcclusionQueryNVPROC glEndOcclusionQueryNV;
+static glGetOcclusionQueryivNVPROC glGetOcclusionQueryivNV;
+static glGetOcclusionQueryuivNVPROC glGetOcclusionQueryuivNV;
+
+void extgl_InitNVOcclusionQuery(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_occlusion_query)
+		return;
+	glGenOcclusionQueriesNV = (glGenOcclusionQueriesNVPROC) extgl_GetProcAddress("glGenOcclusionQueriesNV");
+	glDeleteOcclusionQueriesNV = (glDeleteOcclusionQueriesNVPROC) extgl_GetProcAddress("glDeleteOcclusionQueriesNV");
+	glIsOcclusionQueryNV = (glIsOcclusionQueryNVPROC) extgl_GetProcAddress("glIsOcclusionQueryNV");
+	glBeginOcclusionQueryNV = (glBeginOcclusionQueryNVPROC) extgl_GetProcAddress("glBeginOcclusionQueryNV");
+	glEndOcclusionQueryNV = (glEndOcclusionQueryNVPROC) extgl_GetProcAddress("glEndOcclusionQueryNV");
+	glGetOcclusionQueryivNV = (glGetOcclusionQueryivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryivNV");
+	glGetOcclusionQueryuivNV = (glGetOcclusionQueryuivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryuivNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_occlusion_query)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVOcclusionQuery
  * Method:	nglGenOcclusionQueriesNV

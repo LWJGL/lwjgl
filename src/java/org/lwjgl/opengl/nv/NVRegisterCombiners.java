@@ -158,12 +158,4 @@ public class NVRegisterCombiners {
 		nglGetFinalCombinerInputParameterivNV(variable, pname, piParams, piParams.position());
 	}
 	private static native void nglGetFinalCombinerInputParameterivNV(int variable, int pname, IntBuffer piParams, int piParams_offset);
-	public static void glCombinerStageParameterNV(int stage, int pname, FloatBuffer pfParams) {
-		nglCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
-	}
-	private static native void nglCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
-	public static void glGetCombinerStageParameterNV(int stage, int pname, FloatBuffer pfParams) {
-		nglGetCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
-	}
-	private static native void nglGetCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
 }

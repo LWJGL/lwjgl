@@ -38,6 +38,54 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glCombinerParameterfvNVPROC) (GLenum pname, const GLfloat *params);
+typedef void (APIENTRY * glCombinerParameterfNVPROC) (GLenum pname, GLfloat param);
+typedef void (APIENTRY * glCombinerParameterivNVPROC) (GLenum pname, const GLint *params);
+typedef void (APIENTRY * glCombinerParameteriNVPROC) (GLenum pname, GLint param);
+typedef void (APIENTRY * glCombinerInputNVPROC) (GLenum stage, GLenum portion, GLenum variable, GLenum input, GLenum mapping, GLenum componentUsage);
+typedef void (APIENTRY * glCombinerOutputNVPROC) (GLenum stage, GLenum portion, GLenum abOutput, GLenum cdOutput, GLenum sumOutput, GLenum scale, GLenum bias, GLboolean abDotProduct, GLboolean cdDotProduct, GLboolean muxSum);
+typedef void (APIENTRY * glFinalCombinerInputNVPROC) (GLenum variable, GLenum input, GLenum mapping, GLenum componentUsage);
+typedef void (APIENTRY * glGetCombinerInputParameterfvNVPROC) (GLenum stage, GLenum portion, GLenum variable, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetCombinerInputParameterivNVPROC) (GLenum stage, GLenum portion, GLenum variable, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetCombinerOutputParameterfvNVPROC) (GLenum stage, GLenum portion, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetCombinerOutputParameterivNVPROC) (GLenum stage, GLenum portion, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetFinalCombinerInputParameterfvNVPROC) (GLenum variable, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetFinalCombinerInputParameterivNVPROC) (GLenum variable, GLenum pname, GLint *params);
+
+static glCombinerParameterfvNVPROC glCombinerParameterfvNV;
+static glCombinerParameterfNVPROC  glCombinerParameterfNV;
+static glCombinerParameterivNVPROC glCombinerParameterivNV;
+static glCombinerParameteriNVPROC glCombinerParameteriNV;
+static glCombinerInputNVPROC glCombinerInputNV;
+static glCombinerOutputNVPROC glCombinerOutputNV;
+static glFinalCombinerInputNVPROC glFinalCombinerInputNV;
+static glGetCombinerInputParameterfvNVPROC glGetCombinerInputParameterfvNV;
+static glGetCombinerInputParameterivNVPROC glGetCombinerInputParameterivNV;
+static glGetCombinerOutputParameterfvNVPROC glGetCombinerOutputParameterfvNV;
+static glGetCombinerOutputParameterivNVPROC glGetCombinerOutputParameterivNV;
+static glGetFinalCombinerInputParameterfvNVPROC glGetFinalCombinerInputParameterfvNV;
+static glGetFinalCombinerInputParameterivNVPROC glGetFinalCombinerInputParameterivNV;
+
+void extgl_InitNVRegisterCombiners(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_register_combiners)
+		return;
+	glCombinerParameterfvNV = (glCombinerParameterfvNVPROC) extgl_GetProcAddress("glCombinerParameterfvNV");
+	glCombinerParameterfNV = (glCombinerParameterfNVPROC) extgl_GetProcAddress("glCombinerParameterfNV");
+	glCombinerParameterivNV = (glCombinerParameterivNVPROC) extgl_GetProcAddress("glCombinerParameterivNV");
+	glCombinerParameteriNV = (glCombinerParameteriNVPROC) extgl_GetProcAddress("glCombinerParameteriNV");
+	glCombinerInputNV = (glCombinerInputNVPROC) extgl_GetProcAddress("glCombinerInputNV");
+	glCombinerOutputNV = (glCombinerOutputNVPROC) extgl_GetProcAddress("glCombinerOutputNV");
+	glFinalCombinerInputNV = (glFinalCombinerInputNVPROC) extgl_GetProcAddress("glFinalCombinerInputNV");
+	glGetCombinerInputParameterfvNV = (glGetCombinerInputParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerInputParameterfvNV");
+	glGetCombinerInputParameterivNV = (glGetCombinerInputParameterivNVPROC) extgl_GetProcAddress("glGetCombinerInputParameterivNV");
+	glGetCombinerOutputParameterfvNV = (glGetCombinerOutputParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerOutputParameterfvNV");
+	glGetCombinerOutputParameterivNV = (glGetCombinerOutputParameterivNVPROC) extgl_GetProcAddress("glGetCombinerOutputParameterivNV");
+	glGetFinalCombinerInputParameterfvNV = (glGetFinalCombinerInputParameterfvNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterfvNV");
+	glGetFinalCombinerInputParameterivNV = (glGetFinalCombinerInputParameterivNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterivNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_register_combiners)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVRegisterCombiners
  * Method:	glCombinerParameterfNV
@@ -202,28 +250,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_nv_NVRegisterCombiners_nglGetFinalC
 	CHECK_GL_ERROR
 }
 
-/*
- * Class:	org.lwjgl.opengl.nv.NVRegisterCombiners
- * Method:	nglCombinerStageParameterfvNV
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_nv_NVRegisterCombiners_nglCombinerStageParameterfvNV
-	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
-{
-	CHECK_EXISTS(glCombinerStageParameterfvNV)
-	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
-	glCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.nv.NVRegisterCombiners
- * Method:	nglGetCombinerStageParameterfvNV
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_nv_NVRegisterCombiners_nglGetCombinerStageParameterfvNV
-	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
-{
-	CHECK_EXISTS(glGetCombinerStageParameterfvNV)
-	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
-	glGetCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
-	CHECK_GL_ERROR
-}

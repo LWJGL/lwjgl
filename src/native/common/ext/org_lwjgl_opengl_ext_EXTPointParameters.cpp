@@ -38,6 +38,21 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glPointParameterfEXTPROC) (GLenum pname, GLfloat param);
+typedef void (APIENTRY * glPointParameterfvEXTPROC) (GLenum pname, const GLfloat *params);
+
+static glPointParameterfEXTPROC glPointParameterfEXT;
+static glPointParameterfvEXTPROC glPointParameterfvEXT;
+
+void extgl_InitEXTPointParameters(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_point_parameters)
+		return;
+	glPointParameterfEXT = (glPointParameterfEXTPROC) extgl_GetProcAddress("glPointParameterfEXT");
+	glPointParameterfvEXT = (glPointParameterfvEXTPROC) extgl_GetProcAddress("glPointParameterfvEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_point_parameters)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTPointParameters
  * Method:	glPointParameterfEXT

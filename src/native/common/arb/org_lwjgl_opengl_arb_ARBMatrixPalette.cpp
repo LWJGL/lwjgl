@@ -38,6 +38,30 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glCurrentPaletteMatrixARBPROC) (GLint index);
+typedef void (APIENTRY * glMatrixIndexubvARBPROC) (GLint size, GLubyte *indices);
+typedef void (APIENTRY * glMatrixIndexusvARBPROC) (GLint size, GLushort *indices);
+typedef void (APIENTRY * glMatrixIndexuivARBPROC) (GLint size, GLuint *indices);
+typedef void (APIENTRY * glMatrixIndexPointerARBPROC) (GLint size, GLenum type, GLsizei stride, GLvoid *pointer);
+
+static glCurrentPaletteMatrixARBPROC glCurrentPaletteMatrixARB;
+static glMatrixIndexubvARBPROC glMatrixIndexubvARB;
+static glMatrixIndexusvARBPROC glMatrixIndexusvARB;
+static glMatrixIndexuivARBPROC glMatrixIndexuivARB;
+static glMatrixIndexPointerARBPROC glMatrixIndexPointerARB;
+
+void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_matrix_palette)
+		return;
+	glCurrentPaletteMatrixARB = (glCurrentPaletteMatrixARBPROC) extgl_GetProcAddress("glCurrentPaletteMatrixARB");
+	glMatrixIndexubvARB = (glMatrixIndexubvARBPROC) extgl_GetProcAddress("glMatrixIndexubvARB");
+	glMatrixIndexusvARB = (glMatrixIndexusvARBPROC) extgl_GetProcAddress("glMatrixIndexusvARB");
+	glMatrixIndexuivARB = (glMatrixIndexuivARBPROC) extgl_GetProcAddress("glMatrixIndexuivARB");
+	glMatrixIndexPointerARB = (glMatrixIndexPointerARBPROC) extgl_GetProcAddress("glMatrixIndexPointerARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_matrix_palette)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBMatrixPalette
  * Method:	glCurrentPaletteMatrixARB

@@ -38,6 +38,51 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef GLuint (APIENTRY * glNewObjectBufferATIPROC) (GLsizei size, const GLvoid *pointer, GLenum usage);
+typedef GLboolean (APIENTRY * glIsObjectBufferATIPROC) (GLuint buffer);
+typedef void (APIENTRY * glUpdateObjectBufferATIPROC) (GLuint buffer, GLuint offset, GLsizei size, const GLvoid *pointer, GLenum preserve);
+typedef void (APIENTRY * glGetObjectBufferfvATIPROC) (GLuint buffer, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetObjectBufferivATIPROC) (GLuint buffer, GLenum pname, GLint *params);
+typedef void (APIENTRY * glFreeObjectBufferATIPROC) (GLuint buffer);
+typedef void (APIENTRY * glArrayObjectATIPROC) (GLenum array, GLint size, GLenum type, GLsizei stride, GLuint buffer, GLuint offset);
+typedef void (APIENTRY * glGetArrayObjectfvATIPROC) (GLenum array, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetArrayObjectivATIPROC) (GLenum array, GLenum pname, GLint *params);
+typedef void (APIENTRY * glVariantArrayObjectATIPROC) (GLuint id, GLenum type, GLsizei stride, GLuint buffer, GLuint offset);
+typedef void (APIENTRY * glGetVariantArrayObjectfvATIPROC) (GLuint id, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetVariantArrayObjectivATIPROC) (GLuint id, GLenum pname, GLint *params);
+
+static glNewObjectBufferATIPROC glNewObjectBufferATI;
+static glIsObjectBufferATIPROC glIsObjectBufferATI;
+static glUpdateObjectBufferATIPROC glUpdateObjectBufferATI;
+static glGetObjectBufferfvATIPROC glGetObjectBufferfvATI;
+static glGetObjectBufferivATIPROC glGetObjectBufferivATI;
+static glFreeObjectBufferATIPROC glFreeObjectBufferATI;
+static glArrayObjectATIPROC glArrayObjectATI;
+static glGetArrayObjectfvATIPROC glGetArrayObjectfvATI;
+static glGetArrayObjectivATIPROC glGetArrayObjectivATI;
+static glVariantArrayObjectATIPROC glVariantArrayObjectATI;
+static glGetVariantArrayObjectfvATIPROC glGetVariantArrayObjectfvATI;
+static glGetVariantArrayObjectivATIPROC glGetVariantArrayObjectivATI;
+
+void extgl_InitATIVertexArrayObject(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ATI_vertex_array_object)
+		return;
+	glNewObjectBufferATI = (glNewObjectBufferATIPROC) extgl_GetProcAddress("glNewObjectBufferATI");
+	glIsObjectBufferATI = (glIsObjectBufferATIPROC) extgl_GetProcAddress("glIsObjectBufferATI");
+	glUpdateObjectBufferATI = (glUpdateObjectBufferATIPROC) extgl_GetProcAddress("glUpdateObjectBufferATI");
+	glGetObjectBufferfvATI = (glGetObjectBufferfvATIPROC) extgl_GetProcAddress("glGetObjectBufferfvATI");
+	glGetObjectBufferivATI = (glGetObjectBufferivATIPROC) extgl_GetProcAddress("glGetObjectBufferivATI");
+	glFreeObjectBufferATI = (glFreeObjectBufferATIPROC) extgl_GetProcAddress("glFreeObjectBufferATI");
+	glArrayObjectATI = (glArrayObjectATIPROC) extgl_GetProcAddress("glArrayObjectATI");
+	glGetArrayObjectfvATI = (glGetArrayObjectfvATIPROC) extgl_GetProcAddress("glGetArrayObjectfvATI");
+	glGetArrayObjectivATI = (glGetArrayObjectivATIPROC) extgl_GetProcAddress("glGetArrayObjectivATI");
+	glVariantArrayObjectATI = (glVariantArrayObjectATIPROC) extgl_GetProcAddress("glVariantArrayObjectATI");
+	glGetVariantArrayObjectfvATI = (glGetVariantArrayObjectfvATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectfvATI");
+	glGetVariantArrayObjectivATI = (glGetVariantArrayObjectivATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectivATI");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_vertex_array_object)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ati.ATIVertexArrayObject
  * Method:	nglNewObjectBufferATI

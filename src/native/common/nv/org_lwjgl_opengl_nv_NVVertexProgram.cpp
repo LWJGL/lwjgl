@@ -38,6 +38,129 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glExecuteProgramNVPROC) (GLenum target, GLuint id, const GLfloat *params);
+typedef void (APIENTRY * glGetProgramParameterfvNVPROC) (GLenum target, GLuint index, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetTrackMatrixivNVPROC) (GLenum target, GLuint address, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetVertexAttribfvNVPROC) (GLuint index, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetVertexAttribivNVPROC) (GLuint index, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetVertexAttribPointervNVPROC) (GLuint index, GLenum pname, GLvoid **pointer);
+typedef void (APIENTRY * glProgramParameter4fNVPROC) (GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glProgramParameter4fvNVPROC) (GLenum target, GLuint index, const GLfloat *params);
+typedef void (APIENTRY * glProgramParameters4fvNVPROC) (GLenum target, GLuint index, GLuint num, const GLfloat *params);
+typedef void (APIENTRY * glTrackMatrixNVPROC) (GLenum target, GLuint address, GLenum matrix, GLenum transform);
+typedef void (APIENTRY * glVertexAttribPointerNVPROC) (GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
+typedef void (APIENTRY * glVertexAttrib1sNVPROC) (GLuint index, GLshort x);
+typedef void (APIENTRY * glVertexAttrib1fNVPROC) (GLuint index, GLfloat x);
+typedef void (APIENTRY * glVertexAttrib2sNVPROC) (GLuint index, GLshort x, GLshort y);
+typedef void (APIENTRY * glVertexAttrib2fNVPROC) (GLuint index, GLfloat x, GLfloat y);
+typedef void (APIENTRY * glVertexAttrib3sNVPROC) (GLuint index, GLshort x, GLshort y, GLshort z);
+typedef void (APIENTRY * glVertexAttrib3fNVPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY * glVertexAttrib4sNVPROC) (GLuint index, GLshort x, GLshort y, GLshort z, GLshort w);
+typedef void (APIENTRY * glVertexAttrib4fNVPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glVertexAttrib4ubNVPROC) (GLuint index, GLubyte x, GLubyte y, GLubyte z, GLubyte w);
+typedef void (APIENTRY * glVertexAttrib1svNVPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib1fvNVPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib2svNVPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib2fvNVPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib3svNVPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib3fvNVPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib4svNVPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib4fvNVPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib4ubvNVPROC) (GLuint index, const GLubyte *v);
+typedef void (APIENTRY * glVertexAttribs1svNVPROC) (GLuint index, GLsizei n, const GLshort *v);
+typedef void (APIENTRY * glVertexAttribs1fvNVPROC) (GLuint index, GLsizei n, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttribs2svNVPROC) (GLuint index, GLsizei n, const GLshort *v);
+typedef void (APIENTRY * glVertexAttribs2fvNVPROC) (GLuint index, GLsizei n, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttribs3svNVPROC) (GLuint index, GLsizei n, const GLshort *v);
+typedef void (APIENTRY * glVertexAttribs3fvNVPROC) (GLuint index, GLsizei n, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttribs4svNVPROC) (GLuint index, GLsizei n, const GLshort *v);
+typedef void (APIENTRY * glVertexAttribs4fvNVPROC) (GLuint index, GLsizei n, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttribs4ubvNVPROC) (GLuint index, GLsizei n, const GLubyte *v);
+
+static glExecuteProgramNVPROC glExecuteProgramNV;
+static glGetProgramParameterfvNVPROC glGetProgramParameterfvNV;
+static glGetTrackMatrixivNVPROC glGetTrackMatrixivNV;
+static glGetVertexAttribfvNVPROC glGetVertexAttribfvNV;
+static glGetVertexAttribivNVPROC glGetVertexAttribivNV;
+static glGetVertexAttribPointervNVPROC glGetVertexAttribPointervNV;
+static glProgramParameter4fNVPROC glProgramParameter4fNV;
+static glProgramParameter4fvNVPROC glProgramParameter4fvNV;
+static glProgramParameters4fvNVPROC glProgramParameters4fvNV;
+static glTrackMatrixNVPROC glTrackMatrixNV;
+static glVertexAttribPointerNVPROC glVertexAttribPointerNV;
+static glVertexAttrib1sNVPROC glVertexAttrib1sNV;
+static glVertexAttrib1fNVPROC glVertexAttrib1fNV;
+static glVertexAttrib2sNVPROC glVertexAttrib2sNV;
+static glVertexAttrib2fNVPROC glVertexAttrib2fNV;
+static glVertexAttrib3sNVPROC glVertexAttrib3sNV;
+static glVertexAttrib3fNVPROC glVertexAttrib3fNV;
+static glVertexAttrib4sNVPROC glVertexAttrib4sNV;
+static glVertexAttrib4fNVPROC glVertexAttrib4fNV;
+static glVertexAttrib4ubNVPROC glVertexAttrib4ubNV;
+static glVertexAttrib1svNVPROC glVertexAttrib1svNV;
+static glVertexAttrib1fvNVPROC glVertexAttrib1fvNV;
+static glVertexAttrib2svNVPROC glVertexAttrib2svNV;
+static glVertexAttrib2fvNVPROC glVertexAttrib2fvNV;
+static glVertexAttrib3svNVPROC glVertexAttrib3svNV;
+static glVertexAttrib3fvNVPROC glVertexAttrib3fvNV;
+static glVertexAttrib4svNVPROC glVertexAttrib4svNV;
+static glVertexAttrib4fvNVPROC glVertexAttrib4fvNV;
+static glVertexAttrib4ubvNVPROC glVertexAttrib4ubvNV;
+static glVertexAttribs1svNVPROC glVertexAttribs1svNV;
+static glVertexAttribs1fvNVPROC glVertexAttribs1fvNV;
+static glVertexAttribs2svNVPROC glVertexAttribs2svNV;
+static glVertexAttribs2fvNVPROC glVertexAttribs2fvNV;
+static glVertexAttribs3svNVPROC glVertexAttribs3svNV;
+static glVertexAttribs3fvNVPROC glVertexAttribs3fvNV;
+static glVertexAttribs4svNVPROC glVertexAttribs4svNV;
+static glVertexAttribs4fvNVPROC glVertexAttribs4fvNV;
+static glVertexAttribs4ubvNVPROC glVertexAttribs4ubvNV;
+
+void extgl_InitNVVertexProgram(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_vertex_program)
+		return;
+	glExecuteProgramNV = (glExecuteProgramNVPROC) extgl_GetProcAddress("glExecuteProgramNV");
+	glGetProgramParameterfvNV = (glGetProgramParameterfvNVPROC) extgl_GetProcAddress("glGetProgramParameterfvNV");
+	glGetTrackMatrixivNV = (glGetTrackMatrixivNVPROC) extgl_GetProcAddress("glGetTrackMatrixivNV");
+	glGetVertexAttribfvNV = (glGetVertexAttribfvNVPROC) extgl_GetProcAddress("glGetVertexAttribfvNV");
+	glGetVertexAttribivNV = (glGetVertexAttribivNVPROC) extgl_GetProcAddress("glGetVertexAttribivNV");
+	glGetVertexAttribPointervNV = (glGetVertexAttribPointervNVPROC) extgl_GetProcAddress("glGetVertexAttribPointervNV");
+	glProgramParameter4fNV = (glProgramParameter4fNVPROC) extgl_GetProcAddress("glProgramParameter4fNV");
+	glProgramParameter4fvNV = (glProgramParameter4fvNVPROC) extgl_GetProcAddress("glProgramParameter4fvNV");
+	glProgramParameters4fvNV = (glProgramParameters4fvNVPROC) extgl_GetProcAddress("glProgramParameters4fvNV");
+	glTrackMatrixNV = (glTrackMatrixNVPROC) extgl_GetProcAddress("glTrackMatrixNV");
+	glVertexAttribPointerNV = (glVertexAttribPointerNVPROC) extgl_GetProcAddress("glVertexAttribPointerNV");
+	glVertexAttrib1sNV = (glVertexAttrib1sNVPROC) extgl_GetProcAddress("glVertexAttrib1sNV");
+	glVertexAttrib1fNV = (glVertexAttrib1fNVPROC) extgl_GetProcAddress("glVertexAttrib1fNV");
+	glVertexAttrib2sNV = (glVertexAttrib2sNVPROC) extgl_GetProcAddress("glVertexAttrib2sNV");
+	glVertexAttrib2fNV = (glVertexAttrib2fNVPROC) extgl_GetProcAddress("glVertexAttrib2fNV");
+	glVertexAttrib3sNV = (glVertexAttrib3sNVPROC) extgl_GetProcAddress("glVertexAttrib3sNV");
+	glVertexAttrib3fNV = (glVertexAttrib3fNVPROC) extgl_GetProcAddress("glVertexAttrib3fNV");
+	glVertexAttrib4sNV = (glVertexAttrib4sNVPROC) extgl_GetProcAddress("glVertexAttrib4sNV");
+	glVertexAttrib4fNV = (glVertexAttrib4fNVPROC) extgl_GetProcAddress("glVertexAttrib4fNV");
+	glVertexAttrib4ubNV = (glVertexAttrib4ubNVPROC) extgl_GetProcAddress("glVertexAttrib4ubNV");
+	glVertexAttrib1svNV = (glVertexAttrib1svNVPROC) extgl_GetProcAddress("glVertexAttrib1svNV");
+	glVertexAttrib1fvNV = (glVertexAttrib1fvNVPROC) extgl_GetProcAddress("glVertexAttrib1fvNV");
+	glVertexAttrib2svNV = (glVertexAttrib2svNVPROC) extgl_GetProcAddress("glVertexAttrib2svNV");
+	glVertexAttrib2fvNV = (glVertexAttrib2fvNVPROC) extgl_GetProcAddress("glVertexAttrib2fvNV");
+	glVertexAttrib3svNV = (glVertexAttrib3svNVPROC) extgl_GetProcAddress("glVertexAttrib3svNV");
+	glVertexAttrib3fvNV = (glVertexAttrib3fvNVPROC) extgl_GetProcAddress("glVertexAttrib3fvNV");
+	glVertexAttrib4svNV = (glVertexAttrib4svNVPROC) extgl_GetProcAddress("glVertexAttrib4svNV");
+	glVertexAttrib4fvNV = (glVertexAttrib4fvNVPROC) extgl_GetProcAddress("glVertexAttrib4fvNV");
+	glVertexAttrib4ubvNV = (glVertexAttrib4ubvNVPROC) extgl_GetProcAddress("glVertexAttrib4ubvNV");
+	glVertexAttribs1svNV = (glVertexAttribs1svNVPROC) extgl_GetProcAddress("glVertexAttribs1svNV");
+	glVertexAttribs1fvNV = (glVertexAttribs1fvNVPROC) extgl_GetProcAddress("glVertexAttribs1fvNV");
+	glVertexAttribs2svNV = (glVertexAttribs2svNVPROC) extgl_GetProcAddress("glVertexAttribs2svNV");
+	glVertexAttribs2fvNV = (glVertexAttribs2fvNVPROC) extgl_GetProcAddress("glVertexAttribs2fvNV");
+	glVertexAttribs3svNV = (glVertexAttribs3svNVPROC) extgl_GetProcAddress("glVertexAttribs3svNV");
+	glVertexAttribs3fvNV = (glVertexAttribs3fvNVPROC) extgl_GetProcAddress("glVertexAttribs3fvNV");
+	glVertexAttribs4svNV = (glVertexAttribs4svNVPROC) extgl_GetProcAddress("glVertexAttribs4svNV");
+	glVertexAttribs4fvNV = (glVertexAttribs4fvNVPROC) extgl_GetProcAddress("glVertexAttribs4fvNV");
+	glVertexAttribs4ubvNV = (glVertexAttribs4ubvNVPROC) extgl_GetProcAddress("glVertexAttribs4ubvNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_vertex_program)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVVertexProgram
  * Method:	nglExecuteProgramNV

@@ -38,6 +38,33 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glWindowPos2fARBPROC) (GLfloat x, GLfloat y);
+typedef void (APIENTRY * glWindowPos2iARBPROC) (GLint x, GLint y);
+typedef void (APIENTRY * glWindowPos2sARBPROC) (GLshort x, GLshort y);
+typedef void (APIENTRY * glWindowPos3fARBPROC) (GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY * glWindowPos3iARBPROC) (GLint x, GLint y, GLint z);
+typedef void (APIENTRY * glWindowPos3sARBPROC) (GLshort x, GLshort y, GLshort z);
+
+static glWindowPos2fARBPROC glWindowPos2fARB;
+static glWindowPos2iARBPROC glWindowPos2iARB;
+static glWindowPos2sARBPROC glWindowPos2sARB;
+static glWindowPos3fARBPROC glWindowPos3fARB;
+static glWindowPos3iARBPROC glWindowPos3iARB;
+static glWindowPos3sARBPROC glWindowPos3sARB;
+
+void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_window_pos)
+		return;
+	glWindowPos2fARB = (glWindowPos2fARBPROC) extgl_GetProcAddress("glWindowPos2fARB");
+	glWindowPos2iARB = (glWindowPos2iARBPROC) extgl_GetProcAddress("glWindowPos2iARB");
+	glWindowPos2sARB = (glWindowPos2sARBPROC) extgl_GetProcAddress("glWindowPos2sARB");
+	glWindowPos3fARB = (glWindowPos3fARBPROC) extgl_GetProcAddress("glWindowPos3fARB");
+	glWindowPos3iARB = (glWindowPos3iARBPROC) extgl_GetProcAddress("glWindowPos3iARB");
+	glWindowPos3sARB = (glWindowPos3sARBPROC) extgl_GetProcAddress("glWindowPos3sARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_window_pos)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBWindowPos
  * Method:	glWindowPos2fARB

@@ -38,6 +38,21 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glLockArraysEXTPROC) (GLint first, GLsizei count);
+typedef void (APIENTRY * glUnlockArraysEXTPROC) ();
+
+static glLockArraysEXTPROC glLockArraysEXT;
+static glUnlockArraysEXTPROC glUnlockArraysEXT;
+
+void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_compiled_vertex_array)
+		return;
+	glLockArraysEXT = (glLockArraysEXTPROC) extgl_GetProcAddress("glLockArraysEXT");
+	glUnlockArraysEXT = (glUnlockArraysEXTPROC) extgl_GetProcAddress("glUnlockArraysEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_compiled_vertex_array)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTCompiledVertexArray
  * Method:	glLockArraysEXT

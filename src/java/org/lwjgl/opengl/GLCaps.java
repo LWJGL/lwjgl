@@ -129,6 +129,7 @@ public abstract class GLCaps {
 	public static boolean GL_NV_texture_shader3;
 	public static boolean GL_NV_vertex_array_range;
 	public static boolean GL_NV_vertex_array_range2;
+	public static boolean GL_NV_texture_compression_vtc;
 	public static boolean GL_NV_vertex_program;
 	public static boolean GL_NV_vertex_program1_1;
 	public static boolean GL_NV_vertex_program2;

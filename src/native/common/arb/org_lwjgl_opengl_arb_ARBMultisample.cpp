@@ -38,6 +38,18 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glSampleCoverageARBPROC) (GLclampf value, GLboolean invert );
+
+static glSampleCoverageARBPROC glSampleCoverageARB;
+
+void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_multisample)
+		return;
+	glSampleCoverageARB = (glSampleCoverageARBPROC) extgl_GetProcAddress("glSampleCoverageARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_multisample)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBMultisample
  * Method:	glSampleCoverageARB

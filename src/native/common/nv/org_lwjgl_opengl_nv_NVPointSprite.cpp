@@ -38,6 +38,21 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glPointParameteriNVPROC) (GLenum pname, GLint param);
+typedef void (APIENTRY * glPointParameterivNVPROC) (GLenum pname, const GLint *params);
+
+static glPointParameteriNVPROC glPointParameteriNV;
+static glPointParameterivNVPROC glPointParameterivNV;
+
+void extgl_InitNVPointSprite(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_point_sprite)
+		return;
+	glPointParameteriNV = (glPointParameteriNVPROC) extgl_GetProcAddress("glPointParameteriNV");
+	glPointParameterivNV = (glPointParameterivNVPROC) extgl_GetProcAddress("glPointParameterivNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_point_sprite)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVPointSprite
  * Method:	glPointParameteriNV

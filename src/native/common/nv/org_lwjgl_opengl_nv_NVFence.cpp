@@ -38,6 +38,36 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glGenFencesNVPROC) (GLsizei n, GLuint *fences);
+typedef void (APIENTRY * glDeleteFencesNVPROC) (GLsizei n, const GLuint *fences);
+typedef void (APIENTRY * glSetFenceNVPROC) (GLuint fence, GLenum condition);
+typedef GLboolean (APIENTRY * glTestFenceNVPROC) (GLuint fence);
+typedef void (APIENTRY * glFinishFenceNVPROC) (GLuint fence);
+typedef GLboolean (APIENTRY * glIsFenceNVPROC) (GLuint fence);
+typedef void (APIENTRY * glGetFenceivNVPROC) (GLuint fence, GLenum pname, GLint *params);
+
+static glGenFencesNVPROC glGenFencesNV;
+static glDeleteFencesNVPROC glDeleteFencesNV;
+static glSetFenceNVPROC glSetFenceNV;
+static glTestFenceNVPROC glTestFenceNV;
+static glFinishFenceNVPROC glFinishFenceNV;
+static glIsFenceNVPROC glIsFenceNV;
+static glGetFenceivNVPROC glGetFenceivNV;
+
+void extgl_InitNVFence(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_fence)
+		return;
+	glGenFencesNV = (glGenFencesNVPROC) extgl_GetProcAddress("glGenFencesNV");
+	glDeleteFencesNV = (glDeleteFencesNVPROC) extgl_GetProcAddress("glDeleteFencesNV");
+	glSetFenceNV = (glSetFenceNVPROC) extgl_GetProcAddress("glSetFenceNV");
+	glTestFenceNV = (glTestFenceNVPROC) extgl_GetProcAddress("glTestFenceNV");
+	glFinishFenceNV = (glFinishFenceNVPROC) extgl_GetProcAddress("glFinishFenceNV");
+	glIsFenceNV = (glIsFenceNVPROC) extgl_GetProcAddress("glIsFenceNV");
+	glGetFenceivNV = (glGetFenceivNVPROC) extgl_GetProcAddress("glGetFenceivNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_fence)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVFence
  * Method:	nglGenFencesNV

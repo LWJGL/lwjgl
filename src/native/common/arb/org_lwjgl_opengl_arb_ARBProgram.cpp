@@ -38,6 +38,55 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glProgramStringARBPROC) (GLenum target, GLenum format, GLsizei len, const GLvoid *string); 
+typedef void (APIENTRY * glBindProgramARBPROC) (GLenum target, GLuint program);
+typedef void (APIENTRY * glDeleteProgramsARBPROC) (GLsizei n, const GLuint *programs);
+typedef void (APIENTRY * glGenProgramsARBPROC) (GLsizei n, GLuint *programs);
+typedef void (APIENTRY * glProgramEnvParameter4fARBPROC) (GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glProgramEnvParameter4fvARBPROC) (GLenum target, GLuint index, const GLfloat *params);
+typedef void (APIENTRY * glProgramLocalParameter4fARBPROC) (GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glProgramLocalParameter4fvARBPROC) (GLenum target, GLuint index, const GLfloat *params);
+typedef void (APIENTRY * glGetProgramEnvParameterfvARBPROC) (GLenum target, GLuint index, GLfloat *params);
+typedef void (APIENTRY * glGetProgramLocalParameterfvARBPROC) (GLenum target, GLuint index, GLfloat *params);
+typedef void (APIENTRY * glGetProgramivARBPROC) (GLenum target, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetProgramStringARBPROC) (GLenum target, GLenum pname, GLvoid *string);
+typedef GLboolean (APIENTRY * glIsProgramARBPROC) (GLuint program);
+
+static glProgramStringARBPROC glProgramStringARB;
+static glBindProgramARBPROC glBindProgramARB;
+static glDeleteProgramsARBPROC glDeleteProgramsARB;
+static glGenProgramsARBPROC glGenProgramsARB;
+
+static glProgramEnvParameter4fARBPROC glProgramEnvParameter4fARB;
+static glProgramEnvParameter4fvARBPROC glProgramEnvParameter4fvARB;
+static glProgramLocalParameter4fARBPROC glProgramLocalParameter4fARB;
+static glProgramLocalParameter4fvARBPROC glProgramLocalParameter4fvARB;
+static glGetProgramEnvParameterfvARBPROC glGetProgramEnvParameterfvARB;
+static glGetProgramLocalParameterfvARBPROC glGetProgramLocalParameterfvARB;
+static glGetProgramivARBPROC glGetProgramivARB;
+static glGetProgramStringARBPROC glGetProgramStringARB;
+static glIsProgramARBPROC glIsProgramARB;
+
+void extgl_InitARBProgram(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_fragment_program)
+		return;
+	glProgramStringARB = (glProgramStringARBPROC) extgl_GetProcAddress("glProgramStringARB");
+	glBindProgramARB = (glBindProgramARBPROC) extgl_GetProcAddress("glBindProgramARB");
+	glDeleteProgramsARB = (glDeleteProgramsARBPROC) extgl_GetProcAddress("glDeleteProgramsARB");
+	glGenProgramsARB = (glGenProgramsARBPROC) extgl_GetProcAddress("glGenProgramsARB");
+	glProgramEnvParameter4fARB = (glProgramEnvParameter4fARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fARB");
+	glProgramEnvParameter4fvARB = (glProgramEnvParameter4fvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fvARB");
+	glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
+	glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
+	glGetProgramEnvParameterfvARB = (glGetProgramEnvParameterfvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterfvARB");
+	glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
+	glGetProgramivARB = (glGetProgramivARBPROC) extgl_GetProcAddress("glGetProgramivARB");
+	glGetProgramStringARB = (glGetProgramStringARBPROC) extgl_GetProcAddress("glGetProgramStringARB");
+	glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_fragment_program)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBProgram
  * Method:	nglProgramStringARB

@@ -38,6 +38,27 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glTexBumpParameterivATIPROC) (GLenum pname, GLint *param);
+typedef void (APIENTRY * glTexBumpParameterfvATIPROC) (GLenum pname, GLfloat *param);
+typedef void (APIENTRY * glGetTexBumpParameterivATIPROC) (GLenum pname, GLint *param);
+typedef void (APIENTRY * glGetTexBumpParameterfvATIPROC) (GLenum pname, GLfloat *param);
+
+static glTexBumpParameterivATIPROC glTexBumpParameterivATI;
+static glTexBumpParameterfvATIPROC glTexBumpParameterfvATI;
+static glGetTexBumpParameterivATIPROC glGetTexBumpParameterivATI;
+static glGetTexBumpParameterfvATIPROC glGetTexBumpParameterfvATI;
+
+void extgl_InitATIEnvmapBumpmap(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ATI_envmap_bumpmap)
+		return;
+	glTexBumpParameterivATI = (glTexBumpParameterivATIPROC) extgl_GetProcAddress("glTexBumpParameterivATI");
+	glTexBumpParameterfvATI = (glTexBumpParameterfvATIPROC) extgl_GetProcAddress("glTexBumpParameterfvATI");
+	glGetTexBumpParameterivATI = (glGetTexBumpParameterivATIPROC) extgl_GetProcAddress("glGetTexBumpParameterivATI");
+	glGetTexBumpParameterfvATI = (glGetTexBumpParameterfvATIPROC) extgl_GetProcAddress("glGetTexBumpParameterfvATI");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_envmap_bumpmap)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ati.ATIEnvmapBumpmap
  * Method:	nglTexBumpParameterfvATI

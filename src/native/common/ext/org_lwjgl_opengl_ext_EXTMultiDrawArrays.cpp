@@ -38,6 +38,21 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glMultiDrawArraysEXTPROC) (GLenum mode, GLint *first, GLsizei *count, GLsizei primcount);
+typedef void (APIENTRY * glMultiDrawElementsEXTPROC) (GLenum mode, GLsizei *count, GLenum type, const GLvoid **indices, GLsizei primcount);
+
+static glMultiDrawArraysEXTPROC glMultiDrawArraysEXT;
+static glMultiDrawElementsEXTPROC glMultiDrawElementsEXT;
+
+void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_multi_draw_arrays)
+		return;
+	glMultiDrawArraysEXT = (glMultiDrawArraysEXTPROC) extgl_GetProcAddress("glMultiDrawArraysEXT");
+	glMultiDrawElementsEXT = (glMultiDrawElementsEXTPROC) extgl_GetProcAddress("glMultiDrawElementsEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_multi_draw_arrays)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTMultiDrawArrays
  * Method:	nglMultiDrawArraysEXT

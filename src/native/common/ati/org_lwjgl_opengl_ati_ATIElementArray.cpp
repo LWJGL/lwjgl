@@ -38,6 +38,24 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glElementPointerATIPROC) (GLenum type, const GLvoid *pointer);
+typedef void (APIENTRY * glDrawElementArrayATIPROC) (GLenum mode, GLsizei count);
+typedef void (APIENTRY * glDrawRangeElementArrayATIPROC) (GLenum mode, GLuint start, GLuint end, GLsizei count);
+
+static glElementPointerATIPROC glElementPointerATI;
+static glDrawElementArrayATIPROC glDrawElementArrayATI;
+static glDrawRangeElementArrayATIPROC glDrawRangeElementArrayATI;
+
+void extgl_InitATIElementArray(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ATI_element_array)
+		return;
+	glElementPointerATI = (glElementPointerATIPROC) extgl_GetProcAddress("glElementPointerATI");
+	glDrawElementArrayATI = (glDrawElementArrayATIPROC) extgl_GetProcAddress("glDrawElementArrayATI");
+	glDrawRangeElementArrayATI = (glDrawRangeElementArrayATIPROC) extgl_GetProcAddress("glDrawRangeElementArrayATI");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_element_array)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ati.ATIElementArray
  * Method:	nglElementPointerATI

@@ -38,6 +38,21 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glLoadTransposeMatrixfARBPROC) (const GLfloat m[16] );
+typedef void (APIENTRY * glMultTransposeMatrixfARBPROC) (const GLfloat m[16] );
+
+static glLoadTransposeMatrixfARBPROC glLoadTransposeMatrixfARB;
+static glMultTransposeMatrixfARBPROC glMultTransposeMatrixfARB;
+
+void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_transpose_matrix)
+		return;
+	glLoadTransposeMatrixfARB = (glLoadTransposeMatrixfARBPROC) extgl_GetProcAddress("glLoadTransposeMatrixfARB");
+	glMultTransposeMatrixfARB = (glMultTransposeMatrixfARBPROC) extgl_GetProcAddress("glMultTransposeMatrixfARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_transpose_matrix)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBTransposeMatrix
  * Method:	nglLoadTransposeMatrixfARB

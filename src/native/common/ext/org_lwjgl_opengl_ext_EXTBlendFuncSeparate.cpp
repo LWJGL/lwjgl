@@ -38,6 +38,18 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glBlendFuncSeparateEXTPROC) (GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha);
+
+static glBlendFuncSeparateEXTPROC glBlendFuncSeparateEXT;
+
+void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_blend_func_separate)
+		return;
+	glBlendFuncSeparateEXT = (glBlendFuncSeparateEXTPROC) extgl_GetProcAddress("glBlendFuncSeparateEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_blend_func_separate)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTBlendFuncSeparate
  * Method:	glBlendFuncSeparateEXT

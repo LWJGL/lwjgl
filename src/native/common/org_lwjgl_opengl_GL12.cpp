@@ -39,13 +39,140 @@
  * @version $Revision$
  */
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include "org_lwjgl_opengl_GL12.h"
 #include "checkGLerror.h"
 #include "extgl.h"
+
+typedef void (APIENTRY * glBlendColorPROC) (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha );
+typedef void (APIENTRY * glBlendEquationPROC) (GLenum mode );
+typedef void (APIENTRY * glColorTablePROC) (GLenum target, GLenum internalformat, GLsizei width, GLenum format, GLenum type, const GLvoid *table );
+typedef void (APIENTRY * glColorTableParameterfvPROC) (GLenum target, GLenum pname, const GLfloat *params);
+typedef void (APIENTRY * glColorTableParameterivPROC) (GLenum target, GLenum pname, const GLint *params);
+typedef void (APIENTRY * glCopyColorTablePROC) (GLenum target, GLenum internalformat, GLint x, GLint y, GLsizei width );
+typedef void (APIENTRY * glGetColorTablePROC) (GLenum target, GLenum format, GLenum type, GLvoid *table );
+typedef void (APIENTRY * glGetColorTableParameterfvPROC) (GLenum target, GLenum pname, GLfloat *params );
+typedef void (APIENTRY * glGetColorTableParameterivPROC) (GLenum target, GLenum pname, GLint *params );
+typedef void (APIENTRY * glColorSubTablePROC) (GLenum target, GLsizei start, GLsizei count, GLenum format, GLenum type, const GLvoid *data );
+typedef void (APIENTRY * glCopyColorSubTablePROC) (GLenum target, GLsizei start, GLint x, GLint y, GLsizei width );
+typedef void (APIENTRY * glConvolutionFilter1DPROC) (GLenum target, GLenum internalformat, GLsizei width, GLenum format, GLenum type, const GLvoid *image );
+typedef void (APIENTRY * glConvolutionFilter2DPROC) (GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *image );
+typedef void (APIENTRY * glConvolutionParameterfPROC) (GLenum target, GLenum pname, GLfloat params );
+typedef void (APIENTRY * glConvolutionParameterfvPROC) (GLenum target, GLenum pname, const GLfloat *params );
+typedef void (APIENTRY * glConvolutionParameteriPROC) (GLenum target, GLenum pname, GLint params );
+typedef void (APIENTRY * glConvolutionParameterivPROC) (GLenum target, GLenum pname, const GLint *params );
+typedef void (APIENTRY * glCopyConvolutionFilter1DPROC) (GLenum target, GLenum internalformat, GLint x, GLint y, GLsizei width );
+typedef void (APIENTRY * glCopyConvolutionFilter2DPROC) (GLenum target, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height);
+typedef void (APIENTRY * glGetConvolutionFilterPROC) (GLenum target, GLenum format, GLenum type, GLvoid *image );
+typedef void (APIENTRY * glGetConvolutionParameterfvPROC) (GLenum target, GLenum pname, GLfloat *params );
+typedef void (APIENTRY * glGetConvolutionParameterivPROC) (GLenum target, GLenum pname, GLint *params );
+typedef void (APIENTRY * glSeparableFilter2DPROC) (GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *row, const GLvoid *column );
+typedef void (APIENTRY * glGetHistogramPROC) (GLenum target, GLboolean reset, GLenum format, GLenum type, GLvoid *values );
+typedef void (APIENTRY * glGetHistogramParameterfvPROC) (GLenum target, GLenum pname, GLfloat *params );
+typedef void (APIENTRY * glGetHistogramParameterivPROC) (GLenum target, GLenum pname, GLint *params );
+typedef void (APIENTRY * glGetMinmaxPROC) (GLenum target, GLboolean reset, GLenum format, GLenum types, GLvoid *values );
+typedef void (APIENTRY * glGetMinmaxParameterfvPROC) (GLenum target, GLenum pname, GLfloat *params );
+typedef void (APIENTRY * glGetMinmaxParameterivPROC) (GLenum target, GLenum pname, GLint *params );
+typedef void (APIENTRY * glHistogramPROC) (GLenum target, GLsizei width, GLenum internalformat, GLboolean sink );
+typedef void (APIENTRY * glResetHistogramPROC) (GLenum target );
+typedef void (APIENTRY * glMinmaxPROC) (GLenum target, GLenum internalformat, GLboolean sink );
+typedef void (APIENTRY * glResetMinmaxPROC) (GLenum target );
+typedef void (APIENTRY * glGetSeparableFilterPROC) (GLenum target, GLenum format, GLenum type, GLvoid *row, GLvoid *column, GLvoid *span );
+typedef void (APIENTRY * glDrawRangeElementsPROC) (GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices );
+typedef void (APIENTRY * glTexImage3DPROC) (GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid *pixels );
+typedef void (APIENTRY * glTexSubImage3DPROC) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid *pixels);
+typedef void (APIENTRY * glCopyTexSubImage3DPROC) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height );
+
+static glDrawRangeElementsPROC glDrawRangeElements;
+static glTexImage3DPROC glTexImage3D;
+static glTexSubImage3DPROC glTexSubImage3D;
+static glCopyTexSubImage3DPROC glCopyTexSubImage3D;
+
+static glBlendColorPROC glBlendColor;
+static glBlendEquationPROC glBlendEquation;
+static glColorTablePROC glColorTable;
+static glColorTableParameterfvPROC glColorTableParameterfv;
+static glColorTableParameterivPROC glColorTableParameteriv;
+static glCopyColorTablePROC glCopyColorTable;
+static glGetColorTablePROC glGetColorTable;
+static glGetColorTableParameterfvPROC glGetColorTableParameterfv;
+static glGetColorTableParameterivPROC glGetColorTableParameteriv;
+static glColorSubTablePROC glColorSubTable;
+static glCopyColorSubTablePROC glCopyColorSubTable;
+static glConvolutionFilter1DPROC glConvolutionFilter1D;
+static glConvolutionFilter2DPROC glConvolutionFilter2D;
+static glConvolutionParameterfPROC glConvolutionParameterf;
+static glConvolutionParameterfvPROC glConvolutionParameterfv;
+static glConvolutionParameteriPROC glConvolutionParameteri;
+static glConvolutionParameterivPROC glConvolutionParameteriv;
+static glCopyConvolutionFilter1DPROC glCopyConvolutionFilter1D;
+static glCopyConvolutionFilter2DPROC glCopyConvolutionFilter2D;
+static glGetConvolutionFilterPROC glGetConvolutionFilter;
+static glGetConvolutionParameterfvPROC glGetConvolutionParameterfv;
+static glGetConvolutionParameterivPROC glGetConvolutionParameteriv;
+static glGetSeparableFilterPROC glGetSeparableFilter;
+static glSeparableFilter2DPROC glSeparableFilter2D;
+static glGetHistogramPROC glGetHistogram;
+static glGetHistogramParameterfvPROC glGetHistogramParameterfv;
+static glGetHistogramParameterivPROC glGetHistogramParameteriv;
+static glGetMinmaxPROC glGetMinmax;
+static glGetMinmaxParameterfvPROC glGetMinmaxParameterfv;
+static glGetMinmaxParameterivPROC glGetMinmaxParameteriv;
+static glHistogramPROC glHistogram;
+static glMinmaxPROC glMinmax;
+static glResetHistogramPROC glResetHistogram;
+static glResetMinmaxPROC glResetMinmax;
+
+void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.OpenGL12)
+		return;
+	glTexImage3D = (glTexImage3DPROC) extgl_GetProcAddress("glTexImage3D");
+	glTexSubImage3D = (glTexSubImage3DPROC) extgl_GetProcAddress("glTexSubImage3D");
+	glCopyTexSubImage3D = (glCopyTexSubImage3DPROC) extgl_GetProcAddress("glCopyTexSubImage3D");
+	glDrawRangeElements = (glDrawRangeElementsPROC) extgl_GetProcAddress("glDrawRangeElements");
+	EXTGL_SANITY_CHECK(env, ext_set, OpenGL12)
+}
+
+void extgl_InitARBImaging(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_imaging)
+		return;
+	glBlendColor = (glBlendColorPROC) extgl_GetProcAddress("glBlendColor");
+	glBlendEquation = (glBlendEquationPROC) extgl_GetProcAddress("glBlendEquation");
+	glColorTable = (glColorTablePROC) extgl_GetProcAddress("glColorTable");
+	glColorTableParameterfv = (glColorTableParameterfvPROC) extgl_GetProcAddress("glColorTableParameterfv");
+	glColorTableParameteriv = (glColorTableParameterivPROC) extgl_GetProcAddress("glColorTableParameteriv");
+	glCopyColorTable = (glCopyColorTablePROC) extgl_GetProcAddress("glCopyColorTable");
+	glGetColorTable = (glGetColorTablePROC) extgl_GetProcAddress("glGetColorTable");
+	glGetColorTableParameterfv = (glGetColorTableParameterfvPROC) extgl_GetProcAddress("glGetColorTableParameterfv");
+	glGetColorTableParameteriv = (glGetColorTableParameterivPROC) extgl_GetProcAddress("glGetColorTableParameteriv");
+	glColorSubTable = (glColorSubTablePROC) extgl_GetProcAddress("glColorSubTable");
+	glCopyColorSubTable = (glCopyColorSubTablePROC) extgl_GetProcAddress("glCopyColorSubTable");
+	glConvolutionFilter1D = (glConvolutionFilter1DPROC) extgl_GetProcAddress("glConvolutionFilter1D");
+	glConvolutionFilter2D = (glConvolutionFilter2DPROC) extgl_GetProcAddress("glConvolutionFilter2D");
+	glConvolutionParameterf = (glConvolutionParameterfPROC) extgl_GetProcAddress("glConvolutionParameterf");
+	glConvolutionParameterfv = (glConvolutionParameterfvPROC) extgl_GetProcAddress("glConvolutionParameterfv");
+	glConvolutionParameteri = (glConvolutionParameteriPROC) extgl_GetProcAddress("glConvolutionParameteri");
+	glConvolutionParameteriv = (glConvolutionParameterivPROC) extgl_GetProcAddress("glConvolutionParameteriv");
+	glCopyConvolutionFilter1D = (glCopyConvolutionFilter1DPROC) extgl_GetProcAddress("glCopyConvolutionFilter1D");
+	glCopyConvolutionFilter2D = (glCopyConvolutionFilter2DPROC) extgl_GetProcAddress("glCopyConvolutionFilter2D");
+	glGetConvolutionFilter = (glGetConvolutionFilterPROC) extgl_GetProcAddress("glGetConvolutionFilter");
+	glGetConvolutionParameterfv = (glGetConvolutionParameterfvPROC) extgl_GetProcAddress("glGetConvolutionParameterfv");
+	glGetConvolutionParameteriv = (glGetConvolutionParameterivPROC) extgl_GetProcAddress("glGetConvolutionParameteriv");
+	glGetSeparableFilter = (glGetSeparableFilterPROC) extgl_GetProcAddress("glGetSeparableFilter");
+	glSeparableFilter2D = (glSeparableFilter2DPROC) extgl_GetProcAddress("glSeparableFilter2D");
+	glGetHistogram = (glGetHistogramPROC) extgl_GetProcAddress("glGetHistogram");
+	glGetHistogramParameterfv = (glGetHistogramParameterfvPROC) extgl_GetProcAddress("glGetHistogramParameterfv");
+	glGetHistogramParameteriv = (glGetHistogramParameterivPROC) extgl_GetProcAddress("glGetHistogramParameteriv");
+	glGetMinmax = (glGetMinmaxPROC) extgl_GetProcAddress("glGetMinmax");
+	glGetMinmaxParameterfv = (glGetMinmaxParameterfvPROC) extgl_GetProcAddress("glGetMinmaxParameterfv");
+	glGetMinmaxParameteriv = (glGetMinmaxParameterivPROC) extgl_GetProcAddress("glGetMinmaxParameteriv");
+	glHistogram = (glHistogramPROC) extgl_GetProcAddress("glHistogram");
+	glMinmax = (glMinmaxPROC) extgl_GetProcAddress("glMinmax");
+	glResetHistogram = (glResetHistogramPROC) extgl_GetProcAddress("glResetHistogram");
+	glResetMinmax = (glResetMinmaxPROC) extgl_GetProcAddress("glResetMinmax");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_imaging)
+}
 
 /*
  * Class:     org_lwjgl_opengl_GL12

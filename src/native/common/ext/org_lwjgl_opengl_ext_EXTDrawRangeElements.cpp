@@ -38,6 +38,18 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glDrawRangeElementsEXTPROC) ( GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices);
+
+static glDrawRangeElementsEXTPROC glDrawRangeElementsEXT;
+
+void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_draw_range_elements)
+		return;
+	glDrawRangeElementsEXT = (glDrawRangeElementsEXTPROC) extgl_GetProcAddress("glDrawRangeElementsEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_draw_range_elements)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTDrawRangeElements
  * Method:	nglDrawRangeElementsEXT

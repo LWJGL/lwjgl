@@ -38,6 +38,18 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glActiveStencilFaceEXTPROC) (GLenum face);
+
+static glActiveStencilFaceEXTPROC glActiveStencilFaceEXT;
+
+void extgl_InitEXTStencilTwoSide(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_stencil_two_side)
+		return;
+	glActiveStencilFaceEXT = (glActiveStencilFaceEXTPROC) extgl_GetProcAddress("glActiveStencilFaceEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_stencil_two_side)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTStencilTwoSide
  * Method:	glActiveStencilFaceEXT

@@ -38,6 +38,42 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glLoadProgramNVPROC) (GLenum target, GLuint id, GLsizei len, const GLubyte *program);
+typedef void (APIENTRY * glBindProgramNVPROC) (GLenum target, GLuint id);
+typedef void (APIENTRY * glDeleteProgramsNVPROC) (GLsizei n, const GLuint *ids);
+typedef void (APIENTRY * glGenProgramsNVPROC) (GLsizei n, GLuint *ids);
+typedef void (APIENTRY * glGetProgramStringNVPROC) (GLuint id, GLenum pname, GLubyte *program);
+typedef GLboolean (APIENTRY * glIsProgramNVPROC) (GLuint id);
+typedef GLboolean (APIENTRY * glAreProgramsResidentNVPROC) (GLsizei n, const GLuint *ids, GLboolean *residences);
+typedef void (APIENTRY * glRequestResidentProgramsNVPROC) (GLsizei n, GLuint *ids);
+typedef void (APIENTRY * glGetProgramivNVPROC) (GLuint id, GLenum pname, GLint *params);
+
+static glLoadProgramNVPROC glLoadProgramNV;
+static glBindProgramNVPROC glBindProgramNV;
+static glDeleteProgramsNVPROC glDeleteProgramsNV;
+static glGenProgramsNVPROC glGenProgramsNV;
+static glGetProgramStringNVPROC glGetProgramStringNV;
+static glIsProgramNVPROC glIsProgramNV;
+static glAreProgramsResidentNVPROC glAreProgramsResidentNV;
+static glRequestResidentProgramsNVPROC glRequestResidentProgramsNV;
+static glGetProgramivNVPROC glGetProgramivNV;
+
+void extgl_InitNVProgram(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_vertex_program)
+		return;
+	glLoadProgramNV = (glLoadProgramNVPROC) extgl_GetProcAddress("glLoadProgramNV");
+	glBindProgramNV = (glBindProgramNVPROC) extgl_GetProcAddress("glBindProgramNV");
+	glDeleteProgramsNV = (glDeleteProgramsNVPROC) extgl_GetProcAddress("glDeleteProgramsNV");
+	glGenProgramsNV = (glGenProgramsNVPROC) extgl_GetProcAddress("glGenProgramsNV");
+	glGetProgramivNV = (glGetProgramivNVPROC) extgl_GetProcAddress("glGetProgramivNV");
+	glGetProgramStringNV = (glGetProgramStringNVPROC) extgl_GetProcAddress("glGetProgramStringNV");
+	glIsProgramNV = (glIsProgramNVPROC) extgl_GetProcAddress("glIsProgramNV");
+	glAreProgramsResidentNV = (glAreProgramsResidentNVPROC) extgl_GetProcAddress("glAreProgramsResidentNV");
+	glRequestResidentProgramsNV = (glRequestResidentProgramsNVPROC) extgl_GetProcAddress("glRequestResidentProgramsNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_vertex_program)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVProgram
  * Method:	nglLoadProgramNV

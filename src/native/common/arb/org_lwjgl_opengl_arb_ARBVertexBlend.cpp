@@ -38,6 +38,42 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glWeightbvARBPROC) (GLint size, GLbyte *weights);
+typedef void (APIENTRY * glWeightsvARBPROC) (GLint size, GLshort *weights);
+typedef void (APIENTRY * glWeightivARBPROC) (GLint size, GLint *weights);
+typedef void (APIENTRY * glWeightfvARBPROC) (GLint size, GLfloat *weights);
+typedef void (APIENTRY * glWeightubvARBPROC) (GLint size, GLubyte *weights);
+typedef void (APIENTRY * glWeightusvARBPROC) (GLint size, GLushort *weights);
+typedef void (APIENTRY * glWeightuivARBPROC) (GLint size, GLuint *weights);
+typedef void (APIENTRY * glWeightPointerARBPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
+typedef void (APIENTRY * glVertexBlendARBPROC) (GLint count);
+
+static glWeightbvARBPROC glWeightbvARB;
+static glWeightsvARBPROC glWeightsvARB;
+static glWeightivARBPROC glWeightivARB;
+static glWeightfvARBPROC glWeightfvARB;
+static glWeightubvARBPROC glWeightubvARB;
+static glWeightusvARBPROC glWeightusvARB;
+static glWeightuivARBPROC glWeightuivARB;
+static glWeightPointerARBPROC glWeightPointerARB;
+static glVertexBlendARBPROC glVertexBlendARB;
+
+void extgl_InitARBVertexBlend(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ARB_vertex_blend)
+		return;
+	glWeightbvARB = (glWeightbvARBPROC) extgl_GetProcAddress("glWeightbvARB");
+	glWeightsvARB = (glWeightsvARBPROC) extgl_GetProcAddress("glWeightsvARB");
+	glWeightivARB = (glWeightivARBPROC) extgl_GetProcAddress("glWeightivARB");
+	glWeightfvARB = (glWeightfvARBPROC) extgl_GetProcAddress("glWeightfvARB");
+	glWeightubvARB = (glWeightubvARBPROC) extgl_GetProcAddress("glWeightubvARB");
+	glWeightusvARB = (glWeightusvARBPROC) extgl_GetProcAddress("glWeightusvARB");
+	glWeightuivARB = (glWeightuivARBPROC) extgl_GetProcAddress("glWeightuivARB");
+	glWeightPointerARB = (glWeightPointerARBPROC) extgl_GetProcAddress("glWeightPointerARB");
+	glVertexBlendARB = (glVertexBlendARBPROC) extgl_GetProcAddress("glVertexBlendARB");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_vertex_blend)
+}
+
 /*
  * Class:	org.lwjgl.opengl.arb.ARBVertexBlend
  * Method:	nglWeightbvARB

@@ -39,7 +39,18 @@
  */
 package org.lwjgl.opengl.nv;
 
+import java.nio.FloatBuffer;
+
 public class NVRegisterCombiners2
 {
 	public static final int GL_PER_STAGE_CONSTANTS_NV                               = 0x8535;
+
+	public static void glCombinerStageParameterNV(int stage, int pname, FloatBuffer pfParams) {
+		nglCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
+	}
+	private static native void nglCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
+	public static void glGetCombinerStageParameterNV(int stage, int pname, FloatBuffer pfParams) {
+		nglGetCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
 }

@@ -38,6 +38,21 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glStencilOpSeparateATIPROC) (GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);
+typedef void (APIENTRY * glStencilFuncSeparateATIPROC) (GLenum frontfunc, GLenum backfunc, GLint ref, GLuint mask);
+
+static glStencilOpSeparateATIPROC glStencilOpSeparateATI;
+static glStencilFuncSeparateATIPROC glStencilFuncSeparateATI;
+
+void extgl_InitATISeparateStencil(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ATI_separate_stencil)
+		return;
+	glStencilOpSeparateATI = (glStencilOpSeparateATIPROC)extgl_GetProcAddress("glStencilOpSeparateATI");
+	glStencilFuncSeparateATI = (glStencilFuncSeparateATIPROC)extgl_GetProcAddress("glStencilFuncSeparateATI");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_separate_stencil)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ati.ATISeparateStencil
  * Method:	glStencilOpSeparateATI

@@ -38,6 +38,39 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glSecondaryColor3bEXTPROC) (GLbyte red, GLbyte green, GLbyte blue);
+typedef void (APIENTRY * glSecondaryColor3fEXTPROC) (GLfloat red, GLfloat green, GLfloat blue);
+typedef void (APIENTRY * glSecondaryColor3iEXTPROC) (GLint red, GLint green, GLint blue);
+typedef void (APIENTRY * glSecondaryColor3sEXTPROC) (GLshort red, GLshort green, GLshort blue);
+typedef void (APIENTRY * glSecondaryColor3ubEXTPROC) (GLubyte red, GLubyte green, GLubyte blue);
+typedef void (APIENTRY * glSecondaryColor3uiEXTPROC) (GLuint red, GLuint green, GLuint blue);
+typedef void (APIENTRY * glSecondaryColor3usEXTPROC) (GLushort red, GLushort green, GLushort blue);
+typedef void (APIENTRY * glSecondaryColorPointerEXTPROC) (GLint size, GLenum type, GLsizei stride, GLvoid *pointer);
+
+static glSecondaryColor3bEXTPROC glSecondaryColor3bEXT;
+static glSecondaryColor3fEXTPROC glSecondaryColor3fEXT;
+static glSecondaryColor3iEXTPROC glSecondaryColor3iEXT;
+static glSecondaryColor3sEXTPROC glSecondaryColor3sEXT;
+static glSecondaryColor3ubEXTPROC glSecondaryColor3ubEXT;
+static glSecondaryColor3uiEXTPROC glSecondaryColor3uiEXT;
+static glSecondaryColor3usEXTPROC glSecondaryColor3usEXT;
+static glSecondaryColorPointerEXTPROC glSecondaryColorPointerEXT;
+
+void extgl_InitEXTSecondaryColor(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_secondary_color)
+		return;
+	glSecondaryColor3bEXT = (glSecondaryColor3bEXTPROC) extgl_GetProcAddress("glSecondaryColor3bEXT");
+	glSecondaryColor3fEXT = (glSecondaryColor3fEXTPROC) extgl_GetProcAddress("glSecondaryColor3fEXT");
+	glSecondaryColor3iEXT = (glSecondaryColor3iEXTPROC) extgl_GetProcAddress("glSecondaryColor3iEXT");
+	glSecondaryColor3sEXT = (glSecondaryColor3sEXTPROC) extgl_GetProcAddress("glSecondaryColor3sEXT");
+	glSecondaryColor3ubEXT = (glSecondaryColor3ubEXTPROC) extgl_GetProcAddress("glSecondaryColor3ubEXT");
+	glSecondaryColor3uiEXT = (glSecondaryColor3uiEXTPROC) extgl_GetProcAddress("glSecondaryColor3uiEXT");
+	glSecondaryColor3usEXT = (glSecondaryColor3usEXTPROC) extgl_GetProcAddress("glSecondaryColor3usEXT");
+	glSecondaryColorPointerEXT = (glSecondaryColorPointerEXTPROC) extgl_GetProcAddress("glSecondaryColorPointerEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_secondary_color)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTSecondaryColor
  * Method:	glSecondaryColor3bEXT

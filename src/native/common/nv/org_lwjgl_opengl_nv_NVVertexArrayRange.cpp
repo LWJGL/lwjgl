@@ -38,6 +38,49 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glFlushVertexArrayRangeNVPROC) (void);
+typedef void (APIENTRY * glVertexArrayRangeNVPROC) (GLsizei size, const GLvoid *pointer);
+
+static glFlushVertexArrayRangeNVPROC glFlushVertexArrayRangeNV;
+static glVertexArrayRangeNVPROC glVertexArrayRangeNV;
+
+#ifdef _WIN32
+
+typedef void * (APIENTRY * wglAllocateMemoryNVPROC) (GLsizei size, GLfloat readFrequency, GLfloat writeFrequency, GLfloat priority);
+typedef void (APIENTRY * wglFreeMemoryNVPROC) (void *pointer);
+
+static wglAllocateMemoryNVPROC wglAllocateMemoryNV;
+static wglFreeMemoryNVPROC wglFreeMemoryNV;
+
+#endif /* WIN32 */
+
+#ifdef _X11
+
+typedef void * (APIENTRY * glXAllocateMemoryNVPROC) (GLsizei size, GLfloat readFrequency, GLfloat writeFrequency, GLfloat priority);
+typedef void (APIENTRY * glXFreeMemoryNVPROC) (void *pointer);
+
+static glXAllocateMemoryNVPROC glXAllocateMemoryNV;
+static glXFreeMemoryNVPROC glXFreeMemoryNV;
+
+#endif /* X11 */
+
+void extgl_InitNVVertexArrayRange(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_vertex_array_range)
+		return;
+	glFlushVertexArrayRangeNV = (glFlushVertexArrayRangeNVPROC) extgl_GetProcAddress("glFlushVertexArrayRangeNV");
+	glVertexArrayRangeNV = (glVertexArrayRangeNVPROC) extgl_GetProcAddress("glVertexArrayRangeNV");
+#ifdef _WIN32
+	wglAllocateMemoryNV = (wglAllocateMemoryNVPROC) extgl_GetProcAddress("wglAllocateMemoryNV");
+	wglFreeMemoryNV = (wglFreeMemoryNVPROC) extgl_GetProcAddress("wglFreeMemoryNV");
+#endif /* WIN32 */
+#ifdef _X11
+	glXAllocateMemoryNV = (glXAllocateMemoryNVPROC) extgl_GetProcAddress("glXAllocateMemoryNV");
+	glXFreeMemoryNV = (glXFreeMemoryNVPROC) extgl_GetProcAddress("glXFreeMemoryNV");
+#endif /* X11 */
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_vertex_array_range)
+}
+ 
 /*
  * Class:	org.lwjgl.opengl.nv.NVVertexArrayRange
  * Method:	nglVertexArrayRangeNV

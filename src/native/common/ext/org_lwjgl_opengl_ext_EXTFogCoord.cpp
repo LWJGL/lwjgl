@@ -38,6 +38,24 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glFogCoordfEXTPROC) (GLfloat coord);
+typedef void (APIENTRY * glFogCoordfvEXTPROC) (const GLfloat *coord);
+typedef void (APIENTRY * glFogCoordPointerEXTPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
+
+static glFogCoordfEXTPROC glFogCoordfEXT;
+static glFogCoordfvEXTPROC glFogCoordfvEXT;
+static glFogCoordPointerEXTPROC glFogCoordPointerEXT;
+
+void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_fog_coord)
+		return;
+	glFogCoordfEXT = (glFogCoordfEXTPROC) extgl_GetProcAddress("glFogCoordfEXT");
+	glFogCoordfvEXT = (glFogCoordfvEXTPROC) extgl_GetProcAddress("glFogCoordfvEXT");
+	glFogCoordPointerEXT = (glFogCoordPointerEXTPROC) extgl_GetProcAddress("glFogCoordPointerEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_fog_coord)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTFogCoord
  * Method:	glFogCoordfEXT

@@ -38,6 +38,33 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glProgramNamedParameter4fNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glProgramNamedParameter4fvNVPROC) (GLuint id, GLsizei len, const GLubyte *name, const GLfloat v[]);
+typedef void (APIENTRY * glProgramLocalParameter4fNVPROC) (GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glProgramLocalParameter4fvNVPROC) (GLenum target, GLuint index, const GLfloat *params);
+typedef void (APIENTRY * glGetProgramNamedParameterfvNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLfloat *params);
+typedef void (APIENTRY * glGetProgramLocalParameterfvNVPROC) (GLenum target, GLuint index, GLfloat *params);
+
+static glProgramNamedParameter4fNVPROC glProgramNamedParameter4fNV;
+static glProgramNamedParameter4fvNVPROC glProgramNamedParameter4fvNV;
+static glProgramLocalParameter4fNVPROC glProgramLocalParameter4fNV;
+static glProgramLocalParameter4fvNVPROC glProgramLocalParameter4fvNV;
+static glGetProgramNamedParameterfvNVPROC glGetProgramNamedParameterfvNV;
+static glGetProgramLocalParameterfvNVPROC glGetProgramLocalParameterfvNV;
+
+void extgl_InitNVFragmentProgram(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_fragment_program)
+		return;
+	glProgramNamedParameter4fNV = (glProgramNamedParameter4fNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fNV");
+	glProgramNamedParameter4fvNV = (glProgramNamedParameter4fvNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fvNV");
+	glGetProgramNamedParameterfvNV = (glGetProgramNamedParameterfvNVPROC) extgl_GetProcAddress("glGetProgramNamedParameterfvNV");
+	glProgramLocalParameter4fNV = (glProgramLocalParameter4fNVPROC) extgl_GetProcAddress("glProgramLocalParameter4fNV");
+	glProgramLocalParameter4fvNV = (glProgramLocalParameter4fvNVPROC) extgl_GetProcAddress("glProgramLocalParameter4fvNV");
+	glGetProgramLocalParameterfvNV = (glGetProgramLocalParameterfvNVPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_fragment_program)
+}
+
 /*
  * Class:	org.lwjgl.opengl.nv.NVFragmentProgram
  * Method:	nglProgramNamedParameter4fNV

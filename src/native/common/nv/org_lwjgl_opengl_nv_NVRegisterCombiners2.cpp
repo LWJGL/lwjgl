@@ -31,49 +31,50 @@
 */
 
 // ----------------------------------
-// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.arb.ARBPointParameters
+// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.nv.NVRegisterCombiners2
 // ----------------------------------
 
-#include "org_lwjgl_opengl_arb_ARBPointParameters.h"
+#include "org_lwjgl_opengl_nv_NVRegisterCombiners2.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
-typedef void (APIENTRY * glPointParameterfARBPROC) (GLenum pname, GLfloat param);
-typedef void (APIENTRY * glPointParameterfvARBPROC) (GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glCombinerStageParameterfvNVPROC) (GLenum stage, GLenum pname, const GLfloat *params);
+typedef void (APIENTRY * glGetCombinerStageParameterfvNVPROC) (GLenum stage, GLenum pname, GLfloat *params);
 
-static glPointParameterfARBPROC glPointParameterfARB;
-static glPointParameterfvARBPROC glPointParameterfvARB;
+static glCombinerStageParameterfvNVPROC glCombinerStageParameterfvNV;
+static glGetCombinerStageParameterfvNVPROC glGetCombinerStageParameterfvNV;
 
-void extgl_InitARBPointParameters(JNIEnv *env, jobject ext_set)
+void extgl_InitNVRegisterCombiners2(JNIEnv *env, jobject ext_set)
 {
-	if (!extgl_Extensions.GL_ARB_point_parameters)
+	if (!extgl_Extensions.GL_NV_register_combiners2)
 		return;
-	glPointParameterfARB = (glPointParameterfARBPROC) extgl_GetProcAddress("glPointParameterfARB");
-	glPointParameterfvARB = (glPointParameterfvARBPROC) extgl_GetProcAddress("glPointParameterfvARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_point_parameters)
+	glCombinerStageParameterfvNV = (glCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glCombinerStageParameterfvNV");
+	glGetCombinerStageParameterfvNV = (glGetCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerStageParameterfvNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_register_combiners2)
 }
 
 /*
- * Class:	org.lwjgl.opengl.arb.ARBPointParameters
- * Method:	glPointParameterfARB
+ * Class:	org.lwjgl.opengl.nv.NVRegisterCombiners2
+ * Method:	nglCombinerStageParameterfvNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBPointParameters_glPointParameterfARB
-	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_nv_NVRegisterCombiners2_nglCombinerStageParameterfvNV
+	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
 {
-	CHECK_EXISTS(glPointParameterfARB)
-	glPointParameterfARB(pname, param);
+	CHECK_EXISTS(glCombinerStageParameterfvNV)
+	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
+	glCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
 	CHECK_GL_ERROR
 }
 
 /*
- * Class:	org.lwjgl.opengl.arb.ARBPointParameters
- * Method:	nglPointParameterfvARB
+ * Class:	org.lwjgl.opengl.nv.NVRegisterCombiners2
+ * Method:	nglGetCombinerStageParameterfvNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBPointParameters_nglPointParameterfvARB
-	(JNIEnv * env, jclass clazz, jint pname, jobject pfParams, jint pfParams_offset)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_nv_NVRegisterCombiners2_nglGetCombinerStageParameterfvNV
+	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
 {
-	CHECK_EXISTS(glPointParameterfvARB)
+	CHECK_EXISTS(glGetCombinerStageParameterfvNV)
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
-	glPointParameterfvARB(pname, pfParams_ptr);
+	glGetCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
 	CHECK_GL_ERROR
 }

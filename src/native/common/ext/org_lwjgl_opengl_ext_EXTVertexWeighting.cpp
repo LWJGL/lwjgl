@@ -38,6 +38,24 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glVertexWeightfEXTPROC) (GLfloat weight);
+typedef void (APIENTRY * glVertexWeightfvEXTPROC) (const GLfloat *weight);
+typedef void (APIENTRY * glVertexWeightPointerEXTPROC) (GLsizei size, GLenum type, GLsizei stride, const GLvoid *pointer);
+
+static glVertexWeightfEXTPROC glVertexWeightfEXT;
+static glVertexWeightfvEXTPROC glVertexWeightfvEXT;
+static glVertexWeightPointerEXTPROC glVertexWeightPointerEXT;
+
+void extgl_InitEXTVertexWeighting(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_EXT_vertex_weighting)
+		return;
+	glVertexWeightfEXT = (glVertexWeightfEXTPROC) extgl_GetProcAddress("glVertexWeightfEXT");
+	glVertexWeightfvEXT = (glVertexWeightfvEXTPROC) extgl_GetProcAddress("glVertexWeightfvEXT");
+	glVertexWeightPointerEXT = (glVertexWeightPointerEXTPROC) extgl_GetProcAddress("glVertexWeightPointerEXT");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_vertex_weighting)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ext.EXTVertexWeighting
  * Method:	glVertexWeightfEXT

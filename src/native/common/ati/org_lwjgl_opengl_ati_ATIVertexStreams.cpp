@@ -38,6 +38,72 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+typedef void (APIENTRY * glClientActiveVertexStreamATIPROC) (GLenum stream);
+typedef void (APIENTRY * glVertexBlendEnviATIPROC) (GLenum pname, GLint param);
+typedef void (APIENTRY * glVertexBlendEnvfATIPROC) (GLenum pname, GLfloat param);
+typedef void (APIENTRY * glVertexStream1sATIPROC) (GLenum stream, GLshort x);
+typedef void (APIENTRY * glVertexStream1iATIPROC) (GLenum stream, GLint x);
+typedef void (APIENTRY * glVertexStream1fATIPROC) (GLenum stream, GLfloat x);
+typedef void (APIENTRY * glVertexStream2sATIPROC) (GLenum stream, GLshort x, GLshort y);
+typedef void (APIENTRY * glVertexStream2iATIPROC) (GLenum stream, GLint x, GLint y);
+typedef void (APIENTRY * glVertexStream2fATIPROC) (GLenum stream, GLfloat x, GLfloat y);
+typedef void (APIENTRY * glVertexStream3sATIPROC) (GLenum stream, GLshort x, GLshort y, GLshort z);
+typedef void (APIENTRY * glVertexStream3iATIPROC) (GLenum stream, GLint x, GLint y, GLint z);
+typedef void (APIENTRY * glVertexStream3fATIPROC) (GLenum stream, GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY * glVertexStream4sATIPROC) (GLenum stream, GLshort x, GLshort y, GLshort z, GLshort w);
+typedef void (APIENTRY * glVertexStream4iATIPROC) (GLenum stream, GLint x, GLint y, GLint z, GLint w);
+typedef void (APIENTRY * glVertexStream4fATIPROC) (GLenum stream, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glNormalStream3bATIPROC) (GLenum stream, GLbyte x, GLbyte y, GLbyte z);
+typedef void (APIENTRY * glNormalStream3sATIPROC) (GLenum stream, GLshort x, GLshort y, GLshort z);
+typedef void (APIENTRY * glNormalStream3iATIPROC) (GLenum stream, GLint x, GLint y, GLint z);
+typedef void (APIENTRY * glNormalStream3fATIPROC) (GLenum stream, GLfloat x, GLfloat y, GLfloat z);
+
+static glClientActiveVertexStreamATIPROC glClientActiveVertexStreamATI;
+static glVertexBlendEnviATIPROC glVertexBlendEnviATI;
+static glVertexBlendEnvfATIPROC glVertexBlendEnvfATI;
+static glVertexStream1sATIPROC glVertexStream1sATI;
+static glVertexStream1iATIPROC glVertexStream1iATI;
+static glVertexStream1fATIPROC glVertexStream1fATI;
+static glVertexStream2sATIPROC glVertexStream2sATI;
+static glVertexStream2iATIPROC glVertexStream2iATI;
+static glVertexStream2fATIPROC glVertexStream2fATI;
+static glVertexStream3sATIPROC glVertexStream3sATI;
+static glVertexStream3iATIPROC glVertexStream3iATI;
+static glVertexStream3fATIPROC glVertexStream3fATI;
+static glVertexStream4sATIPROC glVertexStream4sATI;
+static glVertexStream4iATIPROC glVertexStream4iATI;
+static glVertexStream4fATIPROC glVertexStream4fATI;
+static glNormalStream3bATIPROC glNormalStream3bATI;
+static glNormalStream3sATIPROC glNormalStream3sATI;
+static glNormalStream3iATIPROC glNormalStream3iATI;
+static glNormalStream3fATIPROC glNormalStream3fATI;
+
+void extgl_InitATIVertexStreams(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_ATI_vertex_streams)
+		return;
+	glClientActiveVertexStreamATI = (glClientActiveVertexStreamATIPROC) extgl_GetProcAddress("glClientActiveVertexStreamATI");
+	glVertexBlendEnviATI = (glVertexBlendEnviATIPROC) extgl_GetProcAddress("glVertexBlendEnviATI");
+	glVertexBlendEnvfATI = (glVertexBlendEnvfATIPROC) extgl_GetProcAddress("glVertexBlendEnvfATI");
+	glVertexStream1sATI = (glVertexStream1sATIPROC) extgl_GetProcAddress("glVertexStream1sATI");
+	glVertexStream1iATI = (glVertexStream1iATIPROC) extgl_GetProcAddress("glVertexStream1iATI");
+	glVertexStream1fATI = (glVertexStream1fATIPROC) extgl_GetProcAddress("glVertexStream1fATI");
+	glVertexStream2sATI = (glVertexStream2sATIPROC) extgl_GetProcAddress("glVertexStream2sATI");
+	glVertexStream2iATI = (glVertexStream2iATIPROC) extgl_GetProcAddress("glVertexStream2iATI");
+	glVertexStream2fATI = (glVertexStream2fATIPROC) extgl_GetProcAddress("glVertexStream2fATI");
+	glVertexStream3sATI = (glVertexStream3sATIPROC) extgl_GetProcAddress("glVertexStream3sATI");
+	glVertexStream3iATI = (glVertexStream3iATIPROC) extgl_GetProcAddress("glVertexStream3iATI");
+	glVertexStream3fATI = (glVertexStream3fATIPROC) extgl_GetProcAddress("glVertexStream3fATI");
+	glVertexStream4sATI = (glVertexStream4sATIPROC) extgl_GetProcAddress("glVertexStream4sATI");
+	glVertexStream4iATI = (glVertexStream4iATIPROC) extgl_GetProcAddress("glVertexStream4iATI");
+	glVertexStream4fATI = (glVertexStream4fATIPROC) extgl_GetProcAddress("glVertexStream4fATI");
+	glNormalStream3bATI = (glNormalStream3bATIPROC) extgl_GetProcAddress("glNormalStream3bATI");
+	glNormalStream3sATI = (glNormalStream3sATIPROC) extgl_GetProcAddress("glNormalStream3sATI");
+	glNormalStream3iATI = (glNormalStream3iATIPROC) extgl_GetProcAddress("glNormalStream3iATI");
+	glNormalStream3fATI = (glNormalStream3fATIPROC) extgl_GetProcAddress("glNormalStream3fATI");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_vertex_streams)
+}
+
 /*
  * Class:	org.lwjgl.opengl.ati.ATIVertexStreams
  * Method:	glVertexStream1fATI
