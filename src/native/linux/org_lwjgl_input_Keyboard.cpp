@@ -52,8 +52,13 @@ jfieldID fid_readBuffer;
 jfieldID fid_readBufferAddress;
 unsigned char key_buf[KEYBOARD_SIZE];
 
+int keyboard_grabbed;
+
 extern Display *disp;
 extern Window win;
+extern int current_fullscreen;
+
+extern int isFocused(void);
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -74,6 +79,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 	fid_readBufferAddress = env->GetStaticFieldID(clazz, "readBufferAddress", "I");
 }
 
+int grabKeyboard(void) {
+	int result = XGrabKeyboard(disp, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
+	if (result == GrabSuccess)
+		keyboard_grabbed = 1;
+	return result;
+}
+
+void ungrabKeyboard(void) {
+	keyboard_grabbed = 0;
+	XUngrabKeyboard(disp, CurrentTime);
+}
+
+int updateKeyboardGrab(void) {
+	if (current_fullscreen) {
+		if (!keyboard_grabbed)
+			return grabKeyboard();
+	} else {
+		if (isFocused()) {
+			if (!keyboard_grabbed)
+				return grabKeyboard();
+		} else {
+			if (keyboard_grabbed)
+				ungrabKeyboard();
+		}
+	}
+	return GrabSuccess;
+}
+
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate
@@ -82,8 +115,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
-	int result = XGrabKeyboard(disp, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
-	if (result != GrabSuccess) {
+	keyboard_grabbed = 0;
+	if (updateKeyboardGrab() != GrabSuccess) {
 #ifdef _DEBUG
 		printf("Could not grab keyboard\n");
 #endif
@@ -101,13 +134,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-	XUngrabKeyboard(disp, CurrentTime);
+	ungrabKeyboard();
 }
 
 int checkKeyEvents(unsigned char *result_buf) {
 	XEvent event;
 	int count = 0;
 	int buf_count = 0;
+	updateKeyboardGrab();
 	while (XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
 		unsigned char keycode = (unsigned char)((event.xkey.keycode - 8) & 0xff);
 		if (result_buf != NULL) {

@@ -55,6 +55,7 @@
 Display * disp;
 int screen;
 int current_fullscreen;
+int current_focused;
 Window win;
 XF86VidModeModeInfo **avail_modes;
 XVisualInfo * vis_info;
@@ -67,18 +68,29 @@ void waitMapped(Display *disp, Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
+int isFocused(void) {
+	XEvent event;
+	while (XCheckMaskEvent(disp, EnterWindowMask | LeaveWindowMask, &event)) {
+		if (event.type == EnterNotify)
+			current_focused = 1;
+		else if (event.type == LeaveNotify)
+			current_focused = 0;
+	}
+	return current_focused;
+}
+
 int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
 	int event_base, error_base, xvid_ver, xvid_rev;
 	
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
 #ifdef _DEBUG
-		printf("XF86VidMode extention not available\n");
+		printf("XF86VidMode extension not available\n");
 #endif
 		return 0;
 	}
 	XF86VidModeQueryVersion(disp, &xvid_ver, &xvid_rev);
 #ifdef _DEBUG
-	printf("XF86VidMode extention version %i.%i\n", xvid_ver, xvid_rev);
+	printf("XF86VidMode extension version %i.%i\n", xvid_ver, xvid_rev);
 #endif
 	XF86VidModeGetAllModeLines(disp, screen, num_modes, avail_modes);
 	return 1;
@@ -94,6 +106,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	int num_modes, i;
 
 	current_fullscreen = fullscreen;
+	current_focused = 0;
 	disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 #ifdef _DEBUG
@@ -122,9 +135,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 
 	cmap = XCreateColormap(disp, root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
-	attribs.event_mask = ExposureMask | FocusChangeMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+	attribs.event_mask = StructureNotifyMask | EnterWindowMask | LeaveWindowMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
-	attribs.event_mask = StructureNotifyMask;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
 	if (fullscreen) {
 		attribmask |= CWOverrideRedirect;
@@ -134,9 +146,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 #ifdef _DEBUG
 	printf("Created window\n");
 #endif
+	XMapRaised(disp, win);
+	waitMapped(disp, win);
 	if (fullscreen) {
-		XMapRaised(disp, win);
-		waitMapped(disp, win);
 		for ( i = 0; i < num_modes; ++i ) {
 #ifdef _DEBUG
 			printf("Mode %d: %dx%d\n", i, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay);
@@ -155,13 +167,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 			}
 		}
 		XF86VidModeSetViewPort(disp, screen, 0, 0);
-	} else {
-		XMapWindow(disp, win);
-		waitMapped(disp, win);
 	}
 	XClearWindow(disp, win);
 	XSync(disp, True);
-
+        isFocused();
 	return JNI_TRUE;
 }
 

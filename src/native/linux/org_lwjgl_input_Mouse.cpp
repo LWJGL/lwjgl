@@ -50,6 +50,9 @@
 
 extern Display *disp;
 extern Window win;
+extern int current_fullscreen;
+
+int pointer_grabbed;
 
 jfieldID fid_button;
 jfieldID fid_dx;
@@ -65,6 +68,8 @@ int current_z;
 unsigned char buttons[NUM_BUTTONS];
 
 Cursor blank_cursor;
+
+extern int isFocused(void);
 
 /*
  * Class:     org_lwjgl_input_Mouse
@@ -113,8 +118,40 @@ int blankCursor(void) {
 	XColor dummy_color;
 	blank_cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
 	XFreePixmap(disp, mask);
-	XDefineCursor(disp, win, blank_cursor);
 	return 1;
+}
+
+int grabPointer(void) {
+	int result;
+	int mask = EnterWindowMask | LeaveWindowMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
+	if (current_fullscreen)
+		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
+	else
+		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, None, blank_cursor, CurrentTime);
+	if (result == GrabSuccess)
+		pointer_grabbed = 1;
+	return result;
+}
+
+void ungrabPointer(void) {
+	pointer_grabbed = 0;
+	XUngrabPointer(disp, CurrentTime);
+}
+
+int updatePointerGrab(void) {
+	if (current_fullscreen) {
+		if (!pointer_grabbed)
+			return grabPointer();
+	} else {
+		if (isFocused()) {
+			if (!pointer_grabbed)
+				return grabPointer();
+		} else {
+			if (pointer_grabbed)
+				ungrabPointer();
+		}
+	}
+	return GrabSuccess;
 }
 
 /*
@@ -126,19 +163,19 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	int i;
-	current_x = current_y = current_z = last_x = last_y = last_z = 0;
+	
+	current_x = current_y = current_z = last_x = last_y = last_z = pointer_grabbed = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
 #ifdef _DEBUG
-		printf("Could not blank cursor\n");
+		printf("Could create blank cursor\n");
 #endif
 		return JNI_FALSE;
 	}
-	int result = XGrabPointer(disp, win, False, PointerMotionMask | ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, win, None, CurrentTime);
-	if (result != GrabSuccess) {
+	if (updatePointerGrab() != GrabSuccess) {
 #ifdef _DEBUG
-		printf("Could not grab mouse\n");
+		printf("Could not grab pointer\n");
 #endif
 		return JNI_FALSE;
 	}
@@ -172,14 +209,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasZValue(JNIEnv *env, jc
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-	XUndefineCursor(disp, win);
+	if (pointer_grabbed)
+		ungrabPointer();
 	XFreeCursor(disp, blank_cursor);
-	XUngrabPointer(disp, CurrentTime);
 }
 
 int checkPointer() {
 	XEvent event;
 	int count = 0;
+	updatePointerGrab();
 	while (XCheckMaskEvent(disp, ButtonPressMask | ButtonReleaseMask | PointerMotionMask, &event)) {
 		count++;
 		switch (event.type) {
