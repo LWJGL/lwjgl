@@ -594,7 +594,7 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 *
 	 * @param buffers Buffer to delete from
 	 */
-	public static void alDeleteBuffers(int n, IntBuffer buffers) {
+	public static void alDeleteBuffers(IntBuffer buffers) {
 		nalDeleteBuffers(buffers.remaining(), buffers, buffers.position());
 	}
 	private static native void nalDeleteBuffers(int n, IntBuffer buffers, int offset);
