@@ -158,18 +158,19 @@ public final class Display {
 	public static void setDisplayMode(DisplayMode mode) throws LWJGLException {
 		if (mode == null)
 			throw new NullPointerException("mode must be non-null");
+		current_mode = mode;
 		if (isCreated()) {
 			destroyWindow();
-			if (fullscreen)
-				switchDisplayMode(current_mode);
 			try {
+				if (fullscreen)
+					switchDisplayMode(mode);
 				createWindow();
 			} catch (LWJGLException e) {
+				destroyContext();
 				reset();
 				throw e;
 			}
 		}
-		current_mode = mode;
 	}
 
 	/**
@@ -361,17 +362,11 @@ public final class Display {
 			if (!isCreated())
 				return;
 			destroyWindow();
-			if (fullscreen) {
-				try {
-					switchDisplayMode(current_mode);
-				} catch (LWJGLException e) {
-					destroyContext();
-					throw e;
-				}
-			} else {
-				reset();
-			}
 			try {
+				if (fullscreen)
+					switchDisplayMode(current_mode);
+				else
+					resetDisplayMode();
 				createWindow();
 			} catch (LWJGLException e) {
 				destroyContext();
@@ -656,13 +651,14 @@ public final class Display {
 	 * in the static constructor
 	 */
 	private static void reset() {
-		if (!current_mode.equals(initial_mode))
+		if (!current_mode.equals(initial_mode)) {
 			resetDisplayMode();
-		current_mode = initial_mode;
+			current_mode = initial_mode;
+		}
 	}
 	
 	/**
-	 * @return the unique DIsplay context (or null, if the Display has not been created)
+	 * @return the unique Display context (or null, if the Display has not been created)
 	 */
 	public static Object getContext() {
 		return context;

@@ -130,14 +130,17 @@ Display *incDisplay(JNIEnv *env) {
 		}
 		warp_atom = XInternAtom(getDisplay(), "ignore_warp_atom", False);
 	}
+	async_x_error = false;
 	display_connection_usage++;
 	return display_connection;
 }
 
 void decDisplay(void) {
 	display_connection_usage--;
-	if (display_connection_usage == 0)
+	if (display_connection_usage == 0) {
 		XCloseDisplay(display_connection);
+		display_connection = NULL;
+	}
 }
 
 static void waitMapped(Window win) {

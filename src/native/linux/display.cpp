@@ -102,6 +102,7 @@ static bool setMode(Display *disp, int screen, int width, int height, bool lock_
 		}
 	}
 	XFree(avail_modes);
+	XFlush(disp);
 	return false;
 }
 
@@ -132,9 +133,11 @@ jobject initDisplay(JNIEnv *env) {
         int num_modes;
         XF86VidModeModeInfo **avail_modes;
 	int screen;
-	Display *disp = incDisplay(env);
-        if (disp == NULL)
+	Display *disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		throwException(env, "Could not open display");
 		return NULL;
+	}
 	screen = DefaultScreen(disp);
 
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
@@ -159,7 +162,7 @@ jobject initDisplay(JNIEnv *env) {
 		if (!XF86VidModeGetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp))
 			freeSavedGammaRamps();
 	}
-	decDisplay();
+	XCloseDisplay(disp);
 	return newMode;
 }
 
@@ -174,45 +177,49 @@ void switchDisplayMode(JNIEnv * env, jobject mode) {
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
 	int screen;
-	Display *disp = incDisplay(env);
-
-	if (disp == NULL)
+	Display *disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		throwException(env, "Could not open display");
 		return;
+	}
 	screen = DefaultScreen(disp);
 	if (!setMode(disp, screen, width, height, true))
 		throwException(env, "Could not switch mode.");
-	decDisplay();
+	XCloseDisplay(disp);
 }
 
 void resetDisplayMode(JNIEnv *env) {
 	int screen;
-	Display *disp = incDisplay(env);
+	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL)
 		return;
 	screen = DefaultScreen(disp);
-	setMode(disp, screen, saved_width, saved_height, false);
+	if (!setMode(disp, screen, saved_width, saved_height, false)) {
+		printfDebug("Failed to reset mode");
+	}
 	if (gamma_ramp_length > 0) {
 		XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp);
 		freeSavedGammaRamps();
 	}
-	decDisplay();
+	XCloseDisplay(disp);
 }
 
 jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 	int num_modes, i;
 	int screen;
 	XF86VidModeModeInfo **avail_modes;
-	Display *disp = incDisplay(env);
-
-	if (disp == NULL)
+	Display *disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		throwException(env, "Could not open display");
 		return NULL;
+	}
 
 	screen = DefaultScreen(disp);
 	int bpp = XDefaultDepth(disp, screen);
 
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 		printfDebug("Could not get display modes\n");
-		decDisplay();
+		XCloseDisplay(disp);
 		return NULL;
 	}
 	// Allocate an array of DisplayModes big enough
@@ -225,7 +232,7 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 		env->SetObjectArrayElement(ret, i, displayMode);
 	}
 	XFree(avail_modes);
-	decDisplay();
+	XCloseDisplay(disp);
 	return ret;
 }
 
@@ -238,9 +245,11 @@ void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer) {
 		throwException(env, "gamma ramp length == 0.");
 		return;
 	}
-	Display * disp = incDisplay(env);
-	if (disp == NULL)
+	Display * disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		throwException(env, "Could not open display");
 		return;
+	}
 	int screen = DefaultScreen(disp);
 	const float *gamma_ramp = (const float *)env->GetDirectBufferAddress(gamma_ramp_buffer);
 	unsigned short *ramp;
@@ -252,5 +261,5 @@ void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer) {
 	if (XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, ramp, ramp, ramp) == False) {
 		throwException(env, "Could not set gamma ramp.");
 	}
-	decDisplay();
+	XCloseDisplay(disp);
 }
