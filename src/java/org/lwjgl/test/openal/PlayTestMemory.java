@@ -36,8 +36,6 @@ import org.lwjgl.openal.AL;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -65,8 +63,8 @@ public class PlayTestMemory extends BasicTest {
      */
     protected void execute(String[] args) {
         if(args.length < 1) {
-            System.out.println("please specify filename to play");
-            return;
+          System.out.println("no argument supplied, assuming Footsteps.wav");
+          args = new String[] {"Footsteps.wav"};
         }        
         
         int lastError;
@@ -161,20 +159,10 @@ public class PlayTestMemory extends BasicTest {
     protected ByteBuffer getData(String filename) {
         ByteBuffer buffer = null;
 
-        URL url = null;
-
-        String cwd = System.getProperty("user.dir");
-
-        try {
-            url = new URL("file:///" + cwd + "/" + filename);
-        } catch (MalformedURLException mue) {
-            mue.printStackTrace();
-        }
-        
-        System.out.println("Attempting to load: " + url);
+        System.out.println("Attempting to load: " + filename);
         
         try {
-            BufferedInputStream bis = new BufferedInputStream(url.openStream());
+            BufferedInputStream bis = new BufferedInputStream(WaveData.class.getClassLoader().getResourceAsStream(filename));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             
             int bufferLength = 4096;
