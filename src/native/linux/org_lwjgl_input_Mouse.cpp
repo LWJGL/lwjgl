@@ -62,10 +62,12 @@ extern int getWindowHeight(void);
 
 static bool pointer_grabbed;
 
-static jfieldID fid_button;
-static jfieldID fid_dx;
-static jfieldID fid_dy;
-static jfieldID fid_dz;
+static jfieldID fid_has_wheel = NULL;
+static jfieldID fid_button_count = NULL;
+static jfieldID fid_buttons = NULL;
+static jfieldID fid_dx = NULL;
+static jfieldID fid_dy = NULL;
+static jfieldID fid_dwheel = NULL;
 
 static int last_x;
 static int last_y;
@@ -85,26 +87,18 @@ static Cursor blank_cursor;
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
   (JNIEnv * env, jclass clazz)
 {
-	// Get a global class instance, just to be sure
-	static jobject globalClassLock = NULL;
-
-	if (globalClassLock == NULL) {
-		globalClassLock = env->NewGlobalRef(clazz);
-	}
-
-	// Now cache the field IDs:
-	if (fid_button == NULL) {
-		fid_button = env->GetStaticFieldID(clazz, "button", "[Z");
-	}
-	if (fid_dx == NULL) {
+	if (fid_has_wheel == NULL)
+		fid_has_wheel = env->GetStaticFieldID(clazz, "hasWheel", "Z");
+	if (fid_button_count == NULL)
+		fid_button_count = env->GetStaticFieldID(clazz, "buttonCount", "I");
+	if (fid_buttons == NULL)
+		fid_buttons = env->GetStaticFieldID(clazz, "buttons", "[Z");
+	if (fid_dx == NULL)
 		fid_dx = env->GetStaticFieldID(clazz, "dx", "I");
-	}
-	if (fid_dy == NULL) {
+	if (fid_dy == NULL)
 		fid_dy = env->GetStaticFieldID(clazz, "dy", "I");
-	}
-	if (fid_dz == NULL) {
-		fid_dz = env->GetStaticFieldID(clazz, "dz", "I");
-	}
+	if (fid_dwheel == NULL)
+		fid_dwheel = env->GetStaticFieldID(clazz, "dwheel", "I");
 }
 
 int blankCursor(void) {
@@ -172,9 +166,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 {
 	int i;
 	
+	jbooleanArray buttons_array = env->NewBooleanArray(NUM_BUTTONS);
+	env->SetStaticObjectField(clazz, fid_buttons, buttons_array);
+	env->SetStaticIntField(clazz, fid_button_count, NUM_BUTTONS);
+	env->SetStaticBooleanField(clazz, fid_has_wheel, JNI_TRUE);
 	current_x = current_y = current_z = last_x = last_y = last_z = pointer_grabbed = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
-		buttons[i] = 0;
+		buttons[i] = JNI_FALSE;
 	if (!blankCursor()) {
 #ifdef _DEBUG
 		printf("Could create blank cursor\n");
@@ -190,25 +188,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	return JNI_TRUE;
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nGetNumButtons
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNumButtons(JNIEnv *env, jclass clazz) {
-	return (jint)NUM_BUTTONS;
-}
-
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nHasZValue
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasZValue(JNIEnv *env, jclass clazz) {
-	return JNI_TRUE;
-}
-
-    
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nDestroy
@@ -318,12 +297,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	int moved_z = current_z - last_z;
 	env->SetStaticIntField(clazz, fid_dx, (jint)moved_x);
 	env->SetStaticIntField(clazz, fid_dy, (jint)moved_y);
-	env->SetStaticIntField(clazz, fid_dz, (jint)moved_z);
+	env->SetStaticIntField(clazz, fid_dwheel, (jint)moved_z);
 	last_x = current_x;
 	last_y = current_y;
 	last_z = current_z;
-	jbooleanArray buttonsArray = (jbooleanArray) env->GetStaticObjectField(clazz, fid_button);
-	env->SetBooleanArrayRegion(buttonsArray, 0, NUM_BUTTONS, buttons);
+	jbooleanArray buttons_array = (jbooleanArray)env->GetStaticObjectField(clazz, fid_buttons);
+	env->SetBooleanArrayRegion(buttons_array, 0, NUM_BUTTONS, buttons);
 	if (isFullscreen())
 		warpPointer();
 }
