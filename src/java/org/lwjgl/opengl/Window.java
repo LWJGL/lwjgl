@@ -122,7 +122,7 @@ public final class Window {
   /**
    * @return whether this window is in fullscreen mode
    */
-  public static boolean IsFullscreen() {
+  public static boolean isFullscreen() {
     assert isCreated() : "Cannot determine state of uncreated window";
     return fullscreen;
   }
