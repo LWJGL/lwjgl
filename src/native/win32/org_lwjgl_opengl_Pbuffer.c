@@ -66,7 +66,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilitie
 	int pixel_format_id;
 	WGLExtensions extensions;
 	
-	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, NULL, false, false, true, false);
+	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, NULL, false, true, true, false);
 	if (pixel_format_id == -1)
 		return 0;
 	dummy_hwnd = createDummyWindow(origin_x, origin_y);
@@ -138,7 +138,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nCreate
 	} else {
 		pBufferAttribs_ptr = NULL;
 	}
-	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, false, true, false);
+	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, true, true, false);
 	if (pixel_format_id == -1)
 		return;
 	dummy_hwnd = createDummyWindow(origin_x, origin_y);
