@@ -3982,10 +3982,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glBindBufferARB(JNIEnv *env, jcl
  * Method:    glDeleteBuffersARB
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glDeleteBuffersARB(JNIEnv *env , jobject obj, jint n, jint buffers)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glDeleteBuffersARB(JNIEnv *env, jclass clazz, jint n, jobject buffers)
 {
 	CHECK_EXISTS(glDeleteBuffersARB)
-	glDeleteBuffersARB((GLsizei)n, (const GLuint *)buffers);
+	const GLuint *buffers_address = (GLuint *)env->GetDirectBufferAddress(buffers);
+	glDeleteBuffersARB((GLsizei)n, buffers_address);
 	CHECK_GL_ERROR
 }
 
@@ -4111,24 +4112,3 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetBufferPointervARB(JNIEnv
 	CHECK_GL_ERROR
 	return env->NewDirectByteBuffer(pointer, size);
 }
-		      
-/*
- * Class:     org_lwjgl_opengl_GL
- * Method:    checkWGLExtensionsString
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_checkWGLExtensionsString(JNIEnv * env, jclass clazz)
-{
-	jfieldID fid_WGL_ARB_extensions_string = env->GetStaticFieldID(clazz, "WGL_ARB_extensions_string", "Z");
-	jfieldID fid_WGL_EXT_extensions_string = env->GetStaticFieldID(clazz, "WGL_EXT_extensions_string", "Z");
-#ifdef _WIN32
-
-	if (wglGetExtensionsStringARB)
-		env->SetStaticBooleanField(clazz, fid_WGL_ARB_extensions_string, JNI_TRUE);
-	if (wglGetExtensionsStringEXT)
-		env->SetStaticBooleanField(clazz, fid_WGL_EXT_extensions_string, JNI_TRUE);
-#else
-	env->SetStaticBooleanField(clazz, fid_WGL_ARB_extensions_string, JNI_FALSE);
-	env->SetStaticBooleanField(clazz, fid_WGL_EXT_extensions_string, JNI_FALSE);
-#endif
-}
-

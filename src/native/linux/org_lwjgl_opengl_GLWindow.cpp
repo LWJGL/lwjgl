@@ -256,14 +256,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_nCreate
 }
 
 /*
- * Class:     org_lwjgl_opengl_GLWindow
- * Method:    makeCurrent
- * Signature: ()V
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    checkWGLExtensionsString
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_makeCurrent
-  (JNIEnv *env, jobject obj)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_checkWGLExtensionsString(JNIEnv * env, jclass clazz)
 {
-	makeCurrent();
+	jfieldID fid_WGL_ARB_extensions_string = env->GetStaticFieldID(clazz, "WGL_ARB_extensions_string", "Z");
+	jfieldID fid_WGL_EXT_extensions_string = env->GetStaticFieldID(clazz, "WGL_EXT_extensions_string", "Z");
+	env->SetStaticBooleanField(clazz, fid_WGL_ARB_extensions_string, JNI_FALSE);
+	env->SetStaticBooleanField(clazz, fid_WGL_EXT_extensions_string, JNI_FALSE);
 }
 
 /*

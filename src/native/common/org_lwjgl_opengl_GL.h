@@ -1474,10 +1474,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glProgramParameter4fNV
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    glProgramParameters4dvNV
- * Signature: (IIII)V
+ * Signature: (IIILjava/nio/DoubleBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glProgramParameters4dvNV
-  (JNIEnv *, jclass, jint, jint, jint, jint);
+  (JNIEnv *, jclass, jint, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_GL

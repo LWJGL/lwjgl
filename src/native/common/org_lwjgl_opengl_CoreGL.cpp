@@ -130,9 +130,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glBlendFunc(JNIEnv * env, jc
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glBlendColorEXT
+ * Method:    glBlendColor
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_blendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glBlendColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
@@ -3316,7 +3316,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glGetCompressedTexImage
  * Signature: (IIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiDrawArrays
-  (JNIEnv * env, jobject, jint mode, jobject first, jobject count, jint primcount) {
+  (JNIEnv * env, jclass clazz, jint mode, jobject first, jobject count, jint primcount) {
 	CHECK_EXISTS(glMultiDrawArrays)
 	GLint *address = (GLint *)env->GetDirectBufferAddress(first);
 	GLsizei *address2 = (GLsizei *)env->GetDirectBufferAddress(count);

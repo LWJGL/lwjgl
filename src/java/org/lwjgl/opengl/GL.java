@@ -760,7 +760,7 @@ public class GL extends CoreGL implements GLConstants {
 		int target,
 		int index,
 		int num,
-		int pdParams);
+		DoubleBuffer pdParams);
 
 	public static native void glProgramParameters4fvNV(
 		int target,

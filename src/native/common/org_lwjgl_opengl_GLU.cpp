@@ -298,24 +298,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluSphere
 /*
  * Class:     org_lwjgl_opengl_GLU
  * Method:    quadricCallback
- * Signature: (IILjava/lang/String;)V
- */
-/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricCallback__IILjava_lang_String_2
-  (JNIEnv * env, jclass clazz, jobject quad, jint type, jstring method)
-{
-	GLUquadricObj *address = (GLUquadricObj *)env->GetDirectBufferAddress(quad);
-	GLUQuadricCallbacks::set(address, 
-	                         new JavaMethod(env, obj, env->GetStringUTFChars(method, 0)),
-	                         type);
-	CHECK_GL_ERROR  
-}
-*/
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    quadricCallback
  * Signature: (IILjava/lang/Object;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricCallback__IILjava_lang_Object_2Ljava_lang_String_2
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricCallback
   (JNIEnv * env, jclass clazz, jobject quad, jint type, jobject target, jstring method)
 {
 	GLUquadricObj *address = (GLUquadricObj *)env->GetDirectBufferAddress(quad);
@@ -324,4 +309,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricCallback__IILjava_lan
 	                         type);
 	CHECK_GL_ERROR
 }
-

@@ -690,34 +690,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4s
 /*
  * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glLoadTransposeMatrixd
- * Signature: (I)V
+ * Signature: (Ljava/nio/DoubleBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glLoadTransposeMatrixd
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glLoadTransposeMatrixf
- * Signature: (I)V
+ * Signature: (Ljava/nio/FloatBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glLoadTransposeMatrixf
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultTransposeMatrixd
- * Signature: (I)V
+ * Signature: (Ljava/nio/DoubleBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultTransposeMatrixd
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultTransposeMatrixf
- * Signature: (I)V
+ * Signature: (Ljava/nio/FloatBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultTransposeMatrixf
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -1178,10 +1178,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_CoreGL_glGetError
 /*
  * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glGetClipPlane
- * Signature: (II)V
+ * Signature: (ILjava/nio/DoubleBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glGetClipPlane
-  (JNIEnv *, jclass, jint, jint);
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL

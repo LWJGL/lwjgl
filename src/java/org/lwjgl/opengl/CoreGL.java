@@ -162,10 +162,10 @@ public class CoreGL implements CoreGLConstants {
 	public static native void glMultiTexCoord4f(int target, float s, float t, float r, float q);
 	public static native void glMultiTexCoord4i(int target, int s, int t, int r, int q);
 	public static native void glMultiTexCoord4s(int target, short s, short t, short r, short q);
-	public static native void glLoadTransposeMatrixd(int m);
-	public static native void glLoadTransposeMatrixf(int m);
-	public static native void glMultTransposeMatrixd(int m);
-	public static native void glMultTransposeMatrixf(int m);
+	public static native void glLoadTransposeMatrixd(DoubleBuffer m);
+	public static native void glLoadTransposeMatrixf(FloatBuffer m);
+	public static native void glMultTransposeMatrixd(DoubleBuffer m);
+	public static native void glMultTransposeMatrixf(FloatBuffer m);
 	public static native void glSampleCoverage(float value, boolean invert);
 	public static native void glCopyPixels(int x, int y, int width, int height, int type);
 	public static native void glColorPointer(int size, int type, int stride, Buffer pointer);
@@ -223,7 +223,7 @@ public class CoreGL implements CoreGLConstants {
 	public static native void glGetLightfv(int light, int pname, FloatBuffer params);
 	public static native void glGetLightiv(int light, int pname, IntBuffer params);
 	public static native int glGetError();
-	public static native void glGetClipPlane(int plane, int equation);
+	public static native void glGetClipPlane(int plane, DoubleBuffer equation);
 	public static native void glGetBooleanv(int pname, ByteBuffer params);
 	public static native void glGetDoublev(int pname, DoubleBuffer params);
 	public static native void glGetFloatv(int pname, FloatBuffer params);
