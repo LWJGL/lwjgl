@@ -82,9 +82,6 @@ extern bool LoadAL(JNIEnv *env);
 /* Loads OpenAL ALC functions */
 extern bool LoadALC(JNIEnv *env);
 
-/* Loads any extensions to OpenAL */
-static bool LoadALExtensions(void);
-
 static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _WIN32
 	return GetProcAddress(handleOAL, function);
@@ -251,13 +248,6 @@ void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 		throwException(env, "Could not load ALC function pointers.");
 		return;
 	}
-
-	//load OpenAL extensions
-	if(!LoadALExtensions()) {
-		DeInitializeOpenAL();
-		throwException(env, "Could not load AL extension function pointers.");
-		return;
-	}
 }
 
 /**
@@ -266,15 +256,6 @@ void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 void DeInitializeOpenAL() {
 	UnLoadOpenAL();
 	handleOAL = 0;
-}
-
-/**
- * Loads the OpenAL extensions functions
- *
- * @return true if all methods were loaded, false if one of the methods could not be loaded
- */
-static bool LoadALExtensions() {
-	return true;
 }
 
 bool extal_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions) {

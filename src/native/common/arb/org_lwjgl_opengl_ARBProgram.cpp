@@ -238,6 +238,6 @@ void extgl_InitARBProgram(JNIEnv *env, jobject ext_set)
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBProgram");
-	extgl_InitializeClass(env, clazz, NULL, "<ARBProgram>", num_functions, functions);
+	extgl_InitializeClass(env, clazz, NULL, NULL, num_functions, functions);
 }
 

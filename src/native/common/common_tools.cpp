@@ -105,11 +105,9 @@ int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, i
 	return num_events;
 }
 
-/*int getEventBufferSize(event_queue_t *event_queue) {
-	return EVENT_BUFFER_SIZE;
-}
-*/
 static void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err) {
+	if (env->ExceptionCheck() == JNI_TRUE)
+		return; // The JVM crashes if we try to throw two exceptions from one native call
 	jclass cls = env->FindClass(exception_name);
 	env->ThrowNew(cls, err);
 	env->DeleteLocalRef(cls);
@@ -169,9 +167,11 @@ bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char 
 		if (function->ext_function_name != NULL) {
 			void *ext_func_pointer = gpa(function->ext_function_name);
 			if (ext_func_pointer == NULL) {
-				printf("NOTICE: %s disabled because of missing driver symbols\n", ext_name);
-				if (ext_set != NULL)
-					ext_removeExtension(env, ext_set, ext_name);
+				if (ext_name != NULL) {
+					printfDebug("NOTICE: %s disabled because of missing driver symbols\n", ext_name);
+					if (ext_set != NULL)
+						ext_removeExtension(env, ext_set, ext_name);
+				}
 				free(methods);
 				return false;
 			}
@@ -185,9 +185,12 @@ bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char 
 	}
 	jint result = env->RegisterNatives(clazz, methods, num_functions);
 	free(methods);
-	if (result != 0)
-		printfDebug("Could not register natives for extension %s\n", ext_name);
-	return true;
+	if (result != 0) {
+		if (ext_name != NULL)
+			printfDebug("Could not register natives for extension %s\n", ext_name);
+		return false;
+	} else
+		return true;
 }
 
 bool getBooleanProperty(JNIEnv *env, const char* propertyName) {

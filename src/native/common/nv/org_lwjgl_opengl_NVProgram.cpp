@@ -181,5 +181,5 @@ void extgl_InitNVProgram(JNIEnv *env, jobject ext_set)
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVProgram");
-	extgl_InitializeClass(env, clazz, NULL, "<NVProgram>", num_functions, functions);
+	extgl_InitializeClass(env, clazz, NULL, NULL, num_functions, functions);
 }
