@@ -3237,11 +3237,11 @@ int extgl_Initialize()
 #ifdef _X11
 int extgl_Open(Display *disp, int screen)
 {
-    lib_gl_handle = dlopen("libGL.so.1", RTLD_NOW | RTLD_GLOBAL);
+    lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_gl_handle == NULL)
         return 1;
 	
-    lib_glu_handle = dlopen("libGLU.so", RTLD_NOW | RTLD_GLOBAL);
+    lib_glu_handle = dlopen("libGLU.so", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_glu_handle == NULL)
         return 1;
     if (extgl_InitGLX(disp, screen) != 0)
