@@ -109,6 +109,7 @@ public interface GLConstants
 		EXTTextureEnvDot3,
 		EXTTextureFilterAnisotropic,
 		EXTTextureLODBias,
+		EXTTextureRectangle,
 		EXTVertexArray,
 		EXTVertexShader,
 		EXTVertexWeighting,
