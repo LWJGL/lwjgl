@@ -72,8 +72,6 @@ typedef void (APIENTRY * glFogCoordhNVPROC) (GLhalf fog);
 typedef void (APIENTRY * glFogCoordhvNVPROC) (const GLhalf *fog);
 typedef void (APIENTRY * glSecondaryColor3hNVPROC) (GLhalf red, GLhalf green, GLhalf blue);
 typedef void (APIENTRY * glSecondaryColor3hvNVPROC) (const GLhalf *v);
-typedef void (APIENTRY * glVertexWeighthNVPROC) (GLhalf weight);
-typedef void (APIENTRY * glVertexWeighthvNVPROC) (const GLhalf *weight);
 typedef void (APIENTRY * glVertexAttrib1hNVPROC) (GLuint index, GLhalf x);
 typedef void (APIENTRY * glVertexAttrib1hvNVPROC) (GLuint index, const GLhalf *v);
 typedef void (APIENTRY * glVertexAttrib2hNVPROC) (GLuint index, GLhalf x, GLhalf y);
@@ -119,8 +117,6 @@ static glFogCoordhNVPROC glFogCoordhNV;
 static glFogCoordhvNVPROC glFogCoordhvNV;
 static glSecondaryColor3hNVPROC glSecondaryColor3hNV;
 static glSecondaryColor3hvNVPROC glSecondaryColor3hvNV;
-static glVertexWeighthNVPROC glVertexWeighthNV;
-static glVertexWeighthvNVPROC glVertexWeighthvNV;
 static glVertexAttrib1hNVPROC glVertexAttrib1hNV;
 static glVertexAttrib1hvNVPROC glVertexAttrib1hvNV;
 static glVertexAttrib2hNVPROC glVertexAttrib2hNV;
@@ -171,8 +167,6 @@ void extgl_InitNVHalfFloat(JNIEnv *env, jobject ext_set)
 	glFogCoordhvNV = (glFogCoordhvNVPROC) extgl_GetProcAddress("glFogCoordhvNV");
 	glSecondaryColor3hNV = (glSecondaryColor3hNVPROC) extgl_GetProcAddress("glSecondaryColor3hNV");
 	glSecondaryColor3hvNV = (glSecondaryColor3hvNVPROC) extgl_GetProcAddress("glSecondaryColor3hvNV");
-	glVertexWeighthNV = (glVertexWeighthNVPROC) extgl_GetProcAddress("glVertexWeighthNV");
-	glVertexWeighthvNV = (glVertexWeighthvNVPROC) extgl_GetProcAddress("glVertexWeighthvNV");
 	glVertexAttrib1hNV = (glVertexAttrib1hNVPROC) extgl_GetProcAddress("glVertexAttrib1hNV");
 	glVertexAttrib1hvNV = (glVertexAttrib1hvNVPROC) extgl_GetProcAddress("glVertexAttrib1hvNV");
 	glVertexAttrib2hNV = (glVertexAttrib2hNVPROC) extgl_GetProcAddress("glVertexAttrib2hNV");
@@ -378,18 +372,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor3hNV
 {
 	CHECK_EXISTS(glSecondaryColor3hNV)
 	glSecondaryColor3hNV(red, green, blue);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:	org.lwjgl.opengl.NVHalfFloat
- * Method:	glVertexWeighthNV
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexWeighthNV
-	(JNIEnv * env, jclass clazz, jshort weight)
-{
-	CHECK_EXISTS(glVertexWeighthNV)
-	glVertexWeighthNV(weight);
 	CHECK_GL_ERROR
 }
 

@@ -157,13 +157,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor3hNV
 
 /*
  * Class:	org.lwjgl.opengl.NVHalfFloat
- * Method:	glVertexWeighthNV
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexWeighthNV
-	(JNIEnv *, jclass, jshort);
-
-/*
- * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertexAttrib1hNV
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib1hNV
