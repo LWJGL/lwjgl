@@ -119,7 +119,27 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetMinHardwareCha
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetMixer(JNIEnv * env, jclass clazz, jint mixer) {
-  return fmod_instance->FSOUND_SetMixer(mixer);
+  jboolean result = fmod_instance->FSOUND_SetMixer(mixer);
+  
+  // if we successfully changed mixer - update cached size field
+  if(result) {
+		switch(fmod_instance->FSOUND_GetMixer()) {
+			case FSOUND_MIXER_AUTODETECT:
+			case FSOUND_MIXER_BLENDMODE:
+			case FSOUND_MIXER_QUALITY_AUTODETECT:
+			case FSOUND_MIXER_QUALITY_FPU:
+			case FSOUND_MIXER_MONO:
+			case FSOUND_MIXER_QUALITY_MONO:
+			case FSOUND_MIXER_MAX:
+				fsound_dsp_buffer_size = 8;
+				break;
+			default:
+				fsound_dsp_buffer_size = 4;
+				break;
+		}    
+  }
+  
+  return result;
 }
 
 /*
