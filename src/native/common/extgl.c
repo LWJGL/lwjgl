@@ -1572,6 +1572,10 @@ int QueryExtension(const GLubyte*extensions, const char *name)
     const GLubyte *start;
     GLubyte *where, *terminator;
 
+    if (extensions == NULL) {
+	    extgl_error = 1;
+	    return 0;
+    }
     /* Extension names should not have spaces. */
     where = (GLubyte *) strchr(name, ' ');
     if (where || *name == '\0')
