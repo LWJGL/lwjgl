@@ -335,6 +335,21 @@ public class FSound {
   
   /** An Advanced Streaming Format header line */
   public static final int FSOUND_TAGFIELD_ASF = 5;  
+  
+  /** Stream hasn't connected yet */
+  public static final int FSOUND_STREAM_NET_NOTCONNECTED = 0;
+  
+  /** Stream is connecting to remote host */
+  public static final int FSOUND_STREAM_NET_CONNECTING = 1;
+  
+  /** Stream is buffering data */
+  public static final int FSOUND_STREAM_NET_BUFFERING = 2;
+  
+  /** Stream is ready to play */
+  public static final int FSOUND_STREAM_NET_READY = 3;
+  
+  /** Stream has suffered a fatal error */
+  public static final int FSOUND_STREAM_NET_ERROR = 4;
 
   // Pre Initialization / Initialization / Enumeration
   // ======================================================
