@@ -81,7 +81,7 @@ public final class Math {
 		protected MatrixOpClassification unsafe() { return this; }
 		protected MatrixOpClassification safe() { return this; }
 		protected MatrixOpClassification direct() { return this; }
-		protected MatrixOpClassification offset() { return this; }
+		boolean isSafe() { return false; }
 
 		void execute(
 			int leftSourceAddress,
@@ -136,6 +136,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return false; }
 		};
 		
 		/**
@@ -146,6 +147,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
+			boolean isSafe() { return false; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -167,6 +169,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -200,6 +203,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return false; }
 		};
 		
 		/**
@@ -210,6 +214,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
+			boolean isSafe() { return false; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -231,6 +236,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -264,6 +270,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 		};
 		
 		/**
@@ -274,6 +281,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
+			boolean isSafe() { return false; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -295,6 +303,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -328,6 +337,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return false; }
 		};
 		
 		/**
@@ -338,6 +348,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
+			boolean isSafe() { return false; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -359,6 +370,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 			native void execute(
 				int sourceAddress,
 				int sourceStride,
@@ -448,6 +460,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return false; }
 		};
 		
 		/**
@@ -458,6 +471,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
+			boolean isSafe() { return false; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -486,6 +500,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -546,6 +561,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return false; }
 		};
 		
 		/**
@@ -556,6 +572,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
+			boolean isSafe() { return false; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -584,6 +601,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -643,6 +661,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return false; }
 		};
 		
 		/**
@@ -653,6 +672,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
+			boolean isSafe() { return false; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -681,6 +701,7 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			boolean isSafe() { return true; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -830,14 +851,42 @@ public final class Math {
 		 * be safe; otherwise if is direct, then the side where n > 1 must be
 		 * the destination.
 		 */
-		abstract MatrixOpClassification checkBinaryOp(
+		MatrixOpClassification checkBinaryOp(
 			int leftSourceElements,
 			int rightSourceElements,
 			int leftSourceAddress,
 			int rightSourceAddress,
 			int destinationAddress
-		);
+		) {
+			
+			if (leftSourceElements > 1 && rightSourceElements > 1) {
+				if (isSafe())
+					return this;
+				else
+					return MATRIXOP_UNSAFE;
+			} else if (leftSourceElements == 1 && rightSourceElements > 1) {
+				if (isSafe())
+					return this;
+				else if (destinationAddress == rightSourceAddress)
+					return this;
+				else
+					return MATRIXOP_UNSAFE;
+			} else if (rightSourceElements == 1 && leftSourceElements > 1) {
+				if (isSafe())
+					return this;
+				else if (destinationAddress == leftSourceAddress)
+					return this;
+				else
+					return MATRIXOP_UNSAFE;
+			} else {
+				return MATRIXOP_UNSAFE;
+			}
+		}
 		
+		/**
+		 * @return true if this is a safe classification
+		 */
+		abstract boolean isSafe();		
 		
 		public final MatrixOpClassification check(
 			int sourceAddress,
