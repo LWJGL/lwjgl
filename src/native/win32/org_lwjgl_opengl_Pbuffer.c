@@ -131,7 +131,7 @@ static HGLRC createPbufferContext(JNIEnv *env, HDC Pbuffer_dc, HGLRC shared_cont
 		throwException(env, "Failed to create Pbuffer rendering context");
 		return NULL;
 	}
-	if (getCurrentContext() != NULL && !wglShareLists(shared_context, Pbuffer_context)) {
+	if (shared_context != NULL && !wglShareLists(shared_context, Pbuffer_context)) {
 		wglDeleteContext(Pbuffer_context);
 		throwException(env, "Could not share buffer context.");
 		return NULL;
@@ -174,7 +174,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreatePbuffer
 	}
 	shared_context = getCurrentContext();
 	if (shared_context_handle_buffer != NULL) {
-		Pbuffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, buffer_handle);
+		Pbuffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, shared_context_handle_buffer);
 		shared_context = Pbuffer_info->Pbuffer_context;
 	}
 	Pbuffer_context = createPbufferContext(env, Pbuffer_dc, shared_context);
