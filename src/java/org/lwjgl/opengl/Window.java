@@ -208,7 +208,7 @@ public final class Window {
 	 * If you are writing a straightforward game rendering loop and simply paint
 	 * every frame regardless, you can ignore this flag altogether. If you are
 	 * trying to be kind to other processes you can check this flag and only
-	 * redraw when it returns true. The flag is cleared when you call paint().
+	 * redraw when it returns true. The flag is cleared when swapBuffers() is caleld.
 	 * 
 	 * @return true if the window has been damaged by external changes
 	 * and needs to repaint itself
@@ -229,13 +229,15 @@ public final class Window {
 	public static void update() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot update uncreated window");
-		nUpdate();
 		
-		// We paint only when the window is visible, and either dirty or active.
-		if (isVisible() && (isDirty() || isActive())) {
+		// We paint only when the window is visible or dirty
+		if (isVisible() || isDirty()) {
 			Util.checkGLError();
 			swapBuffers();
 		}
+		
+		nUpdate();
+
 		// Poll the input devices while we're here
 		if (Mouse.isCreated()) {
 			Mouse.poll();
