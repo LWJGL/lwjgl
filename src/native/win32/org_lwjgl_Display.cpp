@@ -59,6 +59,9 @@ HDC				hdc = NULL;							// Device context
 LPDIRECTINPUT	lpdi = NULL;
 bool			isMinimized = false;
 bool			isFullscreen = false;
+JNIEnv* environment;
+jclass clsDisplay;
+jfieldID fidclose;
 
 void destroyDI(void)
 {
@@ -148,6 +151,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
       case SC_RESTORE:
         isMinimized = false;
         appActivate(false);
+        break;
+      case SC_CLOSE:
+        environment->SetStaticBooleanField(clsDisplay, fidclose, true);
+        //don't continue processing this command since this 
+        //would shutdown the window, which the application might not want to
+        return 0L;
 			default:
 				break;
 			}
@@ -276,6 +285,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
   (JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq,
   jint alphaBits, jint depthBits, jint stencilBits, jboolean fullscreen, jstring title)
 {
+  environment = env;
+  clsDisplay  = clazz;
+  fidclose    = env->GetStaticFieldID(clsDisplay, "closeRequested", "Z");
+
 #ifdef _DEBUG
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
 #endif
@@ -351,10 +364,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		 dll_handle,
 		 NULL);
 	env->ReleaseStringUTFChars(title, titleString);
-
-  // Disable close button
-  HMENU SysMen = GetSystemMenu(hwnd, false);
-  EnableMenuItem(SysMen, SC_CLOSE, MF_BYCOMMAND | MF_DISABLED);
 
 	// And we never look at windowClass again...
 

@@ -11,6 +11,7 @@ extern "C" {
 /* Inaccessible static: created */
 /* Inaccessible static: mode */
 /* Inaccessible static: handle */
+/* Inaccessible static: closeRequested */
 /* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Display
@@ -43,7 +44,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
   (JNIEnv *, jclass);
-
 
 #ifdef __cplusplus
 }

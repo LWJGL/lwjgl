@@ -57,6 +57,9 @@ public final class Display {
 	
 	/** A pointer to the native display window. On Windows this will be an hWnd. */
 	private static int handle;
+  
+  /** Whether or not the display has been requested to shutdown by the user */
+  public static boolean closeRequested = false;
 	
 	/**
 	 * No construction allowed.
@@ -214,5 +217,4 @@ public final class Display {
 	 * @return true if the display is minimized
 	 */
 	public static native boolean isMinimized();
-	
 }
