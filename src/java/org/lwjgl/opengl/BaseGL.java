@@ -96,7 +96,7 @@ public class BaseGL extends Window {
 	 * @param depth Required depth bits
 	 * @param stencil Required stencil bits
 	 */
-	public BaseGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
+	public BaseGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
 		super(title, x, y, width, height);
 		
 		this.x = x;
@@ -117,7 +117,7 @@ public class BaseGL extends Window {
 	 * @param x, y The position of the window. May be ignored.
 	 * @param width, height The size of the window's client area
 	 */
-	public BaseGL(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
+	public BaseGL(String title, int bpp, int alpha, int depth, int stencil) {
 		super(title, 0, 0, Display.getWidth(), Display.getHeight());
 		
 		this.x = 0;
