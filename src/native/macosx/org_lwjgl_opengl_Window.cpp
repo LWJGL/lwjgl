@@ -189,6 +189,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled(JNIEnv *
 	return vsync_enabled;
 }
 
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVisible(JNIEnv *env, jclass clazz) {
+  return JNI_TRUE;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled(JNIEnv *env, jclass clazz, jboolean enable) {
 	bool should_enable = enable == JNI_TRUE;
 	if (vsync_enabled != should_enable) {
