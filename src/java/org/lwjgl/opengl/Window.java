@@ -73,29 +73,12 @@ public final class Window {
 
 	/** Tracks VBO state for the window context */
 	private static VBOTracker vbo_tracker;
+	
+	/** A unique context object, so we can track different contexts between creates() and destroys() */
+	private static Window context;
 
 	/**
-	 * Construct a Window. Some OSs may not support non-fullscreen windows; in
-	 * which case the window will be fullscreen regardless.
-	 * 
-	 * A fullscreen window MUST track changes to the display settings and change its
-	 * width and height accordingly.
-	 * 
-	 * In this abstract base class, no actual window peer is constructed. This should be
-	 * done in specialised derived classes.
-	 * 
-	 * Only one Window can be created() at a time; to create another Window you must
-	 * first destroy() the first window.
-	 * 
-	 * The dimensions may be ignored if the window cannot be made non-
-	 * fullscreen. The position may be ignored in either case.
-	 *
-	 * @param title The window's title
-	 * @param x Position on x axis of top left corner of window.
-	 * @param y Position on y axis of top left corner of window.
-	 * @param width Width of window
-	 * @param height Height of window
-	 * @throws RuntimeException if you attempt to create more than one window at the same time
+	 * Only constructed by ourselves
 	 */
 	private Window() {
 	}
@@ -312,6 +295,7 @@ public final class Window {
 		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil, extensions);
 		GLCaps.determineAvailableExtensions(extensions);
 		created = true;
+		context = new Window();
 	}
 
 	/**
@@ -322,6 +306,14 @@ public final class Window {
 			return;
 		nDestroy();
 		created = false;
+		context = null;
+	}
+	
+	/**
+	 * @return the unique Window context
+	 */
+	public static final Window getContext() {
+		return context;
 	}
 
 	/**
