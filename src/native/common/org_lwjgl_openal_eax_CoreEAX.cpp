@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Light Weight Java Game Library Project
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -55,7 +55,7 @@ void ThrowException(JNIEnv *env, const char* message) {
 /*
  * Determines available EAX extensions
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExtensions (JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExtensions (JNIEnv *env, jclass clazz) {
 #ifdef _WIN32    
 	bool EAXSupported = false;
 
@@ -80,7 +80,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExten
 #endif
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID (JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID (JNIEnv *env, jclass clazz) {
 #ifdef _WIN32
 	//get class/fields
 	jclass eax_class			= env->FindClass("org/lwjgl/openal/eax/CoreEAX");
@@ -102,9 +102,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID (JNIEnv *env, j
  * ALenum EAXGet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jobject obj, jint propertySetID, jint property, jint source, jint value, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint size) {
 #ifdef _WIN32
-	jint result = (jint) eaxGet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) value, (ALuint) size);
+	jint result = (jint) eaxGet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) env->GetDirectBufferAddress(value), (ALuint) size);
 	CHECK_AL_ERROR
 
 	return result;
@@ -120,9 +120,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jo
  * ALenum EAXSet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jobject obj, jint propertySetID, jint property, jint source, jint value, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint size) {
 #ifdef _WIN32
-	jint result = (jint) eaxSet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) value, (ALuint) size);
+	jint result = (jint) eaxSet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, env->GetDirectBufferAddress(value), (ALuint) size);
 	CHECK_AL_ERROR
 	
 	return result;
@@ -130,3 +130,4 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jo
 	ThrowException(env, "EAX extensions not supported");
 #endif
 }
+

@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Light Weight Java Game Library Project
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -39,16 +39,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* Inaccessible static: created */
 /* Inaccessible static: BUFFER_GUID */
 /* Inaccessible static: LISTENER_GUID */
-/* Inaccessible static: created */
 /*
  * Class:     org_lwjgl_openal_eax_CoreEAX
  * Method:    determineAvailableExtensions
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExtensions
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_openal_eax_CoreEAX
@@ -56,23 +56,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExten
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_openal_eax_CoreEAX
  * Method:    eaxGet
- * Signature: (IIIII)I
+ * Signature: (IIILjava/nio/Buffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet
-  (JNIEnv *, jobject, jint, jint, jint, jint, jint);
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_openal_eax_CoreEAX
  * Method:    eaxSet
- * Signature: (IIIII)I
+ * Signature: (IIILjava/nio/Buffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet
-  (JNIEnv *, jobject, jint, jint, jint, jint, jint);
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
 
 #ifdef __cplusplus
 }

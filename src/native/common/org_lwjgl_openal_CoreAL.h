@@ -1,31 +1,31 @@
-/*
+/* 
  * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
+ * modification, are permitted provided that the following conditions are 
  * met:
- *
- * * Redistributions of source code must retain the above copyright
+ * 
+ * * Redistributions of source code must retain the above copyright 
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Lightweight Java Game Library' nor the names of
- *   its contributors may be used to endorse or promote products derived
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
+ *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -40,429 +40,423 @@
 extern "C" {
 #endif
 /* Inaccessible static: created */
+/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_000241 */
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    enable
+ * Method:    alEnable
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_enable
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alEnable
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    disable
+ * Method:    alDisable
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_disable
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDisable
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    isEnabled
+ * Method:    alIsEnabled
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isEnabled
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsEnabled
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    hint
+ * Method:    alHint
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_hint
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alHint
+  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getBoolean
+ * Method:    alGetBoolean
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_getBoolean
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alGetBoolean
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getInteger
+ * Method:    alGetInteger
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getInteger
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetInteger
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getFloat
+ * Method:    alGetFloat
  * Signature: (I)F
  */
-JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_getFloat
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetFloat
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getDouble
+ * Method:    alGetDouble
  * Signature: (I)D
  */
-JNIEXPORT jdouble JNICALL Java_org_lwjgl_openal_CoreAL_getDouble
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jdouble JNICALL Java_org_lwjgl_openal_CoreAL_alGetDouble
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getBooleanv
- * Signature: (II)V
+ * Method:    alGetBooleanv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBooleanv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetBooleanv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getIntegerv
- * Signature: (II)V
+ * Method:    alGetIntegerv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getIntegerv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetIntegerv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getFloatv
- * Signature: (II)V
+ * Method:    alGetFloatv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getFloatv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetFloatv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getDoublev
- * Signature: (II)V
+ * Method:    alGetDoublev
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getDoublev
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetDoublev
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getString
+ * Method:    alGetString
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_getString
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_alGetString
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getError
+ * Method:    alGetError
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getError
-  (JNIEnv *, jobject);
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetError
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    isExtensionPresent
+ * Method:    alIsExtensionPresent
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isExtensionPresent
-  (JNIEnv *, jobject, jstring);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsExtensionPresent
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getEnumValue
+ * Method:    alGetEnumValue
  * Signature: (Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getEnumValue
-  (JNIEnv *, jobject, jstring);
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetEnumValue
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    listeneri
+ * Method:    alListeneri
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listeneri
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListeneri
+  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    listenerf
+ * Method:    alListenerf
  * Signature: (IF)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listenerf
-  (JNIEnv *, jobject, jint, jfloat);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListenerf
+  (JNIEnv *, jclass, jint, jfloat);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    listener3f
  * Signature: (IFFF)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listener3f
-  (JNIEnv *, jobject, jint, jfloat, jfloat, jfloat);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListener3f
+  (JNIEnv *, jclass, jint, jfloat, jfloat, jfloat);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    listenerfv
- * Signature: (II)V
+ * Method:    alListenerfv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listenerfv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListenerfv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getListeneri
- * Signature: (II)V
+ * Method:    alGetListeneri
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListeneri
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetListeneri
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getListenerf
- * Signature: (II)V
+ * Method:    alGetListenerf
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListenerf
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetListenerf
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getListener3f
- * Signature: (IIII)V
+ * Method:    alGetListenerfv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListener3f
-  (JNIEnv *, jobject, jint, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetListenerfv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getListenerfv
- * Signature: (II)V
+ * Method:    alGenSources
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListenerfv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGenSources
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    genSources
- * Signature: (II)V
+ * Method:    alDeleteSources
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genSources
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDeleteSources
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    deleteSources
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteSources
-  (JNIEnv *, jobject, jint, jint);
-
-/*
- * Class:     org_lwjgl_openal_CoreAL
- * Method:    isSource
+ * Method:    alIsSource
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isSource
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsSource
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourcei
+ * Method:    alSourcei
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcei
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcei
+  (JNIEnv *, jclass, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourcef
+ * Method:    alSourcef
  * Signature: (IIF)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcef
-  (JNIEnv *, jobject, jint, jint, jfloat);
-
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcef
+  (JNIEnv *, jclass, jint, jint, jfloat);
+  
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    source3f
  * Signature: (IIFFF)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_source3f
-  (JNIEnv *, jobject, jint, jint, jfloat, jfloat, jfloat);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSource3f
+  (JNIEnv *, jclass, jint, jint, jfloat, jfloat, jfloat);  
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourcefv
- * Signature: (III)V
+ * Method:    alSourcefv
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcefv
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcefv
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getSourcei
- * Signature: (III)V
+ * Method:    alGetSourcei
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcei
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetSourcei
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getSourcef
- * Signature: (III)V
+ * Method:    alGetSourcef
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcef
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetSourcef
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getSourcefv
- * Signature: (III)V
+ * Method:    alGetSourcefv
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcefv
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetSourcefv
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourcePlayv
- * Signature: (II)V
+ * Method:    alSourcePlayv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlayv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePlayv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourcePausev
- * Signature: (II)V
+ * Method:    alSourcePausev
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePausev
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePausev
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourceStopv
- * Signature: (II)V
+ * Method:    alSourceStopv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStopv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceStopv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourceRewindv
- * Signature: (II)V
+ * Method:    alSourceRewindv
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewindv
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceRewindv
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourcePlay
+ * Method:    alSourcePlay
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlay
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePlay
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourcePause
+ * Method:    alSourcePause
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePause
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePause
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourceStop
+ * Method:    alSourceStop
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStop
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceStop
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourceRewind
+ * Method:    alSourceRewind
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewind
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceRewind
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    genBuffers
- * Signature: (II)V
+ * Method:    alGenBuffers
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genBuffers
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGenBuffers
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    deleteBuffers
- * Signature: (II)V
+ * Method:    alDeleteBuffers
+ * Signature: (ILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteBuffers
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDeleteBuffers
+  (JNIEnv *, jclass, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    isBuffer
+ * Method:    alIsBuffer
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isBuffer
-  (JNIEnv *, jobject, jint);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsBuffer
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    bufferData
- * Signature: (IIIII)V
+ * Method:    alBufferData
+ * Signature: (IILjava/nio/Buffer;II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_bufferData
-  (JNIEnv *, jobject, jint, jint, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alBufferData
+  (JNIEnv *, jclass, jint, jint, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getBufferi
- * Signature: (III)V
+ * Method:    alGetBufferi
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBufferi
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetBufferi
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getBufferf
- * Signature: (III)V
+ * Method:    alGetBufferf
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBufferf
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alGetBufferf
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourceQueueBuffers
- * Signature: (III)V
+ * Method:    alSourceQueueBuffers
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceQueueBuffers
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceQueueBuffers
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    sourceUnqueueBuffers
- * Signature: (III)V
+ * Method:    alSourceUnqueueBuffers
+ * Signature: (IILjava/nio/Buffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceUnqueueBuffers
-  (JNIEnv *, jobject, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceUnqueueBuffers
+  (JNIEnv *, jclass, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    distanceModel
+ * Method:    alDistanceModel
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_distanceModel
-  (JNIEnv *, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDistanceModel
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    dopplerFactor
+ * Method:    alDopplerFactor
  * Signature: (F)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_dopplerFactor
-  (JNIEnv *, jobject, jfloat);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDopplerFactor
+  (JNIEnv *, jclass, jfloat);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    dopplerVelocity
+ * Method:    alDopplerVelocity
  * Signature: (F)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_dopplerVelocity
-  (JNIEnv *, jobject, jfloat);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDopplerVelocity
+  (JNIEnv *, jclass, jfloat);
 
 #ifdef __cplusplus
 }

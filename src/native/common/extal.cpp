@@ -280,7 +280,10 @@ int LoadAL() {
   alGetIntegerv = (alGetIntegervPROC) GetFunctionPointer("alGetIntegerv");
   alGetFloatv = (alGetFloatvPROC) GetFunctionPointer("alGetFloatv");
   alGetDoublev = (alGetDoublevPROC) GetFunctionPointer("alGetDoublev");
+  printf("alGetString before: %d\n", alGetString);
   alGetString = (alGetStringPROC) GetFunctionPointer("alGetString");
+  printf("alGetString after: %d\n", alGetString);
+  printf("%s\n", alGetString(AL_RENDERER));
   alGetError = (alGetErrorPROC) GetFunctionPointer("alGetError");
   alIsExtensionPresent = (alIsExtensionPresentPROC) GetFunctionPointer("alIsExtensionPresent");
   alGetProcAddress = (alGetProcAddressPROC) GetFunctionPointer("alGetProcAddress");

@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Light Weight Java Game Library Project
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -41,7 +41,7 @@
  * Method:    sizeOfEaxBufferProperties
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAXBufferProperties_sizeOfEaxBufferProperties(JNIEnv *env, jobject obj) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAXBufferProperties_sizeOfEaxBufferProperties(JNIEnv *env, jclass clazz) {
 #ifdef _WIN32
 	return sizeof(EAXBUFFERPROPERTIES);
 #else
@@ -54,7 +54,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAXBufferProperties_sizeOfEaxBu
  * Method:    assignOffsets
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAXBufferProperties_assignOffsets(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAXBufferProperties_assignOffsets(JNIEnv *env, jclass clazz) {
 #ifdef _WIN32
 	jclass listener_class;
 	jfieldID field;
