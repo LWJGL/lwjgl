@@ -622,7 +622,7 @@ static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
-	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
 	if (!allow_software_acceleration && (glXIsDirect(getDisplay(), display_context) == False)) {
 		glXDestroyContext(getDisplay(), display_context);
 		XFree(configs);
@@ -659,7 +659,7 @@ static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
-	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
 	if (!allow_software_acceleration && glXIsDirect(getDisplay(), display_context) == False) {
 		glXDestroyContext(getDisplay(), display_context);
 		XFree(vis_info);

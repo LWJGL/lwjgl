@@ -110,7 +110,7 @@ static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_in
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
-	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Display.allowSoftwareOpenGL");
 	if (!allow_software_acceleration && glXIsDirect(getDisplay(), context) == False) {
 		glXDestroyContext(getDisplay(), context);
 		XFree(configs);
