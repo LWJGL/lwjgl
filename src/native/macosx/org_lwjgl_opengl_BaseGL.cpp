@@ -42,9 +42,6 @@
 #include "RenderingContext.h"
 #include "org_lwjgl_opengl_BaseGL.h"
 
-
-
-
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate

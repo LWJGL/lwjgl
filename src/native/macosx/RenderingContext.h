@@ -45,6 +45,7 @@
 
 #include "extgl.h"
 #include <Carbon/Carbon.h>
+#include <ApplicationServices/ApplicationServices.h>
 
 class RenderingContext
 {
@@ -59,6 +60,8 @@ public:
 
     bool createDisplay( int width, int height, int bpp, int freq );
     void destroyDisplay();
+    CGDirectDisplayID * enumerateDisplays();
+    CFArrayRef enumerateDisplayModes( CGDirectDisplayID display );
 
     bool createGL( int colorBits, int alphaBits, int depthBits, int stencilBits );
     void destroyGL();

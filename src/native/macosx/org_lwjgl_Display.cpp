@@ -36,6 +36,20 @@
 
 RenderingContext * renderingContext;
 
+static int numberForKey( CFDictionaryRef desc, CFStringRef key )
+{
+    CFNumberRef			value;
+    int				num = 0;
+
+    if ( (value = CFDictionaryGetValue(desc, key)) == NULL )
+    {
+        return 0;
+    }
+
+    CFNumberGetValue( value, kCFNumberIntType, &num );
+    return num;
+}
+
 /*
  * Class:     org_lwjgl_Display
  * Method:    getAvailableDisplayModes
@@ -44,7 +58,54 @@ RenderingContext * renderingContext;
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
-	return NULL;
+      CGDirectDisplayID * displays = renderingContext->enumerateDisplays();
+      CFArrayRef modeList = renderingContext->enumerateDisplayModes( displays[0] );
+
+      // count the display modes
+      //
+      int cnt = CFArrayGetCount( modeList );
+
+      // Allocate an array of DisplayModes big enough
+      jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+
+      // Note the * 16 - this is because we are manufacturing available alpha/depth/stencil combos.
+      jobjectArray ret = env->NewObjectArray(cnt * 16, displayModeClass, NULL);
+      jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");
+
+      CFDictionaryRef mode;
+      for ( int i=0; i< cnt; i++ )
+      {
+          mode = CFArrayGetValueAtIndex( modeList, i );
+
+          int width = numberForKey( mode, kCGDisplayWidth );
+          int height = numberForKey( mode, kCGDisplayHeight );
+          int bpp = numberForKey( mode, kCGDisplayBitsPerPixel );
+          int refreshRate = numberForKey( mode, kCGDisplayRefreshRate );
+
+          if ( bpp <= 8 )
+          {
+              continue;
+          }
+          else
+          {
+              jobject displayMode;
+
+              for ( int depthBits = 0; depthBits <= 24; depthBits += 8 )
+              {
+                  for ( int stencilBits = 0; stencilBits <= 8; stencilBits += 8 )
+                  {
+                      for ( int alphaBits = 0; alphaBits <= 8; alphaBits += 8 )
+                      {
+                          displayMode = env->NewObject(displayModeClass, displayModeConstructor,
+                                                       width, height, bpp, refreshRate,
+                                                       alphaBits, depthBits, stencilBits );
+
+                          env->SetObjectArrayElement( ret, i, displayMode );
+                      }
+                  }
+              }
+          }
+      }      
 }
 
 /*
@@ -66,6 +127,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 
       jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
       env->SetStaticIntField(clazz, fid_handle, (jint) renderingContext->windowPtr );
+
+#ifdef _DEBUG
+      printf("Display created\n");
+#endif      
 
       return JNI_TRUE;
 }

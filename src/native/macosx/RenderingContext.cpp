@@ -41,6 +41,10 @@
 
 #include "RenderingContext.h"
 
+#define kMaxDisplays		16
+
+CGDirectDisplayID display[kMaxDisplays];
+
 RenderingContext::RenderingContext()
 {
 }
@@ -78,6 +82,41 @@ void RenderingContext::destroyDisplay()
     //
     DisposeWindow( windowPtr );
 }
+
+CGDirectDisplayID * RenderingContext::enumerateDisplays()
+{
+
+    CGDisplayCount numDisplays;
+    CGDisplayErr err;
+
+    err = CGGetActiveDisplayList( kMaxDisplays,
+                                  display,
+                                  &numDisplays );
+
+    if ( err != CGDisplayNoErr )
+    {
+        printf("Cannot get displays (%d). \n", err );
+    }
+
+    return display;
+}
+
+CFArrayRef RenderingContext::enumerateDisplayModes( CGDirectDisplayID display )
+{
+    CFArrayRef modeList;
+
+    modeList = CGDisplayAvailableModes( display );
+    if ( modeList = NULL )
+    {
+        printf("Error. Display requested is invalid.\n");
+        return NULL;
+    }
+
+    return modeList;
+}
+
+
+
 
 bool RenderingContext::createGL( int colorBits, int alphaBits, int depthBits, int stencilBits )
 {
