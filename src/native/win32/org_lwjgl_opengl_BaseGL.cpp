@@ -164,6 +164,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
+ * Method:    nFreeContext
+ * Signature: ()V
+*/
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
+  (JNIEnv *env, jobject obj)
+{
+	wglMakeCurrent(hdc, NULL);
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nMakeCurrent
  * Signature: ()V
  */
