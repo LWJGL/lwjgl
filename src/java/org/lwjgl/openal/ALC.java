@@ -1,35 +1,35 @@
-/* 
+/*
  * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'Light Weight Java Game Library' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal;
+package org.lwjgl.openal;
 
 /**
  * $Id$
@@ -42,8 +42,59 @@
  */
 public class ALC {
     
+    /** Bad value */
+    public static final int     INVALID                     = -1;
+    
+    /** Boolean False */
+    public static final int     FALSE                       = 0;
+    
+    /** Boolean True */
+    public static final int     TRUE                        = 1;
+    
+    /** Errors: No Error */
+    public static final int     NO_ERROR                    = FALSE;
+    
+    public static final int     MAJOR_VERSION               = 0x1000;
+    public static final int     MINOR_VERSION               = 0x1001;
+    public static final int     ATTRIBUTES_SIZE             = 0x1002;
+    public static final int     ALL_ATTRIBUTES              = 0x1003;
+    
+    public static final int     DEFAULT_DEVICE_SPECIFIER    = 0x1004;
+    public static final int     DEVICE_SPECIFIER            = 0x1005;
+    public static final int     EXTENSIONS                  = 0x1006;
+    
+    public static final int     FREQUENCY                   = 0x1007;
+    public static final int     REFRESH                     = 0x1008;
+    public static final int     SYNC                        = 0x1009;
+    
+    /** The device argument does not name a valid device */
+    public static final int     INVALID_DEVICE              = 0xA001;
+    
+    /** The context argument does not name a valid context */
+    public static final int     INVALID_CONTEXT             = 0xA002;
+    
+    /**
+     * A function was called at inappropriate time, or in an inappropriate way, 
+     * causing an illegal state. This can be an incompatible ALenum, object ID,
+     * and/or function.
+     */
+    public static final int     INVALID_ENUM                = 0xA003;
+    
+    /**
+     * Illegal value passed as an argument to an AL call.
+     * Applies to parameter values, but not to enumerations.
+     */
+    public static final int     INVALID_VALUE               = 0xA004;
+    
+    /**
+     * A function could not be completed, because there is not enough 
+     * memory available.
+     */
+    public static final int     OUT_OF_MEMORY               = 0xA005;
+    
     static {
         try {
+            System.out.println("using " + org.lwjgl.Sys.getLibraryName());
             System.loadLibrary(org.lwjgl.Sys.getLibraryName());
         } catch (UnsatisfiedLinkError ule) {
             System.out.println("Failed to load OpenAL library: " + org.lwjgl.Sys.getLibraryName());
@@ -62,7 +113,7 @@ public class ALC {
      * @return String property from device
      */
     public native String        getString(ALCdevice device, int pname);
-
+    
     /**
      * Returns integers related to the context.
      *
@@ -74,7 +125,7 @@ public class ALC {
     public native void          getIntegerv(ALCdevice device, int pname, int size, int integerdata);
     
     /**
-     * Opens the named device. If null is specied, the implementation will 
+     * Opens the named device. If null is specied, the implementation will
      * provide an implementation specic default.
      *
      * @param devicename name of device to open
@@ -103,9 +154,9 @@ public class ALC {
      *
      * @param context ALCcontext to make current
      * @return true if successfull, false if not
-     */ 
+     */
     public native boolean       makeContextCurrent(ALCcontext context);
-
+    
     /**
      * Tells a context to begin processing.
      *
@@ -119,7 +170,7 @@ public class ALC {
      * @return Current ALCcontext
      */
     public native ALCcontext    getCurrentContext();
-
+    
     /**
      * Retrives the device associated with the supplied context
      *
@@ -127,7 +178,7 @@ public class ALC {
      * @param ALCdevice associated with context
      */
     public native ALCdevice     getContextsDevice(ALCcontext context);
-
+    
     /**
      * Suspends processing on supplied context
      *
@@ -141,7 +192,7 @@ public class ALC {
      * @param context ALCcontext to Destroy
      */
     public native void          destroyContext(ALCcontext context);
-
+    
     /**
      * Retrieves the current context error state.
      *
@@ -170,10 +221,10 @@ public class ALC {
     
     /**
      * retrieves the enum value for a specified enumeration name.
-     * 
+     *
      * @param device Device to query
      * @param enumName name of enum to find
      * @return value of enumeration
      */
-    public native int           getEnumValue(ALCdevice device, String enumName);    
+    public native int           getEnumValue(ALCdevice device, String enumName);
 }
