@@ -87,7 +87,7 @@ public class Sphere extends Quadric {
 		dtheta = 2.0f * GLU.PI / slices;
 
 		if (super.drawStyle == GLU.GLU_FILL) {
-			if (super.textureFlag) {
+			if (!super.textureFlag) {
 				// draw +Z end as a triangle fan
 				GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 				GL11.glNormal3f(0.0f, 0.0f, 1.0f);
