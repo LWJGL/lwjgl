@@ -136,6 +136,11 @@ public class MouseTest {
       }
 
       Mouse.poll();
+      Keyboard.poll();
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+        return;
+      }
 
       position.x += Mouse.dx;
       position.y -= Mouse.dy;
@@ -156,8 +161,6 @@ public class MouseTest {
       render();
 
       gl.swapBuffers();
-      
-      Keyboard.poll();
     }
   }
   
