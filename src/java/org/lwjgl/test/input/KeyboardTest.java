@@ -133,7 +133,7 @@ public class KeyboardTest {
       int count = Keyboard.getNumKeyboardEvents();
       while (Keyboard.next()) {
         System.out.println("Checking key:" + Keyboard.getKeyName(Keyboard.getEventKey()));
-        System.out.println("Key character: " + Keyboard.getCharacter());
+        System.out.println("Key character: " + Keyboard.getEventCharacter());
         
         if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
           return;

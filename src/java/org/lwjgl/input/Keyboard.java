@@ -475,7 +475,7 @@ public class Keyboard {
   /**
    * @return The character from the current event
    */
-  public static char getCharacter() {
+  public static char getEventCharacter() {
     return eventCharacter;
   }
 
