@@ -55,7 +55,7 @@ public class Cursor {
 	private CursorElement[] cursors = null;
 	
 	/** Index into list of cursors */
-	private int index = -1;
+	private int index = 0;
 	
 	/**
 	 * Constructs a new Cursor, with the given parameters. Mouse must have been created before you can create
@@ -127,8 +127,6 @@ public class Cursor {
 					// offset to next image
 					images_copy.position(width*height*(i+1));
 				}
-				// set index
-				index = 0;
 				break;
 			case Display.PLATFORM_AGL:
 				break;

@@ -50,11 +50,6 @@
         #include "extgl_glx.h"
 
 	/*
-	 * update input grabbing(keyboard, mouse)
-	 */
-	extern void updateInput(void);
-
-	/*
 	 * release input (keyboard, mouse)
 	 */
 	extern bool releaseInput(void);
@@ -66,10 +61,11 @@
 	extern void handleButtonPress(XButtonEvent *);
 	extern void handleButtonRelease(XButtonEvent *);
 	extern void handleKeyEvent(XKeyEvent *);
-	extern void releaseKeyboard(void);
-	extern void releasePointer(void);
-	extern void acquireKeyboard(void);
-	extern void acquirePointer(void);
+	extern void updatePointerGrab(void);
+	extern void updateKeyboardGrab(void);
+	extern void setGrab(bool);
+	extern bool shouldGrab(void);
+	extern bool isGrabbed(void);
 
 	/*
 	 * get the current window width
@@ -108,11 +104,6 @@
 	 * get the current window
 	 */
 	extern Window getCurrentWindow(void);
-
-	/*
-	 * Return true if a native cursor is active
-	 */
-	extern bool isNativeCursor(void);
 
 	/*
 	 * Return true if we are in fullscreen mode

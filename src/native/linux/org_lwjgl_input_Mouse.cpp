@@ -57,10 +57,8 @@
 // scale the mouse wheel according to win32
 #define WHEEL_SCALE 120 
 
-static bool pointer_grabbed = false;
-static bool created = false;
-static bool should_grab = false;
-static bool native_cursor = false;
+static bool pointer_grabbed;
+static bool created;
 
 static int last_x;
 static int last_y;
@@ -119,23 +117,26 @@ static bool blankCursor(void) {
 	return true;
 }
 
-bool isNativeCursor(void) {
-	return native_cursor;
+static void updateCursor(void) {
+	Cursor cursor;
+	if (isGrabbed())
+		cursor = blank_cursor;
+	else
+		cursor = current_cursor;
+	XDefineCursor(getDisplay(), getCurrentWindow(), cursor);
 }
 
 static void grabPointer(void) {
-	if (isFullscreen() || !native_cursor) {
-		if (!pointer_grabbed) {
-			int result;
-			int grab_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-			result = XGrabPointer(getDisplay(), getCurrentWindow(), False, grab_mask, GrabModeAsync, 
-						GrabModeAsync, getCurrentWindow(), current_cursor, CurrentTime);
-			if (result == GrabSuccess) {
-				pointer_grabbed = true;
-				// make sure we have a centered window
-				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
-				XFlush(getDisplay());
-			}
+	if (!pointer_grabbed) {
+		int result;
+		int grab_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
+		result = XGrabPointer(getDisplay(), getCurrentWindow(), False, grab_mask, GrabModeAsync, 
+					GrabModeAsync, getCurrentWindow(), None, CurrentTime);
+		if (result == GrabSuccess) {
+			pointer_grabbed = true;
+			// make sure we have a centered window
+			XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
+			XFlush(getDisplay());
 		}
 	}
 }
@@ -148,24 +149,15 @@ static void ungrabPointer(void) {
 	}
 }
 
-static void updateGrab(void) {
+void updatePointerGrab(void) {
 	if (!created)
 		return;
-	if (should_grab) {
+	if (shouldGrab()) {
 		grabPointer();
 	} else {
 		ungrabPointer();
 	}
-}
-
-void acquirePointer(void) {
-	should_grab = true;
-	updateGrab();
-}
-
-void releasePointer(void) {
-	should_grab = false;
-	updateGrab();
+	updateCursor();
 }
 
 static void doWarpPointer(void ) {
@@ -188,7 +180,7 @@ static void doWarpPointer(void ) {
 }
 
 static void warpPointer(void) {
-	if (!pointer_grabbed || native_cursor)
+	if (!pointer_grabbed || !isGrabbed())
 		return;
 	// Reset pointer to middle of screen if outside a certain inner border
 	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
@@ -196,11 +188,6 @@ static void warpPointer(void) {
 		doWarpPointer();
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nIsNativeCursorSupported
- * Signature: ()Z
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz) {
 	int caps = 0;
@@ -215,38 +202,15 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 	return caps;
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nSetNativeCursor
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
-  (JNIEnv *env, jclass clazz, jlong cursor_handle)
-{
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor (JNIEnv *env, jclass clazz, jlong cursor_handle) {
 	if (cursor_handle != 0) {
 		Cursor cursor = (Cursor)cursor_handle;
-		if (!native_cursor) {
-			doWarpPointer();
-			native_cursor = true;
-		}
-		XDefineCursor(getDisplay(), getCurrentWindow(), cursor);
 		current_cursor = cursor;
-		updateInput();
-	} else {
-		if (native_cursor) {
-			current_cursor = blank_cursor;
-			XUndefineCursor(getDisplay(), getCurrentWindow());
-			native_cursor = false;
-			updateInput();
-		}
-	}
+	} else
+		current_cursor = None;
+	updateCursor();
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nGetMaxCursorSize
- * Signature: ()I
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
   (JNIEnv *env, jclass clazz)
 {
@@ -256,11 +220,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
 	return width_return > height_return ? width_return : height_return;
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nGetMaxCursorSize
- * Signature: ()I
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
   (JNIEnv *env, jclass clazz)
 {
@@ -292,13 +251,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 		throwException(env, "Could not create blank cursor");
 		return;
 	}
-	current_cursor = blank_cursor;
-	native_cursor = false;
+	current_cursor = None;
 	created = true;
-	should_grab = true;
 	pointer_grabbed = false;
 	buffer_enabled = false;
-	updateGrab();
+	updatePointerGrab();
 	initEventQueue(&event_queue);
 	loadXcursor();
 	doWarpPointer();
@@ -311,7 +268,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 	ungrabPointer();
 	XFreeCursor(getDisplay(), blank_cursor);
 	created = false;
-	should_grab = false;
 	decDisplay();
 }
 
@@ -339,29 +295,24 @@ static void handleButton(XButtonEvent *event, unsigned char state) {
 }
 
 void handleButtonPress(XButtonEvent *event) {
-	if (pointer_grabbed || native_cursor) {
-		switch (event->button) {
-			case Button4:
-				current_z += WHEEL_SCALE;
-				break;
-			case Button5:
-				current_z -= WHEEL_SCALE;
-				break;
-			default: break;
-		}
-		handleButton(event, 1);
+	switch (event->button) {
+		case Button4:
+			current_z += WHEEL_SCALE;
+			break;
+		case Button5:
+			current_z -= WHEEL_SCALE;
+			break;
+		default: break;
 	}
+	handleButton(event, 1);
 }
 
 void handleButtonRelease(XButtonEvent *event) {
-	if (pointer_grabbed || native_cursor) {
-		handleButton(event, 0);
-	}
+	handleButton(event, 0);
 }
 
 void handlePointerMotion(XMotionEvent *event) {
-	if (pointer_grabbed || native_cursor)
-		setCursorPos(event->x, event->y);
+	setCursorPos(event->x, event->y);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
@@ -400,16 +351,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass claz
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, 2);
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nGrabMouse
- * Signature: (Z)Z
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
-  (JNIEnv * env, jclass clazz, jboolean grab) {
-  if(native_cursor) {
-    return;
-  }  
-  
-  // do it?
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
+	setGrab(new_grab == JNI_TRUE ? true : false);
+	if (created)
+		doWarpPointer();
 }

@@ -61,55 +61,30 @@ static bool keyboard_grabbed;
 static bool buffer_enabled;
 static bool translation_enabled;
 static bool created = false;
-static bool should_grab = false;
-
-static void setRepeatMode(int mode) {
-	XKeyboardControl repeat_mode;
-	repeat_mode.auto_repeat_mode = mode;
-	XChangeKeyboardControl(getDisplay(), KBAutoRepeatMode, &repeat_mode);
-}
 
 static void grabKeyboard(void) {
-	if (isFullscreen() || !isNativeCursor()) {
-		if (!keyboard_grabbed) {
-			int result = XGrabKeyboard(getDisplay(), getCurrentWindow(), False, GrabModeAsync, GrabModeAsync, CurrentTime);
-			if (result == GrabSuccess) {
-				keyboard_grabbed = true;
-				setRepeatMode(AutoRepeatModeOff);
-				XFlush(getDisplay());
-			}
-		}
-	} else
-		setRepeatMode(AutoRepeatModeOff);
+	if (!keyboard_grabbed) {
+		int result = XGrabKeyboard(getDisplay(), getCurrentWindow(), False, GrabModeAsync, GrabModeAsync, CurrentTime);
+		if (result == GrabSuccess)
+			keyboard_grabbed = true;
+	}
 }
 
 static void ungrabKeyboard(void) {
 	if (keyboard_grabbed) {
 		keyboard_grabbed = false;
 		XUngrabKeyboard(getDisplay(), CurrentTime);
-		XFlush(getDisplay());
 	}
-	setRepeatMode(AutoRepeatModeDefault);
 }
 
-static void updateGrab(void) {
+void updateKeyboardGrab(void) {
 	if (!created)
 		return;
-	if (should_grab) {
+	if (shouldGrab()) {
 		grabKeyboard();
 	} else {
 		ungrabKeyboard();
 	}
-}
-
-void acquireKeyboard(void) {
-	should_grab = true;
-	updateGrab();
-}
-
-void releaseKeyboard(void) {
-	should_grab = false;
-	updateGrab();
 }
 
 /*
@@ -149,9 +124,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	keyboard_grabbed = false;
 	translation_enabled = false;
 	buffer_enabled = false;
-	should_grab = true;
 	initEventQueue(&event_queue);
-	updateGrab();
+	updateKeyboardGrab();
 }
 
 /*

@@ -72,6 +72,7 @@ static bool vsync_enabled;
 static bool minimized;
 static bool focused;
 static bool closerequested;
+static bool grab;
 
 static Display *display_connection = NULL;
 static int display_connection_usage = 0;
@@ -106,36 +107,49 @@ static void waitMapped(Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
-static void acquireInput(void) {
-	if (input_released) {
-		acquireKeyboard();
-		acquirePointer();
-		input_released = false;
-	}
+static void updateInputGrab(void) {
+	updatePointerGrab();
+	updateKeyboardGrab();
 }
 
-static void doReleaseInput(void) {
-	releaseKeyboard();
-	releasePointer();
-	input_released = true;
-}
-
-void updateInput(void) {
-	if (!input_released) {
-		doReleaseInput();
-		acquireInput();
-	}
+static void setRepeatMode(int mode) {
+	XKeyboardControl repeat_mode;
+	repeat_mode.auto_repeat_mode = mode;
+	XChangeKeyboardControl(getDisplay(), KBAutoRepeatMode, &repeat_mode);
 }
 
 bool releaseInput(void) {
 	if (current_fullscreen || input_released)
 		return false;
-	doReleaseInput();
+	input_released = true;
+        setRepeatMode(AutoRepeatModeDefault);
+	updateInputGrab();
 	return true;
+}
+
+static void acquireInput(void) {
+	if (current_fullscreen || !input_released)
+		return;
+	input_released = false;
+        setRepeatMode(AutoRepeatModeOff);
+	updateInputGrab();
 }
 
 bool isFullscreen(void) {
 	return current_fullscreen;
+}
+
+bool isGrabbed(void) {
+	return grab;
+}
+
+bool shouldGrab(void) {
+	return current_fullscreen || (!input_released && grab);
+}
+
+void setGrab(bool new_grab) {
+	grab = new_grab;
+	updateInputGrab();
 }
 
 static void handleMessages() {
@@ -208,6 +222,7 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	minimized = false;
 	closerequested = false;
 	vsync_enabled = false;
+	grab = false;
 	Window root_win;
 	Window win;
 	XSetWindowAttributes attribs;
@@ -403,6 +418,7 @@ static void destroy(void) {
 	glXDestroyContext(getDisplay(), context);
 	context = NULL;
 	destroyWindow();
+        setRepeatMode(AutoRepeatModeDefault);
 	decDisplay();
 	extgl_Close();
 }
