@@ -85,14 +85,6 @@ HGLRC getCurrentContext() {
 	return display_hglrc;
 }
 
-HDC getCurrentWindowDC() {
-	return display_hdc;
-}
-
-int getCurrentPixelFormat() {
-	return pixel_format_index;
-}
-
 static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool pbuffer, bool double_buffer) {
 	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
 	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
@@ -708,20 +700,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		return;
 	}
 	extgl_InitWGL(env);
-	int pixel_format_index_arb;
-	HGLRC context_arb;
-	bool arb_success = createARBContextAndPixelFormat(env, dummy_hdc, pixel_format, &pixel_format_index_arb, &context_arb);
-	closeWindow(dummy_hwnd, dummy_hdc);
 	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
 	int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
-	if (arb_success) {
+	if (samples > 0) {
+		int pixel_format_index_arb;
+		HGLRC context_arb;
+		bool arb_success = createARBContextAndPixelFormat(env, dummy_hdc, pixel_format, &pixel_format_index_arb, &context_arb);
+		closeWindow(dummy_hwnd, dummy_hdc);
 		wglDeleteContext(display_hglrc);
+		if (!arb_success) {
+			throwException(env, "Samples > 0 but could not find a suitable ARB pixel format");
+			return;
+		}
 		display_hglrc = context_arb;
 		pixel_format_index = pixel_format_index_arb;
-	} else if (samples > 0) {
-		wglDeleteContext(display_hglrc);
-		throwException(env, "Samples > 0 but could not find a suitable ARB pixel format");
-	}
+	} else
+		closeWindow(dummy_hwnd, dummy_hdc);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env, jclass clazz) {

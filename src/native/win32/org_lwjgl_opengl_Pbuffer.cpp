@@ -52,7 +52,6 @@ typedef struct _PbufferInfo {
 	HGLRC Pbuffer_context;
 	HPBUFFERARB Pbuffer;
 	HDC Pbuffer_dc;
-	bool use_display_context;
 } PbufferInfo;
 
 /*
@@ -140,7 +139,7 @@ static HGLRC createPbufferContext(JNIEnv *env, HDC Pbuffer_dc) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *env, jclass clazz, jobject buffer_handle, jboolean use_display_context,
+  (JNIEnv *env, jclass clazz, jobject buffer_handle,
   jint width, jint height, jobject pixel_format,
   jobject pixelFormatCaps, jobject pBufferAttribs)
 {
@@ -155,12 +154,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 	} else {
 		pBufferAttribs_ptr = NULL;
 	}
-	if (use_display_context) {
-		int iPixelFormat = getCurrentPixelFormat();
-		Pbuffer = wglCreatePbufferARB(getCurrentWindowDC(), iPixelFormat, width, height, pBufferAttribs_ptr);
-	} else {
-		Pbuffer = createPbuffer(env, width, height, pixel_format, pixelFormatCaps, pBufferAttribs_ptr);
-	}
+	Pbuffer = createPbuffer(env, width, height, pixel_format, pixelFormatCaps, pBufferAttribs_ptr);
 
 	if (Pbuffer == NULL) {
 		throwException(env, "Could not create Pbuffer.");
@@ -174,22 +168,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 		return;
 	}
 	HGLRC Pbuffer_context;
-	if (use_display_context) {
-		Pbuffer_context = getCurrentContext();
-	} else {
-		Pbuffer_context = createPbufferContext(env, Pbuffer_dc);
-		if (Pbuffer_context == NULL) {
-			wglReleasePbufferDCARB(Pbuffer, Pbuffer_dc);
-			wglDestroyPbufferARB(Pbuffer);
-			return;
-		}
+	Pbuffer_context = createPbufferContext(env, Pbuffer_dc);
+	if (Pbuffer_context == NULL) {
+		wglReleasePbufferDCARB(Pbuffer, Pbuffer_dc);
+		wglDestroyPbufferARB(Pbuffer);
+		return;
 	}
-
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
 	Pbuffer_info->Pbuffer = Pbuffer;
 	Pbuffer_info->Pbuffer_context = Pbuffer_context;
 	Pbuffer_info->Pbuffer_dc = Pbuffer_dc;
-	Pbuffer_info->use_display_context = use_display_context == JNI_TRUE;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
@@ -214,8 +202,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
   (JNIEnv *env, jclass clazz, jobject buffer_handle)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
-	if (!Pbuffer_info->use_display_context)
-		wglDeleteContext(Pbuffer_info->Pbuffer_context);
+	wglDeleteContext(Pbuffer_info->Pbuffer_context);
 	wglReleasePbufferDCARB(Pbuffer_info->Pbuffer, Pbuffer_info->Pbuffer_dc);
 	wglDestroyPbufferARB(Pbuffer_info->Pbuffer);
 }

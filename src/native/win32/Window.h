@@ -60,11 +60,7 @@
 
 	WINDOW_H_API HWND getCurrentHWND();
 
-	WINDOW_H_API HDC getCurrentWindowDC();
-
 	WINDOW_H_API HGLRC getCurrentContext();
-
-	WINDOW_H_API int getCurrentPixelFormat();
 
 	WINDOW_H_API bool applyPixelFormat(HDC hdc, int iPixelFormat);
 
