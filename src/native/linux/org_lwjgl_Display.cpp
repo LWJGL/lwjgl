@@ -106,7 +106,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	int bpe = bpp/4;
 	int attriblist[] = { GLX_RGBA,
                              GLX_DOUBLEBUFFER,
-                             GLX_DEPTH_SIZE, 24,
+                             GLX_DEPTH_SIZE, bpp,
                              GLX_RED_SIZE, bpe,
                              GLX_GREEN_SIZE, bpe,
                              GLX_BLUE_SIZE, bpe,
@@ -114,7 +114,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
                              None };
 	int attriblistna[] = { GLX_RGBA,
                              GLX_DOUBLEBUFFER,
-                             GLX_DEPTH_SIZE, 24,
+                             GLX_DEPTH_SIZE, bpp,
                              GLX_RED_SIZE, bpe,
                              GLX_GREEN_SIZE, bpe,
                              GLX_BLUE_SIZE, bpe,
