@@ -350,11 +350,9 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			switch (wParam) {
 				case SIZE_RESTORED:
 				case SIZE_MAXIMIZED:
-printf("BLAH************************** MAX\n");
 					isMinimized = false;
 					break;
 				case SIZE_MINIMIZED:
-printf("BLAH************************** MIN\n");
 					isMinimized = true;
 					break;
 			}
