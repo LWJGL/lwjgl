@@ -230,7 +230,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1GetDriverCaps(JN
 * Signature: (I)Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetDriverName(JNIEnv * env, jclass clazz, jint id) { 
-  return (*env)->NewStringUTF(env, (const char *) fmod_instance->FSOUND_GetDriverName(id));
+  return NewStringNative(env, (const char *) fmod_instance->FSOUND_GetDriverName(id));
 }
 
 /*
@@ -430,7 +430,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetMode(JNIE
 * Signature: (J)Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetName(JNIEnv * env, jclass clazz, jlong sptr) { 
-  return (*env)->NewStringUTF(env, fmod_instance->FSOUND_Sample_GetName((FSOUND_SAMPLE *) sptr));
+  return NewStringNative(env, fmod_instance->FSOUND_Sample_GetName((FSOUND_SAMPLE *) sptr));
 }
 
 /*
@@ -1203,7 +1203,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSyncPo
 	unsigned int * nPcmOffset = pcmOffsetPosition + (unsigned int *) (*env)->GetDirectBufferAddress(env, pcmOffset);
 	char * result = fmod_instance->FSOUND_Stream_GetSyncPointInfo(nPoint, nPcmOffset);
 	if(result != NULL) {
-		return (*env)->NewStringUTF(env, result);
+		return NewStringNative(env, result);
 	}
 	return NULL;
 }
@@ -1221,7 +1221,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetTagFi
 
 	if(fmod_instance->FSOUND_Stream_GetTagField((FSOUND_STREAM*) stream, num, &type, &name, &value, &length)) {
 		// create string instance of name
-		jstring nName = (*env)->NewStringUTF(env, name);
+		jstring nName = NewStringNative(env, name);
 
 		// get set method and call it
 		jclass cls = (*env)->GetObjectClass(env, tagField);
@@ -1257,7 +1257,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1Get
 * Signature: ()Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1GetLastServerStatus(JNIEnv * env, jclass clazz) {
-  return (*env)->NewStringUTF(env, fmod_instance->FSOUND_Stream_Net_GetLastServerStatus());
+  return NewStringNative(env, fmod_instance->FSOUND_Stream_Net_GetLastServerStatus());
 }
 
 /*
@@ -1773,7 +1773,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Record_1GetDriver(JNI
 * Signature: (I)Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Record_1GetDriverName(JNIEnv * env, jclass clazz, jint driver) {
-  return (*env)->NewStringUTF(env, (const char *)fmod_instance->FSOUND_Record_GetDriverName(driver));
+  return NewStringNative(env, (const char *)fmod_instance->FSOUND_Record_GetDriverName(driver));
 }
 
 /*

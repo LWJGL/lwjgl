@@ -268,7 +268,7 @@ static void JNICALL Java_org_lwjgl_openal_AL10_nalGetFloatv (JNIEnv *env, jclass
  * ALubyte * alGetString(ALenum pname);
  */
 static jstring JNICALL Java_org_lwjgl_openal_AL10_alGetString (JNIEnv *env, jclass clazz, jint param) {
-  jstring string = (*env)->NewStringUTF(env, (char*) alGetString(param));
+  jstring string = NewStringNative(env, (char*) alGetString(param));
 	CHECK_AL_ERROR
 	return string;
 }

@@ -394,9 +394,7 @@ jstring getAdapter(JNIEnv * env)
 	if (driver == NULL) {
 		return NULL;
 	}
-	ret = env->NewStringUTF(
-		driver
-	);
+	ret = NewStringNative(env, driver);
 	return ret;
 }
 
@@ -429,9 +427,7 @@ jstring getVersion(JNIEnv * env)
 			sprintf(ms, "%d.%d\0", fxdFileInfo->dwProductVersionMS >> 16, fxdFileInfo->dwProductVersionMS & 0xFFFF);
 			sprintf(ls, "%d.%d\0", fxdFileInfo->dwProductVersionLS >> 16, fxdFileInfo->dwProductVersionLS & 0xFFFF);
 			sprintf(version, "%s.%s\0", ms, ls);
-			ret = env->NewStringUTF(
-				version
-			);
+			ret = NewStringNative(env, version);
 		}
 	}
 

@@ -53,7 +53,7 @@ static char *concatenate(const char *str1, const char *str2) {
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_getNativeLibraryVersion(JNIEnv * env, jclass clazz) {
-  return (*env)->NewStringUTF(env, VERSION);
+  return NewStringNative(env, VERSION);
 }
 
 /*
@@ -107,5 +107,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nDestroy(JNIEnv *env, jclass cl
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_FMOD_1ErrorString(JNIEnv *env, jclass clazz, jint errorcode) {
-  return (*env)->NewStringUTF(env, FMOD_ErrorString(errorcode));  
+  return NewStringNative(env, FMOD_ErrorString(errorcode));  
 }

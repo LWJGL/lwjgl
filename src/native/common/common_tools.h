@@ -131,6 +131,7 @@ extern void setDebugEnabled(bool enable);
 extern void printfDebug(const char *format, ...);
 extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
 extern char * GetStringNativeChars(JNIEnv *env, jstring jstr);
+extern jstring NewStringNative(JNIEnv *env, const char *str);
 
 extern void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions);

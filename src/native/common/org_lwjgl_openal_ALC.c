@@ -89,7 +89,7 @@ static jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString (JNIEnv *env, jcl
 		return NULL;
 	}
 
-	string = (*env)->NewStringUTF(env, alcString);
+	string = NewStringNative(env, alcString);
 
 	CHECK_ALC_ERROR
 	return string;

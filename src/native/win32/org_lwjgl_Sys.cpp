@@ -212,7 +212,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_nGetClipboard
 		const wchar_t * str = (const wchar_t *) getClipboard(CF_UNICODETEXT);
 		return env->NewString(str, wcslen(str));
 	} else if (textAvailable) {
-		return env->NewStringUTF((const char *) getClipboard(CF_TEXT));
+		return NewStringNative(env, (const char *) getClipboard(CF_TEXT));
 	} else {
 		return NULL;
 	}

@@ -1449,7 +1449,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnviv(JNIEnv * env, jcla
 static jstring JNICALL Java_org_lwjgl_opengl_GL11_glGetString(JNIEnv * env, jclass clazz, jint p0)
 {
 	const GLubyte * string = glGetString((GLenum) p0);
-	return (*env)->NewStringUTF(env, (const char *) string);
+	return NewStringNative(env, (const char *) string);
 }
 
 /*

@@ -59,7 +59,7 @@ void putAttrib(attrib_list_t *list, int attrib) {
 }
 
 jstring getVersionString(JNIEnv *env) {
-	return (*env)->NewStringUTF(env, VERSION);
+	return NewStringNative(env, VERSION);
 }
 
 bool isDebugEnabled(void) {
@@ -200,6 +200,36 @@ char * GetStringNativeChars(JNIEnv *env, jstring jstr) {
   return (char*) result;
 }
 
+// creates locale specific string
+jstring NewStringNative(JNIEnv *env, const char *str) { 
+  jclass jcls_str;
+  jmethodID jmethod_str;
+  jstring result; 
+  jbyteArray bytes;
+  int len; 
+  if (str==NULL) { 
+    return NULL; 
+  } 
+  
+  jcls_str = (*env)->FindClass(env,"java/lang/String"); 
+  jmethod_str = (*env)->GetMethodID(env,jcls_str, "<init>", "([B)V"); 
+
+  bytes = 0; 
+
+  if ((*env)->EnsureLocalCapacity(env,2) < 0) { 
+    return NULL; /* out of memory error */ 
+  } 
+  len = strlen(str); 
+  bytes = (*env)->NewByteArray(env,len); 
+  if (bytes != NULL) { 
+    (*env)->SetByteArrayRegion(env,bytes, 0, len, (jbyte *)str); 
+    result = (jstring)(*env)->NewObject(env,jcls_str, jmethod_str, bytes); 
+    (*env)->DeleteLocalRef(env,bytes); 
+    return result; 
+  } /* else fall through */ 
+  return NULL; 
+}
+
 bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions) {
 	int i;
 	void **ext_function_pointer_pointer;
@@ -250,7 +280,7 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 }
 
 bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
-  jstring property = (*env)->NewStringUTF(env, propertyName);
+  jstring property = NewStringNative(env, propertyName);
   jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
   jmethodID getBoolean = (*env)->GetStaticMethodID(env, booleanClass, "getBoolean", "(Ljava/lang/String;)Z");
   return (*env)->CallStaticBooleanMethod(env, booleanClass, getBoolean, property) ? true : false;

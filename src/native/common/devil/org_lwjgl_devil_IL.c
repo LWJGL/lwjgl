@@ -324,7 +324,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetPalette(JNIEnv *env, jcla
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_IL_ilGetString(JNIEnv *env, jclass clazz, jint stringName) {
-	return (*env)->NewStringUTF(env, ilGetString((ILenum)stringName));
+	return NewStringNative(env, ilGetString((ILenum)stringName));
 }
 
 /*
