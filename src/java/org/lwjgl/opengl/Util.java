@@ -57,8 +57,8 @@ abstract class Util {
 			return buffer.position();
 	}
 
-	static int getGLInteger(int enum) {
-		CoreGL11.glGetInteger(enum, int_buffer);
+	static int getGLInteger(int gl_enum) {
+		CoreGL11.glGetInteger(gl_enum, int_buffer);
 		return int_buffer.get(0);
 	}
 }
