@@ -254,6 +254,7 @@ public final class GLContext {
 		} catch (LWJGLException e) {
 			if (did_auto_load)
 				unloadOpenGLLibrary();
+			throw e;
 		}
 	}
 
