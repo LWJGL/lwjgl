@@ -1,35 +1,35 @@
-/* 
+/*
  * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'Light Weight Java Game Library' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
  *
@@ -65,7 +65,17 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps(JNIEnv *env,
 	return 0;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jint samples) {
+/*
+ * Class:     org_lwjgl_opengl_Pbuffer
+ * Method:    nCreate
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
+  (JNIEnv *env, jclass clazz,
+  jint width, jint height,
+  jint bpp, jint alpha, jint depth, jint stencil,
+  jint samples,
+  jobject pixelFormatCaps, jint pixelFormatCapsSize, jobject pBufferAttribs, jint pBufferAttribsSize)
+{
 /*	CGLPixelFormatObj pixel_format;
 	CGLContextObj context;
 	int dummy;
@@ -102,4 +112,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent(JNIEnv *env, j
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy(JNIEnv *env, jclass clazz, jint handle) {
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
+  (JNIEnv *env, jclass clazz, jint handle, jint attrib, jint value)
+{
+	throwException(env, "The render-to-texture extension is not supported.");
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
+  (JNIEnv *env, jclass clazz, jint handle, jint buffer)
+{
+	throwException(env, "The render-to-texture extension is not supported.");
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
+  (JNIEnv *env, jclass clazz, jint handle, jint buffer)
+{
+	throwException(env, "The render-to-texture extension is not supported.");
 }

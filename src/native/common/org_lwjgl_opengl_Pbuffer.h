@@ -8,7 +8,17 @@
 extern "C" {
 #endif
 #undef org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED
-#define org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED 1L
+#define org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED 1 << 0
+
+#undef org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED
+#define org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED 1 << 1
+
+#undef org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED
+#define org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED 1 << 2
+
+#undef org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED
+#define org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED 1 << 3
+
 /* Inaccessible static: currentBuffer */
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
@@ -37,10 +47,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
- * Signature: (IIIIIII)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint);
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
@@ -49,6 +58,30 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
   (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_Pbuffer
+ * Method:    nSetAttrib
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_Pbuffer
+ * Method:    nBindTexImage
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_Pbuffer
+ * Method:    nReleaseTexImage
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
+  (JNIEnv *, jclass, jint, jint);
 
 #ifdef __cplusplus
 }

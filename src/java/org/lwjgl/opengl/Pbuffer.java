@@ -34,33 +34,124 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.Sys;
 
+import java.nio.IntBuffer;
+
 /**
  * $Id$
- *
+ * <p/>
  * Pbuffer encapsulates an OpenGL pbuffer.
- *
- * Each instance of GL is only valid in the thread that creates it.
- * In addition, only one instance of an OpenGL window or Pbuffer may be
- * the current GL context in any one thread. To make a GL instance the
- * current context, use makeCurrent().
+ * <p/>
+ * Each instance of GL is only valid in the thread that creates it. In addition, only one instance of an OpenGL window or
+ * Pbuffer may be the current GL context in any one thread. To make a GL instance the current context, use makeCurrent().
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 public final class Pbuffer {
-	
-	public static final int PBUFFER_SUPPORTED = 1;
 
-	/** Current Pbuffer */
-	private static Pbuffer currentBuffer = null;
+	/**
+	 * Indicates that Pbuffers can be created.
+	 */
+	public static final int PBUFFER_SUPPORTED = 1 << 0;
 
-	/** Handle to the native GL rendering context */
+	/**
+	 * Indicates that Pbuffers can be used as render-textures.
+	 */
+	public static final int RENDER_TEXTURE_SUPPORTED = 1 << 1;
+
+	/**
+	 * Indicates that Pbuffers can be used as non-power-of-two render-textures.
+	 */
+	public static final int RENDER_TEXTURE_RECTANGLE_SUPPORTED = 1 << 2;
+
+	/**
+	 * Indicates that Pbuffers can be used as depth render-textures.
+	 */
+	public static final int RENDER_DEPTH_TEXTURE_SUPPORTED = 1 << 3;
+
+	/**
+	 * The render-to-texture mipmap level attribute.
+	 */
+	public static final int MIPMAP_LEVEL = RenderTexture.WGL_MIPMAP_LEVEL_ARB;
+
+	/**
+	 * The render-to-texture cube map face attribute.
+	 */
+	public static final int CUBE_MAP_FACE = RenderTexture.WGL_CUBE_MAP_FACE_ARB;
+
+	/**
+	 * The render-to-texture cube map positive X face value.
+	 */
+	public static final int TEXTURE_CUBE_MAP_POSITIVE_X = RenderTexture.WGL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB;
+
+	/**
+	 * The render-to-texture cube map negative X face value.
+	 */
+	public static final int TEXTURE_CUBE_MAP_NEGATIVE_X = RenderTexture.WGL_TEXTURE_CUBE_MAP_NEGATIVE_X_ARB;
+
+	/**
+	 * The render-to-texture cube map positive Y face value.
+	 */
+	public static final int TEXTURE_CUBE_MAP_POSITIVE_Y = RenderTexture.WGL_TEXTURE_CUBE_MAP_POSITIVE_Y_ARB;
+
+	/**
+	 * The render-to-texture cube map negative Y face value.
+	 */
+	public static final int TEXTURE_CUBE_MAP_NEGATIVE_Y = RenderTexture.WGL_TEXTURE_CUBE_MAP_NEGATIVE_Y_ARB;
+
+	/**
+	 * The render-to-texture cube map positive Z face value.
+	 */
+	public static final int TEXTURE_CUBE_MAP_POSITIVE_Z = RenderTexture.WGL_TEXTURE_CUBE_MAP_POSITIVE_Z_ARB;
+
+	/**
+	 * The render-to-texture cube map negative Z face value.
+	 */
+	public static final int TEXTURE_CUBE_MAP_NEGATIVE_Z = RenderTexture.WGL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB;
+
+	/**
+	 * The Pbuffer front left buffer.
+	 */
+	public static final int FRONT_LEFT_BUFFER = RenderTexture.WGL_FRONT_LEFT_ARB;
+
+	/**
+	 * The Pbuffer front right buffer.
+	 */
+	public static final int FRONT_RIGHT_BUFFER = RenderTexture.WGL_FRONT_RIGHT_ARB;
+
+	/**
+	 * The Pbuffer back left buffer.
+	 */
+	public static final int BACK_LEFT_BUFFER = RenderTexture.WGL_BACK_LEFT_ARB;
+
+	/**
+	 * The Pbuffer back right buffer.
+	 */
+	public static final int BACK_RIGHT_BUFFER = RenderTexture.WGL_BACK_RIGHT_ARB;
+
+	/**
+	 * The Pbuffer depth buffer.
+	 */
+	public static final int DEPTH_BUFFER = RenderTexture.WGL_DEPTH_COMPONENT_NV;
+
+	/**
+	 * Current Pbuffer
+	 */
+	private static Pbuffer currentBuffer;
+
+	/**
+	 * Handle to the native GL rendering context
+	 */
 	private final int handle;
 
-	/** Width */
+	/**
+	 * Width
+	 */
 	private final int width;
 
-	/** Height */
+	/**
+	 * Height
+	 */
 	private final int height;
 
 	static {
@@ -68,37 +159,47 @@ public final class Pbuffer {
 	}
 
 	/**
-	 * Construct an instance of a Pbuffer. If this fails then an Exception will be thrown.
-	 * The buffer is single-buffered.
+	 * Construct an instance of a Pbuffer. If this fails then an Exception will be thrown. The buffer is single-buffered.
+	 * <p/>
+	 * NOTE: An OpenGL window must be created before a Pbuffer can be created. The Pbuffer will have its own context that shares
+	 * display lists and textures with the OpenGL window context, but it will have its own OpenGL state. Therefore, state changes
+	 * to a pbuffer will not be seen in the window context and vice versa.
+	 * <p/>
+	 * NOTE: Some OpenGL implementations requires the shared contexts to use the same pixel format. So if possible, use the same
+	 * bpp, alpha, depth and stencil values used to create the main window.
+	 * <p/>
+	 * The renderTexture parameter defines the necessary state for enabling render-to-texture. When this parameter is null,
+	 * render-to-texture is not available. Before using render-to-texture, the Pbuffer capabilities must be queried to ensure that
+	 * it is supported.
 	 *
-	 * NOTE: An OpenGL window must be created before a Pbuffer can be created. The Pbuffer will
-	 * have its own context that shares display lists and textures with the OpenGL window context,
-	 * but it will have its own OpenGL state. Therefore, state changes to a pbuffer will not be seen
-	 * in the window context and vice versa.
-	 *
-	 * NOTE: Some OpenGL implementations requires the shared contexts to use the same pixel format.
-	 * So if possible, use the same bpp, alpha, depth and stencil values used to create the main window.
-	 *
-	 * @param width Pbuffer width
-	 * @param height Pbuffer height
-	 * @param bpp Minimum bits per pixel
-	 * @param alpha Minimum bits per pixel in alpha buffer
-	 * @param depth Minimum bits per pixel in depth buffer
-	 * @param stencil Minimum bits per pixel in stencil buffer
-	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
-		          Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
+	 * @param width         Pbuffer width
+	 * @param height        Pbuffer height
+	 * @param bpp           Minimum bits per pixel
+	 * @param alpha         Minimum bits per pixel in alpha buffer
+	 * @param depth         Minimum bits per pixel in depth buffer
+	 * @param stencil       Minimum bits per pixel in stencil buffer
+	 * @param samples       Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec). Pass
+	 *                      0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
+	 * @param renderTexture
 	 */
-	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
+	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil, int samples, RenderTexture renderTexture) throws Exception {
 		this.width = width;
 		this.height = height;
-		handle = nCreate(width, height, bpp, alpha, depth, stencil, samples);
+
+		if ( renderTexture == null )
+			handle = nCreate(width, height, bpp, alpha, depth, stencil, samples, null, 0, null, 0);
+		else
+			handle = nCreate(width, height,
+			                 bpp, alpha, depth, stencil,
+			                 samples,
+			                 renderTexture.pixelFormatCaps, renderTexture.pixelFormatCaps.limit(),
+			                 renderTexture.pBufferAttribs, renderTexture.pBufferAttribs.limit());
 	}
 
 	/**
-	 * Method to test for validity of the buffer. If this function returns true,
-	 * the buffer contents is lost. The buffer can still be used, but the results are undefined.
-	 * The application is expected to release the buffer if needed, destroy it and recreate a new
-	 * buffer.
+	 * Method to test for validity of the buffer. If this function returns true, the buffer contents is lost. The buffer can still
+	 * be used, but the results are undefined. The application is expected to release the buffer if needed, destroy it and recreate
+	 * a new buffer.
 	 *
 	 * @return true if the buffer is lost and destroyed, false if the buffer is valid.
 	 */
@@ -109,11 +210,10 @@ public final class Pbuffer {
 	/**
 	 * Native method to test for buffer integrity
 	 */
-	private native static boolean nIsBufferLost(int handle);
+	private static native boolean nIsBufferLost(int handle);
 
 	/**
-	 * Method to make the Pbuffer context current. All subsequent OpenGL
-	 * calls will go to this buffer.
+	 * Method to make the Pbuffer context current. All subsequent OpenGL calls will go to this buffer.
 	 */
 	public synchronized void makeCurrent() {
 		currentBuffer = this;
@@ -124,11 +224,10 @@ public final class Pbuffer {
 	/**
 	 * Native method to make a pbuffer current.
 	 */
-	private native static void nMakeCurrent(int handle);
+	private static native void nMakeCurrent(int handle);
 
 	/**
-	 * Gets the Pbuffer capabilities. Only the flag PBUFFER_SUPPORTED is
-	 * available, and indicates that Pbuffers can be created.
+	 * Gets the Pbuffer capabilities.
 	 *
 	 * @return a bitmask of Pbuffer capabilities.
 	 */
@@ -137,18 +236,15 @@ public final class Pbuffer {
 	/**
 	 * Native method to create a Pbuffer
 	 */
-	private native static int nCreate(
-		int width,
-		int height,
-		int bpp,
-		int alpha,
-		int depth,
-		int stencil,
-		int samples) throws Exception;
+	private static native int nCreate(int width, int height,
+	                                  int bpp, int alpha, int depth, int stencil,
+	                                  int samples,
+	                                  IntBuffer pixelFormatCaps, int pixelFormatCapsSize,
+	                                  IntBuffer pBufferAttribs, int pBufferAttribsSize) throws Exception;
 
 	/**
-	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context -
-	 * regardless of whether this Pbuffer was the current rendering context or not.
+	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context - regardless of whether this Pbuffer was
+	 * the current rendering context or not.
 	 */
 	public synchronized void destroy() {
 		makeCurrent();
@@ -159,21 +255,67 @@ public final class Pbuffer {
 	/**
 	 * Natively destroy any GL-related stuff
 	 */
-	private native static void nDestroy(int handle);
-	
+	private static native void nDestroy(int handle);
+
+	// -----------------------------------------------------------------------------------------
+	// ------------------------------- Render-to-Texture Methods -------------------------------
+	// -----------------------------------------------------------------------------------------
+
+	/**
+	 * Sets a render-to-texture attribute.
+	 * <p/>
+	 * The attrib parameter can be one of MIPMAP_LEVEL and CUBE_MAP_FACE. When the attrib parameter is CUBE_MAP_FACE then the value
+	 * parameter can be on of the following:
+	 * <p/>
+	 * TEXTURE_CUBE_MAP_POSITIVE_X TEXTURE_CUBE_MAP_NEGATIVE_X TEXTURE_CUBE_MAP_POSITIVE_Y TEXTURE_CUBE_MAP_NEGATIVE_Y
+	 * TEXTURE_CUBE_MAP_POSITIVE_Z TEXTURE_CUBE_MAP_NEGATIVE_Z
+	 *
+	 * @param attrib
+	 * @param value
+	 */
+	public synchronized void setAttrib(int attrib, int value) {
+		nSetAttrib(handle, attrib, value);
+	}
+
+	private static native void nSetAttrib(int handle, int attrib, int value);
+
+	/**
+	 * Binds the currently bound texture to the buffer specified. The buffer can be one of the following:
+	 * <p/>
+	 * FRONT_LEFT_BUFFER FRONT_RIGHT_BUFFER BACK_LEFT_BUFFER BACK_RIGHT_BUFFER DEPTH_BUFFER
+	 *
+	 * @param buffer
+	 */
+	public synchronized void bindTexImage(int buffer) {
+		nBindTexImage(handle, buffer);
+	}
+
+	private static native void nBindTexImage(int handle, int buffer);
+
+	/**
+	 * Releases the currently bound texture from the buffer specified.
+	 *
+	 * @param buffer
+	 */
+	public synchronized void releaseTexImage(int buffer) {
+		nReleaseTexImage(handle, buffer);
+	}
+
+	private static native void nReleaseTexImage(int handle, int buffer);
+
 	/**
 	 * @return Returns the height.
 	 */
 	public int getHeight() {
 		return height;
 	}
-	
+
 	/**
 	 * @return Returns the width.
 	 */
 	public int getWidth() {
 		return width;
 	}
-	
-	
+
+
 }

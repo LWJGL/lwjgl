@@ -77,11 +77,15 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
- * Signature: (IIII)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *env, jclass clazz, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
+  (JNIEnv *env, jclass clazz,
+  jint width, jint height,
+  jint bpp, jint alpha, jint depth, jint stencil,
+  jint samples,
+  jobject pixelFormatCaps, jint pixelFormatCapsSize, jobject pBufferAttribs, jint pBufferAttribsSize)
 {
+
 	int bpe = convertToBPE(bpp);
 	int attrib_list[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
 				   GLX_DOUBLEBUFFER, False,
@@ -176,4 +180,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
 	glXDestroyPbuffer(getCurrentDisplay(), buffer);
 	glXDestroyContext(getCurrentDisplay(), context);
 	free(buffer_info);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
+  (JNIEnv *env, jclass clazz, jint handle, jint attrib, jint value)
+{
+	throwException(env, "The render-to-texture extension is not supported.");
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
+  (JNIEnv *env, jclass clazz, jint handle, jint buffer)
+{
+	throwException(env, "The render-to-texture extension is not supported.");
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
+  (JNIEnv *env, jclass clazz, jint handle, jint buffer)
+{
+	throwException(env, "The render-to-texture extension is not supported.");
 }
