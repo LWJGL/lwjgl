@@ -93,7 +93,7 @@ public class ARBOcclusionQuery {
 
 	// ---------------------------
 	public static void glGetQueryObjectiARB(int id, int pname, IntBuffer params) {
-		nglGetQueryObjectiv(id, pname, params, params.position());
+		nglGetQueryObjectivARB(id, pname, params, params.position());
 	}
 
 	private static native void nglGetQueryObjectivARB(int id, int pname, IntBuffer params, int paramsOffset);
