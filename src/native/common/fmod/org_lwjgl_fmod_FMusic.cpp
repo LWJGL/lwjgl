@@ -40,7 +40,7 @@
  */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1LoadSong(JNIEnv *env, jclass clazz, jstring name) {
   const char* filename = (const char*) (env->GetStringUTFChars(name, 0));
-  return (jlong) fmod->FMUSIC_LoadSong(filename);
+  return (jlong) fmod_instance->FMUSIC_LoadSong(filename);
 }
 
 /*
@@ -56,7 +56,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1LoadSongEx__Ljava_ni
       sampleData = sampleListOffset + (int *) env->GetDirectBufferAddress(sampleList);
     }
     
-    return (jlong) fmod->FMUSIC_LoadSongEx(songData, offset, length, mode, sampleData, samplelistnum);
+    return (jlong) fmod_instance->FMUSIC_LoadSongEx(songData, offset, length, mode, sampleData, samplelistnum);
   }
   
 /*
@@ -71,7 +71,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1LoadSongEx__Ljava_la
     if(sampleList != NULL) {
       sampleData = sampleListOffset + (int *) env->GetDirectBufferAddress(sampleList);
     }
-    return (jlong) fmod->FMUSIC_LoadSongEx(filename, offset, length, mode, sampleData, samplelistnum);
+    return (jlong) fmod_instance->FMUSIC_LoadSongEx(filename, offset, length, mode, sampleData, samplelistnum);
   }
   
 
@@ -82,7 +82,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1LoadSongEx__Ljava_la
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetOpenState
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetOpenState((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetOpenState((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -92,7 +92,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetOpenState
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1FreeSong
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_FreeSong((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_FreeSong((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -102,7 +102,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1FreeSong
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1PlaySong
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_PlaySong((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_PlaySong((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -112,7 +112,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1PlaySong
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1StopSong
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_StopSong((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_StopSong((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -122,13 +122,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1StopSong
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FMusic_FMUSIC_1StopAllSongs
   (JNIEnv *env, jclass clazz){
-    return fmod->FMUSIC_StopAllSongs();
+    return fmod_instance->FMUSIC_StopAllSongs();
   }
 
 /*
  * Class:     org_lwjgl_fmod_FMusic
  * Method:    nFMUSIC_SetZxxCallback
- * Signature: (JLorg/lwjgl/fmod/FMusicCallback;)Z
+ * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetZxxCallback
   (JNIEnv *env, jclass clazz, jlong, jobject){
@@ -139,7 +139,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetZxxCallback
 /*
  * Class:     org_lwjgl_fmod_FMusic
  * Method:    nFMUSIC_SetRowCallback
- * Signature: (JLorg/lwjgl/fmod/FMusicCallback;I)Z
+ * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetRowCallback
   (JNIEnv *env, jclass clazz, jlong, jobject, jint){
@@ -150,7 +150,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetRowCallback
 /*
  * Class:     org_lwjgl_fmod_FMusic
  * Method:    nFMUSIC_SetOrderCallback
- * Signature: (JLorg/lwjgl/fmod/FMusicCallback;I)Z
+ * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetOrderCallback
   (JNIEnv *env, jclass clazz, jlong, jobject, jint){
@@ -161,7 +161,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetOrderCallback
 /*
  * Class:     org_lwjgl_fmod_FMusic
  * Method:    nFMUSIC_SetInstCallback
- * Signature: (JLorg/lwjgl/fmod/FMusicCallback;I)Z
+ * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetInstCallback
   (JNIEnv *env, jclass clazz, jlong, jobject, jint){
@@ -176,7 +176,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetInstCallback
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetSample
   (JNIEnv *env, jclass clazz, jlong module, jint sampno, jlong sample){
-    return fmod->FMUSIC_SetSample((FMUSIC_MODULE *) module, sampno, (FSOUND_SAMPLE *) sample);
+    return fmod_instance->FMUSIC_SetSample((FMUSIC_MODULE *) module, sampno, (FSOUND_SAMPLE *) sample);
   }
 
 /*
@@ -197,7 +197,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetUserData
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1OptimizeChannels
   (JNIEnv *env, jclass clazz, jlong module, jint max, jint min){
-    return fmod->FMUSIC_OptimizeChannels((FMUSIC_MODULE *) module, max, min);
+    return fmod_instance->FMUSIC_OptimizeChannels((FMUSIC_MODULE *) module, max, min);
   }
 
 /*
@@ -207,7 +207,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1OptimizeChannels
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_FMUSIC_1SetReverb
   (JNIEnv *env, jclass clazz, jboolean reverb){
-    return fmod->FMUSIC_SetReverb(reverb);
+    return fmod_instance->FMUSIC_SetReverb(reverb);
   }
 
 /*
@@ -217,7 +217,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_FMUSIC_1SetReverb
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetLooping
   (JNIEnv *env, jclass clazz, jlong module, jboolean looping){
-    return fmod->FMUSIC_SetLooping((FMUSIC_MODULE *) module, looping);
+    return fmod_instance->FMUSIC_SetLooping((FMUSIC_MODULE *) module, looping);
   }
 
 /*
@@ -227,7 +227,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetLooping
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetOrder
   (JNIEnv *env, jclass clazz, jlong module, jint order){
-    return fmod->FMUSIC_SetOrder((FMUSIC_MODULE *) module, order);
+    return fmod_instance->FMUSIC_SetOrder((FMUSIC_MODULE *) module, order);
   }
 
 /*
@@ -237,7 +237,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetOrder
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetPaused
   (JNIEnv *env, jclass clazz, jlong module, jboolean paused){
-    return fmod->FMUSIC_SetPaused((FMUSIC_MODULE *) module, paused);
+    return fmod_instance->FMUSIC_SetPaused((FMUSIC_MODULE *) module, paused);
   }
 
 /*
@@ -247,7 +247,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetPaused
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetMasterVolume
   (JNIEnv *env, jclass clazz, jlong module, jint volume){
-    return fmod->FMUSIC_SetMasterVolume((FMUSIC_MODULE *) module, volume);
+    return fmod_instance->FMUSIC_SetMasterVolume((FMUSIC_MODULE *) module, volume);
   }
 
 /*
@@ -257,7 +257,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetMasterVolume
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetMasterSpeed
   (JNIEnv *env, jclass clazz, jlong module, jfloat speed){
-    return fmod->FMUSIC_SetMasterSpeed((FMUSIC_MODULE *) module, speed);
+    return fmod_instance->FMUSIC_SetMasterSpeed((FMUSIC_MODULE *) module, speed);
   }
 
 /*
@@ -267,7 +267,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetMasterSpeed
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetPanSeperation
   (JNIEnv *env, jclass clazz, jlong module, jfloat pan){
-    return fmod->FMUSIC_SetPanSeperation((FMUSIC_MODULE *) module, pan);
+    return fmod_instance->FMUSIC_SetPanSeperation((FMUSIC_MODULE *) module, pan);
   }
 
 /*
@@ -277,7 +277,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetPanSeperation
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetName
   (JNIEnv *env, jclass clazz, jlong module) {
-    const char * name = fmod->FMUSIC_GetName((FMUSIC_MODULE *) module);
+    const char * name = fmod_instance->FMUSIC_GetName((FMUSIC_MODULE *) module);
     return env->NewStringUTF(name);
   }
 
@@ -288,7 +288,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetName
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetType
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetType((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetType((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -298,7 +298,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetType
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumOrders
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetNumOrders((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetNumOrders((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -308,7 +308,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumOrders
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumPatterns
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetNumPatterns((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetNumPatterns((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -318,7 +318,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumPatterns
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumInstruments
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetNumInstruments((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetNumInstruments((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -328,7 +328,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumInstruments
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumSamples
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetNumSamples((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetNumSamples((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -338,7 +338,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumSamples
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumChannels
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetNumChannels((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetNumChannels((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -348,7 +348,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetNumChannels
  */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetSample
   (JNIEnv *env, jclass clazz, jlong module, jint sampleno){
-    return (jlong) fmod->FMUSIC_GetSample((FMUSIC_MODULE *) module, sampleno);
+    return (jlong) fmod_instance->FMUSIC_GetSample((FMUSIC_MODULE *) module, sampleno);
   }
 
 /*
@@ -358,7 +358,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetSample
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetPatternLength
   (JNIEnv *env, jclass clazz, jlong module, jint orderno){
-    return fmod->FMUSIC_GetPatternLength((FMUSIC_MODULE *) module, orderno);
+    return fmod_instance->FMUSIC_GetPatternLength((FMUSIC_MODULE *) module, orderno);
   }
 
 /*
@@ -368,7 +368,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetPatternLength
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1IsFinished
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_IsFinished((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_IsFinished((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -378,7 +378,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1IsFinished
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1IsPlaying
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_IsPlaying((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_IsPlaying((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -388,7 +388,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1IsPlaying
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetMasterVolume
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetMasterVolume((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetMasterVolume((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -398,7 +398,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetMasterVolume
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetGlobalVolume
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetGlobalVolume((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetGlobalVolume((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -408,7 +408,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetGlobalVolume
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetOrder
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetOrder((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetOrder((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -418,7 +418,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetOrder
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetPattern
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetPattern((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetPattern((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -428,7 +428,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetPattern
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetSpeed
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetSpeed((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetSpeed((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -438,7 +438,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetSpeed
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetBPM
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetBPM((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetBPM((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -448,7 +448,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetBPM
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetRow
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetRow((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetRow((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -458,7 +458,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetRow
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetPaused
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetPaused((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetPaused((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -468,7 +468,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetPaused
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetTime
   (JNIEnv *env, jclass clazz, jlong module){
-    return fmod->FMUSIC_GetTime((FMUSIC_MODULE *) module);
+    return fmod_instance->FMUSIC_GetTime((FMUSIC_MODULE *) module);
   }
 
 /*
@@ -478,7 +478,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetTime
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetRealChannel
   (JNIEnv *env, jclass clazz, jlong module, jint modchannel){
-    return fmod->FMUSIC_GetRealChannel((FMUSIC_MODULE *) module, modchannel);
+    return fmod_instance->FMUSIC_GetRealChannel((FMUSIC_MODULE *) module, modchannel);
   }
 
 /*

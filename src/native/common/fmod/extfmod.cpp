@@ -39,7 +39,7 @@
 #include "extfmod.h"
 
 /** Instance of fmod  */
-FMOD_INSTANCE * fmod = NULL;
+FMOD_INSTANCE * fmod_instance = NULL;
 
 #ifdef _WIN32
 /**
@@ -56,14 +56,14 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
  * @param path path to try to load dll
  */
 void fmod_create(char* path) {
-  fmod = FMOD_CreateInstance(path);
+  fmod_instance = FMOD_CreateInstance(path);
 }
 
 /**
  * Destroys the fmod instance
  */
 void fmod_destroy() {
-  if (fmod != NULL) {
-    FMOD_FreeInstance(fmod);
+  if (fmod_instance != NULL) {
+    FMOD_FreeInstance(fmod_instance);
   }
 }

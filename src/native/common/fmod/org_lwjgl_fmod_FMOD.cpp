@@ -50,19 +50,19 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FMOD_getNativeLibraryVersion(JNIEn
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FMOD_nCreate(JNIEnv *env, jclass clazz, jobjectArray paths) {
-  jsize pathcount = env->GetArrayLength(paths);
+	jsize pathcount = env->GetArrayLength(paths);
 	for(int i=0;i<pathcount;i++) {
 		jstring path = (jstring) env->GetObjectArrayElement(paths, i);
 		char *path_str = (char *) env->GetStringUTFChars(path, NULL);
-		printfDebug("Trying to load fmod from %s\n", path_str);
-    fmod_create(path_str);
-    env->ReleaseStringUTFChars(path, path_str);
-    
-    if(fmod != NULL) {
-      return;
-    }
-  }
-  throwFMODException(env, "Unable to load fmod library");
+		printfDebug("Trying to load fmod_instance from %s\n", path_str);
+		fmod_create(path_str);
+		env->ReleaseStringUTFChars(path, path_str);
+
+		if(fmod_instance != NULL) {
+			return;
+		}
+	}
+	throwFMODException(env, "Unable to load fmod library");
 }
 
 /*

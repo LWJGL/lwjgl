@@ -34,12 +34,12 @@
 #define _EXT_FMOD_H
 
 #include <jni.h>
-#include "../common_tools.h"
+#include "common_tools.h"
 
 #include "fmoddyn.h"
 #include "fmod_errors.h"
 
-extern FMOD_INSTANCE * fmod;
+extern FMOD_INSTANCE * fmod_instance;
 
 void fmod_create(char*);
 void fmod_destroy();

@@ -38,7 +38,7 @@
 * Signature: ()V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Close(JNIEnv * env, jclass clazz) {
-  fmod->FSOUND_Close();
+  fmod_instance->FSOUND_Close();
 }
 
 
@@ -58,7 +58,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1File_1SetCallbacks(JN
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Init
 (JNIEnv *env, jclass clazz, jint mixrate, jint channels, jint flags) {
-  return fmod->FSOUND_Init(mixrate, channels, flags);
+  return fmod_instance->FSOUND_Init(mixrate, channels, flags);
 }
 
 /*
@@ -67,7 +67,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Init
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetBufferSize(JNIEnv * env, jclass clazz, jint len_ms) {
-  return fmod->FSOUND_SetBufferSize(len_ms);
+  return fmod_instance->FSOUND_SetBufferSize(len_ms);
 }
 
 /*
@@ -76,7 +76,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetBufferSize(JNIE
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetDriver(JNIEnv * env, jclass clazz, jint driver) { 
-  return fmod->FSOUND_SetDriver(driver);
+  return fmod_instance->FSOUND_SetDriver(driver);
 }
 
 /*
@@ -95,7 +95,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetHWND(JNIEnv * e
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMaxHardwareChannels(JNIEnv * env, jclass clazz, jint max) { 
-  return fmod->FSOUND_SetMaxHardwareChannels(max);
+  return fmod_instance->FSOUND_SetMaxHardwareChannels(max);
 }
 
 /*
@@ -104,7 +104,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMaxHardwareChan
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMinHardwareChannels(JNIEnv * env, jclass clazz, jint min) {
-  return fmod->FSOUND_SetMinHardwareChannels(min);
+  return fmod_instance->FSOUND_SetMinHardwareChannels(min);
 }
 
 /*
@@ -113,7 +113,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMinHardwareChan
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMixer(JNIEnv * env, jclass clazz, jint mixer) {
-  return fmod->FSOUND_SetMixer(mixer);
+  return fmod_instance->FSOUND_SetMixer(mixer);
 }
 
 /*
@@ -122,7 +122,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMixer(JNIEnv * 
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetOutput(JNIEnv * env, jclass clazz, jint outputtype) {
-  return fmod->FSOUND_SetOutput(outputtype); 
+  return fmod_instance->FSOUND_SetOutput(outputtype); 
 }
 
 /*
@@ -131,7 +131,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetOutput(JNIEnv *
 * Signature: (F)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPanSeperation(JNIEnv * env, jclass clazz, jfloat pansep) {
-  return fmod->FSOUND_SetPanSeperation(pansep);
+  return fmod_instance->FSOUND_SetPanSeperation(pansep);
 }
 
 /*
@@ -140,7 +140,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPanSeperation(JNIEn
 * Signature: (I)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetSFXMasterVolume(JNIEnv * env, jclass clazz, jint volume) { 
-  fmod->FSOUND_SetSFXMasterVolume(volume);
+  fmod_instance->FSOUND_SetSFXMasterVolume(volume);
 }
 
 /*
@@ -149,7 +149,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetSFXMasterVolume(JNI
 * Signature: (I)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetSpeakerMode(JNIEnv * env, jclass clazz, jint speakermode) {
-  fmod->FSOUND_SetSpeakerMode(speakermode);
+  fmod_instance->FSOUND_SetSpeakerMode(speakermode);
 }
 
 /*
@@ -158,7 +158,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetSpeakerMode(JNIEnv 
 * Signature: ()V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Update(JNIEnv * env, jclass clazz) { 
-  fmod->FSOUND_Update();
+  fmod_instance->FSOUND_Update();
 }
 
 /*
@@ -167,7 +167,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Update(JNIEnv * env, j
 * Signature: ()F
 */
 JNIEXPORT jfloat JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetCPUUsage(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetCPUUsage(); 
+  return fmod_instance->FSOUND_GetCPUUsage(); 
 }
 
 /*
@@ -176,7 +176,7 @@ JNIEXPORT jfloat JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetCPUUsage(JNIEnv *
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetChannelsPlaying(JNIEnv * env, jclass clazz) { 
-  return fmod->FSOUND_GetChannelsPlaying();
+  return fmod_instance->FSOUND_GetChannelsPlaying();
 }
 
 /*
@@ -185,7 +185,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetChannelsPlaying(JNI
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetDriver(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetDriver(); 
+  return fmod_instance->FSOUND_GetDriver(); 
 }
 
 /*
@@ -204,7 +204,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetDriverCaps(JNIE
 * Signature: (I)Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetDriverName(JNIEnv * env, jclass clazz, jint id) { 
-  return env->NewStringUTF((const char *) fmod->FSOUND_GetDriverName(id));
+  return env->NewStringUTF((const char *) fmod_instance->FSOUND_GetDriverName(id));
 }
 
 /*
@@ -213,7 +213,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetDriverName(JNIEn
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetError(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetError();
+  return fmod_instance->FSOUND_GetError();
 }
 
 /*
@@ -222,7 +222,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetError(JNIEnv * env,
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMaxSamples(JNIEnv * env, jclass clazz) { 
-  return fmod->FSOUND_GetMaxSamples();
+  return fmod_instance->FSOUND_GetMaxSamples();
 }
 
 /*
@@ -231,7 +231,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMaxSamples(JNIEnv *
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMaxChannels(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetMaxChannels(); 
+  return fmod_instance->FSOUND_GetMaxChannels(); 
 }
 
 /*
@@ -249,7 +249,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMemoryStats(JNIEnv 
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetNumDrivers(JNIEnv * env, jclass clazz) { 
-  return fmod->FSOUND_GetNumDrivers();
+  return fmod_instance->FSOUND_GetNumDrivers();
 }
 
 /*
@@ -268,7 +268,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetNumHWChannels(J
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetOutput(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetOutput();
+  return fmod_instance->FSOUND_GetOutput();
 }
 
 /*
@@ -277,7 +277,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetOutput(JNIEnv * env
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetOutputRate(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetOutputRate(); 
+  return fmod_instance->FSOUND_GetOutputRate(); 
 }
 
 /*
@@ -286,7 +286,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetOutputRate(JNIEnv *
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetSFXMasterVolume(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetSFXMasterVolume(); 
+  return fmod_instance->FSOUND_GetSFXMasterVolume(); 
 }
 
 /*
@@ -295,7 +295,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetSFXMasterVolume(JNI
 * Signature: ()F
 */
 JNIEXPORT jfloat JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetVersion(JNIEnv * env, jclass clazz) { 
-  return fmod->FSOUND_GetVersion();
+  return fmod_instance->FSOUND_GetVersion();
 }
 
 /*
@@ -324,7 +324,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1Free(JNIEnv *
 * Signature: (I)J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1Get(JNIEnv * env, jclass clazz, jint sampno) { 
-  return (jlong) fmod->FSOUND_Sample_Get(sampno);
+  return (jlong) fmod_instance->FSOUND_Sample_Get(sampno);
 }
 
 /*
@@ -355,7 +355,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1GetDefaul
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1GetLength(JNIEnv * env, jclass clazz, jlong sptr) { 
-  return fmod->FSOUND_Sample_GetLength((FSOUND_SAMPLE *) sptr);
+  return fmod_instance->FSOUND_Sample_GetLength((FSOUND_SAMPLE *) sptr);
 }
 
 /*
@@ -386,7 +386,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1GetMinMaxDist
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1GetMode(JNIEnv * env, jclass clazz, jlong sptr) { 
-  return fmod->FSOUND_Sample_GetMode((FSOUND_SAMPLE *) sptr);
+  return fmod_instance->FSOUND_Sample_GetMode((FSOUND_SAMPLE *) sptr);
 }
 
 /*
@@ -395,7 +395,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1GetMode(JNIEn
 * Signature: (J)Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1GetName(JNIEnv * env, jclass clazz, jlong sptr) { 
-  return env->NewStringUTF(fmod->FSOUND_Sample_GetName((FSOUND_SAMPLE *) sptr));
+  return env->NewStringUTF(fmod_instance->FSOUND_Sample_GetName((FSOUND_SAMPLE *) sptr));
 }
 
 /*
@@ -422,7 +422,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1Load__ILjava
 /*
 * Class:     org_lwjgl_fmod_FSound
 * Method:    nFSOUND_Sample_Lock
-* Signature: (JIILorg/lwjgl/fmod/FSoundSampleLock;)Z
+* Signature: (JIILorg/lwjgl/fmod_instance/FSoundSampleLock;)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1Lock(JNIEnv * env, jclass clazz, jlong, jint, jint, jobject) { 
   //XXX
@@ -458,7 +458,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetDefaul
 * Signature: (JI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetMaxPlaybacks(JNIEnv * env, jclass clazz, jlong sptr, jint max) {
-  return fmod->FSOUND_Sample_SetMaxPlaybacks((FSOUND_SAMPLE*) sptr, max);
+  return fmod_instance->FSOUND_Sample_SetMaxPlaybacks((FSOUND_SAMPLE*) sptr, max);
 }
 
 /*
@@ -467,7 +467,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetMaxPla
 * Signature: (JFF)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetMinMaxDistance(JNIEnv * env, jclass clazz, jlong sptr, jfloat min, jfloat max) { 
-  return fmod->FSOUND_Sample_SetMinMaxDistance((FSOUND_SAMPLE*) sptr, min, max);
+  return fmod_instance->FSOUND_Sample_SetMinMaxDistance((FSOUND_SAMPLE*) sptr, min, max);
 }
 
 /*
@@ -476,7 +476,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetMinMax
 * Signature: (JI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetMode(JNIEnv * env, jclass clazz, jlong sptr, jint mode) { 
-  return fmod->FSOUND_Sample_SetMode((FSOUND_SAMPLE*) sptr, mode);
+  return fmod_instance->FSOUND_Sample_SetMode((FSOUND_SAMPLE*) sptr, mode);
 }
 
 /*
@@ -485,13 +485,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetMode(J
 * Signature: (JII)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1SetLoopPoints(JNIEnv * env, jclass clazz, jlong sptr, jint loopstart, jint loopend) { 
-  return fmod->FSOUND_Sample_SetLoopPoints((FSOUND_SAMPLE*) sptr, loopstart, loopend);
+  return fmod_instance->FSOUND_Sample_SetLoopPoints((FSOUND_SAMPLE*) sptr, loopstart, loopend);
 }
 
 /*
 * Class:     org_lwjgl_fmod_FSound
 * Method:    nFSOUND_Sample_Unlock
-* Signature: (JILorg/lwjgl/fmod/FSoundSampleLock;)Z
+* Signature: (JILorg/lwjgl/fmod_instance/FSoundSampleLock;)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1Unlock(JNIEnv * env, jclass clazz, jlong, jint, jobject) { 
   //XXX
@@ -516,7 +516,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Sample_1Upload(JN
 * Signature: (IJ)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1PlaySound(JNIEnv * env, jclass clazz, jint channel, jlong sptr) {
-  return fmod->FSOUND_PlaySound(channel, (FSOUND_SAMPLE*) sptr);
+  return fmod_instance->FSOUND_PlaySound(channel, (FSOUND_SAMPLE*) sptr);
 }
 
 /*
@@ -525,7 +525,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1PlaySound(JNIEnv * en
 * Signature: (IJJZ)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1PlaySoundEx(JNIEnv * env, jclass clazz, jint channel, jlong sptr, jlong dsp, jboolean startpaused) {
-  return fmod->FSOUND_PlaySoundEx(channel, (FSOUND_SAMPLE*) sptr, (FSOUND_DSPUNIT*) dsp, startpaused);
+  return fmod_instance->FSOUND_PlaySoundEx(channel, (FSOUND_SAMPLE*) sptr, (FSOUND_DSPUNIT*) dsp, startpaused);
 }
 
 /*
@@ -534,7 +534,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1PlaySoundEx(JNIEnv * 
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1StopSound(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_StopSound(channel);
+  return fmod_instance->FSOUND_StopSound(channel);
 }
 
 /*
@@ -543,7 +543,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1StopSound(JNIEnv *
 * Signature: (II)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetFrequency(JNIEnv * env, jclass clazz, jint channel, jint freq) {
-  return fmod->FSOUND_SetFrequency(channel, freq);
+  return fmod_instance->FSOUND_SetFrequency(channel, freq);
 }
 
 /*
@@ -563,7 +563,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetLevels(JNIEnv *
 * Signature: (II)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetLoopMode(JNIEnv * env, jclass clazz, jint channel, jint loopmode) {
-  return fmod->FSOUND_SetLoopMode(channel, loopmode);
+  return fmod_instance->FSOUND_SetLoopMode(channel, loopmode);
 }
 
 /*
@@ -572,7 +572,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetLoopMode(JNIEnv
 * Signature: (IZ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMute(JNIEnv * env, jclass clazz, jint channel, jboolean mute) {
-  return fmod->FSOUND_SetMute(channel, mute);
+  return fmod_instance->FSOUND_SetMute(channel, mute);
 }
 
 /*
@@ -581,7 +581,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetMute(JNIEnv * e
 * Signature: (II)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPan(JNIEnv * env, jclass clazz, jint channel, jint pan) {
-  return fmod->FSOUND_SetPan(channel, pan);
+  return fmod_instance->FSOUND_SetPan(channel, pan);
 }
 
 /*
@@ -590,7 +590,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPan(JNIEnv * en
 * Signature: (IZ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPaused(JNIEnv * env, jclass clazz, jint channel, jboolean paused) {
-  return fmod->FSOUND_SetPaused(channel, paused);
+  return fmod_instance->FSOUND_SetPaused(channel, paused);
 }
 
 /*
@@ -599,7 +599,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPaused(JNIEnv *
 * Signature: (II)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPriority(JNIEnv * env, jclass clazz, jint channel, jint priority) {
-  return fmod->FSOUND_SetPriority(channel, priority);
+  return fmod_instance->FSOUND_SetPriority(channel, priority);
 }
 
 /*
@@ -608,7 +608,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetPriority(JNIEnv
 * Signature: (IZ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetReserved(JNIEnv * env, jclass clazz, jint channel, jboolean reserved) {
-  return fmod->FSOUND_SetReserved(channel, reserved);
+  return fmod_instance->FSOUND_SetReserved(channel, reserved);
 }
 
 /*
@@ -617,7 +617,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetReserved(JNIEnv
 * Signature: (IZ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetSurround(JNIEnv * env, jclass clazz, jint channel, jboolean surround) {
-  return fmod->FSOUND_SetSurround(channel, surround);
+  return fmod_instance->FSOUND_SetSurround(channel, surround);
 }
 
 /*
@@ -626,7 +626,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetSurround(JNIEnv
 * Signature: (II)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetVolume(JNIEnv * env, jclass clazz, jint channel, jint vol) {
-  return fmod->FSOUND_SetVolume(channel, vol);
+  return fmod_instance->FSOUND_SetVolume(channel, vol);
 }
 
 /*
@@ -635,7 +635,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetVolume(JNIEnv *
 * Signature: (II)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetVolumeAbsolute(JNIEnv * env, jclass clazz, jint channel, jint vol) {
-  return fmod->FSOUND_SetVolumeAbsolute(channel, vol);
+  return fmod_instance->FSOUND_SetVolumeAbsolute(channel, vol);
 }
 
 /*
@@ -644,7 +644,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetVolumeAbsolute(
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetVolume(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetVolume(channel);
+  return fmod_instance->FSOUND_GetVolume(channel);
 }
 
 /*
@@ -653,7 +653,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetVolume(JNIEnv * env
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetAmplitude(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetAmplitude(channel);
+  return fmod_instance->FSOUND_GetAmplitude(channel);
 }
 
 /*
@@ -673,7 +673,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_13D_1SetAttributes
 * Signature: (III)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetMinMaxDistance(JNIEnv * env, jclass clazz, jint channel, jint min, jint max) {
-  return fmod->FSOUND_3D_SetMinMaxDistance(channel, min, max);
+  return fmod_instance->FSOUND_3D_SetMinMaxDistance(channel, min, max);
 }
 
 /*
@@ -682,7 +682,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetMinMaxDista
 * Signature: (II)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetCurrentPosition(JNIEnv * env, jclass clazz, jint channel, jint offset) {
-  return fmod->FSOUND_SetCurrentPosition(channel, offset);
+  return fmod_instance->FSOUND_SetCurrentPosition(channel, offset);
 }
 
 /*
@@ -691,7 +691,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1SetCurrentPosition
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetCurrentPosition(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetCurrentPosition(channel);
+  return fmod_instance->FSOUND_GetCurrentPosition(channel);
 }
 
 /*
@@ -700,7 +700,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetCurrentPosition(JNI
 * Signature: (I)J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1GetCurrentSample(JNIEnv * env, jclass clazz, jint channel) { 
-  return (jlong) fmod->FSOUND_GetCurrentSample(channel);
+  return (jlong) fmod_instance->FSOUND_GetCurrentSample(channel);
 }
 
 /*
@@ -720,7 +720,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1GetCurrentLevels(
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetFrequency(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetFrequency(channel);
+  return fmod_instance->FSOUND_GetFrequency(channel);
 }
 
 /*
@@ -729,7 +729,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetFrequency(JNIEnv * 
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetLoopMode(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetLoopMode(channel);
+  return fmod_instance->FSOUND_GetLoopMode(channel);
 }
 
 /*
@@ -738,7 +738,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetLoopMode(JNIEnv * e
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMixer(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_GetMixer();
+  return fmod_instance->FSOUND_GetMixer();
 }
 
 /*
@@ -747,7 +747,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMixer(JNIEnv * env,
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMute(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetMute(channel);  
+  return fmod_instance->FSOUND_GetMute(channel);  
 }
 
 /*
@@ -756,7 +756,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetMute(JNIEnv * e
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetNumSubChannels(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetNumSubChannels(channel);
+  return fmod_instance->FSOUND_GetNumSubChannels(channel);
 }
 
 /*
@@ -765,7 +765,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetNumSubChannels(JNIE
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetPan(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetPan(channel);
+  return fmod_instance->FSOUND_GetPan(channel);
 }
 
 /*
@@ -774,7 +774,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetPan(JNIEnv * env, j
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetPaused(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetPaused(channel);
+  return fmod_instance->FSOUND_GetPaused(channel);
 }
 
 /*
@@ -783,7 +783,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetPaused(JNIEnv *
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetPriority(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetPriority(channel);
+  return fmod_instance->FSOUND_GetPriority(channel);
 }
 
 /*
@@ -792,7 +792,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetPriority(JNIEnv * e
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetReserved(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetReserved(channel);
+  return fmod_instance->FSOUND_GetReserved(channel);
 }
 
 /*
@@ -801,7 +801,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetReserved(JNIEnv * e
 * Signature: (II)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetSubChannel(JNIEnv * env, jclass clazz, jint channel, jint subchannel) {
-  return fmod->FSOUND_GetSubChannel(channel, subchannel);
+  return fmod_instance->FSOUND_GetSubChannel(channel, subchannel);
 }
 
 /*
@@ -810,7 +810,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetSubChannel(JNIEnv *
 * Signature: (I)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetSurround(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_GetSurround(channel);
+  return fmod_instance->FSOUND_GetSurround(channel);
 }
 
 /*
@@ -819,7 +819,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1GetSurround(JNIEnv * e
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1IsPlaying(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_IsPlaying(channel);
+  return fmod_instance->FSOUND_IsPlaying(channel);
 }
 
 /*
@@ -870,7 +870,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_13D_1Listener_1SetAttr
 * Signature: (II)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1Listener_1SetCurrent(JNIEnv * env, jclass clazz, jint current, jint numlisteners) {
-  fmod->FSOUND_3D_Listener_SetCurrent(current, numlisteners);
+  fmod_instance->FSOUND_3D_Listener_SetCurrent(current, numlisteners);
 }
 
 /*
@@ -879,7 +879,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1Listener_1SetCurre
 * Signature: (F)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetDistanceFactor(JNIEnv * env, jclass clazz, jfloat scale) {
-  fmod->FSOUND_3D_SetDistanceFactor(scale);
+  fmod_instance->FSOUND_3D_SetDistanceFactor(scale);
 }
 
 /*
@@ -888,7 +888,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetDistanceFactor(
 * Signature: (F)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetDopplerFactor(JNIEnv * env, jclass clazz, jfloat scale) {
-  return fmod->FSOUND_3D_SetDopplerFactor(scale);
+  return fmod_instance->FSOUND_3D_SetDopplerFactor(scale);
 }
 
 /*
@@ -897,7 +897,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetDopplerFactor(J
 * Signature: (F)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetRolloffFactor(JNIEnv * env, jclass clazz, jfloat scale) {
-  return fmod->FSOUND_3D_SetRolloffFactor(scale);
+  return fmod_instance->FSOUND_3D_SetRolloffFactor(scale);
 }
 
 /*
@@ -907,7 +907,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_13D_1SetRolloffFactor(J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Open__Ljava_nio_ByteBuffer_2IIII(JNIEnv * env, jclass clazz, jobject data, jint dataOffset, jint mode, jint offset, jint length) {
   const char *streamData = dataOffset + (char *) env->GetDirectBufferAddress(data);
-  return (jlong) fmod->FSOUND_Stream_Open(streamData, mode, offset, length);
+  return (jlong) fmod_instance->FSOUND_Stream_Open(streamData, mode, offset, length);
 }
 
 /*
@@ -917,7 +917,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Open__Ljava_
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Open__Ljava_lang_String_2III(JNIEnv * env, jclass clazz, jstring name, jint mode, jint offset, jint length) {
   const char* filename = (const char*) (env->GetStringUTFChars(name, 0));
-  return (jlong) fmod->FSOUND_Stream_Open(filename, mode, offset, length);
+  return (jlong) fmod_instance->FSOUND_Stream_Open(filename, mode, offset, length);
 }
 
 /*
@@ -926,7 +926,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Open__Ljava_
 * Signature: (IJ)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Play(JNIEnv * env, jclass clazz, jint channel, jlong handle) {
-  return fmod->FSOUND_Stream_Play(channel, (FSOUND_STREAM*) handle);
+  return fmod_instance->FSOUND_Stream_Play(channel, (FSOUND_STREAM*) handle);
 }
 
 /*
@@ -935,7 +935,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Play(JNIEnv *
  * Signature: (IJJZ)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1PlayEx(JNIEnv * env, jclass clazz, jint channel, jlong stream, jlong dsp, jboolean startpaused) {
-  return fmod->FSOUND_Stream_PlayEx(channel, (FSOUND_STREAM*) stream, (FSOUND_DSPUNIT*) dsp, startpaused);
+  return fmod_instance->FSOUND_Stream_PlayEx(channel, (FSOUND_STREAM*) stream, (FSOUND_DSPUNIT*) dsp, startpaused);
 }
 
 /*
@@ -944,7 +944,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1PlayEx(JNIEnv
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Stop(JNIEnv * env, jclass clazz, jlong handle) {
-  return fmod->FSOUND_Stream_Stop((FSOUND_STREAM*) handle);
+  return fmod_instance->FSOUND_Stream_Stop((FSOUND_STREAM*) handle);
 }
 
 
@@ -954,7 +954,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Stop(JNIE
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Close(JNIEnv * env, jclass clazz, jlong handle) {
-  return fmod->FSOUND_Stream_Close((FSOUND_STREAM*) handle);
+  return fmod_instance->FSOUND_Stream_Close((FSOUND_STREAM*) handle);
 }
 
 /*
@@ -963,7 +963,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Close(JNI
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetNumSubStreams(JNIEnv * env, jclass clazz, jlong handle) {
-  return fmod->FSOUND_Stream_GetNumSubStreams((FSOUND_STREAM*) handle);
+  return fmod_instance->FSOUND_Stream_GetNumSubStreams((FSOUND_STREAM*) handle);
 }
 
 /*
@@ -972,7 +972,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetNumSubStre
 * Signature: (JI)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetSubStream(JNIEnv * env, jclass clazz, jlong handle, jint index) {
-  return fmod->FSOUND_Stream_SetSubStream((FSOUND_STREAM*) handle, index);
+  return fmod_instance->FSOUND_Stream_SetSubStream((FSOUND_STREAM*) handle, index);
 }
 
 /*
@@ -1014,13 +1014,13 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1CreateDSP(JN
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1DeleteSyncPoint(JNIEnv * env, jclass clazz, jlong point) {
-  return fmod->FSOUND_Stream_DeleteSyncPoint((FSOUND_SYNCPOINT*) point);
+  return fmod_instance->FSOUND_Stream_DeleteSyncPoint((FSOUND_SYNCPOINT*) point);
 }
 
 /*
 * Class:     org_lwjgl_fmod_FSound
 * Method:    nFSOUND_Stream_FindTagField
-* Signature: (JILjava/lang/String;Lorg/lwjgl/fmod/FSoundTagField;)Z
+* Signature: (JILjava/lang/String;Lorg/lwjgl/fmod_instance/FSoundTagField;)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1FindTagField(JNIEnv * env, jclass clazz, jlong, jint, jstring, jobject) {
   //XXX
@@ -1034,7 +1034,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1FindTagFi
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetLength(JNIEnv * env, jclass clazz, jlong stream) {
-  return fmod->FSOUND_Stream_GetLength((FSOUND_STREAM*) stream);
+  return fmod_instance->FSOUND_Stream_GetLength((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1043,7 +1043,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetLength
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetLengthMs(JNIEnv * env, jclass clazz, jlong stream) {
-  return fmod->FSOUND_Stream_GetLengthMs((FSOUND_STREAM*) stream);
+  return fmod_instance->FSOUND_Stream_GetLengthMs((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1052,7 +1052,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetLength
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetMode(JNIEnv * env, jclass clazz, jlong stream) {
-  return fmod->FSOUND_Stream_GetMode((FSOUND_STREAM*) stream);
+  return fmod_instance->FSOUND_Stream_GetMode((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1061,7 +1061,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetMode(JNIEn
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetNumSyncPoints(JNIEnv * env, jclass clazz, jlong stream) {
-  return fmod->FSOUND_Stream_GetNumSyncPoints((FSOUND_STREAM*) stream);
+  return fmod_instance->FSOUND_Stream_GetNumSyncPoints((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1080,7 +1080,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetNumTag
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetOpenState(JNIEnv * env, jclass clazz, jlong stream) {
-  return fmod->FSOUND_Stream_GetOpenState((FSOUND_STREAM*) stream);
+  return fmod_instance->FSOUND_Stream_GetOpenState((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1089,7 +1089,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetOpenState(
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetPosition(JNIEnv * env, jclass clazz, jlong stream) {
-  return fmod->FSOUND_Stream_GetPosition((FSOUND_STREAM*) stream);
+  return fmod_instance->FSOUND_Stream_GetPosition((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1098,7 +1098,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetPosition(J
 * Signature: (J)J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetSample(JNIEnv * env, jclass clazz, jlong stream) {
-  return (jlong) fmod->FSOUND_Stream_GetSample((FSOUND_STREAM*) stream);
+  return (jlong) fmod_instance->FSOUND_Stream_GetSample((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1107,7 +1107,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetSample(JN
 * Signature: (JI)J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetSyncPoint(JNIEnv * env, jclass clazz, jlong stream, jint index) {
-  return (jlong) fmod->FSOUND_Stream_GetSyncPoint((FSOUND_STREAM*) stream, index);
+  return (jlong) fmod_instance->FSOUND_Stream_GetSyncPoint((FSOUND_STREAM*) stream, index);
 }
 
 /*
@@ -1124,7 +1124,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetSyncPoi
 /*
 * Class:     org_lwjgl_fmod_FSound
 * Method:    nFSOUND_Stream_GetTagField
-* Signature: (JILorg/lwjgl/fmod/FSoundTagField;)Z
+* Signature: (JILorg/lwjgl/fmod_instance/FSoundTagField;)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetTagField(JNIEnv * env, jclass clazz, jlong, jint, jobject) {
   //XXX
@@ -1138,7 +1138,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetTagFie
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1GetTime(JNIEnv * env, jclass clazz, jlong stream) {
-  return fmod->FSOUND_Stream_GetTime((FSOUND_STREAM*) stream);
+  return fmod_instance->FSOUND_Stream_GetTime((FSOUND_STREAM*) stream);
 }
 
 /*
@@ -1158,7 +1158,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Net_1GetB
 * Signature: ()Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Stream_1Net_1GetLastServerStatus(JNIEnv * env, jclass clazz) {
-  return env->NewStringUTF(fmod->FSOUND_Stream_Net_GetLastServerStatus());
+  return env->NewStringUTF(fmod_instance->FSOUND_Stream_Net_GetLastServerStatus());
 }
 
 /*
@@ -1201,7 +1201,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Net_1SetM
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Stream_1Net_1SetProxy(JNIEnv * env, jclass clazz, jstring proxy) {
   const char * proxyString = env->GetStringUTFChars(proxy, 0);
-  jboolean result = fmod->FSOUND_Stream_Net_SetProxy(proxyString);
+  jboolean result = fmod_instance->FSOUND_Stream_Net_SetProxy(proxyString);
   env->ReleaseStringUTFChars(proxy, proxyString);
   return result;
 }
@@ -1214,7 +1214,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Stream_1Net_1SetPr
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Stream_1SetBufferSize(JNIEnv * env, jclass clazz, jint ms) {
-  return fmod->FSOUND_Stream_SetBufferSize(ms);
+  return fmod_instance->FSOUND_Stream_SetBufferSize(ms);
 }
 
 /*
@@ -1234,7 +1234,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetEndCal
 * Signature: (JI)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetLoopCount(JNIEnv * env, jclass clazz, jlong stream, jint count) {
-  return fmod->FSOUND_Stream_SetLoopCount((FSOUND_STREAM*) stream, count);
+  return fmod_instance->FSOUND_Stream_SetLoopCount((FSOUND_STREAM*) stream, count);
 }
 
 /*
@@ -1243,7 +1243,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetLoopCount(
 * Signature: (JII)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetLoopPoints(JNIEnv * env, jclass clazz, jlong stream, jint loopstartpcm, jint loopendpcm) {
-  return fmod->FSOUND_Stream_SetLoopPoints((FSOUND_STREAM*) stream, loopstartpcm, loopendpcm);
+  return fmod_instance->FSOUND_Stream_SetLoopPoints((FSOUND_STREAM*) stream, loopstartpcm, loopendpcm);
 }
 
 /*
@@ -1252,7 +1252,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetLoopPoints
 * Signature: (JI)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetMode(JNIEnv * env, jclass clazz, jlong stream, jint mode) {
-  return fmod->FSOUND_Stream_SetMode((FSOUND_STREAM*) stream, mode);
+  return fmod_instance->FSOUND_Stream_SetMode((FSOUND_STREAM*) stream, mode);
 }
 
 /*
@@ -1261,7 +1261,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetMode(JNIEn
 * Signature: (JI)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetPosition(JNIEnv * env, jclass clazz, jlong stream, jint position) {
-  return fmod->FSOUND_Stream_SetPosition((FSOUND_STREAM*) stream, position);
+  return fmod_instance->FSOUND_Stream_SetPosition((FSOUND_STREAM*) stream, position);
 }
 
 /*
@@ -1292,7 +1292,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Stream_1SetSyncCal
 * Signature: (JI)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetTime(JNIEnv * env, jclass clazz, jlong stream, jint ms) {
-  return fmod->FSOUND_Stream_SetTime((FSOUND_STREAM*) stream, ms);
+  return fmod_instance->FSOUND_Stream_SetTime((FSOUND_STREAM*) stream, ms);
 }
 
 /*
@@ -1301,7 +1301,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1SetTime(JNIEn
 * Signature: (C)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1Eject(JNIEnv * env, jclass clazz, jchar drive) {
-  return fmod->FSOUND_CD_Eject(drive);
+  return fmod_instance->FSOUND_CD_Eject(drive);
 }
 
 /*
@@ -1310,7 +1310,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1Eject(JNIEnv *
 * Signature: (C)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetNumTracks(JNIEnv * env, jclass clazz, jchar drive) {
-  return fmod->FSOUND_CD_GetNumTracks(drive);
+  return fmod_instance->FSOUND_CD_GetNumTracks(drive);
 }
 
 /*
@@ -1319,7 +1319,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetNumTracks(JNIEn
 * Signature: (C)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetPaused(JNIEnv * env, jclass clazz, jchar drive) {
-  return fmod->FSOUND_CD_GetPaused(drive);
+  return fmod_instance->FSOUND_CD_GetPaused(drive);
 }
 
 /*
@@ -1328,7 +1328,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetPaused(JNIE
 * Signature: (C)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetTrack(JNIEnv * env, jclass clazz, jchar drive) {
-  return fmod->FSOUND_CD_GetTrack(drive);
+  return fmod_instance->FSOUND_CD_GetTrack(drive);
 }
 
 /*
@@ -1337,7 +1337,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetTrack(JNIEnv * 
 * Signature: (CI)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetTrackLength(JNIEnv * env, jclass clazz, jchar drive, jint track) {
-  return fmod->FSOUND_CD_GetTrackLength(drive, track);
+  return fmod_instance->FSOUND_CD_GetTrackLength(drive, track);
 }
 
 /*
@@ -1346,7 +1346,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetTrackLength(JNI
 * Signature: (C)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetTrackTime(JNIEnv * env, jclass clazz, jchar drive) {
-  return fmod->FSOUND_CD_GetTrackTime(drive);
+  return fmod_instance->FSOUND_CD_GetTrackTime(drive);
 }
 
 /*
@@ -1355,7 +1355,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1GetTrackTime(JNIEn
 * Signature: (CI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1Play(JNIEnv * env, jclass clazz, jchar drive, jint track) {
-  return fmod->FSOUND_CD_Play(drive, track);
+  return fmod_instance->FSOUND_CD_Play(drive, track);
 }
 
 /*
@@ -1364,7 +1364,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1Play(JNIEnv * 
 * Signature: (CZ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetPaused(JNIEnv * env, jclass clazz, jchar drive, jboolean paused) {
-  return fmod->FSOUND_CD_SetPaused(drive, paused);
+  return fmod_instance->FSOUND_CD_SetPaused(drive, paused);
 }
 
 /*
@@ -1373,7 +1373,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetPaused(JNIE
 * Signature: (CI)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetPlayMode(JNIEnv * env, jclass clazz, jchar drive, jint mode) {
-  return fmod->FSOUND_CD_SetPlayMode(drive, mode);
+  return fmod_instance->FSOUND_CD_SetPlayMode(drive, mode);
 }
 
 /*
@@ -1382,7 +1382,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetPlayMode(JNIEnv
 * Signature: (CI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetTrackTime(JNIEnv * env, jclass clazz, jchar drive, jint ms) {
-  return fmod->FSOUND_CD_SetTrackTime(drive, ms);
+  return fmod_instance->FSOUND_CD_SetTrackTime(drive, ms);
 }
 
 /*
@@ -1391,7 +1391,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetTrackTime(J
 * Signature: (CI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetVolume(JNIEnv * env, jclass clazz, jchar drive, jint volume) {
-  return fmod->FSOUND_CD_SetVolume(drive, volume);
+  return fmod_instance->FSOUND_CD_SetVolume(drive, volume);
 }
 
 /*
@@ -1400,7 +1400,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1SetVolume(JNIE
 * Signature: (C)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1Stop(JNIEnv * env, jclass clazz, jchar drive) {
-  return fmod->FSOUND_CD_Stop(drive);
+  return fmod_instance->FSOUND_CD_Stop(drive);
 }
 
 /*
@@ -1409,7 +1409,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1CD_1Stop(JNIEnv * 
 * Signature: ()V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1DSP_1ClearMixBuffer(JNIEnv * env, jclass clazz) {
-  fmod->FSOUND_DSP_ClearMixBuffer();
+  fmod_instance->FSOUND_DSP_ClearMixBuffer();
 }
 
 /*
@@ -1419,7 +1419,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1DSP_1ClearMixBuffer(JN
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1Create(JNIEnv * env, jclass clazz, jint priority) {
   //XXX
-  //return (jlong) fmod->FSOUND_DSP_Create(fmod_dsp_callback, priority, NULL);
+  //return (jlong) fmod_instance->FSOUND_DSP_Create(fmod_dsp_callback, priority, NULL);
   throwFMODException(env, "missing implementation");
   return 0;
 }
@@ -1430,7 +1430,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1Create(JNIEnv *
 * Signature: (J)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1Free(JNIEnv * env, jclass clazz, jlong dsp) {
-  fmod->FSOUND_DSP_Free((FSOUND_DSPUNIT*) dsp);
+  fmod_instance->FSOUND_DSP_Free((FSOUND_DSPUNIT*) dsp);
 }
 
 /*
@@ -1439,7 +1439,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1Free(JNIEnv * en
 * Signature: (JZ)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1SetActive(JNIEnv * env, jclass clazz, jlong dsp, jboolean active) {
-  fmod->FSOUND_DSP_SetActive((FSOUND_DSPUNIT*) dsp, active);
+  fmod_instance->FSOUND_DSP_SetActive((FSOUND_DSPUNIT*) dsp, active);
 }
 
 /*
@@ -1448,7 +1448,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1SetActive(JNIEnv
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetActive(JNIEnv * env, jclass clazz, jlong dsp) {
-  return fmod->FSOUND_DSP_GetActive((FSOUND_DSPUNIT*) dsp);
+  return fmod_instance->FSOUND_DSP_GetActive((FSOUND_DSPUNIT*) dsp);
 }
 
 /*
@@ -1457,7 +1457,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetActive(JN
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1DSP_1GetBufferLength(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_DSP_GetBufferLength();
+  return fmod_instance->FSOUND_DSP_GetBufferLength();
 }
 
 /*
@@ -1466,7 +1466,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1DSP_1GetBufferLength(J
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1DSP_1GetBufferLengthTotal(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_DSP_GetBufferLengthTotal();
+  return fmod_instance->FSOUND_DSP_GetBufferLengthTotal();
 }
 
 /*
@@ -1475,7 +1475,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1DSP_1GetBufferLengthTo
 * Signature: (JI)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1SetPriority(JNIEnv * env, jclass clazz, jlong dsp, jint priority) {
-  fmod->FSOUND_DSP_SetPriority((FSOUND_DSPUNIT*) dsp, priority);
+  fmod_instance->FSOUND_DSP_SetPriority((FSOUND_DSPUNIT*) dsp, priority);
 }
 
 /*
@@ -1484,7 +1484,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1SetPriority(JNIE
 * Signature: (J)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetPriority(JNIEnv * env, jclass clazz, jlong dsp) {
-  return fmod->FSOUND_DSP_GetPriority((FSOUND_DSPUNIT*) dsp);
+  return fmod_instance->FSOUND_DSP_GetPriority((FSOUND_DSPUNIT*) dsp);
 }
 
 /*
@@ -1493,7 +1493,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetPriority(JNIE
 * Signature: ()J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetClearUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod->FSOUND_DSP_GetClearUnit();
+  return (jlong) fmod_instance->FSOUND_DSP_GetClearUnit();
 }
 
 /*
@@ -1502,7 +1502,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetClearUnit(JN
 * Signature: ()J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetClipAndCopyUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod->FSOUND_DSP_GetClipAndCopyUnit();
+  return (jlong) fmod_instance->FSOUND_DSP_GetClipAndCopyUnit();
 }
 
 /*
@@ -1511,7 +1511,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetClipAndCopyU
 * Signature: ()J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetMusicUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod->FSOUND_DSP_GetMusicUnit();
+  return (jlong) fmod_instance->FSOUND_DSP_GetMusicUnit();
 }
 
 /*
@@ -1520,7 +1520,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetMusicUnit(JN
 * Signature: ()J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetSFXUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod->FSOUND_DSP_GetSFXUnit();
+  return (jlong) fmod_instance->FSOUND_DSP_GetSFXUnit();
 }
 
 /*
@@ -1529,7 +1529,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetSFXUnit(JNIE
 * Signature: ()J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetFFTUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod->FSOUND_DSP_GetFFTUnit();
+  return (jlong) fmod_instance->FSOUND_DSP_GetFFTUnit();
 }
 
 /*
@@ -1538,7 +1538,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetFFTUnit(JNIE
 * Signature: ()Ljava/nio/FloatBuffer;
 */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1GetSpectrum(JNIEnv * env, jclass clazz) {
-  return env->NewDirectByteBuffer(fmod->FSOUND_DSP_GetSpectrum(), (512 * sizeof(float)));
+  return env->NewDirectByteBuffer(fmod_instance->FSOUND_DSP_GetSpectrum(), (512 * sizeof(float)));
 }
 
 /*
@@ -1558,7 +1558,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1DSP_1MixBuffers(J
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1Disable(JNIEnv * env, jclass clazz, jint channel) {
-  return fmod->FSOUND_FX_Disable(channel);
+  return fmod_instance->FSOUND_FX_Disable(channel);
 }
 
 /*
@@ -1567,7 +1567,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1Disable(JNIEnv
 * Signature: (II)I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1Enable(JNIEnv * env, jclass clazz, jint channel, jint fx) {
-  return fmod->FSOUND_FX_Enable(channel, fx);
+  return fmod_instance->FSOUND_FX_Enable(channel, fx);
 }
 
 /*
@@ -1576,7 +1576,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1Enable(JNIEnv * en
 * Signature: (IFFFFIFI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetChorus(JNIEnv * env, jclass clazz, jint fxid, jfloat WetDryMix, jfloat Depth, jfloat Feedback, jfloat Frequency, jint Waveform, jfloat Delay, jint Phase) {
-  return fmod->FSOUND_FX_SetChorus(fxid, WetDryMix, Depth, Feedback, Frequency, Waveform, Delay, Phase);
+  return fmod_instance->FSOUND_FX_SetChorus(fxid, WetDryMix, Depth, Feedback, Frequency, Waveform, Delay, Phase);
 }
 
 /*
@@ -1585,7 +1585,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetChorus(JNIE
 * Signature: (IFFFFFF)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetCompressor(JNIEnv * env, jclass clazz, jint fxid, jfloat Gain, jfloat Attack, jfloat Release, jfloat Threshold, jfloat Ratio, jfloat Predelay) {
-  return fmod->FSOUND_FX_SetCompressor(fxid, Gain, Attack, Release, Threshold, Ratio, Predelay);
+  return fmod_instance->FSOUND_FX_SetCompressor(fxid, Gain, Attack, Release, Threshold, Ratio, Predelay);
 }
 
 /*
@@ -1594,7 +1594,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetCompressor(
 * Signature: (IFFFFF)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetDistortion(JNIEnv * env, jclass clazz, jint fxid, jfloat Gain, jfloat Edge, jfloat PostEQCenterFrequency, jfloat PostEQBandwidth, jfloat PreLowpassCutoff) {
-  return fmod->FSOUND_FX_SetDistortion(fxid, Gain, Edge, PostEQCenterFrequency, PostEQBandwidth, PreLowpassCutoff);
+  return fmod_instance->FSOUND_FX_SetDistortion(fxid, Gain, Edge, PostEQCenterFrequency, PostEQBandwidth, PreLowpassCutoff);
 }
 
 /*
@@ -1603,7 +1603,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetDistortion(
 * Signature: (IFFFFI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetEcho(JNIEnv * env, jclass clazz, jint fxid, jfloat WetDryMix, jfloat Feedback, jfloat LeftDelay, jfloat RightDelay, jint PanDelay) {
-  return fmod->FSOUND_FX_SetEcho(fxid, WetDryMix, Feedback, LeftDelay, RightDelay, PanDelay);
+  return fmod_instance->FSOUND_FX_SetEcho(fxid, WetDryMix, Feedback, LeftDelay, RightDelay, PanDelay);
 }
 
 /*
@@ -1612,7 +1612,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetEcho(JNIEnv
 * Signature: (IFFFFIFI)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetFlanger(JNIEnv * env, jclass clazz, jint fxid, jfloat WetDryMix, jfloat Depth, jfloat Feedback, jfloat Frequency, jint Waveform, jfloat Delay, jint Phase) {
-  return fmod->FSOUND_FX_SetFlanger(fxid, WetDryMix, Depth, Feedback, Frequency, Waveform, Delay, Phase);
+  return fmod_instance->FSOUND_FX_SetFlanger(fxid, WetDryMix, Depth, Feedback, Frequency, Waveform, Delay, Phase);
 }
 
 /*
@@ -1621,7 +1621,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetFlanger(JNI
 * Signature: (III)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetGargle(JNIEnv * env, jclass clazz, jint fxid, jint RateHz, jint WaveShape) {
-  return fmod->FSOUND_FX_SetGargle(fxid, RateHz, WaveShape);
+  return fmod_instance->FSOUND_FX_SetGargle(fxid, RateHz, WaveShape);
 }
 
 /*
@@ -1633,7 +1633,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetI3DL2Reverb
   jint fxid, jint Room, jint RoomHF, jfloat RoomRolloffFactor, jfloat DecayTime, 
   jfloat DecayHFRation, jint Reflections, jfloat ReflectionsDelay, jint Reverb, 
   jfloat ReverbDelay, jfloat Diffusion, jfloat Density, jfloat HFReference) {
-  return fmod->FSOUND_FX_SetI3DL2Reverb(
+  return fmod_instance->FSOUND_FX_SetI3DL2Reverb(
   fxid, Room, RoomHF, RoomRolloffFactor, DecayTime, 
   DecayHFRation, Reflections, ReflectionsDelay, Reverb, 
   ReverbDelay, Diffusion, Density, HFReference);
@@ -1645,7 +1645,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetI3DL2Reverb
 * Signature: (IFFF)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetParamEQ(JNIEnv * env, jclass clazz, jint fxid, jfloat Center, jfloat Bandwidth, jfloat Gain) {
-  return fmod->FSOUND_FX_SetParamEQ(fxid, Center, Bandwidth, Gain);
+  return fmod_instance->FSOUND_FX_SetParamEQ(fxid, Center, Bandwidth, Gain);
 }
 
 /*
@@ -1654,7 +1654,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetParamEQ(JNI
 * Signature: (IFFFF)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetWavesReverb(JNIEnv * env, jclass clazz, jint fxid, jfloat InGain, jfloat ReverbMix, jfloat ReverbTime, jfloat HighFreqRTRatio) {
-  return fmod->FSOUND_FX_SetWavesReverb(fxid, InGain, ReverbMix, ReverbTime, HighFreqRTRatio);
+  return fmod_instance->FSOUND_FX_SetWavesReverb(fxid, InGain, ReverbMix, ReverbTime, HighFreqRTRatio);
 }
 
 /*
@@ -1663,7 +1663,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1FX_1SetWavesReverb
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetDriver(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_Record_GetDriver();
+  return fmod_instance->FSOUND_Record_GetDriver();
 }
 
 /*
@@ -1672,7 +1672,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetDriver(JNIE
 * Signature: (I)Ljava/lang/String;
 */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetDriverName(JNIEnv * env, jclass clazz, jint driver) {
-  return env->NewStringUTF((const char *)fmod->FSOUND_Record_GetDriverName(driver));
+  return env->NewStringUTF((const char *)fmod_instance->FSOUND_Record_GetDriverName(driver));
 }
 
 /*
@@ -1681,7 +1681,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetDriverNa
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetNumDrivers(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_Record_GetNumDrivers();
+  return fmod_instance->FSOUND_Record_GetNumDrivers();
 }
 
 /*
@@ -1690,7 +1690,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetNumDrivers(
 * Signature: ()I
 */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetPosition(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_Record_GetPosition();
+  return fmod_instance->FSOUND_Record_GetPosition();
 }
 
 /*
@@ -1699,7 +1699,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1GetPosition(JN
 * Signature: (I)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1SetDriver(JNIEnv * env, jclass clazz, jint outputtype) {
-  return fmod->FSOUND_Record_SetDriver(outputtype);
+  return fmod_instance->FSOUND_Record_SetDriver(outputtype);
 }
 
 /*
@@ -1708,7 +1708,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1SetDriver(
 * Signature: (JZ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Record_1StartSample(JNIEnv * env, jclass clazz, jlong sample, jboolean loop) {
-  return fmod->FSOUND_Record_StartSample((FSOUND_SAMPLE *) sample, loop);
+  return fmod_instance->FSOUND_Record_StartSample((FSOUND_SAMPLE *) sample, loop);
 }
 
 /*
@@ -1717,7 +1717,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Record_1StartSamp
 * Signature: ()Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1Stop(JNIEnv * env, jclass clazz) {
-  return fmod->FSOUND_Record_Stop();
+  return fmod_instance->FSOUND_Record_Stop();
 }
 
 /*
@@ -1726,7 +1726,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Record_1Stop(JNIEn
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Reverb_1SetProperties(JNIEnv * env, jclass clazz, jlong prop) {
-  return fmod->FSOUND_Reverb_SetProperties((FSOUND_REVERB_PROPERTIES*) prop);
+  return fmod_instance->FSOUND_Reverb_SetProperties((FSOUND_REVERB_PROPERTIES*) prop);
 }
 
 /*
@@ -1735,7 +1735,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Reverb_1SetProper
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Reverb_1GetProperties(JNIEnv * env, jclass clazz, jlong prop) {
-  return fmod->FSOUND_Reverb_GetProperties((FSOUND_REVERB_PROPERTIES*) prop);
+  return fmod_instance->FSOUND_Reverb_GetProperties((FSOUND_REVERB_PROPERTIES*) prop);
 }
 
 /*
@@ -1744,7 +1744,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Reverb_1GetProper
 * Signature: (IJ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Reverb_1SetChannelProperties(JNIEnv * env, jclass clazz, jint channel, jlong prop) {
-  return fmod->FSOUND_Reverb_SetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
+  return fmod_instance->FSOUND_Reverb_SetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
 }
 
 /*
@@ -1753,5 +1753,5 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Reverb_1SetChanne
 * Signature: (IJ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Reverb_1GetChannelProperties(JNIEnv * env, jclass clazz, jint channel, jlong prop) {
-  return fmod->FSOUND_Reverb_GetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
+  return fmod_instance->FSOUND_Reverb_GetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
 }
