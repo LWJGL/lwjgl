@@ -53,6 +53,8 @@ bool modeSet = false; // Whether we've done a display mode change
 WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
 WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
 DEVMODE devmode; // Now we'll remember this value for the future
+extern HWND				display_hwnd = NULL;						              // Handle to the window
+extern RECT clientSize;
 char * driver = getDriver();
 
 jobjectArray getAvailableDisplayModes(JNIEnv *env)
@@ -213,7 +215,7 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 	devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFLAGS;
 	if (freq != 0)
 		devmode.dmFields |= DM_DISPLAYFREQUENCY;
-	LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
+	  LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 	if (cdsret != DISP_CHANGE_SUCCESSFUL) {
 		// Failed: so let's check to see if it's a wierd dual screen display
@@ -227,7 +229,6 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 			return;
 		}
 	}
-
 	modeSet = true;
 }
 

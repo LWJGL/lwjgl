@@ -83,7 +83,7 @@
 	 * 
 	 * Returns true for success, or false for failure
 	 */
-	WINDOW_H_API HWND createWindow(int width, int height, bool fullscreen, bool undecorated);
+	WINDOW_H_API HWND createWindow(int x, int y, int width, int height, bool fullscreen, bool undecorated);
 
 
 	/*

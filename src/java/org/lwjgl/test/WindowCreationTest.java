@@ -31,8 +31,10 @@
  */
 package org.lwjgl.test;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -52,6 +54,12 @@ public class WindowCreationTest {
     // get avaialble modes, and print out
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     System.out.println("Found " + modes.length + " display modes");
+
+    int x = 100, y = 100;
+    boolean fullscreen = false;
+    
+    System.out.println("Moving to 100, 100");
+    Display.setLocation(x, y);
     
     // Create the actual window
     try {
@@ -65,9 +73,10 @@ public class WindowCreationTest {
 
     System.out.println("Window created");
     System.out.println(Display.getDisplayMode().getHeight() + ", " + Display.getDisplayMode().getWidth() + ", " + Display.getTitle());
-
+    
     // wait for user to close window
-    while(!Display.isCloseRequested()) {    
+    while(!Display.isCloseRequested()) {
+      GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
       Display.update();
       try {
         Thread.sleep(100);
@@ -78,6 +87,31 @@ public class WindowCreationTest {
       if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
        break; 
       }
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+      	Display.setLocation(x -= 10, y);
+      }
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+        Display.setLocation(x += 10, y);
+      }      
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+        Display.setLocation(x, y -= 10);
+      }
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+        Display.setLocation(x, y += 10);
+      }      
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_F)) {
+        try {
+        	Display.setFullscreen(fullscreen = !fullscreen);
+        } catch (LWJGLException lwjgle) {
+         lwjgle.printStackTrace(); 
+        }
+      }      
+      
     }
     
     // nuke window and get out

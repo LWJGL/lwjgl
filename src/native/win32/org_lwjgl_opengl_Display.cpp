@@ -47,17 +47,18 @@
 #include "display.h"
 #include "org_lwjgl_opengl_Display.h"
 
-static bool				oneShotInitialised = false;			// Registers the LWJGL window class
+static bool				oneShotInitialised = false;     // Registers the LWJGL window class
 
-static HWND				display_hwnd = NULL;						              // Handle to the window
-static HDC					display_hdc = NULL;							              // Device context
-static HGLRC				display_hglrc = NULL;						              // OpenGL context
-static bool				isFullScreen = false;		        // Whether we're fullscreen or not
-static bool				isMinimized = false;		        // Whether we're minimized or not
+static HWND       display_hwnd = NULL;            // Handle to the window
+static HDC        display_hdc = NULL;             // Device context
+static HGLRC      display_hglrc = NULL;           // OpenGL context
+static bool				isFullScreen = false;           // Whether we're fullscreen or not
+static bool				isMinimized = false;            // Whether we're minimized or not
 static bool       isFocused = false;              // whether we're focused or not
 static bool       isDirty = false;                // Whether we're dirty or not
-static bool       isUndecorated = false;                // Whether we're undecorated or not
-extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
+static bool       isUndecorated = false;          // Whether we're undecorated or not
+extern HINSTANCE	dll_handle;                     // Handle to the LWJGL dll
+RECT clientSize;                                  // client size rect used when creating and positioning window
 
 static bool closerequested;
 static int pixel_format_index;
@@ -346,6 +347,17 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		{
 			isDirty = true;
 		}
+    /*case WM_MOVE:  {
+      // get fields of display
+	    jclass cls_display = env->FindClass("org/lwjgl/opengl/Display");
+	    jfieldID fid_x = env->GetStaticFieldID(cls_display, "x", "I");
+	    jfieldID fid_y = env->GetStaticFieldID(cls_display, "y", "I");
+	    
+	    // set fields
+	    env->SetStaticIntField(cls_display, fid_x, (int)(short) LOWORD(lParam));
+	    env->SetStaticIntField(cls_display, fid_y, (int)(short) HIWORD(lParam));
+	    
+    }*/
 	}
 
 	// default action
@@ -414,7 +426,7 @@ static void handleMessages(JNIEnv * env, jclass clazz)
  * 
  * Returns true for success, or false for failure
  */
-HWND createWindow(int width, int height, bool fullscreen, bool undecorated)
+HWND createWindow(int x, int y, int width, int height, bool fullscreen, bool undecorated)
 {
 	int exstyle, windowflags;
 
@@ -436,7 +448,6 @@ HWND createWindow(int width, int height, bool fullscreen, bool undecorated)
 
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar (unless undecorated)
-	RECT clientSize;
 	clientSize.bottom = height;
 	clientSize.left = 0;
 	clientSize.right = width;
@@ -455,7 +466,7 @@ HWND createWindow(int width, int height, bool fullscreen, bool undecorated)
 		 WINDOWCLASSNAME,
 		 "",
 		 windowflags,
-		 0, 0, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
+		 x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
 		 NULL,
 		 NULL,
 		 dll_handle,
@@ -574,7 +585,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Display_nGetAvailableDispla
 	return getAvailableDisplayModes(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen, jint x, jint y) {
 	closerequested = false;
 	isMinimized = false;
 	isFocused = true;
@@ -587,7 +598,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, 
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
 
-	display_hwnd = createWindow(width, height, isFullScreen, isUndecorated);
+	display_hwnd = createWindow(x, y, width, height, isFullScreen, isUndecorated);
 	if (display_hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
 		return;
@@ -656,7 +667,7 @@ static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_f
 		if (pixel_format_index == -1)
 			return false;
 	}
-	HWND arb_hwnd = createWindow(1, 1, false, false);
+	HWND arb_hwnd = createWindow(0, 0, 1, 1, false, false);
 	if (arb_hwnd == NULL)
 		return false;
 	HDC arb_hdc = GetDC(arb_hwnd);
@@ -672,7 +683,7 @@ static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_f
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
-	HWND dummy_hwnd = createWindow(1, 1, false, false);
+	HWND dummy_hwnd = createWindow(0, 0, 1, 1, false, false);
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
 		return;
@@ -728,4 +739,39 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env,
 		wglDeleteContext(display_hglrc);
 		display_hglrc = NULL;
 	}
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nReshape(JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height) {
+	if (isFullScreen) {
+		return;
+	}
+
+	int exstyle, windowflags;
+
+	if (isFullScreen) {
+		exstyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
+		windowflags = WS_POPUP;
+	} else if (getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated")) {
+		exstyle = WS_EX_APPWINDOW;
+		windowflags = WS_POPUP;
+	} else {
+		exstyle = WS_EX_APPWINDOW;
+		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_MINIMIZEBOX | WS_SYSMENU;
+	}
+	
+	// If we're not a fullscreen window, adjust the height to account for the
+	// height of the title bar:
+	clientSize.bottom = height;
+	clientSize.left = 0;
+	clientSize.right = width;
+	clientSize.top = 0;
+	
+	AdjustWindowRectEx(
+	  &clientSize,    // client-rectangle structure
+	  windowflags,    // window styles
+	  FALSE,          // menu-present option
+	  exstyle         // extended window style
+	);
+
+	SetWindowPos(display_hwnd, HWND_TOP, x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top, SWP_NOZORDER);
 }

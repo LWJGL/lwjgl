@@ -79,7 +79,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 }
 
 static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pixel_format, jobject pixelFormatCaps, const int *pBufferAttribs_ptr) {
-	HWND dummy_hwnd = createWindow(1, 1, false, false);
+	HWND dummy_hwnd = createWindow(0, 0, 1, 1, false, false);
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Could not create dummy window");
 		return NULL;

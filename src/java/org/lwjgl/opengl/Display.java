@@ -75,14 +75,14 @@ public final class Display {
 	/** Timer for sync() */
 	private static long timeNow, timeThen;
 
-//	/** X coordinate of the window */
-//	private static int x;
+	/** X coordinate of the window */
+	private static int x;
 
 	/**
 	 * Y coordinate of the window. Y in window coordinates is from the top of the display down,
 	 * unlike GL, where it is typically at the bottom of the display.
 	 */
-//	private static int y;
+	private static int y;
 
 	/** Title of the window (never null) */
 	private static String title = "Game";
@@ -177,13 +177,15 @@ public final class Display {
 	 * A native context must exist, and it will be attached to the window.
 	 */
 	private static void createWindow() throws LWJGLException {
-		nCreateWindow(current_mode, fullscreen);
+		x = Math.max(0, Math.min(initial_mode.getWidth() - current_mode.getWidth(), x));
+		y = Math.max(0, Math.min(initial_mode.getHeight() - current_mode.getHeight(), y));
+		nCreateWindow(current_mode, fullscreen, (fullscreen) ? 0 : x, (fullscreen) ? 0 : y);
 		nSetTitle(title);
 		initControls();
 		nSetVSyncEnabled(vsync);
 	}
 
-	private static native void nCreateWindow(DisplayMode mode, boolean fullscreen) throws LWJGLException;
+	private static native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 
 	private static void destroyWindow() {
 		// Automatically destroy keyboard, mouse, and controller
@@ -329,21 +331,17 @@ public final class Display {
 	/**
 	 * @return the X coordinate of the window (always 0 for fullscreen)
 	 */
-/*	public static int getX() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot get X on uncreated window");
-		return x;
-	}
-*/
+	/*public static int getX() {
+		return (fullscreen) ? 0 :  x;
+	}*/
+
 	/**
 	 * @return the Y coordinate of the window (always 0 for fullscreen)
 	 */
-/*	public static int getY() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot get Y on uncreated window");
-		return y;
-	}
-*/
+	/*public static int getY() {
+		return (fullscreen) ? 0 :  y;
+	}*/
+
 	
 	/**
 	 * @return the title of the window
@@ -370,10 +368,11 @@ public final class Display {
 				return;
 			destroyWindow();
 			try {
-				if (fullscreen)
+				if (fullscreen) {
 					switchDisplayMode();
-				else
+        } else {
 					resetDisplayMode();
+        }
 				createWindow();
 			} catch (LWJGLException e) {
 				destroyContext();
@@ -697,30 +696,28 @@ public final class Display {
 
 	private static native void nSetVSyncEnabled(boolean sync);
 
-//	/**
-//	 * Set the window's location. This is a no-op on fullscreen windows.
-//	 * The window is clamped to remain entirely on the screen. If you attempt
-//	 * to position the window such that it would extend off the screen, the window
-//	 * is simply placed as close to the edge as possible.
-//	 * @param x, y The new window location
-//	 */
-//	public static void setLocation(int x, int y) {
-//		if (!isCreated())
-//			throw new IllegalStateException("Cannot move uncreated window");
-//		if (fullscreen) {
-//			return;
-//		}
-//		Display.x = Math.max(0, Math.min(Display.getWidth() - Display.width, x));
-//		Display.y = Math.max(0, Math.min(Display.getHeight() - Display.height, y));
-//		nReshape(Display.x, Display.y, Display.width, Display.height);
-//	}
-//
-//	
-//	/**
-//	 * Native method to reshape the window
-//	 * @param x, y The new window location
-//	 * @param width, height The new window dimensions
-//	 */
-//	private static native void nReshape(int x, int y, int width, int height);
+	/**
+	 * Set the window's location. This is a no-op on fullscreen windows.
+	 * The window is clamped to remain entirely on the screen. If you attempt
+	 * to position the window such that it would extend off the screen, the window
+	 * is simply placed as close to the edge as possible.
+	 * @param x, y The new window location
+	 */
+	public static void setLocation(int x, int y) {
+		if (fullscreen) {
+			return;
+		}
+    
+    // offset if already created
+    if(isCreated()) {
+    	x = Math.max(0, Math.min(initial_mode.getWidth() - current_mode.getWidth(), x));
+    	y = Math.max(0, Math.min(initial_mode.getHeight() - current_mode.getHeight(), y));
+      nReshape(x, y, current_mode.getWidth(), current_mode.getHeight());    
+    }
 
+    // cache position
+    Display.x = x;
+    Display.y = y;   
+	}
+  private static native void nReshape(int x, int y, int width, int height);
 }
