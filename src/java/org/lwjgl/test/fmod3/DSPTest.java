@@ -31,8 +31,6 @@
  */
 package org.lwjgl.test.fmod3;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -44,6 +42,7 @@ import org.lwjgl.fmod3.FSound;
 import org.lwjgl.fmod3.FSoundDSPUnit;
 import org.lwjgl.fmod3.FSoundStream;
 import org.lwjgl.fmod3.callbacks.FSoundDSPCallback;
+import org.lwjgl.fmod3.callbacks.FSoundStreamCallback;
 
 /**
  * $Id$ <br>
@@ -52,7 +51,10 @@ import org.lwjgl.fmod3.callbacks.FSoundDSPCallback;
  * @version $Revision$
  */
 public class DSPTest {
-
+  
+  public static int bytesPerSample; 
+  public static int channels;
+  
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage:\n DSPTest <file>");
@@ -91,6 +93,47 @@ public class DSPTest {
       System.out.println("Created: " + unit);
       System.out.println("Created: " + unit2);
       
+      switch(FSound.FSOUND_GetMixer()) {
+        case FSound.FSOUND_MIXER_AUTODETECT:
+        case FSound.FSOUND_MIXER_BLENDMODE:
+        case FSound.FSOUND_MIXER_QUALITY_AUTODETECT:
+        case FSound.FSOUND_MIXER_QUALITY_FPU:
+        case FSound.FSOUND_MIXER_MONO:
+        case FSound.FSOUND_MIXER_QUALITY_MONO:
+        case FSound.FSOUND_MIXER_MAX:
+          bytesPerSample = 8;
+          break;
+        default:
+          bytesPerSample = 4;
+          break;
+      }
+      
+      channels = FSound.FSOUND_Stream_GetMode(stream);
+      if((channels & FSound.FSOUND_STEREO) == FSound.FSOUND_STEREO) {
+       channels = 2; 
+      } else {
+       channels = 1; 
+      }
+      
+      FSound.FSOUND_Stream_SetEndCallback(stream, new FSoundStreamCallback() {
+				public void FSOUND_STREAMCALLBACK(FSoundStream stream, ByteBuffer buff, int len) {
+          System.out.println("Done");
+        }
+      });
+      
+      FSound.FSOUND_Stream_SetSyncCallback(stream, new FSoundStreamCallback() {
+        public void FSOUND_STREAMCALLBACK(FSoundStream stream, ByteBuffer buff, int len) {
+          System.out.println("SYNCPOINT");
+          try {
+          	byte[] data = new byte[buff.capacity()];
+          	buff.get(data);
+          	System.out.println("Syncpoint @ " + len + ": " + new String(data));
+          } catch (Exception e) {
+          	e.printStackTrace();
+          }
+        }
+      });
+      
       
 			FSound.FSOUND_Stream_Play(0, stream);
 
@@ -113,77 +156,32 @@ public class DSPTest {
 		FSound.FSOUND_Close();
 		FMOD.destroy();
 	}
-
-	/**
-	 * Reads the file into a ByteBuffer
-	 * 
-	 * @param filename
-	 *          Name of file to load
-	 * @return ByteBuffer containing file data
-	 */
-	static protected ByteBuffer getData(String filename) {
-		ByteBuffer buffer = null;
-
-		System.out.println("Attempting to load: " + filename);
-
-		try {
-			BufferedInputStream bis = new BufferedInputStream(DSPTest.class.getClassLoader().getResourceAsStream(filename));
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-			int bufferLength = 4096;
-			byte[] readBuffer = new byte[bufferLength];
-			int read = -1;
-
-			while ((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
-				baos.write(readBuffer, 0, read);
-			}
-
-			//done reading, close
-			bis.close();
-
-			// if ogg vorbis data, we need to pass it unmodified to alBufferData
-			buffer = ByteBuffer.allocateDirect(baos.size());
-			buffer.order(ByteOrder.nativeOrder());
-			buffer.put(baos.toByteArray());
-			buffer.flip();
-			System.out.println("loaded " + buffer.remaining() + " bytes");
-		} catch (Exception ioe) {
-			ioe.printStackTrace();
-		}
-		return buffer;
-	}
-
-	/**
-	 * Creates a ByteBuffer buffer to hold specified bytes - strictly a utility
-	 * method
-	 * 
-	 * @param size
-	 *          how many bytes to contain
-	 * @return created ByteBuffer
-	 */
-	protected static ByteBuffer createByteBuffer(int size) {
-		ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-		temp.order(ByteOrder.nativeOrder());
-		return temp;
-	}
   
   public class TestDspCallback implements FSoundDSPCallback {
     
     private String name;
-    
+
     public TestDspCallback(String name) {
-     this.name = name; 
+     this.name      = name; 
     }
 
     /* 
      * @see org.lwjgl.fmod3.callbacks.FSoundDSPCallback#FSOUND_DSPCALLBACK(java.nio.ByteBuffer, java.nio.ByteBuffer, int)
      */
     public ByteBuffer FSOUND_DSPCALLBACK(ByteBuffer originalbuffer, ByteBuffer newbuffer, int length) {
-      System.out.println("DSP instance called - " + name);
-      System.out.println("orig: " + originalbuffer.capacity());
-      System.out.println("new: " + newbuffer.capacity());
-      System.out.println("length: " + length);
-      return originalbuffer;
+      short leftChannel;
+      short rightChannel;
+      
+    	for(int i=0; i<length; i++) {
+        leftChannel = originalbuffer.getShort();
+        //rightChannel = originalbuffer.getShort();
+    		
+        // keep left, mute right channel
+        newbuffer.putShort(leftChannel);
+        //newbuffer.putShort(rightChannel);
+    	}
+    	newbuffer.rewind();
+    	return newbuffer;
     }
   }  
 }

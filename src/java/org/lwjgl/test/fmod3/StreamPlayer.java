@@ -139,18 +139,4 @@ public class StreamPlayer {
 		}
 		return buffer;
 	}
-
-	/**
-	 * Creates a ByteBuffer buffer to hold specified bytes - strictly a utility
-	 * method
-	 * 
-	 * @param size
-	 *          how many bytes to contain
-	 * @return created ByteBuffer
-	 */
-	protected static ByteBuffer createByteBuffer(int size) {
-		ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-		temp.order(ByteOrder.nativeOrder());
-		return temp;
-	}
 }
