@@ -235,6 +235,10 @@ bool shouldGrab(void) {
 	return !input_released && grab;
 }
 
+bool isGrabbed(void) {
+	return grab;
+}
+
 void setGrab(bool new_grab) {
 	if (new_grab != grab) {
 		grab = new_grab;

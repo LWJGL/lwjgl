@@ -69,6 +69,7 @@
 	extern void updatePointerGrab(void);
 	extern void updateKeyboardGrab(void);
 	extern void setGrab(bool);
+	extern bool isGrabbed(void);
 	extern bool shouldGrab(void);
 
 	/*
