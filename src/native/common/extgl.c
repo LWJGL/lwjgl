@@ -5,13 +5,13 @@ All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-      this list of conditions and the following disclaimer in the documentation 
-      and/or other materials provided with the distribution.
-    * The name of the author may be used to endorse or promote products 
-      derived from this software without specific prior written permission.
+	* Redistributions of source code must retain the above copyright notice, 
+	  this list of conditions and the following disclaimer.
+	* Redistributions in binary form must reproduce the above copyright notice, 
+	  this list of conditions and the following disclaimer in the documentation 
+	  and/or other materials provided with the distribution.
+	* The name of the author may be used to endorse or promote products 
+	  derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
@@ -25,13 +25,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 ------------------------------------------------------------------------------*/
 /* 
-    Lev Povalahev
+	Lev Povalahev
 
-    levp@gmx.net
+	levp@gmx.net
 
-    http://www.uni-karlsruhe.de/~uli2/
+	http://www.uni-karlsruhe.de/~uli2/
 
-*/                         
+*/						 
 
 #include "extgl.h"
 #include <stdio.h>
@@ -1367,84 +1367,84 @@ CFBundleRef gBundleRefOpenGL = NULL;
 // -------------------------
 OSStatus aglInitEntryPoints (void)
 {
-    OSStatus err = noErr;
-    const Str255 frameworkName = "\pOpenGL.framework";
-    FSRefParam fileRefParam;
-    FSRef fileRef;
-    CFURLRef bundleURLOpenGL;
-    memset(&fileRefParam, 0, sizeof(fileRefParam));
-    memset(&fileRef, 0, sizeof(fileRef));
-    fileRefParam.ioNamePtr  = frameworkName;
-    fileRefParam.newRef = &fileRef;
+	OSStatus err = noErr;
+	const Str255 frameworkName = "\pOpenGL.framework";
+	FSRefParam fileRefParam;
+	FSRef fileRef;
+	CFURLRef bundleURLOpenGL;
+	memset(&fileRefParam, 0, sizeof(fileRefParam));
+	memset(&fileRef, 0, sizeof(fileRef));
+	fileRefParam.ioNamePtr  = frameworkName;
+	fileRefParam.newRef = &fileRef;
 
-    // Frameworks directory/folder
-    //
-    err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
-    if (noErr != err)
-    {
-        DebugStr ("\pCould not find frameworks folder");
-        return err;
-    }
+	// Frameworks directory/folder
+	//
+	err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
+	if (noErr != err)
+	{
+		DebugStr ("\pCould not find frameworks folder");
+		return err;
+	}
 
-    // make FSRef for folder
-    //
-    err = PBMakeFSRefSync (&fileRefParam);
+	// make FSRef for folder
+	//
+	err = PBMakeFSRefSync (&fileRefParam);
 
 
-    if (noErr != err)
-    {
-        DebugStr ("\pCould make FSref to frameworks folder");
-        return err;
-    }
+	if (noErr != err)
+	{
+		DebugStr ("\pCould make FSref to frameworks folder");
+		return err;
+	}
 
-    // create URL to folder
-    //
-    bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
-    if (!bundleURLOpenGL)
-    {
-        DebugStr ("\pCould create OpenGL Framework bundle URL");
-        return paramErr;
-    }
+	// create URL to folder
+	//
+	bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
+	if (!bundleURLOpenGL)
+	{
+		DebugStr ("\pCould create OpenGL Framework bundle URL");
+		return paramErr;
+	}
 
-    // create ref to GL's bundle
-    //
-    gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
-    if (!gBundleRefOpenGL)
-    {
-        DebugStr ("\pCould not create OpenGL Framework bundle");
-        return paramErr;
-    }
+	// create ref to GL's bundle
+	//
+	gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
+	if (!gBundleRefOpenGL)
+	{
+		DebugStr ("\pCould not create OpenGL Framework bundle");
+		return paramErr;
+	}
 
-    // release created bundle
-    //
-    CFRelease (bundleURLOpenGL);
+	// release created bundle
+	//
+	CFRelease (bundleURLOpenGL);
 
-    // if the code was successfully loaded, look for our function.
-    if (!CFBundleLoadExecutable (gBundleRefOpenGL))
-    {
-        DebugStr ("\pCould not load MachO executable");
-        return paramErr;
-    }
+	// if the code was successfully loaded, look for our function.
+	if (!CFBundleLoadExecutable (gBundleRefOpenGL))
+	{
+		DebugStr ("\pCould not load MachO executable");
+		return paramErr;
+	}
 
-    return err;
+	return err;
 }
 
 
 static void aglDellocEntryPoints (void)
 {
-    if (gBundleRefOpenGL != NULL)
-    {
-        // unload the bundle's code.
-        CFBundleUnloadExecutable (gBundleRefOpenGL);
-        CFRelease (gBundleRefOpenGL);
-        gBundleRefOpenGL = NULL;
-    }
+	if (gBundleRefOpenGL != NULL)
+	{
+		// unload the bundle's code.
+		CFBundleUnloadExecutable (gBundleRefOpenGL);
+		CFRelease (gBundleRefOpenGL);
+		gBundleRefOpenGL = NULL;
+	}
 }
 
 
 static void * aglGetProcAddress (char * pszProc)
 {
-    return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
+	return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
 }
 #endif
 
@@ -1453,40 +1453,47 @@ static void * aglGetProcAddress (char * pszProc)
 static void *extgl_GetProcAddress(char *name)
 {
 #ifdef _WIN32
-    void *t = wglGetProcAddress(name);
-    if (t == NULL)
-    {
+	void *t = wglGetProcAddress(name);
+	if (t == NULL)
+	{
 		t = GetProcAddress(lib_gl_handle, name);
 		if (t == NULL)
 		{
 			t = GetProcAddress(lib_glu_handle, name);
-			if (t == NULL)
-				extgl_error = 1;
-		}
-    }
-    return t;
+			if (t == NULL) {
+#ifdef _DEBUG
+				printf("Could not locate symbol %s\n", name);
 #endif
-    
+				extgl_error = 1;
+			}
+		}
+	}
+	return t;
+#endif
+	
 #ifdef _X11
-    void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
-    if (t == NULL)
-    {
+	void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
+	if (t == NULL)
+	{
 		t = dlsym(lib_gl_handle, name);
 		if (t == NULL)
 		{
-	        t = dlsym(lib_glu_handle, name);
+			t = dlsym(lib_glu_handle, name);
 			if (t == NULL) {
-			    extgl_error = 1;
+#ifdef _DEBUG
+				printf("Could not locate symbol %s\n", name);
+#endif
+				extgl_error = 1;
 			}
 		}
-    }
-    return t;
+	}
+	return t;
 #endif
 
 #ifdef _AGL
-    void *t =(void *)aglGetProcAddress(name);
+	void *t =(void *)aglGetProcAddress(name);
 
-    return t;
+	return t;
 #endif 
 }
 
@@ -1499,139 +1506,139 @@ static void *extgl_GetProcAddress(char *name)
 /** returns true if the extention is available */
 static int QueryWGLExtension(const char *name)
 {
-    const GLubyte *extensions;
-    const GLubyte *start;
-    GLubyte *where, *terminator;
+	const GLubyte *extensions;
+	const GLubyte *start;
+	GLubyte *where, *terminator;
 
-    /* Extension names should not have spaces. */
-    where = (GLubyte *) strchr(name, ' ');
-    if (where || *name == '\0')
-        return 0;
-    if (wglGetExtensionsStringARB == NULL)
-        if (wglGetExtensionsStringEXT == NULL)
-            return 0;
-        else
-            extensions = (GLubyte*)wglGetExtensionsStringEXT();
-    else
-        extensions = (GLubyte*)wglGetExtensionsStringARB(wglGetCurrentDC());
-    /* It takes a bit of care to be fool-proof about parsing the
-         OpenGL extensions string. Don't be fooled by sub-strings,
-        etc. */
-    start = extensions;
-    for (;;) 
-    {
-        where = (GLubyte *) strstr((const char *) start, name);
-        if (!where)
-            break;
-        terminator = where + strlen(name);
-        if (where == start || *(where - 1) == ' ')
-            if (*terminator == ' ' || *terminator == '\0')
-                return 1;
-        start = terminator;
-    }
-    return 0;
+	/* Extension names should not have spaces. */
+	where = (GLubyte *) strchr(name, ' ');
+	if (where || *name == '\0')
+		return 0;
+	if (wglGetExtensionsStringARB == NULL)
+		if (wglGetExtensionsStringEXT == NULL)
+			return 0;
+		else
+			extensions = (GLubyte*)wglGetExtensionsStringEXT();
+	else
+		extensions = (GLubyte*)wglGetExtensionsStringARB(wglGetCurrentDC());
+	/* It takes a bit of care to be fool-proof about parsing the
+		 OpenGL extensions string. Don't be fooled by sub-strings,
+		etc. */
+	start = extensions;
+	for (;;) 
+	{
+		where = (GLubyte *) strstr((const char *) start, name);
+		if (!where)
+			break;
+		terminator = where + strlen(name);
+		if (where == start || *(where - 1) == ' ')
+			if (*terminator == ' ' || *terminator == '\0')
+				return 1;
+		start = terminator;
+	}
+	return 0;
 }
 
 static void extgl_InitWGLARBBufferRegion()
 {
-#ifdef WGL_ARB_buffer_region    
-    if (!extgl_Extensions.wgl.ARB_buffer_region)
-        return;
-    wglCreateBufferRegionARB = (wglCreateBufferRegionARBPROC) extgl_GetProcAddress("wglCreateBufferRegionARB");
-    wglDeleteBufferRegionARB = (wglDeleteBufferRegionARBPROC) extgl_GetProcAddress("wglDeleteBufferRegionARB");
-    wglSaveBufferRegionARB = (wglSaveBufferRegionARBPROC) extgl_GetProcAddress("wglSaveBufferRegionARB");
-    wglRestoreBufferRegionARB = (wglRestoreBufferRegionARBPROC) extgl_GetProcAddress("wglRestoreBufferRegionARB");
+#ifdef WGL_ARB_buffer_region	
+	if (!extgl_Extensions.wgl.ARB_buffer_region)
+		return;
+	wglCreateBufferRegionARB = (wglCreateBufferRegionARBPROC) extgl_GetProcAddress("wglCreateBufferRegionARB");
+	wglDeleteBufferRegionARB = (wglDeleteBufferRegionARBPROC) extgl_GetProcAddress("wglDeleteBufferRegionARB");
+	wglSaveBufferRegionARB = (wglSaveBufferRegionARBPROC) extgl_GetProcAddress("wglSaveBufferRegionARB");
+	wglRestoreBufferRegionARB = (wglRestoreBufferRegionARBPROC) extgl_GetProcAddress("wglRestoreBufferRegionARB");
 #endif
 }
 
 static void extgl_InitWGLARBPbuffer()
 {
 #ifdef WGL_ARB_pbuffer
-    if (!extgl_Extensions.wgl.ARB_pbuffer)
-        return;
-    wglCreatePbufferARB = (wglCreatePbufferARBPROC) extgl_GetProcAddress("wglCreatePbufferARB");
-    wglGetPbufferDCARB = (wglGetPbufferDCARBPROC) extgl_GetProcAddress("wglGetPbufferDCARB");
-    wglReleasePbufferDCARB = (wglReleasePbufferDCARBPROC) extgl_GetProcAddress("wglReleasePbufferDCARB");
-    wglDestroyPbufferARB = (wglDestroyPbufferARBPROC) extgl_GetProcAddress("wglDestroyPbufferARB");
-    wglQueryPbufferARB = (wglQueryPbufferARBPROC) extgl_GetProcAddress("wglQueryPbufferARB");
+	if (!extgl_Extensions.wgl.ARB_pbuffer)
+		return;
+	wglCreatePbufferARB = (wglCreatePbufferARBPROC) extgl_GetProcAddress("wglCreatePbufferARB");
+	wglGetPbufferDCARB = (wglGetPbufferDCARBPROC) extgl_GetProcAddress("wglGetPbufferDCARB");
+	wglReleasePbufferDCARB = (wglReleasePbufferDCARBPROC) extgl_GetProcAddress("wglReleasePbufferDCARB");
+	wglDestroyPbufferARB = (wglDestroyPbufferARBPROC) extgl_GetProcAddress("wglDestroyPbufferARB");
+	wglQueryPbufferARB = (wglQueryPbufferARBPROC) extgl_GetProcAddress("wglQueryPbufferARB");
 #endif
 }
 
 static void extgl_InitWGLARBPixelFormat()
 {
 #ifdef WGL_ARB_pixel_format
-    if (!extgl_Extensions.wgl.ARB_pixel_format)
-        return;
-    wglGetPixelFormatAttribivARB = (wglGetPixelFormatAttribivARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribivARB");
-    wglGetPixelFormatAttribfvARB = (wglGetPixelFormatAttribfvARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribfvARB");
-    wglChoosePixelFormatARB = (wglChoosePixelFormatARBPROC) extgl_GetProcAddress("wglChoosePixelFormatARB");
+	if (!extgl_Extensions.wgl.ARB_pixel_format)
+		return;
+	wglGetPixelFormatAttribivARB = (wglGetPixelFormatAttribivARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribivARB");
+	wglGetPixelFormatAttribfvARB = (wglGetPixelFormatAttribfvARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribfvARB");
+	wglChoosePixelFormatARB = (wglChoosePixelFormatARBPROC) extgl_GetProcAddress("wglChoosePixelFormatARB");
 #endif
 }
 
 static void extgl_InitWGLARBRenderTexture()
 {
 #ifdef WGL_ARB_render_texture
-    if (!extgl_Extensions.wgl.ARB_render_texture)
-        return;
-    wglBindTexImageARB = (wglBindTexImageARBPROC) extgl_GetProcAddress("wglBindTexImageARB");
-    wglReleaseTexImageARB = (wglReleaseTexImageARBPROC) extgl_GetProcAddress("wglReleaseTexImageARB");
-    wglSetPbufferAttribARB = (wglSetPbufferAttribARBPROC) extgl_GetProcAddress("wglSetPbufferAttribARB");
+	if (!extgl_Extensions.wgl.ARB_render_texture)
+		return;
+	wglBindTexImageARB = (wglBindTexImageARBPROC) extgl_GetProcAddress("wglBindTexImageARB");
+	wglReleaseTexImageARB = (wglReleaseTexImageARBPROC) extgl_GetProcAddress("wglReleaseTexImageARB");
+	wglSetPbufferAttribARB = (wglSetPbufferAttribARBPROC) extgl_GetProcAddress("wglSetPbufferAttribARB");
 #endif
 }
 
 static void extgl_InitWGLEXTSwapControl()
 {
 #ifdef WGL_EXT_swap_control
-    if (!extgl_Extensions.wgl.EXT_swap_control)
-        return;
-    wglSwapIntervalEXT = (wglSwapIntervalEXTPROC) extgl_GetProcAddress("wglSwapIntervalEXT");
-    wglGetSwapIntervalEXT = (wglGetSwapIntervalEXTPROC) extgl_GetProcAddress("wglGetSwapIntervalEXT");
+	if (!extgl_Extensions.wgl.EXT_swap_control)
+		return;
+	wglSwapIntervalEXT = (wglSwapIntervalEXTPROC) extgl_GetProcAddress("wglSwapIntervalEXT");
+	wglGetSwapIntervalEXT = (wglGetSwapIntervalEXTPROC) extgl_GetProcAddress("wglGetSwapIntervalEXT");
 #endif
 }
 
 static void extgl_InitWGLARBMakeCurrentRead()
 {
 #ifdef WGL_ARB_make_current_read
-    if (!extgl_Extensions.wgl.ARB_make_current_read)
-        return;
-    wglMakeContextCurrentARB = (wglMakeContextCurrentARBPROC) extgl_GetProcAddress("wglMakeContextCurrentARB");
-    wglGetCurrentReadDCARB = (wglGetCurrentReadDCARBPROC) extgl_GetProcAddress("wglGetCurrentReadDCARB");
+	if (!extgl_Extensions.wgl.ARB_make_current_read)
+		return;
+	wglMakeContextCurrentARB = (wglMakeContextCurrentARBPROC) extgl_GetProcAddress("wglMakeContextCurrentARB");
+	wglGetCurrentReadDCARB = (wglGetCurrentReadDCARBPROC) extgl_GetProcAddress("wglGetCurrentReadDCARB");
 #endif
 }
 
 static void extgl_InitSupportedWGLExtensions()
 {
-    extgl_Extensions.wgl.ARB_buffer_region = QueryWGLExtension("WGL_ARB_buffer_region");
-    extgl_Extensions.wgl.ARB_make_current_read = QueryWGLExtension("WGL_ARB_make_current_read");
-    extgl_Extensions.wgl.ARB_multisample = QueryWGLExtension("WGL_ARB_multisample");
-    extgl_Extensions.wgl.ARB_pbuffer = QueryWGLExtension("WGL_ARB_pbuffer");
-    extgl_Extensions.wgl.ARB_pixel_format = QueryWGLExtension("WGL_ARB_pixel_format");
-    extgl_Extensions.wgl.ARB_render_texture = QueryWGLExtension("WGL_ARB_render_texture");
-    extgl_Extensions.wgl.EXT_swap_control = QueryWGLExtension("WGL_EXT_swap_control");
-    extgl_Extensions.wgl.NV_render_depth_texture = QueryWGLExtension("WGL_NV_render_depth_texture");
-    extgl_Extensions.wgl.NV_render_texture_rectangle = QueryWGLExtension("WGL_NV_render_texture_rectangle");
+	extgl_Extensions.wgl.ARB_buffer_region = QueryWGLExtension("WGL_ARB_buffer_region");
+	extgl_Extensions.wgl.ARB_make_current_read = QueryWGLExtension("WGL_ARB_make_current_read");
+	extgl_Extensions.wgl.ARB_multisample = QueryWGLExtension("WGL_ARB_multisample");
+	extgl_Extensions.wgl.ARB_pbuffer = QueryWGLExtension("WGL_ARB_pbuffer");
+	extgl_Extensions.wgl.ARB_pixel_format = QueryWGLExtension("WGL_ARB_pixel_format");
+	extgl_Extensions.wgl.ARB_render_texture = QueryWGLExtension("WGL_ARB_render_texture");
+	extgl_Extensions.wgl.EXT_swap_control = QueryWGLExtension("WGL_EXT_swap_control");
+	extgl_Extensions.wgl.NV_render_depth_texture = QueryWGLExtension("WGL_NV_render_depth_texture");
+	extgl_Extensions.wgl.NV_render_texture_rectangle = QueryWGLExtension("WGL_NV_render_texture_rectangle");
 }
 
 static int extgl_InitializeWGL()
 {
-    extgl_error = 0;
-    wglGetExtensionsStringARB = (wglGetExtensionsStringARBPROC) extgl_GetProcAddress("wglGetExtensionsStringARB");
-    wglGetExtensionsStringEXT = (wglGetExtensionsStringEXTPROC) extgl_GetProcAddress("wglGetExtensionsStringEXT");
-    extgl_Extensions.wgl.ARB_extensions_string = wglGetExtensionsStringARB != NULL;
-    extgl_Extensions.wgl.EXT_extensions_string = wglGetExtensionsStringEXT != NULL;
-    extgl_error = 0;
+	extgl_error = 0;
+	wglGetExtensionsStringARB = (wglGetExtensionsStringARBPROC) extgl_GetProcAddress("wglGetExtensionsStringARB");
+	wglGetExtensionsStringEXT = (wglGetExtensionsStringEXTPROC) extgl_GetProcAddress("wglGetExtensionsStringEXT");
+	extgl_Extensions.wgl.ARB_extensions_string = wglGetExtensionsStringARB != NULL;
+	extgl_Extensions.wgl.EXT_extensions_string = wglGetExtensionsStringEXT != NULL;
+	extgl_error = 0;
 
-    extgl_InitSupportedWGLExtensions();
+	extgl_InitSupportedWGLExtensions();
    
 
-    extgl_InitWGLARBMakeCurrentRead();
-    extgl_InitWGLEXTSwapControl();
-    extgl_InitWGLARBRenderTexture();
-    extgl_InitWGLARBPixelFormat();
-    extgl_InitWGLARBPbuffer();
-    extgl_InitWGLARBBufferRegion();
-    
-    return extgl_error;
+	extgl_InitWGLARBMakeCurrentRead();
+	extgl_InitWGLEXTSwapControl();
+	extgl_InitWGLARBRenderTexture();
+	extgl_InitWGLARBPixelFormat();
+	extgl_InitWGLARBPbuffer();
+	extgl_InitWGLARBBufferRegion();
+	
+	return extgl_error;
 }
 
 #endif /* WIN32 */
@@ -1647,9 +1654,9 @@ static int extgl_InitializeWGL()
 
 static int extgl_InitializeAGL()
 {
-    // add in AGL extensions here
+	// add in AGL extensions here
 
-    return 0;
+	return 0;
 }
 
 #endif
@@ -1659,111 +1666,114 @@ static int extgl_InitializeAGL()
 
 static int QueryExtension(const GLubyte*extensions, const char *name)
 {
-    const GLubyte *start;
-    GLubyte *where, *terminator;
+	const GLubyte *start;
+	GLubyte *where, *terminator;
 
-    if (extensions == NULL) {
-	    extgl_error = 1;
-	    return 0;
-    }
-    /* Extension names should not have spaces. */
-    where = (GLubyte *) strchr(name, ' ');
-    if (where || *name == '\0')
-        return 0;
-    /* It takes a bit of care to be fool-proof about parsing the
-         OpenGL extensions string. Don't be fooled by sub-strings,
-        etc. */
-    start = extensions;
-    for (;;) 
-    {
-        where = (GLubyte *) strstr((const char *) start, name);
-        if (!where)
-            break;
-        terminator = where + strlen(name);
-        if (where == start || *(where - 1) == ' ')
-            if (*terminator == ' ' || *terminator == '\0')
-                return 1;
-        start = terminator;
-    }
-    return 0;
+	if (extensions == NULL) {
+#ifdef _DEBUG
+		printf("NULL extension string\n");
+#endif
+		extgl_error = 1;
+		return 0;
+	}
+	/* Extension names should not have spaces. */
+	where = (GLubyte *) strchr(name, ' ');
+	if (where || *name == '\0')
+		return 0;
+	/* It takes a bit of care to be fool-proof about parsing the
+		 OpenGL extensions string. Don't be fooled by sub-strings,
+		etc. */
+	start = extensions;
+	for (;;) 
+	{
+		where = (GLubyte *) strstr((const char *) start, name);
+		if (!where)
+			break;
+		terminator = where + strlen(name);
+		if (where == start || *(where - 1) == ' ')
+			if (*terminator == ' ' || *terminator == '\0')
+				return 1;
+		start = terminator;
+	}
+	return 0;
 }
 
 #ifdef _X11
 /** returns true if the extention is available */
 static int GLXQueryExtension(Display *disp, int screen, const char *name)
 {
-    const GLubyte *exts = (const GLubyte *)glXQueryExtensionsString(disp, screen);
-    return QueryExtension(exts, name);
+	const GLubyte *exts = (const GLubyte *)glXQueryExtensionsString(disp, screen);
+	return QueryExtension(exts, name);
 }
 #endif
 
 /** returns true if the extention is available */
 static int GLUQueryExtension(const char *name)
 {
-    return QueryExtension(gluGetString(GLU_EXTENSIONS), name);
+	return QueryExtension(gluGetString(GLU_EXTENSIONS), name);
 }
 
 /** returns true if the extention is available */
 static int GLQueryExtension(const char *name)
 {
-    return QueryExtension(glGetString(GL_EXTENSIONS), name);
+	return QueryExtension(glGetString(GL_EXTENSIONS), name);
 }
 
 static void extgl_InitARBFragmentProgram()
 {
 #ifdef GL_ARB_fragment_program
-    if (!extgl_Extensions.ARB_fragment_program)
-        return;
-    glProgramStringARB = (glProgramStringARBPROC) extgl_GetProcAddress("glProgramStringARB");
-    glBindProgramARB = (glBindProgramARBPROC) extgl_GetProcAddress("glBindProgramARB");
-    glDeleteProgramsARB = (glDeleteProgramsARBPROC) extgl_GetProcAddress("glDeleteProgramsARB");
-    glGenProgramsARB = (glGenProgramsARBPROC) extgl_GetProcAddress("glGenProgramsARB");
-    glProgramEnvParameter4dARB = (glProgramEnvParameter4dARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dARB");
-    glProgramEnvParameter4dvARB = (glProgramEnvParameter4dvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dvARB");
-    glProgramEnvParameter4fARB = (glProgramEnvParameter4fARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fARB");
-    glProgramEnvParameter4fvARB = (glProgramEnvParameter4fvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fvARB");
-    glProgramLocalParameter4dARB = (glProgramLocalParameter4dARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dARB");
-    glProgramLocalParameter4dvARB = (glProgramLocalParameter4dvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dvARB");
-    glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
-    glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
-    glGetProgramEnvParameterdvARB = (glGetProgramEnvParameterdvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterdvARB");
-    glGetProgramEnvParameterfvARB = (glGetProgramEnvParameterfvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterfvARB");
-    glGetProgramLocalParameterdvARB = (glGetProgramLocalParameterdvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterdvARB");
-    glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
-    glGetProgramivARB = (glGetProgramivARBPROC) extgl_GetProcAddress("glGetProgramivARB");
-    glGetProgramStringARB = (glGetProgramStringARBPROC) extgl_GetProcAddress("glGetProgramStringARB");
-    glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
+	if (!extgl_Extensions.ARB_fragment_program)
+		return;
+	glProgramStringARB = (glProgramStringARBPROC) extgl_GetProcAddress("glProgramStringARB");
+	glBindProgramARB = (glBindProgramARBPROC) extgl_GetProcAddress("glBindProgramARB");
+	glDeleteProgramsARB = (glDeleteProgramsARBPROC) extgl_GetProcAddress("glDeleteProgramsARB");
+	glGenProgramsARB = (glGenProgramsARBPROC) extgl_GetProcAddress("glGenProgramsARB");
+	glProgramEnvParameter4dARB = (glProgramEnvParameter4dARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dARB");
+	glProgramEnvParameter4dvARB = (glProgramEnvParameter4dvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dvARB");
+	glProgramEnvParameter4fARB = (glProgramEnvParameter4fARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fARB");
+	glProgramEnvParameter4fvARB = (glProgramEnvParameter4fvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fvARB");
+	glProgramLocalParameter4dARB = (glProgramLocalParameter4dARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dARB");
+	glProgramLocalParameter4dvARB = (glProgramLocalParameter4dvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dvARB");
+	glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
+	glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
+	glGetProgramEnvParameterdvARB = (glGetProgramEnvParameterdvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterdvARB");
+	glGetProgramEnvParameterfvARB = (glGetProgramEnvParameterfvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterfvARB");
+	glGetProgramLocalParameterdvARB = (glGetProgramLocalParameterdvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterdvARB");
+	glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
+	glGetProgramivARB = (glGetProgramivARBPROC) extgl_GetProcAddress("glGetProgramivARB");
+	glGetProgramStringARB = (glGetProgramStringARBPROC) extgl_GetProcAddress("glGetProgramStringARB");
+	glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
 #endif
 }
 
 static void extgl_InitNVPrimitiveRestart()
 {
 #ifdef GL_NV_primitive_restart
-    if (!extgl_Extensions.NV_primitive_restart)
-        return;
-    glPrimitiveRestartNV = (glPrimitiveRestartNVPROC) extgl_GetProcAddress("glPrimitiveRestartNV");
-    glPrimitiveRestartIndexNV = (glPrimitiveRestartIndexNVPROC) extgl_GetProcAddress("glPrimitiveRestartIndexNV");
+	if (!extgl_Extensions.NV_primitive_restart)
+		return;
+	glPrimitiveRestartNV = (glPrimitiveRestartNVPROC) extgl_GetProcAddress("glPrimitiveRestartNV");
+	glPrimitiveRestartIndexNV = (glPrimitiveRestartIndexNVPROC) extgl_GetProcAddress("glPrimitiveRestartIndexNV");
 #endif /* GL_NV_primitive_restart */
 }
 
 static void extgl_InitNVFragmentProgram()
 {
 #ifdef GL_NV_fragment_program
-    if (!extgl_Extensions.NV_fragment_program)
-        return;
-    glProgramNamedParameter4fNV = (glProgramNamedParameter4fNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fNV");
-    glProgramNamedParameter4dNV = (glProgramNamedParameter4dNVPROC) extgl_GetProcAddress("glProgramNamedParameter4dNV");
-    glProgramNamedParameter4fvNV = (glProgramNamedParameter4fvNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fvNV");
-    glProgramNamedParameter4dvNV = (glProgramNamedParameter4dvNVPROC) extgl_GetProcAddress("glProgramNamedParameter4dvNV");
-    glGetProgramNamedParameterfvNV = (glGetProgramNamedParameterfvNVPROC) extgl_GetProcAddress("glGetProgramNamedParameterfvNV");
-    glGetProgramNamedParameterdvNV = (glGetProgramNamedParameterdvNVPROC) extgl_GetProcAddress("glGetProgramNamedParameterdvNV");
+	if (!extgl_Extensions.NV_fragment_program)
+		return;
+	glProgramNamedParameter4fNV = (glProgramNamedParameter4fNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fNV");
+	glProgramNamedParameter4dNV = (glProgramNamedParameter4dNVPROC) extgl_GetProcAddress("glProgramNamedParameter4dNV");
+	glProgramNamedParameter4fvNV = (glProgramNamedParameter4fvNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fvNV");
+	glProgramNamedParameter4dvNV = (glProgramNamedParameter4dvNVPROC) extgl_GetProcAddress("glProgramNamedParameter4dvNV");
+	glGetProgramNamedParameterfvNV = (glGetProgramNamedParameterfvNVPROC) extgl_GetProcAddress("glGetProgramNamedParameterfvNV");
+	glGetProgramNamedParameterdvNV = (glGetProgramNamedParameterdvNVPROC) extgl_GetProcAddress("glGetProgramNamedParameterdvNV");
 #ifndef GL_ARB_vertex_program
-    glProgramLocalParameter4dARB = (glProgramLocalParameter4dARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dARB");
-    glProgramLocalParameter4dvARB = (glProgramLocalParameter4dvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dvARB");
-    glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
-    glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
-    glGetProgramLocalParameterdvARB = (glGetProgramLocalParameterdvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterdvARB");
-    glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
+	glProgramLocalParameter4dARB = (glProgramLocalParameter4dARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dARB");
+	glProgramLocalParameter4dvARB = (glProgramLocalParameter4dvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dvARB");
+	glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
+	glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
+	glGetProgramLocalParameterdvARB = (glGetProgramLocalParameterdvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterdvARB");
+	glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
 #endif /* GL_ARB_vertex_program */
 #endif /* GL_NV_fragment_program */
 }
@@ -1771,13 +1781,13 @@ static void extgl_InitNVFragmentProgram()
 static void extgl_InitNVElementArray()
 {
 #ifdef GL_NV_element_array
-    if (!extgl_Extensions.NV_element_array)
-        return;
-    glElementPointerNV = (glElementPointerNVPROC) extgl_GetProcAddress("glElementPointerNV");
-    glDrawElementArrayNV = (glDrawElementArrayNVPROC) extgl_GetProcAddress("glDrawElementArrayNV");
-    glDrawRangeElementArrayNV = (glDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glDrawRangeElementArrayNV");
-    glMultiDrawElementArrayNV = (glMultiDrawElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawElementArrayNV");
-    glMultiDrawRangeElementArrayNV = (glMultiDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawRangeElementArrayNV");
+	if (!extgl_Extensions.NV_element_array)
+		return;
+	glElementPointerNV = (glElementPointerNVPROC) extgl_GetProcAddress("glElementPointerNV");
+	glDrawElementArrayNV = (glDrawElementArrayNVPROC) extgl_GetProcAddress("glDrawElementArrayNV");
+	glDrawRangeElementArrayNV = (glDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glDrawRangeElementArrayNV");
+	glMultiDrawElementArrayNV = (glMultiDrawElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawElementArrayNV");
+	glMultiDrawRangeElementArrayNV = (glMultiDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawRangeElementArrayNV");
 #endif
 }
 
@@ -1785,279 +1795,279 @@ static void extgl_InitNVElementArray()
 static void extgl_InitEXTBlendFuncSeparate()
 {
 #ifdef GL_EXT_blend_func_separate
-    if (!extgl_Extensions.EXT_blend_func_separate)
-        return;
-    glBlendFuncSeparateEXT = (glBlendFuncSeparateEXTPROC) extgl_GetProcAddress("glBlendFuncSeparateEXT");
+	if (!extgl_Extensions.EXT_blend_func_separate)
+		return;
+	glBlendFuncSeparateEXT = (glBlendFuncSeparateEXTPROC) extgl_GetProcAddress("glBlendFuncSeparateEXT");
 #endif
 }
 
 static void extgl_InitEXTCullVertex()
 {
 #ifdef GL_EXT_cull_vertex
-    if (!extgl_Extensions.EXT_cull_vertex)
-        return;
-    glCullParameterfvEXT = (glCullParameterfvEXTPROC) extgl_GetProcAddress("glCullParameterfvEXT");
-    glCullParameterdvEXT = (glCullParameterdvEXTPROC) extgl_GetProcAddress("glCullParameterdvEXT");
+	if (!extgl_Extensions.EXT_cull_vertex)
+		return;
+	glCullParameterfvEXT = (glCullParameterfvEXTPROC) extgl_GetProcAddress("glCullParameterfvEXT");
+	glCullParameterdvEXT = (glCullParameterdvEXTPROC) extgl_GetProcAddress("glCullParameterdvEXT");
 #endif
 }
 
 static void extgl_InitARBVertexBufferObject()
 {
 #ifdef GL_ARB_vertex_buffer_object
-    if (!extgl_Extensions.ARB_vertex_buffer_object)
-        return;
-    glBindBufferARB = (glBindBufferARBPROC) extgl_GetProcAddress("glBindBufferARB");
-    glDeleteBuffersARB = (glDeleteBuffersARBPROC) extgl_GetProcAddress("glDeleteBuffersARB");
-    glGenBuffersARB = (glGenBuffersARBPROC) extgl_GetProcAddress("glGenBuffersARB");
-    glIsBufferARB = (glIsBufferARBPROC) extgl_GetProcAddress("glIsBufferARB");
-    glBufferDataARB = (glBufferDataARBPROC) extgl_GetProcAddress("glBufferDataARB");
-    glBufferSubDataARB = (glBufferSubDataARBPROC) extgl_GetProcAddress("glBufferSubDataARB");
-    glGetBufferSubDataARB = (glGetBufferSubDataARBPROC) extgl_GetProcAddress("glGetBufferSubDataARB");
-    glMapBufferARB = (glMapBufferARBPROC) extgl_GetProcAddress("glMapBufferARB");
-    glUnmapBufferARB = (glUnmapBufferARBPROC) extgl_GetProcAddress("glUnmapBufferARB");
-    glGetBufferParameterivARB = (glGetBufferParameterivARBPROC) extgl_GetProcAddress("glGetBufferParameterivARB");
-    glGetBufferPointervARB = (glGetBufferPointervARBPROC) extgl_GetProcAddress("glGetBufferPointervARB");
+	if (!extgl_Extensions.ARB_vertex_buffer_object)
+		return;
+	glBindBufferARB = (glBindBufferARBPROC) extgl_GetProcAddress("glBindBufferARB");
+	glDeleteBuffersARB = (glDeleteBuffersARBPROC) extgl_GetProcAddress("glDeleteBuffersARB");
+	glGenBuffersARB = (glGenBuffersARBPROC) extgl_GetProcAddress("glGenBuffersARB");
+	glIsBufferARB = (glIsBufferARBPROC) extgl_GetProcAddress("glIsBufferARB");
+	glBufferDataARB = (glBufferDataARBPROC) extgl_GetProcAddress("glBufferDataARB");
+	glBufferSubDataARB = (glBufferSubDataARBPROC) extgl_GetProcAddress("glBufferSubDataARB");
+	glGetBufferSubDataARB = (glGetBufferSubDataARBPROC) extgl_GetProcAddress("glGetBufferSubDataARB");
+	glMapBufferARB = (glMapBufferARBPROC) extgl_GetProcAddress("glMapBufferARB");
+	glUnmapBufferARB = (glUnmapBufferARBPROC) extgl_GetProcAddress("glUnmapBufferARB");
+	glGetBufferParameterivARB = (glGetBufferParameterivARBPROC) extgl_GetProcAddress("glGetBufferParameterivARB");
+	glGetBufferPointervARB = (glGetBufferPointervARBPROC) extgl_GetProcAddress("glGetBufferPointervARB");
 #endif
 }
 
 static void extgl_InitARBVertexProgram()
 {
 #ifdef GL_ARB_vertex_program
-    if (!extgl_Extensions.ARB_vertex_program)
-        return;
-    glVertexAttrib1sARB = (glVertexAttrib1sARBPROC) extgl_GetProcAddress("glVertexAttrib1sARB");
-    glVertexAttrib1fARB = (glVertexAttrib1fARBPROC) extgl_GetProcAddress("glVertexAttrib1fARB");
-    glVertexAttrib1dARB = (glVertexAttrib1dARBPROC) extgl_GetProcAddress("glVertexAttrib1dARB");
-    glVertexAttrib2sARB = (glVertexAttrib2sARBPROC) extgl_GetProcAddress("glVertexAttrib2sARB");
-    glVertexAttrib2fARB = (glVertexAttrib2fARBPROC) extgl_GetProcAddress("glVertexAttrib2fARB");
-    glVertexAttrib2dARB = (glVertexAttrib2dARBPROC) extgl_GetProcAddress("glVertexAttrib2dARB");
-    glVertexAttrib3sARB = (glVertexAttrib3sARBPROC) extgl_GetProcAddress("glVertexAttrib3sARB");
-    glVertexAttrib3fARB = (glVertexAttrib3fARBPROC) extgl_GetProcAddress("glVertexAttrib3fARB");
-    glVertexAttrib3dARB = (glVertexAttrib3dARBPROC) extgl_GetProcAddress("glVertexAttrib3dARB");
-    glVertexAttrib4sARB = (glVertexAttrib4sARBPROC) extgl_GetProcAddress("glVertexAttrib4sARB");
-    glVertexAttrib4fARB = (glVertexAttrib4fARBPROC) extgl_GetProcAddress("glVertexAttrib4fARB");
-    glVertexAttrib4dARB = (glVertexAttrib4dARBPROC) extgl_GetProcAddress("glVertexAttrib4dARB");
-    glVertexAttrib4NubARB = (glVertexAttrib4NubARBPROC) extgl_GetProcAddress("glVertexAttrib4NubARB");
-    glVertexAttrib1svARB = (glVertexAttrib1svARBPROC) extgl_GetProcAddress("glVertexAttrib1svARB");
-    glVertexAttrib1fvARB = (glVertexAttrib1fvARBPROC) extgl_GetProcAddress("glVertexAttrib1fvARB");
-    glVertexAttrib1dvARB = (glVertexAttrib1dvARBPROC) extgl_GetProcAddress("glVertexAttrib1dvARB");
-    glVertexAttrib2svARB = (glVertexAttrib2svARBPROC) extgl_GetProcAddress("glVertexAttrib2svARB");
-    glVertexAttrib2fvARB = (glVertexAttrib2fvARBPROC) extgl_GetProcAddress("glVertexAttrib2fvARB");
-    glVertexAttrib2dvARB = (glVertexAttrib2dvARBPROC) extgl_GetProcAddress("glVertexAttrib2dvARB");
-    glVertexAttrib3svARB = (glVertexAttrib3svARBPROC) extgl_GetProcAddress("glVertexAttrib3svARB");
-    glVertexAttrib3fvARB = (glVertexAttrib3fvARBPROC) extgl_GetProcAddress("glVertexAttrib3fvARB");
-    glVertexAttrib3dvARB = (glVertexAttrib3dvARBPROC) extgl_GetProcAddress("glVertexAttrib3dvARB");
-    glVertexAttrib4bvARB = (glVertexAttrib4bvARBPROC) extgl_GetProcAddress("glVertexAttrib4bvARB");
-    glVertexAttrib4svARB = (glVertexAttrib4svARBPROC) extgl_GetProcAddress("glVertexAttrib4svARB");
-    glVertexAttrib4ivARB = (glVertexAttrib4ivARBPROC) extgl_GetProcAddress("glVertexAttrib4ivARB");
-    glVertexAttrib4ubvARB = (glVertexAttrib4ubvARBPROC) extgl_GetProcAddress("glVertexAttrib4ubvARB");
-    glVertexAttrib4usvARB = (glVertexAttrib4usvARBPROC) extgl_GetProcAddress("glVertexAttrib4usvARB");
-    glVertexAttrib4uivARB = (glVertexAttrib4uivARBPROC) extgl_GetProcAddress("glVertexAttrib4uivARB");
-    glVertexAttrib4fvARB = (glVertexAttrib4fvARBPROC) extgl_GetProcAddress("glVertexAttrib4fvARB");
-    glVertexAttrib4dvARB = (glVertexAttrib4dvARBPROC) extgl_GetProcAddress("glVertexAttrib4dvARB");
-    glVertexAttrib4NbvARB = (glVertexAttrib4NbvARBPROC) extgl_GetProcAddress("glVertexAttrib4NbvARB");
-    glVertexAttrib4NsvARB = (glVertexAttrib4NsvARBPROC) extgl_GetProcAddress("glVertexAttrib4NsvARB");
-    glVertexAttrib4NivARB = (glVertexAttrib4NivARBPROC) extgl_GetProcAddress("glVertexAttrib4NivARB");
-    glVertexAttrib4NubvARB = (glVertexAttrib4NubvARBPROC) extgl_GetProcAddress("glVertexAttrib4NubvARB");
-    glVertexAttrib4NusvARB = (glVertexAttrib4NusvARBPROC) extgl_GetProcAddress("glVertexAttrib4NusvARB");
-    glVertexAttrib4NuivARB = (glVertexAttrib4NuivARBPROC) extgl_GetProcAddress("glVertexAttrib4NuivARB");
-    glVertexAttribPointerARB = (glVertexAttribPointerARBPROC) extgl_GetProcAddress("glVertexAttribPointerARB");
-    glEnableVertexAttribArrayARB = (glEnableVertexAttribArrayARBPROC) extgl_GetProcAddress("glEnableVertexAttribArrayARB");
-    glDisableVertexAttribArrayARB = (glDisableVertexAttribArrayARBPROC) extgl_GetProcAddress("glDisableVertexAttribArrayARB");
-    glProgramStringARB = (glProgramStringARBPROC) extgl_GetProcAddress("glProgramStringARB");
-    glBindProgramARB = (glBindProgramARBPROC) extgl_GetProcAddress("glBindProgramARB");
-    glDeleteProgramsARB = (glDeleteProgramsARBPROC) extgl_GetProcAddress("glDeleteProgramsARB");
-    glGenProgramsARB = (glGenProgramsARBPROC) extgl_GetProcAddress("glGenProgramsARB");
-    glProgramEnvParameter4dARB = (glProgramEnvParameter4dARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dARB");
-    glProgramEnvParameter4dvARB = (glProgramEnvParameter4dvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dvARB");
-    glProgramEnvParameter4fARB = (glProgramEnvParameter4fARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fARB");
-    glProgramEnvParameter4fvARB = (glProgramEnvParameter4fvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fvARB");
-    glProgramLocalParameter4dARB = (glProgramLocalParameter4dARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dARB");
-    glProgramLocalParameter4dvARB = (glProgramLocalParameter4dvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dvARB");
-    glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
-    glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
-    glGetProgramEnvParameterdvARB = (glGetProgramEnvParameterdvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterdvARB");
-    glGetProgramEnvParameterfvARB = (glGetProgramEnvParameterfvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterfvARB");
-    glGetProgramLocalParameterdvARB = (glGetProgramLocalParameterdvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterdvARB");
-    glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
-    glGetProgramivARB = (glGetProgramivARBPROC) extgl_GetProcAddress("glGetProgramivARB");
-    glGetProgramStringARB = (glGetProgramStringARBPROC) extgl_GetProcAddress("glGetProgramStringARB");
-    glGetVertexAttribdvARB = (glGetVertexAttribdvARBPROC) extgl_GetProcAddress("glGetVertexAttribdvARB");
-    glGetVertexAttribfvARB = (glGetVertexAttribfvARBPROC) extgl_GetProcAddress("glGetVertexAttribfvARB");
-    glGetVertexAttribivARB = (glGetVertexAttribivARBPROC) extgl_GetProcAddress("glGetVertexAttribivARB");
-    glGetVertexAttribPointervARB = (glGetVertexAttribPointervARBPROC) extgl_GetProcAddress("glGetVertexAttribPointervARB");
-    glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
+	if (!extgl_Extensions.ARB_vertex_program)
+		return;
+	glVertexAttrib1sARB = (glVertexAttrib1sARBPROC) extgl_GetProcAddress("glVertexAttrib1sARB");
+	glVertexAttrib1fARB = (glVertexAttrib1fARBPROC) extgl_GetProcAddress("glVertexAttrib1fARB");
+	glVertexAttrib1dARB = (glVertexAttrib1dARBPROC) extgl_GetProcAddress("glVertexAttrib1dARB");
+	glVertexAttrib2sARB = (glVertexAttrib2sARBPROC) extgl_GetProcAddress("glVertexAttrib2sARB");
+	glVertexAttrib2fARB = (glVertexAttrib2fARBPROC) extgl_GetProcAddress("glVertexAttrib2fARB");
+	glVertexAttrib2dARB = (glVertexAttrib2dARBPROC) extgl_GetProcAddress("glVertexAttrib2dARB");
+	glVertexAttrib3sARB = (glVertexAttrib3sARBPROC) extgl_GetProcAddress("glVertexAttrib3sARB");
+	glVertexAttrib3fARB = (glVertexAttrib3fARBPROC) extgl_GetProcAddress("glVertexAttrib3fARB");
+	glVertexAttrib3dARB = (glVertexAttrib3dARBPROC) extgl_GetProcAddress("glVertexAttrib3dARB");
+	glVertexAttrib4sARB = (glVertexAttrib4sARBPROC) extgl_GetProcAddress("glVertexAttrib4sARB");
+	glVertexAttrib4fARB = (glVertexAttrib4fARBPROC) extgl_GetProcAddress("glVertexAttrib4fARB");
+	glVertexAttrib4dARB = (glVertexAttrib4dARBPROC) extgl_GetProcAddress("glVertexAttrib4dARB");
+	glVertexAttrib4NubARB = (glVertexAttrib4NubARBPROC) extgl_GetProcAddress("glVertexAttrib4NubARB");
+	glVertexAttrib1svARB = (glVertexAttrib1svARBPROC) extgl_GetProcAddress("glVertexAttrib1svARB");
+	glVertexAttrib1fvARB = (glVertexAttrib1fvARBPROC) extgl_GetProcAddress("glVertexAttrib1fvARB");
+	glVertexAttrib1dvARB = (glVertexAttrib1dvARBPROC) extgl_GetProcAddress("glVertexAttrib1dvARB");
+	glVertexAttrib2svARB = (glVertexAttrib2svARBPROC) extgl_GetProcAddress("glVertexAttrib2svARB");
+	glVertexAttrib2fvARB = (glVertexAttrib2fvARBPROC) extgl_GetProcAddress("glVertexAttrib2fvARB");
+	glVertexAttrib2dvARB = (glVertexAttrib2dvARBPROC) extgl_GetProcAddress("glVertexAttrib2dvARB");
+	glVertexAttrib3svARB = (glVertexAttrib3svARBPROC) extgl_GetProcAddress("glVertexAttrib3svARB");
+	glVertexAttrib3fvARB = (glVertexAttrib3fvARBPROC) extgl_GetProcAddress("glVertexAttrib3fvARB");
+	glVertexAttrib3dvARB = (glVertexAttrib3dvARBPROC) extgl_GetProcAddress("glVertexAttrib3dvARB");
+	glVertexAttrib4bvARB = (glVertexAttrib4bvARBPROC) extgl_GetProcAddress("glVertexAttrib4bvARB");
+	glVertexAttrib4svARB = (glVertexAttrib4svARBPROC) extgl_GetProcAddress("glVertexAttrib4svARB");
+	glVertexAttrib4ivARB = (glVertexAttrib4ivARBPROC) extgl_GetProcAddress("glVertexAttrib4ivARB");
+	glVertexAttrib4ubvARB = (glVertexAttrib4ubvARBPROC) extgl_GetProcAddress("glVertexAttrib4ubvARB");
+	glVertexAttrib4usvARB = (glVertexAttrib4usvARBPROC) extgl_GetProcAddress("glVertexAttrib4usvARB");
+	glVertexAttrib4uivARB = (glVertexAttrib4uivARBPROC) extgl_GetProcAddress("glVertexAttrib4uivARB");
+	glVertexAttrib4fvARB = (glVertexAttrib4fvARBPROC) extgl_GetProcAddress("glVertexAttrib4fvARB");
+	glVertexAttrib4dvARB = (glVertexAttrib4dvARBPROC) extgl_GetProcAddress("glVertexAttrib4dvARB");
+	glVertexAttrib4NbvARB = (glVertexAttrib4NbvARBPROC) extgl_GetProcAddress("glVertexAttrib4NbvARB");
+	glVertexAttrib4NsvARB = (glVertexAttrib4NsvARBPROC) extgl_GetProcAddress("glVertexAttrib4NsvARB");
+	glVertexAttrib4NivARB = (glVertexAttrib4NivARBPROC) extgl_GetProcAddress("glVertexAttrib4NivARB");
+	glVertexAttrib4NubvARB = (glVertexAttrib4NubvARBPROC) extgl_GetProcAddress("glVertexAttrib4NubvARB");
+	glVertexAttrib4NusvARB = (glVertexAttrib4NusvARBPROC) extgl_GetProcAddress("glVertexAttrib4NusvARB");
+	glVertexAttrib4NuivARB = (glVertexAttrib4NuivARBPROC) extgl_GetProcAddress("glVertexAttrib4NuivARB");
+	glVertexAttribPointerARB = (glVertexAttribPointerARBPROC) extgl_GetProcAddress("glVertexAttribPointerARB");
+	glEnableVertexAttribArrayARB = (glEnableVertexAttribArrayARBPROC) extgl_GetProcAddress("glEnableVertexAttribArrayARB");
+	glDisableVertexAttribArrayARB = (glDisableVertexAttribArrayARBPROC) extgl_GetProcAddress("glDisableVertexAttribArrayARB");
+	glProgramStringARB = (glProgramStringARBPROC) extgl_GetProcAddress("glProgramStringARB");
+	glBindProgramARB = (glBindProgramARBPROC) extgl_GetProcAddress("glBindProgramARB");
+	glDeleteProgramsARB = (glDeleteProgramsARBPROC) extgl_GetProcAddress("glDeleteProgramsARB");
+	glGenProgramsARB = (glGenProgramsARBPROC) extgl_GetProcAddress("glGenProgramsARB");
+	glProgramEnvParameter4dARB = (glProgramEnvParameter4dARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dARB");
+	glProgramEnvParameter4dvARB = (glProgramEnvParameter4dvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4dvARB");
+	glProgramEnvParameter4fARB = (glProgramEnvParameter4fARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fARB");
+	glProgramEnvParameter4fvARB = (glProgramEnvParameter4fvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fvARB");
+	glProgramLocalParameter4dARB = (glProgramLocalParameter4dARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dARB");
+	glProgramLocalParameter4dvARB = (glProgramLocalParameter4dvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4dvARB");
+	glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
+	glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
+	glGetProgramEnvParameterdvARB = (glGetProgramEnvParameterdvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterdvARB");
+	glGetProgramEnvParameterfvARB = (glGetProgramEnvParameterfvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterfvARB");
+	glGetProgramLocalParameterdvARB = (glGetProgramLocalParameterdvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterdvARB");
+	glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
+	glGetProgramivARB = (glGetProgramivARBPROC) extgl_GetProcAddress("glGetProgramivARB");
+	glGetProgramStringARB = (glGetProgramStringARBPROC) extgl_GetProcAddress("glGetProgramStringARB");
+	glGetVertexAttribdvARB = (glGetVertexAttribdvARBPROC) extgl_GetProcAddress("glGetVertexAttribdvARB");
+	glGetVertexAttribfvARB = (glGetVertexAttribfvARBPROC) extgl_GetProcAddress("glGetVertexAttribfvARB");
+	glGetVertexAttribivARB = (glGetVertexAttribivARBPROC) extgl_GetProcAddress("glGetVertexAttribivARB");
+	glGetVertexAttribPointervARB = (glGetVertexAttribPointervARBPROC) extgl_GetProcAddress("glGetVertexAttribPointervARB");
+	glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
 #endif
 }
 
 static void extgl_InitEXTStencilTwoSide()
 {
 #ifdef GL_EXT_stencil_two_side
-    if (!extgl_Extensions.EXT_stencil_two_side)
-        return;
-    glActiveStencilFaceEXT = (glActiveStencilFaceEXTPROC) extgl_GetProcAddress("glActiveStencilFaceEXT");
+	if (!extgl_Extensions.EXT_stencil_two_side)
+		return;
+	glActiveStencilFaceEXT = (glActiveStencilFaceEXTPROC) extgl_GetProcAddress("glActiveStencilFaceEXT");
 #endif
 }
 
 static void extgl_InitARBWindowPos()
 {
 #ifdef GL_ARB_window_pos
-    if (!extgl_Extensions.ARB_window_pos)
-        return;
-    glWindowPos2dARB = (glWindowPos2dARBPROC) extgl_GetProcAddress("glWindowPos2dARB");
-    glWindowPos2fARB = (glWindowPos2fARBPROC) extgl_GetProcAddress("glWindowPos2fARB");
-    glWindowPos2iARB = (glWindowPos2iARBPROC) extgl_GetProcAddress("glWindowPos2iARB");
-    glWindowPos2sARB = (glWindowPos2sARBPROC) extgl_GetProcAddress("glWindowPos2sARB");
-    glWindowPos2dvARB = (glWindowPos2dvARBPROC) extgl_GetProcAddress("glWindowPos2dvARB");
-    glWindowPos2fvARB = (glWindowPos2fvARBPROC) extgl_GetProcAddress("glWindowPos2fvARB");
-    glWindowPos2ivARB = (glWindowPos2ivARBPROC) extgl_GetProcAddress("glWindowPos2ivARB");
-    glWindowPos2svARB = (glWindowPos2svARBPROC) extgl_GetProcAddress("glWindowPos2svARB");
-    glWindowPos3dARB = (glWindowPos3dARBPROC) extgl_GetProcAddress("glWindowPos3dARB");
-    glWindowPos3fARB = (glWindowPos3fARBPROC) extgl_GetProcAddress("glWindowPos3fARB");
-    glWindowPos3iARB = (glWindowPos3iARBPROC) extgl_GetProcAddress("glWindowPos3iARB");
-    glWindowPos3sARB = (glWindowPos3sARBPROC) extgl_GetProcAddress("glWindowPos3sARB");
-    glWindowPos3dvARB = (glWindowPos3dvARBPROC) extgl_GetProcAddress("glWindowPos3dvARB");
-    glWindowPos3fvARB = (glWindowPos3fvARBPROC) extgl_GetProcAddress("glWindowPos3fvARB");
-    glWindowPos3ivARB = (glWindowPos3ivARBPROC) extgl_GetProcAddress("glWindowPos3ivARB");
-    glWindowPos3svARB = (glWindowPos3svARBPROC) extgl_GetProcAddress("glWindowPos3svARB");
+	if (!extgl_Extensions.ARB_window_pos)
+		return;
+	glWindowPos2dARB = (glWindowPos2dARBPROC) extgl_GetProcAddress("glWindowPos2dARB");
+	glWindowPos2fARB = (glWindowPos2fARBPROC) extgl_GetProcAddress("glWindowPos2fARB");
+	glWindowPos2iARB = (glWindowPos2iARBPROC) extgl_GetProcAddress("glWindowPos2iARB");
+	glWindowPos2sARB = (glWindowPos2sARBPROC) extgl_GetProcAddress("glWindowPos2sARB");
+	glWindowPos2dvARB = (glWindowPos2dvARBPROC) extgl_GetProcAddress("glWindowPos2dvARB");
+	glWindowPos2fvARB = (glWindowPos2fvARBPROC) extgl_GetProcAddress("glWindowPos2fvARB");
+	glWindowPos2ivARB = (glWindowPos2ivARBPROC) extgl_GetProcAddress("glWindowPos2ivARB");
+	glWindowPos2svARB = (glWindowPos2svARBPROC) extgl_GetProcAddress("glWindowPos2svARB");
+	glWindowPos3dARB = (glWindowPos3dARBPROC) extgl_GetProcAddress("glWindowPos3dARB");
+	glWindowPos3fARB = (glWindowPos3fARBPROC) extgl_GetProcAddress("glWindowPos3fARB");
+	glWindowPos3iARB = (glWindowPos3iARBPROC) extgl_GetProcAddress("glWindowPos3iARB");
+	glWindowPos3sARB = (glWindowPos3sARBPROC) extgl_GetProcAddress("glWindowPos3sARB");
+	glWindowPos3dvARB = (glWindowPos3dvARBPROC) extgl_GetProcAddress("glWindowPos3dvARB");
+	glWindowPos3fvARB = (glWindowPos3fvARBPROC) extgl_GetProcAddress("glWindowPos3fvARB");
+	glWindowPos3ivARB = (glWindowPos3ivARBPROC) extgl_GetProcAddress("glWindowPos3ivARB");
+	glWindowPos3svARB = (glWindowPos3svARBPROC) extgl_GetProcAddress("glWindowPos3svARB");
 #endif 
 }
 
 static void extgl_InitARBTextureCompression()
 {
 #ifdef GL_ARB_texture_compression
-    if (!extgl_Extensions.ARB_texture_compression)
-        return;
-    glCompressedTexImage3DARB = (glCompressedTexImage3DARBPROC) extgl_GetProcAddress("glCompressedTexImage3DARB");
-    glCompressedTexImage2DARB = (glCompressedTexImage2DARBPROC) extgl_GetProcAddress("glCompressedTexImage2DARB");
-    glCompressedTexImage1DARB = (glCompressedTexImage1DARBPROC) extgl_GetProcAddress("glCompressedTexImage1DARB");
-    glCompressedTexSubImage3DARB = (glCompressedTexSubImage3DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage3DARB");
-    glCompressedTexSubImage2DARB = (glCompressedTexSubImage2DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage2DARB");
-    glCompressedTexSubImage1DARB = (glCompressedTexSubImage1DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage1DARB");
-    glGetCompressedTexImageARB = (glGetCompressedTexImageARBPROC) extgl_GetProcAddress("glGetCompressedTexImageARB");
+	if (!extgl_Extensions.ARB_texture_compression)
+		return;
+	glCompressedTexImage3DARB = (glCompressedTexImage3DARBPROC) extgl_GetProcAddress("glCompressedTexImage3DARB");
+	glCompressedTexImage2DARB = (glCompressedTexImage2DARBPROC) extgl_GetProcAddress("glCompressedTexImage2DARB");
+	glCompressedTexImage1DARB = (glCompressedTexImage1DARBPROC) extgl_GetProcAddress("glCompressedTexImage1DARB");
+	glCompressedTexSubImage3DARB = (glCompressedTexSubImage3DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage3DARB");
+	glCompressedTexSubImage2DARB = (glCompressedTexSubImage2DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage2DARB");
+	glCompressedTexSubImage1DARB = (glCompressedTexSubImage1DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage1DARB");
+	glGetCompressedTexImageARB = (glGetCompressedTexImageARBPROC) extgl_GetProcAddress("glGetCompressedTexImageARB");
 #endif
 }
 
 static void extgl_InitNVPointSprite()
 {
 #ifdef GL_NV_point_sprite
-    if (!extgl_Extensions.NV_point_sprite)
-        return;
-    glPointParameteriNV = (glPointParameteriNVPROC) extgl_GetProcAddress("glPointParameteriNV");
-    glPointParameterivNV = (glPointParameterivNVPROC) extgl_GetProcAddress("glPointParameterivNV");
+	if (!extgl_Extensions.NV_point_sprite)
+		return;
+	glPointParameteriNV = (glPointParameteriNVPROC) extgl_GetProcAddress("glPointParameteriNV");
+	glPointParameterivNV = (glPointParameterivNVPROC) extgl_GetProcAddress("glPointParameterivNV");
 #endif
 }
 
 static void extgl_InitNVOcclusionQuery()
 {
 #ifdef GL_NV_occlusion_query
-    if (!extgl_Extensions.NV_occlusion_query)
-        return;
-    glGenOcclusionQueriesNV = (glGenOcclusionQueriesNVPROC) extgl_GetProcAddress("glGenOcclusionQueriesNV");
-    glDeleteOcclusionQueriesNV = (glDeleteOcclusionQueriesNVPROC) extgl_GetProcAddress("glDeleteOcclusionQueriesNV");
-    glIsOcclusionQueryNV = (glIsOcclusionQueryNVPROC) extgl_GetProcAddress("glIsOcclusionQueryNV");
-    glBeginOcclusionQueryNV = (glBeginOcclusionQueryNVPROC) extgl_GetProcAddress("glBeginOcclusionQueryNV");
-    glEndOcclusionQueryNV = (glEndOcclusionQueryNVPROC) extgl_GetProcAddress("glEndOcclusionQueryNV");
-    glGetOcclusionQueryivNV = (glGetOcclusionQueryivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryivNV");
-    glGetOcclusionQueryuivNV = (glGetOcclusionQueryuivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryuivNV");
+	if (!extgl_Extensions.NV_occlusion_query)
+		return;
+	glGenOcclusionQueriesNV = (glGenOcclusionQueriesNVPROC) extgl_GetProcAddress("glGenOcclusionQueriesNV");
+	glDeleteOcclusionQueriesNV = (glDeleteOcclusionQueriesNVPROC) extgl_GetProcAddress("glDeleteOcclusionQueriesNV");
+	glIsOcclusionQueryNV = (glIsOcclusionQueryNVPROC) extgl_GetProcAddress("glIsOcclusionQueryNV");
+	glBeginOcclusionQueryNV = (glBeginOcclusionQueryNVPROC) extgl_GetProcAddress("glBeginOcclusionQueryNV");
+	glEndOcclusionQueryNV = (glEndOcclusionQueryNVPROC) extgl_GetProcAddress("glEndOcclusionQueryNV");
+	glGetOcclusionQueryivNV = (glGetOcclusionQueryivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryivNV");
+	glGetOcclusionQueryuivNV = (glGetOcclusionQueryuivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryuivNV");
 #endif
 }
 
 static void extgl_InitATIVertexArrayObject()
 {
 #ifdef GL_ATI_vertex_array_object
-    if (!extgl_Extensions.ATI_vertex_array_object)
-        return;
-    glNewObjectBufferATI = (glNewObjectBufferATIPROC) extgl_GetProcAddress("glNewObjectBufferATI");
-    glIsObjectBufferATI = (glIsObjectBufferATIPROC) extgl_GetProcAddress("glIsObjectBufferATI");
-    glUpdateObjectBufferATI = (glUpdateObjectBufferATIPROC) extgl_GetProcAddress("glUpdateObjectBufferATI");
-    glGetObjectBufferfvATI = (glGetObjectBufferfvATIPROC) extgl_GetProcAddress("glGetObjectBufferfvATI");
-    glGetObjectBufferivATI = (glGetObjectBufferivATIPROC) extgl_GetProcAddress("glGetObjectBufferivATI");
-    glFreeObjectBufferATI = (glFreeObjectBufferATIPROC) extgl_GetProcAddress("glFreeObjectBufferATI");
-    glArrayObjectATI = (glArrayObjectATIPROC) extgl_GetProcAddress("glArrayObjectATI");
-    glGetArrayObjectfvATI = (glGetArrayObjectfvATIPROC) extgl_GetProcAddress("glGetArrayObjectfvATI");
-    glGetArrayObjectivATI = (glGetArrayObjectivATIPROC) extgl_GetProcAddress("glGetArrayObjectivATI");
-    glVariantArrayObjectATI = (glVariantArrayObjectATIPROC) extgl_GetProcAddress("glVariantArrayObjectATI");
-    glGetVariantArrayObjectfvATI = (glGetVariantArrayObjectfvATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectfvATI");
-    glGetVariantArrayObjectivATI = (glGetVariantArrayObjectivATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectivATI");
+	if (!extgl_Extensions.ATI_vertex_array_object)
+		return;
+	glNewObjectBufferATI = (glNewObjectBufferATIPROC) extgl_GetProcAddress("glNewObjectBufferATI");
+	glIsObjectBufferATI = (glIsObjectBufferATIPROC) extgl_GetProcAddress("glIsObjectBufferATI");
+	glUpdateObjectBufferATI = (glUpdateObjectBufferATIPROC) extgl_GetProcAddress("glUpdateObjectBufferATI");
+	glGetObjectBufferfvATI = (glGetObjectBufferfvATIPROC) extgl_GetProcAddress("glGetObjectBufferfvATI");
+	glGetObjectBufferivATI = (glGetObjectBufferivATIPROC) extgl_GetProcAddress("glGetObjectBufferivATI");
+	glFreeObjectBufferATI = (glFreeObjectBufferATIPROC) extgl_GetProcAddress("glFreeObjectBufferATI");
+	glArrayObjectATI = (glArrayObjectATIPROC) extgl_GetProcAddress("glArrayObjectATI");
+	glGetArrayObjectfvATI = (glGetArrayObjectfvATIPROC) extgl_GetProcAddress("glGetArrayObjectfvATI");
+	glGetArrayObjectivATI = (glGetArrayObjectivATIPROC) extgl_GetProcAddress("glGetArrayObjectivATI");
+	glVariantArrayObjectATI = (glVariantArrayObjectATIPROC) extgl_GetProcAddress("glVariantArrayObjectATI");
+	glGetVariantArrayObjectfvATI = (glGetVariantArrayObjectfvATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectfvATI");
+	glGetVariantArrayObjectivATI = (glGetVariantArrayObjectivATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectivATI");
 #endif
 }
 
 static void extgl_InitATIVertexStreams()
 {
 #ifdef GL_ATI_vertex_streams
-    if (!extgl_Extensions.ATI_vertex_streams)
-        return;
-    glClientActiveVertexStreamATI = (glClientActiveVertexStreamATIPROC) extgl_GetProcAddress("glClientActiveVertexStreamATI");
-    glVertexBlendEnviATI = (glVertexBlendEnviATIPROC) extgl_GetProcAddress("glVertexBlendEnviATI");
-    glVertexBlendEnvfATI = (glVertexBlendEnvfATIPROC) extgl_GetProcAddress("glVertexBlendEnvfATI");
-    glVertexStream2sATI = (glVertexStream2sATIPROC) extgl_GetProcAddress("glVertexStream2sATI");
-    glVertexStream2svATI = (glVertexStream2svATIPROC) extgl_GetProcAddress("glVertexStream2svATI");
-    glVertexStream2iATI = (glVertexStream2iATIPROC) extgl_GetProcAddress("glVertexStream2iATI");
-    glVertexStream2ivATI = (glVertexStream2ivATIPROC) extgl_GetProcAddress("glVertexStream2ivATI");
-    glVertexStream2fATI = (glVertexStream2fATIPROC) extgl_GetProcAddress("glVertexStream2fATI");
-    glVertexStream2fvATI = (glVertexStream2fvATIPROC) extgl_GetProcAddress("glVertexStream2fvATI");
-    glVertexStream2dATI = (glVertexStream2dATIPROC) extgl_GetProcAddress("glVertexStream2dATI");
-    glVertexStream2dvATI = (glVertexStream2dvATIPROC) extgl_GetProcAddress("glVertexStream2dvATI");
-    glVertexStream3sATI = (glVertexStream3sATIPROC) extgl_GetProcAddress("glVertexStream3sATI");
-    glVertexStream3svATI = (glVertexStream3svATIPROC) extgl_GetProcAddress("glVertexStream3svATI");
-    glVertexStream3iATI = (glVertexStream3iATIPROC) extgl_GetProcAddress("glVertexStream3iATI");
-    glVertexStream3ivATI = (glVertexStream3ivATIPROC) extgl_GetProcAddress("glVertexStream3ivATI");
-    glVertexStream3fATI = (glVertexStream3fATIPROC) extgl_GetProcAddress("glVertexStream3fATI");
-    glVertexStream3fvATI = (glVertexStream3fvATIPROC) extgl_GetProcAddress("glVertexStream3fvATI");
-    glVertexStream3dATI = (glVertexStream3dATIPROC) extgl_GetProcAddress("glVertexStream3dATI");
-    glVertexStream3dvATI = (glVertexStream3dvATIPROC) extgl_GetProcAddress("glVertexStream3dvATI");
-    glVertexStream4sATI = (glVertexStream4sATIPROC) extgl_GetProcAddress("glVertexStream4sATI");
-    glVertexStream4svATI = (glVertexStream4svATIPROC) extgl_GetProcAddress("glVertexStream4svATI");
-    glVertexStream4iATI = (glVertexStream4iATIPROC) extgl_GetProcAddress("glVertexStream4iATI");
-    glVertexStream4ivATI = (glVertexStream4ivATIPROC) extgl_GetProcAddress("glVertexStream4ivATI");
-    glVertexStream4fATI = (glVertexStream4fATIPROC) extgl_GetProcAddress("glVertexStream4fATI");
-    glVertexStream4fvATI = (glVertexStream4fvATIPROC) extgl_GetProcAddress("glVertexStream4fvATI");
-    glVertexStream4dATI = (glVertexStream4dATIPROC) extgl_GetProcAddress("glVertexStream4dATI");
-    glVertexStream4dvATI = (glVertexStream4dvATIPROC) extgl_GetProcAddress("glVertexStream4dvATI");
-    glNormalStream3bATI = (glNormalStream3bATIPROC) extgl_GetProcAddress("glNormalStream3bATI");
-    glNormalStream3bvATI = (glNormalStream3bvATIPROC) extgl_GetProcAddress("glNormalStream3bvATI");
-    glNormalStream3sATI = (glNormalStream3sATIPROC) extgl_GetProcAddress("glNormalStream3sATI");
-    glNormalStream3svATI = (glNormalStream3svATIPROC) extgl_GetProcAddress("glNormalStream3svATI");
-    glNormalStream3iATI = (glNormalStream3iATIPROC) extgl_GetProcAddress("glNormalStream3iATI");
-    glNormalStream3ivATI = (glNormalStream3ivATIPROC) extgl_GetProcAddress("glNormalStream3ivATI");
-    glNormalStream3fATI = (glNormalStream3fATIPROC) extgl_GetProcAddress("glNormalStream3fATI");
-    glNormalStream3fvATI = (glNormalStream3fvATIPROC) extgl_GetProcAddress("glNormalStream3fvATI");
-    glNormalStream3dATI = (glNormalStream3dATIPROC) extgl_GetProcAddress("glNormalStream3dATI");
-    glNormalStream3dvATI = (glNormalStream3dvATIPROC) extgl_GetProcAddress("glNormalStream3dvATI");
+	if (!extgl_Extensions.ATI_vertex_streams)
+		return;
+	glClientActiveVertexStreamATI = (glClientActiveVertexStreamATIPROC) extgl_GetProcAddress("glClientActiveVertexStreamATI");
+	glVertexBlendEnviATI = (glVertexBlendEnviATIPROC) extgl_GetProcAddress("glVertexBlendEnviATI");
+	glVertexBlendEnvfATI = (glVertexBlendEnvfATIPROC) extgl_GetProcAddress("glVertexBlendEnvfATI");
+	glVertexStream2sATI = (glVertexStream2sATIPROC) extgl_GetProcAddress("glVertexStream2sATI");
+	glVertexStream2svATI = (glVertexStream2svATIPROC) extgl_GetProcAddress("glVertexStream2svATI");
+	glVertexStream2iATI = (glVertexStream2iATIPROC) extgl_GetProcAddress("glVertexStream2iATI");
+	glVertexStream2ivATI = (glVertexStream2ivATIPROC) extgl_GetProcAddress("glVertexStream2ivATI");
+	glVertexStream2fATI = (glVertexStream2fATIPROC) extgl_GetProcAddress("glVertexStream2fATI");
+	glVertexStream2fvATI = (glVertexStream2fvATIPROC) extgl_GetProcAddress("glVertexStream2fvATI");
+	glVertexStream2dATI = (glVertexStream2dATIPROC) extgl_GetProcAddress("glVertexStream2dATI");
+	glVertexStream2dvATI = (glVertexStream2dvATIPROC) extgl_GetProcAddress("glVertexStream2dvATI");
+	glVertexStream3sATI = (glVertexStream3sATIPROC) extgl_GetProcAddress("glVertexStream3sATI");
+	glVertexStream3svATI = (glVertexStream3svATIPROC) extgl_GetProcAddress("glVertexStream3svATI");
+	glVertexStream3iATI = (glVertexStream3iATIPROC) extgl_GetProcAddress("glVertexStream3iATI");
+	glVertexStream3ivATI = (glVertexStream3ivATIPROC) extgl_GetProcAddress("glVertexStream3ivATI");
+	glVertexStream3fATI = (glVertexStream3fATIPROC) extgl_GetProcAddress("glVertexStream3fATI");
+	glVertexStream3fvATI = (glVertexStream3fvATIPROC) extgl_GetProcAddress("glVertexStream3fvATI");
+	glVertexStream3dATI = (glVertexStream3dATIPROC) extgl_GetProcAddress("glVertexStream3dATI");
+	glVertexStream3dvATI = (glVertexStream3dvATIPROC) extgl_GetProcAddress("glVertexStream3dvATI");
+	glVertexStream4sATI = (glVertexStream4sATIPROC) extgl_GetProcAddress("glVertexStream4sATI");
+	glVertexStream4svATI = (glVertexStream4svATIPROC) extgl_GetProcAddress("glVertexStream4svATI");
+	glVertexStream4iATI = (glVertexStream4iATIPROC) extgl_GetProcAddress("glVertexStream4iATI");
+	glVertexStream4ivATI = (glVertexStream4ivATIPROC) extgl_GetProcAddress("glVertexStream4ivATI");
+	glVertexStream4fATI = (glVertexStream4fATIPROC) extgl_GetProcAddress("glVertexStream4fATI");
+	glVertexStream4fvATI = (glVertexStream4fvATIPROC) extgl_GetProcAddress("glVertexStream4fvATI");
+	glVertexStream4dATI = (glVertexStream4dATIPROC) extgl_GetProcAddress("glVertexStream4dATI");
+	glVertexStream4dvATI = (glVertexStream4dvATIPROC) extgl_GetProcAddress("glVertexStream4dvATI");
+	glNormalStream3bATI = (glNormalStream3bATIPROC) extgl_GetProcAddress("glNormalStream3bATI");
+	glNormalStream3bvATI = (glNormalStream3bvATIPROC) extgl_GetProcAddress("glNormalStream3bvATI");
+	glNormalStream3sATI = (glNormalStream3sATIPROC) extgl_GetProcAddress("glNormalStream3sATI");
+	glNormalStream3svATI = (glNormalStream3svATIPROC) extgl_GetProcAddress("glNormalStream3svATI");
+	glNormalStream3iATI = (glNormalStream3iATIPROC) extgl_GetProcAddress("glNormalStream3iATI");
+	glNormalStream3ivATI = (glNormalStream3ivATIPROC) extgl_GetProcAddress("glNormalStream3ivATI");
+	glNormalStream3fATI = (glNormalStream3fATIPROC) extgl_GetProcAddress("glNormalStream3fATI");
+	glNormalStream3fvATI = (glNormalStream3fvATIPROC) extgl_GetProcAddress("glNormalStream3fvATI");
+	glNormalStream3dATI = (glNormalStream3dATIPROC) extgl_GetProcAddress("glNormalStream3dATI");
+	glNormalStream3dvATI = (glNormalStream3dvATIPROC) extgl_GetProcAddress("glNormalStream3dvATI");
 #endif
 }
 
 static void extgl_InitATIElementArray()
 {
 #ifdef GL_ATI_element_array
-    if (!extgl_Extensions.ATI_element_array)
-        return;
-    glElementPointerATI = (glElementPointerATIPROC) extgl_GetProcAddress("glElementPointerATI");
-    glDrawElementArrayATI = (glDrawElementArrayATIPROC) extgl_GetProcAddress("glDrawElementArrayATI");
-    glDrawRangeElementArrayATI = (glDrawRangeElementArrayATIPROC) extgl_GetProcAddress("glDrawRangeElementArrayATI");
+	if (!extgl_Extensions.ATI_element_array)
+		return;
+	glElementPointerATI = (glElementPointerATIPROC) extgl_GetProcAddress("glElementPointerATI");
+	glDrawElementArrayATI = (glDrawElementArrayATIPROC) extgl_GetProcAddress("glDrawElementArrayATI");
+	glDrawRangeElementArrayATI = (glDrawRangeElementArrayATIPROC) extgl_GetProcAddress("glDrawRangeElementArrayATI");
 #endif
 }
 
 static void extgl_InitATIFragmentShader()
 {
 #ifdef GL_ATI_fragment_shader
-    if (!extgl_Extensions.ATI_fragment_shader)
-        return;
-    glGenFragmentShadersATI = (glGenFragmentShadersATIPROC) extgl_GetProcAddress("glGenFragmentShadersATI");
-    glBindFragmentShaderATI = (glBindFragmentShaderATIPROC) extgl_GetProcAddress("glBindFragmentShaderATI");
-    glDeleteFragmentShaderATI = (glDeleteFragmentShaderATIPROC) extgl_GetProcAddress("glDeleteFragmentShaderATI");
-    glBeginFragmentShaderATI = (glBeginFragmentShaderATIPROC) extgl_GetProcAddress("glBeginFragmentShaderATI");
-    glEndFragmentShaderATI = (glEndFragmentShaderATIPROC) extgl_GetProcAddress("glEndFragmentShaderATI");
-    glPassTexCoordATI = (glPassTexCoordATIPROC) extgl_GetProcAddress("glPassTexCoordATI");
-    glSampleMapATI = (glSampleMapATIPROC) extgl_GetProcAddress("glSampleMapATI");
-    glColorFragmentOp1ATI = (glColorFragmentOp1ATIPROC) extgl_GetProcAddress("glColorFragmentOp1ATI");
-    glColorFragmentOp2ATI = (glColorFragmentOp2ATIPROC) extgl_GetProcAddress("glColorFragmentOp2ATI");
-    glColorFragmentOp3ATI = (glColorFragmentOp3ATIPROC) extgl_GetProcAddress("glColorFragmentOp3ATI");
-    glAlphaFragmentOp1ATI = (glAlphaFragmentOp1ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp1ATI");
-    glAlphaFragmentOp2ATI = (glAlphaFragmentOp2ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp2ATI");
-    glAlphaFragmentOp3ATI = (glAlphaFragmentOp3ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp3ATI");
-    glSetFragmentShaderConstantATI = (glSetFragmentShaderConstantATIPROC) extgl_GetProcAddress("glSetFragmentShaderConstantATI");
+	if (!extgl_Extensions.ATI_fragment_shader)
+		return;
+	glGenFragmentShadersATI = (glGenFragmentShadersATIPROC) extgl_GetProcAddress("glGenFragmentShadersATI");
+	glBindFragmentShaderATI = (glBindFragmentShaderATIPROC) extgl_GetProcAddress("glBindFragmentShaderATI");
+	glDeleteFragmentShaderATI = (glDeleteFragmentShaderATIPROC) extgl_GetProcAddress("glDeleteFragmentShaderATI");
+	glBeginFragmentShaderATI = (glBeginFragmentShaderATIPROC) extgl_GetProcAddress("glBeginFragmentShaderATI");
+	glEndFragmentShaderATI = (glEndFragmentShaderATIPROC) extgl_GetProcAddress("glEndFragmentShaderATI");
+	glPassTexCoordATI = (glPassTexCoordATIPROC) extgl_GetProcAddress("glPassTexCoordATI");
+	glSampleMapATI = (glSampleMapATIPROC) extgl_GetProcAddress("glSampleMapATI");
+	glColorFragmentOp1ATI = (glColorFragmentOp1ATIPROC) extgl_GetProcAddress("glColorFragmentOp1ATI");
+	glColorFragmentOp2ATI = (glColorFragmentOp2ATIPROC) extgl_GetProcAddress("glColorFragmentOp2ATI");
+	glColorFragmentOp3ATI = (glColorFragmentOp3ATIPROC) extgl_GetProcAddress("glColorFragmentOp3ATI");
+	glAlphaFragmentOp1ATI = (glAlphaFragmentOp1ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp1ATI");
+	glAlphaFragmentOp2ATI = (glAlphaFragmentOp2ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp2ATI");
+	glAlphaFragmentOp3ATI = (glAlphaFragmentOp3ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp3ATI");
+	glSetFragmentShaderConstantATI = (glSetFragmentShaderConstantATIPROC) extgl_GetProcAddress("glSetFragmentShaderConstantATI");
 #endif
 }
 
@@ -2065,315 +2075,315 @@ static void extgl_InitATIFragmentShader()
 static void extgl_InitATIEnvmapBumpmap()
 {
 #ifdef GL_ATI_envmap_bumpmap
-    if (!extgl_Extensions.ATI_envmap_bumpmap)
-        return;
-    glTexBumpParameterivATI = (glTexBumpParameterivATIPROC) extgl_GetProcAddress("glTexBumpParameterivATI");
-    glTexBumpParameterfvATI = (glTexBumpParameterfvATIPROC) extgl_GetProcAddress("glTexBumpParameterfvATI");
-    glGetTexBumpParameterivATI = (glGetTexBumpParameterivATIPROC) extgl_GetProcAddress("glGetTexBumpParameterivATI");
-    glGetTexBumpParameterfvATI = (glGetTexBumpParameterfvATIPROC) extgl_GetProcAddress("glGetTexBumpParameterfvATI");
+	if (!extgl_Extensions.ATI_envmap_bumpmap)
+		return;
+	glTexBumpParameterivATI = (glTexBumpParameterivATIPROC) extgl_GetProcAddress("glTexBumpParameterivATI");
+	glTexBumpParameterfvATI = (glTexBumpParameterfvATIPROC) extgl_GetProcAddress("glTexBumpParameterfvATI");
+	glGetTexBumpParameterivATI = (glGetTexBumpParameterivATIPROC) extgl_GetProcAddress("glGetTexBumpParameterivATI");
+	glGetTexBumpParameterfvATI = (glGetTexBumpParameterfvATIPROC) extgl_GetProcAddress("glGetTexBumpParameterfvATI");
 #endif
 }
 
 static void extgl_InitEXTVertexShader()
 {
 #ifdef GL_EXT_vertex_shader
-    if (!extgl_Extensions.EXT_vertex_shader)
-        return;
-    glBeginVertexShaderEXT = (glBeginVertexShaderEXTPROC) extgl_GetProcAddress("glBeginVertexShaderEXT");
-    glEndVertexShaderEXT = (glEndVertexShaderEXTPROC) extgl_GetProcAddress("glEndVertexShaderEXT");
-    glBindVertexShaderEXT = (glBindVertexShaderEXTPROC) extgl_GetProcAddress("glBindVertexShaderEXT");
-    glGenVertexShadersEXT = (glGenVertexShadersEXTPROC) extgl_GetProcAddress("glGenVertexShadersEXT");
-    glDeleteVertexShaderEXT = (glDeleteVertexShaderEXTPROC) extgl_GetProcAddress("glDeleteVertexShaderEXT");
-    glShaderOp1EXT = (glShaderOp1EXTPROC) extgl_GetProcAddress("glShaderOp1EXT");
-    glShaderOp2EXT = (glShaderOp2EXTPROC) extgl_GetProcAddress("glShaderOp2EXT");
-    glShaderOp3EXT = (glShaderOp3EXTPROC) extgl_GetProcAddress("glShaderOp3EXT");
-    glSwizzleEXT = (glSwizzleEXTPROC) extgl_GetProcAddress("glSwizzleEXT");
-    glWriteMaskEXT = (glWriteMaskEXTPROC) extgl_GetProcAddress("glWriteMaskEXT");
-    glInsertComponentEXT = (glInsertComponentEXTPROC) extgl_GetProcAddress("glInsertComponentEXT");
-    glExtractComponentEXT = (glExtractComponentEXTPROC) extgl_GetProcAddress("glExtractComponentEXT");
-    glGenSymbolsEXT = (glGenSymbolsEXTPROC) extgl_GetProcAddress("glGenSymbolsEXT");
-    glSetInvariantEXT = (glSetInvariantEXTPROC) extgl_GetProcAddress("glSetInvarianceEXT");
-    glSetLocalConstantEXT = (glSetLocalConstantEXTPROC) extgl_GetProcAddress("glSetLocalConstantEXT");
-    glVariantbvEXT = (glVariantbvEXTPROC) extgl_GetProcAddress("glVariantbvEXT");
-    glVariantsvEXT = (glVariantsvEXTPROC) extgl_GetProcAddress("glVariantsvEXT");
-    glVariantivEXT = (glVariantivEXTPROC) extgl_GetProcAddress("glVariantivEXT");
-    glVariantfvEXT = (glVariantfvEXTPROC) extgl_GetProcAddress("glVariantfvEXT");
-    glVariantdvEXT = (glVariantdvEXTPROC) extgl_GetProcAddress("glVariantdvEXT");
-    glVariantubvEXT = (glVariantubvEXTPROC) extgl_GetProcAddress("glVariantubvEXT");
-    glVariantusvEXT = (glVariantusvEXTPROC) extgl_GetProcAddress("glVariantusvEXT");
-    glVariantuivEXT = (glVariantuivEXTPROC) extgl_GetProcAddress("glVariantuivEXT");
-    glVariantPointerEXT = (glVariantPointerEXTPROC) extgl_GetProcAddress("glVariantPointerEXT");
-    glEnableVariantClientStateEXT = (glEnableVariantClientStateEXTPROC) extgl_GetProcAddress("glEnableVariantClientStateEXT");
-    glDisableVariantClientStateEXT = (glDisableVariantClientStateEXTPROC) extgl_GetProcAddress("glDisableVariantClientStateEXT");
-    glBindLightParameterEXT = (glBindLightParameterEXTPROC) extgl_GetProcAddress("glBindLightParameterEXT");
-    glBindMaterialParameterEXT = (glBindMaterialParameterEXTPROC) extgl_GetProcAddress("glBindMaterialParameterEXT");
-    glBindTexGenParameterEXT = (glBindTexGenParameterEXTPROC) extgl_GetProcAddress("glBindTexGenParameterEXT");
-    glBindTextureUnitParameterEXT = (glBindTextureUnitParameterEXTPROC) extgl_GetProcAddress("glBindTextureUnitParameterEXT");
-    glBindParameterEXT = (glBindParameterEXTPROC) extgl_GetProcAddress("glBindParameterEXT");
-    glIsVariantEnabledEXT = (glIsVariantEnabledEXTPROC) extgl_GetProcAddress("glIsVariantEnabledEXT");
-    glGetVariantBooleanvEXT = (glGetVariantBooleanvEXTPROC) extgl_GetProcAddress("glGetVariantBooleanvEXT");
-    glGetVariantIntegervEXT = (glGetVariantIntegervEXTPROC) extgl_GetProcAddress("glGetVariantIntegervEXT");
-    glGetVariantFloatvEXT = (glGetVariantFloatvEXTPROC) extgl_GetProcAddress("glGetVariantFloatvEXT");
-    glGetVariantPointervEXT = (glGetVariantPointervEXTPROC) extgl_GetProcAddress("glGetVariantPointervEXT");
-    glGetInvariantBooleanvEXT = (glGetInvariantBooleanvEXTPROC) extgl_GetProcAddress("glGetInvariantBooleanvEXT");
-    glGetInvariantIntegervEXT = (glGetInvariantIntegervEXTPROC) extgl_GetProcAddress("glGetInvariantIntegervEXT");
-    glGetInvariantFloatvEXT = (glGetInvariantFloatvEXTPROC) extgl_GetProcAddress("glGetInvariantFloatvEXT");
-    glGetLocalConstantBooleanvEXT = (glGetLocalConstantBooleanvEXTPROC) extgl_GetProcAddress("glGetLocalConstantBooleanvEXT");
-    glGetLocalConstantIntegervEXT = (glGetLocalConstantIntegervEXTPROC) extgl_GetProcAddress("glGetLocalConstantIntegervEXT");
-    glGetLocalConstantFloatvEXT = (glGetLocalConstantFloatvEXTPROC) extgl_GetProcAddress("glGetLocalConstantFloatvEXT");
+	if (!extgl_Extensions.EXT_vertex_shader)
+		return;
+	glBeginVertexShaderEXT = (glBeginVertexShaderEXTPROC) extgl_GetProcAddress("glBeginVertexShaderEXT");
+	glEndVertexShaderEXT = (glEndVertexShaderEXTPROC) extgl_GetProcAddress("glEndVertexShaderEXT");
+	glBindVertexShaderEXT = (glBindVertexShaderEXTPROC) extgl_GetProcAddress("glBindVertexShaderEXT");
+	glGenVertexShadersEXT = (glGenVertexShadersEXTPROC) extgl_GetProcAddress("glGenVertexShadersEXT");
+	glDeleteVertexShaderEXT = (glDeleteVertexShaderEXTPROC) extgl_GetProcAddress("glDeleteVertexShaderEXT");
+	glShaderOp1EXT = (glShaderOp1EXTPROC) extgl_GetProcAddress("glShaderOp1EXT");
+	glShaderOp2EXT = (glShaderOp2EXTPROC) extgl_GetProcAddress("glShaderOp2EXT");
+	glShaderOp3EXT = (glShaderOp3EXTPROC) extgl_GetProcAddress("glShaderOp3EXT");
+	glSwizzleEXT = (glSwizzleEXTPROC) extgl_GetProcAddress("glSwizzleEXT");
+	glWriteMaskEXT = (glWriteMaskEXTPROC) extgl_GetProcAddress("glWriteMaskEXT");
+	glInsertComponentEXT = (glInsertComponentEXTPROC) extgl_GetProcAddress("glInsertComponentEXT");
+	glExtractComponentEXT = (glExtractComponentEXTPROC) extgl_GetProcAddress("glExtractComponentEXT");
+	glGenSymbolsEXT = (glGenSymbolsEXTPROC) extgl_GetProcAddress("glGenSymbolsEXT");
+	glSetInvariantEXT = (glSetInvariantEXTPROC) extgl_GetProcAddress("glSetInvarianceEXT");
+	glSetLocalConstantEXT = (glSetLocalConstantEXTPROC) extgl_GetProcAddress("glSetLocalConstantEXT");
+	glVariantbvEXT = (glVariantbvEXTPROC) extgl_GetProcAddress("glVariantbvEXT");
+	glVariantsvEXT = (glVariantsvEXTPROC) extgl_GetProcAddress("glVariantsvEXT");
+	glVariantivEXT = (glVariantivEXTPROC) extgl_GetProcAddress("glVariantivEXT");
+	glVariantfvEXT = (glVariantfvEXTPROC) extgl_GetProcAddress("glVariantfvEXT");
+	glVariantdvEXT = (glVariantdvEXTPROC) extgl_GetProcAddress("glVariantdvEXT");
+	glVariantubvEXT = (glVariantubvEXTPROC) extgl_GetProcAddress("glVariantubvEXT");
+	glVariantusvEXT = (glVariantusvEXTPROC) extgl_GetProcAddress("glVariantusvEXT");
+	glVariantuivEXT = (glVariantuivEXTPROC) extgl_GetProcAddress("glVariantuivEXT");
+	glVariantPointerEXT = (glVariantPointerEXTPROC) extgl_GetProcAddress("glVariantPointerEXT");
+	glEnableVariantClientStateEXT = (glEnableVariantClientStateEXTPROC) extgl_GetProcAddress("glEnableVariantClientStateEXT");
+	glDisableVariantClientStateEXT = (glDisableVariantClientStateEXTPROC) extgl_GetProcAddress("glDisableVariantClientStateEXT");
+	glBindLightParameterEXT = (glBindLightParameterEXTPROC) extgl_GetProcAddress("glBindLightParameterEXT");
+	glBindMaterialParameterEXT = (glBindMaterialParameterEXTPROC) extgl_GetProcAddress("glBindMaterialParameterEXT");
+	glBindTexGenParameterEXT = (glBindTexGenParameterEXTPROC) extgl_GetProcAddress("glBindTexGenParameterEXT");
+	glBindTextureUnitParameterEXT = (glBindTextureUnitParameterEXTPROC) extgl_GetProcAddress("glBindTextureUnitParameterEXT");
+	glBindParameterEXT = (glBindParameterEXTPROC) extgl_GetProcAddress("glBindParameterEXT");
+	glIsVariantEnabledEXT = (glIsVariantEnabledEXTPROC) extgl_GetProcAddress("glIsVariantEnabledEXT");
+	glGetVariantBooleanvEXT = (glGetVariantBooleanvEXTPROC) extgl_GetProcAddress("glGetVariantBooleanvEXT");
+	glGetVariantIntegervEXT = (glGetVariantIntegervEXTPROC) extgl_GetProcAddress("glGetVariantIntegervEXT");
+	glGetVariantFloatvEXT = (glGetVariantFloatvEXTPROC) extgl_GetProcAddress("glGetVariantFloatvEXT");
+	glGetVariantPointervEXT = (glGetVariantPointervEXTPROC) extgl_GetProcAddress("glGetVariantPointervEXT");
+	glGetInvariantBooleanvEXT = (glGetInvariantBooleanvEXTPROC) extgl_GetProcAddress("glGetInvariantBooleanvEXT");
+	glGetInvariantIntegervEXT = (glGetInvariantIntegervEXTPROC) extgl_GetProcAddress("glGetInvariantIntegervEXT");
+	glGetInvariantFloatvEXT = (glGetInvariantFloatvEXTPROC) extgl_GetProcAddress("glGetInvariantFloatvEXT");
+	glGetLocalConstantBooleanvEXT = (glGetLocalConstantBooleanvEXTPROC) extgl_GetProcAddress("glGetLocalConstantBooleanvEXT");
+	glGetLocalConstantIntegervEXT = (glGetLocalConstantIntegervEXTPROC) extgl_GetProcAddress("glGetLocalConstantIntegervEXT");
+	glGetLocalConstantFloatvEXT = (glGetLocalConstantFloatvEXTPROC) extgl_GetProcAddress("glGetLocalConstantFloatvEXT");
 #endif
 }
 
 static void extgl_InitARBMatrixPalette()
 {
 #ifdef GL_ARB_matrix_palette
-    if (!extgl_Extensions.ARB_matrix_palette)
-        return;
-    glCurrentPaletteMatrixARB = (glCurrentPaletteMatrixARBPROC) extgl_GetProcAddress("glCurrentPaletteMatrixARB");
-    glMatrixIndexubvARB = (glMatrixIndexubvARBPROC) extgl_GetProcAddress("glMatrixIndexubvARB");
-    glMatrixIndexusvARB = (glMatrixIndexusvARBPROC) extgl_GetProcAddress("glMatrixIndexusvARB");
-    glMatrixIndexuivARB = (glMatrixIndexuivARBPROC) extgl_GetProcAddress("glMatrixIndexuivARB");
-    glMatrixIndexPointerARB = (glMatrixIndexPointerARBPROC) extgl_GetProcAddress("glMatrixIndexPointerARB");
+	if (!extgl_Extensions.ARB_matrix_palette)
+		return;
+	glCurrentPaletteMatrixARB = (glCurrentPaletteMatrixARBPROC) extgl_GetProcAddress("glCurrentPaletteMatrixARB");
+	glMatrixIndexubvARB = (glMatrixIndexubvARBPROC) extgl_GetProcAddress("glMatrixIndexubvARB");
+	glMatrixIndexusvARB = (glMatrixIndexusvARBPROC) extgl_GetProcAddress("glMatrixIndexusvARB");
+	glMatrixIndexuivARB = (glMatrixIndexuivARBPROC) extgl_GetProcAddress("glMatrixIndexuivARB");
+	glMatrixIndexPointerARB = (glMatrixIndexPointerARBPROC) extgl_GetProcAddress("glMatrixIndexPointerARB");
 #endif
 }
 
 static void extgl_InitEXTMultiDrawArrays()
 {
 #ifdef GL_EXT_multi_draw_arrays
-    if (!extgl_Extensions.EXT_multi_draw_arrays)
-        return;
-    glMultiDrawArraysEXT = (glMultiDrawArraysEXTPROC) extgl_GetProcAddress("glMultiDrawArraysEXT");
-    glMultiDrawElementsEXT = (glMultiDrawElementsEXTPROC) extgl_GetProcAddress("glMultiDrawElementsEXT");
+	if (!extgl_Extensions.EXT_multi_draw_arrays)
+		return;
+	glMultiDrawArraysEXT = (glMultiDrawArraysEXTPROC) extgl_GetProcAddress("glMultiDrawArraysEXT");
+	glMultiDrawElementsEXT = (glMultiDrawElementsEXTPROC) extgl_GetProcAddress("glMultiDrawElementsEXT");
 #endif
 }
 
 static void extgl_InitARBVertexBlend()
 {
 #ifdef GL_ARB_vertex_blend
-    if (!extgl_Extensions.ARB_vertex_blend)
-        return;
-    glWeightbvARB = (glWeightbvARBPROC) extgl_GetProcAddress("glWeightbvARB");
-    glWeightsvARB = (glWeightsvARBPROC) extgl_GetProcAddress("glWeightsvARB");
-    glWeightivARB = (glWeightivARBPROC) extgl_GetProcAddress("glWeightivARB");
-    glWeightfvARB = (glWeightfvARBPROC) extgl_GetProcAddress("glWeightfvARB");
-    glWeightdvARB = (glWeightdvARBPROC) extgl_GetProcAddress("glWeightdvARB");
-    glWeightubvARB = (glWeightubvARBPROC) extgl_GetProcAddress("glWeightubvARB");
-    glWeightusvARB = (glWeightusvARBPROC) extgl_GetProcAddress("glWeightusvARB");
-    glWeightuivARB = (glWeightuivARBPROC) extgl_GetProcAddress("glWeightuivARB");
-    glWeightPointerARB = (glWeightPointerARBPROC) extgl_GetProcAddress("glWeightPointerARB");
-    glVertexBlendARB = (glVertexBlendARBPROC) extgl_GetProcAddress("glVertexBlendARB");
+	if (!extgl_Extensions.ARB_vertex_blend)
+		return;
+	glWeightbvARB = (glWeightbvARBPROC) extgl_GetProcAddress("glWeightbvARB");
+	glWeightsvARB = (glWeightsvARBPROC) extgl_GetProcAddress("glWeightsvARB");
+	glWeightivARB = (glWeightivARBPROC) extgl_GetProcAddress("glWeightivARB");
+	glWeightfvARB = (glWeightfvARBPROC) extgl_GetProcAddress("glWeightfvARB");
+	glWeightdvARB = (glWeightdvARBPROC) extgl_GetProcAddress("glWeightdvARB");
+	glWeightubvARB = (glWeightubvARBPROC) extgl_GetProcAddress("glWeightubvARB");
+	glWeightusvARB = (glWeightusvARBPROC) extgl_GetProcAddress("glWeightusvARB");
+	glWeightuivARB = (glWeightuivARBPROC) extgl_GetProcAddress("glWeightuivARB");
+	glWeightPointerARB = (glWeightPointerARBPROC) extgl_GetProcAddress("glWeightPointerARB");
+	glVertexBlendARB = (glVertexBlendARBPROC) extgl_GetProcAddress("glVertexBlendARB");
 #endif
 }
 
 static void extgl_InitARBPointParameters()
 {
 #ifdef GL_ARB_point_parameters
-    if (!extgl_Extensions.ARB_point_parameters)
-        return;
-    glPointParameterfARB = (glPointParameterfARBPROC) extgl_GetProcAddress("glPointParameterfARB");
-    glPointParameterfvARB = (glPointParameterfvARBPROC) extgl_GetProcAddress("glPointParameterfvARB");
+	if (!extgl_Extensions.ARB_point_parameters)
+		return;
+	glPointParameterfARB = (glPointParameterfARBPROC) extgl_GetProcAddress("glPointParameterfARB");
+	glPointParameterfvARB = (glPointParameterfvARBPROC) extgl_GetProcAddress("glPointParameterfvARB");
 #endif
 }
 
 static void extgl_InitATIPNTriangles()
 {
 #ifdef GL_ATI_pn_triangles
-    if (!extgl_Extensions.ATI_pn_triangles)
-        return;
-    glPNTrianglesiATI = (glPNTrianglesiATIPROC) extgl_GetProcAddress("glPNTrianglesiATI");
-    glPNTrianglesfATI = (glPNTrianglesfATIPROC) extgl_GetProcAddress("glPNTrianglesfATI");
+	if (!extgl_Extensions.ATI_pn_triangles)
+		return;
+	glPNTrianglesiATI = (glPNTrianglesiATIPROC) extgl_GetProcAddress("glPNTrianglesiATI");
+	glPNTrianglesfATI = (glPNTrianglesfATIPROC) extgl_GetProcAddress("glPNTrianglesfATI");
 #endif
 }
 
 static void extgl_InitATISeparateStencil()
 {
 #ifdef GL_ATI_separate_stencil
-    if (!extgl_Extensions.ATI_separate_stencil)
-        return;
-    glStencilOpSeparateATI = (glStencilOpSeparateATIPROC)extgl_GetProcAddress("glStencilOpSeparateATI");
-    glStencilFuncSeparateATI = (glStencilFuncSeparateATIPROC)extgl_GetProcAddress("glStencilFuncSeparateATI");
+	if (!extgl_Extensions.ATI_separate_stencil)
+		return;
+	glStencilOpSeparateATI = (glStencilOpSeparateATIPROC)extgl_GetProcAddress("glStencilOpSeparateATI");
+	glStencilFuncSeparateATI = (glStencilFuncSeparateATIPROC)extgl_GetProcAddress("glStencilFuncSeparateATI");
 #endif
 }
 
 static void extgl_InitNVEvaluators()
 {
 #ifdef GL_NV_evaluators
-    if (!extgl_Extensions.NV_evaluators)
-        return;
-    glMapControlPointsNV = (glMapControlPointsNVPROC) extgl_GetProcAddress("glMapControlPointsNV");
-    glMapParameterivNV = (glMapParameterivNVPROC) extgl_GetProcAddress("glMapParameterivNV");
-    glMapParameterfvNV = (glMapParameterfvNVPROC) extgl_GetProcAddress("glMapParameterfvNV");
-    glGetMapControlPointsNV = (glGetMapControlPointsNVPROC) extgl_GetProcAddress("glGetMapControlPointsNV");
-    glGetMapParameterivNV = (glGetMapParameterivNVPROC) extgl_GetProcAddress("glGetMapParameterivNV");
-    glGetMapParameterfvNV = (glGetMapParameterfvNVPROC) extgl_GetProcAddress("glGetMapParameterfvNV");
-    glGetMapAttribParameterivNV = (glGetMapAttribParameterivNVPROC) extgl_GetProcAddress("glGetMapAttribParameterivNV");
-    glGetMapAttribParameterfvNV = (glGetMapAttribParameterfvNVPROC) extgl_GetProcAddress("glGetMapAttribParameterfvNV");
-    glEvalMapsNV = (glEvalMapsNVPROC) extgl_GetProcAddress("glEvalMapsNV");
+	if (!extgl_Extensions.NV_evaluators)
+		return;
+	glMapControlPointsNV = (glMapControlPointsNVPROC) extgl_GetProcAddress("glMapControlPointsNV");
+	glMapParameterivNV = (glMapParameterivNVPROC) extgl_GetProcAddress("glMapParameterivNV");
+	glMapParameterfvNV = (glMapParameterfvNVPROC) extgl_GetProcAddress("glMapParameterfvNV");
+	glGetMapControlPointsNV = (glGetMapControlPointsNVPROC) extgl_GetProcAddress("glGetMapControlPointsNV");
+	glGetMapParameterivNV = (glGetMapParameterivNVPROC) extgl_GetProcAddress("glGetMapParameterivNV");
+	glGetMapParameterfvNV = (glGetMapParameterfvNVPROC) extgl_GetProcAddress("glGetMapParameterfvNV");
+	glGetMapAttribParameterivNV = (glGetMapAttribParameterivNVPROC) extgl_GetProcAddress("glGetMapAttribParameterivNV");
+	glGetMapAttribParameterfvNV = (glGetMapAttribParameterfvNVPROC) extgl_GetProcAddress("glGetMapAttribParameterfvNV");
+	glEvalMapsNV = (glEvalMapsNVPROC) extgl_GetProcAddress("glEvalMapsNV");
 #endif
 }
 
 static void extgl_InitNVRegisterCombiners2()
 {
 #ifdef GL_NV_register_combiners
-    if (!extgl_Extensions.NV_register_combiners2)
-        return;
-    glCombinerStageParameterfvNV = (glCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glCombinerStageParameterfvNV");
-    glGetCombinerStageParameterfvNV = (glGetCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerStageParameterfvNV");
+	if (!extgl_Extensions.NV_register_combiners2)
+		return;
+	glCombinerStageParameterfvNV = (glCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glCombinerStageParameterfvNV");
+	glGetCombinerStageParameterfvNV = (glGetCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerStageParameterfvNV");
 #endif
 }
 
 static void extgl_InitNVFence()
 {
 #ifdef GL_NV_fence
-    if (!extgl_Extensions.NV_fence)
-        return;
-    glGenFencesNV = (glGenFencesNVPROC) extgl_GetProcAddress("glGenFencesNV");
-    glDeleteFencesNV = (glDeleteFencesNVPROC) extgl_GetProcAddress("glDeleteFencesNV");
-    glSetFenceNV = (glSetFenceNVPROC) extgl_GetProcAddress("glSetFenceNV");
-    glTestFenceNV = (glTestFenceNVPROC) extgl_GetProcAddress("glTestFenceNV");
-    glFinishFenceNV = (glFinishFenceNVPROC) extgl_GetProcAddress("glFinishFenceNV");
-    glIsFenceNV = (glIsFenceNVPROC) extgl_GetProcAddress("glIsFenceNV");
-    glGetFenceivNV = (glGetFenceivNVPROC) extgl_GetProcAddress("glGetFenceivNV");
+	if (!extgl_Extensions.NV_fence)
+		return;
+	glGenFencesNV = (glGenFencesNVPROC) extgl_GetProcAddress("glGenFencesNV");
+	glDeleteFencesNV = (glDeleteFencesNVPROC) extgl_GetProcAddress("glDeleteFencesNV");
+	glSetFenceNV = (glSetFenceNVPROC) extgl_GetProcAddress("glSetFenceNV");
+	glTestFenceNV = (glTestFenceNVPROC) extgl_GetProcAddress("glTestFenceNV");
+	glFinishFenceNV = (glFinishFenceNVPROC) extgl_GetProcAddress("glFinishFenceNV");
+	glIsFenceNV = (glIsFenceNVPROC) extgl_GetProcAddress("glIsFenceNV");
+	glGetFenceivNV = (glGetFenceivNVPROC) extgl_GetProcAddress("glGetFenceivNV");
 #endif
 }
 
 static void extgl_InitNVVertexProgram()
 {
 #ifdef GL_NV_vertex_program
-    if (!extgl_Extensions.NV_vertex_program)
-        return;
-    glBindProgramNV = (glBindProgramNVPROC) extgl_GetProcAddress("glBindProgramNV");
-    glDeleteProgramsNV = (glDeleteProgramsNVPROC) extgl_GetProcAddress("glDeleteProgramsNV");
-    glExecuteProgramNV = (glExecuteProgramNVPROC) extgl_GetProcAddress("glExecuteProgramNV");
-    glGenProgramsNV = (glGenProgramsNVPROC) extgl_GetProcAddress("glGenProgramsNV");
-    glAreProgramsResidentNV = (glAreProgramsResidentNVPROC) extgl_GetProcAddress("glAreProgramsResidentNV");
-    glRequestResidentProgramsNV = (glRequestResidentProgramsNVPROC) extgl_GetProcAddress("glRequestResidentProgramsNV");
-    glGetProgramParameterfvNV = (glGetProgramParameterfvNVPROC) extgl_GetProcAddress("glGetProgramParameterfvNV");
-    glGetProgramParameterdvNV = (glGetProgramParameterdvNVPROC) extgl_GetProcAddress("glGetProgramParameterdvNV");
-    glGetProgramivNV = (glGetProgramivNVPROC) extgl_GetProcAddress("glGetProgramivNV");
-    glGetProgramStringNV = (glGetProgramStringNVPROC) extgl_GetProcAddress("glGetProgramStringNV");
-    glGetTrackMatrixivNV = (glGetTrackMatrixivNVPROC) extgl_GetProcAddress("glGetTrackMatrixivNV");
-    glGetVertexAttribdvNV = (glGetVertexAttribdvNVPROC) extgl_GetProcAddress("glGetVertexAttribdvNV");
-    glGetVertexAttribfvNV = (glGetVertexAttribfvNVPROC) extgl_GetProcAddress("glGetVertexAttribfvNV");
-    glGetVertexAttribivNV = (glGetVertexAttribivNVPROC) extgl_GetProcAddress("glGetVertexAttribivNV");
-    glGetVertexAttribPointervNV = (glGetVertexAttribPointervNVPROC) extgl_GetProcAddress("glGetVertexAttribPointervNV");
-    glIsProgramNV = (glIsProgramNVPROC) extgl_GetProcAddress("glIsProgramNV");
-    glLoadProgramNV = (glLoadProgramNVPROC) extgl_GetProcAddress("glLoadProgramNV");
-    glProgramParameter4fNV = (glProgramParameter4fNVPROC) extgl_GetProcAddress("glProgramParameter4fNV");
-    glProgramParameter4dNV = (glProgramParameter4dNVPROC) extgl_GetProcAddress("glProgramParameter4dNV");
-    glProgramParameter4dvNV = (glProgramParameter4dvNVPROC) extgl_GetProcAddress("glProgramParameter4dvNV");
-    glProgramParameter4fvNV = (glProgramParameter4fvNVPROC) extgl_GetProcAddress("glProgramParameter4fvNV");
-    glProgramParameters4dvNV = (glProgramParameters4dvNVPROC) extgl_GetProcAddress("glProgramParameters4dvNV");
-    glProgramParameters4fvNV = (glProgramParameters4fvNVPROC) extgl_GetProcAddress("glProgramParameters4fvNV");
-    glTrackMatrixNV = (glTrackMatrixNVPROC) extgl_GetProcAddress("glTrackMatrixNV");
-    glVertexAttribPointerNV = (glVertexAttribPointerNVPROC) extgl_GetProcAddress("glVertexAttribPointerNV");
-    glVertexAttrib1sNV = (glVertexAttrib1sNVPROC) extgl_GetProcAddress("glVertexAttrib1sNV");
-    glVertexAttrib1fNV = (glVertexAttrib1fNVPROC) extgl_GetProcAddress("glVertexAttrib1fNV");
-    glVertexAttrib1dNV = (glVertexAttrib1dNVPROC) extgl_GetProcAddress("glVertexAttrib1dNV");
-    glVertexAttrib2sNV = (glVertexAttrib2sNVPROC) extgl_GetProcAddress("glVertexAttrib2sNV");
-    glVertexAttrib2fNV = (glVertexAttrib2fNVPROC) extgl_GetProcAddress("glVertexAttrib2fNV");
-    glVertexAttrib2dNV = (glVertexAttrib2dNVPROC) extgl_GetProcAddress("glVertexAttrib2dNV");
-    glVertexAttrib3sNV = (glVertexAttrib3sNVPROC) extgl_GetProcAddress("glVertexAttrib3sNV");
-    glVertexAttrib3fNV = (glVertexAttrib3fNVPROC) extgl_GetProcAddress("glVertexAttrib3fNV");
-    glVertexAttrib3dNV = (glVertexAttrib3dNVPROC) extgl_GetProcAddress("glVertexAttrib3dNV");
-    glVertexAttrib4sNV = (glVertexAttrib4sNVPROC) extgl_GetProcAddress("glVertexAttrib4sNV");
-    glVertexAttrib4fNV = (glVertexAttrib4fNVPROC) extgl_GetProcAddress("glVertexAttrib4fNV");
-    glVertexAttrib4dNV = (glVertexAttrib4dNVPROC) extgl_GetProcAddress("glVertexAttrib4dNV");
-    glVertexAttrib4ubNV = (glVertexAttrib4ubNVPROC) extgl_GetProcAddress("glVertexAttrib4ubNV");
-    glVertexAttrib1svNV = (glVertexAttrib1svNVPROC) extgl_GetProcAddress("glVertexAttrib1svNV");
-    glVertexAttrib1fvNV = (glVertexAttrib1fvNVPROC) extgl_GetProcAddress("glVertexAttrib1fvNV");
-    glVertexAttrib1dvNV = (glVertexAttrib1dvNVPROC) extgl_GetProcAddress("glVertexAttrib1dvNV");
-    glVertexAttrib2svNV = (glVertexAttrib2svNVPROC) extgl_GetProcAddress("glVertexAttrib2svNV");
-    glVertexAttrib2fvNV = (glVertexAttrib2fvNVPROC) extgl_GetProcAddress("glVertexAttrib2fvNV");
-    glVertexAttrib2dvNV = (glVertexAttrib2dvNVPROC) extgl_GetProcAddress("glVertexAttrib2dvNV");
-    glVertexAttrib3svNV = (glVertexAttrib3svNVPROC) extgl_GetProcAddress("glVertexAttrib3svNV");
-    glVertexAttrib3fvNV = (glVertexAttrib3fvNVPROC) extgl_GetProcAddress("glVertexAttrib3fvNV");
-    glVertexAttrib3dvNV = (glVertexAttrib3dvNVPROC) extgl_GetProcAddress("glVertexAttrib3dvNV");
-    glVertexAttrib4svNV = (glVertexAttrib4svNVPROC) extgl_GetProcAddress("glVertexAttrib4svNV");
-    glVertexAttrib4fvNV = (glVertexAttrib4fvNVPROC) extgl_GetProcAddress("glVertexAttrib4fvNV");
-    glVertexAttrib4dvNV = (glVertexAttrib4dvNVPROC) extgl_GetProcAddress("glVertexAttrib4dvNV");
-    glVertexAttrib4ubvNV = (glVertexAttrib4ubvNVPROC) extgl_GetProcAddress("glVertexAttrib4ubvNV");
-    glVertexAttribs1svNV = (glVertexAttribs1svNVPROC) extgl_GetProcAddress("glVertexAttribs1svNV");
-    glVertexAttribs1fvNV = (glVertexAttribs1fvNVPROC) extgl_GetProcAddress("glVertexAttribs1fvNV");
-    glVertexAttribs1dvNV = (glVertexAttribs1dvNVPROC) extgl_GetProcAddress("glVertexAttribs1dvNV");
-    glVertexAttribs2svNV = (glVertexAttribs2svNVPROC) extgl_GetProcAddress("glVertexAttribs2svNV");
-    glVertexAttribs2fvNV = (glVertexAttribs2fvNVPROC) extgl_GetProcAddress("glVertexAttribs2fvNV");
-    glVertexAttribs2dvNV = (glVertexAttribs2dvNVPROC) extgl_GetProcAddress("glVertexAttribs2dvNV");
-    glVertexAttribs3svNV = (glVertexAttribs3svNVPROC) extgl_GetProcAddress("glVertexAttribs3svNV");
-    glVertexAttribs3fvNV = (glVertexAttribs3fvNVPROC) extgl_GetProcAddress("glVertexAttribs3fvNV");
-    glVertexAttribs3dvNV = (glVertexAttribs3dvNVPROC) extgl_GetProcAddress("glVertexAttribs3dvNV");
-    glVertexAttribs4svNV = (glVertexAttribs4svNVPROC) extgl_GetProcAddress("glVertexAttribs4svNV");
-    glVertexAttribs4fvNV = (glVertexAttribs4fvNVPROC) extgl_GetProcAddress("glVertexAttribs4fvNV");
-    glVertexAttribs4dvNV = (glVertexAttribs4dvNVPROC) extgl_GetProcAddress("glVertexAttribs4dvNV");
-    glVertexAttribs4ubvNV = (glVertexAttribs4ubvNVPROC) extgl_GetProcAddress("glVertexAttribs4ubvNV");
+	if (!extgl_Extensions.NV_vertex_program)
+		return;
+	glBindProgramNV = (glBindProgramNVPROC) extgl_GetProcAddress("glBindProgramNV");
+	glDeleteProgramsNV = (glDeleteProgramsNVPROC) extgl_GetProcAddress("glDeleteProgramsNV");
+	glExecuteProgramNV = (glExecuteProgramNVPROC) extgl_GetProcAddress("glExecuteProgramNV");
+	glGenProgramsNV = (glGenProgramsNVPROC) extgl_GetProcAddress("glGenProgramsNV");
+	glAreProgramsResidentNV = (glAreProgramsResidentNVPROC) extgl_GetProcAddress("glAreProgramsResidentNV");
+	glRequestResidentProgramsNV = (glRequestResidentProgramsNVPROC) extgl_GetProcAddress("glRequestResidentProgramsNV");
+	glGetProgramParameterfvNV = (glGetProgramParameterfvNVPROC) extgl_GetProcAddress("glGetProgramParameterfvNV");
+	glGetProgramParameterdvNV = (glGetProgramParameterdvNVPROC) extgl_GetProcAddress("glGetProgramParameterdvNV");
+	glGetProgramivNV = (glGetProgramivNVPROC) extgl_GetProcAddress("glGetProgramivNV");
+	glGetProgramStringNV = (glGetProgramStringNVPROC) extgl_GetProcAddress("glGetProgramStringNV");
+	glGetTrackMatrixivNV = (glGetTrackMatrixivNVPROC) extgl_GetProcAddress("glGetTrackMatrixivNV");
+	glGetVertexAttribdvNV = (glGetVertexAttribdvNVPROC) extgl_GetProcAddress("glGetVertexAttribdvNV");
+	glGetVertexAttribfvNV = (glGetVertexAttribfvNVPROC) extgl_GetProcAddress("glGetVertexAttribfvNV");
+	glGetVertexAttribivNV = (glGetVertexAttribivNVPROC) extgl_GetProcAddress("glGetVertexAttribivNV");
+	glGetVertexAttribPointervNV = (glGetVertexAttribPointervNVPROC) extgl_GetProcAddress("glGetVertexAttribPointervNV");
+	glIsProgramNV = (glIsProgramNVPROC) extgl_GetProcAddress("glIsProgramNV");
+	glLoadProgramNV = (glLoadProgramNVPROC) extgl_GetProcAddress("glLoadProgramNV");
+	glProgramParameter4fNV = (glProgramParameter4fNVPROC) extgl_GetProcAddress("glProgramParameter4fNV");
+	glProgramParameter4dNV = (glProgramParameter4dNVPROC) extgl_GetProcAddress("glProgramParameter4dNV");
+	glProgramParameter4dvNV = (glProgramParameter4dvNVPROC) extgl_GetProcAddress("glProgramParameter4dvNV");
+	glProgramParameter4fvNV = (glProgramParameter4fvNVPROC) extgl_GetProcAddress("glProgramParameter4fvNV");
+	glProgramParameters4dvNV = (glProgramParameters4dvNVPROC) extgl_GetProcAddress("glProgramParameters4dvNV");
+	glProgramParameters4fvNV = (glProgramParameters4fvNVPROC) extgl_GetProcAddress("glProgramParameters4fvNV");
+	glTrackMatrixNV = (glTrackMatrixNVPROC) extgl_GetProcAddress("glTrackMatrixNV");
+	glVertexAttribPointerNV = (glVertexAttribPointerNVPROC) extgl_GetProcAddress("glVertexAttribPointerNV");
+	glVertexAttrib1sNV = (glVertexAttrib1sNVPROC) extgl_GetProcAddress("glVertexAttrib1sNV");
+	glVertexAttrib1fNV = (glVertexAttrib1fNVPROC) extgl_GetProcAddress("glVertexAttrib1fNV");
+	glVertexAttrib1dNV = (glVertexAttrib1dNVPROC) extgl_GetProcAddress("glVertexAttrib1dNV");
+	glVertexAttrib2sNV = (glVertexAttrib2sNVPROC) extgl_GetProcAddress("glVertexAttrib2sNV");
+	glVertexAttrib2fNV = (glVertexAttrib2fNVPROC) extgl_GetProcAddress("glVertexAttrib2fNV");
+	glVertexAttrib2dNV = (glVertexAttrib2dNVPROC) extgl_GetProcAddress("glVertexAttrib2dNV");
+	glVertexAttrib3sNV = (glVertexAttrib3sNVPROC) extgl_GetProcAddress("glVertexAttrib3sNV");
+	glVertexAttrib3fNV = (glVertexAttrib3fNVPROC) extgl_GetProcAddress("glVertexAttrib3fNV");
+	glVertexAttrib3dNV = (glVertexAttrib3dNVPROC) extgl_GetProcAddress("glVertexAttrib3dNV");
+	glVertexAttrib4sNV = (glVertexAttrib4sNVPROC) extgl_GetProcAddress("glVertexAttrib4sNV");
+	glVertexAttrib4fNV = (glVertexAttrib4fNVPROC) extgl_GetProcAddress("glVertexAttrib4fNV");
+	glVertexAttrib4dNV = (glVertexAttrib4dNVPROC) extgl_GetProcAddress("glVertexAttrib4dNV");
+	glVertexAttrib4ubNV = (glVertexAttrib4ubNVPROC) extgl_GetProcAddress("glVertexAttrib4ubNV");
+	glVertexAttrib1svNV = (glVertexAttrib1svNVPROC) extgl_GetProcAddress("glVertexAttrib1svNV");
+	glVertexAttrib1fvNV = (glVertexAttrib1fvNVPROC) extgl_GetProcAddress("glVertexAttrib1fvNV");
+	glVertexAttrib1dvNV = (glVertexAttrib1dvNVPROC) extgl_GetProcAddress("glVertexAttrib1dvNV");
+	glVertexAttrib2svNV = (glVertexAttrib2svNVPROC) extgl_GetProcAddress("glVertexAttrib2svNV");
+	glVertexAttrib2fvNV = (glVertexAttrib2fvNVPROC) extgl_GetProcAddress("glVertexAttrib2fvNV");
+	glVertexAttrib2dvNV = (glVertexAttrib2dvNVPROC) extgl_GetProcAddress("glVertexAttrib2dvNV");
+	glVertexAttrib3svNV = (glVertexAttrib3svNVPROC) extgl_GetProcAddress("glVertexAttrib3svNV");
+	glVertexAttrib3fvNV = (glVertexAttrib3fvNVPROC) extgl_GetProcAddress("glVertexAttrib3fvNV");
+	glVertexAttrib3dvNV = (glVertexAttrib3dvNVPROC) extgl_GetProcAddress("glVertexAttrib3dvNV");
+	glVertexAttrib4svNV = (glVertexAttrib4svNVPROC) extgl_GetProcAddress("glVertexAttrib4svNV");
+	glVertexAttrib4fvNV = (glVertexAttrib4fvNVPROC) extgl_GetProcAddress("glVertexAttrib4fvNV");
+	glVertexAttrib4dvNV = (glVertexAttrib4dvNVPROC) extgl_GetProcAddress("glVertexAttrib4dvNV");
+	glVertexAttrib4ubvNV = (glVertexAttrib4ubvNVPROC) extgl_GetProcAddress("glVertexAttrib4ubvNV");
+	glVertexAttribs1svNV = (glVertexAttribs1svNVPROC) extgl_GetProcAddress("glVertexAttribs1svNV");
+	glVertexAttribs1fvNV = (glVertexAttribs1fvNVPROC) extgl_GetProcAddress("glVertexAttribs1fvNV");
+	glVertexAttribs1dvNV = (glVertexAttribs1dvNVPROC) extgl_GetProcAddress("glVertexAttribs1dvNV");
+	glVertexAttribs2svNV = (glVertexAttribs2svNVPROC) extgl_GetProcAddress("glVertexAttribs2svNV");
+	glVertexAttribs2fvNV = (glVertexAttribs2fvNVPROC) extgl_GetProcAddress("glVertexAttribs2fvNV");
+	glVertexAttribs2dvNV = (glVertexAttribs2dvNVPROC) extgl_GetProcAddress("glVertexAttribs2dvNV");
+	glVertexAttribs3svNV = (glVertexAttribs3svNVPROC) extgl_GetProcAddress("glVertexAttribs3svNV");
+	glVertexAttribs3fvNV = (glVertexAttribs3fvNVPROC) extgl_GetProcAddress("glVertexAttribs3fvNV");
+	glVertexAttribs3dvNV = (glVertexAttribs3dvNVPROC) extgl_GetProcAddress("glVertexAttribs3dvNV");
+	glVertexAttribs4svNV = (glVertexAttribs4svNVPROC) extgl_GetProcAddress("glVertexAttribs4svNV");
+	glVertexAttribs4fvNV = (glVertexAttribs4fvNVPROC) extgl_GetProcAddress("glVertexAttribs4fvNV");
+	glVertexAttribs4dvNV = (glVertexAttribs4dvNVPROC) extgl_GetProcAddress("glVertexAttribs4dvNV");
+	glVertexAttribs4ubvNV = (glVertexAttribs4ubvNVPROC) extgl_GetProcAddress("glVertexAttribs4ubvNV");
 #endif
 }
 
 static void extgl_InitEXTVertexWeighting()
 {
 #ifdef GL_EXT_vertex_weighting
-    if (!extgl_Extensions.EXT_vertex_weighting)
-        return;
-    glVertexWeightfEXT = (glVertexWeightfEXTPROC) extgl_GetProcAddress("glVertexWeightfEXT");
-    glVertexWeightfvEXT = (glVertexWeightfvEXTPROC) extgl_GetProcAddress("glVertexWeightfvEXT");
-    glVertexWeightPointerEXT = (glVertexWeightPointerEXTPROC) extgl_GetProcAddress("glVertexWeightPointerEXT");
+	if (!extgl_Extensions.EXT_vertex_weighting)
+		return;
+	glVertexWeightfEXT = (glVertexWeightfEXTPROC) extgl_GetProcAddress("glVertexWeightfEXT");
+	glVertexWeightfvEXT = (glVertexWeightfvEXTPROC) extgl_GetProcAddress("glVertexWeightfvEXT");
+	glVertexWeightPointerEXT = (glVertexWeightPointerEXTPROC) extgl_GetProcAddress("glVertexWeightPointerEXT");
 #endif
 }
 
 static void extgl_InitARBMultisample()
 {
 #ifdef GL_ARB_multisample
-    if (!extgl_Extensions.ARB_multisample)
-        return;
-    glSampleCoverageARB = (glSampleCoverageARBPROC) extgl_GetProcAddress("glSampleCoverageARB");
+	if (!extgl_Extensions.ARB_multisample)
+		return;
+	glSampleCoverageARB = (glSampleCoverageARBPROC) extgl_GetProcAddress("glSampleCoverageARB");
 #endif
 }
 
 static void extgl_InitNVRegisterCombiners()
 {
 #ifdef GL_NV_register_combiners
-    if (!extgl_Extensions.NV_register_combiners)
-        return;
-    glCombinerParameterfvNV = (glCombinerParameterfvNVPROC) extgl_GetProcAddress("glCombinerParameterfvNV");
-    glCombinerParameterfNV = (glCombinerParameterfNVPROC) extgl_GetProcAddress("glCombinerParameterfNV");
-    glCombinerParameterivNV = (glCombinerParameterivNVPROC) extgl_GetProcAddress("glCombinerParameterivNV");
-    glCombinerParameteriNV = (glCombinerParameteriNVPROC) extgl_GetProcAddress("glCombinerParameteriNV");
-    glCombinerInputNV = (glCombinerInputNVPROC) extgl_GetProcAddress("glCombinerInputNV");
-    glCombinerOutputNV = (glCombinerOutputNVPROC) extgl_GetProcAddress("glCombinerOutputNV");
-    glFinalCombinerInputNV = (glFinalCombinerInputNVPROC) extgl_GetProcAddress("glFinalCombinerInputNV");
-    glGetCombinerInputParameterfvNV = (glGetCombinerInputParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerInputParameterfvNV");
-    glGetCombinerInputParameterivNV = (glGetCombinerInputParameterivNVPROC) extgl_GetProcAddress("glGetCombinerInputParameterivNV");
-    glGetCombinerOutputParameterfvNV = (glGetCombinerOutputParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerOutputParameterfvNV");
-    glGetCombinerOutputParameterivNV = (glGetCombinerOutputParameterivNVPROC) extgl_GetProcAddress("glGetCombinerOutputParameterivNV");
-    glGetFinalCombinerInputParameterfvNV = (glGetFinalCombinerInputParameterfvNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterfvNV");
-    glGetFinalCombinerInputParameterivNV = (glGetFinalCombinerInputParameterivNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterivNV");
+	if (!extgl_Extensions.NV_register_combiners)
+		return;
+	glCombinerParameterfvNV = (glCombinerParameterfvNVPROC) extgl_GetProcAddress("glCombinerParameterfvNV");
+	glCombinerParameterfNV = (glCombinerParameterfNVPROC) extgl_GetProcAddress("glCombinerParameterfNV");
+	glCombinerParameterivNV = (glCombinerParameterivNVPROC) extgl_GetProcAddress("glCombinerParameterivNV");
+	glCombinerParameteriNV = (glCombinerParameteriNVPROC) extgl_GetProcAddress("glCombinerParameteriNV");
+	glCombinerInputNV = (glCombinerInputNVPROC) extgl_GetProcAddress("glCombinerInputNV");
+	glCombinerOutputNV = (glCombinerOutputNVPROC) extgl_GetProcAddress("glCombinerOutputNV");
+	glFinalCombinerInputNV = (glFinalCombinerInputNVPROC) extgl_GetProcAddress("glFinalCombinerInputNV");
+	glGetCombinerInputParameterfvNV = (glGetCombinerInputParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerInputParameterfvNV");
+	glGetCombinerInputParameterivNV = (glGetCombinerInputParameterivNVPROC) extgl_GetProcAddress("glGetCombinerInputParameterivNV");
+	glGetCombinerOutputParameterfvNV = (glGetCombinerOutputParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerOutputParameterfvNV");
+	glGetCombinerOutputParameterivNV = (glGetCombinerOutputParameterivNVPROC) extgl_GetProcAddress("glGetCombinerOutputParameterivNV");
+	glGetFinalCombinerInputParameterfvNV = (glGetFinalCombinerInputParameterfvNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterfvNV");
+	glGetFinalCombinerInputParameterivNV = (glGetFinalCombinerInputParameterivNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterivNV");
 #endif
 }
 
 static void extgl_InitEXTPointParameters()
 {
 #ifdef GL_EXT_point_parameters
-    if (!extgl_Extensions.EXT_point_parameters)
-        return;
-    glPointParameterfEXT = (glPointParameterfEXTPROC) extgl_GetProcAddress("glPointParameterfEXT");
-    glPointParameterfvEXT = (glPointParameterfvEXTPROC) extgl_GetProcAddress("glPointParameterfvEXT");
+	if (!extgl_Extensions.EXT_point_parameters)
+		return;
+	glPointParameterfEXT = (glPointParameterfEXTPROC) extgl_GetProcAddress("glPointParameterfEXT");
+	glPointParameterfvEXT = (glPointParameterfvEXTPROC) extgl_GetProcAddress("glPointParameterfvEXT");
 #endif
 }
 
 static void extgl_InitNVVertexArrayRange()
 {
 #ifdef GL_NV_vertex_array_range
-    if (!extgl_Extensions.NV_vertex_array_range)
-        return;
-    glFlushVertexArrayRangeNV = (glFlushVertexArrayRangeNVPROC) extgl_GetProcAddress("glFlushVertexArrayRangeNV");
-    glVertexArrayRangeNV = (glVertexArrayRangeNVPROC) extgl_GetProcAddress("glVertexArrayRangeNV");
+	if (!extgl_Extensions.NV_vertex_array_range)
+		return;
+	glFlushVertexArrayRangeNV = (glFlushVertexArrayRangeNVPROC) extgl_GetProcAddress("glFlushVertexArrayRangeNV");
+	glVertexArrayRangeNV = (glVertexArrayRangeNVPROC) extgl_GetProcAddress("glVertexArrayRangeNV");
 #ifdef _WIN32
-    wglAllocateMemoryNV = (wglAllocateMemoryNVPROC) extgl_GetProcAddress("wglAllocateMemoryNV");
-    wglFreeMemoryNV = (wglFreeMemoryNVPROC) extgl_GetProcAddress("wglFreeMemoryNV");
+	wglAllocateMemoryNV = (wglAllocateMemoryNVPROC) extgl_GetProcAddress("wglAllocateMemoryNV");
+	wglFreeMemoryNV = (wglFreeMemoryNVPROC) extgl_GetProcAddress("wglFreeMemoryNV");
 #endif /* WIN32 */
 #ifdef _X11
-    glXAllocateMemoryNV = (glXAllocateMemoryNVPROC) extgl_GetProcAddress("glXAllocateMemoryNV");
-    glXFreeMemoryNV = (glXFreeMemoryNVPROC) extgl_GetProcAddress("glXFreeMemoryNV");
+	glXAllocateMemoryNV = (glXAllocateMemoryNVPROC) extgl_GetProcAddress("glXAllocateMemoryNV");
+	glXFreeMemoryNV = (glXFreeMemoryNVPROC) extgl_GetProcAddress("glXFreeMemoryNV");
 #endif /* X11 */
 #endif
 }
@@ -2381,115 +2391,115 @@ static void extgl_InitNVVertexArrayRange()
 static void extgl_InitEXTFogCoord()
 {
 #ifdef GL_EXT_fog_coord
-    if (!extgl_Extensions.EXT_fog_coord)
-        return;
-    glFogCoordfEXT = (glFogCoordfEXTPROC) extgl_GetProcAddress("glFogCoordfEXT");
-    glFogCoordfvEXT = (glFogCoordfvEXTPROC) extgl_GetProcAddress("glFogCoordfvEXT");
-    glFogCoorddEXT = (glFogCoorddEXTPROC) extgl_GetProcAddress("glFogCoorddEXT");
-    glFogCoorddvEXT = (glFogCoorddvEXTPROC) extgl_GetProcAddress("glFogCoorddvEXT");
-    glFogCoordPointerEXT = (glFogCoordPointerEXTPROC) extgl_GetProcAddress("glFogCoordPointerEXT");
+	if (!extgl_Extensions.EXT_fog_coord)
+		return;
+	glFogCoordfEXT = (glFogCoordfEXTPROC) extgl_GetProcAddress("glFogCoordfEXT");
+	glFogCoordfvEXT = (glFogCoordfvEXTPROC) extgl_GetProcAddress("glFogCoordfvEXT");
+	glFogCoorddEXT = (glFogCoorddEXTPROC) extgl_GetProcAddress("glFogCoorddEXT");
+	glFogCoorddvEXT = (glFogCoorddvEXTPROC) extgl_GetProcAddress("glFogCoorddvEXT");
+	glFogCoordPointerEXT = (glFogCoordPointerEXTPROC) extgl_GetProcAddress("glFogCoordPointerEXT");
 #endif
 }
 
 static void extgl_InitEXTSecondaryColor()
 {
 #ifdef GL_EXT_secondary_color
-    if (!extgl_Extensions.EXT_secondary_color)
-        return;
-    glSecondaryColor3bEXT = (glSecondaryColor3bEXTPROC) extgl_GetProcAddress("glSecondaryColor3bEXT");
-    glSecondaryColor3bvEXT = (glSecondaryColor3bvEXTPROC) extgl_GetProcAddress("glSecondaryColor3bvEXT");
-    glSecondaryColor3dEXT = (glSecondaryColor3dEXTPROC) extgl_GetProcAddress("glSecondaryColor3dEXT");
-    glSecondaryColor3dvEXT = (glSecondaryColor3dvEXTPROC) extgl_GetProcAddress("glSecondaryColor3dvEXT");
-    glSecondaryColor3fEXT = (glSecondaryColor3fEXTPROC) extgl_GetProcAddress("glSecondaryColor3fEXT");
-    glSecondaryColor3fvEXT = (glSecondaryColor3fvEXTPROC) extgl_GetProcAddress("glSecondaryColor3fvEXT");
-    glSecondaryColor3iEXT = (glSecondaryColor3iEXTPROC) extgl_GetProcAddress("glSecondaryColor3iEXT");
-    glSecondaryColor3ivEXT = (glSecondaryColor3ivEXTPROC) extgl_GetProcAddress("glSecondaryColor3ivEXT");
-    glSecondaryColor3sEXT = (glSecondaryColor3sEXTPROC) extgl_GetProcAddress("glSecondaryColor3sEXT");
-    glSecondaryColor3svEXT = (glSecondaryColor3svEXTPROC) extgl_GetProcAddress("glSecondaryColor3svEXT");
-    glSecondaryColor3ubEXT = (glSecondaryColor3ubEXTPROC) extgl_GetProcAddress("glSecondaryColor3ubEXT");
-    glSecondaryColor3ubvEXT = (glSecondaryColor3ubvEXTPROC) extgl_GetProcAddress("glSecondaryColor3ubvEXT");
-    glSecondaryColor3uiEXT = (glSecondaryColor3uiEXTPROC) extgl_GetProcAddress("glSecondaryColor3uiEXT");
-    glSecondaryColor3uivEXT = (glSecondaryColor3uivEXTPROC) extgl_GetProcAddress("glSecondaryColor3uivEXT");
-    glSecondaryColor3usEXT = (glSecondaryColor3usEXTPROC) extgl_GetProcAddress("glSecondaryColor3usEXT");
-    glSecondaryColor3usvEXT = (glSecondaryColor3usvEXTPROC) extgl_GetProcAddress("glSecondaryColor3usvEXT");
-    glSecondaryColorPointerEXT = (glSecondaryColorPointerEXTPROC) extgl_GetProcAddress("glSecondaryColorPointerEXT");
+	if (!extgl_Extensions.EXT_secondary_color)
+		return;
+	glSecondaryColor3bEXT = (glSecondaryColor3bEXTPROC) extgl_GetProcAddress("glSecondaryColor3bEXT");
+	glSecondaryColor3bvEXT = (glSecondaryColor3bvEXTPROC) extgl_GetProcAddress("glSecondaryColor3bvEXT");
+	glSecondaryColor3dEXT = (glSecondaryColor3dEXTPROC) extgl_GetProcAddress("glSecondaryColor3dEXT");
+	glSecondaryColor3dvEXT = (glSecondaryColor3dvEXTPROC) extgl_GetProcAddress("glSecondaryColor3dvEXT");
+	glSecondaryColor3fEXT = (glSecondaryColor3fEXTPROC) extgl_GetProcAddress("glSecondaryColor3fEXT");
+	glSecondaryColor3fvEXT = (glSecondaryColor3fvEXTPROC) extgl_GetProcAddress("glSecondaryColor3fvEXT");
+	glSecondaryColor3iEXT = (glSecondaryColor3iEXTPROC) extgl_GetProcAddress("glSecondaryColor3iEXT");
+	glSecondaryColor3ivEXT = (glSecondaryColor3ivEXTPROC) extgl_GetProcAddress("glSecondaryColor3ivEXT");
+	glSecondaryColor3sEXT = (glSecondaryColor3sEXTPROC) extgl_GetProcAddress("glSecondaryColor3sEXT");
+	glSecondaryColor3svEXT = (glSecondaryColor3svEXTPROC) extgl_GetProcAddress("glSecondaryColor3svEXT");
+	glSecondaryColor3ubEXT = (glSecondaryColor3ubEXTPROC) extgl_GetProcAddress("glSecondaryColor3ubEXT");
+	glSecondaryColor3ubvEXT = (glSecondaryColor3ubvEXTPROC) extgl_GetProcAddress("glSecondaryColor3ubvEXT");
+	glSecondaryColor3uiEXT = (glSecondaryColor3uiEXTPROC) extgl_GetProcAddress("glSecondaryColor3uiEXT");
+	glSecondaryColor3uivEXT = (glSecondaryColor3uivEXTPROC) extgl_GetProcAddress("glSecondaryColor3uivEXT");
+	glSecondaryColor3usEXT = (glSecondaryColor3usEXTPROC) extgl_GetProcAddress("glSecondaryColor3usEXT");
+	glSecondaryColor3usvEXT = (glSecondaryColor3usvEXTPROC) extgl_GetProcAddress("glSecondaryColor3usvEXT");
+	glSecondaryColorPointerEXT = (glSecondaryColorPointerEXTPROC) extgl_GetProcAddress("glSecondaryColorPointerEXT");
 #endif
 }
 
 static void extgl_InitEXTCompiledVertexArray()
 {
 #ifdef GL_EXT_compiled_vertex_array
-    if (!extgl_Extensions.EXT_compiled_vertex_array)
-        return;
-    glLockArraysEXT = (glLockArraysEXTPROC) extgl_GetProcAddress("glLockArraysEXT");
-    glUnlockArraysEXT = (glUnlockArraysEXTPROC) extgl_GetProcAddress("glUnlockArraysEXT");
+	if (!extgl_Extensions.EXT_compiled_vertex_array)
+		return;
+	glLockArraysEXT = (glLockArraysEXTPROC) extgl_GetProcAddress("glLockArraysEXT");
+	glUnlockArraysEXT = (glUnlockArraysEXTPROC) extgl_GetProcAddress("glUnlockArraysEXT");
 #endif
 }
 
 static void extgl_InitARBTransposeMatrix()
 {
 #ifdef GL_ARB_transpose_matrix
-    if (!extgl_Extensions.ARB_transpose_matrix)
-        return;
-    glLoadTransposeMatrixfARB = (glLoadTransposeMatrixfARBPROC) extgl_GetProcAddress("glLoadTransposeMatrixfARB");
-    glLoadTransposeMatrixdARB = (glLoadTransposeMatrixdARBPROC) extgl_GetProcAddress("glLoadTransposeMatrixdARB");
-    glMultTransposeMatrixfARB = (glMultTransposeMatrixfARBPROC) extgl_GetProcAddress("glMultTransposeMatrixfARB");
-    glMultTransposeMatrixdARB = (glMultTransposeMatrixdARBPROC) extgl_GetProcAddress("glMultTransposeMatrixdARB");
+	if (!extgl_Extensions.ARB_transpose_matrix)
+		return;
+	glLoadTransposeMatrixfARB = (glLoadTransposeMatrixfARBPROC) extgl_GetProcAddress("glLoadTransposeMatrixfARB");
+	glLoadTransposeMatrixdARB = (glLoadTransposeMatrixdARBPROC) extgl_GetProcAddress("glLoadTransposeMatrixdARB");
+	glMultTransposeMatrixfARB = (glMultTransposeMatrixfARBPROC) extgl_GetProcAddress("glMultTransposeMatrixfARB");
+	glMultTransposeMatrixdARB = (glMultTransposeMatrixdARBPROC) extgl_GetProcAddress("glMultTransposeMatrixdARB");
 #endif
 }
 
 static void extgl_InitEXTDrawRangeElements()
 {
 #ifdef GL_EXT_draw_range_elements
-    if (!extgl_Extensions.EXT_draw_range_elements)
-        return;
-    glDrawRangeElementsEXT = (glDrawRangeElementsEXTPROC) extgl_GetProcAddress("glDrawRangeElementsEXT");
+	if (!extgl_Extensions.EXT_draw_range_elements)
+		return;
+	glDrawRangeElementsEXT = (glDrawRangeElementsEXTPROC) extgl_GetProcAddress("glDrawRangeElementsEXT");
 #endif
 }
 
 static void extgl_InitARBMultitexture()
 {
 #ifdef GL_ARB_multitexture
-    if (!extgl_Extensions.ARB_multitexture)
-        return;
-    glActiveTextureARB = (glActiveTextureARBPROC) extgl_GetProcAddress("glActiveTextureARB");
-    glClientActiveTextureARB = (glClientActiveTextureARBPROC) extgl_GetProcAddress("glClientActiveTextureARB");
+	if (!extgl_Extensions.ARB_multitexture)
+		return;
+	glActiveTextureARB = (glActiveTextureARBPROC) extgl_GetProcAddress("glActiveTextureARB");
+	glClientActiveTextureARB = (glClientActiveTextureARBPROC) extgl_GetProcAddress("glClientActiveTextureARB");
 
-    glMultiTexCoord1dARB = (glMultiTexCoord1dARBPROC) extgl_GetProcAddress("glMultiTexCoord1dARB");
-    glMultiTexCoord1dvARB = (glMultiTexCoord1dvARBPROC) extgl_GetProcAddress("glMultiTexCoord1dvARB");
-    glMultiTexCoord1fARB = (glMultiTexCoord1fARBPROC) extgl_GetProcAddress("glMultiTexCoord1fARB");
-    glMultiTexCoord1fvARB = (glMultiTexCoord1fvARBPROC) extgl_GetProcAddress("glMultiTexCoord1fvARB");
-    glMultiTexCoord1iARB = (glMultiTexCoord1iARBPROC) extgl_GetProcAddress("glMultiTexCoord1iARB");
-    glMultiTexCoord1ivARB = (glMultiTexCoord1ivARBPROC) extgl_GetProcAddress("glMultiTexCoord1ivARB");
-    glMultiTexCoord1sARB = (glMultiTexCoord1sARBPROC) extgl_GetProcAddress("glMultiTexCoord1sARB");
-    glMultiTexCoord1svARB = (glMultiTexCoord1svARBPROC) extgl_GetProcAddress("glMultiTexCoord1svARB");
+	glMultiTexCoord1dARB = (glMultiTexCoord1dARBPROC) extgl_GetProcAddress("glMultiTexCoord1dARB");
+	glMultiTexCoord1dvARB = (glMultiTexCoord1dvARBPROC) extgl_GetProcAddress("glMultiTexCoord1dvARB");
+	glMultiTexCoord1fARB = (glMultiTexCoord1fARBPROC) extgl_GetProcAddress("glMultiTexCoord1fARB");
+	glMultiTexCoord1fvARB = (glMultiTexCoord1fvARBPROC) extgl_GetProcAddress("glMultiTexCoord1fvARB");
+	glMultiTexCoord1iARB = (glMultiTexCoord1iARBPROC) extgl_GetProcAddress("glMultiTexCoord1iARB");
+	glMultiTexCoord1ivARB = (glMultiTexCoord1ivARBPROC) extgl_GetProcAddress("glMultiTexCoord1ivARB");
+	glMultiTexCoord1sARB = (glMultiTexCoord1sARBPROC) extgl_GetProcAddress("glMultiTexCoord1sARB");
+	glMultiTexCoord1svARB = (glMultiTexCoord1svARBPROC) extgl_GetProcAddress("glMultiTexCoord1svARB");
 
-    glMultiTexCoord2dARB = (glMultiTexCoord2dARBPROC) extgl_GetProcAddress("glMultiTexCoord2dARB");
-    glMultiTexCoord2dvARB = (glMultiTexCoord2dvARBPROC) extgl_GetProcAddress("glMultiTexCoord2dvARB");
-    glMultiTexCoord2fARB = (glMultiTexCoord2fARBPROC) extgl_GetProcAddress("glMultiTexCoord2fARB");
-    glMultiTexCoord2fvARB = (glMultiTexCoord2fvARBPROC) extgl_GetProcAddress("glMultiTexCoord2fvARB");
-    glMultiTexCoord2iARB = (glMultiTexCoord2iARBPROC) extgl_GetProcAddress("glMultiTexCoord2iARB");
-    glMultiTexCoord2ivARB = (glMultiTexCoord2ivARBPROC) extgl_GetProcAddress("glMultiTexCoord2ivARB");
-    glMultiTexCoord2sARB = (glMultiTexCoord2sARBPROC) extgl_GetProcAddress("glMultiTexCoord2sARB");
-    glMultiTexCoord2svARB = (glMultiTexCoord2svARBPROC) extgl_GetProcAddress("glMultiTexCoord2svARB");
+	glMultiTexCoord2dARB = (glMultiTexCoord2dARBPROC) extgl_GetProcAddress("glMultiTexCoord2dARB");
+	glMultiTexCoord2dvARB = (glMultiTexCoord2dvARBPROC) extgl_GetProcAddress("glMultiTexCoord2dvARB");
+	glMultiTexCoord2fARB = (glMultiTexCoord2fARBPROC) extgl_GetProcAddress("glMultiTexCoord2fARB");
+	glMultiTexCoord2fvARB = (glMultiTexCoord2fvARBPROC) extgl_GetProcAddress("glMultiTexCoord2fvARB");
+	glMultiTexCoord2iARB = (glMultiTexCoord2iARBPROC) extgl_GetProcAddress("glMultiTexCoord2iARB");
+	glMultiTexCoord2ivARB = (glMultiTexCoord2ivARBPROC) extgl_GetProcAddress("glMultiTexCoord2ivARB");
+	glMultiTexCoord2sARB = (glMultiTexCoord2sARBPROC) extgl_GetProcAddress("glMultiTexCoord2sARB");
+	glMultiTexCoord2svARB = (glMultiTexCoord2svARBPROC) extgl_GetProcAddress("glMultiTexCoord2svARB");
 
-    glMultiTexCoord3dARB = (glMultiTexCoord3dARBPROC) extgl_GetProcAddress("glMultiTexCoord3dARB");
-    glMultiTexCoord3dvARB = (glMultiTexCoord3dvARBPROC) extgl_GetProcAddress("glMultiTexCoord3dvARB");
-    glMultiTexCoord3fARB = (glMultiTexCoord3fARBPROC) extgl_GetProcAddress("glMultiTexCoord3fARB");
-    glMultiTexCoord3fvARB = (glMultiTexCoord3fvARBPROC) extgl_GetProcAddress("glMultiTexCoord3fvARB");
-    glMultiTexCoord3iARB = (glMultiTexCoord3iARBPROC) extgl_GetProcAddress("glMultiTexCoord3iARB");
-    glMultiTexCoord3ivARB = (glMultiTexCoord3ivARBPROC) extgl_GetProcAddress("glMultiTexCoord3ivARB");
-    glMultiTexCoord3sARB = (glMultiTexCoord3sARBPROC) extgl_GetProcAddress("glMultiTexCoord3sARB");
-    glMultiTexCoord3svARB = (glMultiTexCoord3svARBPROC) extgl_GetProcAddress("glMultiTexCoord3svARB");
+	glMultiTexCoord3dARB = (glMultiTexCoord3dARBPROC) extgl_GetProcAddress("glMultiTexCoord3dARB");
+	glMultiTexCoord3dvARB = (glMultiTexCoord3dvARBPROC) extgl_GetProcAddress("glMultiTexCoord3dvARB");
+	glMultiTexCoord3fARB = (glMultiTexCoord3fARBPROC) extgl_GetProcAddress("glMultiTexCoord3fARB");
+	glMultiTexCoord3fvARB = (glMultiTexCoord3fvARBPROC) extgl_GetProcAddress("glMultiTexCoord3fvARB");
+	glMultiTexCoord3iARB = (glMultiTexCoord3iARBPROC) extgl_GetProcAddress("glMultiTexCoord3iARB");
+	glMultiTexCoord3ivARB = (glMultiTexCoord3ivARBPROC) extgl_GetProcAddress("glMultiTexCoord3ivARB");
+	glMultiTexCoord3sARB = (glMultiTexCoord3sARBPROC) extgl_GetProcAddress("glMultiTexCoord3sARB");
+	glMultiTexCoord3svARB = (glMultiTexCoord3svARBPROC) extgl_GetProcAddress("glMultiTexCoord3svARB");
 
-    glMultiTexCoord4dARB = (glMultiTexCoord4dARBPROC) extgl_GetProcAddress("glMultiTexCoord4dARB");
-    glMultiTexCoord4dvARB = (glMultiTexCoord4dvARBPROC) extgl_GetProcAddress("glMultiTexCoord4dvARB");
-    glMultiTexCoord4fARB = (glMultiTexCoord4fARBPROC) extgl_GetProcAddress("glMultiTexCoord4fARB");
-    glMultiTexCoord4fvARB = (glMultiTexCoord4fvARBPROC) extgl_GetProcAddress("glMultiTexCoord4fvARB");
-    glMultiTexCoord4iARB = (glMultiTexCoord4iARBPROC) extgl_GetProcAddress("glMultiTexCoord4iARB");
-    glMultiTexCoord4ivARB = (glMultiTexCoord4ivARBPROC) extgl_GetProcAddress("glMultiTexCoord4ivARB");
-    glMultiTexCoord4sARB = (glMultiTexCoord4sARBPROC) extgl_GetProcAddress("glMultiTexCoord4sARB");
-    glMultiTexCoord4svARB = (glMultiTexCoord4svARBPROC) extgl_GetProcAddress("glMultiTexCoord4svARB");
+	glMultiTexCoord4dARB = (glMultiTexCoord4dARBPROC) extgl_GetProcAddress("glMultiTexCoord4dARB");
+	glMultiTexCoord4dvARB = (glMultiTexCoord4dvARBPROC) extgl_GetProcAddress("glMultiTexCoord4dvARB");
+	glMultiTexCoord4fARB = (glMultiTexCoord4fARBPROC) extgl_GetProcAddress("glMultiTexCoord4fARB");
+	glMultiTexCoord4fvARB = (glMultiTexCoord4fvARBPROC) extgl_GetProcAddress("glMultiTexCoord4fvARB");
+	glMultiTexCoord4iARB = (glMultiTexCoord4iARBPROC) extgl_GetProcAddress("glMultiTexCoord4iARB");
+	glMultiTexCoord4ivARB = (glMultiTexCoord4ivARBPROC) extgl_GetProcAddress("glMultiTexCoord4ivARB");
+	glMultiTexCoord4sARB = (glMultiTexCoord4sARBPROC) extgl_GetProcAddress("glMultiTexCoord4sARB");
+	glMultiTexCoord4svARB = (glMultiTexCoord4svARBPROC) extgl_GetProcAddress("glMultiTexCoord4svARB");
 #endif /* GL_ARB_multitexture */
 }
 
@@ -2566,7 +2576,7 @@ int extgl_InitGLU13(void)
 int extgl_InitEXTNurbsTesselator(void)
 {
 	if (!extgl_Extensions.glu.EXT_nurbs_tessellator)
-	        return 1;
+			return 1;
 	gluNurbsCallbackDataEXT = (gluNurbsCallbackDataEXTPROC) extgl_GetProcAddress("gluNurbsCallbackDataEXT");
 
 	return 0;
@@ -2631,22 +2641,22 @@ static void extgl_InitGLXSupportedExtensions(Display *disp, int screen)
 
 int extgl_InitGLX(Display *disp, int screen)
 {
-    int major, minor;
-    /* Assume glx ver >= 1.2 */
-    extgl_Extensions.glx.GLX12 = 1;
-    glXGetProcAddressARB = (glXGetProcAddressARBPROC) dlsym(lib_gl_handle, "glXGetProcAddressARB");
-    if (glXGetProcAddressARB == NULL)
-        return 1;
-    if (extgl_InitGLX12() != 0)
-        return 1;
-    extgl_InitGLXSupportedExtensions(disp, screen);
-    if (glXQueryVersion(disp, &major, &minor) != True)
-        return 1;
-    if (major > 1 || (major == 1 && minor >= 3))
-        extgl_Extensions.glx.GLX13 = 1;
-    if (extgl_InitGLX13() != 0)
-        return 1;
-    return 0;
+	int major, minor;
+	/* Assume glx ver >= 1.2 */
+	extgl_Extensions.glx.GLX12 = 1;
+	glXGetProcAddressARB = (glXGetProcAddressARBPROC) dlsym(lib_gl_handle, "glXGetProcAddressARB");
+	if (glXGetProcAddressARB == NULL)
+		return 1;
+	if (extgl_InitGLX12() != 0)
+		return 1;
+	extgl_InitGLXSupportedExtensions(disp, screen);
+	if (glXQueryVersion(disp, &major, &minor) != True)
+		return 1;
+	if (major > 1 || (major == 1 && minor >= 3))
+		extgl_Extensions.glx.GLX13 = 1;
+	if (extgl_InitGLX13() != 0)
+		return 1;
+	return 0;
 }
 #endif
 
@@ -2994,407 +3004,406 @@ static void extgl_InitOpenGL1_1(void)
 static void extgl_InitOpenGL1_2()
 {
 #ifdef GL_VERSION_1_2
-    if (!extgl_Extensions.OpenGL12)
-        return;
-    glTexImage3D = (glTexImage3DPROC) extgl_GetProcAddress("glTexImage3D");
-    glTexSubImage3D = (glTexSubImage3DPROC) extgl_GetProcAddress("glTexSubImage3D");
-    glCopyTexSubImage3D = (glCopyTexSubImage3DPROC) extgl_GetProcAddress("glCopyTexSubImage3D");
-    glDrawRangeElements = (glDrawRangeElementsPROC) extgl_GetProcAddress("glDrawRangeElements");
+	if (!extgl_Extensions.OpenGL12)
+		return;
+	glTexImage3D = (glTexImage3DPROC) extgl_GetProcAddress("glTexImage3D");
+	glTexSubImage3D = (glTexSubImage3DPROC) extgl_GetProcAddress("glTexSubImage3D");
+	glCopyTexSubImage3D = (glCopyTexSubImage3DPROC) extgl_GetProcAddress("glCopyTexSubImage3D");
+	glDrawRangeElements = (glDrawRangeElementsPROC) extgl_GetProcAddress("glDrawRangeElements");
 #endif /* GL_VERSION_1_2 */
 }
 
 static void extgl_InitARBImaging()
 {
 #ifdef GL_ARB_imaging
-    if (!extgl_Extensions.ARB_imaging)
-        return;
-    glBlendColor = (glBlendColorPROC) extgl_GetProcAddress("glBlendColor");
-    glBlendEquation = (glBlendEquationPROC) extgl_GetProcAddress("glBlendEquation");
-    glColorTable = (glColorTablePROC) extgl_GetProcAddress("glColorTable");
-    glColorTableParameterfv = (glColorTableParameterfvPROC) extgl_GetProcAddress("glColorTableParameterfv");
-    glColorTableParameteriv = (glColorTableParameterivPROC) extgl_GetProcAddress("glColorTableParameteriv");
-    glCopyColorTable = (glCopyColorTablePROC) extgl_GetProcAddress("glCopyColorTable");
-    glGetColorTable = (glGetColorTablePROC) extgl_GetProcAddress("glGetColorTable");
-    glGetColorTableParameterfv = (glGetColorTableParameterfvPROC) extgl_GetProcAddress("glGetColorTableParameterfv");
-    glGetColorTableParameteriv = (glGetColorTableParameterivPROC) extgl_GetProcAddress("glGetColorTableParameteriv");
-    glColorSubTable = (glColorSubTablePROC) extgl_GetProcAddress("glColorSubTable");
-    glCopyColorSubTable = (glCopyColorSubTablePROC) extgl_GetProcAddress("glCopyColorSubTable");
-    glConvolutionFilter1D = (glConvolutionFilter1DPROC) extgl_GetProcAddress("glConvolutionFilter1D");
-    glConvolutionFilter2D = (glConvolutionFilter2DPROC) extgl_GetProcAddress("glConvolutionFilter2D");
-    glConvolutionParameterf = (glConvolutionParameterfPROC) extgl_GetProcAddress("glConvolutionParameterf");
-    glConvolutionParameterfv = (glConvolutionParameterfvPROC) extgl_GetProcAddress("glConvolutionParameterfv");
-    glConvolutionParameteri = (glConvolutionParameteriPROC) extgl_GetProcAddress("glConvolutionParameteri");
-    glConvolutionParameteriv = (glConvolutionParameterivPROC) extgl_GetProcAddress("glConvolutionParameteriv");
-    glCopyConvolutionFilter1D = (glCopyConvolutionFilter1DPROC) extgl_GetProcAddress("glCopyConvolutionFilter1D");
-    glCopyConvolutionFilter2D = (glCopyConvolutionFilter2DPROC) extgl_GetProcAddress("glCopyConvolutionFilter2D");
-    glGetConvolutionFilter = (glGetConvolutionFilterPROC) extgl_GetProcAddress("glGetConvolutionFilter");
-    glGetConvolutionParameterfv = (glGetConvolutionParameterfvPROC) extgl_GetProcAddress("glGetConvolutionParameterfv");
-    glGetConvolutionParameteriv = (glGetConvolutionParameterivPROC) extgl_GetProcAddress("glGetConvolutionParameteriv");
-    glGetSeparableFilter = (glGetSeparableFilterPROC) extgl_GetProcAddress("glGetSeparableFilter");
-    glSeparableFilter2D = (glSeparableFilter2DPROC) extgl_GetProcAddress("glSeparableFilter2D");
-    glGetHistogram = (glGetHistogramPROC) extgl_GetProcAddress("glGetHistogram");
-    glGetHistogramParameterfv = (glGetHistogramParameterfvPROC) extgl_GetProcAddress("glGetHistogramParameterfv");
-    glGetHistogramParameteriv = (glGetHistogramParameterivPROC) extgl_GetProcAddress("glGetHistogramParameteriv");
-    glGetMinmax = (glGetMinmaxPROC) extgl_GetProcAddress("glGetMinmax");
-    glGetMinmaxParameterfv = (glGetMinmaxParameterfvPROC) extgl_GetProcAddress("glGetMinmaxParameterfv");
-    glGetMinmaxParameteriv = (glGetMinmaxParameterivPROC) extgl_GetProcAddress("glGetMinmaxParameteriv");
-    glHistogram = (glHistogramPROC) extgl_GetProcAddress("glHistogram");
-    glMinmax = (glMinmaxPROC) extgl_GetProcAddress("glMinmax");
-    glResetHistogram = (glResetHistogramPROC) extgl_GetProcAddress("glResetHistogram");
-    glResetMinmax = (glResetMinmaxPROC) extgl_GetProcAddress("glResetMinmax");
+	if (!extgl_Extensions.ARB_imaging)
+		return;
+	glBlendColor = (glBlendColorPROC) extgl_GetProcAddress("glBlendColor");
+	glBlendEquation = (glBlendEquationPROC) extgl_GetProcAddress("glBlendEquation");
+	glColorTable = (glColorTablePROC) extgl_GetProcAddress("glColorTable");
+	glColorTableParameterfv = (glColorTableParameterfvPROC) extgl_GetProcAddress("glColorTableParameterfv");
+	glColorTableParameteriv = (glColorTableParameterivPROC) extgl_GetProcAddress("glColorTableParameteriv");
+	glCopyColorTable = (glCopyColorTablePROC) extgl_GetProcAddress("glCopyColorTable");
+	glGetColorTable = (glGetColorTablePROC) extgl_GetProcAddress("glGetColorTable");
+	glGetColorTableParameterfv = (glGetColorTableParameterfvPROC) extgl_GetProcAddress("glGetColorTableParameterfv");
+	glGetColorTableParameteriv = (glGetColorTableParameterivPROC) extgl_GetProcAddress("glGetColorTableParameteriv");
+	glColorSubTable = (glColorSubTablePROC) extgl_GetProcAddress("glColorSubTable");
+	glCopyColorSubTable = (glCopyColorSubTablePROC) extgl_GetProcAddress("glCopyColorSubTable");
+	glConvolutionFilter1D = (glConvolutionFilter1DPROC) extgl_GetProcAddress("glConvolutionFilter1D");
+	glConvolutionFilter2D = (glConvolutionFilter2DPROC) extgl_GetProcAddress("glConvolutionFilter2D");
+	glConvolutionParameterf = (glConvolutionParameterfPROC) extgl_GetProcAddress("glConvolutionParameterf");
+	glConvolutionParameterfv = (glConvolutionParameterfvPROC) extgl_GetProcAddress("glConvolutionParameterfv");
+	glConvolutionParameteri = (glConvolutionParameteriPROC) extgl_GetProcAddress("glConvolutionParameteri");
+	glConvolutionParameteriv = (glConvolutionParameterivPROC) extgl_GetProcAddress("glConvolutionParameteriv");
+	glCopyConvolutionFilter1D = (glCopyConvolutionFilter1DPROC) extgl_GetProcAddress("glCopyConvolutionFilter1D");
+	glCopyConvolutionFilter2D = (glCopyConvolutionFilter2DPROC) extgl_GetProcAddress("glCopyConvolutionFilter2D");
+	glGetConvolutionFilter = (glGetConvolutionFilterPROC) extgl_GetProcAddress("glGetConvolutionFilter");
+	glGetConvolutionParameterfv = (glGetConvolutionParameterfvPROC) extgl_GetProcAddress("glGetConvolutionParameterfv");
+	glGetConvolutionParameteriv = (glGetConvolutionParameterivPROC) extgl_GetProcAddress("glGetConvolutionParameteriv");
+	glGetSeparableFilter = (glGetSeparableFilterPROC) extgl_GetProcAddress("glGetSeparableFilter");
+	glSeparableFilter2D = (glSeparableFilter2DPROC) extgl_GetProcAddress("glSeparableFilter2D");
+	glGetHistogram = (glGetHistogramPROC) extgl_GetProcAddress("glGetHistogram");
+	glGetHistogramParameterfv = (glGetHistogramParameterfvPROC) extgl_GetProcAddress("glGetHistogramParameterfv");
+	glGetHistogramParameteriv = (glGetHistogramParameterivPROC) extgl_GetProcAddress("glGetHistogramParameteriv");
+	glGetMinmax = (glGetMinmaxPROC) extgl_GetProcAddress("glGetMinmax");
+	glGetMinmaxParameterfv = (glGetMinmaxParameterfvPROC) extgl_GetProcAddress("glGetMinmaxParameterfv");
+	glGetMinmaxParameteriv = (glGetMinmaxParameterivPROC) extgl_GetProcAddress("glGetMinmaxParameteriv");
+	glHistogram = (glHistogramPROC) extgl_GetProcAddress("glHistogram");
+	glMinmax = (glMinmaxPROC) extgl_GetProcAddress("glMinmax");
+	glResetHistogram = (glResetHistogramPROC) extgl_GetProcAddress("glResetHistogram");
+	glResetMinmax = (glResetMinmaxPROC) extgl_GetProcAddress("glResetMinmax");
 #endif /* GL_ARB_imaging */
 }
 
 static void extgl_InitOpenGL1_3()
 {
 #ifdef GL_VERSION_1_3
-    if (!extgl_Extensions.OpenGL13)
-        return;
-    glActiveTexture = (glActiveTexturePROC) extgl_GetProcAddress("glActiveTexture");
-    glClientActiveTexture = (glClientActiveTexturePROC) extgl_GetProcAddress("glClientActiveTexture");
+	if (!extgl_Extensions.OpenGL13)
+		return;
+	glActiveTexture = (glActiveTexturePROC) extgl_GetProcAddress("glActiveTexture");
+	glClientActiveTexture = (glClientActiveTexturePROC) extgl_GetProcAddress("glClientActiveTexture");
 
-    glMultiTexCoord1d = (glMultiTexCoord1dPROC) extgl_GetProcAddress("glMultiTexCoord1d");
-    glMultiTexCoord1dv = (glMultiTexCoord1dvPROC) extgl_GetProcAddress("glMultiTexCoord1dv");
-    glMultiTexCoord1f = (glMultiTexCoord1fPROC) extgl_GetProcAddress("glMultiTexCoord1f");
-    glMultiTexCoord1fv = (glMultiTexCoord1fvPROC) extgl_GetProcAddress("glMultiTexCoord1fv");
-    glMultiTexCoord1i = (glMultiTexCoord1iPROC) extgl_GetProcAddress("glMultiTexCoord1i");
-    glMultiTexCoord1iv = (glMultiTexCoord1ivPROC) extgl_GetProcAddress("glMultiTexCoord1iv");
-    glMultiTexCoord1s = (glMultiTexCoord1sPROC) extgl_GetProcAddress("glMultiTexCoord1s");
-    glMultiTexCoord1sv = (glMultiTexCoord1svPROC) extgl_GetProcAddress("glMultiTexCoord1sv");
+	glMultiTexCoord1d = (glMultiTexCoord1dPROC) extgl_GetProcAddress("glMultiTexCoord1d");
+	glMultiTexCoord1dv = (glMultiTexCoord1dvPROC) extgl_GetProcAddress("glMultiTexCoord1dv");
+	glMultiTexCoord1f = (glMultiTexCoord1fPROC) extgl_GetProcAddress("glMultiTexCoord1f");
+	glMultiTexCoord1fv = (glMultiTexCoord1fvPROC) extgl_GetProcAddress("glMultiTexCoord1fv");
+	glMultiTexCoord1i = (glMultiTexCoord1iPROC) extgl_GetProcAddress("glMultiTexCoord1i");
+	glMultiTexCoord1iv = (glMultiTexCoord1ivPROC) extgl_GetProcAddress("glMultiTexCoord1iv");
+	glMultiTexCoord1s = (glMultiTexCoord1sPROC) extgl_GetProcAddress("glMultiTexCoord1s");
+	glMultiTexCoord1sv = (glMultiTexCoord1svPROC) extgl_GetProcAddress("glMultiTexCoord1sv");
 
-    glMultiTexCoord2d = (glMultiTexCoord2dPROC) extgl_GetProcAddress("glMultiTexCoord2d");
-    glMultiTexCoord2dv = (glMultiTexCoord2dvPROC) extgl_GetProcAddress("glMultiTexCoord2dv");
-    glMultiTexCoord2f = (glMultiTexCoord2fPROC) extgl_GetProcAddress("glMultiTexCoord2f");
-    glMultiTexCoord2fv = (glMultiTexCoord2fvPROC) extgl_GetProcAddress("glMultiTexCoord2fv");
-    glMultiTexCoord2i = (glMultiTexCoord2iPROC) extgl_GetProcAddress("glMultiTexCoord2i");
-    glMultiTexCoord2iv = (glMultiTexCoord2ivPROC) extgl_GetProcAddress("glMultiTexCoord2iv");
-    glMultiTexCoord2s = (glMultiTexCoord2sPROC) extgl_GetProcAddress("glMultiTexCoord2s");
-    glMultiTexCoord2sv = (glMultiTexCoord2svPROC) extgl_GetProcAddress("glMultiTexCoord2sv");
+	glMultiTexCoord2d = (glMultiTexCoord2dPROC) extgl_GetProcAddress("glMultiTexCoord2d");
+	glMultiTexCoord2dv = (glMultiTexCoord2dvPROC) extgl_GetProcAddress("glMultiTexCoord2dv");
+	glMultiTexCoord2f = (glMultiTexCoord2fPROC) extgl_GetProcAddress("glMultiTexCoord2f");
+	glMultiTexCoord2fv = (glMultiTexCoord2fvPROC) extgl_GetProcAddress("glMultiTexCoord2fv");
+	glMultiTexCoord2i = (glMultiTexCoord2iPROC) extgl_GetProcAddress("glMultiTexCoord2i");
+	glMultiTexCoord2iv = (glMultiTexCoord2ivPROC) extgl_GetProcAddress("glMultiTexCoord2iv");
+	glMultiTexCoord2s = (glMultiTexCoord2sPROC) extgl_GetProcAddress("glMultiTexCoord2s");
+	glMultiTexCoord2sv = (glMultiTexCoord2svPROC) extgl_GetProcAddress("glMultiTexCoord2sv");
 
-    glMultiTexCoord3d = (glMultiTexCoord3dPROC) extgl_GetProcAddress("glMultiTexCoord3d");
-    glMultiTexCoord3dv = (glMultiTexCoord3dvPROC) extgl_GetProcAddress("glMultiTexCoord3dv");
-    glMultiTexCoord3f = (glMultiTexCoord3fPROC) extgl_GetProcAddress("glMultiTexCoord3f");
-    glMultiTexCoord3fv = (glMultiTexCoord3fvPROC) extgl_GetProcAddress("glMultiTexCoord3fv");
-    glMultiTexCoord3i = (glMultiTexCoord3iPROC) extgl_GetProcAddress("glMultiTexCoord3i");
-    glMultiTexCoord3iv = (glMultiTexCoord3ivPROC) extgl_GetProcAddress("glMultiTexCoord3iv");
-    glMultiTexCoord3s = (glMultiTexCoord3sPROC) extgl_GetProcAddress("glMultiTexCoord3s");
-    glMultiTexCoord3sv = (glMultiTexCoord3svPROC) extgl_GetProcAddress("glMultiTexCoord3sv");
+	glMultiTexCoord3d = (glMultiTexCoord3dPROC) extgl_GetProcAddress("glMultiTexCoord3d");
+	glMultiTexCoord3dv = (glMultiTexCoord3dvPROC) extgl_GetProcAddress("glMultiTexCoord3dv");
+	glMultiTexCoord3f = (glMultiTexCoord3fPROC) extgl_GetProcAddress("glMultiTexCoord3f");
+	glMultiTexCoord3fv = (glMultiTexCoord3fvPROC) extgl_GetProcAddress("glMultiTexCoord3fv");
+	glMultiTexCoord3i = (glMultiTexCoord3iPROC) extgl_GetProcAddress("glMultiTexCoord3i");
+	glMultiTexCoord3iv = (glMultiTexCoord3ivPROC) extgl_GetProcAddress("glMultiTexCoord3iv");
+	glMultiTexCoord3s = (glMultiTexCoord3sPROC) extgl_GetProcAddress("glMultiTexCoord3s");
+	glMultiTexCoord3sv = (glMultiTexCoord3svPROC) extgl_GetProcAddress("glMultiTexCoord3sv");
 
-    glMultiTexCoord4d = (glMultiTexCoord4dPROC) extgl_GetProcAddress("glMultiTexCoord4d");
-    glMultiTexCoord4dv = (glMultiTexCoord4dvPROC) extgl_GetProcAddress("glMultiTexCoord4dv");
-    glMultiTexCoord4f = (glMultiTexCoord4fPROC) extgl_GetProcAddress("glMultiTexCoord4f");
-    glMultiTexCoord4fv = (glMultiTexCoord4fvPROC) extgl_GetProcAddress("glMultiTexCoord4fv");
-    glMultiTexCoord4i = (glMultiTexCoord4iPROC) extgl_GetProcAddress("glMultiTexCoord4i");
-    glMultiTexCoord4iv = (glMultiTexCoord4ivPROC) extgl_GetProcAddress("glMultiTexCoord4iv");
-    glMultiTexCoord4s = (glMultiTexCoord4sPROC) extgl_GetProcAddress("glMultiTexCoord4s");
-    glMultiTexCoord4sv = (glMultiTexCoord4svPROC) extgl_GetProcAddress("glMultiTexCoord4sv");
+	glMultiTexCoord4d = (glMultiTexCoord4dPROC) extgl_GetProcAddress("glMultiTexCoord4d");
+	glMultiTexCoord4dv = (glMultiTexCoord4dvPROC) extgl_GetProcAddress("glMultiTexCoord4dv");
+	glMultiTexCoord4f = (glMultiTexCoord4fPROC) extgl_GetProcAddress("glMultiTexCoord4f");
+	glMultiTexCoord4fv = (glMultiTexCoord4fvPROC) extgl_GetProcAddress("glMultiTexCoord4fv");
+	glMultiTexCoord4i = (glMultiTexCoord4iPROC) extgl_GetProcAddress("glMultiTexCoord4i");
+	glMultiTexCoord4iv = (glMultiTexCoord4ivPROC) extgl_GetProcAddress("glMultiTexCoord4iv");
+	glMultiTexCoord4s = (glMultiTexCoord4sPROC) extgl_GetProcAddress("glMultiTexCoord4s");
+	glMultiTexCoord4sv = (glMultiTexCoord4svPROC) extgl_GetProcAddress("glMultiTexCoord4sv");
 
-    glLoadTransposeMatrixf = (glLoadTransposeMatrixfPROC) extgl_GetProcAddress("glLoadTransposeMatrixf");
-    glLoadTransposeMatrixd = (glLoadTransposeMatrixdPROC) extgl_GetProcAddress("glLoadTransposeMatrixd");
-    glMultTransposeMatrixf = (glMultTransposeMatrixfPROC) extgl_GetProcAddress("glMultTransposeMatrixf");
-    glMultTransposeMatrixd = (glMultTransposeMatrixdPROC) extgl_GetProcAddress("glMultTransposeMatrixd");
-    glCompressedTexImage3D = (glCompressedTexImage3DPROC) extgl_GetProcAddress("glCompressedTexImage3D");
-    glCompressedTexImage2D = (glCompressedTexImage2DPROC) extgl_GetProcAddress("glCompressedTexImage2D");
-    glCompressedTexImage1D = (glCompressedTexImage1DPROC) extgl_GetProcAddress("glCompressedTexImage1D");
-    glCompressedTexSubImage3D = (glCompressedTexSubImage3DPROC) extgl_GetProcAddress("glCompressedTexSubImage3D");
-    glCompressedTexSubImage2D = (glCompressedTexSubImage2DPROC) extgl_GetProcAddress("glCompressedTexSubImage2D");
-    glCompressedTexSubImage1D = (glCompressedTexSubImage1DPROC) extgl_GetProcAddress("glCompressedTexSubImage1D");
-    glGetCompressedTexImage = (glGetCompressedTexImagePROC) extgl_GetProcAddress("glGetCompressedTexImage");
+	glLoadTransposeMatrixf = (glLoadTransposeMatrixfPROC) extgl_GetProcAddress("glLoadTransposeMatrixf");
+	glLoadTransposeMatrixd = (glLoadTransposeMatrixdPROC) extgl_GetProcAddress("glLoadTransposeMatrixd");
+	glMultTransposeMatrixf = (glMultTransposeMatrixfPROC) extgl_GetProcAddress("glMultTransposeMatrixf");
+	glMultTransposeMatrixd = (glMultTransposeMatrixdPROC) extgl_GetProcAddress("glMultTransposeMatrixd");
+	glCompressedTexImage3D = (glCompressedTexImage3DPROC) extgl_GetProcAddress("glCompressedTexImage3D");
+	glCompressedTexImage2D = (glCompressedTexImage2DPROC) extgl_GetProcAddress("glCompressedTexImage2D");
+	glCompressedTexImage1D = (glCompressedTexImage1DPROC) extgl_GetProcAddress("glCompressedTexImage1D");
+	glCompressedTexSubImage3D = (glCompressedTexSubImage3DPROC) extgl_GetProcAddress("glCompressedTexSubImage3D");
+	glCompressedTexSubImage2D = (glCompressedTexSubImage2DPROC) extgl_GetProcAddress("glCompressedTexSubImage2D");
+	glCompressedTexSubImage1D = (glCompressedTexSubImage1DPROC) extgl_GetProcAddress("glCompressedTexSubImage1D");
+	glGetCompressedTexImage = (glGetCompressedTexImagePROC) extgl_GetProcAddress("glGetCompressedTexImage");
 
-    glSampleCoverage = (glSampleCoveragePROC) extgl_GetProcAddress("glSampleCoverage");
+	glSampleCoverage = (glSampleCoveragePROC) extgl_GetProcAddress("glSampleCoverage");
 #endif /* GL_VERSION_1_3 */
 }
 
 static void extgl_InitOpenGL1_4()
 {
 #ifdef GL_VERSION_1_4
-    if (!extgl_Extensions.OpenGL14)
-        return;
-    glBlendColor = (glBlendColorPROC) extgl_GetProcAddress("glBlendColor");
-    glBlendEquation = (glBlendEquationPROC) extgl_GetProcAddress("glBlendEquation");
-    glFogCoordf = (glFogCoordfPROC) extgl_GetProcAddress("glFogCoordf");
-    glFogCoordfv = (glFogCoordfvPROC) extgl_GetProcAddress("glFogCoordfv");
-    glFogCoordd = (glFogCoorddPROC) extgl_GetProcAddress("glFogCoordd");
-    glFogCoorddv = (glFogCoorddvPROC) extgl_GetProcAddress("glFogCoorddv");
-    glFogCoordPointer = (glFogCoordPointerPROC) extgl_GetProcAddress("glFogCoordPointer");
-    glMultiDrawArrays = (glMultiDrawArraysPROC) extgl_GetProcAddress("glMultiDrawArrays");
-    glMultiDrawElements = (glMultiDrawElementsPROC) extgl_GetProcAddress("glMultiDrawElements");
-    glPointParameterf = (glPointParameterfPROC) extgl_GetProcAddress("glPointParameterf");
-    glPointParameterfv = (glPointParameterfvPROC) extgl_GetProcAddress("glPointParameterfv");
-    glSecondaryColor3b = (glSecondaryColor3bPROC) extgl_GetProcAddress("glSecondaryColor3b");
-    glSecondaryColor3bv = (glSecondaryColor3bvPROC) extgl_GetProcAddress("glSecondaryColor3bv");
-    glSecondaryColor3d = (glSecondaryColor3dPROC) extgl_GetProcAddress("glSecondaryColor3d");
-    glSecondaryColor3dv = (glSecondaryColor3dvPROC) extgl_GetProcAddress("glSecondaryColor3dv");
-    glSecondaryColor3f = (glSecondaryColor3fPROC) extgl_GetProcAddress("glSecondaryColor3f");
-    glSecondaryColor3fv = (glSecondaryColor3fvPROC) extgl_GetProcAddress("glSecondaryColor3fv");
-    glSecondaryColor3i = (glSecondaryColor3iPROC) extgl_GetProcAddress("glSecondaryColor3i");
-    glSecondaryColor3iv = (glSecondaryColor3ivPROC) extgl_GetProcAddress("glSecondaryColor3iv");
-    glSecondaryColor3s = (glSecondaryColor3sPROC) extgl_GetProcAddress("glSecondaryColor3s");
-    glSecondaryColor3sv = (glSecondaryColor3svPROC) extgl_GetProcAddress("glSecondaryColor3sv");
-    glSecondaryColor3ub = (glSecondaryColor3ubPROC) extgl_GetProcAddress("glSecondaryColor3ub");
-    glSecondaryColor3ubv = (glSecondaryColor3ubvPROC) extgl_GetProcAddress("glSecondaryColor3ubv");
-    glSecondaryColor3ui = (glSecondaryColor3uiPROC) extgl_GetProcAddress("glSecondaryColor3ui");
-    glSecondaryColor3uiv = (glSecondaryColor3uivPROC) extgl_GetProcAddress("glSecondaryColor3uiv");
-    glSecondaryColor3us = (glSecondaryColor3usPROC) extgl_GetProcAddress("glSecondaryColor3us");
-    glSecondaryColor3usv = (glSecondaryColor3usvPROC) extgl_GetProcAddress("glSecondaryColor3usv");
-    glSecondaryColorPointer = (glSecondaryColorPointerPROC) extgl_GetProcAddress("glSecondaryColorPointer");
-    glBlendFuncSeparate = (glBlendFuncSeparatePROC) extgl_GetProcAddress("glBlendFuncSeparate");
-    glWindowPos2d = (glWindowPos2dPROC) extgl_GetProcAddress("glWindowPos2d");
-    glWindowPos2f = (glWindowPos2fPROC) extgl_GetProcAddress("glWindowPos2f");
-    glWindowPos2i = (glWindowPos2iPROC) extgl_GetProcAddress("glWindowPos2i");
-    glWindowPos2s = (glWindowPos2sPROC) extgl_GetProcAddress("glWindowPos2s");
-    glWindowPos2dv = (glWindowPos2dvPROC) extgl_GetProcAddress("glWindowPos2dv");
-    glWindowPos2fv = (glWindowPos2fvPROC) extgl_GetProcAddress("glWindowPos2fv");
-    glWindowPos2iv = (glWindowPos2ivPROC) extgl_GetProcAddress("glWindowPos2iv");
-    glWindowPos2sv = (glWindowPos2svPROC) extgl_GetProcAddress("glWindowPos2sv");
-    glWindowPos3d = (glWindowPos3dPROC) extgl_GetProcAddress("glWindowPos3d");
-    glWindowPos3f = (glWindowPos3fPROC) extgl_GetProcAddress("glWindowPos3f");
-    glWindowPos3i = (glWindowPos3iPROC) extgl_GetProcAddress("glWindowPos3i");
-    glWindowPos3s = (glWindowPos3sPROC) extgl_GetProcAddress("glWindowPos3s");
-    glWindowPos3dv = (glWindowPos3dvPROC) extgl_GetProcAddress("glWindowPos3dv");
-    glWindowPos3fv = (glWindowPos3fvPROC) extgl_GetProcAddress("glWindowPos3fv");
-    glWindowPos3iv = (glWindowPos3ivPROC) extgl_GetProcAddress("glWindowPos3iv");
-    glWindowPos3sv = (glWindowPos3svPROC) extgl_GetProcAddress("glWindowPos3sv");
+	if (!extgl_Extensions.OpenGL14)
+		return;
+	glBlendColor = (glBlendColorPROC) extgl_GetProcAddress("glBlendColor");
+	glBlendEquation = (glBlendEquationPROC) extgl_GetProcAddress("glBlendEquation");
+	glFogCoordf = (glFogCoordfPROC) extgl_GetProcAddress("glFogCoordf");
+	glFogCoordfv = (glFogCoordfvPROC) extgl_GetProcAddress("glFogCoordfv");
+	glFogCoordd = (glFogCoorddPROC) extgl_GetProcAddress("glFogCoordd");
+	glFogCoorddv = (glFogCoorddvPROC) extgl_GetProcAddress("glFogCoorddv");
+	glFogCoordPointer = (glFogCoordPointerPROC) extgl_GetProcAddress("glFogCoordPointer");
+	glMultiDrawArrays = (glMultiDrawArraysPROC) extgl_GetProcAddress("glMultiDrawArrays");
+	glMultiDrawElements = (glMultiDrawElementsPROC) extgl_GetProcAddress("glMultiDrawElements");
+	glPointParameterf = (glPointParameterfPROC) extgl_GetProcAddress("glPointParameterf");
+	glPointParameterfv = (glPointParameterfvPROC) extgl_GetProcAddress("glPointParameterfv");
+	glSecondaryColor3b = (glSecondaryColor3bPROC) extgl_GetProcAddress("glSecondaryColor3b");
+	glSecondaryColor3bv = (glSecondaryColor3bvPROC) extgl_GetProcAddress("glSecondaryColor3bv");
+	glSecondaryColor3d = (glSecondaryColor3dPROC) extgl_GetProcAddress("glSecondaryColor3d");
+	glSecondaryColor3dv = (glSecondaryColor3dvPROC) extgl_GetProcAddress("glSecondaryColor3dv");
+	glSecondaryColor3f = (glSecondaryColor3fPROC) extgl_GetProcAddress("glSecondaryColor3f");
+	glSecondaryColor3fv = (glSecondaryColor3fvPROC) extgl_GetProcAddress("glSecondaryColor3fv");
+	glSecondaryColor3i = (glSecondaryColor3iPROC) extgl_GetProcAddress("glSecondaryColor3i");
+	glSecondaryColor3iv = (glSecondaryColor3ivPROC) extgl_GetProcAddress("glSecondaryColor3iv");
+	glSecondaryColor3s = (glSecondaryColor3sPROC) extgl_GetProcAddress("glSecondaryColor3s");
+	glSecondaryColor3sv = (glSecondaryColor3svPROC) extgl_GetProcAddress("glSecondaryColor3sv");
+	glSecondaryColor3ub = (glSecondaryColor3ubPROC) extgl_GetProcAddress("glSecondaryColor3ub");
+	glSecondaryColor3ubv = (glSecondaryColor3ubvPROC) extgl_GetProcAddress("glSecondaryColor3ubv");
+	glSecondaryColor3ui = (glSecondaryColor3uiPROC) extgl_GetProcAddress("glSecondaryColor3ui");
+	glSecondaryColor3uiv = (glSecondaryColor3uivPROC) extgl_GetProcAddress("glSecondaryColor3uiv");
+	glSecondaryColor3us = (glSecondaryColor3usPROC) extgl_GetProcAddress("glSecondaryColor3us");
+	glSecondaryColor3usv = (glSecondaryColor3usvPROC) extgl_GetProcAddress("glSecondaryColor3usv");
+	glSecondaryColorPointer = (glSecondaryColorPointerPROC) extgl_GetProcAddress("glSecondaryColorPointer");
+	glBlendFuncSeparate = (glBlendFuncSeparatePROC) extgl_GetProcAddress("glBlendFuncSeparate");
+	glWindowPos2d = (glWindowPos2dPROC) extgl_GetProcAddress("glWindowPos2d");
+	glWindowPos2f = (glWindowPos2fPROC) extgl_GetProcAddress("glWindowPos2f");
+	glWindowPos2i = (glWindowPos2iPROC) extgl_GetProcAddress("glWindowPos2i");
+	glWindowPos2s = (glWindowPos2sPROC) extgl_GetProcAddress("glWindowPos2s");
+	glWindowPos2dv = (glWindowPos2dvPROC) extgl_GetProcAddress("glWindowPos2dv");
+	glWindowPos2fv = (glWindowPos2fvPROC) extgl_GetProcAddress("glWindowPos2fv");
+	glWindowPos2iv = (glWindowPos2ivPROC) extgl_GetProcAddress("glWindowPos2iv");
+	glWindowPos2sv = (glWindowPos2svPROC) extgl_GetProcAddress("glWindowPos2sv");
+	glWindowPos3d = (glWindowPos3dPROC) extgl_GetProcAddress("glWindowPos3d");
+	glWindowPos3f = (glWindowPos3fPROC) extgl_GetProcAddress("glWindowPos3f");
+	glWindowPos3i = (glWindowPos3iPROC) extgl_GetProcAddress("glWindowPos3i");
+	glWindowPos3s = (glWindowPos3sPROC) extgl_GetProcAddress("glWindowPos3s");
+	glWindowPos3dv = (glWindowPos3dvPROC) extgl_GetProcAddress("glWindowPos3dv");
+	glWindowPos3fv = (glWindowPos3fvPROC) extgl_GetProcAddress("glWindowPos3fv");
+	glWindowPos3iv = (glWindowPos3ivPROC) extgl_GetProcAddress("glWindowPos3iv");
+	glWindowPos3sv = (glWindowPos3svPROC) extgl_GetProcAddress("glWindowPos3sv");
 #endif /* GL_VERSION_1_4 */
 }
 
 
 static void extgl_InitGLUSupportedExtensions()
 {
-    char *s = (char*) gluGetString(GLU_VERSION);
-    if (!s)
-        return;
-    s = strstr(s, "1.");
-    extgl_Extensions.glu.GLU12 = 0;
-    extgl_Extensions.glu.GLU13 = 0;
-    if (s != NULL)
-    {
-        if( s[2] >= '3' )
-        {
-            extgl_Extensions.glu.GLU12 = 1;
-            extgl_Extensions.glu.GLU13 = 1;
-        }
-        if( s[2] == '2' )
-        {
-            extgl_Extensions.glu.GLU12 = 1;
-        }
-    }
-    extgl_Extensions.glu.EXT_nurbs_tessellator = GLUQueryExtension("GLU_EXT_nurbs_tessellator");
-    extgl_Extensions.glu.EXT_object_space_tess = GLUQueryExtension("GLU_EXT_object_space_tess");
+	char *s = (char*) gluGetString(GLU_VERSION);
+	if (!s)
+		return;
+	s = strstr(s, "1.");
+	extgl_Extensions.glu.GLU12 = 0;
+	extgl_Extensions.glu.GLU13 = 0;
+	if (s != NULL)
+	{
+		if( s[2] >= '3' )
+		{
+			extgl_Extensions.glu.GLU12 = 1;
+			extgl_Extensions.glu.GLU13 = 1;
+		}
+		if( s[2] == '2' )
+		{
+			extgl_Extensions.glu.GLU12 = 1;
+		}
+	}
+	extgl_Extensions.glu.EXT_nurbs_tessellator = GLUQueryExtension("GLU_EXT_nurbs_tessellator");
+	extgl_Extensions.glu.EXT_object_space_tess = GLUQueryExtension("GLU_EXT_object_space_tess");
 }
 
 static void extgl_InitSupportedExtensions()
 {
-    char *s = (char*) glGetString(GL_VERSION);
-    if (!s)
-        return;
-    s = strstr(s, "1.");
-    if (s == NULL)
-    {
-        extgl_Extensions.OpenGL12 = 0;    
-        extgl_Extensions.OpenGL13 = 0;    
-        extgl_Extensions.OpenGL14 = 0;
-    }
-    else
-    {
-        extgl_Extensions.OpenGL12 = 0;
-        extgl_Extensions.OpenGL13 = 0;
-        extgl_Extensions.OpenGL14 = 0;
+	char *s = (char*) glGetString(GL_VERSION);
+	if (!s)
+		return;
+	s = strstr(s, "1.");
+	if (s == NULL)
+	{
+		extgl_Extensions.OpenGL12 = 0;	
+		extgl_Extensions.OpenGL13 = 0;	
+		extgl_Extensions.OpenGL14 = 0;
+	}
+	else
+	{
+		extgl_Extensions.OpenGL12 = 0;
+		extgl_Extensions.OpenGL13 = 0;
+		extgl_Extensions.OpenGL14 = 0;
 
-        if( s[2] >= '4' )
-        {
-            extgl_Extensions.OpenGL12 = 1;
-            extgl_Extensions.OpenGL13 = 1;
-            extgl_Extensions.OpenGL14 = 1;
-        }
-        if( s[2] == '3' )
-        {
-            extgl_Extensions.OpenGL12 = 1;
-            extgl_Extensions.OpenGL13 = 1;
-        }
-        if( s[2] == '2' )
-        {
-            extgl_Extensions.OpenGL12 = 1;
-        }
-    }
-    extgl_Extensions.ARB_depth_texture = GLQueryExtension("GL_ARB_depth_texture");
-    extgl_Extensions.ARB_fragment_program = GLQueryExtension("GL_ARB_fragment_program");
-    extgl_Extensions.ARB_imaging = GLQueryExtension("GL_ARB_imaging");
-    extgl_Extensions.ARB_matrix_palette = GLQueryExtension("GL_ARB_matrix_palette");
-    extgl_Extensions.ARB_multisample = GLQueryExtension("GL_ARB_multisample");
-    extgl_Extensions.ARB_multitexture = GLQueryExtension("GL_ARB_multitexture");
-    extgl_Extensions.ARB_point_parameters = GLQueryExtension("GL_ARB_point_parameters");
-    extgl_Extensions.ARB_shadow = GLQueryExtension("GL_ARB_shadow");
-    extgl_Extensions.ARB_shadow_ambient = GLQueryExtension("GL_ARB_shadow_ambient");
-    extgl_Extensions.ARB_texture_border_clamp = GLQueryExtension("GL_ARB_texture_border_clamp");
-    extgl_Extensions.ARB_texture_compression = GLQueryExtension("GL_ARB_texture_compression");
-    extgl_Extensions.ARB_texture_cube_map = GLQueryExtension("GL_ARB_texture_cube_map");
-    extgl_Extensions.ARB_texture_env_add = GLQueryExtension("GL_ARB_texture_env_add");
-    extgl_Extensions.ARB_texture_env_combine = GLQueryExtension("GL_ARB_texture_env_combine");
-    extgl_Extensions.ARB_texture_env_crossbar = GLQueryExtension("GL_ARB_texture_env_crossbar");
-    extgl_Extensions.ARB_texture_env_dot3 = GLQueryExtension("GL_ARB_texture_env_dot3");
-    extgl_Extensions.ARB_texture_mirrored_repeat = GLQueryExtension("GL_ARB_texture_mirrored_repeat");
-    extgl_Extensions.ARB_transpose_matrix = GLQueryExtension("GL_ARB_transpose_matrix");
-    extgl_Extensions.ARB_vertex_blend = GLQueryExtension("GL_ARB_vertex_blend");
-    extgl_Extensions.ARB_vertex_buffer_object = GLQueryExtension("GL_ARB_vertex_buffer_object");
-    extgl_Extensions.ARB_vertex_program = GLQueryExtension("GL_ARB_vertex_program");
-    extgl_Extensions.ARB_window_pos = GLQueryExtension("GL_ARB_window_pos");
-    extgl_Extensions.EXT_abgr = GLQueryExtension("GL_EXT_abgr");
-    extgl_Extensions.EXT_bgra = GLQueryExtension("GL_EXT_bgra");
-    extgl_Extensions.EXT_blend_func_separate = GLQueryExtension("GL_EXT_blend_function_separate");
-    extgl_Extensions.EXT_compiled_vertex_array = GLQueryExtension("GL_EXT_compiled_vertex_array");
-    extgl_Extensions.EXT_cull_vertex = GLQueryExtension("GL_EXT_cull_vertex");
-    extgl_Extensions.EXT_draw_range_elements = GLQueryExtension("GL_EXT_draw_range_elements");
-    extgl_Extensions.EXT_fog_coord = GLQueryExtension("GL_EXT_fog_coord");
-    extgl_Extensions.EXT_multi_draw_arrays = GLQueryExtension("GL_EXT_multi_draw_arrays");
-    extgl_Extensions.EXT_point_parameters = GLQueryExtension("GL_EXT_point_parameters");
-    extgl_Extensions.EXT_secondary_color = GLQueryExtension("GL_EXT_secondary_color");
-    extgl_Extensions.EXT_separate_specular_color = GLQueryExtension("GL_EXT_separate_specular_color");
-    extgl_Extensions.EXT_shadow_funcs = GLQueryExtension("GL_EXT_shadow_funcs");
-    extgl_Extensions.EXT_stencil_two_side = GLQueryExtension("GL_EXT_stencil_two_side");
-    extgl_Extensions.EXT_stencil_wrap = GLQueryExtension("GL_EXT_stencil_wrap");
-    extgl_Extensions.EXT_texture_compression_s3tc = GLQueryExtension("GL_EXT_texture_compression_s3tc");
-    extgl_Extensions.EXT_texture_env_combine = GLQueryExtension("GL_EXT_texture_env_combine");
-    extgl_Extensions.EXT_texture_filter_anisotropic = GLQueryExtension("GL_EXT_texture_filter_anisotropic");
-    extgl_Extensions.EXT_texture_lod_bias = GLQueryExtension("GL_EXT_texture_lod_bias");
-    extgl_Extensions.EXT_vertex_shader = GLQueryExtension("GL_EXT_vertex_shader");
-    extgl_Extensions.EXT_vertex_weighting = GLQueryExtension("GL_EXT_vertex_weighting");
-    extgl_Extensions.ATI_element_array = GLQueryExtension("GL_ATI_element_array");
-    extgl_Extensions.ATI_envmap_bumpmap = GLQueryExtension("GL_ATI_envmap_bumpmap");
-    extgl_Extensions.ATI_fragment_shader = GLQueryExtension("GL_ATI_fragment_shader");
-    extgl_Extensions.ATI_pn_triangles = GLQueryExtension("GL_ATI_pn_triangles");
-    extgl_Extensions.ATI_point_cull_mode = GLQueryExtension("GL_ATI_point_cull_mode");
-    extgl_Extensions.ATI_separate_stencil = GLQueryExtension("GL_ATI_separate_stencil");
-    extgl_Extensions.ATI_text_fragment_shader = GLQueryExtension("GL_ATI_text_fragment_shader");
-    extgl_Extensions.ATI_texture_mirror_once = GLQueryExtension("GL_ATI_texture_mirror_once");
-    extgl_Extensions.ATI_vertex_array_object = GLQueryExtension("GL_ATI_vertex_array_object");
-    extgl_Extensions.ATI_vertex_streams = GLQueryExtension("GL_ATI_vertex_streams");
-    extgl_Extensions.ATIX_point_sprites = GLQueryExtension("GL_ATIX_point_sprites");
-    extgl_Extensions.ATIX_texture_env_route = GLQueryExtension("GL_ATIX_texture_env_route");
-    extgl_Extensions.HP_occlusion_test = GLQueryExtension("GL_HP_occlusion_test");
-    extgl_Extensions.NV_blend_square = GLQueryExtension("GL_NV_blend_square");
-    extgl_Extensions.NV_copy_depth_to_color = GLQueryExtension("GL_NV_copy_depth_to_color");
-    extgl_Extensions.NV_depth_clamp = GLQueryExtension("GL_NV_depth_clamp");
-    extgl_Extensions.NV_element_array = GLQueryExtension("GL_NV_element_array");
-    extgl_Extensions.NV_evaluators = GLQueryExtension("GL_NV_evaluators");
-    extgl_Extensions.NV_fence = GLQueryExtension("GL_NV_fence");
-    extgl_Extensions.NV_float_buffer = GLQueryExtension("GL_NV_float_buffer");
-    extgl_Extensions.NV_fog_distance = GLQueryExtension("GL_NV_fog_distance");
-    extgl_Extensions.NV_fragment_program = GLQueryExtension("GL_NV_fragment_program");
-    extgl_Extensions.NV_light_max_exponent = GLQueryExtension("GL_NV_light_max_exponent");
-    extgl_Extensions.NV_occlusion_query = GLQueryExtension("GL_NV_occlusion_query");
-    extgl_Extensions.NV_packed_depth_stencil = GLQueryExtension("GL_NV_packed_depth_stencil");
-    extgl_Extensions.NV_point_sprite = GLQueryExtension("GL_NV_point_sprite");
-    extgl_Extensions.NV_primitive_restart = GLQueryExtension("GL_NV_primitive_restart");
-    extgl_Extensions.NV_register_combiners = GLQueryExtension("GL_NV_register_combiners");
-    extgl_Extensions.NV_register_combiners2 = GLQueryExtension("GL_NV_register_combiners2");
-    extgl_Extensions.NV_texgen_reflection = GLQueryExtension("GL_NV_texgen_reflection");
-    extgl_Extensions.NV_texture_env_combine4 = GLQueryExtension("GL_NV_texture_env_combine4");
-    extgl_Extensions.NV_texture_rectangle = GLQueryExtension("GL_NV_texture_rectangle");
-    extgl_Extensions.NV_texture_shader = GLQueryExtension("GL_NV_texture_shader");
-    extgl_Extensions.NV_texture_shader2 = GLQueryExtension("GL_NV_texture_shader2");
-    extgl_Extensions.NV_texture_shader3 = GLQueryExtension("GL_NV_texture_shader3");
-    extgl_Extensions.NV_vertex_array_range = GLQueryExtension("GL_NV_vertex_array_range");
-    extgl_Extensions.NV_vertex_array_range2 = GLQueryExtension("GL_NV_vertex_array_range2");
-    extgl_Extensions.NV_vertex_program = GLQueryExtension("GL_NV_vertex_program");
-    extgl_Extensions.NV_vertex_program1_1 = GLQueryExtension("GL_NV_vertex_program1_1");
-    extgl_Extensions.NV_vertex_program2 = GLQueryExtension("GL_NV_vertex_program2");
-    extgl_Extensions.SGIS_generate_mipmap = GLQueryExtension("GL_SGIS_generate_mipmap");
-    extgl_Extensions.SGIX_depth_texture = GLQueryExtension("GL_SGIX_depth_texture");
-    extgl_Extensions.SGIX_shadow = GLQueryExtension("GL_SGIX_shadow");
+		if( s[2] >= '4' )
+		{
+			extgl_Extensions.OpenGL12 = 1;
+			extgl_Extensions.OpenGL13 = 1;
+			extgl_Extensions.OpenGL14 = 1;
+		}
+		if( s[2] == '3' )
+		{
+			extgl_Extensions.OpenGL12 = 1;
+			extgl_Extensions.OpenGL13 = 1;
+		}
+		if( s[2] == '2' )
+		{
+			extgl_Extensions.OpenGL12 = 1;
+		}
+	}
+	extgl_Extensions.ARB_depth_texture = GLQueryExtension("GL_ARB_depth_texture");
+	extgl_Extensions.ARB_fragment_program = GLQueryExtension("GL_ARB_fragment_program");
+	extgl_Extensions.ARB_imaging = GLQueryExtension("GL_ARB_imaging");
+	extgl_Extensions.ARB_matrix_palette = GLQueryExtension("GL_ARB_matrix_palette");
+	extgl_Extensions.ARB_multisample = GLQueryExtension("GL_ARB_multisample");
+	extgl_Extensions.ARB_multitexture = GLQueryExtension("GL_ARB_multitexture");
+	extgl_Extensions.ARB_point_parameters = GLQueryExtension("GL_ARB_point_parameters");
+	extgl_Extensions.ARB_shadow = GLQueryExtension("GL_ARB_shadow");
+	extgl_Extensions.ARB_shadow_ambient = GLQueryExtension("GL_ARB_shadow_ambient");
+	extgl_Extensions.ARB_texture_border_clamp = GLQueryExtension("GL_ARB_texture_border_clamp");
+	extgl_Extensions.ARB_texture_compression = GLQueryExtension("GL_ARB_texture_compression");
+	extgl_Extensions.ARB_texture_cube_map = GLQueryExtension("GL_ARB_texture_cube_map");
+	extgl_Extensions.ARB_texture_env_add = GLQueryExtension("GL_ARB_texture_env_add");
+	extgl_Extensions.ARB_texture_env_combine = GLQueryExtension("GL_ARB_texture_env_combine");
+	extgl_Extensions.ARB_texture_env_crossbar = GLQueryExtension("GL_ARB_texture_env_crossbar");
+	extgl_Extensions.ARB_texture_env_dot3 = GLQueryExtension("GL_ARB_texture_env_dot3");
+	extgl_Extensions.ARB_texture_mirrored_repeat = GLQueryExtension("GL_ARB_texture_mirrored_repeat");
+	extgl_Extensions.ARB_transpose_matrix = GLQueryExtension("GL_ARB_transpose_matrix");
+	extgl_Extensions.ARB_vertex_blend = GLQueryExtension("GL_ARB_vertex_blend");
+	extgl_Extensions.ARB_vertex_buffer_object = GLQueryExtension("GL_ARB_vertex_buffer_object");
+	extgl_Extensions.ARB_vertex_program = GLQueryExtension("GL_ARB_vertex_program");
+	extgl_Extensions.ARB_window_pos = GLQueryExtension("GL_ARB_window_pos");
+	extgl_Extensions.EXT_abgr = GLQueryExtension("GL_EXT_abgr");
+	extgl_Extensions.EXT_bgra = GLQueryExtension("GL_EXT_bgra");
+	extgl_Extensions.EXT_blend_func_separate = GLQueryExtension("GL_EXT_blend_function_separate");
+	extgl_Extensions.EXT_compiled_vertex_array = GLQueryExtension("GL_EXT_compiled_vertex_array");
+	extgl_Extensions.EXT_cull_vertex = GLQueryExtension("GL_EXT_cull_vertex");
+	extgl_Extensions.EXT_draw_range_elements = GLQueryExtension("GL_EXT_draw_range_elements");
+	extgl_Extensions.EXT_fog_coord = GLQueryExtension("GL_EXT_fog_coord");
+	extgl_Extensions.EXT_multi_draw_arrays = GLQueryExtension("GL_EXT_multi_draw_arrays");
+	extgl_Extensions.EXT_point_parameters = GLQueryExtension("GL_EXT_point_parameters");
+	extgl_Extensions.EXT_secondary_color = GLQueryExtension("GL_EXT_secondary_color");
+	extgl_Extensions.EXT_separate_specular_color = GLQueryExtension("GL_EXT_separate_specular_color");
+	extgl_Extensions.EXT_shadow_funcs = GLQueryExtension("GL_EXT_shadow_funcs");
+	extgl_Extensions.EXT_stencil_two_side = GLQueryExtension("GL_EXT_stencil_two_side");
+	extgl_Extensions.EXT_stencil_wrap = GLQueryExtension("GL_EXT_stencil_wrap");
+	extgl_Extensions.EXT_texture_compression_s3tc = GLQueryExtension("GL_EXT_texture_compression_s3tc");
+	extgl_Extensions.EXT_texture_env_combine = GLQueryExtension("GL_EXT_texture_env_combine");
+	extgl_Extensions.EXT_texture_filter_anisotropic = GLQueryExtension("GL_EXT_texture_filter_anisotropic");
+	extgl_Extensions.EXT_texture_lod_bias = GLQueryExtension("GL_EXT_texture_lod_bias");
+	extgl_Extensions.EXT_vertex_shader = GLQueryExtension("GL_EXT_vertex_shader");
+	extgl_Extensions.EXT_vertex_weighting = GLQueryExtension("GL_EXT_vertex_weighting");
+	extgl_Extensions.ATI_element_array = GLQueryExtension("GL_ATI_element_array");
+	extgl_Extensions.ATI_envmap_bumpmap = GLQueryExtension("GL_ATI_envmap_bumpmap");
+	extgl_Extensions.ATI_fragment_shader = GLQueryExtension("GL_ATI_fragment_shader");
+	extgl_Extensions.ATI_pn_triangles = GLQueryExtension("GL_ATI_pn_triangles");
+	extgl_Extensions.ATI_point_cull_mode = GLQueryExtension("GL_ATI_point_cull_mode");
+	extgl_Extensions.ATI_separate_stencil = GLQueryExtension("GL_ATI_separate_stencil");
+	extgl_Extensions.ATI_text_fragment_shader = GLQueryExtension("GL_ATI_text_fragment_shader");
+	extgl_Extensions.ATI_texture_mirror_once = GLQueryExtension("GL_ATI_texture_mirror_once");
+	extgl_Extensions.ATI_vertex_array_object = GLQueryExtension("GL_ATI_vertex_array_object");
+	extgl_Extensions.ATI_vertex_streams = GLQueryExtension("GL_ATI_vertex_streams");
+	extgl_Extensions.ATIX_point_sprites = GLQueryExtension("GL_ATIX_point_sprites");
+	extgl_Extensions.ATIX_texture_env_route = GLQueryExtension("GL_ATIX_texture_env_route");
+	extgl_Extensions.HP_occlusion_test = GLQueryExtension("GL_HP_occlusion_test");
+	extgl_Extensions.NV_blend_square = GLQueryExtension("GL_NV_blend_square");
+	extgl_Extensions.NV_copy_depth_to_color = GLQueryExtension("GL_NV_copy_depth_to_color");
+	extgl_Extensions.NV_depth_clamp = GLQueryExtension("GL_NV_depth_clamp");
+	extgl_Extensions.NV_element_array = GLQueryExtension("GL_NV_element_array");
+	extgl_Extensions.NV_evaluators = GLQueryExtension("GL_NV_evaluators");
+	extgl_Extensions.NV_fence = GLQueryExtension("GL_NV_fence");
+	extgl_Extensions.NV_float_buffer = GLQueryExtension("GL_NV_float_buffer");
+	extgl_Extensions.NV_fog_distance = GLQueryExtension("GL_NV_fog_distance");
+	extgl_Extensions.NV_fragment_program = GLQueryExtension("GL_NV_fragment_program");
+	extgl_Extensions.NV_light_max_exponent = GLQueryExtension("GL_NV_light_max_exponent");
+	extgl_Extensions.NV_occlusion_query = GLQueryExtension("GL_NV_occlusion_query");
+	extgl_Extensions.NV_packed_depth_stencil = GLQueryExtension("GL_NV_packed_depth_stencil");
+	extgl_Extensions.NV_point_sprite = GLQueryExtension("GL_NV_point_sprite");
+	extgl_Extensions.NV_primitive_restart = GLQueryExtension("GL_NV_primitive_restart");
+	extgl_Extensions.NV_register_combiners = GLQueryExtension("GL_NV_register_combiners");
+	extgl_Extensions.NV_register_combiners2 = GLQueryExtension("GL_NV_register_combiners2");
+	extgl_Extensions.NV_texgen_reflection = GLQueryExtension("GL_NV_texgen_reflection");
+	extgl_Extensions.NV_texture_env_combine4 = GLQueryExtension("GL_NV_texture_env_combine4");
+	extgl_Extensions.NV_texture_rectangle = GLQueryExtension("GL_NV_texture_rectangle");
+	extgl_Extensions.NV_texture_shader = GLQueryExtension("GL_NV_texture_shader");
+	extgl_Extensions.NV_texture_shader2 = GLQueryExtension("GL_NV_texture_shader2");
+	extgl_Extensions.NV_texture_shader3 = GLQueryExtension("GL_NV_texture_shader3");
+	extgl_Extensions.NV_vertex_array_range = GLQueryExtension("GL_NV_vertex_array_range");
+	extgl_Extensions.NV_vertex_array_range2 = GLQueryExtension("GL_NV_vertex_array_range2");
+	extgl_Extensions.NV_vertex_program = GLQueryExtension("GL_NV_vertex_program");
+	extgl_Extensions.NV_vertex_program1_1 = GLQueryExtension("GL_NV_vertex_program1_1");
+	extgl_Extensions.NV_vertex_program2 = GLQueryExtension("GL_NV_vertex_program2");
+	extgl_Extensions.SGIS_generate_mipmap = GLQueryExtension("GL_SGIS_generate_mipmap");
+	extgl_Extensions.SGIX_depth_texture = GLQueryExtension("GL_SGIX_depth_texture");
+	extgl_Extensions.SGIX_shadow = GLQueryExtension("GL_SGIX_shadow");
 }
 
 /* extgl_Init the extensions and load all the functions */
 int extgl_Initialize()
 {
-    extgl_error = 0;
-    extgl_InitOpenGL1_1();
-    extgl_InitGLU12();
-    extgl_InitGLU13();
-    extgl_InitSupportedExtensions();
-    extgl_InitGLUSupportedExtensions();
-    
-    extgl_InitEXTNurbsTesselator();
+	extgl_error = 0;
+	extgl_InitOpenGL1_1();
+	extgl_InitGLU12();
+	extgl_InitGLU13();
+	extgl_InitSupportedExtensions();
+	extgl_InitGLUSupportedExtensions();
+	
+	extgl_InitEXTNurbsTesselator();
 
-    /* first load the extensions */
-    extgl_InitARBTransposeMatrix();
-    extgl_InitARBMultisample();
-    extgl_InitEXTCompiledVertexArray();
-    extgl_InitEXTSecondaryColor();
-    extgl_InitEXTFogCoord();
-    extgl_InitNVVertexArrayRange();
-    extgl_InitEXTPointParameters();
-    extgl_InitNVRegisterCombiners();
-    extgl_InitEXTVertexWeighting();
-    extgl_InitNVVertexProgram();
-    extgl_InitNVFence();
-    extgl_InitNVRegisterCombiners2();
-    extgl_InitATIPNTriangles();
-    extgl_InitATISeparateStencil();
-    extgl_InitARBPointParameters();
-    extgl_InitARBVertexBlend();
-    extgl_InitEXTMultiDrawArrays();
-    extgl_InitARBMatrixPalette();
-    extgl_InitEXTVertexShader();
-    extgl_InitATIEnvmapBumpmap();
-    extgl_InitATIFragmentShader();
-    extgl_InitATIElementArray();
-    extgl_InitATIVertexStreams();
-    extgl_InitATIVertexArrayObject();
-    extgl_InitNVOcclusionQuery();
-    extgl_InitNVPointSprite();
-    extgl_InitARBWindowPos();
-    extgl_InitARBTextureCompression();
-    extgl_InitEXTDrawRangeElements();
-    extgl_InitEXTStencilTwoSide();
-    extgl_InitARBVertexProgram();
-    extgl_InitARBVertexBufferObject();
-    extgl_InitEXTCullVertex();
-    extgl_InitEXTBlendFuncSeparate();
-    extgl_InitARBImaging();
-    extgl_InitARBMultitexture();
-    extgl_InitNVElementArray();
-    extgl_InitNVEvaluators();
-    extgl_InitNVFragmentProgram();
-    extgl_InitNVPrimitiveRestart();
-    extgl_InitARBFragmentProgram();
-    
+	/* first load the extensions */
+	extgl_InitARBTransposeMatrix();
+	extgl_InitARBMultisample();
+	extgl_InitEXTCompiledVertexArray();
+	extgl_InitEXTSecondaryColor();
+	extgl_InitEXTFogCoord();
+	extgl_InitNVVertexArrayRange();
+	extgl_InitEXTPointParameters();
+	extgl_InitNVRegisterCombiners();
+	extgl_InitEXTVertexWeighting();
+	extgl_InitNVVertexProgram();
+	extgl_InitNVFence();
+	extgl_InitNVRegisterCombiners2();
+	extgl_InitATIPNTriangles();
+	extgl_InitATISeparateStencil();
+	extgl_InitARBPointParameters();
+	extgl_InitARBVertexBlend();
+	extgl_InitEXTMultiDrawArrays();
+	extgl_InitARBMatrixPalette();
+	extgl_InitEXTVertexShader();
+	extgl_InitATIEnvmapBumpmap();
+	extgl_InitATIFragmentShader();
+	extgl_InitATIElementArray();
+	extgl_InitATIVertexStreams();
+	extgl_InitATIVertexArrayObject();
+	extgl_InitNVOcclusionQuery();
+	extgl_InitNVPointSprite();
+	extgl_InitARBWindowPos();
+	extgl_InitARBTextureCompression();
+	extgl_InitEXTDrawRangeElements();
+	extgl_InitEXTStencilTwoSide();
+	extgl_InitARBVertexProgram();
+	extgl_InitARBVertexBufferObject();
+	extgl_InitEXTCullVertex();
+	extgl_InitEXTBlendFuncSeparate();
+	extgl_InitARBImaging();
+	extgl_InitARBMultitexture();
+	extgl_InitNVElementArray();
+	extgl_InitNVEvaluators();
+	extgl_InitNVFragmentProgram();
+	extgl_InitNVPrimitiveRestart();
+	extgl_InitARBFragmentProgram();
+	
    /* now load core opengl */
-    extgl_InitOpenGL1_2();
-    extgl_InitOpenGL1_3();
-    extgl_InitOpenGL1_4();
-    
+	extgl_InitOpenGL1_2();
+	extgl_InitOpenGL1_3();
+	extgl_InitOpenGL1_4();
+	
 #ifdef _WIN32
-    /* load WGL extensions */
-    extgl_InitializeWGL();
+	/* load WGL extensions */
+	extgl_InitializeWGL();
 #endif
 
 #ifdef _AGL
-    /* load AGL extensions */
-    extgl_InitializeAGL();
+	/* load AGL extensions */
+	extgl_InitializeAGL();
 #endif
-
-    return extgl_error;
+	return extgl_error;
 }
 
 #ifdef _X11
 int extgl_Open()
 {
-    lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
-    if (lib_gl_handle == NULL) {
+	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
+	if (lib_gl_handle == NULL) {
 #ifdef _DEBUG
 	printf("Error loading libGL.so.1: %s\n", dlerror());
 #endif
-        return 1;
-    }
-    lib_glu_handle = dlopen("libGLU.so.1", RTLD_LAZY | RTLD_GLOBAL);
-    if (lib_glu_handle == NULL) {
+		return 1;
+	}
+	lib_glu_handle = dlopen("libGLU.so.1", RTLD_LAZY | RTLD_GLOBAL);
+	if (lib_glu_handle == NULL) {
 #ifdef _DEBUG
 	printf("Error loading libGLU.so.1: %s\n", dlerror());
 #endif
-        return 1;
-    }
-    return 0;
+		return 1;
+	}
+	return 0;
 }
 
 #endif /* X11 */
@@ -3402,33 +3411,33 @@ int extgl_Open()
 #ifdef _WIN32
 int extgl_Open(void)
 {
-    // load the dynamic libraries for OpenGL
-    //
-    lib_gl_handle = LoadLibrary("opengl32.dll");
+	// load the dynamic libraries for OpenGL
+	//
+	lib_gl_handle = LoadLibrary("opengl32.dll");
 	if (lib_gl_handle == NULL)
 		return 1;
 	lib_glu_handle = LoadLibrary("glu32.dll");
-    if (lib_glu_handle == NULL)
-        return 1;
-    return 0;
+	if (lib_glu_handle == NULL)
+		return 1;
+	return 0;
 }
 #endif /* WIN32 */
 
 #ifdef _AGL
 int extgl_Open(void)
 {
-    OSStatus err = aglInitEntryPoints();
-    if ( noErr != err )
-    {
-        // if we encountered an error while initializing OpenGL
-        // we're hosed - return
-        //
-        return 1;
-    }
+	OSStatus err = aglInitEntryPoints();
+	if ( noErr != err )
+	{
+		// if we encountered an error while initializing OpenGL
+		// we're hosed - return
+		//
+		return 1;
+	}
 
-    // open gl framework initialized just fine
-    //
-    return 0;
+	// open gl framework initialized just fine
+	//
+	return 0;
 }
 #endif /* _AGL */
 
@@ -3443,7 +3452,7 @@ void extgl_Close(void)
 	FreeLibrary(lib_glu_handle);
 #endif
 #ifdef _AGL
-        aglDellocEntryPoints();
+	aglDellocEntryPoints();
 #endif 
 }
 
