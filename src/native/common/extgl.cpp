@@ -34,6 +34,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "extgl.h"
 #include "common_tools.h"
@@ -603,7 +604,7 @@ jclass extgl_ResetClass(JNIEnv *env, const char *class_name) {
 }
 
 void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndGLFunction *functions) {
-	JNINativeMethod methods[num_functions];
+	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
 	for (int i = 0; i < num_functions; i++) {
 		JavaMethodAndGLFunction *function = functions + i;
 		if (function->gl_function_name != NULL) {
@@ -612,6 +613,7 @@ void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const cha
 				printf("NOTICE: %s disabled because of missing driver symbols\n", ext_name);
 				if (ext_set != NULL)
 					extgl_removeExtension(env, ext_set, ext_name);
+				free(methods);
 				return;
 			}
 			void **gl_function_pointer_pointer = function->gl_function_pointer;
@@ -623,6 +625,7 @@ void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const cha
 		method->fnPtr = function->method_pointer;
 	}
 	jint result = env->RegisterNatives(clazz, methods, num_functions);
+	free(methods);
 	if (result != 0)
 		printfDebug("Could not register natives for extension %s\n", ext_name);
 }
