@@ -46,7 +46,7 @@ package org.lwjgl;
 public final class Math {
 
 	static {
-		System.loadLibrary(Sys.LIBRARY_NAME);
+		System.loadLibrary(Sys.getLibraryName());
 	}
 
 	/** Floating point version of pi */
@@ -136,19 +136,17 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 		};
 		
 		/**
 		 * A matrix operation is direct if the source and destination addresses
 		 * are the same, and the strides are the same.
 		 */
-		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+		private final class MatrixOpDirect extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -157,46 +155,19 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
-	
-	
-		/**
-		 * A matrix operation is offset if source > destination, and the
-		 * strides are the same
-		 */
-		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
-			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
-			protected MatrixOpClassification safe() { return this; }
-			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return this; }
-			void execute(
-				int sourceAddress,
-				int sourceStride,
-				int numElements,
-				int sourceWidth,
-				int sourceHeight,
-				boolean transposeSource,
-				int destAddress,
-				int destStride,
-				boolean transposeDest)
-			{
-			}
-		};
-	
+		private final MatrixOpDirect MATRIXOP_DIRECT = new MatrixOpDirect();
 	
 		/**
 		 * A matrix operation is safe if the source and destination do not
 		 * overlap in any way
 		 */
-		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+		private final class MatrixOpSafe extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -205,10 +176,9 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
+		private final MatrixOpSafe MATRIXOP_SAFE = new MatrixOpSafe();
 	};
 	public static final MatrixOpCopy MATRIXOP_COPY = new MatrixOpCopy();
 
@@ -230,19 +200,17 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 		};
 		
 		/**
 		 * A matrix operation is direct if the source and destination addresses
 		 * are the same, and the strides are the same.
 		 */
-		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+		private final class MatrixOpDirect extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -251,46 +219,19 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
-	
-	
-		/**
-		 * A matrix operation is offset if source > destination, and the
-		 * strides are the same
-		 */
-		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
-			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
-			protected MatrixOpClassification safe() { return this; }
-			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return this; }
-			void execute(
-				int sourceAddress,
-				int sourceStride,
-				int numElements,
-				int sourceWidth,
-				int sourceHeight,
-				boolean transposeSource,
-				int destAddress,
-				int destStride,
-				boolean transposeDest)
-			{
-			}
-		};
-	
+		private final MatrixOpDirect MATRIXOP_DIRECT = new MatrixOpDirect();
 	
 		/**
 		 * A matrix operation is safe if the source and destination do not
 		 * overlap in any way
 		 */
-		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+		private final class MatrixOpSafe extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -299,10 +240,9 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
+		private final MatrixOpSafe MATRIXOP_SAFE = new MatrixOpSafe();
 	};
 	public static final MatrixOpNegate MATRIXOP_NEGATE = new MatrixOpNegate();
 
@@ -324,19 +264,17 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 		};
 		
 		/**
 		 * A matrix operation is direct if the source and destination addresses
 		 * are the same, and the strides are the same.
 		 */
-		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+		private final class MatrixOpDirect extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -345,46 +283,19 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
-	
-	
-		/**
-		 * A matrix operation is offset if source > destination, and the
-		 * strides are the same
-		 */
-		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
-			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
-			protected MatrixOpClassification safe() { return this; }
-			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return this; }
-			void execute(
-				int sourceAddress,
-				int sourceStride,
-				int numElements,
-				int sourceWidth,
-				int sourceHeight,
-				boolean transposeSource,
-				int destAddress,
-				int destStride,
-				boolean transposeDest)
-			{
-			}
-		};
-	
+		private final MatrixOpDirect MATRIXOP_DIRECT = new MatrixOpDirect();
 	
 		/**
 		 * A matrix operation is safe if the source and destination do not
 		 * overlap in any way
 		 */
-		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+		private final class MatrixOpSafe extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -393,10 +304,9 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
+		private final MatrixOpSafe MATRIXOP_SAFE = new MatrixOpSafe();
 	};
 	public static final MatrixOpNormalise MATRIXOP_NORMALISE = new MatrixOpNormalise();
 
@@ -418,19 +328,17 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 		};
 		
 		/**
 		 * A matrix operation is direct if the source and destination addresses
 		 * are the same, and the strides are the same.
 		 */
-		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+		private final class MatrixOpDirect extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -439,46 +347,19 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
-	
-	
-		/**
-		 * A matrix operation is offset if source > destination, and the
-		 * strides are the same
-		 */
-		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
-			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
-			protected MatrixOpClassification safe() { return this; }
-			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return this; }
-			void execute(
-				int sourceAddress,
-				int sourceStride,
-				int numElements,
-				int sourceWidth,
-				int sourceHeight,
-				boolean transposeSource,
-				int destAddress,
-				int destStride,
-				boolean transposeDest)
-			{
-			}
-		};
-	
+		private final MatrixOpDirect MATRIXOP_DIRECT = new MatrixOpDirect();
 	
 		/**
 		 * A matrix operation is safe if the source and destination do not
 		 * overlap in any way
 		 */
-		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+		private final class MatrixOpSafe extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int sourceAddress,
 				int sourceStride,
 				int numElements,
@@ -487,10 +368,9 @@ public final class Math {
 				boolean transposeSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
+		private final MatrixOpSafe MATRIXOP_SAFE = new MatrixOpSafe();
 	};
 	public static final MatrixOpInvert MATRIXOP_INVERT = new MatrixOpInvert();
 
@@ -562,19 +442,17 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 		};
 		
 		/**
 		 * A matrix operation is direct if the source and destination addresses
 		 * are the same, and the strides are the same.
 		 */
-		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+		private final class MatrixOpDirect extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
 				int leftElements,
@@ -589,52 +467,20 @@ public final class Math {
 				boolean transposeRightSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
-	
-	
-		/**
-		 * A matrix operation is offset if source > destination, and the
-		 * strides are the same
-		 */
-		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
-			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
-			protected MatrixOpClassification safe() { return this; }
-			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return this; }
-			void execute(
-				int leftSourceAddress,
-				int leftSourceStride,
-				int leftElements,
-				int leftSourceWidth,
-				int leftSourceHeight,
-				boolean transposeLeftSource,
-				int rightSourceAddress,
-				int rightSourceStride,
-				int rightElements,
-				int rightSourceWidth,
-				int rightSourceHeight,
-				boolean transposeRightSource,
-				int destAddress,
-				int destStride,
-				boolean transposeDest)
-			{
-			}
-		};
+		private final MatrixOpDirect MATRIXOP_DIRECT = new MatrixOpDirect();
 	
 	
 		/**
 		 * A matrix operation is safe if the source and destination do not
 		 * overlap in any way
 		 */
-		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+		private final class MatrixOpSafe extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
 				int leftElements,
@@ -649,10 +495,9 @@ public final class Math {
 				boolean transposeRightSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
+		private final MatrixOpSafe MATRIXOP_SAFE = new MatrixOpSafe();
 	};
 	public static final MatrixOpMultiply MATRIXOP_MULTIPLY = new MatrixOpMultiply();
 
@@ -694,19 +539,17 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 		};
 		
 		/**
 		 * A matrix operation is direct if the source and destination addresses
 		 * are the same, and the strides are the same.
 		 */
-		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+		private final class MatrixOpDirect extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
 				int leftElements,
@@ -721,52 +564,20 @@ public final class Math {
 				boolean transposeRightSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
-	
-	
-		/**
-		 * A matrix operation is offset if source > destination, and the
-		 * strides are the same
-		 */
-		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
-			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
-			protected MatrixOpClassification safe() { return this; }
-			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return this; }
-			void execute(
-				int leftSourceAddress,
-				int leftSourceStride,
-				int leftElements,
-				int leftSourceWidth,
-				int leftSourceHeight,
-				boolean transposeLeftSource,
-				int rightSourceAddress,
-				int rightSourceStride,
-				int rightElements,
-				int rightSourceWidth,
-				int rightSourceHeight,
-				boolean transposeRightSource,
-				int destAddress,
-				int destStride,
-				boolean transposeDest)
-			{
-			}
-		};
+		private final MatrixOpDirect MATRIXOP_DIRECT = new MatrixOpDirect();
 	
 	
 		/**
 		 * A matrix operation is safe if the source and destination do not
 		 * overlap in any way
 		 */
-		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+		private final class MatrixOpSafe extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
-			void execute(
+			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
 				int leftElements,
@@ -781,10 +592,9 @@ public final class Math {
 				boolean transposeRightSource,
 				int destAddress,
 				int destStride,
-				boolean transposeDest)
-			{
-			}
+				boolean transposeDest);
 		};
+		private final MatrixOpSafe MATRIXOP_SAFE = new MatrixOpSafe();
 	};
 	public static final MatrixOpAdd MATRIXOP_ADD = new MatrixOpAdd();
 
@@ -826,18 +636,16 @@ public final class Math {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 		};
 		
 		/**
 		 * A matrix operation is direct if the source and destination addresses
 		 * are the same, and the strides are the same.
 		 */
-		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+		private final class MatrixOpDirect extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return this; }
 			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -855,45 +663,17 @@ public final class Math {
 				int destStride,
 				boolean transposeDest);
 		};
-	
-	
-		/**
-		 * A matrix operation is offset if source > destination, and the
-		 * strides are the same
-		 */
-		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
-			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
-			protected MatrixOpClassification safe() { return this; }
-			protected MatrixOpClassification direct() { return this; }
-			protected MatrixOpClassification offset() { return this; }
-			native void execute(
-				int leftSourceAddress,
-				int leftSourceStride,
-				int leftElements,
-				int leftSourceWidth,
-				int leftSourceHeight,
-				boolean transposeLeftSource,
-				int rightSourceAddress,
-				int rightSourceStride,
-				int rightElements,
-				int rightSourceWidth,
-				int rightSourceHeight,
-				boolean transposeRightSource,
-				int destAddress,
-				int destStride,
-				boolean transposeDest);
-		};
+		private final MatrixOpDirect MATRIXOP_DIRECT = new MatrixOpDirect();
 	
 	
 		/**
 		 * A matrix operation is safe if the source and destination do not
 		 * overlap in any way
 		 */
-		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+		private final class MatrixOpSafe extends MatrixOpClassification {
 			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
 			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
 			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
-			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
 			native void execute(
 				int leftSourceAddress,
 				int leftSourceStride,
@@ -911,6 +691,7 @@ public final class Math {
 				int destStride,
 				boolean transposeDest);
 		};
+		private final MatrixOpSafe MATRIXOP_SAFE = new MatrixOpSafe();
 	};
 	public static final MatrixOpSubtract MATRIXOP_SUBTRACT = new MatrixOpSubtract();
 
@@ -998,8 +779,6 @@ public final class Math {
 		abstract MatrixOpClassification unsafe();
 		abstract MatrixOpClassification safe();
 		abstract MatrixOpClassification direct();
-		abstract MatrixOpClassification offset();
-		
 		/**
 		 * Execute a unary matrix operation.
 		 * The default implementation does nothing.
@@ -1055,7 +834,7 @@ public final class Math {
 				if (destAddress > sourceAddress || sourceStride != destStride)
 					return unsafe();
 				else if (destAddress < sourceAddress)
-					return offset();
+					return safe();
 				else
 					return direct();
 	
