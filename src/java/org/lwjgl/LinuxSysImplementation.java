@@ -44,7 +44,7 @@ class LinuxSysImplementation extends J2SESysImplementation {
 		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
 		// right anyway.
 
-		String[] browsers = {"mozilla", "opera", "konqueror", "nautilus", "galeon", "netscape"};
+		String[] browsers = {"firefox", "mozilla", "opera", "konqueror", "nautilus", "galeon", "netscape"};
 
 		for (int i = 0; i < browsers.length; i ++) {
 			try {
