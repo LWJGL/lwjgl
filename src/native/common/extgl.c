@@ -774,9 +774,9 @@ glXAllocateMemoryNVPROC glXAllocateMemoryNV = NULL;
 glXFreeMemoryNVPROC glXFreeMemoryNV = NULL;
 #endif /* X11 */
 
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
 // TODO: find the OSX equivalent of these functions
-#endif /* OSX */
+#endif /* TARGET_OS_MAC */
 
 #endif /* GL_NV_vertex_array_range */
 
@@ -1337,7 +1337,7 @@ void * lib_gl_handle = NULL;
 void * lib_glu_handle = NULL;
 #endif
 
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
 // Note: Not used, there is a CFBundleRef in the header file that handles the
 // dynamic load from the GL Framework bundle and this framework include gl
 // and glu in the same library
@@ -1378,7 +1378,7 @@ void *extgl_GetProcAddress(char *name)
     return t;
 #endif
 
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
     void *t =(void *)aglGetProcAddress(name);
 
     return t;
@@ -1538,7 +1538,7 @@ int extgl_InitializeWGL()
 /*-----------------------------------------------------*/
 /* AGL stuff BEGIN*/
 /*-----------------------------------------------------*/
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
 
 int extgl_InitializeAGL()
 {
@@ -3228,7 +3228,7 @@ int extgl_Initialize()
     extgl_InitializeWGL();
 #endif
 
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
     /* load AGL extensions */
     extgl_InitializeAGL();
 #endif
@@ -3267,7 +3267,7 @@ int extgl_Open(void)
 }
 #endif /* WIN32 */
 
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
 int extgl_Open(void)
 {
     OSStatus err = aglInitEntryPoints();
@@ -3283,7 +3283,7 @@ int extgl_Open(void)
     //
     return 0;
 }
-#endif /* OSX */
+#endif /* TARGET_OS_MAC */
 
 void extgl_Close(void)
 {
@@ -3295,12 +3295,12 @@ void extgl_Close(void)
 	FreeLibrary(lib_gl_handle);
 	FreeLibrary(lib_glu_handle);
 #endif
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
         aglDellocEntryPoints();
 #endif 
 }
 
-#ifdef _OSX
+#ifdef TARGET_OS_MAC
 CFBundleRef gBundleRefOpenGL = NULL;
 // -------------------------
 OSStatus aglInitEntryPoints (void)

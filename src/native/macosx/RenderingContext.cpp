@@ -71,10 +71,8 @@ void RenderingContext::destroyDisplay()
     //
     
     aglSetCurrentContext(NULL);
-    /*
     aglSetDrawable(aglContext, NULL);
     aglDestroyContext(aglContext);
-     */
     
     // cleanup the window
     //
@@ -83,7 +81,7 @@ void RenderingContext::destroyDisplay()
 
 bool RenderingContext::createGL( int colorBits, int alphaBits, int depthBits, int stencilBits )
 {
-    /*
+
     AGLPixelFormat 				fmt;
     GLboolean      				ok;
     GLint         			 	attrib[] = { AGL_RGBA, AGL_NONE };
@@ -148,7 +146,7 @@ bool RenderingContext::createGL( int colorBits, int alphaBits, int depthBits, in
         printf("Available extensions:\n%s\n", p);
     }
 #endif 
-*/
+
     return true;
     
 }
@@ -161,7 +159,7 @@ void RenderingContext::destroyGL()
 
     // destroy the context
     //
-    //aglDestroyContext( aglContext );
+    aglDestroyContext( aglContext );
 
     // close the gl extension context
     //
@@ -172,21 +170,21 @@ void RenderingContext::swap()
 {
     // swap the rendering buffer
     //
-    //aglSwapBuffers( aglContext );    
+    aglSwapBuffers( aglContext );    
 }
 
 void RenderingContext::makeContextCurrent()
 {
     // make the current context the one we have stored
     //
-    //aglSetCurrentContext( aglContext );
+    aglSetCurrentContext( aglContext );
 }
 
 void RenderingContext::releaseContext()
 {
     // release the context
     //
-   // aglSetCurrentContext( NULL );
+    aglSetCurrentContext( NULL );
 }
 
 RenderingContext::~RenderingContext()
