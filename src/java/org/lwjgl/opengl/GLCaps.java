@@ -37,8 +37,8 @@ import org.lwjgl.Sys;
 import java.lang.reflect.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * $Id$
@@ -165,7 +165,7 @@ public abstract class GLCaps {
 		System.loadLibrary(Sys.getLibraryName());
 	}
 
-	private static void setExtensionFields(HashSet exts, HashMap field_map) {
+	private static void setExtensionFields(Set exts, HashMap field_map) {
 		Sys.log("Available extensions:");
 		Iterator it = exts.iterator();
 		while ( it.hasNext() ) {
@@ -186,9 +186,13 @@ public abstract class GLCaps {
 
 	/**
 	 * Determine which extensions are available. Use this to initialize capability fields. Can only be
-	 * called _after_ a GLWindow or Pbuffer has been created.
+	 * called _after_ a GLWindow or Pbuffer has been created (or a context from some other GL library).
+	 * Using LWJGL, this method is called automatically for you when the LWJGL Window is created and there
+	 * is no need to call it yourself.
+	 * 
+	 * @param exts A Set of OpenGL extension string names
 	 */
-	static void determineAvailableExtensions(HashSet exts) {
+	public static void determineAvailableExtensions(Set exts) {
 		// Grab all the public static booleans out of this class
 		Field[] fields = GLCaps.class.getDeclaredFields();
 		HashMap map = new HashMap(fields.length);

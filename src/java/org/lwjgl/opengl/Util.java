@@ -41,7 +41,9 @@ import java.nio.*;
  */
 
 abstract class Util {
-	private final static IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
+	
+	final static IntBuffer int_buffer = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder()).asIntBuffer();
+
 	/**
 	 * A helper function which is used to get the byte offset in an arbitrary buffer
 	 * based on its position
@@ -62,4 +64,22 @@ abstract class Util {
 		GL11.glGetInteger(gl_enum, int_buffer);
 		return int_buffer.get(0);
 	}
+	
+	/**
+	 * Handy mutable integer value class
+	 */
+	static final class IntValue {
+		int value;
+		IntValue(int value) {
+			this.value = value;
+		}
+		public boolean equals(Object obj) {
+			return ((IntValue) obj).value == value;
+		}
+		public int hashCode() {
+			return value;
+		}
+	}
+	
+	
 }

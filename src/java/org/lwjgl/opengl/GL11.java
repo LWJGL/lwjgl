@@ -38,6 +38,8 @@ import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.Buffer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * $Id$
@@ -718,6 +720,222 @@ public abstract class GL11 {
 	public static final int GL_LOGIC_OP = GL_INDEX_LOGIC_OP;
 	public static final int GL_TEXTURE_COMPONENTS = GL_TEXTURE_INTERNAL_FORMAT;
 	
+	/*
+	 * Register buffer checking maps
+	 */
+	static {
+		// For glGetPixelMap
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_S_TO_S, GL_PIXEL_MAP_S_TO_S_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_I_TO_R, GL_PIXEL_MAP_I_TO_R_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_I_TO_G, GL_PIXEL_MAP_I_TO_G_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_I_TO_G, GL_PIXEL_MAP_I_TO_B_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_I_TO_A, GL_PIXEL_MAP_I_TO_A_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_R_TO_R, GL_PIXEL_MAP_R_TO_R_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_G_TO_G, GL_PIXEL_MAP_G_TO_G_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_B_TO_B, GL_PIXEL_MAP_B_TO_B_SIZE);
+		BufferChecks.putPixelMap(GL_PIXEL_MAP_B_TO_B, GL_PIXEL_MAP_A_TO_A_SIZE);
+	
+		// For glGetIntegerv/glGetFloatv/glGetBooleanv/glGetDoublev
+		BufferChecks.putGetMap(GL_ACCUM_ALPHA_BITS, 1);
+		BufferChecks.putGetMap(GL_ACCUM_BLUE_BITS, 1);
+		BufferChecks.putGetMap(GL_ACCUM_CLEAR_VALUE, 4);
+		BufferChecks.putGetMap(GL_ACCUM_GREEN_BITS, 1);
+		BufferChecks.putGetMap(GL_ACCUM_RED_BITS, 1);
+		BufferChecks.putGetMap(GL_ALPHA_BIAS, 1);
+		BufferChecks.putGetMap(GL_ALPHA_BITS, 1);
+		BufferChecks.putGetMap(GL_ALPHA_SCALE, 1);
+		BufferChecks.putGetMap(GL_ALPHA_TEST, 1);
+		BufferChecks.putGetMap(GL_ALPHA_TEST_FUNC, 1);
+		BufferChecks.putGetMap(GL_ALPHA_TEST_REF, 1);
+		BufferChecks.putGetMap(GL_ATTRIB_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_AUTO_NORMAL, 1);
+		BufferChecks.putGetMap(GL_AUX_BUFFERS, 1);
+		BufferChecks.putGetMap(GL_BLEND, 1);
+		BufferChecks.putGetMap(GL_BLEND_DST, 1);
+		BufferChecks.putGetMap(GL_BLEND_SRC, 1);
+		BufferChecks.putGetMap(GL_BLUE_BIAS, 1);
+		BufferChecks.putGetMap(GL_BLUE_BITS, 1);
+		BufferChecks.putGetMap(GL_BLUE_SCALE, 1);
+		BufferChecks.putGetMap(GL_CLIP_PLANE0, 1);
+		BufferChecks.putGetMap(GL_CLIP_PLANE1, 1);
+		BufferChecks.putGetMap(GL_CLIP_PLANE2, 1);
+		BufferChecks.putGetMap(GL_CLIP_PLANE3, 1);
+		BufferChecks.putGetMap(GL_CLIP_PLANE4, 1);
+		BufferChecks.putGetMap(GL_CLIP_PLANE5, 1);
+		BufferChecks.putGetMap(GL_COLOR_CLEAR_VALUE, 4);
+		BufferChecks.putGetMap(GL_COLOR_MATERIAL, 1);
+		BufferChecks.putGetMap(GL_COLOR_MATERIAL_FACE, 1);
+		BufferChecks.putGetMap(GL_COLOR_MATERIAL_PARAMETER, 1);
+		BufferChecks.putGetMap(GL_COLOR_WRITEMASK, 4);
+		BufferChecks.putGetMap(GL_CULL_FACE, 1);
+		BufferChecks.putGetMap(GL_CULL_FACE_MODE, 1);
+		BufferChecks.putGetMap(GL_CURRENT_COLOR, 4);
+		BufferChecks.putGetMap(GL_CURRENT_INDEX, 1);
+		BufferChecks.putGetMap(GL_CURRENT_NORMAL, 3);
+		BufferChecks.putGetMap(GL_CURRENT_RASTER_COLOR, 4);
+		BufferChecks.putGetMap(GL_CURRENT_RASTER_INDEX, 1);
+		BufferChecks.putGetMap(GL_CURRENT_RASTER_POSITION, 4);
+		BufferChecks.putGetMap(GL_CURRENT_RASTER_TEXTURE_COORDS, 4);
+		BufferChecks.putGetMap(GL_CURRENT_RASTER_POSITION_VALID, 1);
+		BufferChecks.putGetMap(GL_CURRENT_TEXTURE_COORDS, 4);
+		BufferChecks.putGetMap(GL_DEPTH_BITS, 1);
+		BufferChecks.putGetMap(GL_DEPTH_CLEAR_VALUE, 1);
+		BufferChecks.putGetMap(GL_DEPTH_FUNC, 1);
+		BufferChecks.putGetMap(GL_DEPTH_RANGE, 2);
+		BufferChecks.putGetMap(GL_DEPTH_WRITEMASK, 1);
+		BufferChecks.putGetMap(GL_DOUBLEBUFFER, 1);
+		BufferChecks.putGetMap(GL_DRAW_BUFFER, 1);
+		BufferChecks.putGetMap(GL_EDGE_FLAG, 1);
+		BufferChecks.putGetMap(GL_FOG, 1);
+		BufferChecks.putGetMap(GL_FOG_COLOR, 4);
+		BufferChecks.putGetMap(GL_FOG_DENSITY, 1);
+		BufferChecks.putGetMap(GL_FOG_END, 1);
+		BufferChecks.putGetMap(GL_FOG_HINT, 1);
+		BufferChecks.putGetMap(GL_FOG_INDEX, 1);
+		BufferChecks.putGetMap(GL_FOG_MODE, 1);
+		BufferChecks.putGetMap(GL_FOG_START, 1);
+		BufferChecks.putGetMap(GL_FRONT_FACE, 1);
+		BufferChecks.putGetMap(GL_GREEN_BIAS, 1);
+		BufferChecks.putGetMap(GL_GREEN_BITS, 1);
+		BufferChecks.putGetMap(GL_GREEN_SCALE, 1);
+		BufferChecks.putGetMap(GL_INDEX_BITS, 1);
+		BufferChecks.putGetMap(GL_INDEX_CLEAR_VALUE, 1);
+		BufferChecks.putGetMap(GL_INDEX_MODE, 1);
+		BufferChecks.putGetMap(GL_INDEX_OFFSET, 1);
+		BufferChecks.putGetMap(GL_INDEX_SHIFT, 1);
+		BufferChecks.putGetMap(GL_INDEX_WRITEMASK, 1);
+		BufferChecks.putGetMap(GL_LIGHT0, 1);
+		BufferChecks.putGetMap(GL_LIGHT1, 1);
+		BufferChecks.putGetMap(GL_LIGHT2, 1);
+		BufferChecks.putGetMap(GL_LIGHT3, 1);
+		BufferChecks.putGetMap(GL_LIGHT4, 1);
+		BufferChecks.putGetMap(GL_LIGHT5, 1);
+		BufferChecks.putGetMap(GL_LIGHT6, 1);
+		BufferChecks.putGetMap(GL_LIGHT7, 1);
+		BufferChecks.putGetMap(GL_LIGHTING, 1);
+		BufferChecks.putGetMap(GL_LIGHT_MODEL_AMBIENT, 4);
+		BufferChecks.putGetMap(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
+		BufferChecks.putGetMap(GL_LIGHT_MODEL_TWO_SIDE, 1);
+		BufferChecks.putGetMap(GL_LINE_SMOOTH, 1);
+		BufferChecks.putGetMap(GL_LINE_STIPPLE, 1);
+		BufferChecks.putGetMap(GL_LINE_STIPPLE_PATTERN, 1);
+		BufferChecks.putGetMap(GL_LINE_STIPPLE_REPEAT, 1);
+		BufferChecks.putGetMap(GL_LINE_WIDTH, 1);
+		BufferChecks.putGetMap(GL_LINE_WIDTH_GRANULARITY, 1);
+		BufferChecks.putGetMap(GL_LINE_WIDTH_RANGE, 2);
+		BufferChecks.putGetMap(GL_LIST_BASE, 1);
+		BufferChecks.putGetMap(GL_LIST_INDEX, 1);
+		BufferChecks.putGetMap(GL_LIST_MODE, 1);
+		BufferChecks.putGetMap(GL_LOGIC_OP, 1);
+		BufferChecks.putGetMap(GL_LOGIC_OP_MODE, 1);
+		BufferChecks.putGetMap(GL_MAP1_COLOR_4, 1);
+		BufferChecks.putGetMap(GL_MAP1_GRID_DOMAIN, 2);
+		BufferChecks.putGetMap(GL_MAP1_GRID_SEGMENTS, 1);
+		BufferChecks.putGetMap(GL_MAP1_INDEX, 1);
+		BufferChecks.putGetMap(GL_MAP1_NORMAL, 1);
+		BufferChecks.putGetMap(GL_MAP1_TEXTURE_COORD_1, 1);
+		BufferChecks.putGetMap(GL_MAP1_TEXTURE_COORD_2, 1);
+		BufferChecks.putGetMap(GL_MAP1_TEXTURE_COORD_3, 1);
+		BufferChecks.putGetMap(GL_MAP1_TEXTURE_COORD_4, 1);
+		BufferChecks.putGetMap(GL_MAP1_VERTEX_3, 1);
+		BufferChecks.putGetMap(GL_MAP1_VERTEX_4, 1);
+		BufferChecks.putGetMap(GL_MAP2_COLOR_4, 1);
+		BufferChecks.putGetMap(GL_MAP2_GRID_DOMAIN, 4);
+		BufferChecks.putGetMap(GL_MAP2_GRID_SEGMENTS, 2);
+		BufferChecks.putGetMap(GL_MAP2_INDEX, 1);
+		BufferChecks.putGetMap(GL_MAP2_NORMAL, 1);
+		BufferChecks.putGetMap(GL_MAP2_TEXTURE_COORD_1, 1);
+		BufferChecks.putGetMap(GL_MAP2_TEXTURE_COORD_2, 1);
+		BufferChecks.putGetMap(GL_MAP2_TEXTURE_COORD_3, 1);
+		BufferChecks.putGetMap(GL_MAP2_TEXTURE_COORD_4, 1);
+		BufferChecks.putGetMap(GL_MAP2_VERTEX_3, 1);
+		BufferChecks.putGetMap(GL_MAP2_VERTEX_4, 1);
+		BufferChecks.putGetMap(GL_MAP_COLOR, 1);
+		BufferChecks.putGetMap(GL_MAP_STENCIL, 1);
+		BufferChecks.putGetMap(GL_MATRIX_MODE, 1);
+		BufferChecks.putGetMap(GL_MAX_ATTRIB_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_MAX_CLIENT_ATTRIB_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_MAX_CLIP_PLANES, 1);
+		BufferChecks.putGetMap(GL_MAX_EVAL_ORDER, 1);
+		BufferChecks.putGetMap(GL_MAX_LIGHTS, 1);
+		BufferChecks.putGetMap(GL_MAX_LIST_NESTING, 1);
+		BufferChecks.putGetMap(GL_MAX_MODELVIEW_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_MAX_NAME_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_MAX_PIXEL_MAP_TABLE, 1);
+		BufferChecks.putGetMap(GL_MAX_PROJECTION_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_MAX_TEXTURE_SIZE, 1);
+		BufferChecks.putGetMap(GL_MAX_TEXTURE_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_MAX_VIEWPORT_DIMS, 2);
+		BufferChecks.putGetMap(GL_MODELVIEW_MATRIX, 16);
+		BufferChecks.putGetMap(GL_MODELVIEW_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_NAME_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_NORMALIZE, 1);
+		BufferChecks.putGetMap(GL_PACK_ALIGNMENT, 1);
+		BufferChecks.putGetMap(GL_PACK_LSB_FIRST, 1);
+		BufferChecks.putGetMap(GL_PACK_ROW_LENGTH, 1);
+		BufferChecks.putGetMap(GL_PACK_SKIP_PIXELS, 1);
+		BufferChecks.putGetMap(GL_PACK_SKIP_ROWS, 1);
+		BufferChecks.putGetMap(GL_PACK_SWAP_BYTES, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_A_TO_A_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_B_TO_B_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_G_TO_G_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_I_TO_A_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_I_TO_B_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_I_TO_G_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_I_TO_I_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_I_TO_R_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_R_TO_R_SIZE, 1);
+		BufferChecks.putGetMap(GL_PIXEL_MAP_S_TO_S_SIZE, 1);
+		BufferChecks.putGetMap(GL_POINT_SIZE, 1);
+		BufferChecks.putGetMap(GL_POINT_SIZE_GRANULARITY, 1);
+		BufferChecks.putGetMap(GL_POINT_SIZE_RANGE, 2);
+		BufferChecks.putGetMap(GL_POINT_SMOOTH, 1);
+		BufferChecks.putGetMap(GL_POLYGON_MODE, 2);
+		BufferChecks.putGetMap(GL_POLYGON_SMOOTH, 1);
+		BufferChecks.putGetMap(GL_POLYGON_STIPPLE, 1);
+		BufferChecks.putGetMap(GL_PROJECTION_MATRIX, 16);
+		BufferChecks.putGetMap(GL_PROJECTION_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_READ_BUFFER, 1);
+		BufferChecks.putGetMap(GL_RED_BIAS, 1);
+		BufferChecks.putGetMap(GL_RED_BITS, 1);
+		BufferChecks.putGetMap(GL_RED_SCALE, 1);
+		BufferChecks.putGetMap(GL_RENDER_MODE, 1);
+		BufferChecks.putGetMap(GL_RGBA_MODE, 1);
+		BufferChecks.putGetMap(GL_SCISSOR_BOX, 4);
+		BufferChecks.putGetMap(GL_SCISSOR_TEST, 1);
+		BufferChecks.putGetMap(GL_SHADE_MODEL, 1);
+		BufferChecks.putGetMap(GL_STENCIL_BITS, 1);
+		BufferChecks.putGetMap(GL_STENCIL_CLEAR_VALUE, 1);
+		BufferChecks.putGetMap(GL_STENCIL_FAIL, 1);
+		BufferChecks.putGetMap(GL_STENCIL_FUNC, 1);
+		BufferChecks.putGetMap(GL_STENCIL_PASS_DEPTH_FAIL, 1);
+		BufferChecks.putGetMap(GL_STENCIL_PASS_DEPTH_PASS, 1);
+		BufferChecks.putGetMap(GL_STENCIL_REF, 1);
+		BufferChecks.putGetMap(GL_STENCIL_TEST, 1);
+		BufferChecks.putGetMap(GL_STENCIL_VALUE_MASK, 1);
+		BufferChecks.putGetMap(GL_STENCIL_WRITEMASK, 1);
+		BufferChecks.putGetMap(GL_STEREO, 1);
+		BufferChecks.putGetMap(GL_SUBPIXEL_BITS, 1);
+		BufferChecks.putGetMap(GL_TEXTURE_1D, 1);
+		BufferChecks.putGetMap(GL_TEXTURE_2D, 1);
+		BufferChecks.putGetMap(GL_TEXTURE_GEN_S, 1);
+		BufferChecks.putGetMap(GL_TEXTURE_GEN_T, 1);
+		BufferChecks.putGetMap(GL_TEXTURE_GEN_R, 1);
+		BufferChecks.putGetMap(GL_TEXTURE_GEN_Q, 1);
+		BufferChecks.putGetMap(GL_TEXTURE_MATRIX, 16);
+		BufferChecks.putGetMap(GL_TEXTURE_STACK_DEPTH, 1);
+		BufferChecks.putGetMap(GL_UNPACK_ALIGNMENT, 1);
+		BufferChecks.putGetMap(GL_UNPACK_LSB_FIRST, 1);
+		BufferChecks.putGetMap(GL_UNPACK_ROW_LENGTH, 1);
+		BufferChecks.putGetMap(GL_UNPACK_SKIP_PIXELS, 1);
+		BufferChecks.putGetMap(GL_UNPACK_SKIP_ROWS, 1);
+		BufferChecks.putGetMap(GL_UNPACK_SWAP_BYTES, 1);
+		BufferChecks.putGetMap(GL_VIEWPORT, 4);
+		BufferChecks.putGetMap(GL_ZOOM_X, 1);
+		BufferChecks.putGetMap(GL_ZOOM_Y, 1);
+		
+	}
+	
 	public static native void glAccum(int op, float value);
 	public static native void glAlphaFunc(int func, float ref);
 	public static native void glClearColor(float red, float green, float blue, float alpha);
@@ -736,6 +954,7 @@ public abstract class GL11 {
 	public static native void glCallList(int list);
 	public static native void glBlendFunc(int sfactor, int dfactor);
 	public static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap) {
+		// TODO: check buffer size valid
 		nglBitmap(width, height, xorig, yorig, xmove, ymove, bitmap, bitmap.position());
 	}
 	private static native void nglBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap, int bitmap_offset);
@@ -755,17 +974,18 @@ public abstract class GL11 {
 	public static native void glCopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height, int border);
 	public static native void glCopyTexImage1D(int target, int level, int internalFormat, int x, int y, int width, int border);
 	public static native void glCopyPixels(int x, int y, int width, int height, int type);
+	
 	public static void glColorPointer(int size, boolean unsigned, int stride, ByteBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glColorPointer(int size, int stride, FloatBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglColorPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglColorPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glColorPointer(int size, int type, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglColorPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglColorPointerVBO(int size, int type, int stride, int buffer_offset);
@@ -778,6 +998,9 @@ public abstract class GL11 {
 	public static native void glColor4f(float red, float green, float blue, float alpha);
 	public static native void glColor4ub(byte red, byte green, byte blue, byte alpha);
 	public static void glClipPlane(int plane, DoubleBuffer equation) {
+		if (equation.remaining() < 4) {
+			throw new BufferUnderflowException();
+		}
 		nglClipPlane(plane, equation, equation.position() << 3);
 	}
 	private static native void nglClipPlane(int plane, DoubleBuffer equation, int equation_offset);
@@ -794,41 +1017,44 @@ public abstract class GL11 {
 	public static native void glEnable(int cap);
 	public static native void glDisable(int cap);
 	public static void glEdgeFlagPointer(int stride, ByteBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglEdgeFlagPointer(stride, pointer, pointer.position());
 	}
 	private static native void nglEdgeFlagPointer(int stride, Buffer pointer, int pointer_offset);
 	public static void glEdgeFlagPointer(int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglEdgeFlagPointerVBO(stride, buffer_offset);
 	}
 	private static native void nglEdgeFlagPointerVBO(int stride, int buffer_offset);
 	public static native void glEdgeFlag(boolean flag);
 	public static void glDrawPixels(int width, int height, int format, int type, ByteBuffer pixels) {
+		// TODO: check buffer size valid
 		nglDrawPixels(width, height, format, type, pixels, pixels.position());
 	}
 	public static void glDrawPixels(int width, int height, int format, int type, ShortBuffer pixels) {
+		// TODO: check buffer size valid
 		nglDrawPixels(width, height, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glDrawPixels(int width, int height, int format, int type, IntBuffer pixels) {
+		// TODO: check buffer size valid
 		nglDrawPixels(width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglDrawPixels(int width, int height, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glDrawElements(int mode, ByteBuffer indices) {
-		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
 	}
 	public static void glDrawElements(int mode, ShortBuffer indices) {
-		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
 	public static void glDrawElements(int mode, IntBuffer indices) {
-		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
 	private static native void nglDrawElements(int mode, int count, int type, Buffer indices, int indices_offset);
 	public static void glDrawElements(int mode, int count, int type, int buffer_offset) {
-		assert VBOTracker.getVBOElementStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglDrawElementsVBO(mode, count, type, buffer_offset);
 	}
 	private static native void nglDrawElementsVBO(int mode, int count, int type, int buffer_offset);
@@ -841,60 +1067,77 @@ public abstract class GL11 {
 		nglFeedbackBuffer(buffer.remaining(), type, buffer, buffer.position());
 	}
 	private static native void nglFeedbackBuffer(int size, int type, FloatBuffer buffer, int buffer_offset);
+	
 	public static void glGetPixelMap(int map, FloatBuffer values) {
+		BufferChecks.checkPixelMapBuffer(map, values);
 		nglGetPixelMapfv(map, values, values.position());
 	}
 	private static native void nglGetPixelMapfv(int map, FloatBuffer values, int values_offset);
 	public static void glGetPixelMap(int map, IntBuffer values) {
+		BufferChecks.checkPixelMapBuffer(map, values);
 		nglGetPixelMapuiv(map, values, values.position());
 	}
 	private static native void nglGetPixelMapuiv(int map, IntBuffer values, int values_offset);
 	public static void glGetPixelMap(int map, ShortBuffer values) {
+		BufferChecks.checkPixelMapBuffer(map, values);
 		nglGetPixelMapusv(map, values, values.position());
 	}
 	private static native void nglGetPixelMapusv(int map, ShortBuffer values, int values_offset);
 	public static void glGetMaterial(int face, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglGetMaterialfv(face, pname, params, params.position());
 	}
 	private static native void nglGetMaterialfv(int face, int pname, FloatBuffer params, int params_offset);
 	public static void glGetMaterial(int face, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglGetMaterialiv(face, pname, params, params.position());
 	}
 	private static native void nglGetMaterialiv(int face, int pname, IntBuffer params, int params_offset);
 	public static void glGetMap(int target, int query, FloatBuffer v) {
+		// TODO: check buffer size valid
 		nglGetMapfv(target, query, v, v.position());
 	}
 	public static void glGetMap(int target, int query, IntBuffer v) {
+		// TODO: check buffer size valid
 		nglGetMapiv(target, query, v, v.position());
 	}
 	private static native void nglGetMapfv(int target, int query, FloatBuffer v, int v_offset);
 	private static native void nglGetMapiv(int target, int query, IntBuffer v, int v_offset);
 	public static void glGetLight(int light, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglGetLightfv(light, pname, params, params.position());
 	}
 	private static native void nglGetLightfv(int light, int pname, FloatBuffer params, int params_offset);
 	public static void glGetLight(int light, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglGetLightiv(light, pname, params, params.position());
 	}
 	private static native void nglGetLightiv(int light, int pname, IntBuffer params, int params_offset);
 	public static native int glGetError();
 	public static void glGetClipPlane(int plane, DoubleBuffer equation) {
+		if (equation.remaining() < 4) {
+			throw new BufferUnderflowException();
+		}
 		nglGetClipPlane(plane, equation, equation.position());
 	}
 	private static native void nglGetClipPlane(int plane, DoubleBuffer equation, int equation_offset);
 	public static void glGetBoolean(int pname, ByteBuffer params) {
+		BufferChecks.checkGetBuffer(pname, params);
 		nglGetBooleanv(pname, params, params.position());
 	}
 	private static native void nglGetBooleanv(int pname, ByteBuffer params, int params_offset);
 	public static void glGetDouble(int pname, DoubleBuffer params) {
+		BufferChecks.checkGetBuffer(pname, params);
 		nglGetDoublev(pname, params, params.position());
 	}
 	private static native void nglGetDoublev(int pname, DoubleBuffer params, int params_offset);
 	public static void glGetFloat(int pname, FloatBuffer params) {
+		BufferChecks.checkGetBuffer(pname, params);
 		nglGetFloatv(pname, params, params.position());
 	}
 	private static native void nglGetFloatv(int pname, FloatBuffer params, int params_offset);
 	public static void glGetInteger(int pname, IntBuffer params) {
+		BufferChecks.checkGetBuffer(pname, params);
 		nglGetIntegerv(pname, params, params.position());
 	}
 	private static native void nglGetIntegerv(int pname, IntBuffer params, int params_offset);
@@ -908,10 +1151,12 @@ public abstract class GL11 {
 	public static native void glFogf(int pname, float param);
 	public static native void glFogi(int pname, int param);
 	public static void glFog(int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglFogfv(pname, params, params.position());
 	}
 	private static native void nglFogfv(int pname, FloatBuffer params, int params_offset);
 	public static void glFog(int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglFogiv(pname, params, params.position());
 	}
 	private static native void nglFogiv(int pname, IntBuffer params, int params_offset);
@@ -927,72 +1172,84 @@ public abstract class GL11 {
 	public static native ByteBuffer glGetPointerv(int pname, int size);
 	public static native boolean glIsEnabled(int cap);
 	public static void glInterleavedArrays(int format, int stride, ByteBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position());
 	}
 	public static void glInterleavedArrays(int format, int stride, ShortBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 1);
 	}
 	public static void glInterleavedArrays(int format, int stride, IntBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	public static void glInterleavedArrays(int format, int stride, FloatBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglInterleavedArrays(int format, int stride, Buffer pointer, int pointer_offset);
 	public static void glInterleavedArrays(int format, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglInterleavedArraysVBO(format, stride, buffer_offset);
 	}
 	private static native void nglInterleavedArraysVBO(int format, int stride, int buffer_offset);
 	public static native void glInitNames();
 	public static native void glHint(int target, int mode);
 	public static void glGetTexParameter(int target, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglGetTexParameterfv(target, pname, params, params.position());
 	}
 	private static native void nglGetTexParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 	public static void glGetTexParameter(int target, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglGetTexParameteriv(target, pname, params, params.position());
 	}
 	private static native void nglGetTexParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glGetTexLevelParameter(int target, int level, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglGetTexLevelParameterfv(target, level, pname, params, params.position());
 	}
 	private static native void nglGetTexLevelParameterfv(int target, int level, int pname, FloatBuffer params, int params_offset);
 	public static void glGetTexLevelParameter(int target, int level, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglGetTexLevelParameteriv(target, level, pname, params, params.position());
 	}
 	private static native void nglGetTexLevelParameteriv(int target, int level, int pname, IntBuffer params, int params_offset);
 	public static void glGetTexImage(int target, int level, int format, int type, ByteBuffer pixels) {
+		// TODO: check buffer size valid
 		nglGetTexImage(target, level, format, type, pixels, pixels.position());
 	}
 	public static void glGetTexImage(int target, int level, int format, int type, ShortBuffer pixels) {
+		// TODO: check buffer size valid
 		nglGetTexImage(target, level, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glGetTexImage(int target, int level, int format, int type, IntBuffer pixels) {
+		// TODO: check buffer size valid
 		nglGetTexImage(target, level, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglGetTexImage(int target, int level, int format, int type, Buffer pixels, int pixels_offset);
 	
 	public static void glGetTexGen(int coord, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglGetTexGenfv(coord, pname, params, params.position());
 	}
 	private static native void nglGetTexGenfv(int coord, int pname, FloatBuffer params, int params_offset);
 
 	public static void glGetTexEnv(int coord, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglGetTexEnviv(coord, pname, params, params.position());
 	}
 	private static native void nglGetTexEnviv(int coord, int pname, IntBuffer params, int params_offset);
 	public static void glGetTexEnv(int coord, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglGetTexEnvfv(coord, pname, params, params.position());
 	}
 	private static native void nglGetTexEnvfv(int coord, int pname, FloatBuffer params, int params_offset);
 
 	public static native String glGetString(int name);
 	public static void glGetPolygonStipple(ByteBuffer mask) {
+		// TODO: check buffer size valid. This is a bit more fiddly than you might think;
+		// it looks like a 32x32 byte array but it might not be according to the spec :/
 		nglGetPolygonStipple(mask, mask.position());
 	}
 	private static native void nglGetPolygonStipple(ByteBuffer mask, int mask_offset);
@@ -1000,26 +1257,33 @@ public abstract class GL11 {
 	public static native void glMaterialf(int face, int pname, float param);
 	public static native void glMateriali(int face, int pname, int param);
 	public static void glMaterial(int face, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglMaterialfv(face, pname, params, params.position());
 	}
 	private static native void nglMaterialfv(int face, int pname, FloatBuffer params, int params_offset);
 	public static void glMaterial(int face, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglMaterialiv(face, pname, params, params.position());
 	}
 	private static native void nglMaterialiv(int face, int pname, IntBuffer params, int params_offset);
 	public static native void glMapGrid1f(int un, float u1, float u2);
 	public static native void glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
 	public static void glMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points) {
+		// TODO: check buffer size valid
 		nglMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points, points.position());
 	}
 	private static native void nglMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points, int points_offset);
 	public static void glMap1f(int target, float u1, float u2, int stride, int order, FloatBuffer points) {
+		// TODO: check buffer size valid
 		nglMap1f(target, u1, u2, stride, order, points, points.position());
 	}
 	private static native void nglMap1f(int target, float u1, float u2, int stride, int order, FloatBuffer points, int points_offset);
 	public static native void glLogicOp(int opcode);
 	public static native void glLoadName(int name);
 	public static void glLoadMatrix(FloatBuffer m) {
+		if (m.remaining() < 16) {
+			throw new BufferUnderflowException();
+		}
 		nglLoadMatrixf(m, m.position());
 	}
 	private static native void nglLoadMatrixf(FloatBuffer m, int m_offset);
@@ -1030,26 +1294,31 @@ public abstract class GL11 {
 	public static native void glLightModelf(int pname, float param);
 	public static native void glLightModeli(int pname, int param);
 	public static void glLightModel(int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglLightModelfv( pname, params, params.position());
 	}
 	private static native void nglLightModelfv(int pname, FloatBuffer params, int params_offset);
 	public static void glLightModel(int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglLightModeliv(pname, params, params.position());
 	}
 	private static native void nglLightModeliv(int pname, IntBuffer params, int params_offset);
 	public static native void glLightf(int light, int pname, float param);
 	public static native void glLighti(int light, int pname, int param);
 	public static void glLightfv(int light, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglLightfv(light, pname, params, params.position());
 	}
 	private static native void nglLightfv(int light, int pname, FloatBuffer params, int params_offset);
 	public static void glLightiv(int light, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglLightiv(light, pname, params, params.position());
 	}
 	private static native void nglLightiv(int light, int pname, IntBuffer params, int params_offset);
 	public static native boolean glIsTexture(int texture);
 	public static native void glMatrixMode(int mode);
 	public static void glPolygonStipple(ByteBuffer mask) {
+		// TODO: check buffer size valid (again, possibly more complicated than it first appears)
 		nglPolygonStipple(mask, mask.position());
 	}
 	private static native void nglPolygonStipple(ByteBuffer mask, int mask_offset);
@@ -1062,34 +1331,37 @@ public abstract class GL11 {
 	public static native void glPixelStoref(int pname, float param);
 	public static native void glPixelStorei(int pname, int param);
 	public static void glPixelMap(int map, FloatBuffer values) {
+		// TODO: check buffer size valid
 		nglPixelMapfv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapfv(int map, int mapsize, FloatBuffer values, int values_offset);
 	public static void glPixelMap(int map, IntBuffer values) {
+		// TODO: check buffer size valid
 		nglPixelMapuiv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapuiv(int map, int mapsize, IntBuffer values, int values_offset);
 	public static void glPixelMap(int map, ShortBuffer values) {
+		// TODO: check buffer size valid
 		nglPixelMapusv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapusv(int map, int mapsize, ShortBuffer values, int values_offset);
 	public static native void glPassThrough(float token);
 	public static native void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar);
 	public static void glNormalPointer(int stride, ByteBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglNormalPointer(GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glNormalPointer(int stride, IntBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglNormalPointer(GL_INT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glNormalPointer(int stride, FloatBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglNormalPointer(GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglNormalPointer(int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glNormalPointer(int type, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglNormalPointerVBO(type, stride, buffer_offset);
 	}
 	private static native void nglNormalPointerVBO(int type, int stride, int buffer_offset);
@@ -1099,6 +1371,9 @@ public abstract class GL11 {
 	public static native void glNewList(int list, int mode);
 	public static native void glEndList();
 	public static void glMultMatrixf(FloatBuffer m) {
+		if (m.remaining() < 16) {
+			throw new BufferUnderflowException();
+		}
 		nglMultMatrixf(m, m.position());
 	}
 	private static native void nglMultMatrixf(FloatBuffer m, int m_offset);
@@ -1114,12 +1389,15 @@ public abstract class GL11 {
 	public static native void glRectf(float x1, float y1, float x2, float y2);
 	public static native void glRecti(int x1, int y1, int x2, int y2);
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer pixels) {
+		// TODO: check buffer size valid
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position());
 	}
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, ShortBuffer pixels) {
+		// TODO: check buffer size valid
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, IntBuffer pixels) {
+		// TODO: check buffer size valid
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglReadPixels(int x, int y, int width, int height, int format, int type, Buffer pixels, int pixels_offset);
@@ -1156,16 +1434,16 @@ public abstract class GL11 {
 	public static native void glPopAttrib();
 	public static native void glStencilFunc(int func, int ref, int mask);
 	public static void glVertexPointer(int size, int stride, FloatBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglVertexPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glVertexPointer(int size, int stride, IntBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglVertexPointer(size, GL_INT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglVertexPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glVertexPointer(int size, int type, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglVertexPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglVertexPointerVBO(int size, int type, int stride, int buffer_offset);
@@ -1177,88 +1455,108 @@ public abstract class GL11 {
 	public static native void glVertex4i(int x, int y, int z, int w);
 	public static native void glTranslatef(float x, float y, float z);
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ByteBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position());
 	}
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ShortBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, IntBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ByteBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position());
 	}
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ShortBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, IntBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels, int pixels_offset);
 	public static native void glTexParameterf(int target, int pname, float param);
 	public static native void glTexParameteri(int target, int pname, int param);
 	public static void glTexParameter(int target, int pname, FloatBuffer param) {
+		// TODO: check buffer size valid
 		nglTexParameterfv(target, pname, param, param.position());
 	}
 	private static native void nglTexParameterfv(int target, int pname, FloatBuffer param, int param_position);
 	public static void glTexParameter(int target, int pname, IntBuffer param) {
+		// TODO: check buffer size valid
 		nglTexParameteriv(target, pname, param, param.position());
 	}
 	private static native void nglTexParameteriv(int target, int pname, IntBuffer param, int param_position);
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ByteBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position());
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, IntBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, FloatBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ByteBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position());
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ShortBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, IntBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, FloatBuffer pixels) {
+		// TODO: check buffer size valid
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, Buffer pixels, int pixels_offset);
 	public static native void glTexGenf(int coord, int pname, float param);
 	public static void glTexGen(int coord, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglTexGenfv(coord, pname, params, params.position());
 	}
 	private static native void nglTexGenfv(int coord, int pname, FloatBuffer params, int params_offset);
 	public static native void glTexGeni(int coord, int pname, int param);
 	public static void glTexGen(int coord, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglTexGeniv(coord, pname, params, params.position());
 	}
 	private static native void nglTexGeniv(int coord, int pname, IntBuffer params, int params_offset);
 	public static native void glTexEnvf(int target, int pname, float param);
 	public static native void glTexEnvi(int target, int pname, int param);
 	public static void glTexEnv(int target, int pname, FloatBuffer params) {
+		// TODO: check buffer size valid
 		nglTexEnvfv(target, pname, params, params.position());
 	}
 	private static native void nglTexEnvfv(int target, int pname, FloatBuffer params, int params_offset);
 	public static void glTexEnv(int target, int pname, IntBuffer params) {
+		// TODO: check buffer size valid
 		nglTexEnviv(target, pname, params, params.position());
 	}
 	private static native void nglTexEnviv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glTexCoordPointer(int size, int stride, FloatBuffer pointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglTexCoordPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglTexCoordPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
 	public static void glTexCoordPointer(int size, int type, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglTexCoordPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglTexCoordPointerVBO(int size, int type, int stride, int buffer_offset);

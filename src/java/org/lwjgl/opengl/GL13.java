@@ -148,90 +148,117 @@ public abstract class GL13 extends GL12 {
 	public static native void glActiveTexture(int texture);
 	public static native void glClientActiveTexture(int texture);
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position());
 	}
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position() << 1);
 	}
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, IntBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position() << 2);
 	}
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, FloatBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data, data.position() << 2);
 	}
 	private static native void nglCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, Buffer data, int data_offset);
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position());
 	}
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position() << 1);
 	}
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, IntBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position() << 2);
 	}
 	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, FloatBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data, data.position() << 2);
 	}
 	private static native void nglCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer data, int data_offset);
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position());
 	}
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position() << 1);
 	}
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, IntBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position() << 2);
 	}
 	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, FloatBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data, data.position() << 2);
 	}
 	private static native void nglCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, Buffer data, int data_offset);
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, ByteBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position());
 	}
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, ShortBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position() << 1);
 	}
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, IntBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position() << 2);
 	}
 	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, FloatBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data, data.position() << 2);
 	}
 	private static native void nglCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, Buffer data, int data_offset);
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ByteBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position());
 	}
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ShortBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position() << 1);
 	}
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, IntBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position() << 2);
 	}
 	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, FloatBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data, data.position() << 2);
 	}
 	private static native void nglCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, Buffer data, int data_offset);
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ByteBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position());
 	}
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ShortBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position() << 1);
 	}
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, IntBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position() << 2);
 	}
 	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, FloatBuffer data) {
+		// TODO: check buffer size valid
 		nglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data, data.position() << 2);
 	}
 	private static native void nglCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, Buffer data, int data_offset);
 	public static void glGetCompressedTexImage(int target, int lod, ByteBuffer img) {
+		// TODO: check buffer size valid
 		nglGetCompressedTexImage(target, lod, img, img.position());
 	}
 	public static void glGetCompressedTexImage(int target, int lod, ShortBuffer img) {
+		// TODO: check buffer size valid
 		nglGetCompressedTexImage(target, lod, img, img.position() << 1);
 	}
 	public static void glGetCompressedTexImage(int target, int lod, IntBuffer img) {
+		// TODO: check buffer size valid
 		nglGetCompressedTexImage(target, lod, img, img.position() << 2);
 	}
 	private static native void nglGetCompressedTexImage(int target, int lod, Buffer img, int img_offset);
@@ -240,10 +267,16 @@ public abstract class GL13 extends GL12 {
 	public static native void glMultiTexCoord3f(int target, float s, float t, float r);
 	public static native void glMultiTexCoord4f(int target, float s, float t, float r, float q);
 	public static void glLoadTransposeMatrix(FloatBuffer m) {
+		if (m.remaining() < 16) {
+			throw new BufferUnderflowException();
+		}
 		nglLoadTransposeMatrixf(m, m.position());
 	}
 	private static native void nglLoadTransposeMatrixf(FloatBuffer m, int m_offset);
 	public static void glMultTransposeMatrix(FloatBuffer m) {
+		if (m.remaining() < 16) {
+			throw new BufferUnderflowException();
+		}
 		nglMultTransposeMatrixf(m, m.position());
 	}
 	private static native void nglMultTransposeMatrixf(FloatBuffer m, int m_offset);
