@@ -70,8 +70,12 @@ public final class PixelFormat {
 	/** Whether this format represents a stereo buffer or not */
 	private final boolean stereo;
 
+	/**
+	 * Default pixel format is minimum 8 bits depth, and no alpha
+	 * nor stencil requirements.
+	 */
 	public PixelFormat() {
-		this(0, 0, 0);
+		this(0, 8, 0);
 	}
 
 	public PixelFormat(int alpha, int depth, int stencil) {
