@@ -214,7 +214,8 @@ public final class GLContext {
 	}
 
 	/**
-	 * Makes a GL context the current context. This method does not make the context current though!
+	 * Makes a GL context the current LWJGL context by loading GL function pointers.
+	 * The context must be current before a call to this method!
 	 * Instead it simply ensures that the current context is reflected accurately by GLContext's
 	 * extension caps and function pointers. Use useContext(null) when no context is active.
 	 * <p>If the context is the same as last time, then this is a no-op.
