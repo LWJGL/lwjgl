@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 Lightweight Java Game Library Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,13 +31,13 @@
  */
 package org.lwjgl.test.input;
 
-import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.opengl.GLU;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
+import org.lwjgl.vector.Vector3f;
 
 /**
  * $Id$
@@ -48,35 +48,80 @@ import org.lwjgl.vector.Vector2f;
  * @version $Revision$
  */
 public class ControllerTest {
-
-  /** GLU instance */
-  private GLU glu;
-
-  /** position of quad to draw */
-  private Vector2f position = new Vector2f(320.0f, 240.0f);
   
-  /** Display mode selected */
-  private DisplayMode displayMode;
+  /** Controller fuzz */
+  public static final int FUZZ = 200;
+  
+  /** Direction controller has moved */
+  private int direction;
+  
+  /** Last button pressed */
+  private int lastButton = 0;
+  
+  /** Last direction we scrolled in */
+  private int lastScrollDirection = -1;
+  
+  /** Width of window */
+  private static int WINDOW_WIDTH = 640;
+  
+  /** Height of window */
+  private static int WINDOW_HEIGHT = 640;
+  
+  /** Triangle size (in ½) */
+  private Vector2f triangleSize = new Vector2f(120, 100);
+  
+  /** Triangle color */
+  private Vector3f triangleColor[] = new Vector3f[] { 
+      new Vector3f(1,1,1),
+      new Vector3f(1,0,0),
+      new Vector3f(0,1,0),
+      new Vector3f(0,0,1)
+      };
+  
+  private Vector3f quadColor[] = new Vector3f[] {
+      new Vector3f(1,1,1),
+      new Vector3f(1,0,0),
+      new Vector3f(0,1,0),
+      new Vector3f(0,0,1)
+  };
+  
+  /** Triangles to paint */
+  private Vector2f[] triangles = { 
+      new Vector2f(WINDOW_WIDTH/2, WINDOW_HEIGHT - triangleSize.y),
+      new Vector2f(triangleSize.y, WINDOW_HEIGHT/2),
+      new Vector2f(WINDOW_WIDTH/2, triangleSize.y),
+      new Vector2f(WINDOW_WIDTH-triangleSize.y, WINDOW_HEIGHT/2)
+      };
 
+  /** Whether the test is closing */
+  private boolean closing = false;
+  
+  /** Fullscreen or not */
+  public static final boolean FULLSCREEN = false;
+  
   /** Creates a new instance of ControllerTest */
   public ControllerTest() {
   }
 
   private void initialize() {
     // create display and opengl
-    setupDisplay(false);
+    setupDisplay();
 
-    try {
-      Keyboard.create();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.exit(-1);
-    }
+    createController();
+    createKeyboard();
   }
   
-  private void setupDisplay(boolean fullscreen) {
+  /**
+   * Setup display
+   */
+  private void setupDisplay() {
     try {
-      Window.create("ControllerTest", 50, 50, 640, 480, 16, 0, 0, 0);
+      if (FULLSCREEN) {
+        Window.create("ControllerTest", 16, 0, 0, 0);
+      } else {
+        Window.create("ControllerTest", 50, 50, WINDOW_WIDTH, WINDOW_HEIGHT, 16, 0, 0, 0);
+      }
+      Window.setVSyncEnabled(true);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -85,110 +130,288 @@ public class ControllerTest {
     initializeOpenGL();    
   }
 
+  /**
+   * Initializes OpenGL
+   *
+   */
   private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0, 640, 0, 480);
+    GLU.gluOrtho2D(0.0f, WINDOW_WIDTH, 0, WINDOW_HEIGHT);
   }
 
+  /**
+   * Executes the actual test
+   */
   public void executeTest() {
     initialize();
 
-    createController();
-
-    wiggleController();
+    runTest();
 
     Controller.destroy();
     Keyboard.destroy();
     Window.destroy();
   }
 
+  /**
+   * Creates the controller
+   */
   private void createController() {
     try {
       Controller.create();
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("No controller found, exiting...");
+      System.exit(-1);
+    }
+  }
+  
+  /**
+   * Creates the keyboard
+   */
+  private void createKeyboard() {
+    try {
+      Keyboard.create();
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
     }
   }
 
-  private void wiggleController() {
-    while (!Window.isCloseRequested()) {
-      Window.update();
+  /**
+   * Runs the test
+   */
+  private void runTest() {
+    // while not exiting
+    while (!closing) {
+      handleWindow();
       
-      if(Window.isMinimized()) {
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException inte) {
-          inte.printStackTrace();
+      // secondary check
+      if(!closing) {
+      
+        // poll and check keyboard and mouse
+        handleKeyboard();
+        handleController();
+        
+        
+        // pause and continue if minimized
+        if(Window.isMinimized()) {
+          if(Window.isDirty()) {
+            render();
+            Window.paint();
+          }
+          pause(100);
+          continue;
         }
-        continue;
-      }
 
-      Controller.poll();
-      Keyboard.poll();
-      
-      if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+        // render and flip
+        logic();
+        render();
+        Window.paint();
+      }
+      Thread.yield();
+    }
+  }
+
+  /**
+   * Pauses the current thread for a specified time
+   * 
+   * @param time milliseconds to pause
+   */
+  private void pause(long time) {
+    try {
+      Thread.sleep(time);
+    } catch (InterruptedException inte) {
+      inte.printStackTrace();
+    }
+  }
+
+  /**
+   * Handles the window
+   */
+  private void handleWindow() {
+    Window.update();
+    closing = Window.isCloseRequested();
+  }
+  
+  /**
+   * handles the controller
+   */
+  private void handleController() {
+    readController();
+  }
+
+  /**
+   * Reads the controller
+   */
+  private void readController() {
+    // poll for current values
+    Controller.poll();
+
+    // get last button down
+    for(int i=0;i<Controller.getButtonCount(); i++) {
+      if(Controller.isButtonDown(i)) {
+        lastButton = i;
+      }
+    }
+    
+    updateState();
+  }
+  
+  /**
+   * Updates our "model"
+   */
+  private void updateState() {
+    direction = -1;
+
+    // get out if no movement
+    if (Controller.getX() == Controller.getY() && Controller.getX() == 0) {
+      if(!Controller.hasPOV()) {
         return;
       }
+    }
+    
+    // determine direction moved
+    // ============================
+    if(Controller.getX() > FUZZ) {
+      direction = 3;
+    }
+    
+    if(Controller.getX() < -FUZZ) {
+      direction = 1;
+    }
+    
+    if(Controller.getY() > FUZZ) {
+      direction = 2;
+    }
+    
+    if(Controller.getY() < -FUZZ) {
+      direction = 0;
+    }
+    // ----------------------------
+    
+    if(direction > -1) {
 
-      if (Controller.getX() > 200) {
-        position.x += 1;
+      // based on which button was last pushed, update model
+      switch(lastButton) {
+        case -1:
+          break;
+        case 1:
+          triangleColor[direction].y = 1;
+          break;
+        case 2:
+          triangleColor[direction].z = 1;
+          break;
+        case 3:
+          triangleColor[direction].x = 1;
+          triangleColor[direction].y = 1;
+          triangleColor[direction].z = 1;
+          break;
+        case 0:   // fall through
+        default:
+          triangleColor[direction].x = 1;
+          break;
       }
-        
-      if (Controller.getX() < -200) {
-        position.x -= 1;
-      }
-        
-      if (Controller.getY() < -200) {
-        position.y += 1;
+    }
+    
+    
+    if(Controller.hasPOV()) {
+      // get direction to update in
+      switch(Controller.getPov()) {
+        case Controller.POV_CENTER:
+          return;
+        case Controller.POV_SOUTH:
+        case Controller.POV_EAST:
+          lastScrollDirection++;
+          break;
+        case Controller.POV_NORTH:
+        case Controller.POV_WEST:
+          lastScrollDirection--;
+          break;
       }
       
-      if (Controller.getY() > 200) {
-        position.y -= 1;
+      // over/underflow
+      if(lastScrollDirection < 0) {
+        lastScrollDirection = 3;
+      }
+      if(lastScrollDirection > 3) {
+        lastScrollDirection = 0;
       }
       
-      if(position.x<0) {
-        position.x = 0;
-      } else if (position.x>640-60) {
-        position.x = 640-60;
-      }
-      
-      if(position.y < 0) {
-        position.y = 0;
-      } else if (position.y>480-30) {
-        position.y = 480-30;
-      }
-      
-
-      render();
-
-      Window.paint();
+      // update colors
+      quadColor[lastScrollDirection].x = (float) Math.random();
+      quadColor[lastScrollDirection].y = (float) Math.random();
+      quadColor[lastScrollDirection].z = (float) Math.random();
     }
   }
   
+  /**
+   * Handles the keyboard
+   */
+  private void handleKeyboard() {
+    Keyboard.poll();
+    
+    // closing on ESCAPE
+    if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+      closing = true;
+    }
+  }
+  
+  /**
+   * Does the "model logic"
+   */
+  private void logic() {
+    // "we fade to black"
+    // ===========================================
+    for(int i=0; i<triangleColor.length; i++) {
+      triangleColor[i].x -= 0.01;
+      triangleColor[i].y -= 0.01;
+      triangleColor[i].z -= 0.01;
+    }   
+  
+    for(int i=0; i<quadColor.length; i++) {
+      quadColor[i].x -= 0.01;
+      quadColor[i].y -= 0.01;
+      quadColor[i].z -= 0.01;
+    }   
+    // -------------------------------------------
+  }
+  
+  /**
+   * Render our triangles
+   */
   private void render() {
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-    GL11.glBegin(GL11.GL_POLYGON);
-    {
-      float color = 1.0f;
-      int buttonDown = 0;
-      
-      for(int i=0;i<Controller.getButtonCount(); i++) {
-        if(Controller.isButtonDown(i)) {
-          color = (1.0f / Controller.getButtonCount()) * (i+1);
-          System.out.println("Button " + i + " down"); 
+    // for each triangle, render it at position, rotating degrees for each
+    for(int i=0; i<triangles.length; i++) {
+      GL11.glPushMatrix(); {
+        GL11.glTranslatef(triangles[i].x, triangles[i].y, 0);
+        GL11.glRotatef(i*90, 0, 0, 1);
+        
+        GL11.glColor3f(triangleColor[i].x, triangleColor[i].y, triangleColor[i].z);
+        
+        GL11.glBegin(GL11.GL_TRIANGLES); {
+          GL11.glVertex2f(0, triangleSize.y);
+          GL11.glVertex2f(-triangleSize.x, -triangleSize.y);
+          GL11.glVertex2f(+triangleSize.x, -triangleSize.y);
         }
+        GL11.glEnd();
       }
-      GL11.glColor3f(color, color, color);
-      
-      GL11.glVertex2f(position.x + 0.0f, position.y + 0.0f);
-      GL11.glVertex2f(position.x + 0.0f, position.y + 30.0f);
-      GL11.glVertex2f(position.x + 40.0f, position.y + 30.0f);
-      GL11.glVertex2f(position.x + 60.0f, position.y + 15.f);
-      GL11.glVertex2f(position.x + 40.0f, position.y + 0.0f);
+      GL11.glPopMatrix();
     }
-    GL11.glEnd();
+    
+    // paint quad in the middle (yes, wasting cpu cycles by not precalculating)
+    GL11.glBegin(GL11.GL_QUADS); {
+      GL11.glColor3f(quadColor[0].x, quadColor[0].y, quadColor[0].z);
+      GL11.glVertex2f(WINDOW_WIDTH/2-triangleSize.x, WINDOW_HEIGHT/2-triangleSize.x);
+      GL11.glColor3f(quadColor[1].x, quadColor[1].y, quadColor[1].z);
+      GL11.glVertex2f(WINDOW_WIDTH/2+triangleSize.x, WINDOW_HEIGHT/2-triangleSize.x);
+      GL11.glColor3f(quadColor[2].x, quadColor[2].y, quadColor[2].z);
+      GL11.glVertex2f(WINDOW_WIDTH/2+triangleSize.x, WINDOW_HEIGHT/2+triangleSize.x);
+      GL11.glColor3f(quadColor[3].x, quadColor[3].y, quadColor[3].z);
+      GL11.glVertex2f(WINDOW_WIDTH/2-triangleSize.x, WINDOW_HEIGHT/2+triangleSize.x);
+    }
+    GL11.glEnd();  
   }
 
   /**
