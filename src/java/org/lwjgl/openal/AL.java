@@ -178,7 +178,10 @@ public abstract class AL {
 		ALC.create();
 
 		device = ALC.alcOpenDevice(deviceArguments);
-
+		if (device == null) {
+			ALC.destroy();
+			throw new LWJGLException("Could not open ALC device");
+		}
 		//check if doing default values or not
 		if (contextFrequency == -1) {
 			context = ALC.alcCreateContext(device.device, null);
