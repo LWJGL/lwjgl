@@ -82,7 +82,7 @@ public class MovingSoundTest extends BasicTest {
     
     //initialize display
     try {
-      Display.create(new DisplayMode(320, 240, 32, 60), false);
+      Display.create(new DisplayMode(320, 240, 32, 60), 8, 24, 0, false);
     } catch (Exception e) {
       e.printStackTrace();
       exit(-1);
