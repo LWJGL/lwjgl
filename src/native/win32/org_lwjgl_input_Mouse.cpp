@@ -60,6 +60,7 @@ JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
 bool mCreate_success;                 // bool used to determine successfull creation
 bool mFirstTimeInitialization = true; // boolean to determine first time initialization
+jobject mButtonsReference = NULL;     // reference to buttons array so it won't get GC'ed
 
 // Cached fields of Mouse.java
 jclass clsMouse;
@@ -129,6 +130,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
     if(mCreate_success) {
       /* Do setup of Mouse */
       SetupMouse();
+      
+      /* Initialize any fields on the Mouse */
+      InitializeMouseFields();      
     }
   }
 
@@ -171,6 +175,9 @@ void ShutdownMouse() {
     mDIDevice->Unacquire();
     mDIDevice->Release();
   }
+  
+  //delete global reference, since we're done
+  mEnvironment->DeleteGlobalRef(mButtonsReference);
 }
 /**
  * Enumerates the capabilities of the Mouse attached to the system
@@ -253,9 +260,14 @@ void SetupMouse() {
  * Sets the fields on the Mouse
  */
 void InitializeMouseFields() {
-  //set buttons array
-  jbooleanArray buttonsArray = mEnvironment->NewBooleanArray(mButtoncount);
-  mEnvironment->SetStaticObjectField(clsMouse, fidMButtons, buttonsArray);
+  //create buttons array
+  jbooleanArray mButtonsArray = mEnvironment->NewBooleanArray(mButtoncount);
+  
+  //create reference so it won't get GC'ed
+  mButtonsReference = mEnvironment->NewGlobalRef(mButtonsArray);
+
+  //set buttons array  
+  mEnvironment->SetStaticObjectField(clsMouse, fidMButtons, (jbooleanArray) mButtonsReference);
 }
 
 /**
@@ -271,7 +283,6 @@ void UpdateMouseFields() {
     diMouseState.lX = 0;
     diMouseState.lY = 0;
     diMouseState.lZ = 0;
-
     // did the read fail because we lost input for some reason? 
     // if so, then attempt to reacquire. 
     if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
@@ -290,7 +301,6 @@ void UpdateMouseFields() {
 	mEnvironment->SetStaticIntField(clsMouse, fidMDY, (jint) diMouseState.lY);
 	mEnvironment->SetStaticIntField(clsMouse, fidMDWheel, (jint) diMouseState.lZ);
 	
-  jbooleanArray buttonsArray = (jbooleanArray) mEnvironment->GetStaticObjectField(clsMouse, fidMButtons);
   for (int i = 0; i < mButtoncount; i++) {
     if (diMouseState.rgbButtons[i] != 0) {
       diMouseState.rgbButtons[i] = JNI_TRUE;
@@ -298,7 +308,7 @@ void UpdateMouseFields() {
 				diMouseState.rgbButtons[i] = JNI_FALSE;
     }
   }
-  mEnvironment->SetBooleanArrayRegion(buttonsArray, 0, mButtoncount, diMouseState.rgbButtons);
+  mEnvironment->SetBooleanArrayRegion((jbooleanArray) mButtonsReference, 0, mButtoncount, diMouseState.rgbButtons);
 }
 
 /**

@@ -70,6 +70,7 @@ JNIEnv* cEnvironment;                 // JNIEnvironment copy
 
 bool cCreate_success;                 // bool used to determine successfull creation
 bool cFirstTimeInitialization = true; // boolean to determine first time initialization
+jobject cButtonsReference = NULL;     // reference to buttons array so it won't get GC'ed
 
 // Cached fields of Controller.java
 jclass clsController;
@@ -179,6 +180,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
     if(cCreate_success) {
       /* Do setup of Controller */
       SetupController();
+      
+      /* Initialize any fields on the Controller */
+      InitializeControllerFields();
     }
   }
 
@@ -241,6 +245,9 @@ void ShutdownController() {
     cDIDevice->Release();
     cDIDevice = NULL;
   }
+  
+  //delete global reference, since we're done
+  cEnvironment->DeleteGlobalRef(cButtonsReference);  
 }
 
 /**
@@ -461,9 +468,14 @@ void SetupController() {
  * Sets the fields on the Controller
  */
 void InitializeControllerFields() {
-  //set buttons array
-  jbooleanArray buttonsArray = cEnvironment->NewBooleanArray(cButtoncount);
-  cEnvironment->SetStaticObjectField(clsController, fidCButtons, buttonsArray);
+  //create buttons array
+  jbooleanArray cButtonsArray = cEnvironment->NewBooleanArray(cButtoncount);
+  
+  //create reference so it won't get GC'ed
+  cButtonsReference = cEnvironment->NewGlobalRef(cButtonsArray);
+
+  //set buttons array  
+  cEnvironment->SetStaticObjectField(clsController, fidCButtons, (jbooleanArray) cButtonsReference);
 }
 
 /**
