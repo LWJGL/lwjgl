@@ -397,7 +397,7 @@ void UpdateMouseFields() {
 		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
 			mDIDevice->Acquire();
 #if _DEBUG
-			printf("DIERR_INPUTLOST, reaquiring input : mCreate_success=%d\n", mCreate_success);
+			//printf("DIERR_INPUTLOST, reaquiring input : mCreate_success=%d\n", mCreate_success);
 #endif
 		} else {
 #if _DEBUG

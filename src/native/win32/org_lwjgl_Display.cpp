@@ -48,6 +48,8 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env);
 jobjectArray GetAvailableDisplayModes9x(JNIEnv * env);
 bool modeSet = false; // Whether we've done a display mode change
 WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
+WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
+DEVMODE devmode; // Now we'll remember this value for the future
 
 
 /*
@@ -206,7 +208,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 	int bpp = env->GetIntField(mode, fid_bpp);
 	int freq = env->GetIntField(mode, fid_freq);
 
-	DEVMODE devmode;
 	devmode.dmSize = sizeof(DEVMODE);
 	devmode.dmBitsPerPel = bpp;
 	devmode.dmPelsWidth = width;
@@ -290,6 +291,59 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 }
 
 /*
+ * Temporarily reset display settings. This is called when the window is minimized.
+ */
+void tempResetDisplayMode() {
+	// Return device gamma to normal
+	HDC screenDC = GetDC(NULL);
+	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
+#ifdef _DEBUG
+		printf("Could not reset device gamma\n");
+#endif
+	}
+	ReleaseDC(NULL, screenDC);	
+
+	if (modeSet) {
+#ifdef _DEBUG
+		printf("Attempting to temporarily reset the display mode\n");
+#endif
+		modeSet = false;
+		// Under Win32, all we have to do is:
+		ChangeDisplaySettings(NULL, 0);
+	}
+}
+
+/*
+ * Put display settings back to what they were when the window is maximized.
+ */
+void tempRestoreDisplayMode() {
+	// Restore gamma
+	HDC screenDC = GetDC(NULL);
+	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
+#ifdef _DEBUG
+		printf("Could not restore device gamma\n");
+#endif
+	}
+	ReleaseDC(NULL, screenDC);
+
+	if (!modeSet) {
+
+#ifdef _DEBUG
+		printf("Attempting to restore the display mode\n");
+#endif
+		modeSet = true;
+		LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
+
+#ifdef _DEBUG
+		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
+			printf("Failed to restore display mode\n");
+		}
+#endif
+	}
+}
+
+
+/*
  * Class:     org_lwjgl_Display
  * Method:    getGammaRampLength
  * Signature: ()I
@@ -310,17 +364,17 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 {
 	float *gammaRamp = (float *)gammaRampAddress;
 	// Turn array of floats into array of RGB WORDs
-	WORD newGamma[768];
+
 	for (int i = 0; i < 256; i ++) {
 		float scaledRampEntry = gammaRamp[i]*0xffff;
 		WORD rampEntry = (WORD)scaledRampEntry;
-		newGamma[i] = rampEntry;
-		newGamma[i + 256] = rampEntry;
-		newGamma[i + 512] = rampEntry;
+		currentGamma[i] = rampEntry;
+		currentGamma[i + 256] = rampEntry;
+		currentGamma[i + 512] = rampEntry;
 	}
 	jboolean ret;
 	HDC screenDC = GetDC(NULL);
-	if (SetDeviceGammaRamp(screenDC, newGamma) == FALSE) {
+	if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
 #ifdef _DEBUG
 		printf("Failed to set device gamma\n");
 #endif

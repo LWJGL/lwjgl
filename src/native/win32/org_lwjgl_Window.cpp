@@ -54,6 +54,9 @@ jobject				window;								// Cached Java Window instance handle
 extern HINSTANCE	dll_handle;							// Handle to the LWJGL dll
 RECT clientSize;
 
+extern	void			tempRestoreDisplayMode();
+extern	void			tempResetDisplayMode();
+
 #define WINDOWCLASSNAME "LWJGL"
 
 /*
@@ -197,10 +200,16 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			case WA_CLICKACTIVE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
 				isMinimized = false;
+				// Change to game display settings
+				tempRestoreDisplayMode();
+
 				break;
 			case WA_INACTIVE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
 				isMinimized = true;
+				// Restore display settings
+				tempResetDisplayMode();
+
 				break;
 			}
 			appActivate(!isMinimized);
@@ -404,6 +413,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
 	if (isMinimized)
 		return;
 	ShowWindow(hwnd, SW_MINIMIZE);
+//	tempResetDisplayMode();
 }
 
 /*
@@ -417,5 +427,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
 	if (!isMinimized)
 		return;
 
+//	tempRestoreDisplayMode();
 	ShowWindow(hwnd, SW_RESTORE);
 }
