@@ -132,10 +132,9 @@ public class Controller {
 	private static String[] buttonName;
 	private static final Map buttonMap = new HashMap(8);
 
-	static {
-		initialize();
-	}
-
+	/** Lazy initialization */
+	private static boolean initialized;
+	
 	/**
 	 * Controller cannot be constructed.
 	 */
@@ -156,6 +155,7 @@ public class Controller {
 			buttonMap.put(buttonName[i], new Integer(i));
 		}
 		
+		initialized = true;
 	}
 
 	/**
@@ -163,6 +163,10 @@ public class Controller {
 	 * @throws Exception if the controller could not be created for any reason
 	 */
 	public static void create() throws Exception {
+		if (!initialized) {
+			initialize();
+		}
+		
 		if (created) {
 			return;
 		}

@@ -83,9 +83,8 @@ public class Mouse {
 	private static String[] buttonName;
 	private static final Map buttonMap = new HashMap(16);
 
-	static {
-		initialize();
-	}
+	/** Lazy initialization */
+	private static boolean initialized;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -190,6 +189,8 @@ public class Mouse {
 			buttonName[i] = "BUTTON" + i;
 			buttonMap.put(buttonName[i], new Integer(i));
 		}
+		
+		initialized = true;
 	}
 
 	/**
@@ -203,17 +204,20 @@ public class Mouse {
 	 * @throws Exception if the mouse could not be created for any reason
 	 */
 	public static void create() throws Exception {
-		if (created)
+		if (!initialized) {
+			initialize();
+		}
+		if (created) {
 			return;
-		if (!nCreate())
+		}
+		if (!nCreate()) {
 			throw new Exception("The mouse could not be created.");
+		}
 		created = true;
 		currentCursor = null;
 
-		//set mouse buttons
+		// set mouse buttons
 		buttons = new boolean[buttonCount];
-		
-
 	}
 
 	/**
@@ -271,7 +275,10 @@ public class Mouse {
 	 */
 	public static boolean isButtonDown(int button) {
 		assert created : "The mouse has not been created.";
-		return buttons[button];
+		if (button >= buttonCount)
+			return false;
+		else
+			return buttons[button];
 	}
 	
 	/**
@@ -280,7 +287,7 @@ public class Mouse {
 	 * @return a String with the button's human readable name in it or null if the button is unnamed
 	 */
 	public static String getButtonName(int button) {
-		if (button < 0 || button >= buttonName.length)
+		if (button >= buttonName.length)
 			return null;
 		else
 			return buttonName[button];

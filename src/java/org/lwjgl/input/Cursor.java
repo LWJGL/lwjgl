@@ -50,9 +50,8 @@ import java.nio.ByteOrder;
 
 public class Cursor {
 
-	static {
-		System.loadLibrary(Sys.getLibraryName());
-	}
+	/** Lazy initialization */
+	private static boolean initialized = false;
 
 	/**
 	 * The native handle to the cursor
@@ -75,14 +74,22 @@ public class Cursor {
 	 * @throws Exception if the cursor could not be created for any reason
 	 */
 	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
+		if (!initialized) {
+			initialize();
+		}
 		assert Mouse.isCreated();
 		assert width*height*numImages <= images.remaining(): "width*height*numImages > images.remaining()";
 		assert delays == null || numImages <= delays.remaining(): "delays != null && numImages > delays.remaining()";
-		assert xHotspot <= width && xHotspot >= 0: "xHotspot > width || xHotspot < 0";
-		assert yHotspot <= height && yHotspot >= 0: "yHotspot > height || yHotspot < 0";
+		assert xHotspot < width && xHotspot >= 0: "xHotspot > width || xHotspot < 0";
+		assert yHotspot < height && yHotspot >= 0: "yHotspot > height || yHotspot < 0";
                 IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		flipImages(width, height, numImages, images, images_copy);
 		nativeHandle = nCreateCursor(width, height, xHotspot, height - yHotspot, numImages, images_copy, 0, delays, delays != null ? delays.position() : 0);
+	}
+	
+	private static void initialize() {
+		System.loadLibrary(Sys.getLibraryName());
+		initialized = true;
 	}
 
 	private static void flipImages(int width, int height, int numImages, IntBuffer images, IntBuffer images_copy) {
