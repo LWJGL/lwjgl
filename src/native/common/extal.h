@@ -29,11 +29,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifdef _WIN32
 
 #ifndef _AL_TEST_H
 #define _AL_TEST_H
+#endif
 
+$ifdef _AL_TEST_H
+#ifdef _WIN32
 #define INITGUID
 #define OPENAL
 
@@ -43,13 +45,11 @@
 #include <AL/alut.h>
 #include <eax.h>
 
-EAXSet	eaxSet;						// EAXSet function, retrieved if EAX Extension is supported
-EAXGet	eaxGet;						// EAXGet function, retrieved if EAX Extension is supported
-
-#endif
+EAXSet  eaxSet;                                         // EAXSet function, ret$
+EAXGet  eaxGet;                                         // EAXGet function, ret$
 #else
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alut.h>
-
+#endif
 #endif
