@@ -62,8 +62,10 @@ static int mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
 static int accum_dx;
 static int accum_dy;
 static int accum_dwheel;
-static int last_x;
-static int last_y;
+static int last_poll_x;
+static int last_poll_y;
+static int last_event_x;
+static int last_event_y;
 
 static event_queue_t event_queue;
 static bool buffer_enabled;
@@ -77,22 +79,19 @@ void SetupMouse();
 void InitializeMouseFields();
 void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj);
 
-static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
-	if (buffer_enabled) {
-		putEventElement(&event_queue, button);
-		putEventElement(&event_queue, state);
-		putEventElement(&event_queue, dx);
-		putEventElement(&event_queue, -dy);
-		putEventElement(&event_queue, dz);
-	}
+static bool putMouseEvent(jint button, jint state, jint dx, jint dy, jint dz) {
+	jint event[] = {button, state, dx, -dy, dz};
+	return putEvent(&event_queue, event);
 }
 
 static void resetCursorPos(void) {
 	/* Reset cursor position to middle of the window */
 	RECT clientRect;
 	GetClientRect(getCurrentHWND(), &clientRect);
-	last_x = (clientRect.left + clientRect.right)/2;
-	last_y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
+	last_poll_x = (clientRect.left + clientRect.right)/2;
+	last_poll_y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
+	last_event_x = last_poll_x;
+	last_event_y = last_poll_y;
 	accum_dx = accum_dy = 0;
 }
 
@@ -110,9 +109,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
 	HRESULT hr;
 
-	initEventQueue(&event_queue);
+	initEventQueue(&event_queue, 5);
 
-	last_x = last_y = accum_dx = accum_dy = accum_dwheel = 0;
+	last_poll_x = last_poll_y = last_event_x = last_event_y = accum_dx = accum_dy = accum_dwheel = 0;
 	buffer_enabled = false;
 
 	// Create input
@@ -156,21 +155,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv * env, jc
 
 void handleMouseScrolled(int event_dwheel) {
 	accum_dwheel += event_dwheel;
-	putEvent(-1, 0, 0, 0, event_dwheel);
+	putMouseEvent(-1, 0, 0, 0, event_dwheel);
 }
 
 void handleMouseMoved(int x, int y) {
-	int event_dx = x - last_x;
-	int event_dy = y - last_y;
-	accum_dx += event_dx;
-	accum_dy += event_dy;
-	putEvent(-1, 0, event_dx, event_dy, 0);
-	last_x = x;
-	last_y = y;
+	int poll_dx = x - last_poll_x;
+	int poll_dy = y - last_poll_y;
+	accum_dx += poll_dx;
+	accum_dy += poll_dy;
+	last_poll_x = x;
+	last_poll_y = y;
+	int event_dx = x - last_event_x;
+	int event_dy = y - last_event_y;
+	if (putMouseEvent(-1, 0, event_dx, event_dy, 0)) {
+		last_event_x = x;
+		last_event_y = y;
+	}
 }
 
 void handleMouseButton(int button, int state) {
-	putEvent(button, state, 0, 0, 0);
+	putMouseEvent(button, state, 0, 0, 0);
 }
 
 static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
@@ -180,19 +184,19 @@ static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
 		int button_state = (di_buffer[i].dwData & 0x80) != 0 ? 1 : 0;
 		switch (di_buffer[i].dwOfs) {
 			case DIMOFS_BUTTON0:
-				putEvent(0, button_state, dx, dy, dwheel);
+				putMouseEvent(0, button_state, dx, dy, dwheel);
 				dx = dy = dwheel = 0;
 				break;
 			case DIMOFS_BUTTON1:
-				putEvent(1, button_state, dx, dy, dwheel);
+				putMouseEvent(1, button_state, dx, dy, dwheel);
 				dx = dy = dwheel = 0;
 				break;
 			case DIMOFS_BUTTON2:
-				putEvent(2, button_state, dx, dy, dwheel);
+				putMouseEvent(2, button_state, dx, dy, dwheel);
 				dx = dy = dwheel = 0;
 				break;
 			case DIMOFS_BUTTON3:
-				putEvent(3, button_state, dx, dy, dwheel);
+				putMouseEvent(3, button_state, dx, dy, dwheel);
 				dx = dy = dwheel = 0;
 				break;
 			case DIMOFS_X:
@@ -207,7 +211,7 @@ static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
 		}
 	}
 	if (dx != 0 || dy != 0 || dwheel != 0)
-		putEvent(-1, 0, dx, dy, dwheel);
+		putMouseEvent(-1, 0, dx, dy, dwheel);
 }
 
 static void readDXBuffer()
@@ -257,7 +261,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
 	} else {
 		handleMessages();
 	}
-	return copyEvents(&event_queue, buffer_ptr, buffer_size, 5);
+	return copyEvents(&event_queue, buffer_ptr, buffer_size);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
