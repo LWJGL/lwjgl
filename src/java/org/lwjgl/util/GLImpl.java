@@ -31,9 +31,12 @@
  */
 package org.lwjgl.util;
 
-import org.lwjgl.opengl.GL20;
-
-import java.nio.*;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 /**
  * $Id$
