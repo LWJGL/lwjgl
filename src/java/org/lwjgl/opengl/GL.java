@@ -17,7 +17,7 @@ import org.lwjgl.Sys;
  * 
  * @author foo
  */
-public class GL extends CoreGL14 implements GLConstants {
+public class GL extends CoreGL implements GLConstants {
 
 	static {
 		System.loadLibrary(Sys.LIBRARY_NAME);

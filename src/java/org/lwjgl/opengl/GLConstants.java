@@ -15,6 +15,6 @@ package org.lwjgl.opengl;
  * 
  * @author foo
  */
-public interface GLConstants extends CoreGL14Constants {
+public interface GLConstants extends CoreGLConstants {
 
 }

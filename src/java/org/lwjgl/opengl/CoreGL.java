@@ -1,7 +1,7 @@
 /**
  * (C) 2002 Shaven Puppy Ltd
  * 
- * CoreGL11.java Created on Aug 1, 2002 by foo
+ * CoreGL.java Created on Aug 1, 2002 by foo
  */
 package org.lwjgl.opengl;
 
@@ -12,16 +12,16 @@ import org.lwjgl.Sys;
  * 
  * @author foo
  */
-public class CoreGL11 extends BaseGL implements CoreGL11Constants {
+public class CoreGL extends BaseGL implements CoreGLConstants {
 	
 	static {
 		System.loadLibrary(Sys.LIBRARY_NAME);
 	}
 
 	/**
-	 * Constructor for CoreGL11.
+	 * Constructor for CoreGL.
 	 */
-	public CoreGL11(
+	public CoreGL(
 		int colorBits,
 		int alphaBits,
 		int depthBits,

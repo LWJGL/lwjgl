@@ -1,7 +1,7 @@
 /**
  * (C) 2002 Shaven Puppy Ltd
  * 
- * CoreGL11Constants.java Created on Aug 9, 2002 by foo
+ * CoreGLConstants.java Created on Aug 9, 2002 by foo
  */
 package org.lwjgl.opengl;
 
@@ -10,7 +10,7 @@ package org.lwjgl.opengl;
  * 
  * @author foo
  */
-public interface CoreGL11Constants {
+public interface CoreGLConstants {
 	/* AccumOp */
 	public static final int GL_ACCUM                          = 0x0100;
 	public static final int GL_LOAD                           = 0x0101;
