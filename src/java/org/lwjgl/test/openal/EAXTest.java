@@ -32,12 +32,6 @@
 package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.eax.EAX;
-import org.lwjgl.openal.eax.EAXBufferProperties;
-import java.nio.IntBuffer;
-
-import org.lwjgl.Sys;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALUTLoadWAVData;
 
 /**
  * $Id$

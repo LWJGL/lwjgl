@@ -35,7 +35,6 @@ import org.lwjgl.Sys;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.lang.reflect.*;
 
 /**
  * $Id$

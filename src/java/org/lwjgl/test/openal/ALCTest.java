@@ -31,7 +31,6 @@
  */
 package org.lwjgl.test.openal;
 
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
