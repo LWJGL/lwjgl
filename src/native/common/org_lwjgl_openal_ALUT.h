@@ -40,7 +40,6 @@
 extern "C" {
 #endif
 
-extern int InitializeOpenAL();
 /*
  * Class:     org_lwjgl_openal_ALUT
  * Method:    nCreate

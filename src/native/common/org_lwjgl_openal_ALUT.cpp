@@ -54,7 +54,7 @@
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALUT_nCreate (JNIEnv *env, jobject obj) {
-  return InitializeOpenAL();
+  return true;
 }
 
 /*
