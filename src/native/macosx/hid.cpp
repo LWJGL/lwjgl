@@ -45,7 +45,7 @@
 static void searchDictionary(CFDictionaryRef dict, hid_device_t *hid_dev, int num_cookies, hid_cookie_t *hid_cookies);
 static void searchObject(CFTypeRef object, hid_device_t *hid_dev, int num_cookies, hid_cookie_t *hid_cookies);
 
-/*static void printCFString(CFStringRef str) {
+static void printCFString(CFStringRef str) {
 	CFIndex buffer_size = CFStringGetLength(str) + 1;
 	char * buffer = (char *)malloc(buffer_size);
 	if (buffer != NULL) {
@@ -61,21 +61,20 @@ static void printCFNumber(CFNumberRef num) {
 	if (CFNumberGetValue(num, kCFNumberLongType, &number))
 		printf("0x%lx (%ld)", number, number);
 }
-*/
 
-/*static void printProperty(CFDictionaryRef dict, CFStringRef key) {
+
+static void printProperty(CFDictionaryRef dict, CFStringRef key) {
 	CFTypeRef val = CFDictionaryGetValue(dict, key);
 	if (val != NULL) {
 		CFTypeID type = CFGetTypeID(val);
-		if (type == CFArrayGetTypeID()) printf("array\n");
+/*		if (type == CFArrayGetTypeID()) printf("array\n");
 		else if (type == CFBooleanGetTypeID()) printf("boolean\n");
 		else if (type == CFDictionaryGetTypeID()) printf("dictionary\n");
-		else if (type == CFNumberGetTypeID()) printCFNumber((CFNumberRef)val);
+		else*/ if (type == CFNumberGetTypeID()) printCFNumber((CFNumberRef)val);
 		else if (type == CFStringGetTypeID()) printCFString((CFStringRef)val);
 		else printf("<unknown object type>\n");
 	}
 }
-*/
 
 static void closeDeviceAndQueue(hid_device_t *hid_dev) {
 	(*hid_dev->device_queue)->dispose(hid_dev->device_queue);
@@ -205,9 +204,15 @@ bool findDevice(hid_device_t *hid_dev, long device_usage_page, long device_usage
 			long usage;
 			long usage_page;
 			if (getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsageKey), &usage) &&
-			    getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey), &usage_page) &&
-			    usage_page == device_usage_page && usage == device_usage) {
-				success = initDevice(hid_dev, hid_device, dev_props, num_cookies, hid_cookies, buffer_size);
+			    getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey), &usage_page)) {
+#ifdef _DEBUG
+				printf("Considering device '");
+				printProperty(dev_props, CFSTR(kIOHIDProductKey));
+				printf("', usage page %ld usage %ld\n", usage_page, usage);
+#endif
+				if (usage_page == device_usage_page && usage == device_usage) {
+					success = initDevice(hid_dev, hid_device, dev_props, num_cookies, hid_cookies, buffer_size);
+				}
 			}
 			CFRelease(dev_props);
 		}

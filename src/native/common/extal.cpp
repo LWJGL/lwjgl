@@ -196,7 +196,7 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 
 	jsize pathcount = env->GetArrayLength(oalPaths);
 #ifdef _DEBUG
-	printf("Found %d OpenAL paths\n", pathcount);
+	printf("Found %d OpenAL paths\n", (int)pathcount);
 #endif	
 	for(int i=0;i<pathcount;i++) {
 		jstring path = (jstring) env->GetObjectArrayElement(oalPaths, i);

@@ -164,7 +164,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass c
 	hid_cookies[z_axis_index].usage_page = kHIDPage_GenericDesktop;
 	hid_cookies[z_axis_index].usage = kHIDUsage_GD_Wheel;
 	if (!findDevice(&hid_dev, kHIDPage_GenericDesktop, kHIDUsage_GD_Mouse, NUM_COOKIES, hid_cookies, EVENT_BUFFER_SIZE)) {
-		throwException(env, "Could not find HID muse device");
+		throwException(env, "Could not find HID mouse device");
 		return;
 	}
 	CGAssociateMouseAndMouseCursorPosition(FALSE);
