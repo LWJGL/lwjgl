@@ -97,8 +97,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	/**
-	 * The ARB_shader_objects extension allows multiple, optionally null-terminated, source strings to
-	 * define a shader program.
+	 * The ARB_shader_objects extension allows multiple, optionally null-terminated, source strings to define a shader program.
 	 * <p/>
 	 * This method uses just a single string, that should NOT be null-terminated.
 	 *
@@ -113,8 +112,7 @@ public final class ARBShaderObjects {
 	}
 
 	/**
-	 * The ARB_shader_objects extension allows multiple, optionally null-terminated, source strings to
-	 * define a shader program.
+	 * The ARB_shader_objects extension allows multiple, optionally null-terminated, source strings to define a shader program.
 	 * <p/>
 	 * This method uses an array of strings, that should NOT be null-terminated.
 	 *
@@ -131,10 +129,7 @@ public final class ARBShaderObjects {
 
 	private static native void initShaderSource(int count);
 
-	private static native void setShaderString(int index,
-	                                           ByteBuffer string,
-	                                           int stringOffset,
-	                                           int stringLength);
+	private static native void setShaderString(int index, ByteBuffer string, int stringOffset, int stringLength);
 
 	private static native void nglShaderSourceARB(int shaderObj);
 	// ---------------------------
@@ -172,10 +167,7 @@ public final class ARBShaderObjects {
 		nglUniform1fvARB(location, values.remaining(), values, values.position());
 	}
 
-	private static native void nglUniform1fvARB(int location,
-	                                            int count,
-	                                            FloatBuffer values,
-	                                            int valuesOffset);
+	private static native void nglUniform1fvARB(int location, int count, FloatBuffer values, int valuesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -183,10 +175,7 @@ public final class ARBShaderObjects {
 		nglUniform2fvARB(location, values.remaining() >> 1, values, values.position());
 	}
 
-	private static native void nglUniform2fvARB(int location,
-	                                            int count,
-	                                            FloatBuffer values,
-	                                            int valuesOffset);
+	private static native void nglUniform2fvARB(int location, int count, FloatBuffer values, int valuesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -194,10 +183,7 @@ public final class ARBShaderObjects {
 		nglUniform3fvARB(location, values.remaining() / 3, values, values.position());
 	}
 
-	private static native void nglUniform3fvARB(int location,
-	                                            int count,
-	                                            FloatBuffer values,
-	                                            int valuesOffset);
+	private static native void nglUniform3fvARB(int location, int count, FloatBuffer values, int valuesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -205,10 +191,7 @@ public final class ARBShaderObjects {
 		nglUniform4fvARB(location, values.remaining() >> 2, values, values.position());
 	}
 
-	private static native void nglUniform4fvARB(int location,
-	                                            int count,
-	                                            FloatBuffer values,
-	                                            int valuesOffset);
+	private static native void nglUniform4fvARB(int location, int count, FloatBuffer values, int valuesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -216,20 +199,15 @@ public final class ARBShaderObjects {
 		nglUniform1ivARB(location, values.remaining(), values, values.position());
 	}
 
-	private static native void nglUniform1ivARB(int location,
-	                                            int count,
-	                                            IntBuffer values,
-	                                            int valuesOffset);// ---------------------------
+	private static native void nglUniform1ivARB(int location, int count, IntBuffer values, int valuesOffset);
+	// ---------------------------
 
 	// ---------------------------
 	public static void glUniform2ARB(int location, IntBuffer values) {
 		nglUniform2ivARB(location, values.remaining() >> 1, values, values.position());
 	}
 
-	private static native void nglUniform2ivARB(int location,
-	                                            int count,
-	                                            IntBuffer values,
-	                                            int valuesOffset);
+	private static native void nglUniform2ivARB(int location, int count, IntBuffer values, int valuesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -237,10 +215,7 @@ public final class ARBShaderObjects {
 		nglUniform3ivARB(location, values.remaining() / 3, values, values.position());
 	}
 
-	private static native void nglUniform3ivARB(int location,
-	                                            int count,
-	                                            IntBuffer values,
-	                                            int valuesOffset);
+	private static native void nglUniform3ivARB(int location, int count, IntBuffer values, int valuesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -248,58 +223,34 @@ public final class ARBShaderObjects {
 		nglUniform4ivARB(location, values.remaining() >> 2, values, values.position());
 	}
 
-	private static native void nglUniform4ivARB(int location,
-	                                            int count,
-	                                            IntBuffer values,
-	                                            int valuesOffset);
+	private static native void nglUniform4ivARB(int location, int count, IntBuffer values, int valuesOffset);
 	// ---------------------------
 
 	// ---------------------------
 	public static void glUniformMatrix2ARB(int location, boolean transpose, FloatBuffer matrices) {
-		nglUniformMatrix2fvARB(location,
-		                       matrices.remaining() >> 2,
-		                       transpose,
-		                       matrices,
-		                       matrices.position());
+		nglUniformMatrix2fvARB(location, matrices.remaining() >> 2, transpose, matrices, matrices.position());
 	}
 
-	private static native void nglUniformMatrix2fvARB(int location,
-	                                                  int count,
-	                                                  boolean transpose,
-	                                                  FloatBuffer matrices,
-	                                                  int matricesOffset);
+	private static native void nglUniformMatrix2fvARB(int location, int count, boolean transpose,
+	                                                  FloatBuffer matrices, int matricesOffset);
 	// ---------------------------
 
 	// ---------------------------
 	public static void glUniformMatrix3ARB(int location, boolean transpose, FloatBuffer matrices) {
-		nglUniformMatrix3fvARB(location,
-		                       matrices.remaining() / ( 3 * 3 ),
-		                       transpose,
-		                       matrices,
-		                       matrices.position());
+		nglUniformMatrix3fvARB(location, matrices.remaining() / (3 * 3), transpose, matrices, matrices.position());
 	}
 
-	private static native void nglUniformMatrix3fvARB(int location,
-	                                                  int count,
-	                                                  boolean transpose,
-	                                                  FloatBuffer matrices,
-	                                                  int matricesOffset);
+	private static native void nglUniformMatrix3fvARB(int location, int count, boolean transpose,
+	                                                  FloatBuffer matrices, int matricesOffset);
 	// ---------------------------
 
 	// ---------------------------
 	public static void glUniformMatrix4ARB(int location, boolean transpose, FloatBuffer matrices) {
-		nglUniformMatrix4fvARB(location,
-		                       matrices.remaining() >> 4,
-		                       transpose,
-		                       matrices,
-		                       matrices.position());
+		nglUniformMatrix4fvARB(location, matrices.remaining() >> 4, transpose, matrices, matrices.position());
 	}
 
-	private static native void nglUniformMatrix4fvARB(int location,
-	                                                  int count,
-	                                                  boolean transpose,
-	                                                  FloatBuffer matrices,
-	                                                  int matricesOffset);
+	private static native void nglUniformMatrix4fvARB(int location, int count, boolean transpose,
+	                                                  FloatBuffer matrices, int matricesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -307,10 +258,7 @@ public final class ARBShaderObjects {
 		nglGetObjectParameterfvARB(obj, pname, params, params.position());
 	}
 
-	private static native void nglGetObjectParameterfvARB(int obj,
-	                                                      int pname,
-	                                                      FloatBuffer params,
-	                                                      int paramsOffset);
+	private static native void nglGetObjectParameterfvARB(int obj, int pname, FloatBuffer params, int paramsOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -318,10 +266,7 @@ public final class ARBShaderObjects {
 		nglGetObjectParameterivARB(obj, pname, params, params.position());
 	}
 
-	private static native void nglGetObjectParameterivARB(int obj,
-	                                                      int pname,
-	                                                      IntBuffer params,
-	                                                      int paramsOffset);
+	private static native void nglGetObjectParameterivARB(int obj, int pname, IntBuffer params, int paramsOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -329,111 +274,78 @@ public final class ARBShaderObjects {
 		if ( length == null )
 			nglGetInfoLogARB(obj, infoLog.remaining(), null, -1, infoLog, infoLog.position());
 		else {
-			if (length.remaining() == 0) {
+			if ( length.remaining() == 0 )
 				throw new BufferOverflowException();
-			}
+
 			nglGetInfoLogARB(obj, infoLog.remaining(), length, length.position(), infoLog, infoLog.position());
 		}
 	}
 
-	private static native void nglGetInfoLogARB(int obj,
-	                                            int maxLength,
-	                                            IntBuffer length,
-	                                            int lengthOffset,
-	                                            ByteBuffer infoLog,
-	                                            int infoLogOffset);
+	private static native void nglGetInfoLogARB(int obj, int maxLength,
+	                                            IntBuffer length, int lengthOffset,
+	                                            ByteBuffer infoLog, int infoLogOffset);
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetAttachedObjectsARB(int containerObj,
-	                                           IntBuffer count,
-	                                           IntBuffer obj) {
+	public static void glGetAttachedObjectsARB(int containerObj, IntBuffer count, IntBuffer obj) {
 		if ( count == null )
 			nglGetAttachedObjectsARB(containerObj, obj.remaining(), null, -1, obj, obj.position());
 		else {
-			if (count.remaining() == 0) {
+			if ( count.remaining() == 0 )
 				throw new BufferOverflowException();
-			}
+
 			nglGetAttachedObjectsARB(containerObj, obj.remaining(), count, count.position(), obj, obj.position());
 		}
 	}
 
-	private static native void nglGetAttachedObjectsARB(int containerObj,
-	                                                    int maxCount,
-	                                                    IntBuffer count,
-	                                                    int countOffset,
-	                                                    IntBuffer obj,
-	                                                    int objOffset);
+	private static native void nglGetAttachedObjectsARB(int containerObj, int maxCount,
+	                                                    IntBuffer count, int countOffset, IntBuffer obj, int objOffset);
 	// ---------------------------
 
 	// ---------------------------
+	/**
+	 * Returns the location of the uniform with the specified name. The ByteBuffer should contain the uniform name as a
+	 * <b>null-terminated</b> string.
+	 *
+	 * @param programObj
+	 * @param name
+	 *
+	 * @return
+	 */
 	public static int glGetUniformLocationARB(int programObj, ByteBuffer name) {
-		if (name.get(name.limit() - 1) != 0) {
-			throw new RuntimeException("<name> must be null-terminated.");
-		}
+		// TODO: How do we check that the string is null-terminated?
 		return nglGetUniformLocationARB(programObj, name, name.position());
 	}
 
-	private static native int nglGetUniformLocationARB(int programObj,
-	                                                   ByteBuffer name,
-	                                                   int nameOffset);
+	private static native int nglGetUniformLocationARB(int programObj, ByteBuffer name, int nameOffset);
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetActiveUniformARB(int programObj,
-	                                         int index,
-	                                         IntBuffer length,
-	                                         IntBuffer size,
-	                                         IntBuffer type,
-	                                         ByteBuffer name) {
-		if (size.remaining() == 0) {
+	public static void glGetActiveUniformARB(int programObj, int index,
+	                                         IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		if ( size.remaining() == 0 )
 			throw new BufferOverflowException();
-		}
-		if (type.remaining() == 0) {
+
+		if ( type.remaining() == 0 )
 			throw new BufferOverflowException();
-		}
 
 		if ( length == null )
-			nglGetActiveUniformARB(programObj,
-			                       index,
-			                       name.remaining(),
-			                       null,
-			                       -1,
-			                       size,
-			                       size.position(),
-			                       type,
-			                       type.position(),
-			                       name,
-			                       name.position());
+			nglGetActiveUniformARB(programObj, index, name.remaining(), null, -1,
+			                       size, size.position(), type, type.position(), name, name.position());
 		else {
-			if (length.remaining() == 0) {
+			if ( length.remaining() == 0 )
 				throw new BufferOverflowException();
-			}
-			nglGetActiveUniformARB(programObj,
-			                       index,
-			                       name.remaining(),
-			                       length,
-			                       length.position(),
-			                       size,
-			                       size.position(),
-			                       type,
-			                       type.position(),
-			                       name,
-			                       name.position());
+
+			nglGetActiveUniformARB(programObj, index, name.remaining(), length, length.position(),
+			                       size, size.position(), type, type.position(), name, name.position());
 		}
 	}
 
-	private static native void nglGetActiveUniformARB(int programObj,
-	                                                  int index,
-	                                                  int maxLength,
-	                                                  IntBuffer length,
-	                                                  int lengthOffset,
-	                                                  IntBuffer size,
-	                                                  int sizeOffset,
-	                                                  IntBuffer type,
-	                                                  int typeOffset,
-	                                                  ByteBuffer name,
-	                                                  int nameOffset);
+	private static native void nglGetActiveUniformARB(int programObj, int index, int maxLength,
+	                                                  IntBuffer length, int lengthOffset,
+	                                                  IntBuffer size, int sizeOffset,
+	                                                  IntBuffer type, int typeOffset,
+	                                                  ByteBuffer name, int nameOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -441,10 +353,7 @@ public final class ARBShaderObjects {
 		nglGetUniformfvARB(programObj, location, params, params.position());
 	}
 
-	private static native void nglGetUniformfvARB(int programObj,
-	                                            int location,
-	                                            FloatBuffer params,
-	                                            int paramsOffset);
+	private static native void nglGetUniformfvARB(int programObj, int location, FloatBuffer params, int paramsOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -452,16 +361,11 @@ public final class ARBShaderObjects {
 		nglGetUniformivARB(programObj, location, params, params.position());
 	}
 
-	private static native void nglGetUniformivARB(int programObj,
-	                                            int location,
-	                                            IntBuffer params,
-	                                            int paramsOffset);
+	private static native void nglGetUniformivARB(int programObj, int location, IntBuffer params, int paramsOffset);
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetShaderSourceARB(int obj,
-	                                        IntBuffer length,
-	                                        ByteBuffer source) {
+	public static void glGetShaderSourceARB(int obj, IntBuffer length, ByteBuffer source) {
 		if ( length == null )
 			nglGetShaderSourceARB(obj, source.remaining(), null, -1, source, source.position());
 		else {
@@ -469,12 +373,8 @@ public final class ARBShaderObjects {
 		}
 	}
 
-	private static native void nglGetShaderSourceARB(int obj,
-	                                                 int maxLength,
-	                                                 IntBuffer length,
-	                                                 int lengthOffset,
-	                                                 ByteBuffer source,
-	                                                 int sourceOffset);
+	private static native void nglGetShaderSourceARB(int obj, int maxLength,
+	                                                 IntBuffer length, int lengthOffset, ByteBuffer source, int sourceOffset);
 	// ---------------------------
 
 }

@@ -66,39 +66,39 @@ public final class ARBVertexShader {
 
 	// ---------------------------
 	public static void glBindAttribLocationARB(int programObj, int index, ByteBuffer name) {
-		if (name.get(name.limit() - 1) != 0) {
+		if ( name.get(name.limit() - 1) != 0 ) {
 			throw new RuntimeException("<name> must be a null-terminated string.");
 		}
 		nglBindAttribLocationARB(programObj, index, name, name.position());
 	}
 
-	private static native void nglBindAttribLocationARB(int programObj, int index, ByteBuffer name,
-	                                                    int nameOffset);
+	private static native void nglBindAttribLocationARB(int programObj, int index, ByteBuffer name, int nameOffset);
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetActiveAttribARB(int programObj, int index, IntBuffer length,
-	                                        IntBuffer size, IntBuffer type, ByteBuffer name) {
+	public static void glGetActiveAttribARB(int programObj, int index,
+	                                        IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
 		BufferChecks.checkBuffer(name);
-		
+
 		if ( length == null )
-			nglGetActiveAttribARB(programObj, index, name.remaining(), null, -1, size, size.position(),
-			                      type, type.position(), name, name.position());
+			nglGetActiveAttribARB(programObj, index, name.remaining(), null, -1,
+			                      size, size.position(), type, type.position(), name, name.position());
 		else {
-			nglGetActiveAttribARB(programObj, index, name.remaining(), length, length.position(), size,
-			                      size.position(), type, type.position(), name, name.position());
+			nglGetActiveAttribARB(programObj, index, name.remaining(), length, length.position(),
+			                      size, size.position(), type, type.position(), name, name.position());
 		}
 	}
 
 	private static native void nglGetActiveAttribARB(int programObj, int index, int maxLength,
 	                                                 IntBuffer length, int lengthOffset,
-	                                                 IntBuffer size, int sizeOffset, IntBuffer type,
-	                                                 int typeOffset, ByteBuffer name, int nameOffset);
+	                                                 IntBuffer size, int sizeOffset,
+	                                                 IntBuffer type, int typeOffset,
+	                                                 ByteBuffer name, int nameOffset);
 	// ---------------------------
 
 	// ---------------------------
 	public static int glGetAttribLocationARB(int programObj, ByteBuffer name) {
-		if (name.get(name.limit() - 1) != 0) {
+		if ( name.get(name.limit() - 1) != 0 ) {
 			throw new RuntimeException("<name> must be a null-terminated string.");
 		}
 		return nglGetAttribLocationARB(programObj, name, name.position());
