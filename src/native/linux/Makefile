@@ -48,7 +48,7 @@ LIBCPPOBJS=$(LIBCPPSRC:.cpp=.o)
 LIBCOBJS=$(LIBCSRC:.c=.o)
 LIBOBJS=$(LIBCOBJS) $(LIBCPPOBJS)
 #DEBUG_FLAGS=-D_DEBUG
-LINKOPTS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU
+LINKOPTS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU -lopenal
 
 all: liblwjgl.so
 
