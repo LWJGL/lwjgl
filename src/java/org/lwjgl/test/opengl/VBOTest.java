@@ -186,12 +186,12 @@ public final class VBOTest {
 		System.exit(1);
 	}
 	IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-	GL.glGenBuffersARB(1, int_buffer);
+	GL.glGenBuffersARB(int_buffer);
 	buffer_id = int_buffer.get(0);
 	GL.glBindBufferARB(GL.GL_ARRAY_BUFFER_ARB, buffer_id);
 	vertices = ByteBuffer.allocateDirect(2*4*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
-	GL.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, 2*4*4, Sys.NULL, GL.GL_STREAM_DRAW_ARB);
+	GL.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, 2*4*4, (ByteBuffer)null, GL.GL_STREAM_DRAW_ARB);
 	ByteBuffer index_buffer = Sys.createIndexBuffer(0);
 	GL.glEnableClientState(GL.GL_VERTEX_ARRAY);
 	GL.glVertexPointer(2, 0, index_buffer.asFloatBuffer());
@@ -206,8 +206,8 @@ public final class VBOTest {
       */
      private static void cleanup() {
 	IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-	int_buffer.put(buffer_id);
-	GL.glDeleteBuffersARB(1, int_buffer);
+	int_buffer.put(0, buffer_id);
+	GL.glDeleteBuffersARB(int_buffer);
          Keyboard.destroy();
          Mouse.destroy();
          gl.destroy();

@@ -341,7 +341,7 @@ public class PbufferTest {
   private void destroyTexture() {
     IntBuffer buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
     buffer.put(0, tex_handle);
-    GL.glDeleteTextures(1, buffer);
+    GL.glDeleteTextures(buffer);
   }
 
   /**
@@ -400,7 +400,7 @@ public class PbufferTest {
     GL.glEnable(GL.GL_TEXTURE_2D);
     // Create shared texture
     IntBuffer buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-    GL.glGenTextures(1, buffer);
+    GL.glGenTextures(buffer);
     tex_handle = buffer.get(0);
     GL.glBindTexture(GL.GL_TEXTURE_2D, tex_handle);
     GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP);

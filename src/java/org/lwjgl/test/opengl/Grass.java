@@ -133,7 +133,7 @@ public class Grass {
 		byte_buf.order(ByteOrder.nativeOrder());
 		            GLCaps.determineAvailableExtensions();
 		System.out.println("Vertex program supported: " + GLCaps.GL_NV_vertex_program);
-		GL.glGenProgramsNV(1, byte_buf.asIntBuffer());
+		GL.glGenProgramsNV(byte_buf.asIntBuffer());
 		IntBuffer int_buf = byte_buf.asIntBuffer();
 		if (int_buf.get(0) == 0)
 			throw new RuntimeException("Could not allocate new vertex program id!");
@@ -148,7 +148,6 @@ public class Grass {
 		GL.glLoadProgramNV(
 			GL.GL_VERTEX_PROGRAM_NV,
 			program_handle,
-			program_buf.remaining(),
 			program_buf);
 		/*gl.getIntegerv(GL.PROGRAM_ERROR_POSITION_NV, Sys.getDirectBufferAddress(int_buf));
 		System.out.println("error position: " + int_buf.get(0));*/

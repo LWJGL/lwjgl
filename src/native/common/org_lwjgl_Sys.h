@@ -18,17 +18,8 @@ extern "C" {
 #define org_lwjgl_Sys_REALTIME_PRIORITY 2L
 /* Inaccessible static: LIBRARY_NAME */
 /* Inaccessible static: DEBUG */
-/* Inaccessible static: NULL */
 /* Inaccessible static: _debug */
 /* Inaccessible static: class_00024org_00024lwjgl_00024Sys */
-/*
- * Class:     org_lwjgl_Sys
- * Method:    nGetNULLValue
- * Signature: ()Ljava/nio/ByteBuffer;
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
-  (JNIEnv *, jclass);
-
 /*
  * Class:     org_lwjgl_Sys
  * Method:    createIndexBuffer

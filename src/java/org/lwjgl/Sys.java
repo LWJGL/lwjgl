@@ -85,7 +85,7 @@ public final class Sys {
 	/**
 	 * The ByteBuffer equivalent of the native NULL constant
 	 */
-	public static final ByteBuffer NULL;
+//	public static final ByteBuffer NULL;
 	
 	
 	private static boolean _debug;
@@ -102,7 +102,7 @@ public final class Sys {
 		} finally {
 			DEBUG = _debug;
 			initialize();
-			NULL = nGetNULLValue();
+//			NULL = nGetNULLValue();
 		}
 	}
 	
@@ -132,7 +132,7 @@ public final class Sys {
 	/**
 	 * Gets the native NULL constant value
 	 */
-	private static native ByteBuffer nGetNULLValue();
+//	private static native ByteBuffer nGetNULLValue();
 
 	/**
 	 * Create a buffer representing an integer index. Use it with functions that in C can take

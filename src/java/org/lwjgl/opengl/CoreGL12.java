@@ -190,14 +190,14 @@ public class CoreGL12 extends CoreGL11 implements CoreGL12Constants {
 		nglGetSeparableFilter(target, format, type, row, Util.getOffset(row), column, Util.getOffset(column), span, Util.getOffset(span));
 	}
 	private static native void nglGetSeparableFilter(int target, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset, Buffer span, int span_offset);
-	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, ByteBuffer indices) {
-		nglDrawRangeElements(mode, start, end, count, type, indices, indices.position());
+	public static void glDrawRangeElements(int mode, int start, int end, int type, ByteBuffer indices) {
+		nglDrawRangeElements(mode, start, end, indices.remaining(), type, indices, indices.position());
 	}
-	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, ShortBuffer indices) {
-		nglDrawRangeElements(mode, start, end, count, type, indices, indices.position() << 1);
+	public static void glDrawRangeElements(int mode, int start, int end, int type, ShortBuffer indices) {
+		nglDrawRangeElements(mode, start, end, indices.remaining(), type, indices, indices.position() << 1);
 	}
-	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, IntBuffer indices) {
-		nglDrawRangeElements(mode, start, end, count, type, indices, indices.position() << 2);
+	public static void glDrawRangeElements(int mode, int start, int end, int type, IntBuffer indices) {
+		nglDrawRangeElements(mode, start, end, indices.remaining(), type, indices, indices.position() << 2);
 	}
 	private static native void nglDrawRangeElements(int mode, int start, int end, int count, int type, Buffer indices, int indices_offset);
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ByteBuffer pixels) {
@@ -222,5 +222,4 @@ public class CoreGL12 extends CoreGL11 implements CoreGL12Constants {
 	private static native void nglTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels, int pixels_offset);
 	public static native void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);
 }
-
 

@@ -51,8 +51,9 @@ public class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
 		nglFogCoordPointer(GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglFogCoordPointer (int type, int stride, Buffer data, int data_offset);
-	public static void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount, int primcount) {
-		nglMultiDrawArrays(mode, piFirst, piFirst.position(), piCount, piCount.position(), primcount);
+	public static void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount) {
+		assert piFirst.remaining() == piCount.remaining(): "piFirst.remaining() != piCount.remaining()";
+		nglMultiDrawArrays(mode, piFirst, piFirst.position(), piCount, piCount.position(), piFirst.remaining());
 	}
 	private static native void nglMultiDrawArrays(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset, int primcount);
 /*        public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);*/
@@ -77,5 +78,4 @@ public class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
 	public static native void glWindowPos3f (float x, float y, float z);
 	public static native void glWindowPos3i (int x, int y, int z);
 }
-
 

@@ -53,12 +53,12 @@ long int		hires_timer;				// Hires timer current time
  * Method:    nGetNULLValue
  * Signature: ()I
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
+/*JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
   (JNIEnv *env, jclass clazz)
 {
 	return env->NewDirectByteBuffer(NULL, 0);
 }
-
+*/
 /*
  * Class:     org_lwjgl_Sys
  * Method:    createIndexBuffer

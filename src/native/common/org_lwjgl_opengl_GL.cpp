@@ -47,7 +47,14 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
-static inline jobject newBuffer(JNIEnv *env, void *p, int size) {
+static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {
+	if (buffer == NULL)
+		return NULL;
+	else
+		return env->GetDirectBufferAddress(buffer);
+}
+
+static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
 	if (p == NULL)
 		return NULL;
 	else
@@ -1368,7 +1375,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVariantPointerEXT(JNIEnv
 	void *address;
 	glGetVariantPointervEXT((GLuint) p0, (GLuint) p1, &address);
 	CHECK_GL_ERROR
-	return newBuffer(env, address, size);
+	return safeNewBuffer(env, address, size);
 }
 
 /*
@@ -1429,7 +1436,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointerARB(J
 	void *address;
 	glGetVertexAttribPointervARB((GLuint) p0, (GLuint) p1, &address);
 	CHECK_GL_ERROR
-	return newBuffer(env, address, size);
+	return safeNewBuffer(env, address, size);
 }
 
 /*
@@ -1442,7 +1449,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointerNV(JN
 	void *address;
 	glGetVertexAttribPointervNV((GLuint) p0, (GLuint) p1, &address);
 	CHECK_GL_ERROR
-	return newBuffer(env, address, size);
+	return safeNewBuffer(env, address, size);
 }
 
 /*
@@ -1812,7 +1819,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglMultTransposeMatrixfARB(JNIEn
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_nglNewObjectBufferATI(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint buffer_offset, jint p2)
 {
 	CHECK_EXISTS(glNewObjectBufferATI)
-	const GLubyte *address = (const GLubyte *)env->GetDirectBufferAddress(buffer);
+	const GLubyte *address = (const GLubyte *)safeGetBufferAddress(env, buffer);
 	jint ret = (jint) glNewObjectBufferATI((GLint) p0, address + buffer_offset, (GLuint) p2);
 	CHECK_GL_ERROR
 	return ret;
@@ -3063,7 +3070,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glXAllocateMemoryNV(JNIEnv * 
 #ifdef _X11
 	CHECK_EXISTS(glXAllocateMemoryNV)
 	void *mem_address = glXAllocateMemoryNV((GLint) size, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	return newBuffer(env, mem_address, size);
+	return safeNewBuffer(env, mem_address, size);
 #else
 	CHECK_EXISTS(NULL)
 	return 0;
@@ -3093,7 +3100,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_wglAllocateMemoryNV(JNIEnv * 
 #ifdef _WIN32
 	CHECK_EXISTS(wglAllocateMemoryNV)
 	void *mem_address = wglAllocateMemoryNV((GLint) size, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	return newBuffer(env, mem_address, size);
+	return safeNewBuffer(env, mem_address, size);
 #else
 	CHECK_EXISTS(NULL)
 	return 0;
@@ -3590,7 +3597,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_glIsBufferARB(JNIEnv *env, j
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglBufferDataARB(JNIEnv *env, jclass clazz, jint target, jint size, jobject buffer, jint usage, jint buffer_offset)
 {
 	CHECK_EXISTS(glBufferDataARB)
-	const GLvoid *address = (const GLvoid *)env->GetDirectBufferAddress(buffer);
+	const GLvoid *address = (const GLvoid *)safeGetBufferAddress(env, buffer);
 	glBufferDataARB((GLenum)target, (GLsizeiptrARB)size, address, (GLenum)usage + buffer_offset);
 	CHECK_GL_ERROR
 }
@@ -3636,7 +3643,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glMapBufferARB(JNIEnv *env, j
 		if (old_buffer_address == buffer_address)
 			return old_buffer;
 	}
-	return newBuffer(env, buffer_address, size);
+	return safeNewBuffer(env, buffer_address, size);
 }
 
 /*
@@ -3676,5 +3683,5 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetBufferPointerARB(JNIEnv 
 	void *pointer;
 	glGetBufferPointervARB((GLenum)target, (GLenum)pname, &pointer);
 	CHECK_GL_ERROR
-	return newBuffer(env, pointer, size);
+	return safeNewBuffer(env, pointer, size);
 }

@@ -54,14 +54,14 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native void glClearColor(float red, float green, float blue, float alpha);
 	public static native void glClearAccum(float red, float green, float blue, float alpha);
 	public static native void glClear(int mask);
-	public static void glCallLists(int n, ByteBuffer lists) {
-		nglCallLists(n, GL_UNSIGNED_BYTE, lists, lists.position());
+	public static void glCallLists(ByteBuffer lists) {
+		nglCallLists(lists.remaining(), GL_UNSIGNED_BYTE, lists, lists.position());
 	}
-	public static void glCallLists(int n, ShortBuffer lists) {
-		nglCallLists(n, GL_UNSIGNED_SHORT, lists, lists.position() << 1);
+	public static void glCallLists(ShortBuffer lists) {
+		nglCallLists(lists.remaining(), GL_UNSIGNED_SHORT, lists, lists.position() << 1);
 	}
 	public static void glCallLists(int n, IntBuffer lists) {
-		nglCallLists(n, GL_UNSIGNED_INT, lists, lists.position() << 2);
+		nglCallLists(lists.remaining(), GL_UNSIGNED_INT, lists, lists.position() << 2);
 	}
 	private static native void nglCallLists(int n, int type, Buffer lists, int lists_offset);
 	public static native void glCallList(int list);
@@ -76,8 +76,8 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native void glArrayElement(int i);
 	public static native void glClearDepth(double depth);
 	public static native void glDeleteLists(int list, int range);
-	public static void glDeleteTextures(int n, IntBuffer textures) {
-		nglDeleteTextures(n, textures, textures.position());
+	public static void glDeleteTextures(IntBuffer textures) {
+		nglDeleteTextures(textures.remaining(), textures, textures.position());
 	}
 	private static native void nglDeleteTextures(int n, IntBuffer textures, int textures_offset);
 	public static native void glCullFace(int mode);
@@ -132,14 +132,14 @@ public class CoreGL11 implements CoreGL11Constants {
 		nglDrawPixels(width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglDrawPixels(int width, int height, int format, int type, Buffer pixels, int pixels_offset);
-	public static void glDrawElements(int mode, int count, ByteBuffer indices) {
-		nglDrawElements(mode, count, GL_UNSIGNED_BYTE, indices, indices.position());
+	public static void glDrawElements(int mode, ByteBuffer indices) {
+		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
 	}
-	public static void glDrawElements(int mode, int count, ShortBuffer indices) {
-		nglDrawElements(mode, count, GL_UNSIGNED_SHORT, indices, indices.position() << 1);
+	public static void glDrawElements(int mode, ShortBuffer indices) {
+		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
-	public static void glDrawElements(int mode, int count, IntBuffer indices) {
-		nglDrawElements(mode, count, GL_UNSIGNED_INT, indices, indices.position() << 2);
+	public static void glDrawElements(int mode, IntBuffer indices) {
+		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
 	private static native void nglDrawElements(int mode, int count, int type, Buffer indices, int indices_offset);
 	public static native void glDrawBuffer(int mode);
@@ -147,8 +147,8 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native void glDepthRange(double zNear, double zFar);
 	public static native void glDepthMask(boolean flag);
 	public static native void glDepthFunc(int func);
-	public static void glFeedbackBuffer(int size, int type, FloatBuffer buffer) {
-		nglFeedbackBuffer(size, type, buffer, buffer.position());
+	public static void glFeedbackBuffer(int type, FloatBuffer buffer) {
+		nglFeedbackBuffer(buffer.remaining(), type, buffer, buffer.position());
 	}
 	private static native void nglFeedbackBuffer(int size, int type, FloatBuffer buffer, int buffer_offset);
 	public static void glGetPixelMap(int map, FloatBuffer values) {
@@ -208,8 +208,8 @@ public class CoreGL11 implements CoreGL11Constants {
 		nglGetIntegerv(pname, params, params.position());
 	}
 	private static native void nglGetIntegerv(int pname, IntBuffer params, int params_offset);
-	public static void glGenTextures(int n, IntBuffer textures) {
-		nglGenTextures(n, textures, textures.position());
+	public static void glGenTextures(IntBuffer textures) {
+		nglGenTextures(textures.remaining(), textures, textures.position());
 	}
 	private static native void nglGenTextures(int n, IntBuffer textures, int textures_offset);
 	public static native int glGenLists(int range);
@@ -362,16 +362,16 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native void glPixelTransferi(int pname, int param);
 	public static native void glPixelStoref(int pname, float param);
 	public static native void glPixelStorei(int pname, int param);
-	public static void glPixelMap(int map, int mapsize, FloatBuffer values) {
-		nglPixelMapfv(map, mapsize, values, values.position());
+	public static void glPixelMap(int map, FloatBuffer values) {
+		nglPixelMapfv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapfv(int map, int mapsize, FloatBuffer values, int values_offset);
-	public static void glPixelMap(int map, int mapsize, IntBuffer values) {
-		nglPixelMapuiv(map, mapsize, values, values.position());
+	public static void glPixelMap(int map, IntBuffer values) {
+		nglPixelMapuiv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapuiv(int map, int mapsize, IntBuffer values, int values_offset);
-	public static void glPixelMap(int map, int mapsize, ShortBuffer values) {
-		nglPixelMapusv(map, mapsize, values, values.position());
+	public static void glPixelMap(int map, ShortBuffer values) {
+		nglPixelMapusv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapusv(int map, int mapsize, ShortBuffer values, int values_offset);
 	public static native void glPassThrough(float token);
@@ -396,8 +396,8 @@ public class CoreGL11 implements CoreGL11Constants {
 	}
 	private static native void nglMultMatrixf(FloatBuffer m, int m_offset);
 	public static native void glShadeModel(int mode);
-	public static void glSelectBuffer(int size, IntBuffer buffer) {
-		nglSelectBuffer(size, buffer, buffer.position());
+	public static void glSelectBuffer(IntBuffer buffer) {
+		nglSelectBuffer(buffer.remaining(), buffer, buffer.position());
 	}
 	private static native void nglSelectBuffer(int size, IntBuffer buffer, int buffer_offset);
 	public static native void glScissor(int x, int y, int width, int height);
@@ -515,5 +515,4 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native void glStencilMask(int mask);
 	public static native void glViewport(int x, int y, int width, int height);
 }
-
 
