@@ -101,11 +101,8 @@ public class StressTest extends BasicTest {
 
   private void loadSamples() throws Exception {
     al.getError();
-    WaveData data;
+    WaveData data = WaveData.create("ding.wav");
     for (int i = 1; i <= 10; i++) {
-
-      data = WaveData.create(i + ".wav");
-      
       al.bufferData(
         buffers.get(i - 1),
         data.format,
@@ -120,6 +117,7 @@ public class StressTest extends BasicTest {
         alExit();
       }
     }
+    data.dispose();
   }
 
   public void runTest() {
