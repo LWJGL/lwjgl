@@ -44,6 +44,7 @@
 #include <X11/Xutil.h>
 #include <string.h>
 #include <assert.h>
+#include <Window.h>
 #include "org_lwjgl_input_Keyboard.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
@@ -65,12 +66,6 @@ static bool translation_enabled;
 static bool created = false;
 static bool should_grab = false;
 
-extern Display *disp;
-extern Window win;
-
-extern bool releaseInput(void);
-extern void handleMessages(JNIEnv *env);
-
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    initIDs
@@ -82,16 +77,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
 }
 
+static void setRepeatMode(int mode) {
+	XKeyboardControl repeat_mode;
+	repeat_mode.auto_repeat_mode = mode;
+	XChangeKeyboardControl(getCurrentDisplay(), KBAutoRepeatMode, &repeat_mode);
+}
+
 static int grabKeyboard(void) {
-	int result = XGrabKeyboard(disp, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
-	if (result == GrabSuccess)
+	int result = XGrabKeyboard(getCurrentDisplay(), getCurrentWindow(), False, GrabModeAsync, GrabModeAsync, CurrentTime);
+	if (result == GrabSuccess) {
 		keyboard_grabbed = true;
+		setRepeatMode(AutoRepeatModeOff);
+	}
 	return result;
 }
 
 static void ungrabKeyboard(void) {
 	keyboard_grabbed = false;
-	XUngrabKeyboard(disp, CurrentTime);
+	XUngrabKeyboard(getCurrentDisplay(), CurrentTime);
+	setRepeatMode(AutoRepeatModeDefault);
 }
 
 void acquireKeyboard(void) {
@@ -257,7 +261,6 @@ void handleKeyEvent(XKeyEvent *event) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
   (JNIEnv * env, jclass clazz, jint buf)
 {
-	handleMessages(env);
 	updateGrab();
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
@@ -274,7 +277,6 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 	int buf_count = 0;
 	int num_events = 0;
 
-	handleMessages(env);
 	updateGrab();
 	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && (key_event = nextEventElement()) != NULL) {
 		num_events++;

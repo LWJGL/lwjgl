@@ -5861,7 +5861,8 @@ extern struct ExtensionTypes extgl_Extensions;
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
 int extgl_Initialize();
 #ifdef _X11
-int extgl_Open(Display *disp, int screen);
+int extgl_Open(void);
+int extgl_InitGLX(Display *disp, int screen);
 #endif
 
 #ifdef _WIN32

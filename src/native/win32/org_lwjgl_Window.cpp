@@ -178,15 +178,15 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			case SC_MONITORPOWER:
 				return 0L;
 			case SC_MINIMIZE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), true);
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
 				appActivate(true);
 				break;
 			case SC_RESTORE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), false);
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
 				appActivate(false);
 				break;
 			case SC_CLOSE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), true);
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), JNI_TRUE);
 				//don't continue processing this command since this 
 				//would shutdown the window, which the application might not want to
 				return 0L;
@@ -198,11 +198,11 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			switch(LOWORD(wParam)) {
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), false);
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
 				isMinimized = false;
 				break;
 			case WA_INACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), true);
+				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
 				isMinimized = true;
 				break;
 			}
@@ -211,12 +211,12 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		break;
 		case WM_QUIT:
 		{
-			environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), true);
+			environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), JNI_TRUE);
 			return 0L;
 		}
 		case WM_PAINT:
 		{
-			environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "dirty", "Z"), true);
+			environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "dirty", "Z"), JNI_TRUE);
 		}
 	}
 
@@ -353,40 +353,11 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_nSetTitle
-  (JNIEnv * env, jobject obj)
+  (JNIEnv * env, jobject obj, jstring title_obj)
 {
-	const char * title = env->GetStringUTFChars((jstring) obj, NULL);
+	const char * title = env->GetStringUTFChars(title_obj, NULL);
 	SetWindowText(hwnd, title);
-	env->ReleaseStringUTFChars((jstring) obj, title);
-}
-
-/*
- * Class:     org_lwjgl_Window
- * Method:    swapBuffers
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Window_swapBuffers
-  (JNIEnv * env, jobject obj)
-{
-	SwapBuffers(hdc);
-}
-
-/*
- * Class:     org_lwjgl_Window
- * Method:    nDestroy
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Window_nDestroy
-  (JNIEnv * env, jobject obj)
-{
-	// Cache env and obj
-	environment = env;
-	window = obj;
-
-	closeWindow();
-
-	environment = NULL;
-	window = NULL;
+	env->ReleaseStringUTFChars(title_obj, title);
 }
 
 /*

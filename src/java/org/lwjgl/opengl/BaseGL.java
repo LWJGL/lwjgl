@@ -133,6 +133,15 @@ public class BaseGL extends Window {
 	protected void doCreate() throws Exception {
 		nCreate(getTitle(), x, y, getWidth(), getHeight(), color, alpha, depth, stencil, fullscreen);
 	}
+
+	protected void doPaint() {
+		swapBuffers();
+	}
+
+        /**
+         * Swap the buffers.
+         */
+        private native void swapBuffers();
 	
 	/**
 	 * Native method to create a windowed GL

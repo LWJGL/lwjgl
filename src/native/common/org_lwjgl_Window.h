@@ -11,26 +11,10 @@ extern "C" {
 /*
  * Class:     org_lwjgl_Window
  * Method:    nSetTitle
- * Signature: ()V
+ * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_nSetTitle
-  (JNIEnv *, jobject);
-
-/*
- * Class:     org_lwjgl_Window
- * Method:    swapBuffers
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Window_swapBuffers
-  (JNIEnv *, jobject);
-
-/*
- * Class:     org_lwjgl_Window
- * Method:    nDestroy
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Window_nDestroy
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     org_lwjgl_Window

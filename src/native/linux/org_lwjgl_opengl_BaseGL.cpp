@@ -40,21 +40,64 @@
  */
 
 #include "extgl.h"
+#include "Window.h"
 #include "org_lwjgl_opengl_BaseGL.h"
 
 static GLXContext context = NULL; // OpenGL rendering context
-extern XVisualInfo * getVisualInfo(void);
-extern Window win;
-extern Display * disp;
-
-extern void handleMessages(JNIEnv* env);
 
 static void makeCurrent(void) {
-	glXMakeCurrent(disp, win, context);
+	glXMakeCurrent(getCurrentDisplay(), getCurrentWindow(), context);
 }
 
 static void releaseContext(void) {
-	glXMakeCurrent(disp, None, NULL);
+	glXMakeCurrent(getCurrentDisplay(), None, NULL);
+}
+
+static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
+	int bpe;
+	switch (bpp) {
+		case 32:
+		case 24:
+			bpe = 8;
+			break;
+		case 16:
+			bpe = 4;
+			break;
+		default:
+			return JNI_FALSE;
+	}
+
+	int attriblist[] = { GLX_RGBA,
+		GLX_DOUBLEBUFFER,
+		GLX_DEPTH_SIZE, depth,
+		GLX_RED_SIZE, bpe,
+		GLX_GREEN_SIZE, bpe,
+		GLX_BLUE_SIZE, bpe,
+		GLX_ALPHA_SIZE, alpha,
+		GLX_STENCIL_SIZE, stencil,
+		None };
+	return glXChooseVisual(disp, screen, attriblist);
+}
+
+static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
+	int alpha, depth, stencil, r, g, b;
+	glXGetConfig(disp, vis_info, GLX_RED_SIZE, &r);
+	glXGetConfig(disp, vis_info, GLX_GREEN_SIZE, &g);
+	glXGetConfig(disp, vis_info, GLX_BLUE_SIZE, &b);
+	glXGetConfig(disp, vis_info, GLX_ALPHA_SIZE, &alpha);
+	glXGetConfig(disp, vis_info, GLX_DEPTH_SIZE, &depth);
+	glXGetConfig(disp, vis_info, GLX_STENCIL_SIZE, &stencil);
+	printf("Pixel format chosen sizes: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d\n", r, g, b, alpha, depth, stencil);
+}
+
+static void destroy(void) {
+	releaseContext();
+	glXDestroyContext(getCurrentDisplay(), context); 
+	context = NULL;
+	Display *disp = getCurrentDisplay();
+	destroyWindow();
+	XCloseDisplay(disp);
+	extgl_Close();
 }
 
 /*
@@ -62,41 +105,63 @@ static void releaseContext(void) {
  * Method:    nCreate
  * Signature: (IIII)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv * env, jobject obj)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
+  (JNIEnv * env, jobject obj, jstring title, jint x, jint y, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jboolean fullscreen)
 {
+	int screen;
+	Display *disp;
+	XVisualInfo *vis_info;
+	bool fscreen = false;
+	if (fullscreen == JNI_TRUE)
+		fscreen = true;
+
+	if (extgl_Open() != 0) {
+		throwException(env, "Could not load gl libs");
+		return;
+	}
+	disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-#ifdef _DEBUG
-		printf("No display\n");
-#endif
-		return JNI_FALSE;
+		XCloseDisplay(disp);
+		throwException(env, "Could not open X display");
+		return;
 	}
-	if (getVisualInfo() == NULL) {
-#ifdef _DEBUG
-		printf("No visual info\n");
-#endif
-		return JNI_FALSE;
+	screen = XDefaultScreen(disp);
+	if (extgl_InitGLX(disp, screen) != 0) {
+		XCloseDisplay(disp);
+		extgl_Close();
+		throwException(env, "Could not init GLX");
+		return;
 	}
-	context = glXCreateContext(disp, getVisualInfo(), NULL, True);
+	vis_info = chooseVisual(disp, screen, bpp, depth, alpha, stencil);
+	if (vis_info == NULL) {
+		XCloseDisplay(disp);
+		extgl_Close();
+		throwException(env, "Could not find a matching pixel format");
+		return;
+	}
+#ifdef _DEBUG
+	dumpVisualInfo(disp, vis_info);
+#endif
+	context = glXCreateContext(disp, vis_info, NULL, True);
 	if (context == NULL) {
-#ifdef _DEBUG
-		printf("Could not create context\n");
-#endif
-		return JNI_FALSE;
+		XFree(vis_info);
+		XCloseDisplay(disp);
+		extgl_Close();
+		throwException(env, "Could not create a GLX context");
+		return;
 	}
-	
+	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
+	XFree(vis_info);
 	makeCurrent();
 	if (extgl_Initialize() != 0) {
-#ifdef _DEBUG
-		printf("Could not init gl function pointers\n");
-#endif
-		return JNI_FALSE;
+		destroy();
+		throwException(env, "Could not init gl function pointers");
+		return;
 	}
 #ifdef _DEBUG
 	const GLubyte * extensions = glGetString(GL_EXTENSIONS);
 	printf("Supported extensions: %s\n", extensions);
 #endif
-	return JNI_TRUE;
 }
 
 /*
@@ -104,12 +169,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
   (JNIEnv * env, jobject obj)
 {
-	releaseContext();
-	glXDestroyContext(disp, context); 
-	context = NULL;
+	destroy();
 }
 
 /*
@@ -119,8 +182,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
 {
-	handleMessages(env);
-	glXSwapBuffers(disp, win);
+	glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());
 }
 
 /*

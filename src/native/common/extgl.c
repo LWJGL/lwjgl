@@ -2498,7 +2498,6 @@ int extgl_InitGLX(Display *disp, int screen)
     glXGetProcAddressARB = (glXGetProcAddressARBPROC) dlsym(lib_gl_handle, "glXGetProcAddressARB");
     if (glXGetProcAddressARB == NULL)
         return 1;
-
     if (extgl_InitGLX12() != 0)
         return 1;
     extgl_InitGLXSupportedExtensions(disp, screen);
@@ -3235,19 +3234,17 @@ int extgl_Initialize()
 }
 
 #ifdef _X11
-int extgl_Open(Display *disp, int screen)
+int extgl_Open()
 {
     lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_gl_handle == NULL)
         return 1;
-	
     lib_glu_handle = dlopen("libGLU.so", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_glu_handle == NULL)
         return 1;
-    if (extgl_InitGLX(disp, screen) != 0)
-	    return 1;
     return 0;
 }
+
 #endif /* X11 */
 
 #ifdef _WIN32

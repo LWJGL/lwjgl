@@ -10,6 +10,14 @@ extern "C" {
 /* Inaccessible static: currentWindow */
 /*
  * Class:     org_lwjgl_opengl_BaseGL
+ * Method:    swapBuffers
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
  * Signature: (Ljava/lang/String;IIIIIIIIZ)V
  */

@@ -204,6 +204,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
 		wglDeleteContext(hglrc); 
 		hglrc = NULL;
 	}
-
+	closeWindow();
 	extgl_Close();
 }
+
+/*
+ * Class:     org_lwjgl_opengl_BaseGL
+ * Method:    swapBuffers
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
+  (JNIEnv *, jobject) 
+{
+	SwapBuffers(wglGetCurrentDC());
+}
+  

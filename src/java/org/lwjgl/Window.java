@@ -114,14 +114,14 @@ public abstract class Window {
 	 */
 	public final void setTitle(String newTitle) {
 		title = newTitle;
-		nSetTitle();
+		nSetTitle(title);
 	}
 	
 	/**
 	 * Native implementation of setTitle(). This will read the window's title member
 	 * and stash it in the native title of the window.
 	 */
-	private native void nSetTitle();
+	private native void nSetTitle(String title);
 
 	/**
 	 * @return true if the user or operating system has asked the window to close
@@ -156,13 +156,10 @@ public abstract class Window {
 	 */
 	public final void paint() {
 		dirty = false;
-		swapBuffers();
+		doPaint();
 	}
-	
-	/**
-	 * Swap the buffers.
-	 */
-	private native void swapBuffers();
+
+	protected abstract void doPaint();
 	
 	/**
 	 * Create the window.
@@ -188,7 +185,6 @@ public abstract class Window {
 		if (!created)
 			return;
 		doDestroy();
-		nDestroy();
 		currentWindow = null;
 		created = false;
 	}
@@ -198,10 +194,6 @@ public abstract class Window {
 	 */
 	protected abstract void doDestroy();
 	
-	/**
-	 * Natively destroy the window
-	 */
-	private native void nDestroy();
 	
 	/**
 	 * @return the native window handle

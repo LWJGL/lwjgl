@@ -45,6 +45,7 @@
 #include <X11/extensions/xf86vmode.h>
 #include <assert.h>
 #include <string.h>
+#include <Window.h>
 #include "org_lwjgl_input_Mouse.h"
 
 #define NUM_BUTTONS 3
@@ -53,13 +54,6 @@
 #define WARP_RETRY 5
 // scale the mouse wheel according to win32
 #define WHEEL_SCALE 120 
-
-extern Display *disp;
-extern Window win;
-extern int screen;
-extern int getWindowWidth(void);
-extern int getWindowHeight(void);
-extern void handleMessages(JNIEnv* env);
 
 static bool pointer_grabbed;
 static bool created = false;
@@ -106,30 +100,30 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 
 static int blankCursor(void) {
 	unsigned int best_width, best_height;
-	if (XQueryBestCursor(disp, win, 1, 1, &best_width, &best_height) == 0) {
+	if (XQueryBestCursor(getCurrentDisplay(), getCurrentWindow(), 1, 1, &best_width, &best_height) == 0) {
 #ifdef _DEBUG
 		printf("Could not query best cursor size\n");
 #endif
 		return 0;
 	}
-	Pixmap mask = XCreatePixmap(disp, win, best_width, best_height, 1);
+	Pixmap mask = XCreatePixmap(getCurrentDisplay(), getCurrentWindow(), best_width, best_height, 1);
 	XGCValues gc_values;
 	gc_values.foreground = 0;
-	GC gc = XCreateGC(disp, mask, GCForeground, &gc_values);
-	XFillRectangle(disp, mask, gc, 0, 0, best_width, best_height);
-	XFreeGC(disp, gc);
+	GC gc = XCreateGC(getCurrentDisplay(), mask, GCForeground, &gc_values);
+	XFillRectangle(getCurrentDisplay(), mask, gc, 0, 0, best_width, best_height);
+	XFreeGC(getCurrentDisplay(), gc);
 	XColor dummy_color;
-	blank_cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
-	XFreePixmap(disp, mask);
+	blank_cursor = XCreatePixmapCursor(getCurrentDisplay(), mask, mask, &dummy_color, &dummy_color, 0, 0);
+	XFreePixmap(getCurrentDisplay(), mask);
 	return 1;
 }
 
 static int grabPointer(void) {
 	int result;
 	int mask = FocusChangeMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-	result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
-	XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
-	XF86VidModeSetViewPort(disp, screen, 0, 0); // make sure we have a centered window
+	result = XGrabPointer(getCurrentDisplay(), getCurrentWindow(), False, mask, GrabModeAsync, GrabModeAsync, getCurrentWindow(), blank_cursor, CurrentTime);
+	XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
+	XF86VidModeSetViewPort(getCurrentDisplay(), getCurrentScreen(), 0, 0); // make sure we have a centered window
 	if (result == GrabSuccess)
 		pointer_grabbed = true;
 	return result;
@@ -137,7 +131,7 @@ static int grabPointer(void) {
 
 static void ungrabPointer(void) {
 	pointer_grabbed = false;
-	XUngrabPointer(disp, CurrentTime);
+	XUngrabPointer(getCurrentDisplay(), CurrentTime);
 }
 
 void acquirePointer(void) {
@@ -200,7 +194,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 {
 	if (pointer_grabbed)
 		ungrabPointer();
-	XFreeCursor(disp, blank_cursor);
+	XFreeCursor(getCurrentDisplay(), blank_cursor);
 	created = false;
 	should_grab = false;
 }
@@ -258,11 +252,11 @@ static void warpPointer(void) {
 			current_x > getWindowWidth() - POINTER_WARP_BORDER || current_y > getWindowHeight() - POINTER_WARP_BORDER) {
 		current_x = last_x = getWindowWidth()/2;
 		current_y = last_y = getWindowHeight()/2;
-		XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
+		XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
 		XEvent event;
 		// Try to catch the warp pointer event
 		for (i = 0; i < WARP_RETRY; i++) {
-			XMaskEvent(disp, PointerMotionMask, &event);
+			XMaskEvent(getCurrentDisplay(), PointerMotionMask, &event);
 			if (event.xmotion.x > current_x - POINTER_WARP_BORDER &&
 				event.xmotion.x < current_x + POINTER_WARP_BORDER &&
 				event.xmotion.y > current_y - POINTER_WARP_BORDER &&
@@ -287,7 +281,6 @@ static void warpPointer(void) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv * env, jclass clazz)
 {
-	handleMessages(env);
 	updateGrab();
 	int moved_x = current_x - last_x;
 	int moved_y = current_y - last_y;
