@@ -61,7 +61,7 @@ void releaseContext(void) {
  * Signature: (IIII)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv * env, jobject obj, jint colorBits, jint alphaBits, jint depthBits, jint stencilBits)
+  (JNIEnv * env, jobject obj)
 {
 
 	if (!vis_info) {

@@ -1535,8 +1535,8 @@ public class GL extends CoreGL implements GLConstants {
 	/**
 	 * Constructor for GL.
 	 */
-	public GL(int colorBits, int alphaBits, int depthBits, int stencilBits) {
-		super(colorBits, alphaBits, depthBits, stencilBits);
+	public GL() {
+		super();
 	}
 
 	/**

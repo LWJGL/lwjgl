@@ -26,7 +26,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
  * Signature: (IIIIZ)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
-  (JNIEnv *, jclass, jint, jint, jint, jint, jboolean);
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jboolean);
 
 /*
  * Class:     org_lwjgl_Display

@@ -137,14 +137,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 		lpdiKeyboard->Release();
 		lpdiKeyboard = NULL;
 	}
-
-	// Release directinput if the mouse is not present
-	if (lpdi != NULL) {
-		// Release directinput
-		lpdi->Release();
-		lpdi = NULL;
-
-	}
 }
 
 /*

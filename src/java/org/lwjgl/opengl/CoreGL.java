@@ -45,12 +45,8 @@ public class CoreGL extends BaseGL implements CoreGLConstants {
 	/**
 	 * Constructor for CoreGL.
 	 */
-	public CoreGL(
-		int colorBits,
-		int alphaBits,
-		int depthBits,
-		int stencilBits) {
-		super(colorBits, alphaBits, depthBits, stencilBits);
+	public CoreGL() {
+		super();
 	}
 
 	public native void accum(int op, float value);

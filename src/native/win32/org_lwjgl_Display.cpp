@@ -56,6 +56,37 @@ HWND			hwnd = NULL;						// Handle to the window
 HDC				hdc = NULL;							// Device context
 LPDIRECTINPUT	lpdi = NULL;
 
+void destroyDI(void)
+{
+	lpdi->Release();
+	lpdi = NULL;
+}
+
+void destroyWindow(void)
+{
+	// Reset the display if necessary
+	ChangeDisplaySettings(NULL, 0);
+
+	if (hwnd != NULL) {
+		// Vape the window
+		DestroyWindow(hwnd);
+		hwnd = NULL;
+	}
+
+#ifdef _DEBUG
+	printf("Destroyed display\n");
+#endif
+
+	// Show the mouse
+	ShowCursor(TRUE);
+}
+
+void destroyAll(void)
+{
+	destroyDI();
+	destroyWindow();
+}
+
 void dumpLastError(void) {
 	LPVOID lpMsgBuf;
 	FormatMessage( 
@@ -192,7 +223,8 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
  * Signature: (IIIIZ)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
-  (JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jboolean fullscreen)
+  (JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq,
+  jint alphaBits, jint depthBits, jint stencilBits, jboolean fullscreen)
 {
 #ifdef _DEBUG
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
@@ -259,7 +291,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		printf("Failed to create directinput");
 		switch (ret) {
 			case DIERR_BETADIRECTINPUTVERSION :
-				printf(" - Beta versio0n\n");
+				printf(" - Beta version\n");
 				break;
 			case DIERR_INVALIDPARAM :
 				printf(" - Invalid parameter\n");
@@ -273,6 +305,91 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 			default:
 				printf("\n");
 		}
+		destroyWindow();
+		return JNI_FALSE;
+	}
+
+	int flags = PFD_DRAW_TO_WINDOW |   // support window 
+		PFD_SUPPORT_OPENGL |   // support OpenGL 
+		PFD_GENERIC_ACCELERATED |
+		PFD_DOUBLEBUFFER;      // double buffered 
+
+	PIXELFORMATDESCRIPTOR pfd = { 
+		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
+		1,                     // version number 
+		flags,         // RGBA type 
+		PFD_TYPE_RGBA,
+		(BYTE)bpp,       
+		0, 0, 0, 0, 0, 0,      // color bits ignored 
+		(BYTE)alphaBits,       
+		0,                     // shift bit ignored 
+		0,                     // no accumulation buffer 
+		0, 0, 0, 0,            // accum bits ignored 
+		(BYTE)depthBits,       
+		(BYTE)stencilBits,     
+		0,                     // One auxiliary buffer 
+		PFD_MAIN_PLANE,        // main layer
+		0,                     // reserved 
+		0, 0, 0                // layer masks ignored
+	};
+
+	// Ensure desktop color depth is adequate
+	int availableBitDepth = GetDeviceCaps(hdc, BITSPIXEL);
+	if (availableBitDepth < bpp) {
+		printf("This application requires a greater colour depth.\n");
+		destroyAll();
+		return JNI_FALSE;
+	};
+
+	int  iPixelFormat;  
+
+	// get the best available match of pixel format for the device context  
+	iPixelFormat = ChoosePixelFormat(hdc, &pfd);
+	if (iPixelFormat == 0) {
+		printf("Failed to choose pixel format.\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
+	PIXELFORMATDESCRIPTOR desc;
+	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
+		printf("Could not describe pixel format\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
+	if (desc.cColorBits < bpp) {
+		printf("This application requires a greater colour depth.\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
+	if (desc.cStencilBits < stencilBits) {
+		printf("This application requires a greater stencil depth.\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
+	if (desc.cDepthBits < depthBits) {
+		printf("This application requires a greater depth buffer depth.\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
+	if ((desc.dwFlags & flags) == 0) {
+		printf("Capabilities not supported.\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
+#ifdef _DEBUG
+	printf("Pixel format is %d\n", iPixelFormat);
+#endif
+
+	// make that the pixel format of the device context 
+	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
+		printf("Failed to set pixel format\n");
+		destroyAll();
 		return JNI_FALSE;
 	}
 
@@ -290,19 +407,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-	// Reset the display if necessary
-	ChangeDisplaySettings(NULL, 0);
-
-	if (hwnd != NULL) {
-		// Vape the window
-		DestroyWindow(hwnd);
-		hwnd = NULL;
-	}
-
-#ifdef _DEBUG
-	printf("Destroyed display\n");
-#endif
-
-	// Show the mouse
-	ShowCursor(TRUE);
+	destroyAll();
 }
+

@@ -53,86 +53,11 @@ extern HWND		hwnd;
  * Signature: (IIII)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv * env, jobject obj, jint colorBits, jint alphaBits, jint depthBits, jint stencilBits)
+  (JNIEnv * env, jobject obj)
 {
 
 	if (!hwnd) {
 		printf("No window handle\n");
-		return JNI_FALSE;
-	}
-	int flags = PFD_DRAW_TO_WINDOW |   // support window 
-		PFD_SUPPORT_OPENGL |   // support OpenGL 
-		PFD_GENERIC_ACCELERATED |
-		PFD_DOUBLEBUFFER;      // double buffered 
-
-	PIXELFORMATDESCRIPTOR pfd = { 
-		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
-		1,                     // version number 
-		flags,         // RGBA type 
-		PFD_TYPE_RGBA,
-		(BYTE)colorBits,       
-		0, 0, 0, 0, 0, 0,      // color bits ignored 
-		(BYTE)alphaBits,       
-		0,                     // shift bit ignored 
-		0,                     // no accumulation buffer 
-		0, 0, 0, 0,            // accum bits ignored 
-		(BYTE)depthBits,       
-		(BYTE)stencilBits,     
-		0,                     // One auxiliary buffer 
-		PFD_MAIN_PLANE,        // main layer
-		0,                     // reserved 
-		0, 0, 0                // layer masks ignored
-	};
-
-	// Ensure desktop color depth is adequate
-	int availableBitDepth = GetDeviceCaps(hdc, BITSPIXEL);
-	if (availableBitDepth < colorBits) {
-		printf("This application requires a greater colour depth.\n");
-		return JNI_FALSE;
-	};
-
-	int  iPixelFormat;  
-
-	// get the best available match of pixel format for the device context  
-	iPixelFormat = ChoosePixelFormat(hdc, &pfd);
-	if (iPixelFormat == 0) {
-		printf("Failed to choose pixel format.\n");
-		return JNI_FALSE;
-	}
-
-	PIXELFORMATDESCRIPTOR desc;
-	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
-		printf("Could not describe pixel format\n");
-		return JNI_FALSE;
-	}
-
-	if (desc.cColorBits < colorBits) {
-		printf("This application requires a greater colour depth.\n");
-		return JNI_FALSE;
-	}
-
-	if (desc.cStencilBits < stencilBits) {
-		printf("This application requires a greater stencil depth.\n");
-		return JNI_FALSE;
-	}
-
-	if (desc.cDepthBits < depthBits) {
-		printf("This application requires a greater depth buffer depth.\n");
-		return JNI_FALSE;
-	}
-
-	if ((desc.dwFlags & flags) == 0) {
-		printf("Capabilities not supported.\n");
-		return JNI_FALSE;
-	}
-
-#ifdef _DEBUG
-	printf("Pixel format is %d\n", iPixelFormat);
-#endif
-
-	// make that the pixel format of the device context 
-	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
-		printf("Failed to set pixel format\n");
 		return JNI_FALSE;
 	}
 	if (extgl_Open() != 0)

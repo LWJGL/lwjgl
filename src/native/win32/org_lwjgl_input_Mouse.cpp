@@ -154,12 +154,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 		lpdiMouse = NULL;
 	}
 
-	// Release directinput
-	if (lpdi != NULL) {
-		// Release directinput
-		lpdi->Release();
-		lpdi = NULL;
-	}
 }
 
 /*

@@ -96,28 +96,43 @@ int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeIn
 	return 1;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jboolean fullscreen) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jint alpha_bits, jint depth_bits, jint stencil_bits, jboolean fullscreen) {
 	Window root_win;
 	XSetWindowAttributes attribs;
 	Colormap cmap;
 	int attribmask;
-	int bpe = bpp/4;
+	int bpe;
+	switch (bpp) {
+		case 32:
+		case 24:
+			bpe = 8;
+			break;
+		case 16:
+			bpe = 4;
+			break;
+		default:
+			return JNI_FALSE;
+	}
+	if (depth_bits == 32)
+		depth_bits = 24;
+	
 	int attriblist[] = { GLX_RGBA,
                              GLX_DOUBLEBUFFER,
-                             GLX_DEPTH_SIZE, bpp,
+                             GLX_DEPTH_SIZE, depth_bits,
                              GLX_RED_SIZE, bpe,
                              GLX_GREEN_SIZE, bpe,
                              GLX_BLUE_SIZE, bpe,
-                             GLX_ALPHA_SIZE, bpe,
+                             GLX_ALPHA_SIZE, alpha_bits,
+			     GLX_STENCIL_SIZE, stencil_bits,
                              None };
-	int attriblistna[] = { GLX_RGBA,
+/*	int attriblistna[] = { GLX_RGBA,
                              GLX_DOUBLEBUFFER,
                              GLX_DEPTH_SIZE, bpp,
                              GLX_RED_SIZE, bpe,
                              GLX_GREEN_SIZE, bpe,
                              GLX_BLUE_SIZE, bpe,
                              None };
-
+*/
         int num_modes, i;
                             
 
@@ -151,10 +166,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	vis_info = glXChooseVisual(disp, screen, attriblist);
 
         /* might be a better way to handle not being able to set GLX_ALPHA_SIZE... */
-        if (vis_info == NULL) {
+/*        if (vis_info == NULL) {
             vis_info = glXChooseVisual(disp, screen, attriblistna);
         }
-	
+*/	
         if (vis_info == NULL) {
 		XCloseDisplay(disp);
 #ifdef _DEBUG

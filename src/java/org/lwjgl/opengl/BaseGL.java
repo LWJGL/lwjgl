@@ -68,33 +68,13 @@ abstract class BaseGL {
 	/** This GL will be valid for use in only one thread */
 	protected Thread renderThread;
 	
-	/** The number of color bits */
-	protected final int colorBits;
-	
-	/** The number of alpha bits */
-	protected final int alphaBits;
-	
-	/** The number of depth bits */
-	protected final int depthBits;
-	
-	/** The number of stencil bits */
-	protected final int stencilBits;
-	
 	/**
 	 * Constructor for BaseGL. The context is not created at this point;
 	 * to create the GL you must call create().
 	 *
-	 * @param colorBits the number of color bits (eg. 16, 24, 32)
-	 * @param alphaBits the number of alpha bits (eg. 0 or 8)
-	 * @param depthBits the number of depth bits (eg. 16 or 24)
-	 * @param stencilBits the number of stencil bits (eg. 0 or 8)
 	 * @see #create()
 	 */
-	public BaseGL(int colorBits, int alphaBits, int depthBits, int stencilBits) {
-		this.colorBits = colorBits;
-		this.alphaBits = alphaBits;
-		this.depthBits = depthBits;
-		this.stencilBits = stencilBits;
+	public BaseGL() {
 	}
 	
 	/**
@@ -106,7 +86,7 @@ abstract class BaseGL {
 	public final void create() throws Exception{
 		if (created)
 			return;
-		if (!nCreate(colorBits, alphaBits, depthBits, stencilBits))
+		if (!nCreate())
 			throw new Exception("GL could not be created.");
 		created = true;
 		makeCurrent();
@@ -127,7 +107,7 @@ abstract class BaseGL {
 	 * @return true if the GL was created successfully
 	 * @see org.lwjgl.Display#create(org.lwjgl.DisplayMode, boolean)
 	 */
-	private native boolean nCreate(int colorBits, int alphaBits, int depthBits, int stencilBits);
+	private native boolean nCreate();
 	
 	/**
 	 * Destroy the GL context. Does nothing if the GL has not yet been created.

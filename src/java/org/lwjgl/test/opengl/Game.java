@@ -55,7 +55,7 @@ public final class Game {
              for (int i = 0; i < modes.length; i ++)
                  System.out.println(modes[i]);
              // For now let's just pick a mode we're certain to have
-             Display.create(new DisplayMode(640, 480, 16, 60), true);
+             Display.create(new DisplayMode(640, 480, 16, 60), 8, 16, 0, true);
              System.out.println("Created display.");
          } catch (Exception e) {
              System.err.println("Failed to create display due to "+e);
@@ -63,7 +63,7 @@ public final class Game {
          }
      }
  
-    public static final GL gl = new GL(16, 0, 16, 8);
+    public static final GL gl = new GL();
     public static final GLU glu = new GLU(gl);
      static {
          try {

@@ -16,7 +16,7 @@ extern "C" {
  * Signature: (IIII)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv *, jobject, jint, jint, jint, jint);
+  (JNIEnv *, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL

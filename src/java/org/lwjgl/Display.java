@@ -81,12 +81,18 @@ public final class Display {
 	 * destroyed.
 	 * 
 	 * @param displayMode a display mode to choose
+	 * @param alpha_bits number of alpha bits required
+	 * @param depth_bits number of depth bits required
+	 * @param stencil_bits number of stencil bits required
 	 * @param fullscreen whether to create the display fullscreen
 	 * @throws Exception if the display mode could not be set
 	 * @see #destroy()
 	 */
 	public static void create(
 		DisplayMode displayMode,
+		int alpha_bits,
+		int depth_bits,
+		int stencil_bits,
 		boolean fullscreen)
 		throws Exception {
 
@@ -97,6 +103,9 @@ public final class Display {
 			displayMode.height,
 			displayMode.bpp,
 			displayMode.freq,
+			alpha_bits,
+			depth_bits,
+			stencil_bits,
 			fullscreen))
 			throw new Exception("Failed to set display mode to " + displayMode);
 
@@ -115,6 +124,9 @@ public final class Display {
 		int height,
 		int bpp,
 		int freq,
+		int alpha_bits,
+		int depth_bits,
+		int stencil_bits,
 		boolean fullscreen);
 
 	/**

@@ -26,7 +26,7 @@ public class Grass {
 			for (int i = 0; i < modes.length; i ++)
 				System.out.println(modes[i]);
 			// For now let's just pick a mode we're certain to have
-			Display.create(new DisplayMode(800, 600, 16, 60), false);
+			Display.create(new DisplayMode(800, 600, 16, 60), 8, 16, 0, false);
 			System.out.println("Created display.");
 		} catch (Exception e) {
 			System.err.println("Failed to create display due to "+e);
@@ -34,7 +34,7 @@ public class Grass {
 		}
 	}
 
-	public static final GL gl = new GL(16, 0, 16, 8);
+	public static final GL gl = new GL();
 	public static final GLU glu = new GLU(gl);
 	static {
 		try {
