@@ -283,15 +283,25 @@ void closeWindow(HWND hwnd, HDC hdc)
  */
 static void appActivate(bool active)
 {
+	static bool inAppActivate = false;
+
+	if (inAppActivate) {
+		return;
+	}
+	inAppActivate = true;
 	if (active) {
-		if (isFullScreen)
+		if (isFullScreen) {
 			restoreDisplayMode();
+			ShowWindow(display_hwnd, SW_RESTORE);
+		} else {
+			ShowWindow(display_hwnd, SW_RESTORE);
+		}
 		SetForegroundWindow(display_hwnd);
-		ShowWindow(display_hwnd, SW_RESTORE);
 	} else if (isFullScreen) {
 		ShowWindow(display_hwnd, SW_MINIMIZE);
 		resetDisplayMode(NULL);
 	}
+	inAppActivate = false;
 }
 
 /*
@@ -302,6 +312,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     WPARAM wParam,
 							     LPARAM lParam)
 {
+
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
 		case WM_SYSCOMMAND:
@@ -310,13 +321,6 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			case SC_SCREENSAVE:
 			case SC_MONITORPOWER:
 				return 0L;
-			case SC_MINIMIZE:
-				isMinimized = true;
-				appActivate(false);
-				break;
-			case SC_RESTORE:
-				isMinimized = false;
-				appActivate(true);
 				break;
 			case SC_CLOSE:
 				closerequested = true;
@@ -369,20 +373,6 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			handleMouseButton(2, 0);
 			return 0;
 		}
-		case WM_ACTIVATE:
-		{
-			switch(LOWORD(wParam)) {
-			case WA_ACTIVE:
-			case WA_CLICKACTIVE:
-				isMinimized = false;
-				isFocused = true;
-				break;
-			case WA_INACTIVE:
-				isFocused = false;
-				break;
-			}
-			appActivate(isFocused);
-		}
 		break;
 		case WM_QUIT:
 		{
@@ -404,6 +394,15 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 	    env->SetStaticIntField(cls_display, fid_y, (int)(short) HIWORD(lParam));
 	    
     }*/
+	}
+
+	// Update window state directly having processed window messages
+	bool oldIsMinimized = isMinimized;
+	bool oldIsFocused = isFocused;
+	isMinimized = IsIconic(display_hwnd); 
+	isFocused = GetForegroundWindow() == display_hwnd;
+	if (oldIsMinimized != isMinimized || oldIsFocused != isFocused) {
+		appActivate(isFocused && !isMinimized);
 	}
 
 	// default action
