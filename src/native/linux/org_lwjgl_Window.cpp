@@ -103,6 +103,7 @@ static void handleMessages(JNIEnv *env, jobject window_obj) {
 				break;
 			case UnmapNotify:
 				env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "minimized", "Z"), JNI_TRUE);
+				break;
 			case Expose:
 				env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "dirty", "Z"), JNI_TRUE);
 				break;
