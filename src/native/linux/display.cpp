@@ -46,8 +46,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <jni.h>
-#include "org_lwjgl_Display.h"
+#include "display.h"
 #include "common_tools.h"
 #include "Window.h"
 
@@ -129,15 +128,13 @@ static int getGammaRampLength(Display *disp, int screen) {
 	return ramp_size;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
-  (JNIEnv * env, jclass clazz)
-{
+jobject initDisplay(JNIEnv *env) {
         int num_modes;
         XF86VidModeModeInfo **avail_modes;
 	int screen;
 	Display *disp = incDisplay(env);
         if (disp == NULL)
-		return;
+		return NULL;
 	screen = DefaultScreen(disp);
 
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
@@ -146,12 +143,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	saved_width = avail_modes[0]->hdisplay;
 	saved_height = avail_modes[0]->vdisplay;
 	int bpp = XDefaultDepth(disp, screen);
-	printfDebug("Saved width, height %d, %d\n", saved_width, saved_height);
-	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
+	printfDebug("Original display dimensions: width %d, height %d\n", saved_width, saved_height);
+	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/opengl/DisplayMode");
 	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
 	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, saved_width, saved_height, bpp, 0);
-	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
-	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 
 	XFree(avail_modes);
 
@@ -165,14 +160,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 			freeSavedGammaRamps();
 	}
 	decDisplay();
+	return newMode;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclass clazz, jobject mode) {
+void switchDisplayMode(JNIEnv * env, jobject mode) {
 	if (mode == NULL) {
 		throwException(env, "mode must be non-null");
 		return;
 	}
-	jclass cls_displayMode = env->FindClass("org/lwjgl/DisplayMode");
+	jclass cls_displayMode = env->GetObjectClass(mode);
 	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
 	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
 	int width = env->GetIntField(mode, fid_width);
@@ -183,15 +179,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclas
 	if (disp == NULL)
 		return;
 	screen = DefaultScreen(disp);
-	if (setMode(disp, screen, width, height, true)) {
-		jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
-		env->SetStaticObjectField(clazz, fid_initialMode, mode);
-	} else
+	if (!setMode(disp, screen, width, height, true))
 		throwException(env, "Could not switch mode.");
 	decDisplay();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv * env, jclass clazz) {
+void resetDisplayMode(JNIEnv *env) {
 	int screen;
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
@@ -205,9 +198,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv * env, jcl
 	decDisplay();
 }
 
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
-  (JNIEnv * env, jclass clazz)
-{
+jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 	int num_modes, i;
 	int screen;
 	XF86VidModeModeInfo **avail_modes;
@@ -225,7 +216,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 		return NULL;
 	}
 	// Allocate an array of DisplayModes big enough
-	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+	jclass displayModeClass = env->FindClass("org/lwjgl/opengl/DisplayMode");
 	jobjectArray ret = env->NewObjectArray(num_modes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
 
@@ -238,11 +229,11 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	return ret;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
+int getGammaRampLength(void) {
 	return gamma_ramp_length;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer) {
+void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer) {
 	if (gamma_ramp_length == 0) {
 		throwException(env, "gamma ramp length == 0.");
 		return;
@@ -262,16 +253,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass c
 		throwException(env, "Could not set gamma ramp.");
 	}
 	decDisplay();
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
-  (JNIEnv * env, jclass clazz)
-{
-	return NULL;
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
-  (JNIEnv * env, jclass clazz)
-{
-	return NULL;
 }

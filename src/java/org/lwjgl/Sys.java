@@ -36,6 +36,7 @@ import java.io.IOException;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 /**
  * $Id$
@@ -135,7 +136,7 @@ public final class Sys {
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				Display.resetDisplayMode();
+				Display.destroy();
 				if (Keyboard.isCreated())
 					Keyboard.destroy();
 				if (Mouse.isCreated())

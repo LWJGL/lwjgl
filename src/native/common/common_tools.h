@@ -48,6 +48,7 @@ extern JavaVM *jvm;
 
 // Must be x * max_event_size + 1
 #define EVENT_BUFFER_SIZE (25 * 4 + 1)
+#define ATTRIB_LIST_SIZE (256)
 
 typedef struct {
 	unsigned char input_event_buffer[EVENT_BUFFER_SIZE];
@@ -55,6 +56,14 @@ typedef struct {
 	int list_start;
 	int list_end;
 } event_queue_t;
+
+typedef struct {
+	int current_index;
+	int attribs[ATTRIB_LIST_SIZE];
+} attrib_list_t;
+
+extern void initAttribList(attrib_list_t *list);
+extern void putAttrib(attrib_list_t *list, int attrib);
 
 extern bool isDebugEnabled(void);
 extern jstring getVersionString(JNIEnv *env);

@@ -180,7 +180,7 @@ public final class GLContext {
 
 	/**
 	 * Determine which extensions are available. Use this to initialize capability fields. Can only be
-	 * called _after_ a GLWindow or Pbuffer has been created (or a context from some other GL library).
+	 * called _after_ the Display context or a Pbuffer has been created (or a context from some other GL library).
 	 * Using LWJGL, this method is called automatically for you when the LWJGL Window is created and there
 	 * is no need to call it yourself.
 	 *
@@ -237,5 +237,4 @@ public final class GLContext {
 	 * @param exts An empty Set of Strings that will be filled with the names of enabled extensions
 	 */
 	private static native void init(Set exts);
-
 }

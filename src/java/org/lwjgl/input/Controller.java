@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.Sys;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.LWJGLException;
 
 /**
@@ -159,8 +159,8 @@ public class Controller {
 	 * @throws LWJGLException if the controller could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
-		if (!Window.isCreated())
-			throw new IllegalStateException("Window must be created before you can create Controller");
+		if (!Display.isCreated())
+			throw new IllegalStateException("Display must be created before you can create Controller");
 		initialize();
 		
 		if (created) {

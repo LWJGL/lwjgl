@@ -174,24 +174,17 @@ public final class Pbuffer {
 	 *
 	 * @param width         Pbuffer width
 	 * @param height        Pbuffer height
-	 * @param bpp           Minimum bits per pixel
-	 * @param alpha         Minimum bits per pixel in alpha buffer
-	 * @param depth         Minimum bits per pixel in depth buffer
-	 * @param stencil       Minimum bits per pixel in stencil buffer
-	 * @param samples       Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec). Pass
-	 *                      0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
+	 * @param pixel_format  Minimum Pbuffer context properties
 	 * @param renderTexture
 	 */
-	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil, int samples, RenderTexture renderTexture) throws LWJGLException {
+	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
 		this.width = width;
 		this.height = height;
 
 		if ( renderTexture == null )
-			handle = nCreate(width, height, bpp, alpha, depth, stencil, samples, null, 0, null, 0);
+			handle = nCreate(width, height, pixel_format, null, 0, null, 0);
 		else
-			handle = nCreate(width, height,
-			                 bpp, alpha, depth, stencil,
-			                 samples,
+			handle = nCreate(width, height, pixel_format,
 			                 renderTexture.pixelFormatCaps, renderTexture.pixelFormatCaps.limit(),
 			                 renderTexture.pBufferAttribs, renderTexture.pBufferAttribs.limit());
 	}
@@ -236,9 +229,7 @@ public final class Pbuffer {
 	/**
 	 * Native method to create a Pbuffer
 	 */
-	private static native int nCreate(int width, int height,
-	                                  int bpp, int alpha, int depth, int stencil,
-	                                  int samples,
+	private static native int nCreate(int width, int height, PixelFormat pixel_format,
 	                                  IntBuffer pixelFormatCaps, int pixelFormatCapsSize,
 	                                  IntBuffer pBufferAttribs, int pBufferAttribsSize) throws LWJGLException;
 

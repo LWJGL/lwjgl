@@ -44,6 +44,19 @@ static bool debug = false;
 static const char* VERSION = "0.9pre";
 JavaVM *jvm;
 
+void initAttribList(attrib_list_t *list) {
+	list->current_index = 0;
+}
+
+void putAttrib(attrib_list_t *list, int attrib) {
+	if (list->current_index == ATTRIB_LIST_SIZE) {
+		printfDebug("Ignoring attrib %d: attrib list size too small", attrib);
+		return;
+	}
+	list->attribs[list->current_index] = attrib;
+	list->current_index++;
+}
+
 jstring getVersionString(JNIEnv *env) {
 	return env->NewStringUTF(VERSION);
 }

@@ -87,38 +87,14 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *env, jclass clazz,
-  jint width, jint height,
-  jint bpp, jint alpha, jint depth, jint stencil,
-  jint samples,
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jint width, jint height, jobject pixel_format,
   jobject pixelFormatCaps, jint pixelFormatCapsSize, jobject pBufferAttribs, jint pBufferAttribsSize)
 {
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
 		return 0;
-	int bpe = convertToBPE(bpp);
-	int attrib_list[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
-				   GLX_DOUBLEBUFFER, False,
-				   GLX_RED_SIZE, bpe,
-				   GLX_GREEN_SIZE, bpe,
-				   GLX_BLUE_SIZE, bpe,
-				   GLX_ALPHA_SIZE, alpha,
-				   GLX_DEPTH_SIZE, depth,
-				   GLX_STENCIL_SIZE, stencil,
-				   GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,
-				   None, None, /* for ARB_multisample */
-				   None, None, /*                     */
-				   None};
-	int num_configs;
-	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
-		attrib_list[18] = GLX_SAMPLE_BUFFERS_ARB;
-		attrib_list[19] = 1;
-		attrib_list[20] = GLX_SAMPLES_ARB;
-		attrib_list[21] = samples;
-	}
-	GLXFBConfig *configs = glXChooseFBConfig(disp, getCurrentScreen(), attrib_list, &num_configs);
-	if (num_configs == 0) {
+	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
+	if (configs == 0) {
 		XFree(configs);
 		throwException(env, "No matching pixel format");
 		return -1;

@@ -276,7 +276,6 @@
 	<!-- Generates the native headers from source files -->
 	<target name="headers" description="invokes javah on java classes, producing the headers needed for native compilation" depends="compile_java">
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
-			<class name="org.lwjgl.Display"/>
 			<class name="org.lwjgl.Sys"/>
 			  
 			<class name="org.lwjgl.input.Controller"/>
@@ -292,7 +291,7 @@
 			<class name="org.lwjgl.openal.eax.EAXListenerProperties"/>
 			  
 			<class name="org.lwjgl.opengl.GLContext"/>
-			<class name="org.lwjgl.opengl.Window"/>
+			<class name="org.lwjgl.opengl.Display"/>
 			<class name="org.lwjgl.opengl.Pbuffer"/>
 		</javah>    
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/fmod3" force="yes">

@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = liblwjgl-fmod3.la
-liblwjgl_fmod_la_SOURCES = $(FMOD_SOURCE)
-liblwjgl_fmod_la_LIBADD = $(DEP_LIBS)
-liblwjgl_fmod_la_DEPENDENCIES = $(DEP_LIBS)
+liblwjgl_fmod3_la_SOURCES = $(FMOD_SOURCE)
+liblwjgl_fmod3_la_LIBADD = $(DEP_LIBS)
+liblwjgl_fmod3_la_DEPENDENCIES = $(DEP_LIBS)
 INCLUDES = -I..
 DEP_LIBS = ../libtools.la
 

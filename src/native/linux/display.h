@@ -29,77 +29,21 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl;
 
 /**
  * $Id$
  *
- * This class encapsulates the properties for a given display mode.
- * This class is not instantiable, and is aquired from the <code>Display.
- * getAvailableDisplayModes()</code> method.
- * 
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * Linux specific library for display handling.
+ *
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-public final class DisplayMode {
+#include <jni.h>
 
-	/** properties of the display mode */
-	public final int width, height, bpp, freq;
-
-	/**
-	 * Construct a display mode.
-	 * 
-	 * @see Display
-	 */
-	private DisplayMode(int width, int height, int bpp, int freq) {
-		this.width = width;
-		this.height = height;
-		this.bpp = bpp;
-		this.freq = freq;
-	}
-
-	/**
-	 * Tests for <code>DisplayMode</code> equality
-	 * 
-	 * @see java.lang.Object#equals(Object)
-	 */
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof DisplayMode)) {
-			return false;
-		}
-
-		DisplayMode dm = (DisplayMode) obj;
-		return dm.width == width
-			&& dm.height == dm.height
-			&& dm.bpp == bpp
-			&& dm.freq == freq;
-	}
-
-	/**
-	 * Retrieves the hashcode for this object
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return width ^ height ^ freq ^ bpp;
-	}
-
-	/**
-	 * Retrieves a String representation of this <code>DisplayMode</code>
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(width);
-		sb.append(" x ");
-		sb.append(height);
-		sb.append(" x ");
-		sb.append(bpp);
-		sb.append(" @");
-		sb.append(freq);
-		sb.append("Hz");
-		return sb.toString();
-	}
-}
+extern jobject initDisplay(JNIEnv *env);
+extern void switchDisplayMode(JNIEnv * env, jobject mode);
+extern void resetDisplayMode(JNIEnv * env);
+extern jobjectArray getAvailableDisplayModes(JNIEnv * env);
+extern int getGammaRampLength(void);
+extern void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer);

@@ -39,7 +39,7 @@ import java.util.Map;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 
 /**
  * $Id$
@@ -50,7 +50,7 @@ import org.lwjgl.opengl.Window;
  * n buttons supported, n being a native limit. A scrolly wheel is also
  * supported, if one such is available. Movement is reported as delta from
  * last position or as an absolute position. If the window has been created
- * the absolute position will be clamped to 0 - Window (width | height)
+ * the absolute position will be clamped to 0 - Display (width | height)
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -262,7 +262,7 @@ public class Mouse {
 	 */
 	public static void create() throws LWJGLException {
 
-		if (!Window.isCreated()) throw new IllegalStateException("Window must be created prior to creating mouse");
+		if (!Display.isCreated()) throw new IllegalStateException("Display must be created prior to creating mouse");
 
 		initialize();
 		if (created) { return; }
@@ -271,8 +271,8 @@ public class Mouse {
 		created = true;
 		currentCursor = null;
 		dx = dy = dwheel = 0;
-		width = Window.getWidth() << 16;
-		height = Window.getHeight() << 16;
+		width = Display.getDisplayMode().getWidth() << 16;
+		height = Display.getDisplayMode().getHeight() << 16;
 		x = width / 2;
 		y = height / 2;      
     
@@ -514,7 +514,7 @@ public class Mouse {
 	}
 
 	/**
-	 * Retrieves the absolute position. If the Window has been created
+	 * Retrieves the absolute position. If the Display has been created
 	 * x will be clamped to 0...width-1.
 	 * 
 	 * @return Absolute x axis position of mouse
@@ -524,7 +524,7 @@ public class Mouse {
 	}
 
 	/**
-	 * Retrieves the absolute position. If the Window has been created
+	 * Retrieves the absolute position. If the Display has been created
 	 * y will be clamped to 0...height-1.
 	 *
 	 * @return Absolute y axis position of mouse

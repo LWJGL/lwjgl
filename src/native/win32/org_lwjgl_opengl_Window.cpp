@@ -60,10 +60,6 @@ RECT clientSize;
 static bool closerequested;
 static jboolean allowSoftwareOpenGL;              // Whether to allow software opengl
 
-//CAS: commented these out as no longer used
-//extern	void			tempRestoreDisplayMode();
-//extern	void			tempResetDisplayMode();
-
 #define WINDOWCLASSNAME "LWJGL"
 
 static bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {

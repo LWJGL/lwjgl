@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Linux specific window functions.
+ * Linux specific display functions.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
@@ -51,13 +51,16 @@
 #include "extgl.h"
 #include "extgl_glx.h"
 #include "Window.h"
-#include "org_lwjgl_opengl_Window.h"
+#include "display.h"
+#include "org_lwjgl_opengl_Display.h"
 
 #define USEGLX13 extgl_Extensions.GLX13
 #define ERR_MSG_SIZE 1024
 
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
+static XVisualInfo * vis_info;
+static GLXFBConfig *configs;
 
 static Atom delete_atom;
 static Colormap cmap;
@@ -253,7 +256,7 @@ static void setWindowTitle(const char *title) {
 	XStoreName(getDisplay(), current_win, title);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
   (JNIEnv * env, jclass clazz, jstring title_obj)
 {
 	const char * title = env->GetStringUTFChars(title_obj, NULL);
@@ -266,7 +269,8 @@ static void destroyWindow() {
 	XFreeColormap(getDisplay(), cmap);
 }
 
-static bool createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen, bool undecorated) {
+static bool createWindow(JNIEnv* env, int width, int height) {
+	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	dirty = true;
 	focused = true;
 	minimized = false;
@@ -279,30 +283,27 @@ static bool createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	XSetWindowAttributes attribs;
 	int attribmask;
 
-	current_screen = screen;
 	input_released = false;
-	current_fullscreen = fullscreen;
 	current_width = width;
 	current_height = height;
 
-	root_win = RootWindow(getDisplay(), screen);
+	root_win = RootWindow(getDisplay(), getCurrentScreen());
 	cmap = XCreateColormap(getDisplay(), root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
 	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
-	if (fullscreen || undecorated) {
+	if (current_fullscreen || undecorated) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
-	win = XCreateWindow(getDisplay(), root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
+	win = XCreateWindow(getDisplay(), root_win, 0, 0, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
 	if (!checkXError(env)) {
 		XFreeColormap(getDisplay(), cmap);
 		return false;
 	}
 	printfDebug("Created window\n");
 	current_win = win;
-	Java_org_lwjgl_opengl_Window_nSetTitle(env, NULL, title);
 	XSizeHints * size_hints = XAllocSizeHints();
 	size_hints->flags = PMinSize | PMaxSize;
 	size_hints->min_width = width;
@@ -345,7 +346,7 @@ int getWindowHeight(void) {
  * Method:    nUpdate
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nUpdate
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
   (JNIEnv *env, jclass clazz)
 {
 	handleMessages();
@@ -356,7 +357,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nUpdate
  * Method:    nMakeCurrent
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
   (JNIEnv *env, jclass clazz)
 {
 	makeCurrent();
@@ -395,57 +396,94 @@ GLXContext getCurrentContext(void) {
 	return context;
 }
 
-static GLXFBConfig *chooseVisualGLX13(int screen, int bpp, int depth, int alpha, int stencil, int samples) {
+GLXFBConfig *chooseVisualGLX13(JNIEnv *env, jobject pixel_format, bool use_display_bpp, int drawable_type, bool double_buffer) {
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	int bpp;
+	if (use_display_bpp)
+		bpp = XDefaultDepthOfScreen(XScreenOfDisplay(getDisplay(), getCurrentScreen()));
+	else
+		bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "bpp", "I"));
+	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
+	int depth = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "depth", "I"));
+	int stencil = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "stencil", "I"));
+	int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
+	int num_aux_buffers = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "num_aux_buffers", "I"));
+	int accum_bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_bpp", "I"));
+	int accum_alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_alpha", "I"));
+	bool stereo = (bool)env->GetBooleanField(pixel_format, env->GetFieldID(cls_pixel_format, "stereo", "Z"));
+
 	int bpe = convertToBPE(bpp);
-	int attriblist[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
-			    GLX_DOUBLEBUFFER, True,
-			    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
-			    GLX_DEPTH_SIZE, depth,
-			    GLX_RED_SIZE, bpe,
-			    GLX_GREEN_SIZE, bpe,
-			    GLX_BLUE_SIZE, bpe,
-			    GLX_ALPHA_SIZE, alpha,
-			    GLX_STENCIL_SIZE, stencil,
-			    None, None, /* For ARB_multisample */
-			    None, None, /*                     */
-			    None};
-	int num_formats = 0;
+	int accum_bpe = convertToBPE(accum_bpp);
+	attrib_list_t attrib_list;
+	initAttribList(&attrib_list);
+	putAttrib(&attrib_list, GLX_RENDER_TYPE); putAttrib(&attrib_list, GLX_RGBA_BIT);
+	putAttrib(&attrib_list, GLX_DOUBLEBUFFER); putAttrib(&attrib_list, double_buffer ? True : False);
+	putAttrib(&attrib_list, GLX_DRAWABLE_TYPE); putAttrib(&attrib_list, drawable_type);
+	putAttrib(&attrib_list, GLX_DEPTH_SIZE); putAttrib(&attrib_list, depth);
+	putAttrib(&attrib_list, GLX_RED_SIZE); putAttrib(&attrib_list, bpe);
+	putAttrib(&attrib_list, GLX_GREEN_SIZE); putAttrib(&attrib_list, bpe);
+	putAttrib(&attrib_list, GLX_BLUE_SIZE); putAttrib(&attrib_list, bpe);
+	putAttrib(&attrib_list, GLX_ALPHA_SIZE); putAttrib(&attrib_list, alpha);
+	putAttrib(&attrib_list, GLX_STENCIL_SIZE); putAttrib(&attrib_list, stencil);
+	putAttrib(&attrib_list, GLX_AUX_BUFFERS); putAttrib(&attrib_list, num_aux_buffers);
+	putAttrib(&attrib_list, GLX_ACCUM_RED_SIZE); putAttrib(&attrib_list, accum_bpe);
+	putAttrib(&attrib_list, GLX_ACCUM_GREEN_SIZE); putAttrib(&attrib_list, accum_bpe);
+	putAttrib(&attrib_list, GLX_ACCUM_BLUE_SIZE); putAttrib(&attrib_list, accum_bpe);
+	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
+	putAttrib(&attrib_list, GLX_STEREO); putAttrib(&attrib_list, stereo ? True : False);
 	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
-		attriblist[18] = GLX_SAMPLE_BUFFERS_ARB;
-		attriblist[19] = 1;
-		attriblist[20] = GLX_SAMPLES_ARB;
-		attriblist[21] = samples;
+		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
+		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
-	GLXFBConfig* configs = glXChooseFBConfig(getDisplay(), screen, attriblist, &num_formats);
-	if (num_formats > 0)
+	putAttrib(&attrib_list, None); putAttrib(&attrib_list, None);
+	int num_formats = 0;
+	GLXFBConfig* configs = glXChooseFBConfig(getDisplay(), getCurrentScreen(), attrib_list.attribs, &num_formats);
+	if (num_formats > 0) {
 		return configs;
-	else {
+	} else {
 		if (configs != NULL)
 			XFree(configs);
 		return NULL;
 	}
 }
 
-static XVisualInfo *chooseVisual(int screen, int bpp, int depth, int alpha, int stencil, int samples) {
+static XVisualInfo *chooseVisualGLX(JNIEnv *env, jobject pixel_format) {
+	int bpp = XDefaultDepthOfScreen(XScreenOfDisplay(getDisplay(), getCurrentScreen()));
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
+	int depth = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "depth", "I"));
+	int stencil = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "stencil", "I"));
+	int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
+	int num_aux_buffers = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "num_aux_buffers", "I"));
+	int accum_bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_bpp", "I"));
+	int accum_alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_alpha", "I"));
+	bool stereo = (bool)env->GetBooleanField(pixel_format, env->GetFieldID(cls_pixel_format, "stereo", "Z"));
+
 	int bpe = convertToBPE(bpp);
-	int attriblist[] = {GLX_RGBA,
-			    GLX_DOUBLEBUFFER,
-			    GLX_DEPTH_SIZE, depth,
-			    GLX_RED_SIZE, bpe,
-			    GLX_GREEN_SIZE, bpe,
-			    GLX_BLUE_SIZE, bpe,
-			    GLX_ALPHA_SIZE, alpha,
-			    GLX_STENCIL_SIZE, stencil,
-			    None, None, /* For ARB_multisample */
-			    None, None, /*                     */
-			    None};
+	int accum_bpe = convertToBPE(accum_bpp);
+	attrib_list_t attrib_list;
+	initAttribList(&attrib_list);
+	putAttrib(&attrib_list, GLX_RGBA);
+	putAttrib(&attrib_list, GLX_DOUBLEBUFFER);
+	putAttrib(&attrib_list, GLX_DEPTH_SIZE); putAttrib(&attrib_list, depth);
+	putAttrib(&attrib_list, GLX_RED_SIZE); putAttrib(&attrib_list, bpe);
+	putAttrib(&attrib_list, GLX_GREEN_SIZE); putAttrib(&attrib_list, bpe);
+	putAttrib(&attrib_list, GLX_BLUE_SIZE); putAttrib(&attrib_list, bpe);
+	putAttrib(&attrib_list, GLX_ALPHA_SIZE); putAttrib(&attrib_list, alpha);
+	putAttrib(&attrib_list, GLX_STENCIL_SIZE); putAttrib(&attrib_list, stencil);
+	putAttrib(&attrib_list, GLX_AUX_BUFFERS); putAttrib(&attrib_list, num_aux_buffers);
+	putAttrib(&attrib_list, GLX_ACCUM_RED_SIZE); putAttrib(&attrib_list, accum_bpe);
+	putAttrib(&attrib_list, GLX_ACCUM_GREEN_SIZE); putAttrib(&attrib_list, accum_bpe);
+	putAttrib(&attrib_list, GLX_ACCUM_BLUE_SIZE); putAttrib(&attrib_list, accum_bpe);
+	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
+	if (stereo)
+		putAttrib(&attrib_list, GLX_STEREO);
 	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
-		attriblist[14] = GLX_SAMPLE_BUFFERS_ARB;
-		attriblist[15] = 1;
-		attriblist[16] = GLX_SAMPLES_ARB;
-		attriblist[17] = samples;
+		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
+		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
-	return glXChooseVisual(getDisplay(), screen, attriblist);
+	putAttrib(&attrib_list, None);
+	return glXChooseVisual(getDisplay(), getCurrentScreen(), attrib_list.attribs);
 }
 
 static void dumpVisualInfo(XVisualInfo *vis_info) {
@@ -465,20 +503,22 @@ static void dumpVisualInfo(XVisualInfo *vis_info) {
 	printfDebug("Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d\n", r, g, b, alpha, depth, stencil, sample_buffers, samples);
 }
 
-static void destroy(void) {
+static void destroyContext(void) {
 	releaseContext();
-	if (USEGLX13)
+	if (USEGLX13) {
 		glXDestroyWindow(getDisplay(), glx_window);
+		XFree(configs);
+	}
+	XFree(vis_info);
 	glXDestroyContext(getDisplay(), context);
 	context = NULL;
-	destroyWindow();
         setRepeatMode(AutoRepeatModeDefault);
 	decDisplay();
 	extgl_Close();
 }
 
-static bool initWindowGLX13(JNIEnv *env, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
-	GLXFBConfig *configs = chooseVisualGLX13(screen, bpp, depth, alpha, stencil, samples);
+static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
+	configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT, true);
 	if (configs == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
@@ -496,35 +536,23 @@ static bool initWindowGLX13(JNIEnv *env, int screen, jstring title, int x, int y
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
-	XVisualInfo * vis_info = glXGetVisualFromFBConfig(getDisplay(), configs[0]);
+	vis_info = glXGetVisualFromFBConfig(getDisplay(), configs[0]);
 	if (vis_info == NULL) {
 		glXDestroyContext(getDisplay(), context);
 		XFree(configs);
-		throwException(env, "Could not create visual info from FB config");
+		throwException(env, "Could not get visual from FB config");
 		return false;
 	}
-	bool window_created = createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
-	if (isDebugEnabled())
-		dumpVisualInfo(vis_info);
-	XFree(vis_info);
-	if (!window_created) {
+	if (!checkXError(env)) {
 		glXDestroyContext(getDisplay(), context);
 		XFree(configs);
-		return false;
-	}
-	glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
-	makeCurrent();
-	XFree(configs);
-	if (!checkXError(env)) {
-		glXDestroyWindow(getDisplay(), glx_window);
-		glXDestroyContext(getDisplay(), context);
 		return false;
 	}
 	return true;
 }
 
-static bool initWindowGLX(JNIEnv *env, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
-	XVisualInfo *vis_info = chooseVisual(screen, bpp, depth, alpha, stencil, samples);
+static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
+	vis_info = chooseVisualGLX(env, pixel_format);
 	if (vis_info == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
@@ -544,30 +572,46 @@ static bool initWindowGLX(JNIEnv *env, int screen, jstring title, int x, int y, 
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
-	bool window_created = createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
-	XFree(vis_info);
-	if (!window_created) {
-		glXDestroyContext(getDisplay(), context);
-		return false;
-	}
-	makeCurrent();
 	if (!checkXError(env)) {
 		glXDestroyContext(getDisplay(), context);
-		destroyWindow();
 		return false;
 	}
 	return true;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
-{
-	int screen;
-	bool fscreen = false;
-	if (fullscreen == JNI_TRUE)
-		fscreen = true;
-	bool isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Display_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz) {
+	return getAvailableDisplayModes(env);
+}
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_switchDisplayMode(JNIEnv *env, jclass clazz, jobject mode) {
+	switchDisplayMode(env, mode);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_resetDisplayMode(JNIEnv *env, jclass clazz) {
+	resetDisplayMode(env);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
+	return (jint)getGammaRampLength();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
+	setGammaRamp(env, gamma_buffer);
+}
+
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Display_init(JNIEnv *env, jclass clazz) {
+	return initDisplay(env);
+}
+
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getAdapter(JNIEnv *env , jclass clazz) {
+	return NULL;
+}
+
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getVersion(JNIEnv *env, jclass clazz) {
+	return NULL;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
 	if (!extgl_Open()) {
 		throwException(env, "Could not load gl libs");
 		return;
@@ -575,8 +619,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
 		return;
-	screen = XDefaultScreen(disp);
-	if (!extgl_InitGLX(env, disp, screen)) {
+	current_screen = XDefaultScreen(disp);
+	if (!extgl_InitGLX(env, disp, current_screen)) {
 		decDisplay();
 		extgl_Close();
 		throwException(env, "Could not init GLX");
@@ -584,9 +628,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	}
 	bool create_success;
 	if (USEGLX13) {
-		create_success = initWindowGLX13(env, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
+		create_success = initWindowGLX13(env, pixel_format);
 	} else {
-		create_success = initWindowGLX(env, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
+		create_success = initWindowGLX(env, pixel_format);
 	}
 	if (!create_success) {
 		decDisplay();
@@ -595,15 +639,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	}
 }
 
-/*
- * Class:     org_lwjgl_opengl_GLWindow
- * Method:    nDestroy
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
-  (JNIEnv *env, jclass clazz)
-{
-	destroy();
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env, jclass clazz) {
+	destroyContext();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen) {
+	current_fullscreen = fullscreen == JNI_TRUE;
+	jclass cls_displayMode = env->GetObjectClass(mode);
+	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
+	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
+	int width = env->GetIntField(mode, fid_width);
+	int height = env->GetIntField(mode, fid_height);
+	bool window_created = createWindow(env, width, height);
+	if (!window_created) {
+		return;
+	}
+	if (isDebugEnabled())
+		dumpVisualInfo(vis_info);
+	if (USEGLX13)
+		glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
+	makeCurrent();
+	if (!checkXError(env)) {
+		glXDestroyWindow(getDisplay(), glx_window);
+		destroyWindow();
+	}
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nDestroyWindow(JNIEnv *env, jclass clazz) {
+	destroyWindow();
 }
 
 /*
@@ -611,7 +674,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
  * Method:    swapBuffers
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_swapBuffers(JNIEnv * env, jclass clazz)
 {
 	dirty = false;
 	if (USEGLX13)
@@ -626,7 +689,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jc
  * Method:    nIsDirty
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsDirty
   (JNIEnv *env, jclass clazz) {
 	bool result = dirty;
 	dirty = false;
@@ -638,7 +701,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
  * Method:    nIsVisible
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVisible
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsVisible
   (JNIEnv *env, jclass clazz) {
 	return minimized ? JNI_FALSE : JNI_TRUE;
 }
@@ -648,7 +711,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVisible
  * Method:    nIsCloseRequested
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsCloseRequested
   (JNIEnv *, jclass) {
 	bool saved = closerequested;
 	closerequested = false;
@@ -660,12 +723,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
  * Method:    nIsActive
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsActive
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsActive
   (JNIEnv *env, jclass clazz) {
 	return focused ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetVSyncEnabled
   (JNIEnv * env, jclass clazz, jboolean sync)
 {
 	if (extgl_Extensions.GLX_SGI_swap_control) {
