@@ -58,10 +58,10 @@ static bool mFirstTimeInitialization = true; // boolean to determine first time 
 static bool mouse_grabbed;
 static int mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
 
-/* These deltas track the cursor position from Windows messages */
-static int dx;
-static int dy;
-static int dwheel;
+/* These accumulated deltas track the cursor position from Windows messages */
+static int accum_dx;
+static int accum_dy;
+static int accum_dwheel;
 static int last_x;
 static int last_y;
 
@@ -82,7 +82,7 @@ static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
 		putEventElement(&event_queue, button);
 		putEventElement(&event_queue, state);
 		putEventElement(&event_queue, dx);
-		putEventElement(&event_queue, dy);
+		putEventElement(&event_queue, -dy);
 		putEventElement(&event_queue, dz);
 	}
 }
@@ -93,6 +93,7 @@ static void resetCursorPos(void) {
 	GetClientRect(getCurrentHWND(), &clientRect);
 	last_x = (clientRect.left + clientRect.right)/2;
 	last_y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
+	accum_dx = accum_dy = 0;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
@@ -111,7 +112,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 
 	initEventQueue(&event_queue);
 
-	last_x = last_y = dx = dy = dwheel = 0;
+	last_x = last_y = accum_dx = accum_dy = accum_dwheel = 0;
 	buffer_enabled = false;
 
 	// Create input
@@ -154,16 +155,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv * env, jc
 }
 
 void handleMouseScrolled(int event_dwheel) {
-	dwheel += event_dwheel;
+	accum_dwheel += event_dwheel;
 	putEvent(-1, 0, 0, 0, event_dwheel);
 }
 
 void handleMouseMoved(int x, int y) {
 	int event_dx = x - last_x;
 	int event_dy = y - last_y;
-	dx += event_dx;
-	dy += event_dy;
-	putEvent(-1, 0, event_dx, -event_dy, 0);
+	accum_dx += event_dx;
+	accum_dy += event_dy;
+	putEvent(-1, 0, event_dx, event_dy, 0);
 	last_x = x;
 	last_y = y;
 }
@@ -206,7 +207,7 @@ static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
 		}
 	}
 	if (dx != 0 || dy != 0 || dwheel != 0)
-		putEvent(-1, 0, dx, -dy, dwheel);
+		putEvent(-1, 0, dx, dy, dwheel);
 }
 
 static void readDXBuffer()
@@ -435,27 +436,6 @@ static int cap(int val, int min, int max) {
 		return val;
 }
 
-/*static void getGDICursorDelta(int* return_dx, int* return_dy) {
-
-	int dx;
-	int dy;
-
-	POINT newCursorPos;
-	RECT clientRect;
-	GetCursorPos(&newCursorPos);
-	ScreenToClient(getCurrentHWND(), &newCursorPos);
-	GetClientRect(getCurrentHWND(), &clientRect);
-	// Clip the position to the client rect
-	newCursorPos.x = cap(newCursorPos.x, clientRect.left, clientRect.right - 1);
-	newCursorPos.y = cap(newCursorPos.y, clientRect.top, clientRect.bottom - 1);
-	dx = newCursorPos.x - cursorPos.x;
-	dy = newCursorPos.y - cursorPos.y;
-	cursorPos.x += dx;
-	cursorPos.y += dy;
-	*return_dx = dx;
-	*return_dy = dy;
-}
-*/
 /**
  * Updates the fields on the Mouse
  */
@@ -498,10 +478,10 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer
 		coords[1] = -diMouseState.lY;
 		coords[2] = diMouseState.lZ;
 	} else {
-		coords[0] = dx;
-		coords[1] = -dy;
-		coords[2] = dwheel;
-		dx = dy = dwheel = 0;
+		coords[0] = accum_dx;
+		coords[1] = -accum_dy;
+		coords[2] = accum_dwheel;
+		accum_dx = accum_dy = accum_dwheel = 0;
 	}
 
 	for (int i = 0; i < mButtoncount; i++) {

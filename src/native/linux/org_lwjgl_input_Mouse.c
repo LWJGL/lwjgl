@@ -60,9 +60,9 @@
 static bool pointer_grabbed;
 static bool created;
 
-static int dx;
-static int dy;
-static int dz;
+static int accum_dx;
+static int accum_dy;
+static int accum_dz;
 static int last_x;
 static int last_y;
 static jbyte buttons[NUM_BUTTONS];
@@ -77,7 +77,7 @@ static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
 		putEventElement(&event_queue, button);
 		putEventElement(&event_queue, state);
 		putEventElement(&event_queue, dx);
-		putEventElement(&event_queue, dy);
+		putEventElement(&event_queue, -dy);
 		putEventElement(&event_queue, dz);
 	}
 }
@@ -85,11 +85,11 @@ static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
 static void setCursorPos(int x, int y) {
 	jint event_dx = x - last_x;
 	jint event_dy = y - last_y;
-	dx += event_dx;
-	dy += event_dy;
+	accum_dx += event_dx;
+	accum_dy += event_dy;
 	last_x = x;
 	last_y = y;
-	putEvent(-1, 0, event_dx, -event_dy, 0);
+	putEvent(-1, 0, event_dx, event_dy, 0);
 }
 
 static int transformY(int y) {
@@ -242,7 +242,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	if (disp == NULL)
 		return;
 	int i;
-	last_y = last_x = dx = dy = dz = 0;
+	last_y = last_x = accum_dx = accum_dy = accum_dz = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -357,12 +357,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
 	}
-	coords[0] = dx;
-	coords[1] = -dy;
-	coords[2] = dz;
-	dx = 0;
-	dy = 0;
-	dz = 0;
+	coords[0] = accum_dx;
+	coords[1] = -accum_dy;
+	coords[2] = accum_dz;
+	accum_dx = accum_dy = accum_dz = 0;
 	int num_buttons = NUM_BUTTONS;
 	if (num_buttons > buttons_length)
 		num_buttons = buttons_length;
@@ -385,4 +383,5 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass claz
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
 	setGrab(new_grab == JNI_TRUE ? true : false);
 	resetCursor(getWindowWidth()/2, transformY(getWindowHeight()/2));
+	accum_dx = accum_dy = 0;
 }
