@@ -109,8 +109,8 @@ public final class Game {
              angle = 0.0f;
  
         Mouse.poll();
-        if (Mouse.dx != 0 || Mouse.dy != 0)
-            System.out.println("Mouse moved " + Mouse.dx + " " + Mouse.dy);
+        if (Mouse.dx != 0 || Mouse.dy != 0 || Mouse.dz != 0)
+            System.out.println("Mouse moved " + Mouse.dx + " " + Mouse.dy + " " + Mouse.dz);
         for (int i = 0; i < 8; i++)
             if (Mouse.isButtonDown(i))
                 System.out.println("Button " + i + " down");

@@ -46,7 +46,7 @@
 #include <string.h>
 #include "org_lwjgl_input_Mouse.h"
 
-#define NUM_BUTTONS 8
+#define NUM_BUTTONS 3
 
 extern Display *disp;
 extern Window win;
@@ -58,8 +58,10 @@ jfieldID fid_dz;
 
 int last_x;
 int last_y;
+int last_z;
 int current_x;
 int current_y;
+int current_z;
 unsigned char buttons[NUM_BUTTONS];
 
 Cursor blank_cursor;
@@ -107,10 +109,10 @@ int blankCursor(void) {
 	gc_values.foreground = 0;
 	GC gc = XCreateGC(disp, mask, GCForeground, &gc_values);
 	XFillRectangle(disp, mask, gc, 0, 0, best_width, best_height);
+	XFreeGC(disp, gc);
 	XColor dummy_color;
 	blank_cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
 	XFreePixmap(disp, mask);
-	XFreeGC(disp, gc);
 	XDefineCursor(disp, win, blank_cursor);
 	return 1;
 }
@@ -124,7 +126,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	int i;
-	current_x = current_y = last_x = last_y = 0;
+	current_x = current_y = current_z = last_x = last_y = last_z = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -145,6 +147,25 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 
 /*
  * Class:     org_lwjgl_input_Mouse
+ * Method:    nGetNumButtons
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNumButtons(JNIEnv *env, jclass clazz) {
+	return (jint)NUM_BUTTONS;
+}
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nHasZValue
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasZValue(JNIEnv *env, jclass clazz) {
+	return JNI_TRUE;
+}
+
+    
+/*
+ * Class:     org_lwjgl_input_Mouse
  * Method:    nDestroy
  * Signature: ()V
  */
@@ -156,27 +177,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 	XUngrabPointer(disp, CurrentTime);
 }
 
-void setButtonState(XButtonEvent event, unsigned char val) {
-	switch (event.button) {
-		case Button1:
-			buttons[0] = val;
-			break;
-		case Button2:
-			buttons[1] = val;
-			break;
-		case Button3:
-			buttons[2] = val;
-			break;
-		case Button4:
-			buttons[3] = val;
-			break;
-		case Button5:
-			buttons[4] = val;
-			break;
-		default: assert(0);
-	}
-}
-
 int checkPointer() {
 	XEvent event;
 	int count = 0;
@@ -184,10 +184,41 @@ int checkPointer() {
 		count++;
 		switch (event.type) {
 			case ButtonPress:
-				setButtonState(event.xbutton, 1);
+				switch (event.xbutton.button) {
+					case Button1:
+						buttons[0] = 1;
+						break;
+					case Button2:
+						buttons[1] = 1;
+						break;
+					case Button3:
+						buttons[2] = 1;
+						break;
+					case Button4:
+						current_z--;
+						break;
+					case Button5:
+						current_z++;
+						break;
+					default: assert(0);
+				}
 				break;
 			case ButtonRelease:
-				setButtonState(event.xbutton, 0);
+				switch (event.xbutton.button) {
+					case Button1:
+						buttons[0] = 0;
+						break;
+					case Button2:
+						buttons[1] = 0;
+						break;
+					case Button3:
+						buttons[2] = 0;
+						break;
+					case Button4: /* Fall through */
+					case Button5:
+						break;
+					default: assert(0);
+				}
 				break;
 			case MotionNotify:
 				current_x = event.xbutton.x;
@@ -210,11 +241,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	checkPointer();
 	int moved_x = current_x - last_x;
 	int moved_y = current_y - last_y;
+	int moved_z = current_z - last_z;
 	(*env)->SetStaticIntField(env, clazz, fid_dx, (jint)moved_x);
 	(*env)->SetStaticIntField(env, clazz, fid_dy, (jint)moved_y);
-	(*env)->SetStaticIntField(env, clazz, fid_dz, (jint)0);
+	(*env)->SetStaticIntField(env, clazz, fid_dz, (jint)moved_z);
 	last_x = current_x;
 	last_y = current_y;
+	last_z = current_z;
 	jbooleanArray buttonsArray = (jbooleanArray) (*env)->GetStaticObjectField(env, clazz, fid_button);
 	unsigned char * class_buttons = (unsigned char *) (*env)->GetPrimitiveArrayCritical(env, buttonsArray, NULL);
 	memcpy(class_buttons, buttons, NUM_BUTTONS*sizeof(unsigned char));
