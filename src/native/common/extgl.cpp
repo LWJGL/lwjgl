@@ -140,11 +140,11 @@ wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT = NULL;
 
 /* WGL_ARB_buffer_region */
 
-wglCreateBufferRegionARBPROC wglCreateBufferRegionARB = NULL;
+/*wglCreateBufferRegionARBPROC wglCreateBufferRegionARB = NULL;
 wglDeleteBufferRegionARBPROC wglDeleteBufferRegionARB = NULL;
 wglSaveBufferRegionARBPROC wglSaveBufferRegionARB = NULL;
 wglRestoreBufferRegionARBPROC wglRestoreBufferRegionARB = NULL;
-
+*/
 /* WGL_ARB_extension_string */
 
 
@@ -393,7 +393,7 @@ static bool WGLQueryExtension(JNIEnv *env, const char *name)
 	return QueryExtension(env, NULL, extensions, name);
 }
 
-static void extgl_InitWGLARBBufferRegion(JNIEnv *env)
+/*static void extgl_InitWGLARBBufferRegion(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_ARB_buffer_region)
 		return;
@@ -404,7 +404,7 @@ static void extgl_InitWGLARBBufferRegion(JNIEnv *env)
 
 	EXTGL_SANITY_CHECK(env, WGL_ARB_buffer_region);
 }
-
+*/
 static void extgl_InitWGLARBPbuffer(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_ARB_pbuffer)
@@ -488,7 +488,7 @@ void extgl_InitWGL(JNIEnv *env)
 	extgl_InitWGLARBRenderTexture(env);
 	extgl_InitWGLARBPixelFormat(env);
 	extgl_InitWGLARBPbuffer(env);
-	extgl_InitWGLARBBufferRegion(env);
+	//extgl_InitWGLARBBufferRegion(env);
 }
 
 #endif /* WIN32 */

@@ -68,6 +68,8 @@ void* handleOAL;
 const struct mach_header* handleOAL;
 #endif
 
+alGetProcAddressPROC alGetProcAddress;
+
 /* Loads OpenAL */
 static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths);
 
@@ -230,21 +232,29 @@ void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 	if (!LoadOpenAL(env, oalPaths)) {
 		return;
 	}
-
+	alGetProcAddress = (alGetProcAddressPROC)extal_GetProcAddress("alGetProcAddress");
+	if (alGetProcAddress == NULL) {
+		DeInitializeOpenAL();
+		throwOpenALException(env, "Could not load alGetProcAddress function pointer.");
+		return;
+	}
 	//load basic OpenAL functions
 	if(!LoadAL(env)) {
+		DeInitializeOpenAL();
 		throwOpenALException(env, "Could not load OpenAL function pointers.");
 		return;
 	}
 
 	//load OpenAL context functions
 	if(!LoadALC(env)) {
+		DeInitializeOpenAL();
 		throwOpenALException(env, "Could not load ALC function pointers.");
 		return;
 	}
 
 	//load OpenAL extensions
 	if(!LoadALExtensions()) {
+		DeInitializeOpenAL();
 		throwOpenALException(env, "Could not load AL extension function pointers.");
 		return;
 	}

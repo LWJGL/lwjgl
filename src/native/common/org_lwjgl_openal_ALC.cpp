@@ -51,7 +51,6 @@ typedef ALCvoid     (ALCAPIENTRY *alcCloseDevicePROC)(ALCdevice *device);
 typedef ALCcontext* (ALCAPIENTRY *alcCreateContextPROC)(ALCdevice *device,ALCint *attrList);
 typedef ALCboolean  (ALCAPIENTRY *alcMakeContextCurrentPROC)(ALCcontext *context);
 typedef ALCvoid	    (ALCAPIENTRY *alcProcessContextPROC)(ALCcontext *context);
-typedef ALCcontext* (ALCAPIENTRY *alcGetCurrentContextPROC)(ALCvoid);
 typedef ALCdevice*  (ALCAPIENTRY *alcGetContextsDevicePROC)(ALCcontext *context);
 typedef ALCvoid	    (ALCAPIENTRY *alcSuspendContextPROC)(ALCcontext *context);
 typedef ALCvoid     (ALCAPIENTRY *alcDestroyContextPROC)(ALCcontext *context);
@@ -60,6 +59,7 @@ typedef ALCboolean  (ALCAPIENTRY *alcIsExtensionPresentPROC)(ALCdevice *device,A
 //typedef ALCvoid*    (ALCAPIENTRY *alcGetProcAddressPROC)(ALCdevice *device,ALCubyte *funcName);
 typedef ALCenum	    (ALCAPIENTRY *alcGetEnumValuePROC)(ALCdevice *device,ALCubyte *enumName);
 
+alcGetCurrentContextPROC alcGetCurrentContext;
 static alcGetStringPROC alcGetString;
 static alcGetIntegervPROC alcGetIntegerv;
 static alcOpenDevicePROC alcOpenDevice;
@@ -67,7 +67,6 @@ static alcCloseDevicePROC alcCloseDevice;
 static alcCreateContextPROC alcCreateContext;
 static alcMakeContextCurrentPROC alcMakeContextCurrent;
 static alcProcessContextPROC alcProcessContext;
-static alcGetCurrentContextPROC alcGetCurrentContext;
 static alcGetContextsDevicePROC alcGetContextsDevice;
 static alcSuspendContextPROC alcSuspendContext;
 static alcDestroyContextPROC alcDestroyContext;

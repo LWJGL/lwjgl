@@ -154,7 +154,20 @@ extern EAXGet  eaxGet;
 #endif
 
 typedef ALvoid      (ALAPIENTRY *alEnablePROC)( ALenum capability );
+typedef ALboolean   (ALAPIENTRY *alIsExtensionPresentPROC)( ALubyte* fname );
+typedef ALvoid*	    (ALAPIENTRY *alGetProcAddressPROC)( ALubyte* fname );
+typedef ALubyte*	(ALAPIENTRY *alGetStringPROC)( ALenum param );
+typedef ALenum	    (ALAPIENTRY *alGetErrorPROC)( ALvoid );
+
 extern alEnablePROC alEnable;
+extern alIsExtensionPresentPROC alIsExtensionPresent;
+extern alGetProcAddressPROC alGetProcAddress;
+extern alGetStringPROC alGetString;
+extern alGetErrorPROC alGetError;
+
+typedef ALCcontext* (ALCAPIENTRY *alcGetCurrentContextPROC)(ALCvoid);
+extern alcGetCurrentContextPROC alcGetCurrentContext;
+
 #ifdef __cplusplus
 }
 #endif

@@ -2135,12 +2135,12 @@ extern wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
 /*------------WGL_ARB_BUFFER_REGION----------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#define WGL_FRONT_COLOR_BUFFER_BIT_ARB                          0x00000001
+/*#define WGL_FRONT_COLOR_BUFFER_BIT_ARB                          0x00000001
 #define WGL_BACK_COLOR_BUFFER_BIT_ARB                           0x00000002
 #define WGL_DEPTH_BUFFER_BIT_ARB                                0x00000004
 #define WGL_STENCIL_BUFFER_BIT_ARB                              0x00000008
 
-/*typedef HANDLE (APIENTRY * wglCreateBufferRegionARBPROC) (HDC hDC, int iLayerPlane, UINT uType);
+typedef HANDLE (APIENTRY * wglCreateBufferRegionARBPROC) (HDC hDC, int iLayerPlane, UINT uType);
 typedef VOID (APIENTRY * wglDeleteBufferRegionARBPROC) (HANDLE hRegion);
 typedef BOOL (APIENTRY * wglSaveBufferRegionARBPROC) (HANDLE hRegion, int x, int y, int width, int height);
 typedef BOOL (APIENTRY * wglRestoreBufferRegionARBPROC) (HANDLE hRegion, int x, int y, int width, int height, int xSrc, int ySrc);
