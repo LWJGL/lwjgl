@@ -54,6 +54,8 @@
 	 */
 	extern bool releaseInput(void);
 
+	extern void resetCursor(int x, int y);
+
 	/*
 	 * Various functions to release/acquire keyboard and mouse
 	 */

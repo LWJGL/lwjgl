@@ -93,8 +93,8 @@ static void transformCursorPos(int x, int y) {
 	setCursorPos(x, y);
 }
 
-static void centerCursor() {
-	transformCursorPos(getWindowWidth()/2, getWindowHeight()/2);
+void resetCursor(int x, int y) {
+	transformCursorPos(x, y);
 	last_x = current_x;
 	last_y = current_y;
 }
@@ -161,18 +161,18 @@ void updatePointerGrab(void) {
 }
 
 static void doWarpPointer(void ) {
-//	int i;
 	XEvent ignore_warp_guard;
 	ignore_warp_guard.type = MotionNotify;
-	ignore_warp_guard.xmotion.state = 1; // Tell event loop to start ignoring motion events
-	centerCursor();
+	// Tell event loop to start ignoring motion events
+	ignore_warp_guard.xmotion.state = 1;
 	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
-	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
-	ignore_warp_guard.xmotion.state = 0; // Tell event loop to stop ignoring motion events
+	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, getWindowWidth()/2, getWindowHeight()/2);
+	// Tell event loop to stop ignoring motion events
+	ignore_warp_guard.xmotion.state = 0;
 	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
 
-	centerCursor();
-/*	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
+/*	centerCursor();
+	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
 	XEvent event;
 	// Try to catch the warp pointer event
 	for (i = 0; i < WARP_RETRY; i++) {

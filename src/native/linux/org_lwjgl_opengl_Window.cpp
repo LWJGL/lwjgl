@@ -157,8 +157,11 @@ static void handleMotion(XMotionEvent *event) {
 	if (event->send_event == True) {
 		// We got a warp ignore message
 		ignore_motion_events = event->state == 1 ? true : false;
-	} else if (!ignore_motion_events)
+	} else if (ignore_motion_events) {
+		resetCursor(event->x, event->y);
+	} else {
 		handlePointerMotion(event);
+	}
 }
 
 static void handleMessages() {
@@ -418,7 +421,7 @@ static void dumpVisualInfo(XVisualInfo *vis_info) {
 		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
 		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLES_ARB, &samples);
 	}
-	printf("Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d\n", r, g, b, alpha, depth, stencil, sample_buffers, samples);
+	printfDebug("Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d\n", r, g, b, alpha, depth, stencil, sample_buffers, samples);
 }
 
 static void destroy(void) {
