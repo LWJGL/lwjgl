@@ -44,6 +44,9 @@
 #include "org_lwjgl_opengl_AWTGLCanvas.h"
 
 extern bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, int *pixel_format_index_return, HGLRC *context_return);
+extern int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer);
+extern int findPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format);
+extern bool applyPixelFormat(HDC hdc, int iPixelFormat);
 
 /*
  * Grab the context from the incoming AWTGLCanvas and return it
@@ -202,10 +205,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTGLCanvas_nDestroyContext
 	JAWT_Win32DrawingSurfaceInfo* dsi_win;
 	jboolean result;
 	HGLRC hglrc;
-	BOOL mcResult;
-	LPVOID lpMsgBuf;
-	jclass cls_AWTGLCanvas;
-	jmethodID mid_doPaint;
 
 	// Get the AWT
 	awt.version = JAWT_VERSION_1_4;
