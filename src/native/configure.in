@@ -56,12 +56,8 @@ else
 fi
 
 dnl Checks for libraries.
-dnl Replace `main' with a function in -lGL:
 LIBS='-L/usr/X11R6/lib'
 AC_PATH_X
-AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(GL is required))
-dnl Replace `main' with a function in -lGLU:
-AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU is required))
 dnl Replace `main' with a function in -lX11:
 AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is required))
 dnl Replace `main' with a function in -lXext:

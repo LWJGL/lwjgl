@@ -40,13 +40,11 @@
  */
 
 
+#include "extgl.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/xf86vmode.h>
-#include <GL/glx.h>
 #include <X11/Xutil.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <stdio.h>
 #include <jni.h>
 #include "org_lwjgl_Display.h"
@@ -144,7 +142,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		return JNI_FALSE;
 	}
 	root_win = RootWindow(disp, screen);
-
+	extgl_Open();
 	vis_info = glXChooseVisual(disp, screen, attriblist);
 
         /* might be a better way to handle not being able to set GLX_ALPHA_SIZE... */
@@ -213,6 +211,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 	XFree(avail_modes);
 	XFree(vis_info);
 	XCloseDisplay(disp);
+	extgl_Close();
 #ifdef _DEBUG
 	printf("Closed X connection\n");
 #endif

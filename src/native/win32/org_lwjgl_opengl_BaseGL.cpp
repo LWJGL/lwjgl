@@ -108,7 +108,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		printf("Failed to set pixel format\n");
 		return JNI_FALSE;
 	}
-
+	if (extgl_Open() != 0)
+		return JNI_FALSE;
 	// Create a rendering context
 	hglrc = wglCreateContext(hdc);
 	if (hglrc == NULL) {
@@ -119,6 +120,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 	// Automatically make it the current context
 	wglMakeCurrent(hdc, hglrc);
 
+	if (extgl_Initialize() != 0) {
+		printf("Failed to initialize GL\n");
+		return JNI_FALSE;
+	}
+
 	char * p = (char *) glGetString(GL_EXTENSIONS);
     if (NULL == p) {
         printf("NO extensions available\n");
@@ -126,11 +132,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		printf("Available extensions:\n%s\n", p);
 	}
 	
-	if (extgl_Initialize() != 0) {
-		printf("Failed to initialize GL\n");
-		return JNI_FALSE;
-	}
-
 	return JNI_TRUE;
 }
 
@@ -147,7 +148,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
 	// Delete the rendering context
 	if (hglrc != NULL)
 		wglDeleteContext(hglrc); 
-
+	extgl_Close();
 }
 
 /*

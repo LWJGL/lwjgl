@@ -14,7 +14,6 @@
 
 #include <jni.h>
 #include "extgl.h"
-#include <GL/glu.h>
 
 #define CHECK_GL_ERROR \
 	{ \

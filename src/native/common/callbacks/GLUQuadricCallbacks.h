@@ -9,7 +9,6 @@
 #define	_GLUQuadricCallbacks_H
 
 #include "extgl.h"
-#include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
 

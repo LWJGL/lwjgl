@@ -39,14 +39,9 @@
  * @version $Revision$
  */
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include "org_lwjgl_opengl_GLU.h"
 #include "extgl.h"
 #include "checkGLerror.h"
-#include "GL/glu.h"
 
 #include "callbacks/GLUQuadricCallbacks.h"
 
