@@ -49,7 +49,6 @@
 	<patternset id="lwjgl-win32.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="lwjgl.dll"/>
-		<include name="lwjgl_d.dll"/>
 		<include name="lwjglaudio.dll"/>
 	</patternset>  
   
@@ -57,7 +56,6 @@
 	<patternset id="lwjgl-linux.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="liblwjgl.so"/>
-		<include name="liblwjgl_d.so"/>
 		<include name="libopenal.so"/>
 	</patternset>  
 	
@@ -65,7 +63,6 @@
 	<patternset id="lwjgl-macosx.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="liblwjgl.jnilib"/>
-		<include name="liblwjgl_d.jnilib"/>
 		<include name="openal.dylib"/>
 	</patternset>	
 	
@@ -187,13 +184,6 @@
 		  </fileset>
 		</apply>
 		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl.so"/>
-
-		<apply executable="sh" dir="${lwjgl.src.native}">
-		  <fileset dir="${lwjgl.src.native}">
-		    <include name="build_debug.sh"/>
-		  </fileset>
-		</apply>
-		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl_d.so"/>
 	</target>	
 	
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
@@ -206,12 +196,6 @@
 		</apply>
 		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl.jnilib"/>
 
-		<apply executable="sh" dir="${lwjgl.src.native}">
-		  <fileset dir="${lwjgl.src.native}">
-		    <include name="build_debug.sh"/>
-		  </fileset>
-		</apply>
-		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl_d.jnilib"/>
 	</target>	
   	
   	<!-- Packages the files -->
