@@ -1,4 +1,4 @@
- * Copyright (c) 2002 Light Weight Java Game Library Project
+ /* Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
