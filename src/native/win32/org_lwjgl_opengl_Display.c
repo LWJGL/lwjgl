@@ -71,6 +71,19 @@ HWND getCurrentHWND() {
 	return display_hwnd;
 }
 
+static void setupCursorClipping() {
+	RECT hwnd_client;
+	if (display_hwnd != NULL && GetWindowRect(display_hwnd, &hwnd_client) != 0) {
+		if (ClipCursor(&hwnd_client) == 0)
+			printfDebug("ClipCursor failed\n");
+	}
+}
+
+static void resetDisplayModeAndClipping(JNIEnv *env) {
+	resetDisplayMode(env);
+	ClipCursor(NULL);
+}
+
 /*
  * Called when the application is alt-tabbed to or from
  */
@@ -92,7 +105,7 @@ static void appActivate(bool active)
 		did_maximize = true;
 	} else if (isFullScreen) {
 		ShowWindow(display_hwnd, SW_SHOWMINNOACTIVE);
-		resetDisplayMode(NULL);
+		resetDisplayModeAndClipping(NULL);
 	}
 	inAppActivate = false;
 }
@@ -114,6 +127,8 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
       int xPos; 
       int yPos;
       int dwheel;
+	if (isFullScreen && !isMinimized && isFocused)
+		setupCursorClipping();
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
 		case WM_SYSCOMMAND:
@@ -319,6 +334,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyWindow(JNIEnv *env, jobject self) {
 	closeWindow(&display_hwnd, &display_hdc);
+	if (isFullScreen)
+		ClipCursor(NULL);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_switchDisplayMode(JNIEnv *env, jobject self, jobject mode) {
@@ -326,7 +343,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_switchDisplayMode(JNIE
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_resetDisplayMode(JNIEnv *env, jobject self) {
-	resetDisplayMode(env);
+	resetDisplayModeAndClipping(env);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getGammaRampLength(JNIEnv *env, jobject self) {
