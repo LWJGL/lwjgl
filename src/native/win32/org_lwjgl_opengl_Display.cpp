@@ -292,10 +292,8 @@ static void appActivate(bool active)
 	if (active) {
 		if (isFullScreen) {
 			restoreDisplayMode();
-			ShowWindow(display_hwnd, SW_RESTORE);
-		} else {
-			ShowWindow(display_hwnd, SW_RESTORE);
 		}
+		ShowWindow(display_hwnd, SW_RESTORE);
 		SetForegroundWindow(display_hwnd);
 	} else if (isFullScreen) {
 		ShowWindow(display_hwnd, SW_MINIMIZE);
