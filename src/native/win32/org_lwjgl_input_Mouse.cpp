@@ -59,7 +59,7 @@ bool mHaswheel;                       // Temporary wheel check
 JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
 bool mCreate_success;                 // bool used to determine successfull creation
-bool FirstTimeInitialization = true;  // boolean to determine first time initialization
+bool mFirstTimeInitialization = true; // boolean to determine first time initialization
 
 // Cached fields of Mouse.java
 jclass clsMouse;
@@ -102,8 +102,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
   CreateMouse();
 
   //check for first time initialization - need to detect capabilities
-  if (FirstTimeInitialization) {
-    FirstTimeInitialization = false;
+  if (mFirstTimeInitialization) {
+    mFirstTimeInitialization = false;
 
     /* Enumerate capabilities of Mouse */
     EnumerateMouseCapabilities();
