@@ -319,7 +319,95 @@ extern glXGetClientStringPROC glXGetClientString;
 extern glXQueryServerStringPROC glXQueryServerString;
 extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
 
-#endif
+#endif /* X11 */
+
+#ifdef _OSX
+#include <Carbon/Carbon.h>
+
+CFBundleRef gBundleRefOpenGL = NULL;
+// -------------------------
+OSStatus aglInitEntryPoints (void)
+{
+    OSStatus err = noErr;
+    const Str255 frameworkName = "\pOpenGL.framework";
+    FSRefParam fileRefParam;
+    FSRef fileRef;
+    CFURLRef bundleURLOpenGL;
+    memset(&fileRefParam, 0, sizeof(fileRefParam));
+    memset(&fileRef, 0, sizeof(fileRef));
+    fileRefParam.ioNamePtr  = frameworkName;
+    fileRefParam.newRef = &fileRef;
+
+    // Frameworks directory/folder
+    //
+    err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
+    if (noErr != err)
+    {
+        DebugStr ("\pCould not find frameworks folder");
+        return err;
+    }
+
+    // make FSRef for folder
+    //
+    err = PBMakeFSRefSync (&fileRefParam); 
+
+    
+    if (noErr != err)
+    {
+        DebugStr ("\pCould make FSref to frameworks folder");
+        return err;
+    }
+    
+    // create URL to folder
+    //
+    bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
+    if (!bundleURLOpenGL)
+    {
+        DebugStr ("\pCould create OpenGL Framework bundle URL");
+        return paramErr;
+    }
+    
+    // create ref to GL's bundle
+    //
+    gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
+    if (!gBundleRefOpenGL)
+    {
+        DebugStr ("\pCould not create OpenGL Framework bundle");
+        return paramErr;
+    }
+
+    // release created bundle
+    //
+    CFRelease (bundleURLOpenGL);
+
+    // if the code was successfully loaded, look for our function.
+    if (!CFBundleLoadExecutable (gBundleRefOpenGL))
+    {
+        DebugStr ("\pCould not load MachO executable");
+        return paramErr;
+    }
+    
+    return err;
+}
+
+
+void aglDellocEntryPoints (void)
+{
+    if (gBundleRefOpenGL != NULL)
+    {
+        // unload the bundle's code.
+        CFBundleUnloadExecutable (gBundleRefOpenGL);
+        CFRelease (gBundleRefOpenGL);
+        gBundleRefOpenGL = NULL;
+    }
+}
+
+
+void * aglGetProcAddress (char * pszProc)
+{
+    return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
+}
+#endif /* OSX */
 
 /*************************************************************/
 /* GLU functions */
@@ -5441,7 +5529,6 @@ extern wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
 /* I use int here because C does not know bool */
 
 #ifdef _WIN32
-
 struct WGLExtensionTypes
 {
     int ARB_buffer_region;
@@ -5456,11 +5543,9 @@ struct WGLExtensionTypes
     int NV_render_depth_texture;
     int NV_render_texture_rectangle;
 };
-
 #endif /* WIN32 */
 
 #ifdef _X11
-
 struct GLXExtensionTypes
 {
     int GLX12;
@@ -5468,8 +5553,13 @@ struct GLXExtensionTypes
     int EXT_visual_info;
     int EXT_visual_rating;
 };
-
 #endif /* X11 */
+
+#ifdef _OSX
+struct AGLExtensionTypes
+{
+};
+#endif;
 
 struct GLUExtensionTypes
 {
@@ -5487,6 +5577,10 @@ struct ExtensionTypes
 #ifdef _X11
     struct GLXExtensionTypes glx;
 #endif /* X11 */
+#ifdef _OSX
+    struct AGLExtensionTypes agl;
+#endif /* OSX */
+    
     struct GLUExtensionTypes glu;
     int ARB_imaging;
     int ARB_depth_texture;
@@ -5587,6 +5681,10 @@ int extgl_Open(Display *disp, int screen);
 #endif
 
 #ifdef _WIN32
+int extgl_Open(void);
+#endif
+
+#ifdef _OSX
 int extgl_Open(void);
 #endif
 

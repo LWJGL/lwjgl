@@ -268,7 +268,6 @@ glGetPixelMapusvPROC glGetPixelMapusv = NULL;
 glGetPointervPROC glGetPointerv = NULL;
 glGetPolygonStipplePROC glGetPolygonStipple = NULL;
 glGetStringPROC glGetString = NULL;
-//const GLubyte * glGetString(const GLenum name);
 glGetTexEnvfvPROC glGetTexEnvfv = NULL;
 glGetTexEnvivPROC glGetTexEnviv = NULL;
 glGetTexGendvPROC glGetTexGendv = NULL;
@@ -376,7 +375,6 @@ glRasterPos3dvPROC glRasterPos3dv = NULL;
 glRasterPos3fPROC glRasterPos3f = NULL;
 glRasterPos3fvPROC glRasterPos3fv = NULL;
 glRasterPos3iPROC glRasterPos3i = NULL;
-
 glRasterPos3ivPROC glRasterPos3iv = NULL;
 glRasterPos3sPROC glRasterPos3s = NULL;
 glRasterPos3svPROC glRasterPos3sv = NULL;
@@ -775,6 +773,10 @@ wglFreeMemoryNVPROC wglFreeMemoryNV = NULL;
 glXAllocateMemoryNVPROC glXAllocateMemoryNV = NULL;
 glXFreeMemoryNVPROC glXFreeMemoryNV = NULL;
 #endif /* X11 */
+
+#ifdef _OSX
+// TODO: find the OSX equivalent of these functions
+#endif /* OSX */
 
 #endif /* GL_NV_vertex_array_range */
 
@@ -1325,8 +1327,6 @@ static int extgl_error = 0;
 
 struct ExtensionTypes extgl_Extensions;
 
-struct ExtensionTypes SupportedExtensions; /* deprecated, please do not use */
-
 #ifdef _WIN32
 HMODULE lib_gl_handle = NULL;
 HMODULE lib_glu_handle = NULL;
@@ -1335,6 +1335,12 @@ HMODULE lib_glu_handle = NULL;
 #ifdef _X11
 void * lib_gl_handle = NULL;
 void * lib_glu_handle = NULL;
+#endif
+
+#ifdef _OSX
+// Note: Not used, there is a CFBundleRef in the header file that handles the
+// dynamic load from the GL Framework bundle and this framework include gl
+// and glu in the same library
 #endif
 
 /* getProcAddress */
@@ -1371,6 +1377,12 @@ void *extgl_GetProcAddress(char *name)
     }
     return t;
 #endif
+
+#ifdef _OSX
+    void *t =(void *)aglGetProcAddress(name);
+
+    return t;
+#endif 
 }
 
 /*-----------------------------------------------------*/
@@ -1521,6 +1533,23 @@ int extgl_InitializeWGL()
 
 /*-----------------------------------------------------*/
 /* WGL stuff END*/
+/*-----------------------------------------------------*/
+
+/*-----------------------------------------------------*/
+/* AGL stuff BEGIN*/
+/*-----------------------------------------------------*/
+#ifdef _OSX
+
+int extgl_InitializeWGL()
+{
+    // add in AGL extensions here
+
+    return 0;
+}
+
+#endif
+/*-----------------------------------------------------*/
+/* AGL stuff END*/
 /*-----------------------------------------------------*/
 
 int QueryExtension(const GLubyte*extensions, const char *name)
@@ -3199,7 +3228,11 @@ int extgl_Initialize()
     extgl_InitializeWGL();
 #endif
 
-    SupportedExtensions = extgl_Extensions;
+#ifdef _OSX
+    /* load AGL extensions */
+    extgl_InitializeAGL();
+#endif
+
     return extgl_error;
 }
 
@@ -3217,12 +3250,13 @@ int extgl_Open(Display *disp, int screen)
 	    return 1;
     return 0;
 }
-#endif
+#endif /* X11 */
 
 #ifdef _WIN32
 int extgl_Open(void)
 {
-
+    // load the dynamic libraries for OpenGL
+    //
     lib_gl_handle = LoadLibrary("opengl32.dll");
 	if (lib_gl_handle == NULL)
 		return 1;
@@ -3231,7 +3265,25 @@ int extgl_Open(void)
         return 1;
     return 0;
 }
-#endif
+#endif /* WIN32 */
+
+#ifdef _OSX
+int extgl_Open(void)
+{
+    OSStatus err = aglInitEntryPoints();
+    if ( noErr != err )
+    {
+        // if we encountered an error while initializing OpenGL
+        // we're hosed - return
+        //
+        return 1;
+    }
+
+    // open gl framework initialized just fine
+    //
+    return 0;
+}
+#endif /* OSX */
 
 void extgl_Close(void)
 {
@@ -3243,12 +3295,9 @@ void extgl_Close(void)
 	FreeLibrary(lib_gl_handle);
 	FreeLibrary(lib_glu_handle);
 #endif
-}
-
-/* deprecated function please do not use it, use extgl_Initialize() instead */
-int glInitialize()
-{
-    return extgl_Initialize();
+#ifdef _OSX
+        aglDellocEntryPoints();
+#endif 
 }
 
 /* turn on the warning for the borland compiler*/

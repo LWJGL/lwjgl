@@ -63,6 +63,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
 #endif      
 
+      renderingContext = new RenderingContext();
       
       InitCursor();
 

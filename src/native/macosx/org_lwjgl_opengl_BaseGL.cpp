@@ -39,6 +39,7 @@
  * @version $Revision$
  */
 
+#define _OSX
 #include "extgl.h"
 #include "org_lwjgl_opengl_BaseGL.h"
 #include "RenderingContext.h"
@@ -56,6 +57,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
       AGLPixelFormat 				fmt;
       GLboolean      				ok;
       GLint         			 	attrib[] = { AGL_RGBA, AGL_NONE };
+
+      if ( extgl_Open() != 0 )
+      {
+          printf("extgl_Open failed");
+          return JNI_FALSE;
+      }
       
       /* Choose an rgb pixel format */
       fmt = aglChoosePixelFormat(NULL, 0, attrib);
@@ -85,8 +92,26 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
           return JNI_FALSE;
       }
 
+      if ( extgl_Initialize() != 0 )
+      {
+          printf("Failed to initialize GL [extgl_Initialize()]\n");
+          return JNI_FALSE;
+      }
+
       /* Pixel format is no longer needed */
       aglDestroyPixelFormat(fmt);
+
+#ifdef _DEBUG
+      char * p = (char * ) glGetString( GL_EXTENSIONS );
+      if ( NULL == p )
+      {
+          printf("NO extensions available");
+      }
+      else
+      {
+          printf("Available extensions:\n%s\n", p);
+      }
+#endif /* DEBUG */
       
       return JNI_TRUE;
 }
@@ -106,6 +131,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
       // destroy the context
       //
       aglDestroyContext( renderingContext->aglContext );
+
+      // close the gl extension context
+      //
+      extgl_Close();
 }
 
 /*
