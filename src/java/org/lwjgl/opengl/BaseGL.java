@@ -99,7 +99,7 @@ public class BaseGL extends Window {
 	 * @param depth Required depth bits
 	 * @param stencil Required stencil bits
 	 */
-	protected BaseGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
+	public BaseGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
 		super(title, x, y, width, height);
 		
 		this.x = x;
@@ -123,7 +123,7 @@ public class BaseGL extends Window {
 	 * @param depth Minimum bits per pixel in depth buffer
 	 * @param stencil Minimum bits per pixel in stencil buffer
 	 */
-	protected BaseGL(String title, int bpp, int alpha, int depth, int stencil) {
+	public BaseGL(String title, int bpp, int alpha, int depth, int stencil) {
 		super(title, 0, 0, Display.getWidth(), Display.getHeight());
 		
 		this.x = 0;
