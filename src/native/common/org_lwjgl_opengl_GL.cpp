@@ -47,6 +47,13 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
+static inline jobject newBuffer(JNIEnv *env, void *p, int size) {
+	if (p == NULL)
+		return NULL;
+	else
+		return env->NewDirectByteBuffer(p, size);
+}
+
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    glActiveStencilFaceEXT
@@ -1407,7 +1414,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVariantPointervEXT(JNIEn
 	void *address;
 	glGetVariantPointervEXT((GLuint) p0, (GLuint) p1, &address);
 	CHECK_GL_ERROR
-	return env->NewDirectByteBuffer(address, size);
+	return newBuffer(env, address, size);
 }
 
 /*
@@ -1492,7 +1499,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointervARB(
 	void *address;
 	glGetVertexAttribPointervARB((GLuint) p0, (GLuint) p1, &address);
 	CHECK_GL_ERROR
-	return env->NewDirectByteBuffer(address, size);
+	return newBuffer(env, address, size);
 }
 
 /*
@@ -1505,7 +1512,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointervNV(J
 	void *address;
 	glGetVertexAttribPointervNV((GLuint) p0, (GLuint) p1, &address);
 	CHECK_GL_ERROR
-	return env->NewDirectByteBuffer(address, size);
+	return newBuffer(env, address, size);
 }
 
 /*
@@ -3476,7 +3483,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glXAllocateMemoryNV(JNIEnv * 
 #ifdef _X11
 	CHECK_EXISTS(glXAllocateMemoryNV)
 	void *mem_address = glXAllocateMemoryNV((GLint) size, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	return env->NewDirectByteBuffer(mem_address, size);
+	return newBuffer(env, mem_address, size);
 #else
 	CHECK_EXISTS(NULL)
 	return 0;
@@ -3506,7 +3513,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_wglAllocateMemoryNV(JNIEnv * 
 #ifdef _WIN32
 	CHECK_EXISTS(wglAllocateMemoryNV)
 	void *mem_address = wglAllocateMemoryNV((GLint) size, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	return env->NewDirectByteBuffer(mem_address, size);
+	return newBuffer(env, mem_address, size);
 #else
 	CHECK_EXISTS(NULL)
 	return 0;
@@ -4070,7 +4077,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glMapBufferARB(JNIEnv *env, j
 		if (old_buffer_address == buffer_address)
 			return old_buffer;
 	}
-	return env->NewDirectByteBuffer(buffer_address, size);
+	return newBuffer(env, buffer_address, size);
 }
 
 /*
@@ -4110,5 +4117,5 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetBufferPointervARB(JNIEnv
 	void *pointer;
 	glGetBufferPointervARB((GLenum)target, (GLenum)pname, &pointer);
 	CHECK_GL_ERROR
-	return env->NewDirectByteBuffer(pointer, size);
+	return newBuffer(env, pointer, size);
 }
