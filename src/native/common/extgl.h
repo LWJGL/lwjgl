@@ -8,21 +8,21 @@
 ** this file except in compliance with the License. You may obtain a copy
 ** of the License at Silicon Graphics, Inc., attn: Legal Services, 1600
 ** Amphitheatre Parkway, Mountain View, CA 94043-1351, or at:
-** 
+**
 ** http://oss.sgi.com/projects/FreeB
-** 
+**
 ** Note that, as provided in the License, the Software is distributed on an
 ** "AS IS" basis, with ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS
 ** DISCLAIMED, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTIES AND
 ** CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
 ** PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-** 
+**
 ** Original Code. The Original Code is: OpenGL Sample Implementation,
 ** Version 1.2.1, released January 26, 2000, developed by Silicon Graphics,
 ** Inc. The Original Code is Copyright (c) 1991-2000 Silicon Graphics, Inc.
 ** Copyright in any portions created by third parties is as indicated
 ** elsewhere herein. All Rights Reserved.
-** 
+**
 ** Additional Notice Provisions: This software was created using the
 ** OpenGL(R) version 1.2.1 Sample Implementation published by SGI, but has
 ** not been independently verified as being compliant with the OpenGL(R)
@@ -35,38 +35,38 @@
 Copyright (c) 2002, Lev Povalahev
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, 
+    * Redistributions of source code must retain the above copyright notice,
       this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation 
+      this list of conditions and the following disclaimer in the documentation
       and/or other materials provided with the distribution.
-    * The name of the author may be used to endorse or promote products 
+    * The name of the author may be used to endorse or promote products
       derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 ------------------------------------------------------------------------------*/
 /*
     GL_draw_range_elements support added by Benjamin Karaban
-  
+
     Lev Povalahev contact information:
-    
+
     levp@gmx.net
 
     http://www.uni-karlsruhe.de/~uli2/
 */
-/* These extensions are supported:                
+/* These extensions are supported:
 GL_ARB_vertex_buffer_object
 GL_ARB_depth_texture
 GL_ARB_fragment_program
@@ -98,7 +98,7 @@ GL_EXT_draw_range_elements
 GL_EXT_fog_coord
 GL_EXT_multi_draw_arrays
 GL_EXT_point_parameters
-GL_EXT_secondary_color  
+GL_EXT_secondary_color
 GL_EXT_separate_specular_color
 GL_EXT_shadow_funcs
 GL_EXT_stencil_two_side
@@ -155,7 +155,7 @@ WGL_ARB_make_current_read;
 WGL_ARB_multisample
 WGL_ARB_pbuffer
 WGL_ARB_pixel_format
-WGL_ARB_render_texture 
+WGL_ARB_render_texture
 WGL_EXT_extensions_string
 WGL_EXT_swap_control
 WGL_NV_render_depth_texture
@@ -1684,343 +1684,343 @@ typedef void (APIENTRY * glVertex4svPROC) (const GLshort *v);
 typedef void (APIENTRY * glVertexPointerPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 typedef void (APIENTRY * glViewportPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
 
-extern glAccumPROC glAccum; 
-extern glAlphaFuncPROC glAlphaFunc; 
-extern glAreTexturesResidentPROC glAreTexturesResident; 
-extern glArrayElementPROC glArrayElement; 
-extern glBeginPROC glBegin; 
-extern glBindTexturePROC glBindTexture; 
-extern glBitmapPROC glBitmap; 
-extern glBlendFuncPROC glBlendFunc; 
-extern glCallListPROC glCallList; 
-extern glCallListsPROC glCallLists; 
-extern glClearPROC glClear; 
-extern glClearAccumPROC glClearAccum; 
-extern glClearColorPROC glClearColor; 
-extern glClearDepthPROC glClearDepth; 
-extern glClearIndexPROC glClearIndex; 
-extern glClearStencilPROC glClearStencil; 
-extern glClipPlanePROC glClipPlane; 
-extern glColor3bPROC glColor3b; 
-extern glColor3bvPROC glColor3bv; 
-extern glColor3dPROC glColor3d; 
-extern glColor3dvPROC glColor3dv; 
-extern glColor3fPROC glColor3f; 
-extern glColor3fvPROC glColor3fv; 
-extern glColor3iPROC glColor3i; 
-extern glColor3ivPROC glColor3iv; 
-extern glColor3sPROC glColor3s; 
-extern glColor3svPROC glColor3sv; 
-extern glColor3ubPROC glColor3ub; 
-extern glColor3ubvPROC glColor3ubv; 
-extern glColor3uiPROC glColor3ui; 
-extern glColor3uivPROC glColor3uiv; 
-extern glColor3usPROC glColor3us; 
-extern glColor3usvPROC glColor3usv; 
-extern glColor4bPROC glColor4b; 
-extern glColor4bvPROC glColor4bv; 
-extern glColor4dPROC glColor4d; 
-extern glColor4dvPROC glColor4dv; 
-extern glColor4fPROC glColor4f; 
-extern glColor4fvPROC glColor4fv; 
-extern glColor4iPROC glColor4i; 
-extern glColor4ivPROC glColor4iv; 
-extern glColor4sPROC glColor4s; 
-extern glColor4svPROC glColor4sv; 
-extern glColor4ubPROC glColor4ub; 
-extern glColor4ubvPROC glColor4ubv; 
-extern glColor4uiPROC glColor4ui; 
-extern glColor4uivPROC glColor4uiv; 
-extern glColor4usPROC glColor4us; 
-extern glColor4usvPROC glColor4usv; 
-extern glColorMaskPROC glColorMask; 
-extern glColorMaterialPROC glColorMaterial; 
-extern glColorPointerPROC glColorPointer; 
-extern glCopyPixelsPROC glCopyPixels; 
-extern glCopyTexImage1DPROC glCopyTexImage1D; 
-extern glCopyTexImage2DPROC glCopyTexImage2D; 
-extern glCopyTexSubImage1DPROC glCopyTexSubImage1D; 
-extern glCopyTexSubImage2DPROC glCopyTexSubImage2D; 
-extern glCullFacePROC glCullFace; 
-extern glDeleteListsPROC glDeleteLists; 
-extern glDeleteTexturesPROC glDeleteTextures; 
-extern glDepthFuncPROC glDepthFunc; 
-extern glDepthMaskPROC glDepthMask; 
-extern glDepthRangePROC glDepthRange; 
-extern glDisablePROC glDisable; 
-extern glDisableClientStatePROC glDisableClientState; 
-extern glDrawArraysPROC glDrawArrays; 
-extern glDrawBufferPROC glDrawBuffer; 
-extern glDrawElementsPROC glDrawElements; 
-extern glDrawPixelsPROC glDrawPixels; 
-extern glEdgeFlagPROC glEdgeFlag; 
-extern glEdgeFlagPointerPROC glEdgeFlagPointer; 
-extern glEdgeFlagvPROC glEdgeFlagv; 
-extern glEnablePROC glEnable; 
-extern glEnableClientStatePROC glEnableClientState; 
-extern glEndPROC glEnd; 
-extern glEndListPROC glEndList; 
-extern glEvalCoord1dPROC glEvalCoord1d; 
-extern glEvalCoord1dvPROC glEvalCoord1dv; 
-extern glEvalCoord1fPROC glEvalCoord1f; 
-extern glEvalCoord1fvPROC glEvalCoord1fv; 
-extern glEvalCoord2dPROC glEvalCoord2d; 
-extern glEvalCoord2dvPROC glEvalCoord2dv; 
-extern glEvalCoord2fPROC glEvalCoord2f; 
-extern glEvalCoord2fvPROC glEvalCoord2fv; 
-extern glEvalMesh1PROC glEvalMesh1; 
-extern glEvalMesh2PROC glEvalMesh2; 
-extern glEvalPoint1PROC glEvalPoint1; 
-extern glEvalPoint2PROC glEvalPoint2; 
-extern glFeedbackBufferPROC glFeedbackBuffer; 
-extern glFinishPROC glFinish; 
-extern glFlushPROC glFlush; 
-extern glFogfPROC glFogf; 
-extern glFogfvPROC glFogfv; 
-extern glFogiPROC glFogi; 
-extern glFogivPROC glFogiv; 
-extern glFrontFacePROC glFrontFace; 
-extern glFrustumPROC glFrustum; 
-extern glGenListsPROC glGenLists; 
-extern glGenTexturesPROC glGenTextures; 
-extern glGetBooleanvPROC glGetBooleanv; 
-extern glGetClipPlanePROC glGetClipPlane; 
-extern glGetDoublevPROC glGetDoublev; 
+extern glAccumPROC glAccum;
+extern glAlphaFuncPROC glAlphaFunc;
+extern glAreTexturesResidentPROC glAreTexturesResident;
+extern glArrayElementPROC glArrayElement;
+extern glBeginPROC glBegin;
+extern glBindTexturePROC glBindTexture;
+extern glBitmapPROC glBitmap;
+extern glBlendFuncPROC glBlendFunc;
+extern glCallListPROC glCallList;
+extern glCallListsPROC glCallLists;
+extern glClearPROC glClear;
+extern glClearAccumPROC glClearAccum;
+extern glClearColorPROC glClearColor;
+extern glClearDepthPROC glClearDepth;
+extern glClearIndexPROC glClearIndex;
+extern glClearStencilPROC glClearStencil;
+extern glClipPlanePROC glClipPlane;
+extern glColor3bPROC glColor3b;
+extern glColor3bvPROC glColor3bv;
+extern glColor3dPROC glColor3d;
+extern glColor3dvPROC glColor3dv;
+extern glColor3fPROC glColor3f;
+extern glColor3fvPROC glColor3fv;
+extern glColor3iPROC glColor3i;
+extern glColor3ivPROC glColor3iv;
+extern glColor3sPROC glColor3s;
+extern glColor3svPROC glColor3sv;
+extern glColor3ubPROC glColor3ub;
+extern glColor3ubvPROC glColor3ubv;
+extern glColor3uiPROC glColor3ui;
+extern glColor3uivPROC glColor3uiv;
+extern glColor3usPROC glColor3us;
+extern glColor3usvPROC glColor3usv;
+extern glColor4bPROC glColor4b;
+extern glColor4bvPROC glColor4bv;
+extern glColor4dPROC glColor4d;
+extern glColor4dvPROC glColor4dv;
+extern glColor4fPROC glColor4f;
+extern glColor4fvPROC glColor4fv;
+extern glColor4iPROC glColor4i;
+extern glColor4ivPROC glColor4iv;
+extern glColor4sPROC glColor4s;
+extern glColor4svPROC glColor4sv;
+extern glColor4ubPROC glColor4ub;
+extern glColor4ubvPROC glColor4ubv;
+extern glColor4uiPROC glColor4ui;
+extern glColor4uivPROC glColor4uiv;
+extern glColor4usPROC glColor4us;
+extern glColor4usvPROC glColor4usv;
+extern glColorMaskPROC glColorMask;
+extern glColorMaterialPROC glColorMaterial;
+extern glColorPointerPROC glColorPointer;
+extern glCopyPixelsPROC glCopyPixels;
+extern glCopyTexImage1DPROC glCopyTexImage1D;
+extern glCopyTexImage2DPROC glCopyTexImage2D;
+extern glCopyTexSubImage1DPROC glCopyTexSubImage1D;
+extern glCopyTexSubImage2DPROC glCopyTexSubImage2D;
+extern glCullFacePROC glCullFace;
+extern glDeleteListsPROC glDeleteLists;
+extern glDeleteTexturesPROC glDeleteTextures;
+extern glDepthFuncPROC glDepthFunc;
+extern glDepthMaskPROC glDepthMask;
+extern glDepthRangePROC glDepthRange;
+extern glDisablePROC glDisable;
+extern glDisableClientStatePROC glDisableClientState;
+extern glDrawArraysPROC glDrawArrays;
+extern glDrawBufferPROC glDrawBuffer;
+extern glDrawElementsPROC glDrawElements;
+extern glDrawPixelsPROC glDrawPixels;
+extern glEdgeFlagPROC glEdgeFlag;
+extern glEdgeFlagPointerPROC glEdgeFlagPointer;
+extern glEdgeFlagvPROC glEdgeFlagv;
+extern glEnablePROC glEnable;
+extern glEnableClientStatePROC glEnableClientState;
+extern glEndPROC glEnd;
+extern glEndListPROC glEndList;
+extern glEvalCoord1dPROC glEvalCoord1d;
+extern glEvalCoord1dvPROC glEvalCoord1dv;
+extern glEvalCoord1fPROC glEvalCoord1f;
+extern glEvalCoord1fvPROC glEvalCoord1fv;
+extern glEvalCoord2dPROC glEvalCoord2d;
+extern glEvalCoord2dvPROC glEvalCoord2dv;
+extern glEvalCoord2fPROC glEvalCoord2f;
+extern glEvalCoord2fvPROC glEvalCoord2fv;
+extern glEvalMesh1PROC glEvalMesh1;
+extern glEvalMesh2PROC glEvalMesh2;
+extern glEvalPoint1PROC glEvalPoint1;
+extern glEvalPoint2PROC glEvalPoint2;
+extern glFeedbackBufferPROC glFeedbackBuffer;
+extern glFinishPROC glFinish;
+extern glFlushPROC glFlush;
+extern glFogfPROC glFogf;
+extern glFogfvPROC glFogfv;
+extern glFogiPROC glFogi;
+extern glFogivPROC glFogiv;
+extern glFrontFacePROC glFrontFace;
+extern glFrustumPROC glFrustum;
+extern glGenListsPROC glGenLists;
+extern glGenTexturesPROC glGenTextures;
+extern glGetBooleanvPROC glGetBooleanv;
+extern glGetClipPlanePROC glGetClipPlane;
+extern glGetDoublevPROC glGetDoublev;
 extern glGetErrorPROC glGetError;
-extern glGetFloatvPROC glGetFloatv; 
-extern glGetIntegervPROC glGetIntegerv; 
-extern glGetLightfvPROC glGetLightfv; 
-extern glGetLightivPROC glGetLightiv; 
-extern glGetMapdvPROC glGetMapdv; 
-extern glGetMapfvPROC glGetMapfv; 
-extern glGetMapivPROC glGetMapiv; 
-extern glGetMaterialfvPROC glGetMaterialfv; 
-extern glGetMaterialivPROC glGetMaterialiv; 
-extern glGetPixelMapfvPROC glGetPixelMapfv; 
-extern glGetPixelMapuivPROC glGetPixelMapuiv; 
-extern glGetPixelMapusvPROC glGetPixelMapusv; 
-extern glGetPointervPROC glGetPointerv; 
-extern glGetPolygonStipplePROC glGetPolygonStipple; 
+extern glGetFloatvPROC glGetFloatv;
+extern glGetIntegervPROC glGetIntegerv;
+extern glGetLightfvPROC glGetLightfv;
+extern glGetLightivPROC glGetLightiv;
+extern glGetMapdvPROC glGetMapdv;
+extern glGetMapfvPROC glGetMapfv;
+extern glGetMapivPROC glGetMapiv;
+extern glGetMaterialfvPROC glGetMaterialfv;
+extern glGetMaterialivPROC glGetMaterialiv;
+extern glGetPixelMapfvPROC glGetPixelMapfv;
+extern glGetPixelMapuivPROC glGetPixelMapuiv;
+extern glGetPixelMapusvPROC glGetPixelMapusv;
+extern glGetPointervPROC glGetPointerv;
+extern glGetPolygonStipplePROC glGetPolygonStipple;
 extern glGetStringPROC glGetString;
-extern glGetTexEnvfvPROC glGetTexEnvfv; 
-extern glGetTexEnvivPROC glGetTexEnviv; 
-extern glGetTexGendvPROC glGetTexGendv; 
-extern glGetTexGenfvPROC glGetTexGenfv; 
-extern glGetTexGenivPROC glGetTexGeniv; 
-extern glGetTexImagePROC glGetTexImage; 
-extern glGetTexLevelParameterfvPROC glGetTexLevelParameterfv; 
-extern glGetTexLevelParameterivPROC glGetTexLevelParameteriv; 
-extern glGetTexParameterfvPROC glGetTexParameterfv; 
-extern glGetTexParameterivPROC glGetTexParameteriv; 
-extern glHintPROC glHint; 
-extern glIndexMaskPROC glIndexMask; 
-extern glIndexPointerPROC glIndexPointer; 
-extern glIndexdPROC glIndexd; 
-extern glIndexdvPROC glIndexdv; 
-extern glIndexfPROC glIndexf; 
-extern glIndexfvPROC glIndexfv; 
-extern glIndexiPROC glIndexi; 
-extern glIndexivPROC glIndexiv; 
-extern glIndexsPROC glIndexs; 
-extern glIndexsvPROC glIndexsv; 
-extern glIndexubPROC glIndexub; 
-extern glIndexubvPROC glIndexubv; 
-extern glInitNamesPROC glInitNames; 
-extern glInterleavedArraysPROC glInterleavedArrays; 
-extern glIsEnabledPROC glIsEnabled; 
-extern glIsListPROC glIsList; 
-extern glIsTexturePROC glIsTexture; 
-extern glLightModelfPROC glLightModelf; 
-extern glLightModelfvPROC glLightModelfv; 
-extern glLightModeliPROC glLightModeli; 
-extern glLightModelivPROC glLightModeliv; 
-extern glLightfPROC glLightf; 
-extern glLightfvPROC glLightfv; 
-extern glLightiPROC glLighti; 
-extern glLightivPROC glLightiv; 
-extern glLineStipplePROC glLineStipple; 
-extern glLineWidthPROC glLineWidth; 
-extern glListBasePROC glListBase; 
-extern glLoadIdentityPROC glLoadIdentity; 
-extern glLoadMatrixdPROC glLoadMatrixd; 
-extern glLoadMatrixfPROC glLoadMatrixf; 
-extern glLoadNamePROC glLoadName; 
-extern glLogicOpPROC glLogicOp; 
-extern glMap1dPROC glMap1d; 
-extern glMap1fPROC glMap1f; 
-extern glMap2dPROC glMap2d; 
-extern glMap2fPROC glMap2f; 
-extern glMapGrid1dPROC glMapGrid1d; 
-extern glMapGrid1fPROC glMapGrid1f; 
-extern glMapGrid2dPROC glMapGrid2d; 
-extern glMapGrid2fPROC glMapGrid2f; 
-extern glMaterialfPROC glMaterialf; 
-extern glMaterialfvPROC glMaterialfv; 
-extern glMaterialiPROC glMateriali; 
-extern glMaterialivPROC glMaterialiv; 
-extern glMatrixModePROC glMatrixMode; 
-extern glMultMatrixdPROC glMultMatrixd; 
-extern glMultMatrixfPROC glMultMatrixf; 
-extern glNewListPROC glNewList; 
-extern glNormal3bPROC glNormal3b; 
-extern glNormal3bvPROC glNormal3bv; 
-extern glNormal3dPROC glNormal3d; 
-extern glNormal3dvPROC glNormal3dv; 
-extern glNormal3fPROC glNormal3f; 
-extern glNormal3fvPROC glNormal3fv; 
-extern glNormal3iPROC glNormal3i; 
-extern glNormal3ivPROC glNormal3iv; 
-extern glNormal3sPROC glNormal3s; 
-extern glNormal3svPROC glNormal3sv; 
-extern glNormalPointerPROC glNormalPointer; 
-extern glOrthoPROC glOrtho; 
-extern glPassThroughPROC glPassThrough; 
-extern glPixelMapfvPROC glPixelMapfv; 
-extern glPixelMapuivPROC glPixelMapuiv; 
-extern glPixelMapusvPROC glPixelMapusv; 
-extern glPixelStorefPROC glPixelStoref; 
-extern glPixelStoreiPROC glPixelStorei; 
-extern glPixelTransferfPROC glPixelTransferf; 
-extern glPixelTransferiPROC glPixelTransferi; 
-extern glPixelZoomPROC glPixelZoom; 
-extern glPointSizePROC glPointSize; 
-extern glPolygonModePROC glPolygonMode; 
-extern glPolygonOffsetPROC glPolygonOffset; 
-extern glPolygonStipplePROC glPolygonStipple; 
-extern glPopAttribPROC glPopAttrib; 
-extern glPopClientAttribPROC glPopClientAttrib; 
-extern glPopMatrixPROC glPopMatrix; 
-extern glPopNamePROC glPopName; 
-extern glPrioritizeTexturesPROC glPrioritizeTextures; 
-extern glPushAttribPROC glPushAttrib; 
-extern glPushClientAttribPROC glPushClientAttrib; 
-extern glPushMatrixPROC glPushMatrix; 
-extern glPushNamePROC glPushName; 
-extern glRasterPos2dPROC glRasterPos2d; 
-extern glRasterPos2dvPROC glRasterPos2dv; 
-extern glRasterPos2fPROC glRasterPos2f; 
-extern glRasterPos2fvPROC glRasterPos2fv; 
-extern glRasterPos2iPROC glRasterPos2i; 
-extern glRasterPos2ivPROC glRasterPos2iv; 
-extern glRasterPos2sPROC glRasterPos2s; 
-extern glRasterPos2svPROC glRasterPos2sv; 
-extern glRasterPos3dPROC glRasterPos3d; 
-extern glRasterPos3dvPROC glRasterPos3dv; 
-extern glRasterPos3fPROC glRasterPos3f; 
-extern glRasterPos3fvPROC glRasterPos3fv; 
-extern glRasterPos3iPROC glRasterPos3i; 
+extern glGetTexEnvfvPROC glGetTexEnvfv;
+extern glGetTexEnvivPROC glGetTexEnviv;
+extern glGetTexGendvPROC glGetTexGendv;
+extern glGetTexGenfvPROC glGetTexGenfv;
+extern glGetTexGenivPROC glGetTexGeniv;
+extern glGetTexImagePROC glGetTexImage;
+extern glGetTexLevelParameterfvPROC glGetTexLevelParameterfv;
+extern glGetTexLevelParameterivPROC glGetTexLevelParameteriv;
+extern glGetTexParameterfvPROC glGetTexParameterfv;
+extern glGetTexParameterivPROC glGetTexParameteriv;
+extern glHintPROC glHint;
+extern glIndexMaskPROC glIndexMask;
+extern glIndexPointerPROC glIndexPointer;
+extern glIndexdPROC glIndexd;
+extern glIndexdvPROC glIndexdv;
+extern glIndexfPROC glIndexf;
+extern glIndexfvPROC glIndexfv;
+extern glIndexiPROC glIndexi;
+extern glIndexivPROC glIndexiv;
+extern glIndexsPROC glIndexs;
+extern glIndexsvPROC glIndexsv;
+extern glIndexubPROC glIndexub;
+extern glIndexubvPROC glIndexubv;
+extern glInitNamesPROC glInitNames;
+extern glInterleavedArraysPROC glInterleavedArrays;
+extern glIsEnabledPROC glIsEnabled;
+extern glIsListPROC glIsList;
+extern glIsTexturePROC glIsTexture;
+extern glLightModelfPROC glLightModelf;
+extern glLightModelfvPROC glLightModelfv;
+extern glLightModeliPROC glLightModeli;
+extern glLightModelivPROC glLightModeliv;
+extern glLightfPROC glLightf;
+extern glLightfvPROC glLightfv;
+extern glLightiPROC glLighti;
+extern glLightivPROC glLightiv;
+extern glLineStipplePROC glLineStipple;
+extern glLineWidthPROC glLineWidth;
+extern glListBasePROC glListBase;
+extern glLoadIdentityPROC glLoadIdentity;
+extern glLoadMatrixdPROC glLoadMatrixd;
+extern glLoadMatrixfPROC glLoadMatrixf;
+extern glLoadNamePROC glLoadName;
+extern glLogicOpPROC glLogicOp;
+extern glMap1dPROC glMap1d;
+extern glMap1fPROC glMap1f;
+extern glMap2dPROC glMap2d;
+extern glMap2fPROC glMap2f;
+extern glMapGrid1dPROC glMapGrid1d;
+extern glMapGrid1fPROC glMapGrid1f;
+extern glMapGrid2dPROC glMapGrid2d;
+extern glMapGrid2fPROC glMapGrid2f;
+extern glMaterialfPROC glMaterialf;
+extern glMaterialfvPROC glMaterialfv;
+extern glMaterialiPROC glMateriali;
+extern glMaterialivPROC glMaterialiv;
+extern glMatrixModePROC glMatrixMode;
+extern glMultMatrixdPROC glMultMatrixd;
+extern glMultMatrixfPROC glMultMatrixf;
+extern glNewListPROC glNewList;
+extern glNormal3bPROC glNormal3b;
+extern glNormal3bvPROC glNormal3bv;
+extern glNormal3dPROC glNormal3d;
+extern glNormal3dvPROC glNormal3dv;
+extern glNormal3fPROC glNormal3f;
+extern glNormal3fvPROC glNormal3fv;
+extern glNormal3iPROC glNormal3i;
+extern glNormal3ivPROC glNormal3iv;
+extern glNormal3sPROC glNormal3s;
+extern glNormal3svPROC glNormal3sv;
+extern glNormalPointerPROC glNormalPointer;
+extern glOrthoPROC glOrtho;
+extern glPassThroughPROC glPassThrough;
+extern glPixelMapfvPROC glPixelMapfv;
+extern glPixelMapuivPROC glPixelMapuiv;
+extern glPixelMapusvPROC glPixelMapusv;
+extern glPixelStorefPROC glPixelStoref;
+extern glPixelStoreiPROC glPixelStorei;
+extern glPixelTransferfPROC glPixelTransferf;
+extern glPixelTransferiPROC glPixelTransferi;
+extern glPixelZoomPROC glPixelZoom;
+extern glPointSizePROC glPointSize;
+extern glPolygonModePROC glPolygonMode;
+extern glPolygonOffsetPROC glPolygonOffset;
+extern glPolygonStipplePROC glPolygonStipple;
+extern glPopAttribPROC glPopAttrib;
+extern glPopClientAttribPROC glPopClientAttrib;
+extern glPopMatrixPROC glPopMatrix;
+extern glPopNamePROC glPopName;
+extern glPrioritizeTexturesPROC glPrioritizeTextures;
+extern glPushAttribPROC glPushAttrib;
+extern glPushClientAttribPROC glPushClientAttrib;
+extern glPushMatrixPROC glPushMatrix;
+extern glPushNamePROC glPushName;
+extern glRasterPos2dPROC glRasterPos2d;
+extern glRasterPos2dvPROC glRasterPos2dv;
+extern glRasterPos2fPROC glRasterPos2f;
+extern glRasterPos2fvPROC glRasterPos2fv;
+extern glRasterPos2iPROC glRasterPos2i;
+extern glRasterPos2ivPROC glRasterPos2iv;
+extern glRasterPos2sPROC glRasterPos2s;
+extern glRasterPos2svPROC glRasterPos2sv;
+extern glRasterPos3dPROC glRasterPos3d;
+extern glRasterPos3dvPROC glRasterPos3dv;
+extern glRasterPos3fPROC glRasterPos3f;
+extern glRasterPos3fvPROC glRasterPos3fv;
+extern glRasterPos3iPROC glRasterPos3i;
 
-extern glRasterPos3ivPROC glRasterPos3iv; 
-extern glRasterPos3sPROC glRasterPos3s; 
-extern glRasterPos3svPROC glRasterPos3sv; 
-extern glRasterPos4dPROC glRasterPos4d; 
-extern glRasterPos4dvPROC glRasterPos4dv; 
-extern glRasterPos4fPROC glRasterPos4f; 
-extern glRasterPos4fvPROC glRasterPos4fv; 
-extern glRasterPos4iPROC glRasterPos4i; 
-extern glRasterPos4ivPROC glRasterPos4iv; 
-extern glRasterPos4sPROC glRasterPos4s; 
-extern glRasterPos4svPROC glRasterPos4sv; 
-extern glReadBufferPROC glReadBuffer; 
-extern glReadPixelsPROC glReadPixels; 
-extern glRectdPROC glRectd; 
-extern glRectdvPROC glRectdv; 
-extern glRectfPROC glRectf; 
-extern glRectfvPROC glRectfv; 
-extern glRectiPROC glRecti; 
-extern glRectivPROC glRectiv; 
-extern glRectsPROC glRects; 
-extern glRectsvPROC glRectsv; 
-extern glRenderModePROC glRenderMode; 
-extern glRotatedPROC glRotated; 
-extern glRotatefPROC glRotatef; 
-extern glScaledPROC glScaled; 
-extern glScalefPROC glScalef; 
-extern glScissorPROC glScissor; 
-extern glSelectBufferPROC glSelectBuffer; 
-extern glShadeModelPROC glShadeModel; 
-extern glStencilFuncPROC glStencilFunc; 
-extern glStencilMaskPROC glStencilMask; 
-extern glStencilOpPROC glStencilOp; 
-extern glTexCoord1dPROC glTexCoord1d; 
-extern glTexCoord1dvPROC glTexCoord1dv; 
-extern glTexCoord1fPROC glTexCoord1f; 
-extern glTexCoord1fvPROC glTexCoord1fv; 
-extern glTexCoord1iPROC glTexCoord1i; 
-extern glTexCoord1ivPROC glTexCoord1iv; 
-extern glTexCoord1sPROC glTexCoord1s; 
-extern glTexCoord1svPROC glTexCoord1sv; 
-extern glTexCoord2dPROC glTexCoord2d; 
-extern glTexCoord2dvPROC glTexCoord2dv; 
-extern glTexCoord2fPROC glTexCoord2f; 
-extern glTexCoord2fvPROC glTexCoord2fv; 
-extern glTexCoord2iPROC glTexCoord2i; 
-extern glTexCoord2ivPROC glTexCoord2iv; 
-extern glTexCoord2sPROC glTexCoord2s; 
-extern glTexCoord2svPROC glTexCoord2sv; 
-extern glTexCoord3dPROC glTexCoord3d; 
-extern glTexCoord3dvPROC glTexCoord3dv; 
-extern glTexCoord3fPROC glTexCoord3f; 
-extern glTexCoord3fvPROC glTexCoord3fv; 
-extern glTexCoord3iPROC glTexCoord3i; 
-extern glTexCoord3ivPROC glTexCoord3iv; 
-extern glTexCoord3sPROC glTexCoord3s; 
-extern glTexCoord3svPROC glTexCoord3sv; 
-extern glTexCoord4dPROC glTexCoord4d; 
-extern glTexCoord4dvPROC glTexCoord4dv; 
-extern glTexCoord4fPROC glTexCoord4f; 
-extern glTexCoord4fvPROC glTexCoord4fv; 
-extern glTexCoord4iPROC glTexCoord4i; 
-extern glTexCoord4ivPROC glTexCoord4iv; 
-extern glTexCoord4sPROC glTexCoord4s; 
-extern glTexCoord4svPROC glTexCoord4sv; 
-extern glTexCoordPointerPROC glTexCoordPointer; 
-extern glTexEnvfPROC glTexEnvf; 
-extern glTexEnvfvPROC glTexEnvfv; 
-extern glTexEnviPROC glTexEnvi; 
-extern glTexEnvivPROC glTexEnviv; 
-extern glTexGendPROC glTexGend; 
-extern glTexGendvPROC glTexGendv; 
-extern glTexGenfPROC glTexGenf; 
-extern glTexGenfvPROC glTexGenfv; 
-extern glTexGeniPROC glTexGeni; 
-extern glTexGenivPROC glTexGeniv; 
-extern glTexImage1DPROC glTexImage1D; 
-extern glTexImage2DPROC glTexImage2D; 
-extern glTexParameterfPROC glTexParameterf; 
-extern glTexParameterfvPROC glTexParameterfv; 
-extern glTexParameteriPROC glTexParameteri; 
-extern glTexParameterivPROC glTexParameteriv; 
-extern glTexSubImage1DPROC glTexSubImage1D; 
-extern glTexSubImage2DPROC glTexSubImage2D; 
-extern glTranslatedPROC glTranslated; 
-extern glTranslatefPROC glTranslatef; 
-extern glVertex2dPROC glVertex2d; 
-extern glVertex2dvPROC glVertex2dv; 
-extern glVertex2fPROC glVertex2f; 
-extern glVertex2fvPROC glVertex2fv; 
-extern glVertex2iPROC glVertex2i; 
-extern glVertex2ivPROC glVertex2iv; 
-extern glVertex2sPROC glVertex2s; 
-extern glVertex2svPROC glVertex2sv; 
-extern glVertex3dPROC glVertex3d; 
-extern glVertex3dvPROC glVertex3dv; 
-extern glVertex3fPROC glVertex3f; 
-extern glVertex3fvPROC glVertex3fv; 
-extern glVertex3iPROC glVertex3i; 
-extern glVertex3ivPROC glVertex3iv; 
-extern glVertex3sPROC glVertex3s; 
-extern glVertex3svPROC glVertex3sv; 
-extern glVertex4dPROC glVertex4d; 
-extern glVertex4dvPROC glVertex4dv; 
-extern glVertex4fPROC glVertex4f; 
-extern glVertex4fvPROC glVertex4fv; 
-extern glVertex4iPROC glVertex4i; 
-extern glVertex4ivPROC glVertex4iv; 
-extern glVertex4sPROC glVertex4s; 
-extern glVertex4svPROC glVertex4sv; 
-extern glVertexPointerPROC glVertexPointer; 
-extern glViewportPROC glViewport; 
+extern glRasterPos3ivPROC glRasterPos3iv;
+extern glRasterPos3sPROC glRasterPos3s;
+extern glRasterPos3svPROC glRasterPos3sv;
+extern glRasterPos4dPROC glRasterPos4d;
+extern glRasterPos4dvPROC glRasterPos4dv;
+extern glRasterPos4fPROC glRasterPos4f;
+extern glRasterPos4fvPROC glRasterPos4fv;
+extern glRasterPos4iPROC glRasterPos4i;
+extern glRasterPos4ivPROC glRasterPos4iv;
+extern glRasterPos4sPROC glRasterPos4s;
+extern glRasterPos4svPROC glRasterPos4sv;
+extern glReadBufferPROC glReadBuffer;
+extern glReadPixelsPROC glReadPixels;
+extern glRectdPROC glRectd;
+extern glRectdvPROC glRectdv;
+extern glRectfPROC glRectf;
+extern glRectfvPROC glRectfv;
+extern glRectiPROC glRecti;
+extern glRectivPROC glRectiv;
+extern glRectsPROC glRects;
+extern glRectsvPROC glRectsv;
+extern glRenderModePROC glRenderMode;
+extern glRotatedPROC glRotated;
+extern glRotatefPROC glRotatef;
+extern glScaledPROC glScaled;
+extern glScalefPROC glScalef;
+extern glScissorPROC glScissor;
+extern glSelectBufferPROC glSelectBuffer;
+extern glShadeModelPROC glShadeModel;
+extern glStencilFuncPROC glStencilFunc;
+extern glStencilMaskPROC glStencilMask;
+extern glStencilOpPROC glStencilOp;
+extern glTexCoord1dPROC glTexCoord1d;
+extern glTexCoord1dvPROC glTexCoord1dv;
+extern glTexCoord1fPROC glTexCoord1f;
+extern glTexCoord1fvPROC glTexCoord1fv;
+extern glTexCoord1iPROC glTexCoord1i;
+extern glTexCoord1ivPROC glTexCoord1iv;
+extern glTexCoord1sPROC glTexCoord1s;
+extern glTexCoord1svPROC glTexCoord1sv;
+extern glTexCoord2dPROC glTexCoord2d;
+extern glTexCoord2dvPROC glTexCoord2dv;
+extern glTexCoord2fPROC glTexCoord2f;
+extern glTexCoord2fvPROC glTexCoord2fv;
+extern glTexCoord2iPROC glTexCoord2i;
+extern glTexCoord2ivPROC glTexCoord2iv;
+extern glTexCoord2sPROC glTexCoord2s;
+extern glTexCoord2svPROC glTexCoord2sv;
+extern glTexCoord3dPROC glTexCoord3d;
+extern glTexCoord3dvPROC glTexCoord3dv;
+extern glTexCoord3fPROC glTexCoord3f;
+extern glTexCoord3fvPROC glTexCoord3fv;
+extern glTexCoord3iPROC glTexCoord3i;
+extern glTexCoord3ivPROC glTexCoord3iv;
+extern glTexCoord3sPROC glTexCoord3s;
+extern glTexCoord3svPROC glTexCoord3sv;
+extern glTexCoord4dPROC glTexCoord4d;
+extern glTexCoord4dvPROC glTexCoord4dv;
+extern glTexCoord4fPROC glTexCoord4f;
+extern glTexCoord4fvPROC glTexCoord4fv;
+extern glTexCoord4iPROC glTexCoord4i;
+extern glTexCoord4ivPROC glTexCoord4iv;
+extern glTexCoord4sPROC glTexCoord4s;
+extern glTexCoord4svPROC glTexCoord4sv;
+extern glTexCoordPointerPROC glTexCoordPointer;
+extern glTexEnvfPROC glTexEnvf;
+extern glTexEnvfvPROC glTexEnvfv;
+extern glTexEnviPROC glTexEnvi;
+extern glTexEnvivPROC glTexEnviv;
+extern glTexGendPROC glTexGend;
+extern glTexGendvPROC glTexGendv;
+extern glTexGenfPROC glTexGenf;
+extern glTexGenfvPROC glTexGenfv;
+extern glTexGeniPROC glTexGeni;
+extern glTexGenivPROC glTexGeniv;
+extern glTexImage1DPROC glTexImage1D;
+extern glTexImage2DPROC glTexImage2D;
+extern glTexParameterfPROC glTexParameterf;
+extern glTexParameterfvPROC glTexParameterfv;
+extern glTexParameteriPROC glTexParameteri;
+extern glTexParameterivPROC glTexParameteriv;
+extern glTexSubImage1DPROC glTexSubImage1D;
+extern glTexSubImage2DPROC glTexSubImage2D;
+extern glTranslatedPROC glTranslated;
+extern glTranslatefPROC glTranslatef;
+extern glVertex2dPROC glVertex2d;
+extern glVertex2dvPROC glVertex2dv;
+extern glVertex2fPROC glVertex2f;
+extern glVertex2fvPROC glVertex2fv;
+extern glVertex2iPROC glVertex2i;
+extern glVertex2ivPROC glVertex2iv;
+extern glVertex2sPROC glVertex2s;
+extern glVertex2svPROC glVertex2sv;
+extern glVertex3dPROC glVertex3d;
+extern glVertex3dvPROC glVertex3dv;
+extern glVertex3fPROC glVertex3f;
+extern glVertex3fvPROC glVertex3fv;
+extern glVertex3iPROC glVertex3i;
+extern glVertex3ivPROC glVertex3iv;
+extern glVertex3sPROC glVertex3s;
+extern glVertex3svPROC glVertex3sv;
+extern glVertex4dPROC glVertex4d;
+extern glVertex4dvPROC glVertex4dv;
+extern glVertex4fPROC glVertex4f;
+extern glVertex4fvPROC glVertex4fv;
+extern glVertex4iPROC glVertex4i;
+extern glVertex4ivPROC glVertex4iv;
+extern glVertex4sPROC glVertex4s;
+extern glVertex4svPROC glVertex4sv;
+extern glVertexPointerPROC glVertexPointer;
+extern glViewportPROC glViewport;
 */
 /* OpenGL 1.2 */
 
@@ -2581,7 +2581,7 @@ typedef unsigned int GLsizeiptrARB;
 #define GL_DSDT8_NV                                             0x8709
 #define GL_DSDT8_MAG8_NV                                        0x870A
 #define GL_DSDT_MAG_INTENSITY_NV                                0x86DC
-#define GL_DSDT8_MAG8_INTENSITY8_NV                             0x870B 
+#define GL_DSDT8_MAG8_INTENSITY8_NV                             0x870B
 
 /*-------------------------------------------------------------------*/
 /*------------NV_BLEND_SQUARE----------------------------------------*/
@@ -2718,7 +2718,7 @@ typedef unsigned int GLsizeiptrARB;
 /*------------ARB_SHADOW_AMBIENT-------------------------------------*/
 /*-------------------------------------------------------------------*/
 
-#define GL_TEXTURE_COMPARE_FAIL_VALUE_ARB                       0x80BF 
+#define GL_TEXTURE_COMPARE_FAIL_VALUE_ARB                       0x80BF
 
 /*-------------------------------------------------------------------*/
 /*------------ARB_DEPTH_TEXTURE--------------------------------------*/
@@ -2774,7 +2774,7 @@ typedef void (APIENTRY * glCullParameterdvEXTPROC) (GLenum pname, GLdouble *para
 
 extern glCullParameterfvEXTPROC glCullParameterfvEXT;
 extern glCullParameterdvEXTPROC glCullParameterdvEXT;
- 
+
 /*-------------------------------------------------------------------*/
 /*------------GL_ATI_POINT_CULL_MODE---------------------------------*/
 /*-------------------------------------------------------------------*/
@@ -3142,7 +3142,7 @@ extern wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
 
 struct ExtensionTypes
 {
-#ifdef _WIN32 /* WGL extensions */   
+#ifdef _WIN32 /* WGL extensions */
     bool WGL_ARB_buffer_region;
     bool WGL_ARB_extensions_string;
     bool WGL_ARB_make_current_read;
@@ -3162,10 +3162,11 @@ struct ExtensionTypes
     bool GLX_EXT_visual_rating;
     bool GLX_SGI_swap_control;
 #endif /* X11 */
-    
+
     bool OpenGL12;
     bool OpenGL13;
     bool OpenGL14;
+    bool OpenGL15;
 
     bool GL_ARB_imaging;
     bool GL_ARB_depth_texture;

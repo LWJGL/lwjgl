@@ -2,36 +2,36 @@
 Copyright (c) 2001-2002, Lev Povalahev
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-	* Redistributions of source code must retain the above copyright notice, 
+	* Redistributions of source code must retain the above copyright notice,
 	  this list of conditions and the following disclaimer.
-	* Redistributions in binary form must reproduce the above copyright notice, 
-	  this list of conditions and the following disclaimer in the documentation 
+	* Redistributions in binary form must reproduce the above copyright notice,
+	  this list of conditions and the following disclaimer in the documentation
 	  and/or other materials provided with the distribution.
-	* The name of the author may be used to endorse or promote products 
+	* The name of the author may be used to endorse or promote products
 	  derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 ------------------------------------------------------------------------------*/
-/* 
+/*
 	Lev Povalahev
 
 	levp@gmx.net
 
 	http://www.uni-karlsruhe.de/~uli2/
 
-*/						 
+*/
 
 #include <stdio.h>
 #include <string.h>
@@ -125,7 +125,7 @@ aglUseFontPROC aglUseFont = NULL;
 aglGetErrorPROC aglGetError = NULL;
 aglErrorStringPROC aglErrorString = NULL;
 aglResetLibraryPROC aglResetLibrary = NULL;
-aglSurfaceTexturePROC aglSurfaceTexture = NULL; 
+aglSurfaceTexturePROC aglSurfaceTexture = NULL;
 #endif
 
 /* function variables */
@@ -703,7 +703,7 @@ void *extgl_GetProcAddress(const char *name)
 	}
 	return t;
 #endif
-	
+
 #ifdef _X11
 	void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
 	if (t == NULL)
@@ -730,7 +730,7 @@ void *extgl_GetProcAddress(const char *name)
 	}
 	CFRelease(str);
 	return func_pointer;
-#endif 
+#endif
 }
 
 static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name)
@@ -769,7 +769,7 @@ static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extension
 
 	start = extensions;
 
-	for (;;) 
+	for (;;)
 
 	{
 
@@ -1116,10 +1116,14 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.OpenGL12 = false;
 	extgl_Extensions.OpenGL13 = false;
 	extgl_Extensions.OpenGL14 = false;
+	extgl_Extensions.OpenGL15 = false;
 	if (s != NULL)
 	{
 		// Fall trhough
 		switch (s[2]) {
+			case '5':
+				extgl_Extensions.OpenGL15 = true;
+				insertExtension(env, ext_set, "OpenGL15");
 			case '4':
 				extgl_Extensions.OpenGL14 = true;
 				insertExtension(env, ext_set, "OpenGL14");
@@ -1290,6 +1294,7 @@ extern void extgl_InitATIVertexStreams(JNIEnv *env, jobject ext_set);
 extern void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set);
 extern void extgl_InitOpenGL1_3(JNIEnv *env, jobject ext_set);
 extern void extgl_InitOpenGL1_4(JNIEnv *env, jobject ext_set);
+extern void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set);
 
 /* extgl_Init the extensions and load all the functions */
 bool extgl_Initialize(JNIEnv *env, jobject ext_set)
@@ -1300,7 +1305,7 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 		return false;
 
 	extgl_InitSupportedExtensions(env, ext_set);
-	
+
 	//extgl_InitEXTNurbsTesselator(env, ext_set);
 
 	/* first load the extensions */
@@ -1320,7 +1325,7 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitARBVertexProgram(env, ext_set);
 	extgl_InitARBVertexShader(env, ext_set);
 	extgl_InitARBWindowPos(env, ext_set);
-	
+
 	extgl_InitEXTBlendFuncSeparate(env, ext_set);
 	extgl_InitEXTCompiledVertexArray(env, ext_set);
 	//extgl_InitEXTCullVertex(env, ext_set);
@@ -1358,12 +1363,13 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitATIVertexArrayObject(env, ext_set);
 	extgl_InitATIVertexAttribArrayObject(env, ext_set);
 	extgl_InitATIVertexStreams(env, ext_set);
-	
+
    /* now load core opengl */
 	extgl_InitOpenGL1_2(env, ext_set);
 	extgl_InitOpenGL1_3(env, ext_set);
 	extgl_InitOpenGL1_4(env, ext_set);
-	
+	extgl_InitOpenGL1_5(env, ext_set);
+
 #ifdef _WIN32
 	/* load WGL extensions */
 	extgl_InitializeWGL(env, ext_set);
@@ -1421,7 +1427,7 @@ void extgl_Close(void)
 #ifdef _AGL
 	aglUnloadFramework(opengl_bundle_ref);
 	aglUnloadFramework(agl_bundle_ref);
-#endif 
+#endif
 }
 
 /* turn on the warning for the borland compiler*/
