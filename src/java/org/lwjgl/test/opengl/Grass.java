@@ -131,7 +131,7 @@ public class Grass {
 	public static void main(String[] args) {
 		ByteBuffer byte_buf = ByteBuffer.allocateDirect(4);
 		byte_buf.order(ByteOrder.nativeOrder());
-		System.out.println("Vertex program supported: " + gl.NV_vertex_program);
+		System.out.println("Vertex program supported: " + gl.GL_NV_vertex_program);
     GL.glGenProgramsNV(1, byte_buf.asIntBuffer());
 		IntBuffer int_buf = byte_buf.asIntBuffer();
 		if (int_buf.get(0) == 0)
