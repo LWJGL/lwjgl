@@ -33,6 +33,10 @@
 #include "extfmod3.h"
 
 void * F_CALLBACKAPI fsound_dspcallback(void *originalbuffer, void *newbuffer, int length, void *userdata);
+signed char F_CALLBACKAPI fsound_stream_endcallback(FSOUND_STREAM *stream, void *buff, int len, void *param);
+signed char F_CALLBACKAPI fsound_stream_synccallback(FSOUND_STREAM *stream, void *buff, int len, void *param);
+signed char F_CALLBACKAPI fsound_stream_callback(FSOUND_STREAM *stream, void *buff, int len, void *param);
+signed char F_CALLBACKAPI fsound_metadata_callback(char *name,char *value,void *userdata);
 
 /*
 * Class:     org_lwjgl_fmod3_FSound
@@ -972,7 +976,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Play(JNIEnv 
  * Signature: (IJJZ)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1PlayEx(JNIEnv * env, jclass clazz, jint channel, jlong stream, jobject dsp, jboolean startpaused) {
-	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+	FSOUND_DSPUNIT* nDsp = (dsp != NULL) ? (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp) : NULL;
   return fmod_instance->FSOUND_Stream_PlayEx(channel, (FSOUND_STREAM*) stream, nDsp, startpaused);
 }
 
@@ -1219,7 +1223,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1Get
 * Method:    FSOUND_Stream_Net_SetBufferProperties
 * Signature: (III)Ljava/lang/String;
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1SetBufferPropertie(JNIEnv * env, jclass clazz, jint buffersize, jint prebuffer_percent, jint rebuffer_percent) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1SetBufferProperties(JNIEnv * env, jclass clazz, jint buffersize, jint prebuffer_percent, jint rebuffer_percent) {
 		return fmod_instance->FSOUND_Stream_Net_SetBufferProperties(buffersize, prebuffer_percent, rebuffer_percent);
 }
 
@@ -1228,10 +1232,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1SetB
 * Method:    nFSOUND_Stream_Net_SetMetadataCallback
 * Signature: (J)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1SetMetadataCallback(JNIEnv * env, jclass clazz, jlong) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1SetMetadataCallback(JNIEnv * env, jclass clazz, jlong stream) {
+	return fmod_instance->FSOUND_Stream_Net_SetMetadataCallback((FSOUND_STREAM*) stream, fsound_metadata_callback, (void*) stream);
 }
 
 /*
@@ -1262,10 +1264,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1SetBuffer
 * Method:    nFSOUND_Stream_SetEndCallback
 * Signature: (J)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1SetEndCallback(JNIEnv * env, jclass clazz, jlong) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1SetEndCallback(JNIEnv * env, jclass clazz, jlong stream) {
+	return fmod_instance->FSOUND_Stream_SetEndCallback((FSOUND_STREAM*) stream, fsound_stream_endcallback, 0);
 }
 
 /*
@@ -1320,10 +1320,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1SetSubStream
 * Method:    FSOUND_Stream_SetSyncCallback
 * Signature: (J)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1SetSyncCallback(JNIEnv * env, jclass clazz, jlong) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1SetSyncCallback(JNIEnv * env, jclass clazz, jlong stream) {
+  return fmod_instance->FSOUND_Stream_SetSyncCallback((FSOUND_STREAM*) stream, fsound_stream_synccallback, 0);
 }
 
 /*
@@ -1813,6 +1811,30 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1GetChann
 	return false;
 }
 
+/**
+ * This attaches the mixer thread as a daemon thread, and sets its
+ * priority to max value
+ */
+void attachStreamThread() {
+  jvm->AttachCurrentThreadAsDaemon((void**) &stream_jnienv, NULL);
+  
+  // set to high priority
+  // ==============================
+  // get current thread
+  jclass threadClass = stream_jnienv->FindClass("java/lang/Thread");
+  jmethodID currentThread = stream_jnienv->GetStaticMethodID(threadClass, "currentThread", "()Ljava/lang/Thread;");
+  jobject myThread = stream_jnienv->CallStaticObjectMethod(threadClass, currentThread);
+  
+  // get value of high priority
+  jfieldID highPriority = stream_jnienv->GetStaticFieldID(threadClass, "MAX_PRIORITY", "I");
+  jint highPriorityValue = stream_jnienv->GetStaticIntField(threadClass, highPriority);
+  
+  // call set priority
+  jmethodID priority = stream_jnienv->GetMethodID(threadClass, "setPriority", "(I)V");
+  stream_jnienv->CallVoidMethod(myThread, priority, highPriorityValue);
+  // ------------------------------
+}
+
 // FSound callbacks
 // =======================================
 void * F_CALLBACKAPI fsound_dspcallback(void *originalbuffer, void *newbuffer, int length, void *userdata) {
@@ -1822,4 +1844,29 @@ void * F_CALLBACKAPI fsound_dspcallback(void *originalbuffer, void *newbuffer, i
 	jobject newBuffer = mixer_jnienv->NewDirectByteBuffer(newbuffer, size);
 	jobject resultBuffer = mixer_jnienv->CallStaticObjectMethod(fsound, sound_dspcallback, (jlong) *((long *)userdata), origBuffer, newBuffer, (jint) length);
 	return mixer_jnienv->GetDirectBufferAddress(resultBuffer);
+}
+
+signed char F_CALLBACKAPI fsound_stream_endcallback(FSOUND_STREAM *stream, void *buff, int len, void *param) {
+  if (stream_jnienv == NULL) { attachStreamThread(); }
+	stream_jnienv->CallStaticVoidMethod(fsound, sound_stream_endcallback, (jlong) stream);
+	return true;
+}
+
+signed char F_CALLBACKAPI fsound_stream_synccallback(FSOUND_STREAM *stream, void *buff, int len, void *param) {
+  if (stream_jnienv == NULL) { attachStreamThread(); }
+	int length = strlen((const char *) buff);
+	stream_jnienv->CallStaticVoidMethod(fsound, sound_stream_synccallback, (jlong) stream, safeNewBuffer(stream_jnienv, buff, length), (jint) len);
+	return true;
+}
+
+signed char F_CALLBACKAPI fsound_stream_callback(FSOUND_STREAM *stream, void *buff, int len, void *param) {
+  if (stream_jnienv == NULL) { attachStreamThread(); }
+	stream_jnienv->CallStaticVoidMethod(fsound, sound_stream_callback, (jlong) stream, safeNewBuffer(stream_jnienv, buff, len), (jint) len);
+	return true;
+}
+
+signed char F_CALLBACKAPI fsound_metadata_callback(char *name, char *value, void *userdata) {
+	if (stream_jnienv == NULL) { attachStreamThread(); }
+	stream_jnienv->CallStaticVoidMethod(fsound, sound_metadata_callback, (jlong) userdata, safeNewBuffer(stream_jnienv, name, strlen(name)), safeNewBuffer(stream_jnienv, value, strlen(value)));
+	return true;
 }

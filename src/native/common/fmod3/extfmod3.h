@@ -43,6 +43,7 @@ void fmod_create(JNIEnv *env, char*);
 void fmod_destroy();
 
 extern void attachMixerThread();
+extern void attachStreamThread();
 extern FMOD_INSTANCE * fmod_instance;
 
 // Setup for callback. The callbacks don't have access to a JNIEnv pointer, so we have to provide
@@ -63,6 +64,10 @@ extern jclass fmusic;
 
 // FSound cached fields
 extern jmethodID sound_dspcallback;
+extern jmethodID sound_stream_endcallback;
+extern jmethodID sound_stream_synccallback;
+extern jmethodID sound_stream_callback;
+extern jmethodID sound_metadata_callback;
 extern jclass fsound;
 
 // size of dsp buffer (in bytes)

@@ -54,6 +54,10 @@ jclass fmusic;
 
 // FSound cached fields
 jmethodID sound_dspcallback;
+jmethodID sound_stream_endcallback;
+jmethodID sound_stream_synccallback;
+jmethodID sound_stream_callback;
+jmethodID sound_metadata_callback;
 jclass fsound;
 
 // size of dsp buffer (in bytes)
@@ -85,6 +89,10 @@ void fmod_create(JNIEnv *env, char* path) {
 		
 		fsound = env->FindClass("org/lwjgl/fmod3/FSound");
 		sound_dspcallback = env->GetStaticMethodID(fsound, "dsp_callback", "(JLjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;I)Ljava/nio/ByteBuffer;");
+		sound_stream_endcallback = env->GetStaticMethodID(fsound, "end_callback", "(J)V");
+		sound_stream_synccallback = env->GetStaticMethodID(fsound, "sync_callback", "(JLjava/nio/ByteBuffer;I)V");
+		sound_stream_callback = env->GetStaticMethodID(fsound, "stream_callback", "(JLjava/nio/ByteBuffer;I)V");
+		sound_metadata_callback = env->GetStaticMethodID(fsound, "meta_callback", "(JLjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;)V");
 		
 		// cache some data
 		switch(fmod_instance->FSOUND_GetMixer()) {
