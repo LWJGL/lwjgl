@@ -44,14 +44,13 @@
 #include "Window.h"
 #include "common_tools.h"
 
-/*
- * Class:     org_lwjgl_input_Cursor
- * Method:    nCreateCursor
- * Signature: (IIIIIIIII)I
- */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
-  (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
+  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
+	if (env->GetDirectBufferCapacity(handle_buffer) < sizeof(HCURSOR)) {
+		throwException(env, "Handle buffer not large enough");
+		return;
+	}
 	int *pixels = (int *)env->GetDirectBufferAddress(image_buffer) + images_offset;
 
     BITMAPINFO bitmapInfo;
@@ -78,7 +77,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
     char *dstPtr = ptrCursorImage;
     if (!dstPtr) {
 		throwException(env, "Could not allocate DIB section.");
-        return 0;
+        return;
     }
     for (y = 0; y < height; y++ ) {
         for (x = 0; x < width; x++ ) {
@@ -137,7 +136,8 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 	DeleteObject(cursorMask);
 	delete[] maskPixels;
 
-	return (jint)cursor;
+	HCURSOR *cursor_handle = (HCURSOR *)env->GetDirectBufferAddress(handle_buffer);
+	*cursor_handle = cursor;
 }
 
 /*
@@ -146,8 +146,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor
-  (JNIEnv *env, jclass clazz, jlong cursor_handle)
+  (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
-	HCURSOR cursor = (HCURSOR)cursor_handle;
-	DestroyCursor(cursor);
+//	HCURSOR cursor = (HCURSOR)cursor_handle;
+	HCURSOR *cursor_handle = (HCURSOR *)env->GetDirectBufferAddress(handle_buffer);
+	DestroyCursor(*cursor_handle);
 }

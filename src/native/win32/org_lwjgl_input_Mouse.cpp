@@ -223,12 +223,14 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
-	(JNIEnv *env, jclass clazz, jlong cursor_handle)
+	(JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
 	if (mDIDevice == NULL)
 		throwException(env, "null device!");
-	if (cursor_handle != 0) {
-		HCURSOR cursor = (HCURSOR)cursor_handle;
+	if (handle_buffer != NULL) {
+		HCURSOR *cursor_handle = (HCURSOR *)env->GetDirectBufferAddress(handle_buffer);
+		HCURSOR cursor = *cursor_handle;
+//		HCURSOR cursor = (HCURSOR)cursor_handle;
 		SetClassLong(display_hwnd, GCL_HCURSOR, (LONG)cursor);
 		SetCursor(cursor);
 	} else {
