@@ -237,7 +237,7 @@ public final class Display {
 	public static void sync(int fps) {
 		float frameTime = 1.0f / (float) fps;
 		timeNow = Sys.getTime();
-		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameRate) {
+		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
 			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
 			Thread.yield();
 			timeNow = Sys.getTime();
