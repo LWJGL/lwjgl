@@ -3,16 +3,16 @@ package org.lwjgl.openal;
 /**
  * $Id$
  *
- * This is the core OpenAL 1.0 class. This class implements 
+ * This is the core OpenAL class. This class implements 
  * AL.h version 1.0
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class CoreAL10 extends BaseAL implements BaseALConstants {
+public class CoreAL extends BaseAL implements BaseALConstants {
     
-    /** Creates a new instance of CoreAL10 */
-    public CoreAL10() {
+    /** Creates a new instance of CoreAL */
+    public CoreAL() {
     }
     
     /**

@@ -8,7 +8,7 @@ package org.lwjgl.openal;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class AL extends CoreAL10 {
+public class AL extends CoreAL {
     
     /**
      * Nothing to se here - please move along
