@@ -322,17 +322,6 @@ public class CoreAL extends BaseAL implements BaseALConstants {
     public native void          getSourcef(int source, int pname, int floatdata);
     
     /**
-     * Gets a set of three floating point values from a source.
-     *
-     * @param source Source to get property from
-     * @param pname property to get
-     * @param v1 bytebuffer address to write float 1 to
-     * @param v2 bytebuffer address to write float 2 to
-     * @param v3 bytebuffer address to write float 3 to
-     */    
-    public native void          getSource3f(int source, int pname, int v1, int v2, int v3);
-    
-    /**
      * Gets a floating point vector property from a Source object.
      *
      * @param source Source to get property from

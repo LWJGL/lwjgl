@@ -305,14 +305,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcef
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getSource3f
- * Signature: (IIIII)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSource3f
-  (JNIEnv *, jobject, jint, jint, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_openal_CoreAL
  * Method:    getSourcefv
  * Signature: (III)V
  */
