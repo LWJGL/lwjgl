@@ -124,6 +124,10 @@ public abstract class AL extends CoreAL {
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
+    if(!created) {
+      return;
+    }
+    
 		ALC.alcDestroyContext(context.context);
 		ALC.alcCloseDevice(device.device);
 		ALC.destroy();
