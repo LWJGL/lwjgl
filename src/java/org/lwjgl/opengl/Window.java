@@ -25,6 +25,7 @@ import org.lwjgl.Display;
 import org.lwjgl.Sys;
 
 import java.util.HashSet;
+import java.lang.reflect.Method;
 
 public final class Window {
 
@@ -53,19 +54,19 @@ public final class Window {
 		 * I have posted a bug report to apple regarding the behaviour.
 		 *
 		 */
-		if (Display.getPlatform() == Display.PLATFORM_AGL) {
-			java.awt.Toolkit.getDefaultToolkit();
-			new com.apple.eawt.Application().addApplicationListener(new com.apple.eawt.ApplicationAdapter() {
-				public void handleQuit(com.apple.eawt.ApplicationEvent e) {
-					e.setHandled(false);
-					apple_quit = true;
-				}
-			});
-		}
+		if (Display.getPlatform() == Display.PLATFORM_AGL)
+			initMacOSX();
 	}
 
-	/** Special quit boolean set from the apple version */
-	private static boolean apple_quit;
+	private static void initMacOSX() {
+		try {
+			Class mac_class = Class.forName("org.lwjgl.opengl.MacOSX");
+			Method init_method = mac_class.getMethod("initMacOSX", null);
+			init_method.invoke(null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/** Whether the window is currently created, ie. has a native peer */
 	private static boolean created;
@@ -185,9 +186,7 @@ public final class Window {
 	 */
 	public static boolean isCloseRequested() {
 		assert isCreated()  : "Cannot determine state of uncreated window";
-		boolean result = nIsCloseRequested() || apple_quit;
-		apple_quit = false;
-		return result;
+		return nIsCloseRequested();
 	}
 
 	private static native boolean nIsCloseRequested();
@@ -342,7 +341,6 @@ public final class Window {
 		throws Exception;
 
 	private static void createWindow() throws Exception {
-		apple_quit = false;
 		HashSet extensions = new HashSet();
 		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil, extensions);
 		GLCaps.determineAvailableExtensions(extensions);

@@ -3,6 +3,6 @@
 
 #include <JavaVM/jni.h>
 
-void throwException(JNIEnv* env, const char* msg);
+extern void throwException(JNIEnv* env, const char* msg);
 
 #endif

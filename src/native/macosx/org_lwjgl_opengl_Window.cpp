@@ -62,8 +62,12 @@ static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 	env->ReleaseStringUTFChars(title_obj, title);
 }
 
-static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+void setQuitRequested(void) {
 	close_requested = true;
+}
+
+static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	setQuitRequested();
 	return noErr;
 }
 

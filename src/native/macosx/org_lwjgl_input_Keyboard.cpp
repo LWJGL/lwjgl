@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Linux keyboard handling.
+ * Mac OS X keyboard handling.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
