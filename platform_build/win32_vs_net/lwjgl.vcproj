@@ -99,7 +99,8 @@
 				AdditionalDependencies="dinput.lib dxguid.lib OpenAL32.lib alut.lib eaxguid.lib OpenGL32.Lib Version.lib"
 				OutputFile="..\..\libs\win32\lwjgl.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Creative Labs\OpenAL 1.0 SDK\libs&quot;;&quot;C:\Program Files\Microsoft Visual Studio .NET\Vc7\PlatformSDK\Include\prerelease&quot;;&quot;C:\Program Files\Creative Labs\EAX 2.0 Extensions SDK\Libs&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Creative Labs\OpenAL 1.0 SDK\libs&quot;;&quot;C:\Program Files\Microsoft Visual Studio .NET\Vc7\PlatformSDK\Include\prerelease&quot;;&quot;C:\Program Files\Creative Labs\EAX 2.0 Extensions SDK\Libs&quot;;&quot;C:\Program Files\fmodapi372win\api\lib&quot;"
+				IgnoreAllDefaultLibraries="FALSE"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -208,6 +209,9 @@
 				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Pbuffer.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_SWTCanvas.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Window.cpp">
 			</File>
 			<File
@@ -220,6 +224,9 @@
 			<Filter
 				Name="arb"
 				Filter="">
+				<File
+					RelativePath="..\..\src\native\common\arb\org_lwjgl_opengl_ARBBufferObject.cpp">
+				</File>
 				<File
 					RelativePath="..\..\src\native\common\arb\org_lwjgl_opengl_ARBImaging.cpp">
 				</File>
@@ -252,9 +259,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\native\common\arb\org_lwjgl_opengl_ARBVertexBlend.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\native\common\arb\org_lwjgl_opengl_ARBVertexBufferObject.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\native\common\arb\org_lwjgl_opengl_ARBVertexProgram.cpp">
@@ -308,6 +312,9 @@
 				</File>
 				<File
 					RelativePath="..\..\src\native\common\ext\org_lwjgl_opengl_EXTCompiledVertexArray.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\native\common\ext\org_lwjgl_opengl_EXTDepthBoundsTest.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\native\common\ext\org_lwjgl_opengl_EXTDrawRangeElements.cpp">
