@@ -109,12 +109,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		return JNI_FALSE;
 	}
 
-	_wglSetDC(hdc);
-	if (!glInitialize()) {
-		printf("Failed to initialize GL\n");
-		return JNI_FALSE;
-	}
-
 	// Create a rendering context
 	hglrc = wglCreateContext(hdc);
 	if (hglrc == NULL) {
@@ -123,7 +117,20 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 	}
 
 	// Automatically make it the current context
-	Java_org_lwjgl_opengl_BaseGL_nMakeCurrent(env, obj);
+	wglMakeCurrent(hdc, hglrc);
+
+	char * p = (char *) glGetString(GL_EXTENSIONS);
+    if (NULL == p) {
+        printf("NO extensions available\n");
+    } else {
+		printf("Available extensions:\n%s\n", p);
+	}
+	
+	_wglSetDC(hdc);
+	if (glInitialize() != 0) {
+		printf("Failed to initialize GL\n");
+		return JNI_FALSE;
+	}
 
 	return JNI_TRUE;
 }

@@ -748,6 +748,7 @@ void *lglGetProcAddress(char *name)
 /*    char err[1000];*/
     if (t == NULL)
     {
+		printf("Failed to get function: %s\n", name);
         /*sprintf(err, "wglGetProcAddress on %s failed", name);*/
         error = 1;  /*      MessageBox(0, err, "Error", MB_OK | MB_ICONHAND);*/
     }
@@ -1779,6 +1780,8 @@ int glInitialize()
 {
     error = 0;
     InitSupportedExtensions();
+	if (error != 0)
+		printf("Failed to init supported extensions\n");
     
     /* first load the etensions */
     InitARBImaging();

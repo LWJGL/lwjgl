@@ -79,7 +79,7 @@ public final class Sys {
 	}
 	
 	/** The native library name */
-	public static final String LIBRARY_NAME = "lwjgl";
+	public static final String LIBRARY_NAME = "lwjgl_d";
 
 	/**
 	 * No constructor for Sys.

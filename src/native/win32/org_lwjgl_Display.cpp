@@ -42,11 +42,11 @@
 #include <windows.h>
 #include "org_lwjgl_Display.h"
 
-#define DIRECTINPUT_VERSION 0x0700
+//#define DIRECTINPUT_VERSION 0x0700
 
 #include <dinput.h>
 
-#define WINDOWCLASSNAME "JGLIBWINDOW"
+#define WINDOWCLASSNAME "LWJGLWINDOW"
 
 // Initialise static variables
 bool			oneShotInitialised = false;
@@ -75,6 +75,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 				break;
 			}
 		}
+		case WM_PAINT:
+			return 0;
 	}
 
 	// default action
@@ -180,7 +182,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		width, height,
 		NULL,
 		NULL,
-		(HINSTANCE) GetCurrentProcess(),
+		GetModuleHandle(NULL),
 		NULL);
 	// And we never look at windowClass again...
 
@@ -199,11 +201,30 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 	ShowCursor(FALSE);
 
 	// Create input
-	HRESULT ret = DirectInputCreate((HINSTANCE)GetCurrentProcess(), DIRECTINPUT_VERSION, &lpdi, NULL);
+	HRESULT ret = DirectInputCreate(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &lpdi, NULL);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION ) {
-		printf("Failed to create directinput\n");
+		printf("Failed to create directinput");
+		switch (ret) {
+			case DIERR_BETADIRECTINPUTVERSION :
+				printf(" - Beta versio0n\n");
+				break;
+			case DIERR_INVALIDPARAM :
+				printf(" - Invalid parameter\n");
+				break;
+			case DIERR_OLDDIRECTINPUTVERSION :
+				printf(" - Old Version\n");
+				break;
+			case DIERR_OUTOFMEMORY :
+				printf(" - Out Of Memory\n");
+				break;
+			default:
+				printf("\n");
+		}
 		return JNI_FALSE;
 	}
+
+	jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
+	env->SetStaticIntField(clazz, fid_handle, (jint) hwnd);
 
 	return JNI_TRUE;
 }

@@ -67,8 +67,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 		globalClassLock = env->NewGlobalRef(clazz);
 	}
 
-	fid_readBuffer = env->GetFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
-	fid_readBufferAddress = env->GetFieldID(clazz, "readBufferAddress", "I");
+	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
+	fid_readBufferAddress = env->GetStaticFieldID(clazz, "readBufferAddress", "I");
 }
 
 /*

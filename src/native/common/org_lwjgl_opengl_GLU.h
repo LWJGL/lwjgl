@@ -7,6 +7,94 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    errorString
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GLU_errorString
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    getString
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GLU_getString
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    ortho2D
+ * Signature: (DDDD)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_ortho2D
+  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jdouble);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    perspective
+ * Signature: (DDDD)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_perspective
+  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jdouble);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    pickMatrix
+ * Signature: (DDDDI)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_pickMatrix
+  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jdouble, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    lookAt
+ * Signature: (DDDDDDDDD)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_lookAt
+  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jdouble, jdouble, jdouble, jdouble, jdouble, jdouble);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    project
+ * Signature: (DDDIIIIII)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_project
+  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    unProject
+ * Signature: (DDDIIIIII)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_unProject
+  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    scaleImage
+ * Signature: (IIIIIIIII)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_scaleImage
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    build1DMipmaps
+ * Signature: (IIIIII)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_build1DMipmaps
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    build2DMipmaps
+ * Signature: (IIIIIII)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_build2DMipmaps
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

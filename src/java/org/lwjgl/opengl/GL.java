@@ -32,6 +32,13 @@
 
 package org.lwjgl.opengl;
 
+import java.lang.reflect.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
+import org.lwjgl.Display;
 import org.lwjgl.Sys;
 
 /**
@@ -1302,7 +1309,7 @@ public class GL extends CoreGL implements GLConstants {
 		float writeFrequency,
 		float priority);
 
-	public native boolean wglBindTexImageARB(int hPbuffer, int iBuffer);
+	public static native boolean wglBindTexImageARB(int hPbuffer, int iBuffer);
 
 	public static native boolean wglChoosePixelFormatARB(
 		int hdc,
@@ -1312,31 +1319,31 @@ public class GL extends CoreGL implements GLConstants {
 		int piFormats,
 		int piNumFormats);
 
-	public native int wglCreateBufferRegionARB(
+	public static native int wglCreateBufferRegionARB(
 		int hdc,
 		int iLayerPlane,
 		int uType);
 
-	public native int wglCreatePbufferARB(
+	public static native int wglCreatePbufferARB(
 		int hDC,
 		int iPixelFormat,
 		int iWidth,
 		int iHeight,
 		int piAttribList);
 
-	public native void wglDeleteBufferRegionARB(int hRegion);
+	public static native void wglDeleteBufferRegionARB(int hRegion);
 
-	public native boolean wglDestroyPbufferARB(int hPbuffer);
+	public static native boolean wglDestroyPbufferARB(int hPbuffer);
 
 	public static native void wglFreeMemoryNV(int pointer);
 
-	// #endif
+	
 
 	public static native int wglGetCurrentReadDCARB();
 
 	public static native String wglGetExtensionsStringARB(int hdc);
 
-	// #endif
+	
 
 	public static native String wglGetExtensionsStringEXT();
 
@@ -1365,16 +1372,16 @@ public class GL extends CoreGL implements GLConstants {
 		int hReadDC,
 		int hglrc);
 
-	public native boolean wglQueryPbufferARB(
+	public static native boolean wglQueryPbufferARB(
 		int hPbuffer,
 		int iAttribute,
 		int piValue);
 
-	public native int wglReleasePbufferDCARB(int hPbuffer, int hDC);
+	public static native int wglReleasePbufferDCARB(int hPbuffer, int hDC);
 
-	public native boolean wglReleaseTexImageARB(int hPbuffer, int iBuffer);
+	public static native boolean wglReleaseTexImageARB(int hPbuffer, int iBuffer);
 
-	public native boolean wglRestoreBufferRegionARB(
+	public static native boolean wglRestoreBufferRegionARB(
 		int hRegion,
 		int x,
 		int y,
@@ -1383,14 +1390,14 @@ public class GL extends CoreGL implements GLConstants {
 		int xSrc,
 		int ySrc);
 
-	public native boolean wglSaveBufferRegionARB(
+	public static native boolean wglSaveBufferRegionARB(
 		int hRegion,
 		int x,
 		int y,
 		int width,
 		int height);
 
-	public native boolean wglSetPbufferAttribARB(
+	public static native boolean wglSetPbufferAttribARB(
 		int hPbuffer,
 		int piAttribList);
 
@@ -1529,6 +1536,90 @@ public class GL extends CoreGL implements GLConstants {
 	 * Determine which extensions are available
 	 */
 	private void determineAvailableExtensions() {
+		
+		determineAvailableWGLExtensions();
+		
+		// Grab all the public booleans out of this class
+		Field[] fields = GL.class.getDeclaredFields();
+		HashMap map = new HashMap(fields.length);
+		for (int i = 0; i < fields.length; i ++) {
+			if (!Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType() == boolean.class)
+				map.put(fields[i].getName(), fields[i]);
+		}
+		
+		String exts = wglGetExtensionsStringEXT();
+		StringTokenizer st = new StringTokenizer(exts);
+		while (st.hasMoreTokens()) {
+			String ext = st.nextToken();
+			
+			Field f = (Field) map.get(ext);
+			if (f != null) {
+				try {
+					f.setBoolean(this, true);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			
+		}
+		
+	}
+	
+	/*
+	 * Available WGL extensions
+	 */
+	public static boolean WGL_ARB_buffer_region;
+	public static boolean WGL_ARB_extensions_string;
+	public static boolean WGL_ARB_pbuffer;
+	public static boolean WGL_ARB_pixel_format;
+	public static boolean WGL_ARB_render_texture; 
+	public static boolean WGL_EXT_extensions_string;
+
+	/**
+	 * Checks and sets WGL_EXT_extensions_string and WGL_ARB_extensions_string
+	 * if available.
+	 */
+	private static native void checkWGLExtensionsString();
+	
+	/**
+	 * Determine which WGL extensions are available
+	 */
+	private void determineAvailableWGLExtensions() {
+		
+		// First we must determine if WGL_EXT_extensions_string is available
+		checkWGLExtensionsString();
+		if (!WGL_EXT_extensions_string && !WGL_ARB_extensions_string)
+			return;
+		
+		// Grab all the public booleans out of this class
+		Field[] fields = GL.class.getDeclaredFields();
+		HashMap map = new HashMap(fields.length);
+		for (int i = 0; i < fields.length; i ++) {
+			if (Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType() == boolean.class)
+				map.put(fields[i].getName(), fields[i]);
+		}
+		
+		final String exts;
+		
+		if (WGL_ARB_extensions_string)
+			exts = wglGetExtensionsStringARB(Display.getHandle()); // Remember - this is an HWND not an HDC, which is what's required
+		else
+			exts = wglGetExtensionsStringEXT();
+			
+		StringTokenizer st = new StringTokenizer(exts);
+		while (st.hasMoreTokens()) {
+			String ext = st.nextToken();
+			
+			Field f = (Field) map.get(ext);
+			if (f != null) {
+				try {
+					f.setBoolean(GL.class, true);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace(System.err);
+				}
+			}
+			
+		}		
 	}
 
 	/* (non-Javadoc)
