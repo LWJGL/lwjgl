@@ -32,6 +32,10 @@
 
 package org.lwjgl;
 
+import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 /**
  * $Id$
  *
@@ -790,13 +794,36 @@ public final class Math {
 		return (float) java.lang.Math.toDegrees(java.lang.Math.atan(theta));
 	}
 	
+	/* We use NIO to do our bit fiddling */
+	private static final ByteBuffer sqrtByteBuf = ByteBuffer.allocate(4).order(ByteOrder.nativeOrder());
+	private static final IntBuffer sqrtIntBuf = sqrtByteBuf.asIntBuffer();
+	private static final FloatBuffer sqrtFloatBuf = sqrtByteBuf.asFloatBuffer();
+	
 	/**
-	 * Return the square root of a value
-	 * @param n the number for which you want the square root
-	 * @return sqrt(n)
+	 * Approximate inverse square root function (Newton-Raphson?). This is a very approximate
+	 * root, accurate to maybe 1 or 2 dp.
+	 * @param x
+	 * @return ~x^0.5
 	 */
-	public static float sqrt(float n) {
-		return (float) java.lang.Math.sqrt(n);
+	public static float invsqrt(float x) {
+		float xhalf = 0.5f * x;
+		sqrtFloatBuf.put(0, x);
+		int i = sqrtIntBuf.get(0);
+		i = 0x5f375a86 - (i >> 1);
+		sqrtIntBuf.put(0, i);
+		x = sqrtFloatBuf.get(0);
+		x *= (1.5f - xhalf * x * x); // This line may be duplicated for more accuracy.
+		return x;
+	}
+
+	/**
+	 * Approximate square root function (Newton-Raphson?). This is a very approximate
+	 * root, accurate to maybe 1 or 2 dp.
+	 * @param x
+	 * @return ~x^0.5
+	 */
+	public static float sqrt(float x) {
+		return 1.0f / invsqrt(x);
 	}
 
 	/*
@@ -1100,5 +1127,6 @@ public final class Math {
 		);
 
 	}
+	
 
 }

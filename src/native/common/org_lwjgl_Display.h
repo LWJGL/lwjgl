@@ -12,7 +12,13 @@ extern "C" {
 /* Inaccessible static: mode */
 /* Inaccessible static: handle */
 /* Inaccessible static: closeRequested */
-/* Inaccessible static: class_00024org_00024lwjgl_00024Display */
+#undef org_lwjgl_Display_PLATFORM_WGL
+#define org_lwjgl_Display_PLATFORM_WGL 0L
+#undef org_lwjgl_Display_PLATFORM_GLX
+#define org_lwjgl_Display_PLATFORM_GLX 1L
+#undef org_lwjgl_Display_PLATFORM_AGL
+#define org_lwjgl_Display_PLATFORM_AGL 2L
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Display
  * Method:    nGetAvailableDisplayModes
@@ -43,6 +49,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    getPlatform
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus

@@ -101,20 +101,7 @@ public final class Sys {
 		}
 	}
 	
-	/*
-	 * Platforms. This will let you determine which platform you are running
-	 * on, which is handy to know for some GL calls.
-	 */
 
-	/** Windows platform */	
-	public static final int PLATFORM_WGL = 0;
-	
-	/** GLX (Linux/Unix) platform */
-	public static final int PLATFORM_GLX = 1;
-	
-	/** MacOSX platform */
-	public static final int PLATFORM_AGL = 2;
-	
 	/**
 	 * @return the name of the native library to load
 	 */
@@ -223,14 +210,4 @@ public final class Sys {
 	 */
 	public static native void alert(String title, String message);
 	
-	/**
-	 * Returns the operating system windowing platform. This will be one of the
-	 * constants defined above. There is no "unknown" platform; a native library port
-	 * has to provide a unique platform number for this mechanism to work. If the LWJGL
-	 * is ported to, say, QNX, we will have a PLATFORM_QNX at the ready.
-	 * 
-	 * @return the windowing system
-	 */
-	public static native int getPlatform();
-		
 } 

@@ -163,15 +163,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
 	env->ReleaseStringUTFChars(message, eMessageText);
 	env->ReleaseStringUTFChars(title, cTitleBarText);
 }
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    getPlatform
- * Signature: ()I
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_getPlatform
-  (JNIEnv * env, jclass clazz)
-{
-	return org_lwjgl_Sys_PLATFORM_WGL;
-}
-

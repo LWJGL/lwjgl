@@ -536,14 +536,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		0, 0, 0                // layer masks ignored
 	};
 
-	// Ensure desktop color depth is adequate
-	int availableBitDepth = GetDeviceCaps(hdc, BITSPIXEL);
-	if (availableBitDepth < bpp) {
-		printf("This application requires a greater colour depth.\n");
-		destroyAll();
-		return JNI_FALSE;
-	};
-
 	int  iPixelFormat;  
 
 	// get the best available match of pixel format for the device context  
@@ -561,11 +553,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		return JNI_FALSE;
 	}
 
+	/*
 	if (desc.cColorBits < bpp) {
 		printf("This application requires a greater colour depth.\n");
 		destroyAll();
 		return JNI_FALSE;
 	}
+	*/
 
 	if (desc.cAlphaBits < alphaBits) {
 		printf("This application requires a greater alpha depth.\n");
@@ -643,3 +637,16 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
 
 	return isMinimized ? JNI_TRUE : JNI_FALSE;
 }
+
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    getPlatform
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
+  (JNIEnv * env, jclass clazz)
+{
+	return org_lwjgl_Display_PLATFORM_WGL;
+}
+

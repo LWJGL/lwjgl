@@ -189,4 +189,5 @@ abstract class BaseGL {
 			&& currentContext == this
 			&& Thread.currentThread() == renderThread;
 	}
+
 }
