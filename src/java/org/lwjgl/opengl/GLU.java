@@ -46,16 +46,10 @@ import java.nio.DoubleBuffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public class GLU implements GLUConstants {
+public abstract class GLU implements GLUConstants {
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());
-	}
-
-	/**
-	 * Private constructor for GLU.
-	 */
-	private GLU() {
 	}
 
 	public static native String gluErrorString(int errCode);

@@ -45,7 +45,7 @@ import java.nio.Buffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision: 1.23 $
  */
-public class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
+public abstract class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
 	public static native void glFogCoordf (float coord);
 	public static void glFogCoordPointer (int stride, FloatBuffer data) {
 		nglFogCoordPointer(GL_FLOAT, stride, data, data.position() << 2);

@@ -39,7 +39,7 @@ package org.lwjgl.openal;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class AL extends CoreAL {
+public abstract class AL extends CoreAL {
 
 	/** ALC instance. */
 	protected static ALC alc;

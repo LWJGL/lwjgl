@@ -46,7 +46,7 @@ import java.nio.DoubleBuffer;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class CoreAL extends BaseAL implements BaseALConstants {
+public abstract class CoreAL extends BaseAL implements BaseALConstants {
 
 	/**
 	 * Enables a feature of the OpenAL driver.

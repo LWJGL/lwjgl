@@ -42,7 +42,7 @@ import java.nio.*;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision: 1.23 $
  */
-public class CoreGL13 extends CoreGL12 implements CoreGL13Constants {
+public abstract class CoreGL13 extends CoreGL12 implements CoreGL13Constants {
 	public static native void glActiveTexture(int texture);
 	public static native void glClientActiveTexture(int texture);
 	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer data) {

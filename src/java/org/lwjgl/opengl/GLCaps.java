@@ -48,7 +48,7 @@ import java.util.StringTokenizer;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public class GLCaps {
+public abstract class GLCaps {
 	/*
 	 * Available extensions
 	 */
@@ -249,7 +249,7 @@ public class GLCaps {
 		final String exts;
 
 		if (WGL_ARB_extensions_string)
-			exts = GL.wglGetExtensionsStringARB(Window.getCurrentWindow().getHandle());
+			exts = GL.wglGetExtensionsStringARB(Window.getHandle());
 		// Remember - this is an HWND not an HDC, which is what's required. The native
 		// code on the other side of wglGetExtensionsStringARB gets the HDC from the HWND
 		// behind the scenes.

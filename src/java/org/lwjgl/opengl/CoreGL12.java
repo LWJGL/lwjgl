@@ -45,7 +45,7 @@ import java.nio.Buffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision: 1.23 $
  */
-public class CoreGL12 extends CoreGL11 implements CoreGL12Constants {
+public abstract class CoreGL12 extends CoreGL11 implements CoreGL12Constants {
 	
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, ByteBuffer data) {
 		nglColorTable(target, internalFormat, width, format, type, data, data.position());
