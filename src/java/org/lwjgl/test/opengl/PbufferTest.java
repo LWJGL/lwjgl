@@ -180,7 +180,6 @@ public class PbufferTest {
   private void render() {
     if (pbuffer.isBufferLost()) {
         System.out.println("Buffer contents lost - will recreate the buffer");
-        Pbuffer.releaseContext();
         pbuffer.destroy();
         initPbuffer();
     }
@@ -206,7 +205,7 @@ public class PbufferTest {
     }
     GL11.glPopMatrix();
     GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 0, 0, 512, 512, 0);
-    Pbuffer.releaseContext();
+    Window.makeCurrent();
 
     // OpenGL window rendering
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
@@ -238,7 +237,7 @@ public class PbufferTest {
           pbuffer.makeCurrent();
           initGLState(256, 256, 0.5f);
           GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex_handle);
-          Pbuffer.releaseContext();
+          Window.makeCurrent();
       } catch (Exception e) {
           e.printStackTrace();
       }
@@ -256,8 +255,7 @@ public class PbufferTest {
       try {
         destroyTexture();
         Keyboard.destroy();
-	Pbuffer.releaseContext();
-	pbuffer.destroy();
+        pbuffer.destroy();
         Window.destroy();
 
         Display.setDisplayMode(mode);
@@ -276,8 +274,7 @@ public class PbufferTest {
       try {
         destroyTexture();
         Keyboard.destroy();
-	Pbuffer.releaseContext();
-	pbuffer.destroy();
+        pbuffer.destroy();
         Window.destroy();
 
         Display.resetDisplayMode();
@@ -347,7 +344,6 @@ public class PbufferTest {
   private void cleanup() {
     destroyTexture();
     Keyboard.destroy();
-    Pbuffer.releaseContext();
     pbuffer.destroy();
     Window.destroy();
   }

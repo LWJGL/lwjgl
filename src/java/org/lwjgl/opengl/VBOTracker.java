@@ -32,38 +32,61 @@
 
 package org.lwjgl.opengl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Track Vertex Buffer Objects by context.
+ */
 class VBOTracker {
-	private static VBOTracker default_tracker = new VBOTracker();
-	private static VBOTracker current_tracker = default_tracker;
+	private static VBOTracker current_tracker = null;
+	
+	private static final Map contextToTracker = new HashMap(3, 1.0f);
 
 	private final StateStack vbo_array_stack;
 	private final StateStack vbo_element_stack;
 	private final StateStack attrib_stack;
 
-	public static void setCurrent(VBOTracker tracker) {
-		current_tracker = tracker;
-	}
-
-	public static void releaseCurrent() {
-		current_tracker = default_tracker;
-	}
-
-	VBOTracker() {
+	private VBOTracker() {
 		int stack_size = Util.getGLInteger(GL11.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH);
 		vbo_array_stack = new StateStack(stack_size, 0);
 		vbo_element_stack = new StateStack(stack_size, 0);
 		attrib_stack = new StateStack(stack_size, 0);
 	}
 
-	public static StateStack getVBOArrayStack() {
+	static StateStack getVBOArrayStack() {
 		return current_tracker.vbo_array_stack;
 	}
 
-	public static StateStack getVBOElementStack() {
+	static StateStack getVBOElementStack() {
 		return current_tracker.vbo_element_stack;
 	}
 
-	public static StateStack getClientAttribStack() {
+	static StateStack getClientAttribStack() {
 		return current_tracker.attrib_stack;
+	}
+	
+	/**
+	 * Called after a GLContext has been made current. This will set up the current
+	 * VBO tracker.
+	 * @param context
+	 */
+	static synchronized void setCurrent(GLContext context) {
+		current_tracker = (VBOTracker) contextToTracker.get(context);
+		if (current_tracker == null) {
+			current_tracker = new VBOTracker();
+			contextToTracker.put(context, current_tracker);
+		}
+	}
+	
+	/**
+	 * Remove a context when it is about to be destroyed.
+	 * @param context
+	 */
+	static synchronized void remove(GLContext context) {
+		contextToTracker.remove(context);
+		if (current_tracker == context) {
+			current_tracker = null;
+		}
 	}
 }

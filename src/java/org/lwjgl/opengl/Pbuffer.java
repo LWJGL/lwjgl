@@ -47,7 +47,8 @@ import org.lwjgl.Sys;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public class Pbuffer {
+public final class Pbuffer implements GLContext {
+	
 	public static final int PBUFFER_SUPPORTED = 1;
 
 	/** Current Pbuffer */
@@ -56,8 +57,11 @@ public class Pbuffer {
 	/** Handle to the native GL rendering context */
 	private final int handle;
 
-	/** Tracks VBO state */
-	private final VBOTracker vbo_tracker;
+	/** Width */
+	private final int width;
+
+	/** Height */
+	private final int height;
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());
@@ -85,17 +89,9 @@ public class Pbuffer {
 		          Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
 	 */
 	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
+		this.width = width;
+		this.height = height;
 		handle = nCreate(width, height, bpp, alpha, depth, stencil, samples);
-		vbo_tracker = new VBOTracker();
-	}
-
-	/**
-	 * Method to release the current Pbuffer context and make the OpenGL window current.
-	 */
-	public static void releaseContext() {
-		currentBuffer = null;
-		VBOTracker.releaseCurrent();
-		nReleaseContext();
 	}
 
 	/**
@@ -106,7 +102,7 @@ public class Pbuffer {
 	 *
 	 * @return true if the buffer is lost and destroyed, false if the buffer is valid.
 	 */
-	public boolean isBufferLost() {
+	public synchronized boolean isBufferLost() {
 		return nIsBufferLost(handle);
 	}
 
@@ -116,18 +112,13 @@ public class Pbuffer {
 	private native static boolean nIsBufferLost(int handle);
 
 	/**
-	 * Native method to release the context.
-	 */
-	private native static void nReleaseContext();
-
-	/**
 	 * Method to make the Pbuffer context current. All subsequent OpenGL
 	 * calls will go to this buffer.
 	 */
-	public void makeCurrent() {
+	public synchronized void makeCurrent() {
 		currentBuffer = this;
-		VBOTracker.setCurrent(vbo_tracker);
 		nMakeCurrent(handle);
+		VBOTracker.setCurrent(this);
 	}
 
 	/**
@@ -156,11 +147,12 @@ public class Pbuffer {
 		int samples) throws Exception;
 
 	/**
-	 * Destroys the Pbuffer. The buffer must not be current.
+	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context -
+	 * regardless of whether this Pbuffer was the current rendering context or not.
 	 */
-	public void destroy() {
-		if (currentBuffer == this)
-			releaseContext();
+	public synchronized void destroy() {
+		makeCurrent();
+		VBOTracker.remove(this);
 		nDestroy(handle);
 	}
 
@@ -168,4 +160,20 @@ public class Pbuffer {
 	 * Natively destroy any GL-related stuff
 	 */
 	private native static void nDestroy(int handle);
+	
+	/**
+	 * @return Returns the height.
+	 */
+	public int getHeight() {
+		return height;
+	}
+	
+	/**
+	 * @return Returns the width.
+	 */
+	public int getWidth() {
+		return width;
+	}
+	
+	
 }

@@ -20,14 +20,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nReleaseContext
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseContext
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nMakeCurrent
  * Signature: (I)V
  */

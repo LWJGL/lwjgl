@@ -265,6 +265,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
 	handleMessages();
 }
 
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    nMakeCurrent
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
+  (JNIEnv *env, jclass clazz)
+{
+	makeCurrent();
+}
+
 void makeCurrent(void) {
 	if (USEGLX13)
 		glXMakeContextCurrent(getCurrentDisplay(), glx_window, glx_window, context);
@@ -371,7 +382,7 @@ static void destroy(void) {
 	releaseContext();
 	if (USEGLX13)
 		glXDestroyWindow(getCurrentDisplay(), glx_window);
-	glXDestroyContext(getCurrentDisplay(), context); 
+	glXDestroyContext(getCurrentDisplay(), context);
 	context = NULL;
 	Display *disp = getCurrentDisplay();
 	destroyWindow();

@@ -123,6 +123,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
   (JNIEnv *, jclass, jboolean);
 
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nMakeCurrent
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

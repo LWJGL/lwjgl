@@ -58,9 +58,6 @@ public final class Window {
 		System.loadLibrary(Sys.getLibraryName());
 	}
 
-	/** Whether the window is currently created, ie. has a native peer */
-	private static boolean created;
-
 	/** X coordinate of the window */
 	private static int x;
 
@@ -88,8 +85,24 @@ public final class Window {
 	/** Tracks VBO state for the window context */
 	private static VBOTracker vbo_tracker;
 	
+	/** Context: delegates calls to Window */
+	private static class Context implements GLContext {
+
+		public void makeCurrent() {
+			Window.makeCurrent();
+		}
+
+		public int getWidth() {
+			return width;
+		}
+
+		public int getHeight() {
+			return height;
+		}
+	}
+	
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
-	private static Window context;
+	private static Context context;
 
 	/**
 	 * Only constructed by ourselves
@@ -221,6 +234,20 @@ public final class Window {
 	 * Swap double buffers.
 	 */
 	private static native void swapBuffers();
+	
+	/**
+	 * Make the Window the current rendering context for GL calls.
+	 */
+	public static synchronized void makeCurrent() {
+		assert isCreated() : "No window has been created.";
+		nMakeCurrent();
+		VBOTracker.setCurrent(context);
+	}
+	
+	/**
+	 * Make the window the current rendering context for GL calls.
+	 */
+	private static native void nMakeCurrent();
 
 	/**
 	 * Create a fullscreen window. If the underlying OS does not
@@ -304,26 +331,29 @@ public final class Window {
 	private static void createWindow(int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
 		HashSet extensions = new HashSet();
 		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples, extensions);
+		context = new Context();
+		context.makeCurrent();
 		GLCaps.determineAvailableExtensions(extensions);
-		context = new Window();
-		created = true;
 	}
 
 	/**
-	 * Destroy the window.
+	 * Destroy the Window. After this call, there will be no current GL rendering context,
+	 * regardless of whether the Window was the current rendering context.
 	 */
-	public static void destroy() {
-		if (!created)
+	public static synchronized void destroy() {
+		if (context == null) {
 			return;
+		}
+		makeCurrent();
 		nDestroy();
-		created = false;
+		VBOTracker.remove(context);
 		context = null;
 	}
 	
 	/**
-	 * @return the unique Window context
+	 * @return the unique Window context (or null, if the Window has not been created)
 	 */
-	public static final Window getContext() {
+	public static GLContext getContext() {
 		return context;
 	}
 
@@ -336,7 +366,7 @@ public final class Window {
 	 * @return true if the window's native peer has been created
 	 */
 	public static boolean isCreated() {
-		return created;
+		return context != null;
 	}
 
 	/**

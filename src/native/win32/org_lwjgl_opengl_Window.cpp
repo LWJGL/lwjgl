@@ -675,3 +675,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
 		vsync = sync;
 	}
 }
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
+  (JNIEnv *env, jclass clazz)
+{
+	wglMakeCurrent(hdc, hglrc);
+}
