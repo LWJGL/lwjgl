@@ -28,6 +28,15 @@ public final class Window {
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());
+		/*
+		 * HACK: This is nescessary to establish the Mac OS X dock icon and
+		 * system menu. Without them, windows will misbehave.
+		 *
+		 * I'm accepting this hack on the assumption that awt is always present
+		 * on an Mac OS X JVM.
+		 */
+		if (Display.getPlatform() == Display.PLATFORM_AGL)
+			java.awt.Toolkit.getDefaultToolkit();
 	}
 
 	/** Whether the window is currently created, ie. has a native peer */
