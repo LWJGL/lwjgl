@@ -35,6 +35,8 @@ package org.lwjgl.input;
 import org.lwjgl.Sys;
 
 import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * $Id$
@@ -78,27 +80,28 @@ public class Cursor {
 		assert delays == null || numImages <= delays.remaining(): "delays != null && numImages > delays.remaining()";
 		assert xHotspot <= width && xHotspot >= 0: "xHotspot > width || xHotspot < 0";
 		assert yHotspot <= height && yHotspot >= 0: "yHotspot > height || yHotspot < 0";
-		flipImages(width, height, numImages, images);
-		nativeHandle = nCreateCursor(width, height, xHotspot, height - yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : 0);
+                IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+		flipImages(width, height, numImages, images, images_copy);
+		nativeHandle = nCreateCursor(width, height, xHotspot, height - yHotspot, numImages, images_copy, 0, delays, delays != null ? delays.position() : 0);
 	}
 
-	private static void flipImages(int width, int height, int numImages, IntBuffer images) {
+	private static void flipImages(int width, int height, int numImages, IntBuffer images, IntBuffer images_copy) {
 		for (int i = 0; i < numImages; i++) {
-			int start_index = i*width*height + images.position();
-			flipImage(width, height, start_index, images);
+			int start_index = i*width*height;
+			flipImage(width, height, start_index, images, images_copy);
 		}
 	}
 
-	private static void flipImage(int width, int height, int start_index, IntBuffer images) {
+	private static void flipImage(int width, int height, int start_index, IntBuffer images, IntBuffer images_copy) {
 		for (int y = 0; y < height>>1; y++) {
 			int index_y_1 = y*width + start_index;
 			int index_y_2 = (height - y - 1)*width + start_index;
 			for (int x = 0; x < width; x++) {
 				int index1 = index_y_1 + x;
 				int index2 = index_y_2 + x;
-				int temp_pixel = images.get(index1);
-				images.put(index1, images.get(index2));
-				images.put(index2, temp_pixel);
+				int temp_pixel = images.get(index1 + images.position());
+				images_copy.put(index1, images.get(index2 + images.position()));
+				images_copy.put(index2, temp_pixel);
 			}
 		}
 	}
