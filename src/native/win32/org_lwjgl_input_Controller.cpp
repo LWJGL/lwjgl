@@ -367,6 +367,7 @@ void SetupController() {
 
   //
   // Lastly slider
+  // using z axis since we're running dx 5
   //
   if(hasslider) {
     diprg.diph.dwObj        = DIJOFS_Z;
