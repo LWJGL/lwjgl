@@ -552,7 +552,7 @@ public class ALTest extends BasicTest {
             
             try {
                 ch = System.in.read();
-                System.in.read();
+                eatInput();
             } catch (IOException ioe) {
             }
             
@@ -999,31 +999,34 @@ public class ALTest extends BasicTest {
             if ((ch == 'S') || (ch == 's')) {
                 return 0;
             }
-            if (ch == 0) {
+            if (ch == 10) {
                 return 1;
             }
         }
     }  
     
     protected int CRToContinue() {
-        int ch = 0;
-        int lastchar = 0;
-        
-        do {
-            lastchar = ch;
-            try {
-                ch = System.in.read();
-                System.in.read();
-            } catch (IOException ioe) {
+        int current = -1;
+        try {
+            //read one, and eat the rest
+            current = System.in.read();
+            eatInput();
+        } catch (Exception e) {
+        }
+        return (current == 13) ? 10 : current;
+    }
+    
+    protected void eatInput() {
+        try {
+            while(System.in.available() > 0) {
+                int eaten = System.in.read();
             }
-        } while (ch != 10);
-        
-        return lastchar;
+        } catch (Exception e) {
+        }
     }
     
     protected void CRForNextTest() {
         System.out.print("\nPress Return to continue on to the next test.\n");
-        
         CRToContinue();
     }
     
