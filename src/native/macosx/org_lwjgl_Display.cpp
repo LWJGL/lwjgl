@@ -153,7 +153,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
     int width = CGDisplayPixelsWide( kCGDirectMainDisplay );
     int height = CGDisplayPixelsHigh( kCGDirectMainDisplay );
     int bpp = CGDisplayBitsPerPixel( kCGDirectMainDisplay );
-    int freq = 60;
+    int freq = (int)_getDictDouble (CGDisplayCurrentMode ( kCGDirectMainDisplay ),  kCGDisplayRefreshRate);
     
     jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
     jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
