@@ -69,7 +69,8 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		addComponentListener(this);
 		canvas = new MacOSXGLCanvas();
 		add(canvas, BorderLayout.CENTER);
-		setUndecorated(fullscreen);
+		boolean undecorated = Boolean.getBoolean("org.lwjgl.opengl.Window.undecorated");
+		setUndecorated(fullscreen || undecorated);
 		if ( fullscreen ) {
 			getDevice().setFullScreenWindow(this);
 			getDevice().setDisplayMode(requested_mode);
