@@ -330,6 +330,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 				isFocused = true;
 				break;
 			case WA_INACTIVE:
+				isMinimized = true;
 				isFocused = false;
 				break;
 			}
