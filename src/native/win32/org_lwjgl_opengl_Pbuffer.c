@@ -92,7 +92,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilitie
 		wglMakeCurrent(saved_hdc, saved_context);
 		closeWindow(&dummy_hwnd, &dummy_hdc);
 		wglDeleteContext(dummy_context);
-		throwException(env, "Could not create dummy context");
+		throwException(env, "Could not make dummy context current");
 		return 0;
 	}
 	extgl_InitWGL(&extensions);
