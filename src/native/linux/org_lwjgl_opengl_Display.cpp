@@ -163,7 +163,7 @@ bool releaseInput(void) {
 	if (current_fullscreen || input_released)
 		return false;
 	input_released = true;
-        setRepeatMode(AutoRepeatModeDefault);
+	setRepeatMode(AutoRepeatModeDefault);
 	updateInputGrab();
 	return true;
 }
@@ -172,7 +172,7 @@ static void acquireInput(void) {
 	if (current_fullscreen || !input_released)
 		return;
 	input_released = false;
-        setRepeatMode(AutoRepeatModeOff);
+	setRepeatMode(AutoRepeatModeOff);
 	updateInputGrab();
 }
 
@@ -271,6 +271,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
 }
 
 static void destroyWindow() {
+	setRepeatMode(AutoRepeatModeDefault);
 	XDestroyWindow(getDisplay(), current_win);
 	XFreeColormap(getDisplay(), cmap);
 }
@@ -323,7 +324,7 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	XMapRaised(getDisplay(), win);
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
-        setRepeatMode(AutoRepeatModeOff);
+	setRepeatMode(AutoRepeatModeOff);
 	if (!checkXError(env)) {
 		destroyWindow();
 		return false;
@@ -520,7 +521,6 @@ static void destroyContext(void) {
 	}
 	XFree(vis_info);
 	glXDestroyContext(getDisplay(), context);
-        setRepeatMode(AutoRepeatModeDefault);
 }
 
 static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
