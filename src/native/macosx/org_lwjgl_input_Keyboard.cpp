@@ -365,25 +365,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll(JNIEnv * env, jclass 
 	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead(JNIEnv * env, jclass clazz) {
-	int num_events = 0;
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead(JNIEnv * env, jclass clazz, jobject buffer, jint buffer_position) {
 	int event_size;
 	if (translation_enabled)
 		event_size = 4;
 	else
 		event_size = 2;
-	num_events = copyEvents(&event_queue, event_size);
-	return num_events;
+	unsigned char* buffer_ptr = (unsigned char *)env->GetDirectBufferAddress(buffer);
+	int buffer_size = env->GetDirectBufferCapacity(buffer) - buffer_position;
+	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, event_size);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation(JNIEnv *env, jclass clazz) {
 	translation_enabled = true;
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer(JNIEnv * env, jclass clazz) {
-	jobject new_buffer = env->NewDirectByteBuffer(getOutputList(&event_queue), getEventBufferSize(&event_queue));
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer(JNIEnv * env, jclass clazz) {
 	buffer_enabled = true;
-	return new_buffer;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet(JNIEnv *env, jclass clazz, jint key) {

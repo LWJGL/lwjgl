@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.Sys;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Window;
 
 /**
@@ -57,15 +58,15 @@ import org.lwjgl.opengl.Window;
  * @version $Revision$
  */
 public class Mouse {
-  
-  /** 1 bit transparency for native cursor */
+	
+	/** 1 bit transparency for native cursor */
 	public final static int CURSOR_ONE_BIT_TRANSPARENCY = 1;
-  
-  /** 8 bit alhpa native cursor */
+	
+	/** 8 bit alhpa native cursor */
 	public final static int CURSOR_8_BIT_ALPHA = 2;
-  
-  /** animation native cursor */
-  public final static int CURSOR_ANIMATION = 4;
+	
+	/** animation native cursor */
+	public final static int CURSOR_ANIMATION = 4;
 
 	/** Has the mouse been created? */
 	private static boolean created;
@@ -73,12 +74,12 @@ public class Mouse {
 	/** The mouse buttons status from the last poll */
 	private static byte[] buttons;
 
-  /** X */
-  private static int x;
+	/** X */
+	private static int x;
 
-  /** Y */
-  private static int y;
-  
+	/** Y */
+	private static int y;
+	
 	/** Delta X */
 	private static int dx;
 
@@ -99,8 +100,8 @@ public class Mouse {
 
 	/** Button names. These are set upon create(), to names like BUTTON0, BUTTON1, etc. */
 	private static String[] buttonName;
-  
-  /** hashmap of button names, for fast lookup */
+
+	/** hashmap of button names, for fast lookup */
 	private static final Map buttonMap = new HashMap(16);
 
 	/** Lazy initialization */
@@ -113,7 +114,10 @@ public class Mouse {
 	private static int eventButton;
 
 	/** The current state of the button being examined in the event queue */
-  private static boolean eventState;
+	private static boolean eventState;
+
+	/** Buffer size in events */
+	private final static int BUFFER_SIZE = 50;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -161,7 +165,7 @@ public class Mouse {
 	 *
 	 * @param cursor the native cursor object to bind. May be null.
 	 * @return The previous Cursor object set, or null.
-         * @throws Exception if the cursor could not be set for any reason
+	 * @throws Exception if the cursor could not be set for any reason
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws Exception {
 		assert created && ((getNativeCursorCaps() | CURSOR_ONE_BIT_TRANSPARENCY) != 0);
@@ -169,7 +173,7 @@ public class Mouse {
 		currentCursor = cursor;
 		if (currentCursor != null) {
 			nSetNativeCursor(currentCursor.getHandle());
-     		currentCursor.setTimeout();
+	 		currentCursor.setTimeout();
 		} else {
 			nSetNativeCursor(0);
 		}
@@ -235,9 +239,9 @@ public class Mouse {
 	 * @throws Exception if the mouse could not be created for any reason
 	 */
 	public static void create() throws Exception {
-    
+		
 		assert Window.isCreated() : "Window must be created prior to creating mouse";
-    
+		
 		if (!initialized) {
 			initialize();
 		}
@@ -254,10 +258,10 @@ public class Mouse {
 		buttons = new byte[buttonCount];
 	}
 
-  /** Native query of wheel support */
+	/** Native query of wheel support */
 	private static native boolean nHasWheel();
 
-  /** Native query of button count */
+	/** Native query of button count */
 	private static native int nGetButtonCount();
 
 	/**
@@ -309,43 +313,43 @@ public class Mouse {
 
 	/**
 	 * Polls the mouse for its current state. Access the polled values using the
-   * get<value> methods.
-   * By using this method, it is possible to "miss" mouse click events if you don't
-   * poll fast enough. To receive all button events, enable buffering by calling 
-   * <code>enableBuffer</code>, and read those events by calling <code>read</code>
-   * 
-   * @see org.lwjgl.input.Mouse#isButtonDown(int button) 
-   * @see org.lwjgl.input.Mouse#getX() 
-   * @see org.lwjgl.input.Mouse#getY() 
-   * @see org.lwjgl.input.Mouse#getDX() 
-   * @see org.lwjgl.input.Mouse#getDY() 
-   * @see org.lwjgl.input.Mouse#getDWheel() 
-   * @see org.lwjgl.input.Mouse#enableBuffer()
-   * @see org.lwjgl.input.Mouse#read()  
+	 * get<value> methods.
+	 * By using this method, it is possible to "miss" mouse click events if you don't
+	 * poll fast enough. To receive all button events, enable buffering by calling 
+	 * <code>enableBuffer</code>, and read those events by calling <code>read</code>
+	 * 
+	 * @see org.lwjgl.input.Mouse#isButtonDown(int button) 
+	 * @see org.lwjgl.input.Mouse#getX() 
+	 * @see org.lwjgl.input.Mouse#getY() 
+	 * @see org.lwjgl.input.Mouse#getDX() 
+	 * @see org.lwjgl.input.Mouse#getDY() 
+	 * @see org.lwjgl.input.Mouse#getDWheel() 
+	 * @see org.lwjgl.input.Mouse#enableBuffer()
+	 * @see org.lwjgl.input.Mouse#read()	
 	 */
 	public static void poll() {
 		assert created : "The mouse has not been created.";
 		nPoll();
-    
-    // set absolute position
-    x += dx;
-    y += dy;
+		
+		// set absolute position
+		x += dx;
+		y += dy;
 
-    // if window has been created, clamp to edges
-    if(Window.isCreated()) {
-      // clamp x, y
-      if (x < 0) {
-        x = 0;
-      } else if (x > Window.getWidth()) {
-        x = Window.getWidth();
-      }
-      
-      if (y < 0) {
-        y = 0;
-      } else if (y > Window.getHeight()) {
-        y = Window.getHeight();
-      }
-    }
+		// if window has been created, clamp to edges
+		if(Window.isCreated()) {
+			// clamp x, y
+			if (x < 0) {
+				x = 0;
+			} else if (x > Window.getWidth()) {
+				x = Window.getWidth();
+			}
+			
+			if (y < 0) {
+				y = 0;
+			} else if (y > Window.getHeight()) {
+				y = Window.getHeight();
+			}
+		}
 	}
 
 	/**
@@ -362,9 +366,9 @@ public class Mouse {
 	public static boolean isButtonDown(int button) {
 		assert created : "The mouse has not been created.";
 		if (button >= buttonCount || button < 0)
-		  return false;
+			return false;
 		else
-		  return buttons[button] == 1;
+			return buttons[button] == 1;
 	}
 	
 	/**
@@ -384,7 +388,7 @@ public class Mouse {
 	 * @param buttonName The button name
 	 */
 	public static int getButtonIndex(String buttonName) {
-		Integer ret  = (Integer) buttonMap.get(buttonName);
+		Integer ret = (Integer) buttonMap.get(buttonName);
 		if (ret == null)
 			return -1;
 		else
@@ -393,15 +397,12 @@ public class Mouse {
 
 	/**
 	 * Enable mouse button buffering. Must be called after the mouse is created.
-	 * @return the size of the mouse buffer in events, or 0 if no buffering
-	 * can be enabled for any reason
 	 */
-	public static int enableBuffer() throws Exception {
+	public static void enableBuffer() throws Exception {
 		assert created : "The mouse has not been created.";
-		readBuffer = nEnableBuffer();
-		if (readBuffer != null)
-			readBuffer.order(ByteOrder.nativeOrder());
-		return readBuffer.capacity()/2;
+		readBuffer = BufferUtils.createByteBuffer(2*BUFFER_SIZE);
+		readBuffer.limit(0);
+		nEnableBuffer();
 	}
 
 	/**
@@ -409,40 +410,41 @@ public class Mouse {
 	 * @return the event buffer,
 	 * or null if no buffer can be allocated
 	 */
-	private static native ByteBuffer nEnableBuffer() throws Exception;
+	private static native void nEnableBuffer() throws Exception;
 
 	/**
 	 * Reads all button events since last read.
-   * To use these values, you have to call <code>next</code> for each event you
-   * want to read. You can query which button caused the event by using 
-   * <code>getEventButton</code>. To get the state of that button, for that event, use
-   * <code>getEventButtonState</code>.
-   * 
-   * @see org.lwjgl.input.Mouse#next()
-   * @see org.lwjgl.input.Mouse#enableBuffer()
-   * @see org.lwjgl.input.Mouse#getEventButton()
-   * @see org.lwjgl.input.Mouse#getEventButtonState()
+	 * To use these values, you have to call <code>next</code> for each event you
+	 * want to read. You can query which button caused the event by using 
+	 * <code>getEventButton</code>. To get the state of that button, for that event, use
+	 * <code>getEventButtonState</code>.
+	 * 
+	 * @see org.lwjgl.input.Mouse#next()
+	 * @see org.lwjgl.input.Mouse#enableBuffer()
+	 * @see org.lwjgl.input.Mouse#getEventButton()
+	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 */
 	public static void read() {
 		assert created : "The mouse has not been created.";
 		assert readBuffer != null : "Mouse buffering has not been enabled.";
-		int numEvents = nRead();
-		readBuffer.clear();
-		readBuffer.limit(numEvents << 1);
+		readBuffer.compact();
+		int numEvents = nRead(readBuffer, readBuffer.position());
+		readBuffer.position(readBuffer.position() + numEvents*2);
+		readBuffer.flip();
 	}
 
 	/**
 	 * Native method to read the keyboard buffer
 	 * @return the total number of events read.
 	 */
-	private static native int nRead();
+	private static native int nRead(ByteBuffer buffer, int buffer_position);
 
 	/**
 	 * Gets the next mouse event. You can query which button caused the event by using 
-   * <code>getEventButton()</code>. To get the state of that key, for that event, use
-   * <code>getEventButtonState</code>.
-   * @see org.lwjgl.input.Mouse#getEventButton()
-   * @see org.lwjgl.input.Mouse#getEventButtonState()
+	 * <code>getEventButton()</code>. To get the state of that key, for that event, use
+	 * <code>getEventButtonState</code>.
+	 * @see org.lwjgl.input.Mouse#getEventButton()
+	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 * @return true if a mouse event was read, false otherwise
 	 */
 	public static boolean next() {
@@ -456,79 +458,79 @@ public class Mouse {
 		} else
 			return false;
 	}
-  
-  /**
-   * @return Current events button
-   */
-  public static int getEventButton() {
-    return eventButton;
-  }
-  
-  /**
-   * @return Current events button state
-   */
-  public static boolean getEventButtonState() {
-    return eventState;
-  }
+	
+	/**
+	 * @return Current events button
+	 */
+	public static int getEventButton() {
+		return eventButton;
+	}
+	
+	/**
+	 * @return Current events button state
+	 */
+	public static boolean getEventButtonState() {
+		return eventState;
+	}
 
-  /**
-   * Retrieves the absolute position. If the Window has been created
-   * x will be clamped to 0 - Window.getWidth().
-   * 
-   * @return Absolute x axis position of mouse
-   */
-  public static int getX() {
-    return x;
-  }
+	/**
+	 * Retrieves the absolute position. If the Window has been created
+	 * x will be clamped to 0 - Window.getWidth().
+	 * 
+	 * @return Absolute x axis position of mouse
+	 */
+	public static int getX() {
+		return x;
+	}
 
-  /**
-   * Retrieves the absolute position. If the Window has been created
-   * y will be clamped to 0 - Window.getHeight().
-   *
-   * @return Absolute y axis position of mouse
-   */
-  public static int getY() {
-    return y;
-  }  
-  
-  /**
-   * @return Movement on the x axis since last poll
-   */
-  public static int getDX() {
-    return dx;
-  }
+	/**
+	 * Retrieves the absolute position. If the Window has been created
+	 * y will be clamped to 0 - Window.getHeight().
+	 *
+	 * @return Absolute y axis position of mouse
+	 */
+	public static int getY() {
+		return y;
+	}	
+	
+	/**
+	 * @return Movement on the x axis since last poll
+	 */
+	public static int getDX() {
+		return dx;
+	}
 
-  /**
-   * @return Movement on the y axis since last poll
-   */
-  public static int getDY() {
-    return dy;
-  }
+	/**
+	 * @return Movement on the y axis since last poll
+	 */
+	public static int getDY() {
+		return dy;
+	}
 
-  /**
-   * @return Movement of the wheel since last poll
-   */
-  public static int getDWheel() {
-    return dwheel;
-  }
+	/**
+	 * @return Movement of the wheel since last poll
+	 */
+	public static int getDWheel() {
+		return dwheel;
+	}
 
-  /**
-   * @return Number of buttons on this mouse
-   */
-  public static int getButtonCount() {
-    return buttonCount;
-  }
+	/**
+	 * @return Number of buttons on this mouse
+	 */
+	public static int getButtonCount() {
+		return buttonCount;
+	}
 
-  /**
-   * @return Whether or not this mouse has wheel support
-   */
-  public static boolean hasWheel() {
-    return hasWheel;
-  }
+	/**
+	 * @return Whether or not this mouse has wheel support
+	 */
+	public static boolean hasWheel() {
+		return hasWheel;
+	}
 
 	/**
 	 * Updates the cursor, so that animation can be changed if needed.
-     * This method is called automatically by the window on its update. 
+	 * This method is called automatically by the window on its update. 
 	 */
 	public static void updateCursor() {
 		if(currentCursor != null && currentCursor.hasTimedOut()) {

@@ -393,12 +393,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
 	warpPointer();
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, jclass clazz) {
-	jobject newBuffer = env->NewDirectByteBuffer(getOutputList(&event_queue), getEventBufferSize(&event_queue));
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, jclass clazz) {
 	buffer_enabled = true;
-	return newBuffer;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass clazz) {
-	return copyEvents(&event_queue, 2);
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass clazz, jobject buffer, jint buffer_position) {
+	unsigned char* buffer_ptr = (unsigned char *)env->GetDirectBufferAddress(buffer);
+	int buffer_size = env->GetDirectBufferCapacity(buffer) - buffer_position;
+	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, 2);
 }

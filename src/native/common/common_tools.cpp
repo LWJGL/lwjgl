@@ -77,32 +77,29 @@ static bool hasMoreEvents(event_queue_t *queue) {
 	return queue->list_start != queue->list_end;
 }
 
-static void copyEvent(event_queue_t *queue, int event_size, int event_index) {
-	int output_index = event_index*event_size;
+static void copyEvent(event_queue_t *queue, unsigned char *output_event_buffer, int output_index, int event_size) {
 	for (int i = 0; i < event_size; i++) {
-		queue->output_event_buffer[output_index] = queue->input_event_buffer[queue->list_start];
+		output_event_buffer[output_index] = queue->input_event_buffer[queue->list_start];
                 incListStart(queue);
 		output_index++;
 	}
 }
 
-int copyEvents(event_queue_t *event_queue, int event_size) {
+int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, int buffer_size, int event_size) {
 	int num_events = 0;
-	while (hasMoreEvents(event_queue)) {
-		copyEvent(event_queue, event_size, num_events);
+	int index = 0;
+	while (index + event_size <= buffer_size && hasMoreEvents(event_queue)) {
+		copyEvent(event_queue, output_event_buffer, index, event_size);
 		num_events++;
+		index += event_size;
 	}
 	return num_events;
 }
 
-unsigned char *getOutputList(event_queue_t *queue) {
-	return queue->output_event_buffer;
-}
-
-int getEventBufferSize(event_queue_t *event_queue) {
+/*int getEventBufferSize(event_queue_t *event_queue) {
 	return EVENT_BUFFER_SIZE;
 }
-
+*/
 static void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err) {
 	jclass cls = env->FindClass(exception_name);
 	env->ThrowNew(cls, err);

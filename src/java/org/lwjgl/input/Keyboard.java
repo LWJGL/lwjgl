@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.Sys;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Window;
 
 /**
@@ -191,11 +192,14 @@ public class Keyboard {
 	public static final int KEY_APPS            = 0xDD; /* AppMenu key */
 	public static final int KEY_POWER           = 0xDE;
 	public static final int KEY_SLEEP           = 0xDF;
-  
-  public static final int STATE_ON              = 0;
-  public static final int STATE_OFF             = 1;
-  public static final int STATE_UNKNOWN         = 2;
-	
+
+	public static final int STATE_ON							= 0;
+	public static final int STATE_OFF						 = 1;
+	public static final int STATE_UNKNOWN				 = 2;
+
+	/** Buffer size in events */
+	private final static int BUFFER_SIZE = 50;
+
 	/** Key names */
 	private static final String[] keyName = new String[255];
 	private static final Map keyMap = new HashMap(253);
@@ -243,9 +247,6 @@ public class Keyboard {
 	/** True if translation is enabled */
 	private static boolean translationEnabled;
 
-	/** The number of events read in the last read() */
-	private static int numEvents;
-
 	/** The current keyboard character being examined */
 	private static char eventCharacter;
 	
@@ -285,7 +286,7 @@ public class Keyboard {
 	 * @throws Exception if the keyboard could not be created for any reason
 	 */
 	public static void create() throws Exception {
-    assert Window.isCreated() : "Window must be created prior to creating keyboard";
+		assert Window.isCreated() : "Window must be created prior to creating keyboard";
 		if (!initialized)
 			initialize();
 		if (created)
@@ -322,16 +323,16 @@ public class Keyboard {
 	private static native void nDestroy();
 
 	/**
-   * Polls the keyboard for its current state. Access the polled values using the
-   * <code>isKeyDown</code> method.
-   * By using this method, it is possible to "miss" keyboard keys if you don't
-   * poll fast enough. To receive all events, enable buffering by calling 
-   * <code>enableBuffer</code>, and read those events by calling <code>read</code>
-   * 
-   * @see org.lwjgl.input.Keyboard#isKeyDown(int key) 
-   * @see org.lwjgl.input.Keyboard#isStateKeySet(int key) 
-   * @see org.lwjgl.input.Keyboard#enableBuffer()
-   * @see org.lwjgl.input.Keyboard#read() 
+	 * Polls the keyboard for its current state. Access the polled values using the
+	 * <code>isKeyDown</code> method.
+	 * By using this method, it is possible to "miss" keyboard keys if you don't
+	 * poll fast enough. To receive all events, enable buffering by calling 
+	 * <code>enableBuffer</code>, and read those events by calling <code>read</code>
+	 * 
+	 * @see org.lwjgl.input.Keyboard#isKeyDown(int key) 
+	 * @see org.lwjgl.input.Keyboard#isStateKeySet(int key) 
+	 * @see org.lwjgl.input.Keyboard#enableBuffer()
+	 * @see org.lwjgl.input.Keyboard#read() 
 	 */
 	public static void poll() {
 		assert created : "The keyboard has not been created.";
@@ -347,35 +348,36 @@ public class Keyboard {
 	private static native void nPoll(ByteBuffer keyDownBuffer);
 	
 	/**
-   * Reads all keyboard events since last read.
-   * To use these values, you have to call <code>next</code> for each event you
-   * want to read. You can query which key caused the event by using 
-   * <code>getEventKey</code>. To get the state of that key, for that event, use
-   * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
-   * character for that event.
-   * 
-   * @see org.lwjgl.input.Keyboard#next()
-   * @see org.lwjgl.input.Keyboard#enableBuffer()
-   * @see org.lwjgl.input.Keyboard#getEventKey()
-   * @see org.lwjgl.input.Keyboard#getEventKeyState()
-   * @see org.lwjgl.input.Keyboard#getEventCharacter()
+	 * Reads all keyboard events since last read.
+	 * To use these values, you have to call <code>next</code> for each event you
+	 * want to read. You can query which key caused the event by using 
+	 * <code>getEventKey</code>. To get the state of that key, for that event, use
+	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
+	 * character for that event.
+	 * 
+	 * @see org.lwjgl.input.Keyboard#next()
+	 * @see org.lwjgl.input.Keyboard#enableBuffer()
+	 * @see org.lwjgl.input.Keyboard#getEventKey()
+	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
+	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
 	 */
 	public static void read() {
 		assert created : "The keyboard has not been created.";
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
-		numEvents = nRead();
-		readBuffer.clear();
+		readBuffer.compact();
+		int numEvents = nRead(readBuffer, readBuffer.position());
 		if (translationEnabled)
-			readBuffer.limit(numEvents << 2);
+			readBuffer.position(readBuffer.position() + numEvents*4);
 		else
-			readBuffer.limit(numEvents << 1);
+			readBuffer.position(readBuffer.position() + numEvents*2);
+		readBuffer.flip();
 	}
 	
 	/**
 	 * Native method to read the keyboard buffer
 	 * @return the total number of events read.
 	 */
-	private static native int nRead();
+	private static native int nRead(ByteBuffer buffer, int buffer_position);
 	
 	/**
 	 * Enable keyboard translation. Must be called after the keyboard is created,
@@ -384,7 +386,6 @@ public class Keyboard {
 	public static void enableTranslation() throws Exception {
 		assert created : "The keyboard has not been created.";
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
-        
 		nEnableTranslation();
 		translationEnabled = true;
 	}
@@ -396,14 +397,12 @@ public class Keyboard {
 	
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
-	 * @return the size of the keyboard buffer in events, or 0 if no buffering
-	 * can be enabled for any reason
 	 */
-	public static int enableBuffer() throws Exception {
+	public static void enableBuffer() throws Exception {
 		assert created : "The keyboard has not been created.";
-		readBuffer = nEnableBuffer();
-		readBuffer.order(ByteOrder.nativeOrder());
-		return readBuffer.capacity()/2;
+		readBuffer = BufferUtils.createByteBuffer(4*BUFFER_SIZE);
+		readBuffer.limit(0);
+		nEnableBuffer();
 	}
 	
 	/**
@@ -411,7 +410,7 @@ public class Keyboard {
 	 * @return the event buffer,
 	 * or null if no buffer can be allocated
 	 */
-	private static native ByteBuffer nEnableBuffer() throws Exception;
+	private static native void nEnableBuffer() throws Exception;
 	
 	/**
 	 * Checks to see if a key is down.
@@ -436,18 +435,18 @@ public class Keyboard {
 	public static boolean isTranslationEnabled() {
 		return translationEnabled;
 	}
-  
-  /**
-   * Checks whether one of the state keys are "active"
-   * 
-   * @param key State key to test (KEY_CAPITAL | KEY_NUMLOCK | KEY_SYSRQ)
-   * @return STATE_ON if on, STATE_OFF if off and STATE_UNKNOWN if the state is unknown
-   */
-  public static int isStateKeySet(int key) {
-    assert created : "The keyboard has not been created.";
-    return nisStateKeySet(key);
-  }
-  private static native int nisStateKeySet(int key);
+
+	/**
+	 * Checks whether one of the state keys are "active"
+	 * 
+	 * @param key State key to test (KEY_CAPITAL | KEY_NUMLOCK | KEY_SYSRQ)
+	 * @return STATE_ON if on, STATE_OFF if off and STATE_UNKNOWN if the state is unknown
+	 */
+	public static int isStateKeySet(int key) {
+		assert created : "The keyboard has not been created.";
+		return nisStateKeySet(key);
+	}
+	private static native int nisStateKeySet(int key);
 	
 	/**
 	 * Gets a key's name
@@ -463,7 +462,7 @@ public class Keyboard {
 	 * @param keyName The key name
 	 */
 	public static int getKeyIndex(String keyName) {
-		Integer ret  = (Integer) keyMap.get(keyName);
+		Integer ret = (Integer) keyMap.get(keyName);
 		if (ret == null)
 			return KEY_NONE;
 		else
@@ -476,19 +475,22 @@ public class Keyboard {
 	 */
 	public static int getNumKeyboardEvents() {
 		assert created : "The keyboard has not been created.";
-		return numEvents;
+		if (translationEnabled)
+			return readBuffer.remaining()/4;
+		else
+			return readBuffer.remaining()/2;
 	}
 	
 	/**
-   * Gets the next keyboard event. You can query which key caused the event by using 
-   * <code>getEventKey</code>. To get the state of that key, for that event, use
-   * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
-   * character for that event.
-   * 
-   * @see org.lwjgl.input.Keyboard#getEventKey()
-   * @see org.lwjgl.input.Keyboard#getEventKeyState()
-   * @see org.lwjgl.input.Keyboard#getEventCharacter()
-   * @return true if a keyboard event was read, false otherwise
+	 * Gets the next keyboard event. You can query which key caused the event by using 
+	 * <code>getEventKey</code>. To get the state of that key, for that event, use
+	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
+	 * character for that event.
+	 * 
+	 * @see org.lwjgl.input.Keyboard#getEventKey()
+	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
+	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
+	 * @return true if a keyboard event was read, false otherwise
 	 */
 	public static boolean next() {
 		assert created : "The keyboard has not been created.";
@@ -499,41 +501,41 @@ public class Keyboard {
 			eventState = readBuffer.get() != 0;
 			if (translationEnabled) {
 				eventCharacter = readBuffer.getChar();
-      }
+			}
 			return true;
 		} else {
 			return false;
-    }
+		}
 	}
 
 	/**
 	 * @return Number of keys on this keyboard
 	 */
-  public static int getKeyCount() {
-    return keyCount;
-  }
+	public static int getKeyCount() {
+		return keyCount;
+	}
 
-  /**
-   * @return The character from the current event
-   */
-  public static char getEventCharacter() {
-    return eventCharacter;
-  }
+	/**
+	 * @return The character from the current event
+	 */
+	public static char getEventCharacter() {
+		return eventCharacter;
+	}
 
-  /**
-   * @return The key from the current event
-   */
-  public static int getEventKey() {
-    return eventKey;
-  }
+	/**
+	 * @return The key from the current event
+	 */
+	public static int getEventKey() {
+		return eventKey;
+	}
 
-  /**
-   * Gets the state of the tkey that generated the
-   * current event
-   * 
-   * @return True if key was down, or false if released
-   */
-  public static boolean getEventKeyState() {
-    return eventState;
-  }
+	/**
+	 * Gets the state of the tkey that generated the
+	 * current event
+	 * 
+	 * @return True if key was down, or false if released
+	 */
+	public static boolean getEventKeyState() {
+		return eventState;
+	}
 }

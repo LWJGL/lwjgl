@@ -264,6 +264,8 @@ extern "C" {
 #define org_lwjgl_input_Keyboard_STATE_OFF 1L
 #undef org_lwjgl_input_Keyboard_STATE_UNKNOWN
 #define org_lwjgl_input_Keyboard_STATE_UNKNOWN 2L
+#undef org_lwjgl_input_Keyboard_BUFFER_SIZE
+#define org_lwjgl_input_Keyboard_BUFFER_SIZE 50L
 /* Inaccessible static: keyName */
 /* Inaccessible static: keyMap */
 /* Inaccessible static: counter */
@@ -272,13 +274,11 @@ extern "C" {
 /* Inaccessible static: keyDownBuffer */
 /* Inaccessible static: readBuffer */
 /* Inaccessible static: translationEnabled */
-/* Inaccessible static: numEvents */
 /* Inaccessible static: eventCharacter */
 /* Inaccessible static: eventKey */
 /* Inaccessible static: eventState */
 /* Inaccessible static: initialized */
-/* Inaccessible static: class_000240 */
-/* Inaccessible static: class_000241 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Keyboard */
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    initIDs
@@ -314,10 +314,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nRead
- * Signature: ()I
+ * Signature: (Ljava/nio/ByteBuffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jobject, jint);
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -330,9 +330,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nEnableBuffer
- * Signature: ()Ljava/nio/ByteBuffer;
+ * Signature: ()V
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv *, jclass);
 
 /*
