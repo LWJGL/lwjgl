@@ -247,12 +247,12 @@ public abstract class GL13 extends GL12 {
 	public static native void glMultiTexCoord3f(int target, float s, float t, float r);
 	public static native void glMultiTexCoord4f(int target, float s, float t, float r, float q);
 	public static void glLoadTransposeMatrix(FloatBuffer m) {
-		BufferChecks.checkBuffer(m);
+		BufferChecks.checkBuffer(m, 16);
 		nglLoadTransposeMatrixf(m, m.position());
 	}
 	private static native void nglLoadTransposeMatrixf(FloatBuffer m, int m_offset);
 	public static void glMultTransposeMatrix(FloatBuffer m) {
-		BufferChecks.checkBuffer(m);
+		BufferChecks.checkBuffer(m, 16);
 		nglMultTransposeMatrixf(m, m.position());
 	}
 	private static native void nglMultTransposeMatrixf(FloatBuffer m, int m_offset);

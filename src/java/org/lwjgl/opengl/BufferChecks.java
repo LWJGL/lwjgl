@@ -48,45 +48,41 @@ class BufferChecks {
 	/** Static methods only! */
 	private BufferChecks() {
 	}
-	/** The minimum size we'll allow for glGet* operations */
-	private static final int MIN_BUFFER_SIZE = 16;
+
 	/**
-	 * The minimum size we'll allow for "large" glGet* operations that can
-	 * return lots of data, eg. glGetPixelMap
+	 * Default buffer size for most buffer checks.
 	 */
-	private static final int MIN_LARGE_BUFFER_SIZE = 256;
+	private static final int DEFAULT_BUFFER_SIZE = 4;
+
+	/**
+	 * Helper method to ensure a buffer is big enough to receive data from a
+	 * glGet* operation.
+	 * 
+	 * @param buf
+	 *            The buffer to check
+	 * @param size
+	 * 			  The minimum buffer size
+	 * @throws BufferOverflowException
+	 */
+	static void checkBuffer(Buffer buf, int size) {
+		if (buf.remaining() < size) {
+			throw new BufferOverflowException();
+		}
+	}
 	/**
 	 * Helper method to ensure a buffer is big enough to receive data from a
 	 * glGet* operation. To avoid unnecessarily complex buffer size checking
 	 * we've just set the bar artificially high and insist that any receiving
-	 * buffer has at least 16 remaining().
+	 * buffer has at least 4 remaining().
 	 * 
 	 * @param buf
 	 *            The buffer to check
 	 * @throws BufferOverflowException
 	 */
 	static void checkBuffer(Buffer buf) {
-		if (buf.remaining() < MIN_BUFFER_SIZE) {
-			// TODO: I don't think the default MIN_BUFFER_SIZE should be used for other than glGet*
-			// Others, like glTexEnvf, should use their individual buffer max size (like 4)
-//			throw new BufferOverflowException();
-		}
+		checkBuffer(buf, DEFAULT_BUFFER_SIZE);
 	}
-	/**
-	 * Helper method to ensure a buffer is big enough to receive data from a
-	 * "large" glGet* operation. To avoid unnecessarily complex buffer size
-	 * checking we've just set the bar artificially high and insist that any
-	 * receiving buffer has at least 256 remaining().
-	 * 
-	 * @param buf
-	 *            The buffer to check
-	 * @throws BufferOverflowException
-	 */
-	static void checkLargeBuffer(Buffer buf) {
-		if (buf.remaining() < MIN_LARGE_BUFFER_SIZE) {
-			throw new BufferOverflowException();
-		}
-	}
+	
 	/**
 	 * Helper method to ensure that vertex buffer objects are disabled. If they
 	 * are enabled, we'll throw an OpenGLException

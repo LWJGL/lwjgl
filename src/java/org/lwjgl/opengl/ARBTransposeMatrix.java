@@ -48,13 +48,13 @@ public class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
 	
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
-		BufferChecks.checkBuffer(pfMtx);
+		BufferChecks.checkBuffer(pfMtx, 16);
 		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position());
 	}
 	private static native void nglLoadTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);
 
 	public static void glMultTransposeMatrixfARB(FloatBuffer pfMtx) {
-		BufferChecks.checkBuffer(pfMtx);
+		BufferChecks.checkBuffer(pfMtx, 16);
 		nglMultTransposeMatrixfARB(pfMtx, pfMtx.position());
 	}
 	private static native void nglMultTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);

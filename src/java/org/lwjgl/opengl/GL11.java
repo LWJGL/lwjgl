@@ -862,17 +862,17 @@ public abstract class GL11 {
 	private static native void nglFeedbackBuffer(int size, int type, FloatBuffer buffer, int buffer_offset);
 	
 	public static void glGetPixelMap(int map, FloatBuffer values) {
-		BufferChecks.checkLargeBuffer(values);
+		BufferChecks.checkBuffer(values, 256);
 		nglGetPixelMapfv(map, values, values.position());
 	}
 	private static native void nglGetPixelMapfv(int map, FloatBuffer values, int values_offset);
 	public static void glGetPixelMap(int map, IntBuffer values) {
-		BufferChecks.checkLargeBuffer(values);
+		BufferChecks.checkBuffer(values, 256);
 		nglGetPixelMapuiv(map, values, values.position());
 	}
 	private static native void nglGetPixelMapuiv(int map, IntBuffer values, int values_offset);
 	public static void glGetPixelMap(int map, ShortBuffer values) {
-		BufferChecks.checkLargeBuffer(values);
+		BufferChecks.checkBuffer(values, 256);
 		nglGetPixelMapusv(map, values, values.position());
 	}
 	private static native void nglGetPixelMapusv(int map, ShortBuffer values, int values_offset);
@@ -887,11 +887,11 @@ public abstract class GL11 {
 	}
 	private static native void nglGetMaterialiv(int face, int pname, IntBuffer params, int params_offset);
 	public static void glGetMap(int target, int query, FloatBuffer v) {
-		BufferChecks.checkLargeBuffer(v);
+		BufferChecks.checkBuffer(v, 256);
 		nglGetMapfv(target, query, v, v.position());
 	}
 	public static void glGetMap(int target, int query, IntBuffer v) {
-		BufferChecks.checkLargeBuffer(v);
+		BufferChecks.checkBuffer(v, 256);
 		nglGetMapiv(target, query, v, v.position());
 	}
 	private static native void nglGetMapfv(int target, int query, FloatBuffer v, int v_offset);
@@ -913,22 +913,22 @@ public abstract class GL11 {
 	}
 	private static native void nglGetClipPlane(int plane, DoubleBuffer equation, int equation_offset);
 	public static void glGetBoolean(int pname, ByteBuffer params) {
-		BufferChecks.checkBuffer(params);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetBooleanv(pname, params, params.position());
 	}
 	private static native void nglGetBooleanv(int pname, ByteBuffer params, int params_offset);
 	public static void glGetDouble(int pname, DoubleBuffer params) {
-		BufferChecks.checkBuffer(params);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetDoublev(pname, params, params.position());
 	}
 	private static native void nglGetDoublev(int pname, DoubleBuffer params, int params_offset);
 	public static void glGetFloat(int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetFloatv(pname, params, params.position());
 	}
 	private static native void nglGetFloatv(int pname, FloatBuffer params, int params_offset);
 	public static void glGetInteger(int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetIntegerv(pname, params, params.position());
 	}
 	private static native void nglGetIntegerv(int pname, IntBuffer params, int params_offset);
@@ -1054,11 +1054,7 @@ public abstract class GL11 {
 
 	public static native String glGetString(int name);
 	public static void glGetPolygonStipple(ByteBuffer mask) {
-		// TODO: check buffer size valid. This is a bit more fiddly than you might think;
-		// it looks like a 32x32 byte array but it might not be according to the spec :/
-		if (mask.remaining() < 32 * 32) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(mask, 1024);
 		nglGetPolygonStipple(mask, mask.position());
 	}
 	private static native void nglGetPolygonStipple(ByteBuffer mask, int mask_offset);
@@ -1090,7 +1086,7 @@ public abstract class GL11 {
 	public static native void glLogicOp(int opcode);
 	public static native void glLoadName(int name);
 	public static void glLoadMatrix(FloatBuffer m) {
-		BufferChecks.checkBuffer(m);
+		BufferChecks.checkBuffer(m, 16);
 		nglLoadMatrixf(m, m.position());
 	}
 	private static native void nglLoadMatrixf(FloatBuffer m, int m_offset);
@@ -1125,10 +1121,7 @@ public abstract class GL11 {
 	public static native boolean glIsTexture(int texture);
 	public static native void glMatrixMode(int mode);
 	public static void glPolygonStipple(ByteBuffer mask) {
-		// TODO: check buffer size valid (again, possibly more complicated than it first appears)
-		if (mask.remaining() < 32 * 32) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(mask, 1024);
 		nglPolygonStipple(mask, mask.position());
 	}
 	private static native void nglPolygonStipple(ByteBuffer mask, int mask_offset);
@@ -1178,7 +1171,7 @@ public abstract class GL11 {
 	public static native void glNewList(int list, int mode);
 	public static native void glEndList();
 	public static void glMultMatrixf(FloatBuffer m) {
-		BufferChecks.checkBuffer(m);
+		BufferChecks.checkBuffer(m, 16);
 		nglMultMatrixf(m, m.position());
 	}
 	private static native void nglMultMatrixf(FloatBuffer m, int m_offset);

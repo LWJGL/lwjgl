@@ -70,12 +70,12 @@ public class NVEvaluators {
 	public static final int GL_MAX_RATIONAL_EVAL_ORDER_NV                           = 0x86D7;
 
 	public static void glGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, FloatBuffer pPoints) {
-		BufferChecks.checkLargeBuffer(pPoints);
+		// TODO:Check buffer size
 		nglGetMapControlPointsNV(target, index, type, ustride, vstride, packed, pPoints, pPoints.position()<<2);
 	}
 	private static native void nglGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, Buffer pPoints, int pPoints_offset);
 	public static void glMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, FloatBuffer pPoints) {
-		BufferChecks.checkLargeBuffer(pPoints);
+		// TODO:Check buffer size
 		nglMapControlPointsNV(target, index, type, ustride, vstride, uorder, vorder, packed, pPoints, pPoints.position()<<2);
 	}
 	private static native void nglMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, Buffer pPoints, int pPoints_offset);

@@ -126,51 +126,51 @@ public abstract class ARBImaging {
 	public static final int GL_MINMAX_SINK                    = 0x8030;
 
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, ByteBuffer data) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(data, 256);
 		nglColorTable(target, internalFormat, width, format, type, data, data.position());
 	}
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, FloatBuffer data) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(data, 256);
 		nglColorTable(target, internalFormat, width, format, type, data, data.position() << 2);
 	}
 	private static native void nglColorTable(int target, int internalFormat, int width, int format, int type, Buffer data, int data_offset);
 	public static void glColorSubTable(int target, int start, int count, int format, int type, ByteBuffer data) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(data, 256);
 		nglColorSubTable(target, start, count, format, type, data, data.position());
 	}
 	public static void glColorSubTable(int target, int start, int count, int format, int type, FloatBuffer data) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(data, 256);
 		nglColorSubTable(target, start, count, format, type, data, data.position() << 2);
 	}
 	private static native void nglColorSubTable(int target, int start, int count, int format, int type, Buffer data, int data_offset);
 	public static void glColorTableParameter(int target, int pname, IntBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglColorTableParameteriv(target, pname, params, params.position());
 	}
 	private static native void nglColorTableParameteriv(int target, int pname, IntBuffer params, int data_offset);
 	public static void glColorTableParameter(int target, int pname, FloatBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglColorTableParameterfv(target, pname, params, params.position());		
 	}
 	private static native void nglColorTableParameterfv(int target, int pname, FloatBuffer params, int data_offset);
 	public static native void glCopyColorSubTable(int target, int start, int x, int y, int width);
 	public static native void glCopyColorTable(int target, int internalformat, int x, int y, int width);
 	public static void glGetColorTable(int target, int format, int type, ByteBuffer data) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(data, 256);
 		nglGetColorTable(target, format, type, data, data.position());
 	}
 	public static void glGetColorTable(int target, int format, int type, FloatBuffer data) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(data, 256);
 		nglGetColorTable(target, format, type, data, data.position());
 	}
 	private static native void nglGetColorTable(int target, int format, int type, Buffer data, int data_offset);
 	public static void glGetColorTableParameter(int target, int pname, IntBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetColorTableParameteriv(target, pname, params, params.position());
 	}
 	private static native void nglGetColorTableParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glGetColorTableParameter(int target, int pname, FloatBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetColorTableParameterfv(target, pname, params, params.position());
 	}
 	private static native void nglGetColorTableParameterfv(int target, int pname, FloatBuffer params, int params_offset);
@@ -179,24 +179,24 @@ public abstract class ARBImaging {
 	public static native void glHistogram(int target, int width, int internalformat, boolean sink);
 	public static native void glResetHistogram(int target);
 	public static void glGetHistogram(int target, boolean reset, int format, int type, ByteBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position());
 	}
 	public static void glGetHistogram(int target, boolean reset, int format, int type, ShortBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position() << 1);
 	}
 	public static void glGetHistogram(int target, boolean reset, int format, int type, IntBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position() << 2);
 	}
 	public static void glGetHistogram(int target, boolean reset, int format, int type, FloatBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values, 256);
 		nglGetHistogram(target, reset, format, type, values, values.position() << 2);
 	}
 	private static native void nglGetHistogram(int target, boolean reset, int format, int type, Buffer values, int values_offset);
 	public static void glGetHistogramParameter(int target, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params);
+		BufferChecks.checkBuffer(params, 256);
 		nglGetHistogramParameterfv(target, pname, params, params.position());
 	}
 	private static native void nglGetHistogramParameterfv(int target, int pname, FloatBuffer params, int params_offset);
@@ -235,23 +235,47 @@ public abstract class ARBImaging {
 	}
 	private static native void nglGetMinmaxParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ByteBuffer image) {
-		// TODO: check buffer size valid
+		if (image.remaining() < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
+			throw new BufferUnderflowException();
+		}
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ShortBuffer image) {
-		// TODO: check buffer size valid
+		if (image.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
+			throw new BufferUnderflowException();
+		}
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, IntBuffer image) {
-		// TODO: check buffer size valid
+		if (image.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
+			throw new BufferUnderflowException();
+		}
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, FloatBuffer image) {
-		// TODO: check buffer size valid
+		if (image.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
+			throw new BufferUnderflowException();
+		}
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	private static native void nglConvolutionFilter1D(int target, int internalformat, int width, int format, int type, Buffer image, int image_offset);
-	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image) {
+	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer image) {
+		if (image.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
+			throw new BufferUnderflowException();
+		}
+		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position());
+	}
+	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer image) {
+		if (image.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
+			throw new BufferUnderflowException();
+		}
+		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() <<1);
+	}
+	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer image) {
+		if (image.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
+			throw new BufferUnderflowException();
+		}
+		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() << 2);
 	}
 	private static native void nglConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image, int image_offset);
 	public static native void glConvolutionParameterf(int target, int pname, float params);
@@ -286,12 +310,12 @@ public abstract class ARBImaging {
 	}
 	private static native void nglGetConvolutionFilter(int target, int format, int type, Buffer image, int image_offset);
 	public static void glGetConvolutionParameter(int target, int pname, FloatBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetConvolutionParameterfv(target, pname, params, params.position());
 	}
 	private static native void nglGetConvolutionParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 	public static void glGetConvolutionParameter(int target, int pname, IntBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetConvolutionParameteriv(target, pname, params, params.position());
 	}
 	private static native void nglGetConvolutionParameteriv(int target, int pname, IntBuffer params, int params_offset);

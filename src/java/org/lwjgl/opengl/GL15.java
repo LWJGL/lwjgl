@@ -40,7 +40,7 @@ package org.lwjgl.opengl;
 
 import java.nio.*;
 
-public class GL15 extends GL14 {
+public abstract class GL15 extends GL14 {
 
 	// ----------------------------------------------------------------------
 	// ---------------------- ARB_vertex_buffer_object ----------------------
@@ -205,7 +205,7 @@ public class GL15 extends GL14 {
 	public static native boolean glUnmapBuffer(int target);
 
 	public static void glGetBufferParameter(int target, int pname, IntBuffer params) {
-		// TODO:check buffer size
+		BufferChecks.checkBuffer(params);
 		nglGetBufferParameteriv(target, pname, params, params.position());
 	}
 
@@ -274,7 +274,7 @@ public class GL15 extends GL14 {
 
 	// ---------------------------
 	public static void glGetQueryObjecti(int id, int pname, IntBuffer params) {
-		// TODO: check buffer size
+		BufferChecks.checkBuffer(params);
 		nglGetQueryObjectiv(id, pname, params, params.position());
 	}
 
@@ -286,7 +286,7 @@ public class GL15 extends GL14 {
 
 	// ---------------------------
 	public static void glGetQueryObjectui(int id, int pname, IntBuffer params) {
-		// TODO: check buffer size
+		BufferChecks.checkBuffer(params);
 		nglGetQueryObjectuiv(id, pname, params, params.position());
 	}
 
