@@ -100,7 +100,14 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		accum_dx = accum_dy = 0;
 	}
 
-	private boolean putMouseEvent(int button, int state, int coord1, int coord2, int dz) {
+	private boolean putMouseEvent(int button, int state, int dz) {
+		if (grabbed)
+			return putMouseEventWithCoords(button, state, 0, 0, dz);
+		else
+			return putMouseEventWithCoords(button, state, last_x, last_y, dz);
+	}
+
+	private boolean putMouseEventWithCoords(int button, int state, int coord1, int coord2, int dz) {
 		event[0] = button;
 		event[1] = state;
 		event[2] = coord1;
@@ -125,6 +132,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	}
 
 	private synchronized void setCursorPos(int x, int y) {
+		y = transformY(y);
 		if (grabbed)
 			return;
 		int dx = x - last_x;
@@ -133,7 +141,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		accum_dy += dy;
 		last_x = x;
 		last_y = y;
-		putMouseEvent(-1, 0, x, transformY(y), 0);
+		putMouseEventWithCoords(-1, 0, x, y, 0);
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -181,7 +189,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 
 	private synchronized void setButton(byte button, byte state) {
 		buttons[button] = state;
-		putMouseEvent(button, state, 0, 0, 0);
+		putMouseEvent(button, state, 0);
 	}
 	
 	public void mouseReleased(MouseEvent e) {
@@ -199,7 +207,7 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	
 	private synchronized void handleWheel(int amount) {
 		accum_dz += amount;
-		putMouseEvent(-1, 0, 0, 0, amount);
+		putMouseEvent(-1, 0, amount);
 	}
 	
 	public void updateDeltas() {
@@ -208,9 +216,9 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		synchronized (this) {
 			((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
 			int dx = delta_buffer.get(0);
-			int dy = delta_buffer.get(1);
+			int dy = -delta_buffer.get(1);
 			if (dx != 0 || dy != 0) {
-				putMouseEvent(-1, 0, dx, -dy, 0);
+				putMouseEventWithCoords(-1, 0, dx, dy, 0);
 				accum_dx += dx;
 				accum_dy += dy;
 			}
