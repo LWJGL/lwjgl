@@ -62,7 +62,10 @@ public class ControllerCreationTest {
         setDisplayMode();
         Display.setFullscreen(fullscreen);
         Display.create();
-
+        
+        if(!Controller.isCreated()) {
+        	throw new Exception("Controller could not be created"); 
+        }
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
