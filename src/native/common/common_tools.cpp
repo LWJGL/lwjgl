@@ -142,7 +142,7 @@ jclass ext_ResetClass(JNIEnv *env, const char *class_name) {
 	return clazz;
 }
 
-void ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
+bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
 	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
 	for (int i = 0; i < num_functions; i++) {
 		JavaMethodAndExtFunction *function = functions + i;
@@ -153,7 +153,7 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char 
 				if (ext_set != NULL)
 					ext_removeExtension(env, ext_set, ext_name);
 				free(methods);
-				return;
+				return false;
 			}
 			void **ext_function_pointer_pointer = function->ext_function_pointer;
 			*ext_function_pointer_pointer = ext_func_pointer;
@@ -167,5 +167,6 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char 
 	free(methods);
 	if (result != 0)
 		printfDebug("Could not register natives for extension %s\n", ext_name);
+	return true;
 }
 

@@ -38,35 +38,43 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-#include "org_lwjgl_openal_ALC.h"
 
 /* OpenAL includes */
 #include "checkALerror.h"
 #include "extal.h"
 
-/*
- * Class:     org_lwjgl_openal_ALC
- * Method:    nCreate
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nCreate (JNIEnv *env, jclass clazz) {
-  //check that our methods have been loaded
-  if(alEnable == NULL) {
-    jclass cls = env->FindClass("org/lwjgl/openal/OpenALException");
-		env->ThrowNew(cls, (const char*) "Unable to loacate OpenAL Methods. Please assert that AL was created successfully.");
-		env->DeleteLocalRef(cls);
-    return false;
-  }
-  return true;
-}
+//alc
+typedef ALCubyte*   (ALCAPIENTRY *alcGetStringPROC)(ALCdevice *device,ALCenum param);
+typedef ALCvoid     (ALCAPIENTRY *alcGetIntegervPROC)(ALCdevice *device,ALCenum param,ALCsizei size,ALCint *data);
+typedef ALCdevice*  (ALCAPIENTRY *alcOpenDevicePROC)(ALCubyte *deviceName);
+typedef ALCvoid     (ALCAPIENTRY *alcCloseDevicePROC)(ALCdevice *device);
+typedef ALCcontext* (ALCAPIENTRY *alcCreateContextPROC)(ALCdevice *device,ALCint *attrList);
+typedef ALCboolean  (ALCAPIENTRY *alcMakeContextCurrentPROC)(ALCcontext *context);
+typedef ALCvoid	    (ALCAPIENTRY *alcProcessContextPROC)(ALCcontext *context);
+typedef ALCcontext* (ALCAPIENTRY *alcGetCurrentContextPROC)(ALCvoid);
+typedef ALCdevice*  (ALCAPIENTRY *alcGetContextsDevicePROC)(ALCcontext *context);
+typedef ALCvoid	    (ALCAPIENTRY *alcSuspendContextPROC)(ALCcontext *context);
+typedef ALCvoid     (ALCAPIENTRY *alcDestroyContextPROC)(ALCcontext *context);
+typedef ALCenum	    (ALCAPIENTRY *alcGetErrorPROC)(ALCdevice *device);
+typedef ALCboolean  (ALCAPIENTRY *alcIsExtensionPresentPROC)(ALCdevice *device,ALCubyte *extName);
+//typedef ALCvoid*    (ALCAPIENTRY *alcGetProcAddressPROC)(ALCdevice *device,ALCubyte *funcName);
+typedef ALCenum	    (ALCAPIENTRY *alcGetEnumValuePROC)(ALCdevice *device,ALCubyte *enumName);
 
-/*
- * Class:     org_lwjgl_openal_ALC
- * Method:    nDestroy
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nDestroy (JNIEnv *env, jclass clazz) {
-}
+static alcGetStringPROC alcGetString;
+static alcGetIntegervPROC alcGetIntegerv;
+static alcOpenDevicePROC alcOpenDevice;
+static alcCloseDevicePROC alcCloseDevice;
+static alcCreateContextPROC alcCreateContext;
+static alcMakeContextCurrentPROC alcMakeContextCurrent;
+static alcProcessContextPROC alcProcessContext;
+static alcGetCurrentContextPROC alcGetCurrentContext;
+static alcGetContextsDevicePROC alcGetContextsDevice;
+static alcSuspendContextPROC alcSuspendContext;
+static alcDestroyContextPROC alcDestroyContext;
+static alcGetErrorPROC alcGetError;
+static alcIsExtensionPresentPROC alcIsExtensionPresent;
+//static alcGetProcAddressPROC alcGetProcAddress;
+static alcGetEnumValuePROC alcGetEnumValue;
 
 /**
  * This function returns strings related to the context.
@@ -74,7 +82,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nDestroy (JNIEnv *env, jclass c
  * C Specification:
  * ALubyte * alcGetString(ALCdevice *device, ALenum token);
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString (JNIEnv *env, jclass clazz, jint deviceaddress, jint token) {
+static jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString (JNIEnv *env, jclass clazz, jint deviceaddress, jint token) {
 	const char* alcString = (const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token);
 	if(alcString == NULL) {
 		return NULL;
@@ -92,7 +100,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString (JNIEnv *env, 
  * C Specification:
  * ALvoid alcGetIntegerv(ALCdevice *device, ALenum token, ALsizei size, ALint *dest);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, jclass clazz, jint deviceaddress, jint token, jint size, jobject dest, jint offset) {
+static void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, jclass clazz, jint deviceaddress, jint token, jint size, jobject dest, jint offset) {
   ALint* address = NULL;
   if (dest != NULL) {
     address = offset + (ALint*) env->GetDirectBufferAddress(dest);
@@ -107,7 +115,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, j
  * C Specification:
  * ALCdevice *alcOpenDevice( const ALubyte *tokstr );
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jclass clazz, jstring tokstr) {
+static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jclass clazz, jstring tokstr) {
 	const char * tokenstring;
 
 	jboolean isCopy = JNI_FALSE;
@@ -153,7 +161,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, 
  * C Specification:
  * void alcCloseDevice( ALCdevice *dev );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcCloseDevice (JNIEnv *env, jclass clazz, jint deviceaddress) {
+static void JNICALL Java_org_lwjgl_openal_ALC_alcCloseDevice (JNIEnv *env, jclass clazz, jint deviceaddress) {
 	alcCloseDevice((ALCdevice*) deviceaddress);
 	CHECK_ALC_ERROR
 }
@@ -164,7 +172,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcCloseDevice (JNIEnv *env, jc
  * C Specification:
  * ALCcontext* alcCreateContext( ALCdevice *dev, ALint* attrlist );
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcCreateContext (JNIEnv *env, jclass clazz, jint deviceaddress, jobject attrlist) {
+static jobject JNICALL Java_org_lwjgl_openal_ALC_alcCreateContext (JNIEnv *env, jclass clazz, jint deviceaddress, jobject attrlist) {
   ALint* address = NULL;
   if (attrlist != NULL) {
     address = (ALint*) env->GetDirectBufferAddress(attrlist);
@@ -198,7 +206,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcCreateContext (JNIEnv *en
  * C Specification:
  * ALCboolean alcMakeContextCurrent(ALCcontext *context);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent (JNIEnv *env, jclass clazz, jint contextaddress) {
+static jboolean JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent (JNIEnv *env, jclass clazz, jint contextaddress) {
 	ALCcontext* context = (ALCcontext*) contextaddress;
 	if(context == NULL) {
 		return alcMakeContextCurrent(NULL);
@@ -212,7 +220,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent (JNIE
  * C Specification:
  * void alcProcessContext(ALCcontext *context);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcProcessContext (JNIEnv *env, jclass clazz, jint contextaddress) {
+static void JNICALL Java_org_lwjgl_openal_ALC_nalcProcessContext (JNIEnv *env, jclass clazz, jint contextaddress) {
 	alcProcessContext((ALCcontext*) contextaddress);
 }
 
@@ -222,7 +230,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcProcessContext (JNIEnv *env
  * C Specification:
  * ALCcontext* alcGetCurrentContext( ALvoid );
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetCurrentContext (JNIEnv *env, jclass clazz) {
+static jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetCurrentContext (JNIEnv *env, jclass clazz) {
 
 	ALCcontext* context = alcGetCurrentContext();
 	if(context == NULL) {
@@ -250,7 +258,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetCurrentContext (JNIEnv
  * C Specification:
  * ALCdevice* alcGetContextsDevice(ALCcontext *context);
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetContextsDevice (JNIEnv *env, jclass clazz, jint contextaddress) {
+static jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetContextsDevice (JNIEnv *env, jclass clazz, jint contextaddress) {
 
 	ALCdevice* device = alcGetContextsDevice((ALCcontext*) contextaddress); 
 	if(device == NULL) {
@@ -278,7 +286,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetContextsDevice (JNIEnv
  * C Specification:
  * void alcSuspendContext(ALCcontext *context);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcSuspendContext (JNIEnv *env, jclass clazz, jint contextaddress) {
+static void JNICALL Java_org_lwjgl_openal_ALC_alcSuspendContext (JNIEnv *env, jclass clazz, jint contextaddress) {
 	alcSuspendContext((ALCcontext*) contextaddress);
 }
 
@@ -288,7 +296,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcSuspendContext (JNIEnv *env,
  * C Specification:
  * void alcDestroyContext(ALCcontext *context);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcDestroyContext (JNIEnv *env, jclass clazz, jint contextaddress) {
+static void JNICALL Java_org_lwjgl_openal_ALC_alcDestroyContext (JNIEnv *env, jclass clazz, jint contextaddress) {
 	alcDestroyContext((ALCcontext*) contextaddress);
 }
 
@@ -298,7 +306,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcDestroyContext (JNIEnv *env,
  * C Specification:
  * ALCenum alcGetError(ALCdevice *device);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetError (JNIEnv *env, jclass clazz, jint deviceaddress) {
+static jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetError (JNIEnv *env, jclass clazz, jint deviceaddress) {
 	jint result = alcGetError((ALCdevice*) deviceaddress);
 	CHECK_ALC_ERROR
 	return result;
@@ -310,7 +318,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetError (JNIEnv *env, jcla
  * C Specification:
  * ALboolean alcIsExtensionPresent(ALCdevice *device, ALubyte *extName);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent (JNIEnv *env, jclass clazz, jint deviceaddress, jstring extName) {
+static jboolean JNICALL Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent (JNIEnv *env, jclass clazz, jint deviceaddress, jstring extName) {
 	/* get extension */
 	ALubyte* functionname = (ALubyte*) (env->GetStringUTFChars(extName, 0));
 	
@@ -328,7 +336,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent (JNI
  * C Specification:
  * ALenum alcGetEnumValue(ALCdevice *device, ALubyte *enumName);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, jclass clazz, jint deviceaddress, jstring enumName) {	
+static jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, jclass clazz, jint deviceaddress, jstring enumName) {	
 	/* get extension */
 	ALubyte* enumerationname = (ALubyte*) (env->GetStringUTFChars(enumName, 0));
 	
@@ -338,4 +346,31 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, 
 	
 	CHECK_ALC_ERROR
 	return result;
+}
+
+/**
+ * Loads the context OpenAL functions
+ *
+ * @return true if all methods were loaded, false if one of the methods could not be loaded
+ */
+bool LoadALC(JNIEnv *env) {
+	JavaMethodAndExtFunction functions[] = {
+		{"nalcGetString", "(II)Ljava/lang/String;", (void*)&Java_org_lwjgl_openal_ALC_nalcGetString, "alcGetString", (void**)&alcGetString},
+		{"nalcGetIntegerv", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_openal_ALC_nalcGetIntegerv, "alcGetIntegerv", (void**)&alcGetIntegerv},
+		{"alcOpenDevice", "(Ljava/lang/String;)Lorg/lwjgl/openal/ALCdevice;", (void*)&Java_org_lwjgl_openal_ALC_alcOpenDevice, "alcOpenDevice", (void**)&alcOpenDevice},
+		{"alcCloseDevice", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_alcCloseDevice, "alcCloseDevice", (void**)&alcCloseDevice},
+		{"alcCreateContext", "(ILjava/nio/IntBuffer;)Lorg/lwjgl/openal/ALCcontext;", (void*)&Java_org_lwjgl_openal_ALC_alcCreateContext, "alcCreateContext", (void**)&alcCreateContext},
+		{"alcMakeContextCurrent", "(I)Z", (void*)&Java_org_lwjgl_openal_ALC_alcMakeContextCurrent, "alcMakeContextCurrent", (void**)&alcMakeContextCurrent},
+		{"nalcProcessContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_nalcProcessContext, "alcProcessContext", (void**)&alcProcessContext},
+		{"alcGetCurrentContext", "()Lorg/lwjgl/openal/ALCcontext;", (void*)&Java_org_lwjgl_openal_ALC_alcGetCurrentContext, "alcGetCurrentContext", (void**)&alcGetCurrentContext},
+		{"alcGetContextsDevice", "(I)Lorg/lwjgl/openal/ALCdevice;", (void*)&Java_org_lwjgl_openal_ALC_alcGetContextsDevice, "alcGetContextsDevice", (void**)&alcGetContextsDevice},
+		{"alcSuspendContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_alcSuspendContext, "alcSuspendContext", (void**)&alcSuspendContext},
+		{"alcDestroyContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_alcDestroyContext, "alcDestroyContext", (void**)&alcDestroyContext},
+		{"nalcGetError", "(I)I", (void*)&Java_org_lwjgl_openal_ALC_nalcGetError, "alcGetError", (void**)&alcGetError},
+		{"nalcIsExtensionPresent", "(ILjava/lang/String;)Z", (void*)&Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent, "alcIsExtensionPresent", (void**)&alcIsExtensionPresent},
+		{"nalcGetEnumValue", "(ILjava/lang/String;)I", (void*)&Java_org_lwjgl_openal_ALC_nalcGetEnumValue, "alcGetEnumValue", (void**)&alcGetEnumValue}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/openal/ALC");
+	return extal_InitializeClass(env, clazz, NULL, NULL, num_functions, functions);
 }

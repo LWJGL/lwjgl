@@ -577,7 +577,7 @@ glDrawRangeElementArrayNVPROC glDrawRangeElementArrayNV = NULL;
 glMultiDrawElementArrayNVPROC glMultiDrawElementArrayNV = NULL;
 glMultiDrawRangeElementArrayNVPROC glMultiDrawRangeElementArrayNV = NULL;
 
-bool extgl_error = false;
+static bool extgl_error = false;
 
 struct ExtensionTypes extgl_Extensions;
 
@@ -641,8 +641,8 @@ static void *extgl_GetProcAddress(const char *name)
 #endif
 }
 
-void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions) {
-	ext_InitializeClass(env, clazz, ext_set, ext_name, &extgl_GetProcAddress, num_functions, functions);
+bool extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions) {
+	return ext_InitializeClass(env, clazz, ext_set, ext_name, &extgl_GetProcAddress, num_functions, functions);
 }
 
 
@@ -1165,7 +1165,7 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_SGIX_shadow = GLQueryExtension(env, ext_set, "GL_SGIX_shadow");
 }
 
-extern void extgl_InitOpenGL1_1(JNIEnv *env);
+extern bool extgl_InitOpenGL1_1(JNIEnv *env);
 //extern void extgl_InitARBFragmentProgram(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBImaging(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set);
@@ -1228,8 +1228,8 @@ extern void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set);
 bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 {
 	extgl_error = false;
-	extgl_InitOpenGL1_1(env);
-	if (extgl_error)
+	bool result = extgl_InitOpenGL1_1(env);
+	if (!result)
 		return false;
 
 	extgl_InitSupportedExtensions(env, ext_set);

@@ -443,8 +443,6 @@ public final class AL10 {
 	  */
 	public static native float alGetFloat(int pname);
 
-	private static native void nalGetBooleanv(int pname, ByteBuffer data, int offset);
-
 	/**
    * Like OpenGL, AL uses a simplified interface for querying global state. 
    * 

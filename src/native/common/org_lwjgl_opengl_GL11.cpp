@@ -40,7 +40,6 @@
  */
 
 #include "extgl.h"
-#include "common_tools.h"
 
 typedef void (APIENTRY * glAccumPROC) (GLenum op, GLfloat value);
 typedef void (APIENTRY * glAlphaFuncPROC) (GLenum func, GLclampf ref);
@@ -2572,7 +2571,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glViewport(JNIEnv * env, jclass c
 	
 }
 
-void extgl_InitOpenGL1_1(JNIEnv *env)
+bool extgl_InitOpenGL1_1(JNIEnv *env)
 {
 	JavaMethodAndExtFunction functions[] = {
 		{"glAccum", "(IF)V", (void*)&Java_org_lwjgl_opengl_GL11_glAccum, "glAccum", (void**)&glAccum},
@@ -2784,7 +2783,6 @@ void extgl_InitOpenGL1_1(JNIEnv *env)
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/GL11");
-	if (true)
-		extgl_InitializeClass(env, clazz, NULL, "GL11", num_functions, functions);
+	return extgl_InitializeClass(env, clazz, NULL, "GL11", num_functions, functions);
 }
 

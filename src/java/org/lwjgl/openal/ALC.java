@@ -170,19 +170,9 @@ public class ALC {
 			return;
 		}
 
-		if (!nCreate()) {
-			throw new OpenALException("ALC instance could not be created.");
-		}
 		init();
 		created = true;
 	}
-
-	/**
-	 * Native method to create ALC instance
-	 * 
-	 * @return true if the ALC creation process succeeded
-	 */
-	protected static native boolean nCreate();
 
 	/**
 	 * Calls whatever destruction rutines that are needed
@@ -192,13 +182,7 @@ public class ALC {
 			return;
 		}
 		created = false;
-		nDestroy();
 	}
-
-	/**
-	 * Native method the destroy the ALC
-	 */
-	protected static native void nDestroy();
 
 	/**
 	 * The application can obtain certain strings from ALC.

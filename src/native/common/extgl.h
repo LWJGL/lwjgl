@@ -3267,7 +3267,7 @@ struct ExtensionTypes
 };
 
 extern struct ExtensionTypes extgl_Extensions;
-extern bool extgl_error;
+//extern bool extgl_error;
 
 typedef GLenum (APIENTRY * glGetErrorPROC) (void);
 typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
@@ -3289,7 +3289,7 @@ bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen);
 bool extgl_InitAGL(JNIEnv *env);
 #endif
 void extgl_Close(void);
-void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions);
+bool extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions);
 
 #define EXTGL_SANITY_CHECK(e,x)		if (extgl_error) { \
 						extgl_Extensions.x = false; \
