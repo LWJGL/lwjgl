@@ -48,6 +48,13 @@ public class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
 
+	static {
+		BufferChecks.putGetMap(GL_TRANSPOSE_MODELVIEW_MATRIX_ARB, 16);
+		BufferChecks.putGetMap(GL_TRANSPOSE_PROJECTION_MATRIX_ARB, 16);
+		BufferChecks.putGetMap(GL_TRANSPOSE_TEXTURE_MATRIX_ARB, 16);
+		BufferChecks.putGetMap(GL_TRANSPOSE_COLOR_MATRIX_ARB, 16);
+	}
+	
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
 		if (pfMtx.remaining() < 16) {
 			throw new BufferUnderflowException();

@@ -7,7 +7,7 @@
 
 package org.lwjgl.opengl;
 
-public interface ARBPointSprite {
+public class ARBPointSprite {
 
 	/*
 	 * Accepted by the <cap> parameter of Enable, Disable, and IsEnabled, by
@@ -15,7 +15,7 @@ public interface ARBPointSprite {
 	 * GetDoublev, and by the <target> parameter of TexEnvi, TexEnviv,
 	 * TexEnvf, TexEnvfv, GetTexEnviv, and GetTexEnvfv:
 	*/
-	public static final int POINT_SPRITE_ARB = 0x8861;
+	public static final int GL_POINT_SPRITE_ARB = 0x8861;
 
 	/*
 	* When the <target> parameter of TexEnvf, TexEnvfv, TexEnvi, TexEnviv,
@@ -23,6 +23,9 @@ public interface ARBPointSprite {
 	* <pname> may be:
 	*/
 
-	public static final int COORD_REPLACE_ARB = 0x8862;
+	public static final int GL_COORD_REPLACE_ARB = 0x8862;
 	
+	static {
+		BufferChecks.putGetMap(GL_POINT_SPRITE_ARB, 1);
+	}
 }

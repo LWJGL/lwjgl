@@ -133,6 +133,15 @@ class ARBProgram {
 	public static final int GL_MATRIX29_ARB = 0x88DD;
 	public static final int GL_MATRIX30_ARB = 0x88DE;
 	public static final int GL_MATRIX31_ARB = 0x88DF;
+	
+	static {
+		BufferChecks.putGetMap(GL_PROGRAM_ERROR_POSITION_ARB, 1);
+		BufferChecks.putGetMap(GL_CURRENT_MATRIX_ARB, 1);
+		BufferChecks.putGetMap(GL_TRANSPOSE_CURRENT_MATRIX_ARB, 1);
+		BufferChecks.putGetMap(GL_CURRENT_MATRIX_STACK_DEPTH_ARB, 1);
+		BufferChecks.putGetMap(GL_MAX_PROGRAM_MATRICES_ARB, 1);
+		BufferChecks.putGetMap(GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB, 1);
+	}
 
 	// ---------------------------
 	public static void glProgramStringARB(int target, int format, ByteBuffer string) {

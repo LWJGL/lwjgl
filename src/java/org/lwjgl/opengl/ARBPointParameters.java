@@ -47,6 +47,13 @@ public class ARBPointParameters {
 	public static final int GL_POINT_FADE_THRESHOLD_SIZE_ARB                        = 0x8128;
 	public static final int GL_POINT_DISTANCE_ATTENUATION_ARB                       = 0x8129;
 
+	static {
+		BufferChecks.putGetMap(GL_POINT_SIZE_MIN_ARB, 1);
+		BufferChecks.putGetMap(GL_POINT_SIZE_MAX_ARB, 1);
+		BufferChecks.putGetMap(GL_POINT_FADE_THRESHOLD_SIZE_ARB, 1);
+		BufferChecks.putGetMap(GL_POINT_DISTANCE_ATTENUATION_ARB, 3);
+	}
+	
 	public static native void glPointParameterfARB(int pname, float param);
 
 	public static void glPointParameterARB(int pname, FloatBuffer pfParams) {

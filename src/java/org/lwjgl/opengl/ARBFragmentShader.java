@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public interface ARBFragmentShader {
+public class ARBFragmentShader {
 
 	/*
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB:
@@ -51,4 +51,8 @@ public interface ARBFragmentShader {
 	*/
 	public static final int GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB = 0x8B49;
 	
+	static {
+		BufferChecks.putGetMap(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB, 1);
+	}
+
 }

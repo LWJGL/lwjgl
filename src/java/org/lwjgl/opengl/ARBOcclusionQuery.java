@@ -60,7 +60,7 @@ public class ARBOcclusionQuery {
 	*/
 	public static final int GL_QUERY_RESULT_ARB = 0x8866;
 	public static final int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
-
+	
 	// ---------------------------
 	public static void glGenQueriesARB(IntBuffer ids) {
 		nglGenQueriesARB(ids.remaining(), ids, ids.position());

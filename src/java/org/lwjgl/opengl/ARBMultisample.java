@@ -50,5 +50,16 @@ public class ARBMultisample {
 	public static final int GL_SAMPLE_COVERAGE_INVERT_ARB                           = 0x80AB;
 	public static final int GL_MULTISAMPLE_BIT_ARB                                  = 0x20000000;
 
+	static {
+		BufferChecks.putGetMap(GL_MULTISAMPLE_ARB, 1);
+		BufferChecks.putGetMap(GL_SAMPLE_ALPHA_TO_COVERAGE_ARB, 1);
+		BufferChecks.putGetMap(GL_SAMPLE_ALPHA_TO_ONE_ARB, 1);
+		BufferChecks.putGetMap(GL_SAMPLE_COVERAGE_ARB, 1);
+		BufferChecks.putGetMap(GL_SAMPLE_BUFFERS_ARB, 1);
+		BufferChecks.putGetMap(GL_SAMPLES_ARB, 1);
+		BufferChecks.putGetMap(GL_SAMPLE_COVERAGE_VALUE_ARB, 1);
+		BufferChecks.putGetMap(GL_SAMPLE_COVERAGE_INVERT_ARB, 1);
+	}
+	
 	public static native void glSampleCoverageARB(float value, boolean invert);
 }

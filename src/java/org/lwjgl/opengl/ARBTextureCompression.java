@@ -59,6 +59,12 @@ public class ARBTextureCompression
 	public static final int GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB                   = 0x86A2;
 	public static final int GL_COMPRESSED_TEXTURE_FORMATS_ARB                       = 0x86A3;
 
+	static {
+		BufferChecks.putGetMap(GL_TEXTURE_COMPRESSION_HINT_ARB, 1);
+		BufferChecks.putGetMap(GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB, 1);
+		BufferChecks.putGetMap(GL_COMPRESSED_TEXTURE_FORMATS_ARB, 1);
+	}
+
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer pData) {
 		// TODO: Check buffer size
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position());
