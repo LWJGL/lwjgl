@@ -21,38 +21,8 @@ COMMON = \
   org_lwjgl_input_Joystick.h \
   org_lwjgl_input_Keyboard.h \
   org_lwjgl_input_Mouse.h \
-  MatrixOpCommon.cpp \
-  MatrixOpCommon.h \
   org_lwjgl_Math.cpp \
   org_lwjgl_Math.h \
-  org_lwjgl_Math_MatrixOpAdd_MatrixOpDirect.cpp \
-  org_lwjgl_Math_MatrixOpAdd_MatrixOpDirect.h \
-  org_lwjgl_Math_MatrixOpAdd_MatrixOpSafe.cpp \
-  org_lwjgl_Math_MatrixOpAdd_MatrixOpSafe.h \
-  org_lwjgl_Math_MatrixOpCopy_MatrixOpDirect.cpp \
-  org_lwjgl_Math_MatrixOpCopy_MatrixOpDirect.h \
-  org_lwjgl_Math_MatrixOpCopy_MatrixOpSafe.cpp \
-  org_lwjgl_Math_MatrixOpCopy_MatrixOpSafe.h \
-  org_lwjgl_Math_MatrixOpInvert_MatrixOpDirect.cpp \
-  org_lwjgl_Math_MatrixOpInvert_MatrixOpDirect.h \
-  org_lwjgl_Math_MatrixOpInvert_MatrixOpSafe.cpp \
-  org_lwjgl_Math_MatrixOpInvert_MatrixOpSafe.h \
-  org_lwjgl_Math_MatrixOpMultiply_MatrixOpDirect.cpp \
-  org_lwjgl_Math_MatrixOpMultiply_MatrixOpDirect.h \
-  org_lwjgl_Math_MatrixOpMultiply_MatrixOpSafe.cpp \
-  org_lwjgl_Math_MatrixOpMultiply_MatrixOpSafe.h \
-  org_lwjgl_Math_MatrixOpNegate_MatrixOpDirect.cpp \
-  org_lwjgl_Math_MatrixOpNegate_MatrixOpDirect.h \
-  org_lwjgl_Math_MatrixOpNegate_MatrixOpSafe.cpp \
-  org_lwjgl_Math_MatrixOpNegate_MatrixOpSafe.h \
-  org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect.cpp \
-  org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect.h \
-  org_lwjgl_Math_MatrixOpNormalise_MatrixOpSafe.cpp \
-  org_lwjgl_Math_MatrixOpNormalise_MatrixOpSafe.h \
-  org_lwjgl_Math_MatrixOpSubtract_MatrixOpDirect.cpp \
-  org_lwjgl_Math_MatrixOpSubtract_MatrixOpDirect.h \
-  org_lwjgl_Math_MatrixOpSubtract_MatrixOpSafe.cpp \
-  org_lwjgl_Math_MatrixOpSubtract_MatrixOpSafe.h \
   org_lwjgl_openal_ALC.cpp \
   org_lwjgl_openal_ALC.h \
   org_lwjgl_openal_BaseAL.cpp \
