@@ -739,7 +739,7 @@ public final class GL11 {
 		BufferChecks.checkDirect(lists);
 		nglCallLists(lists.remaining(), GL_UNSIGNED_SHORT, lists, lists.position() << 1);
 	}
-	public static void glCallLists(int n, IntBuffer lists) {
+	public static void glCallLists(IntBuffer lists) {
 		BufferChecks.checkDirect(lists);
 		nglCallLists(lists.remaining(), GL_UNSIGNED_INT, lists, lists.position() << 2);
 	}
@@ -1274,6 +1274,76 @@ public final class GL11 {
 	public static native void glVertex4f(float x, float y, float z, float w);
 	public static native void glVertex4i(int x, int y, int z, int w);
 	public static native void glTranslatef(float x, float y, float z);
+
+	// ---------------------------
+	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ByteBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(format, type, width, border));
+		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() : 0);
+	}
+	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ShortBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(format, type, width, border) >> 1);
+		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() << 1 : 0);
+	}
+	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, IntBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(format, type, width, border) >> 2);
+		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
+	}
+	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, FloatBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(format, type, width, border) >> 2);
+		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
+	}
+	private static native void nglTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, Buffer pixels, int pixels_offset);
+	// ---------------------------
+
+	// ---------------------------
+	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ByteBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(format, type, width, height, border));
+		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() : 0);
+	}
+	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(format, type, width, height, border) >> 1);
+		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() << 1 : 0);
+	}
+	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, IntBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(format, type, width, height, border) >> 2);
+		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
+	}
+	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, FloatBuffer pixels) {
+		if ( pixels != null )
+			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(format, type, width, height, border) >> 2);
+		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
+	}
+	private static native void nglTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels, int pixels_offset);
+	// ---------------------------
+
+	// ---------------------------
+	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ByteBuffer pixels) {
+		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1));
+		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position());
+	}
+	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ShortBuffer pixels) {
+		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1) >> 1);
+		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 1);
+	}
+	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, IntBuffer pixels) {
+		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1) >> 2);
+		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2);
+	}
+	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, FloatBuffer pixels) {
+		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1) >> 2);
+		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2);
+	}
+	private static native void nglTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels, int pixels_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ByteBuffer pixels) {
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position());
@@ -1291,23 +1361,8 @@ public final class GL11 {
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, Buffer pixels, int pixels_offset);
-	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ByteBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1));
-		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position());
-	}
-	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ShortBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>1);
-		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 1);
-	}
-	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, IntBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
-		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2);
-	}
-	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, FloatBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1) >> 2);
-		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2);
-	}
-	private static native void nglTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels, int pixels_offset);
+	// ---------------------------
+
 	public static native void glTexParameterf(int target, int pname, float param);
 	public static native void glTexParameteri(int target, int pname, int param);
 	public static void glTexParameter(int target, int pname, FloatBuffer param) {
@@ -1320,40 +1375,7 @@ public final class GL11 {
 		nglTexParameteriv(target, pname, param, param.position());
 	}
 	private static native void nglTexParameteriv(int target, int pname, IntBuffer param, int param_position);
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ByteBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, 1));
-		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position());
-	}
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
-		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 1);
-	}
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, IntBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
-		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
-	}
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, FloatBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
-		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
-	}
-	private static native void nglTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels, int pixels_offset);
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ByteBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1));
-		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position());
-	}
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ShortBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>1);
-		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 1);
-	}
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, IntBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
-		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
-	}
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, FloatBuffer pixels) {
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
-		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
-	}
-	private static native void nglTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, Buffer pixels, int pixels_offset);
+
 	public static native void glTexGenf(int coord, int pname, float param);
 	public static void glTexGen(int coord, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
