@@ -58,22 +58,10 @@ public class MouseCreationTest {
 	}
 
 	private void initialize(boolean fullscreen) {
-    //  find first display mode that allows us 640*480*16
-    DisplayMode[] modes = Display.getAvailableDisplayModes();
-    for (int i = 0; i < modes.length; i++) {
-      if (modes[i].getWidth() == 640
-        && modes[i].getHeight() == 480
-        && modes[i].getBitsPerPixel() >= 16) {
-        displayMode = modes[i];
-        break;
-      }
-    }    
-    
     try {
-        Display.setDisplayMode(displayMode);
+        setDisplayMode();
         Display.setFullscreen(fullscreen);
         Display.create();
-
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -81,6 +69,28 @@ public class MouseCreationTest {
 
     initializeOpenGL();    
 	}
+  
+  /**
+   * Sets the display mode for fullscreen mode
+   */
+  protected boolean setDisplayMode() {
+    // get modes
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + 640,
+          "height=" + 480,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }  
   
 	private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

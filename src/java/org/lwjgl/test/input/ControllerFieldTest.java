@@ -41,6 +41,7 @@ import java.awt.event.WindowEvent;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
 
 /**
@@ -83,7 +84,9 @@ public class ControllerFieldTest {
     String buttons;
     while(frame.isVisible()) {
       buttons = "";
-      Display.update();
+      if(Display.isActive()) {
+      	Display.update();
+      }
       
       labels[0].setText("" + Controller.getX());
       labels[1].setText("" + Controller.getRx());
@@ -100,6 +103,28 @@ public class ControllerFieldTest {
       labels[17].setText(buttons);
     }
 	}
+  
+  /**
+   * Sets the display mode for fullscreen mode
+   */
+  protected boolean setDisplayMode() {
+    // get modes
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(320, 240, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + 320,
+          "height=" + 240,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }  
 
 	/**
 	 * 
@@ -107,7 +132,8 @@ public class ControllerFieldTest {
 	private void initialize() {
     
     try {
-     Display.create();
+      setDisplayMode();
+      Display.create();
     } catch (LWJGLException lwjgle) {
     	lwjgle.printStackTrace();
       return;
@@ -138,7 +164,7 @@ public class ControllerFieldTest {
     }
     
     frame = new Frame("ControllerFieldTest");
-    frame.setBounds(100, 100, 640, 480);
+    frame.setBounds(400, 400, 640, 480);
     frame.add(panel);
     
     frame.addWindowListener(new WindowAdapter() {

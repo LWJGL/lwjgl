@@ -73,9 +73,32 @@ public class KeyboardTest {
       System.exit(-1);
     }
   }
+  
+  /**
+   * Sets the display mode for fullscreen mode
+   */
+  protected boolean setDisplayMode() {
+    // get modes
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + 640,
+          "height=" + 480,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }  
 
   private void setupDisplay(boolean fullscreen) {
     try {
+      setDisplayMode();
       Display.create();
     } catch (Exception e) {
       e.printStackTrace();

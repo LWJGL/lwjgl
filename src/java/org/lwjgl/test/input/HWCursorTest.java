@@ -53,9 +53,6 @@ import org.lwjgl.opengl.glu.GLU;
  */
 public class HWCursorTest {
 
-  /** Intended deiplay mode */
-  private DisplayMode mode;
-
   /** The native cursor */
   private static Cursor[] cursor = null;
 
@@ -74,17 +71,36 @@ public class HWCursorTest {
 
     cleanup();
   }
+  
+  /**
+   * Sets the display mode for fullscreen mode
+   */
+  protected boolean setDisplayMode() {
+    // get modes
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + 640,
+          "height=" + 480,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }  
 
   /**
    * Initializes the test
    */
   private void initialize() {
     try {
-      //find displaymode
-      mode = findDisplayMode(800, 600, 16);
-      Display.setDisplayMode(mode);
-
       // start of in windowed mode
+      setDisplayMode();
       Display.create();
 
       glInit();
@@ -359,36 +375,16 @@ public class HWCursorTest {
   }
 
   /**
-   * Retrieves a displaymode, if one such is available
-   *
-   * @param width Required width
-   * @param height Required height
-   * @param bpp Minimum required bits per pixel
-   * @return
-   */
-  private DisplayMode findDisplayMode(int width, int height, int bpp) {
-    DisplayMode[] modes = Display.getAvailableDisplayModes();
-    for (int i = 0; i < modes.length; i++) {
-      if (modes[i].getWidth() == width
-        && modes[i].getHeight() == height
-        && modes[i].getBitsPerPixel() >= bpp) {
-        return modes[i];
-      }
-    }
-    return null;
-  }
-
-  /**
    * Initializes OGL
    */
   private void glInit() {
     // Go into orthographic projection mode.
     GL11.glMatrixMode(GL11.GL_PROJECTION);
     GL11.glLoadIdentity();
-    GLU.gluOrtho2D(0, mode.getWidth(), 0, mode.getHeight());
+    GLU.gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
     GL11.glMatrixMode(GL11.GL_MODELVIEW);
     GL11.glLoadIdentity();
-    GL11.glViewport(0, 0, mode.getWidth(), mode.getHeight());
+    GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
 
     //set clear color to black
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

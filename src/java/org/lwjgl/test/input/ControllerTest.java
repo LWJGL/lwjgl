@@ -34,6 +34,7 @@ package org.lwjgl.test.input;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -112,12 +113,10 @@ public class ControllerTest {
    */
   private void setupDisplay() {
     try {
-      if (FULLSCREEN) {
-        Display.create();
-      } else {
-        Display.create();
-      }
+      setDisplayMode();
+      Display.setFullscreen(FULLSCREEN);
       Display.setVSyncEnabled(true);
+      Display.create();
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -125,6 +124,28 @@ public class ControllerTest {
 
     initializeOpenGL();    
   }
+  
+  /**
+   * Sets the display mode for fullscreen mode
+   */
+  protected boolean setDisplayMode() {
+    // get modes
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(WINDOW_WIDTH, WINDOW_HEIGHT, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + WINDOW_WIDTH,
+          "height=" + WINDOW_HEIGHT,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }  
 
   /**
    * Initializes OpenGL
