@@ -52,7 +52,7 @@ public class Game {
 	public static final String GAME_TITLE = "My Game";
 	
 	/** Desired frame time */
-	private static final float FRAMETIME = 1.0f / 60.0f;
+	private static final int FRAMERATE = 60;
 	
 	/** Exit the game */
 	private static boolean finished;
@@ -111,7 +111,7 @@ public class Game {
 				// The window is in the foreground, so we should play the game
 				logic();
 				render();
-				org.lwjgl.Display.sync(FRAMETIME);
+				org.lwjgl.Display.sync(FRAMERATE);
 			} else {
 				// The window is not in the foreground, so we can allow other stuff to run and
 				// infrequently update
