@@ -8,7 +8,7 @@
   <property name="lwjgl.docs"           value="./doc"/>
   <property name="lwjgl.temp"           value="./temp"/>
   <property name="lwjgl.res"            value="./res"/>
-  <property name="lwjgl.version"        value="0.4"/>
+  <property name="lwjgl.version"        value="0.5"/>
   <property name="lwjgl.src.headers"    value="${lwjgl.src}/native/common"/>
   
   <!-- Creates a splash screen -->
