@@ -57,7 +57,8 @@ __int64		hires_timer;				// Hires timer current time
 JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createIndexBuffer
   (JNIEnv *env, jclass clazz, jint index)
 {
-	return env->NewDirectByteBuffer((void *)index, 0);
+	void *p = (char *)NULL + index;
+	return env->NewDirectByteBuffer(p, 0);
 }
 
 /*
