@@ -138,18 +138,20 @@ public final class AL {
 		String osName = System.getProperty("os.name");
 
 		String libname;
+		String platform_lib_name;
 		if (osName.startsWith("Win")) {
 			libname = "lwjglaudio";
+			platform_lib_name = "lwjglaudio.dll";
 		} else if (osName.startsWith("Lin")) {
 			libname = "openal";
+			platform_lib_name = "libopenal.so";
 		} else if (osName.startsWith("Mac")) {
 			libname = "openal";
+			platform_lib_name = "openal.dylib";
 		} else {
 			throw new LWJGLException("Unknown platform: "+osName);
 		}
 		
-		String platform_lib_name = System.mapLibraryName(libname);
-
 		// Add all possible paths from java.library.path
 		String java_library_path = System.getProperty("java.library.path");
 		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
