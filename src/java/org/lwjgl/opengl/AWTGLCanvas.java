@@ -51,7 +51,6 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	private final static AWTCanvasImplementation implementation;
 
 	static {
-		System.loadLibrary("jawt");
 		Sys.initialize();
 		String class_name;
 		String OS_NAME = System.getProperty("os.name");
