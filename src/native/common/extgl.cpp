@@ -87,6 +87,9 @@ glXWaitXPROC glXWaitX = NULL;
 glXGetClientStringPROC glXGetClientString = NULL;
 glXQueryServerStringPROC glXQueryServerString = NULL;
 glXQueryExtensionsStringPROC glXQueryExtensionsString = NULL;
+
+/* GLX_SGI_swap_control */
+glXSwapIntervalSGIPROC glXSwapIntervalSGI = NULL;
 #endif
 
 #ifdef _AGL
@@ -2538,6 +2541,15 @@ static void extgl_InitGLXSupportedExtensions(JNIEnv *env, jobject ext_set, Displ
 {
 	extgl_Extensions.GLX_EXT_visual_info = GLXQueryExtension(env, ext_set, disp, screen, "GLX_EXT_visual_info");
 	extgl_Extensions.GLX_EXT_visual_rating = GLXQueryExtension(env, ext_set, disp, screen, "GLX_EXT_visual_rating");
+	extgl_Extensions.GLX_SGI_swap_control = GLXQueryExtension(env, ext_set, disp, screen, "GLX_SGI_swap_control");
+}
+
+static void extgl_InitGLXSGISwapControl(JNIEnv *env, jobject ext_set)
+{
+	if (extgl_Extensions.GLX_SGI_swap_control != 1)
+		return;
+	glXSwapIntervalSGI = (glXSwapIntervalSGIPROC)extgl_GetProcAddress("glXSwapIntervalSGI");
+	EXTGL_SANITY_CHECK(env, ext_set, GLX_SGI_swap_control)
 }
 
 bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen)
@@ -2556,6 +2568,7 @@ bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen)
 	if (major > 1 || (major == 1 && minor >= 3))
 		extgl_Extensions.GLX13 = true;
 	extgl_InitGLX13(env, ext_set);
+	extgl_InitGLXSGISwapControl(env, ext_set);
 	return true;
 }
 #endif

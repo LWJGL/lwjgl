@@ -68,6 +68,7 @@ static int current_width;
 static bool input_released;
 
 static bool dirty;
+static bool vsync_enabled;
 static bool minimized;
 static bool focused;
 static bool closerequested;
@@ -182,7 +183,7 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	focused = true;
 	minimized = false;
 	closerequested = false;
-
+	vsync_enabled = false;
 	Window root_win;
 	Window win;
 	XSetWindowAttributes attribs;
@@ -556,25 +557,21 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused
 	return focused;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nIsVSyncEnabled
- * Signature: ()Z
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
   (JNIEnv * env, jclass clazz)
 {
-	// Always return false
-	return false;
+	return vsync_enabled;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nSetVSyncEnabled
- * Signature: (Z)V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
   (JNIEnv * env, jclass clazz, jboolean sync)
 {
-	// Do nothing on Linux
+	if (extgl_Extensions.GLX_SGI_swap_control) {
+		bool vsync = sync == JNI_TRUE ? true : false;
+		if (vsync != vsync_enabled) {
+			int interval = vsync ? 1 : 0;
+			glXSwapIntervalSGI(interval);
+			vsync_enabled = vsync;
+		}
+	}
 }

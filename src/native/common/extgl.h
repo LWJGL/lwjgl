@@ -539,6 +539,11 @@ extern glXGetClientStringPROC glXGetClientString;
 extern glXQueryServerStringPROC glXQueryServerString;
 extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
 
+/* GLX_SGI_swap_control */
+typedef void (APIENTRY * glXSwapIntervalSGIPROC)(int interval);
+
+extern glXSwapIntervalSGIPROC glXSwapIntervalSGI;
+
 #endif /* X11 */
 
 #ifdef _AGL
@@ -5535,6 +5540,7 @@ struct ExtensionTypes
     bool GLX13;
     bool GLX_EXT_visual_info;
     bool GLX_EXT_visual_rating;
+    bool GLX_SGI_swap_control;
 #endif /* X11 */
     
     bool OpenGL12;
