@@ -33,61 +33,16 @@
 /**
  * $Id$
  *
+ * Mac OS X cursor handling.
+ *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "common_tools.h"
+#include "org_lwjgl_input_Cursor.h"
 
-void initEventQueue(event_queue_t *event_queue) {
-	event_queue->list_start = 0;
-	event_queue->list_end = 0;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor(JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset) {
 }
 
-void putEventElement(event_queue_t *queue, unsigned char byte) {
-	int next_index = (queue->list_end + 1)%EVENT_BUFFER_SIZE;
-	if (next_index == queue->list_start) {
-#ifdef _DEBUG
-		printf("Event buffer overflow!\n");
-#endif
-		return;
-	}
-	queue->input_event_buffer[queue->list_end] = byte;
-	queue->list_end = next_index;
-}
-
-static bool hasMoreEvents(event_queue_t *queue) {
-	return queue->list_start != queue->list_end;
-}
-
-static void copyEvent(event_queue_t *queue, int event_size, int event_index) {
-	int output_index = event_index*event_size;
-	for (int i = 0; i < event_size; i++) {
-		queue->output_event_buffer[output_index] = queue->input_event_buffer[queue->list_start];
-		queue->list_start = (queue->list_start + 1)%EVENT_BUFFER_SIZE;
-		output_index++;
-	}
-}
-
-int copyEvents(event_queue_t *event_queue, int event_size) {
-	int num_events = 0;
-	while (hasMoreEvents(event_queue)) {
-		copyEvent(event_queue, event_size, num_events);
-		num_events++;
-	}
-	return num_events;
-}
-
-unsigned char *getOutputList(event_queue_t *queue) {
-	return queue->output_event_buffer;
-}
-
-int getEventBufferSize(event_queue_t *event_queue) {
-	return EVENT_BUFFER_SIZE;
-}
-
-void throwException(JNIEnv * env, const char * err) {
-	jclass cls = env->FindClass("java/lang/Exception");
-	env->ThrowNew(cls, err);
-	env->DeleteLocalRef(cls);
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor(JNIEnv *env, jclass clazz, jlong cursor_handle) {
 }

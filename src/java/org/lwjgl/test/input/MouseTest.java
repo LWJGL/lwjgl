@@ -132,7 +132,7 @@ public class MouseTest {
       }
 
       position.x += Mouse.dx;
-      position.y -= Mouse.dy;
+      position.y += Mouse.dy;
       
       if(position.x<0) {
         position.x = 0;

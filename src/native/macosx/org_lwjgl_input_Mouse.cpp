@@ -277,7 +277,7 @@ static bool findDevice(void) {
 #ifdef _DEBUG
 		printf("Could not find matching devices\n");
 #endif
-		return;
+		return false;
 	}
 	while (!success && (hid_device = IOIteratorNext(device_iterator)) != NULL) {
 		kern_err = IORegistryEntryCreateCFProperties(hid_device, &dev_props, kCFAllocatorDefault, kNilOptions);
@@ -301,8 +301,10 @@ static bool findDevice(void) {
 
 static void handleButton(unsigned char button_index, unsigned char state) {
 	button_states[button_index] = state;
-	putEventElement(&event_queue, button_index);
-	putEventElement(&event_queue, state);
+	if (buffer_enabled) {
+		putEventElement(&event_queue, button_index);
+		putEventElement(&event_queue, state);
+	}
 }
 
 static void pollDevice() {
@@ -388,13 +390,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass c
 		return;
 	}
 	CGAssociateMouseAndMouseCursorPosition(FALSE);
+	CGDisplayHideCursor(CGMainDisplayID());
 	created = true;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass clazz) {
 	shutdownDevice();
-	if (!native_cursor)
+	if (!native_cursor) {
 		CGAssociateMouseAndMouseCursorPosition(TRUE);
+		CGDisplayShowCursor(CGMainDisplayID());
+	}
 	created = false;
 }
 

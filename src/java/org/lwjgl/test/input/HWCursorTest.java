@@ -103,7 +103,8 @@ public class HWCursorTest {
           System.exit(0);
       }
       System.out.println("Maximum native cursor size: " + Mouse.getMaxCursorSize() + ", min size: " + Mouse.getMinCursorSize());
-      mouse_x = mouse_y = 0;
+      mouse_x = 400;
+      mouse_y = 300;
       int num_images = 3;
       int image_size = Mouse.getMaxCursorSize()*Mouse.getMaxCursorSize();
       IntBuffer cursor_images = ByteBuffer.allocateDirect(num_images*image_size*4).order(ByteOrder.nativeOrder()).asIntBuffer();
