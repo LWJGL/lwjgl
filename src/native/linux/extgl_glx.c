@@ -205,12 +205,12 @@ bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
 	if (!extgl_InitGLX12())
 		return false;
 	extension_flags.GLX12 = true;
+	if (glXQueryVersion(disp, &major, &minor) != True)
+		return false;
 	if (major > 1 || (major == 1 && minor >= 3))
 		extension_flags.GLX13 = true;
 	extgl_InitGLX13(env);
 	extgl_InitGLXSupportedExtensions(env, disp, screen);
-	if (glXQueryVersion(disp, &major, &minor) != True)
-		return false;
 	extgl_InitGLXSGISwapControl(env);
 	return true;
 }
