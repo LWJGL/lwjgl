@@ -209,9 +209,6 @@
 				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Pbuffer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_SWTCanvas.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Window.cpp">
 			</File>
 			<File
