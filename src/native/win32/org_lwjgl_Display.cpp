@@ -99,7 +99,10 @@ int SetDisplayMode(int width, int height, int bpp, int freq)
 	devmode.dmPelsHeight = height;
 	devmode.dmDisplayFlags = 0;
 	devmode.dmDisplayFrequency = freq;
-	devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFLAGS | DM_DISPLAYFREQUENCY;
+	devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFLAGS;
+	if (freq != 0)
+		devmode.dmFields |= DM_DISPLAYFREQUENCY;
+
 
 	LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 	switch (cdsret) {
