@@ -201,7 +201,7 @@ public class Grass {
 
 			grsDraw();
 
-			gl.paint();
+			Window.paint();
 		}
 		Mouse.destroy();
 		Keyboard.destroy();

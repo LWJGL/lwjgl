@@ -99,17 +99,17 @@ public final class Game {
          try {
              init();
              while (!finished) {
-             	 gl.tick();
+             	 Window.tick();
              	 
-             	 if (gl.isMinimized())
+             	 if (Window.isMinimized())
              	 	Thread.sleep(200);
-             	 else if (gl.isCloseRequested())
+             	 else if (Window.isCloseRequested())
              	 	System.exit(0);
              	 
                  Keyboard.poll();
                  mainLoop();
                  render();
-                 gl.paint();
+                 Window.paint();
              }   
          } catch (Throwable t) {
              t.printStackTrace();

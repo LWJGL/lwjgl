@@ -34,6 +34,7 @@ package org.lwjgl.test.input;
 import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
+import org.lwjgl.Window;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLWindow;
@@ -165,7 +166,7 @@ public class ControllerCreationTest {
 
     while (Sys.getTime() < endtime) {
 
-      gl.tick();
+      Window.tick();
       
       Controller.poll();
 
@@ -183,7 +184,7 @@ public class ControllerCreationTest {
 
       render();
 
-      gl.paint();
+      Window.paint();
 
       if (Sys.getTime() - statustime > Sys.getTimerResolution()) {
         System.out.print(".");

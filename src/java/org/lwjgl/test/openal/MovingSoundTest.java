@@ -31,6 +31,7 @@
  */
 package org.lwjgl.test.openal;
 
+import org.lwjgl.Window;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.eax.*;
 import org.lwjgl.input.Keyboard;
@@ -155,7 +156,7 @@ public class MovingSoundTest extends BasicTest {
     System.out.println("Move source with arrow keys\nMove listener with right shift and arrowkeys\nEnable EAX effect by pressing e (if available)\nExit with ESC");
 
 		while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-      gl.tick();
+      Window.tick();
       
       Keyboard.poll();
       if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
@@ -192,7 +193,7 @@ public class MovingSoundTest extends BasicTest {
           eaxApplied = !eaxApplied;
       }
       
-      if(gl.isCloseRequested()) {
+      if(Window.isCloseRequested()) {
         break;
       }
      

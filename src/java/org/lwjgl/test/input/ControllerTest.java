@@ -32,6 +32,7 @@
 package org.lwjgl.test.input;
 
 import org.lwjgl.DisplayMode;
+import org.lwjgl.Window;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL;
@@ -116,10 +117,10 @@ public class ControllerTest {
   }
 
   private void wiggleController() {
-    while (!gl.isCloseRequested()) {
-      gl.tick();
+    while (!Window.isCloseRequested()) {
+      Window.tick();
       
-      if(gl.isMinimized()) {
+      if(Window.isMinimized()) {
         try {
           Thread.sleep(100);
         } catch (InterruptedException inte) {
@@ -166,7 +167,7 @@ public class ControllerTest {
 
       render();
 
-      gl.paint();
+      Window.paint();
     }
   }
   

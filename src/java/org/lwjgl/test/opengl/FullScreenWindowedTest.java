@@ -115,11 +115,11 @@ public class FullScreenWindowedTest {
    */
   private void mainLoop() {
     while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
-      && !gl.isCloseRequested()) {
+      && !Window.isCloseRequested()) {
       // allow subsystem to get a chance to run too
-      gl.tick();
+      Window.tick();
 
-      if (!gl.isMinimized()) {
+      if (!Window.isMinimized()) {
         // check keyboard input
         processKeyboard();
 
@@ -128,13 +128,13 @@ public class FullScreenWindowedTest {
         render();
 
         // paint window
-        gl.paint();
+        Window.paint();
       } else {
 
         // no need to render/paint if nothing has changed (ie. window dragged over)
-        if (gl.isDirty()) {
+        if (Window.isDirty()) {
           render();
-          gl.paint();
+          Window.paint();
         }
 
         // don't waste cpu time, sleep more

@@ -34,6 +34,7 @@ package org.lwjgl.test.input;
 import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
+import org.lwjgl.Window;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLWindow;
@@ -167,7 +168,7 @@ public class MouseCreationTest {
 		long endtime = Sys.getTime() + Sys.getTimerResolution() * 5;
 
 		while (Sys.getTime() < endtime) {
-      gl.tick();
+      Window.tick();
 
 			Mouse.poll();
 
@@ -188,7 +189,7 @@ public class MouseCreationTest {
 
 			render();
 
-			gl.paint();
+			Window.paint();
 
 			if (Sys.getTime() - statustime > Sys.getTimerResolution()) {
 				System.out.print(".");

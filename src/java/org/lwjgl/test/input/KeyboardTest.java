@@ -32,6 +32,7 @@
 package org.lwjgl.test.input;
 
 import org.lwjgl.DisplayMode;
+import org.lwjgl.Window;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLWindow;
@@ -122,10 +123,10 @@ public class KeyboardTest {
     Keyboard.enableBuffer();
     Keyboard.enableTranslation();
 
-    while (!gl.isCloseRequested()) {
-      gl.tick();
+    while (!Window.isCloseRequested()) {
+      Window.tick();
       
-      if(gl.isMinimized()) {
+      if(Window.isMinimized()) {
         try {
           Thread.sleep(100);
         } catch (InterruptedException inte) {
@@ -185,7 +186,7 @@ public class KeyboardTest {
 
       render();
 
-      gl.paint();
+      Window.paint();
       
       try {
         Thread.sleep(0);

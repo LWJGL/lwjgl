@@ -29,8 +29,8 @@ public class WindowCreationTest {
     
     System.out.println("Display created");
 
-    while(!gl.isCloseRequested()) {    
-      gl.tick();
+    while(!Window.isCloseRequested()) {    
+      Window.tick();
       try {
         Thread.sleep(100);
       } catch (Exception e) {
