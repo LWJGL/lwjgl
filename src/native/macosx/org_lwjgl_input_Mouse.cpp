@@ -48,6 +48,7 @@
 
 static const int NUM_BUTTONS = 7;
 static const int NUM_COOKIES = NUM_BUTTONS + 3;
+static const int WHEEL_SCALE = 120;
 
 static jfieldID fid_dx;
 static jfieldID fid_dy;
@@ -183,7 +184,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
 	int dx, dy, dz;
 	pollMouseDevice();
-	dz = last_dz;
+	dz = last_dz*WHEEL_SCALE;
 	//if (!native_cursor) {
 		dx = last_dx;
 		dy = -last_dy;
