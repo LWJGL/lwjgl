@@ -109,6 +109,7 @@ typedef void ALCvoid;
 #else
  #ifdef TARGET_OS_MAC
   #if TARGET_OS_MAC
+   #define _OSX
    #pragma export on
   #endif
  #endif
