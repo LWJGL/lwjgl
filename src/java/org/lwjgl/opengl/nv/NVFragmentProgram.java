@@ -87,14 +87,14 @@ public class NVFragmentProgram extends NVProgram {
 	                                                           int paramsOffset);
 	// ---------------------------
 
-	public static native void glProgramLocalParameter4fNV(int target, int index, float x, float y, float z, float w);
+	public static native void glProgramLocalParameter4fARB(int target, int index, float x, float y, float z, float w);
 
 	// ---------------------------
-	public static void glGetProgramLocalParameterNV(int target, int index, FloatBuffer params) {
+	public static void glGetProgramLocalParameterARB(int target, int index, FloatBuffer params) {
 		assert params.remaining() >= 4: "<params> must have 4 floats available.";
 		nglGetProgramLocalParameterfvNV(target, index, params, params.position());
 	}
 
-	private static native void nglGetProgramLocalParameterfvNV(int target, int index, FloatBuffer params, int params_offset);
+	private static native void nglGetProgramLocalParameterfvARB(int target, int index, FloatBuffer params, int params_offset);
 	// ---------------------------
 }
