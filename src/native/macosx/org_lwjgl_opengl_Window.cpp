@@ -56,6 +56,20 @@ static void throwException(JNIEnv * env, const char * err)
 	env->DeleteLocalRef(cls);
 }
 
+/*static void dumpRootMenu() {
+	MenuRef root = AcquireRootMenu();
+	if (root == NULL)
+		printf("NULL menu\n");
+	UInt16 count = CountMenuItems(root);
+	printf("item count: %d\n", count);
+	for (int i = 0; i < count; i++) {
+		Str255 menu_text;
+		GetMenuItemText(root, i, menu_text);
+		printf("Item text: %s\n", menu_text);
+	}
+	ReleaseMenu(root);
+}
+*/
 static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 	const char* title = env->GetStringUTFChars(title_obj, NULL);
 	int str_len = env->GetStringUTFLength(title_obj);
@@ -67,17 +81,28 @@ static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 		return;
 	}
 	SetWindowTitleWithCFString(win_ref, cf_title);
+/*	MenuRef root;
+	OSStatus err = CreateNewMenu(1, 0, &root);
+	assert(err == noErr);
+	MenuItemIndex item_index;
+	err = AppendMenuItemTextWithCFString(root, cf_title, 0, FOUR_CHAR_CODE('1234'), &item_index);
+	assert(err == noErr);
+	err = SetRootMenu(root);
+	assert(err == noErr);
+	ReleaseMenu(root);*/
 	CFRelease(cf_title);
 	env->ReleaseStringUTFChars(title_obj, title);
+//	dumpRootMenu();
 }
 
 static pascal OSStatus doWindowClose(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+printf("Close requested\n");
 	close_requested = true;
 	return noErr;
 }
 
 static void registerEventHandlers(void) {
-/*	EventTargetRef event_target = GetWindowEventTarget(win_ref);
+	/*EventTargetRef event_target = GetWindowEventTarget(win_ref);
 	status = InstallStandardEventHandler(event_target);
 	if (noErr != status) {
 		DisposeWindow(win_ref);
@@ -92,18 +117,50 @@ static void registerEventHandlers(void) {
 	DisposeEventHandlerUPP(handlerUPP);
 }
 
+
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv *, jclass) {
 	const bool saved = close_requested;
 	close_requested = false;
 	return saved;
 }
 
+OSErr aehandler(const AppleEvent * theAppleEvent, AppleEvent * reply, SInt32 handlerRefcon) {
+	printf("handler called\n");
+	return noErr;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil) {
 	Rect rect;
 	OSStatus status;
-	const WindowAttributes window_attr = kWindowStandardDocumentAttributes/*kWindowCloseBoxAttribute|
-				       kWindowCollapseBoxAttribute*/|
+	const WindowAttributes window_attr = kWindowCloseBoxAttribute|
+				       kWindowCollapseBoxAttribute|
 				       kWindowStandardHandlerAttribute;
+//	CPSEnableForegroundOperation();
+	/*//AEObjectInit();
+	AEEventHandlerUPP handler = NewAEEventHandlerUPP(aehandler);
+	if (noErr != AEInstallEventHandler(kCoreEventClass, kAEOpenApplication, handler, 0, FALSE))
+		printf("error\n");
+	if (noErr != AEInstallEventHandler(kCoreEventClass, kAEOpenDocuments, handler, 0, FALSE))
+		printf("error\n");
+	if (noErr != AEInstallEventHandler(kCoreEventClass, kAEPrintDocuments, handler, 0, FALSE))
+		printf("error\n");
+	if (noErr != AEInstallEventHandler(kCoreEventClass, kAEQuitApplication, handler, 0, FALSE))
+		printf("error\n");
+	DisposeAEEventHandlerUPP(handler);*/
+	/*
+	 * Hacks to activate the application window
+	 */
+	/*CFBundleRef bundle = CFBundleGetMainBundle();
+	if (bundle != NULL) {
+		printf("bundle != NULL\n");
+		CFRelease(bundle);
+	}*/
+	/*ProcessSerialNumber PSN;
+ 	GetCurrentProcess(&PSN);
+ 	SetFrontProcess(&PSN);
+ 	EventQueueRef queue = GetCurrentEventQueue();
+	if (queue == NULL)
+		printf("null event queue\n");*/
 
 	SetRect(&rect, x, y, x + width, y + height);
 	close_requested = false;
@@ -113,25 +170,44 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not create window");
 		return;
 	}
-/*	setWindowTitle(env, title);
+	registerEventHandlers();
+	setWindowTitle(env, title);
 	const RGBColor background_color = { 0, 0, 0 };
-	status = SetWindowContentColor(win_ref, &background_color);
-	if (noErr != status) {
-		DisposeWindow(win_ref);
-		throwException(env, "Could not alter window background color");
-		return;
-	}
-	registerEventHandlers();*/
+	SetWindowContentColor(win_ref, &background_color);
 	status = TransitionWindow(win_ref, kWindowZoomTransitionEffect, kWindowShowTransitionAction, NULL);
 	if (noErr != status) {
 		DisposeWindow(win_ref);
 		throwException(env, "Could not show window");
 		return;
 	}
-//	SelectWindow(win_ref);
+	SelectWindow(win_ref);
 	InitCursor();
-	RunApplicationEventLoop();
-	printf("Window creation succeeded\n");
+//QuitApplicationEventLoop();
+DebugPrintAllWindowGroups();
+//RunApplicationEventLoop();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
+  (JNIEnv *env, jclass clazz) 
+{
+	EventRef event;
+	OSStatus err;
+	int num_events = GetNumEventsInQueue(GetCurrentEventQueue());
+	for (int i = 0; i < num_events; i++) {
+		UInt32 class_type = GetEventClass(event);
+		UInt32 kind = GetEventKind(event);
+		UInt32 test = FOUR_CHAR_CODE('eppc');
+		EventTime event_time = GetEventTime(event);
+		//UInt32 test = FOUR_CHAR_CODE('appl');
+		printf("recieved event: %x %x %x at %f\n", class_type, kind, test, event_time);
+		err = ReceiveNextEvent(0, NULL, 0, true, &event);
+	/*	if (kind == kEventClassAppleEvent)
+			AEProcessAppleEvent(event);*/
+	        ReleaseEvent(event);
+	}
+	//RunCurrentEventLoop(0);
+/*	if (eventLoopTimedOutErr != RunCurrentEventLoop(0))
+		printf("Could not run current event loop\n");*/
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
