@@ -6,8 +6,8 @@ if "%CHOME%" == "" goto errorchome
 if "%ALHOME%" == "" goto erroralhome
 if "%EAXHOME%" == "" goto erroreaxhome
 if "%DXHOME%" == "" goto errordxhome
-set COPTIONS=/I"%DXHOME%\include" /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"%ALHOME%\include" /I"%EAXHOME%\include" /I"..\..\src\native\common" /O2 /nologo /c 
-set LINKEROPTS=/link /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%EAXHOME%\Libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib"
+set COPTIONS=/I"%DXHOME%\include" /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"%ALHOME%\include" /I"%EAXHOME%\include" /I"..\..\src\native\common" /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W0 /nologo /c /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "LWJGL_EXPORTS" /D "_WINDLL"
+set LINKEROPTS=/link /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%EAXHOME%\Libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL
 set LIBS=dinput.lib dxguid.lib OpenAL32.lib alut.lib eaxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib
 
 for %%x in (..\..\src\native\win32\*.c) do cl %COPTIONS% %%x
