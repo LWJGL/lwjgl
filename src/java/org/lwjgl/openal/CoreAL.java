@@ -512,7 +512,6 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * AL_PLAYING Source. Rewind() applied to a AL_STOPPED Source promotes the Source to
    * AL_INITIAL, resetting the sampling offset to the beginning.
 	 *
-	 * @param n number of sources to rewind
 	 * @param sources array of sources to rewind
 	 */
 	public static void alSourceRewind(IntBuffer sources) {
@@ -658,7 +657,6 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 *
 	 * @param buffer buffer to get property from
 	 * @param pname name of property to retrieve
-	 * @param int
 	 */
 	public static native int alGetBufferi(int buffer, int pname);
 
