@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -31,6 +31,7 @@
  */
 package org.lwjgl.vector;
 
+import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 /**
@@ -42,7 +43,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Matrix2f extends Matrix {
+public class Matrix2f extends Matrix implements Serializable {
 	
 	public float m00 = 1.0f, m01, m10, m11 = 1.0f;
 	

@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Light Weight Java Game Library Project
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -31,6 +31,7 @@
  */
 package org.lwjgl.vector;
 
+import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.Math;
@@ -43,7 +44,7 @@ import org.lwjgl.Math;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public abstract class Vector {
+public abstract class Vector implements Serializable {
 
 	/**
 	 * Constructor for Vector.
