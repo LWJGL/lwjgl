@@ -97,8 +97,8 @@ public final class Sys {
 	/** Current recalibration timer value, in milliseconds */
 	private static long recalibrationNow;
 	
-	/** Total hires ticks that have passed since we started using recalibrated time */
-	private static long ticksSinceRecalibration;
+	/** Hires time when we started counting recalibration time */
+	private static long hiresRecalibrationThen;
 
 	/** Last lowres timer time, in milliseconds */
 	private static long lowresThen;
@@ -223,23 +223,35 @@ public final class Sys {
 				
 				if (currentResolution == defaultResolution) {
 					// Start timing
-					ticksSinceRecalibration = 0L;
+					hiresRecalibrationThen = hiresNow;
 					recalibrationThen = lowresNow;
 					recalibrationNow = lowresNow;
 				} else {
 					// Continue counting ticks
-					ticksSinceRecalibration += getTime();
-					recalibrationNow = lowresNow;
-					long totalTicksSinceRecalibrationStarted = recalibrationNow - recalibrationThen;
-					if (totalTicksSinceRecalibrationStarted > LONG_RECALIBRATION_THRESHOLD) {
-						// Ok, we've now been operating at a different resolution for long enough.
-						// Let's choose a new default resolution based on the average we've
-						// calculated since it first started needing recalibrating
-						long actualRecalibrationDuration = recalibrationNow - recalibrationThen;
-						defaultResolution = (long) (1000.0 * totalTicksSinceRecalibrationStarted / actualRecalibrationDuration);
-						tempResolution = defaultResolution;
-						if (DEBUG_CALIBRATION) {
-							System.err.println("Permanent recalibration to "+defaultResolution+" ticks per second");
+					long ticksSinceRecalibration = hiresNow - hiresRecalibrationThen;
+					if (ticksSinceRecalibration < 0) {
+						// Bah. Wrapped timer, so forget it this time and start over.
+						hiresRecalibrationThen = hiresNow;
+						recalibrationThen = lowresNow;
+					} else {
+						recalibrationNow = lowresNow;
+						long totalMillisSinceRecalibrationStarted = recalibrationNow - recalibrationThen;
+						if (totalMillisSinceRecalibrationStarted > LONG_RECALIBRATION_THRESHOLD) {
+							// Ok, we've now been operating at a different resolution for long enough.
+							// Let's choose a new default resolution based on the average we've
+							// calculated since it first started needing recalibrating
+							long totalTicksSinceRecalibrationStarted = hiresNow - hiresRecalibrationThen;
+							if (totalTicksSinceRecalibrationStarted > 0) {
+								defaultResolution = (long) (1000.0 * totalTicksSinceRecalibrationStarted / totalMillisSinceRecalibrationStarted);
+								tempResolution = defaultResolution;
+								if (DEBUG_CALIBRATION) {
+									System.err.println("Permanent recalibration to "+defaultResolution+" ticks per second");
+								}
+							} else {
+								// Bah. Once again, a wrapped timer.
+								hiresRecalibrationThen = hiresNow;
+								recalibrationThen = lowresNow;
+							}
 						}
 					}
 				}
@@ -247,11 +259,6 @@ public final class Sys {
 				// Temporarily change current resolution to the recently calculated resolution
 				currentResolution = tempResolution;
 			} else {
-				// Recalibrate the baseline using the operating system
-				defaultResolution = implementation.getTimerResolution();
-				if (DEBUG_CALIBRATION && currentResolution != defaultResolution) {
-					System.err.println("Resetting to system calibration "+defaultResolution+" ticks per second");
-				}
 				currentResolution = defaultResolution;
 			}
 		}
