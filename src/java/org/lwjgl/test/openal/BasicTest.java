@@ -55,7 +55,7 @@ public abstract class BasicTest {
     try {
       AL.create();
     } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println("Unable to create OpenAL.\nPlease make sure that OpenAL is available on this system.");
       return;
     }
   }
@@ -64,7 +64,9 @@ public abstract class BasicTest {
    * Shutdowns OpenAL
    */
   protected void alExit() {
-    AL.destroy();
+    if(AL.isCreated()) {
+      AL.destroy();
+    }
   }
 
   /**
