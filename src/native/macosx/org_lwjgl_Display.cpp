@@ -45,7 +45,7 @@
 
 static CFDictionaryRef original_mode;
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_init(JNIEnv * env, jclass clazz) {
+static void init(JNIEnv *env, jclass clazz) {
 	original_mode = CGDisplayCurrentMode(kCGDirectMainDisplay);
 	long width;
 	long height;
@@ -60,6 +60,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init(JNIEnv * env, jclass clazz) {
 	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, width, height, bpp, freq);
 	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
 	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_init(JNIEnv * env, jclass clazz) {
+	init(env, clazz);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclass clazz, jobject mode) {
@@ -125,9 +129,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength(JNIEnv *env, jc
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer) {
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv *, jclass) {
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv *env, jclass clazz) {
 	CGDisplaySwitchToMode(kCGDirectMainDisplay, original_mode);
 	CGDisplayRelease(kCGDirectMainDisplay);
+	init(env, clazz);
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter(JNIEnv * , jclass) {
