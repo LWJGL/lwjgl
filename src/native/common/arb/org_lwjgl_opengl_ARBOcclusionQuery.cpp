@@ -59,7 +59,7 @@ static glGetQueryObjectuivARBPROC glGetQueryObjectuivARB;
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGenQueriesARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB
+static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
@@ -71,7 +71,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQuer
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglDeleteQueriesARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesARB
+static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesARB
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
@@ -83,7 +83,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQ
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	glIsQueryARB
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB
+static jboolean JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	GLboolean result = glIsQueryARB(id);
@@ -95,7 +95,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQu
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	glBeginQueryARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQueryARB
+static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQueryARB
 	(JNIEnv * env, jclass clazz, jint target, jint id)
 {
 	glBeginQueryARB(target, id);
@@ -106,7 +106,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQue
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	glEndQueryARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQueryARB
+static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQueryARB
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	glEndQueryARB(target);
@@ -117,7 +117,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQuery
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGetQueryivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryivARB
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -129,7 +129,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQuer
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGetQueryObjectivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectivARB
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -141,7 +141,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQuer
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGetQueryObjectuivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuivARB
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
 	GLuint *params_ptr = (GLuint *)env->GetDirectBufferAddress(params) + paramsOffset;

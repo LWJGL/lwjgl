@@ -61,7 +61,7 @@ static glEvalMapsNVPROC glEvalMapsNV;
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglGetMapControlPointsNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapControlPointsNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapControlPointsNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jint type, jint ustride, jint vstride, jboolean packed, jobject pPoints, jint pPoints_offset)
 {
 	GLvoid *pPoints_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPoints) + pPoints_offset);
@@ -73,7 +73,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapContro
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglMapControlPointsNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapControlPointsNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapControlPointsNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jint type, jint ustride, jint vstride, jint uorder, jint vorder, jboolean packed, jobject pPoints, jint pPoints_offset)
 {
 	GLvoid *pPoints_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPoints) + pPoints_offset);
@@ -85,7 +85,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapControlPo
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglMapParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterfvNV
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -97,7 +97,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameter
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglMapParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterivNV
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -109,7 +109,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameter
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglGetMapParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterfvNV
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -121,7 +121,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParame
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglGetMapParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterivNV
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -133,7 +133,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParame
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglGetMapAttribParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterfvNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -145,7 +145,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttrib
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	nglGetMapAttribParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterivNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -157,7 +157,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttrib
  * Class:	org.lwjgl.opengl.NVEvaluators
  * Method:	glEvalMapsNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_glEvalMapsNV
+static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_glEvalMapsNV
 	(JNIEnv * env, jclass clazz, jint target, jint mode)
 {
 	glEvalMapsNV(target, mode);

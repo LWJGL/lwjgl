@@ -47,7 +47,7 @@ static glVertexWeightPointerEXTPROC glVertexWeightPointerEXT;
  * Class:	org.lwjgl.opengl.EXTVertexWeighting
  * Method:	glVertexWeightfEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfEXT
 	(JNIEnv * env, jclass clazz, jfloat weight)
 {
 	glVertexWeightfEXT(weight);
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexW
  * Class:	org.lwjgl.opengl.EXTVertexWeighting
  * Method:	nglVertexWeightPointerEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXT
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_offset)
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
@@ -70,7 +70,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertex
  * Class:	org.lwjgl.opengl.EXTVertexWeighting
  * Method:	nglVertexWeightPointerEXTVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXTVBO
+static void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXTVBO
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
 	glVertexWeightPointerEXT(size, type, stride, (GLvoid *)buffer_offset);

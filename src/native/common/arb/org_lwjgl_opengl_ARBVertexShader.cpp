@@ -52,7 +52,7 @@ static glGetAttribLocationARBPROC glGetAttribLocationARB;
  * Class:	org.lwjgl.opengl.ARBVertexShader
  * Method:	nglBindAttribLocationARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocationARB
+static void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocationARB
 	(JNIEnv * env, jclass clazz, jint programObj, jint index, jobject name, jint nameOffset)
 {
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
@@ -64,7 +64,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttri
  * Class:	org.lwjgl.opengl.ARBVertexShader
  * Method:	nglGetActiveAttribARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribARB
+static void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribARB
 	(JNIEnv * env, jclass clazz, jint programObj, jint index, jint maxLength, jobject length, jint lengthOffset, jobject size, jint sizeOffset, jobject type, jint typeOffset, jobject name, jint nameOffset)
 {
 
@@ -86,7 +86,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetActive
  * Class:	org.lwjgl.opengl.ARBVertexShader
  * Method:	nglGetAttribLocationARB
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationARB
+static jint JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationARB
 	(JNIEnv * env, jclass clazz, jint programObj, jobject name, jint nameOffset)
 {
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;

@@ -53,7 +53,7 @@ static glMatrixIndexPointerARBPROC glMatrixIndexPointerARB;
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	glCurrentPaletteMatrixARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB
 	(JNIEnv * env, jclass clazz, jint index)
 {
 	glCurrentPaletteMatrixARB(index);
@@ -64,7 +64,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPa
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexPointerARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_offset)
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
@@ -76,7 +76,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIn
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexPointerARBVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBVBO
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBVBO
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
 	glMatrixIndexPointerARB(size, type, stride, (GLvoid *)buffer_offset);
@@ -87,7 +87,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIn
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexubvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB
 	(JNIEnv * env, jclass clazz, jint size, jobject pIndices, jint pIndices_offset)
 {
 	GLubyte *pIndices_ptr = (GLubyte *)env->GetDirectBufferAddress(pIndices) + pIndices_offset;
@@ -99,7 +99,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIn
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexuivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB
 	(JNIEnv * env, jclass clazz, jint size, jobject piIndices, jint piIndices_offset)
 {
 	GLuint *piIndices_ptr = (GLuint *)env->GetDirectBufferAddress(piIndices) + piIndices_offset;
@@ -111,7 +111,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIn
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexusvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB
 	(JNIEnv * env, jclass clazz, jint size, jobject psIndices, jint psIndices_offset)
 {
 	GLushort *psIndices_ptr = (GLushort *)env->GetDirectBufferAddress(psIndices) + psIndices_offset;

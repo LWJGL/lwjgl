@@ -81,7 +81,7 @@ static glNormalStream3fATIPROC glNormalStream3fATI;
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream1fATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1fATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1fATI
 	(JNIEnv * env, jclass clazz, jint stream, jfloat x)
 {
 	glVertexStream1fATI(stream, x);
@@ -92,7 +92,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream1iATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1iATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1iATI
 	(JNIEnv * env, jclass clazz, jint stream, jint x)
 {
 	glVertexStream1iATI(stream, x);
@@ -103,7 +103,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream1sATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1sATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream1sATI
 	(JNIEnv * env, jclass clazz, jint stream, jshort x)
 {
 	glVertexStream1sATI(stream, x);
@@ -114,7 +114,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream2fATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream2fATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream2fATI
 	(JNIEnv * env, jclass clazz, jint stream, jfloat x, jfloat y)
 {
 	glVertexStream2fATI(stream, x, y);
@@ -125,7 +125,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream2iATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream2iATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream2iATI
 	(JNIEnv * env, jclass clazz, jint stream, jint x, jint y)
 {
 	glVertexStream2iATI(stream, x, y);
@@ -136,7 +136,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream2sATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream2sATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream2sATI
 	(JNIEnv * env, jclass clazz, jint stream, jshort x, jshort y)
 {
 	glVertexStream2sATI(stream, x, y);
@@ -147,7 +147,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream3fATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream3fATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream3fATI
 	(JNIEnv * env, jclass clazz, jint stream, jfloat x, jfloat y, jfloat z)
 {
 	glVertexStream3fATI(stream, x, y, z);
@@ -158,7 +158,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream3iATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream3iATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream3iATI
 	(JNIEnv * env, jclass clazz, jint stream, jint x, jint y, jint z)
 {
 	glVertexStream3iATI(stream, x, y, z);
@@ -169,7 +169,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream3sATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream3sATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream3sATI
 	(JNIEnv * env, jclass clazz, jint stream, jshort x, jshort y, jshort z)
 {
 	glVertexStream3sATI(stream, x, y, z);
@@ -180,7 +180,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream4fATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream4fATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream4fATI
 	(JNIEnv * env, jclass clazz, jint stream, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glVertexStream4fATI(stream, x, y, z, w);
@@ -191,7 +191,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream4iATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream4iATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream4iATI
 	(JNIEnv * env, jclass clazz, jint stream, jint x, jint y, jint z, jint w)
 {
 	glVertexStream4iATI(stream, x, y, z, w);
@@ -202,7 +202,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexStream4sATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream4sATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStream4sATI
 	(JNIEnv * env, jclass clazz, jint stream, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertexStream4sATI(stream, x, y, z, w);
@@ -213,7 +213,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glNormalStream3bATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3bATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3bATI
 	(JNIEnv * env, jclass clazz, jint stream, jbyte x, jbyte y, jbyte z)
 {
 	glNormalStream3bATI(stream, x, y, z);
@@ -224,7 +224,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glNormalStream3fATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3fATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3fATI
 	(JNIEnv * env, jclass clazz, jint stream, jfloat x, jfloat y, jfloat z)
 {
 	glNormalStream3fATI(stream, x, y, z);
@@ -235,7 +235,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glNormalStream3iATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3iATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3iATI
 	(JNIEnv * env, jclass clazz, jint stream, jint x, jint y, jint z)
 {
 	glNormalStream3iATI(stream, x, y, z);
@@ -246,7 +246,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glNormalStream3sATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3sATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStream3sATI
 	(JNIEnv * env, jclass clazz, jint stream, jshort x, jshort y, jshort z)
 {
 	glNormalStream3sATI(stream, x, y, z);
@@ -257,7 +257,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glNormalStr
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glClientActiveVertexStreamATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glClientActiveVertexStreamATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glClientActiveVertexStreamATI
 	(JNIEnv * env, jclass clazz, jint stream)
 {
 	glClientActiveVertexStreamATI(stream);
@@ -268,7 +268,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glClientAct
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexBlendEnvfATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexBlendEnvfATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexBlendEnvfATI
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glVertexBlendEnvfATI(pname, param);
@@ -279,7 +279,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexBle
  * Class:	org.lwjgl.opengl.ATIVertexStreams
  * Method:	glVertexBlendEnviATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexBlendEnviATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexStreams_glVertexBlendEnviATI
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
 	glVertexBlendEnviATI(pname, param);

@@ -86,7 +86,7 @@ static glGetQueryObjectuivPROC glGetQueryObjectuiv;
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglBindBuffer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBindBuffer
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglBindBuffer
 	(JNIEnv * env, jclass clazz, jint target, jint buffer)
 {
 	glBindBuffer(target, buffer);
@@ -97,7 +97,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBindBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglDeleteBuffers
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteBuffers
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteBuffers
 	(JNIEnv * env, jclass clazz, jint n, jobject buffers, jint buffers_offset)
 {
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
@@ -109,7 +109,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteBuffers
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGenBuffers
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenBuffers
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglGenBuffers
 	(JNIEnv * env, jclass clazz, jint n, jobject buffers, jint buffers_offset)
 {
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
@@ -121,7 +121,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenBuffers
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glIsBuffer
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
+static jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	GLboolean result = glIsBuffer(buffer);
@@ -133,7 +133,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglBufferData
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
 	(JNIEnv * env, jclass clazz, jint target, jint size, jobject data, jint data_offset, jint usage)
 {
 	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data, data_offset);
@@ -145,7 +145,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglBufferSubData
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData
 	(JNIEnv * env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_offset)
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
@@ -157,7 +157,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetBufferSubData
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData
 	(JNIEnv * env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_offset)
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
@@ -169,7 +169,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glMapBuffer
  */
-static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glMapBuffer
+static jobject JNICALL Java_org_lwjgl_opengl_GL15_glMapBuffer
 	(JNIEnv * env, jclass clazz, jint target, jint access, jint size, jobject oldBuffer)
 {
         void *buffer_address = glMapBuffer((GLenum)target, (GLenum)access);
@@ -186,7 +186,7 @@ static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glMapBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glUnmapBuffer
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glUnmapBuffer
+static jboolean JNICALL Java_org_lwjgl_opengl_GL15_glUnmapBuffer
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	GLboolean result = glUnmapBuffer(target);
@@ -198,7 +198,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glUnmapBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetBufferParameteriv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject params, jint params_offset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + params_offset;
@@ -210,7 +210,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glGetBufferPointer
  */
-static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glGetBufferPointer
+static jobject JNICALL Java_org_lwjgl_opengl_GL15_glGetBufferPointer
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jint size)
 {
         void *pointer;
@@ -223,7 +223,7 @@ static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glGetBufferPointer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGenQueries
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenQueries
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglGenQueries
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
@@ -235,7 +235,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenQueries
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglDeleteQueries
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteQueries
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteQueries
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
@@ -247,7 +247,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteQueries
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glIsQuery
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsQuery
+static jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsQuery
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	GLboolean result = glIsQuery(id);
@@ -259,7 +259,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsQuery
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glBeginQuery
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glBeginQuery
+static void JNICALL Java_org_lwjgl_opengl_GL15_glBeginQuery
 	(JNIEnv * env, jclass clazz, jint target, jint id)
 {
 	glBeginQuery(target, id);
@@ -270,7 +270,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glBeginQuery
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glEndQuery
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glEndQuery
+static void JNICALL Java_org_lwjgl_opengl_GL15_glEndQuery
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	glEndQuery(target);
@@ -281,7 +281,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glEndQuery
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetQueryiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryiv
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryiv
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -293,7 +293,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryiv
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetQueryObjectiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -305,7 +305,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetQueryObjectuiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv
+static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
 	GLuint *params_ptr = (GLuint *)env->GetDirectBufferAddress(params) + paramsOffset;

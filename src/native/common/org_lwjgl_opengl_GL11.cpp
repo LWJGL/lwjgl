@@ -451,7 +451,7 @@ static glViewportPROC glViewport;
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glAccum
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glAccum(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glAccum(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glAccum((GLint) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -461,7 +461,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glAccum(JNIEnv * env, j
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glAlphaFunc
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glAlphaFunc(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glAlphaFunc(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glAlphaFunc((GLint) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -471,7 +471,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glAlphaFunc(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glClearColor
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glClearColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glClearColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
@@ -481,7 +481,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearColor(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glClearAccum
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearAccum(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glClearAccum(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glClearAccum((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
@@ -491,7 +491,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearAccum(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glClear
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClear(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glClear(JNIEnv * env, jclass clazz, jint p0)
 {
 	glClear((GLint) p0);
 	CHECK_GL_ERROR
@@ -501,7 +501,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClear(JNIEnv * env, j
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCallLists
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglCallLists(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject lists_buffer, jint lists_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglCallLists(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject lists_buffer, jint lists_offset)
 {
 	GLbyte *lists = (GLbyte *)env->GetDirectBufferAddress(lists_buffer);
 	glCallLists((GLint) p0, (GLint) p1, (const void *)(lists + lists_offset));
@@ -512,7 +512,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglCallLists(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCallList
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCallList(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glCallList(JNIEnv * env, jclass clazz, jint p0)
 {
 	glCallList((GLint) p0);
 	CHECK_GL_ERROR
@@ -522,7 +522,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCallList(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glBlendFunc
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glBlendFunc(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glBlendFunc(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glBlendFunc((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -532,7 +532,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glBlendFunc(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glBitmap
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmap(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2, jfloat p3, jfloat p4, jfloat p5, jobject image_buffer, jint image_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmap(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2, jfloat p3, jfloat p4, jfloat p5, jobject image_buffer, jint image_offset)
 {
 	const GLubyte *image = (const GLubyte *)env->GetDirectBufferAddress(image_buffer);
 	glBitmap((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5, image + image_offset);
@@ -543,7 +543,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmap(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glBindTexture
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glBindTexture(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glBindTexture(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glBindTexture((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -553,7 +553,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glBindTexture(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glBegin
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glBegin(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glBegin(JNIEnv * env, jclass clazz, jint p0)
 {
 	glBegin((GLint) p0);
 }
@@ -562,7 +562,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glBegin(JNIEnv * env, j
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEnd
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEnd(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEnd(JNIEnv * env, jclass clazz)
 {
 	glEnd();
 	CHECK_GL_ERROR
@@ -572,7 +572,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEnd(JNIEnv * env, jcl
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glArrayElement
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glArrayElement(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glArrayElement(JNIEnv * env, jclass clazz, jint p0)
 {
 	glArrayElement((GLint) p0);
 }
@@ -581,7 +581,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glArrayElement(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glClearDepth
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearDepth(JNIEnv * env, jclass clazz, jdouble p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glClearDepth(JNIEnv * env, jclass clazz, jdouble p0)
 {
 	glClearDepth((GLdouble) p0);
 	CHECK_GL_ERROR
@@ -591,7 +591,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearDepth(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDeleteLists
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDeleteLists(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDeleteLists(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glDeleteLists((GLuint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -601,7 +601,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDeleteLists(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDeleteTextures
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDeleteTextures(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglDeleteTextures(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	const GLuint *address = (const GLuint *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glDeleteTextures((GLint) p0, address);
@@ -612,7 +612,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDeleteTextures(JNIEn
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCullFace
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCullFace(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glCullFace(JNIEnv * env, jclass clazz, jint p0)
 {
 	glCullFace((GLint) p0);
 	CHECK_GL_ERROR
@@ -622,7 +622,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCullFace(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCopyTexSubImage2D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7)
 {
 	glCopyTexSubImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7);
 	CHECK_GL_ERROR
@@ -632,7 +632,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage2D(JNI
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCopyTexSubImage1D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
 	glCopyTexSubImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
 	CHECK_GL_ERROR
@@ -642,7 +642,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage1D(JNI
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCopyTexImage2D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7)
 {
 	glCopyTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7);
 	CHECK_GL_ERROR
@@ -652,7 +652,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage2D(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCopyTexImage1D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6)
 {
 	glCopyTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6);
 	CHECK_GL_ERROR
@@ -662,7 +662,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage1D(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glCopyPixels
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
 	glCopyPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
 	CHECK_GL_ERROR
@@ -672,7 +672,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glCopyPixels(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglColorPointer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint buffer_offset)
 {
 	const GLbyte *address = (const GLbyte *)env->GetDirectBufferAddress(buffer);
 	glColorPointer((GLint) p0, (GLint) p1, (GLint) p2, (const void *) (address + buffer_offset));
@@ -683,7 +683,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointer(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglColorPointerVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glColorPointer((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -693,7 +693,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointerVBO(JNIE
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColorMaterial
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColorMaterial(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColorMaterial(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glColorMaterial((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -703,7 +703,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColorMaterial(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColorMask
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColorMask(JNIEnv * env, jclass clazz, jboolean p0, jboolean p1, jboolean p2, jboolean p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColorMask(JNIEnv * env, jclass clazz, jboolean p0, jboolean p1, jboolean p2, jboolean p3)
 {
 	glColorMask((GLboolean) p0, (GLboolean) p1, (GLboolean) p2, (GLboolean) p3);
 	CHECK_GL_ERROR
@@ -713,7 +713,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColorMask(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColor3b
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor3b(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColor3b(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2)
 {
 	glColor3b((GLbyte) p0, (GLbyte) p1, (GLbyte) p2);
 }
@@ -722,7 +722,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor3b(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColor3f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColor3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glColor3f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 }
@@ -731,7 +731,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor3f(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColor3ub
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor3ub(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColor3ub(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2)
 {
 	glColor3ub((GLbyte) p0, (GLbyte) p1, (GLbyte) p2);
 }
@@ -740,7 +740,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor3ub(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColor4b
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor4b(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2, jbyte p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColor4b(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2, jbyte p3)
 {
 	glColor4b((GLbyte) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3);
 }
@@ -749,7 +749,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor4b(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColor4f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColor4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glColor4f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 }
@@ -758,7 +758,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor4f(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glColor4ub
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor4ub(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2, jbyte p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glColor4ub(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2, jbyte p3)
 {
 	glColor4ub((GLbyte) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3);
 }
@@ -767,7 +767,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glColor4ub(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glClipPlane
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglClipPlane(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglClipPlane(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	const GLdouble *address = offset + (const GLdouble *)env->GetDirectBufferAddress(buffer);	
 	glClipPlane((GLint) p0, address + offset);
@@ -778,7 +778,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglClipPlane(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glClearStencil
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearStencil(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glClearStencil(JNIEnv * env, jclass clazz, jint p0)
 {
 	glClearStencil((GLint) p0);
 	CHECK_GL_ERROR
@@ -788,7 +788,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearStencil(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glClearIndex
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearIndex(JNIEnv * env, jclass clazz, jfloat p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glClearIndex(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glClearIndex((GLfloat) p0);
 	CHECK_GL_ERROR
@@ -798,7 +798,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glClearIndex(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEvalPoint1
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint1(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint1(JNIEnv * env, jclass clazz, jint p0)
 {
 	glEvalPoint1((GLint) p0);
 	CHECK_GL_ERROR
@@ -808,7 +808,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint1(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEvalPoint2
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint2(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint2(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glEvalPoint2((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -818,7 +818,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint2(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEvalMesh1
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh1(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh1(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glEvalMesh1((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -828,7 +828,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh1(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEvalMesh2
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh2(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh2(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
 	glEvalMesh2((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
 	CHECK_GL_ERROR
@@ -838,7 +838,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh2(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEvalCoord1f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord1f(JNIEnv * env, jclass clazz, jfloat p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord1f(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glEvalCoord1f((GLfloat) p0);
 	CHECK_GL_ERROR
@@ -848,7 +848,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord1f(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEvalCoord2f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glEvalCoord2f((GLfloat) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -858,7 +858,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord2f(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEnableClientState
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEnableClientState(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEnableClientState(JNIEnv * env, jclass clazz, jint p0)
 {
 	glEnableClientState((GLint) p0);
 	CHECK_GL_ERROR
@@ -868,7 +868,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEnableClientState(JNI
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDisableClientState
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDisableClientState(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDisableClientState(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDisableClientState((GLint) p0);
 	CHECK_GL_ERROR
@@ -878,7 +878,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDisableClientState(JN
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEnable
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEnable(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEnable(JNIEnv * env, jclass clazz, jint p0)
 {
 	glEnable((GLint) p0);
 	CHECK_GL_ERROR
@@ -888,7 +888,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEnable(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDisable
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDisable(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDisable(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDisable((GLint) p0);
 	CHECK_GL_ERROR
@@ -898,7 +898,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDisable(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglEdgeFlagPointer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointer(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointer(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	const GLbyte *address = offset + (const GLbyte *)env->GetDirectBufferAddress(buffer);
 	glEdgeFlagPointer((GLint) p0, (const void *)address);
@@ -909,7 +909,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointer(JNIE
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglEdgeFlagPointerVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint buffer_offset)
 {
 	glEdgeFlagPointer((GLint) p0, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -919,7 +919,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointerVBO(J
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEdgeFlag
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEdgeFlag(JNIEnv * env, jclass clazz, jboolean p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEdgeFlag(JNIEnv * env, jclass clazz, jboolean p0)
 {
 	glEdgeFlag((GLboolean) p0);
 }
@@ -928,7 +928,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEdgeFlag(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDrawPixels
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jobject buffer, jint offset)
 {
 	const GLbyte *address = (const GLbyte *)env->GetDirectBufferAddress(buffer);
 	glDrawPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (const void *)(address + offset));
@@ -939,7 +939,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixels(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglDrawElements
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElements(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElements(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
 {
 	const GLbyte *address = (const GLbyte *)env->GetDirectBufferAddress(buffer);
 	glDrawElements((GLint) p0, (GLint) p1, (GLint) p2, (const void *)(address + offset));
@@ -950,7 +950,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElements(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglDrawElementsVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElementsVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElementsVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glDrawElements((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -960,7 +960,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElementsVBO(JNIE
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDrawBuffer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDrawBuffer(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDrawBuffer(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDrawBuffer((GLint) p0);
 	CHECK_GL_ERROR
@@ -970,7 +970,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDrawBuffer(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDrawArrays
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDrawArrays(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDrawArrays(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glDrawArrays((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -980,7 +980,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDrawArrays(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDepthRange
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDepthRange(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthRange(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1)
 {
 	glDepthRange((GLdouble) p0, (GLdouble) p1);
 	CHECK_GL_ERROR
@@ -990,7 +990,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDepthRange(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDepthMask
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDepthMask(JNIEnv * env, jclass clazz, jboolean p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthMask(JNIEnv * env, jclass clazz, jboolean p0)
 {
 	glDepthMask((GLboolean) p0);
 	CHECK_GL_ERROR
@@ -1000,7 +1000,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDepthMask(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glDepthFunc
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDepthFunc(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthFunc(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDepthFunc((GLint) p0);
 	CHECK_GL_ERROR
@@ -1010,7 +1010,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glDepthFunc(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFeedbackBuffer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglFeedbackBuffer(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglFeedbackBuffer(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glFeedbackBuffer((GLint) p0, (GLint) p1, address);
@@ -1021,7 +1021,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglFeedbackBuffer(JNIEn
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetPixelMapfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetPixelMapfv((GLint) p0, address);
@@ -1032,7 +1032,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfv(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetPixelMapuiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuiv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuiv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLuint *address = offset + (GLuint *)env->GetDirectBufferAddress(buffer);
 	glGetPixelMapuiv((GLint) p0, address);
@@ -1043,7 +1043,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuiv(JNIEn
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetPixelMapusv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLushort *address = (GLushort *)env->GetDirectBufferAddress(buffer);
 	glGetPixelMapusv((GLint) p0, address);
@@ -1054,7 +1054,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusv(JNIEn
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetMaterialfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetMaterialfv((GLint) p0, (GLint) p1, address);
@@ -1065,7 +1065,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialfv(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetMaterialiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetMaterialiv((GLint) p0, (GLint) p1, address);
@@ -1076,7 +1076,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialiv(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetMapfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetMapfv((GLint) p0, (GLint) p1, address);
@@ -1087,7 +1087,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapfv(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetMapiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetMapiv((GLint) p0, (GLint) p1, address);
@@ -1098,7 +1098,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapiv(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetLightfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetLightfv((GLint) p0, (GLint) p1, address);
@@ -1109,7 +1109,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightfv(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetLightiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetLightiv((GLint) p0, (GLint) p1, address);
@@ -1120,7 +1120,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightiv(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetError
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL11_glGetError(JNIEnv * env, jclass clazz)
+static jint JNICALL Java_org_lwjgl_opengl_GL11_glGetError(JNIEnv * env, jclass clazz)
 {
 	jint ret = (jint) glGetError();
 	CHECK_GL_ERROR
@@ -1131,7 +1131,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL11_glGetError(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetClipPlane
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetClipPlane(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetClipPlane(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLdouble *address = offset + (GLdouble *)env->GetDirectBufferAddress(buffer);
 	glGetClipPlane((GLint) p0, address);
@@ -1142,7 +1142,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetClipPlane(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetBooleanv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetBooleanv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetBooleanv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLubyte *address = offset + (GLubyte *)env->GetDirectBufferAddress(buffer);
 	glGetBooleanv((GLint) p0, address);
@@ -1153,7 +1153,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetBooleanv(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetDoublev
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetDoublev(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetDoublev(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLdouble *address = offset + (GLdouble *)env->GetDirectBufferAddress(buffer);
 	glGetDoublev((GLint) p0, address);
@@ -1164,7 +1164,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetDoublev(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetFloatv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetFloatv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetFloatv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetFloatv((GLint) p0, address);
@@ -1175,7 +1175,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetFloatv(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetIntegerv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetIntegerv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetIntegerv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetIntegerv((GLint) p0, address);
@@ -1186,7 +1186,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetIntegerv(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGenTextures
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGenTextures(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGenTextures(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLuint *address = offset + (GLuint *)env->GetDirectBufferAddress(buffer);
 	glGenTextures((GLint) p0, address);
@@ -1197,7 +1197,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGenTextures(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGenLists
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL11_glGenLists(JNIEnv * env, jclass clazz, jint p0)
+static jint JNICALL Java_org_lwjgl_opengl_GL11_glGenLists(JNIEnv * env, jclass clazz, jint p0)
 {
 	jint ret = (jint) glGenLists((GLint) p0);
 	CHECK_GL_ERROR
@@ -1208,7 +1208,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL11_glGenLists(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFrustum
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFrustum(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glFrustum(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
 {
 	glFrustum((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
 	CHECK_GL_ERROR
@@ -1218,7 +1218,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFrustum(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFrontFace
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFrontFace(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glFrontFace(JNIEnv * env, jclass clazz, jint p0)
 {
 	glFrontFace((GLint) p0);
 	CHECK_GL_ERROR
@@ -1228,7 +1228,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFrontFace(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFogf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFogf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glFogf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glFogf((GLint) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -1238,7 +1238,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFogf(JNIEnv * env, jc
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFogi
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFogi(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glFogi(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glFogi((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -1248,7 +1248,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFogi(JNIEnv * env, jc
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFogfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglFogfv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglFogfv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glFogfv((GLint) p0, address);
@@ -1259,7 +1259,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglFogfv(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFogiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglFogiv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglFogiv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glFogiv((GLint) p0, address);
@@ -1270,7 +1270,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglFogiv(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFlush
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFlush(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glFlush(JNIEnv * env, jclass clazz)
 {
 	glFlush();
 	CHECK_GL_ERROR
@@ -1280,7 +1280,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFlush(JNIEnv * env, j
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glFinish
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFinish(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glFinish(JNIEnv * env, jclass clazz)
 {
 	glFinish();
 	CHECK_GL_ERROR
@@ -1290,7 +1290,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glFinish(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetPointerv
  */
-static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL11_glGetPointerv(JNIEnv * env, jclass clazz, jint p0, int size)
+static jobject JNICALL Java_org_lwjgl_opengl_GL11_glGetPointerv(JNIEnv * env, jclass clazz, jint p0, int size)
 {
 	void *pointer;
 	glGetPointerv((GLint) p0, &pointer);
@@ -1302,7 +1302,7 @@ static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL11_glGetPointerv(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glIsEnabled
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsEnabled(JNIEnv * env, jclass clazz, jint p0)
+static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsEnabled(JNIEnv * env, jclass clazz, jint p0)
 {
 	jboolean ret = (jboolean) glIsEnabled((GLint) p0);
 	CHECK_GL_ERROR
@@ -1313,7 +1313,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsEnabled(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglInterleavedArrays
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArrays(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArrays(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glInterleavedArrays((GLint) p0, (GLint) p1, address);
@@ -1324,7 +1324,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArrays(JN
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglInterleavedArraysVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArraysVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArraysVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
 {
 	glInterleavedArrays((GLint) p0, (GLint) p1, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -1334,7 +1334,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArraysVBO
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glInitNames
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glInitNames(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glInitNames(JNIEnv * env, jclass clazz)
 {
 	glInitNames();
 	CHECK_GL_ERROR
@@ -1345,7 +1345,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glInitNames(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glHint
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glHint(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glHint(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glHint((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -1355,7 +1355,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glHint(JNIEnv * env, jc
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetTexParameterfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameterfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameterfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetTexParameterfv((GLint) p0, (GLint) p1, address);
@@ -1366,7 +1366,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameterfv(JN
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetTexParameteriv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameteriv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameteriv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetTexParameteriv((GLint) p0, (GLint) p1, address);
@@ -1377,7 +1377,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameteriv(JN
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetTexLevelParameterfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameterfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameterfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetTexLevelParameterfv((GLint) p0, (GLint) p1, (GLint) p2, address);
@@ -1388,7 +1388,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameter
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetTexLevelParameteriv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameteriv(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameteriv(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetTexLevelParameteriv((GLint) p0, (GLint) p1, (GLint) p2, address);
@@ -1399,7 +1399,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameter
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetTexImage
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImage(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImage(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jobject buffer, jint offset)
 {
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetTexImage((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, address);
@@ -1407,14 +1407,14 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImage(JNIEnv *
 }
 
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGenfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGenfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetTexGenfv((GLint) p0, (GLint) p1, address);
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGeniv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGeniv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetTexGeniv((GLint) p0, (GLint) p1, address);
@@ -1425,7 +1425,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGeniv(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetTexEnvfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnvfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnvfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetTexEnvfv((GLint) p0, (GLint) p1, address);
@@ -1436,7 +1436,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnvfv(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetTexEnviv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnviv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnviv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetTexEnviv((GLint) p0, (GLint) p1, address);
@@ -1447,7 +1447,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnviv(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetString
  */
-static JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL11_glGetString(JNIEnv * env, jclass clazz, jint p0)
+static jstring JNICALL Java_org_lwjgl_opengl_GL11_glGetString(JNIEnv * env, jclass clazz, jint p0)
 {
 	const GLubyte * string = glGetString((GLenum) p0);
 	return env->NewStringUTF((const char *) string);
@@ -1457,7 +1457,7 @@ static JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL11_glGetString(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glGetPolygonStipple
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
 {
 	GLubyte *address = offset + (GLubyte *)env->GetDirectBufferAddress(buffer);
 	glGetPolygonStipple(address);
@@ -1468,7 +1468,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple(JN
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glIsList
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsList(JNIEnv * env, jclass clazz, jint p0)
+static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsList(JNIEnv * env, jclass clazz, jint p0)
 {
 	jboolean ret = (jboolean) glIsList((GLint) p0);
 	CHECK_GL_ERROR
@@ -1479,7 +1479,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsList(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMaterialf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMaterialf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glMaterialf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glMaterialf((GLint) p0, (GLint) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -1489,7 +1489,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMaterialf(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMateriali
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMateriali(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glMateriali(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glMateriali((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -1499,7 +1499,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMateriali(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMaterialfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glMaterialfv((GLint) p0, (GLint) p1, address);
@@ -1510,7 +1510,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialfv(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMaterialiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glMaterialiv((GLint) p0, (GLint) p1, address);
@@ -1523,7 +1523,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialiv(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMapGrid1f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid1f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid1f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2)
 {
 	glMapGrid1f((GLint) p0, (GLfloat) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -1534,7 +1534,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid1f(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMapGrid2f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid2f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jfloat p4, jfloat p5)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid2f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jfloat p4, jfloat p5)
 {
 	glMapGrid2f((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLint) p3, (GLfloat) p4, (GLfloat) p5);
 	CHECK_GL_ERROR
@@ -1545,7 +1545,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid2f(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMap2f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMap2f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jint p4, jfloat p5, jfloat p6, jint p7, jint p8, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglMap2f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jint p4, jfloat p5, jfloat p6, jint p7, jint p8, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glMap2f((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLint) p3, (GLint) p4, (GLfloat) p5, (GLfloat) p6, (GLint) p7, (GLint) p8, address);
@@ -1557,7 +1557,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMap2f(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMap1f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMap1f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jint p4, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglMap1f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jint p4, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glMap1f((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLint) p3, (GLint) p4, address);
@@ -1568,7 +1568,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMap1f(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLogicOp
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLogicOp(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLogicOp(JNIEnv * env, jclass clazz, jint p0)
 {
 	glLogicOp((GLint) p0);
 	CHECK_GL_ERROR
@@ -1578,7 +1578,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLogicOp(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLoadName
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLoadName(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLoadName(JNIEnv * env, jclass clazz, jint p0)
 {
 	glLoadName((GLint) p0);
 	CHECK_GL_ERROR
@@ -1589,7 +1589,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLoadName(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLoadMatrixf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLoadMatrixf(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglLoadMatrixf(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glLoadMatrixf(address);
@@ -1600,7 +1600,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLoadMatrixf(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLoadIdentity
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLoadIdentity(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLoadIdentity(JNIEnv * env, jclass clazz)
 {
 	glLoadIdentity();
 	CHECK_GL_ERROR
@@ -1610,7 +1610,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLoadIdentity(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glListBase
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glListBase(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glListBase(JNIEnv * env, jclass clazz, jint p0)
 {
 	glListBase((GLint) p0);
 	CHECK_GL_ERROR
@@ -1620,7 +1620,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glListBase(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLineWidth
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLineWidth(JNIEnv * env, jclass clazz, jfloat p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLineWidth(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glLineWidth((GLfloat) p0);
 	CHECK_GL_ERROR
@@ -1630,7 +1630,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLineWidth(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLineStipple
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLineStipple(JNIEnv * env, jclass clazz, jint p0, jshort p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLineStipple(JNIEnv * env, jclass clazz, jint p0, jshort p1)
 {
 	glLineStipple((GLint) p0, (GLshort) p1);
 	CHECK_GL_ERROR
@@ -1640,7 +1640,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLineStipple(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLightModelf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLightModelf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLightModelf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glLightModelf((GLint) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -1650,7 +1650,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLightModelf(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLightModeli
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLightModeli(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLightModeli(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glLightModeli((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -1660,7 +1660,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLightModeli(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLightModelfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModelfv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModelfv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glLightModelfv((GLint) p0, address);
@@ -1671,7 +1671,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModelfv(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLightModeliv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModeliv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModeliv(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glLightModeliv((GLint) p0, address);
@@ -1682,7 +1682,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModeliv(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLightf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLightf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLightf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glLightf((GLint) p0, (GLint) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -1692,7 +1692,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLightf(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLighti
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLighti(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glLighti(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glLighti((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -1702,7 +1702,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glLighti(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLightfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glLightfv((GLint) p0, (GLint) p1, address);
@@ -1713,7 +1713,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightfv(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glLightiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glLightiv((GLint) p0, (GLint) p1, address);
@@ -1724,7 +1724,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglLightiv(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glIsTexture
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsTexture(JNIEnv * env, jclass clazz, jint p0)
+static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsTexture(JNIEnv * env, jclass clazz, jint p0)
 {
 	jboolean ret = (jboolean) glIsTexture((GLint) p0);
 	CHECK_GL_ERROR
@@ -1735,7 +1735,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsTexture(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMatrixMode
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMatrixMode(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glMatrixMode(JNIEnv * env, jclass clazz, jint p0)
 {
 	glMatrixMode((GLint) p0);
 	CHECK_GL_ERROR
@@ -1745,7 +1745,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glMatrixMode(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPolygonStipple
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStipple(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStipple(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
 {
 	const GLubyte *address = offset + (const GLubyte *)env->GetDirectBufferAddress(buffer);
 	glPolygonStipple(address);
@@ -1756,7 +1756,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStipple(JNIEn
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPolygonOffset
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonOffset(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonOffset(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glPolygonOffset((GLfloat) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -1766,7 +1766,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonOffset(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPolygonMode
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonMode(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonMode(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glPolygonMode((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -1776,7 +1776,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonMode(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPointSize
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPointSize(JNIEnv * env, jclass clazz, jfloat p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPointSize(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glPointSize((GLfloat) p0);
 	CHECK_GL_ERROR
@@ -1786,7 +1786,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPointSize(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelZoom
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelZoom(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelZoom(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glPixelZoom((GLfloat) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -1796,7 +1796,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelZoom(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelTransferf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glPixelTransferf((GLint) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -1806,7 +1806,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferf(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelTransferi
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferi(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferi(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glPixelTransferi((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -1816,7 +1816,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferi(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelStoref
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStoref(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStoref(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glPixelStoref((GLint) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -1826,7 +1826,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStoref(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelStorei
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStorei(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStorei(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glPixelStorei((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -1836,7 +1836,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStorei(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelMapfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glPixelMapfv((GLint) p0, (GLint) p1, address);
@@ -1847,7 +1847,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfv(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelMapuiv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuiv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLuint *address = (const GLuint *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glPixelMapuiv((GLint) p0, (GLint) p1, address);
@@ -1858,7 +1858,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuiv(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPixelMapusv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLushort *address = (const GLushort *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glPixelMapusv((GLint) p0, (GLint) p1, address);
@@ -1869,7 +1869,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusv(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPassThrough
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPassThrough(JNIEnv * env, jclass clazz, jfloat p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPassThrough(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glPassThrough((GLfloat) p0);
 	CHECK_GL_ERROR
@@ -1879,7 +1879,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPassThrough(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glOrtho
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glOrtho(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glOrtho(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
 {
 	glOrtho((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
 	CHECK_GL_ERROR
@@ -1889,7 +1889,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glOrtho(JNIEnv * env, j
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglNormalPointer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glNormalPointer((GLint) p0, (GLint) p1, address);
@@ -1900,7 +1900,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointer(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglNormalPointerVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
 {
 	glNormalPointer((GLint) p0, (GLint) p1, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -1910,7 +1910,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointerVBO(JNI
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glNormal3b
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3b(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3b(JNIEnv * env, jclass clazz, jbyte p0, jbyte p1, jbyte p2)
 {
 	glNormal3b((GLbyte) p0, (GLbyte) p1, (GLbyte) p2);
 }
@@ -1919,7 +1919,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3b(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glNormal3f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glNormal3f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 }
@@ -1928,7 +1928,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3f(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glNormal3i
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glNormal3i((GLint) p0, (GLint) p1, (GLint) p2);
 }
@@ -1938,7 +1938,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3i(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glNewList
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNewList(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glNewList(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glNewList((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -1948,7 +1948,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glNewList(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glEndList
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEndList(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glEndList(JNIEnv * env, jclass clazz)
 {
 	glEndList();
 	CHECK_GL_ERROR
@@ -1959,7 +1959,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glEndList(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glMultMatrixf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMultMatrixf(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglMultMatrixf(JNIEnv * env, jclass clazz, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glMultMatrixf(address);
@@ -1970,7 +1970,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglMultMatrixf(JNIEnv *
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glShadeModel
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glShadeModel(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glShadeModel(JNIEnv * env, jclass clazz, jint p0)
 {
 	glShadeModel((GLint) p0);
 	CHECK_GL_ERROR
@@ -1980,7 +1980,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glShadeModel(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glSelectBuffer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglSelectBuffer(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglSelectBuffer(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
 	GLuint *address = offset + (GLuint *)env->GetDirectBufferAddress(buffer);
 	glSelectBuffer((GLint) p0, address);
@@ -1991,7 +1991,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglSelectBuffer(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glScissor
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glScissor(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glScissor(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glScissor((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
 	CHECK_GL_ERROR
@@ -2001,7 +2001,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glScissor(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glScalef
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glScalef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glScalef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glScalef((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -2012,7 +2012,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glScalef(JNIEnv * env, 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRotatef
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRotatef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRotatef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glRotatef((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
@@ -2022,7 +2022,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRotatef(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRenderMode
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL11_glRenderMode(JNIEnv * env, jclass clazz, jint p0)
+static jint JNICALL Java_org_lwjgl_opengl_GL11_glRenderMode(JNIEnv * env, jclass clazz, jint p0)
 {
 	jint ret = (jint) glRenderMode((GLint) p0);
 	CHECK_GL_ERROR
@@ -2034,7 +2034,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL11_glRenderMode(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRectf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRectf(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRectf(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glRectf((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
@@ -2044,7 +2044,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRectf(JNIEnv * env, j
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRecti
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRecti(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRecti(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glRecti((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
 	CHECK_GL_ERROR
@@ -2055,7 +2055,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRecti(JNIEnv * env, j
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glReadPixels
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jobject buffer, jint offset)
 {
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glReadPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, address);
@@ -2066,7 +2066,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixels(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glReadBuffer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glReadBuffer(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glReadBuffer(JNIEnv * env, jclass clazz, jint p0)
 {
 	glReadBuffer((GLint) p0);
 	CHECK_GL_ERROR
@@ -2078,7 +2078,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glReadBuffer(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRasterPos2f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glRasterPos2f((GLfloat) p0, (GLfloat) p1);
 	CHECK_GL_ERROR
@@ -2088,7 +2088,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2f(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRasterPos2i
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2i(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2i(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glRasterPos2i((GLint) p0, (GLint) p1);
 	CHECK_GL_ERROR
@@ -2099,7 +2099,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2i(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRasterPos3f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glRasterPos3f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -2109,7 +2109,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3f(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRasterPos3i
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glRasterPos3i((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -2121,7 +2121,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3i(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRasterPos4f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glRasterPos4f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
@@ -2131,7 +2131,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4f(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glRasterPos4i
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glRasterPos4i((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
 	CHECK_GL_ERROR
@@ -2142,7 +2142,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4i(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPushName
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPushName(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPushName(JNIEnv * env, jclass clazz, jint p0)
 {
 	glPushName((GLint) p0);
 	CHECK_GL_ERROR
@@ -2152,7 +2152,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPushName(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPopName
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPopName(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPopName(JNIEnv * env, jclass clazz)
 {
 	glPopName();
 	CHECK_GL_ERROR
@@ -2162,7 +2162,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPopName(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPushMatrix
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPushMatrix(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPushMatrix(JNIEnv * env, jclass clazz)
 {
 	glPushMatrix();
 	CHECK_GL_ERROR
@@ -2172,7 +2172,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPushMatrix(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPopMatrix
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPopMatrix(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPopMatrix(JNIEnv * env, jclass clazz)
 {
 	glPopMatrix();
 	CHECK_GL_ERROR
@@ -2182,7 +2182,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPopMatrix(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglPushClientAttrib
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPushClientAttrib(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPushClientAttrib(JNIEnv * env, jclass clazz, jint p0)
 {
 	glPushClientAttrib((GLint) p0);
 	CHECK_GL_ERROR
@@ -2192,7 +2192,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPushClientAttrib(JNI
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglPopClientAttrib
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPopClientAttrib(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglPopClientAttrib(JNIEnv * env, jclass clazz)
 {
 	glPopClientAttrib();
 	CHECK_GL_ERROR
@@ -2202,7 +2202,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglPopClientAttrib(JNIE
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPushAttrib
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPushAttrib(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPushAttrib(JNIEnv * env, jclass clazz, jint p0)
 {
 	glPushAttrib((GLint) p0);
 	CHECK_GL_ERROR
@@ -2212,7 +2212,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPushAttrib(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glPopAttrib
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPopAttrib(JNIEnv * env, jclass clazz)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glPopAttrib(JNIEnv * env, jclass clazz)
 {
 	glPopAttrib();
 	CHECK_GL_ERROR
@@ -2222,7 +2222,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glPopAttrib(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glStencilFunc
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glStencilFunc(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilFunc(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glStencilFunc((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -2232,7 +2232,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glStencilFunc(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglVertexPointer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glVertexPointer((GLint) p0, (GLint) p1, (GLint) p2, address);
@@ -2243,7 +2243,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointer(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglVertexPointerVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glVertexPointer((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -2253,7 +2253,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointerVBO(JNI
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glVertex2f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glVertex2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glVertex2f((GLfloat) p0, (GLfloat) p1);
 }
@@ -2262,7 +2262,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex2f(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glVertex2i
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex2i(JNIEnv * env, jclass clazz, jint p0, jint p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glVertex2i(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glVertex2i((GLint) p0, (GLint) p1);
 }
@@ -2271,7 +2271,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex2i(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glVertex3f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glVertex3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glVertex3f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 }
@@ -2280,7 +2280,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex3f(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glVertex3i
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex3i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glVertex3i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glVertex3i((GLint) p0, (GLint) p1, (GLint) p2);
 }
@@ -2291,7 +2291,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex3i(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glVertex4f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glVertex4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glVertex4f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 }
@@ -2300,7 +2300,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex4f(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glVertex4i
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex4i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glVertex4i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glVertex4i((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
 }
@@ -2310,7 +2310,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glVertex4i(JNIEnv * env
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTranslatef
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTranslatef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTranslatef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glTranslatef((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -2320,7 +2320,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTranslatef(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexSubImage2D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexSubImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, address);
@@ -2331,20 +2331,20 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(JNIEnv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexSubImage1D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexSubImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, address);
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameterfv
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameterfv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject param, jint param_offset) {
 	GLfloat *address = param_offset + (GLfloat *)env->GetDirectBufferAddress(param);
 	glTexParameterfv(target, pname, address);
 }
   
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameteriv
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameteriv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject param, jint param_offset) {
 	GLint *address = param_offset + (GLint *)env->GetDirectBufferAddress(param);
 	glTexParameteriv(target, pname, address);
@@ -2354,7 +2354,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameteriv
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexParameterf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameterf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameterf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glTexParameterf((GLint) p0, (GLint) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -2364,7 +2364,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameterf(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexParameteri
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameteri(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameteri(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glTexParameteri((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -2374,7 +2374,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameteri(JNIEnv 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexImage2D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, address);
@@ -2385,7 +2385,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexImage1D
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, address);
@@ -2397,7 +2397,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexGenf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexGenf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexGenf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glTexGenf((GLint) p0, (GLint) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -2408,7 +2408,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexGenf(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglTexGenfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGenfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGenfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glTexGenfv((GLint) p0, (GLint) p1, address);
@@ -2419,7 +2419,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGenfv(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexGeni
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexGeni(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexGeni(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glTexGeni((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -2430,7 +2430,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexGeni(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglTexGeniv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGeniv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGeniv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glTexGeniv((GLint) p0, (GLint) p1, address);
@@ -2443,7 +2443,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGeniv(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexEnvf
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glTexEnvf((GLint) p0, (GLint) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -2453,7 +2453,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvf(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexEnvi
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvi(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvi(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glTexEnvi((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -2463,7 +2463,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvi(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexEnvfv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnvfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnvfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glTexEnvfv((GLint) p0, (GLint) p1, address);
@@ -2474,7 +2474,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnvfv(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexEnviv
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnviv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnviv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glTexEnviv((GLint) p0, (GLint) p1, address);
@@ -2485,7 +2485,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnviv(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglTexCoordPointer
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexCoordPointer((GLint) p0, (GLint) p1, (GLint) p2, address);
@@ -2496,7 +2496,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(JNIE
  * Class:     org_lwjgl_opengl_GL11
  * Method:    nglTexCoordPointerVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
+static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glTexCoordPointer((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -2506,7 +2506,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointerVBO(J
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexCoord1f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord1f(JNIEnv * env, jclass clazz, jfloat p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord1f(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glTexCoord1f((GLfloat) p0);
 }
@@ -2516,7 +2516,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord1f(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexCoord2f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glTexCoord2f((GLfloat) p0, (GLfloat) p1);
 }
@@ -2526,7 +2526,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord2f(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexCoord3f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glTexCoord3f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 }
@@ -2536,7 +2536,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord3f(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexCoord4f
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glTexCoord4f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 }
@@ -2546,7 +2546,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord4f(JNIEnv * e
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glStencilOp
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glStencilOp(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilOp(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glStencilOp((GLint) p0, (GLint) p1, (GLint) p2);
 	CHECK_GL_ERROR
@@ -2556,7 +2556,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glStencilOp(JNIEnv * en
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glStencilMask
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glStencilMask(JNIEnv * env, jclass clazz, jint p0)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilMask(JNIEnv * env, jclass clazz, jint p0)
 {
 	glStencilMask((GLint) p0);
 	CHECK_GL_ERROR
@@ -2566,7 +2566,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glStencilMask(JNIEnv * 
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glViewport
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glViewport(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
+static void JNICALL Java_org_lwjgl_opengl_GL11_glViewport(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glViewport((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
 	CHECK_GL_ERROR

@@ -49,7 +49,7 @@ static glGetVertexAttribArrayObjectivATIPROC glGetVertexAttribArrayObjectivATI;
  * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
  * Method:	glVertexAttribArrayObjectATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI
 	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint buffer, jint offset)
 {
 	glVertexAttribArrayObjectATI(index, size, type, normalized, stride, buffer, offset);
@@ -60,7 +60,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_g
  * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
  * Method:	nglGetVertexAttribArrayObjectfvATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI
 	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -72,7 +72,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_n
  * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
  * Method:	nglGetVertexAttribArrayObjectivATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI
 	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;

@@ -47,7 +47,7 @@ static glUnlockArraysEXTPROC glUnlockArraysEXT;
  * Class:	org.lwjgl.opengl.EXTCompiledVertexArray
  * Method:	glLockArraysEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT
 	(JNIEnv * env, jclass clazz, jint first, jint count)
 {
 	glLockArraysEXT(first, count);
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLoc
  * Class:	org.lwjgl.opengl.EXTCompiledVertexArray
  * Method:	glUnlockArraysEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT
 	(JNIEnv * env, jclass clazz)
 {
 	glUnlockArraysEXT();

@@ -81,7 +81,7 @@ static glSampleCoveragePROC glSampleCoverage;
  * Method:    glActiveTexture
  * Signature: (I)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glActiveTexture
+static void JNICALL Java_org_lwjgl_opengl_GL13_glActiveTexture
   (JNIEnv *env, jclass clazz, jint texture)
 {
 	glActiveTexture(texture);
@@ -93,7 +93,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glActiveTexture
  * Method:    glClientActiveTexture
  * Signature: (I)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glClientActiveTexture
+static void JNICALL Java_org_lwjgl_opengl_GL13_glClientActiveTexture
   (JNIEnv *env, jclass clazz, jint texture)
 {
 	glClientActiveTexture(texture);
@@ -105,7 +105,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glClientActiveTexture
  * Method:    glCompressedTexImage1D
  * Signature: (IIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1D
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint border, jint imagesize, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -118,7 +118,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1D
  * Method:    glCompressedTexImage2D
  * Signature: (IIIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage2D
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage2D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint border, jint imagesize, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -131,7 +131,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage2D
  * Method:    glCompressedTexImage3D
  * Signature: (IIIIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage3D
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint imagesize, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -144,7 +144,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage3D
  * Method:    glCompressedTexSubImage1D
  * Signature: (IIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage1D
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage1D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint width, jint format, jint imagesize, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -157,7 +157,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImag
  * Method:    glCompressedTexSubImage2D
  * Signature: (IIIIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage2D
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage2D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint width, jint height, jint format, jint imagesize, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -170,7 +170,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImag
  * Method:    glCompressedTexSubImage3D
  * Signature: (IIIIIIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage3D
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint imagesize, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -183,7 +183,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImag
  * Method:    glGetCompressedTexImage
  * Signature: (III)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglGetCompressedTexImage
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglGetCompressedTexImage
   (JNIEnv *env, jclass clazz, jint target, jint lod, jobject buffer, jint offset)
 {
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -198,7 +198,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglGetCompressedTexImag
  * Method:    glMultiTexCoord1f
  * Signature: (IF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord1f
+static void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord1f
   (JNIEnv *env, jclass clazz, jint target, jfloat s)
 {
 	glMultiTexCoord1f(target, s);
@@ -211,7 +211,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord1f
  * Method:    glMultiTexCoord2f
  * Signature: (IFF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord2f
+static void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord2f
   (JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t)
 {
 	glMultiTexCoord2f(target, s, t);
@@ -225,7 +225,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord2f
  * Method:    glMultiTexCoord3f
  * Signature: (IFFF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord3f
+static void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord3f
   (JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r)
 {
 	glMultiTexCoord3f(target, s, t, r);
@@ -238,7 +238,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord3f
  * Method:    glMultiTexCoord4f
  * Signature: (IFFFF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord4f
+static void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord4f
   (JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r, jfloat q)
 {
 	glMultiTexCoord4f(target, s, t, r, q);
@@ -251,7 +251,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glMultiTexCoord4f
  * Method:    glLoadTransposeMatrixf
  * Signature: (I)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglLoadTransposeMatrixf
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglLoadTransposeMatrixf
   (JNIEnv *env, jclass clazz, jobject buffer, jint offset)
 {
 	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
@@ -266,7 +266,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglLoadTransposeMatrixf
  * Method:    glMultTransposeMatrixf
  * Signature: (I)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultTransposeMatrixf
+static void JNICALL Java_org_lwjgl_opengl_GL13_nglMultTransposeMatrixf
   (JNIEnv *env, jclass clazz, jobject buffer, jint offset)
 {
 	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
@@ -279,7 +279,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_nglMultTransposeMatrixf
  * Method:    glSampleCoverage
  * Signature: (FZ)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL13_glSampleCoverage
+static void JNICALL Java_org_lwjgl_opengl_GL13_glSampleCoverage
   (JNIEnv *env, jclass clazz, jfloat value, jboolean invert)
 {
 	glSampleCoverage(value, invert);

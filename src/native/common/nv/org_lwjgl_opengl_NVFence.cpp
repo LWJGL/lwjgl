@@ -57,7 +57,7 @@ static glGetFenceivNVPROC glGetFenceivNV;
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	nglGenFencesNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGenFencesNV
+static void JNICALL Java_org_lwjgl_opengl_NVFence_nglGenFencesNV
 	(JNIEnv * env, jclass clazz, jint n, jobject piFences, jint piFences_offset)
 {
 	GLuint *piFences_ptr = (GLuint *)env->GetDirectBufferAddress(piFences) + piFences_offset;
@@ -69,7 +69,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGenFencesNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	nglDeleteFencesNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV
+static void JNICALL Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV
 	(JNIEnv * env, jclass clazz, jint n, jobject piFences, jint piFences_offset)
 {
 	GLuint *piFences_ptr = (GLuint *)env->GetDirectBufferAddress(piFences) + piFences_offset;
@@ -81,7 +81,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glSetFenceNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glSetFenceNV
+static void JNICALL Java_org_lwjgl_opengl_NVFence_glSetFenceNV
 	(JNIEnv * env, jclass clazz, jint fence, jint condition)
 {
 	glSetFenceNV(fence, condition);
@@ -92,7 +92,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glSetFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glTestFenceNV
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glTestFenceNV
+static jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glTestFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
 	GLboolean result = glTestFenceNV(fence);
@@ -104,7 +104,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glTestFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glFinishFenceNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glFinishFenceNV
+static void JNICALL Java_org_lwjgl_opengl_NVFence_glFinishFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
 	glFinishFenceNV(fence);
@@ -115,7 +115,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glFinishFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glIsFenceNV
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glIsFenceNV
+static jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glIsFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
 	GLboolean result = glIsFenceNV(fence);
@@ -127,7 +127,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glIsFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	nglGetFenceivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV
+static void JNICALL Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV
 	(JNIEnv * env, jclass clazz, jint fence, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;

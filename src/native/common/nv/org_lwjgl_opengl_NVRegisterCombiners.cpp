@@ -69,7 +69,7 @@ static glGetFinalCombinerInputParameterivNVPROC glGetFinalCombinerInputParameter
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	glCombinerParameterfNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameterfNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameterfNV
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glCombinerParameterfNV(pname, param);
@@ -80,7 +80,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombin
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglCombinerParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterfvNV
 	(JNIEnv * env, jclass clazz, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -92,7 +92,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombi
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	glCombinerParameteriNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameteriNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameteriNV
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
 	glCombinerParameteriNV(pname, param);
@@ -103,7 +103,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombin
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglCombinerParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterivNV
 	(JNIEnv * env, jclass clazz, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -115,7 +115,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombi
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	glCombinerInputNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerInputNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerInputNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint variable, jint input, jint mapping, jint componentUsage)
 {
 	glCombinerInputNV(stage, portion, variable, input, mapping, componentUsage);
@@ -126,7 +126,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombin
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	glCombinerOutputNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerOutputNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerOutputNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint abOutput, jint cdOutput, jint sumOutput, jint scale, jint bias, jboolean abDotProduct, jboolean cdDotProduct, jboolean muxSum)
 {
 	glCombinerOutputNV(stage, portion, abOutput, cdOutput, sumOutput, scale, bias, abDotProduct, cdDotProduct, muxSum);
@@ -137,7 +137,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombin
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	glFinalCombinerInputNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glFinalCombinerInputNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glFinalCombinerInputNV
 	(JNIEnv * env, jclass clazz, jint variable, jint input, jint mapping, jint componentUsage)
 {
 	glFinalCombinerInputNV(variable, input, mapping, componentUsage);
@@ -148,7 +148,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glFinalC
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglGetCombinerInputParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterfvNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint variable, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -160,7 +160,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCo
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglGetCombinerInputParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterivNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint variable, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -172,7 +172,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCo
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglGetCombinerOutputParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterfvNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -184,7 +184,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCo
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglGetCombinerOutputParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterivNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint pname, jobject piParams, jint pfParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + pfParams_offset;
@@ -196,7 +196,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCo
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglGetFinalCombinerInputParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterfvNV
 	(JNIEnv * env, jclass clazz, jint variable, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -208,7 +208,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFi
  * Class:	org.lwjgl.opengl.NVRegisterCombiners
  * Method:	nglGetFinalCombinerInputParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterivNV
 	(JNIEnv * env, jclass clazz, jint variable, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;

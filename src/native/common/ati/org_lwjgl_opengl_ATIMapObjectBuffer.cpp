@@ -47,7 +47,7 @@ static glUnmapObjectBufferATIPROC glUnmapObjectBufferATI;
  * Class:	org.lwjgl.opengl.ATIMapObjectBuffer
  * Method:	glMapObjectBufferATI
  */
-static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBufferATI
+static jobject JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint size, jobject oldBuffer)
 {
 	void *buffer_address = glMapObjectBufferATI((GLenum)buffer);
@@ -65,7 +65,7 @@ static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapO
  * Class:	org.lwjgl.opengl.ATIMapObjectBuffer
  * Method:	glUnmapObjectBufferATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBufferATI
+static void JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	glUnmapObjectBufferATI(buffer);

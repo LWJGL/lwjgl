@@ -70,7 +70,7 @@ static glIsProgramARBPROC glIsProgramARB;
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglProgramStringARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB
 	(JNIEnv * env, jclass clazz, jint target, jint format, jint length, jobject string, jint stringOffset)
 {
 	GLvoid *string_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(string) + stringOffset);
@@ -82,7 +82,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramStringA
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glBindProgramARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB
 	(JNIEnv * env, jclass clazz, jint target, jint program)
 {
 	glBindProgramARB(target, program);
@@ -93,7 +93,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglDeleteProgramsARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB
 	(JNIEnv * env, jclass clazz, jint n, jobject programs, jint programsOffset)
 {
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
@@ -105,7 +105,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglDeletePrograms
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGenProgramsARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB
 	(JNIEnv * env, jclass clazz, jint n, jobject programs, jint programsOffset)
 {
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
@@ -117,7 +117,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glProgramEnvParameter4fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParameter4fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParameter4fARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glProgramEnvParameter4fARB(target, index, x, y, z, w);
@@ -128,7 +128,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParam
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglProgramEnvParameter4fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvParameter4fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvParameter4fvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -140,7 +140,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvPara
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glProgramLocalParameter4fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramLocalParameter4fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramLocalParameter4fARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glProgramLocalParameter4fARB(target, index, x, y, z, w);
@@ -151,7 +151,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramLocalPar
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglProgramLocalParameter4fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalParameter4fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalParameter4fvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -163,7 +163,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalPa
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramEnvParameterfvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvParameterfvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvParameterfvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -175,7 +175,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvP
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramLocalParameterfvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLocalParameterfvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLocalParameterfvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -187,7 +187,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLoca
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivARB
 	(JNIEnv * env, jclass clazz, jint target, jint parameterName, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -199,7 +199,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivAR
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramStringARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStringARB
+static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStringARB
 	(JNIEnv * env, jclass clazz, jint target, jint parameterName, jobject paramString, jint paramStringOffset)
 {
 	GLvoid *paramString_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(paramString) + paramStringOffset);
@@ -211,7 +211,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStri
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glIsProgramARB
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB
+static jboolean JNICALL Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB
 	(JNIEnv * env, jclass clazz, jint program)
 {
 	GLboolean result = glIsProgramARB(program);

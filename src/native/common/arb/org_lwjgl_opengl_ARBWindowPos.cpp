@@ -55,7 +55,7 @@ static glWindowPos3sARBPROC glWindowPos3sARB;
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos2fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB
 	(JNIEnv * env, jclass clazz, jfloat x, jfloat y)
 {
 	glWindowPos2fARB(x, y);
@@ -66,7 +66,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fAR
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos2iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB
 	(JNIEnv * env, jclass clazz, jint x, jint y)
 {
 	glWindowPos2iARB(x, y);
@@ -77,7 +77,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iAR
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos2sARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB
+static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB
 	(JNIEnv * env, jclass clazz, jshort x, jshort y)
 {
 	glWindowPos2sARB(x, y);
@@ -88,7 +88,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sAR
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos3fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fARB
 	(JNIEnv * env, jclass clazz, jfloat x, jfloat y, jfloat z)
 {
 	glWindowPos3fARB(x, y, z);
@@ -99,7 +99,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fAR
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos3iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iARB
 	(JNIEnv * env, jclass clazz, jint x, jint y, jint z)
 {
 	glWindowPos3iARB(x, y, z);
@@ -110,7 +110,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iAR
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos3sARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB
+static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB
 	(JNIEnv * env, jclass clazz, jshort x, jshort y, jshort z)
 {
 	glWindowPos3sARB(x, y, z);

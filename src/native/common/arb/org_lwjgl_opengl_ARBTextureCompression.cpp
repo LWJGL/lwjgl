@@ -57,7 +57,7 @@ static glGetCompressedTexImageARBPROC glGetCompressedTexImageARB;
  * Class:	org.lwjgl.opengl.ARBTextureCompression
  * Method:	nglCompressedTexImage1DARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage1DARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage1DARB
 	(JNIEnv * env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint border, jint imageSize, jobject pData, jint pData_offset)
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
@@ -69,7 +69,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCom
  * Class:	org.lwjgl.opengl.ARBTextureCompression
  * Method:	nglCompressedTexImage2DARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage2DARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage2DARB
 	(JNIEnv * env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint border, jint imageSize, jobject pData, jint pData_offset)
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
@@ -81,7 +81,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCom
  * Class:	org.lwjgl.opengl.ARBTextureCompression
  * Method:	nglCompressedTexImage3DARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage3DARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexImage3DARB
 	(JNIEnv * env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint imageSize, jobject pData, jint pData_offset)
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
@@ -93,7 +93,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCom
  * Class:	org.lwjgl.opengl.ARBTextureCompression
  * Method:	nglCompressedTexSubImage1DARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexSubImage1DARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexSubImage1DARB
 	(JNIEnv * env, jclass clazz, jint target, jint level, jint xoffset, jint width, jint border, jint imageSize, jobject pData, jint pData_offset)
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
@@ -105,7 +105,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCom
  * Class:	org.lwjgl.opengl.ARBTextureCompression
  * Method:	nglCompressedTexSubImage2DARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexSubImage2DARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexSubImage2DARB
 	(JNIEnv * env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint width, jint height, jint border, jint imageSize, jobject pData, jint pData_offset)
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
@@ -117,7 +117,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCom
  * Class:	org.lwjgl.opengl.ARBTextureCompression
  * Method:	nglCompressedTexSubImage3DARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexSubImage3DARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTexSubImage3DARB
 	(JNIEnv * env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint border, jint imageSize, jobject pData, jint pData_offset)
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
@@ -129,7 +129,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCom
  * Class:	org.lwjgl.opengl.ARBTextureCompression
  * Method:	nglGetCompressedTexImageARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglGetCompressedTexImageARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglGetCompressedTexImageARB
 	(JNIEnv * env, jclass clazz, jint target, jint lod, jobject pImg, jint pImg_offset)
 {
 	GLvoid *pImg_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pImg) + pImg_offset);

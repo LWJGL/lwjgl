@@ -45,7 +45,7 @@ static glActiveStencilFaceEXTPROC glActiveStencilFaceEXT;
  * Class:	org.lwjgl.opengl.EXTStencilTwoSide
  * Method:	glActiveStencilFaceEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT
 	(JNIEnv * env, jclass clazz, jint face)
 {
 	glActiveStencilFaceEXT(face);

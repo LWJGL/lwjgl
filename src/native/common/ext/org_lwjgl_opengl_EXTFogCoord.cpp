@@ -47,7 +47,7 @@ static glFogCoordPointerEXTPROC glFogCoordPointerEXT;
  * Class:	org.lwjgl.opengl.EXTFogCoord
  * Method:	glFogCoordfEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT
 	(JNIEnv * env, jclass clazz, jfloat coord)
 {
 	glFogCoordfEXT(coord);
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT
  * Class:	org.lwjgl.opengl.EXTFogCoord
  * Method:	nglFogCoordPointerEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT
 	(JNIEnv * env, jclass clazz, jint type, jint stride, jobject data, jint data_offset)
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
@@ -70,7 +70,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPoint
  * Class:	org.lwjgl.opengl.EXTFogCoord
  * Method:	nglFogCoordPointerEXTVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO
+static void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO
 	(JNIEnv * env, jclass clazz, jint type, jint stride, jint buffer_offset)
 {
 	glFogCoordPointerEXT(type, stride, (GLvoid *)buffer_offset);

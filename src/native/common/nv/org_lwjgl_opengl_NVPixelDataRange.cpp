@@ -47,7 +47,7 @@ static glFlushPixelDataRangeNVPROC glFlushPixelDataRangeNV;
  * Class:	org.lwjgl.opengl.NVPixelDataRange
  * Method:	nglPixelDataRangeNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeNV
+static void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeNV
 	(JNIEnv * env, jclass clazz, jint target, jint length, jobject data, jint dataOffset)
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + dataOffset);
@@ -59,7 +59,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDat
  * Class:	org.lwjgl.opengl.NVPixelDataRange
  * Method:	glFlushPixelDataRangeNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRangeNV
+static void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRangeNV
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	glFlushPixelDataRangeNV(target);

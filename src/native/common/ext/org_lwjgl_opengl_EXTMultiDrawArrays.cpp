@@ -45,7 +45,7 @@ static glMultiDrawArraysEXTPROC glMultiDrawArraysEXT;
  * Class:	org.lwjgl.opengl.EXTMultiDrawArrays
  * Method:	nglMultiDrawArraysEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT
 	(JNIEnv * env, jclass clazz, jint mode, jobject piFirst, jint piFirst_offset, jobject piCount, jint piCount_offset, jint primcount)
 {
 	GLint *piFirst_ptr = (GLint *)env->GetDirectBufferAddress(piFirst) + piFirst_offset;

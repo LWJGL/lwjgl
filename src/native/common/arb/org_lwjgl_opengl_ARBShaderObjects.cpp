@@ -130,7 +130,7 @@ static GLint* sourcesLengths = new GLint[initialSourcesSize];
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glDeleteObjectARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDeleteObjectARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDeleteObjectARB
 	(JNIEnv * env, jclass clazz, jint obj)
 {
 	glDeleteObjectARB(obj);
@@ -141,7 +141,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDeleteObj
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glGetHandleARB
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glGetHandleARB
+static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glGetHandleARB
 	(JNIEnv * env, jclass clazz, jint pname)
 {
 	GLhandleARB result = glGetHandleARB(pname);
@@ -153,7 +153,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glGetHandle
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glDetachObjectARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDetachObjectARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDetachObjectARB
 	(JNIEnv * env, jclass clazz, jint containerObj, jint attachedObj)
 {
 	glDetachObjectARB(containerObj, attachedObj);
@@ -164,7 +164,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDetachObj
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glCreateShaderObjectARB
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreateShaderObjectARB
+static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreateShaderObjectARB
 	(JNIEnv * env, jclass clazz, jint shaderType)
 {
 	GLhandleARB result = glCreateShaderObjectARB(shaderType);
@@ -176,7 +176,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreateSha
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	initShaderSource
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_initShaderSource
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_initShaderSource
 	(JNIEnv * env, jclass clazz, jint count)
 {
 	sourceCount = count;
@@ -196,7 +196,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_initShaderS
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	setShaderString
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_setShaderString
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_setShaderString
 	(JNIEnv * env, jclass clazz, jint index, jobject string, jint stringOffset, jint stringLength)
 {
 	GLcharARB *string_ptr = (GLcharARB *)((GLubyte *)env->GetDirectBufferAddress(string) + stringOffset);
@@ -209,7 +209,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_setShaderSt
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglShaderSourceARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglShaderSourceARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglShaderSourceARB
 	(JNIEnv * env, jclass clazz, jint shaderObj)
 {
 	glShaderSourceARB(shaderObj, sourceCount, (const GLcharARB **)sources, (const GLint *)sourcesLengths);
@@ -220,7 +220,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglShaderSo
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glCompileShaderARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCompileShaderARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCompileShaderARB
 	(JNIEnv * env, jclass clazz, jint shaderObj)
 {
 	glCompileShaderARB(shaderObj);
@@ -231,7 +231,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCompileSh
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glCreateProgramObjectARB
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreateProgramObjectARB
+static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreateProgramObjectARB
 	(JNIEnv * env, jclass clazz)
 {
 	GLuint result = glCreateProgramObjectARB();
@@ -243,7 +243,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreatePro
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glAttachObjectARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glAttachObjectARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glAttachObjectARB
 	(JNIEnv * env, jclass clazz, jint containerObj, jint obj)
 {
 	glAttachObjectARB(containerObj, obj);
@@ -254,7 +254,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glAttachObj
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glLinkProgramARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glLinkProgramARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glLinkProgramARB
 	(JNIEnv * env, jclass clazz, jint programObj)
 {
 	glLinkProgramARB(programObj);
@@ -265,7 +265,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glLinkProgr
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUseProgramObjectARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUseProgramObjectARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUseProgramObjectARB
 	(JNIEnv * env, jclass clazz, jint programObj)
 {
 	glUseProgramObjectARB(programObj);
@@ -276,7 +276,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUseProgra
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glValidateProgramARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glValidateProgramARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glValidateProgramARB
 	(JNIEnv * env, jclass clazz, jint programObj)
 {
 	glValidateProgramARB(programObj);
@@ -287,7 +287,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glValidateP
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform1fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0)
 {
 	glUniform1fARB(location, v0);
@@ -298,7 +298,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1f
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform2fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0, jfloat v1)
 {
 	glUniform2fARB(location, v0, v1);
@@ -309,7 +309,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2f
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform3fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0, jfloat v1, jfloat v2)
 {
 	glUniform3fARB(location, v0, v1, v2);
@@ -320,7 +320,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3f
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform4fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0, jfloat v1, jfloat v2, jfloat v3)
 {
 	glUniform4fARB(location, v0, v1, v2, v3);
@@ -331,7 +331,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4f
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform1iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0)
 {
 	glUniform1iARB(location, v0);
@@ -342,7 +342,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1i
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform2iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0, jint v1)
 {
 	glUniform2iARB(location, v0, v1);
@@ -353,7 +353,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2i
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform3iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0, jint v1, jint v2)
 {
 	glUniform3iARB(location, v0, v1, v2);
@@ -364,7 +364,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3i
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	glUniform4iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0, jint v1, jint v2, jint v3)
 {
 	glUniform4iARB(location, v0, v1, v2, v3);
@@ -375,7 +375,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4i
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform1fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1fvARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -387,7 +387,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform2fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2fvARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -399,7 +399,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform3fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3fvARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -411,7 +411,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform4fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4fvARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLfloat *values_ptr = (GLfloat *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -423,7 +423,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform1ivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1ivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1ivARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLint *values_ptr = (GLint *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -435,7 +435,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform2ivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2ivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2ivARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLint *values_ptr = (GLint *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -447,7 +447,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform3ivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3ivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3ivARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLint *values_ptr = (GLint *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -459,7 +459,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniform4ivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4ivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4ivARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jobject values, jint valuesOffset)
 {
 	GLint *values_ptr = (GLint *)env->GetDirectBufferAddress(values) + valuesOffset;
@@ -471,7 +471,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniformMatrix2fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix2fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix2fvARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jboolean transpose, jobject matrices, jint matricesOffset)
 {
 	GLfloat *matrices_ptr = (GLfloat *)env->GetDirectBufferAddress(matrices) + matricesOffset;
@@ -483,7 +483,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformM
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniformMatrix3fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix3fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix3fvARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jboolean transpose, jobject matrices, jint matricesOffset)
 {
 	GLfloat *matrices_ptr = (GLfloat *)env->GetDirectBufferAddress(matrices) + matricesOffset;
@@ -495,7 +495,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformM
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglUniformMatrix4fvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix4fvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix4fvARB
 	(JNIEnv * env, jclass clazz, jint location, jint count, jboolean transpose, jobject matrices, jint matricesOffset)
 {
 	GLfloat *matrices_ptr = (GLfloat *)env->GetDirectBufferAddress(matrices) + matricesOffset;
@@ -507,7 +507,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformM
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetObjectParameterfvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjectParameterfvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjectParameterfvARB
 	(JNIEnv * env, jclass clazz, jint obj, jint pname, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -519,7 +519,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjec
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetObjectParameterivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjectParameterivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjectParameterivARB
 	(JNIEnv * env, jclass clazz, jint obj, jint pname, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -531,7 +531,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjec
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetInfoLogARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetInfoLogARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetInfoLogARB
 	(JNIEnv * env, jclass clazz, jint obj, jint maxLength, jobject length, jint lengthOffset, jobject infoLog, jint infoLogOffset)
 {
 
@@ -551,7 +551,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetInfoL
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetAttachedObjectsARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetAttachedObjectsARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetAttachedObjectsARB
 	(JNIEnv * env, jclass clazz, jint containerObj, jint maxCount, jobject count, jint countOffset, jobject obj, jint objOffset)
 {
 
@@ -571,7 +571,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetAttac
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetUniformLocationARB
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformLocationARB
+static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformLocationARB
 	(JNIEnv * env, jclass clazz, jint programObj, jobject name, jint nameOffset)
 {
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
@@ -584,7 +584,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUnifo
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetActiveUniformARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetActiveUniformARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetActiveUniformARB
 	(JNIEnv * env, jclass clazz, jint programObj, jint index, jint maxLength, jobject length, jint lengthOffset, jobject size, jint sizeOffset, jobject type, jint typeOffset, jobject name, jint nameOffset)
 {
 
@@ -606,7 +606,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetActiv
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetUniformfvARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformfvARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformfvARB
 	(JNIEnv * env, jclass clazz, jint programObj, jint location, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -618,7 +618,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUnifo
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetUniformivARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformivARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformivARB
 	(JNIEnv * env, jclass clazz, jint programObj, jint location, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -630,7 +630,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUnifo
  * Class:	org.lwjgl.opengl.ARBShaderObjects
  * Method:	nglGetShaderSourceARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetShaderSourceARB
+static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetShaderSourceARB
 	(JNIEnv * env, jclass clazz, jint obj, jint maxLength, jobject length, jint lengthOffset, jobject source, jint sourceOffset)
 {
 	GLubyte *source_ptr = (GLubyte *)env->GetDirectBufferAddress(source) + sourceOffset;

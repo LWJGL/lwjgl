@@ -57,7 +57,7 @@ static glCopyTexSubImage3DPROC glCopyTexSubImage3D;
  * Method:    nglDrawRangeElements
  * Signature: (IIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements
+static void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements
   (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -70,7 +70,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements
  * Method:    nglDrawRangeElementsVBO
  * Signature: (IIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
+static void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
   (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint buffer_offset)
 {
 	glDrawRangeElements(mode, start, end, count, type, offsetToPointer(buffer_offset));
@@ -82,7 +82,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
  * Method:    glTexImage3D
  * Signature: (IIIIIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
+static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint format, jint type, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -95,7 +95,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
  * Method:    glTexSubImage3D
  * Signature: (IIIIIIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
+static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
@@ -108,7 +108,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
  * Method:    glCopyTexSubImage3D
  * Signature: (IIIIIIIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D
+static void JNICALL Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint x, jint y, jint width, jint height)
 {
 	glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);

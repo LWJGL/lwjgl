@@ -45,7 +45,7 @@ static glDrawBuffersATIPROC glDrawBuffersATI;
  * Class:	org.lwjgl.opengl.ATIDrawBuffers
  * Method:	nglDrawBuffersATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI
+static void JNICALL Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI
 	(JNIEnv * env, jclass clazz, jint size, jobject buffers, jint buffersOffset)
 {
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffersOffset;

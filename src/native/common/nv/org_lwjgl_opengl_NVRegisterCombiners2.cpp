@@ -47,7 +47,7 @@ static glGetCombinerStageParameterfvNVPROC glGetCombinerStageParameterfvNV;
  * Class:	org.lwjgl.opengl.NVRegisterCombiners2
  * Method:	nglCombinerStageParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerStageParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerStageParameterfvNV
 	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -59,7 +59,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglComb
  * Class:	org.lwjgl.opengl.NVRegisterCombiners2
  * Method:	nglGetCombinerStageParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerStageParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerStageParameterfvNV
 	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;

@@ -93,7 +93,7 @@ static glVertexAttribs4hvNVPROC glVertexAttribs4hvNV;
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertex2hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex2hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex2hNV
 	(JNIEnv * env, jclass clazz, jshort x, jshort y)
 {
 	glVertex2hNV(x, y);
@@ -104,7 +104,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex2hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertex3hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex3hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex3hNV
 	(JNIEnv * env, jclass clazz, jshort x, jshort y, jshort z)
 {
 	glVertex3hNV(x, y, z);
@@ -115,7 +115,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex3hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertex4hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex4hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex4hNV
 	(JNIEnv * env, jclass clazz, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertex4hNV(x, y, z, w);
@@ -126,7 +126,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex4hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glNormal3hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glNormal3hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glNormal3hNV
 	(JNIEnv * env, jclass clazz, jshort nx, jshort ny, jshort nz)
 {
 	glNormal3hNV(nx, ny, nz);
@@ -137,7 +137,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glNormal3hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glColor3hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor3hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor3hNV
 	(JNIEnv * env, jclass clazz, jshort red, jshort green, jshort blue)
 {
 	glColor3hNV(red, green, blue);
@@ -148,7 +148,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor3hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glColor4hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor4hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor4hNV
 	(JNIEnv * env, jclass clazz, jshort red, jshort green, jshort blue, jshort alpha)
 {
 	glColor4hNV(red, green, blue, alpha);
@@ -159,7 +159,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor4hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glTexCoord1hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord1hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord1hNV
 	(JNIEnv * env, jclass clazz, jshort s)
 {
 	glTexCoord1hNV(s);
@@ -170,7 +170,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord1hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glTexCoord2hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord2hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord2hNV
 	(JNIEnv * env, jclass clazz, jshort s, jshort t)
 {
 	glTexCoord2hNV(s, t);
@@ -181,7 +181,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord2hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glTexCoord3hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord3hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord3hNV
 	(JNIEnv * env, jclass clazz, jshort s, jshort t, jshort r)
 {
 	glTexCoord3hNV(s, t, r);
@@ -192,7 +192,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord3hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glTexCoord4hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord4hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord4hNV
 	(JNIEnv * env, jclass clazz, jshort s, jshort t, jshort r, jshort q)
 {
 	glTexCoord4hNV(s, t, r, q);
@@ -203,7 +203,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord4hNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glMultiTexCoord1hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord1hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord1hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s)
 {
 	glMultiTexCoord1hNV(target, s);
@@ -214,7 +214,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord1
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glMultiTexCoord2hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord2hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord2hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t)
 {
 	glMultiTexCoord2hNV(target, s, t);
@@ -225,7 +225,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord2
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glMultiTexCoord3hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord3hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord3hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t, jshort r)
 {
 	glMultiTexCoord3hNV(target, s, t, r);
@@ -236,7 +236,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord3
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glMultiTexCoord4hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord4hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord4hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t, jshort r, jshort q)
 {
 	glMultiTexCoord4hNV(target, s, t, r, q);
@@ -247,7 +247,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord4
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glFogCoordhNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glFogCoordhNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glFogCoordhNV
 	(JNIEnv * env, jclass clazz, jshort fog)
 {
 	glFogCoordhNV(fog);
@@ -258,7 +258,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glFogCoordhNV
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glSecondaryColor3hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor3hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor3hNV
 	(JNIEnv * env, jclass clazz, jshort red, jshort green, jshort blue)
 {
 	glSecondaryColor3hNV(red, green, blue);
@@ -269,7 +269,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertexAttrib1hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib1hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib1hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x)
 {
 	glVertexAttrib1hNV(index, x);
@@ -280,7 +280,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib1h
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertexAttrib2hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib2hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib2hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y)
 {
 	glVertexAttrib2hNV(index, x, y);
@@ -291,7 +291,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib2h
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertexAttrib3hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib3hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib3hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z)
 {
 	glVertexAttrib3hNV(index, x, y, z);
@@ -302,7 +302,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib3h
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	glVertexAttrib4hNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib4hNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib4hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertexAttrib4hNV(index, x, y, z, w);
@@ -313,7 +313,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib4h
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	nglVertexAttribs1hvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs1hvNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs1hvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject attribs, jint attribsOffset)
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;
@@ -325,7 +325,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	nglVertexAttribs2hvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs2hvNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs2hvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject attribs, jint attribsOffset)
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;
@@ -337,7 +337,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	nglVertexAttribs3hvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs3hvNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs3hvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject attribs, jint attribsOffset)
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;
@@ -349,7 +349,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs
  * Class:	org.lwjgl.opengl.NVHalfFloat
  * Method:	nglVertexAttribs4hvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV
+static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject attribs, jint attribsOffset)
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;

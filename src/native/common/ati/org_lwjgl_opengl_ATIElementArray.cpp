@@ -49,7 +49,7 @@ static glDrawRangeElementArrayATIPROC glDrawRangeElementArrayATI;
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	nglElementPointerATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATI
+static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATI
 	(JNIEnv * env, jclass clazz, jint type, jobject pPointer, jint pPointer_offset)
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
@@ -61,7 +61,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPo
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	nglElementPointerATIVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIVBO
+static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIVBO
 	(JNIEnv * env, jclass clazz, jint type, jint buffer_offset)
 {
 	glElementPointerATI(type, (GLvoid *)buffer_offset);
@@ -72,7 +72,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPo
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	glDrawElementArrayATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayATI
+static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayATI
 	(JNIEnv * env, jclass clazz, jint mode, jint count)
 {
 	glDrawElementArrayATI(mode, count);
@@ -83,7 +83,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawElemen
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	glDrawRangeElementArrayATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArrayATI
+static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArrayATI
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count)
 {
 	glDrawRangeElementArrayATI(mode, start, end, count);

@@ -71,7 +71,7 @@ static glMultiTexCoord4sARBPROC glMultiTexCoord4sARB;
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glClientActiveTextureARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glClientActiveTextureARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glClientActiveTextureARB
 	(JNIEnv * env, jclass clazz, jint texture)
 {
 	glClientActiveTextureARB(texture);
@@ -82,7 +82,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glClientActi
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glActiveTextureARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glActiveTextureARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glActiveTextureARB
 	(JNIEnv * env, jclass clazz, jint texture)
 {
 	glActiveTextureARB(texture);
@@ -93,7 +93,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glActiveText
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord1fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1fARB
 	(JNIEnv * env, jclass clazz, jint target, jfloat s)
 {
 	glMultiTexCoord1fARB(target, s);
@@ -104,7 +104,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord1iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1iARB
 	(JNIEnv * env, jclass clazz, jint target, jint s)
 {
 	glMultiTexCoord1iARB(target, s);
@@ -115,7 +115,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord1sARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1sARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1sARB
 	(JNIEnv * env, jclass clazz, jint target, jshort s)
 {
 	glMultiTexCoord1sARB(target, s);
@@ -126,7 +126,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord2fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2fARB
 	(JNIEnv * env, jclass clazz, jint target, jfloat s, jfloat t)
 {
 	glMultiTexCoord2fARB(target, s, t);
@@ -137,7 +137,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord2iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2iARB
 	(JNIEnv * env, jclass clazz, jint target, jint s, jint t)
 {
 	glMultiTexCoord2iARB(target, s, t);
@@ -148,7 +148,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord2sARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2sARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2sARB
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t)
 {
 	glMultiTexCoord2sARB(target, s, t);
@@ -159,7 +159,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord3fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3fARB
 	(JNIEnv * env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r)
 {
 	glMultiTexCoord3fARB(target, s, t, r);
@@ -170,7 +170,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord3iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3iARB
 	(JNIEnv * env, jclass clazz, jint target, jint s, jint t, jint r)
 {
 	glMultiTexCoord3iARB(target, s, t, r);
@@ -181,7 +181,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord3sARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3sARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3sARB
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t, jshort r)
 {
 	glMultiTexCoord3sARB(target, s, t, r);
@@ -192,7 +192,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord4fARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4fARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4fARB
 	(JNIEnv * env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r, jfloat q)
 {
 	glMultiTexCoord4fARB(target, s, t, r, q);
@@ -203,7 +203,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord4iARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4iARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4iARB
 	(JNIEnv * env, jclass clazz, jint target, jint s, jint t, jint r, jint q)
 {
 	glMultiTexCoord4iARB(target, s, t, r, q);
@@ -214,7 +214,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCo
  * Class:	org.lwjgl.opengl.ARBMultitexture
  * Method:	glMultiTexCoord4sARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4sARB
+static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4sARB
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t, jshort r, jshort q)
 {
 	glMultiTexCoord4sARB(target, s, t, r, q);

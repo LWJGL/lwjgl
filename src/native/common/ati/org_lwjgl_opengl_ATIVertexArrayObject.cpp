@@ -67,7 +67,7 @@ static glGetVariantArrayObjectivATIPROC glGetVariantArrayObjectivATI;
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglNewObjectBufferATI
  */
-static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBufferATI
+static jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint size, jobject pPointer, jint pPointer_offset, jint usage)
 {
 	GLvoid *pPointer_ptr = safeGetBufferAddress(env, pPointer, pPointer_offset);
@@ -80,7 +80,7 @@ static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewO
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glIsObjectBufferATI
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObjectBufferATI
+static jboolean JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	GLboolean result = glIsObjectBufferATI(buffer);
@@ -92,7 +92,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glI
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglUpdateObjectBufferATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpdateObjectBufferATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpdateObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint offset, jint size, jobject pPointer, jint pPointer_offset, jint preserve)
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
@@ -104,7 +104,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpda
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetObjectBufferfvATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferfvATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferfvATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -116,7 +116,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetO
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetObjectBufferivATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferivATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferivATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -128,7 +128,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetO
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glFreeObjectBufferATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeObjectBufferATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	glFreeObjectBufferATI(buffer);
@@ -139,7 +139,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeO
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glArrayObjectATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glArrayObjectATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glArrayObjectATI
 	(JNIEnv * env, jclass clazz, jint array, jint size, jint type, jint stride, jint buffer, jint offset)
 {
 	glArrayObjectATI(array, size, type, stride, buffer, offset);
@@ -150,7 +150,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glArray
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetArrayObjectfvATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectfvATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectfvATI
 	(JNIEnv * env, jclass clazz, jint array, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
@@ -162,7 +162,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetA
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetArrayObjectivATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectivATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectivATI
 	(JNIEnv * env, jclass clazz, jint array, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -174,7 +174,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetA
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glVariantArrayObjectATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glVariantArrayObjectATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glVariantArrayObjectATI
 	(JNIEnv * env, jclass clazz, jint id, jint type, jint stride, jint buffer, jint offset)
 {
 	glVariantArrayObjectATI(id, type, stride, buffer, offset);
@@ -185,7 +185,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glVaria
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetVariantArrayObjectfvATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectfvATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectfvATI
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject pfParams, jint pfParams_offset_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset_offset;
@@ -197,7 +197,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetV
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetVariantArrayObjectivATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectivATI
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectivATI
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;

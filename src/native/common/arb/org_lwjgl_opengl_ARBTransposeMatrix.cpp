@@ -47,7 +47,7 @@ static glMultTransposeMatrixfARBPROC glMultTransposeMatrixfARB;
  * Class:	org.lwjgl.opengl.ARBTransposeMatrix
  * Method:	nglLoadTransposeMatrixfARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTransposeMatrixfARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTransposeMatrixfARB
 	(JNIEnv * env, jclass clazz, jobject pfMtx, jint pfMtx_offset)
 {
 	GLfloat *pfMtx_ptr = (GLfloat *)env->GetDirectBufferAddress(pfMtx) + pfMtx_offset;
@@ -59,7 +59,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTr
  * Class:	org.lwjgl.opengl.ARBTransposeMatrix
  * Method:	nglMultTransposeMatrixfARB
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMatrixfARB
+static void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMatrixfARB
 	(JNIEnv * env, jclass clazz, jobject pfMtx, jint pfMtx_offset)
 {
 	GLfloat *pfMtx_ptr = (GLfloat *)env->GetDirectBufferAddress(pfMtx) + pfMtx_offset;

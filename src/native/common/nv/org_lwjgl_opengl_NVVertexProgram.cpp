@@ -99,7 +99,7 @@ static glVertexAttribs4ubvNVPROC glVertexAttribs4ubvNV;
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglExecuteProgramNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglExecuteProgramNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglExecuteProgramNV
 	(JNIEnv * env, jclass clazz, jint target, jint id, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -111,7 +111,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglExecutePr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglGetProgramParameterfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgramParameterfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgramParameterfvNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jint parameterName, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -123,7 +123,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgra
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglGetTrackMatrixivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackMatrixivNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackMatrixivNV
 	(JNIEnv * env, jclass clazz, jint target, jint address, jint parameterName, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -135,7 +135,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackM
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglGetVertexAttribfvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribfvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribfvNV
 	(JNIEnv * env, jclass clazz, jint index, jint parameterName, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -147,7 +147,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertex
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglGetVertexAttribivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribivNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribivNV
 	(JNIEnv * env, jclass clazz, jint index, jint parameterName, jobject params, jint paramsOffset)
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -159,7 +159,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertex
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glGetVertexAttribPointerNV
  */
-static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glGetVertexAttribPointerNV
+static jobject JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glGetVertexAttribPointerNV
 	(JNIEnv * env, jclass clazz, jint index, jint parameterName, jint size)
 {
         void *address;
@@ -172,7 +172,7 @@ static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glGetVert
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glProgramParameter4fNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glProgramParameter4fNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glProgramParameter4fNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glProgramParameter4fNV(target, index, x, y, z, w);
@@ -183,7 +183,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glProgramPar
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglProgramParameters4fvNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglProgramParameters4fvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglProgramParameters4fvNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jint count, jobject params, jint paramsOffset)
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
@@ -195,7 +195,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglProgramPa
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glTrackMatrixNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glTrackMatrixNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glTrackMatrixNV
 	(JNIEnv * env, jclass clazz, jint target, jint address, jint matrix, jint transform)
 {
 	glTrackMatrixNV(target, address, matrix, transform);
@@ -206,7 +206,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glTrackMatri
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglVertexAttribPointerNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNV
 	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jint stride, jobject buffer, jint bufferOffset)
 {
 	GLvoid *buffer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(buffer) + bufferOffset);
@@ -218,7 +218,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	nglVertexAttribPointerNVVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNVVBO
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNVVBO
 	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jint stride, jint bufferOffset)
 {
 	glVertexAttribPointerNV(index, size, type, stride, (GLvoid *)bufferOffset);
@@ -229,7 +229,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib1sNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1sNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x)
 {
 	glVertexAttrib1sNV(index, x);
@@ -240,7 +240,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib1fNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1fNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x)
 {
 	glVertexAttrib1fNV(index, x);
@@ -251,7 +251,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib2sNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2sNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y)
 {
 	glVertexAttrib2sNV(index, x, y);
@@ -262,7 +262,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib2fNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2fNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y)
 {
 	glVertexAttrib2fNV(index, x, y);
@@ -273,7 +273,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib3sNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3sNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z)
 {
 	glVertexAttrib3sNV(index, x, y, z);
@@ -284,7 +284,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib3fNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3fNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z)
 {
 	glVertexAttrib3fNV(index, x, y, z);
@@ -295,7 +295,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib4sNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4sNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertexAttrib4sNV(index, x, y, z, w);
@@ -306,7 +306,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib4fNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4fNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glVertexAttrib4fNV(index, x, y, z, w);
@@ -317,14 +317,14 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttr
  * Class:	org.lwjgl.opengl.NVVertexProgram
  * Method:	glVertexAttrib4ubNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4ubNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4ubNV
 	(JNIEnv * env, jclass clazz, jint index, jbyte x, jbyte y, jbyte z, jbyte w)
 {
 	glVertexAttrib4ubNV(index, x, y, z, w);
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1svNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1svNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
@@ -332,7 +332,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1fvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1fvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
@@ -340,7 +340,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2svNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2svNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
@@ -348,7 +348,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2fvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2fvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
@@ -356,7 +356,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3svNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3svNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
@@ -364,7 +364,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3fvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3fvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
@@ -372,7 +372,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4svNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4svNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
@@ -380,7 +380,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4fvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4fvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
@@ -388,7 +388,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAtt
 	CHECK_GL_ERROR
 }
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4ubvNV
+static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4ubvNV
 	(JNIEnv * env, jclass clazz, jint index, jint n, jobject v, jint v_offset)
 {
 	GLubyte *v_ptr = (GLubyte *)env->GetDirectBufferAddress(v) + v_offset;

@@ -45,7 +45,7 @@ static glDrawRangeElementsEXTPROC glDrawRangeElementsEXT;
  * Class:	org.lwjgl.opengl.EXTDrawRangeElements
  * Method:	nglDrawRangeElementsEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXT
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jobject pIndices, jint pIndices_offset)
 {
 	GLvoid *pIndices_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pIndices) + pIndices_offset);
@@ -57,7 +57,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDraw
  * Class:	org.lwjgl.opengl.EXTDrawRangeElements
  * Method:	nglDrawRangeElementsEXTVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXTVBO
+static void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXTVBO
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint buffer_offset)
 {
 	glDrawRangeElementsEXT(mode, start, end, count, type, (GLvoid *)buffer_offset);

@@ -57,7 +57,7 @@ static glGetOcclusionQueryuivNVPROC glGetOcclusionQueryuivNV;
  * Class:	org.lwjgl.opengl.NVOcclusionQuery
  * Method:	nglGenOcclusionQueriesNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGenOcclusionQueriesNV
+static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGenOcclusionQueriesNV
 	(JNIEnv * env, jclass clazz, jint n, jobject piIDs, jint piIDs_offset)
 {
 	GLuint *piIDs_ptr = (GLuint *)env->GetDirectBufferAddress(piIDs) + piIDs_offset;
@@ -69,7 +69,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGenOcclu
  * Class:	org.lwjgl.opengl.NVOcclusionQuery
  * Method:	nglDeleteOcclusionQueriesNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglDeleteOcclusionQueriesNV
+static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglDeleteOcclusionQueriesNV
 	(JNIEnv * env, jclass clazz, jint n, jobject piIDs, jint piIDs_offset)
 {
 	GLuint *piIDs_ptr = (GLuint *)env->GetDirectBufferAddress(piIDs) + piIDs_offset;
@@ -81,7 +81,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglDeleteOc
  * Class:	org.lwjgl.opengl.NVOcclusionQuery
  * Method:	glIsOcclusionQueryNV
  */
-static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glIsOcclusionQueryNV
+static jboolean JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glIsOcclusionQueryNV
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	GLboolean result = glIsOcclusionQueryNV(id);
@@ -93,7 +93,7 @@ static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glIsOcc
  * Class:	org.lwjgl.opengl.NVOcclusionQuery
  * Method:	glBeginOcclusionQueryNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glBeginOcclusionQueryNV
+static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glBeginOcclusionQueryNV
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	glBeginOcclusionQueryNV(id);
@@ -104,7 +104,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glBeginOccl
  * Class:	org.lwjgl.opengl.NVOcclusionQuery
  * Method:	glEndOcclusionQueryNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glEndOcclusionQueryNV
+static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glEndOcclusionQueryNV
 	(JNIEnv * env, jclass clazz)
 {
 	glEndOcclusionQueryNV();
@@ -115,7 +115,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glEndOcclus
  * Class:	org.lwjgl.opengl.NVOcclusionQuery
  * Method:	nglGetOcclusionQueryivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryivNV
+static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryivNV
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
@@ -127,7 +127,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclu
  * Class:	org.lwjgl.opengl.NVOcclusionQuery
  * Method:	nglGetOcclusionQueryuivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryuivNV
+static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryuivNV
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLuint *piParams_ptr = (GLuint *)env->GetDirectBufferAddress(piParams) + piParams_offset;

@@ -47,7 +47,7 @@ static glPointParameterfvEXTPROC glPointParameterfvEXT;
  * Class:	org.lwjgl.opengl.EXTPointParameters
  * Method:	glPointParameterfEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEXT
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glPointParameterfEXT(pname, param);
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointPa
  * Class:	org.lwjgl.opengl.EXTPointParameters
  * Method:	nglPointParameterfvEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfvEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfvEXT
 	(JNIEnv * env, jclass clazz, jint pname, jobject pfParams, jint pfParams_offset)
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;

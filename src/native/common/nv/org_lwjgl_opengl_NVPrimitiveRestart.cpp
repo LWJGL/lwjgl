@@ -47,7 +47,7 @@ static glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV;
  * Class:	org.lwjgl.opengl.NVPrimitiveRestart
  * Method:	glPrimitiveRestartNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartNV
+static void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartNV
 	(JNIEnv * env, jclass clazz)
 {
 	glPrimitiveRestartNV();
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimiti
  * Class:	org.lwjgl.opengl.NVPrimitiveRestart
  * Method:	glPrimitiveRestartIndexNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartIndexNV
+static void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartIndexNV
 	(JNIEnv * env, jclass clazz, jint index)
 {
 	glPrimitiveRestartIndexNV(index);

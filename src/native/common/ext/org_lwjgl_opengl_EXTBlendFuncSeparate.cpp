@@ -45,7 +45,7 @@ static glBlendFuncSeparateEXTPROC glBlendFuncSeparateEXT;
  * Class:	org.lwjgl.opengl.EXTBlendFuncSeparate
  * Method:	glBlendFuncSeparateEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSeparateEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSeparateEXT
 	(JNIEnv * env, jclass clazz, jint sfactorRGB, jint dfactorRGB, jint sfactorAlpha, jint dfactorAlpha)
 {
 	glBlendFuncSeparateEXT(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);

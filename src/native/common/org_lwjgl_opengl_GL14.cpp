@@ -76,7 +76,7 @@ static glWindowPos3iPROC glWindowPos3i;
 static glBlendColorPROC glBlendColor;
 static glBlendEquationPROC glBlendEquation;
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendEquation
+static void JNICALL Java_org_lwjgl_opengl_GL14_glBlendEquation
   (JNIEnv *env, jclass clazz, jint mode)
 {
 	glBlendEquation(mode);
@@ -84,7 +84,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendEquation
 }
 
 
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static void JNICALL Java_org_lwjgl_opengl_GL14_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glBlendColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
@@ -95,7 +95,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendColor(JNIEnv * e
  * Method:    glFogCoordf
  * Signature: (F)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glFogCoordf
+static void JNICALL Java_org_lwjgl_opengl_GL14_glFogCoordf
   (JNIEnv *env, jclass clazz, jfloat f) {
 	glFogCoordf(f);
 }
@@ -106,7 +106,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glFogCoordf
  * Method:    nglFogCoordPointer
  * Signature: (IILjava/nio/Buffer;)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointer
+static void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointer
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jobject buffer, jint offset) {
 	GLvoid *address = (GLvoid *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glFogCoordPointer(p1, p2, address);
@@ -118,7 +118,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointer
  * Method:    nglFogCoordPointerVBO
  * Signature: (IILjava/nio/Buffer;)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointerVBO
+static void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointerVBO
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint buffer_offset) {
 	glFogCoordPointer(p1, p2, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -129,7 +129,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointerVBO
  * Method:    glMultiDrawArrays
  * Signature: (IIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglMultiDrawArrays
+static void JNICALL Java_org_lwjgl_opengl_GL14_nglMultiDrawArrays
   (JNIEnv *env, jclass clazz, jint mode, jobject first, jint first_offset, jobject count, jint count_offset, jint primcount) {
 	GLint *address = first_offset + (GLint *)env->GetDirectBufferAddress(first);
 	GLsizei *address2 = count_offset + (GLsizei *)env->GetDirectBufferAddress(count);
@@ -142,7 +142,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglMultiDrawArrays
  * Method:    glPointParameterf
  * Signature: (IF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glPointParameterf
+static void JNICALL Java_org_lwjgl_opengl_GL14_glPointParameterf
   (JNIEnv *env, jclass clazz, jint p1, jfloat p2) {
 	glPointParameterf(p1, p2);
 	CHECK_GL_ERROR
@@ -153,7 +153,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glPointParameterf
  * Method:    glPointParameterfv
  * Signature: (ILjava/nio/FloatBuffer;)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglPointParameterfv
+static void JNICALL Java_org_lwjgl_opengl_GL14_nglPointParameterfv
   (JNIEnv *env, jclass clazz, jint p1, jobject buffer, jint offset) {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glPointParameterfv(p1, address);
@@ -165,7 +165,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglPointParameterfv
  * Method:    glSecondaryColor3b
  * Signature: (BBB)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3b
+static void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3b
   (JNIEnv *env, jclass clazz, jbyte p1, jbyte p2, jbyte p3) {
 	glSecondaryColor3b(p1, p2, p3);
 }
@@ -176,7 +176,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3b
  * Method:    glSecondaryColor3f
  * Signature: (FFF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3f
+static void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3f
   (JNIEnv *env, jclass clazz, jfloat p1, jfloat p2, jfloat p3) {
 	glSecondaryColor3f(p1, p2, p3);
 }
@@ -187,7 +187,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3f
  * Method:    glSecondaryColor3ub
  * Signature: (BBB)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3ub
+static void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3ub
   (JNIEnv *env, jclass clazz, jbyte p1, jbyte p2, jbyte p3) {
 	glSecondaryColor3ub(p1, p2, p3);
 }
@@ -197,7 +197,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glSecondaryColor3ub
  * Method:    nglSecondaryColorPointer
  * Signature: (IIILjava/nio/Buffer;)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointer
+static void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointer
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jobject buffer, jint offset) {
 	const GLvoid *address = (const GLvoid *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glSecondaryColorPointer(p1, p2, p3, address);
@@ -209,7 +209,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointe
  * Method:    nglSecondaryColorPointerVBO
  * Signature: (IIILjava/nio/Buffer;)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointerVBO
+static void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointerVBO
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jint buffer_offset) {
 	glSecondaryColorPointer(p1, p2, p3, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
@@ -220,7 +220,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointe
  * Method:    glBlendFuncSeparate
  * Signature: (IIII)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendFuncSeparate
+static void JNICALL Java_org_lwjgl_opengl_GL14_glBlendFuncSeparate
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jint p4) {
 	glBlendFuncSeparate(p1, p2, p3, p4);
 	CHECK_GL_ERROR
@@ -232,7 +232,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendFuncSeparate
  * Method:    glWindowPos2f
  * Signature: (FF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos2f
+static void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos2f
   (JNIEnv *env, jclass clazz, jfloat p1, jfloat p2) {
         glWindowPos2f(p1, p2);
 }
@@ -242,7 +242,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos2f
  * Method:    glWindowPos2i
  * Signature: (II)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos2i
+static void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos2i
   (JNIEnv *env, jclass clazz, jint p1, jint p2) {
         glWindowPos2i(p1, p2);
 }
@@ -253,7 +253,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos2i
  * Method:    glWindowPos3f
  * Signature: (FFF)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos3f
+static void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos3f
   (JNIEnv *env, jclass clazz, jfloat p1, jfloat p2, jfloat p3) {
         glWindowPos3f(p1, p2, p3);
 }
@@ -264,7 +264,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos3f
  * Method:    glWindowPos3i
  * Signature: (III)V
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos3i
+static void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos3i
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3) {
         glWindowPos3i(p1, p2, p3);
 }

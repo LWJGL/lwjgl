@@ -47,7 +47,7 @@ static glPNTrianglesfATIPROC glPNTrianglesfATI;
  * Class:	org.lwjgl.opengl.ATIPnTriangles
  * Method:	glPNTrianglesfATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI
+static void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glPNTrianglesfATI(pname, param);
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTriangles
  * Class:	org.lwjgl.opengl.ATIPnTriangles
  * Method:	glPNTrianglesiATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI
+static void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
 	glPNTrianglesiATI(pname, param);

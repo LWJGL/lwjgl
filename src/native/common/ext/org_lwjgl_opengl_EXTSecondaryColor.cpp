@@ -51,7 +51,7 @@ static glSecondaryColorPointerEXTPROC glSecondaryColorPointerEXT;
  * Class:	org.lwjgl.opengl.EXTSecondaryColor
  * Method:	glSecondaryColor3bEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3bEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3bEXT
 	(JNIEnv * env, jclass clazz, jbyte red, jbyte green, jbyte blue)
 {
 	glSecondaryColor3bEXT(red, green, blue);
@@ -62,7 +62,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondar
  * Class:	org.lwjgl.opengl.EXTSecondaryColor
  * Method:	glSecondaryColor3fEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3fEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3fEXT
 	(JNIEnv * env, jclass clazz, jfloat red, jfloat green, jfloat blue)
 {
 	glSecondaryColor3fEXT(red, green, blue);
@@ -73,7 +73,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondar
  * Class:	org.lwjgl.opengl.EXTSecondaryColor
  * Method:	glSecondaryColor3ubEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3ubEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3ubEXT
 	(JNIEnv * env, jclass clazz, jbyte red, jbyte green, jbyte blue)
 {
 	glSecondaryColor3ubEXT(red, green, blue);
@@ -84,7 +84,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondar
  * Class:	org.lwjgl.opengl.EXTSecondaryColor
  * Method:	nglSecondaryColorPointerEXT
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPointerEXT
+static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPointerEXT
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_offset)
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
@@ -96,7 +96,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSeconda
  * Class:	org.lwjgl.opengl.EXTSecondaryColor
  * Method:	nglSecondaryColorPointerEXTVBO
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPointerEXTVBO
+static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPointerEXTVBO
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
 	glSecondaryColorPointerEXT(size, type, stride, (GLvoid *)buffer_offset);

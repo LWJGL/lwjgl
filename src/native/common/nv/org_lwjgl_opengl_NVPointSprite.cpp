@@ -47,7 +47,7 @@ static glPointParameterivNVPROC glPointParameterivNV;
  * Class:	org.lwjgl.opengl.NVPointSprite
  * Method:	glPointParameteriNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV
+static void JNICALL Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
 	glPointParameteriNV(pname, param);
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_glPointParamet
  * Class:	org.lwjgl.opengl.NVPointSprite
  * Method:	nglPointParameterivNV
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV
+static void JNICALL Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV
 	(JNIEnv * env, jclass clazz, jint pname, jobject piParams, jint piParams_offset)
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;

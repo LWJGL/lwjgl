@@ -47,7 +47,7 @@ static glStencilFuncSeparateATIPROC glStencilFuncSeparateATI;
  * Class:	org.lwjgl.opengl.ATISeparateStencil
  * Method:	glStencilOpSeparateATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSeparateATI
+static void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSeparateATI
 	(JNIEnv * env, jclass clazz, jint face, jint sfail, jint dpfail, jint dppass)
 {
 	glStencilOpSeparateATI(face, sfail, dpfail, dppass);
@@ -58,7 +58,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencil
  * Class:	org.lwjgl.opengl.ATISeparateStencil
  * Method:	glStencilFuncSeparateATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSeparateATI
+static void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSeparateATI
 	(JNIEnv * env, jclass clazz, jint frontfunc, jint backfunc, jint ref, jint mask)
 {
 	glStencilFuncSeparateATI(frontfunc, backfunc, ref, mask);

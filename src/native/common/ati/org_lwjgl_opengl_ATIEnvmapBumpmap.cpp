@@ -51,7 +51,7 @@ static glGetTexBumpParameterfvATIPROC glGetTexBumpParameterfvATI;
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglTexBumpParameterfvATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfvATI
+static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfvATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject pfParam, jint pfParam_offset)
 {
 	GLfloat *pfParam_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParam) + pfParam_offset;
@@ -63,7 +63,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpP
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglTexBumpParameterivATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterivATI
+static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterivATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject piParam, jint piParam_offset)
 {
 	GLint *piParam_ptr = (GLint *)env->GetDirectBufferAddress(piParam) + piParam_offset;
@@ -75,7 +75,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpP
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglGetTexBumpParameterfvATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterfvATI
+static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterfvATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject pfParam, jint pfParam_offset)
 {
 	GLfloat *pfParam_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParam) + pfParam_offset;
@@ -87,7 +87,7 @@ static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBu
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglGetTexBumpParameterivATI
  */
-static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterivATI
+static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterivATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject piParam, jint piParam_offset)
 {
 	GLint *piParam_ptr = (GLint *)env->GetDirectBufferAddress(piParam) + piParam_offset;
