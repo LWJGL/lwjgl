@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
  * Created 11-jan-2004
  * @author Erik Duijs
  */
-public class MipMap extends Util implements GLUConstants {
+public class MipMap extends Util {
 
 	/**
 	 * Method gluBuild2DMipmaps
@@ -41,7 +41,7 @@ public class MipMap extends Util implements GLUConstants {
 		int neww, newh, level, bpp;
 		boolean done;
 
-		if (width < 1 || height < 1) return GLU_INVALID_VALUE;
+		if (width < 1 || height < 1) return GLU.GLU_INVALID_VALUE;
 
 		maxSize = glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE);
 
@@ -56,7 +56,7 @@ public class MipMap extends Util implements GLUConstants {
 
 		bpp = bytesPerPixel(format, type);
 		if (bpp == 0) {
-			return GLU_INVALID_ENUM;
+			return GLU.GLU_INVALID_ENUM;
 		}
 
 		// Get current glPixelStore state
@@ -152,7 +152,7 @@ public class MipMap extends Util implements GLUConstants {
 
 		components = compPerPix(format);
 		if (components == -1) {
-			return GLU_INVALID_ENUM;
+			return GLU.GLU_INVALID_ENUM;
 		}
 
 		// temp image data
@@ -206,7 +206,7 @@ public class MipMap extends Util implements GLUConstants {
 				break;
 
 			default :
-				return GLU_INVALID_ENUM;
+				return GLU.GLU_INVALID_ENUM;
 		}
 
 		// Do scaling
@@ -279,7 +279,7 @@ public class MipMap extends Util implements GLUConstants {
 				break;
 
 			default :
-				return GLU_INVALID_ENUM;
+				return GLU.GLU_INVALID_ENUM;
 		}
 
 		return 0;

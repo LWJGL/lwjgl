@@ -7,7 +7,7 @@ package org.lwjgl.opengl.glu;
  * Created 11-jan-2004
  * @author Erik Duijs
  */
-public class Registry extends Util implements GLUConstants {
+public class Registry extends Util {
 
 	private static final String versionString = "1.3";
 	private static final String extensionString =
@@ -20,9 +20,9 @@ public class Registry extends Util implements GLUConstants {
 	 */
 	public static String gluGetString(int name) {
 
-		if (name == GLU_VERSION) {
+		if (name == GLU.GLU_VERSION) {
 			return versionString;
-		} else if (name == GLU_EXTENSIONS) {
+		} else if (name == GLU.GLU_EXTENSIONS) {
 			return extensionString;
 		}
 		return null;

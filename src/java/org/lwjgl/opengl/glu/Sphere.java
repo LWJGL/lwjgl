@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
  * Created 23-dec-2003
  * @author Erik Duijs
  */
-public class Sphere extends Quadric implements GLUConstants {
+public class Sphere extends Quadric {
 
 	/**
 	 * Constructor
@@ -44,18 +44,18 @@ public class Sphere extends Quadric implements GLUConstants {
 		boolean normals;
 		float nsign;
 
-		normals = super.normals != GLU_NONE;
+		normals = super.normals != GLU.GLU_NONE;
 
-		if (super.orientation == GLU_INSIDE) {
+		if (super.orientation == GLU.GLU_INSIDE) {
 			nsign = -1.0f;
 		} else {
 			nsign = 1.0f;
 		}
 
-		drho = PI / stacks;
-		dtheta = 2.0f * PI / slices;
+		drho = GLU.PI / stacks;
+		dtheta = 2.0f * GLU.PI / slices;
 
-		if (super.drawStyle == GLU_FILL) {
+		if (super.drawStyle == GLU.GLU_FILL) {
 			if (super.textureFlag) {
 				// draw +Z end as a triangle fan
 				GL11.glBegin(GL11.GL_TRIANGLE_FAN);
@@ -119,7 +119,7 @@ public class Sphere extends Quadric implements GLUConstants {
 				GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 				GL11.glNormal3f(0.0f, 0.0f, -1.0f);
 				GL11.glVertex3f(0.0f, 0.0f, -radius * nsign);
-				rho = PI - drho;
+				rho = GLU.PI - drho;
 				s = 1.0f;
 				for (j = slices; j >= 0; j--) {
 					theta = (j == slices) ? 0.0f : j * dtheta;
@@ -134,8 +134,8 @@ public class Sphere extends Quadric implements GLUConstants {
 				GL11.glEnd();
 			}
 		} else if (
-			super.drawStyle == GLU_LINE
-				|| super.drawStyle == GLU_SILHOUETTE) {
+			super.drawStyle == GLU.GLU_LINE
+				|| super.drawStyle == GLU.GLU_SILHOUETTE) {
 			// draw stack lines
 			for (i = 1;
 				i < stacks;
@@ -168,7 +168,7 @@ public class Sphere extends Quadric implements GLUConstants {
 				}
 				GL11.glEnd();
 			}
-		} else if (super.drawStyle == GLU_POINT) {
+		} else if (super.drawStyle == GLU.GLU_POINT) {
 			// top and bottom-most points
 			GL11.glBegin(GL11.GL_POINTS);
 			if (normals)

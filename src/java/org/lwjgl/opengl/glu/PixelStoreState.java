@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
  * Created 11-jan-2004
  * @author Erik Duijs
  */
-class PixelStoreState extends Util implements GLUConstants {
+class PixelStoreState extends Util {
 
 	public int unpackRowLength = glGetIntegerv(GL11.GL_UNPACK_ROW_LENGTH);
 	public int unpackAlignment = glGetIntegerv(GL11.GL_UNPACK_ALIGNMENT);

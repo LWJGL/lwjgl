@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
  * Created 23-dec-2003
  * @author Erik Duijs
  */
-public class Cylinder extends Quadric implements GLUConstants {
+public class Cylinder extends Quadric {
 
 	/**
 	 * Constructor for Cylinder.
@@ -49,19 +49,19 @@ public class Cylinder extends Quadric implements GLUConstants {
 		float x, y, z, nz, nsign;
 		int i, j;
 
-		if (super.orientation == GLU_INSIDE) {
+		if (super.orientation == GLU.GLU_INSIDE) {
 			nsign = -1.0f;
 		} else {
 			nsign = 1.0f;
 		}
 
-		da = 2.0f * PI / slices;
+		da = 2.0f * GLU.PI / slices;
 		dr = (topRadius - baseRadius) / stacks;
 		dz = height / stacks;
 		nz = (baseRadius - topRadius) / height;
 		// Z component of normal vectors
 
-		if (super.drawStyle == GLU_POINT) {
+		if (super.drawStyle == GLU.GLU_POINT) {
 			GL11.glBegin(GL11.GL_POINTS);
 			for (i = 0; i < slices; i++) {
 				x = cos((i * da));
@@ -77,9 +77,9 @@ public class Cylinder extends Quadric implements GLUConstants {
 				}
 			}
 			GL11.glEnd();
-		} else if (super.drawStyle == GLU_LINE || super.drawStyle == GLU_SILHOUETTE) {
+		} else if (super.drawStyle == GLU.GLU_LINE || super.drawStyle == GLU.GLU_SILHOUETTE) {
 			// Draw rings
-			if (super.drawStyle == GLU_LINE) {
+			if (super.drawStyle == GLU.GLU_LINE) {
 				z = 0.0f;
 				r = baseRadius;
 				for (j = 0; j <= stacks; j++) {
@@ -125,7 +125,7 @@ public class Cylinder extends Quadric implements GLUConstants {
 				GL11.glVertex3f((x * topRadius), (y * topRadius), (height));
 			}
 			GL11.glEnd();
-		} else if (super.drawStyle == GLU_FILL) {
+		} else if (super.drawStyle == GLU.GLU_FILL) {
 			float ds = 1.0f / slices;
 			float dt = 1.0f / stacks;
 			float t = 0.0f;

@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
  * 
  * @author Erik Duijs
  */
-public class PartialDisk extends Quadric implements GLUConstants {
+public class PartialDisk extends Quadric {
 
 	private static final int CACHE_SIZE = 240;
 
@@ -36,7 +36,7 @@ public class PartialDisk extends Quadric implements GLUConstants {
 	 * 
 	 * With respect to orientation, the +z side of the partial disk is
 	 * considered to be outside (see gluQuadricOrientation). This means that if
-	 * the orientation is set to GLU_OUTSIDE, then any normals generated point
+	 * the orientation is set to GLU.GLU_OUTSIDE, then any normals generated point
 	 * along the +z axis. Otherwise, they point along the -z axis.
 	 * 
 	 * If texturing is turned on (with gluQuadricTexture), texture coordinates
@@ -72,7 +72,7 @@ public class PartialDisk extends Quadric implements GLUConstants {
 			|| outerRadius <= 0.0f
 			|| innerRadius < 0.0f
 			|| innerRadius > outerRadius) {
-			//gluQuadricError(qobj, GLU_INVALID_VALUE);
+			//gluQuadricError(qobj, GLU.GLU_INVALID_VALUE);
 			System.err.println("PartialDisk: GLU_INVALID_VALUE");
 			return;
 		}
@@ -97,9 +97,9 @@ public class PartialDisk extends Quadric implements GLUConstants {
 
 		/* Cache is the vertex locations cache */
 
-		angleOffset = startAngle / 180.0f * PI;
+		angleOffset = startAngle / 180.0f * GLU.PI;
 		for (i = 0; i <= slices; i++) {
-			angle = angleOffset + ((PI * sweepAngle) / 180.0f) * i / slices;
+			angle = angleOffset + ((GLU.PI * sweepAngle) / 180.0f) * i / slices;
 			sinCache[i] = sin(angle);
 			cosCache[i] = cos(angle);
 		}
@@ -110,21 +110,21 @@ public class PartialDisk extends Quadric implements GLUConstants {
 		}
 
 		switch (super.normals) {
-			case GLU_FLAT :
-			case GLU_SMOOTH :
-				if (super.orientation == GLU_OUTSIDE) {
+			case GLU.GLU_FLAT :
+			case GLU.GLU_SMOOTH :
+				if (super.orientation == GLU.GLU_OUTSIDE) {
 					GL11.glNormal3f(0.0f, 0.0f, 1.0f);
 				} else {
 					GL11.glNormal3f(0.0f, 0.0f, -1.0f);
 				}
 				break;
 			default :
-			case GLU_NONE :
+			case GLU.GLU_NONE :
 				break;
 		}
 
 		switch (super.drawStyle) {
-			case GLU_FILL :
+			case GLU.GLU_FILL :
 				if (innerRadius == .0f) {
 					finish = loops - 1;
 					/* Triangle strip for inner polygons */
@@ -138,7 +138,7 @@ public class PartialDisk extends Quadric implements GLUConstants {
 						texLow = radiusLow / outerRadius / 2;
 					}
 
-					if (super.orientation == GLU_OUTSIDE) {
+					if (super.orientation == GLU.GLU_OUTSIDE) {
 						for (i = slices; i >= 0; i--) {
 							if (super.textureFlag) {
 								GL11.glTexCoord2f(
@@ -171,7 +171,7 @@ public class PartialDisk extends Quadric implements GLUConstants {
 
 					GL11.glBegin(GL11.GL_QUAD_STRIP);
 					for (i = 0; i <= slices; i++) {
-						if (super.orientation == GLU_OUTSIDE) {
+						if (super.orientation == GLU.GLU_OUTSIDE) {
 							if (super.textureFlag) {
 								GL11.glTexCoord2f(
 									texLow * sinCache[i] + 0.5f,
@@ -210,7 +210,7 @@ public class PartialDisk extends Quadric implements GLUConstants {
 					GL11.glEnd();
 				}
 				break;
-			case GLU_POINT :
+			case GLU.GLU_POINT :
 				GL11.glBegin(GL11.GL_POINTS);
 				for (i = 0; i < slices2; i++) {
 					sintemp = sinCache[i];
@@ -230,7 +230,7 @@ public class PartialDisk extends Quadric implements GLUConstants {
 				}
 				GL11.glEnd();
 				break;
-			case GLU_LINE :
+			case GLU.GLU_LINE :
 				if (innerRadius == outerRadius) {
 					GL11.glBegin(GL11.GL_LINE_STRIP);
 
@@ -280,7 +280,7 @@ public class PartialDisk extends Quadric implements GLUConstants {
 					GL11.glEnd();
 				}
 				break;
-			case GLU_SILHOUETTE :
+			case GLU.GLU_SILHOUETTE :
 				if (sweepAngle < 360.0f) {
 					for (i = 0; i <= slices; i += slices) {
 						sintemp = sinCache[i];

@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
  * Created 22-dec-2003
  * @author Erik Duijs
  */
-public class Quadric implements GLUConstants {
+public class Quadric {
 	
 	protected int drawStyle;
 	protected int orientation;
@@ -22,10 +22,10 @@ public class Quadric implements GLUConstants {
 	public Quadric() {
 		super();
 		
-		drawStyle = GLUConstants.GLU_FILL;
-		orientation = GLUConstants.GLU_OUTSIDE;
+		drawStyle = GLU.GLU_FILL;
+		orientation = GLU.GLU_OUTSIDE;
 		textureFlag = false;
-		normals = GLUConstants.GLU_SMOOTH;
+		normals = GLU.GLU_SMOOTH;
 	}
 
 	/**

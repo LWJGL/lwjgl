@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
  * Created 23-dec-2003
  * @author Erik Duijs
  */
-public class Disk extends Quadric implements GLUConstants {
+public class Disk extends Quadric {
 
 	/**
 	 * Constructor for Disk.
@@ -41,8 +41,8 @@ public class Disk extends Quadric implements GLUConstants {
 	   float da, dr;
 
 	   /* Normal vectors */
-	   if (super.normals != GLU_NONE) {
-	      if (super.orientation == GLU_OUTSIDE) {
+	   if (super.normals != GLU.GLU_NONE) {
+	      if (super.orientation == GLU.GLU_OUTSIDE) {
 		 GL11.glNormal3f(0.0f, 0.0f, +1.0f);
 	      }
 	      else {
@@ -50,11 +50,11 @@ public class Disk extends Quadric implements GLUConstants {
 	      }
 	   }
 	
-	   da = 2.0f * PI / slices;
+	   da = 2.0f * GLU.PI / slices;
 	   dr = (outerRadius - innerRadius) /  loops;
 	
 	   switch (super.drawStyle) {
-	   case GLU_FILL:
+	   case GLU.GLU_FILL:
 	      {
 		 /* texture of a gluDisk is a cut out of the texture unit square
 		  * x, y in [-outerRadius, +outerRadius]; s, t in [0, 1]
@@ -66,7 +66,7 @@ public class Disk extends Quadric implements GLUConstants {
 		 int l;
 		 for (l = 0; l < loops; l++) {
 		    float r2 = r1 + dr;
-		    if (super.orientation == GLU_OUTSIDE) {
+		    if (super.orientation == GLU.GLU_OUTSIDE) {
 		       int s;
 		       GL11.glBegin(GL11.GL_QUAD_STRIP);
 		       for (s = 0; s <= slices; s++) {
@@ -106,7 +106,7 @@ public class Disk extends Quadric implements GLUConstants {
 		 }
 		 break;
 	      }
-	   case GLU_LINE:
+	   case GLU.GLU_LINE:
 	      {
 		 int l, s;
 		 /* draw loops */
@@ -133,7 +133,7 @@ public class Disk extends Quadric implements GLUConstants {
 		 }
 		 break;
 	      }
-	   case GLU_POINT:
+	   case GLU.GLU_POINT:
 	      {
 		 int s;
 		 GL11.glBegin(GL11.GL_POINTS);
@@ -150,12 +150,12 @@ public class Disk extends Quadric implements GLUConstants {
 		 GL11.glEnd();
 		 break;
 	      }
-	   case GLU_SILHOUETTE:
+	   case GLU.GLU_SILHOUETTE:
 	      {
 		 if (innerRadius != 0.0) {
 		    float a;
 		    GL11.glBegin(GL11.GL_LINE_LOOP);
-		    for (a = 0.0f; a < 2.0 * PI; a += da) {
+		    for (a = 0.0f; a < 2.0 * GLU.PI; a += da) {
 		       float x = innerRadius * sin(a);
 		       float y = innerRadius * cos(a);
 		       GL11.glVertex2f(x, y);
@@ -165,7 +165,7 @@ public class Disk extends Quadric implements GLUConstants {
 		 {
 		    float a;
 		    GL11.glBegin(GL11.GL_LINE_LOOP);
-		    for (a = 0; a < 2.0f * PI; a += da) {
+		    for (a = 0; a < 2.0f * GLU.PI; a += da) {
 		       float x = outerRadius * sin(a);
 		       float y = outerRadius * cos(a);
 		       GL11.glVertex2f(x, y);

@@ -14,7 +14,7 @@ import java.nio.IntBuffer;
  *
  * @author Erik Duijs
  */
-public class Project extends Util implements GLUConstants {
+public class Project extends Util {
 
 	private static final float[] IDENTITY_MATRIX = new float[] {
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -159,7 +159,7 @@ public class Project extends Util implements GLUConstants {
 	 */
 	public static void gluPerspective(float fovy, float aspect, float zNear, float zFar) {
 		float sine, cotangent, deltaZ;
-		float radians = fovy / 2 * PI / 180;
+		float radians = fovy / 2 * GLU.PI / 180;
 
 		deltaZ = zFar - zNear;
 		sine = (float)Math.sin(radians);
