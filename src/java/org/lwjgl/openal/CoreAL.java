@@ -34,9 +34,6 @@ package org.lwjgl.openal;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
-import java.nio.DoubleBuffer;
-
-
 /**
  * $Id$
  * <br>
@@ -136,36 +133,7 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	  */
 	public static native float alGetFloat(int pname);
 
-	/**
-   * Like OpenGL, AL uses a simplified interface for querying global state. 
-   * 
-   * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
-   * AL_DISTANCE_MODEL.
-   * <p>
-   * <code>null</code> destinations are quietly ignored. AL_INVALID_ENUM is the response to errors
-   * in specifying pName. The amount of memory required in the destination
-   * depends on the actual state requested.
-   * </p>
-	  *
-	  * @return double state described by pname will be returned.
-	  */
-	public static native double alGetDouble(int pname);
-
-	/**
-   * Like OpenGL, AL uses a simplified interface for querying global state. 
-   * 
-   * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
-   * AL_DISTANCE_MODEL.
-   * <p>
-   * <code>null</code> destinations are quietly ignored. AL_INVALID_ENUM is the response to errors
-   * in specifying pName. The amount of memory required in the destination
-   * depends on the actual state requested.
-   * </p>
-	  *
-	  * @param pname state to be queried
-	  * @param data Buffer to place the booleans in
-	  */
-	public static native void alGetBooleanv(int pname, ByteBuffer data);
+	private static native void nalGetBooleanv(int pname, ByteBuffer data, int offset);
 
 	/**
    * Like OpenGL, AL uses a simplified interface for querying global state. 
@@ -181,7 +149,11 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	  * @param pname state to be queried
 	  * @param data Buffer to place the integers in
 	  */
-	public static native void alGetIntegerv(int pname, IntBuffer data);
+	public static void alGetInteger(int pname, IntBuffer data) {
+		assert data.remaining() > 0;
+		nalGetIntegerv(pname, data, data.position());
+	}
+	private static native void nalGetIntegerv(int pname, IntBuffer data, int offset);
 
 	/**
    * Like OpenGL, AL uses a simplified interface for querying global state. 
@@ -197,23 +169,11 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	  * @param pname state to be queried
 	  * @param data Buffer to place the floats in
 	  */
-	public static native void alGetFloatv(int pname, FloatBuffer data);
-
-	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-   * 
-   * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
-   * AL_DISTANCE_MODEL.
-   * <p>
-   * <code>null</code> destinations are quietly ignored. AL_INVALID_ENUM is the response to errors
-   * in specifying pName. The amount of memory required in the destination
-   * depends on the actual state requested.
-   * </p>
-	 *
-	 * @param pname state to be queried
-	 * @param data Buffer to place the floats in
-	 */
-	public static native void alGetDoublev(int pname, DoubleBuffer data);
+	public static void alGetFloat(int pname, FloatBuffer data) {
+		assert data.remaining() > 0;
+		nalGetFloatv(pname, data, data.position());
+	}
+	private static native void nalGetFloatv(int pname, FloatBuffer data, int position);
 
 	/**
 	 * The application can retrieve state information global to the current AL Context.
@@ -367,30 +327,22 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
   
 
 	/**
-	 * Listener attributes are changed using the Listener group of commands.
+   * Listener state is maintained inside the AL implementation and can be queried in
+   * full.
 	 *
-	 * @param pname name of the attribute to be set
-	 * @param floatdata Buffer to read floats from
+	 * @param pname name of the attribute to be retrieved
+	 * @return int
 	 */
-	public static native void alListenerfv(int pname, FloatBuffer floatdata);
+	public static native int alGetListeneri(int pname);
 
 	/**
    * Listener state is maintained inside the AL implementation and can be queried in
    * full.
 	 *
 	 * @param pname name of the attribute to be retrieved
-	 * @param integerdata Buffer to write integer to
+	 * @return float
 	 */
-	public static native void alGetListeneri(int pname, IntBuffer integerdata);
-
-	/**
-   * Listener state is maintained inside the AL implementation and can be queried in
-   * full.
-	 *
-	 * @param pname name of the attribute to be retrieved
-	 * @param floatdata Buffer to write float to
-	 */
-	public static native void alGetListenerf(int pname, FloatBuffer floatdata);
+	public static native float alGetListenerf(int pname);
 
 	/**
 	 * Listener state is maintained inside the AL implementation and can be queried in
@@ -399,23 +351,30 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of the attribute to be retrieved
 	 * @param floatdata Buffer to write floats to
 	 */
-	public static native void alGetListenerfv(int pname, FloatBuffer floatdata);
+	public static void alGetListener(int pname, FloatBuffer floatdata) {
+		nalGetListenerfv(pname, floatdata, floatdata.position());
+	}
+	private static native void nalGetListenerfv(int pname, FloatBuffer floatdata, int offset);
 
 	/**
 	 * The application requests a number of Sources using GenSources.
 	 *
-	 * @param n number of sources to generate
 	 * @param sources array holding sources
 	 */
-	public static native void alGenSources(int n, IntBuffer sources);
+	public static void alGenSources(IntBuffer sources) {
+		nalGenSources(sources.remaining(), sources, sources.position());
+	}
+	private static native void nalGenSources(int n, IntBuffer sources, int offset);
 
 	/**
 	 * The application requests deletion of a number of Sources by DeleteSources.
 	 *
-	 * @param n Number of sources to delete
 	 * @param source Source array to delete from
 	 */
-	public static native void alDeleteSources(int n, IntBuffer source);
+	public static void alDeleteSources(IntBuffer source) {
+		nalDeleteSources(source.remaining(), source, source.position());
+	}
+	private static native void nalDeleteSources(int n, IntBuffer source, int offset);
 
 	/**
 	 * The application can verify whether a source name is valid using the IsSource query.
@@ -464,14 +423,15 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
   
 
 	/**
-   * Specifies the position and other properties as taken into account during
-   * sound processing.
+   * Source state is maintained inside the AL implementation, and the current attributes
+   * can be queried. The performance of such queries is implementation dependent, no
+   * performance guarantees are made.
 	 *
-	 * @param source source whichs attribute is being set
-	 * @param pname name of the attribute being set 
-	 * @param floatdata Buffer to read floats from
+	 * @param source source to get property from
+	 * @param pname name of property
+	 * @return int
 	 */
-	public static native void alSourcefv(int source, int pname, FloatBuffer floatdata);
+	public static native int alGetSourcei(int source, int pname);
 
 	/**
    * Source state is maintained inside the AL implementation, and the current attributes
@@ -480,20 +440,9 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 *
 	 * @param source source to get property from
 	 * @param pname name of property
-	 * @param integerdata Buffer to write integer to
+	 * @return float
 	 */
-	public static native void alGetSourcei(int source, int pname, IntBuffer integerdata);
-
-	/**
-   * Source state is maintained inside the AL implementation, and the current attributes
-   * can be queried. The performance of such queries is implementation dependent, no
-   * performance guarantees are made.
-	 *
-	 * @param source source to get property from
-	 * @param pname name of property
-	 * @param floatdata Buffer to write float to
-	 */
-	public static native void alGetSourcef(int source, int pname, FloatBuffer floatdata);
+	public static native float alGetSourcef(int source, int pname);
 
 	/**
    * Source state is maintained inside the AL implementation, and the current attributes
@@ -504,7 +453,11 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname property to get
 	 * @param floatdata Buffer to write floats to
 	 */
-	public static native void alGetSourcefv(int source, int pname, FloatBuffer floatdata);
+	public static void alGetSource(int source, int pname, FloatBuffer floatdata) {
+		assert floatdata.remaining() > 0;
+		nalGetSourcefv(source, pname, floatdata, floatdata.position());
+	}
+	private static native void nalGetSourcefv(int source, int pname, FloatBuffer floatdata, int position);
 
 	/**
    * Play() applied to an AL_INITIAL Source will promote the Source to AL_PLAYING, thus
@@ -516,10 +469,12 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * Pause() operation. Play() applied to a AL_STOPPED Source will propagate it to
    * AL_INITIAL then to AL_PLAYING immediately.
 	 *
-	 * @param n number of sources to play
 	 * @param sources array of sources to play
 	 */
-	public static native void alSourcePlayv(int n, IntBuffer sources);
+	public static void alSourcePlay(int n, IntBuffer sources) {
+		nalSourcePlayv(sources.remaining(), sources, sources.position());
+	}
+	private static native void nalSourcePlayv(int n, IntBuffer sources, int offset);
 
 	/**
    * Pause() applied to an AL_INITIAL Source is a legal NOP. Pause() applied to a
@@ -527,10 +482,12 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * processing, its current state is preserved. Pause() applied to a AL_PAUSED Source is a
    * legal NOP. Pause() applied to a AL_STOPPED Source is a legal NOP.
 	 *
-	 * @param n number of sources to pause
 	 * @param sources array of sources to pause
 	 */
-	public static native void alSourcePausev(int n, IntBuffer sources);
+	public static void alSourcePause(IntBuffer sources) {
+		nalSourcePausev(sources.remaining(), sources, sources.position());
+	}
+	private static native void nalSourcePausev(int n, IntBuffer sources, int offset);
 
 	/**
    * Stop() applied to an AL_INITIAL Source is a legal NOP. Stop() applied to a AL_PLAYING
@@ -539,10 +496,12 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * state to AL_STOPPED, with the same consequences as on a AL_PLAYING Source. Stop()
    * applied to a AL_STOPPED Source is a legal NOP.
 	 *
-	 * @param n number of sources to stop
 	 * @param sources array of sources to stop
 	 */
-	public static native void alSourceStopv(int n, IntBuffer sources);
+	public static void alSourceStop(IntBuffer sources) {
+		nalSourceStopv(sources.remaining(), sources, sources.position());
+	}
+	private static native void nalSourceStopv(int n, IntBuffer sources, int offset);
 
 	/**
    * Rewind() applied to an AL_INITIAL Source is a legal NOP. Rewind() applied to a
@@ -556,7 +515,10 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of sources to rewind
 	 * @param sources array of sources to rewind
 	 */
-	public static native void alSourceRewindv(int n, IntBuffer sources);
+	public static void alSourceRewind(IntBuffer sources) {
+		nalSourceRewindv(sources.remaining(), sources, sources.position());
+	}
+	private static native void nalSourceRewindv(int n, IntBuffer sources, int offset);
 
 	/**
 	 * Play() applied to an AL_INITIAL Source will promote the Source to AL_PLAYING, thus
@@ -609,10 +571,12 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	 * The application requests a number of Buffers using GenBuffers.
 	 *
-	 * @param n number of buffers to generate
 	 * @param buffers holding buffers
 	 */
-	public static native void alGenBuffers(int n, IntBuffer buffers);
+	public static void alGenBuffers(IntBuffer buffers) {
+		nalGenBuffers(buffers.remaining(), buffers, buffers.position());
+	}
+	private static native void nalGenBuffers(int n, IntBuffer buffers, int offset);
 
 	/**
    * <p>
@@ -628,10 +592,12 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * a legal NOP in both scalar and vector forms of the command. The same is true for
    * unused buffer names, e.g. such as not allocated yet, or as released already.
 	 *
-	 * @param n Number of buffers to delete
 	 * @param buffers Buffer to delete from
 	 */
-	public static native void alDeleteBuffers(int n, IntBuffer buffers);
+	public static void alDeleteBuffers(int n, IntBuffer buffers) {
+		nalDeleteBuffers(buffers.remaining(), buffers, buffers.position());
+	}
+	private static native void nalDeleteBuffers(int n, IntBuffer buffers, int offset);
 
 	/**
 	 * The application can verify whether a buffer Name is valid using the IsBuffer query.
@@ -666,13 +632,22 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param buffer Buffer to fill
 	 * @param format format sound data is in
 	 * @param data location of data 
-	 * @param size size of data segment
 	 * @param freq frequency of data
 	 */
-	public static native void alBufferData(
+	public static void alBufferData(
 		int buffer,
 		int format,
-    ByteBuffer data,
+		ByteBuffer data,
+		int size,
+		int freq) {
+			// TODO: add an assertion here?
+			nalBufferData(buffer, format, data, data.position(), data.remaining(), freq);
+		}
+	private static native void nalBufferData(
+		int buffer,
+		int format,
+		ByteBuffer data,
+		int offset,
 		int size,
 		int freq);
 
@@ -683,9 +658,9 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 *
 	 * @param buffer buffer to get property from
 	 * @param pname name of property to retrieve
-	 * @param integerdata Buffer to write integer to
+	 * @param int
 	 */
-	public static native void alGetBufferi(int buffer, int pname, IntBuffer integerdata);
+	public static native int alGetBufferi(int buffer, int pname);
 
 	/**
    * Buffer state is maintained inside the AL implementation and can be queried in full.<br>
@@ -694,9 +669,9 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 *
 	 * @param buffer buffer to get property from
 	 * @param pname name of property to retrieve
-	 * @param floatdata Buffer to write float to
+	 * @return float
 	 */
-	public static native void alGetBufferf(int buffer, int pname, FloatBuffer floatdata);
+	public static native float alGetBufferf(int buffer, int pname);
 
 	/**
    * <p>
@@ -711,10 +686,12 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * </p>
 	 *
 	 * @param source source to queue buffers onto
-	 * @param n number of buffers to be queued
 	 * @param buffers buffers to be queued
 	 */
-	public static native void alSourceQueueBuffers(int source, int n, IntBuffer buffers);
+	public static void alSourceQueueBuffers(int source, IntBuffer buffers) {
+		nalSourceQueueBuffers(source, buffers.remaining(), buffers, buffers.position());
+	}
+	private static native void nalSourceQueueBuffers(int source, int n, IntBuffer buffers, int offset);
 
 	/**
    * <p>
@@ -733,10 +710,12 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * </p>
 	 *
 	 * @param source source to unqueue buffers from
-	 * @param n number of buffers to be unqueued
 	 * @param buffers buffers to be unqueued
 	 */
-	public static native void alSourceUnqueueBuffers(int source, int n, IntBuffer buffers);
+	public static void alSourceUnqueueBuffers(int source, IntBuffer buffers) {
+		nalSourceUnqueueBuffers(source, buffers.remaining(), buffers, buffers.position());
+	}
+	private static native void nalSourceUnqueueBuffers(int source, int n, IntBuffer buffers, int offset);
 
 	/**
    * <p>

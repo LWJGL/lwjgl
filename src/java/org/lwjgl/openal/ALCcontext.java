@@ -31,7 +31,7 @@
  */
 package org.lwjgl.openal;
 
-import java.nio.Buffer;
+import java.nio.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -57,16 +57,16 @@ final class ALCcontext {
         this.context = context;
     }
     
-    static Buffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
-      ByteBuffer attribList = ByteBuffer.allocateDirect(7*4).order(ByteOrder.nativeOrder());
+    static IntBuffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
+      IntBuffer attribList = ByteBuffer.allocateDirect(7*4).order(ByteOrder.nativeOrder()).asIntBuffer();
       
-      attribList.putInt(ALC.ALC_FREQUENCY);
-      attribList.putInt(contextFrequency);
-      attribList.putInt(ALC.ALC_REFRESH);
-      attribList.putInt(contextRefresh);
-      attribList.putInt(ALC.ALC_SYNC);
-      attribList.putInt(contextSynchronized);
-      attribList.putInt(0); //terminating int
+      attribList.put(ALC.ALC_FREQUENCY);
+      attribList.put(contextFrequency);
+      attribList.put(ALC.ALC_REFRESH);
+      attribList.put(contextRefresh);
+      attribList.put(ALC.ALC_SYNC);
+      attribList.put(contextSynchronized);
+      attribList.put(0); //terminating int
       
       return attribList;
     }

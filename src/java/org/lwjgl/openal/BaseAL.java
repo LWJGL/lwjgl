@@ -95,7 +95,7 @@ public abstract class BaseAL {
     String jwsLibname = 
       (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
       ? "openal"
-      : "OpenAL32";
+      : "lwjglaudio";
     
     String jwsPath = getPathFromJWS(jwsLibname);
     if (jwsPath != null) {
