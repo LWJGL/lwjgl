@@ -243,7 +243,7 @@ public class GLWindow extends Window {
 	 * Checks and sets WGL_EXT_extensions_string and WGL_ARB_extensions_string
 	 * if available.
 	 */
-	private static native void checkWGLExtensionsString();
+	private native void checkWGLExtensionsString();
 
 	/**
 	 * Determine which WGL extensions are available

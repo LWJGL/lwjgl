@@ -10,13 +10,6 @@ extern "C" {
 /* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: currentWindow */
 /* Inaccessible static: class_00024org_00024lwjgl_00024Window */
-/* Inaccessible static: WGL_ARB_buffer_region */
-/* Inaccessible static: WGL_ARB_extensions_string */
-/* Inaccessible static: WGL_ARB_pbuffer */
-/* Inaccessible static: WGL_ARB_pixel_format */
-/* Inaccessible static: WGL_ARB_render_texture */
-/* Inaccessible static: WGL_EXT_extensions_string */
-/* Inaccessible static: WGL_EXT_swap_control */
 /* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL */
 /*
  * Class:     org_lwjgl_opengl_GLWindow
@@ -24,7 +17,7 @@ extern "C" {
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_checkWGLExtensionsString
-  (JNIEnv *, jclass);
+  (JNIEnv *, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_GLWindow
