@@ -1490,7 +1490,7 @@ public class GL extends CoreGL implements GLConstants {
 	public boolean ATI_fragment_shader;
 	public boolean ATI_pn_triangles;
 	public boolean ATI_texture_mirror_once;
-	public boolean ATI_vertex_array_object;;
+	public boolean ATI_vertex_array_object;
 	public boolean ATI_vertex_streams;
 	public boolean ATIX_point_sprites;
 	public boolean ATIX_texture_env_route;

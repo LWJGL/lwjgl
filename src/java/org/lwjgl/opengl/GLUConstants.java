@@ -74,7 +74,7 @@ public interface GLUConstants {
 	public static final int INSIDE              = 100021;
 	
 	/* Callback types: */
-	/*      ERROR               = 100103 */;
+	/*      ERROR               = 100103 */
 	
 	
 	/****           Tesselation constants           ****/
@@ -158,12 +158,12 @@ public interface GLUConstants {
 	public static final int MAP1_TRIM_3         = 100211;
 	
 	/* NurbsDisplay */
-	/*      FILL                = 100012 */;
+	/*      FILL                = 100012 */
 	public static final int OUTLINE_POLYGON     = 100240;
 	public static final int OUTLINE_PATCH       = 100241;
 	
 	/* NurbsCallback */
-	/*      ERROR               = 100103 */;
+	/*      ERROR               = 100103 */
 	
 	/* NurbsErrors */
 	public static final int NURBS_ERROR1        = 100251;
