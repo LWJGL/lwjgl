@@ -184,7 +184,6 @@ void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
   }
 #endif
 #ifdef _X11
-   //handleOAL = dlopen("libopenal.so", RTLD_LAZY);
   for(int i=0;i<pathcount;i++) {
     jstring path = (jstring) env->GetObjectArrayElement(oalPaths, i);
     handleOAL = dlopen(env->GetStringUTFChars(path, NULL), RTLD_LAZY);
