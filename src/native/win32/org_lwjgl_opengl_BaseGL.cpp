@@ -126,8 +126,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		printf("Available extensions:\n%s\n", p);
 	}
 	
-	_wglSetDC(hdc);
-	if (glInitialize() != 0) {
+	if (extgl_Initialize() != 0) {
 		printf("Failed to initialize GL\n");
 		return JNI_FALSE;
 	}
