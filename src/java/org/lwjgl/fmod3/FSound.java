@@ -3137,12 +3137,9 @@ public class FSound {
    * @return FloatBuffer containing 512 floats
    */
   public static FloatBuffer FSOUND_DSP_GetSpectrum() {
-    if(FMOD.fmodFFTBuffer == null) {
-     FMOD.fmodFFTBuffer = nFSOUND_DSP_GetSpectrum();
-    }
-    return FMOD.fmodFFTBuffer;
+    return nFSOUND_DSP_GetSpectrum().asFloatBuffer();
    }
-   private static native FloatBuffer nFSOUND_DSP_GetSpectrum();
+   private static native ByteBuffer nFSOUND_DSP_GetSpectrum();
    
    /**
     * Allows the user to mix their own data from one buffer to another, using FSOUNDs optimized
