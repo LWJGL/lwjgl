@@ -8,7 +8,6 @@ AC_CONFIG_SRCDIR([autogen.sh])
 AM_CONFIG_HEADER([config.h])
 
 AC_DISABLE_STATIC
-AC_LIBTOOL_DLOPEN
 
 # Checks for programs.
 AC_PROG_CC
@@ -37,6 +36,7 @@ case "$host_os" in
                         CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         ;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
+                                   AC_LIBTOOL_DLOPEN
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
                                    AC_SUBST(native_build_dir, [linux])
                                    CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
