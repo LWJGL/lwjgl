@@ -396,13 +396,8 @@ GLXContext getCurrentContext(void) {
 	return context;
 }
 
-GLXFBConfig *chooseVisualGLX13(JNIEnv *env, jobject pixel_format, bool use_display_bpp, int drawable_type, bool double_buffer) {
+static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, jobject pixel_format, int bpp, int drawable_type, bool double_buffer) {
 	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
-	int bpp;
-	if (use_display_bpp)
-		bpp = XDefaultDepthOfScreen(XScreenOfDisplay(getDisplay(), getCurrentScreen()));
-	else
-		bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "bpp", "I"));
 	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
 	int depth = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "depth", "I"));
 	int stencil = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "stencil", "I"));
@@ -445,6 +440,19 @@ GLXFBConfig *chooseVisualGLX13(JNIEnv *env, jobject pixel_format, bool use_displ
 			XFree(configs);
 		return NULL;
 	}
+}
+
+GLXFBConfig *chooseVisualGLX13(JNIEnv *env, jobject pixel_format, bool use_display_bpp, int drawable_type, bool double_buffer) {
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	int bpp;
+	if (use_display_bpp) {
+		bpp = XDefaultDepthOfScreen(XScreenOfDisplay(getDisplay(), getCurrentScreen()));
+		GLXFBConfig *configs = chooseVisualGLX13FromBPP(env, pixel_format, bpp, drawable_type, double_buffer);
+		if (configs == NULL)
+			bpp = 16;
+	} else
+		bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "bpp", "I"));
+	return chooseVisualGLX13FromBPP(env, pixel_format, bpp, drawable_type, double_buffer);
 }
 
 static XVisualInfo *chooseVisualGLX(JNIEnv *env, jobject pixel_format) {
