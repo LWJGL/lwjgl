@@ -57,9 +57,11 @@
 
 		extern HWND		hwnd;								// Handle to the window
 		extern HDC		hdc;								// Device context
-		extern LPDIRECTINPUT	lpdi;						// DirectInput
-		extern bool		isFullScreen;						// Whether we're fullscreen or not
-		extern bool		isMinimized;						// Whether we're minimized or not
+		extern LPDIRECTINPUT	lpdi;				// DirectInput
+		extern bool		isFullScreen;				// Whether we're fullscreen or not
+		extern bool		isMinimized;				// Whether we're minimized or not
+		extern bool		isFocused;					// Whether we're focused or not
+		extern bool		isDirty;					  // Whether we're dirty or not
 		extern RECT		clientSize;
 		extern HGLRC	hglrc;
 	#endif /* _PRIVATE_WINDOW_H_ */

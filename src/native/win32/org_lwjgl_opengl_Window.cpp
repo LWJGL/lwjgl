@@ -45,19 +45,19 @@
 #include "org_lwjgl_opengl_Window.h"
 
 static bool				oneShotInitialised = false;			// Registers the LWJGL window class
-HWND				hwnd = NULL;						// Handle to the window
-HDC					hdc = NULL;							// Device context
-HGLRC				hglrc = NULL;						// OpenGL context
-LPDIRECTINPUT		lpdi = NULL;						// DirectInput
-static bool				isFullScreen = false;				// Whether we're fullscreen or not
-static bool				isMinimized = false;				// Whether we're minimized or not
-extern HINSTANCE	dll_handle;							// Handle to the LWJGL dll
+
+HWND				hwnd = NULL;						              // Handle to the window
+HDC					hdc = NULL;							              // Device context
+HGLRC				hglrc = NULL;						              // OpenGL context
+LPDIRECTINPUT		lpdi = NULL;						          // DirectInput
+static bool				isFullScreen = false;		        // Whether we're fullscreen or not
+static bool				isMinimized = false;		        // Whether we're minimized or not
+static bool       isFocused = false;              // whether we're focused or not
+static bool       isDirty = false;                // Whether we're dirty or not
+extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
 RECT clientSize;
 
 static bool closerequested;
-static bool minimized;
-static bool focused;
-static bool dirty;
 static jboolean vsync;
 
 //CAS: commented these out as no longer used
@@ -271,11 +271,11 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			case SC_MONITORPOWER:
 				return 0L;
 			case SC_MINIMIZE:
-				minimized = true;
+				isMinimized = true;
 				appActivate(false);
 				break;
 			case SC_RESTORE:
-				minimized = false;
+				isMinimized = false;
 				appActivate(true);
 				break;
 			case SC_CLOSE:
@@ -291,14 +291,11 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			switch(LOWORD(wParam)) {
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
-				minimized = false;
 				isMinimized = false;
-
+				isFocused = true;
 				break;
 			case WA_INACTIVE:
-				minimized = true;
-				isMinimized = true;
-
+				isFocused = false;
 				break;
 			}
 			appActivate(!isMinimized);
@@ -311,7 +308,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		}
 		case WM_PAINT:
 		{
-			dirty = true;
+			isDirty = true;
 		}
 	}
 
@@ -511,7 +508,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_restore
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
   (JNIEnv * env, jclass clazz)
 {
-	dirty = false;
+	isDirty = false;
 	SwapBuffers(hdc);
 //	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 }
@@ -525,9 +522,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
   (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples, jobject ext_set)
 {
 	closerequested = false;
-	minimized = false;
-	focused = true;
-	dirty = true;
+	isMinimized = false;
+	isFocused = true;
+	isDirty = true;
 	isFullScreen = fullscreen == JNI_TRUE;
 	vsync = JNI_FALSE;
 
@@ -613,8 +610,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
   (JNIEnv *env, jclass clazz) {
-	bool result = dirty;
-	dirty = false;
+	bool result = isDirty;
+	isDirty = false;
 	return result;
 }
 
@@ -625,7 +622,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsMinimized
   (JNIEnv *env, jclass clazz) {
-	return minimized;
+	return isMinimized;
 }
 
 /*
@@ -647,7 +644,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused
   (JNIEnv *env, jclass clazz) {
-	return focused;
+	return isFocused;
 }
 
 /*
