@@ -1,47 +1,48 @@
-/* 
- * Copyright (c) 2002 Light Weight Java Game Library Project
+/*
+* Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'Light Weight Java Game Library' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+                                        * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+                                        * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                                                              * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
- * $Id$
+* $Id$
  *
- * OSX system library.
+ * Linux system library.
  *
- * @author Gregory Pierce <me@gregorypierce.com>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
+#include <sched.h>
 #include <sys/time.h>
+#include <sys/resource.h>
 #include "org_lwjgl_Sys.h"
-
 
 long int		hires_timer_freq;			// Hires timer frequency
 long int		hires_timer_start;			// Hires timer start
@@ -49,13 +50,24 @@ long int		hires_timer;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
+ * Method:    nGetNULLValue
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_nGetNULLValue
+(JNIEnv *, jclass)
+{
+    return (jint)NULL;
+}
+
+/*
+ * Class:     org_lwjgl_Sys
  * Method:    getDirectBufferAddress
  * Signature: (Ljava/nio/Buffer;)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
-  (JNIEnv * env, jclass clazz, jobject buf)
+(JNIEnv * env, jclass clazz, jobject buf)
 {
-	return (jint) env->GetDirectBufferAddress(buf);
+    return (jint) env->GetDirectBufferAddress(buf);
 }
 
 /*
@@ -64,9 +76,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
  * Signature: (II)Ljava/nio/ByteBuffer;
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
-  (JNIEnv * env, jclass clazz, jint address, jint length)
+(JNIEnv * env, jclass clazz, jint address, jint length)
 {
-	return env->NewDirectByteBuffer((void *)address, length);
+    return env->NewDirectByteBuffer((void *)address, length);
 }
 
 /*
@@ -75,21 +87,18 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
  * Signature: ()J
  */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
-  (JNIEnv * env, jclass clazz)
+(JNIEnv * env, jclass clazz)
 {
-      return hires_timer_freq;
+    return hires_timer_freq;
 }
 
-long queryTime(void)
-{
+long queryTime(void) {
     struct timeval tv;
-    if (gettimeofday(&tv, NULL) == -1)
-    {
+    if (gettimeofday(&tv, NULL) == -1) {
 #ifdef _DEBUG
         printf("Could not read current time\n");
 #endif
     }
-    
     long result = tv.tv_sec * 1000000l + tv.tv_usec;
 
     return result;
@@ -101,11 +110,11 @@ long queryTime(void)
  * Signature: ()J
  */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
-  (JNIEnv * env, jclass clazz)
+(JNIEnv * env, jclass clazz)
 {
-      hires_timer = queryTime();
-      hires_timer -= hires_timer_start;
-      return hires_timer;
+    hires_timer = queryTime();
+    hires_timer -= hires_timer_start;
+    return hires_timer;
 }
 
 /*
@@ -114,12 +123,12 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
-  (JNIEnv * env, jclass clazz, jlong startTime)
+(JNIEnv * env, jclass clazz, jlong startTime)
 {
-      hires_timer_start = queryTime();
-      // We don't have a real resolution so assume highest possible
-      hires_timer_freq = 1000000;
-      hires_timer_start -= startTime;      
+    hires_timer_start = queryTime();
+    // We don't have a real resolution so assume highest possible
+    hires_timer_freq = 1000000;
+    hires_timer_start -= startTime;
 }
 
 /*
@@ -128,9 +137,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
-  (JNIEnv * env, jclass clazz, jint priority)
+(JNIEnv * env, jclass clazz, jint priority)
 {
-      printf("Not supported on OSX \n");
+    printf("Unsupported");
 }
 
 /*
