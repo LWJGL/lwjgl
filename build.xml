@@ -215,11 +215,11 @@
 			<arg value="-factory"/>
 			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
 			<arg value="-cp"/>
-			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg value="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
-			<arg value="${lwjgl.src.headers}"/>
+			<arg path="${lwjgl.src.headers}"/>
 			<arg value="-Atypemap=org.lwjgl.generator.ALTypeMap"/>
 			<arg value="-Ageneratechecks"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java"/>
@@ -234,11 +234,11 @@
 			<arg value="-factory"/>
 			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
 			<arg value="-cp"/>
-			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg value="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
-			<arg value="${lwjgl.src.headers}"/>
+			<arg path="${lwjgl.src.headers}"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/GL*.java"/>
 		</apply>
@@ -248,11 +248,11 @@
 			<arg value="-factory"/>
 			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
 			<arg value="-cp"/>
-			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg value="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
-			<arg value="${lwjgl.src.headers}/arb"/>
+			<arg path="${lwjgl.src.headers}/arb"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ARB*.java"/>
 		</apply>
@@ -262,11 +262,11 @@
 			<arg value="-factory"/>
 			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
 			<arg value="-cp"/>
-			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg value="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
-			<arg value="${lwjgl.src.headers}/ati"/>
+			<arg path="${lwjgl.src.headers}/ati"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ATI*.java"/>
 		</apply>
@@ -276,11 +276,11 @@
 			<arg value="-factory"/>
 			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
 			<arg value="-cp"/>
-			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg value="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
-			<arg value="${lwjgl.src.headers}/ext"/>
+			<arg path="${lwjgl.src.headers}/ext"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/EXT*.java"/>
 		</apply>
@@ -290,11 +290,11 @@
 			<arg value="-factory"/>
 			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
 			<arg value="-cp"/>
-			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
-			<arg value="${lwjgl.src}/java"/>
+			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
-			<arg value="${lwjgl.src.headers}/nv"/>
+			<arg path="${lwjgl.src.headers}/nv"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/NV*.java"/>
 		</apply>
