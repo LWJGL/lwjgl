@@ -102,7 +102,6 @@ public final class Sys {
 		} finally {
 			DEBUG = _debug;
 			initialize();
-//			NULL = nGetNULLValue();
 		}
 	}
 	
@@ -128,11 +127,6 @@ public final class Sys {
 		System.loadLibrary(LIBRARY_NAME);
 		setTime(0);
 	}
-
-	/**
-	 * Gets the native NULL constant value
-	 */
-//	private static native ByteBuffer nGetNULLValue();
 
 	/**
 	 * Create a buffer representing an integer index. Use it with functions that in C can take
