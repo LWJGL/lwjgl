@@ -55,8 +55,8 @@ static LPDIRECTINPUTDEVICE mDIDevice;				// DI Device instance
 static int mButtoncount = 0;								 // Temporary buttoncount
 static bool mHaswheel;											 // Temporary wheel check
 
-static bool mCreate_success;								 // bool used to determine successfull creation
 static bool mFirstTimeInitialization = true; // boolean to determine first time initialization
+static bool created = false;
 
 static bool mouse_grabbed;
 static int mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
@@ -72,11 +72,8 @@ static event_queue_t event_queue;
 static bool buffer_enabled;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
-void EnumerateMouseCapabilities();
 BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
 void ShutdownMouse();
-void CreateMouse();
-void SetupMouse();
 void InitializeMouseFields();
 void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject button_buffer_obj);
 
@@ -111,6 +108,65 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getButtonCount(JNIEnv 
 }
 
 /**
+ * Enumerates the capabilities of the Mouse attached to the system
+ */
+static bool EnumerateMouseCapabilities(JNIEnv *env) {
+	HRESULT hr;
+        hr = IDirectInputDevice_EnumObjects(mDIDevice, EnumMouseObjectsCallback, NULL, DIDFT_ALL);
+	if FAILED(hr) { 
+		throwException(env, "EnumObjects failed");
+		return false;
+	}
+	
+	//check for > 4 buttons - need to clamp since we're using dx 5
+	if(mButtoncount > 4) {
+		mButtoncount = 4;
+		printfDebug("WARNING: Clamping to 4 mouse buttons\n");
+	}
+	return true;	
+}
+
+/**
+ * Creates the specified device as a Mouse
+ */
+static bool CreateMouse(JNIEnv *env) {
+	HRESULT hr;
+        hr = IDirectInput_CreateDevice(lpdi, &GUID_SysMouse, &mDIDevice, NULL);
+	if FAILED(hr) {	
+		throwException(env, "CreateDevice failed");
+		return false;
+	} else
+		return true;
+}
+
+/**
+ * Sets up the Mouse properties
+ */ 
+static bool SetupMouse(JNIEnv *env) {
+	DIPROPDWORD dipropdw;
+	// set Mouse data format
+        if(IDirectInputDevice_SetDataFormat(mDIDevice, &c_dfDIMouse) != DI_OK) {
+		throwException(env, "SetDataFormat failed");
+		return false;
+	}
+
+	dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
+	dipropdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	dipropdw.diph.dwObj = 0;
+	dipropdw.diph.dwHow = DIPH_DEVICE;
+	dipropdw.dwData = EVENT_BUFFER_SIZE;
+        IDirectInputDevice_SetProperty(mDIDevice, DIPROP_BUFFERSIZE, &dipropdw.diph);
+
+	// set the cooperative level
+        if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask) != DI_OK) {
+		throwException(env, "SetCooperativeLevel failed");
+		return false;
+	}
+	resetCursorPos();
+	return true;
+}
+
+/**
  * Called when the Mouse instance is to be created
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *env, jobject self) {
@@ -129,31 +185,29 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 	}
 
 	/* skip enumeration, since we only want system mouse */
-	CreateMouse();
+	if (!CreateMouse(env))
+		return;
 
 	//check for first time initialization - need to detect capabilities
 	if (mFirstTimeInitialization) {
 		mFirstTimeInitialization = false;
 		/* Enumerate capabilities of Mouse */
-		EnumerateMouseCapabilities();
-		if (!mCreate_success) {
-			throwException(env, "Failed to enumerate.");
+		if (!EnumerateMouseCapabilities(env)) {
 			ShutdownMouse();
 			return;
 		}
-		/* Do setup of Mouse */
-		SetupMouse();
-	} else {
-		if(mCreate_success) {
-			/* Do setup of Mouse */
-			SetupMouse();	 
-		}
+	}
+	/* Do setup of Mouse */
+	if (!SetupMouse(env)) {
+		ShutdownMouse();
+		return;
 	}
         /* Aquire the Mouse */
         ret = IDirectInputDevice_Acquire(mDIDevice);
         if(FAILED(ret)) {
 		printfDebug("Failed to acquire mouse\n");
 	}
+	created = true;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableMouseBuffer(JNIEnv * env, jobject self) {
@@ -161,7 +215,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableMouseBuffer(JNIE
 }
 
 void handleMouseScrolled(int event_dwheel) {
-	if(mCreate_success) {
+	if(created) {
 		accum_dwheel += event_dwheel;
 		putMouseEvent(-1, 0, event_dwheel);
 	}
@@ -170,7 +224,7 @@ void handleMouseScrolled(int event_dwheel) {
 void handleMouseMoved(int x, int y) {
         int dx;
         int dy;
-	if(mCreate_success) {
+	if(created) {
 		y = transformY(y);
                 dx = x - last_x;
                 dy = y - last_y;
@@ -187,7 +241,7 @@ void handleMouseMoved(int x, int y) {
 }
 
 void handleMouseButton(int button, int state) {
-	if(mCreate_success) {
+	if(created) {
 		putMouseEvent(button, state, 0);
 	}
 }
@@ -341,7 +395,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 			mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
 		}	
 	}
-	IDirectInputDevice_Unacquire(mDIDevice);
 	di_res = IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask);
 	switch (di_res) {
 		case DI_OK:
@@ -356,7 +409,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 			throwException(env, "Could not set the CooperativeLevel (E_HANDLE).");
 			return;
 		default:
-			printfDebugJava(env, "Failed to set cooperative level with unknown error code %d\n", di_res);
+			printfDebugJava(env, "Failed to set cooperative level with unknown error code %x", di_res);
 			throwException(env, "Could not set the CooperativeLevel (Unknown error code).");
 			return;
 	}
@@ -380,27 +433,7 @@ static void ShutdownMouse() {
                 IDirectInput_Release(lpdi);
 		lpdi = NULL;
 	}
-	mCreate_success = false;
-}
-/**
- * Enumerates the capabilities of the Mouse attached to the system
- */
-static void EnumerateMouseCapabilities() {
-	HRESULT hr;
-        hr = IDirectInputDevice_EnumObjects(mDIDevice, EnumMouseObjectsCallback, NULL, DIDFT_ALL);
-	if FAILED(hr) { 
-		printfDebug("EnumObjects failed\n");
-		mCreate_success = false;
-		return;
-	}
-	
-	//check for > 4 buttons - need to clamp since we're using dx 5
-	if(mButtoncount > 4) {
-		mButtoncount = 4;
-		printfDebug("WARNING: Clamping to 4 mouse buttons\n");
-	}
-	
-	mCreate_success = true;
+	created = false;
 }
 
 /**
@@ -418,49 +451,6 @@ static BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, 
 		printfDebug("Unhandled object found: %s\n", lpddoi->tszName);
 	}
 	return DIENUM_CONTINUE;
-}
-
-/**
- * Creates the specified device as a Mouse
- */
-static void CreateMouse() {
-	HRESULT hr;
-        hr = IDirectInput_CreateDevice(lpdi, &GUID_SysMouse, &mDIDevice, NULL);
-	if FAILED(hr) {	
-		printfDebug("CreateDevice failed\n");
-		mCreate_success = false;
-		return;
-	}
-	mCreate_success = true;
-}
-
-/**
- * Sets up the Mouse properties
- */ 
-static void SetupMouse() {
-	DIPROPDWORD dipropdw;
-	// set Mouse data format
-        if(IDirectInputDevice_SetDataFormat(mDIDevice, &c_dfDIMouse) != DI_OK) {
-		printfDebug("SetDataFormat failed\n");
-		mCreate_success = false;
-		return;
-	}
-
-	dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
-	dipropdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-	dipropdw.diph.dwObj = 0;
-	dipropdw.diph.dwHow = DIPH_DEVICE;
-	dipropdw.dwData = EVENT_BUFFER_SIZE;
-        IDirectInputDevice_SetProperty(mDIDevice, DIPROP_BUFFERSIZE, &dipropdw.diph);
-
-	// set the cooperative level
-        if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask) != DI_OK) {
-		printfDebug("SetCooperativeLevel failed\n");
-		mCreate_success = false;
-		return;
-	}
-	mCreate_success = true;
-	resetCursorPos();
 }
 
 static int cap(int val, int min, int max) {
