@@ -87,9 +87,13 @@ static void setCursorPos(int x, int y) {
 	current_y = cap(y, 0, getWindowHeight() - 1);
 }
 
+static int transformY(int y) {
+	return getWindowHeight() - 1 - y;
+}
+
 static void transformCursorPos(int x, int y) {
 	// transform to OpenGL coordinate system center
-	y = getWindowHeight() - 1 - y;
+	y = transformY(y);
 	setCursorPos(x, y);
 }
 
@@ -168,7 +172,7 @@ static void doWarpPointer(void ) {
 	// Tell event loop to start ignoring motion events
 	ignore_warp_guard.xclient.data.b[0] = 1;
 	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
-	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, getWindowWidth()/2, getWindowHeight()/2);
+	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, getWindowWidth()/2, transformY(getWindowHeight()/2));
 	// Tell event loop to stop ignoring motion events
 	ignore_warp_guard.xclient.data.b[0] = 0;
 	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
