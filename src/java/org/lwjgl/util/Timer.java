@@ -65,6 +65,10 @@ public class Timer {
 	// Whether the timer is paused
 	private boolean paused;
 		
+	static {
+		tick();
+	}
+	
 	/**
 	 * Constructs a timer. The timer will be reset to 0.0 and resumed immediately.
 	 */
