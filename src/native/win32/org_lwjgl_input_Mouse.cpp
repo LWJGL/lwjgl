@@ -387,9 +387,9 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
 	GetCursorPos(&newCursorPos);
 	ScreenToClient(getCurrentHWND(), &newCursorPos);
 	GetClientRect(getCurrentHWND(), &clientRect);
+	// Clip the position to the client rect
 	newCursorPos.x = cap(newCursorPos.x, clientRect.left, clientRect.right - 1);
 	newCursorPos.y = cap(newCursorPos.y, clientRect.top, clientRect.bottom - 1);
-	// Clip the position to the client rect
 	dx = newCursorPos.x - cursorPos.x;
 	dy = newCursorPos.y - cursorPos.y;
 	cursorPos.x += dx;
