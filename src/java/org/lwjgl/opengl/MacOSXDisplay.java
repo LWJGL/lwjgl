@@ -64,6 +64,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 
 final class MacOSXDisplay implements DisplayImplementation {
+	private final static int GAMMA_LENGTH = 256;
+
 	private MacOSXFrame frame;
 	private MouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
@@ -103,12 +105,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	public int getGammaRampLength() {
-		return 0;
+		return GAMMA_LENGTH;
 	}
 
-	public void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException {
-		throw new LWJGLException("Gamma not supported");
-	}
+	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
 
 	public String getAdapter() {
 		return null;
@@ -137,7 +137,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		if (MacOSXFrame.getDevice().getFullScreenWindow() != null)
 			MacOSXFrame.getDevice().setFullScreenWindow(null);
 		requested_mode = null;
+		restoreGamma();
 	}
+
+	private native void restoreGamma();
 	
 	private DisplayMode createLWJGLDisplayMode(java.awt.DisplayMode awt_mode) {
 		int bit_depth;

@@ -162,6 +162,16 @@ static void setView(JNIEnv *env, jobject canvas) {
 	awt.FreeDrawingSurface(ds);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_restoreGamma(JNIEnv *env, jobject this) {
+	CGDisplayRestoreColorSyncSettings();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_setGammaRamp(JNIEnv *env, jobject this, jobject gamma_buffer) {
+	const CGGammaValue *values = (*env)->GetDirectBufferAddress(env, gamma_buffer);
+	CGTableCount table_size = (*env)->GetDirectBufferCapacity(env, gamma_buffer);
+	CGSetDisplayTransferByTable(kCGDirectMainDisplay, table_size, values, values, values);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_hideUI(JNIEnv *env, jobject this, jboolean hide) {
 	if (hide == JNI_TRUE) {
 		SetSystemUIMode(kUIModeContentSuppressed, 0);
