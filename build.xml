@@ -12,7 +12,7 @@
 	<property name="lwjgl.docs"           value="./doc"/>
 	<property name="lwjgl.temp"           value="./temp"/>
 	<property name="lwjgl.res"            value="./res"/>
-	<property name="lwjgl.version"        value="0.9"/>
+	<property name="lwjgl.version"        value="0.92"/>
  
 	<!-- ================================================================== -->  
 	<!-- Filesets used for targets 											-->
@@ -31,6 +31,7 @@
 	<fileset id="lwjgl_test.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*"/>
 		<include name="org/lwjgl/test/**"/>
+		<include name="org/lwjgl/examples/**"/>
 	</fileset>
 	
 	<!-- Files to include in the lwjgl_util.jar file -->
@@ -38,7 +39,7 @@
 		<exclude name="**.*"/>
 		<include name="org/lwjgl/util/**"/>
 	</fileset>
-	
+
 	<!-- Files to include in the lwjgl_fmod3.jar file -->
 	<fileset id="lwjgl_fmod3.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*"/>
@@ -64,7 +65,7 @@
 	<patternset id="lwjgl-win32.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="lwjgl.dll"/>
-		<include name="lwjgl-fmod.dll"/>		
+		<include name="lwjgl-fmod3.dll"/>		
 		<include name="lwjglaudio.dll"/>
 	</patternset>  
   
@@ -72,7 +73,7 @@
 	<patternset id="lwjgl-linux.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="liblwjgl.so"/>
-		<include name="liblwjgl-fmod.so"/>		
+		<include name="liblwjgl-fmod3.so"/>		
 		<include name="libopenal.so"/>
 	</patternset>  
 	
@@ -80,7 +81,7 @@
 	<patternset id="lwjgl-macosx.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="liblwjgl.jnilib"/>
-		<include name="liblwjgl-fmod.jnilib"/>		
+		<include name="liblwjgl-fmod3.jnilib"/>		
 		<include name="openal.dylib"/>
 	</patternset>	
 	
@@ -106,7 +107,7 @@
   <!-- ================================================================== -->
 	<!-- Initialize build			 										-->
 	<!-- ================================================================== -->	
-	<target name="initialize">
+	<target name="-initialize">
 	  <mkdir dir="${lwjgl.bin}" taskname="initialiazing bin folder"/>
 	  <mkdir dir="${lwjgl.lib}" taskname="initialiazing lib folder"/>
 	  <mkdir dir="${lwjgl.dist}" taskname="initialiazing dist folder"/>
@@ -115,13 +116,8 @@
 	  <mkdir dir="${lwjgl.temp}" taskname="initialiazing temp folder"/>	
 	</target>
   
-  	<!-- Creates a splash screen -->
-	<target name="splash">
-		<splash imageurl="http://java-game-lib.sourceforge.net/images/logo.png" showduration="0" taskname="progressscreen"/>  
-	</target>
-  
 	<!-- Performs all the tasks needed for a distribution of LWJGL -->
-	<target name="all" depends="splash" description="compile. make jars. javadoc and distribute">
+	<target name="all" description="Compile. Make jars. Javadoc and distribute">
   
 	    <!-- Though we perform all targets, we do it in somewhat mixed. -->
 	    <!-- This is because we want the 'distribution_application' target to be -->
@@ -131,19 +127,19 @@
 	    <!-- the javadoc target, since the 'distribution' target will try to create the javadoc -->
 	    <!-- archive. -->
 		<antcall target="clean"/>
-		<antcall target="initialize"/>
+		<antcall target="-initialize"/>
 		<antcall target="compile_java"/>
 		<antcall target="compile_native"/>
-		<antcall target="jars"/>
-		<antcall target="distribution_application"/>
+		<antcall target="-jars"/>
+		<antcall target="-distribution_application"/>
 		<antcall target="javadoc"/>
-		<antcall target="distribution_javadoc"/>
-		<antcall target="distribution_source"/>
-		<antcall target="internal_clean"/>    
+		<antcall target="-distribution_javadoc"/>
+		<antcall target="-distribution_source"/>
+		<antcall target="-internal_clean"/>    
 	</target>
 
 	<!-- Cleans up any files created during the execution of this script -->
-	<target name="clean" description="Cleans the diectories controlled by this ant script (temp, dist, lib, javadoc, class files in bin)">
+	<target name="clean" description="Cleans the diectories controlled by this ant script">
 		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder"/>
 		<delete dir="${lwjgl.dist}" quiet="true" failonerror="false" taskname="cleaning dist folder"/>
 		<delete dir="${lwjgl.docs}/javadoc" quiet="true" failonerror="false" taskname="cleaning javadoc folder"/>
@@ -153,50 +149,63 @@
 		</delete>
 	</target>
 
-	<!-- Compiles the code for LWJGL -->
-	<target name="compile" depends="initialize" description="Compiles code">
-		<antcall target="compile_java"/>
-		<antcall target="compile_native"/>
-	</target>
-  
 	<!-- Compiles the Java source code -->
 	<target name="compile_java" description="Compiles the java source code">
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/**.java" source="1.4" taskname="lwjgl"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/input/**" source="1.4" taskname="input"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/openal/**" source="1.4" taskname="openal"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" taskname="opengl"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/vector/**" source="1.4" taskname="vector"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/fmod3/**" source="1.4" taskname="fmod"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" taskname="test"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/**" source="1.4" taskname="util"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/**.java" taskname="lwjgl"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/input/**" taskname="input"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/openal/**" taskname="openal"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" taskname="opengl"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/vector/**" taskname="vector"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/fmod3/**" taskname="fmod"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" taskname="test"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/examples/**" taskname="examples"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/**" taskname="util"/>
 	</target>
 	
 	<!-- Compiles the native files -->
-	<target name="compile_native" description="Compiles the native files">
+	<target name="compile_native" depends="headers" description="Compiles the native files" unless="lwjgl.nocompile">
 		<!-- check each platform, and run their build target -->
         <condition property="lwjgl.platform.windows">
           <os family="windows"/>
         </condition>
-        <antcall target="compile_native_win32"/>
+        <antcall target="-compile_native_win32"/>
 
         <condition property="lwjgl.platform.linux">
           <os name="Linux"/>
         </condition>
-        <antcall target="compile_native_linux"/>
+        <antcall target="-compile_native_linux"/>
         
         <condition property="lwjgl.platform.mac">
           <os name="Mac OS X"/>
         </condition>
-        <antcall target="compile_native_mac"/>
+        <antcall target="-compile_native_mac"/>
 	</target>	
 	
 	<!-- Compiles LWJGL on Win32 platforms  -->
-	<target name="compile_native_win32" description="Compiles LWJGL on Win32 platforms" if="lwjgl.platform.windows">
-		<echo>Sorry, LWJGL does not yet allow compilation of the win32 version via commandline</echo>
+	<target name="-compile_native_win32" if="lwjgl.platform.windows">
+	  <echo>Compiling Win32 LWJGL version</echo>
+		<!-- build main -->
+		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
+			<arg line="/c build.bat"/>
+		</exec>
+		
+		<!-- build fmod -->
+		<exec dir="platform_build/win32_ms_cmdline" executable="cmd.exe" failonerror="true">
+			<arg line="/c build-fmod.bat"/>
+		</exec>
+		
+		<!-- optimize using upx -->
+		<!-- <exec dir="${lwjgl.lib}" executable="upx">
+			<arg line="-9 -f win32/*.dll"/>
+		</exec> -->
+		
+		<!-- copy to libs -->
+		<move file="platform_build/win32_ms_cmdline/lwjgl.dll" tofile="${lwjgl.lib}/lwjgl.dll"/>
+		<move file="platform_build/win32_ms_cmdline/lwjgl-fmod3.dll" tofile="${lwjgl.lib}/lwjgl-fmod3.dll"/>
 	</target>	
 	
-	<!-- Compiles LWJGL on Linux platforms  -->
-	<target name="compile_native_linux" description="Compiles LWJGL on Linux platforms" if="lwjgl.platform.linux">
+	<!-- Compiles LWJGL on Linux platforms -->
+	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<echo>Compiling Linux LWJGL version</echo>
 		<apply executable="sh" dir="${lwjgl.src.native}">
 		  <fileset dir="${lwjgl.src.native}">
@@ -207,19 +216,14 @@
 	</target>	
 	
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
-	<target name="compile_native_mac" description="Compiles LWJGL on Mac OS X platforms" if="lwjgl.platform.mac">
+	<target name="-compile_native_mac" if="lwjgl.platform.mac">
 		<echo>Compiling Mac OS X LWJGL version</echo>
-    <apply executable="sh" dir="${lwjgl.src.native}">
-		  <fileset dir="${lwjgl.src.native}">
-		    <include name="build.sh"/>
-		  </fileset>
-		</apply>
-		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl.jnilib"/>
-
+		<exec dir="platform_build/mac_xcode" executable="xcodebuild" failonerror="true"/>
+		<move file="platform_build/mac_xcode/build/liblwjgl.jnilib" tofile="${lwjgl.lib}/liblwjgl.jnilib"/>
 	</target>	
   	
-  	<!-- Packages the files -->
-	<target name="jars" description="packages the java source files">
+  	<!-- Packages the java files -->
+	<target name="-jars">
   		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.lib}/lwjgl.jar" taskname="lwjgl.jar">
 			<fileset refid="lwjgl.fileset"/>
@@ -246,21 +250,21 @@
 		<javadoc destdir="${lwjgl.docs}/javadoc" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
 			<fileset refid="lwjgl.javadoc.fileset"/>
 			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
-			<bottom><![CDATA[<i>Copyright &#169; 2003-2004 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+			<bottom><![CDATA[<i>Copyright &#169; 2002-2004 lwjgl.org. All Rights Reserved.</i>]]></bottom>
 		</javadoc>
 	</target>  
   
 	<!-- Creates a distribution from the compiled files -->
-	<target name="distribution" depends="jars" description="Creates a versioned distribution of lwjgl">  
-		<antcall target="distribution_application"/>
-		<antcall target="distribution_javadoc"/>
-		<antcall target="distribution_source"/>
-		<antcall target="distribution_resources"/>
-		<antcall target="internal_clean"/>
+	<target name="-distribution" depends="-jars">  
+		<antcall target="-distribution_application"/>
+		<antcall target="-distribution_javadoc"/>
+		<antcall target="-distribution_source"/>
+		<antcall target="-distribution_resources"/>
+		<antcall target="-internal_clean"/>
 	</target>
   
 	<!-- Creates a build of LWJGL directly from CVS -->
-	<target name="cvsbuild" description="Builds lwjgl, by exporting files from cvs into a LWJGL folder and executing the package target on that folders build file">
+	<target name="cvsbuild" description="Builds lwjgl from cvs">
 		<!-- Check that files do not exist BEFORE doing the CVS build -->
 		<available file="LWJGL/build.xml" property="lwjgl.preexistingfiles"/>
 		<available file="${lwjgl.src}/java/org/lwjgl/Sys.java" property="lwjgl.preexistingfiles"/>
@@ -274,7 +278,8 @@
 	</target>  
   
 	<!-- Generates the native headers from source files -->
-	<target name="headers" description="invokes javah on java classes, producing the headers needed for native compilation" depends="compile_java">
+	<target name="headers" description="invokes javah on java classes" depends="compile_java">
+	  <!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
 			<class name="org.lwjgl.Sys"/>
 			  
@@ -294,6 +299,8 @@
 			<class name="org.lwjgl.opengl.Display"/>
 			<class name="org.lwjgl.opengl.Pbuffer"/>
 		</javah>    
+		
+		<!-- fmod -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/fmod3" force="yes">
 			<class name="org.lwjgl.fmod3.FMOD"/>
 			<class name="org.lwjgl.fmod3.FMusic"/>
@@ -302,26 +309,26 @@
 	</target>
   
 	<!-- Creates a versioned distribution for all supported platforms -->
-	<target name="distribution_application">
+	<target name="-distribution_application">
 		<!-- check each platform, and run their copy target -->
         <condition property="lwjgl.platform.windows">
           <os family="windows"/>
         </condition>
-        <antcall target="distribute_win32"/>
+        <antcall target="-distribute_win32"/>
 
         <condition property="lwjgl.platform.linux">
           <os name="Linux"/>
         </condition>
-        <antcall target="distribute_linux"/>
+        <antcall target="-distribute_linux"/>
         
         <condition property="lwjgl.platform.mac">
           <os name="Mac OS X"/>
         </condition>
-        <antcall target="distribute_macosx"/>	
+        <antcall target="-distribute_macosx"/>	
 	</target>
 	
 	<!-- Distributes win32 files  -->
-	<target name="distribute_win32" description="Distributes win32 files" if="lwjgl.platform.windows">
+	<target name="-distribute_win32" if="lwjgl.platform.windows">
 		<!-- copy files from lib/platform to temp -->
 		<copy todir="${lwjgl.temp}/lwjgl-win32-${lwjgl.version}">
 			<fileset dir="${lwjgl.lib}">
@@ -336,7 +343,7 @@
 	</target>	
 	
 	<!-- Distributes linux files  -->
-	<target name="distribute_linux" description="Distributes linux files" if="lwjgl.platform.linux">
+	<target name="-distribute_linux" if="lwjgl.platform.linux">
 		<!-- copy files from lib/platform to temp -->
 		<copy todir="${lwjgl.temp}/lwjgl-linux-${lwjgl.version}">
 			<fileset dir="${lwjgl.lib}">
@@ -351,7 +358,7 @@
 	</target>
 	
 	<!-- Distributes macosx files  -->
-	<target name="distribute_macosx" description="Distributes macosx files" if="lwjgl.platform.macosx">
+	<target name="-distribute_macosx" if="lwjgl.platform.macosx">
 		<!-- copy files from lib/platform to temp -->
 		<copy todir="${lwjgl.temp}/lwjgl-macosx-${lwjgl.version}">
 			<fileset dir="${lwjgl.lib}">
@@ -366,26 +373,26 @@
 	</target>		
     
 	<!-- Creates a versioned distribution of javadocs -->
-	<target name="distribution_javadoc">
+	<target name="-distribution_javadoc">
 		<zip destfile="${lwjgl.dist}/lwjgl-docs-${lwjgl.version}.zip" basedir="${lwjgl.docs}" includes="javadoc/**"/>
 	</target>
   
 	<!-- Creates a versioned distribution of the source code -->
-	<target name="distribution_source">
+	<target name="-distribution_source">
 		<zip destfile="${lwjgl.dist}/lwjgl-source-${lwjgl.version}.zip">
 			<fileset refid="lwjgl.source.fileset"/>
 		</zip>
 	</target>
 	
 	<!-- Creates a versioned distribution of the resource files -->
-	<target name="distribution_resources">
+	<target name="-distribution_resources">
 		<zip destfile="${lwjgl.dist}/lwjgl-media-${lwjgl.version}.zip">
 			<fileset refid="lwjgl.media.fileset"/>
 		</zip>
 	</target>	
   
   	<!-- clean internal temporary directories -->
-	<target name="internal_clean">
+	<target name="-internal_clean">
 		<delete dir="${lwjgl.temp}" taskname="cleanup"/>
 	</target>
 </project>
