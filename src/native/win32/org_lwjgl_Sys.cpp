@@ -129,7 +129,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
  * Method:    alert
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
   (JNIEnv * env, jclass clazz, jstring title, jstring message)
 {
 	jboolean copy = JNI_FALSE;
@@ -142,18 +142,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
 	env->ReleaseStringUTFChars(message, eMessageText);
 	env->ReleaseStringUTFChars(title, cTitleBarText);
 }
-
-// Cas: I've left this here as sometimes it's handy to just pop it back in to debug stuff
-/*
- * Class:     org_lwjgl_Sys
- * Method:    getDirectBufferAddress
- * Signature: (Ljava/nio/Buffer;)I
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
-  (JNIEnv * env, jclass clazz, jobject buf)
-{
-	return (jint) env->GetDirectBufferAddress(buf);
-}
- */
 
 /*
  * Class:     org_lwjgl_Sys

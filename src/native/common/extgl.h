@@ -3278,13 +3278,13 @@ extern glGetStringPROC glGetString;
 bool extgl_Initialize(JNIEnv *env, jobject gl_extensions);
 bool extgl_Open(void);
 #ifdef _WIN32
-void extgl_InitWGL(JNIEnv *env, jobject ext_set);
+void extgl_InitWGL(JNIEnv *env);
 #endif
 #ifdef _X11
-bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen);
+bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen);
 #endif
 #ifdef _AGL
-bool extgl_InitAGL(JNIEnv *env, jobject ext_set);
+bool extgl_InitAGL(JNIEnv *env);
 #endif
 void *extgl_GetProcAddress(const char *name);
 void extgl_Close(void);
@@ -3294,7 +3294,9 @@ void extgl_removeExtension(JNIEnv *env, jobject ext_set, const char *ext);
 						extgl_Extensions.x = 0; \
 						printf("NOTICE: %s disabled because of missing driver symbols\n", #x); \
 						extgl_error = false; \
-						extgl_removeExtension(e, h, #x); \
+						if (h != NULL) { \
+							extgl_removeExtension(e, h, #x); \
+						} \
 					}
 #ifdef __cplusplus
 }

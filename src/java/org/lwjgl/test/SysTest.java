@@ -54,10 +54,10 @@ public class SysTest {
    * Runs the tests
    */
   public void executeTest() {
-    testDebug();
+  	testAlert();
+  	testDebug();
     testTimer();
     testPriority();
-    testAlert();
     testUrl();
   }
   

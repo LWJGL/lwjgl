@@ -519,7 +519,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
  * Signature: (Ljava/lang/String;IIIIZIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples, jobject ext_set)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	closerequested = false;
 	isMinimized = false;
@@ -549,7 +549,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		return;
 	}
 
-	extgl_InitWGL(env, ext_set);
+	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
+	// of multisamples we want. If the extension is present we'll delete the existing
+	// rendering context and start over, using the ARB extension instead to pick the context.
+	extgl_InitWGL(env);
 	if (extgl_Extensions.WGL_ARB_pixel_format) {
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
@@ -564,12 +567,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 			return;
 		}
 	}
+	/*
 	if (!extgl_Initialize(env, ext_set)) {
 		closeWindow();
 		extgl_Close();
 		throwException(env, "Failed to initialize GL extensions");
 		return;
 	}
+	*/
 	if (!createDirectInput()) {
 		// Close the window
 		closeWindow();

@@ -188,12 +188,13 @@ public final class Sys {
 	 * Attempt to display a modal alert to the user. This method should be used
 	 * when a game fails to initialize properly or crashes out losing its display
 	 * in the process. It is provided because AWT may not be available on the target
-	 * platform.
-	 * 
+	 * platform, although on Mac and Linux and other platforms supporting AWT we
+	 * delegate the task to AWT instead of doing it ourselves.
+	 * <p>
 	 * The alert should display the title and the message and then the current
 	 * thread should block until the user dismisses the alert - typically with an
 	 * OK button click.
-	 * 
+	 * <p>
 	 * It may be that the user's system has no windowing system installed for some
 	 * reason, in which case this method may do nothing at all, or attempt to provide
 	 * some console output.
@@ -201,31 +202,41 @@ public final class Sys {
 	 * @param title The title of the alert. We suggest using the title of your game.
 	 * @param message The message text for the alert.
 	 */
-	public static native void alert(String title, String message);
-	
-	/*
-	 * Cas: this is just a debugging aid. The native code is also commented out.
-	 *
-	public static native int getDirectBufferAddress(Buffer buf);
-	 */
+	public static void alert(String title, String message) {
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Windoxws")) {
+			nAlert(title, message);
+		} else {
+			try {
+				Adapter adapter = (Adapter) Class.forName("org.lwjgl.AWTAdapter").newInstance(); // This avoids a Jet error message
+				adapter.alert(title, message);
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			}
+		}
+	}
+
+	private static native void nAlert(String title, String message);
 	
 	/**
 	 * Open the system web browser and point it at the specified URL. It is recommended
 	 * that this not be called whilst your game is running, but on application exit in
 	 * a shutdown hook, as the screen resolution will not be reset when the browser is
 	 * brought into view.
-	 * 
+	 * <p>
 	 * There is no guarantee that this will work, nor that we can detect if it has
 	 * failed - hence we don't return success code or throw an Exception. This is just a
 	 * best attempt at opening the URL given - don't rely on it to work!
+	 * <p>
 	 * @param url The URL
+	 * @return false if we are CERTAIN the call has failed
 	 */
-	public static void openURL(String url) {
+	public static boolean openURL(String url) {
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Mac OS") || osName.startsWith("Windows")) {
 			// Mac and Windows both do this nicely from native code.
 			nOpenURL(url);
-			return;
+			return true;
 		}
 		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
 		// right anyway.
@@ -235,12 +246,15 @@ public final class Sys {
 		for (int i = 0; i < browsers.length; i ++) {				
 			try {
 				Runtime.getRuntime().exec(new String[] { browsers[i], url });
-				break;
+				return true;
 			} catch (IOException e) {
 				// Ignore
 				e.printStackTrace(System.err);
 			}
 		}
+		
+		// Seems to have failed
+		return false;
 	}
 	
 	

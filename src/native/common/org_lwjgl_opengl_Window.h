@@ -8,7 +8,6 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: created */
 /* Inaccessible static: x */
 /* Inaccessible static: y */
 /* Inaccessible static: width */
@@ -18,7 +17,7 @@ extern "C" {
 /* Inaccessible static: vsync */
 /* Inaccessible static: vbo_tracker */
 /* Inaccessible static: context */
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024Window */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nSetTitle
@@ -85,11 +84,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
 
 /*
  * Class:     org_lwjgl_opengl_Window
+ * Method:    nMakeCurrent
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_opengl_Window
  * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIIIILjava/util/HashSet;)V
+ * Signature: (Ljava/lang/String;IIIIZIIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint, jint, jobject);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_Window
@@ -122,14 +129,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
   (JNIEnv *, jclass, jboolean);
-
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nMakeCurrent
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
-  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

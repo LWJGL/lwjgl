@@ -36,7 +36,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,6 +59,9 @@ public final class GLContext {
 	
 	/** A map of WeakReferences to contexts to LWJGL pointers-to-extension-structs */
 	private static final Map contextMap = new HashMap();
+	
+	/** A map of WeakReferences to contents to Sets of extension names */
+	private static final Map extensionsMap = new HashMap();
 	
 	/*
 	 * Available extensions
@@ -132,9 +135,6 @@ public final class GLContext {
 	public static boolean GL_ATI_vertex_streams;
 	public static boolean GL_ATI_separate_stencil;
 
-	public static boolean GL_ATIX_point_sprites;
-	public static boolean GL_ATIX_texture_env_route;
-
 	public static boolean GL_NV_blend_square;
 	public static boolean GL_NV_copy_depth_to_color;
 	public static boolean GL_NV_depth_clamp;
@@ -177,25 +177,6 @@ public final class GLContext {
 		System.loadLibrary(Sys.getLibraryName());
 	}
 
-	private static void setExtensionFields(Set exts, HashMap field_map) {
-		Sys.log("Available extensions:");
-		Iterator it = exts.iterator();
-		while ( it.hasNext() ) {
-			String ext = (String)it.next();
-			Sys.log(ext);
-
-			Field f = (Field)field_map.get(ext);
-			if ( f != null ) {
-				try {
-					f.setBoolean(GLContext.class, true);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace(System.err);
-				}
-			}
-
-		}
-	}
-
 	/**
 	 * Determine which extensions are available. Use this to initialize capability fields. Can only be
 	 * called _after_ a GLWindow or Pbuffer has been created (or a context from some other GL library).
@@ -204,23 +185,19 @@ public final class GLContext {
 	 *
 	 * @param exts A Set of OpenGL extension string names
 	 */
-	public static void determineAvailableExtensions(Set exts) {
+	private static void determineAvailableExtensions(Set exts) {
 		// Grab all the public static booleans out of this class
 		Field[] fields = GLContext.class.getDeclaredFields();
-		HashMap map = new HashMap(fields.length);
 		for ( int i = 0; i < fields.length; i++ ) {
 			if ( Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType() == boolean.class ) {
-				map.put(fields[i].getName(), fields[i]);
 				// reset fields
 				try {
-					fields[i].setBoolean(GLContext.class, false);
+					fields[i].setBoolean(GLContext.class, exts.contains(fields[i].getName()));
 				} catch (IllegalAccessException e) {
 					e.printStackTrace(System.err);
 				}
 			}
 		}
-
-		setExtensionFields(exts, map);
 	}
 	
 	/**
@@ -248,27 +225,30 @@ public final class GLContext {
 		
 		// Look in the context map to see if we've encountered this context before
 		Integer encountered = (Integer) contextMap.get(currentContext);
+		Set exts;
 		if (encountered != null) {
+			exts = (Set) extensionsMap.get(currentContext);
 			reinit(encountered.intValue());
 		} else {
-			contextMap.put(currentContext, new Integer(init()));
+			exts = new HashSet();
+			contextMap.put(currentContext, new Integer(init(exts)));
 		}
 		
-		// Now determine the available extensions
-		
+		determineAvailableExtensions(exts);
 	}
 	
 	/**
 	 * Native method to initialize a context from scratch or load its function pointers from a 
 	 * cache.
+	 * @param exts An empty Set of Strings that will be filled with the names of enabled extensions
 	 * @return a LWJGL context-index-pointer
 	 */
-	private static native int init();
+	private static native int init(Set exts);
 	
 	/**
 	 * Native method to re-initialize a context.
 	 * @param context Hash code of the context object
 	 */
-	private static native int reinit(int context);
+	private static native void reinit(int context);
 
 }

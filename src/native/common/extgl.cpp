@@ -719,7 +719,7 @@ void *extgl_GetProcAddress(const char *name)
 #endif
 
 #ifdef _AGL
-	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNull);
+	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNULL);
 	void *func_pointer = CFBundleGetFunctionPointerForName(opengl_bundle_ref, str);
 	if (func_pointer == NULL) {
 		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
@@ -785,7 +785,9 @@ static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extension
 
 			if (*terminator == ' ' || *terminator == '\0') {
 
-				insertExtension(env, ext_set, name);
+				if (ext_set != NULL) { 
+					insertExtension(env, ext_set, name);
+				}
 
 				return true;
 
@@ -806,7 +808,7 @@ static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extension
 #ifdef _WIN32
 
 /** returns true if the extention is available */
-static bool WGLQueryExtension(JNIEnv *env, jobject ext_set, const char *name)
+static bool WGLQueryExtension(JNIEnv *env, const char *name)
 {
 	const GLubyte *extensions;
 
@@ -817,10 +819,10 @@ static bool WGLQueryExtension(JNIEnv *env, jobject ext_set, const char *name)
 			extensions = (GLubyte*)wglGetExtensionsStringEXT();
 	else
 		extensions = (GLubyte*)wglGetExtensionsStringARB(wglGetCurrentDC());
-	return QueryExtension(env, ext_set, extensions, name);
+	return QueryExtension(env, NULL, extensions, name);
 }
 
-static void extgl_InitWGLARBBufferRegion(JNIEnv *env, jobject ext_set)
+static void extgl_InitWGLARBBufferRegion(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_ARB_buffer_region)
 		return;
@@ -829,10 +831,10 @@ static void extgl_InitWGLARBBufferRegion(JNIEnv *env, jobject ext_set)
 	wglSaveBufferRegionARB = (wglSaveBufferRegionARBPROC) extgl_GetProcAddress("wglSaveBufferRegionARB");
 	wglRestoreBufferRegionARB = (wglRestoreBufferRegionARBPROC) extgl_GetProcAddress("wglRestoreBufferRegionARB");
 
-	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_buffer_region);
+	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_buffer_region);
 }
 
-static void extgl_InitWGLARBPbuffer(JNIEnv *env, jobject ext_set)
+static void extgl_InitWGLARBPbuffer(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_ARB_pbuffer)
 		return;
@@ -841,66 +843,66 @@ static void extgl_InitWGLARBPbuffer(JNIEnv *env, jobject ext_set)
 	wglReleasePbufferDCARB = (wglReleasePbufferDCARBPROC) extgl_GetProcAddress("wglReleasePbufferDCARB");
 	wglDestroyPbufferARB = (wglDestroyPbufferARBPROC) extgl_GetProcAddress("wglDestroyPbufferARB");
 	wglQueryPbufferARB = (wglQueryPbufferARBPROC) extgl_GetProcAddress("wglQueryPbufferARB");
-	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_pbuffer);
+	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_pbuffer);
 
 }
 
-static void extgl_InitWGLARBPixelFormat(JNIEnv *env, jobject ext_set)
+static void extgl_InitWGLARBPixelFormat(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_ARB_pixel_format)
 		return;
 	wglGetPixelFormatAttribivARB = (wglGetPixelFormatAttribivARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribivARB");
 	wglGetPixelFormatAttribfvARB = (wglGetPixelFormatAttribfvARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribfvARB");
 	wglChoosePixelFormatARB = (wglChoosePixelFormatARBPROC) extgl_GetProcAddress("wglChoosePixelFormatARB");
-	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_pixel_format);
+	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_pixel_format);
 
 }
 
-static void extgl_InitWGLARBRenderTexture(JNIEnv *env, jobject ext_set)
+static void extgl_InitWGLARBRenderTexture(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_ARB_render_texture)
 		return;
 	wglBindTexImageARB = (wglBindTexImageARBPROC) extgl_GetProcAddress("wglBindTexImageARB");
 	wglReleaseTexImageARB = (wglReleaseTexImageARBPROC) extgl_GetProcAddress("wglReleaseTexImageARB");
 	wglSetPbufferAttribARB = (wglSetPbufferAttribARBPROC) extgl_GetProcAddress("wglSetPbufferAttribARB");
-	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_render_texture);
+	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_render_texture);
 
 }
 
-static void extgl_InitWGLEXTSwapControl(JNIEnv *env, jobject ext_set)
+static void extgl_InitWGLEXTSwapControl(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_EXT_swap_control)
 		return;
 	wglSwapIntervalEXT = (wglSwapIntervalEXTPROC) extgl_GetProcAddress("wglSwapIntervalEXT");
 	wglGetSwapIntervalEXT = (wglGetSwapIntervalEXTPROC) extgl_GetProcAddress("wglGetSwapIntervalEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, WGL_EXT_swap_control);
+	EXTGL_SANITY_CHECK(env, NULL, WGL_EXT_swap_control);
 
 }
 
-static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env, jobject ext_set)
+static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env)
 {
 	if (!extgl_Extensions.WGL_ARB_make_current_read)
 		return;
 	wglMakeContextCurrentARB = (wglMakeContextCurrentARBPROC) extgl_GetProcAddress("wglMakeContextCurrentARB");
 	wglGetCurrentReadDCARB = (wglGetCurrentReadDCARBPROC) extgl_GetProcAddress("wglGetCurrentReadDCARB");
-	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_make_current_read);
+	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_make_current_read);
 
 }
 
-static void extgl_InitSupportedWGLExtensions(JNIEnv *env, jobject ext_set)
+static void extgl_InitSupportedWGLExtensions(JNIEnv *env)
 {
-	extgl_Extensions.WGL_ARB_buffer_region = WGLQueryExtension(env, ext_set, "WGL_ARB_buffer_region");
-	extgl_Extensions.WGL_ARB_make_current_read = WGLQueryExtension(env, ext_set, "WGL_ARB_make_current_read");
-	extgl_Extensions.WGL_ARB_multisample = WGLQueryExtension(env, ext_set, "WGL_ARB_multisample");
-	extgl_Extensions.WGL_ARB_pbuffer = WGLQueryExtension(env, ext_set, "WGL_ARB_pbuffer");
-	extgl_Extensions.WGL_ARB_pixel_format = WGLQueryExtension(env, ext_set, "WGL_ARB_pixel_format");
-	extgl_Extensions.WGL_ARB_render_texture = WGLQueryExtension(env, ext_set, "WGL_ARB_render_texture");
-	extgl_Extensions.WGL_EXT_swap_control = WGLQueryExtension(env, ext_set, "WGL_EXT_swap_control");
-	extgl_Extensions.WGL_NV_render_depth_texture = WGLQueryExtension(env, ext_set, "WGL_NV_render_depth_texture");
-	extgl_Extensions.WGL_NV_render_texture_rectangle = WGLQueryExtension(env, ext_set, "WGL_NV_render_texture_rectangle");
+	extgl_Extensions.WGL_ARB_buffer_region = WGLQueryExtension(env, "WGL_ARB_buffer_region");
+	extgl_Extensions.WGL_ARB_make_current_read = WGLQueryExtension(env, "WGL_ARB_make_current_read");
+	extgl_Extensions.WGL_ARB_multisample = WGLQueryExtension(env, "WGL_ARB_multisample");
+	extgl_Extensions.WGL_ARB_pbuffer = WGLQueryExtension(env, "WGL_ARB_pbuffer");
+	extgl_Extensions.WGL_ARB_pixel_format = WGLQueryExtension(env, "WGL_ARB_pixel_format");
+	extgl_Extensions.WGL_ARB_render_texture = WGLQueryExtension(env, "WGL_ARB_render_texture");
+	extgl_Extensions.WGL_EXT_swap_control = WGLQueryExtension(env, "WGL_EXT_swap_control");
+	extgl_Extensions.WGL_NV_render_depth_texture = WGLQueryExtension(env, "WGL_NV_render_depth_texture");
+	extgl_Extensions.WGL_NV_render_texture_rectangle = WGLQueryExtension(env, "WGL_NV_render_texture_rectangle");
 }
 
-void extgl_InitWGL(JNIEnv *env, jobject ext_set)
+void extgl_InitWGL(JNIEnv *env)
 {
 	wglGetExtensionsStringARB = (wglGetExtensionsStringARBPROC) extgl_GetProcAddress("wglGetExtensionsStringARB");
 	wglGetExtensionsStringEXT = (wglGetExtensionsStringEXTPROC) extgl_GetProcAddress("wglGetExtensionsStringEXT");
@@ -908,14 +910,14 @@ void extgl_InitWGL(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.WGL_EXT_extensions_string = wglGetExtensionsStringEXT != NULL;
 	extgl_error = false;
 
-	extgl_InitSupportedWGLExtensions(env, ext_set);
+	extgl_InitSupportedWGLExtensions(env);
 
-	extgl_InitWGLARBMakeCurrentRead(env, ext_set);
-	extgl_InitWGLEXTSwapControl(env, ext_set);
-	extgl_InitWGLARBRenderTexture(env, ext_set);
-	extgl_InitWGLARBPixelFormat(env, ext_set);
-	extgl_InitWGLARBPbuffer(env, ext_set);
-	extgl_InitWGLARBBufferRegion(env, ext_set);
+	extgl_InitWGLARBMakeCurrentRead(env);
+	extgl_InitWGLEXTSwapControl(env);
+	extgl_InitWGLARBRenderTexture(env);
+	extgl_InitWGLARBPixelFormat(env);
+	extgl_InitWGLARBPbuffer(env);
+	extgl_InitWGLARBBufferRegion(env);
 }
 
 #endif /* WIN32 */

@@ -308,16 +308,13 @@ public final class Window {
 		int alpha,
 		int depth,
 		int stencil,
-		int samples,
-		HashSet extensions)
+		int samples)
 		throws Exception;
 
 	private static void createWindow(int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
-		HashSet extensions = new HashSet();
-		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples, extensions);
+		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples);
 		context = new Window();
 		makeCurrent();
-		GLContext.determineAvailableExtensions(extensions);
 	}
 
 	/**
