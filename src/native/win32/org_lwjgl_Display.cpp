@@ -67,7 +67,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	
 	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
 #ifdef _DEBUG
-  printf("Selecting NT display mode check");
+  printf("Selecting NT display mode check\n");
 #endif	
     return GetAvailableDisplayModesNT(env);
   }
@@ -93,13 +93,16 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
   
   //enumerate all displays, and all of their displaymodes
 	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
-		while(EnumDisplaySettings(DisplayDevice.DeviceName, j++, &DevMode) != 0) {
+#ifdef _DEBUG
+	  printf("Querying %s device\n", DisplayDevice.DeviceString);
+#endif
+		while(EnumDisplaySettingsEx(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 			if (DevMode.dmBitsPerPel > 8) {
 				AvailableModes++;
 			}
 		}
 	}
-		
+
 #ifdef _DEBUG
 	printf("Found %d displaymodes\n", AvailableModes);
 #endif
@@ -113,7 +116,7 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
   
 	i = 0, j = 0, n = 0;
 	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
-		while(EnumDisplaySettings(DisplayDevice.DeviceName, j++, &DevMode) != 0) {
+		while(EnumDisplaySettingsEx(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 			// Filter out indexed modes
 			if (DevMode.dmBitsPerPel > 8) {
 				jobject displayMode;
@@ -140,7 +143,7 @@ jobjectArray GetAvailableDisplayModes9x(JNIEnv * env) {
 	DevMode.dmSize = sizeof(DEVMODE);
   
 	//enumerate all displaymodes
-	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
+	while(EnumDisplaySettingsEx(NULL, j++, &DevMode, 0) != 0) {
 		if (DevMode.dmBitsPerPel > 8) {
 			AvailableModes++;
 		}
@@ -158,7 +161,7 @@ jobjectArray GetAvailableDisplayModes9x(JNIEnv * env) {
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");  
   
 	i = 0, j = 0, n = 0;
-	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
+	while(EnumDisplaySettingsEx(NULL, j++, &DevMode, 0) != 0) {
 		// Filter out indexed modes
 		if (DevMode.dmBitsPerPel > 8) {
 			jobject displayMode;
