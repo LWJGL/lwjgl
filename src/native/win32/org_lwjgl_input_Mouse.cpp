@@ -161,27 +161,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableMouseBuffer(JNIE
 }
 
 void handleMouseScrolled(int event_dwheel) {
-	accum_dwheel += event_dwheel;
-	putMouseEvent(-1, 0, event_dwheel);
+	if(mCreate_success) {
+		accum_dwheel += event_dwheel;
+		putMouseEvent(-1, 0, event_dwheel);
+	}
 }
 
 void handleMouseMoved(int x, int y) {
-	y = transformY(y);
-	int dx = x - last_x;
-	int dy = y - last_y;
-	accum_dx += dx;
-	accum_dy += dy;
-	last_x = x;
-	last_y = y;
-	if (mouse_grabbed) {
-		putMouseEventWithCoords(-1, 0, dx, dy, 0);
-	} else {
-		putMouseEventWithCoords(-1, 0, x, y, 0);
-	}		
+	if(mCreate_success) {
+		y = transformY(y);
+		int dx = x - last_x;
+		int dy = y - last_y;
+		accum_dx += dx;
+		accum_dy += dy;
+		last_x = x;
+		last_y = y;
+		if (mouse_grabbed) {
+			putMouseEventWithCoords(-1, 0, dx, dy, 0);
+		} else {
+			putMouseEventWithCoords(-1, 0, x, y, 0);
+		}		
+	}
 }
 
 void handleMouseButton(int button, int state) {
-	putMouseEvent(button, state, 0);
+	if(mCreate_success) {
+		putMouseEvent(button, state, 0);
+	}
 }
 
 static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
@@ -354,6 +360,7 @@ static void ShutdownMouse() {
 		lpdi->Release();
 		lpdi = NULL;
 	}
+	mCreate_success = false;
 }
 /**
  * Enumerates the capabilities of the Mouse attached to the system
