@@ -218,7 +218,16 @@ public class WindowCreationTest {
 			// check for fullscreen
 			if (Keyboard.getEventKey() == Keyboard.KEY_F) {
 				try {
-					Display.setFullscreen(fullscreen = !fullscreen);
+					if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ||
+							Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+						System.out.println("Performing Display.destroy()/create() cycle");
+						DisplayMode saved_mode = Display.getDisplayMode();
+						Display.destroy();
+						Display.setDisplayMode(saved_mode);
+						Display.setFullscreen(fullscreen = !fullscreen);
+						Display.create();
+					} else
+						Display.setFullscreen(fullscreen = !fullscreen);
 				} catch (LWJGLException lwjgle) {
 					lwjgle.printStackTrace();
 				}
@@ -270,7 +279,8 @@ public class WindowCreationTest {
 		                   "ARROW Keys:\tMove window when in non-fullscreen mode\n" +
 		                   "L:\t\tList selectable display modes\n" +
 		                   "0-8:\t\tSelection of display modes\n" + 
-		                   "F:\t\tToggle fullscreen");
+		                   "F:\t\tToggle fullscreen" +
+		                   "SHIFT-F:\t\tToggle fullscreen with Display.destroy()/create() cycle");
 		
 		WindowCreationTest wct = new WindowCreationTest();
 		if (wct.initialize()) {
