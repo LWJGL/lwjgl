@@ -38,6 +38,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 /**
  * $Id$

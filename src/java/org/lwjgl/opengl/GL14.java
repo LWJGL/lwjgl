@@ -37,6 +37,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 /**
  * $Id$
@@ -94,12 +95,12 @@ public final class GL14 {
 	public static native void glFogCoordf(float coord);
 	public static void glFogCoordPointer(int stride, FloatBuffer data) {
 		BufferChecks.checkDirect(data);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglFogCoordPointer(GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglFogCoordPointer(int type, int stride, Buffer data, int data_offset);
 	public static void glFogCoordPointer(int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglFogCoordPointerVBO(type, stride, buffer_offset);
 	}
 	private static native void nglFogCoordPointerVBO(int type, int stride, int buffer_offset);
@@ -124,17 +125,17 @@ public final class GL14 {
 	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
 	public static void glSecondaryColorPointer(int size, boolean unsigned, int stride, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointer(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, data, data.position());
 	}
 	public static void glSecondaryColorPointer(int size, int stride, FloatBuffer data) {
 		BufferChecks.checkDirect(data);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointer(size, GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglSecondaryColorPointer (int size, int type, int stride, Buffer data, int data_offset);
 	public static void glSecondaryColorPointer(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglSecondaryColorPointerVBO(int size, int type, int stride, int buffer_offset);

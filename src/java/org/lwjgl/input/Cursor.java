@@ -36,6 +36,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.BufferChecks;
 import org.lwjgl.Sys;
 
 /**
@@ -72,12 +73,13 @@ public class Cursor {
 	 * @throws LWJGLException if the cursor could not be created for any reason
 	 */	
 	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
+		BufferChecks.checkBuffer(images, width*height*numImages);
 		if (!Mouse.isCreated())
 			throw new IllegalStateException("Mouse must be created before creating cursor objects");
 		if (width*height*numImages > images.remaining())
 			throw new IllegalArgumentException("width*height*numImages > images.remaining()");
 		if (delays != null && numImages > delays.remaining())
-			throw new IllegalArgumentException("delays != null && numImages > delays.remaining()");
+			BufferChecks.checkBuffer(delays, numImages);
 		if (xHotspot >= width || xHotspot < 0)
 			throw new IllegalArgumentException("xHotspot > width || xHotspot < 0");
 		if (yHotspot >= height || yHotspot < 0)

@@ -35,6 +35,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_SOURCE_EXT                            = 0x8450;
@@ -52,12 +53,12 @@ public final class EXTFogCoord {
 	public static native void glFogCoordfEXT(float coord);
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
 		BufferChecks.checkDirect(data);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglFogCoordPointerEXT(GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer data, int data_offset);
 	public static void glFogCoordPointerEXT(int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglFogCoordPointerEXTVBO(type, stride, buffer_offset);
 	}
 	private static native void nglFogCoordPointerEXTVBO(int type, int stride, int buffer_offset);

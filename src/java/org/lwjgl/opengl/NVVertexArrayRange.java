@@ -35,6 +35,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class NVVertexArrayRange {
 	public static final int GL_VERTEX_ARRAY_RANGE_NV                                = 0x851D;

@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class ARBPointParameters {
 	public static final int GL_POINT_SIZE_MIN_ARB                                   = 0x8126;

@@ -37,6 +37,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class ARBMatrixPalette {
 	public static final int GL_MATRIX_PALETTE_ARB                                   = 0x8840;
@@ -55,22 +56,22 @@ public final class ARBMatrixPalette {
 	public static native void glCurrentPaletteMatrixARB(int index);
 	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, ShortBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_INT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglMatrixIndexPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 	public static void glMatrixIndexPointerARB(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglMatrixIndexPointerARBVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglMatrixIndexPointerARBVBO(int size, int type, int stride, int buffer_offset);

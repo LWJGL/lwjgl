@@ -37,6 +37,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class ATIElementArray {
 	public static final int GL_ELEMENT_ARRAY_ATI                                    = 0x8768;
@@ -47,23 +48,23 @@ public final class ATIElementArray {
 
 	public static void glElementPointerATI(ByteBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_BYTE, pPointer, pPointer.position());
 	}
 	public static void glElementPointerATI(ShortBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_SHORT, pPointer, pPointer.position()<<1);
 	}
 	public static void glElementPointerATI(IntBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_INT, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglElementPointerATI(int type, Buffer pPointer, int pPointer_offset);
 
 	public static void glElementPointerATI(int type, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglElementPointerATIVBO(type, buffer_offset);
 	}
 	private static native void nglElementPointerATIVBO(int type, int buffer_offset);

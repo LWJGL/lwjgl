@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class NVPointSprite {
 	public static final int GL_POINT_SPRITE_NV                                      = 0x8861;

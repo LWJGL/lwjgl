@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class NVFence {
 	public static final int GL_ALL_COMPLETED_NV                                     = 0x84F2;

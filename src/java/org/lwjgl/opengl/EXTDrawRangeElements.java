@@ -37,6 +37,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class EXTDrawRangeElements {
 	public static final int GL_MAX_ELEMENTS_VERTICES_EXT                            = 0x80E8;
@@ -46,23 +47,23 @@ public final class EXTDrawRangeElements {
 
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ByteBuffer pIndices) {
 		BufferChecks.checkDirect(pIndices);
-		BufferChecks.ensureElementVBOdisabled();
+		GLBufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_BYTE, pIndices, pIndices.position());
 	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ShortBuffer pIndices) {
 		BufferChecks.checkDirect(pIndices);
-		BufferChecks.ensureElementVBOdisabled();
+		GLBufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_SHORT, pIndices, pIndices.position()<<1);
 	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, IntBuffer pIndices) {
 		BufferChecks.checkDirect(pIndices);
-		BufferChecks.ensureElementVBOdisabled();
+		GLBufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_INT, pIndices, pIndices.position()<<2);
 	}
 	private static native void nglDrawRangeElementsEXT(int mode, int start, int end, int count, int type, Buffer pIndices, int pIndices_offset);
 
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, int type, int buffer_offset) {
-		BufferChecks.ensureElementVBOenabled();
+		GLBufferChecks.ensureElementVBOenabled();
 		nglDrawRangeElementsEXTVBO(mode, start, end, count, type, buffer_offset);
 	}
 	private static native void nglDrawRangeElementsEXTVBO(int mode, int start, int end, int count, int type, int buffer_offset);

@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class NVRegisterCombiners2
 {

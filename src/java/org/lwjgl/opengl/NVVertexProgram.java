@@ -39,6 +39,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class NVVertexProgram extends NVProgram {
 
@@ -292,7 +293,7 @@ public final class NVVertexProgram extends NVProgram {
 
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer buffer) {
 		BufferChecks.checkDirect(buffer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVertexAttribPointerNV(
 			index,
 			size,
@@ -304,7 +305,7 @@ public final class NVVertexProgram extends NVProgram {
 
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer buffer) {
 		BufferChecks.checkDirect(buffer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVertexAttribPointerNV(
 			index,
 			size,
@@ -316,13 +317,13 @@ public final class NVVertexProgram extends NVProgram {
 
 	public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer buffer) {
 		BufferChecks.checkDirect(buffer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVertexAttribPointerNV(index, size, GL11.GL_FLOAT, stride, buffer, buffer.position() << 2);
 	}
 
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer buffer) {
 		BufferChecks.checkDirect(buffer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVertexAttribPointerNV(
 			index,
 			size,
@@ -343,7 +344,7 @@ public final class NVVertexProgram extends NVProgram {
 	// ---------------------------
 
 	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, int bufferOffset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglVertexAttribPointerNVVBO(index, size, type, stride, bufferOffset);
 	}
 

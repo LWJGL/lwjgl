@@ -38,6 +38,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class ARBVertexBlend {
 	public static final int GL_MAX_VERTEX_UNITS_ARB                                 = 0x86A4;
@@ -129,27 +130,27 @@ public final class ARBVertexBlend {
 
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 	public static void glWeightPointerARB(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglWeightPointerARBVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglWeightPointerARBVBO(int size, int type, int stride, int buffer_offset);

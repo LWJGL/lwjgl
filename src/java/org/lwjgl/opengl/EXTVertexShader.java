@@ -38,6 +38,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class EXTVertexShader {
 	public static final int GL_VERTEX_SHADER_EXT                                    = 0x8780;
@@ -276,27 +277,27 @@ public final class EXTVertexShader {
 	private static native void nglVariantuivEXT(int id, IntBuffer piAddr, int piAddr_offset);
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ByteBuffer pAddr) {
 		BufferChecks.checkDirect(pAddr);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pAddr, pAddr.position());
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ShortBuffer pAddr) {
 		BufferChecks.checkDirect(pAddr);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pAddr, pAddr.position()<<1);
 	}
 	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
 		BufferChecks.checkDirect(pAddr);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, GL11.GL_FLOAT, stride, pAddr, pAddr.position()<<2);
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, IntBuffer pAddr) {
 		BufferChecks.checkDirect(pAddr);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pAddr, pAddr.position()<<2);
 	}
 	private static native void nglVariantPointerEXT(int id, int type, int stride, Buffer pAddr, int pAddr_offset);
 	public static void glVariantPointerEXT(int id, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglVariantPointerEXTVBO(id, type, stride, buffer_offset);
 	}
 	private static native void nglVariantPointerEXTVBO(int id, int type, int stride, int buffer_offset);

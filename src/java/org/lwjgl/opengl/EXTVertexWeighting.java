@@ -35,6 +35,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class EXTVertexWeighting {
 	public static final int GL_MODELVIEW0_STACK_DEPTH_EXT                           = 0x0BA3;  /* alias to MODELVIEW_STACK_DEPTH */
@@ -57,12 +58,12 @@ public final class EXTVertexWeighting {
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglVertexWeightPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglVertexWeightPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 	public static void glVertexWeightPointerEXT(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglVertexWeightPointerEXTVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglVertexWeightPointerEXTVBO(int size, int type, int stride, int buffer_offset);

@@ -36,6 +36,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class NVEvaluators {
 	public static final int GL_EVAL_2D_NV                                           = 0x86C0;

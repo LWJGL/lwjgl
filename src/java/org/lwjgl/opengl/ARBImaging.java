@@ -40,6 +40,7 @@ import java.nio.ShortBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 /**
  * $Id$
@@ -239,32 +240,32 @@ public final class ARBImaging {
 	}
 	private static native void nglGetMinmaxParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ByteBuffer image) {
-		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1));
+		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1));
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ShortBuffer image) {
-		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>1);
+		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>1);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, IntBuffer image) {
-		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
+		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, FloatBuffer image) {
-		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
+		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	private static native void nglConvolutionFilter1D(int target, int internalformat, int width, int format, int type, Buffer image, int image_offset);
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer image) {
-		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, height, 1));
+		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer image) {
-		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
+		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() <<1);
 	}
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer image) {
-		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
+		BufferChecks.checkBuffer(image, GLBufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() << 2);
 	}
 	private static native void nglConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image, int image_offset);

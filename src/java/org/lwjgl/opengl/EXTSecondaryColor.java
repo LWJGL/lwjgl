@@ -36,6 +36,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 public final class EXTSecondaryColor {
 	public static final int GL_COLOR_SUM_EXT                                        = 0x8458;
@@ -56,18 +57,18 @@ public final class EXTSecondaryColor {
 
 	public static void glSecondaryColorPointerEXT(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointerEXT(size, unsigned ? GL11.GL_UNSIGNED_BYTE: GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		BufferChecks.ensureArrayVBOdisabled();
+		GLBufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglSecondaryColorPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 
 	public static void glSecondaryColorPointerEXT(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.ensureArrayVBOenabled();
+		GLBufferChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerEXTVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglSecondaryColorPointerEXTVBO(int size, int type, int stride, int buffer_offset);
