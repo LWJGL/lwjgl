@@ -160,7 +160,11 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		byte button;
 		switch ( e.getButton() ) {
 			case MouseEvent.BUTTON1:
-				button = (byte)0;
+				// Emulate right click if ctrl is down
+				if (!e.isControlDown())
+					button = (byte)0;
+				else
+					button = (byte)1;
 				break;
 			case MouseEvent.BUTTON2:
 				button = (byte)2;
