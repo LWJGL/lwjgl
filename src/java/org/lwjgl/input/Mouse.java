@@ -282,11 +282,17 @@ public class Mouse {
 	}
 
 	/**
-	 * "Destroy" the mouse. Remember to reset the native cursor if
-	 * setNativeCursor() has been called with anything else than null.
+	 * "Destroy" the mouse.
 	 */
 	public static void destroy() {
-		assert currentCursor == null;
+		if (currentCursor != null) {
+			try {
+				setNativeCursor(null);
+			} catch (Exception e) {
+				if (Sys.DEBUG)
+					e.printStackTrace();
+			}
+		}
 		if (!created)
 			return;
 		created = false;
@@ -530,6 +536,8 @@ public class Mouse {
 			try {
 				setNativeCursor(currentCursor);
 			} catch (Exception e) {
+				if (Sys.DEBUG)
+					e.printStackTrace();
 			}
 		}
 	}
