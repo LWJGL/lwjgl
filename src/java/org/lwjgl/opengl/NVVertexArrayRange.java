@@ -24,7 +24,7 @@ public final class NVVertexArrayRange {
 	}
 	private static native void nglFreeMemoryNV(Buffer pointer, int pointer_position);
 
-	public static native java.nio.ByteBuffer glAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority, int result_size);
+	public static native java.nio.ByteBuffer glAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority);
 
 	public static native void glFlushVertexArrayRangeNV();
 

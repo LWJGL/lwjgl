@@ -194,45 +194,51 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTGLCanvas_nMakeCurrent
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTGLCanvas_nDestroyContext
-  (JNIEnv *env, jobject awtglcanvas)
+  (JNIEnv *env, jobject canvas)
 {
-	// 1. Get the context
-	HGLRC hglrc = getContext(env, awtglcanvas);
-	HWND hwnd = getHWND(env, awtglcanvas);
-	HDC hdc;
+	JAWT awt;
+	JAWT_DrawingSurface* ds;
+	JAWT_DrawingSurfaceInfo* dsi;
+	JAWT_Win32DrawingSurfaceInfo* dsi_win;
+	jboolean result;
+	HGLRC hglrc;
+	BOOL mcResult;
+	LPVOID lpMsgBuf;
+	jclass cls_AWTGLCanvas;
+	jmethodID mid_doPaint;
 
-	// Check to ensure it's the current context for this thread
-	// (it should be!)
-	if (hglrc = wglGetCurrentContext()) { 
-
-		// obtain its associated device context 
-		HDC hdc = wglGetCurrentDC() ; 
-
-		// make the rendering context not current 
-		wglMakeCurrent(NULL, NULL) ; 
-
-		// release the device context 
-		ReleaseDC (hwnd, hdc) ; 
-
-		// delete the rendering context 
-		wglDeleteContext(hglrc); 
-
-	} else {
-		throwException(env, "Could not destroy context: not current");
+	// Get the AWT
+	awt.version = JAWT_VERSION_1_4;
+	result = JAWT_GetAWT(env, &awt);
+	if (result == JNI_FALSE) {
+		throwGeneralException(env, "java/lang/RuntimeException", "Failed get AWT.");
+		return;
 	}
-}
-/*
- * Class:     org_lwjgl_opengl_AWTGLCanvas
- * Method:    nSwapBuffers
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTGLCanvas_nSwapBuffers
-  (JNIEnv *env, jobject awtglcanvas)
-{
-	HWND hwnd = getHWND(env, awtglcanvas);
-	HDC hdc = GetDC(hwnd);
-	SwapBuffers(hdc);
-	ReleaseDC(hwnd, hdc);
+
+	// Get the drawing surface
+	ds = awt.GetDrawingSurface(env, canvas);
+	if (ds == NULL) {
+		throwGeneralException(env, "java/lang/RuntimeException", "Failed get drawing surface.");
+		return;
+	}
+
+	// Get the drawing surface info
+	dsi = ds->GetDrawingSurfaceInfo(ds);
+
+	// Get the platform-specific drawing info
+	dsi_win = (JAWT_Win32DrawingSurfaceInfo*)dsi->platformInfo;
+
+	hglrc = getContext(env, canvas);
+	// make the rendering context not current 
+	wglMakeCurrent(NULL, NULL) ; 
+	// delete the rendering context 
+	wglDeleteContext(hglrc); 
+
+	// Free the drawing surface info
+	ds->FreeDrawingSurfaceInfo(dsi);
+
+	// Free the drawing surface
+	awt.FreeDrawingSurface(ds);
 }
 
 /*

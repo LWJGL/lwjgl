@@ -18,9 +18,9 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglFreeMemoryNV(JNI
 	glFreeMemoryNV(pointer_address);
 }
 
-static jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glAllocateMemoryNV(JNIEnv *env, jclass clazz, jint size, jfloat readFrequency, jfloat writeFrequency, jfloat priority, jint result_size) {
+static jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glAllocateMemoryNV(JNIEnv *env, jclass clazz, jint size, jfloat readFrequency, jfloat writeFrequency, jfloat priority) {
 	GLvoid * __result = glAllocateMemoryNV(size, readFrequency, writeFrequency, priority);
-	return safeNewBuffer(env, __result, result_size);
+	return safeNewBuffer(env, __result, size);
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glFlushVertexArrayRangeNV(JNIEnv *env, jclass clazz) {
