@@ -39,7 +39,9 @@
 
 #include <jni.h>
 #include <jawt.h>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 #include "org_lwjgl_opengl_AWTSurfaceLock.h"
 #include "awt_tools.h"
 #include "common_tools.h"
@@ -48,14 +50,14 @@
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle
   (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject canvas) {
+	JAWT awt;
+	JAWT_DrawingSurface* ds;
+	JAWT_DrawingSurfaceInfo *dsi;
+	AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	if ((*env)->GetDirectBufferCapacity(env, lock_buffer_handle) < sizeof(AWTSurfaceLock)) {
 		throwException(env, "Lock handle buffer not large enough");
 		return;
 	}
-	AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
-	JAWT awt;
-	JAWT_DrawingSurface* ds;
-	JAWT_DrawingSurfaceInfo *dsi;
 	awt.version = JAWT_VERSION_1_4;
 	while (true) {
 		if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
