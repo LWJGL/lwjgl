@@ -314,7 +314,6 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
 	// Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
 
-	// Note the * 16 - this is because we are manufacturing available alpha/depth/stencil combos.
 	jobjectArray ret = env->NewObjectArray(AvailableModes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
   
@@ -361,8 +360,7 @@ jobjectArray GetAvailableDisplayModes9x(JNIEnv * env) {
 	// Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
 
-	// Note the * 16 - this is because we are manufacturing available alpha/depth/stencil combos.
-	jobjectArray ret = env->NewObjectArray(AvailableModes * 16, displayModeClass, NULL);
+	jobjectArray ret = env->NewObjectArray(AvailableModes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");  
   
 	i = 0, j = 0, n = 0;
