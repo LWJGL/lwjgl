@@ -46,7 +46,7 @@
 	#include <windows.h>
 	#include <jni.h>
 	#undef  DIRECTINPUT_VERSION
-	#define DIRECTINPUT_VERSION 0x0300
+	#define DIRECTINPUT_VERSION 0x0500
 	#include <dinput.h>
 	#include "extgl.h"
 
