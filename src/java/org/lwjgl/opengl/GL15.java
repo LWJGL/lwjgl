@@ -273,7 +273,7 @@ public final class GL15 {
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetQueryObjecti(int id, int pname, IntBuffer params) {
+	public static void glGetQueryObject(int id, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetQueryObjectiv(id, pname, params, params.position());
 	}
@@ -285,7 +285,7 @@ public final class GL15 {
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetQueryObjectui(int id, int pname, IntBuffer params) {
+	public static void glGetQueryObjectu(int id, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetQueryObjectuiv(id, pname, params, params.position());
 	}

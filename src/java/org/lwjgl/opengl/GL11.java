@@ -1114,12 +1114,12 @@ public final class GL11 {
 	private static native void nglLightModeliv(int pname, IntBuffer params, int params_offset);
 	public static native void glLightf(int light, int pname, float param);
 	public static native void glLighti(int light, int pname, int param);
-	public static void glLightfv(int light, int pname, FloatBuffer params) {
+	public static void glLight(int light, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglLightfv(light, pname, params, params.position());
 	}
 	private static native void nglLightfv(int light, int pname, FloatBuffer params, int params_offset);
-	public static void glLightiv(int light, int pname, IntBuffer params) {
+	public static void glLight(int light, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglLightiv(light, pname, params, params.position());
 	}
@@ -1176,7 +1176,7 @@ public final class GL11 {
 	public static native void glNormal3i(int nx, int ny, int nz);
 	public static native void glNewList(int list, int mode);
 	public static native void glEndList();
-	public static void glMultMatrixf(FloatBuffer m) {
+	public static void glMultMatrix(FloatBuffer m) {
 		BufferChecks.checkBuffer(m, 16);
 		nglMultMatrixf(m, m.position());
 	}

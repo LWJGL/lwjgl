@@ -188,7 +188,7 @@ public class Project extends Util {
 		matrix.put(3 * 4 + 2, -2 * zNear * zFar / deltaZ);
 		matrix.put(3 * 4 + 3, 0);
 
-		GL11.glMultMatrixf(matrix);
+		GL11.glMultMatrix(matrix);
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class Project extends Util {
 		matrix.put(1 * 4 + 2, -forward[1]);
 		matrix.put(2 * 4 + 2, -forward[2]);
 
-		GL11.glMultMatrixf(matrix);
+		GL11.glMultMatrix(matrix);
 		GL11.glTranslatef(-eyex, -eyey, -eyez);
 	}
 

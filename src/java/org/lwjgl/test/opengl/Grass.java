@@ -165,14 +165,14 @@ public class Grass {
 		light_buf_f.put(LightDiffuse);
 		light_buf_f.flip();
 
-		GL11.glLightfv(
+		GL11.glLight(
 			GL11.GL_LIGHT0,
 			GL11.GL_DIFFUSE,
 			light_buf_f);
 		light_buf_f.clear();
 		light_buf_f.put(LightPosition);
 		light_buf_f.flip();
-		GL11.glLightfv(
+		GL11.glLight(
 			GL11.GL_LIGHT0,
 			GL11.GL_POSITION,
 			light_buf_f);
