@@ -154,12 +154,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 	}
 }
 
-/*
- * Class:     org_lwjgl_Sys
- * Method:    alert
- * Signature: (Ljava/lang/String;Ljava/lang/String;)V
-*/
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert(JNIEnv * env, jclass clazz, jstring title, jstring message)
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jstring title, jstring message)
 {
 	jboolean copy = JNI_FALSE;
 	const char * eMessageText = env->GetStringUTFChars(message, &copy);
