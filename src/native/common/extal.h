@@ -32,9 +32,6 @@
 
 #ifndef _AL_TEST_H
 #define _AL_TEST_H
-#endif
-
-$ifdef _AL_TEST_H
 #ifdef _WIN32
 #define INITGUID
 #define OPENAL
@@ -51,5 +48,4 @@ EAXGet  eaxGet;                                         // EAXGet function, ret$
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alut.h>
-#endif
 #endif
