@@ -123,15 +123,15 @@ typedef double GLdouble;
 typedef double GLclampd;
 typedef void GLvoid;
 
-#ifdef _AGL
+#ifdef _MACOSX
 #include <Carbon/Carbon.h>
 #include <OpenGL/gliContext.h>
 #include <OpenGL/gliDispatch.h>
 #include <AGL/aglContext.h>
 
-typedef struct __AGLRendererInfoRec  *AGLRendererInfo;
-typedef struct __AGLPixelFormatRec   *AGLPixelFormat;
-typedef struct __AGLContextRec       *AGLContext;
+typedef struct __MACOSXRendererInfoRec  *AGLRendererInfo;
+typedef struct __MACOSXPixelFormatRec   *AGLPixelFormat;
+typedef struct __MACOSXContextRec       *AGLContext;
 
 typedef GDHandle AGLDevice;
 typedef CGrafPtr AGLDrawable;
@@ -392,7 +392,7 @@ extern aglSurfaceTexturePROC aglSurfaceTexture;
 
 /************************************************************************/
 
-#endif /* _AGL */
+#endif /* _MACOSX */
 
 #define GL_VERSION                                              0x1F02
 #define GL_EXTENSIONS                                           0x1F03
@@ -434,7 +434,7 @@ extern glGetStringPROC glGetString;
 
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
 extern bool extgl_Open(void);
-#ifdef _AGL
+#ifdef _MACOSX
 extern bool extgl_InitAGL(JNIEnv *env);
 #endif
 extern void extgl_Close(void);

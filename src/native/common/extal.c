@@ -61,7 +61,7 @@ void* handleVorbis;
 void* handleVorbisFile;
 void* handleOAL;
 #endif
-#ifdef _AGL
+#ifdef _MACOSX
 #include <mach-o/dyld.h>
 #include <stdlib.h>
 #include <string.h>
@@ -83,7 +83,7 @@ static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _X11
 	return dlsym(handleOAL, function);
 #endif
-#ifdef _AGL
+#ifdef _MACOSX
 	char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
 	if (mac_symbol_name == NULL)
 		return NULL;
@@ -182,7 +182,7 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 			closeVorbisLibs();
 		}
 #endif
-#ifdef _AGL
+#ifdef _MACOSX
 		char *lib_str = concatenate(path_str, "openal.dylib");
 		handleOAL = NSAddImage(lib_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
                 free(lib_str);
@@ -211,7 +211,7 @@ static void UnLoadOpenAL() {
 	}
 	closeVorbisLibs();
 #endif
-#ifdef _AGL
+#ifdef _MACOSX
 	// Cannot remove the image
 #endif
 }

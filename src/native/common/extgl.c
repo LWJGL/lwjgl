@@ -49,7 +49,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <dlfcn.h>
 #endif
 
-#ifdef _AGL
+#ifdef _MACOSX
 aglChoosePixelFormatPROC aglChoosePixelFormat = NULL;
 aglDestroyPixelFormatPROC aglDestroyPixelFormat = NULL;
 aglNextPixelFormatPROC aglNextPixelFormat = NULL;
@@ -100,9 +100,9 @@ typedef void * (APIENTRY * glXGetProcAddressARBPROC) (const GLubyte *procName);
 static glXGetProcAddressARBPROC glXGetProcAddressARB;
 #endif
 
-#ifdef _AGL
+#ifdef _MACOSX
 CFBundleRef opengl_bundle_ref = NULL;
-CFBundleRef agl_bundle_ref = NULL;
+//CFBundleRef agl_bundle_ref = NULL;
 #endif
 
 /* getProcAddress */
@@ -135,14 +135,14 @@ void *extgl_GetProcAddress(const char *name)
 	return t;
 #endif
 
-#ifdef _AGL
+#ifdef _MACOSX
 	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNull);
 	void *func_pointer = CFBundleGetFunctionPointerForName(opengl_bundle_ref, str);
 	if (func_pointer == NULL) {
-		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
-		if (func_pointer == NULL) {
+/*		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
+		if (func_pointer == NULL) {*/
 			printfDebug("Could not locate symbol %s\n", name);
-		}
+//		}
 	}
 	CFRelease(str);
 	return func_pointer;
@@ -157,7 +157,7 @@ bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions) {
 	return ext_InitializeFunctions(&extgl_GetProcAddress, num_functions, functions);
 }
 
-#ifdef _AGL
+#ifdef _MACOSX
 // -------------------------
 static CFBundleRef loadBundle(const Str255 frameworkName)
 {
@@ -267,7 +267,7 @@ bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *nam
 /*-----------------------------------------------------*/
 /* AGL stuff BEGIN*/
 /*-----------------------------------------------------*/
-#ifdef _AGL
+#ifdef _MACOSX
 
 bool extgl_InitAGL(JNIEnv *env)
 {
@@ -312,18 +312,18 @@ bool extgl_InitAGL(JNIEnv *env)
 /* AGL stuff END*/
 /*-----------------------------------------------------*/
 
-#ifdef _AGL
+#ifdef _MACOSX
 bool extgl_Open(void) {
 	if (opengl_bundle_ref != NULL)
 		return true;
 	opengl_bundle_ref = loadBundle("\pOpenGL.framework");
 	if (opengl_bundle_ref == NULL)
 		return false;
-	agl_bundle_ref = loadBundle("\pAGL.framework");
+/*	agl_bundle_ref = loadBundle("\pAGL.framework");
 	if (agl_bundle_ref == NULL) {
 		aglUnloadFramework(opengl_bundle_ref);
 		return false;
-	}
+	}*/
 	return true;
 }
 #endif
@@ -371,9 +371,9 @@ void extgl_Close(void)
 	FreeLibrary(lib_gl_handle);
 	lib_gl_handle = NULL;
 #endif
-#ifdef _AGL
+#ifdef _MACOSX
 	aglUnloadFramework(opengl_bundle_ref);
-	aglUnloadFramework(agl_bundle_ref);
+//	aglUnloadFramework(agl_bundle_ref);
 	opengl_bundle_ref = NULL;
 #endif
 }

@@ -77,7 +77,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nCreate(JNIEnv *env, jclass cla
 #ifdef _X11
     lib_str = concatenate(path_str, "libfmod.so");
 #endif
-#ifdef _AGL
+#ifdef _MACOSX
     lib_str = concatenate(path_str, "fmod_cfm.shlb");
 #endif	
 		printfDebug("Testing '%s'\n", lib_str);

@@ -45,7 +45,7 @@
 #include <altypes.h>
 #include <alctypes.h>
 #endif
-#ifdef _AGL
+#ifdef _MACOSX
 #include <OpenAL/alctypes.h>
 #include <OpenAL/altypes.h>
 #endif
@@ -71,8 +71,8 @@ extern "C" {
 
  #define ALCAPIENTRY __cdecl
 #else
- #ifdef _AGL
-  #if _AGL
+ #ifdef _MACOSX
+  #if _MACOSX
  typedef struct ALCdevice_struct ALCdevice;
  typedef struct ALCcontext_struct ALCcontext;
  
