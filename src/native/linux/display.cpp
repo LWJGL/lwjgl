@@ -130,8 +130,8 @@ static int getGammaRampLength(Display *disp, int screen) {
 }
 
 jobject initDisplay(JNIEnv *env) {
-        int num_modes;
-        XF86VidModeModeInfo **avail_modes;
+	int num_modes;
+	XF86VidModeModeInfo **avail_modes;
 	int screen;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
@@ -141,7 +141,8 @@ jobject initDisplay(JNIEnv *env) {
 	screen = DefaultScreen(disp);
 
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
-		printfDebug("Could not get display modes\n");
+		throwException(env, "Could not get display modes");
+		return NULL;
 	}
 	saved_width = avail_modes[0]->hdisplay;
 	saved_height = avail_modes[0]->vdisplay;
