@@ -173,7 +173,8 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	public void syncDispose() {
 		invokeAWT(new Runnable() {
 			public void run() {
-				dispose();
+				if (isDisplayable())
+					dispose();
 			}
 		});
 	}
