@@ -188,7 +188,7 @@ public abstract class GLCaps {
 	 * Determine which extensions are available. Use this to initialize capability fields.
 	 * Can only be called _after_ a GLWindow or Pbuffer has been created.
 	 */
-	public static void determineAvailableExtensions(HashSet exts) {
+	static void determineAvailableExtensions(HashSet exts) {
 		// Grab all the public static booleans out of this class
 		Field[] fields = GLCaps.class.getDeclaredFields();
 		HashMap map = new HashMap(fields.length);
