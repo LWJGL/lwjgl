@@ -40,6 +40,6 @@
  */
 
 #include <windows.h>
-#include "org_lwjgl_Math.h"
+//#include "org_lwjgl_Math.h"
 #include "math.h"
 
