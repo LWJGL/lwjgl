@@ -86,23 +86,31 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	translationEnabled = false;
 	// Check to see if we're already initialized
 	if (lpdiKeyboard != NULL) {
+#ifdef _DEBUG
 		printf("Keyboard already created.\n");
-		return 1;
+#endif
+		return JNI_FALSE;
 	}
 
 	if (hwnd == NULL) {
+#ifdef _DEBUG
 		printf("No window\n");
+#endif
 		return JNI_FALSE;
 	}
 
 	// Create a keyboard device
 	if (lpdi->CreateDevice(GUID_SysKeyboard, &lpdiKeyboard, NULL) != DI_OK) {
+#ifdef _DEBUG
 		printf("Failed to create keyboard\n");
+#endif
 		return JNI_FALSE;
 	}
 
 	if (lpdiKeyboard->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-		printf("Failed to keyboard coop\n");
+#ifdef _DEBUG
+		printf("Failed to set keyboard cooperation mode\n");
+#endif
 		return JNI_FALSE;
 	}
 
@@ -120,7 +128,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	HRESULT ret = lpdiKeyboard->Acquire();
 	if(FAILED(ret)) {
 #if _DEBUG
-    printf("Failed to acquire keyboard\n");
+		printf("Failed to acquire keyboard\n");
 #endif	
 	}
 

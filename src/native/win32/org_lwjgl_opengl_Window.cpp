@@ -181,6 +181,7 @@ static bool createDirectInput()
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION ) {
+#ifdef _DEBUG
 		printf("Failed to create directinput");
 		switch (ret) {
 			case DIERR_INVALIDPARAM :
@@ -195,6 +196,7 @@ static bool createDirectInput()
 			default:
 				printf(" - Unknown failure\n");
 		}
+#endif
 		return false;
 	} else {
 		return true;
@@ -342,7 +344,9 @@ static bool registerWindow()
 		windowClass.lpszClassName = WINDOWCLASSNAME;
 
 		if (RegisterClass(&windowClass) == 0) {
+#ifdef _DEBUG
 			printf("Failed to register window class\n");
+#endif
 			return false;
 		}
 #ifdef _DEBUG
@@ -429,7 +433,9 @@ static bool createWindow(const char * title, int x, int y, int width, int height
 		 NULL);
 
 	if (hwnd == NULL) {
+#ifdef _DEBUG
 		printf("Failed to create window\n");
+#endif
 		return false;
 	}
 
