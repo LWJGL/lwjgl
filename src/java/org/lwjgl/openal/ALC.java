@@ -94,7 +94,6 @@ public class ALC {
     
     static {
         try {
-            System.out.println("using " + org.lwjgl.Sys.getLibraryName());
             System.loadLibrary(org.lwjgl.Sys.getLibraryName());
         } catch (UnsatisfiedLinkError ule) {
             System.out.println("Failed to load OpenAL library: " + org.lwjgl.Sys.getLibraryName());
@@ -105,6 +104,7 @@ public class ALC {
     /** Creates a new instance of ALC */
     public ALC() {
     }
+    
     /**
      * Returns strings related to the context.
      *
