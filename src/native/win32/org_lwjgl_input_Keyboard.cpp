@@ -296,7 +296,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv * env, jclass clazz)
 {
-	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE);
+	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE*4);
 	env->SetStaticObjectField(clazz, fid_readBuffer, newBuffer);
 	return KEYBOARD_BUFFER_SIZE;
 }
