@@ -41,6 +41,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#undef  DIRECTINPUT_VERSION
+#define DIRECTINPUT_VERSION 0x0300
 #include <dinput.h>
 #include "org_lwjgl_input_Keyboard.h"
 
