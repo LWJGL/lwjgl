@@ -5,6 +5,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.Sys;
+
 /**
  * GLUT - more GL utilities.
  * 
@@ -12,6 +14,10 @@ package org.lwjgl.opengl;
  */
 public class GLUT implements GLUTConstants {
 	
+	static {
+		System.loadLibrary(Sys.LIBRARY_NAME);
+	}
+
 	/** The GL */
 	private final GL gl;
 

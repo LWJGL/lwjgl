@@ -5,6 +5,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.Sys;
+
 /**
  * GL Utilities library.
  * 
@@ -12,6 +14,10 @@ package org.lwjgl.opengl;
  */
 public class GLU implements GLUConstants {
 	
+	static {
+		System.loadLibrary(Sys.LIBRARY_NAME);
+	}
+
 	/** Handle to GL */
 	private final GL gl;
 

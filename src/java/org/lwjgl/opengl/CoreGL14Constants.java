@@ -14,6 +14,6 @@ package org.lwjgl.opengl;
  * Defines the core constants for OpenGL 1.4
  * @author foo
  */
-public interface CoreGL14Constants {
+public interface CoreGL14Constants extends CoreGL13Constants {
 
 }
