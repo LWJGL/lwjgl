@@ -29,12 +29,11 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+#include <Carbon/Carbon.h>
+#include <AGL/agl.h>
+#include <OpenGL/gl.h>
 #include "org_lwjgl_Display.h"
 
-
-// Initialise static variables
-bool			oneShotInitialised = false;
 
 
 AGLContext		ctx;
@@ -79,6 +78,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
         }
         
         ShowWindow( win );
+        
+	/* Setup the OpenGL context */
+        GLint          attrib[] = { AGL_RGBA, AGL_NONE };
+        
+	ctx = setupAGL(   attrib, (AGLDrawable) win);
+	if(ctx == NULL) 
+        {
+            return JNI_FALSE;
+        }        
 
 
 	jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
@@ -107,4 +115,57 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
 	printf("Destroyed display\n");
 #endif
 }
-@
+
+
+/*
+** OpenGL Setup
+*/
+static AGLContext setupAGL( GLint* attrib, AGLDrawable win)
+{
+	AGLPixelFormat fmt;
+	AGLContext     ctx;
+	GLboolean      ok;
+
+	/* Choose an rgb pixel format */
+	fmt = aglChoosePixelFormat(NULL, 0, attrib);
+	if(fmt == NULL) 
+        {
+            return NULL;
+        }
+
+	/* Create an AGL context */
+	ctx = aglCreateContext(fmt, NULL);
+	if(ctx == NULL)
+        {
+            return NULL;
+        }
+
+	/* Attach the window to the context */
+	ok = aglSetDrawable(ctx, GetWindowPort(win) );
+	if(!ok) 
+        {
+            return NULL;
+        }
+	
+	/* Make the context the current context */
+	ok = aglSetCurrentContext(ctx);
+	if(!ok) 
+        {
+            return NULL;
+        }
+
+	/* Pixel format is no longer needed */
+	aglDestroyPixelFormat(fmt);
+
+	return ctx;
+}
+
+/*
+** OpenGL Cleanup
+*/
+static void cleanupAGL(AGLContext ctx)
+{
+	aglSetCurrentContext(NULL);
+	aglSetDrawable(ctx, NULL);
+	aglDestroyContext(ctx);
+}
