@@ -45,11 +45,12 @@
 
 #include "extgl.h"
 #include <ApplicationServices/ApplicationServices.h>
+#include <OpenGL/OpenGL.h>
 
 class RenderingContext
 {
 public:
-    CGLContextObj				contextObj;
+    CGLContextObj				contextObj;    
     WindowPtr					windowPtr;
     Rect					rect;      
     

@@ -40,6 +40,8 @@
  */
 
 #include "RenderingContext.h"
+#include <ApplicationServices/ApplicationServices.h>
+#include <OpenGL/OpenGL.h>
 
 RenderingContext::RenderingContext()
 {
@@ -49,6 +51,7 @@ bool RenderingContext::createDisplay( int width, int height, int bpp, int freq  
 {
     printf("Creating display");
 
+  
     CGDisplayCapture( kCGDirectMainDisplay ) ;
     CGDisplaySwitchToMode( kCGDirectMainDisplay,
                            CGDisplayBestModeForParameters( kCGDirectMainDisplay,
@@ -96,7 +99,7 @@ void RenderingContext::swap()
 {
     // swap the rendering buffer
     //
-    CGLFlushDrawable( contextObj )    
+    CGLFlushDrawable( contextObj );    
 }
 
 void RenderingContext::makeContextCurrent()

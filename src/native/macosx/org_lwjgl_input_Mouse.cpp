@@ -40,6 +40,7 @@
  */
 
 #include "org_lwjgl_input_Mouse.h"
+#include <ApplicationServices/ApplicationServices.h>
 
 /*
  * Class:     org_lwjgl_input_Mouse
@@ -60,6 +61,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
+      CGDisplayHideCursor( kCGDirectMainDisplay ) ;
+      CGDisplayMoveCursorToPoint( kCGDirectMainDisplay, CGPointZero ) ;
+
+      CGAssociateMouseAndMouseCursorPosition( FALSE ) ;
+      
+      
 	return JNI_TRUE;
 }
 
@@ -90,7 +97,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasZValue(JNIEnv *env, jc
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
   (JNIEnv * env, jclass clazz)
 {
+      CGAssociateMouseAndMouseCursorPosition( TRUE ) ;
 
+      CGDisplayShowCursor( kCGDirectMainDisplay ) ;
 }
 
 
