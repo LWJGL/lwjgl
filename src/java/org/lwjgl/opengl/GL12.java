@@ -49,6 +49,10 @@ import java.nio.ShortBuffer;
  */
 
 public final class GL12 {
+	/* Error codes */
+	public static final int GL_TABLE_TOO_LARGE                = 0x8031;
+
+	/* Enums */
 	public static final int GL_PACK_SKIP_IMAGES               = 0x806B;
 	public static final int GL_PACK_IMAGE_HEIGHT              = 0x806C;
 	public static final int GL_UNPACK_SKIP_IMAGES             = 0x806D;

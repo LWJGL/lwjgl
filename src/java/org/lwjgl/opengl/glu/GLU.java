@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 /**
  * GLU.java
@@ -200,4 +201,32 @@ public class GLU implements GLUConstants {
 		return MipMap.gluScaleImage(format, widthIn, heightIn, typeIn, dataIn, widthOut, heightOut, typeOut, dataOut);
 	}
 
+	public static String gluErrorString(int error_code) {
+		switch (error_code) {
+			case GL11.GL_NO_ERROR:
+				return "No error";
+			case GL11.GL_INVALID_ENUM:
+				return "Invalid enum";
+			case GL11.GL_INVALID_VALUE:
+				return "Invalid value";
+			case GL11.GL_INVALID_OPERATION:
+				return "Invalid operation";
+			case GL11.GL_STACK_OVERFLOW:
+				return "Stack overflow";
+			case GL11.GL_STACK_UNDERFLOW:
+				return "Stack underflow";
+			case GL11.GL_OUT_OF_MEMORY:
+				return "Out of memory";
+			case GL12.GL_TABLE_TOO_LARGE:
+				return "Table too large";
+			case GLU.GLU_INVALID_ENUM:
+				return "Invalid enum (glu)";
+			case GLU.GLU_INVALID_VALUE:
+				return "Invalid value (glu)";
+			case GLU.GLU_OUT_OF_MEMORY:
+				return "Out of memory (glu)";
+			default:
+				return null;
+		}
+	}
 }

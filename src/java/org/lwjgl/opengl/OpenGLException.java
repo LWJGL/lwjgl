@@ -32,6 +32,8 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.opengl.glu.GLU;
+
 /**
  * $Id$
  *
@@ -47,7 +49,12 @@ public class OpenGLException extends RuntimeException {
 	 * Constructor for OpenGLException.
 	 */
 	public OpenGLException(int gl_error_code) {
-		super("GL error code: " + gl_error_code);
+		this(createErrorMessage(gl_error_code));
+	}
+
+	private final static String createErrorMessage(int gl_error_code) {
+		String error_string = GLU.gluErrorString(gl_error_code);
+		return error_string + " (" + gl_error_code + ")";
 	}
 
 	/**
