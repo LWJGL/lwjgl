@@ -92,7 +92,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString (JNIEnv *env, 
  * C Specification:
  * ALvoid alcGetIntegerv(ALCdevice *device, ALenum token, ALsizei size, ALint *dest);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, jclass clazz, jint deviceaddress, jint token, jint size, jobject dest, int offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, jclass clazz, jint deviceaddress, jint token, jint size, jobject dest, jint offset) {
   ALint* address = NULL;
   if (dest != NULL) {
     address = offset + (ALint*) env->GetDirectBufferAddress(dest);
