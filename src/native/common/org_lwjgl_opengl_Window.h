@@ -93,10 +93,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIIII)V
+ * Signature: (Ljava/lang/String;IIIIZZIIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint, jint);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jboolean, jint, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_Window
@@ -129,6 +129,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
   (JNIEnv *, jclass, jboolean);
+
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nReshape
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
+  (JNIEnv *, jclass, jint, jint, jint, jint);
 
 #ifdef __cplusplus
 }

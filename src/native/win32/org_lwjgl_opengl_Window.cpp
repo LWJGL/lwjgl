@@ -54,6 +54,7 @@ static bool				isFullScreen = false;		        // Whether we're fullscreen or not
 static bool				isMinimized = false;		        // Whether we're minimized or not
 static bool       isFocused = false;              // whether we're focused or not
 static bool       isDirty = false;                // Whether we're dirty or not
+static bool       isUndecorated = false;                // Whether we're undecorated or not
 extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
 RECT clientSize;
 
@@ -382,13 +383,15 @@ static void handleMessages(JNIEnv * env, jclass clazz)
  * 
  * Returns true for success, or false for failure
  */
-static bool createWindow(JNIEnv *env, jstring title_obj, int x, int y, int width, int height, bool fullscreen)
+static bool createWindow(JNIEnv *env, jstring title_obj, int x, int y, int width, int height, bool fullscreen, bool undecorated)
 {
-	// 2. Create the window
 	int exstyle, windowflags;
 
 	if (fullscreen) {
 		exstyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
+		windowflags = WS_POPUP;
+	} else if (undecorated) {
+		exstyle = WS_EX_APPWINDOW;
 		windowflags = WS_POPUP;
 	} else {
 		exstyle = WS_EX_APPWINDOW;
@@ -396,7 +399,7 @@ static bool createWindow(JNIEnv *env, jstring title_obj, int x, int y, int width
 	}
 
 	// If we're not a fullscreen window, adjust the height to account for the
-	// height of the title bar:
+	// height of the title bar (unless undecorated)
 	clientSize.bottom = height;
 	clientSize.left = 0;
 	clientSize.right = width;
@@ -523,13 +526,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
  * Signature: (Ljava/lang/String;IIIIZIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	closerequested = false;
 	isMinimized = false;
 	isFocused = true;
 	isDirty = true;
 	isFullScreen = fullscreen == JNI_TRUE;
+	isUndecorated = undecorated == JNI_TRUE;
 	vsync = JNI_FALSE;
 
   // Speacial option for allowing software opengl	
@@ -546,7 +550,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		return;
 	}
 
-	if (!createWindow(env, title, x, y, width, height, isFullScreen)) {
+	if (!createWindow(env, title, x, y, width, height, isFullScreen, isUndecorated)) {
 		extgl_Close();
 		return;
 	}
@@ -564,7 +568,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
 		closeWindow();
-		if (!createWindow(env, title, x, y, width, height, isFullScreen)) {
+		if (!createWindow(env, title, x, y, width, height, isFullScreen, isUndecorated)) {
 			extgl_Close();
 			return;
 		}
@@ -574,14 +578,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 			return;
 		}
 	}
-	/*
-	if (!extgl_Initialize(env, ext_set)) {
-		closeWindow();
-		extgl_Close();
-		throwException(env, "Failed to initialize GL extensions");
-		return;
-	}
-	*/
+
 	if (!createDirectInput()) {
 		// Close the window
 		closeWindow();
@@ -692,4 +689,39 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
   (JNIEnv *env, jclass clazz)
 {
 	wglMakeCurrent(hdc, hglrc);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
+  (JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height)
+{
+	if (isFullScreen) {
+		return;
+	}
+
+	int exstyle, windowflags;
+
+	if (isUndecorated) {
+		exstyle = WS_EX_APPWINDOW;
+		windowflags = WS_OVERLAPPED;
+	} else {
+		exstyle = WS_EX_APPWINDOW;
+		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_MINIMIZEBOX | WS_SYSMENU;
+	}
+
+	// If we're not a fullscreen window, adjust the height to account for the
+	// height of the title bar:
+	clientSize.bottom = height;
+	clientSize.left = 0;
+	clientSize.right = width;
+	clientSize.top = 0;
+	
+	AdjustWindowRectEx(
+	  &clientSize,    // client-rectangle structure
+	  windowflags,    // window styles
+	  FALSE,       // menu-present option
+	  exstyle   // extended window style
+	);
+
+	SetWindowPos(hwnd, HWND_TOP, x, y, clientSize.right - clientSize.left, 
+		clientSize.bottom - clientSize.top, SWP_NOZORDER);
 }

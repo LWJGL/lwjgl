@@ -68,7 +68,8 @@ static int current_width;
 
 static bool input_released;
 
-static bool dirty;
+static bool isUndecorated;
+static bool focused;
 static bool vsync_enabled;
 static bool minimized;
 static bool focused;
@@ -179,7 +180,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
 	env->ReleaseStringUTFChars(title_obj, title);
 }
 
-static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen) {
+static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen, bool undecorated) {
 	dirty = true;
 	focused = true;
 	minimized = false;
@@ -391,7 +392,7 @@ static void destroy(void) {
 	extgl_Close();
 }
 
-static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen) {
+static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
 	GLXFBConfig *configs = chooseVisualGLX13(disp, screen, bpp, depth, alpha, stencil, samples);
 	if (configs == NULL) {
 		throwException(env, "Could not find a matching pixel format");
@@ -417,7 +418,7 @@ static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring titl
 		throwException(env, "Could not create visual info from FB config");
 		return false;
 	}
-	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
+	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
 	glx_window = glXCreateWindow(disp, configs[0], getCurrentWindow(), NULL);
 	makeCurrent();
 	if (isDebugEnabled())
@@ -427,7 +428,7 @@ static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring titl
 	return true;
 }
 
-static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen) {
+static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
 	XVisualInfo *vis_info = chooseVisual(disp, screen, bpp, depth, alpha, stencil, samples);
 	if (vis_info == NULL) {
 		throwException(env, "Could not find a matching pixel format");
@@ -448,20 +449,22 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
-	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
+	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
 	makeCurrent();
 	XFree(vis_info);
 	return true;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	int screen;
 	Display *disp;
 	bool fscreen = false;
 	if (fullscreen == JNI_TRUE)
 		fscreen = true;
+	if (undecorated == JNI_TRUE)
+		isUndecorated = true;
 
 	if (!extgl_Open()) {
 		throwException(env, "Could not load gl libs");
@@ -481,9 +484,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	}
 	bool create_success;
 	if (USEGLX13) {
-		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen);
+		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
 	} else {
-		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen);
+		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
 	}
 	if (!create_success) {
 		XCloseDisplay(disp);
@@ -596,4 +599,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
 			vsync_enabled = vsync;
 		}
 	}
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
+  (JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height)
+{
 }
