@@ -61,6 +61,7 @@ static bool useUnicode;
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
   (JNIEnv * env, jobject self)
 {
+	DIPROPDWORD dipropdw;
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION) {
@@ -76,28 +77,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
 	}
 
 	// Create a keyboard device
-	if (lpdi->CreateDevice(GUID_SysKeyboard, &lpdiKeyboard, NULL) != DI_OK) {
+        if (IDirectInput_CreateDevice(lpdi, &GUID_SysKeyboard, &lpdiKeyboard, NULL) != DI_OK) {
 		throwException(env, "Failed to create keyboard.");
 		return;
 	}
 
-	if (lpdiKeyboard->SetCooperativeLevel(getCurrentHWND(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+        if (IDirectInputDevice_SetCooperativeLevel(lpdiKeyboard, getCurrentHWND(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 		throwException(env, "Failed to set keyboard cooperation mode.");
 		return;
 	}
 
 	// Tell 'em wot format to be in (the default "you are a mouse and keyboard" format)
-	lpdiKeyboard->SetDataFormat(&c_dfDIKeyboard);
+        IDirectInputDevice_SetDataFormat(lpdiKeyboard, &c_dfDIKeyboard);
 
-	DIPROPDWORD dipropdw;
 	dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
 	dipropdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
 	dipropdw.diph.dwObj = 0;
 	dipropdw.diph.dwHow = DIPH_DEVICE;
 	dipropdw.dwData = KEYBOARD_BUFFER_SIZE;
-	lpdiKeyboard->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
+        IDirectInputDevice_SetProperty(lpdiKeyboard, DIPROP_BUFFERSIZE, &dipropdw.diph);
 
-	ret = lpdiKeyboard->Acquire();
+        ret = IDirectInputDevice_Acquire(lpdiKeyboard);
 	if(FAILED(ret)) {
 		printfDebug("Failed to acquire keyboard\n");
 	}
@@ -113,14 +113,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyKeyboard
 {
 	// Release keyboard
 	if (lpdiKeyboard != NULL) {
-		lpdiKeyboard->Unacquire();
-		lpdiKeyboard->Release();
+                IDirectInputDevice_Unacquire(lpdiKeyboard);
+                IDirectInputDevice_Release(lpdiKeyboard);
 		lpdiKeyboard = NULL;
 	}
 	// Release DirectInput
 	if (lpdi != NULL) {
 		printfDebug("Destroying directinput\n");
-		lpdi->Release();
+                IDirectInput_Release(lpdi);
 		lpdi = NULL;
 	}
 }
@@ -134,8 +134,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollKeyboard
   (JNIEnv * env, jobject self, jobject buffer)
 {
 	HRESULT ret;
+        void *keyboardBuffer;
+        jlong buffer_size;
 	do {
-		ret = lpdiKeyboard->Acquire();
+                ret = IDirectInputDevice_Acquire(lpdiKeyboard);
 		if (ret == DIERR_INPUTLOST) {
 			printf("Input lost\n");
 			return;
@@ -157,15 +159,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollKeyboard
 		}
 	} while (ret != DI_OK && ret != S_FALSE);
 	
-	void *keyboardBuffer = (void *)env->GetDirectBufferAddress(buffer);
-	jlong buffer_size = env->GetDirectBufferCapacity(buffer);
-	lpdiKeyboard->GetDeviceState((DWORD)buffer_size, keyboardBuffer);
+        keyboardBuffer = (void *)(*env)->GetDirectBufferAddress(env, buffer);
+        buffer_size = (*env)->GetDirectBufferCapacity(env, buffer);
+        IDirectInputDevice_GetDeviceState(lpdiKeyboard, (DWORD)buffer_size, keyboardBuffer);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
   (JNIEnv * env, jobject self, jobject buffer_obj, jint buffer_position)
 {
-	static DIDEVICEOBJECTDATA rgdod[KEYBOARD_BUFFER_SIZE];
+        UINT scan_code;
+        UINT virt_key;
+        bool key_down;
+        jint * buf;
+        jint ch_int;
+        int buffer_size;
+        int index = 0;
+        int event_size = 3;
+        DWORD current_di_event = 0;
+        DIDEVICEOBJECTDATA rgdod[KEYBOARD_BUFFER_SIZE];
 	wchar_t transBufUnicode[KEYBOARD_BUFFER_SIZE];
 	WORD transBufAscii[KEYBOARD_BUFFER_SIZE];
 
@@ -176,30 +187,27 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
 	int num_chars;
 	int num_events = 0;
 
-	ret = lpdiKeyboard->Acquire();
+        ret = IDirectInputDevice_Acquire(lpdiKeyboard);
 	if (ret != DI_OK && ret != S_FALSE)
 		return 0;
 
-	ret = lpdiKeyboard->GetDeviceData( 
+        ret = IDirectInputDevice_GetDeviceData(lpdiKeyboard,
 		sizeof(DIDEVICEOBJECTDATA), 
 		rgdod, 
 		&num_di_events,
 		0); 
 
 	if (ret == DI_OK) {
-		jint * buf = buffer_position + (jint *)env->GetDirectBufferAddress(buffer_obj);
-		int buffer_size = ((int)env->GetDirectBufferCapacity(buffer_obj))/sizeof(jint) - buffer_position;
-		int index = 0;
-		int event_size = 3;
-		DWORD current_di_event = 0;
+                buf = buffer_position + (jint *)(*env)->GetDirectBufferAddress(env, buffer_obj);
+                buffer_size = ((int)(*env)->GetDirectBufferCapacity(env, buffer_obj))/sizeof(jint) - buffer_position;
 		while (index + event_size <= buffer_size && current_di_event < num_di_events) {
 			num_events++;
 			buf[index++] = (unsigned char) rgdod[current_di_event].dwOfs;
 			buf[index++] = (unsigned char) rgdod[current_di_event].dwData;
-			bool key_down = (rgdod[current_di_event].dwData & 0x80) != 0;
+                        key_down = (rgdod[current_di_event].dwData & 0x80) != 0;
 			if (translationEnabled && key_down) {
-				UINT scan_code = rgdod[current_di_event].dwOfs;
-				UINT virt_key = MapVirtualKey(scan_code, 1);
+                                scan_code = rgdod[current_di_event].dwOfs;
+                                virt_key = MapVirtualKey(scan_code, 1);
 				if (virt_key != 0 && GetKeyboardState(state)) {
 					// Mark key down in the scan code
 					scan_code = scan_code & 0x7fff;
@@ -224,7 +232,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
 								buf[index++] = 0;
 								buf[index++] = 0;
 							}
-							jint ch_int;
 							if (useUnicode) {
 								wchar_t ch = transBufUnicode[current_char];
 								ch_int = ((int)ch) & 0xFFFF;

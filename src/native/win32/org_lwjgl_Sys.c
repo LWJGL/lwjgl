@@ -139,6 +139,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nOpenURL
   (JNIEnv * env, jobject self, jstring url)
 {
+	STARTUPINFO si;
+	PROCESS_INFORMATION pi;
+
 	char * urlString = GetStringNativeChars(env, url);
 
 	char command[256];
@@ -146,9 +149,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nOpenURL
 	strcat(command, "rundll32 url.dll,FileProtocolHandler ");
 	strncat(command, urlString, 200); // Prevent buffer overflow
 	free(urlString);
-
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
 
 	ZeroMemory( &si, sizeof(si) );
 	si.cb = sizeof(si);
@@ -182,12 +182,12 @@ const void * getClipboard(int type)
 {
 
 	void * ret;
-
+	HANDLE hglb;
 	// Open the clipboard
 	if (!OpenClipboard(NULL)) 
 		return NULL; 
 
-	HANDLE hglb = GetClipboardData(type); 
+	hglb = GetClipboardData(type); 
 	if (hglb != NULL) { 
 		ret = GlobalLock(hglb); 
 		if (ret != NULL) { 
@@ -211,7 +211,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_nGetClipboard
 
 	if (unicodeAvailable) {
 		const wchar_t * str = (const wchar_t *) getClipboard(CF_UNICODETEXT);
-		return env->NewString(str, wcslen(str));
+		return (*env)->NewString(env, str, wcslen(str));
 	} else if (textAvailable) {
 		return NewStringNative(env, (const char *) getClipboard(CF_TEXT));
 	} else {

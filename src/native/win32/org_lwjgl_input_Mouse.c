@@ -114,7 +114,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getButtonCount(JNIEnv 
  * Called when the Mouse instance is to be created
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *env, jobject self) {
-	HRESULT hr;
+         HRESULT ret;
 
 	initEventQueue(&event_queue, EVENT_SIZE);
 
@@ -122,7 +122,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 	buffer_enabled = false;
 
 	// Create input
-	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
+        ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION) {
 		throwException(env, "Failed to create DirectInput");
 		return;
@@ -149,9 +149,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 			SetupMouse();	 
 		}
 	}
-	/* Aquire the Mouse */
-	hr = mDIDevice->Acquire();
-	if(FAILED(hr)) {
+        /* Aquire the Mouse */
+        ret = IDirectInputDevice_Acquire(mDIDevice);
+        if(FAILED(ret)) {
 		printfDebug("Failed to acquire mouse\n");
 	}
 }
@@ -168,10 +168,12 @@ void handleMouseScrolled(int event_dwheel) {
 }
 
 void handleMouseMoved(int x, int y) {
+        int dx;
+        int dy;
 	if(mCreate_success) {
 		y = transformY(y);
-		int dx = x - last_x;
-		int dy = y - last_y;
+                dx = x - last_x;
+                dy = y - last_y;
 		accum_dx += dx;
 		accum_dy += dy;
 		last_x = x;
@@ -193,8 +195,10 @@ void handleMouseButton(int button, int state) {
 static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
 	int buffer_index = 0;
 	int dx = 0, dy = 0, dwheel = 0;
-	for (int i = 0; i < num_di_events; i++) {
-		int button_state = (di_buffer[i].dwData & 0x80) != 0 ? 1 : 0;
+        int button_state;
+        int i;
+        for (i = 0; i < num_di_events; i++) {
+                button_state = (di_buffer[i].dwData & 0x80) != 0 ? 1 : 0;
 		switch (di_buffer[i].dwOfs) {
 			case DIMOFS_BUTTON0:
 				putMouseEventWithCoords(0, button_state, dx, -dy, dwheel);
@@ -233,11 +237,11 @@ static void readDXBuffer() {
 
 	HRESULT ret;
 
-	ret = mDIDevice->Acquire();
+        ret = IDirectInputDevice_Acquire(mDIDevice);
 	if (ret != DI_OK && ret != S_FALSE)
 		return;
 
-	ret = mDIDevice->GetDeviceData( 
+        ret = IDirectInputDevice_GetDeviceData(mDIDevice,
 		sizeof(DIDEVICEOBJECTDATA), 
 		rgdod, 
 		&num_di_events,
@@ -265,8 +269,8 @@ static void readDXBuffer() {
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readMouse
 	(JNIEnv * env, jobject self, jobject buffer_obj, jint buffer_position)
 {
-	jint* buffer_ptr = (jint *)env->GetDirectBufferAddress(buffer_obj) + buffer_position;
-	int buffer_size = (env->GetDirectBufferCapacity(buffer_obj))/sizeof(jint) - buffer_position;
+        jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer_obj) + buffer_position;
+        int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer_obj))/sizeof(jint) - buffer_position;
 	if (mouse_grabbed) {
 		readDXBuffer();
 	} else {
@@ -284,11 +288,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getNativeCursorCaps
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
 	(JNIEnv *env, jobject self, jobject handle_buffer)
 {
+        HCURSOR *cursor_handle;
+        HCURSOR cursor;
 	if (mDIDevice == NULL)
 		throwException(env, "null device!");
 	if (handle_buffer != NULL) {
-		HCURSOR *cursor_handle = (HCURSOR *)env->GetDirectBufferAddress(handle_buffer);
-		HCURSOR cursor = *cursor_handle;
+                cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
+                cursor = *cursor_handle;
 		SetClassLong(getCurrentHWND(), GCL_HCURSOR, (LONG)cursor);
 		SetCursor(cursor);
 	} else {
@@ -314,14 +320,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyMouse(JNIEnv *e
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollMouse(JNIEnv * env, jobject self, jobject coord_buffer_obj, jobject button_buffer_obj) {
-	mDIDevice->Acquire();
-	UpdateMouseFields(env, coord_buffer_obj, button_buffer_obj);
+       IDirectInputDevice_Acquire(mDIDevice);
+       UpdateMouseFields(env, coord_buffer_obj, button_buffer_obj);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
   (JNIEnv * env, jobject self, jboolean grab) {
-  
-	mDIDevice->Unacquire();
+        IDirectInputDevice_Unacquire(mDIDevice);
 	if(grab) {
 		if (!mouse_grabbed) {
 			mouse_grabbed = true;
@@ -335,12 +340,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 			mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
 		}	
 	}
-	mDIDevice->Unacquire();
-	if(mDIDevice->SetCooperativeLevel(getCurrentHWND(), mouseMask) != DI_OK) {
+        IDirectInputDevice_Unacquire(mDIDevice);
+        if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask) != DI_OK) {
 	  throwException(env, "Could not set the CooperativeLevel.");
 		return;
 	}
-	mDIDevice->Acquire();
+        IDirectInputDevice_Acquire(mDIDevice);
 	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
@@ -350,14 +355,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 static void ShutdownMouse() {
 	// release device
 	if (mDIDevice != NULL) {
-		mDIDevice->Unacquire();
-		mDIDevice->Release();
+                IDirectInputDevice_Unacquire(mDIDevice);
+                IDirectInputDevice_Release(mDIDevice);
 		mDIDevice = NULL;
 	}
 	// Release DirectInput
 	if (lpdi != NULL) {
 		printfDebug("Destroying directinput\n");
-		lpdi->Release();
+                IDirectInput_Release(lpdi);
 		lpdi = NULL;
 	}
 	mCreate_success = false;
@@ -367,7 +372,7 @@ static void ShutdownMouse() {
  */
 static void EnumerateMouseCapabilities() {
 	HRESULT hr;
-	hr = mDIDevice->EnumObjects(EnumMouseObjectsCallback, NULL, DIDFT_ALL);
+        hr = IDirectInputDevice_EnumObjects(mDIDevice, EnumMouseObjectsCallback, NULL, DIDFT_ALL);
 	if FAILED(hr) { 
 		printfDebug("EnumObjects failed\n");
 		mCreate_success = false;
@@ -388,11 +393,11 @@ static void EnumerateMouseCapabilities() {
  */
 static BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
 	printfDebug("found %s\n", lpddoi->tszName);
-	if(lpddoi->guidType == GUID_Button) {
+        if(IsEqualGUID(&lpddoi->guidType, &GUID_Button)) {
 		mButtoncount++;
-	} else if(lpddoi->guidType == GUID_XAxis) {
-	} else if(lpddoi->guidType == GUID_YAxis) {
-	} else if(lpddoi->guidType == GUID_ZAxis) {
+        } else if(IsEqualGUID(&lpddoi->guidType, &GUID_XAxis)) {
+        } else if(IsEqualGUID(&lpddoi->guidType, &GUID_YAxis)) {
+        } else if(IsEqualGUID(&lpddoi->guidType, &GUID_ZAxis)) {
 		mHaswheel = true;
 	} else {
 		printfDebug("Unhandled object found: %s\n", lpddoi->tszName);
@@ -405,7 +410,7 @@ static BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, 
  */
 static void CreateMouse() {
 	HRESULT hr;
-	hr = lpdi->CreateDevice(GUID_SysMouse, &mDIDevice, NULL);
+        hr = IDirectInput_CreateDevice(lpdi, &GUID_SysMouse, &mDIDevice, NULL);
 	if FAILED(hr) {	
 		printfDebug("CreateDevice failed\n");
 		mCreate_success = false;
@@ -418,23 +423,23 @@ static void CreateMouse() {
  * Sets up the Mouse properties
  */ 
 static void SetupMouse() {
+	DIPROPDWORD dipropdw;
 	// set Mouse data format
-	if(mDIDevice->SetDataFormat(&c_dfDIMouse) != DI_OK) {
+        if(IDirectInputDevice_SetDataFormat(mDIDevice, &c_dfDIMouse) != DI_OK) {
 		printfDebug("SetDataFormat failed\n");
 		mCreate_success = false;
 		return;
 	}
 
-	DIPROPDWORD dipropdw;
 	dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
 	dipropdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
 	dipropdw.diph.dwObj = 0;
 	dipropdw.diph.dwHow = DIPH_DEVICE;
 	dipropdw.dwData = EVENT_BUFFER_SIZE;
-	mDIDevice->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
+        IDirectInputDevice_SetProperty(mDIDevice, DIPROP_BUFFERSIZE, &dipropdw.diph);
 
 	// set the cooperative level
-	if(mDIDevice->SetCooperativeLevel(getCurrentHWND(), mouseMask) != DI_OK) {
+        if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask) != DI_OK) {
 		printfDebug("SetCooperativeLevel failed\n");
 		mCreate_success = false;
 		return;
@@ -458,20 +463,22 @@ static int cap(int val, int min, int max) {
 static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	HRESULT								 hRes; 
 	DIMOUSESTATE diMouseState;						// State of Mouse
+        int i, j;
 
-	handleMessages();
-
-	int *coords = (int *)env->GetDirectBufferAddress(coord_buffer_obj);
-	int coords_length = (int)env->GetDirectBufferCapacity(coord_buffer_obj);
-	unsigned char *buttons_buffer = (unsigned char *)env->GetDirectBufferAddress(button_buffer_obj);
-	int buttons_length = (int)env->GetDirectBufferCapacity(button_buffer_obj);
+        int *coords = (int *)(*env)->GetDirectBufferAddress(env, coord_buffer_obj);
+        int coords_length = (int)(*env)->GetDirectBufferCapacity(env, coord_buffer_obj);
+        unsigned char *buttons_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, button_buffer_obj);
+        int num_buttons;
+        int buttons_length = (int)(*env)->GetDirectBufferCapacity(env, button_buffer_obj);
 	if (coords_length < 3) {
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
 	}
 
+	handleMessages();
+
 	// get data from the Mouse 
-	hRes = mDIDevice->GetDeviceState(sizeof(DIMOUSESTATE), &diMouseState);
+        hRes = IDirectInputDevice_GetDeviceState(mDIDevice, sizeof(DIMOUSESTATE), &diMouseState);
 	if (hRes != DI_OK) { 
 		// Don't allow the mouse to drift when failed
 		diMouseState.lX = 0;
@@ -480,7 +487,7 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 		// did the read fail because we lost input for some reason? 
 		// if so, then attempt to reacquire. 
 		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
-			hRes = mDIDevice->Acquire();
+                        hRes = IDirectInputDevice_Acquire(mDIDevice);
 			if (hRes != DI_OK)
 				return;
 		} else {
@@ -500,16 +507,16 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 		accum_dx = accum_dy = accum_dwheel = 0;
 	}
 
-	for (int i = 0; i < mButtoncount; i++) {
+        for (i = 0; i < mButtoncount; i++) {
 		if (diMouseState.rgbButtons[i] != 0) {
 			diMouseState.rgbButtons[i] = JNI_TRUE;
 		} else {
 			diMouseState.rgbButtons[i] = JNI_FALSE;
 		}
 	}
-	int num_buttons = mButtoncount;
+        num_buttons = mButtoncount;
 	if (num_buttons > buttons_length)
 		num_buttons = buttons_length;
-	for (int j = 0; j < num_buttons; j++)
+        for (j = 0; j < num_buttons; j++)
 		buttons_buffer[j] = (unsigned char)diMouseState.rgbButtons[j];
 }
