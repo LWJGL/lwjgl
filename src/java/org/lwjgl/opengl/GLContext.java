@@ -131,6 +131,7 @@ public final class GLContext {
 	public static boolean GL_ATI_map_object_buffer;
 	public static boolean GL_ATI_pn_triangles;
 	public static boolean GL_ATI_separate_stencil;
+	public static boolean GL_ATI_texture_compression_3dc;
 	public static boolean GL_ATI_texture_float;
 	public static boolean GL_ATI_texture_mirror_once;
 	public static boolean GL_ATI_vertex_array_object;
