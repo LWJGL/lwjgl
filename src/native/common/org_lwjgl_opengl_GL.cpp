@@ -4082,6 +4082,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_glXAllocateMemoryNV(JNIEnv * env
 #ifdef _X11
 	jint ret = (jint) glXAllocateMemoryNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	return ret;
+#else
+  return -1;
 #endif
 }
 
