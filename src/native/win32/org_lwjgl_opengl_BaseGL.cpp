@@ -47,6 +47,39 @@ HGLRC			hglrc = NULL;						// OpenGL rendering context
 extern HDC		hdc;
 extern HWND		hwnd;
 
+
+
+/*
+ * Handle windowing messages sent by the operating system
+ */
+void handleMessages()
+{
+	/*
+	 * Now's our chance to deal with Windows messages that are
+	 * otherwise just piling up and causing everything not to
+	 * work properly
+	 */
+	MSG msg;
+	while (PeekMessage(
+		&msg,         // message information
+		hwnd,           // handle to window
+		0,  // first message
+		0,  // last message
+		PM_NOREMOVE      // removal options
+		)) {
+
+		if (GetMessage (&msg, NULL, 0, 0) <= 0) {
+#ifdef _DEBUG
+			printf("We should quit here...\n");
+#endif
+			return;
+		}
+		TranslateMessage(&msg);
+      	DispatchMessage(&msg);
+	};
+}
+
+
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
@@ -112,6 +145,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
   (JNIEnv *, jobject)
 {
+	// Handle OS messages here
+	handleMessages();
+	// Then do the flip
 	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 }
 

@@ -55,9 +55,9 @@ public final class Display {
 	/** The current display mode, if created */
 	private static DisplayMode mode;
 	
-	/** A pointer to the native display window */
+	/** A pointer to the native display window. On Windows this will be an hWnd. */
 	private static int handle;
-
+	
 	/**
 	 * No construction allowed.
 	 */
@@ -205,4 +205,14 @@ public final class Display {
 		return created;
 	}
 
+	/**
+	 * Determines if the display is minimized. When the display is minimized it is
+	 * effectively invisible, and you need perform no rendering in your game loop.
+	 * On the native side, when the application is switched to some other application,
+	 * the display window will minimize; when focus is regained, it will maximize and
+	 * automatically gain focus and become the foreground window again.
+	 * @return true if the display is minimized
+	 */
+	public static native boolean isMinimized();
+	
 }

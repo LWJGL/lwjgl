@@ -49,12 +49,16 @@
 
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 
+extern void handleMessages();
 extern HINSTANCE dll_handle;
+
 // Initialise static variables
 bool			oneShotInitialised = false;
 HWND			hwnd = NULL;						// Handle to the window
 HDC				hdc = NULL;							// Device context
 LPDIRECTINPUT	lpdi = NULL;
+bool			isMinimized = false;
+bool			isFullscreen = false;
 
 void destroyDI(void)
 {
@@ -65,7 +69,8 @@ void destroyDI(void)
 void destroyWindow(void)
 {
 	// Reset the display if necessary
-	ChangeDisplaySettings(NULL, 0);
+	if (isFullscreen)
+		ChangeDisplaySettings(NULL, 0);
 
 	if (hwnd != NULL) {
 		// Vape the window
@@ -78,7 +83,8 @@ void destroyWindow(void)
 #endif
 
 	// Show the mouse
-	ShowCursor(TRUE);
+	if (isFullscreen)
+		ShowCursor(TRUE);
 }
 
 void destroyAll(void)
@@ -105,6 +111,19 @@ void dumpLastError(void) {
 }
 
 /*
+ * Called when the application is alt-tabbed to or from
+ */
+void appActivate(bool active)
+{
+	if (active) {
+		SetForegroundWindow(hwnd);
+		ShowWindow(hwnd, SW_RESTORE);
+	} else if (isFullscreen)
+		ShowWindow(hwnd, SW_MINIMIZE);
+}
+
+
+/*
  *	A dummy WindowProc which does nothing. Used so we can have an invisible OpenGL window
  */
 LRESULT CALLBACK WindowProc(HWND hWnd,
@@ -126,6 +145,17 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 				break;
 			}
 		}
+		case WM_ACTIVATE:
+		{
+			int	fActive, fMinimized;
+
+			fActive = LOWORD(wParam);
+			fMinimized = (BOOL) HIWORD(wParam);
+
+			appActivate(fActive != WA_INACTIVE && !fMinimized);
+			isMinimized = fMinimized == TRUE || (fActive == WA_INACTIVE && isFullscreen);
+		}
+				
 	}
 
 	// default action
@@ -138,7 +168,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
  */
 int SetDisplayMode(int width, int height, int bpp, int freq)
 {
-	// Step 2: set display mode using OpenGL friendly tactics
+	// Set display mode using OpenGL friendly tactics
 
 	DEVMODE devmode;
 	devmode.dmSize = sizeof(DEVMODE);
@@ -277,8 +307,27 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		exstyle = 0;
 		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_VISIBLE;
 	}
+	isFullscreen = fullscreen == JNI_TRUE;
 
 	const char* titleString = env->GetStringUTFChars(title, NULL);
+
+	// If we're not a fullscreen window, adjust the height to account for the
+	// height of the title bar:
+	RECT clientSize;
+	clientSize.bottom = height;
+	clientSize.left = 0;
+	clientSize.right = width;
+	clientSize.top = 0;
+	
+	AdjustWindowRectEx(
+	  &clientSize,    // client-rectangle structure
+	  windowflags,    // window styles
+	  FALSE,       // menu-present option
+	  exstyle   // extended window style
+	);
+
+	clientSize.bottom -= clientSize.top;
+	clientSize.right -= clientSize.left;
 
 	// Create the window now, using that class:
 	hwnd = CreateWindowEx (
@@ -286,7 +335,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		 WINDOWCLASSNAME,
 		 titleString,
 		 windowflags,
-		 0, 0, width, height,
+		 0, 0, clientSize.right, clientSize.bottom,
 		 NULL,
 		 NULL,
 		 dll_handle,
@@ -308,8 +357,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 	printf("Created display\n");
 #endif
 
-	// Hide the mouse
-	ShowCursor(FALSE);
+	// Hide the mouse in fullscreen
+	if (fullscreen)
+		ShowCursor(FALSE);
+	else {
+		SetCursor(LoadCursor(dll_handle, MAKEINTRESOURCE(IDC_ARROW)));
+	}
+	
+
 
 	// Create input
 	HRESULT ret = DirectInputCreate(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &lpdi, NULL);
@@ -441,4 +496,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
 {
 	destroyAll();
 }
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    isMinimized
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
+  (JNIEnv * env, jclass clazz)
+{
+	// Make sure that messages are being processed. Because
+	// you shouldn't be calling swapBuffers when the window is
+	// minimized, you won't get your window messages processed
+	// there, so we'll do it here too, just to be sure.
+
+	if (isMinimized)
+		handleMessages();
+
+	return isMinimized ? JNI_TRUE : JNI_FALSE;
+}
+
 

@@ -23,7 +23,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 /*
  * Class:     org_lwjgl_Display
  * Method:    nCreate
- * Signature: (IIIIZ)Z
+ * Signature: (IIIIIIIZLjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
   (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jboolean, jstring);
@@ -35,6 +35,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
   (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    isMinimized
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
+  (JNIEnv *, jclass);
+
 
 #ifdef __cplusplus
 }

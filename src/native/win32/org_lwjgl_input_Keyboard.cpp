@@ -196,6 +196,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 
 	do {
 		ret = lpdiKeyboard->Acquire();
+		if (ret != DI_OK && ret != S_FALSE)
+			return 0;
 	} while (ret != DI_OK && ret != S_FALSE);
 
 	ret = lpdiKeyboard->GetDeviceData( 

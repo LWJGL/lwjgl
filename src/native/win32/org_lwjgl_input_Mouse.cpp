@@ -121,7 +121,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	}
 
 	// Grab non-exclusive foreground access to device
-	if (lpdiMouse->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+	if (lpdiMouse->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 		printf("Failed to set mouse coop\n");
 		return JNI_FALSE;
 	}
@@ -169,9 +169,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	while (ret = lpdiMouse->GetDeviceState(sizeof(diMouseState), &diMouseState) != DI_OK) {
 		ret = lpdiMouse->Acquire();
 		if (ret != DI_OK && ret != S_FALSE) {
-#ifdef _DEBUG
-			printf("Failed to acquire mouse\n");
-#endif
 			return;
 		}
 	}
