@@ -35,7 +35,7 @@ import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 /**
  * $Id$

@@ -35,7 +35,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_vertex_array_object {
 	int GL_STATIC_ATI = 0x8760;

@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface EXT_blend_equation_separate {
 	/*

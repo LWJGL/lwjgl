@@ -34,7 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface NV_register_combiners {
 	int GL_REGISTER_COMBINERS_NV = 0x8522;

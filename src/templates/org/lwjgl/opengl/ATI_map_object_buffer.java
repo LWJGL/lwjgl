@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_map_object_buffer {
 	/**

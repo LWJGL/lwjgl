@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ARB_multitexture {
 	int GL_TEXTURE0_ARB = 0x84C0;

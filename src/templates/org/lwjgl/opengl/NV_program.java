@@ -35,7 +35,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 @Extension(postfix="NV", isFinal=false)
 public interface NV_program {

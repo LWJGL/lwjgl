@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ARB_occlusion_query {
 	/*

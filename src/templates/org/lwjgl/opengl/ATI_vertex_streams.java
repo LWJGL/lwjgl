@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_vertex_streams {
 	int GL_MAX_VERTEX_STREAMS_ATI = 0x876B;

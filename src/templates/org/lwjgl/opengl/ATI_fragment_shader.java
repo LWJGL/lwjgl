@@ -38,7 +38,7 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_fragment_shader {
 	int GL_FRAGMENT_SHADER_ATI = 0x8920;

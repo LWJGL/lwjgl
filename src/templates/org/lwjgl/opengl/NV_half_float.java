@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.ShortBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface NV_half_float {
 	/*

@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ARB_multisample {
 	int GL_MULTISAMPLE_ARB = 0x809D;

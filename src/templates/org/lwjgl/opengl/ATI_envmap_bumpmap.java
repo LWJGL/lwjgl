@@ -34,7 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_envmap_bumpmap {
 	int GL_BUMP_ROT_MATRIX_ATI = 0x8775;

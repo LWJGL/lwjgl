@@ -34,7 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_vertex_attrib_array_object {
 	void glVertexAttribArrayObjectATI(@GLuint int index, int size, @GLenum int type, boolean normalized, @GLsizei int stride, @GLuint int buffer, @GLuint int offset);

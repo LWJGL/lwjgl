@@ -35,7 +35,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 @Extension(postfix="ARB", isFinal=false)
 public interface ARB_program {

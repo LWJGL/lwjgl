@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.Buffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface NV_pixel_data_range {
 	/*

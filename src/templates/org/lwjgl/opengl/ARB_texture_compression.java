@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.Buffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ARB_texture_compression {
 	int GL_COMPRESSED_ALPHA_ARB = 0x84E9;

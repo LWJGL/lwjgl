@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.Buffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_element_array {
 	int GL_ELEMENT_ARRAY_ATI = 0x8768;

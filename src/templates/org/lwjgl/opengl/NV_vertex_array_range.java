@@ -34,7 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface NV_vertex_array_range {
 	int GL_VERTEX_ARRAY_RANGE_NV = 0x851D;

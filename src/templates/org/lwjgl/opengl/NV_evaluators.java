@@ -35,7 +35,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface NV_evaluators {
 	int GL_EVAL_2D_NV = 0x86C0;

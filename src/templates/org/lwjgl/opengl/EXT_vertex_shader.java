@@ -37,7 +37,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface EXT_vertex_shader {
 	int GL_VERTEX_SHADER_EXT = 0x8780;

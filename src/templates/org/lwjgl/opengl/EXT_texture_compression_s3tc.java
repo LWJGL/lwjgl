@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 @Extension(postfix="EXT", className="EXTTextureCompressionS3TC")
 public interface EXT_texture_compression_s3tc {

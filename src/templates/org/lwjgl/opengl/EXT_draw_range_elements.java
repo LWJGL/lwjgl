@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.Buffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface EXT_draw_range_elements {
 	int GL_MAX_ELEMENTS_VERTICES_EXT = 0x80E8;

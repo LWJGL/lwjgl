@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ATI_pn_triangles {
 	int GL_PN_TRIANGLES_ATI = 0x87F0;

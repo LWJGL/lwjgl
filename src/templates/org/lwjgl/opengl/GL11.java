@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.*;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 /**
  * $Id$

@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.Buffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface EXT_fog_coord {
 	int GL_FOG_COORDINATE_SOURCE_EXT = 0x8450;

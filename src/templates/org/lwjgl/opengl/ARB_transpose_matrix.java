@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ARB_transpose_matrix {
 	int GL_TRANSPOSE_MODELVIEW_MATRIX_ARB = 0x84E3;

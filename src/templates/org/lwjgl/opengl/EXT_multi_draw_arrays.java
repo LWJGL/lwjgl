@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface EXT_multi_draw_arrays {
 	@Code(	"		if (piFirst.remaining() != piCount.remaining()) {\n" +

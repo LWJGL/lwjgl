@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 @Extension(postfix="EXT", className="EXTTextureLODBias")
 public interface EXT_texture_lod_bias {

@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 @Extension(postfix="NV", className="NVTextureCompressionVTC")
 public interface NV_texture_compression_vtc {

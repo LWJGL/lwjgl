@@ -36,7 +36,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ARB_matrix_palette {
 	int GL_MATRIX_PALETTE_ARB = 0x8840;

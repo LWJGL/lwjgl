@@ -37,7 +37,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface ARB_vertex_blend {
 	int GL_MAX_VERTEX_UNITS_ARB = 0x86A4;

@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface NV_occlusion_query {
 	int GL_OCCLUSION_TEST_HP = 0x8165;

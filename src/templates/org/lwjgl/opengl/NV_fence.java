@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface NV_fence {
 	int GL_ALL_COMPLETED_NV = 0x84F2;

@@ -33,7 +33,7 @@ package org.lwjgl.opengl;
 
 import java.nio.Buffer;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 public interface EXT_vertex_weighting {
 	int GL_MODELVIEW0_STACK_DEPTH_EXT = 0x0BA3;

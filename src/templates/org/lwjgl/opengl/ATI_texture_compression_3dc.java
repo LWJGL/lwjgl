@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
+import org.lwjgl.util.generator.*;
 
 @Extension(postfix="ATI", className="ATITextureCompression3DC")
 public interface ATI_texture_compression_3dc {
