@@ -18,11 +18,6 @@ AC_PROG_MAKE_SET
 AC_CANONICAL_HOST
 
 case "$host_os" in
-	darwin*)	_BUILD_FLAGS="-D_AGL -fpascal-strings"
-				LDFLAGS="-Xlinker -framework -Xlinker JavaVM -Xlinker -framework -Xlinker ApplicationServices -Xlinker -framework -Xlinker CoreServices -Xlinker -framework -Xlinker Carbon"
-				NATIVE_BUILD_DIR=macosx
-				CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
-				;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    AC_LIBTOOL_DLOPEN
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
@@ -74,6 +69,5 @@ AC_CONFIG_FILES([Makefile
                  common/ext/Makefile
                  common/nv/Makefile
                  common/fmod3/Makefile
-                 linux/Makefile
-		 macosx/Makefile])
+                 linux/Makefile])
 AC_OUTPUT
