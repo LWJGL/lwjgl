@@ -31,9 +31,9 @@
  */
 package org.lwjgl.util.model.renderer;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.util.Renderable;
@@ -44,8 +44,7 @@ import org.lwjgl.util.model.Model;
 /**
  * $Id$
  * 
- * A simple (and very inefficient) Model renderer. This calculates the model vertices on the fly
- * and uses GL immediate mode to render the result. This is of course very slow.
+ * Pluggable model renderer
  * <p>
  * Material lookups are performed by mapping the material name to a Renderable thing. You must
  * suppy appropriate Renderables - typically something that binds a 2D texture and sets up some
@@ -57,13 +56,19 @@ import org.lwjgl.util.model.Model;
  * @author $Author$
  * @version $Revision$
  */
-public class Renderer implements Renderable {
+public class ModelRenderer implements Renderable {
 	
 	/** Material map: String name->Renderable */
 	private static final Map materials = new HashMap();
 	
 	/** The model we're rendering */
 	private Model model;
+	
+	/** The frame processor */
+	private FrameProcessor processor;
+	
+	/** Animation event listeners */
+	private List listeners;
 	
 	/** The current material */
 	private Renderable material;
@@ -75,15 +80,15 @@ public class Renderer implements Renderable {
 	private final Timer timer = new Timer();
 	
 	/** Last frame rendered */
-	private Frame lastFrame;
+	private Frame currentFrame;
 	
 	/** Visibility */
-	private boolean visible;
+	private boolean visible = true;
 	
 	/**
 	 * C'tor
 	 */
-	public Renderer() {
+	public ModelRenderer() {
 	}
 	
 	/**
@@ -115,32 +120,47 @@ public class Renderer implements Renderable {
 		}
 		frame = model.getAnimation(animation);
 		timer.reset();
-		lastFrame = null;
 	}
 	
 	/**
-	 * Render a Model
+	 * Update the model
 	 */
-	public void render() {
-		
-		// Don't do anything if there's no model or no animation
-		if (model == null || frame == null) {
+	public void update() {
+
+		// Don't do anything if there's no model or no animation or no processor
+		if (model == null || frame == null || processor == null) {
 			return;
 		}
 		
-		// 1. Set up GL state from the Model's material
+		// Work out what frame to show
+		Frame frame = findFrame();
+		if (frame != currentFrame) {
+			currentFrame = frame;
+			processFrame();
+			if (currentFrame.getAction() != null) {
+				fireAnimationEvent(currentFrame.getAction());
+			}
+		}
+		
+	}
+	
+	/**
+	 * Render things
+	 */
+	public void render() {
+		
+		// Don't do anything if there's no model or no animation or no processor
+		if (model == null || frame == null || processor == null || !visible) {
+			return;
+		}
+		
+		// Set up GL state from the Model's material
 		if (material != null) {
 			material.render();
 		}
 		
-		// 2. Work out what frame to show
-		Frame frame = findFrame();
-		if (frame != lastFrame) {
-			lastFrame = frame;
-			processFrame();
-		}
-		
-		// 3. Render the processed frame
+		// Render the current frame
+		renderFrame();
 		
 	}
 	
@@ -152,13 +172,43 @@ public class Renderer implements Renderable {
 		float time = timer.getTime();
 		
 		// Use a binary search to find the frame
-		int a = 0, b = 
+        int i = 0;
+        for (int j = frame.length - 1; i <= j;) {
+			int k = i + j >> 1;
+			Frame f = frame[k];
+			if (f.getTime() == time) {
+				return f;
+			} else if (f.getTime() < time) {
+				i = k + 1;
+			} else {
+				j = k - 1;
+			}
+		}
+
+        return frame[i + 1];
+	}
+	
+	/**
+	 * Process the current frame of animation
+	 */
+	protected void processFrame() {
+		processor.process(model, currentFrame);
+	}
+	
+	/**
+	 * Render the current frame
+	 */
+	protected void renderFrame() {
+		processor.render();
 	}
 	
 	/**
 	 * Add a material
-	 * @param name The material's name
-	 * @param renderable The renderable object
+	 * 
+	 * @param name
+	 *            The material's name
+	 * @param renderable
+	 *            The renderable object
 	 */
 	public static void putMaterial(String name, Renderable renderable) {
 		materials.put(name, renderable);
@@ -218,4 +268,60 @@ public class Renderer implements Renderable {
 		timer.resume();
 	}
 	
+	/**
+	 * @return Returns the processor.
+	 */
+	public FrameProcessor getProcessor() {
+		return processor;
+	}
+	
+	/**
+	 * Sets the processor. The processor is the clever bit that actually does the
+	 * vertex twiddling and rendering.
+	 * @param processor The processor to set.
+	 */
+	public void setProcessor(FrameProcessor processor) {
+		this.processor = processor;
+	}
+	
+	/**
+	 * Add an animation listener
+	 * @param listener
+	 */
+	public void addAnimationEventListener(AnimationEventListener listener) {
+		if (listeners == null) {
+			listeners = new ArrayList(1);
+		}
+		listeners.remove(listener);
+		listeners.add(listener);
+	}
+	
+	/**
+	 * Remove an animation listener
+	 * @param listener
+	 */
+	public void removeAnimationEventListener(AnimationEventListener listener) {
+		if (listeners == null) {
+			return;
+		}
+		listeners.remove(listener);
+		if (listeners.size() == 0) {
+			listeners = null;
+		}
+	}
+	
+	/**
+	 * Fire an animation event
+	 * @param action
+	 */
+	protected void fireAnimationEvent(String action) {
+		if (listeners == null) {
+			return;
+		}
+		int n = listeners.size();
+		for (int i = 0; i < n; i ++) {
+			AnimationEventListener listener = (AnimationEventListener) listeners.get(i);
+			listener.receiveAnimationEvent(this, action);
+		}
+	}
 }
