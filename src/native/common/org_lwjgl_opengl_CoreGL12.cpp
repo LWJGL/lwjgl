@@ -52,10 +52,11 @@
  * Method:    glColorTable
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTable
-  (JNIEnv * env, jclass clazz, jint target, jint internalFormat, jint width, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorTable
+  (JNIEnv * env, jclass clazz, jint target, jint internalFormat, jint width, jint format, jint type, jobject buffer, jint offset)
 {
-	const void *address = (const void *)env->GetDirectBufferAddress(buffer);
+	CHECK_EXISTS(glColorTable)
+	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glColorTable(target, internalFormat, width, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -65,10 +66,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTable
  * Method:    glColorSubTable
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorSubTable
-  (JNIEnv * env, jclass clazz, jint target, jint start, jint count, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorSubTable
+  (JNIEnv * env, jclass clazz, jint target, jint start, jint count, jint format, jint type, jobject buffer, jint offset)
 {
-	const void *address = (const void *)env->GetDirectBufferAddress(buffer);
+	CHECK_EXISTS(glColorSubTable)
+	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glColorSubTable(target, start, count, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -78,11 +80,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorSubTable
  * Method:    glGetColorTable
  * Signature: (IIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTable
-  (JNIEnv * env, jclass clazz, jint target, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetColorTable
+  (JNIEnv * env, jclass clazz, jint target, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetColorTable)
-	void *address = (void *)env->GetDirectBufferAddress(buffer);
+	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetColorTable(target, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -92,11 +94,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTable
  * Method:    glGetColorTableParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTableParameteriv
-  (JNIEnv * env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetColorTableParameteriv
+  (JNIEnv * env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetColorTableParameteriv)
-	GLint *address = (GLint *)env->GetDirectBufferAddress(buffer);
+	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetColorTableParameteriv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -106,11 +108,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTableParameteriv
  * Method:    glGetColorTableParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTableParameterfv
-  (JNIEnv * env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetColorTableParameterfv
+  (JNIEnv * env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetColorTableParameterfv)
-	GLfloat *address = (GLfloat *)env->GetDirectBufferAddress(buffer);
+	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetColorTableParameterfv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -120,11 +122,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTableParameterfv
  * Method:    glColorTableParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTableParameteriv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorTableParameteriv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glColorTableParameteriv)
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
+	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glColorTableParameteriv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -134,11 +136,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTableParameteriv
  * Method:    glColorTableParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTableParameterfv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorTableParameterfv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glColorTableParameterfv)
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
+	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glColorTableParameterfv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -192,6 +194,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glBlendEquation
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
+	CHECK_EXISTS(glBlendColor)
 	glBlendColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
 }
@@ -227,11 +230,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glResetHistogram
  * Method:    glGetHistogram
  * Signature: (IZIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogram
-  (JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetHistogram
+  (JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetHistogram)
-	void *address = (void *)env->GetDirectBufferAddress(buffer);
+	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetHistogram(target, reset, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -241,11 +244,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogram
  * Method:    glGetHistogramParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogramParameterfv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetHistogramParameterfv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetHistogramParameterfv)
-	GLfloat *address = (GLfloat *)env->GetDirectBufferAddress(buffer);
+	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetHistogramParameterfv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -255,11 +258,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogramParameterfv
  * Method:    glGetHistogramParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogramParameteriv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetHistogramParameteriv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetHistogramParameteriv)
-	GLint *address = (GLint *)env->GetDirectBufferAddress(buffer);
+	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetHistogramParameteriv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -295,11 +298,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glResetMinmax
  * Method:    glGetMinmax
  * Signature: (IZIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmax
-  (JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetMinmax
+  (JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetMinmax)
-	void *address = (void *)env->GetDirectBufferAddress(buffer);
+	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetMinmax(target, reset, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -309,11 +312,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmax
  * Method:    glGetMinmaxParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmaxParameterfv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetMinmaxParameterfv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetMinmaxParameterfv)
-	GLfloat *address = (GLfloat *)env->GetDirectBufferAddress(buffer);
+	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetMinmaxParameterfv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -323,11 +326,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmaxParameterfv
  * Method:    glGetMinmaxParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmaxParameteriv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetMinmaxParameteriv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetMinmaxParameteriv)
-	GLint *address = (GLint *)env->GetDirectBufferAddress(buffer);
+	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetMinmaxParameteriv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -337,11 +340,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmaxParameteriv
  * Method:    glConvolutionFilter1D
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionFilter1D
-  (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionFilter1D
+  (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glConvolutionFilter1D)
-	const void *address = (const void *)env->GetDirectBufferAddress(buffer);
+	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glConvolutionFilter1D(target, internalformat, width, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -351,11 +354,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionFilter1D
  * Method:    glConvolutionFilter2D
  * Signature: (IIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionFilter2D
-  (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionFilter2D
+  (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glConvolutionFilter2D)
-	const void *address = (const void *)env->GetDirectBufferAddress(buffer);
+	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glConvolutionFilter2D(target, internalformat, width, height, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -378,11 +381,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameterf
  * Method:    glConvolutionParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameterfv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionParameterfv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glConvolutionParameterfv)
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
+	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glConvolutionParameterfv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -405,11 +408,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameteri
  * Method:    glConvolutionParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameteriv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionParameteriv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glConvolutionParameteriv)
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
+	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glConvolutionParameteriv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -445,11 +448,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glCopyConvolutionFilter2D
  * Method:    glGetConvolutionFilter
  * Signature: (IIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionFilter
-  (JNIEnv *env, jclass clazz, jint target, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetConvolutionFilter
+  (JNIEnv *env, jclass clazz, jint target, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetConvolutionFilter)
-	void *address = (void *)env->GetDirectBufferAddress(buffer);
+	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetConvolutionFilter(target, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -459,11 +462,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionFilter
  * Method:    glGetConvolutionParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionParameterfv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetConvolutionParameterfv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetConvolutionParameterfv)
-	GLfloat *address = (GLfloat *)env->GetDirectBufferAddress(buffer);
+	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetConvolutionParameterfv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -473,11 +476,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionParameterf
  * Method:    glGetConvolutionParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionParameteriv
-  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetConvolutionParameteriv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glGetConvolutionParameteriv)
-	GLint *address = (GLint *)env->GetDirectBufferAddress(buffer);
+	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetConvolutionParameteriv(target, pname, address);
 	CHECK_GL_ERROR
 }
@@ -487,12 +490,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionParameteri
  * Method:    glSeparableFilter2D
  * Signature: (IIIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glSeparableFilter2D
-  (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jobject row, jobject column)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglSeparableFilter2D
+  (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jobject row, jint row_offset, jobject column, jint column_offset)
 {
 	CHECK_EXISTS(glSeparableFilter2D)
-	const void *address = (const void *)env->GetDirectBufferAddress(row);
-	const void *address2 = env->GetDirectBufferAddress(column);
+	const void *address = (const void *)(row_offset + (const GLbyte *)env->GetDirectBufferAddress(row));
+	const void *address2 = (const void *)(column_offset + (const GLbyte *)env->GetDirectBufferAddress(column));
 	glSeparableFilter2D(target, internalformat, width, height, format, type, address, address2);
 	CHECK_GL_ERROR
 }
@@ -502,13 +505,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glSeparableFilter2D
  * Method:    glGetSeparableFilter
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetSeparableFilter
-  (JNIEnv *env, jclass clazz, jint target, jint format, jint type, jobject row, jobject column, jobject span)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetSeparableFilter
+  (JNIEnv *env, jclass clazz, jint target, jint format, jint type, jobject row, jint row_offset, jobject column, jint column_offset, jobject span, jint span_offset)
 {
 	CHECK_EXISTS(glGetSeparableFilter)
-	void *address = (void *)env->GetDirectBufferAddress(row);
-	void *address2 = (void *)env->GetDirectBufferAddress(column);
-	void *address3 = (void *)env->GetDirectBufferAddress(span);
+	void *address = (void *)(row_offset + (GLbyte *)env->GetDirectBufferAddress(row));
+	void *address2 = (void *)(column_offset + (GLbyte *)env->GetDirectBufferAddress(column));
+	void *address3 = (void *)(span_offset + (GLbyte *)env->GetDirectBufferAddress(span));
 	glGetSeparableFilter(target, format, type, address, address2, address3);
 	CHECK_GL_ERROR
 }
@@ -518,11 +521,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetSeparableFilter
  * Method:    glDrawRangeElements
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glDrawRangeElements
-  (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglDrawRangeElements
+  (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glDrawRangeElements)
-	const void *address = (const void *)env->GetDirectBufferAddress(buffer);
+	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glDrawRangeElements(mode, start, end, count, type, address);
 	CHECK_GL_ERROR
 }
@@ -532,11 +535,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glDrawRangeElements
  * Method:    glTexImage3D
  * Signature: (IIIIIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glTexImage3D
-  (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglTexImage3D
+  (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glTexImage3D)
-	const void *address = (const void *)env->GetDirectBufferAddress(buffer);
+	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, address);
 	CHECK_GL_ERROR
 }
@@ -546,11 +549,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glTexImage3D
  * Method:    glTexSubImage3D
  * Signature: (IIIIIIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glTexSubImage3D
-  (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jobject buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglTexSubImage3D
+  (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jobject buffer, jint offset)
 {
 	CHECK_EXISTS(glTexSubImage3D)
-	const void *address = (const void *)env->GetDirectBufferAddress(buffer);
+	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, address);
 	CHECK_GL_ERROR
 }

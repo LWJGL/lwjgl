@@ -9,35 +9,35 @@ extern "C" {
 #endif
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glColorTable
- * Signature: (IIIIILjava/nio/Buffer;)V
+ * Method:    nglColorTable
+ * Signature: (IIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTable
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorTable
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glColorSubTable
- * Signature: (IIIIILjava/nio/Buffer;)V
+ * Method:    nglColorSubTable
+ * Signature: (IIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorSubTable
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorSubTable
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glColorTableParameteriv
- * Signature: (IILjava/nio/IntBuffer;)V
+ * Method:    nglColorTableParameteriv
+ * Signature: (IILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTableParameteriv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorTableParameteriv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glColorTableParameterfv
- * Signature: (IILjava/nio/FloatBuffer;)V
+ * Method:    nglColorTableParameterfv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glColorTableParameterfv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglColorTableParameterfv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
@@ -57,27 +57,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glCopyColorTable
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetColorTable
- * Signature: (IIILjava/nio/Buffer;)V
+ * Method:    nglGetColorTable
+ * Signature: (IIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTable
-  (JNIEnv *, jclass, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetColorTable
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetColorTableParameteriv
- * Signature: (IILjava/nio/IntBuffer;)V
+ * Method:    nglGetColorTableParameteriv
+ * Signature: (IILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTableParameteriv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetColorTableParameteriv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetColorTableParameterfv
- * Signature: (IILjava/nio/FloatBuffer;)V
+ * Method:    nglGetColorTableParameterfv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetColorTableParameterfv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetColorTableParameterfv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
@@ -113,27 +113,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glResetHistogram
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetHistogram
- * Signature: (IZIILjava/nio/Buffer;)V
+ * Method:    nglGetHistogram
+ * Signature: (IZIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogram
-  (JNIEnv *, jclass, jint, jboolean, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetHistogram
+  (JNIEnv *, jclass, jint, jboolean, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetHistogramParameterfv
- * Signature: (IILjava/nio/FloatBuffer;)V
+ * Method:    nglGetHistogramParameterfv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogramParameterfv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetHistogramParameterfv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetHistogramParameteriv
- * Signature: (IILjava/nio/IntBuffer;)V
+ * Method:    nglGetHistogramParameteriv
+ * Signature: (IILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetHistogramParameteriv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetHistogramParameteriv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
@@ -153,43 +153,43 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glResetMinmax
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetMinmax
- * Signature: (IZIILjava/nio/Buffer;)V
+ * Method:    nglGetMinmax
+ * Signature: (IZIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmax
-  (JNIEnv *, jclass, jint, jboolean, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetMinmax
+  (JNIEnv *, jclass, jint, jboolean, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetMinmaxParameterfv
- * Signature: (IILjava/nio/FloatBuffer;)V
+ * Method:    nglGetMinmaxParameterfv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmaxParameterfv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetMinmaxParameterfv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetMinmaxParameteriv
- * Signature: (IILjava/nio/IntBuffer;)V
+ * Method:    nglGetMinmaxParameteriv
+ * Signature: (IILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetMinmaxParameteriv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetMinmaxParameteriv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glConvolutionFilter1D
- * Signature: (IIIIILjava/nio/Buffer;)V
+ * Method:    nglConvolutionFilter1D
+ * Signature: (IIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionFilter1D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionFilter1D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glConvolutionFilter2D
- * Signature: (IIIIIILjava/nio/Buffer;)V
+ * Method:    nglConvolutionFilter2D
+ * Signature: (IIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionFilter2D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionFilter2D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
@@ -201,11 +201,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameterf
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glConvolutionParameterfv
- * Signature: (IILjava/nio/FloatBuffer;)V
+ * Method:    nglConvolutionParameterfv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameterfv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionParameterfv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
@@ -217,11 +217,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameteri
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glConvolutionParameteriv
- * Signature: (IILjava/nio/IntBuffer;)V
+ * Method:    nglConvolutionParameteriv
+ * Signature: (IILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glConvolutionParameteriv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglConvolutionParameteriv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
@@ -241,67 +241,67 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glCopyConvolutionFilter2D
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetConvolutionFilter
- * Signature: (IIILjava/nio/Buffer;)V
+ * Method:    nglGetConvolutionFilter
+ * Signature: (IIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionFilter
-  (JNIEnv *, jclass, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetConvolutionFilter
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetConvolutionParameterfv
- * Signature: (IILjava/nio/FloatBuffer;)V
+ * Method:    nglGetConvolutionParameterfv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionParameterfv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetConvolutionParameterfv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetConvolutionParameteriv
- * Signature: (IILjava/nio/IntBuffer;)V
+ * Method:    nglGetConvolutionParameteriv
+ * Signature: (IILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetConvolutionParameteriv
-  (JNIEnv *, jclass, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetConvolutionParameteriv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glSeparableFilter2D
- * Signature: (IIIIIILjava/nio/Buffer;Ljava/nio/Buffer;)V
+ * Method:    nglSeparableFilter2D
+ * Signature: (IIIIIILjava/nio/Buffer;ILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glSeparableFilter2D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglSeparableFilter2D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glGetSeparableFilter
- * Signature: (IIILjava/nio/Buffer;Ljava/nio/Buffer;Ljava/nio/Buffer;)V
+ * Method:    nglGetSeparableFilter
+ * Signature: (IIILjava/nio/Buffer;ILjava/nio/Buffer;ILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glGetSeparableFilter
-  (JNIEnv *, jclass, jint, jint, jint, jobject, jobject, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetSeparableFilter
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glDrawRangeElements
- * Signature: (IIIIILjava/nio/Buffer;)V
+ * Method:    nglDrawRangeElements
+ * Signature: (IIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glDrawRangeElements
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglDrawRangeElements
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glTexImage3D
- * Signature: (IIIIIIIIILjava/nio/Buffer;)V
+ * Method:    nglTexImage3D
+ * Signature: (IIIIIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glTexImage3D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglTexImage3D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glTexSubImage3D
- * Signature: (IIIIIIIIIILjava/nio/Buffer;)V
+ * Method:    nglTexSubImage3D
+ * Signature: (IIIIIIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_glTexSubImage3D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglTexSubImage3D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12

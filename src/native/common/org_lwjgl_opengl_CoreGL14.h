@@ -17,27 +17,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glFogCoordf
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glFogCoordd
- * Signature: (D)V
+ * Method:    nglFogCoordPointer
+ * Signature: (IILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glFogCoordd
-  (JNIEnv *, jclass, jdouble);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglFogCoordPointer
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glFogCoordPointer
- * Signature: (IILjava/nio/Buffer;)V
+ * Method:    nglMultiDrawArrays
+ * Signature: (ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glFogCoordPointer
-  (JNIEnv *, jclass, jint, jint, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glMultiDrawArrays
- * Signature: (ILjava/nio/IntBuffer;Ljava/nio/IntBuffer;I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glMultiDrawArrays
-  (JNIEnv *, jclass, jint, jobject, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglMultiDrawArrays
+  (JNIEnv *, jclass, jint, jobject, jint, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
@@ -49,11 +41,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glPointParameterf
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glPointParameterfv
- * Signature: (ILjava/nio/FloatBuffer;)V
+ * Method:    nglPointParameter
+ * Signature: (ILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glPointParameterfv
-  (JNIEnv *, jclass, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglPointParameter
+  (JNIEnv *, jclass, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
@@ -65,35 +57,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3b
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glSecondaryColor3d
- * Signature: (DDD)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3d
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
  * Method:    glSecondaryColor3f
  * Signature: (FFF)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3f
   (JNIEnv *, jclass, jfloat, jfloat, jfloat);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glSecondaryColor3i
- * Signature: (III)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3i
-  (JNIEnv *, jclass, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glSecondaryColor3s
- * Signature: (SSS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3s
-  (JNIEnv *, jclass, jshort, jshort, jshort);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
@@ -105,27 +73,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3ub
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glSecondaryColor3ui
- * Signature: (III)V
+ * Method:    nglSecondaryColorPointer
+ * Signature: (IIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3ui
-  (JNIEnv *, jclass, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glSecondaryColor3us
- * Signature: (SSS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3us
-  (JNIEnv *, jclass, jshort, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glSecondaryColorPointer
- * Signature: (IIILjava/nio/Buffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColorPointer
-  (JNIEnv *, jclass, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglSecondaryColorPointer
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
@@ -134,14 +86,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColorPointer
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glBlendFuncSeparate
   (JNIEnv *, jclass, jint, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glWindowPos2d
- * Signature: (DD)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glWindowPos2d
-  (JNIEnv *, jclass, jdouble, jdouble);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
@@ -161,22 +105,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glWindowPos2i
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glWindowPos2s
- * Signature: (SS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glWindowPos2s
-  (JNIEnv *, jclass, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glWindowPos3d
- * Signature: (DDD)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glWindowPos3d
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
  * Method:    glWindowPos3f
  * Signature: (FFF)V
  */
@@ -190,14 +118,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glWindowPos3f
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glWindowPos3i
   (JNIEnv *, jclass, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glWindowPos3s
- * Signature: (SSS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glWindowPos3s
-  (JNIEnv *, jclass, jshort, jshort, jshort);
 
 #ifdef __cplusplus
 }

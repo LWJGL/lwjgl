@@ -25,67 +25,59 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glClientActiveTexture
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glCompressedTexImage1D
- * Signature: (IIIIIILjava/nio/Buffer;)V
+ * Method:    nglCompressedTexImage1D
+ * Signature: (IIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glCompressedTexImage1D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglCompressedTexImage1D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glCompressedTexImage2D
- * Signature: (IIIIIIILjava/nio/Buffer;)V
+ * Method:    nglCompressedTexImage2D
+ * Signature: (IIIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glCompressedTexImage2D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglCompressedTexImage2D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glCompressedTexImage3D
- * Signature: (IIIIIIIILjava/nio/Buffer;)V
+ * Method:    nglCompressedTexImage3D
+ * Signature: (IIIIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glCompressedTexImage3D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglCompressedTexImage3D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glCompressedTexSubImage1D
- * Signature: (IIIIIILjava/nio/Buffer;)V
+ * Method:    nglCompressedTexSubImage1D
+ * Signature: (IIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glCompressedTexSubImage1D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglCompressedTexSubImage1D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glCompressedTexSubImage2D
- * Signature: (IIIIIIIILjava/nio/Buffer;)V
+ * Method:    nglCompressedTexSubImage2D
+ * Signature: (IIIIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glCompressedTexSubImage2D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglCompressedTexSubImage2D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glCompressedTexSubImage3D
- * Signature: (IIIIIIIIIILjava/nio/Buffer;)V
+ * Method:    nglCompressedTexSubImage3D
+ * Signature: (IIIIIIIIIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glCompressedTexSubImage3D
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglCompressedTexSubImage3D
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glGetCompressedTexImage
- * Signature: (IILjava/nio/Buffer;)V
+ * Method:    nglGetCompressedTexImage
+ * Signature: (IILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glGetCompressedTexImage
-  (JNIEnv *, jclass, jint, jint, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord1d
- * Signature: (ID)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord1d
-  (JNIEnv *, jclass, jint, jdouble);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglGetCompressedTexImage
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
@@ -97,59 +89,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord1f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord1i
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord1i
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord1s
- * Signature: (IS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord1s
-  (JNIEnv *, jclass, jint, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord2d
- * Signature: (IDD)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord2d
-  (JNIEnv *, jclass, jint, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
  * Method:    glMultiTexCoord2f
  * Signature: (IFF)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord2f
   (JNIEnv *, jclass, jint, jfloat, jfloat);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord2i
- * Signature: (III)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord2i
-  (JNIEnv *, jclass, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord2s
- * Signature: (ISS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord2s
-  (JNIEnv *, jclass, jint, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord3d
- * Signature: (IDDD)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord3d
-  (JNIEnv *, jclass, jint, jdouble, jdouble, jdouble);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
@@ -161,30 +105,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord3f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord3i
- * Signature: (IIII)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord3i
-  (JNIEnv *, jclass, jint, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord3s
- * Signature: (ISSS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord3s
-  (JNIEnv *, jclass, jint, jshort, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord4d
- * Signature: (IDDDD)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord4d
-  (JNIEnv *, jclass, jint, jdouble, jdouble, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
  * Method:    glMultiTexCoord4f
  * Signature: (IFFFF)V
  */
@@ -193,51 +113,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord4f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord4i
- * Signature: (IIIII)V
+ * Method:    nglLoadTransposeMatrixf
+ * Signature: (Ljava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord4i
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglLoadTransposeMatrixf
+  (JNIEnv *, jclass, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultiTexCoord4s
- * Signature: (ISSSS)V
+ * Method:    nglMultTransposeMatrixf
+ * Signature: (Ljava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultiTexCoord4s
-  (JNIEnv *, jclass, jint, jshort, jshort, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glLoadTransposeMatrixd
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glLoadTransposeMatrixd
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glLoadTransposeMatrixf
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glLoadTransposeMatrixf
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultTransposeMatrixd
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultTransposeMatrixd
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL13
- * Method:    glMultTransposeMatrixf
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_glMultTransposeMatrixf
-  (JNIEnv *, jclass, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL13_nglMultTransposeMatrixf
+  (JNIEnv *, jclass, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
