@@ -203,36 +203,35 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 		0,                     // reserved 
 		0, 0, 0                // layer masks ignored
 	};
-
 	// get the best available match of pixel format for the device context  
         iPixelFormat = ChoosePixelFormat(hdc, &pfd);
 	if (iPixelFormat == 0) {
-		throwException(env, "Failed to choose pixel format");
+		printfDebugJava(env, "Failed to choose pixel format");
 		return -1;
 	}
 
 	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
-		throwException(env, "Could not describe pixel format");
+		printfDebugJava(env, "Could not describe pixel format");
 		return -1;
 	}
 
 	if (desc.cColorBits < bpp) {
-		throwException(env, "This application requires a greater colour depth");
+		printfDebugJava(env, "Insufficient color precision");
 		return -1;
 	}
 
 	if (desc.cAlphaBits < alpha) {
-		throwException(env, "This application requires a greater alpha depth");
+		printfDebugJava(env, "Insufficient alpha precision");
 		return -1;
 	}
 
 	if (desc.cStencilBits < stencil) {
-		throwException(env, "This application requires a greater stencil depth");
+		printfDebugJava(env, "Insufficient stencil precision");
 		return -1;
 	}
 
 	if (desc.cDepthBits < depth) {
-		throwException(env, "This application requires a greater depth buffer depth");
+		printfDebugJava(env, "Insufficient depth buffer precision");
 		return -1;
 	}
 
@@ -240,13 +239,13 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 		jboolean allowSoftwareOpenGL = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
 		// secondary check for software override
 		if(!allowSoftwareOpenGL) {
-			throwException(env, "Mode not supported by hardware");
+			printfDebugJava(env, "Pixel format not accelerated");
 			return -1;
 		}
 	}
 
 	if ((desc.dwFlags & flags) != flags) {
-		throwException(env, "Capabilities not supported");
+		printfDebugJava(env, "Capabilities not supported");
 		return -1;
 	}
 
@@ -255,8 +254,8 @@ static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, in
 
 int findPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format) {
         int bpp = GetDeviceCaps(hdc, BITSPIXEL);
-        jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
-	int iPixelFormat = findPixelFormatFromBPP(env, hdc, pixel_format, bpp);
+	int iPixelFormat;
+	iPixelFormat = findPixelFormatFromBPP(env, hdc, pixel_format, bpp);
 	if (iPixelFormat == -1) {
 		return findPixelFormatFromBPP(env, hdc, pixel_format, 16);
 	} else
@@ -510,7 +509,6 @@ HWND createWindow(int x, int y, int width, int height, bool fullscreen, bool und
 	  FALSE,       // menu-present option
 	  exstyle   // extended window style
 	);
-
 	// Create the window now, using that class:
         new_hwnd = CreateWindowEx (
 		 exstyle, 
@@ -733,7 +731,7 @@ static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_f
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *env, jobject self, jobject pixel_format) {
-	HWND dummy_hwnd = createWindow(0, 0, 1, 1, false, false);
+	HWND dummy_hwnd;
         HDC dummy_hdc;
         BOOL result;
         jclass cls_pixel_format;
@@ -741,6 +739,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *
         int pixel_format_index_arb;
         HGLRC context_arb;
         bool arb_success;
+	dummy_hwnd = createWindow(0, 0, 1, 1, false, false);
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
 		return;
