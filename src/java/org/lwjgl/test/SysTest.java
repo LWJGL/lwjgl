@@ -57,7 +57,6 @@ public class SysTest {
   	testAlert();
   	testDebug();
     testTimer();
-    testPriority();
     testUrl();
     testClipboard();
   }
@@ -102,24 +101,6 @@ public class SysTest {
   }
   
   /**
-   * Tests the priority
-   */
-  private void testPriority() {
-    System.out.println("==== Test Priority ====");
-    
-    busyWait(Sys.LOW_PRIORITY,      5, "Busy waiting in low priority...");
-    busyWait(Sys.NORMAL_PRIORITY,   5, "Busy waiting in normal priority...");
-    busyWait(Sys.HIGH_PRIORITY,     5, "Busy waiting in high priority...");
-    busyWait(Sys.REALTIME_PRIORITY, 5, "Busy waiting in realtime priority (may lag the computer!)...");
-    
-    // reset
-    System.out.println("Resetting to normal");
-    Sys.setProcessPriority(Sys.NORMAL_PRIORITY);
-
-    System.out.println("---- Test Priority ----\n"); 
-  }  
-  
-  /**
    * Tests the alert
    */
   private void testAlert() {
@@ -154,7 +135,6 @@ public class SysTest {
     long future = Sys.getTime() + (Sys.getTimerResolution() * seconds);
     
     System.out.print(message);
-    Sys.setProcessPriority(priority);
     
     // waste some cycles
     while (Sys.getTime() < future) {

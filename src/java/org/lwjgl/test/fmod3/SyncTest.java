@@ -136,8 +136,6 @@ public class SyncTest {
 		
 		// if we have a module - get going
 		if (module != null) {
-			// high priority... - might otherwise skip
-			Sys.setProcessPriority(Sys.HIGH_PRIORITY);
 			
 			// go go go!
 			run();
