@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -31,149 +31,176 @@
  */
 package org.lwjgl.test.input;
 
-import java.awt.*;
-import java.awt.event.*;
+import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Controller;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLU;
+import org.lwjgl.vector.Vector2f;
 
 /**
  * $Id$
  * <br>
- * Controller test, hwich shows a awt window, printing Controller state
+ * Controller test
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class ControllerTest extends Panel {
+public class ControllerTest {
 
-	private int counter = 0;
+  /** OpenGL instance */
+  private GL gl;
 
-	public Thread animationThread;
+  /** GLU instance */
+  private GLU glu;
 
-	/** Creates a new instance of ControllerTest */
-	public ControllerTest() {
-		try {
-			Controller.create();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+  /** position of quad to draw */
+  private Vector2f position = new Vector2f(320.0f, 240.0f);
+  
+  /** Display mode selected */
+  private DisplayMode displayMode;
 
-		animationThread = new Thread() {
-			public void run() {
-				while (true) {
-					paint(getGraphics());
+  /** Creates a new instance of ControllerTest */
+  public ControllerTest() {
+  }
 
-					try {
-						Thread.sleep(250);
-					} catch (InterruptedException inte) {
-						inte.printStackTrace();
-					}
-				}
-			}
-		};
-		animationThread.setDaemon(true);
-	}
+  private void initialize() {
+    // create display and opengl
+    setupDisplay(false);
 
-	public void paint(Graphics g) {
-		if (g == null) {
-			return;
-		}
-
-		g.setColor(Color.white);
-		g.fillRect(0, 0, 640, 480);
-
-		int y = 100;
-		int x = 100;
-		Controller.poll();
-
-		g.setColor(Color.blue);
-		g.drawString("Buttoncount: " + Controller.buttonCount, x, y);
-		y += 20;
-		g.drawString("-----------------------------------------------", x, y);
-		y += 20;
-    
-    if(Controller.hasXAxis) {
-		  g.drawString("x  : " + Controller.x, x, y);
-      y += 20;
+    try {
+      Keyboard.create();
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.exit(-1);
     }
-    
-    if(Controller.hasRXAxis) {
-      g.drawString("rx  : " + Controller.rx, x, y);
-      y += 20;
-    }
-    
-    if(Controller.hasYAxis) {
-  		g.drawString("y  : " + Controller.y, x, y);
-      y += 20;
-    }
-		
-    if(Controller.hasRYAxis) {
-      g.drawString("ry  : " + Controller.ry, x, y);
-      y += 20;
-    }
-    
-    if (Controller.hasZAxis) {
-			g.drawString("z  : " + Controller.z, x, y);
-			y += 20;
-		}
-		
-    if (Controller.hasRZAxis) {
-      g.drawString("rz  : " + Controller.rz, x, y);
-      y += 20;
-    }
-    
-    if (Controller.hasPOV) {
-			g.drawString("pov: " + Controller.pov, x, y);
-			y += 20;
-		}
+  }
+  
+  private void setupDisplay(boolean fullscreen) {
+    try {
+      gl = new GL("ControllerTest", 50, 50, 640, 480, 16, 0, 0, 0);
+      gl.create();
 
-    if (Controller.hasSlider) {
-      g.drawString("slder: " + Controller.slider, x, y);
-      y += 20;
+      glu = new GLU(gl);
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.exit(-1);
     }
 
-		//paint buttons
-		g.drawString("btn: ", x, y);
-		x += g.getFontMetrics().stringWidth("btn: ");
-		for (int i = 0; i < Controller.buttonCount; i++) {
-			if (Controller.isButtonDown(i)) {
-				g.drawString(i + ", ", x, y);
-				x += 15;
-			}
-		}
-	}
+    initializeOpenGL();    
+  }
 
-	public void update(Graphics g) {
-		paint(g);
-	}
+  private void initializeOpenGL() {
+    gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glu.ortho2D(0.0, 640, 0, 480);
+  }
 
-	public void disposing() {
-		Controller.destroy();
-	}
+  public void executeTest() {
+    initialize();
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String[] args) {
-		final ControllerTest p = new ControllerTest();
-		final Frame f = new Frame();
-		f.setLayout(null);
-		f.setSize(640, 480);
-		f.setLocation(100, 100);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				f.hide();
-				p.disposing();
-				f.dispose();
-			}
-		});
+    createController();
 
-		p.setSize(640, 480);
-		p.setLocation(0, 0);
-		p.setBackground(Color.RED);
+    wiggleController();
 
-		f.add(p);
-		f.show();
-		p.animationThread.start();
-	}
+    Controller.destroy();
+    Keyboard.destroy();
+    gl.destroy();
+  }
+
+  private void createController() {
+    try {
+      Controller.create();
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.exit(-1);
+    }
+  }
+
+  private void wiggleController() {
+    while (!gl.isCloseRequested()) {
+      gl.tick();
+      
+      if(gl.isMinimized()) {
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException inte) {
+          inte.printStackTrace();
+        }
+        continue;
+      }
+
+      Controller.poll();
+      Keyboard.poll();
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+        return;
+      }
+
+      if (Controller.x > 200) {
+        position.x += 1;
+      }
+        
+      if (Controller.x < -200) {
+        position.x -= 1;
+      }
+        
+      if (Controller.y < -200) {
+        position.y += 1;
+      }
+      
+      if (Controller.y > 200) {
+        position.y -= 1;
+      }
+      
+      if(position.x<0) {
+        position.x = 0;
+      } else if (position.x>640-60) {
+        position.x = 640-60;
+      }
+      
+      if(position.y < 0) {
+        position.y = 0;
+      } else if (position.y>480-30) {
+        position.y = 480-30;
+      }
+      
+
+      render();
+
+      gl.paint();
+    }
+  }
+  
+  private void render() {
+    gl.clear(GL.COLOR_BUFFER_BIT);
+
+    gl.begin(GL.POLYGON);
+    {
+      float color = 1.0f;
+      int buttonDown = 0;
+      
+      for(int i=0;i<Controller.buttonCount; i++) {
+        if(Controller.isButtonDown(i)) {
+          color = (1.0f / Controller.buttonCount) * (i+1);
+          System.out.println("Button " + i + " down"); 
+        }
+      }
+      gl.color3f(color, color, color);
+      
+      gl.vertex2f(position.x + 0.0f, position.y + 0.0f);
+      gl.vertex2f(position.x + 0.0f, position.y + 30.0f);
+      gl.vertex2f(position.x + 40.0f, position.y + 30.0f);
+      gl.vertex2f(position.x + 60.0f, position.y + 15.f);
+      gl.vertex2f(position.x + 40.0f, position.y + 0.0f);
+    }
+    gl.end();
+  }
+
+  /**
+   * @param args the command line arguments
+   */
+  public static void main(String[] args) {
+    ControllerTest ct = new ControllerTest();
+    ct.executeTest();
+  }
 }
