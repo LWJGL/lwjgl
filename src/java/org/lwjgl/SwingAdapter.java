@@ -66,4 +66,23 @@ final class SwingAdapter implements PlatformAdapter {
 		}
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 	}
+  
+	/**
+	 * Get the contents of the system clipboard. The system might not have a clipboard
+	 * (particularly if it doesn't even have a keyboard) in which case we return null.
+	 * Otherwise we return a String, which may be the empty string "".
+	 * @return a String, or null if there is no system clipboard.
+	 */
+	public String getClipboard() {
+		try {
+			java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+			java.awt.datatransfer.Transferable transferable = clipboard.getContents(null);
+			if (transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
+				return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+			}
+		} catch (Exception e) {
+			Sys.log("Exception while getting clipboard: " + e);
+		}
+		return null;
+	}
 }

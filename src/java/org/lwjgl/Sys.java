@@ -277,18 +277,14 @@ public final class Sys {
 	 */
 	public static String getClipboard() {
 		try {
-			java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
-			java.awt.datatransfer.Transferable transferable = clipboard.getContents(null);
-			if (transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
-				return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
-			} else {
-				return null;
-			}
+			PlatformAdapter adapter = (PlatformAdapter) Class.forName(PLATFORM).newInstance(); // This avoids a Jet error message
+			return adapter.getClipboard();
 		} catch (Exception e) {
+			Sys.log("Unable to get clipboard contents: " + e);
 			// ignore exception and use native implementation
 			return nGetClipboard();
 		}
 	}
-
+	
 	private static native String nGetClipboard();
 } 
