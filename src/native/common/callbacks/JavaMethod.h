@@ -8,20 +8,19 @@
 #ifndef _JavaMethod_H
 #define	_JavaMethod_H
 #include <string>
-
+#include <jni.h>
 
 class JavaMethod {
 public:
-	JavaMethod(JNIEnv *, jobject, string);
+	JavaMethod(JNIEnv *, jobject, std::string);
 	~JavaMethod();
-
+        
+        JNIEnv* env;
+        jobject obj;
+        std::string method;
 protected:
 
 private:
-    JNIEnv* env;
-    jobject obj;
-    string method;
-
 };
 
 #endif	/* _JavaMethod_H */

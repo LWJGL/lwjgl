@@ -1,7 +1,14 @@
+SUBDIRS = callbacks
+
 noinst_LTLIBRARIES = libcommon.la
 
 libcommon_la_SOURCES = $(COMMON)
 libcommon_la_CPPFLAGS = -D_DEBUG
+
+libcommon_la_LIBADD = \
+  callbacks/libcallbacks.la
+libcommon_la_DEPENDENCIES = \
+  callbacks/libcallbacks.la
 
 COMMON = \
   extal.c \

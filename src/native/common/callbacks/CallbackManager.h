@@ -10,18 +10,20 @@
 #include <map>
 #include <jni.h>
 
+#include "CallbackContainer.h"
+
 class CallbackManager {
 public:
 	CallbackManager();
 	~CallbackManager();
 
-        static bool add(jint, CallbackContainer);
-        static bool del(jint);
-        static CallbackContainer get(jint);
+        bool add(jint, CallbackContainer*);
+        bool del(jint);
+        CallbackContainer* get(jint);
         
 protected:
 private:
-        static map<jint, CallbackContainer> data;
+        std::map<jint, CallbackContainer*> data;
 };
 
 #endif	/* _CallbackManager_H */

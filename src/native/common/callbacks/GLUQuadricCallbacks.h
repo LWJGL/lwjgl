@@ -1,28 +1,39 @@
 // 
-// File:   GLUQuadricCallback.h
+// File:   GLUQuadricCallbacks.h
 // Author: alterself
 //
 // Created on November 28, 2002, 8:21 PM
 //
 
-#ifndef _GLUQuadricCallback_H
-#define	_GLUQuadricCallback_H
+#ifndef _GLUQuadricCallbacks_H
+#define	_GLUQuadricCallbacks_H
 
 #include "extgl.h"
+#include <GL/glu.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-class GLUQuadricCallbacks : public Callback {
+#include "JavaMethod.h"
+#include "CallbackContainer.h"
+
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+
+
+class GLUQuadricCallbacks : public CallbackContainer {
 public:
-	GLUQuadricCallback(jint quad);
-	~GLUQuadricCallback();
+	GLUQuadricCallbacks(GLUquadricObj *quad);
+	~GLUQuadricCallbacks();
         void add(JavaMethod*, GLenum);
         
-        void gluError(GLenum);
+        void CALLBACK gluError(GLenum);
 protected:
 
 private:
-        GLUquadricObj *quadric;
-        JavaMethod *errorCallback;
+        JavaMethod* errorCallback;
+        GLUquadricObj* quadric;
 };
 
-#endif	/* _GLUQuadricCallback_H */
+#endif	/* _GLUQuadricCallbacks_H */
 

@@ -1,7 +1,5 @@
 This is just the start of my callback implementation.
 
-As it is, it wont compile =)
-
 Basically... we have 3 main classes...
 
 CallbackManager, which maintains a mapping of objects to callback containers

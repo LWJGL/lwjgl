@@ -5,12 +5,12 @@
 // Created on November 28, 2002, 3:37 PM
 //
 
-#include "Callback.h"
+#include "JavaMethod.h"
 
 //
 // Constructor
 ///
-JavaMethod::JavaMethod(JNIEnv *newEnv, jobject newObj, string newMethod)
+JavaMethod::JavaMethod(JNIEnv *newEnv, jobject newObj, std::string newMethod)
 {
     env = newEnv;
     obj = newObj;
@@ -22,6 +22,5 @@ JavaMethod::JavaMethod(JNIEnv *newEnv, jobject newObj, string newMethod)
 //
 JavaMethod::~JavaMethod()
 {
-    delete(method);
 }
 
