@@ -42,7 +42,8 @@
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.input.*;
- 
+
+import java.nio.*; 
 
 public final class Game {
      static {
@@ -161,8 +162,13 @@ public final class Game {
          gl.matrixMode(GL.MODELVIEW);
          gl.loadIdentity();
          gl.viewport(0, 0, Display.getWidth(), Display.getHeight());
+         ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(4);
+         num_tex_units_buf.order(ByteOrder.nativeOrder());
+         int buf_addr = Sys.getDirectBufferAddress(num_tex_units_buf);
+         gl.getIntegerv(GL.MAX_TEXTURE_UNITS_ARB, buf_addr);
+         System.out.println("Number of texture units: " + num_tex_units_buf.getInt());
          // Fix the refresh rate to the display frequency.
-         gl.wglSwapIntervalEXT(1);
+//         gl.wglSwapIntervalEXT(1);
      }
  
     /**
