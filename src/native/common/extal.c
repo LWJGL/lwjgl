@@ -31,6 +31,7 @@
  */
 
 #include <stdio.h>
+#include <jni.h>
 #include "extal.h"
 
 #ifndef _WIN32
@@ -185,7 +186,7 @@ void UnLoadOpenAL() {
  */
 int InitializeOpenAL() {
   if(handleOAL != 0) {
-    return 1;
+    return JNI_TRUE;
   }
 
   //load our library
@@ -193,25 +194,25 @@ int InitializeOpenAL() {
 
   // if we couldn't load the library, get out
   if(handleOAL == 0) {
-    return 0;
+    return JNI_FALSE;
   }
   
   //load basic OpenAL functions
   if(!LoadAL()) {
-    return 0;
+    return JNI_FALSE;
   }
 
   //load OpenAL context functions
   if(!LoadALC()) {
-    return 0;
+    return JNI_FALSE;
   }
 
   //load OpenAL extensions
   if(!LoadALExtensions()) {
-    return 0;
+    return JNI_FALSE;
   }
 
-  return 1;
+  return JNI_TRUE;
 }
 
 /**
@@ -387,5 +388,5 @@ int LoadALC() {
  * @return true if all methods were loaded, false if one of the methods could not be loaded
  */
 int LoadALExtensions() {
-  return 1;
+  return JNI_TRUE;
 }
