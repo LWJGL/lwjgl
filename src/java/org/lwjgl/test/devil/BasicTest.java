@@ -40,6 +40,7 @@ import org.lwjgl.devil.IL;
 import org.lwjgl.devil.ILU;
 import org.lwjgl.devil.ILUT;
 import org.lwjgl.devil.ILinfo;
+import org.lwjgl.BufferUtils;
 
 /**
  * $Id$
@@ -61,8 +62,8 @@ public class BasicTest {
 		}
 		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
 		System.out.println("ilGenImages");
-		IntBuffer im = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-		IL.ilGenImages(1, im);
+		IntBuffer im = BufferUtils.createIntBuffer(1);
+		IL.ilGenImages(im);
 		System.out.println("ilBindImage");
 		IL.ilBindImage(im.get(0));
 		IL.ilEnable(IL.IL_ORIGIN_SET);
