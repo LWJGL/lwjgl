@@ -20,7 +20,7 @@ CC="$CXX"
 AC_PROG_LIBTOOL 
 
 AC_ARG_ENABLE(debug,
-AC_HELP_STRING([--disable-foo], [Disable debug build]),
+AC_HELP_STRING([--disable-buidl], [Disable debug build]),
 [build_debug=$enableval], [build_debug=no])
 
 if test $build_debug = yes; then
