@@ -260,6 +260,9 @@ final class KeyboardEventQueue extends EventQueue implements KeyListener {
 		int key_code_mapped = KEY_MAP[key_code];
 		if (character == KeyEvent.CHAR_UNDEFINED)
 			character = Keyboard.CHAR_NONE;
+		/* Ignore repeating presses */
+		if (key_states[key_code_mapped] == state)
+			return;
 		key_states[key_code_mapped] = state;
 		int key_int_char = ((int)character) & 0xffff;
 		putKeyboardEvent(key_code_mapped, state, key_int_char);
