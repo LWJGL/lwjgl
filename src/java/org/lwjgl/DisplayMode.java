@@ -46,21 +46,18 @@ package org.lwjgl;
 public final class DisplayMode {
 
 	/** properties of the display mode */
-	public final int width, height, bpp, freq, alpha, depth, stencil;
+	public final int width, height, bpp, freq;
 
 	/**
 	 * Construct a display mode.
 	 * 
 	 * @see Display
 	 */
-	private DisplayMode(int width, int height, int bpp, int freq, int alpha, int depth, int stencil) {
+	private DisplayMode(int width, int height, int bpp, int freq) {
 		this.width = width;
 		this.height = height;
 		this.bpp = bpp;
 		this.freq = freq;
-		this.alpha = alpha;
-		this.depth = depth;
-		this.stencil = stencil;
 	}
 
 	/**
@@ -77,10 +74,7 @@ public final class DisplayMode {
 		return dm.width == width
 			&& dm.height == dm.height
 			&& dm.bpp == bpp
-			&& dm.freq == freq
-			&& dm.alpha == alpha
-			&& dm.depth == depth
-			&& dm.stencil == stencil;
+			&& dm.freq == freq;
 	}
 
 	/**
@@ -89,7 +83,7 @@ public final class DisplayMode {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return width ^ height ^ freq ^ bpp ^ alpha ^ (depth << 8) ^ (stencil << 24);
+		return width ^ height ^ freq ^ bpp;
 	}
 
 	/**
@@ -106,13 +100,7 @@ public final class DisplayMode {
 		sb.append(bpp);
 		sb.append(" @");
 		sb.append(freq);
-		sb.append("Hz ");
-		sb.append(alpha);
-		sb.append("bit alpha, ");
-		sb.append(depth);
-		sb.append("bit depth, ");
-		sb.append(stencil);
-		sb.append("bit stencil");
+		sb.append("Hz");
 		return sb.toString();
 	}
 }

@@ -90,7 +90,7 @@ public class MouseTest {
   
   private void setupDisplay(boolean fullscreen) {
     try {
-      Display.create(displayMode, fullscreen, "MouseTest");
+      Display.create(displayMode, 0, 0, 0, fullscreen, "MouseTest");
       gl = new GL();
       gl.create();
 

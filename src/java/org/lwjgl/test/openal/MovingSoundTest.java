@@ -92,7 +92,7 @@ public class MovingSoundTest extends BasicTest {
               break;
         }       
       }       
-      Display.create(modes[mode], false, "MovingSoundTest");
+      Display.create(modes[mode], 0, 0, 0, false, "MovingSoundTest");
     } catch (Exception e) {
       e.printStackTrace();
       exit(-1);

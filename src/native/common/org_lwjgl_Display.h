@@ -12,7 +12,7 @@ extern "C" {
 /* Inaccessible static: mode */
 /* Inaccessible static: handle */
 /* Inaccessible static: closeRequested */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024Display */
 /*
  * Class:     org_lwjgl_Display
  * Method:    nGetAvailableDisplayModes

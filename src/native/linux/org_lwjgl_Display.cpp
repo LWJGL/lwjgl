@@ -84,7 +84,7 @@ struct pixelformat {
 	int stencil;
 };
 
-static int fillFormat(struct pixelformat *formats, int index, int bpp, int depth, int alpha, int stencil) {
+/*static int fillFormat(struct pixelformat *formats, int index, int bpp, int depth, int alpha, int stencil) {
 	for (int i = 0; i < index; i++)
 		if (formats[i].bpp == bpp &&
 		    formats[i].depth == depth &&
@@ -114,7 +114,7 @@ static struct pixelformat *getGLXAvailablePixelFormats(Display *disp, int screen
 			int bpp, depth, alpha, stencil;
 			int val;
 			if (glXGetFBConfigAttrib(disp, configs[i], GLX_RED_SIZE, &val) != 0) {
-				free(formats);
+				ree(formats);
 				return NULL;
 			}
 			bpp = val;
@@ -147,7 +147,7 @@ static struct pixelformat *getGLXAvailablePixelFormats(Display *disp, int screen
 	}
 	return NULL;
 }
-
+*/
 static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
 	int bpe;
 	switch (bpp) {
@@ -174,7 +174,7 @@ static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, 
 	return glXChooseVisual(disp, screen, attriblist);
 }
 
-static struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, int *length) {
+/*static struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, int *length) {
 	struct pixelformat *formats = getGLXAvailablePixelFormats(disp, screen, length);
 	if (formats != NULL)
 		return formats;
@@ -194,6 +194,7 @@ static struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, i
 				}
 	return formats;
 }
+*/
 
 static void waitMapped(Display *disp, Window win) {
 	XEvent event;
@@ -470,6 +471,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	}
 	
 	screen = DefaultScreen(disp);
+	int bpp = XDefaultDepth(disp, screen);
 	
 	if (!loadGL(disp, screen)) {
 #ifdef _DEBUG
@@ -486,19 +488,21 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 		return NULL;
 	}
 	int num_pixelformats;
-	struct pixelformat *formats = getAvailablePixelFormats(disp, screen, &num_pixelformats);
+//	struct pixelformat *formats = getAvailablePixelFormats(disp, screen, &num_pixelformats);
 	// Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
-	jobjectArray ret = env->NewObjectArray(num_modes*num_pixelformats, displayModeClass, NULL);
-	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");
+	jobjectArray ret = env->NewObjectArray(num_modes/**num_pixelformats*/, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
 	
 	for (i = 0; i < num_modes; i++) {
-		for (int j = 0; j < num_pixelformats; j++) {
+/*		for (int j = 0; j < num_pixelformats; j++) {
 			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, formats[j].bpp, 0, formats[j].alpha, formats[j].depth, formats[j].stencil);
 			env->SetObjectArrayElement(ret, i*num_pixelformats + j, displayMode);
-		}
+		}*/
+		jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, bpp, 0);
+		env->SetObjectArrayElement(ret, i, displayMode);
 	}
-	free(formats);
+//	free(formats);
 	XFree(avail_modes);
 	XCloseDisplay(disp);
 	return ret;

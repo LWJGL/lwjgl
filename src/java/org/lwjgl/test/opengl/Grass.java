@@ -81,7 +81,7 @@ public class Grass {
 			}
 			// For now let's just pick a mode we're certain to have
 
-			Display.create(modes[mode], false, "Grass");
+			Display.create(modes[mode], 0, 16, 0, false, "Grass");
 			System.out.println("Created display.");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -63,7 +63,7 @@ public final class Game {
 			}
 
 			//select above found displaymode
-			Display.create(modes[mode], false, "LWJGL Game Example");
+			Display.create(modes[mode], 0, 16, 0, false, "LWJGL Game Example");
 			System.out.println("Created display.");
 		} catch (Exception e) {
 			System.err.println("Failed to create display due to " + e);
