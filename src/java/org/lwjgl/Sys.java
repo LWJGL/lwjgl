@@ -33,6 +33,8 @@ package org.lwjgl;
 
 import java.io.IOException;
 
+import org.lwjgl.input.Mouse;
+
 /**
  * $Id$
  *
@@ -200,6 +202,10 @@ public final class Sys {
 	 * @param message The message text for the alert.
 	 */
 	public static void alert(String title, String message) {
+		boolean grabbed = Mouse.isGrabbed();
+		if (grabbed) {
+			Mouse.setGrabbed(false);
+		}
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Windows")) {
 			nAlert(title, message);
@@ -210,6 +216,9 @@ public final class Sys {
 			} catch (Exception e) {
 				Sys.log("Unable to display alert using: " + PLATFORM);
 			}
+		}
+		if (grabbed) {
+			Mouse.setGrabbed(true);
 		}
 	}
 
