@@ -463,6 +463,27 @@ public class Matrix4f extends Matrix {
 		m33 += m03 * vec.x + m13 * vec.y + m23 * vec.z;
 		return this;
 	}
+
+	/**
+	 * Scales this matrix
+	 * @param vec The vector to scale by
+	 * @return this
+	 */
+	public Matrix4f scale(Vector3f vec) {
+		m00 *= vec.x;
+		m01 *= vec.x;
+		m02 *= vec.x;
+		m03 *= vec.x;
+		m10 *= vec.y;
+		m11 *= vec.y;
+		m12 *= vec.y;
+		m13 *= vec.y;
+		m20 *= vec.z;
+		m21 *= vec.z;
+		m22 *= vec.z;
+		m23 *= vec.z;
+		return this;
+	}
 	
 	/**
 	 * Rotates the matrix around the given axis the specified angle
