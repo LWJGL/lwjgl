@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.openal.test;
+package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.eax.EAX;
 import org.lwjgl.openal.eax.EAXBufferProperties;

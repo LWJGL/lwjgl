@@ -29,38 +29,33 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.openal.test;
+package org.lwjgl.test.openal;
 
 import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALUTLoadWAVData;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 
 /**
  * $Id$
  *
- * This is a basic play test
+ * This is a basic play test using ALUT
  * Yes, over zealous use of getError ;)
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class PlayTestMemory extends BasicTest {
+public class ALUTTest extends BasicTest {
     
     /**
-     * Creates an instance of PlayTestMemory
+     * Creates an instance of ALUTTest
      */
-    public PlayTestMemory() {
+    public ALUTTest() {
         super();
     }
-
+    
     /**
      * Runs the actual test, using supplied arguments
      */
@@ -72,12 +67,15 @@ public class PlayTestMemory extends BasicTest {
         
         int lastError;
         
-        //initialize AL, using ALC
-        alInitialize();
+        //initialize AL, using ALUT
+        alut.init(args);
         
         //create 1 buffer and 1 source
-        IntBuffer buffers = createIntBuffer(1);
-        IntBuffer sources = createIntBuffer(1);        
+        ByteBuffer buffers = ByteBuffer.allocateDirect(4);
+        buffers.order(ByteOrder.nativeOrder());
+        
+        ByteBuffer sources = ByteBuffer.allocateDirect(4);
+        sources.order(ByteOrder.nativeOrder());
         
         // al generate buffers and sources
         al.genBuffers(1, Sys.getDirectBufferAddress(buffers));
@@ -91,20 +89,14 @@ public class PlayTestMemory extends BasicTest {
         }
         
         //load wave data
-        ByteBuffer filebuffer = getData(args[0]);
-        if(filebuffer == null) {
-            System.out.println("Error loading file: " + args[0]);
-            System.exit(-1);
-        }
-        
-        ALUTLoadWAVData file = alut.loadWAVMemory(Sys.getDirectBufferAddress(filebuffer));
+        ALUTLoadWAVData file = alut.loadWAVFile(args[0]);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }
         
         
         //copy to buffers
-        al.bufferData(buffers.get(0), file.format, file.data, file.size, file.freq);
+        al.bufferData(buffers.getInt(0), file.format, file.data, file.size, file.freq);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -115,20 +107,20 @@ public class PlayTestMemory extends BasicTest {
             exit(lastError);
         }        
         
-        //set up source input            
-        al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));
+        //set up source input
+        al.sourcei(sources.getInt(0), AL.BUFFER, buffers.getInt(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //lets loop the sound
-        al.sourcei(sources.get(0), AL.LOOPING, AL.TRUE);
+        al.sourcei(sources.getInt(0), AL.LOOPING, AL.TRUE);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //play source 0
-        al.sourcePlay(sources.get(0));
+        al.sourcePlay(sources.getInt(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -141,7 +133,7 @@ public class PlayTestMemory extends BasicTest {
         }
         
         //stop source 0
-        al.sourceStop(sources.get(0));
+        al.sourceStop(sources.getInt(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -156,58 +148,10 @@ public class PlayTestMemory extends BasicTest {
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
-        
-        //no errorchecking from now on, since our context is gone.
-        //shutdown
-        alc.makeContextCurrent(null);
-        alc.destroyContext(context);
-        alc.closeDevice(device);
+
+        //shutdown using ALUT
+        alut.exit();
     }
-    
-    /**
-     * Reads the file into a ByteBuffer
-     *
-     * @param filename Name of file to load
-     * @return ByteBuffer containing file data
-     */
-    protected ByteBuffer getData(String filename) {
-        ByteBuffer buffer = null;
-
-        URL url = null;
-
-        String cwd = System.getProperty("user.dir");
-
-        try {
-            url = new URL("file:///" + cwd + "/" + filename);
-        } catch (MalformedURLException mue) {
-            mue.printStackTrace();
-        }
-        
-        System.out.println("Attempting to load: " + url);
-        
-        try {
-            BufferedInputStream bis = new BufferedInputStream(url.openStream());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            
-            int bufferLength = 4096;
-            byte[] readBuffer = new byte[bufferLength];
-            int read = -1;
-            
-            while((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
-                baos.write(readBuffer, 0, read);
-            }
-            
-            //done reading, close
-            bis.close();
-            
-            buffer = ByteBuffer.allocateDirect(baos.size());
-            buffer.order(ByteOrder.nativeOrder());
-            buffer.put(baos.toByteArray());
-        } catch (Exception ioe) {
-            ioe.printStackTrace();
-        }
-        return buffer;
-    }    
     
     /**
      * main entry point
@@ -215,7 +159,7 @@ public class PlayTestMemory extends BasicTest {
      * @param args String array containing arguments
      */
     public static void main(String[] args) {
-        PlayTestMemory playTestMemory = new PlayTestMemory();
-        playTestMemory.execute(args);
+        ALUTTest alutTest = new ALUTTest();
+        alutTest.execute(args);
     }
 }

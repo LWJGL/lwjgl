@@ -39,7 +39,7 @@
  * @version $Revision$
  */
 
-package org.lwjgl.opengl.test;
+package org.lwjgl.test.opengl;
 
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;

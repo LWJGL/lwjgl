@@ -4,7 +4,7 @@
  * Created on 13. november 2002, 22:49
  */
 
-package org.lwjgl.input.test;
+package org.lwjgl.test.input;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,4 +1,4 @@
-package org.lwjgl.test;
+package org.lwjgl.test.vector;
 
 import java.nio.*;
 
