@@ -191,6 +191,14 @@ static void setRepeatMode(int mode) {
 	XCloseDisplay(disp);
 }
 
+static void setDecorations(int dec) {
+	Atom motif_hints_atom = XInternAtom(getDisplay(), "_MOTIF_WM_HINTS", False);
+	MotifWmHints motif_hints;
+	motif_hints.flags = MWM_HINTS_DECORATIONS;
+	motif_hints.decorations = dec;
+	XChangeProperty (getDisplay(), getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
+}
+
 bool releaseInput(void) {
 	if (isLegacyFullscreen() || input_released)
 		return false;
@@ -369,13 +377,9 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	}
 	printfDebug("Created window\n");
 	current_win = win;
-	if (undecorated && current_window_mode == WINDOWED) {
+	if (current_window_mode != WINDOWED || undecorated) {
 		// Use Motif decoration hint property and hope the window manager respects them
-		Atom motif_hints_atom = XInternAtom(getDisplay(), "_MOTIF_WM_HINTS", False);
-		MotifWmHints motif_hints;
-		motif_hints.flags = MWM_HINTS_DECORATIONS;
-		motif_hints.decorations = 0;
-		XChangeProperty (getDisplay(), getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
+		setDecorations(0);
 	}
 	XSizeHints * size_hints = XAllocSizeHints();
 	size_hints->flags = PMinSize | PMaxSize;
