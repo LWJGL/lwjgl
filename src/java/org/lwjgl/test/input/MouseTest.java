@@ -168,22 +168,26 @@ public class MouseTest {
   private void render() {
     gl.clear(GL.COLOR_BUFFER_BIT);
 
-    gl.pushMatrix();
     gl.begin(GL.POLYGON);
     {
-      gl.color3f(0.0f, 1.0f, 1.0f);
+      float color = 1.0f;
+      int buttonDown = 0;
+      
+      for(int i=0;i<Mouse.buttonCount; i++) {
+        if(Mouse.isButtonDown(i)) {
+          color = (1.0f / Mouse.buttonCount) * (i+1); 
+          break; 
+        }
+      }
+      gl.color3f(color, color, color);
+      
       gl.vertex2f(position.x + 0.0f, position.y + 0.0f);
-
-      gl.color3f(1.0f, 0.0f, 1.0f);
       gl.vertex2f(position.x + 0.0f, position.y + 30.0f);
       gl.vertex2f(position.x + 40.0f, position.y + 30.0f);
-
-      gl.color3f(1.0f, 1.0f, 0.0f);
       gl.vertex2f(position.x + 60.0f, position.y + 15.f);
       gl.vertex2f(position.x + 40.0f, position.y + 0.0f);
     }
     gl.end();
-    gl.popMatrix();
   }
 
   /**
