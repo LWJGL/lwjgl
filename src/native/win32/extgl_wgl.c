@@ -78,6 +78,41 @@ wglGetSwapIntervalEXTPROC wglGetSwapIntervalEXT = NULL;
 wglMakeContextCurrentARBPROC wglMakeContextCurrentARB = NULL;
 wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB = NULL;
 
+static HMODULE lib_gl_handle = NULL;
+
+void *extgl_GetProcAddress(const char *name)
+{
+	void *t = wglGetProcAddress(name);
+	if (t == NULL)
+	{
+		t = GetProcAddress(lib_gl_handle, name);
+		if (t == NULL)
+		{
+			printfDebug("Could not locate symbol %s\n", name);
+		}
+	}
+	return t;
+}
+
+bool extgl_Open(JNIEnv *env)
+{
+	if (lib_gl_handle != NULL)
+		return true;
+	// load the dynamic libraries for OpenGL
+	lib_gl_handle = LoadLibrary("opengl32.dll");
+	if (lib_gl_handle == NULL) {
+		throwException(env, "Could not load OpenGL library");
+		return false;
+	}
+	return true;
+}
+
+void extgl_Close(void)
+{
+	FreeLibrary(lib_gl_handle);
+	lib_gl_handle = NULL;
+}
+
 /** returns true if the extension is available */
 static bool WGLQueryExtension(JNIEnv *env, const char *name)
 {

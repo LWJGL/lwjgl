@@ -38,80 +38,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "extgl.h"
 #include "common_tools.h"
 
-/* turn off the warning for the borland compiler*/
-#ifdef __BORLANDC__
-#pragma warn -8064
-#pragma warn -8065
-#endif /* __BORLANDC__	*/
-
-#ifdef _X11
-
-#include <dlfcn.h>
-#endif
-
-#ifdef _WIN32
-HMODULE lib_gl_handle = NULL;
-#endif
-
-#ifdef _X11
-void * lib_gl_handle = NULL;
-
-typedef void * (APIENTRY * glXGetProcAddressARBPROC) (const GLubyte *procName);
-
-static glXGetProcAddressARBPROC glXGetProcAddressARB;
-#endif
-
-#ifdef _MACOSX
-#include <mach-o/dyld.h>
-static const struct mach_header *opengl_lib_handle = NULL;
-#endif
-
-/* getProcAddress */
-
-void *extgl_GetProcAddress(const char *name)
-{
-#ifdef _WIN32
-	void *t = wglGetProcAddress(name);
-	if (t == NULL)
-	{
-		t = GetProcAddress(lib_gl_handle, name);
-		if (t == NULL)
-		{
-			printfDebug("Could not locate symbol %s\n", name);
-		}
-	}
-	return t;
-#endif
-
-#ifdef _X11
-	void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
-	if (t == NULL)
-	{
-		t = dlsym(lib_gl_handle, name);
-		if (t == NULL)
-		{
-			printfDebug("Could not locate symbol %s\n", name);
-		}
-	}
-	return t;
-#endif
-
-#ifdef _MACOSX
-	#define BUFFER_SIZE 1024
-	char mach_name[BUFFER_SIZE] = "_";
-	strncat(mach_name, name, BUFFER_SIZE - 1);
-
-	if (NSIsSymbolNameDefinedInImage(opengl_lib_handle, mach_name)) {           
-		NSSymbol sym = NSLookupSymbolInImage(opengl_lib_handle, mach_name, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
-		void *address = NSAddressOfSymbol(sym);
-		return address;
-	} else {
-		printfDebug("Could not locate symbol %s\n", name);
-		return NULL;
-	}
-#endif
-}
-
 void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions) {
 	ext_InitializeClass(env, clazz, &extgl_GetProcAddress, num_functions, functions);
 }
@@ -119,12 +45,6 @@ void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMet
 bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions) {
 	return ext_InitializeFunctions(&extgl_GetProcAddress, num_functions, functions);
 }
-
-#ifdef _MACOSX
-static const struct mach_header *loadImage(const char *lib_name) {   
-	return NSAddImage(lib_name, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
-}
-#endif
 
 bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *name)
 {
@@ -160,83 +80,4 @@ bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *nam
 	return false;
 
 }
-
-/*-----------------------------------------------------*/
-/* AGL stuff END*/
-/*-----------------------------------------------------*/
-
-#ifdef _MACOSX
-bool extgl_Open(JNIEnv *env) {
-	if (opengl_lib_handle != NULL)
-		return true;
-	opengl_lib_handle = loadImage("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib");
-	if (opengl_lib_handle != NULL) {
-		return true;
-	} else {
-		throwException(env, "Could not load OpenGL library");
-		return false;
-	}
-}
-#endif
-
-#ifdef _X11
-bool extgl_Open(JNIEnv *env)
-{
-#define BUFFER_SIZE 2000
-	static char buffer[BUFFER_SIZE];
-	if (lib_gl_handle != NULL)
-		return true;
-	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
-	if (lib_gl_handle == NULL) {
-		snprintf(buffer, BUFFER_SIZE, "Error loading libGL.so.1: %s", dlerror());
-		buffer[BUFFER_SIZE - 1] = '\0';
-		throwException(env, buffer);
-		return false;
-	}
-	glXGetProcAddressARB = (glXGetProcAddressARBPROC)dlsym(lib_gl_handle, "glXGetProcAddressARB");
-	if (glXGetProcAddressARB == NULL) {
-		extgl_Close();
-		throwException(env, "Could not get address of glXGetProcAddressARB");
-		return false;
-	}
-	return true;
-}
-
-#endif /* X11 */
-
-#ifdef _WIN32
-bool extgl_Open(JNIEnv *env)
-{
-	if (lib_gl_handle != NULL)
-		return true;
-	// load the dynamic libraries for OpenGL
-	lib_gl_handle = LoadLibrary("opengl32.dll");
-	if (lib_gl_handle == NULL) {
-		throwException(env, "Could not load OpenGL library");
-		return false;
-	}
-	return true;
-}
-#endif /* WIN32 */
-
-void extgl_Close(void)
-{
-#ifdef _X11
-	dlclose(lib_gl_handle);
-	lib_gl_handle = NULL;
-#endif
-#ifdef _WIN32
-	FreeLibrary(lib_gl_handle);
-	lib_gl_handle = NULL;
-#endif
-#ifdef _MACOSX
-	opengl_lib_handle = NULL;
-#endif
-}
-
-/* turn on the warning for the borland compiler*/
-#ifdef __BORLANDC__
-#pragma warn .8064
-#pragma warn .8065
-#endif /* __BORLANDC__	*/
 

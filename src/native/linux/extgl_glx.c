@@ -29,6 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <dlfcn.h>
 #include "extgl_glx.h"
 
 GLXExtensions extension_flags;
@@ -74,6 +75,54 @@ glXQueryExtensionsStringPROC glXQueryExtensionsString = NULL;
 
 /* GLX_SGI_swap_control */
 glXSwapIntervalSGIPROC glXSwapIntervalSGI = NULL;
+
+static void * lib_gl_handle = NULL;
+
+typedef void * (APIENTRY * glXGetProcAddressARBPROC) (const GLubyte *procName);
+
+static glXGetProcAddressARBPROC glXGetProcAddressARB;
+
+bool extgl_Open(JNIEnv *env)
+{
+#define BUFFER_SIZE 2000
+	static char buffer[BUFFER_SIZE];
+	if (lib_gl_handle != NULL)
+		return true;
+	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
+	if (lib_gl_handle == NULL) {
+		snprintf(buffer, BUFFER_SIZE, "Error loading libGL.so.1: %s", dlerror());
+		buffer[BUFFER_SIZE - 1] = '\0';
+		throwException(env, buffer);
+		return false;
+	}
+	glXGetProcAddressARB = (glXGetProcAddressARBPROC)dlsym(lib_gl_handle, "glXGetProcAddressARB");
+	if (glXGetProcAddressARB == NULL) {
+		extgl_Close();
+		throwException(env, "Could not get address of glXGetProcAddressARB");
+		return false;
+	}
+	return true;
+}
+
+void *extgl_GetProcAddress(const char *name)
+{
+	void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
+	if (t == NULL)
+	{
+		t = dlsym(lib_gl_handle, name);
+		if (t == NULL)
+		{
+			printfDebug("Could not locate symbol %s\n", name);
+		}
+	}
+	return t;
+}
+
+void extgl_Close(void)
+{
+	dlclose(lib_gl_handle);
+	lib_gl_handle = NULL;
+}
 
 /** returns true if the extention is available */
 static bool GLXQueryExtension(JNIEnv* env, Display *disp, int screen, const char *name)
@@ -153,15 +202,15 @@ bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
 {
 	int major, minor;
 	/* Assume glx ver >= 1.2 */
-	extension_flags.GLX12 = true;
 	if (!extgl_InitGLX12())
 		return false;
-	extgl_InitGLXSupportedExtensions(env, disp, screen);
-	if (glXQueryVersion(disp, &major, &minor) != True)
-		return false;
+	extension_flags.GLX12 = true;
 	if (major > 1 || (major == 1 && minor >= 3))
 		extension_flags.GLX13 = true;
 	extgl_InitGLX13(env);
+	extgl_InitGLXSupportedExtensions(env, disp, screen);
+	if (glXQueryVersion(disp, &major, &minor) != True)
+		return false;
 	extgl_InitGLXSGISwapControl(env);
 	return true;
 }

@@ -42,6 +42,46 @@
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 
+#include <mach-o/dyld.h>
+static const struct mach_header *opengl_lib_handle = NULL;
+
+void *extgl_GetProcAddress(const char *name)
+{
+	#define BUFFER_SIZE 1024
+	char mach_name[BUFFER_SIZE] = "_";
+	strncat(mach_name, name, BUFFER_SIZE - 1);
+
+	if (NSIsSymbolNameDefinedInImage(opengl_lib_handle, mach_name)) {           
+		NSSymbol sym = NSLookupSymbolInImage(opengl_lib_handle, mach_name, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+		void *address = NSAddressOfSymbol(sym);
+		return address;
+	} else {
+		printfDebug("Could not locate symbol %s\n", name);
+		return NULL;
+	}
+}
+
+static const struct mach_header *loadImage(const char *lib_name) {   
+	return NSAddImage(lib_name, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+}
+
+bool extgl_Open(JNIEnv *env) {
+	if (opengl_lib_handle != NULL)
+		return true;
+	opengl_lib_handle = loadImage("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib");
+	if (opengl_lib_handle != NULL) {
+		return true;
+	} else {
+		throwException(env, "Could not load OpenGL library");
+		return false;
+	}
+}
+
+void extgl_Close(void)
+{
+	opengl_lib_handle = NULL;
+}
+
 NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered) {
 	int bpp;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
