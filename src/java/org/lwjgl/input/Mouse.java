@@ -122,8 +122,8 @@ public class Mouse {
 	private static native int nGetNumButtons();
 	
 	/**
-	 * Queries whether the joystick has a Z value
-	 * @return true if the joystick has a Z value
+	 * Queries whether the mouse has a Z value
+	 * @return true if the mouse has a Z value
 	 */
 	public static boolean hasZValue() {
 		assert created : "The mouse has not been created.";
@@ -134,6 +134,4 @@ public class Mouse {
 	 * Native implementation of hasZValue()
 	 */
 	private static native boolean nHasZValue();
-
-
 }
