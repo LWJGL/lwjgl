@@ -1,6 +1,6 @@
 This is just the start of my callback implementation.
 
-Unfortunatly, you cant pass a non static method as an object pointer...
+Unfortunatly, you cant pass a non static method as a function pointer...
 So we can only have callbacks for a single GLU object. However, 
 according to the OpenGL redbook... this should not be an issue. For example
 the redbook states that, a single tess object should be used for an 
@@ -16,7 +16,7 @@ eventually you can expect callbacks for glu nurbs and glu tesselators.
 Of course callbacks for other object types should be easy to do using this framework.
 
 
-Note quite as elegent as I wanted, but it works.
+Note as elegent as I wanted, but it works.
 
 You would write a callback like this:
 
