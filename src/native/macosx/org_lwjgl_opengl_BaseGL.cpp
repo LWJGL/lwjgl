@@ -39,31 +39,88 @@
  * @version $Revision$
  */
 
-#include "RenderingContext.h"
 #include "org_lwjgl_opengl_BaseGL.h"
+#include <ApplicationServices/ApplicationServices.h>
+#include <OpenGL/OpenGL.h>
+
+typedef struct
+{
+    CGDirectDisplayID			displayID;
+    CGLContextObj			contextObj;
+
+    CGGammaValue			redMin, redMax, redGamma,
+        greenMin, greenMax, greenGamma,
+        blueMin, blueMax, blueGamma;
+} RenderingContext;
+
+static RenderingContext * renderingContext;
+
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
- * Signature: (IIII)Z
+ * Signature: (Ljava/lang/String;IIIIIIIIZ)V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv * env, jobject obj, jint colorBits, jint alphaBits, jint depthBits, jint stencilBits)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
+(JNIEnv * env, jobject obj, jstring title, jint x, jint y, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jboolean fullscreen)
 {
-      renderingContext->createGL( colorBits, alphaBits, depthBits, stencilBits );
-      
-      return JNI_TRUE;
+    if ( CGDisplayCapture( renderingContext->displayID ) != kCGErrorSuccess )
+    {
+        return;
+    }
+
+    CGDisplayHideCursor( renderingContext->displayID );
+    CGDisplayMoveCursorToPoint( renderingContext->displayID, CGPointZero );
+    CGAssociateMouseAndMouseCursorPosition( FALSE );
+
+    CGLPixelFormatObj pixelFormatObj;
+    long numPixelFormats;
+
+    CFDictionaryRef displayMode;
+    displayMode = CGDisplayBestModeForParametersAndRefreshRate( kCGDirectMainDisplay,
+                                                                bpp,
+                                                                width, height,
+                                                                60,
+                                                                NULL );
+
+    CGDisplaySwitchToMode( kCGDirectMainDisplay, displayMode );
+
+    CGLPixelFormatAttribute attribs[2];
+    attribs[0] = kCGLPFAFullScreen;
+    attribs[1] = NULL;
+
+    CGLChoosePixelFormat( attribs, &pixelFormatObj, &numPixelFormats );
+    if ( pixelFormatObj != NULL )
+    {
+        CGLCreateContext( pixelFormatObj, NULL, &renderingContext->contextObj );
+        CGLDestroyPixelFormat( pixelFormatObj );
+    }
+
+    CGLSetCurrentContext( renderingContext->contextObj );
+    CGLSetFullScreen( renderingContext->contextObj );
 }
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nDestroy
+ * Method:    nDestroyGL
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
-  (JNIEnv * env, jobject obj)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
+(JNIEnv * env, jobject obj)
 {
-      renderingContext->destroyGL();
+    if ( renderingContext->contextObj != NULL )
+    {
+        CGLSetCurrentContext( NULL );
+        CGLClearDrawable( renderingContext->contextObj );
+        CGLDestroyContext( renderingContext->contextObj );
+
+        renderingContext->contextObj = NULL;
+    }
+
+    CGAssociateMouseAndMouseCursorPosition( TRUE );
+    CGDisplayShowCursor( kCGDirectMainDisplay );
+    
+    CGReleaseAllDisplays();        
 }
 
 /*
@@ -71,29 +128,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
  * Method:    swapBuffers
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
+(JNIEnv *, jobject)
 {
-    renderingContext->swap();
 }
 
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nMakeCurrent
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
-  (JNIEnv * env, jobject obj)
-{
-      renderingContext->makeContextCurrent();
-}
 
-/*
- *  * Class:     org_lwjgl_opengl_BaseGL
- *   * Method:    nFreeContext
- *    * Signature: ()V
- *     */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
-  (JNIEnv *, jobject)
-{
-      renderingContext->releaseContext();
-}
+
