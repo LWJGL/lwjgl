@@ -461,7 +461,6 @@ void handleMessages(void)
 		PM_REMOVE      // removal options
 		))
 	{
-		TranslateMessage(&msg);
       	DispatchMessage(&msg);
 	};
 }

@@ -166,12 +166,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 	lpdiKeyboard->GetDeviceState((DWORD)buffer_size, keyboardBuffer);
 }
 
-
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    nRead
- * Signature: (I)V
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
   (JNIEnv * env, jclass clazz, jobject buffer_obj, jint buffer_position)
 {
@@ -206,18 +200,22 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 			num_events++;
 			buf[index++] = (unsigned char) rgdod[current_di_event].dwOfs;
 			buf[index++] = (unsigned char) rgdod[current_di_event].dwData;
-			if (translationEnabled) {
-				UINT virt_key = MapVirtualKey(rgdod[current_di_event].dwOfs, 1);
+			bool key_down = (rgdod[current_di_event].dwData & 0x80) != 0;
+			if (translationEnabled && key_down) {
+				UINT scan_code = rgdod[current_di_event].dwOfs;
+				UINT virt_key = MapVirtualKey(scan_code, 1);
 				if (virt_key != 0 && GetKeyboardState(state)) {
+					// Mark key down in the scan code
+					scan_code = scan_code & 0x7fff;
 					if (useUnicode) {
 						num_chars = ToUnicode(virt_key, 
-											  rgdod[current_di_event].dwOfs,
+											  scan_code,
 											  state,
 											  transBufUnicode,
 											  KEYBOARD_BUFFER_SIZE, 0);
 					} else {
 						num_chars = ToAscii(virt_key,
-											rgdod[current_di_event].dwOfs,
+											scan_code,
 											state,
 											transBufAscii,
 											0);
@@ -292,21 +290,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
 	translationEnabled = true;
 }
 
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    nEnableBuffer
- * Signature: ()I
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv * env, jclass clazz)
 {
 }
 
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    nisStateKeySet
- * Signature: (I)I
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet(JNIEnv *env, jclass clazz, jint key)
 {
   int state = org_lwjgl_input_Keyboard_STATE_UNKNOWN;
