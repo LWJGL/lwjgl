@@ -222,7 +222,11 @@ public class Vector4f extends Vector {
 	 * @see org.lwjgl.vector.Vector#load(FloatBuffer)
 	 */
 	public Vector load(FloatBuffer buf) {
-		return null;
+    	x = buf.get();
+    	y = buf.get();
+    	z = buf.get();
+    	w = buf.get();
+    	return this;
 	}
 
 	/* (non-Javadoc)
