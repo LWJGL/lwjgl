@@ -43,18 +43,20 @@
 #include "Window.h"
 #include "org_lwjgl_opengl_BaseGL.h"
 
+#define USEGLX13 true
+
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
 
 void makeCurrent(void) {
-	if (extgl_Extensions.glx.GLX13)
+	if (USEGLX13 && extgl_Extensions.glx.GLX13)
 		glXMakeContextCurrent(getCurrentDisplay(), glx_window, glx_window, context);
 	else
 		glXMakeCurrent(getCurrentDisplay(), getCurrentWindow(), context);
 }
 
 static void releaseContext(void) {
-	if (extgl_Extensions.glx.GLX13)
+	if (USEGLX13 && extgl_Extensions.glx.GLX13)
 		glXMakeContextCurrent(getCurrentDisplay(), None, None, NULL);
 	else
 		glXMakeCurrent(getCurrentDisplay(), None, NULL);
@@ -128,7 +130,7 @@ static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
 
 static void destroy(void) {
 	releaseContext();
-	if (extgl_Extensions.glx.GLX13)
+	if (USEGLX13 && extgl_Extensions.glx.GLX13)
 		glXDestroyWindow(getCurrentDisplay(), glx_window);
 	glXDestroyContext(getCurrentDisplay(), context); 
 	context = NULL;
@@ -232,7 +234,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		return;
 	}
 	bool create_success;
-	if (extgl_Extensions.glx.GLX13) {
+	if (USEGLX13 && extgl_Extensions.glx.GLX13) {
 		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
 	} else {
 		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
@@ -282,7 +284,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
 {
-	if (extgl_Extensions.glx.GLX13)
+	if (USEGLX13 && extgl_Extensions.glx.GLX13)
 		glXSwapBuffers(getCurrentDisplay(), glx_window);
 	else
 		glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());
