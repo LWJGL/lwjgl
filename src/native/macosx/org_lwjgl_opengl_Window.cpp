@@ -51,7 +51,7 @@ static bool vsync_enabled;
 static bool current_fullscreen;
  
 static void destroyMode(JNIEnv *env, jclass clazz) {
-	if (current_fullscreen);
+	if (!current_fullscreen);
 		resetMode(env);
 }
 
@@ -131,6 +131,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not load gl function pointers");
 		return;
 	}
+	FlushEventQueue(GetMainEventQueue());
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle(JNIEnv * env, jclass clazz, jstring title_obj) {
