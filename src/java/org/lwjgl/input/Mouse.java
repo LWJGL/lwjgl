@@ -42,7 +42,7 @@ import org.lwjgl.opengl.Window;
 
 /**
  * $Id$
- *
+ * <br>
  * A raw Mouse interface. This can be used to poll the current state of the
  * mouse buttons, and determine the mouse movement delta since the last poll.
  * 
@@ -294,7 +294,20 @@ public class Mouse {
 	private static native void nDestroy();
 
 	/**
-	 * Polls the mouse.
+	 * Polls the mouse for its current state. Access the polled values using the
+   * get<value> methods.
+   * By using this method, it is possible to "miss" mouse click events if you don't
+   * poll fast enough. To receive all button events, enable buffering by calling 
+   * <code>enableBuffer</code>, and read those events by calling <code>read</code>
+   * 
+   * @see org.lwjgl.input.Mouse#isButtonDown(int button) 
+   * @see org.lwjgl.input.Mouse#getX() 
+   * @see org.lwjgl.input.Mouse#getY() 
+   * @see org.lwjgl.input.Mouse#getDX() 
+   * @see org.lwjgl.input.Mouse#getDY() 
+   * @see org.lwjgl.input.Mouse#getDWheel() 
+   * @see org.lwjgl.input.Mouse#enableBuffer()
+   * @see org.lwjgl.input.Mouse#read()  
 	 */
 	public static void poll() {
 		assert created : "The mouse has not been created.";
@@ -329,7 +342,7 @@ public class Mouse {
 	/**
 	 * See if a particular mouse button is down.
 	 * 
-	 * @param button The index of the button you wish to test (0..buttonCount-1)
+	 * @param button The index of the button you wish to test (0..getButtonCount-1)
 	 * @return true if the specified button is down
 	 */
 	public static boolean isButtonDown(int button) {
@@ -385,7 +398,15 @@ public class Mouse {
 	private static native ByteBuffer nEnableBuffer() throws Exception;
 
 	/**
-	 * Reads the mouse buffer.
+	 * Reads all button events since last read.
+   * To use these values, you have to call <code>next</code> for each event you
+   * want to read. You can query which button caused the event by using 
+   * <code>getEventButton</code>. To get the state of that key, for that event, use
+   * <code>getEventButtonState</code>.
+   * 
+   * @see org.lwjgl.input.Mouse#enableBuffer()
+   * @see org.lwjgl.input.Mouse#getEventButton()
+   * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 */
 	public static void read() {
 		assert created : "The mouse has not been created.";
@@ -402,8 +423,11 @@ public class Mouse {
 	private static native int nRead();
 
 	/**
-	 * Gets the next mouse event. This is stored in the publicly accessible
-	 * static fields button and state.
+	 * Gets the next mouse event. You can query which button caused the event by using 
+   * <code>getEventButton()</code>. To get the state of that key, for that event, use
+   * <code>getEventButtonState</code>.
+   * @see org.lwjgl.input.Mouse#getEventButton()
+   * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 * @return true if a mouse event was read, false otherwise
 	 */
 	public static boolean next() {
