@@ -53,9 +53,11 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 final class MacOSXDisplay implements DisplayImplementation {
@@ -364,7 +366,19 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getPbufferCapabilities() {
-		return GL11.glGetString(GL11.GL_EXTENSIONS).indexOf("GL_APPLE_pixel_buffer") != -1 ? Pbuffer.PBUFFER_SUPPORTED : 0;
+		int major_version;
+		int minor_version;
+		String os_version = System.getProperty("os.version");
+		StringTokenizer tokenizer = new StringTokenizer(os_version, ".");
+		try  {
+			major_version = Integer.parseInt(tokenizer.nextToken());
+			minor_version = Integer.parseInt(tokenizer.nextToken());
+			if (major_version > 10 || (major_version == 10 && minor_version >= 3))
+				return Pbuffer.PBUFFER_SUPPORTED;
+		} catch (Exception e) {
+			Sys.log("Exception occurred when trying to determine OS version: " + e);
+		}
+		return 0;
 	}
 
 	/**
