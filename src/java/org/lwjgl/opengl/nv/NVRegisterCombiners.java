@@ -39,8 +39,10 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVRegisterCombiners
-{
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+public class NVRegisterCombiners {
 	public static final int GL_REGISTER_COMBINERS_NV                                = 0x8522;
 	public static final int GL_COMBINER0_NV                                         = 0x8550;
 	public static final int GL_COMBINER1_NV                                         = 0x8551;
@@ -92,4 +94,76 @@ public interface NVRegisterCombiners
 	public static final int GL_NUM_GENERAL_COMBINERS_NV                             = 0x854E;
 	public static final int GL_COLOR_SUM_CLAMP_NV                                   = 0x854F;
 	public static final int GL_MAX_GENERAL_COMBINERS_NV                             = 0x854D;
+
+	public static native void glCombinerParameterfNV(int pname, float param);
+
+	public static void glCombinerParameterNV(int pname, FloatBuffer pfParams) {
+		nglCombinerParameterfvNV(pname, pfParams, pfParams.position());
+	}
+	private static native void nglCombinerParameterfvNV(int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static native void glCombinerParameteriNV(int pname, int param);
+
+	public static void glCombinerParameterNV(int pname, IntBuffer piParams) {
+		nglCombinerParameterivNV(pname, piParams, piParams.position());
+	}
+	private static native void nglCombinerParameterivNV(int pname, IntBuffer piParams, int piParams_offset);
+	public static native void glCombinerInputNV(
+		int stage,
+		int portion,
+		int variable,
+		int input,
+		int mapping,
+		int componentUsage);
+	public static native void glCombinerOutputNV(
+		int stage,
+		int portion,
+		int abOutput,
+		int cdOutput,
+		int sumOutput,
+		int scale,
+		int bias,
+		boolean abDotProduct,
+		boolean cdDotProduct,
+		boolean muxSum);
+	public static native void glFinalCombinerInputNV(
+		int variable,
+		int input,
+		int mapping,
+		int componentUsage);
+	public static void glGetCombinerInputParameterNV(int stage, int portion, int variable, int pname, FloatBuffer pfParams) {
+		nglGetCombinerInputParameterfvNV(stage, portion, variable, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetCombinerInputParameterfvNV(int stage, int portion, int variable, int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static void glGetCombinerInputParameterNV(int stage, int portion, int variable, int pname, IntBuffer piParams) {
+		nglGetCombinerInputParameterivNV(stage, portion, variable, pname, piParams, piParams.position());
+	}
+	private static native void nglGetCombinerInputParameterivNV(int stage, int portion, int variable, int pname, IntBuffer piParams, int piParams_offset);
+	public static void glGetCombinerOutputParameterNV(int stage, int portion, int pname, FloatBuffer pfParams) {
+		nglGetCombinerOutputParameterfvNV(stage, portion, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetCombinerOutputParameterfvNV(int stage, int portion, int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static void glGetCombinerOutputParameterNV(int stage, int portion, int pname, IntBuffer piParams) {
+		nglGetCombinerOutputParameterivNV(stage, portion, pname, piParams, piParams.position());
+	}
+	private static native void nglGetCombinerOutputParameterivNV(int stage, int portion, int pname, IntBuffer piParams, int pfParams_offset);
+	public static void glGetFinalCombinerInputParameterNV(int variable, int pname, FloatBuffer pfParams) {
+		nglGetFinalCombinerInputParameterfvNV(variable, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetFinalCombinerInputParameterfvNV(int variable, int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static void glGetFinalCombinerInputParameterNV(int variable, int pname, IntBuffer piParams) {
+		nglGetFinalCombinerInputParameterivNV(variable, pname, piParams, piParams.position());
+	}
+	private static native void nglGetFinalCombinerInputParameterivNV(int variable, int pname, IntBuffer piParams, int piParams_offset);
+	public static void glCombinerStageParameterNV(int stage, int pname, FloatBuffer pfParams) {
+		nglCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
+	}
+	private static native void nglCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
+	public static void glGetCombinerStageParameterNV(int stage, int pname, FloatBuffer pfParams) {
+		nglGetCombinerStageParameterfvNV(stage, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetCombinerStageParameterfvNV(int stage, int pname, FloatBuffer pfParams, int pfParams_offset);
 }

@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVTextureShader
+public class NVTextureShader
 {
 	public static final int GL_TEXTURE_SHADER_NV                                    = 0x86DE;
 	public static final int GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV                 = 0x86D9;

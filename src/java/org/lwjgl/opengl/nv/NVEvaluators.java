@@ -39,8 +39,11 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVEvaluators
-{
+import java.nio.Buffer;
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
+
+public class NVEvaluators {
 	public static final int GL_EVAL_2D_NV                                           = 0x86C0;
 	public static final int GL_EVAL_TRIANGULAR_2D_NV                                = 0x86C1;
 	public static final int GL_MAP_TESSELLATION_NV                                  = 0x86C2;
@@ -65,4 +68,41 @@ public interface NVEvaluators
 	public static final int GL_EVAL_VERTEX_ATTRIB15_NV                              = 0x86D5;
 	public static final int GL_MAX_MAP_TESSELLATION_NV                              = 0x86D6;
 	public static final int GL_MAX_RATIONAL_EVAL_ORDER_NV                           = 0x86D7;
+
+	public static void glGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, FloatBuffer pPoints) {
+		nglGetMapControlPointsNV(target, index, type, ustride, vstride, packed, pPoints, pPoints.position()<<2);
+	}
+	private static native void nglGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, Buffer pPoints, int pPoints_offset);
+	public static void glMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, FloatBuffer pPoints) {
+		nglMapControlPointsNV(target, index, type, ustride, vstride, uorder, vorder, packed, pPoints, pPoints.position()<<2);
+	}
+	private static native void nglMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, Buffer pPoints, int pPoints_offset);
+	public static void glMapParameterNV(int target, int pname, FloatBuffer pfParams) {
+		nglMapParameterfvNV(target, pname, pfParams, pfParams.position());
+	}
+	private static native void nglMapParameterfvNV(int target, int pname, FloatBuffer pfParams, int pfParams_offset);
+	public static void glMapParameterNV(int target, int pname, IntBuffer piParams) {
+		nglMapParameterivNV(target, pname, piParams, piParams.position());
+	}
+	private static native void nglMapParameterivNV(int target, int pname, IntBuffer piParams, int piParams_offset);
+
+	public static void glGetMapParameterNV(int target, int pname, FloatBuffer pfParams) {
+		nglGetMapParameterfvNV(target, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetMapParameterfvNV(int target, int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static void glGetMapParameterNV(int target, int pname, IntBuffer piParams) {
+		nglGetMapParameterivNV(target, pname, piParams, piParams.position());
+	}
+	private static native void nglGetMapParameterivNV(int target, int pname, IntBuffer piParams, int piParams_offset);
+	public static void glGetMapAttribParameterNV(int target, int index, int pname, FloatBuffer pfParams) {
+		nglGetMapAttribParameterfvNV(target, index, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetMapAttribParameterfvNV(int target, int index, int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static void glGetMapAttribParameterNV(int target, int index, int pname, IntBuffer piParams) {
+		nglGetMapAttribParameterivNV(target, index, pname, piParams, piParams.position());
+	}
+	private static native void nglGetMapAttribParameterivNV(int target, int index, int pname, IntBuffer piParams, int piParams_offset);
+	public static native void glEvalMapsNV(int target, int mode);
 }

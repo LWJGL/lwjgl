@@ -41,8 +41,15 @@
 
 package org.lwjgl.opengl.arb;
 
-public interface ARBVertexBufferObject
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+
+public class ARBVertexBufferObject {
 	public static final int GL_ARRAY_BUFFER_ARB                             = 0x8892;
 	public static final int GL_ELEMENT_ARRAY_BUFFER_ARB                     = 0x8893;
 	public static final int GL_ARRAY_BUFFER_BINDING_ARB                     = 0x8894;
@@ -74,4 +81,97 @@ public interface ARBVertexBufferObject
 	public static final int GL_BUFFER_ACCESS_ARB                            = 0x88BB;
 	public static final int GL_BUFFER_MAPPED_ARB                            = 0x88BC;
 	public static final int GL_BUFFER_MAP_POINTER_ARB                       = 0x88BD;
+
+	public static void glBindBufferARB(int target, int buffer) {
+		switch (target) {
+			case GL_ELEMENT_ARRAY_BUFFER_ARB:
+				VBOTracker.getVBOElementStack().setState(buffer);
+				break;
+			case GL_ARRAY_BUFFER_ARB:
+				VBOTracker.getVBOArrayStack().setState(buffer);
+				break;
+			default: assert false: "Unsupported VBO target " + target;
+		}
+		nglBindBufferARB(target, buffer);
+	}
+	private static native void nglBindBufferARB(int target, int buffer);
+	public static void glDeleteBuffersARB(IntBuffer buffers) {
+		for (int i = buffers.position(); i < buffers.limit(); i++) {
+			int buffer_handle = buffers.get(i);
+			if (VBOTracker.getVBOElementStack().getState() == buffer_handle)
+				VBOTracker.getVBOElementStack().setState(0);
+			if (VBOTracker.getVBOArrayStack().getState() == buffer_handle)
+				VBOTracker.getVBOArrayStack().setState(0);
+		}
+		nglDeleteBuffersARB(buffers.remaining(), buffers, buffers.position());
+	}
+	private static native void nglDeleteBuffersARB(int n, IntBuffer buffers, int buffers_offset);
+	public static void glGenBuffersARB(IntBuffer buffers) {
+		nglGenBuffersARB(buffers.remaining(), buffers, buffers.position());
+	}
+	private static native void nglGenBuffersARB(int n, IntBuffer buffers, int buffers_offset);
+	public static native boolean glIsBufferARB(int buffer);
+	public static void glBufferDataARB(int target, int size, ByteBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data != null ? data.position() : 0, usage);
+	}
+	public static void glBufferDataARB(int target, int size, ShortBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data != null ? data.position()<<1 : 0, usage);
+	}
+	public static void glBufferDataARB(int target, int size, FloatBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data != null ? data.position()<<2 : 0, usage);
+	}
+	public static void glBufferDataARB(int target, int size, IntBuffer data, int usage) {
+		nglBufferDataARB(target, size, data, data != null ? data.position()<<2 : 0, usage);
+	}
+	private static native void nglBufferDataARB(int target, int size, Buffer data, int data_offset, int usage);
+	public static void glBufferSubDataARB(int target, int offset, ByteBuffer data) {
+		nglBufferSubDataARB(target, offset, data.remaining(), data, data.position());
+	}
+	public static void glBufferSubDataARB(int target, int offset, ShortBuffer data) {
+		nglBufferSubDataARB(target, offset, data.remaining()<<1, data, data.position()<<1);
+	}
+	public static void glBufferSubDataARB(int target, int offset, FloatBuffer data) {
+		nglBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
+	}
+	public static void glBufferSubDataARB(int target, int offset, IntBuffer data) {
+		nglBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
+	}
+	private static native void nglBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);
+	public static void glGetBufferSubDataARB(int target, int offset, ByteBuffer data) {
+		nglGetBufferSubDataARB(target, offset, data.remaining(), data, data.position());
+	}
+	public static void glGetBufferSubDataARB(int target, int offset, ShortBuffer data) {
+		nglGetBufferSubDataARB(target, offset, data.remaining()<<1, data, data.position()<<1);
+	}
+	public static void glGetBufferSubDataARB(int target, int offset, IntBuffer data) {
+		nglGetBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
+	}
+	public static void glGetBufferSubDataARB(int target, int offset, FloatBuffer data) {
+		nglGetBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
+	}
+	private static native void nglGetBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);
+	/**
+	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in
+	 * which case a new ByteBuffer will be created, pointing to the returned memory. If oldBuffer is non-null,
+	 * it will be returned if it points to the same mapped memory, otherwise a new ByteBuffer is created.
+	 * That way, an application will normally use glMapBufferARB like this:
+	 *
+	 * ByteBuffer mapped_buffer;
+	 * mapped_buffer = glMapBufferARB(..., ..., ..., null);
+	 * ...
+	 * // Another map on the same buffer
+	 * mapped_buffer = glMapBufferARB(..., ..., ..., mapped_buffer);
+	 *
+	 * @param size The size of the buffer area.
+	 * @param oldBuffer A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and
+	 * no new buffer will be created. In that case, size is ignored.
+	 * @return A ByteBuffer representing the mapped buffer memory.
+	 */
+	public static native ByteBuffer glMapBufferARB(int target, int access, int size, ByteBuffer oldBuffer);
+	public static native boolean glUnmapBufferARB(int target);
+	public static void glGetBufferParameterARB(int target, int pname, IntBuffer params) {
+		nglGetBufferParameterivARB(target, pname, params, params.position());
+	}
+	private static native void nglGetBufferParameterivARB(int target, int pname, IntBuffer params, int params_offset);
+	public static native ByteBuffer glGetBufferPointerARB(int target, int pname, int size);
 }

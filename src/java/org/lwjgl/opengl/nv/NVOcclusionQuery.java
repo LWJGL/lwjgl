@@ -39,8 +39,9 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVOcclusionQuery
-{
+import java.nio.IntBuffer;
+
+public class NVOcclusionQuery {
 	public static final int GL_OCCLUSION_TEST_HP                                    = 0x8165;
 	public static final int GL_OCCLUSION_TEST_RESULT_HP                             = 0x8166;
 	/* HP_occlusion_test */
@@ -48,4 +49,28 @@ public interface NVOcclusionQuery
 	public static final int GL_CURRENT_OCCLUSION_QUERY_ID_NV                        = 0x8865;
 	public static final int GL_PIXEL_COUNT_NV                                       = 0x8866;
 	public static final int GL_PIXEL_COUNT_AVAILABLE_NV                             = 0x8867;
+
+	public static void glGenOcclusionQueriesNV(IntBuffer piIDs) {
+		nglGenOcclusionQueriesNV(piIDs.remaining(), piIDs, piIDs.position());
+	}
+	private static native void nglGenOcclusionQueriesNV(int n, IntBuffer piIDs, int piIDs_offset);
+	public static void glDeleteOcclusionQueriesNV(IntBuffer piIDs) {
+		nglDeleteOcclusionQueriesNV(piIDs.remaining(), piIDs, piIDs.position());
+	}
+	private static native void nglDeleteOcclusionQueriesNV(int n, IntBuffer piIDs, int piIDs_offset);
+
+	public static native boolean glIsOcclusionQueryNV(int id);
+	public static native void glBeginOcclusionQueryNV(int id);
+
+	public static native void glEndOcclusionQueryNV();
+
+	public static void glGetOcclusionQueryNV(int id, int pname, IntBuffer piParams) {
+		nglGetOcclusionQueryivNV(id, pname, piParams, piParams.position());
+	}
+	private static native void nglGetOcclusionQueryivNV(int id, int pname, IntBuffer piParams, int piParams_offset);
+
+	public static void glGetOcclusionQueryuNV(int id, int pname, IntBuffer piParams) {
+		nglGetOcclusionQueryuivNV(id, pname, piParams, piParams.position());
+	}
+	private static native void nglGetOcclusionQueryuivNV(int id, int pname, IntBuffer piParams, int piParams_offset);
 }

@@ -39,8 +39,7 @@
  */
 package org.lwjgl.opengl.arb;
 
-public interface ARBMultitexture
-{
+public class ARBMultitexture {
 	public static final int GL_TEXTURE0_ARB                                         = 0x84C0;
 	public static final int GL_TEXTURE1_ARB                                         = 0x84C1;
 	public static final int GL_TEXTURE2_ARB                                         = 0x84C2;
@@ -76,4 +75,55 @@ public interface ARBMultitexture
 	public static final int GL_ACTIVE_TEXTURE_ARB                                   = 0x84E0;
 	public static final int GL_CLIENT_ACTIVE_TEXTURE_ARB                            = 0x84E1;
 	public static final int GL_MAX_TEXTURE_UNITS_ARB                                = 0x84E2;
+
+	public static native void glClientActiveTextureARB(int texture);
+
+	public static native void glActiveTextureARB(int texture);
+
+	public static native void glMultiTexCoord1fARB(int target, float s);
+
+	public static native void glMultiTexCoord1iARB(int target, int s);
+
+	public static native void glMultiTexCoord1sARB(int target, short s);
+
+	public static native void glMultiTexCoord2fARB(int target, float s, float t);
+
+	public static native void glMultiTexCoord2iARB(int target, int s, int t);
+
+	public static native void glMultiTexCoord2sARB(int target, short s, short t);
+
+	public static native void glMultiTexCoord3fARB(
+		int target,
+		float s,
+		float t,
+		float r);
+
+	public static native void glMultiTexCoord3iARB(int target, int s, int t, int r);
+
+	public static native void glMultiTexCoord3sARB(
+		int target,
+		short s,
+		short t,
+		short r);
+
+	public static native void glMultiTexCoord4fARB(
+		int target,
+		float s,
+		float t,
+		float r,
+		float q);
+
+	public static native void glMultiTexCoord4iARB(
+		int target,
+		int s,
+		int t,
+		int r,
+		int q);
+
+	public static native void glMultiTexCoord4sARB(
+		int target,
+		short s,
+		short t,
+		short r,
+		short q);
 }

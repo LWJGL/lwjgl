@@ -39,8 +39,13 @@
  */
 package org.lwjgl.opengl.ext;
 
-public interface EXTFogCoord
-{
+import java.nio.Buffer;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+import org.lwjgl.opengl.CoreGL11Constants;
+
+public class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_SOURCE_EXT                            = 0x8450;
 	public static final int GL_FOG_COORDINATE_EXT                                   = 0x8451;
 	public static final int GL_FRAGMENT_DEPTH_EXT                                   = 0x8452;
@@ -50,4 +55,15 @@ public interface EXTFogCoord
 	public static final int GL_FOG_COORDINATE_ARRAY_POINTER_EXT                     = 0x8456;
 	public static final int GL_FOG_COORDINATE_ARRAY_EXT                             = 0x8457;
 
+	public static native void glFogCoordfEXT(float coord);
+	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglFogCoordPointerEXT(CoreGL11Constants.GL_FLOAT, stride, data, data.position() << 2);
+	}
+	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer data, int data_offset);
+	public static void glFogCoordPointerEXT(int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglFogCoordPointerEXTVBO(type, stride, buffer_offset);
+	}
+	private static native void nglFogCoordPointerEXTVBO(int type, int stride, int buffer_offset);
 }

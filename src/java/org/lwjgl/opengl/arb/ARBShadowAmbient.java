@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl.arb;
 
-public interface ARBShadowAmbient
+public class ARBShadowAmbient
 {
 	public static final int GL_TEXTURE_COMPARE_FAIL_VALUE_ARB                       = 0x80BF;
 }

@@ -148,17 +148,17 @@ public final class Game {
       * All rendering is done in here
       */
      private static void render() {
-       GL.glClear(GL.GL_COLOR_BUFFER_BIT);
-       GL.glPushMatrix();
-       GL.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
-       GL.glRotatef(angle, 0, 0, 1.0f);
-       GL.glBegin(GL.GL_QUADS);
-       GL.glVertex2i(-50, -50);
-       GL.glVertex2i(50, -50);
-       GL.glVertex2i(50, 50);
-       GL.glVertex2i(-50, 50);
-       GL.glEnd();
-       GL.glPopMatrix();
+       CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT);
+       CoreGL11.glPushMatrix();
+       CoreGL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+       CoreGL11.glRotatef(angle, 0, 0, 1.0f);
+       CoreGL11.glBegin(CoreGL11.GL_QUADS);
+       CoreGL11.glVertex2i(-50, -50);
+       CoreGL11.glVertex2i(50, -50);
+       CoreGL11.glVertex2i(50, 50);
+       CoreGL11.glVertex2i(-50, 50);
+       CoreGL11.glEnd();
+       CoreGL11.glPopMatrix();
      }
  
     /**
@@ -172,18 +172,18 @@ public final class Game {
          Sys.setProcessPriority(Sys.HIGH_PRIORITY);
          System.out.println("Timer resolution: " + Sys.getTimerResolution());
          // Go into orthographic projection mode.
-       GL.glMatrixMode(GL.GL_PROJECTION);
-       GL.glLoadIdentity();
+       CoreGL11.glMatrixMode(CoreGL11.GL_PROJECTION);
+       CoreGL11.glLoadIdentity();
          GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());
-       GL.glMatrixMode(GL.GL_MODELVIEW);
-       GL.glLoadIdentity();
-       GL.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+       CoreGL11.glMatrixMode(CoreGL11.GL_MODELVIEW);
+       CoreGL11.glLoadIdentity();
+       CoreGL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
          ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(4);
          num_tex_units_buf.order(ByteOrder.nativeOrder());
-       GL.glGetInteger(GL.GL_MAX_TEXTURE_UNITS_ARB, num_tex_units_buf.asIntBuffer());
+       CoreGL11.glGetInteger(CoreGL13.GL_MAX_TEXTURE_UNITS, num_tex_units_buf.asIntBuffer());
          System.out.println("Number of texture units: " + num_tex_units_buf.getInt());
          // Fix the refresh rate to the display frequency.
-//         GL.wglSwapIntervalEXT(1);
+//         CoreGL11.wglSwapIntervalEXT(1);
      }
  
     /**

@@ -39,9 +39,32 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVFence
-{
+import java.nio.IntBuffer;
+
+public class NVFence {
 	public static final int GL_ALL_COMPLETED_NV                                     = 0x84F2;
 	public static final int GL_FENCE_STATUS_NV                                      = 0x84F3;
 	public static final int GL_FENCE_CONDITION_NV                                   = 0x84F4;
+
+	public static void glGenFencesNV(IntBuffer piFences) {
+		nglGenFencesNV(piFences.remaining(), piFences, piFences.position());
+	}
+	private static native void nglGenFencesNV(int n, IntBuffer piFences, int piFences_offset);
+	public static void glDeleteFencesNV(IntBuffer piFences) {
+		nglDeleteFencesNV(piFences.remaining(), piFences, piFences.position());
+	}
+	private static native void nglDeleteFencesNV(int n, IntBuffer piFences, int piFences_offset);
+
+	public static native void glSetFenceNV(int fence, int condition);
+
+	public static native boolean glTestFenceNV(int fence);
+
+	public static native void glFinishFenceNV(int fence);
+
+	public static native boolean glIsFenceNV(int fence);
+
+	public static void glGetFenceNV(int fence, int pname, IntBuffer piParams) {
+		nglGetFenceivNV(fence, pname, piParams, piParams.position());
+	}
+	private static native void nglGetFenceivNV(int fence, int pname, IntBuffer piParams, int piParams_offset);
 }

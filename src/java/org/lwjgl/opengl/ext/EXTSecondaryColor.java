@@ -39,8 +39,14 @@
  */
 package org.lwjgl.opengl.ext;
 
-public interface EXTSecondaryColor
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+import org.lwjgl.opengl.CoreGL11Constants;
+
+public class EXTSecondaryColor {
 	public static final int GL_COLOR_SUM_EXT                                        = 0x8458;
 	public static final int GL_CURRENT_SECONDARY_COLOR_EXT                          = 0x8459;
 	public static final int GL_SECONDARY_COLOR_ARRAY_SIZE_EXT                       = 0x845A;
@@ -48,4 +54,26 @@ public interface EXTSecondaryColor
 	public static final int GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT                     = 0x845C;
 	public static final int GL_SECONDARY_COLOR_ARRAY_POINTER_EXT                    = 0x845D;
 	public static final int GL_SECONDARY_COLOR_ARRAY_EXT                            = 0x845E;
+
+	public static native void glSecondaryColor3bEXT(byte red, byte green, byte blue);
+
+	public static native void glSecondaryColor3fEXT(float red, float green, float blue);
+
+	public static native void glSecondaryColor3ubEXT(byte red, byte green, byte blue);
+
+	public static void glSecondaryColorPointerEXT(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglSecondaryColorPointerEXT(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE: CoreGL11Constants.GL_BYTE, stride, pPointer, pPointer.position());
+	}
+	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglSecondaryColorPointerEXT(size, CoreGL11Constants.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglSecondaryColorPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
+
+	public static void glSecondaryColorPointerEXT(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglSecondaryColorPointerEXTVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglSecondaryColorPointerEXTVBO(int size, int type, int stride, int buffer_offset);
 }

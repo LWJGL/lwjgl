@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 #AC_PREREQ(2.57)
-AC_INIT(LWJGL, 0.7)
+AC_INIT(LWJGL, 0.8)
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([autogen.sh])
 AM_CONFIG_HEADER([config.h])
@@ -72,6 +72,10 @@ AC_CHECK_FUNCS([gettimeofday memset strchr strstr])
 
 AC_CONFIG_FILES([Makefile
                  common/Makefile
+                 common/arb/Makefile
+                 common/ati/Makefile
+                 common/ext/Makefile
+                 common/nv/Makefile
                  linux/Makefile
 		 macosx/Makefile])
 AC_OUTPUT

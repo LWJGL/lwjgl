@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVTextureShader3
+public class NVTextureShader3
 {
 	public static final int GL_OFFSET_PROJECTIVE_TEXTURE_2D_NV                      = 0x8850;
 	public static final int GL_OFFSET_PROJECTIVE_TEXTURE_2D_SCALE_NV                = 0x8851;

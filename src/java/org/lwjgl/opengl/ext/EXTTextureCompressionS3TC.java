@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl.ext;
 
-public interface EXTTextureCompressionS3TC
+public class EXTTextureCompressionS3TC
 {
 	public static final int GL_COMPRESSED_RGB_S3TC_DXT1_EXT                         = 0x83F0;
 	public static final int GL_COMPRESSED_RGBA_S3TC_DXT1_EXT                        = 0x83F1;

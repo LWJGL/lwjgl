@@ -43,8 +43,9 @@
  */
 package org.lwjgl.opengl.ati;
 
-public interface ATIFragmentShader
-{
+import java.nio.FloatBuffer;
+
+public class ATIFragmentShader {
 	public static final int GL_FRAGMENT_SHADER_ATI                                  = 0x8920;
 	public static final int GL_REG_0_ATI                                            = 0x8921;
 	public static final int GL_REG_1_ATI                                            = 0x8922;
@@ -149,4 +150,92 @@ public interface ATIFragmentShader
 	public static final int GL_COMP_BIT_ATI                                         = 0x00000002;
 	public static final int GL_NEGATE_BIT_ATI                                       = 0x00000004;
 	public static final int GL_BIAS_BIT_ATI                                         = 0x00000008;
+
+	public static native int glGenFragmentShadersATI(int range);
+
+	public static native void glBindFragmentShaderATI(int id);
+
+	public static native void glDeleteFragmentShaderATI(int id);
+
+	public static native void glBeginFragmentShaderATI();
+
+	public static native void glEndFragmentShaderATI();
+
+	public static native void glPassTexCoordATI(int dst, int coord, int swizzle);
+
+	public static native void glSampleMapATI(int dst, int interp, int swizzle);
+
+	public static native void glColorFragmentOp1ATI(
+		int op,
+		int dst,
+		int dstMask,
+		int dstMod,
+		int arg1,
+		int arg1Rep,
+		int arg1Mod);
+
+	public static native void glColorFragmentOp2ATI(
+		int op,
+		int dst,
+		int dstMask,
+		int dstMod,
+		int arg1,
+		int arg1Rep,
+		int arg1Mod,
+		int arg2,
+		int arg2Rep,
+		int arg2Mod);
+
+	public static native void glColorFragmentOp3ATI(
+		int op,
+		int dst,
+		int dstMask,
+		int dstMod,
+		int arg1,
+		int arg1Rep,
+		int arg1Mod,
+		int arg2,
+		int arg2Rep,
+		int arg2Mod,
+		int arg3,
+		int arg3Rep,
+		int arg3Mod);
+
+	public static native void glAlphaFragmentOp1ATI(
+		int op,
+		int dst,
+		int dstMod,
+		int arg1,
+		int arg1Rep,
+		int arg1Mod);
+
+	public static native void glAlphaFragmentOp2ATI(
+		int op,
+		int dst,
+		int dstMod,
+		int arg1,
+		int arg1Rep,
+		int arg1Mod,
+		int arg2,
+		int arg2Rep,
+		int arg2Mod);
+
+	public static native void glAlphaFragmentOp3ATI(
+		int op,
+		int dst,
+		int dstMod,
+		int arg1,
+		int arg1Rep,
+		int arg1Mod,
+		int arg2,
+		int arg2Rep,
+		int arg2Mod,
+		int arg3,
+		int arg3Rep,
+		int arg3Mod);
+
+	public static void glSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue) {
+		nglSetFragmentShaderConstantATI(dst, pfValue, pfValue.position());
+	}
+	private static native void nglSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue, int pfValue_offset);
 }

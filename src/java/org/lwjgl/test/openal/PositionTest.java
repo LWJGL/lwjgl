@@ -122,14 +122,14 @@ public class PositionTest extends BasicTest {
     // =====================================================
     Sys.log("Setting up OpenGL");
 
-    GL.glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    GL.glMatrixMode(GL.GL_PROJECTION);
-    GL.glLoadIdentity();
+    CoreGL11.glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    CoreGL11.glMatrixMode(CoreGL11.GL_PROJECTION);
+    CoreGL11.glLoadIdentity();
     GLU.gluPerspective(50.0, WINDOW_WIDTH / WINDOW_HEIGHT, 0.0, 50.0);
-    GL.glMatrixMode(GL.GL_MODELVIEW);
-    GL.glLoadIdentity();
-    GL.glTranslatef(0.0f, 0.0f, -6.6f);
-    GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    CoreGL11.glMatrixMode(CoreGL11.GL_MODELVIEW);
+    CoreGL11.glLoadIdentity();
+    CoreGL11.glTranslatef(0.0f, 0.0f, -6.6f);
+    CoreGL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glut = this.new GLUT();
 
     Window.setVSyncEnabled(true);
@@ -404,48 +404,48 @@ public class PositionTest extends BasicTest {
    * Render the scene
    */
   private void render() {
-    GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-    GL.glPushMatrix();
+    CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT | CoreGL11.GL_DEPTH_BUFFER_BIT);
+    CoreGL11.glPushMatrix();
     {
-      GL.glRotatef(20.0f, 1.0f, 1.0f, 0.0f);
+      CoreGL11.glRotatef(20.0f, 1.0f, 1.0f, 0.0f);
 
       // left
-      GL.glPushMatrix();
+      CoreGL11.glPushMatrix();
       {
-        GL.glTranslatef(leftPosition.get(0), leftPosition.get(1), leftPosition.get(2));
-        GL.glColor3f(1.0f, 0.0f, 0.0f);
+        CoreGL11.glTranslatef(leftPosition.get(0), leftPosition.get(1), leftPosition.get(2));
+        CoreGL11.glColor3f(1.0f, 0.0f, 0.0f);
         glut.glutWireCube(0.5f);
       }
-      GL.glPopMatrix();
+      CoreGL11.glPopMatrix();
 
       // center
-      GL.glPushMatrix();
+      CoreGL11.glPushMatrix();
       {
-        GL.glTranslatef(centerPosition.get(0), centerPosition.get(1), centerPosition.get(2));
-        GL.glColor3f(0.0f, 0.0f, 1.0f);
+        CoreGL11.glTranslatef(centerPosition.get(0), centerPosition.get(1), centerPosition.get(2));
+        CoreGL11.glColor3f(0.0f, 0.0f, 1.0f);
         glut.glutWireCube(0.5f);
       }
-      GL.glPopMatrix();
+      CoreGL11.glPopMatrix();
 
       // right
-      GL.glPushMatrix();
+      CoreGL11.glPushMatrix();
       {
-        GL.glTranslatef(rightPosition.get(0), rightPosition.get(1), rightPosition.get(2));
-        GL.glColor3f(0.0f, 1.0f, 0.0f);
+        CoreGL11.glTranslatef(rightPosition.get(0), rightPosition.get(1), rightPosition.get(2));
+        CoreGL11.glColor3f(0.0f, 1.0f, 0.0f);
         glut.glutWireCube(0.5f);
       }
-      GL.glPopMatrix();
+      CoreGL11.glPopMatrix();
 
       // listener
-      GL.glPushMatrix();
+      CoreGL11.glPushMatrix();
       {
-        GL.glTranslatef(listenerPosition.get(0), listenerPosition.get(1), listenerPosition.get(2));
-        GL.glColor3f(1.0f, 1.0f, 1.0f);
+        CoreGL11.glTranslatef(listenerPosition.get(0), listenerPosition.get(1), listenerPosition.get(2));
+        CoreGL11.glColor3f(1.0f, 1.0f, 1.0f);
         glut.glutSolidCube(0.5f);
       }
-      GL.glPopMatrix();
+      CoreGL11.glPopMatrix();
     }
-    GL.glPopMatrix();
+    CoreGL11.glPopMatrix();
   }
 
   /**
@@ -515,11 +515,11 @@ public class PositionTest extends BasicTest {
     float v[][] = new float[8][3];
 
     public void glutWireCube(float size) {
-      drawBox(size, GL.GL_LINE_LOOP);
+      drawBox(size, CoreGL11.GL_LINE_LOOP);
     }
 
     public void glutSolidCube(float size) {
-      drawBox(size, GL.GL_QUADS);
+      drawBox(size, CoreGL11.GL_QUADS);
     }
 
     private void drawBox(float size, int type) {
@@ -532,13 +532,13 @@ public class PositionTest extends BasicTest {
       v[1][2] = v[2][2] = v[5][2] = v[6][2] = size / 2;
 
       for (int i = 5; i >= 0; i--) {
-        GL.glBegin(type);
-        GL.glNormal3f(n[i][0], n[i][1], n[i][2]);
-        GL.glVertex3f(v[faces[i][0]][0], v[faces[i][0]][1], v[faces[i][0]][2]);
-        GL.glVertex3f(v[faces[i][1]][0], v[faces[i][1]][1], v[faces[i][1]][2]);
-        GL.glVertex3f(v[faces[i][2]][0], v[faces[i][2]][1], v[faces[i][2]][2]);
-        GL.glVertex3f(v[faces[i][3]][0], v[faces[i][3]][1], v[faces[i][3]][2]);
-        GL.glEnd();
+        CoreGL11.glBegin(type);
+        CoreGL11.glNormal3f(n[i][0], n[i][1], n[i][2]);
+        CoreGL11.glVertex3f(v[faces[i][0]][0], v[faces[i][0]][1], v[faces[i][0]][2]);
+        CoreGL11.glVertex3f(v[faces[i][1]][0], v[faces[i][1]][1], v[faces[i][1]][2]);
+        CoreGL11.glVertex3f(v[faces[i][2]][0], v[faces[i][2]][1], v[faces[i][2]][2]);
+        CoreGL11.glVertex3f(v[faces[i][3]][0], v[faces[i][3]][1], v[faces[i][3]][2]);
+        CoreGL11.glEnd();
       }
 
     }

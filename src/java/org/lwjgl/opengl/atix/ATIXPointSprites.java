@@ -39,8 +39,7 @@
  */
 package org.lwjgl.opengl.atix;
 
-public interface ATIXPointSprites
-{
+public class ATIXPointSprites {
 	public static final int GL_TEXTURE_POINT_MODE_ATIX                              = 0x60b0;
 	public static final int GL_TEXTURE_POINT_ONE_COORD_ATIX                         = 0x60b1;
 	public static final int GL_TEXTURE_POINT_SPRITE_ATIX                            = 0x60b2;

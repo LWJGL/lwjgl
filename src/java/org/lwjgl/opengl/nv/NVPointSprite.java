@@ -39,9 +39,17 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVPointSprite
-{
+import java.nio.IntBuffer;
+
+public class NVPointSprite {
 	public static final int GL_POINT_SPRITE_NV                                      = 0x8861;
 	public static final int GL_COORD_REPLACE_NV                                     = 0x8862;
 	public static final int GL_POINT_SPRITE_R_MODE_NV                               = 0x8863;
+
+	public static native void glPointParameteriNV(int pname, int param);
+
+	public static void glPointParameterNV(int pname, IntBuffer piParams) {
+		nglPointParameterivNV(pname, piParams, piParams.position());
+	}
+	private static native void nglPointParameterivNV(int pname, IntBuffer piParams, int piParams_offset);
 }

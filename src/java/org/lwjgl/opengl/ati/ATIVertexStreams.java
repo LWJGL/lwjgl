@@ -39,8 +39,7 @@
  */
 package org.lwjgl.opengl.ati;
 
-public interface ATIVertexStreams
-{
+public class ATIVertexStreams {
 	public static final int GL_MAX_VERTEX_STREAMS_ATI                               = 0x876B;
 	public static final int GL_VERTEX_SOURCE_ATI                                    = 0x876C;
 	public static final int GL_VERTEX_STREAM0_ATI                                   = 0x876D;
@@ -51,4 +50,39 @@ public interface ATIVertexStreams
 	public static final int GL_VERTEX_STREAM5_ATI                                   = 0x8772;
 	public static final int GL_VERTEX_STREAM6_ATI                                   = 0x8773;
 	public static final int GL_VERTEX_STREAM7_ATI                                   = 0x8774;
+
+	public static native void glVertexStream1fATI(int stream, float x);
+	public static native void glVertexStream1iATI(int stream, int x);
+	public static native void glVertexStream1sATI(int stream, short x);
+	public static native void glVertexStream2fATI(int stream, float x, float y);
+	public static native void glVertexStream2iATI(int stream, int x, int y);
+	public static native void glVertexStream2sATI(int stream, short x, short y);
+	public static native void glVertexStream3fATI(int stream, float x, float y, float z);
+	public static native void glVertexStream3iATI(int stream, int x, int y, int z);
+	public static native void glVertexStream3sATI(int stream, short x, short y, short z);
+	public static native void glVertexStream4fATI(
+		int stream,
+		float x,
+		float y,
+		float z,
+		float w);
+	public static native void glVertexStream4iATI(
+		int stream,
+		int x,
+		int y,
+		int z,
+		int w);
+	public static native void glVertexStream4sATI(
+		int stream,
+		short x,
+		short y,
+		short z,
+		short w);
+	public static native void glNormalStream3bATI(int stream, byte x, byte y, byte z);
+	public static native void glNormalStream3fATI(int stream, float x, float y, float z);
+	public static native void glNormalStream3iATI(int stream, int x, int y, int z);
+	public static native void glNormalStream3sATI(int stream, short x, short y, short z);
+	public static native void glClientActiveVertexStreamATI(int stream);
+	public static native void glVertexBlendEnvfATI(int pname, float param);
+	public static native void glVertexBlendEnviATI(int pname, int param);
 }

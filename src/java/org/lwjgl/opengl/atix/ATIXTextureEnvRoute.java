@@ -39,8 +39,7 @@
  */
 package org.lwjgl.opengl.atix;
 
-public interface ATIXTextureEnvRoute
-{
+public class ATIXTextureEnvRoute {
 	public static final int GL_SECONDARY_COLOR_ATIX                                 = 0x8747;
 	public static final int GL_TEXTURE_OUTPUT_RGB_ATIX                              = 0x8748;
 	public static final int GL_TEXTURE_OUTPUT_ALPHA_ATIX                            = 0x8749;

@@ -43,6 +43,7 @@ package org.lwjgl.test.opengl;
 
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.arb.*;
 import org.lwjgl.input.*;
 
 import java.nio.*;
@@ -150,18 +151,18 @@ public final class VBOIndexTest {
       * All rendering is done in here
       */
      private static void render() {
-       GL.glClear(GL.GL_COLOR_BUFFER_BIT);
-       GL.glPushMatrix();
-       GL.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
-       GL.glRotatef(angle, 0, 0, 1.0f);
+       CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT);
+       CoreGL11.glPushMatrix();
+       CoreGL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+       CoreGL11.glRotatef(angle, 0, 0, 1.0f);
 
 
-	ByteBuffer new_mapped_buffer = GL.glMapBufferARB(GL.GL_ARRAY_BUFFER_ARB, GL.GL_WRITE_ONLY_ARB, 2*4*4, mapped_buffer);
+	ByteBuffer new_mapped_buffer = ARBVertexBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, ARBVertexBufferObject.GL_WRITE_ONLY_ARB, 2*4*4, mapped_buffer);
 	if (new_mapped_buffer != mapped_buffer)
 		mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
 	mapped_buffer = new_mapped_buffer;
 
-        new_mapped_buffer = GL.glMapBufferARB(GL.GL_ELEMENT_ARRAY_BUFFER_ARB, GL.GL_WRITE_ONLY_ARB, 4*4, mapped_indices_buffer);
+        new_mapped_buffer = ARBVertexBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, ARBVertexBufferObject.GL_WRITE_ONLY_ARB, 4*4, mapped_indices_buffer);
 	if (new_mapped_buffer != mapped_indices_buffer)
 		mapped_indices_int_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asIntBuffer();
 
@@ -172,10 +173,11 @@ public final class VBOIndexTest {
         mapped_indices_int_buffer.rewind();
         indices.rewind();
         mapped_indices_int_buffer.put(indices);
-	if (GL.glUnmapBufferARB(GL.GL_ARRAY_BUFFER_ARB) && GL.glUnmapBufferARB(GL.GL_ELEMENT_ARRAY_BUFFER_ARB)) {
-		GL.glDrawElements(GL.GL_QUADS, 4, GL.GL_UNSIGNED_INT, 0);
+	if (ARBVertexBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB) && 
+            ARBVertexBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB)) {
+		CoreGL11.glDrawElements(CoreGL11.GL_QUADS, 4, CoreGL11.GL_UNSIGNED_INT, 0);
         }
-       GL.glPopMatrix();
+       CoreGL11.glPopMatrix();
      }
  
     /**
@@ -189,36 +191,32 @@ public final class VBOIndexTest {
          Sys.setProcessPriority(Sys.HIGH_PRIORITY);
          System.out.println("Timer resolution: " + Sys.getTimerResolution());
          // Go into orthographic projection mode.
-       GL.glMatrixMode(GL.GL_PROJECTION);
-       GL.glLoadIdentity();
+       CoreGL11.glMatrixMode(CoreGL11.GL_PROJECTION);
+       CoreGL11.glLoadIdentity();
          GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());
-       GL.glMatrixMode(GL.GL_MODELVIEW);
-       GL.glLoadIdentity();
-       GL.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+       CoreGL11.glMatrixMode(CoreGL11.GL_MODELVIEW);
+       CoreGL11.glLoadIdentity();
+       CoreGL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 	if (!GLCaps.GL_ARB_vertex_buffer_object) {
 		System.out.println("ARB VBO not supported!");
 		System.exit(1);
 	}
 	IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
-	GL.glGenBuffersARB(int_buffer);
+	ARBVertexBufferObject.glGenBuffersARB(int_buffer);
 	buffer_id = int_buffer.get(0);
         indices_buffer_id = int_buffer.get(1);
-	GL.glBindBufferARB(GL.GL_ARRAY_BUFFER_ARB, buffer_id);
-	GL.glBindBufferARB(GL.GL_ELEMENT_ARRAY_BUFFER_ARB, indices_buffer_id);
+	ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, buffer_id);
+	ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, indices_buffer_id);
 	vertices = ByteBuffer.allocateDirect(2*4*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
         vertices.rewind();
         indices = ByteBuffer.allocateDirect(4*4).order(ByteOrder.nativeOrder()).asIntBuffer();
         indices.put(0).put(1).put(2).put(3);
         indices.rewind();
-	GL.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, 2*4*4, (ByteBuffer)null, GL.GL_STREAM_DRAW_ARB);
-	GL.glBufferDataARB(GL.GL_ELEMENT_ARRAY_BUFFER_ARB, 4*4, (ByteBuffer)null, GL.GL_STREAM_DRAW_ARB);
-	GL.glEnableClientState(GL.GL_VERTEX_ARRAY);
-	GL.glVertexPointer(2, GL.GL_FLOAT, 0, 0);
-       GL.glGetInteger(GL.GL_MAX_TEXTURE_UNITS_ARB, int_buffer);
-         System.out.println("Number of texture units: " + int_buffer.get(0));
-         // Fix the refresh rate to the display frequency.
-//         gl.wglSwapIntervalEXT(1);
+	ARBVertexBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, 2*4*4, (ByteBuffer)null, ARBVertexBufferObject.GL_STREAM_DRAW_ARB);
+	ARBVertexBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, 4*4, (ByteBuffer)null, ARBVertexBufferObject.GL_STREAM_DRAW_ARB);
+	CoreGL11.glEnableClientState(CoreGL11.GL_VERTEX_ARRAY);
+	CoreGL11.glVertexPointer(2, CoreGL11.GL_FLOAT, 0, 0);
      }
  
     /**
@@ -228,7 +226,7 @@ public final class VBOIndexTest {
 	IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
 	int_buffer.put(0, buffer_id);
         int_buffer.put(1, indices_buffer_id);
-	GL.glDeleteBuffersARB(int_buffer);
+	ARBVertexBufferObject.glDeleteBuffersARB(int_buffer);
          Keyboard.destroy();
          Mouse.destroy();
          Window.destroy();

@@ -39,8 +39,15 @@
  */
 package org.lwjgl.opengl.arb;
 
-public interface ARBMatrixPalette
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+import org.lwjgl.opengl.CoreGL11Constants;
+
+public class ARBMatrixPalette {
 	public static final int GL_MATRIX_PALETTE_ARB                                   = 0x8840;
 	public static final int GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB                   = 0x8841;
 	public static final int GL_MAX_PALETTE_MATRICES_ARB                             = 0x8842;
@@ -51,4 +58,39 @@ public interface ARBMatrixPalette
 	public static final int GL_MATRIX_INDEX_ARRAY_TYPE_ARB                          = 0x8847;
 	public static final int GL_MATRIX_INDEX_ARRAY_STRIDE_ARB                        = 0x8848;
 	public static final int GL_MATRIX_INDEX_ARRAY_POINTER_ARB                       = 0x8849;
+
+	public static native void glCurrentPaletteMatrixARB(int index);
+	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglMatrixIndexPointerARB(size, CoreGL11Constants.GL_UNSIGNED_BYTE, stride, pPointer, pPointer.position());
+	}
+	public static void glMatrixIndexPointerARB(int size, int stride, ShortBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglMatrixIndexPointerARB(size, CoreGL11Constants.GL_UNSIGNED_SHORT, stride, pPointer, pPointer.position()<<1);
+	}
+	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglMatrixIndexPointerARB(size, CoreGL11Constants.GL_UNSIGNED_INT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglMatrixIndexPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
+	public static void glMatrixIndexPointerARB(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglMatrixIndexPointerARBVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglMatrixIndexPointerARBVBO(int size, int type, int stride, int buffer_offset);
+
+	public static void glMatrixIndexuARB(ByteBuffer pIndices) {
+		nglMatrixIndexubvARB(pIndices.remaining(), pIndices, pIndices.position());
+	}
+	private static native void nglMatrixIndexubvARB(int size, ByteBuffer pIndices, int pIndices_offset);
+
+	public static void glMatrixIndexuARB(IntBuffer piIndices) {
+		nglMatrixIndexuivARB(piIndices.remaining(), piIndices, piIndices.position());
+	}
+	private static native void nglMatrixIndexuivARB(int size, IntBuffer piIndices, int piIndices_offset);
+
+	public static void glMatrixIndexuARB(ShortBuffer psIndices) {
+		nglMatrixIndexusvARB(psIndices.remaining(), psIndices, psIndices.position());
+	}
+	private static native void nglMatrixIndexusvARB(int size, ShortBuffer psIndices, int psIndices_offset);
 }

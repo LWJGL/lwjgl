@@ -39,9 +39,40 @@
  */
 package org.lwjgl.opengl.ati;
 
-public interface ATIElementArray
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+import org.lwjgl.opengl.CoreGL11Constants;
+
+public class ATIElementArray {
 	public static final int GL_ELEMENT_ARRAY_ATI                                    = 0x8768;
 	public static final int GL_ELEMENT_ARRAY_TYPE_ATI                               = 0x8769;
 	public static final int GL_ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;
+
+	public static void glElementPointerATI(ByteBuffer pPointer) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglElementPointerATI(CoreGL11Constants.GL_UNSIGNED_BYTE, pPointer, pPointer.position());
+	}
+	public static void glElementPointerATI(ShortBuffer pPointer) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglElementPointerATI(CoreGL11Constants.GL_UNSIGNED_SHORT, pPointer, pPointer.position()<<1);
+	}
+	public static void glElementPointerATI(IntBuffer pPointer) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglElementPointerATI(CoreGL11Constants.GL_UNSIGNED_INT, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglElementPointerATI(int type, Buffer pPointer, int pPointer_offset);
+
+	public static void glElementPointerATI(int type, int buffer_offset) {
+		assert VBOTracker.getVBOElementStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglElementPointerATIVBO(type, buffer_offset);
+	}
+	private static native void nglElementPointerATIVBO(int type, int buffer_offset);
+
+	public static native void glDrawElementArrayATI(int mode, int count);
+	public static native void glDrawRangeElementArrayATI(int mode, int start, int end, int count);
 }

@@ -39,8 +39,13 @@
  */
 package org.lwjgl.opengl.ext;
 
-public interface EXTVertexWeighting
-{
+import java.nio.Buffer;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+import org.lwjgl.opengl.CoreGL11Constants;
+
+public class EXTVertexWeighting {
 	public static final int GL_MODELVIEW0_STACK_DEPTH_EXT                           = 0x0BA3;  /* alias to MODELVIEW_STACK_DEPTH */
 	public static final int GL_MODELVIEW1_STACK_DEPTH_EXT                           = 0x8502;
 	public static final int GL_MODELVIEW0_MATRIX_EXT                                = 0x0BA6;  /* alias to MODELVIEW_MATRIX */
@@ -54,4 +59,17 @@ public interface EXTVertexWeighting
 	public static final int GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT                         = 0x850E;
 	public static final int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT                       = 0x850F;
 	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT                      = 0x8510;
+
+	public static native void glVertexWeightfEXT(float weight);
+
+	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglVertexWeightPointerEXT(size, CoreGL11Constants.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglVertexWeightPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
+	public static void glVertexWeightPointerEXT(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglVertexWeightPointerEXTVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglVertexWeightPointerEXTVBO(int size, int type, int stride, int buffer_offset);
 }

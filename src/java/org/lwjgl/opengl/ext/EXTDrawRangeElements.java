@@ -39,8 +39,35 @@
  */
 package org.lwjgl.opengl.ext;
 
-public interface EXTDrawRangeElements
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+import org.lwjgl.opengl.CoreGL11Constants;
+
+public class EXTDrawRangeElements {
 	public static final int GL_MAX_ELEMENTS_VERTICES_EXT                            = 0x80E8;
 	public static final int GL_MAX_ELEMENTS_INDICES_EXT                             = 0x80E9;
+
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, ByteBuffer pIndices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), CoreGL11Constants.GL_UNSIGNED_BYTE, pIndices, pIndices.position());
+	}
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, ShortBuffer pIndices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), CoreGL11Constants.GL_UNSIGNED_SHORT, pIndices, pIndices.position()<<1);
+	}
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, IntBuffer pIndices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), CoreGL11Constants.GL_UNSIGNED_INT, pIndices, pIndices.position()<<2);
+	}
+	private static native void nglDrawRangeElementsEXT(int mode, int start, int end, int count, int type, Buffer pIndices, int pIndices_offset);
+
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, int count, int type, int buffer_offset) {
+		assert VBOTracker.getVBOElementStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglDrawRangeElementsEXTVBO(mode, start, end, count, type, buffer_offset);
+	}
+	private static native void nglDrawRangeElementsEXTVBO(int mode, int start, int end, int count, int type, int buffer_offset);
 }

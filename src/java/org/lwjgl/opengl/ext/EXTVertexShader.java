@@ -39,8 +39,16 @@
  */
 package org.lwjgl.opengl.ext;
 
-public interface EXTVertexShader
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.opengl.CoreGL11Constants;
+import org.lwjgl.opengl.VBOTracker;
+
+public class EXTVertexShader {
 	public static final int GL_VERTEX_SHADER_EXT                                    = 0x8780;
 	public static final int GL_VERTEX_SHADER_BINDING_EXT                            = 0x8781;
 	public static final int GL_OP_INDEX_EXT                                         = 0x8782;
@@ -151,4 +159,192 @@ public interface EXTVertexShader
 	public static final int GL_INVARIANT_DATATYPE_EXT                               = 0x87EB;
 	public static final int GL_LOCAL_CONSTANT_VALUE_EXT                             = 0x87EC;
 	public static final int GL_LOCAL_CONSTANT_DATATYPE_EXT                          = 0x87ED;
+
+	public static native void glBeginVertexShaderEXT();
+	public static native void glEndVertexShaderEXT();
+
+	public static native void glBindVertexShaderEXT(int id);
+
+	public static native int glGenVertexShadersEXT(int range);
+
+	public static native void glDeleteVertexShaderEXT(int id);
+
+	public static native void glShaderOp1EXT(int op, int res, int arg1);
+
+	public static native void glShaderOp2EXT(int op, int res, int arg1, int arg2);
+
+	public static native void glShaderOp3EXT(
+		int op,
+		int res,
+		int arg1,
+		int arg2,
+		int arg3);
+
+	public static native void glSwizzleEXT(
+		int res,
+		int in,
+		int outX,
+		int outY,
+		int outZ,
+		int outW);
+
+	public static native void glWriteMaskEXT(
+		int res,
+		int in,
+		int outX,
+		int outY,
+		int outZ,
+		int outW);
+	public static native void glInsertComponentEXT(int res, int src, int num);
+
+	public static native void glExtractComponentEXT(int res, int src, int num);
+
+	public static native int glGenSymbolsEXT(
+		int dataType,
+		int storageType,
+		int range,
+		int components);
+	public static void glSetInvariantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
+		nglSetInvariantEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE : CoreGL11Constants.GL_BYTE, pAddr, pAddr.position());
+	}
+	public static void glSetInvariantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+		nglSetInvariantEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_SHORT : CoreGL11Constants.GL_SHORT, pAddr, pAddr.position()<<1);
+	}
+	public static void glSetInvariantEXT(int id, FloatBuffer pAddr) {
+		nglSetInvariantEXT(id, CoreGL11Constants.GL_FLOAT, pAddr, pAddr.position()<<2);
+	}
+	public static void glSetInvariantEXT(int id, boolean unsigned, IntBuffer pAddr) {
+		nglSetInvariantEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_INT : CoreGL11Constants.GL_INT, pAddr, pAddr.position()<<2);
+	}
+	private static native void nglSetInvariantEXT(int id, int type, Buffer pAddr, int pAddr_offset);
+
+	public static void glSetLocalConstantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
+		nglSetLocalConstantEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE : CoreGL11Constants.GL_BYTE, pAddr, pAddr.position());
+	}
+	public static void glSetLocalConstantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+		nglSetLocalConstantEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_SHORT : CoreGL11Constants.GL_SHORT, pAddr, pAddr.position()<<1);
+	}
+	public static void glSetLocalConstantEXT(int id, FloatBuffer pAddr) {
+		nglSetLocalConstantEXT(id, CoreGL11Constants.GL_FLOAT, pAddr, pAddr.position()<<2);
+	}
+	public static void glSetLocalConstantEXT(int id, boolean unsigned, IntBuffer pAddr) {
+		nglSetLocalConstantEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_INT : CoreGL11Constants.GL_INT, pAddr, pAddr.position()<<2);
+	}
+	private static native void nglSetLocalConstantEXT(int id, int type, Buffer pAddr, int pAddr_offset);
+
+	public static void glVariantEXT(int id, ByteBuffer pAddr) {
+		nglVariantbvEXT(id, pAddr, pAddr.position());
+	}
+	private static native void nglVariantbvEXT(int id, ByteBuffer pAddr, int pAddr_offset);
+
+	public static void glVariantEXT(int id, ShortBuffer psAddr) {
+		nglVariantsvEXT(id, psAddr, psAddr.position());
+	}
+	private static native void nglVariantsvEXT(int id, ShortBuffer psAddr, int psAddr_offset);
+
+	public static void glVariantEXT(int id, FloatBuffer pfAddr) {
+		nglVariantfvEXT(id, pfAddr, pfAddr.position());
+	}
+	private static native void nglVariantfvEXT(int id, FloatBuffer pfAddr, int pfAddr_offset);
+
+	public static void glVariantEXT(int id, IntBuffer piAddr) {
+		nglVariantivEXT(id, piAddr, piAddr.position());
+	}
+	private static native void nglVariantivEXT(int id, IntBuffer piAddr, int piAddr_offset);
+
+	public static void glVariantuEXT(int id, ByteBuffer pAddr) {
+		nglVariantubvEXT(id, pAddr, pAddr.position());
+	}
+	private static native void nglVariantubvEXT(int id, ByteBuffer pAddr, int pAddr_offset);
+
+	public static void glVariantuEXT(int id, ShortBuffer psAddr) {
+		nglVariantusvEXT(id, psAddr, psAddr.position());
+	}
+	private static native void nglVariantusvEXT(int id, ShortBuffer psAddr, int psAddr_offset);
+
+	public static void glVariantuEXT(int id, IntBuffer piAddr) {
+		nglVariantuivEXT(id, piAddr, piAddr.position());
+	}
+	private static native void nglVariantuivEXT(int id, IntBuffer piAddr, int piAddr_offset);
+	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ByteBuffer pAddr) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglVariantPointerEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE : CoreGL11Constants.GL_BYTE, stride, pAddr, pAddr.position());
+	}
+	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ShortBuffer pAddr) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglVariantPointerEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_SHORT : CoreGL11Constants.GL_SHORT, stride, pAddr, pAddr.position()<<1);
+	}
+	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglVariantPointerEXT(id, CoreGL11Constants.GL_FLOAT, stride, pAddr, pAddr.position()<<2);
+	}
+	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, IntBuffer pAddr) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglVariantPointerEXT(id, unsigned ? CoreGL11Constants.GL_UNSIGNED_INT : CoreGL11Constants.GL_INT, stride, pAddr, pAddr.position()<<2);
+	}
+	private static native void nglVariantPointerEXT(int id, int type, int stride, Buffer pAddr, int pAddr_offset);
+	public static void glVariantPointerEXT(int id, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglVariantPointerEXTVBO(id, type, stride, buffer_offset);
+	}
+	private static native void nglVariantPointerEXTVBO(int id, int type, int stride, int buffer_offset);
+	public static native void glEnableVariantClientStateEXT(int id);
+
+	public static native void glDisableVariantClientStateEXT(int id);
+
+	public static native int glBindLightParameterEXT(int light, int value);
+
+	public static native int glBindMaterialParameterEXT(int face, int value);
+
+	public static native int glBindTexGenParameterEXT(int unit, int coord, int value);
+
+	public static native int glBindTextureUnitParameterEXT(int unit, int value);
+
+	public static native int glBindParameterEXT(int value);
+	public static native boolean glIsVariantEnabledEXT(int id, int cap);
+
+	public static void glGetVariantBooleanEXT(int id, int value, ByteBuffer pbData) {
+		nglGetVariantBooleanvEXT(id, value, pbData, pbData.position());
+	}
+	private static native void nglGetVariantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
+	public static void glGetVariantIntegerEXT(int id, int value, IntBuffer piData) {
+		nglGetVariantIntegervEXT(id, value, piData, piData.position());
+	}
+	private static native void nglGetVariantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
+
+	public static void glGetVariantFloatEXT(int id, int value, FloatBuffer pfData) {
+		nglGetVariantFloatvEXT(id, value, pfData, pfData.position());
+	}
+	private static native void nglGetVariantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
+
+	public static native ByteBuffer glGetVariantPointerEXT(int id, int value, int size);
+	public static void glGetInvariantBooleanEXT(int id, int value, ByteBuffer pbData) {
+		nglGetInvariantBooleanvEXT(id, value, pbData, pbData.position());
+	}
+	private static native void nglGetInvariantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
+
+	public static void glGetInvariantIntegerEXT(int id, int value, IntBuffer piData) {
+		nglGetInvariantIntegervEXT(id, value, piData, piData.position());
+	}
+	private static native void nglGetInvariantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
+
+	public static void glGetInvariantFloatEXT(int id, int value, FloatBuffer pfData) {
+		nglGetInvariantFloatvEXT(id, value, pfData, pfData.position());
+	}
+	private static native void nglGetInvariantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
+
+	public static void glGetLocalConstantBooleanEXT(int id, int value, ByteBuffer pbData) {
+		nglGetLocalConstantBooleanvEXT(id, value, pbData, pbData.position());
+	}
+	private static native void nglGetLocalConstantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
+
+	public static void glGetLocalConstantIntegerEXT(int id, int value, IntBuffer piData) {
+		nglGetLocalConstantIntegervEXT(id, value, piData, piData.position());
+	}
+	private static native void nglGetLocalConstantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
+
+	public static void glGetLocalConstantFloatEXT(int id, int value, FloatBuffer pfData) {
+		nglGetLocalConstantFloatvEXT(id, value, pfData, pfData.position());
+	}
+	private static native void nglGetLocalConstantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
 }

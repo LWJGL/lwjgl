@@ -1,6 +1,11 @@
 noinst_LTLIBRARIES = libcommon.la
 
+SUBDIRS = arb ati ext nv
+
 libcommon_la_SOURCES = $(COMMON)
+libcommon_la_LIBADD = $(DEP_LIBS)
+libcommon_la_DEPENDENCIES = $(DEP_LIBS)
+DEP_LIBS=arb/libarb.la ati/libati.la ext/libext.la nv/libnv.la
 
 COMMON = \
   extal.cpp \
@@ -37,8 +42,6 @@ COMMON = \
   org_lwjgl_opengl_CoreGL13.h \
   org_lwjgl_opengl_CoreGL14.cpp \
   org_lwjgl_opengl_CoreGL15.h \
-  org_lwjgl_opengl_GL.cpp \
-  org_lwjgl_opengl_GL.h \
   org_lwjgl_opengl_GLU.cpp \
   org_lwjgl_opengl_GLU.h
   

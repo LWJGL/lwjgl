@@ -32,7 +32,7 @@
 
 package org.lwjgl.opengl;
 
-class VBOTracker {
+public class VBOTracker {
 	private static VBOTracker default_tracker = new VBOTracker();
 	private static VBOTracker current_tracker = default_tracker;
 

@@ -39,8 +39,16 @@
  */
 package org.lwjgl.opengl.arb;
 
-public interface ARBVertexBlend
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.opengl.VBOTracker;
+import org.lwjgl.opengl.CoreGL11Constants;
+
+public class ARBVertexBlend {
 	public static final int GL_MAX_VERTEX_UNITS_ARB                                 = 0x86A4;
 	public static final int GL_ACTIVE_VERTEX_UNITS_ARB                              = 0x86A5;
 	public static final int GL_WEIGHT_SUM_UNITY_ARB                                 = 0x86A6;
@@ -83,4 +91,63 @@ public interface ARBVertexBlend
 	public static final int GL_MODELVIEW29_ARB                                      = 0x873D;
 	public static final int GL_MODELVIEW30_ARB                                      = 0x873E;
 	public static final int GL_MODELVIEW31_ARB                                      = 0x873F;
+
+	public static void glWeightARB(ByteBuffer pWeights) {
+		nglWeightbvARB(pWeights.remaining(), pWeights, pWeights.position());
+	}
+	private static native void nglWeightbvARB(int size, ByteBuffer pWeights, int pWeights_offset);
+
+	public static void glWeightARB(FloatBuffer pfWeights) {
+		nglWeightfvARB(pfWeights.remaining(), pfWeights, pfWeights.position());
+	}
+	private static native void nglWeightfvARB(int size, FloatBuffer pfWeights, int pfWeights_offset);
+
+	public static void glWeightARB(IntBuffer piWeights) {
+		nglWeightivARB(piWeights.remaining(), piWeights, piWeights.position());
+	}
+	private static native void nglWeightivARB(int size, IntBuffer piWeights, int piWeights_offset);
+
+	public static void glWeightARB(ShortBuffer psWeights) {
+		nglWeightsvARB(psWeights.remaining(), psWeights, psWeights.position());
+	}
+	private static native void nglWeightsvARB(int size, ShortBuffer psWeights, int psWeights_offset);
+
+	public static void glWeightuARB(ByteBuffer pWeights) {
+		nglWeightubvARB(pWeights.remaining(), pWeights, pWeights.position());
+	}
+	private static native void nglWeightubvARB(int size, ByteBuffer pWeights, int pWeights_offset);
+
+	public static void glWeightuARB(IntBuffer piWeights) {
+		nglWeightuivARB(piWeights.remaining(), piWeights, piWeights.position());
+	}
+	private static native void nglWeightuivARB(int size, IntBuffer piWeights, int piWeights_offset);
+
+	public static void glWeightuARB(ShortBuffer psWeights) {
+		nglWeightusvARB(psWeights.remaining(), psWeights, psWeights.position());
+	}
+	private static native void nglWeightusvARB(int size, ShortBuffer psWeights, int psWeights_offset);
+
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglWeightPointerARB(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE : CoreGL11Constants.GL_BYTE, stride, pPointer, pPointer.position());
+	}
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglWeightPointerARB(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_SHORT : CoreGL11Constants.GL_SHORT, stride, pPointer, pPointer.position()<<1);
+	}
+	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglWeightPointerARB(size, CoreGL11Constants.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+	}
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		nglWeightPointerARB(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_INT : CoreGL11Constants.GL_INT, stride, pPointer, pPointer.position()<<2);
+	}
+	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
+	public static void glWeightPointerARB(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglWeightPointerARBVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglWeightPointerARBVBO(int size, int type, int stride, int buffer_offset);
+        public static native void glVertexBlendARB(int count);
 }

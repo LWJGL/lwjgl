@@ -35,7 +35,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Controller;
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.CoreGL11;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
@@ -88,7 +88,7 @@ public class ControllerCreationTest {
   }
   
   private void initializeOpenGL() {
-    GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    CoreGL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     GLU.gluOrtho2D(0.0, 640, 0, 480);
   }
 
@@ -195,24 +195,24 @@ public class ControllerCreationTest {
   }
 
   private void render() {
-    GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+    CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT);
 
-    GL.glPushMatrix();
-    GL.glBegin(GL.GL_POLYGON);
+    CoreGL11.glPushMatrix();
+    CoreGL11.glBegin(CoreGL11.GL_POLYGON);
     {
-      GL.glColor3f(0.0f, 1.0f, 1.0f);
-      GL.glVertex2f(position.x + 0.0f, position.y + 0.0f);
+      CoreGL11.glColor3f(0.0f, 1.0f, 1.0f);
+      CoreGL11.glVertex2f(position.x + 0.0f, position.y + 0.0f);
 
-      GL.glColor3f(1.0f, 0.0f, 1.0f);
-      GL.glVertex2f(position.x + 0.0f, position.y + 30.0f);
-      GL.glVertex2f(position.x + 40.0f, position.y + 30.0f);
+      CoreGL11.glColor3f(1.0f, 0.0f, 1.0f);
+      CoreGL11.glVertex2f(position.x + 0.0f, position.y + 30.0f);
+      CoreGL11.glVertex2f(position.x + 40.0f, position.y + 30.0f);
 
-      GL.glColor3f(1.0f, 1.0f, 0.0f);
-      GL.glVertex2f(position.x + 60.0f, position.y + 15.f);
-      GL.glVertex2f(position.x + 40.0f, position.y + 0.0f);
+      CoreGL11.glColor3f(1.0f, 1.0f, 0.0f);
+      CoreGL11.glVertex2f(position.x + 60.0f, position.y + 15.f);
+      CoreGL11.glVertex2f(position.x + 40.0f, position.y + 0.0f);
     }
-    GL.glEnd();
-    GL.glPopMatrix();
+    CoreGL11.glEnd();
+    CoreGL11.glPopMatrix();
   }
 
   /**

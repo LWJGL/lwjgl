@@ -39,8 +39,10 @@
  */
 package org.lwjgl.opengl.ati;
 
-public interface ATIEnvmapBumpmap
-{
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+public class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_ROT_MATRIX_ATI                                  = 0x8775;
 	public static final int GL_BUMP_ROT_MATRIX_SIZE_ATI                             = 0x8776;
 	public static final int GL_BUMP_NUM_TEX_UNITS_ATI                               = 0x8777;
@@ -49,4 +51,24 @@ public interface ATIEnvmapBumpmap
 	public static final int GL_DU8DV8_ATI                                           = 0x877A;
 	public static final int GL_BUMP_ENVMAP_ATI                                      = 0x877B;
 	public static final int GL_BUMP_TARGET_ATI                                      = 0x877C;
+
+	public static void glTexBumpParameterATI(int pname, FloatBuffer pfParam) {
+		nglTexBumpParameterfvATI(pname, pfParam, pfParam.position());
+	}
+	private static native void nglTexBumpParameterfvATI(int pname, FloatBuffer pfParam, int pfParam_offset);
+
+	public static void glTexBumpParameterATI(int pname, IntBuffer piParam) {
+		nglTexBumpParameterivATI(pname, piParam, piParam.position());
+	}
+	private static native void nglTexBumpParameterivATI(int pname, IntBuffer piParam, int piParam_offset);
+
+	public static void glGetTexBumpParameterATI(int pname, FloatBuffer pfParam) {
+		nglGetTexBumpParameterfvATI(pname, pfParam, pfParam.position());
+	}
+	private static native void nglGetTexBumpParameterfvATI(int pname, FloatBuffer pfParam, int pfParam_offset);
+
+	public static void glGetTexBumpParameterATI(int pname, IntBuffer piParam) {
+		nglGetTexBumpParameterivATI(pname, piParam, piParam.position());
+	}
+	private static native void nglGetTexBumpParameterivATI(int pname, IntBuffer piParam, int piParam_offset);
 }

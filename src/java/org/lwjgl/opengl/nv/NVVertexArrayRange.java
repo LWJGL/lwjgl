@@ -39,11 +39,36 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVVertexArrayRange
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+
+public class NVVertexArrayRange {
 	public static final int GL_VERTEX_ARRAY_RANGE_NV                                = 0x851D;
 	public static final int GL_VERTEX_ARRAY_RANGE_LENGTH_NV                         = 0x851E;
 	public static final int GL_VERTEX_ARRAY_RANGE_VALID_NV                          = 0x851F;
 	public static final int GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV                    = 0x8520;
 	public static final int GL_VERTEX_ARRAY_RANGE_POINTER_NV                        = 0x8521;
+
+	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {
+		nglVertexArrayRangeNV(pPointer.remaining(), pPointer, pPointer.position());
+	}
+	private static native void nglVertexArrayRangeNV(int size, Buffer pPointer, int pPointer_offset);
+	public static native void glFlushVertexArrayRangeNV();
+
+	public static native ByteBuffer glXAllocateMemoryNV(
+		int size,
+		float readFrequency,
+		float writeFrequency,
+		float priority);
+
+	private static native void glXFreeMemoryNV(ByteBuffer pointer);
+
+	// #ifdef _WIN32
+
+	public static native ByteBuffer wglAllocateMemoryNV(
+		int size,
+		float readFrequency,
+		float writeFrequency,
+		float priority);
+	public static native void wglFreeMemoryNV(ByteBuffer pointer);
 }

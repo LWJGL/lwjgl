@@ -39,7 +39,6 @@
  */
 package org.lwjgl.opengl.nv;
 
-public interface NVVertexArrayRange2
-{
+public class NVVertexArrayRange2 {
 	public static final int GL_VERTEX_ARRAY_RANGE_WITHOUT_FLUSH_NV                  = 0x8533;
 }

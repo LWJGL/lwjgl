@@ -39,10 +39,21 @@
  */
 package org.lwjgl.opengl.arb;
 
-public interface ARBTransposeMatrix
-{
+import java.nio.FloatBuffer;
+
+public class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_MODELVIEW_MATRIX_ARB                       = 0x84E3;
 	public static final int GL_TRANSPOSE_PROJECTION_MATRIX_ARB                      = 0x84E4;
 	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
+
+	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
+		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position());
+	}
+	private static native void nglLoadTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);
+
+	public static void glMultTransposeMatrixfARB(FloatBuffer pfMtx) {
+		nglMultTransposeMatrixfARB(pfMtx, pfMtx.position());
+	}
+	private static native void nglMultTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);
 }

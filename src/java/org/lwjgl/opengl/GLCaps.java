@@ -76,18 +76,13 @@ public abstract class GLCaps {
 	public static boolean GL_ARB_window_pos;
 	public static boolean GL_EXT_abgr;
 	public static boolean GL_EXT_bgra;
-	public static boolean GL_EXT_blend_color;
 	public static boolean GL_EXT_blend_function_separate;
-	public static boolean GL_EXT_blend_minmax;
 	public static boolean GL_EXT_blend_subtract;
 	public static boolean GL_EXT_compiled_vertex_array;
-	public static boolean GL_EXT_cull_vertex;
 	public static boolean GL_EXT_draw_range_elements;
-	public static boolean GL_EXT_fog_coord;
-	public static boolean GL_EXT_light_max_exponent;
 	public static boolean GL_EXT_multi_draw_arrays;
+	public static boolean GL_EXT_fog_coord;
 	public static boolean GL_EXT_packed_pixels;
-	public static boolean GL_EXT_paletted_texture;
 	public static boolean GL_EXT_point_parameters;
 	public static boolean GL_EXT_rescale_normal;
 	public static boolean GL_EXT_secondary_color;
@@ -101,8 +96,6 @@ public abstract class GLCaps {
 	public static boolean GL_EXT_texture_env_dot3;
 	public static boolean GL_EXT_texture_filter_anisotropic;
 	public static boolean GL_EXT_texture_lod_bias;
-	public static boolean GL_EXT_texture_rectangle;
-	public static boolean GL_EXT_vertex_array;
 	public static boolean GL_EXT_vertex_shader;
 	public static boolean GL_EXT_vertex_weighting;
 	public static boolean GL_ATI_element_array;
@@ -115,7 +108,6 @@ public abstract class GLCaps {
 	public static boolean GL_ATI_separate_stencil;
 	public static boolean GL_ATIX_point_sprites;
 	public static boolean GL_ATIX_texture_env_route;
-	public static boolean GL_HP_occlusion_test;
 	public static boolean GL_NV_blend_square;
 	public static boolean GL_NV_copy_depth_to_color;
 	public static boolean GL_NV_depth_clamp;
@@ -138,25 +130,11 @@ public abstract class GLCaps {
 	public static boolean GL_NV_vertex_array_range2;
 	public static boolean GL_NV_vertex_program;
 	public static boolean GL_NV_vertex_program1_1;
-	public static boolean GL_SGIS_generate_mipmap;
-	public static boolean GL_SGIX_shadow;
-	public static boolean GL_SGIX_depth_texture;
 	public static boolean OpenGL11;
 	public static boolean OpenGL12;
 	public static boolean OpenGL13;
 	public static boolean OpenGL14;
 
-	/*
-	 * Available WGL extensions
-	 */
-	public static boolean WGL_ARB_buffer_region;
-	public static boolean WGL_ARB_extensions_string;
-	public static boolean WGL_ARB_pbuffer;
-	public static boolean WGL_ARB_pixel_format;
-	public static boolean WGL_ARB_render_texture;
-	public static boolean WGL_EXT_extensions_string;
-	public static boolean WGL_EXT_swap_control;
-		
 	static {
 		System.loadLibrary(Sys.getLibraryName());
 	}

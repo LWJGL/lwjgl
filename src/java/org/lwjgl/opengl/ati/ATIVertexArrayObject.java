@@ -39,8 +39,13 @@
  */
 package org.lwjgl.opengl.ati;
 
-public interface ATIVertexArrayObject
-{
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+public class ATIVertexArrayObject {
 	public static final int GL_STATIC_ATI                                           = 0x8760;
 	public static final int GL_DYNAMIC_ATI                                          = 0x8761;
 	public static final int GL_PRESERVE_ATI                                         = 0x8762;
@@ -49,4 +54,78 @@ public interface ATIVertexArrayObject
 	public static final int GL_OBJECT_BUFFER_USAGE_ATI                              = 0x8765;
 	public static final int GL_ARRAY_OBJECT_BUFFER_ATI                              = 0x8766;
 	public static final int GL_ARRAY_OBJECT_OFFSET_ATI                              = 0x8767;
+
+	public static int glNewObjectBufferATI(int size, ByteBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position() : 0, usage);
+	}
+	public static int glNewObjectBufferATI(int size, ShortBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position()<<1 : 0, usage);
+	}
+	public static int glNewObjectBufferATI(int size, FloatBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position()<<2 : 0, usage);
+	}
+	public static int glNewObjectBufferATI(int size, IntBuffer pPointer, int usage) {
+		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position()<<2 : 0, usage);
+	}
+	private static native int nglNewObjectBufferATI(int size, Buffer pPointer, int pPointer_offset, int usage);
+	public static native boolean glIsObjectBufferATI(int buffer);
+
+	public static void glUpdateObjectBufferATI(int buffer, int offset, ByteBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining(), pPointer, pPointer.position(), preserve);
+	}
+	public static void glUpdateObjectBufferATI(int buffer, int offset, ShortBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining()<<1, pPointer, pPointer.position()<<1, preserve);
+	}
+	public static void glUpdateObjectBufferATI(int buffer, int offset, FloatBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining()<<2, pPointer, pPointer.position()<<2, preserve);
+	}
+	public static void glUpdateObjectBufferATI(int buffer, int offset, IntBuffer pPointer, int preserve) {
+		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining()<<2, pPointer, pPointer.position()<<2, preserve);
+	}
+	private static native void nglUpdateObjectBufferATI(int buffer, int offset, int size, Buffer pPointer, int pPointer_offset, int preserve);
+
+	public static void glGetObjectBufferATI(int buffer, int pname, FloatBuffer pfParams) {
+		nglGetObjectBufferfvATI(buffer, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetObjectBufferfvATI(int buffer, int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static void glGetObjectBufferATI(int buffer, int pname, IntBuffer piParams) {
+		nglGetObjectBufferivATI(buffer, pname, piParams, piParams.position());
+	}
+	private static native void nglGetObjectBufferivATI(int buffer, int pname, IntBuffer piParams, int piParams_offset);
+	public static native void glFreeObjectBufferATI(int buffer);
+	public static native void glArrayObjectATI(
+		int array,
+		int size,
+		int type,
+		int stride,
+		int buffer,
+		int offset);
+
+	public static void glGetArrayObjectATI(int array, int pname, FloatBuffer pfParams) {
+		nglGetArrayObjectfvATI(array, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetArrayObjectfvATI(int array, int pname, FloatBuffer pfParams, int pfParams_offset);
+
+	public static void glGetArrayObjectATI(int array, int pname, IntBuffer piParams) {
+		nglGetArrayObjectivATI(array, pname, piParams, piParams.position());
+	}
+	private static native void nglGetArrayObjectivATI(int array, int pname, IntBuffer piParams, int piParams_offset);
+
+	public static native void glVariantArrayObjectATI(
+		int id,
+		int type,
+		int stride,
+		int buffer,
+		int offset);
+
+	public static void glGetVariantArrayObjectATI(int id, int pname, FloatBuffer pfParams) {
+		nglGetVariantArrayObjectfvATI(id, pname, pfParams, pfParams.position());
+	}
+	private static native void nglGetVariantArrayObjectfvATI(int id, int pname, FloatBuffer pfParams, int pfParams_offset_offset);
+
+	public static void glGetVariantArrayObjectATI(int id, int pname, IntBuffer piParams) {
+		nglGetVariantArrayObjectivATI(id, pname, piParams, piParams.position());
+	}
+	private static native void nglGetVariantArrayObjectivATI(int id, int pname, IntBuffer piParams, int piParams_offset);
 }

@@ -39,8 +39,7 @@
  */
 package org.lwjgl.opengl.arb;
 
-public interface ARBCubeMap
-{
+public class ARBCubeMap {
 	public static final int GL_NORMAL_MAP_ARB                                       = 0x8511;
 	public static final int GL_REFLECTION_MAP_ARB                                   = 0x8512;
 	public static final int GL_TEXTURE_CUBE_MAP_ARB                                 = 0x8513;

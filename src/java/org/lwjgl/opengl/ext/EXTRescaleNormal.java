@@ -37,6 +37,6 @@ package org.lwjgl.opengl.ext;
  * EXT_rescale_normal
  * @author cas
  */
-public interface EXTRescaleNormal {
+public class EXTRescaleNormal {
 	public static final int GL_RESCALE_NORMAL_EXT              = 0x803A;
 }
