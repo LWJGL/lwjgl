@@ -39,6 +39,7 @@
  * @version $Revision$
  */
 #include "org_lwjgl_openal_ALC.h"
+#include "checkALerror.h"
 
 /* OpenAL includes */
 #include <alc.h>
@@ -54,7 +55,10 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_getString (JNIEnv *env, jobj
 	jfieldID field_device	= env->GetFieldID(class_device, "device", "I");
 	jint deviceaddress = env->GetIntField(obj, field_device);
 
-	return env->NewStringUTF((const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token));
+	jstring string = env->NewStringUTF((const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token));
+
+	CHECK_ALC_ERROR
+	return string;
 }
 
 /**
@@ -69,6 +73,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_getIntegerv (JNIEnv *env, jobje
 	jint deviceaddress		= env->GetIntField(obj, device_field);
 
 	alcGetIntegerv((ALCdevice*) deviceaddress, (ALenum) token, (ALsizei) size, (ALint*) dest);
+	CHECK_ALC_ERROR
 }
 
 /**
@@ -119,6 +124,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_closeDevice (JNIEnv *env, jobje
 	jint deviceaddress		= env->GetIntField(device, device_field);
 
 	alcCloseDevice((ALCdevice*) deviceaddress);
+	CHECK_ALC_ERROR
 }
 
 /**
@@ -152,6 +158,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_createContext (JNIEnv *env, 
 	/* create instance */
 	alcContext_object = env->NewObject(alcContext_class, alcContext_method, (int) context);
 
+	CHECK_ALC_ERROR
 	return alcContext_object;
 }
 
@@ -288,7 +295,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getError (JNIEnv *env, jobject 
 	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
 	jint deviceaddress		= env->GetIntField(device, device_field);
 
-	return (jint) alcGetError((ALCdevice*) deviceaddress);
+	jint result = alcGetError((ALCdevice*) deviceaddress);
+	CHECK_ALC_ERROR
+	return result;
 }
 
 /**
@@ -310,6 +319,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_isExtensionPresent (JNIEnv 
 	
 	env->ReleaseStringUTFChars((jstring)functionname, 0);
 	
+	CHECK_ALC_ERROR
 	return result;
 }
 
@@ -332,6 +342,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getProcAddress (JNIEnv *env, jo
 	
 	env->ReleaseStringUTFChars((jstring)functionname, 0);
 	
+	CHECK_ALC_ERROR
 	return result;
 }
 
@@ -354,5 +365,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getEnumValue (JNIEnv *env, jobj
 	
 	env->ReleaseStringUTFChars((jstring)enumerationname, 0);
 	
+	CHECK_ALC_ERROR
 	return result;
 }

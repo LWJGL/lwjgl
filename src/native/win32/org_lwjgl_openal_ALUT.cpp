@@ -40,6 +40,7 @@
  * @version $Revision$
  */
 #include "org_lwjgl_openal_ALUT.h"
+#include "checkALerror.h"
 
 /* OpenAL includes */
 #include <alut.h>
@@ -79,6 +80,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init (JNIEnv *env, jobject obj
 
 	/* call the actual implementation */
 	alutInit((ALint*) &argc,(char**) argv);
+	CHECK_AL_ERROR
 }
 /*
  * This function loads a WAV file into memory from a file.
@@ -128,6 +130,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
 	/* release chars */
 	env->ReleaseStringUTFChars((jstring)filename, 0);
 
+	CHECK_AL_ERROR
 	return alutLoadWAVFile_object;
 }
 
@@ -179,6 +182,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env,
 	/* release bytearray again */
 	env->ReleaseByteArrayElements(buffer, (jbyte*) bufferlocation, 0);
 
+	CHECK_AL_ERROR
 	return alutLoadWAVFile_object;
 }
 
@@ -191,6 +195,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV (JNIEnv *env, jobject obj, jint format, jint data, jint size, jint freq) {
 	alutUnloadWAV(format, (void**) data, size, freq);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -201,4 +206,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV (JNIEnv *env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_exit (JNIEnv *env, jobject obj) {
 	alutExit();
+	CHECK_AL_ERROR
 }

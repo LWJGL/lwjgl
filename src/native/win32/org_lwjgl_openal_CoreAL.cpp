@@ -40,6 +40,7 @@
  * @version $Revision$
  */
 #include "org_lwjgl_openal_CoreAL.h"
+#include "checkALerror.h"
 
 /* OpenAL includes */
 #include <al.h>
@@ -52,6 +53,7 @@
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_enable (JNIEnv *env, jobject obj, jint capability) {
 	alEnable((ALenum) capability);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -62,6 +64,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_enable (JNIEnv *env, jobject
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_disable (JNIEnv *env, jobject obj, jint capability) {
 	alDisable((ALenum) capability);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -71,7 +74,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_disable (JNIEnv *env, jobjec
  * Alboolean alIsEnabled(ALenum capability);
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isEnabled (JNIEnv *env, jobject obj, jint capability) {
-	return (jboolean) alIsEnabled((ALenum) capability);
+	jboolean result = (jboolean) alIsEnabled((ALenum) capability);
+	
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -94,7 +100,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_hint (JNIEnv *env, jobject o
  * Alboolean alGetBoolean(ALenum pname);
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_getBoolean (JNIEnv *env, jobject obj, jint pname) {
-	return (jboolean) alGetBoolean((ALenum) pname);
+	jboolean result = (jboolean) alGetBoolean((ALenum) pname);
+
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -104,7 +113,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_getBoolean (JNIEnv *env,
  * Alint alGetInteger(ALenum pname);
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getInteger (JNIEnv *env, jobject obj, jint pname) {
-	return (jint) alGetInteger((ALenum) pname);
+	jint result = (jint) alGetInteger((ALenum) pname);
+
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -114,7 +126,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getInteger (JNIEnv *env, job
  * ALfloat alGetFloat(ALenum pname);
  */
 JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_getFloat (JNIEnv *env, jobject obj, jint pname) {
-	return (jfloat) alGetFloat((ALenum) pname);
+	jfloat result = (jfloat) alGetFloat((ALenum) pname);
+
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -124,7 +139,10 @@ JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_getFloat (JNIEnv *env, job
  * Aldouble alGetDouble(ALenum pname);
  */
 JNIEXPORT jdouble JNICALL Java_org_lwjgl_openal_CoreAL_getDouble (JNIEnv *env, jobject obj, jint pname) {
-	return (jdouble) alGetDouble((ALenum) pname);
+	jdouble result = (jdouble) alGetDouble((ALenum) pname);
+
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -135,6 +153,7 @@ JNIEXPORT jdouble JNICALL Java_org_lwjgl_openal_CoreAL_getDouble (JNIEnv *env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBooleanv (JNIEnv *env, jobject obj, jint pname, jint data) {
 	alGetBooleanv((ALenum) pname, (ALboolean*) data);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -145,6 +164,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBooleanv (JNIEnv *env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getIntegerv (JNIEnv *env, jobject obj, jint pname, jint data) {
 	alGetIntegerv((ALenum) pname, (ALint*) data);
+	CHECK_AL_ERROR
 }
 
 /** 
@@ -155,6 +175,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getIntegerv (JNIEnv *env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getFloatv (JNIEnv *env, jobject obj, jint pname, jint data) {
 	alGetFloatv((ALenum) pname, (ALfloat*) data);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -165,6 +186,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getFloatv (JNIEnv *env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getDoublev (JNIEnv *env, jobject obj, jint pname, jint data) {
 	alGetDoublev((ALenum) pname, (ALdouble*) data);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -174,7 +196,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getDoublev (JNIEnv *env, job
  * ALubyte * alGetString(ALenum pname);
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_getString (JNIEnv *env, jobject obj, jint param) {
-	return env->NewStringUTF((const char*) alGetString((ALenum)param));
+	jstring string = (jstring) env->NewStringUTF((const char*) alGetString((ALenum)param));
+
+	CHECK_AL_ERROR
+	return string;
 }
 
 /**
@@ -184,7 +209,10 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_getString (JNIEnv *env, j
  * ALenum alGetError(ALvoid);
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getError (JNIEnv *env, jobject obj) {
-	return (jint) alGetError();
+	jint result = (jint) alGetError();
+
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -198,6 +226,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isExtensionPresent (JNIE
 	jboolean result = (jboolean) alIsExtensionPresent(functionname);
 	env->ReleaseStringUTFChars((jstring)functionname, 0);
 	
+	CHECK_AL_ERROR
 	return result;
 }
 
@@ -212,6 +241,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getProcAddress (JNIEnv *env,
 	jint result = (jint) alGetProcAddress(functionname);
 	env->ReleaseStringUTFChars((jstring)functionname, 0);
 	
+	CHECK_AL_ERROR
 	return result;
 }
 
@@ -226,6 +256,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getEnumValue (JNIEnv *env, j
 	jint result = (jint) alGetEnumValue(functionname);
 	env->ReleaseStringUTFChars((jstring)functionname, 0);
 
+	CHECK_AL_ERROR
 	return result;
 }
 
@@ -237,6 +268,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getEnumValue (JNIEnv *env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listeneri (JNIEnv *env, jobject obj, jint pname, jint value) {
 	alListeneri((ALenum) pname, (ALint) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -247,6 +279,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listeneri (JNIEnv *env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listenerf (JNIEnv *env, jobject obj, jint pname, jfloat value) {
 	alListenerf((ALenum) pname, (ALfloat) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -257,6 +290,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listenerf (JNIEnv *env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listener3f (JNIEnv *env, jobject obj, jint pname, jfloat v1, jfloat v2, jfloat v3) {
 	alListener3f((ALenum) pname, (ALfloat) v1, (ALfloat) v2, (ALfloat) v3);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -267,6 +301,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listener3f (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listenerfv (JNIEnv *env, jobject obj, jint pname, jint values) {
 	alListenerfv((ALenum) pname, (ALfloat*) values);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -277,6 +312,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_listenerfv (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListeneri (JNIEnv *env, jobject obj, jint pname, jint value) {
 	alGetListeneri((ALenum) pname, (ALint*) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -287,6 +323,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListeneri (JNIEnv *env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListenerf (JNIEnv *env, jobject obj, jint pname, jint value) {
 	alGetListenerf((ALenum) pname, (ALfloat*) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -297,6 +334,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListenerf (JNIEnv *env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListener3f (JNIEnv *env, jobject obj, jint pname, jint v1, jint v2, jint v3) {
 	alGetListener3f((ALenum) pname, (ALfloat*) v1, (ALfloat*) v2, (ALfloat*) v3);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -307,6 +345,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListener3f (JNIEnv *env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListenerfv (JNIEnv *env, jobject obj, jint pname, jint values) {
 	alGetListenerfv((ALenum) pname, (ALfloat*) values);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -319,6 +358,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genSources (JNIEnv *env, job
 	int* array = (int*) env->GetIntArrayElements(sources, 0);
 	alGenSources(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(sources, (jint*) array, 0);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -331,6 +371,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteSources (JNIEnv *env, 
 	int* array = (int*) env->GetIntArrayElements(source, 0);
 	alDeleteSources(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(source, (jint*) array, 0);	
+	CHECK_AL_ERROR
 }
 
 /**
@@ -340,7 +381,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteSources (JNIEnv *env, 
  * Alboolean alIsSource(ALuint source);
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isSource (JNIEnv *env, jobject obj, jint source) {
-	return (jboolean) alIsSource((ALuint) source);
+	jboolean result = (jboolean) alIsSource((ALuint) source);
+
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -351,6 +395,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isSource (JNIEnv *env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcei (JNIEnv *env, jobject obj, jint source, jint pname, jint value) {
 	alSourcei((ALuint) source, (ALenum) pname, (ALint) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -361,6 +406,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcei (JNIEnv *env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcef (JNIEnv *env, jobject obj, jint source, jint pname, jfloat value) {
 	alSourcef((ALuint) source, (ALenum) pname, (ALfloat) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -370,6 +416,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcef (JNIEnv *env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_source3f (JNIEnv *env, jobject obj, jint source, jint pname, jfloat v1, jfloat v2, jfloat v3) {
 	alSource3f((ALuint) source, (ALenum) pname, (ALfloat) v1, (ALfloat) v2, (ALfloat) v3);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -380,6 +427,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_source3f (JNIEnv *env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcefv (JNIEnv *env, jobject obj, jint source, jint pname, jint values) {
 	alSourcefv((ALuint) source, (ALenum) pname, (ALfloat*) values);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -389,6 +437,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcefv (JNIEnv *env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcei (JNIEnv *env, jobject obj, jint source, jint pname, jint value) {
 	alGetSourcei((ALuint) source, (ALenum) pname, (ALint*) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -399,6 +448,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcei (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcef (JNIEnv *env, jobject obj, jint source, jint pname, jint value) {
 	alGetSourcef((ALuint) source, (ALenum) pname, (ALfloat*) value);
+	CHECK_AL_ERROR
 }
 
 /* 
@@ -409,6 +459,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcef (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSource3f (JNIEnv *env, jobject obj, jint source, jint pname, jint v1, jint v2, jint v3) {
 	alGetSource3f((ALuint) source, (ALenum) pname, (ALfloat*) v1, (ALfloat*) v2, (ALfloat*) v3);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -419,6 +470,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSource3f (JNIEnv *env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcefv (JNIEnv *env, jobject obj, jint source, jint pname, jint values) {
 	alGetSourcefv((ALuint) source, (ALenum) pname, (ALfloat*) values);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -431,6 +483,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlayv (JNIEnv *env, jo
 	int* array = (int*) env->GetIntArrayElements(sources, 0);
 	alSourcePlayv(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+	CHECK_AL_ERROR
 }
 
 /**
@@ -443,6 +496,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePausev (JNIEnv *env, j
 	int* array = (int*) env->GetIntArrayElements(sources, 0);
 	alSourcePausev(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+	CHECK_AL_ERROR
 }
 
 /**
@@ -455,6 +509,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStopv (JNIEnv *env, jo
 	int* array = (int*) env->GetIntArrayElements(sources, 0);
 	alSourceStopv(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+	CHECK_AL_ERROR
 }
 
 /**
@@ -467,6 +522,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewindv (JNIEnv *env, 
 	int* array = (int*) env->GetIntArrayElements(sources, 0);
 	alSourceRewindv(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+	CHECK_AL_ERROR
 }
 
 /**
@@ -477,6 +533,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewindv (JNIEnv *env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlay (JNIEnv *env, jobject obj, jint source) {
 	alSourcePlay((ALuint) source);
+	CHECK_AL_ERROR
 }
 
 /*
@@ -487,6 +544,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlay (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePause (JNIEnv *env, jobject obj, jint source) {
 	alSourcePause((ALuint) source);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -497,6 +555,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePause (JNIEnv *env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStop (JNIEnv *env, jobject obj, jint source) {
 	alSourceStop((ALuint) source);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -507,6 +566,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStop (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewind (JNIEnv *env, jobject obj, jint source) {
 	alSourceRewind((ALuint) source);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -519,6 +579,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genBuffers (JNIEnv *env, job
 	int* array = (int*) env->GetIntArrayElements(buffers, 0);
 	alGenBuffers(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(buffers, (jint*) array, 0);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -531,6 +592,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteBuffers (JNIEnv *env, 
 	int* array = (int*) env->GetIntArrayElements(buffer, 0);
 	alDeleteBuffers(n, (ALuint*) array);
 	env->ReleaseIntArrayElements(buffer, (jint*) array, 0);	
+	CHECK_AL_ERROR
 }
 
 /** 
@@ -540,7 +602,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteBuffers (JNIEnv *env, 
  * Alboolean alIsBuffer(ALuint buffer);
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isBuffer (JNIEnv *env, jobject obj, jint buffer) {
-	return (jboolean) alIsBuffer((ALuint) buffer);
+	jboolean result = (jboolean) alIsBuffer((ALuint) buffer);
+
+	CHECK_AL_ERROR
+	return result;
 }
 
 /**
@@ -551,6 +616,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isBuffer (JNIEnv *env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_bufferData (JNIEnv *env, jobject obj, jint buffer, jint format, jint data, jint size, jint freq) {
 	alBufferData(buffer, format, (void**) data, size, freq);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -561,6 +627,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_bufferData (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBufferi (JNIEnv *env, jobject obj, jint buffer, jint pname, jint value) {
 	alGetBufferi((ALuint) buffer, (ALenum) pname, (ALint*) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -571,6 +638,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBufferi (JNIEnv *env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBufferf (JNIEnv *env, jobject obj, jint buffer, jint pname, jint value) {
 	alGetBufferf((ALuint) buffer, (ALenum) pname, (ALfloat*) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -583,6 +651,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceQueueBuffers (JNIEnv *
 	int* array = (int*) env->GetIntArrayElements(buffers, 0);
 	alSourceQueueBuffers((ALuint) source, (ALsizei) n, (ALuint*) array);
 	env->ReleaseIntArrayElements(buffers, (jint*) array, 0);	
+	CHECK_AL_ERROR
 }
 
 /**
@@ -595,6 +664,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceUnqueueBuffers (JNIEnv
 	int* array = (int*) env->GetIntArrayElements(buffers, 0);
 	alSourceUnqueueBuffers((ALuint) source, (ALsizei) n, (ALuint*) array);
 	env->ReleaseIntArrayElements(buffers, (jint*) array, 0);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -606,6 +676,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceUnqueueBuffers (JNIEnv
 
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_distanceModel (JNIEnv *env, jobject obj, jint value) {
 	alDistanceModel((ALenum) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -616,6 +687,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_distanceModel (JNIEnv *env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_dopplerFactor (JNIEnv *env, jobject obj, jfloat value) {
 	alDopplerFactor((ALfloat) value);
+	CHECK_AL_ERROR
 }
 
 /**
@@ -626,8 +698,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_dopplerFactor (JNIEnv *env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_dopplerVelocity (JNIEnv *env, jobject obj, jfloat value) {
 	alDopplerVelocity((ALfloat) value);
+	CHECK_AL_ERROR
 }
-
-
-
-
