@@ -31,6 +31,10 @@
  */
 package org.lwjgl.devil;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -45,7 +49,7 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  */
 public class IL {
-    
+    private static final int BUFFER_LENGTH = 1000;
     /** Have we been created? */
     protected static boolean created;
   
@@ -62,11 +66,11 @@ public class IL {
     public static final int IL_LUMINANCE = 0x1909; 
      
     public static final int IL_BYTE = 0x1400; 
-    public static final int IL_UNSIGNED_BYTE = 0x1401; 
+//    public static final int IL_UNSIGNED_BYTE = 0x1401; 
     public static final int IL_SHORT = 0x1402; 
-    public static final int IL_UNSIGNED_SHORT = 0x1403; 
+//    public static final int IL_UNSIGNED_SHORT = 0x1403; 
     public static final int IL_INT = 0x1404; 
-    public static final int IL_UNSIGNED_INT = 0x1405; 
+//    public static final int IL_UNSIGNED_INT = 0x1405; 
     public static final int IL_FLOAT = 0x1406; 
     public static final int IL_DOUBLE = 0x140A; 
      
@@ -374,6 +378,123 @@ public class IL {
     //ilLoadF() uses a Windows file handle so will not be implemented
 //    public static native boolean ilLoadF(int Type, ILHANDLE File);
     public static native boolean ilLoadImage(String fileName);
+    public static boolean ilLoadFromURL(URL url) {
+        boolean result = false;
+        int type = IL_TYPE_UNKNOWN;
+        
+        String file = url.toString();
+        int index = file.lastIndexOf('.');
+        if(index != -1) {
+            String extension = file.substring(index + 1);
+            if(extension.equalsIgnoreCase("bmp")) {
+                type = IL_BMP;
+            }
+            else if(extension.equalsIgnoreCase("cut")) {
+                type = IL_CUT;
+            }
+            else if(extension.equalsIgnoreCase("gif")) {
+                type = IL_GIF;
+            }
+            else if(extension.equalsIgnoreCase("ico")) {
+                type = IL_ICO;
+            }
+            else if(extension.equalsIgnoreCase("jpg")) {
+                type = IL_JPG;
+            }
+            else if(extension.equalsIgnoreCase("lif")) {
+                type = IL_LIF;
+            }
+            else if(extension.equalsIgnoreCase("mng")) {
+                type = IL_MNG;
+            }
+            else if(extension.equalsIgnoreCase("pcd")) {
+                type = IL_PCD;
+            }
+            else if(extension.equalsIgnoreCase("pcx")) {
+                type = IL_PCX;
+            }
+            else if(extension.equalsIgnoreCase("pic")) {
+                type = IL_PIC;
+            }
+            else if(extension.equalsIgnoreCase("png")) {
+                type = IL_PNG;
+            }
+            else if(extension.equalsIgnoreCase("pbm") || 
+                    extension.equalsIgnoreCase("pgm") || 
+                    extension.equalsIgnoreCase("ppm")) {
+                type = IL_PNM;
+            }
+            else if(extension.equalsIgnoreCase("psd")) {
+                type = IL_PSD;
+            }
+            else if(extension.equalsIgnoreCase("psp")) {
+                type = IL_PSP;
+            }
+            else if(extension.equalsIgnoreCase("bw") ||
+                    extension.equalsIgnoreCase("rgb") ||
+                    extension.equalsIgnoreCase("rgba") ||
+                    extension.equalsIgnoreCase("sgi")) {
+                type = IL_SGI;
+            }
+            else if(extension.equalsIgnoreCase("tga")) {
+                type = IL_TGA;
+            }
+            else if(extension.equalsIgnoreCase("tif") ||
+                    extension.equalsIgnoreCase("tiff")) {
+                type = IL_TIF;
+            }
+        }
+
+        try {
+            result = ilLoadFromStream(url.openStream(), type);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+            result = false;
+        }
+        
+        return result;
+    }
+    public static boolean ilLoadFromStream(InputStream stream, int type) {
+        boolean result = false;
+        int bufferLength = BUFFER_LENGTH;
+        int lastRead = 0;
+        byte read[] = new byte[bufferLength];
+        byte block[] = new byte[0];
+        
+        BufferedInputStream buf = new BufferedInputStream(stream);
+        try {
+            do {
+                lastRead = buf.read(read);
+                if(lastRead != -1) {
+                    block = appendByteArray(block, read, lastRead);
+                }
+            } while(lastRead != -1);
+            ByteBuffer lump = ByteBuffer.allocateDirect(block.length);
+            lump.put(block);
+            lump.flip();
+            result = ilLoadL(type, lump, block.length);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+            result = false;
+        }
+        
+        return result;
+    }
+    private static byte[] appendByteArray(byte oldArray[], byte copyArray[], int length) {
+        int oldLength = oldArray.length;
+        byte newArray[] = new byte[oldLength + length];
+        
+        for(int i=0;i<oldLength;i++) {
+            newArray[i] = oldArray[i];
+        }
+        for(int i=0;i<length;i++) {
+            newArray[i + oldLength] = copyArray[i];
+        }
+        
+        return newArray;
+    }
     public static boolean ilLoadL(int Type, ByteBuffer Lump, int Size) {
         BufferChecks.checkDirect(Lump);
         return nilLoadL(Type, Lump, Lump.position(), Size);
