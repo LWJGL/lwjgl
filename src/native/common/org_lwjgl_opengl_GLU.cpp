@@ -35,13 +35,18 @@
  *
  * GLU library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "org_lwjgl_opengl_GLU.h"
+#include "extgl.h"
 #include "checkGLerror.h"
-#include <GL/glu.h>
+#include "GL/glu.h"
 
 /*
  * Class:     org_lwjgl_opengl_GLU
