@@ -16,14 +16,14 @@ typedef ILboolean		(ILAPIENTRY *iluEmbossPROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluEnlargeCanvasPROC) (ILuint Width, ILuint Height, ILuint Depth);
 typedef ILboolean		(ILAPIENTRY *iluEnlargeImagePROC) (ILfloat XDim, ILfloat YDim, ILfloat ZDim);
 typedef ILboolean		(ILAPIENTRY *iluEqualizePROC) (ILvoid);
-typedef const ILstring	(ILAPIENTRY *iluErrorStringPROC) (ILenum Error);
+typedef const ILstring		(ILAPIENTRY *iluErrorStringPROC) (ILenum Error);
 typedef ILboolean		(ILAPIENTRY *iluFlipImagePROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluGammaCorrectPROC) (ILfloat Gamma);
 typedef ILuint			(ILAPIENTRY *iluGenImagePROC) (ILvoid);
 typedef ILvoid			(ILAPIENTRY *iluGetImageInfoPROC) (ILinfo *Info);
 typedef ILint			(ILAPIENTRY *iluGetIntegerPROC) (ILenum Mode);
 typedef ILvoid			(ILAPIENTRY *iluGetIntegervPROC) (ILenum Mode, ILint *Param);
-typedef const ILstring	(ILAPIENTRY *iluGetStringPROC) (ILenum StringName);
+typedef const ILstring		(ILAPIENTRY *iluGetStringPROC) (ILenum StringName);
 typedef ILvoid			(ILAPIENTRY *iluImageParameterPROC) (ILenum PName, ILenum Param);
 typedef ILvoid			(ILAPIENTRY *iluInitPROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluInvertAlphaPROC) (ILvoid);
@@ -32,11 +32,8 @@ typedef ILboolean		(ILAPIENTRY *iluMirrorPROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluNegativePROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluNoisifyPROC) (ILclampf Tolerance);
 typedef ILboolean		(ILAPIENTRY *iluPixelizePROC) (ILuint PixSize);
-typedef ILvoid			(ILAPIENTRY *iluRegionfvPROC) (ILpointf *Points, ILuint n);
-typedef ILvoid			(ILAPIENTRY *iluRegionivPROC) (ILpointi *Points, ILuint n);
 typedef ILboolean		(ILAPIENTRY *iluReplaceColourPROC) (ILubyte Red, ILubyte Green, ILubyte Blue, ILfloat Tolerance);
 typedef ILboolean		(ILAPIENTRY *iluRotatePROC) (ILfloat Angle);
-typedef ILboolean		(ILAPIENTRY *iluRotate3DPROC) (ILfloat x, ILfloat y, ILfloat z, ILfloat Angle);
 typedef ILboolean		(ILAPIENTRY *iluSaturate1fPROC) (ILfloat Saturation);
 typedef ILboolean		(ILAPIENTRY *iluSaturate4fPROC) (ILfloat r, ILfloat g, ILfloat b, ILfloat Saturation);
 typedef ILboolean		(ILAPIENTRY *iluScalePROC) (ILuint Width, ILuint Height, ILuint Depth);
@@ -44,6 +41,11 @@ typedef ILboolean		(ILAPIENTRY *iluScaleColoursPROC) (ILfloat r, ILfloat g, ILfl
 typedef ILboolean		(ILAPIENTRY *iluSharpenPROC) (ILfloat Factor, ILuint Iter);
 typedef ILboolean		(ILAPIENTRY *iluSwapColoursPROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *iluWavePROC) (ILfloat Angle);
+
+// not bound
+//typedef ILvoid		(ILAPIENTRY *iluRegionfvPROC) (ILpointf *Points, ILuint n);
+//typedef ILvoid		(ILAPIENTRY *iluRegionivPROC) (ILpointi *Points, ILuint n);
+//typedef ILboolean		(ILAPIENTRY *iluRotate3DPROC) (ILfloat x, ILfloat y, ILfloat z, ILfloat Angle);
 
 static iluAlienifyPROC iluAlienify;
 static iluBlurAvgPROC iluBlurAvg;
@@ -77,11 +79,8 @@ static iluMirrorPROC iluMirror;
 static iluNegativePROC iluNegative;
 static iluNoisifyPROC iluNoisify;
 static iluPixelizePROC iluPixelize;
-static iluRegionfvPROC iluRegionfv;
-static iluRegionivPROC iluRegioniv;
 static iluReplaceColourPROC iluReplaceColour;
 static iluRotatePROC iluRotate;
-static iluRotate3DPROC iluRotate3D;
 static iluSaturate1fPROC iluSaturate1f;
 static iluSaturate4fPROC iluSaturate4f;
 static iluScalePROC iluScale;
@@ -89,6 +88,11 @@ static iluScaleColoursPROC iluScaleColours;
 static iluSharpenPROC iluSharpen;
 static iluSwapColoursPROC iluSwapColours;
 static iluWavePROC iluWave;
+
+// not bound
+//static iluRegionfvPROC iluRegionfv;
+//static iluRegionivPROC iluRegioniv;
+//static iluRotate3DPROC iluRotate3D;
 
 /*
  * Class:     org_lwjgl_devil_ILU
@@ -442,59 +446,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluPixelize(JNIEnv *env, jcl
 
 /*
  * Class:     org_lwjgl_devil_ILU
- * Method:    iluRegionfv
- * Signature: ([Lorg/lwjgl/devil/ILpointf;I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluRegionfv(JNIEnv *env, jclass clazz, jobjectArray points, jint n) {
-    /*jfieldID fieldId;
-    jmethodID methodId;
-    jobject element;
-    int i;
-    ILpointf *pointInfo;
-
-    if(points == 0) {
-        throwException(env, "ILpointf array must not be null.");
-    }
-
-    pointInfo = (ILpointf *)malloc(sizeof(ILpointf) * n);
-    iluGetImageInfo(pointInfo, n);
-
-    clazz = (*env)->FindClass(env, "org/lwjgl/devil/ILpointf");
-    methodId = (*env)->GetMethodID(env, clazz, "<init>", "()V");
-
-    for(i=1;i<n;i++) {
-        element = (*env)->NewObject(env, clazz, methodId);
-
-        fieldId = (*env)->GetFieldID(env, clazz, "x", "F");
-        (*env)->SetFloatField(env, element, fieldId, (jfloat)((pointInfo + i)->x));
-
-        fieldId = (*env)->GetFieldID(env, clazz, "y", "F");
-        (*env)->SetFloatField(env, element, fieldId, (jfloat)((pointInfo + i)->y));
-    printf("\nHere 3");
-    printf("\n                         (pointInfo + i)->x) = %f", (pointInfo + i)->x);
-    printf("\n(*env)->GetFloatField(env, element, fieldId) = %f", (*env)->GetFloatField(env, element, fieldId));
-
-    printf("\npoints address=%p", points);
-    printf("\nelement address=%p", element);
-    printf("\ni = %d", i);
-        (*env)->SetObjectArrayElement(env, points, i, element);
-    printf("\nHere 4");
-    }
-    printf("\nHere 5");
-
-    free(pointInfo);*/
-}
-
-/*
- * Class:     org_lwjgl_devil_ILU
- * Method:    iluRegioniv
- * Signature: ([Lorg/lwjgl/devil/ILpointi;I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluRegioniv(JNIEnv *env, jclass clazz, jobjectArray points, jint n) {
-}
-
-/*
- * Class:     org_lwjgl_devil_ILU
  * Method:    iluReplaceColour
  * Signature: (BBBF)Z
  */
@@ -618,7 +569,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_initNativeStubs(JNIEnv *env, jcl
 		{"iluGenImage", "()I", (void*)&Java_org_lwjgl_devil_ILU_iluGenImage, "iluGenImage", (void*)&iluGenImage},
 		{"iluGetImageInfo", "(Lorg/lwjgl/devil/ILinfo;)V", (void*)&Java_org_lwjgl_devil_ILU_iluGetImageInfo, "iluGetImageInfo", (void*)&iluGetImageInfo},
 		{"iluGetInteger", "(I)I", (void*)&Java_org_lwjgl_devil_ILU_iluGetInteger, "iluGetInteger", (void*)&iluGetInteger},
-		//{"niluGetIntegerv", "(ILjava/nio/IntBuffer;)V", (void*)&Java_org_lwjgl_devil_ILU_niluGetIntegerv, "iluGetIntegerv", (void*)&iluGetIntegerv},
+		{"niluGetIntegerv", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_devil_ILU_niluGetIntegerv, "iluGetIntegerv", (void*)&iluGetIntegerv},
 		{"iluGetString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_devil_ILU_iluGetString, "iluGetString", (void*)&iluGetString},
 		{"iluImageParameter", "(II)V", (void*)&Java_org_lwjgl_devil_ILU_iluImageParameter, "iluImageParameter", (void*)&iluImageParameter},
 		{"iluInit", "()V", (void*)&Java_org_lwjgl_devil_ILU_iluInit, "iluInit", (void*)&iluInit},
