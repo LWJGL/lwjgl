@@ -129,15 +129,10 @@ public class MouseTest {
    */
   protected boolean setDisplayMode() {
     // get modes
-    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(WINDOW_WIDTH, WINDOW_HEIGHT, -1, -1, -1, -1, 60, 60);
+    DisplayMode dm = new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT);
     
     try {
-      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
-          "width=" + WINDOW_WIDTH,
-          "height=" + WINDOW_HEIGHT,
-          "freq=" + 60,
-          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
-         }); 
+      Display.setDisplayMode(dm);
       return true;
     } catch (Exception e) {
       e.printStackTrace();
