@@ -85,24 +85,8 @@ public final class Window {
 	/** Tracks VBO state for the window context */
 	private static VBOTracker vbo_tracker;
 	
-	/** Context: delegates calls to Window */
-	private static class Context implements GLContext {
-
-		public void makeCurrent() {
-			Window.makeCurrent();
-		}
-
-		public int getWidth() {
-			return width;
-		}
-
-		public int getHeight() {
-			return height;
-		}
-	}
-	
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
-	private static Context context;
+	private static Window context;
 
 	/**
 	 * Only constructed by ourselves
@@ -114,7 +98,7 @@ public final class Window {
 	 * @return the width of the window
 	 */
 	public static int getWidth() {
-    assert isCreated() : "Cannot get width on uncreated window";    
+  	  assert isCreated() : "Cannot get width on uncreated window";    
 		return width;
 	}
 
@@ -122,7 +106,7 @@ public final class Window {
 	 * @return the height of the window
 	 */
 	public static int getHeight() {
-    assert isCreated() : "Cannot get height on uncreated window";    
+ 	   assert isCreated() : "Cannot get height on uncreated window";    
 		return height;
 	}
 
@@ -130,7 +114,7 @@ public final class Window {
 	 * @return the title of the window
 	 */
 	public static String getTitle() {
-    assert isCreated() : "Cannot get title on uncreated window";
+   	 assert isCreated() : "Cannot get title on uncreated window";
 		return title;
 	}
   
@@ -241,7 +225,7 @@ public final class Window {
 	public static synchronized void makeCurrent() {
 		assert isCreated() : "No window has been created.";
 		nMakeCurrent();
-		VBOTracker.setCurrent(context);
+		GLContext.setContext(context);
 	}
 	
 	/**
@@ -331,9 +315,9 @@ public final class Window {
 	private static void createWindow(int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
 		HashSet extensions = new HashSet();
 		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples, extensions);
-		context = new Context();
-		context.makeCurrent();
-		GLCaps.determineAvailableExtensions(extensions);
+		context = new Window();
+		makeCurrent();
+		GLContext.determineAvailableExtensions(extensions);
 	}
 
 	/**
@@ -346,14 +330,13 @@ public final class Window {
 		}
 		makeCurrent();
 		nDestroy();
-		VBOTracker.remove(context);
 		context = null;
 	}
 	
 	/**
 	 * @return the unique Window context (or null, if the Window has not been created)
 	 */
-	public static GLContext getContext() {
+	public static Object getContext() {
 		return context;
 	}
 

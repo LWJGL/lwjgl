@@ -54,7 +54,7 @@ import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLCaps;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.NVVertexProgram;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.glu.GLU;
@@ -139,7 +139,7 @@ public class Grass {
 	public static void main(String[] args) {
 		ByteBuffer byte_buf = ByteBuffer.allocateDirect(4);
 		byte_buf.order(ByteOrder.nativeOrder());
-		System.out.println("Vertex program supported: " + GLCaps.GL_NV_vertex_program);
+		System.out.println("Vertex program supported: " + GLContext.GL_NV_vertex_program);
 		NVVertexProgram.glGenProgramsNV(byte_buf.asIntBuffer());
 		IntBuffer int_buf = byte_buf.asIntBuffer();
 		if (int_buf.get(0) == 0)

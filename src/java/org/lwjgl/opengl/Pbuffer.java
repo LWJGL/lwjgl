@@ -47,7 +47,7 @@ import org.lwjgl.Sys;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public final class Pbuffer implements GLContext {
+public final class Pbuffer {
 	
 	public static final int PBUFFER_SUPPORTED = 1;
 

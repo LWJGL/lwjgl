@@ -53,7 +53,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLCaps;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.glu.GLU;
 
@@ -189,7 +189,7 @@ public final class VBOTest {
        GL11.glMatrixMode(GL11.GL_MODELVIEW);
        GL11.glLoadIdentity();
        GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
-	if (!GLCaps.GL_ARB_vertex_buffer_object) {
+	if (!GLContext.GL_ARB_vertex_buffer_object) {
 		System.out.println("ARB VBO not supported!");
 		System.exit(1);
 	}

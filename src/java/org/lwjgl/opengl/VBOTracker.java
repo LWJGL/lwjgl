@@ -71,7 +71,7 @@ class VBOTracker {
 	 * VBO tracker.
 	 * @param context
 	 */
-	static synchronized void setCurrent(GLContext context) {
+	static synchronized void setCurrent(Object context) {
 		current_tracker = (VBOTracker) contextToTracker.get(context);
 		if (current_tracker == null) {
 			current_tracker = new VBOTracker();
@@ -83,7 +83,7 @@ class VBOTracker {
 	 * Remove a context when it is about to be destroyed.
 	 * @param context
 	 */
-	static synchronized void remove(GLContext context) {
+	static synchronized void remove(Object context) {
 		contextToTracker.remove(context);
 		if (current_tracker == context) {
 			current_tracker = null;
