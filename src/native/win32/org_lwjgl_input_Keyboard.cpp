@@ -163,7 +163,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 	} while (ret != DI_OK && ret != S_FALSE);
 	
 	void *keyboardBuffer = (void *)env->GetDirectBufferAddress(buffer);
-	lpdiKeyboard->GetDeviceState(256, keyboardBuffer);
+	jlong buffer_size = env->GetDirectBufferCapacity(buffer);
+	lpdiKeyboard->GetDeviceState((DWORD)buffer_size, keyboardBuffer);
 }
 
 /*
