@@ -175,22 +175,6 @@ void* GetFunctionPointer(const char* function) {
  */
 void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 
-	/*
-	 * CAS: Experimental new code for loading OpenAL. We're ignoring the paths
-	 * and just trying to load it once.
-	 */
-
-#ifdef _WIN32
-    handleOAL = LoadLibrary("OpenAL32.dll");
-#endif
-#ifdef _X11
-    handleOAL = dlopen("libopenal.so", RTLD_LAZY);
-#endif
-#ifdef TARGET_OS_MAC
-    oalInitEntryPoints();
-#endif
-
-	/*
 	jsize pathcount = env->GetArrayLength(oalPaths);
 #ifdef _DEBUG
   printf("Found %d OpenAL paths\n", pathcount);
@@ -218,7 +202,7 @@ void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
       break;
     }
     env->ReleaseStringUTFChars(path, path_str);
-	*/
+  }
 }
 
 /**

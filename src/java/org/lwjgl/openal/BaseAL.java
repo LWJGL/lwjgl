@@ -65,11 +65,6 @@ public abstract class BaseAL {
 	 */
 	private static void initialize() {
 		System.loadLibrary(org.lwjgl.Sys.getLibraryName());
-		try {
-			System.loadLibrary("OpenAL32");
-		} catch (Exception e) {
-			System.loadLibrary("openal");
-		}
 	}
 
 	/**
