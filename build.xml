@@ -12,16 +12,6 @@
 	<property name="lwjgl.temp"           value="./temp"/>
 	<property name="lwjgl.res"            value="./res"/>
 	<property name="lwjgl.version"        value="0.8"/>
-	
-	<!-- ================================================================== -->
-	<!-- Initialize build			 										-->
-	<!-- ================================================================== -->	
-	<mkdir dir="${lwjgl.bin}" taskname="initialiazing bin folder"/>
-	<mkdir dir="${lwjgl.lib}" taskname="initialiazing lib folder"/>
-	<mkdir dir="${lwjgl.dist}" taskname="initialiazing dist folder"/>
-	<mkdir dir="${lwjgl.docs}/javadoc" taskname="initialiazing docs folder"/>
-	<mkdir dir="${lwjgl.res}" taskname="initialiazing res folder"/>
-	<mkdir dir="${lwjgl.temp}" taskname="initialiazing temp folder"/>	
  
 	<!-- ================================================================== -->  
 	<!-- Filesets used for targets 											-->
@@ -96,6 +86,18 @@
 	<!-- Everything below this line is targets.								-->
 	<!-- Do not modify, unless you know what you're doing 					-->
 	<!-- ================================================================== -->	
+	
+  <!-- ================================================================== -->
+	<!-- Initialize build			 										-->
+	<!-- ================================================================== -->	
+	<target name="initialize">
+	  <mkdir dir="${lwjgl.bin}" taskname="initialiazing bin folder"/>
+	  <mkdir dir="${lwjgl.lib}" taskname="initialiazing lib folder"/>
+	  <mkdir dir="${lwjgl.dist}" taskname="initialiazing dist folder"/>
+	  <mkdir dir="${lwjgl.docs}/javadoc" taskname="initialiazing docs folder"/>
+	  <mkdir dir="${lwjgl.res}" taskname="initialiazing res folder"/>
+	  <mkdir dir="${lwjgl.temp}" taskname="initialiazing temp folder"/>	
+	</target>
   
   	<!-- Creates a splash screen -->
 	<target name="splash">
@@ -113,7 +115,9 @@
 	    <!-- the javadoc target, since the 'distribution' target will try to create the javadoc -->
 	    <!-- archive. -->
 		<antcall target="clean"/>
-		<antcall target="compile"/>
+		<antcall target="initialize"/>
+		<antcall target="compile_java"/>
+		<antcall target="compile_native"/>
 		<antcall target="jars"/>
 		<antcall target="distribution_application"/>
 		<antcall target="javadoc"/>
@@ -134,7 +138,7 @@
 	</target>
 
 	<!-- Compiles the code for LWJGL -->
-	<target name="compile" description="Compiles code">
+	<target name="compile" depends="initialize" description="Compiles code">
 		<antcall target="compile_java"/>
 		<antcall target="compile_native"/>
 	</target>
@@ -186,7 +190,7 @@
 	</target>	
   	
   	<!-- Packages the files -->
-	<target name="jars" depends="compile" description="packages the java source files">
+	<target name="jars" description="packages the java source files">
   		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.lib}/lwjgl.jar" taskname="lwjgl.jar">
 			<fileset refid="lwjgl.fileset"/>
