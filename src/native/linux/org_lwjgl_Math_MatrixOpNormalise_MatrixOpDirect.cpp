@@ -43,7 +43,7 @@
 #include "MatrixOpCommon.h"
 #include <cmath>
 
-using namespace std;
+//using namespace std;
 
 /*
  * Class:     org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect

@@ -64,7 +64,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpDire
 	jboolean transposeDest
   )
 {
-        if (transposeSource == transposeDest)
+        static float * temp_matrix = 0;
+		static int temp_matrix_size = 0;
+
+			if (transposeSource == transposeDest)
         {
             transposeSource = JNI_FALSE;
             transposeDest   = JNI_FALSE;
@@ -84,7 +87,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpDire
         float * srcMatrix, * destMatrix;
         
         int   temp_side = source.width-1;
-        float temp_matrix [temp_side*temp_side];
+
+		if (temp_matrix_size < temp_side) {
+			if (temp_matrix)
+				delete[] temp_matrix;
+			temp_matrix = new float[temp_side * temp_side];
+			temp_matrix_size = temp_side;
+		}
  
        for (int i = 0; i < source.elements; i++)
         {
