@@ -132,6 +132,7 @@ int grabPointer(void) {
 	int result;
 	int mask = EnterWindowMask | LeaveWindowMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
 	if (current_fullscreen) {
+                XWarpPointer(disp, None, win, 0, 0, 0, 0, 0, 0);
 		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
 		XF86VidModeSetViewPort(disp, screen, 0, 0); // make sure we have a centered window
 	} else
@@ -328,4 +329,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	env->ReleasePrimitiveArrayCritical(buttonsArray, class_buttons, 0);
 	if (current_fullscreen)
 		warpPointer();
+}
+
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nEnableBuffer
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer
+  (JNIEnv * env, jclass clazz) {
+      printf("*** FIXME: nEnableBuffer not implemented!\n*");
 }
