@@ -298,10 +298,10 @@ static void appActivate(bool active)
 		if (isFullScreen) {
 			restoreDisplayMode();
 		}
-		ShowWindow(display_hwnd, SW_SHOWDEFAULT);
+		ShowWindow(display_hwnd, SW_RESTORE);
 		SetForegroundWindow(display_hwnd);
 	} else if (isFullScreen) {
-		ShowWindow(display_hwnd, SW_SHOWMINIMIZED);
+		ShowWindow(display_hwnd, SW_SHOWMINNOACTIVE);
 		resetDisplayMode(NULL);
 	}
 	inAppActivate = false;
@@ -320,7 +320,6 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
         int dwheel;
         bool oldIsMinimized;
         bool oldIsFocused;
-	LRESULT res;
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
 		case WM_SYSCOMMAND:
