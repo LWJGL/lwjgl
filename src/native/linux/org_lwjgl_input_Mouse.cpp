@@ -213,10 +213,10 @@ void handleButtonPress(XButtonEvent *event) {
 			buttons[0] = JNI_TRUE;
 			break;
 		case Button2:
-			buttons[1] = JNI_TRUE;
+			buttons[2] = JNI_TRUE;
 			break;
 		case Button3:
-			buttons[2] = JNI_TRUE;
+			buttons[1] = JNI_TRUE;
 			break;
 		case Button4:
 			current_z += WHEEL_SCALE;
