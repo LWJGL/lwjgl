@@ -35,12 +35,11 @@ package org.lwjgl.input;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.Sys;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
 
 /**

@@ -35,7 +35,6 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 import org.lwjgl.vector.Vector3f;
 
@@ -106,9 +105,6 @@ public class ControllerTest {
   private void initialize() {
     // create display and opengl
     setupDisplay();
-
-    createController();
-    createKeyboard();
   }
   
   /**
@@ -136,7 +132,6 @@ public class ControllerTest {
    */
   private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0f, WINDOW_WIDTH, 0, WINDOW_HEIGHT);
   }
 
   /**
@@ -147,36 +142,8 @@ public class ControllerTest {
 
     runTest();
 
-    Controller.destroy();
-    Keyboard.destroy();
     Window.destroy();
   }
-
-  /**
-   * Creates the controller
-   */
-  private void createController() {
-    try {
-      Controller.create();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("No controller found, exiting...");
-      System.exit(-1);
-    }
-  }
-  
-  /**
-   * Creates the keyboard
-   */
-  private void createKeyboard() {
-    try {
-      Keyboard.create();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.exit(-1);
-    }
-  }
-
   /**
    * Runs the test
    */
@@ -195,10 +162,8 @@ public class ControllerTest {
         
         // pause and continue if minimized
         if(Window.isMinimized()) {
-          if(Window.isDirty()) {
-            render();
-          }
           pause(100);
+          render();
           continue;
         }
 
@@ -242,9 +207,6 @@ public class ControllerTest {
    * Reads the controller
    */
   private void readController() {
-    // poll for current values
-    Controller.poll();
-
     // get last button down
     for(int i=0;i<Controller.getButtonCount(); i++) {
       if(Controller.isButtonDown(i)) {
@@ -346,8 +308,6 @@ public class ControllerTest {
    * Handles the keyboard
    */
   private void handleKeyboard() {
-    Keyboard.poll();
-    
     // closing on ESCAPE
     if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
       closing = true;

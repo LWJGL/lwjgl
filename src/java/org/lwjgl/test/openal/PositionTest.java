@@ -194,20 +194,6 @@ public class PositionTest extends BasicTest {
 
     Sys.log("Soundfiles loaded successfully");
     // -----------------------------------------------------
-
-    // Setup Keyboard
-    // =====================================================
-    Sys.log("Setting up Keyboard");
-
-    Keyboard.create();
-    // -----------------------------------------------------
-    
-    // Setup Mouse
-    // =====================================================
-    Sys.log("Setting up Mouse");
-
-    Mouse.create();
-    // -----------------------------------------------------
   }
 
   /**
@@ -238,18 +224,18 @@ public class PositionTest extends BasicTest {
     while (!finished) {
       // handle any input
       handleInput();
+
+      // allow window to process internal messages
+      Window.update();
       
       // render and paint if !minimized and not dirty
-      if(Window.isFocused() || Window.isDirty()) {
+      if(!Window.isMinimized()) {
         render();
       } else {
         // sleeeeeep
         pause(100);
       }
       
-      // allow window to process internal messages
-      Window.update();
-
       // act on pause mode
       paused(Window.isMinimized() || !Window.isFocused());
       
@@ -300,9 +286,6 @@ public class PositionTest extends BasicTest {
    * Handles any input
    */
   private void handleInput() {
-    Mouse.poll();
-    Keyboard.poll();
-
     // User wants to exit?
     finished = Window.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE);
     if (finished) {
@@ -445,12 +428,6 @@ public class PositionTest extends BasicTest {
    * Shutdown of demonstration
    */
   private void shutdown() {
-    Sys.log("Shutting down Keyboard");
-    Keyboard.destroy();
-    
-    Sys.log("Shutting down Mouse");
-    Mouse.destroy();
-    
     Sys.log("Shutting down OpenAL");
     AL10.alSourceStop(soundSources);
     AL10.alDeleteSources(soundSources);

@@ -163,6 +163,7 @@ public class FullScreenWindowedTest {
 		//check for fullscreen key
 		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 			try {
+        Window.destroy();
 				Display.setDisplayMode(mode);
 				Window.create("Test", mode.bpp, 0, 0, 0, 0);
 				glInit();
@@ -173,6 +174,7 @@ public class FullScreenWindowedTest {
 		//check for window key
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			try {
+        Window.destroy();
 				Display.resetDisplayMode();
 				Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
 				glInit();

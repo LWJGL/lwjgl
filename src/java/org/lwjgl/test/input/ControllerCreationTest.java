@@ -37,7 +37,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 
 /**
@@ -89,7 +88,6 @@ public class ControllerCreationTest {
   
   private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0f, 640f, 0f, 480f);
   }
 
   public void executeTest() {
@@ -101,9 +99,7 @@ public class ControllerCreationTest {
     System.out.println("=========== WINDOWED MODE ==============");
     for(int i=0; i<2; i++) {
       System.out.println("Test " + (i+1) + ":");
-      createController();
       wiggleController();
-      destroyController();
       System.out.println("");
     }
     
@@ -127,29 +123,15 @@ public class ControllerCreationTest {
     System.out.println("=========== FULLSCREEN MODE ==============");
     for(int i=0; i<2; i++) {
       System.out.println("Test " + (i+3) + ":");
-      createController();
       wiggleController();
-      destroyController();
       System.out.println("");
     }
     
     System.out.println("Test completed successfully!");
     System.out.print("Shutting down...");
     Display.resetDisplayMode();
-    Controller.destroy();
     Window.destroy();
     System.out.println("shutdown complete");
-  }
-
-  private void createController() {
-    System.out.print("Creating controller...");
-    try {
-      Controller.create();
-    } catch (Exception e) {
-      System.out.println("failed");
-      System.exit(-1);
-    }
-    System.out.println("success");
   }
 
   private void wiggleController() {
@@ -161,8 +143,6 @@ public class ControllerCreationTest {
     while (Sys.getTime() < endtime) {
 
       Window.update();
-      
-      Controller.poll();
 
       //controller is a bit fuzzy
       if(Controller.getX() > 100) {
@@ -186,12 +166,6 @@ public class ControllerCreationTest {
     System.out.println("thank you");
   }
   
-  private void destroyController() {
-    System.out.print("Destroying controller...");
-    Controller.destroy();
-    System.out.print("success");
-  }
-
   private void render() {
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 

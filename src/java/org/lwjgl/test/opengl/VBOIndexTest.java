@@ -117,7 +117,6 @@ public final class VBOIndexTest {
              	 else if (Window.isCloseRequested())
              	 	System.exit(0);
              	 
-                 Keyboard.poll();
                  mainLoop();
                  render();
              }   
@@ -136,16 +135,13 @@ public final class VBOIndexTest {
          if (angle > 360.0f)
              angle = 0.0f;
  
-        Mouse.poll();
         if (Mouse.getDX() != 0 || Mouse.getDY() != 0 || Mouse.getDWheel() != 0)
             System.out.println("Mouse moved " + Mouse.getDX() + " " + Mouse.getDY() + " " + Mouse.getDWheel());
         for (int i = 0; i < Mouse.getButtonCount(); i++)
             if (Mouse.isButtonDown(i))
                 System.out.println("Button " + i + " down");
-/*        Keyboard.poll(); 
         if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
-             finished = true;*/
-        Keyboard.read();
+             finished = true;
         for (int i = 0; i < Keyboard.getNumKeyboardEvents(); i++) {
             Keyboard.next();
             if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState())
@@ -192,9 +188,6 @@ public final class VBOIndexTest {
       * Initialize
       */
      private static void init() throws Exception {
-         Keyboard.create();
-         Keyboard.enableBuffer();
-         Mouse.create();
          Sys.setTime(0);
          Sys.setProcessPriority(Sys.HIGH_PRIORITY);
          System.out.println("Timer resolution: " + Sys.getTimerResolution());
@@ -235,8 +228,6 @@ public final class VBOIndexTest {
 	int_buffer.put(0, buffer_id);
         int_buffer.put(1, indices_buffer_id);
 	ARBVertexBufferObject.glDeleteBuffersARB(int_buffer);
-         Keyboard.destroy();
-         Mouse.destroy();
          Window.destroy();
          try {
          	Display.resetDisplayMode();

@@ -33,6 +33,7 @@ package org.lwjgl.test;
 
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Window;
 
 /**
@@ -73,6 +74,10 @@ public class WindowCreationTest {
       } catch (Exception e) {
         e.printStackTrace();
       } 
+      
+      if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+       break; 
+      }
     }
     
     // nuke window and get out

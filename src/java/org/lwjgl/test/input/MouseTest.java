@@ -35,7 +35,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 import org.lwjgl.vector.Vector3f;
 
@@ -95,11 +94,6 @@ public class MouseTest {
   /** Fullscreen or not */
   public static final boolean FULLSCREEN = false;
   
-  /** Buffered mouse or not */
-  public static final boolean BUFFERED_MOUSE = true; 
-  
-  private int bufferSize;
-  
   /** Creates a new instance of MouseTest */
   public MouseTest() {
   }
@@ -108,8 +102,8 @@ public class MouseTest {
     // create display and opengl
     setupDisplay();
 
-    createMouse();
-    createKeyboard();
+    setupMouse();
+    setupKeyboard();
   }
   
   /**
@@ -137,7 +131,6 @@ public class MouseTest {
    */
   private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0f, WINDOW_WIDTH, 0, WINDOW_HEIGHT);
   }
 
   /**
@@ -148,43 +141,19 @@ public class MouseTest {
 
     runTest();
 
-    Mouse.destroy();
-    Keyboard.destroy();
     Window.destroy();
   }
 
   /**
    * Creates the mouse
    */
-  private void createMouse() {
-    try {
-      Mouse.create();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.exit(-1);
-    }
-
-    // if compiled for buffered mode, enable that
-    if(BUFFERED_MOUSE) {
-      try {
-        Mouse.enableBuffer();
-      } catch (Exception e) {
-        e.printStackTrace();
-        System.exit(-1);
-      }
-    }
+  private void setupMouse() {
   }
   
   /**
    * Creates the keyboard
    */
-  private void createKeyboard() {
-    try {
-      Keyboard.create();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.exit(-1);
-    }
+  private void setupKeyboard() {
   }
 
   /**
@@ -245,46 +214,19 @@ public class MouseTest {
    * handles the mouse
    */
   private void handleMouse() {
-    if(BUFFERED_MOUSE) {
-      readBufferedMouse();
-    } else {
-      readUnbufferedMouse();
-    }
+  	readBufferedMouse();
   }
   
   /**
    * reads a mouse in buffered mode
    */
   private void readBufferedMouse() {
-    // poll for current values
-    Mouse.poll();
-    
-    // read events
-    Mouse.read();
-    
     // iterate all events, use the last button down
     while(Mouse.next()) {
       if(Mouse.getEventButtonState()) {
         lastButton = Mouse.getEventButton();
       }
     }  
-    
-    updateState();
-  }
-
-  /**
-   * Reads the mouse in unbuffered mode
-   */
-  private void readUnbufferedMouse() {
-    // poll for current values
-    Mouse.poll();
-
-    // get last button down
-    for(int i=0;i<Mouse.getButtonCount(); i++) {
-      if(Mouse.isButtonDown(i)) {
-        lastButton = i;
-      }
-    }
     
     updateState();
   }
@@ -300,7 +242,6 @@ public class MouseTest {
     if (Mouse.getDX() == Mouse.getDY() && Mouse.getDX() == 0 && Mouse.getDWheel() == 0) {
       return;
     }
-    
     // determine direction moved
     // ============================
     if(Mouse.getDX() > 0) {
@@ -371,8 +312,6 @@ public class MouseTest {
    * Handles the keyboard
    */
   private void handleKeyboard() {
-    Keyboard.poll();
-    
     // closing on ESCAPE
     if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
       closing = true;

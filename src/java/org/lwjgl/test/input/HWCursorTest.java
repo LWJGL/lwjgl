@@ -260,9 +260,6 @@ public class HWCursorTest {
    * Processes keyboard input
    */
   private void processKeyboard() {
-    Keyboard.poll();
-    Mouse.poll();
-
     if (Mouse.getDX() != 0 || Mouse.getDY() != 0) {
         mouse_x += Mouse.getDX() / 2;
         mouse_y += Mouse.getDY() / 2;
