@@ -116,6 +116,7 @@ public class MouseTest {
       Display.setFullscreen(FULLSCREEN);
       Display.setVSyncEnabled(true);
       Display.create();
+      Mouse.setGrabbed(true);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -186,8 +187,6 @@ public class MouseTest {
         // poll and check keyboard and mouse
         handleKeyboard();
         handleMouse();
-        
-        System.out.println(Mouse.getX() + ", " + Mouse.getY());        
         
         // pause and continue if minimized
         if(!Display.isVisible()) {
