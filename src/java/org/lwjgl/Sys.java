@@ -112,7 +112,7 @@ public final class Sys {
 	/** GLX (Linux/Unix) platform */
 	public static final int PLATFORM_GLX = 1;
 	
-	/** Apply platform */
+	/** MacOSX platform */
 	public static final int PLATFORM_AGL = 2;
 	
 	/**

@@ -49,21 +49,6 @@ __int64		hires_timer_freq;			// Hires timer frequency
 __int64		hires_timer_start;			// Hires timer start
 __int64		hires_timer;				// Hires timer current time
 
-// Platform
-#ifdef _WIN32
-#define PLATFORM 0
-#else
-#ifdef _X11
-#define PLATFORM 1
-#else
-#ifdef APPLE
-#define PLATFORM 2
-#else
-#error Unsupported Platform!
-#endif
-#endif
-
-
 /*
  * Class:     org_lwjgl_Sys
  * Method:    getDirectBufferAddress
