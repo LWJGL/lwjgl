@@ -512,6 +512,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 			extgl_Close();
 			return;
 		}
+		extgl_InitWGL(env);
 	}
 
 	ShowWindow(hwnd, SW_SHOW);
