@@ -93,6 +93,46 @@ static int sourceCount;
 static GLchar** sources = NULL;;
 static GLint* sourcesLengths = NULL;
 
+// ARB_vertex_program
+typedef void (APIENTRY * glVertexAttrib1sPROC) (GLuint index, GLshort x);
+typedef void (APIENTRY * glVertexAttrib1fPROC) (GLuint index, GLfloat x);
+typedef void (APIENTRY * glVertexAttrib2sPROC) (GLuint index, GLshort x, GLshort y);
+typedef void (APIENTRY * glVertexAttrib2fPROC) (GLuint index, GLfloat x, GLfloat y);
+typedef void (APIENTRY * glVertexAttrib3sPROC) (GLuint index, GLshort x, GLshort y, GLshort z);
+typedef void (APIENTRY * glVertexAttrib3fPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z);
+typedef void (APIENTRY * glVertexAttrib4sPROC) (GLuint index, GLshort x, GLshort y, GLshort z, GLshort w);
+typedef void (APIENTRY * glVertexAttrib4fPROC) (GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+typedef void (APIENTRY * glVertexAttrib4NubPROC) (GLuint index, GLubyte x, GLubyte y, GLubyte z, GLubyte w);
+typedef void (APIENTRY * glVertexAttrib1svPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib1fvPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib2svPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib2fvPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib2dvPROC) (GLuint index, const GLdouble *v);
+typedef void (APIENTRY * glVertexAttrib3svPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib3fvPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib3dvPROC) (GLuint index, const GLdouble *v);
+typedef void (APIENTRY * glVertexAttrib4bvPROC) (GLuint index, const GLbyte *v);
+typedef void (APIENTRY * glVertexAttrib4svPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib4ivPROC) (GLuint index, const GLint *v);
+typedef void (APIENTRY * glVertexAttrib4ubvPROC) (GLuint index, const GLubyte *v);
+typedef void (APIENTRY * glVertexAttrib4usvPROC) (GLuint index, const GLushort *v);
+typedef void (APIENTRY * glVertexAttrib4uivPROC) (GLuint index, const GLuint *v);
+typedef void (APIENTRY * glVertexAttrib4fvPROC) (GLuint index, const GLfloat *v);
+typedef void (APIENTRY * glVertexAttrib4dvPROC) (GLuint index, const GLdouble *v);
+typedef void (APIENTRY * glVertexAttrib4NbvPROC) (GLuint index, const GLbyte *v);
+typedef void (APIENTRY * glVertexAttrib4NsvPROC) (GLuint index, const GLshort *v);
+typedef void (APIENTRY * glVertexAttrib4NivPROC) (GLuint index, const GLint *v);
+typedef void (APIENTRY * glVertexAttrib4NubvPROC) (GLuint index, const GLubyte *v);
+typedef void (APIENTRY * glVertexAttrib4NusvPROC) (GLuint index, const GLushort *v);
+typedef void (APIENTRY * glVertexAttrib4NuivPROC) (GLuint index, const GLuint *v);
+typedef void (APIENTRY * glVertexAttribPointerPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
+typedef void (APIENTRY * glEnableVertexAttribArrayPROC) (GLuint index);
+typedef void (APIENTRY * glDisableVertexAttribArrayPROC) (GLuint index);
+typedef void (APIENTRY * glGetVertexAttribdvPROC) (GLuint index, GLenum pname, GLdouble *params);
+typedef void (APIENTRY * glGetVertexAttribfvPROC) (GLuint index, GLenum pname, GLfloat *params);
+typedef void (APIENTRY * glGetVertexAttribivPROC) (GLuint index, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetVertexAttribPointervPROC) (GLuint index, GLenum pname, GLvoid **pointer);
+
 // ARB_vertex_shader
 typedef void (APIENTRY * glBindAttribLocationPROC) (GLuint program, GLuint index, const GLchar *name);
 typedef void (APIENTRY * glGetActiveAttribPROC) (GLuint program, GLuint index, GLsizei maxLength, GLsizei *length, GLint *size, GLenum *type, const GLchar *name);
@@ -100,8 +140,11 @@ typedef GLint (APIENTRY * glGetAttribLocationPROC) (GLuint program, const GLchar
 // ARB_draw_buffers
 typedef void (APIENTRY * glDrawBuffersPROC) (GLsizei n, const GLenum *bufs);
 // Two-Sided Stencil
-typedef void (APIENTRY * glStencilFuncSeparatePROC) (GLenum face, GLenum func, GLint ref, GLuint mask);
 typedef void (APIENTRY * glStencilOpSeparatePROC) (GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);
+typedef void (APIENTRY * glStencilFuncSeparatePROC) (GLenum face, GLenum func, GLint ref, GLuint mask);
+typedef void (APIENTRY * glStencilMaskSeparatePROC) (GLenum face, GLuint mask);
+// EXT_blend_equation_separate
+typedef void (APIENTRY * glBlendEquationSeparatePROC) (GLenum modeRGB, GLenum modeAlpha);
 
 // ARB_shader_objects
 static glAttachShaderPROC glAttachShader;
@@ -148,6 +191,22 @@ static glUniformMatrix3fvPROC glUniformMatrix3fv;
 static glUniformMatrix4fvPROC glUniformMatrix4fv;
 static glUseProgramPROC glUseProgram;
 static glValidateProgramPROC glValidateProgram;
+// ARB_vertex_program
+static glVertexAttrib1sPROC glVertexAttrib1s;
+static glVertexAttrib1fPROC glVertexAttrib1f;
+static glVertexAttrib2sPROC glVertexAttrib2s;
+static glVertexAttrib2fPROC glVertexAttrib2f;
+static glVertexAttrib3sPROC glVertexAttrib3s;
+static glVertexAttrib3fPROC glVertexAttrib3f;
+static glVertexAttrib4sPROC glVertexAttrib4s;
+static glVertexAttrib4fPROC glVertexAttrib4f;
+static glVertexAttrib4NubPROC glVertexAttrib4Nub;
+static glVertexAttribPointerPROC glVertexAttribPointer;
+static glEnableVertexAttribArrayPROC glEnableVertexAttribArray;
+static glDisableVertexAttribArrayPROC glDisableVertexAttribArray;
+static glGetVertexAttribfvPROC glGetVertexAttribfv;
+static glGetVertexAttribivPROC glGetVertexAttribiv;
+static glGetVertexAttribPointervPROC glGetVertexAttribPointerv;
 // ARB_vertex_shader
 static glBindAttribLocationPROC glBindAttribLocation;
 static glGetActiveAttribPROC glGetActiveAttrib;
@@ -155,8 +214,11 @@ static glGetAttribLocationPROC glGetAttribLocation;
 // ARB_draw_buffers
 static glDrawBuffersPROC glDrawBuffers;
 // Two-Sided Stencil
-static glStencilFuncSeparatePROC glStencilFuncSeparate;
 static glStencilOpSeparatePROC glStencilOpSeparate;
+static glStencilFuncSeparatePROC glStencilFuncSeparate;
+static glStencilMaskSeparatePROC glStencilMaskSeparate;
+// EXT_blend_equation_separate
+static glBlendEquationSeparatePROC glBlendEquationSeparate;
 
 // ------------------------------------------------------------------
 // ----------------------[ ARB_shader_objects ]----------------------
@@ -686,6 +748,191 @@ static void JNICALL Java_org_lwjgl_opengl_GL20_nglGetShaderSource
 }
 
 // ------------------------------------------------------------------
+// ----------------------[ ARB_vertex_program ]----------------------
+// ------------------------------------------------------------------
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib1s
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib1s
+	(JNIEnv * env, jclass clazz, jint index, jshort x)
+{
+	glVertexAttrib1s(index, x);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib1f
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib1f
+	(JNIEnv * env, jclass clazz, jint index, jfloat x)
+{
+	glVertexAttrib1f(index, x);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib2s
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib2s
+	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y)
+{
+	glVertexAttrib2s(index, x, y);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib2f
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib2f
+	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y)
+{
+	glVertexAttrib2f(index, x, y);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib3s
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib3s
+	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z)
+{
+	glVertexAttrib3s(index, x, y, z);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib3f
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib3f
+	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z)
+{
+	glVertexAttrib3f(index, x, y, z);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib4s
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib4s
+	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w)
+{
+	glVertexAttrib4s(index, x, y, z, w);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib4f
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib4f
+	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
+{
+	glVertexAttrib4f(index, x, y, z, w);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glVertexAttrib4Nub
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glVertexAttrib4Nub
+	(JNIEnv * env, jclass clazz, jint index, jbyte x, jbyte y, jbyte z, jbyte w)
+{
+	glVertexAttrib4Nub(index, x, y, z, w);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	nglVertexAttribPointer
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttribPointer
+	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jobject buffer, jint bufferOffset)
+{
+	GLvoid *buffer_ptr = (GLvoid *)((GLubyte *)(*env)->GetDirectBufferAddress(env, buffer) + bufferOffset);
+	glVertexAttribPointer(index, size, type, normalized, stride, buffer_ptr);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	nglVertexAttribPointerVBO
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_nglVertexAttribPointerVBO
+	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint bufferOffset)
+{
+	glVertexAttribPointer(index, size, type, normalized, stride, (GLvoid *)bufferOffset);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glEnableVertexAttribArray
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glEnableVertexAttribArray
+	(JNIEnv * env, jclass clazz, jint index)
+{
+	glEnableVertexAttribArray(index);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glDisableVertexAttribArray
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glDisableVertexAttribArray
+	(JNIEnv * env, jclass clazz, jint index)
+{
+	glDisableVertexAttribArray(index);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	nglGetVertexAttribfv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribfv
+	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
+{
+	GLfloat *params_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
+	glGetVertexAttribfv(index, pname, params_ptr);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	nglGetVertexAttribiv
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_nglGetVertexAttribiv
+	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
+{
+	GLint *params_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
+	glGetVertexAttribiv(index, pname, params_ptr);
+
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glGetVertexAttribPointer
+ */
+static jobject JNICALL Java_org_lwjgl_opengl_GL20_glGetVertexAttribPointer
+	(JNIEnv * env, jclass clazz, jint index, jint pname, jint size)
+{
+        void *address;
+        glGetVertexAttribPointerv((GLuint)index, (GLuint)pname, &address);
+
+        return safeNewBuffer(env, address, size);
+}
+
+// ------------------------------------------------------------------
 // ----------------------[ ARB_vertex_shaders ]----------------------
 // ------------------------------------------------------------------
 /*
@@ -750,6 +997,16 @@ static void JNICALL Java_org_lwjgl_opengl_GL20_nglDrawBuffers
 
 /*
  * Class:	org.lwjgl.opengl.GL20
+ * Method:	glStencilOpSeparate
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glStencilOpSeparate
+	(JNIEnv * env, jclass clazz, jint face, jint sfail, jint dpfail, jint dppass)
+{
+	glStencilOpSeparate(face, sfail, dpfail, dppass);
+}
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
  * Method:	glStencilFuncSeparate
  */
 static void JNICALL Java_org_lwjgl_opengl_GL20_glStencilFuncSeparate
@@ -760,12 +1017,26 @@ static void JNICALL Java_org_lwjgl_opengl_GL20_glStencilFuncSeparate
 
 /*
  * Class:	org.lwjgl.opengl.GL20
- * Method:	glStencilOpSeparate
+ * Method:	glStencilMaskSeparate
  */
-static void JNICALL Java_org_lwjgl_opengl_GL20_glStencilOpSeparate
-	(JNIEnv * env, jclass clazz, jint face, jint sfail, jint dpfail, jint dppass)
+static void JNICALL Java_org_lwjgl_opengl_GL20_glStencilMaskSeparate
+	(JNIEnv * env, jclass clazz, jint face, jint mask)
 {
-	glStencilOpSeparate(face, sfail, dpfail, dppass);
+	glStencilMaskSeparate(face, mask);
+}
+
+// -----------------------------------------------------------------
+// ----------------------[ EXT_blend_equation_separate ]----------------------
+// -----------------------------------------------------------------
+
+/*
+ * Class:	org.lwjgl.opengl.GL20
+ * Method:	glBlendEquationSeparate
+ */
+static void JNICALL Java_org_lwjgl_opengl_GL20_glBlendEquationSeparate
+	(JNIEnv * env, jclass clazz, jint modeRGB, jint modeAlpha)
+{
+	glBlendEquationSeparate(modeRGB, modeAlpha);
 }
 
 #ifdef __cplusplus
@@ -820,6 +1091,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_initNativeStubs(JNIEnv *env, j
 		{"nglGetUniformfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetUniformfv, "glGetUniformfv", (void*)&glGetUniformfv},
 		{"nglGetUniformiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetUniformiv, "glGetUniformiv", (void*)&glGetUniformiv},
 		{"nglGetShaderSource", "(IILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetShaderSource, "glGetShaderSource", (void*)&glGetShaderSource},
+		// ARB_vertex_program
+		{"glVertexAttrib1s", "(IS)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib1s, "glVertexAttrib1s", (void*)&glVertexAttrib1s},
+		{"glVertexAttrib1f", "(IF)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib1f, "glVertexAttrib1f", (void*)&glVertexAttrib1f},
+		{"glVertexAttrib2s", "(ISS)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib2s, "glVertexAttrib2s", (void*)&glVertexAttrib2s},
+		{"glVertexAttrib2f", "(IFF)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib2f, "glVertexAttrib2f", (void*)&glVertexAttrib2f},
+		{"glVertexAttrib3s", "(ISSS)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib3s, "glVertexAttrib3s", (void*)&glVertexAttrib3s},
+		{"glVertexAttrib3f", "(IFFF)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib3f, "glVertexAttrib3f", (void*)&glVertexAttrib3f},
+		{"glVertexAttrib4s", "(ISSSS)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib4s, "glVertexAttrib4s", (void*)&glVertexAttrib4s},
+		{"glVertexAttrib4f", "(IFFFF)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib4f, "glVertexAttrib4f", (void*)&glVertexAttrib4f},
+		{"glVertexAttrib4Nub", "(IBBBB)V", (void*)&Java_org_lwjgl_opengl_GL20_glVertexAttrib4Nub, "glVertexAttrib4Nub", (void*)&glVertexAttrib4Nub},
+		{"nglVertexAttribPointer", "(IIIZILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglVertexAttribPointer, "glVertexAttribPointer", (void*)&glVertexAttribPointer},
+		{"nglVertexAttribPointerVBO", "(IIIZII)V", (void*)&Java_org_lwjgl_opengl_GL20_nglVertexAttribPointerVBO, NULL, NULL},
+		{"glEnableVertexAttribArray", "(I)V", (void*)&Java_org_lwjgl_opengl_GL20_glEnableVertexAttribArray, "glEnableVertexAttribArray", (void*)&glEnableVertexAttribArray},
+		{"glDisableVertexAttribArray", "(I)V", (void*)&Java_org_lwjgl_opengl_GL20_glDisableVertexAttribArray, "glDisableVertexAttribArray", (void*)&glDisableVertexAttribArray},
+		{"nglGetVertexAttribfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetVertexAttribfv, "glGetVertexAttribfv", (void*)&glGetVertexAttribfv},
+		{"nglGetVertexAttribiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetVertexAttribiv, "glGetVertexAttribiv", (void*)&glGetVertexAttribiv},
+		{"glGetVertexAttribPointer", "(III)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_GL20_glGetVertexAttribPointer, "glGetVertexAttribPointerv", (void*)&glGetVertexAttribPointerv},
 		// ARB_vertex_shader
 		{"nglBindAttribLocation", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglBindAttribLocation, "glBindAttribLocation", (void*)&glBindAttribLocation},
 		{"nglGetActiveAttrib", "(IIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetActiveAttrib, "glGetActiveAttrib", (void*)&glGetActiveAttrib},
@@ -827,8 +1115,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_initNativeStubs(JNIEnv *env, j
 		// ARB_draw_buffers
 		{"nglDrawBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglDrawBuffers, "glDrawBuffers", (void*)&glDrawBuffers},
 		// Two-Sided Stencil
+		{"glStencilOpSeparate", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL20_glStencilOpSeparate, "glStencilOpSeparate", (void*)&glStencilOpSeparate},
 		{"glStencilFuncSeparate", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL20_glStencilFuncSeparate, "glStencilFuncSeparate", (void*)&glStencilFuncSeparate},
-		{"glStencilOpSeparate", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL20_glStencilOpSeparate, "glStencilOpSeparate", (void*)&glStencilOpSeparate}
+		{"glStencilMaskSeparate", "(II)V", (void*)&Java_org_lwjgl_opengl_GL20_glStencilMaskSeparate, "glStencilMaskSeparate", (void*)&glStencilMaskSeparate},
+		// EXT_blend_equation_separate
+		{"glBlendEquationSeparate", "(II)V", (void*)&Java_org_lwjgl_opengl_GL20_glBlendEquationSeparate, "glBlendEquationSeparate", (void*)&glBlendEquationSeparate}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extgl_InitializeClass(env, clazz, num_functions, functions);

@@ -125,20 +125,29 @@ public final class GL14 {
 	}
 
 	private static native void nglMultiDrawArrays(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset, int primcount);
-/*        public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);*/
+	/*public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);*/
+
+	public static native void glPointParameteri(int pname, int param);
 	public static native void glPointParameterf(int pname, float param);
 
+	// ---------------------------
+	public static void glPointParameter(int pname, IntBuffer params) {
+		BufferChecks.checkBuffer(params);
+		nglPointParameteriv(pname, params, params.position());
+	}
+	private static native void nglPointParameteriv(int pname, IntBuffer params, int params_offset);
+	// ---------------------------
+
+	// ---------------------------
 	public static void glPointParameter(int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglPointParameterfv(pname, params, params.position());
 	}
-
 	private static native void nglPointParameterfv(int pname, FloatBuffer params, int params_offset);
+	// ---------------------------
 
 	public static native void glSecondaryColor3b(byte red, byte green, byte blue);
-
 	public static native void glSecondaryColor3f(float red, float green, float blue);
-
 	public static native void glSecondaryColor3ub(byte red, byte green, byte blue);
 
 	public static void glSecondaryColorPointer(int size, boolean unsigned, int stride, ByteBuffer data) {
@@ -152,14 +161,12 @@ public final class GL14 {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointer(size, GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
-
 	private static native void nglSecondaryColorPointer(int size, int type, int stride, Buffer data, int data_offset);
 
 	public static void glSecondaryColorPointer(int size, int type, int stride, int buffer_offset) {
 		GLBufferChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerVBO(size, type, stride, buffer_offset);
 	}
-
 	private static native void nglSecondaryColorPointerVBO(int size, int type, int stride, int buffer_offset);
 
 	public static native void glBlendFuncSeparate(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha);

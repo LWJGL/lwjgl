@@ -34,10 +34,7 @@ package org.lwjgl.opengl;
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
 
-import java.nio.BufferOverflowException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.nio.*;
 
 public final class GL20 {
 
@@ -47,18 +44,27 @@ public final class GL20 {
 	static native void initNativeStubs() throws LWJGLException;
 
 	// ------------------------------------------------------------------
+	// ----------------------[ ARB_shading_language_100 ]----------------------
+	// ------------------------------------------------------------------
+
+	/*
+	* Accepted by the <name> parameter of GetString:
+	*/
+	public static final int GL_SHADING_LANGUAGE_VERSION = 0x8B8C;
+
+	// ------------------------------------------------------------------
 	// ----------------------[ ARB_shader_objects ]----------------------
 	// ------------------------------------------------------------------
 
 	/*
-	* Accepted by the <pname> argument of GetHandleARB:
+	* Accepted by the <pname> argument of GetInteger:
 	*/
-	public static final int GL_PROGRAM_OBJECT = 0x8B40;
+	public static final int GL_CURRENT_PROGRAM = 0x8B8D;
 
 	/*
 	* Accepted by the <pname> parameter of GetObjectParameter{fi}vARB:
 	*/
-	public static final int GL_SHADER_TYPE = 0x8B4E;
+	public static final int GL_SHADER_TYPE = 0x8B4F;
 	public static final int GL_DELETE_STATUS = 0x8B80;
 	public static final int GL_COMPILE_STATUS = 0x8B81;
 	public static final int GL_LINK_STATUS = 0x8B82;
@@ -98,8 +104,6 @@ public final class GL20 {
 	public static final int GL_SAMPLER_CUBE = 0x8B60;
 	public static final int GL_SAMPLER_1D_SHADOW = 0x8B61;
 	public static final int GL_SAMPLER_2D_SHADOW = 0x8B62;
-	public static final int GL_SAMPLER_2D_RECT = 0x8B63;
-	public static final int GL_SAMPLER_2D_RECT_SHADOW = 0x8B64;
 
 	// ---------------------------
 	/**
@@ -448,6 +452,83 @@ public final class GL20 {
 	                                              IntBuffer length, int lengthOffset, ByteBuffer source, int sourceOffset);
 	// ---------------------------
 
+	// ------------------------------------------------------------------
+	// ----------------------[ ARB_vertex_program ]----------------------
+	// ------------------------------------------------------------------
+
+	public static native void glVertexAttrib1s(int index, short x);
+
+	public static native void glVertexAttrib1f(int index, float x);
+
+	public static native void glVertexAttrib2s(int index, short x, short y);
+
+	public static native void glVertexAttrib2f(int index, float x, float y);
+
+	public static native void glVertexAttrib3s(int index, short x, short y, short z);
+
+	public static native void glVertexAttrib3f(int index, float x, float y, float z);
+
+	public static native void glVertexAttrib4s(int index, short x, short y, short z, short w);
+
+	public static native void glVertexAttrib4f(int index, float x, float y, float z, float w);
+
+	public static native void glVertexAttrib4Nub(int index, byte x, byte y, byte z, byte w);
+
+	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, normalized, stride, buffer, buffer.position());
+	}
+
+	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, normalized, stride, buffer, buffer.position() << 1);
+	}
+
+	public static void glVertexAttribPointer(int index, int size, boolean normalized, int stride, FloatBuffer buffer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		nglVertexAttribPointer(index, size, GL11.GL_FLOAT, normalized, stride, buffer, buffer.position() << 2);
+	}
+
+	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2);
+	}
+
+	private static native void nglVertexAttribPointer(int index, int size, int type, boolean normalized, int stride, Buffer buffer, int bufferOffset);
+
+	// ---------------------------
+	public static void glVertexAttribPointer(int index, int size, int type, boolean normalized, int stride, int bufferOffset) {
+		GLBufferChecks.ensureArrayVBOenabled();
+		nglVertexAttribPointerVBO(index, size, type, normalized, stride, bufferOffset);
+	}
+
+	private static native void nglVertexAttribPointerVBO(int index, int size, int type, boolean normalized, int stride, int bufferOffset);
+	// ---------------------------
+
+	public static native void glEnableVertexAttribArray(int index);
+
+	public static native void glDisableVertexAttribArray(int index);
+
+	// ---------------------------
+	public static void glGetVertexAttrib(int index, int pname, FloatBuffer params) {
+		BufferChecks.checkBuffer(params);
+		nglGetVertexAttribfv(index, pname, params, params.position());
+	}
+
+	private static native void nglGetVertexAttribfv(int index, int pname, FloatBuffer params, int paramsOffset);
+	// ---------------------------
+
+	// ---------------------------
+	public static void glGetVertexAttrib(int index, int pname, IntBuffer params) {
+		BufferChecks.checkBuffer(params);
+		nglGetVertexAttribiv(index, pname, params, params.position());
+	}
+
+	private static native void nglGetVertexAttribiv(int index, int pname, IntBuffer params, int paramsOffset);
+	// ---------------------------
+
+	public static native ByteBuffer glGetVertexAttribPointer(int index, int pname, int size);
+
 	// -----------------------------------------------------------------
 	// ----------------------[ ARB_vertex_shader ]----------------------
 	// -----------------------------------------------------------------
@@ -617,6 +698,18 @@ public final class GL20 {
 	*/
 	public static final int GL_COORD_REPLACE = 0x8862;
 
+	/*
+	 * Accepted by the <pname> parameter of PointParameter{if}vARB, and the
+	 * <pname> of Get:
+	*/
+	public static final int GL_POINT_SPRITE_COORD_ORIGIN = 0x8CA0;
+
+	/*
+	* Accepted by the <param> parameter of PointParameter{if}vARB:
+	*/
+	public static final int GL_LOWER_LEFT = 0x8CA1;
+	public static final int GL_UPPER_LEFT = 0x8CA2;
+
 	// -----------------------------------------------------------------
 	// ----------------------[ Two-Sided Stencil ]----------------------
 	// -----------------------------------------------------------------
@@ -625,11 +718,23 @@ public final class GL20 {
 	public static final int GL_STENCIL_BACK_FAIL = 0x8801;
 	public static final int GL_STENCIL_BACK_PASS_DEPTH_FAIL = 0x8802;
 	public static final int GL_STENCIL_BACK_PASS_DEPTH_PASS = 0x8803;
-	public static final int GL_STENCIL_BACK_REF = 0x0000; // TODO: Find this value
-	public static final int GL_STENCIL_BACK_VALUE_MASK = 0x0000; // TODO: Find this value
+	public static final int GL_STENCIL_BACK_REF = 0x8CA3;
+	public static final int GL_STENCIL_BACK_VALUE_MASK = 0x8CA4;
+	public static final int GL_STENCIL_BACK_WRITEMASK = 0x8CA5;
+
+	public static native void glStencilOpSeparate(int face, int sfail, int dpfail, int dppass);
 
 	public static native void glStencilFuncSeparate(int face, int func, int ref, int mask);
 
-	public static native void glStencilOpSeparate(int face, int sfail, int dpfail, int dppass);
+	public static native void glStencilMaskSeparate(int face, int mask);
+
+	// -------------------------------------------------------------
+	// ----------------------[ EXT_blend_equation_separate ]----------------------
+	// -------------------------------------------------------------
+
+	public static final int GL_BLEND_EQUATION_RGB = 0x8009;
+	public static final int GL_BLEND_EQUATION_ALPHA = 0x883D;
+
+	public static native void glBlendEquationSeparate(int modeRGB, int modeAlpha);
 
 }
