@@ -348,6 +348,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 #endif
 					return JNI_FALSE;
 				}
+				XF86VidModeLockModeSwitch(disp, screen, 1);
 				break;
 			}
 		}
@@ -363,6 +364,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 	setRepeatMode(AutoRepeatModeDefault);
 	XDestroyWindow(disp, win);
 	if (current_fullscreen) {
+		XF86VidModeLockModeSwitch(disp, screen, 0);
 		if (!XF86VidModeSwitchToMode(disp, screen, avail_modes[0])) {
 #ifdef _DEBUG
 			printf("Could not switch mode\n");
