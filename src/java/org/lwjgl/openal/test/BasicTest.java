@@ -101,7 +101,7 @@ public abstract class BasicTest {
     protected void alInitialize() {
         
         //get default device
-        device = alc.openDevice("");
+        device = alc.openDevice(null);
         if(device == null) {
             throw new RuntimeException("Error creating device");
         }
