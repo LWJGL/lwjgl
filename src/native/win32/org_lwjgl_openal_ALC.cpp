@@ -358,29 +358,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_isExtensionPresent (JNIEnv 
 }
 
 /**
- * This function retrieves the address of a specified context extension function.
- *
- * C Specification:
- * ALvoid * alcGetProcAddress(ALCdevice *device, ALubyte *funcName);
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getProcAddress (JNIEnv *env, jobject obj, jobject device, jstring funcName) {
-	/* get device address */
-	jclass device_class		= env->GetObjectClass(device);
-	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(device, device_field);
-	
-	/* get extension */
-	ALubyte* functionname = (ALubyte*) (env->GetStringUTFChars(funcName, 0));
-	
-	jint result = (jint) alcGetProcAddress((ALCdevice*) deviceaddress, functionname);
-	
-	env->ReleaseStringUTFChars((jstring)functionname, 0);
-	
-	CHECK_ALC_ERROR
-	return result;
-}
-
-/**
  * This function retrieves the enum value for a specified enumeration name.
  *
  * C Specification:

@@ -129,14 +129,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_isExtensionPresent
 
 /*
  * Class:     org_lwjgl_openal_ALC
- * Method:    getProcAddress
- * Signature: (Lorg/lwjgl/openal/ALCdevice;Ljava/lang/String;)I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getProcAddress
-  (JNIEnv *, jobject, jobject, jstring);
-
-/*
- * Class:     org_lwjgl_openal_ALC
  * Method:    getEnumValue
  * Signature: (Lorg/lwjgl/openal/ALCdevice;Ljava/lang/String;)I
  */

@@ -165,14 +165,6 @@ public class CoreAL extends BaseAL implements BaseALConstants {
     public native boolean       isExtensionPresent(String fname);
     
     /**
-     * Returns the address of an OpenAL extension function.
-     *
-     * @param fname String containing the function name
-     * @return int specifying offset of extension
-     */
-    public native int           getProcAddress(String fname);
-    
-    /**
      * Returns the enumeration value of an OpenAL enum described by a string.
      *
      * @param ename String describing an OpenAL enum

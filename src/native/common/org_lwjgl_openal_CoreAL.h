@@ -161,14 +161,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isExtensionPresent
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
- * Method:    getProcAddress
- * Signature: (Ljava/lang/String;)I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getProcAddress
-  (JNIEnv *, jobject, jstring);
-
-/*
- * Class:     org_lwjgl_openal_CoreAL
  * Method:    getEnumValue
  * Signature: (Ljava/lang/String;)I
  */

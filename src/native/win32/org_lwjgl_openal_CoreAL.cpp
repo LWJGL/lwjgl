@@ -230,21 +230,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_isExtensionPresent (JNIE
 	return result;
 }
 
-/** 
- * This function returns the address of an OpenAL extension function.
- * 
- * C Specification:
- * ALvoid * alGetProcAddress(ALubyte *funcName);
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_getProcAddress (JNIEnv *env, jobject obj, jstring fname) {
-	ALubyte* functionname = (ALubyte*) (env->GetStringUTFChars(fname, 0));
-	jint result = (jint) alGetProcAddress(functionname);
-	env->ReleaseStringUTFChars((jstring)functionname, 0);
-	
-	CHECK_AL_ERROR
-	return result;
-}
-
 /**
  * This function returns the enumeration value of an OpenAL enum described by a string.
  * 

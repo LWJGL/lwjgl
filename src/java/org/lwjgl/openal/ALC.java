@@ -261,15 +261,6 @@ public class ALC {
     public native boolean       isExtensionPresent(ALCdevice device, String extName);
     
     /**
-     * Retrieves the address of a specified context extension function.
-     *
-     * @param device device to query
-     * @param extName name of extension to find
-     * @return address of function
-     */
-    public native int           getProcAddress(ALCdevice device, String extName);
-    
-    /**
      * retrieves the enum value for a specified enumeration name.
      *
      * @param device Device to query
