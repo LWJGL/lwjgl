@@ -113,6 +113,8 @@ bool isFullscreen(void) {
 
 static void handleMessages() {
 	XEvent event;
+	Window win;
+	int revert_mode;
 	while (XPending(current_disp) > 0) {
 		XNextEvent(current_disp, &event);
 		switch (event.type) {
@@ -121,12 +123,18 @@ static void handleMessages() {
 					closerequested = true;
 				break;
 			case FocusOut:
-				releaseInput();
-				focused = false;
+				XGetInputFocus(current_disp, &win, &revert_mode);
+				if (win != current_win) {
+					releaseInput();
+					focused = false;
+				}
 				break;
 			case FocusIn:
-				acquireInput();
-				focused = true;
+				XGetInputFocus(current_disp, &win, &revert_mode);
+				if (win == current_win) {
+					acquireInput();
+					focused = true;
+				}
 				break;
 			case MapNotify:
 				dirty = true;

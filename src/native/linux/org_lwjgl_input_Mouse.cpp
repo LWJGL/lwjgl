@@ -79,8 +79,6 @@ static unsigned char buttons[NUM_BUTTONS];
 static Cursor blank_cursor;
 static Cursor current_cursor;
 
-static int grab_mask = FocusChangeMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    initIDs
@@ -131,6 +129,7 @@ static void grabPointer(void) {
 	if (isFullscreen() || !native_cursor) {
 		if (!pointer_grabbed) {
 			int result;
+			int grab_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
 			result = XGrabPointer(getCurrentDisplay(), getCurrentWindow(), False, grab_mask, GrabModeAsync, 
 						GrabModeAsync, getCurrentWindow(), current_cursor, CurrentTime);
 			if (result == GrabSuccess) {
