@@ -96,14 +96,16 @@ public class SourceLimitTest extends BasicTest {
 		IntBuffer sources = createIntBuffer(sourcesToCreate);
 
 		//Create sourcesToCreate sources in one fell swoop
-		AL.alGenSources(sourcesToCreate, sources);
+    sources.position(0).limit(sourcesToCreate);
+		AL.alGenSources(sources);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			System.out.println("failed to create " + sourcesToCreate + " sources (" + AL.alGetString(lastError) + ")");
 			return;
 		}
 
 		//delete sources
-		AL.alDeleteSources(sourcesToCreate, sources);
+    sources.position(0).limit(sourcesToCreate);
+		AL.alDeleteSources(sources);
 
 		System.out.println("created " + sourcesToCreate + " sources successfully!");
 	}
@@ -121,7 +123,8 @@ public class SourceLimitTest extends BasicTest {
     //create the sources
 		for (int i = 0; i <= sourcesToCreate; i++) {
       sources[i] = createIntBuffer(1);
-			AL.alGenSources(1, sources[i]);
+      sources[i].position(0).limit(1);
+			AL.alGenSources(sources[i]);
 			if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 				System.out.println("failed to create source: " + (i + 1));
 				break;
@@ -132,7 +135,8 @@ public class SourceLimitTest extends BasicTest {
     //delete allocated sources
 		for (int i = 0; i < sourcesCreated; i++) {
 			//delete buffers and sources
-			AL.alDeleteSources(1, sources[i]);
+      sources[i].position(0).limit(1);
+			AL.alDeleteSources(sources[i]);
 			if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 				System.out.println("failed to delete source: " + i + "(" + AL.alGetString(lastError) + ")");
 				break;

@@ -77,14 +77,9 @@ public class ALCTest extends BasicTest {
 
 		//mo query
 		buffer.rewind();
-		ALC.alcGetIntegerv(
-			ALC.ALC_MAJOR_VERSION,
-			4,
-			buffer);
-		ALC.alcGetIntegerv(
-			ALC.ALC_MINOR_VERSION,
-			4,
-			((IntBuffer)buffer.position(4)).slice());
+    buffer.limit(1);
+		ALC.alcGetInteger(ALC.ALC_MAJOR_VERSION, buffer);
+		ALC.alcGetInteger(ALC.ALC_MINOR_VERSION, (IntBuffer) buffer.position(1).limit(2));
 
 		System.out.println("ALC_MAJOR_VERSION: " + buffer.get(0));
 		System.out.println("ALC_MINOR_VERSION: " + buffer.get(1));

@@ -136,12 +136,14 @@ public class OpenALCreationTest {
 		IntBuffer sources = createIntBuffer(1);
 
 		// al generate buffers and sources
-    AL.alGenBuffers(1, buffers);
+    buffers.position(0).limit(1);
+    AL.alGenBuffers(buffers);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
-    AL.alGenSources(1, sources);
+    sources.position(0).limit(1);
+    AL.alGenSources(sources);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
@@ -196,12 +198,14 @@ public class OpenALCreationTest {
 		}
 
 		//delete buffers and sources
-    AL.alDeleteSources(1, sources);
+    sources.position(0).limit(1);
+    AL.alDeleteSources(sources);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
-    AL.alDeleteBuffers(1, buffers);
+    buffers.position(0).limit(1);
+    AL.alDeleteBuffers(buffers);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}

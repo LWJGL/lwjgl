@@ -79,7 +79,8 @@ public class StressTest extends BasicTest {
 
   private void createSources() {
     sources = createIntBuffer(4);
-    AL.alGenSources(4, sources);
+    sources.position(0).limit(4);
+    AL.alGenSources(sources);
     if (AL.alGetError() != AL.AL_NO_ERROR) {
       System.out.println("Unable to create 4 sources");
       alExit();
@@ -88,10 +89,12 @@ public class StressTest extends BasicTest {
 
   private void createBuffers() {
     buffers = createIntBuffer(10);
-    AL.alGenBuffers(10, buffers);
+    buffers.position(0).limit(10);
+    AL.alGenBuffers(buffers);
     if (AL.alGetError() != AL.AL_NO_ERROR) {
       System.out.println("Unable to create 10 buffers");
-      AL.alDeleteSources(4, sources);
+      sources.position(0).limit(4);
+      AL.alDeleteSources(sources);
       alExit();
     }
   }
@@ -109,8 +112,11 @@ public class StressTest extends BasicTest {
 
       if (AL.alGetError() != AL.AL_NO_ERROR) {
         System.out.println("Failed to load " + i + ".wav into buffer");
-        AL.alDeleteSources(4, sources);
-        AL.alDeleteBuffers(10, buffers);
+        sources.position(0).limit(4);
+        AL.alDeleteSources(sources);
+        buffers.position(0).limit(10);
+        AL.alDeleteBuffers(buffers);
+
         alExit();
       }
     }
@@ -191,8 +197,10 @@ public class StressTest extends BasicTest {
     } catch (Exception e) {
     }
 
-    AL.alDeleteSources(4, sources);
-    AL.alDeleteBuffers(10, buffers);
+    sources.position(0).limit(4);
+    AL.alDeleteSources(sources);
+    buffers.position(0).limit(10);
+    AL.alDeleteBuffers(buffers);
   }
 
   private int getRandomBuffer() {

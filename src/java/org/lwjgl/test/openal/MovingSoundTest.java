@@ -35,9 +35,9 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.eax.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Window;
+import org.lwjgl.vector.Vector3f;
 
 import java.nio.IntBuffer;
-import java.nio.FloatBuffer;
 
 /**
  * $Id$
@@ -76,8 +76,8 @@ public class MovingSoundTest extends BasicTest {
 
 
 		int lastError;
-    FloatBuffer sourcePosition = createFloatBuffer(3);
-    FloatBuffer listenerPosition = createFloatBuffer(3);
+    Vector3f sourcePosition = new Vector3f();
+    Vector3f listenerPosition = new Vector3f();
     boolean eaxApplied = false;
     EAXListenerProperties eaxListenerProp = null;
     
@@ -94,12 +94,14 @@ public class MovingSoundTest extends BasicTest {
 		IntBuffer sources = createIntBuffer(1);
 
 		// al generate buffers and sources
-		AL.alGenBuffers(1, buffers);
+    buffers.position(0).limit(1);
+		AL.alGenBuffers(buffers);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
-    AL.alGenSources(1, sources);
+    sources.position(0).limit(1);
+    AL.alGenSources(sources);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
@@ -159,24 +161,24 @@ public class MovingSoundTest extends BasicTest {
       Keyboard.poll();
       if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
         if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-          listenerPosition.put(0, listenerPosition.get(0) - MOVEMENT);
-          AL.alListenerfv(AL.AL_POSITION, listenerPosition);
-          System.out.println("listenerx: " + listenerPosition.get(0));
+          listenerPosition.x -= MOVEMENT;
+          AL.alListener3f(AL.AL_POSITION, listenerPosition.x, listenerPosition.y, listenerPosition.z);
+          System.out.println("listenerx: " + listenerPosition.x);
         } else {
-          sourcePosition.put(0, sourcePosition.get(0) - MOVEMENT);
-          AL.alSourcefv(sources.get(0), AL.AL_POSITION, sourcePosition);
-          System.out.println("sourcex: " + sourcePosition.get(0));
+          sourcePosition.x -= MOVEMENT;
+          AL.alSource3f(sources.get(0), AL.AL_POSITION, sourcePosition.x, sourcePosition.y, sourcePosition.z);
+          System.out.println("sourcex: " + sourcePosition.x);
         }
       }      
       if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
         if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-          listenerPosition.put(0, listenerPosition.get(0) + MOVEMENT);
-          AL.alListenerfv(AL.AL_POSITION, listenerPosition);
-          System.out.println("listenerx: " + listenerPosition.get(0));
+          listenerPosition.x += MOVEMENT;
+          AL.alListener3f(AL.AL_POSITION, listenerPosition.x, listenerPosition.y, listenerPosition.z);
+          System.out.println("listenerx: " + listenerPosition.x);
         } else {        
-          sourcePosition.put(0, sourcePosition.get(0) + MOVEMENT);
-          AL.alSourcefv(sources.get(0), AL.AL_POSITION, sourcePosition);
-          System.out.println("sourcex: " + sourcePosition.get(0));
+          sourcePosition.x += MOVEMENT;
+          AL.alSource3f(sources.get(0), AL.AL_POSITION, sourcePosition.x, sourcePosition.y, sourcePosition.z);
+          System.out.println("sourcex: " + sourcePosition.x);
         }
       }
       
@@ -208,12 +210,14 @@ public class MovingSoundTest extends BasicTest {
 		}
 
 		//delete buffers and sources
-    AL.alDeleteSources(1, sources);
+    sources.position(0).limit(1);
+    AL.alDeleteSources(sources);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
-    AL.alDeleteBuffers(1, buffers);
+    buffers.position(0).limit(1);
+    AL.alDeleteBuffers(buffers);
 		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
