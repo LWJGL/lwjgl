@@ -47,7 +47,19 @@ final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 	public LinuxDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
-			initDefaultPeerInfo(getHandle(), pixel_format);
+			LinuxDisplay.incDisplay();
+			try {
+				GLContext.loadOpenGLLibrary();
+				try {
+					initDefaultPeerInfo(getHandle(), pixel_format);
+				} catch (LWJGLException e) {
+					GLContext.unloadOpenGLLibrary();
+					throw e;
+				}
+			} catch (LWJGLException e) {
+				LinuxDisplay.decDisplay();
+				throw e;
+			}
 		} finally {
 			LinuxDisplay.unlockAWT();
 		}
@@ -66,5 +78,13 @@ final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 	
 	protected void doUnlock() throws LWJGLException {
 		// NO-OP
+	}
+
+	public void destroy() {
+		super.destroy();
+		LinuxDisplay.lockAWT();
+		GLContext.unloadOpenGLLibrary();
+		LinuxDisplay.decDisplay();
+		LinuxDisplay.unlockAWT();
 	}
 }

@@ -42,8 +42,10 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 
-final class MacOSXGLCanvas extends Canvas implements ComponentListener {
+final class MacOSXGLCanvas extends Canvas implements ComponentListener, HierarchyListener {
 
 	private int width;
 	private int height;
@@ -68,7 +70,8 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener {
 		/* Input methods are not enabled in fullscreen anyway, so disable always */
 		enableInputMethods(false);
 		addComponentListener(this);
-		((MacOSXDisplay)Display.getImplementation()).setView(this);
+		addHierarchyListener(this);
+//		((MacOSXDisplay)Display.getImplementation()).setView(this);
 		setUpdate();
 	}
 
@@ -146,6 +149,10 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener {
 
 	public void setBounds(int x, int y, int width, int height) {
 		super.setBounds(x, y, width, height);
+		setUpdate();
+	}
+
+	public void hierarchyChanged(HierarchyEvent e) {
 		setUpdate();
 	}
 }

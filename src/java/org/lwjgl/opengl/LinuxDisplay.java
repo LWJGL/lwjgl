@@ -185,35 +185,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	private static native boolean nIsDirty();
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		lockAWT();
-		try {
-			incDisplay();
-			try {
-				GLContext.loadOpenGLLibrary();
-				try {
-					peer_info = new LinuxDisplayPeerInfo(pixel_format);
-					return peer_info;
-				} catch (LWJGLException e) {
-					GLContext.unloadOpenGLLibrary();
-					throw e;
-				}
-			} catch (LWJGLException e) {
-				decDisplay();
-				throw e;
-			}
-		} finally {
-			unlockAWT();
-		}
+		peer_info = new LinuxDisplayPeerInfo(pixel_format);
+		return peer_info;
 	}
 	
-	public void destroyPeerInfo() {
-		lockAWT();
-		peer_info = null;
-		GLContext.unloadOpenGLLibrary();
-		decDisplay();
-		unlockAWT();
-	}
-
 	public void update() {
 		lockAWT();
 		nUpdate();
@@ -432,33 +407,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
-		lockAWT();
-		try {
-			incDisplay();
-			try {
-				GLContext.loadOpenGLLibrary();
-				try {
-					PeerInfo peer_info = new LinuxPbufferPeerInfo(width, height, pixel_format);
-					return peer_info;
-				} catch (LWJGLException e) {
-					GLContext.unloadOpenGLLibrary();
-					throw e;
-				}
-			} catch (LWJGLException e) {
-				decDisplay();
-				throw e;
-			}
-		} finally {
-			unlockAWT();
-		}
-	}
-
-	public void destroyPbuffer(PeerInfo handle) {
-		lockAWT();
-		((LinuxPbufferPeerInfo)handle).destroy();
-		decDisplay();
-		GLContext.unloadOpenGLLibrary();
-		unlockAWT();
+		return new LinuxPbufferPeerInfo(width, height, pixel_format);
 	}
 
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {

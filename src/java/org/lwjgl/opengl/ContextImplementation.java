@@ -61,6 +61,11 @@ interface ContextImplementation {
 	public void releaseCurrentContext() throws LWJGLException;
 
 	/**
+	 * Update the context. Should be called whenever it's drawable is moved or resized
+	 */
+	public void update(ByteBuffer context_handle);
+
+	/**
 	 * Query whether the context is current
 	 */
 	public void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException;

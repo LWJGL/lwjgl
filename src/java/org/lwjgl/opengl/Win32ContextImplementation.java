@@ -70,6 +70,9 @@ final class Win32ContextImplementation implements ContextImplementation {
 	}
 	private static native void nSwapBuffers(ByteBuffer peer_info_handle) throws LWJGLException;
 
+	public void update(ByteBuffer context_handle) {
+	}
+
 	public void releaseCurrentContext() throws LWJGLException {
 		nReleaseCurrentContext();
 	}

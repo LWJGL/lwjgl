@@ -33,16 +33,41 @@
 /**
  * $Id$
  *
- * Mac OS Xspecific display functions.
- *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
+#import <jni.h>
 #import <Cocoa/Cocoa.h>
+#import "org_lwjgl_opengl_MacOSXPeerInfo.h"
+#import "context.h"
 #import "common_tools.h"
 
-/* Will return NULL and throw exception if it fails */
-extern NSOpenGLContext *createContext(JNIEnv *env, jobject pixel_format, bool double_buffered, bool use_display_bpp, long drawable_type, NSOpenGLContext *share_context);
-extern NSOpenGLContext *getDisplayContext();
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_MacOSXPeerInfo_createHandle
+  (JNIEnv *env, jclass clazz) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	jobject handle = newJavaManagedByteBuffer(env, sizeof(MacOSXPeerInfo));
+	[pool release];
+	return handle;
+}
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXPeerInfo_nChoosePixelFormat
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jobject pixel_format, jboolean use_display_bpp, jboolean support_window, jboolean support_pbuffer, jboolean double_buffered) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	NSOpenGLPixelFormat *macosx_pixel_format = choosePixelFormat(env, pixel_format, use_display_bpp, support_window, support_pbuffer, double_buffered);
+	if (pixel_format == nil) {
+		throwException(env, "Could not find pixel format");
+		return;
+	}
+	peer_info->pixel_format = macosx_pixel_format;
+	[pool release];
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXPeerInfo_nDestroy
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	[peer_info->pixel_format release];
+	[pool release];
+}

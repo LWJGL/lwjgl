@@ -108,7 +108,7 @@ public interface DisplayImplementation {
 	 */
 	PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException;
 
-	void destroyPeerInfo();
+//	void destroyPeerInfo();
 
 	/**
 	 * Updates the windows internal state. This must be called at least once per video frame
@@ -220,11 +220,6 @@ public interface DisplayImplementation {
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException;
-
-	/**
-	 * Destroy pbuffer
-	 */
-	public void destroyPbuffer(PeerInfo handle);
 
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value);
 

@@ -247,7 +247,7 @@ public final class Pbuffer implements Drawable {
 			return;
 		try {
 			context.forceDestroy();
-			Display.getImplementation().destroyPbuffer(peer_info);
+			peer_info.destroy();
 			destroyed = true;
 		} catch (LWJGLException e) {
 			Sys.log("Exception occurred while destroying pbuffer: " + e);

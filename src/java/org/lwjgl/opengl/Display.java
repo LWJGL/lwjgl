@@ -86,6 +86,7 @@ public final class Display {
 	private static boolean vsync;
 
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
+	private static PeerInfo peer_info;
 	private static Context context;
 
 	private static boolean window_created = false;
@@ -252,6 +253,13 @@ public final class Display {
 	}
 
 	private static void destroyWindow() {
+		try {
+		if (context.isCurrent())
+			Context.releaseCurrentContext();
+		} catch (LWJGLException e) {
+			Sys.log("Exception occurred while trying to release context");
+		}
+
 		if (!window_created)
 			throw new InternalError("Window already created");
 		// Automatically destroy keyboard, mouse, and controller
@@ -583,7 +591,7 @@ public final class Display {
 		if (fullscreen)
 			switchDisplayMode();
 		try {
-			PeerInfo peer_info = display_impl.createPeerInfo(pixel_format);
+			peer_info = display_impl.createPeerInfo(pixel_format);
 			context = new Context(peer_info, shared_drawable != null ? shared_drawable.getContext() : null);
 			try {
 				createWindow();
@@ -659,11 +667,11 @@ public final class Display {
 	private static void destroyContext() {
 		try {
 			context.forceDestroy();
+			peer_info.destroy();
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
 		} finally {
 			context = null;
-			display_impl.destroyPeerInfo();
 		}
 	}
 

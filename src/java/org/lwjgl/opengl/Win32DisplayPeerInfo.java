@@ -45,11 +45,17 @@ import org.lwjgl.Sys;
  */
 final class Win32DisplayPeerInfo extends Win32PeerInfo {
 	public Win32DisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		createDummyDC(getHandle());
+		GLContext.loadOpenGLLibrary();
 		try {
-			choosePixelFormat(0, 0, pixel_format, null, true, true, false, true);
+			createDummyDC(getHandle());
+			try {
+				choosePixelFormat(0, 0, pixel_format, null, true, true, false, true);
+			} catch (LWJGLException e) {
+				nDestroy(getHandle());
+				throw e;
+			}
 		} catch (LWJGLException e) {
-			destroy();
+			GLContext.unloadOpenGLLibrary();
 			throw e;
 		}
 	}
@@ -60,10 +66,6 @@ final class Win32DisplayPeerInfo extends Win32PeerInfo {
 	}
 	private static native void nInitDC(ByteBuffer peer_info_handle);
 
-	void destroy() {
-		nDestroy(getHandle());
-	}
-	
 	private static native void nDestroy(ByteBuffer peer_info_handle);
 	
 	protected void doLockAndInitHandle() throws LWJGLException {
@@ -74,5 +76,11 @@ final class Win32DisplayPeerInfo extends Win32PeerInfo {
 	
 	protected void doUnlock() throws LWJGLException {
 		// NO-OP
+	}
+
+	public void destroy() {
+		super.destroy();
+		nDestroy(getHandle());
+		GLContext.unloadOpenGLLibrary();
 	}
 }

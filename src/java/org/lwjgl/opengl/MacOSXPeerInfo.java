@@ -37,49 +37,28 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
+import java.nio.IntBuffer;
+
 /**
  * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxPbufferPeerInfo extends LinuxPeerInfo {
-	public LinuxPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
-		LinuxDisplay.lockAWT();
-		try {
-			LinuxDisplay.incDisplay();
-			try {
-				GLContext.loadOpenGLLibrary();
-				try {
-					nInitHandle(getHandle(), width, height, pixel_format);
-				} catch (LWJGLException e) {
-					GLContext.unloadOpenGLLibrary();
-					throw e;
-				}
-			} catch (LWJGLException e) {
-				LinuxDisplay.decDisplay();
-				throw e;
-			}
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
+abstract class MacOSXPeerInfo extends PeerInfo {
+	public MacOSXPeerInfo(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+		super(createHandle());
+		choosePixelFormat(pixel_format, use_display_bpp, support_window, support_pbuffer, double_buffered);
 	}
-	private static native void nInitHandle(ByteBuffer handle, int width, int height, PixelFormat pixel_format) throws LWJGLException;
+	private static native ByteBuffer createHandle();
+
+	private void choosePixelFormat(PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+		nChoosePixelFormat(getHandle(), pixel_format, use_display_bpp, support_window, support_pbuffer, double_buffered);
+	}
+	private static native void nChoosePixelFormat(ByteBuffer peer_info_handle, PixelFormat pixel_format, boolean use_display_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
 
 	public void destroy() {
-		LinuxDisplay.lockAWT();
 		nDestroy(getHandle());
-		LinuxDisplay.decDisplay();
-		GLContext.unloadOpenGLLibrary();
-		LinuxDisplay.unlockAWT();
 	}
 	private static native void nDestroy(ByteBuffer handle);
-
-	protected void doLockAndInitHandle() throws LWJGLException {
-		// NO-OP
-	}
-
-	protected void doUnlock() throws LWJGLException {
-		// NO-OP
-	}
 }

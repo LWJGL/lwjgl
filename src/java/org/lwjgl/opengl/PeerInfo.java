@@ -85,4 +85,7 @@ abstract class PeerInfo {
 	protected final ByteBuffer getHandle() {
 		return handle;
 	}
+
+	public void destroy() {
+	}
 }

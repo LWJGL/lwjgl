@@ -39,6 +39,13 @@ import java.awt.GraphicsEnvironment;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
+import java.awt.Point;
+import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.HierarchyListener;
+
 /**
  * $Id$
  * <p>
@@ -47,8 +54,9 @@ import org.lwjgl.Sys;
  * @version $Revision$
  * @author $Author$
  */
-public class AWTGLCanvas extends Canvas implements Drawable {
+public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, HierarchyListener {
 	private final static AWTCanvasImplementation implementation;
+	private boolean update_context;
 
 	static {
 		Sys.initialize();
@@ -59,7 +67,7 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 		} else if (OS_NAME.startsWith("Windows")) {
 			class_name = "org.lwjgl.opengl.Win32CanvasImplementation";
 		} else if (OS_NAME.startsWith("Mac")) {
-			class_name = "org.lwjgl.opengl.DefaultCanvasImplementation";
+			class_name = "org.lwjgl.opengl.MacOSXCanvasImplementation";
 		} else
 			throw new IllegalStateException("The platform " + OS_NAME + " is not supported");
 		try {
@@ -75,14 +83,20 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	}
 
 	/** The requested pixel format */
-	private final PeerInfo peer_info;
+	private final PixelFormat pixel_format;
 
 	/** The drawable to share context with */
 	private final Drawable drawable;
 	
 	/** Context handle */
+	private PeerInfo peer_info;
 	private Context context;
 	
+
+	private synchronized void setUpdate() {
+		update_context = true;
+	}
+
 	/**
 	 * This method should only be called internally.
 	 */
@@ -126,8 +140,9 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	 */
 	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format, Drawable drawable) throws LWJGLException {
 		super(implementation.findConfiguration(device, pixel_format));
-		this.peer_info = implementation.createPeerInfo(this, pixel_format);
+		addHierarchyListener(this);
 		this.drawable = drawable;
+		this.pixel_format = pixel_format;
 	}
 	
 	/* (non-Javadoc)
@@ -188,6 +203,8 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 			if (context != null) {
 				context.forceDestroy();
 				context = null;
+				peer_info.destroy();
+				peer_info = null;
 			}
 		} catch (LWJGLException e) {
 			throw new RuntimeException(e);
@@ -202,12 +219,19 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 
 	public final void paint(Graphics g) {
 		try {
+			if (peer_info == null)
+				this.peer_info = implementation.createPeerInfo(this, pixel_format);
 			peer_info.lockAndGetHandle();
 			try {
-				if (context == null)
-					context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
+				if (context == null) {
+					this.context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
+				}
 				if (!context.isCurrent())
 					context.makeCurrent();
+				if (update_context) {
+					context.update();
+					update_context = false;
+				}
 				paintGL();
 			} finally {
 				peer_info.unlock();
@@ -222,5 +246,48 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	 */
 	public void update(Graphics g) {
 		paint(g);
+	}
+
+	public void componentShown(ComponentEvent e) {
+	}
+
+	public void componentHidden(ComponentEvent e) {
+	}
+
+	public void componentResized(ComponentEvent e) {
+		setUpdate();
+	}
+
+	public void componentMoved(ComponentEvent e) {
+		setUpdate();
+	}
+
+	public void setLocation(int x, int y) {
+		super.setLocation(x, y);
+		setUpdate();
+	}
+
+	public void setLocation(Point p) {
+		super.setLocation(p);
+		setUpdate();
+	}
+
+	public void setSize(Dimension d) {
+		super.setSize(d);
+		setUpdate();
+	}
+
+	public void setSize(int width, int height) {
+		super.setSize(width, height);
+		setUpdate();
+	}
+
+	public void setBounds(int x, int y, int width, int height) {
+		super.setBounds(x, y, width, height);
+		setUpdate();
+	}
+
+	public void hierarchyChanged(HierarchyEvent e) {
+		setUpdate();
 	}
 }

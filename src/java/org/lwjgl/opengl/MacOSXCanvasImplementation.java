@@ -33,9 +33,14 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
+import org.lwjgl.BufferUtils;
+
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsConfiguration;
+import java.awt.Rectangle;
+
+import java.lang.reflect.Method;
 
 /**
  * $Id$
@@ -43,43 +48,20 @@ import org.lwjgl.Sys;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxPbufferPeerInfo extends LinuxPeerInfo {
-	public LinuxPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
-		LinuxDisplay.lockAWT();
-		try {
-			LinuxDisplay.incDisplay();
-			try {
-				GLContext.loadOpenGLLibrary();
-				try {
-					nInitHandle(getHandle(), width, height, pixel_format);
-				} catch (LWJGLException e) {
-					GLContext.unloadOpenGLLibrary();
-					throw e;
-				}
-			} catch (LWJGLException e) {
-				LinuxDisplay.decDisplay();
-				throw e;
-			}
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
-	}
-	private static native void nInitHandle(ByteBuffer handle, int width, int height, PixelFormat pixel_format) throws LWJGLException;
-
-	public void destroy() {
-		LinuxDisplay.lockAWT();
-		nDestroy(getHandle());
-		LinuxDisplay.decDisplay();
-		GLContext.unloadOpenGLLibrary();
-		LinuxDisplay.unlockAWT();
-	}
-	private static native void nDestroy(ByteBuffer handle);
-
-	protected void doLockAndInitHandle() throws LWJGLException {
-		// NO-OP
+final class MacOSXCanvasImplementation implements AWTCanvasImplementation {
+	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
+		return new MacOSXAWTGLCanvasPeerInfo(canvas, pixel_format);
 	}
 
-	protected void doUnlock() throws LWJGLException {
-		// NO-OP
+	/**
+	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.
+	 *
+	 * @return The GraphicsConfiguration corresponding to a visual that matches the pixel format.
+	 */
+	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
+		/*
+		 * It seems like the best way is to simply return null
+		 */
+		return null;
 	}
 }

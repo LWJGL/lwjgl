@@ -95,7 +95,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		if (frame != null) {
 			if (MacOSXFrame.getDevice().getFullScreenWindow() == frame)
 				MacOSXFrame.getDevice().setFullScreenWindow(null);
-			setView(null);
+//			setView(null);
 			if (frame.isDisplayable())
 				frame.dispose();
 			frame = null;
@@ -193,29 +193,35 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return frame.syncIsActive();
 	}
 
+	public MacOSXFrame getFrame() {
+		return frame;
+	}
+
 	public boolean isDirty() {
 		return frame.getCanvas().syncIsDirty();
 	}
 
-	public native void setView(MacOSXGLCanvas canvas);
+//	public native void setView(MacOSXGLCanvas canvas);
 
 //	public native void swapBuffers();
 
 //	public native void makeCurrent() throws LWJGLException;
 
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		throw new RuntimeException("Not supported yet");
+		return new MacOSXDisplayPeerInfo(pixel_format);
 	}
 //	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
 
-	public native void destroyPeerInfo();
+//	public native void destroyPeerInfo();
 //	public native void destroyContext();
 
 	public void update() {
-		if (frame.syncShouldUpdateContext()) {
-			updateContext();
+		if (frame.getCanvas().syncShouldUpdateContext()) {
+			Display.getContext().update();
 			/* This is necessary to make sure the context won't "forget" about the view size */
 			GL11.glViewport(0, 0, frame.getCanvas().syncGetWidth(), frame.getCanvas().syncGetHeight());
+		}
+		if (frame.syncShouldWarpCursor()) {
 			warpCursor();
 		}
 	}
@@ -240,7 +246,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	private native void updateContext();
 
-	public native void setVSyncEnabled(boolean sync);
+//	public native void setVSyncEnabled(boolean sync);
 
 	public void reshape(int x, int y, int width, int height) {
 		frame.resize(x, y, width, height);
@@ -422,7 +428,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
-		throw new RuntimeException("Not yet supported");
+		return new MacOSXPbufferPeerInfo(width, height, pixel_format);
 	}
 
 /*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
@@ -438,7 +444,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
 */
 //	public native void destroyPbuffer(ByteBuffer handle);
-	public native void destroyPbuffer(PeerInfo handle);
 
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
 		throw new UnsupportedOperationException();

@@ -37,20 +37,42 @@
  * @version $Revision$
  */
 
-#include <jni.h>
-#include <jawt.h>
-#include <jawt_md.h>
-#include "awt_tools.h"
-#include "org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo.h"
-#include "context.h"
-#include "common_tools.h"
+#import <jni.h>
+#import <Cocoa/Cocoa.h>
+#import "org_lwjgl_opengl_MacOSXPbufferPeerInfo.h"
+#import "context.h"
+#import "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo_nInitHandle
-  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
-	JAWT_Win32DrawingSurfaceInfo *win32_dsi = (JAWT_Win32DrawingSurfaceInfo *)surface->dsi->platformInfo;
-	peer_info->format_hwnd = win32_dsi->hwnd;
-	peer_info->format_hdc = win32_dsi->hdc;
-	peer_info->drawable_hdc = win32_dsi->hdc;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXPbufferPeerInfo_nCreate(JNIEnv *env, jclass clazz, jobject peer_info_handle, jint width, jint height) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSOpenGLPixelBuffer *pbuffer = nil;
+	// check if the texture is power of 2
+	if ( (( width > 0 ) && ( width & ( width-1)) == 0) || (( height > 0 ) && ( height & ( height-1)) == 0) )
+	{
+		pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_2D
+			textureInternalFormat:GL_RGBA
+			textureMaxMipMapLevel:0
+			pixelsWide:width
+			pixelsHigh:height];
+	}
+	else
+	{
+		pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_RECTANGLE_EXT
+			textureInternalFormat:GL_RGBA
+			textureMaxMipMapLevel:0
+			pixelsWide:width
+			pixelsHigh:height];
+	}
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	peer_info->pbuffer = pbuffer;
+	peer_info->window = false;
+	[pool release];
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXPbufferPeerInfo_nDestroy
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	MacOSXPeerInfo *peer_info = (MacOSXPeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	[peer_info->pbuffer release];
+	[pool release];
 }

@@ -576,7 +576,11 @@
 			<class name="org.lwjgl.opengl.Win32ContextImplementation" />
 		</javah>
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
+			<class name="org.lwjgl.opengl.MacOSXCanvasPeerInfo" />
+			<class name="org.lwjgl.opengl.MacOSXPeerInfo" />
+			<class name="org.lwjgl.opengl.MacOSXPbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.MacOSXDisplay" />
+			<class name="org.lwjgl.opengl.MacOSXContextImplementation" />
 		</javah>
 		<!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">

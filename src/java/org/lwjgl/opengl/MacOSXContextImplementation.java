@@ -42,111 +42,68 @@ import org.lwjgl.BufferUtils;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxContextImplementation implements ContextImplementation {
+final class MacOSXContextImplementation implements ContextImplementation {
 	private static PeerInfo getCurrentPeerInfo() {
 		return Context.getCurrentContext().getPeerInfo();
 	}
 
 	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
-		LinuxDisplay.lockAWT();
+		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-			ByteBuffer peer_handle = peer_info.lockAndGetHandle();
-			try {
-				return nCreate(peer_handle, shared_context_handle);
-			} finally {
-				peer_info.unlock();
-			}
+			return nCreate(peer_handle, shared_context_handle);
 		} finally {
-			LinuxDisplay.unlockAWT();
+			peer_info.unlock();
 		}
 	}
-
 	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
-	
-	public void swapBuffers() throws LWJGLException {
-		PeerInfo current_peer_info = getCurrentPeerInfo();
-		if (current_peer_info == null)
-			throw new IllegalStateException("No context is current");
-		LinuxDisplay.lockAWT();
-		try {
-			ByteBuffer peer_handle = current_peer_info.lockAndGetHandle();
-			try {
-				nSwapBuffers(peer_handle);
-			} finally {
-				current_peer_info.unlock();
-			}
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
-	}
-	private static native void nSwapBuffers(ByteBuffer peer_info_handle) throws LWJGLException;
 
-	public void releaseCurrentContext() throws LWJGLException {
-		PeerInfo current_peer_info = getCurrentPeerInfo();
-		if (current_peer_info == null)
-			return; // No context is current
-		LinuxDisplay.lockAWT();
-		try {
-			ByteBuffer peer_handle = current_peer_info.lockAndGetHandle();
-			try {
-				nReleaseCurrentContext(peer_handle);
-			} finally {
-				current_peer_info.unlock();
-			}
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
+	public void swapBuffers() throws LWJGLException {
+		Context current_context = Context.getCurrentContext();
+		nSwapBuffers(current_context.getHandle());
 	}
-	private static native void nReleaseCurrentContext(ByteBuffer peer_info_handle) throws LWJGLException;
+	private static native void nSwapBuffers(ByteBuffer context_handle) throws LWJGLException;
 
 	public void update(ByteBuffer context_handle) {
+System.out.println("context_handle = " + context_handle);
+		nUpdate(context_handle);
 	}
+	private static native void nUpdate(ByteBuffer context_handle);
+
+	public void releaseCurrentContext() throws LWJGLException {
+		Context current_context = Context.getCurrentContext();
+		if (current_context != null)
+			clearDrawable(current_context.getHandle());
+		nReleaseCurrentContext();
+	}
+	private static native void nReleaseCurrentContext() throws LWJGLException;
+
+	private static native void clearDrawable(ByteBuffer handle) throws LWJGLException;
 
 	public void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
-		LinuxDisplay.lockAWT();
+		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
-			ByteBuffer peer_handle = peer_info.lockAndGetHandle();
-			try {
-				nMakeCurrent(peer_handle, handle);
-			} finally {
-				peer_info.unlock();
-			}
+			setView(peer_handle, handle);
+			nMakeCurrent(handle);
 		} finally {
-			LinuxDisplay.unlockAWT();
+			peer_info.unlock();
 		}
 	}
-	private static native void nMakeCurrent(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
-	
+	private static native void setView(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
+	private static native void nMakeCurrent(ByteBuffer context_handle) throws LWJGLException;
+
 	public boolean isCurrent(ByteBuffer handle) throws LWJGLException {
-		LinuxDisplay.lockAWT();
-		try {
-			boolean result = nIsCurrent(handle);
-			return result;
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
+		boolean result = nIsCurrent(handle);
+		return result;
 	}
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setVSync(boolean enabled) {
-		LinuxDisplay.lockAWT();
-		nSetVSync(enabled);
-		LinuxDisplay.unlockAWT();
+		nSetVSync(Context.getCurrentContext().getHandle(), enabled);
 	}
-	private static native void nSetVSync(boolean enabled);
+	private static native void nSetVSync(ByteBuffer context_handle, boolean enabled);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
-		LinuxDisplay.lockAWT();
-		try {
-			ByteBuffer peer_handle = peer_info.lockAndGetHandle();
-			try {
-				nDestroy(peer_handle, handle);
-			} finally {
-				peer_info.unlock();
-			}
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
+		nDestroy(handle);
 	}
-	private static native void nDestroy(ByteBuffer peer_handle, ByteBuffer context_handle) throws LWJGLException;
+	private static native void nDestroy(ByteBuffer context_handle) throws LWJGLException;
 }

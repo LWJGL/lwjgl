@@ -37,49 +37,27 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
+import java.awt.Canvas;
+
 /**
  * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxPbufferPeerInfo extends LinuxPeerInfo {
-	public LinuxPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
-		LinuxDisplay.lockAWT();
-		try {
-			LinuxDisplay.incDisplay();
-			try {
-				GLContext.loadOpenGLLibrary();
-				try {
-					nInitHandle(getHandle(), width, height, pixel_format);
-				} catch (LWJGLException e) {
-					GLContext.unloadOpenGLLibrary();
-					throw e;
-				}
-			} catch (LWJGLException e) {
-				LinuxDisplay.decDisplay();
-				throw e;
-			}
-		} finally {
-			LinuxDisplay.unlockAWT();
-		}
-	}
-	private static native void nInitHandle(ByteBuffer handle, int width, int height, PixelFormat pixel_format) throws LWJGLException;
+abstract class MacOSXCanvasPeerInfo extends MacOSXPeerInfo {
+	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
 
-	public void destroy() {
-		LinuxDisplay.lockAWT();
-		nDestroy(getHandle());
-		LinuxDisplay.decDisplay();
-		GLContext.unloadOpenGLLibrary();
-		LinuxDisplay.unlockAWT();
+	public MacOSXCanvasPeerInfo(PixelFormat pixel_format) throws LWJGLException {
+		super(pixel_format, true, true, false, true);
 	}
-	private static native void nDestroy(ByteBuffer handle);
 
-	protected void doLockAndInitHandle() throws LWJGLException {
-		// NO-OP
+	protected void initHandle(Canvas canvas) throws LWJGLException {
+		nInitHandle(awt_surface.lockAndGetHandle(canvas), getHandle());
 	}
+	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
-		// NO-OP
+		awt_surface.unlock();
 	}
 }

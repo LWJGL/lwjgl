@@ -140,6 +140,15 @@ final class Context {
 	}
 
 	/**
+	 * Update the context. Should be called whenever it's drawable is moved or resized
+	 */
+	public synchronized void update() {
+		if (destroyed)
+			throw new IllegalStateException("Context is destroyed");
+		implementation.update(getHandle());
+	}
+	
+	/**
 	 * Swap the buffers on the current context. Only valid for double-buffered contexts
 	 */
 	public static void swapBuffers() throws LWJGLException {
@@ -166,6 +175,10 @@ final class Context {
 		current_context_local.set(this);
 		implementation.makeCurrent(peer_info, handle);
 		GLContext.useContext(this);
+	}
+
+	ByteBuffer getHandle() {
+		return handle;
 	}
 
 	/**

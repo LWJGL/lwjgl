@@ -73,21 +73,11 @@ final class Win32Display implements DisplayImplementation {
 //	public native void swapBuffers();
 //	public native void makeCurrent() throws LWJGLException;
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		GLContext.loadOpenGLLibrary();
-		try {
-			peer_info = new Win32DisplayPeerInfo(pixel_format);
-			return peer_info;
-		} catch (LWJGLException e) {
-			GLContext.unloadOpenGLLibrary();
-			throw e;
-		}
+		peer_info = new Win32DisplayPeerInfo(pixel_format);
+		return peer_info;
 	}
 //	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
 //	public native void destroyContext();
-	public void destroyPeerInfo() {
-		peer_info.destroy();
-		GLContext.unloadOpenGLLibrary();
-	}
 	public void update() {
 		nUpdate();
 		if (didMaximize()) {
@@ -167,9 +157,6 @@ final class Win32Display implements DisplayImplementation {
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
 */
-	public void destroyPbuffer(PeerInfo handle) {
-		((Win32PbufferPeerInfo)handle).destroy();
-	}
 //	public native void destroyPbuffer(ByteBuffer handle);
 
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {

@@ -33,24 +33,28 @@
 /**
  * $Id$
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * Base Win32 display
+ *
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include <jni.h>
-#include <jawt.h>
-#include <jawt_md.h>
-#include "awt_tools.h"
-#include "org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo.h"
-#include "context.h"
+#ifndef __LWJGL_CONTEXT_H
+#define __LWJGL_CONTEXT_H
+
+#include <Cocoa/Cocoa.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo_nInitHandle
-  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
-	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
-	JAWT_Win32DrawingSurfaceInfo *win32_dsi = (JAWT_Win32DrawingSurfaceInfo *)surface->dsi->platformInfo;
-	peer_info->format_hwnd = win32_dsi->hwnd;
-	peer_info->format_hdc = win32_dsi->hdc;
-	peer_info->drawable_hdc = win32_dsi->hdc;
-}
+typedef struct {
+	NSOpenGLPixelFormat *pixel_format;
+	bool window;
+	union {
+		NSView *nsview;
+		NSOpenGLPixelBuffer *pbuffer;
+	};
+} MacOSXPeerInfo;
+
+NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool use_display_bpp, bool support_window, bool support_pbuffer, bool double_buffered);
+#endif

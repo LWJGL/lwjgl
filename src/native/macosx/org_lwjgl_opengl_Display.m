@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Mac OS Xspecific display functions.
+ * Mac OS X specific display functions.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
@@ -44,12 +44,12 @@
 #import <jawt_md.h>
 #import <jni.h>
 #import <unistd.h>
-#import "display.h"
+//#import "display.h"
 #import "common_tools.h"
 
 #define WAIT_DELAY 100
 
-static NSOpenGLContext *gl_context;
+/*static NSOpenGLContext *gl_context;
 
 NSOpenGLContext *createContext(JNIEnv *env, jobject pixel_format, bool double_buffered, bool use_display_bpp, long drawable_type, NSOpenGLContext *share_context) {
 	int bpp;
@@ -173,7 +173,7 @@ static void setView(JNIEnv *env, jobject canvas) {
 	ds->Unlock(ds);
 	awt.FreeDrawingSurface(ds);
 }
-
+*/
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_restoreGamma(JNIEnv *env, jobject this) {
 	CGDisplayRestoreColorSyncSettings();
 }
@@ -194,7 +194,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_hideUI(JNIEnv *env, j
 		SetSystemUIMode(kUIModeNormal, 0);
 	}
 }
-
+/*
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_setVSyncEnabled(JNIEnv *env, jobject this, jboolean vsync) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	long vsync_value = vsync  == JNI_TRUE ? 1 : 0;
@@ -233,3 +233,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_destroyContext(JNIEnv
 	}
 	[pool release];
 }
+*/

@@ -57,10 +57,10 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 
 	/* States */
 	private Rectangle bounds;
-	private boolean should_update;
 	private boolean active;
 	private boolean visible;
 	private boolean minimized;
+	private boolean should_warp_cursor;
 
 	MacOSXFrame(DisplayMode mode, java.awt.DisplayMode requested_mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		setResizable(false);
@@ -160,8 +160,8 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 
 	public void windowActivated(WindowEvent e) {
 		synchronized ( this ) {
-			should_update = true;
 			active = true;
+			should_warp_cursor = true;
 		}
 	}
 
@@ -190,11 +190,11 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		return canvas;
 	}
 
-	public boolean syncShouldUpdateContext() {
+	public boolean syncShouldWarpCursor() {
 		boolean result;
 		synchronized ( this ) {
-			result = canvas.syncShouldUpdateContext() || should_update;
-			should_update = false;
+			result = should_warp_cursor;
+			should_warp_cursor = false;
 		}
 		return result;
 	}
