@@ -83,7 +83,7 @@ public abstract class Vector {
 	 * Normalise this vector
 	 * @return this
 	 */
-	public final Vector normalise() {
+	public final Vector normalize() {
 		float l = 1.0f / length();
 		return scale(l);
 	}

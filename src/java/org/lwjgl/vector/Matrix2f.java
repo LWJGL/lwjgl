@@ -84,8 +84,8 @@ public class Matrix2f extends Matrix {
 	public Matrix load(FloatBuffer buf) {
 		
 		m00 = buf.get();
-		m10 = buf.get();
 		m01 = buf.get();
+		m10 = buf.get();
 		m11 = buf.get();
 		
 		return this;
@@ -101,8 +101,8 @@ public class Matrix2f extends Matrix {
 	public Matrix loadTranspose(FloatBuffer buf) {
 		
 		m00 = buf.get();
-		m01 = buf.get();
 		m10 = buf.get();
+		m01 = buf.get();
 		m11 = buf.get();
 		
 		return this;
@@ -115,8 +115,8 @@ public class Matrix2f extends Matrix {
 	 */
 	public Matrix store(FloatBuffer buf) {
 		buf.put(m00);
-		buf.put(m10);
 		buf.put(m01);
+		buf.put(m10);
 		buf.put(m11);
 		return this;
 	}
@@ -128,8 +128,8 @@ public class Matrix2f extends Matrix {
 	 */
 	public Matrix storeTranspose(FloatBuffer buf) {
 		buf.put(m00);
-		buf.put(m01);
 		buf.put(m10);
+		buf.put(m01);
 		buf.put(m11);
 		return this;
 	}	
@@ -293,6 +293,7 @@ public class Matrix2f extends Matrix {
 	 * @return this
 	 */
 	public Matrix invert() {
+		assert false : "Not implemented yet!";
 		return this;
 	}
 	
@@ -356,6 +357,7 @@ public class Matrix2f extends Matrix {
 	 * @see org.lwjgl.vector.Matrix#determinant()
 	 */
 	public float determinant() {
+		assert false : "Not implemented yet!";
 		return 0;
 	}
 

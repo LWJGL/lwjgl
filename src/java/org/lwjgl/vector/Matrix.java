@@ -36,7 +36,8 @@ import java.nio.FloatBuffer;
 /**
  * $Id$
  *
- * Base class for matrices.
+ * Base class for matrices. When a matrix is constructed it will be the identity
+ * matrix unless otherwise stated.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$

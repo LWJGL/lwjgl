@@ -39,6 +39,16 @@ import java.nio.FloatBuffer;
  * @author foo
  */
 public class Matrix4f extends Matrix {
+	
+	public float m00 = 1.0f, m01, m02, m03, m10, m11 = 1.0f, m12, m13, m20, m21, m22 = 1.0f, m23, m30, m31, m32, m33 = 1.0f;
+	
+	/**
+	 * Construct a Matrix4f
+	 */
+	public Matrix4f() {
+		super();
+	}
+
 	/**
 	 * Set this matrix to be the identity matrix.
 	 * @return this
@@ -91,15 +101,6 @@ public class Matrix4f extends Matrix {
 	}
 
 
-	
-	public float m00 = 1.0f, m01, m02, m03, m10, m11 = 1.0f, m12, m13, m20, m21, m22 = 1.0f, m23, m30, m31, m32, m33 = 1.0f;
-	
-	/**
-	 * Construct a Matrix4f
-	 */
-	public Matrix4f() {
-		super();
-	}
 	/**
 	 * Load from another matrix4f
 	 * @param src The source matrix
@@ -137,20 +138,20 @@ public class Matrix4f extends Matrix {
 	public Matrix load(FloatBuffer buf) {
 		
 		m00 = buf.get();
-		m10 = buf.get();
-		m20 = buf.get();
-		m30 = buf.get();
 		m01 = buf.get();
-		m11 = buf.get();
-		m21 = buf.get();
-		m31 = buf.get();
 		m02 = buf.get();
-		m12 = buf.get();
-		m22 = buf.get();
-		m32 = buf.get();
 		m03 = buf.get();
+		m10 = buf.get();
+		m11 = buf.get();
+		m12 = buf.get();
 		m13 = buf.get();
+		m20 = buf.get();
+		m21 = buf.get();
+		m22 = buf.get();
 		m23 = buf.get();
+		m30 = buf.get();
+		m31 = buf.get();
+		m32 = buf.get();
 		m33 = buf.get();
 		
 		return this;
@@ -166,20 +167,20 @@ public class Matrix4f extends Matrix {
 	public Matrix loadTranspose(FloatBuffer buf) {
 		
 		m00 = buf.get();
-		m01 = buf.get();
-		m02 = buf.get();
-		m03 = buf.get();
 		m10 = buf.get();
-		m11 = buf.get();
-		m12 = buf.get();
-		m13 = buf.get();
 		m20 = buf.get();
-		m21 = buf.get();
-		m22 = buf.get();
-		m23 = buf.get();
 		m30 = buf.get();
+		m01 = buf.get();
+		m11 = buf.get();
+		m21 = buf.get();
 		m31 = buf.get();
+		m02 = buf.get();
+		m12 = buf.get();
+		m22 = buf.get();
 		m32 = buf.get();
+		m03 = buf.get();
+		m13 = buf.get();
+		m23 = buf.get();
 		m33 = buf.get();
 		
 		return this;
@@ -192,20 +193,20 @@ public class Matrix4f extends Matrix {
 	 */
 	public Matrix store(FloatBuffer buf) {
 		buf.put(m00);
-		buf.put(m10);
-		buf.put(m20);
-		buf.put(m30);
 		buf.put(m01);
-		buf.put(m11);
-		buf.put(m21);
-		buf.put(m31);
 		buf.put(m02);
-		buf.put(m12);
-		buf.put(m22);
-		buf.put(m32);
 		buf.put(m03);
+		buf.put(m10);
+		buf.put(m11);
+		buf.put(m12);
 		buf.put(m13);
+		buf.put(m20);
+		buf.put(m21);
+		buf.put(m22);
 		buf.put(m23);
+		buf.put(m30);
+		buf.put(m31);
+		buf.put(m32);
 		buf.put(m33);
 		return this;
 	}
@@ -217,20 +218,20 @@ public class Matrix4f extends Matrix {
 	 */
 	public Matrix storeTranspose(FloatBuffer buf) {
 		buf.put(m00);
-		buf.put(m01);
-		buf.put(m02);
-		buf.put(m03);
 		buf.put(m10);
-		buf.put(m11);
-		buf.put(m12);
-		buf.put(m13);
 		buf.put(m20);
-		buf.put(m21);
-		buf.put(m22);
-		buf.put(m23);
 		buf.put(m30);
+		buf.put(m01);
+		buf.put(m11);
+		buf.put(m21);
 		buf.put(m31);
+		buf.put(m02);
+		buf.put(m12);
+		buf.put(m22);
 		buf.put(m32);
+		buf.put(m03);
+		buf.put(m13);
+		buf.put(m23);
 		buf.put(m33);
 		return this;
 	}	
@@ -425,6 +426,76 @@ public class Matrix4f extends Matrix {
 	}
 	
 	/**
+	 * Translate this matrix
+	 * @param vec The vector to translate by
+	 * @return this
+	 */
+	public Matrix4f translate(Vector2f vec) {
+		m30 += m00 * vec.x + m10 * vec.y;
+		m31 += m01 * vec.x + m11 * vec.y;
+		m32 += m02 * vec.x + m12 * vec.y;
+		m33 += m03 * vec.x + m13 * vec.y;
+		return this;
+	}
+	
+	/**
+	 * Translate this matrix
+	 * @param vec The vector to translate by
+	 * @return this
+	 */
+	public Matrix4f translate(Vector3f vec) {
+		m30 += m00 * vec.x + m10 * vec.y + m20 * vec.z;
+		m31 += m01 * vec.x + m11 * vec.y + m21 * vec.z;
+		m32 += m02 * vec.x + m12 * vec.y + m22 * vec.z;
+		m33 += m03 * vec.x + m13 * vec.y + m23 * vec.z;
+		return this;
+	}
+		
+	
+
+	/**
+	 * Translate this matrix and stash the result in another matrix
+	 * @param vec The vector to translate by
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 * @return the translated matrix
+	 */
+	public Matrix4f translate(Vector3f vec, Matrix4f dest) {
+		if (dest == null)
+			dest = new Matrix4f();
+		else if (dest == this)
+			return translate(vec);
+		
+		dest.m30 += m00 * vec.x + m10 * vec.y + m20 * vec.z;
+		dest.m31 += m01 * vec.x + m11 * vec.y + m21 * vec.z;
+		dest.m32 += m02 * vec.x + m12 * vec.y + m22 * vec.z;
+		dest.m33 += m03 * vec.x + m13 * vec.y + m23 * vec.z;
+		
+		return dest;
+	}
+	
+	/**
+	 * Translate this matrix and stash the result in another matrix
+	 * @param vec The vector to translate by
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 * @return the translated matrix
+	 */
+	public Matrix4f translate(Vector2f vec, Matrix4f dest) {
+		if (dest == null)
+			dest = new Matrix4f();
+		else if (dest == this)
+			return translate(vec);
+		
+		dest.m30 += m00 * vec.x + m10 * vec.y;
+		dest.m31 += m01 * vec.x + m11 * vec.y;
+		dest.m32 += m02 * vec.x + m12 * vec.y;
+		dest.m33 += m03 * vec.x + m13 * vec.y;
+		
+		return dest;
+	}	
+
+
+	
+	/**
 	 * Transpose this matrix and place the result in another matrix
 	 * @param dest The destination matrix or null if a new matrix is to be created
 	 * @return the transposed matrix
@@ -488,6 +559,7 @@ public class Matrix4f extends Matrix {
 	 * @return this
 	 */
 	public Matrix invert() {
+		assert false : "Not implemented yet!";
 		return this;
 	}
 	

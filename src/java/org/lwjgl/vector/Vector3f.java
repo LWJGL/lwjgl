@@ -143,6 +143,32 @@ public class Vector3f extends Vector {
 			return dest.set(left.x - right.x, left.y - right.y, left.z - right.z);
     	}
     }
+    
+	/**
+	 * The cross product of two vectors.
+	 * 
+	 * @param left The LHS vector
+	 * @param right The RHS vector
+	 * @param dest The destination result, or null if a new vector is to be created
+	 * @return left cross right
+	 */
+	public static Vector3f cross(
+		Vector3f left,
+		Vector3f right,
+		Vector3f dest)
+	{
+
+		if (dest == null)
+			dest = new Vector3f();
+
+		dest.set(
+			left.y * right.z - left.z * right.y,
+			right.x * left.z - right.z * left.x,
+			left.x * right.y - left.y * right.x
+			);
+		
+		return dest;
+	}    
       
 	
 	

@@ -151,7 +151,7 @@ public class Vector2f extends Vector {
 	
 	/**
 	 * The dot product of two vectors is calculated as
-	 * v1.x * v2.x + v1.y * v2.y
+	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
 	 * @param left The LHS vector
 	 * @param right The RHS vector
 	 * @return left dot right
@@ -159,6 +159,8 @@ public class Vector2f extends Vector {
 	public static float dot(Vector2f left, Vector2f right) {
 		return left.x * right.x + left.y * right.y;
 	}
+
+
 	
 	/**
 	 * Calculate the angle between two vectors, in degrees
