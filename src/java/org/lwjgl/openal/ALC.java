@@ -290,17 +290,20 @@ public class ALC {
 
 	/**
 	 * The application can suspend any context from processing (including the current
-	* one). To indicate that a context should be suspended from processing (i.e. that
-	* internal execution state like offset increments is not supposed to be changed), the
-	* application has to use <code>alcSuspendContext</code>.
-	* 
-	* Repeated calls to <code>alcSuspendContext</code> are legal, and do not affect a context that is
-	* already marked as suspended. The default state of a context created by
-	* <code>alcCreateContext</code> is that it is marked as suspended.
+	 * one). To indicate that a context should be suspended from processing (i.e. that
+	 * internal execution state like offset increments is not supposed to be changed), the
+	 * application has to use <code>alcSuspendContext</code>.
+	 * 
+	 * Repeated calls to <code>alcSuspendContext</code> are legal, and do not affect a context that is
+	 * already marked as suspended. The default state of a context created by
+	 * <code>alcCreateContext</code> is that it is marked as suspended.
 	 *
 	 * @param context address of context to suspend
 	 */
-	native static void alcSuspendContext(int context);
+  public static void alcSuspendContext() {
+  	nalcSuspendContext(AL.context.context);
+  }
+	native static void nalcSuspendContext(int context);
 
 	/**
 	 * The correct way to destroy a context is to first release it using <code>alcMakeCurrent</code> and

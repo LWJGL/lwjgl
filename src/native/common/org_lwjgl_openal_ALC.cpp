@@ -288,7 +288,7 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcGetContextsDevice (JNIEnv *e
  * C Specification:
  * void alcSuspendContext(ALCcontext *context);
  */
-static void JNICALL Java_org_lwjgl_openal_ALC_alcSuspendContext (JNIEnv *env, jclass clazz, jint contextaddress) {
+static void JNICALL Java_org_lwjgl_openal_ALC_nalcSuspendContext (JNIEnv *env, jclass clazz, jint contextaddress) {
 	alcSuspendContext((ALCcontext*) contextaddress);
 }
 
@@ -367,7 +367,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_initNativeStubs(JNIEnv *env, jc
 		{"nalcProcessContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_nalcProcessContext, "alcProcessContext", (void**)&alcProcessContext},
 		{"alcGetCurrentContext", "()Lorg/lwjgl/openal/ALCcontext;", (void*)&Java_org_lwjgl_openal_ALC_alcGetCurrentContext, "alcGetCurrentContext", (void**)&alcGetCurrentContext},
 		{"alcGetContextsDevice", "(I)Lorg/lwjgl/openal/ALCdevice;", (void*)&Java_org_lwjgl_openal_ALC_alcGetContextsDevice, "alcGetContextsDevice", (void**)&alcGetContextsDevice},
-		{"alcSuspendContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_alcSuspendContext, "alcSuspendContext", (void**)&alcSuspendContext},
+		{"nalcSuspendContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_nalcSuspendContext, "alcSuspendContext", (void**)&alcSuspendContext},
 		{"alcDestroyContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_alcDestroyContext, "alcDestroyContext", (void**)&alcDestroyContext},
 		{"nalcGetError", "(I)I", (void*)&Java_org_lwjgl_openal_ALC_nalcGetError, "alcGetError", (void**)&alcGetError},
 		{"nalcIsExtensionPresent", "(ILjava/lang/String;)Z", (void*)&Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent, "alcIsExtensionPresent", (void**)&alcIsExtensionPresent},
