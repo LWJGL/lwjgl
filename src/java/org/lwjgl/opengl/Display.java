@@ -43,17 +43,16 @@ package org.lwjgl.opengl;
  * @author foo
  */
 
+import java.nio.FloatBuffer;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferUtils;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
-import java.util.HashSet;
 
 public final class Display {
 

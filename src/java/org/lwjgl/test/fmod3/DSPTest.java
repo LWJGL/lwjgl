@@ -34,7 +34,6 @@ package org.lwjgl.test.fmod3;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import org.lwjgl.fmod3.FMOD;
 import org.lwjgl.fmod3.FMODException;

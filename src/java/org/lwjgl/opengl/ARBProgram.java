@@ -32,14 +32,13 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import org.lwjgl.LWJGLException;
 
 public abstract class ARBProgram {
 	/*

@@ -32,15 +32,14 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.BufferChecks;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
 
 /**
  * $Id$

@@ -32,7 +32,6 @@
 package org.lwjgl.test.fmod3;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -40,7 +39,6 @@ import org.lwjgl.fmod3.FMOD;
 import org.lwjgl.fmod3.FMODException;
 import org.lwjgl.fmod3.FSound;
 import org.lwjgl.fmod3.FSoundStream;
-import org.lwjgl.fmod3.callbacks.FSoundDSPCallback;
 import org.lwjgl.fmod3.callbacks.FSoundMetaDataCallback;
 
 /**

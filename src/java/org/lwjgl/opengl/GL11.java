@@ -31,17 +31,14 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.BufferChecks;
-
-import java.nio.*;
 import java.nio.Buffer;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
 
 /**
