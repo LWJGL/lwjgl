@@ -33,6 +33,7 @@
 package org.lwjgl.input;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class Mouse {
 	private static boolean created;
 
 	/** The mouse buttons status from the last poll */
-	private static byte[] buttons;
+	private static ByteBuffer buttons;
 
 	/** X */
 	private static int x;
@@ -80,6 +81,9 @@ public class Mouse {
 	/** Y */
 	private static int y;
 	
+	/** Buffer to hold the deltas dx, dy and dwheel */
+	private static IntBuffer coord_buffer;
+
 	/** Delta X */
 	private static int dx;
 
@@ -177,8 +181,8 @@ public class Mouse {
 		if (currentCursor != null) {
 			nSetNativeCursor(currentCursor.getHandle());
 	 		currentCursor.setTimeout();
-      x = Window.getWidth() / 2;
-      y = Window.getHeight() / 2;      
+		x = Window.getWidth() / 2;
+		y = Window.getHeight() / 2;      
 		} else {
 			nSetNativeCursor(0);
 		}
@@ -221,7 +225,6 @@ public class Mouse {
 	 */
 	private static void initialize() {
 		Sys.initialize();
-		initIDs();
 		
 		// Assign names to all the buttons
 		buttonName = new String[16];
@@ -234,13 +237,8 @@ public class Mouse {
 	}
 
 	/**
-	 * Register fields with the native library
-	 */
-	private static native void initIDs();
-
-	/**
 	 * "Create" the mouse. The display must first have been created.
-	* 
+	 * 
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
@@ -256,10 +254,12 @@ public class Mouse {
 		hasWheel = nHasWheel();
 		created = true;
 		currentCursor = null;
+		dx = dy = dwheel = 0;
 
 		// set mouse buttons
 		buttonCount = nGetButtonCount();
-		buttons = new byte[buttonCount];
+		buttons = BufferUtils.createByteBuffer(buttonCount);
+		coord_buffer = BufferUtils.createIntBuffer(3);
 	}
 
 	/** Native query of wheel support */
@@ -305,6 +305,7 @@ public class Mouse {
 			return;
 		created = false;
 		buttons = null;
+		coord_buffer = null;
 		currentCursor = null;
 
 		nDestroy();
@@ -334,11 +335,17 @@ public class Mouse {
 	public static void poll() {
 		if (!created)
 			throw new IllegalStateException("Mouse must be created before you can poll it");
-		nPoll();
+		nPoll(coord_buffer, buttons);
 		
+		int poll_dx = coord_buffer.get(0);
+		int poll_dy = coord_buffer.get(1);
+		int poll_dwheel = coord_buffer.get(2);
 		// set absolute position
-		x += dx;
-		y += dy;
+		x += poll_dx;
+		y += poll_dy;
+		dx += poll_dx;
+		dy += poll_dy;
+		dwheel += poll_dwheel;
 
 		// if window has been created, clamp to edges
 		if(Window.isCreated()) {
@@ -360,7 +367,7 @@ public class Mouse {
 	/**
 	 * Native method to poll the mouse
 	 */
-	private static native void nPoll();
+	private static native void nPoll(IntBuffer coord_buffer, ByteBuffer buttons);
 
 	/**
 	 * See if a particular mouse button is down.
@@ -374,7 +381,7 @@ public class Mouse {
 		if (button >= buttonCount || button < 0)
 			return false;
 		else
-			return buttons[button] == 1;
+			return buttons.get(button) == 1;
 	}
 	
 	/**
@@ -505,24 +512,30 @@ public class Mouse {
 	}	
 	
 	/**
-	 * @return Movement on the x axis since last poll
+	 * @return Movement on the x axis since last time getDX() was called
 	 */
 	public static int getDX() {
-		return dx;
+		int result = dx;
+		dx = 0;
+		return result;
 	}
 
 	/**
-	 * @return Movement on the y axis since last poll
+	 * @return Movement on the y axis since last time getDY() was called
 	 */
 	public static int getDY() {
-		return dy;
+		int result = dy;
+		dy = 0;
+		return result;
 	}
 
 	/**
-	 * @return Movement of the wheel since last poll
+	 * @return Movement of the wheel since last time getDWheel() was called
 	 */
 	public static int getDWheel() {
-		return dwheel;
+		int result = dwheel;
+		dwheel = 0;
+		return result;
 	}
 
 	/**

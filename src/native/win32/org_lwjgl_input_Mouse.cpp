@@ -54,12 +54,6 @@ static bool mHaswheel;											 // Temporary wheel check
 static bool mCreate_success;								 // bool used to determine successfull creation
 static bool mFirstTimeInitialization = true; // boolean to determine first time initialization
 
-// Cached fields of Mouse.java
-static jfieldID fidMButtons;
-static jfieldID fidMDX;
-static jfieldID fidMDY;
-static jfieldID fidMDWheel;
-
 static POINT cursorPos;
 static RECT windowRect;
 static bool usingNativeCursor;
@@ -71,8 +65,7 @@ void ShutdownMouse();
 void CreateMouse();
 void SetupMouse();
 void InitializeMouseFields();
-void CacheMouseFields(JNIEnv *env, jclass clsMouse);
-void UpdateMouseFields(JNIEnv *env, jclass clsMouse);
+void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj);
 
 static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
 {
@@ -82,14 +75,6 @@ static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
 	clientRect->left = -clientSize.left + windowRect->left;
 	clientRect->bottom += clientRect->top;
 	clientRect->right += clientRect->left;
-}
-
-/**
- * Initializes any field ids
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass clazz) {
-	/* Cache fields in Mouse */
-	CacheMouseFields(env, clazz);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
@@ -113,7 +98,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 	} 
 
 	ShowCursor(FALSE);
-	CacheMouseFields(env, clazz);
 
 	/* skip enumeration, since we only want system mouse */
 	CreateMouse();
@@ -312,9 +296,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass c
  * Method:		nPoll
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	mDIDevice->Acquire();
-	UpdateMouseFields(env, clazz);
+	UpdateMouseFields(env, clazz, coord_buffer_obj, button_buffer_obj);
 }
 
 /**
@@ -444,10 +428,19 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
 /**
  * Updates the fields on the Mouse
  */
-static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
+static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	HRESULT								 hRes; 
 	DIMOUSESTATE diMouseState;						// State of Mouse
 	int dx, dy;
+
+	int *coords = (int *)env->GetDirectBufferAddress(coord_buffer_obj);
+	int coords_length = env->GetDirectBufferCapacity(coord_buffer_obj);
+	unsigned char *buttons_buffer = (unsigned char *)env->GetDirectBufferAddress(button_buffer_obj);
+	int buttons_length = env->GetDirectBufferCapacity(button_buffer_obj);
+	if (coords_length < 3) {
+		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
+		return;
+	}
 
 	// get data from the Mouse 
 	hRes = mDIDevice->GetDeviceState(sizeof(DIMOUSESTATE), &diMouseState);
@@ -473,10 +466,9 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
 	}
 	dy = -dy;
 
-	env->SetStaticIntField(clsMouse, fidMDX, (jint)dx);
-	env->SetStaticIntField(clsMouse, fidMDY, (jint)dy);
-	env->SetStaticIntField(clsMouse, fidMDWheel, (jint)diMouseState.lZ);
-	
+	coords[0] = dx;
+	coords[0] = dy;
+	coords[0] = diMouseState.lZ;
 	for (int i = 0; i < mButtoncount; i++) {
 		if (diMouseState.rgbButtons[i] != 0) {
 			diMouseState.rgbButtons[i] = JNI_TRUE;
@@ -484,16 +476,9 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
 			diMouseState.rgbButtons[i] = JNI_FALSE;
 		}
 	}
-	jbyteArray mButtonsArray = (jbyteArray) env->GetStaticObjectField(clsMouse, fidMButtons);
-	env->SetByteArrayRegion(mButtonsArray, 0, mButtoncount, (const signed char *) diMouseState.rgbButtons);
-}
-
-/**
- * Caches the field ids for quicker access
- */
-void CacheMouseFields(JNIEnv* env, jclass clsMouse) {
-	fidMButtons	= env->GetStaticFieldID(clsMouse, "buttons", "[B");
-	fidMDX		= env->GetStaticFieldID(clsMouse, "dx", "I");
-	fidMDY		= env->GetStaticFieldID(clsMouse, "dy", "I");
-	fidMDWheel	= env->GetStaticFieldID(clsMouse, "dwheel", "I");
+	int num_buttons = mButtoncount;
+	if (num_buttons > buttons_length)
+		num_buttons = buttons_length;
+	for (int i = 0; i < num_buttons; i++)
+		buttons_buffer[i] = (unsigned char)diMouseState.rgbButtons[i];
 }

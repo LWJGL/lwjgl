@@ -7,7 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
 #undef org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY
 #define org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY 1L
 #undef org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA
@@ -18,6 +17,7 @@ extern "C" {
 /* Inaccessible static: buttons */
 /* Inaccessible static: x */
 /* Inaccessible static: y */
+/* Inaccessible static: coord_buffer */
 /* Inaccessible static: dx */
 /* Inaccessible static: dy */
 /* Inaccessible static: dwheel */
@@ -32,7 +32,6 @@ extern "C" {
 /* Inaccessible static: eventState */
 #undef org_lwjgl_input_Mouse_BUFFER_SIZE
 #define org_lwjgl_input_Mouse_BUFFER_SIZE 50L
-/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Mouse */
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nGetNativeCursorCaps
@@ -108,10 +107,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nPoll
- * Signature: ()V
+ * Signature: (Ljava/nio/IntBuffer;Ljava/nio/ByteBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jobject, jobject);
 
 /*
  * Class:     org_lwjgl_input_Mouse

@@ -50,11 +50,6 @@ static const int NUM_BUTTONS = 7;
 static const int NUM_COOKIES = NUM_BUTTONS + 3;
 static const int WHEEL_SCALE = 120;
 
-static jfieldID fid_dx;
-static jfieldID fid_dy;
-static jfieldID fid_dwheel;
-static jfieldID fid_buttons;
-
 static jbyte button_states[NUM_BUTTONS];
 static bool buffer_enabled;
 /*static int x_axis_index = NUM_BUTTONS;
@@ -176,13 +171,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 	return NUM_BUTTONS;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass clazz) {
-	fid_dx = env->GetStaticFieldID(clazz, "dx", "I");
-	fid_dy = env->GetStaticFieldID(clazz, "dy", "I");
-	fid_dwheel = env->GetStaticFieldID(clazz, "dwheel", "I");
-	fid_buttons = env->GetStaticFieldID(clazz, "buttons", "[B");
-}
-
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps(JNIEnv *env, jclass clazz) {
 	return 0;
 }
@@ -235,17 +223,28 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass 
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	int dx, dy, dz;
 	//pollMouseDevice();
 	dz = last_dz*WHEEL_SCALE;
 	dx = last_dx;
 	dy = -last_dy;
-	env->SetStaticIntField(clazz, fid_dx, (jint)dx);
-	env->SetStaticIntField(clazz, fid_dy, (jint)dy);
-	env->SetStaticIntField(clazz, fid_dwheel, (jint)dz);
-	jbyteArray buttons_array = (jbyteArray)env->GetStaticObjectField(clazz, fid_buttons);
-	env->SetByteArrayRegion(buttons_array, 0, NUM_BUTTONS, button_states);
+	int *coords = (int *)env->GetDirectBufferAddress(coord_buffer_obj);
+	int coords_length = env->GetDirectBufferCapacity(coord_buffer_obj);
+	unsigned char *buttons_buffer = (unsigned char *)env->GetDirectBufferAddress(button_buffer_obj);
+	int buttons_length = env->GetDirectBufferCapacity(button_buffer_obj);
+	if (coords_length < 3) {
+		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
+		return;
+	}
+	coords[0] = dx;
+	coords[1] = dy;
+	coords[2] = dz;
+	int num_buttons = NUM_BUTTONS;
+	if (num_buttons > buttons_length)
+		num_buttons = buttons_length;
+	for (int i = 0; i < num_buttons; i++)
+		buttons_buffer[i] = button_states[i];
 	resetDeltas();
 }
 

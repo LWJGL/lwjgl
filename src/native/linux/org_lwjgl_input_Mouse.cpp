@@ -62,11 +62,6 @@ static bool created = false;
 static bool should_grab = false;
 static bool native_cursor = false;
 
-static jfieldID fid_buttons = NULL;
-static jfieldID fid_dx = NULL;
-static jfieldID fid_dy = NULL;
-static jfieldID fid_dwheel = NULL;
-
 static int last_x;
 static int last_y;
 static int last_z;
@@ -104,19 +99,6 @@ static void centerCursor() {
 	transformCursorPos(getWindowWidth()/2, getWindowHeight()/2);
 	last_x = current_x;
 	last_y = current_y;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
-  (JNIEnv * env, jclass clazz)
-{
-	if (fid_buttons == NULL)
-		fid_buttons = env->GetStaticFieldID(clazz, "buttons", "[B");
-	if (fid_dx == NULL)
-		fid_dx = env->GetStaticFieldID(clazz, "dx", "I");
-	if (fid_dy == NULL)
-		fid_dy = env->GetStaticFieldID(clazz, "dy", "I");
-	if (fid_dwheel == NULL)
-		fid_dwheel = env->GetStaticFieldID(clazz, "dwheel", "I");
 }
 
 static bool blankCursor(void) {
@@ -378,18 +360,29 @@ void handlePointerMotion(XMotionEvent *event) {
 		setCursorPos(event->x, event->y);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	int moved_x = current_x - last_x;
 	int moved_y = -(current_y - last_y);
 	int moved_z = current_z - last_z;
-	env->SetStaticIntField(clazz, fid_dx, (jint)moved_x);
-	env->SetStaticIntField(clazz, fid_dy, (jint)moved_y);
-	env->SetStaticIntField(clazz, fid_dwheel, (jint)moved_z);
+	int *coords = (int *)env->GetDirectBufferAddress(coord_buffer_obj);
+	int coords_length = env->GetDirectBufferCapacity(coord_buffer_obj);
+	unsigned char *buttons_buffer = (unsigned char *)env->GetDirectBufferAddress(button_buffer_obj);
+	int buttons_length = env->GetDirectBufferCapacity(button_buffer_obj);
+	if (coords_length < 3) {
+		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
+		return;
+	}
+	coords[0] = moved_x;
+	coords[1] = moved_y;
+	coords[2] = moved_z;
 	last_x = current_x;
 	last_y = current_y;
 	last_z = current_z;
-	jbyteArray buttons_array = (jbyteArray)env->GetStaticObjectField(clazz, fid_buttons);
-	env->SetByteArrayRegion(buttons_array, 0, NUM_BUTTONS, buttons);
+	int num_buttons = NUM_BUTTONS;
+	if (num_buttons > buttons_length)
+		num_buttons = buttons_length;
+	for (int i = 0; i < num_buttons; i++)
+		buttons_buffer[i] = buttons[i];
 	warpPointer();
 }
 
