@@ -37,3 +37,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_deleteQuadric
     /* delete any callbacks we assigned to the quadric */
     CallbackManager.del(quad);
 }
+
+
+then from java:
+
+/* myquadric is a reference to a GLUquadricObj returned by glu.newQuadric()
+ * GLU.ERROR is the callback type
+ * errorCallback is the method you wish to be called */
+glu.quadricCallback(myquadric, GLU.ERROR, "errorCallback");
