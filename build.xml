@@ -301,7 +301,7 @@
 	</target>
 
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
-	<target name="-compile_native_mac" >
+	<target name="-compile_native_mac" if="lwjgl.platform.mac">
       <echo>Checking for valid OpenAL install</echo>
       <property name="openal.home" value="/projects/openal"/>
          <available file="${openal.home}" type="dir" property="isValidOpenALHome"/>
