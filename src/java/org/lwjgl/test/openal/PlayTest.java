@@ -103,14 +103,14 @@ public class PlayTest extends BasicTest {
           ByteBuffer filebuffer = getData(args[0]);
           
           // pass directly to buffer data
-          AL10.alBufferData(buffers.get(0), AL10.AL_FORMAT_VORBIS_EXT, filebuffer, -1, -1);
+          AL10.alBufferData(buffers.get(0), AL10.AL_FORMAT_VORBIS_EXT, filebuffer, -1);
           filebuffer.clear();
         } else {
           // load wave data from buffer
           WaveData wavefile = WaveData.create(args[0]);
 
           //copy to buffers
-          AL10.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
+          AL10.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.samplerate);
           
           //unload file again
           wavefile.dispose();        

@@ -164,7 +164,7 @@ public class PositionTest extends BasicTest {
 
     Sys.log("Loading left.wav");
     WaveData left = WaveData.create("left.wav");
-    AL10.alBufferData(soundBuffers.get(LEFT), left.format, left.data, left.data.capacity(), left.samplerate);
+    AL10.alBufferData(soundBuffers.get(LEFT), left.format, left.data, left.samplerate);
     AL10.alSourcef(soundSources.get(LEFT), AL10.AL_PITCH, 1.0f);
     AL10.alSourcef(soundSources.get(LEFT), AL10.AL_GAIN, 1.0f);
     AL10.alSource(soundSources.get(LEFT), AL10.AL_POSITION, leftPosition);
@@ -174,7 +174,7 @@ public class PositionTest extends BasicTest {
 
     Sys.log("Loading center.wav");
     WaveData center = WaveData.create("center.wav");
-    AL10.alBufferData(soundBuffers.get(CENTER), center.format, center.data, center.data.capacity(), center.samplerate);
+    AL10.alBufferData(soundBuffers.get(CENTER), center.format, center.data, center.samplerate);
     AL10.alSourcef(soundSources.get(CENTER), AL10.AL_PITCH, 1.0f);
     AL10.alSourcef(soundSources.get(CENTER), AL10.AL_GAIN, 1.0f);
     AL10.alSource(soundSources.get(CENTER), AL10.AL_POSITION, centerPosition);
@@ -184,7 +184,7 @@ public class PositionTest extends BasicTest {
 
     Sys.log("Loading right.wav");
     WaveData right = WaveData.create("right.wav");
-    AL10.alBufferData(soundBuffers.get(RIGHT), right.format, right.data, right.data.capacity(), right.samplerate);
+    AL10.alBufferData(soundBuffers.get(RIGHT), right.format, right.data, right.samplerate);
     AL10.alSourcef(soundSources.get(RIGHT), AL10.AL_PITCH, 1.0f);
     AL10.alSourcef(soundSources.get(RIGHT), AL10.AL_GAIN, 1.0f);
     AL10.alSource(soundSources.get(RIGHT), AL10.AL_POSITION, rightPosition);

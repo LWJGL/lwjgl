@@ -31,9 +31,11 @@
  */
 package org.lwjgl.openal;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 /**
  * $Id$
  * <br>
@@ -972,15 +974,27 @@ public final class AL10 {
 		int buffer,
 		int format,
 		ByteBuffer data,
-		int size,
 		int freq) {
-			// TODO: add an assertion here?
 			nalBufferData(buffer, format, data, data.position(), data.remaining(), freq);
+		}
+	public static void alBufferData(
+		int buffer,
+		int format,
+		ShortBuffer data,
+		int freq) {
+			nalBufferData(buffer, format, data, data.position() << 1, data.remaining() << 1, freq);
+		}
+	public static void alBufferData(
+		int buffer,
+		int format,
+		IntBuffer data,
+		int freq) {
+			nalBufferData(buffer, format, data, data.position() << 2, data.remaining() << 2, freq);
 		}
 	private static native void nalBufferData(
 		int buffer,
 		int format,
-		ByteBuffer data,
+		Buffer data,
 		int offset,
 		int size,
 		int freq);
