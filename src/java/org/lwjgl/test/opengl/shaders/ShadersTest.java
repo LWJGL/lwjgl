@@ -122,13 +122,11 @@ public final class ShadersTest {
 
 		DisplayMode displayMode;
 
-		displayMode = chooseMode(modes, 1024, 768, 32);
+		displayMode = chooseMode(modes, 1024, 768);
 		if ( displayMode == null )
-			displayMode = chooseMode(modes, 800, 600, 32);
+			displayMode = chooseMode(modes, 800, 600);
 		if ( displayMode == null )
-			displayMode = chooseMode(modes, 1024, 768, 16);
-		if ( displayMode == null )
-			displayMode = chooseMode(modes, 800, 600, 16);
+			displayMode = chooseMode(modes, 640, 480);
 		if ( displayMode == null )
 			kill("Failed to set an appropriate display mode.");
 
@@ -206,7 +204,7 @@ public final class ShadersTest {
 		// Setup lighting for when we have fixed function fragment rendering.
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
-		if (shader == null ) {
+		if ( shader == null ) {
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_LIGHT0);
 		}
@@ -281,13 +279,13 @@ public final class ShadersTest {
 		sphere.draw(1.0f, 32, 32);
 	}
 
-	private static DisplayMode chooseMode(DisplayMode[] modes, int width, int height, int bpp) {
+	private static DisplayMode chooseMode(DisplayMode[] modes, int width, int height) {
 		DisplayMode bestMode = null;
 
 		for ( int i = 0; i < modes.length; i++ ) {
 			DisplayMode mode = modes[i];
-			if ( mode.width == width && mode.height == height && mode.bpp == bpp && mode.freq <= 85 ) {
-				if ( bestMode == null || bestMode.freq < mode.freq )
+			if ( mode.width == width && mode.height == height && mode.freq <= 85 ) {
+				if ( bestMode == null || (mode.bpp >= bestMode.bpp && mode.freq > bestMode.freq) )
 					bestMode = mode;
 			}
 		}

@@ -8,7 +8,7 @@ void main(void) {
 
 	// Normalize position.
 	// Multiply with current sin.
-	color2D.xy = normalize(color2D) * UNIFORMS.x;
+	color2D.xy = normalize(color2D).xy * UNIFORMS.x;
 	// {-1..1} => {0..1} & Intensify colors.
 	color2D.xy = (vec2(color2D) * 0.5 + 0.5) * 2.0;
 	color2D.z = 1.0;
