@@ -31,12 +31,6 @@
 		<include name="org/lwjgl/test/**"/>
 	</fileset>  
 
-	<!-- Files to include in the lwjgl_util.jar file -->
-	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
-		<exclude name="**.*"/>
-		<include name="org/lwjgl/util/**"/>
-	</fileset>  
-
 	<!-- Files to make Javadoc from -->
 	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}/java">
 		<include name="**/*.java" />
@@ -215,11 +209,6 @@
 		<!-- Create lwjgl_test.jar -->
 		<jar destfile="${lwjgl.lib}/lwjgl_test.jar" taskname="lwjgl_test.jar">
 			<fileset refid="lwjgl_test.fileset"/>
-		</jar>
-
-		<!-- Create lwjgl_util.jar -->
-		<jar destfile="${lwjgl.lib}/lwjgl_util.jar" taskname="lwjgl_util.jar">
-			<fileset refid="lwjgl_util.fileset"/>
 		</jar>
 	</target>
   
