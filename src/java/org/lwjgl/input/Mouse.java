@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package org.lwjgl.input;
 
 import org.lwjgl.Display;
@@ -50,37 +50,37 @@ import org.lwjgl.Sys;
  */
 public class Mouse {
 
+	/** Has the mouse been created? */
+	private static boolean created;
+
+	/** The mouse buttons status from the last poll */
+	private static boolean[] buttons = new boolean[4];
+
+	/** Delta X */
+	public static int dx;
+
+	/** Delta Y */
+	public static int dy;
+
+	/** Delta Z */
+	public static int dwheel;
+
+	/** Number of buttons supported by the mouse */
+	public static int buttonCount = -1;
+
+	/** Does this mouse support a scroll wheel */
+	public static boolean hasWheel = false;
+
 	static {
 		initialize();
 	}
-	
-	/** Has the mouse been created? */
-	private static boolean created;
-	
-	/** The mouse buttons status from the last poll */
-	private static boolean[] buttons;
-	
-	/** Delta X */
-	public static int dx;
-	
-	/** Delta Y */
-	public static int dy;
-	
-	/** Delta Z */
-	public static int dwheel;
-  
-  /** Number of buttons supported by the mouse */
-  public static int buttonCount = -1;
-  
-  /** Does this mouse support a scroll wheel */
-  public static boolean hasWheel = false;
 
 	/**
 	 * Mouse cannot be constructed.
 	 */
 	private Mouse() {
 	}
-	
+
 	/**
 	 * Static initialization
 	 */
@@ -88,15 +88,15 @@ public class Mouse {
 		System.loadLibrary(Sys.getLibraryName());
 		initIDs();
 	}
-	
+
 	/**
 	 * Register fields with the native library
 	 */
 	private static native void initIDs();
-	
+
 	/**
 	 * "Create" the mouse. The display must first have been created.
-   * 
+	* 
 	 * @throws Exception if the mouse could not be created for any reason
 	 */
 	public static void create() throws Exception {
@@ -108,7 +108,7 @@ public class Mouse {
 			throw new Exception("The mouse could not be created.");
 		created = true;
 	}
-	
+
 	/**
 	 * Native method to create the mouse
 	 * 
@@ -125,7 +125,7 @@ public class Mouse {
 		created = false;
 		nDestroy();
 	}
-	
+
 	/**
 	 * Native method the destroy the mouse
 	 */
@@ -137,13 +137,13 @@ public class Mouse {
 	public static void poll() {
 		assert created : "The mouse has not been created.";
 		nPoll();
-	}		
-	
+	}
+
 	/**
 	 * Native method to poll the mouse
 	 */
 	private static native void nPoll();
-	
+
 	/**
 	 * See if a particular mouse button is down.
 	 * 
