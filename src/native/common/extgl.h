@@ -3161,6 +3161,7 @@ struct ExtensionTypes
     bool GLX_EXT_visual_info;
     bool GLX_EXT_visual_rating;
     bool GLX_SGI_swap_control;
+    bool GLX_ARB_multisample;
 #endif /* X11 */
 
     bool OpenGL12;

@@ -14,10 +14,6 @@ extern "C" {
 /* Inaccessible static: width */
 /* Inaccessible static: height */
 /* Inaccessible static: title */
-/* Inaccessible static: color */
-/* Inaccessible static: alpha */
-/* Inaccessible static: depth */
-/* Inaccessible static: stencil */
 /* Inaccessible static: fullscreen */
 /* Inaccessible static: vsync */
 /* Inaccessible static: vbo_tracker */
@@ -90,10 +86,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIIILjava/util/HashSet;)V
+ * Signature: (Ljava/lang/String;IIIIZIIIIILjava/util/HashSet;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint, jobject);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint, jint, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Window

@@ -297,7 +297,7 @@ GLXContext getCurrentContext(void) {
 	return context;
 }
 
-static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
+static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int depth, int alpha, int stencil, int samples) {
 	int bpe = convertToBPE(bpp);
 	int attriblist[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
 			    GLX_DOUBLEBUFFER, True,
@@ -308,8 +308,16 @@ static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int de
 			    GLX_BLUE_SIZE, bpe,
 			    GLX_ALPHA_SIZE, alpha,
 			    GLX_STENCIL_SIZE, stencil,
+			    None, None, /* For ARB_multisample */
+			    None, None, /*                     */
 			    None};
 	int num_formats = 0;
+	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
+		attriblist[18] = GLX_SAMPLE_BUFFERS_ARB;
+		attriblist[19] = 1;
+		attriblist[20] = GLX_SAMPLES_ARB;
+		attriblist[21] = samples;
+	}
 	GLXFBConfig* configs = glXChooseFBConfig(disp, screen, attriblist, &num_formats);
 	if (num_formats > 0)
 		return configs;
@@ -320,7 +328,7 @@ static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int de
 	}
 }
 
-static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
+static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil, int samples) {
 	int bpe = convertToBPE(bpp);
 	int attriblist[] = {GLX_RGBA,
 			    GLX_DOUBLEBUFFER,
@@ -330,19 +338,33 @@ static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, 
 			    GLX_BLUE_SIZE, bpe,
 			    GLX_ALPHA_SIZE, alpha,
 			    GLX_STENCIL_SIZE, stencil,
+			    None, None, /* For ARB_multisample */
+			    None, None, /*                     */
 			    None};
+	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
+		attriblist[14] = GLX_SAMPLE_BUFFERS_ARB;
+		attriblist[15] = 1;
+		attriblist[16] = GLX_SAMPLES_ARB;
+		attriblist[17] = samples;
+	}
 	return glXChooseVisual(disp, screen, attriblist);
 }
 
 static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
 	int alpha, depth, stencil, r, g, b;
+	int sample_buffers = 0;
+	int samples = 0;
 	glXGetConfig(disp, vis_info, GLX_RED_SIZE, &r);
 	glXGetConfig(disp, vis_info, GLX_GREEN_SIZE, &g);
 	glXGetConfig(disp, vis_info, GLX_BLUE_SIZE, &b);
 	glXGetConfig(disp, vis_info, GLX_ALPHA_SIZE, &alpha);
 	glXGetConfig(disp, vis_info, GLX_DEPTH_SIZE, &depth);
 	glXGetConfig(disp, vis_info, GLX_STENCIL_SIZE, &stencil);
-	printf("Pixel format chosen sizes: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d\n", r, g, b, alpha, depth, stencil);
+	if (extgl_Extensions.GLX_ARB_multisample) {
+		glXGetConfig(disp, vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
+		glXGetConfig(disp, vis_info, GLX_SAMPLES_ARB, &samples);
+	}
+	printf("Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d\n", r, g, b, alpha, depth, stencil, sample_buffers, samples);
 }
 
 static void destroy(void) {
@@ -357,8 +379,8 @@ static void destroy(void) {
 	extgl_Close();
 }
 
-static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, bool fscreen) {
-	GLXFBConfig *configs = chooseVisualGLX13(disp, screen, bpp, depth, alpha, stencil);
+static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen) {
+	GLXFBConfig *configs = chooseVisualGLX13(disp, screen, bpp, depth, alpha, stencil, samples);
 	if (configs == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
@@ -372,7 +394,7 @@ static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring titl
 	if (glXIsDirect(disp, context) == False) {
 		glXDestroyContext(disp, context);
 		XFree(configs);
-		throwException(env, "Could not create a GLX context");
+		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
 	XVisualInfo * vis_info = glXGetVisualFromFBConfig(disp, configs[0]);
@@ -382,18 +404,18 @@ static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring titl
 		throwException(env, "Could not create visual info from FB config");
 		return false;
 	}
-	if (ISDEBUGENABLED())
-		dumpVisualInfo(disp, vis_info);
 	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
 	glx_window = glXCreateWindow(disp, configs[0], getCurrentWindow(), NULL);
 	makeCurrent();
+	if (ISDEBUGENABLED())
+		dumpVisualInfo(disp, vis_info);
 	XFree(configs);
 	XFree(vis_info);
 	return true;
 }
 
-static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, bool fscreen) {
-	XVisualInfo *vis_info = chooseVisual(disp, screen, bpp, depth, alpha, stencil);
+static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen) {
+	XVisualInfo *vis_info = chooseVisual(disp, screen, bpp, depth, alpha, stencil, samples);
 	if (vis_info == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
@@ -424,7 +446,7 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
  * Signature: (IIII)Z
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jobject ext_set)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples, jobject ext_set)
 {
 	int screen;
 	Display *disp;
@@ -450,13 +472,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	}
 	bool create_success;
 	if (USEGLX13) {
-		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
+		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen);
 	} else {
-		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
+		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen);
 	}
 	if (!create_success) {
 		XCloseDisplay(disp);
 		extgl_Close();
+		throwException(env, "Could not create window");
 		return;
 	}
 	if (!extgl_Initialize(env, ext_set)) {

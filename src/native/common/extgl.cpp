@@ -1075,6 +1075,7 @@ static void extgl_InitGLXSupportedExtensions(JNIEnv *env, jobject ext_set, Displ
 	extgl_Extensions.GLX_EXT_visual_info = GLXQueryExtension(env, ext_set, disp, screen, "GLX_EXT_visual_info");
 	extgl_Extensions.GLX_EXT_visual_rating = GLXQueryExtension(env, ext_set, disp, screen, "GLX_EXT_visual_rating");
 	extgl_Extensions.GLX_SGI_swap_control = GLXQueryExtension(env, ext_set, disp, screen, "GLX_SGI_swap_control");
+	extgl_Extensions.GLX_ARB_multisample = GLXQueryExtension(env, ext_set, disp, screen, "GLX_ARB_multisample");
 }
 
 static void extgl_InitGLXSGISwapControl(JNIEnv *env, jobject ext_set)

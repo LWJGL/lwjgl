@@ -360,3 +360,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv
 	glGetQueryObjectuiv(id, pname, params_ptr);
 	CHECK_GL_ERROR
 }
+

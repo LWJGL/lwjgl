@@ -79,21 +79,9 @@ public final class Window {
 	/** Title of the window */
 	private static String title;
 
-	/** Color bits */
-	private static int color;
-
-	/** Alpha bits */
-	private static int alpha;
-
-	/** Depth bits */
-	private static int depth;
-
-	/** Stencil bits */
-	private static int stencil;
-
 	/** Fullscreen */
 	private static boolean fullscreen;
-	
+
 	/** Vsync */
 	private static boolean vsync;
 
@@ -244,23 +232,21 @@ public final class Window {
 	 * @param alpha Minimum bits per pixel in alpha buffer
 	 * @param depth Minimum bits per pixel in depth buffer
 	 * @param stencil Minimum bits per pixel in stencil buffer
+	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
+			  Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
 	 * @throws Exception if the window could not be created for any reason; typically because
 	 * the minimum requirements could not be met satisfactorily
 	 */
-	public static void create(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
+	public static void create(String title, int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
 		if (isCreated())
 			throw new Exception("Only one LWJGL window may be instantiated at any one time.");
+		Window.fullscreen = true;
 		Window.x = 0;
 		Window.y = 0;
-		Window.color = bpp;
-		Window.alpha = alpha;
-		Window.depth = depth;
-		Window.stencil = stencil;
-		Window.fullscreen = true;
-		Window.title = title;
 		Window.width = Display.getWidth();
 		Window.height = Display.getHeight();
-		createWindow();
+		Window.title = title;
+		createWindow(bpp, alpha, depth, stencil, samples);
 	}
 
 	/**
@@ -278,24 +264,22 @@ public final class Window {
 	 * @param alpha Minimum bits per pixel in alpha buffer
 	 * @param depth Minimum bits per pixel in depth buffer
 	 * @param stencil Minimum bits per pixel in stencil buffer
+	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
+			  Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
 	 * @throws Exception if the window could not be created for any reason; typically because
 	 * the minimum requirements could not be met satisfactorily
 	 */
-	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil)
+	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil, int samples)
 		throws Exception {
 		if (isCreated())
 			throw new Exception("Only one LWJGL window may be instantiated at any one time.");
+		Window.fullscreen = false;
 		Window.x = x;
 		Window.y = y;
 		Window.width = width;
 		Window.height = height;
-		Window.color = bpp;
-		Window.alpha = alpha;
-		Window.depth = depth;
-		Window.stencil = stencil;
-		Window.fullscreen = false;
 		Window.title = title;
-		createWindow();
+		createWindow(bpp, alpha, depth, stencil, samples);
 	}
 
 	/**
@@ -313,12 +297,13 @@ public final class Window {
 		int alpha,
 		int depth,
 		int stencil,
+		int samples,
 		HashSet extensions)
 		throws Exception;
 
-	private static void createWindow() throws Exception {
+	private static void createWindow(int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
 		HashSet extensions = new HashSet();
-		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil, extensions);
+		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples, extensions);
 		GLCaps.determineAvailableExtensions(extensions);
 		context = new Window();
 		created = true;
