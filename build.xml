@@ -25,6 +25,7 @@
 		<exclude name="org/lwjgl/fmod3/**" />
 		<exclude name="org/lwjgl/test/**" />
 		<exclude name="org/lwjgl/util/**" />
+		<exclude name="org/lwjgl/devil/**" />
 		<exclude name="org/lwjgl/examples/**" />
 	</fileset>
 
@@ -73,6 +74,7 @@
 		<patternset refid="lwjgl-common.fileset" />
 		<include name="lwjgl.dll" />
 		<include name="lwjgl-fmod3.dll" />
+		<include name="lwjgl-devil.dll" />
 		<include name="lwjglaudio.dll" />
 	</patternset>
 
@@ -81,6 +83,7 @@
 		<patternset refid="lwjgl-common.fileset" />
 		<include name="liblwjgl.so" />
 		<include name="liblwjgl-fmod3.so" />
+		<include name="liblwjgl-devil.so" />
 		<include name="libopenal.so" />
 	</patternset>
 
@@ -89,6 +92,7 @@
 		<patternset refid="lwjgl-common.fileset" />
 		<include name="liblwjgl.jnilib" />
 		<include name="liblwjgl-fmod3.jnilib" />
+		<include name="liblwjgl-devil.jnilib" />
 		<include name="openal.dylib" />
 	</patternset>
 
