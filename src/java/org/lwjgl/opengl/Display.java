@@ -319,7 +319,7 @@ public final class Display {
 	public static void setFullscreen(boolean fullscreen) throws LWJGLException {
 		if (Display.fullscreen != fullscreen) {
 			Display.fullscreen = fullscreen;
-                        if (!isCreated())
+			if (!isCreated())
 				return;
 			destroyWindow();
 			if (fullscreen) {
