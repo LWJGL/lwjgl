@@ -38,8 +38,6 @@ import org.lwjgl.openal.ALCdevice;
 import org.lwjgl.openal.ALUT;
 import org.lwjgl.openal.ALUTLoadWAVData;
 
-import java.io.*;
-import java.net.*;
 /**
  * $Id$
  *
