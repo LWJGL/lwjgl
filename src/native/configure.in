@@ -32,14 +32,14 @@ AC_PROG_LIBTOOL
 
 case "$host_os" in
         darwin*)        _BUILD_FLAGS="-D_AGL"
-                        AC_CHECK_HEADER([altypes.h alctypes.h],, AC_MSG_ERROR([OpenAL headers required1]))
+                        AC_CHECK_HEADERS([altypes.h alctypes.h],, AC_MSG_ERROR([OpenAL headers required1]))
                         AC_SUBST(native_build_dir, [macosx])
                         CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         ;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
-                                   AC_CHECK_HEADER([AL/altypes.h AL/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
+                                   AC_CHECK_HEADERS([AL/altypes.h AL/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
                                    AC_SUBST(native_build_dir, [linux])
                                    CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                                    CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
