@@ -50,7 +50,7 @@ class ARBProgram {
 	/*
 	* Accepted by the <format> parameter of ProgramStringARB:
 	*/
-	public final static int GL_PROGRAM_FORMAT_ASCII_ARB = 0x8875;
+	public static final int GL_PROGRAM_FORMAT_ASCII_ARB = 0x8875;
 
 	/*
 	* Accepted by the <pname> parameter of GetProgramivARB:
@@ -178,7 +178,7 @@ class ARBProgram {
 			throw new BufferUnderflowException();
 		}
 	}
-	
+
 	// ---------------------------
 	public static void glProgramEnvParameterARB(int target, int index, FloatBuffer params) {
 		checkProgramEnv(index, params);
