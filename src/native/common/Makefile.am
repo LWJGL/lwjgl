@@ -11,7 +11,7 @@ libcommon_la_DEPENDENCIES = \
   callbacks/libcallbacks.la
 
 COMMON = \
-  extal.c \
+  extal.cpp \
   extal.h \
   extgl.c \
   extgl.h \
