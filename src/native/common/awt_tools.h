@@ -42,7 +42,6 @@
 
 #include <jni.h>
 #include <jawt.h>
-#include <jawt_md.h>
 
 typedef struct {
 	JAWT awt;
