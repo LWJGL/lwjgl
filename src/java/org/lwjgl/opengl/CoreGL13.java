@@ -32,9 +32,6 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.Buffer;

@@ -34,7 +34,6 @@ package org.lwjgl.test.openal;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.eax.*;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLWindow;
 
 import java.nio.IntBuffer;
