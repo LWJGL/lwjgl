@@ -139,6 +139,7 @@ public class Keyboard {
 	public static final int KEY_F13             = 0x64; /*                     (NEC PC98) */
 	public static final int KEY_F14             = 0x65; /*                     (NEC PC98) */
 	public static final int KEY_F15             = 0x66; /*                     (NEC PC98) */
+	public static final int KEY_PRINTSCREEN     = 0x67;
 	public static final int KEY_KANA            = 0x70; /* (Japanese keyboard)            */
 	public static final int KEY_CONVERT         = 0x79; /* (Japanese keyboard)            */
 	public static final int KEY_NOCONVERT       = 0x7B; /* (Japanese keyboard)            */
