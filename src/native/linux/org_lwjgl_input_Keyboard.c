@@ -143,30 +143,27 @@ static void putKeyboardEvent(jint keycode, jint state, jint ch) {
 	putEvent(&event_queue, event_list);
 }
 
-static int translateEvent(XKeyEvent *event, jint keycode, jint state) {
-	static char temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
+static void translateEvent(XKeyEvent *event, jint keycode, jint state) {
 	static XComposeStatus status;
+	char temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
 	int num_chars, i;
 	jint ch;
 
 	if (!translation_enabled || event->type == KeyRelease) {
 		putKeyboardEvent(keycode, state, 0);
-		return 0;
+		return;
 	}
 	num_chars = XLookupString(event, temp_translation_buffer, KEYBOARD_BUFFER_SIZE, NULL, &status);
 	if (num_chars > 0) {
-		num_chars--;
-		/* Assume little endian byte order */
-		ch = (jint)temp_translation_buffer[0] & 0xFF;
+		ch = ((jint)temp_translation_buffer[0]) & 0xFF;
 		putKeyboardEvent(keycode, state, ch);
-		for (i = 0; i < num_chars; i++) {
-			ch = ((jint)temp_translation_buffer[i + 1]) & 0xFF;
+		for (i = 1; i < num_chars; i++) {
+			ch = ((jint)temp_translation_buffer[i]) & 0xFF;
 			putKeyboardEvent(0, 0, ch);
 		}
 	} else {
 		putKeyboardEvent(keycode, state, 0);
 	}
-	return num_chars;
 }
 
 static unsigned char eventState(XKeyEvent *event) {
