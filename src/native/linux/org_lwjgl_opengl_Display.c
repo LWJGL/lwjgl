@@ -199,7 +199,7 @@ static void setDecorations(int dec) {
 	XChangeProperty (getDisplay(), getCurrentWindow(), motif_hints_atom, motif_hints_atom, 32, PropModeReplace, (unsigned char *)&motif_hints, sizeof(MotifWmHints)/sizeof(long));
 }
 
-bool releaseInput(void) {
+static bool releaseInput(JNIEnv *env) {
 	if (isLegacyFullscreen() || input_released)
 		return false;
 	input_released = true;
@@ -207,19 +207,19 @@ bool releaseInput(void) {
 	updateInputGrab();
 	if (current_window_mode == FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-		resetDisplayMode(getCurrentScreen(), true);
+		resetDisplayMode(env, getCurrentScreen(), true);
 	}
 	return true;
 }
 
-static void acquireInput(void) {
+static void acquireInput(JNIEnv *env) {
 	if (isLegacyFullscreen() || !input_released)
 		return;
 	input_released = false;
 	setRepeatMode(AutoRepeatModeOff);
 	updateInputGrab();
 	if (current_window_mode == FULLSCREEN_NETWM) {
-		temporaryRestoreMode(getCurrentScreen());
+		temporaryRestoreMode(env, getCurrentScreen());
 	}
 }
 
@@ -246,20 +246,20 @@ void setGrab(bool new_grab) {
 	}
 }
 
-static void checkInput(void) {
+static void checkInput(JNIEnv *env) {
 	Window win;
 	int revert_mode;
 	XGetInputFocus(getDisplay(), &win, &revert_mode);
 	if (win == current_win) {
-		acquireInput();
+		acquireInput(env);
 		focused = true;
 	} else {
-		releaseInput();
+		releaseInput(env);
 		focused = false;
 	}
 }
 
-void handleMessages(void) {
+void handleMessages(JNIEnv *env) {
 	XEvent event;
 /*	Window win;
 	int revert_mode;*/
@@ -310,7 +310,7 @@ void handleMessages(void) {
 				break;
 		}
 	}
-	checkInput();
+	checkInput(env);
 }
 
 static void setWindowTitle(const char *title) {
@@ -439,7 +439,7 @@ int getWindowHeight(void) {
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_update
   (JNIEnv *env, jobject this)
 {
-	handleMessages();
+	handleMessages(env);
 }
 
 static bool makeCurrent(void) {
@@ -676,11 +676,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_switchDisplayMode(JNIE
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_resetDisplayMode(JNIEnv *env, jobject this) {
-	resetDisplayMode(getCurrentScreen(), false);
+	resetDisplayMode(env, getCurrentScreen(), false);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getGammaRampLength(JNIEnv *env, jobject this) {
-	return (jint)getGammaRampLength(getCurrentScreen());
+	return (jint)getGammaRampLength(env, getCurrentScreen());
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setGammaRamp(JNIEnv *env, jobject this, jobject gamma_buffer) {

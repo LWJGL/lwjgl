@@ -80,7 +80,7 @@ void printfDebugJava(JNIEnv *env, const char *format, ...) {
 		buffer[BUFFER_SIZE - 1] = '\0';
 		jstring str = (*env)->NewStringUTF(env, buffer);
 		jclass org_lwjgl_Sys_class = (*env)->FindClass(env, "org/lwjgl/Sys");
-		jmethodID log_method = (*env)->GetMethodID(env, org_lwjgl_Sys_class, "log", "(Ljava/lang/String;)V");
+		jmethodID log_method = (*env)->GetStaticMethodID(env, org_lwjgl_Sys_class, "log", "(Ljava/lang/String;)V");
 		(*env)->CallStaticVoidMethod(env, org_lwjgl_Sys_class, log_method, str);
 	}
 	va_end(ap);

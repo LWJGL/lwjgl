@@ -285,12 +285,12 @@ void handleKeyEvent(XKeyEvent *event) {
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollKeyboard(JNIEnv * env, jobject this, jobject buffer) {
 	unsigned char *new_keyboard_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
-	handleMessages();
+	handleMessages(env);
 	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
 JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_readKeyboard(JNIEnv * env, jobject this, jobject buffer, jint buffer_position) {
-	handleMessages();
+	handleMessages(env);
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);

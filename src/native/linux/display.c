@@ -87,54 +87,54 @@ extension getCurrentDisplayModeExtension(void) {
 	return current_extension;
 }
 
-static bool getXF86VidModeVersion(Display *disp, int *major, int *minor) {
+static bool getXF86VidModeVersion(JNIEnv *env, Display *disp, int *major, int *minor) {
 	int event_base, error_base;
 
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
-		printfDebug("XF86VidMode extension not available\n");
+		printfDebugJava(env, "XF86VidMode extension not available");
 		return false;
 	}
 	if (!XF86VidModeQueryVersion(disp, major, minor)) {
-		printfDebug("Could not query XF86VidMode version\n");
+		printfDebugJava(env, "Could not query XF86VidMode version");
 		return false;
 	}
-	printfDebug("XF86VidMode extension version %i.%i\n", *major, *minor);
+	printfDebugJava(env, "XF86VidMode extension version %i.%i", *major, *minor);
 	return true;
 }
 
-static bool getXrandrVersion(Display *disp, int *major, int *minor) {
+static bool getXrandrVersion(JNIEnv *env, Display *disp, int *major, int *minor) {
 	int event_base, error_base;
 
 	if (!XRRQueryExtension(disp, &event_base, &error_base)) {
-		printfDebug("Xrandr extension not available\n");
+		printfDebugJava(env, "Xrandr extension not available");
 		return false;
 	}
 	if (!XRRQueryVersion(disp, major, minor)) {
-		printfDebug("Could not query Xrandr version\n");
+		printfDebugJava(env, "Could not query Xrandr version");
 		return false;
 	}
-	printfDebug("Xrandr extension version %i.%i\n", *major, *minor);
+	printfDebugJava(env, "Xrandr extension version %i.%i", *major, *minor);
 	return true;
 }
 
-static bool isXrandrSupported(Display *disp) {
+static bool isXrandrSupported(JNIEnv *env, Display *disp) {
 	int major, minor;
-	if (!getXrandrVersion(disp, &major, &minor))
+	if (!getXrandrVersion(env, disp, &major, &minor))
 		return false;
 	return major >= 1;
 }
 
-static bool isXF86VidModeSupported(Display *disp) {
+static bool isXF86VidModeSupported(JNIEnv *env, Display *disp) {
 	int minor_ver, major_ver;
-	if (!getXF86VidModeVersion(disp, &major_ver, &minor_ver))
+	if (!getXF86VidModeVersion(env, disp, &major_ver, &minor_ver))
 		return false;
 	return major_ver >= 2;
 }
 	
-static extension getBestDisplayModeExtension(Display *disp) {
-	if (isXrandrSupported(disp))
+static extension getBestDisplayModeExtension(JNIEnv *env, Display *disp) {
+	if (isXrandrSupported(env, disp))
 		return XRANDR;
-	else if (isXF86VidModeSupported(disp))
+	else if (isXF86VidModeSupported(env, disp))
 		return XF86VIDMODE;
 	else
 		return NONE;
@@ -225,29 +225,29 @@ static bool setXrandrMode(Display *disp, int screen, mode_info *mode) {
 	return true;
 }
 
-static bool setMode(Display *disp, int screen, int width, int height, int freq, bool temporary) {
+static bool setMode(JNIEnv *env, Display *disp, int screen, int width, int height, int freq, bool temporary) {
 	if (current_extension == NONE)
 		return false;
 	int num_modes, i;
 	mode_info *avail_modes = getDisplayModes(disp, screen, &num_modes);
 	if (avail_modes == NULL) {
-		printfDebug("Could not get display modes\n");
+		printfDebugJava(env, "Could not get display modes");
 		return false;
 	}
 	bool result = false;
 	for ( i = 0; i < num_modes; ++i ) {
-		printfDebug("Mode %d: %dx%d @%d\n", i, avail_modes[i].width, avail_modes[i].height, avail_modes[i].freq);
+		printfDebugJava(env, "Mode %d: %dx%d @%d", i, avail_modes[i].width, avail_modes[i].height, avail_modes[i].freq);
 		if (avail_modes[i].width == width && avail_modes[i].height == height && avail_modes[i].freq == freq) {
 			switch (current_extension) {
 				case XF86VIDMODE:
 					if (!setXF86VidModeMode(disp, screen, &avail_modes[i])) {
-						printfDebug("Could not switch mode\n");
+						printfDebugJava(env, "Could not switch mode");
 						continue;
 					}
 					break;
 				case XRANDR:
 					if (!setXrandrMode(disp, screen, &avail_modes[i])) {
-						printfDebug("Could not switch mode\n");
+						printfDebugJava(env, "Could not switch mode");
 						continue;
 					}
 					break;
@@ -279,26 +279,26 @@ static void freeSavedGammaRamps() {
 	saved_gamma_ramp_length = 0;
 }
 
-static int getGammaRampLengthOfDisplay(Display *disp, int screen) {
+static int getGammaRampLengthOfDisplay(JNIEnv *env, Display *disp, int screen) {
 	int ramp_size;
-	if (!isXF86VidModeSupported(disp)) {
-		printfDebug("XF86VidMode extension version >= 2 not found\n");
+	if (!isXF86VidModeSupported(env, disp)) {
+		printfDebugJava(env, "XF86VidMode extension version >= 2 not found");
 		return 0;
 	}
 	if (XF86VidModeGetGammaRampSize(disp, screen, &ramp_size) == False) {
-		printfDebug("XF86VidModeGetGammaRampSize call failed\n");
+		printfDebugJava(env, "XF86VidModeGetGammaRampSize call failed");
 		return 0;
 	}
 	return ramp_size;
 }
 
-int getGammaRampLength(int screen) {
+int getGammaRampLength(JNIEnv *env, int screen) {
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-		printfDebug("Could not open display");
+		printfDebugJava(env, "Could not open display");
 		return 0;
 	}
-	int length = getGammaRampLengthOfDisplay(disp, screen);
+	int length = getGammaRampLengthOfDisplay(env, disp, screen);
 	XCloseDisplay(disp);
 	return length;
 }
@@ -312,7 +312,7 @@ jobject initDisplay(JNIEnv *env, int screen) {
 		return NULL;
 	}
 
-	current_extension = getBestDisplayModeExtension(disp);
+	current_extension = getBestDisplayModeExtension(env, disp);
 	if (current_extension == NONE) {
 		throwException(env, "No display mode extension is available");
 		XCloseDisplay(disp);
@@ -328,7 +328,7 @@ jobject initDisplay(JNIEnv *env, int screen) {
 	saved_height = current_height = avail_modes[0].height;
 	saved_freq = current_freq = avail_modes[0].freq;
 	int bpp = XDefaultDepth(disp, screen);
-	printfDebug("Original display dimensions: width %d, height %d freq %d\n", saved_width, saved_height, saved_freq);
+	printfDebugJava(env, "Original display dimensions: width %d, height %d freq %d", saved_width, saved_height, saved_freq);
 	jclass jclass_DisplayMode = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
 	jmethodID ctor = (*env)->GetMethodID(env, jclass_DisplayMode, "<init>", "(IIII)V");
 	jobject newMode = (*env)->NewObject(env, jclass_DisplayMode, ctor, saved_width, saved_height, bpp, saved_freq);
@@ -336,7 +336,7 @@ jobject initDisplay(JNIEnv *env, int screen) {
 	free(avail_modes);
 
 	/* Fetch the current gamma ramp */
-	saved_gamma_ramp_length = getGammaRampLengthOfDisplay(disp, screen);
+	saved_gamma_ramp_length = getGammaRampLengthOfDisplay(env, disp, screen);
 	if (saved_gamma_ramp_length > 0) {
 		r_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
 		g_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
@@ -363,18 +363,18 @@ static void setCurrentGamma(Display *disp, int screen, JNIEnv *env) {
 		if (env != NULL)
 			throwException(env, "Could not set gamma ramp.");
 		else
-			printfDebug("Could not set gamma ramp\n");
+			printfDebugJava(env, "Could not set gamma ramp");
 	}
 }
 
-void temporaryRestoreMode(int screen) {
+void temporaryRestoreMode(JNIEnv *env, int screen) {
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-		printfDebug("Could not open display");
+		printfDebugJava(env, "Could not open display");
 		return;
 	}
-	if (!setMode(disp, screen, current_width, current_height, current_freq, false))
-		printfDebug("Could not restore mode\n");
+	if (!setMode(env, disp, screen, current_width, current_height, current_freq, false))
+		printfDebugJava(env, "Could not restore mode");
 	setCurrentGamma(disp, screen, NULL);
 	XCloseDisplay(disp);
 	// Don't propagate error to caller
@@ -397,17 +397,17 @@ void switchDisplayMode(JNIEnv * env, jobject mode, int screen) {
 		throwException(env, "Could not open display");
 		return;
 	}
-	if (!setMode(disp, screen, width, height, freq, false))
+	if (!setMode(env, disp, screen, width, height, freq, false))
 		throwException(env, "Could not switch mode.");
 	XCloseDisplay(disp);
 }
 
-void resetDisplayMode(int screen, bool temporary) {
+void resetDisplayMode(JNIEnv *env, int screen, bool temporary) {
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL)
 		return;
-	if (!setMode(disp, screen, saved_width, saved_height, saved_freq, temporary)) {
-		printfDebug("Failed to reset mode");
+	if (!setMode(env, disp, screen, saved_width, saved_height, saved_freq, temporary)) {
+		printfDebugJava(env, "Failed to reset mode");
 	}
 	if (saved_gamma_ramp_length > 0) {
 		XF86VidModeSetGammaRamp(disp, screen, saved_gamma_ramp_length, r_ramp, g_ramp, b_ramp);
@@ -428,7 +428,7 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env, int screen) {
 	int bpp = XDefaultDepth(disp, screen);
 	avail_modes = getDisplayModes(disp, screen, &num_modes);
 	if (avail_modes == NULL) {
-		printfDebug("Could not get display modes\n");
+		printfDebugJava(env, "Could not get display modes");
 		XCloseDisplay(disp);
 		return NULL;
 	}
@@ -453,7 +453,7 @@ void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer, int screen) {
 		return;
 	}
 	freeCurrentGamma();
-	current_gamma_ramp_length = getGammaRampLengthOfDisplay(disp, screen);
+	current_gamma_ramp_length = getGammaRampLengthOfDisplay(env, disp, screen);
 	if (current_gamma_ramp_length == 0) {
 		throwException(env, "Gamma ramp not supported");
 		return;

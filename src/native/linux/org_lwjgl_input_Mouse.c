@@ -365,7 +365,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollMouse(JNIEnv * env
 	int coords_length = (*env)->GetDirectBufferCapacity(env, coord_buffer_obj);
 	unsigned char *buttons_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, button_buffer_obj);
 	int buttons_length = (*env)->GetDirectBufferCapacity(env, button_buffer_obj);
-	handleMessages();
+	handleMessages(env);
 	if (coords_length < 3) {
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
@@ -394,7 +394,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_enableMouseBuffer(JNIE
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_readMouse(JNIEnv *env, jobject this, jobject buffer, jint buffer_position) {
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
-	handleMessages();
+	handleMessages(env);
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
 }
 
