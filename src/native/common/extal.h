@@ -57,6 +57,8 @@ extern "C" {
 #else
  #ifdef TARGET_OS_MAC
   #if TARGET_OS_MAC
+ typedef struct ALCdevice_struct ALCdevice;
+ typedef struct ALCcontext_struct ALCcontext;
  
    #pragma export on
   #endif

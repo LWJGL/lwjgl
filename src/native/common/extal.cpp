@@ -123,8 +123,15 @@ EAXGet  eaxGet;                                         // EAXGet function, ret$
 
 /* Handle to OpenAL Library */
 HMODULE handleOAL;
-#else
+#endif
+#ifdef _X11
 void* handleOAL;
+#endif
+#ifdef TARGET_OS_MAC
+#include <Carbon/Carbon.h>
+OSStatus oalInitEntryPoints (void);
+void oalDellocEntryPoints (void);
+CFBundleRef handleOAL = NULL;
 #endif
 
 /* Loads OpenAL */
@@ -158,6 +165,9 @@ void* GetFunctionPointer(const char* function) {
 #ifdef _X11
   return dlsym(handleOAL, function);
 #endif
+#ifdef TARGET_OS_MAC
+    return CFBundleGetFunctionPointerForName (handleOAL,CFStringCreateWithCStringNoCopy (NULL, function, CFStringGetSystemEncoding (), NULL));
+#endif 
 }
 
 /**
@@ -180,6 +190,10 @@ void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 #ifdef _X11
     handleOAL = dlopen(path_str, RTLD_LAZY);
 #endif
+#ifdef TARGET_OS_MAC
+    // NOTE: This totally ignores the input array! - SWP
+    oalInitEntryPoints();
+#endif
     if (handleOAL != NULL) {
 #ifdef _DEBUG
       printf("Found OpenAL at '%s'\n", path_str);
@@ -199,6 +213,9 @@ void UnLoadOpenAL() {
 #endif
 #ifdef _X11
   dlclose(handleOAL);
+#endif
+#ifdef TARGET_OS_MAC
+    oalDellocEntryPoints();
 #endif
 }
 
@@ -412,3 +429,83 @@ int LoadALC() {
 int LoadALExtensions() {
   return JNI_TRUE;
 }
+
+#ifdef TARGET_OS_MAC
+// -------------------------
+OSStatus oalInitEntryPoints (void)
+{
+    OSStatus err = noErr;
+    const Str255 frameworkName = "\pOpenAL.framework";
+    FSRefParam fileRefParam;
+    FSRef fileRef;
+    CFURLRef bundleURLOpenAL;
+    memset(&fileRefParam, 0, sizeof(fileRefParam));
+    memset(&fileRef, 0, sizeof(fileRef));
+    fileRefParam.ioNamePtr  = frameworkName;
+    fileRefParam.newRef = &fileRef;
+
+    // Frameworks directory/folder
+    //
+    err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
+    if (noErr != err)
+    {
+        DebugStr ("\pCould not find frameworks folder");
+        return err;
+    }
+
+    // make FSRef for folder
+    //
+    err = PBMakeFSRefSync (&fileRefParam);
+
+
+    if (noErr != err)
+    {
+        DebugStr ("\pCould make FSref to frameworks folder");
+        return err;
+    }
+
+    // create URL to folder
+    //
+    bundleURLOpenAL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
+    if (!bundleURLOpenAL)
+    {
+        DebugStr ("\pCould create OpenAL Framework bundle URL");
+        return paramErr;
+    }
+
+    // create ref to GL's bundle
+    //
+    handleOAL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenAL);
+    if (!handleOAL)
+    {
+        DebugStr ("\pCould not create OpenAL Framework bundle");
+        return paramErr;
+    }
+
+    // release created bundle
+    //
+    CFRelease (bundleURLOpenAL);
+
+    // if the code was successfully loaded, look for our function.
+    if (!CFBundleLoadExecutable (handleOAL))
+    {
+        DebugStr ("\pCould not load OpenAL MachO executable");
+        return paramErr;
+    }
+
+    return err;
+}
+
+
+void oalDellocEntryPoints (void)
+{
+    if (handleOAL != NULL)
+    {
+        // unload the bundle's code.
+        CFBundleUnloadExecutable (handleOAL);
+        CFRelease (handleOAL);
+        handleOAL = NULL;
+    }
+}
+
+#endif
