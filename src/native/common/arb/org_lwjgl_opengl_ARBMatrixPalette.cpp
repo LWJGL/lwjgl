@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glCurrentPaletteMatrixARBPROC) (GLint index);
 typedef void (APIENTRY * glMatrixIndexubvARBPROC) (GLint size, GLubyte *indices);
@@ -57,7 +57,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatri
 	(JNIEnv * env, jclass clazz, jint index)
 {
 	glCurrentPaletteMatrixARB(index);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -69,7 +69,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointer
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glMatrixIndexPointerARB(size, type, stride, pPointer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -80,7 +80,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointer
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
 	glMatrixIndexPointerARB(size, type, stride, (GLvoid *)buffer_offset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -92,7 +92,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB
 {
 	GLubyte *pIndices_ptr = (GLubyte *)env->GetDirectBufferAddress(pIndices) + pIndices_offset;
 	glMatrixIndexubvARB(size, pIndices_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -104,7 +104,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB
 {
 	GLuint *piIndices_ptr = (GLuint *)env->GetDirectBufferAddress(piIndices) + piIndices_offset;
 	glMatrixIndexuivARB(size, piIndices_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -116,7 +116,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB
 {
 	GLushort *psIndices_ptr = (GLushort *)env->GetDirectBufferAddress(psIndices) + psIndices_offset;
 	glMatrixIndexusvARB(size, psIndices_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set)

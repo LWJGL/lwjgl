@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glLoadTransposeMatrixfARBPROC) (const GLfloat m[16] );
 typedef void (APIENTRY * glMultTransposeMatrixfARBPROC) (const GLfloat m[16] );
@@ -52,7 +52,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTransposeMat
 {
 	GLfloat *pfMtx_ptr = (GLfloat *)env->GetDirectBufferAddress(pfMtx) + pfMtx_offset;
 	glLoadTransposeMatrixfARB(pfMtx_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -64,7 +64,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMat
 {
 	GLfloat *pfMtx_ptr = (GLfloat *)env->GetDirectBufferAddress(pfMtx) + pfMtx_offset;
 	glMultTransposeMatrixfARB(pfMtx_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set)

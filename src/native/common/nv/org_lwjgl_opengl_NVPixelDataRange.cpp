@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glPixelDataRangeNVPROC) (GLenum target, GLsizei length, GLvoid *pointer);
 typedef void (APIENTRY * glFlushPixelDataRangeNVPROC) (GLenum target);
@@ -52,7 +52,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeNV
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + dataOffset);
 	glPixelDataRangeNV(target, length, data_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -63,7 +63,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRange
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	glFlushPixelDataRangeNV(target);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVPixelDataRange(JNIEnv *env, jobject ext_set)

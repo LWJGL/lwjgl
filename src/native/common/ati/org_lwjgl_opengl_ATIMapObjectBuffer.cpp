@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+#include "common_tools.h"
 
 typedef void * (APIENTRY * glMapObjectBufferATIPROC) (GLuint buffer);
 typedef void (APIENTRY * glUnmapObjectBufferATIPROC) (GLuint buffer);
@@ -51,7 +51,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBuffe
 	(JNIEnv * env, jclass clazz, jint buffer, jint size, jobject oldBuffer)
 {
 	void *buffer_address = glMapObjectBufferATI((GLenum)buffer);
-	CHECK_GL_ERROR
+	
 	if (oldBuffer != NULL) {
 		void *old_buffer_address = env->GetDirectBufferAddress(oldBuffer);
 		if (old_buffer_address == buffer_address)
@@ -69,7 +69,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBuffer
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	glUnmapObjectBufferATI(buffer);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIMapObjectBuffer(JNIEnv *env, jobject ext_set)

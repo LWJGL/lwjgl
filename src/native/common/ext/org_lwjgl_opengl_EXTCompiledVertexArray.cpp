@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glLockArraysEXTPROC) (GLint first, GLsizei count);
 typedef void (APIENTRY * glUnlockArraysEXTPROC) ();
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT
 	(JNIEnv * env, jclass clazz, jint first, jint count)
 {
 	glLockArraysEXT(first, count);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysE
 	(JNIEnv * env, jclass clazz)
 {
 	glUnlockArraysEXT();
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set)

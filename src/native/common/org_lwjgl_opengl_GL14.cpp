@@ -39,8 +39,8 @@
  * @version $Revision$
  */
 
-#include "checkGLerror.h"
 #include "extgl.h"
+#include "common_tools.h"
 
 typedef void (APIENTRY * glBlendColorPROC) (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 typedef void (APIENTRY * glBlendEquationPROC) (GLenum mode);
@@ -80,14 +80,14 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_glBlendEquation
   (JNIEnv *env, jclass clazz, jint mode)
 {
 	glBlendEquation(mode);
-	CHECK_GL_ERROR
+	
 }
 
 
 static void JNICALL Java_org_lwjgl_opengl_GL14_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glBlendColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -110,7 +110,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointer
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jobject buffer, jint offset) {
 	GLvoid *address = (GLvoid *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glFogCoordPointer(p1, p2, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -121,7 +121,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointer
 static void JNICALL Java_org_lwjgl_opengl_GL14_nglFogCoordPointerVBO
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint buffer_offset) {
 	glFogCoordPointer(p1, p2, offsetToPointer(buffer_offset));
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -134,7 +134,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglMultiDrawArrays
 	GLint *address = first_offset + (GLint *)env->GetDirectBufferAddress(first);
 	GLsizei *address2 = count_offset + (GLsizei *)env->GetDirectBufferAddress(count);
 	glMultiDrawArrays(mode, address, address2, (GLsizei)primcount);
-	CHECK_GL_ERROR
+	
 }
   
 /*
@@ -145,7 +145,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglMultiDrawArrays
 static void JNICALL Java_org_lwjgl_opengl_GL14_glPointParameterf
   (JNIEnv *env, jclass clazz, jint p1, jfloat p2) {
 	glPointParameterf(p1, p2);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -157,7 +157,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglPointParameterfv
   (JNIEnv *env, jclass clazz, jint p1, jobject buffer, jint offset) {
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glPointParameterfv(p1, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -201,7 +201,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointer
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jobject buffer, jint offset) {
 	const GLvoid *address = (const GLvoid *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glSecondaryColorPointer(p1, p2, p3, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -212,7 +212,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointer
 static void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointerVBO
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jint buffer_offset) {
 	glSecondaryColorPointer(p1, p2, p3, offsetToPointer(buffer_offset));
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -223,7 +223,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_nglSecondaryColorPointerVBO
 static void JNICALL Java_org_lwjgl_opengl_GL14_glBlendFuncSeparate
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jint p4) {
 	glBlendFuncSeparate(p1, p2, p3, p4);
-	CHECK_GL_ERROR
+	
 }
 
 

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glMultiDrawArraysEXTPROC) (GLenum mode, GLint *first, GLsizei *count, GLsizei primcount);
 
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysE
 	GLint *piFirst_ptr = (GLint *)env->GetDirectBufferAddress(piFirst) + piFirst_offset;
 	GLint *piCount_ptr = (GLint *)env->GetDirectBufferAddress(piCount) + piCount_offset;
 	glMultiDrawArraysEXT(mode, piFirst_ptr, piCount_ptr, primcount);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set)

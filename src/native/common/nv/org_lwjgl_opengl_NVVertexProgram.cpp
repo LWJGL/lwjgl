@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+#include "common_tools.h"
 
 typedef void (APIENTRY * glExecuteProgramNVPROC) (GLenum target, GLuint id, const GLfloat *params);
 typedef void (APIENTRY * glGetProgramParameterfvNVPROC) (GLenum target, GLuint index, GLenum pname, GLfloat *params);
@@ -104,7 +104,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglExecuteProgramNV
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glExecuteProgramNV(target, id, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -116,7 +116,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgramParameter
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramParameterfvNV(target, index, parameterName, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -128,7 +128,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackMatrixivNV
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetTrackMatrixivNV(target, address, parameterName, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -140,7 +140,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribfvNV
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribfvNV(index, parameterName, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -152,7 +152,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribivNV
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribivNV(index, parameterName, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -164,7 +164,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glGetVertexAttribPo
 {
         void *address;
         glGetVertexAttribPointervNV((GLuint)index, (GLuint)parameterName, &address);
-        CHECK_GL_ERROR
+        
         return safeNewBuffer(env, address, size);
 }
 
@@ -176,7 +176,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glProgramParameter4fNV
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glProgramParameter4fNV(target, index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -188,7 +188,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglProgramParameters4f
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glProgramParameters4fvNV(target, index, count, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -199,7 +199,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glTrackMatrixNV
 	(JNIEnv * env, jclass clazz, jint target, jint address, jint matrix, jint transform)
 {
 	glTrackMatrixNV(target, address, matrix, transform);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -211,7 +211,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointer
 {
 	GLvoid *buffer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(buffer) + bufferOffset);
 	glVertexAttribPointerNV(index, size, type, stride, buffer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -222,7 +222,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointer
 	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jint stride, jint bufferOffset)
 {
 	glVertexAttribPointerNV(index, size, type, stride, (GLvoid *)bufferOffset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -233,7 +233,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x)
 {
 	glVertexAttrib1sNV(index, x);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -244,7 +244,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x)
 {
 	glVertexAttrib1fNV(index, x);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -255,7 +255,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y)
 {
 	glVertexAttrib2sNV(index, x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -266,7 +266,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y)
 {
 	glVertexAttrib2fNV(index, x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -277,7 +277,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z)
 {
 	glVertexAttrib3sNV(index, x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -288,7 +288,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z)
 {
 	glVertexAttrib3fNV(index, x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -299,7 +299,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4sNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertexAttrib4sNV(index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -310,7 +310,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4fNV
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glVertexAttrib4fNV(index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -321,7 +321,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4ubNV
 	(JNIEnv * env, jclass clazz, jint index, jbyte x, jbyte y, jbyte z, jbyte w)
 {
 	glVertexAttrib4ubNV(index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1svNV
@@ -329,7 +329,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1svNV
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs1svNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1fvNV
@@ -337,7 +337,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1fvNV
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs1fvNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2svNV
@@ -345,7 +345,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2svNV
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs2svNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2fvNV
@@ -353,7 +353,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2fvNV
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs2fvNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3svNV
@@ -361,7 +361,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3svNV
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs3svNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3fvNV
@@ -369,7 +369,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3fvNV
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs3fvNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4svNV
@@ -377,7 +377,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4svNV
 {
 	GLshort *v_ptr = (GLshort *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs4svNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4fvNV
@@ -385,7 +385,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4fvNV
 {
 	GLfloat *v_ptr = (GLfloat *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs4fvNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4ubvNV
@@ -393,7 +393,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4ubvNV
 {
 	GLubyte *v_ptr = (GLubyte *)env->GetDirectBufferAddress(v) + v_offset;
 	glVertexAttribs4ubvNV(index, n, v_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVVertexProgram(JNIEnv *env, jobject ext_set)

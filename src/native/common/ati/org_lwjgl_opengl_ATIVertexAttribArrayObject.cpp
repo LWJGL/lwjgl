@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glVertexAttribArrayObjectATIPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLuint buffer, GLuint offset);
 typedef void (APIENTRY * glGetVertexAttribArrayObjectfvATIPROC) (GLuint index, GLenum pname, GLfloat *params);
@@ -53,7 +53,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAtt
 	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint buffer, jint offset)
 {
 	glVertexAttribArrayObjectATI(index, size, type, normalized, stride, buffer, offset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -65,7 +65,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVerte
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribArrayObjectfvATI(index, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -77,7 +77,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVerte
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribArrayObjectivATI(index, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIVertexAttribArrayObject(JNIEnv *env, jobject ext_set)

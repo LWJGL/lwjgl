@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glVertexWeightfEXTPROC) (GLfloat weight);
 typedef void (APIENTRY * glVertexWeightPointerEXTPROC) (GLsizei size, GLenum type, GLsizei stride, const GLvoid *pointer);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfEXT
 	(JNIEnv * env, jclass clazz, jfloat weight)
 {
 	glVertexWeightfEXT(weight);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -63,7 +63,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPoin
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glVertexWeightPointerEXT(size, type, stride, pPointer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -74,7 +74,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPoin
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
 	glVertexWeightPointerEXT(size, type, stride, (GLvoid *)buffer_offset);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTVertexWeighting(JNIEnv *env, jobject ext_set)

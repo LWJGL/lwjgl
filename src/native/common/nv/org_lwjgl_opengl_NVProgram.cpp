@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glLoadProgramNVPROC) (GLenum target, GLuint id, GLsizei len, const GLubyte *program);
 typedef void (APIENTRY * glBindProgramNVPROC) (GLenum target, GLuint id);
@@ -66,7 +66,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_nglLoadProgramNV
 {
 	const GLubyte *string_ptr = (const GLubyte *)env->GetDirectBufferAddress(string) + stringOffset;
 	glLoadProgramNV(target, programID, length, string_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -77,7 +77,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_glBindProgramNV
 	(JNIEnv * env, jclass clazz, jint target, jint programID)
 {
 	glBindProgramNV(target, programID);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -89,7 +89,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_nglDeleteProgramsNV
 {
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glDeleteProgramsNV(n, programs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -101,7 +101,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGenProgramsNV
 {
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glGenProgramsNV(n, programs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -113,7 +113,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramivNV
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramivNV(programID, parameterName, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -125,7 +125,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramStringNV
 {
 	GLubyte *paramString_ptr = (GLubyte *)env->GetDirectBufferAddress(paramString) + paramStringOffset;
 	glGetProgramStringNV(programID, parameterName, paramString_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -136,7 +136,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_glIsProgramNV
 	(JNIEnv * env, jclass clazz, jint programID)
 {
 	GLboolean result = glIsProgramNV(programID);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -150,7 +150,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_nglAreProgramsResidentNV
 	GLuint *programIDs_ptr = (GLuint *)env->GetDirectBufferAddress(programIDs) + programIDsOffset;
 	GLubyte *programResidences_ptr = (GLubyte *)env->GetDirectBufferAddress(programResidences) + programResidencesOffset;
 	GLboolean result = glAreProgramsResidentNV(n, programIDs_ptr, programResidences_ptr);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -163,7 +163,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_nglRequestResidentProgramsNV
 {
 	GLuint *programIDs_ptr = (GLuint *)env->GetDirectBufferAddress(programIDs) + programIDsOffset;
 	glRequestResidentProgramsNV(n, programIDs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVProgram(JNIEnv *env, jobject ext_set)

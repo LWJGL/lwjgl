@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glDrawRangeElementsEXTPROC) ( GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices);
 
@@ -50,7 +50,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeEleme
 {
 	GLvoid *pIndices_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pIndices) + pIndices_offset);
 	glDrawRangeElementsEXT(mode, start, end, count, type, pIndices_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -61,7 +61,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeEleme
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint buffer_offset)
 {
 	glDrawRangeElementsEXT(mode, start, end, count, type, (GLvoid *)buffer_offset);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set)

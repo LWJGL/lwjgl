@@ -209,6 +209,7 @@ public final class Window {
 	 */
 	public static void paint() {
 		assert isCreated()  : "Cannot paint uncreated window";
+		Util.checkGLError();
 		swapBuffers();
 	}
 

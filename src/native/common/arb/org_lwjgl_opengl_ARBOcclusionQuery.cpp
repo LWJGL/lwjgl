@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glGenQueriesARBPROC) (GLsizei n, GLuint *ids);
 typedef void (APIENTRY * glDeleteQueriesARBPROC) (GLsizei n, const GLuint *ids);
@@ -64,7 +64,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glGenQueriesARB(n, ids_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -76,7 +76,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesARB
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glDeleteQueriesARB(n, ids_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -87,7 +87,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	GLboolean result = glIsQueryARB(id);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -99,7 +99,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQueryARB
 	(JNIEnv * env, jclass clazz, jint target, jint id)
 {
 	glBeginQueryARB(target, id);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -110,7 +110,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQueryARB
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	glEndQueryARB(target);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -122,7 +122,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryivARB
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryivARB(target, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -134,7 +134,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectivA
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectivARB(id, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -146,7 +146,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuiv
 {
 	GLuint *params_ptr = (GLuint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectuivARB(id, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBOcclusionQuery(JNIEnv *env, jobject ext_set)

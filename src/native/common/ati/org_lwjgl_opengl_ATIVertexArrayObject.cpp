@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+#include "common_tools.h"
 
 typedef GLuint (APIENTRY * glNewObjectBufferATIPROC) (GLsizei size, const GLvoid *pointer, GLenum usage);
 typedef GLboolean (APIENTRY * glIsObjectBufferATIPROC) (GLuint buffer);
@@ -72,7 +72,7 @@ static jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBuffe
 {
 	GLvoid *pPointer_ptr = safeGetBufferAddress(env, pPointer, pPointer_offset);
 	GLuint result = glNewObjectBufferATI(size, pPointer_ptr, usage);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -84,7 +84,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObjectBuf
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	GLboolean result = glIsObjectBufferATI(buffer);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -97,7 +97,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpdateObjectBu
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glUpdateObjectBufferATI(buffer, offset, size, pPointer_ptr, preserve);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -109,7 +109,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBuffe
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetObjectBufferfvATI(buffer, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -121,7 +121,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBuffe
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetObjectBufferivATI(buffer, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -132,7 +132,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeObjectBuffe
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	glFreeObjectBufferATI(buffer);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -143,7 +143,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glArrayObjectATI
 	(JNIEnv * env, jclass clazz, jint array, jint size, jint type, jint stride, jint buffer, jint offset)
 {
 	glArrayObjectATI(array, size, type, stride, buffer, offset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -155,7 +155,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObject
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetArrayObjectfvATI(array, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -167,7 +167,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObject
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetArrayObjectivATI(array, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -178,7 +178,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glVariantArrayObj
 	(JNIEnv * env, jclass clazz, jint id, jint type, jint stride, jint buffer, jint offset)
 {
 	glVariantArrayObjectATI(id, type, stride, buffer, offset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -190,7 +190,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArra
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset_offset;
 	glGetVariantArrayObjectfvATI(id, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -202,7 +202,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArra
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetVariantArrayObjectivATI(id, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIVertexArrayObject(JNIEnv *env, jobject ext_set)

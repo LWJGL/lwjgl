@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glCombinerParameterfvNVPROC) (GLenum pname, const GLfloat *params);
 typedef void (APIENTRY * glCombinerParameterfNVPROC) (GLenum pname, GLfloat param);
@@ -73,7 +73,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParamete
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glCombinerParameterfNV(pname, param);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -85,7 +85,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParamet
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glCombinerParameterfvNV(pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -96,7 +96,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParamete
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
 	glCombinerParameteriNV(pname, param);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -108,7 +108,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParamet
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glCombinerParameterivNV(pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -119,7 +119,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerInputNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint variable, jint input, jint mapping, jint componentUsage)
 {
 	glCombinerInputNV(stage, portion, variable, input, mapping, componentUsage);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -130,7 +130,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerOutputNV
 	(JNIEnv * env, jclass clazz, jint stage, jint portion, jint abOutput, jint cdOutput, jint sumOutput, jint scale, jint bias, jboolean abDotProduct, jboolean cdDotProduct, jboolean muxSum)
 {
 	glCombinerOutputNV(stage, portion, abOutput, cdOutput, sumOutput, scale, bias, abDotProduct, cdDotProduct, muxSum);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -141,7 +141,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glFinalCombinerInp
 	(JNIEnv * env, jclass clazz, jint variable, jint input, jint mapping, jint componentUsage)
 {
 	glFinalCombinerInputNV(variable, input, mapping, componentUsage);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -153,7 +153,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInpu
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetCombinerInputParameterfvNV(stage, portion, variable, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -165,7 +165,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInpu
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetCombinerInputParameterivNV(stage, portion, variable, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -177,7 +177,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutp
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetCombinerOutputParameterfvNV(stage, portion, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -189,7 +189,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutp
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + pfParams_offset;
 	glGetCombinerOutputParameterivNV(stage, portion, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -201,7 +201,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombine
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetFinalCombinerInputParameterfvNV(variable, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -213,7 +213,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombine
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetFinalCombinerInputParameterivNV(variable, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVRegisterCombiners(JNIEnv *env, jobject ext_set)

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glSecondaryColor3bEXTPROC) (GLbyte red, GLbyte green, GLbyte blue);
 typedef void (APIENTRY * glSecondaryColor3fEXTPROC) (GLfloat red, GLfloat green, GLfloat blue);
@@ -55,7 +55,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3bEX
 	(JNIEnv * env, jclass clazz, jbyte red, jbyte green, jbyte blue)
 {
 	glSecondaryColor3bEXT(red, green, blue);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -66,7 +66,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3fEX
 	(JNIEnv * env, jclass clazz, jfloat red, jfloat green, jfloat blue)
 {
 	glSecondaryColor3fEXT(red, green, blue);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -77,7 +77,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3ubE
 	(JNIEnv * env, jclass clazz, jbyte red, jbyte green, jbyte blue)
 {
 	glSecondaryColor3ubEXT(red, green, blue);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -89,7 +89,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPoi
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glSecondaryColorPointerEXT(size, type, stride, pPointer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -100,7 +100,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPoi
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
 	glSecondaryColorPointerEXT(size, type, stride, (GLvoid *)buffer_offset);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTSecondaryColor(JNIEnv *env, jobject ext_set)

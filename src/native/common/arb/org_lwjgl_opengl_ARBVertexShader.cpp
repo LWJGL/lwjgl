@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef unsigned char GLcharARB;
 typedef unsigned int GLhandleARB;
@@ -57,7 +57,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocationA
 {
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	glBindAttribLocationARB(programObj, index, name_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -79,7 +79,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribARB
 		glGetActiveAttribARB(programObj, index, maxLength, length_ptr, size_ptr, type_ptr, name_ptr);
 	}
 
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -91,7 +91,7 @@ static jint JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationAR
 {
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	GLuint result = glGetAttribLocationARB(programObj, name_ptr);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 

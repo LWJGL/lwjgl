@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glStencilOpSeparateATIPROC) (GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);
 typedef void (APIENTRY * glStencilFuncSeparateATIPROC) (GLenum frontfunc, GLenum backfunc, GLint ref, GLuint mask);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSeparate
 	(JNIEnv * env, jclass clazz, jint face, jint sfail, jint dpfail, jint dppass)
 {
 	glStencilOpSeparateATI(face, sfail, dpfail, dppass);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSepara
 	(JNIEnv * env, jclass clazz, jint frontfunc, jint backfunc, jint ref, jint mask)
 {
 	glStencilFuncSeparateATI(frontfunc, backfunc, ref, mask);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATISeparateStencil(JNIEnv *env, jobject ext_set)

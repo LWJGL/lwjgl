@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glPrimitiveRestartNVPROC) (GLvoid);
 typedef void (APIENTRY * glPrimitiveRestartIndexNVPROC) (GLuint index);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartN
 	(JNIEnv * env, jclass clazz)
 {
 	glPrimitiveRestartNV();
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartI
 	(JNIEnv * env, jclass clazz, jint index)
 {
 	glPrimitiveRestartIndexNV(index);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVPrimitiveRestart(JNIEnv *env, jobject ext_set)

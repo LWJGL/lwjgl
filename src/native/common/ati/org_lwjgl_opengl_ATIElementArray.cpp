@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glElementPointerATIPROC) (GLenum type, const GLvoid *pointer);
 typedef void (APIENTRY * glDrawElementArrayATIPROC) (GLenum mode, GLsizei count);
@@ -54,7 +54,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATI
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glElementPointerATI(type, pPointer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -65,7 +65,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIVB
 	(JNIEnv * env, jclass clazz, jint type, jint buffer_offset)
 {
 	glElementPointerATI(type, (GLvoid *)buffer_offset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -76,7 +76,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayATI
 	(JNIEnv * env, jclass clazz, jint mode, jint count)
 {
 	glDrawElementArrayATI(mode, count);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -87,7 +87,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArra
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count)
 {
 	glDrawRangeElementArrayATI(mode, start, end, count);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIElementArray(JNIEnv *env, jobject ext_set)

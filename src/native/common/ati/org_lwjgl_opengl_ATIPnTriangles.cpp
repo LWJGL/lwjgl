@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glPNTrianglesiATIPROC) (GLenum pname, GLint param);
 typedef void (APIENTRY * glPNTrianglesfATIPROC) (GLenum pname, GLfloat param);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glPNTrianglesfATI(pname, param);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
 	glPNTrianglesiATI(pname, param);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIPNTriangles(JNIEnv *env, jobject ext_set)

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+#include "common_tools.h"
 
 typedef void (APIENTRY * glVertexAttrib1sARBPROC) (GLuint index, GLshort x);
 typedef void (APIENTRY * glVertexAttrib1fARBPROC) (GLuint index, GLfloat x);
@@ -100,7 +100,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib1sARB
 	(JNIEnv * env, jclass clazz, jint index, jshort x)
 {
 	glVertexAttrib1sARB(index, x);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -111,7 +111,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib1fARB
 	(JNIEnv * env, jclass clazz, jint index, jfloat x)
 {
 	glVertexAttrib1fARB(index, x);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -122,7 +122,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib2sARB
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y)
 {
 	glVertexAttrib2sARB(index, x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -133,7 +133,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib2fARB
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y)
 {
 	glVertexAttrib2fARB(index, x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -144,7 +144,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib3sARB
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z)
 {
 	glVertexAttrib3sARB(index, x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -155,7 +155,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib3fARB
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z)
 {
 	glVertexAttrib3fARB(index, x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -166,7 +166,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib4sARB
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertexAttrib4sARB(index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -177,7 +177,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib4fARB
 	(JNIEnv * env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glVertexAttrib4fARB(index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -188,7 +188,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glVertexAttrib4NubARB
 	(JNIEnv * env, jclass clazz, jint index, jbyte x, jbyte y, jbyte z, jbyte w)
 {
 	glVertexAttrib4NubARB(index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -200,7 +200,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglVertexAttribPointe
 {
 	GLvoid *buffer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(buffer) + bufferOffset);
 	glVertexAttribPointerARB(index, size, type, normalized, stride, buffer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -211,7 +211,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglVertexAttribPointe
 	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint bufferOffset)
 {
 	glVertexAttribPointerARB(index, size, type, normalized, stride, (GLvoid *)bufferOffset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -222,7 +222,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glEnableVertexAttribA
 	(JNIEnv * env, jclass clazz, jint index)
 {
 	glEnableVertexAttribArrayARB(index);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -233,7 +233,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glDisableVertexAttrib
 	(JNIEnv * env, jclass clazz, jint index)
 {
 	glDisableVertexAttribArrayARB(index);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -245,7 +245,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglGetVertexAttribfvA
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribfvARB(index, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -257,7 +257,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_nglGetVertexAttribivA
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribivARB(index, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -269,7 +269,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_ARBVertexProgram_glGetVertexAttribP
 {
         void *address;
         glGetVertexAttribPointervARB((GLuint)index, (GLuint)pname, &address);
-        CHECK_GL_ERROR
+        
         return safeNewBuffer(env, address, size);
 }
 

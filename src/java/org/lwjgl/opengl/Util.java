@@ -60,6 +60,13 @@ abstract class Util {
 			return buffer.position();
 	}
 
+	static void checkGLError() {
+		int err = GL11.glGetError();
+		if (err != GL11.GL_NO_ERROR) {
+			throw new OpenGLException(err);
+		}
+	}
+
 	static int getGLInteger(int gl_enum) {
 		GL11.glGetInteger(gl_enum, int_buffer);
 		return int_buffer.get(0);

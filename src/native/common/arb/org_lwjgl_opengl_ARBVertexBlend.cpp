@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glWeightbvARBPROC) (GLint size, GLbyte *weights);
 typedef void (APIENTRY * glWeightsvARBPROC) (GLint size, GLshort *weights);
@@ -66,7 +66,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightbvARB
 {
 	GLbyte *pWeights_ptr = (GLbyte *)env->GetDirectBufferAddress(pWeights) + pWeights_offset;
 	glWeightbvARB(size, pWeights_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -78,7 +78,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightfvARB
 {
 	GLfloat *pfWeights_ptr = (GLfloat *)env->GetDirectBufferAddress(pfWeights) + pfWeights_offset;
 	glWeightfvARB(size, pfWeights_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -90,7 +90,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightivARB
 {
 	GLint *piWeights_ptr = (GLint *)env->GetDirectBufferAddress(piWeights) + piWeights_offset;
 	glWeightivARB(size, piWeights_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -102,7 +102,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightsvARB
 {
 	GLshort *psWeights_ptr = (GLshort *)env->GetDirectBufferAddress(psWeights) + psWeights_offset;
 	glWeightsvARB(size, psWeights_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -114,7 +114,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightubvARB
 {
 	GLubyte *pWeights_ptr = (GLubyte *)env->GetDirectBufferAddress(pWeights) + pWeights_offset;
 	glWeightubvARB(size, pWeights_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -126,7 +126,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightuivARB
 {
 	GLuint *piWeights_ptr = (GLuint *)env->GetDirectBufferAddress(piWeights) + piWeights_offset;
 	glWeightuivARB(size, piWeights_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -138,7 +138,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightusvARB
 {
 	GLushort *psWeights_ptr = (GLushort *)env->GetDirectBufferAddress(psWeights) + psWeights_offset;
 	glWeightusvARB(size, psWeights_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -150,7 +150,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightPointerARB
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glWeightPointerARB(size, type, stride, pPointer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -161,7 +161,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightPointerARBVBO
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
 	glWeightPointerARB(size, type, stride, (GLvoid *)buffer_offset);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -172,7 +172,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_glVertexBlendARB
 	(JNIEnv * env, jclass clazz, jint count)
 {
 	glVertexBlendARB(count);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBVertexBlend(JNIEnv *env, jobject ext_set)

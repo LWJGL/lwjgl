@@ -248,8 +248,11 @@ public final class Pbuffer {
 	 */
 	public synchronized void destroy() {
 		makeCurrent();
+		int error = GL11.glGetError();
 		VBOTracker.remove(this);
 		nDestroy(handle);
+		if (error != GL11.GL_NO_ERROR)
+			throw new OpenGLException(error);
 	}
 
 	/**

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glGenOcclusionQueriesNVPROC) (GLsizei n, GLuint *ids);
 typedef void (APIENTRY * glDeleteOcclusionQueriesNVPROC) (GLsizei n, const GLuint *ids);
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGenOcclusionQuerie
 {
 	GLuint *piIDs_ptr = (GLuint *)env->GetDirectBufferAddress(piIDs) + piIDs_offset;
 	glGenOcclusionQueriesNV(n, piIDs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -74,7 +74,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglDeleteOcclusionQue
 {
 	GLuint *piIDs_ptr = (GLuint *)env->GetDirectBufferAddress(piIDs) + piIDs_offset;
 	glDeleteOcclusionQueriesNV(n, piIDs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -85,7 +85,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glIsOcclusionQuer
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	GLboolean result = glIsOcclusionQueryNV(id);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -97,7 +97,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glBeginOcclusionQuery
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	glBeginOcclusionQueryNV(id);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -108,7 +108,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glEndOcclusionQueryNV
 	(JNIEnv * env, jclass clazz)
 {
 	glEndOcclusionQueryNV();
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -120,7 +120,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryi
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetOcclusionQueryivNV(id, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -132,7 +132,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryu
 {
 	GLuint *piParams_ptr = (GLuint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetOcclusionQueryuivNV(id, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVOcclusionQuery(JNIEnv *env, jobject ext_set)

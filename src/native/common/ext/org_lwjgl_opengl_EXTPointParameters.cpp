@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glPointParameterfEXTPROC) (GLenum pname, GLfloat param);
 typedef void (APIENTRY * glPointParameterfvEXTPROC) (GLenum pname, const GLfloat *params);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEX
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glPointParameterfEXT(pname, param);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -63,7 +63,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfv
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glPointParameterfvEXT(pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTPointParameters(JNIEnv *env, jobject ext_set)

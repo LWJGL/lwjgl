@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glGenFencesNVPROC) (GLsizei n, GLuint *fences);
 typedef void (APIENTRY * glDeleteFencesNVPROC) (GLsizei n, const GLuint *fences);
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVFence_nglGenFencesNV
 {
 	GLuint *piFences_ptr = (GLuint *)env->GetDirectBufferAddress(piFences) + piFences_offset;
 	glGenFencesNV(n, piFences_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -74,7 +74,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV
 {
 	GLuint *piFences_ptr = (GLuint *)env->GetDirectBufferAddress(piFences) + piFences_offset;
 	glDeleteFencesNV(n, piFences_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -85,7 +85,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVFence_glSetFenceNV
 	(JNIEnv * env, jclass clazz, jint fence, jint condition)
 {
 	glSetFenceNV(fence, condition);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -96,7 +96,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glTestFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
 	GLboolean result = glTestFenceNV(fence);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -108,7 +108,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVFence_glFinishFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
 	glFinishFenceNV(fence);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -119,7 +119,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glIsFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
 	GLboolean result = glIsFenceNV(fence);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -132,7 +132,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetFenceivNV(fence, pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVFence(JNIEnv *env, jobject ext_set)

@@ -32,7 +32,7 @@
 
 #include "org_lwjgl_opengl_GLContext.h"
 #include "extgl.h"
-#include "checkGLerror.h"
+#include "common_tools.h"
 
 /*
  * Class:     org_lwjgl_opengl_GLContext

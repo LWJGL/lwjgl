@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+#include "common_tools.h"
 
 typedef void (APIENTRY * glFlushVertexArrayRangeNVPROC) (void);
 typedef void (APIENTRY * glVertexArrayRangeNVPROC) (GLsizei size, const GLvoid *pointer);
@@ -72,7 +72,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglVertexArrayRange
 {
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glVertexArrayRangeNV(size, pPointer_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -83,7 +83,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glFlushVertexArrayR
 	(JNIEnv * env, jclass clazz)
 {
 	glFlushVertexArrayRangeNV();
-	CHECK_GL_ERROR
+	
 }
 
 #ifdef _X11

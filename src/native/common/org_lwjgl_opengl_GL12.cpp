@@ -39,8 +39,8 @@
  * @version $Revision$
  */
 
-#include "checkGLerror.h"
 #include "extgl.h"
+#include "common_tools.h"
 
 typedef void (APIENTRY * glDrawRangeElementsPROC) (GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices );
 typedef void (APIENTRY * glTexImage3DPROC) (GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid *pixels );
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glDrawRangeElements(mode, start, end, count, type, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -74,7 +74,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
   (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint buffer_offset)
 {
 	glDrawRangeElements(mode, start, end, count, type, offsetToPointer(buffer_offset));
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -87,7 +87,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -100,7 +100,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -112,7 +112,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint x, jint y, jint width, jint height)
 {
 	glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set)

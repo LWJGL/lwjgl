@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glProgramStringARBPROC) (GLenum target, GLenum format, GLsizei len, const GLvoid *string);
 typedef void (APIENTRY * glBindProgramARBPROC) (GLenum target, GLuint program);
@@ -75,7 +75,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB
 {
 	GLvoid *string_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(string) + stringOffset);
 	glProgramStringARB(target, format, length, string_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -86,7 +86,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB
 	(JNIEnv * env, jclass clazz, jint target, jint program)
 {
 	glBindProgramARB(target, program);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -98,7 +98,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB
 {
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glDeleteProgramsARB(n, programs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -110,7 +110,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB
 {
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glGenProgramsARB(n, programs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -121,7 +121,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParameter4fARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glProgramEnvParameter4fARB(target, index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -133,7 +133,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvParameter4fvAR
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glProgramEnvParameter4fvARB(target, index, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -144,7 +144,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramLocalParameter4fAR
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
 	glProgramLocalParameter4fARB(target, index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -156,7 +156,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalParameter4fv
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glProgramLocalParameter4fvARB(target, index, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -168,7 +168,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvParameterfv
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramEnvParameterfvARB(target, index, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -180,7 +180,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLocalParameter
 {
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramLocalParameterfvARB(target, index, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -192,7 +192,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivARB
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramivARB(target, parameterName, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -204,7 +204,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStringARB
 {
 	GLvoid *paramString_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(paramString) + paramStringOffset);
 	glGetProgramStringARB(target, parameterName, paramString_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -215,7 +215,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB
 	(JNIEnv * env, jclass clazz, jint program)
 {
 	GLboolean result = glIsProgramARB(program);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 

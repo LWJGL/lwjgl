@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+#include "common_tools.h"
 
 typedef int GLintptr;
 typedef unsigned int GLsizeiptr;
@@ -90,7 +90,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglBindBuffer
 	(JNIEnv * env, jclass clazz, jint target, jint buffer)
 {
 	glBindBuffer(target, buffer);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -102,7 +102,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteBuffers
 {
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
 	glDeleteBuffers(n, buffers_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -114,7 +114,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGenBuffers
 {
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
 	glGenBuffers(n, buffers_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -125,7 +125,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
 	GLboolean result = glIsBuffer(buffer);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -138,7 +138,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
 {
 	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data, data_offset);
 	glBufferData(target, size, data_ptr, usage);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -150,7 +150,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glBufferSubData(target, offset, size, data_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -162,7 +162,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glGetBufferSubData(target, offset, size, data_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -173,7 +173,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_GL15_glMapBuffer
 	(JNIEnv * env, jclass clazz, jint target, jint access, jint size, jobject oldBuffer)
 {
         void *buffer_address = glMapBuffer((GLenum)target, (GLenum)access);
-        CHECK_GL_ERROR
+        
         if (oldBuffer != NULL) {
                 void *old_buffer_address = env->GetDirectBufferAddress(oldBuffer);
                 if (old_buffer_address == buffer_address)
@@ -190,7 +190,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_GL15_glUnmapBuffer
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	GLboolean result = glUnmapBuffer(target);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -203,7 +203,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + params_offset;
 	glGetBufferParameteriv(target, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -215,7 +215,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_GL15_glGetBufferPointer
 {
         void *pointer;
         glGetBufferPointerv((GLenum)target, (GLenum)pname, &pointer);
-        CHECK_GL_ERROR
+        
         return safeNewBuffer(env, pointer, size);
 }
 
@@ -228,7 +228,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGenQueries
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glGenQueries(n, ids_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -240,7 +240,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteQueries
 {
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glDeleteQueries(n, ids_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -251,7 +251,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsQuery
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	GLboolean result = glIsQuery(id);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -263,7 +263,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_glBeginQuery
 	(JNIEnv * env, jclass clazz, jint target, jint id)
 {
 	glBeginQuery(target, id);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -274,7 +274,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_glEndQuery
 	(JNIEnv * env, jclass clazz, jint target)
 {
 	glEndQuery(target);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -286,7 +286,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryiv
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryiv(target, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -298,7 +298,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv
 {
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectiv(id, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -310,7 +310,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv
 {
 	GLuint *params_ptr = (GLuint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectuiv(id, pname, params_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set)

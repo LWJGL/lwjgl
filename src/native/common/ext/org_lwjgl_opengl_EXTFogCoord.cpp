@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glFogCoordfEXTPROC) (GLfloat coord);
 typedef void (APIENTRY * glFogCoordPointerEXTPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT
 	(JNIEnv * env, jclass clazz, jfloat coord)
 {
 	glFogCoordfEXT(coord);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -63,7 +63,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT
 {
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glFogCoordPointerEXT(type, stride, data_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -74,7 +74,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO
 	(JNIEnv * env, jclass clazz, jint type, jint stride, jint buffer_offset)
 {
 	glFogCoordPointerEXT(type, stride, (GLvoid *)buffer_offset);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set)

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glDrawBuffersATIPROC) (GLsizei n, const GLenum *bufs);
 
@@ -50,7 +50,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI
 {
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffersOffset;
 	glDrawBuffersATI(size, buffers_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIDrawBuffers(JNIEnv *env, jobject ext_set)

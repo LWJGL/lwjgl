@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glCombinerStageParameterfvNVPROC) (GLenum stage, GLenum pname, const GLfloat *params);
 typedef void (APIENTRY * glGetCombinerStageParameterfvNVPROC) (GLenum stage, GLenum pname, GLfloat *params);
@@ -52,7 +52,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerStageP
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -64,7 +64,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerSta
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVRegisterCombiners2(JNIEnv *env, jobject ext_set)

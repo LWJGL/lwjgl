@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef unsigned short GLhalf;
 
@@ -97,7 +97,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex2hNV
 	(JNIEnv * env, jclass clazz, jshort x, jshort y)
 {
 	glVertex2hNV(x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -108,7 +108,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex3hNV
 	(JNIEnv * env, jclass clazz, jshort x, jshort y, jshort z)
 {
 	glVertex3hNV(x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -119,7 +119,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex4hNV
 	(JNIEnv * env, jclass clazz, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertex4hNV(x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -130,7 +130,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glNormal3hNV
 	(JNIEnv * env, jclass clazz, jshort nx, jshort ny, jshort nz)
 {
 	glNormal3hNV(nx, ny, nz);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -141,7 +141,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor3hNV
 	(JNIEnv * env, jclass clazz, jshort red, jshort green, jshort blue)
 {
 	glColor3hNV(red, green, blue);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -152,7 +152,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor4hNV
 	(JNIEnv * env, jclass clazz, jshort red, jshort green, jshort blue, jshort alpha)
 {
 	glColor4hNV(red, green, blue, alpha);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -163,7 +163,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord1hNV
 	(JNIEnv * env, jclass clazz, jshort s)
 {
 	glTexCoord1hNV(s);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -174,7 +174,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord2hNV
 	(JNIEnv * env, jclass clazz, jshort s, jshort t)
 {
 	glTexCoord2hNV(s, t);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -185,7 +185,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord3hNV
 	(JNIEnv * env, jclass clazz, jshort s, jshort t, jshort r)
 {
 	glTexCoord3hNV(s, t, r);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -196,7 +196,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord4hNV
 	(JNIEnv * env, jclass clazz, jshort s, jshort t, jshort r, jshort q)
 {
 	glTexCoord4hNV(s, t, r, q);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -207,7 +207,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord1hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s)
 {
 	glMultiTexCoord1hNV(target, s);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -218,7 +218,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord2hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t)
 {
 	glMultiTexCoord2hNV(target, s, t);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -229,7 +229,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord3hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t, jshort r)
 {
 	glMultiTexCoord3hNV(target, s, t, r);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -240,7 +240,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord4hNV
 	(JNIEnv * env, jclass clazz, jint target, jshort s, jshort t, jshort r, jshort q)
 {
 	glMultiTexCoord4hNV(target, s, t, r, q);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -251,7 +251,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glFogCoordhNV
 	(JNIEnv * env, jclass clazz, jshort fog)
 {
 	glFogCoordhNV(fog);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -262,7 +262,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor3hNV
 	(JNIEnv * env, jclass clazz, jshort red, jshort green, jshort blue)
 {
 	glSecondaryColor3hNV(red, green, blue);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -273,7 +273,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib1hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x)
 {
 	glVertexAttrib1hNV(index, x);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -284,7 +284,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib2hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y)
 {
 	glVertexAttrib2hNV(index, x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -295,7 +295,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib3hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z)
 {
 	glVertexAttrib3hNV(index, x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -306,7 +306,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib4hNV
 	(JNIEnv * env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w)
 {
 	glVertexAttrib4hNV(index, x, y, z, w);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -318,7 +318,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs1hvNV
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;
 	glVertexAttribs1hvNV(index, n, attribs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -330,7 +330,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs2hvNV
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;
 	glVertexAttribs2hvNV(index, n, attribs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -342,7 +342,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs3hvNV
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;
 	glVertexAttribs3hvNV(index, n, attribs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -354,7 +354,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV
 {
 	GLushort *attribs_ptr = (GLushort *)env->GetDirectBufferAddress(attribs) + attribsOffset;
 	glVertexAttribs4hvNV(index, n, attribs_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVHalfFloat(JNIEnv *env, jobject ext_set)

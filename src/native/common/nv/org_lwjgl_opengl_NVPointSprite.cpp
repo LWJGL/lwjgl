@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glPointParameteriNVPROC) (GLenum pname, GLint param);
 typedef void (APIENTRY * glPointParameterivNVPROC) (GLenum pname, const GLint *params);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
 	glPointParameteriNV(pname, param);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -63,7 +63,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV
 {
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glPointParameterivNV(pname, piParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitNVPointSprite(JNIEnv *env, jobject ext_set)

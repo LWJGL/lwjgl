@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glWindowPos2fARBPROC) (GLfloat x, GLfloat y);
 typedef void (APIENTRY * glWindowPos2iARBPROC) (GLint x, GLint y);
@@ -59,7 +59,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB
 	(JNIEnv * env, jclass clazz, jfloat x, jfloat y)
 {
 	glWindowPos2fARB(x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -70,7 +70,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB
 	(JNIEnv * env, jclass clazz, jint x, jint y)
 {
 	glWindowPos2iARB(x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -81,7 +81,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB
 	(JNIEnv * env, jclass clazz, jshort x, jshort y)
 {
 	glWindowPos2sARB(x, y);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -92,7 +92,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fARB
 	(JNIEnv * env, jclass clazz, jfloat x, jfloat y, jfloat z)
 {
 	glWindowPos3fARB(x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -103,7 +103,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iARB
 	(JNIEnv * env, jclass clazz, jint x, jint y, jint z)
 {
 	glWindowPos3iARB(x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -114,7 +114,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB
 	(JNIEnv * env, jclass clazz, jshort x, jshort y, jshort z)
 {
 	glWindowPos3sARB(x, y, z);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set)

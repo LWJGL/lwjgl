@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glTexBumpParameterivATIPROC) (GLenum pname, GLint *param);
 typedef void (APIENTRY * glTexBumpParameterfvATIPROC) (GLenum pname, GLfloat *param);
@@ -56,7 +56,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfv
 {
 	GLfloat *pfParam_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParam) + pfParam_offset;
 	glTexBumpParameterfvATI(pname, pfParam_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -68,7 +68,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameteriv
 {
 	GLint *piParam_ptr = (GLint *)env->GetDirectBufferAddress(piParam) + piParam_offset;
 	glTexBumpParameterivATI(pname, piParam_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -80,7 +80,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParamete
 {
 	GLfloat *pfParam_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParam) + pfParam_offset;
 	glGetTexBumpParameterfvATI(pname, pfParam_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -92,7 +92,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParamete
 {
 	GLint *piParam_ptr = (GLint *)env->GetDirectBufferAddress(piParam) + piParam_offset;
 	glGetTexBumpParameterivATI(pname, piParam_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIEnvmapBumpmap(JNIEnv *env, jobject ext_set)

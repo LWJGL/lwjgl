@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glCompressedTexImage1DARBPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLint border, GLsizei imageSize, const GLvoid *data );
 typedef void (APIENTRY * glCompressedTexImage2DARBPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid *data );
@@ -62,7 +62,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTex
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
 	glCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -74,7 +74,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTex
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
 	glCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -86,7 +86,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTex
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
 	glCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -98,7 +98,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTex
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
 	glCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -110,7 +110,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTex
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
 	glCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -122,7 +122,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglCompressedTex
 {
 	GLvoid *pData_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pData) + pData_offset);
 	glCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -134,7 +134,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBTextureCompression_nglGetCompressed
 {
 	GLvoid *pImg_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pImg) + pImg_offset);
 	glGetCompressedTexImageARB(target, lod, pImg_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBTextureCompression(JNIEnv *env, jobject ext_set)

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glBlendFuncSeparateEXTPROC) (GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha);
 
@@ -49,7 +49,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSepara
 	(JNIEnv * env, jclass clazz, jint sfactorRGB, jint dfactorRGB, jint sfactorAlpha, jint dfactorAlpha)
 {
 	glBlendFuncSeparateEXT(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set)

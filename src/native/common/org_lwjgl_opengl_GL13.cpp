@@ -39,7 +39,6 @@
  * @version $Revision$
  */
 
-#include "checkGLerror.h"
 #include "extgl.h"
 
 typedef void (APIENTRY * glActiveTexturePROC) (GLenum texture );
@@ -85,7 +84,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_glActiveTexture
   (JNIEnv *env, jclass clazz, jint texture)
 {
 	glActiveTexture(texture);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -97,7 +96,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_glClientActiveTexture
   (JNIEnv *env, jclass clazz, jint texture)
 {
 	glClientActiveTexture(texture);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -110,7 +109,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glCompressedTexImage1D(target, level, internalformat, width, border, imagesize, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -123,7 +122,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage2D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glCompressedTexImage2D(target, level, internalformat, width, height, border, imagesize, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -136,7 +135,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexImage3D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imagesize, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -149,7 +148,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage1D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glCompressedTexSubImage1D(target, level, xoffset, width, format, imagesize, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -162,7 +161,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage2D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imagesize, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -175,7 +174,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglCompressedTexSubImage3D
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imagesize, address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -188,7 +187,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglGetCompressedTexImage
 {
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetCompressedTexImage(target, lod, address);
-	CHECK_GL_ERROR
+	
 }
 
 
@@ -256,7 +255,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglLoadTransposeMatrixf
 {
 	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glLoadTransposeMatrixf(address);
-	CHECK_GL_ERROR
+	
 }
 
 
@@ -271,7 +270,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_nglMultTransposeMatrixf
 {
 	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glMultTransposeMatrixf(address);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -283,7 +282,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_glSampleCoverage
   (JNIEnv *env, jclass clazz, jfloat value, jboolean invert)
 {
 	glSampleCoverage(value, invert);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitOpenGL1_3(JNIEnv *env, jobject ext_set)

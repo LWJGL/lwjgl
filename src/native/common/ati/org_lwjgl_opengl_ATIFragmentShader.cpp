@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef GLuint (APIENTRY * glGenFragmentShadersATIPROC) (GLuint range);
 typedef void (APIENTRY * glBindFragmentShaderATIPROC) (GLuint id);
@@ -75,7 +75,7 @@ static jint JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glGenFragmentShaders
 	(JNIEnv * env, jclass clazz, jint range)
 {
 	GLuint result = glGenFragmentShadersATI(range);
-	CHECK_GL_ERROR
+	
 	return result;
 }
 
@@ -87,7 +87,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBindFragmentShader
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	glBindFragmentShaderATI(id);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -98,7 +98,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glDeleteFragmentShad
 	(JNIEnv * env, jclass clazz, jint id)
 {
 	glDeleteFragmentShaderATI(id);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -109,7 +109,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBeginFragmentShade
 	(JNIEnv * env, jclass clazz)
 {
 	glBeginFragmentShaderATI();
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -120,7 +120,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glEndFragmentShaderA
 	(JNIEnv * env, jclass clazz)
 {
 	glEndFragmentShaderATI();
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -131,7 +131,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glPassTexCoordATI
 	(JNIEnv * env, jclass clazz, jint dst, jint coord, jint swizzle)
 {
 	glPassTexCoordATI(dst, coord, swizzle);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -142,7 +142,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glSampleMapATI
 	(JNIEnv * env, jclass clazz, jint dst, jint interp, jint swizzle)
 {
 	glSampleMapATI(dst, interp, swizzle);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -153,7 +153,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp1AT
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMask, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod)
 {
 	glColorFragmentOp1ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -164,7 +164,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp2AT
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMask, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod)
 {
 	glColorFragmentOp2ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -175,7 +175,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp3AT
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMask, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod, jint arg3, jint arg3Rep, jint arg3Mod)
 {
 	glColorFragmentOp3ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, arg3, arg3Rep, arg3Mod);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -186,7 +186,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp1AT
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod)
 {
 	glAlphaFragmentOp1ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -197,7 +197,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp2AT
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod)
 {
 	glAlphaFragmentOp2ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -208,7 +208,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp3AT
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod, jint arg3, jint arg3Rep, jint arg3Mod)
 {
 	glAlphaFragmentOp3ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, arg3, arg3Rep, arg3Mod);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -220,7 +220,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_nglSetFragmentShader
 {
 	GLfloat *pfValue_ptr = (GLfloat *)env->GetDirectBufferAddress(pfValue) + pfValue_offset;
 	glSetFragmentShaderConstantATI(dst, pfValue_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitATIFragmentShader(JNIEnv *env, jobject ext_set)

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glPointParameterfARBPROC) (GLenum pname, GLfloat param);
 typedef void (APIENTRY * glPointParameterfvARBPROC) (GLenum pname, GLfloat *params);
@@ -51,7 +51,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBPointParameters_glPointParameterfAR
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
 	glPointParameterfARB(pname, param);
-	CHECK_GL_ERROR
+	
 }
 
 /*
@@ -63,7 +63,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBPointParameters_nglPointParameterfv
 {
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glPointParameterfvARB(pname, pfParams_ptr);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBPointParameters(JNIEnv *env, jobject ext_set)

@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glSampleCoverageARBPROC) (GLclampf value, GLboolean invert);
 
@@ -49,7 +49,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMultisample_glSampleCoverageARB
 	(JNIEnv * env, jclass clazz, jfloat value, jboolean invert)
 {
 	glSampleCoverageARB(value, invert);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set)

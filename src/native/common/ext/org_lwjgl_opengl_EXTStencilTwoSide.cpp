@@ -35,7 +35,7 @@
 // ----------------------------------
 
 #include "extgl.h"
-#include "checkGLerror.h"
+
 
 typedef void (APIENTRY * glActiveStencilFaceEXTPROC) (GLenum face);
 
@@ -49,7 +49,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceE
 	(JNIEnv * env, jclass clazz, jint face)
 {
 	glActiveStencilFaceEXT(face);
-	CHECK_GL_ERROR
+	
 }
 
 void extgl_InitEXTStencilTwoSide(JNIEnv *env, jobject ext_set)
