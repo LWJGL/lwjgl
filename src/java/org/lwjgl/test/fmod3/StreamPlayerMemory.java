@@ -33,8 +33,6 @@ package org.lwjgl.test.fmod3;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -53,7 +51,7 @@ public class StreamPlayerMemory {
 
 	public static void main(String[] args) {
 		if (args.length < 1) {
-			System.out.println("Usage:\n StreamPlayer <file>");
+			System.out.println("Usage:\n StreamPlayerMemory <file>");
       
       // default to phero-eveningtest.mp3
       args = new String[] { "phero-eveningtest.mp3" };
@@ -82,11 +80,11 @@ public class StreamPlayerMemory {
       
       // busy wait until done
       int length = FSound.FSOUND_Stream_GetLengthMs(stream);
-      System.out.println("Loaded song of length: " + ((length / 1000) / 60) + "m " + ((length / 1000) % 60) + "s");
-      System.out.println("Waiting 60 seconds, for song to finish");
+      String time = ((length / 1000) / 60) + "m " + ((length / 1000) % 60) + "s";
+      System.out.println("Waiting " + time + ", for song to finish");
       
       try {
-      	Thread.sleep(60000);
+      	Thread.sleep(length);
       } catch (InterruptedException inte) {
       }
 
