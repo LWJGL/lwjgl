@@ -112,6 +112,7 @@ public final class GL20 {
 	 */
 	public static void glShaderSource(int shader, ByteBuffer string) {
 		BufferChecks.checkDirect(string);
+
 		initShaderSource(1);
 		setShaderString(0, string, string.position(), string.remaining());
 
@@ -127,6 +128,9 @@ public final class GL20 {
 	 * @param strings
 	 */
 	public static void glShaderSource(int shader, ByteBuffer[] strings) {
+		if ( strings == null || strings.length == 0 )
+			throw new IllegalArgumentException("Invalid shader string array.");
+
 		initShaderSource(strings.length);
 		for ( int i = 0; i < strings.length; i++ ) {
 			BufferChecks.checkDirect(strings[i]);

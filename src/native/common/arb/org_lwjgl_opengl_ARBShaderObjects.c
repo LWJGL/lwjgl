@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -120,7 +120,6 @@ static glGetUniformfvARBPROC glGetUniformfvARB;
 static glGetUniformivARBPROC glGetUniformivARB;
 static glGetShaderSourceARBPROC glGetShaderSourceARB;
 
-static int sourcesSize;
 static int sourceCount;
 static GLcharARB** sources = NULL;
 static GLint* sourcesLengths = NULL;
@@ -133,7 +132,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDeleteObjectARB
 	(JNIEnv * env, jclass clazz, jint obj)
 {
 	glDeleteObjectARB(obj);
-	
+
 }
 
 /*
@@ -144,7 +143,7 @@ static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glGetHandleARB
 	(JNIEnv * env, jclass clazz, jint pname)
 {
 	GLhandleARB result = glGetHandleARB(pname);
-	
+
 	return result;
 }
 
@@ -156,7 +155,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glDetachObjectARB
 	(JNIEnv * env, jclass clazz, jint containerObj, jint attachedObj)
 {
 	glDetachObjectARB(containerObj, attachedObj);
-	
+
 }
 
 /*
@@ -167,7 +166,7 @@ static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreateShaderObjectA
 	(JNIEnv * env, jclass clazz, jint shaderType)
 {
 	GLhandleARB result = glCreateShaderObjectARB(shaderType);
-	
+
 	return result;
 }
 
@@ -176,17 +175,8 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_initShaderSource
 {
 	sourceCount = count;
 
-	if ( sources == NULL || sourcesLengths == NULL || sourceCount > sourcesSize ) {
-		sourcesSize = sourceCount * 2;
-
-		if (sources != NULL)
-			free(sources);
-		if (sourcesLengths != NULL)
-			free(sourcesLengths);
-
-		sources = (GLcharARB**)malloc(sizeof(GLcharARB*)*sourcesSize);
-		sourcesLengths = (GLint*)malloc(sizeof(GLint)*sourcesSize);
-	}
+	sources = (GLcharARB**)malloc(sizeof(GLcharARB*) * sourceCount);
+	sourcesLengths = (GLint*)malloc(sizeof(GLint) * sourceCount);
 }
 
 /*
@@ -210,7 +200,9 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglShaderSourceARB
 	(JNIEnv * env, jclass clazz, jint shaderObj)
 {
 	glShaderSourceARB(shaderObj, sourceCount, (const GLcharARB **)sources, (const GLint *)sourcesLengths);
-	
+
+	free(sources);
+	free(sourcesLengths);
 }
 
 /*
@@ -221,7 +213,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCompileShaderARB
 	(JNIEnv * env, jclass clazz, jint shaderObj)
 {
 	glCompileShaderARB(shaderObj);
-	
+
 }
 
 /*
@@ -232,7 +224,7 @@ static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glCreateProgramObject
 	(JNIEnv * env, jclass clazz)
 {
 	GLuint result = glCreateProgramObjectARB();
-	
+
 	return result;
 }
 
@@ -244,7 +236,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glAttachObjectARB
 	(JNIEnv * env, jclass clazz, jint containerObj, jint obj)
 {
 	glAttachObjectARB(containerObj, obj);
-	
+
 }
 
 /*
@@ -255,7 +247,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glLinkProgramARB
 	(JNIEnv * env, jclass clazz, jint programObj)
 {
 	glLinkProgramARB(programObj);
-	
+
 }
 
 /*
@@ -266,7 +258,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUseProgramObjectARB
 	(JNIEnv * env, jclass clazz, jint programObj)
 {
 	glUseProgramObjectARB(programObj);
-	
+
 }
 
 /*
@@ -277,7 +269,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glValidateProgramARB
 	(JNIEnv * env, jclass clazz, jint programObj)
 {
 	glValidateProgramARB(programObj);
-	
+
 }
 
 /*
@@ -288,7 +280,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0)
 {
 	glUniform1fARB(location, v0);
-	
+
 }
 
 /*
@@ -299,7 +291,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0, jfloat v1)
 {
 	glUniform2fARB(location, v0, v1);
-	
+
 }
 
 /*
@@ -310,7 +302,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0, jfloat v1, jfloat v2)
 {
 	glUniform3fARB(location, v0, v1, v2);
-	
+
 }
 
 /*
@@ -321,7 +313,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4fARB
 	(JNIEnv * env, jclass clazz, jint location, jfloat v0, jfloat v1, jfloat v2, jfloat v3)
 {
 	glUniform4fARB(location, v0, v1, v2, v3);
-	
+
 }
 
 /*
@@ -332,7 +324,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform1iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0)
 {
 	glUniform1iARB(location, v0);
-	
+
 }
 
 /*
@@ -343,7 +335,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform2iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0, jint v1)
 {
 	glUniform2iARB(location, v0, v1);
-	
+
 }
 
 /*
@@ -354,7 +346,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform3iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0, jint v1, jint v2)
 {
 	glUniform3iARB(location, v0, v1, v2);
-	
+
 }
 
 /*
@@ -365,7 +357,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_glUniform4iARB
 	(JNIEnv * env, jclass clazz, jint location, jint v0, jint v1, jint v2, jint v3)
 {
 	glUniform4iARB(location, v0, v1, v2, v3);
-	
+
 }
 
 /*
@@ -377,7 +369,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1fvARB
 {
 	GLfloat *values_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform1fvARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -389,7 +381,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2fvARB
 {
 	GLfloat *values_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform2fvARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -401,7 +393,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3fvARB
 {
 	GLfloat *values_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform3fvARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -413,7 +405,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4fvARB
 {
 	GLfloat *values_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform4fvARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -425,7 +417,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform1ivARB
 {
 	GLint *values_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform1ivARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -437,7 +429,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform2ivARB
 {
 	GLint *values_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform2ivARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -449,7 +441,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform3ivARB
 {
 	GLint *values_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform3ivARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -461,7 +453,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniform4ivARB
 {
 	GLint *values_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, values) + valuesOffset;
 	glUniform4ivARB(location, count, values_ptr);
-	
+
 }
 
 /*
@@ -473,7 +465,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix2fvAR
 {
 	GLfloat *matrices_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, matrices) + matricesOffset;
 	glUniformMatrix2fvARB(location, count, transpose, matrices_ptr);
-	
+
 }
 
 /*
@@ -485,7 +477,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix3fvAR
 {
 	GLfloat *matrices_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, matrices) + matricesOffset;
 	glUniformMatrix3fvARB(location, count, transpose, matrices_ptr);
-	
+
 }
 
 /*
@@ -497,7 +489,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglUniformMatrix4fvAR
 {
 	GLfloat *matrices_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, matrices) + matricesOffset;
 	glUniformMatrix4fvARB(location, count, transpose, matrices_ptr);
-	
+
 }
 
 /*
@@ -509,7 +501,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjectParameter
 {
 	GLfloat *params_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
 	glGetObjectParameterfvARB(obj, pname, params_ptr);
-	
+
 }
 
 /*
@@ -521,7 +513,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetObjectParameter
 {
 	GLint *params_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
 	glGetObjectParameterivARB(obj, pname, params_ptr);
-	
+
 }
 
 /*
@@ -541,7 +533,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetInfoLogARB
 		glGetInfoLogARB(obj, maxLength, length_ptr, infoLog_ptr);
 	}
 
-	
+
 }
 
 /*
@@ -561,7 +553,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetAttachedObjects
 		glGetAttachedObjectsARB(containerObj, maxCount, count_ptr, obj_ptr);
 	}
 
-	
+
 }
 
 /*
@@ -573,7 +565,7 @@ static jint JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformLocation
 {
 	GLubyte *name_ptr = (GLubyte *)(*env)->GetDirectBufferAddress(env, name) + nameOffset;
 	GLuint result = glGetUniformLocationARB(programObj, name_ptr);
-	
+
 	return result;
 }
 
@@ -596,7 +588,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetActiveUniformAR
 		glGetActiveUniformARB(programObj, index, maxLength, length_ptr, size_ptr, type_ptr, name_ptr);
 	}
 
-	
+
 }
 
 /*
@@ -608,7 +600,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformfvARB
 {
 	GLfloat *params_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
 	glGetUniformfvARB(programObj, location, params_ptr);
-	
+
 }
 
 /*
@@ -620,7 +612,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetUniformivARB
 {
 	GLint *params_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
 	glGetUniformivARB(programObj, location, params_ptr);
-	
+
 }
 
 /*
@@ -639,7 +631,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetShaderSourceARB
 		glGetShaderSourceARB(obj, maxLength, length_ptr, source_ptr);
 	}
 
-	
+
 }
 
 #ifdef __cplusplus

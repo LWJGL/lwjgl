@@ -89,7 +89,6 @@ typedef void (APIENTRY * glUniformMatrix4fvPROC) (GLint location, GLsizei count,
 typedef void (APIENTRY * glUseProgramPROC) (GLuint program);
 typedef void (APIENTRY * glValidateProgramPROC) (GLuint program);
 
-static int sourcesSize;
 static int sourceCount;
 static GLchar** sources = NULL;;
 static GLint* sourcesLengths = NULL;
@@ -172,17 +171,8 @@ static void JNICALL Java_org_lwjgl_opengl_GL20_initShaderSource
 {
 	sourceCount = count;
 
-	if ( sources == NULL || sourcesLengths == NULL || sourceCount > sourcesSize ) {
-		sourcesSize = sourceCount * 2;
-
-		if (sources != NULL)
-			free(sources);
-		if (sourcesLengths != NULL)
-			free(sourcesLengths);
-
-		sources = (GLchar**)malloc(sizeof(GLchar*)*sourcesSize);
-		sourcesLengths = (GLint*)malloc(sizeof(GLint)*sourcesSize);
-	}
+	sources = (GLchar**)malloc(sizeof(GLchar*) * sourceCount);
+	sourcesLengths = (GLint*)malloc(sizeof(GLint) * sourceCount);
 }
 
 /*
@@ -206,6 +196,9 @@ static void JNICALL Java_org_lwjgl_opengl_GL20_nglShaderSource
 	(JNIEnv * env, jclass clazz, jint shader)
 {
 	glShaderSource(shader, sourceCount, (const GLchar **)sources, (const GLint *)sourcesLengths);
+
+	free(sources);
+	free(sourcesLengths);
 }
 
 /*

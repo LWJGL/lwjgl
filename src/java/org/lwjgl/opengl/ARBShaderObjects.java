@@ -131,6 +131,9 @@ public final class ARBShaderObjects {
 	 * @param strings
 	 */
 	public static void glShaderSourceARB(int shaderObj, ByteBuffer[] strings) {
+		if ( strings == null || strings.length == 0 )
+			throw new IllegalArgumentException("Invalid shader string array.");
+
 		initShaderSource(strings.length);
 		for ( int i = 0; i < strings.length; i++ ) {
 			BufferChecks.checkDirect(strings[i]);
