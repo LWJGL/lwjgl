@@ -53,19 +53,11 @@ unsigned __int64		hires_timer = 0;				// Hires timer current time
  * Method:    getTimerResolution
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT jlong JNICALL Java_org_lwjgl_Win32SysImplementation_getTimerResolution
+  (JNIEnv * env, jobject ignored)
 {
 	QueryPerformanceFrequency((LARGE_INTEGER*) &hires_timer_freq);
 	return (jlong) hires_timer_freq;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebug(JNIEnv *env, jclass clazz, jboolean enabled) {
-	setDebugEnabled(enabled == JNI_TRUE ? true : false);
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
-	return getVersionString(env);
 }
 
 /*
@@ -73,8 +65,8 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env
  * Method:    ngetTime
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_ngetTime
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT jlong JNICALL Java_org_lwjgl_Win32SysImplementation_getTime
+  (JNIEnv * env, jobject ignored)
 {
 	QueryPerformanceCounter((LARGE_INTEGER*) &hires_timer);
 	return (jlong) hires_timer;
@@ -85,8 +77,8 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_ngetTime
  * Method:    alert
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
-  (JNIEnv * env, jclass clazz, jstring title, jstring message)
+JNIEXPORT void JNICALL Java_org_lwjgl_Win32SysImplementation_alert
+  (JNIEnv * env, jobject ignored, jstring title, jstring message)
 {
 	char * eMessageText = GetStringNativeChars(env, message);
 	char * cTitleBarText = GetStringNativeChars(env, title);
@@ -103,8 +95,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
  * Method:    openURL
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nOpenURL
-  (JNIEnv * env, jobject self, jstring url)
+JNIEXPORT void JNICALL Java_org_lwjgl_Win32SysImplementation_openURL
+  (JNIEnv * env, jobject ignored, jstring url)
 {
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -169,8 +161,8 @@ const void * getClipboard(int type)
 
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_nGetClipboard
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Win32SysImplementation_getClipboard
+  (JNIEnv * env, jobject ignored)
 {
 	// Check to see if there's text available in the clipboard
 	BOOL textAvailable = IsClipboardFormatAvailable(CF_TEXT);

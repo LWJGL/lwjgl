@@ -385,13 +385,14 @@
 		</javah>
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
 			<class name="org.lwjgl.opengl.Win32Display" />
+			<class name="org.lwjgl.Win32SysImplementation" />
 		</javah>
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
 			<class name="org.lwjgl.opengl.MacOSXDisplay" />
 		</javah>
 		<!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
-			<class name="org.lwjgl.Sys" />
+			<class name="org.lwjgl.DefaultSysImplementation" />
 
 			<class name="org.lwjgl.input.Cursor" />
 			<class name="org.lwjgl.input.Keyboard" />

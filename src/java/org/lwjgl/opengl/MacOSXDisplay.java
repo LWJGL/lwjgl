@@ -368,18 +368,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return GL11.glGetString(GL11.GL_EXTENSIONS).indexOf("GL_APPLE_pixel_buffer") != -1 ? Pbuffer.PBUFFER_SUPPORTED : 0;
 	}
 
-	/* Use the com.apple.eio.FileManager Mac OS X extension to show the given URL */
-	public boolean openURL(String url) {
-		try {
-			Class com_apple_eio_FileManager = Class.forName("com.apple.eio.FileManager");
-			Method openURL_method = com_apple_eio_FileManager.getMethod("openURL", new Class[]{String.class});
-			openURL_method.invoke(null, new Object[]{url});
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
 	/**
 	 * This class captures com.apple.eawt.ApplicationEvents through reflection
 	 * to enable compilation on other platforms than Mac OS X

@@ -45,6 +45,7 @@
 #endif
 
 #include "common_tools.h"
+#include "org_lwjgl_DefaultSysImplementation.h"
 
 static bool debug = false;
 static const char* VERSION = "0.94";
@@ -63,16 +64,18 @@ void putAttrib(attrib_list_t *list, int attrib) {
 	list->current_index++;
 }
 
-jstring getVersionString(JNIEnv *env) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_DefaultSysImplementation_getNativeLibraryVersion
+  (JNIEnv *env, jobject ignored) {
 	return NewStringNative(env, VERSION);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_DefaultSysImplementation_setDebug
+  (JNIEnv *env, jobject ignored, jboolean enable) {
+	  debug = enable == JNI_TRUE ? true : false;
 }
 
 bool isDebugEnabled(void) {
 	return debug;
-}
-
-void setDebugEnabled(bool enable) {
-	debug = enable;
 }
 
 void printfDebugJava(JNIEnv *env, const char *format, ...) {

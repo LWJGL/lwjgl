@@ -248,6 +248,4 @@ public interface DisplayImplementation {
 	public void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
 
 	public void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
-
-	boolean openURL(String url);
 }

@@ -51,27 +51,54 @@ public final class Sys {
 	public static final String VERSION = "0.94";
 
 	/** The native library name */
-	private static String LIBRARY_NAME = "lwjgl";
+	private static final String LIBRARY_NAME = "lwjgl";
 
 	/** The platform adapter class name */
-	private static String PLATFORM;
+	private static final String PLATFORM;
 
 	/**
 	 * Debug flag.
 	 */
 	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.Sys.debug");
 
-	private static boolean initialized;
+	/**
+	  * The implementation instance to delegate platform specific behavior to
+	  */
+	private final static SysImplementation implementation;
 
 	static {
-		initialize();
+		System.loadLibrary(LIBRARY_NAME);
+		implementation = createImplementation();
+		String native_version = implementation.getNativeLibraryVersion();
+		if (!native_version.equals(VERSION))
+			throw new LinkageError("Version mismatch: jar version is '" + VERSION +
+                                                        "', native libary version is '" + native_version + "'");
+		implementation.setDebug(DEBUG);
+
+		PLATFORM = System.getProperty("org.lwjgl.Sys.platform", "org.lwjgl.SwingAdapter");
 	}
 
-	/**
-	 * @return the name of the native library to load
-	 */
-	private static String getLibraryName() {
-		return LIBRARY_NAME;
+	private static SysImplementation createImplementation() {
+		String class_name;
+		String os_name = System.getProperty("os.name");
+		if (os_name.startsWith("Linux")) {
+			class_name = "org.lwjgl.LinuxSysImplementation";
+		} else if (os_name.startsWith("Windows")) {
+			class_name = "org.lwjgl.Win32SysImplementation";
+		} else if (os_name.startsWith("Mac")) {
+			class_name = "org.lwjgl.MacOSXSysImplementation";
+		} else
+			throw new IllegalStateException("The platform " + os_name + " is not supported");
+		try {
+			Class impl_class = Class.forName(class_name);
+			return (SysImplementation)impl_class.newInstance();
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -91,39 +118,19 @@ public final class Sys {
 	}
 
 	/**
-	 * Initialization.
+	 * Initialization. This is just a dummy method to trigger the static constructor.
 	 */
 	public static void initialize() {
-		if (initialized)
-			return;
-		initialized = true;
-		System.loadLibrary(LIBRARY_NAME);
-		String native_version = getNativeLibraryVersion();
-		if (!native_version.equals(VERSION))
-			throw new LinkageError("Version mismatch: jar version is '" + VERSION +
-                                                        "', native libary version is '" + native_version + "'");
-		setDebug(DEBUG);
-
-		PLATFORM = System.getProperty("org.lwjgl.Sys.platform", "org.lwjgl.SwingAdapter");
-
 	}
-
-	/**
-	 * Return the version of the native library
-	 */
-	private static native String getNativeLibraryVersion();
-
-	/**
-	 * Set the debug level of the native library
-	 */
-	private static native void setDebug(boolean debug);
 
 	/**
 	 * Obtains the number of ticks that the hires timer does in a second.
 	 *
 	 * @return timer resolution in ticks per second or 0 if no timer is present.
 	 */
-	public static native long getTimerResolution();
+	public static long getTimerResolution() {
+		return implementation.getTimerResolution();
+	}
 
 	/**
 	 * Gets the current value of the hires timer, in ticks. When the Sys class is first loaded
@@ -133,9 +140,8 @@ public final class Sys {
 	 * @return the current hires time, in ticks (always >= 0)
 	 */
 	public static long getTime() {
-		return ngetTime() & 0x7FFFFFFFFFFFFFFFL;
+		return implementation.getTime() & 0x7FFFFFFFFFFFFFFFL;
 	}
-	private static native long ngetTime();
 
 	/**
 	 * Attempt to display a modal alert to the user. This method should be used
@@ -165,22 +171,11 @@ public final class Sys {
 		if (message == null)
 			message = "";
 		String osName = System.getProperty("os.name");
-		if (osName.startsWith("Windows")) {
-			nAlert(title, message);
-		} else {
-			try {
-				PlatformAdapter adapter = (PlatformAdapter) Class.forName(PLATFORM).newInstance(); // This avoids a Jet error message
-				adapter.alert(title, message);
-			} catch (Exception e) {
-				Sys.log("Unable to display alert using: " + PLATFORM);
-			}
-		}
+		implementation.alert(title, message);
 		if (grabbed) {
 			Mouse.setGrabbed(true);
 		}
 	}
-
-	private static native void nAlert(String title, String message);
 
 	/**
 	 * Open the system web browser and point it at the specified URL. It is recommended
@@ -212,7 +207,7 @@ public final class Sys {
 				return false;
 			}
 		} catch (Exception ue) {
-			return Display.getImplementation().openURL(url);
+			return implementation.openURL(url);
 		}
 	}
 
@@ -225,15 +220,6 @@ public final class Sys {
 	 * @return a String, or null if there is no system clipboard.
 	 */
 	public static String getClipboard() {
-		try {
-			PlatformAdapter adapter = (PlatformAdapter) Class.forName(PLATFORM).newInstance(); // This avoids a Jet error message
-			return adapter.getClipboard();
-		} catch (Throwable e) {
-			Sys.log("Unable to get clipboard contents: " + e);
-			// ignore exception and use native implementation
-			return nGetClipboard();
-		}
+		return implementation.getClipboard();
 	}
-
-	private static native String nGetClipboard();
 }

@@ -126,11 +126,4 @@ final class Win32Display implements DisplayImplementation {
 	public native void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
 	public native void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
 	public native void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
-
-	public boolean openURL(String url) {
-		nOpenURL(url);
-		return true;
-	}
-
-	private native void nOpenURL(String url);
 }

@@ -31,30 +31,35 @@
  */
 package org.lwjgl;
 
-
 /**
  * $Id$
  *
- * Interface for adapting to window environments.
+ * System class platform specific method interface
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public interface PlatformAdapter {
+interface SysImplementation {
+	/**
+	 * Return the version of the native library
+	 */
+	public String getNativeLibraryVersion();
+
+	public void setDebug(boolean debug);
 
 	/**
-	 * Spawn a "modal" dialog in the centre of the screen with a message in it
-	 * and an OK button. This method blocks until the dialog is dismissed.
-	 * @param title
-	 * @param message
+	 * Obtains the number of ticks that the hires timer does in a second.
+	 *
+	 * @return timer resolution in ticks per second or 0 if no timer is present.
 	 */
-	void alert(String title, String message);
+	public long getTimerResolution();
 
-	/**
-	 * Get the contents of the system clipboard. The system might not have a clipboard
-	 * (particularly if it doesn't even have a keyboard) in which case we return null.
-	 * Otherwise we return a String, which may be the empty string "".
-	 * @return a String, or null if there is no system clipboard.
-	 */
-	String getClipboard();
+	public long getTime();
+
+	public void alert(String title, String message);
+
+	boolean openURL(String url);
+
+	public String getClipboard();
 }
