@@ -12,7 +12,7 @@ package org.lwjgl;
  * 
  * - width and height are always fixed and cannot be changed
  * - the position of the window may or may not be programmable but once specified
- * cannot be changed
+ * cannot be changed programmatically
  * - the window may be closeable by the user or operating system, and may be minimized
  * by the user or operating system
  * - only one window may ever be open at once
@@ -30,40 +30,40 @@ public abstract class Window {
 	private static Window currentWindow;
 	
 	/** Whether the window is currently created, ie. has a native peer */
-	private boolean created;
+	private static boolean created;
 
 	/** The window's native data structure. On Win32 this is an HWND. */
-	private int handle;
+	private static int handle;
 
 	/** Whether the window is currently minimized */
-	private boolean minimized;
+	private static boolean minimized;
   
 	/** Whether the window has focus */
-	private boolean focused = true;
+	private static boolean focused = true;
 	
 	/** Whether the window has been asked to close by the user or underlying OS */
-	private boolean closeRequested;
+	private static boolean closeRequested;
 	
 	/** Whether the window is dirty, ie. needs painting */
-	private boolean dirty;
+	private static boolean dirty;
 	
 	/** X coordinate of the window */
-	private int x;
+	private static int x;
 	
 	/**
 	 * Y coordinate of the window. Y in window coordinates is from the top of the display down,
 	 * unlike GL, where it is typically at the bottom of the display.
 	 */
-	private int y;
+	private static int y;
 	
 	/** Width of the window */
-	private int width;
+	private static int width;
 	
 	/** Height of the window */
-	private int height;
+	private static int height;
 	
 	/** Title of the window */
-	private String title;
+	private static String title;
 	
 	/**
 	 * Construct a Window. Some OSs may not support non-fullscreen windows; in
@@ -89,32 +89,32 @@ public abstract class Window {
 	 * @throws RuntimeException if you attempt to create more than one window at the same time
 	 */
 	protected Window(String title, int x, int y, int width, int height) {
-		this.title = title;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		Window.title = title;
+		Window.x = x;
+		Window.y = y;
+		Window.width = width;
+		Window.height = height;
 		
 	}
 
 	/**
 	 * @return the width of the window
 	 */
-	public final int getWidth() {
+	public static int getWidth() {
 		return width;
 	}
 	
 	/**
 	 * @return the height of the window
 	 */
-	public final int getHeight() {
+	public static int getHeight() {
 		return height;
 	}
 	
 	/**
 	 * @return the title of the window
 	 */
-	public final String getTitle() {
+	public static String getTitle() {
 		return title;
 	}
 	
@@ -122,7 +122,7 @@ public abstract class Window {
 	 * Set the title of the window. This may be ignored by the underlying OS.
 	 * @param newTitle The new window title
 	 */
-	public final void setTitle(String newTitle) {
+	public static void setTitle(String newTitle) {
 		assert isCreated();
 		title = newTitle;
 		nSetTitle(title);
@@ -132,12 +132,12 @@ public abstract class Window {
 	 * Native implementation of setTitle(). This will read the window's title member
 	 * and stash it in the native title of the window.
 	 */
-	private native void nSetTitle(String title);
+	private static native void nSetTitle(String title);
 
 	/**
 	 * @return true if the user or operating system has asked the window to close
 	 */
-	public final boolean isCloseRequested() {
+	public static boolean isCloseRequested() {
 		assert isCreated();
 
 		boolean currentValue = closeRequested;
@@ -148,7 +148,7 @@ public abstract class Window {
 	/**
 	 * @return true if the window is minimized or otherwise not visible
 	 */
-	public final boolean isMinimized() {
+	public static boolean isMinimized() {
 		assert isCreated();
 		return minimized;
 	}
@@ -156,7 +156,7 @@ public abstract class Window {
 	/**
 	 * @return true if window is focused
 	 */
-	public final boolean isFocused() {
+	public static boolean isFocused() {
 		assert isCreated();
 		return focused;
 	}
@@ -168,7 +168,7 @@ public abstract class Window {
 	 * 
 	 * If the display is already minimized then this is a no-op.
 	 */
-	public final native void minimize();
+	public static native void minimize();
 	
 	/**
 	 * Restore the game and hide the operating system away. It is the responsibility of
@@ -176,7 +176,7 @@ public abstract class Window {
 	 * 
 	 * If the display is not minimized then this is a no-op/
 	 */
-	public final native void restore();
+	public static native void restore();
 	
 	/**
 	 * Determine if the window's contents have been damaged by external events.
@@ -188,7 +188,7 @@ public abstract class Window {
 	 * @return true if the window has been damaged by external changes
 	 * and needs to repaint itself
 	 */
-	public final boolean isDirty() {
+	public static boolean isDirty() {
 		assert isCreated();
 		return dirty;
 	}
@@ -196,10 +196,10 @@ public abstract class Window {
 	/**
 	 * Paint the window. This clears the dirty flag and swaps the buffers.
 	 */
-	public final void paint() {
+	public static void paint() {
 		assert isCreated();
 		dirty = false;
-		doPaint();
+		currentWindow.doPaint();
 	}
 
 	protected abstract void doPaint();
@@ -213,7 +213,6 @@ public abstract class Window {
 		doCreate();
 		currentWindow = this;
 		created = true;
-		
   	}
 	
 	/**
@@ -242,14 +241,14 @@ public abstract class Window {
 	/**
 	 * @return the native window handle
 	 */
-	public final int getHandle() {
+	public static int getHandle() {
 		return handle;
 	}
 	
 	/**
 	 * @return true if the window's native peer has been created
 	 */
-	public final boolean isCreated() {
+	public static boolean isCreated() {
 		return created;
 	}
 	
@@ -257,7 +256,7 @@ public abstract class Window {
 	 * 'Tick' the window. This must be called at least once per video frame
 	 * to handle window close requests, moves, paints, etc.
 	 */
-	public native void tick();
+	public static native void tick();
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

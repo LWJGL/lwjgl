@@ -47,7 +47,7 @@ import java.nio.Buffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision: 1.23 $
  */
-public class CoreGL11 implements CoreGL11Constants {
+public abstract class CoreGL11 implements CoreGL11Constants {
 	
 	public static native void glAccum(int op, float value);
 	public static native void glAlphaFunc(int func, float ref);
