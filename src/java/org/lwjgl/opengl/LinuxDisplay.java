@@ -48,7 +48,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
-	private static final int CURSOR_HANDLE_SIZE = 8;
 //	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int NUM_BUTTONS = 3;
 
@@ -359,16 +358,14 @@ final class LinuxDisplay implements DisplayImplementation {
 		return Keyboard.STATE_UNKNOWN;
 	}
 
-	private static native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
+	private static native ByteBuffer nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
 		lockAWT();
 		try {
 			incDisplay();
 			try {
-				ByteBuffer handle = BufferUtils.createByteBuffer(CURSOR_HANDLE_SIZE);
-				nCreateCursor(handle, width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
-				return handle;
+				return nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
 			} catch (LWJGLException e) {
 				decDisplay();
 				throw e;
