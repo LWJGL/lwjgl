@@ -291,7 +291,7 @@ public class Matrix2f extends Matrix implements Serializable {
 
 	/**
 	 * Invert this matrix
-	 * @return this
+	 * @return this if successful, null otherwise
 	 */
 	public Matrix invert() 
         {
@@ -300,18 +300,21 @@ public class Matrix2f extends Matrix implements Serializable {
                     inv(A) = 1/det(A) * adj(A);
                 */
                 
-                float determinant = m00 * m11 - m01*m10;
-                float t00 =  m11/determinant;
-                float t01 = -m01/determinant;
-                float t11 =  m00/determinant;
-                float t10 = -m10/determinant;
+                float determinant = determinant();
+                if (determinant != 0) {
+                    float determinant_inv = 1f/determinant;
+                    float t00 =  m11*determinant_inv;
+                    float t01 = -m01*determinant_inv;
+                    float t11 =  m00*determinant_inv;
+                    float t10 = -m10*determinant_inv;
                 
-                m00 = t00;
-                m01 = t01;
-                m10 = t10;
-                m11 = t11;
-                
-		return this;
+                    m00 = t00;
+                    m01 = t01;
+                    m10 = t10;
+                    m11 = t11;
+                    return this;
+                } else
+                    return null;
 	}
 	
 	/**
