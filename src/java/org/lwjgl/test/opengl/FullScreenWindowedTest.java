@@ -95,7 +95,7 @@ public class FullScreenWindowedTest {
 	 */
 	private void mainLoop() {
 		while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !Window.isCloseRequested()) {
-			if (!Window.isMinimized()) {
+			if (Window.isVisible()) {
 				// check keyboard input
 				processKeyboard();
 				// do "game" logic, and render it

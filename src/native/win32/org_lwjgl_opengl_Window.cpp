@@ -482,33 +482,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nUpdate
 
 /*
  * Class:     org_lwjgl_Window
- * Method:    minimize
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_minimize
-  (JNIEnv * env, jclass clazz)
-{
-	if (isMinimized)
-		return;
-	ShowWindow(hwnd, SW_MINIMIZE);
-}
-
-/*
- * Class:     org_lwjgl_Window
- * Method:    minimize
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_restore
-  (JNIEnv * env, jclass clazz)
-{
-	if (!isMinimized)
-		return;
-
-	ShowWindow(hwnd, SW_RESTORE);
-}
-
-/*
- * Class:     org_lwjgl_Window
  * Method:    swapBuffers
  * Signature: ()V
  */
@@ -526,14 +499,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
  * Signature: (Ljava/lang/String;IIIIZIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	closerequested = false;
 	isMinimized = false;
 	isFocused = true;
 	isDirty = true;
 	isFullScreen = fullscreen == JNI_TRUE;
-	isUndecorated = undecorated == JNI_TRUE;
+	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	vsync = JNI_FALSE;
 
   // Speacial option for allowing software opengl	
@@ -626,12 +599,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
 
 /*
  * Class:     org_lwjgl_opengl_Window
- * Method:    nIsMinimized
+ * Method:    nIsVisible
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsMinimized
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVisible
   (JNIEnv *env, jclass clazz) {
-	return isMinimized;
+	return isMinimized ? JNI_FALSE : JNI_TRUE;
 }
 
 /*
@@ -648,10 +621,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
 
 /*
  * Class:     org_lwjgl_opengl_Window
- * Method:    nIsFocused
+ * Method:    nIsActive
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsActive
   (JNIEnv *env, jclass clazz) {
 	return isFocused;
 }
@@ -691,6 +664,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
 	wglMakeCurrent(hdc, hglrc);
 }
 
+/*
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
   (JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height)
 {
@@ -725,3 +699,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
 	SetWindowPos(hwnd, HWND_TOP, x, y, clientSize.right - clientSize.left, 
 		clientSize.bottom - clientSize.top, SWP_NOZORDER);
 }
+*/

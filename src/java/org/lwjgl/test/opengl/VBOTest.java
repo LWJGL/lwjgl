@@ -110,7 +110,7 @@ public final class VBOTest {
 			while ( !finished ) {
 				Window.update();
 
-				if ( Window.isMinimized() )
+				if ( !Window.isVisible() )
 					Thread.sleep(200);
 				else if ( Window.isCloseRequested() )
 					System.exit(0);

@@ -211,7 +211,7 @@ public class HWCursorTest {
       // allow subsystem to get a chance to run too
       Window.update();
 
-      if (!Window.isMinimized()) {
+      if (Window.isVisible()) {
         // check keyboard input
         processKeyboard();
 

@@ -117,7 +117,7 @@ public class KeyboardTest {
     while (!Window.isCloseRequested()) {
       Window.update();
 
-      if (Window.isMinimized()) {
+      if (!Window.isVisible()) {
         try {
           Thread.sleep(100);
         } catch (InterruptedException inte) {

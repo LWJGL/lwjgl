@@ -77,7 +77,7 @@ public final class ShadersTest {
 		long lastFrameTime = 0;
 
 		while ( run ) {
-			if ( Window.isMinimized() )
+			if (!Window.isVisible() )
 				Thread.yield();
 			else {
 				// This is the current frame time.

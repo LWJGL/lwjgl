@@ -229,7 +229,7 @@ public class PositionTest extends BasicTest {
       Window.update();
       
       // render and paint if !minimized and not dirty
-      if(!Window.isMinimized()) {
+      if(Window.isVisible()) {
         render();
       } else {
         // sleeeeeep
@@ -237,7 +237,7 @@ public class PositionTest extends BasicTest {
       }
       
       // act on pause mode
-      paused(Window.isMinimized() || !Window.isFocused());
+      paused(!(Window.isVisible() || Window.isActive()));
       
       // start sound after first paint, since we don't want
       // the delay before something is painted on the screen

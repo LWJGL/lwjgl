@@ -173,7 +173,7 @@ public class MouseTest {
         
         
         // pause and continue if minimized
-        if(Window.isMinimized()) {
+        if(!Window.isVisible()) {
           if(Window.isDirty()) {
             render();
           }          

@@ -94,7 +94,7 @@ public final class Game {
 		try {
 			init();
 			while (!finished) {
-				if (Window.isMinimized()) {
+				if (!Window.isVisible()) {
 					Thread.sleep(200);
 				} else if (Window.isCloseRequested()) {
 					finished = true;

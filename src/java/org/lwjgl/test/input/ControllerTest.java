@@ -161,7 +161,7 @@ public class ControllerTest {
         
         
         // pause and continue if minimized
-        if(Window.isMinimized()) {
+        if(!Window.isVisible()) {
           pause(100);
           render();
           continue;

@@ -456,15 +456,14 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jboolean undecorated, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	int screen;
 	Display *disp;
 	bool fscreen = false;
 	if (fullscreen == JNI_TRUE)
 		fscreen = true;
-	if (undecorated == JNI_TRUE)
-		isUndecorated = true;
+	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 
 	if (!extgl_Open()) {
 		throwException(env, "Could not load gl libs");
@@ -520,23 +519,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jc
 		glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());
 }
 
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    minimize
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_minimize
-  (JNIEnv *env, jclass clazz) {
-}
-
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    restore
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_restore
-  (JNIEnv *env, jclass clazz) {
-}
 
 /*
  * Class:     org_lwjgl_opengl_Window
@@ -547,17 +529,17 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
   (JNIEnv *env, jclass clazz) {
 	bool result = dirty;
 	dirty = false;
-	return result;
+	return result ? JNI_TRUE : JNI_FALSE;
 }
 
 /*
  * Class:     org_lwjgl_opengl_Window
- * Method:    nIsMinimized
+ * Method:    nIsVisible
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsMinimized
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVisible
   (JNIEnv *env, jclass clazz) {
-	return minimized;
+	return minimized ? JNI_FALSE : JNI_TRUE;
 }
 
 /*
@@ -574,12 +556,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
 
 /*
  * Class:     org_lwjgl_opengl_Window
- * Method:    nIsFocused
+ * Method:    nIsActive
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsActive
   (JNIEnv *env, jclass clazz) {
-	return focused;
+	return focused ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
@@ -601,8 +583,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
-  (JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height)
-{
-	XMoveResizeWindow(current_disp, current_win, x, y, width, height);
-}

@@ -36,9 +36,6 @@ package org.lwjgl.opengl;
  * This is the abstract class for a Window in LWJGL. LWJGL windows have some
  * peculiar characteristics:
  * 
- * - width and height are always fixed and cannot be changed
- * - the position of the window may or may not be programmable but once specified
- * cannot be changed programmatically
  * - the window may be closeable by the user or operating system, and may be minimized
  * by the user or operating system
  * - only one window may ever be open at once
@@ -81,9 +78,6 @@ public final class Window {
 	/** Fullscreen */
 	private static boolean fullscreen;
 	
-	/** Undecorated */
-	private static boolean undecorated;
-
 	/** Tracks VBO state for the window context */
 	private static VBOTracker vbo_tracker;
 	
@@ -188,43 +182,26 @@ public final class Window {
 	private static native boolean nIsCloseRequested();
 
 	/**
-	 * @return true if the window is minimized or otherwise not visible
+	 * @return true if the window is visible, false if not
 	 */
-	public static boolean isMinimized() {
+	public static boolean isVisible() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine minimized state of uncreated window");
-		return nIsMinimized();
+		return nIsVisible();
 	}
 
-	private static native boolean nIsMinimized();
+	private static native boolean nIsVisible();
 
 	/**
-	 * @return true if window is focused
+	 * @return true if window is active, that is, the foreground display of the operating system.
 	 */
-	public static boolean isFocused() {
+	public static boolean isActive() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine focused state of uncreated window");
-		return nIsFocused();
+		return nIsActive();
 	}
 
-	private static native boolean nIsFocused();
-
-	/**
-	 * Minimize the game and allow the operating system's default display to become
-	 * visible. It is the responsibility of LWJGL's native code to restore the display
-	 * to its normal display settings.
-	 * 
-	 * If the display is already minimized then this is a no-op.
-	 */
-	public static native void minimize();
-
-	/**
-	 * Restore the game and hide the operating system away. It is the responsibility of
-	 * LWJGL's native code to restore the display to its game display settings.
-	 * 
-	 * If the display is not minimized then this is a no-op/
-	 */
-	public static native void restore();
+	private static native boolean nIsActive();
 
 	/**
 	 * Determine if the window's contents have been damaged by external events.
@@ -253,7 +230,7 @@ public final class Window {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot update uncreated window");
 		nUpdate();
-		if ((isDirty() && !isMinimized()) || (isFocused() && !isMinimized())) {
+		if ((isDirty() && isVisible()) || (isActive() && isVisible())) {
 			Util.checkGLError();
 			swapBuffers();
 		}
@@ -347,7 +324,6 @@ public final class Window {
 		if (isCreated())
 			throw new IllegalStateException("Only one LWJGL window may be instantiated at any one time.");
 		Window.fullscreen = true;
-		Window.undecorated = true;
 		Window.x = 0;
 		Window.y = 0;
 		Window.width = Display.getWidth();
@@ -374,31 +350,9 @@ public final class Window {
 	 * the minimum requirements could not be met satisfactorily
 	 */
 	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws LWJGLException {
-		create(title, x, y, width, height, false, bpp, alpha, depth, stencil);
+		create(title, x, y, width, height, bpp, alpha, depth, stencil);
 	}
 	
-	/**
-	 * Create a window. If the underlying OS does not have "floating" windows, then a fullscreen
-	 * display will be created instead. If this fails too then an LWJGLException will be thrown.
-	 * If the window is created fullscreen, then its size may not match the specified size
-	 * here.
-	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
-	 * @param title The title of the window
-	 * @param x The position of the window on the x axis. May be ignored.
-	 * @param y The position of the window on the y axis. May be ignored.
-	 * @param width The width of the window's client area
-	 * @param height The height of the window's client area
-	 * @param undecorated A hint to specify that the window should not have OS decorations such as drag bar and close box
-	 * @param bpp Minimum bits per pixel
-	 * @param alpha Minimum bits per pixel in alpha buffer
-	 * @param depth Minimum bits per pixel in depth buffer
-	 * @throws LWJGLException if the window could not be created for any reason; typically because
-	 * the minimum requirements could not be met satisfactorily
-	 */
-	public static void create(String title, int x, int y, int width, int height, boolean undecorated, int bpp, int alpha, int depth, int stencil) throws LWJGLException {
-		create(title, x, y, width, height, undecorated, bpp, alpha, depth, stencil, 0);
-	}
-
 	/**
 	 * Create a window. If the underlying OS does not have "floating" windows, then a fullscreen
 	 * display will be created instead. If this fails too then an LWJGLException will be thrown.
@@ -422,42 +376,7 @@ public final class Window {
 	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil, int samples)
 		throws LWJGLException {
 		
-		create(title, x, y, width, height, false, bpp, alpha, depth, stencil, samples);
-	}
-
-	/**
-	 * Create a window. If the underlying OS does not have "floating" windows, then a fullscreen
-	 * display will be created instead. If this fails too then an LWJGLException will be thrown.
-	 * If the window is created fullscreen, then its size may not match the specified size
-	 * here.
-	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
-	 * @param title The title of the window
-	 * @param x The position of the window on the x axis. May be ignored.
-	 * @param y The position of the window on the y axis. May be ignored.
-	 * @param width The width of the window's client area
-	 * @param height The height of the window's client area
-	 * @param undecorated A hint to specify that the window should not have OS decorations such as drag bar and close box
-	 * @param bpp Minimum bits per pixel
-	 * @param alpha Minimum bits per pixel in alpha buffer
-	 * @param depth Minimum bits per pixel in depth buffer
-	 * @param stencil Minimum bits per pixel in stencil buffer
-	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
-			  Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
-	 * @throws LWJGLException if the window could not be created for any reason; typically because
-	 * the minimum requirements could not be met satisfactorily
-	 */
-	public static void create(String title, int x, int y, int width, int height, boolean undecorated, int bpp, int alpha, int depth, int stencil, int samples)
-		throws LWJGLException {
-		if (isCreated())
-			throw new IllegalStateException("Only one LWJGL window may be instantiated at any one time.");
-		Window.fullscreen = false;
-		Window.undecorated = undecorated;
-		Window.x = x;
-		Window.y = y;
-		Window.width = width;
-		Window.height = height;
-		Window.title = title;
-		createWindow(bpp, alpha, depth, stencil, samples);
+		create(title, x, y, width, height, bpp, alpha, depth, stencil, samples);
 	}
 
 	/**
@@ -471,7 +390,6 @@ public final class Window {
 		int width,
 		int height,
 		boolean fullscreen,
-		boolean undecorated,
 		int bpp,
 		int alpha,
 		int depth,
@@ -480,7 +398,7 @@ public final class Window {
 		throws LWJGLException;
 
 	private static void createWindow(int bpp, int alpha, int depth, int stencil, int samples) throws LWJGLException {
-		nCreate(title, x, y, width, height, fullscreen, undecorated, bpp, alpha, depth, stencil, samples);
+		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples);
 		context = new Window();
 		makeCurrent();
 
@@ -621,68 +539,68 @@ public final class Window {
 
 	private static native void nSetVSyncEnabled(boolean sync);
 
-	/**
-	 * Set the window's location. This is a no-op on fullscreen windows.
-	 * The window is clamped to remain entirely on the screen. If you attempt
-	 * to position the window such that it would extend off the screen, the window
-	 * is simply placed as close to the edge as possible.
-	 * @param x, y The new window location
-	 */
-	public static void setLocation(int x, int y) {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot move uncreated window");
-		if (fullscreen) {
-			return;
-		}
-		Window.x = Math.max(0, Math.min(Display.getWidth() - Window.width, x));
-		Window.y = Math.max(0, Math.min(Display.getHeight() - Window.height, y));
-		nReshape(Window.x, Window.y, Window.width, Window.height);
-	}
-
-	/**
-	 * Set the window's size. This is a no-op on fullscreen windows.
-	 * The window is clamped to remain entirely on the screen. If you attempt
-	 * to position the window such that it would extend off the screen, the window
-	 * is simply placed as close to the edge as possible.
-	 * @param width, height The new window dimensions
-	 */
-	public static void setSize(int width, int height) {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot resize uncreated window");
-		if (fullscreen) {
-			return;
-		}
-		Window.width = Math.max(0, Math.min(Display.getWidth() - Window.x, width));
-		Window.height = Math.max(0, Math.min(Display.getHeight() - Window.y, height));
-		nReshape(Window.x, Window.y, Window.width, Window.height);
-	}
-	
-	/**
-	 * Set the window's bounds. This is a no-op on fullscreen windows.
-	 * The window is clamped to remain entirely on the screen.
-	 * @param x, y The new window location
-	 * @param width, height The new window dimensions
-	 */
-	public static void setBounds(int x, int y, int width, int height) {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot reshape uncreated window");
-		if (fullscreen) {
-			return;
-		}
-		width = Math.max(0, Math.min(Display.getWidth(), width));
-		height = Math.max(0, Math.min(Display.getHeight(), height));
-		Window.x = Math.max(0, Math.min(Display.getWidth() - width, x));
-		Window.y = Math.max(0, Math.min(Display.getHeight() - height, y));
-		Window.width = Math.max(0, Math.min(Display.getWidth() - Window.x, width));
-		Window.height = Math.max(0, Math.min(Display.getHeight() - Window.y, height));
-		nReshape(Window.x, Window.y, Window.width, Window.height);
-	}
-	
-	/**
-	 * Native method to reshape the window
-	 * @param x, y The new window location
-	 * @param width, height The new window dimensions
-	 */
-	private static native void nReshape(int x, int y, int width, int height);
+//	/**
+//	 * Set the window's location. This is a no-op on fullscreen windows.
+//	 * The window is clamped to remain entirely on the screen. If you attempt
+//	 * to position the window such that it would extend off the screen, the window
+//	 * is simply placed as close to the edge as possible.
+//	 * @param x, y The new window location
+//	 */
+//	public static void setLocation(int x, int y) {
+//		if (!isCreated())
+//			throw new IllegalStateException("Cannot move uncreated window");
+//		if (fullscreen) {
+//			return;
+//		}
+//		Window.x = Math.max(0, Math.min(Display.getWidth() - Window.width, x));
+//		Window.y = Math.max(0, Math.min(Display.getHeight() - Window.height, y));
+//		nReshape(Window.x, Window.y, Window.width, Window.height);
+//	}
+//
+//	/**
+//	 * Set the window's size. This is a no-op on fullscreen windows.
+//	 * The window is clamped to remain entirely on the screen. If you attempt
+//	 * to position the window such that it would extend off the screen, the window
+//	 * is simply placed as close to the edge as possible.
+//	 * @param width, height The new window dimensions
+//	 */
+//	public static void setSize(int width, int height) {
+//		if (!isCreated())
+//			throw new IllegalStateException("Cannot resize uncreated window");
+//		if (fullscreen) {
+//			return;
+//		}
+//		Window.width = Math.max(0, Math.min(Display.getWidth() - Window.x, width));
+//		Window.height = Math.max(0, Math.min(Display.getHeight() - Window.y, height));
+//		nReshape(Window.x, Window.y, Window.width, Window.height);
+//	}
+//	
+//	/**
+//	 * Set the window's bounds. This is a no-op on fullscreen windows.
+//	 * The window is clamped to remain entirely on the screen.
+//	 * @param x, y The new window location
+//	 * @param width, height The new window dimensions
+//	 */
+//	public static void setBounds(int x, int y, int width, int height) {
+//		if (!isCreated())
+//			throw new IllegalStateException("Cannot reshape uncreated window");
+//		if (fullscreen) {
+//			return;
+//		}
+//		width = Math.max(0, Math.min(Display.getWidth(), width));
+//		height = Math.max(0, Math.min(Display.getHeight(), height));
+//		Window.x = Math.max(0, Math.min(Display.getWidth() - width, x));
+//		Window.y = Math.max(0, Math.min(Display.getHeight() - height, y));
+//		Window.width = Math.max(0, Math.min(Display.getWidth() - Window.x, width));
+//		Window.height = Math.max(0, Math.min(Display.getHeight() - Window.y, height));
+//		nReshape(Window.x, Window.y, Window.width, Window.height);
+//	}
+//	
+//	/**
+//	 * Native method to reshape the window
+//	 * @param x, y The new window location
+//	 * @param width, height The new window dimensions
+//	 */
+//	private static native void nReshape(int x, int y, int width, int height);
 
 }

@@ -192,7 +192,7 @@ public class Grass {
 		while (!finished) {
 			if (Window.isCloseRequested()) {
 				finished = true;
-			} else if (!Window.isMinimized()) {
+			} else if (Window.isVisible()) {
 				keyPoll();
 				float degree = (1.0f + (aslod.value * 20.0f)) * 0.01745329f;
 
