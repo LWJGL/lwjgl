@@ -46,7 +46,7 @@ final class UniqueRendererRTT extends TextureRenderer {
 
 		try {
 			final RenderTexture rt = new RenderTexture(true, false, false, false, RenderTexture.RENDER_TEXTURE_2D, 0);
-			pbuffer = Pbuffer.createPbufferUsingUniqueContext(width, height, new PixelFormat(16, 0, 0, 0, 0), rt);
+			pbuffer = new Pbuffer(width, height, new PixelFormat(16, 0, 0, 0, 0), rt);
 
 			// Initialise state of the pbuffer context.
 			pbuffer.makeCurrent();

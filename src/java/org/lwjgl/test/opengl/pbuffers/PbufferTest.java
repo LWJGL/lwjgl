@@ -129,14 +129,6 @@ public final class PbufferTest {
 					System.out.print("Creating render-to-texture pbuffer with unique context...");
 					texRenderer = new UniqueRendererRTT(TEXTURE_SIZE, TEXTURE_SIZE, texID);
 					break;
-				case 3:
-					System.out.print("Creating pbuffer with shared context...");
-					texRenderer = new SharedRenderer(TEXTURE_SIZE, TEXTURE_SIZE, texID);
-					break;
-				case 4:
-					System.out.print("Creating render-to-texture pbuffer with shared context...");
-					texRenderer = new SharedRendererRTT(TEXTURE_SIZE, TEXTURE_SIZE, texID);
-					break;
 			}
 
 			System.out.println("OK");
@@ -433,10 +425,8 @@ public final class PbufferTest {
 		System.out.println("-------");
 		System.out.println("Usage: java org.lwjgl.test.opengl.pbuffer.PbufferTest <mode>");
 		System.out.println("\n<mode>\tA number in the range 1-4.");
-		System.out.println("\t1: Unique Context, no render-to-texture");
-		System.out.println("\t2: Unique Context, with render-to-texture");
-		System.out.println("\t3: Shared Context, no render-to-texture");
-		System.out.println("\t4: Shared Context, with render-to-texture");
+		System.out.println("\t1: no render-to-texture");
+		System.out.println("\t2: with render-to-texture");
 
 		System.exit(-1);
 	}

@@ -47,7 +47,7 @@ final class UniqueRenderer extends TextureRenderer {
 		Pbuffer pbuffer = null;
 
 		try {
-			pbuffer = Pbuffer.createPbufferUsingUniqueContext(width, height, new PixelFormat(16, 0, 0, 0, 0), null);
+			pbuffer = new Pbuffer(width, height, new PixelFormat(16, 0, 0, 0, 0), null);
 
 			// Initialise state of the pbuffer context.
 			pbuffer.makeCurrent();
