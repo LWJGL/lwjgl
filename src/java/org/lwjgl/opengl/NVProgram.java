@@ -45,138 +45,105 @@ import java.nio.IntBuffer;
 
 class NVProgram {
 
-  /*
-  Accepted by the <pname> parameter of GetProgramivNV:
-  */
+	/*
+	   Accepted by the <pname> parameter of GetProgramivNV:
+	 */
+	public static final int GL_PROGRAM_TARGET_NV = 0x8646;
+	public static final int GL_PROGRAM_LENGTH_NV = 0x8627;
+	public static final int GL_PROGRAM_RESIDENT_NV = 0x8647;
 
-  public static final int GL_PROGRAM_TARGET_NV = 0x8646;
+	/*
+	   Accepted by the <pname> parameter of GetProgramStringNV:
+	 */
+	public static final int GL_PROGRAM_STRING_NV = 0x8628;
 
-  public static final int GL_PROGRAM_LENGTH_NV = 0x8627;
+	/*
+	   Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+	   GetFloatv, and GetDoublev:
+	 */
+	public static final int GL_PROGRAM_ERROR_POSITION_NV = 0x864B;
 
-  public static final int GL_PROGRAM_RESIDENT_NV = 0x8647;
+	/*
+	   Accepted by the <name> parameter of GetString:
+	 */
+	public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
 
-  /*
-  Accepted by the <pname> parameter of GetProgramStringNV:
-  */
+	// ---------------------------
+	public static void glLoadProgramNV(int target, int programID, ByteBuffer string) {
+		nglLoadProgramNV(target, programID, string.remaining(), string, string.position());
+	}
 
-  public static final int GL_PROGRAM_STRING_NV = 0x8628;
+	private static native void nglLoadProgramNV(int target, int programID, int length, Buffer string, int stringOffset);
 
-  /*
-  Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-  GetFloatv, and GetDoublev:
-  */
+	// ---------------------------
+	public static native void glBindProgramNV(int target, int programID);
+	// ---------------------------
 
-  public static final int GL_PROGRAM_ERROR_POSITION_NV = 0x864B;
+	public static void glDeleteProgramsNV(IntBuffer programs) {
+		nglDeleteProgramsNV(programs.remaining(), programs, programs.position());
+	}
 
-  /*
-  Accepted by the <name> parameter of GetString:
-  */
+	private static native void nglDeleteProgramsNV(int n, IntBuffer programs, int programsOffset);
 
-  public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
+	// ---------------------------
 
-  // ---------------------------
+	// ---------------------------
+	public static void glGenProgramsNV(IntBuffer programs) {
+		nglGenProgramsNV(programs.remaining(), programs, programs.position());
+	}
 
-  public static void glLoadProgramNV(int target, int programID, ByteBuffer string) {
+	private static native void nglGenProgramsNV(int n, IntBuffer programs, int programsOffset);
 
-    nglLoadProgramNV(target, programID, string.remaining(), string, string.position());
+	// ---------------------------
 
-  }
+	// ---------------------------
+	public static void glGetProgramNV(int programID, int parameterName, IntBuffer params) {
+		nglGetProgramivNV(programID, parameterName, params, params.position());
+	}
 
-  private static native void nglLoadProgramNV(int target, int programID, int length, Buffer string, int stringOffset);
+	private static native void nglGetProgramivNV(int programID, int parameterName, IntBuffer params, int paramsOffset);
+	// ---------------------------
 
-  // ---------------------------
+	// ---------------------------
+	public static void glGetProgramStringNV(int programID, int parameterName, ByteBuffer paramString) {
+		nglGetProgramStringNV(programID, parameterName, paramString, paramString.position());
+	}
 
-  public static native void glBindProgramNV(int target, int programID);
+	private static native void nglGetProgramStringNV(
+			int programID,
+			int parameterName,
+			Buffer paramString,
+			int paramStringOffset);
+	// ---------------------------
 
-  // ---------------------------
+	public static native boolean glIsProgramNV(int programID);
 
-  public static void glDeleteProgramsNV(IntBuffer programs) {
+	// ---------------------------
+	public static boolean glAreProgramsResidentNV(IntBuffer programIDs, ByteBuffer programResidences) {
+		if (programIDs.remaining() != programResidences.remaining())
+			throw new IllegalArgumentException("programIDs.remaining() != programResidences.remaining()");
+		return nglAreProgramsResidentNV(
+				programIDs.remaining(),
+				programIDs,
+				programIDs.position(),
+				programResidences,
+				programResidences.position());
+	}
 
-    nglDeleteProgramsNV(programs.remaining(), programs, programs.position());
+	private static native boolean nglAreProgramsResidentNV(
+			int n,
+			IntBuffer programIDs,
+			int programIDsOffset,
+			ByteBuffer programResidences,
+			int programResidencesOffset);
+	// ---------------------------
 
-  }
+	// ---------------------------
+	public static void glRequestResidentProgramsNV(IntBuffer programIDs) {
+		nglRequestResidentProgramsNV(programIDs.remaining(), programIDs, programIDs.position());
+	}
 
-  private static native void nglDeleteProgramsNV(int n, IntBuffer programs, int programsOffset);
-
-  // ---------------------------
-
-  // ---------------------------
-
-  public static void glGenProgramsNV(IntBuffer programs) {
-
-    nglGenProgramsNV(programs.remaining(), programs, programs.position());
-
-  }
-
-  private static native void nglGenProgramsNV(int n, IntBuffer programs, int programsOffset);
-
-  // ---------------------------
-
-  // ---------------------------
-
-  public static void glGetProgramNV(int programID, int parameterName, IntBuffer params) {
-
-    nglGetProgramivNV(programID, parameterName, params, params.position());
-
-  }
-
-  private static native void nglGetProgramivNV(int programID, int parameterName, IntBuffer params, int paramsOffset);
-
-  // ---------------------------
-
-  // ---------------------------
-
-  public static void glGetProgramStringNV(int programID, int parameterName, ByteBuffer paramString) {
-
-    nglGetProgramStringNV(programID, parameterName, paramString, paramString.position());
-
-  }
-
-  private static native void nglGetProgramStringNV(
-    int programID,
-    int parameterName,
-    Buffer paramString,
-    int paramStringOffset);
-
-  // ---------------------------
-
-  public static native boolean glIsProgramNV(int programID);
-
-  // ---------------------------
-
-  public static boolean glAreProgramsResidentNV(IntBuffer programIDs, ByteBuffer programResidences) {
-
-    assert programIDs.remaining()
-      == programResidences.remaining() : "programIDs.remaining() != programResidences.remaining()";
-
-    return nglAreProgramsResidentNV(
-      programIDs.remaining(),
-      programIDs,
-      programIDs.position(),
-      programResidences,
-      programResidences.position());
-
-  }
-
-  private static native boolean nglAreProgramsResidentNV(
-    int n,
-    IntBuffer programIDs,
-    int programIDsOffset,
-    ByteBuffer programResidences,
-    int programResidencesOffset);
-
-  // ---------------------------
-
-  // ---------------------------
-
-  public static void glRequestResidentProgramsNV(IntBuffer programIDs) {
-
-    nglRequestResidentProgramsNV(programIDs.remaining(), programIDs, programIDs.position());
-
-  }
-
-  private static native void nglRequestResidentProgramsNV(int n, IntBuffer programIDs, int programIDsOffset);
-
-  // ---------------------------
-
+	private static native void nglRequestResidentProgramsNV(int n, IntBuffer programIDs, int programIDsOffset);
+	// ---------------------------
 }
+

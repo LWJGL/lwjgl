@@ -44,87 +44,74 @@ import java.nio.FloatBuffer;
 
 public final class NVFragmentProgram extends NVProgram {
 
-  /*
-  Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
-  <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
-  and by the <target> parameter of BindProgramNV, LoadProgramNV,
-  ProgramLocalParameter4dARB, ProgramLocalParameter4dvARB,
-  ProgramLocalParameter4fARB, ProgramLocalParameter4fvARB,
-  GetProgramLocalParameterdvARB, and GetProgramLocalParameterfvARB:
-  */
+	/*
+	   Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
+	   <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
+	   and by the <target> parameter of BindProgramNV, LoadProgramNV,
+	   ProgramLocalParameter4dARB, ProgramLocalParameter4dvARB,
+	   ProgramLocalParameter4fARB, ProgramLocalParameter4fvARB,
+	   GetProgramLocalParameterdvARB, and GetProgramLocalParameterfvARB:
+	 */
+	public static final int GL_FRAGMENT_PROGRAM_NV = 0x8870;
 
-  public static final int GL_FRAGMENT_PROGRAM_NV = 0x8870;
+	/*
+	   Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
+	   and GetDoublev:
+	 */
+	public static final int GL_MAX_TEXTURE_COORDS_NV = 0x8871;
+	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_NV = 0x8872;
+	public static final int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;
+	public static final int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;
 
-  /*
-  Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
-  and GetDoublev:
-  */
+	// ---------------------------
 
-  public static final int GL_MAX_TEXTURE_COORDS_NV = 0x8871;
+	public static void glProgramNamedParameter4fNV(int id, ByteBuffer name, float x, float y, float z, float w) {
+		nglProgramNamedParameter4fNV(id, name.remaining(), name, name.position(), x, y, z, w);
+	}
 
-  public static final int GL_MAX_TEXTURE_IMAGE_UNITS_NV = 0x8872;
+	private static native void nglProgramNamedParameter4fNV(
+			int id,
+			int length,
+			ByteBuffer name,
+			int nameOffset,
+			float x,
+			float y,
+			float z,
+			float w);
 
-  public static final int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;
+	// ---------------------------
 
-  public static final int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;
+	// ---------------------------
 
-  // ---------------------------
+	public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, FloatBuffer params) {
+		BufferChecks.checkBuffer(params);
+		nglGetProgramNamedParameterfvNV(id, name.remaining(), name, name.position(), params, params.position());
+	}
 
-  public static void glProgramNamedParameter4fNV(int id, ByteBuffer name, float x, float y, float z, float w) {
+	private static native void nglGetProgramNamedParameterfvNV(
+			int id,
+			int length,
+			ByteBuffer name,
+			int nameOffset,
+			FloatBuffer params,
+			int paramsOffset);
 
-    nglProgramNamedParameter4fNV(id, name.remaining(), name, name.position(), x, y, z, w);
+	// ---------------------------
 
-  }
+	public static native void glProgramLocalParameter4fARB(int target, int index, float x, float y, float z, float w);
 
-  private static native void nglProgramNamedParameter4fNV(
-    int id,
-    int length,
-    ByteBuffer name,
-    int nameOffset,
-    float x,
-    float y,
-    float z,
-    float w);
+	// ---------------------------
 
-  // ---------------------------
+	public static void glGetProgramLocalParameterARB(int target, int index, FloatBuffer params) {
+		BufferChecks.checkBuffer(params);
+		nglGetProgramLocalParameterfvARB(target, index, params, params.position());
+	}
 
-  // ---------------------------
-
-  public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, FloatBuffer params) {
-
-  	BufferChecks.checkBuffer(params);
-  	nglGetProgramNamedParameterfvNV(id, name.remaining(), name, name.position(), params, params.position());
-
-  }
-
-  private static native void nglGetProgramNamedParameterfvNV(
-    int id,
-    int length,
-    ByteBuffer name,
-    int nameOffset,
-    FloatBuffer params,
-    int paramsOffset);
-
-  // ---------------------------
-
-  public static native void glProgramLocalParameter4fARB(int target, int index, float x, float y, float z, float w);
-
-  // ---------------------------
-
-  public static void glGetProgramLocalParameterARB(int target, int index, FloatBuffer params) {
-
-  	BufferChecks.checkBuffer(params);
-  	
-    nglGetProgramLocalParameterfvARB(target, index, params, params.position());
-
-  }
-
-  private static native void nglGetProgramLocalParameterfvARB(
-    int target,
-    int index,
-    FloatBuffer params,
-    int params_offset);
-
-  // ---------------------------
-
+	private static native void nglGetProgramLocalParameterfvARB(
+			int target,
+			int index,
+			FloatBuffer params,
+			int params_offset);
+	// ---------------------------
 }
+

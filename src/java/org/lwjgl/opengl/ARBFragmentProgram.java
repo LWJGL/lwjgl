@@ -34,53 +34,37 @@ package org.lwjgl.opengl;
 
 public final class ARBFragmentProgram extends ARBProgram {
 
-  /*
-   * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
-   * <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
-   * and by the <target> parameter of ProgramStringARB, BindProgramARB,
-   * ProgramEnvParameter4[df][v]ARB, ProgramLocalParameter4[df][v]ARB,
-   * GetProgramEnvParameter[df]vARB, GetProgramLocalParameter[df]vARB,
-   * GetProgramivARB and GetProgramStringARB.
-   */
+	/*
+	 * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
+	 * <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
+	 * and by the <target> parameter of ProgramStringARB, BindProgramARB,
+	 * ProgramEnvParameter4[df][v]ARB, ProgramLocalParameter4[df][v]ARB,
+	 * GetProgramEnvParameter[df]vARB, GetProgramLocalParameter[df]vARB,
+	 * GetProgramivARB and GetProgramStringARB.
+	 */
+	public static final int GL_FRAGMENT_PROGRAM_ARB = 0x8804;
 
-  public static final int GL_FRAGMENT_PROGRAM_ARB = 0x8804;
+	/*
+	 * Accepted by the <pname> parameter of GetProgramivARB:
+	 */
+	public static final int GL_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x8805;
+	public static final int GL_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x8806;
+	public static final int GL_PROGRAM_TEX_INDIRECTIONS_ARB = 0x8807;
+	public static final int GL_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x8808;
+	public static final int GL_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x8809;
+	public static final int GL_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x880A;
+	public static final int GL_MAX_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x880B;
+	public static final int GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x880C;
+	public static final int GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB = 0x880D;
+	public static final int GL_MAX_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x880E;
+	public static final int GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x880F;
+	public static final int GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x8810;
 
-  /*
-   * Accepted by the <pname> parameter of GetProgramivARB:
-   */
-
-  public static final int GL_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x8805;
-
-  public static final int GL_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x8806;
-
-  public static final int GL_PROGRAM_TEX_INDIRECTIONS_ARB = 0x8807;
-
-  public static final int GL_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x8808;
-
-  public static final int GL_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x8809;
-
-  public static final int GL_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x880A;
-
-  public static final int GL_MAX_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x880B;
-
-  public static final int GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x880C;
-
-  public static final int GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB = 0x880D;
-
-  public static final int GL_MAX_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x880E;
-
-  public static final int GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x880F;
-
-  public static final int GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x8810;
-
-  /*
-   * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
-   * and GetDoublev:
-   */
-
-  public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
-
-  public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
-
-
+	/*
+	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
+	 * and GetDoublev:
+	 */
+	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
+	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
 }
+
