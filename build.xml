@@ -131,6 +131,17 @@
     <antcall target="internal_clean"/>
   </target>
   
+  <target name="cvsbuild" description="Builds lwjgl, by exporting files from cvs into a LWJGL folder and executing the package target on that folders build file">
+    <available file="LWJGL/build.xml" property="lwjgl.preexistingfiles"/>
+    <available file="${lwjgl.src}/java/org/lwjgl/Sys.java" property="lwjgl.preexistingfiles"/>
+    <fail if="lwjgl.preexistingfiles" message="Cannot perform webbuild from nonempty folder"/>
+    <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/build.xml" dest="."/>
+    <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/src" dest="."/>
+    <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/examples" dest="."/>
+    <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/doc" dest="."/>
+    <ant dir="LWJGL" target="package"/>
+  </target>  
+  
   <!-- Creates a versioned distribution of dll's and jars -->
   <target name="distribution_application">
     <!-- check for file presence -->
