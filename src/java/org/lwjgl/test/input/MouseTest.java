@@ -240,7 +240,7 @@ public class MouseTest {
   private void readBufferedMouse() {
     // iterate all events, use the last button down
     while(Mouse.next()) {
-      if(Mouse.getEventButtonState()) {
+      if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
         lastButton = Mouse.getEventButton();
       }
     }  

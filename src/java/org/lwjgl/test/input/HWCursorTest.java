@@ -279,7 +279,8 @@ public class HWCursorTest {
     mouse_y = Mouse.getY();
 
     while(Mouse.next()) {
-      if(Mouse.getEventButtonState() && Mouse.getEventButton() < 3) {
+	int button = Mouse.getEventButton();
+      if(button >= 0 && button < 3 && Mouse.getEventButtonState()) {
         mouse_btn = Mouse.getEventButton();
       }
     }
