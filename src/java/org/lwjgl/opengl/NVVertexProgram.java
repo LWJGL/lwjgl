@@ -46,7 +46,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public final class NVVertexProgram {
+public final class NVVertexProgram extends NVProgram {
 
   /*
   Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,

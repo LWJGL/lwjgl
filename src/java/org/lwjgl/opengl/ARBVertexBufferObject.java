@@ -41,7 +41,7 @@
 
 package org.lwjgl.opengl;
 
-public final class ARBVertexBufferObject {
+public final class ARBVertexBufferObject extends ARBProgram {
 
 	/*
 	 * Accepted by the <target> parameters of BindBufferARB, BufferDataARB,

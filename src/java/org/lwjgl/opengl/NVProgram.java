@@ -43,7 +43,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-public final class NVProgram {
+public class NVProgram {
 
 	/*
 	   Accepted by the <pname> parameter of GetProgramivNV:
