@@ -98,6 +98,8 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	private void resetCursorToCenter() {
 		clearEvents();
 		accum_dx = accum_dy = 0;
+		/* Clear accumulated deltas */
+		((MacOSXDisplay)Display.getImplementation()).getMouseDeltas(delta_buffer);
 	}
 
 	private boolean putMouseEvent(int button, int state, int dz) {
