@@ -202,7 +202,7 @@ public class TypeInfo {
 	}
 
 	private static void getCrossProductRecursive(int index, ParameterDeclaration[] parameters, Map<ParameterDeclaration,
-			Collection<TypeInfo>> typeinfos_map, HashMap<ParameterDeclaration, TypeInfo> current_instance,
+			Collection<TypeInfo>> typeinfos_map, Map<ParameterDeclaration, TypeInfo> current_instance,
 			Collection<Map<ParameterDeclaration, TypeInfo>> cross_product) {
 		if (index == parameters.length) {
 			cross_product.add(current_instance);
@@ -212,7 +212,7 @@ public class TypeInfo {
 		Collection<TypeInfo> typeinfos = typeinfos_map.get(param);
 		if (typeinfos != null) {
 			for (TypeInfo typeinfo : typeinfos) {
-				HashMap<ParameterDeclaration, TypeInfo> instance = (HashMap<ParameterDeclaration, TypeInfo>)current_instance.clone();
+				Map<ParameterDeclaration, TypeInfo> instance = new HashMap<ParameterDeclaration, TypeInfo>(current_instance);
 				instance.put(param, typeinfo);
 				getCrossProductRecursive(index + 1, parameters, typeinfos_map, instance, cross_product);
 			}

@@ -1825,8 +1825,8 @@ public class ContextCapabilities {
 
 	private boolean NV_vertex_array_range_initNativeFunctionAddresses() {
 		return 
-			(NV_vertex_array_range_glFreeMemoryNV_pointer = GLContext.getFunctionAddress("glFreeMemoryNV")) != 0 &&
-			(NV_vertex_array_range_glAllocateMemoryNV_pointer = GLContext.getFunctionAddress("glAllocateMemoryNV")) != 0 &&
+			(NV_vertex_array_range_glFreeMemoryNV_pointer = GLContext.getPlatformSpecificFunctionAddress("gl", new String[]{"Windows", "Linux"}, new String[]{"wgl", "glX"}, "glFreeMemoryNV")) != 0 &&
+			(NV_vertex_array_range_glAllocateMemoryNV_pointer = GLContext.getPlatformSpecificFunctionAddress("gl", new String[]{"Windows", "Linux"}, new String[]{"wgl", "glX"}, "glAllocateMemoryNV")) != 0 &&
 			(NV_vertex_array_range_glFlushVertexArrayRangeNV_pointer = GLContext.getFunctionAddress("glFlushVertexArrayRangeNV")) != 0 &&
 			(NV_vertex_array_range_glVertexArrayRangeNV_pointer = GLContext.getFunctionAddress("glVertexArrayRangeNV")) != 0;
 	}

@@ -67,7 +67,18 @@ public enum Platform {
 		writer.println("#endif");
 	}
 	
-	public String getPostfix() {
+	public String getOSPrefix() {
+		switch (this) {
+			case WGL:
+				return "Windows";
+			case GLX:
+				return "Linux";
+			default:
+				throw new RuntimeException(this + " has no OS specific prefix");
+		}
+	}
+	
+	public String getPrefix() {
 		switch (this) {
 			case WGL:
 				return "wgl";

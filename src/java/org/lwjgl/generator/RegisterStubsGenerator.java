@@ -108,7 +108,7 @@ public class RegisterStubsGenerator {
 		writer.print(Utils.getQualifiedNativeMethodName(Utils.getQualifiedClassName(d), method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
-		String opengl_handle_name = method.getSimpleName().replaceFirst("gl", platform.getPostfix());
+		String opengl_handle_name = method.getSimpleName().replaceFirst("gl", platform.getPrefix());
 		writer.print(", \"" + opengl_handle_name + "\", (void *)&" + method.getSimpleName() + "}");
 		if (has_more)
 			writer.println(",");

@@ -84,6 +84,21 @@ public final class GLContext {
 	
 	/**
 	 * Helper method to get a pointer to a named function in the OpenGL library
+	 * with a name dependent on the current platform
+	 */
+	static long getPlatformSpecificFunctionAddress(String function_prefix, String[] os_prefixes, String[] os_function_prefixes, String function) {
+		String os_name = System.getProperty("os.name");
+		for (int i = 0; i < os_prefixes.length; i++)
+			if (os_name.startsWith(os_prefixes[i])) {
+				String platform_function_name = function.replaceFirst(function_prefix, os_function_prefixes[i]);
+				long address = getFunctionAddress(platform_function_name);
+				return address;
+			}
+		return 0;
+	}
+
+	/**
+	 * Helper method to get a pointer to a named function in the OpenGL library
 	 */
 	static native long getFunctionAddress(String name);
 

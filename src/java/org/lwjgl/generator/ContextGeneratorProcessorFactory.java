@@ -127,10 +127,12 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				ContextCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
 			}
-			writer.println();
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				ContextCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
+			if (context_specific) {
+				writer.println();
+				for (TypeDeclaration typedecl : interface_decls) {
+					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+					ContextCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
+				}
 			}
 			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
 			for (TypeDeclaration typedecl : interface_decls) {

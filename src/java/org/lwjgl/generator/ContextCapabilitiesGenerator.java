@@ -149,8 +149,30 @@ public class ContextCapabilitiesGenerator {
 			writer.println("\t\treturn ");
 			while (methods.hasNext()) {
 				MethodDeclaration method = methods.next();
-				writer.print("\t\t\t(" + Utils.getFunctionAddressName(d, method) + " = GLContext.getFunctionAddress(\"");
-				writer.print(method.getSimpleName() + "\")) != 0");
+				writer.print("\t\t\t(" + Utils.getFunctionAddressName(d, method) + " = ");
+				PlatformDependent platform_dependent = method.getAnnotation(PlatformDependent.class);
+				if (platform_dependent != null) {
+					EnumSet<Platform> platform_set = EnumSet.copyOf(Arrays.asList(platform_dependent.value()));
+					writer.print("GLContext.getPlatformSpecificFunctionAddress(\"");
+					writer.print(Platform.ALL.getPrefix() + "\", ");
+					writer.print("new String[]{");
+					Iterator<Platform> platforms = platform_set.iterator();
+					while (platforms.hasNext()) {
+						writer.print("\"" + platforms.next().getOSPrefix() + "\"");
+						if(platforms.hasNext())
+							writer.print(", ");
+					}
+					writer.print("}, new String[]{");
+					platforms = platform_set.iterator();
+					while (platforms.hasNext()) {
+						writer.print("\"" + platforms.next().getPrefix() + "\"");
+						if(platforms.hasNext())
+							writer.print(", ");
+					}
+					writer.print("}, ");
+				} else
+					writer.print("GLContext.getFunctionAddress(");
+				writer.print("\"" + method.getSimpleName() + "\")) != 0");
 				if (methods.hasNext())
 					writer.println(" &&");
 			}
