@@ -334,12 +334,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readMouse
 	return copyEvents(&event_queue, buffer_ptr, buffer_size);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getNativeCursorCaps
-	(JNIEnv *env, jobject self)
-{
-	return org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
 	(JNIEnv *env, jobject self, jobject handle_buffer)
 {
@@ -354,18 +348,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
 		SetClassLong(getCurrentHWND(), GCL_HCURSOR, (LONG)NULL);
 		SetCursor(LoadCursor(NULL, IDC_ARROW));
 	}
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getMaxCursorSize
-	(JNIEnv *env, jobject self)
-{
-	return GetSystemMetrics(SM_CXCURSOR);
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getMinCursorSize
-	(JNIEnv *env, jobject self)
-{
-	return GetSystemMetrics(SM_CXCURSOR);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyMouse(JNIEnv *env, jobject self) {

@@ -58,16 +58,6 @@ import org.lwjgl.opengl.Display;
  * @version $Revision$
  */
 public class Mouse {
-
-	/** 1 bit transparency for native cursor */
-	public static final int		CURSOR_ONE_BIT_TRANSPARENCY	= 1;
-
-	/** 8 bit alhpa native cursor */
-	public static final int		CURSOR_8_BIT_ALPHA					= 2;
-
-	/** animation native cursor */
-	public static final int		CURSOR_ANIMATION						= 4;
-
 	/** Mouse constraint */
 	private static int width, height;
 
@@ -156,18 +146,6 @@ public class Mouse {
 	}
 
 	/**
-	 * Get the capabilities of the native cursor. Return a bit mask of the native cursor capabilities.
-	 * The CURSOR_ONE_BIT_TRANSPARANCY indicates support for cursors with one bit transparancy,
-	 * the CURSOR_8_BIT_ALPHA indicates support for 8 bit alpha and CURSOR_ANIMATION indicates
-	 * support for cursor animations.
-	 *
-	 * @return A bit mask with native cursor capabilities.
-	 */
-	public static int getNativeCursorCaps() {
-		return Display.getImplementation().getNativeCursorCaps();
-	}
-
-	/**
 	 * Binds a native cursor. If the cursor argument is null, the
 	 * native cursor is disabled, as if native cursors were not supported.
 	 *
@@ -183,7 +161,7 @@ public class Mouse {
 	 * @throws LWJGLException if the cursor could not be set for any reason
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
-		if ((getNativeCursorCaps() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
+		if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0)
 			throw new IllegalStateException("Mouse doesn't support native cursors");
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
@@ -196,28 +174,6 @@ public class Mouse {
 			}
 		}
 		return oldCursor;
-	}
-
-	/**
-	 * Gets the minimum size of a native cursor. Can only be called if
-	 * The Mouse is created and cursor caps includes at least
-	 * CURSOR_ONE_BIT_TRANSPARANCY.
-	 *
-	 * @return the maximum size of a native cursor
-	 */
-	public static int getMinCursorSize() {
-		return Display.getImplementation().getMinCursorSize();
-	}
-
-	/**
-	 * Gets the maximum size of a native cursor. Can only be called if
-	 * The Mouse is created and cursor caps includes at least
-	 * CURSOR_ONE_BIT_TRANSPARANCY.
-	 *
-	 * @return the maximum size of a native cursor
-	 */
-	public static int getMaxCursorSize() {
-		return Display.getImplementation().getMaxCursorSize();
 	}
 
 	/**

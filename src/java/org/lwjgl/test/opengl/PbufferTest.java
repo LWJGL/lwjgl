@@ -102,7 +102,7 @@ public class PbufferTest {
       // start of in windowed mode
       Display.create();
 //      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
-      if ((Pbuffer.getPbufferCaps() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
+      if ((Pbuffer.getCapabilities() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
           System.out.println("No Pbuffer support!");
           System.exit(1);
       }

@@ -55,7 +55,7 @@ typedef struct _PbufferInfo {
 	HDC Pbuffer_dc;
 } PbufferInfo;
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCaps
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCapabilities
   (JNIEnv *env, jobject self)
 {
 	int caps = 0;

@@ -44,6 +44,19 @@
 #include "org_lwjgl_opengl_Win32Display.h"
 #include "common_tools.h"
 
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getMaxCursorSize
+	(JNIEnv *env, jobject self)
+{
+	return GetSystemMetrics(SM_CXCURSOR);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getMinCursorSize
+	(JNIEnv *env, jobject self)
+{
+	return GetSystemMetrics(SM_CXCURSOR);
+}
+
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateCursor
   (JNIEnv *env, jobject self, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {

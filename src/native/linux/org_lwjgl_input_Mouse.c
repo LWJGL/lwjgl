@@ -193,22 +193,6 @@ static void doWarpPointer(int center_x, int center_y) {
 	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, center_x, center_y);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetNativeCursorCaps
-  (JNIEnv *env, jobject this) {
-	int caps = 0;
-	Display *disp = incDisplay(env);
-	if (disp == NULL)
-		return caps;
-	XcursorBool argb_supported = XcursorSupportsARGB(getDisplay());
-	XcursorBool anim_supported = XcursorSupportsAnim(getDisplay());
-	if (argb_supported)
-		caps |= org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA | org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
-	if (anim_supported)
-		caps |= org_lwjgl_input_Mouse_CURSOR_ANIMATION;
-	decDisplay();
-	return caps;
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetNativeCursor(JNIEnv *env, jobject this, jobject cursor_handle) {
 	if (cursor_handle != NULL) {
 		Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle);
@@ -216,24 +200,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetNativeCursor(JNIEn
 	} else
 		current_cursor = None;
 	updateCursor();
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMinCursorSize
-  (JNIEnv *env, jobject this)
-{
-	unsigned int width_return = 0;
-	unsigned int height_return = 0;
-	XQueryBestCursor(getDisplay(), getCurrentWindow(), 1, 1, &width_return, &height_return);
-	return width_return > height_return ? width_return : height_return;
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetMaxCursorSize
-  (JNIEnv *env, jobject this)
-{
-	unsigned int width_return = 0;
-	unsigned int height_return = 0;
-	XQueryBestCursor(getDisplay(), getCurrentWindow(), 0xffffffff, 0xffffffff, &width_return, &height_return);
-	return width_return > height_return ? height_return : width_return;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetButtonCount(JNIEnv *env, jobject this) {

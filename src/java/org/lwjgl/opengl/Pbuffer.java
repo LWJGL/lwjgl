@@ -175,7 +175,7 @@ public final class Pbuffer {
 	 * 						 with the Display context (if created).
 	 */
 	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Pbuffer shared_context) throws LWJGLException {
-		if ((getPbufferCaps() & PBUFFER_SUPPORTED) == 0)
+		if ((getCapabilities() & PBUFFER_SUPPORTED) == 0)
 			throw new IllegalStateException("Pbuffers are not supported");
 		this.width = width;
 		this.height = height;
@@ -223,8 +223,8 @@ public final class Pbuffer {
 	 *
 	 * @return a bitmask of Pbuffer capabilities.
 	 */
-	public static int getPbufferCaps() {
-		return Display.getImplementation().getPbufferCaps();
+	public static int getCapabilities() {
+		return Display.getImplementation().getPbufferCapabilities();
 	}
 
 	/**

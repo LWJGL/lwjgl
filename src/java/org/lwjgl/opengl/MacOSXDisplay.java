@@ -288,7 +288,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	private native void nGrabMouse(boolean grab);
 
-	public int getNativeCursorCaps() {
+	public int getNativeCursorCapabilities() {
 		/*
 		int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
 		boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
@@ -373,7 +373,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public void destroyCursor(Object cursor_handle) {
 	}
 
-	public int getPbufferCaps() {
+	public int getPbufferCapabilities() {
 		return GL11.glGetString(GL11.GL_EXTENSIONS).indexOf("GL_APPLE_pixel_buffer") != -1 ? Pbuffer.PBUFFER_SUPPORTED : 0;
 	}
 

@@ -51,7 +51,7 @@ typedef struct _PbufferInfo {
 	GLXContext context;
 } PbufferInfo;
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCaps
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities
   (JNIEnv *env, jobject this)
 {
 	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension

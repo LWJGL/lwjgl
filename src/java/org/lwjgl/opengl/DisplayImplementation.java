@@ -66,7 +66,7 @@ public interface DisplayImplementation {
 	int getGammaRampLength();
 
 	/**
-	 * Native method to set the gamma ramp.
+	 * Method to set the gamma ramp.
 	 */
 	void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
 
@@ -90,7 +90,7 @@ public interface DisplayImplementation {
 	DisplayMode init();
 
 	/**
-	 * Native implementation of setTitle(). This will read the window's title member
+	 * Implementation of setTitle(). This will read the window's title member
 	 * and stash it in the native title of the window.
 	 */
 	void setTitle(String title);
@@ -131,41 +131,41 @@ public interface DisplayImplementation {
 	void reshape(int x, int y, int width, int height);
 
 	/**
-	 * Native method for getting displaymodes
+	 * Method for getting displaymodes
 	 */
 	DisplayMode[] getAvailableDisplayModes();
 
 	/*
 	 * Mouse methods
 	 */
-	/** Native query of wheel support */
+	/** Query of wheel support */
 	boolean hasWheel();
 
-	/** Native query of button count */
+	/** Query of button count */
 	int getButtonCount();
 
 	/**
-	 * Native method to create the mouse.
+	 * Method to create the mouse.
 	 */
 	void createMouse();
 
 	/**
-	 * Native method the destroy the mouse
+	 * Method the destroy the mouse
 	 */
 	void destroyMouse();
 
 	/**
-	 * Native method to poll the mouse
+	 * Method to poll the mouse
 	 */
 	void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 
 	/**
-	 * Native method to enable the buffer
+	 * Method to enable the buffer
 	 */
 	void enableMouseBuffer() throws LWJGLException;
 
 	/**
-	 * Native method to read the keyboard buffer
+	 * Method to read the keyboard buffer
 	 *
 	 * @return the total number of events read.
 	 */
@@ -175,17 +175,17 @@ public interface DisplayImplementation {
 	void grabMouse(boolean grab);
 
 	/**
-	 * Native function to determine native cursor support
+	 * Function to determine native cursor support
 	 */
-	int getNativeCursorCaps();
+	int getNativeCursorCapabilities();
 
-	/** Native method to set the native cursor */
+	/** Method to set the native cursor */
 	void setNativeCursor(Object handle) throws LWJGLException;
 
-	/** Native method returning the minimum cursor size */
+	/** Method returning the minimum cursor size */
 	int getMinCursorSize();
 
-	/** Native method returning the maximum cursor size */
+	/** Method returning the maximum cursor size */
 	int getMaxCursorSize();
 
 	/*
@@ -193,17 +193,17 @@ public interface DisplayImplementation {
 	 */
 
 	/**
-	 * Native method to create the keyboard
+	 * Method to create the keyboard
 	 */
 	void createKeyboard() throws LWJGLException;
 
 	/**
-	 * Native method to destroy the keyboard
+	 * Method to destroy the keyboard
 	 */
 	void destroyKeyboard();
 
 	/**
-	 * Native method to poll the keyboard.
+	 * Method to poll the keyboard.
 	 *
 	 * @param keyDownBuffer the address of a 256-byte buffer to place
 	 * key states in.
@@ -211,18 +211,18 @@ public interface DisplayImplementation {
 	void pollKeyboard(ByteBuffer keyDownBuffer);
 
 	/**
-	 * Native method to read the keyboard buffer
+	 * Method to read the keyboard buffer
 	 * @return the total number of events read.
 	 */
 	int readKeyboard(IntBuffer buffer, int buffer_position);
 
 	/**
-	 * Native method to enable the translation buffer
+	 * Method to enable the translation buffer
 	 */
 	void enableTranslation() throws LWJGLException;
 
 	/**
-	 * Native method to enable the buffer
+	 * Method to enable the buffer
 	 */
 	void enableKeyboardBuffer() throws LWJGLException;
 
@@ -234,7 +234,7 @@ public interface DisplayImplementation {
 	void destroyCursor(Object cursor_handle);
 
 	/* Pbuffer */
-	int getPbufferCaps();
+	int getPbufferCapabilities();
 
 	/**
 	 * Method to test for buffer integrity

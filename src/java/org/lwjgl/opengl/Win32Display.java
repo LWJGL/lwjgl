@@ -44,6 +44,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Cursor;
 
 final class Win32Display implements DisplayImplementation {
 	private static final int CURSOR_HANDLE_SIZE = 8;
@@ -81,7 +82,10 @@ final class Win32Display implements DisplayImplementation {
 	public native void enableMouseBuffer() throws LWJGLException;
 	public native int readMouse(IntBuffer buffer, int buffer_position);
 	public native void grabMouse(boolean grab);
-	public native int getNativeCursorCaps();
+	public int getNativeCursorCapabilities() {
+		return Cursor.CURSOR_ONE_BIT_TRANSPARENCY;
+	}
+
 	public native void setNativeCursor(Object handle) throws LWJGLException;
 	public native int getMinCursorSize();
 	public native int getMaxCursorSize();
@@ -104,7 +108,7 @@ final class Win32Display implements DisplayImplementation {
 	}
 
 	public native void destroyCursor(Object cursorHandle);
-	public native int getPbufferCaps();
+	public native int getPbufferCapabilities();
 	public native boolean isBufferLost(ByteBuffer handle);
 	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
 

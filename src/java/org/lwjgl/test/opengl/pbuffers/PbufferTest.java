@@ -114,7 +114,7 @@ public final class PbufferTest {
 
 			glInit();
 
-			if ( (Pbuffer.getPbufferCaps() & Pbuffer.PBUFFER_SUPPORTED) == 0 ) {
+			if ( (Pbuffer.getCapabilities() & Pbuffer.PBUFFER_SUPPORTED) == 0 ) {
 				System.out.println("No Pbuffer support!");
 				System.exit(-1);
 			}

@@ -114,7 +114,7 @@ public class HWCursorTest {
 	}
 	
 	private static void initNativeCursors() throws Exception {
-		if ((Mouse.getNativeCursorCaps() & Mouse.CURSOR_ONE_BIT_TRANSPARENCY) == 0) {
+		if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0) {
 			System.out.println("No HW cursor support!");
 			System.exit(0);
 		}

@@ -269,13 +269,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	public native void nGrabMouse(boolean grab);
 	
-	public int getNativeCursorCaps() {
+	public int getNativeCursorCapabilities() {
 		lockAWT();
-		int caps = nGetNativeCursorCaps();
+		int caps = nGetNativeCursorCapabilities();
 		unlockAWT();
 		return caps;
 	}
-	public native int nGetNativeCursorCaps();
+	public native int nGetNativeCursorCapabilities();
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		lockAWT();
@@ -365,13 +365,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	public native void nDestroyCursor(Object cursorHandle);
 	
-	public int getPbufferCaps() {
+	public int getPbufferCapabilities() {
 		lockAWT();
-		int caps = nGetPbufferCaps();
+		int caps = nGetPbufferCapabilities();
 		unlockAWT();
 		return caps;
 	}
-	public native int nGetPbufferCaps();
+	public native int nGetPbufferCapabilities();
 
 	public boolean isBufferLost(ByteBuffer handle) {
 		return false;
