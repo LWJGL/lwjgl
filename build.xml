@@ -99,8 +99,10 @@
       <!-- copy dll/so to lib directory -->
       <copy todir="${lwjgl.lib}" taskname="libraries">
         <fileset dir="${lwjgl.bin}">
-            <include name="lwjgl.*"/>
-            <include name="lwjgl_d.*"/>
+            <include name="lwjgl.dll"/>
+            <include name="lwjgl_d.dll"/>
+            <include name="liblwjgl.so"/>
+            <include name="liblwjgl_d.so"/>
         </fileset>
       </copy>
   </target>
