@@ -31,7 +31,19 @@
  */
 package org.lwjgl.test.fmod3;
 
-import java.nio.ByteBuffer;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.TextField;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -39,7 +51,6 @@ import org.lwjgl.fmod3.FMOD;
 import org.lwjgl.fmod3.FMODException;
 import org.lwjgl.fmod3.FSound;
 import org.lwjgl.fmod3.FSoundStream;
-import org.lwjgl.fmod3.callbacks.FSoundMetaDataCallback;
 
 /**
  * $Id$ <br>
@@ -48,90 +59,237 @@ import org.lwjgl.fmod3.callbacks.FSoundMetaDataCallback;
  * @version $Revision$
  */
 public class NetTest {
+
+  private Frame frame;
+  private boolean initialized;
+  private Thread fmodThread;
+  private volatile boolean running;
+  private int channel = -1;
+  private boolean paused = true;
+  
+  public NetTest(Frame frame) {
+    this.frame = frame;
+  }
   
 	public static void main(String[] args) {
-		if (args.length < 1) {
-			System.out.println("Usage:\n NetTest <url>");
-      
-      // default to monkeyradio.org
-      args = new String[1];
-      args[0] = "http://207.200.96.227:8038/";
-		}
     
-
-		try {
-			FMOD.create();
-		} catch (FMODException fmode) {
-			fmode.printStackTrace();
-			return;
-		}
-
-		System.out.println("Initializing FMOD");
-		if (!FSound.FSOUND_Init(44100, 32, 0)) {
-			System.out.println("Failed to initialize FMOD");
-			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-			return;
-		}
+    final Frame frame = new Frame("LWJGL Fmod streaming player");    
+    final NetTest netTest = new NetTest(frame);
+    final boolean playing = false;
     
+    final TextField txtField;
+    final Button  btnPlay;
+    final Button btnStop;
     
-    FSound.FSOUND_Stream_SetBufferSize(100);
-    FSound.FSOUND_Stream_Net_SetBufferProperties(64000, 60, 80);
-
-		System.out.println("Loading " + args[0]);
-		FSoundStream stream = FSound.FSOUND_Stream_Open(args[0], FSound.FSOUND_NORMAL | FSound.FSOUND_NONBLOCKING, 0, 0);
-
+    // main panel
+    Panel panel = new Panel();
+    panel.setLayout(new FlowLayout());
+    panel.add(new Label("URL:"));
+    panel.add(txtField = new TextField("http://207.200.96.227:8038/", 60));
+    panel.add(btnPlay = new Button("Play"));
+    panel.add(btnStop = new Button("Stop"));
+    panel.setBackground(new Color(0x99, 0x99, 0x99));
     
-		if (stream != null) {
-      
-      int channel = -1;
-      boolean run = true;
-      IntBuffer status = BufferUtils.createIntBuffer(4);
-      while(run) {
-        if(channel < 0) {
-         channel = FSound.FSOUND_Stream_PlayEx(FSound.FSOUND_FREE, stream, null, true);
-         FSound.FSOUND_SetPaused(channel, false);
-         
-         if (channel != -1) {
-             FSound.FSOUND_Stream_Net_SetMetadataCallback(stream, new FSoundMetaDataCallback() {
-							public void FSOUND_METADATACALLBACK(ByteBuffer name, ByteBuffer value) {
-                byte[] charName = new byte[name.capacity()];
-                name.get(charName);
-                
-                byte[] charValue = new byte[value.capacity()];
-                value.get(charValue);
-                
-                System.out.println(new String(charName) + " = " + new String(charValue));
-							}
-             });
-           }
-        }
-        
-        int openstate = FSound.FSOUND_Stream_GetOpenState(stream);
-        if ((openstate == -1) || (openstate == -3)) {
-            System.out.println("\nERROR: failed to open stream!\n");
-            System.out.println("SERVER: " + FSound.FSOUND_Stream_Net_GetLastServerStatus() + "\n");
-            break;
-        }
-        
-        FSound.FSOUND_Stream_Net_GetStatus(stream, status);
-        
-        System.out.println("Status: " + status.get(0) + ", buffer: " + status.get(1) + ", bitrate: " + status.get(2) + ", flags: " + status.get(3));
-        
-        pause(100);
+    frame.add(panel);
+    frame.pack();
+    
+    frame.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+       frame.dispose(); 
+       netTest.dispose();
       }
-      
-      FSound.FSOUND_Stream_Stop(stream);
-      FSound.FSOUND_Stream_Close(stream);
-		} else {
-			System.out.println("Unable to play: " + args[0]);
-			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-		}
+    });
+    
+    btnPlay.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) { 
+      	netTest.play(txtField.getText()); 
+      }
+    });
+    
+    btnStop.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) { 
+      	netTest.stop();
+      }
+    });
 
-		FSound.FSOUND_Close();
-		FMOD.destroy();
+    // setup frame
+    int x = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - frame.getWidth()) / 2;
+    int y = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - frame.getHeight()) / 2;
+    frame.setLocation(x, y);
+    frame.setResizable(false);
+    frame.setVisible(true);
 	}
   
   /**
+	 * 
+	 */
+	private void dispose() {
+    if(initialized) {
+      stop();
+    	FSound.FSOUND_Close();
+    	FMOD.destroy();
+    }
+	}
+
+	/**
+	 * 
+	 */
+	protected void pause() {
+    if(running && channel > 0) {
+    	FSound.FSOUND_SetPaused(channel, paused = !paused);
+      
+      if(paused) {
+      	frame.setTitle("LWJGL Fmod streaming player: Paused");
+      }
+    }
+	}
+
+	/**
+	 * 
+	 */
+	protected void play(final String url) {
+    if(!initialized) {
+    	frame.setTitle("Initializing...");
+      if(!initialize()) {
+        frame.setTitle("LWJGL Fmod streaming player");
+        return;
+      }
+    }
+    
+    if(fmodThread != null) {
+      stop();
+    }
+    
+    
+    fmodThread = new Thread() {
+    	public void run() {
+        frame.setTitle("Opening [" + url + "]");
+    		running = true;
+    		FSoundStream stream = FSound.FSOUND_Stream_Open(url, FSound.FSOUND_NORMAL | FSound.FSOUND_NONBLOCKING, 0, 0);    
+    		
+    		if (stream != null) {
+    			IntBuffer status = BufferUtils.createIntBuffer(4);
+    			while(running) {
+    				if(channel < 0) {
+    					channel = FSound.FSOUND_Stream_PlayEx(FSound.FSOUND_FREE, stream, null, true);
+    					FSound.FSOUND_SetPaused(channel, false);
+              paused = false;
+    				}
+    				
+    				int openstate = FSound.FSOUND_Stream_GetOpenState(stream);
+    				if ((openstate == -1) || (openstate == -3)) {
+    					error("failed to open stream!: " + FSound.FSOUND_Stream_Net_GetLastServerStatus());
+    					break;
+    				}
+    				
+    				FSound.FSOUND_Stream_Net_GetStatus(stream, status);
+    				
+            if(!paused) {
+            	frame.setTitle("Playing [state: " + getNameFor(status.get(0)) + ", buffer: " + status.get(1) + ", bitrate: " + status.get(2) + "]");
+            }
+    				pause(10);
+    			}
+    			
+    			while(!FSound.FSOUND_Stream_Stop(stream)) {
+    				pause(10);
+          }
+    			while(!FSound.FSOUND_Stream_Close(stream)) {
+    				pause(10);
+          }
+          channel = -1;
+    		} else {
+    			error("Unable to play: " + url + ". Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
+    		}          
+    	}
+    };
+    fmodThread.start();
+	}
+
+	/**
+	 * @param i
+	 * @return
+	 */
+	protected String getNameFor(int i) {
+    switch(i) {
+      case FSound.FSOUND_STREAM_NET_NOTCONNECTED:
+        return "FSOUND_STREAM_NET_NOTCONNECTED";
+      case FSound.FSOUND_STREAM_NET_CONNECTING:
+        return "FSOUND_STREAM_NET_CONNECTING";
+      case FSound.FSOUND_STREAM_NET_BUFFERING:
+        return "FSOUND_STREAM_NET_BUFFERING";
+      case FSound.FSOUND_STREAM_NET_READY:
+        return "FSOUND_STREAM_NET_READY";
+      case FSound.FSOUND_STREAM_NET_ERROR:
+        return "FSOUND_STREAM_NET_ERROR";
+    }
+		return "";
+	}
+
+	/**
+	 * 
+	 */
+	protected void stop() {
+    if(frame.isVisible()) {
+    	frame.setTitle("LWJGL Fmod streaming player: stopping...");
+    }
+    
+    running = false;
+    if(fmodThread != null) {
+      try {
+        fmodThread.join();
+      } catch (InterruptedException inte) {
+      }
+      fmodThread = null;
+    }
+    
+    if(frame.isVisible()) {
+    	frame.setTitle("LWJGL Fmod streaming player");
+    }
+	}
+  
+  protected boolean initialize() {
+    if(!initialized) {
+      try {
+        FMOD.create();
+      } catch (FMODException fmode) {
+        error(fmode.getMessage());
+        return false;
+      }      
+      
+      if (!FSound.FSOUND_Init(44100, 32, 0)) {
+        error("Failed to initialize FMOD: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
+        return false;
+      }
+      
+      FSound.FSOUND_Stream_SetBufferSize(500);
+      FSound.FSOUND_Stream_Net_SetBufferProperties(64000, 60, 80);
+      initialized = true;
+    }
+    return initialized;
+  }
+
+	/**
+	 * @param string
+	 */
+	private void error(String string) {
+    final Dialog dialog = new Dialog(frame, "Error", true);
+    dialog.add(new Label(string));
+    dialog.pack();
+    
+    dialog.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+       dialog.dispose(); 
+      }
+    });
+    
+    // setup dialog
+    int x = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - dialog.getWidth()) / 2;
+    int y = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - dialog.getHeight()) / 2;
+    dialog.setLocation(x, y);
+    dialog.setVisible(true);  
+	}
+
+	/**
    * @param i
    */
   private static void pause(long i) {
