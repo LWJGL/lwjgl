@@ -46,7 +46,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ati_ATIVertexArrayObject_nglNewObje
 	(JNIEnv * env, jclass clazz, jint size, jobject pPointer, jint pPointer_offset, jint usage)
 {
 	CHECK_EXISTS(glNewObjectBufferATI)
-	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
+	GLvoid *pPointer_ptr = safeGetBufferAddress(env, pPointer, pPointer_offset);
 	GLuint result = glNewObjectBufferATI(size, pPointer_ptr, usage);
 	CHECK_GL_ERROR
 	return result;

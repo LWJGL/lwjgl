@@ -67,11 +67,11 @@ extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void setDebugEnabled(bool enable);
 extern void printfDebug(const char *format, ...);
 
-static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {
+static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer, int offset) {
 	if (buffer == NULL)
 		return NULL;
 	else
-		return env->GetDirectBufferAddress(buffer);
+		return (void *)((char *)env->GetDirectBufferAddress(buffer) + offset);
 }
 
 static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {

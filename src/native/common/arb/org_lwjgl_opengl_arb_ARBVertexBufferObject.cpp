@@ -97,7 +97,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBVertexBufferObject_nglBuffer
 	(JNIEnv * env, jclass clazz, jint target, jint size, jobject data, jint data_offset, jint usage)
 {
 	CHECK_EXISTS(glBufferDataARB)
-	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
+	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data, data_offset);
 	glBufferDataARB(target, size, data_ptr, usage);
 	CHECK_GL_ERROR
 }
