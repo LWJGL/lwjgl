@@ -49,6 +49,7 @@
 
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 
+extern HINSTANCE dll_handle;
 // Initialise static variables
 bool			oneShotInitialised = false;
 HWND			hwnd = NULL;						// Handle to the window
@@ -210,7 +211,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		windowClass.lpfnWndProc = WindowProc;
 		windowClass.cbClsExtra = 0;
 		windowClass.cbWndExtra = 0;
-		windowClass.hInstance = (HINSTANCE) GetCurrentProcess();
+		windowClass.hInstance = dll_handle;
 		windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 		windowClass.hCursor = LoadIcon(NULL, IDC_ARROW);
 		windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);

@@ -43,6 +43,8 @@
 #include <windows.h>
 #include <stdio.h>
 
+HINSTANCE dll_handle;
+
 /*
  * DLL entry point for Windows. Called when Java loads the .dll
  */
@@ -52,5 +54,6 @@ BOOL WINAPI DllMain(
   LPVOID lpvReserved   // reserved
   ) 
 {
+	dll_handle = hinstDLL;
 	return TRUE; // Success
 }
