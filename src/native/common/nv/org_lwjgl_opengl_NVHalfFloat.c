@@ -1,6 +1,7 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
+#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glVertexAttribs4hvNVPROC) (GLuint index, GLsizei n, const GLhalf * attribs);
@@ -28,158 +29,127 @@ typedef void (APIENTRY *glVertex4hNVPROC) (GLhalf x, GLhalf y, GLhalf z, GLhalf 
 typedef void (APIENTRY *glVertex3hNVPROC) (GLhalf x, GLhalf y, GLhalf z);
 typedef void (APIENTRY *glVertex2hNVPROC) (GLhalf x, GLhalf y);
 
-static glVertexAttribs4hvNVPROC glVertexAttribs4hvNV;
-static glVertexAttribs3hvNVPROC glVertexAttribs3hvNV;
-static glVertexAttribs2hvNVPROC glVertexAttribs2hvNV;
-static glVertexAttribs1hvNVPROC glVertexAttribs1hvNV;
-static glVertexAttrib4hNVPROC glVertexAttrib4hNV;
-static glVertexAttrib3hNVPROC glVertexAttrib3hNV;
-static glVertexAttrib2hNVPROC glVertexAttrib2hNV;
-static glVertexAttrib1hNVPROC glVertexAttrib1hNV;
-static glSecondaryColor3hNVPROC glSecondaryColor3hNV;
-static glFogCoordhNVPROC glFogCoordhNV;
-static glMultiTexCoord4hNVPROC glMultiTexCoord4hNV;
-static glMultiTexCoord3hNVPROC glMultiTexCoord3hNV;
-static glMultiTexCoord2hNVPROC glMultiTexCoord2hNV;
-static glMultiTexCoord1hNVPROC glMultiTexCoord1hNV;
-static glTexCoord4hNVPROC glTexCoord4hNV;
-static glTexCoord3hNVPROC glTexCoord3hNV;
-static glTexCoord2hNVPROC glTexCoord2hNV;
-static glTexCoord1hNVPROC glTexCoord1hNV;
-static glColor4hNVPROC glColor4hNV;
-static glColor3hNVPROC glColor3hNV;
-static glNormal3hNVPROC glNormal3hNV;
-static glVertex4hNVPROC glVertex4hNV;
-static glVertex3hNVPROC glVertex3hNV;
-static glVertex2hNVPROC glVertex2hNV;
-
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position, jlong function_pointer) {
 	const GLhalf *attribs_address = ((const GLhalf *)(*env)->GetDirectBufferAddress(env, attribs)) + attribs_position;
+	glVertexAttribs4hvNVPROC glVertexAttribs4hvNV = (glVertexAttribs4hvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs4hvNV(index, n, attribs_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs3hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs3hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position, jlong function_pointer) {
 	const GLhalf *attribs_address = ((const GLhalf *)(*env)->GetDirectBufferAddress(env, attribs)) + attribs_position;
+	glVertexAttribs3hvNVPROC glVertexAttribs3hvNV = (glVertexAttribs3hvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs3hvNV(index, n, attribs_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs2hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs2hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position, jlong function_pointer) {
 	const GLhalf *attribs_address = ((const GLhalf *)(*env)->GetDirectBufferAddress(env, attribs)) + attribs_position;
+	glVertexAttribs2hvNVPROC glVertexAttribs2hvNV = (glVertexAttribs2hvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs2hvNV(index, n, attribs_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs1hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs1hvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject attribs, jint attribs_position, jlong function_pointer) {
 	const GLhalf *attribs_address = ((const GLhalf *)(*env)->GetDirectBufferAddress(env, attribs)) + attribs_position;
+	glVertexAttribs1hvNVPROC glVertexAttribs1hvNV = (glVertexAttribs1hvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs1hvNV(index, n, attribs_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib4hNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttrib4hNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w, jlong function_pointer) {
+	glVertexAttrib4hNVPROC glVertexAttrib4hNV = (glVertexAttrib4hNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib4hNV(index, x, y, z, w);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib3hNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttrib3hNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jlong function_pointer) {
+	glVertexAttrib3hNVPROC glVertexAttrib3hNV = (glVertexAttrib3hNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib3hNV(index, x, y, z);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib2hNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttrib2hNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jlong function_pointer) {
+	glVertexAttrib2hNVPROC glVertexAttrib2hNV = (glVertexAttrib2hNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib2hNV(index, x, y);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib1hNV(JNIEnv *env, jclass clazz, jint index, jshort x) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttrib1hNV(JNIEnv *env, jclass clazz, jint index, jshort x, jlong function_pointer) {
+	glVertexAttrib1hNVPROC glVertexAttrib1hNV = (glVertexAttrib1hNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib1hNV(index, x);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor3hNV(JNIEnv *env, jclass clazz, jshort red, jshort green, jshort blue) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglSecondaryColor3hNV(JNIEnv *env, jclass clazz, jshort red, jshort green, jshort blue, jlong function_pointer) {
+	glSecondaryColor3hNVPROC glSecondaryColor3hNV = (glSecondaryColor3hNVPROC)((intptr_t)function_pointer);
 	glSecondaryColor3hNV(red, green, blue);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glFogCoordhNV(JNIEnv *env, jclass clazz, jshort fog) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglFogCoordhNV(JNIEnv *env, jclass clazz, jshort fog, jlong function_pointer) {
+	glFogCoordhNVPROC glFogCoordhNV = (glFogCoordhNVPROC)((intptr_t)function_pointer);
 	glFogCoordhNV(fog);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord4hNV(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r, jshort q) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglMultiTexCoord4hNV(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r, jshort q, jlong function_pointer) {
+	glMultiTexCoord4hNVPROC glMultiTexCoord4hNV = (glMultiTexCoord4hNVPROC)((intptr_t)function_pointer);
 	glMultiTexCoord4hNV(target, s, t, r, q);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord3hNV(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglMultiTexCoord3hNV(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r, jlong function_pointer) {
+	glMultiTexCoord3hNVPROC glMultiTexCoord3hNV = (glMultiTexCoord3hNVPROC)((intptr_t)function_pointer);
 	glMultiTexCoord3hNV(target, s, t, r);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord2hNV(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglMultiTexCoord2hNV(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jlong function_pointer) {
+	glMultiTexCoord2hNVPROC glMultiTexCoord2hNV = (glMultiTexCoord2hNVPROC)((intptr_t)function_pointer);
 	glMultiTexCoord2hNV(target, s, t);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord1hNV(JNIEnv *env, jclass clazz, jint target, jshort s) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglMultiTexCoord1hNV(JNIEnv *env, jclass clazz, jint target, jshort s, jlong function_pointer) {
+	glMultiTexCoord1hNVPROC glMultiTexCoord1hNV = (glMultiTexCoord1hNVPROC)((intptr_t)function_pointer);
 	glMultiTexCoord1hNV(target, s);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord4hNV(JNIEnv *env, jclass clazz, jshort s, jshort t, jshort r, jshort q) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglTexCoord4hNV(JNIEnv *env, jclass clazz, jshort s, jshort t, jshort r, jshort q, jlong function_pointer) {
+	glTexCoord4hNVPROC glTexCoord4hNV = (glTexCoord4hNVPROC)((intptr_t)function_pointer);
 	glTexCoord4hNV(s, t, r, q);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord3hNV(JNIEnv *env, jclass clazz, jshort s, jshort t, jshort r) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglTexCoord3hNV(JNIEnv *env, jclass clazz, jshort s, jshort t, jshort r, jlong function_pointer) {
+	glTexCoord3hNVPROC glTexCoord3hNV = (glTexCoord3hNVPROC)((intptr_t)function_pointer);
 	glTexCoord3hNV(s, t, r);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord2hNV(JNIEnv *env, jclass clazz, jshort s, jshort t) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglTexCoord2hNV(JNIEnv *env, jclass clazz, jshort s, jshort t, jlong function_pointer) {
+	glTexCoord2hNVPROC glTexCoord2hNV = (glTexCoord2hNVPROC)((intptr_t)function_pointer);
 	glTexCoord2hNV(s, t);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord1hNV(JNIEnv *env, jclass clazz, jshort s) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglTexCoord1hNV(JNIEnv *env, jclass clazz, jshort s, jlong function_pointer) {
+	glTexCoord1hNVPROC glTexCoord1hNV = (glTexCoord1hNVPROC)((intptr_t)function_pointer);
 	glTexCoord1hNV(s);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor4hNV(JNIEnv *env, jclass clazz, jshort red, jshort green, jshort blue, jshort alpha) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglColor4hNV(JNIEnv *env, jclass clazz, jshort red, jshort green, jshort blue, jshort alpha, jlong function_pointer) {
+	glColor4hNVPROC glColor4hNV = (glColor4hNVPROC)((intptr_t)function_pointer);
 	glColor4hNV(red, green, blue, alpha);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glColor3hNV(JNIEnv *env, jclass clazz, jshort red, jshort green, jshort blue) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglColor3hNV(JNIEnv *env, jclass clazz, jshort red, jshort green, jshort blue, jlong function_pointer) {
+	glColor3hNVPROC glColor3hNV = (glColor3hNVPROC)((intptr_t)function_pointer);
 	glColor3hNV(red, green, blue);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glNormal3hNV(JNIEnv *env, jclass clazz, jshort nx, jshort ny, jshort nz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglNormal3hNV(JNIEnv *env, jclass clazz, jshort nx, jshort ny, jshort nz, jlong function_pointer) {
+	glNormal3hNVPROC glNormal3hNV = (glNormal3hNVPROC)((intptr_t)function_pointer);
 	glNormal3hNV(nx, ny, nz);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex4hNV(JNIEnv *env, jclass clazz, jshort x, jshort y, jshort z, jshort w) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertex4hNV(JNIEnv *env, jclass clazz, jshort x, jshort y, jshort z, jshort w, jlong function_pointer) {
+	glVertex4hNVPROC glVertex4hNV = (glVertex4hNVPROC)((intptr_t)function_pointer);
 	glVertex4hNV(x, y, z, w);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex3hNV(JNIEnv *env, jclass clazz, jshort x, jshort y, jshort z) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertex3hNV(JNIEnv *env, jclass clazz, jshort x, jshort y, jshort z, jlong function_pointer) {
+	glVertex3hNVPROC glVertex3hNV = (glVertex3hNVPROC)((intptr_t)function_pointer);
 	glVertex3hNV(x, y, z);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_glVertex2hNV(JNIEnv *env, jclass clazz, jshort x, jshort y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertex2hNV(JNIEnv *env, jclass clazz, jshort x, jshort y, jlong function_pointer) {
+	glVertex2hNVPROC glVertex2hNV = (glVertex2hNVPROC)((intptr_t)function_pointer);
 	glVertex2hNV(x, y);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_initNativeStubs(JNIEnv *env, jclass clazz) {
-	JavaMethodAndExtFunction functions[] = {
-		{"nglVertexAttribs4hvNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV, "glVertexAttribs4hvNV", (void *)&glVertexAttribs4hvNV},
-		{"nglVertexAttribs3hvNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs3hvNV, "glVertexAttribs3hvNV", (void *)&glVertexAttribs3hvNV},
-		{"nglVertexAttribs2hvNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs2hvNV, "glVertexAttribs2hvNV", (void *)&glVertexAttribs2hvNV},
-		{"nglVertexAttribs1hvNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs1hvNV, "glVertexAttribs1hvNV", (void *)&glVertexAttribs1hvNV},
-		{"glVertexAttrib4hNV", "(ISSSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib4hNV, "glVertexAttrib4hNV", (void *)&glVertexAttrib4hNV},
-		{"glVertexAttrib3hNV", "(ISSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib3hNV, "glVertexAttrib3hNV", (void *)&glVertexAttrib3hNV},
-		{"glVertexAttrib2hNV", "(ISS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib2hNV, "glVertexAttrib2hNV", (void *)&glVertexAttrib2hNV},
-		{"glVertexAttrib1hNV", "(IS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glVertexAttrib1hNV, "glVertexAttrib1hNV", (void *)&glVertexAttrib1hNV},
-		{"glSecondaryColor3hNV", "(SSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glSecondaryColor3hNV, "glSecondaryColor3hNV", (void *)&glSecondaryColor3hNV},
-		{"glFogCoordhNV", "(S)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glFogCoordhNV, "glFogCoordhNV", (void *)&glFogCoordhNV},
-		{"glMultiTexCoord4hNV", "(ISSSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord4hNV, "glMultiTexCoord4hNV", (void *)&glMultiTexCoord4hNV},
-		{"glMultiTexCoord3hNV", "(ISSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord3hNV, "glMultiTexCoord3hNV", (void *)&glMultiTexCoord3hNV},
-		{"glMultiTexCoord2hNV", "(ISS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord2hNV, "glMultiTexCoord2hNV", (void *)&glMultiTexCoord2hNV},
-		{"glMultiTexCoord1hNV", "(IS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glMultiTexCoord1hNV, "glMultiTexCoord1hNV", (void *)&glMultiTexCoord1hNV},
-		{"glTexCoord4hNV", "(SSSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord4hNV, "glTexCoord4hNV", (void *)&glTexCoord4hNV},
-		{"glTexCoord3hNV", "(SSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord3hNV, "glTexCoord3hNV", (void *)&glTexCoord3hNV},
-		{"glTexCoord2hNV", "(SS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord2hNV, "glTexCoord2hNV", (void *)&glTexCoord2hNV},
-		{"glTexCoord1hNV", "(S)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glTexCoord1hNV, "glTexCoord1hNV", (void *)&glTexCoord1hNV},
-		{"glColor4hNV", "(SSSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glColor4hNV, "glColor4hNV", (void *)&glColor4hNV},
-		{"glColor3hNV", "(SSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glColor3hNV, "glColor3hNV", (void *)&glColor3hNV},
-		{"glNormal3hNV", "(SSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glNormal3hNV, "glNormal3hNV", (void *)&glNormal3hNV},
-		{"glVertex4hNV", "(SSSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glVertex4hNV, "glVertex4hNV", (void *)&glVertex4hNV},
-		{"glVertex3hNV", "(SSS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glVertex3hNV, "glVertex3hNV", (void *)&glVertex3hNV},
-		{"glVertex2hNV", "(SS)V", (void *)&Java_org_lwjgl_opengl_NVHalfFloat_glVertex2hNV, "glVertex2hNV", (void *)&glVertex2hNV}
-	};
-	int num_functions = NUMFUNCTIONS(functions);
-	extgl_InitializeClass(env, clazz, num_functions, functions);
-}

@@ -239,6 +239,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/GL*.java"/>
 		</apply>
@@ -253,6 +254,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}/arb"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ARB*.java"/>
 		</apply>
@@ -267,6 +269,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}/ati"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ATI*.java"/>
 		</apply>
@@ -281,6 +284,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}/ext"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/EXT*.java"/>
 		</apply>
@@ -295,6 +299,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}/nv"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/NV*.java"/>
 		</apply>
@@ -309,6 +314,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}/hp"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/HP*.java"/>
 		</apply>
@@ -323,6 +329,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}/ibm"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/IBM*.java"/>
 		</apply>
@@ -337,6 +344,7 @@
 			<arg path="${lwjgl.src}/java"/>
 			<arg value="-d"/>
 			<arg path="${lwjgl.src.headers}/sun"/>
+			<arg value="-Acontextspecific"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/SUN*.java"/>
 		</apply>
@@ -352,6 +360,7 @@
 			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
 			<arg value="-s"/>
 			<arg path="${lwjgl.src}/java"/>
+			<arg value="-Acontextspecific"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/*.java"/>
 		</apply>
 	</target>

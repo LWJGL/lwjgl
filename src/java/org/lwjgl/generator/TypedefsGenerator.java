@@ -48,8 +48,6 @@ import java.io.*;
 import java.util.*;
 
 public class TypedefsGenerator {
-	public static final String TYPEDEF_POSTFIX = "PROC";
-
 	private static void generateNativeTypedefs(TypeMap type_map, PrintWriter writer, MethodDeclaration method) {
 		TypeMirror return_type = method.getReturnType();
 		writer.print("typedef ");
@@ -58,7 +56,7 @@ public class TypedefsGenerator {
 		writer.print(translator.getSignature());
 		writer.print(" (");
 		writer.print(type_map.getTypedefPrefix());
-		writer.print(" *" + method.getSimpleName()  + TYPEDEF_POSTFIX + ") (");
+		writer.print(" *" + Utils.getTypedefName(method) + ") (");
 		generateNativeTypedefsParameters(type_map, writer, method.getParameters());
 		writer.println(");");
 	}

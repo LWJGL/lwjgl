@@ -15,5 +15,10 @@ public final class EXTDepthBoundsTest {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glDepthBoundsEXT(double zmin, double zmax);
+	public static void glDepthBoundsEXT(double zmin, double zmax) {
+		long function_pointer = GLContext.getCapabilities().EXT_depth_bounds_test_glDepthBoundsEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDepthBoundsEXT(zmin, zmax, function_pointer);
+	}
+	private static native void nglDepthBoundsEXT(double zmin, double zmax, long function_pointer);
 }

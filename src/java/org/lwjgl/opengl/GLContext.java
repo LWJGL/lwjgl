@@ -73,6 +73,21 @@ public final class GLContext {
 	}
 	
 	/**
+	 * Set the current capabilities instance. It contains the flags used
+	 * to test for support of a particular extension.
+	 *
+	 * @return The current capabilities instance.
+	 */
+	static void setCapabilities(ContextCapabilities capabilities) {
+		current_capabilities.set(capabilities);
+	}
+	
+	/**
+	 * Helper method to get a pointer to a named function in the OpenGL library
+	 */
+	static native long getFunctionAddress(String name);
+
+	/**
 	 * Determine which extensions are available. Helper method to ContextCapabilities.
 	 *
 	 * @return A Set containing all available extension strings.
@@ -145,8 +160,7 @@ public final class GLContext {
 	private static void loadStubs() throws LWJGLException {
 		if (loaded_stubs)
 			return;
-		Set supported_extensions = ContextCapabilities.initAllStubs();
-		current_capabilities.set(new ContextCapabilities(supported_extensions));
+		new ContextCapabilities();
 		loaded_stubs = true;
 	}
 

@@ -51,53 +51,89 @@ public final class GL15 {
 
 	public static void glGetQueryObjectu(int id, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetQueryObjectuiv(id, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glGetQueryObjectuiv_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetQueryObjectuiv(id, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetQueryObjectuiv(int id, int pname, IntBuffer params, int params_position);
+	private static native void nglGetQueryObjectuiv(int id, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetQueryObject(int id, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetQueryObjectiv(id, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glGetQueryObjectiv_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetQueryObjectiv(id, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetQueryObjectiv(int id, int pname, IntBuffer params, int params_position);
+	private static native void nglGetQueryObjectiv(int id, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetQuery(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetQueryiv(target, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glGetQueryiv_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetQueryiv(target, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetQueryiv(int target, int pname, IntBuffer params, int params_position);
+	private static native void nglGetQueryiv(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
-	public static native void glEndQuery(int target);
+	public static void glEndQuery(int target) {
+		long function_pointer = GLContext.getCapabilities().GL15_glEndQuery_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglEndQuery(target, function_pointer);
+	}
+	private static native void nglEndQuery(int target, long function_pointer);
 
-	public static native void glBeginQuery(int target, int id);
+	public static void glBeginQuery(int target, int id) {
+		long function_pointer = GLContext.getCapabilities().GL15_glBeginQuery_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBeginQuery(target, id, function_pointer);
+	}
+	private static native void nglBeginQuery(int target, int id, long function_pointer);
 
-	public static native boolean glIsQuery(int id);
+	public static boolean glIsQuery(int id) {
+		long function_pointer = GLContext.getCapabilities().GL15_glIsQuery_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		boolean __result = nglIsQuery(id, function_pointer);
+		return __result;
+	}
+	private static native boolean nglIsQuery(int id, long function_pointer);
 
 	public static void glDeleteQueries(IntBuffer ids) {
 		BufferChecks.checkDirect(ids);
-		nglDeleteQueries((ids.remaining()), ids, ids.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glDeleteQueries_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDeleteQueries((ids.remaining()), ids, ids.position(), function_pointer);
 	}
-	private static native void nglDeleteQueries(int n, IntBuffer ids, int ids_position);
+	private static native void nglDeleteQueries(int n, IntBuffer ids, int ids_position, long function_pointer);
 
 	public static void glGenQueries(IntBuffer ids) {
 		BufferChecks.checkDirect(ids);
-		nglGenQueries((ids.remaining()), ids, ids.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glGenQueries_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGenQueries((ids.remaining()), ids, ids.position(), function_pointer);
 	}
-	private static native void nglGenQueries(int n, IntBuffer ids, int ids_position);
+	private static native void nglGenQueries(int n, IntBuffer ids, int ids_position, long function_pointer);
 
 	public static java.nio.ByteBuffer glGetBufferPointer(int target, int pname, int result_size) {
-		java.nio.ByteBuffer __result = nglGetBufferPointerv(target, pname, result_size);
+		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferPointerv_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		java.nio.ByteBuffer __result = nglGetBufferPointerv(target, pname, result_size, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglGetBufferPointerv(int target, int pname, int result_size);
+	private static native java.nio.ByteBuffer nglGetBufferPointerv(int target, int pname, int result_size, long function_pointer);
 
 	public static void glGetBufferParameter(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetBufferParameteriv(target, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferParameteriv_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetBufferParameteriv(target, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetBufferParameteriv(int target, int pname, IntBuffer params, int params_position);
+	private static native void nglGetBufferParameteriv(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
-	public static native boolean glUnmapBuffer(int target);
+	public static boolean glUnmapBuffer(int target) {
+		long function_pointer = GLContext.getCapabilities().GL15_glUnmapBuffer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		boolean __result = nglUnmapBuffer(target, function_pointer);
+		return __result;
+	}
+	private static native boolean nglUnmapBuffer(int target, long function_pointer);
 
 	/**
 	 * glMapBuffer maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in which case a new
@@ -115,86 +151,126 @@ public final class GL15 {
 	public static java.nio.ByteBuffer glMapBuffer(int target, int access, int result_size, java.nio.ByteBuffer old_buffer) {
 		if (old_buffer != null)
 			BufferChecks.checkDirect(old_buffer);
-		java.nio.ByteBuffer __result = nglMapBuffer(target, access, result_size, old_buffer);
+		long function_pointer = GLContext.getCapabilities().GL15_glMapBuffer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		java.nio.ByteBuffer __result = nglMapBuffer(target, access, result_size, old_buffer, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglMapBuffer(int target, int access, int result_size, java.nio.ByteBuffer old_buffer);
+	private static native java.nio.ByteBuffer nglMapBuffer(int target, int access, int result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
 
 	public static void glGetBufferSubData(int target, int offset, ShortBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglGetBufferSubData(target, offset, (data.remaining() << 1), data, data.position() << 1);
+		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetBufferSubData(target, offset, (data.remaining() << 1), data, data.position() << 1, function_pointer);
 	}
 	public static void glGetBufferSubData(int target, int offset, IntBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglGetBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2);
+		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
 	public static void glGetBufferSubData(int target, int offset, FloatBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglGetBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2);
+		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
 	public static void glGetBufferSubData(int target, int offset, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglGetBufferSubData(target, offset, (data.remaining()), data, data.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glGetBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetBufferSubData(target, offset, (data.remaining()), data, data.position(), function_pointer);
 	}
-	private static native void nglGetBufferSubData(int target, int offset, int size, Buffer data, int data_position);
+	private static native void nglGetBufferSubData(int target, int offset, int size, Buffer data, int data_position, long function_pointer);
 
 	public static void glBufferSubData(int target, int offset, ShortBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglBufferSubData(target, offset, (data.remaining() << 1), data, data.position() << 1);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferSubData(target, offset, (data.remaining() << 1), data, data.position() << 1, function_pointer);
 	}
 	public static void glBufferSubData(int target, int offset, IntBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
 	public static void glBufferSubData(int target, int offset, FloatBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferSubData(target, offset, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
 	public static void glBufferSubData(int target, int offset, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglBufferSubData(target, offset, (data.remaining()), data, data.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferSubData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferSubData(target, offset, (data.remaining()), data, data.position(), function_pointer);
 	}
-	private static native void nglBufferSubData(int target, int offset, int size, Buffer data, int data_position);
+	private static native void nglBufferSubData(int target, int offset, int size, Buffer data, int data_position, long function_pointer);
 
 	public static void glBufferData(int target, int size, int usage) {
-		nglBufferData(target, size, null, 0, usage);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferData(target, size, null, 0, usage, function_pointer);
 	}
 	public static void glBufferData(int target, ShortBuffer data, int usage) {
 		BufferChecks.checkDirect(data);
-		nglBufferData(target, (data.remaining() << 1), data, data.position() << 1, usage);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferData(target, (data.remaining() << 1), data, data.position() << 1, usage, function_pointer);
 	}
 	public static void glBufferData(int target, IntBuffer data, int usage) {
 		BufferChecks.checkDirect(data);
-		nglBufferData(target, (data.remaining() << 2), data, data.position() << 2, usage);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferData(target, (data.remaining() << 2), data, data.position() << 2, usage, function_pointer);
 	}
 	public static void glBufferData(int target, FloatBuffer data, int usage) {
 		BufferChecks.checkDirect(data);
-		nglBufferData(target, (data.remaining() << 2), data, data.position() << 2, usage);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferData(target, (data.remaining() << 2), data, data.position() << 2, usage, function_pointer);
 	}
 	public static void glBufferData(int target, ByteBuffer data, int usage) {
 		BufferChecks.checkDirect(data);
-		nglBufferData(target, (data.remaining()), data, data.position(), usage);
+		long function_pointer = GLContext.getCapabilities().GL15_glBufferData_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBufferData(target, (data.remaining()), data, data.position(), usage, function_pointer);
 	}
-	private static native void nglBufferData(int target, int size, Buffer data, int data_position, int usage);
+	private static native void nglBufferData(int target, int size, Buffer data, int data_position, int usage, long function_pointer);
 
-	public static native boolean glIsBuffer(int buffer);
+	public static boolean glIsBuffer(int buffer) {
+		long function_pointer = GLContext.getCapabilities().GL15_glIsBuffer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		boolean __result = nglIsBuffer(buffer, function_pointer);
+		return __result;
+	}
+	private static native boolean nglIsBuffer(int buffer, long function_pointer);
 
 	public static void glGenBuffers(IntBuffer buffers) {
 		BufferChecks.checkDirect(buffers);
-		nglGenBuffers((buffers.remaining()), buffers, buffers.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glGenBuffers_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGenBuffers((buffers.remaining()), buffers, buffers.position(), function_pointer);
 	}
-	private static native void nglGenBuffers(int n, IntBuffer buffers, int buffers_position);
+	private static native void nglGenBuffers(int n, IntBuffer buffers, int buffers_position, long function_pointer);
 
 	public static void glDeleteBuffers(IntBuffer buffers) {
 		BufferChecks.checkDirect(buffers);
 		BufferObjectTracker.deleteBuffers(buffers);
-		nglDeleteBuffers((buffers.remaining()), buffers, buffers.position());
+		long function_pointer = GLContext.getCapabilities().GL15_glDeleteBuffers_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDeleteBuffers((buffers.remaining()), buffers, buffers.position(), function_pointer);
 	}
-	private static native void nglDeleteBuffers(int n, IntBuffer buffers, int buffers_position);
+	private static native void nglDeleteBuffers(int n, IntBuffer buffers, int buffers_position, long function_pointer);
 
 	public static void glBindBuffer(int target, int buffer) {
 		BufferObjectTracker.bindBuffer(target, buffer);
-		nglBindBuffer(target, buffer);
+		long function_pointer = GLContext.getCapabilities().GL15_glBindBuffer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBindBuffer(target, buffer, function_pointer);
 	}
-	private static native void nglBindBuffer(int target, int buffer);
+	private static native void nglBindBuffer(int target, int buffer, long function_pointer);
 }

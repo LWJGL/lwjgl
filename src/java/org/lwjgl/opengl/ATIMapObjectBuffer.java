@@ -13,7 +13,12 @@ public final class ATIMapObjectBuffer {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glUnmapObjectBufferATI(int buffer);
+	public static void glUnmapObjectBufferATI(int buffer) {
+		long function_pointer = GLContext.getCapabilities().ATI_map_object_buffer_glUnmapObjectBufferATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglUnmapObjectBufferATI(buffer, function_pointer);
+	}
+	private static native void nglUnmapObjectBufferATI(int buffer, long function_pointer);
 
 	/**
 	 * glMapObjectBufferATI maps a gl object buffer to a ByteBuffer. The oldBuffer argument can be
@@ -29,8 +34,10 @@ public final class ATIMapObjectBuffer {
 	public static java.nio.ByteBuffer glMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer) {
 		if (old_buffer != null)
 			BufferChecks.checkDirect(old_buffer);
-		java.nio.ByteBuffer __result = nglMapObjectBufferATI(buffer, result_size, old_buffer);
+		long function_pointer = GLContext.getCapabilities().ATI_map_object_buffer_glMapObjectBufferATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		java.nio.ByteBuffer __result = nglMapObjectBufferATI(buffer, result_size, old_buffer, function_pointer);
 		return __result;
 	}
-	private static native java.nio.ByteBuffer nglMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer);
+	private static native java.nio.ByteBuffer nglMapObjectBufferATI(int buffer, int result_size, java.nio.ByteBuffer old_buffer, long function_pointer);
 }

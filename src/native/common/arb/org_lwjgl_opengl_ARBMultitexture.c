@@ -1,6 +1,7 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
+#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glMultiTexCoord4sARBPROC) (GLenum target, GLshort s, GLshort t, GLshort r, GLshort q);
@@ -18,94 +19,73 @@ typedef void (APIENTRY *glMultiTexCoord1fARBPROC) (GLenum target, GLfloat s);
 typedef void (APIENTRY *glActiveTextureARBPROC) (GLenum texture);
 typedef void (APIENTRY *glClientActiveTextureARBPROC) (GLenum texture);
 
-static glMultiTexCoord4sARBPROC glMultiTexCoord4sARB;
-static glMultiTexCoord4iARBPROC glMultiTexCoord4iARB;
-static glMultiTexCoord4fARBPROC glMultiTexCoord4fARB;
-static glMultiTexCoord3sARBPROC glMultiTexCoord3sARB;
-static glMultiTexCoord3iARBPROC glMultiTexCoord3iARB;
-static glMultiTexCoord3fARBPROC glMultiTexCoord3fARB;
-static glMultiTexCoord2sARBPROC glMultiTexCoord2sARB;
-static glMultiTexCoord2iARBPROC glMultiTexCoord2iARB;
-static glMultiTexCoord2fARBPROC glMultiTexCoord2fARB;
-static glMultiTexCoord1sARBPROC glMultiTexCoord1sARB;
-static glMultiTexCoord1iARBPROC glMultiTexCoord1iARB;
-static glMultiTexCoord1fARBPROC glMultiTexCoord1fARB;
-static glActiveTextureARBPROC glActiveTextureARB;
-static glClientActiveTextureARBPROC glClientActiveTextureARB;
-
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4sARB(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r, jshort q) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord4sARB(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r, jshort q, jlong function_pointer) {
+	glMultiTexCoord4sARBPROC glMultiTexCoord4sARB = (glMultiTexCoord4sARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord4sARB(target, s, t, r, q);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4iARB(JNIEnv *env, jclass clazz, jint target, jint s, jint t, jint r, jint q) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord4iARB(JNIEnv *env, jclass clazz, jint target, jint s, jint t, jint r, jint q, jlong function_pointer) {
+	glMultiTexCoord4iARBPROC glMultiTexCoord4iARB = (glMultiTexCoord4iARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord4iARB(target, s, t, r, q);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4fARB(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r, jfloat q) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord4fARB(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r, jfloat q, jlong function_pointer) {
+	glMultiTexCoord4fARBPROC glMultiTexCoord4fARB = (glMultiTexCoord4fARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord4fARB(target, s, t, r, q);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3sARB(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord3sARB(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jshort r, jlong function_pointer) {
+	glMultiTexCoord3sARBPROC glMultiTexCoord3sARB = (glMultiTexCoord3sARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord3sARB(target, s, t, r);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3iARB(JNIEnv *env, jclass clazz, jint target, jint s, jint t, jint r) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord3iARB(JNIEnv *env, jclass clazz, jint target, jint s, jint t, jint r, jlong function_pointer) {
+	glMultiTexCoord3iARBPROC glMultiTexCoord3iARB = (glMultiTexCoord3iARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord3iARB(target, s, t, r);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3fARB(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord3fARB(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jfloat r, jlong function_pointer) {
+	glMultiTexCoord3fARBPROC glMultiTexCoord3fARB = (glMultiTexCoord3fARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord3fARB(target, s, t, r);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2sARB(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord2sARB(JNIEnv *env, jclass clazz, jint target, jshort s, jshort t, jlong function_pointer) {
+	glMultiTexCoord2sARBPROC glMultiTexCoord2sARB = (glMultiTexCoord2sARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord2sARB(target, s, t);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2iARB(JNIEnv *env, jclass clazz, jint target, jint s, jint t) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord2iARB(JNIEnv *env, jclass clazz, jint target, jint s, jint t, jlong function_pointer) {
+	glMultiTexCoord2iARBPROC glMultiTexCoord2iARB = (glMultiTexCoord2iARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord2iARB(target, s, t);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2fARB(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord2fARB(JNIEnv *env, jclass clazz, jint target, jfloat s, jfloat t, jlong function_pointer) {
+	glMultiTexCoord2fARBPROC glMultiTexCoord2fARB = (glMultiTexCoord2fARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord2fARB(target, s, t);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1sARB(JNIEnv *env, jclass clazz, jint target, jshort s) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord1sARB(JNIEnv *env, jclass clazz, jint target, jshort s, jlong function_pointer) {
+	glMultiTexCoord1sARBPROC glMultiTexCoord1sARB = (glMultiTexCoord1sARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord1sARB(target, s);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1iARB(JNIEnv *env, jclass clazz, jint target, jint s) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord1iARB(JNIEnv *env, jclass clazz, jint target, jint s, jlong function_pointer) {
+	glMultiTexCoord1iARBPROC glMultiTexCoord1iARB = (glMultiTexCoord1iARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord1iARB(target, s);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1fARB(JNIEnv *env, jclass clazz, jint target, jfloat s) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglMultiTexCoord1fARB(JNIEnv *env, jclass clazz, jint target, jfloat s, jlong function_pointer) {
+	glMultiTexCoord1fARBPROC glMultiTexCoord1fARB = (glMultiTexCoord1fARBPROC)((intptr_t)function_pointer);
 	glMultiTexCoord1fARB(target, s);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glActiveTextureARB(JNIEnv *env, jclass clazz, jint texture) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglActiveTextureARB(JNIEnv *env, jclass clazz, jint texture, jlong function_pointer) {
+	glActiveTextureARBPROC glActiveTextureARB = (glActiveTextureARBPROC)((intptr_t)function_pointer);
 	glActiveTextureARB(texture);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_glClientActiveTextureARB(JNIEnv *env, jclass clazz, jint texture) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_nglClientActiveTextureARB(JNIEnv *env, jclass clazz, jint texture, jlong function_pointer) {
+	glClientActiveTextureARBPROC glClientActiveTextureARB = (glClientActiveTextureARBPROC)((intptr_t)function_pointer);
 	glClientActiveTextureARB(texture);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultitexture_initNativeStubs(JNIEnv *env, jclass clazz) {
-	JavaMethodAndExtFunction functions[] = {
-		{"glMultiTexCoord4sARB", "(ISSSS)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4sARB, "glMultiTexCoord4sARB", (void *)&glMultiTexCoord4sARB},
-		{"glMultiTexCoord4iARB", "(IIIII)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4iARB, "glMultiTexCoord4iARB", (void *)&glMultiTexCoord4iARB},
-		{"glMultiTexCoord4fARB", "(IFFFF)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord4fARB, "glMultiTexCoord4fARB", (void *)&glMultiTexCoord4fARB},
-		{"glMultiTexCoord3sARB", "(ISSS)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3sARB, "glMultiTexCoord3sARB", (void *)&glMultiTexCoord3sARB},
-		{"glMultiTexCoord3iARB", "(IIII)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3iARB, "glMultiTexCoord3iARB", (void *)&glMultiTexCoord3iARB},
-		{"glMultiTexCoord3fARB", "(IFFF)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord3fARB, "glMultiTexCoord3fARB", (void *)&glMultiTexCoord3fARB},
-		{"glMultiTexCoord2sARB", "(ISS)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2sARB, "glMultiTexCoord2sARB", (void *)&glMultiTexCoord2sARB},
-		{"glMultiTexCoord2iARB", "(III)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2iARB, "glMultiTexCoord2iARB", (void *)&glMultiTexCoord2iARB},
-		{"glMultiTexCoord2fARB", "(IFF)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord2fARB, "glMultiTexCoord2fARB", (void *)&glMultiTexCoord2fARB},
-		{"glMultiTexCoord1sARB", "(IS)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1sARB, "glMultiTexCoord1sARB", (void *)&glMultiTexCoord1sARB},
-		{"glMultiTexCoord1iARB", "(II)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1iARB, "glMultiTexCoord1iARB", (void *)&glMultiTexCoord1iARB},
-		{"glMultiTexCoord1fARB", "(IF)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glMultiTexCoord1fARB, "glMultiTexCoord1fARB", (void *)&glMultiTexCoord1fARB},
-		{"glActiveTextureARB", "(I)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glActiveTextureARB, "glActiveTextureARB", (void *)&glActiveTextureARB},
-		{"glClientActiveTextureARB", "(I)V", (void *)&Java_org_lwjgl_opengl_ARBMultitexture_glClientActiveTextureARB, "glClientActiveTextureARB", (void *)&glClientActiveTextureARB}
-	};
-	int num_functions = NUMFUNCTIONS(functions);
-	extgl_InitializeClass(env, clazz, num_functions, functions);
-}

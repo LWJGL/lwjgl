@@ -53,11 +53,11 @@ public class NativeMethodStubsGenerator {
 	private static final String BUFFER_ADDRESS_POSTFIX = "_address";
 	public static final String BUFFER_POSITION_POSTFIX = "_position";
 
-	public static void generateNativeMethodStubs(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks) {
+	public static void generateNativeMethodStubs(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks, boolean context_specific) {
 		for (MethodDeclaration method : d.getMethods()) {
-			generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.NORMAL, generate_error_checks);
+			generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.NORMAL, generate_error_checks, context_specific);
 			if (Utils.hasMethodBufferObjectParameter(method))
-				generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.BUFFEROBJECT, generate_error_checks);
+				generateMethodStub(env, type_map, writer, Utils.getQualifiedClassName(d), method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
 		}
 	}
 
@@ -80,12 +80,16 @@ public class NativeMethodStubsGenerator {
 		}
 	}
 
-	private static void generateMethodStub(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, String interface_name, MethodDeclaration method, Mode mode, boolean generate_error_checks) {
+	private static void generateMethodStub(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, String interface_name, MethodDeclaration method, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		TypeMirror result_type = Utils.getMethodReturnType(method);
 		JNITypeTranslator translator = new JNITypeTranslator();
 		result_type.accept(translator);
-		writer.print("static " + translator.getSignature() + " JNICALL ");
-		writer.print(Utils.getQualifiedNativeMethodName(interface_name, method, generate_error_checks));
+		if (!context_specific)
+			writer.print("static ");
+		else
+			writer.print("JNIEXPORT ");
+		writer.print(translator.getSignature() + " JNICALL ");
+		writer.print(Utils.getQualifiedNativeMethodName(interface_name, method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		writer.print("(JNIEnv *env, jclass clazz");
@@ -95,8 +99,17 @@ public class NativeMethodStubsGenerator {
 			if (method.getAnnotation(CachedResult.class) != null)
 				writer.print(", jobject " + Utils.CACHED_BUFFER_NAME);
 		}
+		if (context_specific) {
+			writer.print(", jlong " + Utils.FUNCTION_POINTER_VAR_NAME);
+		}
 		writer.println(") {");
 		generateBufferParameterAddresses(type_map, writer, method, mode);
+		if (context_specific) {
+			String typedef_name = Utils.getTypedefName(method);
+			writer.print("\t" + typedef_name + " " + method.getSimpleName());
+			writer.print(" = (" + typedef_name + ")((intptr_t)");
+			writer.println(Utils.FUNCTION_POINTER_VAR_NAME + ");");
+		}
 		writer.print("\t");
 		if (!result_type.equals(env.getTypeUtils().getVoidType())) {
 			Declaration return_declaration;
@@ -131,9 +144,11 @@ public class NativeMethodStubsGenerator {
 				writer.print("NewStringNative(env, ");
 			writer.print(Utils.RESULT_VAR_NAME);
 			if (Buffer.class.isAssignableFrom(java_result_type)) {
-				Utils.printExtraCallArguments(writer, method);
-				writer.print(")");
-			} else if (String.class.equals(java_result_type))
+				writer.print(", ");
+				Utils.printExtraCallArguments(writer, method, Utils.RESULT_SIZE_NAME);
+			}
+			if (Buffer.class.isAssignableFrom(java_result_type) ||
+				String.class.equals(java_result_type))
 				writer.print(")");
 			writer.println(";");
 		}

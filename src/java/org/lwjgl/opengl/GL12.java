@@ -50,85 +50,118 @@ public final class GL12 {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height);
+	public static void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) {
+		long function_pointer = GLContext.getCapabilities().GL12_glCopyTexSubImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height, function_pointer);
+	}
+	private static native void nglCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height, long function_pointer);
 
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ShortBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, depth));
-		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 1);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexSubImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 1, function_pointer);
 	}
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, IntBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, depth));
-		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexSubImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, FloatBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, depth));
-		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexSubImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ByteBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, depth));
-		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position());
+		long function_pointer = GLContext.getCapabilities().GL12_glTexSubImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position(), function_pointer);
 	}
-	private static native void nglTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels, int pixels_position);
+	private static native void nglTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int pixels_buffer_offset) {
 		GLBufferChecks.ensureUnpackPBOenabled();
-		nglTexSubImage3DBO(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels_buffer_offset);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexSubImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexSubImage3DBO(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels_buffer_offset, function_pointer);
 	}
-	private static native void nglTexSubImage3DBO(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int pixels_buffer_offset);
+	private static native void nglTexSubImage3DBO(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, int pixels_buffer_offset, long function_pointer);
 
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ShortBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		if (pixels != null)
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border));
-		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 1 : 0);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 1 : 0, function_pointer);
 	}
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, IntBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		if (pixels != null)
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border));
-		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0, function_pointer);
 	}
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, FloatBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		if (pixels != null)
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border));
-		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0, function_pointer);
 	}
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ByteBuffer pixels) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		if (pixels != null)
 			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border));
-		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() : 0);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels != null ? pixels.position() : 0, function_pointer);
 	}
-	private static native void nglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, Buffer pixels, int pixels_position);
+	private static native void nglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int pixels_buffer_offset) {
 		GLBufferChecks.ensureUnpackPBOenabled();
-		nglTexImage3DBO(target, level, internalFormat, width, height, depth, border, format, type, pixels_buffer_offset);
+		long function_pointer = GLContext.getCapabilities().GL12_glTexImage3D_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexImage3DBO(target, level, internalFormat, width, height, depth, border, format, type, pixels_buffer_offset, function_pointer);
 	}
-	private static native void nglTexImage3DBO(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int pixels_buffer_offset);
+	private static native void nglTexImage3DBO(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, int pixels_buffer_offset, long function_pointer);
 
 	public static void glDrawRangeElements(int mode, int start, int end, IntBuffer indices) {
 		GLBufferChecks.ensureElementVBOdisabled();
 		BufferChecks.checkDirect(indices);
-		nglDrawRangeElements(mode, start, end, (indices.remaining()), GL11.GL_UNSIGNED_INT, indices, indices.position() << 2);
+		long function_pointer = GLContext.getCapabilities().GL12_glDrawRangeElements_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDrawRangeElements(mode, start, end, (indices.remaining()), GL11.GL_UNSIGNED_INT, indices, indices.position() << 2, function_pointer);
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, ShortBuffer indices) {
 		GLBufferChecks.ensureElementVBOdisabled();
 		BufferChecks.checkDirect(indices);
-		nglDrawRangeElements(mode, start, end, (indices.remaining()), GL11.GL_UNSIGNED_SHORT, indices, indices.position() << 1);
+		long function_pointer = GLContext.getCapabilities().GL12_glDrawRangeElements_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDrawRangeElements(mode, start, end, (indices.remaining()), GL11.GL_UNSIGNED_SHORT, indices, indices.position() << 1, function_pointer);
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, ByteBuffer indices) {
 		GLBufferChecks.ensureElementVBOdisabled();
 		BufferChecks.checkDirect(indices);
-		nglDrawRangeElements(mode, start, end, (indices.remaining()), GL11.GL_UNSIGNED_BYTE, indices, indices.position());
+		long function_pointer = GLContext.getCapabilities().GL12_glDrawRangeElements_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDrawRangeElements(mode, start, end, (indices.remaining()), GL11.GL_UNSIGNED_BYTE, indices, indices.position(), function_pointer);
 	}
-	private static native void nglDrawRangeElements(int mode, int start, int end, int count, int type, Buffer indices, int indices_position);
+	private static native void nglDrawRangeElements(int mode, int start, int end, int count, int type, Buffer indices, int indices_position, long function_pointer);
 	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, int indices_buffer_offset) {
 		GLBufferChecks.ensureElementVBOenabled();
-		nglDrawRangeElementsBO(mode, start, end, count, type, indices_buffer_offset);
+		long function_pointer = GLContext.getCapabilities().GL12_glDrawRangeElements_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDrawRangeElementsBO(mode, start, end, count, type, indices_buffer_offset, function_pointer);
 	}
-	private static native void nglDrawRangeElementsBO(int mode, int start, int end, int count, int type, int indices_buffer_offset);
+	private static native void nglDrawRangeElementsBO(int mode, int start, int end, int count, int type, int indices_buffer_offset, long function_pointer);
 }

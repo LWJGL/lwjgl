@@ -1,20 +1,13 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
+#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glActiveStencilFaceEXTPROC) (GLenum face);
 
-static glActiveStencilFaceEXTPROC glActiveStencilFaceEXT;
-
-static void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT(JNIEnv *env, jclass clazz, jint face) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_nglActiveStencilFaceEXT(JNIEnv *env, jclass clazz, jint face, jlong function_pointer) {
+	glActiveStencilFaceEXTPROC glActiveStencilFaceEXT = (glActiveStencilFaceEXTPROC)((intptr_t)function_pointer);
 	glActiveStencilFaceEXT(face);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_initNativeStubs(JNIEnv *env, jclass clazz) {
-	JavaMethodAndExtFunction functions[] = {
-		{"glActiveStencilFaceEXT", "(I)V", (void *)&Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT, "glActiveStencilFaceEXT", (void *)&glActiveStencilFaceEXT}
-	};
-	int num_functions = NUMFUNCTIONS(functions);
-	extgl_InitializeClass(env, clazz, num_functions, functions);
-}

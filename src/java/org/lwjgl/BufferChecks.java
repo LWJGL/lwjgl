@@ -59,6 +59,15 @@ public class BufferChecks {
 	private static final int DEFAULT_BUFFER_SIZE = 4;
 
 	/**
+	 * Helper methods to ensure a function pointer is not-null (0)
+	 */
+	public static void checkFunctionAddress(long pointer) {
+		if (pointer == 0) {
+			throw new IllegalStateException("Function is unsupported");
+		}
+	}
+
+	/**
 	 * Helper methods to ensure a ByteBuffer is null-terminated
 	 */
 	public static void checkNullTerminated(ByteBuffer buf) {

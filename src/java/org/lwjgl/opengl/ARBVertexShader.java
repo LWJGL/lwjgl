@@ -42,10 +42,12 @@ public final class ARBVertexShader {
 	public static int glGetAttribLocationARB(int programObj, ByteBuffer name) {
 		BufferChecks.checkDirect(name);
 		BufferChecks.checkNullTerminated(name);
-		int __result = nglGetAttribLocationARB(programObj, name, name.position());
+		long function_pointer = GLContext.getCapabilities().ARB_vertex_shader_glGetAttribLocationARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		int __result = nglGetAttribLocationARB(programObj, name, name.position(), function_pointer);
 		return __result;
 	}
-	private static native int nglGetAttribLocationARB(int programObj, ByteBuffer name, int name_position);
+	private static native int nglGetAttribLocationARB(int programObj, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glGetActiveAttribARB(int programObj, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
 		if (length != null)
@@ -53,14 +55,18 @@ public final class ARBVertexShader {
 		BufferChecks.checkBuffer(size, 1);
 		BufferChecks.checkBuffer(type, 1);
 		BufferChecks.checkDirect(name);
-		nglGetActiveAttribARB(programObj, index, (name.remaining()), length, length != null ? length.position() : 0, size, size.position(), type, type.position(), name, name.position());
+		long function_pointer = GLContext.getCapabilities().ARB_vertex_shader_glGetActiveAttribARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetActiveAttribARB(programObj, index, (name.remaining()), length, length != null ? length.position() : 0, size, size.position(), type, type.position(), name, name.position(), function_pointer);
 	}
-	private static native void nglGetActiveAttribARB(int programObj, int index, int maxLength, IntBuffer length, int length_position, IntBuffer size, int size_position, IntBuffer type, int type_position, ByteBuffer name, int name_position);
+	private static native void nglGetActiveAttribARB(int programObj, int index, int maxLength, IntBuffer length, int length_position, IntBuffer size, int size_position, IntBuffer type, int type_position, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glBindAttribLocationARB(int programObj, int index, ByteBuffer name) {
 		BufferChecks.checkDirect(name);
 		BufferChecks.checkNullTerminated(name);
-		nglBindAttribLocationARB(programObj, index, name, name.position());
+		long function_pointer = GLContext.getCapabilities().ARB_vertex_shader_glBindAttribLocationARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBindAttribLocationARB(programObj, index, name, name.position(), function_pointer);
 	}
-	private static native void nglBindAttribLocationARB(int programObj, int index, ByteBuffer name, int name_position);
+	private static native void nglBindAttribLocationARB(int programObj, int index, ByteBuffer name, int name_position, long function_pointer);
 }

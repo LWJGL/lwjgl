@@ -57,11 +57,13 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	private final AnnotationProcessorEnvironment env;
 	private final TypeMap type_map;
 	private final boolean generate_error_checks;
+	private final boolean context_specific;
 
-	public GeneratorVisitor(AnnotationProcessorEnvironment env, TypeMap type_map, boolean generate_error_checks) {
+	public GeneratorVisitor(AnnotationProcessorEnvironment env, TypeMap type_map, boolean generate_error_checks, boolean context_specific) {
 		this.env = env;
 		this.type_map = type_map;
 		this.generate_error_checks = generate_error_checks;
+		this.context_specific = context_specific;
 	}
 
 	private void validateMethods(InterfaceDeclaration d) {
@@ -153,7 +155,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 	}
 
 	private static void generateMethodNativePointers(PrintWriter writer, MethodDeclaration method) {
-		writer.println("static " + method.getSimpleName() + TypedefsGenerator.TYPEDEF_POSTFIX + " " + method.getSimpleName() + ";");
+		writer.println("static " + Utils.getTypedefName(method) + " " + method.getSimpleName() + ";");
 	}
 
 	private void generateJavaSource(InterfaceDeclaration d) throws IOException {
@@ -190,7 +192,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		}
 		if (d.getMethods().size() > 0)
 			java_writer.println("\tstatic native void " + Utils.STUB_INITIALIZER_NAME + "() throws LWJGLException;");
-		JavaMethodsGenerator.generateMethodsJava(env, type_map, java_writer, d, generate_error_checks);
+		JavaMethodsGenerator.generateMethodsJava(env, type_map, java_writer, d, generate_error_checks, context_specific);
 		java_writer.println("}");
 		java_writer.close();
 		String qualified_interface_name = Utils.getQualifiedClassName(d);
@@ -204,23 +206,29 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		native_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 		native_writer.println();
 		native_writer.println("#include <jni.h>");
+		if (context_specific)
+			native_writer.println("#include <inttypes.h>");
 		type_map.printNativeIncludes(native_writer);
 		native_writer.println();
 		TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, d.getMethods());
 		native_writer.println();
-		generateMethodsNativePointers(native_writer, d.getMethods());
-		native_writer.println();
-		NativeMethodStubsGenerator.generateNativeMethodStubs(env, type_map, native_writer, d, generate_error_checks);
-		native_writer.print("JNIEXPORT void JNICALL " + Utils.getQualifiedNativeMethodName(qualified_interface_name, Utils.STUB_INITIALIZER_NAME));
-		native_writer.println("(JNIEnv *env, jclass clazz) {");
-		native_writer.println("\tJavaMethodAndExtFunction functions[] = {");
-		RegisterStubsGenerator.generateMethodsNativeStubBind(native_writer, d, generate_error_checks);
-		native_writer.println("\t};");
-		native_writer.println("\tint num_functions = NUMFUNCTIONS(functions);");
-		native_writer.print("\t");
-		native_writer.print(type_map.getRegisterNativesFunctionName());
-		native_writer.println("(env, clazz, num_functions, functions);");
-		native_writer.println("}");
+		if (!context_specific) {
+			generateMethodsNativePointers(native_writer, d.getMethods());
+			native_writer.println();
+		}
+		NativeMethodStubsGenerator.generateNativeMethodStubs(env, type_map, native_writer, d, generate_error_checks, context_specific);
+		if (!context_specific) {
+			native_writer.print("JNIEXPORT void JNICALL " + Utils.getQualifiedNativeMethodName(qualified_interface_name, Utils.STUB_INITIALIZER_NAME));
+			native_writer.println("(JNIEnv *env, jclass clazz) {");
+			native_writer.println("\tJavaMethodAndExtFunction functions[] = {");
+			RegisterStubsGenerator.generateMethodsNativeStubBind(native_writer, d, generate_error_checks, context_specific);
+			native_writer.println("\t};");
+			native_writer.println("\tint num_functions = NUMFUNCTIONS(functions);");
+			native_writer.print("\t");
+			native_writer.print(type_map.getRegisterNativesFunctionName());
+			native_writer.println("(env, clazz, num_functions, functions);");
+			native_writer.println("}");
+		}
 		native_writer.close();
 		env.getMessager().printNotice("Generated C source " + qualified_interface_name);
 	}

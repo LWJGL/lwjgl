@@ -37,53 +37,74 @@ public final class NVEvaluators {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glEvalMapsNV(int target, int mode);
+	public static void glEvalMapsNV(int target, int mode) {
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glEvalMapsNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglEvalMapsNV(target, mode, function_pointer);
+	}
+	private static native void nglEvalMapsNV(int target, int mode, long function_pointer);
 
 	public static void glGetMapAttribParameterNV(int target, int index, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetMapAttribParameterivNV(target, index, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glGetMapAttribParameterivNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetMapAttribParameterivNV(target, index, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetMapAttribParameterivNV(int target, int index, int pname, IntBuffer params, int params_position);
+	private static native void nglGetMapAttribParameterivNV(int target, int index, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetMapAttribParameterNV(int target, int index, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetMapAttribParameterfvNV(target, index, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glGetMapAttribParameterfvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetMapAttribParameterfvNV(target, index, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetMapAttribParameterfvNV(int target, int index, int pname, FloatBuffer params, int params_position);
+	private static native void nglGetMapAttribParameterfvNV(int target, int index, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetMapParameterNV(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetMapParameterivNV(target, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glGetMapParameterivNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetMapParameterivNV(target, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetMapParameterivNV(int target, int pname, IntBuffer params, int params_position);
+	private static native void nglGetMapParameterivNV(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetMapParameterNV(int target, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetMapParameterfvNV(target, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glGetMapParameterfvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetMapParameterfvNV(target, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetMapParameterfvNV(int target, int pname, FloatBuffer params, int params_position);
+	private static native void nglGetMapParameterfvNV(int target, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glMapParameterNV(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglMapParameterivNV(target, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glMapParameterivNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMapParameterivNV(target, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglMapParameterivNV(int target, int pname, IntBuffer params, int params_position);
+	private static native void nglMapParameterivNV(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glMapParameterNV(int target, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglMapParameterfvNV(target, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glMapParameterfvNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMapParameterfvNV(target, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglMapParameterfvNV(int target, int pname, FloatBuffer params, int params_position);
+	private static native void nglMapParameterfvNV(int target, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, FloatBuffer pPoints) {
 		BufferChecks.checkDirect(pPoints);
-		nglMapControlPointsNV(target, index, type, ustride, vstride, uorder, vorder, packed, pPoints, pPoints.position() << 2);
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glMapControlPointsNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMapControlPointsNV(target, index, type, ustride, vstride, uorder, vorder, packed, pPoints, pPoints.position() << 2, function_pointer);
 	}
-	private static native void nglMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, Buffer pPoints, int pPoints_position);
+	private static native void nglMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, Buffer pPoints, int pPoints_position, long function_pointer);
 
 	public static void glGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, FloatBuffer pPoints) {
 		BufferChecks.checkDirect(pPoints);
-		nglGetMapControlPointsNV(target, index, type, ustride, vstride, packed, pPoints, pPoints.position() << 2);
+		long function_pointer = GLContext.getCapabilities().NV_evaluators_glGetMapControlPointsNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetMapControlPointsNV(target, index, type, ustride, vstride, packed, pPoints, pPoints.position() << 2, function_pointer);
 	}
-	private static native void nglGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, Buffer pPoints, int pPoints_position);
+	private static native void nglGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, Buffer pPoints, int pPoints_position, long function_pointer);
 }

@@ -24,14 +24,23 @@ public final class EXTFogCoord {
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(data);
-		nglFogCoordPointerEXT(GL11.GL_FLOAT, stride, data, data.position() << 2);
+		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoordPointerEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFogCoordPointerEXT(GL11.GL_FLOAT, stride, data, data.position() << 2, function_pointer);
 	}
-	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer data, int data_position);
+	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer data, int data_position, long function_pointer);
 	public static void glFogCoordPointerEXT(int type, int stride, int data_buffer_offset) {
 		GLBufferChecks.ensureArrayVBOenabled();
-		nglFogCoordPointerEXTBO(type, stride, data_buffer_offset);
+		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoordPointerEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFogCoordPointerEXTBO(type, stride, data_buffer_offset, function_pointer);
 	}
-	private static native void nglFogCoordPointerEXTBO(int type, int stride, int data_buffer_offset);
+	private static native void nglFogCoordPointerEXTBO(int type, int stride, int data_buffer_offset, long function_pointer);
 
-	public static native void glFogCoordfEXT(float coord);
+	public static void glFogCoordfEXT(float coord) {
+		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoordfEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFogCoordfEXT(coord, function_pointer);
+	}
+	private static native void nglFogCoordfEXT(float coord, long function_pointer);
 }

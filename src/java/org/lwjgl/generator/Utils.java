@@ -48,6 +48,10 @@ import java.util.*;
 import com.sun.mirror.declaration.*;
 
 public class Utils {
+	public static final String TYPEDEF_POSTFIX = "PROC";
+	public static final String FUNCTION_POINTER_VAR_NAME = "function_pointer";
+	public static final String FUNCTION_POINTER_POSTFIX = "_pointer";
+	public static final String CONTEXT_CAPS_CLASS_NAME = "ContextCapabilities";
 	public static final String STUB_INITIALIZER_NAME = "initNativeStubs";
 	public static final String BUFFER_OBJECT_METHOD_POSTFIX = "BO";
 	public static final String BUFFER_OBJECT_PARAMETER_POSTFIX = "_buffer_offset";
@@ -55,6 +59,14 @@ public class Utils {
 	public static final String RESULT_VAR_NAME = "__result";
 	public static final String CACHED_BUFFER_NAME = "old_buffer";
 	private static final String OVERLOADED_METHOD_PREFIX = "n";
+
+	public static String getTypedefName(MethodDeclaration method) {
+		return method.getSimpleName() + TYPEDEF_POSTFIX;
+	}
+	
+	public static String getFunctionAddressName(InterfaceDeclaration interface_decl, MethodDeclaration method) {
+		return interface_decl.getSimpleName() + "_" + method.getSimpleName() + FUNCTION_POINTER_POSTFIX;
+	}
 
 	public static boolean isFinal(InterfaceDeclaration d) {
 		Extension extension_annotation = d.getAnnotation(Extension.class);
@@ -127,6 +139,17 @@ public class Utils {
 		}
 	}
 
+	public static ParameterDeclaration getAutoResultSizeParameter(MethodDeclaration method) {
+		ParameterDeclaration result = null;
+		for (ParameterDeclaration param : method.getParameters())
+			if (param.getAnnotation(AutoResultSize.class) != null) {
+				if (result != null)
+					throw new RuntimeException(method + " contains multiple AutoResultSize annotations");
+				result = param;
+			}
+		return result;
+	}
+
 	public static AnnotationMirror getParameterAutoAnnotation(ParameterDeclaration param) {
 		for (AnnotationMirror annotation : param.getAnnotationMirrors())
 			if (NativeTypeTranslator.getAnnotation(annotation, Auto.class) != null)
@@ -134,7 +157,7 @@ public class Utils {
 		return null;
 	}
 
-	public static boolean isMethodIndirect(boolean generate_error_checks, MethodDeclaration method) {
+	public static boolean isMethodIndirect(boolean generate_error_checks, boolean context_specific, MethodDeclaration method) {
 		for (ParameterDeclaration param : method.getParameters()) {
 			if (isAddressableType(param.getType()) || getParameterAutoAnnotation(param) != null ||
 					param.getAnnotation(Constant.class) != null)
@@ -142,7 +165,8 @@ public class Utils {
 		}
 		return hasMethodBufferObjectParameter(method) || method.getAnnotation(Code.class) != null ||
 			method.getAnnotation(CachedResult.class) != null ||
-			(generate_error_checks && method.getAnnotation(NoErrorCheck.class) == null);
+			(generate_error_checks && method.getAnnotation(NoErrorCheck.class) == null) ||
+			context_specific;
 	}
 
 	public static String getNativeQualifiedName(String qualified_name) {
@@ -153,8 +177,8 @@ public class Utils {
 		return "Java_" + getNativeQualifiedName(qualified_class_name) + "_" + method_name;
 	}
 
-	public static String getQualifiedNativeMethodName(String qualified_class_name, MethodDeclaration method, boolean generate_error_checks) {
-		String method_name = getSimpleNativeMethodName(method, generate_error_checks);
+	public static String getQualifiedNativeMethodName(String qualified_class_name, MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
+		String method_name = getSimpleNativeMethodName(method, generate_error_checks, context_specific);
 		return getQualifiedNativeMethodName(qualified_class_name, method_name);
 	}
 
@@ -180,8 +204,12 @@ public class Utils {
 		return result_type;
 	}
 
-	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method) {
-		writer.print(", " + RESULT_SIZE_NAME);
+	public static boolean needResultSize(MethodDeclaration method) {
+		return getNIOBufferType(getMethodReturnType(method)) != null && getAutoResultSizeParameter(method) == null;
+	}
+	
+	public static void printExtraCallArguments(PrintWriter writer, MethodDeclaration method, String size_parameter_name) {
+		writer.print(size_parameter_name);
 		if (method.getAnnotation(CachedResult.class) != null) {
 			writer.print(", " + CACHED_BUFFER_NAME);
 		}
@@ -229,9 +257,9 @@ public class Utils {
 			return null;
 	}
 
-	public static String getSimpleNativeMethodName(MethodDeclaration method, boolean generate_error_checks) {
+	public static String getSimpleNativeMethodName(MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
 		String method_name = method.getSimpleName();
-		if (isMethodIndirect(generate_error_checks, method))
+		if (isMethodIndirect(generate_error_checks, context_specific, method))
 			method_name = OVERLOADED_METHOD_PREFIX + method_name;
 		return method_name;
 	}

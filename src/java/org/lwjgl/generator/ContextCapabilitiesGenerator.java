@@ -55,23 +55,19 @@ import java.lang.annotation.Annotation;
  * @version $Revision$
  */
 public class ContextCapabilitiesGenerator {
-	public final static String CONTEXT_CAPS_CLASS_NAME = "ContextCapabilities";
+	private final static String ALL_INIT_METHOD_NAME = "initAllStubs";
+	private final static String POINTER_INITIALIZER_POSTFIX = "_initNativeFunctionAddresses";
 	private final static String CACHED_EXTS_VAR_NAME = "supported_extensions";
 	private final static String EXTENSION_PREFIX = "GL_";
 	private final static String CORE_PREFIX = "Open";
 
 	public static void generateClassPrologue(PrintWriter writer) {
-		writer.println("public class " + CONTEXT_CAPS_CLASS_NAME + " {");
+		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
 	}
 
 	public static void generateInitializerPrologue(PrintWriter writer) {
-//		writer.println("\t\t/*");
-//		writer.println("\t\t * Special case: initialize GL11 unconditionally,");
-//		writer.println("\t\t * and let exceptions abort the constructor");
-//		writer.println("\t\t */");
-
-//		writer.println("\t\tGL11.initNativeStubs();");*/
-		writer.println("\t" + CONTEXT_CAPS_CLASS_NAME + "(Set " + CACHED_EXTS_VAR_NAME + ") {");
+		writer.println("\t" + Utils.CONTEXT_CAPS_CLASS_NAME + "() throws LWJGLException {");
+		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = " + ALL_INIT_METHOD_NAME + "();");
 	}
 
 	private static String translateFieldName(String interface_name) {
@@ -98,9 +94,19 @@ public class ContextCapabilitiesGenerator {
 		writer.println(";");
 	}
 
-	public static void generateInitStubsPrologue(PrintWriter writer) {
-		writer.println("\tstatic Set initAllStubs() throws LWJGLException {");
-		writer.println("\t\torg.lwjgl.opengl.GL11.initNativeStubs();");
+	private static String getAddressesInitializerName(String class_name) {
+		return class_name + POINTER_INITIALIZER_POSTFIX;
+	}
+	
+	public static void generateInitStubsPrologue(PrintWriter writer, boolean context_specific) {
+		writer.println("\tprivate Set " + ALL_INIT_METHOD_NAME + "() throws LWJGLException {");
+		if (!context_specific) {
+			writer.println("\t\torg.lwjgl.opengl.GL11.initNativeStubs();");
+		} else {
+			writer.println("\t\tif (!" + getAddressesInitializerName("GL11") + "())");
+			writer.println("\t\t\tthrow new LWJGLException(\"GL11 not supported\");");
+		}
+		writer.println("\t\tGLContext.setCapabilities(this);");
 		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = GLContext.getSupportedExtensions();");
 	}
 
@@ -116,10 +122,18 @@ public class ContextCapabilitiesGenerator {
 		}
 	}
 
-	public static void generateInitStubs(PrintWriter writer, InterfaceDeclaration d) {
+	public static void generateInitStubs(PrintWriter writer, InterfaceDeclaration d, boolean context_specific) {
 		if (d.getMethods().size() > 0) {
-			writer.print("\t\tGLContext.initNativeStubs(" + Utils.getSimpleClassName(d));
-			writer.println(".class, supported_extensions, \"" + translateFieldName(d.getSimpleName()) + "\");");
+			if (context_specific) {
+				writer.print("\t\tif (" + CACHED_EXTS_VAR_NAME + ".contains(\"");
+				writer.print(translateFieldName(d.getSimpleName()) + "\")");
+				writer.println(" && !" + getAddressesInitializerName(d.getSimpleName()) + "())");
+				writer.print("\t\t\t" + CACHED_EXTS_VAR_NAME + ".remove(\"");
+				writer.println(translateFieldName(d.getSimpleName()) + "\");");
+			} else {
+				writer.print("\t\tGLContext.initNativeStubs(" + Utils.getSimpleClassName(d));
+				writer.println(".class, supported_extensions, \"" + translateFieldName(d.getSimpleName()) + "\");");
+			}
 		}
 	}
 	
@@ -128,12 +142,30 @@ public class ContextCapabilitiesGenerator {
 		writer.println(translateFieldName(d.getSimpleName()) + "\");");
 	}
 
-/*	public static void generateSymbolPointers(PrintWriter writer, InterfaceDeclaration d) {
-		for (MethodDeclaration method : d.getMethods()) {
-			writer.println("\tlong " + d.getSimpleName() + "_" + method.getSimpleName() + ";");
+	public static void generateAddressesInitializers(PrintWriter writer, InterfaceDeclaration d) {
+		Iterator<? extends MethodDeclaration> methods = d.getMethods().iterator();
+		if (methods.hasNext()) {
+			writer.println("\tprivate boolean " + getAddressesInitializerName(d.getSimpleName()) + "() {");
+			writer.println("\t\treturn ");
+			while (methods.hasNext()) {
+				MethodDeclaration method = methods.next();
+				writer.print("\t\t\t(" + Utils.getFunctionAddressName(d, method) + " = GLContext.getFunctionAddress(\"");
+				writer.print(method.getSimpleName() + "\")) != 0");
+				if (methods.hasNext())
+					writer.println(" &&");
+			}
+			writer.println(";");
+			writer.println("\t}");
+			writer.println();
 		}
 	}
-*/
+
+	public static void generateSymbolAddresses(PrintWriter writer, InterfaceDeclaration d) {
+		for (MethodDeclaration method : d.getMethods()) {
+			writer.println("\tlong " + Utils.getFunctionAddressName(d, method) + ";");
+		}
+	}
+
 	public static void generateField(PrintWriter writer, InterfaceDeclaration d) {
 		writer.println("\tpublic final boolean " + translateFieldName(d.getSimpleName()) + ";");
 	}

@@ -72,7 +72,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 	}
 
 	public Collection<String> supportedOptions() {
-		return Collections.emptySet();
+		return unmodifiableCollection(Arrays.asList("-Acontextspecific"));
 	}
 
 	public void roundComplete(RoundCompleteEvent event) {
@@ -96,15 +96,17 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 		}
 
 		public void process() {
+			Map<String, String> options = env.getOptions();
+			boolean context_specific = options.containsKey("-Acontextspecific");
 			try {
-				generateContextCapabilitiesSource();
+				generateContextCapabilitiesSource(context_specific);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 
-		private void generateContextCapabilitiesSource() throws IOException {
-			PrintWriter writer = env.getFiler().createSourceFile("org.lwjgl.opengl." + ContextCapabilitiesGenerator.CONTEXT_CAPS_CLASS_NAME);
+		private void generateContextCapabilitiesSource(boolean context_specific) throws IOException {
+			PrintWriter writer = env.getFiler().createSourceFile("org.lwjgl.opengl." + Utils.CONTEXT_CAPS_CLASS_NAME);
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
 			writer.println("package org.lwjgl.opengl;");
@@ -121,7 +123,16 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 					ContextCapabilitiesGenerator.generateField(writer, interface_decl);
 			}
 			writer.println();
-			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer);
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				ContextCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
+			}
+			writer.println();
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				ContextCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
+			}
+			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				if (!Utils.isFinal(interface_decl))
@@ -132,21 +143,18 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 				String simple_name = interface_decl.getSimpleName();
 				if (simple_name.equals("GL11"))
 					continue;
-				ContextCapabilitiesGenerator.generateInitStubs(writer, interface_decl);
+				ContextCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
 			}
 			ContextCapabilitiesGenerator.generateInitStubsEpilogue(writer);
 			writer.println();
 			writer.println("\tstatic void unloadAllStubs() {");
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				ContextCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
+			if (!context_specific) {
+				for (TypeDeclaration typedecl : interface_decls) {
+					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+					ContextCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
+				}
 			}
 			writer.println("\t}");
-/*			writer.println();
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				ContextCapabilitiesGenerator.generateSymbolPointers(writer, interface_decl);
-			}*/
 			writer.println();
 			ContextCapabilitiesGenerator.generateInitializerPrologue(writer);
 			for (TypeDeclaration typedecl : interface_decls) {

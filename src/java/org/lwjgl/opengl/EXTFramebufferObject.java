@@ -70,61 +70,131 @@ public final class EXTFramebufferObject {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glGenerateMipmapEXT(int target);
+	public static void glGenerateMipmapEXT(int target) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGenerateMipmapEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGenerateMipmapEXT(target, function_pointer);
+	}
+	private static native void nglGenerateMipmapEXT(int target, long function_pointer);
 
 	public static void glGetFramebufferAttachmentParameterEXT(int target, int attachment, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetFramebufferAttachmentParameterivEXT(target, attachment, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGetFramebufferAttachmentParameterivEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetFramebufferAttachmentParameterivEXT(target, attachment, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetFramebufferAttachmentParameterivEXT(int target, int attachment, int pname, IntBuffer params, int params_position);
+	private static native void nglGetFramebufferAttachmentParameterivEXT(int target, int attachment, int pname, IntBuffer params, int params_position, long function_pointer);
 
-	public static native void glFramebufferRenderbufferEXT(int target, int attachment, int renderbuffertarget, int renderbuffer);
+	public static void glFramebufferRenderbufferEXT(int target, int attachment, int renderbuffertarget, int renderbuffer) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glFramebufferRenderbufferEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFramebufferRenderbufferEXT(target, attachment, renderbuffertarget, renderbuffer, function_pointer);
+	}
+	private static native void nglFramebufferRenderbufferEXT(int target, int attachment, int renderbuffertarget, int renderbuffer, long function_pointer);
 
-	public static native void glFramebufferTexture3DEXT(int target, int attachment, int textarget, int texture, int level, int zoffset);
+	public static void glFramebufferTexture3DEXT(int target, int attachment, int textarget, int texture, int level, int zoffset) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glFramebufferTexture3DEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFramebufferTexture3DEXT(target, attachment, textarget, texture, level, zoffset, function_pointer);
+	}
+	private static native void nglFramebufferTexture3DEXT(int target, int attachment, int textarget, int texture, int level, int zoffset, long function_pointer);
 
-	public static native void glFramebufferTexture2DEXT(int target, int attachment, int textarget, int texture, int level);
+	public static void glFramebufferTexture2DEXT(int target, int attachment, int textarget, int texture, int level) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glFramebufferTexture2DEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFramebufferTexture2DEXT(target, attachment, textarget, texture, level, function_pointer);
+	}
+	private static native void nglFramebufferTexture2DEXT(int target, int attachment, int textarget, int texture, int level, long function_pointer);
 
-	public static native void glFramebufferTexture1DEXT(int target, int attachment, int textarget, int texture, int level);
+	public static void glFramebufferTexture1DEXT(int target, int attachment, int textarget, int texture, int level) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glFramebufferTexture1DEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFramebufferTexture1DEXT(target, attachment, textarget, texture, level, function_pointer);
+	}
+	private static native void nglFramebufferTexture1DEXT(int target, int attachment, int textarget, int texture, int level, long function_pointer);
 
-	public static native int glCheckFramebufferStatusEXT(int target);
+	public static int glCheckFramebufferStatusEXT(int target) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glCheckFramebufferStatusEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		int __result = nglCheckFramebufferStatusEXT(target, function_pointer);
+		return __result;
+	}
+	private static native int nglCheckFramebufferStatusEXT(int target, long function_pointer);
 
 	public static void glGenFramebuffersEXT(IntBuffer framebuffers) {
 		BufferChecks.checkDirect(framebuffers);
-		nglGenFramebuffersEXT((framebuffers.remaining()), framebuffers, framebuffers.position());
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGenFramebuffersEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGenFramebuffersEXT((framebuffers.remaining()), framebuffers, framebuffers.position(), function_pointer);
 	}
-	private static native void nglGenFramebuffersEXT(int n, IntBuffer framebuffers, int framebuffers_position);
+	private static native void nglGenFramebuffersEXT(int n, IntBuffer framebuffers, int framebuffers_position, long function_pointer);
 
 	public static void glDeleteFramebuffersEXT(IntBuffer framebuffers) {
 		BufferChecks.checkDirect(framebuffers);
-		nglDeleteFramebuffersEXT((framebuffers.remaining()), framebuffers, framebuffers.position());
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glDeleteFramebuffersEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDeleteFramebuffersEXT((framebuffers.remaining()), framebuffers, framebuffers.position(), function_pointer);
 	}
-	private static native void nglDeleteFramebuffersEXT(int n, IntBuffer framebuffers, int framebuffers_position);
+	private static native void nglDeleteFramebuffersEXT(int n, IntBuffer framebuffers, int framebuffers_position, long function_pointer);
 
-	public static native void glBindFramebufferEXT(int target, int framebuffer);
+	public static void glBindFramebufferEXT(int target, int framebuffer) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glBindFramebufferEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBindFramebufferEXT(target, framebuffer, function_pointer);
+	}
+	private static native void nglBindFramebufferEXT(int target, int framebuffer, long function_pointer);
 
-	public static native boolean glIsFramebufferEXT(int framebuffer);
+	public static boolean glIsFramebufferEXT(int framebuffer) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glIsFramebufferEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		boolean __result = nglIsFramebufferEXT(framebuffer, function_pointer);
+		return __result;
+	}
+	private static native boolean nglIsFramebufferEXT(int framebuffer, long function_pointer);
 
 	public static void glGetRenderbufferParameterEXT(int target, int pname, IntBuffer params) {
 		BufferChecks.checkBuffer(params, 4);
-		nglGetRenderbufferParameterivEXT(target, pname, params, params.position());
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGetRenderbufferParameterivEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetRenderbufferParameterivEXT(target, pname, params, params.position(), function_pointer);
 	}
-	private static native void nglGetRenderbufferParameterivEXT(int target, int pname, IntBuffer params, int params_position);
+	private static native void nglGetRenderbufferParameterivEXT(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
-	public static native void glRenderbufferStorageEXT(int target, int internalformat, int width, int height);
+	public static void glRenderbufferStorageEXT(int target, int internalformat, int width, int height) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glRenderbufferStorageEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglRenderbufferStorageEXT(target, internalformat, width, height, function_pointer);
+	}
+	private static native void nglRenderbufferStorageEXT(int target, int internalformat, int width, int height, long function_pointer);
 
 	public static void glGenRenderbuffersEXT(IntBuffer renderbuffers) {
 		BufferChecks.checkDirect(renderbuffers);
-		nglGenRenderbuffersEXT((renderbuffers.remaining()), renderbuffers, renderbuffers.position());
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGenRenderbuffersEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGenRenderbuffersEXT((renderbuffers.remaining()), renderbuffers, renderbuffers.position(), function_pointer);
 	}
-	private static native void nglGenRenderbuffersEXT(int n, IntBuffer renderbuffers, int renderbuffers_position);
+	private static native void nglGenRenderbuffersEXT(int n, IntBuffer renderbuffers, int renderbuffers_position, long function_pointer);
 
 	public static void glDeleteRenderbuffersEXT(IntBuffer renderbuffers) {
 		BufferChecks.checkDirect(renderbuffers);
-		nglDeleteRenderbuffersEXT((renderbuffers.remaining()), renderbuffers, renderbuffers.position());
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glDeleteRenderbuffersEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDeleteRenderbuffersEXT((renderbuffers.remaining()), renderbuffers, renderbuffers.position(), function_pointer);
 	}
-	private static native void nglDeleteRenderbuffersEXT(int n, IntBuffer renderbuffers, int renderbuffers_position);
+	private static native void nglDeleteRenderbuffersEXT(int n, IntBuffer renderbuffers, int renderbuffers_position, long function_pointer);
 
-	public static native void glBindRenderbufferEXT(int target, int renderbuffer);
+	public static void glBindRenderbufferEXT(int target, int renderbuffer) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glBindRenderbufferEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBindRenderbufferEXT(target, renderbuffer, function_pointer);
+	}
+	private static native void nglBindRenderbufferEXT(int target, int renderbuffer, long function_pointer);
 
-	public static native boolean glIsRenderbufferEXT(int renderbuffer);
+	public static boolean glIsRenderbufferEXT(int renderbuffer) {
+		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glIsRenderbufferEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		boolean __result = nglIsRenderbufferEXT(renderbuffer, function_pointer);
+		return __result;
+	}
+	private static native boolean nglIsRenderbufferEXT(int renderbuffer, long function_pointer);
 }

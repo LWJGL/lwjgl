@@ -193,6 +193,7 @@ extern void extgl_Close(void);
 extern void extgl_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions);
 extern bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *name);
+extern void *extgl_GetProcAddress(const char *name);
 
 #ifdef __cplusplus
 }

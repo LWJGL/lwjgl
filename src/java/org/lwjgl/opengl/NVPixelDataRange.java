@@ -19,23 +19,36 @@ public final class NVPixelDataRange {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glFlushPixelDataRangeNV(int target);
-
-	public static void glPixelDataRangeNV(int target, ByteBuffer data) {
-		BufferChecks.checkDirect(data);
-		nglPixelDataRangeNV(target, (data.remaining()), data, data.position());
+	public static void glFlushPixelDataRangeNV(int target) {
+		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glFlushPixelDataRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglFlushPixelDataRangeNV(target, function_pointer);
 	}
+	private static native void nglFlushPixelDataRangeNV(int target, long function_pointer);
+
 	public static void glPixelDataRangeNV(int target, IntBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglPixelDataRangeNV(target, (data.remaining() << 2), data, data.position() << 2);
+		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glPixelDataRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPixelDataRangeNV(target, (data.remaining() << 2), data, data.position() << 2, function_pointer);
 	}
-	public static void glPixelDataRangeNV(int target, FloatBuffer data) {
+	public static void glPixelDataRangeNV(int target, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglPixelDataRangeNV(target, (data.remaining() << 2), data, data.position() << 2);
+		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glPixelDataRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPixelDataRangeNV(target, (data.remaining()), data, data.position(), function_pointer);
 	}
 	public static void glPixelDataRangeNV(int target, ShortBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglPixelDataRangeNV(target, (data.remaining() << 1), data, data.position() << 1);
+		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glPixelDataRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPixelDataRangeNV(target, (data.remaining() << 1), data, data.position() << 1, function_pointer);
 	}
-	private static native void nglPixelDataRangeNV(int target, int length, Buffer data, int data_position);
+	public static void glPixelDataRangeNV(int target, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
+		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glPixelDataRangeNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPixelDataRangeNV(target, (data.remaining() << 2), data, data.position() << 2, function_pointer);
+	}
+	private static native void nglPixelDataRangeNV(int target, int length, Buffer data, int data_position, long function_pointer);
 }

@@ -23,25 +23,33 @@ public final class ATIEnvmapBumpmap {
 
 	public static void glGetTexBumpParameterATI(int pname, IntBuffer param) {
 		BufferChecks.checkBuffer(param, 4);
-		nglGetTexBumpParameterivATI(pname, param, param.position());
+		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glGetTexBumpParameterivATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetTexBumpParameterivATI(pname, param, param.position(), function_pointer);
 	}
-	private static native void nglGetTexBumpParameterivATI(int pname, IntBuffer param, int param_position);
+	private static native void nglGetTexBumpParameterivATI(int pname, IntBuffer param, int param_position, long function_pointer);
 
 	public static void glGetTexBumpParameterATI(int pname, FloatBuffer param) {
 		BufferChecks.checkBuffer(param, 4);
-		nglGetTexBumpParameterfvATI(pname, param, param.position());
+		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glGetTexBumpParameterfvATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglGetTexBumpParameterfvATI(pname, param, param.position(), function_pointer);
 	}
-	private static native void nglGetTexBumpParameterfvATI(int pname, FloatBuffer param, int param_position);
+	private static native void nglGetTexBumpParameterfvATI(int pname, FloatBuffer param, int param_position, long function_pointer);
 
 	public static void glTexBumpParameterATI(int pname, IntBuffer param) {
 		BufferChecks.checkBuffer(param, 4);
-		nglTexBumpParameterivATI(pname, param, param.position());
+		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glTexBumpParameterivATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexBumpParameterivATI(pname, param, param.position(), function_pointer);
 	}
-	private static native void nglTexBumpParameterivATI(int pname, IntBuffer param, int param_position);
+	private static native void nglTexBumpParameterivATI(int pname, IntBuffer param, int param_position, long function_pointer);
 
 	public static void glTexBumpParameterATI(int pname, FloatBuffer param) {
 		BufferChecks.checkBuffer(param, 4);
-		nglTexBumpParameterfvATI(pname, param, param.position());
+		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glTexBumpParameterfvATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglTexBumpParameterfvATI(pname, param, param.position(), function_pointer);
 	}
-	private static native void nglTexBumpParameterfvATI(int pname, FloatBuffer param, int param_position);
+	private static native void nglTexBumpParameterfvATI(int pname, FloatBuffer param, int param_position, long function_pointer);
 }

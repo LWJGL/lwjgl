@@ -48,7 +48,7 @@ import java.io.*;
 import java.util.*;
 
 public class RegisterStubsGenerator {
-	public static void generateMethodsNativeStubBind(PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks) {
+	public static void generateMethodsNativeStubBind(PrintWriter writer, InterfaceDeclaration d, boolean generate_error_checks, boolean context_specific) {
 		Iterator<? extends MethodDeclaration> it = d.getMethods().iterator();
 		while (it.hasNext()) {
 			MethodDeclaration method = it.next();
@@ -61,9 +61,9 @@ public class RegisterStubsGenerator {
 			for (Platform platform : platforms) {
 				platform.printPrologue(writer);
 				boolean has_buffer_parameter = Utils.hasMethodBufferObjectParameter(method);
-				printMethodNativeStubBind(writer, d, method, platform, Mode.NORMAL, it.hasNext() || has_buffer_parameter, generate_error_checks);
+				printMethodNativeStubBind(writer, d, method, platform, Mode.NORMAL, it.hasNext() || has_buffer_parameter, generate_error_checks, context_specific);
 				if (has_buffer_parameter) {
-					printMethodNativeStubBind(writer, d, method, platform, Mode.BUFFEROBJECT, it.hasNext(), generate_error_checks);
+					printMethodNativeStubBind(writer, d, method, platform, Mode.BUFFEROBJECT, it.hasNext(), generate_error_checks, context_specific);
 				}
 				platform.printEpilogue(writer);
 			}
@@ -100,12 +100,12 @@ public class RegisterStubsGenerator {
 		return signature;
 	}
 
-	private static void printMethodNativeStubBind(PrintWriter writer, InterfaceDeclaration d, MethodDeclaration method, Platform platform, Mode mode, boolean has_more, boolean generate_error_checks) {
-		writer.print("\t\t{\"" + Utils.getSimpleNativeMethodName(method, generate_error_checks));
+	private static void printMethodNativeStubBind(PrintWriter writer, InterfaceDeclaration d, MethodDeclaration method, Platform platform, Mode mode, boolean has_more, boolean generate_error_checks, boolean context_specific) {
+		writer.print("\t\t{\"" + Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		writer.print("\", \"" + getMethodSignature(method, mode) + "\", (void *)&");
-		writer.print(Utils.getQualifiedNativeMethodName(Utils.getQualifiedClassName(d), method, generate_error_checks));
+		writer.print(Utils.getQualifiedNativeMethodName(Utils.getQualifiedClassName(d), method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		String opengl_handle_name = method.getSimpleName().replaceFirst("gl", platform.getPostfix());

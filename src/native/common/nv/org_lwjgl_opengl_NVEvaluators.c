@@ -1,6 +1,7 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
+#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glEvalMapsNVPROC) (GLenum target, GLenum mode);
@@ -13,72 +14,56 @@ typedef void (APIENTRY *glMapParameterfvNVPROC) (GLenum target, GLenum pname, co
 typedef void (APIENTRY *glMapControlPointsNVPROC) (GLenum target, GLuint index, GLenum type, GLsizei ustride, GLsizei vstride, GLint uorder, GLint vorder, GLboolean packed, const GLvoid * pPoints);
 typedef void (APIENTRY *glGetMapControlPointsNVPROC) (GLenum target, GLuint index, GLenum type, GLsizei ustride, GLsizei vstride, GLboolean packed, const GLvoid * pPoints);
 
-static glEvalMapsNVPROC glEvalMapsNV;
-static glGetMapAttribParameterivNVPROC glGetMapAttribParameterivNV;
-static glGetMapAttribParameterfvNVPROC glGetMapAttribParameterfvNV;
-static glGetMapParameterivNVPROC glGetMapParameterivNV;
-static glGetMapParameterfvNVPROC glGetMapParameterfvNV;
-static glMapParameterivNVPROC glMapParameterivNV;
-static glMapParameterfvNVPROC glMapParameterfvNV;
-static glMapControlPointsNVPROC glMapControlPointsNV;
-static glGetMapControlPointsNVPROC glGetMapControlPointsNV;
-
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_glEvalMapsNV(JNIEnv *env, jclass clazz, jint target, jint mode) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglEvalMapsNV(JNIEnv *env, jclass clazz, jint target, jint mode, jlong function_pointer) {
+	glEvalMapsNVPROC glEvalMapsNV = (glEvalMapsNVPROC)((intptr_t)function_pointer);
 	glEvalMapsNV(target, mode);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterivNV(JNIEnv *env, jclass clazz, jint target, jint index, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterivNV(JNIEnv *env, jclass clazz, jint target, jint index, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetMapAttribParameterivNVPROC glGetMapAttribParameterivNV = (glGetMapAttribParameterivNVPROC)((intptr_t)function_pointer);
 	glGetMapAttribParameterivNV(target, index, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint index, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint index, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetMapAttribParameterfvNVPROC glGetMapAttribParameterfvNV = (glGetMapAttribParameterfvNVPROC)((intptr_t)function_pointer);
 	glGetMapAttribParameterfvNV(target, index, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterivNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterivNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	const GLint *params_address = ((const GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetMapParameterivNVPROC glGetMapParameterivNV = (glGetMapParameterivNVPROC)((intptr_t)function_pointer);
 	glGetMapParameterivNV(target, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	const GLfloat *params_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetMapParameterfvNVPROC glGetMapParameterfvNV = (glGetMapParameterfvNVPROC)((intptr_t)function_pointer);
 	glGetMapParameterfvNV(target, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterivNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterivNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	const GLint *params_address = ((const GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glMapParameterivNVPROC glMapParameterivNV = (glMapParameterivNVPROC)((intptr_t)function_pointer);
 	glMapParameterivNV(target, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	const GLfloat *params_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glMapParameterfvNVPROC glMapParameterfvNV = (glMapParameterfvNVPROC)((intptr_t)function_pointer);
 	glMapParameterfvNV(target, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapControlPointsNV(JNIEnv *env, jclass clazz, jint target, jint index, jint type, jint ustride, jint vstride, jint uorder, jint vorder, jboolean packed, jobject pPoints, jint pPoints_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglMapControlPointsNV(JNIEnv *env, jclass clazz, jint target, jint index, jint type, jint ustride, jint vstride, jint uorder, jint vorder, jboolean packed, jobject pPoints, jint pPoints_position, jlong function_pointer) {
 	const GLvoid *pPoints_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pPoints)) + pPoints_position));
+	glMapControlPointsNVPROC glMapControlPointsNV = (glMapControlPointsNVPROC)((intptr_t)function_pointer);
 	glMapControlPointsNV(target, index, type, ustride, vstride, uorder, vorder, packed, pPoints_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapControlPointsNV(JNIEnv *env, jclass clazz, jint target, jint index, jint type, jint ustride, jint vstride, jboolean packed, jobject pPoints, jint pPoints_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_nglGetMapControlPointsNV(JNIEnv *env, jclass clazz, jint target, jint index, jint type, jint ustride, jint vstride, jboolean packed, jobject pPoints, jint pPoints_position, jlong function_pointer) {
 	const GLvoid *pPoints_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pPoints)) + pPoints_position));
+	glGetMapControlPointsNVPROC glGetMapControlPointsNV = (glGetMapControlPointsNVPROC)((intptr_t)function_pointer);
 	glGetMapControlPointsNV(target, index, type, ustride, vstride, packed, pPoints_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVEvaluators_initNativeStubs(JNIEnv *env, jclass clazz) {
-	JavaMethodAndExtFunction functions[] = {
-		{"glEvalMapsNV", "(II)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_glEvalMapsNV, "glEvalMapsNV", (void *)&glEvalMapsNV},
-		{"nglGetMapAttribParameterivNV", "(IIILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterivNV, "glGetMapAttribParameterivNV", (void *)&glGetMapAttribParameterivNV},
-		{"nglGetMapAttribParameterfvNV", "(IIILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglGetMapAttribParameterfvNV, "glGetMapAttribParameterfvNV", (void *)&glGetMapAttribParameterfvNV},
-		{"nglGetMapParameterivNV", "(IILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterivNV, "glGetMapParameterivNV", (void *)&glGetMapParameterivNV},
-		{"nglGetMapParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglGetMapParameterfvNV, "glGetMapParameterfvNV", (void *)&glGetMapParameterfvNV},
-		{"nglMapParameterivNV", "(IILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterivNV, "glMapParameterivNV", (void *)&glMapParameterivNV},
-		{"nglMapParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterfvNV, "glMapParameterfvNV", (void *)&glMapParameterfvNV},
-		{"nglMapControlPointsNV", "(IIIIIIIZLjava/nio/Buffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglMapControlPointsNV, "glMapControlPointsNV", (void *)&glMapControlPointsNV},
-		{"nglGetMapControlPointsNV", "(IIIIIZLjava/nio/Buffer;I)V", (void *)&Java_org_lwjgl_opengl_NVEvaluators_nglGetMapControlPointsNV, "glGetMapControlPointsNV", (void *)&glGetMapControlPointsNV}
-	};
-	int num_functions = NUMFUNCTIONS(functions);
-	extgl_InitializeClass(env, clazz, num_functions, functions);
-}

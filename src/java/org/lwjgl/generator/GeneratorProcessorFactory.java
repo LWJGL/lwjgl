@@ -60,7 +60,7 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 		unmodifiableCollection(Arrays.asList("*"));
 
 	private static final Collection<String> supportedOptions =
-		unmodifiableCollection(Arrays.asList("-Atypemap", "-Ageneratechecks"));
+		unmodifiableCollection(Arrays.asList("-Atypemap", "-Ageneratechecks", "-Acontextspecific"));
 
 	public Collection<String> supportedAnnotationTypes() {
 		return supportedAnnotations;
@@ -93,15 +93,14 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 		public void process() {
 			Map<String, String> options = env.getOptions();
 			String typemap_classname = null;
-			boolean generate_error_checks = false;
+			boolean generate_error_checks = options.containsKey("-Ageneratechecks");
+			boolean context_specific = options.containsKey("-Acontextspecific");
 			for (String k : options.keySet()) {
 				int delimiter = k.indexOf('=');
 				if (delimiter != -1) {
 					if (k.startsWith("-Atypemap")) {
 						typemap_classname = k.substring(delimiter + 1);
 					}
-				} else if ( "-Ageneratechecks".equals(k)) {
-					generate_error_checks = true;
 				}
 			}
 			if (typemap_classname == null)
@@ -109,7 +108,7 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 			try {
 				TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
 				for (TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations()) {
-					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks), NO_OP));
+					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks, context_specific), NO_OP));
 				}
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(e);

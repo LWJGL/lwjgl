@@ -19,7 +19,9 @@ public final class EXTMultiDrawArrays {
 		if (piFirst.remaining() != piCount.remaining()) {
 			throw new IllegalArgumentException("piFirst.remaining() != piCount.remaining()");
 		}
-		nglMultiDrawArraysEXT(mode, piFirst, piFirst.position(), piCount, piCount.position(), (piFirst.remaining()));
+		long function_pointer = GLContext.getCapabilities().EXT_multi_draw_arrays_glMultiDrawArraysEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglMultiDrawArraysEXT(mode, piFirst, piFirst.position(), piCount, piCount.position(), (piFirst.remaining()), function_pointer);
 	}
-	private static native void nglMultiDrawArraysEXT(int mode, IntBuffer piFirst, int piFirst_position, IntBuffer piCount, int piCount_position, int primcount);
+	private static native void nglMultiDrawArraysEXT(int mode, IntBuffer piFirst, int piFirst_position, IntBuffer piCount, int piCount_position, int primcount, long function_pointer);
 }

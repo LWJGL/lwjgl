@@ -1,6 +1,7 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
+#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glVertexAttribs4fvNVPROC) (GLuint index, GLsizei n, const GLfloat * v);
@@ -31,195 +32,161 @@ typedef void (APIENTRY *glGetTrackMatrixivNVPROC) (GLenum target, GLuint address
 typedef void (APIENTRY *glGetProgramParameterfvNVPROC) (GLenum target, GLuint index, GLenum parameterName, GLfloat * params);
 typedef void (APIENTRY *glExecuteProgramNVPROC) (GLenum target, GLuint id, const GLfloat * params);
 
-static glVertexAttribs4fvNVPROC glVertexAttribs4fvNV;
-static glVertexAttribs4svNVPROC glVertexAttribs4svNV;
-static glVertexAttribs3fvNVPROC glVertexAttribs3fvNV;
-static glVertexAttribs3svNVPROC glVertexAttribs3svNV;
-static glVertexAttribs2fvNVPROC glVertexAttribs2fvNV;
-static glVertexAttribs2svNVPROC glVertexAttribs2svNV;
-static glVertexAttribs1fvNVPROC glVertexAttribs1fvNV;
-static glVertexAttribs1svNVPROC glVertexAttribs1svNV;
-static glVertexAttrib4ubNVPROC glVertexAttrib4ubNV;
-static glVertexAttrib4fNVPROC glVertexAttrib4fNV;
-static glVertexAttrib4sNVPROC glVertexAttrib4sNV;
-static glVertexAttrib3fNVPROC glVertexAttrib3fNV;
-static glVertexAttrib3sNVPROC glVertexAttrib3sNV;
-static glVertexAttrib2fNVPROC glVertexAttrib2fNV;
-static glVertexAttrib2sNVPROC glVertexAttrib2sNV;
-static glVertexAttrib1fNVPROC glVertexAttrib1fNV;
-static glVertexAttrib1sNVPROC glVertexAttrib1sNV;
-static glVertexAttribPointerNVPROC glVertexAttribPointerNV;
-static glTrackMatrixNVPROC glTrackMatrixNV;
-static glProgramParameters4fvNVPROC glProgramParameters4fvNV;
-static glProgramParameter4fNVPROC glProgramParameter4fNV;
-static glGetVertexAttribPointervNVPROC glGetVertexAttribPointervNV;
-static glGetVertexAttribivNVPROC glGetVertexAttribivNV;
-static glGetVertexAttribfvNVPROC glGetVertexAttribfvNV;
-static glGetTrackMatrixivNVPROC glGetTrackMatrixivNV;
-static glGetProgramParameterfvNVPROC glGetProgramParameterfvNV;
-static glExecuteProgramNVPROC glExecuteProgramNV;
-
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLfloat *v_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs4fvNVPROC glVertexAttribs4fvNV = (glVertexAttribs4fvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs4fvNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLshort *v_address = ((const GLshort *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs4svNVPROC glVertexAttribs4svNV = (glVertexAttribs4svNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs4svNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLfloat *v_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs3fvNVPROC glVertexAttribs3fvNV = (glVertexAttribs3fvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs3fvNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLshort *v_address = ((const GLshort *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs3svNVPROC glVertexAttribs3svNV = (glVertexAttribs3svNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs3svNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLfloat *v_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs2fvNVPROC glVertexAttribs2fvNV = (glVertexAttribs2fvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs2fvNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLshort *v_address = ((const GLshort *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs2svNVPROC glVertexAttribs2svNV = (glVertexAttribs2svNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs2svNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1fvNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLfloat *v_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs1fvNVPROC glVertexAttribs1fvNV = (glVertexAttribs1fvNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs1fvNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1svNV(JNIEnv *env, jclass clazz, jint index, jint n, jobject v, jint v_position, jlong function_pointer) {
 	const GLshort *v_address = ((const GLshort *)(*env)->GetDirectBufferAddress(env, v)) + v_position;
+	glVertexAttribs1svNVPROC glVertexAttribs1svNV = (glVertexAttribs1svNVPROC)((intptr_t)function_pointer);
 	glVertexAttribs1svNV(index, n, v_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4ubNV(JNIEnv *env, jclass clazz, jint index, jbyte x, jbyte y, jbyte z, jbyte w) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib4ubNV(JNIEnv *env, jclass clazz, jint index, jbyte x, jbyte y, jbyte z, jbyte w, jlong function_pointer) {
+	glVertexAttrib4ubNVPROC glVertexAttrib4ubNV = (glVertexAttrib4ubNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib4ubNV(index, x, y, z, w);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4fNV(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jfloat w) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib4fNV(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jfloat w, jlong function_pointer) {
+	glVertexAttrib4fNVPROC glVertexAttrib4fNV = (glVertexAttrib4fNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib4fNV(index, x, y, z, w);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4sNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib4sNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jshort w, jlong function_pointer) {
+	glVertexAttrib4sNVPROC glVertexAttrib4sNV = (glVertexAttrib4sNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib4sNV(index, x, y, z, w);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3fNV(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib3fNV(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y, jfloat z, jlong function_pointer) {
+	glVertexAttrib3fNVPROC glVertexAttrib3fNV = (glVertexAttrib3fNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib3fNV(index, x, y, z);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3sNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib3sNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jshort z, jlong function_pointer) {
+	glVertexAttrib3sNVPROC glVertexAttrib3sNV = (glVertexAttrib3sNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib3sNV(index, x, y, z);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2fNV(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib2fNV(JNIEnv *env, jclass clazz, jint index, jfloat x, jfloat y, jlong function_pointer) {
+	glVertexAttrib2fNVPROC glVertexAttrib2fNV = (glVertexAttrib2fNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib2fNV(index, x, y);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2sNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib2sNV(JNIEnv *env, jclass clazz, jint index, jshort x, jshort y, jlong function_pointer) {
+	glVertexAttrib2sNVPROC glVertexAttrib2sNV = (glVertexAttrib2sNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib2sNV(index, x, y);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1fNV(JNIEnv *env, jclass clazz, jint index, jfloat x) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib1fNV(JNIEnv *env, jclass clazz, jint index, jfloat x, jlong function_pointer) {
+	glVertexAttrib1fNVPROC glVertexAttrib1fNV = (glVertexAttrib1fNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib1fNV(index, x);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1sNV(JNIEnv *env, jclass clazz, jint index, jshort x) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttrib1sNV(JNIEnv *env, jclass clazz, jint index, jshort x, jlong function_pointer) {
+	glVertexAttrib1sNVPROC glVertexAttrib1sNV = (glVertexAttrib1sNVPROC)((intptr_t)function_pointer);
 	glVertexAttrib1sNV(index, x);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNV(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jint stride, jobject buffer, jint buffer_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNV(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jint stride, jobject buffer, jint buffer_position, jlong function_pointer) {
 	const GLvoid *buffer_address = ((const GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, buffer)) + buffer_position));
+	glVertexAttribPointerNVPROC glVertexAttribPointerNV = (glVertexAttribPointerNVPROC)((intptr_t)function_pointer);
 	glVertexAttribPointerNV(index, size, type, stride, buffer_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNVBO(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jint stride, jint buffer_buffer_offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNVBO(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jint stride, jint buffer_buffer_offset, jlong function_pointer) {
 	const GLvoid *buffer_address = ((const GLvoid *)offsetToPointer(buffer_buffer_offset));
+	glVertexAttribPointerNVPROC glVertexAttribPointerNV = (glVertexAttribPointerNVPROC)((intptr_t)function_pointer);
 	glVertexAttribPointerNV(index, size, type, stride, buffer_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glTrackMatrixNV(JNIEnv *env, jclass clazz, jint target, jint address, jint matrix, jint transform) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglTrackMatrixNV(JNIEnv *env, jclass clazz, jint target, jint address, jint matrix, jint transform, jlong function_pointer) {
+	glTrackMatrixNVPROC glTrackMatrixNV = (glTrackMatrixNVPROC)((intptr_t)function_pointer);
 	glTrackMatrixNV(target, address, matrix, transform);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglProgramParameters4fvNV(JNIEnv *env, jclass clazz, jint target, jint index, jint count, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglProgramParameters4fvNV(JNIEnv *env, jclass clazz, jint target, jint index, jint count, jobject params, jint params_position, jlong function_pointer) {
 	const GLfloat *params_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glProgramParameters4fvNVPROC glProgramParameters4fvNV = (glProgramParameters4fvNVPROC)((intptr_t)function_pointer);
 	glProgramParameters4fvNV(target, index, count, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_glProgramParameter4fNV(JNIEnv *env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglProgramParameter4fNV(JNIEnv *env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w, jlong function_pointer) {
+	glProgramParameter4fNVPROC glProgramParameter4fNV = (glProgramParameter4fNVPROC)((intptr_t)function_pointer);
 	glProgramParameter4fNV(target, index, x, y, z, w);
 }
 
-static jobject JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribPointervNV(JNIEnv *env, jclass clazz, jint index, jint parameterName, jint result_size) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribPointervNV(JNIEnv *env, jclass clazz, jint index, jint parameterName, jint result_size, jlong function_pointer) {
+	glGetVertexAttribPointervNVPROC glGetVertexAttribPointervNV = (glGetVertexAttribPointervNVPROC)((intptr_t)function_pointer);
 	GLvoid * __result;
 	glGetVertexAttribPointervNV(index, parameterName, &__result);
 	return safeNewBuffer(env, __result, result_size);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribivNV(JNIEnv *env, jclass clazz, jint index, jint parameterName, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribivNV(JNIEnv *env, jclass clazz, jint index, jint parameterName, jobject params, jint params_position, jlong function_pointer) {
 	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetVertexAttribivNVPROC glGetVertexAttribivNV = (glGetVertexAttribivNVPROC)((intptr_t)function_pointer);
 	glGetVertexAttribivNV(index, parameterName, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribfvNV(JNIEnv *env, jclass clazz, jint index, jint parameterName, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribfvNV(JNIEnv *env, jclass clazz, jint index, jint parameterName, jobject params, jint params_position, jlong function_pointer) {
 	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetVertexAttribfvNVPROC glGetVertexAttribfvNV = (glGetVertexAttribfvNVPROC)((intptr_t)function_pointer);
 	glGetVertexAttribfvNV(index, parameterName, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackMatrixivNV(JNIEnv *env, jclass clazz, jint target, jint address, jint parameterName, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackMatrixivNV(JNIEnv *env, jclass clazz, jint target, jint address, jint parameterName, jobject params, jint params_position, jlong function_pointer) {
 	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetTrackMatrixivNVPROC glGetTrackMatrixivNV = (glGetTrackMatrixivNVPROC)((intptr_t)function_pointer);
 	glGetTrackMatrixivNV(target, address, parameterName, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgramParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint index, jint parameterName, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgramParameterfvNV(JNIEnv *env, jclass clazz, jint target, jint index, jint parameterName, jobject params, jint params_position, jlong function_pointer) {
 	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetProgramParameterfvNVPROC glGetProgramParameterfvNV = (glGetProgramParameterfvNVPROC)((intptr_t)function_pointer);
 	glGetProgramParameterfvNV(target, index, parameterName, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglExecuteProgramNV(JNIEnv *env, jclass clazz, jint target, jint id, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglExecuteProgramNV(JNIEnv *env, jclass clazz, jint target, jint id, jobject params, jint params_position, jlong function_pointer) {
 	const GLfloat *params_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glExecuteProgramNVPROC glExecuteProgramNV = (glExecuteProgramNVPROC)((intptr_t)function_pointer);
 	glExecuteProgramNV(target, id, params_address);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_initNativeStubs(JNIEnv *env, jclass clazz) {
-	JavaMethodAndExtFunction functions[] = {
-		{"nglVertexAttribs4fvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4fvNV, "glVertexAttribs4fvNV", (void *)&glVertexAttribs4fvNV},
-		{"nglVertexAttribs4svNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4svNV, "glVertexAttribs4svNV", (void *)&glVertexAttribs4svNV},
-		{"nglVertexAttribs3fvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3fvNV, "glVertexAttribs3fvNV", (void *)&glVertexAttribs3fvNV},
-		{"nglVertexAttribs3svNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs3svNV, "glVertexAttribs3svNV", (void *)&glVertexAttribs3svNV},
-		{"nglVertexAttribs2fvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2fvNV, "glVertexAttribs2fvNV", (void *)&glVertexAttribs2fvNV},
-		{"nglVertexAttribs2svNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs2svNV, "glVertexAttribs2svNV", (void *)&glVertexAttribs2svNV},
-		{"nglVertexAttribs1fvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1fvNV, "glVertexAttribs1fvNV", (void *)&glVertexAttribs1fvNV},
-		{"nglVertexAttribs1svNV", "(IILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs1svNV, "glVertexAttribs1svNV", (void *)&glVertexAttribs1svNV},
-		{"glVertexAttrib4ubNV", "(IBBBB)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4ubNV, "glVertexAttrib4ubNV", (void *)&glVertexAttrib4ubNV},
-		{"glVertexAttrib4fNV", "(IFFFF)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4fNV, "glVertexAttrib4fNV", (void *)&glVertexAttrib4fNV},
-		{"glVertexAttrib4sNV", "(ISSSS)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib4sNV, "glVertexAttrib4sNV", (void *)&glVertexAttrib4sNV},
-		{"glVertexAttrib3fNV", "(IFFF)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3fNV, "glVertexAttrib3fNV", (void *)&glVertexAttrib3fNV},
-		{"glVertexAttrib3sNV", "(ISSS)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib3sNV, "glVertexAttrib3sNV", (void *)&glVertexAttrib3sNV},
-		{"glVertexAttrib2fNV", "(IFF)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2fNV, "glVertexAttrib2fNV", (void *)&glVertexAttrib2fNV},
-		{"glVertexAttrib2sNV", "(ISS)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib2sNV, "glVertexAttrib2sNV", (void *)&glVertexAttrib2sNV},
-		{"glVertexAttrib1fNV", "(IF)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1fNV, "glVertexAttrib1fNV", (void *)&glVertexAttrib1fNV},
-		{"glVertexAttrib1sNV", "(IS)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glVertexAttrib1sNV, "glVertexAttrib1sNV", (void *)&glVertexAttrib1sNV},
-		{"nglVertexAttribPointerNV", "(IIIILjava/nio/Buffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNV, "glVertexAttribPointerNV", (void *)&glVertexAttribPointerNV},
-		{"nglVertexAttribPointerNVBO", "(IIIII)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribPointerNVBO, "glVertexAttribPointerNV", (void *)&glVertexAttribPointerNV},
-		{"glTrackMatrixNV", "(IIII)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glTrackMatrixNV, "glTrackMatrixNV", (void *)&glTrackMatrixNV},
-		{"nglProgramParameters4fvNV", "(IIILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglProgramParameters4fvNV, "glProgramParameters4fvNV", (void *)&glProgramParameters4fvNV},
-		{"glProgramParameter4fNV", "(IIFFFF)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_glProgramParameter4fNV, "glProgramParameter4fNV", (void *)&glProgramParameter4fNV},
-		{"nglGetVertexAttribPointervNV", "(III)Ljava/nio/ByteBuffer;", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribPointervNV, "glGetVertexAttribPointervNV", (void *)&glGetVertexAttribPointervNV},
-		{"nglGetVertexAttribivNV", "(IILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribivNV, "glGetVertexAttribivNV", (void *)&glGetVertexAttribivNV},
-		{"nglGetVertexAttribfvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglGetVertexAttribfvNV, "glGetVertexAttribfvNV", (void *)&glGetVertexAttribfvNV},
-		{"nglGetTrackMatrixivNV", "(IIILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackMatrixivNV, "glGetTrackMatrixivNV", (void *)&glGetTrackMatrixivNV},
-		{"nglGetProgramParameterfvNV", "(IIILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgramParameterfvNV, "glGetProgramParameterfvNV", (void *)&glGetProgramParameterfvNV},
-		{"nglExecuteProgramNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVVertexProgram_nglExecuteProgramNV, "glExecuteProgramNV", (void *)&glExecuteProgramNV}
-	};
-	int num_functions = NUMFUNCTIONS(functions);
-	extgl_InitializeClass(env, clazz, num_functions, functions);
-}

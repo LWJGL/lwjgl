@@ -50,46 +50,51 @@ import java.util.*;
 import java.nio.*;
 
 public class JavaMethodsGenerator {
-	public static void generateMethodsJava(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, boolean generate_error_checks) {
+	public static void generateMethodsJava(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, boolean generate_error_checks, boolean context_specific) {
 		for (MethodDeclaration method : interface_decl.getMethods())
-			generateMethodJava(env, type_map, writer, interface_decl, method, generate_error_checks);
+			generateMethodJava(env, type_map, writer, interface_decl, method, generate_error_checks, context_specific);
 	}
 
-	private static void generateMethodJava(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, boolean generate_error_checks) {
+	private static void generateMethodJava(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, boolean generate_error_checks, boolean context_specific) {
 		writer.println();
-		if (Utils.isMethodIndirect(generate_error_checks, method)) {
+		if (Utils.isMethodIndirect(generate_error_checks, context_specific, method)) {
 			if (method.getAnnotation(GenerateAutos.class) != null) {
-				printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.AUTOS, generate_error_checks);
+				printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.AUTOS, generate_error_checks, context_specific);
 			}
 			Collection<Map<ParameterDeclaration, TypeInfo>> cross_product = TypeInfo.getTypeInfoCrossProduct(type_map, method);
 			for (Map<ParameterDeclaration, TypeInfo> typeinfos_instance : cross_product) {
-				printMethodWithMultiType(env, type_map, writer, interface_decl, method, typeinfos_instance, Mode.NORMAL, generate_error_checks);
+				printMethodWithMultiType(env, type_map, writer, interface_decl, method, typeinfos_instance, Mode.NORMAL, generate_error_checks, context_specific);
 			}
 		}
-		printJavaNativeStub(writer, method, Mode.NORMAL, generate_error_checks);
+		printJavaNativeStub(writer, method, Mode.NORMAL, generate_error_checks, context_specific);
 		if (Utils.hasMethodBufferObjectParameter(method)) {
-			printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.BUFFEROBJECT, generate_error_checks);
-			printJavaNativeStub(writer, method, Mode.BUFFEROBJECT, generate_error_checks);
+			printMethodWithMultiType(env, type_map, writer, interface_decl, method, TypeInfo.getDefaultTypeInfoMap(method), Mode.BUFFEROBJECT, generate_error_checks, context_specific);
+			printJavaNativeStub(writer, method, Mode.BUFFEROBJECT, generate_error_checks, context_specific);
 		}
 	}
 
-	private static void printJavaNativeStub(PrintWriter writer, MethodDeclaration method, Mode mode, boolean generate_error_checks) {
-		if (Utils.isMethodIndirect(generate_error_checks, method)) {
+	private static void printJavaNativeStub(PrintWriter writer, MethodDeclaration method, Mode mode, boolean generate_error_checks, boolean context_specific) {
+		if (Utils.isMethodIndirect(generate_error_checks, context_specific, method)) {
 			writer.print("\tprivate static native ");
 		} else {
 			Utils.printDocComment(writer, method);
 			writer.print("\tpublic static native ");
 		}
 		printResultType(writer, method);
-		writer.print(" " + Utils.getSimpleNativeMethodName(method, generate_error_checks));
+		writer.print(" " + Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		writer.print("(");
-		generateParametersJava(writer, method, TypeInfo.getDefaultTypeInfoMap(method), true, mode);
+		boolean first_parameter = generateParametersJava(writer, method, TypeInfo.getDefaultTypeInfoMap(method), true, mode);
+		if (context_specific) {
+			if (!first_parameter)
+				writer.print(", ");
+			writer.print("long " + Utils.FUNCTION_POINTER_VAR_NAME);
+		}
 		writer.println(");");
 	}
 
-	private static void generateParametersJava(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance,
+	private static boolean generateParametersJava(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance,
 			boolean native_stub, Mode mode) {
 		boolean first_parameter = true;
 		for (ParameterDeclaration param : method.getParameters()) {
@@ -103,6 +108,7 @@ public class JavaMethodsGenerator {
 					if (auto_param_type_info.getSignedness() == Signedness.BOTH) {
 						if (!first_parameter)
 							writer.print(", ");
+						first_parameter = false;
 						writer.print("boolean " + TypeInfo.UNSIGNED_PARAMETER_NAME);
 					}
 				}
@@ -113,14 +119,18 @@ public class JavaMethodsGenerator {
 			}
 		}
 		TypeMirror result_type = Utils.getMethodReturnType(method);
-		if (Utils.getNIOBufferType(result_type) != null) {
-			writer.print(", int " + Utils.RESULT_SIZE_NAME);
+		if ((native_stub && Utils.getNIOBufferType(result_type) != null) || Utils.needResultSize(method)) {
+			if (!first_parameter)
+				writer.print(", ");
+			first_parameter = false;
+			writer.print("int " + Utils.RESULT_SIZE_NAME);
 			if (method.getAnnotation(CachedResult.class) != null) {
 				writer.print(", ");
 				printResultType(writer, method);
 				writer.print(" " + Utils.CACHED_BUFFER_NAME);
 			}
 		}
+		return first_parameter;
 	}
 
 	private static boolean generateParameterJava(PrintWriter writer, ParameterDeclaration param, TypeInfo type_info, boolean native_stub, boolean first_parameter, Mode mode) {
@@ -162,18 +172,14 @@ public class JavaMethodsGenerator {
 			printBufferObjectCheck(writer, kind, mode);
 	}
 
-	private static void printMethodWithMultiType(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks) {
+	private static void printMethodWithMultiType(AnnotationProcessorEnvironment env, TypeMap type_map, PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode, boolean generate_error_checks, boolean context_specific) {
 		Utils.printDocComment(writer, method);
 		writer.print("\tpublic static ");
 		printResultType(writer, method);
 		StripPostfix strip_annotation = method.getAnnotation(StripPostfix.class);
 		String method_name = method.getSimpleName();
-		if (strip_annotation != null) {
-            // TODO: This is not used, is it necessary? (keep Utils.findParameter only?)
-			ParameterDeclaration postfix_parameter = Utils.findParameter(method, strip_annotation.value());
-			if (mode == Mode.NORMAL)
-				method_name = getPostfixStrippedName(type_map, interface_decl, method);
-		}
+		if (strip_annotation != null && mode == Mode.NORMAL)
+			method_name = getPostfixStrippedName(type_map, interface_decl, method);
 		writer.print(" " + method_name + "(");
 		generateParametersJava(writer, method, typeinfos_instance, false, mode);
 		TypeMirror result_type = Utils.getMethodReturnType(method);
@@ -183,17 +189,28 @@ public class JavaMethodsGenerator {
 		Code code_annotation = method.getAnnotation(Code.class);
 		if (code_annotation != null)
 			writer.println(code_annotation.value());
+		if (context_specific) {
+			writer.print("\t\tlong " + Utils.FUNCTION_POINTER_VAR_NAME + " = GLContext.getCapabilities().");
+			writer.println(Utils.getFunctionAddressName(interface_decl, method) + ";");
+			writer.print("\t\tBufferChecks.checkFunctionAddress(");
+			writer.println(Utils.FUNCTION_POINTER_VAR_NAME + ");");
+		}
 		writer.print("\t\t");
 		boolean has_result = !result_type.equals(env.getTypeUtils().getVoidType());
 		if (has_result) {
 			printResultType(writer, method);
 			writer.print(" " + Utils.RESULT_VAR_NAME + " = ");
 		}
-		writer.print(Utils.getSimpleNativeMethodName(method, generate_error_checks));
+		writer.print(Utils.getSimpleNativeMethodName(method, generate_error_checks, context_specific));
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print(Utils.BUFFER_OBJECT_METHOD_POSTFIX);
 		writer.print("(");
-		printMethodCallArguments(writer, method, typeinfos_instance, mode);
+		boolean first_parameter = printMethodCallArguments(writer, method, typeinfos_instance, mode);
+		if (context_specific) {
+			if (!first_parameter)
+				writer.print(", ");
+			writer.print(Utils.FUNCTION_POINTER_VAR_NAME);
+		}
 		writer.println(");");
 		if (generate_error_checks && method.getAnnotation(NoErrorCheck.class) == null)
 			writer.println("\t\t" + type_map.getErrorCheckMethodName() + ";");
@@ -353,16 +370,25 @@ public class JavaMethodsGenerator {
 		return false;
 	}
 
-	private static void printMethodCallArguments(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode) {
+	private static boolean printMethodCallArguments(PrintWriter writer, MethodDeclaration method, Map<ParameterDeclaration, TypeInfo> typeinfos_instance, Mode mode) {
 		boolean first_parameter = true;
 		for (ParameterDeclaration param : method.getParameters())
 			if (param.getAnnotation(Result.class) == null) {
 				first_parameter = printMethodCallArgument(writer, method, param, typeinfos_instance, mode, first_parameter);
 			}
-		TypeMirror result_type = Utils.getMethodReturnType(method);
-		if (Utils.getNIOBufferType(result_type) != null) {
-			Utils.printExtraCallArguments(writer, method);
+		if (Utils.getNIOBufferType(Utils.getMethodReturnType(method)) != null) {
+			if (!first_parameter)
+				writer.print(", ");
+			first_parameter = false;
+			ParameterDeclaration auto_result_size_parameter = Utils.getAutoResultSizeParameter(method);
+			String result_size_parameter_name;
+			if (auto_result_size_parameter == null)
+				result_size_parameter_name = Utils.RESULT_SIZE_NAME;
+			else
+				result_size_parameter_name = auto_result_size_parameter.getSimpleName();
+			Utils.printExtraCallArguments(writer, method, result_size_parameter_name);
 		}
+		return first_parameter;
 	}
 
 	private static void printParameterChecks(PrintWriter writer, MethodDeclaration method, Mode mode) {

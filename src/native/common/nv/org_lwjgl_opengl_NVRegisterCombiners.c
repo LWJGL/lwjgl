@@ -1,6 +1,7 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
+#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glGetFinalCombinerInputParameterivNVPROC) (GLenum variable, GLenum pname, GLint * params);
@@ -17,96 +18,76 @@ typedef void (APIENTRY *glCombinerParameteriNVPROC) (GLenum pname, GLint param);
 typedef void (APIENTRY *glCombinerParameterfvNVPROC) (GLenum pname, const GLfloat * params);
 typedef void (APIENTRY *glCombinerParameterfNVPROC) (GLenum pname, GLfloat param);
 
-static glGetFinalCombinerInputParameterivNVPROC glGetFinalCombinerInputParameterivNV;
-static glGetFinalCombinerInputParameterfvNVPROC glGetFinalCombinerInputParameterfvNV;
-static glGetCombinerOutputParameterivNVPROC glGetCombinerOutputParameterivNV;
-static glGetCombinerOutputParameterfvNVPROC glGetCombinerOutputParameterfvNV;
-static glGetCombinerInputParameterivNVPROC glGetCombinerInputParameterivNV;
-static glGetCombinerInputParameterfvNVPROC glGetCombinerInputParameterfvNV;
-static glFinalCombinerInputNVPROC glFinalCombinerInputNV;
-static glCombinerOutputNVPROC glCombinerOutputNV;
-static glCombinerInputNVPROC glCombinerInputNV;
-static glCombinerParameterivNVPROC glCombinerParameterivNV;
-static glCombinerParameteriNVPROC glCombinerParameteriNV;
-static glCombinerParameterfvNVPROC glCombinerParameterfvNV;
-static glCombinerParameterfNVPROC glCombinerParameterfNV;
-
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterivNV(JNIEnv *env, jclass clazz, jint variable, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterivNV(JNIEnv *env, jclass clazz, jint variable, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetFinalCombinerInputParameterivNVPROC glGetFinalCombinerInputParameterivNV = (glGetFinalCombinerInputParameterivNVPROC)((intptr_t)function_pointer);
 	glGetFinalCombinerInputParameterivNV(variable, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterfvNV(JNIEnv *env, jclass clazz, jint variable, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterfvNV(JNIEnv *env, jclass clazz, jint variable, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetFinalCombinerInputParameterfvNVPROC glGetFinalCombinerInputParameterfvNV = (glGetFinalCombinerInputParameterfvNVPROC)((intptr_t)function_pointer);
 	glGetFinalCombinerInputParameterfvNV(variable, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterivNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterivNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetCombinerOutputParameterivNVPROC glGetCombinerOutputParameterivNV = (glGetCombinerOutputParameterivNVPROC)((intptr_t)function_pointer);
 	glGetCombinerOutputParameterivNV(stage, portion, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterfvNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterfvNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetCombinerOutputParameterfvNVPROC glGetCombinerOutputParameterfvNV = (glGetCombinerOutputParameterfvNVPROC)((intptr_t)function_pointer);
 	glGetCombinerOutputParameterfvNV(stage, portion, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterivNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint variable, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterivNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint variable, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetCombinerInputParameterivNVPROC glGetCombinerInputParameterivNV = (glGetCombinerInputParameterivNVPROC)((intptr_t)function_pointer);
 	glGetCombinerInputParameterivNV(stage, portion, variable, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterfvNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint variable, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterfvNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint variable, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetCombinerInputParameterfvNVPROC glGetCombinerInputParameterfvNV = (glGetCombinerInputParameterfvNVPROC)((intptr_t)function_pointer);
 	glGetCombinerInputParameterfvNV(stage, portion, variable, pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glFinalCombinerInputNV(JNIEnv *env, jclass clazz, jint variable, jint input, jint mapping, jint componentUsage) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglFinalCombinerInputNV(JNIEnv *env, jclass clazz, jint variable, jint input, jint mapping, jint componentUsage, jlong function_pointer) {
+	glFinalCombinerInputNVPROC glFinalCombinerInputNV = (glFinalCombinerInputNVPROC)((intptr_t)function_pointer);
 	glFinalCombinerInputNV(variable, input, mapping, componentUsage);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerOutputNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint abOutput, jint cdOutput, jint sumOutput, jint scale, jint bias, jboolean abDotProduct, jboolean cdDotProduct, jboolean muxSum) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerOutputNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint abOutput, jint cdOutput, jint sumOutput, jint scale, jint bias, jboolean abDotProduct, jboolean cdDotProduct, jboolean muxSum, jlong function_pointer) {
+	glCombinerOutputNVPROC glCombinerOutputNV = (glCombinerOutputNVPROC)((intptr_t)function_pointer);
 	glCombinerOutputNV(stage, portion, abOutput, cdOutput, sumOutput, scale, bias, abDotProduct, cdDotProduct, muxSum);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerInputNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint variable, jint input, jint mapping, jint componentUsage) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerInputNV(JNIEnv *env, jclass clazz, jint stage, jint portion, jint variable, jint input, jint mapping, jint componentUsage, jlong function_pointer) {
+	glCombinerInputNVPROC glCombinerInputNV = (glCombinerInputNVPROC)((intptr_t)function_pointer);
 	glCombinerInputNV(stage, portion, variable, input, mapping, componentUsage);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterivNV(JNIEnv *env, jclass clazz, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterivNV(JNIEnv *env, jclass clazz, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	const GLint *params_address = ((const GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glCombinerParameterivNVPROC glCombinerParameterivNV = (glCombinerParameterivNVPROC)((intptr_t)function_pointer);
 	glCombinerParameterivNV(pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameteriNV(JNIEnv *env, jclass clazz, jint pname, jint param) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameteriNV(JNIEnv *env, jclass clazz, jint pname, jint param, jlong function_pointer) {
+	glCombinerParameteriNVPROC glCombinerParameteriNV = (glCombinerParameteriNVPROC)((intptr_t)function_pointer);
 	glCombinerParameteriNV(pname, param);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterfvNV(JNIEnv *env, jclass clazz, jint pname, jobject params, jint params_position) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterfvNV(JNIEnv *env, jclass clazz, jint pname, jobject params, jint params_position, jlong function_pointer) {
 	const GLfloat *params_address = ((const GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glCombinerParameterfvNVPROC glCombinerParameterfvNV = (glCombinerParameterfvNVPROC)((intptr_t)function_pointer);
 	glCombinerParameterfvNV(pname, params_address);
 }
 
-static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameterfNV(JNIEnv *env, jclass clazz, jint pname, jfloat param) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterfNV(JNIEnv *env, jclass clazz, jint pname, jfloat param, jlong function_pointer) {
+	glCombinerParameterfNVPROC glCombinerParameterfNV = (glCombinerParameterfNVPROC)((intptr_t)function_pointer);
 	glCombinerParameterfNV(pname, param);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_initNativeStubs(JNIEnv *env, jclass clazz) {
-	JavaMethodAndExtFunction functions[] = {
-		{"nglGetFinalCombinerInputParameterivNV", "(IILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterivNV, "glGetFinalCombinerInputParameterivNV", (void *)&glGetFinalCombinerInputParameterivNV},
-		{"nglGetFinalCombinerInputParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterfvNV, "glGetFinalCombinerInputParameterfvNV", (void *)&glGetFinalCombinerInputParameterfvNV},
-		{"nglGetCombinerOutputParameterivNV", "(IIILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterivNV, "glGetCombinerOutputParameterivNV", (void *)&glGetCombinerOutputParameterivNV},
-		{"nglGetCombinerOutputParameterfvNV", "(IIILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerOutputParameterfvNV, "glGetCombinerOutputParameterfvNV", (void *)&glGetCombinerOutputParameterfvNV},
-		{"nglGetCombinerInputParameterivNV", "(IIIILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterivNV, "glGetCombinerInputParameterivNV", (void *)&glGetCombinerInputParameterivNV},
-		{"nglGetCombinerInputParameterfvNV", "(IIIILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetCombinerInputParameterfvNV, "glGetCombinerInputParameterfvNV", (void *)&glGetCombinerInputParameterfvNV},
-		{"glFinalCombinerInputNV", "(IIII)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_glFinalCombinerInputNV, "glFinalCombinerInputNV", (void *)&glFinalCombinerInputNV},
-		{"glCombinerOutputNV", "(IIIIIIIZZZ)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerOutputNV, "glCombinerOutputNV", (void *)&glCombinerOutputNV},
-		{"glCombinerInputNV", "(IIIIII)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerInputNV, "glCombinerInputNV", (void *)&glCombinerInputNV},
-		{"nglCombinerParameterivNV", "(ILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterivNV, "glCombinerParameterivNV", (void *)&glCombinerParameterivNV},
-		{"glCombinerParameteriNV", "(II)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameteriNV, "glCombinerParameteriNV", (void *)&glCombinerParameteriNV},
-		{"nglCombinerParameterfvNV", "(ILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterfvNV, "glCombinerParameterfvNV", (void *)&glCombinerParameterfvNV},
-		{"glCombinerParameterfNV", "(IF)V", (void *)&Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameterfNV, "glCombinerParameterfNV", (void *)&glCombinerParameterfNV}
-	};
-	int num_functions = NUMFUNCTIONS(functions);
-	extgl_InitializeClass(env, clazz, num_functions, functions);
-}

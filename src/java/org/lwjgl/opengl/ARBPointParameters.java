@@ -19,9 +19,16 @@ public final class ARBPointParameters {
 
 	public static void glPointParameterARB(int pname, FloatBuffer pfParams) {
 		BufferChecks.checkBuffer(pfParams, 4);
-		nglPointParameterfvARB(pname, pfParams, pfParams.position());
+		long function_pointer = GLContext.getCapabilities().ARB_point_parameters_glPointParameterfvARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPointParameterfvARB(pname, pfParams, pfParams.position(), function_pointer);
 	}
-	private static native void nglPointParameterfvARB(int pname, FloatBuffer pfParams, int pfParams_position);
+	private static native void nglPointParameterfvARB(int pname, FloatBuffer pfParams, int pfParams_position, long function_pointer);
 
-	public static native void glPointParameterfARB(int pname, float param);
+	public static void glPointParameterfARB(int pname, float param) {
+		long function_pointer = GLContext.getCapabilities().ARB_point_parameters_glPointParameterfARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPointParameterfARB(pname, param, function_pointer);
+	}
+	private static native void nglPointParameterfARB(int pname, float param, long function_pointer);
 }

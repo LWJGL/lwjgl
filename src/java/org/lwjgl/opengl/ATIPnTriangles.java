@@ -22,7 +22,17 @@ public final class ATIPnTriangles {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glPNTrianglesiATI(int pname, int param);
+	public static void glPNTrianglesiATI(int pname, int param) {
+		long function_pointer = GLContext.getCapabilities().ATI_pn_triangles_glPNTrianglesiATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPNTrianglesiATI(pname, param, function_pointer);
+	}
+	private static native void nglPNTrianglesiATI(int pname, int param, long function_pointer);
 
-	public static native void glPNTrianglesfATI(int pname, float param);
+	public static void glPNTrianglesfATI(int pname, float param) {
+		long function_pointer = GLContext.getCapabilities().ATI_pn_triangles_glPNTrianglesfATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglPNTrianglesfATI(pname, param, function_pointer);
+	}
+	private static native void nglPNTrianglesfATI(int pname, float param, long function_pointer);
 }

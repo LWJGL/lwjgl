@@ -17,5 +17,10 @@ public final class EXTBlendFuncSeparate {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static native void glBlendFuncSeparateEXT(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha);
+	public static void glBlendFuncSeparateEXT(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha) {
+		long function_pointer = GLContext.getCapabilities().EXT_blend_func_separate_glBlendFuncSeparateEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglBlendFuncSeparateEXT(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha, function_pointer);
+	}
+	private static native void nglBlendFuncSeparateEXT(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha, long function_pointer);
 }

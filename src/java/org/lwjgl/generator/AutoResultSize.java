@@ -29,33 +29,21 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.opengl;
+package org.lwjgl.generator;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
+/**
+ * $Id$
+ *
+ * AutoResultSize specifies that a parameter should determine
+ * the size of a Buffer result.
+ *
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @version $Revision$
+ */
 
-import org.lwjgl.generator.*;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
-public interface NV_vertex_array_range {
-	int GL_VERTEX_ARRAY_RANGE_NV = 0x851D;
-	int GL_VERTEX_ARRAY_RANGE_LENGTH_NV = 0x851E;
-	int GL_VERTEX_ARRAY_RANGE_VALID_NV = 0x851F;
-	int GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV = 0x8520;
-	int GL_VERTEX_ARRAY_RANGE_POINTER_NV = 0x8521;
-
-	void glVertexArrayRangeNV(@AutoSize("pPointer") @GLsizei int size,
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			Buffer pPointer);
-
-	void glFlushVertexArrayRangeNV();
-
-	@PlatformDependent({Platform.WGL, Platform.GLX})
-	@GLvoid ByteBuffer glAllocateMemoryNV(@AutoResultSize int size, float readFrequency, float writeFrequency, float priority);
-
-	@PlatformDependent({Platform.WGL, Platform.GLX})
-	void glFreeMemoryNV(@Check @GLbyte Buffer pointer);
+@Target(ElementType.PARAMETER)
+public @interface AutoResultSize {
 }
