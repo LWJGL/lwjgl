@@ -4660,17 +4660,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_writeMaskEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_checkWGLExtensionsString(JNIEnv * env, jclass clazz)
 {
-
-#ifdef _WIN32
 	jfieldID fid_WGL_ARB_extensions_string = env->GetStaticFieldID(clazz, "WGL_ARB_extensions_string", "Z");
 	jfieldID fid_WGL_EXT_extensions_string = env->GetStaticFieldID(clazz, "WGL_EXT_extensions_string", "Z");
+#ifdef _WIN32
 
 	if (wglGetExtensionsStringARB)
 		env->SetStaticBooleanField(clazz, fid_WGL_ARB_extensions_string, JNI_TRUE);
 	if (wglGetExtensionsStringEXT)
 		env->SetStaticBooleanField(clazz, fid_WGL_EXT_extensions_string, JNI_TRUE);
 #else
-	CHECK_EXISTS(NULL)
+	env->SetStaticBooleanField(clazz, fid_WGL_ARB_extensions_string, JNI_FALSE);
+	env->SetStaticBooleanField(clazz, fid_WGL_EXT_extensions_string, JNI_FALSE);
 #endif
 }
 
