@@ -45,6 +45,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -133,8 +134,13 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 		canvas = null;
 	}
 	
-	public native int getGammaRampLength();
-	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
+	public int getGammaRampLength() {
+		return 0;
+	}
+
+	public void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException {
+		throw new LWJGLException("Gamma not supported");
+	}
 
 	public String getAdapter() {
 		return null;
@@ -359,7 +365,9 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	public void enableKeyboardBuffer() throws LWJGLException {
 	}
 
-	public native int isStateKeySet(int key);
+	public int isStateKeySet(int key) {
+		return Keyboard.STATE_UNKNOWN;
+	}
 
 	/** Native cursor handles */
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
