@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal;
+package org.lwjgl.openal;
 
 import java.io.File;
 import java.util.StringTokenizer;
@@ -49,25 +49,25 @@ import java.util.StringTokenizer;
 public abstract class BaseAL {
 	/** Has the ALC object been created? */
 	protected static boolean created;
-    
+
 	static {
 		initialize();
 	}
-    
-    /**
+
+	/**
 	 * Override to provide any initialization code after creation.
 	 */
-	protected void init() {
+	protected void init() throws Exception {
 	}
-    
+
 	/**
 	 * Static initialization
 	 */
 	private static void initialize() {
 		System.loadLibrary(org.lwjgl.Sys.getLibraryName());
 	}
-    
-    /**
+
+	/**
 	 * Creates the AL instance
 	 * 
 	 * @throws Exception if a failiure occured in the AL creation process
@@ -83,49 +83,47 @@ public abstract class BaseAL {
 		String libname;
 
 		// libname is hardcoded atm - this will change in a near future...
-		libname = (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1) 
-		        ? "libopenal.so" 
-		        : "OpenAL32.dll";     
+		libname = (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1) ? "libopenal.so" : "OpenAL32.dll";
 
 		StringTokenizer st = new StringTokenizer(libpath, seperator);
-            
+
 		//create needed string array
-		String[] oalPaths = new String[st.countTokens()+1];
+		String[] oalPaths = new String[st.countTokens() + 1];
 
 		//build paths
-		for(int i=0;i<oalPaths.length - 1;i++) {
-			oalPaths[i] = st.nextToken() + File.separator + libname; 
+		for (int i = 0; i < oalPaths.length - 1; i++) {
+			oalPaths[i] = st.nextToken() + File.separator + libname;
 		}
 
 		//add cwd path
-		oalPaths[oalPaths.length-1] = libname;
+		oalPaths[oalPaths.length - 1] = libname;
 		if (!nCreate(oalPaths)) {
 			throw new Exception("AL instance could not be created.");
-                }
+		}
+		init();
 		created = true;
-                init();
 	}
-	
+
 	/**
 	 * Native method to create AL instance
 	 * 
 	 * @return true if the AL creation process succeeded
 	 */
 	protected native boolean nCreate(String[] oalPaths);
-    
+
 	/**
 	 * Calls whatever destruction rutines that are needed
 	 */
 	public void destroy() {
 		if (!created) {
 			return;
-        }
-        created = false;
-        nDestroy();
+		}
+		created = false;
+		nDestroy();
 	}
-	
+
 	/**
 	 * Native method the destroy the AL
 	 */
-	protected native void nDestroy();    
+	protected native void nDestroy();
 }

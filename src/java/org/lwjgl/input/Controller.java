@@ -159,6 +159,13 @@ public class Controller {
 	}
 
 	/**
+	 * @return true if the controller has been created
+	 */
+	public static boolean isCreated() {
+		return created;
+	}
+
+	/**
 	 * "Destroy" the controller
 	 */
 	public static void destroy() {

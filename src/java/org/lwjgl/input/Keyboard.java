@@ -32,6 +32,8 @@
  
 package org.lwjgl.input;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -184,6 +186,27 @@ public class Keyboard {
 	public static final int KEY_APPS            = 0xDD; /* AppMenu key */
 	public static final int KEY_POWER           = 0xDE;
 	public static final int KEY_SLEEP           = 0xDF;
+	
+	/** Key names */
+	private static final String[] keyName = new String[255];
+	static {
+		// Use reflection to find out key names
+		Field[] field = Keyboard.class.getFields();
+		try {
+			for (int i = 0; i < field.length; i++) {
+				if (Modifier.isStatic(field[i].getModifiers())
+					&& Modifier.isPublic(field[i].getModifiers())
+					&& Modifier.isFinal(field[i].getModifiers())
+					&& field[i].getType() == int.class
+					&& field[i].getName().startsWith("KEY_")) {
+					keyName[field[i].getInt(null)] = field[i].getName().substring(4);
+				}
+
+			}
+		} catch (Exception e) {
+		}
+		
+	}
 
 	/** Has the keyboard been created? */
 	private static boolean created;
@@ -259,6 +282,13 @@ public class Keyboard {
 	 * @return true if the keyboard was created
 	 */
 	private static native boolean nCreate();
+
+	/**
+	 * @return true if the keyboard has been created
+	 */
+	public static boolean isCreated() {
+		return created;
+	}
 
 	/**
 	 * "Destroy" the keyboard
@@ -355,6 +385,15 @@ public class Keyboard {
 	public static boolean isKeyDown(int key) {
 		assert created : "The keyboard has not been created.";
 		return keyDownBuffer.get(key) != 0;
+	}
+	
+	/**
+	 * Gets a key's name
+	 * @param key The key
+	 * @return a String with the key's human readable name in it or null if the key is unnamed
+	 */
+	public static String getKeyName(int key) {
+		return keyName[key];
 	}
 	
 	/**

@@ -104,9 +104,9 @@ public class Mouse {
 		if (!nCreate())
 			throw new Exception("The mouse could not be created.");
 		created = true;
-    
-    //set mouse buttons
-    buttons = new boolean[buttonCount];
+
+		//set mouse buttons
+		buttons = new boolean[buttonCount];
 	}
 
 	/**
@@ -117,14 +117,21 @@ public class Mouse {
 	private static native boolean nCreate();
 
 	/**
+	 * @return true if the mouse has been created
+	 */
+	public static boolean isCreated() {
+		return created;
+	}
+
+	/**
 	 * "Destroy" the mouse
 	 */
 	public static void destroy() {
 		if (!created)
 			return;
 		created = false;
-    buttons = null;
-    
+		buttons = null;
+
 		nDestroy();
 	}
 
