@@ -55,13 +55,12 @@
 extern Display *disp;
 extern Window win;
 extern int screen;
-extern bool isFullscreen(void);
-extern bool isFocused(void);
 extern int getWindowWidth(void);
 extern int getWindowHeight(void);
 extern void handleMessages(void);
 
 static bool pointer_grabbed;
+static bool created = false;
 
 static jfieldID fid_has_wheel = NULL;
 static jfieldID fid_button_count = NULL;
@@ -124,13 +123,10 @@ int blankCursor(void) {
 
 int grabPointer(void) {
 	int result;
-	int mask = EnterWindowMask | LeaveWindowMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-	if (isFullscreen()) {
-		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
-		XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
-		XF86VidModeSetViewPort(disp, screen, 0, 0); // make sure we have a centered window
-	} else
-		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, None, blank_cursor, CurrentTime);
+	int mask = FocusChangeMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
+	result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
+	XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
+	XF86VidModeSetViewPort(disp, screen, 0, 0); // make sure we have a centered window
 	if (result == GrabSuccess)
 		pointer_grabbed = true;
 	return result;
@@ -141,20 +137,16 @@ void ungrabPointer(void) {
 	XUngrabPointer(disp, CurrentTime);
 }
 
-int updatePointerGrab(JNIEnv *env, jclass clazz) {
-	if (isFullscreen()) {
-		if (!pointer_grabbed)
-			return grabPointer();
-	} else {
-		if (isFocused()) {
-			if (!pointer_grabbed)
-				return grabPointer();
-		} else {
-			if (pointer_grabbed)
-				ungrabPointer();
-		}
-	}
-	return GrabSuccess;
+void acquirePointer(void) {
+	if (!created)
+		return;
+	grabPointer();
+}
+
+void releasePointer(void) {
+	if (!created)
+		return;
+	ungrabPointer();
 }
 
 /*
@@ -180,12 +172,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 #endif
 		return JNI_FALSE;
 	}
-	if (updatePointerGrab(env, clazz) != GrabSuccess) {
+	if (grabPointer() != GrabSuccess) {
 #ifdef _DEBUG
 		printf("Could not grab pointer\n");
 #endif
 		return JNI_FALSE;
 	}
+	created = true;
 	return JNI_TRUE;
 }
 
@@ -200,6 +193,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 	if (pointer_grabbed)
 		ungrabPointer();
 	XFreeCursor(disp, blank_cursor);
+	created = false;
 }
 
 void handleButtonPress(XButtonEvent *event) {
@@ -248,6 +242,8 @@ void handlePointerMotion(XMotionEvent *event) {
 
 void warpPointer(void) {
 	int i;
+	if (!pointer_grabbed)
+		return;
 	// Reset pointer to middle of screen if inside a certain inner border
 	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
 			current_x > getWindowWidth() - POINTER_WARP_BORDER || current_y > getWindowHeight() - POINTER_WARP_BORDER) {
@@ -282,7 +278,6 @@ void warpPointer(void) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv * env, jclass clazz)
 {
-	updatePointerGrab(env, clazz);
 	handleMessages();
 	int moved_x = current_x - last_x;
 	int moved_y = current_y - last_y;
@@ -295,17 +290,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	last_z = current_z;
 	jbooleanArray buttons_array = (jbooleanArray)env->GetStaticObjectField(clazz, fid_buttons);
 	env->SetBooleanArrayRegion(buttons_array, 0, NUM_BUTTONS, buttons);
-	if (isFullscreen())
-		warpPointer();
-}
-
-
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nEnableBuffer
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer
-  (JNIEnv * env, jclass clazz) {
-      printf("*** FIXME: nEnableBuffer not implemented!\n*");
+	warpPointer();
 }

@@ -57,8 +57,8 @@ Window win;
 
 static jfieldID fid_close;
 static bool current_fullscreen;
-static bool current_focused;
 static bool current_minimized;
+static bool input_released;
 static int win_width;
 static int win_height;
 static XF86VidModeModeInfo **avail_modes;
@@ -72,6 +72,10 @@ extern void handlePointerMotion(XMotionEvent *);
 extern void handleButtonPress(XButtonEvent *);
 extern void handleButtonRelease(XButtonEvent *);
 extern void handleKeyEvent(XKeyEvent *);
+extern void releaseKeyboard(void);
+extern void releasePointer(void);
+extern void acquireKeyboard(void);
+extern void acquirePointer(void);
 
 struct pixelformat {
 	int bpp;
@@ -199,6 +203,15 @@ void waitMapped(Display *disp, Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
+bool releaseInput(void) {
+	if (current_fullscreen)
+		return false;
+	releaseKeyboard();
+	releasePointer();
+	input_released = true;
+	return true;
+}
+
 void handleMessages(void) {
 	XEvent event;
 	while (XPending(disp) > 0) {
@@ -208,11 +221,11 @@ void handleMessages(void) {
 				if ((event.xclient.format == 32) && (event.xclient.data.l[0] == delete_atom))
 					saved_env->SetStaticBooleanField(saved_clazz, fid_close, JNI_TRUE);
 				break;
-			case EnterNotify:
-				current_focused = true;
-				break;
-			case LeaveNotify:
-				current_focused = false;
+			case FocusIn:
+				if (input_released) {
+					acquireKeyboard();
+					acquirePointer();
+				}
 				break;
 			case MapNotify:
 				current_minimized = false;
@@ -272,15 +285,6 @@ int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeIn
 	return 1;
 }
 
-bool isFullscreen(void) {
-	return current_fullscreen;
-}
-
-bool isFocused() {
-	handleMessages();
-	return current_focused;
-}
-
 bool isMinimized() {
 	handleMessages();
 	return current_minimized;
@@ -325,7 +329,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	else
 		current_fullscreen = false;
 	current_minimized = false;
-	current_focused = false;
+	input_released = false;
 	disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 #ifdef _DEBUG
@@ -359,7 +363,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 
 	cmap = XCreateColormap(disp, root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
-	attribs.event_mask = VisibilityChangeMask| StructureNotifyMask | EnterWindowMask | LeaveWindowMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+	attribs.event_mask = FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
 	if (fullscreen) {
@@ -407,7 +411,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	}
 	XClearWindow(disp, win);
 	XSync(disp, True);
-        isFocused();
 	return JNI_TRUE;
 }
 

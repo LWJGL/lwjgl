@@ -62,13 +62,12 @@ static int list_end = 0;
 static bool keyboard_grabbed;
 static bool buffer_enabled;
 static bool translation_enabled;
+static bool created = false;
 
 extern Display *disp;
 extern Window win;
 
-extern bool isFullscreen(void);
-
-extern bool isFocused(void);
+extern bool releaseInput(void);
 extern void handleMessages(void);
 
 /*
@@ -101,20 +100,16 @@ void ungrabKeyboard(void) {
 	XUngrabKeyboard(disp, CurrentTime);
 }
 
-int updateKeyboardGrab() {
-	if (isFullscreen()) {
-		if (!keyboard_grabbed)
-			return grabKeyboard();
-	} else {
-		if (isFocused()) {
-			if (!keyboard_grabbed)
-				return grabKeyboard();
-		} else {
-			if (keyboard_grabbed)
-				ungrabKeyboard();
-		}
-	}
-	return GrabSuccess;
+void acquireKeyboard(void) {
+	if (!created)
+		return;
+	grabKeyboard();
+}
+
+void releaseKeyboard(void) {
+	if (!created)
+		return;
+	ungrabKeyboard();
 }
 
 /*
@@ -129,7 +124,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	translation_enabled = false;
 	buffer_enabled = false;
 
-	if (updateKeyboardGrab() != GrabSuccess) {
+	if (grabKeyboard() != GrabSuccess) {
 #ifdef _DEBUG
 		printf("Could not grab keyboard\n");
 #endif
@@ -157,6 +152,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	key_map[0x68] = 0xb5; // Numpad divide
 	
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
+	created = true;
 	return JNI_TRUE;
 }
 
@@ -170,6 +166,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 {
 	if (keyboard_grabbed)
 		ungrabKeyboard();
+	created = false;
 }
 
 XKeyEvent *nextEventElement(void) {
@@ -238,6 +235,17 @@ void handleKeyEvent(XKeyEvent *event) {
 	unsigned char keycode = getKeycode(event);
 	unsigned char state = eventState(event);
 	key_buf[keycode] = state;
+	if (key_buf[org_lwjgl_input_Keyboard_KEY_LMENU] == 1 ||
+			key_buf[org_lwjgl_input_Keyboard_KEY_RMENU] == 1) {
+		if (key_buf[org_lwjgl_input_Keyboard_KEY_TAB] == 1) {
+			if (releaseInput()) {
+				key_buf[org_lwjgl_input_Keyboard_KEY_RMENU] = 0;
+				key_buf[org_lwjgl_input_Keyboard_KEY_LMENU] = 0;
+				key_buf[org_lwjgl_input_Keyboard_KEY_TAB] = 0;
+				return;
+			}
+		}
+	}
 	if (buffer_enabled)
 		putEventElement(event);
 }
@@ -253,7 +261,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 	XEvent event;
 	unsigned char state;
 	
-	updateKeyboardGrab();
 	handleMessages();
 
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
@@ -273,7 +280,6 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 	int state;
 	int num_events = 0;
 
-	updateKeyboardGrab();
 	handleMessages();
 
 	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && (key_event = nextEventElement()) != NULL) {
