@@ -284,10 +284,13 @@ void closeWindow(HWND hwnd, HDC hdc)
 static void appActivate(bool active)
 {
 	if (active) {
+		if (isFullScreen)
+			restoreDisplayMode();
 		SetForegroundWindow(display_hwnd);
 		ShowWindow(display_hwnd, SW_RESTORE);
 	} else if (isFullScreen) {
 		ShowWindow(display_hwnd, SW_MINIMIZE);
+		resetDisplayMode(NULL);
 	}
 }
 

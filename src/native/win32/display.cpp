@@ -232,48 +232,6 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 	modeSet = true;
 }
 
-/*
- * Temporarily reset display settings. This is called when the window is minimized.
- */
-/*static void tempResetDisplayMode() {
-	// Return device gamma to normal
-	HDC screenDC = GetDC(NULL);
-	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-		printfDebug("Could not reset device gamma\n");
-	}
-	ReleaseDC(NULL, screenDC);	
-
-	if (modeSet) {
-		printfDebug("Attempting to temporarily reset the display mode\n");
-		modeSet = false;
-		// Under Win32, all we have to do is:
-		ChangeDisplaySettings(NULL, 0);
-	}
-}
-*/
-/*
- * Put display settings back to what they were when the window is maximized.
- */
-/*static void tempRestoreDisplayMode() {
-	// Restore gamma
-	HDC screenDC = GetDC(NULL);
-	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
-		printfDebug("Could not restore device gamma\n");
-	}
-	ReleaseDC(NULL, screenDC);
-
-	if (!modeSet) {
-		printfDebug("Attempting to restore the display mode\n");
-		modeSet = true;
-		LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
-
-		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-			printfDebug("Failed to restore display mode\n");
-		}
-	}
-}
-*/
-
 int getGammaRampLength(void)
 {
 	return 256;
@@ -328,9 +286,7 @@ jobject initDisplay(JNIEnv * env)
 	return newMode;
 }
 
-void resetDisplayMode(JNIEnv * env)
-{
-
+void resetDisplayMode(JNIEnv * env) {
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
@@ -344,7 +300,30 @@ void resetDisplayMode(JNIEnv * env)
 		ChangeDisplaySettings(NULL, 0);
 
 		// And we'll call init() again to put the correct mode back in Display
-		initDisplay(env);
+		if (env != NULL)
+			initDisplay(env);
+	}
+}
+
+/*
+ * Put display settings back to what they were when the window is maximized.
+ */
+void restoreDisplayMode(void) {
+	// Restore gamma
+	HDC screenDC = GetDC(NULL);
+	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
+		printfDebug("Could not restore device gamma\n");
+	}
+	ReleaseDC(NULL, screenDC);
+
+	if (!modeSet) {
+		printfDebug("Attempting to restore the display mode\n");
+		modeSet = true;
+		LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
+
+		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
+			printfDebug("Failed to restore display mode\n");
+		}
 	}
 }
 

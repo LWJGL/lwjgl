@@ -39,8 +39,13 @@ extern "C" {
 /* Inaccessible static: readBuffer */
 /* Inaccessible static: eventButton */
 /* Inaccessible static: eventState */
+/* Inaccessible static: event_dx */
+/* Inaccessible static: event_dy */
+/* Inaccessible static: event_dwheel */
 #undef org_lwjgl_input_Mouse_BUFFER_SIZE
 #define org_lwjgl_input_Mouse_BUFFER_SIZE 50L
+#undef org_lwjgl_input_Mouse_EVENT_SIZE
+#define org_lwjgl_input_Mouse_EVENT_SIZE 5L
 /* Inaccessible static: isGrabbed */
 /* Inaccessible static: trackingEnabled */
 /*
@@ -126,7 +131,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nRead
- * Signature: (Ljava/nio/ByteBuffer;I)I
+ * Signature: (Ljava/nio/IntBuffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
   (JNIEnv *, jclass, jobject, jint);

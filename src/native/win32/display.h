@@ -47,6 +47,7 @@
 extern jobjectArray getAvailableDisplayModes(JNIEnv *env);
 extern void switchDisplayMode(JNIEnv * env, jobject mode);
 extern void resetDisplayMode(JNIEnv * env);
+extern void restoreDisplayMode(void);
 extern int getGammaRampLength(void);
 extern void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer);
 extern jobject initDisplay(JNIEnv * env);

@@ -265,6 +265,8 @@ extern "C" {
 #define org_lwjgl_input_Keyboard_STATE_UNKNOWN 2L
 #undef org_lwjgl_input_Keyboard_BUFFER_SIZE
 #define org_lwjgl_input_Keyboard_BUFFER_SIZE 50L
+#undef org_lwjgl_input_Keyboard_EVENT_SIZE
+#define org_lwjgl_input_Keyboard_EVENT_SIZE 3L
 /* Inaccessible static: keyName */
 /* Inaccessible static: keyMap */
 /* Inaccessible static: counter */
@@ -305,7 +307,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nRead
- * Signature: (Ljava/nio/ByteBuffer;I)I
+ * Signature: (Ljava/nio/IntBuffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
   (JNIEnv *, jclass, jobject, jint);
