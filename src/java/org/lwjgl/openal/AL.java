@@ -123,6 +123,12 @@ public class AL extends CoreAL {
 		alc.destroyContext(context.context);
 		alc.closeDevice(device.device);
 		alc.destroy();
+    
+    alc = null;
+    device = null;
+    context = null;
+    
+    super.destroy();
 	}
 	
 	/**
