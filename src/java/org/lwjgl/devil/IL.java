@@ -32,14 +32,22 @@
 package org.lwjgl.devil;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+
 /**
  * $Id$
  *
@@ -49,535 +57,650 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  */
 public class IL {
-    private static final int BUFFER_LENGTH = 1000;
-    /** Have we been created? */
-    protected static boolean created;
-  
-    public static final int IL_FALSE = 0; 
-    public static final int IL_TRUE = 1; 
-     
-    // Matches OpenGL's right now. 
-    public static final int IL_COLOUR_INDEX = 0x1900; 
-    public static final int IL_COLOR_INDEX = 0x1900; 
-    public static final int IL_RGB = 0x1907; 
-    public static final int IL_RGBA = 0x1908; 
-    public static final int IL_BGR = 0x80E0; 
-    public static final int IL_BGRA = 0x80E1; 
-    public static final int IL_LUMINANCE = 0x1909; 
-     
-    public static final int IL_BYTE = 0x1400; 
-//    public static final int IL_UNSIGNED_BYTE = 0x1401; 
-    public static final int IL_SHORT = 0x1402; 
-//    public static final int IL_UNSIGNED_SHORT = 0x1403; 
-    public static final int IL_INT = 0x1404; 
-//    public static final int IL_UNSIGNED_INT = 0x1405; 
-    public static final int IL_FLOAT = 0x1406; 
-    public static final int IL_DOUBLE = 0x140A; 
-     
-    public static final int IL_VENDOR = 0x1F00; 
-     
-    // IL-specific public const's 
-    public static final int IL_VERSION_1_6_0 = 1; 
-    public static final int IL_VERSION = 160; 
-    public static final int IL_LOAD_EXT = 0x1F01; 
-    public static final int IL_SAVE_EXT = 0x1F02; 
-     
-    // Attribute Bits 
-    public static final int IL_ORIGIN_BIT = 0x1; 
-    public static final int IL_FILE_BIT = 0x2; 
-    public static final int IL_PAL_BIT = 0x4; 
-    public static final int IL_FORMAT_BIT = 0x8; 
-    public static final int IL_TYPE_BIT = 0x10; 
-    public static final int IL_COMPRESS_BIT = 0x20; 
-    public static final int IL_LOADFAIL_BIT = 0x40; 
-    public static final int IL_FORMAT_SPECIFIC_BIT = 0x80; 
-    public static final int IL_ALL_ATTRIB_BITS = 0xFFFFF; 
-     
-    // Palette types 
-    public static final int IL_PAL_NONE = 0x400; 
-    public static final int IL_PAL_RGB24 = 0x401; 
-    public static final int IL_PAL_RGB32 = 0x402; 
-    public static final int IL_PAL_RGBA32 = 0x403; 
-    public static final int IL_PAL_BGR24 = 0x404; 
-    public static final int IL_PAL_BGR32 = 0x405; 
-    public static final int IL_PAL_BGRA32 = 0x406; 
-     
-    // Image types 
-    public static final int IL_TYPE_UNKNOWN = 0x0; 
-    public static final int IL_BMP = 0x420; 
-    public static final int IL_CUT = 0x421; 
-    public static final int IL_DOOM = 0x422; 
-    public static final int IL_DOOM_FLAT = 0x423; 
-    public static final int IL_ICO = 0x424; 
-    public static final int IL_JPG = 0x425; 
-    public static final int IL_LBM = 0x426; 
-    public static final int IL_PCD = 0x427; 
-    public static final int IL_PCX = 0x428; 
-    public static final int IL_PIC = 0x429; 
-    public static final int IL_PNG = 0x42A; 
-    public static final int IL_PNM = 0x42B; 
-    public static final int IL_SGI = 0x42C; 
-    public static final int IL_TGA = 0x42D; 
-    public static final int IL_TIF = 0x42E; 
-    public static final int IL_CHEAD = 0x42F; 
-    public static final int IL_RAW = 0x430; 
-    public static final int IL_MDL = 0x431; 
-    public static final int IL_WAL = 0x432; 
-    public static final int IL_OIL = 0x433; 
-    public static final int IL_LIF = 0x434; 
-    public static final int IL_MNG = 0x435; 
-    public static final int IL_JNG = 0x435; 
-    public static final int IL_GIF = 0x436; 
-    public static final int IL_DDS = 0x437; 
-    public static final int IL_DCX = 0x438; 
-    public static final int IL_PSD = 0x439; 
-    public static final int IL_EXIF = 0x43A; 
-    public static final int IL_PSP = 0x43B; 
-    public static final int IL_PIX = 0x43C; 
-    public static final int IL_PXR = 0x43D; 
-    public static final int IL_XPM = 0x43E; 
-     
-    public static final int IL_JASC_PAL = 0x475; 
-     
-    // Error Types 
-    public static final int IL_NO_ERROR = 0x0; 
-    public static final int IL_INVALID_ENUM = 0x501; 
-    public static final int IL_OUT_OF_MEMORY = 0x502; 
-    public static final int IL_FORMAT_NOT_SUPPORTED = 0x503; 
-    public static final int IL_INTERNAL_ERROR = 0x504; 
-    public static final int IL_INVALID_VALUE = 0x505; 
-    public static final int IL_ILLEGAL_OPERATION = 0x506; 
-    public static final int IL_ILLEGAL_FILE_VALUE = 0x507; 
-    public static final int IL_INVALID_FILE_HEADER = 0x508; 
-    public static final int IL_INVALID_PARAM = 0x509; 
-    public static final int IL_COULD_NOT_OPEN_FILE = 0x50A; 
-    public static final int IL_INVALID_EXTENSION = 0x50B; 
-    public static final int IL_FILE_ALREADY_EXISTS = 0x50C; 
-    public static final int IL_OUT_FORMAT_SAME = 0x50D; 
-    public static final int IL_STACK_OVERFLOW = 0x50E; 
-    public static final int IL_STACK_UNDERFLOW = 0x50F; 
-    public static final int IL_INVALID_CONVERSION = 0x510; 
-    public static final int IL_BAD_DIMENSIONS = 0x511; 
-    public static final int IL_FILE_READ_ERROR = 0x512; 
-     
-    public static final int IL_LIB_GIF_ERROR = 0x5E1; 
-    public static final int IL_LIB_JPEG_ERROR = 0x5E2; 
-    public static final int IL_LIB_PNG_ERROR = 0x5E3; 
-    public static final int IL_LIB_TIFF_ERROR = 0x5E4; 
-    public static final int IL_LIB_MNG_ERROR = 0x5E5; 
-    public static final int IL_UNKNOWN_ERROR = 0x5FF; 
-     
-    // Origin Definitions 
-    public static final int IL_ORIGIN_SET = 0x600; 
-    public static final int IL_ORIGIN_LOWER_LEFT = 0x601; 
-    public static final int IL_ORIGIN_UPPER_LEFT = 0x602; 
-    public static final int IL_ORIGIN_MODE = 0x603; 
-     
-    // Format and Type Mode Definitions 
-    public static final int IL_FORMAT_SET = 0x610; 
-    public static final int IL_FORMAT_MODE = 0x611; 
-    public static final int IL_TYPE_SET = 0x612; 
-    public static final int IL_TYPE_MODE = 0x613; 
-     
-    // File definitions 
-    public static final int IL_FILE_OVERWRITE = 0x620; 
-    public static final int IL_FILE_MODE = 0x621; 
-     
-    // Palette definitions 
-    public static final int IL_CONV_PAL = 0x630; 
-     
-    // Load fail definitions 
-    public static final int IL_DEFAULT_ON_FAIL = 0x632; 
-     
-    // Key colour definitions 
-    public static final int IL_USE_KEY_COLOUR = 0x635; 
-    public static final int IL_USE_KEY_COLOR = 0x635; 
-     
-    // Interlace definitions 
-    public static final int IL_SAVE_INTERLACED = 0x639; 
-    public static final int IL_INTERLACE_MODE = 0x63A; 
-     
-    // Quantization definitions 
-    public static final int IL_QUANTIZATION_MODE = 0x640; 
-    public static final int IL_WU_QUANT = 0x641; 
-    public static final int IL_NEU_QUANT = 0x642; 
-    public static final int IL_NEU_QUANT_SAMPLE = 0x643; 
-     
-    // Hints 
-    public static final int IL_FASTEST = 0x660; 
-    public static final int IL_LESS_MEM = 0x661; 
-    public static final int IL_DONT_CARE = 0x662; 
-    public static final int IL_MEM_SPEED_HINT = 0x665; 
-    public static final int IL_USE_COMPRESSION = 0x666; 
-    public static final int IL_NO_COMPRESSION = 0x667; 
-    public static final int IL_COMPRESSION_HINT = 0x668; 
-     
-    // Subimage types 
-    public static final int IL_SUB_NEXT = 0x680; 
-    public static final int IL_SUB_MIPMAP = 0x681; 
-    public static final int IL_SUB_LAYER = 0x682; 
-     
-    // Compression definitions (mostly for .oil) 
-    public static final int IL_COMPRESS_MODE = 0x700; 
-    public static final int IL_COMPRESS_NONE = 0x701; 
-    public static final int IL_COMPRESS_RLE = 0x702; 
-    public static final int IL_COMPRESS_LZO = 0x703; 
-    public static final int IL_COMPRESS_ZLIB = 0x704; 
-     
-    // File format-specific values 
-    public static final int IL_TGA_CREATE_STAMP = 0x710; 
-    public static final int IL_JPG_QUALITY = 0x711; 
-    public static final int IL_PNG_INTERLACE = 0x712; 
-    public static final int IL_TGA_RLE = 0x713; 
-    public static final int IL_BMP_RLE = 0x714; 
-    public static final int IL_SGI_RLE = 0x715; 
-    public static final int IL_TGA_ID_STRING = 0x717; 
-    public static final int IL_TGA_AUTHNAME_STRING = 0x718; 
-    public static final int IL_TGA_AUTHCOMMENT_STRING = 0x719; 
-    public static final int IL_PNG_AUTHNAME_STRING = 0x71A; 
-    public static final int IL_PNG_TITLE_STRING = 0x71B; 
-    public static final int IL_PNG_DESCRIPTION_STRING = 0x71C; 
-    public static final int IL_TIF_DESCRIPTION_STRING = 0x71D; 
-    public static final int IL_TIF_HOSTCOMPUTER_STRING = 0x71E; 
-    public static final int IL_TIF_DOCUMENTNAME_STRING = 0x71F; 
-    public static final int IL_TIF_AUTHNAME_STRING = 0x720; 
-    public static final int IL_JPG_SAVE_FORMAT = 0x721; 
-    public static final int IL_CHEAD_HEADER_STRING = 0x722; 
-    public static final int IL_PCD_PICNUM = 0x723; 
-     
-    // DXTC definitions 
-    public static final int IL_DXTC_FORMAT = 0x705; 
-    public static final int IL_DXT1 = 0x706; 
-    public static final int IL_DXT2 = 0x707; 
-    public static final int IL_DXT3 = 0x708; 
-    public static final int IL_DXT4 = 0x709; 
-    public static final int IL_DXT5 = 0x70A; 
-    public static final int IL_DXT_NO_COMP = 0x70B; 
-    public static final int IL_KEEP_DXTC_DATA = 0x70C; 
-    public static final int IL_DXTC_DATA_FORMAT = 0x70D; 
-     
-    // Cube map definitions 
-    public static final int IL_CUBEMAP_POSITIVEX = 0x400; 
-    public static final int IL_CUBEMAP_NEGATIVEX = 0x800; 
-    public static final int IL_CUBEMAP_POSITIVEY = 0x1000; 
-    public static final int IL_CUBEMAP_NEGATIVEY = 0x2000; 
-    public static final int IL_CUBEMAP_POSITIVEZ = 0x4000; 
-    public static final int IL_CUBEMAP_NEGATIVEZ = 0x8000; 
-     
-    // Values 
-    public static final int IL_VERSION_NUM = 0xDE2; 
-    public static final int IL_IMAGE_WIDTH = 0xDE4; 
-    public static final int IL_IMAGE_HEIGHT = 0xDE5; 
-    public static final int IL_IMAGE_DEPTH = 0xDE6; 
-    public static final int IL_IMAGE_SIZE_OF_DATA = 0xDE7; 
-    public static final int IL_IMAGE_BPP = 0xDE8; 
-    public static final int IL_IMAGE_BYTES_PER_PIXEL = 0xDE8; 
-    public static final int IL_IMAGE_BITS_PER_PIXEL = 0xDE9; 
-    public static final int IL_IMAGE_FORMAT = 0xDEA; 
-    public static final int IL_IMAGE_TYPE = 0xDEB; 
-    public static final int IL_PALETTE_TYPE = 0xDEC; 
-    public static final int IL_PALETTE_SIZE = 0xDED; 
-    public static final int IL_PALETTE_BPP = 0xDEE; 
-    public static final int IL_PALETTE_NUM_COLS = 0xDEF; 
-    public static final int IL_PALETTE_BASE_TYPE = 0xDF0; 
-    public static final int IL_NUM_IMAGES = 0xDF1; 
-    public static final int IL_NUM_MIPMAPS = 0xDF2; 
-    public static final int IL_NUM_LAYERS = 0xDF3; 
-    public static final int IL_ACTIVE_IMAGE = 0xDF4; 
-    public static final int IL_ACTIVE_MIPMAP = 0xDF5; 
-    public static final int IL_ACTIVE_LAYER = 0xDF6; 
-    public static final int IL_CUR_IMAGE = 0xDF7; 
-    public static final int IL_IMAGE_DURATION = 0xDF8; 
-    public static final int IL_IMAGE_PLANESIZE = 0xDF9; 
-    public static final int IL_IMAGE_BPC = 0xDFA; 
-    public static final int IL_IMAGE_OFFX = 0xDFB; 
-    public static final int IL_IMAGE_OFFY = 0xDFC; 
-    public static final int IL_IMAGE_CUBEFLAGS = 0xDFD; 
-     
-    public static final int IL_SEEK_SET = 0; 
-    public static final int IL_SEEK_CUR = 1; 
-    public static final int IL_SEEK_END = 2; 
-    public static final int IL_EOF = -1; 
-    
-    static {
-        //System.loadLibrary("DevIL");
-    	System.loadLibrary("lwjgl-devil");
-    }
-    
-    /**
-     * @return true if DevIL has been created
-     */
-    public static boolean isCreated() {
-      return created;
-    }     
 
-    public static native void initNativeStubs() throws LWJGLException;
-    
-    public static native boolean ilActiveImage(int Number);
-    public static native boolean ilActiveLayer(int Number);
-    public static native boolean ilActiveMipmap(int Number);
-    public static native boolean ilApplyPal(String FileName);
-    public static native boolean ilApplyProfile(String InProfile, String OutProfile);
-    public static native void ilBindImage(int image);
-    public static native boolean ilBlit(int Source, int DestX, int DestY, int DestZ, int SrcX, int SrcY, int SrcZ, int Width, int Height, int Depth);
-    public static native void ilClearColour(float Red, float Green, float Blue, float Alpha);
-    public static native boolean ilClearImage();
-    public static native int ilCloneCurImage();
-    public static native boolean ilCompressFunc(int Mode);
-    public static native boolean ilConvertImage(int DestFormat, int DestType);
-    public static native boolean ilConvertPal(int DestFormat);
-    public static native boolean ilCopyImage(int Src);
-    public static int ilCopyPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data) {
-        BufferChecks.checkDirect(Data);
-        return nilCopyPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
-    }
-    public static native int nilCopyPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data, int data_offset);
-    public static native int ilCreateSubImage(int Type, int Num);
-    public static native boolean ilDefaultImage();
-    public static void ilDeleteImages(int num, IntBuffer images) {
-        BufferChecks.checkDirect(images);
-        nilDeleteImages(num, images, images.position());
-    }
-    public static native void nilDeleteImages(int num, IntBuffer images, int images_offset);
-    public static native boolean ilDisable(int Mode);
-    public static native boolean ilEnable(int Mode);
-    public static native boolean ilFormatFunc(int Mode);
-    public static void ilGenImages(int num, IntBuffer images) {
-        BufferChecks.checkDirect(images);
-        nilGenImages(num, images, images.position());
-    }
-    public static native void nilGenImages(int num, IntBuffer images, int images_offset);
-    public static native ByteBuffer ilGetAlpha(int Type);//ILubyte*
-    public static native void ilModAlpha( int AlphaValue );
-    public static native void ilSetAlpha( int AlphaValue );
-    public static native boolean ilGetBoolean(int Mode);
-//    public static native void ilGetBooleanv(int Mode, boolean *Param);
-    public static native ByteBuffer ilGetData();
-//    public static native int ilGetDXTCData(ILvoid *Buffer, int BufferSize, int DXTCFormat);
-    public static native int ilGetError();
-    public static native int ilGetInteger(int mode);
-//    public static native void ilGetIntegerv(int Mode, int *Param);
-    public static native int ilGetLumpPos();
-    public static native ByteBuffer ilGetPalette();//ILubyte*
-    public static native String ilGetString(int StringName);//String
-    public static native void ilHint(int Target, int Mode);
-    public static native void ilInit();
-    public static native boolean ilIsDisabled(int Mode);
-    public static native boolean ilIsEnabled(int Mode);
-    public static native boolean ilIsImage(int Image);
-    public static native boolean ilIsValid(int Type, String FileName);
-    //ilIsValidF() uses a Windows file handle so will not be implemented
-//    public static native boolean ilIsValidF(int Type, ILHANDLE File);
-    public static boolean ilIsValidL(int Type, ByteBuffer Lump, int Size) {
-        BufferChecks.checkDirect(Lump);
-        return nilIsValidL(Type, Lump, Lump.position(), Size);
-    }
-    public static native boolean nilIsValidL(int Type, ByteBuffer Lump,  int lump_offset, int Size);
-    public static native void ilKeyColour(float Red, float Green, float Blue, float Alpha);
-    public static native boolean ilLoad(int Type, String FileName);
-    //ilLoadF() uses a Windows file handle so will not be implemented
-//    public static native boolean ilLoadF(int Type, ILHANDLE File);
-    public static native boolean ilLoadImage(String fileName);
-    public static boolean ilLoadFromURL(URL url) {
-        boolean result = false;
-        int type = IL_TYPE_UNKNOWN;
-        
-        String file = url.toString();
-        int index = file.lastIndexOf('.');
-        if(index != -1) {
-            String extension = file.substring(index + 1);
-            if(extension.equalsIgnoreCase("bmp")) {
-                type = IL_BMP;
-            }
-            else if(extension.equalsIgnoreCase("cut")) {
-                type = IL_CUT;
-            }
-            else if(extension.equalsIgnoreCase("gif")) {
-                type = IL_GIF;
-            }
-            else if(extension.equalsIgnoreCase("ico")) {
-                type = IL_ICO;
-            }
-            else if(extension.equalsIgnoreCase("jpg")) {
-                type = IL_JPG;
-            }
-            else if(extension.equalsIgnoreCase("lif")) {
-                type = IL_LIF;
-            }
-            else if(extension.equalsIgnoreCase("mng")) {
-                type = IL_MNG;
-            }
-            else if(extension.equalsIgnoreCase("pcd")) {
-                type = IL_PCD;
-            }
-            else if(extension.equalsIgnoreCase("pcx")) {
-                type = IL_PCX;
-            }
-            else if(extension.equalsIgnoreCase("pic")) {
-                type = IL_PIC;
-            }
-            else if(extension.equalsIgnoreCase("png")) {
-                type = IL_PNG;
-            }
-            else if(extension.equalsIgnoreCase("pbm") || 
-                    extension.equalsIgnoreCase("pgm") || 
-                    extension.equalsIgnoreCase("ppm")) {
-                type = IL_PNM;
-            }
-            else if(extension.equalsIgnoreCase("psd")) {
-                type = IL_PSD;
-            }
-            else if(extension.equalsIgnoreCase("psp")) {
-                type = IL_PSP;
-            }
-            else if(extension.equalsIgnoreCase("bw") ||
-                    extension.equalsIgnoreCase("rgb") ||
-                    extension.equalsIgnoreCase("rgba") ||
-                    extension.equalsIgnoreCase("sgi")) {
-                type = IL_SGI;
-            }
-            else if(extension.equalsIgnoreCase("tga")) {
-                type = IL_TGA;
-            }
-            else if(extension.equalsIgnoreCase("tif") ||
-                    extension.equalsIgnoreCase("tiff")) {
-                type = IL_TIF;
-            }
-        }
+	public static final int		IL_FALSE										= 0;
+	public static final int		IL_TRUE											= 1;
 
-        try {
-            result = ilLoadFromStream(url.openStream(), type);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-            result = false;
-        }
-        
-        return result;
-    }
-    public static boolean ilLoadFromStream(InputStream stream, int type) {
-        boolean result = false;
-        int bufferLength = BUFFER_LENGTH;
-        int lastRead = 0;
-        byte read[] = new byte[bufferLength];
-        byte block[] = new byte[0];
-        
-        BufferedInputStream buf = new BufferedInputStream(stream);
-        try {
-            do {
-                lastRead = buf.read(read);
-                if(lastRead != -1) {
-                    block = appendByteArray(block, read, lastRead);
-                }
-            } while(lastRead != -1);
-            ByteBuffer lump = ByteBuffer.allocateDirect(block.length);
-            lump.put(block);
-            lump.flip();
-            result = ilLoadL(type, lump, block.length);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-            result = false;
-        }
-        
-        return result;
-    }
-    private static byte[] appendByteArray(byte oldArray[], byte copyArray[], int length) {
-        int oldLength = oldArray.length;
-        byte newArray[] = new byte[oldLength + length];
-        
-        for(int i=0;i<oldLength;i++) {
-            newArray[i] = oldArray[i];
-        }
-        for(int i=0;i<length;i++) {
-            newArray[i + oldLength] = copyArray[i];
-        }
-        
-        return newArray;
-    }
-    public static boolean ilLoadL(int Type, ByteBuffer Lump, int Size) {
-        BufferChecks.checkDirect(Lump);
-        return nilLoadL(Type, Lump, Lump.position(), Size);
-    }
-    public static native boolean nilLoadL(int Type, ByteBuffer Lump, int lump_offset, int Size);
-    public static native boolean ilLoadPal(String FileName);
-    public static native boolean ilOriginFunc(int Mode);
-    public static native boolean ilOverlayImage(int Source, int XCoord, int YCoord, int ZCoord);
-    public static native void ilPopAttrib();
-    public static native void ilPushAttrib(int Bits);
-//    public static native void ilRegisterFormat(int Format);
-//    public static native boolean ilRegisterLoad(String Ext, IL_LOADPROC Load);
-//    public static native boolean ilRegisterMipNum(int Num);
-//    public static native boolean ilRegisterNumImages(int Num);
-//    public static native void ilRegisterOrigin(int Origin);
-//    public static void ilRegisterPal(ByteBuffer Pal, int Size, int Type) {
-//        BufferChecks.checkDirect(Pal);
-//        nilRegisterPal(Pal, Pal.position(), Size, Type);
-//    }
-//    public static native void nilRegisterPal(ByteBuffer Pal, int pal_position, int Size, int Type);
-//    public static native boolean ilRegisterSave(String Ext, IL_SAVEPROC Save);
-//    public static native void ilRegisterType(int Type);
-    public static native boolean ilRemoveLoad(String Ext);
-    public static native boolean ilRemoveSave(String Ext);
-    public static native void ilResetMemory();
-    public static native void ilResetRead();
-    public static native void ilResetWrite();
-    public static native boolean ilSave(int Type, String FileName);
-    //ilSaveF() uses a Windows file handle so will not be implemented
-//    public static native int ilSaveF(int Type, ILHANDLE File);
-    public static native boolean ilSaveImage(String FileName);
-    public static int ilSaveL(int Type, ByteBuffer Lump, int Size) {
-        BufferChecks.checkDirect(Lump);
-        return nilSaveL(Type, Lump, Lump.position(), Size);
-    }
-    public static native int nilSaveL(int Type, ByteBuffer Lump, int lump_offset, int Size);
-    public static native boolean ilSavePal(String FileName);
-    public static boolean ilSetData(ByteBuffer Data) {
-        BufferChecks.checkDirect(Data);
-        return nilSetData(Data, Data.position());
-    }
-    public static native boolean nilSetData(ByteBuffer Data, int data_offset);
-    public static native boolean ilSetDuration(int Duration);
-    public static native void ilSetInteger(int Mode, int Param);
-//    public static native void ilSetMemory(mAlloc, mFree);
-    public static void ilSetPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data) {
-        BufferChecks.checkDirect(Data);
-        nilSetPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
-    }
-    public static native void nilSetPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data, int data_offset);
-//    public static native void ilSetRead(fOpenRProc, fCloseRProc, fEofProc, fGetcProc, fReadProc, fSeekRProc, fTellRProc);
-    public static native void ilSetString(int Mode, String string);
-//    public static native void ilSetWrite(fOpenWProc, fCloseWProc, fPutcProc, fSeekWProc, fTellWProc, fWriteProc);
-    public static native void ilShutDown();
-    public static boolean ilTexImage(int Width, int Height, int Depth, byte Bpp, int Format, int Type, ByteBuffer Data) {
-        BufferChecks.checkDirect(Data);
-        return nilTexImage(Width, Height, Depth, Bpp, Format, Type, Data, Data.position());
-    }
-    public static native boolean nilTexImage(int Width, int Height, int Depth, byte Bpp, int Format, int Type, ByteBuffer Data, int data_offset);
-    public static native boolean ilTypeFunc(int Mode);
-    public static native boolean ilLoadData(String FileName, int Width, int Height, int Depth, byte Bpp);
-//    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);
-    public static boolean ilLoadDataL(ByteBuffer Lump, int Size, int Width, int Height, int Depth, byte Bpp) {
-        BufferChecks.checkDirect(Lump);
-        return nilLoadDataL(Lump, Lump.position(), Size, Width, Height, Depth, Bpp);
-    }
-    public static native boolean nilLoadDataL(ByteBuffer Lump, int lump_offset, int Size, int Width, int Height, int Depth, byte Bpp);
-    public static native boolean ilSaveData(String FileName);
+	// Matches OpenGL's right now. 
+	public static final int		IL_COLOUR_INDEX							= 0x1900;
+	public static final int		IL_COLOR_INDEX							= 0x1900;
+	public static final int		IL_RGB											= 0x1907;
+	public static final int		IL_RGBA											= 0x1908;
+	public static final int		IL_BGR											= 0x80E0;
+	public static final int		IL_BGRA											= 0x80E1;
+	public static final int		IL_LUMINANCE								= 0x1909;
+	public static final int		IL_BYTE											= 0x1400;
 
-//    public static native boolean ilLoadFromJpegStruct(ILvoid* JpegDecompressorPtr);
-//    public static native boolean ilSaveFromJpegStruct(ILvoid* JpegCompressorPtr);
+	public static final int 	IL_UNSIGNED_BYTE 						= 0x1401; 
+	public static final int		IL_SHORT										= 0x1402;
+	public static final int 	IL_UNSIGNED_SHORT 					= 0x1403; 
+	public static final int		IL_INT											= 0x1404;
+	public static final int 	IL_UNSIGNED_INT 						= 0x1405; 
+	public static final int		IL_FLOAT										= 0x1406;
+	public static final int		IL_DOUBLE										= 0x140A;
+	public static final int		IL_VENDOR										= 0x1F00;
 
-		/**
-		 * 
-		 */
-    public static void create() throws LWJGLException {
-    	if (!created) {
-            nCreate();
-    		IL.initNativeStubs();
-    		IL.ilInit();
-    		created = true;
-    	}
-    }
-    
-    public static native void nCreate();
+	// IL-specific public const's 
+	public static final int		IL_VERSION_1_6_0						= 1;
+	public static final int		IL_VERSION									= 160;
+	public static final int		IL_LOAD_EXT									= 0x1F01;
+	public static final int		IL_SAVE_EXT									= 0x1F02;
+
+	// Attribute Bits 
+	public static final int		IL_ORIGIN_BIT								= 0x1;
+	public static final int		IL_FILE_BIT									= 0x2;
+	public static final int		IL_PAL_BIT									= 0x4;
+	public static final int		IL_FORMAT_BIT								= 0x8;
+	public static final int		IL_TYPE_BIT									= 0x10;
+	public static final int		IL_COMPRESS_BIT							= 0x20;
+	public static final int		IL_LOADFAIL_BIT							= 0x40;
+	public static final int		IL_FORMAT_SPECIFIC_BIT			= 0x80;
+	public static final int		IL_ALL_ATTRIB_BITS					= 0xFFFFF;
+
+	// Palette types 
+	public static final int		IL_PAL_NONE									= 0x400;
+	public static final int		IL_PAL_RGB24								= 0x401;
+	public static final int		IL_PAL_RGB32								= 0x402;
+	public static final int		IL_PAL_RGBA32								= 0x403;
+	public static final int		IL_PAL_BGR24								= 0x404;
+	public static final int		IL_PAL_BGR32								= 0x405;
+	public static final int		IL_PAL_BGRA32								= 0x406;
+
+	// Image types 
+	public static final int		IL_TYPE_UNKNOWN							= 0x0;
+	public static final int		IL_BMP											= 0x420;
+	public static final int		IL_CUT											= 0x421;
+	public static final int		IL_DOOM											= 0x422;
+	public static final int		IL_DOOM_FLAT								= 0x423;
+	public static final int		IL_ICO											= 0x424;
+	public static final int		IL_JPG											= 0x425;
+	public static final int		IL_LBM											= 0x426;
+	public static final int		IL_PCD											= 0x427;
+	public static final int		IL_PCX											= 0x428;
+	public static final int		IL_PIC											= 0x429;
+	public static final int		IL_PNG											= 0x42A;
+	public static final int		IL_PNM											= 0x42B;
+	public static final int		IL_SGI											= 0x42C;
+	public static final int		IL_TGA											= 0x42D;
+	public static final int		IL_TIF											= 0x42E;
+	public static final int		IL_CHEAD										= 0x42F;
+	public static final int		IL_RAW											= 0x430;
+	public static final int		IL_MDL											= 0x431;
+	public static final int		IL_WAL											= 0x432;
+	public static final int		IL_OIL											= 0x433;
+	public static final int		IL_LIF											= 0x434;
+	public static final int		IL_MNG											= 0x435;
+	public static final int		IL_JNG											= 0x435;
+	public static final int		IL_GIF											= 0x436;
+	public static final int		IL_DDS											= 0x437;
+	public static final int		IL_DCX											= 0x438;
+	public static final int		IL_PSD											= 0x439;
+	public static final int		IL_EXIF											= 0x43A;
+	public static final int		IL_PSP											= 0x43B;
+	public static final int		IL_PIX											= 0x43C;
+	public static final int		IL_PXR											= 0x43D;
+	public static final int		IL_XPM											= 0x43E;
+	public static final int		IL_JASC_PAL									= 0x475;
+
+	// Error Types 
+	public static final int		IL_NO_ERROR									= 0x0;
+	public static final int		IL_INVALID_ENUM							= 0x501;
+	public static final int		IL_OUT_OF_MEMORY						= 0x502;
+	public static final int		IL_FORMAT_NOT_SUPPORTED			= 0x503;
+	public static final int		IL_INTERNAL_ERROR						= 0x504;
+	public static final int		IL_INVALID_VALUE						= 0x505;
+	public static final int		IL_ILLEGAL_OPERATION				= 0x506;
+	public static final int		IL_ILLEGAL_FILE_VALUE				= 0x507;
+	public static final int		IL_INVALID_FILE_HEADER			= 0x508;
+	public static final int		IL_INVALID_PARAM						= 0x509;
+	public static final int		IL_COULD_NOT_OPEN_FILE			= 0x50A;
+	public static final int		IL_INVALID_EXTENSION				= 0x50B;
+	public static final int		IL_FILE_ALREADY_EXISTS			= 0x50C;
+	public static final int		IL_OUT_FORMAT_SAME					= 0x50D;
+	public static final int		IL_STACK_OVERFLOW						= 0x50E;
+	public static final int		IL_STACK_UNDERFLOW					= 0x50F;
+	public static final int		IL_INVALID_CONVERSION				= 0x510;
+	public static final int		IL_BAD_DIMENSIONS						= 0x511;
+	public static final int		IL_FILE_READ_ERROR					= 0x512;
+	public static final int		IL_LIB_GIF_ERROR						= 0x5E1;
+	public static final int		IL_LIB_JPEG_ERROR						= 0x5E2;
+	public static final int		IL_LIB_PNG_ERROR						= 0x5E3;
+	public static final int		IL_LIB_TIFF_ERROR						= 0x5E4;
+	public static final int		IL_LIB_MNG_ERROR						= 0x5E5;
+	public static final int		IL_UNKNOWN_ERROR						= 0x5FF;
+
+	// Origin Definitions 
+	public static final int		IL_ORIGIN_SET								= 0x600;
+	public static final int		IL_ORIGIN_LOWER_LEFT				= 0x601;
+	public static final int		IL_ORIGIN_UPPER_LEFT				= 0x602;
+	public static final int		IL_ORIGIN_MODE							= 0x603;
+
+	// Format and Type Mode Definitions 
+	public static final int		IL_FORMAT_SET								= 0x610;
+	public static final int		IL_FORMAT_MODE							= 0x611;
+	public static final int		IL_TYPE_SET									= 0x612;
+	public static final int		IL_TYPE_MODE								= 0x613;
+
+	// File definitions 
+	public static final int		IL_FILE_OVERWRITE						= 0x620;
+	public static final int		IL_FILE_MODE								= 0x621;
+
+	// Palette definitions 
+	public static final int		IL_CONV_PAL									= 0x630;
+
+	// Load fail definitions 
+	public static final int		IL_DEFAULT_ON_FAIL					= 0x632;
+
+	// Key colour definitions 
+	public static final int		IL_USE_KEY_COLOUR						= 0x635;
+	public static final int		IL_USE_KEY_COLOR						= 0x635;
+
+	// Interlace definitions 
+	public static final int		IL_SAVE_INTERLACED					= 0x639;
+	public static final int		IL_INTERLACE_MODE						= 0x63A;
+
+	// Quantization definitions 
+	public static final int		IL_QUANTIZATION_MODE				= 0x640;
+	public static final int		IL_WU_QUANT									= 0x641;
+	public static final int		IL_NEU_QUANT								= 0x642;
+	public static final int		IL_NEU_QUANT_SAMPLE					= 0x643;
+
+	// Hints 
+	public static final int		IL_FASTEST									= 0x660;
+	public static final int		IL_LESS_MEM									= 0x661;
+	public static final int		IL_DONT_CARE								= 0x662;
+	public static final int		IL_MEM_SPEED_HINT						= 0x665;
+	public static final int		IL_USE_COMPRESSION					= 0x666;
+	public static final int		IL_NO_COMPRESSION						= 0x667;
+	public static final int		IL_COMPRESSION_HINT					= 0x668;
+
+	// Subimage types 
+	public static final int		IL_SUB_NEXT									= 0x680;
+	public static final int		IL_SUB_MIPMAP								= 0x681;
+	public static final int		IL_SUB_LAYER								= 0x682;
+
+	// Compression definitions (mostly for .oil) 
+	public static final int		IL_COMPRESS_MODE						= 0x700;
+	public static final int		IL_COMPRESS_NONE						= 0x701;
+	public static final int		IL_COMPRESS_RLE							= 0x702;
+	public static final int		IL_COMPRESS_LZO							= 0x703;
+	public static final int		IL_COMPRESS_ZLIB						= 0x704;
+
+	// File format-specific values 
+	public static final int		IL_TGA_CREATE_STAMP					= 0x710;
+	public static final int		IL_JPG_QUALITY							= 0x711;
+	public static final int		IL_PNG_INTERLACE						= 0x712;
+	public static final int		IL_TGA_RLE									= 0x713;
+	public static final int		IL_BMP_RLE									= 0x714;
+	public static final int		IL_SGI_RLE									= 0x715;
+	public static final int		IL_TGA_ID_STRING						= 0x717;
+	public static final int		IL_TGA_AUTHNAME_STRING			= 0x718;
+	public static final int		IL_TGA_AUTHCOMMENT_STRING		= 0x719;
+	public static final int		IL_PNG_AUTHNAME_STRING			= 0x71A;
+	public static final int		IL_PNG_TITLE_STRING					= 0x71B;
+	public static final int		IL_PNG_DESCRIPTION_STRING		= 0x71C;
+	public static final int		IL_TIF_DESCRIPTION_STRING		= 0x71D;
+	public static final int		IL_TIF_HOSTCOMPUTER_STRING	= 0x71E;
+	public static final int		IL_TIF_DOCUMENTNAME_STRING	= 0x71F;
+	public static final int		IL_TIF_AUTHNAME_STRING			= 0x720;
+	public static final int		IL_JPG_SAVE_FORMAT					= 0x721;
+	public static final int		IL_CHEAD_HEADER_STRING			= 0x722;
+	public static final int		IL_PCD_PICNUM								= 0x723;
+
+	// DXTC definitions 
+	public static final int		IL_DXTC_FORMAT							= 0x705;
+	public static final int		IL_DXT1											= 0x706;
+	public static final int		IL_DXT2											= 0x707;
+	public static final int		IL_DXT3											= 0x708;
+	public static final int		IL_DXT4											= 0x709;
+	public static final int		IL_DXT5											= 0x70A;
+	public static final int		IL_DXT_NO_COMP							= 0x70B;
+	public static final int		IL_KEEP_DXTC_DATA						= 0x70C;
+	public static final int		IL_DXTC_DATA_FORMAT					= 0x70D;
+
+	// Cube map definitions 
+	public static final int		IL_CUBEMAP_POSITIVEX				= 0x400;
+	public static final int		IL_CUBEMAP_NEGATIVEX				= 0x800;
+	public static final int		IL_CUBEMAP_POSITIVEY				= 0x1000;
+	public static final int		IL_CUBEMAP_NEGATIVEY				= 0x2000;
+	public static final int		IL_CUBEMAP_POSITIVEZ				= 0x4000;
+	public static final int		IL_CUBEMAP_NEGATIVEZ				= 0x8000;
+
+	// Values 
+	public static final int		IL_VERSION_NUM							= 0xDE2;
+	public static final int		IL_IMAGE_WIDTH							= 0xDE4;
+	public static final int		IL_IMAGE_HEIGHT							= 0xDE5;
+	public static final int		IL_IMAGE_DEPTH							= 0xDE6;
+	public static final int		IL_IMAGE_SIZE_OF_DATA				= 0xDE7;
+	public static final int		IL_IMAGE_BPP								= 0xDE8;
+	public static final int		IL_IMAGE_BYTES_PER_PIXEL		= 0xDE8;
+	public static final int		IL_IMAGE_BITS_PER_PIXEL			= 0xDE9;
+	public static final int		IL_IMAGE_FORMAT							= 0xDEA;
+	public static final int		IL_IMAGE_TYPE								= 0xDEB;
+	public static final int		IL_PALETTE_TYPE							= 0xDEC;
+	public static final int		IL_PALETTE_SIZE							= 0xDED;
+	public static final int		IL_PALETTE_BPP							= 0xDEE;
+	public static final int		IL_PALETTE_NUM_COLS					= 0xDEF;
+	public static final int		IL_PALETTE_BASE_TYPE				= 0xDF0;
+	public static final int		IL_NUM_IMAGES								= 0xDF1;
+	public static final int		IL_NUM_MIPMAPS							= 0xDF2;
+	public static final int		IL_NUM_LAYERS								= 0xDF3;
+	public static final int		IL_ACTIVE_IMAGE							= 0xDF4;
+	public static final int		IL_ACTIVE_MIPMAP						= 0xDF5;
+	public static final int		IL_ACTIVE_LAYER							= 0xDF6;
+	public static final int		IL_CUR_IMAGE								= 0xDF7;
+	public static final int		IL_IMAGE_DURATION						= 0xDF8;
+	public static final int		IL_IMAGE_PLANESIZE					= 0xDF9;
+	public static final int		IL_IMAGE_BPC								= 0xDFA;
+	public static final int		IL_IMAGE_OFFX								= 0xDFB;
+	public static final int		IL_IMAGE_OFFY								= 0xDFC;
+	public static final int		IL_IMAGE_CUBEFLAGS					= 0xDFD;
+	public static final int		IL_SEEK_SET									= 0;
+	public static final int		IL_SEEK_CUR									= 1;
+	public static final int		IL_SEEK_END									= 2;
+	public static final int		IL_EOF											= -1;
+	
+	/** Have we been created? */
+	protected static boolean	created;	
+
+
+	public static native boolean ilActiveImage(int Number);
+	public static native boolean ilActiveLayer(int Number);
+	public static native boolean ilActiveMipmap(int Number);
+	public static native boolean ilApplyPal(String FileName);
+	public static native boolean ilApplyProfile(String InProfile, String OutProfile);
+	public static native void ilBindImage(int image);
+	public static native boolean ilBlit(int Source, int DestX, int DestY, 
+																			int DestZ, int SrcX, int SrcY, int SrcZ,
+																			int Width, int Height, int Depth);
+	public static native void ilClearColour(float Red, float Green, float Blue, float Alpha);
+	public static native boolean ilClearImage();
+	public static native int ilCloneCurImage();
+	public static native boolean ilCompressFunc(int Mode);
+	public static native boolean ilConvertImage(int DestFormat, int DestType);
+	public static native boolean ilConvertPal(int DestFormat);
+	public static native boolean ilCopyImage(int Src);
+	public static int ilCopyPixels(	int XOff, int YOff, int ZOff, 
+																	int Width, int Height, int Depth, 
+																	int Format, int Type,	ByteBuffer Data) {
+		BufferChecks.checkDirect(Data);
+		return nilCopyPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
+	}
+
+	private static native int nilCopyPixels(int XOff, int YOff, int ZOff, int Width, 
+																					int Height, int Depth, int Format,
+																					int Type, ByteBuffer Data, int data_offset);
+
+	public static native int ilCreateSubImage(int Type, int Num);
+	public static native boolean ilDefaultImage();
+	public static void ilDeleteImages(int num, IntBuffer images) {
+		BufferChecks.checkDirect(images);
+		nilDeleteImages(num, images, images.position());
+	}
+
+	private static native void nilDeleteImages(int num, IntBuffer images, int images_offset);
+	public static native boolean ilDisable(int Mode);
+	public static native boolean ilEnable(int Mode);
+	public static native boolean ilFormatFunc(int Mode);
+	public static void ilGenImages(int num, IntBuffer images) {
+		BufferChecks.checkDirect(images);
+		nilGenImages(num, images, images.position());
+	}
+	private static native void nilGenImages(int num, IntBuffer images, int images_offset);
+
+	public static native ByteBuffer ilGetAlpha(int Type);
+	public static native void ilModAlpha(int AlphaValue);
+	public static native void ilSetAlpha(int AlphaValue);
+	public static native boolean ilGetBoolean(int Mode);
+	public static native ByteBuffer ilGetData();
+	public static native int ilGetError();
+	public static native int ilGetInteger(int mode);
+	public static native int ilGetLumpPos();
+	public static native ByteBuffer ilGetPalette();
+	public static native String ilGetString(int StringName);
+	public static native void ilHint(int Target, int Mode);
+	private static native void ilInit();
+	public static native boolean ilIsDisabled(int Mode);
+	public static native boolean ilIsEnabled(int Mode);
+	public static native boolean ilIsImage(int Image);
+	public static native boolean ilIsValid(int Type, String FileName);
+	public static boolean ilIsValidL(int Type, ByteBuffer Lump, int Size) {
+		BufferChecks.checkDirect(Lump);
+		return nilIsValidL(Type, Lump, Lump.position(), Size);
+	}
+	private static native boolean nilIsValidL(int Type, ByteBuffer Lump, int lump_offset, int Size);
+
+	public static native void ilKeyColour(float Red, float Green, float Blue, float Alpha);
+	public static native boolean ilLoad(int Type, String FileName);
+	public static native boolean ilLoadImage(String fileName);
+	public static boolean ilLoadL(int Type, ByteBuffer Lump, int Size) {
+		BufferChecks.checkDirect(Lump);
+		return nilLoadL(Type, Lump, Lump.position(), Size);
+	}
+
+	private static native boolean nilLoadL(int Type, ByteBuffer Lump, int lump_offset, int Size);
+	public static native boolean ilLoadPal(String FileName);
+	public static native boolean ilOriginFunc(int Mode);
+	public static native boolean ilOverlayImage(int Source, int XCoord, int YCoord, int ZCoord);
+	public static native void ilPopAttrib();
+	public static native void ilPushAttrib(int Bits);
+	public static native boolean ilRemoveLoad(String Ext);
+	public static native boolean ilRemoveSave(String Ext);
+	public static native void ilResetMemory();
+	public static native void ilResetRead();
+	public static native void ilResetWrite();
+	public static native boolean ilSave(int Type, String FileName);
+	public static native boolean ilSaveImage(String FileName);
+	public static int ilSaveL(int Type, ByteBuffer Lump, int Size) {
+		BufferChecks.checkDirect(Lump);
+		return nilSaveL(Type, Lump, Lump.position(), Size);
+	}
+	private static native int nilSaveL(int Type, ByteBuffer Lump, int lump_offset, int Size);
+
+	public static native boolean ilSavePal(String FileName);
+	public static boolean ilSetData(ByteBuffer Data) {
+		BufferChecks.checkDirect(Data);
+		return nilSetData(Data, Data.position());
+	}
+	private static native boolean nilSetData(ByteBuffer Data, int data_offset);
+
+	public static native boolean ilSetDuration(int Duration);
+	public static native void ilSetInteger(int Mode, int Param);
+	public static void ilSetPixels(	int XOff, int YOff, int ZOff, int Width, 
+																	int Height, int Depth, int Format, int Type, ByteBuffer Data) {
+		BufferChecks.checkDirect(Data);
+		nilSetPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
+	}
+	private static native void nilSetPixels(int XOff, int YOff, int ZOff, int Width, 
+																					int Height, int Depth, int Format,
+																					int Type, ByteBuffer Data, int data_offset);
+
+	public static native void ilSetString(int Mode, String string);
+	public static native void ilShutDown();
+	public static boolean ilTexImage(	int Width, int Height, int Depth, byte Bpp, 
+																		int Format, int Type, ByteBuffer Data) {
+		BufferChecks.checkDirect(Data);
+		return nilTexImage(Width, Height, Depth, Bpp, Format, Type, Data, Data.position());
+	}
+
+	private static native boolean nilTexImage(int Width, int Height, int Depth, byte Bpp,
+																						int Format, int Type, ByteBuffer Data, int data_offset);
+
+	public static native boolean ilTypeFunc(int Mode);
+	public static native boolean ilLoadData(String FileName, int Width, int Height, int Depth, byte Bpp);
+
+	public static boolean ilLoadDataL(ByteBuffer Lump, int Size, int Width, int Height, int Depth, byte Bpp) {
+		BufferChecks.checkDirect(Lump);
+		return nilLoadDataL(Lump, Lump.position(), Size, Width, Height, Depth, Bpp);
+	}
+	private static native boolean nilLoadDataL(ByteBuffer Lump, int lump_offset, int Size, int Width, int Height,
+			int Depth, byte Bpp);
+
+	public static native boolean ilSaveData(String FileName);	
+	
+	/**
+	 * Loads an image from the specified url
+	 * 
+	 * @param url URL to load from
+	 * @return true if image was loaded
+	 */
+	public static boolean ilLoadFromURL(URL url) {
+		boolean result = false;
+		int type = IL_TYPE_UNKNOWN;
+
+		String file = url.toString();
+		int index = file.lastIndexOf('.');
+		if (index != -1) {
+			String extension = file.substring(index + 1);
+			if (extension.equalsIgnoreCase("bmp")) {
+				type = IL_BMP;
+			} else if (extension.equalsIgnoreCase("cut")) {
+				type = IL_CUT;
+			} else if (extension.equalsIgnoreCase("gif")) {
+				type = IL_GIF;
+			} else if (extension.equalsIgnoreCase("ico")) {
+				type = IL_ICO;
+			} else if (extension.equalsIgnoreCase("jpg")) {
+				type = IL_JPG;
+			} else if (extension.equalsIgnoreCase("lif")) {
+				type = IL_LIF;
+			} else if (extension.equalsIgnoreCase("mng")) {
+				type = IL_MNG;
+			} else if (extension.equalsIgnoreCase("pcd")) {
+				type = IL_PCD;
+			} else if (extension.equalsIgnoreCase("pcx")) {
+				type = IL_PCX;
+			} else if (extension.equalsIgnoreCase("pic")) {
+				type = IL_PIC;
+			} else if (extension.equalsIgnoreCase("png")) {
+				type = IL_PNG;
+			} else if (extension.equalsIgnoreCase("pbm") || extension.equalsIgnoreCase("pgm")
+					|| extension.equalsIgnoreCase("ppm")) {
+				type = IL_PNM;
+			} else if (extension.equalsIgnoreCase("psd")) {
+				type = IL_PSD;
+			} else if (extension.equalsIgnoreCase("psp")) {
+				type = IL_PSP;
+			} else if (extension.equalsIgnoreCase("bw") || extension.equalsIgnoreCase("rgb")
+					|| extension.equalsIgnoreCase("rgba") || extension.equalsIgnoreCase("sgi")) {
+				type = IL_SGI;
+			} else if (extension.equalsIgnoreCase("tga")) {
+				type = IL_TGA;
+			} else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff")) {
+				type = IL_TIF;
+			}
+		}
+
+		// read stream
+		try {
+			result = ilLoadFromStream(url.openStream(), type);
+		} catch (IOException e) {
+			e.printStackTrace();
+			result = false;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Reads an image from an inputstream
+	 * 
+	 * @param stream Stream to read from
+	 * @param type Type of image to expect
+	 * @return true if image was loaded
+	 */
+	public static boolean ilLoadFromStream(InputStream stream, int type) {
+		boolean result = false;
+		int lastRead = 0;
+		byte[] buffer = new byte[4096];
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		BufferedInputStream buf = new BufferedInputStream(stream);
+		
+		try {
+			while((lastRead = buf.read(buffer, 0, buffer.length)) != -1) {
+				baos.write(buffer, 0, lastRead);
+			}
+			
+			buffer = baos.toByteArray();
+			ByteBuffer lump = ByteBuffer.allocateDirect(buffer.length);
+			lump.put(buffer);
+			lump.flip();
+			result = ilLoadL(type, lump, buffer.length);
+		} catch (IOException e) {
+			e.printStackTrace();
+			result = false;
+		}
+
+		return result;
+	}
+	
+	//    public static native int ilGetDXTCData(ILvoid *Buffer, int BufferSize, int DXTCFormat);
+	//    public static native void ilGetBooleanv(int Mode, boolean *Param);
+	//    public static native void ilGetIntegerv(int Mode, int *Param);
+	// ilIsValidF() uses a Windows file handle so will not be implemented
+	//    public static native boolean ilIsValidF(int Type, ILHANDLE File);
+	// ilLoadF() uses a Windows file handle so will not be implemented
+	//    public static native boolean ilLoadF(int Type, ILHANDLE File);
+	// ilSaveF() uses a Windows file handle so will not be implemented
+	//    public static native int ilSaveF(int Type, ILHANDLE File);
+	//    public static native void ilRegisterFormat(int Format);
+	//    public static native boolean ilRegisterLoad(String Ext, IL_LOADPROC Load);
+	//    public static native boolean ilRegisterMipNum(int Num);
+	//    public static native boolean ilRegisterNumImages(int Num);
+	//    public static native void ilRegisterOrigin(int Origin);
+	//    public static void ilRegisterPal(ByteBuffer Pal, int Size, int Type) {
+	//        BufferChecks.checkDirect(Pal);
+	//        nilRegisterPal(Pal, Pal.position(), Size, Type);
+	//    }
+	//    public static native void nilRegisterPal(ByteBuffer Pal, int pal_position, int Size, int Type);
+	//    public static native boolean ilRegisterSave(String Ext, IL_SAVEPROC Save);
+	//    public static native void ilRegisterType(int Type);
+	//    public static native void ilSetMemory(mAlloc, mFree);
+	//    public static native void ilSetRead(fOpenRProc, fCloseRProc, fEofProc, fGetcProc, fReadProc, fSeekRProc, fTellRProc);
+	//    public static native void ilSetWrite(fOpenWProc, fCloseWProc, fPutcProc, fSeekWProc, fTellWProc, fWriteProc);
+	//    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);	
+	
+
+	static {
+		System.loadLibrary("lwjgl-devil");
+	}
+
+
+	/**
+	 * @return true if DevIL has been created
+	 */
+	public static boolean isCreated() {
+		return created;
+	}
+
+	private static native void initNativeStubs() throws LWJGLException;
+
+	private static native void resetNativeStubs(Class clazz);
+
+	/**
+	 * Creates a new instance of IL.
+	 */
+	public static void create() throws LWJGLException {
+		if (created) {
+			return;
+		}
+
+		String[] illPaths = getILPaths();
+		nCreate(illPaths);
+		created = true;
+
+		try {
+			IL.initNativeStubs();
+			IL.ilInit();
+			created = true;
+		} catch (LWJGLException e) {
+			destroy();
+			throw e;
+		}
+	}
+
+	/**
+	 * Exit cleanly by calling destroy.
+	 */
+	public static void destroy() {
+		resetNativeStubs(IL.class);
+		if (created) {
+			nDestroy();
+		}
+		created = false;
+	}
+
+	/**
+	 * Native method to create IL instance
+	 * 
+	 * @param ilPaths Array of strings containing paths to search for Devil library
+	 */
+	protected static native void nCreate(String[] ilPaths) throws LWJGLException;
+
+	/**
+	 * Native method the destroy the IL
+	 */
+	protected static native void nDestroy();
+
+	private static String[] getILPaths() throws LWJGLException {
+		// need to pass path of possible locations of IL to native side
+		List possible_paths = new ArrayList();
+
+		String osName = System.getProperty("os.name");
+
+		String libname;
+		String platform_lib_name;
+		if (osName.startsWith("Win")) {
+			libname = "DevIL";
+			platform_lib_name = "DevIL.dll";
+		} else if (osName.startsWith("Lin")) {
+			libname = "DevIL";
+			platform_lib_name = "DevIL.so";
+		} else if (osName.startsWith("Mac")) {
+			libname = "DevIL";
+			platform_lib_name = "DevIL.dylib";
+		} else {
+			throw new LWJGLException("Unknown platform: " + osName);
+		}
+
+		// Add all possible paths from java.library.path
+		String java_library_path = System.getProperty("java.library.path");
+		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
+		while (st.hasMoreTokens()) {
+			String path = st.nextToken();
+			possible_paths.add(path + File.separator + platform_lib_name);
+		}
+
+		String classloader_path = getPathFromClassLoader(libname);
+		if (classloader_path != null) {
+			Sys.log("getPathFromClassLoader: Path found: " + classloader_path);
+			possible_paths.add(classloader_path);
+		}
+		String lwjgl_classloader_path = getPathFromClassLoader("lwjgl");
+		if (lwjgl_classloader_path != null) {
+			Sys.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
+			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
+					+ File.separator + platform_lib_name);
+		}
+
+		//add cwd path
+		possible_paths.add(platform_lib_name);
+		
+		//create needed string array
+		String[] ilPaths = new String[possible_paths.size()];
+		possible_paths.toArray(ilPaths);
+
+		return ilPaths;
+	}
+
+	/**
+	 * Tries to locate Devil from the current ClassLoader
+	 * This method exists because Devil is loaded from native code, and as such
+	 * is exempt from ClassLoader library loading rutines. Devil therefore always fails.
+	 * We therefore invoke the protected method of the ClassLoader to see if it can
+	 * locate it. 
+	 * 
+	 * @param libname Name of library to search for
+	 * @return Absolute path to library if found, otherwise null
+	 */
+	private static String getPathFromClassLoader(String libname) {
+		try {
+			Sys.log("getPathFromClassLoader: searching for: " + libname);
+			Object o = IL.class.getClassLoader();
+			Class c = o.getClass();
+			while (c != null) {
+				try {
+					Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class});
+					findLibrary.setAccessible(true);
+					Object[] arguments = new Object[] { libname};
+					return (String) findLibrary.invoke(o, arguments);
+				} catch (NoSuchMethodException e) {
+					c = c.getSuperclass();
+				}
+			}
+		} catch (Exception e) {
+			Sys.log("Failure locating DevIL using classloader:" + e);
+		}
+		return null;
+	}
 }

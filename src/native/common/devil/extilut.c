@@ -1,29 +1,29 @@
-#include "extil.h"
+#include "extilut.h"
 
-/* Handle to devil Library */
+/* Handle to ilut Library */
 #ifdef _WIN32
-static HMODULE devILhandle;
+static HMODULE devILUThandle;
 #endif
 #ifdef _X11
-static void* devILhandle;
+static void* devILUThandle;
 #endif
 #ifdef _MACOSX
 #include <mach-o/dyld.h>
 #include <stdlib.h>
 #include <string.h>
-static const struct mach_header* devILhandle;
+static const struct mach_header* devILUThandle;
 #endif
 
 /**
- * Retrieves a function pointer from the devil library
+ * Retrieves a function pointer from the ilut library
  * @param function Name of function to retrieve
  */
 static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _WIN32
-	return GetProcAddress(devILhandle, function);
+	return GetProcAddress(devILUThandle, function);
 #endif
 #ifdef _X11
-	return dlsym(devILhandle, function);
+	return dlsym(devILUThandle, function);
 #endif
 #ifdef _MACOSX
 	char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
@@ -31,7 +31,7 @@ static void *NativeGetFunctionPointer(const char *function) {
 		return NULL;
 	mac_symbol_name[0] = '_';
 	strcpy(&(mac_symbol_name[1]), function);
-	NSSymbol symbol = NSLookupSymbolInImage(devILhandle, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+	NSSymbol symbol = NSLookupSymbolInImage(devILUThandle, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
 	free(mac_symbol_name);
 	if (symbol == NULL)
 		return NULL;
@@ -45,7 +45,7 @@ static void *NativeGetFunctionPointer(const char *function) {
  * @param function Name of function
  * @return pointer to named function, or NULL if not found
  */
-static void* extil_GetProcAddress(const char* function) {
+static void* extilut_GetProcAddress(const char* function) {
 	void *p = NativeGetFunctionPointer(function);
 	if (p == NULL) {
 		printfDebug("Could not locate symbol %s\n", function);
@@ -56,60 +56,60 @@ static void* extil_GetProcAddress(const char* function) {
 /**
  * Initializes all functions for class
  */
-void extil_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions) {
-    ext_InitializeClass(env, clazz, &extil_GetProcAddress, num_functions, functions);
+void extilut_InitializeClass(JNIEnv *env, jclass clazz, int num_functions, JavaMethodAndExtFunction *functions) {
+    ext_InitializeClass(env, clazz, &extilut_GetProcAddress, num_functions, functions);
 }
 
 /**
  * Opens the native library
  */
-bool extil_Open(JNIEnv *env, jobjectArray ilPaths) {
+bool extilut_Open(JNIEnv *env, jobjectArray ilPaths) {
 	jsize pathcount = (*env)->GetArrayLength(env, ilPaths);
 	int i;
 	jstring path;
 	char *path_str;
 
-	printfDebug("Found %d devil paths\n", (int)pathcount);
+	printfDebug("Found %d ilut paths\n", (int)pathcount);
 	for(i=0;i<pathcount;i++) {
 		path = (jstring) (*env)->GetObjectArrayElement(env, ilPaths, i);
 		path_str = GetStringNativeChars(env, path);
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
-		devILhandle = LoadLibrary(path_str);
+		devILUThandle = LoadLibrary(path_str);
 #endif
 #ifdef _X11
-		devILhandle = dlopen(path_str, RTLD_LAZY);
+		devILUThandle = dlopen(path_str, RTLD_LAZY);
 #endif
 #ifdef _MACOSX
-		devILhandle = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+		devILUThandle = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
 #endif
-		if (devILhandle != NULL) {
-			printfDebug("Found devil at '%s'\n", path_str);
+		if (devILUThandle != NULL) {
+			printfDebug("Found ilut at '%s'\n", path_str);
 		}
 
 		free(path_str);
-		if (devILhandle != NULL) {
+		if (devILUThandle != NULL) {
 			return true;
 		}
 	}
-	throwException(env, "Could not load devil library.");
+	throwException(env, "Could not load ilut library.");
 	return false;
 }
 
 /**
  * Closes the native library
  */
-void extil_Close(void) {
+void extilut_Close(void) {
 #ifdef _WIN32
-	FreeLibrary(devILhandle);
+	FreeLibrary(devILUThandle);
 #endif
 #ifdef _X11
-	if (devILhandle != NULL) {
-		dlclose(devILhandle);
+	if (devILUThandle != NULL) {
+		dlclose(devILUThandle);
 	}
 #endif
 #ifdef _MACOSX
 	// Cannot remove the image
 #endif
-	devILhandle = NULL;
+	devILUThandle = NULL;
 }

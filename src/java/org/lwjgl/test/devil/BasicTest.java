@@ -37,6 +37,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+
 /**
  * $Id$
  * <p>The core DevIL and ILU API.</p>
@@ -45,67 +46,73 @@ import java.nio.IntBuffer;
  * @version $Revision$
  */
 public class BasicTest {
-    public static void main(String args[]) {
-        try {
-            IL.create();
-            ILU.create();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
-        System.out.println("ilGenImages");
-        IntBuffer im =  ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-        IL.ilGenImages(1, im);
-        System.out.println("ilBindImage");
-        IL.ilBindImage(im.get(0));
-        IL.ilEnable(IL.IL_ORIGIN_SET);
-        IL.ilOriginFunc(IL.IL_ORIGIN_UPPER_LEFT);
-        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
-        String imageFile = "F:/Apps/Java/eclipse/workspace/LWJGL/res/ILtest.tga";
-        URL imageURL = BasicTest.class.getResource("/res/ILtest.tga");
-        System.out.println("ilLoadFromURL " + imageURL);
-        System.out.println("load lump = " + IL.ilLoadFromURL(imageURL));
-        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
-        int newIm = IL.ilCloneCurImage();
-        IL.ilCopyImage(im.get(0));
-        IL.ilBindImage(newIm);
-        ByteBuffer buf = IL.ilGetData();
-        System.out.println("ilGetData");
-        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
-        int limit = buf.limit();
-        System.out.println("limit = " + limit);
-        for(int i=0;i<buf.limit();i+=3) {
-            System.out.println(buf.get(i) + " " + buf.get(i + 1) + " " + buf.get(i + 2));
-        }
-        
-        System.out.println("current image = " + im.get(0) + " IL.ilGetInteger(IL.IL_ACTIVE_IMAGE) = " + IL.ilGetInteger(IL.IL_ACTIVE_IMAGE));
-        System.out.println("Version: " + IL.ilGetInteger(IL.IL_VERSION_NUM));
-        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
-        
-        ILinfo info = new ILinfo();
-        ILU.iluGetImageInfo(info);
-        System.out.println("info.id         = " + info.id);
-        System.out.println("info.width      = " + info.width);
-        System.out.println("info.height     = " + info.height);
-        System.out.println("info.depth      = " + info.depth);
-        System.out.println("info.bpp        = " + info.bpp);
-        System.out.println("info.sizeOfData = " + info.sizeOfData);
-        System.out.println("info.format     = " + info.format);
-        System.out.println("info.type       = " + info.type);
-        System.out.println("info.origin     = " + info.origin);
-        System.out.println("info.palType    = " + info.palType);
-        System.out.println("info.palSize    = " + info.palSize);
-        System.out.println("info.numNext    = " + info.numNext);
-        System.out.println("info.numMips    = " + info.numMips);
-        System.out.println("info.numLayers  = " + info.numLayers);
-        System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
-        
-//        ILpointf pointf[] = new ILpointf[3];
-//        ILU.iluRegionfv(pointf, pointf.length);
-//        for(int i=0;i<pointf.length;i++) {
-//            System.out.println("point[" + i + "] x = " + pointf[i].x + " y = " + pointf[i].y);
-//        }
-    }
+
+	public static void main(String args[]) {
+		try {
+			IL.create();
+			ILU.create();
+			ILUT.create();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+		System.out.println("ilGenImages");
+		IntBuffer im = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
+		IL.ilGenImages(1, im);
+		System.out.println("ilBindImage");
+		IL.ilBindImage(im.get(0));
+		IL.ilEnable(IL.IL_ORIGIN_SET);
+		IL.ilOriginFunc(IL.IL_ORIGIN_UPPER_LEFT);
+		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+		URL imageURL = BasicTest.class.getResource("/res/ILtest.tga");
+		System.out.println("ilLoadFromURL " + imageURL);
+		System.out.println("load lump = " + IL.ilLoadFromURL(imageURL));
+		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+		int newIm = IL.ilCloneCurImage();
+		IL.ilCopyImage(im.get(0));
+		IL.ilBindImage(newIm);
+		ByteBuffer buf = IL.ilGetData();
+		System.out.println("ilGetData");
+		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+		int limit = buf.limit();
+		System.out.println("limit = " + limit);
+		for (int i = 0; i < buf.limit(); i += 3) {
+			System.out.println(buf.get(i) + " " + buf.get(i + 1) + " " + buf.get(i + 2));
+		}
+
+		System.out.println("current image = " + im.get(0) + " IL.ilGetInteger(IL.IL_ACTIVE_IMAGE) = "
+				+ IL.ilGetInteger(IL.IL_ACTIVE_IMAGE));
+		System.out.println("Version: " + IL.ilGetInteger(IL.IL_VERSION_NUM));
+		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+
+		ILinfo info = new ILinfo();
+		ILU.iluGetImageInfo(info);
+		System.out.println("info.id         = " + info.id);
+		System.out.println("info.width      = " + info.width);
+		System.out.println("info.height     = " + info.height);
+		System.out.println("info.depth      = " + info.depth);
+		System.out.println("info.bpp        = " + info.bpp);
+		System.out.println("info.sizeOfData = " + info.sizeOfData);
+		System.out.println("info.format     = " + info.format);
+		System.out.println("info.type       = " + info.type);
+		System.out.println("info.origin     = " + info.origin);
+		System.out.println("info.palType    = " + info.palType);
+		System.out.println("info.palSize    = " + info.palSize);
+		System.out.println("info.numNext    = " + info.numNext);
+		System.out.println("info.numMips    = " + info.numMips);
+		System.out.println("info.numLayers  = " + info.numLayers);
+		System.out.println("error = " + ILU.iluErrorString(IL.ilGetError()));
+
+		System.out.println("ILUT Vendor: " + ILUT.ilutGetString(ILUT.ILUT_VENDOR));
+
+		try {
+			ILUT.destroy();
+			ILU.destroy();
+			IL.destroy();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
 }

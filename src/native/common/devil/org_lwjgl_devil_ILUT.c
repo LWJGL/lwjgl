@@ -1,4 +1,48 @@
-#include "extil.h"
+#include "extilut.h"
+
+typedef ILboolean		(ILAPIENTRY *ilutRendererPROC) (ILenum Renderer);
+typedef ILboolean		(ILAPIENTRY *ilutDisablePROC) (ILenum Mode);
+typedef ILboolean		(ILAPIENTRY *ilutEnablePROC) (ILenum Mode);
+typedef ILboolean		(ILAPIENTRY *ilutGetBooleanPROC) (ILenum Mode);
+typedef ILint			(ILAPIENTRY *ilutGetIntegerPROC) (ILenum Mode);
+typedef const ILstring	(ILAPIENTRY *ilutGetStringPROC) (ILenum StringName);
+typedef ILvoid			(ILAPIENTRY *ilutInitPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *ilutIsDisabledPROC) (ILenum Mode);
+typedef ILboolean		(ILAPIENTRY *ilutIsEnabledPROC) (ILenum Mode);
+typedef ILvoid			(ILAPIENTRY *ilutPopAttribPROC) (ILvoid);
+typedef ILvoid			(ILAPIENTRY *ilutPushAttribPROC) (ILuint Bits);
+typedef ILvoid			(ILAPIENTRY *ilutSetIntegerPROC) (ILenum Mode, ILint Param);
+typedef GLuint			(ILAPIENTRY *ilutGLBindTexImagePROC) ();
+typedef GLuint			(ILAPIENTRY *ilutGLBindMipmapsPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *ilutGLBuildMipmapsPROC) (ILvoid);
+typedef GLuint			(ILAPIENTRY *ilutGLLoadImagePROC) (const ILstring FileName);
+typedef ILboolean		(ILAPIENTRY *ilutGLScreenPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *ilutGLScreeniePROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *ilutGLSaveImagePROC) (const ILstring FileName, GLuint TexID);
+typedef ILboolean		(ILAPIENTRY *ilutGLSetTexPROC) (GLuint TexID);
+typedef ILboolean		(ILAPIENTRY *ilutGLTexImagePROC) (GLuint Level);
+
+static ilutRendererPROC ilutRenderer;
+static ilutDisablePROC ilutDisable;
+static ilutEnablePROC ilutEnable;
+static ilutGetBooleanPROC ilutGetBoolean;
+static ilutGetIntegerPROC ilutGetInteger;
+static ilutGetStringPROC ilutGetString;
+static ilutInitPROC ilutInit;
+static ilutIsDisabledPROC  ilutIsDisabled;
+static ilutIsEnabledPROC ilutIsEnabled;
+static ilutPopAttribPROC ilutPopAttrib;
+static ilutPushAttribPROC ilutPushAttrib;
+static ilutSetIntegerPROC ilutSetInteger;
+static ilutGLBindTexImagePROC ilutGLBindTexImage;
+static ilutGLBindMipmapsPROC ilutGLBindMipmaps;
+static ilutGLBuildMipmapsPROC ilutGLBuildMipmaps;
+static ilutGLLoadImagePROC ilutGLLoadImage;
+static ilutGLScreenPROC ilutGLScreen;
+static ilutGLScreeniePROC ilutGLScreenie;
+static ilutGLSaveImagePROC ilutGLSaveImage;
+static ilutGLSetTexPROC ilutGLSetTex;
+static ilutGLTexImagePROC ilutGLTexImage;
 
 /*
  * Class:     org_lwjgl_devil_ILUT
@@ -202,25 +246,46 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILUT_ilutGLTexImage(JNIEnv *env,
  * Method:    nCreate
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_nCreate(JNIEnv *env, jclass clazz){
-    /*if (!extilut_Open(env)) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_nCreate(JNIEnv *env, jclass clazz, jobjectArray ilutPaths){
+    if (!extilut_Open(env, ilutPaths)) {
         throwException(env, "Failed to load ILUT library");
         return;
-    }*/
+    }
 }
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_nDestroy(JNIEnv *env, jclass clazz) {
+	extilut_Close();
+}
 
-/*
- * Class:     org_lwjgl_devil_ILUT
- * Method:    initNativeStubs
- * Signature: ()V
- */
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_resetNativeStubs(JNIEnv *env, jclass clazz, jclass ilut_class) {
+	(*env)->UnregisterNatives(env, ilut_class);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_initNativeStubs(JNIEnv *env, jclass clazz){
-}
+JavaMethodAndExtFunction functions[] = {
+        {"ilutRenderer", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutRenderer, "ilutRenderer", (void*)&ilutRenderer},
+		{"ilutDisable", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutDisable, "ilutDisable", (void*)&ilutDisable},
+		{"ilutEnable", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutEnable, "ilutEnable", (void*)&ilutEnable},
+		{"ilutGetBoolean", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetBoolean, "ilutGetBoolean", (void*)&ilutGetBoolean},
+		{"ilutGetInteger", "(I)I", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetInteger, "ilutGetInteger", (void*)&ilutGetInteger},
+		{"ilutGetString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetString, "ilutGetString", (void*)&ilutGetString},
+		{"ilutInit", "()V", (void*)&Java_org_lwjgl_devil_ILUT_ilutInit, "ilutInit", (void*)&ilutInit},
+		{"ilutIsDisabled", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutIsDisabled, "ilutIsDisabled", (void*)&ilutIsDisabled},
+		{"ilutIsEnabled", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutIsDisabled, "ilutIsDisabled", (void*)&ilutIsDisabled},
+		{"ilutPopAttrib", "()V", (void*)&Java_org_lwjgl_devil_ILUT_ilutPopAttrib, "ilutPopAttrib", (void*)&ilutPopAttrib},
+		{"ilutPushAttrib", "(I)V", (void*)&Java_org_lwjgl_devil_ILUT_ilutPushAttrib, "ilutPushAttrib", (void*)&ilutPushAttrib},
+		{"ilutSetInteger", "(II)V", (void*)&Java_org_lwjgl_devil_ILUT_ilutSetInteger, "ilutSetInteger", (void*)&ilutSetInteger},
 
-#ifdef __cplusplus
+		{"ilutGLBindTexImage", "()I", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLBindTexImage, "ilutGLBindTexImage", (void*)&ilutGLBindTexImage},
+		{"ilutGLBindMipmaps", "()I", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLBindMipmaps, "ilutGLBindMipmaps", (void*)&ilutGLBindMipmaps},
+		{"ilutGLBuildMipmaps", "()Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLBuildMipmaps, "ilutGLBuildMipmaps", (void*)&ilutGLBuildMipmaps},
+		{"ilutGLLoadImage", "(Ljava/lang/String;)I", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLLoadImage, "ilutGLLoadImage", (void*)&ilutGLLoadImage},
+		{"ilutGLScreen", "()Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLScreen, "ilutGLScreen", (void*)&ilutGLScreen},
+		{"ilutGLScreenie", "()Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLScreenie, "ilutGLScreenie", (void*)&ilutGLScreenie},
+		{"ilutGLSaveImage", "(Ljava/lang/String;I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLSaveImage, "ilutGLSaveImage", (void*)&ilutGLSaveImage},
+		{"ilutGLSetTex", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLSetTex, "ilutGLSetTex", (void*)&ilutGLSetTex},
+		{"ilutGLTexImage", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGLTexImage, "ilutGLTexImage", (void*)&ilutGLTexImage},
+    };
+    int num_functions = NUMFUNCTIONS(functions);
+    extilut_InitializeClass(env, clazz, num_functions, functions);
 }
-#endif

@@ -1,5 +1,179 @@
 #include "extil.h"
 
+typedef ILboolean			(ILAPIENTRY *ilActiveImagePROC) (ILuint Number);
+typedef ILboolean			(ILAPIENTRY *ilActiveLayerPROC) (ILuint Number);
+typedef ILboolean			(ILAPIENTRY *ilActiveMipmapPROC) (ILuint Number);
+typedef ILboolean			(ILAPIENTRY *ilApplyPalPROC) (const ILstring FileName);
+typedef ILboolean			(ILAPIENTRY *ilApplyProfilePROC) (const ILstring InProfile, const ILstring OutProfile);
+typedef ILvoid				(ILAPIENTRY *ilBindImagePROC) (ILuint Image);
+typedef ILboolean			(ILAPIENTRY *ilBlitPROC) (ILuint Source, ILint DestX, ILint DestY, ILint DestZ, ILuint SrcX, ILuint SrcY, ILuint SrcZ, ILuint Width, ILuint Height, ILuint Depth);
+typedef ILvoid				(ILAPIENTRY *ilClearColourPROC) (ILclampf Red, ILclampf Green, ILclampf Blue, ILclampf Alpha);
+typedef ILboolean			(ILAPIENTRY *ilClearImagePROC) (ILvoid);
+typedef ILuint				(ILAPIENTRY *ilCloneCurImagePROC) (ILvoid);
+typedef ILboolean			(ILAPIENTRY *ilCompressFuncPROC) (ILenum Mode);
+typedef ILboolean			(ILAPIENTRY *ilConvertImagePROC) (ILenum DestFormat, ILenum DestType);
+typedef ILboolean			(ILAPIENTRY *ilConvertPalPROC) (ILenum DestFormat);
+typedef ILboolean			(ILAPIENTRY *ilCopyImagePROC) (ILuint Src);
+typedef ILuint				(ILAPIENTRY *ilCopyPixelsPROC) (ILuint XOff, ILuint YOff, ILuint ZOff, ILuint Width, ILuint Height, ILuint Depth, ILenum Format, ILenum Type, ILvoid *Data);
+typedef ILuint				(ILAPIENTRY *ilCreateSubImagePROC) (ILenum Type, ILuint Num);
+typedef ILboolean			(ILAPIENTRY *ilDefaultImagePROC) (ILvoid);
+typedef ILvoid				(ILAPIENTRY *ilDeleteImagesPROC) (ILsizei Num, const ILuint *Images);
+typedef ILboolean			(ILAPIENTRY *ilDisablePROC) (ILenum Mode);
+typedef ILboolean			(ILAPIENTRY *ilEnablePROC) (ILenum Mode);
+typedef ILboolean			(ILAPIENTRY *ilFormatFuncPROC) (ILenum Mode);
+typedef ILvoid				(ILAPIENTRY *ilGenImagesPROC) (ILsizei Num, ILuint *Images);
+typedef ILubyte*			(ILAPIENTRY *ilGetAlphaPROC) (ILenum Type);
+typedef ILvoid				(ILAPIENTRY *ilModAlphaPROC) ( ILint AlphaValue );
+typedef ILvoid				(ILAPIENTRY *ilSetAlphaPROC) ( ILuint AlphaValue );
+typedef ILboolean			(ILAPIENTRY *ilGetBooleanPROC) (ILenum Mode);
+typedef ILvoid				(ILAPIENTRY *ilGetBooleanvPROC) (ILenum Mode, ILboolean *Param);
+typedef ILubyte*			(ILAPIENTRY *ilGetDataPROC) (ILvoid);
+typedef ILuint				(ILAPIENTRY *ilGetDXTCDataPROC) (ILvoid *Buffer, ILuint BufferSize, ILenum DXTCFormat);
+typedef ILenum				(ILAPIENTRY *ilGetErrorPROC) (ILvoid);
+typedef ILint				(ILAPIENTRY *ilGetIntegerPROC) (ILenum Mode);
+typedef ILvoid				(ILAPIENTRY *ilGetIntegervPROC) (ILenum Mode, ILint *Param);
+typedef ILuint				(ILAPIENTRY *ilGetLumpPosPROC) (ILvoid);
+typedef ILubyte*			(ILAPIENTRY *ilGetPalettePROC) (ILvoid);
+typedef const ILstring		(ILAPIENTRY *ilGetStringPROC) (ILenum StringName);
+typedef ILvoid				(ILAPIENTRY *ilHintPROC) (ILenum Target, ILenum Mode);
+typedef ILvoid				(ILAPIENTRY *ilInitPROC) (ILvoid);
+typedef ILboolean			(ILAPIENTRY *ilIsDisabledPROC) (ILenum Mode);
+typedef ILboolean			(ILAPIENTRY *ilIsEnabledPROC) (ILenum Mode);
+typedef ILboolean			(ILAPIENTRY *ilIsImagePROC) (ILuint Image);
+typedef ILboolean			(ILAPIENTRY *ilIsValidPROC) (ILenum Type, const ILstring FileName);
+typedef ILboolean			(ILAPIENTRY *ilIsValidFPROC) (ILenum Type, ILHANDLE File);
+typedef ILboolean			(ILAPIENTRY *ilIsValidLPROC) (ILenum Type, ILvoid *Lump, ILuint Size);
+typedef ILvoid				(ILAPIENTRY *ilKeyColourPROC) (ILclampf Red, ILclampf Green, ILclampf Blue, ILclampf Alpha);
+typedef ILboolean			(ILAPIENTRY *ilLoadPROC) (ILenum Type, const ILstring FileName);
+typedef ILboolean			(ILAPIENTRY *ilLoadFPROC) (ILenum Type, ILHANDLE File);
+typedef ILboolean			(ILAPIENTRY *ilLoadImagePROC) (const ILstring FileName);
+typedef ILboolean			(ILAPIENTRY *ilLoadLPROC) (ILenum Type, ILvoid *Lump, ILuint Size);
+typedef ILboolean			(ILAPIENTRY *ilLoadPalPROC) (const ILstring FileName);
+typedef ILboolean			(ILAPIENTRY *ilOriginFuncPROC) (ILenum Mode);
+typedef ILboolean			(ILAPIENTRY *ilOverlayImagePROC) (ILuint Source, ILint XCoord, ILint YCoord, ILint ZCoord);
+typedef ILvoid				(ILAPIENTRY *ilPopAttribPROC) (ILvoid);
+typedef ILvoid				(ILAPIENTRY *ilPushAttribPROC) (ILuint Bits);
+typedef ILvoid				(ILAPIENTRY *ilRegisterFormatPROC) (ILenum Format);
+typedef ILboolean			(ILAPIENTRY *ilRegisterLoadPROC) (const ILstring Ext, IL_LOADPROC Load);
+typedef ILboolean			(ILAPIENTRY *ilRegisterMipNumPROC) (ILuint Num);
+typedef ILboolean			(ILAPIENTRY *ilRegisterNumImagesPROC) (ILuint Num);
+typedef ILvoid				(ILAPIENTRY *ilRegisterOriginPROC) (ILenum Origin);
+typedef ILvoid				(ILAPIENTRY *ilRegisterPalPROC) (ILvoid *Pal, ILuint Size, ILenum Type);
+typedef ILboolean			(ILAPIENTRY *ilRegisterSavePROC) (const ILstring Ext, IL_SAVEPROC Save);
+typedef ILvoid				(ILAPIENTRY *ilRegisterTypePROC) (ILenum Type);
+typedef ILboolean			(ILAPIENTRY *ilRemoveLoadPROC) (const ILstring Ext);
+typedef ILboolean			(ILAPIENTRY *ilRemoveSavePROC) (const ILstring Ext);
+typedef ILvoid				(ILAPIENTRY *ilResetMemoryPROC) (ILvoid);
+typedef ILvoid				(ILAPIENTRY *ilResetReadPROC) (ILvoid);
+typedef ILvoid				(ILAPIENTRY *ilResetWritePROC) (ILvoid);
+typedef ILboolean			(ILAPIENTRY *ilSavePROC) (ILenum Type, const ILstring FileName);
+typedef ILuint				(ILAPIENTRY *ilSaveFPROC) (ILenum Type, ILHANDLE File);
+typedef ILboolean			(ILAPIENTRY *ilSaveImagePROC) (const ILstring FileName);
+typedef ILuint				(ILAPIENTRY *ilSaveLPROC) (ILenum Type, ILvoid *Lump, ILuint Size);
+typedef ILboolean			(ILAPIENTRY *ilSavePalPROC) (const ILstring FileName);
+typedef ILboolean			(ILAPIENTRY *ilSetDataPROC) (ILvoid *Data);
+typedef ILboolean			(ILAPIENTRY *ilSetDurationPROC) (ILuint Duration);
+typedef ILvoid				(ILAPIENTRY *ilSetIntegerPROC) (ILenum Mode, ILint Param);
+typedef ILvoid				(ILAPIENTRY *ilSetMemoryPROC) (mAlloc, mFree);
+typedef ILvoid				(ILAPIENTRY *ilSetPixelsPROC) (ILint XOff, ILint YOff, ILint ZOff, ILuint Width, ILuint Height, ILuint Depth, ILenum Format, ILenum Type, ILvoid *Data);
+typedef ILvoid				(ILAPIENTRY *ilSetReadPROC) (fOpenRProc, fCloseRProc, fEofProc, fGetcProc, fReadProc, fSeekRProc, fTellRProc);
+typedef ILvoid				(ILAPIENTRY *ilSetStringPROC) (ILenum Mode, const char *String);
+typedef ILvoid				(ILAPIENTRY *ilSetWritePROC) (fOpenWProc, fCloseWProc, fPutcProc, fSeekWProc, fTellWProc, fWriteProc);
+typedef ILvoid				(ILAPIENTRY *ilShutDownPROC) (ILvoid);
+typedef ILboolean			(ILAPIENTRY *ilTexImagePROC) (ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp, ILenum Format, ILenum Type, ILvoid *Data);
+typedef ILboolean			(ILAPIENTRY *ilTypeFuncPROC) (ILenum Mode);
+typedef ILboolean			(ILAPIENTRY *ilLoadDataPROC) (const ILstring FileName, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
+typedef ILboolean			(ILAPIENTRY *ilLoadDataFPROC) (ILHANDLE File, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
+typedef ILboolean			(ILAPIENTRY *ilLoadDataLPROC) (ILvoid *Lump, ILuint Size, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
+typedef ILboolean			(ILAPIENTRY *ilSaveDataPROC) (const ILstring FileName);
+
+static ilActiveImagePROC ilActiveImage;
+static ilActiveLayerPROC ilActiveLayer;
+static ilActiveMipmapPROC ilActiveMipmap;
+static ilApplyPalPROC ilApplyPal;
+static ilApplyProfilePROC ilApplyProfile;
+static ilBindImagePROC ilBindImage;
+static ilBlitPROC ilBlit;
+static ilClearColourPROC ilClearColour;
+static ilClearImagePROC ilClearImage;
+static ilCloneCurImagePROC ilCloneCurImage;
+static ilCompressFuncPROC ilCompressFunc;
+static ilConvertImagePROC ilConvertImage;
+static ilConvertPalPROC ilConvertPal;
+static ilCopyImagePROC ilCopyImage;
+static ilCopyPixelsPROC ilCopyPixels;
+static ilCreateSubImagePROC ilCreateSubImage;
+static ilDefaultImagePROC ilDefaultImage;
+static ilDeleteImagesPROC ilDeleteImages;
+static ilDisablePROC ilDisable;
+static ilEnablePROC ilEnable;
+static ilFormatFuncPROC ilFormatFunc;
+static ilGenImagesPROC ilGenImages;
+static ilGetAlphaPROC ilGetAlpha;
+static ilModAlphaPROC ilModAlpha; 
+static ilSetAlphaPROC ilSetAlpha;
+static ilGetBooleanPROC ilGetBoolean;
+static ilGetBooleanvPROC ilGetBooleanv;
+static ilGetDataPROC ilGetData;
+static ilGetDXTCDataPROC ilGetDXTCData;
+static ilGetErrorPROC ilGetError;
+static ilGetIntegerPROC ilGetInteger;
+static ilGetIntegervPROC ilGetIntegerv;
+static ilGetLumpPosPROC ilGetLumpPos;
+static ilGetPalettePROC ilGetPalette;
+static ilGetStringPROC ilGetString;
+static ilHintPROC ilHint;
+static ilInitPROC ilInit;
+static ilIsDisabledPROC ilIsDisabled;
+static ilIsEnabledPROC ilIsEnabled;
+static ilIsImagePROC ilIsImage;
+static ilIsValidPROC ilIsValid;
+static ilIsValidFPROC ilIsValidF;
+static ilIsValidLPROC ilIsValidL;
+static ilKeyColourPROC ilKeyColour;
+static ilLoadPROC ilLoad;
+static ilLoadFPROC ilLoadF;
+static ilLoadImagePROC ilLoadImage; 
+static ilLoadLPROC ilLoadL;
+static ilLoadPalPROC ilLoadPal;
+static ilOriginFuncPROC ilOriginFunc;
+static ilOverlayImagePROC ilOverlayImage;
+static ilPopAttribPROC ilPopAttrib;
+static ilPushAttribPROC ilPushAttrib;
+static ilRegisterFormatPROC ilRegisterFormat;
+static ilRegisterLoadPROC ilRegisterLoad;
+static ilRegisterMipNumPROC ilRegisterMipNum;
+static ilRegisterNumImagesPROC ilRegisterNumImages;
+static ilRegisterOriginPROC ilRegisterOrigin;
+static ilRegisterPalPROC ilRegisterPal;
+static ilRegisterSavePROC ilRegisterSave;
+static ilRegisterTypePROC ilRegisterType;
+static ilRemoveLoadPROC ilRemoveLoad;
+static ilRemoveSavePROC ilRemoveSave;
+static ilResetMemoryPROC ilResetMemory;
+static ilResetReadPROC ilResetRead;
+static ilResetWritePROC ilResetWrite;
+static ilSavePROC ilSave;
+static ilSaveFPROC ilSaveF;
+static ilSaveImagePROC ilSaveImage;
+static ilSaveLPROC ilSaveL;
+static ilSavePalPROC ilSavePal;
+static ilSetDataPROC ilSetData;
+static ilSetDurationPROC ilSetDuration;
+static ilSetIntegerPROC ilSetInteger;
+static ilSetMemoryPROC ilSetMemory;
+static ilSetPixelsPROC ilSetPixels;
+static ilSetReadPROC ilSetRead;
+static ilSetStringPROC ilSetString;
+static ilSetWritePROC ilSetWrite;
+static ilShutDownPROC ilShutDown;
+static ilTexImagePROC ilTexImage;
+static ilTypeFuncPROC ilTypeFunc;
+static ilLoadDataPROC ilLoadData;
+static ilLoadDataFPROC ilLoadDataF;
+static ilLoadDataLPROC ilLoadDataL;
+static ilSaveDataPROC ilSaveData;
+
 /*
  * Class:     org_lwjgl_devil_IL
  * Method:    ilActiveImage
@@ -213,7 +387,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilGenImages(JNIEnv *env , jclass
     ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer) + lists_offset;
     ilGenImages((ILsizei)num, (ILuint *)lists);
 }
-
 
 /*
  * Class:     org_lwjgl_devil_IL
@@ -657,7 +830,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilShutDown(JNIEnv *env, jclass cl
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilTexImage(JNIEnv *env, jclass clazz, jint width, jint height, jint depth , jbyte bpp, jint format, jint type, jobject data_buffer, jint data_offset) {
     ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
-
     return ilTexImage((ILuint)width, (ILuint)height, (ILuint)depth , (ILubyte)bpp, (ILenum)format, (ILenum)type, (ILvoid *)(data + data_offset));
 }
 
@@ -712,18 +884,22 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveData(JNIEnv *env, jclas
  * Method:    nCreate
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nCreate(JNIEnv *env, jclass clazz) {
-    /*if (!extil_Open(env)) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nCreate(JNIEnv *env, jclass clazz, jobjectArray ilPaths) {
+	if (!extil_Open(env, ilPaths)) {
         throwException(env, "Failed to load DevIL library");
         return;
-    }*/
+    }
 }
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nDestroy(JNIEnv *env, jclass clazz) {
+	extil_Close();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_resetNativeStubs(JNIEnv *env, jclass clazz, jclass il_class) {
+	(*env)->UnregisterNatives(env, il_class);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jclass clazz) {
-/*
     JavaMethodAndExtFunction functions[] = {
         {"ilActiveImage", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveImage, "ilActiveImage", (void*)&ilActiveImage},
         {"ilActiveLayer", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveLayer, "ilActiveLayer", (void*)&ilActiveLayer},
@@ -747,15 +923,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jcla
         {"ilEnable", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilEnable, "ilEnable", (void*)&ilEnable},
         {"ilFormatFunc", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilFormatFunc, "ilFormatFunc", (void*)&ilFormatFunc},
         {"nilGenImages", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_devil_IL_nilGenImages, "ilGenImages", (void*)&ilGenImages},
-        {"ilGetAlpha", "(I)[B", (void*)&Java_org_lwjgl_devil_IL_ilGetAlpha, "ilGetAlpha", (void*)&ilGetAlpha},
-        {"ilModAlpha", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilModAlpha, "ilModAlpha", (void*)&ilModAlpha},
-        {"ilSetAlpha", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilSetAlpha, "ilSetAlpha", (void*)&ilSetAlpha},
+        {"ilGetAlpha", "(I)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_devil_IL_ilGetAlpha, "ilGetAlpha", (void*)&ilGetAlpha},
+        //{"ilModAlpha", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilModAlpha, "ilModAlpha", (void*)&ilModAlpha},
+        //{"ilSetAlpha", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilSetAlpha, "ilSetAlpha", (void*)&ilSetAlpha},
         {"ilGetBoolean", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilGetBoolean, "ilGetBoolean", (void*)&ilGetBoolean},
-        {"ilGetData", "()[B", (void*)&Java_org_lwjgl_devil_IL_ilGetData, "ilGetData", (void*)&ilGetData},
+        {"ilGetData", "()Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_devil_IL_ilGetData, "ilGetData", (void*)&ilGetData},
         {"ilGetError", "()I", (void*)&Java_org_lwjgl_devil_IL_ilGetError, "ilGetError", (void*)&ilGetError},
         {"ilGetInteger", "(I)I", (void*)&Java_org_lwjgl_devil_IL_ilGetInteger, "ilGetInteger", (void*)&ilGetInteger},
         {"ilGetLumpPos", "()I", (void*)&Java_org_lwjgl_devil_IL_ilGetLumpPos, "ilGetLumpPos", (void*)&ilGetLumpPos},
-        {"ilGetPalette", "()[B", (void*)&Java_org_lwjgl_devil_IL_ilGetPalette, "ilGetPalette", (void*)&ilGetPalette},
+        {"ilGetPalette", "()Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_devil_IL_ilGetPalette, "ilGetPalette", (void*)&ilGetPalette},
         {"ilGetString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_devil_IL_ilGetString, "ilGetString", (void*)&ilGetString},
         {"ilHint", "(II)V", (void*)&Java_org_lwjgl_devil_IL_ilHint, "ilHint", (void*)&ilHint},
         {"ilInit", "()V", (void*)&Java_org_lwjgl_devil_IL_ilInit, "ilInit", (void*)&ilInit},
@@ -781,7 +957,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jcla
         {"ilSave", "(ILjava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSave, "ilSave", (void*)&ilSave},
         {"ilSaveImage", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSaveImage, "ilSaveImage", (void*)&ilSaveImage},
         {"nilSaveL", "(ILjava/nio/ByteBuffer;II)I", (void*)&Java_org_lwjgl_devil_IL_nilSaveL, "ilSaveL", (void*)&ilSaveL},
-        {"ilSavePal", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilSavePal, "ilSavePal", (void*)&ilSavePal},
+        {"ilSavePal", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSavePal, "ilSavePal", (void*)&ilSavePal},
         {"nilSetData", "(Ljava/nio/ByteBuffer;I)Z", (void*)&Java_org_lwjgl_devil_IL_nilSetData, "ilSetData", (void*)&ilSetData},
         {"ilSetDuration", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilSetDuration, "ilSetDuration", (void*)&ilSetDuration},
         {"ilSetInteger", "(II)V", (void*)&Java_org_lwjgl_devil_IL_ilSetInteger, "ilSetInteger", (void*)&ilSetInteger},
@@ -791,14 +967,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jcla
         {"nilTexImage", "(IIIBIILjava/nio/ByteBuffer;I)Z", (void*)&Java_org_lwjgl_devil_IL_nilTexImage, "ilTexImage", (void*)&ilTexImage},
         {"ilTypeFunc", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilTypeFunc, "ilTypeFunc", (void*)&ilTypeFunc},
         {"ilLoadData", "(Ljava/lang/String;IIIB)Z", (void*)&Java_org_lwjgl_devil_IL_ilLoadData, "ilLoadData", (void*)&ilLoadData},
-        {"ilLoadDataL", "(Ljava/nio/ByteBuffer;IIIIIB)Z", (void*)&Java_org_lwjgl_devil_IL_nilLoadDataL, "ilLoadDataL", (void*)&ilLoadDataL},
+        {"nilLoadDataL", "(Ljava/nio/ByteBuffer;IIIIIB)Z", (void*)&Java_org_lwjgl_devil_IL_nilLoadDataL, "ilLoadDataL", (void*)&ilLoadDataL},
         {"ilSaveData", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSaveData, "ilSaveData", (void*)&ilSaveData}
     };
     int num_functions = NUMFUNCTIONS(functions);
     extil_InitializeClass(env, clazz, num_functions, functions);
-*/
 }
-
-#ifdef __cplusplus
-}
-#endif

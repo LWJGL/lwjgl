@@ -31,10 +31,16 @@
  */
 package org.lwjgl.devil;
 
+import java.io.File;
+import java.lang.reflect.Method;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 
 /**
  * $Id$
@@ -42,15 +48,11 @@ import org.lwjgl.LWJGLException;
  * The DevIL ILU API.
  * 
  * @author captainjester <captainjester@users.sourceforge.net>
+ * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
 public class ILU {
-    /** Have we been created? */
-    protected static boolean created;
-  
-    public static final int ILU_VERSION_1_6_7 =                  1;
-    public static final int ILU_VERSION =                        167;
-
+		
     public static final int ILU_FILTER =                         0x2600;
     public static final int ILU_NEAREST =                        0x2601;
     public static final int ILU_LINEAR =                         0x2602;
@@ -62,7 +64,7 @@ public class ILU {
     public static final int ILU_SCALE_LANCZOS3 =                 0x2608;
     public static final int ILU_SCALE_MITCHELL =                 0x2609;
 
-//     Error types
+		// Error types
     public static final int ILU_INVALID_ENUM =                   0x0501;
     public static final int ILU_OUT_OF_MEMORY =                  0x0502;
     public static final int ILU_INTERNAL_ERROR =                 0x0504;
@@ -70,7 +72,7 @@ public class ILU {
     public static final int ILU_ILLEGAL_OPERATION =              0x0506;
     public static final int ILU_INVALID_PARAM =                  0x0509;
     
-//     Values
+		// Values
     public static final int ILU_PLACEMENT =                      0x0700;
     public static final int ILU_LOWER_LEFT =                     0x0701;
     public static final int ILU_LOWER_RIGHT =                    0x0702;
@@ -78,23 +80,19 @@ public class ILU {
     public static final int ILU_UPPER_RIGHT =                    0x0704;
     public static final int ILU_CENTER =                         0x0705;
     public static final int ILU_CONVOLUTION_MATRIX =             0x0710;
-//    public static final int ILU_VERSION_NUM =                    IL_VERSION_NUM;
-//    public static final int ILU_VENDOR =                         IL_VENDOR;
+    public static final int ILU_VERSION_NUM =                    IL.IL_VERSION_NUM;
+    public static final int ILU_VENDOR =                         IL.IL_VENDOR;
 
-    static {
-//        System.loadLibrary("ILU");
-        System.loadLibrary("lwjgl-devil");
-    }
-    
+    /** Have we been created? */
+    protected static boolean created;
+
     /**
-     * @return true if DevIL has been created
+     * @return true if ILU has been created
      */
     public static boolean isCreated() {
       return created;
     }     
 
-    public static native void initNativeStubs() throws LWJGLException;
-    
     public static native boolean iluAlienify();
     public static native boolean iluBlurAvg(int iter);
     public static native boolean iluBlurGaussian(int iter);
@@ -121,25 +119,18 @@ public class ILU {
         BufferChecks.checkDirect(param);
         niluGetIntegerv(mode, param, param.position());
     }
-    public static native void niluGetIntegerv(int mode, IntBuffer param, int param_offset);
+    private static native void niluGetIntegerv(int mode, IntBuffer param, int param_offset);
     public static native String iluGetString(int stringName);
     public static native void iluImageParameter(int pName, int param);
-    public static native void iluInit();
+    private static native void iluInit();
     public static native boolean iluInvertAlpha();
     public static native int iluLoadImage(String fileName);
     public static native boolean iluMirror();
     public static native boolean iluNegative();
     public static native boolean iluNoisify(float tolerance);
     public static native boolean iluPixelize(int pixSize);
-    // TODO result placed in a pointer
-//    public static native void iluRegionfv(ILpointf points[], int n);
-    // TODO result placed in a pointer
-//    public static native void iluRegioniv(ILpointi points[], int n);
     public static native boolean iluReplaceColour(byte red, byte green, byte blue, float tolerance);
     public static native boolean iluRotate(float angle);
-    
-    // TODO Not implemented in the native lib
-//    public static native boolean iluRotate3D(float x, float y, float z, float Angle);
     public static native boolean iluSaturate1f(float saturation);
     public static native boolean iluSaturate4f(float r, float g, float b, float saturation);
     public static native boolean iluScale(int width, int height, int depth);
@@ -147,23 +138,13 @@ public class ILU {
     public static native boolean iluSharpen(float factor, int iter);
     public static native boolean iluSwapColours();
     public static native boolean iluWave(float angle);
-    /**
-     * 
-     */
-    public static void create() throws LWJGLException {
-        if (!created) {
-            nCreate();
-            ILU.initNativeStubs();
-            ILU.iluInit();
-            created = true;
-        }
-        
-    }
 
-    public static native void nCreate();
+		// public static native void iluRegionfv(ILpointf points[], int n);
+		// public static native void iluRegioniv(ILpointi points[], int n);
+		// public static native boolean iluRotate3D(float x, float y, float z, float Angle);
     
-    //DevIL lib allows both spellings of colour.
-    //Will do the same this way.
+    /* DevIL lib allows both spellings of colour. We support that too */
+		// ========================================================================
     public static void iluColorsUsed() {
         iluColoursUsed();
     }
@@ -176,4 +157,136 @@ public class ILU {
     public static void iluScaleColors(float r, float g, float b) {
         iluScaleColours(r, g, b);
     }
+		// ------------------------------------------------------------------------
+		
+    /**
+     * Creates a new instance of ILU. Cannot be created unless IL has been created.
+     */
+    public static void create() throws LWJGLException {
+				if(!IL.isCreated()) {
+						throw new LWJGLException("Cannot create ILU without having created IL instance");
+				}
+				
+				String[] iluPaths = getILUPaths();
+				nCreate(iluPaths);
+				created = true;
+
+				try {
+					ILU.initNativeStubs();
+					ILU.iluInit();
+					created = true;
+				} catch (LWJGLException e) {
+					destroy();
+					throw e;
+				}				
+    }
+
+		private static native void initNativeStubs() throws LWJGLException;
+
+		private static native void resetNativeStubs(Class clazz);
+
+		/**
+		 * Exit cleanly by calling destroy.
+		 */
+		public static void destroy() {
+			resetNativeStubs(ILU.class);
+			if (created) {
+				nDestroy();
+			}
+			created = false;
+		}
+
+		/**
+		 * Native method to create ILU instance
+		 * 
+		 * @param iluPaths Array of strings containing paths to search for ILU library
+		 */
+		protected static native void nCreate(String[] iluPaths) throws LWJGLException;
+
+		/**
+		 * Native method the destroy the ILU
+		 */
+		protected static native void nDestroy();
+
+		private static String[] getILUPaths() throws LWJGLException {
+			// need to pass path of possible locations of ILU to native side
+			List possible_paths = new ArrayList();
+
+			String osName = System.getProperty("os.name");
+
+			String libname;
+			String platform_lib_name;
+			if (osName.startsWith("Win")) {
+				libname = "ILU";
+				platform_lib_name = "ILU.dll";
+			} else if (osName.startsWith("Lin")) {
+				libname = "ILU";
+				platform_lib_name = "ILU.so";
+			} else if (osName.startsWith("Mac")) {
+				libname = "ILU";
+				platform_lib_name = "ILU.dylib";
+			} else {
+				throw new LWJGLException("Unknown platform: " + osName);
+			}
+
+			// Add all possible paths from java.library.path
+			String java_library_path = System.getProperty("java.library.path");
+			StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
+			while (st.hasMoreTokens()) {
+				String path = st.nextToken();
+				possible_paths.add(path + File.separator + platform_lib_name);
+			}
+
+			String classloader_path = getPathFromClassLoader(libname);
+			if (classloader_path != null) {
+				Sys.log("getPathFromClassLoader: Path found: " + classloader_path);
+				possible_paths.add(classloader_path);
+			}
+			String lwjgl_classloader_path = getPathFromClassLoader("lwjgl");
+			if (lwjgl_classloader_path != null) {
+				Sys.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
+				possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
+						+ File.separator + platform_lib_name);
+			}
+
+			//add cwd path
+			possible_paths.add(platform_lib_name);
+			
+			//create needed string array
+			String[] iluPaths = new String[possible_paths.size()];
+			possible_paths.toArray(iluPaths);
+
+			return iluPaths;
+		}
+
+		/**
+		 * Tries to locate ILU from the current ClassLoader
+		 * This method exists because ILU is loaded from native code, and as such
+		 * is exempt from ClassLoader library loading rutines. ILU therefore always fails.
+		 * We therefore invoke the protected method of the ClassLoader to see if it can
+		 * locate it. 
+		 * 
+		 * @param libname Name of library to search for
+		 * @return Absolute path to library if found, otherwise null
+		 */
+		private static String getPathFromClassLoader(String libname) {
+			try {
+				Sys.log("getPathFromClassLoader: searching for: " + libname);
+				Object o = IL.class.getClassLoader();
+				Class c = o.getClass();
+				while (c != null) {
+					try {
+						Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class});
+						findLibrary.setAccessible(true);
+						Object[] arguments = new Object[] { libname};
+						return (String) findLibrary.invoke(o, arguments);
+					} catch (NoSuchMethodException e) {
+						c = c.getSuperclass();
+					}
+				}
+			} catch (Exception e) {
+				Sys.log("Failure locating ILU using classloader:" + e);
+			}
+			return null;
+		}
 }

@@ -1,4 +1,94 @@
-#include "extil.h"
+#include "extilu.h"
+
+typedef ILboolean		(ILAPIENTRY *iluAlienifyPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluBlurAvgPROC) (ILuint Iter);
+typedef ILboolean		(ILAPIENTRY *iluBlurGaussianPROC) (ILuint Iter);
+typedef ILboolean		(ILAPIENTRY *iluBuildMipmapsPROC) (ILvoid);
+typedef ILuint			(ILAPIENTRY *iluColoursUsedPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluCompareImagePROC) (ILuint Comp);
+typedef ILboolean		(ILAPIENTRY *iluContrastPROC) (ILfloat Contrast);
+typedef ILboolean		(ILAPIENTRY *iluCropPROC) (ILuint XOff, ILuint YOff, ILuint ZOff, ILuint Width, ILuint Height, ILuint Depth);
+typedef ILvoid			(ILAPIENTRY *iluDeleteImagePROC) (ILuint Id);
+typedef ILboolean		(ILAPIENTRY *iluEdgeDetectEPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluEdgeDetectPPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluEdgeDetectSPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluEmbossPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluEnlargeCanvasPROC) (ILuint Width, ILuint Height, ILuint Depth);
+typedef ILboolean		(ILAPIENTRY *iluEnlargeImagePROC) (ILfloat XDim, ILfloat YDim, ILfloat ZDim);
+typedef ILboolean		(ILAPIENTRY *iluEqualizePROC) (ILvoid);
+typedef const ILstring	(ILAPIENTRY *iluErrorStringPROC) (ILenum Error);
+typedef ILboolean		(ILAPIENTRY *iluFlipImagePROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluGammaCorrectPROC) (ILfloat Gamma);
+typedef ILuint			(ILAPIENTRY *iluGenImagePROC) (ILvoid);
+typedef ILvoid			(ILAPIENTRY *iluGetImageInfoPROC) (ILinfo *Info);
+typedef ILint			(ILAPIENTRY *iluGetIntegerPROC) (ILenum Mode);
+typedef ILvoid			(ILAPIENTRY *iluGetIntegervPROC) (ILenum Mode, ILint *Param);
+typedef const ILstring	(ILAPIENTRY *iluGetStringPROC) (ILenum StringName);
+typedef ILvoid			(ILAPIENTRY *iluImageParameterPROC) (ILenum PName, ILenum Param);
+typedef ILvoid			(ILAPIENTRY *iluInitPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluInvertAlphaPROC) (ILvoid);
+typedef ILuint			(ILAPIENTRY *iluLoadImagePROC) (const ILstring FileName);
+typedef ILboolean		(ILAPIENTRY *iluMirrorPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluNegativePROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluNoisifyPROC) (ILclampf Tolerance);
+typedef ILboolean		(ILAPIENTRY *iluPixelizePROC) (ILuint PixSize);
+typedef ILvoid			(ILAPIENTRY *iluRegionfvPROC) (ILpointf *Points, ILuint n);
+typedef ILvoid			(ILAPIENTRY *iluRegionivPROC) (ILpointi *Points, ILuint n);
+typedef ILboolean		(ILAPIENTRY *iluReplaceColourPROC) (ILubyte Red, ILubyte Green, ILubyte Blue, ILfloat Tolerance);
+typedef ILboolean		(ILAPIENTRY *iluRotatePROC) (ILfloat Angle);
+typedef ILboolean		(ILAPIENTRY *iluRotate3DPROC) (ILfloat x, ILfloat y, ILfloat z, ILfloat Angle);
+typedef ILboolean		(ILAPIENTRY *iluSaturate1fPROC) (ILfloat Saturation);
+typedef ILboolean		(ILAPIENTRY *iluSaturate4fPROC) (ILfloat r, ILfloat g, ILfloat b, ILfloat Saturation);
+typedef ILboolean		(ILAPIENTRY *iluScalePROC) (ILuint Width, ILuint Height, ILuint Depth);
+typedef ILboolean		(ILAPIENTRY *iluScaleColoursPROC) (ILfloat r, ILfloat g, ILfloat b);
+typedef ILboolean		(ILAPIENTRY *iluSharpenPROC) (ILfloat Factor, ILuint Iter);
+typedef ILboolean		(ILAPIENTRY *iluSwapColoursPROC) (ILvoid);
+typedef ILboolean		(ILAPIENTRY *iluWavePROC) (ILfloat Angle);
+
+static iluAlienifyPROC iluAlienify;
+static iluBlurAvgPROC iluBlurAvg;
+static iluBlurGaussianPROC iluBlurGaussian;
+static iluBuildMipmapsPROC iluBuildMipmaps;
+static iluColoursUsedPROC iluColoursUsed;
+static iluCompareImagePROC iluCompareImage;
+static iluContrastPROC iluContrast;
+static iluCropPROC iluCrop;
+static iluDeleteImagePROC iluDeleteImage;
+static iluEdgeDetectEPROC iluEdgeDetectE;
+static iluEdgeDetectPPROC iluEdgeDetectP;
+static iluEdgeDetectSPROC iluEdgeDetectS;
+static iluEmbossPROC iluEmboss;
+static iluEnlargeCanvasPROC iluEnlargeCanvas;
+static iluEnlargeImagePROC iluEnlargeImage;
+static iluEqualizePROC iluEqualize;
+static iluErrorStringPROC iluErrorString;
+static iluFlipImagePROC iluFlipImage;
+static iluGammaCorrectPROC iluGammaCorrect;
+static iluGenImagePROC iluGenImage;
+static iluGetImageInfoPROC iluGetImageInfo;
+static iluGetIntegerPROC iluGetInteger;
+static iluGetIntegervPROC iluGetIntegerv;
+static iluGetStringPROC iluGetString;
+static iluImageParameterPROC iluImageParameter;
+static iluInitPROC iluInit;
+static iluInvertAlphaPROC iluInvertAlpha;
+static iluLoadImagePROC iluLoadImage;
+static iluMirrorPROC iluMirror;
+static iluNegativePROC iluNegative;
+static iluNoisifyPROC iluNoisify;
+static iluPixelizePROC iluPixelize;
+static iluRegionfvPROC iluRegionfv;
+static iluRegionivPROC iluRegioniv;
+static iluReplaceColourPROC iluReplaceColour;
+static iluRotatePROC iluRotate;
+static iluRotate3DPROC iluRotate3D;
+static iluSaturate1fPROC iluSaturate1f;
+static iluSaturate4fPROC iluSaturate4f;
+static iluScalePROC iluScale;
+static iluScaleColoursPROC iluScaleColours;
+static iluSharpenPROC iluSharpen;
+static iluSwapColoursPROC iluSwapColours;
+static iluWavePROC iluWave;
 
 /*
  * Class:     org_lwjgl_devil_ILU
@@ -260,9 +350,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluGetInteger(JNIEnv *env, jclas
  * Method:    iluGetIntegerv
  * Signature: (ILjava/nio/IntBuffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluGetIntegerv(JNIEnv *env, jclass clazz, jint mode, jobject param_buffer, jint param_offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_niluGetIntegerv(JNIEnv *env, jclass clazz, jint mode, jobject param_buffer, jint param_offset) {
     ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, param_buffer) + param_offset;
-    ilGenImages((ILsizei)mode, (ILuint *)lists);
+    iluGetIntegerv((ILsizei)mode, (ILuint *)lists);
 }
 
 /*
@@ -356,7 +446,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluPixelize(JNIEnv *env, jcl
  * Signature: ([Lorg/lwjgl/devil/ILpointf;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluRegionfv(JNIEnv *env, jclass clazz, jobjectArray points, jint n) {
-    jfieldID fieldId;
+    /*jfieldID fieldId;
     jmethodID methodId;
     jobject element;
     int i;
@@ -392,7 +482,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluRegionfv(JNIEnv *env, jclass 
     }
     printf("\nHere 5");
 
-    free(pointInfo);
+    free(pointInfo);*/
 }
 
 /*
@@ -409,6 +499,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluRegioniv(JNIEnv *env, jclass 
  * Signature: (BBBF)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluReplaceColour(JNIEnv *env, jclass clazz, jbyte red, jbyte green, jbyte blue, jfloat tolerence) {
+	return false;
 }
 
 /*
@@ -488,31 +579,65 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluWave(JNIEnv *env, jclass 
  * Method:    nCreate
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_nCreate(JNIEnv *env, jclass clazz) {
-    /*if (!extilu_Open(env)) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_nCreate(JNIEnv *env, jclass clazz, jobjectArray iluPaths) {
+	if (!extilu_Open(env, iluPaths)) {
         throwException(env, "Failed to load ILU library");
         return;
-    }*/
+    }
 }
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-/*
- * Class:     org_lwjgl_devil_ILU
- * Method:    initNativeStubs
- * Signature: ()V
- */
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_nDestroy(JNIEnv *env, jclass clazz) {
+	extilu_Close();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_resetNativeStubs(JNIEnv *env, jclass clazz, jclass ilu_class) {
+	(*env)->UnregisterNatives(env, ilu_class);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_initNativeStubs(JNIEnv *env, jclass clazz) {
-/*
     JavaMethodAndExtFunction functions[] = {
-        {"iluAlienify", "()Z", (void*)&Java_org_lwjgl_devil_IL_iluAlienify, "iluAlienify", (void*)&iluAlienify},
+        {"iluAlienify", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluAlienify, "iluAlienify", (void*)&iluAlienify},
+		{"iluBlurAvg", "(I)Z", (void*)&Java_org_lwjgl_devil_ILU_iluBlurAvg, "iluBlurAvg", (void*)&iluBlurAvg},
+		{"iluBlurGaussian", "(I)Z", (void*)&Java_org_lwjgl_devil_ILU_iluBlurGaussian, "iluBlurGaussian", (void*)&iluBlurGaussian},
+		{"iluBuildMipmaps", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluBuildMipmaps, "iluBuildMipmaps", (void*)&iluBuildMipmaps},
+		{"iluColoursUsed", "()I", (void*)&Java_org_lwjgl_devil_ILU_iluColoursUsed, "iluColoursUsed", (void*)&iluColoursUsed},
+		{"iluCompareImage", "(I)Z", (void*)&Java_org_lwjgl_devil_ILU_iluCompareImage, "iluCompareImage", (void*)&iluCompareImage},
+		{"iluContrast", "(F)Z", (void*)&Java_org_lwjgl_devil_ILU_iluContrast, "iluContrast", (void*)&iluContrast},
+		{"iluCrop", "(IIIIII)Z", (void*)&Java_org_lwjgl_devil_ILU_iluCrop, "iluCrop", (void*)&iluCrop},
+		{"iluDeleteImage", "(I)V", (void*)&Java_org_lwjgl_devil_ILU_iluDeleteImage, "iluDeleteImage", (void*)&iluDeleteImage},
+		{"iluEdgeDetectE", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluEdgeDetectE, "iluEdgeDetectE", (void*)&iluEdgeDetectE},
+		{"iluEdgeDetectP", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluEdgeDetectP, "iluEdgeDetectP", (void*)&iluEdgeDetectP},
+		{"iluEdgeDetectS", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluEdgeDetectS, "iluEdgeDetectS", (void*)&iluEdgeDetectS},
+		{"iluEmboss", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluEmboss, "iluEmboss", (void*)&iluEmboss},
+		{"iluEnlargeCanvas", "(III)Z", (void*)&Java_org_lwjgl_devil_ILU_iluEnlargeCanvas, "iluEnlargeCanvas", (void*)&iluEnlargeCanvas},
+		{"iluEnlargeImage", "(FFF)Z", (void*)&Java_org_lwjgl_devil_ILU_iluEnlargeImage, "iluEnlargeImage", (void*)&iluEnlargeImage},
+		{"iluEqualize", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluEqualize, "iluEqualize", (void*)&iluEqualize},
+		{"iluErrorString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_devil_ILU_iluErrorString, "iluErrorString", (void*)&iluErrorString},
+		{"iluFlipImage", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluFlipImage, "iluFlipImage", (void*)&iluFlipImage},
+		{"iluGammaCorrect", "(F)Z", (void*)&Java_org_lwjgl_devil_ILU_iluGammaCorrect, "iluGammaCorrect", (void*)&iluGammaCorrect},
+		{"iluGenImage", "()I", (void*)&Java_org_lwjgl_devil_ILU_iluGenImage, "iluGenImage", (void*)&iluGenImage},
+		{"iluGetImageInfo", "(Lorg/lwjgl/devil/ILinfo;)V", (void*)&Java_org_lwjgl_devil_ILU_iluGetImageInfo, "iluGetImageInfo", (void*)&iluGetImageInfo},
+		{"iluGetInteger", "(I)I", (void*)&Java_org_lwjgl_devil_ILU_iluGetInteger, "iluGetInteger", (void*)&iluGetInteger},
+		//{"niluGetIntegerv", "(ILjava/nio/IntBuffer;)V", (void*)&Java_org_lwjgl_devil_ILU_niluGetIntegerv, "iluGetIntegerv", (void*)&iluGetIntegerv},
+		{"iluGetString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_devil_ILU_iluGetString, "iluGetString", (void*)&iluGetString},
+		{"iluImageParameter", "(II)V", (void*)&Java_org_lwjgl_devil_ILU_iluImageParameter, "iluImageParameter", (void*)&iluImageParameter},
+		{"iluInit", "()V", (void*)&Java_org_lwjgl_devil_ILU_iluInit, "iluInit", (void*)&iluInit},
+		{"iluInvertAlpha", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluInvertAlpha, "iluInvertAlpha", (void*)&iluInvertAlpha},
+		{"iluLoadImage", "(Ljava/lang/String;)I", (void*)&Java_org_lwjgl_devil_ILU_iluLoadImage, "iluLoadImage", (void*)&iluLoadImage},
+		{"iluMirror", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluMirror, "iluMirror", (void*)&iluMirror},
+		{"iluNegative", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluNegative, "iluNegative", (void*)&iluNegative},
+		{"iluNoisify", "(F)Z", (void*)&Java_org_lwjgl_devil_ILU_iluNoisify, "iluNoisify", (void*)&iluNoisify},
+		{"iluPixelize", "(I)Z", (void*)&Java_org_lwjgl_devil_ILU_iluPixelize, "iluPixelize", (void*)&iluPixelize},
+		{"iluReplaceColour", "(BBBF)Z", (void*)&Java_org_lwjgl_devil_ILU_iluReplaceColour, "iluReplaceColour", (void*)&iluReplaceColour},
+		{"iluRotate", "(F)Z", (void*)&Java_org_lwjgl_devil_ILU_iluRotate, "iluRotate", (void*)&iluRotate},
+		{"iluSaturate1f", "(F)Z", (void*)&Java_org_lwjgl_devil_ILU_iluSaturate1f, "iluSaturate1f", (void*)&iluSaturate1f},
+		{"iluSaturate4f", "(FFFF)Z", (void*)&Java_org_lwjgl_devil_ILU_iluSaturate4f, "iluSaturate4f", (void*)&iluSaturate4f},
+		{"iluScale", "(III)Z", (void*)&Java_org_lwjgl_devil_ILU_iluScale, "iluScale", (void*)&iluScale},
+		{"iluScaleColours", "(FFF)Z", (void*)&Java_org_lwjgl_devil_ILU_iluScaleColours, "iluScaleColours", (void*)&iluScaleColours},
+		{"iluSharpen", "(FI)Z", (void*)&Java_org_lwjgl_devil_ILU_iluSharpen, "iluSharpen", (void*)&iluSharpen},
+		{"iluSwapColours", "()Z", (void*)&Java_org_lwjgl_devil_ILU_iluSwapColours, "iluSwapColours", (void*)&iluSwapColours},
+		{"iluWave", "(F)Z", (void*)&Java_org_lwjgl_devil_ILU_iluWave, "iluWave", (void*)&iluWave},
     };
     int num_functions = NUMFUNCTIONS(functions);
-    extil_InitializeClass(env, clazz, num_functions, functions);
-*/
+    extilu_InitializeClass(env, clazz, num_functions, functions);
 }
-
-#ifdef __cplusplus
-}
-#endif
