@@ -177,7 +177,7 @@ void LoadOpenAL() {
  */
 void UnLoadOpenAL() {
 #ifdef _WIN32
-  FreeLibrary(handleOAL);
+  //FreeLibrary(handleOAL);
 #endif
 #ifdef _X11
    dlclose(handleOAL);

@@ -112,21 +112,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_getIntegerv (JNIEnv *env, jobje
  * ALCdevice *alcOpenDevice( const ALubyte *tokstr );
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_openDevice (JNIEnv *env, jobject obj, jstring tokstr) {
-	ALubyte* tokenstring;
+	const char * tokenstring;
 
+	jboolean isCopy = JNI_FALSE;
 	if(tokstr != NULL) {
-		tokenstring = (ALubyte*) (env->GetStringUTFChars(tokstr, 0));
+		tokenstring = (env->GetStringUTFChars(tokstr, &isCopy));
 	} else {
 		tokenstring = NULL;
 	}
 
 	/* get device */
-	ALCdevice* device = alcOpenDevice(tokenstring);
+	ALCdevice* device = alcOpenDevice((ALubyte *) tokenstring);
 
 	/* if error - cleanup and get out */
 	if(device == NULL) {
 		if(tokenstring != NULL) {
-			env->ReleaseStringUTFChars((jstring)tokenstring, 0);
+			env->ReleaseStringUTFChars(tokstr, tokenstring);
 		}
 		return NULL;
 	}
@@ -144,7 +145,8 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_openDevice (JNIEnv *env, job
 	alcDevice_object = env->NewObject(alcDevice_class, alcDevice_method, (int) device);
 
 	/* clean up */
-	env->ReleaseStringUTFChars((jstring)tokenstring, 0);
+	if (tokenstring != NULL)
+		env->ReleaseStringUTFChars(tokstr, tokenstring);
 
 	return alcDevice_object;
 }
@@ -358,7 +360,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_isExtensionPresent (JNIEnv 
 	
 	jboolean result = (jboolean) alcIsExtensionPresent((ALCdevice*) deviceaddress, functionname);
 	
-	env->ReleaseStringUTFChars((jstring)functionname, 0);
+	env->ReleaseStringUTFChars(extName, (const char *)functionname);
 	
 	CHECK_ALC_ERROR
 	return result;
@@ -381,7 +383,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getEnumValue (JNIEnv *env, jobj
 	
 	jint result = (jint) alcGetEnumValue((ALCdevice*) deviceaddress, enumerationname);
 	
-	env->ReleaseStringUTFChars((jstring)enumerationname, 0);
+	env->ReleaseStringUTFChars(enumName, (const char *)enumerationname);
 	
 	CHECK_ALC_ERROR
 	return result;
