@@ -177,6 +177,8 @@ public class Mouse {
 		if (currentCursor != null) {
 			nSetNativeCursor(currentCursor.getHandle());
 	 		currentCursor.setTimeout();
+      x = Window.getWidth() / 2;
+      y = Window.getHeight() / 2;      
 		} else {
 			nSetNativeCursor(0);
 		}
