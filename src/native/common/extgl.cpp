@@ -3080,7 +3080,7 @@ static void extgl_InitOpenGL1_4(JNIEnv *env, jobject ext_set)
 
 static void extgl_InitGLUSupportedExtensions(JNIEnv *env, jobject ext_set)
 {
-	char *s = (char*) gluGetString(GLU_VERSION);
+	const char *s = (const char *)gluGetString(GLU_VERSION);
 	if (!s)
 		return;
 	s = strstr(s, "1.");
