@@ -550,14 +550,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_update
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_swapBuffers
   (JNIEnv * env, jobject self)
 {
-	display_hdc = GetDC(display_hwnd);
-	if (!applyPixelFormat(display_hdc, pixel_format_index)) {
-		closeWindow(display_hwnd, display_hdc);
-		throwException(env, "Could not apply pixel format to window");
-		return;
-	}
-
-	BOOL result = wglMakeCurrent(display_hdc, display_hglrc);
 	isDirty = false;
 	SwapBuffers(display_hdc);
 }
