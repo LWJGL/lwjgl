@@ -39,6 +39,11 @@
 
 #include <jni.h>
 #include <stdlib.h>
+
+#ifdef WIN32
+#include <wtypes.h>
+#endif
+
 #include "common_tools.h"
 
 static bool debug = false;
