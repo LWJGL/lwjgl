@@ -9,14 +9,14 @@ OBJECTS=$(subst .m,.o, $(subst .c,.o,$(SRC)))
 LIBRARY=liblwjgl.jnilib
 
 $(LIBRARY): $(OBJECTS)
-   $(LINKER) $(CFLAGS_LINK) -o $@ $(OBJECTS) $(FRAMEWORKS)
-   $(STRIP) -S -X $@
+	$(LINKER) $(CFLAGS_LINK) -o $@ $(OBJECTS) $(FRAMEWORKS)
+	$(STRIP) -S -X $@
 
 .m.o:
-   $(CC) $(CFLAGS_O) $< -o $@
+	$(CC) $(CFLAGS_O) $< -o $@
 
 .c.o:
-   $(CC) $(CFLAGS_O) $< -o $@
+	$(CC) $(CFLAGS_O) $< -o $@
 
 clean:
-   rm -f $(OBJECTS) $(LIBRARY) 
+	rm -f $(OBJECTS) $(LIBRARY) 
