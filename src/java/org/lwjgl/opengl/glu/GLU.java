@@ -103,9 +103,7 @@ public class GLU implements GLUConstants {
 	 * @param modelMatrix
 	 * @param projMatrix
 	 * @param viewport
-	 * @param objx
-	 * @param objy
-	 * @param objz
+	 * @param obj_pos
 	 * @return
 	 */
 	public static boolean gluUnProject(float winx, float winy, float winz,
