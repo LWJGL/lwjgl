@@ -89,9 +89,7 @@ long queryTime(void) {
 #endif
 	}		
 	long result = tv.tv_sec * 1000000l + tv.tv_usec;
-#ifdef _DEBUG
-	printf("Current time (native): %ld\n", result);
-#endif
+
 	return result;
 }
 
