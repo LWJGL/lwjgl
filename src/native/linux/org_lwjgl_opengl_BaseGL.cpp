@@ -85,6 +85,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 #endif
 		return JNI_FALSE;
 	}
+#ifdef _DEBUG
+	const GLubyte * extensions = glGetString(GL_EXTENSIONS);
+	printf("Supported extensions: %s\n", extensions);
+#endif
 	return JNI_TRUE;
 }
 
