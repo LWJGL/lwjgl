@@ -637,9 +637,6 @@ glDrawRangeElementArrayNVPROC glDrawRangeElementArrayNV = NULL;
 glMultiDrawElementArrayNVPROC glMultiDrawElementArrayNV = NULL;
 glMultiDrawRangeElementArrayNVPROC glMultiDrawRangeElementArrayNV = NULL;
 
-glPrimitiveRestartNVPROC glPrimitiveRestartNV = NULL;
-glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV = NULL;
-
 bool extgl_error = false;
 
 struct ExtensionTypes extgl_Extensions;
@@ -1385,7 +1382,7 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_NV_float_buffer = GLQueryExtension(env, ext_set, "GL_NV_float_buffer");
 	extgl_Extensions.GL_NV_fog_distance = GLQueryExtension(env, ext_set, "GL_NV_fog_distance");
 	extgl_Extensions.GL_NV_fragment_program = GLQueryExtension(env, ext_set, "GL_NV_fragment_program");
-	extgl_Extensions.GL_NV_half_float = GLQueryExtensions(env, ext_set, "GL_NV_half_float");
+	extgl_Extensions.GL_NV_half_float = GLQueryExtension(env, ext_set, "GL_NV_half_float");
 	extgl_Extensions.GL_NV_light_max_exponent = GLQueryExtension(env, ext_set, "GL_NV_light_max_exponent");
 	extgl_Extensions.GL_NV_occlusion_query = GLQueryExtension(env, ext_set, "GL_NV_occlusion_query");
 	extgl_Extensions.GL_NV_packed_depth_stencil = GLQueryExtension(env, ext_set, "GL_NV_packed_depth_stencil");

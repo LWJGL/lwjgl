@@ -42,7 +42,7 @@ typedef void (APIENTRY * glDrawBuffersATIPROC) (GLsizei n, const GLenum *bufs);
 
 static glDrawBuffersATIPROC glDrawBuffersATI;
 
-void extgl_InitATIMapObjectBuffer(JNIEnv *env, jobject ext_set)
+void extgl_InitATIDrawBuffers(JNIEnv *env, jobject ext_set)
 {
 	if (!extgl_Extensions.GL_ATI_draw_buffers)
 		return;

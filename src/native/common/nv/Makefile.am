@@ -11,4 +11,7 @@ SRC=org_lwjgl_opengl_nv_NVEvaluators.cpp \
     org_lwjgl_opengl_nv_NVRegisterCombiners.cpp \
     org_lwjgl_opengl_nv_NVRegisterCombiners2.cpp \
     org_lwjgl_opengl_nv_NVVertexArrayRange.cpp \
-    org_lwjgl_opengl_nv_NVVertexProgram.cpp
+    org_lwjgl_opengl_nv_NVVertexProgram.cpp \
+    org_lwjgl_opengl_nv_NVHalfFloat.cpp \
+    org_lwjgl_opengl_nv_NVPixelDataRange.cpp \
+    org_lwjgl_opengl_nv_NVPrimitiveRestart.cpp

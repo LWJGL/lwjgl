@@ -3189,19 +3189,6 @@ extern glMultiDrawRangeElementArrayNVPROC glMultiDrawRangeElementArrayNV;
 #endif /* _WIN32 */
 
 /*-------------------------------------------------------------------*/
-/*------------GL_NV_PRIMITIVE_RESTART--------------------------------*/
-/*-------------------------------------------------------------------*/
-
-#define GL_PRIMITIVE_RESTART_NV                                 0x8558
-#define GL_PRIMITIVE_RESTART_INDEX_NV                           0x8559
-
-typedef void (APIENTRY * glPrimitiveRestartNVPROC) ();
-typedef void (APIENTRY * glPrimitiveRestartIndexNVPROC) (GLuint index);
-
-extern glPrimitiveRestartNVPROC glPrimitiveRestartNV;
-extern glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV;
-
-/*-------------------------------------------------------------------*/
 /*------------GL_NV_VERTEX_PROGRAM2----------------------------------*/
 /*-------------------------------------------------------------------*/
 
