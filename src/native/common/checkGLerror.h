@@ -13,7 +13,7 @@
 #ifdef _DEBUG
 
 #include <jni.h>
-#include <gl/glu.h>
+#include <GL/glu.h>
 
 #define CHECK_GL_ERROR \
 	{ \

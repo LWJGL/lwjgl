@@ -39,7 +39,7 @@
  * @version $Revision$
  */
 
-#include <GL/glx.h>
+#include "extgl.h"
 #include "org_lwjgl_opengl_BaseGL.h"
 
 GLXContext context = NULL; // OpenGL rendering context
