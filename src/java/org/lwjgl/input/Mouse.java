@@ -351,9 +351,9 @@ public class Mouse {
 		// set absolute position
 		x += poll_dx;
 		y += poll_dy;
-		dx += poll_dx;
-		dy += poll_dy;
-		dwheel += poll_dwheel;
+		dx = poll_dx;
+		dy = poll_dy;
+		dwheel = poll_dwheel;
 
 		// if window has been created, clamp to edges
 		if(Window.isCreated()) {
@@ -509,27 +509,21 @@ public class Mouse {
 	 * @return Movement on the x axis since last time getDX() was called
 	 */
 	public static int getDX() {
-		int result = dx;
-		dx = 0;
-		return result;
+		return dx;
 	}
 
 	/**
 	 * @return Movement on the y axis since last time getDY() was called
 	 */
 	public static int getDY() {
-		int result = dy;
-		dy = 0;
-		return result;
+		return dy;
 	}
 
 	/**
 	 * @return Movement of the wheel since last time getDWheel() was called
 	 */
 	public static int getDWheel() {
-		int result = dwheel;
-		dwheel = 0;
-		return result;
+		return dwheel;
 	}
 
 	/**
