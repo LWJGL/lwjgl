@@ -166,3 +166,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 	env->ReleaseStringUTFChars(url, urlString);
 }
 
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    setClipboard
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setClipboard
+  (JNIEnv * env, jclass clazz, jstring clipboard)
+{
+	const char * urlString = env->GetStringUTFChars(clipboard, NULL);
+	// TODO
+}
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    getClipboard
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getClipboard
+  (JNIEnv * env, jclass clazz)
+{
+	return NULL;
+}
+
