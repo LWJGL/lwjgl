@@ -41,6 +41,7 @@
 
 #include "Window.h"
 #include "org_lwjgl_Sys.h"
+#include "org_lwjgl_opengl_Win32Display.h"
 #include "common_tools.h"
 #include <malloc.h>
 
@@ -135,8 +136,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
  * Method:    openURL
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
-  (JNIEnv * env, jclass clazz, jstring url)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nOpenURL
+  (JNIEnv * env, jobject self, jstring url)
 {
 	char * urlString = GetStringNativeChars(env, url);
 

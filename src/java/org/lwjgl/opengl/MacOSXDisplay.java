@@ -375,6 +375,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return GL11.glGetString(GL11.GL_EXTENSIONS).indexOf("GL_APPLE_pixel_buffer") != -1 ? Pbuffer.PBUFFER_SUPPORTED : 0;
 	}
 
+	public boolean openURL(String url) {
+		return false;
+	}
+	
 	/**
 	 * This class captures com.apple.eawt.ApplicationEvents through reflection
 	 * to enable compilation on other platforms than Mac OS X

@@ -94,28 +94,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jst
 {
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
-  (JNIEnv * env, jclass clazz, jstring url)
-{
-/*	char * urlString = GetStringNativeChars(env, url);
-
-	OSStatus err;
-	ICInstance inst;
-	long startSel;
-	long endSel;
-	Str255  urlStr;
-
-	CopyCStringToPascal(urlString, urlStr);
-	free(urlString);
-	err = ICStart(&inst, '????'); // Use your creator code if you have one!
-	if (err == noErr) {
-		startSel = 0;
-		endSel = urlStr[0];
-		err = ICLaunchURL(inst, "\p", (char *) &urlStr[1], urlStr[0], &startSel, &endSel);
-		(void) ICStop(inst);
-	}*/
-}
-
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_nGetClipboard
   (JNIEnv * env, jclass clazz)
 {

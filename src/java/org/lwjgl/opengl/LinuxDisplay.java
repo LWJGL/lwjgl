@@ -41,6 +41,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.io.IOException;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -102,4 +103,24 @@ final class LinuxDisplay implements DisplayImplementation {
 
 	public native void destroyCursor(Object cursorHandle);
 	public native int getPbufferCaps();
+
+	public boolean openURL(String url) {
+		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
+		// right anyway.
+
+		String[] browsers = {"mozilla", "opera", "konqueror", "nautilus", "galeon", "netscape"};
+
+		for (int i = 0; i < browsers.length; i ++) {				
+			try {
+				Runtime.getRuntime().exec(new String[] { browsers[i], url });
+				return true;
+			} catch (IOException e) {
+				// Ignore
+				e.printStackTrace(System.err);
+			}
+		}
+		
+		// Seems to have failed
+		return false;
+	}
 }

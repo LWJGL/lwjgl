@@ -102,4 +102,10 @@ final class Win32Display implements DisplayImplementation {
 
 	public native void destroyCursor(Object cursorHandle);
 	public native int getPbufferCaps();
+	public boolean openURL(String url) {
+		nOpenURL(url);
+		return true;
+	}
+
+	private native void nOpenURL(String url);
 }

@@ -34,6 +34,7 @@ package org.lwjgl;
 import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 
 /**
  * $Id$
@@ -238,36 +239,8 @@ public final class Sys {
 	 * @return false if we are CERTAIN the call has failed
 	 */
 	public static boolean openURL(String url) {
-		String osName = System.getProperty("os.name");
-		if (osName.startsWith("Mac OS") || osName.startsWith("Windows")) {
-			// Mac and Windows both do this nicely from native code.
-			nOpenURL(url);
-			return true;
-		}
-		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
-		// right anyway.
-
-		String[] browsers = {"mozilla", "opera", "konqueror", "nautilus", "galeon", "netscape"};
-
-		for (int i = 0; i < browsers.length; i ++) {				
-			try {
-				Runtime.getRuntime().exec(new String[] { browsers[i], url });
-				return true;
-			} catch (IOException e) {
-				// Ignore
-				e.printStackTrace(System.err);
-			}
-		}
-		
-		// Seems to have failed
-		return false;
+		return Display.getImplementation().openURL(url);
 	}
-	
-	
-	/*
-	 * Where necessary, we use a native implementation of openURL.
-	 */
-	private static native void nOpenURL(String url);
 
 	/**
 	 * Get the contents of the system clipboard. The system might not have a clipboard

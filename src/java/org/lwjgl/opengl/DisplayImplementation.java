@@ -237,4 +237,6 @@ public interface DisplayImplementation {
 
 	/* Pbuffer caps */
 	public int getPbufferCaps();
+
+	public boolean openURL(String url);
 }
