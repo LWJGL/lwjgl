@@ -40,10 +40,10 @@
  * @version $Revision$
  */
 #include "org_lwjgl_openal_CoreAL.h"
+/* OpenAL includes */
+#include "extal.h"
 #include "checkALerror.h"
 
-/* OpenAL includes */
-#include <AL/al.h>
 
 /**
  * This function enables a feature of the OpenAL driver.

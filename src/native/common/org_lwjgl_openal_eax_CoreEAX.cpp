@@ -39,9 +39,8 @@
  * @version $Revision$
  */
 #include "org_lwjgl_openal_eax_CoreEAX.h"
-#include "checkALerror.h"
-
 #include "extal.h"
+#include "checkALerror.h"
 
 /**
  * Throws an OAL exception with the specified message

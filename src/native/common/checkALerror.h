@@ -1,19 +1,19 @@
 /*
-	checkGLerror.h
+	checkALerror.h
 
 	Author:		C. Prince
 	Created:	8 November 2001
 
-	Error checking for OpenGL bindings
+	Error checking for OpenAL bindings
 */
 
-#ifndef _CHECKGLERROR_H_INCLUDED_
-#define _CHECKGLERROR_H_INCLUDED_
+#ifndef _CHECKALERROR_H_INCLUDED_
+#define _CHECKALERROR_H_INCLUDED_
 
 #ifdef _DEBUG
 
 #include <jni.h>
-#include <AL/al.h>
+#include "extal.h"
 
 #define CHECK_AL_ERROR \
 	{ \
@@ -42,4 +42,4 @@
 
 #endif /* _DEBUG */
 
-#endif /* _CHECKGLERROR_H_INCLUDED_ */
+#endif /* _CHECKALERROR_H_INCLUDED_ */
