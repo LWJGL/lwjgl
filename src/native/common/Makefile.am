@@ -15,8 +15,6 @@ COMMON = \
   org_lwjgl_input_Joystick.h \
   org_lwjgl_input_Keyboard.h \
   org_lwjgl_input_Mouse.h \
-  org_lwjgl_Math.cpp \
-  org_lwjgl_Math.h \
   org_lwjgl_openal_ALC.cpp \
   org_lwjgl_openal_ALC.h \
   org_lwjgl_openal_BaseAL.cpp \
