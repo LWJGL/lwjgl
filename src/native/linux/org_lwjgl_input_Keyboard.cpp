@@ -47,7 +47,7 @@
 
 #define KEYBOARD_BUFFER_SIZE 50
 #define KEYBOARD_SIZE 256
-#define KEY_EVENT_BACKLOG 5
+#define KEY_EVENT_BACKLOG 20
 
 unsigned char readBuffer[KEYBOARD_BUFFER_SIZE * 2];
 jfieldID fid_readBuffer;
