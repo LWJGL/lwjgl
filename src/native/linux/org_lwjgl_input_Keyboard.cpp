@@ -63,6 +63,7 @@ static bool keyboard_grabbed;
 static bool buffer_enabled;
 static bool translation_enabled;
 static bool created = false;
+static bool should_grab = false;
 
 extern Display *disp;
 extern Window win;
@@ -88,14 +89,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
 }
 
-int grabKeyboard(void) {
+static int grabKeyboard(void) {
 	int result = XGrabKeyboard(disp, win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
 	if (result == GrabSuccess)
 		keyboard_grabbed = true;
 	return result;
 }
 
-void ungrabKeyboard(void) {
+static void ungrabKeyboard(void) {
 	keyboard_grabbed = false;
 	XUngrabKeyboard(disp, CurrentTime);
 }
@@ -103,13 +104,23 @@ void ungrabKeyboard(void) {
 void acquireKeyboard(void) {
 	if (!created)
 		return;
-	grabKeyboard();
+	should_grab = true;
 }
 
 void releaseKeyboard(void) {
 	if (!created)
 		return;
-	ungrabKeyboard();
+	should_grab = false;
+}
+
+static void updateGrab(void) {
+	if (should_grab) {
+		if (!keyboard_grabbed)
+			grabKeyboard();
+	} else {
+		if (keyboard_grabbed)
+			ungrabKeyboard();
+	}
 }
 
 /*
@@ -123,13 +134,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	keyboard_grabbed = false;
 	translation_enabled = false;
 	buffer_enabled = false;
-
-	if (grabKeyboard() != GrabSuccess) {
-#ifdef _DEBUG
-		printf("Could not grab keyboard\n");
-#endif
-		return JNI_FALSE;
-	}
+	should_grab = true;
+	updateGrab();
 	for (int i =  0; i < KEYBOARD_SIZE; i++)
 		key_map[i] = i;
 	key_map[0x6b] = 0xdb; // Left doze key
@@ -169,7 +175,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 	created = false;
 }
 
-XKeyEvent *nextEventElement(void) {
+static XKeyEvent *nextEventElement(void) {
 	if (list_start == list_end)
 		return NULL;
 	XKeyEvent *result = &(saved_key_events[list_start]);
@@ -177,7 +183,7 @@ XKeyEvent *nextEventElement(void) {
 	return result;
 }
 
-void putEventElement(XKeyEvent *event) {
+static void putEventElement(XKeyEvent *event) {
 	int next_index = (list_end + 1)%KEY_EVENT_BACKLOG;
 	if (next_index == list_start)
 		return;
@@ -185,13 +191,13 @@ void putEventElement(XKeyEvent *event) {
 	list_end = next_index;
 }
 
-unsigned char getKeycode(XKeyEvent *event) {
+static unsigned char getKeycode(XKeyEvent *event) {
 	unsigned char keycode = (unsigned char)((event->keycode - 8) & 0xff);
 	keycode = key_map[keycode];
 	return keycode;
 }
 
-int translateEvent(int *position, XKeyEvent *event) {
+static int translateEvent(int *position, XKeyEvent *event) {
 	static char temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
 	static XComposeStatus status;
         int num_chars, i;
@@ -222,7 +228,7 @@ int translateEvent(int *position, XKeyEvent *event) {
 	return num_chars;
 }
 
-unsigned char eventState(XKeyEvent *event) {
+static unsigned char eventState(XKeyEvent *event) {
 	if (event->type == KeyPress) {
 		return 1;
 	} else if (event->type == KeyRelease) {
@@ -262,7 +268,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 	unsigned char state;
 	
 	handleMessages();
-
+	updateGrab();
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
@@ -281,7 +287,7 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 	int num_events = 0;
 
 	handleMessages();
-
+	updateGrab();
 	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && (key_event = nextEventElement()) != NULL) {
 		num_events++;
 		unsigned char keycode = getKeycode(key_event);

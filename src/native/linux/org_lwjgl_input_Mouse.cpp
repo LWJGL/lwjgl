@@ -61,6 +61,7 @@ extern void handleMessages(void);
 
 static bool pointer_grabbed;
 static bool created = false;
+static bool should_grab = false;
 
 static jfieldID fid_has_wheel = NULL;
 static jfieldID fid_button_count = NULL;
@@ -101,7 +102,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 		fid_dwheel = env->GetStaticFieldID(clazz, "dwheel", "I");
 }
 
-int blankCursor(void) {
+static int blankCursor(void) {
 	unsigned int best_width, best_height;
 	if (XQueryBestCursor(disp, win, 1, 1, &best_width, &best_height) == 0) {
 #ifdef _DEBUG
@@ -121,7 +122,7 @@ int blankCursor(void) {
 	return 1;
 }
 
-int grabPointer(void) {
+static int grabPointer(void) {
 	int result;
 	int mask = FocusChangeMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
 	result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
@@ -132,7 +133,7 @@ int grabPointer(void) {
 	return result;
 }
 
-void ungrabPointer(void) {
+static void ungrabPointer(void) {
 	pointer_grabbed = false;
 	XUngrabPointer(disp, CurrentTime);
 }
@@ -140,13 +141,24 @@ void ungrabPointer(void) {
 void acquirePointer(void) {
 	if (!created)
 		return;
-	grabPointer();
+	should_grab = true;
 }
 
 void releasePointer(void) {
 	if (!created)
 		return;
-	ungrabPointer();
+	should_grab = false;
+}
+
+
+static void updateGrab(void) {
+	if (should_grab) {
+		if (!pointer_grabbed)
+			grabPointer();
+	} else {
+		if (pointer_grabbed)
+			ungrabPointer();
+	}
 }
 
 /*
@@ -172,13 +184,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 #endif
 		return JNI_FALSE;
 	}
-	if (grabPointer() != GrabSuccess) {
-#ifdef _DEBUG
-		printf("Could not grab pointer\n");
-#endif
-		return JNI_FALSE;
-	}
 	created = true;
+	should_grab = true;
+	updateGrab();
 	return JNI_TRUE;
 }
 
@@ -194,6 +202,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 		ungrabPointer();
 	XFreeCursor(disp, blank_cursor);
 	created = false;
+	should_grab = false;
 }
 
 void handleButtonPress(XButtonEvent *event) {
@@ -240,7 +249,7 @@ void handlePointerMotion(XMotionEvent *event) {
 	current_y = event->y;
 }
 
-void warpPointer(void) {
+static void warpPointer(void) {
 	int i;
 	if (!pointer_grabbed)
 		return;
@@ -279,6 +288,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv * env, jclass clazz)
 {
 	handleMessages();
+	updateGrab();
 	int moved_x = current_x - last_x;
 	int moved_y = current_y - last_y;
 	int moved_z = current_z - last_z;

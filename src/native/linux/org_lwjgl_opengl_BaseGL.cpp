@@ -49,11 +49,11 @@ extern Display * disp;
 
 extern void handleMessages();
 
-void makeCurrent(void) {
+static void makeCurrent(void) {
 	glXMakeCurrent(disp, win, context);
 }
 
-void releaseContext(void) {
+static void releaseContext(void) {
 	glXMakeCurrent(disp, None, NULL);
 }
 

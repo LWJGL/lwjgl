@@ -84,7 +84,7 @@ struct pixelformat {
 	int stencil;
 };
 
-int fillFormat(struct pixelformat *formats, int index, int bpp, int depth, int alpha, int stencil) {
+static int fillFormat(struct pixelformat *formats, int index, int bpp, int depth, int alpha, int stencil) {
 	for (int i = 0; i < index; i++)
 		if (formats[i].bpp == bpp &&
 		    formats[i].depth == depth &&
@@ -98,7 +98,7 @@ int fillFormat(struct pixelformat *formats, int index, int bpp, int depth, int a
 	return 1;
 }
 
-struct pixelformat *getGLXAvailablePixelFormats(Display *disp, int screen, int *length) {
+static struct pixelformat *getGLXAvailablePixelFormats(Display *disp, int screen, int *length) {
 	if (extgl_Extensions.glx.GLX13 == 1) {
 		int num_formats;
 		int attriblist[] = {GLX_DOUBLEBUFFER, True,
@@ -148,7 +148,7 @@ struct pixelformat *getGLXAvailablePixelFormats(Display *disp, int screen, int *
 	return NULL;
 }
 
-XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
+static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
 	int bpe;
 	switch (bpp) {
 		case 32:
@@ -174,7 +174,7 @@ XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alp
 	return glXChooseVisual(disp, screen, attriblist);
 }
 
-struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, int *length) {
+static struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, int *length) {
 	struct pixelformat *formats = getGLXAvailablePixelFormats(disp, screen, length);
 	if (formats != NULL)
 		return formats;
@@ -195,7 +195,7 @@ struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, int *len
 	return formats;
 }
 
-void waitMapped(Display *disp, Window win) {
+static void waitMapped(Display *disp, Window win) {
 	XEvent event;
 
 	do {
@@ -250,7 +250,7 @@ void handleMessages(void) {
 	}
 }
 
-bool loadGL(Display *disp, int screen) {
+static bool loadGL(Display *disp, int screen) {
 	if (gl_loaded == true)
 		return true;
 	if (extgl_Open(disp, screen) != 0) {
@@ -263,12 +263,12 @@ bool loadGL(Display *disp, int screen) {
 	return true;
 }
 
-void closeGL(void) {
+static void closeGL(void) {
 	gl_loaded = false;
 	extgl_Close();
 }
 
-int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
+static int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
 	int event_base, error_base, xvid_ver, xvid_rev;
 	
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
@@ -285,7 +285,7 @@ int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeIn
 	return 1;
 }
 
-bool isMinimized() {
+static bool isMinimized() {
 	handleMessages();
 	return current_minimized;
 }
