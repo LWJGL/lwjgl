@@ -121,7 +121,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 	}
 	disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-		XCloseDisplay(disp);
 		throwException(env, "Could not open X display");
 		return;
 	}
