@@ -65,7 +65,6 @@ static void releaseContext(void) {
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
   (JNIEnv * env, jobject obj)
 {
-	printf("1\n");
 	if (disp == NULL) {
 #ifdef _DEBUG
 		printf("No display\n");
@@ -78,9 +77,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 #endif
 		return JNI_FALSE;
 	}
-	printf("2\n");
 	context = glXCreateContext(disp, getVisualInfo(), NULL, True);
-	printf("3\n");
 	if (context == NULL) {
 #ifdef _DEBUG
 		printf("Could not create context\n");
@@ -88,9 +85,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		return JNI_FALSE;
 	}
 	
-	printf("4\n");
 	makeCurrent();
-	printf("5\n");
 	if (extgl_Initialize() != 0) {
 #ifdef _DEBUG
 		printf("Could not init gl function pointers\n");
