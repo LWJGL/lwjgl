@@ -50,7 +50,7 @@ import org.lwjgl.LWJGLException;
  * $Id$
  * <p/>
  * Manages GL contexts. Before any rendering is done by a LWJGL system, a call should be made to
- * GLContext.setContext() with a context. This will ensure that GLContext has an accurate reflection
+ * GLContext.useContext() with a context. This will ensure that GLContext has an accurate reflection
  * of the current context's capabilities and function pointers.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
