@@ -293,7 +293,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	}
 	root_win = RootWindow(disp, screen);
 	vis_info = chooseVisual(disp, screen, bpp, depth_bits, alpha_bits, stencil_bits);
-	XSync(disp, False);
         if (vis_info == NULL) {
 		XCloseDisplay(disp);
 #ifdef _DEBUG
@@ -376,6 +375,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 	vis_info = NULL;
 	XCloseDisplay(disp);
 	disp = NULL;
+	XSync(disp, False);
 	closeGL();
 #ifdef _DEBUG
 	printf("Closed X connection\n");
