@@ -508,6 +508,7 @@ public final class Display {
 			context = null;
 			if (fullscreen)
 				resetDisplayMode();
+			throw e;
 		}
 		makeCurrent();
 		initContext();

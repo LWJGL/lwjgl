@@ -615,7 +615,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, 
 		return;
 	}
 
-	wglMakeCurrent(hdc, hglrc);
+	BOOL result = wglMakeCurrent(hdc, hglrc);
+	if (!result) {
+		printf("Could not bind context to window %d %d\n", GetLastError(), pixel_format_index);
+		throwException(env, "Could not bind context to window");
+		closeWindow();
+		return;
+	}
 	extgl_InitWGL(env);
 	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
@@ -685,13 +691,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		extgl_Close();
 		return;
 	}
-	wglMakeCurrent(hdc, hglrc);
+	BOOL result = wglMakeCurrent(hdc, hglrc);
+	if (!result) {
+		throwException(env, "Could not bid context to dummy window");
+		wglDeleteContext(hglrc);
+		closeWindow();
+		return;
+	}
 	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
 	// of multisamples we want. If the extension is present we'll delete the existing
 	// rendering context and start over, using the ARB extension instead to pick the context.
 	extgl_InitWGL(env);
 	if (extgl_Extensions.WGL_ARB_pixel_format) {
 		pixel_format_index = findPixelFormatARB(env, pixel_format, NULL, true, true, true);
+		printf("pixel format %d\n", pixel_format_index);
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
 		hglrc = wglCreateContext(hdc);
