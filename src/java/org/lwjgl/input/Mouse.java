@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -46,12 +46,12 @@ import org.lwjgl.opengl.Display;
  * <br>
  * A raw Mouse interface. This can be used to poll the current state of the
  * mouse buttons, and determine the mouse movement delta since the last poll.
- * 
+ *
  * n buttons supported, n being a native limit. A scrolly wheel is also
  * supported, if one such is available. Movement is reported as delta from
  * last position or as an absolute position. If the window has been created
  * the absolute position will be clamped to 0 - Display (width | height)
- * 
+ *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @author Brian Matzon <brian@matzon.dk>
@@ -60,17 +60,17 @@ import org.lwjgl.opengl.Display;
 public class Mouse {
 
 	/** 1 bit transparency for native cursor */
-	public final static int		CURSOR_ONE_BIT_TRANSPARENCY	= 1;
+	public static final int		CURSOR_ONE_BIT_TRANSPARENCY	= 1;
 
 	/** 8 bit alhpa native cursor */
-	public final static int		CURSOR_8_BIT_ALPHA					= 2;
+	public static final int		CURSOR_8_BIT_ALPHA					= 2;
 
 	/** animation native cursor */
-	public final static int		CURSOR_ANIMATION						= 4;
+	public static final int		CURSOR_ANIMATION						= 4;
 
 	/** Mouse constraint */
 	private static int width, height;
-	
+
 	/** Has the mouse been created? */
 	private static boolean		created;
 
@@ -99,7 +99,7 @@ public class Mouse {
 	private static int			buttonCount									= -1;
 
 	/** Does this mouse support a scroll wheel */
-	private static boolean		hasWheel									= false;
+	private static boolean		hasWheel;
 
 	/** The current native cursor, if any */
 	private static Cursor		currentCursor;
@@ -114,14 +114,14 @@ public class Mouse {
 	private static boolean		initialized;
 
 	/** The mouse button events from the last read */
-	private static IntBuffer	readBuffer									= null;
+	private static IntBuffer	readBuffer;
 
 	/** The current mouse event button being examined */
 	private static int				eventButton;
 
 	/** The current state of the button being examined in the event queue */
 	private static boolean		eventState;
-	
+
 	/** The current delta of the mouse in the event queue */
 	private static int			event_dx;
 	private static int			event_dy;
@@ -131,9 +131,9 @@ public class Mouse {
 	private static int			event_y;
 
 	/** Buffer size in events */
-	private final static int	BUFFER_SIZE									= 50;
+	private static final int	BUFFER_SIZE									= 50;
 	/** Event size in elements */
-	private final static int	EVENT_SIZE									= 5;
+	private static final int	EVENT_SIZE									= 5;
 
 	private static boolean		isGrabbed;
 
@@ -157,7 +157,7 @@ public class Mouse {
 	 * The CURSOR_ONE_BIT_TRANSPARANCY indicates support for cursors with one bit transparancy,
 	 * the CURSOR_8_BIT_ALPHA indicates support for 8 bit alpha and CURSOR_ANIMATION indicates
 	 * support for cursor animations.
-	 * 
+	 *
 	 * @return A bit mask with native cursor capabilities.
 	 */
 	public static int getNativeCursorCaps() {
@@ -242,12 +242,12 @@ public class Mouse {
 		if (readBuffer != null)
 			readBuffer.clear();
 	}
-  
+
 	/**
 	 * "Create" the mouse. The display must first have been created.
 	 * Initially, the mouse is not grabbed and the delta values are reported
 	 * with respect to the center of the display.
-	 * 
+	 *
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
@@ -299,24 +299,24 @@ public class Mouse {
 	 * Polls the mouse for its current state. Access the polled values using the
 	 * get<value> methods.
 	 * By using this method, it is possible to "miss" mouse click events if you don't
-	 * poll fast enough. To receive all button events, enable buffering by calling 
+	 * poll fast enough. To receive all button events, enable buffering by calling
 	 * <code>enableBuffer</code>.
-	 * 
+	 *
 	 * If buffering is enabled, this method also reads all button events since last read.
 	 * To use these values, you have to call <code>next</code> for each event you
-	 * want to read. You can query which button caused the event by using 
+	 * want to read. You can query which button caused the event by using
 	 * <code>getEventButton</code>. To get the state of that button, for that event, use
 	 * <code>getEventButtonState</code>.
-	 * 
+	 *
 	 * @see org.lwjgl.input.Mouse#next()
 	 * @see org.lwjgl.input.Mouse#getEventButton()
 	 * @see org.lwjgl.input.Mouse#getEventButtonState()
-	 * @see org.lwjgl.input.Mouse#isButtonDown(int button) 
-	 * @see org.lwjgl.input.Mouse#getX() 
-	 * @see org.lwjgl.input.Mouse#getY() 
-	 * @see org.lwjgl.input.Mouse#getDX() 
-	 * @see org.lwjgl.input.Mouse#getDY() 
-	 * @see org.lwjgl.input.Mouse#getDWheel() 
+	 * @see org.lwjgl.input.Mouse#isButtonDown(int button)
+	 * @see org.lwjgl.input.Mouse#getX()
+	 * @see org.lwjgl.input.Mouse#getY()
+	 * @see org.lwjgl.input.Mouse#getDX()
+	 * @see org.lwjgl.input.Mouse#getDY()
+	 * @see org.lwjgl.input.Mouse#getDWheel()
 	 * @see org.lwjgl.input.Mouse#enableBuffer()
 	 */
 	public static void poll() {
@@ -354,7 +354,7 @@ public class Mouse {
 
 	/**
 	 * See if a particular mouse button is down.
-	 * 
+	 *
 	 * @param button The index of the button you wish to test (0..getButtonCount-1)
 	 * @return true if the specified button is down
 	 */
@@ -401,7 +401,7 @@ public class Mouse {
 	}
 
 	/**
-	 * Gets the next mouse event. You can query which button caused the event by using 
+	 * Gets the next mouse event. You can query which button caused the event by using
 	 * <code>getEventButton()</code> (if any). To get the state of that key, for that event, use
 	 * <code>getEventButtonState</code>. To get the current mouse delta values use <code>getEventDX()</code>,
 	 * <code>getEventDY()</code> and <code>getEventDZ()</code>.
@@ -494,7 +494,7 @@ public class Mouse {
 	/**
 	 * Retrieves the absolute position. If the Display has been created
 	 * x will be clamped to 0...width-1.
-	 * 
+	 *
 	 * @return Absolute x axis position of mouse
 	 */
 	public static int getX() {
@@ -548,7 +548,7 @@ public class Mouse {
 	public static int getButtonCount() {
 		return buttonCount;
 	}
-	
+
 	/**
 	 * @return Whether or not this mouse has wheel support
 	 */
@@ -564,7 +564,7 @@ public class Mouse {
 	}
 
 	/**
-	 * Sets whether or not the mouse has grabbed the cursor 
+	 * Sets whether or not the mouse has grabbed the cursor
 	 * (and thus hidden). If grab is false, the getX() and getY()
 	 * will return delta movement in pixels clamped to the display
 	 * dimensions, from the center of the display.
@@ -581,7 +581,7 @@ public class Mouse {
 
 	/**
 	 * Updates the cursor, so that animation can be changed if needed.
-	 * This method is called automatically by the window on its update, and 
+	 * This method is called automatically by the window on its update, and
 	 * shouldn't be called otherwise
 	 */
 	public static void updateCursor() {

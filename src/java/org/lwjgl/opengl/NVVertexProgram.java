@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -42,6 +42,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class NVVertexProgram extends NVProgram {
+
 	/*
 	Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,
 	and by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
@@ -218,12 +219,7 @@ public final class NVVertexProgram extends NVProgram {
 		nglGetProgramParameterfvNV(target, index, parameterName, params, params.position());
 	}
 
-	private static native void nglGetProgramParameterfvNV(
-		int target,
-		int index,
-		int parameterName,
-		FloatBuffer params,
-		int paramsOffset);
+	private static native void nglGetProgramParameterfvNV(int target, int index, int parameterName, FloatBuffer params, int paramsOffset);
 
 	// ---------------------------
 
@@ -235,12 +231,7 @@ public final class NVVertexProgram extends NVProgram {
 
 	}
 
-	private static native void nglGetTrackMatrixivNV(
-		int target,
-		int address,
-		int parameterName,
-		IntBuffer params,
-		int paramsOffset);
+	private static native void nglGetTrackMatrixivNV(int target, int address, int parameterName, IntBuffer params, int paramsOffset);
 
 	// ---------------------------
 
@@ -275,19 +266,14 @@ public final class NVVertexProgram extends NVProgram {
 	public static void glProgramParameters4NV(int target, int index, int count, FloatBuffer params) {
 		BufferChecks.checkDirect(params);
 		// Special case buffer check
-		if (params.remaining() < count * 4) {
+		if ( params.remaining() < count * 4 ) {
 			throw new BufferOverflowException();
 		}
 		nglProgramParameters4fvNV(target, index, count, params, params.position());
 
 	}
 
-	private static native void nglProgramParameters4fvNV(
-		int target,
-		int index,
-		int count,
-		FloatBuffer params,
-		int paramsOffset);
+	private static native void nglProgramParameters4fvNV(int target, int index, int count, FloatBuffer params, int paramsOffset);
 
 	// ---------------------------
 
@@ -296,25 +282,13 @@ public final class NVVertexProgram extends NVProgram {
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer buffer) {
 		BufferChecks.checkDirect(buffer);
 		GLBufferChecks.ensureArrayVBOdisabled();
-		nglVertexAttribPointerNV(
-			index,
-			size,
-			unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE,
-			stride,
-			buffer,
-			buffer.position());
+		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, buffer, buffer.position());
 	}
 
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer buffer) {
 		BufferChecks.checkDirect(buffer);
 		GLBufferChecks.ensureArrayVBOdisabled();
-		nglVertexAttribPointerNV(
-			index,
-			size,
-			unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT,
-			stride,
-			buffer,
-			buffer.position() << 1);
+		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, buffer, buffer.position() << 1);
 	}
 
 	public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer buffer) {
@@ -326,22 +300,10 @@ public final class NVVertexProgram extends NVProgram {
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer buffer) {
 		BufferChecks.checkDirect(buffer);
 		GLBufferChecks.ensureArrayVBOdisabled();
-		nglVertexAttribPointerNV(
-			index,
-			size,
-			unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT,
-			stride,
-			buffer,
-			buffer.position() << 2);
+		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, buffer, buffer.position() << 2);
 	}
 
-	private static native void nglVertexAttribPointerNV(
-		int index,
-		int size,
-		int type,
-		int stride,
-		Buffer buffer,
-		int bufferOffset);
+	private static native void nglVertexAttribPointerNV(int index, int size, int type, int stride, Buffer buffer, int bufferOffset);
 
 	// ---------------------------
 
@@ -374,55 +336,64 @@ public final class NVVertexProgram extends NVProgram {
 
 	public static void glVertexAttribs1NV(int index, ShortBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs1svNV(index, v.remaining(), v, v.position()<<1);
+		nglVertexAttribs1svNV(index, v.remaining(), v, v.position() << 1);
 	}
+
 	private static native void nglVertexAttribs1svNV(int index, int n, ShortBuffer v, int v_offset);
 
 	public static void glVertexAttribs1NV(int index, FloatBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs1fvNV(index, v.remaining(), v, v.position()<<2);
+		nglVertexAttribs1fvNV(index, v.remaining(), v, v.position() << 2);
 	}
+
 	private static native void nglVertexAttribs1fvNV(int index, int n, FloatBuffer v, int v_offset);
 
 	public static void glVertexAttribs2NV(int index, ShortBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs2svNV(index, v.remaining()>>1, v, v.position()<<1);
+		nglVertexAttribs2svNV(index, v.remaining() >> 1, v, v.position() << 1);
 	}
+
 	private static native void nglVertexAttribs2svNV(int index, int n, ShortBuffer v, int v_offset);
 
 	public static void glVertexAttribs2NV(int index, FloatBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs2fvNV(index, v.remaining()>>1, v, v.position()<<2);
+		nglVertexAttribs2fvNV(index, v.remaining() >> 1, v, v.position() << 2);
 	}
+
 	private static native void nglVertexAttribs2fvNV(int index, int n, FloatBuffer v, int v_offset);
 
 	public static void glVertexAttribs3NV(int index, ShortBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs3svNV(index, v.remaining()/3, v, v.position()<<1);
+		nglVertexAttribs3svNV(index, v.remaining() / 3, v, v.position() << 1);
 	}
+
 	private static native void nglVertexAttribs3svNV(int index, int n, ShortBuffer v, int v_offset);
 
 	public static void glVertexAttribs3NV(int index, FloatBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs3fvNV(index, v.remaining()/3, v, v.position()<<2);
+		nglVertexAttribs3fvNV(index, v.remaining() / 3, v, v.position() << 2);
 	}
+
 	private static native void nglVertexAttribs3fvNV(int index, int n, FloatBuffer v, int v_offset);
 
 	public static void glVertexAttribs4NV(int index, ShortBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs4svNV(index, v.remaining()>>2, v, v.position()<<1);
+		nglVertexAttribs4svNV(index, v.remaining() >> 2, v, v.position() << 1);
 	}
+
 	private static native void nglVertexAttribs4svNV(int index, int n, ShortBuffer v, int v_offset);
 
 	public static void glVertexAttribs4NV(int index, FloatBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs4fvNV(index, v.remaining()>>2, v, v.position()<<2);
+		nglVertexAttribs4fvNV(index, v.remaining() >> 2, v, v.position() << 2);
 	}
+
 	private static native void nglVertexAttribs4fvNV(int index, int n, FloatBuffer v, int v_offset);
 
 	public static void glVertexAttribs4uNV(int index, ByteBuffer v) {
 		BufferChecks.checkDirect(v);
-		nglVertexAttribs4ubvNV(index, v.remaining()>>2, v, v.position());
+		nglVertexAttribs4ubvNV(index, v.remaining() >> 2, v, v.position());
 	}
+
 	private static native void nglVertexAttribs4ubvNV(int index, int n, ByteBuffer v, int v_offset);
 }

@@ -33,100 +33,101 @@ package org.lwjgl.opengl;
 
 
 /**
- * $Id$ A class to
- * check buffer boundaries in GL methods. Many GL methods read data from the GL
- * into a native Buffer at its current position. If there is unsufficient space
- * in the buffer when the call is made then a buffer overflow would otherwise
- * occur and cause unexpected behaviour, a crash, or worse, a security risk.
- * Therefore in those methods where GL reads data back into a buffer, we will
- * call a bounds check method from this class to ensure that there is
- * sufficient space in the buffer.
- *
- * Thrown by the debug build library of the LWJGL if any OpenGL operation
- * causes an error.
+ * $Id$ A class to check buffer boundaries in GL methods. Many GL
+ * methods read data from the GL into a native Buffer at its current position. If there is unsufficient space in the buffer when
+ * the call is made then a buffer overflow would otherwise occur and cause unexpected behaviour, a crash, or worse, a security
+ * risk. Therefore in those methods where GL reads data back into a buffer, we will call a bounds check method from this class
+ * to ensure that there is sufficient space in the buffer.
+ * <p/>
+ * Thrown by the debug build library of the LWJGL if any OpenGL operation causes an error.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 class GLBufferChecks {
+
 	/** Static methods only! */
 	private GLBufferChecks() {
 	}
 
-	/**
-	 * Helper method to ensure that vertex buffer objects are disabled. If they
-	 * are enabled, we'll throw an OpenGLException
-	 */
+	/** Helper method to ensure that vertex buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled() {
-		if (VBOTracker.getVBOArrayStack().getState() != 0) {
+		if ( VBOTracker.getVBOArrayStack().getState() != 0 ) {
 			throw new OpenGLException("Cannot use Buffers when VBO is enabled");
 		}
 	}
-	/**
-	 * Helper method to ensure that vertex buffer objects are enabled. If they
-	 * are disabled, we'll throw an OpenGLException
-	 */
+
+	/** Helper method to ensure that vertex buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled() {
-		if (VBOTracker.getVBOArrayStack().getState() == 0) {
+		if ( VBOTracker.getVBOArrayStack().getState() == 0 ) {
 			throw new OpenGLException("Cannot use offsets when VBO is disabled");
 		}
 	}
-	/**
-	 * Helper method to ensure that vertex buffer objects are disabled. If they
-	 * are enabled, we'll throw an OpenGLException
-	 */
+
+	/** Helper method to ensure that vertex buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled() {
-		if (VBOTracker.getVBOElementStack().getState() != 0) {
+		if ( VBOTracker.getVBOElementStack().getState() != 0 ) {
 			throw new OpenGLException("Cannot use Buffers when VBO is enabled");
 		}
 	}
-	/**
-	 * Helper method to ensure that vertex buffer objects are enabled. If they
-	 * are disabled, we'll throw an OpenGLException
-	 */
+
+	/** Helper method to ensure that vertex buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled() {
-		if (VBOTracker.getVBOElementStack().getState() == 0) {
+		if ( VBOTracker.getVBOElementStack().getState() == 0 ) {
 			throw new OpenGLException("Cannot use offsets when VBO is disabled");
 		}
 	}
+
 	/**
 	 * Calculate the storage required for an image.
 	 *
-	 * @param format
-	 *            The format of the image (example: GL_RGBA)
-	 * @param type
-	 *            The type of the image elements (example: GL_UNSIGNED_BYTE)
-	 * @param width
-	 *            The width of the image
-	 * @param height
-	 *            The height of the image (1 for 1D images)
-	 * @param depth
-	 *            The depth of the image (1 for 2D images)
+	 * @param format The format of the image (example: GL_RGBA)
+	 * @param type   The type of the image elements (example: GL_UNSIGNED_BYTE)
+	 * @param width  The width of the image
+	 * @param height The height of the image (1 for 1D images)
+	 * @param depth  The depth of the image (1 for 2D images)
+	 *
 	 * @return the size, in bytes, of the image
 	 */
 	static int calculateImageStorage(int format, int type, int width, int height, int depth) {
+		return calculateBytesPerPixel(type, format) * width * height * depth;
+	}
+
+	static int calculateTexImage1DStorage(int format, int type, int width, int border) {
+		return calculateBytesPerPixel(type, format) * (width + (border << 1));
+	}
+
+	static int calculateTexImage2DStorage(int format, int type, int width, int height, int border) {
+		return calculateTexImage1DStorage(type, format, width, border) * (height + (border << 1));
+	}
+
+	static int calculateTexImage3DStorage(int format, int type, int width, int height, int depth, int border) {
+		return calculateTexImage2DStorage(type, format, width, height, border) * (depth + (border << 1));
+	}
+
+	private static int calculateBytesPerPixel(int type, int format) {
 		int bpe;
-		switch (type) {
-			case GL11.GL_UNSIGNED_BYTE :
-			case GL11.GL_BYTE :
+		switch ( type ) {
+			case GL11.GL_UNSIGNED_BYTE:
+			case GL11.GL_BYTE:
 				bpe = 1;
 				break;
-			case GL11.GL_UNSIGNED_SHORT :
-			case GL11.GL_SHORT :
+			case GL11.GL_UNSIGNED_SHORT:
+			case GL11.GL_SHORT:
 				bpe = 2;
 				break;
-			case GL11.GL_UNSIGNED_INT :
-			case GL11.GL_INT :
-			case GL11.GL_FLOAT :
+			case GL11.GL_UNSIGNED_INT:
+			case GL11.GL_INT:
+			case GL11.GL_FLOAT:
 				bpe = 4;
 				break;
 			default :
 				// TODO: Add more types (like the GL12 types GL_UNSIGNED_INT_8_8_8_8
 				return 0;
-		//		throw new IllegalArgumentException("Unknown type " + type);
+				//		throw new IllegalArgumentException("Unknown type " + type);
 		}
 		int epp;
-		switch (format) {
+		switch ( format ) {
 			case GL11.GL_LUMINANCE:
 			case GL11.GL_ALPHA:
 				epp = 1;
@@ -135,13 +136,13 @@ class GLBufferChecks {
 			case GL11.GL_LUMINANCE_ALPHA:
 				epp = 2;
 				break;
-			case GL11.GL_RGB :
-			case EXTBgra.GL_BGR_EXT :
+			case GL11.GL_RGB:
+			case EXTBgra.GL_BGR_EXT:
 				epp = 3;
 				break;
-			case GL11.GL_RGBA :
-			case EXTAbgr.GL_ABGR_EXT :
-			case EXTBgra.GL_BGRA_EXT :
+			case GL11.GL_RGBA:
+			case EXTAbgr.GL_ABGR_EXT:
+			case EXTBgra.GL_BGRA_EXT:
 				epp = 4;
 				break;
 			default :
@@ -150,6 +151,7 @@ class GLBufferChecks {
 /*				// Assume 4 elements per pixel
 				epp = 4;*/
 		}
-		return epp * bpe * width * height * depth;
+
+		return bpe * epp;
 	}
 }

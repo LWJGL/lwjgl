@@ -38,6 +38,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class ARBVertexShader {
+
 	/*
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
 	 * returned by the <params> parameter of GetObjectParameter{if}vARB:
@@ -114,27 +115,20 @@ public final class ARBVertexShader {
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetActiveAttribARB(int programObj, int index,
-	                                        IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+	public static void glGetActiveAttribARB(int programObj, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
 		BufferChecks.checkDirect(name);
 		BufferChecks.checkDirect(size);
 		BufferChecks.checkDirect(type);
 
 		if ( length == null ) {
-			nglGetActiveAttribARB(programObj, index, name.remaining(), null, -1,
-			                      size, size.position(), type, type.position(), name, name.position());
+			nglGetActiveAttribARB(programObj, index, name.remaining(), null, -1, size, size.position(), type, type.position(), name, name.position());
 		} else {
 			BufferChecks.checkDirect(length);
-			nglGetActiveAttribARB(programObj, index, name.remaining(), length, length.position(),
-			                      size, size.position(), type, type.position(), name, name.position());
+			nglGetActiveAttribARB(programObj, index, name.remaining(), length, length.position(), size, size.position(), type, type.position(), name, name.position());
 		}
 	}
 
-	private static native void nglGetActiveAttribARB(int programObj, int index, int maxLength,
-	                                                 IntBuffer length, int lengthOffset,
-	                                                 IntBuffer size, int sizeOffset,
-	                                                 IntBuffer type, int typeOffset,
-	                                                 ByteBuffer name, int nameOffset);
+	private static native void nglGetActiveAttribARB(int programObj, int index, int maxLength, IntBuffer length, int lengthOffset, IntBuffer size, int sizeOffset, IntBuffer type, int typeOffset, ByteBuffer name, int nameOffset);
 	// ---------------------------
 
 	// ---------------------------

@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -50,21 +50,21 @@ import org.lwjgl.LWJGLException;
  * keys, or read all the keyboard presses / releases since the last read.
  * Buffering must be explicitly enabled; the size of the buffer is determined
  * by the native implementation at its discretion.
- * 
+ *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
 public class Keyboard {
-	/** 
+	/**
 	 * The special character meaning that no
 	 * character was translated for the event.
 	 */
 	public static final char CHAR_NONE          = '\0';
 
-	/** 
-	 * The special keycode meaning that only the 
+	/**
+	 * The special keycode meaning that only the
 	 * translated character is valid.
 	 */
 	public static final int KEY_NONE            = 0x00;
@@ -197,17 +197,18 @@ public class Keyboard {
 	public static final int STATE_OFF						 = 1;
 	public static final int STATE_UNKNOWN				 = 2;
 
-	public final static int KEYBOARD_SIZE = 256;
+	public static final int KEYBOARD_SIZE = 256;
 
 	/** Buffer size in events */
-	private final static int BUFFER_SIZE = 50;
+	private static final int BUFFER_SIZE = 50;
 	/** Event size in elements */
-	private final static int EVENT_SIZE = 3;
+	private static final int EVENT_SIZE = 3;
 
 	/** Key names */
 	private static final String[] keyName = new String[255];
 	private static final Map keyMap = new HashMap(253);
-	private static int counter = 0;
+	private static int counter;
+
 	static {
 		// Use reflection to find out key names
 		Field[] field = Keyboard.class.getFields();
@@ -218,7 +219,7 @@ public class Keyboard {
 					&& Modifier.isFinal(field[i].getModifiers())
 					&& field[i].getType().equals(int.class)
 					&& field[i].getName().startsWith("KEY_")) {
-						
+
 					int key = field[i].getInt(null);
 					String name = field[i].getName().substring(4);
 					keyName[key] = name;
@@ -229,18 +230,18 @@ public class Keyboard {
 			}
 		} catch (Exception e) {
 		}
-		
+
 	}
-	
+
 	/** The number of keys supported */
 	private static final int keyCount = counter;
 
 	/** Has the keyboard been created? */
 	private static boolean created;
-	
+
 	/** The keys status from the last poll */
 	private static final ByteBuffer keyDownBuffer = BufferUtils.createByteBuffer(KEYBOARD_SIZE);
-	
+
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,
 	 * followed by state. If translation is enabled, the state is followed by
@@ -253,22 +254,22 @@ public class Keyboard {
 
 	/** The current keyboard character being examined */
 	private static char eventCharacter;
-	
+
 	/** The current keyboard event key being examined */
 	private static int eventKey;
-	
+
 	/** The current state of the key being examined in the event queue */
 	private static boolean eventState;
-	
+
 	/** One time initialization */
 	private static boolean initialized;
-	
+
 	/**
 	 * Keyboard cannot be constructed.
 	 */
 	private Keyboard() {
 	}
-	
+
 	/**
 	 * Static initialization
 	 */
@@ -278,11 +279,11 @@ public class Keyboard {
 		Sys.initialize();
 		initialized = true;
 	}
-	
+
 	/**
 	 * "Create" the keyboard. The display must first have been created. The
 	 * reason for this is so the keyboard has a window to "focus" in.
-	 * 
+	 *
 	 * @throws LWJGLException if the keyboard could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
@@ -295,7 +296,7 @@ public class Keyboard {
 		Display.getImplementation().createKeyboard();
 		created = true;
 	}
-	
+
 	/**
 	 * @return true if the keyboard has been created
 	 */
@@ -312,23 +313,23 @@ public class Keyboard {
 		created = false;
 		Display.getImplementation().destroyKeyboard();
 	}
-	
+
 	/**
 	 * Polls the keyboard for its current state. Access the polled values using the
 	 * <code>isKeyDown</code> method.
 	 * By using this method, it is possible to "miss" keyboard keys if you don't
-	 * poll fast enough. To receive all events, enable buffering by calling 
+	 * poll fast enough. To receive all events, enable buffering by calling
 	 * <code>enableBuffer</code>.
-	 * 
+	 *
 	 * This method also reads all keyboard events since last read if keyboard buffering is enabled.
 	 * To use these values, you have to call <code>next</code> for each event you
-	 * want to read. You can query which key caused the event by using 
+	 * want to read. You can query which key caused the event by using
 	 * <code>getEventKey</code>. To get the state of that key, for that event, use
 	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
 	 * character for that event.
 	 *
-	 * @see org.lwjgl.input.Keyboard#isKeyDown(int key) 
-	 * @see org.lwjgl.input.Keyboard#isStateKeySet(int key) 
+	 * @see org.lwjgl.input.Keyboard#isKeyDown(int key)
+	 * @see org.lwjgl.input.Keyboard#isStateKeySet(int key)
 	 * @see org.lwjgl.input.Keyboard#next()
 	 * @see org.lwjgl.input.Keyboard#enableBuffer()
 	 * @see org.lwjgl.input.Keyboard#getEventKey()
@@ -342,14 +343,14 @@ public class Keyboard {
 		if (readBuffer != null)
 			read();
 	}
-	
+
 	private static void read() {
 		readBuffer.compact();
 		int numEvents = Display.getImplementation().readKeyboard(readBuffer, readBuffer.position());
 		readBuffer.position(readBuffer.position() + numEvents*EVENT_SIZE);
 		readBuffer.flip();
 	}
-	
+
 	/**
 	 * Enable keyboard translation. Must be called after the keyboard is created,
 	 * and keyboard buffering must be enabled.
@@ -362,7 +363,7 @@ public class Keyboard {
 		Display.getImplementation().enableTranslation();
 		translationEnabled = true;
 	}
-	
+
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
 	 */
@@ -373,7 +374,7 @@ public class Keyboard {
 		readBuffer.limit(0);
 		Display.getImplementation().enableKeyboardBuffer();
 	}
-	
+
 	/**
 	 * Checks to see if a key is down.
 	 * @param key Keycode to check
@@ -384,14 +385,14 @@ public class Keyboard {
 			throw new IllegalStateException("Keyboard must be created before you can query key state");
 		return keyDownBuffer.get(key) != 0;
 	}
-	
+
 	/**
 	 * @return true if buffering is enabled
 	 */
 	public static boolean isBuffered() {
 		return readBuffer != null;
 	}
-	
+
 	/**
 	 * @return true if translation is enabled
 	 */
@@ -401,7 +402,7 @@ public class Keyboard {
 
 	/**
 	 * Checks whether one of the state keys are "active"
-	 * 
+	 *
 	 * @param key State key to test (KEY_CAPITAL | KEY_NUMLOCK | KEY_SYSRQ)
 	 * @return STATE_ON if on, STATE_OFF if off and STATE_UNKNOWN if the state is unknown
 	 */
@@ -419,7 +420,7 @@ public class Keyboard {
 	public static String getKeyName(int key) {
 		return keyName[key];
 	}
-	
+
 	/**
 	 * Get's a key's index. If the key is unrecognised then KEY_NONE is returned.
 	 * @param keyName The key name
@@ -431,7 +432,7 @@ public class Keyboard {
 		else
 			return ret.intValue();
 	}
-	
+
 	/**
 	 * Gets the number of keyboard events waiting after doing a buffer enabled poll().
 	 * @return the number of keyboard events
@@ -441,13 +442,13 @@ public class Keyboard {
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 		return readBuffer.remaining()/EVENT_SIZE;
 	}
-	
+
 	/**
-	 * Gets the next keyboard event. You can query which key caused the event by using 
+	 * Gets the next keyboard event. You can query which key caused the event by using
 	 * <code>getEventKey</code>. To get the state of that key, for that event, use
 	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
 	 * character for that event.
-	 * 
+	 *
 	 * @see org.lwjgl.input.Keyboard#getEventKey()
 	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
 	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
@@ -458,7 +459,7 @@ public class Keyboard {
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 		if (readBuffer == null)
 			throw new IllegalStateException("Event buffering must be enabled before you can read events");
-		
+
 		if (readBuffer.hasRemaining()) {
 			eventKey = readBuffer.get() & 0xFF;
 			eventState = readBuffer.get() != 0;
@@ -494,7 +495,7 @@ public class Keyboard {
 	/**
 	 * Gets the state of the tkey that generated the
 	 * current event
-	 * 
+	 *
 	 * @return True if key was down, or false if released
 	 */
 	public static boolean getEventKeyState() {

@@ -99,10 +99,9 @@ public interface IGL {
 	void glCallLists(ByteBuffer lists);
 
 	/**
-	 * @param n
 	 * @param lists
 	 */
-	void glCallLists(int n, IntBuffer lists);
+	void glCallLists(IntBuffer lists);
 
 	/**
 	 * @param lists

@@ -468,11 +468,10 @@ public class GLImpl implements IGL {
 	}
 
 	/**
-	 * @param n
 	 * @param lists
 	 */
-	public void glCallLists(int n, IntBuffer lists) {
-		GL.glCallLists(n, lists);
+	public void glCallLists(IntBuffer lists) {
+		GL.glCallLists(lists);
 	}
 
 	/**

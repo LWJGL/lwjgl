@@ -40,6 +40,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class ARBShaderObjects {
+
 	/*
 	* Accepted by the <pname> argument of GetHandleARB:
 	*/
@@ -256,8 +257,7 @@ public final class ARBShaderObjects {
 		nglUniformMatrix2fvARB(location, matrices.remaining() >> 2, transpose, matrices, matrices.position());
 	}
 
-	private static native void nglUniformMatrix2fvARB(int location, int count, boolean transpose,
-	                                                  FloatBuffer matrices, int matricesOffset);
+	private static native void nglUniformMatrix2fvARB(int location, int count, boolean transpose, FloatBuffer matrices, int matricesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -266,8 +266,7 @@ public final class ARBShaderObjects {
 		nglUniformMatrix3fvARB(location, matrices.remaining() / (3 * 3), transpose, matrices, matrices.position());
 	}
 
-	private static native void nglUniformMatrix3fvARB(int location, int count, boolean transpose,
-	                                                  FloatBuffer matrices, int matricesOffset);
+	private static native void nglUniformMatrix3fvARB(int location, int count, boolean transpose, FloatBuffer matrices, int matricesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -276,8 +275,7 @@ public final class ARBShaderObjects {
 		nglUniformMatrix4fvARB(location, matrices.remaining() >> 4, transpose, matrices, matrices.position());
 	}
 
-	private static native void nglUniformMatrix4fvARB(int location, int count, boolean transpose,
-	                                                  FloatBuffer matrices, int matricesOffset);
+	private static native void nglUniformMatrix4fvARB(int location, int count, boolean transpose, FloatBuffer matrices, int matricesOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -309,9 +307,7 @@ public final class ARBShaderObjects {
 		}
 	}
 
-	private static native void nglGetInfoLogARB(int obj, int maxLength,
-	                                            IntBuffer length, int lengthOffset,
-	                                            ByteBuffer infoLog, int infoLogOffset);
+	private static native void nglGetInfoLogARB(int obj, int maxLength, IntBuffer length, int lengthOffset, ByteBuffer infoLog, int infoLogOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -326,14 +322,12 @@ public final class ARBShaderObjects {
 		}
 	}
 
-	private static native void nglGetAttachedObjectsARB(int containerObj, int maxCount,
-	                                                    IntBuffer count, int countOffset, IntBuffer obj, int objOffset);
+	private static native void nglGetAttachedObjectsARB(int containerObj, int maxCount, IntBuffer count, int countOffset, IntBuffer obj, int objOffset);
 	// ---------------------------
 
 	// ---------------------------
 	/**
-	 * Returns the location of the uniform with the specified name. The ByteBuffer should contain the uniform name as a
-	 * <b>null-terminated</b> string.
+	 * Returns the location of the uniform with the specified name. The ByteBuffer should contain the uniform name as a <b>null-terminated</b> string.
 	 *
 	 * @param programObj
 	 * @param name
@@ -349,8 +343,7 @@ public final class ARBShaderObjects {
 	// ---------------------------
 
 	// ---------------------------
-	public static void glGetActiveUniformARB(int programObj, int index,
-	                                         IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+	public static void glGetActiveUniformARB(int programObj, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
 		if ( size.remaining() == 0 )
 			throw new BufferOverflowException();
 
@@ -358,22 +351,16 @@ public final class ARBShaderObjects {
 			throw new BufferOverflowException();
 
 		if ( length == null )
-			nglGetActiveUniformARB(programObj, index, name.remaining(), null, -1,
-			                       size, size.position(), type, type.position(), name, name.position());
+			nglGetActiveUniformARB(programObj, index, name.remaining(), null, -1, size, size.position(), type, type.position(), name, name.position());
 		else {
 			if ( length.remaining() == 0 )
 				throw new BufferOverflowException();
 
-			nglGetActiveUniformARB(programObj, index, name.remaining(), length, length.position(),
-			                       size, size.position(), type, type.position(), name, name.position());
+			nglGetActiveUniformARB(programObj, index, name.remaining(), length, length.position(), size, size.position(), type, type.position(), name, name.position());
 		}
 	}
 
-	private static native void nglGetActiveUniformARB(int programObj, int index, int maxLength,
-	                                                  IntBuffer length, int lengthOffset,
-	                                                  IntBuffer size, int sizeOffset,
-	                                                  IntBuffer type, int typeOffset,
-	                                                  ByteBuffer name, int nameOffset);
+	private static native void nglGetActiveUniformARB(int programObj, int index, int maxLength, IntBuffer length, int lengthOffset, IntBuffer size, int sizeOffset, IntBuffer type, int typeOffset, ByteBuffer name, int nameOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -401,8 +388,7 @@ public final class ARBShaderObjects {
 		}
 	}
 
-	private static native void nglGetShaderSourceARB(int obj, int maxLength,
-	                                                 IntBuffer length, int lengthOffset, ByteBuffer source, int sourceOffset);
+	private static native void nglGetShaderSourceARB(int obj, int maxLength, IntBuffer length, int lengthOffset, ByteBuffer source, int sourceOffset);
 	// ---------------------------
 
 }

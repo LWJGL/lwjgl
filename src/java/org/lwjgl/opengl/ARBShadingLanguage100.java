@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 public final class ARBShadingLanguage100 {
+
 	/*
      * Accepted by the <name> parameter of GetString:
     */

@@ -48,13 +48,13 @@ public interface PlatformAdapter {
 	 * @param title
 	 * @param message
 	 */
-	public void alert(String title, String message);
-  
+	void alert(String title, String message);
+
 	/**
 	 * Get the contents of the system clipboard. The system might not have a clipboard
 	 * (particularly if it doesn't even have a keyboard) in which case we return null.
 	 * Otherwise we return a String, which may be the empty string "".
 	 * @return a String, or null if there is no system clipboard.
-	 */  
-	public String getClipboard();
+	 */
+	String getClipboard();
 }
