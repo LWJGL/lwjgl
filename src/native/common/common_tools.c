@@ -47,7 +47,7 @@
 #include "common_tools.h"
 
 static bool debug = false;
-static const char* VERSION = "0.93";
+static const char* VERSION = "0.94";
 static JavaVM *jvm;
 
 void initAttribList(attrib_list_t *list) {

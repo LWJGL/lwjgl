@@ -49,7 +49,7 @@ import org.lwjgl.opengl.Display;
  */
 public final class Sys {
 
-	public static final String VERSION = "0.93";
+	public static final String VERSION = "0.94";
 
 	/** Low process priority. @see #setProcessPriority() */
 	public static final int LOW_PRIORITY = -1;
