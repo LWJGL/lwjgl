@@ -52,6 +52,8 @@
 						<arg value="/DEFAULTLIB:user32.lib"/>
 						<arg value="/DEFAULTLIB:Gdi32.lib"/>
 						<arg value="/DEFAULTLIB:AdvApi32.lib"/>
+						<arg value="/DEFAULTLIB:jawt.lib"/>
+						<arg value="/DEFAULTLIB:winmm.lib"/>
 						<arg value="/DLL"/>
 						<sources>
 							<includes name="build/*.obj" />
