@@ -35,6 +35,7 @@ import java.nio.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
@@ -69,7 +70,7 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Construct a direct native-order shortbuffer with the specified number
+	 * Construct a direct native-order intbuffer with the specified number
 	 * of elements.
 	 * @param size The size, in ints
 	 * @return an IntBuffer
@@ -79,7 +80,7 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Construct a direct native-order shortbuffer with the specified number
+	 * Construct a direct native-order floatbuffer with the specified number
 	 * of elements.
 	 * @param size The size, in floats
 	 * @return a FloatBuffer
@@ -88,6 +89,16 @@ public final class BufferUtils {
 		return createByteBuffer(size << 2).asFloatBuffer();
 	}
 
+	/**
+	 * Construct a direct native-order doublebuffer with the specified number
+	 * of elements.
+	 * @param size The size, in floats
+	 * @return a FloatBuffer
+	 */
+	public static DoubleBuffer createDoubleBuffer(int size) {
+		return createByteBuffer(size << 3).asDoubleBuffer();
+	}
+	
 	/**
 	 * A helper function which is used to get the byte offset in an arbitrary buffer
 	 * based on its position
