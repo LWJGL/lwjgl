@@ -35,6 +35,7 @@ import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
@@ -118,7 +119,7 @@ public class MouseTest {
     Mouse.destroy();
     Keyboard.destroy();
     gl.destroy();
-    Display.destroy();
+    BaseGL.destroy();
   }
 
   private void createMouse() {
@@ -131,8 +132,8 @@ public class MouseTest {
   }
 
   private void wiggleMouse() {
-    while (!Display.isCloseRequested()) {
-      if(Display.isMinimized()) {
+    while (!BaseGL.isCloseRequested()) {
+      if(BaseGL.isMinimized()) {
         continue;
       }
 

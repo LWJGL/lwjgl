@@ -7,6 +7,7 @@
 package org.lwjgl.test;
 
 import org.lwjgl.*;
+import org.lwjgl.opengl.BaseGL;
 
 /**
  * @author Brian
@@ -43,6 +44,6 @@ public class WindowCreationTest {
     
     System.out.println("Display created");
     
-    Display.destroy();
+    BaseGL.destroy();
 	}
 }

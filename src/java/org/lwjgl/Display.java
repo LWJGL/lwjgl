@@ -34,6 +34,7 @@ package org.lwjgl;
 
 import java.util.HashSet;
 import java.util.Arrays;
+
 /**
  * $Id$
  *
@@ -49,6 +50,7 @@ public final class Display {
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());
+		init();
 	}
 
 	/** Has the display been created? */
@@ -83,6 +85,12 @@ public final class Display {
 	private Display() {
 		super();
 	}
+	
+	/**
+	 * Initialize. This determines, natively, the current display mode and stashes
+	 * it back in the mode static member.
+	 */
+	private static native void init();
 
 	/**
 	 * Returns the entire list of display modes as an array, in no
@@ -116,89 +124,29 @@ public final class Display {
 	/** 
 	 * Native method for getting displaymodes
 	 */
-	public static native DisplayMode[] nGetAvailableDisplayModes();
-
+	private static native DisplayMode[] nGetAvailableDisplayModes();
+	
 	/**
-	 * Create a display with the specified display mode. If the display is
-	 * already created then no action is taken - the display must first be
-	 * destroyed.
-	 * 
-	 * @param displayMode A display mode to choose
-	 * @param alpha Minimun number of alpha bits on the display
-	 * @param depth Minimun number of depth bits on the display
-	 * @param stencil Minimun number of stencil bits on the display
-	 * @param fullscreen Whether to create the display fullscreen
-	 * @param title The title for the application
+	 * Set the current display mode. The underlying OS may not use an exact match for
+	 * the specified display mode. After successfully calling setDisplayMode() you will
+	 * still need to query the display's characteristics using getDisplayMode().
+	 * @param newMode The new display mode to set
 	 * @throws Exception if the display mode could not be set
-	 * @see #destroy()
 	 */
-	public static void create(DisplayMode displayMode, int alpha, int depth, int stencil, boolean fullscreen, String title)
-		throws Exception {
-
-		if (created) {
-			return;
-		}
-
-		if (!nCreate(displayMode.width,
-			displayMode.height,
-			displayMode.bpp,
-			displayMode.freq,
-			alpha,
-			depth,
-			stencil,
-			fullscreen,
-			title)) {
-			throw new Exception("Failed to set display mode to " + displayMode);
-		}
-
-		created = true;
-		mode = displayMode;
-	}
-
+	public static native void setDisplayMode(DisplayMode mode) throws Exception;
+	
 	/**
-	 * Native method to create the display. This will set the handle if it is
-	 * successful.
-	 * @return true if the display was successfully created
-	 * @see #create(org.lwjgl.DisplayMode, boolean)
+	 * Reset the display mode to whatever it was when LWJGL was initialized.
+	 * Fails silently.
 	 */
-	private static native boolean nCreate(
-		int width,
-		int height,
-		int bpp,
-		int freq,
-		int alpha_bits,
-		int depth_bits,
-		int stencil_bits,
-		boolean fullscreen,
-		String title);
-
-	/**
-	 * Destroy the display and return it to normal. If the display has not yet
-	 * been created no action is taken.
-	 */
-	public static void destroy() {
-		if (!created) {
-			return;
-		}
-
-		nDestroy();
-		created = false;
-		mode = null;
-	}
-
-	/**
-	 * Native method to destroy the display. This will reset the handle.
-	 */
-	private static native void nDestroy();
+	public static native void resetDisplayMode() throws Exception;
 
 	/**
 	 * Retrieves the width of the created display
 	 * 
 	 * @return the current display width.
-	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getWidth() {
-		assert created : "The display has not been created yet.";
 		return mode.width;
 	}
 
@@ -206,10 +154,8 @@ public final class Display {
 	 * Retrieves the height of the created display
 	 * 
 	 * @return the current display height.
-	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getHeight() {
-		assert created : "The display has not been created yet.";
 		return mode.height;
 	}
 
@@ -217,10 +163,8 @@ public final class Display {
 	 * Retrieves the current display depth of the created display
 	 * 
 	 * @return the current display depth.
-	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getDepth() {
-		assert created : "The display has not been created yet.";
 		return mode.bpp;
 	}
 
@@ -228,27 +172,14 @@ public final class Display {
 	 * Retrieves the current display frequency of the created display
 	 * 
 	 * @return the current display frequency.
-	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getFrequency() {
-		assert created : "The display has not been created yet.";
 		return mode.freq;
 	}
 
 	/**
-	 * Retrieves the <code>DisplayMode</code> that the display has currently been
-	 * set to.
-	 * 
-	 * @return the current display mode, or null if the display is not yet created
-	 * @throws AssertionError if the display has not been created yet.
-	 */
-	public static DisplayMode getDisplayMode() {
-		assert created : "The display has not been created yet.";
-		return mode;
-	}
-
-	/**
-	 * Retrieves the native handle to the created window
+	 * Retrieves the native handle to the created window. The meaning of this value
+	 * is platform specific. Under Win32, it is an HWND.
 	 * 
 	 * @return the native handle
 	 * @throws AssertionError if the display has not been created yet.
@@ -256,37 +187,6 @@ public final class Display {
 	public static int getHandle() {
 		assert created : "The display has not been created yet.";
 		return handle;
-	}
-
-	/**
-	 * Tests whether or not the display has been created
-	 * 
-	 * @return true if the display has been created
-	 */
-	public static boolean isCreated() {
-		return created;
-	}
-
-	/**
-	 * Determines if the display is minimized. When the display is minimized it is
-	 * effectively invisible, and you need perform no rendering in your game loop.
-	 * On the native side, when the application is switched to some other application,
-	 * the display window will minimize; when focus is regained, it will maximize and
-	 * automatically gain focus and become the foreground window again.
-	 * @return true if the display is minimized
-	 */
-	public static native boolean isMinimized();
-
-	/**
-	 * Determines if the user has requested that the application should close.
-	 * When a user has requested that the application should shutdown, it is up to
-	 * the application to perform the actual shutdown and cleanup of any allocated
-	 * resources.
-	 * 
-	 * @return true if the user has requested that the application should close
-	 */
-	public static boolean isCloseRequested() {
-		return closeRequested;
 	}
 
 	/**
@@ -299,5 +199,21 @@ public final class Display {
 	 */
 	public static native int getPlatform();
 
+	/**
+	 * Obtains the display's gamma ramp. The gamma ramp returned is an array of
+	 * integers in the range 0..255. If gamma is not supported by the underlying
+	 * hardware then null is returned.
+	 * @return an array of ints, or null
+	 */
+	public static native int[] getGammaRamp();
+	
+	/**
+	 * Sets the display's gamma ramp. The gamma ramp should be an array of ints
+	 * in the range 0...255. The length of the array should match the length of the
+	 * array returned by getGammaRamp().
+	 * 
+	 * If the underlying hardware does not support gamma then this command is a no-op.
+	 */
+	public static native void setGammaRamp(int[] gamma);
 
 }

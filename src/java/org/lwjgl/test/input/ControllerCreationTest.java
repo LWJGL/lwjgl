@@ -35,6 +35,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Controller;
+import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
@@ -118,7 +119,7 @@ public class ControllerCreationTest {
     
     // recreate display in fullscreen mode
     System.out.print("Destroying display...");
-    Display.destroy();
+    BaseGL.destroy();
     System.out.println("success");
     
     System.out.print("Entering fullscreen mode...");
@@ -140,7 +141,7 @@ public class ControllerCreationTest {
     System.out.print("Shutting down...");
     Controller.destroy();
     gl.destroy();
-    Display.destroy();
+    BaseGL.destroy();
     System.out.println("shutdown complete");
   }
 

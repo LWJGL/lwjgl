@@ -45,7 +45,7 @@ import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.input.*;
 
-import java.nio.*; 
+import java.nio.*;
 
 public final class Game {
 	static {
@@ -188,6 +188,6 @@ public final class Game {
          Keyboard.destroy();
          Mouse.destroy();
          gl.destroy();
-         Display.destroy();
+         BaseGL.destroy();
      }
  }

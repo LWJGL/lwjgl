@@ -214,7 +214,7 @@ public class Grass {
 		Mouse.destroy();
 		Keyboard.destroy();
 		gl.destroy();
-		Display.destroy();
+		BaseGL.destroy();
 	}
 
 	private static float myrand() {
