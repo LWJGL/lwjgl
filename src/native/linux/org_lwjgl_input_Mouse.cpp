@@ -173,8 +173,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 {
 	int i;
 	
-	jbooleanArray buttons_array = env->NewBooleanArray(NUM_BUTTONS);
-	env->SetStaticObjectField(clazz, fid_buttons, buttons_array);
 	env->SetStaticIntField(clazz, fid_button_count, NUM_BUTTONS);
 	env->SetStaticBooleanField(clazz, fid_has_wheel, JNI_TRUE);
 	current_x = current_y = current_z = last_x = last_y = last_z = pointer_grabbed = 0;
