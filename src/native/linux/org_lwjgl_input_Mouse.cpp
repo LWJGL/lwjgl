@@ -55,28 +55,27 @@
 extern Display *disp;
 extern Window win;
 extern int screen;
-extern int current_fullscreen;
-extern int win_width;
-extern int win_height;
+extern bool isFullscreen(void);
+extern bool isFocused(void);
+extern int getWindowWidth(void);
+extern int getWindowHeight(void);
 
-bool pointer_grabbed;
+static bool pointer_grabbed;
 
-jfieldID fid_button;
-jfieldID fid_dx;
-jfieldID fid_dy;
-jfieldID fid_dz;
+static jfieldID fid_button;
+static jfieldID fid_dx;
+static jfieldID fid_dy;
+static jfieldID fid_dz;
 
-int last_x;
-int last_y;
-int last_z;
-int current_x;
-int current_y;
-int current_z;
-unsigned char buttons[NUM_BUTTONS];
+static int last_x;
+static int last_y;
+static int last_z;
+static int current_x;
+static int current_y;
+static int current_z;
+static unsigned char buttons[NUM_BUTTONS];
 
-Cursor blank_cursor;
-
-extern int isFocused(void);
+static Cursor blank_cursor;
 
 /*
  * Class:     org_lwjgl_input_Mouse
@@ -131,7 +130,7 @@ int blankCursor(void) {
 int grabPointer(void) {
 	int result;
 	int mask = EnterWindowMask | LeaveWindowMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-	if (current_fullscreen) {
+	if (isFullscreen()) {
 		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
 		XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
 		XF86VidModeSetViewPort(disp, screen, 0, 0); // make sure we have a centered window
@@ -148,7 +147,7 @@ void ungrabPointer(void) {
 }
 
 int updatePointerGrab(void) {
-	if (current_fullscreen) {
+	if (isFullscreen()) {
 		if (!pointer_grabbed)
 			return grabPointer();
 	} else {
@@ -281,9 +280,9 @@ void warpPointer(void) {
 	int i;
 	// Reset pointer to middle of screen if inside a certain inner border
 	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
-			current_x > win_width - POINTER_WARP_BORDER || current_y > win_height - POINTER_WARP_BORDER) {
-		current_x = last_x = win_width/2;
-		current_y = last_y = win_height/2;
+			current_x > getWindowWidth() - POINTER_WARP_BORDER || current_y > getWindowHeight() - POINTER_WARP_BORDER) {
+		current_x = last_x = getWindowWidth()/2;
+		current_y = last_y = getWindowHeight()/2;
 		XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
 		XEvent event;
 		// Try to catch the warp pointer event
@@ -325,7 +324,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	last_z = current_z;
 	jbooleanArray buttonsArray = (jbooleanArray) env->GetStaticObjectField(clazz, fid_button);
 	env->SetBooleanArrayRegion(buttonsArray, 0, NUM_BUTTONS, buttons);
-	if (current_fullscreen)
+	if (isFullscreen())
 		warpPointer();
 }
 

@@ -50,24 +50,25 @@
 #define KEYBOARD_SIZE 256
 #define KEY_EVENT_BACKLOG 20
 
-unsigned char readBuffer[KEYBOARD_BUFFER_SIZE * 2];
-jfieldID fid_readBuffer;
-unsigned char key_buf[KEYBOARD_SIZE];
-unsigned char key_map[KEYBOARD_SIZE];
+static unsigned char readBuffer[KEYBOARD_BUFFER_SIZE * 2];
+static jfieldID fid_readBuffer;
+static unsigned char key_buf[KEYBOARD_SIZE];
+static unsigned char key_map[KEYBOARD_SIZE];
 
-XKeyEvent saved_key_events[KEY_EVENT_BACKLOG];
-int list_start = 0;
-int list_end = 0;
+static XKeyEvent saved_key_events[KEY_EVENT_BACKLOG];
+static int list_start = 0;
+static int list_end = 0;
 
-bool keyboard_grabbed;
-bool buffer_enabled;
-bool translation_enabled;
+static bool keyboard_grabbed;
+static bool buffer_enabled;
+static bool translation_enabled;
 
 extern Display *disp;
 extern Window win;
-extern int current_fullscreen;
 
-extern int isFocused(void);
+extern bool isFullscreen(void);
+
+extern bool isFocused(void);
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -100,7 +101,7 @@ void ungrabKeyboard(void) {
 }
 
 int updateKeyboardGrab(void) {
-	if (current_fullscreen) {
+	if (isFullscreen()) {
 		if (!keyboard_grabbed)
 			return grabKeyboard();
 	} else {

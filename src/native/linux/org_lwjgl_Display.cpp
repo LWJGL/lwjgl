@@ -47,20 +47,22 @@
 #include <X11/Xutil.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <jni.h>
 #include "org_lwjgl_Display.h"
 
-
 Display * disp;
 int screen;
-int current_fullscreen;
-int current_focused;
 Window win;
-int win_width;
-int win_height;
-XF86VidModeModeInfo **avail_modes;
-XVisualInfo * vis_info;
-int gl_loaded = 0;
+
+static bool current_fullscreen;
+static bool current_focused;
+static bool current_minimized;
+static int win_width;
+static int win_height;
+static XF86VidModeModeInfo **avail_modes;
+static XVisualInfo * vis_info;
+static bool gl_loaded = false;
 
 struct pixelformat {
 	int bpp;
@@ -188,32 +190,41 @@ void waitMapped(Display *disp, Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
-int isFocused(void) {
+void handleMessages(void) {
 	XEvent event;
-	while (XCheckMaskEvent(disp, EnterWindowMask | LeaveWindowMask, &event)) {
-		if (event.type == EnterNotify)
-			current_focused = 1;
-		else if (event.type == LeaveNotify)
-			current_focused = 0;
+	while (XCheckMaskEvent(disp, EnterWindowMask | LeaveWindowMask | StructureNotifyMask, &event)) {
+		switch (event.type) {
+			case EnterNotify:
+				current_focused = true;
+				break;
+			case LeaveNotify:
+				current_focused = false;
+				break;
+			case MapNotify:
+				current_minimized = false;
+				break;
+			case UnmapNotify:
+				current_minimized = true;
+				break;
+		}
 	}
-	return current_focused;
 }
 
-int loadGL(Display *disp, int screen) {
-	if (gl_loaded == 1)
-		return JNI_TRUE;
+bool loadGL(Display *disp, int screen) {
+	if (gl_loaded == true)
+		return true;
 	if (extgl_Open(disp, screen) != 0) {
 #ifdef _DEBUG
 		printf("Could not load gl libs\n");
 #endif
-		return JNI_FALSE;
+		return false;
 	}
-	gl_loaded = 1;
-	return JNI_TRUE;
+	gl_loaded = true;
+	return true;
 }
 
 void closeGL(void) {
-	gl_loaded = 0;
+	gl_loaded = false;
 	extgl_Close();
 }
 
@@ -234,6 +245,41 @@ int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeIn
 	return 1;
 }
 
+bool isFullscreen(void) {
+	return current_fullscreen;
+}
+
+bool isFocused(void) {
+	handleMessages();
+	return current_focused;
+}
+
+bool isMinimized(void) {
+	handleMessages();
+	return current_minimized;
+}
+
+int getWindowHeight(void) {
+	return win_height;
+}
+
+int getWindowWidth(void) {
+	return win_width;
+}
+
+XVisualInfo *getVisualInfo(void) {
+	return vis_info;
+}
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    isMinimized
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized(JNIEnv *env, jclass clazz) {
+	return isMinimized() ? JNI_TRUE : JNI_FALSE;
+}
+
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jint alpha_bits, jint depth_bits, jint stencil_bits, jboolean fullscreen, jstring title) {
 	Window root_win;
 	XSetWindowAttributes attribs;
@@ -243,8 +289,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 
 	win_width = width;
 	win_height = height;
-	current_fullscreen = fullscreen;
-	current_focused = 0;
+	if (fullscreen == JNI_TRUE)
+		current_fullscreen = true;
+	else
+		current_fullscreen = false;
+	current_minimized = false;
+	current_focused = false;
 	disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 #ifdef _DEBUG
@@ -253,7 +303,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		return JNI_FALSE;
 	}
 	screen = DefaultScreen(disp);
-	if (loadGL(disp, screen) != JNI_TRUE) {
+	if (!loadGL(disp, screen)) {
 #ifdef _DEBUG
 		printf("Could not load GL libs\n");
 #endif
@@ -278,7 +328,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 
 	cmap = XCreateColormap(disp, root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
-	attribs.event_mask = StructureNotifyMask | EnterWindowMask | LeaveWindowMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+	attribs.event_mask = VisibilityChangeMask| StructureNotifyMask | EnterWindowMask | LeaveWindowMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
 	if (fullscreen) {
@@ -359,7 +409,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 		XCloseDisplay(disp);
 		return NULL;
 	}
-	if (loadGL(disp, screen) != JNI_TRUE) {
+	if (!loadGL(disp, screen)) {
 #ifdef _DEBUG
 		printf("Could not load GL\n");
 #endif

@@ -43,7 +43,7 @@
 #include "org_lwjgl_opengl_BaseGL.h"
 
 GLXContext context = NULL; // OpenGL rendering context
-extern XVisualInfo * vis_info;
+extern XVisualInfo * getVisualInfo(void);
 extern Window win;
 extern Display * disp;
 
@@ -64,13 +64,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
   (JNIEnv * env, jobject obj)
 {
 
-	if (!vis_info) {
+	if (!getVisualInfo()) {
 #ifdef _DEBUG
 		printf("No visual info\n");
 #endif
 		return JNI_FALSE;
 	}
-	context = glXCreateContext(disp, vis_info, NULL, True);
+	context = glXCreateContext(disp, getVisualInfo(), NULL, True);
 	if (!context) {
 #ifdef _DEBUG
 		printf("Could not create context\n");
