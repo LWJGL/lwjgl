@@ -212,7 +212,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_clearDepth(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_deleteLists(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-	glDeleteLists((GLint) p0, (GLint) p1);
+	glDeleteLists((GLuint) p0, (GLint) p1);
 	CHECK_GL_ERROR
 }
 

@@ -223,6 +223,7 @@ int InitializeOpenAL() {
  */
 void DeInitializeOpenAL() {
   UnLoadOpenAL();
+  handleOAL = 0;
 }
 
 /**
