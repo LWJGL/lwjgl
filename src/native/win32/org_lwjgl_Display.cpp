@@ -42,7 +42,8 @@
 #include <windows.h>
 #include "org_lwjgl_Display.h"
 
-//#define DIRECTINPUT_VERSION 0x0700
+#undef  DIRECTINPUT_VERSION
+#define DIRECTINPUT_VERSION 0x0300
 
 #include <dinput.h>
 
