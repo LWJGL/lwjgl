@@ -50,7 +50,7 @@ final class XMLUtil {
 	 * @return the single child element, or null
 	 * @throws Exception if the child is present multiple times
 	 */
-	public static Element getChild(Element element, String child) throws Exception {
+	static Element getChild(Element element, String child) throws Exception {
 		NodeList nodes = element.getChildNodes();
 		Element ret = null;
 		for (int i = 0; i < nodes.getLength(); i ++) {

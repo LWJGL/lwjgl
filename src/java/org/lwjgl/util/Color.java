@@ -395,9 +395,9 @@ public final class Color implements ReadableColor, Serializable, WritableColor {
 	
 	/**
 	 * HSB to RGB conversion, pinched from java.awt.Color.
-	 * @param hue (0..360)
-	 * @param saturation (0..100)
-	 * @param brightness (0..100)
+	 * @param hue (0..1.0f)
+	 * @param saturation (0..1.0f)
+	 * @param brightness (0..1.0f)
 	 */
     public void fromHSB(float hue, float saturation, float brightness) {
 		if (saturation == 0.0F) {
@@ -446,7 +446,7 @@ public final class Color implements ReadableColor, Serializable, WritableColor {
 	/**
 	 * RGB to HSB conversion, pinched from java.awt.Color.
 	 * The HSB value is returned in dest[] if dest[] is supplied.
-	 * Hue is 0..360, saturation and brightness are 0..100.
+	 * Values range from 0..1
 	 * @param dest[] Destination floats, or null
 	 * @return dest[], or a new float[]
 	 */
