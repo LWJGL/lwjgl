@@ -273,11 +273,12 @@ extern "C" {
 /* Inaccessible static: readBuffer */
 /* Inaccessible static: translationEnabled */
 /* Inaccessible static: numEvents */
-/* Inaccessible static: character */
-/* Inaccessible static: key */
-/* Inaccessible static: state */
+/* Inaccessible static: eventCharacter */
+/* Inaccessible static: eventKey */
+/* Inaccessible static: eventState */
 /* Inaccessible static: initialized */
-/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Keyboard */
+/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_000241 */
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    initIDs

@@ -8,8 +8,6 @@
 extern "C" {
 #endif
 /* Inaccessible static: currentContext */
-/* Inaccessible static: contextMap */
-/* Inaccessible static: extensionsMap */
 /* Inaccessible static: GL_ARB_imaging */
 /* Inaccessible static: GL_ARB_depth_texture */
 /* Inaccessible static: GL_ARB_fragment_program */
@@ -76,8 +74,6 @@ extern "C" {
 /* Inaccessible static: GL_ATI_vertex_attrib_array_object */
 /* Inaccessible static: GL_ATI_vertex_streams */
 /* Inaccessible static: GL_ATI_separate_stencil */
-/* Inaccessible static: GL_ATIX_point_sprites */
-/* Inaccessible static: GL_ATIX_texture_env_route */
 /* Inaccessible static: GL_NV_blend_square */
 /* Inaccessible static: GL_NV_copy_depth_to_color */
 /* Inaccessible static: GL_NV_depth_clamp */

@@ -16,6 +16,8 @@ extern "C" {
 #define org_lwjgl_input_Mouse_CURSOR_ANIMATION 4L
 /* Inaccessible static: created */
 /* Inaccessible static: buttons */
+/* Inaccessible static: x */
+/* Inaccessible static: y */
 /* Inaccessible static: dx */
 /* Inaccessible static: dy */
 /* Inaccessible static: dwheel */
@@ -26,9 +28,9 @@ extern "C" {
 /* Inaccessible static: buttonMap */
 /* Inaccessible static: initialized */
 /* Inaccessible static: readBuffer */
-/* Inaccessible static: button */
-/* Inaccessible static: state */
-/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Mouse */
+/* Inaccessible static: eventButton */
+/* Inaccessible static: eventState */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nGetNativeCursorCaps

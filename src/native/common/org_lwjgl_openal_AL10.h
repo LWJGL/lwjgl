@@ -126,7 +126,7 @@ extern "C" {
 #define org_lwjgl_openal_AL10_AL_INVERSE_DISTANCE 53249L
 #undef org_lwjgl_openal_AL10_AL_INVERSE_DISTANCE_CLAMPED
 #define org_lwjgl_openal_AL10_AL_INVERSE_DISTANCE_CLAMPED 53250L
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024AL10 */
 /*
  * Class:     org_lwjgl_openal_AL10
  * Method:    alEnable

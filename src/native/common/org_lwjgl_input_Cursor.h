@@ -9,7 +9,7 @@ extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: initialized */
-/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Cursor */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_input_Cursor
  * Method:    nCreateCursor

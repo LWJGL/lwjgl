@@ -59,10 +59,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    alert
+ * Method:    nAlert
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
   (JNIEnv *, jclass, jstring, jstring);
 
 /*

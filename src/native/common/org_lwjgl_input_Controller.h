@@ -40,7 +40,7 @@ extern "C" {
 /* Inaccessible static: buttonName */
 /* Inaccessible static: buttonMap */
 /* Inaccessible static: initialized */
-/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Controller */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_input_Controller
  * Method:    nPoll

@@ -7,7 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
 #undef org_lwjgl_opengl_GL11_GL_ACCUM
 #define org_lwjgl_opengl_GL11_GL_ACCUM 256L
 #undef org_lwjgl_opengl_GL11_GL_LOAD
@@ -1072,7 +1071,6 @@ extern "C" {
 #define org_lwjgl_opengl_GL11_GL_LOGIC_OP 3057L
 #undef org_lwjgl_opengl_GL11_GL_TEXTURE_COMPONENTS
 #define org_lwjgl_opengl_GL11_GL_TEXTURE_COMPONENTS 4099L
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL11 */
 /*
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glAccum

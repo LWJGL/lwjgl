@@ -15,8 +15,8 @@ extern "C" {
 /* Inaccessible static: contextRefresh */
 /* Inaccessible static: contextSynchronized */
 /* Inaccessible static: created */
-/* Inaccessible static: class_000240 */
-/* Inaccessible static: class_000241 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024AL */
+/* Inaccessible static: class_00024java_00024lang_00024String */
 /*
  * Class:     org_lwjgl_openal_AL
  * Method:    nCreate
