@@ -40,7 +40,7 @@ bool loadXcursor(void) {
 	load_success = false;
 	xcursor_handle = dlopen(xcursor_lib_name, RTLD_GLOBAL | RTLD_LAZY);
 	if (xcursor_handle == NULL) {
-		printfDebug("Could not load %s: %s\n", xcursor_lib_name, dlerror());
+		printfDebug(org_lwjgl_Sys_DEBUG, "Could not load %s: %s\n", xcursor_lib_name, dlerror());
 		return load_success;
 	}
 	loadFunctionPointers();

@@ -162,15 +162,11 @@ public abstract class GLCaps {
 	}
 
 	private static void setExtensionFields(HashSet exts, HashMap field_map) {
-		if(org.lwjgl.Sys.atDebugLevel()) {
-			System.out.println("Available extensions:");
-		}
+		Sys.log(Sys.DEBUG, "Available extensions:");
 		Iterator it = exts.iterator();
 		while (it.hasNext()) {
 			String ext = (String)it.next();
-			if(org.lwjgl.Sys.atDebugLevel()) {
-				System.out.println(ext);
-			}
+			Sys.log(Sys.DEBUG, ext);
 
 			Field f = (Field)field_map.get(ext);
 			if (f != null) {

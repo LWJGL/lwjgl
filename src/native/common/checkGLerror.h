@@ -16,7 +16,7 @@
 
 #define CHECK_GL_ERROR \
 	{ \
-		if (ATDEBUGLEVEL()) { \
+		if (ATDEBUGLEVEL(org_lwjgl_Sys_DEBUG)) { \
 			int err = glGetError(); \
 			if (err != GL_NO_ERROR) { \
 				jclass cls = env->FindClass("org/lwjgl/opengl/OpenGLException"); \

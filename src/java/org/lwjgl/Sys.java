@@ -48,8 +48,12 @@ import org.lwjgl.input.Mouse;
  */
 public final class Sys {
 	/** Debug level constants */
-	public static final int DEBUG_DISABLED = 1;
-	public static final int DEBUG_ENABLED = 2;
+	public static final int DEBUG = 6;
+	public static final int INFO = 5;
+	public static final int WARN = 4;
+	public static final int ERROR = 3;
+	public static final int FATAL = 2;
+	public static final int NONE = 1;
 
 	/** Low process priority. @see #setProcessPriority() */
 	public static final int LOW_PRIORITY = -1;
@@ -84,22 +88,28 @@ public final class Sys {
 	private static String LIBRARY_NAME = "lwjgl";
 	
 	/**
-	 * Debug level. This will tell you if you are using the debug version of
-	 * the library, and whether assertions are enabled or not.
+	 * Debug level. 
 	 */
-	public static final int DEBUG;
+	public static final int debug_level;
 
 	static {
-		int _debug = DEBUG_DISABLED;
-		try {
-			assert false;
-		} catch (AssertionError e) {
-			// Assertions are enabled, so we'll enabled debugging
-			_debug = DEBUG_ENABLED;
-		} finally {
-			DEBUG = _debug;
-			initialize();
+		String debug_level_prop = System.getProperty("lwjgl.debuglevel", "NONE");
+		int _debug = NONE;
+		if (debug_level_prop.equals("DEBUG")) {
+			_debug = DEBUG;
+		} else if (debug_level_prop.equals("INFO")) {
+			_debug = INFO;
+		} else if (debug_level_prop.equals("WARN")) {
+			_debug = WARN;
+		} else if (debug_level_prop.equals("ERROR")) {
+			_debug = ERROR;
+		} else if (debug_level_prop.equals("FATAL")) {
+			_debug = FATAL;
+		} else if (debug_level_prop.equals("NONE")) {
+			_debug = NONE;
 		}
+		debug_level = _debug;
+		initialize();
 	}
 
 	/**
@@ -114,9 +124,21 @@ public final class Sys {
 	 */
 	private Sys() {
 	}
-	
-	public static boolean atDebugLevel() {
-		return DEBUG >= DEBUG_ENABLED;
+
+	/**
+	 * Prints the given message to System.err if atDebugLevel(debug_level)
+	 * is true.
+	 */
+	public static void log(int debug_level, String msg) {
+		if (atDebugLevel(debug_level))
+			System.err.println(msg);
+	}
+
+	/**
+	 * @return true if the debug level is greater than or equal to level
+	 */
+	public static boolean atDebugLevel(int level) {
+		return debug_level >= level;
 	}
 
 	/**
@@ -124,7 +146,7 @@ public final class Sys {
 	 */
 	private static void initialize() {
 		System.loadLibrary(LIBRARY_NAME);
-		setDebugLevel(DEBUG);
+		setDebugLevel(debug_level);
 		setTime(0);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {

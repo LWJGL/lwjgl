@@ -63,7 +63,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 static long queryTime(void) {
 	struct timeval tv;
 	if (gettimeofday(&tv, NULL) == -1) {
-		printfDebug("Could not read current time\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Could not read current time\n");
 	}
 	long result = tv.tv_sec * 1000000l + tv.tv_usec;
 
@@ -117,7 +117,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 		// Reset scheduler to normal
 		sched_pri.sched_priority = 0;
 		if (sched_setscheduler(0, SCHED_OTHER, &sched_pri) != 0) {
-			printfDebug("Could not set realtime priority\n");
+			printfDebug(org_lwjgl_Sys_DEBUG, "Could not set realtime priority\n");
 			return;
 		}
 	}
@@ -127,12 +127,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 		min_pri = sched_get_priority_min(SCHED_FIFO);
 		max_pri = sched_get_priority_max(SCHED_FIFO);
 		if (min_pri == -1 || max_pri == -1) {
-			printfDebug("Failed to set realtime priority\n");
+			printfDebug(org_lwjgl_Sys_DEBUG, "Failed to set realtime priority\n");
 			return;
 		}
 		sched_pri.sched_priority = (max_pri + min_pri)/2;
 		if (sched_setscheduler(0, SCHED_FIFO, &sched_pri) != 0) {
-			printfDebug("Could not set realtime priority\n");
+			printfDebug(org_lwjgl_Sys_DEBUG, "Could not set realtime priority\n");
 			return;
 		}
 		return;
@@ -150,7 +150,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 	}
 
 	if (setpriority(PRIO_PROCESS, 0, linux_priority) == -1) {
-		printfDebug("Failed to set priority.\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Failed to set priority.\n");
 	}
 }
 

@@ -39,18 +39,18 @@
 
 #include "common_tools.h"
 
-int debug_level = org_lwjgl_Sys_DEBUG_DISABLED;
+int debug_level = org_lwjgl_Sys_NONE;
 
 void setDebugLevel(int level) {
 	debug_level = level;
 }
 
-int printfDebug(const char *format, ...) {
+void printfDebug(int level, const char *format, ...) {
 	va_list ap;
 	va_start(ap, format);
-	int result = vprintf(format, ap);
+	if (debug_level >= level)
+		vprintf(format, ap);
 	va_end(ap);
-	return result;
 }
 
 static void incListStart(event_queue_t *queue) {
@@ -65,7 +65,7 @@ void initEventQueue(event_queue_t *event_queue) {
 void putEventElement(event_queue_t *queue, unsigned char byte) {
 	int next_index = (queue->list_end + 1)%EVENT_BUFFER_SIZE;
 	if (next_index == queue->list_start) {
-		printfDebug("Event buffer overflow!\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Event buffer overflow!\n");
 		return;
 	}
 	queue->input_event_buffer[queue->list_end] = byte;

@@ -110,7 +110,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 
 	HRESULT ret = lpdiKeyboard->Acquire();
 	if(FAILED(ret)) {
-		printfDebug("Failed to acquire keyboard\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Failed to acquire keyboard\n");
 	}
 }
 
@@ -245,19 +245,19 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 			}
 		}
 	} else if (ret == DI_BUFFEROVERFLOW) { 
-		printfDebug("Keyboard buffer overflowed\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Keyboard buffer overflowed\n");
 	} else if (ret == DIERR_INPUTLOST) {
-		printfDebug("Input lost\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Input lost\n");
 	} else if (ret == DIERR_NOTACQUIRED) {
-		printfDebug("not acquired\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "not acquired\n");
 	} else if (ret == DIERR_INVALIDPARAM) {
-		printfDebug("invalid parameter\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "invalid parameter\n");
 	} else if (ret == DIERR_NOTBUFFERED) {
-		printfDebug("not buffered\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "not buffered\n");
 	} else if (ret == DIERR_NOTINITIALIZED) {
-		printfDebug("not inited\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "not inited\n");
 	} else {
-		printfDebug("unknown keyboard error\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "unknown keyboard error\n");
 	}
 	return num_events;
 }

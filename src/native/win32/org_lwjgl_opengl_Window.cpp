@@ -97,7 +97,7 @@ static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, 
 		return -1;
 	}
 
-	printfDebug("Pixel format is %d\n", iPixelFormat);
+	printfDebug(org_lwjgl_Sys_DEBUG, "Pixel format is %d\n", iPixelFormat);
 
 	// make that the pixel format of the device context 
 	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
@@ -159,19 +159,19 @@ static bool createDirectInput()
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION ) {
-		printfDebug("Failed to create directinput");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Failed to create directinput");
 		switch (ret) {
 			case DIERR_INVALIDPARAM :
-				printfDebug(" - Invalid parameter\n");
+				printfDebug(org_lwjgl_Sys_DEBUG, " - Invalid parameter\n");
 				break;
 			case DIERR_OLDDIRECTINPUTVERSION :
-				printfDebug(" - Old Version\n");
+				printfDebug(org_lwjgl_Sys_DEBUG, " - Old Version\n");
 				break;
 			case DIERR_OUTOFMEMORY :
-				printfDebug(" - Out Of Memory\n");
+				printfDebug(org_lwjgl_Sys_DEBUG, " - Out Of Memory\n");
 				break;
 			default:
-				printfDebug(" - Unknown failure\n");
+				printfDebug(org_lwjgl_Sys_DEBUG, " - Unknown failure\n");
 		}
 		return false;
 	} else {
@@ -186,23 +186,23 @@ static void closeWindow()
 {
 	// Release DirectInput
 	if (lpdi != NULL) {
-		printfDebug("Destroying directinput\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Destroying directinput\n");
 		lpdi->Release();
 		lpdi = NULL;
 	}
 
 	// Release device context
 	if (hdc != NULL && hwnd != NULL) {
-		printfDebug("Releasing DC\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Releasing DC\n");
 		ReleaseDC(hwnd, hdc);
 	}
 
 	// Close the window
 	if (hwnd != NULL) {
-		printfDebug("Destroy window\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Destroy window\n");
 		// Vape the window
 		DestroyWindow(hwnd);
-		printfDebug("Destroyed window\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Destroyed window\n");
 		hwnd = NULL;
 	}
 }
@@ -312,10 +312,10 @@ static bool registerWindow()
 		windowClass.lpszClassName = WINDOWCLASSNAME;
 
 		if (RegisterClass(&windowClass) == 0) {
-			printfDebug("Failed to register window class\n");
+			printfDebug(org_lwjgl_Sys_DEBUG, "Failed to register window class\n");
 			return false;
 		}
-		printfDebug("Window registered\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Window registered\n");
 		oneShotInitialised = true;
 	}
 
@@ -397,11 +397,11 @@ static bool createWindow(const char * title, int x, int y, int width, int height
 		 NULL);
 
 	if (hwnd == NULL) {
-		printfDebug("Failed to create window\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Failed to create window\n");
 		return false;
 	}
 
-	printfDebug("Created window\n");
+	printfDebug(org_lwjgl_Sys_DEBUG, "Created window\n");
 
 	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
@@ -558,7 +558,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
 
 	// Delete the rendering context
 	if (hglrc != NULL) {
-		printfDebug("Deleting GL context\n");
+		printfDebug(org_lwjgl_Sys_DEBUG, "Deleting GL context\n");
 		wglDeleteContext(hglrc); 
 		hglrc = NULL;
 	}

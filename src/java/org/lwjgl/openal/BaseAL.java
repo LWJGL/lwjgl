@@ -142,9 +142,7 @@ public abstract class BaseAL {
 	private static String getPathFromJWS(String libname) {
 		try {			
 
-			if(Sys.atDebugLevel()) {			
-				System.out.println("JWS Classloader looking for: " + libname);
-			}
+			Sys.log(Sys.DEBUG, "JWS Classloader looking for: " + libname);
 			
 			Object o = BaseAL.class.getClassLoader();
 			Class c = o.getClass();
@@ -154,10 +152,7 @@ public abstract class BaseAL {
 			return (String) findLibrary.invoke(o, arguments);
 
 		} catch (Exception e) {
-			if(Sys.atDebugLevel()) {
-				System.out.println("Failure locating OpenAL using classloader:");
-				e.printStackTrace();
-			}
+			Sys.log(Sys.INFO, "Failure locating OpenAL using classloader:" + e);
 		}
 		return null;
 	}	

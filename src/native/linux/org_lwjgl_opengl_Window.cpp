@@ -208,7 +208,7 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	}
 	win = XCreateWindow(disp, root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
 	XFreeColormap(disp, cmap);
-	printfDebug("Created window\n");
+	printfDebug(org_lwjgl_Sys_DEBUG, "Created window\n");
 	current_win = win;
 	Java_org_lwjgl_opengl_Window_nSetTitle(env, NULL, title);
 	XSizeHints * size_hints = XAllocSizeHints();
@@ -381,7 +381,7 @@ static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring titl
 		throwException(env, "Could not create visual info from FB config");
 		return false;
 	}
-	if (ATDEBUGLEVEL())
+	if (ATDEBUGLEVEL(org_lwjgl_Sys_DEBUG))
 		dumpVisualInfo(disp, vis_info);
 	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
 	glx_window = glXCreateWindow(disp, configs[0], getCurrentWindow(), NULL);
@@ -397,7 +397,7 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
 		throwException(env, "Could not find a matching pixel format");
 		return false;
 	}
-	if (ATDEBUGLEVEL())
+	if (ATDEBUGLEVEL(org_lwjgl_Sys_DEBUG))
 		dumpVisualInfo(disp, vis_info);
 	context = glXCreateContext(disp, vis_info, NULL, True);
 	if (context == NULL) {
@@ -463,7 +463,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		throwException(env, "Could not init gl function pointers");
 		return;
 	}
-	if (ATDEBUGLEVEL()) {
+	if (ATDEBUGLEVEL(org_lwjgl_Sys_DEBUG)) {
 		const GLubyte * extensions = glGetString(GL_EXTENSIONS);
 		printf("Supported extensions: %s\n", extensions);
 	}

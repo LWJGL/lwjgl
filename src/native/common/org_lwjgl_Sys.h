@@ -7,11 +7,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
-#undef org_lwjgl_Sys_DEBUG_DISABLED
-#define org_lwjgl_Sys_DEBUG_DISABLED 1L
-#undef org_lwjgl_Sys_DEBUG_ENABLED
-#define org_lwjgl_Sys_DEBUG_ENABLED 2L
+#undef org_lwjgl_Sys_DEBUG
+#define org_lwjgl_Sys_DEBUG 6L
+#undef org_lwjgl_Sys_INFO
+#define org_lwjgl_Sys_INFO 5L
+#undef org_lwjgl_Sys_WARN
+#define org_lwjgl_Sys_WARN 4L
+#undef org_lwjgl_Sys_ERROR
+#define org_lwjgl_Sys_ERROR 3L
+#undef org_lwjgl_Sys_FATAL
+#define org_lwjgl_Sys_FATAL 2L
+#undef org_lwjgl_Sys_NONE
+#define org_lwjgl_Sys_NONE 1L
 #undef org_lwjgl_Sys_LOW_PRIORITY
 #define org_lwjgl_Sys_LOW_PRIORITY -1L
 #undef org_lwjgl_Sys_NORMAL_PRIORITY
@@ -21,8 +28,7 @@ extern "C" {
 #undef org_lwjgl_Sys_REALTIME_PRIORITY
 #define org_lwjgl_Sys_REALTIME_PRIORITY 2L
 /* Inaccessible static: LIBRARY_NAME */
-/* Inaccessible static: DEBUG */
-/* Inaccessible static: class_00024org_00024lwjgl_00024Sys */
+/* Inaccessible static: debug_level */
 /*
  * Class:     org_lwjgl_Sys
  * Method:    setDebugLevel
