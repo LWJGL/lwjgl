@@ -101,8 +101,11 @@ static bool checkPbufferCaps(JNIEnv *env, GLXFBConfig config, int width, int hei
 static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_info, jobject pixel_format, int width, int height, const int *buffer_attribs) {
 	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
 	if (configs == NULL) {
-		throwException(env, "No matching pixel format");
-		return false;
+		GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, true);
+		if (configs == NULL) {
+			throwException(env, "No matching pixel format");
+			return false;
+		}
 	}
 	if (!checkPbufferCaps(env, configs[0], width, height)) {
 		XFree(configs);
@@ -186,10 +189,8 @@ static bool createPbufferUsingDisplayContext(JNIEnv *env, PbufferInfo *buffer_in
 		return false;
 	}
 	GLXFBConfig config = chooseSingleBufferedConfigFromConfig(getCurrentGLXFBConfig());
-	if (config == NULL) {
-		throwException(env, "Could not find a suitable GLXFBConfig");
-		return false;
-	}
+	if (config == NULL)
+		config = getCurrentGLXFBConfig();
 	GLXPbuffer buffer = glXCreatePbuffer(getDisplay(), config, buffer_attribs);
 	buffer_info->buffer = buffer;
 	buffer_info->context = getCurrentGLXContext();
