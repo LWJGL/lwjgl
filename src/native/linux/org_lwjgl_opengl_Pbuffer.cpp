@@ -48,6 +48,7 @@
 typedef struct _PbufferInfo {
 	GLXPbuffer buffer;
 	GLXContext context;
+	bool use_display_context;
 } PbufferInfo;
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
@@ -60,7 +61,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
   (JNIEnv *env, jclass clazz)
 {
-	// Only support thw GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
+	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
 	return extgl_Extensions.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
@@ -68,13 +69,85 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
 	glXDestroyPbuffer(getDisplay(), buffer);
-	glXDestroyContext(getDisplay(), context);
+	if (!buffer_info->use_display_context)
+		glXDestroyContext(getDisplay(), context);
 	free(buffer_info);
 	decDisplay();
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jint width, jint height, jobject pixel_format,
-  jobject pixelFormatCaps, jobject pBufferAttribs)
+static bool checkPbufferCaps(JNIEnv *env, GLXFBConfig config, int width, int height) {
+	int max;
+	int result = glXGetFBConfigAttrib(getDisplay(), config, GLX_MAX_PBUFFER_WIDTH, &max);
+	if (result != Success) {
+		throwException(env, "Could not get GLX_MAX_PBUFFER_WIDTH from configuration");
+		return false;
+	}
+	if (max < width) {
+		throwException(env, "Width too large");
+		return false;
+	}
+	result = glXGetFBConfigAttrib(getDisplay(), config, GLX_MAX_PBUFFER_HEIGHT, &max);
+	if (result != Success) {
+		throwException(env, "Could not get GLX_MAX_PBUFFER_WIDTH from configuration");
+		return false;
+	}
+	if (max < height) {
+		throwException(env, "Height too large");
+		return false;
+	}
+	return true;
+}
+
+static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_info, jobject pixel_format, int width, int height, const int *buffer_attribs) {
+	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
+	if (configs == NULL) {
+		throwException(env, "No matching pixel format");
+		return false;
+	}
+	if (!checkPbufferCaps(env, configs[0], width, height)) {
+		XFree(configs);
+		return false;
+	}
+	GLXContext context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, getCurrentContext(), True);
+	if (context == NULL) {
+		XFree(configs);
+		throwException(env, "Could not create a GLX context");
+		return false;
+	}
+	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+	if (!allow_software_acceleration && glXIsDirect(getDisplay(), context) == False) {
+		glXDestroyContext(getDisplay(), context);
+		XFree(configs);
+		throwException(env, "Could not create a direct GLX context");
+		return false;
+	}
+	GLXPbuffer buffer = glXCreatePbuffer(getDisplay(), configs[0], buffer_attribs);
+	XFree(configs);
+	pbuffer_info->context = context;
+	pbuffer_info->buffer = buffer;
+	return true;
+}
+
+static bool createPbufferUsingDisplayContext(JNIEnv *env, PbufferInfo *buffer_info, int width, int height, const int *buffer_attribs) {
+	if (!checkPbufferCaps(env, getCurrentGLXFBConfig(), width, height)) {
+		return false;
+	}
+	int drawable_type;
+	if (glXGetFBConfigAttrib(getDisplay(), getCurrentGLXFBConfig(), GLX_DRAWABLE_TYPE, &drawable_type) != Success) {
+		throwException(env, "Could not get GLX_DRAWABLE_TYPE attribute from Display context");
+		return false;
+	}
+	if (drawable_type & GLX_PBUFFER_BIT == 0) {
+		throwException(env, "Display context does not support Pbuffers");
+		return false;
+	}
+	GLXPbuffer buffer = glXCreatePbuffer(getDisplay(), getCurrentGLXFBConfig(), buffer_attribs);
+	buffer_info->buffer = buffer;
+	buffer_info->context = getCurrentGLXContext();
+	return true;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jboolean use_display_context, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs)
 {
 	Display *disp = incDisplay(env);
 	if (disp == NULL) {
@@ -87,48 +160,22 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 		return -1;
 	}
 
-	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
-	if (configs == 0) {
-		XFree(configs);
-		throwException(env, "No matching pixel format");
-		return -1;
-	}
-	int max;
-	glXGetFBConfigAttrib(disp, configs[0], GLX_MAX_PBUFFER_WIDTH, &max);
-	if (max < width) {
-		XFree(configs);
-		throwException(env, "Width too large");
-		return -1;
-	}
-	glXGetFBConfigAttrib(disp, configs[0], GLX_MAX_PBUFFER_HEIGHT, &max);
-	if (max < height) {
-		XFree(configs);
-		throwException(env, "Height too large");
-		return -1;
-	}
-        GLXContext context = glXCreateNewContext(disp, configs[0], GLX_RGBA_TYPE, getCurrentContext(), True);
-        if (context == NULL) {
-                XFree(configs);
-                throwException(env, "Could not create a GLX context");
-                return -1;
-        }
-	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
-        if (!allow_software_acceleration && glXIsDirect(disp, context) == False) {
-                glXDestroyContext(disp, context);
-                XFree(configs);
-                throwException(env, "Could not create a direct GLX context");
-                return -1;
-        }
 	const int buffer_attribs[] = {GLX_PBUFFER_WIDTH, width,
 				      GLX_PBUFFER_HEIGHT, height,
 				      GLX_PRESERVED_CONTENTS, True,
-				      GLX_LARGEST_PBUFFER, False};
+				      GLX_LARGEST_PBUFFER, False,
+					  None, None};
 
-	GLXPbuffer buffer = glXCreatePbuffer(disp, configs[0], buffer_attribs);
-	XFree(configs);
 	PbufferInfo *buffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
-	buffer_info->buffer = buffer;
-	buffer_info->context = context;
+	buffer_info->use_display_context = use_display_context;
+	bool result;
+	if (use_display_context) {
+		result = createPbufferUsingDisplayContext(env, buffer_info, width, height, buffer_attribs);
+	} else {
+		result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs);
+	}
+	if (!result)
+		return -1;
 	if (!checkXError(env)) {
 		destroyPbuffer(buffer_info);
 		return -1;

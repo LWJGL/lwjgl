@@ -57,9 +57,9 @@
 #define ERR_MSG_SIZE 1024
 
 static GLXContext context = NULL; // OpenGL rendering context
+static GLXFBConfig *configs = NULL;
 static GLXWindow glx_window;
 static XVisualInfo *vis_info = NULL;
-static GLXFBConfig *configs = NULL;
 
 static Atom delete_atom;
 static Colormap cmap;
@@ -84,6 +84,14 @@ static int display_connection_usage = 0;
 static bool async_x_error;
 static char error_message[ERR_MSG_SIZE];
 static Atom warp_atom;
+
+GLXFBConfig getCurrentGLXFBConfig(void) {
+	return configs[0];
+}
+
+GLXContext getCurrentGLXContext(void) {
+	return context;
+}
 
 Atom getWarpAtom(void) {
 	return warp_atom;
@@ -274,6 +282,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
 
 static void destroyWindow(void) {
 	setRepeatMode(AutoRepeatModeDefault);
+	if (USEGLX13)
+		glXDestroyWindow(getDisplay(), glx_window);
 	XDestroyWindow(getDisplay(), current_win);
 	XFreeColormap(getDisplay(), cmap);
 }
@@ -371,13 +381,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
 		throwException(env, "Could not make display context current");
 }
 
-static void releaseContext(void) {
+/*static void releaseContext(void) {
 	if (USEGLX13)
 		glXMakeContextCurrent(getDisplay(), None, None, NULL);
 	else
 		glXMakeCurrent(getDisplay(), None, NULL);
 }
-
+*/
 int convertToBPE(int bpp) {
 	int bpe;
 	switch (bpp) {
@@ -515,9 +525,8 @@ static void dumpVisualInfo(XVisualInfo *vis_info) {
 }
 
 static void destroyContext(void) {
-	releaseContext();
+//	releaseContext();
 	if (USEGLX13) {
-		glXDestroyWindow(getDisplay(), glx_window);
 		XFree(configs);
 		configs = NULL;
 	}
@@ -528,10 +537,13 @@ static void destroyContext(void) {
 }
 
 static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
-	configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT, true);
+	configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT | GLX_PBUFFER_BIT, true);
 	if (configs == NULL) {
-		throwException(env, "Could not find a matching pixel format");
-		return false;
+		configs = chooseVisualGLX13(env, pixel_format, true, GLX_WINDOW_BIT, true);
+		if (configs == NULL) {
+			throwException(env, "Could not find a matching pixel format");
+			return false;
+		}
 	}
 	context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, NULL, True);
 	if (context == NULL) {
@@ -556,6 +568,7 @@ static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
 	if (!checkXError(env)) {
 		glXDestroyContext(getDisplay(), context);
 		XFree(configs);
+		XFree(vis_info);
 		return false;
 	}
 	return true;
@@ -584,6 +597,7 @@ static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
 	}
 	if (!checkXError(env)) {
 		glXDestroyContext(getDisplay(), context);
+		XFree(vis_info);
 		return false;
 	}
 	return true;

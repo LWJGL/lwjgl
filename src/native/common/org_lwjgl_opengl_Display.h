@@ -8,15 +8,15 @@
 extern "C" {
 #endif
 /* Inaccessible static: current_mode */
+/* Inaccessible static: initial_mode */
 /* Inaccessible static: timeNow */
 /* Inaccessible static: timeThen */
 /* Inaccessible static: title */
 /* Inaccessible static: fullscreen */
+/* Inaccessible static: vsync */
 /* Inaccessible static: vbo_tracker */
 /* Inaccessible static: context */
-/* Inaccessible static: createdMouse */
-/* Inaccessible static: createdKeyboard */
-/* Inaccessible static: createdController */
+/* Inaccessible static: timeLate */
 /*
  * Class:     org_lwjgl_opengl_Display
  * Method:    nGetAvailableDisplayModes

@@ -139,7 +139,8 @@ static void grabPointer(void) {
 		if (result == GrabSuccess) {
 			pointer_grabbed = true;
 			// make sure we have a centered window
-			XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
+			if (isFullscreen())
+				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
 			XFlush(getDisplay());
 		}
 	}

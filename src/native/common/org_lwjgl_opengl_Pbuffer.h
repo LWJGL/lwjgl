@@ -41,7 +41,6 @@ extern "C" {
 #define org_lwjgl_opengl_Pbuffer_BACK_RIGHT_BUFFER 8326L
 #undef org_lwjgl_opengl_Pbuffer_DEPTH_BUFFER
 #define org_lwjgl_opengl_Pbuffer_DEPTH_BUFFER 8359L
-/* Inaccessible static: currentBuffer */
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nIsBufferLost
@@ -69,10 +68,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
- * Signature: (IILorg/lwjgl/opengl/PixelFormat;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;)I
+ * Signature: (ZIILorg/lwjgl/opengl/PixelFormat;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *, jclass, jint, jint, jobject, jobject, jobject);
+  (JNIEnv *, jclass, jboolean, jint, jint, jobject, jobject, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer

@@ -112,6 +112,16 @@
 	extern Window getCurrentWindow(void);
 
 	/*
+	 * get the current context
+	 */
+	extern GLXContext getCurrentGLXContext(void);
+
+	/*
+	 * get the current GLXFBConfig for the current context
+	 */
+	extern GLXFBConfig getCurrentGLXFBConfig(void);
+
+	/*
 	 * Return true if we are in fullscreen mode
 	 */
 	extern bool isFullscreen(void);
