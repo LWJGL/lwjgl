@@ -53,6 +53,9 @@ extern "C" {
   #define ALCAPI __declspec(dllimport)
  #endif
 
+ typedef struct ALCdevice_struct ALCdevice;
+ typedef struct ALCcontext_struct ALCcontext;
+
  #define ALCAPIENTRY __cdecl
 #else
  #ifdef TARGET_OS_MAC
@@ -62,6 +65,40 @@ extern "C" {
  #endif
  #define ALCAPI
  #define ALCAPIENTRY
+
+/** ALC boolean type. */
+typedef char ALCboolean;
+
+/** ALC 8bit signed byte. */
+typedef char ALCbyte;
+
+/** ALC 8bit unsigned byte. */
+typedef unsigned char ALCubyte;
+
+/** ALC 16bit signed short integer type. */
+typedef short ALCshort;
+
+/** ALC 16bit unsigned short integer type. */
+typedef unsigned short ALCushort;
+
+/** ALC 32bit unsigned integer type. */
+typedef unsigned ALCuint;
+
+/** ALC 32bit signed integer type. */
+typedef int ALCint;
+
+/** ALC 32bit floating point type. */
+typedef float ALCfloat;
+
+/** ALC 64bit double point type. */
+typedef double ALCdouble;
+
+/** ALC 32bit type. */
+typedef unsigned int ALCsizei;
+
+/** ALC void type */
+typedef void ALCvoid;
+
 #endif
 
 #ifdef _WIN32
@@ -99,9 +136,6 @@ DEFINE_GUID(DSPROPSETID_EAX20_BufferProperties,
 
 #define INITGUID
 #define OPENAL
-
- typedef struct ALCdevice_struct ALCdevice;
- typedef struct ALCcontext_struct ALCcontext;
 
 int InitializeOpenAL();
 void DeInitializeOpenAL();
