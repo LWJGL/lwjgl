@@ -50,7 +50,7 @@
 BYTE readBuffer[KEYBOARD_BUFFER_SIZE];
 LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
 jfieldID fid_readBuffer;
-jfieldID fid_readBufferAddress;
+bool translationEnabled;
 extern LPDIRECTINPUT lpdi;
 extern HWND hwnd;
 
@@ -70,7 +70,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 	}
 
 	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
-	fid_readBufferAddress = env->GetStaticFieldID(clazz, "readBufferAddress", "I");
 }
 
 /*
@@ -81,6 +80,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
+	translationEnabled = false;
 	// Check to see if we're already initialized
 	if (lpdiKeyboard != NULL) {
 		printf("Keyboard already created.\n");
@@ -180,13 +180,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
  * Signature: (I)V
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
-  (JNIEnv * env, jclass clazz, jint keys)
+  (JNIEnv * env, jclass clazz)
 {
 	
 	static DIDEVICEOBJECTDATA rgdod[KEYBOARD_BUFFER_SIZE];
+	wchar_t transBuf[KEYBOARD_BUFFER_SIZE];
+	MSG msg;
+
+	BYTE state[256];
 	DWORD bufsize = KEYBOARD_BUFFER_SIZE;
 
 	HRESULT ret;
+	int num_chars;
+	int num_events = 0;
+
 	do {
 		ret = lpdiKeyboard->Acquire();
 	} while (ret != DI_OK && ret != S_FALSE);
@@ -198,13 +205,47 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 		0); 
 
 	if (ret == DI_OK) {
-		unsigned char * buf = (unsigned char *) keys;
+		unsigned char * buf = readBuffer;
 		for (unsigned int i = 0; i < bufsize; i ++) {
+			num_events++;
 			*buf++ = (unsigned char) rgdod[i].dwOfs;
 			*buf++ = (unsigned char) rgdod[i].dwData;
+			if (translationEnabled) {
+				while (PeekMessage(&msg, hwnd, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) != 0)
+					; // Flush keyboard messages to update keyboard state
+				UINT virt_key = MapVirtualKey(rgdod[i].dwOfs, 1);
+				if (virt_key != 0) {
+					if (!GetKeyboardState(state))
+						return -1;
+					num_chars = ToUnicode(virt_key, 
+										  rgdod[i].dwOfs,
+										  state,
+										  transBuf,
+										  KEYBOARD_BUFFER_SIZE, 0);
+					if (num_chars > 0) {
+						wchar_t ch = transBuf[0];
+						*buf++ = (unsigned char) (ch & 0xff);
+						*buf++ = (unsigned char) ((ch & 0xff00) >> 8);
+						for (int i = 1; i < num_chars; i++) {
+							num_events++;
+							ch = transBuf[i];
+							*buf++ = 0;
+							*buf++ = 0;
+							*buf++ = (unsigned char) (ch & 0xff);
+							*buf++ = (unsigned char) ((ch & 0xff00) >> 8);
+						}
+					} else {
+						*buf++ = 0;
+						*buf++ = 0;
+					}
+				} else {
+					*buf++ = 0;
+					*buf++ = 0;
+				}
+			}
 		}
-		return bufsize;
-	} if (ret == DI_BUFFEROVERFLOW) { 
+		return num_events;
+	} else if (ret == DI_BUFFEROVERFLOW) { 
 #ifdef _DEBUG
 		printf("Keyboard buffer overflowed\n");
 #endif
@@ -244,6 +285,17 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 
 /*
  * Class:     org_lwjgl_input_Keyboard
+ * Method:    nEnableTranslation
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+  (JNIEnv *, jclass)
+{
+	translationEnabled = true;
+}
+
+/*
+ * Class:     org_lwjgl_input_Keyboard
  * Method:    nEnableBuffer
  * Signature: ()I
  */
@@ -252,6 +304,5 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
 {
 	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE);
 	env->SetStaticObjectField(clazz, fid_readBuffer, newBuffer);
-	env->SetStaticIntField(clazz, fid_readBufferAddress, (jint) (&readBuffer));
 	return KEYBOARD_BUFFER_SIZE;
 }

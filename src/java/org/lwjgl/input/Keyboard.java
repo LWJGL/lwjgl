@@ -33,6 +33,7 @@
 package org.lwjgl.input;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
@@ -49,6 +50,18 @@ import org.lwjgl.Sys;
  * @version $Revision$
  */
 public class Keyboard {
+	/** 
+	 * The special character meaning that no
+	 * character was translated for the event.
+	 */
+	public static final char CHAR_NONE          = '\0';
+
+	/** 
+	 * The special keycode meaning that only the 
+	 * translated character is valid.
+	 */
+	public static final int KEY_NONE            = 0x00;
+
 	public static final int KEY_ESCAPE          = 0x01;
 	public static final int KEY_1               = 0x02;
 	public static final int KEY_2               = 0x03;
@@ -173,132 +186,6 @@ public class Keyboard {
 	public static final int KEY_POWER           = 0xDE;
 	public static final int KEY_SLEEP           = 0xDF;
 
-	// Maps keycodes to ascii characters
-	private static final char map[] =
-		{
-			0,
-			0,
-			'1',
-			'2',
-			'3',
-			'4',
-			'5',
-			'6',
-			'7',
-			'8',
-			'9',
-			'0',
-			'-',
-			'=',
-			0,
-			'\t',
-			'q',
-			'w',
-			'e',
-			'r',
-			't',
-			'y',
-			'u',
-			'i',
-			'o',
-			'p',
-			'[',
-			']',
-			'\n',
-			0,
-			'a',
-			's',
-			'd',
-			'f',
-			'g',
-			'h',
-			'j',
-			'k',
-			'l',
-			';',
-			'\'',
-			'#',
-			0,
-			'\\',
-			'z',
-			'x',
-			'c',
-			'v',
-			'b',
-			'n',
-			'm',
-			',',
-			'.',
-			'/',
-			0,
-			0,
-			0,
-			' ' };
-	private static final char shiftMap[] =
-		{
-			0,
-			0,
-			'!',
-			'"',
-			'*',
-			'$',
-			'%',
-			'^',
-			'&',
-			'*',
-			'(',
-			')',
-			'_',
-			'+',
-			0,
-			'\t',
-			'Q',
-			'W',
-			'E',
-			'R',
-			'T',
-			'Y',
-			'U',
-			'I',
-			'O',
-			'P',
-			'{',
-			'}',
-			'\n',
-			0,
-			'A',
-			'S',
-			'D',
-			'F',
-			'G',
-			'H',
-			'J',
-			'K',
-			'L',
-			':',
-			'@',
-			'~',
-			0,
-			'|',
-			'Z',
-			'X',
-			'C',
-			'V',
-			'B',
-			'N',
-			'M',
-			'<',
-			'>',
-			'?',
-			0,
-			0,
-			0,
-			' ' };
-			
-	static {
-		initialize();
-	}
-	
 	/** Has the keyboard been created? */
 	private static boolean created;
 	
@@ -310,12 +197,19 @@ public class Keyboard {
 	
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,
-	 * followed by state.
+	 * followed by state. If translation is enabled, the state is followed by
+	 * a 2 byte java char representing the translated character.
 	 */
 	private static ByteBuffer readBuffer;
-	
-	/** Address of the read buffer */
-	private static int readBufferAddress;
+
+	/** True if translation is enabled */
+	private static boolean translationEnabled;
+
+	/** The number of events read in the last read() */
+	private static int numEvents;
+
+	/** The current keyboard character being examined */
+	public static char character;
 	
 	/** The current keyboard event key being examined */
 	public static int key;
@@ -323,8 +217,12 @@ public class Keyboard {
 	/** The current state of the key being examined in the event queue */
 	public static boolean state;
 	
+	static {
+		initialize();
+	}
+	
 	/**
-	 * Mouse cannot be constructed.
+	 * Keyboard cannot be constructed.
 	 */
 	private Keyboard() {
 	}
@@ -376,7 +274,7 @@ public class Keyboard {
 	}
 	
 	/**
-	 * Native method the destroy the keyboard
+	 * Native method to destroy the keyboard
 	 */
 	private static native void nDestroy();
 
@@ -402,17 +300,35 @@ public class Keyboard {
 	public static void read() {
 		assert created : "The keyboard has not been created.";
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
+		numEvents = nRead();
 		readBuffer.clear();
-		readBuffer.limit(nRead(readBufferAddress) << 1);
+		if (translationEnabled)
+			readBuffer.limit(numEvents << 2);
+		else
+			readBuffer.limit(numEvents << 1);
 	}
 	
 	/**
 	 * Native method to read the keyboard buffer
-	 * 
-	 * @param readBufferAddress the address of the keyboard buffer
-	 * @return the number of keyboard events read
+	 * @return the total number of events read.
 	 */
-	private static native int nRead(int readBufferAddress);
+	private static native int nRead();
+	
+	/**
+	 * Enable keyboard translation. Must be called after the keyboard is created,
+	 * and keyboard buffering must be enabled.
+	 */
+	public static void enableTranslation() {
+		assert created : "The keyboard has not been created.";
+		assert readBuffer != null : "Keyboard buffering has not been enabled.";
+                nEnableTranslation();
+		translationEnabled = true;
+	}
+	
+	/**
+	 * Native method to enable the translation buffer
+	 */
+	private static native void nEnableTranslation();
 	
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
@@ -421,7 +337,10 @@ public class Keyboard {
 	 */
 	public static int enableBuffer() {
 		assert created : "The keyboard has not been created.";
-		return nEnableBuffer();
+		int buf_len = nEnableBuffer();
+		if (readBuffer != null)
+			readBuffer.order(ByteOrder.nativeOrder());
+		return buf_len;
 	}
 	
 	/**
@@ -446,7 +365,10 @@ public class Keyboard {
 	 * @return the number of keyboard events
 	 */
 	public static int getNumKeyboardEvents() {
-		return readBuffer.limit() >> 1;
+		assert created : "The keyboard has not been created.";
+		assert readBuffer != null : "Keyboard buffering has not been enabled.";
+
+		return numEvents;
 	}
 	
 	/**
@@ -461,27 +383,10 @@ public class Keyboard {
 		if (readBuffer.hasRemaining()) {
 			key = readBuffer.get() & 0xFF;
 			state = readBuffer.get() != 0;
+			if (translationEnabled)
+				character = readBuffer.getChar();
 			return true;
 		} else
 			return false;
-		
-	}
-	
-	/**
-	 * Maps a keycode to a character.
-	 * @param keyCode The keycode
-	 * @return the corresponding ASCII character or 0 if no mapping is possible
-	 */
-	public static char map(int keyCode) {
-		char c;
-
-		if (keyCode < 0 || keyCode >= map.length)
-			return 0;
-		else if (isKeyDown(KEY_LSHIFT) || isKeyDown(KEY_RSHIFT)) {
-			c = shiftMap[keyCode];
-		} else {
-			c = map[keyCode];
-		}
-		return c;
 	}
 }
