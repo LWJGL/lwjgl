@@ -43,56 +43,108 @@
 #include "tools.h"
 #include "org_lwjgl_input_Keyboard.h"
 
-#define KEYBOARD_BUFFER_SIZE 50
+#define EVENT_BUFFER_SIZE 100
 #define KEYBOARD_SIZE 256
-#define KEY_EVENT_BACKLOG 40
 #define UNICODE_BUFFER_SIZE 10
 
 static unsigned char key_buf[KEYBOARD_SIZE];
 static unsigned char key_map[KEYBOARD_SIZE];
-static unsigned char input_event_buffer[KEYBOARD_SIZE*2];
-static unsigned char output_event_buffer[KEYBOARD_SIZE*2];
+static unsigned char input_event_buffer[EVENT_BUFFER_SIZE];
+static unsigned char output_event_buffer[EVENT_BUFFER_SIZE];
 
-static int list_start;
-static int list_end;
-static bool buffer_enabled;
+static int list_start = 0;
+static int list_end = 0;
+static bool buffer_enabled = false;
+static bool translation_enabled = false;
 
-static void handleMappedKey(unsigned char mapped_code, unsigned char state) {
-	lock();
+static void putEventElement(unsigned char byte) {
+	int next_index = (list_end + 1)%EVENT_BUFFER_SIZE;
+	if (next_index == list_start) {
+#ifdef _DEBUG
+		printf("Keyboard buffer overflow!\n");
+#endif
+		return;
+	}
+	input_event_buffer[list_end] = byte;
+	list_end = next_index;
+}                                                                                                                                                                                              
+
+static bool hasMoreEvents(void) {
+	return list_start != list_end;
+}
+
+static void copyEvent(int event_size, int event_index) {
+	int output_index = event_index*event_size;
+	for (int i = 0; i < event_size; i++) {
+printf("list start %d end %d\n", list_start, list_end);
+		output_event_buffer[output_index] = input_event_buffer[list_start];
+		list_start = (list_start + 1)%EVENT_BUFFER_SIZE;
+		output_index++;
+	}
+}
+
+static bool handleMappedKey(unsigned char mapped_code, unsigned char state) {
 	unsigned char old_state = key_buf[mapped_code];
 	if (old_state != state) {
 if (state == 1)
 	printf("key down, %x\n", mapped_code);
 else
 	printf("key up,  %x\n", mapped_code);
+		
 		key_buf[mapped_code] = state;
-
+		if (buffer_enabled) {
+			putEventElement(mapped_code);
+			putEventElement(state);
+			return true;
+		}
 	}
-	unlock();
+	return false;
 }
 
-static void handleKey(UInt32 key_code, unsigned char state) {
+static bool handleKey(UInt32 key_code, unsigned char state) {
 	if (key_code >= KEYBOARD_SIZE) {
 #ifdef _DEBUG
-		printf("Key code too large %x\n", (unsigned int)key_code);
+		printf("Key code >= %d %x\n", KEYBOARD_SIZE, (unsigned int)key_code);
 #endif
-		return;
+		return false;
 	}
 	unsigned char mapped_code = key_map[key_code];
 	if (mapped_code == 0) {
 #ifdef _DEBUG
 		printf("unknown key code: %x\n", (unsigned int)key_code);
 #endif
-		return;
+		return false;
 	}
-	handleMappedKey(mapped_code, state);
+	return handleMappedKey(mapped_code, state);
 }
 
-static void writeChars(int num_chars, UniChar *buffer) {
-	
+static unsigned char getSecondByte(UniChar ch) {
+	return (unsigned char)(ch & 0xff);
 }
 
-static OSStatus handleUnicode(EventRef event) {
+static unsigned char getFirstByte(UniChar ch) {
+	return (unsigned char)((ch & 0xff00) >> 16);
+}
+
+static bool writeChars(int num_chars, UniChar *buffer) {
+	if (num_chars == 0)
+		return false;
+	unsigned char b0 = getFirstByte(buffer[0]);
+	unsigned char b1 = getSecondByte(buffer[0]);
+	putEventElement(b0);
+	putEventElement(b1);
+	for (int i = 1; i < num_chars; i++) {
+		putEventElement(0);
+		putEventElement(0);
+		b0 = getFirstByte(buffer[i]);
+		b1 = getSecondByte(buffer[i]);
+		putEventElement(b0);
+		putEventElement(b1);
+	}
+	return true;
+}
+
+static bool handleUnicode(EventRef event) {
 	UniChar unicode_buffer[UNICODE_BUFFER_SIZE];
 	UInt32 data_size;
 	int num_chars;
@@ -101,25 +153,23 @@ static OSStatus handleUnicode(EventRef event) {
 #ifdef _DEBUG
 		printf("Could not get unicode char count\n");
 #endif
-		return eventNotHandledErr;
+		return false;
 	}
 	num_chars = data_size/sizeof(UniChar);
 	if (num_chars >= UNICODE_BUFFER_SIZE) {
 #ifdef _DEBUG
 		printf("Unicode chars could not fit in buffer\n");
 #endif
-		return eventNotHandledErr;
+		return false;
 	}
 	err = GetEventParameter(event, kEventParamKeyUnicodes, typeUnicodeText, NULL, data_size, NULL, unicode_buffer);
 	if (err != noErr) {
 #ifdef _DEBUG
 		printf("Could not get unicode chars\n");
 #endif
-		return eventNotHandledErr;
+		return false;
 	}
-	if (buffer_enabled)
-		writeChars(num_chars, unicode_buffer);
-	return noErr;
+	return writeChars(num_chars, unicode_buffer);
 }
 
 static pascal OSStatus doKeyDown(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
@@ -131,8 +181,20 @@ static pascal OSStatus doKeyDown(EventHandlerCallRef next_handler, EventRef even
 #endif
 		return eventNotHandledErr;
 	}
-	handleKey(key_code, 1);
-	return handleUnicode(event);
+	lock();
+	if (handleKey(key_code, 1)) {
+		if (translation_enabled) {
+			if (!handleUnicode(event)) {
+				putEventElement(0);
+				putEventElement(0);
+			}
+		} else {
+			putEventElement(0);
+			putEventElement(0);
+		}
+	}
+	unlock();
+	return noErr;
 }
 
 static pascal OSStatus doKeyUp(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
@@ -144,14 +206,22 @@ static pascal OSStatus doKeyUp(EventHandlerCallRef next_handler, EventRef event,
 #endif
 		return eventNotHandledErr;
 	}
-	handleKey(key_code, 0);
+	lock();
+	if (handleKey(key_code, 0)) {
+		putEventElement(0);
+		putEventElement(0);
+	}
+	unlock();
 	return noErr;
 }
 
 static void handleModifier(UInt32 modifier_bit_mask, UInt32 modifier_bit, unsigned char key_code) {
 	bool key_down = (modifier_bit_mask & modifier_bit) == modifier_bit;
 	unsigned char key_state = key_down ? 1 : 0;
-	handleMappedKey(key_code, key_state);
+	if (handleMappedKey(key_code, key_state)) {
+		putEventElement(0);
+		putEventElement(0);
+	}
 }
 
 static pascal OSStatus doKeyModifier(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
@@ -293,9 +363,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs(JNIEnv * env, jclas
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate(JNIEnv * env, jclass clazz) {
+	lock();
 	buffer_enabled = false;
+	translation_enabled = false;
+	list_end = 0;
+	list_start = 0;
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	setupMappings();
+	unlock();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy(JNIEnv * env, jclass clazz) {
@@ -309,17 +384,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll(JNIEnv * env, jclass 
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead(JNIEnv * env, jclass clazz) {
+	int num_events = 0;
+	lock();
+	int event_size;
+	if (translation_enabled)
+		event_size = 4;
+	else
+		event_size = 2;
+	while (hasMoreEvents()) {
+		copyEvent(event_size, num_events);
+		num_events++;
+	}
+	unlock();
+if (num_events != 0)
+	printf("num events: %d\n", num_events);
+	return num_events;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation(JNIEnv *env, jclass clazz) {
+	translation_enabled = true;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer(JNIEnv * env, jclass clazz) {
 	jfieldID fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
-	jobject new_buffer = env->NewDirectByteBuffer(&output_event_buffer, KEYBOARD_BUFFER_SIZE * 2);
+	jobject new_buffer = env->NewDirectByteBuffer(&output_event_buffer, EVENT_BUFFER_SIZE);
 	env->SetStaticObjectField(clazz, fid_readBuffer, new_buffer);
 	buffer_enabled = true;
-	return KEYBOARD_BUFFER_SIZE;
+	return EVENT_BUFFER_SIZE/2;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet(JNIEnv *env, jclass clazz, jint key) {

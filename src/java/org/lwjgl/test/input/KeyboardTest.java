@@ -130,20 +130,18 @@ public class KeyboardTest {
       }
 
       //check keys, buffered
+      Keyboard.poll();
       Keyboard.read();
 
       int count = Keyboard.getNumKeyboardEvents();
       while(Keyboard.next()) {
         System.out.println("Checking key:" + Keyboard.getKeyName(Keyboard.key));
+	System.out.println("Key character: " + Keyboard.character);
         if(Keyboard.key == Keyboard.KEY_ESCAPE) {
           return;
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-          position.x += 1;
-        }
-        
-        if (Keyboard.key == Keyboard.KEY_RIGHT) {
           position.x += 1;
         }
         
