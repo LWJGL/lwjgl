@@ -44,8 +44,11 @@
 #include "common_tools.h"
 #include "tools.h"
 
+#define GAMMARAMP_LENGTH 256
+
 static CFDictionaryRef original_mode;
 static bool initialized = false;
+static bool display_captured = false;
 
 static void saveMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 	jclass display_class = env->FindClass("org/lwjgl/Display");
@@ -76,9 +79,23 @@ static void init(JNIEnv *env) {
 	}
 }
 
+static void captureDisplay(void) {
+	if (!display_captured) {
+		display_captured = true;
+		CGDisplayCapture(kCGDirectMainDisplay);
+	}
+}
+
+static void releaseDisplay(void) {
+	if (display_captured) {
+		display_captured = false;
+		CGDisplayRelease(kCGDirectMainDisplay);
+	}
+}
+
 void switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 	init(env);
-	CGDisplayCapture(kCGDirectMainDisplay);
+	captureDisplay();
 	CFDictionaryRef displayMode = CGDisplayBestModeForParametersAndRefreshRate(kCGDirectMainDisplay, bpp, width, height, freq, NULL);
 	CGDisplaySwitchToMode(kCGDirectMainDisplay, displayMode);
 	saveMode(env, width, height, bpp, freq);
@@ -86,8 +103,9 @@ void switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 
 void resetMode(JNIEnv *env) {
 	init(env);
+	CGDisplayRestoreColorSyncSettings();
 	CGDisplaySwitchToMode(kCGDirectMainDisplay, original_mode);
-	CGDisplayRelease(kCGDirectMainDisplay);
+	releaseDisplay();
 	saveOriginalMode(env);
 }
 
@@ -146,9 +164,15 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform(JNIEnv * env, jclass c
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
+	return GAMMARAMP_LENGTH;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer) {
+	const float *gamma_ramp = (const float *)env->GetDirectBufferAddress(gamma_ramp_buffer);
+	CGDisplayErr err = CGSetDisplayTransferByTable(kCGDirectMainDisplay, GAMMARAMP_LENGTH, gamma_ramp, gamma_ramp, gamma_ramp);
+	if (err) {
+		throwException(env, "Could not set gamma.");
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv *env, jclass clazz) {

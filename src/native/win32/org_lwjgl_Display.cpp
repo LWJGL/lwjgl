@@ -391,7 +391,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
  * Method:    setGammaRamp
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
   (JNIEnv * env, jclass clazz, jobject gammaRampBuffer)
 {
 	const float *gammaRamp = (const float *)env->GetDirectBufferAddress(gammaRampBuffer);
@@ -404,24 +404,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 		currentGamma[i + 256] = rampEntry;
 		currentGamma[i + 512] = rampEntry;
 	}
-	jboolean ret;
 	HDC screenDC = GetDC(NULL);
 	try {
 		if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
-	#ifdef _DEBUG
-			printf("Failed to set device gamma\n");
-	#endif
-			ret = JNI_FALSE;
-		} else {
-			ret = JNI_TRUE;
+			throwException(env, "Failed to set device gamma.")
 		}
 	} catch (...) {
-		printf("Exception occurred in SetDeviceGammaRamp\n");
-		ret = JNI_FALSE;
+		throwException(env, "Exception occurred in SetDeviceGammaRamp.")
 	}
 	ReleaseDC(NULL, screenDC);
-
-	return ret;
 }
 
 

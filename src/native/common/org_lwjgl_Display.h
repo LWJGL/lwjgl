@@ -70,24 +70,26 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
 /*
  * Class:     org_lwjgl_Display
  * Method:    setGammaRamp
- * Signature: (Ljava/nio/FloatBuffer;)Z
+ * Signature: (Ljava/nio/FloatBuffer;)V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
   (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_Display
  * Method:    getAdapter
+ * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
-  (JNIEnv * , jclass);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_Display
  * Method:    getVersion
+ * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
-  (JNIEnv * , jclass);
+  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

@@ -215,12 +215,13 @@ public final class Display {
 	 * @param contrast The contrast, larger than 0.0.
 	 * @return true if the call succeeded, false otherwise
 	 */
-	public static boolean setDisplayConfiguration(float gamma, float brightness, float contrast) {
+	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws Exception {
 		assert brightness >= -1.0f && brightness <= 1.0f;
 		assert contrast >= 0.0f;
 		int rampSize = getGammaRampLength();
-		if (rampSize == 0)
-			return false;
+		if (rampSize == 0) {
+			throw new Exception("Display configuration not supported");
+		}
 		FloatBuffer gammaRamp = ByteBuffer.allocateDirect(rampSize*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		for (int i = 0; i < rampSize; i++) {
 			float intensity = (float)i/(rampSize - 1);
@@ -237,12 +238,10 @@ public final class Display {
 				rampEntry = 0.0f;
 			gammaRamp.put(i, rampEntry);
 		}
-		if (!setGammaRamp(gammaRamp))
-			return false;
+		setGammaRamp(gammaRamp);
 		if (Sys.DEBUG) {
 			System.out.println("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
 		}
-		return true;
 	}
 
 	/**
@@ -256,7 +255,7 @@ public final class Display {
 	/**
 	 * Native method to set the gamma ramp.
 	 */
-	private static native boolean setGammaRamp(FloatBuffer gammaRamp);
+	private static native void setGammaRamp(FloatBuffer gammaRamp) throws Exception ;
 	
 	/**
 	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",

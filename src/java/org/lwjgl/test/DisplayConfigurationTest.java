@@ -13,9 +13,9 @@ import org.lwjgl.*;
  */
 public class DisplayConfigurationTest {
 	private static void changeConfig(float gamma, float brightness, float contrast) {
-		Display.setDisplayConfiguration(gamma, brightness, contrast);
-		System.out.println("Configuration changed, gamma = " + gamma + " brightness = " + brightness + " contrast = " + contrast);
 		try {
+			Display.setDisplayConfiguration(gamma, brightness, contrast);
+			System.out.println("Configuration changed, gamma = " + gamma + " brightness = " + brightness + " contrast = " + contrast);
 			Thread.sleep(3000);
 		} catch (Exception e) {
 			e.printStackTrace();

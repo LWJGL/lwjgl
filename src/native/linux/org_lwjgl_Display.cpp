@@ -276,44 +276,23 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	return ret;
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    getPlatform
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
-  (JNIEnv * env, jclass clazz)
-{
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform(JNIEnv * env, jclass clazz) {
 	return org_lwjgl_Display_PLATFORM_GLX;
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    getGammaRampLength
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
-  (JNIEnv *env, jclass clazz)
-{
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
 	return gamma_ramp_length;
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    setGammaRamp
- * Signature: (I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer)
-{
-	if (gamma_ramp_length == 0)
-		return JNI_FALSE;
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer) {
+	if (gamma_ramp_length == 0) {
+		throwException(env, "gamma ramp length == 0.");
+		return;
+	}
 	Display * disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-#ifdef _DEBUG
-		printf("Could not open X connection\n");
-#endif
-		return JNI_FALSE;
+		throwException(env, "Could not open X connection.");
+		return;
 	}
 	int screen = DefaultScreen(disp);
 	const float *gamma_ramp = (const float *)env->GetDirectBufferAddress(gamma_ramp_buffer);
@@ -324,14 +303,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 		ramp[i] = (unsigned short)round(scaled_gamma);
 	}
 	if (XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, ramp, ramp, ramp) == False) {
-#ifdef _DEBUG
-		printf("Could not set gamma ramp\n");
-#endif
-		XCloseDisplay(disp);
-		return JNI_FALSE;
+		throwException(env, "Could not set gamma ramp.");
 	}
 	XCloseDisplay(disp);
-	return JNI_TRUE;
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
