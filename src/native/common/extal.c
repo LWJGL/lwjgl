@@ -188,9 +188,11 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 #endif
 		if (handleOAL != NULL) {
 			printfDebug("Found OpenAL at '%s'\n", path_str);
-			return true;
 		}
 		free(path_str);
+		if (handleOAL != NULL) {
+			return true;
+		}
 	}
 	throwException(env, "Could not load openal library.");
 	return false;
