@@ -145,15 +145,15 @@ public final class AL {
 			throw new LWJGLException("Unknown platform: "+osName);
 		}
 		
-		String jwsPath = getPathFromJWS(jwsLibname);
+		String jwsPath = getPathFromClassLoader(jwsLibname);
 		if (jwsPath != null) {
-			Sys.log("getPathFromJWS: Path found: " + jwsPath);
+			Sys.log("getPathFromClassLoader: Path found: " + jwsPath);
 			libpath += seperator
 				+ jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
 		}
-		String lwjgl_jws_path = getPathFromJWS("lwjgl");
+		String lwjgl_jws_path = getPathFromClassLoader("lwjgl");
 		if (lwjgl_jws_path != null) {
-			Sys.log("getPathFromJWS: Path found: " + lwjgl_jws_path);
+			Sys.log("getPathFromClassLoader: Path found: " + lwjgl_jws_path);
 			libpath += seperator
 				+ lwjgl_jws_path.substring(0, lwjgl_jws_path.lastIndexOf(File.separator));
 		}
@@ -237,25 +237,29 @@ public final class AL {
 	}
 	
 	/**
-	 * Tries to locate OpenAL from the JWS Library path
+	 * Tries to locate OpenAL from the current ClassLoader
 	 * This method exists because OpenAL is loaded from native code, and as such
-	 * is exempt from JWS library loading rutines. OpenAL therefore always fails.
-	 * We therefore invoke the protected method of the JWS classloader to see if it can
+	 * is exempt from ClassLoader library loading rutines. OpenAL therefore always fails.
+	 * We therefore invoke the protected method of the ClassLoader to see if it can
 	 * locate it. 
 	 * 
 	 * @param libname Name of library to search for
 	 * @return Absolute path to library if found, otherwise null
 	 */
-	private static String getPathFromJWS(String libname) {
+	private static String getPathFromClassLoader(String libname) {
 		try {		 
-      Sys.log("getPathFromJWS: searching for: " + libname);
+			Sys.log("getPathFromClassLoader: searching for: " + libname);
 			Object o = AL.class.getClassLoader();
 			Class c = o.getClass();
-			Method findLibrary =
-				c.getMethod("findLibrary", new Class[] { String.class });
-			Object[] arguments = new Object[] { libname };
-			return (String) findLibrary.invoke(o, arguments);
-
+			while (c != null) {
+				try {
+					Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class });
+					Object[] arguments = new Object[] { libname };
+					return (String)findLibrary.invoke(o, arguments);
+				} catch (NoSuchMethodException e) {
+					c = c.getSuperclass();
+				}
+			}
 		} catch (Exception e) {
 			Sys.log("Failure locating OpenAL using classloader:" + e);
 		}
