@@ -77,15 +77,25 @@ public final class Sys {
 	/** The native library name */
 	private static String LIBRARY_NAME;
 	
+	/**
+	 * Debug flag. This will tell you if you are using the debug version of
+	 * the library, and whether assertions are enabled or not.
+	 */
+	public static final boolean DEBUG;
+	
+	private static boolean _debug;
 	static {
 		try {
 			assert false;
 			LIBRARY_NAME = "lwjgl";
+			_debug = false;
 		} catch (AssertionError e) {
 			// Assertions are enabled, so we'll use the debug version of the
 			// library
 			LIBRARY_NAME = "lwjgl_d";
+			_debug = true;
 		} finally {
+			DEBUG = _debug;
 			initialize();
 		}
 	}
@@ -178,5 +188,24 @@ public final class Sys {
 	 * HIGH_PRIORITY, NORMAL_PRIORITY, or LOW_PRIORITY.
 	 */
 	public static native void setProcessPriority(int priority);
+	
+	/**
+	 * Attempt to display a modal alert to the user. This method should be used
+	 * when a game fails to initialize properly or crashes out losing its display
+	 * in the process. It is provided because AWT may not be available on the target
+	 * platform.
+	 * 
+	 * The alert should display the title and the message and then the current
+	 * thread should block until the user dismisses the alert - typically with an
+	 * OK button click.
+	 * 
+	 * It may be that the user's system has no windowing system installed for some
+	 * reason, in which case this method may do nothing at all, or attempt to provide
+	 * some console output.
+	 *
+	 * @param title The title of the alert. We suggest using the title of your game.
+	 * @param message The message text for the alert.
+	 */
+	public static native void alert(String title, String message);
 		
 } 
