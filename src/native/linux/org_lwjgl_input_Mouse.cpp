@@ -106,11 +106,6 @@ static void centerCursor() {
 	last_y = current_y;
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    initIDs
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
   (JNIEnv * env, jclass clazz)
 {
@@ -307,17 +302,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 	return NUM_BUTTONS;
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nCreate
- * Signature: ()Z
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	int i;
-	centerCursor();
 	current_z = last_z = 0;
+	doWarpPointer();
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -335,11 +325,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	loadXcursor();
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nDestroy
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
   (JNIEnv * env, jclass clazz)
 {
