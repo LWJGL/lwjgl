@@ -46,5 +46,9 @@ EAXSet	eaxSet;						// EAXSet function, retrieved if EAX Extension is supported
 EAXGet	eaxGet;						// EAXGet function, retrieved if EAX Extension is supported
 
 #endif
+#else
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
 
 #endif
