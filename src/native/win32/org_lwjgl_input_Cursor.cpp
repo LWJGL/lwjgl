@@ -10,7 +10,7 @@
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
   (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jobject delay_buffer)
 {
-	const int *pixels = (const int *)env->GetDirectBufferAddress(image_buffer);
+	int *pixels = (int *)env->GetDirectBufferAddress(image_buffer);
 
     BITMAPINFO bitmapInfo;
 
