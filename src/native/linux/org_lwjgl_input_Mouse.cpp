@@ -42,6 +42,7 @@
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <X11/extensions/xf86vmode.h>
 #include <assert.h>
 #include <string.h>
 #include "org_lwjgl_input_Mouse.h"
@@ -50,6 +51,7 @@
 
 extern Display *disp;
 extern Window win;
+extern int screen;
 extern int current_fullscreen;
 
 int pointer_grabbed;
@@ -124,9 +126,10 @@ int blankCursor(void) {
 int grabPointer(void) {
 	int result;
 	int mask = EnterWindowMask | LeaveWindowMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-	if (current_fullscreen)
+	if (current_fullscreen) {
 		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
-	else
+		XF86VidModeSetViewPort(disp, screen, 0, 0); // make sure we have a centered window
+	} else
 		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, None, blank_cursor, CurrentTime);
 	if (result == GrabSuccess)
 		pointer_grabbed = 1;
