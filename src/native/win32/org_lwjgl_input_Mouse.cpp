@@ -88,8 +88,8 @@ static void resetCursorPos(void) {
 	getScreenClientRect(&clientRect, &windowRect);
 	cursorPos.x = (clientRect.left + clientRect.right)/2;
 	cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
-	SetCursorPos(cursorPos.x, cursorPos.y);
-	GetCursorPos(&cursorPos);
+/*	SetCursorPos(cursorPos.x, cursorPos.y);
+	GetCursorPos(&cursorPos);*/
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
