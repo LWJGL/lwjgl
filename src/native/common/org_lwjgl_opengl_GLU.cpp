@@ -165,3 +165,113 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_build2DMipmaps(JNIEnv * env, jo
 	return ret;
 }
 
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    newQuadric
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_newQuadric(JNIEnv * env, jobject obj)
+{
+    jint ret = (jint) gluNewQuadric();
+    CHECK_GL_ERROR
+    return ret;
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    cylinder
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_cylinder(JNIEnv * env, jobject obj, jint quad, jdouble baseRadius, jdouble topRadius, jdouble height, jint slices, jint stacks)
+{
+    gluCylinder((GLUquadricObj *) quad, (GLdouble) baseRadius, (GLdouble) topRadius, (GLdouble) height, (GLint) slices, (GLint) stacks);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    deleteQuadric
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_deleteQuadric(JNIEnv * env, jobject obj, jint quad) 
+{
+    gluDeleteQuadric((GLUquadricObj *) quad);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    disk
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_disk
+  (JNIEnv * env, jobject obj, jint quad, jdouble innerRadius, jdouble outerRadius, jint slices, jint loops)
+{
+    gluDisk((GLUquadricObj *) quad, (GLdouble) innerRadius, (GLdouble) outerRadius, (GLint) slices, (GLint) loops);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    partialDisk
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_partialDisk
+  (JNIEnv * env, jobject obj, jint quad, jdouble innerRadius, jdouble outerRadius, 
+  jint slices, jint loops, jdouble startAngle, jdouble sweepAngle)
+{
+    gluPartialDisk((GLUquadricObj *) quad, (GLdouble) innerRadius, (GLdouble) outerRadius,
+                   (GLint) slices, (GLint) loops, (GLdouble) startAngle, (GLdouble) sweepAngle);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricDrawStyle
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricDrawStyle
+  (JNIEnv * env, jobject obj, jint quad, jint drawStyle)
+{
+    gluQuadricDrawStyle((GLUquadricObj *) quad, (GLenum) drawStyle);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricNormals
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricNormals
+  (JNIEnv * env, jobject obj, jint quad, jint normals)
+{
+    gluQuadricNormals((GLUquadricObj *) quad, (GLenum) normals);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricOrientation
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricOrientation
+  (JNIEnv * env, jobject obj, jint quad, jint orientation)
+{
+    gluQuadricOrientation((GLUquadricObj *) quad, (GLenum) orientation);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricTexture
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricTexture
+  (JNIEnv * env, jobject obj, jint quad, jboolean textureCoords)
+{
+    gluQuadricTexture((GLUquadricObj *) quad, (GLboolean) textureCoords);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    sphere
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_sphere
+  (JNIEnv * env, jobject obj, jint quad, jdouble radius, jint slices, jint stacks)
+{
+    gluSphere((GLUquadricObj *) quad, (GLdouble) radius, (GLint) slices, (GLint) stacks);
+    CHECK_GL_ERROR
+}
+

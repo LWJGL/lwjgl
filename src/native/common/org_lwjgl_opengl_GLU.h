@@ -95,6 +95,89 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_build1DMipmaps
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_build2DMipmaps
   (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint, jint);
 
+
+
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    newQuadric
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_newQuadric
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    cylinder
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_cylinder
+  (JNIEnv *, jobject, jint, jdouble, jdouble, jdouble, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    deleteQuadric
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_deleteQuadric
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    disk
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_disk
+  (JNIEnv *, jobject, jint, jdouble, jdouble, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    partialDisk
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_partialDisk
+  (JNIEnv *, jobject, jint, jdouble, jdouble, jint, jint, jdouble, jdouble);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricDrawStyle
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricDrawStyle
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricNormals
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricNormals
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricOrientation
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricOrientation
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricTexture
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricTexture
+  (JNIEnv *, jobject, jint, jboolean);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    sphere
+ * not sure exactly what to do with this part...
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_sphere
+  (JNIEnv *, jobject, jint, jdouble, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif
