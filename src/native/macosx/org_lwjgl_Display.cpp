@@ -79,7 +79,8 @@ static double _getDictDouble (CFDictionaryRef refDict, CFStringRef key)
 
 jobjectArray GetAvailableDisplayModesOSX(JNIEnv * env)
 {
-    CFIndex		i, count, availableModes;
+    CFIndex		i, count; 
+    CFIndex             availableModes = 0;
     CFArrayRef		displayModes = NULL;
     int			n = 0;
 
@@ -105,7 +106,7 @@ jobjectArray GetAvailableDisplayModesOSX(JNIEnv * env)
     jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
     jobjectArray ret = env->NewObjectArray( availableModes, displayModeClass, NULL);
     jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
-    
+
     for ( i = 0; i < count; i++ )
     {
         CFDictionaryRef modeDict = static_cast<CFDictionaryRef>( CFArrayGetValueAtIndex( displayModes, i ) );
