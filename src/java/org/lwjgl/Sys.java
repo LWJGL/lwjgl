@@ -42,7 +42,7 @@ import java.io.IOException;
  * @version $Revision$
  */
 public final class Sys {
-	public static final String VERSION = "0.9pre";
+	public static final String VERSION = "0.91";
 
 	/** Low process priority. @see #setProcessPriority() */
 	public static final int LOW_PRIORITY = -1;
