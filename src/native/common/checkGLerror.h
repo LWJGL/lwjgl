@@ -25,9 +25,19 @@
 		} \
 	}
 
+#define CHECK_EXISTS(f) \
+	{ \
+		if (!f) { \
+			jclass cls = env->FindClass("org/lwjgl/opengl/OpenGLException"); \
+			env->ThrowNew(cls, "This function is not available in this driver."); \
+			env->DeleteLocalRef(cls); \
+		} \
+	} \
+
 #else
 
 #define CHECK_GL_ERROR
+#define CHECK_EXISTS(f)
 
 #endif /* _DEBUG */
 
