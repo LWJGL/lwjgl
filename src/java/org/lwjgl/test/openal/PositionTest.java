@@ -9,18 +9,17 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.input.*;
 
 /**
- * $Id$
- * <br>
- * This test demonstrates OpenAL positioning
- * Based on the example by Chad Armstrong (http://www.edenwaith.com/products/pige/tutorials/openal.php)
+ * $Id$<br>This test
+ * demonstrates OpenAL positioning Based on the example by Chad Armstrong
+ * (http://www.edenwaith.com/products/pige/tutorials/openal.php)
  * 
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
 public class PositionTest extends BasicTest {
 
-  /** *Small* glut implementation :) */
-  private GLUT glut;
+	/** *Small* glut implementation :) */
+	private GLUT glut;
 
 	/** Width of window */
 	public static final int WINDOW_WIDTH = 640;
@@ -50,14 +49,14 @@ public class PositionTest extends BasicTest {
 	private IntBuffer soundSources = createIntBuffer(3);
 
 	/** Position of listener */
-	private FloatBuffer listenerPosition = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 2.0f });
+	private FloatBuffer listenerPosition = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
 
 	/** Velocity of listener */
 	private FloatBuffer listenerVelocity = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
 
 	/** Orientation of listener */
 	private FloatBuffer listenerOrientation =
-		createFloatBuffer(6).put(new float[] { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f });
+		createFloatBuffer(6).put(new float[] { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
 
 	/** Position of left sound */
 	private FloatBuffer leftPosition = createFloatBuffer(3).put(new float[] { -2.0f, 0.0f, 0.0f });
@@ -127,7 +126,7 @@ public class PositionTest extends BasicTest {
 		GL.glLoadIdentity();
 		GL.glTranslatef(0.0f, 0.0f, -6.6f);
 		GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glut = this.new GLUT();
+		glut = this.new GLUT();
 
 		Window.setVSyncEnabled(true);
 		// -----------------------------------------------------
@@ -160,7 +159,7 @@ public class PositionTest extends BasicTest {
 		AL.alGenBuffers(soundBuffers);
 		soundBuffers.rewind();
 
-		// creating sources 
+		// creating sources
 		AL.alGenSources(soundSources);
 		soundSources.rewind();
 
@@ -197,7 +196,7 @@ public class PositionTest extends BasicTest {
 		AL.alSourcei(soundSources.get(RIGHT), AL.AL_BUFFER, soundBuffers.get(RIGHT));
 		AL.alSourcei(soundSources.get(RIGHT), AL.AL_LOOPING, AL.AL_TRUE);
 
-		Sys.log("Soundfiles loaded successfully, initializing OpenAL environment");
+		Sys.log("Soundfiles loaded successfully");
 		// -----------------------------------------------------
 
 		// Setup Keyboard
@@ -212,12 +211,27 @@ public class PositionTest extends BasicTest {
 	 * Runs the actual demonstration
 	 */
 	private void run() {
+		boolean firstRun = true;
 
-    System.out.println("Press 1/4 (left), 2/5 (center) or 3/6 (right) to toggle sound");
-    System.out.println("Press LEFT/RIGHT to move along x axis");
-    System.out.println("Press SHIFT and either LEFT/RIGHT to move along y axis");
-    System.out.println("Press UP/DOWN to move along z axis");
-    System.out.println("Press ESC to exit demo");
+		System.out.println("Press 1/4 (left), 2/5 (center) or 3/6 (right) to toggle sound");
+		System.out.println("Press LEFT/RIGHT to move along x axis");
+		System.out.println("Press SHIFT and either UP/DOWN to move along y axis");
+		System.out.println("Press UP/DOWN to move along z axis");
+		System.out.println("Press ESC to exit demo");
+
+		Sys.log(
+			"Listener position: "
+				+ listenerPosition.get(0)
+				+ ", "
+				+ listenerPosition.get(1)
+				+ ", "
+				+ listenerPosition.get(2));
+    Sys.log(
+			"Left position: " + leftPosition.get(0) + ", " + leftPosition.get(1) + ", " + leftPosition.get(2));
+    Sys.log(
+			"Center position: " + centerPosition.get(0) + ", " + centerPosition.get(1) + ", " + centerPosition.get(2));
+    Sys.log(
+			"Right position: " + rightPosition.get(0) + ", " + rightPosition.get(1) + ", " + rightPosition.get(2));
 
 		while (!finished) {
 			// handle any input
@@ -229,8 +243,21 @@ public class PositionTest extends BasicTest {
 			// allow window to process internal messages
 			Window.update();
 
-			// paint the content and flip buffer  
+			// paint the content and flip buffer
 			Window.paint();
+
+			// start sound after first paint, since we don't want
+      // the delay before something is painted on the screen
+			if (firstRun) {
+				firstRun = false;
+
+				// start sounds with delays
+				AL.alSourcePlay(soundSources.get(LEFT));
+				pause(300);
+				AL.alSourcePlay(soundSources.get(CENTER));
+				pause(500);
+				AL.alSourcePlay(soundSources.get(RIGHT));
+			}
 		}
 	}
 
@@ -317,7 +344,7 @@ public class PositionTest extends BasicTest {
 	}
 
 	/**
-	 * Render the scene 
+	 * Render the scene
 	 */
 	private void render() {
 		GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -369,9 +396,9 @@ public class PositionTest extends BasicTest {
 		Keyboard.destroy();
 
 		Sys.log("Shutting down OpenAL");
-    AL.alSourceStop(soundSources);
-    AL.alDeleteSources(soundSources);
-    AL.alDeleteBuffers(soundBuffers);
+		AL.alSourceStop(soundSources);
+		AL.alDeleteSources(soundSources);
+		AL.alDeleteBuffers(soundBuffers);
 		AL.destroy();
 
 		Sys.log("Shutting down Window");
@@ -380,59 +407,57 @@ public class PositionTest extends BasicTest {
 
 	/**
 	 * main entry point
-	 *
-	 * @param args String array containing arguments
+	 * 
+	 * @param args
+	 *          String array containing arguments
 	 */
 	public static void main(String[] args) {
 		PositionTest positionTest = new PositionTest();
 		positionTest.execute(args);
 	}
 
-  /**
-   * Minute implementation of GLUT:
-   * <br>
-   * COPYRIGHT:
-   *
-   * The OpenGL Utility Toolkit distribution for Win32 (Windows NT &
-   * Windows 95) contains source code modified from the original source
-   * code for GLUT version 3.3 which was developed by Mark J. Kilgard.  The
-   * original source code for GLUT is Copyright 1997 by Mark J. Kilgard.
-   * GLUT for Win32 is Copyright 1997 by Nate Robins and is not in the
-   * public domain, but it is freely distributable without licensing fees.
-   * It is provided without guarantee or warrantee expressed or implied.
-   * It was ported with the permission of Mark J. Kilgard by Nate Robins.
-   *
-   * THIS SOURCE CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-   * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-   * OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
-   */
+	/**
+	 * Minute implementation of GLUT: <br>COPYRIGHT:
+	 * 
+	 * The OpenGL Utility Toolkit distribution for Win32 (Windows NT & Windows
+	 * 95) contains source code modified from the original source code for GLUT
+	 * version 3.3 which was developed by Mark J. Kilgard. The original source
+	 * code for GLUT is Copyright 1997 by Mark J. Kilgard. GLUT for Win32 is
+	 * Copyright 1997 by Nate Robins and is not in the public domain, but it is
+	 * freely distributable without licensing fees. It is provided without
+	 * guarantee or warrantee expressed or implied. It was ported with the
+	 * permission of Mark J. Kilgard by Nate Robins.
+	 * 
+	 * THIS SOURCE CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+	 * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+	 * OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+	 */
 	class GLUT {
 
-      float n[][] = new float[][] { { -1.0f, 0.0f, 0.0f }, {
-          0.0f, 1.0f, 0.0f }, {
-          1.0f, 0.0f, 0.0f }, {
-          0.0f, -1.0f, 0.0f }, {
-          0.0f, 0.0f, 1.0f }, {
-          0.0f, 0.0f, -1.0f }
-      };
+		float n[][] = new float[][] { { -1.0f, 0.0f, 0.0f }, {
+				0.0f, 1.0f, 0.0f }, {
+				1.0f, 0.0f, 0.0f }, {
+				0.0f, -1.0f, 0.0f }, {
+				0.0f, 0.0f, 1.0f }, {
+				0.0f, 0.0f, -1.0f }
+		};
 
-      int faces[][] = new int[][] { { 0, 1, 2, 3 }, {
-          3, 2, 6, 7 }, {
-          7, 6, 5, 4 }, {
-          4, 5, 1, 0 }, {
-          5, 6, 2, 1 }, {
-          7, 4, 0, 3 }
-      };
-      float v[][] = new float[8][3];
-
+		int faces[][] = new int[][] { { 0, 1, 2, 3 }, {
+				3, 2, 6, 7 }, {
+				7, 6, 5, 4 }, {
+				4, 5, 1, 0 }, {
+				5, 6, 2, 1 }, {
+				7, 4, 0, 3 }
+		};
+		float v[][] = new float[8][3];
 
 		public void glutWireCube(float size) {
 			drawBox(size, GL.GL_LINE_LOOP);
 		}
 
-    public void glutSolidCube(float size) {
-      drawBox(size, GL.GL_QUADS);
-    }
+		public void glutSolidCube(float size) {
+			drawBox(size, GL.GL_QUADS);
+		}
 
 		private void drawBox(float size, int type) {
 
