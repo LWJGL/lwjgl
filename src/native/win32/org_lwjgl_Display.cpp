@@ -90,6 +90,9 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
 	DISPLAY_DEVICE DisplayDevice;
 	DEVMODE DevMode;
 
+	ZeroMemory(&DevMode, sizeof(DEVMODE));
+	ZeroMemory(&DisplayDevice, sizeof(DISPLAY_DEVICE));
+
 	DevMode.dmSize = sizeof(DEVMODE);
 	DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
   
@@ -98,7 +101,11 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
 #ifdef _DEBUG
 	  printf("Querying %s device\n", DisplayDevice.DeviceString);
 #endif
+		j = 0;
 		while(EnumDisplaySettingsEx(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
+#ifdef _DEBUG
+			printf("Checking setting #%d\n", j);
+#endif
 			if (DevMode.dmBitsPerPel > 8) {
 				AvailableModes++;
 			}
@@ -116,8 +123,9 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
 	jobjectArray ret = env->NewObjectArray(AvailableModes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
   
-	i = 0, j = 0, n = 0;
+	i = 0, n = 0;
 	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
+		j = 0;
 		while(EnumDisplaySettingsEx(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 			// Filter out indexed modes
 			if (DevMode.dmBitsPerPel > 8) {
@@ -141,6 +149,8 @@ jobjectArray GetAvailableDisplayModes9x(JNIEnv * env) {
 	int AvailableModes = 0;
 
 	DEVMODE DevMode;
+
+	ZeroMemory(&DevMode, sizeof(DEVMODE));
 
 	DevMode.dmSize = sizeof(DEVMODE);
   
@@ -270,7 +280,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
   (JNIEnv * env, jclass clazz)
 {
-	
+	/*
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	try {
@@ -283,7 +293,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 		printf("Exception occurred in SetDeviceGammaRamp\n");
 	}	
 	ReleaseDC(NULL, screenDC);	
-
+	*/
 	if (modeSet) {
 		modeSet = false;
 		// Under Win32, all we have to do is:
@@ -298,6 +308,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
  * Temporarily reset display settings. This is called when the window is minimized.
  */
 void tempResetDisplayMode() {
+	/*
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	try {
@@ -310,7 +321,7 @@ void tempResetDisplayMode() {
 		printf("Exception occurred in SetDeviceGammaRamp\n");
 	}	
 	ReleaseDC(NULL, screenDC);	
-
+	*/
 	if (modeSet) {
 #ifdef _DEBUG
 		printf("Attempting to temporarily reset the display mode\n");
@@ -326,6 +337,7 @@ void tempResetDisplayMode() {
  */
 void tempRestoreDisplayMode() {
 	// Restore gamma
+	/*
 	HDC screenDC = GetDC(NULL);
 	try { 
 		if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
@@ -337,7 +349,7 @@ void tempRestoreDisplayMode() {
 		printf("Exception occurred in SetDeviceGammaRamp\n");
 	}	
 	ReleaseDC(NULL, screenDC);
-
+	*/
 	if (!modeSet) {
 
 #ifdef _DEBUG
@@ -374,6 +386,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
   (JNIEnv * env, jclass clazz, jobject gammaRampBuffer)
 {
+
+	return JNI_FALSE;
+	/*
 	const float *gammaRamp = (const float *)env->GetDirectBufferAddress(gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
 
@@ -402,6 +417,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 	ReleaseDC(NULL, screenDC);
 
 	return ret;
+	*/
 }
 
 
@@ -435,6 +451,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 	env->DeleteLocalRef(newMode);
 
+	/*
 	// Get the default gamma ramp
 	try {
 		if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
@@ -445,6 +462,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	} catch (...) {
 		printf("Exception occurred in GetDeviceGammaRamp\n");
 	}
+	*/
 	ReleaseDC(NULL, screenDC);
 }
 
