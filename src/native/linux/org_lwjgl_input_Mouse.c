@@ -80,7 +80,7 @@ static bool putMouseEventWithCoords(jint button, jint state, jint coord1, jint c
 }
 
 static bool putMouseEvent(jint button, jint state, jint dz) {
-	if (pointer_grabbed)
+	if (shouldGrab())
 		return putMouseEventWithCoords(button, state, 0, 0, dz);
 	else
 		return putMouseEventWithCoords(button, state, last_x, last_y, dz);
@@ -370,7 +370,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollMouse(JNIEnv * env
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
 	}
-	if (pointer_grabbed) {
+	if (shouldGrab()) {
 		coords[0] = accum_dx;
 		coords[1] = accum_dy;
 	} else {
