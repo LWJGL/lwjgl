@@ -394,7 +394,7 @@ public class Matrix3f extends Matrix implements Serializable {
 			 float determinant_inv = 1f/determinant;
 			 
 			 // get the conjugate matrix
-			 float t00 = m11 * m22 - m12* m22;
+			 float t00 = m11 * m22 - m12* m21;
 			 float t01 = - m10 * m22 + m12 *m20;
 			 float t02 = m10 * m21 - m11 * m20;
 			 float t10 = - m01 * m22 + m02 * m21;
