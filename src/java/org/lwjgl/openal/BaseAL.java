@@ -36,6 +36,7 @@ import java.util.StringTokenizer;
 import java.lang.reflect.Method;
 
 import org.lwjgl.Sys;
+import org.lwjgl.Display;
 
 /**
  * $Id$
@@ -75,86 +76,91 @@ public abstract class BaseAL {
 	 * 
 	 * @throws Exception if a failiure occured in the AL creation process
 	 */
-  public static void create() throws OpenALException {
-    if (created) {
-      return;
-    }
+	public static void create() throws OpenALException {
+		if (created) {
+			return;
+		}
 
-    // need to pass path of possible locations of OAL to native side
-    String libpath = System.getProperty("java.library.path");
-    String seperator = System.getProperty("path.separator");
-    String libname;
+		// need to pass path of possible locations of OAL to native side
+		String libpath = System.getProperty("java.library.path");
+		String seperator = System.getProperty("path.separator");
+		String libname;
+		String jwsLibname;
 
-    // libname is hardcoded atm - this will change in a near future...
-    libname =
-      (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
-        ? "libopenal.so"
-        : "lwjglaudio.dll";
+		// libname is hardcoded atm - this will change in a near future...
+		switch (Display.getPlatform()) {
+			case Display.PLATFORM_WGL:
+				libname = "lwjglaudio.dll";
+				jwsLibname = "lwjglaudio";
+				break;
+			case Display.PLATFORM_GLX:
+				libname = "libopenal.so";
+				jwsLibname = "openal";
+				break;
+			case Display.PLATFORM_AGL:
+				libname = "openal.dylib";
+				jwsLibname = "openal";
+				break;
+			default:
+				throw new OpenALException("Unknown platform");
+		}
+		
+		String jwsPath = getPathFromJWS(jwsLibname);
+		if (jwsPath != null) {
+			libpath += seperator
+				+ jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
+		}
 
-    // try to get path from JWS (if possible)
-    String jwsLibname = 
-      (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1)
-      ? "openal"
-      : "lwjglaudio";
-    
-    String jwsPath = getPathFromJWS(jwsLibname);
-    if (jwsPath != null) {
-      libpath += seperator
-        + jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
-    }
+		StringTokenizer st = new StringTokenizer(libpath, seperator);
 
-    StringTokenizer st = new StringTokenizer(libpath, seperator);
+		//create needed string array
+		String[] oalPaths = new String[st.countTokens() + 1];
 
-    //create needed string array
-    String[] oalPaths = new String[st.countTokens() + 1];
+		//build paths
+		for (int i = 0; i < oalPaths.length - 1; i++) {
+			oalPaths[i] = st.nextToken() + File.separator + libname;
+		}
 
-    //build paths
-    for (int i = 0; i < oalPaths.length - 1; i++) {
-      oalPaths[i] = st.nextToken() + File.separator + libname;
-    }
+		//add cwd path
+		oalPaths[oalPaths.length - 1] = libname;
+		nCreate(oalPaths);
 
-    //add cwd path
-    oalPaths[oalPaths.length - 1] = libname;
-    if (!nCreate(oalPaths)) {
-      throw new OpenALException("AL instance could not be created.");
-    }
+		init();
+		created = true;
+	}
+	
+	/**
+	 * Tries to locate OpenAL from the JWS Library path
+	 * This method exists because OpenAL is loaded from native code, and as such
+	 * is exempt from JWS library loading rutines. OpenAL therefore always fails.
+	 * We therefore invoke the protected method of the JWS classloader to see if it can
+	 * locate it. 
+	 * 
+	 * @param libname Name of library to search for
+	 * @return Absolute path to library if found, otherwise null
+	 */
+	private static String getPathFromJWS(String libname) {
+		try {			
 
-    init();
-    created = true;
-  }
-  
-  /**
-   * Tries to locate OpenAL from the JWS Library path
-   * This method exists because OpenAL is loaded from native code, and as such
-   * is exempt from JWS library loading rutines. OpenAL therefore always fails.
-   * We therefore invoke the protected method of the JWS classloader to see if it can
-   * locate it. 
-   * 
-   * @param libname Name of library to search for
-   * @return Absolute path to library if found, otherwise null
-   */
-  private static String getPathFromJWS(String libname) {
-    try {      
+			if(Sys.DEBUG) {			
+				System.out.println("JWS Classloader looking for: " + libname);
+			}
+			
+			Object o = BaseAL.class.getClassLoader();
+			Class c = o.getClass();
+			Method findLibrary =
+				c.getMethod("findLibrary", new Class[] { String.class });
+			Object[] arguments = new Object[] { libname };
+			return (String) findLibrary.invoke(o, arguments);
 
-      if(Sys.DEBUG) {      
-        System.out.println("JWS Classloader looking for: " + libname);
-      }
-      
-      Object o = BaseAL.class.getClassLoader();
-      Class c = o.getClass();
-      Method findLibrary =
-        c.getMethod("findLibrary", new Class[] { String.class });
-      Object[] arguments = new Object[] { libname };
-      return (String) findLibrary.invoke(o, arguments);
-
-    } catch (Exception e) {
-      if(Sys.DEBUG) {
-        System.out.println("Failure locating OpenAL using classloader:");
-        e.printStackTrace();
-      }
-    }
-    return null;
-  }  
+		} catch (Exception e) {
+			if(Sys.DEBUG) {
+				System.out.println("Failure locating OpenAL using classloader:");
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}	
 
 	/**
 	 * Native method to create AL instance
@@ -162,7 +168,7 @@ public abstract class BaseAL {
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
 	 * @return true if the AL creation process succeeded
 	 */
-	protected static native boolean nCreate(String[] oalPaths);
+	protected static native void nCreate(String[] oalPaths) throws OpenALException;
 
 	/**
 	 * Calls whatever destruction rutines that are needed

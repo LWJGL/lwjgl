@@ -58,5 +58,6 @@ extern void putEventElement(event_queue_t *queue, unsigned char byte);
 extern unsigned char *getOutputList(event_queue_t *queue);
 extern int getEventBufferSize(event_queue_t *event_queue);
 extern void throwException(JNIEnv *env, const char *msg);
+extern void throwOpenALException(JNIEnv * env, const char * err);
 
 #endif

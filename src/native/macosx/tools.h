@@ -4,9 +4,6 @@
 #include <JavaVM/jni.h>
 #include <CoreFoundation/CoreFoundation.h>
 
-#define lock() {lockLWJGL();
-#define unlock() unlockLWJGL();}
-
 extern bool getDictLong(CFDictionaryRef dict, CFStringRef key, long *key_value);
 
 #endif

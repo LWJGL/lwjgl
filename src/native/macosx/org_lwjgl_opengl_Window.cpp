@@ -130,6 +130,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle(JNIEnv * env, jcla
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update(JNIEnv *env, jclass clazz) {
+	EventRef event;
+	OSStatus err = ReceiveNextEvent(0, NULL, 0, true, &event);
+	if (err == noErr) {
+		UInt32 event_class = GetEventClass(event);
+		if (event_class == kEventClassKeyboard)
+			handleKeyboardEvent(event);
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz) {

@@ -144,7 +144,7 @@ DEFINE_GUID(DSPROPSETID_EAX20_BufferProperties,
 #define INITGUID
 #define OPENAL
 
-int InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths);
+void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths);
 void DeInitializeOpenAL();
 
 //alc

@@ -85,6 +85,7 @@ void switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 }
 
 void resetMode(JNIEnv *env) {
+	init(env);
 	CGDisplaySwitchToMode(kCGDirectMainDisplay, original_mode);
 	CGDisplayRelease(kCGDirectMainDisplay);
 	saveOriginalMode(env);

@@ -39,20 +39,19 @@
  * @version $Revision$
  */
 
-#include "org_lwjgl_input_Keyboard.h"
 #include "Window.h"
 #include "tools.h"
+#include "org_lwjgl_input_Keyboard.h"
 #include "common_tools.h"
-#include "hid.h"
 
 #define KEYBOARD_SIZE 256
 #define UNICODE_BUFFER_SIZE 10
 
 static unsigned char key_buf[KEYBOARD_SIZE];
+static unsigned char key_map[KEYBOARD_SIZE];
 static bool buffer_enabled = false;
 static bool translation_enabled = false;
 static event_queue_t event_queue;
-static hid_device_t hid_dev;
 
 static bool handleMappedKey(unsigned char mapped_code, unsigned char state) {
 	unsigned char old_state = key_buf[mapped_code];
@@ -61,13 +60,12 @@ static bool handleMappedKey(unsigned char mapped_code, unsigned char state) {
 		if (buffer_enabled) {
 			putEventElement(&event_queue, mapped_code);
 			putEventElement(&event_queue, state);
-			return translation_enabled;
+			return true;
 		}
 	}
 	return false;
 }
 
-/*
 static bool handleKey(UInt32 key_code, unsigned char state) {
 	if (key_code >= KEYBOARD_SIZE) {
 #ifdef _DEBUG
@@ -139,14 +137,14 @@ static bool handleUnicode(EventRef event) {
 	return writeChars(num_chars, unicode_buffer);
 }
 
-static pascal OSStatus doKeyDown(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+static void doKeyDown(EventRef event) {
 	UInt32 key_code;
 	OSStatus err = GetEventParameter(event, kEventParamKeyCode, typeUInt32, NULL, sizeof(key_code), NULL, &key_code);
 	if (err != noErr) {
 #ifdef _DEBUG
 		printf("Could not get event key code\n");
 #endif
-		return eventNotHandledErr;
+		return;
 	}
 	if (handleKey(key_code, 1)) {
 		if (translation_enabled) {
@@ -159,23 +157,22 @@ static pascal OSStatus doKeyDown(EventHandlerCallRef next_handler, EventRef even
 			putEventElement(&event_queue, 0);
 		}
 	}
-	return noErr;
 }
 
-static pascal OSStatus doKeyUp(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+static void doKeyUp(EventRef event) {
 	UInt32 key_code;
 	OSStatus err = GetEventParameter(event, kEventParamKeyCode, typeUInt32, NULL, sizeof(key_code), NULL, &key_code);
 	if (err != noErr) {
 #ifdef _DEBUG
 		printf("Could not get event key code\n");
 #endif
-		return eventNotHandledErr;
+		return;
 	}
 	if (handleKey(key_code, 0)) {
 		putEventElement(&event_queue, 0);
 		putEventElement(&event_queue, 0);
 	}
-	return noErr;
+	return;
 }
 
 static void handleModifier(UInt32 modifier_bit_mask, UInt32 modifier_bit, unsigned char key_code) {
@@ -187,14 +184,14 @@ static void handleModifier(UInt32 modifier_bit_mask, UInt32 modifier_bit, unsign
 	}
 }
 
-static pascal OSStatus doKeyModifier(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+static void doKeyModifier(EventRef event) {
 	UInt32 modifier_bits;
 	OSStatus err = GetEventParameter(event, kEventParamKeyModifiers, typeUInt32, NULL, sizeof(modifier_bits), NULL, &modifier_bits);
 	if (err != noErr) {
 #ifdef _DEBUG
 		printf("Could not get event key code\n");
 #endif
-		return eventNotHandledErr;
+		return;
 	}
 	handleModifier(modifier_bits, controlKey, 0x1d);
 	handleModifier(modifier_bits, rightControlKey, 0x9d);
@@ -206,7 +203,22 @@ static pascal OSStatus doKeyModifier(EventHandlerCallRef next_handler, EventRef 
 	handleModifier(modifier_bits, alphaLock, 0x3a);
 	handleModifier(modifier_bits, kEventKeyModifierNumLockMask, 0x45);
 	//handleModifier(modifier_bits, rightCmdKey, 0xdc);
-	return noErr;
+	return;
+}
+
+void handleKeyboardEvent(EventRef event) {
+	UInt32 event_kind = GetEventKind(event);
+	switch (event_kind) {
+		case kEventRawKeyDown:
+			doKeyDown(event);
+			break;
+		case kEventRawKeyUp:
+			doKeyUp(event);
+			break;
+		case kEventRawKeyModifiersChanged:
+			doKeyModifier(event);
+			break;
+	}
 }
 
 static void setupMappings(void) {
@@ -300,156 +312,6 @@ static void setupMappings(void) {
 	key_map[0x7d] = org_lwjgl_input_Keyboard_KEY_DOWN;
 	key_map[0x79] = org_lwjgl_input_Keyboard_KEY_NEXT;
 }
-*/
-
-static void initCookie(hid_cookie_t *hid_cookies, int index, long usage) {
-	hid_cookies[index].usage_page = kHIDPage_KeyboardOrKeypad;
-	hid_cookies[index].usage = usage;
-}
-
-static void initCookies(hid_cookie_t *hid_cookies) {
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_ESCAPE, kHIDUsage_KeyboardEscape);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_1, kHIDUsage_Keyboard1);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_2, kHIDUsage_Keyboard2);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_3, kHIDUsage_Keyboard3);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_4, kHIDUsage_Keyboard4);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_5, kHIDUsage_Keyboard5);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_6, kHIDUsage_Keyboard6);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_7, kHIDUsage_Keyboard7);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_8, kHIDUsage_Keyboard8);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_9, kHIDUsage_Keyboard9);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_0, kHIDUsage_Keyboard0);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_MINUS, kHIDUsage_KeyboardHyphen);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_EQUALS, kHIDUsage_KeyboardEqualSign);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_BACK, kHIDUsage_KeyboardDeleteOrBackspace);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_TAB, kHIDUsage_KeyboardTab);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_Q, kHIDUsage_KeyboardQ);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_W, kHIDUsage_KeyboardW);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_E, kHIDUsage_KeyboardE);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_R, kHIDUsage_KeyboardR);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_T, kHIDUsage_KeyboardT);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_Y, kHIDUsage_KeyboardY);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_U, kHIDUsage_KeyboardU);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_I, kHIDUsage_KeyboardI);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_O, kHIDUsage_KeyboardO);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_P, kHIDUsage_KeyboardP);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_LBRACKET, kHIDUsage_KeyboardOpenBracket);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_RBRACKET, kHIDUsage_KeyboardCloseBracket);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_RETURN, kHIDUsage_KeyboardReturnOrEnter);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_LCONTROL, kHIDUsage_KeyboardLeftControl);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_A, kHIDUsage_KeyboardA);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_S, kHIDUsage_KeyboardS);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_D, kHIDUsage_KeyboardD);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F, kHIDUsage_KeyboardF);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_G, kHIDUsage_KeyboardG);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_H, kHIDUsage_KeyboardH);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_J, kHIDUsage_KeyboardJ);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_K, kHIDUsage_KeyboardK);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_L, kHIDUsage_KeyboardL);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_SEMICOLON, kHIDUsage_KeyboardSemicolon);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_APOSTROPHE, kHIDUsage_KeyboardQuote);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_GRAVE, kHIDUsage_KeyboardGraveAccentAndTilde);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_LSHIFT, kHIDUsage_KeyboardLeftShift);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_BACKSLASH, kHIDUsage_KeyboardBackslash);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_Z, kHIDUsage_KeyboardZ);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_X, kHIDUsage_KeyboardX);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_C, kHIDUsage_KeyboardC);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_V, kHIDUsage_KeyboardV);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_B, kHIDUsage_KeyboardB);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_N, kHIDUsage_KeyboardN);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_M, kHIDUsage_KeyboardM);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_COMMA, kHIDUsage_KeyboardComma);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_PERIOD, kHIDUsage_KeyboardPeriod);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_SLASH, kHIDUsage_KeyboardSlash);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_RSHIFT, kHIDUsage_KeyboardRightShift);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_MULTIPLY, kHIDUsage_KeypadAsterisk);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_LMENU, kHIDUsage_KeyboardLeftGUI);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_SPACE, kHIDUsage_KeyboardSpacebar);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_CAPITAL, kHIDUsage_KeyboardCapsLock);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F1, kHIDUsage_KeyboardF1);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F2, kHIDUsage_KeyboardF2);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F3, kHIDUsage_KeyboardF3);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F4, kHIDUsage_KeyboardF4);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F5, kHIDUsage_KeyboardF5);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F6, kHIDUsage_KeyboardF6);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F7, kHIDUsage_KeyboardF7);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F8, kHIDUsage_KeyboardF8);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F9, kHIDUsage_KeyboardF9);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F10, kHIDUsage_KeyboardF10);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMLOCK, kHIDUsage_KeypadNumLock);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_SCROLL, kHIDUsage_KeyboardScrollLock);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD7, kHIDUsage_Keypad7);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD8, kHIDUsage_Keypad8);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD9, kHIDUsage_Keypad9);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_SUBTRACT, kHIDUsage_KeypadHyphen);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD4, kHIDUsage_Keypad4);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD5, kHIDUsage_Keypad5);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD6, kHIDUsage_Keypad6);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_ADD, kHIDUsage_KeypadPlus);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD1, kHIDUsage_Keypad1);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD2, kHIDUsage_Keypad2);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD3, kHIDUsage_Keypad3);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPAD0, kHIDUsage_Keypad0);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_DECIMAL, kHIDUsage_KeypadPeriod);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F11, kHIDUsage_KeyboardF11);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F12, kHIDUsage_KeyboardF12);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F13, kHIDUsage_KeyboardF13);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F14, kHIDUsage_KeyboardF14);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_F15, kHIDUsage_KeyboardF15);
-/*	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_KANA, kHIDUsage_KeyboardKANA);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_CONVERT, kHIDUsage_KeyboardCONVERT);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NOCONVERT, kHIDUsage_KeyboardNOCONVERT);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_YEN, kHIDUsage_KeyboardYEN);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPADEQUALS, kHIDUsage_KeyboardNUMPADEQUALS);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_CIRCUMFLEX, kHIDUsage_KeyboardCIRCUMFLEX);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_AT, kHIDUsage_KeyboardAT);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_COLON, kHIDUsage_KeyboardCOLON);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_UNDERLINE, kHIDUsage_KeyboardUNDERLINE);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_KANJI, kHIDUsage_KeyboardKANJI);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_STOP, kHIDUsage_KeyboardSTOP);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_AX, kHIDUsage_KeyboardAX);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_UNLABELED, kHIDUsage_KeyboardUNLABELED);*/
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPADENTER, kHIDUsage_KeypadEnter);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_RCONTROL, kHIDUsage_KeyboardRightControl);
-//	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NUMPADCOMMA, kHIDUsage_KeyboardNUMPADCOMMA);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_DIVIDE, kHIDUsage_KeypadSlash);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_SYSRQ, kHIDUsage_KeyboardSysReqOrAttention);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_RMENU, kHIDUsage_KeyboardRightGUI);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_PAUSE, kHIDUsage_KeyboardPause);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_HOME, kHIDUsage_KeyboardHome);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_UP, kHIDUsage_KeyboardUpArrow);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_PRIOR, kHIDUsage_KeyboardPageUp);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_LEFT, kHIDUsage_KeyboardLeftArrow);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_RIGHT, kHIDUsage_KeyboardRightArrow);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_END, kHIDUsage_KeyboardEnd);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_DOWN, kHIDUsage_KeyboardDownArrow);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_NEXT, kHIDUsage_KeyboardPageDown);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_INSERT, kHIDUsage_KeyboardInsert);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_DELETE, kHIDUsage_KeyboardDeleteForward);
-/*	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_LWIN, kHIDUsage_KeyboardLWIN);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_RWIN, kHIDUsage_KeyboardRWIN);*/
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_APPS, kHIDUsage_KeyboardApplication);
-	initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_POWER, kHIDUsage_KeyboardPower);
-	//initCookie(hid_cookies, org_lwjgl_input_Keyboard_KEY_SLEEP, kHIDUsage_KeyboardSleep);
-}
-
-static void pollKeyboardDevice(void) {
-	hid_event_t event;
-	while (nextDeviceEvent(&hid_dev, &event)) {
-		if (event.cookie_index >= KEYBOARD_SIZE) {
-#ifdef _DEBUG
-			printf("Uknown key code\n");
-#endif
-			return;
-		}
-		unsigned char key_code = (unsigned char)event.cookie_index;
-		unsigned char state = event.value != 0 ? 1 : 0;
-		if (handleMappedKey(key_code, state)) {
-			putEventElement(&event_queue, 0);
-			putEventElement(&event_queue, 0);
-		}
-	}
-}
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs(JNIEnv * env, jclass clazz) {
 }
@@ -459,24 +321,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate(JNIEnv * env, jclas
 	translation_enabled = false;
 	initEventQueue(&event_queue);
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
-	hid_cookie_t hid_cookies[KEYBOARD_SIZE];
-	for (int i = 0; i < KEYBOARD_SIZE; i++) {
-		hid_cookies[i].usage_page = kHIDPage_Undefined;
-		hid_cookies[i].usage = kHIDUsage_Undefined;
-	}
-	initCookies(hid_cookies);
-	if (!findDevice(&hid_dev, kHIDPage_GenericDesktop, kHIDUsage_GD_Keyboard, KEYBOARD_SIZE, hid_cookies, EVENT_BUFFER_SIZE)) {
-		throwException(env, "Could not find a keyboard device");
-		return;
-	}
+	setupMappings();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy(JNIEnv * env, jclass clazz) {
-	shutdownDevice(&hid_dev);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll(JNIEnv * env, jclass clazz, jobject buffer) {
-	pollKeyboardDevice();
 	unsigned char *new_keyboard_buffer = (unsigned char *)env->GetDirectBufferAddress(buffer);
 	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }

@@ -86,8 +86,16 @@ int getEventBufferSize(event_queue_t *event_queue) {
 	return EVENT_BUFFER_SIZE;
 }
 
-void throwException(JNIEnv * env, const char * err) {
-	jclass cls = env->FindClass("java/lang/Exception");
+static void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err) {
+	jclass cls = env->FindClass(exception_name);
 	env->ThrowNew(cls, err);
 	env->DeleteLocalRef(cls);
+}
+
+void throwOpenALException(JNIEnv * env, const char * err) {
+	throwGeneralException(env, "org/lwjgl/openal/OpenALException", err);
+}
+
+void throwException(JNIEnv * env, const char * err) {
+	throwGeneralException(env, "java/lang/Exception", err);
 }
