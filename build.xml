@@ -22,7 +22,7 @@
 	<fileset id="lwjgl.fileset" dir="${lwjgl.bin}">
 		<include name="**"/>
 		<exclude name="**.*"/>
-		<exclude name="org/lwjgl/fmod/**"/>		
+		<exclude name="org/lwjgl/fmod3/**"/>		
 		<exclude name="org/lwjgl/test/**"/>
 		<exclude name="org/lwjgl/util/**"/>
 	</fileset>  
@@ -39,10 +39,10 @@
 		<include name="org/lwjgl/util/**"/>
 	</fileset>
 	
-	<!-- Files to include in the lwjgl_fmod.jar file -->
-	<fileset id="lwjgl_fmod.fileset" dir="${lwjgl.bin}">
+	<!-- Files to include in the lwjgl_fmod3.jar file -->
+	<fileset id="lwjgl_fmod3.fileset" dir="${lwjgl.bin}">
 		<exclude name="**.*"/>
-		<include name="org/lwjgl/fmod/**"/>
+		<include name="org/lwjgl/fmod3/**"/>
 	</fileset>
 	
 	
@@ -166,7 +166,7 @@
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/openal/**" source="1.4" taskname="openal"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" taskname="opengl"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/vector/**" source="1.4" taskname="vector"/>
-		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/fmod/**" source="1.4" taskname="fmod"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/fmod3/**" source="1.4" taskname="fmod"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" taskname="test"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/**" source="1.4" taskname="util"/>
 	</target>
@@ -236,8 +236,8 @@
 		</jar>		
 		
 		<!-- Create lwjgl_fmod.jar -->
-		<jar destfile="${lwjgl.lib}/lwjgl_fmod.jar" taskname="lwjgl_fmod.jar">
-			<fileset refid="lwjgl_fmod.fileset"/>
+		<jar destfile="${lwjgl.lib}/lwjgl_fmod3.jar" taskname="lwjgl_fmod3.jar">
+			<fileset refid="lwjgl_fmod3.fileset"/>
 		</jar>		
 	</target>
   
@@ -295,10 +295,10 @@
 			<class name="org.lwjgl.opengl.Window"/>
 			<class name="org.lwjgl.opengl.Pbuffer"/>
 		</javah>    
-		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/fmod" force="yes">
-			<class name="org.lwjgl.fmod.FMOD"/>
-			<class name="org.lwjgl.fmod.FMusic"/>
-			<class name="org.lwjgl.fmod.FSound"/>
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/fmod3" force="yes">
+			<class name="org.lwjgl.fmod3.FMOD"/>
+			<class name="org.lwjgl.fmod3.FMusic"/>
+			<class name="org.lwjgl.fmod3.FSound"/>
 		</javah>
 	</target>
   
