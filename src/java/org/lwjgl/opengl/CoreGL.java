@@ -413,8 +413,8 @@ public class CoreGL implements CoreGLConstants {
 	public static native void glViewport(int x, int y, int width, int height);
         public static native void glMultiDrawArrays(
                 int mode,
-                ByteBuffer piFirst,
-                ByteBuffer piCount,
+                IntBuffer piFirst,
+                IntBuffer piCount,
                 int primcount);
 
 /*        public static native void glMultiDrawElements(
