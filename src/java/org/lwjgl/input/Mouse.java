@@ -38,6 +38,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import org.lwjgl.*;
+import org.lwjgl.opengl.Window;
 
 /**
  * $Id$
@@ -46,8 +47,9 @@ import org.lwjgl.*;
  * mouse buttons, and determine the mouse movement delta since the last poll.
  * 
  * n buttons supported, n being a native limit. A scrolly wheel is also
- * supported, if one such is available. All movement is reported as delta from
- * last position.
+ * supported, if one such is available. Movement is reported as delta from
+ * last position or as an absolute position. If the window has been created
+ * the absolute position will be clamped to 0 - Window (width | height)
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -71,6 +73,12 @@ public class Mouse {
 	/** The mouse buttons status from the last poll */
 	private static byte[] buttons;
 
+  /** X */
+  private static int x;
+
+  /** Y */
+  private static int y;
+  
 	/** Delta X */
 	private static int dx;
 
@@ -288,6 +296,26 @@ public class Mouse {
 	public static void poll() {
 		assert created : "The mouse has not been created.";
 		nPoll();
+    
+    // set absolute position
+    x += dx;
+    y += dy;
+
+    // if window has been created, clamp to edges
+    if(Window.isCreated()) {
+      // clamp x, y
+      if (x < 0) {
+        x = 0;
+      } else if (x > Window.getWidth()) {
+        x = Window.getWidth();
+      }
+      
+      if (y < 0) {
+        y = 0;
+      } else if (y > Window.getHeight()) {
+        y = Window.getWidth();
+      }
+    }
 	}
 
 	/**
@@ -401,6 +429,26 @@ public class Mouse {
     return eventState;
   }
 
+  /**
+   * Retrieves the absolute position. If the Window has been created
+   * x will be clamped to 0 - Window.getWidth().
+   * 
+   * @return Absolute x axis position of mouse
+   */
+  public static int getX() {
+    return x;
+  }
+
+  /**
+   * Retrieves the absolute position. If the Window has been created
+   * y will be clamped to 0 - Window.getHeight().
+   *
+   * @return Absolute y axis position of mouse
+   */
+  public static int getY() {
+    return y;
+  }  
+  
   /**
    * @return Movement on the x axis since last poll
    */
