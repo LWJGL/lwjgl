@@ -34,6 +34,7 @@ package org.lwjgl.util.model;
 
 import java.util.Map;
 
+import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector2f;
 
 
@@ -60,11 +61,12 @@ public class BonedModel extends Model {
 	 * @param material
 	 * @param triangle
 	 * @param skin[]
+	 * @param color[]
 	 * @param animation
 	 * @param vertex
 	 */
-	public BonedModel(String material, Triangle[] triangle, Vector2f[] skin, Map animation, BonedVertex[] vertex) {
-		super(material, triangle, skin, animation);
+	public BonedModel(String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation, BonedVertex[] vertex) {
+		super(material, triangle, skin, color, animation);
 		this.vertex = vertex;
 	}
 	

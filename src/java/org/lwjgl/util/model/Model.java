@@ -35,6 +35,7 @@ package org.lwjgl.util.model;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector2f;
 
 
@@ -60,6 +61,9 @@ public abstract class Model implements Serializable {
 	/** Skin */
 	private final Vector2f[] skin;
 	
+	/** Colour */
+	private final Color[] color;
+	
 	/** The animations: a Map of string names to Frame[] arrays */
 	private final Map animation;
 	
@@ -68,12 +72,14 @@ public abstract class Model implements Serializable {
 	 * @param material
 	 * @param triangle
 	 * @param skin[]
+	 * @param color[]
 	 * @param animation
 	 */
-	public Model(String material, Triangle[] triangle, Vector2f[] skin, Map animation) {
+	public Model(String material, Triangle[] triangle, Vector2f[] skin, Color[] color, Map animation) {
 		this.material = material;
 		this.triangle = triangle;
 		this.skin = skin;
+		this.color = color;
 		this.animation = animation;
 	}
 	
@@ -106,5 +112,13 @@ public abstract class Model implements Serializable {
 	public final Vector2f[] getSkin() {
 		return skin;
 	}
+	
+	/**
+	 * @return Returns the color
+	 */
+	public final Color[] getColor() {
+		return color;
+	}
+	
 	
 }

@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.util.Color;
 import org.lwjgl.util.model.*;
 import org.lwjgl.util.model.BoneFrame;
 import org.lwjgl.util.model.BonedModel;
@@ -92,6 +93,7 @@ public class Loader {
 					material,
 					loadTriangles(),
 					loadSkin(),
+					loadColor(),
 					loadBoneAnimations(), 
 					loadBonedVertices()
 				);
@@ -101,6 +103,7 @@ public class Loader {
 					material,
 					loadTriangles(),
 					loadSkin(),
+					loadColor(),
 					loadMeshAnimations()
 				);
 		} else {
@@ -147,6 +150,28 @@ public class Loader {
 			skins[skinCount++] = loadTexCoord(skinElement);
 		}
 		return skins;
+	}
+	
+	/**
+	 * Load the colour
+	 * @return Color[]
+	 * @throws Exception
+	 */
+	private Color[] loadColor() throws Exception {
+		List colorElements = XMLUtil.getChildren(src.getDocumentElement(), "color");
+		if (colorElements.size() == 0) {
+			return null;
+		}
+		if (colorElements.size() != numVertices) {
+			throw new Exception("Color count incorrect, got "+colorElements.size()+", expected "+numVertices);
+		}
+		Color[] colors = new Color[colorElements.size()];
+		int colorCount = 0;
+		for (Iterator i = colorElements.iterator(); i.hasNext(); ) {
+			Element colorElement = (Element) i.next();
+			colors[colorCount++] = loadColor(colorElement);
+		}
+		return colors;
 	}
 	
 	/**
@@ -314,6 +339,21 @@ public class Loader {
 		return new Vector2f(
 				XMLUtil.getFloat(element, "u"),
 				XMLUtil.getFloat(element, "v")
+			);
+	}
+	
+	/**
+	 * Load a colour from XML
+	 * @param element
+	 * @return a Color
+	 * @throws Exception
+	 */
+	private Color loadColor(Element element) throws Exception {
+		return new Color(
+				XMLUtil.getInt(element, "r"),
+				XMLUtil.getInt(element, "g"),
+				XMLUtil.getInt(element, "b"),
+				XMLUtil.getInt(element, "a", 255)
 			);
 	}
 	
