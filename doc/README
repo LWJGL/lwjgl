@@ -11,9 +11,10 @@ To run some of the included tests:
  Extract the archive, and cd into directory
  Extract the media files into lwjgl folder (only needed for openal tests)
 
- LWJGL Tests:
   java -cp .;lwjgl_test.jar;lwjgl.jar; DEMO
+  
  where DEMO is one of the following: 
+ 
   org.lwjgl.test.input.ControllerCreationTest (Requires attached Controller)
   org.lwjgl.test.input.ControllerTest (Requires attached Controller)
   org.lwjgl.test.input.MouseCreationTest
