@@ -288,10 +288,10 @@ public class Matrix3f {
 	 * @return the transposed matrix
 	 */
 	public Matrix3f transpose(Matrix3f dest) {
-		
+
 		if (dest == null)
 			dest = new Matrix3f();
-		
+
 		if (this != dest) {
 			m00 = dest.m00;
 			m01 = dest.m10;
@@ -304,9 +304,20 @@ public class Matrix3f {
 			m22 = dest.m22;
 		} else
 			transpose();
-		
+
 		return this;
-		
+
+	}
+
+	/**
+	 * @return the determinant of the matrix
+	 */
+	public float determinant() {
+		float f =
+			m00 * (m11 * m22 - m12 * m21)
+				+ m01 * (m12 * m20 - m10 * m22)
+				+ m02 * (m10 * m21 - m11 * m20);
+		return f;
 	}
 
 	/**
