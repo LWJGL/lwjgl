@@ -199,6 +199,7 @@ static void closeWindow()
 
 	// Close the window
 	if (hwnd != NULL) {
+		ShowWindow(hwnd, SW_HIDE);
 		printfDebug("Destroy window\n");
 		// Vape the window
 		DestroyWindow(hwnd);
