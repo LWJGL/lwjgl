@@ -93,9 +93,6 @@ public final class Display {
 	/** VSync */
 	private static boolean vsync;
 	
-	/** Tracks VBO state for the window context */
-	private static VBOTracker vbo_tracker;
-	
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static Display context;
 	
