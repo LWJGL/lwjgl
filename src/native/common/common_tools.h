@@ -92,8 +92,8 @@ static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
 		return NULL;
 }
 
-static inline const void *offsetToPointer(jint offset) {
-	return (const char *)NULL + offset;
+static inline void *offsetToPointer(jint offset) {
+	return (char *)NULL + offset;
 }
 
 typedef void *(* ExtGetProcAddressPROC) (const char *func_name);
