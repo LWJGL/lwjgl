@@ -385,7 +385,7 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 		if (pixelFormatCaps != NULL && !extensions.WGL_ARB_render_texture) {
 			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
 			wglDeleteContext(dummy_hglrc);
-			throwException(env, "No support for WGL_ARB_multisample");
+			throwException(env, "No support for WGL_ARB_render_texture");
 			return -1;
 		}
 		pixel_format_id = findPixelFormatARB(env, hdc, &extensions, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer);
