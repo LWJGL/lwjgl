@@ -60,7 +60,6 @@ JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
 bool mCreate_success;                 // bool used to determine successfull creation
 bool mFirstTimeInitialization = true; // boolean to determine first time initialization
-jobject mButtonsReference = NULL;     // reference to buttons array so it won't get GC'ed
 
 // Cached fields of Mouse.java
 jclass clsMouse;
@@ -116,10 +115,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
       return JNI_FALSE;
     }
 
-    if(mCreate_success) {
-      /* Do setup of Mouse */
-      SetupMouse();
-    }
+	/* Do setup of Mouse */
+	SetupMouse();
 
     /* Initialize any fields on the Mouse */
     InitializeMouseFields();
@@ -144,7 +141,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
 #endif
   }
 
-  return mCreate_success;
+  return mCreate_success ? JNI_TRUE : JNI_FALSE;
 }
 
 /*
@@ -174,10 +171,8 @@ void ShutdownMouse() {
   if (mDIDevice != NULL) {
     mDIDevice->Unacquire();
     mDIDevice->Release();
+	mDIDevice = NULL;
   }
-  
-  //delete global reference, since we're done
-  mEnvironment->DeleteGlobalRef(mButtonsReference);
 }
 /**
  * Enumerates the capabilities of the Mouse attached to the system
@@ -263,9 +258,6 @@ void InitializeMouseFields() {
   //create buttons array
   jbooleanArray mButtonsArray = mEnvironment->NewBooleanArray(mButtoncount);
   
-  //create reference so it won't get GC'ed
-  mButtonsReference = mEnvironment->NewGlobalRef(mButtonsArray);
-
   //set buttons array  
   mEnvironment->SetStaticObjectField(clsMouse, fidMButtons, (jbooleanArray) mButtonsReference);
 }
