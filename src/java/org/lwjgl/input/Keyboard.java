@@ -402,8 +402,7 @@ public class Keyboard {
 	public static int enableBuffer() throws Exception {
 		assert created : "The keyboard has not been created.";
 		readBuffer = nEnableBuffer();
-		if (readBuffer != null)
-			readBuffer.order(ByteOrder.nativeOrder());
+		readBuffer.order(ByteOrder.nativeOrder());
 		return readBuffer.capacity()/2;
 	}
 	
