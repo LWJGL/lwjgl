@@ -1579,7 +1579,7 @@ static void extgl_InitializeWGL(JNIEnv *env, jobject ext_set)
 /*-----------------------------------------------------*/
 #ifdef _AGL
 
-static int extgl_InitializeAGL()
+static int extgl_InitializeAGL(JNIEnv *env, jobject ext_set)
 {
 	// add in AGL extensions here
 

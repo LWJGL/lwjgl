@@ -95,13 +95,13 @@ static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 //	dumpRootMenu();
 }
 
-static pascal OSStatus doWindowClose(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 printf("Close requested\n");
 	close_requested = true;
 	return noErr;
 }
 
-static void registerEventHandlers(void) {
+static void registerEventHandlers(JNIEnv *env) {
 	/*EventTargetRef event_target = GetWindowEventTarget(win_ref);
 	status = InstallStandardEventHandler(event_target);
 	if (noErr != status) {
@@ -109,12 +109,28 @@ static void registerEventHandlers(void) {
 		throwException(env, "Could not install default window event handler");
 		return;
 	}*/
-	EventTypeSpec eventType;
-	eventType.eventClass = kEventClassWindow;
-	eventType.eventKind  = kEventWindowClose;
-	EventHandlerUPP handlerUPP = NewEventHandlerUPP(doWindowClose);
-	InstallWindowEventHandler(win_ref, handlerUPP, 1, &eventType, NULL, NULL);
-	DisposeEventHandlerUPP(handlerUPP);
+	EventTypeSpec event_types[1];
+	OSStatus err;
+	EventHandlerUPP handler_upp = NewEventHandlerUPP(doQuit);
+	event_types[0].eventClass = kEventClassWindow;
+	event_types[0].eventKind  = kEventWindowClose;
+	err = InstallWindowEventHandler(win_ref, handler_upp, 1, event_types, NULL, NULL);
+	if (noErr != err) {
+		DisposeEventHandlerUPP(handler_upp);
+		throwException(env, "Could not register window event handler");
+		return;
+	}
+	event_types[0].eventClass = kEventClassApplication;
+	event_types[0].eventKind = kEventAppQuit;
+	/*event_types[1].eventClass = kEventClassAppleEvent;
+	event_types[1].eventKind = kEventAppleEvent;*/
+	err = InstallApplicationEventHandler(handler_upp, 1, event_types, NULL, NULL);
+	if (noErr != err) {
+		DisposeEventHandlerUPP(handler_upp);
+		throwException(env, "Could not register application event handler");
+		return;
+	}
+	DisposeEventHandlerUPP(handler_upp);
 }
 
 
@@ -124,10 +140,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv
 	return saved;
 }
 
-OSErr aehandler(const AppleEvent * theAppleEvent, AppleEvent * reply, SInt32 handlerRefcon) {
+/*OSErr aehandler(const AppleEvent * theAppleEvent, AppleEvent * reply, SInt32 handlerRefcon) {
 	printf("handler called\n");
 	return noErr;
 }
+*/
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jobject ext_set) {
 	Rect rect;
@@ -157,11 +174,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 	}*/
 	/*ProcessSerialNumber PSN;
  	GetCurrentProcess(&PSN);
- 	SetFrontProcess(&PSN);
- 	EventQueueRef queue = GetCurrentEventQueue();
-	if (queue == NULL)
-		printf("null event queue\n");*/
-
+ 	SetFrontProcess(&PSN);*/
+ 	EventLoopRef queue = GetCurrentEventLoop();
+	EventLoopRef main = GetMainEventLoop();
+	QuitEventLoop(queue);
+	QuitEventLoop(main);
+	/*if (queue == main)
+		printf("equals\n");*/
 	SetRect(&rect, x, y, x + width, y + height);
 	close_requested = false;
 	
@@ -170,7 +189,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not create window");
 		return;
 	}
-	registerEventHandlers();
+	registerEventHandlers(env);
 	setWindowTitle(env, title);
 	const RGBColor background_color = { 0, 0, 0 };
 	SetWindowContentColor(win_ref, &background_color);
@@ -183,14 +202,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 	SelectWindow(win_ref);
 	InitCursor();
 //QuitApplicationEventLoop();
-DebugPrintAllWindowGroups();
 //RunApplicationEventLoop();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv *env, jclass clazz) 
 {
-	EventRef event;
+	/*EventRef event;
 	OSStatus err;
 	int num_events = GetNumEventsInQueue(GetCurrentEventQueue());
 	for (int i = 0; i < num_events; i++) {
@@ -203,7 +221,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
 		err = ReceiveNextEvent(0, NULL, 0, true, &event);
 	/*	if (kind == kEventClassAppleEvent)
 			AEProcessAppleEvent(event);*/
-	        ReleaseEvent(event);
+	  /*      ReleaseEvent(event);
 	}
 	//RunCurrentEventLoop(0);
 /*	if (eventLoopTimedOutErr != RunCurrentEventLoop(0))
