@@ -102,7 +102,7 @@ public class SourceLimitTest extends BasicTest {
 		//delete sources
 		al.deleteSources(sourcesToCreate, Sys.getDirectBufferAddress(sources));
 
-		System.out.println("successfully created " + sourcesToCreate + "sources!");
+		System.out.println("successfully created " + sourcesToCreate + " sources!");
 	}
 
 	/**
