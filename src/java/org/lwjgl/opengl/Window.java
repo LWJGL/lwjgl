@@ -99,6 +99,7 @@ public final class Window {
 	 * @return the width of the window
 	 */
 	public static int getWidth() {
+    assert isCreated() : "Cannot get width on uncreated window";    
 		return width;
 	}
 
@@ -106,6 +107,7 @@ public final class Window {
 	 * @return the height of the window
 	 */
 	public static int getHeight() {
+    assert isCreated() : "Cannot get height on uncreated window";    
 		return height;
 	}
 
@@ -113,15 +115,24 @@ public final class Window {
 	 * @return the title of the window
 	 */
 	public static String getTitle() {
+    assert isCreated() : "Cannot get title on uncreated window";
 		return title;
 	}
+  
+  /**
+   * @return whether this window is in fullscreen mode
+   */
+  public static boolean IsFullscreen() {
+    assert isCreated() : "Cannot determine state of uncreated window";
+    return fullscreen;
+  }
 
 	/**
 	 * Set the title of the window. This may be ignored by the underlying OS.
 	 * @param newTitle The new window title
 	 */
 	public static void setTitle(String newTitle) {
-		assert isCreated();
+		assert isCreated() : "Cannot set title of uncreated window";
 		title = newTitle;
 		nSetTitle(title);
 	}
@@ -136,7 +147,7 @@ public final class Window {
 	 * @return true if the user or operating system has asked the window to close
 	 */
 	public static boolean isCloseRequested() {
-		assert isCreated();
+		assert isCreated()  : "Cannot determine state of uncreated window";
 		return nIsCloseRequested();
 	}
 
@@ -146,7 +157,7 @@ public final class Window {
 	 * @return true if the window is minimized or otherwise not visible
 	 */
 	public static boolean isMinimized() {
-		assert isCreated();
+		assert isCreated()  : "Cannot determine state of uncreated window";
 		return nIsMinimized();
 	}
 
@@ -156,7 +167,7 @@ public final class Window {
 	 * @return true if window is focused
 	 */
 	public static boolean isFocused() {
-		assert isCreated();
+		assert isCreated()  : "Cannot determine state of uncreated window";
 		return nIsFocused();
 	}
 
@@ -190,7 +201,7 @@ public final class Window {
 	 * and needs to repaint itself
 	 */
 	public static boolean isDirty() {
-		assert isCreated();
+		assert isCreated()  : "Cannot determine state of uncreated window";
 		return nIsDirty();
 	}
 
@@ -200,7 +211,7 @@ public final class Window {
 	 * Paint the window. This clears the dirty flag and swaps the buffers.
 	 */
 	public static void paint() {
-		assert isCreated();
+		assert isCreated()  : "Cannot paint uncreated window";
 		swapBuffers();
 	}
 
