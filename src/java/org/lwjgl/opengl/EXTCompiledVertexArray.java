@@ -13,7 +13,6 @@ public final class EXTCompiledVertexArray {
 	private EXTCompiledVertexArray() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glUnlockArraysEXT() {
 		long function_pointer = GLContext.getCapabilities().EXT_compiled_vertex_array_glUnlockArraysEXT_pointer;

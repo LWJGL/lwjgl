@@ -13,7 +13,6 @@ public final class EXTStencilTwoSide {
 	private EXTStencilTwoSide() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glActiveStencilFaceEXT(int face) {
 		long function_pointer = GLContext.getCapabilities().EXT_stencil_two_side_glActiveStencilFaceEXT_pointer;

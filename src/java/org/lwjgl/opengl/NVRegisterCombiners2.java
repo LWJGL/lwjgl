@@ -12,7 +12,6 @@ public final class NVRegisterCombiners2 {
 	private NVRegisterCombiners2() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetCombinerStageParameterNV(int stage, int pname, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_register_combiners2_glGetCombinerStageParameterfvNV_pointer;

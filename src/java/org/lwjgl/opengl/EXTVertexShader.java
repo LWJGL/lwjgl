@@ -121,7 +121,6 @@ public final class EXTVertexShader {
 	private EXTVertexShader() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetLocalConstantFloatEXT(int id, int value, FloatBuffer pbData) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_shader_glGetLocalConstantFloatvEXT_pointer;

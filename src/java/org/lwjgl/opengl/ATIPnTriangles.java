@@ -20,7 +20,6 @@ public final class ATIPnTriangles {
 	private ATIPnTriangles() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glPNTrianglesiATI(int pname, int param) {
 		long function_pointer = GLContext.getCapabilities().ATI_pn_triangles_glPNTrianglesiATI_pointer;

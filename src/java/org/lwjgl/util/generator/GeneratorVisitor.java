@@ -194,7 +194,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 			java_writer.println("\t}");
 			java_writer.println();
 		}
-		if (d.getMethods().size() > 0)
+		if (d.getMethods().size() > 0 && !context_specific)
 			java_writer.println("\tstatic native void " + Utils.STUB_INITIALIZER_NAME + "() throws LWJGLException;");
 		JavaMethodsGenerator.generateMethodsJava(env, type_map, java_writer, d, generate_error_checks, context_specific);
 		java_writer.println("}");

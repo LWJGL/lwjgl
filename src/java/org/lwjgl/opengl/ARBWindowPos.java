@@ -11,7 +11,6 @@ public final class ARBWindowPos {
 	private ARBWindowPos() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glWindowPos3sARB(short x, short y, short z) {
 		long function_pointer = GLContext.getCapabilities().ARB_window_pos_glWindowPos3sARB_pointer;

@@ -27,7 +27,6 @@ public final class ARBVertexProgram extends ARBProgram {
 	private ARBVertexProgram() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static java.nio.ByteBuffer glGetVertexAttribPointerARB(int index, int pname, int result_size) {
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glGetVertexAttribPointervARB_pointer;

@@ -48,7 +48,6 @@ public final class GL12 {
 	private GL12() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) {
 		long function_pointer = GLContext.getCapabilities().GL12_glCopyTexSubImage3D_pointer;

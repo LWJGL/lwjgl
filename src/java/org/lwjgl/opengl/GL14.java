@@ -50,7 +50,6 @@ public final class GL14 {
 	private GL14() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glWindowPos3i(int x, int y, int z) {
 		long function_pointer = GLContext.getCapabilities().GL14_glWindowPos3i_pointer;

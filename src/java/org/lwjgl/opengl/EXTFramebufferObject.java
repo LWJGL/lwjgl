@@ -68,7 +68,6 @@ public final class EXTFramebufferObject {
 	private EXTFramebufferObject() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGenerateMipmapEXT(int target) {
 		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGenerateMipmapEXT_pointer;

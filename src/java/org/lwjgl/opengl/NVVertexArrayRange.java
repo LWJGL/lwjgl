@@ -16,7 +16,6 @@ public final class NVVertexArrayRange {
 	private NVVertexArrayRange() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glFreeMemoryNV(ByteBuffer pointer) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_array_range_glFreeMemoryNV_pointer;

@@ -13,7 +13,6 @@ public final class EXTBlendEquationSeparate {
 	private EXTBlendEquationSeparate() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glBlendEquationSeparateEXT(int modeRGB, int modeAlpha) {
 		long function_pointer = GLContext.getCapabilities().EXT_blend_equation_separate_glBlendEquationSeparateEXT_pointer;

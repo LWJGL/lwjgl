@@ -20,7 +20,6 @@ public final class ARBMultisample {
 	private ARBMultisample() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glSampleCoverageARB(float value, boolean invert) {
 		long function_pointer = GLContext.getCapabilities().ARB_multisample_glSampleCoverageARB_pointer;

@@ -19,7 +19,6 @@ public final class EXTFogCoord {
 	private EXTFogCoord() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
 		long function_pointer = GLContext.getCapabilities().EXT_fog_coord_glFogCoordPointerEXT_pointer;

@@ -46,7 +46,6 @@ public final class ARBMultitexture {
 	private ARBMultitexture() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMultiTexCoord4sARB(int target, short s, short t, short r, short q) {
 		long function_pointer = GLContext.getCapabilities().ARB_multitexture_glMultiTexCoord4sARB_pointer;

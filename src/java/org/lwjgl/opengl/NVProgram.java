@@ -14,7 +14,6 @@ public class NVProgram {
 	public static final int GL_PROGRAM_LENGTH_NV = 0x8627;
 	public static final int GL_PROGRAM_TARGET_NV = 0x8646;
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glRequestResidentProgramsNV(IntBuffer programIDs) {
 		long function_pointer = GLContext.getCapabilities().NV_program_glRequestResidentProgramsNV_pointer;

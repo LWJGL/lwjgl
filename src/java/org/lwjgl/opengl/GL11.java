@@ -543,7 +543,6 @@ public final class GL11 {
 	private GL11() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glViewport(int x, int y, int width, int height) {
 		long function_pointer = GLContext.getCapabilities().GL11_glViewport_pointer;

@@ -12,7 +12,6 @@ public final class NVHalfFloat {
 	private NVHalfFloat() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexAttribs4NV(int index, ShortBuffer attribs) {
 		long function_pointer = GLContext.getCapabilities().NV_half_float_glVertexAttribs4hvNV_pointer;

@@ -47,7 +47,6 @@ public final class GL15 {
 	private GL15() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetQueryObjectu(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().GL15_glGetQueryObjectuiv_pointer;

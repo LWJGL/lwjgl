@@ -14,7 +14,6 @@ public final class NVFence {
 	private NVFence() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetFenceivNV(int fence, int pname, IntBuffer piParams) {
 		long function_pointer = GLContext.getCapabilities().NV_fence_glGetFenceivNV_pointer;

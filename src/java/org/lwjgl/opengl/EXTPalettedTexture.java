@@ -26,7 +26,6 @@ public final class EXTPalettedTexture {
 	private EXTPalettedTexture() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetColorTableParameterEXT(int target, int pname, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().EXT_paletted_texture_glGetColorTableParameterfvEXT_pointer;

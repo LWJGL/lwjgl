@@ -115,7 +115,6 @@ public final class ATIFragmentShader {
 	private ATIFragmentShader() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue) {
 		long function_pointer = GLContext.getCapabilities().ATI_fragment_shader_glSetFragmentShaderConstantATI_pointer;

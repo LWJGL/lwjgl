@@ -71,7 +71,6 @@ public class ARBProgram {
 	public static final int GL_PROGRAM_LENGTH_ARB = 0x8627;
 	public static final int GL_PROGRAM_FORMAT_ASCII_ARB = 0x8875;
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static boolean glIsProgramARB(int program) {
 		long function_pointer = GLContext.getCapabilities().ARB_program_glIsProgramARB_pointer;

@@ -15,7 +15,6 @@ public final class ARBTransposeMatrix {
 	private ARBTransposeMatrix() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMultTransposeMatrixARB(FloatBuffer pfMtx) {
 		long function_pointer = GLContext.getCapabilities().ARB_transpose_matrix_glMultTransposeMatrixfARB_pointer;

@@ -28,7 +28,6 @@ public final class ARBDrawBuffers {
 	private ARBDrawBuffers() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glDrawBuffersARB(IntBuffer buffers) {
 		long function_pointer = GLContext.getCapabilities().ARB_draw_buffers_glDrawBuffersARB_pointer;

@@ -96,7 +96,6 @@ public final class GL20 {
 	private GL20() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glBlendEquationSeparate(int modeRGB, int modeAlpha) {
 		long function_pointer = GLContext.getCapabilities().GL20_glBlendEquationSeparate_pointer;

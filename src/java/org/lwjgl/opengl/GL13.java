@@ -107,7 +107,6 @@ public final class GL13 {
 	private GL13() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glSampleCoverage(float value, boolean invert) {
 		long function_pointer = GLContext.getCapabilities().GL13_glSampleCoverage_pointer;

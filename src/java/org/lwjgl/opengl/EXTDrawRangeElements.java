@@ -13,7 +13,6 @@ public final class EXTDrawRangeElements {
 	private EXTDrawRangeElements() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ByteBuffer pIndices) {
 		long function_pointer = GLContext.getCapabilities().EXT_draw_range_elements_glDrawRangeElementsEXT_pointer;

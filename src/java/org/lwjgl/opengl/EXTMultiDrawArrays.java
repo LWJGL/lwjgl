@@ -11,7 +11,6 @@ public final class EXTMultiDrawArrays {
 	private EXTMultiDrawArrays() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst, IntBuffer piCount) {
 		if (piFirst.remaining() != piCount.remaining()) {

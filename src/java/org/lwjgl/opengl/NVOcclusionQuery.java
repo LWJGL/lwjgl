@@ -17,7 +17,6 @@ public final class NVOcclusionQuery {
 	private NVOcclusionQuery() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetOcclusionQueryNV(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_occlusion_query_glGetOcclusionQueryivNV_pointer;

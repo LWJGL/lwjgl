@@ -16,7 +16,6 @@ public final class NVFragmentProgram extends NVProgram {
 	private NVFragmentProgram() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, FloatBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_fragment_program_glGetProgramNamedParameterfvNV_pointer;

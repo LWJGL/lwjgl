@@ -47,7 +47,6 @@ public final class ARBShaderObjects {
 	private ARBShaderObjects() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetShaderSourceARB(int obj, IntBuffer length, ByteBuffer source) {
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetShaderSourceARB_pointer;

@@ -19,7 +19,6 @@ public final class ATIEnvmapBumpmap {
 	private ATIEnvmapBumpmap() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetTexBumpParameterATI(int pname, IntBuffer param) {
 		long function_pointer = GLContext.getCapabilities().ATI_envmap_bumpmap_glGetTexBumpParameterivATI_pointer;

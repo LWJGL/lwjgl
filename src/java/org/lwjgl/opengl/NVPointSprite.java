@@ -14,7 +14,6 @@ public final class NVPointSprite {
 	private NVPointSprite() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glPointParameterNV(int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().NV_point_sprite_glPointParameterivNV_pointer;

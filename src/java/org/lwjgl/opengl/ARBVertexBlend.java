@@ -53,7 +53,6 @@ public final class ARBVertexBlend {
 	private ARBVertexBlend() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexBlendARB(int count) {
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glVertexBlendARB_pointer;

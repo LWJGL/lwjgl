@@ -37,7 +37,6 @@ public final class ARBVertexShader {
 	private ARBVertexShader() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static int glGetAttribLocationARB(int programObj, ByteBuffer name) {
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_shader_glGetAttribLocationARB_pointer;

@@ -89,7 +89,6 @@ public final class NVVertexProgram extends NVProgram {
 	private NVVertexProgram() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexAttribs4NV(int index, FloatBuffer v) {
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribs4fvNV_pointer;

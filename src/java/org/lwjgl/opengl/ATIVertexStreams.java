@@ -21,7 +21,6 @@ public final class ATIVertexStreams {
 	private ATIVertexStreams() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexBlendEnviATI(int pname, int param) {
 		long function_pointer = GLContext.getCapabilities().ATI_vertex_streams_glVertexBlendEnviATI_pointer;

@@ -16,7 +16,6 @@ public final class ARBColorBufferFloat {
 	private ARBColorBufferFloat() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glClampColorARB(int target, int clamp) {
 		long function_pointer = GLContext.getCapabilities().ARB_color_buffer_float_glClampColorARB_pointer;

@@ -11,7 +11,6 @@ public final class ATIMapObjectBuffer {
 	private ATIMapObjectBuffer() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glUnmapObjectBufferATI(int buffer) {
 		long function_pointer = GLContext.getCapabilities().ATI_map_object_buffer_glUnmapObjectBufferATI_pointer;

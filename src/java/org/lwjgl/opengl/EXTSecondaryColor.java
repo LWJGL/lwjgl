@@ -18,7 +18,6 @@ public final class EXTSecondaryColor {
 	private EXTSecondaryColor() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
 		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColorPointerEXT_pointer;

@@ -16,7 +16,6 @@ public final class ARBOcclusionQuery {
 	private ARBOcclusionQuery() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetQueryObjectuARB(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ARB_occlusion_query_glGetQueryObjectuivARB_pointer;

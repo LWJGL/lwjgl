@@ -13,7 +13,6 @@ public final class NVPrimitiveRestart {
 	private NVPrimitiveRestart() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glPrimitiveRestartIndexNV(int index) {
 		long function_pointer = GLContext.getCapabilities().NV_primitive_restart_glPrimitiveRestartIndexNV_pointer;

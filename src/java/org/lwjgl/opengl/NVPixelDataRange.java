@@ -17,7 +17,6 @@ public final class NVPixelDataRange {
 	private NVPixelDataRange() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glFlushPixelDataRangeNV(int target) {
 		long function_pointer = GLContext.getCapabilities().NV_pixel_data_range_glFlushPixelDataRangeNV_pointer;

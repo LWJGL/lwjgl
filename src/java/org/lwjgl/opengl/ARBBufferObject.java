@@ -25,7 +25,6 @@ public class ARBBufferObject {
 	public static final int GL_STREAM_READ_ARB = 0x88e1;
 	public static final int GL_STREAM_DRAW_ARB = 0x88e0;
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static java.nio.ByteBuffer glGetBufferPointerARB(int target, int pname, int result_size) {
 		long function_pointer = GLContext.getCapabilities().ARB_buffer_object_glGetBufferPointervARB_pointer;

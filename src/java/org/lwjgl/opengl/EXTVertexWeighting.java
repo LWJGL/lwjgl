@@ -24,7 +24,6 @@ public final class EXTVertexWeighting {
 	private EXTVertexWeighting() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;

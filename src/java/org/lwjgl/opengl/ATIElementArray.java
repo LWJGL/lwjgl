@@ -14,7 +14,6 @@ public final class ATIElementArray {
 	private ATIElementArray() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glDrawRangeElementArrayATI(int mode, int start, int end, int count) {
 		long function_pointer = GLContext.getCapabilities().ATI_element_array_glDrawRangeElementArrayATI_pointer;

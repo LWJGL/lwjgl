@@ -110,7 +110,7 @@ public class ContextCapabilitiesGenerator {
 		if (!context_specific) {
 			writer.println("\t\tif (" + STUBS_LOADED_NAME + ")");
 			writer.println("\t\t\treturn GLContext.getSupportedExtensions();");
-			writer.println("\t\torg.lwjgl.opengl.GL11.initNativeStubs();");
+			writer.println("\t\torg.lwjgl.opengl.GL11." + Utils.STUB_INITIALIZER_NAME + "();");
 		} else {
 			writer.println("\t\tif (!" + getAddressesInitializerName("GL11") + "())");
 			writer.println("\t\t\tthrow new LWJGLException(\"GL11 not supported\");");
@@ -143,7 +143,7 @@ public class ContextCapabilitiesGenerator {
 				writer.print("\t\t\t" + CACHED_EXTS_VAR_NAME + ".remove(\"");
 				writer.println(translateFieldName(d.getSimpleName()) + "\");");
 			} else {
-				writer.print("\t\tGLContext.initNativeStubs(" + Utils.getSimpleClassName(d));
+				writer.print("\t\tGLContext." + Utils.STUB_INITIALIZER_NAME + "(" + Utils.getSimpleClassName(d));
 				writer.println(".class, supported_extensions, \"" + translateFieldName(d.getSimpleName()) + "\");");
 			}
 		}

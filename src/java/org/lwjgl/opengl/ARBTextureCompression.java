@@ -22,7 +22,6 @@ public final class ARBTextureCompression {
 	private ARBTextureCompression() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetCompressedTexImageARB(int target, int lod, ByteBuffer pImg) {
 		long function_pointer = GLContext.getCapabilities().ARB_texture_compression_glGetCompressedTexImageARB_pointer;

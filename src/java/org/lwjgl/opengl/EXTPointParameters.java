@@ -15,7 +15,6 @@ public final class EXTPointParameters {
 	private EXTPointParameters() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glPointParameterEXT(int pname, FloatBuffer pfParams) {
 		long function_pointer = GLContext.getCapabilities().EXT_point_parameters_glPointParameterfvEXT_pointer;

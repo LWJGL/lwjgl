@@ -21,7 +21,6 @@ public final class ARBMatrixPalette {
 	private ARBMatrixPalette() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMatrixIndexuARB(IntBuffer pIndices) {
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexuivARB_pointer;

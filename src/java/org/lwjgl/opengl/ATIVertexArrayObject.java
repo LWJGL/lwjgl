@@ -19,7 +19,6 @@ public final class ATIVertexArrayObject {
 	private ATIVertexArrayObject() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetVariantArrayObjectATI(int id, int pname, IntBuffer params) {
 		long function_pointer = GLContext.getCapabilities().ATI_vertex_array_object_glGetVariantArrayObjectivATI_pointer;

@@ -28,7 +28,6 @@ public final class ATIDrawBuffers {
 	private ATIDrawBuffers() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glDrawBuffersATI(IntBuffer buffers) {
 		long function_pointer = GLContext.getCapabilities().ATI_draw_buffers_glDrawBuffersATI_pointer;

@@ -86,7 +86,6 @@ public final class ARBImaging {
 	private ARBImaging() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetSeparableFilter(int target, int format, int type, ByteBuffer row, ByteBuffer column, ByteBuffer span) {
 		long function_pointer = GLContext.getCapabilities().ARB_imaging_glGetSeparableFilter_pointer;

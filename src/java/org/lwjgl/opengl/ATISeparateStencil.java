@@ -15,7 +15,6 @@ public final class ATISeparateStencil {
 	private ATISeparateStencil() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glStencilFuncSeparateATI(int frontfunc, int backfunc, int ref, int mask) {
 		long function_pointer = GLContext.getCapabilities().ATI_separate_stencil_glStencilFuncSeparateATI_pointer;

@@ -35,7 +35,6 @@ public final class NVEvaluators {
 	private NVEvaluators() {
 	}
 
-	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glEvalMapsNV(int target, int mode) {
 		long function_pointer = GLContext.getCapabilities().NV_evaluators_glEvalMapsNV_pointer;
