@@ -196,8 +196,6 @@ static void warpPointer(void) {
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz) {
 	int caps = 0;
-/*	if (!isXcursorLoaded())
-		return caps;*/
 	XcursorBool argb_supported = XcursorSupportsARGB(getDisplay());
 	XcursorBool anim_supported = XcursorSupportsAnim(getDisplay());
 	if (argb_supported)
@@ -263,14 +261,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	buffer_enabled = false;
 	updatePointerGrab();
 	initEventQueue(&event_queue);
-//	loadXcursor();
 	doWarpPointer();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-//	closeXcursor();
 	ungrabPointer();
 	XFreeCursor(getDisplay(), blank_cursor);
 	created = false;

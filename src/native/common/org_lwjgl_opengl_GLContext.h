@@ -8,11 +8,12 @@
 extern "C" {
 #endif
 /* Inaccessible static: currentContext */
-/* Inaccessible static: GL_ARB_imaging */
 /* Inaccessible static: GL_ARB_depth_texture */
+/* Inaccessible static: GL_ARB_draw_buffers */
 /* Inaccessible static: GL_ARB_fragment_program */
 /* Inaccessible static: GL_ARB_fragment_program_shadow */
 /* Inaccessible static: GL_ARB_fragment_shader */
+/* Inaccessible static: GL_ARB_imaging */
 /* Inaccessible static: GL_ARB_matrix_palette */
 /* Inaccessible static: GL_ARB_multisample */
 /* Inaccessible static: GL_ARB_multitexture */
@@ -32,6 +33,7 @@ extern "C" {
 /* Inaccessible static: GL_ARB_texture_env_dot3 */
 /* Inaccessible static: GL_ARB_texture_mirrored_repeat */
 /* Inaccessible static: GL_ARB_texture_non_power_of_two */
+/* Inaccessible static: GL_ARB_texture_rectangle */
 /* Inaccessible static: GL_ARB_transpose_matrix */
 /* Inaccessible static: GL_ARB_vertex_blend */
 /* Inaccessible static: GL_ARB_vertex_buffer_object */
@@ -123,6 +125,7 @@ extern "C" {
 /* Inaccessible static: exts */
 /* Inaccessible static: gl_ref_count */
 /* Inaccessible static: did_auto_load */
+/* Inaccessible static: loaded_stubs */
 /* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GLContext */
 /* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL11 */
 /*
