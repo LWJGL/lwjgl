@@ -279,6 +279,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	}
 	screen = DefaultScreen(disp);
 	if (!loadGL(disp, screen)) {
+		XCloseDisplay(disp);
 #ifdef _DEBUG
 		printf("Could not load GL libs\n");
 #endif
