@@ -31,6 +31,8 @@
  */
 package org.lwjgl.vector;
 
+import java.nio.FloatBuffer;
+
 import org.lwjgl.Math;
 
 /**
@@ -42,7 +44,7 @@ import org.lwjgl.Math;
  * @version $Revision$
  */
 
-public class Vector4f {
+public class Vector4f extends Vector {
 
 	public float x, y, z, w;
 
@@ -93,13 +95,6 @@ public class Vector4f {
 	}
 	
 	/**
-	 * @return the length of the vector
-	 */
-	public float length() {
-		return Math.sqrt(lengthSquared());
-	}
-	
-	/**
 	 * @return the length squared of the vector
 	 */
 	public float lengthSquared() {
@@ -120,11 +115,44 @@ public class Vector4f {
 		return this;
 	}
 	
+    /**
+     * Add a vector to another vector and place the result in a destination
+     * vector.
+     * @param left The LHS vector
+     * @param right The RHS vector
+     * @param dest The destination vector, or null if a new vector is to be created
+     * @return the sum of left and right in dest
+     */
+    public static Vector4f add(Vector4f left, Vector4f right, Vector4f dest) {
+    	if (dest == null)
+    		return new Vector4f(left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w);
+    	else {
+			return dest.set(left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w);
+    	}
+    }
+
+    /**
+     * Subtract a vector from another vector and place the result in a destination
+     * vector.
+     * @param left The LHS vector
+     * @param right The RHS vector
+     * @param dest The destination vector, or null if a new vector is to be created
+     * @return left minus right in dest
+     */
+    public static Vector4f sub(Vector4f left, Vector4f right, Vector4f dest) {
+    	if (dest == null)
+    		return new Vector4f(left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w);
+    	else {
+			return dest.set(left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w);
+    	}
+    }
+      	
+	
 	/**
 	 * Negate a vector
 	 * @return this
 	 */
-	public Vector4f negate() {
+	public Vector negate() {
 		x = -x;
 		y = -y;
 		z = -z;
@@ -133,17 +161,20 @@ public class Vector4f {
 	}
 	
 	/**
-	 * Normalise this vector
-	 * @return this
+	 * Negate a vector and place the result in a destination vector.
+	 * @param dest The destination vector or null if a new vector is to be created
+	 * @return the negated vector
 	 */
-	public Vector4f normalise() {
-		float l = 1.0f / length();
-		x *= l;
-		y *= l;
-		z *= l;
-		w *= l;
-		return this;
+	public Vector4f negate(Vector4f dest) {
+		if (dest == null)
+			dest = new Vector4f();
+		dest.x = -x;
+		dest.y = -y;
+		dest.z = -z;
+		dest.w = -w;
+		return dest;
 	}
+	
 	
 	/**
 	 * Normalise this vector and place the result in another vector.
@@ -187,4 +218,35 @@ public class Vector4f {
         return Math.acos(dls);
     }
 	
+	/* (non-Javadoc)
+	 * @see org.lwjgl.vector.Vector#load(FloatBuffer)
+	 */
+	public Vector load(FloatBuffer buf) {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.lwjgl.vector.Vector#scale(float)
+	 */
+	public Vector scale(float scale) {
+		x *= scale;
+		y *= scale;
+		z *= scale;
+		w *= scale;
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.lwjgl.vector.Vector#store(FloatBuffer)
+	 */
+	public Vector store(FloatBuffer buf) {
+		
+		buf.put(x);
+		buf.put(y);
+		buf.put(z);
+		buf.put(w);
+		
+		return this;
+	}
+
 }

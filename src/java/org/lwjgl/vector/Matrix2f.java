@@ -42,7 +42,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Matrix2f {
+public class Matrix2f extends Matrix {
 	
 	public float m00 = 1.0f, m01, m10, m11 = 1.0f;
 	
@@ -81,7 +81,7 @@ public class Matrix2f {
 	 * @param buf A float buffer to read from
 	 * @return this
 	 */
-	public Matrix2f load(FloatBuffer buf) {
+	public Matrix load(FloatBuffer buf) {
 		
 		m00 = buf.get();
 		m10 = buf.get();
@@ -92,16 +92,47 @@ public class Matrix2f {
 	}
 	
 	/**
+	 * Load from a float buffer. The buffer stores the matrix in row major
+	 * (mathematical) order.
+	 * 
+	 * @param buf A float buffer to read from
+	 * @return this
+	 */
+	public Matrix loadTranspose(FloatBuffer buf) {
+		
+		m00 = buf.get();
+		m01 = buf.get();
+		m10 = buf.get();
+		m11 = buf.get();
+		
+		return this;
+	}	
+	
+	/**
 	 * Store this matrix in a float buffer. The matrix is stored in column
 	 * major (openGL) order.
 	 * @param buf The buffer to store this matrix in
 	 */
-	public void store(FloatBuffer buf) {
+	public Matrix store(FloatBuffer buf) {
 		buf.put(m00);
 		buf.put(m10);
 		buf.put(m01);
 		buf.put(m11);
+		return this;
 	}
+	
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in row
+	 * major (maths) order.
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix storeTranspose(FloatBuffer buf) {
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m10);
+		buf.put(m11);
+		return this;
+	}	
 	
 	
 	
@@ -228,7 +259,7 @@ public class Matrix2f {
 	 * Transpose this matrix
 	 * @return this
 	 */
-	public Matrix2f transpose() {
+	public Matrix transpose() {
 		float temp;
 		
 		temp = m01;
@@ -261,7 +292,7 @@ public class Matrix2f {
 	 * Invert this matrix
 	 * @return this
 	 */
-	public Matrix2f invert() {
+	public Matrix invert() {
 		return this;
 	}
 	
@@ -269,7 +300,7 @@ public class Matrix2f {
 	 * Negate this matrix
 	 * @return this
 	 */
-	public Matrix2f negate() {
+	public Matrix negate() {
 		
 		m00 = -m00;
 		m01 = -m01;
@@ -301,7 +332,7 @@ public class Matrix2f {
 	 * Set this matrix to be the identity matrix.
 	 * @return this
 	 */
-	public Matrix2f identity() {
+	public Matrix identity() {
 		m00 = 1.0f;
 		m01 = 0.0f;
 		m10 = 0.0f;
@@ -313,7 +344,7 @@ public class Matrix2f {
 	 * Set this matrix to 0.
 	 * @return this
 	 */
-	public Matrix2f zero() {
+	public Matrix zero() {
 		m00 = 0.0f;
 		m01 = 0.0f;
 		m10 = 0.0f;
@@ -321,4 +352,11 @@ public class Matrix2f {
 		return this;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.lwjgl.vector.Matrix#determinant()
+	 */
+	public float determinant() {
+		return 0;
+	}
+
 }

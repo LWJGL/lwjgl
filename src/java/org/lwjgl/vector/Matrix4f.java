@@ -38,7 +38,7 @@ import java.nio.FloatBuffer;
  *
  * @author foo
  */
-public class Matrix4f {
+public class Matrix4f extends Matrix {
 	/**
 	 * Set this matrix to be the identity matrix.
 	 * @return this
@@ -157,6 +157,35 @@ public class Matrix4f {
 	}
 	
 	/**
+	 * Load from a float buffer. The buffer stores the matrix in row major
+	 * (maths) order.
+	 * 
+	 * @param buf A float buffer to read from
+	 * @return this
+	 */
+	public Matrix4f loadTranspose(FloatBuffer buf) {
+		
+		m00 = buf.get();
+		m01 = buf.get();
+		m02 = buf.get();
+		m03 = buf.get();
+		m10 = buf.get();
+		m11 = buf.get();
+		m12 = buf.get();
+		m13 = buf.get();
+		m20 = buf.get();
+		m21 = buf.get();
+		m22 = buf.get();
+		m23 = buf.get();
+		m30 = buf.get();
+		m31 = buf.get();
+		m32 = buf.get();
+		m33 = buf.get();
+		
+		return this;
+	}	
+	
+	/**
 	 * Store this matrix in a float buffer. The matrix is stored in column
 	 * major (openGL) order.
 	 * @param buf The buffer to store this matrix in
@@ -179,6 +208,30 @@ public class Matrix4f {
 		buf.put(m23);
 		buf.put(m33);
 	}
+	
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in row
+	 * major (maths) order.
+	 * @param buf The buffer to store this matrix in
+	 */
+	public void storeTranspose(FloatBuffer buf) {
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m02);
+		buf.put(m03);
+		buf.put(m10);
+		buf.put(m11);
+		buf.put(m12);
+		buf.put(m13);
+		buf.put(m20);
+		buf.put(m21);
+		buf.put(m22);
+		buf.put(m23);
+		buf.put(m30);
+		buf.put(m31);
+		buf.put(m32);
+		buf.put(m33);
+	}	
 	
 	
 	/**

@@ -42,7 +42,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Matrix3f {
+public class Matrix3f extends Matrix {
 
 	public float m00 = 1.0f,
 		m01,
@@ -87,7 +87,7 @@ public class Matrix3f {
 	 * @param buf A float buffer to read from
 	 * @return this
 	 */
-	public Matrix3f load(FloatBuffer buf) {
+	public Matrix load(FloatBuffer buf) {
 		
 		m00 = buf.get();
 		m10 = buf.get();
@@ -103,11 +103,33 @@ public class Matrix3f {
 	}
 	
 	/**
+	 * Load from a float buffer. The buffer stores the matrix in row major
+	 * (maths) order.
+	 * 
+	 * @param buf A float buffer to read from
+	 * @return this
+	 */
+	public Matrix loadTranspose(FloatBuffer buf) {
+		
+		m00 = buf.get();
+		m01 = buf.get();
+		m02 = buf.get();
+		m10 = buf.get();
+		m11 = buf.get();
+		m12 = buf.get();
+		m20 = buf.get();
+		m21 = buf.get();
+		m22 = buf.get();
+		
+		return this;
+	}	
+	
+	/**
 	 * Store this matrix in a float buffer. The matrix is stored in column
 	 * major (openGL) order.
 	 * @param buf The buffer to store this matrix in
 	 */
-	public void store(FloatBuffer buf) {
+	public Matrix store(FloatBuffer buf) {
 		buf.put(m00);
 		buf.put(m10);
 		buf.put(m20);
@@ -117,7 +139,26 @@ public class Matrix3f {
 		buf.put(m02);
 		buf.put(m12);
 		buf.put(m22);
+		return this;
 	}
+	
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in row
+	 * major (maths) order.
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix storeTranspose(FloatBuffer buf) {
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m02);
+		buf.put(m10);
+		buf.put(m11);
+		buf.put(m12);
+		buf.put(m20);
+		buf.put(m21);
+		buf.put(m22);
+		return this;
+	}	
 	
 	
 
@@ -269,7 +310,7 @@ public class Matrix3f {
 	 * Transpose this matrix
 	 * @return this
 	 */
-	public Matrix3f transpose() {
+	public Matrix transpose() {
 		float f = m10;
 		m10 = m01;
 		m01 = f;
@@ -324,7 +365,7 @@ public class Matrix3f {
 	 * Invert this matrix
 	 * @return this
 	 */
-	public Matrix3f invert() {
+	public Matrix invert() {
 		return this;
 	}
 
@@ -332,7 +373,7 @@ public class Matrix3f {
 	 * Negate this matrix
 	 * @return this
 	 */
-	public Matrix3f negate() {
+	public Matrix negate() {
 		m00 = -m00;
 		m01 = -m02;
 		m02 = -m01;
