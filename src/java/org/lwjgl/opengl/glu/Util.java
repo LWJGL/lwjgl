@@ -5,7 +5,8 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 /**
  * Util.java
@@ -68,22 +69,22 @@ public class Util {
 	protected static int compPerPix(int format) {
 		/* Determine number of components per pixel */
 		switch (format) {
-			case GL.GL_COLOR_INDEX :
-			case GL.GL_STENCIL_INDEX :
-			case GL.GL_DEPTH_COMPONENT :
-			case GL.GL_RED :
-			case GL.GL_GREEN :
-			case GL.GL_BLUE :
-			case GL.GL_ALPHA :
-			case GL.GL_LUMINANCE :
+			case GL11.GL_COLOR_INDEX :
+			case GL11.GL_STENCIL_INDEX :
+			case GL11.GL_DEPTH_COMPONENT :
+			case GL11.GL_RED :
+			case GL11.GL_GREEN :
+			case GL11.GL_BLUE :
+			case GL11.GL_ALPHA :
+			case GL11.GL_LUMINANCE :
 				return 1;
-			case GL.GL_LUMINANCE_ALPHA :
+			case GL11.GL_LUMINANCE_ALPHA :
 				return 2;
-			case GL.GL_RGB :
-			case GL.GL_BGR :
+			case GL11.GL_RGB :
+			case GL12.GL_BGR :
 				return 3;
-			case GL.GL_RGBA :
-			case GL.GL_BGRA :
+			case GL11.GL_RGBA :
+			case GL12.GL_BGRA :
 				return 4;
 			default :
 				return -1;
@@ -129,25 +130,25 @@ public class Util {
 		int n, m;
 
 		switch (format) {
-			case GL.GL_COLOR_INDEX :
-			case GL.GL_STENCIL_INDEX :
-			case GL.GL_DEPTH_COMPONENT :
-			case GL.GL_RED :
-			case GL.GL_GREEN :
-			case GL.GL_BLUE :
-			case GL.GL_ALPHA :
-			case GL.GL_LUMINANCE :
+			case GL11.GL_COLOR_INDEX :
+			case GL11.GL_STENCIL_INDEX :
+			case GL11.GL_DEPTH_COMPONENT :
+			case GL11.GL_RED :
+			case GL11.GL_GREEN :
+			case GL11.GL_BLUE :
+			case GL11.GL_ALPHA :
+			case GL11.GL_LUMINANCE :
 				n = 1;
 				break;
-			case GL.GL_LUMINANCE_ALPHA :
+			case GL11.GL_LUMINANCE_ALPHA :
 				n = 2;
 				break;
-			case GL.GL_RGB :
-			case GL.GL_BGR :
+			case GL11.GL_RGB :
+			case GL12.GL_BGR :
 				n = 3;
 				break;
-			case GL.GL_RGBA :
-			case GL.GL_BGRA :
+			case GL11.GL_RGBA :
+			case GL12.GL_BGRA :
 				n = 4;
 				break;
 			default :
@@ -155,28 +156,28 @@ public class Util {
 		}
 
 		switch (type) {
-			case GL.GL_UNSIGNED_BYTE :
+			case GL11.GL_UNSIGNED_BYTE :
 				m = 1;
 				break;
-			case GL.GL_BYTE :
+			case GL11.GL_BYTE :
 				m = 1;
 				break;
-			case GL.GL_BITMAP :
+			case GL11.GL_BITMAP :
 				m = 1;
 				break;
-			case GL.GL_UNSIGNED_SHORT :
+			case GL11.GL_UNSIGNED_SHORT :
 				m = 2;
 				break;
-			case GL.GL_SHORT :
+			case GL11.GL_SHORT :
 				m = 2;
 				break;
-			case GL.GL_UNSIGNED_INT :
+			case GL11.GL_UNSIGNED_INT :
 				m = 4;
 				break;
-			case GL.GL_INT :
+			case GL11.GL_INT :
 				m = 4;
 				break;
-			case GL.GL_FLOAT :
+			case GL11.GL_FLOAT :
 				m = 4;
 				break;
 			default :
@@ -219,7 +220,7 @@ public class Util {
 	 */
 	protected static int glGetIntegerv(int what) {
 		scratch.rewind();
-		GL.glGetInteger(what, scratch);
+		GL11.glGetInteger(what, scratch);
 		return scratch.get();
 	}
 

@@ -2,7 +2,7 @@ package org.lwjgl.opengl.glu;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Project.java
@@ -64,7 +64,7 @@ public class Project extends Util implements GLUConstants {
 		matrix.put(3 * 4 + 2, -2 * zNear * zFar / deltaZ);
 		matrix.put(3 * 4 + 3, 0);
 
-		GL.glMultMatrixf(matrix);
+		GL11.glMultMatrixf(matrix);
 	}
 
 	/**
@@ -125,8 +125,8 @@ public class Project extends Util implements GLUConstants {
 		matrix.put(1 * 4 + 2, -forward[1]);
 		matrix.put(2 * 4 + 2, -forward[2]);
 
-		GL.glMultMatrixf(matrix);
-		GL.glTranslatef(-eyex, -eyey, -eyez);
+		GL11.glMultMatrixf(matrix);
+		GL11.glTranslatef(-eyex, -eyey, -eyez);
 	}
 
 	/**
@@ -148,10 +148,10 @@ public class Project extends Util implements GLUConstants {
 		}
 
 		/* Translate and scale the picked region to the entire window */
-		GL.glTranslatef(
+		GL11.glTranslatef(
 			(viewport[2] - 2 * (x - viewport[0])) / deltax,
 			(viewport[3] - 2 * (y - viewport[1])) / deltay,
 			0);
-		GL.glScalef(viewport[2] / deltax, viewport[3] / deltay, 1.0f);
+		GL11.glScalef(viewport[2] / deltax, viewport[3] / deltay, 1.0f);
 	}
 }

@@ -2,7 +2,7 @@ package org.lwjgl.opengl.glu;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 /**
  * GLU.java
@@ -52,7 +52,7 @@ public class GLU extends Util implements GLUConstants {
 		float bottom,
 		float top) {
 		
-		GL.glOrtho(left, right, bottom, top, -1.0, 1.0);
+		GL11.glOrtho(left, right, bottom, top, -1.0, 1.0);
 	}
 
 	/**

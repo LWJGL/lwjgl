@@ -57,9 +57,6 @@ public final class Display {
 	/** The current display mode, if created */
 	private static DisplayMode mode;
 
-	/** A pointer to the native display window. On Windows this will be an hWnd. */
-	private static int handle;
-
 	/** Whether or not the display has been requested to shutdown by the user */
 	private static boolean closeRequested = false;
 
@@ -178,18 +175,6 @@ public final class Display {
 	 */
 	public static int getFrequency() {
 		return mode.freq;
-	}
-
-	/**
-	 * Retrieves the native handle to the created window. The meaning of this value
-	 * is platform specific. Under Win32, it is an HWND.
-	 * 
-	 * @return the native handle
-	 * @throws AssertionError if the display has not been created yet.
-	 */
-	public static int getHandle() {
-		assert created : "The display has not been created yet.";
-		return handle;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package org.lwjgl.opengl.glu;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Cylinder.java
@@ -62,7 +62,7 @@ public class Cylinder extends Quadric implements GLUConstants {
 		// Z component of normal vectors
 
 		if (super.drawStyle == GLU_POINT) {
-			GL.glBegin(GL.GL_POINTS);
+			GL11.glBegin(GL11.GL_POINTS);
 			for (i = 0; i < slices; i++) {
 				x = cos((i * da));
 				y = sin((i * da));
@@ -71,60 +71,60 @@ public class Cylinder extends Quadric implements GLUConstants {
 				z = 0.0f;
 				r = baseRadius;
 				for (j = 0; j <= stacks; j++) {
-					GL.glVertex3f((x * r), (y * r), z);
+					GL11.glVertex3f((x * r), (y * r), z);
 					z += dz;
 					r += dr;
 				}
 			}
-			GL.glEnd();
+			GL11.glEnd();
 		} else if (super.drawStyle == GLU_LINE || super.drawStyle == GLU_SILHOUETTE) {
 			// Draw rings
 			if (super.drawStyle == GLU_LINE) {
 				z = 0.0f;
 				r = baseRadius;
 				for (j = 0; j <= stacks; j++) {
-					GL.glBegin(GL.GL_LINE_LOOP);
+					GL11.glBegin(GL11.GL_LINE_LOOP);
 					for (i = 0; i < slices; i++) {
 						x = cos((i * da));
 						y = sin((i * da));
 						normal3f(x * nsign, y * nsign, nz * nsign);
-						GL.glVertex3f((x * r), (y * r), z);
+						GL11.glVertex3f((x * r), (y * r), z);
 					}
-					GL.glEnd();
+					GL11.glEnd();
 					z += dz;
 					r += dr;
 				}
 			} else {
 				// draw one ring at each end
 				if (baseRadius != 0.0) {
-					GL.glBegin(GL.GL_LINE_LOOP);
+					GL11.glBegin(GL11.GL_LINE_LOOP);
 					for (i = 0; i < slices; i++) {
 						x = cos((i * da));
 						y = sin((i * da));
 						normal3f(x * nsign, y * nsign, nz * nsign);
-						GL.glVertex3f((x * baseRadius), (y * baseRadius), 0.0f);
+						GL11.glVertex3f((x * baseRadius), (y * baseRadius), 0.0f);
 					}
-					GL.glEnd();
-					GL.glBegin(GL.GL_LINE_LOOP);
+					GL11.glEnd();
+					GL11.glBegin(GL11.GL_LINE_LOOP);
 					for (i = 0; i < slices; i++) {
 						x = cos((i * da));
 						y = sin((i * da));
 						normal3f(x * nsign, y * nsign, nz * nsign);
-						GL.glVertex3f((x * topRadius), (y * topRadius), height);
+						GL11.glVertex3f((x * topRadius), (y * topRadius), height);
 					}
-					GL.glEnd();
+					GL11.glEnd();
 				}
 			}
 			// draw length lines
-			GL.glBegin(GL.GL_LINES);
+			GL11.glBegin(GL11.GL_LINES);
 			for (i = 0; i < slices; i++) {
 				x = cos((i * da));
 				y = sin((i * da));
 				normal3f(x * nsign, y * nsign, nz * nsign);
-				GL.glVertex3f((x * baseRadius), (y * baseRadius), 0.0f);
-				GL.glVertex3f((x * topRadius), (y * topRadius), (height));
+				GL11.glVertex3f((x * baseRadius), (y * baseRadius), 0.0f);
+				GL11.glVertex3f((x * topRadius), (y * topRadius), (height));
 			}
-			GL.glEnd();
+			GL11.glEnd();
 		} else if (super.drawStyle == GLU_FILL) {
 			float ds = 1.0f / slices;
 			float dt = 1.0f / stacks;
@@ -133,7 +133,7 @@ public class Cylinder extends Quadric implements GLUConstants {
 			r = baseRadius;
 			for (j = 0; j < stacks; j++) {
 				float s = 0.0f;
-				GL.glBegin(GL.GL_QUAD_STRIP);
+				GL11.glBegin(GL11.GL_QUAD_STRIP);
 				for (i = 0; i <= slices; i++) {
 					if (i == slices) {
 						x = sin(0.0f);
@@ -145,21 +145,21 @@ public class Cylinder extends Quadric implements GLUConstants {
 					if (nsign == 1.0f) {
 						normal3f((x * nsign), (y * nsign), (nz * nsign));
 						TXTR_COORD(s, t);
-						GL.glVertex3f((x * r), (y * r), z);
+						GL11.glVertex3f((x * r), (y * r), z);
 						normal3f((x * nsign), (y * nsign), (nz * nsign));
 						TXTR_COORD(s, t + dt);
-						GL.glVertex3f((x * (r + dr)), (y * (r + dr)), (z + dz));
+						GL11.glVertex3f((x * (r + dr)), (y * (r + dr)), (z + dz));
 					} else {
 						normal3f(x * nsign, y * nsign, nz * nsign);
 						TXTR_COORD(s, t);
-						GL.glVertex3f((x * r), (y * r), z);
+						GL11.glVertex3f((x * r), (y * r), z);
 						normal3f(x * nsign, y * nsign, nz * nsign);
 						TXTR_COORD(s, t + dt);
-						GL.glVertex3f((x * (r + dr)), (y * (r + dr)), (z + dz));
+						GL11.glVertex3f((x * (r + dr)), (y * (r + dr)), (z + dz));
 					}
 					s += ds;
 				} // for slices
-				GL.glEnd();
+				GL11.glEnd();
 				r += dr;
 				t += dt;
 				z += dz;

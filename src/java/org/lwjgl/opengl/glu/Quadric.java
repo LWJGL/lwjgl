@@ -1,6 +1,6 @@
 package org.lwjgl.opengl.glu;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Quadric.java
@@ -44,7 +44,7 @@ public class Quadric implements GLUConstants {
 	      y /= mag;
 	      z /= mag;
 	   }
-	   GL.glNormal3f(x, y, z);
+	   GL11.glNormal3f(x, y, z);
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class Quadric implements GLUConstants {
 	}
 
 	protected void TXTR_COORD(float x, float y) {
-		if (textureFlag) GL.glTexCoord2f(x,y);
+		if (textureFlag) GL11.glTexCoord2f(x,y);
 	}
 
 

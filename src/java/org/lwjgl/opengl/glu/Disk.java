@@ -1,6 +1,6 @@
 package org.lwjgl.opengl.glu;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Disk.java
@@ -43,10 +43,10 @@ public class Disk extends Quadric implements GLUConstants {
 	   /* Normal vectors */
 	   if (super.normals != GLU_NONE) {
 	      if (super.orientation == GLU_OUTSIDE) {
-		 GL.glNormal3f(0.0f, 0.0f, +1.0f);
+		 GL11.glNormal3f(0.0f, 0.0f, +1.0f);
 	      }
 	      else {
-		 GL.glNormal3f(0.0f, 0.0f, -1.0f);
+		 GL11.glNormal3f(0.0f, 0.0f, -1.0f);
 	      }
 	   }
 	
@@ -68,7 +68,7 @@ public class Disk extends Quadric implements GLUConstants {
 		    float r2 = r1 + dr;
 		    if (super.orientation == GLU_OUTSIDE) {
 		       int s;
-		       GL.glBegin(GL.GL_QUAD_STRIP);
+		       GL11.glBegin(GL11.GL_QUAD_STRIP);
 		       for (s = 0; s <= slices; s++) {
 			  float a;
 			  if (s == slices)
@@ -78,15 +78,15 @@ public class Disk extends Quadric implements GLUConstants {
 			  sa = sin(a);
 			  ca = cos(a);
 			  TXTR_COORD(0.5f + sa * r2 / dtc, 0.5f + ca * r2 / dtc);
-			  GL.glVertex2f(r2 * sa, r2 * ca);
+			  GL11.glVertex2f(r2 * sa, r2 * ca);
 			  TXTR_COORD(0.5f + sa * r1 / dtc, 0.5f + ca * r1 / dtc);
-			  GL.glVertex2f(r1 * sa, r1 * ca);
+			  GL11.glVertex2f(r1 * sa, r1 * ca);
 		       }
-		       GL.glEnd();
+		       GL11.glEnd();
 		    }
 		    else {
 		       int s;
-		       GL.glBegin(GL.GL_QUAD_STRIP);
+		       GL11.glBegin(GL11.GL_QUAD_STRIP);
 		       for (s = slices; s >= 0; s--) {
 			  float a;
 			  if (s == slices)
@@ -96,11 +96,11 @@ public class Disk extends Quadric implements GLUConstants {
 			  sa = sin(a);
 			  ca = cos(a);
 			  TXTR_COORD(0.5f - sa * r2 / dtc, 0.5f + ca * r2 / dtc);
-			  GL.glVertex2f(r2 * sa, r2 * ca);
+			  GL11.glVertex2f(r2 * sa, r2 * ca);
 			  TXTR_COORD(0.5f - sa * r1 / dtc, 0.5f + ca * r1 / dtc);
-			  GL.glVertex2f(r1 * sa, r1 * ca);
+			  GL11.glVertex2f(r1 * sa, r1 * ca);
 		       }
-		       GL.glEnd();
+		       GL11.glEnd();
 		    }
 		    r1 = r2;
 		 }
@@ -112,31 +112,31 @@ public class Disk extends Quadric implements GLUConstants {
 		 /* draw loops */
 		 for (l = 0; l <= loops; l++) {
 		    float r = innerRadius + l * dr;
-		    GL.glBegin(GL.GL_LINE_LOOP);
+		    GL11.glBegin(GL11.GL_LINE_LOOP);
 		    for (s = 0; s < slices; s++) {
 		       float a = s * da;
-		       GL.glVertex2f(r * sin(a), r * cos(a));
+		       GL11.glVertex2f(r * sin(a), r * cos(a));
 		    }
-		    GL.glEnd();
+		    GL11.glEnd();
 		 }
 		 /* draw spokes */
 		 for (s = 0; s < slices; s++) {
 		    float a = s * da;
 		    float x = sin(a);
 		    float y = cos(a);
-		    GL.glBegin(GL.GL_LINE_STRIP);
+		    GL11.glBegin(GL11.GL_LINE_STRIP);
 		    for (l = 0; l <= loops; l++) {
 		       float r = innerRadius + l * dr;
-		       GL.glVertex2f(r * x, r * y);
+		       GL11.glVertex2f(r * x, r * y);
 		    }
-		    GL.glEnd();
+		    GL11.glEnd();
 		 }
 		 break;
 	      }
 	   case GLU_POINT:
 	      {
 		 int s;
-		 GL.glBegin(GL.GL_POINTS);
+		 GL11.glBegin(GL11.GL_POINTS);
 		 for (s = 0; s < slices; s++) {
 		    float a = s * da;
 		    float x = sin(a);
@@ -144,33 +144,33 @@ public class Disk extends Quadric implements GLUConstants {
 		    int l;
 		    for (l = 0; l <= loops; l++) {
 		       float r = innerRadius * l * dr;
-		       GL.glVertex2f(r * x, r * y);
+		       GL11.glVertex2f(r * x, r * y);
 		    }
 		 }
-		 GL.glEnd();
+		 GL11.glEnd();
 		 break;
 	      }
 	   case GLU_SILHOUETTE:
 	      {
 		 if (innerRadius != 0.0) {
 		    float a;
-		    GL.glBegin(GL.GL_LINE_LOOP);
+		    GL11.glBegin(GL11.GL_LINE_LOOP);
 		    for (a = 0.0f; a < 2.0 * PI; a += da) {
 		       float x = innerRadius * sin(a);
 		       float y = innerRadius * cos(a);
-		       GL.glVertex2f(x, y);
+		       GL11.glVertex2f(x, y);
 		    }
-		    GL.glEnd();
+		    GL11.glEnd();
 		 }
 		 {
 		    float a;
-		    GL.glBegin(GL.GL_LINE_LOOP);
+		    GL11.glBegin(GL11.GL_LINE_LOOP);
 		    for (a = 0; a < 2.0f * PI; a += da) {
 		       float x = outerRadius * sin(a);
 		       float y = outerRadius * cos(a);
-		       GL.glVertex2f(x, y);
+		       GL11.glVertex2f(x, y);
 		    }
-		    GL.glEnd();
+		    GL11.glEnd();
 		 }
 		 break;
 	      }
