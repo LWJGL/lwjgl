@@ -448,7 +448,9 @@ GLXFBConfig *chooseVisualGLX13(JNIEnv *env, jobject pixel_format, bool use_displ
 	if (use_display_bpp) {
 		bpp = XDefaultDepthOfScreen(XScreenOfDisplay(getDisplay(), getCurrentScreen()));
 		GLXFBConfig *configs = chooseVisualGLX13FromBPP(env, pixel_format, bpp, drawable_type, double_buffer);
-		if (configs == NULL)
+		if (configs != NULL)
+			return configs;
+		else
 			bpp = 16;
 	} else
 		bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "bpp", "I"));
