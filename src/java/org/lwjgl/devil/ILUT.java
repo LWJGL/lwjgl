@@ -133,7 +133,12 @@ public class ILUT {
 				if(!IL.isCreated()) {
 						throw new LWJGLException("Cannot create ILUT without having created IL instance");
 				}
-				
+
+        // We need to do nothing when running on mac, since all is loaded in IL
+        if(System.getProperty("os.name").startsWith("Mac")) {
+          return;
+        }
+
 			  String[] ilutPaths = LWJGLUtil.getLibraryPaths(new String[]{
                                                   "ILUT", "ILUT.dll",
                                                   "ILUT", "libILUT.so",
@@ -151,14 +156,20 @@ public class ILUT {
 				}				
     }
 
-		private static native void initNativeStubs() throws LWJGLException;
+		static native void initNativeStubs() throws LWJGLException;
 
-		private static native void resetNativeStubs(Class clazz);
+		static native void resetNativeStubs(Class clazz);
 
 		/**
 		 * Exit cleanly by calling destroy.
 		 */
 		public static void destroy() {
+
+      // We need to do nothing when running on mac, since all is destroyed in IL
+      if(System.getProperty("os.name").startsWith("Mac")) {
+        return;
+      }
+
 			resetNativeStubs(ILUT.class);
 			if (created) {
 				nDestroy();
@@ -177,4 +188,13 @@ public class ILUT {
 		 * Native method the destroy the ILUT
 		 */
 		protected static native void nDestroy();
+
+    /**
+     * Forcefully set created. Used internally by mac platform since
+     * it loads ilu/ilut in IL and needs to mark them as created
+     * @param created value to set created to
+     */
+    static void setCreated(boolean created) {
+      ILUT.created = created;
+    }  
 }

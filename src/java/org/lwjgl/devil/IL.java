@@ -596,6 +596,16 @@ public class IL {
 		try {
 			IL.initNativeStubs();
 			IL.ilInit();
+
+      // We need to initialize everything in one fell swoop on mac
+      if(System.getProperty("os.name").startsWith("Mac")) {
+        ILU.initNativeStubs();
+        ILU.setCreated(true);
+
+        ILUT.initNativeStubs();
+        ILUT.setCreated(true);
+      }
+
 			created = true;
 		} catch (LWJGLException e) {
 			destroy();
@@ -608,6 +618,18 @@ public class IL {
 	 */
 	public static void destroy() {
 		resetNativeStubs(IL.class);
+
+    // We need to destroy everything on mac in one go
+    if(System.getProperty("os.name").startsWith("Mac")) {
+      ILU.resetNativeStubs(ILU.class);
+      ILU.nDestroy();
+      ILU.setCreated(false);
+
+      ILUT.resetNativeStubs(ILUT.class);
+      ILUT.nDestroy();
+      ILUT.setCreated(false);
+    }
+
 		if (created) {
 			nDestroy();
 		}
