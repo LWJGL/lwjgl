@@ -713,10 +713,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveData(JNIEnv *env, jclas
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nCreate(JNIEnv *env, jclass clazz) {
-    if (!extil_Open(env)) {
+    /*if (!extil_Open(env)) {
         throwException(env, "Failed to load DevIL library");
         return;
-    }
+    }*/
 }
 
 #ifdef __cplusplus
