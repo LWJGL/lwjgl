@@ -32,7 +32,6 @@
 
 package org.lwjgl;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 /**
