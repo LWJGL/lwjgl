@@ -103,10 +103,10 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
   
 	//enumerate all displays, and all of their displaymodes
 	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
-	  // continue if mirroring device
-	  if(DisplayDevice.StateFlags && DISPLAY_DEVICE_MIRRORING_DRIVER) {
-	    continue;
-	  }
+		// continue if mirroring device
+		if((DisplayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) != 0) {
+			continue;
+		}
 		
 		// go ahead
 		printfDebug("Querying %s device\n", DisplayDevice.DeviceString);
@@ -130,9 +130,9 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	i = 0, n = 0;
 	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
 	  // continue if mirroring device
-	  if(DisplayDevice.StateFlags && DISPLAY_DEVICE_MIRRORING_DRIVER) {
-	    continue;
-	  }	
+		if((DisplayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) != 0) {
+			continue;
+		}
 	
 		j = 0;
 		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
