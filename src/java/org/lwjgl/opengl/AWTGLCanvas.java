@@ -136,22 +136,13 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	 */
 	public void addNotify() {
 		super.addNotify();
-		try {
-			createContext();
-		} catch (LWJGLException e) {
-			throw new RuntimeException(e);
-		}
 	}
 	
 	/* (non-Javadoc)
 	 * @see java.awt.Component#removeNotify()
 	 */
 	public void removeNotify() {
-		try {
-			destroyContext();
-		} catch (LWJGLException e) {
-			throw new RuntimeException(e);
-		}
+		destroyContext();
 		super.removeNotify();
 	} 
 	
@@ -191,26 +182,40 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	}
 	
 	/**
-	 * Create the OpenGL context. This occurs when the component becomes displayable
-	 * @throws LWJGLException
-	 */
-	private synchronized void createContext() throws LWJGLException {
-		if (context == null)
-			context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
-	}
-	
-	/**
 	 * Destroy the OpenGL context. This happens when the component becomes undisplayable
 	 */
-	private synchronized void destroyContext() throws LWJGLException {
-		context.forceDestroy();
-		context = null;
+	private synchronized void destroyContext() {
+		try {
+			if (context != null) {
+				context.forceDestroy();
+				context = null;
+			}
+		} catch (LWJGLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
-	 * Empty paint to avoid clearing
+	 * Override this to do painting
 	 */
-	public void paint(Graphics g) {
+	protected void paintGL() {
+	}
+
+	public final void paint(Graphics g) {
+		try {
+			peer_info.lockAndGetHandle();
+			try {
+				if (context == null)
+					context = new Context(peer_info, drawable != null ? drawable.getContext() : null);
+				if (!context.isCurrent())
+					context.makeCurrent();
+				paintGL();
+			} finally {
+				peer_info.unlock();
+			}
+		} catch (LWJGLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**

@@ -44,6 +44,8 @@ import org.lwjgl.Sys;
  */
 abstract class PeerInfo {
 	private final ByteBuffer handle;
+	private Thread locking_thread; // Thread that has locked this PeerInfo
+	private int lock_count;
 
 	protected PeerInfo(ByteBuffer handle) {
 		this.handle = handle;
@@ -54,14 +56,29 @@ abstract class PeerInfo {
 	}
 	
 	public synchronized final void unlock() throws LWJGLException {
-		doUnlock();
+		if (lock_count <= 0)
+			throw new IllegalStateException("PeerInfo not locked!");
+		if (Thread.currentThread() != locking_thread)
+			throw new IllegalStateException("PeerInfo already locked by " + locking_thread);
+		lock_count--;
+		if (lock_count == 0) {
+			doUnlock();
+			locking_thread = null;
+		}
 	}
 
 	protected abstract void doLockAndInitHandle() throws LWJGLException;
 	protected abstract void doUnlock() throws LWJGLException;
 
 	public synchronized final ByteBuffer lockAndGetHandle() throws LWJGLException {
-		lockAndInitHandle();
+		Thread this_thread = Thread.currentThread();
+		if (locking_thread != null && locking_thread != this_thread)
+			throw new IllegalStateException("PeerInfo already locked by " + locking_thread);
+		if (lock_count == 0) {
+			locking_thread = this_thread;
+			doLockAndInitHandle();
+		}
+		lock_count++;
 		return getHandle();
 	}
 

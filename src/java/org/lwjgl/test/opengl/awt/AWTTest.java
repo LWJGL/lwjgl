@@ -37,7 +37,7 @@ public class AWTTest extends Frame {
 		setSize(640, 320);
 		setLayout(null);
 		add(canvas0 = new AWTGLCanvas() {
-			public void paint(Graphics g) {
+			public void paintGL() {
 				try {
 					makeCurrent();
 					GL11.glViewport(0, 0, getWidth(), getHeight());
@@ -61,7 +61,7 @@ public class AWTTest extends Frame {
 		});
 		canvas0.setBounds(0, 0, 320, 320);
 		add(canvas1 = new AWTGLCanvas() {
-			public void paint(Graphics g) {
+			public void paintGL() {
 				try {
 					makeCurrent();
 					GL11.glViewport(0, 0, getWidth(), getHeight());
