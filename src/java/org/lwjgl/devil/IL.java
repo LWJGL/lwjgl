@@ -50,7 +50,6 @@ public class IL {
     /** Have we been created? */
     protected static boolean created;
   
-  
     public static final int IL_FALSE = 0; 
     public static final int IL_TRUE = 1; 
      
@@ -298,7 +297,7 @@ public class IL {
     public static final int IL_EOF = -1; 
     
     static {
-        System.loadLibrary("DevIL");
+      System.loadLibrary("DevIL");
     	System.loadLibrary("lwjgl-devil");
     }
     
@@ -405,12 +404,13 @@ public class IL {
 		/**
 		 * 
 		 */
-		public static void create() throws LWJGLException {
-		    if (!created) {
-                IL.initNativeStubs();
-                created = true;
-            }
-		}
+    public static void create() throws LWJGLException {
+    	if (!created) {
+    		IL.initNativeStubs();
+        IL.ilInit();
+    		created = true;
+    	}
+    }
 
 //    public static native boolean ilLoadData(const ILstring FileName, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
 //    public static native boolean ilLoadDataF(ILHANDLE File, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
