@@ -122,7 +122,7 @@ public class PositionTest extends BasicTest {
     GL.glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     GL.glMatrixMode(GL.GL_PROJECTION);
     GL.glLoadIdentity();
-    GLU.gluPerspective(60.0, WINDOW_WIDTH / WINDOW_HEIGHT, 1.0, 30.0);
+    GLU.gluPerspective(50.0, WINDOW_WIDTH / WINDOW_HEIGHT, 0.0, 50.0);
     GL.glMatrixMode(GL.GL_MODELVIEW);
     GL.glLoadIdentity();
     GL.glTranslatef(0.0f, 0.0f, -6.6f);
@@ -206,6 +206,13 @@ public class PositionTest extends BasicTest {
 
     Keyboard.create();
     // -----------------------------------------------------
+    
+    // Setup Mouse
+    // =====================================================
+    Sys.log("Setting up Mouse");
+
+    Mouse.create();
+    // -----------------------------------------------------
   }
 
   /**
@@ -263,6 +270,7 @@ public class PositionTest extends BasicTest {
    * Handles any input
    */
   private void handleInput() {
+    Mouse.poll();
     Keyboard.poll();
 
     // User wants to exit?
@@ -309,7 +317,7 @@ public class PositionTest extends BasicTest {
     }
     // --------------------------------------------
 
-    // Test for movement
+    // Test for movement with keyboard
     // ============================================
     if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
       listenerPosition.put(0, listenerPosition.get(0) - 0.1f);
@@ -339,6 +347,20 @@ public class PositionTest extends BasicTest {
       AL.alListener(AL.AL_POSITION, listenerPosition);
     }
     // --------------------------------------------
+    
+    // Test for movement with Mouse
+    // ============================================
+    listenerPosition.put(0, listenerPosition.get(0) + (0.01f * Mouse.dx));
+    listenerPosition.put(1, listenerPosition.get(1) + (0.01f * Mouse.dy));
+    if (Mouse.isButtonDown(0)) {
+      listenerPosition.put(2, listenerPosition.get(2) - 0.1f);
+    }
+    if (Mouse.isButtonDown(1)) {
+      listenerPosition.put(2, listenerPosition.get(2) + 0.1f);
+    }
+    
+    AL.alListener(AL.AL_POSITION, listenerPosition);
+    
   }
 
   /**
@@ -392,7 +414,10 @@ public class PositionTest extends BasicTest {
   private void shutdown() {
     Sys.log("Shutting down Keyboard");
     Keyboard.destroy();
-
+    
+    Sys.log("Shutting down Mouse");
+    Mouse.destroy();
+    
     Sys.log("Shutting down OpenAL");
     AL.alSourceStop(soundSources);
     AL.alDeleteSources(soundSources);
