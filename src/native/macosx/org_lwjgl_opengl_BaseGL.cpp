@@ -87,6 +87,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
     CGLPixelFormatAttribute attribs[] =
     {
 	kCGLPFAFullScreen,
+	kCGLPFADoubleBuffer,
 	kCGLPFADisplayMask,
 	displayMask,
 	NULL
