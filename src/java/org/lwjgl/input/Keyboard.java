@@ -384,11 +384,7 @@ public class Keyboard {
 	 */
 	public static boolean isKeyDown(int key) {
 		assert created : "The keyboard has not been created.";
-//    if (readBuffer != null) {
-//      return Keyboard.key == key;
-//    } else {
-		  return keyDownBuffer.get(key) != 0;
-//    }
+		return keyDownBuffer.get(key) != 0;
 	}
 	
 	/**
