@@ -405,6 +405,8 @@ public final class Math {
 			boolean transposeRightSource,
 			boolean transposeDest);
 			
+
+			
 		abstract MatrixOpClassification classify();
 		
 	}
@@ -822,6 +824,21 @@ public final class Math {
 			boolean transposeDest) {
 		}
 		
+		/**
+		 * Check a binary operation to make sure that when dealing with n x n
+		 * result sets that when both n's are greater than 1 the operation must
+		 * be safe; otherwise if is direct, then the side where n > 1 must be
+		 * the destination.
+		 */
+		abstract MatrixOpClassification checkBinaryOp(
+			int leftSourceElements,
+			int rightSourceElements,
+			int leftSourceAddress,
+			int rightSourceAddress,
+			int destinationAddress
+		);
+		
+		
 		public final MatrixOpClassification check(
 			int sourceAddress,
 			int sourceStride,
@@ -1014,6 +1031,7 @@ public final class Math {
 		// Check unary matrix operation type
 		MatrixOpClassification op = operation.classify().check(leftSourceAddress, leftSourceStride, leftElements, destAddress, destStride);
 		op = op.check(rightSourceAddress, rightSourceStride, rightElements, destAddress, destStride);
+		op = op.checkBinaryOp(leftElements, rightElements, leftSourceAddress, rightSourceAddress, destAddress);
 		op.execute(
 			leftSourceAddress,
 			leftSourceStride,
