@@ -35,6 +35,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import org.lwjgl.Sys;
+import org.lwjgl.BufferUtils;
 
 /**
  * $Id$
@@ -205,7 +206,7 @@ public class EAXBufferProperties {
 	 * Creates a new EAXBufferProperties object 
 	 */
 	public EAXBufferProperties() {
-		eaxBufferProperties = ByteBuffer.allocateDirect(EAXBUFFERPROPERTIES_SIZE);
+		eaxBufferProperties = BufferUtils.createByteBuffer(EAXBUFFERPROPERTIES_SIZE);
 		eaxBufferProperties.order(ByteOrder.nativeOrder());
 	}
 	

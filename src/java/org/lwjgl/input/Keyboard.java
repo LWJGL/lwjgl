@@ -234,7 +234,7 @@ public class Keyboard {
 	private static boolean created;
 	
 	/** The keys status from the last poll */
-	private static final ByteBuffer keyDownBuffer = ByteBuffer.allocateDirect(256);
+	private static final ByteBuffer keyDownBuffer = BufferUtils.createByteBuffer(256);
 	
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,

@@ -48,6 +48,7 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferUtils;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -227,7 +228,7 @@ public final class Display {
 		if (rampSize == 0) {
 			throw new LWJGLException("Display configuration not supported");
 		}
-		FloatBuffer gammaRamp = ByteBuffer.allocateDirect(rampSize*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		FloatBuffer gammaRamp = BufferUtils.createFloatBuffer(rampSize);
 		for (int i = 0; i < rampSize; i++) {
 			float intensity = (float)i/(rampSize - 1);
 			// apply gamma

@@ -34,6 +34,7 @@ package org.lwjgl.opengl.glu;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.BufferUtils;
 
 /**
  * MipMap.java
@@ -103,7 +104,7 @@ public class MipMap extends Util {
 
 		if (w != width || h != height) {
 			// must rescale image to get "top" mipmap texture image
-			image = ByteBuffer.allocateDirect((w + 4) * h * bpp);
+			image = BufferUtils.createByteBuffer((w + 4) * h * bpp);
 			error = gluScaleImage(format, width, height, type, data, w, h, type, image);
 			if (error != 0) {
 				retVal = error;
@@ -130,7 +131,7 @@ public class MipMap extends Util {
 
 			neww = (w < 2) ? 1 : w / 2;
 			newh = (h < 2) ? 1 : h / 2;
-			newimage = ByteBuffer.allocateDirect((neww + 4) * newh * bpp);
+			newimage = BufferUtils.createByteBuffer((neww + 4) * newh * bpp);
 
 			error = gluScaleImage(format, w, h, type, image, neww, newh, type, newimage);
 			if (error != 0) {
