@@ -39,6 +39,11 @@
  * @version $Revision$
  */
 
+#include <IOKit/IOKitLib.h>
+#include <IOKit/hid/IOHIDKeys.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <stdlib.h>
+#include "tools.h"
 #include "org_lwjgl_input_Keyboard.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
@@ -55,6 +60,36 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 {
 }
 
+static void printCFString(CFStringRef str) {
+	CFIndex buffer_size = CFStringGetLength(str) + 1;
+	char * buffer = (char *)malloc(buffer_size);
+	if (buffer != NULL) {
+		if (CFStringGetCString(str, buffer, buffer_size, CFStringGetSystemEncoding()))
+			printf("%s", buffer);
+		free(buffer);
+	}
+}
+
+static void printCFNumber(CFNumberRef num) {
+	long number;
+
+	if (CFNumberGetValue(num, kCFNumberLongType, &number))
+		printf("0x%lx (%ld)", number, number);
+}
+
+static void printProperty(CFDictionaryRef dict, CFStringRef key) {
+	CFTypeRef val = CFDictionaryGetValue(dict, key);
+	if (val != NULL) {
+		CFTypeID type = CFGetTypeID(val);
+		if (type == CFArrayGetTypeID()) printf("array\n");
+		else if (type == CFBooleanGetTypeID()) printf("boolean\n");
+		else if (type == CFDictionaryGetTypeID()) printf("dictionary\n");
+		else if (type == CFNumberGetTypeID()) printCFNumber((CFNumberRef)val);
+		else if (type == CFStringGetTypeID()) printCFString((CFStringRef)val);
+		else printf("<unknown object type>\n");
+	}
+}
+
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate
@@ -63,6 +98,31 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
+	io_iterator_t device_iterator;
+	io_object_t hid_device;
+	kern_return_t kern_err;
+	CFMutableDictionaryRef dev_props;
+	CFMutableDictionaryRef matching_dic = IOServiceMatching(kIOHIDDeviceKey);
+	IOReturn err = IOServiceGetMatchingServices(kIOMasterPortDefault, matching_dic, &device_iterator);
+	if (err != kIOReturnSuccess) {
+		throwException(env, "Could not find matching devices");
+		return;
+	}
+	while ((hid_device = IOIteratorNext(device_iterator)) != NULL) {
+		kern_err = IORegistryEntryCreateCFProperties(hid_device, &dev_props, kCFAllocatorDefault, kNilOptions);
+		IOObjectRelease(hid_device);
+		if (kern_err == KERN_SUCCESS && dev_props != NULL) {
+			printf("Device found: ");
+			printProperty(dev_props, CFSTR(kIOHIDProductKey));
+			printf(" usage ");
+			printProperty(dev_props, CFSTR(kIOHIDPrimaryUsageKey));
+			printf(" usage page ");
+			printProperty(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey));
+			printf("\n");
+			CFRelease(dev_props);
+		}
+	}
+	IOObjectRelease(device_iterator);
 }
 
 /*
@@ -90,16 +150,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
  * Method:    nRead
  * Signature: (I)V
  */
-JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
   (JNIEnv * env, jclass clazz)
 {
+}
 
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nEnableTranslation
  * Signature: ()I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
   (JNIEnv *env, jclass clazz)
 {
 }

@@ -40,24 +40,14 @@
  */
 
 #include <Carbon/Carbon.h>
-#include <JavaVM/jni.h>
 #include "org_lwjgl_opengl_Window.h"
 #include "extgl.h"
+#include "tools.h"
 
 static WindowRef win_ref;
 static AGLContext context;
 static bool close_requested;
  
-/* 
- * Utility function to throw an Exception
- */
-static void throwException(JNIEnv * env, const char * err)
-{
-	jclass cls = env->FindClass("java/lang/Exception");
-	env->ThrowNew(cls, err);
-	env->DeleteLocalRef(cls);
-}
-
 static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 	const char* title = env->GetStringUTFChars(title_obj, NULL);
 	CFStringRef cf_title = CFStringCreateWithCString(NULL, title, kCFStringEncodingUTF8);
@@ -184,7 +174,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv *env, jclass clazz) 
 {
-	RunApplicationEventLoop();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz)
