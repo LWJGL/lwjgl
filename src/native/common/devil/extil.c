@@ -52,7 +52,7 @@ bool extil_Open(JNIEnv *env) {
 }
 #endif /* WIN32 */
 
-void extgl_Close(void) {
+void extil_Close(void) {
 #ifdef _WIN32
     FreeLibrary(devILhandle);
     devILhandle = NULL;

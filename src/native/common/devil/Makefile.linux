@@ -1,0 +1,19 @@
+CC=gcc
+LINKER=gcc
+STRIP=strip
+CFLAGS_LINK=-shared -Wall
+LIBS=-lpthread
+CFLAGS_O=-fPIC -O2 -D_X11 -Wall -pthread -c -I.. -I. -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+SRC=$(wildcard *.c) ../common_tools.c
+OBJECTS=$(subst .c,.o,$(SRC))
+LIBRARY=liblwjgl-devil.so
+
+$(LIBRARY): $(OBJECTS)
+	$(LINKER) $(CFLAGS_LINK) -o $@ $(OBJECTS) $(LIBS)
+	$(STRIP) $@
+
+.c.o:
+	$(CC) $(CFLAGS_O) $< -o $@
+
+clean:
+	rm -f $(OBJECTS) $(LIBRARY)

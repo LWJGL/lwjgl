@@ -4,7 +4,7 @@
 #include <jni.h>
 #include <stdio.h>
 #include <string.h>
-#include <IL\il.h>
+#include <IL/il.h>
 #include "org_lwjgl_devil_IL.h"
 #include "common_tools.h"
 
