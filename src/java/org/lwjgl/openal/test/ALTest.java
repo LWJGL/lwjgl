@@ -504,18 +504,18 @@ public class ALTest extends BasicTest {
         
         do {
             System.out.print("\n\n\nAutomated Test Series:\n\n");
-            System.out.print("A) Run Fully Automated Tests\n");
-            System.out.print("B) Run Semi-Automated Tests\n");
+            System.out.print("*A) Run Fully Automated Tests\n");
+            System.out.print("*B) Run Semi-Automated Tests\n");
             System.out.print("\nInteractive Tests:\n\n");
             System.out.print("1 Position Test\n");
             System.out.print("2 Looping Test\n");
-            System.out.print("3 EAX 2.0 Test\n");
-            System.out.print("4 Queue Test\n");
+            System.out.print("*3 EAX 2.0 Test\n");
+            System.out.print("*4 Queue Test\n");
             System.out.print("5 Buffer Test\n");
             System.out.print("6 Frequency Test\n");
             System.out.print("7 Stereo Test\n");
             System.out.print("8 Gain Test\n");
-            System.out.print("9 Streaming Test\n");
+            System.out.print("*9 Streaming Test\n");
             System.out.print("0 Multiple Sources Test\n");
             
             System.out.print("\nQ to quit\n\n\n");
@@ -595,19 +595,19 @@ public class ALTest extends BasicTest {
         source0Vel.putFloat(0.0f);
         source0Vel.putFloat(0.0f);
         source0Vel.putFloat(0.0f);
-
+        
         ByteBuffer source1Pos = ByteBuffer.allocateDirect(12);
         source1Pos.order(ByteOrder.nativeOrder());
         source1Pos.putFloat(2.0f);
         source1Pos.putFloat(0.0f);
         source1Pos.putFloat(-2.0f);
-
+        
         ByteBuffer source1Vel = ByteBuffer.allocateDirect(12);
         source1Vel.order(ByteOrder.nativeOrder());
         source1Vel.putFloat(0.0f);
         source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);        
-
+        source1Vel.putFloat(0.0f);
+        
         al.genSources(2, source);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alGenSources 2 : ", error);
@@ -642,7 +642,7 @@ public class ALTest extends BasicTest {
         al.sourcei(source[0],AL.LOOPING,AL.TRUE);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 0 AL_LOOPING true: \n", error);
-        }        
+        }
         
         al.sourcef(source[1],AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
@@ -741,18 +741,18 @@ public class ALTest extends BasicTest {
         source0Vel.putFloat(0.0f);
         source0Vel.putFloat(0.0f);
         source0Vel.putFloat(0.0f);
-
+        
         ByteBuffer source1Pos = ByteBuffer.allocateDirect(12);
         source1Pos.order(ByteOrder.nativeOrder());
         source1Pos.putFloat(2.0f);
         source1Pos.putFloat(0.0f);
         source1Pos.putFloat(-2.0f);
-
+        
         ByteBuffer source1Vel = ByteBuffer.allocateDirect(12);
         source1Vel.order(ByteOrder.nativeOrder());
         source1Vel.putFloat(0.0f);
         source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);           
+        source1Vel.putFloat(0.0f);
         
         // Clear Error Code
         al.getError();
@@ -905,27 +905,934 @@ public class ALTest extends BasicTest {
     
     protected void i_QueueTest() {
         System.out.println("i_QueueTest");
-        delay_ms(3000);
+        delay_ms(3000);  
+        
+        /*
+        int     error;
+        int[]   source = new int[1];
+        int     ch = -1;
+        int[]  tbuffers = new int[5];
+        int[]  buffersremoved;
+        int bLooping;
+        
+        ByteBuffer BuffersInQueue = ByteBuffer.allocateDirect(4);
+        BuffersInQueue.order(ByteOrder.nativeOrder());
+        
+        ByteBuffer BuffersProcessed = ByteBuffer.allocateDirect(4);
+        BuffersProcessed.order(ByteOrder.nativeOrder());
+        
+        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
+        source0Pos.order(ByteOrder.nativeOrder());
+        source0Pos.putFloat(0.0f);
+        source0Pos.putFloat(0.0f);
+        source0Pos.putFloat(-2.0f);
+        
+        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
+        source0Vel.order(ByteOrder.nativeOrder());
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        
+        ByteBuffer Buffer = ByteBuffer.allocateDirect(4);
+        Buffer.order(ByteOrder.nativeOrder());
+        int	i;
+        
+        // Clear Error Code
+        al.getError();
+        
+        al.genSources(1,source);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alGenSources 1 : ", error);
+            return;
+        }
+        
+        al.sourcef(source[0],AL.PITCH,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alSourcef 0 AL_PITCH : ", error);
+        }
+        
+        al.sourcef(source[0],AL.GAIN,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alSourcef 0 AL_GAIN : ", error);
+        }
+        
+        al.sourcefv(source[0],AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alSourcefv 0 AL_POSITION : ", error);
+        }
+        
+        al.sourcefv(source[0],AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alSourcefv 0 AL_VELOCITY : ", error);
+        }
+        
+        al.sourcei(source[0],AL.LOOPING,AL.FALSE);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alSourcei 0 AL_LOOPING false: ", error);
+        }
+        
+        bLooping = AL.FALSE;
+        
+        System.out.print("Queue Test\n\n");
+        System.out.print("Press '1' to start playing source 0\n");
+        System.out.print("Press '2' to stop source 0\n");
+        System.out.print("Press '3' to toggle looping on source 0\n");
+        System.out.print("Press '4' to queue 4 buffers on source 0\n");
+        System.out.print("Press '5' to queue 1st buffer on source 0\n");
+        System.out.print("Press '6' to queue 2nd buffer on source 0\n");
+        System.out.print("Press '7' to queue 3rd buffer on source 0\n");
+        System.out.print("Press '8' to queue 4th buffer on source 0\n");
+        System.out.print("Press '9' to queue 5th buffer (Buffer 0) on source 0\n");
+        System.out.print("Press '0' to display stats\n");
+        
+        System.out.print("Press 'A' to unqueue first Buffer\n");
+        System.out.print("Press 'B' to unqueue first 2 Buffers\n");
+        System.out.print("Press 'C' to unqueue first 3 Buffers\n");
+        System.out.print("Press 'D' to unqueue first 4 Buffers\n");
+        System.out.print("Press 'E' to unqueue first 5 Buffers\n");
+        System.out.print("Press 'F' to unqueue all buffers\n");
+        
+        System.out.print("Press 'Q' to quit\n");
+        
+        System.out.print("Source 0 not looping\n");
+        
+        tbuffers[0] = buffers[2];
+        tbuffers[1] = buffers[3];
+        tbuffers[2] = buffers[4];
+        tbuffers[3] = buffers[5];
+        tbuffers[4] = 0;
+        
+        do {
+            try {
+                ch = System.in.read();
+            } catch (IOException ioe) {
+            }
+            switch (ch) {
+            case '1':
+                al.sourcePlay(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcePlay source 0 : ", error);
+                break;
+            case '2':
+                al.sourceStop(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceStop source 0 : ", error);
+                break;
+            case '3':
+                if (bLooping == AL.TRUE)
+                {
+                    bLooping = AL.FALSE;
+                    System.out.print("Source 0 not looping\n");
+                }
+                else
+                {
+                    bLooping = AL.TRUE;
+                    System.out.print("Source 0 looping    \n");
+                }
+                al.sourcei(source[0], AL.LOOPING, bLooping);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei AL_LOOPING : ", error);
+                break;
+            case '4':
+                al.sourceQueueBuffers(source[0], 4, buffers);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceQueueBuffers 4 : ", error);
+                break;
+            case '5':
+                //al.sourceQueueBuffers(source[0], 1, buffers[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceQueueBuffers 1 : ", error);
+                break;
+            case '6':
+                //al.sourceQueueBuffers(source[0], 1, buffers[1]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceQueueBuffers 1 : ", error);
+                break;
+            case '7':
+                //al.sourceQueueBuffers(source[0], 1, buffers[2]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceQueueBuffers 1 : ", error);
+                break;
+            case '8':
+                //al.sourceQueueBuffers(source[0], 1, buffers[3]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceQueueBuffers 1 : ", error);
+                break;
+            case '9':
+                // Queue buffer 0
+                //al.sourceQueueBuffers(source[0], 1, buffers[4]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceQueueBuffers 1 (buffer 0) : ", error);
+                break;
+            case 'A':
+                // Unqueue first Buffer
+                buffersremoved = new int[1];
+                al.sourceUnqueueBuffers(source[0], 1, buffersremoved);
+                          
+                if ((error = al.getError()) != AL.NO_ERROR)
+                {
+                    displayALError("alSourceUnqueueBuffers 1 : ", error);
+                } else
+                {
+                    if (buffersremoved[0] == buffers[0])
+                        buffersremoved[0] = 1;
+                    else if (buffersremoved[0] == buffers[1])
+                        buffersremoved[0] = 2;
+                    else if (buffersremoved[0] == buffers[2])
+                        buffersremoved[0] = 3;
+                    else if (buffersremoved[0] == buffers[3])
+                        buffersremoved[0] = 4;
+                    else
+                        buffersremoved[0] = 0;
+                          
+                    System.out.print("\nRemoved Buffer " + buffersremoved[0] + " from queue\n");
+                }
+                buffersremoved = null;
+                break;
+            case 'B':
+                // Unqueue first 2 Buffers
+                buffersremoved = new int[2];
+                al.sourceUnqueueBuffers(source[0], 2, buffersremoved);
+                          
+                if ((error = al.getError()) != AL.NO_ERROR)
+                {
+                    displayALError("alSourceUnqueueBuffers 2 : ", error);
+                } else
+                {
+                    for (i = 0; i < 2; i++)
+                    {
+                        if (buffersremoved[i] == buffers[0])
+                            buffersremoved[i] = 1;
+                        else if (buffersremoved[i] == buffers[1])
+                            buffersremoved[i] = 2;
+                        else if (buffersremoved[i] == buffers[2])
+                            buffersremoved[i] = 3;
+                        else if (buffersremoved[i] == buffers[3])
+                            buffersremoved[i] = 4;
+                        else
+                            buffersremoved[i] = 0;
+                    }
+                          
+                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + " and " + buffersremoved[1] + " from queue\n");
+                }
+                          
+                buffersremoved = null;
+                break;
+            case 'C':
+                // Unqueue first 3 Buffers
+                buffersremoved = new int[3];
+                al.sourceUnqueueBuffers(source[0], 3, buffersremoved);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                {
+                    displayALError("alSourceUnqueueBuffers 3 : ", error);
+                } else
+                {
+                    for (i = 0; i < 3; i++)
+                    {
+                        if (buffersremoved[i] == buffers[0])
+                            buffersremoved[i] = 1;
+                        else if (buffersremoved[i] == buffers[1])
+                            buffersremoved[i] = 2;
+                        else if (buffersremoved[i] == buffers[2])
+                            buffersremoved[i] = 3;
+                        else if (buffersremoved[i] == buffers[3])
+                            buffersremoved[i] = 4;
+                        else
+                            buffersremoved[i] = 0;
+                    }
+                          
+                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + 
+                                     ", " + buffersremoved[1] + " and " +
+                                     buffersremoved[2] +" from queue\n");
+                }
+                          
+                buffersremoved = null;
+                break;
+            case 'D':
+                // Unqueue first 4 Buffers
+                buffersremoved = new int[4];
+                al.sourceUnqueueBuffers(source[0], 4, buffersremoved);
+                          
+                if ((error = al.getError()) != AL.NO_ERROR)
+                {
+                    displayALError("alSourceUnqueueBuffers 1 : ", error);
+                } else
+                {
+                    for (i = 0; i < 4; i++)
+                    {
+                        if (buffersremoved[i] == buffers[0])
+                            buffersremoved[i] = 1;
+                        else if (buffersremoved[i] == buffers[1])
+                            buffersremoved[i] = 2;
+                        else if (buffersremoved[i] == buffers[2])
+                            buffersremoved[i] = 3;
+                        else if (buffersremoved[i] == buffers[3])
+                            buffersremoved[i] = 4;
+                        else
+                            buffersremoved[i] = 0;
+                    }
+                          
+                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + 
+                                     ", " + buffersremoved[1] + 
+                                     ", " + buffersremoved[2] + 
+                                     "and " + buffersremoved[3] + 
+                                     " from queue\n");
+                }
+                          
+                buffersremoved = null;
+                break;
+            case 'E':
+                // Unqueue first 5 Buffers
+                buffersremoved = new int[5];
+                al.sourceUnqueueBuffers(source[0], 5, buffersremoved);
+                          
+                if ((error = al.getError()) != AL.NO_ERROR)
+                {
+                    displayALError("alSourceUnqueueBuffers 1 : ", error);
+                } else
+                {
+                    for (i = 0; i < 5; i++)
+                    {
+                        if (buffersremoved[i] == buffers[0])
+                            buffersremoved[i] = 1;
+                        else if (buffersremoved[i] == buffers[1])
+                            buffersremoved[i] = 2;
+                        else if (buffersremoved[i] == buffers[2])
+                            buffersremoved[i] = 3;
+                        else if (buffersremoved[i] == buffers[3])
+                            buffersremoved[i] = 4;
+                        else
+                            buffersremoved[i] = 0;
+                    }
+                          
+                    System.out.print("\nRemoved Buffers " + buffersremoved[0] + 
+                                     ", " + buffersremoved[1] + 
+                                     ", " + buffersremoved[2] + 
+                                     ", " + buffersremoved[3] + 
+                                     "and " + buffersremoved[4] + 
+                                     " from queue\n");
+                }
+                          
+                buffersremoved = null;
+                break;
+            case 'F':
+                al.sourcei(source[0], AL.BUFFER, 0);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSource AL_BUFFER NULL : ", error);
+                break;
+            case '0':
+                // Retrieve number of buffers in queue
+                al.getSourcei(source[0], AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
+                
+                // Retrieve number of processed buffers
+                al.getSourcei(source[0], AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
+                
+                // Retrieve current buffer
+                al.getSourcei(source[0], AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
+                
+                int address = Buffer.getInt();
+                if (address == buffers[0])
+                    address = 1;
+                else if (address == buffers[1])
+                    address = 2;
+                else if (address == buffers[2])
+                    address = 3;
+                else if (address == buffers[3])
+                    address = 4;
+                else
+                    address = 0;
+                          
+                System.out.print("Current Buffer is " + address + ", " + BuffersInQueue.getInt() + " Buffers in queue, " + BuffersProcessed.getInt() + " Processed\n");
+                          
+                break;
+            }
+        } while (ch != 'Q');
+        
+        // Release resources
+        al.sourceStop(source[0]);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourceStop : ", error);
+        
+        al.deleteSources(1, source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alDeleteSources 1 : ", error);
+         */
     }
     
+    
     protected void i_BufferTest() {
-        System.out.println("i_BufferTest");
-        delay_ms(3000);
+        int[]	source = new int[1];
+        int	error;
+        int ch = -1;
+        
+        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
+        source0Pos.order(ByteOrder.nativeOrder());
+        source0Pos.putFloat(2.0f);
+        source0Pos.putFloat(0.0f);
+        source0Pos.putFloat(-2.0f);
+        
+        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
+        source0Vel.order(ByteOrder.nativeOrder());
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        
+        al.genSources(1,source);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alGenSources 2 : ", error);
+            return;
+        }
+        
+        al.sourcef(source[0],AL.PITCH,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_PITCH : \n", error);
+        
+        al.sourcef(source[0],AL.GAIN,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_GAIN : \n", error);
+        
+        al.sourcefv(source[0],AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_POSITION : \n", error);
+        
+        al.sourcefv(source[0],AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
+        
+        al.sourcei(source[0],AL.LOOPING,AL.FALSE);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 0 AL_LOOPING true: \n", error);
+        
+        System.out.print("Buffer Test\n");
+        System.out.print("Press '1' to play buffer 0 on source 0\n");
+        System.out.print("Press '2' to play buffer 1 on source 0\n");
+        System.out.print("Press '3' to stop source 0\n");
+        System.out.print("Press 'Q' to quit\n");
+        
+        do {
+            try {
+                ch = System.in.read();
+            } catch (IOException ioe) {
+            }
+            
+            switch (ch) {
+                case '1':
+                    // Stop source
+                    al.sourceStop(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourceStop 0 : ", error);
+                    // Attach buffer 0 to source
+                    al.sourcei(source[0], AL.BUFFER, buffers[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcei AL_BUFFER 0 : ", error);
+                    // Play
+                    al.sourcePlay(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcePlay 0 : ", error);
+                    break;
+                case '2':
+                    // Stop source
+                    al.sourceStop(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourceStop 0 : ", error);
+                    // Attach buffer 0 to source
+                    al.sourcei(source[0], AL.BUFFER, buffers[1]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcei AL_BUFFER 1 : ", error);
+                    // Play
+                    al.sourcePlay(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcePlay 0 : ", error);
+                    break;
+                case '3':
+                    // Stop source
+                    al.sourceStop(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourceStop 0 : ", error);
+                    break;
+            }
+        } while (ch != 'Q');
+        
+        // Release resources
+        al.sourceStopv(1, source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourceStopv 1 : ", error);
+        
+        al.deleteSources(1, source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alDeleteSources 1 : ", error);
     }
     
     protected void i_FreqTest() {
-        System.out.println("i_FreqTest");
-        delay_ms(3000);
+        int	error;
+        int[] source = new int[1];
+        int	ch = -1;
+        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
+        source0Pos.order(ByteOrder.nativeOrder());
+        source0Pos.putFloat(2.0f);
+        source0Pos.putFloat(0.0f);
+        source0Pos.putFloat(-2.0f);
+        
+        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
+        source0Vel.order(ByteOrder.nativeOrder());
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        
+        
+        al.genSources(1,source);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alGenSources 1 : ", error);
+            return;
+        }
+        
+        al.sourcef(source[0],AL.PITCH,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_PITCH : \n", error);
+        
+        al.sourcef(source[0],AL.GAIN,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_GAIN : \n", error);
+        
+        al.sourcefv(source[0],AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_POSITION : \n", error);
+        
+        al.sourcefv(source[0],AL.VELOCITY, Sys.getDirectBufferAddress(source0Vel));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
+        
+        al.sourcei(source[0],AL.BUFFER, buffers[1]);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 0 AL_BUFFER buffer 1 : \n", error);
+        
+        al.sourcei(source[0],AL.LOOPING,AL.TRUE);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 0 AL_LOOPING true: \n", error);
+        
+        System.out.print("Frequency Test\n");
+        System.out.print("Press '1' to play source 0 (looping)\n");
+        System.out.print("Press '2' to Double Frequency\n");
+        System.out.print("Press '3' to Halve Frequency\n");
+        System.out.print("Press 'Q' to quit\n");
+        
+        do {
+            try {
+                ch = System.in.read();
+            } catch (IOException ioe) {
+            }
+            
+            switch (ch) {
+                case '1':
+                    al.sourcef(source[0], AL.PITCH, 1.0f);
+                    al.sourcePlay(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcePlay source 0 : ", error);
+                    break;
+                case '2':
+                    al.sourcef(source[0], AL.PITCH, 2.0f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcef source 0 AL_PITCH 2.0 : ", error);
+                    break;
+                case '3':
+                    al.sourcef(source[0], AL.PITCH, 0.5f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcef source 0 AL PITCH 0.5: ", error);
+                    break;
+            }
+        } while (ch != 'Q');
+        
+        // Release resources
+        al.sourceStopv(1, source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourceStopv 2 : ", error);
+        
+        al.deleteSources(1, source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alDeleteSources 2 : ", error);
     }
     
     protected void i_StereoTest() {
-        System.out.println("i_StereoTest");
-        delay_ms(3000);
+        int	error;
+        int[]   source = new int[1];
+        int[]   tbuffers = new int[2];
+        ByteBuffer BuffersInQueue = ByteBuffer.allocateDirect(4);
+        BuffersInQueue.order(ByteOrder.nativeOrder());
+        
+        ByteBuffer BuffersProcessed = ByteBuffer.allocateDirect(4);
+        BuffersProcessed.order(ByteOrder.nativeOrder());
+        
+        
+        ByteBuffer Buffer = ByteBuffer.allocateDirect(4);
+        Buffer.order(ByteOrder.nativeOrder());
+        int	ch = -1;
+        
+        int bLoop = AL.TRUE;
+        
+        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
+        source0Pos.order(ByteOrder.nativeOrder());
+        source0Pos.putFloat(2.0f);
+        source0Pos.putFloat(0.0f);
+        source0Pos.putFloat(-2.0f);
+        
+        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
+        source0Vel.order(ByteOrder.nativeOrder());
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        
+        al.genSources(1,source);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alGenSources 1 : ", error);
+            return;
+        }
+        
+        tbuffers[0] = buffers[6];
+        tbuffers[1] = buffers[6];
+        
+        System.out.print("Stereo Test\n");
+        System.out.print("Press '1' to play a stereo buffer on source 0 (looping)\n");
+        System.out.print("Press '2' to play a mono buffer on source 0 (looping)\n");
+        System.out.print("Press '3' to stop source 0\n");
+        System.out.print("Press '4' to queue 2 stereo buffers on source 0 and start playing\n");
+        System.out.print("Press '5' to unqueue the 2 stereo buffers on source 0\n");
+        System.out.print("Press '6' to toggle looping on / off\n");
+        System.out.print("Press '0' to display stats\n");
+        System.out.print("Press 'Q' to quit\n");
+        System.out.print("Looping is on\n");
+        
+        do {
+            try {
+                ch = System.in.read();
+            } catch (IOException ioe) {
+            }
+            
+            switch (ch) {
+            case '1':
+                // Stop source
+                al.sourceStop(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceStop source 0 : ", error);
+             
+                // Attach new buffer
+                al.sourcei(source[0],AL.BUFFER, buffers[6]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei 0 AL_BUFFER buffer 6 (stereo) : \n", error);
+             
+                // Set volume
+                al.sourcef(source[0],AL.GAIN,0.5f);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcef 0 AL_GAIN : \n", error);
+             
+                // Set looping
+                al.sourcei(source[0],AL.LOOPING,bLoop);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei 0 AL_LOOPING true: \n", error);
+             
+                // Play source
+                al.sourcePlay(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcePlay source 0 : ", error);
+             
+                break;
+            case '2':
+                // Stop source
+                al.sourceStop(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceStop source 0 : ", error);
+             
+                // Attach new buffer
+                al.sourcei(source[0],AL.BUFFER, buffers[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei 0 AL_BUFFER buffer 0 (mono) : \n", error);
+             
+                // Set 3D position
+                al.sourcefv(source[0],AL.POSITION, Sys.getDirectBufferAddress(source0Pos));
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcefv 0 AL_POSITION : \n", error);
+             
+                // Set 3D velocity
+                al.sourcefv(source[0],AL.VELOCITY, Sys.getDirectBufferAddress(source0Vel));
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
+             
+                // Set volume to full
+                al.sourcef(source[0],AL.GAIN,1.0f);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcef 0 AL_GAIN : \n", error);
+             
+                // Set Looping
+                al.sourcei(source[0],AL.LOOPING,bLoop);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei 0 AL_LOOPING : \n", error);
+             
+                // Play source
+                al.sourcePlay(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcePlay source 0 : ", error);
+                break;
+            case '3':
+                al.sourceStop(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceStop source 0 : ", error);
+                break;
+            case '4':
+                al.sourceStop(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceStop Source 0 : ", error);
+             
+                // Attach NULL buffer to source to clear everything
+                al.sourcei(source[0], AL.BUFFER, 0);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei AL_BUFFER (NULL) : ", error);
+             
+                al.sourceQueueBuffers(source[0], 2, buffers);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceQueueBuffers 2 (stereo) : ", error);
+             
+                // Set Looping
+                al.sourcei(source[0],AL.LOOPING,bLoop);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei 0 AL_LOOPING : \n", error);
+             
+                al.sourcePlay(source[0]);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcePlay Source 0 : ", error);
+                break;
+            case '5':
+                //yes, this causes a invalid operation - so does the original :/
+                al.sourceUnqueueBuffers(source[0], 2, buffers);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourceUnqueueBuffers 2 (stereo) : ", error);
+                break;
+            case '6':
+                if (bLoop == AL.FALSE)
+                {
+                    System.out.print("Looping is off\n");
+                    bLoop = AL.FALSE;
+                }
+                else
+                {
+                    System.out.print("Looping is on  \n");
+                    bLoop = AL.TRUE;
+                }
+                al.sourcei(source[0], AL.LOOPING, bLoop);
+                if ((error = al.getError()) != AL.NO_ERROR)
+                    displayALError("alSourcei 0 AL_LOOPING : \n", error);
+                break;
+            case '0':
+                        // Retrieve number of buffers in queue
+                al.getSourcei(source[0], AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
+                // Retrieve number of processed buffers
+                al.getSourcei(source[0], AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
+                // Retrieve current buffer
+                al.getSourcei(source[0], AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
+
+                int address = Buffer.getInt();
+                if (address == buffers[0])
+                    address = 6;
+                else if (address == buffers[1])
+                    address = 6;
+                else
+                    address = 0;
+             
+                System.out.print("Current Buffer is " + address + ", " + BuffersInQueue.getInt() + " Buffers in queue, " + BuffersProcessed.getInt() + " Processed\n");
+                Buffer.clear();
+                BuffersProcessed.clear();
+                BuffersInQueue.clear();
+             
+                break;
+            }
+        } while (ch != 'Q');
+        
+        // Release resources
+        al.sourceStop(source[0]);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourceStop : ", error);
+        
+        al.deleteSources(1, source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alDeleteSources 2 : ", error);
     }
     
     protected void i_GainTest() {
-        System.out.println("i_GainTest");
-        delay_ms(3000);
+        int     error;
+        int[]   source = new int[2];
+        int     ch = -1;
+        
+        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
+        source0Pos.order(ByteOrder.nativeOrder());
+        source0Pos.putFloat(2.0f);
+        source0Pos.putFloat(0.0f);
+        source0Pos.putFloat(-2.0f);
+        
+        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
+        source0Vel.order(ByteOrder.nativeOrder());
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        source0Vel.putFloat(0.0f);
+        
+        ByteBuffer source1Pos = ByteBuffer.allocateDirect(12);
+        source1Pos.order(ByteOrder.nativeOrder());
+        source1Pos.putFloat(-2.0f);
+        source1Pos.putFloat(0.0f);
+        source1Pos.putFloat(-2.0f);
+        
+        ByteBuffer source1Vel = ByteBuffer.allocateDirect(12);
+        source1Vel.order(ByteOrder.nativeOrder());
+        source1Vel.putFloat(0.0f);
+        source1Vel.putFloat(0.0f);
+        source1Vel.putFloat(0.0f);
+        
+        al.genSources(2,source);
+        if ((error = al.getError()) != AL.NO_ERROR) {
+            displayALError("alGenSources 2 : ", error);
+            return;
+        }
+        
+        al.sourcef(source[0],AL.PITCH,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_PITCH : \n", error);
+        
+        al.sourcef(source[0],AL.GAIN,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 0 AL_GAIN : \n", error);
+        
+        al.sourcefv(source[0],AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_POSITION : \n", error);
+        
+        al.sourcefv(source[0],AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
+        
+        al.sourcei(source[0],AL.BUFFER, buffers[0]);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 0 AL_BUFFER buffer 0 : \n", error);
+        
+        al.sourcei(source[0],AL.LOOPING,AL.TRUE);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 0 AL_LOOPING true: \n", error);
+        
+        
+        al.sourcef(source[1],AL.PITCH,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 1 AL_PITCH : \n", error);
+        
+        al.sourcef(source[1],AL.GAIN,1.0f);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcef 1 AL_GAIN : \n", error);
+        
+        al.sourcefv(source[1],AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 1 AL_POSITION : \n", error);
+        
+        al.sourcefv(source[1],AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcefv 1 AL_VELOCITY : \n", error);
+        
+        al.sourcei(source[1],AL.BUFFER, buffers[1]);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 1 AL_BUFFER buffer 1 : \n", error);
+        
+        al.sourcei(source[1],AL.LOOPING,AL.TRUE);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourcei 1 AL_LOOPING true: \n", error);
+        
+        System.out.print("Gain Test\n");
+        System.out.print("Press '1' to play source 0 (looping)\n");
+        System.out.print("Press '2' to play source 1 (looping)\n");
+        System.out.print("Press '3' to stop source 0\n");
+        System.out.print("Press '4' to stop source 1\n");
+        System.out.print("Press '5' to set source 0 gain to 1.0\n");
+        System.out.print("Press '6' to set source 0 gain to 0.5\n");
+        System.out.print("Press '7' to set source 0 gain to 0.25\n");
+        System.out.print("Press '8' to set source 0 gain to 0\n");
+        System.out.print("Press 'A' to set Listener Gain to 1.0\n");
+        System.out.print("Press 'B' to set Listener Gain to 0.5\n");
+        System.out.print("Press 'C' to set Listener Gain to 0.25\n");
+        System.out.print("Press 'D' to set Listener Gain to 0.0\n");
+        System.out.print("Press 'Q' to quit\n");
+        
+        do {
+            try {
+                ch = System.in.read();
+            } catch (IOException ioe) {
+            }
+            
+            switch (ch) {
+                case '1':
+                    al.sourcePlay(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcePlay source 0 : ", error);
+                    break;
+                case '2':
+                    al.sourcePlay(source[1]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcePlay source 1 : ", error);
+                    break;
+                case '3':
+                    al.sourceStop(source[0]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourceStop source 0 : \n", error);
+                    break;
+                case '4':
+                    al.sourceStop(source[1]);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourceStop source 1 : \n", error);
+                    break;
+                case '5':
+                    al.sourcef(source[0],AL.GAIN,1.0f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcef 0 AL_GAIN 1.0 : \n", error);
+                    break;
+                case '6':
+                    al.sourcef(source[0],AL.GAIN,0.5f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcef 0 AL_GAIN 0.5 : \n", error);
+                    break;
+                case '7':
+                    al.sourcef(source[0],AL.GAIN,0.25f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcef 0 AL_GAIN 0.25 : \n", error);
+                    break;
+                case '8':
+                    al.sourcef(source[0],AL.GAIN,0.0f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourcef 0 AL_GAIN 0.0 : \n", error);
+                    break;
+                case 'A':
+                    al.listenerf(AL.GAIN,1.0f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alListenerf AL_GAIN 1.0 : \n", error);
+                    break;
+                case 'B':
+                    al.listenerf(AL.GAIN,0.5f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alListenerf AL_GAIN 0.5 : \n", error);
+                    break;
+                case 'C':
+                    al.listenerf(AL.GAIN,0.25f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alListenerf AL_GAIN 0.25 : \n", error);
+                    break;
+                case 'D':
+                    al.listenerf(AL.GAIN,0.0f);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alListenerf AL_GAIN 0.0 : \n", error);
+                    break;
+            }
+        } while (ch != 'Q');
+        
+        // Reset & Release resources
+        al.listenerf(AL.GAIN,1.0f);
+        al.sourceStopv(2,source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alSourceStop : ", error);
+        
+        al.deleteSources(2, source);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("alDeleteSources 2 : ", error);
     }
     
     protected void i_StreamingTest() {
@@ -934,8 +1841,91 @@ public class ALTest extends BasicTest {
     }
     
     protected void i_MultipleSourcesTest() {
-        System.out.println("i_MultipleSourcesTest");
-        delay_ms(3000);
+        int	numSources = 0;
+        int[]   Sources = new int[64];
+        int	error;
+        int	i;
+        int	ch = -1;
+        float radius;
+        double anglestep;
+        ByteBuffer pos = ByteBuffer.allocateDirect(12);
+        pos.order(ByteOrder.nativeOrder());
+        
+        // Generate as many sources as possible (up to 64)
+        for (i = 0; i < 64; i++) {
+            int[] tempSource = new int[1];
+            al.genSources(1, tempSource);
+            if ((error = al.getError()) != AL.NO_ERROR) {
+                break;
+            } else {
+                numSources++;
+                Sources[i] = tempSource[0];
+            }            
+        }
+        
+        System.out.print("Multiple Sources Test\n\n");
+        System.out.print("Generated " + numSources + " Sources\n");
+        
+        // Set sources to located in a circle around the listener
+        
+        anglestep = (2 * 3.1416) / (float)numSources;
+        radius = 2.0f;
+        
+        for (i = 0; i < numSources; i++) {
+            // Attach buffer
+            al.sourcei(Sources[i], AL.BUFFER, buffers[0]);
+            
+            // Set position
+            pos.putFloat((float)(Math.cos(anglestep*i) * radius));
+            pos.putFloat(0.0f);
+            pos.putFloat((float)(Math.sin(anglestep*i) * radius));
+            
+            al.sourcefv(Sources[i], AL.POSITION, Sys.getDirectBufferAddress(pos));
+            
+            pos.rewind();
+            
+            System.out.print("Source " + i + " at " + 
+                            pos.getFloat() + ", " +
+                            pos.getFloat() + ", " +
+                            pos.getFloat() + "\n");
+            
+            // Enable looping
+            al.sourcei(Sources[i], AL.LOOPING, AL.TRUE);
+            
+            pos.clear();
+        }
+        
+        
+        System.out.print("Press '1' to start playing Sources seperately\n");
+        System.out.print("Press '2' to stop playing Sources seperately\n");
+        System.out.print("Press 'Q' to quit\n");
+        
+        do {
+            try {
+                ch = System.in.read();
+            } catch (IOException ioe) {
+            }
+            switch (ch) {
+                case '1':
+                    for (i = 0; i < numSources; i++) {
+                        al.sourcePlay(Sources[i]);
+                        if ((error = al.getError()) != AL.NO_ERROR)
+                            displayALError("alSourcePlay : ", error);
+                        
+                        // Delay a little
+                        delay_ms(100);
+                    }
+                    break;
+                case '2':
+                    al.sourceStopv(numSources, Sources);
+                    if ((error = al.getError()) != AL.NO_ERROR)
+                        displayALError("alSourceStopv : ", error);
+                    break;
+            }
+        } while (ch != 'Q');
+        
+        // Delete the Sources
+        al.deleteSources(numSources, Sources);
     }
     
     /**
