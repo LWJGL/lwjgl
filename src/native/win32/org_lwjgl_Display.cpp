@@ -273,11 +273,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 	
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
-	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-#ifdef _DEBUG
-		printf("Could not reset device gamma\n");
-#endif
-	}
+	try {
+		if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
+	#ifdef _DEBUG
+			printf("Could not reset device gamma\n");
+	#endif
+		}
+	} catch (...) {
+		printf("Exception occurred in SetDeviceGammaRamp\n");
+	}	
 	ReleaseDC(NULL, screenDC);	
 
 	if (modeSet) {
@@ -296,11 +300,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 void tempResetDisplayMode() {
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
-	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-#ifdef _DEBUG
-		printf("Could not reset device gamma\n");
-#endif
-	}
+	try {
+		if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
+	#ifdef _DEBUG
+			printf("Could not reset device gamma\n");
+	#endif
+		}
+	} catch (...) {
+		printf("Exception occurred in SetDeviceGammaRamp\n");
+	}	
 	ReleaseDC(NULL, screenDC);	
 
 	if (modeSet) {
@@ -319,11 +327,15 @@ void tempResetDisplayMode() {
 void tempRestoreDisplayMode() {
 	// Restore gamma
 	HDC screenDC = GetDC(NULL);
-	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
-#ifdef _DEBUG
-		printf("Could not restore device gamma\n");
-#endif
-	}
+	try { 
+		if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
+	#ifdef _DEBUG
+			printf("Could not restore device gamma\n");
+	#endif
+		}
+	} catch (...) {
+		printf("Exception occurred in SetDeviceGammaRamp\n");
+	}	
 	ReleaseDC(NULL, screenDC);
 
 	if (!modeSet) {
@@ -374,13 +386,18 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 	}
 	jboolean ret;
 	HDC screenDC = GetDC(NULL);
-	if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
-#ifdef _DEBUG
-		printf("Failed to set device gamma\n");
-#endif
+	try {
+		if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
+	#ifdef _DEBUG
+			printf("Failed to set device gamma\n");
+	#endif
+			ret = JNI_FALSE;
+		} else {
+			ret = JNI_TRUE;
+		}
+	} catch (...) {
+		printf("Exception occurred in SetDeviceGammaRamp\n");
 		ret = JNI_FALSE;
-	} else {
-		ret = JNI_TRUE;
 	}
 	ReleaseDC(NULL, screenDC);
 
@@ -419,10 +436,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	env->DeleteLocalRef(newMode);
 
 	// Get the default gamma ramp
-	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
-#ifdef _DEBUG
-		printf("Failed to get initial device gamma\n");
-#endif
+	try {
+		if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
+	#ifdef _DEBUG
+			printf("Failed to get initial device gamma\n");
+	#endif
+		}
+	} catch (...) {
+		printf("Exception occurred in GetDeviceGammaRamp\n");
 	}
 	ReleaseDC(NULL, screenDC);
 }

@@ -191,4 +191,9 @@ public final class Sys {
 	 */
 	public static native void alert(String title, String message);
 	
+	/*
+	 * Cas: this is just a debugging aid. The native code is also commented out.
+	 *
+	public static native int getDirectBufferAddress(Buffer buf);
+	 */
 } 

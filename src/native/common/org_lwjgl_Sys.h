@@ -19,7 +19,7 @@ extern "C" {
 /* Inaccessible static: LIBRARY_NAME */
 /* Inaccessible static: DEBUG */
 /* Inaccessible static: _debug */
-/* Inaccessible static: class_00024org_00024lwjgl_00024Sys */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution
@@ -59,6 +59,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
   (JNIEnv *, jclass, jstring, jstring);
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    getDirectBufferAddress
+ * Signature: (Ljava/nio/Buffer;)I
+JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
+  (JNIEnv *, jclass, jobject);
+ */
 
 #ifdef __cplusplus
 }
