@@ -45,6 +45,28 @@ import org.w3c.dom.NodeList;
 final class XMLUtil {
 	
 	/**
+	 * Get a single child element
+	 * @param child
+	 * @return the single child element, or null
+	 * @throws Exception if the child is present multiple times
+	 */
+	public static Element getChild(Element element, String child) throws Exception {
+		NodeList nodes = element.getChildNodes();
+		Element ret = null;
+		for (int i = 0; i < nodes.getLength(); i ++) {
+			Node childNode = (Node) nodes.item(i);
+			if (childNode.getNodeName().equals(child) && childNode.getNodeType() == Node.ELEMENT_NODE) {
+				if (ret != null) {
+					throw new Exception("Child element '"+child+"' present multiple times");
+				} else {
+					ret = (Element) childNode;
+				}
+			}
+		}
+		return ret;
+	}
+
+	/**
 	 * @param name The name of the child elements you want
 	 * @return a List of child Elements
 	 */

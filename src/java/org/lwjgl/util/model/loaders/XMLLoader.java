@@ -39,13 +39,6 @@ import java.util.Map;
 
 import org.lwjgl.util.Color;
 import org.lwjgl.util.model.*;
-import org.lwjgl.util.model.BoneFrame;
-import org.lwjgl.util.model.BonedModel;
-import org.lwjgl.util.model.BonedVertex;
-import org.lwjgl.util.model.MeshedModel;
-import org.lwjgl.util.model.Triangle;
-import org.lwjgl.util.model.Vertex;
-import org.lwjgl.util.model.Weight;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -121,7 +114,11 @@ public class XMLLoader {
 	 * @throws Exception
 	 */
 	private BonedVertex[] loadBonedVertices() throws Exception {
-		List vertexElements = XMLUtil.getChildren(src.getDocumentElement(), "vertex");
+		Element verticesElement = XMLUtil.getChild(src.getDocumentElement(), "vertices");
+		if (verticesElement == null) {
+			return null;
+		}
+		List vertexElements = XMLUtil.getChildren(verticesElement, "vertex");
 		if (vertexElements.size() != numVertices) {
 			throw new Exception("Vertex count incorrect, got "+vertexElements.size()+", expected "+numVertices);
 		}
@@ -140,7 +137,11 @@ public class XMLLoader {
 	 * @throws Exception
 	 */
 	private Vector2f[] loadSkin() throws Exception {
-		List skinElements = XMLUtil.getChildren(src.getDocumentElement(), "skin");
+		Element skinElement = XMLUtil.getChild(src.getDocumentElement(), "skin");
+		if (skinElement == null) {
+			return null;
+		}
+		List skinElements = XMLUtil.getChildren(skinElement, "texcoord");
 		if (skinElements.size() == 0) {
 			return null;
 		}
@@ -150,8 +151,8 @@ public class XMLLoader {
 		Vector2f[] skins = new Vector2f[skinElements.size()];
 		int skinCount = 0;
 		for (Iterator i = skinElements.iterator(); i.hasNext(); ) {
-			Element skinElement = (Element) i.next();
-			skins[skinCount++] = loadTexCoord(skinElement);
+			Element texCoordElement = (Element) i.next();
+			skins[skinCount++] = loadTexCoord(texCoordElement);
 		}
 		return skins;
 	}
@@ -162,7 +163,12 @@ public class XMLLoader {
 	 * @throws Exception
 	 */
 	private Color[] loadColor() throws Exception {
-		List colorElements = XMLUtil.getChildren(src.getDocumentElement(), "color");
+		Element colorsElement = XMLUtil.getChild(src.getDocumentElement(), "colors");
+		if (colorsElement == null) {
+			return null;
+		}
+
+		List colorElements = XMLUtil.getChildren(colorsElement, "color");
 		if (colorElements.size() == 0) {
 			return null;
 		}
@@ -184,7 +190,11 @@ public class XMLLoader {
 	 * @throws Exception
 	 */
 	private Triangle[] loadTriangles() throws Exception {
-		List triangleElements = XMLUtil.getChildren(src.getDocumentElement(), "triangle");
+		Element meshElement = XMLUtil.getChild(src.getDocumentElement(), "mesh");
+		if (meshElement == null) {
+			return null;
+		}
+		List triangleElements = XMLUtil.getChildren(meshElement, "triangle");
 		Triangle[] triangles = new Triangle[triangleElements.size()];
 		int triangleCount = 0;
 		for (Iterator i = triangleElements.iterator(); i.hasNext(); ) {
@@ -200,11 +210,15 @@ public class XMLLoader {
 	 * @throws Exception
 	 */
 	private Map loadBoneAnimations() throws Exception {
-		List animationElements = XMLUtil.getChildren(src.getDocumentElement(), "animation");
-		Map animations = new HashMap(animationElements.size());
-		for (Iterator i = animationElements.iterator(); i.hasNext(); ) {
-			Element animationElement = (Element) i.next();
-			animations.put(XMLUtil.getString(animationElement, "name"), loadBonedAnimation(animationElement));
+		Element animationElement = XMLUtil.getChild(src.getDocumentElement(), "animation");
+		if (animationElement == null) {
+			return null;
+		}
+		List sequenceElements = XMLUtil.getChildren(src.getDocumentElement(), "sequence");
+		Map animations = new HashMap(sequenceElements.size());
+		for (Iterator i = sequenceElements.iterator(); i.hasNext(); ) {
+			Element sequenceElement = (Element) i.next();
+			animations.put(XMLUtil.getString(sequenceElement, "name"), loadBonedAnimation(sequenceElement));
 		}
 		return animations;
 	}
@@ -215,11 +229,15 @@ public class XMLLoader {
 	 * @throws Exception
 	 */
 	private Map loadMeshAnimations() throws Exception {
-		List animationElements = XMLUtil.getChildren(src.getDocumentElement(), "animation");
-		Map animations = new HashMap(animationElements.size());
-		for (Iterator i = animationElements.iterator(); i.hasNext(); ) {
-			Element animationElement = (Element) i.next();
-			animations.put(XMLUtil.getString(animationElement, "name"), loadMeshAnimation(animationElement));
+		Element animationElement = XMLUtil.getChild(src.getDocumentElement(), "animation");
+		if (animationElement == null) {
+			return null;
+		}
+		List sequenceElements = XMLUtil.getChildren(src.getDocumentElement(), "sequence");
+		Map animations = new HashMap(sequenceElements.size());
+		for (Iterator i = sequenceElements.iterator(); i.hasNext(); ) {
+			Element sequenceElement = (Element) i.next();
+			animations.put(XMLUtil.getString(sequenceElement, "name"), loadMeshAnimation(sequenceElement));
 		}
 		return animations;
 	}
