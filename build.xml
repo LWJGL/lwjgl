@@ -65,6 +65,7 @@
 		<include name="CREDITS" />
 		<include name="LICENSE" />
 		<include name="README" />
+		<include name="lwjgl_hidden_switches.text" />
 	</patternset>
 
 	<!-- Files to include in win32 package -->
