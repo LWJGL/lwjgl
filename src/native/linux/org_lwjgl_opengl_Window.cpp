@@ -73,6 +73,7 @@ static bool minimized;
 static bool focused;
 static bool closerequested;
 static bool grab;
+static bool ignore_motion_events;
 
 static Display *display_connection = NULL;
 static int display_connection_usage = 0;
@@ -152,6 +153,14 @@ void setGrab(bool new_grab) {
 	updateInputGrab();
 }
 
+static void handleMotion(XMotionEvent *event) {
+	if (event->send_event == True) {
+		// We got a warp ignore message
+		ignore_motion_events = event->state == 1 ? true : false;
+	} else if (!ignore_motion_events)
+		handlePointerMotion(event);
+}
+
 static void handleMessages() {
 	XEvent event;
 	Window win;
@@ -194,7 +203,7 @@ static void handleMessages() {
 				handleButtonRelease(&(event.xbutton));
 				break;
 			case MotionNotify:
-				handlePointerMotion(&(event.xmotion));
+				handleMotion(&(event.xmotion));
 				break;
 			case KeyPress:
 			case KeyRelease:
@@ -223,6 +232,7 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	closerequested = false;
 	vsync_enabled = false;
 	grab = false;
+	ignore_motion_events = false;
 	Window root_win;
 	Window win;
 	XSetWindowAttributes attribs;

@@ -161,9 +161,18 @@ void updatePointerGrab(void) {
 }
 
 static void doWarpPointer(void ) {
-	int i;
+//	int i;
+	XEvent ignore_warp_guard;
+	ignore_warp_guard.type = MotionNotify;
+	ignore_warp_guard.xmotion.state = 1; // Tell event loop to start ignoring motion events
 	centerCursor();
+	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
 	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
+	ignore_warp_guard.xmotion.state = 0; // Tell event loop to stop ignoring motion events
+	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
+
+	centerCursor();
+/*	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
 	XEvent event;
 	// Try to catch the warp pointer event
 	for (i = 0; i < WARP_RETRY; i++) {
@@ -176,7 +185,7 @@ static void doWarpPointer(void ) {
 		printfDebug("Skipped event searching for warp event %d, %d\n", event.xmotion.x, event.xmotion.y);
 	}
 	if (i == WARP_RETRY)
-		printfDebug("Never got warp event\n");
+		printfDebug("Never got warp event\n");*/
 }
 
 static void warpPointer(void) {
