@@ -60,31 +60,39 @@ DEVMODE devmode; // Now we'll remember this value for the future
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
-  // Determine whether to use a display name or NULL, which depends on the operating
-	// system
-	OSVERSIONINFO osvi;
-
-	osvi.dwOSVersionInfoSize = sizeof(osvi);
-	GetVersionEx(&osvi);
-	
-	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ||
-            osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS && osvi.dwMinorVersion >= 10) {
+	jobjectArray result = GetAvailableDisplayModesEx(env);
+	if (result == NULL) {
 #ifdef _DEBUG
-		printf("Selecting extended display mode check\n");
-#endif	
-		return GetAvailableDisplayModesEx(env);
-	} else {
-#ifdef _DEBUG
-		printf("Selecting standard display mode check");
-#endif	
-		return GetAvailableDisplayModes(env);
+		printf("Extended display mode selection failed, using fallback\n");
+#endif
+		result = GetAvailableDisplayModes(env);
 	}
+	return result;
 }
 
 /**
  * Choose displaymodes using extended codepath (multiple displaydevices)
  */
 jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
+	typedef BOOL (WINAPI * EnumDisplayDevicesAPROC)(IN LPCSTR lpDevice, IN DWORD iDevNum, OUT PDISPLAY_DEVICEA lpDisplayDevice, IN DWORD dwFlags);
+	typedef BOOL (WINAPI * EnumDisplaySettingsExAPROC)(IN LPCSTR lpszDeviceName, IN DWORD iModeNum, OUT LPDEVMODEA lpDevMode, IN DWORD dwFlags);
+	EnumDisplayDevicesAPROC EnumDisplayDevicesA;
+	EnumDisplaySettingsExAPROC EnumDisplaySettingsExA;
+
+	HMODULE lib_handle = LoadLibrary("user32.dll");
+	if (lib_handle == NULL) {
+#ifdef _DEBUG
+		printf("Could not load user32.dll\n");
+#endif
+		return NULL;
+	}
+	EnumDisplayDevicesA = (EnumDisplayDevicesAPROC)GetProcAddress(lib_handle, "EnumDisplayDevicesA");
+	if (EnumDisplayDevicesA == NULL)
+		return NULL;
+	EnumDisplaySettingsExA = (EnumDisplaySettingsExAPROC)GetProcAddress(lib_handle, "EnumDisplaySettingsExA");
+	if (EnumDisplaySettingsExA == NULL)
+		return NULL;
+
 	int i = 0, j = 0, n = 0;
 	int AvailableModes = 0;
 
@@ -98,12 +106,12 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
   
   //enumerate all displays, and all of their displaymodes
-	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
+	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
 #ifdef _DEBUG
 	  printf("Querying %s device\n", DisplayDevice.DeviceString);
 #endif
 		j = 0;
-		while(EnumDisplaySettingsEx(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
+		while(EnumDisplaySettingsExA(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 #ifdef _DEBUG
 			printf("Checking setting #%d\n", j);
 #endif
@@ -125,9 +133,9 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
   
 	i = 0, n = 0;
-	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
+	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
 		j = 0;
-		while(EnumDisplaySettingsEx(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
+		while(EnumDisplaySettingsExA(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 			// Filter out indexed modes
 			if (DevMode.dmBitsPerPel > 8) {
 				jobject displayMode;
@@ -139,6 +147,7 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 			}
 		}
 	}
+	FreeLibrary(lib_handle);
 	return ret;
 }
 
