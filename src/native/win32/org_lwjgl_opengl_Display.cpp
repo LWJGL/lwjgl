@@ -137,7 +137,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 		GLuint *pixelFormatCaps_ptr = (GLuint *)env->GetDirectBufferAddress(pixelFormatCaps);
 		jlong pixelFormatCapsSize = env->GetDirectBufferCapacity(pixelFormatCaps);
 
-		for (jlong i = 0; i < pixelFormatCapsSize;)
+		for (jlong i = 0; i < pixelFormatCapsSize; i++)
 			putAttrib(&attrib_list, pixelFormatCaps_ptr[i]);
 	}
 	putAttrib(&attrib_list, 0); putAttrib(&attrib_list, 0);

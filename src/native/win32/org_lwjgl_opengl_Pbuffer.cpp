@@ -186,7 +186,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 	}
 
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
-//	PbufferInfo *Pbuffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
 	Pbuffer_info->Pbuffer = Pbuffer;
 	Pbuffer_info->Pbuffer_context = Pbuffer_context;
 	Pbuffer_info->Pbuffer_dc = Pbuffer_dc;
@@ -197,7 +196,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
   (JNIEnv *env, jclass clazz, jobject buffer_handle)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
-//	PbufferInfo *Pbuffer_info = (PbufferInfo *)handle;
 	BOOL buffer_lost;
 	wglQueryPbufferARB(Pbuffer_info->Pbuffer, WGL_PBUFFER_LOST_ARB, &buffer_lost);
 	return buffer_lost ? JNI_TRUE : JNI_FALSE;
@@ -216,19 +214,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
   (JNIEnv *env, jclass clazz, jobject buffer_handle)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
-//	PbufferInfo *Pbuffer_info = (PbufferInfo *)handle;
 	if (!Pbuffer_info->use_display_context)
 		wglDeleteContext(Pbuffer_info->Pbuffer_context);
 	wglReleasePbufferDCARB(Pbuffer_info->Pbuffer, Pbuffer_info->Pbuffer_dc);
 	wglDestroyPbufferARB(Pbuffer_info->Pbuffer);
-//	free(Pbuffer_info);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
   (JNIEnv *env, jclass clazz, jobject buffer_handle, jint attrib, jint value)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
-//	PbufferInfo *Pbuffer_info = (PbufferInfo *)handle;
 
 	int attribs[3];
 
@@ -243,7 +238,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
   (JNIEnv *env, jclass clazz, jobject buffer_handle, jint buffer)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
-//	PbufferInfo *Pbuffer_info = (PbufferInfo *)handle;
 	wglBindTexImageARB(Pbuffer_info->Pbuffer, buffer);
 }
 
@@ -251,6 +245,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
   (JNIEnv *env, jclass clazz, jobject buffer_handle, jint buffer)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)env->GetDirectBufferAddress(buffer_handle);
-//	PbufferInfo *Pbuffer_info = (PbufferInfo *)handle;
 	wglReleaseTexImageARB(Pbuffer_info->Pbuffer, buffer);
 }
