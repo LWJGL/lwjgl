@@ -47,11 +47,16 @@ import java.util.*;
  * context. This will ensure that GLContext has an accurate reflection of the current context's capabilities and function
  * pointers.
  *
+ * This class is thread-safe in the sense that multiple threads can safely call all public methods. The class is also
+ * thread-aware in the sense that it tracks a per-thread current context (and capabilities). That way, multiple threads
+ * can have multiple contexts current and render to them concurrently.
+ *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 public final class GLContext {
 	private final static ThreadLocal current_capabilities = new ThreadLocal();
+	private final static Map capability_cache = new WeakHashMap();
 
 	/** Map of classes that have native stubs loaded */
 	private static int gl_ref_count;
@@ -171,10 +176,6 @@ public final class GLContext {
 		}
 	}
 
-	private static void loadStubs() throws LWJGLException {
-		new ContextCapabilities();
-	}
-
 	/**
 	 * Makes a GL context the current LWJGL context by loading GL function pointers. The context must be current before a call to
 	 * this method! Instead it simply ensures that the current context is reflected accurately by GLContext's extension caps and
@@ -189,13 +190,13 @@ public final class GLContext {
 	 *
 	 * @throws LWJGLException if context non-null, and the gl library can't be loaded or the basic GL11 functions can't be loaded
 	 */
-	public static void useContext(Object context) throws LWJGLException {
+	public static synchronized void useContext(Object context) throws LWJGLException {
 		if (context == null) {
 			ContextCapabilities.unloadAllStubs();
 			setCapabilities(null);
+			BufferObjectTracker.setCurrent(null);
 			if (did_auto_load)
 				unloadOpenGLLibrary();
-			BufferObjectTracker.setCurrent(null);
 			return;
 		}
 		if (gl_ref_count == 0) {
@@ -203,18 +204,29 @@ public final class GLContext {
 			did_auto_load = true;
 		}
 		try {
-			loadStubs();
+			ContextCapabilities capabilities = (ContextCapabilities)capability_cache.get(context);
+			if (capabilities == null) {
+				/*
+				 * The capabilities object registers itself as current. This behaviour is caused
+				 * by a chicken-and-egg situation where the constructor needs to call GL functions
+				 * as part of its capability discovery, but GL functions cannot be called before
+				 * a capabilities object has been set.
+				 */
+				new ContextCapabilities();
+				capability_cache.put(context, getCapabilities());
+			} else
+				setCapabilities(capabilities);
 			BufferObjectTracker.setCurrent(context);
 		} catch (LWJGLException e) {
-			if ( did_auto_load )
+			if (did_auto_load)
 				unloadOpenGLLibrary();
 			throw e;
 		}
 	}
 
 	/** If the OpenGL reference count is 0, the library is loaded. The reference count is then incremented. */
-	public static void loadOpenGLLibrary() throws LWJGLException {
-		if ( gl_ref_count == 0 )
+	public static synchronized void loadOpenGLLibrary() throws LWJGLException {
+		if (gl_ref_count == 0)
 			nLoadOpenGLLibrary();
 		gl_ref_count++;
 	}
@@ -222,7 +234,7 @@ public final class GLContext {
 	private static native void nLoadOpenGLLibrary() throws LWJGLException;
 
 	/** The OpenGL library reference count is decremented, and if it reaches 0, the library is unloaded. */
-	public static void unloadOpenGLLibrary() {
+	public static synchronized void unloadOpenGLLibrary() {
 		gl_ref_count--;
 		if ( gl_ref_count == 0 )
 			nUnloadOpenGLLibrary();
