@@ -468,174 +468,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4us(JNIEnv * env, jcl
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3bv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3bv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLbyte *address = (const GLbyte *)env->GetDirectBufferAddress(buffer);
-	glColor3bv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3dv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glColor3dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3fv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glColor3fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3iv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glColor3iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3sv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glColor3sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3ubv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3ubv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLubyte *address = (const GLubyte *)env->GetDirectBufferAddress(buffer);
-	glColor3ubv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3uiv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3uiv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLuint *address = (const GLuint *)env->GetDirectBufferAddress(buffer);
-	glColor3uiv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3usv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3usv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLushort *address = (const GLushort *)env->GetDirectBufferAddress(buffer);
-	glColor3usv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4bv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4bv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLbyte *address = (const GLbyte *)env->GetDirectBufferAddress(buffer);
-	glColor4bv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4dv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glColor4dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4fv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glColor4fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4iv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glColor4iv(address);
-}
-
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4sv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glColor4sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4ubv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4ubv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLubyte *address = (const GLubyte *)env->GetDirectBufferAddress(buffer);
-	glColor4ubv(address);
-}
-
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4uiv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4uiv
-  (JNIEnv *env, jclass clazz, jobject buffer)
-{
-	const GLuint *address = (const GLuint *)env->GetDirectBufferAddress(buffer);
-	glColor4uiv(address);
-}
-
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glClipPlane
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glClipPlane(JNIEnv * env, jclass clazz, jint p0, jobject buffer)
@@ -747,50 +579,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord2f(JNIEnv * env, 
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord1dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord1dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glEvalCoord1dv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord1fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord1fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glEvalCoord1fv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord2dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord2dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glEvalCoord2dv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord2fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord2fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glEvalCoord2fv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glEnableClientState
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEnableClientState(JNIEnv * env, jclass clazz, jint p0)
@@ -847,16 +635,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEdgeFlagPointer(JNIEnv * e
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEdgeFlag(JNIEnv * env, jclass clazz, jboolean p0)
 {
 	glEdgeFlag((GLboolean) p0);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEdgeFlagv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEdgeFlagv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLubyte *address = (const GLubyte *)env->GetDirectBufferAddress(buffer);
-	glEdgeFlagv(address);
 }
 
 /*
@@ -1330,56 +1108,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexs(JNIEnv * env, jclas
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexub(JNIEnv * env, jclass clazz, jbyte p0)
 {
 	glIndexub((GLbyte) p0);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexdv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexdv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glIndexdv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexfv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexfv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glIndexfv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexiv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexiv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glIndexiv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexsv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexsv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glIndexsv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexubv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexubv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLubyte *address = (const GLubyte *)env->GetDirectBufferAddress(buffer);
-	glIndexubv(address);
 }
 
 /*
@@ -2049,56 +1777,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3s(JNIEnv * env, jcl
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3bv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3bv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLbyte *address = (const GLbyte *)env->GetDirectBufferAddress(buffer);
-	glNormal3bv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glNormal3dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glNormal3fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glNormal3iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glNormal3sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glNewList
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNewList(JNIEnv * env, jclass clazz, jint p0, jint p1)
@@ -2275,54 +1953,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRects(JNIEnv * env, jclass
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectdv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectdv(JNIEnv * env, jclass clazz, jobject buffer, jobject buffer2)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	const GLdouble *address2 = (const GLdouble *)env->GetDirectBufferAddress(buffer2);
-	glRectdv(address, address2);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectfv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectfv(JNIEnv * env, jclass clazz, jobject buffer, jobject buffer2)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	const GLfloat *address2 = (const GLfloat *)env->GetDirectBufferAddress(buffer2);
-	glRectfv(address, address2);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectiv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectiv(JNIEnv * env, jclass clazz, jobject buffer, jobject buffer2)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	const GLint *address2 = (const GLint *)env->GetDirectBufferAddress(buffer2);
-	glRectiv(address, address2);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectsv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectsv(JNIEnv * env, jclass clazz, jobject buffer, jobject buffer2)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	const GLshort *address2 = (const GLshort *)env->GetDirectBufferAddress(buffer2);
-	glRectsv(address, address2);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glReadPixels
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glReadPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jobject buffer)
@@ -2459,138 +2089,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4i(JNIEnv * env, 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4s(JNIEnv * env, jclass clazz, jshort p0, jshort p1, jshort p2, jshort p3)
 {
 	glRasterPos4s((GLshort) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glRasterPos2dv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glRasterPos2fv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glRasterPos2iv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glRasterPos2sv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glRasterPos3dv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glRasterPos3fv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glRasterPos3iv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glRasterPos3sv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glRasterPos4dv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glRasterPos4fv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glRasterPos4iv(address);
-	CHECK_GL_ERROR
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glRasterPos4sv(address);
 	CHECK_GL_ERROR
 }
 
@@ -2801,127 +2299,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4i(JNIEnv * env, jcl
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4s(JNIEnv * env, jclass clazz, jshort p0, jshort p1, jshort p2, jshort p3)
 {
 	glVertex4s((GLshort) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glVertex2dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glVertex2fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glVertex2iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glVertex2sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glVertex3dv(address);
-
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glVertex3fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glVertex3iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glVertex3sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glVertex4dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glVertex4fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glVertex4iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glVertex4sv(address);
 }
 
 /*
@@ -3266,166 +2643,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4i(JNIEnv * env, j
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4s(JNIEnv * env, jclass clazz, jshort p0, jshort p1, jshort p2, jshort p3)
 {
 	glTexCoord4s((GLshort) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glTexCoord1dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glTexCoord1fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glTexCoord1iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glTexCoord1sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glTexCoord2dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glTexCoord2fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glTexCoord2iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glTexCoord2sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glTexCoord3dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glTexCoord3fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glTexCoord3iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glTexCoord3sv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4dv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4dv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glTexCoord4dv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4fv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4fv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glTexCoord4fv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4iv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4iv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glTexCoord4iv(address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4sv
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4sv(JNIEnv * env, jclass clazz, jobject buffer)
-{
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glTexCoord4sv(address);
 }
 
 /*
@@ -4137,20 +3354,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1d
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1dv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord1dv)
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord1dv(target, address);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord1f
  * Signature: (IF)V
  */
@@ -4159,20 +3362,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1f
 {
 	CHECK_EXISTS(glMultiTexCoord1f)
 	glMultiTexCoord1f(target, s);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1fv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord1fv)
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord1fv(target, address);
 	
 }
 
@@ -4191,20 +3380,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1i
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1iv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord1iv)
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord1iv(target, address);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord1s
  * Signature: (IS)V
  */
@@ -4213,20 +3388,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1s
 {
 	CHECK_EXISTS(glMultiTexCoord1s)
 	glMultiTexCoord1s(target, s);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1sv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord1sv)
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord1sv(target, address);
 	
 }
 
@@ -4245,20 +3406,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2d
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2dv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord2dv)
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord2dv(target, address);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord2f
  * Signature: (IFF)V
  */
@@ -4267,20 +3414,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2f
 {
 	CHECK_EXISTS(glMultiTexCoord2f)
 	glMultiTexCoord2f(target, s, t);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2fv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord2fv)
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord2fv(target, address);
 	
 }
 
@@ -4299,20 +3432,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2i
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2iv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord2iv)
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord2iv(target, address);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord2s
  * Signature: (ISS)V
  */
@@ -4321,20 +3440,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2s
 {
 	CHECK_EXISTS(glMultiTexCoord2s)
 	glMultiTexCoord2s(target, s, t);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2sv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord2sv)
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord2sv(target, address);
 	
 }
 
@@ -4353,20 +3458,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3d
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3dv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord3dv)
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord3dv(target, address);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord3f
  * Signature: (IFFF)V
  */
@@ -4375,20 +3466,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3f
 {
 	CHECK_EXISTS(glMultiTexCoord3f)
 	glMultiTexCoord3f(target, s, t, r);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3fv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord3fv)
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord3fv(target, address);
 	
 }
 
@@ -4407,20 +3484,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3i
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3iv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord3iv)
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord3iv(target, address);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord3s
  * Signature: (ISSS)V
  */
@@ -4429,20 +3492,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3s
 {
 	CHECK_EXISTS(glMultiTexCoord3s)
 	glMultiTexCoord3s(target, s, t, r);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3sv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord3sv)
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord3sv(target, address);
 	
 }
 
@@ -4461,20 +3510,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4d
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4dv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord4dv)
-	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord4dv(target, address);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord4f
  * Signature: (IFFFF)V
  */
@@ -4483,20 +3518,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4f
 {
 	CHECK_EXISTS(glMultiTexCoord4f)
 	glMultiTexCoord4f(target, s, t, r, q);
-	
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4fv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord4fv)
-	const GLfloat *address = (const GLfloat *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord4fv(target, address);
 	
 }
 
@@ -4514,19 +3535,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4i
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4iv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord4iv)
-	const GLint *address = (const GLint *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord4iv(target, address);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord4s
  * Signature: (ISSSS)V
  */
@@ -4535,19 +3543,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4s
 {
 	CHECK_EXISTS(glMultiTexCoord4s)
 	glMultiTexCoord4s(target, s, t, r, q);
-}
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4sv
-  (JNIEnv *env, jclass clazz, jint target, jobject buffer)
-{
-	CHECK_EXISTS(glMultiTexCoord4sv)
-	const GLshort *address = (const GLshort *)env->GetDirectBufferAddress(buffer);
-	glMultiTexCoord4sv(target, address);
 }
 
 /*

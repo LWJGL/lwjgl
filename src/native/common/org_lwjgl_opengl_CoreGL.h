@@ -569,14 +569,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1d
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1dv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord1f
  * Signature: (IF)V
  */
@@ -585,26 +577,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1fv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord1i
  * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1i
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1iv
   (JNIEnv *, jclass, jint, jint);
 
 /*
@@ -617,27 +593,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1s
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord1sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord1sv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord2d
  * Signature: (IDD)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2d
   (JNIEnv *, jclass, jint, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2dv
-  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -649,27 +609,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2fv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord2i
  * Signature: (III)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2i
   (JNIEnv *, jclass, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2iv
-  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -681,27 +625,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2s
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord2sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord2sv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord3d
  * Signature: (IDDD)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3d
   (JNIEnv *, jclass, jint, jdouble, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3dv
-  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -713,27 +641,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3fv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord3i
  * Signature: (IIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3i
   (JNIEnv *, jclass, jint, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3iv
-  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -745,27 +657,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3s
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord3sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord3sv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord4d
  * Signature: (IDDDD)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4d
   (JNIEnv *, jclass, jint, jdouble, jdouble, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4dv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4dv
-  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -777,14 +673,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4fv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4fv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord4i
  * Signature: (IIIII)V
  */
@@ -793,27 +681,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4i
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4iv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4iv
-  (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glMultiTexCoord4s
  * Signature: (ISSSS)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4s
   (JNIEnv *, jclass, jint, jshort, jshort, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glMultiTexCoord4sv
- * Signature: (II)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glMultiTexCoord4sv
-  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -1017,126 +889,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4us
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3bv
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3bv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3ubv
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3ubv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3uiv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3uiv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor3usv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor3usv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4bv
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4bv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4ubv
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4ubv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glColor4uiv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glColor4uiv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glClipPlane
  * Signature: (ILjava/nio/DoubleBuffer;)V
  */
@@ -1225,38 +977,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord2f
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord1dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord1dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord1fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord1fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord2dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord2dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEvalCoord2fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEvalCoord2fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glEnableClientState
  * Signature: (I)V
  */
@@ -1302,14 +1022,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEdgeFlagPointer
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEdgeFlag
   (JNIEnv *, jclass, jboolean);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glEdgeFlagv
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glEdgeFlagv
-  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -1670,46 +1382,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexs
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexub
   (JNIEnv *, jclass, jbyte);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexdv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexdv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexfv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexfv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexiv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexiv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexsv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexsv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glIndexubv
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glIndexubv
-  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -2225,46 +1897,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3s
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3bv
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3bv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glNormal3sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glNormal3sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glNewList
  * Signature: (II)V
  */
@@ -2401,38 +2033,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRects
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectdv
- * Signature: (Ljava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectdv
-  (JNIEnv *, jclass, jobject, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectfv
- * Signature: (Ljava/nio/FloatBuffer;Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectfv
-  (JNIEnv *, jclass, jobject, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectiv
- * Signature: (Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectiv
-  (JNIEnv *, jclass, jobject, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRectsv
- * Signature: (Ljava/nio/CharBuffer;Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRectsv
-  (JNIEnv *, jclass, jobject, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
  * Method:    glReadPixels
  * Signature: (IIIIIILjava/nio/Buffer;)V
  */
@@ -2542,102 +2142,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4i
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4s
   (JNIEnv *, jclass, jshort, jshort, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos2sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos2sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos3sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos3sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glRasterPos4sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glRasterPos4sv
-  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -2814,102 +2318,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4i
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4s
   (JNIEnv *, jclass, jshort, jshort, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex2sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex2sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex3sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex3sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glVertex4sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glVertex4sv
-  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
@@ -3190,134 +2598,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4i
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4s
   (JNIEnv *, jclass, jshort, jshort, jshort, jshort);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord1sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord1sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord2sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord2sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord3sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord3sv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4dv
- * Signature: (Ljava/nio/DoubleBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4dv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4fv
- * Signature: (Ljava/nio/FloatBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4fv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4iv
- * Signature: (Ljava/nio/IntBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4iv
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL
- * Method:    glTexCoord4sv
- * Signature: (Ljava/nio/CharBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_glTexCoord4sv
-  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL

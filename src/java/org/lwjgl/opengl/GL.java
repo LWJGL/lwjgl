@@ -322,11 +322,7 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native void glFogCoorddEXT(double coord);
 
-	public static native void glFogCoorddvEXT(DoubleBuffer pdCoord);
-
 	public static native void glFogCoordfEXT(float coord);
-
-	public static native void glFogCoordfvEXT(FloatBuffer pfCoord);
 
 	public static native void glFogCoordPointerEXT(int type, int stride, Buffer pPointer);
 
@@ -612,35 +608,19 @@ public class GL extends CoreGL implements GLConstants {
 */
 	public static native void glMultiTexCoord1dARB(int target, double s);
 
-	public static native void glMultiTexCoord1dvARB(int target, DoubleBuffer pdV);
-
 	public static native void glMultiTexCoord1fARB(int target, float s);
-
-	public static native void glMultiTexCoord1fvARB(int target, FloatBuffer pfV);
 
 	public static native void glMultiTexCoord1iARB(int target, int s);
 
-	public static native void glMultiTexCoord1ivARB(int target, IntBuffer piV);
-
 	public static native void glMultiTexCoord1sARB(int target, short s);
-
-	public static native void glMultiTexCoord1svARB(int target, CharBuffer psV);
 
 	public static native void glMultiTexCoord2dARB(int target, double s, double t);
 
-	public static native void glMultiTexCoord2dvARB(int target, DoubleBuffer pdV);
-
 	public static native void glMultiTexCoord2fARB(int target, float s, float t);
-
-	public static native void glMultiTexCoord2fvARB(int target, FloatBuffer pfV);
 
 	public static native void glMultiTexCoord2iARB(int target, int s, int t);
 
-	public static native void glMultiTexCoord2ivARB(int target, IntBuffer piV);
-
 	public static native void glMultiTexCoord2sARB(int target, short s, short t);
-
-	public static native void glMultiTexCoord2svARB(int target, CharBuffer psV);
 
 	public static native void glMultiTexCoord3dARB(
 		int target,
@@ -648,27 +628,19 @@ public class GL extends CoreGL implements GLConstants {
 		double t,
 		double r);
 
-	public static native void glMultiTexCoord3dvARB(int target, int pdV);
-
 	public static native void glMultiTexCoord3fARB(
 		int target,
 		float s,
 		float t,
 		float r);
 
-	public static native void glMultiTexCoord3fvARB(int target, FloatBuffer pfV);
-
 	public static native void glMultiTexCoord3iARB(int target, int s, int t, int r);
-
-	public static native void glMultiTexCoord3ivARB(int target, IntBuffer piV);
 
 	public static native void glMultiTexCoord3sARB(
 		int target,
 		short s,
 		short t,
 		short r);
-
-	public static native void glMultiTexCoord3svARB(int target, CharBuffer psV);
 
 	public static native void glMultiTexCoord4dARB(
 		int target,
@@ -677,16 +649,12 @@ public class GL extends CoreGL implements GLConstants {
 		double r,
 		double q);
 
-	public static native void glMultiTexCoord4dvARB(int target, DoubleBuffer pdV);
-
 	public static native void glMultiTexCoord4fARB(
 		int target,
 		float s,
 		float t,
 		float r,
 		float q);
-
-	public static native void glMultiTexCoord4fvARB(int target, FloatBuffer pfV);
 
 	public static native void glMultiTexCoord4iARB(
 		int target,
@@ -695,16 +663,12 @@ public class GL extends CoreGL implements GLConstants {
 		int r,
 		int q);
 
-	public static native void glMultiTexCoord4ivARB(int target, IntBuffer piV);
-
 	public static native void glMultiTexCoord4sARB(
 		int target,
 		short s,
 		short t,
 		short r,
 		short q);
-
-	public static native void glMultiTexCoord4svARB(int target, CharBuffer psV);
 
 	public static native void glMultTransposeMatrixdARB(DoubleBuffer pdMtx); // m[16]
 
@@ -714,27 +678,17 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native void glNormalStream3bATI(int stream, byte x, byte y, byte z);
 
-	public static native void glNormalStream3bvATI(int stream, ByteBuffer pV);
-
 	public static native void glNormalStream3dATI(
 		int stream,
 		double x,
 		double y,
 		double z);
 
-	public static native void glNormalStream3dvATI(int stream, DoubleBuffer pdV);
-
 	public static native void glNormalStream3fATI(int stream, float x, float y, float z);
-
-	public static native void glNormalStream3fvATI(int stream, FloatBuffer pfV);
 
 	public static native void glNormalStream3iATI(int stream, int x, int y, int z);
 
-	public static native void glNormalStream3ivATI(int stream, IntBuffer piV);
-
 	public static native void glNormalStream3sATI(int stream, short x, short y, short z);
-
-	public static native void glNormalStream3svATI(int stream, CharBuffer psV);
 
 	public static native void glPassTexCoordATI(int dst, int coord, int swizzle);
 
@@ -762,11 +716,6 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public static native void glProgramEnvParameter4dvARB(
-		int target,
-		int index,
-		DoubleBuffer pdParams);
-
 	public static native void glProgramEnvParameter4fARB(
 		int target,
 		int index,
@@ -774,11 +723,6 @@ public class GL extends CoreGL implements GLConstants {
 		float y,
 		float z,
 		float w);
-
-	public static native void glProgramEnvParameter4fvARB(
-		int target,
-		int index,
-		FloatBuffer pfParams);
 
 	public static native void glProgramLocalParameter4dARB(
 		int target,
@@ -788,11 +732,6 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public static native void glProgramLocalParameter4dvARB(
-		int target,
-		int index,
-		DoubleBuffer pdParams);
-
 	public static native void glProgramLocalParameter4fARB(
 		int target,
 		int index,
@@ -800,11 +739,6 @@ public class GL extends CoreGL implements GLConstants {
 		float y,
 		float z,
 		float w);
-
-	public static native void glProgramLocalParameter4fvARB(
-		int target,
-		int index,
-		FloatBuffer pfParams);
 
 	public static native void glProgramParameter4dNV(
 		int target,
@@ -814,11 +748,6 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public static native void glProgramParameter4dvNV(
-		int target,
-		int index,
-		DoubleBuffer pdParams);
-
 	public static native void glProgramParameter4fNV(
 		int target,
 		int index,
@@ -826,11 +755,6 @@ public class GL extends CoreGL implements GLConstants {
 		float y,
 		float z,
 		float w);
-
-	public static native void glProgramParameter4fvNV(
-		int target,
-		int index,
-		FloatBuffer pfParams);
 
 	public static native void glProgramParameters4dvNV(
 		int target,
@@ -858,38 +782,22 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 
-	public static native void glSecondaryColor3bvEXT(ByteBuffer pV);
-
 	public static native void glSecondaryColor3dEXT(
 		double red,
 		double green,
 		double blue);
 
-	public static native void glSecondaryColor3dvEXT(DoubleBuffer pdV);
-
 	public static native void glSecondaryColor3fEXT(float red, float green, float blue);
-
-	public static native void glSecondaryColor3fvEXT(FloatBuffer pfV);
 
 	public static native void glSecondaryColor3iEXT(int red, int green, int blue);
 
-	public static native void glSecondaryColor3ivEXT(IntBuffer piV);
-
 	public static native void glSecondaryColor3sEXT(short red, short green, short blue);
-
-	public static native void glSecondaryColor3svEXT(CharBuffer psV);
 
 	public static native void glSecondaryColor3ubEXT(byte red, byte green, byte blue);
 
-	public static native void glSecondaryColor3ubvEXT(ByteBuffer pV);
-
 	public static native void glSecondaryColor3uiEXT(int red, int green, int blue);
 
-	public static native void glSecondaryColor3uivEXT(IntBuffer piV);
-
 	public static native void glSecondaryColor3usEXT(short red, short green, short blue);
-
-	public static native void glSecondaryColor3usvEXT(CharBuffer psV);
 
 	public static native void glSecondaryColorPointerEXT(
 		int size,
@@ -980,49 +888,25 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native void glVertexAttrib1dNV(int index, double x);
 
-	public static native void glVertexAttrib1dvARB(int index, DoubleBuffer pdV);
-
-	public static native void glVertexAttrib1dvNV(int index, DoubleBuffer pdV);
-
 	public static native void glVertexAttrib1fARB(int index, float x);
 
 	public static native void glVertexAttrib1fNV(int index, float x);
-
-	public static native void glVertexAttrib1fvARB(int index, FloatBuffer pfV);
-
-	public static native void glVertexAttrib1fvNV(int index, FloatBuffer pfV);
 
 	public static native void glVertexAttrib1sARB(int index, short x);
 
 	public static native void glVertexAttrib1sNV(int index, short x);
 
-	public static native void glVertexAttrib1svARB(int index, CharBuffer psV);
-
-	public static native void glVertexAttrib1svNV(int index, CharBuffer psV);
-
 	public static native void glVertexAttrib2dARB(int index, double x, double y);
 
 	public static native void glVertexAttrib2dNV(int index, double x, double y);
-
-	public static native void glVertexAttrib2dvARB(int index, DoubleBuffer pdV);
-
-	public static native void glVertexAttrib2dvNV(int index, DoubleBuffer pdV);
 
 	public static native void glVertexAttrib2fARB(int index, float x, float y);
 
 	public static native void glVertexAttrib2fNV(int index, float x, float y);
 
-	public static native void glVertexAttrib2fvARB(int index, FloatBuffer pfV);
-
-	public static native void glVertexAttrib2fvNV(int index, FloatBuffer pfV);
-
 	public static native void glVertexAttrib2sARB(int index, short x, short y);
 
 	public static native void glVertexAttrib2sNV(int index, short x, short y);
-
-	public static native void glVertexAttrib2svARB(int index, CharBuffer psV);
-
-	public static native void glVertexAttrib2svNV(int index, CharBuffer psV);
 
 	public static native void glVertexAttrib3dARB(
 		int index,
@@ -1036,25 +920,13 @@ public class GL extends CoreGL implements GLConstants {
 		double y,
 		double z);
 
-	public static native void glVertexAttrib3dvARB(int index, DoubleBuffer pdV);
-
-	public static native void glVertexAttrib3dvNV(int index, DoubleBuffer pdV);
-
 	public static native void glVertexAttrib3fARB(int index, float x, float y, float z);
 
 	public static native void glVertexAttrib3fNV(int index, float x, float y, float z);
 
-	public static native void glVertexAttrib3fvARB(int index, FloatBuffer pfV);
-
-	public static native void glVertexAttrib3fvNV(int index, FloatBuffer pfV);
-
 	public static native void glVertexAttrib3sARB(int index, short x, short y, short z);
 
 	public static native void glVertexAttrib3sNV(int index, short x, short y, short z);
-
-	public static native void glVertexAttrib3svARB(int index, CharBuffer psV);
-
-	public static native void glVertexAttrib3svNV(int index, CharBuffer psV);
 
 	public static native void glVertexAttrib4bvARB(int index, ByteBuffer pV);
 
@@ -1072,10 +944,6 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public static native void glVertexAttrib4dvARB(int index, DoubleBuffer pdV);
-
-	public static native void glVertexAttrib4dvNV(int index, DoubleBuffer pdV);
-
 	public static native void glVertexAttrib4fARB(
 		int index,
 		float x,
@@ -1089,10 +957,6 @@ public class GL extends CoreGL implements GLConstants {
 		float y,
 		float z,
 		float w);
-
-	public static native void glVertexAttrib4fvARB(int index, FloatBuffer pfV);
-
-	public static native void glVertexAttrib4fvNV(int index, FloatBuffer pfV);
 
 	public static native void glVertexAttrib4ivARB(int index, IntBuffer piV);
 
@@ -1128,10 +992,6 @@ public class GL extends CoreGL implements GLConstants {
 		short y,
 		short z,
 		short w);
-
-	public static native void glVertexAttrib4svARB(int index, CharBuffer psV);
-
-	public static native void glVertexAttrib4svNV(int index, CharBuffer psV);
 
 	public static native void glVertexAttrib4ubNV(
 		int index,
@@ -1197,19 +1057,11 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native void glVertexStream2dATI(int stream, double x, double y);
 
-	public static native void glVertexStream2dvATI(int stream, DoubleBuffer pdV);
-
 	public static native void glVertexStream2fATI(int stream, float x, float y);
-
-	public static native void glVertexStream2fvATI(int stream, FloatBuffer pfV);
 
 	public static native void glVertexStream2iATI(int stream, int x, int y);
 
-	public static native void glVertexStream2ivATI(int stream, IntBuffer piV);
-
 	public static native void glVertexStream2sATI(int stream, short x, short y);
-
-	public static native void glVertexStream2svATI(int stream, CharBuffer psV);
 
 	public static native void glVertexStream3dATI(
 		int stream,
@@ -1217,19 +1069,11 @@ public class GL extends CoreGL implements GLConstants {
 		double y,
 		double z);
 
-	public static native void glVertexStream3dvATI(int stream, DoubleBuffer pdV);
-
 	public static native void glVertexStream3fATI(int stream, float x, float y, float z);
-
-	public static native void glVertexStream3fvATI(int stream, FloatBuffer pfV);
 
 	public static native void glVertexStream3iATI(int stream, int x, int y, int z);
 
-	public static native void glVertexStream3ivATI(int stream, IntBuffer piV);
-
 	public static native void glVertexStream3sATI(int stream, short x, short y, short z);
-
-	public static native void glVertexStream3svATI(int stream, CharBuffer psV);
 
 	public static native void glVertexStream4dATI(
 		int stream,
@@ -1238,16 +1082,12 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public static native void glVertexStream4dvATI(int stream, DoubleBuffer pdV);
-
 	public static native void glVertexStream4fATI(
 		int stream,
 		float x,
 		float y,
 		float z,
 		float w);
-
-	public static native void glVertexStream4fvATI(int stream, FloatBuffer pfV);
 
 	public static native void glVertexStream4iATI(
 		int stream,
@@ -1256,8 +1096,6 @@ public class GL extends CoreGL implements GLConstants {
 		int z,
 		int w);
 
-	public static native void glVertexStream4ivATI(int stream, IntBuffer piV);
-
 	public static native void glVertexStream4sATI(
 		int stream,
 		short x,
@@ -1265,11 +1103,7 @@ public class GL extends CoreGL implements GLConstants {
 		short z,
 		short w);
 
-	public static native void glVertexStream4svATI(int stream, CharBuffer psV);
-
 	public static native void glVertexWeightfEXT(float weight);
-
-	public static native void glVertexWeightfvEXT(FloatBuffer pfWeight);
 
 	public static native void glVertexWeightPointerEXT(
 		int size,
@@ -1409,35 +1243,19 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native void glWindowPos2dARB(double x, double y);
 
-	public static native void glWindowPos2dvARB(DoubleBuffer pdP);
-
 	public static native void glWindowPos2fARB(float x, float y);
-
-	public static native void glWindowPos2fvARB(FloatBuffer pfP);
 
 	public static native void glWindowPos2iARB(int x, int y);
 
-	public static native void glWindowPos2ivARB(IntBuffer piP);
-
 	public static native void glWindowPos2sARB(short x, short y);
-
-	public static native void glWindowPos2svARB(CharBuffer psP);
 
 	public static native void glWindowPos3dARB(double x, double y, double z);
 
-	public static native void glWindowPos3dvARB(DoubleBuffer pdP);
-
 	public static native void glWindowPos3fARB(float x, float y, float z);
-
-	public static native void glWindowPos3fvARB(FloatBuffer pfP);
 
 	public static native void glWindowPos3iARB(int x, int y, int z);
 
-	public static native void glWindowPos3ivARB(IntBuffer piP);
-
 	public static native void glWindowPos3sARB(short x, short y, short z);
-
-	public static native void glWindowPos3svARB(CharBuffer psP);
 
 	public static native void glWriteMaskEXT(
 		int res,
