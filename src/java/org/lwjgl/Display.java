@@ -236,6 +236,9 @@ public final class Display {
 		}
 		if (!setGammaRamp(Sys.getDirectBufferAddress(gammaRamp)))
 			return false;
+		if (Sys.DEBUG) {
+			System.out.println("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
+		}
 		return true;
 	}
 
