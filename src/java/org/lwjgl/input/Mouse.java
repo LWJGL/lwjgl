@@ -253,8 +253,18 @@ public class Mouse {
 		initialized = true;
 	}
 
+	private static void resetMouse() {
+		dx = dy = dwheel = 0;
+		width = Display.getDisplayMode().getWidth() << 16;
+		height = Display.getDisplayMode().getHeight() << 16;
+		x = width / 2;
+		y = height / 2;
+	}
+  
 	/**
 	 * "Create" the mouse. The display must first have been created.
+	 * Initially, the mouse is not grabbed and the delta values are reported
+	 * with respect to the center of the display.
 	 * 
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
@@ -266,11 +276,6 @@ public class Mouse {
 		nCreate();
 		hasWheel = nHasWheel();
 		created = true;
-		dx = dy = dwheel = 0;
-		width = Display.getDisplayMode().getWidth() << 16;
-		height = Display.getDisplayMode().getHeight() << 16;
-		x = width / 2;
-		y = height / 2;      
     
 		// set mouse buttons
 		buttonCount = nGetButtonCount();
@@ -587,9 +592,9 @@ public class Mouse {
 
 	/**
 	 * Sets whether or not the mouse has grabbed the cursor 
-	 * (and thus hidden). If grab is true, and isGrabbed() is
-	 * false, the native cursor position is reset to the middle
-	 * of the screen.
+	 * (and thus hidden). If grab is false, the getX() and getY()
+	 * will return delta movement in pixels clamped to the display
+	 * dimensions, from the center of the display.
 	 *
 	 * @param grab whether the mouse should be grabbed
 	 */
@@ -597,10 +602,7 @@ public class Mouse {
 		isGrabbed = grab;
 		if (isCreated()) {
 			nGrabMouse(isGrabbed);
-			if(!isGrabbed) {
-				x = width / 2;
-				y = height / 2;      
-			}
+			resetMouse();
 		}
 	}
 

@@ -352,6 +352,5 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass claz
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
 	setGrab(new_grab == JNI_TRUE ? true : false);
-	if (created)
-		doWarpPointer();
+	resetCursor(getWindowWidth()/2, transformY(getWindowHeight()/2));
 }
