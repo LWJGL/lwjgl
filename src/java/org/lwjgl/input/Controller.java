@@ -56,10 +56,6 @@ import org.lwjgl.Sys;
  */
 public class Controller {
 
-	static {
-		initialize();
-	}
-
 	/** Has the controller been created? */
 	private static boolean created;
 
@@ -135,6 +131,10 @@ public class Controller {
 	/** Button names. These are set upon create(), to names like BUTTON0, BUTTON1, etc. */
 	private static String[] buttonName;
 	private static final Map buttonMap = new HashMap(8);
+
+	static {
+		initialize();
+	}
 
 	/**
 	 * Controller cannot be constructed.
