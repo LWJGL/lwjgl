@@ -113,7 +113,7 @@ public class MouseTest {
 
   private void wiggleMouse() {
     while (!Window.isCloseRequested()) {
-      Window.updateState();
+      Window.update();
       
       if(Window.isMinimized()) {
         try {

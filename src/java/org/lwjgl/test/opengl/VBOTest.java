@@ -96,7 +96,7 @@ public final class VBOTest {
          try {
              init();
              while (!finished) {
-             	 Window.updateState();
+             	 Window.update();
              	 
              	 if (Window.isMinimized())
              	 	Thread.sleep(200);

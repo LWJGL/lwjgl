@@ -113,7 +113,7 @@ public class ControllerTest {
 
   private void wiggleController() {
     while (!Window.isCloseRequested()) {
-      Window.updateState();
+      Window.update();
       
       if(Window.isMinimized()) {
         try {

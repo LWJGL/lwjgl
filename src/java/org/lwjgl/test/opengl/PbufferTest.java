@@ -122,7 +122,7 @@ public class PbufferTest {
     while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
       && !Window.isCloseRequested()) {
       // allow subsystem to get a chance to run too
-      Window.updateState();
+      Window.update();
 
       if (!Window.isMinimized()) {
         // check keyboard input
