@@ -432,18 +432,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcef (JNIEnv *env, job
 	CHECK_AL_ERROR
 }
 
-/* 
- * This function retrieves a set of three floating point values from a property of a source.
- *
- * C Specification:
- * ALvoid alGetSource3f(ALuint source, ALenum param, ALfloat* v1, ALfloat* v2, ALfloat* v3);
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSource3f (JNIEnv *env, jobject obj, jint source, jint pname, jint v1, jint v2, jint v3) {
-#warning FIXME: alGetSource3f
-/*	alGetSource3f((ALuint) source, (ALenum) pname, (ALfloat*) v1, (ALfloat*) v2, (ALfloat*) v3);*/
-	CHECK_AL_ERROR
-}
-
 /**
  * This function retrieves a floating point-vector property of a source.
  *
