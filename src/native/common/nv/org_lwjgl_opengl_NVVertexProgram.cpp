@@ -398,7 +398,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4ubvNV
 
 void extgl_InitNVVertexProgram(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglExecuteProgramNV", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVVertexProgram_nglExecuteProgramNV, "glExecuteProgramNV", (void**)&glExecuteProgramNV},
 		{"nglGetProgramParameterfvNV", "(IIILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVVertexProgram_nglGetProgramParameterfvNV, "glGetProgramParameterfvNV", (void**)&glGetProgramParameterfvNV},
 		{"nglGetTrackMatrixivNV", "(IIILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVVertexProgram_nglGetTrackMatrixivNV, "glGetTrackMatrixivNV", (void**)&glGetTrackMatrixivNV},
@@ -430,7 +430,7 @@ void extgl_InitNVVertexProgram(JNIEnv *env, jobject ext_set)
 		{"nglVertexAttribs4ubvNV", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVVertexProgram_nglVertexAttribs4ubvNV, "glVertexAttribs4ubvNV", (void**)&glVertexAttribs4ubvNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVVertexProgram");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVVertexProgram");
 	if (extgl_Extensions.GL_NV_vertex_program)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_vertex_program", num_functions, functions);
 }

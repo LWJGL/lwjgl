@@ -79,13 +79,13 @@ static void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPoin
 
 void extgl_InitEXTVertexWeighting(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glVertexWeightfEXT", "(F)V", (void*)&Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfEXT, "glVertexWeightfEXT", (void**)&glVertexWeightfEXT},
 		{"nglVertexWeightPointerEXT", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXT, "glVertexWeightPointerEXT", (void**)&glVertexWeightPointerEXT},
 		{"nglVertexWeightPointerEXTVBO", "(IIII)V", (void*)&Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXTVBO, NULL, NULL}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTVertexWeighting");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTVertexWeighting");
 	if (extgl_Extensions.GL_EXT_vertex_weighting)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_vertex_weighting", num_functions, functions);
 }

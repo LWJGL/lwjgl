@@ -166,7 +166,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVEvaluators_glEvalMapsNV
 
 void extgl_InitNVEvaluators(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglGetMapControlPointsNV", "(IIIIIZLjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVEvaluators_nglGetMapControlPointsNV, "glGetMapControlPointsNV", (void**)&glGetMapControlPointsNV},
 		{"nglMapControlPointsNV", "(IIIIIIIZLjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVEvaluators_nglMapControlPointsNV, "glMapControlPointsNV", (void**)&glMapControlPointsNV},
 		{"nglMapParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVEvaluators_nglMapParameterfvNV, "glMapParameterfvNV", (void**)&glMapParameterfvNV},
@@ -178,7 +178,7 @@ void extgl_InitNVEvaluators(JNIEnv *env, jobject ext_set)
 		{"glEvalMapsNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVEvaluators_glEvalMapsNV, "glEvalMapsNV", (void**)&glEvalMapsNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVEvaluators");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVEvaluators");
 	if (extgl_Extensions.GL_NV_evaluators)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_evaluators", num_functions, functions);
 }

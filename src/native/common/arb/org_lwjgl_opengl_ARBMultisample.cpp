@@ -54,11 +54,11 @@ static void JNICALL Java_org_lwjgl_opengl_ARBMultisample_glSampleCoverageARB
 
 void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glSampleCoverageARB", "(FZ)V", (void*)&Java_org_lwjgl_opengl_ARBMultisample_glSampleCoverageARB, "glSampleCoverageARB", (void**)&glSampleCoverageARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBMultisample");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBMultisample");
 	if (extgl_Extensions.GL_ARB_multisample)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_multisample", num_functions, functions);
 }

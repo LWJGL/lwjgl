@@ -85,4 +85,20 @@ static inline const void *offsetToPointer(jint offset) {
 	return (const char *)NULL + offset;
 }
 
+typedef void *(* ExtGetProcAddressPROC) (const char *func_name);
+typedef struct {
+	char *method_name;
+	char *signature;
+	void *method_pointer;
+
+	char *ext_function_name;
+	void **ext_function_pointer;
+} JavaMethodAndExtFunction;
+
+#define NUMFUNCTIONS(x) (sizeof(x)/sizeof(JavaMethodAndExtFunction));
+
+extern void doExtension(JNIEnv *env, jobject ext_set, const char *method_name, const char *ext);
+extern jclass ext_ResetClass(JNIEnv *env, const char *class_name);
+extern void ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions);
+
 #endif

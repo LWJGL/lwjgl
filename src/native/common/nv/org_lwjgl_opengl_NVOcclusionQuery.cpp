@@ -137,7 +137,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryu
 
 void extgl_InitNVOcclusionQuery(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglGenOcclusionQueriesNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVOcclusionQuery_nglGenOcclusionQueriesNV, "glGenOcclusionQueriesNV", (void**)&glGenOcclusionQueriesNV},
 		{"nglDeleteOcclusionQueriesNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVOcclusionQuery_nglDeleteOcclusionQueriesNV, "glDeleteOcclusionQueriesNV", (void**)&glDeleteOcclusionQueriesNV},
 		{"glIsOcclusionQueryNV", "(I)Z", (void*)&Java_org_lwjgl_opengl_NVOcclusionQuery_glIsOcclusionQueryNV, "glIsOcclusionQueryNV", (void**)&glIsOcclusionQueryNV},
@@ -147,7 +147,7 @@ void extgl_InitNVOcclusionQuery(JNIEnv *env, jobject ext_set)
 		{"nglGetOcclusionQueryuivNV", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryuivNV, "glGetOcclusionQueryuivNV", (void**)&glGetOcclusionQueryuivNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVOcclusionQuery");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVOcclusionQuery");
 	if (extgl_Extensions.GL_NV_occlusion_query)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_occlusion_query", num_functions, functions);
 }

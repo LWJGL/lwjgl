@@ -202,7 +202,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glGetBufferPo
 
 void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglBindBufferARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBindBufferARB, "glBindBufferARB", (void**)&glBindBufferARB},
 		{"nglDeleteBuffersARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglDeleteBuffersARB, "glDeleteBuffersARB", (void**)&glDeleteBuffersARB},
 		{"nglGenBuffersARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGenBuffersARB, "glGenBuffersARB", (void**)&glGenBuffersARB},
@@ -216,7 +216,7 @@ void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set)
 		{"glGetBufferPointerARB", "(III)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_glGetBufferPointerARB, "glGetBufferPointervARB", (void**)&glGetBufferPointervARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBVertexBufferObject");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBVertexBufferObject");
 	if (extgl_Extensions.GL_ARB_vertex_buffer_object)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_vertex_buffer_object", num_functions, functions);
 }

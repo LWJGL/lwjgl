@@ -68,12 +68,12 @@ static void JNICALL Java_org_lwjgl_opengl_ARBPointParameters_nglPointParameterfv
 
 void extgl_InitARBPointParameters(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glPointParameterfARB", "(IF)V", (void*)&Java_org_lwjgl_opengl_ARBPointParameters_glPointParameterfARB, "glPointParameterfARB", (void**)&glPointParameterfARB},
 		{"nglPointParameterfvARB", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBPointParameters_nglPointParameterfvARB, "glPointParameterfvARB", (void**)&glPointParameterfvARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBPointParameters");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBPointParameters");
 	if (extgl_Extensions.GL_ARB_point_parameters)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_point_parameters", num_functions, functions);
 }

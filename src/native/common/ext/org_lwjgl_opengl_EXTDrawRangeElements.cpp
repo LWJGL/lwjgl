@@ -66,12 +66,12 @@ static void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeEleme
 
 void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglDrawRangeElementsEXT", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXT, "glDrawRangeElementsEXT", (void**)&glDrawRangeElementsEXT},
 		{"nglDrawRangeElementsEXTVBO", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXTVBO, NULL, NULL}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTDrawRangeElements");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTDrawRangeElements");
 	if (extgl_Extensions.GL_EXT_draw_range_elements)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_draw_range_elements", num_functions, functions);
 }

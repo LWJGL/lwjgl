@@ -287,7 +287,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL13_glSampleCoverage
 
 void extgl_InitOpenGL1_3(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glActiveTexture", "(I)V", (void*)&Java_org_lwjgl_opengl_GL13_glActiveTexture, "glActiveTexture", (void**)&glActiveTexture},
 		{"glClientActiveTexture", "(I)V", (void*)&Java_org_lwjgl_opengl_GL13_glClientActiveTexture, "glClientActiveTexture", (void**)&glClientActiveTexture},
 		{"nglCompressedTexImage1D", "(IIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL13_nglCompressedTexImage1D, "glCompressedTexImage1D", (void**)&glCompressedTexImage1D},
@@ -306,7 +306,7 @@ void extgl_InitOpenGL1_3(JNIEnv *env, jobject ext_set)
 		{"glSampleCoverage", "(FZ)V", (void*)&Java_org_lwjgl_opengl_GL13_glSampleCoverage, "glSampleCoverage", (void**)&glSampleCoverage}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/GL13");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/GL13");
 	if (extgl_Extensions.OpenGL13)
 		extgl_InitializeClass(env, clazz, ext_set, "OpenGL13", num_functions, functions);
 }

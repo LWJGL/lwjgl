@@ -614,7 +614,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantFlo
 
 void extgl_InitEXTVertexShader(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glBeginVertexShaderEXT", "()V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBeginVertexShaderEXT, "glBeginVertexShaderEXT", (void**)&glBeginVertexShaderEXT},
 		{"glEndVertexShaderEXT", "()V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glEndVertexShaderEXT, "glEndVertexShaderEXT", (void**)&glEndVertexShaderEXT},
 		{"glBindVertexShaderEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBindVertexShaderEXT, "glBindVertexShaderEXT", (void**)&glBindVertexShaderEXT},
@@ -659,7 +659,7 @@ void extgl_InitEXTVertexShader(JNIEnv *env, jobject ext_set)
 		{"nglGetLocalConstantFloatvEXT", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantFloatvEXT, "glGetLocalConstantFloatvEXT", (void**)&glGetLocalConstantFloatvEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTVertexShader");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTVertexShader");
 	if (extgl_Extensions.GL_EXT_vertex_shader)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_vertex_shader", num_functions, functions);
 }

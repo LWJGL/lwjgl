@@ -67,12 +67,12 @@ static void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysE
 
 void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glLockArraysEXT", "(II)V", (void*)&Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT, "glLockArraysEXT", (void**)&glLockArraysEXT},
 		{"glUnlockArraysEXT", "()V", (void*)&Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT, "glUnlockArraysEXT", (void**)&glUnlockArraysEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTCompiledVertexArray");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTCompiledVertexArray");
 	if (extgl_Extensions.GL_EXT_compiled_vertex_array)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_compiled_vertex_array", num_functions, functions);
 }

@@ -119,7 +119,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB
 
 void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glWindowPos2fARB", "(FF)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB, "glWindowPos2fARB", (void**)&glWindowPos2fARB},
 		{"glWindowPos2iARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB, "glWindowPos2iARB", (void**)&glWindowPos2iARB},
 		{"glWindowPos2sARB", "(SS)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB, "glWindowPos2sARB", (void**)&glWindowPos2sARB},
@@ -128,7 +128,7 @@ void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set)
 		{"glWindowPos3sARB", "(SSS)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB, "glWindowPos3sARB", (void**)&glWindowPos3sARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBWindowPos");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBWindowPos");
 	if (extgl_Extensions.GL_ARB_window_pos)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_window_pos", num_functions, functions);
 }

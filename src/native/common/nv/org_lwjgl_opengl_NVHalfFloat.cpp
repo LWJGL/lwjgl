@@ -359,7 +359,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV
 
 void extgl_InitNVHalfFloat(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glVertex2hNV", "(SS)V", (void*)&Java_org_lwjgl_opengl_NVHalfFloat_glVertex2hNV, "glVertex2hNV", (void**)&glVertex2hNV},
 		{"glVertex3hNV", "(SSS)V", (void*)&Java_org_lwjgl_opengl_NVHalfFloat_glVertex3hNV, "glVertex3hNV", (void**)&glVertex3hNV},
 		{"glVertex4hNV", "(SSSS)V", (void*)&Java_org_lwjgl_opengl_NVHalfFloat_glVertex4hNV, "glVertex4hNV", (void**)&glVertex4hNV},
@@ -386,7 +386,7 @@ void extgl_InitNVHalfFloat(JNIEnv *env, jobject ext_set)
 		{"nglVertexAttribs4hvNV", "(IILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVHalfFloat_nglVertexAttribs4hvNV, "glVertexAttribs4hvNV", (void**)&glVertexAttribs4hvNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVHalfFloat");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVHalfFloat");
 	if (extgl_Extensions.GL_NV_half_float)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_half_float", num_functions, functions);
 }

@@ -68,12 +68,12 @@ static void JNICALL Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV
 
 void extgl_InitNVPointSprite(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glPointParameteriNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV, "glPointParameteriNV", (void**)&glPointParameteriNV},
 		{"nglPointParameterivNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV, "glPointParameterivNV", (void**)&glPointParameterivNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVPointSprite");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVPointSprite");
 	if (extgl_Extensions.GL_NV_point_sprite)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_point_sprite", num_functions, functions);
 }

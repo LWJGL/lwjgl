@@ -68,12 +68,12 @@ static void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfv
 
 void extgl_InitEXTPointParameters(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glPointParameterfEXT", "(IF)V", (void*)&Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEXT, "glPointParameterfEXT", (void**)&glPointParameterfEXT},
 		{"nglPointParameterfvEXT", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfvEXT, "glPointParameterfvEXT", (void**)&glPointParameterfvEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTPointParameters");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTPointParameters");
 	if (extgl_Extensions.GL_EXT_point_parameters)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_point_parameters", num_functions, functions);
 }

@@ -225,7 +225,7 @@ static void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_nglSetFragmentShader
 
 void extgl_InitATIFragmentShader(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glGenFragmentShadersATI", "(I)I", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glGenFragmentShadersATI, "glGenFragmentShadersATI", (void**)&glGenFragmentShadersATI},
 		{"glBindFragmentShaderATI", "(I)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glBindFragmentShaderATI, "glBindFragmentShaderATI", (void**)&glBindFragmentShaderATI},
 		{"glDeleteFragmentShaderATI", "(I)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glDeleteFragmentShaderATI, "glDeleteFragmentShaderATI", (void**)&glDeleteFragmentShaderATI},
@@ -242,7 +242,7 @@ void extgl_InitATIFragmentShader(JNIEnv *env, jobject ext_set)
 		{"nglSetFragmentShaderConstantATI", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_nglSetFragmentShaderConstantATI, "glSetFragmentShaderConstantATI", (void**)&glSetFragmentShaderConstantATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIFragmentShader");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIFragmentShader");
 	if (extgl_Extensions.GL_ATI_fragment_shader)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_fragment_shader", num_functions, functions);
 }

@@ -120,7 +120,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_wglFreeMemoryNV
 
 void extgl_InitNVVertexArrayRange(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglVertexArrayRangeNV", "(ILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_nglVertexArrayRangeNV, "glVertexArrayRangeNV", (void**)&glVertexArrayRangeNV},
 		{"glFlushVertexArrayRangeNV", "()V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_glFlushVertexArrayRangeNV, "glFlushVertexArrayRangeNV", (void**)&glFlushVertexArrayRangeNV},
 #ifdef _X11
@@ -133,7 +133,7 @@ void extgl_InitNVVertexArrayRange(JNIEnv *env, jobject ext_set)
 #endif
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVVertexArrayRange");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVVertexArrayRange");
 	if (extgl_Extensions.GL_NV_vertex_array_range)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_vertex_array_range", num_functions, functions);
 }

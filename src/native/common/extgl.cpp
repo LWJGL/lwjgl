@@ -34,7 +34,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "extgl.h"
 #include "common_tools.h"
@@ -595,57 +594,57 @@ CFBundleRef opengl_bundle_ref = NULL;
 CFBundleRef agl_bundle_ref = NULL;
 #endif
 
-jclass extgl_ResetClass(JNIEnv *env, const char *class_name) {
-	jclass clazz = env->FindClass(class_name);
-	jint result = env->UnregisterNatives(clazz);
-	if (result != 0)
-		printfDebug("Could not unregister natives for class %s\n", class_name);
-	return clazz;
-}
+/* getProcAddress */
 
-void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndGLFunction *functions) {
-	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
-	for (int i = 0; i < num_functions; i++) {
-		JavaMethodAndGLFunction *function = functions + i;
-		if (function->gl_function_name != NULL) {
-			void *gl_func_pointer = extgl_GetProcAddress(function->gl_function_name);
-			if (gl_func_pointer == NULL) {
-				printf("NOTICE: %s disabled because of missing driver symbols\n", ext_name);
-				if (ext_set != NULL)
-					extgl_removeExtension(env, ext_set, ext_name);
-				free(methods);
-				return;
-			}
-			void **gl_function_pointer_pointer = function->gl_function_pointer;
-			*gl_function_pointer_pointer = gl_func_pointer;
+static void *extgl_GetProcAddress(const char *name)
+{
+#ifdef _WIN32
+	void *t = wglGetProcAddress(name);
+	if (t == NULL)
+	{
+		t = GetProcAddress(lib_gl_handle, name);
+		if (t == NULL)
+		{
+			printfDebug("Could not locate symbol %s\n", name);
+			extgl_error = true;
 		}
-		JNINativeMethod *method = methods + i;
-		method->name = function->method_name;
-		method->signature = function->signature;
-		method->fnPtr = function->method_pointer;
 	}
-	jint result = env->RegisterNatives(clazz, methods, num_functions);
-	free(methods);
-	if (result != 0)
-		printfDebug("Could not register natives for extension %s\n", ext_name);
+	return t;
+#endif
+
+#ifdef _X11
+	void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
+	if (t == NULL)
+	{
+		t = dlsym(lib_gl_handle, name);
+		if (t == NULL)
+		{
+			printfDebug("Could not locate symbol %s\n", name);
+			extgl_error = true;
+		}
+	}
+	return t;
+#endif
+
+#ifdef _AGL
+	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNull);
+	void *func_pointer = CFBundleGetFunctionPointerForName(opengl_bundle_ref, str);
+	if (func_pointer == NULL) {
+		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
+		if (func_pointer == NULL) {
+			printfDebug("Could not locate symbol %s\n", name);
+			extgl_error = true;
+		}
+	}
+	CFRelease(str);
+	return func_pointer;
+#endif
 }
 
-static void doExtension(JNIEnv *env, jobject ext_set, const char *method_name, const char *ext) {
-	jclass clazz = env->GetObjectClass(ext_set);
-	jmethodID id = env->GetMethodID(clazz, method_name, "(Ljava/lang/Object;)Z");
-	if (id == NULL)
-		return;
-	jstring ext_string = env->NewStringUTF(ext);
-	if (ext_string == NULL) {
-		printf("Could not allocate java string from %s\n", ext);
-		return;
-	}
-	env->CallBooleanMethod(ext_set, id, ext_string);
+void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions) {
+	ext_InitializeClass(env, clazz, ext_set, ext_name, &extgl_GetProcAddress, num_functions, functions);
 }
 
-void extgl_removeExtension(JNIEnv *env, jobject ext_set, const char *ext) {
-	doExtension(env, ext_set, "remove", ext);
-}
 
 static void insertExtension(JNIEnv *env, jobject ext_set, const char *ext) {
 	doExtension(env, ext_set, "add", ext);
@@ -721,53 +720,6 @@ static void aglUnloadFramework(CFBundleRef f)
 }
 
 #endif
-
-/* getProcAddress */
-
-void *extgl_GetProcAddress(const char *name)
-{
-#ifdef _WIN32
-	void *t = wglGetProcAddress(name);
-	if (t == NULL)
-	{
-		t = GetProcAddress(lib_gl_handle, name);
-		if (t == NULL)
-		{
-			printfDebug("Could not locate symbol %s\n", name);
-			extgl_error = true;
-		}
-	}
-	return t;
-#endif
-
-#ifdef _X11
-	void *t = (void*)glXGetProcAddressARB((const GLubyte*)name);
-	if (t == NULL)
-	{
-		t = dlsym(lib_gl_handle, name);
-		if (t == NULL)
-		{
-			printfDebug("Could not locate symbol %s\n", name);
-			extgl_error = true;
-		}
-	}
-	return t;
-#endif
-
-#ifdef _AGL
-	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNull);
-	void *func_pointer = CFBundleGetFunctionPointerForName(opengl_bundle_ref, str);
-	if (func_pointer == NULL) {
-		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
-		if (func_pointer == NULL) {
-			printfDebug("Could not locate symbol %s\n", name);
-			extgl_error = true;
-		}
-	}
-	CFRelease(str);
-	return func_pointer;
-#endif
-}
 
 static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name)
 {

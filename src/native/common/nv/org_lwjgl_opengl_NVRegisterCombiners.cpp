@@ -218,7 +218,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombine
 
 void extgl_InitNVRegisterCombiners(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glCombinerParameterfNV", "(IF)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameterfNV, "glCombinerParameterfNV", (void**)&glCombinerParameterfNV},
 		{"nglCombinerParameterfvNV", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglCombinerParameterfvNV, "glCombinerParameterfvNV", (void**)&glCombinerParameterfvNV},
 		{"glCombinerParameteriNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners_glCombinerParameteriNV, "glCombinerParameteriNV", (void**)&glCombinerParameteriNV},
@@ -234,7 +234,7 @@ void extgl_InitNVRegisterCombiners(JNIEnv *env, jobject ext_set)
 		{"nglGetFinalCombinerInputParameterivNV", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners_nglGetFinalCombinerInputParameterivNV, "glGetFinalCombinerInputParameterivNV", (void**)&glGetFinalCombinerInputParameterivNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVRegisterCombiners");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVRegisterCombiners");
 	if (extgl_Extensions.GL_NV_register_combiners)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_register_combiners", num_functions, functions);
 }

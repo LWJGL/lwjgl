@@ -97,13 +97,13 @@ static jint JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationAR
 
 void extgl_InitARBVertexShader(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglBindAttribLocationARB", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocationARB, "glBindAttribLocationARB", (void**)&glBindAttribLocationARB},
 		{"nglGetActiveAttribARB", "(IIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribARB, "glGetActiveAttribARB", (void**)&glGetActiveAttribARB},
 		{"nglGetAttribLocationARB", "(ILjava/nio/ByteBuffer;I)I", (void*)&Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationARB, "glGetAttribLocationARB", (void**)&glGetAttribLocationARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBVertexShader");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBVertexShader");
 	if (extgl_Extensions.GL_ARB_vertex_shader)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_vertex_shader", num_functions, functions);
 }

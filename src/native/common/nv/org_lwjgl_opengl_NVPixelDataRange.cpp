@@ -68,12 +68,12 @@ static void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRange
 
 void extgl_InitNVPixelDataRange(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglPixelDataRangeNV", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeNV, "glPixelDataRangeNV", (void**)&glPixelDataRangeNV},
 		{"glFlushPixelDataRangeNV", "(I)V", (void*)&Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRangeNV, "glFlushPixelDataRangeNV", (void**)&glFlushPixelDataRangeNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVPixelDataRange");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVPixelDataRange");
 	if (extgl_Extensions.GL_NV_pixel_data_range)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_pixel_data_range", num_functions, functions);
 }

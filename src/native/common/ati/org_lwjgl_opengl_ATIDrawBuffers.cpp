@@ -55,11 +55,11 @@ static void JNICALL Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI
 
 void extgl_InitATIDrawBuffers(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglDrawBuffersATI", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI, "glDrawBuffersATI", (void**)&glDrawBuffersATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIDrawBuffers");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIDrawBuffers");
 	if (extgl_Extensions.GL_ATI_draw_buffers)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_draw_buffers", num_functions, functions);
 }

@@ -54,11 +54,11 @@ static void JNICALL Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSepara
 
 void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glBlendFuncSeparateEXT", "(IIII)V", (void*)&Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSeparateEXT, "glBlendFuncSeparateEXT", (void**)&glBlendFuncSeparateEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTBlendFuncSeparate");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTBlendFuncSeparate");
 	if (extgl_Extensions.GL_EXT_blend_func_separate)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_blend_func_separate", num_functions, functions);
 }

@@ -92,14 +92,14 @@ static void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArra
 
 void extgl_InitATIElementArray(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglElementPointerATI", "(ILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATI, "glElementPointerATI", (void**)&glElementPointerATI},
 		{"nglElementPointerATIVBO", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIVBO, NULL, NULL},
 		{"glDrawElementArrayATI", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayATI, "glDrawElementArrayATI", (void**)&glDrawElementArrayATI},
 		{"glDrawRangeElementArrayATI", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArrayATI, "glDrawRangeElementArrayATI", (void**)&glDrawRangeElementArrayATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIElementArray");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIElementArray");
 	if (extgl_Extensions.GL_ATI_element_array)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_element_array", num_functions, functions);
 }

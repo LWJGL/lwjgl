@@ -56,11 +56,11 @@ static void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysE
 
 void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglMultiDrawArraysEXT", "(ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;II)V", (void*)&Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT, "glMultiDrawArraysEXT", (void**)&glMultiDrawArraysEXT}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTMultiDrawArrays");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTMultiDrawArrays");
 	if (extgl_Extensions.GL_EXT_multi_draw_arrays)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_multi_draw_arrays", num_functions, functions);
 }

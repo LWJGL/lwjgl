@@ -105,7 +105,7 @@ static void JNICALL Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPoi
 
 void extgl_InitEXTSecondaryColor(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glSecondaryColor3bEXT", "(BBB)V", (void*)&Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3bEXT, "glSecondaryColor3bEXT", (void**)&glSecondaryColor3bEXT},
 		{"glSecondaryColor3fEXT", "(FFF)V", (void*)&Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3fEXT, "glSecondaryColor3fEXT", (void**)&glSecondaryColor3fEXT},
 		{"glSecondaryColor3ubEXT", "(BBB)V", (void*)&Java_org_lwjgl_opengl_EXTSecondaryColor_glSecondaryColor3ubEXT, "glSecondaryColor3ubEXT", (void**)&glSecondaryColor3ubEXT},
@@ -113,7 +113,7 @@ void extgl_InitEXTSecondaryColor(JNIEnv *env, jobject ext_set)
 		{"nglSecondaryColorPointerEXTVBO", "(IIII)V", (void*)&Java_org_lwjgl_opengl_EXTSecondaryColor_nglSecondaryColorPointerEXTVBO, NULL, NULL}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTSecondaryColor");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTSecondaryColor");
 	if (extgl_Extensions.GL_EXT_secondary_color)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_secondary_color", num_functions, functions);
 }

@@ -117,7 +117,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D
 
 void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglDrawRangeElements", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglDrawRangeElements, "glDrawRangeElements", (void**)&glDrawRangeElements},
 		{"nglDrawRangeElementsVBO", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO, NULL, NULL},
 		{"nglTexImage3D", "(IIIIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglTexImage3D, "glTexImage3D", (void**)&glTexImage3D},
@@ -125,7 +125,7 @@ void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set)
 		{"glCopyTexSubImage3D", "(IIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D, "glCopyTexSubImage3D", (void**)&glCopyTexSubImage3D}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/GL12");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/GL12");
 	if (extgl_Extensions.OpenGL12)
 		extgl_InitializeClass(env, clazz, ext_set, "OpenGL12", num_functions, functions);
 }

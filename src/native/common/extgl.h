@@ -194,6 +194,8 @@ typedef void (*_GLfuncptr)();
 #define GLAPI extern
 #define GLAPIENTRY
 
+#include "common_tools.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -3286,23 +3288,9 @@ bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen);
 #ifdef _AGL
 bool extgl_InitAGL(JNIEnv *env);
 #endif
-void *extgl_GetProcAddress(const char *name);
 void extgl_Close(void);
-void extgl_removeExtension(JNIEnv *env, jobject ext_set, const char *ext);
+void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions);
 
-typedef struct {
-	char *method_name;
-	char *signature;
-	void *method_pointer;
-
-	char *gl_function_name;
-	void **gl_function_pointer;
-} JavaMethodAndGLFunction;
-
-#define NUMFUNCTIONS(x) (sizeof(x)/sizeof(JavaMethodAndGLFunction));
-
-jclass extgl_ResetClass(JNIEnv *env, const char *class_name);
-void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndGLFunction *functions);
 #define EXTGL_SANITY_CHECK(e,x)		if (extgl_error) { \
 						extgl_Extensions.x = false; \
 						printf("NOTICE: %s disabled because of missing driver symbols\n", #x); \

@@ -79,13 +79,13 @@ static void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO
 
 void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glFogCoordfEXT", "(F)V", (void*)&Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT, "glFogCoordfEXT", (void**)&glFogCoordfEXT},
 		{"nglFogCoordPointerEXT", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT, "glFogCoordPointerEXT", (void**)&glFogCoordPointerEXT},
 		{"nglFogCoordPointerEXTVBO", "(III)V", (void*)&Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO, NULL, NULL}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTFogCoord");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/EXTFogCoord");
 	if (extgl_Extensions.GL_EXT_fog_coord)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_fog_coord", num_functions, functions);
 }

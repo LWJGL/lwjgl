@@ -271,7 +271,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL14_glWindowPos3i
 
 void extgl_InitOpenGL1_4(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glBlendEquation", "(I)V", (void*)&Java_org_lwjgl_opengl_GL14_glBlendEquation, "glBlendEquation", (void**)&glBlendEquation},
 		{"glBlendColor", "(FFFF)V", (void*)&Java_org_lwjgl_opengl_GL14_glBlendColor, "glBlendColor", (void**)&glBlendColor},
 		{"glFogCoordf", "(F)V", (void*)&Java_org_lwjgl_opengl_GL14_glFogCoordf, "glFogCoordf", (void**)&glFogCoordf},
@@ -292,7 +292,7 @@ void extgl_InitOpenGL1_4(JNIEnv *env, jobject ext_set)
 		{"glWindowPos3i", "(III)V", (void*)&Java_org_lwjgl_opengl_GL14_glWindowPos3i, "glWindowPos3i", (void**)&glWindowPos3i}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/GL14");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/GL14");
 	if (extgl_Extensions.OpenGL14)
 		extgl_InitializeClass(env, clazz, ext_set, "OpenGL14", num_functions, functions);
 }

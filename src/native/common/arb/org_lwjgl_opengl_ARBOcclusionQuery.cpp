@@ -151,7 +151,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuiv
 
 void extgl_InitARBOcclusionQuery(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglGenQueriesARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB, "glGenQueriesARB", (void**)&glGenQueriesARB},
 		{"nglDeleteQueriesARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesARB, "glDeleteQueriesARB", (void**)&glDeleteQueriesARB},
 		{"glIsQueryARB", "(I)Z", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB, "glIsQueryARB", (void**)&glIsQueryARB},
@@ -162,7 +162,7 @@ void extgl_InitARBOcclusionQuery(JNIEnv *env, jobject ext_set)
 		{"nglGetQueryObjectuivARB", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuivARB, "glGetQueryObjectuivARB", (void**)&glGetQueryObjectuivARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBOcclusionQuery");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBOcclusionQuery");
 	if (extgl_Extensions.GL_ARB_occlusion_query)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_occlusion_query", num_functions, functions);
 }

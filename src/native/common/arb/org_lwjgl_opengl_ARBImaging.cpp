@@ -548,7 +548,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilter
 
 void extgl_InitARBImaging(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglColorTable", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglColorTable, "glColorTable", (void**)&glColorTable},
 		{"nglColorSubTable", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglColorSubTable, "glColorSubTable", (void**)&glColorSubTable},
 		{"nglColorTableParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameteriv, "glColorTableParameteriv", (void**)&glColorTableParameteriv},
@@ -585,7 +585,7 @@ void extgl_InitARBImaging(JNIEnv *env, jobject ext_set)
 		{"nglGetSeparableFilter", "(IIILjava/nio/Buffer;ILjava/nio/Buffer;ILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilter, "glGetSeparableFilter", (void**)&glGetSeparableFilter}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBImaging");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBImaging");
 	if (extgl_Extensions.GL_ARB_imaging)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_imaging", num_functions, functions);
 }

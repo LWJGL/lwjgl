@@ -69,12 +69,12 @@ static void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerSta
 
 void extgl_InitNVRegisterCombiners2(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglCombinerStageParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerStageParameterfvNV, "glCombinerStageParameterfvNV", (void**)&glCombinerStageParameterfvNV},
 		{"nglGetCombinerStageParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerStageParameterfvNV, "glGetCombinerStageParameterfvNV", (void**)&glGetCombinerStageParameterfvNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVRegisterCombiners2");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVRegisterCombiners2");
 	if (extgl_Extensions.GL_NV_register_combiners2)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_register_combiners2", num_functions, functions);
 }

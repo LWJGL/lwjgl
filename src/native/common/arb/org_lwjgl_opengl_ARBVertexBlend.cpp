@@ -177,7 +177,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBVertexBlend_glVertexBlendARB
 
 void extgl_InitARBVertexBlend(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglWeightbvARB", "(ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightbvARB, "glWeightbvARB", (void**)&glWeightbvARB},
 		{"nglWeightfvARB", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightfvARB, "glWeightfvARB", (void**)&glWeightfvARB},
 		{"nglWeightivARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBlend_nglWeightivARB, "glWeightivARB", (void**)&glWeightivARB},
@@ -190,7 +190,7 @@ void extgl_InitARBVertexBlend(JNIEnv *env, jobject ext_set)
 		{"glVertexBlendARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBlend_glVertexBlendARB, "glVertexBlendARB", (void**)&glVertexBlendARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBVertexBlend");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBVertexBlend");
 	if (extgl_Extensions.GL_ARB_vertex_blend)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_vertex_blend", num_functions, functions);
 }

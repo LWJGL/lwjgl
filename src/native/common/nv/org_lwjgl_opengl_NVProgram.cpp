@@ -168,7 +168,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVProgram_nglRequestResidentProgramsNV
 
 void extgl_InitNVProgram(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglLoadProgramNV", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglLoadProgramNV, "glLoadProgramNV", (void**)&glLoadProgramNV},
 		{"glBindProgramNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVProgram_glBindProgramNV, "glBindProgramNV", (void**)&glBindProgramNV},
 		{"nglDeleteProgramsNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglDeleteProgramsNV, "glDeleteProgramsNV", (void**)&glDeleteProgramsNV},
@@ -180,6 +180,6 @@ void extgl_InitNVProgram(JNIEnv *env, jobject ext_set)
 		{"nglRequestResidentProgramsNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglRequestResidentProgramsNV, "glRequestResidentProgramsNV", (void**)&glRequestResidentProgramsNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVProgram");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVProgram");
 	extgl_InitializeClass(env, clazz, NULL, "<NVProgram>", num_functions, functions);
 }

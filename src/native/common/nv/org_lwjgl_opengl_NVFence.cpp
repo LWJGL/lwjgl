@@ -137,7 +137,7 @@ static void JNICALL Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV
 
 void extgl_InitNVFence(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglGenFencesNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFence_nglGenFencesNV, "glGenFencesNV", (void**)&glGenFencesNV},
 		{"nglDeleteFencesNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV, "glDeleteFencesNV", (void**)&glDeleteFencesNV},
 		{"glSetFenceNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVFence_glSetFenceNV, "glSetFenceNV", (void**)&glSetFenceNV},
@@ -147,7 +147,7 @@ void extgl_InitNVFence(JNIEnv *env, jobject ext_set)
 		{"nglGetFenceivNV", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV, "glGetFenceivNV", (void**)&glGetFenceivNV}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVFence");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVFence");
 	if (extgl_Extensions.GL_NV_fence)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_fence", num_functions, functions);
 }

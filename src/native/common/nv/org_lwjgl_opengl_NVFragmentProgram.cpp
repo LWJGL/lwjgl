@@ -97,14 +97,14 @@ static void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramLocalPa
 
 void extgl_InitNVFragmentProgram(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglProgramNamedParameter4fNV", "(IILjava/nio/ByteBuffer;IFFFF)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglProgramNamedParameter4fNV, "glProgramNamedParameter4fNV", (void**)&glProgramNamedParameter4fNV},
 		{"nglGetProgramNamedParameterfvNV", "(IILjava/nio/ByteBuffer;ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramNamedParameterfvNV, "glGetProgramNamedParameterfvNV", (void**)&glGetProgramNamedParameterfvNV},
 		{"glProgramLocalParameter4fARB", "(IIFFFF)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_glProgramLocalParameter4fARB, "glProgramLocalParameter4fARB", (void**)&glProgramLocalParameter4fARB},
 		{"nglGetProgramLocalParameterfvARB", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramLocalParameterfvARB, "glGetProgramLocalParameterfvARB", (void**)&glGetProgramLocalParameterfvARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVFragmentProgram");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVFragmentProgram");
 	if (extgl_Extensions.GL_NV_fragment_program)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_fragment_program", num_functions, functions);
 }

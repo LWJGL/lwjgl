@@ -97,14 +97,14 @@ static void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParamete
 
 void extgl_InitATIEnvmapBumpmap(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglTexBumpParameterfvATI", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfvATI, "glTexBumpParameterfvATI", (void**)&glTexBumpParameterfvATI},
 		{"nglTexBumpParameterivATI", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterivATI, "glTexBumpParameterivATI", (void**)&glTexBumpParameterivATI},
 		{"nglGetTexBumpParameterfvATI", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterfvATI, "glGetTexBumpParameterfvATI", (void**)&glGetTexBumpParameterfvATI},
 		{"nglGetTexBumpParameterivATI", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterivATI, "glGetTexBumpParameterivATI", (void**)&glGetTexBumpParameterivATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIEnvmapBumpmap");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ATIEnvmapBumpmap");
 	if (extgl_Extensions.GL_ATI_envmap_bumpmap)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_envmap_bumpmap", num_functions, functions);
 }

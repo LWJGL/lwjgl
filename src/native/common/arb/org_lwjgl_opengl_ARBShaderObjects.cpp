@@ -647,7 +647,7 @@ static void JNICALL Java_org_lwjgl_opengl_ARBShaderObjects_nglGetShaderSourceARB
 
 void extgl_InitARBShaderObjects(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"glDeleteObjectARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBShaderObjects_glDeleteObjectARB, "glDeleteObjectARB", (void**)&glDeleteObjectARB},
 		{"glGetHandleARB", "(I)I", (void*)&Java_org_lwjgl_opengl_ARBShaderObjects_glGetHandleARB, "glGetHandleARB", (void**)&glGetHandleARB},
 		{"glDetachObjectARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBShaderObjects_glDetachObjectARB, "glDetachObjectARB", (void**)&glDetachObjectARB},
@@ -691,7 +691,7 @@ void extgl_InitARBShaderObjects(JNIEnv *env, jobject ext_set)
 		{"nglGetShaderSourceARB", "(IILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBShaderObjects_nglGetShaderSourceARB, "glGetShaderSourceARB", (void**)&glGetShaderSourceARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBShaderObjects");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBShaderObjects");
 	if (extgl_Extensions.GL_ARB_shader_objects)
 		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_shader_objects", num_functions, functions);
 }

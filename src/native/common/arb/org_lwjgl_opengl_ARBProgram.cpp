@@ -221,7 +221,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB
 
 void extgl_InitARBProgram(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglProgramStringARB", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB, "glProgramStringARB", (void**)&glProgramStringARB},
 		{"glBindProgramARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB, "glBindProgramARB", (void**)&glBindProgramARB},
 		{"nglDeleteProgramsARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB, "glDeleteProgramsARB", (void**)&glDeleteProgramsARB},
@@ -237,7 +237,7 @@ void extgl_InitARBProgram(JNIEnv *env, jobject ext_set)
 		{"glIsProgramARB", "(I)Z", (void*)&Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB, "glIsProgramARB", (void**)&glIsProgramARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBProgram");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/ARBProgram");
 	extgl_InitializeClass(env, clazz, NULL, "<ARBProgram>", num_functions, functions);
 }
 

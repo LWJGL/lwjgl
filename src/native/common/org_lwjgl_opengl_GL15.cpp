@@ -315,7 +315,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv
 
 void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set)
 {
-	JavaMethodAndGLFunction functions[] = {
+	JavaMethodAndExtFunction functions[] = {
 		{"nglBindBuffer", "(II)V", (void*)&Java_org_lwjgl_opengl_GL15_nglBindBuffer, "glBindBuffer", (void**)&glBindBuffer},
 		{"nglDeleteBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglDeleteBuffers, "glDeleteBuffers", (void**)&glDeleteBuffers},
 		{"nglGenBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGenBuffers, "glGenBuffers", (void**)&glGenBuffers},
@@ -337,7 +337,7 @@ void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set)
 		{"nglGetQueryObjectuiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv, "glGetQueryObjectuiv", (void**)&glGetQueryObjectuiv}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
-	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/GL15");
+	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/GL15");
 	if (extgl_Extensions.OpenGL15)
 		extgl_InitializeClass(env, clazz, ext_set, "OpenGL15", num_functions, functions);
 }
