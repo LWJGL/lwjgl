@@ -124,10 +124,11 @@ static bool blankCursor(void) {
 
 static void updateCursor(void) {
 	Cursor cursor;
-	if (shouldGrab())
+	if (shouldGrab()) {
 		cursor = blank_cursor;
-	else
+	} else {
 		cursor = current_cursor;
+	}
 	XDefineCursor(getDisplay(), getCurrentWindow(), cursor);
 }
 
@@ -143,7 +144,6 @@ static void grabPointer(void) {
 			if (isLegacyFullscreen()) {
 				XWindowAttributes win_attribs;
 				XGetWindowAttributes(getDisplay(), getCurrentWindow(), &win_attribs);
-//				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
 				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), win_attribs.x, win_attribs.y);
 			}
 			XFlush(getDisplay());

@@ -218,11 +218,6 @@ void setGrab(bool new_grab) {
 	if (new_grab != grab) {
 		grab = new_grab;
 		updateInputGrab();
-/*		// Attempt to regain focus
-		if (grab) {
-			XMapRaised(getDisplay(), getCurrentWindow());
-			waitMapped(getCurrentWindow());
-		}*/
 	}
 }
 
@@ -278,7 +273,6 @@ static void handleMessages() {
 				dirty = true;
 				break;
 			case ButtonPress:
-				checkInput();
 				handleButtonPress(&(event.xbutton));
 				break;
 			case ButtonRelease:
