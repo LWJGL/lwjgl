@@ -90,7 +90,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
   jint width, jint height, jobject pixel_format,
   jobject pixelFormatCaps, jobject pBufferAttribs)
 {
-	int iPixelFormat = findPixelFormatARB(env, pixel_format, pixelFormatCaps, false, false, true);
+	int iPixelFormat = findPixelFormatARB(env, pixel_format, pixelFormatCaps, false, false, false);
 	if (iPixelFormat == -1) {
 		throwException(env, "Could not choose pixel formats.");
 		return (jint)NULL;
