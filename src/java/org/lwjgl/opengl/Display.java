@@ -69,13 +69,13 @@ public final class Display {
 	private static long timeNow, timeThen;
 
 	/** X coordinate of the window */
-	private static int x;
+	private static int x = -1;
 
 	/**
 	 * Y coordinate of the window. Y in window coordinates is from the top of the display down,
 	 * unlike GL, where it is typically at the bottom of the display.
 	 */
-	private static int y;
+	private static int y = -1;
 
 	/** Title of the window (never null) */
 	private static String title = "Game";
@@ -201,8 +201,12 @@ public final class Display {
 	 * A native context must exist, and it will be attached to the window.
 	 */
 	private static void createWindow() throws LWJGLException {
-		x = Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2);
-		y = Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2);
+    // if no display location set, center window
+    if(x == -1 && y == -1) {
+      setLocation(Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2),
+                  Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2));
+    }
+    
 		display_impl.createWindow(current_mode, fullscreen, (fullscreen) ? 0 : x, (fullscreen) ? 0 : y);
 		setTitle(title);
 		initControls();
@@ -610,6 +614,7 @@ public final class Display {
 		display_impl.destroyContext();
 		GLContext.unloadOpenGLLibrary();
 		context = null;
+    x = y = -1;
 		try {
 			GLContext.useContext(null);
 		} catch (LWJGLException e) {
@@ -657,7 +662,9 @@ public final class Display {
 	 * The window is clamped to remain entirely on the screen. If you attempt
 	 * to position the window such that it would extend off the screen, the window
 	 * is simply placed as close to the edge as possible.
-	 * @param x , y The new window location
+   * <br><b>note</b>If no location has been specified (or x == y == -1) the window will be centered
+	 * @param x The new window location on the x axis
+   * @param y The new window location on the y axis
 	 */
 	public static void setLocation(int x, int y) {
 		if (fullscreen) {
@@ -666,8 +673,6 @@ public final class Display {
 
 		// offset if already created
 		if(isCreated()) {
-			x = Math.max(0, Math.min(initial_mode.getWidth() - current_mode.getWidth(), x));
-			y = Math.max(0, Math.min(initial_mode.getHeight() - current_mode.getHeight(), y));
 			display_impl.reshape(x, y, current_mode.getWidth(), current_mode.getHeight());
 		}
 
