@@ -104,10 +104,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID (JNIEnv *env, j
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint size) {
 #ifdef _WIN32
+	/*
 	jint result = (jint) eaxGet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) env->GetDirectBufferAddress(value), (ALuint) size);
 	CHECK_AL_ERROR
 
 	return result;
+	*/
+	printf("Method currently deactivated. Fixed soon\n");
+	return -1;
 #else
 	ThrowException(env, "EAX extensions not supported");
 	return 0;
@@ -123,10 +127,14 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jc
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint size) {
 #ifdef _WIN32
+  /*
 	jint result = (jint) eaxSet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, env->GetDirectBufferAddress(value), (ALuint) size);
 	CHECK_AL_ERROR
 	
 	return result;
+	*/
+	printf("Method currently deactivated. Fixed soon\n");
+	return -1;	
 #else
 	ThrowException(env, "EAX extensions not supported");
 	return 0;
