@@ -29,16 +29,12 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <Carbon/Carbon.h>
-#include <AGL/agl.h>
-#include <OpenGL/gl.h>
-#include <JavaVM/jni.h>
+
 #include "org_lwjgl_Display.h"
+#include <JavaVM/jni.h>
 #include "RenderingContext.h"
 
-
-RenderingContext *			renderingContext;
-
+RenderingContext * renderingContext;
 
 /*
  * Class:     org_lwjgl_Display
@@ -64,29 +60,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 #endif      
 
       renderingContext = new RenderingContext();
-      
-      InitCursor();
 
-      SetRect( &renderingContext->rect, 0, 0, width, height );
-      renderingContext->windowPtr = NewCWindow( NULL, &renderingContext->rect, "LWJGL", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
-
-      /*
-      CreateNewWindow( 	kDocumentWindowClass,
-                        kWindowStandardDocumentAttributes |
-                        kWindowStandardHandlerAttribute,
-                        &rect,
-                        &windowPtr );
-       */
-        
-      SetPortWindowPort( renderingContext->windowPtr );
-        
-      if ( renderingContext->windowPtr == NULL )
-      {
-          printf("Failed to create a window\n");
-          return JNI_TRUE;
-      }
-        
-      ShowWindow( renderingContext->windowPtr );
+      renderingContext->createDisplay( width, height, bpp, freq );
 
 
       jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
@@ -103,19 +78,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-      // cleanup the AGL context
-      //
-      aglSetCurrentContext(NULL);
-      aglSetDrawable(renderingContext->aglContext, NULL);
-      aglDestroyContext(renderingContext->aglContext);
-
-      // cleanup the window
-      //
-      DisposeWindow( renderingContext->windowPtr );
+#ifdef _DEBUG
+      printf("Destroying display\n");
+#endif
+      
+      renderingContext->destroyDisplay();
 
         
 #ifdef _DEBUG
-	printf("Destroyed display\n");
+      printf("Destroyed display\n");
 #endif
 }
 

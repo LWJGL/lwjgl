@@ -112,4 +112,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer
   (JNIEnv * env, jclass clazz) {
+      return 0;
 }

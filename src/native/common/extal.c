@@ -34,7 +34,7 @@
 #include <jni.h>
 #include "extal.h"
 
-#ifndef _WIN32
+#ifdef _X11
 #include <dlfcn.h>
 #endif
 
@@ -154,7 +154,8 @@ int LoadALExtensions();
 void* GetFunctionPointer(const char* function) {
 #ifdef _WIN32
   return GetProcAddress(handleOAL, function);
-#else
+#endif
+#ifdef _X11
   return dlsym(handleOAL, function);
 #endif
 }
@@ -165,7 +166,8 @@ void* GetFunctionPointer(const char* function) {
 void LoadOpenAL() {
 #ifdef _WIN32
   handleOAL = LoadLibrary("OpenAL32.dll");
-#else
+#endif
+#ifdef _X11
    handleOAL = dlopen("libopenal.so", RTLD_LAZY);
 #endif
 }
@@ -176,7 +178,8 @@ void LoadOpenAL() {
 void UnLoadOpenAL() {
 #ifdef _WIN32
   FreeLibrary(handleOAL);
-#else
+#endif
+#ifdef _X11
    dlclose(handleOAL);
 #endif
 }

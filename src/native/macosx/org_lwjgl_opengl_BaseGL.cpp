@@ -39,12 +39,11 @@
  * @version $Revision$
  */
 
-#define _OSX
-#include "extgl.h"
-#include "org_lwjgl_opengl_BaseGL.h"
 #include "RenderingContext.h"
+#include "org_lwjgl_opengl_BaseGL.h"
 
-extern RenderingContext * renderingContext;
+
+
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
@@ -54,64 +53,7 @@ extern RenderingContext * renderingContext;
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
   (JNIEnv * env, jobject obj, jint colorBits, jint alphaBits, jint depthBits, jint stencilBits)
 {
-      AGLPixelFormat 				fmt;
-      GLboolean      				ok;
-      GLint         			 	attrib[] = { AGL_RGBA, AGL_NONE };
-
-      if ( extgl_Open() != 0 )
-      {
-          printf("extgl_Open failed");
-          return JNI_FALSE;
-      }
-      
-      /* Choose an rgb pixel format */
-      fmt = aglChoosePixelFormat(NULL, 0, attrib);
-      if(fmt == NULL)
-      {
-          return JNI_FALSE;
-      }
-
-      /* Create an AGL context */
-      renderingContext->aglContext = aglCreateContext(fmt, NULL);
-      if( renderingContext->aglContext == NULL)
-      {
-          return JNI_FALSE;
-      }
-
-      /* Attach the window to the context */
-      ok = aglSetDrawable(renderingContext->aglContext, GetWindowPort(renderingContext->windowPtr) );
-      if(!ok)
-      {
-          return JNI_FALSE;
-      }
-
-      /* Make the context the current context */
-      ok = aglSetCurrentContext(renderingContext->aglContext);
-      if(!ok)
-      {
-          return JNI_FALSE;
-      }
-
-      if ( extgl_Initialize() != 0 )
-      {
-          printf("Failed to initialize GL [extgl_Initialize()]\n");
-          return JNI_FALSE;
-      }
-
-      /* Pixel format is no longer needed */
-      aglDestroyPixelFormat(fmt);
-
-#ifdef _DEBUG
-      char * p = (char * ) glGetString( GL_EXTENSIONS );
-      if ( NULL == p )
-      {
-          printf("NO extensions available");
-      }
-      else
-      {
-          printf("Available extensions:\n%s\n", p);
-      }
-#endif /* DEBUG */
+      renderingContext->createGL( colorBits, alphaBits, depthBits, stencilBits );
       
       return JNI_TRUE;
 }
@@ -124,17 +66,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
   (JNIEnv * env, jobject obj)
 {
-      // clear out the current rendering context
-      //
-      aglSetCurrentContext( NULL );
-
-      // destroy the context
-      //
-      aglDestroyContext( renderingContext->aglContext );
-
-      // close the gl extension context
-      //
-      extgl_Close();
+      renderingContext->destroyGL();
 }
 
 /*
@@ -144,9 +76,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
 {
-    // swap the rendering buffer
-    //
-    aglSwapBuffers( renderingContext->aglContext );
+    renderingContext->swap();
 }
 
 /*
@@ -157,9 +87,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jo
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
   (JNIEnv * env, jobject obj)
 {
-      // make the current context the one we have stored
-      //
-      aglSetCurrentContext( renderingContext->aglContext );
+      renderingContext->makeContextCurrent();
 }
 
 /*
@@ -170,7 +98,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
   (JNIEnv *, jobject)
 {
-      // release the context
-      //
-      aglSetCurrentContext( NULL );
+      renderingContext->releaseContext();
 }

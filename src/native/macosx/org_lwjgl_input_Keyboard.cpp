@@ -117,7 +117,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
   (JNIEnv * env, jclass clazz, jint keys)
 {
-
+      return 0;
 }
 
 /*
