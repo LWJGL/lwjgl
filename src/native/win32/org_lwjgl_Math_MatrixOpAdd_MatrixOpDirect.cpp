@@ -41,6 +41,7 @@
 
 #include <windows.h>
 #include "org_lwjgl_Math_MatrixOpAdd_MatrixOpDirect.h"
+#include "MatrixOpCommon.h"
 /*
  * Class:     org_lwjgl_Math_MatrixOpAdd_MatrixOpDirect
  * Method:    execute
@@ -67,9 +68,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpAdd_00024MatrixOpDirect_
 	jboolean transposeDest
   )
 {
-	float * leftSource = (float *) leftSourceAddress;
-	float * rightSource = (float *) rightSourceAddress;
-	float * dest = (float *) destAddress;
+        SrcMatrix left  (leftSourceAddress,  leftSourceStride, 
+                            leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
+        SrcMatrix right (rightSourceAddress, leftSourceStride, 
+                            rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
+        DstMatrix dest  (destAddress,        destStride,      
+                            left.width, left.height, left.elements * right.elements, transposeDest);
+        
+        dest.configureBuffer(left, right);
+        
+        float * leftRecord, * rightRecord, * destRecord;
+        
+        left.rewind();
+        for (int i = 0; i < left.elements; i++)
+        {
+            leftRecord = left.nextRecord();
+            
+            right.rewind();
+            for (int j = 0; j < right.elements; j++)
+            {
+                rightRecord = right.nextRecord();
+                destRecord  =  dest.nextRecord();
+                
+                for (int k = (dest.width * dest.height) - 1; k >= 0; k--)
+                    destRecord[k] = leftRecord[k] + rightRecord[k];
+                
+                dest.writeRecord();
+            }
+        }
+        
 }
-
 

@@ -41,6 +41,9 @@
 
 #include <windows.h>
 #include "org_lwjgl_Math_MatrixOpInvert_MatrixOpSafe.h"
+#include "MatrixOpCommon.h"
+
+
 /*
  * Class:     org_lwjgl_Math_MatrixOpInvert_MatrixOpSafe
  * Method:    execute
@@ -61,6 +64,45 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpSafe
 	jboolean transposeDest
   )
 {
-	float * source = (float *) sourceAddress;
-	float * dest = (float *) destAddress;
+        // We are under the assumption that sourceWidth == sourceHeight and the matrix 
+        // defined within is invertable
+        
+        SrcMatrix source  (sourceAddress,  sourceStride, 
+                sourceWidth,  sourceHeight,  numElements, transposeSource);
+        DstMatrix dest  (destAddress,      destStride,   
+                source.width, source.height, source.elements, transposeDest);
+    
+        float * sourceRecord, * destRecord;
+        
+        int   temp_side = source.width-1;
+        float temp_matrix [temp_side*temp_side];
+ 
+        for (int i = 0; i < source.elements; i++)
+        {
+            sourceRecord = source.nextRecord();
+            destRecord   = dest.nextRecord();
+
+            float det = determinant(sourceRecord, sourceWidth);
+            float sign;
+            
+            for (int c = 0; c < source.width; c++)
+            {
+                sign = (c & 1) ? 1.0f : -1.0f;
+                
+                for (int r = 0; r < source.width; r++)
+                {
+                    // get the sub matrix
+                    subMatrix(sourceRecord, source.width, temp_matrix, c, r);
+                    
+                    // transpose the result
+                    destRecord[r + c * source.width] 
+                            = (sign / det) * determinant(temp_matrix, temp_side); 
+                    
+                    // swap signs
+                    sign = (sign == 1) ? -1.0f : 1.0f;
+                }
+            }
+    
+            dest.writeRecord();
+        }
 }

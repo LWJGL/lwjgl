@@ -41,6 +41,7 @@
 
 #include <windows.h>
 #include "org_lwjgl_Math_MatrixOpCopy_MatrixOpSafe.h"
+#include "MatrixOpCommon.h"
 /*
  * Class:     org_lwjgl_Math_MatrixOpCopy_MatrixOpSafe
  * Method:    execute
@@ -61,6 +62,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpCopy_00024MatrixOpSafe_e
 	jboolean transposeDest
   )
 {
-	float * source = (float *) sourceAddress;
-	float * dest = (float *) destAddress;
+        // remove any unnecessary copying
+        if (transposeSource == transposeDest)
+        {
+            transposeSource = false;
+            transposeDest   = false;
+        }
+
+        SrcMatrix source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight, numElements, transposeSource);
+        DstMatrix dest  (destAddress,    destStride,   source.width, source.height,  source.elements, transposeDest);
+        
+        float * sourceRecord, * destRecord;
+        
+        for (int i = 0; i < source.elements; i++)
+        {
+            sourceRecord = source.nextRecord();
+            destRecord = dest.nextRecord();
+            
+            // just do a straight memory copy
+            memcpy(destRecord, sourceRecord, source.width * source.height * sizeof(jfloat));
+            dest.writeRecord();
+        }
 }

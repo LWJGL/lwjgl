@@ -41,6 +41,11 @@
 
 #include <windows.h>
 #include "org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect.h"
+#include "MatrixOpCommon.h"
+#include <cmath>
+
+using namespace std;
+
 /*
  * Class:     org_lwjgl_Math_MatrixOpNormalise_MatrixOpDirect
  * Method:    execute
@@ -61,6 +66,32 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpD
 	jboolean transposeDest
   )
 {
-	float * source = (float *) sourceAddress;
-	float * dest = (float *) destAddress;
+        SrcMatrix source  (sourceAddress, sourceStride, sourceWidth,  sourceHeight, numElements,    transposeSource);
+        DstMatrix dest  (destAddress,     destStride,   source.width, source.height, source.elements, transposeDest);
+        
+        dest.configureBuffer(source);
+        
+        float * sourceRecord, * destRecord;
+        float magnitude, magnitude_squared;
+        
+        int i;
+        register int j;
+        
+        for (i = 0; i < source.elements; i++)
+        {
+        
+            magnitude_squared = 0;
+            sourceRecord = source.nextRecord();
+            destRecord = dest.nextRecord();
+            
+            for (j = 0 ; j < sourceWidth*sourceHeight; i++)
+                magnitude_squared += sourceRecord[j] * sourceRecord[j];
+                
+            magnitude = (float) sqrt((double) magnitude_squared);
+                
+            for (j = 0; j < sourceWidth*sourceHeight; i++)
+                destRecord[j] = sourceRecord[j] / magnitude;
+            
+            dest.writeRecord();
+        }
 }
