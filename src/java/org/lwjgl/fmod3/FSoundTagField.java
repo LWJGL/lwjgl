@@ -55,6 +55,12 @@ public class FSoundTagField {
 
 	/** Type of tagfield */
 	int					type;
+  
+  /**
+   * Creates a new FSoundTagField
+   */
+  public FSoundTagField() {
+  }  
 
 	/**
 	 * Creates a new FSoundTagField
@@ -65,36 +71,53 @@ public class FSoundTagField {
 	}
   
 	/**
-	 * Sets the value and length
+	 * Sets the name value and type
+   * @param name name of tagfield
 	 * @param value value of tagfield
-	 * @param lenght length of data
+	 * @param type type of tagfield
 	 */
-	void set(ByteBuffer value, int lenght) {
+	void set(String name, ByteBuffer value, int type) {
+    this.name = name;
 		this.value = value;
-		this.length = lenght;
+		this.length = value.capacity();
+    this.type = type;
 	}
+  
 	/**
 	 * @return Returns the length.
 	 */
 	public int getLength() {
 		return length;
 	}
+  
 	/**
 	 * @return Returns the name.
 	 */
 	public String getName() {
 		return name;
 	}
+  
 	/**
 	 * @return Returns the type.
 	 */
 	public int getType() {
 		return type;
 	}
+  
 	/**
 	 * @return Returns the value.
 	 */
 	public ByteBuffer getValue() {
-		return value;
+		return value.asReadOnlyBuffer();
 	}
+  
+  /**
+   * @value as string
+   */
+  public String getValueAsString() {
+    byte[] buffer = new byte[value.capacity()];
+    value.get(buffer);
+    value.rewind();
+    return new String(buffer);
+  }  
 }

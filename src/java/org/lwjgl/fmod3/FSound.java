@@ -2368,7 +2368,6 @@ public class FSound {
    * Get a tag field associated with an open stream
    * <p>
    * <b>Remarks</b>
-   * Do not attempt to modify or free any pointers returned by this function.
    * If this function returns successfully, "value" will contain a pointer to a piece of tag-field-specific data - do not assume it will always point to a null-terminated ASCII string.
    * @param stream The stream to get the tag field from.
    * @param num The number of the tag field to retrieve.

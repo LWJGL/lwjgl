@@ -1086,10 +1086,22 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1CreateDSP
 * Method:    nFSOUND_Stream_FindTagField
 * Signature: (JILjava/lang/String;Lorg/lwjgl/fmod_instance/FSoundTagField;)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1FindTagField(JNIEnv * env, jclass clazz, jlong p1, jint p2, jstring p3, jobject p4) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1FindTagField(JNIEnv * env, jclass clazz, jlong stream, jint type, jstring name, jobject tagField) {
+	const char * nName = (*env)->GetStringUTFChars(env, name, 0);
+	bool result = false;
+	void* value;
+	jint length;
+
+	if(fmod_instance->FSOUND_Stream_FindTagField((FSOUND_STREAM*) stream, type, nName, &value, &length)) {
+
+		// get set method and call it
+		jclass cls = (*env)->GetObjectClass(env, tagField);
+		jmethodID mid = (*env)->GetMethodID(env, cls, "set", "(Ljava/lang/String;Ljava/nio/ByteBuffer;I)V");
+		(*env)->CallVoidMethod(env, tagField, mid, name, safeNewBuffer(env, value, length), type);
+		result = true;
+	}
+	(*env)->ReleaseStringUTFChars (env, name, nName);
+	return result;
 }
 
 /*
@@ -1195,10 +1207,23 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSyncPo
 * Method:    nFSOUND_Stream_GetTagField
 * Signature: (JILorg/lwjgl/fmod_instance/FSoundTagField;)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetTagField(JNIEnv * env, jclass clazz, jlong p1, jint p2, jobject p3) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetTagField(JNIEnv * env, jclass clazz, jlong stream, jint num, jobject tagField) {
+	jint type;
+	char* name;
+	void* value;
+	jint length;
+
+	if(fmod_instance->FSOUND_Stream_GetTagField((FSOUND_STREAM*) stream, num, &type, &name, &value, &length)) {
+		// create string instance of name
+		jstring nName = (*env)->NewStringUTF(env, name);
+
+		// get set method and call it
+		jclass cls = (*env)->GetObjectClass(env, tagField);
+		jmethodID mid = (*env)->GetMethodID(env, cls, "set", "(Ljava/lang/String;Ljava/nio/ByteBuffer;I)V");
+		(*env)->CallVoidMethod(env, tagField, mid, nName, safeNewBuffer(env, value, length), type);
+		return true;
+	}
+	return false;
 }
 
 /*
