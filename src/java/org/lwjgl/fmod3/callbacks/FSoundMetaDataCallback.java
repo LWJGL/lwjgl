@@ -33,8 +33,6 @@ package org.lwjgl.fmod3.callbacks;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.fmod3.FSoundStream;
-
 /**
  * This interface describes a callback interface to Fmod music
  * $Id$
@@ -43,5 +41,5 @@ import org.lwjgl.fmod3.FSoundStream;
  * @version $Revision$
  */
 public interface FSoundMetaDataCallback {
-  public void FSOUND_STREAMCALLBACK(FSoundStream stream, ByteBuffer buff, int len);
+  public void FSOUND_METADATACALLBACK(ByteBuffer name, ByteBuffer value);
 }
