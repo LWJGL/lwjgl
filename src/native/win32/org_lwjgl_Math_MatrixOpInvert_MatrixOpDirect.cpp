@@ -65,25 +65,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpDire
         // We are under the assumption that sourceWidth == sourceHeight and the matrix 
         // defined within is invertable
         
-        SrcMatrix source  (sourceAddress,  sourceStride, 
+        MatrixSrc source  (sourceAddress,  sourceStride, 
                 sourceWidth,  sourceHeight,  numElements, transposeSource);
-        DstMatrix dest  (destAddress,      destStride,   
+        MatrixDst dest  (destAddress,      destStride,   
                 source.width, source.height, source.elements, transposeDest);
     
         dest.configureBuffer(source);
     
-        float * sourceRecord, * destRecord;
+        float * srcMatrix, * destMatrix;
         
         int   temp_side = source.width-1;
         float temp_matrix [temp_side*temp_side];
  
        for (int i = 0; i < source.elements; i++)
         {
-            sourceRecord = source.nextRecord();
-            destRecord   = dest.nextRecord();
+            srcMatrix = source.nextMatrix();
+            destMatrix   = dest.nextMatrix();
 
             // calculate the determinant
-            float det = determinant(sourceRecord, source.width);
+            float det = determinant(srcMatrix, source.width);
             
 #ifdef _DEBUG
             printf("Determinant: %f\n", det);
@@ -108,10 +108,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpDire
                 for (int row = 0; row < source.height; row++)
                 {
                     // get the sub matrix
-                    subMatrix(sourceRecord, source.width, temp_matrix, col, row);
+                    subMatrix(srcMatrix, source.width, temp_matrix, col, row);
                     
                     // transpose the result
-                    destRecord[col + row * source.height] 
+                    destMatrix[col + row * source.height] 
                             = (sign / det) * determinant(temp_matrix, temp_side); 
                     
                     // swap signs
@@ -119,6 +119,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpInvert_00024MatrixOpDire
                 }
             }
     
-            dest.writeRecord();
+            dest.writeComplete();
         }
 }

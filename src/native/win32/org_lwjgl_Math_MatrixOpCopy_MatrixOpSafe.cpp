@@ -69,18 +69,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpCopy_00024MatrixOpSafe_e
             transposeDest   = false;
         }
 
-        SrcMatrix source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight, numElements, transposeSource);
-        DstMatrix dest  (destAddress,    destStride,   source.width, source.height,  source.elements, transposeDest);
+        MatrixSrc source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight, numElements, transposeSource);
+        MatrixDst dest  (destAddress,    destStride,   source.width, source.height,  source.elements, transposeDest);
         
-        float * sourceRecord, * destRecord;
+        float * srcMatrix, * destMatrix;
+        int matrixByteCount = source.width*source.height*sizeof(jfloat);
         
         for (int i = 0; i < source.elements; i++)
         {
-            sourceRecord = source.nextRecord();
-            destRecord = dest.nextRecord();
+            srcMatrix = source.nextMatrix();
+            destMatrix = dest.nextMatrix();
             
             // just do a straight memory copy
-            memcpy(destRecord, sourceRecord, source.width * source.height * sizeof(jfloat));
-            dest.writeRecord();
+            memcpy(destMatrix, srcMatrix, matrixByteCount);
+            dest.writeComplete();
         }
 }

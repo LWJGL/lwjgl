@@ -68,33 +68,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpAdd_00024MatrixOpSafe_ex
 	jboolean transposeDest
   )
 {
-        SrcMatrix left  (leftSourceAddress,  leftSourceStride, 
+        MatrixSrc left  (leftSourceAddress,  leftSourceStride, 
                             leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
-        SrcMatrix right (rightSourceAddress, leftSourceStride, 
+        MatrixSrc right (rightSourceAddress, leftSourceStride, 
                             rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
-        DstMatrix dest  (destAddress,        destStride,      
+        MatrixDst dest  (destAddress,        destStride,      
                             left.width, left.height, left.elements * right.elements, transposeDest);
         
-        float * leftRecord, * rightRecord, * destRecord;
+        float * leftMatrix, * rightMatrix, * destMatrix;
         
         left.rewind();
         for (int i = 0; i < leftElements; i++)
         {
-            leftRecord = left.nextRecord();
+            leftMatrix = left.nextMatrix();
             right.rewind();
             
             for (int j = 0; j < rightElements; j++)
             {
-                rightRecord = right.nextRecord();
-                destRecord  =  dest.nextRecord();
+                rightMatrix = right.nextMatrix();
+                destMatrix  =  dest.nextMatrix();
                 
-                for (int k = (leftSourceWidth * rightSourceWidth) - 1; k >= 0; k--)
-                    destRecord[k] = leftRecord[k] + rightRecord[k];
+                int k = dest.width * dest.height;
+                while (k--)
+                    destMatrix[k] = leftMatrix[k] + rightMatrix[k];
                 
-                dest.writeRecord();
+                dest.writeComplete();
             }
         }
-        
 }
 
 

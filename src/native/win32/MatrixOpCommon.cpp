@@ -70,7 +70,7 @@ void Matrix::transposeMatrix(float * mat, int src_width, int src_height)
 }
 
 
-SrcMatrix::SrcMatrix ( jint addr, jint s,
+MatrixSrc::MatrixSrc ( jint addr, jint s,
             jint w,    jint h, 
             jint e,	jboolean t):	
             Matrix(addr, s, e), 
@@ -102,16 +102,16 @@ SrcMatrix::SrcMatrix ( jint addr, jint s,
 
     if (elements == 1)
     {
-        // fool the nextRecord function into returning a value
+        // fool the nextMatrix function into returning a value
         elements = 2;
-        nextRecord();
+        nextMatrix();
         elements = 1;
     }
 }
 
-SrcMatrix::~SrcMatrix()
+MatrixSrc::~MatrixSrc()
 {
-    //cout << "SrcMatrix destructor \n";
+    //cout << "MatrixSrc destructor \n";
     
     delete [] record;
     
@@ -119,7 +119,7 @@ SrcMatrix::~SrcMatrix()
        delete [] transpose_record;
 }
 
-float * SrcMatrix::nextRecord()
+float * MatrixSrc::nextMatrix()
 {
     if (elements > 1)
     {
@@ -159,7 +159,7 @@ float * SrcMatrix::nextRecord()
     return current_record_ptr;
 }
 
-DstMatrix::DstMatrix (jint addr, jint s, jint w, jint h, jint e, jboolean t): 
+MatrixDst::MatrixDst (jint addr, jint s, jint w, jint h, jint e, jboolean t): 
             Matrix(addr, s, e)	
 {
     width = w;
@@ -181,9 +181,9 @@ DstMatrix::DstMatrix (jint addr, jint s, jint w, jint h, jint e, jboolean t):
     record_offset = address - stride;
 }
 
-DstMatrix::~DstMatrix()
+MatrixDst::~MatrixDst()
 {
-    //cout << "DstMatrix destructor \n";
+    //cout << "MatrixDst destructor \n";
 
     delete [] record;
     if (transpose_record != 0)
@@ -206,7 +206,7 @@ DstMatrix::~DstMatrix()
     }
 }
 
-void DstMatrix::configureBuffer(SrcMatrix & a, SrcMatrix & b)
+void MatrixDst::configureBuffer(MatrixSrc & a, MatrixSrc & b)
 {
 
 
@@ -226,7 +226,7 @@ void DstMatrix::configureBuffer(SrcMatrix & a, SrcMatrix & b)
         createBuffer();
 }
 
-void DstMatrix::configureBuffer(SrcMatrix & a)
+void MatrixDst::configureBuffer(MatrixSrc & a)
 {
         if (identicalDataSpaces(a))
             record_buffered = JNI_TRUE;
@@ -234,14 +234,14 @@ void DstMatrix::configureBuffer(SrcMatrix & a)
             createBuffer();
 }
             
-void DstMatrix::createBuffer()
+void MatrixDst::createBuffer()
 {
         data_buffered = JNI_TRUE;
         buffer = new char[ elements * stride ];
         record_offset = buffer - stride;
 }
 
-float * DstMatrix::nextRecord()
+float * MatrixDst::nextMatrix()
 {
     record_offset = &record_offset[stride];
     
@@ -258,7 +258,7 @@ float * DstMatrix::nextRecord()
 }
 
 
-void DstMatrix::writeRecord()
+void MatrixDst::writeComplete()
 {	
     if (last_record_in_temp)
     {	

@@ -62,25 +62,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNegate_00024MatrixOpDire
 	jboolean transposeDest
   )
 {
-        SrcMatrix source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight,  numElements, transposeSource);
-        DstMatrix dest  (destAddress,      destStride,   source.width, source.height, numElements, transposeDest);
+        MatrixSrc source  (sourceAddress,  sourceStride, sourceWidth,  sourceHeight,  numElements, transposeSource);
+        MatrixDst dest  (destAddress,      destStride,   source.width, source.height, numElements, transposeDest);
     
         dest.configureBuffer(source);
     
-        int * sourceRecord, * destRecord;
+        int * srcMatrix, * destMatrix;
  
         for (int i = 0; i < source.elements; i++)
         {
-            sourceRecord = (int *) source.nextRecord();
-            destRecord =   (int *) dest.nextRecord();
+            srcMatrix = (int *) source.nextMatrix();
+            destMatrix =   (int *) dest.nextMatrix();
             
             // we can cheat and use the less expensive xor 
             // to switch the sign bit of the float
             // single precision format   1 - sign   8 - exponent (excess 127) 23 - mantisa
             
-            for (int j = 0; j < sourceWidth*sourceHeight; j++)
-                destRecord[j] = sourceRecord[j] ^ 0x80000000;
+            int j = source.width*source.height;
+            while (j--)
+                destMatrix[j] = srcMatrix[j] ^ 0x80000000;
     
-            dest.writeRecord();
+            dest.writeComplete();
         }
 }

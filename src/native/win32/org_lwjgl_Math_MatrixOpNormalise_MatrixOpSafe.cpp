@@ -66,29 +66,30 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpS
 	jboolean transposeDest
   )
 {
-        SrcMatrix source  (sourceAddress, sourceStride, sourceWidth,  sourceHeight, numElements,    transposeSource);
-        DstMatrix dest  (destAddress,     destStride,   source.width, source.height, source.elements, transposeDest);
+        MatrixSrc source  (sourceAddress, sourceStride, sourceWidth,  sourceHeight, numElements,    transposeSource);
+        MatrixDst dest  (destAddress,     destStride,   source.width, source.height, source.elements, transposeDest);
         
-        float * sourceRecord, * destRecord;
+        float * srcMatrix, * destMatrix;
         float magnitude, magnitude_squared;
         
-        int i, j;
+        int i, j, matrixFloatCount = source.width * source.height;
         
         for (i = 0; i < source.elements; i++)
         {
-        
             magnitude_squared = 0;
-            sourceRecord = source.nextRecord();
-            destRecord   = dest.nextRecord();
+            srcMatrix = source.nextMatrix();
+            destMatrix = dest.nextMatrix();
             
-            for (j = 0 ; j < sourceWidth*sourceHeight; j++)
-                magnitude_squared += sourceRecord[j] * sourceRecord[j];
+            j = matrixFloatCount;
+            while (j--)
+                magnitude_squared += srcMatrix[j] * srcMatrix[j];
                 
             magnitude = (float) sqrt((double) magnitude_squared);
                 
-            for (j = 0; j < sourceWidth*sourceHeight; j++)
-                destRecord[j] = sourceRecord[j] / magnitude;
+            j = matrixFloatCount;
+            while (j--)
+                destMatrix[j] = srcMatrix[j] / magnitude;
             
-            dest.writeRecord();
+            dest.writeComplete();
         }
 }

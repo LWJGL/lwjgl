@@ -77,16 +77,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDi
         }
 
 
-        SrcMatrix left  (leftSourceAddress,  leftSourceStride, 
+        MatrixSrc left  (leftSourceAddress,  leftSourceStride, 
                         leftSourceWidth,  leftSourceHeight,  leftElements,  transposeLeftSource);
-        SrcMatrix right (rightSourceAddress, leftSourceStride, 
+        MatrixSrc right (rightSourceAddress, leftSourceStride, 
                         rightSourceWidth, rightSourceHeight, rightElements, transposeRightSource);
-        DstMatrix dest  (destAddress,        destStride,       
+        MatrixDst dest  (destAddress,        destStride,       
                         right.width, left.height, left.elements * right.elements, transposeDest);
         
         dest.configureBuffer(left, right);
         
-        float * leftRecord, * rightRecord, * destRecord;
+        float * leftMatrix, * rightMatrix, * destMatrix;
         
         // check out discussions envolving ordering
         
@@ -94,17 +94,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDi
          left.rewind();
         for (int i = 0; i < left.elements; i++)
         {
-            leftRecord = left.nextRecord();
+            leftMatrix = left.nextMatrix();
             
             right.rewind();
             for (int j = 0; j < right.elements; j++)
             {
-                rightRecord = right.nextRecord();
-                destRecord  =  dest.nextRecord();
+                rightMatrix = right.nextMatrix();
+                destMatrix  =  dest.nextMatrix();
                 
                 // zero the elements of the destination matrix
                 for (int d = 0; d < dest.width * dest.height; d++)
-                    destRecord[d] = 0;
+                    destMatrix[d] = 0;
                 
                 // loop through each column of the right matrix
                 int rightCell = 0;
@@ -119,16 +119,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpMultiply_00024MatrixOpDi
                     {
                         for (int leftRow = 0; leftRow < left.height; leftRow++)
                         {	
-                            destRecord[leftRow] += rightRecord[rightCell] * leftRecord[leftCell++];
+                            destMatrix[leftRow] += rightMatrix[rightCell] * leftMatrix[leftCell++];
                         }
                         rightCell ++ ;
                     }
                     
-                    //rightRecord = &rightRecord[right.height];
-                    destRecord =  &destRecord[dest.height];
+                    //rightMatrix = &rightMatrix[right.height];
+                    destMatrix =  &destMatrix[dest.height];
                     
                 }
-                dest.writeRecord();
+                dest.writeComplete();
             }
         }        
 }

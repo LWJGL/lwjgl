@@ -43,7 +43,7 @@ class Matrix
 // Src Matrix
 //////////////////////////////////////////////////////////////////////////////////////
 
-class SrcMatrix: public Matrix
+class MatrixSrc: public Matrix
 {
     private:
         char * record_offset;		// the offset of this record in memory
@@ -51,41 +51,46 @@ class SrcMatrix: public Matrix
         float * record;			// temporary storage to store a fully aligned and transposed
                                         // copy of the record, if the one in memory is not so
         float * current_record_ptr;	// the address of the memory containing the record last
-                                        // returned by the nextRecord() function
+                                        // returned by the nextMatrix() function
         jint record_size;		// the total floats in each record
 
     public:
-        SrcMatrix ( jint address, jint stride, jint width, jint height, jint elements, jboolean transpose);
+        MatrixSrc ( jint address, jint stride, jint width, jint height, jint elements, jboolean transpose);
+        ~MatrixSrc();
+        
         void rewind() {	record_offset = address; }
-        float * nextRecord();
-        ~SrcMatrix();
+        float * nextMatrix();
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Dst Matrix
 //////////////////////////////////////////////////////////////////////////////////////
 
-class DstMatrix: public Matrix
+class MatrixDst: public Matrix
 {
-    char  * record_offset;	// the offset of the record in memory
-
-    jboolean data_buffered;	// if all of the data has to be buffered
-    char * buffer;		// a buffer used when data_buffered
+    private:
+        char  * record_offset;	// the offset of the record in memory
     
-    jboolean last_record_in_temp;
-    jboolean record_buffered;	// if only a single record is buffered
-    float * record;		// to store data if source is unaligned
-    
-    jint record_size;
+        jboolean data_buffered;	// if all of the data has to be buffered
+        char * buffer;		// a buffer used when data_buffered
+        
+        jboolean last_record_in_temp;
+        jboolean record_buffered;	// if only a single record is buffered
+        float * record;		// to store data if source is unaligned
+        
+        jint record_size;
+        void createBuffer();
 
     public:
-        DstMatrix (jint address, jint stride, jint width, jint height, jint elements, jboolean transpose);
-        void configureBuffer(SrcMatrix & a, SrcMatrix & b);        
-        void configureBuffer(SrcMatrix & a);    
-        void createBuffer();
-        float * nextRecord();
-        void writeRecord();
-        ~DstMatrix();
+        MatrixDst (jint address, jint stride, jint width, jint height, jint elements, jboolean transpose);
+        ~MatrixDst();
+        void configureBuffer(MatrixSrc & a, MatrixSrc & b);        
+        void configureBuffer(MatrixSrc & a);    
+        
+        float * nextMatrix();
+        void writeComplete();
+
 };
 
 
