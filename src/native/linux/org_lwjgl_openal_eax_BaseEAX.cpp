@@ -30,21 +30,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "org_lwjgl_openal_BaseAL.h"
+#include "org_lwjgl_openal_eax_BaseEAX.h"
 
 /*
- * Class:     org_lwjgl_openal_BaseAL
+ * Class:     org_lwjgl_openal_eax_BaseEAX
  * Method:    nCreate
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_BaseAL_nCreate (JNIEnv *env, jobject obj) {
-	return true;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_eax_BaseEAX_nCreate (JNIEnv *env, jobject obj) {
+	return false;
 }
 
 /*
- * Class:     org_lwjgl_openal_BaseAL
+ * Class:     org_lwjgl_openal_eax_BaseEAX
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_BaseAL_nDestroy(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_BaseEAX_nDestroy (JNIEnv *env, jobject obj) {
 }
