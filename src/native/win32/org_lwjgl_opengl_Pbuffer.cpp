@@ -44,6 +44,7 @@
 #include "Window.h"
 
 #include "extgl.h"
+#include "extgl_wgl.h"
 
 #include "common_tools.h"
 

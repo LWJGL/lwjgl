@@ -41,7 +41,9 @@
 
 #define _PRIVATE_WINDOW_H_
 #include "Window.h"
+#include "extgl_wgl.h"
 #include "common_tools.h"
+#include "extgl_wgl.h"
 #include "display.h"
 #include "org_lwjgl_opengl_Display.h"
 
