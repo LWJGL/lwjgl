@@ -64,12 +64,12 @@ public abstract class Vector implements Serializable, ReadableVector {
 	 */
 	public abstract float lengthSquared();
 	
-    /**
-     * Load this vector from a FloatBuffer
-     * @param buf The buffer to load it from, at the current position
-     * @return this
-     */
-    public abstract Vector load(FloatBuffer buf);	
+	/**
+	 * Load this vector from a FloatBuffer
+	 * @param buf The buffer to load it from, at the current position
+	 * @return this
+	 */
+	public abstract Vector load(FloatBuffer buf);	
 
 	/**
 	 * Negate a vector
@@ -87,27 +87,25 @@ public abstract class Vector implements Serializable, ReadableVector {
 		if (len != 0.0f) {
 			float l = 1.0f / len;
 			return scale(l);
-		} else {
-			assert false;
-			return this;
-		}
+		} else
+			throw new IllegalStateException("Zero length vector");
 	}
 	
 
-    /**
-     * Store this vector in a FloatBuffer
-     * @param buf The buffer to store it in, at the current position
-     * @return this
-     */
-    public abstract Vector store(FloatBuffer buf);    
+	/**
+	 * Store this vector in a FloatBuffer
+	 * @param buf The buffer to store it in, at the current position
+	 * @return this
+	 */
+	public abstract Vector store(FloatBuffer buf);	
 
 
-    /**
-     * Scale this vector
-     * @param scale The scale factor
-     * @return this
-     */
-    public abstract Vector scale(float scale);    
+	/**
+	 * Scale this vector
+	 * @param scale The scale factor
+	 * @return this
+	 */
+	public abstract Vector scale(float scale);	
 
 
 
