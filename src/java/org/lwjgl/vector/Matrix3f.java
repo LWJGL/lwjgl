@@ -371,15 +371,7 @@ public class Matrix3f extends Matrix {
 				  + m01 * (m12 * m20 - m10 * m22)
 				  + m02 * (m10 * m21 - m11 * m20);
                 
-                if (determinant == 1)
-                    // matrix is proper orthogonal
-                    transpose();
-                else if (determinant == -1)
-                {   // matrix is improper orthogonal
-                    transpose();
-                    negate();
-                }
-                else if (determinant != 0)
+                if (determinant != 0)
                 {
                     // do it the ordinary way
                     

@@ -575,15 +575,7 @@ public class Matrix4f extends Matrix {
 		
                 float determinant = determinant();
                 
-                if (determinant == 1)
-                	// proper orthogonal
-                        transpose();
-                else if (determinant == -1)
-                {	// improper orthogonal
-                        transpose();
-                        negate();
-                }
-                else if (determinant != 0)
+                if (determinant != 0)
                 {
                     /*
                         m00 m01 m02 m03
