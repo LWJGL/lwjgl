@@ -99,6 +99,19 @@ public abstract class BasicTest {
   }
   
   /**
+   * Creates a float buffer to hold specified float array
+   * - strictly a utility method
+   *
+   * @param array to hold
+   * @return created FloatBuffer
+   */
+  protected FloatBuffer createFloatBuffer(float[] data) {
+    FloatBuffer temp = createFloatBuffer(data.length).put(data);
+    temp.flip();
+    return temp;
+  }  
+  
+  /**
    * Pauses the invoking thread for specified milliseconds
    * 
    * @param time Milliseconds to sleep

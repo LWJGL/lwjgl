@@ -58,32 +58,32 @@ public class PositionTest extends BasicTest {
   private IntBuffer soundSources = createIntBuffer(3);
 
   /** Position of listener */
-  private FloatBuffer listenerPosition = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+  private FloatBuffer listenerPosition = createFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f });
 
   /** Velocity of listener */
-  private FloatBuffer listenerVelocity = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+  private FloatBuffer listenerVelocity = createFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f });
 
   /** Orientation of listener */
   private FloatBuffer listenerOrientation =
-    createFloatBuffer(6).put(new float[] { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
+    createFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
 
   /** Position of left sound */
-  private FloatBuffer leftPosition = createFloatBuffer(3).put(new float[] { -2.0f, 0.0f, 0.0f });
+  private FloatBuffer leftPosition = createFloatBuffer(new float[] { -2.0f, 0.0f, 0.0f });
 
   /** Velocity of left sound */
-  private FloatBuffer leftVelocity = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+  private FloatBuffer leftVelocity = createFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f });
 
   /** Position of center sound */
-  private FloatBuffer centerPosition = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, -4.0f });
+  private FloatBuffer centerPosition = createFloatBuffer(new float[] { 0.0f, 0.0f, -4.0f });
 
   /** Velocity of center sound */
-  private FloatBuffer centerVelocity = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+  private FloatBuffer centerVelocity = createFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f });
 
   /** Position of right sound */
-  private FloatBuffer rightPosition = createFloatBuffer(3).put(new float[] { 2.0f, 0.0f, 0.0f });
+  private FloatBuffer rightPosition = createFloatBuffer(new float[] { 2.0f, 0.0f, 0.0f });
 
   /** Velocity of right sound */
-  private FloatBuffer rightVelocity = createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+  private FloatBuffer rightVelocity = createFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f });
   // ---------------------------------------------------
 
   /**
@@ -145,19 +145,6 @@ public class PositionTest extends BasicTest {
     Sys.log("Setting up OpenAL");
 
     AL.create();
-
-    listenerPosition.flip();
-    listenerVelocity.flip();
-    listenerOrientation.flip();
-
-    leftPosition.flip();
-    leftVelocity.flip();
-
-    centerPosition.flip();
-    centerVelocity.flip();
-
-    rightPosition.flip();
-    rightVelocity.flip();
 
     AL10.alListener(AL10.AL_POSITION, listenerPosition);
     AL10.alListener(AL10.AL_VELOCITY, listenerVelocity);
