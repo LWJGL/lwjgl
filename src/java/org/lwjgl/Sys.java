@@ -34,7 +34,6 @@ package org.lwjgl;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -239,7 +238,7 @@ public final class Sys {
 	 * failed - hence we don't return success code or throw an Exception. This is just a
 	 * best attempt at opening the URL given - don't rely on it to work!
 	 * <p>
-	 * @param url The URL
+	 * @param url The URL. Ensure that the URL is properly encoded.
 	 * @return false if we are CERTAIN the call has failed
 	 */
 	public static boolean openURL(String url) {
@@ -252,7 +251,7 @@ public final class Sys {
 			Class basicServiceClass = Class.forName("javax.jnlp.BasicService");
 			Method showDocumentMethod = basicServiceClass.getMethod("showDocument", new Class[] {URL.class});
 			try {
-				Boolean ret = (Boolean) showDocumentMethod.invoke(basicService, new Object[] {new URL(URLEncoder.encode(url, "utf8"))});
+				Boolean ret = (Boolean) showDocumentMethod.invoke(basicService, new Object[] {new URL(url)});
 				return ret.booleanValue();
 			} catch (MalformedURLException e) {
 				e.printStackTrace(System.err);
