@@ -487,7 +487,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	
 	/**
 	 * Rotates the matrix around the given axis the specified angle
-	 * @param angle the angle, in degrees.
+	 * @param angle the angle, in radians.
 	 * @param axis The vector representing the rotation axis. Must be normalized.
 	 * @return this
 	 */
@@ -539,7 +539,7 @@ public class Matrix4f extends Matrix implements Serializable {
 
 	/**
 	 * Rotates the matrix around the given axis the specified angle, and stores it in the specified destination
-	 * @param angle the angle, in degrees.
+	 * @param angle the angle, in radians.
 	 * @param axis The vector representing the rotation axis. Must be normalized.
 	 * @param dest The destination matrix or null if a new matrix is to be created
 	 * @return The rotated matrix

@@ -53,14 +53,14 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	public Vector3f() {
 		super();
 	}
-	
+
 	/**
 	 * Constructor
 	 */
 	public Vector3f(ReadableVector3f src) {
 		set(src);
 	}
-	
+
 	/**
 	 * Constructor
 	 */
@@ -96,14 +96,14 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		z = src.getZ();
 		return this;
 	}
-	
+
 	/**
 	 * @return the length squared of the vector
 	 */
 	public float lengthSquared() {
 		return x * x + y * y + z * z;
 	}
-	
+
 	/**
 	 * Translate a vector
 	 * @param x The translation in x
@@ -116,41 +116,41 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		this.z += z;
 		return this;
 	}
-	
-    /**
-     * Add a vector to another vector and place the result in a destination
-     * vector.
-     * @param left The LHS vector
-     * @param right The RHS vector
-     * @param dest The destination vector, or null if a new vector is to be created
-     * @return the sum of left and right in dest
-     */
-    public static Vector3f add(Vector3f left, Vector3f right, Vector3f dest) {
-    	if (dest == null)
-    		return new Vector3f(left.x + right.x, left.y + right.y, left.z + right.z);
-    	else {
+
+	/**
+	 * Add a vector to another vector and place the result in a destination
+	 * vector.
+	 * @param left The LHS vector
+	 * @param right The RHS vector
+	 * @param dest The destination vector, or null if a new vector is to be created
+	 * @return the sum of left and right in dest
+	 */
+	public static Vector3f add(Vector3f left, Vector3f right, Vector3f dest) {
+		if (dest == null)
+			return new Vector3f(left.x + right.x, left.y + right.y, left.z + right.z);
+		else {
 			dest.set(left.x + right.x, left.y + right.y, left.z + right.z);
 			return dest;
-    	}
-    }
+		}
+	}
 
-    /**
-     * Subtract a vector from another vector and place the result in a destination
-     * vector.
-     * @param left The LHS vector
-     * @param right The RHS vector
-     * @param dest The destination vector, or null if a new vector is to be created
-     * @return left minus right in dest
-     */
-    public static Vector3f sub(Vector3f left, Vector3f right, Vector3f dest) {
-    	if (dest == null)
-    		return new Vector3f(left.x - right.x, left.y - right.y, left.z - right.z);
-    	else {
+	/**
+	 * Subtract a vector from another vector and place the result in a destination
+	 * vector.
+	 * @param left The LHS vector
+	 * @param right The RHS vector
+	 * @param dest The destination vector, or null if a new vector is to be created
+	 * @return left minus right in dest
+	 */
+	public static Vector3f sub(Vector3f left, Vector3f right, Vector3f dest) {
+		if (dest == null)
+			return new Vector3f(left.x - right.x, left.y - right.y, left.z - right.z);
+		else {
 			dest.set(left.x - right.x, left.y - right.y, left.z - right.z);
 			return dest;
-    	}
-    }
-    
+		}
+	}
+
 	/**
 	 * The cross product of two vectors.
 	 * 
@@ -160,25 +160,25 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	 * @return left cross right
 	 */
 	public static Vector3f cross(
-		Vector3f left,
-		Vector3f right,
-		Vector3f dest)
+			Vector3f left,
+			Vector3f right,
+			Vector3f dest)
 	{
 
 		if (dest == null)
 			dest = new Vector3f();
 
 		dest.set(
-			left.y * right.z - left.z * right.y,
-			right.x * left.z - right.z * left.x,
-			left.x * right.y - left.y * right.x
-			);
-		
+				left.y * right.z - left.z * right.y,
+				right.x * left.z - right.z * left.x,
+				left.x * right.y - left.y * right.x
+				);
+
 		return dest;
 	}    
-      
-	
-	
+
+
+
 	/**
 	 * Negate a vector
 	 * @return this
@@ -189,7 +189,7 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		z = -z;
 		return this;
 	}
-	
+
 	/**
 	 * Negate a vector and place the result in a destination vector.
 	 * @param dest The destination vector or null if a new vector is to be created
@@ -203,8 +203,8 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		dest.z = -z;
 		return dest;
 	}
-	
-	
+
+
 	/**
 	 * Normalise this vector and place the result in another vector.
 	 * @param dest The destination vector, or null if a new vector is to be created
@@ -212,12 +212,12 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	 */
 	public Vector3f normalise(Vector3f dest) {
 		float l = length();
-		
+
 		if (dest == null)
 			dest = new Vector3f(x / l, y / l, z / l);
 		else
 			dest.set(x / l, y / l, z / l);
-		
+
 		return dest;
 	}
 
@@ -231,41 +231,41 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	public static float dot(Vector3f left, Vector3f right) {
 		return left.x * right.x + left.y * right.y + left.z * right.z;
 	}
-	
+
 	/**
-	 * Calculate the angle between two vectors, in degrees
+	 * Calculate the angle between two vectors, in radians
 	 * @param a A vector
 	 * @param b The other vector
-	 * @return the angle between the two vectors, in degrees
+	 * @return the angle between the two vectors, in radians
 	 */
-    public static float angle(Vector3f a, Vector3f b) {
-        float dls = dot(a, b) / (a.length() * b.length());
-        if (dls < -1f)
-            dls = -1f;
-        else if (dls > 1.0f)
-            dls = 1.0f;
-        return (float) Math.toDegrees(Math.acos(dls));
-    }
-	
+	public static float angle(Vector3f a, Vector3f b) {
+		float dls = dot(a, b) / (a.length() * b.length());
+		if (dls < -1f)
+			dls = -1f;
+		else if (dls > 1.0f)
+			dls = 1.0f;
+		return (float)Math.acos(dls);
+	}
+
 	/* (non-Javadoc)
 	 * @see org.lwjgl.vector.Vector#load(FloatBuffer)
 	 */
 	public Vector load(FloatBuffer buf) {
-    	x = buf.get();
-    	y = buf.get();
-    	z = buf.get();
-    	return this;
+		x = buf.get();
+		y = buf.get();
+		z = buf.get();
+		return this;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.lwjgl.vector.Vector#scale(float)
 	 */
 	public Vector scale(float scale) {
-		
+
 		x *= scale;
 		y *= scale;
 		z *= scale;
-		
+
 		return this;
 
 	}
@@ -274,20 +274,20 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	 * @see org.lwjgl.vector.Vector#store(FloatBuffer)
 	 */
 	public Vector store(FloatBuffer buf) {
-		
+
 		buf.put(x);
 		buf.put(y);
 		buf.put(z);
-		
+
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		StringBuffer sb = new StringBuffer(64);
-		
+
 		sb.append("Vector3f[");
 		sb.append(x);
 		sb.append(", ");
@@ -304,14 +304,14 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	public final float getX() {
 		return x;
 	}
-	
+
 	/**
 	 * @return y
 	 */
 	public final float getY() {
 		return y;
 	}
-	
+
 	/**
 	 * Set X
 	 * @param x
@@ -319,7 +319,7 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	public final void setX(float x) {
 		this.x = x;
 	}
-	
+
 	/**
 	 * Set Y
 	 * @param y
