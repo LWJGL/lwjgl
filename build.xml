@@ -301,11 +301,20 @@
 	</target>
 
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
-	<target name="-compile_native_mac" if="lwjgl.platform.mac">
-		<echo>Compiling Mac OS X LWJGL version</echo>
-		<exec dir="platform_build/mac_xcode" executable="xcodebuild" failonerror="true" />
-		<move file="platform_build/mac_xcode/build/liblwjgl.jnilib" tofile="${lwjgl.lib}/liblwjgl.jnilib" />
-	</target>
+	<target name="-compile_native_mac" >
+      <echo>Checking for valid OpenAL install</echo>
+      <property name="openal.home" value="/projects/openal"/>
+         <available file="${openal.home}" type="dir" property="isValidOpenALHome"/>
+         <fail message="openal.home in build.xml in target compile_native_mac does not point to valid OpenAL install. Please change this to the location of your OpenAL install." unless="isValidOpenALHome"/>
+      <echo>Valid OpenAL install located</echo>
+      
+      <echo>Compiling Mac OS X LWJGL version</echo>   
+      <exec dir="${lwjgl.src.native}/macosx" executable="make" failonerror="true">
+         <env key="AL" path="${openal.home}/include/AL/" />
+      </exec>
+   
+      <move file="${lwjgl.src.native}/macosx/liblwjgl.jnilib" tofile="${lwjgl.lib}/liblwjgl.jnilib" />   
+   </target> 
 
 	<!-- Packages the java files -->
 	<target name="jars">
