@@ -71,7 +71,6 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
 	glXDestroyPbuffer(getDisplay(), buffer);
 	if (!buffer_info->use_display_context)
 		glXDestroyContext(getDisplay(), context);
-//	free(buffer_info);
 	decDisplay();
 }
 
@@ -221,7 +220,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 		return;
 	}
 	PbufferInfo *buffer_info = (PbufferInfo *)env->GetDirectBufferAddress(handle_buffer);
-//	PbufferInfo *buffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
 	buffer_info->use_display_context = use_display_context;
 	bool result;
 	if (use_display_context) {
@@ -229,9 +227,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 	} else {
 		result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs);
 	}
-	if (!result)
-		return;
-	if (!checkXError(env)) {
+	if (!result || !checkXError(env)) {
+		decDisplay();
 		destroyPbuffer(buffer_info);
 		return;
 	}
@@ -241,7 +238,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
   (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)env->GetDirectBufferAddress(handle_buffer);
-	//PbufferInfo *buffer_info = (PbufferInfo *)handle;
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
 	if (glXMakeContextCurrent(getDisplay(), buffer, buffer, context) == False) {
@@ -249,16 +245,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
 	}
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nDestroyGL
- * Signature: (I)V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
   (JNIEnv *env, jclass clazz, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)env->GetDirectBufferAddress(handle_buffer);
-	//PbufferInfo *buffer_info = (PbufferInfo *)handle;
 	destroyPbuffer(buffer_info);
 }
 
