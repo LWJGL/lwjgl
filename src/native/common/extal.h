@@ -33,7 +33,9 @@
 #ifndef _AL_TEST_H
 #define _AL_TEST_H
 
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <AL/altypes.h>
 #include <AL/alctypes.h>
 
@@ -51,9 +53,6 @@ extern "C" {
   #define ALCAPI __declspec(dllimport)
  #endif
 
- typedef struct ALCdevice_struct ALCdevice;
- typedef struct ALCcontext_struct ALCcontext;
-
  #define ALCAPIENTRY __cdecl
 #else
  #ifdef TARGET_OS_MAC
@@ -62,7 +61,7 @@ extern "C" {
   #endif
  #endif
  #define ALCAPI
- #define ALCAPIENTRY __cdecl
+ #define ALCAPIENTRY
 #endif
 
 #ifdef _WIN32
@@ -80,10 +79,11 @@ extern "C" {
   #endif
  #endif
  #define ALAPI
- #define ALAPIENTRY __cdecl
+ #define ALAPIENTRY
  #define AL_CALLBACK
 #endif
 
+#ifdef _WIN32
 DEFINE_GUID(DSPROPSETID_EAX20_ListenerProperties, 
     0x306a6a8, 
     0xb224, 
@@ -95,15 +95,19 @@ DEFINE_GUID(DSPROPSETID_EAX20_BufferProperties,
     0xb224, 
     0x11d2, 
     0x99, 0xe5, 0x0, 0x0, 0xe8, 0xd8, 0xc7, 0x22);
+#endif
 
 #define INITGUID
 #define OPENAL
+
+ typedef struct ALCdevice_struct ALCdevice;
+ typedef struct ALCcontext_struct ALCcontext;
 
 int InitializeOpenAL();
 void DeInitializeOpenAL();
 
 //alc
-typedef ALCubyte*   (ALCAPIENTRY *alcGetStringPROC)(ALCdevice *device,ALCenum param);
+typedef ALCubyte*   (/*ALCAPIENTRY*/ *alcGetStringPROC)(ALCdevice *device,ALCenum param);
 typedef ALCvoid     (ALCAPIENTRY *alcGetIntegervPROC)(ALCdevice *device,ALCenum param,ALCsizei size,ALCint *data);
 typedef ALCdevice*  (ALCAPIENTRY *alcOpenDevicePROC)(ALCubyte *deviceName);
 typedef ALCvoid     (ALCAPIENTRY *alcCloseDevicePROC)(ALCdevice *device);
@@ -252,11 +256,13 @@ extern alDistanceModelPROC alDistanceModel;
 extern alDopplerFactorPROC alDopplerFactor;
 extern alDopplerVelocityPROC alDopplerVelocity;
 
+#ifdef _WIN32
 typedef ALenum (*EAXSet)(const GUID*, ALuint, ALuint, ALvoid*, ALuint);
 typedef ALenum (*EAXGet)(const GUID*, ALuint, ALuint, ALvoid*, ALuint);
 
 extern EAXSet  eaxSet;
 extern EAXGet  eaxGet;
+#endif
 
 #ifdef __cplusplus
 }

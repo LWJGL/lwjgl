@@ -42,7 +42,9 @@
 #include "org_lwjgl_openal_ALUT.h"
 
 #include <stdlib.h>
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 /* OpenAL includes */
 #include "checkALerror.h"

@@ -30,6 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdio.h>
 #include "extal.h"
 
 /**
@@ -111,11 +112,11 @@ alcIsExtensionPresentPROC alcIsExtensionPresent = NULL;
 alcGetProcAddressPROC alcGetProcAddress = NULL;
 alcGetEnumValuePROC alcGetEnumValue = NULL;
 
+#ifdef _WIN32
 EAXSet  eaxSet;                                         // EAXSet function, ret$
 EAXGet  eaxGet;                                         // EAXGet function, ret$
 
 /* Handle to OpenAL Library */
-#ifdef WIN32
 HMODULE handleOAL;
 #else
 void* handleOAL;
