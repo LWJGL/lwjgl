@@ -1,18 +1,12 @@
-#include <IL\il.h>
-#include "extgl.h"
-#include "org_lwjgl_devil_IL.h"
-#include "common_tools.h"
+#include "extil.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 /*
  * Class:     org_lwjgl_devil_IL
  * Method:    ilActiveImage
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveImage(JNIEnv *env, jclass clazz, jint number) {
-	return ilActiveImage((ILuint)number);
+    return ilActiveImage((ILuint)number);
 }
 
 /*
@@ -21,7 +15,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveImage(JNIEnv *env, jc
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveLayer(JNIEnv *env, jclass clazz, jint number) {
-	return ilActiveLayer((ILuint)number);
+    return ilActiveLayer((ILuint)number);
 }
 
 /*
@@ -30,7 +24,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveLayer(JNIEnv *env, jc
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveMipmap(JNIEnv *env, jclass clazz, jint number) {
-	return ilActiveMipmap((ILuint)number);
+    return ilActiveMipmap((ILuint)number);
 }
 
 /*
@@ -39,11 +33,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveMipmap(JNIEnv *env, j
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyPal(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilApplyPal((const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilApplyPal((const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -52,13 +46,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyPal(JNIEnv *env, jclas
  * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyProfile(JNIEnv *env, jclass clazz, jstring inProfile, jstring outProfile) {
-	char *strInProfile = GetStringNativeChars(env, inProfile);
-	char *strOutProfile = GetStringNativeChars(env, outProfile);
-	jboolean result = ilApplyProfile((const ILstring)strInProfile, (const ILstring)strOutProfile);
-	free(strInProfile);
-	free(strOutProfile);
+    char *strInProfile = GetStringNativeChars(env, inProfile);
+    char *strOutProfile = GetStringNativeChars(env, outProfile);
+    jboolean result = ilApplyProfile((const ILstring)strInProfile, (const ILstring)strOutProfile);
+    free(strInProfile);
+    free(strOutProfile);
 
-	return result;
+    return result;
 }
 
 /*
@@ -67,7 +61,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyProfile(JNIEnv *env, j
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilBindImage(JNIEnv *env, jclass clazz, jint image) {
-	ilBindImage(image);
+    ilBindImage(image);
 }
 
 
@@ -77,7 +71,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilBindImage(JNIEnv *env, jclass c
  * Signature: (IIIIIIIIII)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilBlit(JNIEnv *env, jclass clazz, jint source, jint destX, jint destY, jint destZ, jint srcX, jint srcY, jint srcZ, jint width, jint height, jint depth) {
-	return ilBlit((ILuint)source, (ILint)destX, (ILint)destY, (ILint)destZ, (ILuint)srcX, (ILuint)srcY, (ILuint)srcZ, (ILuint)width, (ILuint)height, (ILuint)depth);
+    return ilBlit((ILuint)source, (ILint)destX, (ILint)destY, (ILint)destZ, (ILuint)srcX, (ILuint)srcY, (ILuint)srcZ, (ILuint)width, (ILuint)height, (ILuint)depth);
 }
 
 /*
@@ -86,7 +80,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilBlit(JNIEnv *env, jclass cl
  * Signature: (FFFF)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilClearColour(JNIEnv *env, jclass clazz, jfloat red, jfloat green, jfloat blue, jfloat alpha) {
-	ilClearColour((ILclampf)red, (ILclampf)green, (ILclampf)blue, (ILclampf)alpha);
+    ilClearColour((ILclampf)red, (ILclampf)green, (ILclampf)blue, (ILclampf)alpha);
 }
 
 /*
@@ -95,7 +89,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilClearColour(JNIEnv *env, jclass
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilClearImage(JNIEnv *env, jclass clazz) {
-	return ilClearImage();
+    return ilClearImage();
 }
 
 /*
@@ -104,7 +98,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilClearImage(JNIEnv *env, jcl
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilCloneCurImage(JNIEnv *env, jclass clazz) {
-	return ilCloneCurImage();
+    return ilCloneCurImage();
 }
 
 /*
@@ -113,7 +107,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilCloneCurImage(JNIEnv *env, jcla
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilCompressFunc(JNIEnv *env, jclass clazz, jint mode) {
-	return ilCompressFunc((ILenum)mode);
+    return ilCompressFunc((ILenum)mode);
 }
 
 /*
@@ -122,7 +116,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilCompressFunc(JNIEnv *env, j
  * Signature: (II)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilConvertImage(JNIEnv *env, jclass clazz, jint destFormat, jint destType) {
-	return ilConvertImage((ILenum)destFormat, (ILenum)destType);
+    return ilConvertImage((ILenum)destFormat, (ILenum)destType);
 }
 
 /*
@@ -131,7 +125,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilConvertImage(JNIEnv *env, j
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilConvertPal(JNIEnv *env, jclass clazz, jint destFormat) {
-	return ilConvertPal((ILenum)destFormat);
+    return ilConvertPal((ILenum)destFormat);
 }
 
 /*
@@ -140,7 +134,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilConvertPal(JNIEnv *env, jcl
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilCopyImage(JNIEnv *env, jclass clazz, jint src) {
-	return ilCopyImage((ILuint)src);
+    return ilCopyImage((ILuint)src);
 }
 
 /*
@@ -149,9 +143,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilCopyImage(JNIEnv *env, jcla
  * Signature: (IIIIIIIILjava/nio/ByteBuffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_nilCopyPixels(JNIEnv *env, jclass clazz, jint xOff, jint yOff, jint zOff, jint width, jint height, jint depth, jint format, jint type, jobject data_buffer, jint data_offset) {
-	ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
+    ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
 
-	return ilCopyPixels((ILuint)xOff, (ILuint)yOff, (ILuint)zOff, (ILuint)width, (ILuint)height, (ILuint)depth, (ILenum)format, (ILenum)type, (ILvoid *)(data + data_offset));
+    return ilCopyPixels((ILuint)xOff, (ILuint)yOff, (ILuint)zOff, (ILuint)width, (ILuint)height, (ILuint)depth, (ILenum)format, (ILenum)type, (ILvoid *)(data + data_offset));
 }
 
 /*
@@ -160,7 +154,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_nilCopyPixels(JNIEnv *env, jclass
  * Signature: (II)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilCreateSubImage(JNIEnv *env, jclass clazz, jint type, jint num) {
-	return ilCreateSubImage((ILenum)type, (ILuint)num);
+    return ilCreateSubImage((ILenum)type, (ILuint)num);
 }
 
 /*
@@ -169,17 +163,17 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilCreateSubImage(JNIEnv *env, jcl
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilDefaultImage(JNIEnv *env, jclass clazz) {
-	return ilDefaultImage();
+    return ilDefaultImage();
 }
 
 /*
  * Class:     org_lwjgl_devil_IL
- * Method:    ilDeleteImages
- * Signature: (I[I)V
+ * Method:    nilDeleteImages
+ * Signature: (ILjava/nio/IntBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilDeleteImages(JNIEnv * env, jclass clazz, jint num, jobject lists_buffer, jint lists_offset) {
-	ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
-	ilDeleteImages((ILsizei)num, (ILuint *)lists);
+    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
+    ilDeleteImages((ILsizei)num, (ILuint *)lists);
 }
 
 
@@ -189,7 +183,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilDeleteImages(JNIEnv * env, jcl
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilDisable(JNIEnv *env, jclass clazz, jint mode) {
-	return ilDisable((ILenum)mode);
+    return ilDisable((ILenum)mode);
 }
 
 /*
@@ -198,7 +192,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilDisable(JNIEnv *env, jclass
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilEnable(JNIEnv *env, jclass clazz, jint mode) {
-	return ilEnable((ILenum)mode);
+    return ilEnable((ILenum)mode);
 }
 
 /*
@@ -207,17 +201,17 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilEnable(JNIEnv *env, jclass 
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilFormatFunc(JNIEnv *env, jclass clazz, jint mode) {
-	return ilFormatFunc((ILenum)mode);
+    return ilFormatFunc((ILenum)mode);
 }
 
 /*
  * Class:     org_lwjgl_devil_IL
- * Method:    ilGenImages
- * Signature: (I[I)V
+ * Method:    nilGenImages
+ * Signature: (ILjava/nio/IntBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilGenImages(JNIEnv *env , jclass clazz, jint num, jobject lists_buffer, jint lists_offset) {
-	ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
-	ilGenImages((ILsizei)num, (ILuint *)lists);
+    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
+    ilGenImages((ILsizei)num, (ILuint *)lists);
 }
 
 
@@ -227,12 +221,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilGenImages(JNIEnv *env , jclass
  * Signature: (I)[B
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetAlpha(JNIEnv *env, jclass clazz, jint type) {
-	ILubyte *alpha = ilGetAlpha((ILenum)type);
+    ILubyte *alpha = ilGetAlpha((ILenum)type);
 
-	int size = sizeof(alpha);
-	jobject result = safeNewBuffer(env, alpha, size);
+    int size = sizeof(alpha);
+    jobject result = safeNewBuffer(env, alpha, size);
 
-	return result;
+    return result;
 }
 
 /*
@@ -241,7 +235,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetAlpha(JNIEnv *env, jclass
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilModAlpha(JNIEnv *env, jclass clazz, jint alphaValue) {
-	ilModAlpha((ILint)alphaValue);
+    ilModAlpha((ILint)alphaValue);
 }
 
 /*
@@ -250,7 +244,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilModAlpha(JNIEnv *env, jclass cl
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilSetAlpha(JNIEnv *env, jclass clazz, jint alphaValue) {
-	ilSetAlpha((ILuint)alphaValue);
+    ilSetAlpha((ILuint)alphaValue);
 }
 
 /*
@@ -259,7 +253,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilSetAlpha(JNIEnv *env, jclass cl
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilGetBoolean(JNIEnv *env, jclass clazz, jint mode) {
-	return ilGetBoolean((ILenum)mode);
+    return ilGetBoolean((ILenum)mode);
 }
 
 /*
@@ -268,12 +262,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilGetBoolean(JNIEnv *env, jcl
  * Signature: ()[B
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetData(JNIEnv * env, jclass clazz) {
-	ILubyte *data = ilGetData();
+    ILubyte *data = ilGetData();
 
-	int size = ilGetInteger(IL_IMAGE_WIDTH) * ilGetInteger(IL_IMAGE_HEIGHT) * ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-	jobject result = safeNewBuffer(env, data, size);
+    int size = ilGetInteger(IL_IMAGE_WIDTH) * ilGetInteger(IL_IMAGE_HEIGHT) * ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+    jobject result = safeNewBuffer(env, data, size);
 
-	return result;
+    return result;
 }
 
 /*
@@ -282,7 +276,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetData(JNIEnv * env, jclass
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilGetError(JNIEnv *env, jclass clazz) {
-	return ilGetError();
+    return ilGetError();
 }
 
 /*
@@ -291,7 +285,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilGetError(JNIEnv *env, jclass cl
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilGetInteger(JNIEnv *env, jclass clazz, jint mode) {
-	return ilGetInteger((ILenum)mode);
+    return ilGetInteger((ILenum)mode);
 }
 
 
@@ -301,7 +295,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilGetInteger(JNIEnv *env, jclass 
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilGetLumpPos(JNIEnv *env, jclass clazz) {
-	return ilGetLumpPos();
+    return ilGetLumpPos();
 }
 
 /*
@@ -310,12 +304,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_ilGetLumpPos(JNIEnv *env, jclass 
  * Signature: ()[B
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetPalette(JNIEnv *env, jclass clazz) {
-	ILubyte *pal = ilGetPalette();
+    ILubyte *pal = ilGetPalette();
 
-	int size = sizeof(pal);
-	jobject result = safeNewBuffer(env, pal, size);
+    int size = sizeof(pal);
+    jobject result = safeNewBuffer(env, pal, size);
 
-	return result;
+    return result;
 }
 
 /*
@@ -324,7 +318,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetPalette(JNIEnv *env, jcla
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_IL_ilGetString(JNIEnv *env, jclass clazz, jint stringName) {
-	return NewStringNative(env, ilGetString((ILenum)stringName));
+    return NewStringNative(env, ilGetString((ILenum)stringName));
 }
 
 /*
@@ -333,7 +327,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_devil_IL_ilGetString(JNIEnv *env, jclas
  * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilHint(JNIEnv *env, jclass clazz, jint target, jint mode) {
-	ilHint((ILenum)target, (ILenum)mode);
+    ilHint((ILenum)target, (ILenum)mode);
 }
 
 /*
@@ -342,7 +336,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilHint(JNIEnv *env, jclass clazz,
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilInit(JNIEnv * env, jclass clazz) {
-	ilInit();
+    ilInit();
 }
 
 /*
@@ -351,7 +345,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilInit(JNIEnv * env, jclass clazz
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsDisabled(JNIEnv *env, jclass clazz, jint mode) {
-	return ilIsDisabled((ILenum)mode);
+    return ilIsDisabled((ILenum)mode);
 }
 
 /*
@@ -360,7 +354,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsDisabled(JNIEnv *env, jcl
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsEnabled(JNIEnv *env, jclass clazz, jint mode) {
-	return ilIsEnabled((ILenum)mode);
+    return ilIsEnabled((ILenum)mode);
 }
 
 /*
@@ -369,7 +363,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsEnabled(JNIEnv *env, jcla
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsImage(JNIEnv *env, jclass clazz, jint image) {
-	return ilIsImage((ILuint)image);
+    return ilIsImage((ILuint)image);
 }
 
 /*
@@ -378,11 +372,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsImage(JNIEnv *env, jclass
  * Signature: (ILjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsValid(JNIEnv *env, jclass clazz, jint type, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilIsValid((ILuint)type, (const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilIsValid((ILuint)type, (const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -391,9 +385,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsValid(JNIEnv *env, jclass
  * Signature: (ILjava/nio/ByteBuffer;II)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilIsValidL(JNIEnv *env, jclass clazz, jint type, jobject lump_buffer, jint lump_offset, jint size) {
-	ILbyte *lump = (ILbyte *)(*env)->GetDirectBufferAddress(env, lump_buffer);
+    ILbyte *lump = (ILbyte *)(*env)->GetDirectBufferAddress(env, lump_buffer);
 
-	return ilIsValidL((ILenum)type, (ILvoid *)(lump + lump_offset), (ILuint)size);
+    return ilIsValidL((ILenum)type, (ILvoid *)(lump + lump_offset), (ILuint)size);
 }
 
 /*
@@ -402,7 +396,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilIsValidL(JNIEnv *env, jcla
  * Signature: (FFFF)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilKeyColour(JNIEnv *env, jclass clazz, jfloat red, jfloat green, jfloat blue, jfloat alpha) {
-	ilKeyColour((ILclampf)red, (ILclampf)green, (ILclampf)blue, (ILclampf)alpha);
+    ilKeyColour((ILclampf)red, (ILclampf)green, (ILclampf)blue, (ILclampf)alpha);
 }
 
 /*
@@ -411,11 +405,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilKeyColour(JNIEnv *env, jclass c
  * Signature: (ILjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoad(JNIEnv *env, jclass clazz, jint type, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilLoad((ILenum)type, (const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilLoad((ILenum)type, (const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -424,11 +418,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoad(JNIEnv *env, jclass cl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilLoadImage((const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilLoadImage((const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 
@@ -438,9 +432,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jcla
  * Signature: (ILjava/nio/ByteBuffer;II)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadL(JNIEnv *env, jclass clazz, jint type, jobject lump_buffer, jint lump_offset, jint size) {
-	ILbyte *lump = (ILbyte *)safeGetBufferAddress(env, lump_buffer, lump_offset);
+    ILbyte *lump = (ILbyte *)safeGetBufferAddress(env, lump_buffer, lump_offset);
 
-	return ilLoadL((ILenum)type, (ILvoid *)(lump), (ILuint)size);
+    return ilLoadL((ILenum)type, (ILvoid *)(lump), (ILuint)size);
 }
 
 /*
@@ -449,11 +443,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadL(JNIEnv *env, jclass 
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadPal(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilLoadPal((const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilLoadPal((const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -462,7 +456,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadPal(JNIEnv *env, jclass
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilOriginFunc(JNIEnv *env, jclass clazz, jint mode) {
-	return ilOriginFunc((ILenum)mode);
+    return ilOriginFunc((ILenum)mode);
 }
 
 /*
@@ -471,7 +465,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilOriginFunc(JNIEnv *env, jcl
  * Signature: (IIII)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilOverlayImage(JNIEnv *env, jclass clazz, jint source, jint xCoord, jint yCoord, jint zCoord) {
-	return ilOverlayImage((ILuint)source, (ILint)xCoord, (ILint)yCoord, (ILint)zCoord);
+    return ilOverlayImage((ILuint)source, (ILint)xCoord, (ILint)yCoord, (ILint)zCoord);
 }
 
 /*
@@ -480,7 +474,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilOverlayImage(JNIEnv *env, j
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilPopAttrib(JNIEnv *env, jclass clazz) {
-	ilPopAttrib();
+    ilPopAttrib();
 }
 
 /*
@@ -489,7 +483,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilPopAttrib(JNIEnv *env, jclass c
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilPushAttrib(JNIEnv *env, jclass clazz, jint bits) {
-	ilPushAttrib((ILuint)bits);
+    ilPushAttrib((ILuint)bits);
 }
 
 /*
@@ -498,11 +492,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilPushAttrib(JNIEnv *env, jclass 
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jclass clazz, jstring ext) {
-	char *strExt = GetStringNativeChars(env, ext);
-	jboolean result = ilRemoveLoad((const ILstring)strExt);
-	free(strExt);
+    char *strExt = GetStringNativeChars(env, ext);
+    jboolean result = ilRemoveLoad((const ILstring)strExt);
+    free(strExt);
 
-	return result;
+    return result;
 }
 
 /*
@@ -511,11 +505,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jcl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveSave(JNIEnv *env, jclass clazz, jstring ext) {
-	char *strExt = GetStringNativeChars(env, ext);
-	jboolean result = ilRemoveSave((const ILstring)strExt);
-	free(strExt);
+    char *strExt = GetStringNativeChars(env, ext);
+    jboolean result = ilRemoveSave((const ILstring)strExt);
+    free(strExt);
 
-	return result;
+    return result;
 }
 
 /*
@@ -524,7 +518,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveSave(JNIEnv *env, jcl
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilResetMemory(JNIEnv *env, jclass clazz) {
-	ilResetMemory();
+    ilResetMemory();
 }
 
 /*
@@ -533,7 +527,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilResetMemory(JNIEnv *env, jclass
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilResetRead(JNIEnv *env, jclass clazz) {
-	ilResetRead();
+    ilResetRead();
 }
 
 /*
@@ -542,7 +536,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilResetRead(JNIEnv *env, jclass c
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilResetWrite(JNIEnv *env, jclass clazz) {
-	ilResetWrite();
+    ilResetWrite();
 }
 
 /*
@@ -551,11 +545,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilResetWrite(JNIEnv *env, jclass 
  * Signature: (ILjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSave(JNIEnv *env, jclass clazz, jint type, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilSave((ILenum)type, (const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilSave((ILenum)type, (const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -564,11 +558,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSave(JNIEnv *env, jclass cl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveImage(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilSaveImage((const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilSaveImage((const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -577,9 +571,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveImage(JNIEnv *env, jcla
  * Signature: (ILjava/nio/ByteBuffer;II)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_nilSaveL(JNIEnv *env, jclass clazz, jint type, jobject lump_buffer, jint lump_offset, jint size) {
-	ILbyte *lump = (ILbyte *)(*env)->GetDirectBufferAddress(env, lump_buffer);
+    ILbyte *lump = (ILbyte *)(*env)->GetDirectBufferAddress(env, lump_buffer);
 
-	return ilSaveL((ILenum)type, (ILvoid *)(lump + lump_offset), (ILuint)size);
+    return ilSaveL((ILenum)type, (ILvoid *)(lump + lump_offset), (ILuint)size);
 }
 
 /*
@@ -588,11 +582,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_nilSaveL(JNIEnv *env, jclass claz
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSavePal(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilSavePal((const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilSavePal((const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -601,9 +595,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSavePal(JNIEnv *env, jclass
  * Signature: (Ljava/nio/ByteBuffer;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilSetData(JNIEnv *env, jclass clazz, jobject data_buffer, jint data_offset) {
-	ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
+    ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
 
-	return ilSetData((ILvoid *)(data + data_offset));
+    return ilSetData((ILvoid *)(data + data_offset));
 }
 
 /*
@@ -612,7 +606,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilSetData(JNIEnv *env, jclas
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSetDuration(JNIEnv *env, jclass clazz, jint duration) {
-	return ilSetDuration((ILuint)duration);
+    return ilSetDuration((ILuint)duration);
 }
 
 /*
@@ -621,7 +615,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSetDuration(JNIEnv *env, jc
  * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilSetInteger(JNIEnv *env, jclass clazz, jint mode, jint param) {
-	ilSetInteger((ILenum)mode, (ILint)param);
+    ilSetInteger((ILenum)mode, (ILint)param);
 }
 
 /*
@@ -630,9 +624,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilSetInteger(JNIEnv *env, jclass 
  * Signature: (IIIIIIIILjava/nio/ByteBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilSetPixels(JNIEnv *env, jclass clazz, jint xOff, jint yOff, jint zOff, jint width, jint height, jint depth, jint format, jint type, jobject data_buffer, jint data_offset) {
-	ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
+    ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
 
-	ilSetPixels((ILint)xOff, (ILint)yOff, (ILint)zOff, (ILuint)width, (ILuint)height, (ILuint)depth, (ILenum)format, (ILenum)type, (ILvoid *)(data + data_offset));
+    ilSetPixels((ILint)xOff, (ILint)yOff, (ILint)zOff, (ILuint)width, (ILuint)height, (ILuint)depth, (ILenum)format, (ILenum)type, (ILvoid *)(data + data_offset));
 }
 
 /*
@@ -641,10 +635,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilSetPixels(JNIEnv *env, jclass 
  * Signature: (ILjava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilSetString(JNIEnv *env, jclass clazz, jint mode, jstring string) {
-	char *strString = GetStringNativeChars(env, string);
+    char *strString = GetStringNativeChars(env, string);
 
-	ilSetString(mode, (const ILstring)strString);
-	free(strString);
+    ilSetString(mode, (const ILstring)strString);
+    free(strString);
 }
 
 /*
@@ -653,7 +647,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilSetString(JNIEnv *env, jclass c
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilShutDown(JNIEnv *env, jclass clazz) {
-	ilShutDown();
+    ilShutDown();
 }
 
 /*
@@ -662,9 +656,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilShutDown(JNIEnv *env, jclass cl
  * Signature: (IIIBIILjava/nio/ByteBuffer;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilTexImage(JNIEnv *env, jclass clazz, jint width, jint height, jint depth , jbyte bpp, jint format, jint type, jobject data_buffer, jint data_offset) {
-	ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
+    ILbyte *data = (ILbyte *)(*env)->GetDirectBufferAddress(env, data_buffer);
 
-	return ilTexImage((ILuint)width, (ILuint)height, (ILuint)depth , (ILubyte)bpp, (ILenum)format, (ILenum)type, (ILvoid *)(data + data_offset));
+    return ilTexImage((ILuint)width, (ILuint)height, (ILuint)depth , (ILubyte)bpp, (ILenum)format, (ILenum)type, (ILvoid *)(data + data_offset));
 }
 
 /*
@@ -673,7 +667,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilTexImage(JNIEnv *env, jcla
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilTypeFunc(JNIEnv *env, jclass clazz, jint mode) {
-	return ilTypeFunc((ILenum)mode);
+    return ilTypeFunc((ILenum)mode);
 }
 
 /*
@@ -682,11 +676,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilTypeFunc(JNIEnv *env, jclas
  * Signature: (Ljava/lang/String;IIIB)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadData(JNIEnv *env, jclass clazz, jstring fileName, jint width, jint height, jint depth, jbyte bpp) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilLoadData((const ILstring)strFileName, (ILuint)width, (ILuint)height, (ILuint)depth, (ILubyte)bpp);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilLoadData((const ILstring)strFileName, (ILuint)width, (ILuint)height, (ILuint)depth, (ILubyte)bpp);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
 /*
@@ -695,9 +689,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadData(JNIEnv *env, jclas
  * Signature: (Ljava/nio/ByteBuffer;IIIIIB)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadDataL(JNIEnv *env, jclass clazz, jobject lump_buffer, jint lump_offset, jint size, jint width, jint height, jint depth, jbyte bpp) {
-	ILbyte *lump = (ILbyte *)(*env)->GetDirectBufferAddress(env, lump_buffer);
+    ILbyte *lump = (ILbyte *)(*env)->GetDirectBufferAddress(env, lump_buffer);
 
-	return ilLoadDataL((ILvoid *)(lump + lump_offset), (ILuint)size, (ILuint)width, (ILuint)height, (ILuint)depth, (ILubyte)bpp);
+    return ilLoadDataL((ILvoid *)(lump + lump_offset), (ILuint)size, (ILuint)width, (ILuint)height, (ILuint)depth, (ILubyte)bpp);
 }
 
 /*
@@ -706,14 +700,102 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadDataL(JNIEnv *env, jcl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveData(JNIEnv *env, jclass clazz, jstring fileName) {
-	char *strFileName = GetStringNativeChars(env, fileName);
-	jboolean result = ilSaveData((const ILstring)strFileName);
-	free(strFileName);
+    char *strFileName = GetStringNativeChars(env, fileName);
+    jboolean result = ilSaveData((const ILstring)strFileName);
+    free(strFileName);
 
-	return result;
+    return result;
 }
 
+/*
+ * Class:     org_lwjgl_devil_IL
+ * Method:    nCreate
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nCreate(JNIEnv *env, jclass clazz) {
+    if (!extil_Open(env)) {
+        throwException(env, "Failed to load DevIL library");
+        return;
+    }
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jclass clazz) {
+    JavaMethodAndExtFunction functions[] = {
+        {"ilActiveImage", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveImage, "ilActiveImage", (void*)&ilActiveImage},
+        {"ilActiveLayer", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveLayer, "ilActiveLayer", (void*)&ilActiveLayer},
+        {"ilActiveMipmap", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveMipmap, "ilActiveMipmap", (void*)&ilActiveMipmap},
+        {"ilApplyPal", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilApplyPal, "ilApplyPal", (void*)&ilApplyPal},
+        {"ilApplyProfile", "(Ljava/lang/String;Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilApplyProfile, "ilApplyProfile", (void*)&ilApplyProfile},
+        {"ilBindImage", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilBindImage, "ilBindImage", (void*)&ilBindImage},
+        {"ilBlit", "(IIIIIIIIII)Z", (void*)&Java_org_lwjgl_devil_IL_ilBlit, "ilBlit", (void*)&ilBlit},
+        {"ilClearColour", "(FFFF)V", (void*)&Java_org_lwjgl_devil_IL_ilClearColour, "ilClearColour", (void*)&ilClearColour},
+        {"ilClearImage", "()Z", (void*)&Java_org_lwjgl_devil_IL_ilClearImage, "ilClearImage", (void*)&ilClearImage},
+        {"ilCloneCurImage", "()I", (void*)&Java_org_lwjgl_devil_IL_ilCloneCurImage, "ilCloneCurImage", (void*)&ilCloneCurImage},
+        {"ilCompressFunc", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilCompressFunc, "ilCompressFunc", (void*)&ilCompressFunc},
+        {"ilConvertImage", "(II)Z", (void*)&Java_org_lwjgl_devil_IL_ilConvertImage, "ilConvertImage", (void*)&ilConvertImage},
+        {"ilConvertPal", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilConvertPal, "ilConvertPal", (void*)&ilConvertPal},
+        {"ilCopyImage", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilCopyImage, "ilCopyImage", (void*)&ilCopyImage},
+        {"nilCopyPixels", "(IIIIIIIILjava/nio/ByteBuffer;I)I", (void*)&Java_org_lwjgl_devil_IL_nilCopyPixels, "ilCopyPixels", (void*)&ilCopyPixels},
+        {"ilCreateSubImage", "(II)I", (void*)&Java_org_lwjgl_devil_IL_ilCreateSubImage, "ilCreateSubImage", (void*)&ilCreateSubImage},
+        {"ilDefaultImage", "()Z", (void*)&Java_org_lwjgl_devil_IL_ilDefaultImage, "ilDefaultImage", (void*)&ilDefaultImage},
+        {"nilDeleteImages", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_devil_IL_nilDeleteImages, "ilDeleteImages", (void*)&ilDeleteImages},
+        {"ilDisable", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilDisable, "ilDisable", (void*)&ilDisable},
+        {"ilEnable", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilEnable, "ilEnable", (void*)&ilEnable},
+        {"ilFormatFunc", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilFormatFunc, "ilFormatFunc", (void*)&ilFormatFunc},
+        {"nilGenImages", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_devil_IL_nilGenImages, "ilGenImages", (void*)&ilGenImages},
+        {"ilGetAlpha", "(I)[B", (void*)&Java_org_lwjgl_devil_IL_ilGetAlpha, "ilGetAlpha", (void*)&ilGetAlpha},
+        {"ilModAlpha", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilModAlpha, "ilModAlpha", (void*)&ilModAlpha},
+        {"ilSetAlpha", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilSetAlpha, "ilSetAlpha", (void*)&ilSetAlpha},
+        {"ilGetBoolean", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilGetBoolean, "ilGetBoolean", (void*)&ilGetBoolean},
+        {"ilGetData", "()[B", (void*)&Java_org_lwjgl_devil_IL_ilGetData, "ilGetData", (void*)&ilGetData},
+        {"ilGetError", "()I", (void*)&Java_org_lwjgl_devil_IL_ilGetError, "ilGetError", (void*)&ilGetError},
+        {"ilGetInteger", "(I)I", (void*)&Java_org_lwjgl_devil_IL_ilGetInteger, "ilGetInteger", (void*)&ilGetInteger},
+        {"ilGetLumpPos", "()I", (void*)&Java_org_lwjgl_devil_IL_ilGetLumpPos, "ilGetLumpPos", (void*)&ilGetLumpPos},
+        {"ilGetPalette", "()[B", (void*)&Java_org_lwjgl_devil_IL_ilGetPalette, "ilGetPalette", (void*)&ilGetPalette},
+        {"ilGetString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_devil_IL_ilGetString, "ilGetString", (void*)&ilGetString},
+        {"ilHint", "(II)V", (void*)&Java_org_lwjgl_devil_IL_ilHint, "ilHint", (void*)&ilHint},
+        {"ilInit", "()V", (void*)&Java_org_lwjgl_devil_IL_ilInit, "ilInit", (void*)&ilInit},
+        {"ilIsDisabled", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilIsDisabled, "ilIsDisabled", (void*)&ilIsDisabled},
+        {"ilIsEnabled", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilIsEnabled, "ilIsEnabled", (void*)&ilIsEnabled},
+        {"ilIsImage", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilIsImage, "ilIsImage", (void*)&ilIsImage},
+        {"ilIsValid", "(ILjava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilIsValid, "ilIsValid", (void*)&ilIsValid},
+        {"nilIsValidL", "(ILjava/nio/ByteBuffer;II)Z", (void*)&Java_org_lwjgl_devil_IL_nilIsValidL, "ilIsValidL", (void*)&ilIsValidL},
+        {"ilKeyColour", "(FFFF)V", (void*)&Java_org_lwjgl_devil_IL_ilKeyColour, "ilKeyColour", (void*)&ilKeyColour},
+        {"ilLoad", "(ILjava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilLoad, "ilLoad", (void*)&ilLoad},
+        {"ilLoadImage", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilLoadImage, "ilLoadImage", (void*)&ilLoadImage},
+        {"nilLoadL", "(ILjava/nio/ByteBuffer;II)Z", (void*)&Java_org_lwjgl_devil_IL_nilLoadL, "ilLoadL", (void*)&ilLoadL},
+        {"ilLoadPal", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilLoadPal, "ilLoadPal", (void*)&ilLoadPal},
+        {"ilOriginFunc", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilOriginFunc, "ilOriginFunc", (void*)&ilOriginFunc},
+        {"ilOverlayImage", "(IIII)Z", (void*)&Java_org_lwjgl_devil_IL_ilOverlayImage, "ilOverlayImage", (void*)&ilOverlayImage},
+        {"ilPopAttrib", "()V", (void*)&Java_org_lwjgl_devil_IL_ilPopAttrib, "ilPopAttrib", (void*)&ilPopAttrib},
+        {"ilPushAttrib", "(I)V", (void*)&Java_org_lwjgl_devil_IL_ilPushAttrib, "ilPushAttrib", (void*)&ilPushAttrib},
+        {"ilRemoveLoad", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilRemoveLoad, "ilRemoveLoad", (void*)&ilRemoveLoad},
+        {"ilRemoveSave", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilRemoveSave, "ilRemoveSave", (void*)&ilRemoveSave},
+        {"ilResetMemory", "()V", (void*)&Java_org_lwjgl_devil_IL_ilResetMemory, "ilResetMemory", (void*)&ilResetMemory},
+        {"ilResetRead", "()V", (void*)&Java_org_lwjgl_devil_IL_ilResetRead, "ilResetRead", (void*)&ilResetRead},
+        {"ilResetWrite", "()V", (void*)&Java_org_lwjgl_devil_IL_ilResetWrite, "ilResetWrite", (void*)&ilResetWrite},
+        {"ilSave", "(ILjava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSave, "ilSave", (void*)&ilSave},
+        {"ilSaveImage", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSaveImage, "ilSaveImage", (void*)&ilSaveImage},
+        {"nilSaveL", "(ILjava/nio/ByteBuffer;II)I", (void*)&Java_org_lwjgl_devil_IL_nilSaveL, "ilSaveL", (void*)&ilSaveL},
+        {"ilSavePal", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilSavePal, "ilSavePal", (void*)&ilSavePal},
+        {"nilSetData", "(Ljava/nio/ByteBuffer;I)Z", (void*)&Java_org_lwjgl_devil_IL_nilSetData, "ilSetData", (void*)&ilSetData},
+        {"ilSetDuration", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilSetDuration, "ilSetDuration", (void*)&ilSetDuration},
+        {"ilSetInteger", "(II)V", (void*)&Java_org_lwjgl_devil_IL_ilSetInteger, "ilSetInteger", (void*)&ilSetInteger},
+        {"nilSetPixels", "(IIIIIIIILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_devil_IL_nilSetPixels, "ilSetPixels", (void*)&ilSetPixels},
+        {"ilSetString", "(ILjava/lang/String;)V", (void*)&Java_org_lwjgl_devil_IL_ilSetString, "ilSetString", (void*)&ilSetString},
+        {"ilShutDown", "()V", (void*)&Java_org_lwjgl_devil_IL_ilShutDown, "ilShutDown", (void*)&ilShutDown},
+        {"nilTexImage", "(IIIBIILjava/nio/ByteBuffer;I)Z", (void*)&Java_org_lwjgl_devil_IL_nilTexImage, "ilTexImage", (void*)&ilTexImage},
+        {"ilTypeFunc", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilTypeFunc, "ilTypeFunc", (void*)&ilTypeFunc},
+        {"ilLoadData", "(Ljava/lang/String;IIIB)Z", (void*)&Java_org_lwjgl_devil_IL_ilLoadData, "ilLoadData", (void*)&ilLoadData},
+        {"ilLoadDataL", "(Ljava/nio/ByteBuffer;IIIIIB)Z", (void*)&Java_org_lwjgl_devil_IL_nilLoadDataL, "ilLoadDataL", (void*)&ilLoadDataL},
+        {"ilSaveData", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSaveData, "ilSaveData", (void*)&ilSaveData}
+    };
+    int num_functions = NUMFUNCTIONS(functions);
+    extil_InitializeClass(env, clazz, num_functions, functions);
+    printf("\r\ninitNativeStubs");
 }
 
 #ifdef __cplusplus
