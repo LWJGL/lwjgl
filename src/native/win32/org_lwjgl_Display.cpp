@@ -250,7 +250,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 	// Get the device caps
 	width = GetDeviceCaps(screenDC, HORZRES);
 	height = GetDeviceCaps(screenDC, VERTRES);
-	bpp = GetDeviceCaps(screenDC, COLORRES);
+	bpp = GetDeviceCaps(screenDC, BITSPIXEL);
 	freq = GetDeviceCaps(screenDC, VREFRESH);
 	if (freq <= 1)
 		freq = 0; // Unknown
@@ -400,7 +400,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	// Get the device caps
 	int width = GetDeviceCaps(screenDC, HORZRES);
 	int height = GetDeviceCaps(screenDC, VERTRES);
-	int bpp = GetDeviceCaps(screenDC, COLORRES);
+	int bpp = GetDeviceCaps(screenDC, BITSPIXEL);
 	int freq = GetDeviceCaps(screenDC, VREFRESH);
 	if (freq <= 1)
 		freq = 0; // Unknown
