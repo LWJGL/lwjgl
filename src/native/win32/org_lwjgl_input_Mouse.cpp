@@ -47,8 +47,6 @@
 #include "common_tools.h"
 #include <dinput.h>
 
-static BYTE readBuffer[EVENT_BUFFER_SIZE];
-
 static LPDIRECTINPUTDEVICE mDIDevice;				// DI Device instance
 static int mButtoncount = 0;								 // Temporary buttoncount
 static bool mHaswheel;											 // Temporary wheel check
@@ -145,9 +143,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 	}
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv * env, jclass clazz) {
-	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, EVENT_BUFFER_SIZE);
-	return newBuffer;
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv * env, jclass clazz) {
 }
 
 static unsigned char mapButton(DWORD button_id) {
@@ -164,17 +160,17 @@ static unsigned char mapButton(DWORD button_id) {
 	}
 }
 
-static int bufferButtons(int count, DIDEVICEOBJECTDATA *di_buffer) {
+static int bufferButtons(int num_di_events, DIDEVICEOBJECTDATA *di_buffer, unsigned char *buffer, int buffer_size) {
 	int buffer_index = 0;
-	for (int i = 0; i < count; i++) {
+	for (int i = 0; i < num_di_events; i++) {
 		unsigned char button = mapButton(di_buffer[i].dwOfs);
 		if (button >= 0 && button < mButtoncount) {
 			unsigned char state = (unsigned char)di_buffer[i].dwData & 0x80;
 			if (state != 0)
 				state = 1;
-			readBuffer[buffer_index++] = button;
-			readBuffer[buffer_index++] = state;
-			if (buffer_index == EVENT_BUFFER_SIZE)
+			buffer[buffer_index++] = button;
+			buffer[buffer_index++] = state;
+			if (buffer_index == buffer_size)
 				break;
 		}
 	}
@@ -182,11 +178,11 @@ static int bufferButtons(int count, DIDEVICEOBJECTDATA *di_buffer) {
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
-	(JNIEnv * env, jclass clazz)
+	(JNIEnv * env, jclass clazz, jobject buffer_obj, jint buffer_position)
 {
 	
 	static DIDEVICEOBJECTDATA rgdod[EVENT_BUFFER_SIZE];
-	DWORD bufsize = EVENT_BUFFER_SIZE;
+	DWORD num_di_events = EVENT_BUFFER_SIZE;
 
 	HRESULT ret;
 
@@ -197,11 +193,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
 	ret = mDIDevice->GetDeviceData( 
 		sizeof(DIDEVICEOBJECTDATA), 
 		rgdod, 
-		&bufsize,
+		&num_di_events,
 		0); 
 
 	if (ret == DI_OK) {
-		return bufferButtons(bufsize, rgdod);
+		unsigned char *buffer_ptr = buffer_position + (unsigned char*)env->GetDirectBufferAddress(buffer_obj);
+		int buffer_size = (int)env->GetDirectBufferCapacity(buffer_obj) - buffer_position;
+		return bufferButtons(num_di_events, rgdod, buffer_ptr, buffer_size);
 	} else if (ret == DI_BUFFEROVERFLOW) { 
 		printfDebug("Buffer overflowed\n");
 	} else if (ret == DIERR_INPUTLOST) {
