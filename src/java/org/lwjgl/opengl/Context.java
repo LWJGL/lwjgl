@@ -208,7 +208,7 @@ final class Context {
 	 * the monitor vertical refresh synchronization of the context, and is not guaranteed to be successful.
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
-	public synchronized void setVSync(boolean enable) {
+	public static void setVSync(boolean enable) {
 		implementation.setVSync(enable);
 	}
 	

@@ -43,10 +43,6 @@ import org.lwjgl.BufferUtils;
  * @version $Revision$
  */
 final class MacOSXContextImplementation implements ContextImplementation {
-	private static PeerInfo getCurrentPeerInfo() {
-		return Context.getCurrentContext().getPeerInfo();
-	}
-
 	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
@@ -59,7 +55,11 @@ final class MacOSXContextImplementation implements ContextImplementation {
 
 	public void swapBuffers() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();
-		nSwapBuffers(current_context.getHandle());
+		if (current_context == null)
+			throw new IllegalStateException("No context is current");
+		synchronized (current_context) {
+			nSwapBuffers(current_context.getHandle());
+		}
 	}
 	private static native void nSwapBuffers(ByteBuffer context_handle) throws LWJGLException;
 
@@ -70,8 +70,11 @@ final class MacOSXContextImplementation implements ContextImplementation {
 
 	public void releaseCurrentContext() throws LWJGLException {
 		Context current_context = Context.getCurrentContext();
-		if (current_context != null)
-			clearDrawable(current_context.getHandle());
+		if (current_context != null) {
+			synchronized (current_context) {
+				clearDrawable(current_context.getHandle());
+			}
+		}
 		nReleaseCurrentContext();
 	}
 	private static native void nReleaseCurrentContext() throws LWJGLException;
@@ -97,7 +100,10 @@ final class MacOSXContextImplementation implements ContextImplementation {
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setVSync(boolean enabled) {
-		nSetVSync(Context.getCurrentContext().getHandle(), enabled);
+		Context current_context = Context.getCurrentContext();
+		synchronized (current_context) {
+			nSetVSync(current_context.getHandle(), enabled);
+		}
 	}
 	private static native void nSetVSync(ByteBuffer context_handle, boolean enabled);
 

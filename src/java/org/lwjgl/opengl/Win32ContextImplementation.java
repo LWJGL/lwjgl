@@ -43,10 +43,6 @@ import org.lwjgl.BufferUtils;
  * @version $Revision$
  */
 final class Win32ContextImplementation implements ContextImplementation {
-	private static PeerInfo getCurrentPeerInfo() {
-		return Context.getCurrentContext().getPeerInfo();
-	}
-
 	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {
@@ -58,14 +54,17 @@ final class Win32ContextImplementation implements ContextImplementation {
 	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
 
 	public void swapBuffers() throws LWJGLException {
-		PeerInfo current_peer_info = getCurrentPeerInfo();
-		if (current_peer_info == null)
+		Context current_context = Context.getCurrentContext();
+		if (current_context == null)
 			throw new IllegalStateException("No context is current");
-		ByteBuffer peer_handle = current_peer_info.lockAndGetHandle();
-		try {
-			nSwapBuffers(peer_handle);
-		} finally {
-			current_peer_info.unlock();
+		synchronized (current_context) {
+			PeerInfo current_peer_info = current_context.getPeerInfo();
+			ByteBuffer peer_handle = current_peer_info.lockAndGetHandle();
+			try {
+				nSwapBuffers(peer_handle);
+			} finally {
+				current_peer_info.unlock();
+			}
 		}
 	}
 	private static native void nSwapBuffers(ByteBuffer peer_info_handle) throws LWJGLException;
