@@ -235,6 +235,8 @@ public final class GLContext {
 		}
 		
 		determineAvailableExtensions(exts);
+		
+		VBOTracker.setCurrent(currentContext);
 	}
 	
 	/**
