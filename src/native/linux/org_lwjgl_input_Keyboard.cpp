@@ -151,6 +151,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	key_map[0x67] = 0xb7; // SysRQ
 	key_map[0x66] = 0xc5; // Pause
 	key_map[0x64] = 0x9c; // Numpad enter
+	key_map[0x65] = 0x9d; // Right control
 	key_map[0x68] = 0xb5; // Numpad divide
 	
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
