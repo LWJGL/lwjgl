@@ -51,7 +51,7 @@ import org.lwjgl.Sys;
  * @version $Revision$
  */
 public final class GLContext {
-	
+
 	/** The currently initialised context */
 	private static WeakReference currentContext;
 
@@ -61,6 +61,7 @@ public final class GLContext {
 	public static boolean GL_ARB_imaging;
 	public static boolean GL_ARB_depth_texture;
 	public static boolean GL_ARB_fragment_program;
+	public static boolean GL_ARB_fragment_program_shadow;
 	public static boolean GL_ARB_fragment_shader;
 	public static boolean GL_ARB_matrix_palette;
 	public static boolean GL_ARB_multisample;
@@ -191,7 +192,7 @@ public final class GLContext {
 			}
 		}
 	}
-	
+
 	/**
 	 * Makes a GL context the current context. This method does not make the context current though!
 	 * Instead it simply ensures that the current context is reflected accurately by GLContext's
@@ -214,7 +215,7 @@ public final class GLContext {
 			// Yes, so we don't need to do anything. Our caps and function pointers are still valid.
 			return;
 		}
-		
+
 		// Ok, now it's the current context.
 		currentContext = new WeakReference(context);
 		HashSet exts = new HashSet();
@@ -222,7 +223,7 @@ public final class GLContext {
 		determineAvailableExtensions(exts);
 		VBOTracker.setCurrent(currentContext);
 	}
-	
+
 	/**
 	 * Native method to initialize a context
 	 * @param exts An empty Set of Strings that will be filled with the names of enabled extensions
