@@ -93,12 +93,30 @@ static void releaseDisplay(void) {
 	}
 }
 
-void switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
+bool switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 	init(env);
 	captureDisplay();
-	CFDictionaryRef displayMode = CGDisplayBestModeForParametersAndRefreshRate(kCGDirectMainDisplay, bpp, width, height, freq, NULL);
-	CGDisplaySwitchToMode(kCGDirectMainDisplay, displayMode);
-	saveMode(env, width, height, bpp, freq);
+	CFArrayRef modes = CGDisplayAvailableModes(kCGDirectMainDisplay);
+	int size = CFArrayGetCount(modes);
+	for (int i = 0; i < size; i++) {
+		CFDictionaryRef mode = (CFDictionaryRef)CFArrayGetValueAtIndex(modes, i);
+		long mode_width;
+		long mode_height;
+		long mode_bpp;
+		long mode_freq;
+		getDictLong(mode, kCGDisplayWidth, &mode_width);
+		getDictLong(mode, kCGDisplayHeight, &mode_height);
+		getDictLong(mode, kCGDisplayRefreshRate, &mode_freq);
+		getDictLong(mode, kCGDisplayBitsPerPixel, &mode_bpp);
+		if (width == mode_width && height == mode_height && bpp == mode_bpp && mode_freq == freq) {
+			CGDisplayErr err = CGDisplaySwitchToMode(kCGDirectMainDisplay, mode);
+			if (!err) {
+				saveMode(env, width, height, bpp, freq);
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void resetMode(JNIEnv *env) {
@@ -123,7 +141,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclas
 	int height = env->GetIntField(mode, fid_height);
 	int bpp = env->GetIntField(mode, fid_bpp);
 	int freq = env->GetIntField(mode, fid_freq);
-	switchMode(env, width, height, bpp, freq);
+	if (!switchMode(env, width, height, bpp, freq)) {
+		throwException(env, "Could not switch mode.");
+	}
 }
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes(JNIEnv * env, jclass clazz) {

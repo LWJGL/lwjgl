@@ -201,16 +201,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclas
 	Display *disp = XOpenDisplay(NULL);
 
 	if (disp == NULL) {
-#ifdef _DEBUG
-		printf("Could not open X connection\n");
-#endif
+		throwException(env, "Could not open X connection.");
 		return;
 	}
 	screen = DefaultScreen(disp);
 	if (setMode(disp, screen, width, height, true)) {
 		jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
 		env->SetStaticObjectField(clazz, fid_initialMode, mode);
-	}
+	} else
+		throwException(env, "Could not switch mode.");
 	XCloseDisplay(disp);
 }
 

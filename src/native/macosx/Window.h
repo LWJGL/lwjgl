@@ -44,9 +44,8 @@
 
 	#include <jni.h>
 	#include <Carbon/Carbon.h>
-	extern void setQuitRequested(void);
 	extern void resetMode(JNIEnv *env);
-	extern void switchMode(JNIEnv *env, long width, long height, long bpp, long freq);
+	extern bool switchMode(JNIEnv *env, long width, long height, long bpp, long freq);
 	extern void handleKeyboardEvent(EventRef event);
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

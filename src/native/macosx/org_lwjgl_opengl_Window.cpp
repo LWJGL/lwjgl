@@ -103,7 +103,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jobject ext_set) {
 	vsync_enabled = false;
-	current_fullscreen = fullscreen == JNI_FALSE;
+	current_fullscreen = fullscreen == JNI_TRUE;
 	if (!extgl_Open()) {
 		throwException(env, "Could not load gl library");
 		return;
@@ -112,8 +112,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not load agl symbols");
 		return;
 	}
-	if (current_fullscreen)
-		switchMode(env, width, height, bpp, 60);
+	if (!current_fullscreen) {
+		if (!switchMode(env, width, height, bpp, 60)) {
+			destroyMode(env, clazz);
+			extgl_Close();
+			throwException(env, "Could not switch mode.");
+			return;
+		}
+	}
 	if (!createFullscreenContext(env, bpp, alpha, depth, stencil)) {
 		destroyMode(env, clazz);
 		extgl_Close();
