@@ -64,15 +64,30 @@ public class Grass {
 
 	static {
 		try {
+      int mode = -1;
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
-			System.out.println("Available display modes:");
-			for (int i = 0; i < modes.length; i ++)
-				System.out.println(modes[i]);
+			System.out.println("Available display modes(" + modes.length + "):");
+			for (int i = 0; i < modes.length; i ++) {
+				//System.out.println(modes[i]);
+        if( modes[i].width == 640 && 
+            modes[i].height == 480 && 
+            modes[i].bpp == 16 && 
+            modes[i].freq == 60) {
+              mode = i;
+        }       
+      }
+      
+      if (mode == -1) {
+        System.out.println("did not find suitable mode");
+      } else {
+        System.out.println("Display mode: " + modes[mode]);
+      }
 			// For now let's just pick a mode we're certain to have
-			Display.create(new DisplayMode(800, 600, 16, 60), 8, 16, 0, false);
+      
+			Display.create(modes[mode], false);
 			System.out.println("Created display.");
 		} catch (Exception e) {
-			System.err.println("Failed to create display due to "+e);
+      e.printStackTrace();
 			System.exit(1);
 		}
 	}

@@ -50,12 +50,18 @@ import java.nio.*;
 public final class Game {
      static {
          try {
-             DisplayMode[] modes = Display.getAvailableDisplayModes();
-             System.out.println("Available display modes:");
-             for (int i = 0; i < modes.length; i ++)
-                 System.out.println(modes[i]);
+          int mode = -1;
+          DisplayMode[] modes = Display.getAvailableDisplayModes();
+          for (int i = 0; i < modes.length; i ++) {
+            if( modes[i].width == 640 && 
+                modes[i].height == 480 && 
+                modes[i].bpp == 16 && 
+                modes[i].freq == 60) {
+                  mode = i;
+            }       
+          } 
              // For now let's just pick a mode we're certain to have
-             Display.create(new DisplayMode(640, 480, 16, 60), 8, 16, 0, true);
+             Display.create(modes[mode], false);
              System.out.println("Created display.");
          } catch (Exception e) {
              System.err.println("Failed to create display due to "+e);

@@ -82,7 +82,17 @@ public class MovingSoundTest extends BasicTest {
     
     //initialize display
     try {
-      Display.create(new DisplayMode(320, 240, 32, 60), 8, 24, 0, false);
+      int mode = -1;
+      DisplayMode[] modes = Display.getAvailableDisplayModes();
+      for (int i = 0; i < modes.length; i ++) {
+        if( modes[i].width == 640 && 
+            modes[i].height == 480 && 
+            modes[i].bpp == 16 && 
+            modes[i].freq == 60) {
+              mode = i;
+        }       
+      }       
+      Display.create(modes[mode], false);
     } catch (Exception e) {
       e.printStackTrace();
       exit(-1);
