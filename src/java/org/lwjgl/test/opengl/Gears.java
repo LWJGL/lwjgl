@@ -8,7 +8,6 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.ARBTransposeMatrix;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
