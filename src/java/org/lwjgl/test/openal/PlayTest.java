@@ -59,8 +59,8 @@ public class PlayTest extends BasicTest {
      */
     protected void execute(String[] args) {
         if(args.length < 1) {
-            System.out.println("please specify filename to play");
-            return;
+          System.out.println("no argument supplied, assuming Footsteps.wav");
+          args = new String[] {"Footsteps.wav"};
         }        
         
         int lastError;
