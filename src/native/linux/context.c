@@ -79,7 +79,7 @@ XVisualInfo *getVisualInfoFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 }
 
 GLXFBConfig *getFBConfigFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
-	int attribs[] = {GLX_FBCONFIG_ID, peer_info->config.glx13_config.config_id};
+	int attribs[] = {GLX_FBCONFIG_ID, peer_info->config.glx13_config.config_id, None, None};
 	int num_elements;
 	GLXFBConfig *configs = glXChooseFBConfig(peer_info->display, peer_info->screen, attribs, &num_elements);
 	if (configs == NULL) {
