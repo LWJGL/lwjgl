@@ -526,15 +526,15 @@ public class Matrix4f extends Matrix implements Serializable {
 		m21 = m01 * f20 + m11 * f21 + m21 * f22;
 		m22 = m02 * f20 + m12 * f21 + m22 * f22;
 		m23 = m03 * f20 + m13 * f21 + m23 * f22;
-                m00 = t00;
-                m01 = t01;
-                m02 = t02;
-                m03 = t03;
-                m10 = t10;
-                m11 = t11;
-                m12 = t12;
-                m13 = t13;
-                return this;
+		m00 = t00;
+		m01 = t01;
+		m02 = t02;
+		m03 = t03;
+		m10 = t10;
+		m11 = t11;
+		m12 = t12;
+		m13 = t13;
+		return this;
 	}
 
 	/**
@@ -584,7 +584,7 @@ public class Matrix4f extends Matrix implements Serializable {
 		dest.m21 = m01 * f8 + m11 * f9 + m21 * f10;
 		dest.m22 = m02 * f8 + m12 * f9 + m22 * f10;
 		dest.m23 = m03 * f8 + m13 * f9 + m23 * f10;
-                return dest;
+		return dest;
 	}
 
 	/**
@@ -687,19 +687,19 @@ public class Matrix4f extends Matrix implements Serializable {
 		return f;
 	}
 		
-        /**
-         * Calculate the determinant of a 3x3 matrix
-         * @return result
-         */
+	/**
+	 * Calculate the determinant of a 3x3 matrix
+	 * @return result
+	 */
 
-        private float determinant3x3(float t00, float t01, float t02,
-                                    float t10, float t11, float t12,
-                                    float t20, float t21, float t22)
-        {
-                    return    t00 * (t11 * t22 - t12 * t21) 
-                            + t01 * (t12 * t20 - t10 * t22)
-                            + t02 * (t10 * t21 - t11 * t20);
-        }
+	private float determinant3x3(float t00, float t01, float t02,
+				     float t10, float t11, float t12,
+				     float t20, float t21, float t22)
+	{
+		return   t00 * (t11 * t22 - t12 * t21) 
+		       + t01 * (t12 * t20 - t10 * t22)
+		       + t02 * (t10 * t21 - t11 * t20);
+	}
 
 	/**
 	 * Invert this matrix
@@ -707,59 +707,59 @@ public class Matrix4f extends Matrix implements Serializable {
 	 */
 	public Matrix invert() {
 		
-                float determinant = determinant();
-                
-                if (determinant != 0)
-                {
-                    /*
-                        m00 m01 m02 m03
-                        m10 m11 m12 m13
-                        m20 m21 m22 m23
-                        m30 m31 m32 m33    
-                    */
-                    float determinant_inv = 1f/determinant;
-                    
-                    // first row
-                    float t00 = determinant3x3(	m11, m12, m13, m21, m22, m23, m31, m32, m33 );
-                    float t01 = -determinant3x3(m10, m12, m13, m20, m22, m23, m30, m32, m33 );
-                    float t02 = determinant3x3(	m10, m11, m13, m20, m21, m23, m30, m31, m33 );
-                    float t03 = -determinant3x3(m10, m11, m12, m20, m21, m22, m30, m31, m32 );   
-                    // second row
-                    float t10 = -determinant3x3(m01, m02, m03, m21, m22, m23, m31, m32, m33 );
-                    float t11 = determinant3x3( m00, m02, m03, m20, m22, m23, m30, m32, m33 );
-                    float t12 = -determinant3x3(m00, m01, m03, m20, m21, m23, m30, m31, m33 );
-                    float t13 = determinant3x3( m00, m01, m02, m20, m21, m22, m30, m31, m32 );  
-                    // third row
-                    float t20 = determinant3x3( m01, m02, m03, m11, m12, m13, m31, m32, m33 );
-                    float t21 = -determinant3x3(m00, m02, m03, m10, m12, m13, m30, m32, m33 );
-                    float t22 = determinant3x3( m00, m01, m03, m10, m11, m13, m30, m31, m33 );
-                    float t23 = -determinant3x3(m00, m01, m02, m10, m11, m12, m30, m31, m32 );  
-                    // fourth row
-                    float t30 = -determinant3x3(m01, m02, m03, m11, m12, m13, m21, m22, m23 );
-                    float t31 = determinant3x3( m00, m02, m03, m10, m12, m13, m20, m22, m23 );
-                    float t32 = -determinant3x3(m00, m01, m03, m10, m11, m13, m20, m21, m23 );
-                    float t33 = determinant3x3( m00, m01, m02, m10, m11, m12, m20, m21, m22 );  
-        
-                    // transpose and divide by the determinant
-                    m00 = t00*determinant_inv;
-                    m11 = t11*determinant_inv;
-                    m22 = t22*determinant_inv;
-                    m33 = t33*determinant_inv;
-                    m01 = t10*determinant_inv;
-                    m10 = t01*determinant_inv;
-                    m20 = t02*determinant_inv;
-                    m02 = t20*determinant_inv;
-                    m12 = t21*determinant_inv;
-                    m21 = t12*determinant_inv;
-                    m03 = t30*determinant_inv;
-                    m30 = t03*determinant_inv;
-                    m13 = t31*determinant_inv;
-                    m31 = t13*determinant_inv;
-                    m32 = t23*determinant_inv;
-                    m23 = t32*determinant_inv;
-		    return this;
-                } else
-                    return null;
+		float determinant = determinant();
+		
+		if (determinant != 0)
+		{
+			/*
+			 * m00 m01 m02 m03
+			 * m10 m11 m12 m13
+			 * m20 m21 m22 m23
+			 * m30 m31 m32 m33
+			 */
+			float determinant_inv = 1f/determinant;
+			
+			// first row
+			float t00 =  determinant3x3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+			float t01 = -determinant3x3(m10, m12, m13, m20, m22, m23, m30, m32, m33);
+			float t02 =  determinant3x3(m10, m11, m13, m20, m21, m23, m30, m31, m33);
+			float t03 = -determinant3x3(m10, m11, m12, m20, m21, m22, m30, m31, m32);
+			// second row
+			float t10 = -determinant3x3(m01, m02, m03, m21, m22, m23, m31, m32, m33);
+			float t11 =  determinant3x3(m00, m02, m03, m20, m22, m23, m30, m32, m33);
+			float t12 = -determinant3x3(m00, m01, m03, m20, m21, m23, m30, m31, m33);
+			float t13 =  determinant3x3(m00, m01, m02, m20, m21, m22, m30, m31, m32);
+			// third row
+			float t20 =  determinant3x3(m01, m02, m03, m11, m12, m13, m31, m32, m33);
+			float t21 = -determinant3x3(m00, m02, m03, m10, m12, m13, m30, m32, m33);
+			float t22 =  determinant3x3(m00, m01, m03, m10, m11, m13, m30, m31, m33);
+			float t23 = -determinant3x3(m00, m01, m02, m10, m11, m12, m30, m31, m32);
+			// fourth row
+			float t30 = -determinant3x3(m01, m02, m03, m11, m12, m13, m21, m22, m23);
+			float t31 =  determinant3x3(m00, m02, m03, m10, m12, m13, m20, m22, m23);
+			float t32 = -determinant3x3(m00, m01, m03, m10, m11, m13, m20, m21, m23);
+			float t33 =  determinant3x3(m00, m01, m02, m10, m11, m12, m20, m21, m22);
+	
+			// transpose and divide by the determinant
+			m00 = t00*determinant_inv;
+			m11 = t11*determinant_inv;
+			m22 = t22*determinant_inv;
+			m33 = t33*determinant_inv;
+			m01 = t10*determinant_inv;
+			m10 = t01*determinant_inv;
+			m20 = t02*determinant_inv;
+			m02 = t20*determinant_inv;
+			m12 = t21*determinant_inv;
+			m21 = t12*determinant_inv;
+			m03 = t30*determinant_inv;
+			m30 = t03*determinant_inv;
+			m13 = t31*determinant_inv;
+			m31 = t13*determinant_inv;
+			m32 = t23*determinant_inv;
+			m23 = t32*determinant_inv;
+			return this;
+		} else
+			return null;
 	}
 	
 	/**

@@ -294,27 +294,37 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * @return this if successful, null otherwise
 	 */
 	public Matrix invert() 
-        {
+	{
 		
-                /*
-                    inv(A) = 1/det(A) * adj(A);
-                */
-                
-                float determinant = determinant();
-                if (determinant != 0) {
-                    float determinant_inv = 1f/determinant;
-                    float t00 =  m11*determinant_inv;
-                    float t01 = -m01*determinant_inv;
-                    float t11 =  m00*determinant_inv;
-                    float t10 = -m10*determinant_inv;
-                
-                    m00 = t00;
-                    m01 = t01;
-                    m10 = t10;
-                    m11 = t11;
-                    return this;
-                } else
-                    return null;
+		/*
+		 *inv(A) = 1/det(A) * adj(A);
+		 */
+		
+		float determinant = determinant();
+		if (determinant != 0) {
+			float determinant_inv = 1f/determinant;
+			float t00 =  m11*determinant_inv;
+			float t01 = -m01*determinant_inv;
+			float t11 =  m00*determinant_inv;
+			float t10 = -m10*determinant_inv;
+		
+			m00 = t00;
+			m01 = t01;
+			m10 = t10;
+			m11 = t11;
+			return this;
+		} else
+		 	return null;
+	}
+
+	/**
+	 * Returns a string representation of this matrix
+	 */
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append(m00).append(' ').append(m10).append(' ').append('\n');
+		buf.append(m01).append(' ').append(m11).append(' ').append('\n');
+		return buf.toString();
 	}
 	
 	/**

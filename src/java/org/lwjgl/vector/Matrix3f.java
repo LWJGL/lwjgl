@@ -363,49 +363,60 @@ public class Matrix3f extends Matrix implements Serializable {
 	}
 
 	/**
+	 * Returns a string representation of this matrix
+	 */
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append(m00).append(' ').append(m10).append(' ').append(m20).append(' ').append('\n');
+		buf.append(m01).append(' ').append(m11).append(' ').append(m21).append(' ').append('\n');
+		buf.append(m02).append(' ').append(m12).append(' ').append(m22).append(' ').append('\n');
+		return buf.toString();
+	}
+
+	/**
 	 * Invert this matrix
 	 * @return this if successful, null otherwise
 	 */
 	public Matrix invert() 
-        {
+	{
 		float determinant = determinant();
-                
-                if (determinant != 0)
-                {
-                    // do it the ordinary way
-                    
-                    /*  inv(A) = 1/det(A) * adj(T), where adj(T) = transpose(Conjugate Matrix)
-                    
-                        m00 m01 m02 
-                        m10 m11 m12
-                        m20 m21 m22  
-                    */
-                    float determinant_inv = 1f/determinant;
-                    
-                    // get the conjugate matrix
-                    float t00 = m11 * m22 - m12* m22;
-                    float t01 = - m10 * m22 + m12 *m20;
-                    float t02 = m10 * m21 - m11 * m20;
-                    float t10 = - m01 * m22 + m02 * m21;
-                    float t11 = m00 * m22 - m02 * m20;
-                    float t12 = - m00 * m21 + m01 * m20;
-                    float t20 = m01 * m12 - m02 * m11;
-                    float t21 = -m00 * m12 + m02 * m10;
-                    float t22 = m00 * m11 - m01 * m10;
-                    
-                    
-                    m00 = t00*determinant_inv;
-                    m11 = t11*determinant_inv;
-                    m22 = t22*determinant_inv;
-                    m01 = t10*determinant_inv;
-                    m10 = t01*determinant_inv;
-                    m20 = t02*determinant_inv;
-                    m02 = t20*determinant_inv;
-                    m12 = t21*determinant_inv;
-                    m21 = t12*determinant_inv;
-		    return this;
-                } else
-                    return null;
+		
+		if (determinant != 0)
+		{
+			 /* do it the ordinary way
+			  *
+			  * inv(A) = 1/det(A) * adj(T), where adj(T) = transpose(Conjugate Matrix)
+			  *
+			  * m00 m01 m02 
+			  * m10 m11 m12
+			  * m20 m21 m22  
+			  */
+			 float determinant_inv = 1f/determinant;
+			 
+			 // get the conjugate matrix
+			 float t00 = m11 * m22 - m12* m22;
+			 float t01 = - m10 * m22 + m12 *m20;
+			 float t02 = m10 * m21 - m11 * m20;
+			 float t10 = - m01 * m22 + m02 * m21;
+			 float t11 = m00 * m22 - m02 * m20;
+			 float t12 = - m00 * m21 + m01 * m20;
+			 float t20 = m01 * m12 - m02 * m11;
+			 float t21 = -m00 * m12 + m02 * m10;
+			 float t22 = m00 * m11 - m01 * m10;
+			 
+			 
+			 m00 = t00*determinant_inv;
+			 m11 = t11*determinant_inv;
+			 m22 = t22*determinant_inv;
+			 m01 = t10*determinant_inv;
+			 m10 = t01*determinant_inv;
+			 m20 = t02*determinant_inv;
+			 m02 = t20*determinant_inv;
+			 m12 = t21*determinant_inv;
+			 m21 = t12*determinant_inv;
+			 return this;
+		} else
+			 return null;
 	}
 
 	/**
