@@ -10,7 +10,7 @@ LIBRARY=liblwjgl-devil.jnilib
 
 $(LIBRARY): $(OBJECTS)
 	$(LINKER) $(CFLAGS_LINK) -o $@ $(OBJECTS) $(LIBS)
-	$(STRIP) $@
+	$(STRIP) -S -X $@
 
 .c.o:
 	$(CC) $(CFLAGS_O) $< -o $@
