@@ -58,13 +58,13 @@ public class WindowCreationTest {
     int x = 100, y = 100;
     boolean fullscreen = false;
     
-    System.out.println("Moving to 100, 100");
-    Display.setLocation(x, y);
-    
     // Create the actual window
     try {
       setDisplayMode();
       Display.create();
+      
+      System.out.println("Moving to 100, 100");
+      Display.setLocation(x, y);      
     } catch (Exception e) {
 			e.printStackTrace();
       System.out.println("Unable to create window!, exiting...");
@@ -72,7 +72,11 @@ public class WindowCreationTest {
 		}
 
     System.out.println("Window created");
-    System.out.println(Display.getDisplayMode().getHeight() + ", " + Display.getDisplayMode().getWidth() + ", " + Display.getTitle());
+    System.out.println("Width: " + Display.getDisplayMode().getWidth() + 
+                       ", Height: " + Display.getDisplayMode().getHeight() + 
+                       ", Bits per pixel: " + Display.getDisplayMode().getBitsPerPixel() + 
+                       ", Frequency: " + Display.getDisplayMode().getFrequency() + 
+                       ", Title: "+ Display.getTitle());
     
 	Display.setVSyncEnabled(true);
 	Display.setTitle("WindowCreationTest");
