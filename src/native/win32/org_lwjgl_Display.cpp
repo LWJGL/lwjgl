@@ -261,7 +261,7 @@ int SetDisplayMode(int width, int height, int bpp, int freq)
 
 /*
  * Class:     org_lwjgl_Display
- * Method:    getAvailableDisplayModes
+ * Method:    nGetAvailableDisplayModes
  * Signature: ()[Lorg/lwjgl/DisplayMode;
  */
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes

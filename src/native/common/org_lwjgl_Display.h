@@ -15,7 +15,7 @@ extern "C" {
 /* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Display
- * Method:    getAvailableDisplayModes
+ * Method:    nGetAvailableDisplayModes
  * Signature: ()[Lorg/lwjgl/DisplayMode;
  */
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
