@@ -169,7 +169,7 @@ public class Mouse {
 		currentCursor = cursor;
 		if (currentCursor != null) {
 			nSetNativeCursor(currentCursor.getHandle());
-      currentCursor.setTimeout();
+     		currentCursor.setTimeout();
 		} else {
 			nSetNativeCursor(0);
 		}
@@ -272,6 +272,13 @@ public class Mouse {
 	 */
 	public static boolean isCreated() {
 		return created;
+	}
+	
+	/**
+	 * @return true if buffering is enabled
+	 */
+	public static boolean isBuffered() {
+		return readBuffer != null;
 	}
 
 	/**
@@ -515,7 +522,7 @@ public class Mouse {
 
 	/**
 	 * Updates the cursor, so that animation can be changed if needed.
-   * This method is called automatically by the window on its update. 
+     * This method is called automatically by the window on its update. 
 	 */
 	public static void updateCursor() {
 		if(currentCursor != null && currentCursor.hasTimedOut()) {

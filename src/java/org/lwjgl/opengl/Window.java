@@ -273,6 +273,7 @@ public final class Window {
 	 * Create a fullscreen window that matches the current display depth. Default common values are chosen
 	 * for common OpenGL rendering operations: you will get at least a 16-bit depth buffer, an 8 bit stencil
 	 * buffer, probably no alpha buffer, and probably no multisampling.
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title
 	 * @throws Exception
 	 */
@@ -284,7 +285,7 @@ public final class Window {
 	 * Create a fullscreen window. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
 	 * fails too then an Exception will be thrown.
-	 * 
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title The title of the window
 	 * @param bpp Minimum bits per pixel
 	 * @param alpha Minimum bits per pixel in alpha buffer
@@ -301,7 +302,7 @@ public final class Window {
 	 * Create a fullscreen window. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
 	 * fails too then an Exception will be thrown.
-	 * 
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title The title of the window
 	 * @param bpp Minimum bits per pixel
 	 * @param alpha Minimum bits per pixel in alpha buffer
@@ -329,7 +330,7 @@ public final class Window {
 	 * display will be created instead. If this fails too then an Exception will be thrown.
 	 * If the window is created fullscreen, then its size may not match the specified size
 	 * here.
-	 * 
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title The title of the window
 	 * @param x The position of the window on the x axis. May be ignored.
 	 * @param y The position of the window on the y axis. May be ignored.
@@ -352,7 +353,7 @@ public final class Window {
 	 * display will be created instead. If this fails too then an Exception will be thrown.
 	 * If the window is created fullscreen, then its size may not match the specified size
 	 * here.
-	 * 
+	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 * @param title The title of the window
 	 * @param x The position of the window on the x axis. May be ignored.
 	 * @param y The position of the window on the y axis. May be ignored.
@@ -402,7 +403,16 @@ public final class Window {
 		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples);
 		context = new Window();
 		makeCurrent();
-		
+
+		// Put the window into orthographic projection mode with 1:1 pixel ratio.
+		// We haven't used GLU here to do this to avoid an unnecessary dependency.
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0.0, (double) width, 0.0, (double) height, -1.0, 1.0);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		GL11.glViewport(0, 0, width, height);
+
 		// Automatically create mouse, keyboard and controller
 		if (!Mouse.isCreated()) {
 			try {

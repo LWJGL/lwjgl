@@ -257,7 +257,7 @@ int getWindowHeight(void) {
 
 /*
  * Class:     org_lwjgl_Window
- * Method:    update
+ * Method:    nUpdate
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nUpdate

@@ -422,6 +422,20 @@ public class Keyboard {
 		assert created : "The keyboard has not been created.";
 		return keyDownBuffer.get(key) != 0;
 	}
+	
+	/**
+	 * @return true if buffering is enabled
+	 */
+	public static boolean isBuffered() {
+		return readBuffer != null;
+	}
+	
+	/**
+	 * @return true if translation is enabled
+	 */
+	public static boolean isTranslationEnabled() {
+		return translationEnabled;
+	}
   
   /**
    * Checks whether one of the state keys are "active"
