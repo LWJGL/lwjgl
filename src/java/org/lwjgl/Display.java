@@ -59,7 +59,7 @@ public final class Display {
 	 * @throws Exception if the display mode could not be set
 	 * @see destroy()
 	 */
-	public static void setDisplayMode(
+	public static void create(
 		DisplayMode displayMode,
 		boolean fullscreen)
 		throws Exception {
