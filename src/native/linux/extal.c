@@ -36,6 +36,6 @@
  *
  * This file contains the AL extension assigning mechanism
  *
- * @author Brian Matzon <brian@matzon.dk>
+ * @author elias_naur <elias_naur@matzon.dk>
  * @version $Revision$
  */

@@ -35,7 +35,7 @@
  *
  * This is the actual JNI implementation of the OpenAL EAX library. 
  * 
- * @author Brian Matzon <brian@matzon.dk>
+ * @author elias_naur <elias_naur@matzon.dk>
  * @version $Revision$
  */
 #include "org_lwjgl_openal_eax_CoreEAX.h"

@@ -36,7 +36,7 @@
  * This is the actual JNI implementation of the OpenAL utility library. 
  * It handles whatever is needed for proper OpenAL support via using Java.
  * 
- * @author  Brian Matzon <brian@matzon.dk>
+ * @author  elias_naur <elias_naur@matzon.dk>
  * @version $Revision$
  */
 #include "org_lwjgl_openal_ALUT.h"
