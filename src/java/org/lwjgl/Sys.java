@@ -82,14 +82,9 @@ public final class Sys {
 	/**
 	 * Debug flag.
 	 */
-	public static final boolean DEBUG;
+	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.Sys.debug");
 
 	static {
-		String debug_level_prop = System.getProperty("org.lwjgl.Sys.debug", "false");
-		if (debug_level_prop.equals("true"))
-			DEBUG = true;
-		else
-			DEBUG = false;
 		initialize();
 	}
 
