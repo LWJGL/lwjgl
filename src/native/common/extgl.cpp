@@ -578,6 +578,7 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 
 	extgl_Extensions.GL_EXT_abgr = GLQueryExtension(env, ext_set, "GL_EXT_abgr");
 	extgl_Extensions.GL_EXT_bgra = GLQueryExtension(env, ext_set, "GL_EXT_bgra");
+	extgl_Extensions.GL_EXT_blend_equation_separate = GLQueryExtension(env, ext_set, "GL_EXT_blend_equation_separate");
 	extgl_Extensions.GL_EXT_blend_func_separate = GLQueryExtension(env, ext_set, "GL_EXT_blend_func_separate");
 	extgl_Extensions.GL_EXT_blend_subtract = GLQueryExtension(env, ext_set, "GL_EXT_blend_subtract");
 	extgl_Extensions.GL_EXT_Cg_shader = GLQueryExtension(env, ext_set, "GL_EXT_Cg_shader");
@@ -671,6 +672,7 @@ extern void extgl_InitARBVertexProgram(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBVertexShader(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set);
 
+extern void extgl_InitEXTBlendEquationSeparate(JNIEnv *env, jobject ext_set);
 extern void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set);
 extern void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set);
 extern void extgl_InitEXTDepthBoundsTest(JNIEnv *env, jobject ext_set);
@@ -742,6 +744,7 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitARBVertexShader(env, ext_set);
 	extgl_InitARBWindowPos(env, ext_set);
 
+	extgl_InitEXTBlendEquationSeparate(env, ext_set);
 	extgl_InitEXTBlendFuncSeparate(env, ext_set);
 	extgl_InitEXTCompiledVertexArray(env, ext_set);
 	extgl_InitEXTDepthBoundsTest(env, ext_set);

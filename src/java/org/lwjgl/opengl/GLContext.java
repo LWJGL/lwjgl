@@ -91,6 +91,7 @@ public final class GLContext {
 
 	public static boolean GL_EXT_abgr;
 	public static boolean GL_EXT_bgra;
+	public static boolean GL_EXT_blend_equation_separate;
 	public static boolean GL_EXT_blend_func_separate;
 	public static boolean GL_EXT_blend_subtract;
 	public static boolean GL_EXT_Cg_shader;
@@ -114,6 +115,7 @@ public final class GLContext {
 	public static boolean GL_EXT_texture_env_dot3;
 	public static boolean GL_EXT_texture_filter_anisotropic;
 	public static boolean GL_EXT_texture_lod_bias;
+	public static boolean GL_EXT_texture_mirror_clamp;
 	public static boolean GL_EXT_texture_rectangle;
 	public static boolean GL_EXT_vertex_shader;
 	public static boolean GL_EXT_vertex_weighting;
@@ -139,6 +141,7 @@ public final class GLContext {
 	public static boolean GL_NV_float_buffer;
 	public static boolean GL_NV_fog_distance;
 	public static boolean GL_NV_fragment_program;
+	public static boolean GL_NV_fragment_program2;
 	public static boolean GL_NV_fragment_program_option;
 	public static boolean GL_NV_half_float;
 	public static boolean GL_NV_light_max_exponent;
@@ -164,6 +167,7 @@ public final class GLContext {
 	public static boolean GL_NV_vertex_program1_1;
 	public static boolean GL_NV_vertex_program2;
 	public static boolean GL_NV_vertex_program2_option;
+	public static boolean GL_NV_vertex_program3;
 
 	public static boolean OpenGL11;
 	public static boolean OpenGL12;

@@ -2,7 +2,8 @@ noinst_LTLIBRARIES = libext.la
 
 libext_la_SOURCES = $(SRC)
 INCLUDES=-I..
-SRC=org_lwjgl_opengl_EXTBlendFuncSeparate.cpp \
+SRC=org_lwjgl_opengl_EXTBlendEquationSeparate.cpp \
+	org_lwjgl_opengl_EXTBlendFuncSeparate.cpp \
     org_lwjgl_opengl_EXTCompiledVertexArray.cpp \
     org_lwjgl_opengl_EXTDepthBoundsTest.cpp \
     org_lwjgl_opengl_EXTDrawRangeElements.cpp \

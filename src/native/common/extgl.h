@@ -2086,6 +2086,7 @@ struct ExtensionTypes
 
 	bool GL_EXT_abgr;
 	bool GL_EXT_bgra;
+	bool GL_EXT_blend_equation_separate;
 	bool GL_EXT_blend_func_separate;
 	bool GL_EXT_blend_subtract;
 	bool GL_EXT_Cg_shader;
