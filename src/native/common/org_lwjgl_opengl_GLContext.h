@@ -77,6 +77,7 @@ extern "C" {
 /* Inaccessible static: GL_ATI_map_object_buffer */
 /* Inaccessible static: GL_ATI_pn_triangles */
 /* Inaccessible static: GL_ATI_separate_stencil */
+/* Inaccessible static: GL_ATI_texture_compression_3dc */
 /* Inaccessible static: GL_ATI_texture_float */
 /* Inaccessible static: GL_ATI_texture_mirror_once */
 /* Inaccessible static: GL_ATI_vertex_array_object */
