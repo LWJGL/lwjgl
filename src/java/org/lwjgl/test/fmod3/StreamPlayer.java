@@ -31,12 +31,8 @@
  */
 package org.lwjgl.test.fmod3;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import org.lwjgl.fmod3.FMOD;
 import org.lwjgl.fmod3.FMODException;
@@ -50,45 +46,48 @@ import org.lwjgl.fmod3.FSoundStream;
  * @version $Revision$
  */
 public class StreamPlayer {
-
+	
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage:\n StreamPlayer <file>");
-			return;
+			
+			// default to phero.mp3
+			args = new String[] { "res\\phero.mp3"};
+			System.out.println("Using default: " + args[0]);
 		}
-
+		
 		File file = new File(args[0]);
 		if (!file.exists()) {
 			System.out.println("No such file: " + args[0]);
 			return;
 		}
-
+		
 		try {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
 			return;
 		}
-
+		
 		System.out.println("Initializing FMOD");
 		if (!FSound.FSOUND_Init(44100, 32, 0)) {
 			System.out.println("Failed to initialize FMOD");
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
 			return;
 		}
-
+		
 		System.out.println("Loading " + args[0]);
 		FSoundStream stream = FSound.FSOUND_Stream_Open(args[0], FSound.FSOUND_NORMAL, 0, 0);
-
+		
 		if (stream != null) {
 			FSound.FSOUND_Stream_Play(0, stream);
-
+			
 			System.out.println("Press enter to stop playing");
 			try {
 				System.in.read();
 			} catch (IOException ioe) {
 			}
-
+			
 			System.out.println("Done playing. Cleaning up");
 			FSound.FSOUND_Stream_Stop(stream);
 			FSound.FSOUND_Stream_Close(stream);
@@ -96,47 +95,8 @@ public class StreamPlayer {
 			System.out.println("Unable to play: " + args[0]);
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
 		}
-
+		
 		FSound.FSOUND_Close();
 		FMOD.destroy();
-	}
-
-	/**
-	 * Reads the file into a ByteBuffer
-	 * 
-	 * @param filename
-	 *          Name of file to load
-	 * @return ByteBuffer containing file data
-	 */
-	static protected ByteBuffer getData(String filename) {
-		ByteBuffer buffer = null;
-
-		System.out.println("Attempting to load: " + filename);
-
-		try {
-			BufferedInputStream bis = new BufferedInputStream(StreamPlayer.class.getClassLoader().getResourceAsStream(filename));
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-			int bufferLength = 4096;
-			byte[] readBuffer = new byte[bufferLength];
-			int read = -1;
-
-			while ((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
-				baos.write(readBuffer, 0, read);
-			}
-
-			//done reading, close
-			bis.close();
-
-			// if ogg vorbis data, we need to pass it unmodified to alBufferData
-			buffer = ByteBuffer.allocateDirect(baos.size());
-			buffer.order(ByteOrder.nativeOrder());
-			buffer.put(baos.toByteArray());
-			buffer.flip();
-			System.out.println("loaded " + buffer.remaining() + " bytes");
-		} catch (Exception ioe) {
-			ioe.printStackTrace();
-		}
-		return buffer;
 	}
 }

@@ -50,14 +50,18 @@ import org.lwjgl.fmod3.callbacks.FSoundStreamCallback;
  * @version $Revision$
  */
 public class DSPTest {
-  
-  public static int bytesPerSample; 
-  public static int channels;
-  
+
+	public static int	bytesPerSample;
+
+	public static int	channels;
+
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage:\n DSPTest <file>");
-			return;
+
+			// default to phero.mp3
+			args = new String[] { "res\\phero.mp3"};
+			System.out.println("Using default: " + args[0]);
 		}
 
 		File file = new File(args[0]);
@@ -84,56 +88,54 @@ public class DSPTest {
 		FSoundStream stream = FSound.FSOUND_Stream_Open(args[0], FSound.FSOUND_NORMAL, 0, 0);
 
 		if (stream != null) {
-      System.out.println("Creating dsp unit");
-      FSoundDSPUnit unit = FSound.FSOUND_Stream_CreateDSP(stream, new DSPTest().new TestDspCallback("1"), 1);
-      FSound.FSOUND_DSP_SetActive(unit, true);
-      FSoundDSPUnit unit2 = FSound.FSOUND_Stream_CreateDSP(stream, new DSPTest().new TestDspCallback("2"), 0);
-      FSound.FSOUND_DSP_SetActive(unit2, true);      
-      System.out.println("Created: " + unit);
-      System.out.println("Created: " + unit2);
-      
-      switch(FSound.FSOUND_GetMixer()) {
-        case FSound.FSOUND_MIXER_AUTODETECT:
-        case FSound.FSOUND_MIXER_BLENDMODE:
-        case FSound.FSOUND_MIXER_QUALITY_AUTODETECT:
-        case FSound.FSOUND_MIXER_QUALITY_FPU:
-        case FSound.FSOUND_MIXER_MONO:
-        case FSound.FSOUND_MIXER_QUALITY_MONO:
-        case FSound.FSOUND_MIXER_MAX:
-          bytesPerSample = 8;
-          break;
-        default:
-          bytesPerSample = 4;
-          break;
-      }
-      
-      channels = FSound.FSOUND_Stream_GetMode(stream);
-      if((channels & FSound.FSOUND_STEREO) == FSound.FSOUND_STEREO) {
-       channels = 2; 
-      } else {
-       channels = 1; 
-      }
-      
-      FSound.FSOUND_Stream_SetEndCallback(stream, new FSoundStreamCallback() {
+			System.out.println("Creating dsp unit");
+			FSoundDSPUnit unit = FSound.FSOUND_Stream_CreateDSP(stream, new DSPTest().new TestDspCallback("1"), 1);
+			FSound.FSOUND_DSP_SetActive(unit, true);
+			System.out.println("Created: " + unit);
+
+			switch (FSound.FSOUND_GetMixer()) {
+				case FSound.FSOUND_MIXER_AUTODETECT:
+				case FSound.FSOUND_MIXER_BLENDMODE:
+				case FSound.FSOUND_MIXER_QUALITY_AUTODETECT:
+				case FSound.FSOUND_MIXER_QUALITY_FPU:
+				case FSound.FSOUND_MIXER_MONO:
+				case FSound.FSOUND_MIXER_QUALITY_MONO:
+				case FSound.FSOUND_MIXER_MAX:
+					bytesPerSample = 8;
+					break;
+				default:
+					bytesPerSample = 4;
+					break;
+			}
+
+			channels = FSound.FSOUND_Stream_GetMode(stream);
+			if ((channels & FSound.FSOUND_STEREO) == FSound.FSOUND_STEREO) {
+				channels = 2;
+			} else {
+				channels = 1;
+			}
+
+			FSound.FSOUND_Stream_SetEndCallback(stream, new FSoundStreamCallback() {
+
 				public void FSOUND_STREAMCALLBACK(FSoundStream stream, ByteBuffer buff, int len) {
-          System.out.println("Done");
-        }
-      });
-      
-      FSound.FSOUND_Stream_SetSyncCallback(stream, new FSoundStreamCallback() {
-        public void FSOUND_STREAMCALLBACK(FSoundStream stream, ByteBuffer buff, int len) {
-          System.out.println("SYNCPOINT");
-          try {
-          	byte[] data = new byte[buff.capacity()];
-          	buff.get(data);
-          	System.out.println("Syncpoint @ " + len + ": " + new String(data));
-          } catch (Exception e) {
-          	e.printStackTrace();
-          }
-        }
-      });
-      
-      
+					System.out.println("Done");
+				}
+			});
+
+			FSound.FSOUND_Stream_SetSyncCallback(stream, new FSoundStreamCallback() {
+
+				public void FSOUND_STREAMCALLBACK(FSoundStream stream, ByteBuffer buff, int len) {
+					System.out.println("SYNCPOINT");
+					try {
+						byte[] data = new byte[buff.capacity()];
+						buff.get(data);
+						System.out.println("Syncpoint @ " + len + ": " + new String(data));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
 			FSound.FSOUND_Stream_Play(0, stream);
 
 			System.out.println("Press enter to stop playing");
@@ -145,8 +147,8 @@ public class DSPTest {
 			System.out.println("Done playing. Cleaning up");
 			FSound.FSOUND_Stream_Stop(stream);
 			FSound.FSOUND_Stream_Close(stream);
-      FSound.FSOUND_DSP_Free(unit);
-      FSound.FSOUND_DSP_Free(unit2);
+			FSound.FSOUND_DSP_Free(unit);
+			//FSound.FSOUND_DSP_Free(unit2);
 		} else {
 			System.out.println("Unable to play: " + args[0]);
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
@@ -155,32 +157,32 @@ public class DSPTest {
 		FSound.FSOUND_Close();
 		FMOD.destroy();
 	}
-  
-  public class TestDspCallback implements FSoundDSPCallback {
-    
-    private String name;
 
-    public TestDspCallback(String name) {
-     this.name      = name; 
-    }
+	public class TestDspCallback implements FSoundDSPCallback {
 
-    /* 
-     * @see org.lwjgl.fmod3.callbacks.FSoundDSPCallback#FSOUND_DSPCALLBACK(java.nio.ByteBuffer, java.nio.ByteBuffer, int)
-     */
-    public ByteBuffer FSOUND_DSPCALLBACK(ByteBuffer originalbuffer, ByteBuffer newbuffer, int length) {
-      short leftChannel;
-      short rightChannel;
-      
-    	for(int i=0; i<length; i++) {
-        leftChannel = originalbuffer.getShort();
-        //rightChannel = originalbuffer.getShort();
-    		
-        // keep left, mute right channel
-        newbuffer.putShort(leftChannel);
-        //newbuffer.putShort(rightChannel);
-    	}
-    	newbuffer.rewind();
-    	return newbuffer;
-    }
-  }  
+		private String	name;
+
+		public TestDspCallback(String name) {
+			this.name = name;
+		}
+
+		/* 
+		 * @see org.lwjgl.fmod3.callbacks.FSoundDSPCallback#FSOUND_DSPCALLBACK(java.nio.ByteBuffer, java.nio.ByteBuffer, int)
+		 */
+		public ByteBuffer FSOUND_DSPCALLBACK(ByteBuffer originalbuffer, ByteBuffer newbuffer, int length) {
+			short leftChannel;
+			short rightChannel;
+
+			for (int i = 0; i < length; i++) {
+				leftChannel = originalbuffer.getShort();
+				rightChannel = originalbuffer.getShort();
+
+				// mute right channel
+				newbuffer.putShort(leftChannel);
+				newbuffer.putShort((short) 0);
+			}
+			newbuffer.rewind();
+			return newbuffer;
+		}
+	}
 }

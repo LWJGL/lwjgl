@@ -48,57 +48,57 @@ import org.lwjgl.fmod3.FSoundStream;
  * @version $Revision$
  */
 public class StreamPlayerMemory {
-
+	
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage:\n StreamPlayerMemory <file>");
-      
-      // default to phero-eveningtest.mp3
-      args = new String[] { "phero-eveningtest.mp3" };
-      System.out.println("Using default: " + args[0]);
-		} 
-
+			
+			// default to phero.mp3
+			args = new String[] { "phero2.ogg"};
+			System.out.println("Using default: " + args[0]);
+		}
+		
 		try {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
 			return;
 		}
-
+		
 		System.out.println("Initializing FMOD");
 		if (!FSound.FSOUND_Init(44100, 32, 0)) {
 			System.out.println("Failed to initialize FMOD");
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
 			return;
 		}
-
+		
 		ByteBuffer data = getData(args[0]);
 		FSoundStream stream = FSound.FSOUND_Stream_Open(data, FSound.FSOUND_LOADMEMORY, 0, data.capacity());
-
+		
 		if (stream != null) {
 			FSound.FSOUND_Stream_Play(0, stream);
-      
-      // busy wait until done
-      int length = FSound.FSOUND_Stream_GetLengthMs(stream);
-      String time = ((length / 1000) / 60) + "m " + ((length / 1000) % 60) + "s";
-      System.out.println("Waiting " + time + ", for song to finish");
-      
-      try {
-      	Thread.sleep(length);
-      } catch (InterruptedException inte) {
-      }
-
+			
+			// busy wait until done
+			int length = FSound.FSOUND_Stream_GetLengthMs(stream);
+			String time = ((length / 1000) / 60) + "m " + ((length / 1000) % 60) + "s";
+			System.out.println("Waiting " + time + ", for song to finish");
+			
+			try {
+				Thread.sleep(length);
+			} catch (InterruptedException inte) {
+			}
+			
 			FSound.FSOUND_Stream_Stop(stream);
 			FSound.FSOUND_Stream_Close(stream);
 		} else {
 			System.out.println("Unable to play: " + args[0]);
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
 		}
-
+		
 		FSound.FSOUND_Close();
 		FMOD.destroy();
 	}
-
+	
 	/**
 	 * Reads the file into a ByteBuffer
 	 * 
@@ -108,24 +108,25 @@ public class StreamPlayerMemory {
 	 */
 	static protected ByteBuffer getData(String filename) {
 		ByteBuffer buffer = null;
-
+		
 		System.out.println("Attempting to load: " + filename);
-
+		
 		try {
-			BufferedInputStream bis = new BufferedInputStream(StreamPlayerMemory.class.getClassLoader().getResourceAsStream(filename));
+			BufferedInputStream bis = new BufferedInputStream(StreamPlayerMemory.class.getClassLoader()
+																												.getResourceAsStream(filename));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
+			
 			int bufferLength = 4096;
 			byte[] readBuffer = new byte[bufferLength];
 			int read = -1;
-
+			
 			while ((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
 				baos.write(readBuffer, 0, read);
 			}
-
+			
 			//done reading, close
 			bis.close();
-
+			
 			// if ogg vorbis data, we need to pass it unmodified to alBufferData
 			buffer = ByteBuffer.allocateDirect(baos.size());
 			buffer.order(ByteOrder.nativeOrder());

@@ -45,41 +45,41 @@ import org.lwjgl.fmod3.FSound;
  * @version $Revision$
  */
 public class StreamTest {
-
-  public static void main(String[] args) {
-    try {
-      FMOD.create();
-    } catch (FMODException fmode) {
-      fmode.printStackTrace();
-      return;
-    }
-
-    IntBuffer caps = BufferUtils.createIntBuffer(1);
-    FSound.FSOUND_SetOutput(FSound.FSOUND_OUTPUT_DSOUND);
-    
-    int count = FSound.FSOUND_GetNumDrivers();
-    System.out.println("Found: " + count + " drivers");
-    for(int i=0;i<count; i++) {
-        FSound.FSOUND_GetDriverCaps(i, caps);
-        System.out.println(i + " (" + FSound.FSOUND_GetDriverName(i) + ") = " + caps.get(0));
-    }
-    
-    // init
-    if (!FSound.FSOUND_Init(44100, 32, 0)) {
-      System.out.println("Failed to initialize FMOD");
-      System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-      return;
-    }
-    
-    IntBuffer mem = BufferUtils.createIntBuffer(2);
-    FSound.FSOUND_GetMemoryStats(mem);
-    System.out.println("Allocated: " + mem.get(0) + ", Max: " + mem.get(1));
-    
-    IntBuffer hwChannels = BufferUtils.createIntBuffer(3);
-    FSound.FSOUND_GetNumHWChannels(hwChannels);
-    System.out.println("2d: " + hwChannels.get(0) + ", 3d: " + hwChannels.get(1) + ", total: " + hwChannels.get(2));
-
-    FSound.FSOUND_Close();
-    FMOD.destroy();
-  }
+	
+	public static void main(String[] args) {
+		try {
+			FMOD.create();
+		} catch (FMODException fmode) {
+			fmode.printStackTrace();
+			return;
+		}
+		
+		IntBuffer caps = BufferUtils.createIntBuffer(1);
+		FSound.FSOUND_SetOutput(FSound.FSOUND_OUTPUT_DSOUND);
+		
+		int count = FSound.FSOUND_GetNumDrivers();
+		System.out.println("Found: " + count + " drivers");
+		for (int i = 0; i < count; i++) {
+			FSound.FSOUND_GetDriverCaps(i, caps);
+			System.out.println(i + " (" + FSound.FSOUND_GetDriverName(i) + ") = " + caps.get(0));
+		}
+		
+		// init
+		if (!FSound.FSOUND_Init(44100, 32, 0)) {
+			System.out.println("Failed to initialize FMOD");
+			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
+			return;
+		}
+		
+		IntBuffer mem = BufferUtils.createIntBuffer(2);
+		FSound.FSOUND_GetMemoryStats(mem);
+		System.out.println("Allocated: " + mem.get(0) + ", Max: " + mem.get(1));
+		
+		IntBuffer hwChannels = BufferUtils.createIntBuffer(3);
+		FSound.FSOUND_GetNumHWChannels(hwChannels);
+		System.out.println("2d: " + hwChannels.get(0) + ", 3d: " + hwChannels.get(1) + ", total: " + hwChannels.get(2));
+		
+		FSound.FSOUND_Close();
+		FMOD.destroy();
+	}
 }
