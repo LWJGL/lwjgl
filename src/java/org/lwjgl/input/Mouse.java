@@ -271,8 +271,8 @@ public class Mouse {
 		created = true;
 		currentCursor = null;
 		dx = dy = dwheel = 0;
-		width = Window.getWidth();
-		height = Window.getHeight();
+		width = Window.getWidth() << 16;
+		height = Window.getHeight() << 16;
 		x = width / 2;
 		y = height / 2;      
     
@@ -382,6 +382,8 @@ public class Mouse {
 			} else if (x >= width) {
 				scrollX = x - width;
 				x = width - 1;
+			} else {
+				scrollX = 0;
 			}
 
 			if (y < 0) {
@@ -390,7 +392,12 @@ public class Mouse {
 			} else if (y >= height) {
 				scrollY = y - height;
 				y = height - 1;
+			} else {
+				scrollY = 0;
 			}
+		} else {
+			scrollX = 0;
+			scrollY = 0;
 		}
 		
 		if (readBuffer != null) {
