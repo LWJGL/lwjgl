@@ -146,12 +146,17 @@ public final class AL {
 		}
 		
 		String jwsPath = getPathFromJWS(jwsLibname);
-    Sys.log("getPathFromJWS: Paths found: " + jwsPath);
 		if (jwsPath != null) {
+			Sys.log("getPathFromJWS: Path found: " + jwsPath);
 			libpath += seperator
 				+ jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
 		}
-
+		String lwjgl_jws_path = getPathFromJWS("lwjgl");
+		if (lwjgl_jws_path != null) {
+			Sys.log("getPathFromJWS: Path found: " + lwjgl_jws_path);
+			libpath += seperator
+				+ lwjgl_jws_path.substring(0, lwjgl_jws_path.lastIndexOf(File.separator));
+		}
 		StringTokenizer st = new StringTokenizer(libpath, seperator);
 
 		//create needed string array
@@ -161,10 +166,10 @@ public final class AL {
 		for (int i = 0; i < oalPaths.length - 1; i++) {
 			oalPaths[i] = st.nextToken() + File.separator;
 		}
-    
-    for(int i=0 ; i<oalPaths.length; i++) {
-      Sys.log("Will search " + oalPaths[i] + " for " + jwsLibname);
-    }    
+
+		for(int i=0 ; i<oalPaths.length; i++) {
+			Sys.log("Will search " + oalPaths[i] + " for " + jwsLibname);
+		}
 
 		//add cwd path
 		oalPaths[oalPaths.length - 1] = "";
