@@ -195,6 +195,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_cylinder(JNIEnv * env, jobject 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_deleteQuadric(JNIEnv * env, jobject obj, jint quad) 
 {
     gluDeleteQuadric((GLUquadricObj *) quad);
+    GLUQuadricCallbacks::clear();
     CHECK_GL_ERROR
 }
 

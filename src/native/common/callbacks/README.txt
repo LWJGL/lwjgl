@@ -49,6 +49,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricCallback__IILjava_lang_O
 }
 
 
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    deleteQuadric
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_deleteQuadric(JNIEnv * env, jobject obj, jint quad) 
+{
+    gluDeleteQuadric((GLUquadricObj *) quad);
+    GLUQuadricCallbacks::clear();
+    CHECK_GL_ERROR
+}
+
+
+
 and call it from java:
 
 /* myquadric is a reference to a GLUquadricObj returned by glu.newQuadric()
