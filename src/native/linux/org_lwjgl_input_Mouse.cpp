@@ -307,7 +307,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 {
 	int i;
 	current_z = last_z = 0;
-	doWarpPointer();
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -323,6 +322,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	updateGrab();
 	initEventQueue(&event_queue);
 	loadXcursor();
+	doWarpPointer();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
