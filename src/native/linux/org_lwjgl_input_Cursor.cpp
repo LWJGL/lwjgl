@@ -55,7 +55,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
 		return 0;
-  const int *delays = NULL;
+	const int *delays = NULL;
 	if (delay_buffer != NULL)
 		delays = (const int *)env->GetDirectBufferAddress(delay_buffer) + delays_offset;		
 	XcursorPixel *pixels = (XcursorPixel *)env->GetDirectBufferAddress(image_buffer) + images_offset;
@@ -67,7 +67,8 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 	for (int i = 0; i < num_images; i++) {
 		XcursorImage *cursor_image = XcursorImageCreate(width, height);
 		cursor_image->xhot = x_hotspot;
-		cursor_image->yhot = y_hotspot;
+		// Of some reason, the y hotspot coordinate is offset by 1
+		cursor_image->yhot = y_hotspot + 1;
 		cursor_image->pixels = &(pixels[stride*i]);
 		if (num_images > 1)
 			cursor_image->delay = delays[i];		
