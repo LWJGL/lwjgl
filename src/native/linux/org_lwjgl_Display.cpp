@@ -102,8 +102,26 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	Colormap cmap;
 	int attribmask;
 	int bpe = bpp/4;
-	int attriblist[] = {GLX_RGBA, GLX_DOUBLEBUFFER, GLX_DEPTH_SIZE, 24, GLX_RED_SIZE, bpe, GLX_GREEN_SIZE, bpe, GLX_BLUE_SIZE, bpe, GLX_ALPHA_SIZE, bpe, None};
-	int num_modes, i;
+	int attriblist[] = { GLX_RGBA,
+                             GLX_DOUBLEBUFFER,
+                             GLX_DEPTH_SIZE, 24,
+                             GLX_RED_SIZE, bpe,
+                             GLX_GREEN_SIZE, bpe,
+                             GLX_BLUE_SIZE, bpe,
+                             GLX_ALPHA_SIZE, bpe,
+                             None };
+	int attriblistna[] = { GLX_RGBA,
+                             GLX_DOUBLEBUFFER,
+                             GLX_DEPTH_SIZE, 24,
+                             GLX_RED_SIZE, bpe,
+                             GLX_GREEN_SIZE, bpe,
+                             GLX_BLUE_SIZE, bpe,
+                             None };
+
+        int num_modes, i;
+                            
+
+
 
 	current_fullscreen = fullscreen;
 	current_focused = 0;
@@ -125,7 +143,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	root_win = RootWindow(disp, screen);
 
 	vis_info = glXChooseVisual(disp, screen, attriblist);
-	if (vis_info == NULL) {
+
+        /* might be a better way to handle not being able to set GLX_ALPHA_SIZE... */
+        if (vis_info == NULL) {
+            vis_info = glXChooseVisual(disp, screen, attriblistna);
+        }
+	
+        if (vis_info == NULL) {
 		XCloseDisplay(disp);
 #ifdef _DEBUG
 		printf("Could not choose glx visual\n");
