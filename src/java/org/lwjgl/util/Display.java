@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -71,7 +71,7 @@ public final class Display {
 		// First get the available display modes
 		DisplayMode[] modes = org.lwjgl.opengl.Display.getAvailableDisplayModes();
 		
-		if (Sys.DEBUG || DEBUG) {
+		if (LWJGLUtil.DEBUG || DEBUG) {
 			System.out.println("Available screen modes:");
 			for (int i = 0; i < modes.length; i ++) {
 				System.out.println(modes[i]);
@@ -107,7 +107,7 @@ public final class Display {
 		
 		DisplayMode[] ret = new DisplayMode[matches.size()];
 		matches.toArray(ret);
-		if (Sys.DEBUG && DEBUG) {
+		if (LWJGLUtil.DEBUG && DEBUG) {
 			System.out.println("Filtered screen modes:");
 			for (int i = 0; i < ret.length; i ++) {
 				System.out.println(ret[i]);
@@ -210,7 +210,7 @@ public final class Display {
 		Arrays.sort(dm, new Sorter());
 		
 		// Try them out in the appropriate order
-		if (Sys.DEBUG || DEBUG) {
+		if (LWJGLUtil.DEBUG || DEBUG) {
 			System.out.println("Sorted display modes:");
 			for (int i = 0; i < dm.length; i ++) {
 				System.out.println(dm[i]);
@@ -218,12 +218,12 @@ public final class Display {
 		}
 		for (int i = 0; i < dm.length; i ++) {
 			try {
-				if (Sys.DEBUG || DEBUG)
+				if (LWJGLUtil.DEBUG || DEBUG)
 					System.out.println("Attempting to set displaymode: "+dm[i]);
 				org.lwjgl.opengl.Display.setDisplayMode(dm[i]);
 				return dm[i];
 			} catch (Exception e) {
-				if (Sys.DEBUG || DEBUG) {
+				if (LWJGLUtil.DEBUG || DEBUG) {
 					System.out.println("Failed to set display mode to "+dm[i]);
 					e.printStackTrace();
 				}

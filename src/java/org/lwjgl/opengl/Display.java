@@ -49,6 +49,7 @@ import java.util.HashSet;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -96,7 +97,7 @@ public final class Display {
 		display_impl = createDisplayImplementation();
 		try {
 			current_mode = initial_mode = display_impl.init();
-			Sys.log("Initial mode: " + initial_mode);
+			LWJGLUtil.log("Initial mode: " + initial_mode);
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run() {
 					reset();
@@ -177,7 +178,7 @@ public final class Display {
 		DisplayMode[] filteredModes = new DisplayMode[modes.size()];
 		modes.toArray(filteredModes);
 
-		Sys.log("Removed " + (unfilteredModes.length - filteredModes.length) + " duplicate displaymodes");
+		LWJGLUtil.log("Removed " + (unfilteredModes.length - filteredModes.length) + " duplicate displaymodes");
 
 		return filteredModes;
 	}
@@ -257,7 +258,7 @@ public final class Display {
 		if (context.isCurrent())
 			Context.releaseCurrentContext();
 		} catch (LWJGLException e) {
-			Sys.log("Exception occurred while trying to release context");
+			LWJGLUtil.log("Exception occurred while trying to release context");
 		}
 
 		if (!window_created)
@@ -316,7 +317,7 @@ public final class Display {
 			gammaRamp.put(i, rampEntry);
 		}
 		display_impl.setGammaRamp(gammaRamp);
-		Sys.log("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
+		LWJGLUtil.log("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
 	}
 
 	/**
@@ -628,10 +629,10 @@ public final class Display {
 				try {
 					Mouse.create();
 				} catch (LWJGLException e) {
-					if (Sys.DEBUG) {
+					if (LWJGLUtil.DEBUG) {
 						e.printStackTrace(System.err);
 					} else {
-						Sys.log("Failed to create Mouse: "+e);
+						LWJGLUtil.log("Failed to create Mouse: "+e);
 					}
 				}
 			}
@@ -639,10 +640,10 @@ public final class Display {
 				try {
 					Keyboard.create();
 				} catch (LWJGLException e) {
-					if (Sys.DEBUG) {
+					if (LWJGLUtil.DEBUG) {
 						e.printStackTrace(System.err);
 					} else {
-						Sys.log("Failed to create Keyboard: "+e);
+						LWJGLUtil.log("Failed to create Keyboard: "+e);
 					}
 				}
 			}

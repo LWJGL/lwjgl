@@ -32,6 +32,7 @@
 package org.lwjgl.test;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 import org.lwjgl.LWJGLException;
 
@@ -67,8 +68,8 @@ public class SysTest {
    */
   private void testDebug() {
     System.out.println("==== Test Debug ====");
-    if (Sys.DEBUG) {
-      Sys.log("Debug is enabled, you should now see output from LWJGL during the following tests.");
+    if (LWJGLUtil.DEBUG) {
+      LWJGLUtil.log("Debug is enabled, you should now see output from LWJGL during the following tests.");
     } else {
       System.out.println("Debug is not enabled. Please set the org.lwjgl.Sys.debug property to true to enable debugging");
       System.out.println("Example:\n  java -Dorg.lwjgl.Sys.debug=true ...");

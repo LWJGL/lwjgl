@@ -9,7 +9,7 @@ Do not create the mouse when creating the display
 org.lwjgl.opengl.Display.nokeyboard
 Do not create the keyboard when creating the display
 
-org.lwjgl.Sys.debug
+org.lwjgl.util.Debug
 Whether to output debug info
 
 org.lwjgl.opengl.Display.allowSoftwareOpenGL

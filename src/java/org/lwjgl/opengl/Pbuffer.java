@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
@@ -250,7 +251,7 @@ public final class Pbuffer implements Drawable {
 			peer_info.destroy();
 			destroyed = true;
 		} catch (LWJGLException e) {
-			Sys.log("Exception occurred while destroying pbuffer: " + e);
+			LWJGLUtil.log("Exception occurred while destroying pbuffer: " + e);
 		}
 	}
 

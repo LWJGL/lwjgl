@@ -42,7 +42,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
@@ -84,7 +84,7 @@ final class Win32Display implements DisplayImplementation {
 				if (Display.getContext().isCurrent())
 					Display.getContext().makeCurrent();
 			} catch (LWJGLException e) {
-				Sys.log("Exception occurred while trying to make context current: " + e);
+				LWJGLUtil.log("Exception occurred while trying to make context current: " + e);
 			}
 		}
 	}
@@ -129,7 +129,7 @@ final class Win32Display implements DisplayImplementation {
 		// Return the capabilities of a minimum pixel format
 			return nGetPbufferCapabilities(new PixelFormat(0, 0, 0, 0, 0, 0, 0, 0, false));
 		} catch (LWJGLException e) {
-			Sys.log("Exception occurred while determining pbuffer capabilities: " + e);
+			LWJGLUtil.log("Exception occurred while determining pbuffer capabilities: " + e);
 			return 0;
 		}
 	}

@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 import java.lang.reflect.Method;
@@ -169,7 +170,7 @@ public final class GLContext {
 				Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
 				init_stubs_method.invoke(null, null);
 			} catch (Exception e) {
-				Sys.log("Failed to initialize extension " + extension_class + " - exception: " + e);
+				LWJGLUtil.log("Failed to initialize extension " + extension_class + " - exception: " + e);
 				supported_extensions.remove(ext_name);
 			}
 		}

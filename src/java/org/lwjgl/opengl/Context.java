@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 /**
@@ -198,7 +199,7 @@ final class Context {
 				thread = null;
 				GLContext.unloadOpenGLLibrary();
 			} catch (LWJGLException e) {
-				Sys.log("Exception occurred while destroying context: " + e);
+				LWJGLUtil.log("Exception occurred while destroying context: " + e);
 			}
 		}
 	}

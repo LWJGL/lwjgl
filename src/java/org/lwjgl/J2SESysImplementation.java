@@ -63,7 +63,7 @@ abstract class J2SESysImplementation extends DefaultSysImplementation {
 				return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
 			}
 		} catch (Exception e) {
-			Sys.log("Exception while getting clipboard: " + e);
+			LWJGLUtil.log("Exception while getting clipboard: " + e);
 		}
 		return null;
 	}

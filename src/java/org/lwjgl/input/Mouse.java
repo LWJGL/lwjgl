@@ -38,6 +38,7 @@ import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
@@ -526,7 +527,7 @@ public class Mouse {
 			try {
 				setNativeCursor(currentCursor);
 			} catch (LWJGLException e) {
-				if (Sys.DEBUG) e.printStackTrace();
+				if (LWJGLUtil.DEBUG) e.printStackTrace();
 			}
 		}
 	}

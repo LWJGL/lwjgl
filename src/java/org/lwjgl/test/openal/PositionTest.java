@@ -35,7 +35,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
@@ -145,7 +145,7 @@ public class PositionTest extends BasicTest {
 
     // Setup Window
     // =====================================================
-    Sys.log("Setting up window");
+    LWJGLUtil.log("Setting up window");
 
     // calc center
     int centerX = (Display.getDisplayMode().getWidth() - WINDOW_WIDTH) / 2;
@@ -158,7 +158,7 @@ public class PositionTest extends BasicTest {
 
     // Setup OpenGL
     // =====================================================
-    Sys.log("Setting up OpenGL");
+    LWJGLUtil.log("Setting up OpenGL");
 
     GL11.glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -175,7 +175,7 @@ public class PositionTest extends BasicTest {
 
     // Setup OpenAL
     // =====================================================
-    Sys.log("Setting up OpenAL");
+    LWJGLUtil.log("Setting up OpenAL");
 
     AL.create();
 
@@ -184,7 +184,7 @@ public class PositionTest extends BasicTest {
     AL10.alListener(AL10.AL_ORIENTATION, listenerOrientation);
 
     // creating buffers
-    Sys.log("Creating buffers");
+    LWJGLUtil.log("Creating buffers");
     AL10.alGenBuffers(soundBuffers);
     soundBuffers.rewind();
 
@@ -193,9 +193,9 @@ public class PositionTest extends BasicTest {
     soundSources.rewind();
 
     // load sound files (left, center, right).wav
-    Sys.log("Loading soundfiles...");
+    LWJGLUtil.log("Loading soundfiles...");
 
-    Sys.log("Loading left.wav");
+    LWJGLUtil.log("Loading left.wav");
     WaveData left = WaveData.create("left.wav");
     AL10.alBufferData(soundBuffers.get(LEFT), left.format, left.data, left.samplerate);
     AL10.alSourcef(soundSources.get(LEFT), AL10.AL_PITCH, 1.0f);
@@ -205,7 +205,7 @@ public class PositionTest extends BasicTest {
     AL10.alSourcei(soundSources.get(LEFT), AL10.AL_BUFFER, soundBuffers.get(LEFT));
     AL10.alSourcei(soundSources.get(LEFT), AL10.AL_LOOPING, AL10.AL_TRUE);
 
-    Sys.log("Loading center.wav");
+    LWJGLUtil.log("Loading center.wav");
     WaveData center = WaveData.create("center.wav");
     AL10.alBufferData(soundBuffers.get(CENTER), center.format, center.data, center.samplerate);
     AL10.alSourcef(soundSources.get(CENTER), AL10.AL_PITCH, 1.0f);
@@ -215,7 +215,7 @@ public class PositionTest extends BasicTest {
     AL10.alSourcei(soundSources.get(CENTER), AL10.AL_BUFFER, soundBuffers.get(CENTER));
     AL10.alSourcei(soundSources.get(CENTER), AL10.AL_LOOPING, AL10.AL_TRUE);
 
-    Sys.log("Loading right.wav");
+    LWJGLUtil.log("Loading right.wav");
     WaveData right = WaveData.create("right.wav");
     AL10.alBufferData(soundBuffers.get(RIGHT), right.format, right.data, right.samplerate);
     AL10.alSourcef(soundSources.get(RIGHT), AL10.AL_PITCH, 1.0f);
@@ -225,7 +225,7 @@ public class PositionTest extends BasicTest {
     AL10.alSourcei(soundSources.get(RIGHT), AL10.AL_BUFFER, soundBuffers.get(RIGHT));
     AL10.alSourcei(soundSources.get(RIGHT), AL10.AL_LOOPING, AL10.AL_TRUE);
 
-    Sys.log("Soundfiles loaded successfully");
+    LWJGLUtil.log("Soundfiles loaded successfully");
     // -----------------------------------------------------
     
     Mouse.setGrabbed(true);
@@ -245,16 +245,16 @@ public class PositionTest extends BasicTest {
     System.out.println("Press LEFT or RIGHT mouse button to move along z axis");
     System.out.println("Press ESC to exit demo");
 
-    Sys.log(
+    LWJGLUtil.log(
       "Listener position: "
         + listenerPosition.get(0)
         + ", "
         + listenerPosition.get(1)
         + ", "
         + listenerPosition.get(2));
-    Sys.log("Left position: " + leftPosition.get(0) + ", " + leftPosition.get(1) + ", " + leftPosition.get(2));
-    Sys.log("Center position: " + centerPosition.get(0) + ", " + centerPosition.get(1) + ", " + centerPosition.get(2));
-    Sys.log("Right position: " + rightPosition.get(0) + ", " + rightPosition.get(1) + ", " + rightPosition.get(2));
+    LWJGLUtil.log("Left position: " + leftPosition.get(0) + ", " + leftPosition.get(1) + ", " + leftPosition.get(2));
+    LWJGLUtil.log("Center position: " + centerPosition.get(0) + ", " + centerPosition.get(1) + ", " + centerPosition.get(2));
+    LWJGLUtil.log("Right position: " + rightPosition.get(0) + ", " + rightPosition.get(1) + ", " + rightPosition.get(2));
 
     while (!finished) {
       // handle any input
@@ -333,17 +333,17 @@ public class PositionTest extends BasicTest {
     // ============================================
     if (Keyboard.isKeyDown(Keyboard.KEY_1)) {
       AL10.alSourcePlay(soundSources.get(LEFT));
-      Sys.log("Playing left.wav");
+      LWJGLUtil.log("Playing left.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_2)) {
       AL10.alSourcePlay(soundSources.get(CENTER));
-      Sys.log("Playing center.wav");
+      LWJGLUtil.log("Playing center.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_3)) {
       AL10.alSourcePlay(soundSources.get(RIGHT));
-      Sys.log("Playing right.wav");
+      LWJGLUtil.log("Playing right.wav");
     }
     // --------------------------------------------
 
@@ -351,17 +351,17 @@ public class PositionTest extends BasicTest {
     // ============================================
     if (Keyboard.isKeyDown(Keyboard.KEY_4)) {
       AL10.alSourceStop(soundSources.get(LEFT));
-      Sys.log("Stopped left.wav");
+      LWJGLUtil.log("Stopped left.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_5)) {
       AL10.alSourceStop(soundSources.get(CENTER));
-      Sys.log("Stopped center.wav");
+      LWJGLUtil.log("Stopped center.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_6)) {
       AL10.alSourceStop(soundSources.get(RIGHT));
-      Sys.log("Stopped right.wav");
+      LWJGLUtil.log("Stopped right.wav");
     }
     // --------------------------------------------
 
@@ -465,13 +465,13 @@ public class PositionTest extends BasicTest {
    * Shutdown of demonstration
    */
   private void shutdown() {
-    Sys.log("Shutting down OpenAL");
+    LWJGLUtil.log("Shutting down OpenAL");
     AL10.alSourceStop(soundSources);
     AL10.alDeleteSources(soundSources);
     AL10.alDeleteBuffers(soundBuffers);
     AL.destroy();
 
-    Sys.log("Shutting down Window");
+    LWJGLUtil.log("Shutting down Window");
     Display.destroy();
   }
 

@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -276,7 +276,7 @@ public class FMOD {
     }
     
     String jwsPath = getPathFromJWS(dllName);
-    Sys.log("getPathFromJWS: Paths found: " + jwsPath);
+    LWJGLUtil.log("getPathFromJWS: Paths found: " + jwsPath);
     if (jwsPath != null) {
       libpath += seperator
         + jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
@@ -292,7 +292,7 @@ public class FMOD {
     }
     
     for(int i=0 ; i<paths.length; i++) {
-    	Sys.log("Will search " + paths[i] + " for " + dllName);
+    	LWJGLUtil.log("Will search " + paths[i] + " for " + dllName);
     }
 
     //add cwd path
@@ -329,7 +329,7 @@ public class FMOD {
    */
   private static String getPathFromJWS(String libname) {
     try {
-      Sys.log("getPathFromJWS: searching for: " + libname);
+      LWJGLUtil.log("getPathFromJWS: searching for: " + libname);
       Object o = FMOD.class.getClassLoader();
       Class c = o.getClass();
       Method findLibrary =
@@ -338,7 +338,7 @@ public class FMOD {
       return (String) findLibrary.invoke(o, arguments);
 
     } catch (Exception e) {
-      Sys.log("Failure locating FMOD using classloader:" + e);
+      LWJGLUtil.log("Failure locating FMOD using classloader:" + e);
     }
     return null;
   }  
@@ -360,7 +360,7 @@ public class FMOD {
 
     if (callbackList == null ) {
       if (callbackHandler == null) {
-        Sys.log("No callbackhandlers registered for handle: " + handle);
+        LWJGLUtil.log("No callbackhandlers registered for handle: " + handle);
       } else {
       	callbackList = new ArrayList();
         callbacks[type].put(callbackID, callbackList);

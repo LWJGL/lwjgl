@@ -53,10 +53,7 @@ public final class Sys {
 	/** The native library name */
 	private static final String LIBRARY_NAME = "lwjgl";
 
-	/** Debug flag. */
-	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.Sys.debug");
-	
-  	/** OS Name */
+	/** OS Name */
 	private final static String OS_NAME = System.getProperty("os.name");
 
 	/** The implementation instance to delegate platform specific behavior to */
@@ -69,7 +66,7 @@ public final class Sys {
 		if (!native_version.equals(VERSION))
 			throw new LinkageError("Version mismatch: jar version is '" + VERSION +
                              "', native libary version is '" + native_version + "'");
-		implementation.setDebug(DEBUG);
+		implementation.setDebug(LWJGLUtil.DEBUG);
 	}
 
 	private static SysImplementation createImplementation() {
@@ -98,16 +95,6 @@ public final class Sys {
 	 * No constructor for Sys.
 	 */
 	private Sys() {
-	}
-
-	/**
-	 * Prints the given message to System.err if isDebugEnabled()
-	 * is true.
-	 */
-	public static void log(String msg) {
-		if (Sys.DEBUG) {
-			System.err.println(msg);
-		}
 	}
 
 	/**

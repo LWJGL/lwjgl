@@ -57,7 +57,7 @@ import java.util.StringTokenizer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
 
 final class MacOSXDisplay implements DisplayImplementation {
@@ -376,7 +376,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			if (major_version > 10 || (major_version == 10 && minor_version >= 3))
 				return Pbuffer.PBUFFER_SUPPORTED;
 		} catch (Exception e) {
-			Sys.log("Exception occurred when trying to determine OS version: " + e);
+			LWJGLUtil.log("Exception occurred when trying to determine OS version: " + e);
 		}
 		return 0;
 	}

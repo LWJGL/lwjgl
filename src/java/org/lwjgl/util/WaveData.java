@@ -94,7 +94,7 @@ public class WaveData {
 				AudioSystem.getAudioInputStream(
 					new BufferedInputStream(WaveData.class.getClassLoader().getResourceAsStream(filepath))));
 		} catch (Exception e) {
-      org.lwjgl.Sys.log("Unable to load file: " + filepath);
+      org.lwjgl.LWJGLUtil.log("Unable to load file: " + filepath);
 			e.printStackTrace();
 			return null;
 		}		

@@ -32,7 +32,6 @@
 package org.lwjgl;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -51,7 +50,10 @@ import java.util.StringTokenizer;
  */
 public class LWJGLUtil {
 
-  /**
+  /** Debug flag. */
+	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.util.Debug");
+
+	/**
    * Locates the paths required by a library.
    *
    * @param libNames List of library names to look for, in the form of Local Library name, Platform library name.
@@ -89,13 +91,13 @@ public class LWJGLUtil {
 
 		String classloader_path = LWJGLUtil.getPathFromClassLoader(libname, classloader);
 		if (classloader_path != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + classloader_path);
+			LWJGLUtil.log("getPathFromClassLoader: Path found: " + classloader_path);
 			possible_paths.add(classloader_path);
 		}
 
 	  String lwjgl_classloader_path = LWJGLUtil.getPathFromClassLoader("lwjgl", classloader);
 		if (lwjgl_classloader_path != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
+			LWJGLUtil.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
 			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
 					+ File.separator + platform_lib_name);
 		}
@@ -123,7 +125,7 @@ public class LWJGLUtil {
 	 */
 	public static String getPathFromClassLoader(String libname, ClassLoader classloader) {
 		try {
-			Sys.log("getPathFromClassLoader: searching for: " + libname);
+			LWJGLUtil.log("getPathFromClassLoader: searching for: " + libname);
 			Object o = classloader;
 			Class c = o.getClass();
 			while (c != null) {
@@ -137,8 +139,19 @@ public class LWJGLUtil {
 				}
 			}
 		} catch (Exception e) {
-			Sys.log("Failure locating " + e + " using classloader:" + e);
+			LWJGLUtil.log("Failure locating " + e + " using classloader:" + e);
 		}
 		return null;
+	}
+
+	/**
+	 * Prints the given message to System.err if DEBUG is true.
+	 * 
+	 * @param msg Message to print
+	 */
+	public static void log(String msg) {
+		if (LWJGLUtil.DEBUG) {
+			System.err.println(msg);
+		}
 	}
 }

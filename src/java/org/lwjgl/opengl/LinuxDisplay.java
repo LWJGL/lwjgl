@@ -42,7 +42,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -383,7 +383,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			decDisplay();
 			return caps;
 		} catch (LWJGLException e) {
-			Sys.log("Exception occurred in getPbufferCapabilities: " + e);
+			LWJGLUtil.log("Exception occurred in getPbufferCapabilities: " + e);
 			return 0;
 		} finally {
 			unlockAWT();
