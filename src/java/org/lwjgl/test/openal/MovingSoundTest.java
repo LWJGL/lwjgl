@@ -116,7 +116,6 @@ public class MovingSoundTest extends BasicTest {
 			buffers.get(0),
 			wavefile.format,
 			wavefile.data,
-			wavefile.data.capacity(),
 			wavefile.samplerate);
 		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);

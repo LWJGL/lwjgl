@@ -121,7 +121,7 @@ public class EAXTest extends BasicTest {
     // load sound files (left, center, right).wav
     Sys.log("Loading Footsteps.wav");
     WaveData footsteps = WaveData.create("Footsteps.wav");
-    AL10.alBufferData(soundBuffers.get(0), footsteps.format, footsteps.data, footsteps.data.capacity(), footsteps.samplerate);
+    AL10.alBufferData(soundBuffers.get(0), footsteps.format, footsteps.data, footsteps.samplerate);
     AL10.alSourcef(soundSources.get(0), AL10.AL_PITCH, 1.0f);
     AL10.alSourcef(soundSources.get(0), AL10.AL_GAIN, 1.0f);
     AL10.alSourcei(soundSources.get(0), AL10.AL_BUFFER, soundBuffers.get(0));

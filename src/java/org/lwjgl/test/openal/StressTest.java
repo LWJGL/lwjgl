@@ -108,7 +108,6 @@ public class StressTest extends BasicTest {
         buffers.get(i - 1),
         data.format,
         data.data,
-        data.data.capacity(),
         data.samplerate);
 
       if (AL10.alGetError() != AL10.AL_NO_ERROR) {
