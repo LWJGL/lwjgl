@@ -48,9 +48,9 @@ import java.nio.IntBuffer;
 
 public class Cursor {
 
-        static {
-                System.loadLibrary(Sys.getLibraryName());
-        }
+	static {
+		System.loadLibrary(Sys.getLibraryName());
+	}
 
 	/**
 	 * The native handle to the cursor
@@ -68,13 +68,39 @@ public class Cursor {
 	 * @param xHotspot the x coordinate of the cursor hotspot
 	 * @param yHotspot the y coordinate of the cursor hotspot
 	 * @param numImages number of cursor images specified. Must be 1 if animations are not supported.
-	 * @param images A buffer containing the images
+	 * @param images A buffer containing the images. The origin is at the lower left corner, like OpenGL.
 	 * @param delays An int buffer of animation frame delays, if numImages is greater than 1, else null
-         * @throws Exception if the cursor could not be created for any reason
+	 * @throws Exception if the cursor could not be created for any reason
 	 */
 	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
 		assert Mouse.isCreated();
-		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : 0);
+		assert width*height*numImages <= images.remaining(): "width*height*numImages > images.remaining()";
+		assert delays == null || numImages <= delays.remaining(): "delays != null && numImages > delays.remaining()";
+		assert xHotspot <= width && xHotspot >= 0: "xHotspot > width || xHotspot < 0";
+		assert yHotspot <= height && yHotspot >= 0: "yHotspot > height || yHotspot < 0";
+		flipImages(width, height, numImages, images);
+		nativeHandle = nCreateCursor(width, height, xHotspot, height - yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : 0);
+	}
+
+	private static void flipImages(int width, int height, int numImages, IntBuffer images) {
+		for (int i = 0; i < numImages; i++) {
+			int start_index = i*width*height + images.position();
+			flipImage(width, height, start_index, images);
+		}
+	}
+
+	private static void flipImage(int width, int height, int start_index, IntBuffer images) {
+		for (int y = 0; y < height>>1; y++) {
+			int index_y_1 = y*width + start_index;
+			int index_y_2 = (height - y - 1)*width + start_index;
+			for (int x = 0; x < width; x++) {
+				int index1 = index_y_1 + x;
+				int index2 = index_y_2 + x;
+				int temp_pixel = images.get(index1);
+				images.put(index1, images.get(index2));
+				images.put(index2, temp_pixel);
+			}
+		}
 	}
 
 	/**
