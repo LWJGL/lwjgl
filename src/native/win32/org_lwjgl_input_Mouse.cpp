@@ -41,7 +41,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include "org_lwjgl_input_Mouse.h"
 #include <windows.h>
-#include <math.h>
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
 #include "Window.h"
@@ -175,7 +174,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			GetWindowRect(hwnd, &windowRect);
 			getScreenClientRect(&clientRect, &windowRect);
 			cursorPos.x = (clientRect.left + clientRect.right)/2;
-			cursorPos.y = (int)ceil((clientRect.top + clientRect.bottom)/2.0f);
+			cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
 			SetCursorPos(cursorPos.x, cursorPos.y);
 			ShowCursor(TRUE);
 			usingNativeCursor = true;

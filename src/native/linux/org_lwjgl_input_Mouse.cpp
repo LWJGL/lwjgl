@@ -45,7 +45,6 @@
 #include <X11/extensions/xf86vmode.h>
 #include <assert.h>
 #include <string.h>
-#include <math.h>
 #include <Window.h>
 #include "org_lwjgl_input_Mouse.h"
 #include "extxcursor.h"
@@ -92,11 +91,14 @@ static void setCursorPos(int x, int y) {
 	current_y = cap(y, 0, getWindowHeight() - 1);
 }
 
-static void centerCursor() {
+static void transformCursorPos(int x, int y) {
 	// transform to OpenGL coordinate system center
-	int x = getWindowWidth()/2;
-	int y = (int)ceil(getWindowHeight()/2.0f);
+	y = getWindowHeight() - 1 - y;
 	setCursorPos(x, y);
+}
+
+static void centerCursor() {
+	transformCursorPos(getWindowWidth()/2, getWindowHeight()/2);
 	last_x = current_x;
 	last_y = current_y;
 }

@@ -77,6 +77,7 @@ public class Cursor {
 		if (!initialized) {
 			initialize();
 		}
+		yHotspot = height - 1 - yHotspot;
 		assert Mouse.isCreated();
 		assert width*height*numImages <= images.remaining(): "width*height*numImages > images.remaining()";
 		assert delays == null || numImages <= delays.remaining(): "delays != null && numImages > delays.remaining()";
@@ -84,7 +85,7 @@ public class Cursor {
 		assert yHotspot < height && yHotspot >= 0: "yHotspot > height || yHotspot < 0";
                 IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		flipImages(width, height, numImages, images, images_copy);
-		nativeHandle = nCreateCursor(width, height, xHotspot, height - yHotspot, numImages, images_copy, 0, delays, delays != null ? delays.position() : 0);
+		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images_copy, 0, delays, delays != null ? delays.position() : 0);
 	}
 	
 	private static void initialize() {
