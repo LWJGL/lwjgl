@@ -41,12 +41,12 @@ package org.lwjgl.opengl.wgl;
 
 public interface WGLPBuffer
 {
-  public static final int WDRAW_TO_PBUFFER_ARB                                 = 0x202D;
-  public static final int WMAX_PBUFFER_PIXELS_ARB                              = 0x202E;
-  public static final int WMAX_PBUFFER_WIDTH_ARB                               = 0x202F;
-  public static final int WMAX_PBUFFER_HEIGHT_ARB                              = 0x2030;
-  public static final int WPBUFFER_LARGEST_ARB                                 = 0x2033;
-  public static final int WPBUFFER_WIDTH_ARB                                   = 0x2034;
-  public static final int WPBUFFER_HEIGHT_ARB                                  = 0x2035;
-  public static final int WPBUFFER_LOST_ARB                                    = 0x2036;
+  public static final int WGL_WDRAW_TO_PBUFFER_ARB                                 = 0x202D;
+  public static final int WGL_WMAX_PBUFFER_PIXELS_ARB                              = 0x202E;
+  public static final int WGL_WMAX_PBUFFER_WIDTH_ARB                               = 0x202F;
+  public static final int WGL_WMAX_PBUFFER_HEIGHT_ARB                              = 0x2030;
+  public static final int WGL_WPBUFFER_LARGEST_ARB                                 = 0x2033;
+  public static final int WGL_WPBUFFER_WIDTH_ARB                                   = 0x2034;
+  public static final int WGL_WPBUFFER_HEIGHT_ARB                                  = 0x2035;
+  public static final int WGL_WPBUFFER_LOST_ARB                                    = 0x2036;
 }

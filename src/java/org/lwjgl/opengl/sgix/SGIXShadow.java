@@ -41,8 +41,8 @@ package org.lwjgl.opengl.sgix;
 
 public interface SGIXShadow
 {
-  public static final int TEXTURE_COMPARE_SGIX                                 = 0x819A;
-  public static final int TEXTURE_COMPARE_OPERATOR_SGIX                        = 0x819B;
-  public static final int TEXTURE_LEQUAL_R_SGIX                                = 0x819C;
-  public static final int TEXTURE_GEQUAL_R_SGIX                                = 0x819D;
+	public static final int GL_TEXTURE_COMPARE_SGIX                                 = 0x819A;
+	public static final int GL_TEXTURE_COMPARE_OPERATOR_SGIX                        = 0x819B;
+	public static final int GL_TEXTURE_LEQUAL_R_SGIX                                = 0x819C;
+	public static final int GL_TEXTURE_GEQUAL_R_SGIX                                = 0x819D;
 }

@@ -41,8 +41,8 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBPointParameters
 {
-  public static final int POINT_SIZE_MIN_ARB                                   = 0x8126;
-  public static final int POINT_SIZE_MAX_ARB                                   = 0x8127;
-  public static final int POINT_FADE_THRESHOLD_SIZE_ARB                        = 0x8128;
-  public static final int POINT_DISTANCE_ATTENUATION_ARB                       = 0x8129;
+	public static final int GL_POINT_SIZE_MIN_ARB                                   = 0x8126;
+	public static final int GL_POINT_SIZE_MAX_ARB                                   = 0x8127;
+	public static final int GL_POINT_FADE_THRESHOLD_SIZE_ARB                        = 0x8128;
+	public static final int GL_POINT_DISTANCE_ATTENUATION_ARB                       = 0x8129;
 }

@@ -307,7 +307,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv *env, jclass clazz, jint gamma_ramp_address)
+  (JNIEnv *env, jclass clazz, jobject gamma_ramp_buffer)
 {
 	if (gamma_ramp_length == 0)
 		return JNI_FALSE;
@@ -319,7 +319,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 		return JNI_FALSE;
 	}
 	int screen = DefaultScreen(disp);
-	float *gamma_ramp = (float *)gamma_ramp_address;
+	const float *gamma_ramp = (const float *)env->GetDirectBufferAddress(gamma_ramp_buffer);
 	unsigned short *ramp;
 	ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
 	for (int i = 0; i < gamma_ramp_length; i++) {

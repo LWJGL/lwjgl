@@ -41,7 +41,7 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBTextureEnvDot3
 {
-  public static final int DOT3_RGB_ARB                                         = 0x86AE;
-  public static final int DOT3_RGBA_ARB                                        = 0x86AF;
+	public static final int GL_DOT3_RGB_ARB                                         = 0x86AE;
+	public static final int GL_DOT3_RGBA_ARB                                        = 0x86AF;
 
 }

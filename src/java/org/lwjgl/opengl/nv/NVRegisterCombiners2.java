@@ -41,5 +41,5 @@ package org.lwjgl.opengl.nv;
 
 public interface NVRegisterCombiners2
 {
-  public static final int PER_STAGE_CONSTANTS_NV                               = 0x8535;
+	public static final int GL_PER_STAGE_CONSTANTS_NV                               = 0x8535;
 }

@@ -41,12 +41,12 @@ package org.lwjgl.opengl.ati;
 
 public interface ATIVertexArrayObject
 {
-  public static final int STATIC_ATI                                           = 0x8760;
-  public static final int DYNAMIC_ATI                                          = 0x8761;
-  public static final int PRESERVE_ATI                                         = 0x8762;
-  public static final int DISCARD_ATI                                          = 0x8763;
-  public static final int OBJECT_BUFFER_SIZE_ATI                               = 0x8764;
-  public static final int OBJECT_BUFFER_USAGE_ATI                              = 0x8765;
-  public static final int ARRAY_OBJECT_BUFFER_ATI                              = 0x8766;
-  public static final int ARRAY_OBJECT_OFFSET_ATI                              = 0x8767;
+	public static final int GL_STATIC_ATI                                           = 0x8760;
+	public static final int GL_DYNAMIC_ATI                                          = 0x8761;
+	public static final int GL_PRESERVE_ATI                                         = 0x8762;
+	public static final int GL_DISCARD_ATI                                          = 0x8763;
+	public static final int GL_OBJECT_BUFFER_SIZE_ATI                               = 0x8764;
+	public static final int GL_OBJECT_BUFFER_USAGE_ATI                              = 0x8765;
+	public static final int GL_ARRAY_OBJECT_BUFFER_ATI                              = 0x8766;
+	public static final int GL_ARRAY_OBJECT_OFFSET_ATI                              = 0x8767;
 }

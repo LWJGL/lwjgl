@@ -34,6 +34,8 @@ package org.lwjgl.input;
 
 import org.lwjgl.Sys;
 
+import java.nio.IntBuffer;
+
 /**
  * $Id$
  *
@@ -66,13 +68,13 @@ public class Cursor {
 	 * @param xHotspot the x coordinate of the cursor hotspot
 	 * @param yHotspot the y coordinate of the cursor hotspot
 	 * @param numImages number of cursor images specified. Must be 1 if animations are not supported.
-	 * @param cursorAddress the address of an int array containing the cursor image
-	 * @param delayAddresses the address of animation frame delays, if numImages is greater than 1, else Sys.NULL
+	 * @param images A buffer containing the images
+	 * @param delays An int buffer of animation frame delays, if numImages is greater than 1, else null
          * @throws Exception if the cursor could not be created for any reason
 	 */
-	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, int imageAddress, int delayAddresses) throws Exception {
+	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
 		assert Mouse.isCreated();
-		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, imageAddress, delayAddresses);
+		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
 	}
 
 	/**
@@ -92,7 +94,7 @@ public class Cursor {
 	/**
 	 * Native method to create a native cursor
 	 */
-	private static native int nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, int imageAddresses, int delayAddresses);
+	private static native int nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays);
 
 	/**
 	 * Native method to destroy a native cursor

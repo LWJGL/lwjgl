@@ -41,11 +41,11 @@ package org.lwjgl.opengl.nv;
 
 public interface NVOcclusionQuery
 {
-  public static final int OCCLUSION_TEST_HP                                    = 0x8165;
-  public static final int OCCLUSION_TEST_RESULT_HP                             = 0x8166;
-  /* HP_occlusion_test */
-  public static final int PIXEL_COUNTER_BITS_NV                                = 0x8864;
-  public static final int CURRENT_OCCLUSION_QUERY_ID_NV                        = 0x8865;
-  public static final int PIXEL_COUNT_NV                                       = 0x8866;
-  public static final int PIXEL_COUNT_AVAILABLE_NV                             = 0x8867;
+	public static final int GL_OCCLUSION_TEST_HP                                    = 0x8165;
+	public static final int GL_OCCLUSION_TEST_RESULT_HP                             = 0x8166;
+	/* HP_occlusion_test */
+	public static final int GL_PIXEL_COUNTER_BITS_NV                                = 0x8864;
+	public static final int GL_CURRENT_OCCLUSION_QUERY_ID_NV                        = 0x8865;
+	public static final int GL_PIXEL_COUNT_NV                                       = 0x8866;
+	public static final int GL_PIXEL_COUNT_AVAILABLE_NV                             = 0x8867;
 }

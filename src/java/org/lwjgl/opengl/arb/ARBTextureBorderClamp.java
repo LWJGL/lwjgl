@@ -41,5 +41,5 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBTextureBorderClamp
 {
-  public static final int CLAMP_TO_BORDER_ARB                                  = 0x812D;
+	public static final int GL_CLAMP_TO_BORDER_ARB                                  = 0x812D;
 }

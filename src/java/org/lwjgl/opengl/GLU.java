@@ -34,6 +34,11 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.Sys;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.DoubleBuffer;
+
 /**
  * $Id$
  *
@@ -48,41 +53,37 @@ public class GLU implements GLUConstants {
 		System.loadLibrary(Sys.getLibraryName());
 	}
 
-	/** Handle to GL */
-	private final GL gl;
-
 	/**
-	 * Constructor for GLU.
+	 * Private constructor for GLU.
 	 */
-	public GLU(GL gl) {
-		this.gl = gl;
+	private GLU() {
 	}
 
-	public native String errorString(int errCode);
+	public static native String gluErrorString(int errCode);
 
-	public native String getString(int name);
+	public static native String gluGetString(int name);
 
-	public native void ortho2D(
+	public static native void gluOrtho2D(
 		double left,
 		double right,
 		double bottom,
 		double top);
 
-	public native void perspective(
+	public static native void gluPerspective(
 		double fovy,
 		double aspect,
 		double zNear,
 		double zFar);
 
-	public native void pickMatrix(
+	public static native void gluPickMatrix(
 		double x,
 		double y,
 		double width,
 		double height,
-		int viewport /*int*/
+		IntBuffer viewport
 	);
 
-	public native void lookAt(
+	public static native void gluLookAt(
 		double eyex,
 		double eyey,
 		double eyez,
@@ -93,67 +94,67 @@ public class GLU implements GLUConstants {
 		double upy,
 		double upz);
 
-	public native int project(
+	public static native int gluProject(
 		double objx,
 		double objy,
 		double objz,
-		int modelMatrix /*double*/
-	, int projMatrix /*double*/
-	, int viewport /*int*/
-	, int winx /*double*/
-	, int winy /*double*/
-	, int winz /*double*/
+		DoubleBuffer modelMatrix,
+		DoubleBuffer projMatrix,
+		IntBuffer viewport,
+		DoubleBuffer winx,
+		DoubleBuffer winy,
+		DoubleBuffer winz
 	);
 
-	public native int unProject(
+	public static native int gluUnProject(
 		double winx,
 		double winy,
 		double winz,
-		int modelMatrix /*double*/
-	, int projMatrix /*double*/
-	, int viewport /*int*/
-	, int objx /*double*/
-	, int objy /*double*/
-	, int objz /*double*/
+		DoubleBuffer modelMatrix,
+		DoubleBuffer projMatrix,
+		IntBuffer viewport,
+		DoubleBuffer objx,
+		DoubleBuffer objy,
+		DoubleBuffer objz
 	);
 
-	public native int scaleImage(
+	public static native int gluScaleImage(
 		int format,
 		int widthin,
 		int heightin,
 		int typein,
-		int datain /*void*/
-	, int widthout, int heightout, int typeout, int dataout /*void*/
+		ByteBuffer datain,
+		int widthout, int heightout, int typeout, ByteBuffer dataout
 	);
 
-	public native int build1DMipmaps(
+	public static native int gluBuild1DMipmaps(
 		int target,
 		int components,
 		int width,
 		int format,
 		int type,
-		int data /*void*/
+		ByteBuffer data
 	);
 
-	public native int build2DMipmaps(
+	public static native int gluBuild2DMipmaps(
 		int target,
 		int components,
 		int width,
 		int height,
 		int format,
 		int type,
-		int data /*void*/
+		ByteBuffer data
 	);
         
         /**
          * creates and returns a pointer to a new quadrics object. This
          * object must be referred to when calling quadrics rendering and control
-         * functions.  A return value of zero means that there is not enough memory to
+         * functions.  A return value of null means that there is not enough memory to
          * allocate the object
          *
-         * @return adress to a new quadrics object
+         * @return ByteBuffer representing a new quadrics object
          */
-        public native int newQuadric();
+        public static native ByteBuffer gluNewQuadric();
         
         /**
          * draws a cylinder oriented along the z axis. The base of the
@@ -174,7 +175,7 @@ public class GLU implements GLUConstants {
          * axis, to 0.5 at the -y axis, to 0.75 at the -x axis, and back to 1.0 at the
          * +y axis.
          *
-         * @param qobj  Specifies the quadrics object (created with glu.newQuadric).
+         * @param target  Specifies the quadrics object (created with glu.newQuadric).
          *
          * @param baseRadius  Specifies the radius of the cylinder at z = 0.
          *
@@ -186,8 +187,8 @@ public class GLU implements GLUConstants {
          *
          * @param stacks      Specifies the number of subdivisions along the z axis.
          */
-        public native void cylinder(
-                int qobj,
+        public static native void gluCylinder(
+                ByteBuffer target,
                 double baseRadius,
                 double topRadius,
                 double height,
@@ -202,8 +203,8 @@ public class GLU implements GLUConstants {
          * @param qobj pecifies the quadrics object to be destroyed (created with
 	 * glu.newQuadric).
          */
-        public native void deleteQuadric(
-                int qobj
+        public static native void gluDeleteQuadric(
+                ByteBuffer qobj
         );
         
         
@@ -225,8 +226,8 @@ public class GLU implements GLUConstants {
          * (1, 0.5), at (0, r, 0) it is (0.5, 1), at (-r, 0, 0) it is (0, 0.5), and at
          * (0, -r, 0) it is (0.5, 0).
          */
-        public native void disk(
-                int target,
+        public static native void gluDisk(
+                ByteBuffer target,
                 double innerRadius,
                 double outerRadius,
                 int slices,
@@ -256,8 +257,8 @@ public class GLU implements GLUConstants {
          * (1, 0.5), at (0, r, 0) it is (0.5, 1), at (-r, 0, 0) it is (0, 0.5), and at
          * (0, -r, 0) it is (0.5, 0).
          */
-        public native void partialDisk(
-                int target,
+        public static native void gluPartialDisk(
+                ByteBuffer target,
                 double innerRadius,
                 double outerRadius,
                 int slices,
@@ -281,8 +282,8 @@ public class GLU implements GLUConstants {
          *
          * GLU.POINT:       Quadrics are rendered as a set of points.
          */
-        public native void quadricDrawStyle(
-                int target,
+        public static native void gluQuadricDrawStyle(
+                ByteBuffer target,
                 int drawStyle
         );
         
@@ -297,8 +298,8 @@ public class GLU implements GLUConstants {
          * GLU.SMOOTH:   One normal is generated for every vertex of a quadric.  This
          *               is the default.
          */
-        public native void quadricNormals(
-                int target,
+        public static native void gluQuadricNormals(
+                ByteBuffer target,
                 int normals
         );
         
@@ -313,8 +314,8 @@ public class GLU implements GLUConstants {
          * Note that the interpretation of outward and inward depends on the quadric
          * being drawn.
          */
-        public native void quadricOrientation(
-                int target,
+        public static native void gluQuadricOrientation(
+                ByteBuffer target,
                 int orientation
         );
         
@@ -327,8 +328,8 @@ public class GLU implements GLUConstants {
          * The manner in which texture coordinates are generated depends upon the
          * specific quadric rendered.
          */
-        public native void quadricTexture(
-                int target,
+        public static native void gluQuadricTexture(
+                ByteBuffer target,
                 boolean textureCoords
         );
         
@@ -347,21 +348,21 @@ public class GLU implements GLUConstants {
          * 0.0 at the +y axis, to 0.25 at the +x axis, to 0.5 at the -y axis, to 0.75
          * at the -x axis, and back to 1.0 at the +y axis.
          */
-        public native void sphere(
-                int target,
+        public static native void gluSphere(
+                ByteBuffer target,
                 double radius,
                 int slices,
                 int stacks
         );
         
-        
-        public native void quadricCallback(
-                int target,
+/*        public static native void gluQuadricCallback(
+                ByteBuffer target,
                 int type,
                 String method
         );
-        public native void quadricCallback(
-                int target,
+*/
+        public static native void gluQuadricCallback(
+                ByteBuffer target,
                 int type,
                 Object obj,
                 String method

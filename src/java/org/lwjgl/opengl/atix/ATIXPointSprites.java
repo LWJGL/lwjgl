@@ -41,10 +41,10 @@ package org.lwjgl.opengl.atix;
 
 public interface ATIXPointSprites
 {
-  public static final int TEXTURE_POINT_MODE_ATIX                              = 0x60b0;
-  public static final int TEXTURE_POINT_ONE_COORD_ATIX                         = 0x60b1;
-  public static final int TEXTURE_POINT_SPRITE_ATIX                            = 0x60b2;
-  public static final int POINT_SPRITE_CULL_MODE_ATIX                          = 0x60b3;
-  public static final int POINT_SPRITE_CULL_CENTER_ATIX                        = 0x60b4;
-  public static final int POINT_SPRITE_CULL_CLIP_ATIX                          = 0x60b5;
+	public static final int GL_TEXTURE_POINT_MODE_ATIX                              = 0x60b0;
+	public static final int GL_TEXTURE_POINT_ONE_COORD_ATIX                         = 0x60b1;
+	public static final int GL_TEXTURE_POINT_SPRITE_ATIX                            = 0x60b2;
+	public static final int GL_POINT_SPRITE_CULL_MODE_ATIX                          = 0x60b3;
+	public static final int GL_POINT_SPRITE_CULL_CENTER_ATIX                        = 0x60b4;
+	public static final int GL_POINT_SPRITE_CULL_CLIP_ATIX                          = 0x60b5;
 }

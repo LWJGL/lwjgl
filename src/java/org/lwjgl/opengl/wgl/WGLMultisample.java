@@ -41,6 +41,6 @@ package org.lwjgl.opengl.wgl;
 
 public interface WGLMultisample
 {
-  public static final int WSAMPLE_BUFFERS_ARB                                  = 0x2041;
-  public static final int WSAMPLES_ARB                                         = 0x2042;
+	public static final int WGL_WSAMPLE_BUFFERS_ARB                                  = 0x2041;
+	public static final int WGL_WSAMPLES_ARB                                         = 0x2042;
 }

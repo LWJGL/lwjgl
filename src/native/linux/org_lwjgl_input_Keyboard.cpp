@@ -264,9 +264,10 @@ void handleKeyEvent(XKeyEvent *event) {
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
-  (JNIEnv * env, jclass clazz, jint buf)
+  (JNIEnv * env, jclass clazz, jobject buffer)
 {
-	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
+	unsigned char *new_keyboard_buffer = (unsigned char *)env->GetDirectBufferAddress(buffer);
+	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
 /*

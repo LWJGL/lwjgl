@@ -41,6 +41,6 @@ package org.lwjgl.opengl.hp;
 
 public interface HPOcclusionTest
 {
-  public static final int OCCLUSION_TEST_HP                                    = 0x8165;
-  public static final int OCCLUSION_TEST_RESULT_HP                             = 0x8166;
+	public static final int GL_OCCLUSION_TEST_HP                                    = 0x8165;
+	public static final int GL_OCCLUSION_TEST_RESULT_HP                             = 0x8166;
 }

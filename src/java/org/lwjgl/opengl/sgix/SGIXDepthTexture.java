@@ -41,8 +41,8 @@ package org.lwjgl.opengl.sgix;
 
 public interface SGIXDepthTexture
 {
-  public static final int DEPTH_COMPONENT16_SGIX                               = 0x81A5;
-  public static final int DEPTH_COMPONENT24_SGIX                               = 0x81A6;
-  public static final int DEPTH_COMPONENT32_SGIX                               = 0x81A7;
+	public static final int GL_DEPTH_COMPONENT16_SGIX                               = 0x81A5;
+	public static final int GL_DEPTH_COMPONENT24_SGIX                               = 0x81A6;
+	public static final int GL_DEPTH_COMPONENT32_SGIX                               = 0x81A7;
 
 }

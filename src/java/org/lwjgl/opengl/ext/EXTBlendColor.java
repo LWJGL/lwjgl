@@ -37,9 +37,9 @@ package org.lwjgl.opengl.ext;
  * Creation date: (29/06/2000 00:45:10)
  */
 public interface EXTBlendColor {
-	public static final int 	CONSTANT_COLOR_EXT               = 0x8001;
-	public static final int 	ONE_MINUS_CONSTANT_COLOR_EXT     = 0x8002;
-	public static final int 	CONSTANT_ALPHA_EXT               = 0x8003;
-	public static final int 	ONE_MINUS_CONSTANT_ALPHA_EXT     = 0x8004;
-	public static final int 	BLEND_COLOR_EXT                  = 0x8005;
+	public static final int GL_CONSTANT_COLOR_EXT               = 0x8001;
+	public static final int GL_ONE_MINUS_CONSTANT_COLOR_EXT     = 0x8002;
+	public static final int GL_CONSTANT_ALPHA_EXT               = 0x8003;
+	public static final int GL_ONE_MINUS_CONSTANT_ALPHA_EXT     = 0x8004;
+	public static final int GL_BLEND_COLOR_EXT                  = 0x8005;
 }

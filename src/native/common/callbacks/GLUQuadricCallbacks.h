@@ -25,7 +25,7 @@ public:
 	~GLUQuadricCallbacks();
         
         static void CALLBACK gluError(GLenum);
-        static void set(jint, JavaMethod*, jint);
+        static void set(GLUquadricObj *, JavaMethod*, jint);
         static void clear();
 protected:
 

@@ -33,7 +33,7 @@ void GLUQuadricCallbacks::clear() {
 
 typedef void (GLAPIENTRY *callback_t)();
 
-void GLUQuadricCallbacks::set(jint globj, JavaMethod* cb, jint type)
+void GLUQuadricCallbacks::set(GLUquadricObj *globj, JavaMethod* cb, jint type)
 {   
     switch (type) {
         case GLU_ERROR:
@@ -42,13 +42,13 @@ void GLUQuadricCallbacks::set(jint globj, JavaMethod* cb, jint type)
                 delete errorCallback;
             }
             if (cb == NULL) {
-                gluQuadricCallback((GLUquadricObj *) globj, 
+                gluQuadricCallback(globj, 
                                    (GLenum) type, 
                                    NULL);                
             }
             else {
                 errorCallback = cb;
-                gluQuadricCallback((GLUquadricObj *) globj, 
+                gluQuadricCallback(globj, 
                                    (GLenum) type, 
                                    (callback_t) GLUQuadricCallbacks::gluError);
             }

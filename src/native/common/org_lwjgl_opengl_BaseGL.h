@@ -7,7 +7,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: currentWindow */
+/* Inaccessible static: class_00024org_00024lwjgl_00024Window */
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    swapBuffers

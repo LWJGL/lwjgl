@@ -41,8 +41,8 @@ package org.lwjgl.opengl.wgl;
 
 public interface WGLBufferRegion
 {
-  public static final int WFRONT_COLOR_BUFFER_BIT_ARB                          = 0x00000001;
-  public static final int WBACK_COLOR_BUFFER_BIT_ARB                           = 0x00000002;
-  public static final int WDEPTH_BUFFER_BIT_ARB                                = 0x00000004;
-  public static final int WSTENCIL_BUFFER_BIT_ARB                              = 0x00000008;
+	public static final int WGL_WFRONT_COLOR_BUFFER_BIT_ARB                          = 0x00000001;
+	public static final int WGL_WBACK_COLOR_BUFFER_BIT_ARB                           = 0x00000002;
+	public static final int WGL_WDEPTH_BUFFER_BIT_ARB                                = 0x00000004;
+	public static final int WGL_WSTENCIL_BUFFER_BIT_ARB                              = 0x00000008;
 }

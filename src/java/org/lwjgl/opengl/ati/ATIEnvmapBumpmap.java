@@ -41,12 +41,12 @@ package org.lwjgl.opengl.ati;
 
 public interface ATIEnvmapBumpmap
 {
-  public static final int BUMP_ROT_MATRIX_ATI                                  = 0x8775;
-  public static final int BUMP_ROT_MATRIX_SIZE_ATI                             = 0x8776;
-  public static final int BUMP_NUM_TEX_UNITS_ATI                               = 0x8777;
-  public static final int BUMP_TEX_UNITS_ATI                                   = 0x8778;
-  public static final int DUDV_ATI                                             = 0x8779;
-  public static final int DU8DV8_ATI                                           = 0x877A;
-  public static final int BUMP_ENVMAP_ATI                                      = 0x877B;
-  public static final int BUMP_TARGET_ATI                                      = 0x877C;
+	public static final int GL_BUMP_ROT_MATRIX_ATI                                  = 0x8775;
+	public static final int GL_BUMP_ROT_MATRIX_SIZE_ATI                             = 0x8776;
+	public static final int GL_BUMP_NUM_TEX_UNITS_ATI                               = 0x8777;
+	public static final int GL_BUMP_TEX_UNITS_ATI                                   = 0x8778;
+	public static final int GL_DUDV_ATI                                             = 0x8779;
+	public static final int GL_DU8DV8_ATI                                           = 0x877A;
+	public static final int GL_BUMP_ENVMAP_ATI                                      = 0x877B;
+	public static final int GL_BUMP_TARGET_ATI                                      = 0x877C;
 }

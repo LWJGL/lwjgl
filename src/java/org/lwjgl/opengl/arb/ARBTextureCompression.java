@@ -41,15 +41,15 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBTextureCompression
 {
-  public static final int COMPRESSED_ALPHA_ARB                                 = 0x84E9;
-  public static final int COMPRESSED_LUMINANCE_ARB                             = 0x84EA;
-  public static final int COMPRESSED_LUMINANCE_ALPHA_ARB                       = 0x84EB;
-  public static final int COMPRESSED_INTENSITY_ARB                             = 0x84EC;
-  public static final int COMPRESSED_RGB_ARB                                   = 0x84ED;
-  public static final int COMPRESSED_RGBA_ARB                                  = 0x84EE;
-  public static final int TEXTURE_COMPRESSION_HINT_ARB                         = 0x84EF;
-  public static final int TEXTURE_IMAGE_SIZE_ARB                               = 0x86A0;
-  public static final int TEXTURE_COMPRESSED_ARB                               = 0x86A1;
-  public static final int NUM_COMPRESSED_TEXTURE_FORMATS_ARB                   = 0x86A2;
-  public static final int COMPRESSED_TEXTURE_FORMATS_ARB                       = 0x86A3;
+	public static final int GL_COMPRESSED_ALPHA_ARB                                 = 0x84E9;
+	public static final int GL_COMPRESSED_LUMINANCE_ARB                             = 0x84EA;
+	public static final int GL_COMPRESSED_LUMINANCE_ALPHA_ARB                       = 0x84EB;
+	public static final int GL_COMPRESSED_INTENSITY_ARB                             = 0x84EC;
+	public static final int GL_COMPRESSED_RGB_ARB                                   = 0x84ED;
+	public static final int GL_COMPRESSED_RGBA_ARB                                  = 0x84EE;
+	public static final int GL_TEXTURE_COMPRESSION_HINT_ARB                         = 0x84EF;
+	public static final int GL_TEXTURE_IMAGE_SIZE_ARB                               = 0x86A0;
+	public static final int GL_TEXTURE_COMPRESSED_ARB                               = 0x86A1;
+	public static final int GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB                   = 0x86A2;
+	public static final int GL_COMPRESSED_TEXTURE_FORMATS_ARB                       = 0x86A3;
 }

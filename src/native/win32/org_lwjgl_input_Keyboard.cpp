@@ -150,7 +150,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
-  (JNIEnv * env, jclass clazz, jint buf)
+  (JNIEnv * env, jclass clazz, jobject buffer)
 {
 	HRESULT ret;
 	do {
@@ -176,7 +176,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 		}
 	} while (ret != DI_OK && ret != S_FALSE);
 	
-	lpdiKeyboard->GetDeviceState(256, (void *)buf);
+	void *keyboardBuffer = (void *)env->GetDirectBufferAddress(buffer);
+	lpdiKeyboard->GetDeviceState(256, keyboardBuffer);
 }
 
 /*

@@ -41,7 +41,7 @@ package org.lwjgl.opengl.ati;
 
 public interface ATIElementArray
 {
-  public static final int ELEMENT_ARRAY_ATI                                    = 0x8768;
-  public static final int ELEMENT_ARRAY_TYPE_ATI                               = 0x8769;
-  public static final int ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;
+	public static final int GL_ELEMENT_ARRAY_ATI                                    = 0x8768;
+	public static final int GL_ELEMENT_ARRAY_TYPE_ATI                               = 0x8769;
+	public static final int GL_ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;
 }

@@ -41,6 +41,6 @@ package org.lwjgl.opengl.wgl;
 
 public interface WGLMakeCurrentRead
 {
-  public static final int ERROR_INVALID_PIXEL_TYPE_ARB                            = 0x2043;
-  public static final int ERROR_INCOMPATIBLE_DEVICE_CONTEXTS_ARB	              = 0x2054;
+	public static final int WGL_ERROR_INVALID_PIXEL_TYPE_ARB                            = 0x2043;
+	public static final int WGL_ERROR_INCOMPATIBLE_DEVICE_CONTEXTS_ARB	              = 0x2054;
 }

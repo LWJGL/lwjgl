@@ -41,13 +41,13 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBMultisample
 {
-  public static final int MULTISAMPLE_ARB                                      = 0x809D;
-  public static final int SAMPLE_ALPHA_TO_COVERAGE_ARB                         = 0x809E;
-  public static final int SAMPLE_ALPHA_TO_ONE_ARB                              = 0x809F;
-  public static final int SAMPLE_COVERAGE_ARB                                  = 0x80A0;
-  public static final int SAMPLE_BUFFERS_ARB                                   = 0x80A8;
-  public static final int SAMPLES_ARB                                          = 0x80A9;
-  public static final int SAMPLE_COVERAGE_VALUE_ARB                            = 0x80AA;
-  public static final int SAMPLE_COVERAGE_INVERT_ARB                           = 0x80AB;
-  public static final int MULTISAMPLE_BIT_ARB                                  = 0x20000000;
+	public static final int GL_MULTISAMPLE_ARB                                      = 0x809D;
+	public static final int GL_SAMPLE_ALPHA_TO_COVERAGE_ARB                         = 0x809E;
+	public static final int GL_SAMPLE_ALPHA_TO_ONE_ARB                              = 0x809F;
+	public static final int GL_SAMPLE_COVERAGE_ARB                                  = 0x80A0;
+	public static final int GL_SAMPLE_BUFFERS_ARB                                   = 0x80A8;
+	public static final int GL_SAMPLES_ARB                                          = 0x80A9;
+	public static final int GL_SAMPLE_COVERAGE_VALUE_ARB                            = 0x80AA;
+	public static final int GL_SAMPLE_COVERAGE_INVERT_ARB                           = 0x80AB;
+	public static final int GL_MULTISAMPLE_BIT_ARB                                  = 0x20000000;
 }

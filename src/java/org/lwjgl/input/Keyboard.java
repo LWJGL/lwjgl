@@ -214,9 +214,6 @@ public class Keyboard {
 	/** The keys status from the last poll */
 	private static final ByteBuffer keyDownBuffer = ByteBuffer.allocateDirect(256);
 	
-	/** Address of the keyDown buffer */
-	private static final int keyDownAddress = Sys.getDirectBufferAddress(keyDownBuffer);
-	
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,
 	 * followed by state. If translation is enabled, the state is followed by
@@ -310,7 +307,7 @@ public class Keyboard {
 	 */
 	public static void poll() {
 		assert created : "The keyboard has not been created.";
-		nPoll(keyDownAddress);
+		nPoll(keyDownBuffer);
 	}
 	
 	/**
@@ -319,7 +316,7 @@ public class Keyboard {
 	 * @param keyDownBufferAddress the address of a 256-byte buffer to place
 	 * key states in.
 	 */
-	private static native void nPoll(int keyDownBufferAddress);
+	private static native void nPoll(ByteBuffer keyDownBuffer);
 	
 	/**
 	 * Reads the keyboard buffer.

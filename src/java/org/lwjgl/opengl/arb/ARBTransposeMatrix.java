@@ -41,8 +41,8 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBTransposeMatrix
 {
-  public static final int TRANSPOSE_MODELVIEW_MATRIX_ARB                       = 0x84E3;
-  public static final int TRANSPOSE_PROJECTION_MATRIX_ARB                      = 0x84E4;
-  public static final int TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;
-  public static final int TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
+	public static final int GL_TRANSPOSE_MODELVIEW_MATRIX_ARB                       = 0x84E3;
+	public static final int GL_TRANSPOSE_PROJECTION_MATRIX_ARB                      = 0x84E4;
+	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;
+	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
 }

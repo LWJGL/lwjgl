@@ -41,6 +41,6 @@ package org.lwjgl.opengl.nv;
 
 public interface NVPackedDepthStencil
 {
-  public static final int DEPTH_STENCIL_NV                                     = 0x84F9;
-  public static final int UNSIGNED_INT_24_8_NV                                 = 0x84FA;
+	public static final int GL_DEPTH_STENCIL_NV                                     = 0x84F9;
+	public static final int GL_UNSIGNED_INT_24_8_NV                                 = 0x84FA;
 }

@@ -37,8 +37,8 @@ package org.lwjgl.opengl.ext;
  * @author cas
  */
 public interface EXTBlendMinmax {
-	public static final int FUNC_ADD_EXT                     = 0x8006;
-	public static final int MIN_EXT                          = 0x8007;
-	public static final int MAX_EXT                          = 0x8008;
-	public static final int BLEND_EQUATION_EXT               = 0x8009;
+	public static final int GL_FUNC_ADD_EXT                     = 0x8006;
+	public static final int GL_MIN_EXT                          = 0x8007;
+	public static final int GL_MAX_EXT                          = 0x8008;
+	public static final int GL_BLEND_EQUATION_EXT               = 0x8009;
 }

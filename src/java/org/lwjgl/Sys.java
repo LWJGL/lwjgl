@@ -84,9 +84,9 @@ public final class Sys {
 	public static final boolean DEBUG;
 
 	/**
-	 * The integer equivalent of the native NULL constant
+	 * The ByteBuffer equivalent of the native NULL constant
 	 */
-	public static final int NULL;
+	public static final ByteBuffer NULL;
 	
 	
 	private static boolean _debug;
@@ -133,29 +133,7 @@ public final class Sys {
         /**
          * Gets the native NULL constant value
          */
-        private static native int nGetNULLValue();
-
-	/**
-	 * Gets the address of a buffer. If the address cannot be obtained for any reason
-	 * then this method returns 0.
-	 * 
-	 * @param buffer The buffer for which you want the
-	 * @return the address of the direct buffer passed in
-	 */
-	public static native int getDirectBufferAddress(Buffer buffer);
-
-	/**
-	 * Create a direct byte buffer at the specified address with the specified
-	 * capacity. Note that no actual memory allocation is performed. The returned
-	 * direct byte buffer is in native endian order.
-	 * 
-	 * @param address The address of the buffer
-	 * @param length The length in bytes that the buffer should have
-	 * @return a direct ByteBuffer
-	 * @throws IllegalArgumentException if address &lt;1 or length &lt;1
-	 */
-	public static native ByteBuffer createDirectBuffer(int address, int length)
-		throws IllegalArgumentException;
+        private static native ByteBuffer nGetNULLValue();
 
 	/**
 	 * Obtains the number of ticks that the hires timer does in a second.

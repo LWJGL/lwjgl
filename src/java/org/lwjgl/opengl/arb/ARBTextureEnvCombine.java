@@ -41,25 +41,25 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBTextureEnvCombine
 {
-  public static final int COMBINE_ARB                                          = 0x8570;
-  public static final int COMBINE_RGB_ARB                                      = 0x8571;
-  public static final int COMBINE_ALPHA_ARB                                    = 0x8572;
-  public static final int RGB_SCALE_ARB                                        = 0x8573;
-  public static final int ADD_SIGNED_ARB                                       = 0x8574;
-  public static final int INTERPOLATE_ARB                                      = 0x8575;
-  public static final int CONSTANT_ARB                                         = 0x8576;
-  public static final int PRIMARY_COLOR_ARB                                    = 0x8577;
-  public static final int PREVIOUS_ARB                                         = 0x8578;
-  public static final int SOURCE0_RGB_ARB                                      = 0x8580;
-  public static final int SOURCE1_RGB_ARB                                      = 0x8581;
-  public static final int SOURCE2_RGB_ARB                                      = 0x8582;
-  public static final int SOURCE0_ALPHA_ARB                                    = 0x8588;
-  public static final int SOURCE1_ALPHA_ARB                                    = 0x8589;
-  public static final int SOURCE2_ALPHA_ARB                                    = 0x858A;
-  public static final int OPERAND0_RGB_ARB                                     = 0x8590;
-  public static final int OPERAND1_RGB_ARB                                     = 0x8591;
-  public static final int OPERAND2_RGB_ARB                                     = 0x8592;
-  public static final int OPERAND0_ALPHA_ARB                                   = 0x8598;
-  public static final int OPERAND1_ALPHA_ARB                                   = 0x8599;
-  public static final int OPERAND2_ALPHA_ARB                                   = 0x859A;
+	public static final int GL_COMBINE_ARB                                          = 0x8570;
+	public static final int GL_COMBINE_RGB_ARB                                      = 0x8571;
+	public static final int GL_COMBINE_ALPHA_ARB                                    = 0x8572;
+	public static final int GL_RGB_SCALE_ARB                                        = 0x8573;
+	public static final int GL_ADD_SIGNED_ARB                                       = 0x8574;
+	public static final int GL_INTERPOLATE_ARB                                      = 0x8575;
+	public static final int GL_CONSTANT_ARB                                         = 0x8576;
+	public static final int GL_PRIMARY_COLOR_ARB                                    = 0x8577;
+	public static final int GL_PREVIOUS_ARB                                         = 0x8578;
+	public static final int GL_SOURCE0_RGB_ARB                                      = 0x8580;
+	public static final int GL_SOURCE1_RGB_ARB                                      = 0x8581;
+	public static final int GL_SOURCE2_RGB_ARB                                      = 0x8582;
+	public static final int GL_SOURCE0_ALPHA_ARB                                    = 0x8588;
+	public static final int GL_SOURCE1_ALPHA_ARB                                    = 0x8589;
+	public static final int GL_SOURCE2_ALPHA_ARB                                    = 0x858A;
+	public static final int GL_OPERAND0_RGB_ARB                                     = 0x8590;
+	public static final int GL_OPERAND1_RGB_ARB                                     = 0x8591;
+	public static final int GL_OPERAND2_RGB_ARB                                     = 0x8592;
+	public static final int GL_OPERAND0_ALPHA_ARB                                   = 0x8598;
+	public static final int GL_OPERAND1_ALPHA_ARB                                   = 0x8599;
+	public static final int GL_OPERAND2_ALPHA_ARB                                   = 0x859A;
 }

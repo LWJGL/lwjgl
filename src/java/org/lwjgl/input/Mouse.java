@@ -133,7 +133,7 @@ public class Mouse {
 		if (currentCursor != null) {
 			nSetNativeCursor(currentCursor.getHandle());
 		} else {
-			nSetNativeCursor(Sys.NULL);
+			nSetNativeCursor(0);
 		}
 		return oldCursor;
 	}

@@ -37,6 +37,13 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.CharBuffer;
+import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.Buffer;
+
 /**
  * $Id$
  *
@@ -82,11 +89,11 @@ public class GL extends CoreGL implements GLConstants {
 	}
 
 
-	public native void activeStencilFaceEXT(int face);
+	public static native void glActiveStencilFaceEXT(int face);
 
-	public native void activeTextureARB(int texture);
+	public static native void glActiveTextureARB(int texture);
 
-	public native void alphaFragmentOp1ATI(
+	public static native void glAlphaFragmentOp1ATI(
 		int op,
 		int dst,
 		int dstMod,
@@ -94,7 +101,7 @@ public class GL extends CoreGL implements GLConstants {
 		int arg1Rep,
 		int arg1Mod);
 
-	public native void alphaFragmentOp2ATI(
+	public static native void glAlphaFragmentOp2ATI(
 		int op,
 		int dst,
 		int dstMod,
@@ -105,7 +112,7 @@ public class GL extends CoreGL implements GLConstants {
 		int arg2Rep,
 		int arg2Mod);
 
-	public native void alphaFragmentOp3ATI(
+	public static native void glAlphaFragmentOp3ATI(
 		int op,
 		int dst,
 		int dstMod,
@@ -119,12 +126,12 @@ public class GL extends CoreGL implements GLConstants {
 		int arg3Rep,
 		int arg3Mod);
 
-	public native boolean areProgramsResidentNV(
+	public static native boolean glAreProgramsResidentNV(
 		int n,
-		int piIDs,
-		int pbResidences);
+		IntBuffer piIDs,
+		ByteBuffer pbResidences);
 
-	public native void arrayObjectATI(
+	public static native void glArrayObjectATI(
 		int array,
 		int size,
 		int type,
@@ -132,35 +139,35 @@ public class GL extends CoreGL implements GLConstants {
 		int buffer,
 		int offset);
 
-	public native void beginFragmentShaderATI();
+	public static native void glBeginFragmentShaderATI();
 
-	public native void beginOcclusionQueryNV(int id);
+	public static native void glBeginOcclusionQueryNV(int id);
 
-	public native void beginVertexShaderEXT();
+	public static native void glBeginVertexShaderEXT();
 
-	public native void bindFragmentShaderATI(int id);
+	public static native void glBindFragmentShaderATI(int id);
 
-	public native int bindLightParameterEXT(int light, int value);
+	public static native int glBindLightParameterEXT(int light, int value);
 
-	public native int bindMaterialParameterEXT(int face, int value);
+	public static native int glBindMaterialParameterEXT(int face, int value);
 
-	public native int bindParameterEXT(int value);
+	public static native int glBindParameterEXT(int value);
 
-	public native void bindProgramARB(int target, int program);
+	public static native void glBindProgramARB(int target, int program);
 
-	public native void bindProgramNV(int target, int id);
+	public static native void glBindProgramNV(int target, int id);
 
-	public native int bindTexGenParameterEXT(int unit, int coord, int value);
+	public static native int glBindTexGenParameterEXT(int unit, int coord, int value);
 
-	public native int bindTextureUnitParameterEXT(int unit, int value);
+	public static native int glBindTextureUnitParameterEXT(int unit, int value);
 
-	public native void bindVertexShaderEXT(int id);
+	public static native void glBindVertexShaderEXT(int id);
 
-	public native void clientActiveTextureARB(int texture);
+	public static native void glClientActiveTextureARB(int texture);
 
-	public native void clientActiveVertexStreamATI(int stream);
+	public static native void glClientActiveVertexStreamATI(int stream);
 
-	public native void colorFragmentOp1ATI(
+	public static native void glColorFragmentOp1ATI(
 		int op,
 		int dst,
 		int dstMask,
@@ -169,7 +176,7 @@ public class GL extends CoreGL implements GLConstants {
 		int arg1Rep,
 		int arg1Mod);
 
-	public native void colorFragmentOp2ATI(
+	public static native void glColorFragmentOp2ATI(
 		int op,
 		int dst,
 		int dstMask,
@@ -181,7 +188,7 @@ public class GL extends CoreGL implements GLConstants {
 		int arg2Rep,
 		int arg2Mod);
 
-	public native void colorFragmentOp3ATI(
+	public static native void glColorFragmentOp3ATI(
 		int op,
 		int dst,
 		int dstMask,
@@ -196,7 +203,7 @@ public class GL extends CoreGL implements GLConstants {
 		int arg3Rep,
 		int arg3Mod);
 
-	public native void combinerInputNV(
+	public static native void glCombinerInputNV(
 		int stage,
 		int portion,
 		int variable,
@@ -204,7 +211,7 @@ public class GL extends CoreGL implements GLConstants {
 		int mapping,
 		int componentUsage);
 
-	public native void combinerOutputNV(
+	public static native void glCombinerOutputNV(
 		int stage,
 		int portion,
 		int abOutput,
@@ -216,29 +223,29 @@ public class GL extends CoreGL implements GLConstants {
 		boolean cdDotProduct,
 		boolean muxSum);
 
-	public native void combinerParameterfNV(int pname, float param);
+	public static native void glCombinerParameterfNV(int pname, float param);
 
-	public native void combinerParameterfvNV(int pname, int pfParams);
+	public static native void glCombinerParameterfvNV(int pname, FloatBuffer pfParams);
 
-	public native void combinerParameteriNV(int pname, int param);
+	public static native void glCombinerParameteriNV(int pname, int param);
 
-	public native void combinerParameterivNV(int pname, int piParams);
+	public static native void glCombinerParameterivNV(int pname, IntBuffer piParams);
 
-	public native void combinerStageParameterfvNV(
+	public static native void glCombinerStageParameterfvNV(
 		int stage,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void compressedTexImage1DARB(
+	public static native void glCompressedTexImage1DARB(
 		int target,
 		int level,
 		int internalformat,
 		int width,
 		int border,
 		int imageSize,
-		int pData);
+		Buffer pData);
 
-	public native void compressedTexImage2DARB(
+	public static native void glCompressedTexImage2DARB(
 		int target,
 		int level,
 		int internalformat,
@@ -246,9 +253,9 @@ public class GL extends CoreGL implements GLConstants {
 		int height,
 		int border,
 		int imageSize,
-		int pData);
+		Buffer pData);
 
-	public native void compressedTexImage3DARB(
+	public static native void glCompressedTexImage3DARB(
 		int target,
 		int level,
 		int internalformat,
@@ -257,18 +264,18 @@ public class GL extends CoreGL implements GLConstants {
 		int depth,
 		int border,
 		int imageSize,
-		int pData);
+		Buffer pData);
 
-	public native void compressedTexSubImage1DARB(
+	public static native void glCompressedTexSubImage1DARB(
 		int target,
 		int level,
 		int xoffset,
 		int width,
 		int format,
 		int imageSize,
-		int pData);
+		Buffer pData);
 
-	public native void compressedTexSubImage2DARB(
+	public static native void glCompressedTexSubImage2DARB(
 		int target,
 		int level,
 		int xoffset,
@@ -277,9 +284,9 @@ public class GL extends CoreGL implements GLConstants {
 		int height,
 		int format,
 		int imageSize,
-		int pData);
+		Buffer pData);
 
-	public native void compressedTexSubImage3DARB(
+	public static native void glCompressedTexSubImage3DARB(
 		int target,
 		int level,
 		int xoffset,
@@ -290,321 +297,321 @@ public class GL extends CoreGL implements GLConstants {
 		int depth,
 		int format,
 		int imageSize,
-		int pData);
+		Buffer pData);
 
-	public native void currentPaletteMatrixARB(int index);
+	public static native void glCurrentPaletteMatrixARB(int index);
 
-	public native void deleteFencesNV(int n, int piFences);
+	public static native void glDeleteFencesNV(int n, IntBuffer piFences);
 
-	public native void deleteFragmentShaderATI(int id);
+	public static native void glDeleteFragmentShaderATI(int id);
 
-	public native void deleteOcclusionQueriesNV(int n, int piIDs);
+	public static native void glDeleteOcclusionQueriesNV(int n, IntBuffer piIDs);
 
-	public native void deleteProgramsARB(int n, int piPrograms);
+	public static native void glDeleteProgramsARB(int n, IntBuffer piPrograms);
 
-	public native void deleteProgramsNV(int n, int piIDs);
+	public static native void glDeleteProgramsNV(int n, IntBuffer piIDs);
 
-	public native void deleteVertexShaderEXT(int id);
+	public static native void glDeleteVertexShaderEXT(int id);
 
-	public native void disableVariantClientStateEXT(int id);
+	public static native void glDisableVariantClientStateEXT(int id);
 
-	public native void disableVertexAttribArrayARB(int index);
+	public static native void glDisableVertexAttribArrayARB(int index);
 
-	public native void drawElementArrayATI(int mode, int count);
+	public static native void glDrawElementArrayATI(int mode, int count);
 
-	public native void drawRangeElementArrayATI(
+	public static native void glDrawRangeElementArrayATI(
 		int mode,
 		int start,
 		int end,
 		int count);
 
-	public native void drawRangeElementsEXT(
+	public static native void glDrawRangeElementsEXT(
 		int mode,
 		int start,
 		int end,
 		int count,
 		int type,
-		int pIndices);
+		Buffer pIndices);
 
-	public native void elementPointerATI(int type, int pPointer);
+	public static native void glElementPointerATI(int type, Buffer pPointer);
 
-	public native void enableVariantClientStateEXT(int id);
+	public static native void glEnableVariantClientStateEXT(int id);
 
-	public native void enableVertexAttribArrayARB(int index);
+	public static native void glEnableVertexAttribArrayARB(int index);
 
-	public native void endFragmentShaderATI();
+	public static native void glEndFragmentShaderATI();
 
-	public native void endOcclusionQueryNV();
+	public static native void glEndOcclusionQueryNV();
 
-	public native void endVertexShaderEXT();
+	public static native void glEndVertexShaderEXT();
 
-	public native void evalMapsNV(int target, int mode);
+	public static native void glEvalMapsNV(int target, int mode);
 
-	public native void executeProgramNV(int target, int id, int pfParams);
+	public static native void glExecuteProgramNV(int target, int id, FloatBuffer pfParams);
 
-	public native void extractComponentEXT(int res, int src, int num);
+	public static native void glExtractComponentEXT(int res, int src, int num);
 
-	public native void finalCombinerInputNV(
+	public static native void glFinalCombinerInputNV(
 		int variable,
 		int input,
 		int mapping,
 		int componentUsage);
 
-	public native void finishFenceNV(int fence);
+	public static native void glFinishFenceNV(int fence);
 
-	public native void flushVertexArrayRangeNV();
+	public static native void glFlushVertexArrayRangeNV();
 
-	public native void fogCoorddEXT(double coord);
+	public static native void glFogCoorddEXT(double coord);
 
-	public native void fogCoorddvEXT(int pdCoord);
+	public static native void glFogCoorddvEXT(DoubleBuffer pdCoord);
 
-	public native void fogCoordfEXT(float coord);
+	public static native void glFogCoordfEXT(float coord);
 
-	public native void fogCoordfvEXT(int pfCoord);
+	public static native void glFogCoordfvEXT(FloatBuffer pfCoord);
 
-	public native void fogCoordPointerEXT(int type, int stride, int pPointer);
+	public static native void glFogCoordPointerEXT(int type, int stride, Buffer pPointer);
 
-	public native void freeObjectBufferATI(int buffer);
+	public static native void glFreeObjectBufferATI(int buffer);
 
-	public native void genFencesNV(int n, int piFences);
+	public static native void glGenFencesNV(int n, IntBuffer piFences);
 
-	public native int genFragmentShadersATI(int range);
+	public static native int glGenFragmentShadersATI(int range);
 
-	public native void genOcclusionQueriesNV(int n, int piIDs);
+	public static native void glGenOcclusionQueriesNV(int n, IntBuffer piIDs);
 
-	public native void genProgramsARB(int n, int piPrograms);
+	public static native void glGenProgramsARB(int n, IntBuffer piPrograms);
 
-	public native void genProgramsNV(int n, int piIDs);
+	public static native void glGenProgramsNV(int n, IntBuffer piIDs);
 
-	public native int genSymbolsEXT(
+	public static native int glGenSymbolsEXT(
 		int dataType,
 		int storageType,
 		int range,
 		int components);
 
-	public native int genVertexShadersEXT(int range);
+	public static native int glGenVertexShadersEXT(int range);
 
-	public native void getArrayObjectfvATI(int array, int pname, int pfParams);
+	public static native void glGetArrayObjectfvATI(int array, int pname, FloatBuffer pfParams);
 
-	public native void getArrayObjectivATI(int array, int pname, int piParams);
+	public static native void glGetArrayObjectivATI(int array, int pname, IntBuffer piParams);
 
-	public native void getCombinerInputParameterfvNV(
+	public static native void glGetCombinerInputParameterfvNV(
 		int stage,
 		int portion,
 		int variable,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getCombinerInputParameterivNV(
+	public static native void glGetCombinerInputParameterivNV(
 		int stage,
 		int portion,
 		int variable,
 		int pname,
-		int piParams);
+		IntBuffer piParams);
 
-	public native void getCombinerOutputParameterfvNV(
+	public static native void glGetCombinerOutputParameterfvNV(
 		int stage,
 		int portion,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getCombinerOutputParameterivNV(
+	public static native void glGetCombinerOutputParameterivNV(
 		int stage,
 		int portion,
 		int pname,
-		int piParams);
+		IntBuffer piParams);
 
-	public native void getCombinerStageParameterfvNV(
+	public static native void glGetCombinerStageParameterfvNV(
 		int stage,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getCompressedTexImageARB(int target, int lod, int pImg);
+	public static native void glGetCompressedTexImageARB(int target, int lod, Buffer pImg);
 
-	public native void getFenceivNV(int fence, int pname, int piParams);
+	public static native void glGetFenceivNV(int fence, int pname, IntBuffer piParams);
 
-	public native void getFinalCombinerInputParameterfvNV(
+	public static native void glGetFinalCombinerInputParameterfvNV(
 		int variable,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getFinalCombinerInputParameterivNV(
+	public static native void glGetFinalCombinerInputParameterivNV(
 		int variable,
 		int pname,
-		int piParams);
+		IntBuffer piParams);
 
-	public native void getInvariantBooleanvEXT(int id, int value, int pbData);
+	public static native void glGetInvariantBooleanvEXT(int id, int value, ByteBuffer pbData);
 
-	public native void getInvariantFloatvEXT(int id, int value, int pfData);
+	public static native void glGetInvariantFloatvEXT(int id, int value, FloatBuffer pfData);
 
-	public native void getInvariantIntegervEXT(int id, int value, int piData);
+	public static native void glGetInvariantIntegervEXT(int id, int value, IntBuffer piData);
 
-	public native void getLocalConstantBooleanvEXT(
+	public static native void glGetLocalConstantBooleanvEXT(
 		int id,
 		int value,
-		int pbData);
+		ByteBuffer pbData);
 
-	public native void getLocalConstantFloatvEXT(int id, int value, int pfData);
+	public static native void glGetLocalConstantFloatvEXT(int id, int value, FloatBuffer pfData);
 
-	public native void getLocalConstantIntegervEXT(
+	public static native void glGetLocalConstantIntegervEXT(
 		int id,
 		int value,
-		int piData);
+		IntBuffer piData);
 
-	public native void getMapAttribParameterfvNV(
+	public static native void glGetMapAttribParameterfvNV(
 		int target,
 		int index,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getMapAttribParameterivNV(
+	public static native void glGetMapAttribParameterivNV(
 		int target,
 		int index,
 		int pname,
-		int piParams);
+		IntBuffer piParams);
 
-	public native void getMapControlPointsNV(
+	public static native void glGetMapControlPointsNV(
 		int target,
 		int index,
 		int type,
 		int ustride,
 		int vstride,
 		boolean packed,
-		int pPoints);
+		Buffer pPoints);
 
-	public native void getMapParameterfvNV(int target, int pname, int pfParams);
+	public static native void glGetMapParameterfvNV(int target, int pname, FloatBuffer pfParams);
 
-	public native void getMapParameterivNV(int target, int pname, int piParams);
+	public static native void glGetMapParameterivNV(int target, int pname, IntBuffer piParams);
 
-	public native void getObjectBufferfvATI(
+	public static native void glGetObjectBufferfvATI(
 		int buffer,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getObjectBufferivATI(
+	public static native void glGetObjectBufferivATI(
 		int buffer,
 		int pname,
-		int piParams);
+		IntBuffer piParams);
 
-	public native void getOcclusionQueryivNV(int id, int pname, int piParams);
+	public static native void glGetOcclusionQueryivNV(int id, int pname, IntBuffer piParams);
 
-	public native void getOcclusionQueryuivNV(int id, int pname, int piParams);
+	public static native void glGetOcclusionQueryuivNV(int id, int pname, IntBuffer piParams);
 
-	public native void getProgramEnvParameterdvARB(
+	public static native void glGetProgramEnvParameterdvARB(
 		int target,
 		int index,
-		int pdParams);
+		DoubleBuffer pdParams);
 
-	public native void getProgramEnvParameterfvARB(
+	public static native void glGetProgramEnvParameterfvARB(
 		int target,
 		int index,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getProgramivARB(int target, int pname, int piParams);
+	public static native void glGetProgramivARB(int target, int pname, IntBuffer piParams);
 
-	public native void getProgramivNV(int id, int pname, int piParams);
+	public static native void glGetProgramivNV(int id, int pname, IntBuffer piParams);
 
-	public native void getProgramLocalParameterdvARB(
+	public static native void glGetProgramLocalParameterdvARB(
 		int target,
 		int index,
-		int pdParams);
+		DoubleBuffer pdParams);
 
-	public native void getProgramLocalParameterfvARB(
+	public static native void glGetProgramLocalParameterfvARB(
 		int target,
 		int index,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getProgramParameterdvNV(
-		int target,
-		int index,
-		int pname,
-		int pdParams);
-
-	public native void getProgramParameterfvNV(
+	public static native void glGetProgramParameterdvNV(
 		int target,
 		int index,
 		int pname,
-		int pfParams);
+		DoubleBuffer pdParams);
 
-	public native void getProgramStringARB(int target, int pname, int pString);
+	public static native void glGetProgramParameterfvNV(
+		int target,
+		int index,
+		int pname,
+		FloatBuffer pfParams);
 
-	public native void getProgramStringNV(int id, int pname, int pProgram);
+	public static native void glGetProgramStringARB(int target, int pname, Buffer pString);
 
-	public native void getTexBumpParameterfvATI(int pname, int pfParam);
+	public static native void glGetProgramStringNV(int id, int pname, ByteBuffer pProgram);
 
-	public native void getTexBumpParameterivATI(int pname, int piParam);
+	public static native void glGetTexBumpParameterfvATI(int pname, FloatBuffer pfParam);
 
-	public native void getTrackMatrixivNV(
+	public static native void glGetTexBumpParameterivATI(int pname, FloatBuffer piParam);
+
+	public static native void glGetTrackMatrixivNV(
 		int target,
 		int address,
 		int pname,
-		int piParams);
+		IntBuffer piParams);
 
-	public native void getVariantArrayObjectfvATI(
+	public static native void glGetVariantArrayObjectfvATI(
 		int id,
 		int pname,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void getVariantArrayObjectivATI(
+	public static native void glGetVariantArrayObjectivATI(
 		int id,
 		int pname,
-		int piParams);
+		IntBuffer piParams);
 
-	public native void getVariantBooleanvEXT(int id, int value, int pbData);
+	public static native void glGetVariantBooleanvEXT(int id, int value, ByteBuffer pbData);
 
-	public native void getVariantFloatvEXT(int id, int value, int pfData);
+	public static native void glGetVariantFloatvEXT(int id, int value, FloatBuffer pfData);
 
-	public native void getVariantIntegervEXT(int id, int value, int piData);
+	public static native void glGetVariantIntegervEXT(int id, int value, IntBuffer piData);
 
-	public native void getVariantPointervEXT(int id, int value, int pData);
+	public static native ByteBuffer glGetVariantPointervEXT(int id, int value, int size);
 
-	public native void getVertexAttribdvARB(int index, int pname, int pdParams);
+	public static native void glGetVertexAttribdvARB(int index, int pname, DoubleBuffer pdParams);
 
-	public native void getVertexAttribdvNV(int index, int pname, int pdParams);
+	public static native void glGetVertexAttribdvNV(int index, int pname, DoubleBuffer pdParams);
 
-	public native void getVertexAttribfvARB(int index, int pname, int pfParams);
+	public static native void glGetVertexAttribfvARB(int index, int pname, FloatBuffer pfParams);
 
-	public native void getVertexAttribfvNV(int index, int pname, int pfParams);
+	public static native void glGetVertexAttribfvNV(int index, int pname, FloatBuffer pfParams);
 
-	public native void getVertexAttribivARB(int index, int pname, int piParams);
+	public static native void glGetVertexAttribivARB(int index, int pname, IntBuffer piParams);
 
-	public native void getVertexAttribivNV(int index, int pname, int piParams);
+	public static native void glGetVertexAttribivNV(int index, int pname, IntBuffer piParams);
 
-	public native void getVertexAttribPointervARB(
+	public static native ByteBuffer glGetVertexAttribPointervARB(
 		int index,
 		int pname,
-		int pPointer);
+		int size);
 
-	public native void getVertexAttribPointervNV(
+	public static native ByteBuffer glGetVertexAttribPointervNV(
 		int index,
 		int pname,
-		int pPointer);
+		int size);
 
-	public native void insertComponentEXT(int res, int src, int num);
+	public static native void glInsertComponentEXT(int res, int src, int num);
 
-	public native boolean isFenceNV(int fence);
+	public static native boolean glIsFenceNV(int fence);
 
-	public native boolean isObjectBufferATI(int buffer);
+	public static native boolean glIsObjectBufferATI(int buffer);
 
-	public native boolean isOcclusionQueryNV(int id);
+	public static native boolean glIsOcclusionQueryNV(int id);
 
-	public native boolean isProgramARB(int program);
+	public static native boolean glIsProgramARB(int program);
 
 	// #ifdef _WIN32
 
-	public native boolean isProgramNV(int id);
+	public static native boolean glIsProgramNV(int id);
 
-	public native boolean isVariantEnabledEXT(int id, int cap);
+	public static native boolean glIsVariantEnabledEXT(int id, int cap);
 
-	public native void loadProgramNV(int target, int id, int len, int pProgram);
+	public static native void glLoadProgramNV(int target, int id, int len, ByteBuffer pProgram);
 
-	public native void loadTransposeMatrixdARB(int pdMtx); // m[16]
+	public static native void glLoadTransposeMatrixdARB(DoubleBuffer pdMtx); // m[16]
 
-	public native void loadTransposeMatrixfARB(int pfMtx); // m[16]
+	public static native void glLoadTransposeMatrixfARB(FloatBuffer pfMtx); // m[16]
 
-	public native void lockArraysEXT(int first, int count);
+	public static native void glLockArraysEXT(int first, int count);
 
-	public native void mapControlPointsNV(
+	public static native void glMapControlPointsNV(
 		int target,
 		int index,
 		int type,
@@ -613,182 +620,182 @@ public class GL extends CoreGL implements GLConstants {
 		int uorder,
 		int vorder,
 		boolean packed,
-		int pPoints);
+		Buffer pPoints);
 
-	public native void mapParameterfvNV(int target, int pname, int pfParams);
+	public static native void glMapParameterfvNV(int target, int pname, FloatBuffer pfParams);
 
-	public native void mapParameterivNV(int target, int pname, int piParams);
+	public static native void glMapParameterivNV(int target, int pname, IntBuffer piParams);
 
-	public native void matrixIndexPointerARB(
+	public static native void glMatrixIndexPointerARB(
 		int size,
 		int type,
 		int stride,
-		int pPointer);
+		Buffer pPointer);
 
-	public native void matrixIndexubvARB(int size, int pIndices);
+	public static native void glMatrixIndexubvARB(int size, ByteBuffer pIndices);
 
-	public native void matrixIndexuivARB(int size, int piIndices);
+	public static native void glMatrixIndexuivARB(int size, IntBuffer piIndices);
 
-	public native void matrixIndexusvARB(int size, int psIndices);
+	public static native void glMatrixIndexusvARB(int size, CharBuffer psIndices);
 
-	public native void multiDrawArraysEXT(
+	public static native void glMultiDrawArraysEXT(
 		int mode,
-		int piFirst,
-		int piCount,
+		IntBuffer piFirst,
+		IntBuffer piCount,
 		int primcount);
 
-	public native void multiDrawElementsEXT(
+/*	public static native void glMultiDrawElementsEXT(
 		int mode,
 		int piCount,
 		int type,
 		int pIndices,
 		int primcount);
+*/
+	public static native void glMultiTexCoord1dARB(int target, double s);
 
-	public native void multiTexCoord1dARB(int target, double s);
+	public static native void glMultiTexCoord1dvARB(int target, DoubleBuffer pdV);
 
-	public native void multiTexCoord1dvARB(int target, int pdV);
+	public static native void glMultiTexCoord1fARB(int target, float s);
 
-	public native void multiTexCoord1fARB(int target, float s);
+	public static native void glMultiTexCoord1fvARB(int target, FloatBuffer pfV);
 
-	public native void multiTexCoord1fvARB(int target, int pfV);
+	public static native void glMultiTexCoord1iARB(int target, int s);
 
-	public native void multiTexCoord1iARB(int target, int s);
+	public static native void glMultiTexCoord1ivARB(int target, IntBuffer piV);
 
-	public native void multiTexCoord1ivARB(int target, int piV);
+	public static native void glMultiTexCoord1sARB(int target, short s);
 
-	public native void multiTexCoord1sARB(int target, short s);
+	public static native void glMultiTexCoord1svARB(int target, CharBuffer psV);
 
-	public native void multiTexCoord1svARB(int target, int psV);
+	public static native void glMultiTexCoord2dARB(int target, double s, double t);
 
-	public native void multiTexCoord2dARB(int target, double s, double t);
+	public static native void glMultiTexCoord2dvARB(int target, DoubleBuffer pdV);
 
-	public native void multiTexCoord2dvARB(int target, int pdV);
+	public static native void glMultiTexCoord2fARB(int target, float s, float t);
 
-	public native void multiTexCoord2fARB(int target, float s, float t);
+	public static native void glMultiTexCoord2fvARB(int target, FloatBuffer pfV);
 
-	public native void multiTexCoord2fvARB(int target, int pfV);
+	public static native void glMultiTexCoord2iARB(int target, int s, int t);
 
-	public native void multiTexCoord2iARB(int target, int s, int t);
+	public static native void glMultiTexCoord2ivARB(int target, IntBuffer piV);
 
-	public native void multiTexCoord2ivARB(int target, int piV);
+	public static native void glMultiTexCoord2sARB(int target, short s, short t);
 
-	public native void multiTexCoord2sARB(int target, short s, short t);
+	public static native void glMultiTexCoord2svARB(int target, CharBuffer psV);
 
-	public native void multiTexCoord2svARB(int target, int psV);
-
-	public native void multiTexCoord3dARB(
+	public static native void glMultiTexCoord3dARB(
 		int target,
 		double s,
 		double t,
 		double r);
 
-	public native void multiTexCoord3dvARB(int target, int pdV);
+	public static native void glMultiTexCoord3dvARB(int target, int pdV);
 
-	public native void multiTexCoord3fARB(
+	public static native void glMultiTexCoord3fARB(
 		int target,
 		float s,
 		float t,
 		float r);
 
-	public native void multiTexCoord3fvARB(int target, int pfV);
+	public static native void glMultiTexCoord3fvARB(int target, FloatBuffer pfV);
 
-	public native void multiTexCoord3iARB(int target, int s, int t, int r);
+	public static native void glMultiTexCoord3iARB(int target, int s, int t, int r);
 
-	public native void multiTexCoord3ivARB(int target, int piV);
+	public static native void glMultiTexCoord3ivARB(int target, IntBuffer piV);
 
-	public native void multiTexCoord3sARB(
+	public static native void glMultiTexCoord3sARB(
 		int target,
 		short s,
 		short t,
 		short r);
 
-	public native void multiTexCoord3svARB(int target, int psV);
+	public static native void glMultiTexCoord3svARB(int target, CharBuffer psV);
 
-	public native void multiTexCoord4dARB(
+	public static native void glMultiTexCoord4dARB(
 		int target,
 		double s,
 		double t,
 		double r,
 		double q);
 
-	public native void multiTexCoord4dvARB(int target, int pdV);
+	public static native void glMultiTexCoord4dvARB(int target, DoubleBuffer pdV);
 
-	public native void multiTexCoord4fARB(
+	public static native void glMultiTexCoord4fARB(
 		int target,
 		float s,
 		float t,
 		float r,
 		float q);
 
-	public native void multiTexCoord4fvARB(int target, int pfV);
+	public static native void glMultiTexCoord4fvARB(int target, FloatBuffer pfV);
 
-	public native void multiTexCoord4iARB(
+	public static native void glMultiTexCoord4iARB(
 		int target,
 		int s,
 		int t,
 		int r,
 		int q);
 
-	public native void multiTexCoord4ivARB(int target, int piV);
+	public static native void glMultiTexCoord4ivARB(int target, IntBuffer piV);
 
-	public native void multiTexCoord4sARB(
+	public static native void glMultiTexCoord4sARB(
 		int target,
 		short s,
 		short t,
 		short r,
 		short q);
 
-	public native void multiTexCoord4svARB(int target, int psV);
+	public static native void glMultiTexCoord4svARB(int target, CharBuffer psV);
 
-	public native void multTransposeMatrixdARB(int pdMtx); // m[16]
+	public static native void glMultTransposeMatrixdARB(DoubleBuffer pdMtx); // m[16]
 
-	public native void multTransposeMatrixfARB(int pfMtx); // m[16]
+	public static native void glMultTransposeMatrixfARB(FloatBuffer pfMtx); // m[16]
 
-	public native int newObjectBufferATI(int size, int pPointer, int usage);
+	public static native int glNewObjectBufferATI(int size, Buffer pPointer, int usage);
 
-	public native void normalStream3bATI(int stream, byte x, byte y, byte z);
+	public static native void glNormalStream3bATI(int stream, byte x, byte y, byte z);
 
-	public native void normalStream3bvATI(int stream, int pV);
+	public static native void glNormalStream3bvATI(int stream, ByteBuffer pV);
 
-	public native void normalStream3dATI(
+	public static native void glNormalStream3dATI(
 		int stream,
 		double x,
 		double y,
 		double z);
 
-	public native void normalStream3dvATI(int stream, int pdV);
+	public static native void glNormalStream3dvATI(int stream, DoubleBuffer pdV);
 
-	public native void normalStream3fATI(int stream, float x, float y, float z);
+	public static native void glNormalStream3fATI(int stream, float x, float y, float z);
 
-	public native void normalStream3fvATI(int stream, int pfV);
+	public static native void glNormalStream3fvATI(int stream, FloatBuffer pfV);
 
-	public native void normalStream3iATI(int stream, int x, int y, int z);
+	public static native void glNormalStream3iATI(int stream, int x, int y, int z);
 
-	public native void normalStream3ivATI(int stream, int piV);
+	public static native void glNormalStream3ivATI(int stream, IntBuffer piV);
 
-	public native void normalStream3sATI(int stream, short x, short y, short z);
+	public static native void glNormalStream3sATI(int stream, short x, short y, short z);
 
-	public native void normalStream3svATI(int stream, int psV);
+	public static native void glNormalStream3svATI(int stream, CharBuffer psV);
 
-	public native void passTexCoordATI(int dst, int coord, int swizzle);
+	public static native void glPassTexCoordATI(int dst, int coord, int swizzle);
 
-	public native void PNTrianglesfATI(int pname, float param);
+	public static native void glPNTrianglesfATI(int pname, float param);
 
-	public native void PNTrianglesiATI(int pname, int param);
+	public static native void glPNTrianglesiATI(int pname, int param);
 
-	public native void pointParameterfARB(int pname, float param);
+	public static native void glPointParameterfARB(int pname, float param);
 
-	public native void pointParameterfEXT(int pname, float param);
+	public static native void glPointParameterfEXT(int pname, float param);
 
-	public native void pointParameterfvARB(int pname, int pfParams);
+	public static native void glPointParameterfvARB(int pname, FloatBuffer pfParams);
 
-	public native void pointParameterfvEXT(int pname, int pfParams);
+	public static native void glPointParameterfvEXT(int pname, FloatBuffer pfParams);
 
-	public native void pointParameteriNV(int pname, int param);
+	public static native void glPointParameteriNV(int pname, int param);
 
-	public native void pointParameterivNV(int pname, int piParams);
+	public static native void glPointParameterivNV(int pname, IntBuffer piParams);
 
-	public native void programEnvParameter4dARB(
+	public static native void glProgramEnvParameter4dARB(
 		int target,
 		int index,
 		double x,
@@ -796,12 +803,12 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public native void programEnvParameter4dvARB(
+	public static native void glProgramEnvParameter4dvARB(
 		int target,
 		int index,
-		int pdParams);
+		DoubleBuffer pdParams);
 
-	public native void programEnvParameter4fARB(
+	public static native void glProgramEnvParameter4fARB(
 		int target,
 		int index,
 		float x,
@@ -809,12 +816,12 @@ public class GL extends CoreGL implements GLConstants {
 		float z,
 		float w);
 
-	public native void programEnvParameter4fvARB(
+	public static native void glProgramEnvParameter4fvARB(
 		int target,
 		int index,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void programLocalParameter4dARB(
+	public static native void glProgramLocalParameter4dARB(
 		int target,
 		int index,
 		double x,
@@ -822,12 +829,12 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public native void programLocalParameter4dvARB(
+	public static native void glProgramLocalParameter4dvARB(
 		int target,
 		int index,
-		int pdParams);
+		DoubleBuffer pdParams);
 
-	public native void programLocalParameter4fARB(
+	public static native void glProgramLocalParameter4fARB(
 		int target,
 		int index,
 		float x,
@@ -835,12 +842,12 @@ public class GL extends CoreGL implements GLConstants {
 		float z,
 		float w);
 
-	public native void programLocalParameter4fvARB(
+	public static native void glProgramLocalParameter4fvARB(
 		int target,
 		int index,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void programParameter4dNV(
+	public static native void glProgramParameter4dNV(
 		int target,
 		int index,
 		double x,
@@ -848,12 +855,12 @@ public class GL extends CoreGL implements GLConstants {
 		double z,
 		double w);
 
-	public native void programParameter4dvNV(
+	public static native void glProgramParameter4dvNV(
 		int target,
 		int index,
-		int pdParams);
+		DoubleBuffer pdParams);
 
-	public native void programParameter4fNV(
+	public static native void glProgramParameter4fNV(
 		int target,
 		int index,
 		float x,
@@ -861,96 +868,96 @@ public class GL extends CoreGL implements GLConstants {
 		float z,
 		float w);
 
-	public native void programParameter4fvNV(
+	public static native void glProgramParameter4fvNV(
 		int target,
 		int index,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void programParameters4dvNV(
+	public static native void glProgramParameters4dvNV(
 		int target,
 		int index,
 		int num,
 		int pdParams);
 
-	public native void programParameters4fvNV(
+	public static native void glProgramParameters4fvNV(
 		int target,
 		int index,
 		int num,
-		int pfParams);
+		FloatBuffer pfParams);
 
-	public native void programStringARB(
+	public static native void glProgramStringARB(
 		int target,
 		int format,
 		int len,
-		int pString);
+		Buffer pString);
 
-	public native void requestResidentProgramsNV(int n, int piIDs);
+	public static native void glRequestResidentProgramsNV(int n, IntBuffer piIDs);
 
-	public native void sampleCoverageARB(float value, boolean invert);
+	public static native void glSampleCoverageARB(float value, boolean invert);
 
-	public native void sampleMapATI(int dst, int interp, int swizzle);
+	public static native void glSampleMapATI(int dst, int interp, int swizzle);
 
-	public native void secondaryColor3bEXT(byte red, byte green, byte blue);
+	public static native void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 
-	public native void secondaryColor3bvEXT(int pV);
+	public static native void glSecondaryColor3bvEXT(ByteBuffer pV);
 
-	public native void secondaryColor3dEXT(
+	public static native void glSecondaryColor3dEXT(
 		double red,
 		double green,
 		double blue);
 
-	public native void secondaryColor3dvEXT(int pdV);
+	public static native void glSecondaryColor3dvEXT(DoubleBuffer pdV);
 
-	public native void secondaryColor3fEXT(float red, float green, float blue);
+	public static native void glSecondaryColor3fEXT(float red, float green, float blue);
 
-	public native void secondaryColor3fvEXT(int pfV);
+	public static native void glSecondaryColor3fvEXT(FloatBuffer pfV);
 
-	public native void secondaryColor3iEXT(int red, int green, int blue);
+	public static native void glSecondaryColor3iEXT(int red, int green, int blue);
 
-	public native void secondaryColor3ivEXT(int piV);
+	public static native void glSecondaryColor3ivEXT(IntBuffer piV);
 
-	public native void secondaryColor3sEXT(short red, short green, short blue);
+	public static native void glSecondaryColor3sEXT(short red, short green, short blue);
 
-	public native void secondaryColor3svEXT(int psV);
+	public static native void glSecondaryColor3svEXT(CharBuffer psV);
 
-	public native void secondaryColor3ubEXT(byte red, byte green, byte blue);
+	public static native void glSecondaryColor3ubEXT(byte red, byte green, byte blue);
 
-	public native void secondaryColor3ubvEXT(int pV);
+	public static native void glSecondaryColor3ubvEXT(ByteBuffer pV);
 
-	public native void secondaryColor3uiEXT(int red, int green, int blue);
+	public static native void glSecondaryColor3uiEXT(int red, int green, int blue);
 
-	public native void secondaryColor3uivEXT(int piV);
+	public static native void glSecondaryColor3uivEXT(IntBuffer piV);
 
-	public native void secondaryColor3usEXT(short red, short green, short blue);
+	public static native void glSecondaryColor3usEXT(short red, short green, short blue);
 
-	public native void secondaryColor3usvEXT(int psV);
+	public static native void glSecondaryColor3usvEXT(CharBuffer psV);
 
-	public native void secondaryColorPointerEXT(
+	public static native void glSecondaryColorPointerEXT(
 		int size,
 		int type,
 		int stride,
-		int pPointer);
+		Buffer pPointer);
 
-	public native void setFenceNV(int fence, int condition);
+	public static native void glSetFenceNV(int fence, int condition);
 
-	public native void setFragmentShaderConstantATI(int dst, int pfValue);
+	public static native void glSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue);
 
-	public native void setInvariantEXT(int id, int type, int pAddr);
+	public static native void glSetInvariantEXT(int id, int type, Buffer pAddr);
 
-	public native void setLocalConstantEXT(int id, int type, int pAddr);
+	public static native void glSetLocalConstantEXT(int id, int type, Buffer pAddr);
 
-	public native void shaderOp1EXT(int op, int res, int arg1);
+	public static native void glShaderOp1EXT(int op, int res, int arg1);
 
-	public native void shaderOp2EXT(int op, int res, int arg1, int arg2);
+	public static native void glShaderOp2EXT(int op, int res, int arg1, int arg2);
 
-	public native void shaderOp3EXT(
+	public static native void glShaderOp3EXT(
 		int op,
 		int res,
 		int arg1,
 		int arg2,
 		int arg3);
 
-	public native void swizzleEXT(
+	public static native void glSwizzleEXT(
 		int res,
 		int in,
 		int outX,
@@ -958,392 +965,392 @@ public class GL extends CoreGL implements GLConstants {
 		int outZ,
 		int outW);
 
-	public native boolean testFenceNV(int fence);
+	public static native boolean glTestFenceNV(int fence);
 
-	public native void texBumpParameterfvATI(int pname, int pfParam);
+	public static native void glTexBumpParameterfvATI(int pname, FloatBuffer pfParam);
 
-	public native void texBumpParameterivATI(int pname, int piParam);
+	public static native void glTexBumpParameterivATI(int pname, IntBuffer piParam);
 
-	public native void trackMatrixNV(
+	public static native void glTrackMatrixNV(
 		int target,
 		int address,
 		int matrix,
 		int transform);
 
-	public native void unlockArraysEXT();
+	public static native void glUnlockArraysEXT();
 
-	public native void updateObjectBufferATI(
+	public static native void glUpdateObjectBufferATI(
 		int buffer,
 		int offset,
 		int size,
-		int pPointer,
+		Buffer pPointer,
 		int preserve);
 
-	public native void variantArrayObjectATI(
+	public static native void glVariantArrayObjectATI(
 		int id,
 		int type,
 		int stride,
 		int buffer,
 		int offset);
 
-	public native void variantbvEXT(int id, int pAddr);
+	public static native void glVariantbvEXT(int id, ByteBuffer pAddr);
 
-	public native void variantdvEXT(int id, int pdAddr);
+	public static native void glVariantdvEXT(int id, DoubleBuffer pdAddr);
 
-	public native void variantfvEXT(int id, int pfAddr);
+	public static native void glVariantfvEXT(int id, FloatBuffer pfAddr);
 
-	public native void variantivEXT(int id, int piAddr);
+	public static native void glVariantivEXT(int id, IntBuffer piAddr);
 
-	public native void variantPointerEXT(
+	public static native void glVariantPointerEXT(
 		int id,
 		int type,
 		int stride,
-		int pAddr);
+		Buffer pAddr);
 
-	public native void variantsvEXT(int id, int psAddr);
+	public static native void glVariantsvEXT(int id, CharBuffer psAddr);
 
-	public native void variantubvEXT(int id, int pAddr);
+	public static native void glVariantubvEXT(int id, ByteBuffer pAddr);
 
-	public native void variantuivEXT(int id, int piAddr);
+	public static native void glVariantuivEXT(int id, IntBuffer piAddr);
 
-	public native void variantusvEXT(int id, int psAddr);
+	public static native void glVariantusvEXT(int id, CharBuffer psAddr);
 
-	public native void vertexArrayRangeNV(int size, int pPointer);
+	public static native void glVertexArrayRangeNV(int size, Buffer pPointer);
 
-	public native void vertexAttrib1dARB(int index, double x);
+	public static native void glVertexAttrib1dARB(int index, double x);
 
-	public native void vertexAttrib1dNV(int index, double x);
+	public static native void glVertexAttrib1dNV(int index, double x);
 
-	public native void vertexAttrib1dvARB(int index, int pdV);
+	public static native void glVertexAttrib1dvARB(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib1dvNV(int index, int pdV);
+	public static native void glVertexAttrib1dvNV(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib1fARB(int index, float x);
+	public static native void glVertexAttrib1fARB(int index, float x);
 
-	public native void vertexAttrib1fNV(int index, float x);
+	public static native void glVertexAttrib1fNV(int index, float x);
 
-	public native void vertexAttrib1fvARB(int index, int pfV);
+	public static native void glVertexAttrib1fvARB(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib1fvNV(int index, int pfV);
+	public static native void glVertexAttrib1fvNV(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib1sARB(int index, short x);
+	public static native void glVertexAttrib1sARB(int index, short x);
 
-	public native void vertexAttrib1sNV(int index, short x);
+	public static native void glVertexAttrib1sNV(int index, short x);
 
-	public native void vertexAttrib1svARB(int index, int psV);
+	public static native void glVertexAttrib1svARB(int index, CharBuffer psV);
 
-	public native void vertexAttrib1svNV(int index, int psV);
+	public static native void glVertexAttrib1svNV(int index, CharBuffer psV);
 
-	public native void vertexAttrib2dARB(int index, double x, double y);
+	public static native void glVertexAttrib2dARB(int index, double x, double y);
 
-	public native void vertexAttrib2dNV(int index, double x, double y);
+	public static native void glVertexAttrib2dNV(int index, double x, double y);
 
-	public native void vertexAttrib2dvARB(int index, int pdV);
+	public static native void glVertexAttrib2dvARB(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib2dvNV(int index, int pdV);
+	public static native void glVertexAttrib2dvNV(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib2fARB(int index, float x, float y);
+	public static native void glVertexAttrib2fARB(int index, float x, float y);
 
-	public native void vertexAttrib2fNV(int index, float x, float y);
+	public static native void glVertexAttrib2fNV(int index, float x, float y);
 
-	public native void vertexAttrib2fvARB(int index, int pfV);
+	public static native void glVertexAttrib2fvARB(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib2fvNV(int index, int pfV);
+	public static native void glVertexAttrib2fvNV(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib2sARB(int index, short x, short y);
+	public static native void glVertexAttrib2sARB(int index, short x, short y);
 
-	public native void vertexAttrib2sNV(int index, short x, short y);
+	public static native void glVertexAttrib2sNV(int index, short x, short y);
 
-	public native void vertexAttrib2svARB(int index, int psV);
+	public static native void glVertexAttrib2svARB(int index, CharBuffer psV);
 
-	public native void vertexAttrib2svNV(int index, int psV);
+	public static native void glVertexAttrib2svNV(int index, CharBuffer psV);
 
-	public native void vertexAttrib3dARB(
+	public static native void glVertexAttrib3dARB(
 		int index,
 		double x,
 		double y,
 		double z);
 
-	public native void vertexAttrib3dNV(
+	public static native void glVertexAttrib3dNV(
 		int index,
 		double x,
 		double y,
 		double z);
 
-	public native void vertexAttrib3dvARB(int index, int pdV);
+	public static native void glVertexAttrib3dvARB(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib3dvNV(int index, int pdV);
+	public static native void glVertexAttrib3dvNV(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib3fARB(int index, float x, float y, float z);
+	public static native void glVertexAttrib3fARB(int index, float x, float y, float z);
 
-	public native void vertexAttrib3fNV(int index, float x, float y, float z);
+	public static native void glVertexAttrib3fNV(int index, float x, float y, float z);
 
-	public native void vertexAttrib3fvARB(int index, int pfV);
+	public static native void glVertexAttrib3fvARB(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib3fvNV(int index, int pfV);
+	public static native void glVertexAttrib3fvNV(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib3sARB(int index, short x, short y, short z);
+	public static native void glVertexAttrib3sARB(int index, short x, short y, short z);
 
-	public native void vertexAttrib3sNV(int index, short x, short y, short z);
+	public static native void glVertexAttrib3sNV(int index, short x, short y, short z);
 
-	public native void vertexAttrib3svARB(int index, int psV);
+	public static native void glVertexAttrib3svARB(int index, CharBuffer psV);
 
-	public native void vertexAttrib3svNV(int index, int psV);
+	public static native void glVertexAttrib3svNV(int index, CharBuffer psV);
 
-	public native void vertexAttrib4bvARB(int index, int pV);
+	public static native void glVertexAttrib4bvARB(int index, ByteBuffer pV);
 
-	public native void vertexAttrib4dARB(
+	public static native void glVertexAttrib4dARB(
 		int index,
 		double x,
 		double y,
 		double z,
 		double w);
 
-	public native void vertexAttrib4dNV(
+	public static native void glVertexAttrib4dNV(
 		int index,
 		double x,
 		double y,
 		double z,
 		double w);
 
-	public native void vertexAttrib4dvARB(int index, int pdV);
+	public static native void glVertexAttrib4dvARB(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib4dvNV(int index, int pdV);
+	public static native void glVertexAttrib4dvNV(int index, DoubleBuffer pdV);
 
-	public native void vertexAttrib4fARB(
+	public static native void glVertexAttrib4fARB(
 		int index,
 		float x,
 		float y,
 		float z,
 		float w);
 
-	public native void vertexAttrib4fNV(
+	public static native void glVertexAttrib4fNV(
 		int index,
 		float x,
 		float y,
 		float z,
 		float w);
 
-	public native void vertexAttrib4fvARB(int index, int pfV);
+	public static native void glVertexAttrib4fvARB(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib4fvNV(int index, int pfV);
+	public static native void glVertexAttrib4fvNV(int index, FloatBuffer pfV);
 
-	public native void vertexAttrib4ivARB(int index, int piV);
+	public static native void glVertexAttrib4ivARB(int index, IntBuffer piV);
 
-	public native void vertexAttrib4NbvARB(int index, int pV);
+	public static native void glVertexAttrib4NbvARB(int index, ByteBuffer pV);
 
-	public native void vertexAttrib4NivARB(int index, int piV);
+	public static native void glVertexAttrib4NivARB(int index, IntBuffer piV);
 
-	public native void vertexAttrib4NsvARB(int index, int psV);
+	public static native void glVertexAttrib4NsvARB(int index, CharBuffer psV);
 
-	public native void vertexAttrib4NubARB(
+	public static native void glVertexAttrib4NubARB(
 		int index,
 		byte x,
 		byte y,
 		byte z,
 		byte w);
 
-	public native void vertexAttrib4NubvARB(int index, int pV);
+	public static native void glVertexAttrib4NubvARB(int index, ByteBuffer pV);
 
-	public native void vertexAttrib4NuivARB(int index, int piV);
+	public static native void glVertexAttrib4NuivARB(int index, IntBuffer piV);
 
-	public native void vertexAttrib4NusvARB(int index, int psV);
+	public static native void glVertexAttrib4NusvARB(int index, CharBuffer psV);
 
-	public native void vertexAttrib4sARB(
+	public static native void glVertexAttrib4sARB(
 		int index,
 		short x,
 		short y,
 		short z,
 		short w);
 
-	public native void vertexAttrib4sNV(
+	public static native void glVertexAttrib4sNV(
 		int index,
 		short x,
 		short y,
 		short z,
 		short w);
 
-	public native void vertexAttrib4svARB(int index, int psV);
+	public static native void glVertexAttrib4svARB(int index, CharBuffer psV);
 
-	public native void vertexAttrib4svNV(int index, int psV);
+	public static native void glVertexAttrib4svNV(int index, CharBuffer psV);
 
-	public native void vertexAttrib4ubNV(
+	public static native void glVertexAttrib4ubNV(
 		int index,
 		byte x,
 		byte y,
 		byte z,
 		byte w);
 
-	public native void vertexAttrib4ubvARB(int index, int pV);
+	public static native void glVertexAttrib4ubvARB(int index, ByteBuffer pV);
 
-	public native void vertexAttrib4ubvNV(int index, int pV);
+	public static native void glVertexAttrib4ubvNV(int index, ByteBuffer pV);
 
-	public native void vertexAttrib4uivARB(int index, int piV);
+	public static native void glVertexAttrib4uivARB(int index, IntBuffer piV);
 
-	public native void vertexAttrib4usvARB(int index, int psV);
+	public static native void glVertexAttrib4usvARB(int index, CharBuffer psV);
 
-	public native void vertexAttribPointerARB(
+	public static native void glVertexAttribPointerARB(
 		int index,
 		int size,
 		int type,
 		boolean normalized,
 		int stride,
-		int pPointer);
+		Buffer pPointer);
 
-	public native void vertexAttribPointerNV(
+	public static native void glVertexAttribPointerNV(
 		int index,
 		int size,
 		int type,
 		int stride,
-		int pPointer);
+		Buffer pPointer);
 
-	public native void vertexAttribs1dvNV(int index, int n, int pdV);
+	public static native void glVertexAttribs1dvNV(int index, int n, DoubleBuffer pdV);
 
-	public native void vertexAttribs1fvNV(int index, int n, int pfV);
+	public static native void glVertexAttribs1fvNV(int index, int n, FloatBuffer pfV);
 
-	public native void vertexAttribs1svNV(int index, int n, int psV);
+	public static native void glVertexAttribs1svNV(int index, int n, CharBuffer psV);
 
-	public native void vertexAttribs2dvNV(int index, int n, int pdV);
+	public static native void glVertexAttribs2dvNV(int index, int n, DoubleBuffer pdV);
 
-	public native void vertexAttribs2fvNV(int index, int n, int pfV);
+	public static native void glVertexAttribs2fvNV(int index, int n, FloatBuffer pfV);
 
-	public native void vertexAttribs2svNV(int index, int n, int psV);
+	public static native void glVertexAttribs2svNV(int index, int n, CharBuffer psV);
 
-	public native void vertexAttribs3dvNV(int index, int n, int pdV);
+	public static native void glVertexAttribs3dvNV(int index, int n, DoubleBuffer pdV);
 
-	public native void vertexAttribs3fvNV(int index, int n, int pfV);
+	public static native void glVertexAttribs3fvNV(int index, int n, FloatBuffer pfV);
 
-	public native void vertexAttribs3svNV(int index, int n, int psV);
+	public static native void glVertexAttribs3svNV(int index, int n, CharBuffer psV);
 
-	public native void vertexAttribs4dvNV(int index, int n, int pdV);
+	public static native void glVertexAttribs4dvNV(int index, int n, DoubleBuffer pdV);
 
-	public native void vertexAttribs4fvNV(int index, int n, int pfV);
+	public static native void glVertexAttribs4fvNV(int index, int n, FloatBuffer pfV);
 
-	public native void vertexAttribs4svNV(int index, int n, int psV);
+	public static native void glVertexAttribs4svNV(int index, int n, CharBuffer psV);
 
-	public native void vertexAttribs4ubvNV(int index, int n, int pV);
+	public static native void glVertexAttribs4ubvNV(int index, int n, ByteBuffer pV);
 
-	public native void vertexBlendARB(int count);
+	public static native void glVertexBlendARB(int count);
 
-	public native void vertexBlendEnvfATI(int pname, float param);
+	public static native void glVertexBlendEnvfATI(int pname, float param);
 
-	public native void vertexBlendEnviATI(int pname, int param);
+	public static native void glVertexBlendEnviATI(int pname, int param);
 
-	public native void vertexStream2dATI(int stream, double x, double y);
+	public static native void glVertexStream2dATI(int stream, double x, double y);
 
-	public native void vertexStream2dvATI(int stream, int pdV);
+	public static native void glVertexStream2dvATI(int stream, DoubleBuffer pdV);
 
-	public native void vertexStream2fATI(int stream, float x, float y);
+	public static native void glVertexStream2fATI(int stream, float x, float y);
 
-	public native void vertexStream2fvATI(int stream, int pfV);
+	public static native void glVertexStream2fvATI(int stream, FloatBuffer pfV);
 
-	public native void vertexStream2iATI(int stream, int x, int y);
+	public static native void glVertexStream2iATI(int stream, int x, int y);
 
-	public native void vertexStream2ivATI(int stream, int piV);
+	public static native void glVertexStream2ivATI(int stream, IntBuffer piV);
 
-	public native void vertexStream2sATI(int stream, short x, short y);
+	public static native void glVertexStream2sATI(int stream, short x, short y);
 
-	public native void vertexStream2svATI(int stream, int psV);
+	public static native void glVertexStream2svATI(int stream, CharBuffer psV);
 
-	public native void vertexStream3dATI(
+	public static native void glVertexStream3dATI(
 		int stream,
 		double x,
 		double y,
 		double z);
 
-	public native void vertexStream3dvATI(int stream, int pdV);
+	public static native void glVertexStream3dvATI(int stream, DoubleBuffer pdV);
 
-	public native void vertexStream3fATI(int stream, float x, float y, float z);
+	public static native void glVertexStream3fATI(int stream, float x, float y, float z);
 
-	public native void vertexStream3fvATI(int stream, int pfV);
+	public static native void glVertexStream3fvATI(int stream, FloatBuffer pfV);
 
-	public native void vertexStream3iATI(int stream, int x, int y, int z);
+	public static native void glVertexStream3iATI(int stream, int x, int y, int z);
 
-	public native void vertexStream3ivATI(int stream, int piV);
+	public static native void glVertexStream3ivATI(int stream, IntBuffer piV);
 
-	public native void vertexStream3sATI(int stream, short x, short y, short z);
+	public static native void glVertexStream3sATI(int stream, short x, short y, short z);
 
-	public native void vertexStream3svATI(int stream, int psV);
+	public static native void glVertexStream3svATI(int stream, CharBuffer psV);
 
-	public native void vertexStream4dATI(
+	public static native void glVertexStream4dATI(
 		int stream,
 		double x,
 		double y,
 		double z,
 		double w);
 
-	public native void vertexStream4dvATI(int stream, int pdV);
+	public static native void glVertexStream4dvATI(int stream, DoubleBuffer pdV);
 
-	public native void vertexStream4fATI(
+	public static native void glVertexStream4fATI(
 		int stream,
 		float x,
 		float y,
 		float z,
 		float w);
 
-	public native void vertexStream4fvATI(int stream, int pfV);
+	public static native void glVertexStream4fvATI(int stream, FloatBuffer pfV);
 
-	public native void vertexStream4iATI(
+	public static native void glVertexStream4iATI(
 		int stream,
 		int x,
 		int y,
 		int z,
 		int w);
 
-	public native void vertexStream4ivATI(int stream, int piV);
+	public static native void glVertexStream4ivATI(int stream, IntBuffer piV);
 
-	public native void vertexStream4sATI(
+	public static native void glVertexStream4sATI(
 		int stream,
 		short x,
 		short y,
 		short z,
 		short w);
 
-	public native void vertexStream4svATI(int stream, int psV);
+	public static native void glVertexStream4svATI(int stream, CharBuffer psV);
 
-	public native void vertexWeightfEXT(float weight);
+	public static native void glVertexWeightfEXT(float weight);
 
-	public native void vertexWeightfvEXT(int pfWeight);
+	public static native void glVertexWeightfvEXT(FloatBuffer pfWeight);
 
-	public native void vertexWeightPointerEXT(
+	public static native void glVertexWeightPointerEXT(
 		int size,
 		int type,
 		int stride,
-		int pPointer);
+		Buffer pPointer);
 
-	public native void weightbvARB(int size, int pWeights);
+	public static native void glWeightbvARB(int size, ByteBuffer pWeights);
 
-	public native void weightdvARB(int size, int pdWeights);
+	public static native void glWeightdvARB(int size, DoubleBuffer pdWeights);
 
-	public native void weightfvARB(int size, int pfWeights);
+	public static native void glWeightfvARB(int size, FloatBuffer pfWeights);
 
-	public native void weightivARB(int size, int piWeights);
+	public static native void glWeightivARB(int size, IntBuffer piWeights);
 
-	public native void weightPointerARB(
+	public static native void glWeightPointerARB(
 		int size,
 		int type,
 		int stride,
-		int pPointer);
+		Buffer pPointer);
 
-	public native void weightsvARB(int size, int psWeights);
+	public static native void glWeightsvARB(int size, CharBuffer psWeights);
 
-	public native void weightubvARB(int size, int pWeights);
+	public static native void glWeightubvARB(int size, ByteBuffer pWeights);
 
-	public native void weightuivARB(int size, int piWeights);
+	public static native void glWeightuivARB(int size, IntBuffer piWeights);
 
-	public native void weightusvARB(int size, int psWeights);
+	public static native void glWeightusvARB(int size, CharBuffer psWeights);
 
-	public static native int glXAllocateMemoryNV(
+	public static native ByteBuffer glXAllocateMemoryNV(
 		int size,
 		float readFrequency,
 		float writeFrequency,
 		float priority);
 
-	public static native void glXFreeMemoryNV(int pointer);
+	public static native void glXFreeMemoryNV(ByteBuffer pointer);
 
 	// #ifdef _WIN32
 
-	public static native int wglAllocateMemoryNV(
+	public static native ByteBuffer wglAllocateMemoryNV(
 		int size,
 		float readFrequency,
 		float writeFrequency,
@@ -1351,31 +1358,31 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native boolean wglBindTexImageARB(int hPbuffer, int iBuffer);
 
-	public static native boolean wglChoosePixelFormatARB(
+/*	public static native boolean wglChoosePixelFormatARB(
 		int hdc,
 		int piAttribIList,
 		int pfAttribFList,
 		int nMaxFormats,
 		int piFormats,
 		int piNumFormats);
-
+*/
 	public static native int wglCreateBufferRegionARB(
 		int hdc,
 		int iLayerPlane,
 		int uType);
 
-	public static native int wglCreatePbufferARB(
+/*	public static native int wglCreatePbufferARB(
 		int hDC,
 		int iPixelFormat,
 		int iWidth,
 		int iHeight,
 		int piAttribList);
+*/
+	public static native void wglDeleteBufferRegionARB(Buffer hRegion);
 
-	public static native void wglDeleteBufferRegionARB(int hRegion);
+/*	public static native boolean wglDestroyPbufferARB(int hPbuffer);*/
 
-	public static native boolean wglDestroyPbufferARB(int hPbuffer);
-
-	public static native void wglFreeMemoryNV(int pointer);
+	public static native void wglFreeMemoryNV(ByteBuffer pointer);
 
 	public static native int wglGetCurrentReadDCARB();
 
@@ -1383,9 +1390,9 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native String wglGetExtensionsStringEXT();
 
-	public static native int wglGetPbufferDCARB(int hPbuffer);
+//	public static native int wglGetPbufferDCARB(int hPbuffer);
 
-	public static native boolean wglGetPixelFormatAttribfvARB(
+/*	public static native boolean wglGetPixelFormatAttribfvARB(
 		int hdc,
 		int iPixelFormat,
 		int iLayerPlane,
@@ -1400,10 +1407,10 @@ public class GL extends CoreGL implements GLConstants {
 		int nAttributes,
 		int piAttributes,
 		int piValues);
-
+*/
 	public static native int wglGetSwapIntervalEXT();
 
-	public static native boolean wglMakeContextCurrentARB(
+/*	public static native boolean wglMakeContextCurrentARB(
 		int hDrawDC,
 		int hReadDC,
 		int hglrc);
@@ -1414,13 +1421,13 @@ public class GL extends CoreGL implements GLConstants {
 		int piValue);
 
 	public static native int wglReleasePbufferDCARB(int hPbuffer, int hDC);
-
+*/
 	public static native boolean wglReleaseTexImageARB(
 		int hPbuffer,
 		int iBuffer);
 
 	public static native boolean wglRestoreBufferRegionARB(
-		int hRegion,
+		Buffer hRegion,
 		int x,
 		int y,
 		int width,
@@ -1429,51 +1436,51 @@ public class GL extends CoreGL implements GLConstants {
 		int ySrc);
 
 	public static native boolean wglSaveBufferRegionARB(
-		int hRegion,
+		Buffer hRegion,
 		int x,
 		int y,
 		int width,
 		int height);
 
-	public static native boolean wglSetPbufferAttribARB(
+/*	public static native boolean wglSetPbufferAttribARB(
 		int hPbuffer,
 		int piAttribList);
-
+*/
 	public static native boolean wglSwapIntervalEXT(int interval);
 
-	public native void windowPos2dARB(double x, double y);
+	public static native void glWindowPos2dARB(double x, double y);
 
-	public native void windowPos2dvARB(int pdP);
+	public static native void glWindowPos2dvARB(DoubleBuffer pdP);
 
-	public native void windowPos2fARB(float x, float y);
+	public static native void glWindowPos2fARB(float x, float y);
 
-	public native void windowPos2fvARB(int pfP);
+	public static native void glWindowPos2fvARB(FloatBuffer pfP);
 
-	public native void windowPos2iARB(int x, int y);
+	public static native void glWindowPos2iARB(int x, int y);
 
-	public native void windowPos2ivARB(int piP);
+	public static native void glWindowPos2ivARB(IntBuffer piP);
 
-	public native void windowPos2sARB(short x, short y);
+	public static native void glWindowPos2sARB(short x, short y);
 
-	public native void windowPos2svARB(int psP);
+	public static native void glWindowPos2svARB(CharBuffer psP);
 
-	public native void windowPos3dARB(double x, double y, double z);
+	public static native void glWindowPos3dARB(double x, double y, double z);
 
-	public native void windowPos3dvARB(int pdP);
+	public static native void glWindowPos3dvARB(DoubleBuffer pdP);
 
-	public native void windowPos3fARB(float x, float y, float z);
+	public static native void glWindowPos3fARB(float x, float y, float z);
 
-	public native void windowPos3fvARB(int pfP);
+	public static native void glWindowPos3fvARB(FloatBuffer pfP);
 
-	public native void windowPos3iARB(int x, int y, int z);
+	public static native void glWindowPos3iARB(int x, int y, int z);
 
-	public native void windowPos3ivARB(int piP);
+	public static native void glWindowPos3ivARB(IntBuffer piP);
 
-	public native void windowPos3sARB(short x, short y, short z);
+	public static native void glWindowPos3sARB(short x, short y, short z);
 
-	public native void windowPos3svARB(int psP);
+	public static native void glWindowPos3svARB(CharBuffer psP);
 
-	public native void writeMaskEXT(
+	public static native void glWriteMaskEXT(
 		int res,
 		int in,
 		int outX,
@@ -1481,17 +1488,34 @@ public class GL extends CoreGL implements GLConstants {
 		int outZ,
 		int outW);
 
-	public native void bindBufferARB(int target, int buffer);
-	public native void deleteBuffersARB(int n, int buffers);
-	public native void genBuffersARB(int n, int buffers);
-	public native boolean isBufferARB(int buffer);
-	public native void bufferDataARB(int target, int size, int data, int usage);
-	public native void bufferSubDataARB(int target, int offset, int size, int data);
-	public native void getBufferSubDataARB(int target, int offset, int size, int data);
-	public native int mapBufferARB(int target, int access);
-	public native boolean unmapBufferARB(int target);
-	public native void getBufferParameterivARB(int target, int pname, int params);
-	public native void getBufferPointervARB(int target, int pname, int params);
+	public static native void glBindBufferARB(int target, int buffer);
+	public static native void glDeleteBuffersARB(int n, IntBuffer buffers);
+	public static native void glGenBuffersARB(int n, IntBuffer buffers);
+	public static native boolean glIsBufferARB(int buffer);
+	public static native void glBufferDataARB(int target, int size, Buffer data, int usage);
+	public static native void glBufferSubDataARB(int target, int offset, int size, Buffer data);
+	public static native void glGetBufferSubDataARB(int target, int offset, int size, Buffer data);
+	/**
+	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in
+	 * which case a new ByteBuffer will be created, pointing to the returned memory. If oldBuffer is non-null,
+	 * it will be returned if it points to the same mapped memory, otherwise a new ByteBuffer is created.
+	 * That way, an application will normally use glMapBufferARB like this:
+	 *
+	 * ByteBuffer mapped_buffer;
+	 * mapped_buffer = glMapBufferARB(..., ..., ..., null);
+	 * ...
+	 * // Another map on the same buffer
+	 * mapped_buffer = glMapBufferARB(..., ..., ..., mapped_buffer);
+	 *
+	 * @param size The size of the buffer area.
+	 * @param oldBuffer A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and
+	 * no new buffer will be created. In that case, size is ignored.
+	 * @return A ByteBuffer representing the mapped buffer memory.
+	 */
+	public static native ByteBuffer glMapBufferARB(int target, int access, int size, ByteBuffer oldBuffer);
+	public static native boolean glUnmapBufferARB(int target);
+	public static native void glGetBufferParameterivARB(int target, int pname, IntBuffer params);
+	public static native ByteBuffer glGetBufferPointervARB(int target, int pname, int size);
 
 	/*
 	 * Available extensions
@@ -1604,12 +1628,10 @@ public class GL extends CoreGL implements GLConstants {
 				map.put(fields[i].getName(), fields[i]);
 		}
 
-		String exts = getString(EXTENSIONS);
+		String exts = glGetString(GL_EXTENSIONS);
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
-			if (ext.startsWith("GL_"))
-				ext = ext.substring(3);
 			Field f = (Field) map.get(ext);
 			if (f != null) {
 				//System.out.println("Extension : "+ext+" : present");
@@ -1625,7 +1647,7 @@ public class GL extends CoreGL implements GLConstants {
 		}
 
 		// Let's see what openGL version we are too:
-		String version = getString(VERSION);
+		String version = glGetString(GL_VERSION);
 		int i = version.indexOf("1.");
 		if (i > -1) {
 			char c = version.charAt(i + 2);

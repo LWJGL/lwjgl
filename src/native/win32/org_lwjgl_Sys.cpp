@@ -54,32 +54,10 @@ __int64		hires_timer;				// Hires timer current time
  * Method:    nGetNULLValue
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_nGetNULLValue
-  (JNIEnv *, jclass)
+JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
+  (JNIEnv *env, jclass clazz)
 {
-	return (jint)NULL;
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    getDirectBufferAddress
- * Signature: (Ljava/nio/Buffer;)I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
-  (JNIEnv * env, jclass clazz, jobject buf)
-{
-	return (jint) env->GetDirectBufferAddress(buf);
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    createDirectBuffer
- * Signature: (II)Ljava/nio/ByteBuffer;
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
-  (JNIEnv * env, jclass clazz, jint address, jint length)
-{
-	return env->NewDirectByteBuffer((void *)address, length);
+	return env->NewDirectByteBuffer(NULL, 0);
 }
 
 /*

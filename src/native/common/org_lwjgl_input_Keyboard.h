@@ -258,9 +258,9 @@ extern "C" {
 #define org_lwjgl_input_Keyboard_KEY_POWER 222L
 #undef org_lwjgl_input_Keyboard_KEY_SLEEP
 #define org_lwjgl_input_Keyboard_KEY_SLEEP 223L
+/* Inaccessible static: keyName */
 /* Inaccessible static: created */
 /* Inaccessible static: keyDownBuffer */
-/* Inaccessible static: keyDownAddress */
 /* Inaccessible static: readBuffer */
 /* Inaccessible static: translationEnabled */
 /* Inaccessible static: numEvents */
@@ -295,10 +295,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nPoll
- * Signature: (I)V
+ * Signature: (Ljava/nio/ByteBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -311,7 +311,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nEnableTranslation
- * Signature: ()V
+ * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
   (JNIEnv *, jclass);

@@ -198,8 +198,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
   (JNIEnv *env, jclass clazz, jint cursor_handle)
 {
-	Cursor cursor = (Cursor)cursor_handle;
-	if (cursor != None) {
+	if (cursor_handle != 0) {
+		Cursor cursor = (Cursor)cursor_handle;
 		if (!native_cursor) {
 			current_x = current_y = 0;
 			XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);

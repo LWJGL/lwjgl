@@ -41,17 +41,17 @@ package org.lwjgl.opengl.ext;
 
 public interface EXTVertexWeighting
 {
-  public static final int MODELVIEW0_STACK_DEPTH_EXT                           = 0x0BA3;  /* alias to MODELVIEW_STACK_DEPTH */
-  public static final int MODELVIEW1_STACK_DEPTH_EXT                           = 0x8502;
-  public static final int MODELVIEW0_MATRIX_EXT                                = 0x0BA6;  /* alias to MODELVIEW_MATRIX */
-  public static final int MODELVIEW1_MATRIX_EXT                                = 0x8506;
-  public static final int VERTEX_WEIGHTING_EXT                                 = 0x8509;
-  public static final int MODELVIEW0_EXT                                       = 0x1700;  /* alias to MODELVIEW */
-  public static final int MODELVIEW1_EXT                                       = 0x850A;
-  public static final int CURRENT_VERTEX_WEIGHT_EXT                            = 0x850B;
-  public static final int VERTEX_WEIGHT_ARRAY_EXT                              = 0x850C;
-  public static final int VERTEX_WEIGHT_ARRAY_SIZE_EXT                         = 0x850D;
-  public static final int VERTEX_WEIGHT_ARRAY_TYPE_EXT                         = 0x850E;
-  public static final int VERTEX_WEIGHT_ARRAY_STRIDE_EXT                       = 0x850F;
-  public static final int VERTEX_WEIGHT_ARRAY_POINTER_EXT                      = 0x8510;
+	public static final int GL_MODELVIEW0_STACK_DEPTH_EXT                           = 0x0BA3;  /* alias to MODELVIEW_STACK_DEPTH */
+	public static final int GL_MODELVIEW1_STACK_DEPTH_EXT                           = 0x8502;
+	public static final int GL_MODELVIEW0_MATRIX_EXT                                = 0x0BA6;  /* alias to MODELVIEW_MATRIX */
+	public static final int GL_MODELVIEW1_MATRIX_EXT                                = 0x8506;
+	public static final int GL_VERTEX_WEIGHTING_EXT                                 = 0x8509;
+	public static final int GL_MODELVIEW0_EXT                                       = 0x1700;  /* alias to MODELVIEW */
+	public static final int GL_MODELVIEW1_EXT                                       = 0x850A;
+	public static final int GL_CURRENT_VERTEX_WEIGHT_EXT                            = 0x850B;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_EXT                              = 0x850C;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT                         = 0x850D;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT                         = 0x850E;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT                       = 0x850F;
+	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT                      = 0x8510;
 }

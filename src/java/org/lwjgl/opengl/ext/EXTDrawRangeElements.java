@@ -41,6 +41,6 @@ package org.lwjgl.opengl.ext;
 
 public interface EXTDrawRangeElements
 {
-  public static final int MAX_ELEMENTS_VERTICES_EXT                            = 0x80E8;
-  public static final int MAX_ELEMENTS_INDICES_EXT                             = 0x80E9;
+	public static final int GL_MAX_ELEMENTS_VERTICES_EXT                            = 0x80E8;
+	public static final int GL_MAX_ELEMENTS_INDICES_EXT                             = 0x80E9;
 }

@@ -39,7 +39,7 @@
  */
 public interface EXTBgra {
 	/*
-	public static final int  BGR_EXT                          = 0x80E0;
-	public static final int  BGRA_EXT                         = 0x80E1;
+	public static final int GL_ BGR_EXT                          = 0x80E0;
+	public static final int GL_ BGRA_EXT                         = 0x80E1;
 	*/
 }

@@ -360,9 +360,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
  * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv * env, jclass clazz, jint gammaRampAddress)
+  (JNIEnv * env, jclass clazz, jobject gammaRampBuffer)
 {
-	float *gammaRamp = (float *)gammaRampAddress;
+	const float *gammaRamp = (const float *)env->GetDirectBufferAddress(gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
 
 	for (int i = 0; i < 256; i ++) {

@@ -41,12 +41,11 @@ package org.lwjgl.opengl.ext;
 
 public interface EXTSecondaryColor
 {
-  public static final int COLOR_SUM_EXT                                        = 0x8458;
-  public static final int CURRENT_SECONDARY_COLOR_EXT                          = 0x8459;
-  public static final int SECONDARY_COLOR_ARRAY_SIZE_EXT                       = 0x845A;
-  public static final int SECONDARY_COLOR_ARRAY_TYPE_EXT                       = 0x845B;
-  public static final int SECONDARY_COLOR_ARRAY_STRIDE_EXT                     = 0x845C;
-  public static final int SECONDARY_COLOR_ARRAY_POINTER_EXT                    = 0x845D;
-  public static final int SECONDARY_COLOR_ARRAY_EXT                            = 0x845E;
-
+	public static final int GL_COLOR_SUM_EXT                                        = 0x8458;
+	public static final int GL_CURRENT_SECONDARY_COLOR_EXT                          = 0x8459;
+	public static final int GL_SECONDARY_COLOR_ARRAY_SIZE_EXT                       = 0x845A;
+	public static final int GL_SECONDARY_COLOR_ARRAY_TYPE_EXT                       = 0x845B;
+	public static final int GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT                     = 0x845C;
+	public static final int GL_SECONDARY_COLOR_ARRAY_POINTER_EXT                    = 0x845D;
+	public static final int GL_SECONDARY_COLOR_ARRAY_EXT                            = 0x845E;
 }

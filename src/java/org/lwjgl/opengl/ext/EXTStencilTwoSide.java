@@ -41,6 +41,6 @@ package org.lwjgl.opengl.ext;
 
 public interface EXTStencilTwoSide
 {
-  public static final int STENCIL_TEST_TWO_SIDE_EXT                            = 0x8910;
-  public static final int ACTIVE_STENCIL_FACE_EXT                              = 0x8911;
+	public static final int GL_STENCIL_TEST_TWO_SIDE_EXT                            = 0x8910;
+	public static final int GL_ACTIVE_STENCIL_FACE_EXT                              = 0x8911;
 }

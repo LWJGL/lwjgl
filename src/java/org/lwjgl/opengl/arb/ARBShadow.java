@@ -41,7 +41,7 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBShadow
 {
-  public static final int TEXTURE_COMPARE_MODE_ARB                             = 0x884C;
-  public static final int TEXTURE_COMPARE_FUNC_ARB                             = 0x884D;
-  public static final int COMPARE_R_TO_TEXTURE_ARB                             = 0x884E;
+	public static final int GL_TEXTURE_COMPARE_MODE_ARB                             = 0x884C;
+	public static final int GL_TEXTURE_COMPARE_FUNC_ARB                             = 0x884D;
+	public static final int GL_COMPARE_R_TO_TEXTURE_ARB                             = 0x884E;
 }

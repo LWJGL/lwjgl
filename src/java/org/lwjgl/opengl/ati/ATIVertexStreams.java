@@ -41,14 +41,14 @@ package org.lwjgl.opengl.ati;
 
 public interface ATIVertexStreams
 {
-  public static final int MAX_VERTEX_STREAMS_ATI                               = 0x876B;
-  public static final int VERTEX_SOURCE_ATI                                    = 0x876C;
-  public static final int VERTEX_STREAM0_ATI                                   = 0x876D;
-  public static final int VERTEX_STREAM1_ATI                                   = 0x876E;
-  public static final int VERTEX_STREAM2_ATI                                   = 0x876F;
-  public static final int VERTEX_STREAM3_ATI                                   = 0x8770;
-  public static final int VERTEX_STREAM4_ATI                                   = 0x8771;
-  public static final int VERTEX_STREAM5_ATI                                   = 0x8772;
-  public static final int VERTEX_STREAM6_ATI                                   = 0x8773;
-  public static final int VERTEX_STREAM7_ATI                                   = 0x8774;
+	public static final int GL_MAX_VERTEX_STREAMS_ATI                               = 0x876B;
+	public static final int GL_VERTEX_SOURCE_ATI                                    = 0x876C;
+	public static final int GL_VERTEX_STREAM0_ATI                                   = 0x876D;
+	public static final int GL_VERTEX_STREAM1_ATI                                   = 0x876E;
+	public static final int GL_VERTEX_STREAM2_ATI                                   = 0x876F;
+	public static final int GL_VERTEX_STREAM3_ATI                                   = 0x8770;
+	public static final int GL_VERTEX_STREAM4_ATI                                   = 0x8771;
+	public static final int GL_VERTEX_STREAM5_ATI                                   = 0x8772;
+	public static final int GL_VERTEX_STREAM6_ATI                                   = 0x8773;
+	public static final int GL_VERTEX_STREAM7_ATI                                   = 0x8774;
 }

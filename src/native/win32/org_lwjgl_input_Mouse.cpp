@@ -166,7 +166,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
   (JNIEnv *env, jclass clazz, jint cursor_handle)
 {
-	if (cursor_handle != NULL) {
+	if (cursor_handle != 0) {
 		if (mDIDevice == NULL)
 			throwException(env, "null device!");
 		mDIDevice->Unacquire();

@@ -41,7 +41,7 @@ package org.lwjgl.opengl.nv;
 
 public interface NVFence
 {
-  public static final int ALL_COMPLETED_NV                                     = 0x84F2;
-  public static final int FENCE_STATUS_NV                                      = 0x84F3;
-  public static final int FENCE_CONDITION_NV                                   = 0x84F4;
+	public static final int GL_ALL_COMPLETED_NV                                     = 0x84F2;
+	public static final int GL_FENCE_STATUS_NV                                      = 0x84F3;
+	public static final int GL_FENCE_CONDITION_NV                                   = 0x84F4;
 }

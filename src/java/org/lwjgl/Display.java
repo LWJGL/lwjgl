@@ -234,7 +234,7 @@ public final class Display {
 				rampEntry = 0.0f;
 			gammaRamp.put(i, rampEntry);
 		}
-		if (!setGammaRamp(Sys.getDirectBufferAddress(gammaRamp)))
+		if (!setGammaRamp(gammaRamp))
 			return false;
 		if (Sys.DEBUG) {
 			System.out.println("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
@@ -253,5 +253,5 @@ public final class Display {
 	/**
 	 * Native method to set the gamma ramp.
 	 */
-	private static native boolean setGammaRamp(int gammaRampAddress);
+	private static native boolean setGammaRamp(FloatBuffer gammaRamp);
 }

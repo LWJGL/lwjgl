@@ -24,26 +24,10 @@ extern "C" {
 /*
  * Class:     org_lwjgl_Sys
  * Method:    nGetNULLValue
- * Signature: ()I
+ * Signature: ()Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_nGetNULLValue
+JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
   (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    getDirectBufferAddress
- * Signature: (Ljava/nio/Buffer;)I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    createDirectBuffer
- * Signature: (II)Ljava/nio/ByteBuffer;
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
-  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_Sys
