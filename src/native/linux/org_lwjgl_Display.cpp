@@ -375,7 +375,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 	vis_info = NULL;
 	XCloseDisplay(disp);
 	disp = NULL;
-	XSync(disp, False);
 	closeGL();
 #ifdef _DEBUG
 	printf("Closed X connection\n");
