@@ -78,7 +78,7 @@ wglGetSwapIntervalEXTPROC wglGetSwapIntervalEXT = NULL;
 wglMakeContextCurrentARBPROC wglMakeContextCurrentARB = NULL;
 wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB = NULL;
 
-/** returns true if the extention is available */
+/** returns true if the extension is available */
 static bool WGLQueryExtension(JNIEnv *env, const char *name)
 {
 	const GLubyte *extensions;
