@@ -43,9 +43,6 @@
 extern "C" {
 #endif
 
-#define ALUTAPI
-#define ALUTAPIENTRY __cdecl
-
 #ifdef _WIN32
  #ifdef _OPENAL32LIB
   #define ALCAPI __declspec(dllexport)
