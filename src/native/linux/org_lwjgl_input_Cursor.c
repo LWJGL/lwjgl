@@ -84,11 +84,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
 	XcursorImagesDestroy(cursor_images);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay__destroyCursor
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyCursor
   (JNIEnv *env, jobject this, jobject cursor_handle_buffer)
 {
 	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle_buffer);
-//	Cursor cursor = (Cursor)cursor_handle;
 	XFreeCursor(getDisplay(), *cursor);
 	decDisplay();
 }
