@@ -132,7 +132,7 @@ void throwOpenALException(JNIEnv * env, const char * err) {
 }
 
 void throwFMODException(JNIEnv * env, const char * err) {
-	throwGeneralException(env, "org/lwjgl/fmod/FMODException", err);
+	throwGeneralException(env, "org/lwjgl/fmod3/FMODException", err);
 }
 
 void throwException(JNIEnv * env, const char * err) {
