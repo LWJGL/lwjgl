@@ -39,10 +39,14 @@
 # version $Revision$
 #
 
-GCC = gcc
-LINK = gcc
+GCC = g++
+LINK = g++
 JAVAHOME=/usr/java/j2sdk1.4.1_01
-LIBOBJS=../common/extgl.o org_lwjgl_Display.o org_lwjgl_Sys.o org_lwjgl_opengl_BaseGL.o org_lwjgl_opengl_GL.o org_lwjgl_opengl_CoreGL.o org_lwjgl_input_Keyboard.o org_lwjgl_opengl_GLU.o org_lwjgl_input_Mouse.o
+LIBCSRC=../common/extgl.c
+LIBCPPSRC=$(shell find . -name \*.cpp -print|grep -v CVS)
+LIBCPPOBJS=$(LIBCPPSRC:.cpp=.o)
+LIBCOBJS=$(LIBCSRC:.c=.o)
+LIBOBJS=$(LIBCOBJS) $(LIBCPPOBJS)
 #DEBUG_FLAGS=-D_DEBUG
 LINKOPTS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU
 
@@ -59,7 +63,7 @@ liblwjgl.so: $(LIBOBJS)
 
 .SUFFIXES:      .cpp .so .o .java .h .class
 
-%.o : %.c
+%.o : %.cpp
 	$(GCC) $(DEBUG_FLAGS) -Wall -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
 
 testprog : main.o

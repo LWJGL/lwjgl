@@ -68,7 +68,7 @@ void waitMapped(Display *disp, Window win) {
 }
 
 int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
-	unsigned int event_base, error_base, xvid_ver, xvid_rev;
+	int event_base, error_base, xvid_ver, xvid_rev;
 	
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
 #ifdef _DEBUG
@@ -211,13 +211,13 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 		return NULL;
 	}
 	// Allocate an array of DisplayModes big enough
-	jclass displayModeClass = (*env)->FindClass(env, "org/lwjgl/DisplayMode");
-	jobjectArray ret = (*env)->NewObjectArray(env, num_modes, displayModeClass, NULL);
-	jmethodID displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
+	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+	jobjectArray ret = env->NewObjectArray(num_modes, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
 	
 	for (i = 0; i < num_modes; i++) {
-		jobject displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, depth, 0);
-		(*env)->SetObjectArrayElement(env, ret, i, displayMode);
+		jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, depth, 0);
+		env->SetObjectArrayElement(ret, i, displayMode);
 	}
 	XFree(avail_modes);
 	XCloseDisplay(disp);

@@ -55,7 +55,7 @@ long int		hires_timer;				// Hires timer current time
 JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
   (JNIEnv * env, jclass clazz, jobject buf)
 {
-	return (jint) (*env)->GetDirectBufferAddress(env, buf);
+	return (jint) env->GetDirectBufferAddress(buf);
 }
 
 /*
@@ -66,7 +66,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
 JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
   (JNIEnv * env, jclass clazz, jint address, jint length)
 {
-	return (*env)->NewDirectByteBuffer(env, (void *)address, length);
+	return env->NewDirectByteBuffer((void *)address, length);
 }
 
 /*

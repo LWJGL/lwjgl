@@ -1287,7 +1287,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getTexEnviv(JNIEnv * env, jo
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_CoreGL_getString(JNIEnv * env, jobject obj, jint p0)
 {
 	const GLubyte * string = glGetString((GLenum) p0);
-	return (*env)->NewStringUTF(env, (const char *) string);
+	return env->NewStringUTF((const char *) string);
 }
 
 /*

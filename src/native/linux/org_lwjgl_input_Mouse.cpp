@@ -78,26 +78,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 	static jobject globalClassLock = NULL;
 
 	if (globalClassLock == NULL) {
-		globalClassLock = (*env)->NewGlobalRef(env, clazz);
+		globalClassLock = env->NewGlobalRef(clazz);
 	}
 
 	// Now cache the field IDs:
 	if (fid_button == NULL) {
-		fid_button = (*env)->GetStaticFieldID(env, clazz, "button", "[Z");
+		fid_button = env->GetStaticFieldID(clazz, "button", "[Z");
 	}
 	if (fid_dx == NULL) {
-		fid_dx = (*env)->GetStaticFieldID(env, clazz, "dx", "I");
+		fid_dx = env->GetStaticFieldID(clazz, "dx", "I");
 	}
 	if (fid_dy == NULL) {
-		fid_dy = (*env)->GetStaticFieldID(env, clazz, "dy", "I");
+		fid_dy = env->GetStaticFieldID(clazz, "dy", "I");
 	}
 	if (fid_dz == NULL) {
-		fid_dz = (*env)->GetStaticFieldID(env, clazz, "dz", "I");
+		fid_dz = env->GetStaticFieldID(clazz, "dz", "I");
 	}
 }
 
 int blankCursor(void) {
-	int best_width, best_height;
+	unsigned int best_width, best_height;
 	if (XQueryBestCursor(disp, win, 1, 1, &best_width, &best_height) == 0) {
 #ifdef _DEBUG
 		printf("Could not query best cursor size\n");
@@ -242,14 +242,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	int moved_x = current_x - last_x;
 	int moved_y = current_y - last_y;
 	int moved_z = current_z - last_z;
-	(*env)->SetStaticIntField(env, clazz, fid_dx, (jint)moved_x);
-	(*env)->SetStaticIntField(env, clazz, fid_dy, (jint)moved_y);
-	(*env)->SetStaticIntField(env, clazz, fid_dz, (jint)moved_z);
+	env->SetStaticIntField(clazz, fid_dx, (jint)moved_x);
+	env->SetStaticIntField(clazz, fid_dy, (jint)moved_y);
+	env->SetStaticIntField(clazz, fid_dz, (jint)moved_z);
 	last_x = current_x;
 	last_y = current_y;
 	last_z = current_z;
-	jbooleanArray buttonsArray = (jbooleanArray) (*env)->GetStaticObjectField(env, clazz, fid_button);
-	unsigned char * class_buttons = (unsigned char *) (*env)->GetPrimitiveArrayCritical(env, buttonsArray, NULL);
+	jbooleanArray buttonsArray = (jbooleanArray) env->GetStaticObjectField(clazz, fid_button);
+	unsigned char * class_buttons = (unsigned char *) env->GetPrimitiveArrayCritical(buttonsArray, NULL);
 	memcpy(class_buttons, buttons, NUM_BUTTONS*sizeof(unsigned char));
-	(*env)->ReleasePrimitiveArrayCritical(env, buttonsArray, class_buttons, 0);
+	env->ReleasePrimitiveArrayCritical(buttonsArray, class_buttons, 0);
 }

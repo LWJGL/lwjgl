@@ -67,11 +67,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 	static jobject globalClassLock = NULL;
 
 	if (globalClassLock == NULL) {
-		globalClassLock = (*env)->NewGlobalRef(env, clazz);
+		globalClassLock = env->NewGlobalRef(clazz);
 	}
 
-	fid_readBuffer = (*env)->GetStaticFieldID(env, clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
-	fid_readBufferAddress = (*env)->GetStaticFieldID(env, clazz, "readBufferAddress", "I");
+	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
+	fid_readBufferAddress = env->GetStaticFieldID(clazz, "readBufferAddress", "I");
 }
 
 /*
@@ -156,8 +156,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv * env, jclass clazz)
 {
-	jobject newBuffer = (*env)->NewDirectByteBuffer(env, &readBuffer, KEYBOARD_BUFFER_SIZE);
-	(*env)->SetStaticObjectField(env, clazz, fid_readBuffer, newBuffer);
-	(*env)->SetStaticIntField(env, clazz, fid_readBufferAddress, (jint) (&readBuffer));
+	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE);
+	env->SetStaticObjectField(clazz, fid_readBuffer, newBuffer);
+	env->SetStaticIntField(clazz, fid_readBufferAddress, (jint) (&readBuffer));
 	return KEYBOARD_BUFFER_SIZE;
 }

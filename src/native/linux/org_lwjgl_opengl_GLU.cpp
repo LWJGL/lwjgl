@@ -50,7 +50,7 @@
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GLU_getString(JNIEnv * env, jobject obj, jint p0)
 {
 	const char * msg = (const char *) gluGetString((GLint) p0);
-	jstring ret = (*env)->NewStringUTF(env, msg);
+	jstring ret = env->NewStringUTF(msg);
 	return ret;
 }
 
@@ -61,7 +61,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GLU_getString(JNIEnv * env, jobj
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GLU_errorString(JNIEnv * env, jobject obj, jint p0)
 {
 	const GLubyte * msg = gluErrorString((GLint) p0);
-	jstring ret = (*env)->NewStringUTF(env, (const char *) msg);
+	jstring ret = env->NewStringUTF((const char *) msg);
 	return ret;
 }
 
