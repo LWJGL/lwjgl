@@ -80,11 +80,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCapabilities
 
 static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pixel_format, jobject pixelFormatCaps, const int *pBufferAttribs_ptr) {
 	HWND dummy_hwnd = createWindow(0, 0, 1, 1, false, false);
-        HDC dummy_hdc;
-        int iPixelFormat;
-        HGLRC dummy_hglrc;
-        BOOL result;
-        HPBUFFERARB Pbuffer;
+      HDC dummy_hdc;
+      int iPixelFormat;
+      HGLRC dummy_hglrc;
+      BOOL result;
+      HPBUFFERARB Pbuffer;
+	bool pbuffers_supported;
+
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Could not create dummy window");
 		return NULL;
@@ -114,7 +116,7 @@ static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pix
 		return NULL;
 	}
 	extgl_InitWGL(env);
-	bool pbuffers_supported = isPbuffersSupported();
+	pbuffers_supported = isPbuffersSupported();
 	iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, false);
 	if (iPixelFormat == -1)
 		iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, true);
