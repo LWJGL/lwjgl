@@ -48,7 +48,6 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener {
 	private int width;
 	private int height;
 	private boolean context_update;
-	private boolean canvas_created;
 	private boolean dirty;
 
 	public void update(Graphics g) {
@@ -56,18 +55,22 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener {
 	}
 
 	public void paint(Graphics g) {
+		// Do nothing
+	}
+
+	/**
+	  * This initializes the canvas and binds the context to it. Should only
+	  * be called from the AWT dispatch thread.
+	  */
+	public void initializeCanvas() {
 		synchronized ( this ) {
 			dirty = true;
-			if ( !canvas_created ) {
-				setFocusTraversalKeysEnabled(false);
-				/* Input methods are not enabled in fullscreen anyway, so disable always */
-				enableInputMethods(false);
-				addComponentListener(this);
-				((MacOSXDisplay)Display.getImplementation()).setView(this);
-				canvas_created = true;
-				setUpdate();
-				notify();
-			}
+			setFocusTraversalKeysEnabled(false);
+			/* Input methods are not enabled in fullscreen anyway, so disable always */
+			enableInputMethods(false);
+			addComponentListener(this);
+			((MacOSXDisplay)Display.getImplementation()).setView(this);
+			setUpdate();
 		}
 	}
 
@@ -78,18 +81,6 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener {
 			dirty = false;
 		}
 		return result;
-	}
-
-	public void waitForCanvasCreated() {
-		synchronized ( this ) {
-			while ( !canvas_created ) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// ignore
-				}
-			}
-		}
 	}
 
 	public boolean syncShouldUpdateContext() {
