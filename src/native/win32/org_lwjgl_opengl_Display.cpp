@@ -683,12 +683,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		extgl_Close();
 		return;
 	}
+	wglMakeCurrent(hdc, hglrc);
 	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
 	// of multisamples we want. If the extension is present we'll delete the existing
 	// rendering context and start over, using the ARB extension instead to pick the context.
+	extgl_InitWGL(env);
 	if (extgl_Extensions.WGL_ARB_pixel_format) {
-		wglMakeCurrent(hdc, hglrc);
-		extgl_InitWGL(env);
 		pixel_format_index = findPixelFormatARB(env, pixel_format, NULL, true, true, true);
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
