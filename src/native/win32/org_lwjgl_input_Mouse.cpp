@@ -73,7 +73,7 @@ void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, j
 
 static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
 {
-	GetClientRect(hwnd, clientRect);
+	GetClientRect(display_hwnd, clientRect);
 	// transform clientRect to screen coordinates
 	clientRect->top = -clientSize.top + windowRect->top;
 	clientRect->left = -clientSize.left + windowRect->left;
@@ -228,14 +228,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 		throwException(env, "null device!");
 	if (cursor_handle != 0) {
 		HCURSOR cursor = (HCURSOR)cursor_handle;
-		SetClassLong(hwnd, GCL_HCURSOR, (LONG)cursor);
+		SetClassLong(display_hwnd, GCL_HCURSOR, (LONG)cursor);
 		SetCursor(cursor);
 		if (!usingNativeCursor) {
 			usingNativeCursor = true;
 		}
 	} else {
 		if (usingNativeCursor) {
-			SetClassLong(hwnd, GCL_HCURSOR, (LONG)NULL);
+			SetClassLong(display_hwnd, GCL_HCURSOR, (LONG)NULL);
 			SetCursor(LoadCursor(NULL, IDC_ARROW));
 			usingNativeCursor = false;
 		}
@@ -300,14 +300,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
 			
 	  /* Reset cursor position to middle of the window */
 		RECT clientRect;
-		GetWindowRect(hwnd, &windowRect);
+		GetWindowRect(display_hwnd, &windowRect);
 		getScreenClientRect(&clientRect, &windowRect);
 		cursorPos.x = (clientRect.left + clientRect.right)/2;
 		cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
 		SetCursorPos(cursorPos.x, cursorPos.y);    
   }
   mDIDevice->Unacquire();
-	if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
+	if(mDIDevice->SetCooperativeLevel(display_hwnd, mouseMask) != DI_OK) {
 	  throwException(env, "Could not set the CooperativeLevel.");
 		return;
 	}
@@ -403,7 +403,7 @@ static void SetupMouse() {
 	mDIDevice->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
 
 	// set the cooperative level
-	if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
+	if(mDIDevice->SetCooperativeLevel(display_hwnd, mouseMask) != DI_OK) {
 		printfDebug("SetCooperativeLevel failed\n");
 		mCreate_success = false;
 		return;
@@ -412,11 +412,11 @@ static void SetupMouse() {
 	
 	 /* Reset cursor position to middle of the window */
 	RECT clientRect;
-	GetWindowRect(hwnd, &windowRect);
+	GetWindowRect(display_hwnd, &windowRect);
 	getScreenClientRect(&clientRect, &windowRect);
 	cursorPos.x = (clientRect.left + clientRect.right)/2;
 	cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
-  SetCursorPos(cursorPos.x, cursorPos.y);	
+	SetCursorPos(cursorPos.x, cursorPos.y);	
 }
 
 static int cap(int val, int min, int max) {
@@ -436,7 +436,7 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
 	GetCursorPos(&newCursorPos);
 	RECT clientRect;
 	RECT newWindowRect;
-	GetWindowRect(hwnd, &newWindowRect);
+	GetWindowRect(display_hwnd, &newWindowRect);
 	cursorPos.x += newWindowRect.left - windowRect.left;
 	cursorPos.y += newWindowRect.top - windowRect.top;
 	windowRect = newWindowRect;

@@ -81,7 +81,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 		return;
 	}
 
-	if (hwnd == NULL) {
+	if (display_hwnd == NULL) {
 		throwException(env, "No window.");
 		return;
 	}
@@ -92,7 +92,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 		return;
 	}
 
-	if (lpdiKeyboard->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+	if (lpdiKeyboard->SetCooperativeLevel(display_hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 		throwException(env, "Failed to set keyboard cooperation mode.");
 		return;
 	}

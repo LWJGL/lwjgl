@@ -42,9 +42,7 @@
 #include <windows.h>
 #include "org_lwjgl_Sys.h"
 #include "common_tools.h"
-
-// Handle to the application's window
-extern HWND hwnd;
+#include "Window.h"
 
 unsigned __int64		hires_timer_freq = 0;			// Hires timer frequency
 unsigned __int64		hires_timer = 0;				// Hires timer current time
@@ -125,7 +123,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
 	jboolean copy = JNI_FALSE;
 	const char * eMessageText = env->GetStringUTFChars(message, &copy);
 	const char * cTitleBarText = env->GetStringUTFChars(title, &copy);
-	MessageBox(hwnd, eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
+	MessageBox(display_hwnd, eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
 	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	

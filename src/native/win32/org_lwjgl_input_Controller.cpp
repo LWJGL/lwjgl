@@ -53,7 +53,6 @@
 #define CONTROLLER_AXISMIN -1000			// Minimum range to which we'll gauge the swing
 
 extern HINSTANCE dll_handle;
-extern HWND hwnd;
 
 static IDirectInput* cDI;									 // DI instance
 static IDirectInputDevice2* cDIDevice;			 // DI Device instance
@@ -117,13 +116,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jcl
  * Called when the Controller instance is to be created
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
-  
-	// assert that window has been created
-	if(hwnd == NULL) {
-		throwException(env, "Please create the window before initializing input devices");
-		return;
-	}
-	
 	// Create the DirectInput object. 
 	HRESULT hr;
 	hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &cDI, NULL); 
@@ -326,7 +318,7 @@ static void SetupController() {
 	}
 
 	// set the cooperative level
-	if(cDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+	if(cDIDevice->SetCooperativeLevel(display_hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 		printfDebug("SetCooperativeLevel failed\n");
 		cCreate_success = false;
 		return;

@@ -91,11 +91,41 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
   jint width, jint height, jobject pixel_format,
   jobject pixelFormatCaps, jobject pBufferAttribs)
 {
-	int iPixelFormat = findPixelFormatARB(env, pixel_format, pixelFormatCaps, false, false, false);
+	HWND dummy_hwnd = createWindow(env, 1, 1, false, false);
+	if (dummy_hwnd == NULL) {
+		return (jint)NULL;
+	}
+	HDC dummy_hdc = GetDC(dummy_hwnd);
+	int iPixelFormat = findPixelFormat(env, dummy_hdc, pixel_format);
 	if (iPixelFormat == -1) {
+		return (jint)NULL;
+	}
+	if (!applyPixelFormat(env, dummy_hdc, iPixelFormat)) {
+		closeWindow(dummy_hwnd, dummy_hdc);
+		return (jint)NULL;
+	}
+	
+	HGLRC dummy_hglrc = wglCreateContext(dummy_hdc);
+	if (dummy_hglrc == NULL) {
+		closeWindow(dummy_hwnd, dummy_hdc);
+		throwException(env, "Failed to create OpenGL rendering context");
+		return (jint)NULL;
+	}
+	BOOL result = wglMakeCurrent(dummy_hdc, dummy_hglrc);
+	if (!result) {
+		wglDeleteContext(dummy_hglrc);
+		closeWindow(dummy_hwnd, dummy_hdc);
+		throwException(env, "Could not bind context to dummy window");
+		return (jint)NULL;
+	}
+	extgl_InitWGL(env);
+
+	iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, false);
+	if (iPixelFormat == -1) {
+		wglDeleteContext(dummy_hglrc);
+		closeWindow(dummy_hwnd, dummy_hdc);
 		throwException(env, "Could not choose pixel formats.");
 		return (jint)NULL;
-
 	}
 
 	HPBUFFERARB Pbuffer;
@@ -112,10 +142,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 
 		pBufferAttribList[i] = 0;
 
-		Pbuffer = wglCreatePbufferARB(hdc, iPixelFormat, width, height, pBufferAttribList);
+		Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, pBufferAttribList);
 	} else {
-		Pbuffer = wglCreatePbufferARB(hdc, iPixelFormat, width, height, NULL);
+		Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, NULL);
 	}
+	wglDeleteContext(dummy_hglrc);
+	closeWindow(dummy_hwnd, dummy_hdc);
 
 	if (Pbuffer == NULL) {
 		throwException(env, "Could not create Pbuffer.");
@@ -138,13 +170,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 		return (jint)NULL;
 	}
 
-	if (!wglShareLists(hglrc, Pbuffer_context)) {
+	if (display_hglrc != NULL && !wglShareLists(display_hglrc, Pbuffer_context)) {
 		wglDeleteContext(Pbuffer_context);
 		wglReleasePbufferDCARB(Pbuffer, Pbuffer_dc);
 		wglDestroyPbufferARB(Pbuffer);
 		throwException(env, "Could not share buffer context.");
 		return (jint)NULL;
-
 	}
 
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
@@ -158,7 +189,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseContext
   (JNIEnv *env, jclass clazz)
 {
-	wglMakeCurrent(hdc, hglrc);
+	wglMakeCurrent(display_hdc, display_hglrc);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost

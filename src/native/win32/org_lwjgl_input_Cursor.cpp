@@ -70,7 +70,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
     bitmapInfo.bmiHeader.biBitCount          = 24;
     bitmapInfo.bmiHeader.biCompression       = BI_RGB;
 
-    colorDIB = CreateDIBSection(hdc, (BITMAPINFO*)&(bitmapInfo),
+    colorDIB = CreateDIBSection(GetDC(NULL), (BITMAPINFO*)&(bitmapInfo),
                                     DIB_RGB_COLORS,
                                     (void**)&(ptrCursorImage),
                                     NULL, 0);
@@ -91,7 +91,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
         }
     }
 
-    colorBitmap = CreateDIBitmap(hdc,
+    colorBitmap = CreateDIBitmap(GetDC(NULL),
                              (BITMAPINFOHEADER*)&bitmapInfo.bmiHeader,
                              CBM_INIT,
                              (void *)ptrCursorImage,

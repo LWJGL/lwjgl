@@ -52,20 +52,29 @@
 	#else
 		#define WINDOW_H_API extern
 
-		extern HWND		hwnd;								// Handle to the window
-		extern HDC		hdc;								// Device context
+		extern HWND		display_hwnd;								// Handle to the window
+		extern HDC		display_hdc;								// Device context
 		extern bool		isFullScreen;				// Whether we're fullscreen or not
 		extern bool		isMinimized;				// Whether we're minimized or not
 		extern bool		isFocused;					// Whether we're focused or not
 		extern bool		isDirty;					  // Whether we're dirty or not
 		extern RECT		clientSize;
-		extern HGLRC	hglrc;
+		extern HGLRC	display_hglrc;
 	#endif /* _PRIVATE_WINDOW_H_ */
+
+	WINDOW_H_API bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat);
+
+	WINDOW_H_API void closeWindow(HWND hwnd, HDC hdc);
+
+	/*
+	 * Find a suitable pixel format
+	 */
+	WINDOW_H_API int findPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format);
 
 	/*
 	 * Find a suitable pixel format using the WGL_ARB_pixel_format extension
 	 */
-	WINDOW_H_API int findPixelFormatARB(JNIEnv *env, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool double_buffer);
+	WINDOW_H_API int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool double_buffer);
 
 	/*
 	 * Create a window with the specified title, position, size, and
@@ -74,7 +83,7 @@
 	 * 
 	 * Returns true for success, or false for failure
 	 */
-	WINDOW_H_API bool createWindow(const char * title, int x, int y, int width, int height, bool fullscreen);
+	WINDOW_H_API HWND createWindow(JNIEnv *env, int width, int height, bool fullscreen, bool undecorated);
 
 
 	/*
