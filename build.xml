@@ -279,6 +279,11 @@
 			<class name="org.lwjgl.opengl.Window"/>
 			<class name="org.lwjgl.opengl.Pbuffer"/>
 		</javah>    
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/fmod" force="yes">
+			<class name="org.lwjgl.fmod.FMOD"/>
+			<class name="org.lwjgl.fmod.FMusic"/>
+			<class name="org.lwjgl.fmod.FSound"/>
+                </javah>
 	</target>
   
 	<!-- Creates a versioned distribution for all supported platforms -->

@@ -29,24 +29,26 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#endif
+
 #include <stdio.h>
 #include "extfmod.h"
 
 /** Instance of fmod  */
 FMOD_INSTANCE * fmod = NULL;
 
-/** Handle to dll */
-HINSTANCE dll_handle;
-
+#ifdef _WIN32
 /**
  * DLL entry point for Windows. Called when Java loads the .dll
  */
 BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
-  dll_handle = hinstDLL;
 	return true;
 }
+#endif
 
 /**
  * Creates and loads the FMOD instance

@@ -1201,7 +1201,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_nFSOUND_1Stream_1Net_1SetM
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FSound_FSOUND_1Stream_1Net_1SetProxy(JNIEnv * env, jclass clazz, jstring proxy) {
   const char * proxyString = env->GetStringUTFChars(proxy, 0);
-  boolean result = fmod->FSOUND_Stream_Net_SetProxy(proxyString);
+  jboolean result = fmod->FSOUND_Stream_Net_SetProxy(proxyString);
   env->ReleaseStringUTFChars(proxy, proxyString);
   return result;
 }

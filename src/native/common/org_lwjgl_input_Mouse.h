@@ -32,6 +32,7 @@ extern "C" {
 /* Inaccessible static: eventState */
 #undef org_lwjgl_input_Mouse_BUFFER_SIZE
 #define org_lwjgl_input_Mouse_BUFFER_SIZE 50L
+/* Inaccessible static: isGrabbed */
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nGetNativeCursorCaps
@@ -103,14 +104,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv *, jclass, jobject, jobject);
-  
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nGrabMouse
- * Signature: (Z)Z
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
-  (JNIEnv * env, jclass clazz, jboolean grab);
 
 /*
  * Class:     org_lwjgl_input_Mouse
@@ -127,6 +120,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
   (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGrabMouse
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
+  (JNIEnv *, jclass, jboolean);
 
 #ifdef __cplusplus
 }

@@ -8,17 +8,39 @@
 extern "C" {
 #endif
 #undef org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED
-#define org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED 1 << 0
-
+#define org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED 1L
 #undef org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED
-#define org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED 1 << 1
-
+#define org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED 2L
 #undef org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED
-#define org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED 1 << 2
-
+#define org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED 4L
 #undef org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED
-#define org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED 1 << 3
-
+#define org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED 8L
+#undef org_lwjgl_opengl_Pbuffer_MIPMAP_LEVEL
+#define org_lwjgl_opengl_Pbuffer_MIPMAP_LEVEL 8315L
+#undef org_lwjgl_opengl_Pbuffer_CUBE_MAP_FACE
+#define org_lwjgl_opengl_Pbuffer_CUBE_MAP_FACE 8316L
+#undef org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_POSITIVE_X
+#define org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_POSITIVE_X 8317L
+#undef org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_NEGATIVE_X
+#define org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_NEGATIVE_X 8318L
+#undef org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_POSITIVE_Y
+#define org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_POSITIVE_Y 8319L
+#undef org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_NEGATIVE_Y
+#define org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_NEGATIVE_Y 8320L
+#undef org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_POSITIVE_Z
+#define org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_POSITIVE_Z 8321L
+#undef org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_NEGATIVE_Z
+#define org_lwjgl_opengl_Pbuffer_TEXTURE_CUBE_MAP_NEGATIVE_Z 8322L
+#undef org_lwjgl_opengl_Pbuffer_FRONT_LEFT_BUFFER
+#define org_lwjgl_opengl_Pbuffer_FRONT_LEFT_BUFFER 8323L
+#undef org_lwjgl_opengl_Pbuffer_FRONT_RIGHT_BUFFER
+#define org_lwjgl_opengl_Pbuffer_FRONT_RIGHT_BUFFER 8324L
+#undef org_lwjgl_opengl_Pbuffer_BACK_LEFT_BUFFER
+#define org_lwjgl_opengl_Pbuffer_BACK_LEFT_BUFFER 8325L
+#undef org_lwjgl_opengl_Pbuffer_BACK_RIGHT_BUFFER
+#define org_lwjgl_opengl_Pbuffer_BACK_RIGHT_BUFFER 8326L
+#undef org_lwjgl_opengl_Pbuffer_DEPTH_BUFFER
+#define org_lwjgl_opengl_Pbuffer_DEPTH_BUFFER 8359L
 /* Inaccessible static: currentBuffer */
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
@@ -47,6 +69,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
+ * Signature: (IIIIIIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
   (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
@@ -70,7 +93,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nBindTexImage
- * Signature: (III)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
   (JNIEnv *, jclass, jint, jint);
@@ -78,7 +101,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nReleaseTexImage
- * Signature: (III)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
   (JNIEnv *, jclass, jint, jint);

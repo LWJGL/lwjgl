@@ -7,7 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: created */
 /* Inaccessible static: buttons */
 /* Inaccessible static: x */
@@ -40,7 +39,6 @@ extern "C" {
 /* Inaccessible static: buttonName */
 /* Inaccessible static: buttonMap */
 /* Inaccessible static: initialized */
-/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_input_Controller
  * Method:    nPoll
