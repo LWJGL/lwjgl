@@ -60,6 +60,7 @@
 		<include name="**/*.java" />
 		<exclude name="org/lwjgl/test/**" />
 		<exclude name="org/lwjgl/examples/**" />
+		<exclude name="org/lwjgl/util/generator/**" />
 	</fileset>
 
 	<!-- Files to include in common package -->
