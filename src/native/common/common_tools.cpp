@@ -132,7 +132,7 @@ void doExtension(JNIEnv *env, jobject ext_set, const char *method_name, const ch
 		return;
 	jstring ext_string = env->NewStringUTF(ext);
 	if (ext_string == NULL) {
-		printf("Could not allocate java string from %s\n", ext);
+		printfDebug("Could not allocate java string from %s\n", ext);
 		return;
 	}
 	env->CallBooleanMethod(ext_set, id, ext_string);
@@ -144,6 +144,8 @@ static void ext_removeExtension(JNIEnv *env, jobject ext_set, const char *ext) {
 
 jclass ext_ResetClass(JNIEnv *env, const char *class_name) {
 	jclass clazz = env->FindClass(class_name);
+	if (clazz == NULL)
+		return NULL;
 	jint result = env->UnregisterNatives(clazz);
 	if (result != 0)
 		printfDebug("Could not unregister natives for class %s\n", class_name);
@@ -165,6 +167,8 @@ bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFu
 }
 
 bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
+	if (clazz == NULL)
+		return false;
 	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
 	for (int i = 0; i < num_functions; i++) {
 		JavaMethodAndExtFunction *function = functions + i;

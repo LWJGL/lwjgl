@@ -726,7 +726,6 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitSupportedExtensions(env, ext_set);
 
 	//extgl_InitEXTNurbsTesselator(env, ext_set);
-
 	/* first load the extensions */
 	extgl_InitARBBufferObject(env, ext_set);
 	extgl_InitARBImaging(env, ext_set);
@@ -781,7 +780,7 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitATIVertexAttribArrayObject(env, ext_set);
 	extgl_InitATIVertexStreams(env, ext_set);
 
-   /* now load core opengl */
+	/* now load core opengl */
 	extgl_InitOpenGL1_2(env, ext_set);
 	extgl_InitOpenGL1_3(env, ext_set);
 	extgl_InitOpenGL1_4(env, ext_set);
