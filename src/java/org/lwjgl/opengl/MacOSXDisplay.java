@@ -51,6 +51,7 @@ import java.lang.reflect.Proxy;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -375,8 +376,16 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return GL11.glGetString(GL11.GL_EXTENSIONS).indexOf("GL_APPLE_pixel_buffer") != -1 ? Pbuffer.PBUFFER_SUPPORTED : 0;
 	}
 
+	/* Use the com.apple.eio.FileManager Mac OS X extension to show the given URL */
 	public boolean openURL(String url) {
-		return false;
+		try {
+			Class com_apple_eio_FileManager = Class.forName("com.apple.eio.FileManager");
+			Method openURL_method = com_apple_eio_FileManager.getMethod("openURL", new Class[]{String.class});
+			openURL_method.invoke(null, new Object[]{url});
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	/**
