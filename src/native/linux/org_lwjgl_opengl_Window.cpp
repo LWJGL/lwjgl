@@ -69,7 +69,7 @@ static int current_width;
 static bool input_released;
 
 static bool isUndecorated;
-static bool focused;
+static bool dirty;
 static bool vsync_enabled;
 static bool minimized;
 static bool focused;
@@ -293,7 +293,7 @@ static void releaseContext(void) {
 }
 
 int convertToBPE(int bpp) {
-	int bpe = 4;
+	int bpe;
 	switch (bpp) {
 		case 32:
 		case 24:
@@ -301,6 +301,7 @@ int convertToBPE(int bpp) {
 			break;
 		case 16: /* Fall through */
 		default:
+			bpe = 4;
 			break;
 	}
 	return bpe;
