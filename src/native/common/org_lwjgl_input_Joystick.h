@@ -8,6 +8,12 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: created */
+/* Inaccessible static: buttons */
+/* Inaccessible static: x */
+/* Inaccessible static: y */
+/* Inaccessible static: z */
+/* Inaccessible static: pov */
 #undef org_lwjgl_input_Joystick_POV_CENTER
 #define org_lwjgl_input_Joystick_POV_CENTER -1L
 #undef org_lwjgl_input_Joystick_POV_NORTH
@@ -18,6 +24,9 @@ extern "C" {
 #define org_lwjgl_input_Joystick_POV_EAST 27000L
 #undef org_lwjgl_input_Joystick_POV_WEST
 #define org_lwjgl_input_Joystick_POV_WEST 9000L
+/* Inaccessible static: buttonCount */
+/* Inaccessible static: hasZAxis */
+/* Inaccessible static: hasPOV */
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Joystick */
 /*
  * Class:     org_lwjgl_input_Joystick
@@ -25,7 +34,7 @@ extern "C" {
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_input_Joystick
@@ -33,7 +42,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_input_Joystick
@@ -41,7 +50,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nDestroy
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_input_Joystick
