@@ -61,7 +61,7 @@ public class OpenALCreationTest {
 	 * Creates an instance of OpenALCreationTest
 	 */
 	public OpenALCreationTest() {
-		al = new AL(null, 44100, 15, false);
+		al = new AL();
 	}
 
 	public void alInitialize() {

@@ -59,16 +59,25 @@ public class AL extends CoreAL {
   protected String deviceArguments;
   
   /** Frequency for mixing output buffer, in units of Hz. */
-  protected int contextFrequency;
+  protected int contextFrequency = -1;
   
   /** Refresh intervalls, in units of Hz. */
-  protected int contextRefresh;
+  protected int contextRefresh = -1;
   
   /** Flag, indicating a synchronous context. */
-  protected int contextSynchronized;
+  protected int contextSynchronized = ALC.FALSE;
+
+  /**
+   * Creates an OpenAL instance. The empty constructor will cause OpenAL to
+   * open the default device, and create a context using default values. 
+   */
+  public AL() {
+  }
 
 	/**
-   * Creates an OpenAL instance
+   * Creates an OpenAL instance. Using this constructor will cause OpenAL to
+   * open the device using supplied device argument, and create a context using the context values
+   * supplied. 
    * 
    * @param deviceArguments Arguments supplied to native device
    * @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
@@ -93,10 +102,16 @@ public class AL extends CoreAL {
     alc.create();
     
     device = alc.openDevice(deviceArguments);
-    
+
+    //check if doing default values or not
+    if (contextFrequency == -1) {
+      context = alc.createContext(device.device, 0);    
+    } else {
     context = alc.createContext(device.device, 
                 Sys.getDirectBufferAddress(
                   ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized)));
+    }
+
                   
     alc.makeContextCurrent(context.context);     
 	}
