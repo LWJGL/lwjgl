@@ -166,7 +166,13 @@ static void updateInputGrab(void) {
 static void setRepeatMode(int mode) {
 	XKeyboardControl repeat_mode;
 	repeat_mode.auto_repeat_mode = mode;
-	XChangeKeyboardControl(getDisplay(), KBAutoRepeatMode, &repeat_mode);
+	Display *disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		printfDebug("Could not open display to set repeat mode\n");
+		return;
+	}
+	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
+	XCloseDisplay(disp);
 }
 
 bool releaseInput(void) {
@@ -281,11 +287,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
 }
 
 static void destroyWindow(void) {
-	setRepeatMode(AutoRepeatModeDefault);
 	if (USEGLX13)
 		glXDestroyWindow(getDisplay(), glx_window);
 	XDestroyWindow(getDisplay(), current_win);
 	XFreeColormap(getDisplay(), cmap);
+	setRepeatMode(AutoRepeatModeDefault);
 }
 
 static bool createWindow(JNIEnv* env, int width, int height) {
