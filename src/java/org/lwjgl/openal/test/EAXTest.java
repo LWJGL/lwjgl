@@ -32,6 +32,12 @@
 package org.lwjgl.openal.test;
 
 import org.lwjgl.openal.eax.EAX;
+import org.lwjgl.openal.eax.EAXBufferProperties;
+import java.nio.IntBuffer;
+
+import org.lwjgl.Sys;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALUTLoadWAVData;
 
 /**
  * $Id$
@@ -54,6 +60,8 @@ public class EAXTest extends BasicTest {
      * Runs the actual test, using supplied arguments
      */
     protected void execute(String[] args) {
+        alInitialize();
+        
         EAX eax = new EAX();
         try {
             eax.create();
@@ -61,7 +69,15 @@ public class EAXTest extends BasicTest {
             e.printStackTrace();
             return;
         }
-        System.out.println("EAX supported...");
+        System.out.print("EAX supported...");
+        
+        //no errorchecking from now on, since our context is gone.
+        //shutdown
+        alc.makeContextCurrent(null);
+        alc.destroyContext(context);
+        alc.closeDevice(device);
+        
+        System.out.println("test done.");
     }
     
     /**
