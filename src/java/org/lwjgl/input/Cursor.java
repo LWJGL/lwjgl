@@ -32,6 +32,8 @@
 
 package org.lwjgl.input;
 
+import org.lwjgl.Sys;
+
 /**
  * $Id$
  *
