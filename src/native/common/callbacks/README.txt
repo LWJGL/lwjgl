@@ -6,7 +6,7 @@ Basically... we have 3 main classes...
 
 CallbackManager, which maintains a mapping of objects to callback containers
 CallbackContainer, the base class which we extend to implement callbacks for specific objects
-JavaMethod, which is a data object that contains information on method the method to call back too.
+JavaMethod, which is a data object that contains information on the method to call.
 
 GLUQuadricCallbacks is a CallbackContainer for working with quadric callbacks
 eventually you can expect containers to callbacks for glu nurbs and glu tesselators.
