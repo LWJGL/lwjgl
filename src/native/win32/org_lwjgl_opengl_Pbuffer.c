@@ -198,7 +198,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isBufferLost
 	return buffer_lost ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_makePbufferCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_makePbufferCurrent
   (JNIEnv *env, jobject self, jobject buffer_handle)
 {
         PbufferInfo *Pbuffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, buffer_handle);
@@ -207,7 +207,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_makePbufferCurrent
 		throwException(env, "Could not make pbuffer context current");
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_destroyPbuffer
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyPbuffer
   (JNIEnv *env, jobject self, jobject buffer_handle)
 {
         PbufferInfo *Pbuffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, buffer_handle);
@@ -216,7 +216,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_destroyPbuffer
 	wglDestroyPbufferARB(Pbuffer_info->Pbuffer);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_setPbufferAttrib
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setPbufferAttrib
   (JNIEnv *env, jobject self, jobject buffer_handle, jint attrib, jint value)
 {
         PbufferInfo *Pbuffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, buffer_handle);
