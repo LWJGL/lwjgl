@@ -194,24 +194,23 @@ static int findPixelFormat(JNIEnv *env, int bpp, int alpha, int depth, int stenc
  * Create DirectInput.
  * Returns true for success, or false for failure
  */
-static bool createDirectInput()
+static bool createDirectInput(JNIEnv *env)
 {
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION ) {
-		printfDebug("Failed to create directinput");
 		switch (ret) {
 			case DIERR_INVALIDPARAM :
-				printfDebug(" - Invalid parameter\n");
+				throwException(env, "Failed to create DirectInput - Invalid parameter\n");
 				break;
 			case DIERR_OLDDIRECTINPUTVERSION :
-				printfDebug(" - Old Version\n");
+				throwException(env, "Failed to create DirectInput - Old Version\n");
 				break;
 			case DIERR_OUTOFMEMORY :
-				printfDebug(" - Out Of Memory\n");
+				throwException(env, "Failed to create DirectInput - Out Of Memory\n");
 				break;
 			default:
-				printfDebug(" - Unknown failure\n");
+				throwException(env, "Failed to create DirectInput - Unknown failure\n");
 		}
 		return false;
 	} else {
@@ -552,7 +551,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		}
 	}
 
-	if (!createDirectInput()) {
+	if (!createDirectInput(env)) {
 		// Close the window
 		closeWindow();
 		extgl_Close();
