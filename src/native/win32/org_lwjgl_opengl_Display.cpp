@@ -65,16 +65,14 @@ static int pixel_format_index;
 
 #define WINDOWCLASSNAME "LWJGL"
 
-bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {
+bool applyPixelFormat(HDC hdc, int iPixelFormat) {
 	PIXELFORMATDESCRIPTOR desc;
 	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
-		throwException(env, "Could not describe pixel format");
 		return false;
 	}
 
 	// make that the pixel format of the device context 
 	if (SetPixelFormat(hdc, iPixelFormat, &desc) == FALSE) {
-		throwException(env, "Failed to set pixel format");
 		return false;
 	}
 	return true;
@@ -420,13 +418,12 @@ static void handleMessages(JNIEnv * env, jclass clazz)
  * 
  * Returns true for success, or false for failure
  */
-HWND createWindow(JNIEnv *env, int width, int height, bool fullscreen, bool undecorated)
+HWND createWindow(int width, int height, bool fullscreen, bool undecorated)
 {
 	int exstyle, windowflags;
 
 	// 1. Register window class if necessary
 	if (!registerWindow()) {
-		throwException(env, "Could not register window class");
 		return NULL;
 	}
 
@@ -466,11 +463,6 @@ HWND createWindow(JNIEnv *env, int width, int height, bool fullscreen, bool unde
 		 NULL,
 		 dll_handle,
 		 NULL);
-
-	if (new_hwnd == NULL) {
-		throwException(env, "Failed to create the window.");
-		return NULL;
-	}
 
 	return new_hwnd;
 }
@@ -635,13 +627,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, 
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
 
-	display_hwnd = createWindow(env, width, height, isFullScreen, isUndecorated);
+	display_hwnd = createWindow(width, height, isFullScreen, isUndecorated);
 	if (display_hwnd == NULL) {
+		throwException(env, "Failed to create the window.");
 		return;
 	}
 	display_hdc = GetDC(display_hwnd);
-	if (!applyPixelFormat(env, display_hdc, pixel_format_index)) {
+	if (!applyPixelFormat(display_hdc, pixel_format_index)) {
 		closeWindow(display_hwnd, display_hdc);
+		throwException(env, "Could not apply pixel format to window");
 		return;
 	}
 
@@ -690,9 +684,37 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Display_init(JNIEnv *env, jclass
 	return initDisplay(env);
 }
 
+static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, int *pixel_format_index_return, HGLRC *context_return) {
+	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
+	// of multisamples we want. If the extension is present we'll delete the existing
+	// rendering context and start over, using the ARB extension instead to pick the context.
+	if (!extgl_Extensions.WGL_ARB_pixel_format)
+		return false;
+	int pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, true, true);
+	if (pixel_format_index == -1) {
+		pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, false, true);		
+		if (pixel_format_index == -1)
+			return false;
+	}
+	HWND arb_hwnd = createWindow(1, 1, false, false);
+	if (arb_hwnd == NULL)
+		return false;
+	HDC arb_hdc = GetDC(arb_hwnd);
+	if (!applyPixelFormat(arb_hdc, pixel_format_index)) {
+		closeWindow(arb_hwnd, arb_hdc);
+		return false;
+	}	
+	HGLRC arb_context = wglCreateContext(arb_hdc);
+	closeWindow(arb_hwnd, arb_hdc);
+	*pixel_format_index_return = pixel_format_index;
+	*context_return = arb_context;
+	return true;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
-	HWND dummy_hwnd = createWindow(env, 1, 1, false, false);
+	HWND dummy_hwnd = createWindow(1, 1, false, false);
 	if (dummy_hwnd == NULL) {
+		throwException(env, "Failed to create the window.");
 		return;
 	}
 	HDC dummy_hdc = GetDC(dummy_hwnd);
@@ -700,11 +722,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 	if (pixel_format_index == -1) {
 		return;
 	}
-	if (!applyPixelFormat(env, dummy_hdc, pixel_format_index)) {
+	if (!applyPixelFormat(dummy_hdc, pixel_format_index)) {
 		closeWindow(dummy_hwnd, dummy_hdc);
+		throwException(env, "Could not apply pixel format to window");
 		return;
 	}
-	
 	display_hglrc = wglCreateContext(dummy_hdc);
 	if (display_hglrc == NULL) {
 		closeWindow(dummy_hwnd, dummy_hdc);
@@ -719,40 +741,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		return;
 	}
 	extgl_InitWGL(env);
-	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
-	// of multisamples we want. If the extension is present we'll delete the existing
-	// rendering context and start over, using the ARB extension instead to pick the context.
-	if (extgl_Extensions.WGL_ARB_pixel_format) {
-		pixel_format_index = findPixelFormatARB(env, dummy_hdc, pixel_format, NULL, true, true, true, true);
-		if (pixel_format_index == -1) {
-			pixel_format_index = findPixelFormatARB(env, dummy_hdc, pixel_format, NULL, true, true, false, true);		
-		}
-		closeWindow(dummy_hwnd, dummy_hdc);
-		if (pixel_format_index == -1) {
-			jclass cls_pixel_format = env->GetObjectClass(pixel_format);
-			int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
-			if (samples > 0)
-				throwException(env, "Could not find suitable pixel format");
-			return;
-		}
+	int pixel_format_index_arb;
+	HGLRC context_arb;
+	bool arb_success = createARBContextAndPixelFormat(env, dummy_hdc, pixel_format, &pixel_format_index_arb, &context_arb);
+	closeWindow(dummy_hwnd, dummy_hdc);
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
+	if (arb_success) {
 		wglDeleteContext(display_hglrc);
-		dummy_hwnd = createWindow(env, 1, 1, false, false);
-		if (dummy_hwnd == NULL) {
-			return;
-		}
-		dummy_hdc = GetDC(dummy_hwnd);
-		if (!applyPixelFormat(env, dummy_hdc, pixel_format_index)) {
-			closeWindow(dummy_hwnd, dummy_hdc);
-			return;
-		}	
-		display_hglrc = wglCreateContext(dummy_hdc);
-		closeWindow(dummy_hwnd, dummy_hdc);
-		if (display_hglrc == NULL) {
-			throwException(env, "Failed to create OpenGL rendering context (ARB)");
-			return;
-		}
-	} else {
-		closeWindow(dummy_hwnd, dummy_hdc);
+		display_hglrc = context_arb;
+		pixel_format_index = pixel_format_index_arb;
+	} else if (samples > 0) {
+		wglDeleteContext(display_hglrc);
+		throwException(env, "Samples > 0 but could not finc a suitable ARB pixel format");
 	}
 }
 

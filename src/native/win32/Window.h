@@ -68,7 +68,7 @@
 
 	WINDOW_H_API int getCurrentPixelFormat();
 
-	WINDOW_H_API bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat);
+	WINDOW_H_API bool applyPixelFormat(HDC hdc, int iPixelFormat);
 
 	WINDOW_H_API void closeWindow(HWND hwnd, HDC hdc);
 
@@ -89,7 +89,7 @@
 	 * 
 	 * Returns true for success, or false for failure
 	 */
-	WINDOW_H_API HWND createWindow(JNIEnv *env, int width, int height, bool fullscreen, bool undecorated);
+	WINDOW_H_API HWND createWindow(int width, int height, bool fullscreen, bool undecorated);
 
 
 	/*

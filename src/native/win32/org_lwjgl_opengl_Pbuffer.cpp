@@ -80,8 +80,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 }
 
 static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pixel_format, jobject pixelFormatCaps, const int *pBufferAttribs_ptr) {
-	HWND dummy_hwnd = createWindow(env, 1, 1, false, false);
+	HWND dummy_hwnd = createWindow(1, 1, false, false);
 	if (dummy_hwnd == NULL) {
+		throwException(env, "Could not create dummy window");
 		return NULL;
 	}
 	HDC dummy_hdc = GetDC(dummy_hwnd);
@@ -89,8 +90,9 @@ static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pix
 	if (iPixelFormat == -1) {
 		return NULL;
 	}
-	if (!applyPixelFormat(env, dummy_hdc, iPixelFormat)) {
+	if (!applyPixelFormat(dummy_hdc, iPixelFormat)) {
 		closeWindow(dummy_hwnd, dummy_hdc);
+		throwException(env, "Could not apply pixel format to window");
 		return NULL;
 	}
 	
