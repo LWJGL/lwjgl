@@ -37,8 +37,8 @@ import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
 import org.lwjgl.Sys;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+
 /**
  * $Id$
  *
@@ -71,15 +71,14 @@ public class ALCTest extends BasicTest {
         }
         
         //create attribute list for context creation
-        ByteBuffer buffer = ByteBuffer.allocateDirect(28);
-        buffer.order(ByteOrder.nativeOrder());
-        buffer.putInt(ALC.FREQUENCY);
-        buffer.putInt(44100);
-        buffer.putInt(ALC.REFRESH);
-        buffer.putInt(15);
-        buffer.putInt(ALC.SYNC);
-        buffer.putInt(ALC.FALSE);
-        buffer.putInt(0); //terminating int
+        IntBuffer buffer = createIntBuffer(7);
+        buffer.put(ALC.FREQUENCY);
+        buffer.put(44100);
+        buffer.put(ALC.REFRESH);
+        buffer.put(15);
+        buffer.put(ALC.SYNC);
+        buffer.put(ALC.FALSE);
+        buffer.put(0); //terminating int
         
         //create a context, using above attributes
         context = alc.createContext(device, Sys.getDirectBufferAddress(buffer));
@@ -112,8 +111,8 @@ public class ALCTest extends BasicTest {
         alc.getIntegerv(device, ALC.MAJOR_VERSION, 4, Sys.getDirectBufferAddress(buffer));
         alc.getIntegerv(device, ALC.MINOR_VERSION, 4, Sys.getDirectBufferAddress(buffer)+4);
 
-        System.out.println("ALC_MAJOR_VERSION: " + buffer.getInt());
-        System.out.println("ALC_MINOR_VERSION: " + buffer.getInt());
+        System.out.println("ALC_MAJOR_VERSION: " + buffer.get(0));
+        System.out.println("ALC_MINOR_VERSION: " + buffer.get(1));
         
         //no check for ALC_ALL_ATTRIBUTES / ALC_ATTRIBUTES_SIZE since it 
         //is buggy on win32 - my dev platform

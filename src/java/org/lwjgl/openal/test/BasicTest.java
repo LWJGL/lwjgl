@@ -37,6 +37,10 @@ import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
 import org.lwjgl.openal.ALUT;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+
 /**
  * $Id$
  *
@@ -94,6 +98,20 @@ public abstract class BasicTest {
             throw new RuntimeException("An error occurred while making context current");
         }
     }
+    
+    /**
+     * Creates an integer buffer to hold specified ints
+     * - strictly a utility method
+     *
+     * @param size how many int to contain
+     * @return created IntBuffer
+     */
+    protected IntBuffer createIntBuffer(int size) {
+        ByteBuffer temp = ByteBuffer.allocateDirect(4*size);
+        temp.order(ByteOrder.nativeOrder());
+        
+        return temp.asIntBuffer();
+    }    
     
     /**
      * Exits the test NOW, printing errorcode to stdout

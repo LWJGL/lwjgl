@@ -41,6 +41,8 @@ import org.lwjgl.Sys;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 import java.io.IOException;
 /**
@@ -57,7 +59,7 @@ public class ALTest extends BasicTest {
     public static final int NUM_BUFFERS     = 7;
     
     /**  buffers used */
-    protected ByteBuffer buffers;
+    protected IntBuffer buffers;
     
     /** enumerations string */
     protected String[] enumerationString    = new String[]{
@@ -217,9 +219,36 @@ public class ALTest extends BasicTest {
     public ALTest() {
         super();
         
-        buffers = ByteBuffer.allocateDirect(4 * NUM_BUFFERS);
-        buffers.order(ByteOrder.nativeOrder());
+        buffers = createIntBuffer(NUM_BUFFERS);
     }
+    
+    /**
+     * Creates an integer buffer to hold specified ints
+     * - strictly a utility method
+     *
+     * @param size how many int to contain
+     * @return created IntBuffer
+     */
+    protected IntBuffer createIntBuffer(int size) {
+        ByteBuffer temp = ByteBuffer.allocateDirect(4*size);
+        temp.order(ByteOrder.nativeOrder());
+        
+        return temp.asIntBuffer();
+    }    
+    
+    /**
+     * Creates a float buffer to hold specified floats
+     * - strictly a utility method
+     *
+     * @param size how many floats to contain
+     * @return created FloatBuffer
+     */
+    protected FloatBuffer createFloatBuffer(int size) {
+        ByteBuffer temp = ByteBuffer.allocateDirect(4*size);
+        temp.order(ByteOrder.nativeOrder());
+        
+        return temp.asFloatBuffer();
+    }    
     
     /**
      * Sleeeeeep
@@ -250,26 +279,14 @@ public class ALTest extends BasicTest {
         ALCcontext context;
         ALCdevice device;
         
-        ByteBuffer listenerPos = ByteBuffer.allocateDirect(12);
-        listenerPos.order(ByteOrder.nativeOrder());
-        listenerPos.putFloat(0.0f);
-        listenerPos.putFloat(0.0f);
-        listenerPos.putFloat(0.0f);
+        FloatBuffer listenerPos = createFloatBuffer(3);
+        listenerPos.put(new float[] {0.0f, 0.0f, 0.0f});
         
-        ByteBuffer listenerVel = ByteBuffer.allocateDirect(12);
-        listenerVel.order(ByteOrder.nativeOrder());
-        listenerVel.putFloat(0.0f);
-        listenerVel.putFloat(0.0f);
-        listenerVel.putFloat(0.0f);
+        FloatBuffer listenerVel = createFloatBuffer(3);
+        listenerVel.put(new float[] {0.0f, 0.0f, 0.0f});
         
-        ByteBuffer listenerOri = ByteBuffer.allocateDirect(24);
-        listenerOri.order(ByteOrder.nativeOrder());
-        listenerOri.putFloat(0.0f);
-        listenerOri.putFloat(0.0f);
-        listenerOri.putFloat(-1.0f);
-        listenerOri.putFloat(0.0f);
-        listenerOri.putFloat(1.0f);
-        listenerOri.putFloat(0.0f);
+        FloatBuffer listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f});
         
         System.out.print("OpenAL Test Application (Java!)\n");
         System.out.print("=======================\n\n");
@@ -327,7 +344,7 @@ public class ALTest extends BasicTest {
         }
         
         // Copy footsteps.wav data into AL Buffer 0
-        al.bufferData(buffers.getInt(4*0), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(0), data.format, data.data, data.size, data.freq);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 0 : ", error);
             // Delete buffers
@@ -354,8 +371,7 @@ public class ALTest extends BasicTest {
         }
         
         // Copy ding.wav data into AL Buffer 1
-        System.out.println("Trying to load data to buffer @ " + buffers.getInt(4*1));
-        al.bufferData(buffers.getInt(4*1), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(1), data.format, data.data, data.size, data.freq);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 1 : ", error);
             // Delete buffers
@@ -382,7 +398,7 @@ public class ALTest extends BasicTest {
         }
         
         // Copy wave1.wav data into AL Buffer 2
-        al.bufferData(buffers.getInt(4*2), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(2), data.format, data.data, data.size, data.freq);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 2 : ", error);
             // Delete buffers
@@ -409,7 +425,7 @@ public class ALTest extends BasicTest {
         }
         
         // Copy Wave2.wav data into AL Buffer 3
-        al.bufferData(buffers.getInt(4*3), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(3), data.format, data.data, data.size, data.freq);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 3 : ", error);
             // Delete buffers
@@ -436,7 +452,7 @@ public class ALTest extends BasicTest {
         }
         
         // Copy wave3.wav data into AL Buffer 4
-        al.bufferData(buffers.getInt(4*4), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(4), data.format, data.data, data.size, data.freq);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 4 : ", error);
             // Delete buffers
@@ -463,7 +479,7 @@ public class ALTest extends BasicTest {
         }
         
         // Copy wave4.wav data into AL Buffer 5
-        al.bufferData(buffers.getInt(4*5), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(5), data.format, data.data, data.size, data.freq);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 5 : ", error);
             // Delete buffers
@@ -490,7 +506,7 @@ public class ALTest extends BasicTest {
         }
         
         // Copy stereo.wav data into AL Buffer 6
-        al.bufferData(buffers.getInt(4*6), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(6), data.format, data.data, data.size, data.freq);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 6 : ", error);
             // Delete buffers
@@ -589,11 +605,8 @@ public class ALTest extends BasicTest {
     
     protected void fA_RequestObjectNames() {
         boolean localResultOK;
-        ByteBuffer testBuffers = ByteBuffer.allocateDirect(4*4);
-        testBuffers.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer testSources = ByteBuffer.allocateDirect(4*4);
-        testSources.order(ByteOrder.nativeOrder());        
+        IntBuffer testBuffers = createIntBuffer(1);
+        IntBuffer testSources = createIntBuffer(1);
 
         int error;
         
@@ -629,11 +642,8 @@ public class ALTest extends BasicTest {
     
     protected void fA_ReleaseObjectNames() {
         boolean localResultOK;
-        ByteBuffer testBuffers = ByteBuffer.allocateDirect(4*4);
-        testBuffers.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer testSources = ByteBuffer.allocateDirect(4*4);
-        testSources.order(ByteOrder.nativeOrder()); 
+        IntBuffer testBuffers = createIntBuffer(1);
+        IntBuffer testSources = createIntBuffer(1);
         int error;
         
         System.out.print("\nReleasing Object Names Test. ");
@@ -658,11 +668,8 @@ public class ALTest extends BasicTest {
     
     protected void fA_ValidateObjectNames() {
         boolean localResultOK;
-        ByteBuffer testBuffers = ByteBuffer.allocateDirect(4*4);
-        testBuffers.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer testSources = ByteBuffer.allocateDirect(4*4);
-        testSources.order(ByteOrder.nativeOrder()); 
+        IntBuffer testBuffers = createIntBuffer(1);
+        IntBuffer testSources = createIntBuffer(1);
         int error;
         
         System.out.print("\nValidating Object Names Test. ");
@@ -674,19 +681,19 @@ public class ALTest extends BasicTest {
         if (error != AL.NO_ERROR) {
             localResultOK = false;
         } else {
-            if (al.isBuffer(testBuffers.getInt(4*0)) == false) // this buffer should test as valid
+            if (al.isBuffer(testBuffers.get(0)) == false) // this buffer should test as valid
             {
                 localResultOK = false;
             }
-            if (al.isSource(testSources.getInt(4*0)) == false) // this source should test as valid
+            if (al.isSource(testSources.get(0)) == false) // this source should test as valid
             {
                 localResultOK = false;
             }
-            if (al.isBuffer(testBuffers.getInt(4*0) + 1) == true) // this buffer should be invalid
+            if (al.isBuffer(testBuffers.get(0) + 1) == true) // this buffer should be invalid
             {
                 localResultOK = false;
             }
-            if (al.isSource(testSources.getInt(4*0) + 1) == true) // this source should be invalid
+            if (al.isSource(testSources.get(0) + 1) == true) // this source should be invalid
             {
                 localResultOK = false;
             }
@@ -702,53 +709,47 @@ public class ALTest extends BasicTest {
     
     protected void fA_StateTransition() {
         boolean localResultOK;
-        ByteBuffer testSources = ByteBuffer.allocateDirect(4*4);
-        testSources.order(ByteOrder.nativeOrder()); 
-        
+        IntBuffer testSources = createIntBuffer(1);        
+
         System.out.print("\nState Transition Test. ");
         al.getError();
         localResultOK = true;
         al.genSources(1, Sys.getDirectBufferAddress(testSources));
-        al.sourcei(testSources.getInt(4*0), AL.BUFFER, buffers.getInt(4*0));
-        al.sourcei(testSources.getInt(4*0), AL.LOOPING, AL.TRUE);
+        al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(0));
+        al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
         
-        ByteBuffer sourceState = ByteBuffer.allocateDirect(4);
-        sourceState.order(ByteOrder.nativeOrder());
+        IntBuffer sourceState = createIntBuffer(1);
         
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.INITIAL) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.INITIAL) {
             localResultOK = false;
         }
-        al.sourcePlay(testSources.getInt(4*0));
+        al.sourcePlay(testSources.get(0));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PLAYING) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PLAYING) {
             localResultOK = false;
         }
-        al.sourcePause(testSources.getInt(4*0));
+        al.sourcePause(testSources.get(0));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PAUSED) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PAUSED) {
             localResultOK = false;
         }
-        al.sourcePlay(testSources.getInt(4*0));
+        al.sourcePlay(testSources.get(0));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PLAYING) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PLAYING) {
             localResultOK = false;
         }
-        al.sourceStop(testSources.getInt(4*0));
+        al.sourceStop(testSources.get(0));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.STOPPED) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.STOPPED) {
             localResultOK = false;
         }
         if (localResultOK == true) {
@@ -762,98 +763,87 @@ public class ALTest extends BasicTest {
     protected void fA_VectorStateTransition() {
         boolean localResultOK;
 
-        ByteBuffer testSources = ByteBuffer.allocateDirect(4*4);
-        testSources.order(ByteOrder.nativeOrder()); 
-        
-        ByteBuffer sourceState = ByteBuffer.allocateDirect(4);
-        sourceState.order(ByteOrder.nativeOrder());
+        IntBuffer testSources = createIntBuffer(4);
+
+        IntBuffer sourceState = createIntBuffer(1);        
         
         System.out.print("\nVector State Transition Test. ");
         al.getError();
         localResultOK = true;
         al.genSources(2, Sys.getDirectBufferAddress(testSources));
-        al.sourcei(testSources.getInt(4*0), AL.BUFFER, buffers.getInt(4*0));
-        al.sourcei(testSources.getInt(4*1), AL.BUFFER, buffers.getInt(4*1));
-        al.sourcei(testSources.getInt(4*0), AL.LOOPING, AL.TRUE);
-        al.sourcei(testSources.getInt(4*1), AL.LOOPING, AL.TRUE);
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(0));
+        al.sourcei(testSources.get(1), AL.BUFFER, buffers.get(1));
+        al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+        al.sourcei(testSources.get(1), AL.LOOPING, AL.TRUE);
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
 
-        if (sourceState.getInt() != AL.INITIAL) {
+        if (sourceState.get(0) != AL.INITIAL) {
             localResultOK = false;
             System.out.print("FAILED -- AL_INITIAL 0");
         }
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.INITIAL) {
+        al.getSourcei(testSources.get(1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.INITIAL) {
             localResultOK = false;
             System.out.print("FAILED -- AL_INITIAL 1");
         }
-        al.sourcePlay(testSources.getInt(4*0));
-        al.sourcePlay(testSources.getInt(4*1));
+        al.sourcePlay(testSources.get(0));
+        al.sourcePlay(testSources.get(1));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PLAYING) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PLAYING) {
             localResultOK = false;
             System.out.print("FAILED -- AL_PLAYING 0");
         }
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PLAYING) {
+        al.getSourcei(testSources.get(1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PLAYING) {
             localResultOK = false;
             System.out.print("FAILED -- AL_PLAYING 1");
         }
-        al.sourcePause(testSources.getInt(4*0));
-        al.sourcePause(testSources.getInt(4*1));
+        al.sourcePause(testSources.get(0));
+        al.sourcePause(testSources.get(1));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PAUSED) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PAUSED) {
             localResultOK = false;
             System.out.print("FAILED -- AL_PAUSED 0");
         }
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PAUSED) {
+        al.getSourcei(testSources.get(1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PAUSED) {
             localResultOK = false;
             System.out.print("FAILED -- AL_PAUSED 1");
         }
-        al.sourcePlay(testSources.getInt(4*0));
-        al.sourcePlay(testSources.getInt(4*1));
+        al.sourcePlay(testSources.get(0));
+        al.sourcePlay(testSources.get(1));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PLAYING) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PLAYING) {
             localResultOK = false;
             System.out.print("FAILED -- AL_PLAYING 0A");
         }
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.PLAYING) {
+        al.getSourcei(testSources.get(1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.PLAYING) {
             localResultOK = false;
             System.out.print("FAILED -- AL_PLAYING 1A");
         }
-        al.sourceStop(testSources.getInt(4*0));
-        al.sourceStop(testSources.getInt(4*1));
+        al.sourceStop(testSources.get(0));
+        al.sourceStop(testSources.get(1));
         delay_ms(500);
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.STOPPED) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.STOPPED) {
             localResultOK = false;
             System.out.print("FAILED -- AL_STOPPED 0");
         }
         
-        sourceState.clear();
-        al.getSourcei(testSources.getInt(4*1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
-        if (sourceState.getInt() != AL.STOPPED) {
+        al.getSourcei(testSources.get(1), AL.SOURCE_STATE, Sys.getDirectBufferAddress(sourceState));
+        if (sourceState.get(0) != AL.STOPPED) {
             localResultOK = false;
             System.out.print("FAILED -- AL_STOPPED 1");
         }
@@ -866,23 +856,21 @@ public class ALTest extends BasicTest {
     }  
     
     protected void fA_GetBufferProperties() {
-        ByteBuffer data = ByteBuffer.allocateDirect(16);
-        data.order(ByteOrder.nativeOrder());
-        
+        IntBuffer data = createIntBuffer(4);
         boolean passNULL;
         
         System.out.print("\nGet Buffer Properties Test. ");
-        al.getBufferi(buffers.getInt(4*0), AL.FREQUENCY, Sys.getDirectBufferAddress(data));
-        al.getBufferi(buffers.getInt(4*0), AL.BITS, Sys.getDirectBufferAddress(data)+4);
-        al.getBufferi(buffers.getInt(4*0), AL.CHANNELS, Sys.getDirectBufferAddress(data)+8);
-        al.getBufferi(buffers.getInt(4*0), AL.SIZE, Sys.getDirectBufferAddress(data)+12);
+        al.getBufferi(buffers.get(0), AL.FREQUENCY, Sys.getDirectBufferAddress(data));
+        al.getBufferi(buffers.get(0), AL.BITS, Sys.getDirectBufferAddress(data)+4);
+        al.getBufferi(buffers.get(0), AL.CHANNELS, Sys.getDirectBufferAddress(data)+8);
+        al.getBufferi(buffers.get(0), AL.SIZE, Sys.getDirectBufferAddress(data)+12);
         
         passNULL = !(al.isBuffer(0));  // the NULL buffer should cause alIsBuffer to be FALSE
         
         data.rewind();
         
         //       FREQ                         BITS                      CH                         SIZE
-        if ((data.getInt() == 44100) && (data.getInt() == 16) && (data.getInt() == 1) && (data.getInt() == 282626) && (passNULL == true)) {
+        if ((data.get(0) == 44100) && (data.get(1) == 16) && (data.get(2) == 1) && (data.get(3) == 282626) && (passNULL == true)) {
             System.out.print("PASSED.");
         } else {
             System.out.print("FAILED.");
@@ -913,32 +901,16 @@ public class ALTest extends BasicTest {
     }
     
     protected void fA_QueuingUnderrunStates() {
-        ByteBuffer testSources = ByteBuffer.allocateDirect(4*1);
-        testSources.order(ByteOrder.nativeOrder()); 
-        
-        ByteBuffer tempInt = ByteBuffer.allocateDirect(4);
-        tempInt.order(ByteOrder.nativeOrder()); 
         int error;
-        ByteBuffer bufferName = ByteBuffer.allocateDirect(4);
-        bufferName.order(ByteOrder.nativeOrder()); 
+        IntBuffer testSources   = createIntBuffer(1); 
+        IntBuffer tempInt       = createIntBuffer(1);
+        IntBuffer bufferName    = createIntBuffer(1);
         
-        ByteBuffer listenerOri = ByteBuffer.allocateDirect(24);
-        listenerOri.order(ByteOrder.nativeOrder());
-        listenerOri.putFloat(0.0f);
-        listenerOri.putFloat(0.0f);
-        listenerOri.putFloat(-1.0f);
-        listenerOri.putFloat(0.0f);
-        listenerOri.putFloat(1.0f);
-        listenerOri.putFloat(0.0f);        
+        FloatBuffer listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f});        
         
-        ByteBuffer sourceOri = ByteBuffer.allocateDirect(24);
-        sourceOri.order(ByteOrder.nativeOrder());
-        sourceOri.putFloat(1.0f);
-        sourceOri.putFloat(0.0f);
-        sourceOri.putFloat(0.0f);
-        sourceOri.putFloat(0.0f);
-        sourceOri.putFloat(1.0f);
-        sourceOri.putFloat(0.0f);               
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f});               
         
         boolean localResultOK;
         
@@ -946,31 +918,31 @@ public class ALTest extends BasicTest {
         localResultOK = true;
         al.getError();
         al.genSources(1, Sys.getDirectBufferAddress(testSources));
-        al.sourcei(testSources.getInt(4*0), AL.BUFFER, 0);
-        al.sourcei(testSources.getInt(4*0), AL.LOOPING, AL.FALSE);
+        al.sourcei(testSources.get(0), AL.BUFFER, 0);
+        al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("Init error : ", error);
-        al.sourceQueueBuffers(testSources.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
+        al.sourceQueueBuffers(testSources.get(0), 1, Sys.getDirectBufferAddress(buffers) + (4));
         if ((error = al.getError()) != AL.NO_ERROR) localResultOK = false;
-        al.sourcePlay(testSources.getInt(4*0));
+        al.sourcePlay(testSources.get(0));
         delay_ms(1000);
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(tempInt));
-        if (tempInt.getInt(0) != AL.STOPPED) localResultOK = false;
-        al.getSourcei(testSources.getInt(4*0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(tempInt));
-        if (tempInt.getInt(0) != 1) {
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(tempInt));
+        if (tempInt.get(0) != AL.STOPPED) localResultOK = false;
+        al.getSourcei(testSources.get(0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(tempInt));
+        if (tempInt.get(0) != 1) {
             localResultOK = false;
         } else {
-            al.sourceUnqueueBuffers(testSources.getInt(4*0), tempInt.getInt(0), Sys.getDirectBufferAddress(bufferName));
+            al.sourceUnqueueBuffers(testSources.get(0), tempInt.get(0), Sys.getDirectBufferAddress(bufferName));
         }
-        al.sourceQueueBuffers(testSources.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
+        al.sourceQueueBuffers(testSources.get(0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
         if ((error = al.getError()) != AL.NO_ERROR) localResultOK = false;
-        al.sourcePlay(testSources.getInt(4*0));
+        al.sourcePlay(testSources.get(0));
         delay_ms(100);
-        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(tempInt));
-        if (tempInt.getInt(0) != AL.PLAYING) localResultOK = false;
+        al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(tempInt));
+        if (tempInt.get(0) != AL.PLAYING) localResultOK = false;
         
         // cleanup
-        al.sourcei(testSources.getInt(4*0), AL.BUFFER, 0);
+        al.sourcei(testSources.get(0), AL.BUFFER, 0);
         al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
         
         // display result
@@ -989,33 +961,20 @@ public class ALTest extends BasicTest {
     protected void i_PositionTest() {
         int error;
         
-        ByteBuffer source = ByteBuffer.allocateDirect(4*2);
-        source.order(ByteOrder.nativeOrder());
+        IntBuffer source = createIntBuffer(2);
         int	ch = -1;
         
-        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
-        source0Pos.order(ByteOrder.nativeOrder());
-        source0Pos.putFloat(-2.0f);
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(2.0f);
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {-2.0f, 0.0f, 2.0f});
         
-        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
-        source0Vel.order(ByteOrder.nativeOrder());
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});
         
-        ByteBuffer source1Pos = ByteBuffer.allocateDirect(12);
-        source1Pos.order(ByteOrder.nativeOrder());
-        source1Pos.putFloat(2.0f);
-        source1Pos.putFloat(0.0f);
-        source1Pos.putFloat(-2.0f);
+        FloatBuffer source1Pos = createFloatBuffer(3);
+        source1Pos.put(new float[] {2.0f, 0.0f, -2.0f});
         
-        ByteBuffer source1Vel = ByteBuffer.allocateDirect(12);
-        source1Vel.order(ByteOrder.nativeOrder());
-        source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);
+        FloatBuffer source1Vel = createFloatBuffer(3);
+        source1Vel.put(new float[] {0.0f, 0.0f, 0.0f});
         
         al.genSources(2, Sys.getDirectBufferAddress(source));
         if ((error = al.getError()) != AL.NO_ERROR) {
@@ -1023,62 +982,62 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        al.sourcef(source.getInt(4*0),AL.PITCH,1.0f);
+        al.sourcef(source.get(0),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_PITCH : \n", error);
         }
         
-        al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+        al.sourcef(source.get(0),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_GAIN : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        al.sourcefv(source.get(0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_POSITION : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        al.sourcefv(source.get(0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
         }
         
-        al.sourcei(source.getInt(4*0),AL.BUFFER, buffers.getInt(4*1));
+        al.sourcei(source.get(0),AL.BUFFER, buffers.get(1));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 0 AL_BUFFER buffer 0 : \n", error);
         }
         
-        al.sourcei(source.getInt(4*0),AL.LOOPING,AL.TRUE);
+        al.sourcei(source.get(0),AL.LOOPING,AL.TRUE);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 0 AL_LOOPING true: \n", error);
         }
         
-        al.sourcef(source.getInt(4*1),AL.PITCH,1.0f);
+        al.sourcef(source.get(1),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 1 AL_PITCH : \n", error);
         }
         
-        al.sourcef(source.getInt(4*1),AL.GAIN,1.0f);
+        al.sourcef(source.get(1),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 1 AL_GAIN : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*1),AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
+        al.sourcefv(source.get(1),AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 1 AL_POSITION : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*1),AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
+        al.sourcefv(source.get(1),AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 1 AL_VELOCITY : \n", error);
         }
         
-        al.sourcei(source.getInt(4*1),AL.BUFFER, buffers.getInt(4*1));
+        al.sourcei(source.get(1),AL.BUFFER, buffers.get(1));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 1 AL_BUFFER buffer 1 : \n", error);
         }
         
-        al.sourcei(source.getInt(4*1),AL.LOOPING,AL.FALSE);
+        al.sourcei(source.get(1),AL.LOOPING,AL.FALSE);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 1 AL_LOOPING false: \n", error);
         }
@@ -1098,22 +1057,22 @@ public class ALTest extends BasicTest {
             
             switch (ch) {
                 case '1':
-                    al.sourcePlay(source.getInt(4*0));
+                    al.sourcePlay(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay source 0 : ", error);
                     break;
                 case '2':
-                    al.sourcePlay(source.getInt(4*1));
+                    al.sourcePlay(source.get(1));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay source 1 : ", error);
                     break;
                 case '3':
-                    al.sourceStop(source.getInt(4*0));
+                    al.sourceStop(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourceStop source 0 : ", error);
                     break;
                 case '4':
-                    al.sourceStop(source.getInt(4*1));
+                    al.sourceStop(source.get(1));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourceStop source 1 : ", error);
                     break;
@@ -1134,35 +1093,22 @@ public class ALTest extends BasicTest {
     
     protected void i_LoopingTest() {
         int	error;
-        ByteBuffer source = ByteBuffer.allocateDirect(4*2);
-        source.order(ByteOrder.nativeOrder());
+        IntBuffer source = createIntBuffer(2);
         int	ch = -1;
         int bLooping0 = AL.FALSE;
         int bLooping1 = AL.FALSE;
         
-        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
-        source0Pos.order(ByteOrder.nativeOrder());
-        source0Pos.putFloat(-2.0f);
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(-2.0f);
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {-2.0f, 0.0f, -2.0f});
+
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});        
         
-        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
-        source0Vel.order(ByteOrder.nativeOrder());
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
+        FloatBuffer source1Pos = createFloatBuffer(3);
+        source1Pos.put(new float[] {2.0f, 0.0f, -2.0f});
         
-        ByteBuffer source1Pos = ByteBuffer.allocateDirect(12);
-        source1Pos.order(ByteOrder.nativeOrder());
-        source1Pos.putFloat(2.0f);
-        source1Pos.putFloat(0.0f);
-        source1Pos.putFloat(-2.0f);
-        
-        ByteBuffer source1Vel = ByteBuffer.allocateDirect(12);
-        source1Vel.order(ByteOrder.nativeOrder());
-        source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);
+        FloatBuffer source1Vel = createFloatBuffer(3);
+        source1Vel.put(new float[] {0.0f, 0.0f, 0.0f});        
         
         // Clear Error Code
         al.getError();
@@ -1173,62 +1119,62 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        al.sourcef(source.getInt(4*0),AL.PITCH,1.0f);
+        al.sourcef(source.get(0),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_PITCH : \n", error);
         }
         
-        al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+        al.sourcef(source.get(0),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_GAIN : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        al.sourcefv(source.get(0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_POSITION : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        al.sourcefv(source.get(0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
         }
         
-        al.sourcei(source.getInt(4*0),AL.BUFFER, buffers.getInt(4*0));
+        al.sourcei(source.get(0),AL.BUFFER, buffers.get(0));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 0 AL_BUFFER buffer 0 : \n", error);
         }
         
-        al.sourcei(source.getInt(4*0),AL.LOOPING,AL.FALSE);
+        al.sourcei(source.get(0),AL.LOOPING,AL.FALSE);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 0 AL_LOOPING false : \n", error);
         }
         
-        al.sourcef(source.getInt(4*1),AL.PITCH,1.0f);
+        al.sourcef(source.get(1),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 1 AL_PITCH : \n", error);
         }
         
-        al.sourcef(source.getInt(4*1),AL.GAIN,1.0f);
+        al.sourcef(source.get(1),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 1 AL_GAIN : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*1),AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
+        al.sourcefv(source.get(1),AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 1 AL_POSITION : \n", error);
         }
         
-        al.sourcefv(source.getInt(4*1),AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
+        al.sourcefv(source.get(1),AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 1 AL_VELOCITY : \n", error);
         }
         
-        al.sourcei(source.getInt(4*1),AL.BUFFER, buffers.getInt(4*1));
+        al.sourcei(source.get(1),AL.BUFFER, buffers.get(1));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 1 AL_BUFFER buffer 1 : \n", error);
         }
         
-        al.sourcei(source.getInt(4*1),AL.LOOPING,AL.FALSE);
+        al.sourcei(source.get(1),AL.LOOPING,AL.FALSE);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 1 AL_LOOPING false: \n", error);
         }
@@ -1248,7 +1194,7 @@ public class ALTest extends BasicTest {
             
             switch (ch) {
                 case '1':
-                    al.sourcePlay(source.getInt(4*0));
+                    al.sourcePlay(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay source 0 : ", error);
                     break;
@@ -1267,10 +1213,10 @@ public class ALTest extends BasicTest {
                         else
                             System.out.print("Source 0 : Not looping Source 1 : Not looping\n");
                     }
-                    al.sourcei(source.getInt(4*0), AL.LOOPING, bLooping0);
+                    al.sourcei(source.get(0), AL.LOOPING, bLooping0);
                     break;
                 case '3':
-                    al.sourcePlay(source.getInt(4*1));
+                    al.sourcePlay(source.get(1));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay source 1 : ", error);
                     break;
@@ -1289,7 +1235,7 @@ public class ALTest extends BasicTest {
                         else
                             System.out.print("Source 0 : Not looping Source 1 : Not looping\n");
                     }
-                    al.sourcei(source.getInt(4*1), AL.LOOPING, bLooping1);
+                    al.sourcei(source.get(1), AL.LOOPING, bLooping1);
                     break;
             }
         } while (ch != 'Q');
@@ -1297,7 +1243,7 @@ public class ALTest extends BasicTest {
         System.out.print("\n");
         
         // Release resources
-        al.sourceStop(source.getInt(4*0));
+        al.sourceStop(source.get(0));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourceStop source 1 : ", error);
         
@@ -1315,36 +1261,22 @@ public class ALTest extends BasicTest {
     
     protected void i_QueueTest() {
         int     error;
-        ByteBuffer source = ByteBuffer.allocateDirect(4);
-        source.order(ByteOrder.nativeOrder());
         int     ch = -1;
-        ByteBuffer tbuffers = ByteBuffer.allocateDirect(4*5);
-        tbuffers.order(ByteOrder.nativeOrder());
-
-        ByteBuffer buffersremoved = ByteBuffer.allocateDirect(4*5);
-        buffersremoved.order(ByteOrder.nativeOrder());
         int bLooping;
+        IntBuffer source = createIntBuffer(1);
+        IntBuffer tbuffers = createIntBuffer(5);
+        IntBuffer buffersremoved = createIntBuffer(5);
+        IntBuffer BuffersInQueue = createIntBuffer(1);
         
-        ByteBuffer BuffersInQueue = ByteBuffer.allocateDirect(4);
-        BuffersInQueue.order(ByteOrder.nativeOrder());
+        IntBuffer BuffersProcessed = createIntBuffer(1);
         
-        ByteBuffer BuffersProcessed = ByteBuffer.allocateDirect(4);
-        BuffersProcessed.order(ByteOrder.nativeOrder());
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {0.0f, 0.0f, -2.0f});
         
-        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
-        source0Pos.order(ByteOrder.nativeOrder());
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(-2.0f);
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});        
         
-        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
-        source0Vel.order(ByteOrder.nativeOrder());
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        
-        ByteBuffer Buffer = ByteBuffer.allocateDirect(4);
-        Buffer.order(ByteOrder.nativeOrder());
+        IntBuffer Buffer = createIntBuffer(1);
         int	i;
         
         // Clear Error Code
@@ -1356,27 +1288,27 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        al.sourcef(source.getInt(4*0),AL.PITCH,1.0f);
+        al.sourcef(source.get(0),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_PITCH : ", error);
         }
         
-        al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+        al.sourcef(source.get(0),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcef 0 AL_GAIN : ", error);
         }
         
-        al.sourcefv(source.getInt(4*0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        al.sourcefv(source.get(0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_POSITION : ", error);
         }
         
-        al.sourcefv(source.getInt(4*0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        al.sourcefv(source.get(0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcefv 0 AL_VELOCITY : ", error);
         }
         
-        al.sourcei(source.getInt(4*0),AL.LOOPING,AL.FALSE);
+        al.sourcei(source.get(0),AL.LOOPING,AL.FALSE);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alSourcei 0 AL_LOOPING false: ", error);
         }
@@ -1406,11 +1338,11 @@ public class ALTest extends BasicTest {
         
         System.out.print("Source 0 not looping\n");
         
-        tbuffers.putInt(4*0, buffers.getInt(4*2));
-        tbuffers.putInt(4*1, buffers.getInt(4*3));
-        tbuffers.putInt(4*2, buffers.getInt(4*4));
-        tbuffers.putInt(4*3, buffers.getInt(4*5));
-        tbuffers.putInt(4*4, 0);
+        tbuffers.put(0, buffers.get(2));
+        tbuffers.put(1, buffers.get(3));
+        tbuffers.put(2, buffers.get(4));
+        tbuffers.put(3, buffers.get(5));
+        tbuffers.put(4, 0);
         
         do {
             try {
@@ -1419,12 +1351,12 @@ public class ALTest extends BasicTest {
             }
             switch (ch) {
             case '1':
-                al.sourcePlay(source.getInt(4*0));
+                al.sourcePlay(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcePlay source 0 : ", error);
                 break;
             case '2':
-                al.sourceStop(source.getInt(4*0));
+                al.sourceStop(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceStop source 0 : ", error);
                 break;
@@ -1439,69 +1371,67 @@ public class ALTest extends BasicTest {
                     bLooping = AL.TRUE;
                     System.out.print("Source 0 looping    \n");
                 }
-                al.sourcei(source.getInt(4*0), AL.LOOPING, bLooping);
+                al.sourcei(source.get(0), AL.LOOPING, bLooping);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei AL_LOOPING : ", error);
                 break;
             case '4':
-                al.sourceQueueBuffers(source.getInt(4*0), 4, Sys.getDirectBufferAddress(buffers));
+                al.sourceQueueBuffers(source.get(0), 4, Sys.getDirectBufferAddress(buffers));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 4 : ", error);
                 break;
             case '5':
-                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*0));
+                al.sourceQueueBuffers(source.get(0), 1, Sys.getDirectBufferAddress(buffers) + (4*0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '6':
-                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
+                al.sourceQueueBuffers(source.get(0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '7':
-                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*2));
+                al.sourceQueueBuffers(source.get(0), 1, Sys.getDirectBufferAddress(buffers) + (4*2));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '8':
-                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*3));
+                al.sourceQueueBuffers(source.get(0), 1, Sys.getDirectBufferAddress(buffers) + (4*3));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '9':
                 // Queue buffer 0
-                al.sourceQueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*4));
+                al.sourceQueueBuffers(source.get(0), 1, Sys.getDirectBufferAddress(buffers) + (4*4));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 (buffer 0) : ", error);
                 break;
             case 'A':
                 // Unqueue first Buffer
-                buffersremoved.clear();
-                al.sourceUnqueueBuffers(source.getInt(4*0), 1, Sys.getDirectBufferAddress(buffersremoved));
+                al.sourceUnqueueBuffers(source.get(0), 1, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 1 : ", error);
                 } else
                 {
-                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*0))
-                        buffersremoved.putInt(4*0, 1);
-                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*1))
-                        buffersremoved.putInt(4*0, 2);
-                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*2))
-                        buffersremoved.putInt(4*0, 3);
-                    if (buffersremoved.getInt(4*0) == buffers.getInt(4*3))
-                        buffersremoved.putInt(4*0, 4);
+                    if (buffersremoved.get(0) == buffers.get(0))
+                        buffersremoved.put(0, 1);
+                    if (buffersremoved.get(0) == buffers.get(1))
+                        buffersremoved.put(0, 2);
+                    if (buffersremoved.get(0) == buffers.get(2))
+                        buffersremoved.put(0, 3);
+                    if (buffersremoved.get(0) == buffers.get(3))
+                        buffersremoved.put(0, 4);
                     else
-                        buffersremoved.putInt(4*0, 0);
+                        buffersremoved.put(0, 0);
                           
-                    System.out.print("\nRemoved Buffer " + buffersremoved.getInt(4*0) + " from queue\n");
+                    System.out.print("\nRemoved Buffer " + buffersremoved.get(0) + " from queue\n");
                 }
                 break;
             case 'B':
                 // Unqueue first 2 Buffers
-                buffersremoved.clear();
-                al.sourceUnqueueBuffers(source.getInt(4*0), 2, Sys.getDirectBufferAddress(buffersremoved));
+                al.sourceUnqueueBuffers(source.get(0), 2, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
@@ -1510,144 +1440,137 @@ public class ALTest extends BasicTest {
                 {
                     for (i = 0; i < 2; i++)
                     {
-                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
-                            buffersremoved.putInt(4*i, 1);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
-                            buffersremoved.putInt(4*i, 2);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
-                            buffersremoved.putInt(4*i, 3);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
-                            buffersremoved.putInt(4*i, 4);
+                        if (buffersremoved.get(i) == buffers.get(0))
+                            buffersremoved.put(i, 1);
+                        else if (buffersremoved.get(i) == buffers.get(1))
+                            buffersremoved.put(i, 2);
+                        else if (buffersremoved.get(i) == buffers.get(2))
+                            buffersremoved.put(i, 3);
+                        else if (buffersremoved.get(i) == buffers.get(3))
+                            buffersremoved.put(i, 4);
                         else
-                            buffersremoved.putInt(4*i, 0);
+                            buffersremoved.put(i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + " and " + buffersremoved.getInt(4*1) + " from queue\n");
+                    System.out.print("\nRemoved Buffers " + buffersremoved.get(0) + " and " + buffersremoved.get(1) + " from queue\n");
                 }
                 break;
             case 'C':
                 // Unqueue first 3 Buffers
-                buffersremoved.clear();
-                al.sourceUnqueueBuffers(source.getInt(0), 3, Sys.getDirectBufferAddress(buffersremoved));
+                al.sourceUnqueueBuffers(source.get(0), 3, Sys.getDirectBufferAddress(buffersremoved));
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 3 : ", error);
                 } else
                 {
-                    for (i = 0; i < 2; i++)
+                    for (i = 0; i < 3; i++)
                     {
-                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
-                            buffersremoved.putInt(4*i, 1);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
-                            buffersremoved.putInt(4*i, 2);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
-                            buffersremoved.putInt(4*i, 3);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
-                            buffersremoved.putInt(4*i, 4);
+                        if (buffersremoved.get(i) == buffers.get(0))
+                            buffersremoved.put(i, 1);
+                        else if (buffersremoved.get(i) == buffers.get(1))
+                            buffersremoved.put(i, 2);
+                        else if (buffersremoved.get(i) == buffers.get(2))
+                            buffersremoved.put(i, 3);
+                        else if (buffersremoved.get(i) == buffers.get(3))
+                            buffersremoved.put(i, 4);
                         else
-                            buffersremoved.putInt(4*i, 0);
+                            buffersremoved.put(i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + 
-                                     ", " + buffersremoved.getInt(4*1) + " and " +
-                                     buffersremoved.getInt(4*2) +" from queue\n");
+                    System.out.print("\nRemoved Buffers " + buffersremoved.get(0) + 
+                                     ", " + buffersremoved.get(1) + " and " +
+                                     buffersremoved.get(2) +" from queue\n");
                 }
                 break;
             case 'D':
                 // Unqueue first 4 Buffers
-                buffersremoved.clear();
-                al.sourceUnqueueBuffers(source.getInt(4*0), 4, Sys.getDirectBufferAddress(buffersremoved));
+                al.sourceUnqueueBuffers(source.get(0), 4, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 1 : ", error);
                 } else
                 {
-                    for (i = 0; i < 2; i++)
+                    for (i = 0; i < 4; i++)
                     {
-                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
-                            buffersremoved.putInt(4*i, 1);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
-                            buffersremoved.putInt(4*i, 2);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
-                            buffersremoved.putInt(4*i, 3);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
-                            buffersremoved.putInt(4*i, 4);
+                        if (buffersremoved.get(i) == buffers.get(0))
+                            buffersremoved.put(i, 1);
+                        else if (buffersremoved.get(i) == buffers.get(1))
+                            buffersremoved.put(i, 2);
+                        else if (buffersremoved.get(i) == buffers.get(2))
+                            buffersremoved.put(i, 3);
+                        else if (buffersremoved.get(i) == buffers.get(3))
+                            buffersremoved.put(i, 4);
                         else
-                            buffersremoved.putInt(4*i, 0);
+                            buffersremoved.put(i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + 
-                                     ", " + buffersremoved.getInt(4*1) + 
-                                     ", " + buffersremoved.getInt(4*2) + 
-                                     "and " + buffersremoved.getInt(4*3) + 
+                    System.out.print("\nRemoved Buffers " + buffersremoved.get(0) + 
+                                     ", " + buffersremoved.get(1) + 
+                                     ", " + buffersremoved.get(2) + 
+                                     "and " + buffersremoved.get(3) + 
                                      " from queue\n");
                 }
-                          
-                buffersremoved = null;
                 break;
             case 'E':
                 // Unqueue first 5 Buffers
-                buffersremoved.clear();
-                al.sourceUnqueueBuffers(source.getInt(4*0), 5, Sys.getDirectBufferAddress(buffersremoved));
+                al.sourceUnqueueBuffers(source.get(0), 5, Sys.getDirectBufferAddress(buffersremoved));
                           
                 if ((error = al.getError()) != AL.NO_ERROR)
                 {
                     displayALError("alSourceUnqueueBuffers 1 : ", error);
                 } else
                 {
-                    for (i = 0; i < 2; i++)
+                    for (i = 0; i < 5; i++)
                     {
-                        if (buffersremoved.getInt(4*i) == buffers.getInt(4*0))
-                            buffersremoved.putInt(4*i, 1);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*1))
-                            buffersremoved.putInt(4*i, 2);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*2))
-                            buffersremoved.putInt(4*i, 3);
-                        else if (buffersremoved.getInt(4*i) == buffers.getInt(4*3))
-                            buffersremoved.putInt(4*i, 4);
+                        if (buffersremoved.get(i) == buffers.get(0))
+                            buffersremoved.put(i, 1);
+                        else if (buffersremoved.get(i) == buffers.get(1))
+                            buffersremoved.put(i, 2);
+                        else if (buffersremoved.get(i) == buffers.get(2))
+                            buffersremoved.put(i, 3);
+                        else if (buffersremoved.get(i) == buffers.get(3))
+                            buffersremoved.put(i, 4);
                         else
-                            buffersremoved.putInt(4*i, 0);
+                            buffersremoved.put(i, 0);
                     }
                           
-                    System.out.print("\nRemoved Buffers " + buffersremoved.getInt(4*0) + 
-                                     ", " + buffersremoved.getInt(4*1) + 
-                                     ", " + buffersremoved.getInt(4*2) + 
-                                     ", " + buffersremoved.getInt(4*3) + 
-                                     "and " + buffersremoved.getInt(4*4) + 
+                    System.out.print("\nRemoved Buffers " + buffersremoved.get(0) + 
+                                     ", " + buffersremoved.get(1) + 
+                                     ", " + buffersremoved.get(2) + 
+                                     ", " + buffersremoved.get(3) + 
+                                     "and " + buffersremoved.get(4) + 
                                      " from queue\n");
                 }
-                          
-                buffersremoved = null;
                 break;
             case 'F':
-                al.sourcei(source.getInt(4*0), AL.BUFFER, 0);
+                al.sourcei(source.get(0), AL.BUFFER, 0);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSource AL_BUFFER NULL : ", error);
                 break;
             case '0':
                 // Retrieve number of buffers in queue
-                al.getSourcei(source.getInt(4*0), AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
+                al.getSourcei(source.get(0), AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
                 
                 // Retrieve number of processed buffers
-                al.getSourcei(source.getInt(4*0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
+                al.getSourcei(source.get(0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
                 
                 // Retrieve current buffer
-                al.getSourcei(source.getInt(4*0), AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
+                al.getSourcei(source.get(0), AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
                 
-                int address = Buffer.getInt();
-                if (address == buffers.getInt(4*0))
+                int address = Buffer.get(0);
+                if (address == buffers.get(0))
                     address = 1;
-                else if (address == buffers.getInt(4*1))
+                else if (address == buffers.get(1))
                     address = 2;
-                else if (address == buffers.getInt(4*2))
+                else if (address == buffers.get(2))
                     address = 3;
-                else if (address == buffers.getInt(4*3))
+                else if (address == buffers.get(3))
                     address = 4;
                 else
                     address = 0;
                           
-                System.out.print("Current Buffer is " + address + ", " + BuffersInQueue.getInt() + " Buffers in queue, " + BuffersProcessed.getInt() + " Processed\n");
+                System.out.print("Current Buffer is " + address + ", " + BuffersInQueue.get(0) + " Buffers in queue, " + BuffersProcessed.get(0) + " Processed\n");
                 Buffer.clear();
                 BuffersProcessed.clear();
                 BuffersInQueue.clear();                          
@@ -1656,7 +1579,7 @@ public class ALTest extends BasicTest {
         } while (ch != 'Q');
         
         // Release resources
-        al.sourceStop(source.getInt(4*0));
+        al.sourceStop(source.get(0));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourceStop : ", error);
         
@@ -1665,24 +1588,16 @@ public class ALTest extends BasicTest {
             displayALError("alDeleteSources 1 : ", error);
     }
     
-    
     protected void i_BufferTest() {
-        ByteBuffer source = ByteBuffer.allocateDirect(4);
-        source.order(ByteOrder.nativeOrder());
+        IntBuffer source = createIntBuffer(1);
         int	error;
         int ch = -1;
         
-        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
-        source0Pos.order(ByteOrder.nativeOrder());
-        source0Pos.putFloat(2.0f);
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(-2.0f);
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {2.0f, 0.0f, -2.0f});
         
-        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
-        source0Vel.order(ByteOrder.nativeOrder());
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});        
         
         al.genSources(1,Sys.getDirectBufferAddress(source));
         if ((error = al.getError()) != AL.NO_ERROR) {
@@ -1690,23 +1605,23 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        al.sourcef(source.getInt(4*0),AL.PITCH,1.0f);
+        al.sourcef(source.get(0),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 0 AL_PITCH : \n", error);
         
-        al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+        al.sourcef(source.get(0),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 0 AL_GAIN : \n", error);
         
-        al.sourcefv(source.getInt(4*0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        al.sourcefv(source.get(0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 0 AL_POSITION : \n", error);
         
-        al.sourcefv(source.getInt(4*0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        al.sourcefv(source.get(0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
         
-        al.sourcei(source.getInt(4*0),AL.LOOPING,AL.FALSE);
+        al.sourcei(source.get(0),AL.LOOPING,AL.FALSE);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcei 0 AL_LOOPING true: \n", error);
         
@@ -1725,35 +1640,35 @@ public class ALTest extends BasicTest {
             switch (ch) {
                 case '1':
                     // Stop source
-                    al.sourceStop(source.getInt(4*0));
+                    al.sourceStop(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourceStop 0 : ", error);
                     // Attach buffer 0 to source
-                    al.sourcei(source.getInt(4*0), AL.BUFFER, buffers.getInt(4*0));
+                    al.sourcei(source.get(0), AL.BUFFER, buffers.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcei AL_BUFFER 0 : ", error);
                     // Play
-                    al.sourcePlay(source.getInt(4*0));
+                    al.sourcePlay(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay 0 : ", error);
                     break;
                 case '2':
                     // Stop source
-                    al.sourceStop(source.getInt(4*0));
+                    al.sourceStop(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourceStop 0 : ", error);
                     // Attach buffer 0 to source
-                    al.sourcei(source.getInt(4*0), AL.BUFFER, buffers.getInt(4*1));
+                    al.sourcei(source.get(0), AL.BUFFER, buffers.get(1));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcei AL_BUFFER 1 : ", error);
                     // Play
-                    al.sourcePlay(source.getInt(4*0));
+                    al.sourcePlay(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay 0 : ", error);
                     break;
                 case '3':
                     // Stop source
-                    al.sourceStop(source.getInt(4*0));
+                    al.sourceStop(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourceStop 0 : ", error);
                     break;
@@ -1772,21 +1687,14 @@ public class ALTest extends BasicTest {
     
     protected void i_FreqTest() {
         int	error;
-        ByteBuffer source = ByteBuffer.allocateDirect(4);
-        source.order(ByteOrder.nativeOrder());
+        IntBuffer source = createIntBuffer(1);
         int	ch = -1;
-        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
-        source0Pos.order(ByteOrder.nativeOrder());
-        source0Pos.putFloat(2.0f);
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(-2.0f);
+
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {2.0f, 0.0f, -2.0f});
         
-        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
-        source0Vel.order(ByteOrder.nativeOrder());
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});        
         
         al.genSources(1,Sys.getDirectBufferAddress(source));
         if ((error = al.getError()) != AL.NO_ERROR) {
@@ -1794,27 +1702,27 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        al.sourcef(source.getInt(4*0),AL.PITCH,1.0f);
+        al.sourcef(source.get(0),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 0 AL_PITCH : \n", error);
         
-        al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+        al.sourcef(source.get(0),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 0 AL_GAIN : \n", error);
         
-        al.sourcefv(source.getInt(4*0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        al.sourcefv(source.get(0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 0 AL_POSITION : \n", error);
         
-        al.sourcefv(source.getInt(4*0),AL.VELOCITY, Sys.getDirectBufferAddress(source0Vel));
+        al.sourcefv(source.get(0),AL.VELOCITY, Sys.getDirectBufferAddress(source0Vel));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
         
-        al.sourcei(source.getInt(4*0),AL.BUFFER, buffers.getInt(4*1));
+        al.sourcei(source.get(0),AL.BUFFER, buffers.get(1));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcei 0 AL_BUFFER buffer 1 : \n", error);
         
-        al.sourcei(source.getInt(4*0),AL.LOOPING,AL.TRUE);
+        al.sourcei(source.get(0),AL.LOOPING,AL.TRUE);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcei 0 AL_LOOPING true: \n", error);
         
@@ -1832,18 +1740,18 @@ public class ALTest extends BasicTest {
             
             switch (ch) {
                 case '1':
-                    al.sourcef(source.getInt(4*0), AL.PITCH, 1.0f);
-                    al.sourcePlay(source.getInt(4*0));
+                    al.sourcef(source.get(0), AL.PITCH, 1.0f);
+                    al.sourcePlay(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay source 0 : ", error);
                     break;
                 case '2':
-                    al.sourcef(source.getInt(4*0), AL.PITCH, 2.0f);
+                    al.sourcef(source.get(0), AL.PITCH, 2.0f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcef source 0 AL_PITCH 2.0 : ", error);
                     break;
                 case '3':
-                    al.sourcef(source.getInt(4*0), AL.PITCH, 0.5f);
+                    al.sourcef(source.get(0), AL.PITCH, 0.5f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcef source 0 AL PITCH 0.5: ", error);
                     break;
@@ -1862,35 +1770,20 @@ public class ALTest extends BasicTest {
     
     protected void i_StereoTest() {
         int	error;
-        ByteBuffer source = ByteBuffer.allocateDirect(4);
-        source.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer tbuffers = ByteBuffer.allocateDirect(4*2);
-        tbuffers.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer BuffersInQueue = ByteBuffer.allocateDirect(4);
-        BuffersInQueue.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer BuffersProcessed = ByteBuffer.allocateDirect(4);
-        BuffersProcessed.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer Buffer = ByteBuffer.allocateDirect(4);
-        Buffer.order(ByteOrder.nativeOrder());
+        IntBuffer source = createIntBuffer(1);
+        IntBuffer tbuffers = createIntBuffer(2);
+        IntBuffer BuffersInQueue = createIntBuffer(1);
+        IntBuffer BuffersProcessed = createIntBuffer(1);
+        IntBuffer Buffer = createIntBuffer(1);
+
         int	ch = -1;
-        
         int bLoop = AL.TRUE;
+
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {2.0f, 0.0f, -2.0f});
         
-        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
-        source0Pos.order(ByteOrder.nativeOrder());
-        source0Pos.putFloat(2.0f);
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(-2.0f);
-        
-        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
-        source0Vel.order(ByteOrder.nativeOrder());
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});        
         
         al.genSources(1,Sys.getDirectBufferAddress(source));
         if ((error = al.getError()) != AL.NO_ERROR) {
@@ -1898,8 +1791,8 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        tbuffers.putInt(4*0, buffers.getInt(4*6));
-        tbuffers.putInt(4*1, buffers.getInt(4*6));
+        tbuffers.put(0, buffers.get(6));
+        tbuffers.put(1, buffers.get(6));
         
         System.out.print("Stereo Test\n");
         System.out.print("Press '1' to play a stereo buffer on source 0 (looping)\n");
@@ -1921,98 +1814,98 @@ public class ALTest extends BasicTest {
             switch (ch) {
             case '1':
                 // Stop source
-                al.sourceStop(source.getInt(4*0));
+                al.sourceStop(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceStop source 0 : ", error);
              
                 // Attach new buffer
-                al.sourcei(source.getInt(4*0),AL.BUFFER, buffers.getInt(4*6));
+                al.sourcei(source.get(0),AL.BUFFER, buffers.get(6));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei 0 AL_BUFFER buffer 6 (stereo) : \n", error);
              
                 // Set volume
-                al.sourcef(source.getInt(4*0),AL.GAIN,0.5f);
+                al.sourcef(source.get(0),AL.GAIN,0.5f);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcef 0 AL_GAIN : \n", error);
              
                 // Set looping
-                al.sourcei(source.getInt(4*0),AL.LOOPING,bLoop);
+                al.sourcei(source.get(0),AL.LOOPING,bLoop);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei 0 AL_LOOPING true: \n", error);
              
                 // Play source
-                al.sourcePlay(source.getInt(4*0));
+                al.sourcePlay(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcePlay source 0 : ", error);
              
                 break;
             case '2':
                 // Stop source
-                al.sourceStop(source.getInt(4*0));
+                al.sourceStop(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceStop source 0 : ", error);
              
                 // Attach new buffer
-                al.sourcei(source.getInt(4*0),AL.BUFFER, buffers.getInt(4*0));
+                al.sourcei(source.get(0),AL.BUFFER, buffers.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei 0 AL_BUFFER buffer 0 (mono) : \n", error);
              
                 // Set 3D position
-                al.sourcefv(source.getInt(4*0),AL.POSITION, Sys.getDirectBufferAddress(source0Pos));
+                al.sourcefv(source.get(0),AL.POSITION, Sys.getDirectBufferAddress(source0Pos));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcefv 0 AL_POSITION : \n", error);
              
                 // Set 3D velocity
-                al.sourcefv(source.getInt(4*0),AL.VELOCITY, Sys.getDirectBufferAddress(source0Vel));
+                al.sourcefv(source.get(0),AL.VELOCITY, Sys.getDirectBufferAddress(source0Vel));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
              
                 // Set volume to full
-                al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+                al.sourcef(source.get(0),AL.GAIN,1.0f);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcef 0 AL_GAIN : \n", error);
              
                 // Set Looping
-                al.sourcei(source.getInt(4*0),AL.LOOPING,bLoop);
+                al.sourcei(source.get(0),AL.LOOPING,bLoop);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei 0 AL_LOOPING : \n", error);
              
                 // Play source
-                al.sourcePlay(source.getInt(4*0));
+                al.sourcePlay(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcePlay source 0 : ", error);
                 break;
             case '3':
-                al.sourceStop(source.getInt(4*0));
+                al.sourceStop(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceStop source 0 : ", error);
                 break;
             case '4':
-                al.sourceStop(source.getInt(4*0));
+                al.sourceStop(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceStop Source 0 : ", error);
              
                 // Attach NULL buffer to source to clear everything
-                al.sourcei(source.getInt(4*0), AL.BUFFER, 0);
+                al.sourcei(source.get(0), AL.BUFFER, 0);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei AL_BUFFER (NULL) : ", error);
              
-                al.sourceQueueBuffers(source.getInt(4*0), 2, Sys.getDirectBufferAddress(buffers));
+                al.sourceQueueBuffers(source.get(0), 2, Sys.getDirectBufferAddress(buffers));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 2 (stereo) : ", error);
              
                 // Set Looping
-                al.sourcei(source.getInt(4*0),AL.LOOPING,bLoop);
+                al.sourcei(source.get(0),AL.LOOPING,bLoop);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei 0 AL_LOOPING : \n", error);
              
-                al.sourcePlay(source.getInt(4*0));
+                al.sourcePlay(source.get(0));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcePlay Source 0 : ", error);
                 break;
             case '5':
                 //yes, this causes a invalid operation - so does the original :/
-                al.sourceUnqueueBuffers(source.getInt(4*0), 2, Sys.getDirectBufferAddress(buffers));
+                al.sourceUnqueueBuffers(source.get(0), 2, Sys.getDirectBufferAddress(buffers));
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceUnqueueBuffers 2 (stereo) : ", error);
                 break;
@@ -2027,27 +1920,27 @@ public class ALTest extends BasicTest {
                     System.out.print("Looping is on  \n");
                     bLoop = AL.TRUE;
                 }
-                al.sourcei(source.getInt(4*0), AL.LOOPING, bLoop);
+                al.sourcei(source.get(0), AL.LOOPING, bLoop);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourcei 0 AL_LOOPING : \n", error);
                 break;
             case '0':
                         // Retrieve number of buffers in queue
-                al.getSourcei(source.getInt(4*0), AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
+                al.getSourcei(source.get(0), AL.BUFFERS_QUEUED, Sys.getDirectBufferAddress(BuffersInQueue));
                 // Retrieve number of processed buffers
-                al.getSourcei(source.getInt(4*0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
+                al.getSourcei(source.get(0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(BuffersProcessed));
                 // Retrieve current buffer
-                al.getSourcei(source.getInt(4*0), AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
+                al.getSourcei(source.get(0), AL.BUFFER, Sys.getDirectBufferAddress(Buffer));
 
-                int address = Buffer.getInt();
-                if (address == buffers.getInt(4*0))
+                int address = Buffer.get(0);
+                if (address == buffers.get(0))
                     address = 6;
-                else if (address == buffers.getInt(4*0))
+                else if (address == buffers.get(0))
                     address = 6;
                 else
                     address = 0;
              
-                System.out.print("Current Buffer is " + address + ", " + BuffersInQueue.getInt() + " Buffers in queue, " + BuffersProcessed.getInt() + " Processed\n");
+                System.out.print("Current Buffer is " + address + ", " + BuffersInQueue.get(0) + " Buffers in queue, " + BuffersProcessed.get(0) + " Processed\n");
                 Buffer.clear();
                 BuffersProcessed.clear();
                 BuffersInQueue.clear();
@@ -2057,7 +1950,7 @@ public class ALTest extends BasicTest {
         } while (ch != 'Q');
         
         // Release resources
-        al.sourceStop(source.getInt(4*0));
+        al.sourceStop(source.get(0));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourceStop : ", error);
         
@@ -2068,33 +1961,21 @@ public class ALTest extends BasicTest {
     
     protected void i_GainTest() {
         int     error;
-        ByteBuffer source = ByteBuffer.allocateDirect(4*2);
-        source.order(ByteOrder.nativeOrder());
         int     ch = -1;
+
+        IntBuffer source = createIntBuffer(2);
         
-        ByteBuffer source0Pos = ByteBuffer.allocateDirect(12);
-        source0Pos.order(ByteOrder.nativeOrder());
-        source0Pos.putFloat(2.0f);
-        source0Pos.putFloat(0.0f);
-        source0Pos.putFloat(-2.0f);
+        FloatBuffer source0Pos = createFloatBuffer(3);
+        source0Pos.put(new float[] {2.0f, 0.0f, -2.0f});
         
-        ByteBuffer source0Vel = ByteBuffer.allocateDirect(12);
-        source0Vel.order(ByteOrder.nativeOrder());
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
-        source0Vel.putFloat(0.0f);
+        FloatBuffer source0Vel = createFloatBuffer(3);
+        source0Vel.put(new float[] {0.0f, 0.0f, 0.0f});   
         
-        ByteBuffer source1Pos = ByteBuffer.allocateDirect(12);
-        source1Pos.order(ByteOrder.nativeOrder());
-        source1Pos.putFloat(-2.0f);
-        source1Pos.putFloat(0.0f);
-        source1Pos.putFloat(-2.0f);
+        FloatBuffer source1Pos = createFloatBuffer(3);
+        source1Pos.put(new float[] {-2.0f, 0.0f, -2.0f});
         
-        ByteBuffer source1Vel = ByteBuffer.allocateDirect(12);
-        source1Vel.order(ByteOrder.nativeOrder());
-        source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);
-        source1Vel.putFloat(0.0f);
+        FloatBuffer source1Vel = createFloatBuffer(3);
+        source1Vel.put(new float[] {0.0f, 0.0f, 0.0f});           
         
         al.genSources(2,Sys.getDirectBufferAddress(source));
         if ((error = al.getError()) != AL.NO_ERROR) {
@@ -2102,52 +1983,52 @@ public class ALTest extends BasicTest {
             return;
         }
         
-        al.sourcef(source.getInt(4*0),AL.PITCH,1.0f);
+        al.sourcef(source.get(0),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 0 AL_PITCH : \n", error);
         
-        al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+        al.sourcef(source.get(0),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 0 AL_GAIN : \n", error);
         
-        al.sourcefv(source.getInt(4*0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
+        al.sourcefv(source.get(0),AL.POSITION,Sys.getDirectBufferAddress(source0Pos));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 0 AL_POSITION : \n", error);
         
-        al.sourcefv(source.getInt(4*0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
+        al.sourcefv(source.get(0),AL.VELOCITY,Sys.getDirectBufferAddress(source0Vel));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 0 AL_VELOCITY : \n", error);
         
-        al.sourcei(source.getInt(4*0),AL.BUFFER, buffers.getInt(4*0));
+        al.sourcei(source.get(0),AL.BUFFER, buffers.get(0));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcei 0 AL_BUFFER buffer 0 : \n", error);
         
-        al.sourcei(source.getInt(4*0),AL.LOOPING,AL.TRUE);
+        al.sourcei(source.get(0),AL.LOOPING,AL.TRUE);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcei 0 AL_LOOPING true: \n", error);
         
         
-        al.sourcef(source.getInt(4*1),AL.PITCH,1.0f);
+        al.sourcef(source.get(1),AL.PITCH,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 1 AL_PITCH : \n", error);
         
-        al.sourcef(source.getInt(4*1),AL.GAIN,1.0f);
+        al.sourcef(source.get(1),AL.GAIN,1.0f);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcef 1 AL_GAIN : \n", error);
         
-        al.sourcefv(source.getInt(4*1),AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
+        al.sourcefv(source.get(1),AL.POSITION,Sys.getDirectBufferAddress(source1Pos));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 1 AL_POSITION : \n", error);
         
-        al.sourcefv(source.getInt(4*1),AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
+        al.sourcefv(source.get(1),AL.VELOCITY,Sys.getDirectBufferAddress(source1Vel));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcefv 1 AL_VELOCITY : \n", error);
         
-        al.sourcei(source.getInt(4*1),AL.BUFFER, buffers.getInt(4*1));
+        al.sourcei(source.get(1),AL.BUFFER, buffers.get(1));
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcei 1 AL_BUFFER buffer 1 : \n", error);
         
-        al.sourcei(source.getInt(4*1),AL.LOOPING,AL.TRUE);
+        al.sourcei(source.get(1),AL.LOOPING,AL.TRUE);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("alSourcei 1 AL_LOOPING true: \n", error);
         
@@ -2174,42 +2055,42 @@ public class ALTest extends BasicTest {
             
             switch (ch) {
                 case '1':
-                    al.sourcePlay(source.getInt(4*0));
+                    al.sourcePlay(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay source 0 : ", error);
                     break;
                 case '2':
-                    al.sourcePlay(source.getInt(4*1));
+                    al.sourcePlay(source.get(1));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcePlay source 1 : ", error);
                     break;
                 case '3':
-                    al.sourceStop(source.getInt(4*0));
+                    al.sourceStop(source.get(0));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourceStop source 0 : \n", error);
                     break;
                 case '4':
-                    al.sourceStop(source.getInt(4*1));
+                    al.sourceStop(source.get(1));
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourceStop source 1 : \n", error);
                     break;
                 case '5':
-                    al.sourcef(source.getInt(4*0),AL.GAIN,1.0f);
+                    al.sourcef(source.get(0),AL.GAIN,1.0f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcef 0 AL_GAIN 1.0 : \n", error);
                     break;
                 case '6':
-                    al.sourcef(source.getInt(4*0),AL.GAIN,0.5f);
+                    al.sourcef(source.get(0),AL.GAIN,0.5f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcef 0 AL_GAIN 0.5 : \n", error);
                     break;
                 case '7':
-                    al.sourcef(source.getInt(4*0),AL.GAIN,0.25f);
+                    al.sourcef(source.get(0),AL.GAIN,0.25f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcef 0 AL_GAIN 0.25 : \n", error);
                     break;
                 case '8':
-                    al.sourcef(source.getInt(4*0),AL.GAIN,0.0f);
+                    al.sourcef(source.get(0),AL.GAIN,0.0f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcef 0 AL_GAIN 0.0 : \n", error);
                     break;
@@ -2254,15 +2135,13 @@ public class ALTest extends BasicTest {
     
     protected void i_MultipleSourcesTest() {
         int	numSources = 0;
-        ByteBuffer Sources = ByteBuffer.allocateDirect(4*64);
-        Sources.order(ByteOrder.nativeOrder());
+        IntBuffer Sources = createIntBuffer(64);
         int	error;
         int	i;
         int	ch = -1;
         float radius;
         double anglestep;
-        ByteBuffer pos = ByteBuffer.allocateDirect(12);
-        pos.order(ByteOrder.nativeOrder());
+        FloatBuffer pos = createFloatBuffer(3);
         
         // Generate as many sources as possible (up to 64)
         for (i = 0; i < 64; i++) {
@@ -2284,24 +2163,22 @@ public class ALTest extends BasicTest {
         
         for (i = 0; i < numSources; i++) {
             // Attach buffer
-            al.sourcei(Sources.getInt(4*i), AL.BUFFER, buffers.getInt(4*0));
+            al.sourcei(Sources.get(i), AL.BUFFER, buffers.get(0));
             
             // Set position
-            pos.putFloat((float)(Math.cos(anglestep*i) * radius));
-            pos.putFloat(0.0f);
-            pos.putFloat((float)(Math.sin(anglestep*i) * radius));
+            pos.put(0, (float)(Math.cos(anglestep*i) * radius));
+            pos.put(1, 0.0f);
+            pos.put(2, (float)(Math.sin(anglestep*i) * radius));
             
-            al.sourcefv(Sources.getInt(4*i), AL.POSITION, Sys.getDirectBufferAddress(pos));
-            
-            pos.rewind();
+            al.sourcefv(Sources.get(i), AL.POSITION, Sys.getDirectBufferAddress(pos));
             
             System.out.print("Source " + i + " at " + 
-                            pos.getFloat() + ", " +
-                            pos.getFloat() + ", " +
-                            pos.getFloat() + "\n");
+                            pos.get(0) + ", " +
+                            pos.get(1) + ", " +
+                            pos.get(2) + "\n");
             
             // Enable looping
-            al.sourcei(Sources.getInt(4*i), AL.LOOPING, AL.TRUE);
+            al.sourcei(Sources.get(i), AL.LOOPING, AL.TRUE);
             
             pos.clear();
         }
@@ -2319,7 +2196,7 @@ public class ALTest extends BasicTest {
             switch (ch) {
                 case '1':
                     for (i = 0; i < numSources; i++) {
-                        al.sourcePlay(Sources.getInt(4*i));
+                        al.sourcePlay(Sources.get(i));
                         if ((error = al.getError()) != AL.NO_ERROR)
                             displayALError("alSourcePlay : ", error);
                         

@@ -41,6 +41,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 
 /**
  * $Id$
@@ -75,11 +76,8 @@ public class PlayTestMemory extends BasicTest {
         alInitialize();
         
         //create 1 buffer and 1 source
-        ByteBuffer buffers = ByteBuffer.allocateDirect(4);
-        buffers.order(ByteOrder.nativeOrder());
-        
-        ByteBuffer sources = ByteBuffer.allocateDirect(4);
-        sources.order(ByteOrder.nativeOrder());
+        IntBuffer buffers = createIntBuffer(1);
+        IntBuffer sources = createIntBuffer(1);        
         
         // al generate buffers and sources
         al.genBuffers(1, Sys.getDirectBufferAddress(buffers));
@@ -106,7 +104,7 @@ public class PlayTestMemory extends BasicTest {
         
         
         //copy to buffers
-        al.bufferData(buffers.getInt(0), file.format, file.data, file.size, file.freq);
+        al.bufferData(buffers.get(0), file.format, file.data, file.size, file.freq);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -118,19 +116,19 @@ public class PlayTestMemory extends BasicTest {
         }        
         
         //set up source input            
-        al.sourcei(sources.getInt(0), AL.BUFFER, buffers.getInt(0));
+        al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //lets loop the sound
-        al.sourcei(sources.getInt(0), AL.LOOPING, AL.TRUE);
+        al.sourcei(sources.get(0), AL.LOOPING, AL.TRUE);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //play source 0
-        al.sourcePlay(sources.getInt(0));
+        al.sourcePlay(sources.get(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -143,7 +141,7 @@ public class PlayTestMemory extends BasicTest {
         }
         
         //stop source 0
-        al.sourceStop(sources.getInt(0));
+        al.sourceStop(sources.get(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
