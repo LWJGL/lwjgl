@@ -33,7 +33,7 @@
 #include "org_lwjgl_fmod3_FMOD.h"
 #include "extfmod3.h"
 
-static const char* VERSION = "0.92";
+static const char* VERSION = "0.93";
 
 /**
  * Concatenate two strings
