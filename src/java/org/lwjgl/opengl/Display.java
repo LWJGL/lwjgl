@@ -406,6 +406,7 @@ public final class Display {
 	public static boolean isCloseRequested() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine close requested state of uncreated window");
+		nUpdate();
 		return nIsCloseRequested();
 	}
 
@@ -417,6 +418,7 @@ public final class Display {
 	public static boolean isVisible() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine minimized state of uncreated window");
+		nUpdate();
 		return nIsVisible();
 	}
 
@@ -428,6 +430,7 @@ public final class Display {
 	public static boolean isActive() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine focused state of uncreated window");
+		nUpdate();
 		return nIsActive();
 	}
 
@@ -446,6 +449,7 @@ public final class Display {
 	public static boolean isDirty() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine dirty state of uncreated window");
+		nUpdate();
 		return nIsDirty();
 	}
 
@@ -642,7 +646,8 @@ public final class Display {
 	}
 
 	/*
-	 * Reset display mode if fullscreen. This method is also called from the shutdown hook added in Sys
+	 * Reset display mode if fullscreen. This method is also called from the shutdown hook added
+	 * in the static constructor
 	 */
 	private static void reset() {
 		if (fullscreen)
