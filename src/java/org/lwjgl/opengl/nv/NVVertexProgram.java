@@ -29,6 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /*
  * Created by LWJGL.
  * User: spasi
@@ -41,269 +42,429 @@ package org.lwjgl.opengl.nv;
 import java.nio.*;
 
 import org.lwjgl.opengl.VBOTracker;
+
 import org.lwjgl.opengl.GL11;
 
 public class NVVertexProgram extends NVProgram {
 
-	/*
-	Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,
-	and by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
-	and GetDoublev, and by the <target> parameter of BindProgramNV,
-	ExecuteProgramNV, GetProgramParameter[df]vNV, GetTrackMatrixivNV,
-	LoadProgramNV, ProgramParameter[s]4[df][v]NV, and TrackMatrixNV:
-	*/
+  /*
+  Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,
+  and by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
+  and GetDoublev, and by the <target> parameter of BindProgramNV,
+  ExecuteProgramNV, GetProgramParameter[df]vNV, GetTrackMatrixivNV,
+  LoadProgramNV, ProgramParameter[s]4[df][v]NV, and TrackMatrixNV:
+  */
 
-	public static final int GL_VERTEX_PROGRAM_NV = 0x8620;
+  public static final int GL_VERTEX_PROGRAM_NV = 0x8620;
 
-	/*
-	Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,
-	and by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
-	and GetDoublev:
-	*/
-	public static final int GL_VERTEX_PROGRAM_POINT_SIZE_NV = 0x8642;
-	public static final int GL_VERTEX_PROGRAM_TWO_SIDE_NV = 0x8643;
+  /*
+  Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,
+  and by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
+  and GetDoublev:
+  */
 
-	/*
-	Accepted by the <target> parameter of ExecuteProgramNV and
-	LoadProgramNV:
-	*/
-	public static final int GL_VERTEX_STATE_PROGRAM_NV = 0x8621;
+  public static final int GL_VERTEX_PROGRAM_POINT_SIZE_NV = 0x8642;
 
-	/*
-	Accepted by the <pname> parameter of GetVertexAttrib[dfi]vNV:
-	*/
-	public static final int GL_ATTRIB_ARRAY_SIZE_NV = 0x8623;
-	public static final int GL_ATTRIB_ARRAY_STRIDE_NV = 0x8624;
-	public static final int GL_ATTRIB_ARRAY_TYPE_NV = 0x8625;
-	public static final int GL_CURRENT_ATTRIB_NV = 0x8626;
+  public static final int GL_VERTEX_PROGRAM_TWO_SIDE_NV = 0x8643;
 
-	/*
-	Accepted by the <pname> parameter of GetProgramParameterfvNV
-	and GetProgramParameterdvNV:
-	*/
-	public static final int GL_PROGRAM_PARAMETER_NV = 0x8644;
+  /*
+  Accepted by the <target> parameter of ExecuteProgramNV and
+  LoadProgramNV:
+  */
 
-	/*
-	Accepted by the <pname> parameter of GetVertexAttribPointervNV:
-	*/
-	public static final int GL_ATTRIB_ARRAY_POINTER_NV = 0x8645;
+  public static final int GL_VERTEX_STATE_PROGRAM_NV = 0x8621;
 
+  /*
+  Accepted by the <pname> parameter of GetVertexAttrib[dfi]vNV:
+  */
 
-	/*
-	Accepted by the <pname> parameter of GetTrackMatrixivNV:
-	*/
-	public static final int GL_TRACK_MATRIX_NV = 0x8648;
-	public static final int GL_TRACK_MATRIX_TRANSFORM_NV = 0x8649;
+  public static final int GL_ATTRIB_ARRAY_SIZE_NV = 0x8623;
 
-	/*
-	Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
-	GetFloatv, and GetDoublev:
-	*/
-	public static final int GL_MAX_TRACK_MATRIX_STACK_DEPTH_NV = 0x862E;
-	public static final int GL_MAX_TRACK_MATRICES_NV = 0x862F;
-	public static final int GL_CURRENT_MATRIX_STACK_DEPTH_NV = 0x8640;
-	public static final int GL_CURRENT_MATRIX_NV = 0x8641;
-	public static final int GL_VERTEX_PROGRAM_BINDING_NV = 0x864A;
+  public static final int GL_ATTRIB_ARRAY_STRIDE_NV = 0x8624;
 
-	/*
-	Accepted by the <matrix> parameter of TrackMatrixNV:
-	*/
-	public static final int GL_MODELVIEW_PROJECTION_NV = 0x8629;
+  public static final int GL_ATTRIB_ARRAY_TYPE_NV = 0x8625;
 
-	/*
-	Accepted by the <matrix> parameter of TrackMatrixNV and by the
-	<mode> parameter of MatrixMode:
-	*/
-	public static final int GL_MATRIX0_NV = 0x8630;
-	public static final int GL_MATRIX1_NV = 0x8631;
-	public static final int GL_MATRIX2_NV = 0x8632;
-	public static final int GL_MATRIX3_NV = 0x8633;
-	public static final int GL_MATRIX4_NV = 0x8634;
-	public static final int GL_MATRIX5_NV = 0x8635;
-	public static final int GL_MATRIX6_NV = 0x8636;
-	public static final int GL_MATRIX7_NV = 0x8637;
+  public static final int GL_CURRENT_ATTRIB_NV = 0x8626;
 
-	/*
-	Accepted by the <transform> parameter of TrackMatrixNV:
-	*/
-	public static final int GL_IDENTITY_NV = 0x862A;
-	public static final int GL_INVERSE_NV = 0x862B;
-	public static final int GL_TRANSPOSE_NV = 0x862C;
-	public static final int GL_INVERSE_TRANSPOSE_NV = 0x862D;
+  /*
+  Accepted by the <pname> parameter of GetProgramParameterfvNV
+  and GetProgramParameterdvNV:
+  */
 
-	/*
-	Accepted by the <array> parameter of EnableClientState and
-	DisableClientState, by the <cap> parameter of IsEnabled, and by
-	the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
-	GetDoublev:
-	*/
-	public static final int GL_VERTEX_ATTRIB_ARRAY0_NV = 0x8650;
-	public static final int GL_VERTEX_ATTRIB_ARRAY1_NV = 0x8651;
-	public static final int GL_VERTEX_ATTRIB_ARRAY2_NV = 0x8652;
-	public static final int GL_VERTEX_ATTRIB_ARRAY3_NV = 0x8653;
-	public static final int GL_VERTEX_ATTRIB_ARRAY4_NV = 0x8654;
-	public static final int GL_VERTEX_ATTRIB_ARRAY5_NV = 0x8655;
-	public static final int GL_VERTEX_ATTRIB_ARRAY6_NV = 0x8656;
-	public static final int GL_VERTEX_ATTRIB_ARRAY7_NV = 0x8657;
-	public static final int GL_VERTEX_ATTRIB_ARRAY8_NV = 0x8658;
-	public static final int GL_VERTEX_ATTRIB_ARRAY9_NV = 0x8659;
-	public static final int GL_VERTEX_ATTRIB_ARRAY10_NV = 0x865A;
-	public static final int GL_VERTEX_ATTRIB_ARRAY11_NV = 0x865B;
-	public static final int GL_VERTEX_ATTRIB_ARRAY12_NV = 0x865C;
-	public static final int GL_VERTEX_ATTRIB_ARRAY13_NV = 0x865D;
-	public static final int GL_VERTEX_ATTRIB_ARRAY14_NV = 0x865E;
-	public static final int GL_VERTEX_ATTRIB_ARRAY15_NV = 0x865F;
+  public static final int GL_PROGRAM_PARAMETER_NV = 0x8644;
 
-	/*
-	Accepted by the <target> parameter of GetMapdv, GetMapfv, GetMapiv,
-	Map1d and Map1f and by the <cap> parameter of Enable, Disable, and
-	IsEnabled, and by the <pname> parameter of GetBooleanv, GetIntegerv,
-	GetFloatv, and GetDoublev:
-	*/
-	public static final int GL_MAP1_VERTEX_ATTRIB0_4_NV = 0x8660;
-	public static final int GL_MAP1_VERTEX_ATTRIB1_4_NV = 0x8661;
-	public static final int GL_MAP1_VERTEX_ATTRIB2_4_NV = 0x8662;
-	public static final int GL_MAP1_VERTEX_ATTRIB3_4_NV = 0x8663;
-	public static final int GL_MAP1_VERTEX_ATTRIB4_4_NV = 0x8664;
-	public static final int GL_MAP1_VERTEX_ATTRIB5_4_NV = 0x8665;
-	public static final int GL_MAP1_VERTEX_ATTRIB6_4_NV = 0x8666;
-	public static final int GL_MAP1_VERTEX_ATTRIB7_4_NV = 0x8667;
-	public static final int GL_MAP1_VERTEX_ATTRIB8_4_NV = 0x8668;
-	public static final int GL_MAP1_VERTEX_ATTRIB9_4_NV = 0x8669;
-	public static final int GL_MAP1_VERTEX_ATTRIB10_4_NV = 0x866A;
-	public static final int GL_MAP1_VERTEX_ATTRIB11_4_NV = 0x866B;
-	public static final int GL_MAP1_VERTEX_ATTRIB12_4_NV = 0x866C;
-	public static final int GL_MAP1_VERTEX_ATTRIB13_4_NV = 0x866D;
-	public static final int GL_MAP1_VERTEX_ATTRIB14_4_NV = 0x866E;
-	public static final int GL_MAP1_VERTEX_ATTRIB15_4_NV = 0x866F;
+  /*
+  Accepted by the <pname> parameter of GetVertexAttribPointervNV:
+  */
 
-	/*
-	Accepted by the <target> parameter of GetMapdv, GetMapfv, GetMapiv,
-	Map2d and Map2f and by the <cap> parameter of Enable, Disable, and
-	IsEnabled, and by the <pname> parameter of GetBooleanv, GetIntegerv,
-	GetFloatv, and GetDoublev:
-	*/
-	public static final int GL_MAP2_VERTEX_ATTRIB0_4_NV = 0x8670;
-	public static final int GL_MAP2_VERTEX_ATTRIB1_4_NV = 0x8671;
-	public static final int GL_MAP2_VERTEX_ATTRIB2_4_NV = 0x8672;
-	public static final int GL_MAP2_VERTEX_ATTRIB3_4_NV = 0x8673;
-	public static final int GL_MAP2_VERTEX_ATTRIB4_4_NV = 0x8674;
-	public static final int GL_MAP2_VERTEX_ATTRIB5_4_NV = 0x8675;
-	public static final int GL_MAP2_VERTEX_ATTRIB6_4_NV = 0x8676;
-	public static final int GL_MAP2_VERTEX_ATTRIB7_4_NV = 0x8677;
-	public static final int GL_MAP2_VERTEX_ATTRIB8_4_NV = 0x8678;
-	public static final int GL_MAP2_VERTEX_ATTRIB9_4_NV = 0x8679;
-	public static final int GL_MAP2_VERTEX_ATTRIB10_4_NV = 0x867A;
-	public static final int GL_MAP2_VERTEX_ATTRIB11_4_NV = 0x867B;
-	public static final int GL_MAP2_VERTEX_ATTRIB12_4_NV = 0x867C;
-	public static final int GL_MAP2_VERTEX_ATTRIB13_4_NV = 0x867D;
-	public static final int GL_MAP2_VERTEX_ATTRIB14_4_NV = 0x867E;
-	public static final int GL_MAP2_VERTEX_ATTRIB15_4_NV = 0x867F;
+  public static final int GL_ATTRIB_ARRAY_POINTER_NV = 0x8645;
 
-	// ---------------------------
-	public static void glExecuteProgramNV(int target, int id, FloatBuffer params) {
-		assert params.remaining() >= 4: "<params> must have 4 floats available.";
-		nglExecuteProgramNV(target, id, params, params.position());
-	}
+  /*
+  Accepted by the <pname> parameter of GetTrackMatrixivNV:
+  */
 
-	private static native void nglExecuteProgramNV(int target, int id, FloatBuffer params, int paramsOffset);
-	// ---------------------------
+  public static final int GL_TRACK_MATRIX_NV = 0x8648;
 
-	// ---------------------------
-	public static void glGetProgramParameterNV(int target, int index, int parameterName, FloatBuffer params) {
-		assert params.remaining() >= 4: "<params> must have 4 floats available.";
-		nglGetProgramParameterfvNV(target, index, parameterName, params, params.position());
-	}
+  public static final int GL_TRACK_MATRIX_TRANSFORM_NV = 0x8649;
 
-	private static native void nglGetProgramParameterfvNV(int target, int index, int parameterName, FloatBuffer params, int paramsOffset);
-	// ---------------------------
+  /*
+  Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+  GetFloatv, and GetDoublev:
+  */
 
-	// ---------------------------
-	public static void glGetTrackMatrixNV(int target, int address, int parameterName, IntBuffer params) {
-		nglGetTrackMatrixivNV(target, address, parameterName, params, params.position());
-	}
+  public static final int GL_MAX_TRACK_MATRIX_STACK_DEPTH_NV = 0x862E;
 
-	private static native void nglGetTrackMatrixivNV(int target, int address, int parameterName, IntBuffer params, int paramsOffset);
-	// ---------------------------
+  public static final int GL_MAX_TRACK_MATRICES_NV = 0x862F;
 
-	// ---------------------------
-	public static void glGetVertexAttribNV(int index, int parameterName, FloatBuffer params) {
-		nglGetVertexAttribfvNV(index, parameterName, params, params.position());
-	}
+  public static final int GL_CURRENT_MATRIX_STACK_DEPTH_NV = 0x8640;
 
-	private static native void nglGetVertexAttribfvNV(int index, int parameterName, FloatBuffer params, int paramsOffset);
-	// ---------------------------
+  public static final int GL_CURRENT_MATRIX_NV = 0x8641;
 
-	// ---------------------------
-	public static void glGetVertexAttribNV(int index, int parameterName, IntBuffer params) {
-		nglGetVertexAttribivNV(index, parameterName, params, params.position());
-	}
+  public static final int GL_VERTEX_PROGRAM_BINDING_NV = 0x864A;
 
-	private static native void nglGetVertexAttribivNV(int index, int parameterName, IntBuffer params, int paramsOffset);
-	// ---------------------------
+  /*
+  Accepted by the <matrix> parameter of TrackMatrixNV:
+  */
 
-	public static native ByteBuffer glGetVertexAttribPointerNV(int index, int parameterName, int size);
+  public static final int GL_MODELVIEW_PROJECTION_NV = 0x8629;
 
-	public static native void glProgramParameter4fNV(int target, int index, float x, float y, float z, float w);
+  /*
+  Accepted by the <matrix> parameter of TrackMatrixNV and by the
+  <mode> parameter of MatrixMode:
+  */
 
+  public static final int GL_MATRIX0_NV = 0x8630;
 
-	// ---------------------------
-	public static void glProgramParameters4NV(int target, int index, int count, FloatBuffer params) {
-		assert params.remaining() >= 4 * count: "<params> must have " + 4 * count + " floats available.";
-		nglProgramParameters4fvNV(target, index, count, params, params.position());
-	}
+  public static final int GL_MATRIX1_NV = 0x8631;
 
-	private static native void nglProgramParameters4fvNV(int target, int index, int count, FloatBuffer params, int paramsOffset);
-	// ---------------------------
+  public static final int GL_MATRIX2_NV = 0x8632;
 
-	public static native void glTrackMatrixNV(int target, int address, int matrix, int transform);
+  public static final int GL_MATRIX3_NV = 0x8633;
 
-	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, buffer, buffer.position());
-	}
+  public static final int GL_MATRIX4_NV = 0x8634;
 
-	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, buffer, buffer.position() << 1);
-	}
+  public static final int GL_MATRIX5_NV = 0x8635;
 
-	public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, GL11.GL_FLOAT, stride, buffer, buffer.position() << 2);
-	}
+  public static final int GL_MATRIX6_NV = 0x8636;
 
-	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, buffer, buffer.position() << 2);
-	}
+  public static final int GL_MATRIX7_NV = 0x8637;
 
-	private static native void nglVertexAttribPointerNV(int index, int size, int type, int stride, Buffer buffer, int bufferOffset);
+  /*
+  Accepted by the <transform> parameter of TrackMatrixNV:
+  */
 
-	// ---------------------------
-	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, int bufferOffset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
-		nglVertexAttribPointerNVVBO(index, size, type, stride, bufferOffset);
-	}
+  public static final int GL_IDENTITY_NV = 0x862A;
 
-	private static native void nglVertexAttribPointerNVVBO(int index, int size, int type, int stride, int bufferOffset);
-	// ---------------------------
+  public static final int GL_INVERSE_NV = 0x862B;
 
-	public static native void glVertexAttrib1sNV(int index, short x);
+  public static final int GL_TRANSPOSE_NV = 0x862C;
 
-	public static native void glVertexAttrib1fNV(int index, float x);
+  public static final int GL_INVERSE_TRANSPOSE_NV = 0x862D;
 
-	public static native void glVertexAttrib2sNV(int index, short x, short y);
+  /*
+  Accepted by the <array> parameter of EnableClientState and
+  DisableClientState, by the <cap> parameter of IsEnabled, and by
+  the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
+  GetDoublev:
+  */
 
-	public static native void glVertexAttrib2fNV(int index, float x, float y);
+  public static final int GL_VERTEX_ATTRIB_ARRAY0_NV = 0x8650;
 
-	public static native void glVertexAttrib3sNV(int index, short x, short y, short z);
+  public static final int GL_VERTEX_ATTRIB_ARRAY1_NV = 0x8651;
 
-	public static native void glVertexAttrib3fNV(int index, float x, float y, float z);
+  public static final int GL_VERTEX_ATTRIB_ARRAY2_NV = 0x8652;
 
-	public static native void glVertexAttrib4sNV(int index, short x, short y, short z, short w);
+  public static final int GL_VERTEX_ATTRIB_ARRAY3_NV = 0x8653;
 
-	public static native void glVertexAttrib4fNV(int index, float x, float y, float z, float w);
+  public static final int GL_VERTEX_ATTRIB_ARRAY4_NV = 0x8654;
 
-	public static native void glVertexAttrib4ubNV(int index, byte x, byte y, byte z, byte w);
+  public static final int GL_VERTEX_ATTRIB_ARRAY5_NV = 0x8655;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY6_NV = 0x8656;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY7_NV = 0x8657;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY8_NV = 0x8658;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY9_NV = 0x8659;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY10_NV = 0x865A;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY11_NV = 0x865B;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY12_NV = 0x865C;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY13_NV = 0x865D;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY14_NV = 0x865E;
+
+  public static final int GL_VERTEX_ATTRIB_ARRAY15_NV = 0x865F;
+
+  /*
+  Accepted by the <target> parameter of GetMapdv, GetMapfv, GetMapiv,
+  Map1d and Map1f and by the <cap> parameter of Enable, Disable, and
+  IsEnabled, and by the <pname> parameter of GetBooleanv, GetIntegerv,
+  GetFloatv, and GetDoublev:
+  */
+
+  public static final int GL_MAP1_VERTEX_ATTRIB0_4_NV = 0x8660;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB1_4_NV = 0x8661;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB2_4_NV = 0x8662;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB3_4_NV = 0x8663;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB4_4_NV = 0x8664;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB5_4_NV = 0x8665;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB6_4_NV = 0x8666;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB7_4_NV = 0x8667;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB8_4_NV = 0x8668;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB9_4_NV = 0x8669;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB10_4_NV = 0x866A;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB11_4_NV = 0x866B;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB12_4_NV = 0x866C;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB13_4_NV = 0x866D;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB14_4_NV = 0x866E;
+
+  public static final int GL_MAP1_VERTEX_ATTRIB15_4_NV = 0x866F;
+
+  /*
+  Accepted by the <target> parameter of GetMapdv, GetMapfv, GetMapiv,
+  Map2d and Map2f and by the <cap> parameter of Enable, Disable, and
+  IsEnabled, and by the <pname> parameter of GetBooleanv, GetIntegerv,
+  GetFloatv, and GetDoublev:
+  */
+
+  public static final int GL_MAP2_VERTEX_ATTRIB0_4_NV = 0x8670;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB1_4_NV = 0x8671;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB2_4_NV = 0x8672;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB3_4_NV = 0x8673;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB4_4_NV = 0x8674;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB5_4_NV = 0x8675;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB6_4_NV = 0x8676;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB7_4_NV = 0x8677;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB8_4_NV = 0x8678;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB9_4_NV = 0x8679;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB10_4_NV = 0x867A;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB11_4_NV = 0x867B;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB12_4_NV = 0x867C;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB13_4_NV = 0x867D;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB14_4_NV = 0x867E;
+
+  public static final int GL_MAP2_VERTEX_ATTRIB15_4_NV = 0x867F;
+
+  // ---------------------------
+
+  public static void glExecuteProgramNV(int target, int id, FloatBuffer params) {
+
+    assert params.remaining() >= 4 : "<params> must have 4 floats available.";
+
+    nglExecuteProgramNV(target, id, params, params.position());
+
+  }
+
+  private static native void nglExecuteProgramNV(int target, int id, FloatBuffer params, int paramsOffset);
+
+  // ---------------------------
+
+  // ---------------------------
+
+  public static void glGetProgramParameterNV(int target, int index, int parameterName, FloatBuffer params) {
+
+    assert params.remaining() >= 4 : "<params> must have 4 floats available.";
+
+    nglGetProgramParameterfvNV(target, index, parameterName, params, params.position());
+
+  }
+
+  private static native void nglGetProgramParameterfvNV(
+    int target,
+    int index,
+    int parameterName,
+    FloatBuffer params,
+    int paramsOffset);
+
+  // ---------------------------
+
+  // ---------------------------
+
+  public static void glGetTrackMatrixNV(int target, int address, int parameterName, IntBuffer params) {
+
+    nglGetTrackMatrixivNV(target, address, parameterName, params, params.position());
+
+  }
+
+  private static native void nglGetTrackMatrixivNV(
+    int target,
+    int address,
+    int parameterName,
+    IntBuffer params,
+    int paramsOffset);
+
+  // ---------------------------
+
+  // ---------------------------
+
+  public static void glGetVertexAttribNV(int index, int parameterName, FloatBuffer params) {
+
+    nglGetVertexAttribfvNV(index, parameterName, params, params.position());
+
+  }
+
+  private static native void nglGetVertexAttribfvNV(int index, int parameterName, FloatBuffer params, int paramsOffset);
+
+  // ---------------------------
+
+  // ---------------------------
+
+  public static void glGetVertexAttribNV(int index, int parameterName, IntBuffer params) {
+
+    nglGetVertexAttribivNV(index, parameterName, params, params.position());
+
+  }
+
+  private static native void nglGetVertexAttribivNV(int index, int parameterName, IntBuffer params, int paramsOffset);
+
+  // ---------------------------
+
+  public static native ByteBuffer glGetVertexAttribPointerNV(int index, int parameterName, int size);
+
+  public static native void glProgramParameter4fNV(int target, int index, float x, float y, float z, float w);
+
+  // ---------------------------
+
+  public static void glProgramParameters4NV(int target, int index, int count, FloatBuffer params) {
+
+    assert params.remaining() >= 4 * count : "<params> must have " + 4 * count + " floats available.";
+
+    nglProgramParameters4fvNV(target, index, count, params, params.position());
+
+  }
+
+  private static native void nglProgramParameters4fvNV(
+    int target,
+    int index,
+    int count,
+    FloatBuffer params,
+    int paramsOffset);
+
+  // ---------------------------
+
+  public static native void glTrackMatrixNV(int target, int address, int matrix, int transform);
+
+  public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer buffer) {
+
+    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
+
+    nglVertexAttribPointerNV(
+      index,
+      size,
+      unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE,
+      stride,
+      buffer,
+      buffer.position());
+
+  }
+
+  public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer buffer) {
+
+    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
+
+    nglVertexAttribPointerNV(
+      index,
+      size,
+      unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT,
+      stride,
+      buffer,
+      buffer.position() << 1);
+
+  }
+
+  public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer buffer) {
+
+    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
+
+    nglVertexAttribPointerNV(index, size, GL11.GL_FLOAT, stride, buffer, buffer.position() << 2);
+
+  }
+
+  public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer buffer) {
+
+    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
+
+    nglVertexAttribPointerNV(
+      index,
+      size,
+      unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT,
+      stride,
+      buffer,
+      buffer.position() << 2);
+
+  }
+
+  private static native void nglVertexAttribPointerNV(
+    int index,
+    int size,
+    int type,
+    int stride,
+    Buffer buffer,
+    int bufferOffset);
+
+  // ---------------------------
+
+  public static void glVertexAttribPointerNV(int index, int size, int type, int stride, int bufferOffset) {
+
+    assert VBOTracker.getVBOArrayStack().getState() != 0 : "Cannot use int offsets when VBO is disabled";
+
+    nglVertexAttribPointerNVVBO(index, size, type, stride, bufferOffset);
+
+  }
+
+  private static native void nglVertexAttribPointerNVVBO(int index, int size, int type, int stride, int bufferOffset);
+
+  // ---------------------------
+
+  public static native void glVertexAttrib1sNV(int index, short x);
+
+  public static native void glVertexAttrib1fNV(int index, float x);
+
+  public static native void glVertexAttrib2sNV(int index, short x, short y);
+
+  public static native void glVertexAttrib2fNV(int index, float x, float y);
+
+  public static native void glVertexAttrib3sNV(int index, short x, short y, short z);
+
+  public static native void glVertexAttrib3fNV(int index, float x, float y, float z);
+
+  public static native void glVertexAttrib4sNV(int index, short x, short y, short z, short w);
+
+  public static native void glVertexAttrib4fNV(int index, float x, float y, float z, float w);
+
+  public static native void glVertexAttrib4ubNV(int index, byte x, byte y, byte z, byte w);
+
 }
