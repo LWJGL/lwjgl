@@ -42,18 +42,69 @@
  */
 public class ALUT {
     
-    static {
-        try {
-            System.loadLibrary(org.lwjgl.Sys.getLibraryName());
-        } catch (UnsatisfiedLinkError ule) {
-            System.out.println("Failed to load OpenAL library: " + org.lwjgl.Sys.getLibraryName());
-            ule.printStackTrace();
-        }
-    }
+	/** Has the ALUT object been created? */
+	protected static boolean created;    
+    
+	static {
+		initialize();
+	}
     
     /** Creates a new instance of ALUT */
     public ALUT() {
     }
+    
+    /**
+	 * Override to provide any initialization code after creation.
+	 */
+	protected void init() {
+	}
+    
+	/**
+	 * Static initialization
+	 */
+	private static void initialize() {
+		System.loadLibrary(org.lwjgl.Sys.getLibraryName());
+	}
+    
+    /**
+	 * Creates the ALUT instance
+	 * 
+	 * @throws Exception if a failiure occured in the ALUT creation process
+	 */
+	public void create() throws Exception {
+		if (created) {
+			return;
+        }
+        
+		if (!nCreate()) {
+			throw new Exception("ALUT instance could not be created.");
+        }
+		created = true;
+        init();
+	}
+	
+	/**
+	 * Native method to create ALUT instance
+	 * 
+	 * @return true if the ALUT creation process succeeded
+	 */
+	protected native boolean nCreate();
+    
+	/**
+	 * Calls whatever destruction rutines that are needed
+	 */
+	public void destroy() {
+		if (!created) {
+			return;
+        }
+        created = false;
+        nDestroy();
+	}
+	
+	/**
+	 * Native method the destroy the ALUT
+	 */
+	protected native void nDestroy();    
     
     /**
      * Initializes the OpenAL engine

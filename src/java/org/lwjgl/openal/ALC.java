@@ -41,6 +41,8 @@ package org.lwjgl.openal;
  * @version $Revision$
  */
 public class ALC {
+	/** Has the ALC object been created? */
+	protected static boolean created;    
     
     /** Bad value */
     public static final int     INVALID                     = -1;
@@ -92,18 +94,66 @@ public class ALC {
      */
     public static final int     OUT_OF_MEMORY               = 0xA005;
     
-    static {
-        try {
-            System.loadLibrary(org.lwjgl.Sys.getLibraryName());
-        } catch (UnsatisfiedLinkError ule) {
-            System.out.println("Failed to load OpenAL library: " + org.lwjgl.Sys.getLibraryName());
-            ule.printStackTrace();
-        }
-    }
+	static {
+		initialize();
+	}
     
     /** Creates a new instance of ALC */
     public ALC() {
     }
+    
+    /**
+	 * Override to provide any initialization code after creation.
+	 */
+	protected void init() {
+	}
+    
+	/**
+	 * Static initialization
+	 */
+	private static void initialize() {
+		System.loadLibrary(org.lwjgl.Sys.getLibraryName());
+	}
+    
+    /**
+	 * Creates the ALC instance
+	 * 
+	 * @throws Exception if a failiure occured in the ALC creation process
+	 */
+	public void create() throws Exception {
+		if (created) {
+			return;
+        }
+        
+		if (!nCreate()) {
+			throw new Exception("ALC instance could not be created.");
+        }
+		created = true;
+        init();
+	}
+	
+	/**
+	 * Native method to create ALC instance
+	 * 
+	 * @return true if the ALC creation process succeeded
+	 */
+	protected native boolean nCreate();
+    
+	/**
+	 * Calls whatever destruction rutines that are needed
+	 */
+	public void destroy() {
+		if (!created) {
+			return;
+        }
+        created = false;
+        nDestroy();
+	}
+	
+	/**
+	 * Native method the destroy the ALC
+	 */
+	protected native void nDestroy();    
     
     /**
      * Returns strings related to the context.

@@ -71,8 +71,28 @@ public abstract class BasicTest {
      */
     public BasicTest() {
         al      = new AL();
+        try {
+            al.create();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }        
+        
         alc     = new ALC();
+        try {
+            alc.create();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }        
+        
         alut    = new ALUT();
+        try {
+            alut.create();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }                
     }
     
     /**
