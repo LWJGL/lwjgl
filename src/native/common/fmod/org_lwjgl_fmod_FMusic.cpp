@@ -33,6 +33,12 @@
 #include "org_lwjgl_fmod_FMusic.h"
 #include "extfmod.h"
 
+// callback
+void F_CALLBACKAPI fmusic_instcallback(FMUSIC_MODULE *mod, unsigned char param);
+void F_CALLBACKAPI fmusic_ordercallback(FMUSIC_MODULE *mod, unsigned char param);
+void F_CALLBACKAPI fmusic_rowcallback(FMUSIC_MODULE *mod, unsigned char param);
+void F_CALLBACKAPI fmusic_zxxcallback(FMUSIC_MODULE *mod, unsigned char param);
+
 /*
  * Class:     org_lwjgl_fmod_FMusic
  * Method:    nFMUSIC_LoadSong
@@ -130,32 +136,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FMusic_FMUSIC_1StopAllSongs
  * Method:    nFMUSIC_SetZxxCallback
  * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetZxxCallback
-  (JNIEnv *env, jclass clazz, jlong, jobject){
-    throwFMODException(env, "missing implementation");
-    return false;
-  }
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetZxxCallback(JNIEnv *env, jclass clazz, jlong module){
+  return fmod_instance->FMUSIC_SetZxxCallback((FMUSIC_MODULE*)module, fmusic_zxxcallback);
+}
 
 /*
  * Class:     org_lwjgl_fmod_FMusic
  * Method:    nFMUSIC_SetRowCallback
  * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetRowCallback
-  (JNIEnv *env, jclass clazz, jlong, jobject, jint){
-    throwFMODException(env, "missing implementation");
-    return false;
-  }
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetRowCallback(JNIEnv *env, jclass clazz, jlong module, jint row) {
+  return fmod_instance->FMUSIC_SetRowCallback((FMUSIC_MODULE*)module, fmusic_rowcallback, row);
+}
 
 /*
  * Class:     org_lwjgl_fmod_FMusic
  * Method:    nFMUSIC_SetOrderCallback
  * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetOrderCallback
-  (JNIEnv *env, jclass clazz, jlong, jobject, jint){
-    throwFMODException(env, "missing implementation");
-    return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetOrderCallback(JNIEnv *env, jclass clazz, jlong module, jint order) {
+    return fmod_instance->FMUSIC_SetOrderCallback((FMUSIC_MODULE*)module, fmusic_ordercallback, order);
   }
 
 /*
@@ -163,11 +163,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetOrderCallback
  * Method:    nFMUSIC_SetInstCallback
  * Signature: (JLorg/lwjgl/fmod_instance/FMusicCallback;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetInstCallback
-  (JNIEnv *env, jclass clazz, jlong, jobject, jint){
-    throwFMODException(env, "missing implementation");
-    return false;
-  }
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetInstCallback(JNIEnv *env, jclass clazz, jlong module, jint inst){
+  return fmod_instance->FMUSIC_SetInstCallback((FMUSIC_MODULE*)module, fmusic_instcallback, inst);
+}
 
 /*
  * Class:     org_lwjgl_fmod_FMusic
@@ -184,11 +182,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetSample
  * Method:    nFMUSIC_SetUserData
  * Signature: (JLjava/nio/ByteBuffer;I)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetUserData
-  (JNIEnv *env, jclass clazz, jlong module, jobject data, jint offset){
-    throwFMODException(env, "missing implementation");
-    return false;
-  }
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1SetUserData(JNIEnv *env, jclass clazz, jlong module, jobject data, jint offset) {
+  void *userdata = offset + (char*) env->GetDirectBufferAddress(data);
+  return fmod_instance->FMUSIC_SetUserData((FMUSIC_MODULE *) module, userdata);
+}
 
 /*
  * Class:     org_lwjgl_fmod_FMusic
@@ -486,8 +483,54 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetRealChannel
  * Method:    nFMUSIC_GetUserData
  * Signature: (J)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetUserData
-  (JNIEnv *env, jclass clazz, jlong module) {
-    throwFMODException(env, "missing implementation");
-    return NULL;
-  }
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod_FMusic_nFMUSIC_1GetUserData(JNIEnv *env, jclass clazz, jlong module, jint capacity) {
+  void* data = (void*) fmod_instance->FMUSIC_GetUserData((FMUSIC_MODULE *) module);
+  return env->NewDirectByteBuffer(data, capacity);
+}
+
+/**
+ * This attaches the mixer thread as a daemon thread, and sets its
+ * priority to max value
+ */
+void attachMixerThread() {
+  jvm->AttachCurrentThreadAsDaemon((void**) &mixer_jnienv, NULL);
+  
+  // set to high priority
+  // ==============================
+  // get current thread
+  jclass threadClass = mixer_jnienv->FindClass("java/lang/Thread");
+  jmethodID currentThread = mixer_jnienv->GetStaticMethodID(threadClass, "currentThread", "()Ljava/lang/Thread;");
+  jobject myThread = mixer_jnienv->CallStaticObjectMethod(threadClass, currentThread);
+  
+  // get value of high priority
+  jfieldID highPriority = mixer_jnienv->GetStaticFieldID(threadClass, "MAX_PRIORITY", "I");
+  jint highPriorityValue = mixer_jnienv->GetStaticIntField(threadClass, highPriority);
+  
+  // call set priority
+  jmethodID priority = mixer_jnienv->GetMethodID(threadClass, "setPriority", "(I)V");
+  mixer_jnienv->CallVoidMethod(myThread, priority, highPriorityValue);
+  // ------------------------------
+}
+
+// FMusic callbacks
+// =======================================
+void F_CALLBACKAPI fmusic_instcallback(FMUSIC_MODULE *mod, unsigned char param) {
+  if (mixer_jnienv == NULL) { attachMixerThread(); }
+  mixer_jnienv->CallStaticVoidMethod(fmusic, music_instcallback, (jlong) mod, (jint) param);
+}
+
+void F_CALLBACKAPI fmusic_ordercallback(FMUSIC_MODULE *mod, unsigned char param) {
+  if (mixer_jnienv == NULL) { attachMixerThread(); }
+  mixer_jnienv->CallStaticVoidMethod(fmusic, music_ordercallback, (jlong) mod, (jint) param);
+}
+
+void F_CALLBACKAPI fmusic_rowcallback(FMUSIC_MODULE *mod, unsigned char param) {
+  if (mixer_jnienv == NULL) { attachMixerThread(); }
+  mixer_jnienv->CallStaticVoidMethod(fmusic, music_rowcallback, (jlong) mod, (jint) param);
+}
+
+void F_CALLBACKAPI fmusic_zxxcallback(FMUSIC_MODULE *mod, unsigned char param) {
+  if (mixer_jnienv == NULL) { attachMixerThread(); }
+  mixer_jnienv->CallStaticVoidMethod(fmusic, music_zxxcallback, (jlong) mod, (jint) param);
+}
+// ------------------------------------------

@@ -41,6 +41,17 @@
 /** Instance of fmod  */
 FMOD_INSTANCE * fmod_instance = NULL;
 
+// jnienvs
+JNIEnv *mixer_jnienv;
+JNIEnv *stream_jnienv;
+
+// FMusic cached fields
+jmethodID music_instcallback;
+jmethodID music_ordercallback;
+jmethodID music_rowcallback;
+jmethodID music_zxxcallback;
+jclass fmusic;
+
 #ifdef _WIN32
 /**
  * DLL entry point for Windows. Called when Java loads the .dll
@@ -55,8 +66,16 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
  *
  * @param path path to try to load dll
  */
-void fmod_create(char* path) {
+void fmod_create(JNIEnv *env, char* path) {
   fmod_instance = FMOD_CreateInstance(path);
+  
+  if (fmod_instance != NULL) {
+    fmusic = env->FindClass("org/lwjgl/fmod/FMusic");
+    music_instcallback = env->GetStaticMethodID(fmusic, "music_instcallback", "(JI)V");
+    music_ordercallback = env->GetStaticMethodID(fmusic, "music_ordercallback", "(JI)V");
+    music_rowcallback = env->GetStaticMethodID(fmusic, "music_rowcallback", "(JI)V");
+    music_zxxcallback = env->GetStaticMethodID(fmusic, "music_zxxcallback", "(JI)V");
+  }
 }
 
 /**

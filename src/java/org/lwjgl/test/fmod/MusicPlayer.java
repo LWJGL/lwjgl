@@ -38,7 +38,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.lwjgl.fmod.*;
+import org.lwjgl.fmod.FMOD;
+import org.lwjgl.fmod.FMODException;
+import org.lwjgl.fmod.FMusic;
+import org.lwjgl.fmod.FMusicModule;
+import org.lwjgl.fmod.FSound;
 
 /**
  * $Id$
@@ -74,12 +78,18 @@ public class MusicPlayer {
     }
     
     System.out.println("Loading " + args[0]);
+    
+    // choose either way of loading...
+    
+    // using name (path)
     FMusicModule module = FMusic.FMUSIC_LoadSong(args[0]);
-    //ByteBuffer buffer = ByteBuffer.allocateDirect(11).order(ByteOrder.nativeOrder());
-    //buffer.put("razorbck.it".getBytes());
-    //buffer.flip();
-    //FMusicModule module = FMusic.FMUSIC_LoadSongEx(getData(args[0]), 0, 0, 0, null);
-    //FMusicModule module = FMusic.FMUSIC_LoadSongEx(buffer, 0, 0, 0, null);
+    
+    // using name (path), extended mode
+    //FMusicModule module = FMusic.FMUSIC_LoadSongEx(args[0], 0, 0, 0, null);
+    
+    // using memory buffers
+    //ByteBuffer data = getData(args[0]);
+    //FMusicModule module = FMusic.FMUSIC_LoadSongEx(data, 0, data.remaining(), FSound.FSOUND_LOADMEMORY, null);
     
     if(module != null) {
       System.out.println("Loaded. Playing module of type: " + FMusic.FMUSIC_GetType(module));
@@ -96,6 +106,7 @@ public class MusicPlayer {
       FMusic.FMUSIC_FreeSong(module);
     } else {
     	System.out.println("Unable to play: " + args[0]);
+      System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
     }
     
     FSound.FSOUND_Close();
@@ -104,39 +115,40 @@ public class MusicPlayer {
   
   /**
    * Reads the file into a ByteBuffer
-   *
-   * @param filename Name of file to load
+   * 
+   * @param filename
+   *          Name of file to load
    * @return ByteBuffer containing file data
    */
   static protected ByteBuffer getData(String filename) {
-      ByteBuffer buffer = null;
+    ByteBuffer buffer = null;
 
-      System.out.println("Attempting to load: " + filename);
-      
-      try {
-          BufferedInputStream bis = new BufferedInputStream(MusicPlayer.class.getClassLoader().getResourceAsStream(filename));
-          ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          
-          int bufferLength = 4096;
-          byte[] readBuffer = new byte[bufferLength];
-          int read = -1;
-          
-          while((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
-              baos.write(readBuffer, 0, read);
-          }
-          
-          //done reading, close
-          bis.close();
-          
-          // if ogg vorbis data, we need to pass it unmodified to alBufferData
-          buffer = ByteBuffer.allocateDirect(baos.size());
-          buffer.order(ByteOrder.nativeOrder());
-          buffer.put(baos.toByteArray());
-          buffer.flip();
-          System.out.println("loaded " + buffer.remaining() + " bytes");
-      } catch (Exception ioe) {
-          ioe.printStackTrace();
+    System.out.println("Attempting to load: " + filename);
+
+    try {
+      BufferedInputStream bis = new BufferedInputStream(StreamPlayer.class.getClassLoader().getResourceAsStream(filename));
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+      int bufferLength = 4096;
+      byte[] readBuffer = new byte[bufferLength];
+      int read = -1;
+
+      while ((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
+        baos.write(readBuffer, 0, read);
       }
-      return buffer;
+
+      //done reading, close
+      bis.close();
+
+      // if ogg vorbis data, we need to pass it unmodified to alBufferData
+      buffer = ByteBuffer.allocateDirect(baos.size());
+      buffer.order(ByteOrder.nativeOrder());
+      buffer.put(baos.toByteArray());
+      buffer.flip();
+      System.out.println("loaded " + buffer.remaining() + " bytes");
+    } catch (Exception ioe) {
+      ioe.printStackTrace();
+    }
+    return buffer;
   }  
 }

@@ -33,8 +33,11 @@ package org.lwjgl.fmod;
 
 import java.io.File;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+
+import org.lwjgl.Sys;
 
 /**
  * $Id$
@@ -45,7 +48,7 @@ import java.util.StringTokenizer;
 public class FMOD {
   
 	/** Array of hashmaps for callbacks */
-  private static HashMap[] callbacks = new HashMap[14];
+  private static HashMap[] callbacks = new HashMap[17];
    
   /** FMOD System level clear dsp unit */
   static FSoundDSPUnit fmodClearUnit;
@@ -66,46 +69,56 @@ public class FMOD {
   static FloatBuffer fmodFFTBuffer;  
   
   /** Type defining the music callback entries in callback hashmap array */
-  public static final int FMUSIC_CALLBACK = 0;
+  public static final int FMUSIC_INSTCALLBACK = 0;
+  
+  /** Type defining the music callback entries in callback hashmap array */
+  public static final int FMUSIC_ORDERCALLBACK = 1;
+  
+  /** Type defining the music callback entries in callback hashmap array */
+  public static final int FMUSIC_ROWCALLBACK = 2;
+
+  /** Type defining the music callback entries in callback hashmap array */
+  public static final int FMUSIC_ZXXCALLBACK = 3;
+  
   
   /** Type defining the dsp callback entries in callback hashmap array */
-  public static final int FSOUND_DSPCALLBACK = 1;
+  public static final int FSOUND_DSPCALLBACK = 4;
   
   /** Type defining the stream callback entries in callback hashmap array */
-  public static final int FSOUND_STREAMCALLBACK = 2;
+  public static final int FSOUND_STREAMCALLBACK = 5;
   
   /** Type defining the alloc callback entries in callback hashmap array */
-  public static final int FSOUND_ALLOCCALLBACK = 3;
+  public static final int FSOUND_ALLOCCALLBACK = 6;
   
   /** Type defining the realloc callback entries in callback hashmap array */
-  public static final int FSOUND_REALLOCCALLBACK = 4;
+  public static final int FSOUND_REALLOCCALLBACK = 7;
   
   /** Type defining the free callback entries in callback hashmap array */
-  public static final int FSOUND_FREECALLBACK = 5;
+  public static final int FSOUND_FREECALLBACK = 8;
   
   /** Type defining the open callback entries in callback hashmap array */
-  public static final int FSOUND_OPENCALLBACK = 6;
+  public static final int FSOUND_OPENCALLBACK = 9;
   
   /** Type defining the close callback entries in callback hashmap array */
-  public static final int FSOUND_CLOSECALLBACK = 7;
+  public static final int FSOUND_CLOSECALLBACK = 10;
   
   /** Type defining the metadata callback entries in callback hashmap array */
-  public static final int FSOUND_METADATACALLBACK = 8;
+  public static final int FSOUND_METADATACALLBACK = 11;
   
   /** Type defining the read callback entries in callback hashmap array */
-  public static final int FSOUND_READCALLBACK = 9;
+  public static final int FSOUND_READCALLBACK = 12;
   
   /** Type defining the seek callback entries in callback hashmap array */
-  public static final int FSOUND_SEEKCALLBACK = 10;
+  public static final int FSOUND_SEEKCALLBACK = 13;
   
   /** Type defining the tell callback entries in callback hashmap array */
-  public static final int FSOUND_TELLCALLBACK = 11;
+  public static final int FSOUND_TELLCALLBACK = 14;
   
   /** Type defining the "end" callback entries in callback hashmap array */
-  public static final int FSOUND_ENDCALLBACK = 12;
+  public static final int FSOUND_ENDCALLBACK = 15;
   
   /** Type defining the "sync" callback entries in callback hashmap array */
-  public static final int FSOUND_SYNCCALLBACK = 13;  
+  public static final int FSOUND_SYNCCALLBACK = 16;  
 
   /** Have we been created? */
   protected static boolean created;  
@@ -304,10 +317,23 @@ public class FMOD {
    * @param callbackHandler Object to register as the call back handler
    */
   static void registerCallback(int type, long handle, Object handled, Object callbackHandler) {
+    Long callbackID = new Long(handle);
+    ArrayList callbackList = (ArrayList) callbacks[type].get(callbackID);
+
+    if (callbackList == null ) {
+      if (callbackHandler == null) {
+        Sys.log("No callbackhandlers registered for handle: " + handle);
+      } else {
+      	callbackList = new ArrayList();
+        callbacks[type].put(callbackID, callbackList);
+      }
+    }
+    
+    // are we going to add or remove from the list?
     if(callbackHandler == null) {
-    	callbacks[type].remove(new Long(handle)); 
+    	callbacks[type].remove(callbackID);
     } else {
-    	callbacks[type].put(new Long(handle), new FMOD.WrappedCallback(handled, callbackHandler));
+    	callbackList.add(new FMOD.WrappedCallback(handled, callbackHandler));
     }
   }
   
@@ -316,8 +342,8 @@ public class FMOD {
    * @param handle Handle to native object being monitored
    * @return Call back handler, or null if no such handler
    */
-  static WrappedCallback getCallback(int type, long handle) {
-   return (WrappedCallback) callbacks[type].get(new Long(handle));
+  static ArrayList getCallbacks(int type, long handle) {
+   return (ArrayList) callbacks[type].get(new Long(handle));
   }
 
   /**

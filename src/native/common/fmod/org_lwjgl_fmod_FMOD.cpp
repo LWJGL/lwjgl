@@ -55,7 +55,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod_FMOD_nCreate(JNIEnv *env, jclass claz
 		jstring path = (jstring) env->GetObjectArrayElement(paths, i);
 		char *path_str = (char *) env->GetStringUTFChars(path, NULL);
 		printfDebug("Trying to load fmod_instance from %s\n", path_str);
-		fmod_create(path_str);
+		fmod_create(env, path_str);
 		env->ReleaseStringUTFChars(path, path_str);
 
 		if(fmod_instance != NULL) {

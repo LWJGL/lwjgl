@@ -34,6 +34,7 @@ package org.lwjgl.fmod;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import org.lwjgl.fmod.callbacks.FSoundCloseCallback;
 import org.lwjgl.fmod.callbacks.FSoundDSPCallback;
@@ -354,13 +355,18 @@ public class FSound {
 	public static void FSOUND_File_SetCallbacks(
       FSoundOpenCallback open, FSoundCloseCallback close, FSoundReadCallback read,
       FSoundSeekCallback seek, FSoundTellCallback tell) {
-    FMOD.registerCallback(FMOD.FSOUND_OPENCALLBACK, -1, null, open);
-    FMOD.registerCallback(FMOD.FSOUND_CLOSECALLBACK, -1, null, open);
-    FMOD.registerCallback(FMOD.FSOUND_READCALLBACK, -1, null, open);
-    FMOD.registerCallback(FMOD.FSOUND_SEEKCALLBACK, -1, null, open);
-    FMOD.registerCallback(FMOD.FSOUND_TELLCALLBACK, -1, null, open);
     
-    nFSOUND_File_SetCallbacks();
+    if(open != null && close != null && read != null && seek != null && tell != null) {
+    	FMOD.registerCallback(FMOD.FSOUND_OPENCALLBACK, -1, null, open);
+    	FMOD.registerCallback(FMOD.FSOUND_CLOSECALLBACK, -1, null, open);
+    	FMOD.registerCallback(FMOD.FSOUND_READCALLBACK, -1, null, open);
+    	FMOD.registerCallback(FMOD.FSOUND_SEEKCALLBACK, -1, null, open);
+    	FMOD.registerCallback(FMOD.FSOUND_TELLCALLBACK, -1, null, open);
+    	
+    	nFSOUND_File_SetCallbacks();
+    } else {
+    	throw new IllegalArgumentException("Cannot supply null callback");
+    }
   }
   private static native void nFSOUND_File_SetCallbacks();
 
@@ -922,26 +928,39 @@ public class FSound {
    * 0 or above - The absolute index into the sample pool. The pool will grow as the index gets larger. If a slot is already used it will be replaced.
    * FSOUND_FREE - Let FSOUND select an arbitrary sample slot.
    * FSOUND_UNMANAGED - Dont have this sample managed within fsounds sample management system
-   * @param name_or_data Name of sound file or pointer to memory image to load.
+   * @param data ByteBuffer of memory image to load.
    * @param inputmode Description of the data format, OR in the bits defined in FSOUND_MODES to describe the data being loaded.
    * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used.
    * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading.
    * @return On success, a sample is returned. On failure, NULL is returned.
    */
-  public static FSoundSample FSOUND_Sample_Load(int index, ByteBuffer name_or_data, int inputmode, int offset, int length) {
-    long result = 0;
-    
-    if((inputmode & FSound.FSOUND_LOADMEMORY) == FSound.FSOUND_LOADMEMORY) {
-      result = nFSOUND_Sample_Load(index, name_or_data, name_or_data.position(), inputmode, offset, length);
-    } else {
-      byte[] data = new byte[name_or_data.remaining()];
-      result = nFSOUND_Sample_Load(index, new String(data), inputmode, offset, length);
-    }
+  public static FSoundSample FSOUND_Sample_Load(int index, ByteBuffer data, int inputmode, int offset, int length) {
+    long result = nFSOUND_Sample_Load(index, data, data.position(), inputmode, offset, length);
     if(result != 0) {
      return new FSoundSample(result); 
     }
     return null;
   }
+  
+  /**
+   * @see #FSOUND_Sample_Load(int, ByteBuffer, int, int, int)
+   * @param index Sample pool index. See remarks for more on the sample pool.
+   * 0 or above - The absolute index into the sample pool. The pool will grow as the index gets larger. If a slot is already used it will be replaced.
+   * FSOUND_FREE - Let FSOUND select an arbitrary sample slot.
+   * FSOUND_UNMANAGED - Dont have this sample managed within fsounds sample management system
+   * @param name Name of sound file.
+   * @param inputmode Description of the data format, OR in the bits defined in FSOUND_MODES to describe the data being loaded.
+   * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening. length must also be specified if this value is used.
+   * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading.
+   * @return On success, a sample is returned. On failure, NULL is returned.
+   */
+  public static FSoundSample FSOUND_Sample_Load(int index, String name, int inputmode, int offset, int length) {
+    long result = nFSOUND_Sample_Load(index, name, inputmode, offset, length);
+    if(result != 0) {
+     return new FSoundSample(result); 
+    }
+    return null;
+  }  
   private static native long nFSOUND_Sample_Load(int index, ByteBuffer data, int dataOffset, int inputmode, int offset, int length);    
   private static native long nFSOUND_Sample_Load(int index, String name, int inputmode, int offset, int length);
   
@@ -3508,9 +3527,13 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static void dsp_callback(long dspHandle, ByteBuffer originalbuffer, ByteBuffer newbuffer, int length) {
-    // locate out callback and call it back
-    FSoundDSPCallback callback = (FSoundDSPCallback) ((FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_DSPCALLBACK, dspHandle)).callback;
-    callback.FSOUND_DSPCALLBACK(originalbuffer, newbuffer, length);
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_DSPCALLBACK, dspHandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FSoundDSPCallback callback = (FSoundDSPCallback) wCallback.callback;  
+      callback.FSOUND_DSPCALLBACK(originalbuffer, newbuffer, length);
+    }    
   }
   
   /**
@@ -3521,10 +3544,13 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static void stream_callback(long streamHandle, ByteBuffer buff, int length) {
-    // locate out callback and call it back
-  	FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_STREAMCALLBACK, streamHandle);   
-    FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;
-    callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, buff, length);
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_STREAMCALLBACK, streamHandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;  
+      callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, buff, length);
+    }
   }
   
   /**
@@ -3535,10 +3561,13 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static void end_callback(long streamHandle) {
-    // locate out callback and call it back
-    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_ENDCALLBACK, streamHandle);   
-    FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;
-    callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, null, 0);
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_ENDCALLBACK, streamHandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;  
+      callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, null, 0);
+    }
   }
   
   /**
@@ -3549,10 +3578,13 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static void sync_callback(long streamHandle, ByteBuffer buff, int lenght) {
-    // locate out callback and call it back
-    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_SYNCCALLBACK, streamHandle);   
-    FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;
-    callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, buff, lenght);
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_SYNCCALLBACK, streamHandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FSoundStreamCallback callback = (FSoundStreamCallback) wCallback.callback;  
+      callback.FSOUND_STREAMCALLBACK((FSoundStream) wCallback.handled, buff, lenght);
+    }
   }
   
   /**
@@ -3563,9 +3595,10 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static int open_callback(String name) {
-    // locate out callback and call it back
-    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_OPENCALLBACK, -1);   
-    FSoundOpenCallback callback = (FSoundOpenCallback) wCallback.callback;
+    // we got a callback - notify THE handler
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_OPENCALLBACK, -1);
+    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(0);   
+    FSoundOpenCallback callback = (FSoundOpenCallback) wCallback.callback;  
     return callback.FSOUND_OPENCALLBACK(name);
   }  
   
@@ -3577,9 +3610,10 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static void close_callback(int handle) {
-    // locate out callback and call it back
-    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_CLOSECALLBACK, -1);   
-    FSoundCloseCallback callback = (FSoundCloseCallback) wCallback.callback;
+    // we got a callback - notify THE handler
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_CLOSECALLBACK, -1);
+    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(0);   
+    FSoundCloseCallback callback = (FSoundCloseCallback) wCallback.callback;  
     callback.FSOUND_CLOSECALLBACK(handle);
   }  
   
@@ -3591,9 +3625,10 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static int read_callback(ByteBuffer buffer, int size, int handle) {
-    // locate out callback and call it back
-    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_CLOSECALLBACK, -1);   
-    FSoundReadCallback callback = (FSoundReadCallback) wCallback.callback;
+    // we got a callback - notify THE handler
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_READCALLBACK, -1);
+    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(0);   
+    FSoundReadCallback callback = (FSoundReadCallback) wCallback.callback;  
     return callback.FSOUND_READCALLBACK(buffer, size, handle);
   }  
   
@@ -3605,9 +3640,10 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static int seek_callback(int handle, int pos, int mode) {
-    // locate out callback and call it back
-    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_CLOSECALLBACK, -1);   
-    FSoundSeekCallback callback = (FSoundSeekCallback) wCallback.callback;
+    // we got a callback - notify THE handler
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_SEEKCALLBACK, -1);
+    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(0);   
+    FSoundSeekCallback callback = (FSoundSeekCallback) wCallback.callback;  
     return callback.FSOUND_SEEKCALLBACK(handle, pos, mode);
   } 
   
@@ -3619,9 +3655,10 @@ public class FSound {
    * @param param parameter passed to callback
    */
   private static int tell_callback(int handle) {
-    // locate out callback and call it back
-    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_CLOSECALLBACK, -1);   
-    FSoundTellCallback callback = (FSoundTellCallback) wCallback.callback;
+    // we got a callback - notify THE handler
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_TELLCALLBACK, -1);
+    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(0);   
+    FSoundTellCallback callback = (FSoundTellCallback) wCallback.callback;  
     return callback.FSOUND_TELLCALLBACK(handle);
   }  
   // ----------------------------------------------------------  

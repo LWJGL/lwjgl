@@ -34,14 +34,30 @@
 #define _EXT_FMOD_H
 
 #include <jni.h>
-#include "common_tools.h"
+#include "../common_tools.h"
 
 #include "fmoddyn.h"
 #include "fmod_errors.h"
 
+void fmod_create(JNIEnv *env, char*);
+void fmod_destroy();
+
 extern FMOD_INSTANCE * fmod_instance;
 
-void fmod_create(char*);
-void fmod_destroy();
+// Setup for callback. The callbacks don't have access to a JNIEnv pointer, so we have to provide
+// one. Unfortunately we cannot cache one, since JNIEnv er thread local copies. We can however
+// aquire one, using AttachCurrent<ThreadAsDaemon>. However we need a VM instance for that.
+// so we supply 1 VM instance for use by threads (in common_tools) (VM instances are shared across threads), and
+// 1 JNIEnv pointer per thread. At this time, 2 threads have been identified - the Stream thread
+// and the mixer thread.
+extern JNIEnv *mixer_jnienv;
+extern JNIEnv *stream_jnienv;
+
+// FMusic cached fields
+extern jmethodID music_instcallback;
+extern jmethodID music_ordercallback;
+extern jmethodID music_rowcallback;
+extern jmethodID music_zxxcallback;
+extern jclass fmusic;
 
 #endif

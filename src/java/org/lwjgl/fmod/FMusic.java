@@ -32,7 +32,9 @@
 package org.lwjgl.fmod;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import org.lwjgl.fmod.callbacks.FMusicCallback;
 
@@ -107,27 +109,38 @@ public class FMusic {
    * </i>
    * </p>
    * 
-   * @param name_or_data Name of song or data containing song to load (if loading from memory and not file). On PlayStation 2 data must be 16 byte aligned if loading from memory
+   * @param data containing song to load. On PlayStation 2 data must be 16 byte aligned if loading from memory
    * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening
    * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading
    * @param mode Mode for opening song. With module files, only FSOUND_LOADMEMORY, FSOUND_NONBLOCKING, FSOUND_LOOP_NORMAL, or FSOUND_LOOP_OFF are supported. For FSB files, FSOUND_2D, FSOUND_HW3D, FSOUND_FORCEMONO also work
    * @param sampleList Optional. Buffer of sample indicies to load. Leave as Null if you want all samples to be loaded (default behaviour). See Remarks for more on this
    * @return On success, a FMusicModule instance is returned. On failure, Null is returned
    */
-  public static FMusicModule FMUSIC_LoadSongEx(ByteBuffer name_or_data, int offset, int length, int mode, IntBuffer sampleList) {
-    long result = 0;
-    
-  	if((mode & FSound.FSOUND_LOADMEMORY) == FSound.FSOUND_LOADMEMORY) {
-  		result = nFMUSIC_LoadSongEx(name_or_data, name_or_data.position(), offset, length, mode, (sampleList != null) ? sampleList : null, (sampleList != null) ? sampleList.position() : 0, (sampleList != null) ? sampleList.remaining() : 0);
-    } else {
-      byte[] data = new byte[name_or_data.remaining()];
-      result = nFMUSIC_LoadSongEx(new String(data), offset, length, mode, (sampleList != null) ? sampleList : null, (sampleList != null) ? sampleList.position() : 0, (sampleList != null) ? sampleList.remaining() : 0);
-    }
+  public static FMusicModule FMUSIC_LoadSongEx(ByteBuffer data, int offset, int length, int mode, IntBuffer sampleList) {
+    long result = nFMUSIC_LoadSongEx(data, data.position(), offset, length, mode, (sampleList != null) ? sampleList : null, (sampleList != null) ? sampleList.position() : 0, (sampleList != null) ? sampleList.remaining() : 0);
     if(result != FMUSIC_TYPE_NONE) {
      return new FMusicModule(result); 
     }
     return null;
   }
+  
+  /**
+   * @see #FMUSIC_LoadSongEx(ByteBuffer, int, int, int, IntBuffer)
+   * @param name of song
+   * @param offset Optional. 0 by default. If > 0, this value is used to specify an offset in a file, so fmod will seek before opening
+   * @param length Optional. 0 by default. If > 0, this value is used to specify the length of a memory block when using FSOUND_LOADMEMORY, or it is the length of a file or file segment if the offset parameter is used. On PlayStation 2 this must be 16 byte aligned for memory loading
+   * @param mode Mode for opening song. With module files, only FSOUND_LOADMEMORY, FSOUND_NONBLOCKING, FSOUND_LOOP_NORMAL, or FSOUND_LOOP_OFF are supported. For FSB files, FSOUND_2D, FSOUND_HW3D, FSOUND_FORCEMONO also work
+   * @param sampleList Optional. Buffer of sample indicies to load. Leave as Null if you want all samples to be loaded (default behaviour). See Remarks for more on this
+   * @return On success, a FMusicModule instance is returned. On failure, Null is returned
+   */
+  public static FMusicModule FMUSIC_LoadSongEx(String name, int offset, int length, int mode, IntBuffer sampleList) {
+    long result = nFMUSIC_LoadSongEx(name, offset, length, mode, (sampleList != null) ? sampleList : null, (sampleList != null) ? sampleList.position() : 0, (sampleList != null) ? sampleList.remaining() : 0);
+
+    if(result != FMUSIC_TYPE_NONE) {
+     return new FMusicModule(result); 
+    }
+    return null;
+  }  
   private static native long nFMUSIC_LoadSongEx(ByteBuffer data, int dataOffset, int offset, int length, int mode, IntBuffer sampleList, int bufferOffset, int remaining);
   private static native long nFMUSIC_LoadSongEx(String name, int offset, int length, int mode, IntBuffer sampleList, int bufferOffset, int remaining);
   
@@ -148,8 +161,10 @@ public class FMusic {
    */
   public static boolean FMUSIC_FreeSong(FMusicModule module) {
     // when freeing a song, we automatically deregister any callbacks
-    FMOD.registerCallback(FMOD.FMUSIC_CALLBACK, module.moduleHandle, null, null);
-    
+    FMOD.registerCallback(FMOD.FMUSIC_INSTCALLBACK, module.moduleHandle, null, null);
+    FMOD.registerCallback(FMOD.FMUSIC_ORDERCALLBACK, module.moduleHandle, null, null);
+    FMOD.registerCallback(FMOD.FMUSIC_ROWCALLBACK, module.moduleHandle, null, null);
+    FMOD.registerCallback(FMOD.FMUSIC_ZXXCALLBACK, module.moduleHandle, null, null);
     return nFMUSIC_FreeSong(module.moduleHandle); 
   }
   private static native boolean nFMUSIC_FreeSong(long module);
@@ -204,10 +219,10 @@ public class FMusic {
    * @return On success, true is returned. On failure, false is returned
    */
   public static boolean FMUSIC_SetZxxCallback(FMusicModule module, FMusicCallback callback) {
-    FMOD.registerCallback(FMOD.FMUSIC_CALLBACK, module.moduleHandle, module, callback);
-    return nFMUSIC_SetZxxCallback(module.moduleHandle, callback);
+    FMOD.registerCallback(FMOD.FMUSIC_ZXXCALLBACK, module.moduleHandle, module, callback);
+    return nFMUSIC_SetZxxCallback(module.moduleHandle);
   }
-  private static native boolean nFMUSIC_SetZxxCallback(long module, FMusicCallback callback);
+  private static native boolean nFMUSIC_SetZxxCallback(long module);
   
   /**
    * Sets a user callback to occur on every row divisible by the rowstep parameter, played from a MOD, S3M, XM or IT file.
@@ -231,10 +246,10 @@ public class FMusic {
    * @return On success, true is returned. On failure, false is returned
    */
   public static boolean FMUSIC_SetRowCallback(FMusicModule module, FMusicCallback callback, int rowstep) {
-    FMOD.registerCallback(FMOD.FMUSIC_CALLBACK, module.moduleHandle, module, callback);
-    return nFMUSIC_SetRowCallback(module.moduleHandle, callback, rowstep);
+    FMOD.registerCallback(FMOD.FMUSIC_ROWCALLBACK, module.moduleHandle, module, callback);
+    return nFMUSIC_SetRowCallback(module.moduleHandle, rowstep);
   }
-  private static native boolean nFMUSIC_SetRowCallback(long module, FMusicCallback callback, int rowstep);
+  private static native boolean nFMUSIC_SetRowCallback(long module, int rowstep);
   
   /**
    * Sets a user callback to occur on every order divisible by the orderstep parameter, played from a MOD, S3M, XM or IT file
@@ -258,10 +273,10 @@ public class FMusic {
    * @return On success, true is returned. On failure, false is returned
    */
   public static boolean FMUSIC_SetOrderCallback(FMusicModule module, FMusicCallback callback, int orderstep) {
-    FMOD.registerCallback(FMOD.FMUSIC_CALLBACK, module.moduleHandle, module, callback);
-    return nFMUSIC_SetOrderCallback(module.moduleHandle, callback, orderstep); 
+    FMOD.registerCallback(FMOD.FMUSIC_ORDERCALLBACK, module.moduleHandle, module, callback);
+    return nFMUSIC_SetOrderCallback(module.moduleHandle, orderstep); 
   }
-  private static native boolean nFMUSIC_SetOrderCallback(long module, FMusicCallback callback, int orderstep);
+  private static native boolean nFMUSIC_SetOrderCallback(long module, int orderstep);
   
   /**
    * Sets a user callback to occur every time a instrument is played, triggered from a MOD, S3M, XM or IT file.
@@ -285,10 +300,10 @@ public class FMusic {
    * @return On success, true is returned. On failure, false is returned
    */
   public static boolean FMUSIC_SetInstCallback(FMusicModule module, FMusicCallback callback, int instrument) {
-    FMOD.registerCallback(FMOD.FMUSIC_CALLBACK, module.moduleHandle, module, callback);
-    return nFMUSIC_SetInstCallback(module.moduleHandle, callback, instrument);
+    FMOD.registerCallback(FMOD.FMUSIC_INSTCALLBACK, module.moduleHandle, module, callback);
+    return nFMUSIC_SetInstCallback(module.moduleHandle, instrument);
   }
-  private static native boolean nFMUSIC_SetInstCallback(long module, FMusicCallback callback, int instrument);
+  private static native boolean nFMUSIC_SetInstCallback(long module, int instrument);
   
   /**
    * Replaces a mod's sample with a sample definition specified.
@@ -712,10 +727,12 @@ public class FMusic {
    * @param module Module to get the open state from
    * @return On success, userdata set by FMUSIC_SetUserData is returned. On failure, Null is returned.
    */
-  public static ByteBuffer FMUSIC_GetUserData(FMusicModule module) {
-    return nFMUSIC_GetUserData(module.moduleHandle);
+  public static ByteBuffer FMUSIC_GetUserData(FMusicModule module, int capacity) {
+    ByteBuffer buffer = nFMUSIC_GetUserData(module.moduleHandle, capacity);
+    buffer.order(ByteOrder.nativeOrder());
+    return buffer;
   }
-  private static native ByteBuffer nFMUSIC_GetUserData(long module);  
+  private static native ByteBuffer nFMUSIC_GetUserData(long module, int capacity);  
   
   /**
    * This is the callback rutine called by the native implementation whenever a
@@ -724,10 +741,64 @@ public class FMusic {
    * @param handle Handle to native object being monitored
    * @param param parameter passed to callback
    */
-  private static void music_callback(long modulehandle, int param) {
-    // locate out callback and call it back
-  	FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) FMOD.getCallback(FMOD.FSOUND_DSPCALLBACK, modulehandle);   
-    FMusicCallback callback = (FMusicCallback) wCallback.callback;  
-    callback.FMUSIC_CALLBACK((FMusicModule) wCallback.handled, param);
+  public static void music_instcallback(long modulehandle, int param) {
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FMUSIC_INSTCALLBACK, modulehandle);
+    for(int i=0; i<handlers.size(); i++) {
+    	FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+    	FMusicCallback callback = (FMusicCallback) wCallback.callback;  
+    	callback.FMUSIC_CALLBACK((FMusicModule) wCallback.handled, param);
+    }
   }
+  
+  /**
+   * This is the callback rutine called by the native implementation whenever a
+   * register callback is notified.
+   * 
+   * @param handle Handle to native object being monitored
+   * @param param parameter passed to callback
+   */
+  public static void music_ordercallback(long modulehandle, int param) {
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FMUSIC_ORDERCALLBACK, modulehandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FMusicCallback callback = (FMusicCallback) wCallback.callback;  
+      callback.FMUSIC_CALLBACK((FMusicModule) wCallback.handled, param);
+    }
+  }
+  
+  /**
+   * This is the callback rutine called by the native implementation whenever a
+   * register callback is notified.
+   * 
+   * @param handle Handle to native object being monitored
+   * @param param parameter passed to callback
+   */
+  public static void music_rowcallback(long modulehandle, int param) {
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FMUSIC_ROWCALLBACK, modulehandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FMusicCallback callback = (FMusicCallback) wCallback.callback;  
+      callback.FMUSIC_CALLBACK((FMusicModule) wCallback.handled, param);
+    }
+  }   
+  
+  /**
+   * This is the callback rutine called by the native implementation whenever a
+   * register callback is notified.
+   * 
+   * @param handle Handle to native object being monitored
+   * @param param parameter passed to callback
+   */
+  public static void music_zxxcallback(long modulehandle, int param) {
+    // we got a callback - notify everybody
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FMUSIC_ZXXCALLBACK, modulehandle);
+    for(int i=0; i<handlers.size(); i++) {
+      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
+      FMusicCallback callback = (FMusicCallback) wCallback.callback;  
+      callback.FMUSIC_CALLBACK((FMusicModule) wCallback.handled, param);
+    }
+  }   
 }
