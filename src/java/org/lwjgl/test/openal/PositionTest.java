@@ -253,7 +253,7 @@ public class PositionTest extends BasicTest {
       handleInput();
       
       // render and paint if !minimized and not dirty
-      if(!Window.isMinimized() || Window.isDirty()) {
+      if(Window.isFocused() || Window.isDirty()) {
         render();
         Window.paint();
       } else {
@@ -265,7 +265,7 @@ public class PositionTest extends BasicTest {
       Window.update();
 
       // act on pause mode
-      paused(Window.isMinimized());
+      paused(Window.isMinimized() || !Window.isFocused());
       
       // start sound after first paint, since we don't want
       // the delay before something is painted on the screen
@@ -299,12 +299,14 @@ public class PositionTest extends BasicTest {
     if(paused && !pauseMode) {
       pauseMode = true;
       AL10.alSourcePause(soundSources);
+      System.out.println("pauseMode = true");
     } 
     
     // else go out of pause mode and start sounds
     else if(!paused && pauseMode) {
       pauseMode = false;
       startSounds();
+      System.out.println("pauseMode = false");
     }    
   }
 
