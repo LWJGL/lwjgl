@@ -266,6 +266,20 @@ public final class Sys {
 	 * Otherwise we return a String, which may be the empty string "".
 	 * @return a String, or null if there is no system clipboard.
 	 */
-	public static native String getClipboard();
-		
+	public static String getClipboard() {
+		try {
+			java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+			java.awt.datatransfer.Transferable transferable = clipboard.getContents(null);
+			if (transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
+				return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			// ignore exception and use native implementation
+			return nGetClipboard();
+		}
+	}
+
+	private static native String nGetClipboard();
 } 

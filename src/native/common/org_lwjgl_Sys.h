@@ -75,8 +75,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
   (JNIEnv *, jclass, jstring);
 
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getClipboard
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    nGetClipboard
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_nGetClipboard
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus

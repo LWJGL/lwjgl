@@ -167,7 +167,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 }
 
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getClipboard
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_nGetClipboard
   (JNIEnv * env, jclass clazz)
 {
 	return NULL;

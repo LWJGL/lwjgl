@@ -202,7 +202,7 @@ const void * getClipboard(int type)
 
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getClipboard
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_nGetClipboard
   (JNIEnv * env, jclass clazz)
 {
 	// Check to see if there's text available in the clipboard

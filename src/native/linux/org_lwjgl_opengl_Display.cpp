@@ -105,7 +105,10 @@ bool checkXError(JNIEnv *env) {
 	XSync(getDisplay(), False);
 	if (async_x_error) {
 		async_x_error = false;
-		throwException(env, error_message);
+		if (env != NULL)
+			throwException(env, error_message);
+		else
+			printfDebug(error_message);
 		return false;
 	} else
 		return true;
@@ -132,7 +135,10 @@ Display *incDisplay(JNIEnv *env) {
 		XSetErrorHandler(errorHandler);
 		display_connection = XOpenDisplay(NULL);
 		if (display_connection == NULL) {
-			throwException(env, "Could not open X display");
+			if (env != NULL)
+				throwException(env, "Could not open X display connection");
+			else
+				printfDebug("Could not open X display connection\n");
 			return NULL;
 		}
 		warp_atom = XInternAtom(getDisplay(), "ignore_warp_atom", False);
