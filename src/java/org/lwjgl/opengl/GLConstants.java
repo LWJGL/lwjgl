@@ -39,7 +39,7 @@ import org.lwjgl.opengl.ati.ATIEnvmapBumpmap;
 import org.lwjgl.opengl.atix.ATIXPointSprites;
 import org.lwjgl.opengl.atix.ATIXTextureEnvRoute;
 import org.lwjgl.opengl.ext.*;
-import org.lwjgl.opengl.ext.EXTAgbr;
+import org.lwjgl.opengl.ext.EXTAbgr;
 import org.lwjgl.opengl.ext.EXTCompiledVertexArray;
 import org.lwjgl.opengl.hp.HPOcclusionTest;
 import org.lwjgl.opengl.nv.*;
@@ -89,17 +89,28 @@ public interface GLConstants
 		ATIVertexStreams,
 		ATIXPointSprites,
 		ATIXTextureEnvRoute,
-		EXTAgbr,
+		EXTAbgr,
+		EXTBgra,
+		EXTBlendColor,
+		EXTBlendMinmax,
 		EXTCompiledVertexArray,
 		EXTDrawRangeElements,
 		EXTFogCoord,
+		EXTLightMaxExponent,
+		EXTPackedPixels,
 		EXTPointParameters,
+		EXTRescaleNormal,
 		EXTSecondaryColor,
+		EXTSeparateSpecularColor,
+		EXTSharedTexturePalette,
 		EXTStencilTwoSide,
 		EXTStencilWrap,
 		EXTTextureCompressionS3TC,
+		EXTTextureEnvCombine,
+		EXTTextureEnvDot3,
 		EXTTextureFilterAnisotropic,
 		EXTTextureLODBias,
+		EXTVertexArray,
 		EXTVertexShader,
 		EXTVertexWeighting,
 		HPOcclusionTest,

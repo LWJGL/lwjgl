@@ -57,6 +57,38 @@ public class CoreGL extends BaseGL implements CoreGLConstants {
 
 	public native void accum(int op, float value);
 	public native void alphaFunc(int func, float ref);
+	public native void colorTable(
+		int target,
+		int internalFormat,
+		int width,
+		int format,
+		int type,
+		int data);
+
+	public native void colorSubTable(
+		int target,
+		int start,
+		int count,
+		int format,
+		int type,
+		int data);
+
+	public native void getColorTable(
+		int target,
+		int format,
+		int type,
+		int data);
+
+	public native void getColorTableParameteriv(
+		int target,
+		int pname,
+		int params);
+
+	public native void getColorTableParameterfv(
+		int target,
+		int pname,
+		int params);
+
 	public native void clearColor(float red, float green, float blue, float alpha);
 	public native void clearAccum(float red, float green, float blue, float alpha);
 	public native void clear(int mask);

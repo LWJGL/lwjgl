@@ -29,18 +29,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*
- * Created by IntelliJ IDEA.
- * User: nj
- * Date: 12-08-2002
- * Time: 15:29:12
- * To change template for new interface use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
+ 
 package org.lwjgl.opengl.ext;
 
-public interface EXTAgbr
-{
-
-  public static final int ABGR_EXT                                             = 0x8000;
+/**
+ * EXT_light_max_exponent constants
+ * @author: cas
+ */
+public interface EXTLightMaxExponent {
+	public static final int MAX_SHININESS_EXT                = 0x8504;
+	public static final int MAX_SPOT_EXPONENT_EXT            = 0x8505;
 }

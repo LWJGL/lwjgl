@@ -1337,13 +1337,9 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native void wglFreeMemoryNV(int pointer);
 
-	
-
 	public static native int wglGetCurrentReadDCARB();
 
 	public static native String wglGetExtensionsStringARB(int hdc);
-
-	
 
 	public static native String wglGetExtensionsStringEXT();
 
@@ -1379,7 +1375,9 @@ public class GL extends CoreGL implements GLConstants {
 
 	public static native int wglReleasePbufferDCARB(int hPbuffer, int hDC);
 
-	public static native boolean wglReleaseTexImageARB(int hPbuffer, int iBuffer);
+	public static native boolean wglReleaseTexImageARB(
+		int hPbuffer,
+		int iBuffer);
 
 	public static native boolean wglRestoreBufferRegionARB(
 		int hRegion,
@@ -1468,21 +1466,32 @@ public class GL extends CoreGL implements GLConstants {
 	public boolean ARB_window_pos;
 	public boolean EXT_abgr;
 	public boolean EXT_bgra;
+	public boolean EXT_blend_color;
 	public boolean EXT_blend_function_separate;
+	public boolean EXT_blend_minmax;
+	public boolean EXT_blend_subtract;
 	public boolean EXT_compiled_vertex_array;
 	public boolean EXT_cull_vertex;
 	public boolean EXT_draw_range_elements;
 	public boolean EXT_fog_coord;
+	public boolean EXT_light_max_exponent;
 	public boolean EXT_multi_draw_arrays;
+	public boolean EXT_packed_pixels;
+	public boolean EXT_paletted_texture;
 	public boolean EXT_point_parameters;
-	public boolean EXT_secondary_color  ;
+	public boolean EXT_rescale_normal;
+	public boolean EXT_secondary_color;
 	public boolean EXT_separate_specular_color;
 	public boolean EXT_shadow_funcs;
+	public boolean EXT_shared_texture_palette;
 	public boolean EXT_stencil_two_side;
 	public boolean EXT_stencil_wrap;
 	public boolean EXT_texture_compression_s3tc;
+	public boolean EXT_texture_env_combine;
+	public boolean EXT_texture_env_dot3;
 	public boolean EXT_texture_filter_anisotropic;
 	public boolean EXT_texture_lod_bias;
+	public boolean EXT_vertex_array;
 	public boolean EXT_vertex_shader;
 	public boolean EXT_vertex_weighting;
 	public boolean ATI_element_array;
@@ -1536,22 +1545,23 @@ public class GL extends CoreGL implements GLConstants {
 	 * Determine which extensions are available
 	 */
 	private void determineAvailableExtensions() {
-		
+
 		determineAvailableWGLExtensions();
-		
+
 		// Grab all the public booleans out of this class
 		Field[] fields = GL.class.getDeclaredFields();
 		HashMap map = new HashMap(fields.length);
-		for (int i = 0; i < fields.length; i ++) {
-			if (!Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType() == boolean.class)
+		for (int i = 0; i < fields.length; i++) {
+			if (!Modifier.isStatic(fields[i].getModifiers())
+				&& fields[i].getType() == boolean.class)
 				map.put(fields[i].getName(), fields[i]);
 		}
-		
+
 		String exts = getString(EXTENSIONS);
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
-			
+
 			Field f = (Field) map.get(ext);
 			if (f != null) {
 				try {
@@ -1560,9 +1570,9 @@ public class GL extends CoreGL implements GLConstants {
 					e.printStackTrace(System.err);
 				}
 			}
-			
+
 		}
-		
+
 		// Let's see what openGL version we are too:
 		String version = getString(VERSION);
 		int i = version.indexOf("1.");
@@ -1580,7 +1590,7 @@ public class GL extends CoreGL implements GLConstants {
 			}
 		}
 	}
-	
+
 	/*
 	 * Available WGL extensions
 	 */
@@ -1588,7 +1598,7 @@ public class GL extends CoreGL implements GLConstants {
 	public static boolean WGL_ARB_extensions_string;
 	public static boolean WGL_ARB_pbuffer;
 	public static boolean WGL_ARB_pixel_format;
-	public static boolean WGL_ARB_render_texture; 
+	public static boolean WGL_ARB_render_texture;
 	public static boolean WGL_EXT_extensions_string;
 	public static boolean WGL_EXT_swap_control;
 
@@ -1597,42 +1607,44 @@ public class GL extends CoreGL implements GLConstants {
 	 * if available.
 	 */
 	private static native void checkWGLExtensionsString();
-	
+
 	/**
 	 * Determine which WGL extensions are available
 	 */
 	private void determineAvailableWGLExtensions() {
-		
+
 		// First we must determine if WGL_EXT_extensions_string is available
 		checkWGLExtensionsString();
 		if (!WGL_EXT_extensions_string && !WGL_ARB_extensions_string)
 			return;
-		
+
 		// Grab all the public booleans out of this class
 		Field[] fields = GL.class.getDeclaredFields();
 		HashMap map = new HashMap(fields.length);
-		for (int i = 0; i < fields.length; i ++) {
-			if (Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType() == boolean.class)
+		for (int i = 0; i < fields.length; i++) {
+			if (Modifier.isStatic(fields[i].getModifiers())
+				&& fields[i].getType() == boolean.class)
 				map.put(fields[i].getName(), fields[i]);
 		}
-		
+
 		final String exts;
-		
+
 		if (WGL_ARB_extensions_string)
-			exts = wglGetExtensionsStringARB(Display.getHandle()); // Remember - this is an HWND not an HDC, which is what's required
+			exts = wglGetExtensionsStringARB(Display.getHandle());
+		// Remember - this is an HWND not an HDC, which is what's required
 		else
 			exts = wglGetExtensionsStringEXT();
-			
+
 		if (exts == null)
 			return;
 
-		System.out.println("Available WGL extensions:");			
+		System.out.println("Available WGL extensions:");
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
-			
+
 			System.out.println(ext);
-			
+
 			Field f = (Field) map.get(ext);
 			if (f != null) {
 				try {
@@ -1641,8 +1653,8 @@ public class GL extends CoreGL implements GLConstants {
 					e.printStackTrace(System.err);
 				}
 			}
-			
-		}		
+
+		}
 	}
 
 	/* (non-Javadoc)
