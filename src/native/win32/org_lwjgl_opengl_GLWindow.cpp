@@ -207,21 +207,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_nDestroyGL
 }
 
 /*
- * Class:     org_lwjgl_opengl_GL
- * Method:    checkWGLExtensionsString
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLWindow_checkWGLExtensionsString(JNIEnv * env, jobject obj)
-{
-	jclass clazz = env->GetObjectClass(obj);
-	jfieldID fid_WGL_ARB_extensions_string = env->GetFieldID(clazz, "WGL_ARB_extensions_string", "Z");
-	jfieldID fid_WGL_EXT_extensions_string = env->GetFieldID(clazz, "WGL_EXT_extensions_string", "Z");
-	if (wglGetExtensionsStringARB)
-		env->SetBooleanField(obj, fid_WGL_ARB_extensions_string, JNI_TRUE);
-	if (wglGetExtensionsStringEXT)
-		env->SetBooleanField(obj, fid_WGL_EXT_extensions_string, JNI_TRUE);
-}
-
-/*
  * Class:     org_lwjgl_opengl_GLWindow
  * Method:    swapBuffers
  * Signature: ()V

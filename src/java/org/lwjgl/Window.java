@@ -38,8 +38,8 @@ public abstract class Window {
 	/** Whether the window is currently minimized */
 	private boolean minimized;
   
-  /** Whether the window has focus */
-  private boolean focused = true;
+	/** Whether the window has focus */
+	private boolean focused = true;
 	
 	/** Whether the window has been asked to close by the user or underlying OS */
 	private boolean closeRequested;
@@ -134,16 +134,16 @@ public abstract class Window {
 	 */
 	private native void nSetTitle(String title);
 
-  /**
-   * @return true if the user or operating system has asked the window to close
-   */
-  public final boolean isCloseRequested() {
-    assert isCreated();
-    
-    boolean currentValue = closeRequested;
-    closeRequested = false;
-    return currentValue;
-  }
+	/**
+	 * @return true if the user or operating system has asked the window to close
+	 */
+	public final boolean isCloseRequested() {
+		assert isCreated();
+
+		boolean currentValue = closeRequested;
+		closeRequested = false;
+		return currentValue;
+	}
 	
 	/**
 	 * @return true if the window is minimized or otherwise not visible
@@ -153,13 +153,13 @@ public abstract class Window {
 		return minimized;
 	}
   
-  /**
-   * @return true if window is focused
-   */
-  public final boolean isFocused() {
-    assert isCreated();
-    return focused;
-  }
+	/**
+	 * @return true if window is focused
+	 */
+	public final boolean isFocused() {
+		assert isCreated();
+		return focused;
+	}
 	
 	/**
 	 * Minimize the game and allow the operating system's default display to become
