@@ -79,6 +79,7 @@ public interface GLConstants
 		ARBTextureMirroredRepeat,
 		ARBTransposeMatrix,
 		ARBVertexBlend,
+		ARBVertexBufferObject,
 		ARBVertexProgram,
 		ATIElementArray,
 		ATIEnvmapBumpmap,
