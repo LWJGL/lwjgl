@@ -33,9 +33,9 @@
 /**
  * $Id$
  *
- * Win32 mouse handling.
+ * Linux mouse handling.
  *
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 

@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Linux specific library for display handdling.
+ * Linux specific library for display handling.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$

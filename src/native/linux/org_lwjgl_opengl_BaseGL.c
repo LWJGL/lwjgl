@@ -33,9 +33,9 @@
 /**
  * $Id$
  *
- * Base Win32 functionality for GL.
+ * Base linux functionality for GL.
  *
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
