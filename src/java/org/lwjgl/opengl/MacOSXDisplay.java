@@ -77,6 +77,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 	
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
+		hideUI(fullscreen);
 		close_requested = false;
 		try {
 			frame = new MacOSXFrame(mode, requested_mode, fullscreen, x, y);
@@ -98,6 +99,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 		setView(null);
 		frame.syncDispose();
 		frame = null;
+		hideUI(false);
 	}
 	
 	public int getGammaRampLength() {
@@ -221,6 +223,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 			nWarpCursor(x, y);
 		}
 	}
+
+	/**
+	 * This is an interface to the native Carbon call
+	 * SetSystemUIMode. It is used to hide the dock in a way
+	 * that will prevent AWT from shifting the fullscreen window
+	 */
+	private native void hideUI(boolean hide);
 
 	native void getMouseDeltas(IntBuffer delta_buffer);
 

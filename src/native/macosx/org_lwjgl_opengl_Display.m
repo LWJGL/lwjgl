@@ -153,7 +153,6 @@ static void setView(JNIEnv *env, jobject canvas) {
 		usleep(WAIT_DELAY);
 	}
 
-//	[gl_context clearDrawable];
 	[gl_context setView:view];
 
 	[view unlockFocus];
@@ -161,6 +160,14 @@ static void setView(JNIEnv *env, jobject canvas) {
 	ds->FreeDrawingSurfaceInfo(dsi);
 	ds->Unlock(ds);
 	awt.FreeDrawingSurface(ds);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_hideUI(JNIEnv *env, jobject this, jboolean hide) {
+	if (hide == JNI_TRUE) {
+		SetSystemUIMode(kUIModeContentSuppressed, 0);
+	} else {
+		SetSystemUIMode(kUIModeNormal, 0);
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_setVSyncEnabled(JNIEnv *env, jobject this, jboolean vsync) {
