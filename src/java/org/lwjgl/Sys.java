@@ -55,13 +55,69 @@ public final class Sys {
 
 	/** Debug flag. */
 	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.Sys.debug");
-  
-  /** OS Name */
-  private final static String OS_NAME = System.getProperty("os.name");
+	
+  	/** OS Name */
+	private final static String OS_NAME = System.getProperty("os.name");
 
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
+	
+	/*
+	 * Timer calibration. The hires timers on some systems - notably SpeedStep chips,
+	 * HyperThreaded chips, or dual-processor/cores, are notoriously inaccurate. We
+	 * therefore need to calibrate the hires timer with a lowres timer that is known
+	 * to keep much more accurate time. System.currentTimeMillis() keeps accurate time
+	 * down to a worst-case resolution of 50ms, which is good enough for us as it means
+	 * at worst we will have 3-4 frames at the wrong rate if a hires timer resolution
+	 * change occurs.
+	 */
 
+	/** Master control: override all our clever recalibration */
+	private static final boolean OVERRIDE_CALIBRATION = Boolean.getBoolean("org.lwjgl.Sys.overrideCalibration");
+	
+	/** Turn on debugging for calibration */
+	private static final boolean DEBUG_CALIBRATION = Boolean.getBoolean("org.lwjgl.Sys.debugCalibration");
+	
+	/**
+	 * Timer calibration error, expressed as % variance either side of the baseline in the
+	 * system property org.lwjhgl.Sys.timerError. 35.0% is the default.
+	 */
+	private static final double UPPER_TIMER_ERROR = 1.0 + Double.parseDouble(System.getProperty("org.lwjgl.Sys.timerError", "35.0")) / 100.0;
+	private static final double LOWER_TIMER_ERROR = 1.0 - Double.parseDouble(System.getProperty("org.lwjgl.Sys.timerError", "35.0")) / 100.0;
+	
+	/** Short term recalibration threshold */
+	private static final long SHORT_RECALIBRATION_THRESHOLD = Long.parseLong(System.getProperty("org.lwjgl.Sys.shortRecalibrationThreshold", "50"));
+
+	/** Long term recalibration threshold */
+	private static final long LONG_RECALIBRATION_THRESHOLD = Long.parseLong(System.getProperty("org.lwjgl.Sys.longRecalibrationThreshold", "1000"));
+	
+	/** Last recalibration timer value, in milliseconds */
+	private static long recalibrationThen;
+	
+	/** Current recalibration timer value, in milliseconds */
+	private static long recalibrationNow;
+	
+	/** Total hires ticks that have passed since we started using recalibrated time */
+	private static long ticksSinceRecalibration;
+
+	/** Last lowres timer time, in milliseconds */
+	private static long lowresThen;
+	
+	/** Current lowres timer time, in milliseconds */
+	private static long lowresNow;
+	
+	/** Last hires timer time, in ticks */
+	private static long hiresThen;
+	
+	/** Current hires timer time, in ticks */
+	private static long hiresNow;
+	
+	/** Baseline hires resolution */
+	private static long defaultResolution;
+	
+	/** Current hires resolution */
+	private static long currentResolution;
+  
 	static {
 		implementation = createImplementation();
 		System.loadLibrary(LIBRARY_NAME);
@@ -117,12 +173,90 @@ public final class Sys {
 	}
 
 	/**
-	 * Obtains the number of ticks that the hires timer does in a second.
+	 * Obtains the number of ticks that the hires timer does in a second. This method is fast;
+	 * it should be called as frequently as possible, as it recalibrates the timer.
 	 *
 	 * @return timer resolution in ticks per second or 0 if no timer is present.
 	 */
 	public static long getTimerResolution() {
-		return implementation.getTimerResolution();
+		
+		// Check for explicit override
+		if (OVERRIDE_CALIBRATION) {
+			return implementation.getTimerResolution();
+		}
+		
+		// Firstly make sure we have at least some notion of a baseline
+		if (defaultResolution == 0L) {
+			defaultResolution = implementation.getTimerResolution();
+			currentResolution = defaultResolution;
+			if (DEBUG_CALIBRATION) {
+				System.err.println("Initial timer calibration "+defaultResolution+" ticks per second");
+			}
+		}
+		
+		lowresNow = System.currentTimeMillis() & 0x7FFFFFFFFFFFFFFFL;
+		hiresNow = getTime();
+		if (lowresNow > lowresThen + SHORT_RECALIBRATION_THRESHOLD && hiresNow > hiresThen) {
+			// We've had a lowres timer update. We can use this to calibrate the hires timer
+			// resolution.
+			double millis = lowresNow - lowresThen;
+			double ticks = hiresNow - hiresThen;
+			lowresThen = lowresNow;
+			hiresThen = hiresNow;
+			double ticksPerSecond = 1000.0 * ticks / millis;
+			// If the ticksPerSecond we've calcuated is out by more than the error % from
+			// the baseline resolution, we will discreetly replace the returned timer resolution
+			// by our calculated. If this persists for more than a second or so we will adjust
+			// the baseline resolution to the average that we've calculated over the second.
+			double errorRatio = ticksPerSecond / (double) defaultResolution;
+			if (errorRatio < LOWER_TIMER_ERROR || errorRatio > UPPER_TIMER_ERROR) {
+				// We're outside the acceptable range so we will use the newly calculated ticks
+				// per second. If we were already using recalibrated time, we start counting
+				// the ticks that pass over a certain length of time. If that duration is exceeded
+				// and we're still using recalibrated time, we permanently recalibrate.
+				
+				long tempResolution = (long) ticksPerSecond;
+				
+				if (DEBUG_CALIBRATION) {
+					System.err.println("Temporary recalibration to "+tempResolution+" ticks per second");
+				}
+				
+				if (currentResolution == defaultResolution) {
+					// Start timing
+					ticksSinceRecalibration = 0L;
+					recalibrationThen = lowresNow;
+					recalibrationNow = lowresNow;
+				} else {
+					// Continue counting ticks
+					ticksSinceRecalibration += getTime();
+					recalibrationNow = lowresNow;
+					long totalTicksSinceRecalibrationStarted = recalibrationNow - recalibrationThen;
+					if (totalTicksSinceRecalibrationStarted > LONG_RECALIBRATION_THRESHOLD) {
+						// Ok, we've now been operating at a different resolution for long enough.
+						// Let's choose a new default resolution based on the average we've
+						// calculated since it first started needing recalibrating
+						long actualRecalibrationDuration = recalibrationNow - recalibrationThen;
+						defaultResolution = (long) (1000.0 * totalTicksSinceRecalibrationStarted / actualRecalibrationDuration);
+						tempResolution = defaultResolution;
+						if (DEBUG_CALIBRATION) {
+							System.err.println("Permanent recalibration to "+defaultResolution+" ticks per second");
+						}
+					}
+				}
+
+				// Temporarily change current resolution to the recently calculated resolution
+				currentResolution = tempResolution;
+			} else {
+				// Recalibrate the baseline using the operating system
+				defaultResolution = implementation.getTimerResolution();
+				if (DEBUG_CALIBRATION && currentResolution != defaultResolution) {
+					System.err.println("Resetting to system calibration "+defaultResolution+" ticks per second");
+				}
+				currentResolution = defaultResolution;
+			}
+		}
+		
+		return currentResolution;
 	}
 
 	/**
