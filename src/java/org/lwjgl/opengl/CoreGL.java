@@ -104,8 +104,8 @@ public class CoreGL implements CoreGLConstants {
 	public static native void glCopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height, int border);
 	public static native void glCopyTexImage1D(int target, int level, int internalFormat, int x, int y, int width, int border);
         /* OpenGL 1.2 functions */
-	public static native void glColorTableParameteriv(int target, int pname, int params);
-	public static native void glColorTableParameterfv(int target, int pname, int params);
+	public static native void glColorTableParameteriv(int target, int pname, IntBuffer params);
+	public static native void glColorTableParameterfv(int target, int pname, FloatBuffer params);
 	public static native void glCopyColorSubTable(int target, int start, int x, int y, int width);
 	public static native void glCopyColorTable(int target, int internalformat, int x, int y, int width);
 	public static native void glBlendEquation(int mode);
