@@ -7,6 +7,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL11 */
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL12 */
 /*
  * Class:     org_lwjgl_opengl_CoreGL13
  * Method:    glActiveTexture

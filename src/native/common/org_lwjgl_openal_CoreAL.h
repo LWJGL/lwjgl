@@ -8,10 +8,10 @@
 extern "C" {
 #endif
 /* Inaccessible static: created */
-/* Inaccessible static: class_000240 */
-/* Inaccessible static: class_000241 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024BaseAL */
+/* Inaccessible static: class_00024java_00024lang_00024String */
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024CoreAL */
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    alEnable

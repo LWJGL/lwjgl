@@ -19,7 +19,7 @@ extern "C" {
 /* Inaccessible static: LIBRARY_NAME */
 /* Inaccessible static: DEBUG */
 /* Inaccessible static: _debug */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024Sys */
 /*
  * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution
@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    openURL
+ * Method:    nOpenURL
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL

@@ -21,7 +21,8 @@ extern "C" {
 /* Inaccessible static: fullscreen */
 /* Inaccessible static: vsync */
 /* Inaccessible static: vbo_tracker */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: context */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024Window */
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nSetTitle
@@ -121,9 +122,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nSetVSyncEnabled
- * Signature: (Z)V
+ * Signature: (Z)Z
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
   (JNIEnv *, jclass, jboolean);
 
 #ifdef __cplusplus

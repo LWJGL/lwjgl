@@ -7,11 +7,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
 #undef org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED
 #define org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED 1L
 /* Inaccessible static: currentBuffer */
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024Pbuffer */
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nIsBufferLost
