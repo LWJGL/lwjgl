@@ -62,11 +62,12 @@ import java.awt.GraphicsDevice;
 import java.awt.image.BufferedImage;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationListener;
-import com.apple.eawt.ApplicationEvent;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 
-final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation, ApplicationListener {
+final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation {
 	private JFrame frame;
 	private MacOSXGLCanvas canvas;
 	private boolean close_requested;
@@ -75,8 +76,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	private java.awt.DisplayMode requested_mode;
 	
 	public MacOSXDisplay() {
-		Application.getApplication().addApplicationListener(this);
-System.out.println("getMaxCursorSize = " + getMaxCursorSize());
+		new MacOSXApplicationListener();
 	}
 	
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
@@ -108,28 +108,6 @@ System.out.println("getMaxCursorSize = " + getMaxCursorSize());
 		GraphicsEnvironment g_env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice device = g_env.getDefaultScreenDevice();
 		return device;
-	}
-
-	public void handleAbout(ApplicationEvent event) {
-	}
-	
-	public void handleOpenApplication(ApplicationEvent event) {
-	}
-	
-	public void handleOpenFile(ApplicationEvent event) {
-	}
-	
-	public void handlePreferences(ApplicationEvent event) {
-	}
-	
-	public void handlePrintFile(ApplicationEvent event) {
-	}
-	
-	public void handleQuit(ApplicationEvent event) {
-		handleQuit();
-	}
-	
-	public void handleReOpenApplication(ApplicationEvent event) {
 	}
 
 	private void handleQuit() {
@@ -395,5 +373,45 @@ System.out.println("getMaxCursorSize = " + getMaxCursorSize());
 	}
 
 	public void destroyCursor(Object cursor_handle) {
+	}
+
+	/**
+	 * This class captures com.apple.eawt.ApplicationEvents through reflection
+	 * to enable compilation on other platforms than Mac OS X
+	 */
+	private class MacOSXApplicationListener implements InvocationHandler {
+		private final Method handleQuit;
+
+		public MacOSXApplicationListener() {
+			try {
+				/* Get the com.apple.eawt.Application class */
+				Class com_apple_eawt_Application = Class.forName("com.apple.eawt.Application");
+				/* Call the static Application.getApplication() method */
+				Object application = com_apple_eawt_Application.getMethod("getApplication", null).invoke(null, null);
+				/* Create a proxy implementing com.apple.eawt.ApplicationListener */
+				Class com_apple_eawt_ApplicationListener = Class.forName("com.apple.eawt.ApplicationListener");
+				Object listener_proxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {com_apple_eawt_ApplicationListener}, this);
+				/* Invoke the method application.addApplicationListener(proxy) */
+				Method addApplicationListener = com_apple_eawt_Application.getMethod("addApplicationListener", new Class[]{com_apple_eawt_ApplicationListener});
+				addApplicationListener.invoke(application, new Object[]{listener_proxy});
+				/* Finally, get the handleQuit method we want to react to */
+				Class com_apple_eawt_ApplicationEvent = Class.forName("com.apple.eawt.ApplicationEvent");
+				handleQuit = com_apple_eawt_ApplicationListener.getMethod("handleQuit", new Class[]{com_apple_eawt_ApplicationEvent});
+			} catch (InvocationTargetException e) {
+				throw new RuntimeException(e);
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		public Object invoke(Object proxy, Method method, Object[] args) {
+			if (method.equals(handleQuit))
+				handleQuit();
+			return null;
+		}
 	}
 }
