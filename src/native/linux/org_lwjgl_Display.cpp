@@ -342,6 +342,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	const char * title_str = env->GetStringUTFChars(title, NULL);
 	XStoreName(disp, win, title_str);
 	env->ReleaseStringUTFChars(title, title_str);
+	XSizeHints * size_hints = XAllocSizeHints();
+	size_hints->flags = PMinSize | PMaxSize;
+	size_hints->min_width = width;
+	size_hints->max_width = width;
+	size_hints->min_height = height;
+	size_hints->max_height = height;
+	XSetWMNormalHints(disp, win, size_hints);
+	XFree(size_hints);
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
 	if (fullscreen) {
