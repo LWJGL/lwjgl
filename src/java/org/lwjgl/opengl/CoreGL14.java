@@ -48,8 +48,31 @@ import java.nio.Buffer;
  * @version $Revision: 1.23 $
  */
 public class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
+	public static native void glFogCoordf (float coord);
+	public static native void glFogCoordd (double coord);
+	public static native void glFogCoordPointer (int type, int stride, Buffer data);
         public static native void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount, int primcount);
 /*        public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);*/
+	public static native void glPointParameterf (int pname, float param);
+	public static native void glPointParameterfv (int pname, FloatBuffer params);
+	public static native void glSecondaryColor3b (byte red, byte green, byte blue);
+	public static native void glSecondaryColor3d (double red, double green, double blue);
+	public static native void glSecondaryColor3f (float red, float green, float blue);
+	public static native void glSecondaryColor3i (int red, int green, int blue);
+	public static native void glSecondaryColor3s (short red, short green, short blue);
+	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
+	public static native void glSecondaryColor3ui (int red, int green, int blue);
+	public static native void glSecondaryColor3us (short red, short green, short blue);
+	public static native void glSecondaryColorPointer (int size, int type, int stride, Buffer data);
+	public static native void glBlendFuncSeparate (int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha);
+	public static native void glWindowPos2d (double x, double y);
+	public static native void glWindowPos2f (float x, float y);
+	public static native void glWindowPos2i (int x, int y);
+	public static native void glWindowPos2s (short x, short y);
+	public static native void glWindowPos3d (double x, double y, double z);
+	public static native void glWindowPos3f (float x, float y, float z);
+	public static native void glWindowPos3i (int x, int y, int z);
+	public static native void glWindowPos3s (short x, short y, short z);
 }
 
 
