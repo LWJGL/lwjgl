@@ -35,7 +35,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
@@ -67,25 +66,19 @@ public class MouseCreationTest {
 	}
 
 	private void initialize() {
-		//  find first display mode that allows us 640*480*16
-		DisplayMode[] modes = Display.getAvailableDisplayModes();
-		for (int i = 0; i < modes.length; i++) {
-			if (modes[i].width == 640
-				&& modes[i].height == 480
-				&& modes[i].bpp >= 16) {
-				displayMode = modes[i];
-				break;
-			}
-		}
-
-		// create display and opengl
-    setupDisplay(false);
-	}
-  
-  private void setupDisplay(boolean fullscreen) {
+    //  find first display mode that allows us 640*480*16
+    DisplayMode[] modes = Display.getAvailableDisplayModes();
+    for (int i = 0; i < modes.length; i++) {
+      if (modes[i].width == 640
+        && modes[i].height == 480
+        && modes[i].bpp >= 16) {
+        displayMode = modes[i];
+        break;
+      }
+    }    
+    
     try {
-      Display.create(displayMode, 0, 0, 0, fullscreen, "MouseTest");
-      gl = new GL();
+      gl = new GL("MouseCreationTest", 50, 50, 640, 480, 32, 0, 0, 0);
       gl.create();
 
       glu = new GLU(gl);
@@ -95,11 +88,11 @@ public class MouseCreationTest {
     }
 
     initializeOpenGL();    
-  }
-
+	}
+  
 	private void initializeOpenGL() {
 		gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glu.ortho2D(0.0, Display.getWidth(), 0, Display.getHeight());
+		glu.ortho2D(0.0, 640, 0, 480);
 	}
 
 	public void executeTest() {
@@ -119,11 +112,17 @@ public class MouseCreationTest {
     
     // recreate display in fullscreen mode
     System.out.print("Destroying display...");
-    BaseGL.destroy();
+    
     System.out.println("success");
     
     System.out.print("Entering fullscreen mode...");
-    setupDisplay(true);
+    try {
+      gl.destroy();
+      initialize();
+      Display.setDisplayMode(displayMode);
+    } catch (Exception e) {
+			e.printStackTrace();
+		}
     System.out.println("success");
     
     
@@ -141,7 +140,6 @@ public class MouseCreationTest {
     System.out.print("Shutting down...");
     Mouse.destroy();
     gl.destroy();
-    BaseGL.destroy();
     System.out.println("shutdown complete");
 	}
 
@@ -163,6 +161,7 @@ public class MouseCreationTest {
 		long endtime = Sys.getTime() + Sys.getTimerResolution() * 5;
 
 		while (Sys.getTime() < endtime) {
+      gl.tick();
 
 			Mouse.poll();
 
@@ -171,19 +170,19 @@ public class MouseCreationTest {
       
       if(position.x<0) {
         position.x = 0;
-      } else if (position.x>Display.getWidth()-60) {
-        position.x = Display.getWidth()-60;
+      } else if (position.x>640-60) {
+        position.x = 640-60;
       }
       
       if(position.y < 0) {
         position.y = 0;
-      } else if (position.y>Display.getHeight()-30) {
-        position.y = Display.getHeight()-30;
+      } else if (position.y>480-30) {
+        position.y = 480-30;
       }      
 
 			render();
 
-			gl.swapBuffers();
+			gl.paint();
 
 			if (Sys.getTime() - statustime > Sys.getTimerResolution()) {
 				System.out.print(".");

@@ -31,11 +31,9 @@
  */
 package org.lwjgl.test.input;
 
-import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
@@ -67,17 +65,6 @@ public class MouseTest {
   }
 
   private void initialize() {
-    //  find first display mode that allows us 640*480*16
-    DisplayMode[] modes = Display.getAvailableDisplayModes();
-    for (int i = 0; i < modes.length; i++) {
-      if (modes[i].width == 640
-        && modes[i].height == 480
-        && modes[i].bpp >= 16) {
-        displayMode = modes[i];
-        break;
-      }
-    }
-    
     // create display and opengl
     setupDisplay(false);
 
@@ -91,8 +78,7 @@ public class MouseTest {
   
   private void setupDisplay(boolean fullscreen) {
     try {
-      Display.create(displayMode, 0, 0, 0, fullscreen, "MouseTest");
-      gl = new GL();
+      gl = new GL("MouseTest", 50, 50, 640, 480, 32, 0, 0, 0);
       gl.create();
 
       glu = new GLU(gl);
@@ -106,7 +92,7 @@ public class MouseTest {
 
   private void initializeOpenGL() {
     gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glu.ortho2D(0.0, Display.getWidth(), 0, Display.getHeight());
+    glu.ortho2D(0.0, 640, 0, 480);
   }
 
   public void executeTest() {
@@ -119,7 +105,6 @@ public class MouseTest {
     Mouse.destroy();
     Keyboard.destroy();
     gl.destroy();
-    BaseGL.destroy();
   }
 
   private void createMouse() {
@@ -132,10 +117,12 @@ public class MouseTest {
   }
 
   private void wiggleMouse() {
-    while (!BaseGL.isCloseRequested()) {
-      if(BaseGL.isMinimized()) {
+    while (!gl.isCloseRequested()) {
+      if(gl.isMinimized()) {
         continue;
       }
+      
+      gl.tick();
 
       Mouse.poll();
       Keyboard.poll();
@@ -149,20 +136,20 @@ public class MouseTest {
       
       if(position.x<0) {
         position.x = 0;
-      } else if (position.x>Display.getWidth()-60) {
-        position.x = Display.getWidth()-60;
+      } else if (position.x>640-60) {
+        position.x = 640-60;
       }
       
       if(position.y < 0) {
         position.y = 0;
-      } else if (position.y>Display.getHeight()-30) {
-        position.y = Display.getHeight()-30;
+      } else if (position.y>480-30) {
+        position.y = 480-30;
       }
       
 
       render();
 
-      gl.swapBuffers();
+      gl.paint();
     }
   }
   

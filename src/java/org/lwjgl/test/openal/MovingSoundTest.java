@@ -35,8 +35,7 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.eax.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.Sys;
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.GL;
 
 import java.nio.IntBuffer;
 
@@ -52,6 +51,7 @@ import java.nio.IntBuffer;
 public class MovingSoundTest extends BasicTest {
   
   public static float MOVEMENT = 50.00f;
+  private GL gl = new GL("Moving Sound Test", 100, 100, 320, 240, 32, 0 ,0 ,0);
 
 	/**
 	 * Creates an instance of MovingSoundTest
@@ -69,6 +69,13 @@ public class MovingSoundTest extends BasicTest {
 			return;
 		}
 
+    try {
+      gl.create();
+    } catch (Exception e) {
+			e.printStackTrace();
+		} 
+
+
 		int lastError;
     float sourcex = 0.0f, sourcey = 0.0f, sourcez = 0.0f;
     float listenerx = 0.0f, listenery = 0.0f, listenerz = 0.0f;
@@ -79,24 +86,6 @@ public class MovingSoundTest extends BasicTest {
 
 		//initialize AL, using ALC
 		alInitialize();
-    
-    //initialize display
-    try {
-      int mode = -1;
-      DisplayMode[] modes = Display.getAvailableDisplayModes();
-      for (int i = 0; i < modes.length; i ++) {
-        if( modes[i].width == 640 && 
-            modes[i].height == 480 && 
-            modes[i].bpp >= 16) {
-              mode = i;
-              break;
-        }       
-      }       
-      Display.create(modes[mode], 0, 0, 0, false, "MovingSoundTest");
-    } catch (Exception e) {
-      e.printStackTrace();
-      exit(-1);
-    }
     
     //initialize keyboard
     try {
@@ -175,6 +164,8 @@ public class MovingSoundTest extends BasicTest {
     System.out.println("Move source with arrow keys\nMove listener with right shift and arrowkeys\nEnable EAX effect by pressing e (if available)\nExit with ESC");
 
 		while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+      gl.tick();
+      
       Keyboard.poll();
       if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
         if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
@@ -218,6 +209,10 @@ public class MovingSoundTest extends BasicTest {
           }
           eaxApplied = !eaxApplied;
         }
+      }
+      
+      if(gl.isCloseRequested()) {
+        break;
       }
      
       try {

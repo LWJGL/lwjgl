@@ -81,7 +81,7 @@ public class Grass {
 			}
 			// For now let's just pick a mode we're certain to have
 
-			Display.create(modes[mode], 0, 16, 0, false, "Grass");
+			Display.setDisplayMode(modes[mode]);
 			System.out.println("Created display.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,7 +89,7 @@ public class Grass {
 		}
 	}
 
-	public static final GL gl = new GL();
+	public static final GL gl = new GL("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0);
 	public static final GLU glu = new GLU(gl);
 
 	static {
@@ -209,12 +209,11 @@ public class Grass {
 
 			grsDraw();
 
-			gl.swapBuffers();
+			gl.paint();
 		}
 		Mouse.destroy();
 		Keyboard.destroy();
 		gl.destroy();
-		BaseGL.destroy();
 	}
 
 	private static float myrand() {

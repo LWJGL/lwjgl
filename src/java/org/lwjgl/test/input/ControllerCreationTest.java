@@ -35,7 +35,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Controller;
-import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
@@ -84,8 +83,7 @@ public class ControllerCreationTest {
   
   private void setupDisplay(boolean fullscreen) {
     try {
-      Display.create(displayMode, 0, 0, 0, fullscreen, "MouseTest");
-      gl = new GL();
+      gl = new GL("ControllerCreationTest", 50, 50, 640, 480, 32, 0, 0, 0);
       gl.create();
 
       glu = new GLU(gl);
@@ -119,7 +117,7 @@ public class ControllerCreationTest {
     
     // recreate display in fullscreen mode
     System.out.print("Destroying display...");
-    BaseGL.destroy();
+    gl.destroy();
     System.out.println("success");
     
     System.out.print("Entering fullscreen mode...");
@@ -141,7 +139,6 @@ public class ControllerCreationTest {
     System.out.print("Shutting down...");
     Controller.destroy();
     gl.destroy();
-    BaseGL.destroy();
     System.out.println("shutdown complete");
   }
 
@@ -164,6 +161,8 @@ public class ControllerCreationTest {
 
     while (Sys.getTime() < endtime) {
 
+      gl.tick();
+      
       Controller.poll();
 
       //controller is a bit fuzzy
@@ -180,7 +179,7 @@ public class ControllerCreationTest {
 
       render();
 
-      gl.swapBuffers();
+      gl.paint();
 
       if (Sys.getTime() - statustime > Sys.getTimerResolution()) {
         System.out.print(".");

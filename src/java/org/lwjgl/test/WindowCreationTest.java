@@ -7,7 +7,7 @@
 package org.lwjgl.test;
 
 import org.lwjgl.*;
-import org.lwjgl.opengl.BaseGL;
+import org.lwjgl.opengl.GL;
 
 /**
  * @author Brian
@@ -15,35 +15,34 @@ import org.lwjgl.opengl.BaseGL;
 public class WindowCreationTest {
 
 	public static void main(String[] args) {
+    GL gl = null;
+    
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     System.out.println("Found " + modes.length + " display modes");
     
-    //find 640*480*32*100
-    DisplayMode mode = modes[0];
-    for(int i=0;i<modes.length;i++) {
-      if(modes[i].width == 640 &&
-          modes[i].height == 480 &&
-          modes[i].bpp == 16 &&
-          mode.freq <= modes[i].freq) {
-            mode = modes[i];
-          }
-    }
-    
-    if(mode == null) {
-      System.out.println("Unable to find displaymode with following features: 640*480*16*60");
-      System.exit(-1);
-    }
-    
-    System.out.println("mode: " + mode);
-    
     try {
-      Display.create(mode, 0, 0, 0, false, "WindowCreationTest");
+      gl = new GL("WindowCreationTest", 50, 50, 320, 240, 32, 0, 0, 0);
     } catch (Exception e) {
 			e.printStackTrace();
 		}
     
+    try {
+      gl.create();
+    } catch (Exception e) {
+			e.printStackTrace();
+		}
+
     System.out.println("Display created");
+
+    while(!gl.isCloseRequested()) {    
+      gl.tick();
+      try {
+        Thread.sleep(100);
+      } catch (Exception e) {
+        e.printStackTrace();
+      } 
+    }
     
-    BaseGL.destroy();
+    gl.destroy();
 	}
 }
