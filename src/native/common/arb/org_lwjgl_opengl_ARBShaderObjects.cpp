@@ -121,6 +121,12 @@ static glGetUniformfvARBPROC glGetUniformfvARB;
 static glGetUniformivARBPROC glGetUniformivARB;
 static glGetShaderSourceARBPROC glGetShaderSourceARB;
 
+static const int initialSourcesSize = 8;
+static int sourcesSize = initialSourcesSize;
+static int sourceCount;
+static GLcharARB** sources = new GLcharARB*[initialSourcesSize];
+static GLint* sourcesLengths = new GLint[initialSourcesSize];
+
 void extgl_InitARBShaderObjects(JNIEnv *env, jobject ext_set)
 {
 	if (!extgl_Extensions.GL_ARB_shader_objects)
@@ -168,11 +174,6 @@ void extgl_InitARBShaderObjects(JNIEnv *env, jobject ext_set)
 
 	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_shader_objects)
 }
-
-int sourceCount;
-int sourcesSize = 8;
-GLcharARB** sources = new GLcharARB*[sourcesSize];
-GLint* sourcesLengths = new GLint[sourcesSize];
 
 /*
  * Class:	org.lwjgl.opengl.ARBShaderObjects
