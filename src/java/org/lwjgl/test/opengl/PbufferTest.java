@@ -202,7 +202,7 @@ public class PbufferTest {
       GL.glEnd();
     }
     GL.glPopMatrix();
-    GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, 0, 0, 512, 512, 0);
+    GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_COMPRESSED_RGB, 0, 0, 512, 512, 0);
     Pbuffer.releaseContext();
 
     // OpenGL window rendering

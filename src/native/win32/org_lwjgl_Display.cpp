@@ -405,12 +405,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
 		currentGamma[i + 512] = rampEntry;
 	}
 	HDC screenDC = GetDC(NULL);
-	try {
-		if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
-			throwException(env, "Failed to set device gamma.")
-		}
-	} catch (...) {
-		throwException(env, "Exception occurred in SetDeviceGammaRamp.")
+	if (SetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
+		throwException(env, "Failed to set device gamma.");
 	}
 	ReleaseDC(NULL, screenDC);
 }

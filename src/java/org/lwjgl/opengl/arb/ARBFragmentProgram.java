@@ -41,6 +41,8 @@ package org.lwjgl.opengl.arb;
 
 public interface ARBFragmentProgram
 {
+	public static final int GL_FRAGMENT_PROGRAM_ARB                            = 0x8804;
+        public static final int GL_PROGRAM_FORMAT_ASCII_ARB                        = 0x8875;
 	public static final int GL_PROGRAM_LENGTH_ARB                              = 0x8627;
 	public static final int GL_PROGRAM_FORMAT_ARB                              = 0x8876;
 	public static final int GL_PROGRAM_BINDING_ARB                             = 0x8677;

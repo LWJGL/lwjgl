@@ -48,6 +48,7 @@
 #include <math.h>
 #include <jni.h>
 #include "org_lwjgl_Display.h"
+#include "common_tools.h"
 
 static int saved_width;
 static int saved_height;
