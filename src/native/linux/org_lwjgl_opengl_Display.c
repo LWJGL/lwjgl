@@ -207,7 +207,7 @@ bool releaseInput(void) {
 	updateInputGrab();
 	if (current_window_mode == FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-		resetDisplayMode(getCurrentScreen());
+		resetDisplayMode(getCurrentScreen(), true);
 	}
 	return true;
 }
@@ -664,7 +664,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSwitchDisplayMode(JNIEnv *
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_resetDisplayMode(JNIEnv *env, jclass clazz) {
-	resetDisplayMode(getCurrentScreen());
+	resetDisplayMode(getCurrentScreen(), false);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {

@@ -225,7 +225,7 @@ static bool setXrandrMode(Display *disp, int screen, mode_info *mode) {
 	return true;
 }
 
-static bool setMode(Display *disp, int screen, int width, int height, int freq/*, bool lock_mode*/) {
+static bool setMode(Display *disp, int screen, int width, int height, int freq, bool temporary) {
 	if (current_extension == NONE)
 		return false;
 	int num_modes, i;
@@ -256,6 +256,11 @@ static bool setMode(Display *disp, int screen, int width, int height, int freq/*
 					continue;
 			}
 			result = true;
+			if (!temporary) {
+				current_width = width;
+				current_height = height;
+				current_freq = freq;
+			}
 			break;
 		}
 	}
@@ -368,7 +373,7 @@ void temporaryRestoreMode(int screen) {
 		printfDebug("Could not open display");
 		return;
 	}
-	if (!setMode(disp, screen, current_width, current_height, current_freq))
+	if (!setMode(disp, screen, current_width, current_height, current_freq, false))
 		printfDebug("Could not restore mode\n");
 	setCurrentGamma(disp, screen, NULL);
 	XCloseDisplay(disp);
@@ -392,20 +397,16 @@ void switchDisplayMode(JNIEnv * env, jobject mode, int screen) {
 		throwException(env, "Could not open display");
 		return;
 	}
-	if (setMode(disp, screen, width, height, freq)) {
-		current_width = width;
-		current_height = height;
-		current_freq = freq;
-	} else
+	if (!setMode(disp, screen, width, height, freq, false))
 		throwException(env, "Could not switch mode.");
 	XCloseDisplay(disp);
 }
 
-void resetDisplayMode(int screen) {
+void resetDisplayMode(int screen, bool temporary) {
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL)
 		return;
-	if (!setMode(disp, screen, saved_width, saved_height, saved_freq)) {
+	if (!setMode(disp, screen, saved_width, saved_height, saved_freq, temporary)) {
 		printfDebug("Failed to reset mode");
 	}
 	if (saved_gamma_ramp_length > 0) {
