@@ -79,10 +79,11 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 
 	HMODULE lib_handle = LoadLibrary("user32.dll");
         int i = 0, j = 0, n = 0;
-	int AvailableModes = 0;
 
 	DISPLAY_DEVICE DisplayDevice;
 	DEVMODE DevMode;
+	jobject *display_mode_objects = NULL;
+	int list_size = 0;
 
         jclass displayModeClass;
 
@@ -106,33 +107,9 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	DevMode.dmSize = sizeof(DEVMODE);
 	DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
   
-	//enumerate all displays, and all of their displaymodes
-	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
-		// continue if mirroring device
-		if((DisplayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) != 0) {
-			continue;
-		}
-		
-		// go ahead
-		printfDebug("Querying %s device\n", DisplayDevice.DeviceString);
-		j = 0;
-		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
-			if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
-				AvailableModes++;
-			}
-		}
-	}
-
-	printfDebug("Found %d displaymodes\n", AvailableModes);
-  
-	// now that we have the count create the classes, and add 'em all - we'll remove dups in Java
-	// Allocate an array of DisplayModes big enough
-        displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
-
-        ret = (*env)->NewObjectArray(env, AvailableModes, displayModeClass, NULL);
-        displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
-  
-	i = 0, n = 0;
+      displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
+      displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
+ 
 	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
 	  // continue if mirroring device
 		if((DisplayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) != 0) {
@@ -144,14 +121,26 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 			// Filter out indexed modes
 			if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 				jobject displayMode;
-                                displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor, 
+				if (list_size <= n) {
+					list_size += 1;
+					display_mode_objects = (jobject *)realloc(display_mode_objects, sizeof(jobject)*list_size);
+					if (display_mode_objects == NULL)
+						return NULL;
+				}
+                        displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor, 
 											 DevMode.dmPelsWidth, DevMode.dmPelsHeight,
 											 DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency);
-
-                                (*env)->SetObjectArrayElement(env, ret, n++, displayMode);
+				display_mode_objects[n++] = displayMode;
 			}
 		}
 	}
+	printfDebug("Found %d displaymodes\n", n);
+  
+      ret = (*env)->NewObjectArray(env, n, displayModeClass, NULL);
+	for (i = 0; i < n; i++) {
+		(*env)->SetObjectArrayElement(env, ret, i, display_mode_objects[i]);
+	}
+	free(display_mode_objects);   
 	FreeLibrary(lib_handle);
 	return ret;
 }
@@ -161,46 +150,46 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
  */
 static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	int i = 0, j = 0, n = 0;
-	int AvailableModes = 0;
 
 	DEVMODE DevMode;
 
-        jclass displayModeClass;
+      jclass displayModeClass;
 
-        jobjectArray ret;
-        jmethodID displayModeConstructor;
+      jobjectArray ret;
+      jmethodID displayModeConstructor;
+	jobject *display_mode_objects = NULL;
+	int list_size = 0;
 
 	ZeroMemory(&DevMode, sizeof(DEVMODE));
 
 	DevMode.dmSize = sizeof(DEVMODE);
   
-	//enumerate all displaymodes
-	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
-		if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
-			AvailableModes++;
-		}
-	}
-		
-	printfDebug("Found %d displaymodes\n", AvailableModes);
-  
-	// now that we have the count create the classes, and add 'em all - we'll remove dups in Java
-	// Allocate an array of DisplayModes big enough
         displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
 
-        ret = (*env)->NewObjectArray(env, AvailableModes, displayModeClass, NULL);
         displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");  
   
-	i = 0, j = 0, n = 0;
 	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
 		// Filter out indexed modes
 		if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 			jobject displayMode;
+				if (list_size <= n) {
+					list_size += 1;
+					display_mode_objects = (jobject *)realloc(display_mode_objects, sizeof(jobject)*list_size);
+					if (display_mode_objects == NULL)
+						return NULL;
+				}
                         displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor,
 			                              DevMode.dmPelsWidth, DevMode.dmPelsHeight,
 						                  DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency);
-                        (*env)->SetObjectArrayElement(env, ret, n++, displayMode);
+				display_mode_objects[n++] = displayMode;
 		}
 	}
+      ret = (*env)->NewObjectArray(env, n, displayModeClass, NULL);
+	for (i = 0; i < n; i++) {
+		(*env)->SetObjectArrayElement(env, ret, i, display_mode_objects[i]);
+	}
+	free(display_mode_objects);
+	printfDebug("Found %d displaymodes\n", n);  
 	return ret;
 }
 
