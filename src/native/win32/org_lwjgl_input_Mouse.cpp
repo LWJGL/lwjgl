@@ -99,6 +99,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass c
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
   HRESULT hr;
 
+  mEnvironment = env;
+  clsMouse = clazz;
+
+  CacheMouseFields();
+
   /* skip enumeration, since we only want system mouse */
   CreateMouse();
 
@@ -151,6 +156,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
+  mEnvironment = env;
+  clsMouse = clazz;
   ShutdownMouse();
 }
 
@@ -161,6 +168,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass c
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
   mDIDevice->Acquire();
+  mEnvironment = env;
+  clsMouse = clazz;
   UpdateMouseFields();
 }
 
