@@ -51,8 +51,8 @@ if test "x$JAVA_HOME" = x; then
 else
   AC_MSG_RESULT($JAVA_HOME)
   JAVA_HOME="$JAVA_HOME"
-  CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
-  CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+  CPPFLAGS="$CPPFLAGS -D_X11 -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+  CFLAGS="$CFLAGS -D_X11 -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 fi
 
 dnl Checks for libraries.
