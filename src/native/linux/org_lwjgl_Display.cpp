@@ -434,10 +434,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 
 /*
  * Class:     org_lwjgl_Display
- * Method:    getAvailableDisplayModes
+ * Method:    nGetAvailableDisplayModes
  * Signature: ()[Lorg/lwjgl/DisplayMode;
  */
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
 	int num_modes, i;

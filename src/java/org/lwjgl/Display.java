@@ -32,6 +32,8 @@
 
 package org.lwjgl;
 
+import java.util.HashSet;
+import java.util.Arrays;
 /**
  * $Id$
  *
@@ -76,7 +78,31 @@ public final class Display {
 	 * 
 	 * @return an array of all display modes the system reckons it can handle.
 	 */
-	public static native DisplayMode[] getAvailableDisplayModes();
+	public static DisplayMode[] getAvailableDisplayModes() {
+    DisplayMode[] unfilteredModes = nGetAvailableDisplayModes();
+    
+    // We'll use a HashSet to filter out the duplicated modes
+    HashSet modes = new HashSet(unfilteredModes.length);    
+    
+    if (unfilteredModes == null) {
+      return new DisplayMode[0];
+    }
+    
+    modes.addAll(Arrays.asList(unfilteredModes));
+    DisplayMode[] filteredModes = new DisplayMode[modes.size()];
+    modes.toArray(filteredModes);
+    
+    if(Sys.DEBUG) {
+      System.out.println("Removed " + (unfilteredModes.length - filteredModes.length) + " duplicate displaymodes");        
+    }
+    
+    return filteredModes;
+	}
+  
+  /** 
+   * Native method for getting displaymodes
+   */
+  public static native DisplayMode[] nGetAvailableDisplayModes();
 
 	/**
 	 * Create a display with the specified display mode. If the display is

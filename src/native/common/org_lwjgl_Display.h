@@ -18,7 +18,7 @@ extern "C" {
  * Method:    getAvailableDisplayModes
  * Signature: ()[Lorg/lwjgl/DisplayMode;
  */
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
   (JNIEnv *, jclass);
 
 /*

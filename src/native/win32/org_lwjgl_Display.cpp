@@ -46,11 +46,13 @@
 #define DIRECTINPUT_VERSION 0x0300
 
 #include <dinput.h>
-
+#include <hash_map>
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 
 void handleMessages();
 extern HINSTANCE dll_handle;
+jobjectArray GetAvailableDisplayModesNT(JNIEnv * env);
+jobjectArray GetAvailableDisplayModes9x(JNIEnv * env);
 
 // Initialise static variables
 bool			oneShotInitialised = false;
@@ -262,53 +264,146 @@ int SetDisplayMode(int width, int height, int bpp, int freq)
  * Method:    getAvailableDisplayModes
  * Signature: ()[Lorg/lwjgl/DisplayMode;
  */
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
+  // Determine whether to use a display name or NULL, which depends on the operating
+	// system
+	OSVERSIONINFO osvi;
 
-	DEVMODE mode;
-
-	// First count the number of display modes.
-	int i = 0, n = 0;
-	while (EnumDisplaySettings(NULL, i ++, &mode) != 0) {
-		// Filter out indexed modes
-		if (mode.dmBitsPerPel <=8) {
-			continue;
-		} else
-			n ++;
-	}
-
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	GetVersionEx(&osvi);
 	
-	// Allocate an array of DisplayModes big enough
+	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
+#ifdef _DEBUG
+  printf("Selecting NT display mode check");
+#endif	
+    return GetAvailableDisplayModesNT(env);
+  }
+  
+#ifdef _DEBUG
+  printf("Selecting 9x display mode check");
+#endif	
+  return GetAvailableDisplayModes9x(env);
+}
+
+/**
+ * Choose displaymodes using NT codepath (multiple displaydevices)
+ */
+jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
+  int i = 0, j = 0, n = 0;
+  int AvailableModes = 0;
+
+  DISPLAY_DEVICE DisplayDevice;
+  DEVMODE DevMode;
+
+  DevMode.dmSize = sizeof(DEVMODE);
+  DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
+  
+  //enumerate all displays, and all of their displaymodes
+  while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
+    while(EnumDisplaySettings(DisplayDevice.DeviceName, j++, &DevMode) != 0) {
+  	  if (DevMode.dmBitsPerPel <=8) {
+	    continue;
+	    }
+      AvailableModes++;
+    }
+  }    	  
+		
+#ifdef _DEBUG
+  printf("Found %d displaymodes\n", AvailableModes);
+#endif
+  
+  // now that we have the count create the classes, and add 'em all - we'll remove dups in Java
+  // Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
 
 	// Note the * 16 - this is because we are manufacturing available alpha/depth/stencil combos.
-	jobjectArray ret = env->NewObjectArray(n * 16, displayModeClass, NULL);
-	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");
+	jobjectArray ret = env->NewObjectArray(AvailableModes * 16, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");  
+  
+  i = 0, j = 0, n = 0;
+  while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
+    while(EnumDisplaySettings(DisplayDevice.DeviceName, j++, &DevMode) != 0) {
+      // Filter out indexed modes
+      if (DevMode.dmBitsPerPel <= 8) {
+	      continue;
+		  } else {
+			  jobject displayMode;
 
-	i = n = 0;
-	while (EnumDisplaySettings(NULL, i ++, &mode) != 0) {
-		// Filter out indexed modes
-		if (mode.dmBitsPerPel <= 8) {
-			continue;
+		    for (int depthBits = 0; depthBits <= 24; depthBits += 8) {
+		      for (int stencilBits = 0; stencilBits <= 8; stencilBits += 8) {
+            for (int alphaBits = 0; alphaBits <= 8; alphaBits += 8) {
+    			
+						  displayMode = env->NewObject( displayModeClass, displayModeConstructor, 
+						                                DevMode.dmPelsWidth, DevMode.dmPelsHeight,
+							                              DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency, 
+							                              alphaBits, depthBits, stencilBits);
+
+						  env->SetObjectArrayElement(ret, n++, displayMode);
+					  }
+				  }
+			  }       
+			}
+    }
+  }
+  return ret;
+}
+
+/**
+ * Choose displaymodes using 9x codepath (single displaydevice)
+ */
+jobjectArray GetAvailableDisplayModes9x(JNIEnv * env) {
+  int i = 0, j = 0, n = 0;
+  int AvailableModes = 0;
+
+  DEVMODE DevMode;
+
+  DevMode.dmSize = sizeof(DEVMODE);
+  
+  //enumerate all displaymodes
+  while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
+	  if (DevMode.dmBitsPerPel <=8) {
+      continue;
+	  }
+    AvailableModes++;
+  }
+		
+#ifdef _DEBUG
+  printf("Found %d displaymodes\n", AvailableModes);
+#endif
+  
+  // now that we have the count create the classes, and add 'em all - we'll remove dups in Java
+  // Allocate an array of DisplayModes big enough
+	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+
+	// Note the * 16 - this is because we are manufacturing available alpha/depth/stencil combos.
+	jobjectArray ret = env->NewObjectArray(AvailableModes * 16, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");  
+  
+  i = 0, j = 0, n = 0;
+  while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
+    // Filter out indexed modes
+    if (DevMode.dmBitsPerPel <= 8) {
+	    continue;
 		} else {
-			jobject displayMode;
+		  jobject displayMode;
+      for (int depthBits = 0; depthBits <= 24; depthBits += 8) {
+		    for (int stencilBits = 0; stencilBits <= 8; stencilBits += 8) {
+          for (int alphaBits = 0; alphaBits <= 8; alphaBits += 8) {
+    			
+					  displayMode = env->NewObject( displayModeClass, displayModeConstructor, 
+						                              DevMode.dmPelsWidth, DevMode.dmPelsHeight,
+						                              DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency, 
+							                            alphaBits, depthBits, stencilBits);
 
-			for (int depthBits = 0; depthBits <= 24; depthBits += 8) {
-				for (int stencilBits = 0; stencilBits <= 8; stencilBits += 8) {
-					for (int alphaBits = 0; alphaBits <= 8; alphaBits += 8) {
-			
-						displayMode = env->NewObject(displayModeClass, displayModeConstructor, mode.dmPelsWidth, mode.dmPelsHeight,
-							mode.dmBitsPerPel, mode.dmDisplayFrequency, alphaBits, depthBits, stencilBits);
-
-						env->SetObjectArrayElement(ret, n ++, displayMode);
+						env->SetObjectArrayElement(ret, n++, displayMode);
 					}
 				}
 			}
-		}
-	}
-
-	return ret;
+	  }
+  }
+  return ret;
 }
 
 /*
