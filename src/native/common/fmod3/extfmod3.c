@@ -77,9 +77,9 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
  *
  * @param path path to try to load dll
  */
-void fmod_create(JNIEnv *env, char* path) {
+void fmod_create(JNIEnv *env, const char* path) {
   // try to create an instance using the supplied path
-  fmod_instance = FMOD_CreateInstance(path);
+  fmod_instance = FMOD_CreateInstance((char *)path);
   
   // if we got one, we need to locate and cache jni stuff used for callbacks
   if (fmod_instance != NULL) {

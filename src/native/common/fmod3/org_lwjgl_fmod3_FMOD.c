@@ -33,7 +33,19 @@
 #include "org_lwjgl_fmod3_FMOD.h"
 #include "extfmod3.h"
 
-static const char* VERSION = "0.9a";
+static const char* VERSION = "0.92";
+
+/**
+ * Concatenate two strings
+ */
+static char *concatenate(const char *str1, const char *str2) {
+	int length1 = strlen(str1);
+	int length2 = strlen(str2);
+	char *str = (char *)calloc(length1 + length2 + 1, sizeof(char));
+	strncpy(str, str1, length1);
+	strncpy(str + length1, str2, length2 + 1);
+	return str;
+}
 
 /*
  * Class:     org_lwjgl_fmod3_FMOD
@@ -52,11 +64,25 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_getNativeLibraryVersion(JNIE
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nCreate(JNIEnv *env, jclass clazz, jobjectArray paths) {
 	jsize pathcount = (*env)->GetArrayLength(env, paths);
 	int i;
+	jstring path;
+	const char *path_str;
+	char *lib_str;
+	
 	for(i=0;i<pathcount;i++) {
-		jstring path = (jstring) (*env)->GetObjectArrayElement(env, paths, i);
-		char *path_str = (char *) (*env)->GetStringUTFChars(env, path, NULL);
-		printfDebug("Trying to load fmod_instance from %s\n", path_str);
-		fmod_create(env, path_str);
+		path = (jstring) (*env)->GetObjectArrayElement(env, paths, i);
+		path_str = (*env)->GetStringUTFChars(env, path, NULL);
+#ifdef _WIN32
+		lib_str = concatenate(path_str, "fmod.dll");
+#endif
+#ifdef _X11
+    lib_str = concatenate(path_str, "libfmod.so");
+#endif
+#ifdef _AGL
+    lib_str = concatenate(path_str, "fmod_cfm.shlb");
+#endif	
+		printfDebug("Testing '%s'\n", lib_str);
+		fmod_create(env, lib_str);
+    free(lib_str);
 		(*env)->ReleaseStringUTFChars(env, path, path_str);
 
 		if(fmod_instance != NULL) {

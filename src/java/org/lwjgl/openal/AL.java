@@ -146,6 +146,7 @@ public final class AL {
 		}
 		
 		String jwsPath = getPathFromJWS(jwsLibname);
+    Sys.log("getPathFromJWS: Paths found: " + jwsPath);
 		if (jwsPath != null) {
 			libpath += seperator
 				+ jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
@@ -160,6 +161,10 @@ public final class AL {
 		for (int i = 0; i < oalPaths.length - 1; i++) {
 			oalPaths[i] = st.nextToken() + File.separator;
 		}
+    
+    for(int i=0 ; i<oalPaths.length; i++) {
+      Sys.log("Will search " + oalPaths[i] + " for " + jwsLibname);
+    }    
 
 		//add cwd path
 		oalPaths[oalPaths.length - 1] = "";
@@ -238,9 +243,7 @@ public final class AL {
 	 */
 	private static String getPathFromJWS(String libname) {
 		try {		 
-
-			Sys.log("JWS Classloader looking for: " + libname);
-			
+      Sys.log("getPathFromJWS: searching for: " + libname);
 			Object o = AL.class.getClassLoader();
 			Class c = o.getClass();
 			Method findLibrary =

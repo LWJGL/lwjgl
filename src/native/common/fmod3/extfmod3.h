@@ -40,7 +40,7 @@
 #include "fmod_errors.h"
 
 // Called to create an FMOD instance
-void fmod_create(JNIEnv *env, char*);
+void fmod_create(JNIEnv *env, const char*);
 
 // Called to destroy our FMOD instance
 void fmod_destroy();

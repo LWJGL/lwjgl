@@ -191,16 +191,16 @@ public class FMOD {
   private static String JNI_LIBRARY_NAME = "lwjgl-fmod3";
   
   /** The native library name on win32 */
-  private static String FMOD_WIN32_LIBRARY_NAME = "fmod.dll";
+  private static String FMOD_WIN32_LIBRARY_NAME = "fmod";
   
   /** The native library name on win32 */
-  private static String FMOD_LINUX_LIBRARY_NAME = "libfmod.so.0";
+  private static String FMOD_LINUX_LIBRARY_NAME = "fmod";
 
   /** The native library name on win32 */
-  private static String FMOD_OSX_LIBRARY_NAME = "fmod_cfm.shlb";
+  private static String FMOD_OSX_LIBRARY_NAME = "fmod";
 
   /** Version of FMOD */
-  public static final String VERSION = "0.9a";
+  public static final String VERSION = "0.92";
   
   static {
     initialize();
@@ -275,7 +275,8 @@ public class FMOD {
       dllName = FMOD_LINUX_LIBRARY_NAME;
     }
     
-    String jwsPath = getPathFromJWS(dllName.substring(0, dllName.indexOf(".")));
+    String jwsPath = getPathFromJWS(dllName);
+    Sys.log("getPathFromJWS: Paths found: " + jwsPath);
     if (jwsPath != null) {
       libpath += seperator
         + jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
@@ -287,7 +288,11 @@ public class FMOD {
 
     //build paths
     for (int i = 0; i < paths.length - 1; i++) {
-      paths[i] = st.nextToken() + File.separator + dllName;
+      paths[i] = st.nextToken() + File.separator;
+    }
+    
+    for(int i=0 ; i<paths.length; i++) {
+    	Sys.log("Will search " + paths[i] + " for " + dllName);
     }
 
     //add cwd path
@@ -323,7 +328,8 @@ public class FMOD {
    * @return Absolute path to library if found, otherwise null
    */
   private static String getPathFromJWS(String libname) {
-    try {    
+    try {
+      Sys.log("getPathFromJWS: searching for: " + libname);
       Object o = FMOD.class.getClassLoader();
       Class c = o.getClass();
       Method findLibrary =
@@ -332,7 +338,7 @@ public class FMOD {
       return (String) findLibrary.invoke(o, arguments);
 
     } catch (Exception e) {
-      System.out.println("Failure locating FMOD using classloader:" + e);
+      Sys.log("Failure locating FMOD using classloader:" + e);
     }
     return null;
   }  
