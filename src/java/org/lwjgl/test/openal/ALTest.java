@@ -2131,8 +2131,7 @@ public class ALTest extends BasicTest {
                     break;
                 case '5':
                     eaxListenerProp.setEnvironment(EAX.EAX_ENVIRONMENT_HANGAR);
-                    EAX.eaxSetProperty(eaxListenerProp, 
-                        EAXListenerProperties.EAXLISTENER_ENVIRONMENT | 
+                    eaxListenerProp.eaxSet(EAXListenerProperties.EAXLISTENER_ENVIRONMENT | 
                         EAXListenerProperties.EAXLISTENER_DEFERRED,
                     	  0);
                     if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
@@ -2141,7 +2140,7 @@ public class ALTest extends BasicTest {
                     
                 case '6':
                     eaxListenerProp.setRoom(-10000);
-                    EAX.eaxSetProperty(eaxListenerProp, 
+                    eaxListenerProp.eaxSet( 
                       EAXListenerProperties.EAXLISTENER_ROOM | 
                       EAXListenerProperties.EAXLISTENER_DEFERRED, 
                       0);
@@ -2151,14 +2150,14 @@ public class ALTest extends BasicTest {
                     
                 case '7':
                 
-                    EAX.eaxGetProperty(eaxBufferProp, 
+                      eaxListenerProp.eaxGet(
                       EAXBufferProperties.EAXBUFFER_ALLPARAMETERS, 
                       source.get(0));
                       
                     if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                         displayALError("eaxGet EAXBUFFER_ALLPARAMETERS : \n", error);
                     eaxBufferProp.setOcclusion(-5000);
-                    EAX.eaxSetProperty(eaxBufferProp, 
+                    eaxBufferProp.eaxSet( 
                       EAXBufferProperties.EAXBUFFER_ALLPARAMETERS | 
                       EAXBufferProperties.EAXBUFFER_DEFERRED, 
                       source.get(0));
@@ -2168,7 +2167,7 @@ public class ALTest extends BasicTest {
                     
                 case '8':
                     eaxBufferProp.setOcclusion(0);
-                    EAX.eaxSetProperty(eaxBufferProp, 
+                    eaxBufferProp.eaxSet(                      
                       EAXBufferProperties.EAXBUFFER_OCCLUSION | 
                       EAXBufferProperties.EAXBUFFER_DEFERRED, 
                       source.get(0));
@@ -2178,7 +2177,7 @@ public class ALTest extends BasicTest {
                     
                 case '9':
                     eaxBufferProp.setObstruction(-5000);
-                    EAX.eaxSetProperty(eaxBufferProp, 
+                    eaxBufferProp.eaxSet( 
                       EAXBufferProperties.EAXBUFFER_OBSTRUCTION, 
                       source.get(1));
                     if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
@@ -2187,7 +2186,7 @@ public class ALTest extends BasicTest {
                     
                 case '0':
                     eaxBufferProp.setObstruction(0);
-                    EAX.eaxSetProperty(eaxBufferProp, 
+                    eaxBufferProp.eaxSet( 
                       EAXBufferProperties.EAXBUFFER_OBSTRUCTION, 
                       source.get(1));
                     if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
@@ -2196,14 +2195,14 @@ public class ALTest extends BasicTest {
                     
                 case 'c':
                     // Commit settings on source 0
-                    EAX.eaxSetProperty(eaxBufferProp, 
+                      eaxBufferProp.eaxSet( 
                       EAXBufferProperties.EAXBUFFER_COMMITDEFERREDSETTINGS,
                     	source.get(0));
                     if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                         displayALError("eaxSet EAXBUFFER_COMMITDEFERREDSETTINGS : \n", error);
                     
                     // Commit Listener settings
-                    EAX.eaxSetProperty(eaxListenerProp, 
+                      eaxListenerProp.eaxSet(
                       EAXListenerProperties.EAXLISTENER_COMMITDEFERREDSETTINGS,
                     	0);
                     if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
@@ -2214,7 +2213,7 @@ public class ALTest extends BasicTest {
         
         // reset EAX level
         eaxListenerProp.setRoom(-10000);
-        EAX.eaxSetProperty(eaxListenerProp, 
+        eaxListenerProp.eaxSet( 
           EAXListenerProperties.EAXLISTENER_ROOM, 
           0);
         if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
