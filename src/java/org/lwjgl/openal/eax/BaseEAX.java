@@ -99,6 +99,17 @@ public abstract class BaseEAX {
         created = false;
         nDestroy();
 	}
+    
+	/**
+	 * Finalizer, marked final. To perform specialized cleanup override the
+	 * cleanup() method.
+	 * 
+	 * @see #cleanup()
+	 */
+	public void finalize() throws Throwable {
+		super.finalize();
+		destroy();
+	}    
 	
 	/**
 	 * Native method the destroy the EAX
