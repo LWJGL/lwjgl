@@ -169,6 +169,7 @@ public class Mouse {
 		currentCursor = cursor;
 		if (currentCursor != null) {
 			nSetNativeCursor(currentCursor.getHandle());
+      currentCursor.setTimeout();
 		} else {
 			nSetNativeCursor(0);
 		}
@@ -511,4 +512,18 @@ public class Mouse {
   public static boolean hasWheel() {
     return hasWheel;
   }
+
+	/**
+	 * Updates the cursor, so that animation can be changed if needed.
+   * This method is called automatically by the window on its update. 
+	 */
+	public static void updateCursor() {
+		if(currentCursor != null && currentCursor.hasTimedOut()) {
+			currentCursor.nextCursor();
+			try {
+				setNativeCursor(currentCursor);
+			} catch (Exception e) {
+			}
+		}
+	}
 }

@@ -58,11 +58,12 @@ public class HWCursorTest {
   private DisplayMode mode;
 
   /** The native cursor */
-  private static Cursor cursor = null;
+  private static Cursor[] cursor = null;
 
   /** The mouse cursor position */
   private static int mouse_x;
   private static int mouse_y;
+  private static int mouse_btn = 0;
 
   /**
    * Executes the test
@@ -89,62 +90,116 @@ public class HWCursorTest {
       glInit();
 
       Keyboard.create();
-      initNativeCursor();
+      Mouse.create();
+      initNativeCursors();
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private static void initNativeCursor() {
-      try {
-          Mouse.create();
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
+  private static void initNativeCursors() throws Exception {
       if ((Mouse.getNativeCursorCaps() & Mouse.CURSOR_ONE_BIT_TRANSPARENCY) == 0) {
           System.out.println("No HW cursor support!");
           System.exit(0);
       }
-      System.out.println("Maximum native cursor size: " + Mouse.getMaxCursorSize() + ", min size: " + Mouse.getMinCursorSize());
+
+      cursor = new Cursor[3];
+      
+      // center
       mouse_x = 400;
       mouse_y = 300;
-      int num_images = 3;
-      int image_size = Mouse.getMaxCursorSize()*Mouse.getMaxCursorSize();
-      IntBuffer cursor_images = ByteBuffer.allocateDirect(num_images*image_size*4).order(ByteOrder.nativeOrder()).asIntBuffer();
-      IntBuffer delays = ByteBuffer.allocateDirect(num_images*4).order(ByteOrder.nativeOrder()).asIntBuffer();
-      delays.put(0, 500);
-      delays.put(1, 500);
-      delays.put(2, 500);
-      int color_scale = 255/Mouse.getMaxCursorSize();
-      int bit_mask = 0x81000000;
-      for (int j = 0; j < image_size; j++) {
-          if (j % 4 == 0)
-              bit_mask = (~bit_mask) & 0x81000000;
-          int color = (j*color_scale/Mouse.getMaxCursorSize()) << 16;
-          cursor_images.put(0*image_size + j, 0x00000020 | color | bit_mask);
+      
+      int cursorImageCount = 1;
+      int cursorWidth = Mouse.getMaxCursorSize();
+      int cursorHeight = cursorWidth;
+      IntBuffer cursorImages;
+      IntBuffer cursorDelays;
+      
+      
+      // Create a single cursor
+      // ==================================
+      cursorImages = ByteBuffer.allocateDirect(cursorWidth*cursorHeight*cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+      cursorDelays = null;
+      for(int j=0; j<cursorWidth; j++) {
+        for(int l=0; l<cursorHeight; l++) {
+        	cursorImages.put(0xffffffff);
+        }
       }
-      for (int j = 0; j < image_size; j++) {
-          if (j % 4 == 0)
-              bit_mask = (~bit_mask) & 0x81000000;
-          int color = (j*color_scale/Mouse.getMaxCursorSize()) << 8;
-          cursor_images.put(1*image_size + j, 0x00000020 | color | bit_mask);
+      cursorImages.flip();
+      cursor[0] = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
+      // ----------------------------------
+      
+      // Create 3 piece animation
+      // ==================================
+      cursorImageCount = 3;
+      cursorImages = ByteBuffer.allocateDirect(cursorWidth*cursorHeight*cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+      cursorDelays = ByteBuffer.allocateDirect(cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+      for(int i=0; i<cursorImageCount; i++) {
+        
+        // make a colored square with a chocolate center 
+        int offColor = 0x00000000;        
+        int onColor = 0xffff0000;
+        
+        // change color according to cursor
+        if(i == 1) {
+          onColor = 0xff00ff00;
+        } else if (i == 2) {
+          onColor = 0xff0000ff;
+        }
+        
+        // calculate size of center
+        int centerSize  = (cursorWidth / 5) * (i + 1);
+        int centerLeft  = cursorWidth / 2 - centerSize / 2;
+        int centerRight = cursorWidth / 2 + centerSize / 2;
+        
+        // go!
+      	for(int j=0; j<cursorWidth; j++) {
+      		for(int l=0; l<cursorHeight; l++) {
+            if(j >= centerLeft && j < centerRight && l >= centerLeft && l < centerRight) {
+              cursorImages.put(offColor);
+            } else {
+              cursorImages.put(onColor);
+            }
+      		}
+      	}
       }
-      for (int j = 0; j < image_size; j++) {
-          if (j % 4 == 0)
-              bit_mask = (~bit_mask) & 0x81000000;
-          int color = (j*color_scale/Mouse.getMaxCursorSize());
-          cursor_images.put(2*image_size + j, 0x00000020 | color | bit_mask);
+      cursorDelays.put(2000).put(2000).put(2000);
+      cursorDelays.flip();
+      cursorImages.flip();
+      
+      cursor[1] = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);
+      // ----------------------------------
+      
+      
+      // Create a 20 piece animation
+      // ==================================
+      cursorImageCount = 20;
+      cursorImages = ByteBuffer.allocateDirect(cursorWidth*cursorHeight*cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+      cursorDelays = ByteBuffer.allocateDirect(cursorImageCount*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+      cursorDelays.put(
+          new int[] { 
+              100, 100, 100, 100, 100,
+              100, 100, 100, 100, 100,
+              100, 100, 100, 100, 100,
+              100, 100, 100, 100, 100
+          });
+      
+      float step = 0xffffffff / 20.0f;
+      for(int i=0; i<cursorImageCount; i++) {
+        for(int j=0; j<cursorWidth; j++) {
+          for(int l=0; l<cursorHeight; l++) {
+            cursorImages.put((int)step);
+          }
+        }
+        step += step;
       }
-      try {
-          if ((Mouse.getNativeCursorCaps() | Mouse.CURSOR_ANIMATION) == 0)
-              num_images = 1;
-          cursor = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, num_images, cursor_images, delays);
-          Mouse.setNativeCursor(cursor);
-      } catch (Exception e) {
-          e.printStackTrace();
-          System.exit(1);
-      }
+      cursorImages.flip();
+      cursorDelays.flip();
+      cursor[2] = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, cursorImageCount, cursorImages, cursorDelays);      
+      // ----------------------------------
+      
+      Mouse.setNativeCursor(cursor[0]);
   }
 
   /**
@@ -191,14 +246,14 @@ public class HWCursorTest {
     // draw white quad
     GL11.glPushMatrix();
     {
-      GL11.glTranslatef(mouse_x, 600 - mouse_y, 0);
+      GL11.glTranslatef(mouse_x, mouse_y, 0);
       GL11.glColor3f(1.0f, 1.0f, 1.0f);
       GL11.glBegin(GL11.GL_QUADS);
       {
-        GL11.glVertex2i(-50, -50);
-        GL11.glVertex2i(50, -50);
-        GL11.glVertex2i(50, 50);
-        GL11.glVertex2i(-50, 50);
+        GL11.glColor3f(1.0f, 0.0f, 0.0f); GL11.glVertex2i(-50, -50);
+        GL11.glColor3f(0.0f, 1.0f, 0.0f); GL11.glVertex2i(50, -50);
+        GL11.glColor3f(0.0f, 0.0f, 1.0f); GL11.glVertex2i(50, 50);
+        GL11.glColor3f(1.0f, 0.0f, 1.0f); GL11.glVertex2i(-50, 50);
       }
       GL11.glEnd();
     }
@@ -213,9 +268,16 @@ public class HWCursorTest {
     Mouse.poll();
 
     if (Mouse.getDX() != 0 || Mouse.getDY() != 0) {
-        mouse_x += Mouse.getDX();
-        mouse_y += Mouse.getDY();
-        System.out.println("mouse_x " + mouse_x + " mouse_y " + mouse_y);
+        mouse_x += Mouse.getDX() / 2;
+        mouse_y += Mouse.getDY() / 2;
+    }
+    
+    if(Mouse.isButtonDown(0)) {
+    	mouse_btn = 0;
+    } else if(Mouse.isButtonDown(1)) {
+      mouse_btn = 1;
+    } else if(Mouse.isButtonDown(2)) {
+      mouse_btn = 2;
     }
 
     //check for fullscreen key
@@ -229,7 +291,9 @@ public class HWCursorTest {
             e.printStackTrace();
             System.exit(1);
         }
-        cursor.destroy();
+        for(int i=0; i<cursor.length; i++) {
+        	cursor[i].destroy();
+        }
         Mouse.destroy();
         Window.destroy();
 
@@ -239,7 +303,7 @@ public class HWCursorTest {
         glInit();
 
         Keyboard.create();
-        initNativeCursor();
+        initNativeCursors();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -255,7 +319,9 @@ public class HWCursorTest {
             e.printStackTrace();
             System.exit(1);
         }
-        cursor.destroy();
+        for(int i=0; i<cursor.length; i++) {
+          cursor[i].destroy();
+        }
         Mouse.destroy();
         Window.destroy();
 
@@ -265,7 +331,7 @@ public class HWCursorTest {
         glInit();
 
         Keyboard.create();
-        initNativeCursor();
+        initNativeCursors();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -281,8 +347,8 @@ public class HWCursorTest {
 
     if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
         try {
-            Mouse.setNativeCursor(cursor);
-            mouse_x = mouse_y = 0;
+            cursor[mouse_btn].resetAnimation();
+            Mouse.setNativeCursor(cursor[mouse_btn]);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -300,7 +366,9 @@ public class HWCursorTest {
         e.printStackTrace();
         System.exit(1);
     }
-    cursor.destroy();
+    for(int i=0; i<cursor.length; i++) {
+      cursor[i].destroy();
+    }
     Mouse.destroy();
     Display.resetDisplayMode();
     Window.destroy();

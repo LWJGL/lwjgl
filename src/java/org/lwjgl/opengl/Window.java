@@ -49,6 +49,7 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Mouse;
 
 public final class Window {
 
@@ -352,7 +353,15 @@ public final class Window {
 	 * Updates the windows internal state. This must be called at least once per video frame
 	 * to handle window close requests, moves, paints, etc.
 	 */
-	public static native void update();
+	public static void update() {
+		nUpdate();
+    
+    // notify Mouse that we've had an update, so that it may update its cursor if needed
+    if(Mouse.isCreated()) {
+    	Mouse.updateCursor();
+    }
+  }
+  public static native void nUpdate();
 
 	/**
 	 * Determines to the best of the platform's ability whether monitor vysnc is enabled on

@@ -131,7 +131,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle(JNIEnv * env, jclass clazz, jstring title_obj) {
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nUpdate(JNIEnv *env, jclass clazz) {
 	EventRef event;
 	OSStatus err = ReceiveNextEvent(0, NULL, 0, true, &event);
 	if (err == noErr) {
