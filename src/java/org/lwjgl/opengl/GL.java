@@ -1640,12 +1640,16 @@ public class GL extends CoreGL implements GLConstants {
 		if (exts == null)
 			return;
 
-		System.out.println("Available WGL extensions:");
+    if(org.lwjgl.Sys.DEBUG) {
+		  System.out.println("Available WGL extensions:");
+    }
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
 
-			System.out.println(ext);
+      if(org.lwjgl.Sys.DEBUG) {
+        System.out.println(ext);
+      }
 
 			Field f = (Field) map.get(ext);
 			if (f != null) {
