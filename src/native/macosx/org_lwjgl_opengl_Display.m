@@ -69,8 +69,10 @@ NSOpenGLContext *createContext(JNIEnv *env, jobject pixel_format, bool double_bu
 	bool stereo = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
 
 	attrib_list_t attribs;
+	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
 	initAttribList(&attribs);
-	putAttrib(&attribs, NSOpenGLPFAAccelerated);
+	if (!allow_software_acceleration)
+		putAttrib(&attribs, NSOpenGLPFAAccelerated);
 	if (double_buffered)
 		putAttrib(&attribs, NSOpenGLPFADoubleBuffer);
 	putAttrib(&attribs, NSOpenGLPFAColorSize); putAttrib(&attribs, bpp);
