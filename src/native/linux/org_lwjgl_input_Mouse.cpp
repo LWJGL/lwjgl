@@ -174,13 +174,18 @@ void releasePointer(void) {
  * Method:    nIsNativeCursorSupported
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nIsNativeCursorSupported
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz) {
+        int caps = 0;
 	if (!isXcursorLoaded())
-		return false;
+		return caps;
 	XcursorBool argb_supported = XcursorSupportsARGB(getCurrentDisplay());
 	XcursorBool anim_supported = XcursorSupportsAnim(getCurrentDisplay());
-	return argb_supported && anim_supported ? JNI_TRUE : JNI_FALSE;
+        if (argb_supported)
+		caps |= org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA | org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARANCY;
+	if (anim_supported)
+		caps |= org_lwjgl_input_Mouse_CURSOR_ANIMATION;
+	return caps;
 }
 
 /*

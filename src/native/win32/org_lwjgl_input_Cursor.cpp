@@ -5,10 +5,10 @@
 /*
  * Class:     org_lwjgl_input_Cursor
  * Method:    nCreateCursor
- * Signature: (IIIIIII)I
+ * Signature: (IIIIIIIII)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
-  (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint image_address)
+  (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jint image_address, jint delay_addresses)
 {
 	int *pixels = (int *)image_address;
 

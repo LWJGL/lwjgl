@@ -48,6 +48,7 @@
 	#undef  DIRECTINPUT_VERSION
 	#define DIRECTINPUT_VERSION 0x0300
 	#include <dinput.h>
+	#include "extgl.h"
 
 	#ifdef _PRIVATE_WINDOW_H_
 		#define WINDOW_H_API
@@ -60,6 +61,7 @@
 		extern bool		isFullScreen;						// Whether we're fullscreen or not
 		extern bool		isMinimized;						// Whether we're minimized or not
 		extern RECT		clientSize;
+		extern HGLRC	hglrc;
 	#endif /* _PRIVATE_WINDOW_H_ */
 
 	/*

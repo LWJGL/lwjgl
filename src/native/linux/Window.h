@@ -46,6 +46,7 @@
 	#include <X11/X.h>
 	#include <X11/Xlib.h>
 	#include <X11/Xutil.h>
+	#include "extgl.h"
 
 	/*
 	 * update input grabbing(keyboard, mouse)
@@ -123,5 +124,20 @@
 	 * Utility function to throw a RuntimeException
 	 */
 	extern void throwRuntimeException(JNIEnv * env, const char * err);
+
+	/*
+	 * convert bit-per-pixel to bits-per-element
+	 */
+	extern int convertToBPE(int bpp);
+
+	/*
+	 * Return the context to the OpenGL window
+	 */
+	void makeCurrent(void);
+
+	/*
+	 * Return the current OpenGL window context
+	 */
+	GLXContext getCurrentContext(void);
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

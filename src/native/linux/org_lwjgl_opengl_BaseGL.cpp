@@ -44,38 +44,67 @@
 #include "org_lwjgl_opengl_BaseGL.h"
 
 static GLXContext context = NULL; // OpenGL rendering context
+static GLXWindow glx_window;
 
-static void makeCurrent(void) {
-	glXMakeCurrent(getCurrentDisplay(), getCurrentWindow(), context);
+void makeCurrent(void) {
+	if (extgl_Extensions.glx.GLX13)
+		glXMakeContextCurrent(getCurrentDisplay(), glx_window, glx_window, context);
+	else
+		glXMakeCurrent(getCurrentDisplay(), getCurrentWindow(), context);
 }
 
 static void releaseContext(void) {
-	glXMakeCurrent(getCurrentDisplay(), None, NULL);
+	if (extgl_Extensions.glx.GLX13)
+		glXMakeContextCurrent(getCurrentDisplay(), None, None, NULL);
+	else
+		glXMakeCurrent(getCurrentDisplay(), None, NULL);
 }
 
-static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
-	int bpe;
+int convertToBPE(int bpp) {
+	int bpe = 4;
 	switch (bpp) {
 		case 32:
 		case 24:
 			bpe = 8;
 			break;
-		case 16:
-			bpe = 4;
-			break;
+		case 16: /* Fall through */
 		default:
-			return JNI_FALSE;
+			break;
 	}
+	return bpe;
+}
 
-	int attriblist[] = { GLX_RGBA,
-		GLX_DOUBLEBUFFER,
-		GLX_DEPTH_SIZE, depth,
-		GLX_RED_SIZE, bpe,
-		GLX_GREEN_SIZE, bpe,
-		GLX_BLUE_SIZE, bpe,
-		GLX_ALPHA_SIZE, alpha,
-		GLX_STENCIL_SIZE, stencil,
-		None };
+GLXContext getCurrentContext(void) {
+	return context;
+}
+
+static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
+	int bpe = convertToBPE(bpp);
+	int attriblist[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
+			    GLX_DOUBLEBUFFER, True,
+			    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+			    GLX_DEPTH_SIZE, depth,
+			    GLX_RED_SIZE, bpe,
+			    GLX_GREEN_SIZE, bpe,
+			    GLX_BLUE_SIZE, bpe,
+			    GLX_ALPHA_SIZE, alpha,
+			    GLX_STENCIL_SIZE, stencil,
+			    None};
+	int num_formats;
+	return glXChooseFBConfig(disp, screen, attriblist, &num_formats);
+}
+
+static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
+	int bpe = convertToBPE(bpp);
+	int attriblist[] = {GLX_RGBA,
+			    GLX_DOUBLEBUFFER,
+			    GLX_DEPTH_SIZE, depth,
+			    GLX_RED_SIZE, bpe,
+			    GLX_GREEN_SIZE, bpe,
+			    GLX_BLUE_SIZE, bpe,
+			    GLX_ALPHA_SIZE, alpha,
+			    GLX_STENCIL_SIZE, stencil,
+			    None};
 	return glXChooseVisual(disp, screen, attriblist);
 }
 
@@ -92,12 +121,71 @@ static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
 
 static void destroy(void) {
 	releaseContext();
+	if (extgl_Extensions.glx.GLX13)
+		glXDestroyWindow(getCurrentDisplay(), glx_window);
 	glXDestroyContext(getCurrentDisplay(), context); 
 	context = NULL;
 	Display *disp = getCurrentDisplay();
 	destroyWindow();
 	XCloseDisplay(disp);
 	extgl_Close();
+}
+
+static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, bool fscreen) {
+	GLXFBConfig *configs = chooseVisualGLX13(disp, screen, bpp, depth, alpha, stencil);
+	if (configs == NULL) {
+		throwException(env, "Could not find a matching pixel format");
+		return false;
+	}
+	context = glXCreateNewContext(disp, configs[0], GLX_RGBA_TYPE, NULL, True);
+	if (context == NULL) {
+		XFree(configs);
+		throwException(env, "Could not create a GLX context");
+		return false;
+	}
+	if (glXIsDirect(disp, context) == False) {
+		glXDestroyContext(disp, context);
+		XFree(configs);
+		throwException(env, "Could not create a GLX context");
+		return false;
+	}
+	XVisualInfo * vis_info = glXGetVisualFromFBConfig(disp, configs[0]);
+#ifdef _DEBUG
+	dumpVisualInfo(disp, vis_info);
+#endif
+	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
+	glx_window = glXCreateWindow(disp, configs[0], getCurrentWindow(), NULL);
+	makeCurrent();
+	XFree(configs);
+	XFree(vis_info);
+	return true;
+}
+
+static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, bool fscreen) {
+	XVisualInfo *vis_info = chooseVisual(disp, screen, bpp, depth, alpha, stencil);
+	if (vis_info == NULL) {
+		throwException(env, "Could not find a matching pixel format");
+		return false;
+	}
+#ifdef _DEBUG
+	dumpVisualInfo(disp, vis_info);
+#endif
+	context = glXCreateContext(disp, vis_info, NULL, True);
+	if (context == NULL) {
+		XFree(vis_info);
+		throwException(env, "Could not create a GLX context");
+		return false;
+	}
+	if (glXIsDirect(disp, context) == False) {
+		glXDestroyContext(disp, context);
+		XFree(vis_info);
+		throwException(env, "Could not create a GLX context");
+		return false;
+	}
+	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
+	makeCurrent();
+	XFree(vis_info);
+	return true;
 }
 
 /*
@@ -110,7 +198,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 {
 	int screen;
 	Display *disp;
-	XVisualInfo *vis_info;
 	bool fscreen = false;
 	if (fullscreen == JNI_TRUE)
 		fscreen = true;
@@ -131,27 +218,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		throwException(env, "Could not init GLX");
 		return;
 	}
-	vis_info = chooseVisual(disp, screen, bpp, depth, alpha, stencil);
-	if (vis_info == NULL) {
+	bool create_success;
+	if (extgl_Extensions.glx.GLX13) {
+		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
+	} else {
+		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, fscreen);
+	}
+	if (!create_success) {
 		XCloseDisplay(disp);
 		extgl_Close();
-		throwException(env, "Could not find a matching pixel format");
 		return;
 	}
-#ifdef _DEBUG
-	dumpVisualInfo(disp, vis_info);
-#endif
-	context = glXCreateContext(disp, vis_info, NULL, True);
-	if (context == NULL) {
-		XFree(vis_info);
-		XCloseDisplay(disp);
-		extgl_Close();
-		throwException(env, "Could not create a GLX context");
-		return;
-	}
-	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
-	XFree(vis_info);
-	makeCurrent();
 	if (extgl_Initialize() != 0) {
 		destroy();
 		throwException(env, "Could not init gl function pointers");
@@ -161,6 +238,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 	const GLubyte * extensions = glGetString(GL_EXTENSIONS);
 	printf("Supported extensions: %s\n", extensions);
 #endif
+}
+
+/*
+ * Class:     org_lwjgl_opengl_BaseGL
+ * Method:    makeCurrent
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_makeCurrent
+  (JNIEnv *env, jobject obj)
+{
+	makeCurrent();
 }
 
 /*
@@ -181,5 +269,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
 {
-	glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());
+	if (extgl_Extensions.glx.GLX13)
+		glXSwapBuffers(getCurrentDisplay(), glx_window);
+	else
+		glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());
 }

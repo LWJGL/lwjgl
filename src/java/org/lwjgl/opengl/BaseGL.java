@@ -88,12 +88,12 @@ public class BaseGL extends Window {
 	 * support windowed mode, then the width and height must match the current
 	 * display resolution, or an Exception will be thrown. Otherwise a fullscreen
 	 * window will be created.
-   * 
+	 * 
 	 * @param title The title of the window
 	 * @param x The position of the window on the x axis. May be ignored.
-   * @param y The position of the window on the y axis. May be ignored.
+	 * @param y The position of the window on the y axis. May be ignored.
 	 * @param width The width of the window's client area
-   * @param height The height of the window's client area
+	 * @param height The height of the window's client area
 	 * @param bpp Require colour bits
 	 * @param alpha Required alpha bits
 	 * @param depth Required depth bits

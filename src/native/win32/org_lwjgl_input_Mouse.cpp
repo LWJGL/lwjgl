@@ -108,6 +108,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
 	mEnvironment = env;
 	clsMouse = clazz;
 
+	ShowCursor(FALSE);
 	CacheMouseFields();
 
 	/* skip enumeration, since we only want system mouse */
@@ -149,12 +150,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nIsNativeCursorSupported
- * Signature: ()Z
+ * Signature: ()I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nIsNativeCursorSupported
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz)
 {
-	return JNI_TRUE;
+	return org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARANCY;
 }
 
 /*
@@ -187,24 +188,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			SetCursorPos(clientRect.left, clientRect.top);
 			cursorPos.x = clientRect.left;
 			cursorPos.y = clientRect.top;
-			while (ShowCursor(TRUE) < 0)
-				;
+			ShowCursor(TRUE);
 			usingNativeCursor = true;
 		}
 	} else {
-		while (ShowCursor(FALSE) >= 0)
-			;
-		SetClassLong(hwnd, GCL_HCURSOR, (LONG)NULL);
-		SetCursor(NULL);
-		mDIDevice->Unacquire();
-		if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+		if (usingNativeCursor) {
+			SetClassLong(hwnd, GCL_HCURSOR, (LONG)NULL);
+			SetCursor(NULL);
+			mDIDevice->Unacquire();
+			if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 #if _DEBUG
-			printf("SetCooperativeLevel failed\n");
+				printf("SetCooperativeLevel failed\n");
 #endif
-			throwException(env, "Could not set the CooperativeLevel.");
-		    return;
+				throwException(env, "Could not set the CooperativeLevel.");
+				return;
+			}
+			ShowCursor(FALSE);
+			usingNativeCursor = false;
 		}
-		usingNativeCursor = false;
 	}
 }
 
@@ -236,9 +237,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
-  mEnvironment = env;
-  clsMouse = clazz;
-  ShutdownMouse();
+	mEnvironment = env;
+	clsMouse = clazz;
+	ShowCursor(FALSE);
+	ShutdownMouse();
 }
 
 /*

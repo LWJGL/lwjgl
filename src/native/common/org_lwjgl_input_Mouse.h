@@ -8,6 +8,12 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
+#undef org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARANCY
+#define org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARANCY 1L
+#undef org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA
+#define org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA 2L
+#undef org_lwjgl_input_Mouse_CURSOR_ANIMATION
+#define org_lwjgl_input_Mouse_CURSOR_ANIMATION 4L
 /* Inaccessible static: created */
 /* Inaccessible static: buttons */
 /* Inaccessible static: dx */
@@ -19,10 +25,10 @@ extern "C" {
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Mouse */
 /*
  * Class:     org_lwjgl_input_Mouse
- * Method:    nIsNativeCursorSupported
- * Signature: ()Z
+ * Method:    nGetNativeCursorCaps
+ * Signature: ()I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nIsNativeCursorSupported
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *, jclass);
 
 /*

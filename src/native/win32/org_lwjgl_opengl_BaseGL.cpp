@@ -47,6 +47,89 @@
 
 HGLRC			hglrc = NULL;						// OpenGL rendering context
 
+static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, int depth, int stencil) {
+	PIXELFORMATDESCRIPTOR pfd = { 
+		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
+		1,                     // version number 
+		flags,         // RGBA type 
+		PFD_TYPE_RGBA,
+		(BYTE)bpp,       
+		0, 0, 0, 0, 0, 0,      // color bits ignored 
+		(BYTE)alpha,       
+		0,                     // shift bit ignored 
+		0,                     // no accumulation buffer 
+		0, 0, 0, 0,            // accum bits ignored 
+		(BYTE)depth,       
+		(BYTE)stencil,     
+		0,                     // No auxiliary buffer 
+		PFD_MAIN_PLANE,        // main layer
+		0,                     // reserved 
+		0, 0, 0                // layer masks ignored
+	};
+
+	// get the best available match of pixel format for the device context  
+	int iPixelFormat = ChoosePixelFormat(hdc, &pfd);
+	if (iPixelFormat == 0) {
+		throwException(env, "Failed to choose pixel format");
+		return -1;
+	}
+
+#ifdef _DEBUG
+	printf("Pixel format is %d\n", iPixelFormat);
+#endif
+
+	// make that the pixel format of the device context 
+	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
+		printf("Failed to set pixel format\n");
+		throwException(env, "Failed to choose pixel format");
+		return -1;
+	}
+
+	// 3. Check the chosen format matches or exceeds our specifications
+	PIXELFORMATDESCRIPTOR desc;
+	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
+		throwException(env, "Could not describe pixel format");
+		return -1;
+	}
+
+	if (desc.cColorBits < bpp) {
+		throwException(env, "This application requires a greater colour depth");
+		return -1;
+	}
+
+	if (desc.cAlphaBits < alpha) {
+		throwException(env, "This application requires a greater alpha depth");
+		return -1;
+	}
+
+	if (desc.cStencilBits < stencil) {
+		throwException(env, "This application requires a greater stencil depth");
+		return -1;
+	}
+
+	if (desc.cDepthBits < depth) {
+		throwException(env, "This application requires a greater depth buffer depth");
+		return -1;
+	}
+
+	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
+		throwException(env, "Mode not supported by hardware");
+		return -1;
+	}
+
+	if ((desc.dwFlags & flags) != flags) {
+		throwException(env, "Capabilities not supported");
+		return -1;
+	}
+
+	// 4. Initialise other things now
+	if (extgl_Open() != 0) {
+		throwException(env, "Failed to open extgl");
+		return -1;
+	}
+	return iPixelFormat;
+}
+
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
@@ -73,96 +156,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		PFD_SUPPORT_OPENGL |   // support OpenGL 
 		PFD_DOUBLEBUFFER;      // double buffered 
 
-	PIXELFORMATDESCRIPTOR pfd = { 
-		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
-		1,                     // version number 
-		flags,         // RGBA type 
-		PFD_TYPE_RGBA,
-		(BYTE)bpp,       
-		0, 0, 0, 0, 0, 0,      // color bits ignored 
-		(BYTE)alpha,       
-		0,                     // shift bit ignored 
-		0,                     // no accumulation buffer 
-		0, 0, 0, 0,            // accum bits ignored 
-		(BYTE)depth,       
-		(BYTE)stencil,     
-		0,                     // No auxiliary buffer 
-		PFD_MAIN_PLANE,        // main layer
-		0,                     // reserved 
-		0, 0, 0                // layer masks ignored
-	};
-
-	// get the best available match of pixel format for the device context  
-	int iPixelFormat = ChoosePixelFormat(hdc, &pfd);
-	if (iPixelFormat == 0) {
-		throwException(env, "Failed to choose pixel format");
+	int iPixelFormat = findPixelFormat(env, flags, bpp, alpha, depth, stencil);
+	if (iPixelFormat == -1) {
 		closeWindow();
 		return;
 	}
-
-#ifdef _DEBUG
-	printf("Pixel format is %d\n", iPixelFormat);
-#endif
-
-	// make that the pixel format of the device context 
-	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
-		printf("Failed to set pixel format\n");
-		throwException(env, "Failed to choose pixel format");
-		closeWindow();
-		return;
-	}
-
-	// 3. Check the chosen format matches or exceeds our specifications
-	PIXELFORMATDESCRIPTOR desc;
-	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
-		throwException(env, "Could not describe pixel format");
-		closeWindow();
-		return;
-	}
-
-	if (desc.cColorBits < bpp) {
-		throwException(env, "This application requires a greater colour depth");
-		closeWindow();
-		return;
-	}
-
-	if (desc.cAlphaBits < alpha) {
-		throwException(env, "This application requires a greater alpha depth");
-		closeWindow();
-		return;
-	}
-
-	if (desc.cStencilBits < stencil) {
-		throwException(env, "This application requires a greater stencil depth");
-		closeWindow();
-		return;
-	}
-
-	if (desc.cDepthBits < depth) {
-		throwException(env, "This application requires a greater depth buffer depth");
-		closeWindow();
-		return;
-	}
-
-	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
-		throwException(env, "Mode not supported by hardware");
-		closeWindow();
-		return;
-	}
-
-	if ((desc.dwFlags & flags) != flags) {
-		throwException(env, "Capabilities not supported");
-		closeWindow();
-		return;
-	}
-
-	// 4. Initialise other things now
-	if (extgl_Open() != 0) {
-		throwException(env, "Failed to open extgl");
-		closeWindow();
-		return;
-	}
-
 	// Create a rendering context
 	hglrc = wglCreateContext(hdc);
 	if (hglrc == NULL) {

@@ -104,19 +104,19 @@ public class HWCursorTest {
       } catch (Exception e) {
           e.printStackTrace();
       }
-      if (!Mouse.isNativeCursorSupported()) {
+      if ((Mouse.getNativeCursorCaps() & Mouse.CURSOR_ONE_BIT_TRANSPARANCY) == 0) {
           System.out.println("No HW cursor support!");
           System.exit(0);
       }
       System.out.println("Maximum native cursor size: " + Mouse.getMaxCursorSize() + ", min size: " + Mouse.getMinCursorSize());
       mouse_x = mouse_y = 0;
-//      int num_images = 3;
+      int num_images = 3;
       int image_size = Mouse.getMaxCursorSize()*Mouse.getMaxCursorSize();
-      IntBuffer cursor_images = ByteBuffer.allocateDirect(/*num_images**/image_size*4).order(ByteOrder.nativeOrder()).asIntBuffer();
-/*      IntBuffer delays = ByteBuffer.allocateDirect(num_images*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+      IntBuffer cursor_images = ByteBuffer.allocateDirect(num_images*image_size*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+      IntBuffer delays = ByteBuffer.allocateDirect(num_images*4).order(ByteOrder.nativeOrder()).asIntBuffer();
       delays.put(0, 500);
       delays.put(1, 500);
-      delays.put(2, 500);*/
+      delays.put(2, 500);
       int color_scale = 255/Mouse.getMaxCursorSize();
       int bit_mask = 0x81000000;
       for (int j = 0; j < image_size; j++) {
@@ -125,16 +125,22 @@ public class HWCursorTest {
           int color = (j*color_scale/Mouse.getMaxCursorSize()) << 16;
           cursor_images.put(0*image_size + j, 0x00000020 | color | bit_mask);
       }
-/*      for (int j = 0; j < image_size; j++) {
+      for (int j = 0; j < image_size; j++) {
+          if (j % 4 == 0)
+              bit_mask = (~bit_mask) & 0x81000000;
           int color = (j*color_scale/Mouse.getMaxCursorSize()) << 8;
-          cursor_images.put(1*image_size + j, 0x80000000 | color);
+          cursor_images.put(1*image_size + j, 0x00000020 | color | bit_mask);
       }
       for (int j = 0; j < image_size; j++) {
-          int color = j*color_scale/Mouse.getMaxCursorSize();
-          cursor_images.put(2*image_size + j, 0x80000000 | color);
-      }*/
+          if (j % 4 == 0)
+              bit_mask = (~bit_mask) & 0x81000000;
+          int color = (j*color_scale/Mouse.getMaxCursorSize());
+          cursor_images.put(2*image_size + j, 0x00000020 | color | bit_mask);
+      }
       try {
-          cursor = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2/*, num_images*/, Sys.getDirectBufferAddress(cursor_images)/*, Sys.getDirectBufferAddress(delays)*/);
+          if ((Mouse.getNativeCursorCaps() | Mouse.CURSOR_ANIMATION) == 0)
+              num_images = 1;
+          cursor = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, num_images, Sys.getDirectBufferAddress(cursor_images), Sys.getDirectBufferAddress(delays));
           Mouse.setNativeCursor(cursor);
       } catch (Exception e) {
           e.printStackTrace();

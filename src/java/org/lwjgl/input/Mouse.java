@@ -48,6 +48,9 @@ import org.lwjgl.*;
  * @version $Revision$
  */
 public class Mouse {
+	public final static int CURSOR_ONE_BIT_TRANSPARANCY = 1;
+	public final static int CURSOR_8_BIT_ALPHA = 2;
+	public final static int CURSOR_ANIMATION = 4;
 
 	/** Has the mouse been created? */
 	private static boolean created;
@@ -92,17 +95,21 @@ public class Mouse {
 	}
 
 	/**
-	 * Check native cursor support
-	 * @return true if native cursors are supported
+	 * Get the capabilities of the native cursor. Return a bit mask of the native cursor capabilities.
+	 * The CURSOR_ONE_BIT_TRANSPARANCY indicates support for cursors with one bit transparancy,
+	 * the CURSOR_8_BIT_ALPHA indicates support for 8 bit alpha and CURSOR_ANIMATION indicates
+	 * support for cursor animations.
+	 * 
+	 * @return A bit mask with native cursor capabilities.
 	 */
-	public static boolean isNativeCursorSupported() {
-		return nIsNativeCursorSupported();
+	public static int getNativeCursorCaps() {
+		return nGetNativeCursorCaps();
 	}
 
 	/**
 	 * Native function to determine native cursor support
 	 */
-	private static native boolean nIsNativeCursorSupported();
+	private static native int nGetNativeCursorCaps();
 
 	/**
 	 * Binds a native cursor. If the cursor argument is null, the
@@ -120,7 +127,7 @@ public class Mouse {
          * @throws Exception if the cursor could not be set for any reason
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws Exception {
-		assert created && isNativeCursorSupported();
+		assert created && ((getNativeCursorCaps() | CURSOR_ONE_BIT_TRANSPARANCY) != 0);
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
 		if (currentCursor != null) {
@@ -136,7 +143,8 @@ public class Mouse {
 
 	/**
 	 * Gets the minimum size of a native cursor. Can only be called if
-	 * The Mouse is created and isNativeCursorSupported() returns true 
+	 * The Mouse is created and cursor caps includes at least
+	 * CURSOR_ONE_BIT_TRANSPARANCY.
 	 *
 	 * @return the maximum size of a native cursor
 	 */
@@ -149,7 +157,8 @@ public class Mouse {
 
 	/**
 	 * Gets the maximum size of a native cursor. Can only be called if
-	 * The Mouse is created and isNativeCursorSupported() returns true 
+	 * The Mouse is created and cursor caps includes at least
+	 * CURSOR_ONE_BIT_TRANSPARANCY.
 	 *
 	 * @return the maximum size of a native cursor
 	 */

@@ -139,9 +139,6 @@ void closeWindow()
 #endif
 		hwnd = NULL;
 	}
-
-	// Show the mouse
-	ShowCursor(TRUE);
 }
 
 /*
@@ -239,7 +236,7 @@ bool registerWindow()
 		windowClass.cbWndExtra = 0;
 		windowClass.hInstance = dll_handle;
 		windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		windowClass.hCursor = NULL/*LoadCursor(NULL, IDC_ARROW)*/;
+		windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 		windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		windowClass.lpszMenuName = NULL;
 		windowClass.lpszClassName = WINDOWCLASSNAME;
@@ -328,7 +325,6 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 
 	// 3. Hide the mouse if necessary
 	isFullScreen = fullscreen == JNI_TRUE;
-	ShowCursor(FALSE);
 
 	// 4. Create DirectInput
 	if (!createDirectInput()) {

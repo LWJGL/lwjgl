@@ -64,12 +64,14 @@ public class Cursor {
 	 * @param height cursor image height
 	 * @param xHotspot the x coordinate of the cursor hotspot
 	 * @param yHotspot the y coordinate of the cursor hotspot
+	 * @param numImages number of cursor images specified. Must be 1 if animations are not supported.
 	 * @param cursorAddress the address of an int array containing the cursor image
+	 * @param delayAddresses the address of animation frame delays, if numImages is greater than 1, else Sys.NULL
          * @throws Exception if the cursor could not be created for any reason
 	 */
-	public Cursor(int width, int height, int xHotspot, int yHotspot, int imageAddress) throws Exception {
+	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, int imageAddress, int delayAddresses) throws Exception {
 		assert Mouse.isCreated();
-		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, imageAddress);
+		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, imageAddress, delayAddresses);
 	}
 
 	/**
@@ -89,7 +91,7 @@ public class Cursor {
 	/**
 	 * Native method to create a native cursor
 	 */
-	private static native int nCreateCursor(int width, int height, int xHotspot, int yHotspot, int imageAddresses);
+	private static native int nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, int imageAddresses, int delayAddresses);
 
 	/**
 	 * Native method to destroy a native cursor
