@@ -71,11 +71,15 @@ public abstract class Window {
 	 * 
 	 * Only one Window can be created() at a time; to create another Window you must
 	 * first destroy() the first window.
+   * 
+   * The dimensions may be ignored if the window cannot be made non-
+   * fullscreen. The position may be ignored in either case.
 	 *
 	 * @param title The window's title
-	 * @param x, y, width, height The position and dimensions of the client area of
-	 * the window. The dimensions may be ignored if the window cannot be made non-
-	 * fullscreen. The position may be ignored in either case.
+	 * @param x Position on x axis of top left corner of window.
+   * @param y Position on y axis of top left corner of window.
+   * @param width Width of window
+   * @param height Height of window
 	 * @throws RuntimeException if you attempt to create more than one window at the same time
 	 */
 	protected Window(String title, int x, int y, int width, int height) {

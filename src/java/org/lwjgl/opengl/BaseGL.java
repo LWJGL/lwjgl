@@ -88,9 +88,12 @@ public class BaseGL extends Window {
 	 * support windowed mode, then the width and height must match the current
 	 * display resolution, or an Exception will be thrown. Otherwise a fullscreen
 	 * window will be created.
+   * 
 	 * @param title The title of the window
-	 * @param x, y The position of the window. May be ignored.
-	 * @param width, height The size of the window's client area
+	 * @param x The position of the window on the x axis. May be ignored.
+   * @param y The position of the window on the y axis. May be ignored.
+	 * @param width The width of the window's client area
+   * @param height The height of the window's client area
 	 * @param bpp Require colour bits
 	 * @param alpha Required alpha bits
 	 * @param depth Required depth bits
@@ -113,9 +116,12 @@ public class BaseGL extends Window {
 	 * Construct a fullscreen instance of GL. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
 	 * fails too then an Exception will be thrown.
+   * 
 	 * @param title The title of the window
-	 * @param x, y The position of the window. May be ignored.
-	 * @param width, height The size of the window's client area
+   * @param bpp Minimum bits per pixel
+   * @param alpha Minimum bits per pixel in alpha buffer
+   * @param depth Minimum bits per pixel in depth buffer
+   * @param stencil Minimum bits per pixel in stencil buffer
 	 */
 	public BaseGL(String title, int bpp, int alpha, int depth, int stencil) {
 		super(title, 0, 0, Display.getWidth(), Display.getHeight());

@@ -190,8 +190,6 @@ public class EAXBufferProperties {
     
     /** 
      * Creates a new instance of EAXBufferProperties 
-     *
-     * @param eaxBufferProperties address of EAXBUFFERPROPERTIES
      */
     public EAXBufferProperties() {
         eaxBufferProperties = ByteBuffer.allocateDirect(EAXBUFFERPROPERTIES_SIZE);
@@ -228,7 +226,7 @@ public class EAXBufferProperties {
     /**
      * Sets the direct path level at high frequencies
      *
-     * @param direct direct path level at high frequencies to set to
+     * @param directHF direct path level at high frequencies to set to
      */
     public void setDirectHF(int directHF) {
         eaxBufferProperties.putInt(directHF_offset, directHF);
@@ -264,7 +262,7 @@ public class EAXBufferProperties {
     /**
      * Sets the room effect level at high frequencies
      *
-     * @param room room effect level at high frequencies to set to 
+     * @param roomHF room effect level at high frequencies to set to 
      */
     public void setRoomHF(int roomHF) {
         eaxBufferProperties.putInt(roomHF_offset, roomHF);

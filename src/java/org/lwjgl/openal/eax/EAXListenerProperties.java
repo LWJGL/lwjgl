@@ -244,7 +244,7 @@ public class EAXListenerProperties {
     /**
      * Sets the room effect level at high frequencies
      *
-     * @param room room effect level at high frequencies to set to 
+     * @param roomHF room effect level at high frequencies to set to 
      */
     public void setRoomHF(int roomHF) {
         eaxListenerProperties.putInt(roomHF_offset, roomHF);

@@ -130,7 +130,8 @@ public final class Display {
 	 * Set the current display mode. The underlying OS may not use an exact match for
 	 * the specified display mode. After successfully calling setDisplayMode() you will
 	 * still need to query the display's characteristics using getDisplayMode().
-	 * @param newMode The new display mode to set
+   * 
+	 * @param mode The new display mode to set
 	 * @throws Exception if the display mode could not be set
 	 */
 	public static native void setDisplayMode(DisplayMode mode) throws Exception;
@@ -207,9 +208,9 @@ public final class Display {
 	 * 
 	 * If gamma is not supported by the underlying hardware then false is returned.
 	 * 
-	 * @param red[] An array of ints to store red gamma in. Must be 256 in length.
-	 * @param green[] An array of ints to store green gamma in. Must be 256 in length.
-	 * @param blue[] An array of ints to store blue gamma in. Must be 256 in length.
+	 * @param red An array of ints to store red gamma in. Must be 256 in length.
+	 * @param green An array of ints to store green gamma in. Must be 256 in length.
+	 * @param blue An array of ints to store blue gamma in. Must be 256 in length.
 	 * @return true if it succeeds, false if it fails
 	 */
 	public static native boolean getGammaRamp(int[] red, int[] green, int[] blue);
@@ -223,9 +224,9 @@ public final class Display {
 	 * 
 	 * When LWJGL exits, any gamma changes are automatically undone.
 	 *
-	 * @param red[] An array of ints to store red gamma in. Must be 256 in length.
-	 * @param green[] An array of ints to store green gamma in. Must be 256 in length.
-	 * @param blue[] An array of ints to store blue gamma in. Must be 256 in length.
+	 * @param red An array of ints to store red gamma in. Must be 256 in length.
+	 * @param green An array of ints to store green gamma in. Must be 256 in length.
+	 * @param blue An array of ints to store blue gamma in. Must be 256 in length.
 	 * 
 	 * @return true if it succeeds, false if it fails
 	 */

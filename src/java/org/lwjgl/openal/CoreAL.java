@@ -81,7 +81,6 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	 * Returns a boolean OpenAL state.
 	 *
-	 * @param parameter state to be queried
 	 * @return boolean state described by pname will be returned.
 	 */
 	public native boolean getBoolean(int pname);
@@ -89,7 +88,6 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	  * Returns an int OpenAL state.
 	  *
-	  * @param parameter state to be queried
 	  * @return int state described by pname will be returned.
 	  */
 	public native int getInteger(int pname);
@@ -97,7 +95,6 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	  * Returns a float OpenAL state.
 	  *
-	  * @param parameter state to be queried
 	  * @return float state described by pname will be returned.
 	  */
 	public native float getFloat(int pname);
@@ -105,7 +102,6 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	  * Returns a double OpenAL state.
 	  *
-	  * @param parameter state to be queried
 	  * @return double state described by pname will be returned.
 	  */
 	public native double getDouble(int pname);
@@ -113,7 +109,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	  * Returns a boolean OpenAL state.
 	  *
-	  * @param parameter state to be queried
+	  * @param pname state to be queried
 	  * @param data address of ByteBuffer to place the booleans in
 	  */
 	public native void getBooleanv(int pname, int data);
@@ -121,7 +117,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	  * Returns an integer OpenAL state.
 	  *
-	  * @param parameter state to be queried
+	  * @param pname state to be queried
 	  * @param data address of ByteBuffer to place the integers in
 	  */
 	public native void getIntegerv(int pname, int data);
@@ -129,7 +125,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	  * Returns a floating point OpenAL state.
 	  *
-	  * @param parameter state to be queried
+	  * @param pname state to be queried
 	  * @param data address of ByteBuffer to place the floats in
 	  */
 	public native void getFloatv(int pname, int data);
@@ -137,7 +133,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	/**
 	  * Returns a double OpenAL state.
 	  *
-	  * @param parameter state to be queried
+	  * @param pname state to be queried
 	  * @param data address of ByteBuffer to place the floats in
 	  */
 	public native void getDoublev(int pname, int data);
@@ -177,7 +173,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * Sets an integer property of the listener
 	 *
 	 * @param pname name of the attribute to be set
-	 * @param integer value to set the attribute to
+	 * @param value value to set the attribute to
 	 */
 	public native void listeneri(int pname, int value);
 
@@ -340,7 +336,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * Plays a set of sources.
 	 *
 	 * @param n number of sources to play
-	 * @param source array of sources to play
+	 * @param sources array of sources to play
 	 */
 	public native void sourcePlayv(int n, int sources);
 
@@ -348,7 +344,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * Pauses a set of sources.
 	 *
 	 * @param n number of sources to pause
-	 * @param source array of sources to pause
+	 * @param sources array of sources to pause
 	 */
 	public native void sourcePausev(int n, int sources);
 
@@ -356,7 +352,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * Stops a set of sources.
 	 *
 	 * @param n number of sources to stop
-	 * @param source array of sources to stop
+	 * @param sources array of sources to stop
 	 */
 	public native void sourceStopv(int n, int sources);
 
@@ -364,7 +360,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * Rewinds a set of sources.
 	 *
 	 * @param n number of sources to rewind
-	 * @param source array of sources to rewind
+	 * @param sources array of sources to rewind
 	 */
 	public native void sourceRewindv(int n, int sources);
 
