@@ -83,8 +83,6 @@ public final class NVHalfFloat {
 
 	public static native void glSecondaryColor3hNV(short red, short green, short blue);
 
-	public static native void glVertexWeighthNV(short weight);
-
 	public static native void glVertexAttrib1hNV(int index, short x);
 
 	public static native void glVertexAttrib2hNV(int index, short x, short y);
