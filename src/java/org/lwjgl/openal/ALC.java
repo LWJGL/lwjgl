@@ -215,10 +215,10 @@ public class ALC {
 	 * @return String property from device
 	 */
 	public static String alcGetString(int pname) {
-		return nGetString(AL.device.device, pname);
+		return nalcGetString(AL.device.device, pname);
 	}
 
-	native static String nGetString(int device, int pname);
+	native static String nalcGetString(int device, int pname);
 
 	/**
 	 * The application can query ALC for information using an integer query function.
@@ -241,10 +241,10 @@ public class ALC {
 	 * @param integerdata ByteBuffer to write integers to
 	 */
 	public static void alcGetInteger(int pname, IntBuffer integerdata) {
-		nGetIntegerv(AL.device.device, pname, integerdata.remaining(), integerdata, integerdata.position());
+		nalcGetIntegerv(AL.device.device, pname, integerdata.remaining(), integerdata, integerdata.position());
 	}
 
-	native static void nGetIntegerv(int device, int pname, int size, Buffer integerdata, int offset);
+	native static void nalcGetIntegerv(int device, int pname, int size, Buffer integerdata, int offset);
 
 	/**
 	 * The <code>alcOpenDevice</code> function allows the application (i.e. the client program) to
@@ -316,10 +316,10 @@ public class ALC {
 	 * alcCreateContext is that it is not marked as processing.
 	 */
 	public static void alcProcessContext() {
-		nProcessContext(AL.context.context);
+		nalcProcessContext(AL.context.context);
 	}
 
-	native static void nProcessContext(int context);
+	native static void nalcProcessContext(int context);
 
 	/**
 	 * The application can query for, and obtain an handle to, the current context for the
@@ -375,10 +375,10 @@ public class ALC {
 	 * @return Errorcode from ALC statemachine
 	 */
 	public static int alcGetError() {
-		return nGetError(AL.device.device);
+		return nalcGetError(AL.device.device);
 	}
 
-	native static int nGetError(int device);
+	native static int nalcGetError(int device);
 
 	/**
 	* Verify that a given extension is available for the current context and the device it
@@ -390,10 +390,10 @@ public class ALC {
 	 * @return true if extension is available, false if not
 	 */
 	public static boolean alcIsExtensionPresent(String extName) {
-		return nIsExtensionPresent(AL.device.device, extName);
+		return nalcIsExtensionPresent(AL.device.device, extName);
 	}
 
-	native static boolean nIsExtensionPresent(int device, String extName);
+	native static boolean nalcIsExtensionPresent(int device, String extName);
 
 	/**
 	 * Enumeration/token values are device independend, but tokens defined for
@@ -406,8 +406,8 @@ public class ALC {
 	 * @return value of enumeration
 	 */
 	public static int alcGetEnumValue(String enumName) {
-		return nGetEnumValue(AL.device.device, enumName);
+		return nalcGetEnumValue(AL.device.device, enumName);
 	}
 
-	native static int nGetEnumValue(int device, String enumName);
+	native static int nalcGetEnumValue(int device, String enumName);
 }

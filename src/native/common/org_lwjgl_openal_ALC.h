@@ -64,18 +64,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nDestroy
 
 /*
  * Class:     org_lwjgl_openal_ALC
- * Method:    nGetString
+ * Method:    nalcGetString
  * Signature: (II)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nGetString
+JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString
   (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_ALC
- * Method:    nGetIntegerv
+ * Method:    nalcGetIntegerv
  * Signature: (IIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nGetIntegerv
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv
   (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
 
 /*
@@ -112,10 +112,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent
 
 /*
  * Class:     org_lwjgl_openal_ALC
- * Method:    nProcessContext
+ * Method:    nalcProcessContext
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nProcessContext
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcProcessContext
   (JNIEnv *, jclass, jint);
 
 /*
@@ -152,26 +152,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcDestroyContext
 
 /*
  * Class:     org_lwjgl_openal_ALC
- * Method:    nGetError
+ * Method:    nalcGetError
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nGetError
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetError
   (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_openal_ALC
- * Method:    nIsExtensionPresent
+ * Method:    nalcIsExtensionPresent
  * Signature: (ILjava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nIsExtensionPresent
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent
   (JNIEnv *, jclass, jint, jstring);
 
 /*
  * Class:     org_lwjgl_openal_ALC
- * Method:    nGetEnumValue
+ * Method:    nalcGetEnumValue
  * Signature: (ILjava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nGetEnumValue
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue
   (JNIEnv *, jclass, jint, jstring);
 
 #ifdef __cplusplus

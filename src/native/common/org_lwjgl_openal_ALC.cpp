@@ -74,7 +74,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nDestroy (JNIEnv *env, jclass c
  * C Specification:
  * ALubyte * alcGetString(ALCdevice *device, ALenum token);
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nGetString (JNIEnv *env, jclass clazz, jint deviceaddress, jint token) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nalcGetString (JNIEnv *env, jclass clazz, jint deviceaddress, jint token) {
 	const char* alcString = (const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token);
 	if(alcString == NULL) {
 		return NULL;
@@ -92,7 +92,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nGetString (JNIEnv *env, jcl
  * C Specification:
  * ALvoid alcGetIntegerv(ALCdevice *device, ALenum token, ALsizei size, ALint *dest);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nGetIntegerv (JNIEnv *env, jclass clazz, jint deviceaddress, jint token, jint size, jobject dest, int offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, jclass clazz, jint deviceaddress, jint token, jint size, jobject dest, int offset) {
   ALint* address = NULL;
   if (dest != NULL) {
     address = offset + (ALint*) env->GetDirectBufferAddress(dest);
@@ -212,7 +212,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent (JNIE
  * C Specification:
  * void alcProcessContext(ALCcontext *context);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nProcessContext (JNIEnv *env, jclass clazz, jint contextaddress) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nalcProcessContext (JNIEnv *env, jclass clazz, jint contextaddress) {
 	alcProcessContext((ALCcontext*) contextaddress);
 }
 
@@ -298,7 +298,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_alcDestroyContext (JNIEnv *env,
  * C Specification:
  * ALCenum alcGetError(ALCdevice *device);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nGetError (JNIEnv *env, jclass clazz, jint deviceaddress) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetError (JNIEnv *env, jclass clazz, jint deviceaddress) {
 	jint result = alcGetError((ALCdevice*) deviceaddress);
 	CHECK_ALC_ERROR
 	return result;
@@ -310,7 +310,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nGetError (JNIEnv *env, jclass 
  * C Specification:
  * ALboolean alcIsExtensionPresent(ALCdevice *device, ALubyte *extName);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nIsExtensionPresent (JNIEnv *env, jclass clazz, jint deviceaddress, jstring extName) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent (JNIEnv *env, jclass clazz, jint deviceaddress, jstring extName) {
 	/* get extension */
 	ALubyte* functionname = (ALubyte*) (env->GetStringUTFChars(extName, 0));
 	
@@ -328,7 +328,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nIsExtensionPresent (JNIEnv
  * C Specification:
  * ALenum alcGetEnumValue(ALCdevice *device, ALubyte *enumName);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nGetEnumValue (JNIEnv *env, jclass clazz, jint deviceaddress, jstring enumName) {	
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, jclass clazz, jint deviceaddress, jstring enumName) {	
 	/* get extension */
 	ALubyte* enumerationname = (ALubyte*) (env->GetStringUTFChars(enumName, 0));
 	
