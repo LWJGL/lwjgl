@@ -54,10 +54,10 @@ public abstract class Window {
 	private int y;
 	
 	/** Width of the window */
-	private final int width;
+	private int width;
 	
 	/** Height of the window */
-	private final int height;
+	private int height;
 	
 	/** Title of the window */
 	private String title;
@@ -65,6 +65,9 @@ public abstract class Window {
 	/**
 	 * Construct a Window. Some OSs may not support non-fullscreen windows; in
 	 * which case the window will be fullscreen regardless.
+	 * 
+	 * A fullscreen window MUST track changes to the display settings and change its
+	 * width and height accordingly.
 	 * 
 	 * In this abstract base class, no actual window peer is constructed. This should be
 	 * done in specialised derived classes.
@@ -140,6 +143,23 @@ public abstract class Window {
 	public final boolean isMinimized() {
 		return minimized;
 	}
+	
+	/**
+	 * Minimize the game and allow the operating system's default display to become
+	 * visible. It is NOT the responsibility of LWJGL's native code to restore the display
+	 * to its normal display settings.
+	 * 
+	 * If the display is already minimized then this is a no-op.
+	 */
+	public final native void minimize();
+	
+	/**
+	 * Restore the game and hide the operating system away. It is NOT the responsibility of
+	 * LWJGL's native code to restore the display to its game display settings.
+	 * 
+	 * If the display is not minimized then this is a no-op/
+	 */
+	public final native void restore();
 	
 	/**
 	 * Determine if the window's contents have been damaged by external events.

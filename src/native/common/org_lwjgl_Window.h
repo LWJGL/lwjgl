@@ -24,6 +24,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_nSetTitle
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_tick
   (JNIEnv *, jobject);
 
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    minimize
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    restore
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif
