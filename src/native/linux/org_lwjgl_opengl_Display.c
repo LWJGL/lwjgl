@@ -710,11 +710,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateContext(JNIEnv 
 		return;
 	}
 
+	bool result;
 	if (USEGLX13) {
-		initWindowGLX13(env, pixel_format);
+		result = initWindowGLX13(env, pixel_format);
 	} else {
-		initWindowGLX(env, pixel_format);
+		result = initWindowGLX(env, pixel_format);
 	}
+	if (!result)
+		decDisplay();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyContext(JNIEnv *env, jobject this) {
