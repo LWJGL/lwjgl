@@ -116,7 +116,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
 	// Handle OS messages here
 	handleMessages();
 	// Then do the flip
-	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+	SwapBuffers(hdc);
 }
 
 /*
