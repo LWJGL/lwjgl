@@ -179,6 +179,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 
 	last_x = last_y = accum_dx = accum_dy = accum_dwheel = 0;
 	buffer_enabled = false;
+	mouse_grabbed = false;
 
 	// Create input
 	ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
@@ -204,11 +205,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 	if (!SetupMouse(env)) {
 		ShutdownMouse();
 		return;
-	}
-	/* Aquire the Mouse */
-	ret = IDirectInputDevice_Acquire(mDIDevice);
-	if(FAILED(ret)) {
-		printfDebug("Failed to acquire mouse\n");
 	}
 	created = true;
 }
@@ -247,7 +243,7 @@ void handleMouseButton(int button, int state) {
 	if(created) {
 		putMouseEvent(button, state, 0);
 		if (button < BUTTON_STATES_SIZE)
-			win32_message_button_states[button] = state != 0 : JNI_TRUE: JNI_FALSE;
+			win32_message_button_states[button] = state != 0 ? JNI_TRUE: JNI_FALSE;
 	}
 }
 
@@ -386,13 +382,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 	if(grab) {
 		if (!mouse_grabbed) {
 			mouse_grabbed = true;
-			ShowCursor(false);
 			IDirectInputDevice_Acquire(mDIDevice);
 		}
 	} else {
 		if (mouse_grabbed) {
 			mouse_grabbed = false;
-			ShowCursor(true);
 			IDirectInputDevice_Unacquire(mDIDevice);
 		}	
 	}
