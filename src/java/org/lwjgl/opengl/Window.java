@@ -471,7 +471,7 @@ public final class Window {
 		int width,
 		int height,
 		boolean fullscreen,
-		boolean undecordated,
+		boolean undecorated,
 		int bpp,
 		int alpha,
 		int depth,
