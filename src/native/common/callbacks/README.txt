@@ -6,7 +6,7 @@ Basically... we have 3 main classes...
 
 CallbackManager, which maintains a mapping of objects to callback containers
 CallbackContainer, the base class which we extend to implement callbacks for specific objects
-JavaMethod, which is a data object which contains information on which method to call from where
+JavaMethod, which is a data object that contains information on method the method to call back too.
 
 GLUQuadricCallbacks is a CallbackContainer for working with quadric callbacks
 eventually you can expect containers to callbacks for glu nurbs and glu tesselators.
@@ -21,7 +21,7 @@ Eventually... to add a callback you would do things like:
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricCallback
   (JNIEnv * env, jobject obj, jint quad, jint type, jint method) {
     /* if this quad has no callback container, make one */
-    if (CallbackManager.get(quad == NULL) {
+    if (CallbackManager.get(quad) == null) {
         CallbackManager.put(quad, new GLUQuadricCallbacks((GLUquadricObj *) quad);
     }
 
