@@ -567,7 +567,7 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_ARB_vertex_blend = GLQueryExtension(env, ext_set, "GL_ARB_vertex_blend");
 	extgl_Extensions.GL_ARB_vertex_buffer_object = GLQueryExtension(env, ext_set, "GL_ARB_vertex_buffer_object");
 	extgl_Extensions.GL_ARB_vertex_program = GLQueryExtension(env, ext_set, "GL_ARB_vertex_program");
-	extgl_Extensions.GL_ARB_vertex_shader = GLQueryExtension(env, ext_set, "GL_ARB_vertex_shaders");
+	extgl_Extensions.GL_ARB_vertex_shader = GLQueryExtension(env, ext_set, "GL_ARB_vertex_shader");
 	extgl_Extensions.GL_ARB_window_pos = GLQueryExtension(env, ext_set, "GL_ARB_window_pos");
 
 	extgl_Extensions.GL_EXT_abgr = GLQueryExtension(env, ext_set, "GL_EXT_abgr");
