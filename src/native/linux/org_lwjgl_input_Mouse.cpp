@@ -233,13 +233,13 @@ int checkPointer() {
 			case ButtonPress:
 				switch (event.xbutton.button) {
 					case Button1:
-						buttons[0] = 1;
+						buttons[0] = JNI_TRUE;
 						break;
 					case Button2:
-						buttons[1] = 1;
+						buttons[1] = JNI_TRUE;
 						break;
 					case Button3:
-						buttons[2] = 1;
+						buttons[2] = JNI_TRUE;
 						break;
 					case Button4:
 						current_z--;
@@ -253,13 +253,13 @@ int checkPointer() {
 			case ButtonRelease:
 				switch (event.xbutton.button) {
 					case Button1:
-						buttons[0] = 0;
+						buttons[0] = JNI_FALSE;
 						break;
 					case Button2:
-						buttons[1] = 0;
+						buttons[1] = JNI_FALSE;
 						break;
 					case Button3:
-						buttons[2] = 0;
+						buttons[2] = JNI_FALSE;
 						break;
 					case Button4: /* Fall through */
 					case Button5:
@@ -324,9 +324,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	last_y = current_y;
 	last_z = current_z;
 	jbooleanArray buttonsArray = (jbooleanArray) env->GetStaticObjectField(clazz, fid_button);
-	unsigned char * class_buttons = (unsigned char *) env->GetPrimitiveArrayCritical(buttonsArray, NULL);
-	memcpy(class_buttons, buttons, NUM_BUTTONS*sizeof(unsigned char));
-	env->ReleasePrimitiveArrayCritical(buttonsArray, class_buttons, 0);
+	env->SetBooleanArrayRegion(buttonsArray, 0, NUM_BUTTONS, buttons);
 	if (current_fullscreen)
 		warpPointer();
 }

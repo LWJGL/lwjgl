@@ -121,7 +121,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	}
 
 	// Grab non-exclusive foreground access to device
-	if (lpdiMouse->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+	if (lpdiMouse->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 		printf("Failed to set mouse coop\n");
 		return JNI_FALSE;
 	}
@@ -135,6 +135,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 		printf("Failed to acquire mouse\n");
 #endif
 	}
+	printf("Acquired mouse\n");
 	return JNI_TRUE;
 }
 
@@ -187,9 +188,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 		env->SetStaticIntField(clazz, fid_dy, (jint)diMouseState.lY);
 		env->SetStaticIntField(clazz, fid_dz, (jint)diMouseState.lZ);
 		jbooleanArray buttonsArray = (jbooleanArray) env->GetStaticObjectField(clazz, fid_button);
-		BYTE * buttons = (BYTE *) env->GetPrimitiveArrayCritical(buttonsArray, NULL);
-		memcpy(buttons, diMouseState.rgbButtons, 4);
-		env->ReleasePrimitiveArrayCritical(buttonsArray, buttons, 0);
+		for (int i = 0; i < 4; i++)
+			if (diMouseState.rgbButtons[i] != 0)
+				diMouseState.rgbButtons[i] = JNI_TRUE;
+			else
+				diMouseState.rgbButtons[i] = JNI_FALSE;
+		env->SetBooleanArrayRegion(buttonsArray, 0, 4, diMouseState.rgbButtons);
 	} else {
 #ifdef _DEBUG
 		printf("Failed to get mouse device state\n");
