@@ -72,9 +72,9 @@ public abstract class BaseEAX {
 		if (!nCreate()) {
 			throw new Exception("EAX instance could not be created.");
 		}
-		created = true;
 		CoreEAX.init();
-	}
+    created = true;
+  }
 
 	/**
 	 * Native method to create EAX instance
