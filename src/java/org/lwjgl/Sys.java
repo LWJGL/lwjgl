@@ -14,11 +14,23 @@ import java.nio.ByteBuffer;
  * Sys.java Created on Aug 1, 2002 by foo
  */
 /**
- * System class (named Sys so as not to conflict with java.lang.Sys)
+ * System class (named Sys so as not to conflict with java.lang.System)
  * 
  * @author foo
  */
 public final class Sys {
+
+	/** Low process priority. @see #setProcessPriority() */
+	public static final int LOW_PRIORITY = -1;
+
+	/** Normal process priority. @see #setProcessPriority() */
+	public static final int NORMAL_PRIORITY = 0;
+
+	/** High process priority. @see #setProcessPriority() */
+	public static final int HIGH_PRIORITY = 1;
+
+	/** Realtime priority. Use at your own risk. @see #setProcessPriority() */
+	public static final int REALTIME_PRIORITY = 2;
 
 	static {
 		initialize();

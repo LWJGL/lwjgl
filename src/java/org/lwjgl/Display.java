@@ -12,8 +12,8 @@ package org.lwjgl;
  */
 /**
  * Encapsulates everything you need for game display.
- * The game display has NO mouse cursor or any other window decorations.
  * It must be created before any input devices are created.
+ * The game display has NO mouse cursor or any other window decorations.
  * 
  * @author foo
  */
@@ -59,16 +59,21 @@ public final class Display {
 	 * @throws Exception if the display mode could not be set
 	 * @see destroy()
 	 */
-	public static void setDisplayMode(DisplayMode displayMode, boolean fullscreen)
+	public static void setDisplayMode(
+		DisplayMode displayMode,
+		boolean fullscreen)
 		throws Exception {
 
 		if (created)
 			return;
-			
-		if (!nCreate(displayMode.width, displayMode.height, displayMode.bpp,
-		displayMode.freq, fullscreen))
-			throw new Exception("Failed to set display mode to "+displayMode);
-			
+
+		if (!nCreate(displayMode.width,
+			displayMode.height,
+			displayMode.bpp,
+			displayMode.freq,
+			fullscreen))
+			throw new Exception("Failed to set display mode to " + displayMode);
+
 		created = true;
 		mode = displayMode;
 	}
@@ -105,43 +110,55 @@ public final class Display {
 
 	/**
 	 * @return the current display width.
+	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getWidth() {
+		assert created : "The display has not been created yet.";
 		return mode.width;
 	}
 
 	/**
 	 * @return the current display height.
+	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getHeight() {
+		assert created : "The display has not been created yet.";
 		return mode.height;
 	}
 
 	/**
 	 * @return the current display depth.
+	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getDepth() {
+		assert created : "The display has not been created yet.";
 		return mode.bpp;
 	}
 
 	/**
 	 * @return the current display frequency.
+	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getFrequency() {
+		assert created : "The display has not been created yet.";
 		return mode.freq;
 	}
 	
 	/**
 	 * @return the current display mode, or null if the display is not yet created
+	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static DisplayMode getDisplayMode() {
+		assert created : "The display has not been created yet.";
 		return mode;
 	}
 	
 	/**
 	 * @return the native handle
+	 * @throws AssertionError if the display has not been created yet.
 	 */
 	public static int getHandle() {
+		assert created : "The display has not been created yet.";
 		return handle;
 	}
 	

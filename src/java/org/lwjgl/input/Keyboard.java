@@ -62,7 +62,9 @@ public class Keyboard {
 	private static native void initIDs();
 	
 	/**
-	 * "Create" the keyboard. The display must first have been created.
+	 * "Create" the keyboard. The display must first have been created. The
+	 * reason for this is so the keyboard has a window to "focus" in.
+	 * 
 	 * @throw Exception if the keyboard could not be created for any reason
 	 */
 	public static void create() throws Exception {
@@ -118,6 +120,7 @@ public class Keyboard {
 	 */
 	public static void read() {
 		assert created : "The keyboard has not been created.";
+		assert readBuffer != null : "Keyboard buffering has not been enabled.";
 		nRead(readBufferAddress);
 	}
 	
