@@ -194,7 +194,7 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
 	if (glXIsDirect(disp, context) == False) {
 		glXDestroyContext(disp, context);
 		XFree(vis_info);
-		throwException(env, "Could not create a GLX context");
+		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
 	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen);
