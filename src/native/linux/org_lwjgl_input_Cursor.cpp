@@ -39,8 +39,11 @@
  * @version $Revision$
  */
 
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xcursor/Xcursor.h>
 #include "org_lwjgl_input_Cursor.h"
-#include "extxcursor.h"
+//#include "extxcursor.h"
 #include "Window.h"
 #include "common_tools.h"
 

@@ -48,7 +48,8 @@
 #include "Window.h"
 #include "common_tools.h"
 #include "org_lwjgl_input_Mouse.h"
-#include "extxcursor.h"
+#include <X11/Xcursor/Xcursor.h>
+//#include "extxcursor.h"
 
 #define NUM_BUTTONS 3
 
@@ -139,8 +140,12 @@ static void grabPointer(void) {
 		if (result == GrabSuccess) {
 			pointer_grabbed = true;
 			// make sure we have a centered window
-			if (isFullscreen())
-				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
+			if (isFullscreen()) {
+				XWindowAttributes win_attribs;
+				XGetWindowAttributes(getDisplay(), getCurrentWindow(), &win_attribs);
+//				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
+				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), win_attribs.x, win_attribs.y);
+			}
 			XFlush(getDisplay());
 		}
 	}
@@ -191,8 +196,8 @@ static void warpPointer(void) {
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz) {
 	int caps = 0;
-	if (!isXcursorLoaded())
-		return caps;
+/*	if (!isXcursorLoaded())
+		return caps;*/
 	XcursorBool argb_supported = XcursorSupportsARGB(getDisplay());
 	XcursorBool anim_supported = XcursorSupportsAnim(getDisplay());
 	if (argb_supported)
@@ -205,7 +210,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor(JNIEnv *env, jclass clazz, jobject cursor_handle) {
 	if (cursor_handle != NULL) {
 		Cursor *cursor = (Cursor *)env->GetDirectBufferAddress(cursor_handle);
-//		Cursor cursor = (Cursor)cursor_handle;
 		current_cursor = *cursor;
 	} else
 		current_cursor = None;
@@ -259,14 +263,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	buffer_enabled = false;
 	updatePointerGrab();
 	initEventQueue(&event_queue);
-	loadXcursor();
+//	loadXcursor();
 	doWarpPointer();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-	closeXcursor();
+//	closeXcursor();
 	ungrabPointer();
 	XFreeCursor(getDisplay(), blank_cursor);
 	created = false;

@@ -1,6 +1,8 @@
 noinst_LTLIBRARIES = libnative.la
 
 libnative_la_SOURCES = $(NATIVE)
+#libnative_la_LIBADD = -lXrender -lXcursor
+#libnative_la_LDFLAGS = -Wl,-static,-lXcursor,-lXrender,-call_shared
 INCLUDES = -I../common
 
 NATIVE = \
@@ -12,6 +14,6 @@ NATIVE = \
   org_lwjgl_opengl_Display.cpp \
   org_lwjgl_opengl_Pbuffer.cpp \
   display.cpp \
-  extgl_glx.cpp \
-  extxcursor.cpp
+  extgl_glx.cpp
+#  extxcursor.cpp
   

@@ -28,8 +28,9 @@ case "$host_os" in
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    AC_LIBTOOL_DLOPEN
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
+								   LDFLAGS="-Wl,-static,-lXcursor,-lXrender,-call_shared"
                                    AC_CHECK_HEADERS([AL/altypes.h AL/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
-				   NATIVE_BUILD_DIR=linux
+								   NATIVE_BUILD_DIR=linux
                                    CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
                                    CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
                                    LIBS="$LIBS $X_LIBS"
