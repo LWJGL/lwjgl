@@ -110,7 +110,7 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	  printf("Querying %s device\n", DisplayDevice.DeviceString);
 #endif
 		j = 0;
-		while(EnumDisplaySettingsExA(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
+		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 #ifdef _DEBUG
 			printf("Checking setting #%d\n", j);
 #endif
@@ -134,7 +134,7 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	i = 0, n = 0;
 	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
 		j = 0;
-		while(EnumDisplaySettingsExA(DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
+		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 			// Filter out indexed modes
 			if (DevMode.dmBitsPerPel > 8) {
 				jobject displayMode;
