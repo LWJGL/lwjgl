@@ -47,7 +47,7 @@
  * Method:    isWGLEXTExtensionsStringAvaiable
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLEXTExtensionsStringAvaiable
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLEXTExtensionsStringAvailable
   (JNIEnv *env, jclass clazz) {
 	return extgl_Extensions.wgl.EXT_extensions_string;
 }
@@ -57,7 +57,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLEXTExtensionsString
  * Method:    isWGLARBExtensionsStringAvaiable
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLARBExtensionsStringAvaiable
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLARBExtensionsStringAvailable
   (JNIEnv *env, jclass clazz) {
 	return extgl_Extensions.wgl.ARB_extensions_string;
 }
