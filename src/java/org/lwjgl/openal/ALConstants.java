@@ -39,5 +39,5 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public interface ALConstants extends BaseALConstants, EAXALConstants {
+public interface ALConstants extends BaseALConstants, BaseEAXConstants {
 }
