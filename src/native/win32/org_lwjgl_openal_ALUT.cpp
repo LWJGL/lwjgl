@@ -44,6 +44,8 @@
 /* OpenAL includes */
 #include <alut.h>
 
+#include <stdlib.h>
+
 /**
  * This function initializes OpenAL.
  * 
@@ -125,6 +127,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
 
 	return alutLoadWAVFile_object;
 }
+
 /**
  * This function loads a WAV file into memory from another memory location.
  *
@@ -132,9 +135,61 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
  * ALvoid alutLoadWAVMemory(ALbyte *memory,ALenum *format,ALvoid **data,ALsizei
  * *size,ALsizei *freq,ALboolean *loop)
  */
+JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env, jobject obj, jbyteArray buffer) {
+	
+	/*
+	 * NOTE: Since Java doesn't support modification of supplied 
+	 * variables (pass by value). We will return a class that 
+	 * holds what is needed to unload the file again.
+	 * The data field contains the offset at whcih the data
+	 * segment begins (ie. a pointer). This will *not* work
+	 * on 64 bit platforms, since we use an jint for this.
+	 */
+
+	/* actual file info object */
+	jobject alutLoadWAVFile_object = NULL;
+
+	/* class type to find */
+	jclass alutLoadWAVFile_class = NULL;
+
+	/* method id - will be set to constructor of alutLoadWAVFile */
+	jmethodID methodID = NULL;
+	
+	/* sound data vars */
+	jint format, size, freq;
+	jboolean loop;
+	void* data;
+	ALbyte* bufferlocation = (ALbyte*) (env->GetByteArrayElements(buffer, 0));
+	
+	/* load wave from mem */
+	alutLoadWAVMemory(bufferlocation, (ALenum*) &format, (void**) &data, (ALsizei*) &size, (ALsizei*) &freq, (ALboolean*) &loop);
+
+	/* get class */
+	alutLoadWAVFile_class = env->FindClass("org/lwjgl/openal/ALUTLoadWAVFile");
+
+	/* get constructor */
+	methodID = env->GetMethodID(alutLoadWAVFile_class, "<init>", "(IIIIZ)V");
+
+	/* create object */
+	alutLoadWAVFile_object = env->NewObject(alutLoadWAVFile_class, methodID, format, (int) data, size, freq, loop);
+
+	/* release bytearray again */
+	env->ReleaseByteArrayElements(buffer, (jbyte*) bufferlocation, 0);
+
+	return alutLoadWAVFile_object;
+}
+
+/**
+ * This function unloads a WAV file from memory and is normally used after copying the data into a buffer
+ * after an alutLoad* function.
+ * 
+ * C Specification:
+ * ALvoid alutUnloadWAV(ALenum format, ALvoid *data, ALsizei size, ALsizei freq)
+ */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV (JNIEnv *env, jobject obj, jint format, jint data, jint size, jint freq) {
 	alutUnloadWAV(format, (void**) data, size, freq);
 }
+
 /**
  * This function exits OpenAL.
  * 
