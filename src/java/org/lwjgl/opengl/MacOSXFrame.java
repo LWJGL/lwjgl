@@ -80,10 +80,13 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		if (fullscreen) {
 			getDevice().setFullScreenWindow(this);
 			getDevice().setDisplayMode(requested_mode);
+			java.awt.DisplayMode real_mode = getDevice().getDisplayMode();
 			/** For some strange reason, the display mode is sometimes silently capped even though the mode is reported as supported */
-			if (requested_mode.getWidth() != getDevice().getDisplayMode().getWidth() || requested_mode.getHeight() != getDevice().getDisplayMode().getHeight()) {
+			if (requested_mode.getWidth() != real_mode.getWidth() || requested_mode.getHeight() != real_mode.getHeight()) {
+				getDevice().setFullScreenWindow(null);
 				syncDispose();
-				throw new LWJGLException("AWT capped mode");
+				throw new LWJGLException("AWT capped mode: requested mode = " + requested_mode.getWidth() + "x" + requested_mode.getHeight() +
+										 " but got " + real_mode.getWidth() + " " + real_mode.getHeight());
 			}
 		}
 		pack();
