@@ -723,6 +723,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nCreate(JNIEnv *env, jclass clazz
 extern "C" {
 #endif
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jclass clazz) {
+/*
     JavaMethodAndExtFunction functions[] = {
         {"ilActiveImage", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveImage, "ilActiveImage", (void*)&ilActiveImage},
         {"ilActiveLayer", "(I)Z", (void*)&Java_org_lwjgl_devil_IL_ilActiveLayer, "ilActiveLayer", (void*)&ilActiveLayer},
@@ -795,6 +796,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jcla
     };
     int num_functions = NUMFUNCTIONS(functions);
     extil_InitializeClass(env, clazz, num_functions, functions);
+*/
 }
 
 #ifdef __cplusplus
