@@ -3373,7 +3373,6 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringEXT(JNI
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    wglGetSwapIntervalEXT
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetSwapIntervalEXT(JNIEnv * env, jclass clazz)
 {
 #ifdef _WIN32
@@ -3385,6 +3384,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetSwapIntervalEXT(JNIEnv * e
 	return JNI_FALSE;
 #endif
 }
+ */
 
 /*
  * Class:     org_lwjgl_opengl_GL
@@ -3504,7 +3504,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglReleaseTexImageARB(JNIEnv
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    wglSwapIntervalEXT
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSwapIntervalEXT(JNIEnv * env, jclass clazz, jint p0)
 {
 #ifdef _WIN32
@@ -3516,6 +3515,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSwapIntervalEXT(JNIEnv * 
 	return JNI_FALSE;
 #endif
 }
+ */
 
 /*
  * Class:     org_lwjgl_opengl_GL

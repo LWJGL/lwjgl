@@ -1407,24 +1407,6 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 
 //	public static native int wglGetPbufferDCARB(int hPbuffer);
 
-/*	public static native boolean wglGetPixelFormatAttribfvARB(
-		int hdc,
-		int iPixelFormat,
-		int iLayerPlane,
-		int nAttributes,
-		int piAttributes,
-		int pfValues);
-
-	public static native boolean wglGetPixelFormatAttribivARB(
-		int hdc,
-		int iPixelFormat,
-		int iLayerPlane,
-		int nAttributes,
-		int piAttributes,
-		int piValues);
-*/
-	public static native int wglGetSwapIntervalEXT();
-
 /*	public static native boolean wglMakeContextCurrentARB(
 		int hDrawDC,
 		int hReadDC,
@@ -1441,29 +1423,7 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 		int hPbuffer,
 		int iBuffer);
 
-/*	public static native boolean wglRestoreBufferRegionARB(
-		Buffer hRegion,
-		int x,
-		int y,
-		int width,
-		int height,
-		int xSrc,
-		int ySrc);
-
-	public static native boolean wglSaveBufferRegionARB(
-		Buffer hRegion,
-		int x,
-		int y,
-		int width,
-		int height);
-*/
-/*	public static native boolean wglSetPbufferAttribARB(
-		int hPbuffer,
-		int piAttribList);
-*/
-	public static native boolean wglSwapIntervalEXT(int interval);
-
-	public static native void glWindowPos2fARB(float x, float y);
+public static native void glWindowPos2fARB(float x, float y);
 
 	public static native void glWindowPos2iARB(int x, int y);
 

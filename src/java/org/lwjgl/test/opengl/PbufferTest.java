@@ -386,9 +386,8 @@ public class PbufferTest {
    */
   private void glInit() {
     //sync frame (only works on windows)
-    if (GLCaps.WGL_EXT_swap_control) {
-      GL.wglSwapIntervalEXT(1);
-    }
+    Window.setVSyncEnabled(true);
+    
     GL.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
     GL.glEnable(GL.GL_TEXTURE_2D);
     // Create shared texture

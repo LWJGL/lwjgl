@@ -25,7 +25,6 @@ import org.lwjgl.Display;
 import org.lwjgl.Sys;
 
 import java.util.HashSet;
-import java.lang.reflect.Method;
 
 public final class Window {
 
@@ -54,8 +53,9 @@ public final class Window {
 		 * I have posted a bug report to apple regarding the behaviour.
 		 *
 		 */
-		if (Display.getPlatform() == Display.PLATFORM_AGL)
+		if (Display.getPlatform() == Display.PLATFORM_AGL) {
 			MacOSX.initMacOSX();
+		}
 	}
 
 	/** Whether the window is currently created, ie. has a native peer */
@@ -93,6 +93,9 @@ public final class Window {
 
 	/** Fullscreen */
 	private static boolean fullscreen;
+	
+	/** Vsync */
+	private static boolean vsync;
 
 	/** Tracks VBO state for the window context */
 	private static VBOTracker vbo_tracker;
@@ -364,4 +367,35 @@ public final class Window {
 	 * to handle window close requests, moves, paints, etc.
 	 */
 	public static native void update();
+
+	/**
+	 * Determines to the best of the platform's ability whether monitor vysnc is enabled on
+	 * this window. The failsafe assumption is that when vsync cannot be determined, this
+	 * method returns false, and you should rely on using a hires timer to throttle your
+	 * framerate rather than relying on monitor sync (even if monitor sync is actually working).
+	 * Therefore you can guarantee that if we return true from this method that we're pretty
+	 * certain vsync is enabled.
+	 * @return boolean
+	 */
+	public static boolean isVSyncEnabled() {
+		assert isCreated()  : "Cannot determine sync of uncreated window";
+		return nIsVSyncEnabled();
+	}
+
+	private static native boolean nIsVSyncEnabled();
+	
+	/**
+	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
+	 * the vertical refresh synchronization of the monitor, and is not guaranteed to be successful.
+	 * To check whether the call <em>might</em> have been successful, call isVSyncEnabled().
+	 * @param sync true to synchronize; false to ignore synchronization
+	 */
+	public static void setVSyncEnabled(boolean sync) {
+		assert isCreated() : "Cannot set sync of uncreated window";
+		nSetVSyncEnabled(sync);
+	}
+
+	private static native boolean nSetVSyncEnabled(boolean sync);
+
+
 }

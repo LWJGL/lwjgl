@@ -315,9 +315,7 @@ public class FullScreenWindowedTest {
     GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     //sync frame (only works on windows)
-    if (GLCaps.WGL_EXT_swap_control) {
-      GL.wglSwapIntervalEXT(1);
-    }
+    Window.setVSyncEnabled(true);
   }
 
   /**

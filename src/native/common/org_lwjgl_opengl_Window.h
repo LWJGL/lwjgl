@@ -19,8 +19,9 @@ extern "C" {
 /* Inaccessible static: depth */
 /* Inaccessible static: stencil */
 /* Inaccessible static: fullscreen */
+/* Inaccessible static: vsync */
 /* Inaccessible static: vbo_tracker */
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024Window */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nSetTitle
@@ -88,7 +89,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIIILjava/util/Vector;)V
+ * Signature: (Ljava/lang/String;IIIIZIIIILjava/util/HashSet;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
   (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint, jobject);
@@ -108,6 +109,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nIsVSyncEnabled
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nSetVSyncEnabled
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
+  (JNIEnv *, jclass, jboolean);
 
 #ifdef __cplusplus
 }

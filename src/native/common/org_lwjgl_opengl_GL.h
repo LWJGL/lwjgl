@@ -2217,27 +2217,11 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringEXT
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    wglGetSwapIntervalEXT
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetSwapIntervalEXT
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_opengl_GL
  * Method:    wglReleaseTexImageARB
  * Signature: (II)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglReleaseTexImageARB
   (JNIEnv *, jclass, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_GL
- * Method:    wglSwapIntervalEXT
- * Signature: (I)Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSwapIntervalEXT
-  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GL

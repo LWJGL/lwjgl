@@ -559,3 +559,26 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused
   (JNIEnv *env, jclass clazz) {
 	return focused;
 }
+
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nIsVSyncEnabled
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
+  (JNIEnv * env, jclass clazz)
+{
+	// Always return false
+	return false;
+}
+
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nSetVSyncEnabled
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
+  (JNIEnv * env, jclass clazz, jboolean sync)
+{
+	// Do nothing on Linux
+}

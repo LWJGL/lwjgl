@@ -58,6 +58,7 @@ static bool closerequested;
 static bool minimized;
 static bool focused;
 static bool dirty;
+static jboolean vsync;
 
 //CAS: commented these out as no longer used
 //extern	void			tempRestoreDisplayMode();
@@ -444,6 +445,8 @@ static bool createWindow(const char * title, int x, int y, int width, int height
 
 	}
 
+	vsync = JNI_FALSE;
+
 	return true;
 }
 
@@ -628,4 +631,33 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused
   (JNIEnv *env, jclass clazz) {
 	return focused;
+}
+
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nIsVSyncEnabled
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
+  (JNIEnv * env, jclass clazz)
+{
+	return vsync;
+}
+
+/*
+ * Class:     org_lwjgl_opengl_Window
+ * Method:    nSetVSyncEnabled
+ * Signature: (Z)Z
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
+  (JNIEnv * env, jclass clazz, jboolean sync)
+{
+	if (extgl_Extensions.WGL_EXT_swap_control) {
+		if (sync == JNI_TRUE) {
+			wglSwapIntervalEXT(1);
+		} else {
+			wglSwapIntervalEXT(0);
+		}
+		vsync = sync;
+	}
 }
