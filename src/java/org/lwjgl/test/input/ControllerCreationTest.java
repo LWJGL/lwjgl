@@ -160,7 +160,7 @@ public class ControllerCreationTest {
 
     while (Sys.getTime() < endtime) {
 
-      Window.tick();
+      Window.updateState();
       
       Controller.poll();
 

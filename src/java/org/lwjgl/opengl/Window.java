@@ -329,9 +329,8 @@ public final class Window {
 	}
 
 	/**
-	 * 'Tick' the window. This must be called at least once per video frame
+	 * Updates the windows internal state. This must be called at least once per video frame
 	 * to handle window close requests, moves, paints, etc.
 	 */
-	public static native void tick();
-
+	public static native void updateState();
 }

@@ -149,7 +149,7 @@ public class HWCursorTest {
     while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
       && !Window.isCloseRequested()) {
       // allow subsystem to get a chance to run too
-      Window.tick();
+      Window.updateState();
 
       if (!Window.isMinimized()) {
         // check keyboard input

@@ -162,7 +162,7 @@ public class MouseCreationTest {
 		long endtime = Sys.getTime() + Sys.getTimerResolution() * 5;
 
 		while (Sys.getTime() < endtime) {
-      Window.tick();
+      Window.updateState();
 
 			Mouse.poll();
 

@@ -118,7 +118,7 @@ public class KeyboardTest {
     Keyboard.enableTranslation();
 
     while (!Window.isCloseRequested()) {
-      Window.tick();
+      Window.updateState();
       
       if(Window.isMinimized()) {
         try {

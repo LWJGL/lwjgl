@@ -156,7 +156,7 @@ public class MovingSoundTest extends BasicTest {
     System.out.println("Move source with arrow keys\nMove listener with right shift and arrowkeys\nEnable EAX effect by pressing e (if available)\nExit with ESC");
 
 		while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-      Window.tick();
+      Window.updateState();
       
       Keyboard.poll();
       if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
