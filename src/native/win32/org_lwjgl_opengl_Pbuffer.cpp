@@ -49,13 +49,10 @@
 #include "common_tools.h"
 
 typedef struct _PbufferInfo {
-
 	HGLRC Pbuffer_context;
-
 	HPBUFFERARB Pbuffer;
-
 	HDC Pbuffer_dc;
-
+	bool use_display_context;
 } PbufferInfo;
 
 /*
@@ -82,72 +79,80 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 	return caps;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nCreate
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *env, jclass clazz,
-  jint width, jint height, jobject pixel_format,
-  jobject pixelFormatCaps, jobject pBufferAttribs)
-{
+static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pixel_format, jobject pixelFormatCaps, const int *pBufferAttribs_ptr) {
 	HWND dummy_hwnd = createWindow(env, 1, 1, false, false);
 	if (dummy_hwnd == NULL) {
-		return (jint)NULL;
+		return NULL;
 	}
 	HDC dummy_hdc = GetDC(dummy_hwnd);
 	int iPixelFormat = findPixelFormat(env, dummy_hdc, pixel_format);
 	if (iPixelFormat == -1) {
-		return (jint)NULL;
+		return NULL;
 	}
 	if (!applyPixelFormat(env, dummy_hdc, iPixelFormat)) {
 		closeWindow(dummy_hwnd, dummy_hdc);
-		return (jint)NULL;
+		return NULL;
 	}
 	
 	HGLRC dummy_hglrc = wglCreateContext(dummy_hdc);
 	if (dummy_hglrc == NULL) {
 		closeWindow(dummy_hwnd, dummy_hdc);
 		throwException(env, "Failed to create OpenGL rendering context");
-		return (jint)NULL;
+		return NULL;
 	}
 	BOOL result = wglMakeCurrent(dummy_hdc, dummy_hglrc);
 	if (!result) {
 		wglDeleteContext(dummy_hglrc);
 		closeWindow(dummy_hwnd, dummy_hdc);
 		throwException(env, "Could not bind context to dummy window");
-		return (jint)NULL;
+		return NULL;
 	}
 	extgl_InitWGL(env);
 
-	iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, false);
-	if (iPixelFormat == -1) {
-		wglDeleteContext(dummy_hglrc);
-		closeWindow(dummy_hwnd, dummy_hdc);
-		throwException(env, "Could not choose pixel formats.");
-		return (jint)NULL;
-	}
-
-	HPBUFFERARB Pbuffer;
-
-	if ( pBufferAttribs != NULL ) {
-		GLuint *pBufferAttribs_ptr = (GLuint *)env->GetDirectBufferAddress(pBufferAttribs);
-		jlong pBufferAttribsSize = env->GetDirectBufferCapacity(pBufferAttribs);
-
-		int pBufferAttribList[9];
-
-		jlong i;
-		for ( i = 0; i < pBufferAttribsSize; )
-			pBufferAttribList[i++] = pBufferAttribs_ptr[i];
-
-		pBufferAttribList[i] = 0;
-
-		Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, pBufferAttribList);
-	} else {
-		Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, NULL);
-	}
+	iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, false);
 	wglDeleteContext(dummy_hglrc);
+	if (iPixelFormat == -1) {
+		closeWindow(dummy_hwnd, dummy_hdc);
+		throwException(env, "Could not find suitable pixel format.");
+		return NULL;
+	}
+	HPBUFFERARB Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, pBufferAttribs_ptr);
 	closeWindow(dummy_hwnd, dummy_hdc);
+	return Pbuffer;
+}
+
+static HGLRC createPbufferContext(JNIEnv *env, HDC Pbuffer_dc) {
+	HGLRC Pbuffer_context = wglCreateContext(Pbuffer_dc);
+	if (Pbuffer_context == NULL) {
+		throwException(env, "Failed to create Pbuffer rendering context");
+		return NULL;
+	}
+	if (getCurrentContext() != NULL && !wglShareLists(getCurrentContext(), Pbuffer_context)) {
+		wglDeleteContext(Pbuffer_context);
+		throwException(env, "Could not share buffer context.");
+		return NULL;
+	}
+	return Pbuffer_context;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
+  (JNIEnv *env, jclass clazz, jboolean use_display_context,
+  jint width, jint height, jobject pixel_format,
+  jobject pixelFormatCaps, jobject pBufferAttribs)
+{
+	HPBUFFERARB Pbuffer;
+	const int *pBufferAttribs_ptr;
+	if ( pBufferAttribs != NULL ) {
+		pBufferAttribs_ptr = (const int *)env->GetDirectBufferAddress(pBufferAttribs);
+	} else {
+		pBufferAttribs_ptr = NULL;
+	}
+	if (use_display_context) {
+		int iPixelFormat = getCurrentPixelFormat();
+		Pbuffer = wglCreatePbufferARB(getCurrentWindowDC(), iPixelFormat, width, height, pBufferAttribs_ptr);
+	} else {
+		Pbuffer = createPbuffer(env, width, height, pixel_format, pixelFormatCaps, pBufferAttribs_ptr);
+	}
 
 	if (Pbuffer == NULL) {
 		throwException(env, "Could not create Pbuffer.");
@@ -160,36 +165,24 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 		throwException(env, "Could not get Pbuffer dc.");
 		return (jint)NULL;
 	}
-
-	// Create a rendering context
-	HGLRC Pbuffer_context = wglCreateContext(Pbuffer_dc);
-	if (Pbuffer_context == NULL) {
-		wglReleasePbufferDCARB(Pbuffer, Pbuffer_dc);
-		wglDestroyPbufferARB(Pbuffer);
-		throwException(env, "Failed to create Pbuffer rendering context");
-		return (jint)NULL;
-	}
-
-	if (display_hglrc != NULL && !wglShareLists(display_hglrc, Pbuffer_context)) {
-		wglDeleteContext(Pbuffer_context);
-		wglReleasePbufferDCARB(Pbuffer, Pbuffer_dc);
-		wglDestroyPbufferARB(Pbuffer);
-		throwException(env, "Could not share buffer context.");
-		return (jint)NULL;
+	HGLRC Pbuffer_context;
+	if (use_display_context) {
+		Pbuffer_context = getCurrentContext();
+	} else {
+		Pbuffer_context = createPbufferContext(env, Pbuffer_dc);
+		if (Pbuffer_context == NULL) {
+			wglReleasePbufferDCARB(Pbuffer, Pbuffer_dc);
+			wglDestroyPbufferARB(Pbuffer);
+			return (jint)NULL;
+		}
 	}
 
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
 	Pbuffer_info->Pbuffer = Pbuffer;
 	Pbuffer_info->Pbuffer_context = Pbuffer_context;
 	Pbuffer_info->Pbuffer_dc = Pbuffer_dc;
-
+	Pbuffer_info->use_display_context = use_display_context == JNI_TRUE;
 	return (jint)Pbuffer_info;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseContext
-  (JNIEnv *env, jclass clazz)
-{
-	wglMakeCurrent(display_hdc, display_hglrc);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
@@ -213,7 +206,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
   (JNIEnv *env, jclass clazz, jint handle)
 {
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)handle;
-	wglDeleteContext(Pbuffer_info->Pbuffer_context);
+	if (!Pbuffer_info->use_display_context)
+		wglDeleteContext(Pbuffer_info->Pbuffer_context);
 	wglReleasePbufferDCARB(Pbuffer_info->Pbuffer, Pbuffer_info->Pbuffer_dc);
 	wglDestroyPbufferARB(Pbuffer_info->Pbuffer);
 	free(Pbuffer_info);

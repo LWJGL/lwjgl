@@ -130,10 +130,4 @@
 	 * convert bit-per-pixel to bits-per-element
 	 */
 	extern int convertToBPE(int bpp);
-
-	/*
-	 * Return the current OpenGL window context
-	 */
-	GLXContext getCurrentContext(void);
-
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

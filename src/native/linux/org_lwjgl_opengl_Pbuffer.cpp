@@ -108,7 +108,7 @@ static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_in
 		XFree(configs);
 		return false;
 	}
-	GLXContext context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, getCurrentContext(), True);
+	GLXContext context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, getCurrentGLXContext(), True);
 	if (context == NULL) {
 		XFree(configs);
 		throwException(env, "Could not create a GLX context");

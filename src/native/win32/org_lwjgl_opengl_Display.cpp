@@ -50,8 +50,8 @@
 static bool				oneShotInitialised = false;			// Registers the LWJGL window class
 
 HWND				display_hwnd = NULL;						              // Handle to the window
-HDC					display_hdc = NULL;							              // Device context
-HGLRC				display_hglrc = NULL;						              // OpenGL context
+static HDC					display_hdc = NULL;							              // Device context
+static HGLRC				display_hglrc = NULL;						              // OpenGL context
 static bool				isFullScreen = false;		        // Whether we're fullscreen or not
 static bool				isMinimized = false;		        // Whether we're minimized or not
 static bool       isFocused = false;              // whether we're focused or not
@@ -80,7 +80,19 @@ bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {
 	return true;
 }
 
-static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool double_buffer) {
+HGLRC getCurrentContext() {
+	return display_hglrc;
+}
+
+HDC getCurrentWindowDC() {
+	return display_hdc;
+}
+
+int getCurrentPixelFormat() {
+	return pixel_format_index;
+}
+
+static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool pbuffer, bool double_buffer) {
 	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
 	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
 	int depth = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "depth", "I"));
@@ -96,7 +108,8 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	initAttribList(&attrib_list);
 	if (window) {
 		putAttrib(&attrib_list, WGL_DRAW_TO_WINDOW_ARB); putAttrib(&attrib_list, TRUE);
-	} else {
+	} 
+	if (pbuffer) {
 		putAttrib(&attrib_list, WGL_DRAW_TO_PBUFFER_ARB); putAttrib(&attrib_list, TRUE);
 	}
 	putAttrib(&attrib_list, WGL_ACCELERATION_ARB); putAttrib(&attrib_list, WGL_FULL_ACCELERATION_ARB);
@@ -117,7 +130,6 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	putAttrib(&attrib_list, WGL_AUX_BUFFERS_ARB); putAttrib(&attrib_list, num_aux_buffers);
 	if ( pixelFormatCaps != NULL ) {
 		if ( !extgl_Extensions.WGL_ARB_render_texture ) {
-			throwException(env, "The render-to-texture extension is not supported.");
 			return -1;
 		}
 
@@ -131,25 +143,24 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	BOOL result = wglChoosePixelFormatARB(hdc, attrib_list.attribs, NULL, 1, &iPixelFormat, &num_formats_returned);
 
 	if (result == FALSE || num_formats_returned < 1) {
-		throwException(env, "Could not choose ARB pixel formats.");
 		return -1;
 	}
 	return iPixelFormat;
 }
 
-int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool double_buffer) {
+int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer) {
 	int bpp;
 	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
 	if (use_hdc_bpp) {
 		bpp = GetDeviceCaps(hdc, BITSPIXEL);
-		int iPixelFormat = findPixelFormatARBFromBPP(env, hdc, pixel_format, pixelFormatCaps, bpp, window, double_buffer);
+		int iPixelFormat = findPixelFormatARBFromBPP(env, hdc, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
 		if (iPixelFormat == -1)
 			bpp = 16;
 		else
 			return iPixelFormat;
 	} else
 		bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "bpp", "I"));
-	return findPixelFormatARBFromBPP(env, hdc, pixel_format, pixelFormatCaps, bpp, window, double_buffer);
+	return findPixelFormatARBFromBPP(env, hdc, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
 }
 
 /*
@@ -708,19 +719,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		return;
 	}
 	extgl_InitWGL(env);
-	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
-	int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
 	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
 	// of multisamples we want. If the extension is present we'll delete the existing
 	// rendering context and start over, using the ARB extension instead to pick the context.
-	if (samples > 0 && extgl_Extensions.WGL_ARB_pixel_format) {
-		pixel_format_index = findPixelFormatARB(env, dummy_hdc, pixel_format, NULL, true, true, true);
-		wglMakeCurrent(NULL, NULL);
-		wglDeleteContext(display_hglrc);
+	if (extgl_Extensions.WGL_ARB_pixel_format) {
+		pixel_format_index = findPixelFormatARB(env, dummy_hdc, pixel_format, NULL, true, true, true, true);
+		if (pixel_format_index == -1) {
+			pixel_format_index = findPixelFormatARB(env, dummy_hdc, pixel_format, NULL, true, true, false, true);		
+		}
 		closeWindow(dummy_hwnd, dummy_hdc);
 		if (pixel_format_index == -1) {
+			jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+			int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
+			if (samples > 0)
+				throwException(env, "Could not find suitable pixel format");
 			return;
 		}
+		wglDeleteContext(display_hglrc);
 		dummy_hwnd = createWindow(env, 1, 1, false, false);
 		if (dummy_hwnd == NULL) {
 			return;
@@ -736,8 +751,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 			throwException(env, "Failed to create OpenGL rendering context (ARB)");
 			return;
 		}
-	} else
+	} else {
 		closeWindow(dummy_hwnd, dummy_hdc);
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env, jclass clazz) {
