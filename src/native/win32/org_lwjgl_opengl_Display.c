@@ -660,7 +660,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *e
 		return;
 	}
 
-	extgl_InitWGL(env);
 	ShowWindow(display_hwnd, SW_SHOW);
 	UpdateWindow(display_hwnd);
 	SetForegroundWindow(display_hwnd);
@@ -725,9 +724,17 @@ static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_f
 	}	
         arb_context = wglCreateContext(arb_hdc);
 	closeWindow(arb_hwnd, arb_hdc);
+	if (arb_context == NULL) {
+		return false;
+	}
+	if (!wglMakeCurrent(arb_hdc, arb_context)) {
+		wglDeleteContext(arb_context);
+		return false;
+	}
+	extgl_InitWGL(env);
 	*pixel_format_index_return = pixel_format_index;
 	*context_return = arb_context;
-	return true;
+	return;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *env, jobject self, jobject pixel_format) {
