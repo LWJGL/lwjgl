@@ -167,7 +167,7 @@ public abstract class Window {
 	/**
 	 * Destroy the window.
 	 */
-	public final void destroy() {
+	public void destroy() {
 		currentWindow = null;
 		nDestroy();
 	}

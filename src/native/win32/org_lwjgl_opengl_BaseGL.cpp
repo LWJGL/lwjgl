@@ -42,51 +42,146 @@
 #include <windows.h>
 #include "org_lwjgl_opengl_BaseGL.h"
 #include "extgl.h"
+#include "Window.h"
 
 HGLRC			hglrc = NULL;						// OpenGL rendering context
-extern HDC		hdc;
-extern HWND		hwnd;
-extern void handleMessages();
+
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
- * Signature: (IIII)Z
+ * Signature: (Ljava/lang/String;IIIIZ)V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv * env, jobject obj)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
+  (JNIEnv * env, jobject obj, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil)
 {
-
-	if (!hwnd) {
-		printf("No window handle\n");
-		return JNI_FALSE;
+	// 1. Create a window
+	const char * titleString = env->GetStringUTFChars(title, NULL);
+	if (!createWindow(titleString, x, y, width, height, fullscreen == JNI_TRUE ? true : false)) {
+		env->ReleaseStringUTFChars(title, titleString);
+		closeWindow();
+		throwException(env, "Failed to create the window.");
+		return;
 	}
-	if (extgl_Open() != 0)
-		return JNI_FALSE;
+	env->ReleaseStringUTFChars(title, titleString);
+
+
+	// 2. Choose a pixel format and set it
+	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window 
+		PFD_SUPPORT_OPENGL |   // support OpenGL 
+		PFD_DOUBLEBUFFER;      // double buffered 
+
+	PIXELFORMATDESCRIPTOR pfd = { 
+		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
+		1,                     // version number 
+		flags,         // RGBA type 
+		PFD_TYPE_RGBA,
+		(BYTE)bpp,       
+		0, 0, 0, 0, 0, 0,      // color bits ignored 
+		(BYTE)alpha,       
+		0,                     // shift bit ignored 
+		0,                     // no accumulation buffer 
+		0, 0, 0, 0,            // accum bits ignored 
+		(BYTE)depth,       
+		(BYTE)stencil,     
+		0,                     // No auxiliary buffer 
+		PFD_MAIN_PLANE,        // main layer
+		0,                     // reserved 
+		0, 0, 0                // layer masks ignored
+	};
+
+	// get the best available match of pixel format for the device context  
+	int iPixelFormat = ChoosePixelFormat(hdc, &pfd);
+	if (iPixelFormat == 0) {
+		throwException(env, "Failed to choose pixel format");
+		closeWindow();
+		return;
+	}
+
+#ifdef _DEBUG
+	printf("Pixel format is %d\n", iPixelFormat);
+#endif
+
+	// make that the pixel format of the device context 
+	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
+		printf("Failed to set pixel format\n");
+		throwException(env, "Failed to choose pixel format");
+		closeWindow();
+		return;
+	}
+
+	// 3. Check the chosen format matches or exceeds our specifications
+	PIXELFORMATDESCRIPTOR desc;
+	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
+		throwException(env, "Could not describe pixel format");
+		closeWindow();
+		return;
+	}
+
+	if (desc.cColorBits < bpp) {
+		throwException(env, "This application requires a greater colour depth");
+		closeWindow();
+		return;
+	}
+
+	if (desc.cAlphaBits < alpha) {
+		throwException(env, "This application requires a greater alpha depth");
+		closeWindow();
+		return;
+	}
+
+	if (desc.cStencilBits < stencil) {
+		throwException(env, "This application requires a greater stencil depth");
+		closeWindow();
+		return;
+	}
+
+	if (desc.cDepthBits < depth) {
+		throwException(env, "This application requires a greater depth buffer depth");
+		closeWindow();
+		return;
+	}
+
+	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
+		throwException(env, "Mode not supported by hardware");
+		closeWindow();
+		return;
+	}
+
+	if ((desc.dwFlags & flags) != flags) {
+		throwException(env, "Capabilities not supported");
+		closeWindow();
+		return;
+	}
+
+	// 4. Initialise other things now
+	if (extgl_Open() != 0) {
+		closeWindow();
+		throwException(env, "Failed to open extgl");
+		return;
+	}
+
 	// Create a rendering context
 	hglrc = wglCreateContext(hdc);
 	if (hglrc == NULL) {
-		printf("Failed to create device context.\n");
-		return JNI_FALSE;
+		closeWindow();
+		throwException(env, "Failed to create OpenGL rendering context");
+		return;
 	}
 
 	// Automatically make it the current context
 	wglMakeCurrent(hdc, hglrc);
 
+	// Initialise GL extensions
 	if (extgl_Initialize() != 0) {
-		printf("Failed to initialize GL\n");
-		return JNI_FALSE;
+		closeWindow();
+		throwException(env, "Failed to initialize GL extensions");
+		return;
 	}
 
-#ifdef _DEBUG
-	char * p = (char *) glGetString(GL_EXTENSIONS);
-    if (NULL == p) {
-        printf("NO extensions available\n");
-    } else {
-		printf("Available extensions:\n%s\n", p);
-	}
-#endif	
-	return JNI_TRUE;
+	// Stash handle back in Java
+	env->SetIntField(obj, env->GetFieldID(env->GetObjectClass(obj), "handle", "I"), (jint) hglrc);
+
 }
 
 /*
@@ -104,41 +199,3 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
 		wglDeleteContext(hglrc); 
 	extgl_Close();
 }
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    swapBuffers
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
-  (JNIEnv *, jobject)
-{
-	// Handle OS messages here
-	handleMessages();
-	// Then do the flip
-	SwapBuffers(hdc);
-}
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nFreeContext
- * Signature: ()V
-*/
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
-  (JNIEnv *env, jobject obj)
-{
-	wglMakeCurrent(hdc, NULL);
-}
-
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nMakeCurrent
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
-  (JNIEnv * env, jobject obj)
-{
-	wglMakeCurrent(hdc, hglrc);
-}
-

@@ -48,6 +48,36 @@ import org.lwjgl.Display;
  * @version $Revision$
  */
 public class GL extends CoreGL implements GLConstants {
+	/**
+	 * @param title
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param bpp
+	 * @param alpha
+	 * @param depth
+	 * @param stencil
+	 * @throws Exception
+	 */
+	public GL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
+		super(title, x, y, width, height, bpp, alpha, depth, stencil);
+		determineAvailableExtensions();
+	}
+
+	/**
+	 * @param title
+	 * @param bpp
+	 * @param alpha
+	 * @param depth
+	 * @param stencil
+	 * @throws Exception
+	 */
+	public GL(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
+		super(title, bpp, alpha, depth, stencil);
+		determineAvailableExtensions();
+	}
+
 	public native void activeStencilFaceEXT(int face);
 
 	public native void activeTextureARB(int texture);
@@ -1541,13 +1571,6 @@ public class GL extends CoreGL implements GLConstants {
 	public boolean OpenGL14;
 
 	/**
-	 * Constructor for GL.
-	 */
-	public GL() {
-		super();
-	}
-
-	/**
 	 * Determine which extensions are available
 	 */
 	private void determineAvailableExtensions() {
@@ -1671,17 +1694,5 @@ public class GL extends CoreGL implements GLConstants {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lwjgl.opengl.BaseGL#init()
-	 */
-	protected void init() {
-		super.init();
-
-		// Right after creation we can go and find out what extensions are
-		// available. We can't actually determine this beforehand of course
-		// because the available extensions can only be determined when there's
-		// an actual rendering context.
-		determineAvailableExtensions();
-	}
 
 }

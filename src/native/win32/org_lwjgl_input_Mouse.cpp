@@ -43,13 +43,10 @@
 #include <windows.h>
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
+#include "Window.h"
 #include <dinput.h>
 
 extern HINSTANCE dll_handle;
-
-extern HWND hwnd;                     // Handle to window
-
-extern LPDIRECTINPUT lpdi;            // DI instance
 LPDIRECTINPUTDEVICE mDIDevice;        // DI Device instance
 DIMOUSESTATE diMouseState;            // State of Mouse
 

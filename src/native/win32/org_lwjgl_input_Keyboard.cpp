@@ -45,16 +45,14 @@
 #define DIRECTINPUT_VERSION 0x0300
 #include <dinput.h>
 #include "org_lwjgl_input_Keyboard.h"
+#include "Window.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
 BYTE readBuffer[KEYBOARD_BUFFER_SIZE*4];
 LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
 jfieldID fid_readBuffer;
 bool translationEnabled;
-extern LPDIRECTINPUT lpdi;
-extern HWND hwnd;
 
-extern void handleMessages(void);
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -214,7 +212,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 			*buf++ = (unsigned char) rgdod[i].dwOfs;
 			*buf++ = (unsigned char) rgdod[i].dwData;
 			if (translationEnabled) {
-				handleMessages();
+				// Cas: shouldn't need to call handleMessages any more
+				// handleMessages();
 				UINT virt_key = MapVirtualKey(rgdod[i].dwOfs, 1);
 				if (virt_key != 0) {
 					if (!GetKeyboardState(state))

@@ -42,11 +42,33 @@ package org.lwjgl.opengl;
  */
 public class CoreGL extends BaseGL implements CoreGLConstants {
 	
+
 	/**
-	 * Constructor for CoreGL.
+	 * @param title
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param bpp
+	 * @param alpha
+	 * @param depth
+	 * @param stencil
+	 * @throws Exception
 	 */
-	public CoreGL() {
-		super();
+	public CoreGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
+		super(title, x, y, width, height, bpp, alpha, depth, stencil);
+	}
+
+	/**
+	 * @param title
+	 * @param bpp
+	 * @param alpha
+	 * @param depth
+	 * @param stencil
+	 * @throws Exception
+	 */
+	public CoreGL(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
+		super(title, bpp, alpha, depth, stencil);
 	}
 
 	public native void accum(int op, float value);

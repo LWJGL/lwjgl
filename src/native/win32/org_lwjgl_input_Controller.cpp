@@ -44,13 +44,12 @@
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0500
 #include <dinput.h>
+#include "Window.h"
 
 #define CONTROLLER_AXISMAX 1000       // Maxmimum range to which we'll gauge the swing
 #define CONTROLLER_AXISMIN -1000      // Minimum range to which we'll gauge the swing
 
 extern HINSTANCE dll_handle;
-
-extern HWND hwnd;                     // Handle to window
 
 IDirectInput* cDI;                   // DI instance
 IDirectInputDevice2* cDIDevice;       // DI Device instance

@@ -21,6 +21,14 @@ extern "C" {
 /* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Display
+ * Method:    init
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_Display
  * Method:    nGetAvailableDisplayModes
  * Signature: ()[Lorg/lwjgl/DisplayMode;
  */
@@ -29,26 +37,18 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 
 /*
  * Class:     org_lwjgl_Display
- * Method:    nCreate
- * Signature: (IIIIIIIZLjava/lang/String;)Z
+ * Method:    setDisplayMode
+ * Signature: (Lorg/lwjgl/DisplayMode;)V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jboolean, jstring);
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_Display
- * Method:    nDestroy
+ * Method:    resetDisplayMode
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_Display
- * Method:    isMinimized
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
   (JNIEnv *, jclass);
 
 /*
@@ -58,6 +58,22 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
   (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    getGammaRamp
+ * Signature: ()[I
+ */
+JNIEXPORT jintArray JNICALL Java_org_lwjgl_Display_getGammaRamp
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    setGammaRamp
+ * Signature: ([I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
+  (JNIEnv *, jclass, jintArray);
 
 #ifdef __cplusplus
 }

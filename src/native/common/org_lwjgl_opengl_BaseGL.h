@@ -7,16 +7,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: currentWindow */
 /* Inaccessible static: currentContext */
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024BaseGL */
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
- * Signature: (IIII)Z
+ * Signature: (Ljava/lang/String;IIIIZIIII)V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv *, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
+  (JNIEnv *, jobject, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
@@ -24,30 +23,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
-  (JNIEnv *, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    swapBuffers
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
-  (JNIEnv *, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nReleaseContext
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
-  (JNIEnv *, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nMakeCurrent
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus
