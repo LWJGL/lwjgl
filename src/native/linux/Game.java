@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Simple test java program.
+ * Simple java test program.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$

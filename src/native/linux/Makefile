@@ -42,25 +42,25 @@
 GCC = gcc
 LINK = gcc
 JAVAHOME=/usr/java/j2sdk1.4.1_01
-JAVAC=$(JAVAHOME)/bin/javac
-JAVAH=$(JAVAHOME)/bin/javah
-CP=../../java
-JAVAFILES=$(shell find ../../java -name \*.java -print|grep -v CVS)
-CLASSFILES=$(JAVAFILES:.java=.class)
+LIBOBJS=org_lwjgl_Display.o org_lwjgl_Sys.o org_lwjgl_opengl_BaseGL.o org_lwjgl_opengl_GL.o org_lwjgl_opengl_CoreGL.o org_lwjgl_input_Keyboard.o org_lwjgl_opengl_GLU.o org_lwjgl_input_Mouse.o
+DEBUG_FLAGS=-D_DEBUG
+LINKOPTS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU
 
 all: liblwjgl.so
 
-liblwjgl.so: org_lwjgl_Display.o org_lwjgl_Sys.o org_lwjgl_opengl_BaseGL.o org_lwjgl_opengl_GL.o org_lwjgl_opengl_CoreGL.o org_lwjgl_input_Keyboard.o org_lwjgl_opengl_GLU.o org_lwjgl_input_Mouse.o
-	$(LINK) -shared -o $@ $^ -L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU
+
+liblwjgl_d.so: $(LIBOBJS)
+	$(LINK) -shared -o $@ $^ $(LINKOPTS)
+	cp $@ ../../../bin/
+
+liblwjgl.so: $(LIBOBJS)
+	$(LINK) -shared -o $@ $^ $(LINKOPTS)
 	cp $@ ../../../bin/
 
 .SUFFIXES:      .cpp .so .o .java .h .class
 
-%.class: %.java
-	$(JAVAC) -deprecation -O -source 1.4 -classpath $(CP) $<
-
 %.o : %.c
-	$(GCC) -Wall -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
+	$(GCC) $(DEBUG_FLAGS) -Wall -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
 
 testprog : main.o
 	$(LINK) -o $@ $< -L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU
