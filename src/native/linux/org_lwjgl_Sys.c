@@ -39,6 +39,7 @@
  * @version $Revision$
  */
 
+#include <sys/time.h>
 #include "org_lwjgl_Sys.h"
 
 long int		hires_timer_freq;			// Hires timer frequency
@@ -78,6 +79,20 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 	return hires_timer_freq;
 }
 
+long queryTime(void) {
+	struct timeval tv;
+	if (gettimeofday(&tv, NULL) == -1) {
+#ifdef _DEBUG
+		printf("Could not read current time\n");
+#endif
+	}		
+	long result = tv.tv_sec * 1000000l + tv.tv_usec;
+#ifdef _DEBUG
+	printf("Current time (native): %ld\n", result);
+#endif
+	return result;
+}
+
 /*
  * Class:     org_lwjgl_Sys
  * Method:    getTime
@@ -86,7 +101,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
   (JNIEnv * env, jclass clazz)
 {
-//	QueryPerformanceCounter((LARGE_INTEGER*) &hires_timer);
+	hires_timer = queryTime();
 	hires_timer -= hires_timer_start;
 	return hires_timer;
 }
@@ -99,8 +114,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
   (JNIEnv * env, jclass clazz, jlong startTime)
 {
-/*	QueryPerformanceFrequency((LARGE_INTEGER*) &hires_timer_freq);
-	QueryPerformanceCounter((LARGE_INTEGER*) &hires_timer_start);*/
+	hires_timer_start = queryTime();
+	// We don't have a real resolution so assume highest possible
+	hires_timer_freq = 1000000;
 	hires_timer_start -= startTime;
 }
 

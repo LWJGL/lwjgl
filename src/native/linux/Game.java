@@ -118,10 +118,12 @@ public final class Game {
         if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
              finished = true;*/
         Keyboard.read();
-        if (Keyboard.getNumKeyboardEvents() > 0) {
+        for (int i = 0; i < Keyboard.getNumKeyboardEvents(); i++) {
             Keyboard.next();
             if (Keyboard.key == Keyboard.KEY_ESCAPE && Keyboard.state)
                 finished = true;
+            if (Keyboard.key == Keyboard.KEY_T && Keyboard.state)
+                System.out.println("Current time: " + Sys.getTime());
         }
      }
  
@@ -149,6 +151,8 @@ public final class Game {
          Keyboard.create();
          Keyboard.enableBuffer();
          Mouse.create();
+         Sys.setTime(0);
+         System.out.println("Timer resolution: " + Sys.getTimerResolution());
          // Go into orthographic projection mode.
          gl.matrixMode(GL.PROJECTION);
          gl.loadIdentity();
