@@ -275,7 +275,7 @@ public final class Sys {
 		try {
 			PlatformAdapter adapter = (PlatformAdapter) Class.forName(PLATFORM).newInstance(); // This avoids a Jet error message
 			return adapter.getClipboard();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Sys.log("Unable to get clipboard contents: " + e);
 			// ignore exception and use native implementation
 			return nGetClipboard();
