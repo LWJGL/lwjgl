@@ -82,10 +82,10 @@ public final class GL15 {
 	public static void glBindBuffer(int target, int buffer) {
 		switch ( target ) {
 			case GL_ELEMENT_ARRAY_BUFFER:
-				VBOTracker.getVBOElementStack().setState(buffer);
+				BufferObjectTracker.getVBOElementStack().setState(buffer);
 				break;
 			case GL_ARRAY_BUFFER:
-				VBOTracker.getVBOArrayStack().setState(buffer);
+				BufferObjectTracker.getVBOArrayStack().setState(buffer);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported VBO target " + target);
@@ -99,10 +99,10 @@ public final class GL15 {
 		BufferChecks.checkDirect(buffers);
 		for ( int i = buffers.position(); i < buffers.limit(); i++ ) {
 			int buffer_handle = buffers.get(i);
-			if ( VBOTracker.getVBOElementStack().getState() == buffer_handle )
-				VBOTracker.getVBOElementStack().setState(0);
-			if ( VBOTracker.getVBOArrayStack().getState() == buffer_handle )
-				VBOTracker.getVBOArrayStack().setState(0);
+			if ( BufferObjectTracker.getVBOElementStack().getState() == buffer_handle )
+				BufferObjectTracker.getVBOElementStack().setState(0);
+			if ( BufferObjectTracker.getVBOArrayStack().getState() == buffer_handle )
+				BufferObjectTracker.getVBOArrayStack().setState(0);
 		}
 		nglDeleteBuffers(buffers.remaining(), buffers, buffers.position());
 	}

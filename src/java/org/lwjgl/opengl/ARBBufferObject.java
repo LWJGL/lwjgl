@@ -72,16 +72,16 @@ public abstract class ARBBufferObject {
 	public static void glBindBufferARB(int target, int buffer) {
 		switch ( target ) {
 			case ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB:
-				VBOTracker.getVBOArrayStack().setState(buffer);
+				BufferObjectTracker.getVBOArrayStack().setState(buffer);
 				break;
 			case ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB:
-				VBOTracker.getVBOElementStack().setState(buffer);
+				BufferObjectTracker.getVBOElementStack().setState(buffer);
 				break;
 			case ARBPixelBufferObject.GL_PIXEL_PACK_BUFFER_ARB:
-				VBOTracker.getPBOPackStack().setState(buffer);
+				BufferObjectTracker.getPBOPackStack().setState(buffer);
 				break;
 			case ARBPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_ARB:
-				VBOTracker.getPBOUnpackStack().setState(buffer);
+				BufferObjectTracker.getPBOUnpackStack().setState(buffer);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported VBO target " + target);
@@ -94,14 +94,14 @@ public abstract class ARBBufferObject {
 	public static void glDeleteBuffersARB(IntBuffer buffers) {
 		for ( int i = buffers.position(); i < buffers.limit(); i++ ) {
 			int buffer_handle = buffers.get(i);
-			if ( VBOTracker.getVBOArrayStack().getState() == buffer_handle )
-				VBOTracker.getVBOArrayStack().setState(0);
-			if ( VBOTracker.getVBOElementStack().getState() == buffer_handle )
-				VBOTracker.getVBOElementStack().setState(0);
-			if ( VBOTracker.getPBOPackStack().getState() == buffer_handle )
-				VBOTracker.getPBOPackStack().setState(0);
-			if ( VBOTracker.getPBOUnpackStack().getState() == buffer_handle )
-				VBOTracker.getPBOUnpackStack().setState(0);
+			if ( BufferObjectTracker.getVBOArrayStack().getState() == buffer_handle )
+				BufferObjectTracker.getVBOArrayStack().setState(0);
+			if ( BufferObjectTracker.getVBOElementStack().getState() == buffer_handle )
+				BufferObjectTracker.getVBOElementStack().setState(0);
+			if ( BufferObjectTracker.getPBOPackStack().getState() == buffer_handle )
+				BufferObjectTracker.getPBOPackStack().setState(0);
+			if ( BufferObjectTracker.getPBOUnpackStack().getState() == buffer_handle )
+				BufferObjectTracker.getPBOUnpackStack().setState(0);
 		}
 		BufferChecks.checkDirect(buffers);
 		nglDeleteBuffersARB(buffers.remaining(), buffers, buffers.position());

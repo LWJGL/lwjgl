@@ -243,7 +243,7 @@ public final class GLContext {
 			if ( did_auto_load )
 				unloadOpenGLLibrary();
 			currentContext = null;
-			VBOTracker.setCurrent(null);
+			BufferObjectTracker.setCurrent(null);
 			return;
 		}
 		// Is this the same as last time?
@@ -261,7 +261,7 @@ public final class GLContext {
 		try {
 			loadStubs();
 			currentContext = new WeakReference(context);
-			VBOTracker.setCurrent(context);
+			BufferObjectTracker.setCurrent(context);
 		} catch (LWJGLException e) {
 			if ( did_auto_load )
 				unloadOpenGLLibrary();

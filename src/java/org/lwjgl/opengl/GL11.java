@@ -1426,24 +1426,24 @@ public final class GL11 {
 	public static native void glPopMatrix();
 
 	public static void glPushClientAttrib(int mask) {
-		VBOTracker.getClientAttribStack().pushState();
-		VBOTracker.getClientAttribStack().setState(mask);
+		BufferObjectTracker.getClientAttribStack().pushState();
+		BufferObjectTracker.getClientAttribStack().setState(mask);
 		if ((mask & GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			VBOTracker.getVBOArrayStack().pushState();
-			VBOTracker.getVBOElementStack().pushState();
-			VBOTracker.getPBOPackStack().pushState();
-			VBOTracker.getPBOUnpackStack().pushState();
+			BufferObjectTracker.getVBOArrayStack().pushState();
+			BufferObjectTracker.getVBOElementStack().pushState();
+			BufferObjectTracker.getPBOPackStack().pushState();
+			BufferObjectTracker.getPBOUnpackStack().pushState();
 		}
 		nglPushClientAttrib(mask);
 	}
 	private static native void nglPushClientAttrib(int mask);
 
 	public static void glPopClientAttrib() {
-		if ((VBOTracker.getClientAttribStack().popState() & GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			VBOTracker.getVBOArrayStack().popState();
-			VBOTracker.getVBOElementStack().popState();
-			VBOTracker.getPBOPackStack().popState();
-			VBOTracker.getPBOUnpackStack().popState();
+		if ((BufferObjectTracker.getClientAttribStack().popState() & GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
+			BufferObjectTracker.getVBOArrayStack().popState();
+			BufferObjectTracker.getVBOElementStack().popState();
+			BufferObjectTracker.getPBOPackStack().popState();
+			BufferObjectTracker.getPBOUnpackStack().popState();
 		}
 		nglPopClientAttrib();
 	}
