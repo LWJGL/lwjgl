@@ -47,18 +47,19 @@
 
 extern HINSTANCE dll_handle;
 
-extern HWND hwnd;                   // Handle to window
+extern HWND hwnd;                     // Handle to window
 
-extern LPDIRECTINPUT lpdi;          // DI instance
-LPDIRECTINPUTDEVICE mDIDevice;     // DI Device instance
-DIMOUSESTATE diMouseState;          // State of Mouse
+extern LPDIRECTINPUT lpdi;            // DI instance
+LPDIRECTINPUTDEVICE mDIDevice;        // DI Device instance
+DIMOUSESTATE diMouseState;            // State of Mouse
 
-int mButtoncount = 0;               // Temporary buttoncount
-bool mHaswheel;                     // Temporary wheel check
+int mButtoncount = 0;                 // Temporary buttoncount
+bool mHaswheel;                       // Temporary wheel check
 
-JNIEnv* mEnvironment;                // JNIEnvironment copy
+JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
-bool mCreate_success;                // bool used to determine successfull creation
+bool mCreate_success;                 // bool used to determine successfull creation
+bool FirstTimeInitialization = true;  // boolean to determine first time initialization
 
 // Cached fields of Mouse.java
 jclass clsMouse;
@@ -95,40 +96,41 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass c
  * Called when the Mouse instance is to be created
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
-  // Create the DirectInput object. 
   HRESULT hr;
-  hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL); 
-  if (FAILED(hr)) {
-#if _DEBUG
-    printf("DirectInputCreate failed\n");
-#endif
-    ShutdownMouse();
-    return JNI_FALSE;
-  }
 
   /* skip enumeration, since we only want system mouse */
   CreateMouse();
 
-  /* Enumerate capabilities of Mouse */
-  EnumerateMouseCapabilities();
-  if (!mCreate_success) {
-#if _DEBUG
-    printf("EnumerateMouseCapabilities failed\n");
-#endif
-    ShutdownMouse();
-    return JNI_FALSE;
+  //check for first time initialization - need to detect capabilities
+  if (FirstTimeInitialization) {
+    FirstTimeInitialization = false;
+
+    /* Enumerate capabilities of Mouse */
+    EnumerateMouseCapabilities();
+    if (!mCreate_success) {
+  #if _DEBUG
+      printf("EnumerateMouseCapabilities failed\n");
+  #endif
+      ShutdownMouse();
+      return JNI_FALSE;
+    }
+
+    if(mCreate_success) {
+      /* Do setup of Mouse */
+      SetupMouse();
+    }
+
+    /* Initialize any fields on the Mouse */
+    InitializeMouseFields();
+
+    /* Set capabilities */
+    SetMouseCapabilities();
+  } else {
+    if(mCreate_success) {
+      /* Do setup of Mouse */
+      SetupMouse();
+    }
   }
-
-  if(mCreate_success) {
-    /* Do setup of Mouse */
-    SetupMouse();
-  }
-
-  /* Initialize any fields on the Mouse */
-  InitializeMouseFields();
-
-  /* Set capabilities */
-  SetMouseCapabilities();
 
   /* Aquire the Mouse */
   hr = mDIDevice->Acquire();
@@ -139,6 +141,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
     ShutdownMouse();
     return JNI_FALSE;
   }
+
   return mCreate_success;
 }
 
