@@ -1,35 +1,37 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.util;
+
+import org.lwjgl.opengl.GL20;
 
 import java.nio.*;
 
@@ -3644,7 +3646,7 @@ public class GLImpl implements IGL {
 	 * @param v1
 	 * @param v2
 	 * @param vstride
-	 * @param vorder  
+	 * @param vorder
 	 * @param points
 	 */
 	public void glMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points) {
@@ -6092,4 +6094,456 @@ public class GLImpl implements IGL {
 	public void glWriteMaskEXT(int res, int in, int outX, int outY, int outZ, int outW) {
 		GL.glWriteMaskEXT(res, in, outX, outY, outZ, outW);
 	}
+
+	// ----------------------------------------------------------
+	// ----------------------[ OpenGL 2.0 ]----------------------
+	// ----------------------------------------------------------
+
+	/**
+	 * @param shader
+	 * @param string
+	 */
+	public void glShaderSource(int shader, ByteBuffer string) {
+		GL.glShaderSource(shader, string);
+	}
+
+	/**
+	 * @param shader
+	 * @param strings
+	 */
+	public void glShaderSource(int shader, ByteBuffer[] strings) {
+		GL.glShaderSource(shader, strings);
+	}
+
+	/**
+	 * @param type
+	 *
+	 * @return
+	 */
+	public int glCreateShader(int type) {
+		return GL.glCreateShader(type);
+	}
+
+	/**
+	 * @param shader
+	 *
+	 * @return
+	 */
+	public boolean glIsShader(int shader) {
+		return GL.glIsShader(shader);
+	}
+
+	/**
+	 * @param shader
+	 */
+	public void glCompileShader(int shader) {
+		GL.glCompileShader(shader);
+	}
+
+	/**
+	 * @param shader
+	 */
+	public void glDeleteShader(int shader) {
+		GL.glDeleteShader(shader);
+	}
+
+	/**
+	 * @return
+	 */
+	public int glCreateProgram() {
+		return GL.glCreateProgram();
+	}
+
+	/**
+	 * @param program
+	 *
+	 * @return
+	 */
+	public boolean glIsProgram(int program) {
+		return GL.glIsProgram(program);
+	}
+
+	/**
+	 * @param program
+	 * @param shader
+	 */
+	public void glAttachShader(int program, int shader) {
+		GL.glAttachShader(program, shader);
+	}
+
+	/**
+	 * @param program
+	 * @param shader
+	 */
+	public void glDetachShader(int program, int shader) {
+		GL.glDetachShader(program, shader);
+	}
+
+	/**
+	 * @param program
+	 */
+	public void glLinkProgram(int program) {
+		GL.glLinkProgram(program);
+	}
+
+	/**
+	 * @param program
+	 */
+	public void glUseProgram(int program) {
+		GL.glUseProgram(program);
+	}
+
+	/**
+	 * @param program
+	 */
+	public void glValidateProgram(int program) {
+		GL.glValidateProgram(program);
+	}
+
+	/**
+	 * @param program
+	 */
+	public void glDeleteProgram(int program) {
+		GL.glDeleteProgram(program);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	public void glUniform1f(int location, float v0) {
+		GL.glUniform1f(location, v0);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	public void glUniform2f(int location, float v0, float v1) {
+		GL.glUniform2f(location, v0, v1);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	public void glUniform3f(int location, float v0, float v1, float v2) {
+		GL.glUniform3f(location, v0, v1, v2);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	public void glUniform4f(int location, float v0, float v1, float v2, float v3) {
+		GL.glUniform4f(location, v0, v1, v2, v3);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	public void glUniform1i(int location, int v0) {
+		GL.glUniform1i(location, v0);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	public void glUniform2i(int location, int v0, int v1) {
+		GL.glUniform2i(location, v0, v1);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	public void glUniform3i(int location, int v0, int v1, int v2) {
+		GL.glUniform3i(location, v0, v1, v2);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	public void glUniform4i(int location, int v0, int v1, int v2, int v3) {
+		GL.glUniform4i(location, v0, v1, v2, v3);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform1(int location, FloatBuffer values) {
+		GL.glUniform1(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform2(int location, FloatBuffer values) {
+		GL.glUniform2(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform3(int location, FloatBuffer values) {
+		GL.glUniform3(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform4(int location, FloatBuffer values) {
+		GL.glUniform4(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform1(int location, IntBuffer values) {
+		GL.glUniform1(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform2(int location, IntBuffer values) {
+		GL.glUniform2(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform3(int location, IntBuffer values) {
+		GL.glUniform3(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public void glUniform4(int location, IntBuffer values) {
+		GL.glUniform4(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public void glUniformMatrix2(int location, boolean transpose, FloatBuffer matrices) {
+		GL.glUniformMatrix2(location, transpose, matrices);
+	}
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public void glUniformMatrix3(int location, boolean transpose, FloatBuffer matrices) {
+		GL.glUniformMatrix3(location, transpose, matrices);
+	}
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public void glUniformMatrix4(int location, boolean transpose, FloatBuffer matrices) {
+		GL.glUniformMatrix4(location, transpose, matrices);
+	}
+
+	/**
+	 * @param shader
+	 * @param pname
+	 * @param params
+	 */
+	public void glGetShader(int shader, int pname, FloatBuffer params) {
+		GL.glGetShader(shader, pname, params);
+	}
+
+	/**
+	 * @param shader
+	 * @param pname
+	 * @param params
+	 */
+	public void glGetShader(int shader, int pname, IntBuffer params) {
+		GL.glGetShader(shader, pname, params);
+	}
+
+	/**
+	 * @param program
+	 * @param pname
+	 * @param params
+	 */
+	public void glGetProgram(int program, int pname, FloatBuffer params) {
+		GL.glGetProgram(program, pname, params);
+	}
+
+	/**
+	 * @param program
+	 * @param pname
+	 * @param params
+	 */
+	public void glGetProgram(int program, int pname, IntBuffer params) {
+		GL.glGetProgram(program, pname, params);
+	}
+
+	/**
+	 * @param shader
+	 * @param length
+	 * @param infoLog
+	 */
+	public void glGetShaderInfoLog(int shader, IntBuffer length, ByteBuffer infoLog) {
+		GL.glGetShaderInfoLog(shader, length, infoLog);
+	}
+
+	/**
+	 * @param program
+	 * @param length
+	 * @param infoLog
+	 */
+	public void glGetProgramInfoLog(int program, IntBuffer length, ByteBuffer infoLog) {
+		GL.glGetProgramInfoLog(program, length, infoLog);
+	}
+
+	/**
+	 * @param program
+	 * @param count
+	 * @param shaders
+	 */
+	public void glGetAttachedShaders(int program, IntBuffer count, IntBuffer shaders) {
+		GL.glGetAttachedShaders(program, count, shaders);
+	}
+
+	/**
+	 * @param program
+	 * @param name
+	 *
+	 * @return
+	 */
+	public int glGetUniformLocation(int program, ByteBuffer name) {
+		return GL.glGetUniformLocation(program, name);
+	}
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	public void glGetActiveUniform(int program, int index,
+	                                      IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		GL.glGetActiveUniform(program, index, length, size, type, name);
+	}
+
+	/**
+	 * @param program
+	 * @param location
+	 * @param params
+	 */
+	public void glGetUniform(int program, int location, FloatBuffer params) {
+		GL.glGetUniform(program, location, params);
+	}
+
+	/**
+	 * @param program
+	 * @param location
+	 * @param params
+	 */
+	public void glGetUniform(int program, int location, IntBuffer params) {
+		GL.glGetUniform(program, location, params);
+	}
+
+	/**
+	 * @param shader
+	 * @param length
+	 * @param source
+	 */
+	public void glGetShaderSource(int shader, IntBuffer length, ByteBuffer source) {
+		GL.glGetShaderSource(shader, length, source);
+	}
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param name
+	 */
+	public void glBindAttribLocation(int program, int index, ByteBuffer name) {
+		GL.glBindAttribLocation(program, index, name);
+	}
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	public void glGetActiveAttrib(int program, int index,
+	                                     IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		GL.glGetActiveAttrib(program, index, length, size, type, name);
+	}
+
+	/**
+	 * @param program
+	 * @param name
+	 *
+	 * @return
+	 */
+	public int glGetAttribLocation(int program, ByteBuffer name) {
+		return GL.glGetAttribLocation(program, name);
+	}
+
+	/**
+	 * @param buffers
+	 */
+	public void glDrawBuffers(IntBuffer buffers) {
+		GL.glDrawBuffers(buffers);
+	}
+
+	/**
+	 * @param face
+	 * @param func
+	 * @param ref
+	 * @param mask
+	 */
+	public void glStencilFuncSeparate(int face, int func, int ref, int mask) {
+		GL.glStencilFuncSeparate(face, func, ref, mask);
+	}
+
+	/**
+	 * @param face
+	 * @param sfail
+	 * @param dpfail
+	 * @param dppass
+	 */
+	public void glStencilOpSeparate(int face, int sfail, int dpfail, int dppass) {
+		GL.glStencilOpSeparate(face, sfail, dpfail, dppass);
+	}
+
 }

@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -4926,5 +4926,353 @@ public interface IGL {
 	 */
 	void glVertexWeightPointerEXT(int size, int type, int stride, int buffer_offset);
 
+	// ----------------------------------------------------------
+	// ----------------------[ OpenGL 2.0 ]----------------------
+	// ----------------------------------------------------------
+
+	/**
+	 * @param shader
+	 * @param string
+	 */
+	void glShaderSource(int shader, ByteBuffer string);
+
+	/**
+	 * @param shader
+	 * @param strings
+	 */
+	void glShaderSource(int shader, ByteBuffer[] strings);
+
+	/**
+	 * @param type
+	 *
+	 * @return
+	 */
+	int glCreateShader(int type);
+
+	/**
+	 * @param shader
+	 *
+	 * @return
+	 */
+	boolean glIsShader(int shader);
+
+	/**
+	 * @param shader
+	 */
+	void glCompileShader(int shader);
+
+	/**
+	 * @param shader
+	 */
+	void glDeleteShader(int shader);
+
+	/**
+	 * @return
+	 */
+	int glCreateProgram();
+
+	/**
+	 * @param program
+	 *
+	 * @return
+	 */
+	boolean glIsProgram(int program);
+
+	/**
+	 * @param program
+	 * @param shader
+	 */
+	void glAttachShader(int program, int shader);
+
+	/**
+	 * @param program
+	 * @param shader
+	 */
+	void glDetachShader(int program, int shader);
+
+	/**
+	 * @param program
+	 */
+	void glLinkProgram(int program);
+
+	/**
+	 * @param program
+	 */
+	void glUseProgram(int program);
+
+	/**
+	 * @param program
+	 */
+	void glValidateProgram(int program);
+
+	/**
+	 * @param program
+	 */
+	void glDeleteProgram(int program);
+
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	void glUniform1f(int location, float v0);
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	void glUniform2f(int location, float v0, float v1);
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	void glUniform3f(int location, float v0, float v1, float v2);
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	void glUniform4f(int location, float v0, float v1, float v2, float v3);
+
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	void glUniform1i(int location, int v0);
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	void glUniform2i(int location, int v0, int v1);
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	void glUniform3i(int location, int v0, int v1, int v2);
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	void glUniform4i(int location, int v0, int v1, int v2, int v3);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform1(int location, FloatBuffer values);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform2(int location, FloatBuffer values);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform3(int location, FloatBuffer values);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform4(int location, FloatBuffer values);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform1(int location, IntBuffer values);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform2(int location, IntBuffer values);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform3(int location, IntBuffer values);
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	void glUniform4(int location, IntBuffer values);
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	void glUniformMatrix2(int location, boolean transpose, FloatBuffer matrices);
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	void glUniformMatrix3(int location, boolean transpose, FloatBuffer matrices);
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	void glUniformMatrix4(int location, boolean transpose, FloatBuffer matrices);
+
+	/**
+	 * @param shader
+	 * @param pname
+	 * @param params
+	 */
+	void glGetShader(int shader, int pname, FloatBuffer params);
+
+	/**
+	 * @param shader
+	 * @param pname
+	 * @param params
+	 */
+	void glGetShader(int shader, int pname, IntBuffer params);
+
+	/**
+	 * @param program
+	 * @param pname
+	 * @param params
+	 */
+	void glGetProgram(int program, int pname, FloatBuffer params);
+
+	/**
+	 * @param program
+	 * @param pname
+	 * @param params
+	 */
+	void glGetProgram(int program, int pname, IntBuffer params);
+
+	/**
+	 * @param shader
+	 * @param length
+	 * @param infoLog
+	 */
+	void glGetShaderInfoLog(int shader, IntBuffer length, ByteBuffer infoLog);
+
+	/**
+	 * @param program
+	 * @param length
+	 * @param infoLog
+	 */
+	void glGetProgramInfoLog(int program, IntBuffer length, ByteBuffer infoLog);
+
+	/**
+	 * @param program
+	 * @param count
+	 * @param shaders
+	 */
+	void glGetAttachedShaders(int program, IntBuffer count, IntBuffer shaders);
+
+	/**
+	 * @param program
+	 * @param name
+	 *
+	 * @return
+	 */
+	int glGetUniformLocation(int program, ByteBuffer name);
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	void glGetActiveUniform(int program, int index,
+	                               IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name);
+
+	/**
+	 * @param program
+	 * @param location
+	 * @param params
+	 */
+	void glGetUniform(int program, int location, FloatBuffer params);
+
+	/**
+	 * @param program
+	 * @param location
+	 * @param params
+	 */
+	void glGetUniform(int program, int location, IntBuffer params);
+
+	/**
+	 * @param shader
+	 * @param length
+	 * @param source
+	 */
+	void glGetShaderSource(int shader, IntBuffer length, ByteBuffer source);
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param name
+	 */
+	void glBindAttribLocation(int program, int index, ByteBuffer name);
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	void glGetActiveAttrib(int program, int index,
+	                              IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name);
+
+	/**
+	 * @param program
+	 * @param name
+	 *
+	 * @return
+	 */
+	int glGetAttribLocation(int program, ByteBuffer name);
+
+	/**
+	 * @param buffers
+	 */
+	void glDrawBuffers(IntBuffer buffers);
+
+	/**
+	 * @param face
+	 * @param func
+	 * @param ref
+	 * @param mask
+	 */
+	void glStencilFuncSeparate(int face, int func, int ref, int mask);
+
+	/**
+	 * @param face
+	 * @param sfail
+	 * @param dpfail
+	 * @param dppass
+	 */
+	void glStencilOpSeparate(int face, int sfail, int dpfail, int dppass);
 
 }

@@ -1,40 +1,40 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.opengl;
 
-import java.nio.*;
-
-import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import org.lwjgl.LWJGLException;
+
+import java.nio.*;
 
 public final class GL15 {
 
@@ -125,24 +125,20 @@ public final class GL15 {
 
 	public static void glBufferData(int target, int size, ShortBuffer data, int usage) {
 		BufferChecks.checkDirectOrNull(data);
-		nglBufferData(target, data != null ? data.remaining()<<1 : size, data, data != null ? data.position() << 1 : 0, usage);
+		nglBufferData(target, data != null ? data.remaining() << 1 : size, data, data != null ? data.position() << 1 : 0, usage);
 	}
 
 	public static void glBufferData(int target, int size, FloatBuffer data, int usage) {
 		BufferChecks.checkDirectOrNull(data);
-		nglBufferData(target, data != null ? data.remaining()<<2 : size, data, data != null ? data.position() << 2 : 0, usage);
+		nglBufferData(target, data != null ? data.remaining() << 2 : size, data, data != null ? data.position() << 2 : 0, usage);
 	}
 
 	public static void glBufferData(int target, int size, IntBuffer data, int usage) {
 		BufferChecks.checkDirectOrNull(data);
-		nglBufferData(target, data != null ? data.remaining()<<2 : size, data, data != null ? data.position() << 2 : 0, usage);
+		nglBufferData(target, data != null ? data.remaining() << 2 : size, data, data != null ? data.position() << 2 : 0, usage);
 	}
 
-	private static native void nglBufferData(int target,
-	                                            int size,
-	                                            Buffer data,
-	                                            int data_offset,
-	                                            int usage);
+	private static native void nglBufferData(int target, int size, Buffer data, int data_offset, int usage);
 
 	public static void glBufferSubData(int target, int offset, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
@@ -164,11 +160,7 @@ public final class GL15 {
 		nglBufferSubData(target, offset, data.remaining() << 2, data, data.position() << 2);
 	}
 
-	private static native void nglBufferSubData(int target,
-	                                               int offset,
-	                                               int size,
-	                                               Buffer data,
-	                                               int data_offset);
+	private static native void nglBufferSubData(int target, int offset, int size, Buffer data, int data_offset);
 
 	public static void glGetBufferSubData(int target, int offset, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
@@ -190,32 +182,24 @@ public final class GL15 {
 		nglGetBufferSubData(target, offset, data.remaining() << 2, data, data.position() << 2);
 	}
 
-	private static native void nglGetBufferSubData(int target,
-	                                                  int offset,
-	                                                  int size,
-	                                                  Buffer data,
-	                                                  int data_offset);
+	private static native void nglGetBufferSubData(int target, int offset, int size, Buffer data, int data_offset);
 
 	/**
-	 * glMapBuffer maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be
-	 * null, in which case a new ByteBuffer will be created, pointing to the returned memory. If
-	 * oldBuffer is non-null, it will be returned if it points to the same mapped memory, otherwise a
-	 * new ByteBuffer is created. That way, an application will normally use glMapBuffer like this:
+	 * glMapBuffer maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in which case a new
+	 * ByteBuffer will be created, pointing to the returned memory. If oldBuffer is non-null, it will be returned if it points to
+	 * the same mapped memory, otherwise a new ByteBuffer is created. That way, an application will normally use glMapBuffer like
+	 * this:
 	 * <p/>
-	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBuffer(..., ..., ..., null); ... // Another
-	 * map on the same buffer mapped_buffer = glMapBuffer(..., ..., ..., mapped_buffer);
+	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBuffer(..., ..., ..., null); ... // Another map on the same buffer
+	 * mapped_buffer = glMapBuffer(..., ..., ..., mapped_buffer);
 	 *
 	 * @param size      The size of the buffer area.
-	 * @param oldBuffer A ByteBuffer. If this argument points to the same address as the new mapping,
-	 *                  it will be returned and no new buffer will be created. In that case, size is
-	 *                  ignored.
+	 * @param oldBuffer A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and no
+	 *                  new buffer will be created. In that case, size is ignored.
 	 *
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
-	public static native ByteBuffer glMapBuffer(int target,
-	                                               int access,
-	                                               int size,
-	                                               ByteBuffer oldBuffer);
+	public static native ByteBuffer glMapBuffer(int target, int access, int size, ByteBuffer oldBuffer);
 
 	public static native boolean glUnmapBuffer(int target);
 
@@ -224,10 +208,7 @@ public final class GL15 {
 		nglGetBufferParameteriv(target, pname, params, params.position());
 	}
 
-	private static native void nglGetBufferParameteriv(int target,
-	                                                      int pname,
-	                                                      IntBuffer params,
-	                                                      int params_offset);
+	private static native void nglGetBufferParameteriv(int target, int pname, IntBuffer params, int params_offset);
 
 	public static native ByteBuffer glGetBufferPointer(int target, int pname, int size);
 
@@ -284,10 +265,7 @@ public final class GL15 {
 		nglGetQueryiv(target, pname, params, params.position());
 	}
 
-	private static native void nglGetQueryiv(int target,
-	                                            int pname,
-	                                            IntBuffer params,
-	                                            int paramsOffset);
+	private static native void nglGetQueryiv(int target, int pname, IntBuffer params, int paramsOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -296,10 +274,7 @@ public final class GL15 {
 		nglGetQueryObjectiv(id, pname, params, params.position());
 	}
 
-	private static native void nglGetQueryObjectiv(int id,
-	                                                  int pname,
-	                                                  IntBuffer params,
-	                                                  int paramsOffset);
+	private static native void nglGetQueryObjectiv(int id, int pname, IntBuffer params, int paramsOffset);
 	// ---------------------------
 
 	// ---------------------------
@@ -308,10 +283,7 @@ public final class GL15 {
 		nglGetQueryObjectuiv(id, pname, params, params.position());
 	}
 
-	private static native void nglGetQueryObjectuiv(int id,
-	                                                   int pname,
-	                                                   IntBuffer params,
-	                                                   int paramsOffset);
+	private static native void nglGetQueryObjectuiv(int id, int pname, IntBuffer params, int paramsOffset);
 	// ---------------------------
-	
+
 }

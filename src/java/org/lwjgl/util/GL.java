@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -333,7 +333,14 @@ public class GL {
 	 * @param height
 	 * @param border
 	 */
-	public static void glCopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height, int border) {
+	public static void glCopyTexImage2D(int target,
+	                                    int level,
+	                                    int internalFormat,
+	                                    int x,
+	                                    int y,
+	                                    int width,
+	                                    int height,
+	                                    int border) {
 		GL11.glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border);
 	}
 
@@ -1181,7 +1188,16 @@ public class GL {
 	 * @param vorder
 	 * @param points
 	 */
-	public static void glMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points) {
+	public static void glMap2f(int target,
+	                           float u1,
+	                           float u2,
+	                           int ustride,
+	                           int uorder,
+	                           float v1,
+	                           float v2,
+	                           int vstride,
+	                           int vorder,
+	                           FloatBuffer points) {
 		GL11.glMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
 	}
 
@@ -1825,7 +1841,14 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ByteBuffer pixels) {
+	public static void glTexImage1D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                ByteBuffer pixels) {
 		GL11.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
 	}
 
@@ -1839,7 +1862,14 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, FloatBuffer pixels) {
+	public static void glTexImage1D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                FloatBuffer pixels) {
 		GL11.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
 	}
 
@@ -1853,7 +1883,14 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, IntBuffer pixels) {
+	public static void glTexImage1D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                IntBuffer pixels) {
 		GL11.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
 	}
 
@@ -1867,7 +1904,14 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ShortBuffer pixels) {
+	public static void glTexImage1D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                ShortBuffer pixels) {
 		GL11.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
 	}
 
@@ -1882,7 +1926,15 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ByteBuffer pixels) {
+	public static void glTexImage2D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int height,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                ByteBuffer pixels) {
 		GL11.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 	}
 
@@ -1897,7 +1949,15 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, FloatBuffer pixels) {
+	public static void glTexImage2D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int height,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                FloatBuffer pixels) {
 		GL11.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 	}
 
@@ -1912,7 +1972,15 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, IntBuffer pixels) {
+	public static void glTexImage2D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int height,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                IntBuffer pixels) {
 		GL11.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 	}
 
@@ -1927,7 +1995,15 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels) {
+	public static void glTexImage2D(int target,
+	                                int level,
+	                                int internalformat,
+	                                int width,
+	                                int height,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                ShortBuffer pixels) {
 		GL11.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 	}
 
@@ -2017,7 +2093,15 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ByteBuffer pixels) {
+	public static void glTexSubImage2D(int target,
+	                                   int level,
+	                                   int xoffset,
+	                                   int yoffset,
+	                                   int width,
+	                                   int height,
+	                                   int format,
+	                                   int type,
+	                                   ByteBuffer pixels) {
 		GL11.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
 	}
 
@@ -2032,7 +2116,15 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, IntBuffer pixels) {
+	public static void glTexSubImage2D(int target,
+	                                   int level,
+	                                   int xoffset,
+	                                   int yoffset,
+	                                   int width,
+	                                   int height,
+	                                   int format,
+	                                   int type,
+	                                   IntBuffer pixels) {
 		GL11.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
 	}
 
@@ -2047,7 +2139,15 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ShortBuffer pixels) {
+	public static void glTexSubImage2D(int target,
+	                                   int level,
+	                                   int xoffset,
+	                                   int yoffset,
+	                                   int width,
+	                                   int height,
+	                                   int format,
+	                                   int type,
+	                                   ShortBuffer pixels) {
 		GL11.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
 	}
 
@@ -2163,7 +2263,15 @@ public class GL {
 	 * @param width
 	 * @param height
 	 */
-	public static void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) {
+	public static void glCopyTexSubImage3D(int target,
+	                                       int level,
+	                                       int xoffset,
+	                                       int yoffset,
+	                                       int zoffset,
+	                                       int x,
+	                                       int y,
+	                                       int width,
+	                                       int height) {
 		GL12.glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
 	}
 
@@ -2221,7 +2329,16 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ByteBuffer pixels) {
+	public static void glTexImage3D(int target,
+	                                int level,
+	                                int internalFormat,
+	                                int width,
+	                                int height,
+	                                int depth,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                ByteBuffer pixels) {
 		GL12.glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels);
 	}
 
@@ -2237,7 +2354,16 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, FloatBuffer pixels) {
+	public static void glTexImage3D(int target,
+	                                int level,
+	                                int internalFormat,
+	                                int width,
+	                                int height,
+	                                int depth,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                FloatBuffer pixels) {
 		GL12.glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels);
 	}
 
@@ -2253,7 +2379,16 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, IntBuffer pixels) {
+	public static void glTexImage3D(int target,
+	                                int level,
+	                                int internalFormat,
+	                                int width,
+	                                int height,
+	                                int depth,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                IntBuffer pixels) {
 		GL12.glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels);
 	}
 
@@ -2269,7 +2404,16 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ShortBuffer pixels) {
+	public static void glTexImage3D(int target,
+	                                int level,
+	                                int internalFormat,
+	                                int width,
+	                                int height,
+	                                int depth,
+	                                int border,
+	                                int format,
+	                                int type,
+	                                ShortBuffer pixels) {
 		GL12.glTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels);
 	}
 
@@ -2286,7 +2430,17 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ByteBuffer pixels) {
+	public static void glTexSubImage3D(int target,
+	                                   int level,
+	                                   int xoffset,
+	                                   int yoffset,
+	                                   int zoffset,
+	                                   int width,
+	                                   int height,
+	                                   int depth,
+	                                   int format,
+	                                   int type,
+	                                   ByteBuffer pixels) {
 		GL12.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 	}
 
@@ -2303,7 +2457,17 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, FloatBuffer pixels) {
+	public static void glTexSubImage3D(int target,
+	                                   int level,
+	                                   int xoffset,
+	                                   int yoffset,
+	                                   int zoffset,
+	                                   int width,
+	                                   int height,
+	                                   int depth,
+	                                   int format,
+	                                   int type,
+	                                   FloatBuffer pixels) {
 		GL12.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 	}
 
@@ -2320,7 +2484,17 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, IntBuffer pixels) {
+	public static void glTexSubImage3D(int target,
+	                                   int level,
+	                                   int xoffset,
+	                                   int yoffset,
+	                                   int zoffset,
+	                                   int width,
+	                                   int height,
+	                                   int depth,
+	                                   int format,
+	                                   int type,
+	                                   IntBuffer pixels) {
 		GL12.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 	}
 
@@ -2337,7 +2511,17 @@ public class GL {
 	 * @param type
 	 * @param pixels
 	 */
-	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ShortBuffer pixels) {
+	public static void glTexSubImage3D(int target,
+	                                   int level,
+	                                   int xoffset,
+	                                   int yoffset,
+	                                   int zoffset,
+	                                   int width,
+	                                   int height,
+	                                   int depth,
+	                                   int format,
+	                                   int type,
+	                                   ShortBuffer pixels) {
 		GL12.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 	}
 
@@ -2364,7 +2548,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer data) {
+	public static void glCompressedTexImage1D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int border,
+	                                          int imageSize,
+	                                          ByteBuffer data) {
 		GL13.glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data);
 	}
 
@@ -2377,7 +2567,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, FloatBuffer data) {
+	public static void glCompressedTexImage1D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int border,
+	                                          int imageSize,
+	                                          FloatBuffer data) {
 		GL13.glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data);
 	}
 
@@ -2390,7 +2586,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, IntBuffer data) {
+	public static void glCompressedTexImage1D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int border,
+	                                          int imageSize,
+	                                          IntBuffer data) {
 		GL13.glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data);
 	}
 
@@ -2403,7 +2605,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage1D(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer data) {
+	public static void glCompressedTexImage1D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int border,
+	                                          int imageSize,
+	                                          ShortBuffer data) {
 		GL13.glCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data);
 	}
 
@@ -2417,7 +2625,14 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer data) {
+	public static void glCompressedTexImage2D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int border,
+	                                          int imageSize,
+	                                          ByteBuffer data) {
 		GL13.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 	}
 
@@ -2431,7 +2646,14 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, FloatBuffer data) {
+	public static void glCompressedTexImage2D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int border,
+	                                          int imageSize,
+	                                          FloatBuffer data) {
 		GL13.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 	}
 
@@ -2445,7 +2667,14 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, IntBuffer data) {
+	public static void glCompressedTexImage2D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int border,
+	                                          int imageSize,
+	                                          IntBuffer data) {
 		GL13.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 	}
 
@@ -2459,7 +2688,14 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer data) {
+	public static void glCompressedTexImage2D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int border,
+	                                          int imageSize,
+	                                          ShortBuffer data) {
 		GL13.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 	}
 
@@ -2474,7 +2710,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer data) {
+	public static void glCompressedTexImage3D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int depth,
+	                                          int border,
+	                                          int imageSize,
+	                                          ByteBuffer data) {
 		GL13.glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
 	}
 
@@ -2489,7 +2733,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, FloatBuffer data) {
+	public static void glCompressedTexImage3D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int depth,
+	                                          int border,
+	                                          int imageSize,
+	                                          FloatBuffer data) {
 		GL13.glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
 	}
 
@@ -2504,7 +2756,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, IntBuffer data) {
+	public static void glCompressedTexImage3D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int depth,
+	                                          int border,
+	                                          int imageSize,
+	                                          IntBuffer data) {
 		GL13.glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
 	}
 
@@ -2519,7 +2779,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer data) {
+	public static void glCompressedTexImage3D(int target,
+	                                          int level,
+	                                          int internalformat,
+	                                          int width,
+	                                          int height,
+	                                          int depth,
+	                                          int border,
+	                                          int imageSize,
+	                                          ShortBuffer data) {
 		GL13.glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
 	}
 
@@ -2532,7 +2800,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, ByteBuffer data) {
+	public static void glCompressedTexSubImage1D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int width,
+	                                             int format,
+	                                             int imageSize,
+	                                             ByteBuffer data) {
 		GL13.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
 	}
 
@@ -2545,7 +2819,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, FloatBuffer data) {
+	public static void glCompressedTexSubImage1D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int width,
+	                                             int format,
+	                                             int imageSize,
+	                                             FloatBuffer data) {
 		GL13.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
 	}
 
@@ -2558,7 +2838,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, IntBuffer data) {
+	public static void glCompressedTexSubImage1D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int width,
+	                                             int format,
+	                                             int imageSize,
+	                                             IntBuffer data) {
 		GL13.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
 	}
 
@@ -2571,7 +2857,13 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage1D(int target, int level, int xoffset, int width, int format, int imageSize, ShortBuffer data) {
+	public static void glCompressedTexSubImage1D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int width,
+	                                             int format,
+	                                             int imageSize,
+	                                             ShortBuffer data) {
 		GL13.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
 	}
 
@@ -2586,7 +2878,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ByteBuffer data) {
+	public static void glCompressedTexSubImage2D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int width,
+	                                             int height,
+	                                             int format,
+	                                             int imageSize,
+	                                             ByteBuffer data) {
 		GL13.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
 	}
 
@@ -2601,7 +2901,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, FloatBuffer data) {
+	public static void glCompressedTexSubImage2D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int width,
+	                                             int height,
+	                                             int format,
+	                                             int imageSize,
+	                                             FloatBuffer data) {
 		GL13.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
 	}
 
@@ -2616,7 +2924,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, IntBuffer data) {
+	public static void glCompressedTexSubImage2D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int width,
+	                                             int height,
+	                                             int format,
+	                                             int imageSize,
+	                                             IntBuffer data) {
 		GL13.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
 	}
 
@@ -2631,7 +2947,15 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ShortBuffer data) {
+	public static void glCompressedTexSubImage2D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int width,
+	                                             int height,
+	                                             int format,
+	                                             int imageSize,
+	                                             ShortBuffer data) {
 		GL13.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
 	}
 
@@ -2648,7 +2972,17 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ByteBuffer data) {
+	public static void glCompressedTexSubImage3D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int zoffset,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int format,
+	                                             int imageSize,
+	                                             ByteBuffer data) {
 		GL13.glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
 	}
 
@@ -2665,7 +2999,17 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, FloatBuffer data) {
+	public static void glCompressedTexSubImage3D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int zoffset,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int format,
+	                                             int imageSize,
+	                                             FloatBuffer data) {
 		GL13.glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
 	}
 
@@ -2682,7 +3026,17 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, IntBuffer data) {
+	public static void glCompressedTexSubImage3D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int zoffset,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int format,
+	                                             int imageSize,
+	                                             IntBuffer data) {
 		GL13.glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
 	}
 
@@ -2699,7 +3053,17 @@ public class GL {
 	 * @param imageSize
 	 * @param data
 	 */
-	public static void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ShortBuffer data) {
+	public static void glCompressedTexSubImage3D(int target,
+	                                             int level,
+	                                             int xoffset,
+	                                             int yoffset,
+	                                             int zoffset,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int format,
+	                                             int imageSize,
+	                                             ShortBuffer data) {
 		GL13.glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
 	}
 
@@ -3631,7 +3995,13 @@ public class GL {
 	 * @param type
 	 * @param image
 	 */
-	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer image) {
+	public static void glConvolutionFilter2D(int target,
+	                                         int internalformat,
+	                                         int width,
+	                                         int height,
+	                                         int format,
+	                                         int type,
+	                                         ByteBuffer image) {
 		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height, format, type, image);
 	}
 
@@ -3644,7 +4014,13 @@ public class GL {
 	 * @param type
 	 * @param image
 	 */
-	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer image) {
+	public static void glConvolutionFilter2D(int target,
+	                                         int internalformat,
+	                                         int width,
+	                                         int height,
+	                                         int format,
+	                                         int type,
+	                                         IntBuffer image) {
 		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height, format, type, image);
 	}
 
@@ -3657,7 +4033,13 @@ public class GL {
 	 * @param type
 	 * @param image
 	 */
-	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer image) {
+	public static void glConvolutionFilter2D(int target,
+	                                         int internalformat,
+	                                         int width,
+	                                         int height,
+	                                         int format,
+	                                         int type,
+	                                         ShortBuffer image) {
 		ARBImaging.glConvolutionFilter2D(target, internalformat, width, height, format, type, image);
 	}
 
@@ -4018,7 +4400,14 @@ public class GL {
 	 * @param row
 	 * @param column
 	 */
-	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
+	public static void glSeparableFilter2D(int target,
+	                                       int internalformat,
+	                                       int width,
+	                                       int height,
+	                                       int format,
+	                                       int type,
+	                                       Buffer row,
+	                                       Buffer column) {
 		ARBImaging.glSeparableFilter2D(target, internalformat, width, height, format, type, row, column);
 	}
 
@@ -4313,7 +4702,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer pData) {
+	public static void glCompressedTexImage1DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int border,
+	                                             int imageSize,
+	                                             ByteBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData);
 	}
 
@@ -4326,7 +4721,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, FloatBuffer pData) {
+	public static void glCompressedTexImage1DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int border,
+	                                             int imageSize,
+	                                             FloatBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData);
 	}
 
@@ -4339,7 +4740,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, IntBuffer pData) {
+	public static void glCompressedTexImage1DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int border,
+	                                             int imageSize,
+	                                             IntBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData);
 	}
 
@@ -4352,7 +4759,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexImage1DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int border,
+	                                             int imageSize,
+	                                             ShortBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData);
 	}
 
@@ -4366,7 +4779,14 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer pData) {
+	public static void glCompressedTexImage2DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int border,
+	                                             int imageSize,
+	                                             ByteBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData);
 	}
 
@@ -4380,7 +4800,14 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, FloatBuffer pData) {
+	public static void glCompressedTexImage2DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int border,
+	                                             int imageSize,
+	                                             FloatBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData);
 	}
 
@@ -4394,7 +4821,14 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, IntBuffer pData) {
+	public static void glCompressedTexImage2DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int border,
+	                                             int imageSize,
+	                                             IntBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData);
 	}
 
@@ -4408,7 +4842,14 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexImage2DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int border,
+	                                             int imageSize,
+	                                             ShortBuffer pData) {
 		ARBTextureCompression.glCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData);
 	}
 
@@ -4423,8 +4864,24 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
-		ARBTextureCompression.glCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexImage3DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int border,
+	                                             int imageSize,
+	                                             ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target,
+		                                                level,
+		                                                internalformat,
+		                                                width,
+		                                                height,
+		                                                depth,
+		                                                border,
+		                                                imageSize,
+		                                                pData);
 	}
 
 	/**
@@ -4438,8 +4895,24 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, FloatBuffer pData) {
-		ARBTextureCompression.glCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexImage3DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int border,
+	                                             int imageSize,
+	                                             FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target,
+		                                                level,
+		                                                internalformat,
+		                                                width,
+		                                                height,
+		                                                depth,
+		                                                border,
+		                                                imageSize,
+		                                                pData);
 	}
 
 	/**
@@ -4453,8 +4926,24 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, IntBuffer pData) {
-		ARBTextureCompression.glCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexImage3DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int border,
+	                                             int imageSize,
+	                                             IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target,
+		                                                level,
+		                                                internalformat,
+		                                                width,
+		                                                height,
+		                                                depth,
+		                                                border,
+		                                                imageSize,
+		                                                pData);
 	}
 
 	/**
@@ -4468,8 +4957,24 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
-		ARBTextureCompression.glCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexImage3DARB(int target,
+	                                             int level,
+	                                             int internalformat,
+	                                             int width,
+	                                             int height,
+	                                             int depth,
+	                                             int border,
+	                                             int imageSize,
+	                                             ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexImage3DARB(target,
+		                                                level,
+		                                                internalformat,
+		                                                width,
+		                                                height,
+		                                                depth,
+		                                                border,
+		                                                imageSize,
+		                                                pData);
 	}
 
 	/**
@@ -4481,7 +4986,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, ByteBuffer pData) {
+	public static void glCompressedTexSubImage1DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int width,
+	                                                int border,
+	                                                int imageSize,
+	                                                ByteBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData);
 	}
 
@@ -4494,7 +5005,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, FloatBuffer pData) {
+	public static void glCompressedTexSubImage1DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int width,
+	                                                int border,
+	                                                int imageSize,
+	                                                FloatBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData);
 	}
 
@@ -4507,7 +5024,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, IntBuffer pData) {
+	public static void glCompressedTexSubImage1DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int width,
+	                                                int border,
+	                                                int imageSize,
+	                                                IntBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData);
 	}
 
@@ -4520,7 +5043,13 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexSubImage1DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int width,
+	                                                int border,
+	                                                int imageSize,
+	                                                ShortBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData);
 	}
 
@@ -4535,7 +5064,15 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, ByteBuffer pData) {
+	public static void glCompressedTexSubImage2DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int width,
+	                                                int height,
+	                                                int border,
+	                                                int imageSize,
+	                                                ByteBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData);
 	}
 
@@ -4550,7 +5087,15 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, FloatBuffer pData) {
+	public static void glCompressedTexSubImage2DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int width,
+	                                                int height,
+	                                                int border,
+	                                                int imageSize,
+	                                                FloatBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData);
 	}
 
@@ -4565,7 +5110,15 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, IntBuffer pData) {
+	public static void glCompressedTexSubImage2DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int width,
+	                                                int height,
+	                                                int border,
+	                                                int imageSize,
+	                                                IntBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData);
 	}
 
@@ -4580,7 +5133,15 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexSubImage2DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int width,
+	                                                int height,
+	                                                int border,
+	                                                int imageSize,
+	                                                ShortBuffer pData) {
 		ARBTextureCompression.glCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData);
 	}
 
@@ -4597,8 +5158,28 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
-		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexSubImage3DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int zoffset,
+	                                                int width,
+	                                                int height,
+	                                                int depth,
+	                                                int border,
+	                                                int imageSize,
+	                                                ByteBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target,
+		                                                   level,
+		                                                   xoffset,
+		                                                   yoffset,
+		                                                   zoffset,
+		                                                   width,
+		                                                   height,
+		                                                   depth,
+		                                                   border,
+		                                                   imageSize,
+		                                                   pData);
 	}
 
 	/**
@@ -4614,8 +5195,28 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, FloatBuffer pData) {
-		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexSubImage3DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int zoffset,
+	                                                int width,
+	                                                int height,
+	                                                int depth,
+	                                                int border,
+	                                                int imageSize,
+	                                                FloatBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target,
+		                                                   level,
+		                                                   xoffset,
+		                                                   yoffset,
+		                                                   zoffset,
+		                                                   width,
+		                                                   height,
+		                                                   depth,
+		                                                   border,
+		                                                   imageSize,
+		                                                   pData);
 	}
 
 	/**
@@ -4631,8 +5232,28 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, IntBuffer pData) {
-		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexSubImage3DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int zoffset,
+	                                                int width,
+	                                                int height,
+	                                                int depth,
+	                                                int border,
+	                                                int imageSize,
+	                                                IntBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target,
+		                                                   level,
+		                                                   xoffset,
+		                                                   yoffset,
+		                                                   zoffset,
+		                                                   width,
+		                                                   height,
+		                                                   depth,
+		                                                   border,
+		                                                   imageSize,
+		                                                   pData);
 	}
 
 	/**
@@ -4648,8 +5269,28 @@ public class GL {
 	 * @param imageSize
 	 * @param pData
 	 */
-	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
-		ARBTextureCompression.glCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData);
+	public static void glCompressedTexSubImage3DARB(int target,
+	                                                int level,
+	                                                int xoffset,
+	                                                int yoffset,
+	                                                int zoffset,
+	                                                int width,
+	                                                int height,
+	                                                int depth,
+	                                                int border,
+	                                                int imageSize,
+	                                                ShortBuffer pData) {
+		ARBTextureCompression.glCompressedTexSubImage3DARB(target,
+		                                                   level,
+		                                                   xoffset,
+		                                                   yoffset,
+		                                                   zoffset,
+		                                                   width,
+		                                                   height,
+		                                                   depth,
+		                                                   border,
+		                                                   imageSize,
+		                                                   pData);
 	}
 
 	/**
@@ -4815,7 +5456,12 @@ public class GL {
 	 * @param type
 	 * @param name
 	 */
-	public static void glGetActiveAttribARB(int programObj, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+	public static void glGetActiveAttribARB(int programObj,
+	                                        int index,
+	                                        IntBuffer length,
+	                                        IntBuffer size,
+	                                        IntBuffer type,
+	                                        ByteBuffer name) {
 		ARBVertexShader.glGetActiveAttribARB(programObj, index, length, size, type, name);
 	}
 
@@ -4934,7 +5580,12 @@ public class GL {
 	 * @param type
 	 * @param name
 	 */
-	public static void glGetActiveUniformARB(int programObj, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+	public static void glGetActiveUniformARB(int programObj,
+	                                         int index,
+	                                         IntBuffer length,
+	                                         IntBuffer size,
+	                                         IntBuffer type,
+	                                         ByteBuffer name) {
 		ARBShaderObjects.glGetActiveUniformARB(programObj, index, length, size, type, name);
 	}
 
@@ -5362,7 +6013,12 @@ public class GL {
 	 * @param stride
 	 * @param buffer
 	 */
-	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
+	public static void glVertexAttribPointerARB(int index,
+	                                            int size,
+	                                            boolean unsigned,
+	                                            boolean normalized,
+	                                            int stride,
+	                                            ByteBuffer buffer) {
 		ARBVertexProgram.glVertexAttribPointerARB(index, size, unsigned, normalized, stride, buffer);
 	}
 
@@ -5374,7 +6030,12 @@ public class GL {
 	 * @param stride
 	 * @param buffer
 	 */
-	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
+	public static void glVertexAttribPointerARB(int index,
+	                                            int size,
+	                                            boolean unsigned,
+	                                            boolean normalized,
+	                                            int stride,
+	                                            IntBuffer buffer) {
 		ARBVertexProgram.glVertexAttribPointerARB(index, size, unsigned, normalized, stride, buffer);
 	}
 
@@ -5386,7 +6047,12 @@ public class GL {
 	 * @param stride
 	 * @param buffer
 	 */
-	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
+	public static void glVertexAttribPointerARB(int index,
+	                                            int size,
+	                                            boolean unsigned,
+	                                            boolean normalized,
+	                                            int stride,
+	                                            ShortBuffer buffer) {
 		ARBVertexProgram.glVertexAttribPointerARB(index, size, unsigned, normalized, stride, buffer);
 	}
 
@@ -6095,4 +6761,451 @@ public class GL {
 	public static void glVertexWeightPointerEXT(int size, int type, int stride, int buffer_offset) {
 		EXTVertexWeighting.glVertexWeightPointerEXT(size, type, stride, buffer_offset);
 	}
+
+	// ----------------------------------------------------------
+	// ----------------------[ OpenGL 2.0 ]----------------------
+	// ----------------------------------------------------------
+
+	/**
+	 * @param shader
+	 * @param string
+	 */
+	public static void glShaderSource(int shader, ByteBuffer string) {
+		GL20.glShaderSource(shader, string);
+	}
+
+	/**
+	 * @param shader
+	 * @param strings
+	 */
+	public static void glShaderSource(int shader, ByteBuffer[] strings) {
+		GL20.glShaderSource(shader, strings);
+	}
+
+	/**
+	 * @param type
+	 * @return
+	 */
+	public static int glCreateShader(int type) {
+		return GL20.glCreateShader(type);
+	}
+
+	/**
+	 * @param shader
+	 * @return
+	 */
+	public static boolean glIsShader(int shader) {
+		return GL20.glIsShader(shader);
+	}
+
+	/**
+	 * @param shader
+	 */
+	public static void glCompileShader(int shader) {
+		GL20.glCompileShader(shader);
+	}
+
+	/**
+	 * @param shader
+	 */
+	public static void glDeleteShader(int shader) {
+		GL20.glDeleteShader(shader);
+	}
+
+	/**
+	 * @return
+	 */
+	public static int glCreateProgram() {
+		return GL20.glCreateProgram();
+	}
+
+	/**
+	 * @param program
+	 * @return
+	 */
+	public static boolean glIsProgram(int program) {
+		return GL20.glIsProgram(program);
+	}
+
+	/**
+	 * @param program
+	 * @param shader
+	 */
+	public static void glAttachShader(int program, int shader) {
+		GL20.glAttachShader(program, shader);
+	}
+
+	/**
+	 * @param program
+	 * @param shader
+	 */
+	public static void glDetachShader(int program, int shader) {
+		GL20.glDetachShader(program, shader);
+	}
+
+	/**
+	 * @param program
+	 */
+	public static void glLinkProgram(int program) {
+		GL20.glLinkProgram(program);
+	}
+
+	/**
+	 * @param program
+	 */
+	public static void glUseProgram(int program) {
+		GL20.glUseProgram(program);
+	}
+
+	/**
+	 * @param program
+	 */
+	public static void glValidateProgram(int program) {
+		GL20.glValidateProgram(program);
+	}
+
+	/**
+	 * @param program
+	 */
+	public static void glDeleteProgram(int program) {
+		GL20.glDeleteProgram(program);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	public static void glUniform1f(int location, float v0) {
+		GL20.glUniform1f(location, v0);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	public static void glUniform2f(int location, float v0, float v1) {
+		GL20.glUniform2f(location, v0, v1);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	public static void glUniform3f(int location, float v0, float v1, float v2) {
+		GL20.glUniform3f(location, v0, v1, v2);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	public static void glUniform4f(int location, float v0, float v1, float v2, float v3) {
+		GL20.glUniform4f(location, v0, v1, v2, v3);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 */
+	public static void glUniform1i(int location, int v0) {
+		GL20.glUniform1i(location, v0);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 */
+	public static void glUniform2i(int location, int v0, int v1) {
+		GL20.glUniform2i(location, v0, v1);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 */
+	public static void glUniform3i(int location, int v0, int v1, int v2) {
+		GL20.glUniform3i(location, v0, v1, v2);
+	}
+
+	/**
+	 * @param location
+	 * @param v0
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 */
+	public static void glUniform4i(int location, int v0, int v1, int v2, int v3) {
+		GL20.glUniform4i(location, v0, v1, v2, v3);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform1(int location, FloatBuffer values) {
+		GL20.glUniform1(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform2(int location, FloatBuffer values) {
+		GL20.glUniform2(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform3(int location, FloatBuffer values) {
+		GL20.glUniform3(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform4(int location, FloatBuffer values) {
+		GL20.glUniform4(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform1(int location, IntBuffer values) {
+		GL20.glUniform1(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform2(int location, IntBuffer values) {
+		GL20.glUniform2(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform3(int location, IntBuffer values) {
+		GL20.glUniform3(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param values
+	 */
+	public static void glUniform4(int location, IntBuffer values) {
+		GL20.glUniform4(location, values);
+	}
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public static void glUniformMatrix2(int location, boolean transpose, FloatBuffer matrices) {
+		GL20.glUniformMatrix2(location, transpose, matrices);
+	}
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public static void glUniformMatrix3(int location, boolean transpose, FloatBuffer matrices) {
+		GL20.glUniformMatrix3(location, transpose, matrices);
+	}
+
+	/**
+	 * @param location
+	 * @param transpose
+	 * @param matrices
+	 */
+	public static void glUniformMatrix4(int location, boolean transpose, FloatBuffer matrices) {
+		GL20.glUniformMatrix4(location, transpose, matrices);
+	}
+
+	/**
+	 * @param shader
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetShader(int shader, int pname, FloatBuffer params) {
+		GL20.glGetShader(shader, pname, params);
+	}
+
+	/**
+	 * @param shader
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetShader(int shader, int pname, IntBuffer params) {
+		GL20.glGetShader(shader, pname, params);
+	}
+
+	/**
+	 * @param program
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetProgram(int program, int pname, FloatBuffer params) {
+		GL20.glGetProgram(program, pname, params);
+	}
+
+	/**
+	 * @param program
+	 * @param pname
+	 * @param params
+	 */
+	public static void glGetProgram(int program, int pname, IntBuffer params) {
+		GL20.glGetProgram(program, pname, params);
+	}
+
+	/**
+	 * @param shader
+	 * @param length
+	 * @param infoLog
+	 */
+	public static void glGetShaderInfoLog(int shader, IntBuffer length, ByteBuffer infoLog) {
+		GL20.glGetShaderInfoLog(shader, length, infoLog);
+	}
+
+	/**
+	 * @param program
+	 * @param length
+	 * @param infoLog
+	 */
+	public static void glGetProgramInfoLog(int program, IntBuffer length, ByteBuffer infoLog) {
+		GL20.glGetProgramInfoLog(program, length, infoLog);
+	}
+
+	/**
+	 * @param program
+	 * @param count
+	 * @param shaders
+	 */
+	public static void glGetAttachedShaders(int program, IntBuffer count, IntBuffer shaders) {
+		GL20.glGetAttachedShaders(program, count, shaders);
+	}
+
+	/**
+	 * @param program
+	 * @param name
+	 * @return
+	 */
+	public static int glGetUniformLocation(int program, ByteBuffer name) {
+		return GL20.glGetUniformLocation(program, name);
+	}
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	public static void glGetActiveUniform(int program, int index,
+	                                      IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		GL20.glGetActiveUniform(program, index, length, size, type, name);
+	}
+
+	/**
+	 * @param program
+	 * @param location
+	 * @param params
+	 */
+	public static void glGetUniform(int program, int location, FloatBuffer params) {
+		GL20.glGetUniform(program, location, params);
+	}
+
+	/**
+	 * @param program
+	 * @param location
+	 * @param params
+	 */
+	public static void glGetUniform(int program, int location, IntBuffer params) {
+		GL20.glGetUniform(program, location, params);
+	}
+
+	/**
+	 * @param shader
+	 * @param length
+	 * @param source
+	 */
+	public static void glGetShaderSource(int shader, IntBuffer length, ByteBuffer source) {
+		GL20.glGetShaderSource(shader, length, source);
+	}
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param name
+	 */
+	public static void glBindAttribLocation(int program, int index, ByteBuffer name) {
+		GL20.glBindAttribLocation(program, index, name);
+	}
+
+	/**
+	 * @param program
+	 * @param index
+	 * @param length
+	 * @param size
+	 * @param type
+	 * @param name
+	 */
+	public static void glGetActiveAttrib(int program, int index,
+	                                     IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		GL20.glGetActiveAttrib(program, index, length, size, type, name);
+	}
+
+	/**
+	 * @param program
+	 * @param name
+	 * @return
+	 */
+	public static int glGetAttribLocation(int program, ByteBuffer name) {
+		return GL20.glGetAttribLocation(program, name);
+	}
+
+	/**
+	 * @param buffers
+	 */
+	public static void glDrawBuffers(IntBuffer buffers) {
+		GL20.glDrawBuffers(buffers);
+	}
+
+	/**
+	 * @param face
+	 * @param func
+	 * @param ref
+	 * @param mask
+	 */
+	public static void glStencilFuncSeparate(int face, int func, int ref, int mask) {
+		GL20.glStencilFuncSeparate(face, func, ref, mask);
+	}
+
+	/**
+	 * @param face
+	 * @param sfail
+	 * @param dpfail
+	 * @param dppass
+	 */
+	public static void glStencilOpSeparate(int face, int sfail, int dpfail, int dppass) {
+		GL20.glStencilOpSeparate(face, sfail, dpfail, dppass);
+	}
+
 }

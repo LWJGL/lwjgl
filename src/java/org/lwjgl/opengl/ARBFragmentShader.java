@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 public final class ARBFragmentShader {
+
 	/*
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
 	 * returned by the <params> parameter of GetObjectParameter{fi}vARB:
@@ -42,7 +43,6 @@ public final class ARBFragmentShader {
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	*/
-
 	public static final int GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB = 0x8B49;
 	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
 	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;

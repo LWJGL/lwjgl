@@ -39,13 +39,8 @@ COMMON = \
   org_lwjgl_openal_eax_EAXListenerProperties.h \
   org_lwjgl_opengl_GLContext.cpp \
   org_lwjgl_opengl_GL11.cpp \
-  org_lwjgl_opengl_GL11.h \
   org_lwjgl_opengl_GL12.cpp \
-  org_lwjgl_opengl_GL12.h \
   org_lwjgl_opengl_GL13.cpp \
-  org_lwjgl_opengl_GL13.h \
   org_lwjgl_opengl_GL14.cpp \
-  org_lwjgl_opengl_GL14.h \
   org_lwjgl_opengl_GL15.cpp \
-  org_lwjgl_opengl_GL15.h
-  
+  org_lwjgl_opengl_GL20.cpp

@@ -31,34 +31,30 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.StringTokenizer;
-
 import java.lang.reflect.Method;
-
-import org.lwjgl.Sys;
-import org.lwjgl.LWJGLException;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * $Id$
  * <p/>
- * Manages GL contexts. Before any rendering is done by a LWJGL system, a call should be made to
- * GLContext.useContext() with a context. This will ensure that GLContext has an accurate reflection
- * of the current context's capabilities and function pointers.
+ * Manages GL contexts. Before any rendering is done by a LWJGL system, a call should be made to GLContext.useContext() with a
+ * context. This will ensure that GLContext has an accurate reflection of the current context's capabilities and function
+ * pointers.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 public final class GLContext {
 
-	/** The currently initialised context */
+	/**
+	 * The currently initialised context
+	 */
 	private static WeakReference currentContext;
 
 	/*
@@ -182,22 +178,24 @@ public final class GLContext {
 	public static boolean OpenGL13;
 	public static boolean OpenGL14;
 	public static boolean OpenGL15;
+	public static boolean OpenGL20;
 
-	/** Map of classes that have native stubs loaded */
+	/**
+	 * Map of classes that have native stubs loaded
+	 */
 	private static Map exts;
-	private static int gl_ref_count = 0;
-	private static boolean did_auto_load = false;
-	private static boolean loaded_stubs = false;
+	private static int gl_ref_count;
+	private static boolean did_auto_load;
+	private static boolean loaded_stubs;
 
 	static {
 		Sys.initialize();
 	}
 
 	/**
-	 * Determine which extensions are available. Use this to initialize capability fields. Can only be
-	 * called _after_ the Display context or a Pbuffer has been created (or a context from some other GL library).
-	 * Using LWJGL, this method is called automatically for you when the LWJGL Window is created and there
-	 * is no need to call it yourself.
+	 * Determine which extensions are available. Use this to initialize capability fields. Can only be called _after_ the Display
+	 * context or a Pbuffer has been created (or a context from some other GL library). Using LWJGL, this method is called
+	 * automatically for you when the LWJGL Window is created and there is no need to call it yourself.
 	 *
 	 * @param exts A Set of OpenGL extension string names
 	 */
@@ -217,24 +215,23 @@ public final class GLContext {
 	}
 
 	/**
-	 * Makes a GL context the current LWJGL context by loading GL function pointers.
-	 * The context must be current before a call to this method!
-	 * Instead it simply ensures that the current context is reflected accurately by GLContext's
-	 * extension caps and function pointers. Use useContext(null) when no context is active.
-	 * <p>If the context is the same as last time, then this is a no-op.
-	 * <p>If the context has not been encountered before it will be fully initialized from scratch.
-	 * Otherwise a cached set of caps and function pointers will be used.
-	 * <p>The reference to the context is held in a weak reference; therefore if no strong reference
-	 * exists to the GL context it will automatically be forgotten by the VM at an indeterminate point
-	 * in the future, freeing up a little RAM.
-	 * @param context The context object, which uniquely identifies a GL context. If context is null,
-	 * 		  the native stubs are unloaded.
+	 * Makes a GL context the current LWJGL context by loading GL function pointers. The context must be current before a call to
+	 * this method! Instead it simply ensures that the current context is reflected accurately by GLContext's extension caps and
+	 * function pointers. Use useContext(null) when no context is active. <p>If the context is the same as last time, then this is
+	 * a no-op. <p>If the context has not been encountered before it will be fully initialized from scratch. Otherwise a cached set
+	 * of caps and function pointers will be used. <p>The reference to the context is held in a weak reference; therefore if no
+	 * strong reference exists to the GL context it will automatically be forgotten by the VM at an indeterminate point in the
+	 * future, freeing up a little RAM.
+	 *
+	 * @param context The context object, which uniquely identifies a GL context. If context is null, the native stubs are
+	 *                unloaded.
+	 *
 	 * @throws LWJGLException if context non-null, and the gl library can't be loaded or the basic GL11 functions can't be loaded
 	 */
 	public static void useContext(Object context) throws LWJGLException {
-		if (context == null) {
+		if ( context == null ) {
 			unloadStubs();
-			if (did_auto_load)
+			if ( did_auto_load )
 				unloadOpenGLLibrary();
 			currentContext = null;
 			VBOTracker.setCurrent(null);
@@ -242,13 +239,13 @@ public final class GLContext {
 		}
 		// Is this the same as last time?
 		Object current = currentContext == null ? null : currentContext.get();
-		if (current == context) {
+		if ( current == context ) {
 			// Yes, so we don't need to do anything. Our caps and function pointers are still valid.
 			return;
 		}
 
 		// Ok, now it's the current context.
-		if (gl_ref_count == 0) {
+		if ( gl_ref_count == 0 ) {
 			loadOpenGLLibrary();
 			did_auto_load = true;
 		}
@@ -257,58 +254,71 @@ public final class GLContext {
 			currentContext = new WeakReference(context);
 			VBOTracker.setCurrent(context);
 		} catch (LWJGLException e) {
-			if (did_auto_load)
+			if ( did_auto_load )
 				unloadOpenGLLibrary();
 			throw e;
 		}
 	}
 
 	private static void getExtensionClassesAndNames(Map exts, Set exts_names) {
-		String version_string = GL11.glGetString(GL11.GL_VERSION);
-		int version_index = version_string.indexOf("1.");
-		if (version_index != -1) {
-			String version = version_string.substring(version_index);
-			char minor_version = version_string.charAt(2);
-			switch (minor_version) {
-				case '5':
-					addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
-					// Fall through
-				case '4':
-					addExtensionClass(exts, exts_names, "GL14", "OpenGL14");
-					// Fall through
-				case '3':
-					addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
-					// Fall through
-				case '2':
-					addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
-					// Fall through
-				default:
-					break;
-			}
+		/*
+		The version number is either of the form
+		<major number>.<minor number>
+		or
+		<major number>.<minor number>.<release number>
+		where the numbers all have one or more digits.
+		*/
+		String version = GL11.glGetString(GL11.GL_VERSION);
 
+		int majorEnd = version.indexOf('.');
+		int minorEnd = version.indexOf('.', majorEnd + 1);
+
+		int majorVersion = Integer.parseInt(version.substring(0, majorEnd));
+		int minorVersion = Integer.parseInt(version.substring(majorEnd + 1, minorEnd));
+
+		if ( majorVersion == 2 ) {
+			// ----------------------[ 2.X ]----------------------
+			addExtensionClass(exts, exts_names, "GL20", "OpenGL20");
+			// ----------------------[ 1.X ]----------------------
+			addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
+			addExtensionClass(exts, exts_names, "GL14", "OpenGL14");
+			addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
+			addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
+		} else {
+			switch ( minorVersion ) {
+				case 5:
+					addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
+				case 4:
+					addExtensionClass(exts, exts_names, "GL14", "OpenGL14");
+				case 3:
+					addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
+				case 2:
+					addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
+			}
 		}
+
 		addExtensionClass(exts, exts_names, "EXTTextureCompressionS3TC", "");
 		String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
 		StringTokenizer tokenizer = new StringTokenizer(extensions_string);
-		while (tokenizer.hasMoreTokens()) {
+		while ( tokenizer.hasMoreTokens() ) {
 			String extension_string = tokenizer.nextToken();
 			StringBuffer converted_name = new StringBuffer();
 			int gl_prefix_index = extension_string.indexOf("GL_");
-			if (gl_prefix_index == -1)
+			if ( gl_prefix_index == -1 )
 				continue;
-			if (extension_string.equals("GL_EXT_texture_compression_s3tc")) {
+			if ( "GL_EXT_texture_compression_s3tc".equals(extension_string) ) {
 				// Special workaround
 				addExtensionClass(exts, exts_names, "EXTTextureCompressionS3TC", "GL_EXT_texture_compression_s3tc");
-			} else if (extension_string.equals("GL_EXT_texture_lod_bias")) {
+			} else if ( "GL_EXT_texture_lod_bias".equals(extension_string) ) {
 				// Special workaround
 				addExtensionClass(exts, exts_names, "EXTTextureLODBias", "GL_EXT_texture_lod_bias");
-			} else if (extension_string.equals("GL_NV_texture_compression_vtc")) {
+			} else if ( "GL_NV_texture_compression_vtc".equals(extension_string) ) {
 				// Special workaround
 				addExtensionClass(exts, exts_names, "NVTextureCompressionVTC", "GL_NV_texture_compression_vtc");
 			} else {
-				for (int i = gl_prefix_index + 3; i < extension_string.length(); i++) {
+				for ( int i = gl_prefix_index + 3; i < extension_string.length(); i++ ) {
 					char c;
-					if (extension_string.charAt(i) == '_') {
+					if ( extension_string.charAt(i) == '_' ) {
 						i++;
 						c = Character.toUpperCase(extension_string.charAt(i));
 					} else
@@ -324,8 +334,8 @@ public final class GLContext {
 	}
 
 	private static void addExtensionClass(Map exts, Set exts_names, String ext_class_name, String ext_name) {
-		if (ext_name != null) {
-			if (exts_names.contains(ext_name)) {
+		if ( ext_name != null ) {
+			if ( exts_names.contains(ext_name) ) {
 				// Already added; ignore
 				return;
 			}
@@ -343,20 +353,19 @@ public final class GLContext {
 	}
 
 	private static void loadStubs() throws LWJGLException {
-		if (loaded_stubs)
+		if ( loaded_stubs )
 			return;
 		GL11.initNativeStubs();
 		exts = new HashMap();
 		Set exts_names = new HashSet();
 		getExtensionClassesAndNames(exts, exts_names);
 		Iterator exts_it = exts.keySet().iterator();
-		while (exts_it.hasNext()) {
+		while ( exts_it.hasNext() ) {
 			Class extension_class = (Class)exts_it.next();
 			resetNativeStubs(extension_class);
 			try {
 				Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
 				init_stubs_method.invoke(null, null);
-				String ext_name = (String)exts.get(extension_class);
 			} catch (Exception e) {
 				Sys.log("Failed to initialize extension " + extension_class);
 				exts_it.remove();
@@ -368,11 +377,11 @@ public final class GLContext {
 	}
 
 	private static void unloadStubs() {
-		if (!loaded_stubs)
+		if ( !loaded_stubs )
 			return;
 		loaded_stubs = false;
 		Iterator exts_it = exts.keySet().iterator();
-		while (exts_it.hasNext()) {
+		while ( exts_it.hasNext() ) {
 			Class ext_class = (Class)exts_it.next();
 			resetNativeStubs(ext_class);
 		}
@@ -380,11 +389,10 @@ public final class GLContext {
 	}
 
 	/**
-	 * If the OpenGL reference count is 0, the library is loaded. The
-	 * reference count is then incremented.
+	 * If the OpenGL reference count is 0, the library is loaded. The reference count is then incremented.
 	 */
 	public static void loadOpenGLLibrary() throws LWJGLException {
-		if (gl_ref_count == 0)
+		if ( gl_ref_count == 0 )
 			nLoadOpenGLLibrary();
 		gl_ref_count++;
 	}
@@ -392,12 +400,11 @@ public final class GLContext {
 	private static native void nLoadOpenGLLibrary() throws LWJGLException;
 
 	/**
-	 * The OpenGL library reference count is decremented, and if it
-	 * reaches 0, the library is unloaded.
+	 * The OpenGL library reference count is decremented, and if it reaches 0, the library is unloaded.
 	 */
 	public static void unloadOpenGLLibrary() {
 		gl_ref_count--;
-		if (gl_ref_count == 0)
+		if ( gl_ref_count == 0 )
 			nUnloadOpenGLLibrary();
 	}
 
