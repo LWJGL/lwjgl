@@ -27,9 +27,6 @@ AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
 
-
-LIBS='-L/usr/X11R6/lib'
-
 AC_CONFIG_AUX_DIR(admin)
 
 AC_CONFIG_SRCDIR(common/org_lwjgl_opengl_CoreGL.cpp)
@@ -62,6 +59,8 @@ dnl Replace `main' with a function in -lGL:
 AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(GL is required))
 dnl Replace `main' with a function in -lGLU:
 AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU is required))
+LIBS='-L/usr/X11R6/lib'
+AC_PATH_X
 dnl Replace `main' with a function in -lX11:
 AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is required))
 dnl Replace `main' with a function in -lXext:
