@@ -191,7 +191,16 @@ public class Vector4f extends Vector {
 		
 		return dest;
 	}
-	
+
+	/**
+	 * Get the magnitude of of the vector
+	 * @return the magnitude of the vector
+	 */
+	public float magnitude()
+	{
+		return Math.sqrt( (x * x) + (y * y) + (z * z) + (w * w) );
+	}
+
 	/**
 	 * The dot product of two vectors is calculated as
 	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w

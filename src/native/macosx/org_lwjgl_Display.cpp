@@ -70,7 +70,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
       Rect			rect;      
       SetRect( &rect, 0, 0, width, height );
       
-      WindowPtr windowPtr = NewCWindow( NULL, &rect, "Lightweight Java Gaming Library", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
+      WindowPtr windowPtr = NewCWindow( NULL, &rect, "LWJGL", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
         
       SetPortWindowPort( windowPtr );
         
