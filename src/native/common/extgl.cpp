@@ -1593,7 +1593,7 @@ static int extgl_InitializeAGL(JNIEnv *env, jobject ext_set)
 
 #ifdef _X11
 /** returns true if the extention is available */
-static int GLXQueryExtension(JNIEnv* env, jobject ext_set, Display *disp, int screen, const char *name)
+static bool GLXQueryExtension(JNIEnv* env, jobject ext_set, Display *disp, int screen, const char *name)
 {
 	const GLubyte *exts = (const GLubyte *)glXQueryExtensionsString(disp, screen);
 	return QueryExtension(env, ext_set, exts, name);
