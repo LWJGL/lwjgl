@@ -79,7 +79,6 @@ final class Win32Display implements DisplayImplementation {
 	public native void createMouse();
 	public native void destroyMouse();
 	public native void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
-	public native void enableMouseBuffer() throws LWJGLException;
 	public native int readMouse(IntBuffer buffer, int buffer_position);
 	public native void grabMouse(boolean grab);
 	public int getNativeCursorCapabilities() {
@@ -95,8 +94,6 @@ final class Win32Display implements DisplayImplementation {
 	public native void destroyKeyboard();
 	public native void pollKeyboard(ByteBuffer keyDownBuffer);
 	public native int readKeyboard(IntBuffer buffer, int buffer_position);
-	public native void enableTranslation() throws LWJGLException;
-	public native void enableKeyboardBuffer() throws LWJGLException;
 	public native int isStateKeySet(int key);
 
 	public native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;

@@ -69,7 +69,6 @@ static int last_x;
 static int last_y;
 static jbyte buttons[NUM_BUTTONS];
 static event_queue_t event_queue;
-static bool buffer_enabled;
 
 static Cursor blank_cursor;
 static Cursor current_cursor;
@@ -228,7 +227,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateMouse
 	current_cursor = None;
 	created = true;
 	pointer_grabbed = false;
-	buffer_enabled = false;
 	updatePointerGrab();
 	initEventQueue(&event_queue, EVENT_SIZE);
 }
@@ -346,10 +344,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollMouse(JNIEnv * en
 	int i;
 	for (i = 0; i < num_buttons; i++)
 		buttons_buffer[i] = buttons[i];
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nEnableMouseBuffer(JNIEnv *env, jobject this) {
-	buffer_enabled = true;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadMouse(JNIEnv *env, jobject this, jobject buffer, jint buffer_position) {

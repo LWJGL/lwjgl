@@ -247,13 +247,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	public native void nPollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 	
-	public void enableMouseBuffer() throws LWJGLException {
-		lockAWT();
-		nEnableMouseBuffer();
-		unlockAWT();
-	}
-	public native void nEnableMouseBuffer() throws LWJGLException;
-
 	public int readMouse(IntBuffer buffer, int buffer_position) {
 		lockAWT();
 		int count = nReadMouse(buffer, buffer_position);
@@ -330,20 +323,6 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	public native int nReadKeyboard(IntBuffer buffer, int buffer_position);
 	
-	public void enableTranslation() throws LWJGLException {
-		lockAWT();
-		nEnableTranslation();
-		unlockAWT();
-	}
-	public native void nEnableTranslation() throws LWJGLException;
-	
-	public void enableKeyboardBuffer() throws LWJGLException {
-		lockAWT();
-		nEnableKeyboardBuffer();
-		unlockAWT();
-	}
-	public native void nEnableKeyboardBuffer() throws LWJGLException;
-
 	public int isStateKeySet(int key) {
 		return Keyboard.STATE_UNKNOWN;
 	}

@@ -72,7 +72,6 @@ static int last_x;
 static int last_y;
 
 static event_queue_t event_queue;
-static bool buffer_enabled;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
@@ -178,7 +177,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 	initEventQueue(&event_queue, EVENT_SIZE);
 
 	last_x = last_y = accum_dx = accum_dy = accum_dwheel = 0;
-	buffer_enabled = false;
 	mouse_grabbed = false;
 
 	// Create input
@@ -207,10 +205,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 		return;
 	}
 	created = true;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableMouseBuffer(JNIEnv * env, jobject self) {
-	buffer_enabled = true;
 }
 
 void handleMouseScrolled(int event_dwheel) {

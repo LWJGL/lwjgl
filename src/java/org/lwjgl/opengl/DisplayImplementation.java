@@ -160,11 +160,6 @@ public interface DisplayImplementation {
 	void pollMouse(IntBuffer coord_buffer, ByteBuffer buttons);
 
 	/**
-	 * Method to enable the buffer
-	 */
-	void enableMouseBuffer() throws LWJGLException;
-
-	/**
 	 * Method to read the keyboard buffer
 	 *
 	 * @return the total number of events read.
@@ -215,16 +210,6 @@ public interface DisplayImplementation {
 	 * @return the total number of events read.
 	 */
 	int readKeyboard(IntBuffer buffer, int buffer_position);
-
-	/**
-	 * Method to enable the translation buffer
-	 */
-	void enableTranslation() throws LWJGLException;
-
-	/**
-	 * Method to enable the buffer
-	 */
-	void enableKeyboardBuffer() throws LWJGLException;
 
 	int isStateKeySet(int key);
 

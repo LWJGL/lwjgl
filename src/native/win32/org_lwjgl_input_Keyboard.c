@@ -54,13 +54,13 @@ extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
 
 static LPDIRECTINPUT		lpdi = NULL;						          // DirectInput
 static LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
-static bool translationEnabled;
 
 static bool useUnicode;
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
   (JNIEnv * env, jobject self)
 {
+	OSVERSIONINFO osvi;
 	DIPROPDWORD dipropdw;
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
@@ -69,7 +69,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
 		return;
 	}
 
-	translationEnabled = false;
 	// Check to see if we're already initialized
 	if (lpdiKeyboard != NULL) {
 		throwException(env, "Keyboard already created.");
@@ -101,6 +100,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
 	if(FAILED(ret)) {
 		printfDebug("Failed to acquire keyboard\n");
 	}
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	GetVersionEx(&osvi);
+	
+	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
+		useUnicode = true;
+	} else {
+		useUnicode = false;
+	}
+}
+
 }
 
 /*
@@ -205,7 +214,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
 			buf[index++] = (unsigned char) rgdod[current_di_event].dwOfs;
 			buf[index++] = (unsigned char) rgdod[current_di_event].dwData;
                         key_down = (rgdod[current_di_event].dwData & 0x80) != 0;
-			if (translationEnabled && key_down) {
+			if (key_down) {
                                 scan_code = rgdod[current_di_event].dwOfs;
                                 virt_key = MapVirtualKey(scan_code, 1);
 				if (virt_key != 0 && GetKeyboardState(state)) {
@@ -268,34 +277,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
 		printfDebug("unknown keyboard error\n");
 	}
 	return num_events;
-}
-
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    nEnableTranslation
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableTranslation
-  (JNIEnv *env, jobject self)
-{
-	// We can't do translation on DOS boxes it seems so we'll have to throw a wobbler
-	// here:
-	OSVERSIONINFO osvi;
-
-	osvi.dwOSVersionInfoSize = sizeof(osvi);
-	GetVersionEx(&osvi);
-	
-	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
-		useUnicode = true;
-	} else {
-		useUnicode = false;
-	}
-	translationEnabled = true;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_enableKeyboardBuffer
-  (JNIEnv * env, jobject self)
-{
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_isStateKeySet(JNIEnv *env, jobject self, jint key)

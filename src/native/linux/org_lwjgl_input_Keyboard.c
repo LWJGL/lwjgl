@@ -61,8 +61,6 @@ static unsigned char key_map[KEYBOARD_SIZE];
 static event_queue_t event_queue;
 
 static bool keyboard_grabbed;
-static bool buffer_enabled;
-static bool translation_enabled;
 static bool created = false;
 
 // X input manager values
@@ -151,8 +149,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	created = true;
 	keyboard_grabbed = false;
-	translation_enabled = false;
-	buffer_enabled = false;
 	initEventQueue(&event_queue, 3);
 	updateKeyboardGrab();
 	
@@ -244,7 +240,7 @@ static void translateEvent(XKeyEvent *event, jint keycode, jint state) {
 	int num_chars, i;
 	jint ch;
 
-	if (!translation_enabled || event->type == KeyRelease) {
+	if (event->type == KeyRelease) {
 		putKeyboardEvent(keycode, state, 0);
 		return;
 	}
@@ -281,8 +277,7 @@ void handleKeyEvent(XKeyEvent *event) {
 	unsigned char keycode = getKeycode(event);
 	unsigned char state = eventState(event);
 	key_buf[keycode] = state;
-	if (buffer_enabled)
-		bufferEvent(event);
+	bufferEvent(event);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollKeyboard(JNIEnv * env, jobject this, jobject buffer) {
@@ -296,12 +291,4 @@ JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadKeyboard(JNIEnv * 
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nEnableTranslation(JNIEnv *env, jobject this) {
-	translation_enabled = true;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nEnableKeyboardBuffer(JNIEnv * env, jobject this) {
-	buffer_enabled = true;
 }

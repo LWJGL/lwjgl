@@ -270,9 +270,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 		mouse_queue.poll(coord_buffer, buttons_buffer);
 	}
 
-	public void enableMouseBuffer() throws LWJGLException {
-	}
-
 	public int readMouse(IntBuffer buffer, int buffer_position) {
 		assert buffer_position == buffer.position();
 		return mouse_queue.copyEvents(buffer);
@@ -347,12 +344,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public int readKeyboard(IntBuffer buffer, int buffer_position) {
 		assert buffer_position == buffer.position();
 		return keyboard_queue.copyEvents(buffer);
-	}
-
-	public void enableTranslation() throws LWJGLException {
-	}
-
-	public void enableKeyboardBuffer() throws LWJGLException {
 	}
 
 	public int isStateKeySet(int key) {

@@ -173,7 +173,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateCursor
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyCursor
   (JNIEnv *env, jobject self, jobject handle_buffer)
 {
-//	HCURSOR cursor = (HCURSOR)cursor_handle;
-        HCURSOR *cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
+	HCURSOR *cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	DestroyCursor(*cursor_handle);
 }

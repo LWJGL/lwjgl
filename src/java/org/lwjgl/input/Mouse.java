@@ -198,8 +198,7 @@ public class Mouse {
 		height = Display.getDisplayMode().getHeight();
 		x = width / 2;
 		y = height / 2;
-		if (readBuffer != null)
-			readBuffer.clear();
+		readBuffer.clear();
 	}
 
 	/**
@@ -225,8 +224,9 @@ public class Mouse {
 		coord_buffer = BufferUtils.createIntBuffer(3);
 		if (currentCursor != null)
 			setNativeCursor(currentCursor);
+		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE * BUFFER_SIZE);
+		readBuffer.limit(0);
 		setGrabbed(isGrabbed);
-		enableBuffer();
 	}
 
 	/**
@@ -291,8 +291,7 @@ public class Mouse {
 		x = Math.min(width - 1, Math.max(0, x));
 		y = Math.min(height - 1, Math.max(0, y));
 		dwheel += poll_dwheel;
-		if (readBuffer != null)
-			read();
+		read();
 	}
 
 	private static void read() {
@@ -341,16 +340,6 @@ public class Mouse {
 	}
 
 	/**
-	 * Enable mouse button buffering. Must be called after the mouse is created.
-	 */
-	private static void enableBuffer() throws LWJGLException {
-		if (!created) throw new IllegalStateException("Mouse must be created before you can enable buffering");
-		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE * BUFFER_SIZE);
-		readBuffer.limit(0);
-		Display.getImplementation().enableMouseBuffer();
-	}
-
-	/**
 	 * Gets the next mouse event. You can query which button caused the event by using
 	 * <code>getEventButton()</code> (if any). To get the state of that key, for that event, use
 	 * <code>getEventButtonState</code>. To get the current mouse delta values use <code>getEventDX()</code>,
@@ -361,9 +350,6 @@ public class Mouse {
 	 */
 	public static boolean next() {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can read events");
-		if (readBuffer == null)
-				throw new IllegalStateException("Event buffering must be enabled before you can read events");
-
 		if (readBuffer.hasRemaining()) {
 			eventButton = readBuffer.get();
 			eventState = readBuffer.get() != 0;

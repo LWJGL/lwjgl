@@ -247,9 +247,6 @@ public class Keyboard {
 	 */
 	private static IntBuffer readBuffer;
 
-	/** True if translation is enabled */
-	private static boolean translationEnabled;
-
 	/** The current keyboard character being examined */
 	private static char eventCharacter;
 
@@ -293,8 +290,8 @@ public class Keyboard {
 			return;
 		Display.getImplementation().createKeyboard();
 		created = true;
-		enableBuffer();
-		enableTranslation();
+		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE*BUFFER_SIZE);
+		readBuffer.limit(0);
 	}
 
 	/**
@@ -337,8 +334,7 @@ public class Keyboard {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can poll the device");
 		Display.getImplementation().pollKeyboard(keyDownBuffer);
-		if (readBuffer != null)
-			read();
+		read();
 	}
 
 	private static void read() {
@@ -346,30 +342,6 @@ public class Keyboard {
 		int numEvents = Display.getImplementation().readKeyboard(readBuffer, readBuffer.position());
 		readBuffer.position(readBuffer.position() + numEvents*EVENT_SIZE);
 		readBuffer.flip();
-	}
-
-	/**
-	 * Enable keyboard translation. Must be called after the keyboard is created,
-	 * and keyboard buffering must be enabled.
-	 */
-	private static void enableTranslation() throws LWJGLException {
-		if (!created)
-			throw new IllegalStateException("Keyboard must be created before you can read events");
-		if (readBuffer == null)
-			throw new IllegalStateException("Event buffering must be enabled before you can read events");
-		Display.getImplementation().enableTranslation();
-		translationEnabled = true;
-	}
-
-	/**
-	 * Enable keyboard buffering. Must be called after the keyboard is created.
-	 */
-	private static void enableBuffer() throws LWJGLException {
-		if (!created)
-			throw new IllegalStateException("Keyboard must be created before you can enable buffering");
-		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE*BUFFER_SIZE);
-		readBuffer.limit(0);
-		Display.getImplementation().enableKeyboardBuffer();
 	}
 
 	/**
@@ -440,8 +412,6 @@ public class Keyboard {
 	public static boolean next() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can read events");
-		if (readBuffer == null)
-			throw new IllegalStateException("Event buffering must be enabled before you can read events");
 
 		if (readBuffer.hasRemaining()) {
 			eventKey = readBuffer.get() & 0xFF;
