@@ -35,7 +35,6 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
-import org.lwjgl.openal.ALUT;
 import org.lwjgl.openal.ALUTLoadWAVData;
 import org.lwjgl.openal.eax.EAX;
 import org.lwjgl.openal.eax.EAXBufferProperties;
@@ -1195,10 +1194,6 @@ public class ALTest extends BasicTest {
             CRToContinue();
             al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
             al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -100.0f);
-            al.getSource3f(testSources.get(0), AL.POSITION, Sys.getDirectBufferAddress(tempFVect), Sys.getDirectBufferAddress(tempFVect) + 4, Sys.getDirectBufferAddress(tempFVect) + 8);
-            if ((tempFVect.get(0) != 0.0f) || (tempFVect.get(1) != 0.0f) || (tempFVect.get(2) != -100.0f)) {
-                System.out.print("ERROR: alGetSource3f(..., AL_POSITION, ...).\n");
-            }
             al.getSourcefv(testSources.get(0), AL.POSITION, Sys.getDirectBufferAddress(tempFVect));
             if ((tempFVect.get(0) != 0.0f) || (tempFVect.get(1) != 0.0f) || (tempFVect.get(2) != -100.0f)) {
                 System.out.print("ERROR: alGetSourcefv(..., AL_POSITION, ...).\n");
