@@ -239,7 +239,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
 	mEnvironment = env;
 	clsMouse = clazz;
-	ShowCursor(FALSE);
+	ShowCursor(TRUE);
 	ShutdownMouse();
 }
 
