@@ -123,6 +123,11 @@ static void updateGrab(void) {
 	}
 }
 
+static void setRepeatMode(int mode) {
+	XKeyboardControl repeat_mode;
+	repeat_mode.auto_repeat_mode = mode;
+	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
+}
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate
@@ -159,6 +164,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	created = true;
+	setRepeatMode(AutoRepeatModeOff);
 	return JNI_TRUE;
 }
 
@@ -173,6 +179,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 	if (keyboard_grabbed)
 		ungrabKeyboard();
 	created = false;
+	setRepeatMode(AutoRepeatModeDefault);
 }
 
 static XKeyEvent *nextEventElement(void) {
