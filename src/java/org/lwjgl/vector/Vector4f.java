@@ -34,8 +34,6 @@ package org.lwjgl.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
-import org.lwjgl.Math;
-
 /**
  * $Id$
  *
@@ -194,15 +192,6 @@ public class Vector4f extends Vector implements Serializable {
 	}
 
 	/**
-	 * Get the magnitude of of the vector
-	 * @return the magnitude of the vector
-	 */
-	public float magnitude()
-	{
-		return Math.sqrt( (x * x) + (y * y) + (z * z) + (w * w) );
-	}
-
-	/**
 	 * The dot product of two vectors is calculated as
 	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w
 	 * @param left The LHS vector
@@ -225,7 +214,7 @@ public class Vector4f extends Vector implements Serializable {
             dls = -1f;
         else if (dls > 1.0f)
             dls = 1.0f;
-        return Math.acos(dls);
+        return (float) Math.toDegrees(Math.acos(dls));
     }
 	
 	/* (non-Javadoc)

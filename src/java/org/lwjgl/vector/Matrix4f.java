@@ -31,8 +31,6 @@
  */
 package org.lwjgl.vector;
 
-import org.lwjgl.Math;
-
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
@@ -494,8 +492,8 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @return this
 	 */
 	public Matrix4f rotate(float angle, Vector3f axis) {
-		float c = Math.cos(angle);
-		float s = Math.sin(angle);
+		float c = (float) Math.cos(angle);
+		float s = (float) Math.sin(angle);
 		float oneminusc = 1.0f - c;
 		float xy = axis.x*axis.y;
 		float yz = axis.y*axis.z;
@@ -551,8 +549,8 @@ public class Matrix4f extends Matrix implements Serializable {
 			dest = new Matrix4f();
 		else if (dest == this)
 			return rotate(angle, axis);
-		float c = Math.cos(angle);
-		float s = Math.sin(angle);
+		float c = (float) Math.cos(angle);
+		float s = (float) Math.sin(angle);
 		float oneminusc = 1.0f - c;
 		float xy = axis.x*axis.y;
 		float yz = axis.y*axis.z;

@@ -143,7 +143,8 @@ public interface GLConstants
 		WGLMultisample,
 		WGLPBuffer,
 		WGLPixelFormat,
-		WGLRenderTexture
+		WGLRenderTexture,
+		CoreGL14Constants
 {
 
 }

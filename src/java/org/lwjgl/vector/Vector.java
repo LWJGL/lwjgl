@@ -34,8 +34,6 @@ package org.lwjgl.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
-import org.lwjgl.Math;
-
 /**
  * $Id$
  *
@@ -57,7 +55,7 @@ public abstract class Vector implements Serializable {
 	 * @return the length of the vector
 	 */
 	public final float length() {
-		return Math.sqrt(lengthSquared());
+		return (float) Math.sqrt(lengthSquared());
 	}
 	
 

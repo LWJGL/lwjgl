@@ -52,6 +52,7 @@ import java.util.StringTokenizer;
  * @version $Revision$
  */
 public class GLWindow extends Window {
+	
 	/** Has the GL been created yet? */
 	private boolean created;
 	

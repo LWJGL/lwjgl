@@ -34,8 +34,6 @@ package org.lwjgl.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
-import org.lwjgl.Math;
-
 /**
  * $Id$
  *
@@ -238,7 +236,7 @@ public class Vector3f extends Vector implements Serializable {
             dls = -1f;
         else if (dls > 1.0f)
             dls = 1.0f;
-        return Math.acos(dls);
+        return (float) Math.toDegrees(Math.acos(dls));
     }
 	
 	/* (non-Javadoc)
