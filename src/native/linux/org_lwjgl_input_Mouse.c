@@ -130,7 +130,7 @@ static bool blankCursor(void) {
 
 static void updateCursor(void) {
 	Cursor cursor;
-	if (isGrabbed()) {
+	if (shouldGrab()) {
 		cursor = blank_cursor;
 	} else {
 		cursor = current_cursor;
