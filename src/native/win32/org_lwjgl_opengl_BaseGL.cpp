@@ -214,5 +214,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
   (JNIEnv *, jobject) 
 {
-	SwapBuffers(wglGetCurrentDC());
+	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 }

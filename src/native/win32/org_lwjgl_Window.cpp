@@ -313,7 +313,8 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 	printf("Created window\n");
 #endif
 
-	ShowWindow(hwnd, SW_SHOWNORMAL);
+	//ShowWindow(hwnd, SW_SHOWNORMAL);
+	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
@@ -389,4 +390,32 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_tick
   (JNIEnv * env, jobject obj)
 {
 	handleMessages(env, obj);
+}
+
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    minimize
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
+  (JNIEnv * env, jobject obj)
+{
+	if (isMinimized)
+		return;
+	ShowWindow(hwnd, SW_MINIMIZE);
+}
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    minimize
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
+  (JNIEnv * env, jobject obj)
+{
+	if (!isMinimized)
+		return;
+
+	ShowWindow(hwnd, SW_RESTORE);
 }
