@@ -281,7 +281,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
   (JNIEnv * env, jclass clazz)
 {
-	/*
+
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	try {
@@ -294,7 +294,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 		printf("Exception occurred in SetDeviceGammaRamp\n");
 	}	
 	ReleaseDC(NULL, screenDC);	
-	*/
+
 	if (modeSet) {
 		modeSet = false;
 		// Under Win32, all we have to do is:
@@ -309,7 +309,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
  * Temporarily reset display settings. This is called when the window is minimized.
  */
 void tempResetDisplayMode() {
-	/*
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	try {
@@ -322,7 +321,7 @@ void tempResetDisplayMode() {
 		printf("Exception occurred in SetDeviceGammaRamp\n");
 	}	
 	ReleaseDC(NULL, screenDC);	
-	*/
+
 	if (modeSet) {
 #ifdef _DEBUG
 		printf("Attempting to temporarily reset the display mode\n");
@@ -338,7 +337,6 @@ void tempResetDisplayMode() {
  */
 void tempRestoreDisplayMode() {
 	// Restore gamma
-	/*
 	HDC screenDC = GetDC(NULL);
 	try { 
 		if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
@@ -350,7 +348,7 @@ void tempRestoreDisplayMode() {
 		printf("Exception occurred in SetDeviceGammaRamp\n");
 	}	
 	ReleaseDC(NULL, screenDC);
-	*/
+
 	if (!modeSet) {
 
 #ifdef _DEBUG
@@ -389,7 +387,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 {
 
 	return JNI_FALSE;
-	/*
+
 	const float *gammaRamp = (const float *)env->GetDirectBufferAddress(gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
 
@@ -418,7 +416,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 	ReleaseDC(NULL, screenDC);
 
 	return ret;
-	*/
 }
 
 
@@ -452,7 +449,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 	env->DeleteLocalRef(newMode);
 
-	/*
 	// Get the default gamma ramp
 	try {
 		if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
@@ -463,7 +459,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	} catch (...) {
 		printf("Exception occurred in GetDeviceGammaRamp\n");
 	}
-	*/
+
 	ReleaseDC(NULL, screenDC);
 }
 
