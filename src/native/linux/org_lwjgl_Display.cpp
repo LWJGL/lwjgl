@@ -65,7 +65,6 @@ static XF86VidModeModeInfo **avail_modes;
 static XVisualInfo * vis_info;
 static Atom delete_atom;
 static bool gl_loaded = false;
-static JNIEnv *saved_env;
 static jclass saved_clazz;
 
 extern void handlePointerMotion(XMotionEvent *);
@@ -229,14 +228,14 @@ static void acquireInput(void) {
 	}
 }
 
-void handleMessages(void) {
+void handleMessages(JNIEnv *env) {
 	XEvent event;
 	while (XPending(disp) > 0) {
 		XNextEvent(disp, &event);
 		switch (event.type) {
 			case ClientMessage:
 				if ((event.xclient.format == 32) && (event.xclient.data.l[0] == delete_atom))
-					saved_env->SetStaticBooleanField(saved_clazz, fid_close, JNI_TRUE);
+					env->SetStaticBooleanField(saved_clazz, fid_close, JNI_TRUE);
 				break;
 			case FocusIn:
 				acquireInput();
@@ -299,8 +298,8 @@ static int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidMod
 	return 1;
 }
 
-static bool isMinimized() {
-	handleMessages();
+static bool isMinimized(JNIEnv *env, jclass clazz) {
+	handleMessages(env);
 	return current_minimized;
 }
 
@@ -322,12 +321,19 @@ XVisualInfo *getVisualInfo(void) {
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized(JNIEnv *env, jclass clazz) {
-	return isMinimized() ? JNI_TRUE : JNI_FALSE;
+	return isMinimized(env, clazz) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jint alpha_bits, jint depth_bits, jint stencil_bits, jboolean fullscreen, jstring title) {
-	saved_env = env;
+        // Get a global class instance, just to be sure
+	static jobject globalClassLock = NULL;
+	
+	if (globalClassLock == NULL) {
+		globalClassLock = env->NewGlobalRef(clazz);
+	}
+
 	saved_clazz = clazz;
+	
 	fid_close = env->GetStaticFieldID(clazz, "closeRequested", "Z");
 	
 	Window root_win;

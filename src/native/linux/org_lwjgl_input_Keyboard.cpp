@@ -69,7 +69,7 @@ extern Display *disp;
 extern Window win;
 
 extern bool releaseInput(void);
-extern void handleMessages(void);
+extern void handleMessages(JNIEnv *env);
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -79,13 +79,6 @@ extern void handleMessages(void);
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
   (JNIEnv * env, jclass clazz)
 {
-	// Get a global class instance, just to be sure
-	static jobject globalClassLock = NULL;
-
-	if (globalClassLock == NULL) {
-		globalClassLock = env->NewGlobalRef(clazz);
-	}
-
 	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
 }
 
@@ -267,7 +260,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 	XEvent event;
 	unsigned char state;
 	
-	handleMessages();
+	handleMessages(env);
 	updateGrab();
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
@@ -286,7 +279,7 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 	int state;
 	int num_events = 0;
 
-	handleMessages();
+	handleMessages(env);
 	updateGrab();
 	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && (key_event = nextEventElement()) != NULL) {
 		num_events++;

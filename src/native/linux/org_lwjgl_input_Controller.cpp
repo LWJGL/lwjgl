@@ -32,9 +32,9 @@
 /**
  * $Id$
  *
- * Win32 controller handling.
+ * Linux controller handling.
  *
- * @author Brian Matzon <brian@matzon.com>
+ * @author Elias Naur <brian@matzon.com>
  * @version $Revision$
  */
 #include <jni.h>

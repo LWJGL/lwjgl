@@ -59,7 +59,7 @@ extern Window win;
 extern int screen;
 extern int getWindowWidth(void);
 extern int getWindowHeight(void);
-extern void handleMessages(void);
+extern void handleMessages(JNIEnv* env);
 
 static bool pointer_grabbed;
 static bool created = false;
@@ -289,7 +289,7 @@ static void warpPointer(void) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv * env, jclass clazz)
 {
-	handleMessages();
+	handleMessages(env);
 	updateGrab();
 	int moved_x = current_x - last_x;
 	int moved_y = current_y - last_y;

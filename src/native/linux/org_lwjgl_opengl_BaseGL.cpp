@@ -47,7 +47,7 @@ extern XVisualInfo * getVisualInfo(void);
 extern Window win;
 extern Display * disp;
 
-extern void handleMessages();
+extern void handleMessages(JNIEnv* env);
 
 static void makeCurrent(void) {
 	glXMakeCurrent(disp, win, context);
@@ -115,7 +115,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
 {
-	handleMessages();
+	handleMessages(env);
 	glXSwapBuffers(disp, win);
 }
 
