@@ -38,6 +38,7 @@
 
 package org.lwjgl.opengl.arb;
 
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.Buffer;
 import java.nio.IntBuffer;
@@ -167,10 +168,18 @@ class ARBProgram {
 	        float z,
 	        float w);
 
+	private static void checkProgramEnv(int index, Buffer buf) {
+		if (index < 0) {
+			throw new IllegalArgumentException("<index> must be greater than or equal to 0.");
+		}
+		if (buf.remaining() < 4) {
+			throw new BufferUnderflowException();
+		}
+	}
+	
 	// ---------------------------
 	public static void glProgramEnvParameterARB(int target, int index, FloatBuffer params) {
-		assert index >= 0 : "<index> must be greater than or equal to 0.";
-		assert params.remaining() >= 4 : "<params> must have 4 floats available.";
+		checkProgramEnv(index, params);
 		nglProgramEnvParameter4fvARB(target, index, params, params.position());
 	}
 
@@ -187,8 +196,7 @@ class ARBProgram {
 
 	// ---------------------------
 	public static void glProgramLocalParameterARB(int target, int index, FloatBuffer params) {
-		assert index >= 0 : "<index> must be greater than or equal to 0.";
-		assert params.remaining() >= 4 : "<params> must have 4 floats available.";
+		checkProgramEnv(index, params);
 		nglProgramLocalParameter4fvARB(target, index, params, params.position());
 	}
 
@@ -197,8 +205,7 @@ class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramEnvParameterARB(int target, int index, FloatBuffer params) {
-		assert index >= 0 : "<index> must be greater than or equal to 0.";
-		assert params.remaining() >= 4 : "<params> must have 4 floats available.";
+		checkProgramEnv(index, params);
 		nglGetProgramEnvParameterfvARB(target, index, params, params.position());
 	}
 
@@ -207,8 +214,7 @@ class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramLocalParameterARB(int target, int index, FloatBuffer params) {
-		assert index >= 0 : "<index> must be greater than or equal to 0.";
-		assert params.remaining() >= 4 : "<params> must have 4 floats available.";
+		checkProgramEnv(index, params);
 		nglGetProgramLocalParameterfvARB(target, index, params, params.position());
 	}
 
@@ -217,6 +223,7 @@ class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramARB(int target, int parameterName, IntBuffer params) {
+		// TODO: Check buffer size
 		nglGetProgramivARB(target, parameterName, params, params.position());
 	}
 
@@ -225,6 +232,7 @@ class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramStringARB(int target, int parameterName, ByteBuffer paramString) {
+		// TODO: Check buffer size
 		nglGetProgramStringARB(target, parameterName, paramString, paramString.position());
 	}
 

@@ -60,95 +60,122 @@ public class ARBTextureCompression
 	public static final int GL_COMPRESSED_TEXTURE_FORMATS_ARB                       = 0x86A3;
 
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position()<<1);
 	}
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, IntBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position()<<2);
 	}
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, FloatBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position()<<2);
 	}
 	private static native void nglCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, Buffer pData, int pData_offset);
 
 	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position()<<1);
 	}
 	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, IntBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position()<<2);
 	}
 	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, FloatBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position()<<2);
 	}
 	private static native void nglCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer pData, int pData_offset);
 
 	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position()<<1);
 	}
 	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, IntBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position()<<2);
 	}
 	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, FloatBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position()<<2);
 	}
 	private static native void nglCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, Buffer pData, int pData_offset);
 
 	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, ByteBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, ShortBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData, pData.position()<<1);
 	}
 	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, IntBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData, pData.position()<<2);
 	}
 	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, FloatBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage1DARB(target, level, xoffset, width, border, imageSize, pData, pData.position()<<2);
 	}
 	private static native void nglCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int border, int imageSize, Buffer pData, int pData_offset);
 
 	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, ByteBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, ShortBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData, pData.position()<<1);
 	}
 	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, IntBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData, pData.position()<<2);
 	}
 	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, FloatBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, border, imageSize, pData, pData.position()<<2);
 	}
 	private static native void nglCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int border, int imageSize, Buffer pData, int pData_offset);
 
 	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData, pData.position()<<1);
 	}
 	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, IntBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData, pData.position()<<2);
 	}
 	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, FloatBuffer pData) {
+		// TODO: Check buffer size
 		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, border, imageSize, pData, pData.position()<<2);
 	}
 	private static native void nglCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int border, int imageSize, Buffer pData, int pData_offset);
 	public static void glGetCompressedTexImageARB(int target, int lod, ByteBuffer pImg) {
+		// TODO: Check buffer size
 		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position());
 	}
 	public static void glGetCompressedTexImageARB(int target, int lod, ShortBuffer pImg) {
+		// TODO: Check buffer size
 		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position()<<1);
 	}
 	public static void glGetCompressedTexImageARB(int target, int lod, IntBuffer pImg) {
+		// TODO: Check buffer size
 		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position()<<2);
 	}
 	private static native void nglGetCompressedTexImageARB(int target, int lod, Buffer pImg, int pImg_offset);

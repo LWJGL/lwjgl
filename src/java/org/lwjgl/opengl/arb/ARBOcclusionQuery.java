@@ -93,6 +93,7 @@ public class ARBOcclusionQuery {
 
 	// ---------------------------
 	public static void glGetQueryObjectiARB(int id, int pname, IntBuffer params) {
+		// TODO: check buffer size
 		nglGetQueryObjectivARB(id, pname, params, params.position());
 	}
 
@@ -101,6 +102,7 @@ public class ARBOcclusionQuery {
 
 	// ---------------------------
 	public static void glGetQueryObjectuiARB(int id, int pname, IntBuffer params) {
+		// TODO: check buffer size
 		nglGetQueryObjectuivARB(id, pname, params, params.position());
 	}
 

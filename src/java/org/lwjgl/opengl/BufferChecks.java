@@ -52,7 +52,7 @@ import java.util.Map;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-class BufferChecks {
+public class BufferChecks {
 	
 	/** Static methods only! */
 	private BufferChecks() {}
@@ -103,7 +103,7 @@ class BufferChecks {
 	 * Helper method to ensure that vertex buffer objects are disabled.
 	 * If they are enabled, we'll throw an OpenGLException
 	 */
-	static void checkVBOdisabled() {
+	public static void checkVBOdisabled() {
 		if (VBOTracker.getVBOArrayStack().getState() != 0) {
 			throw new OpenGLException("Cannot use Buffers when VBO is enabled");
 		}
@@ -113,7 +113,7 @@ class BufferChecks {
 	 * Helper method to ensure that vertex buffer objects are enabled.
 	 * If they are disabled, we'll throw an OpenGLException
 	 */
-	static void checkVBOenabled() {
+	public static void checkVBOenabled() {
 		if (VBOTracker.getVBOArrayStack().getState() == 0) {
 			throw new OpenGLException("Cannot use offsets when VBO is disabled");
 		}

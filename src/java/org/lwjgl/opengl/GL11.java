@@ -51,6 +51,7 @@ import java.util.Map;
  */
 
 public abstract class GL11 {
+	
 	/* AccumOp */
 	public static final int GL_ACCUM                          = 0x0100;
 	public static final int GL_LOAD                           = 0x0101;

@@ -39,6 +39,7 @@
  */
 package org.lwjgl.opengl.arb;
 
+import java.nio.BufferUnderflowException;
 import java.nio.FloatBuffer;
 
 public class ARBTransposeMatrix {
@@ -48,11 +49,17 @@ public class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
 
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
+		if (pfMtx.remaining() < 16) {
+			throw new BufferUnderflowException();
+		}
 		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position());
 	}
 	private static native void nglLoadTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);
 
 	public static void glMultTransposeMatrixfARB(FloatBuffer pfMtx) {
+		if (pfMtx.remaining() < 16) {
+			throw new BufferUnderflowException();
+		}
 		nglMultTransposeMatrixfARB(pfMtx, pfMtx.position());
 	}
 	private static native void nglMultTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);

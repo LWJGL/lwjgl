@@ -170,6 +170,7 @@ public class ARBVertexBufferObject {
 	public static native ByteBuffer glMapBufferARB(int target, int access, int size, ByteBuffer oldBuffer);
 	public static native boolean glUnmapBufferARB(int target);
 	public static void glGetBufferParameterARB(int target, int pname, IntBuffer params) {
+		// TODO:check buffer size
 		nglGetBufferParameterivARB(target, pname, params, params.position());
 	}
 	private static native void nglGetBufferParameterivARB(int target, int pname, IntBuffer params, int params_offset);

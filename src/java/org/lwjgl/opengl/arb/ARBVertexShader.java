@@ -65,7 +65,9 @@ public class ARBVertexShader {
 
 	// ---------------------------
 	public static void glBindAttribLocationARB(int programObj, int index, ByteBuffer name) {
-		assert name.get(name.limit()) == 0 : "<name> must be a null-terminated string.";
+		if (name.get(name.limit()) != 0) {
+			throw new IllegalArgumentException("<name> must be a null-terminated string.");
+		}
 		nglBindAttribLocationARB(programObj, index, name, name.position());
 	}
 
@@ -76,14 +78,12 @@ public class ARBVertexShader {
 	// ---------------------------
 	public static void glGetActiveAttribARB(int programObj, int index, IntBuffer length,
 	                                        IntBuffer size, IntBuffer type, ByteBuffer name) {
-		assert size.remaining() > 0 : "<size> must have at least one element available.";
-		assert type.remaining() > 0 : "<type> must have at least one element available.";
-
+		// TODO: check buffer size
+		
 		if ( length == null )
 			nglGetActiveAttribARB(programObj, index, name.remaining(), null, -1, size, size.position(),
 			                      type, type.position(), name, name.position());
 		else {
-			assert length.remaining() > 0 : "<length> must have at least one element available.";
 			nglGetActiveAttribARB(programObj, index, name.remaining(), length, length.position(), size,
 			                      size.position(), type, type.position(), name, name.position());
 		}
@@ -97,7 +97,9 @@ public class ARBVertexShader {
 
 	// ---------------------------
 	public static int glGetAttribLocationARB(int programObj, ByteBuffer name) {
-		assert name.get(name.limit()) == 0 : "<name> must be null-terminated.";
+		if (name.get(name.limit()) != 0) {
+			throw new IllegalArgumentException("<name> must be a null-terminated string.");
+		}
 		return nglGetAttribLocationARB(programObj, name, name.position());
 	}
 

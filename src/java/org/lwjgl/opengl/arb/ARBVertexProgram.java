@@ -38,6 +38,7 @@
 
 package org.lwjgl.opengl.arb;
 
+import org.lwjgl.opengl.BufferChecks;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.VBOTracker;
 import java.nio.Buffer;
@@ -115,22 +116,22 @@ public class ARBVertexProgram extends ARBProgram {
 	public static native void glVertexAttrib4NubARB(int index, byte x, byte y, byte z, byte w);
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, normalized, stride, buffer, buffer.position());
 	}
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, normalized, stride, buffer, buffer.position() << 1);
 	}
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean normalized, int stride, FloatBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglVertexAttribPointerARB(index, size, GL11.GL_FLOAT, normalized, stride, buffer, buffer.position() << 2);
 	}
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.checkVBOdisabled();
 		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2);
 	}
 
@@ -138,7 +139,7 @@ public class ARBVertexProgram extends ARBProgram {
 
 	// ---------------------------
 	public static void glVertexAttribPointerARB(int index, int size, int type, boolean normalized, int stride, int bufferOffset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.checkVBOenabled();
 		nglVertexAttribPointerARBVBO(index, size, type, normalized, stride, bufferOffset);
 	}
 
@@ -151,7 +152,7 @@ public class ARBVertexProgram extends ARBProgram {
 
 	// ---------------------------
 	public static void glGetVertexAttribARB(int index, int pname, FloatBuffer params) {
-		assert params.remaining() > 0 : "<params> must have at least one element available.";
+		// TODO: check buffer size
 		nglGetVertexAttribfvARB(index, pname, params, params.position());
 	}
 
@@ -160,7 +161,7 @@ public class ARBVertexProgram extends ARBProgram {
 
 	// ---------------------------
 	public static void glGetVertexAttribARB(int index, int pname, IntBuffer params) {
-		assert params.remaining() > 0 : "<params> must have at least one element available.";
+		// TODO: check buffer size
 		nglGetVertexAttribivARB(index, pname, params, params.position());
 	}
 

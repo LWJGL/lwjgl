@@ -50,6 +50,7 @@ public class ARBPointParameters {
 	public static native void glPointParameterfARB(int pname, float param);
 
 	public static void glPointParameterARB(int pname, FloatBuffer pfParams) {
+		// TODO: check buffer size
 		nglPointParameterfvARB(pname, pfParams, pfParams.position());
 	}
 	private static native void nglPointParameterfvARB(int pname, FloatBuffer pfParams, int pfParams_offset);
