@@ -5,7 +5,6 @@
 package org.lwjgl.test.opengl.awt;
 
 import java.awt.Frame;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.FloatBuffer;
@@ -16,15 +15,14 @@ import org.lwjgl.opengl.ARBTransposeMatrix;
 import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.glu.GLU;
 
 /**
  * $Id$
  * <p>
- * Tests AWTGLCanvas functionality
+ * AWT version of the gears demo
  * <p>
  * @version $Revision$
- * @author $Author$
+ * @author Brian Matzon <brian@matzon.dk>
  */
 public class AWTGears extends Frame {
 	
