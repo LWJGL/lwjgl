@@ -70,6 +70,7 @@ public final class GLContext {
 	public static boolean GL_ARB_multisample;
 	public static boolean GL_ARB_multitexture;
 	public static boolean GL_ARB_occlusion_query;
+	public static boolean GL_ARB_pixel_buffer_object;
 	public static boolean GL_ARB_point_parameters;
 	public static boolean GL_ARB_point_sprite;
 	public static boolean GL_ARB_shading_language_100;
