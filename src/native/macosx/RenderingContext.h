@@ -42,9 +42,10 @@
 #ifndef _RENDERING_CONTEXT_H
 #define _RENDERING_CONTEXT_H
 
+#define _OSX
 #include "extgl.h"
+//#include <OpenGL/glext.h>
 #include <Carbon/Carbon.h>
-#include <AGL/agl.h>
 
 class RenderingContext
 {

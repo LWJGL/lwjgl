@@ -327,10 +327,89 @@ extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
 
 #ifdef _OSX
 #include <Carbon/Carbon.h>
+#include <OpenGL/gliContext.h>
+#include <OpenGL/gliDispatch.h>
+#include <AGL/aglContext.h>
+
+typedef struct __AGLRendererInfoRec  *AGLRendererInfo;
+typedef struct __AGLPixelFormatRec   *AGLPixelFormat;
+typedef struct __AGLContextRec       *AGLContext;
+
+typedef GDHandle AGLDevice;
+typedef CGrafPtr AGLDrawable;
 
 OSStatus aglInitEntryPoints(void);
 void aglDellocEntryPoints (void);
 void * aglGetProcAddress (char * pszProc);
+
+typedef AGLPixelFormat (APIENTRY * aglChoosePixelFormatEXTPROC)(const AGLDevice *gdevs, GLint ndev, const GLint *attribs);
+typedef void (APIENTRY * aglDestroyPixelFormatEXTPROC)(AGLPixelFormat pix);
+typedef AGLPixelFormat (APIENTRY * aglNextPixelFormatEXTPROC)(AGLPixelFormat pix);
+typedef GLboolean (APIENTRY * aglDescribePixelFormatEXTPROC)(AGLPixelFormat pix, GLint attrib, GLint *value);
+typedef AGLDevice * (APIENTRY * aglDevicesOfPixelFormatEXTPROC)(AGLPixelFormat pix, GLint *ndevs);
+typedef AGLRendererInfo (APIENTRY * aglQueryRendererInfoEXTPROC)(const AGLDevice *gdevs, GLint ndev);
+typedef void (APIENTRY * aglDestroyRendererInfoEXTPROC)(AGLRendererInfo rend);
+typedef AGLRendererInfo (APIENTRY * aglNextRendererInfoEXTPROC)(AGLRendererInfo rend);
+typedef GLboolean (APIENTRY * aglDescribeRendererEXTPROC)(AGLRendererInfo rend, GLint prop, GLint *value);
+typedef AGLContext (APIENTRY * aglCreateContextEXTPROC)(AGLPixelFormat pix, AGLContext share);
+typedef GLboolean (APIENTRY * aglDestroyContextEXTPROC)(AGLContext ctx);
+typedef GLboolean (APIENTRY * aglCopyContextEXTPROC)(AGLContext src, AGLContext dst, GLuint mask);
+typedef GLboolean (APIENTRY * aglUpdateContextEXTPROC)(AGLContext ctx);
+typedef GLboolean (APIENTRY * aglSetCurrentContextEXTPROC)(AGLContext ctx);
+typedef AGLContext (APIENTRY * aglGetCurrentContextEXTPROC)(void);
+typedef GLboolean (APIENTRY * aglSetDrawableEXTPROC)(AGLContext ctx, AGLDrawable draw);
+typedef GLboolean (APIENTRY * aglSetOffScreenEXTPROC)(AGLContext ctx, GLsizei width, GLsizei height, GLsizei rowbytes, GLvoid *baseaddr);
+typedef GLboolean (APIENTRY * aglSetFullScreenEXTPROC)(AGLContext ctx, GLsizei width, GLsizei height, GLsizei freq, GLint device);
+typedef AGLDrawable (APIENTRY * aglGetDrawableEXTPROC)(AGLContext ctx);
+typedef GLboolean (APIENTRY * aglSetVirtualScreenEXTPROC)(AGLContext ctx, GLint screen);
+typedef GLint (APIENTRY * aglGetVirtualScreenEXTPROC)(AGLContext ctx);
+typedef void (APIENTRY * aglGetVersionEXTPROC)(GLint *major, GLint *minor);
+typedef void (APIENTRY * aglSwapBuffersEXTPROC)(AGLContext ctx);
+typedef GLboolean (APIENTRY * aglEnableEXTPROC)(AGLContext ctx, GLenum pname);
+typedef GLboolean (APIENTRY * aglDisableEXTPROC)(AGLContext ctx, GLenum pname);
+typedef GLboolean (APIENTRY * aglIsEnabledEXTPROC)(AGLContext ctx, GLenum pname);
+typedef GLboolean (APIENTRY * aglSetIntegerEXTPROC)(AGLContext ctx, GLenum pname, const GLint *params);
+typedef GLboolean (APIENTRY * aglGetIntegerEXTPROC)(AGLContext ctx, GLenum pname, GLint *params);
+typedef GLboolean (APIENTRY * aglUseFontEXTPROC)(AGLContext ctx, GLint fontID, Style face, GLint size, GLint first, GLint count, GLint base);
+typedef GLenum (APIENTRY * aglGetErrorEXTPROC)(void);
+typedef const GLubyte * (APIENTRY * aglErrorStringEXTPROC)(GLenum code);
+typedef void (APIENTRY * aglResetLibraryEXTPROC)(void);
+typedef void (APIENTRY * aglSurfaceTextureEXTPROC) (AGLContext context, GLenum target, GLenum internalformat, AGLContext surfacecontext);
+
+extern aglChoosePixelFormatEXTPROC aglChoosePixelFormat;
+extern aglDestroyPixelFormatEXTPROC aglDestroyPixelFormat;
+extern aglNextPixelFormatEXTPROC aglNextPixelFormat;
+extern aglDescribePixelFormatEXTPROC aglDescribePixelFormat;
+extern aglDevicesOfPixelFormatEXTPROC aglDevicesOfPixelFormat;
+extern aglQueryRendererInfoEXTPROC aglQueryRendererInfo;
+extern aglDestroyRendererInfoEXTPROC aglDestroyRendererInfo;
+extern aglNextRendererInfoEXTPROC aglNextRendererInfo;
+extern aglDescribeRendererEXTPROC aglDescribeRenderer;
+extern aglCreateContextEXTPROC aglCreateContext;
+extern aglDestroyContextEXTPROC aglDestroyContext;
+extern aglCopyContextEXTPROC aglCopyContext;
+extern aglUpdateContextEXTPROC aglUpdateContext;
+extern aglSetCurrentContextEXTPROC aglSetCurrentContext;
+extern aglGetCurrentContextEXTPROC aglGetCurrentContext;
+extern aglSetDrawableEXTPROC aglSetDrawable;
+extern aglSetOffScreenEXTPROC aglSetOffScreen;
+extern aglSetFullScreenEXTPROC aglSetFullScreen;
+extern aglGetDrawableEXTPROC aglGetDrawable;
+extern aglSetVirtualScreenEXTPROC aglSetVirtualScreen;
+extern aglGetVirtualScreenEXTPROC aglGetVirtualScreen;
+extern aglGetVersionEXTPROC aglGetVersion;
+extern aglSwapBuffersEXTPROC aglSwapBuffers;
+extern aglEnableEXTPROC aglEnable;
+extern aglDisableEXTPROC aglDisable;
+extern aglIsEnabledEXTPROC aglIsEnabled;
+extern aglSetIntegerEXTPROC aglSetInteger;
+extern aglGetIntegerEXTPROC aglGetInteger;
+extern aglUseFontEXTPROC aglUseFont;
+extern aglGetErrorEXTPROC aglGetError;
+extern aglErrorStringEXTPROC aglErrorString;
+extern aglResetLibraryEXTPROC aglResetlibrary;
+extern aglSurfaceTextureEXTPROC aglSurfaceTexture;
+
 
 #endif /* OSX */
 
