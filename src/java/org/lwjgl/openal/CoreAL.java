@@ -413,7 +413,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 *
 	 * @param buffer Buffer to fill
 	 * @param format format sound data is in
-	 * @param ByteBuffer location of data 
+	 * @param data location of data 
 	 * @param size size of data segment
 	 * @param freq frequency of data
 	 */
