@@ -1273,6 +1273,10 @@ extern void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set);
 /* extgl_Init the extensions and load all the functions */
 bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 {
+	if (!extgl_Open()) {
+		return false;
+	}
+
 	extgl_error = false;
 	extgl_InitOpenGL1_1();
 	if (extgl_error)
@@ -1349,6 +1353,8 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 
 #ifdef _AGL
 bool extgl_Open(void) {
+	if (opengl_bundle_ref != NULL)
+		return true;
 	opengl_bundle_ref = loadBundle("\pOpenGL.framework");
 	if (opengl_bundle_ref == NULL)
 		return false;
@@ -1364,6 +1370,8 @@ bool extgl_Open(void) {
 #ifdef _X11
 bool extgl_Open()
 {
+	if (lib_gl_handle != NULL)
+		return true;
 	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
 	if (lib_gl_handle == NULL) {
 		printfDebug("Error loading libGL.so.1: %s\n", dlerror());
@@ -1377,8 +1385,9 @@ bool extgl_Open()
 #ifdef _WIN32
 bool extgl_Open(void)
 {
+	if (lib_gl_handle != NULL)
+		return true;
 	// load the dynamic libraries for OpenGL
-	//
 	lib_gl_handle = LoadLibrary("opengl32.dll");
 	if (lib_gl_handle == NULL)
 		return false;
@@ -1390,13 +1399,16 @@ void extgl_Close(void)
 {
 #ifdef _X11
 	dlclose(lib_gl_handle);
+	lib_gl_handle = NULL;
 #endif
 #ifdef _WIN32
 	FreeLibrary(lib_gl_handle);
+	lib_gl_handle = NULL;
 #endif
 #ifdef _AGL
 	aglUnloadFramework(opengl_bundle_ref);
 	aglUnloadFramework(agl_bundle_ref);
+	opengl_bundle_ref = NULL;
 #endif
 }
 
