@@ -232,12 +232,11 @@ public final class Display {
 	
 	/**
 	 * Synchronize the display to a capped frame rate.
-	 * @param frameTime The desired frame time in seconds
+	 * @param fps The desired frame rate, in frames per second
 	 */
-	public static void sync(float frameRate) {
+	public static void sync(int fps) {
+		float frameTime = 1.0f / (float) fps;
 		timeNow = Sys.getTime();
-		System.out.println(Sys.getTimerResolution());
-		System.out.println(timeNow+" "+timeThen+" "+((float) (timeNow - timeThen) / (float) Sys.getTimerResolution()));
 		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameRate) {
 			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
 			Thread.yield();
