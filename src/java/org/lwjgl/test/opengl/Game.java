@@ -61,17 +61,18 @@ public final class Game {
 					break;
 				}
 			}
-
-			//select above found displaymode
-			Display.create(modes[mode], 0, 16, 0, false, "LWJGL Game Example");
-			System.out.println("Created display.");
+			if (mode != -1) {
+				//select above found displaymode
+				System.out.println("Setting display mode to "+modes[mode]);
+				Display.setDisplayMode(modes[mode]);
+				System.out.println("Created display.");
+			}
 		} catch (Exception e) {
 			System.err.println("Failed to create display due to " + e);
-			System.exit(1);
 		}
 	}
  
-    public static final GL gl = new GL();
+    public static final GL gl = new GL("LWJGL Game Example", 16, 0, 0,0);
     public static final GLU glu = new GLU(gl);
      static {
          try {
@@ -99,10 +100,18 @@ public final class Game {
          try {
              init();
              while (!finished) {
-//                 Keyboard.poll();
+             	 gl.tick();
+             	 
+             	 if (gl.isMinimized())
+             	 	Thread.sleep(200);
+             	 else if (gl.isCloseRequested())
+             	 	System.exit(0);
+             	 
+                 Keyboard.poll();
+                 Keyboard.read();
                  mainLoop();
                  render();
-                 gl.swapBuffers();
+                 gl.paint();
              }   
          } catch (Throwable t) {
              t.printStackTrace();
@@ -188,6 +197,10 @@ public final class Game {
          Keyboard.destroy();
          Mouse.destroy();
          gl.destroy();
-         BaseGL.destroy();
+         try {
+         	Display.resetDisplayMode();
+         } catch (Exception e) {
+         	e.printStackTrace();
+         }
      }
  }
