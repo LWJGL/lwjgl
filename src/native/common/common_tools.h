@@ -42,7 +42,8 @@
 
 #include <jni.h>
 
-#define EVENT_BUFFER_SIZE 100
+// Must be x * max_event_size + 1
+#define EVENT_BUFFER_SIZE (25 * 4 + 1)
 
 typedef struct {
 	unsigned char input_event_buffer[EVENT_BUFFER_SIZE];

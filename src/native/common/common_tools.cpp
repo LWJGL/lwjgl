@@ -39,6 +39,10 @@
 
 #include "common_tools.h"
 
+static void incListStart(event_queue_t *queue) {
+	queue->list_start = (queue->list_start + 1)%EVENT_BUFFER_SIZE;
+}
+
 void initEventQueue(event_queue_t *event_queue) {
 	event_queue->list_start = 0;
 	event_queue->list_end = 0;
@@ -64,7 +68,7 @@ static void copyEvent(event_queue_t *queue, int event_size, int event_index) {
 	int output_index = event_index*event_size;
 	for (int i = 0; i < event_size; i++) {
 		queue->output_event_buffer[output_index] = queue->input_event_buffer[queue->list_start];
-		queue->list_start = (queue->list_start + 1)%EVENT_BUFFER_SIZE;
+                incListStart(queue);
 		output_index++;
 	}
 }
