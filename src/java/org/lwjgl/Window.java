@@ -149,7 +149,7 @@ public abstract class Window {
 	
 	/**
 	 * Minimize the game and allow the operating system's default display to become
-	 * visible. It is NOT the responsibility of LWJGL's native code to restore the display
+	 * visible. It is the responsibility of LWJGL's native code to restore the display
 	 * to its normal display settings.
 	 * 
 	 * If the display is already minimized then this is a no-op.
@@ -157,7 +157,7 @@ public abstract class Window {
 	public final native void minimize();
 	
 	/**
-	 * Restore the game and hide the operating system away. It is NOT the responsibility of
+	 * Restore the game and hide the operating system away. It is the responsibility of
 	 * LWJGL's native code to restore the display to its game display settings.
 	 * 
 	 * If the display is not minimized then this is a no-op/

@@ -149,11 +149,17 @@ void closeWindow()
  */
 void appActivate(bool active)
 {
+	if (!active) {
+		tempResetDisplayMode();
+	}
 	if (active) {
 		SetForegroundWindow(hwnd);
 		ShowWindow(hwnd, SW_RESTORE);
 	} else if (isFullScreen) {
 		ShowWindow(hwnd, SW_MINIMIZE);
+	}
+	if (active) {
+		tempRestoreDisplayMode();
 	}
 }
 
@@ -200,15 +206,11 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			case WA_CLICKACTIVE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
 				isMinimized = false;
-				// Change to game display settings
-				tempRestoreDisplayMode();
 
 				break;
 			case WA_INACTIVE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
 				isMinimized = true;
-				// Restore display settings
-				tempResetDisplayMode();
 
 				break;
 			}
@@ -413,7 +415,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
 	if (isMinimized)
 		return;
 	ShowWindow(hwnd, SW_MINIMIZE);
-//	tempResetDisplayMode();
+	tempResetDisplayMode();
 }
 
 /*
@@ -427,6 +429,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
 	if (!isMinimized)
 		return;
 
-//	tempRestoreDisplayMode();
+	tempRestoreDisplayMode();
 	ShowWindow(hwnd, SW_RESTORE);
 }
