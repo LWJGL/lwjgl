@@ -1949,6 +1949,28 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglTexGenfv(JNIEnv * env, 
 	CHECK_GL_ERROR
 }
 
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    glTexGeni
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glTexGenf(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
+{
+	glTexGeni((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    glTexGeniv
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glTexGeniv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+{
+	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
+	glTexGeniv((GLint) p0, (GLint) p1, address);
+	CHECK_GL_ERROR
+}
+
 
 
 /*

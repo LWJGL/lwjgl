@@ -43,7 +43,6 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
-//#include "callbacks/GLUQuadricCallbacks.h"
 
 /*
  * Class:     org_lwjgl_opengl_GLU

@@ -1465,6 +1465,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglTexGenfv
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    glTexGeni
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glTexGeni
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglTexGenfi
+ * Signature: (IILjava/nio/IntBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglTexGenfi
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glTexEnvf
  * Signature: (IIF)V
  */
