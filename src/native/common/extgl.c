@@ -1363,6 +1363,12 @@ void * lib_glu_handle = NULL;
 CFBundleRef gBundleRefOpenGL = NULL;
 #endif
 
+#define EXTGL_SANITY_CHECK(x) 	if (extgl_error != 0) { \
+					extgl_Extensions.x = 0; \
+					printf("NOTICE: %s disabled because of missing driver symbols\n", #x); \
+					extgl_error = 0; \
+				}
+
 #ifdef _AGL
 // -------------------------
 OSStatus aglInitEntryPoints (void)
@@ -1743,6 +1749,7 @@ static void extgl_InitARBFragmentProgram()
 	glGetProgramivARB = (glGetProgramivARBPROC) extgl_GetProcAddress("glGetProgramivARB");
 	glGetProgramStringARB = (glGetProgramStringARBPROC) extgl_GetProcAddress("glGetProgramStringARB");
 	glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
+	EXTGL_SANITY_CHECK(ARB_fragment_program)
 #endif
 }
 
@@ -1753,6 +1760,7 @@ static void extgl_InitNVPrimitiveRestart()
 		return;
 	glPrimitiveRestartNV = (glPrimitiveRestartNVPROC) extgl_GetProcAddress("glPrimitiveRestartNV");
 	glPrimitiveRestartIndexNV = (glPrimitiveRestartIndexNVPROC) extgl_GetProcAddress("glPrimitiveRestartIndexNV");
+	EXTGL_SANITY_CHECK(NV_primitive_restart)
 #endif /* GL_NV_primitive_restart */
 }
 
@@ -1775,6 +1783,7 @@ static void extgl_InitNVFragmentProgram()
 	glGetProgramLocalParameterdvARB = (glGetProgramLocalParameterdvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterdvARB");
 	glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
 #endif /* GL_ARB_vertex_program */
+	EXTGL_SANITY_CHECK(NV_fragment_program)
 #endif /* GL_NV_fragment_program */
 }
 
@@ -1788,6 +1797,7 @@ static void extgl_InitNVElementArray()
 	glDrawRangeElementArrayNV = (glDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glDrawRangeElementArrayNV");
 	glMultiDrawElementArrayNV = (glMultiDrawElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawElementArrayNV");
 	glMultiDrawRangeElementArrayNV = (glMultiDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawRangeElementArrayNV");
+	EXTGL_SANITY_CHECK(NV_element_array)
 #endif
 }
 
@@ -1798,6 +1808,7 @@ static void extgl_InitEXTBlendFuncSeparate()
 	if (!extgl_Extensions.EXT_blend_func_separate)
 		return;
 	glBlendFuncSeparateEXT = (glBlendFuncSeparateEXTPROC) extgl_GetProcAddress("glBlendFuncSeparateEXT");
+	EXTGL_SANITY_CHECK(EXT_blend_func_separate)
 #endif
 }
 
@@ -1808,6 +1819,7 @@ static void extgl_InitEXTCullVertex()
 		return;
 	glCullParameterfvEXT = (glCullParameterfvEXTPROC) extgl_GetProcAddress("glCullParameterfvEXT");
 	glCullParameterdvEXT = (glCullParameterdvEXTPROC) extgl_GetProcAddress("glCullParameterdvEXT");
+	EXTGL_SANITY_CHECK(EXT_cull_vertex)
 #endif
 }
 
@@ -1827,6 +1839,7 @@ static void extgl_InitARBVertexBufferObject()
 	glUnmapBufferARB = (glUnmapBufferARBPROC) extgl_GetProcAddress("glUnmapBufferARB");
 	glGetBufferParameterivARB = (glGetBufferParameterivARBPROC) extgl_GetProcAddress("glGetBufferParameterivARB");
 	glGetBufferPointervARB = (glGetBufferPointervARBPROC) extgl_GetProcAddress("glGetBufferPointervARB");
+	EXTGL_SANITY_CHECK(ARB_vertex_buffer_object)
 #endif
 }
 
@@ -1897,6 +1910,7 @@ static void extgl_InitARBVertexProgram()
 	glGetVertexAttribivARB = (glGetVertexAttribivARBPROC) extgl_GetProcAddress("glGetVertexAttribivARB");
 	glGetVertexAttribPointervARB = (glGetVertexAttribPointervARBPROC) extgl_GetProcAddress("glGetVertexAttribPointervARB");
 	glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
+	EXTGL_SANITY_CHECK(ARB_vertex_program)
 #endif
 }
 
@@ -1906,6 +1920,7 @@ static void extgl_InitEXTStencilTwoSide()
 	if (!extgl_Extensions.EXT_stencil_two_side)
 		return;
 	glActiveStencilFaceEXT = (glActiveStencilFaceEXTPROC) extgl_GetProcAddress("glActiveStencilFaceEXT");
+	EXTGL_SANITY_CHECK(EXT_stencil_two_side)
 #endif
 }
 
@@ -1930,6 +1945,7 @@ static void extgl_InitARBWindowPos()
 	glWindowPos3fvARB = (glWindowPos3fvARBPROC) extgl_GetProcAddress("glWindowPos3fvARB");
 	glWindowPos3ivARB = (glWindowPos3ivARBPROC) extgl_GetProcAddress("glWindowPos3ivARB");
 	glWindowPos3svARB = (glWindowPos3svARBPROC) extgl_GetProcAddress("glWindowPos3svARB");
+	EXTGL_SANITY_CHECK(ARB_window_pos)
 #endif 
 }
 
@@ -1945,6 +1961,7 @@ static void extgl_InitARBTextureCompression()
 	glCompressedTexSubImage2DARB = (glCompressedTexSubImage2DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage2DARB");
 	glCompressedTexSubImage1DARB = (glCompressedTexSubImage1DARBPROC) extgl_GetProcAddress("glCompressedTexSubImage1DARB");
 	glGetCompressedTexImageARB = (glGetCompressedTexImageARBPROC) extgl_GetProcAddress("glGetCompressedTexImageARB");
+	EXTGL_SANITY_CHECK(ARB_texture_compression)
 #endif
 }
 
@@ -1955,6 +1972,7 @@ static void extgl_InitNVPointSprite()
 		return;
 	glPointParameteriNV = (glPointParameteriNVPROC) extgl_GetProcAddress("glPointParameteriNV");
 	glPointParameterivNV = (glPointParameterivNVPROC) extgl_GetProcAddress("glPointParameterivNV");
+	EXTGL_SANITY_CHECK(NV_point_sprite)
 #endif
 }
 
@@ -1970,6 +1988,7 @@ static void extgl_InitNVOcclusionQuery()
 	glEndOcclusionQueryNV = (glEndOcclusionQueryNVPROC) extgl_GetProcAddress("glEndOcclusionQueryNV");
 	glGetOcclusionQueryivNV = (glGetOcclusionQueryivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryivNV");
 	glGetOcclusionQueryuivNV = (glGetOcclusionQueryuivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryuivNV");
+	EXTGL_SANITY_CHECK(NV_occlusion_query)
 #endif
 }
 
@@ -1990,6 +2009,7 @@ static void extgl_InitATIVertexArrayObject()
 	glVariantArrayObjectATI = (glVariantArrayObjectATIPROC) extgl_GetProcAddress("glVariantArrayObjectATI");
 	glGetVariantArrayObjectfvATI = (glGetVariantArrayObjectfvATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectfvATI");
 	glGetVariantArrayObjectivATI = (glGetVariantArrayObjectivATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectivATI");
+	EXTGL_SANITY_CHECK(ATI_vertex_array_object)
 #endif
 }
 
@@ -2035,6 +2055,7 @@ static void extgl_InitATIVertexStreams()
 	glNormalStream3fvATI = (glNormalStream3fvATIPROC) extgl_GetProcAddress("glNormalStream3fvATI");
 	glNormalStream3dATI = (glNormalStream3dATIPROC) extgl_GetProcAddress("glNormalStream3dATI");
 	glNormalStream3dvATI = (glNormalStream3dvATIPROC) extgl_GetProcAddress("glNormalStream3dvATI");
+	EXTGL_SANITY_CHECK(ATI_vertex_streams)
 #endif
 }
 
@@ -2046,6 +2067,7 @@ static void extgl_InitATIElementArray()
 	glElementPointerATI = (glElementPointerATIPROC) extgl_GetProcAddress("glElementPointerATI");
 	glDrawElementArrayATI = (glDrawElementArrayATIPROC) extgl_GetProcAddress("glDrawElementArrayATI");
 	glDrawRangeElementArrayATI = (glDrawRangeElementArrayATIPROC) extgl_GetProcAddress("glDrawRangeElementArrayATI");
+	EXTGL_SANITY_CHECK(ATI_element_array)
 #endif
 }
 
@@ -2068,6 +2090,7 @@ static void extgl_InitATIFragmentShader()
 	glAlphaFragmentOp2ATI = (glAlphaFragmentOp2ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp2ATI");
 	glAlphaFragmentOp3ATI = (glAlphaFragmentOp3ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp3ATI");
 	glSetFragmentShaderConstantATI = (glSetFragmentShaderConstantATIPROC) extgl_GetProcAddress("glSetFragmentShaderConstantATI");
+	EXTGL_SANITY_CHECK(ATI_fragment_shader)
 #endif
 }
 
@@ -2081,6 +2104,7 @@ static void extgl_InitATIEnvmapBumpmap()
 	glTexBumpParameterfvATI = (glTexBumpParameterfvATIPROC) extgl_GetProcAddress("glTexBumpParameterfvATI");
 	glGetTexBumpParameterivATI = (glGetTexBumpParameterivATIPROC) extgl_GetProcAddress("glGetTexBumpParameterivATI");
 	glGetTexBumpParameterfvATI = (glGetTexBumpParameterfvATIPROC) extgl_GetProcAddress("glGetTexBumpParameterfvATI");
+	EXTGL_SANITY_CHECK(ATI_envmap_bumpmap)
 #endif
 }
 
@@ -2131,6 +2155,7 @@ static void extgl_InitEXTVertexShader()
 	glGetLocalConstantBooleanvEXT = (glGetLocalConstantBooleanvEXTPROC) extgl_GetProcAddress("glGetLocalConstantBooleanvEXT");
 	glGetLocalConstantIntegervEXT = (glGetLocalConstantIntegervEXTPROC) extgl_GetProcAddress("glGetLocalConstantIntegervEXT");
 	glGetLocalConstantFloatvEXT = (glGetLocalConstantFloatvEXTPROC) extgl_GetProcAddress("glGetLocalConstantFloatvEXT");
+	EXTGL_SANITY_CHECK(EXT_vertex_shader)
 #endif
 }
 
@@ -2144,6 +2169,7 @@ static void extgl_InitARBMatrixPalette()
 	glMatrixIndexusvARB = (glMatrixIndexusvARBPROC) extgl_GetProcAddress("glMatrixIndexusvARB");
 	glMatrixIndexuivARB = (glMatrixIndexuivARBPROC) extgl_GetProcAddress("glMatrixIndexuivARB");
 	glMatrixIndexPointerARB = (glMatrixIndexPointerARBPROC) extgl_GetProcAddress("glMatrixIndexPointerARB");
+	EXTGL_SANITY_CHECK(ARB_matrix_palette)
 #endif
 }
 
@@ -2154,6 +2180,7 @@ static void extgl_InitEXTMultiDrawArrays()
 		return;
 	glMultiDrawArraysEXT = (glMultiDrawArraysEXTPROC) extgl_GetProcAddress("glMultiDrawArraysEXT");
 	glMultiDrawElementsEXT = (glMultiDrawElementsEXTPROC) extgl_GetProcAddress("glMultiDrawElementsEXT");
+	EXTGL_SANITY_CHECK(EXT_multi_draw_arrays)
 #endif
 }
 
@@ -2172,6 +2199,7 @@ static void extgl_InitARBVertexBlend()
 	glWeightuivARB = (glWeightuivARBPROC) extgl_GetProcAddress("glWeightuivARB");
 	glWeightPointerARB = (glWeightPointerARBPROC) extgl_GetProcAddress("glWeightPointerARB");
 	glVertexBlendARB = (glVertexBlendARBPROC) extgl_GetProcAddress("glVertexBlendARB");
+	EXTGL_SANITY_CHECK(ARB_vertex_blend)
 #endif
 }
 
@@ -2182,6 +2210,7 @@ static void extgl_InitARBPointParameters()
 		return;
 	glPointParameterfARB = (glPointParameterfARBPROC) extgl_GetProcAddress("glPointParameterfARB");
 	glPointParameterfvARB = (glPointParameterfvARBPROC) extgl_GetProcAddress("glPointParameterfvARB");
+	EXTGL_SANITY_CHECK(ARB_point_parameters)
 #endif
 }
 
@@ -2192,6 +2221,7 @@ static void extgl_InitATIPNTriangles()
 		return;
 	glPNTrianglesiATI = (glPNTrianglesiATIPROC) extgl_GetProcAddress("glPNTrianglesiATI");
 	glPNTrianglesfATI = (glPNTrianglesfATIPROC) extgl_GetProcAddress("glPNTrianglesfATI");
+	EXTGL_SANITY_CHECK(ATI_pn_triangles)
 #endif
 }
 
@@ -2202,6 +2232,7 @@ static void extgl_InitATISeparateStencil()
 		return;
 	glStencilOpSeparateATI = (glStencilOpSeparateATIPROC)extgl_GetProcAddress("glStencilOpSeparateATI");
 	glStencilFuncSeparateATI = (glStencilFuncSeparateATIPROC)extgl_GetProcAddress("glStencilFuncSeparateATI");
+	EXTGL_SANITY_CHECK(ATI_separate_stencil)
 #endif
 }
 
@@ -2219,6 +2250,7 @@ static void extgl_InitNVEvaluators()
 	glGetMapAttribParameterivNV = (glGetMapAttribParameterivNVPROC) extgl_GetProcAddress("glGetMapAttribParameterivNV");
 	glGetMapAttribParameterfvNV = (glGetMapAttribParameterfvNVPROC) extgl_GetProcAddress("glGetMapAttribParameterfvNV");
 	glEvalMapsNV = (glEvalMapsNVPROC) extgl_GetProcAddress("glEvalMapsNV");
+	EXTGL_SANITY_CHECK(NV_evaluators)
 #endif
 }
 
@@ -2229,6 +2261,7 @@ static void extgl_InitNVRegisterCombiners2()
 		return;
 	glCombinerStageParameterfvNV = (glCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glCombinerStageParameterfvNV");
 	glGetCombinerStageParameterfvNV = (glGetCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerStageParameterfvNV");
+	EXTGL_SANITY_CHECK(NV_register_combiners2)
 #endif
 }
 
@@ -2244,6 +2277,7 @@ static void extgl_InitNVFence()
 	glFinishFenceNV = (glFinishFenceNVPROC) extgl_GetProcAddress("glFinishFenceNV");
 	glIsFenceNV = (glIsFenceNVPROC) extgl_GetProcAddress("glIsFenceNV");
 	glGetFenceivNV = (glGetFenceivNVPROC) extgl_GetProcAddress("glGetFenceivNV");
+	EXTGL_SANITY_CHECK(NV_fence)
 #endif
 }
 
@@ -2316,6 +2350,7 @@ static void extgl_InitNVVertexProgram()
 	glVertexAttribs4fvNV = (glVertexAttribs4fvNVPROC) extgl_GetProcAddress("glVertexAttribs4fvNV");
 	glVertexAttribs4dvNV = (glVertexAttribs4dvNVPROC) extgl_GetProcAddress("glVertexAttribs4dvNV");
 	glVertexAttribs4ubvNV = (glVertexAttribs4ubvNVPROC) extgl_GetProcAddress("glVertexAttribs4ubvNV");
+	EXTGL_SANITY_CHECK(NV_vertex_program)
 #endif
 }
 
@@ -2327,6 +2362,7 @@ static void extgl_InitEXTVertexWeighting()
 	glVertexWeightfEXT = (glVertexWeightfEXTPROC) extgl_GetProcAddress("glVertexWeightfEXT");
 	glVertexWeightfvEXT = (glVertexWeightfvEXTPROC) extgl_GetProcAddress("glVertexWeightfvEXT");
 	glVertexWeightPointerEXT = (glVertexWeightPointerEXTPROC) extgl_GetProcAddress("glVertexWeightPointerEXT");
+	EXTGL_SANITY_CHECK(EXT_vertex_weighting)
 #endif
 }
 
@@ -2336,6 +2372,7 @@ static void extgl_InitARBMultisample()
 	if (!extgl_Extensions.ARB_multisample)
 		return;
 	glSampleCoverageARB = (glSampleCoverageARBPROC) extgl_GetProcAddress("glSampleCoverageARB");
+	EXTGL_SANITY_CHECK(ARB_multisample)
 #endif
 }
 
@@ -2357,6 +2394,7 @@ static void extgl_InitNVRegisterCombiners()
 	glGetCombinerOutputParameterivNV = (glGetCombinerOutputParameterivNVPROC) extgl_GetProcAddress("glGetCombinerOutputParameterivNV");
 	glGetFinalCombinerInputParameterfvNV = (glGetFinalCombinerInputParameterfvNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterfvNV");
 	glGetFinalCombinerInputParameterivNV = (glGetFinalCombinerInputParameterivNVPROC) extgl_GetProcAddress("glGetFinalCombinerInputParameterivNV");
+	EXTGL_SANITY_CHECK(NV_register_combiners)
 #endif
 }
 
@@ -2367,6 +2405,7 @@ static void extgl_InitEXTPointParameters()
 		return;
 	glPointParameterfEXT = (glPointParameterfEXTPROC) extgl_GetProcAddress("glPointParameterfEXT");
 	glPointParameterfvEXT = (glPointParameterfvEXTPROC) extgl_GetProcAddress("glPointParameterfvEXT");
+	EXTGL_SANITY_CHECK(EXT_point_parameters)
 #endif
 }
 
@@ -2385,6 +2424,7 @@ static void extgl_InitNVVertexArrayRange()
 	glXAllocateMemoryNV = (glXAllocateMemoryNVPROC) extgl_GetProcAddress("glXAllocateMemoryNV");
 	glXFreeMemoryNV = (glXFreeMemoryNVPROC) extgl_GetProcAddress("glXFreeMemoryNV");
 #endif /* X11 */
+	EXTGL_SANITY_CHECK(NV_vertex_array_range)
 #endif
 }
  
@@ -2398,6 +2438,7 @@ static void extgl_InitEXTFogCoord()
 	glFogCoorddEXT = (glFogCoorddEXTPROC) extgl_GetProcAddress("glFogCoorddEXT");
 	glFogCoorddvEXT = (glFogCoorddvEXTPROC) extgl_GetProcAddress("glFogCoorddvEXT");
 	glFogCoordPointerEXT = (glFogCoordPointerEXTPROC) extgl_GetProcAddress("glFogCoordPointerEXT");
+	EXTGL_SANITY_CHECK(EXT_fog_coord)
 #endif
 }
 
@@ -2423,6 +2464,7 @@ static void extgl_InitEXTSecondaryColor()
 	glSecondaryColor3usEXT = (glSecondaryColor3usEXTPROC) extgl_GetProcAddress("glSecondaryColor3usEXT");
 	glSecondaryColor3usvEXT = (glSecondaryColor3usvEXTPROC) extgl_GetProcAddress("glSecondaryColor3usvEXT");
 	glSecondaryColorPointerEXT = (glSecondaryColorPointerEXTPROC) extgl_GetProcAddress("glSecondaryColorPointerEXT");
+	EXTGL_SANITY_CHECK(EXT_secondary_color)
 #endif
 }
 
@@ -2433,6 +2475,7 @@ static void extgl_InitEXTCompiledVertexArray()
 		return;
 	glLockArraysEXT = (glLockArraysEXTPROC) extgl_GetProcAddress("glLockArraysEXT");
 	glUnlockArraysEXT = (glUnlockArraysEXTPROC) extgl_GetProcAddress("glUnlockArraysEXT");
+	EXTGL_SANITY_CHECK(EXT_compiled_vertex_array)
 #endif
 }
 
@@ -2445,6 +2488,7 @@ static void extgl_InitARBTransposeMatrix()
 	glLoadTransposeMatrixdARB = (glLoadTransposeMatrixdARBPROC) extgl_GetProcAddress("glLoadTransposeMatrixdARB");
 	glMultTransposeMatrixfARB = (glMultTransposeMatrixfARBPROC) extgl_GetProcAddress("glMultTransposeMatrixfARB");
 	glMultTransposeMatrixdARB = (glMultTransposeMatrixdARBPROC) extgl_GetProcAddress("glMultTransposeMatrixdARB");
+	EXTGL_SANITY_CHECK(ARB_transpose_matrix)
 #endif
 }
 
@@ -2454,6 +2498,7 @@ static void extgl_InitEXTDrawRangeElements()
 	if (!extgl_Extensions.EXT_draw_range_elements)
 		return;
 	glDrawRangeElementsEXT = (glDrawRangeElementsEXTPROC) extgl_GetProcAddress("glDrawRangeElementsEXT");
+	EXTGL_SANITY_CHECK(EXT_draw_range_elements)
 #endif
 }
 
@@ -2500,10 +2545,11 @@ static void extgl_InitARBMultitexture()
 	glMultiTexCoord4ivARB = (glMultiTexCoord4ivARBPROC) extgl_GetProcAddress("glMultiTexCoord4ivARB");
 	glMultiTexCoord4sARB = (glMultiTexCoord4sARBPROC) extgl_GetProcAddress("glMultiTexCoord4sARB");
 	glMultiTexCoord4svARB = (glMultiTexCoord4svARBPROC) extgl_GetProcAddress("glMultiTexCoord4svARB");
+	EXTGL_SANITY_CHECK(ARB_multitexture)
 #endif /* GL_ARB_multitexture */
 }
 
-int extgl_InitGLU12(void)
+static void extgl_InitGLU12(void)
 {
 	gluBeginCurve = (gluBeginCurvePROC) extgl_GetProcAddress("gluBeginCurve");
 	gluBeginPolygon = (gluBeginPolygonPROC) extgl_GetProcAddress("gluBeginPolygon");
@@ -2556,13 +2602,12 @@ int extgl_InitGLU12(void)
 	gluTessProperty = (gluTessPropertyPROC) extgl_GetProcAddress("gluTessProperty");
 	gluTessVertex = (gluTessVertexPROC) extgl_GetProcAddress("gluTessVertex");
 	gluUnProject = (gluUnProjectPROC) extgl_GetProcAddress("gluUnProject");
-	return extgl_error;
 }
 
-int extgl_InitGLU13(void)
+static void extgl_InitGLU13(void)
 {
 	if (extgl_Extensions.glu.GLU13 != 1)
-		return extgl_error;
+		return;
 	gluUnProject4 = (gluUnProject4PROC) extgl_GetProcAddress("gluUnProject4");
 	gluBuild1DMipmapLevels = (gluBuild1DMipmapLevelsPROC) extgl_GetProcAddress("gluBuild1DMipmapLevels");
 	gluBuild2DMipmapLevels = (gluBuild2DMipmapLevelsPROC) extgl_GetProcAddress("gluBuild2DMipmapLevels");
@@ -2570,23 +2615,22 @@ int extgl_InitGLU13(void)
 	gluBuild3DMipmaps = (gluBuild3DMipmapsPROC) extgl_GetProcAddress("gluBuild3DMipmaps");
 	gluNurbsCallbackData = (gluNurbsCallbackDataPROC) extgl_GetProcAddress("gluNurbsCallbackData");
 	gluCheckExtension = (gluCheckExtensionPROC) extgl_GetProcAddress("gluCheckExtension");
-	return extgl_error;
+	EXTGL_SANITY_CHECK(glu.GLU13)
 }
 
-int extgl_InitEXTNurbsTesselator(void)
+static void extgl_InitEXTNurbsTesselator(void)
 {
 	if (!extgl_Extensions.glu.EXT_nurbs_tessellator)
-			return 1;
+		return;
 	gluNurbsCallbackDataEXT = (gluNurbsCallbackDataEXTPROC) extgl_GetProcAddress("gluNurbsCallbackDataEXT");
-
-	return 0;
+	EXTGL_SANITY_CHECK(glu.EXT_nurbs_tessellator)
 }
 
 #ifdef _X11
-int extgl_InitGLX13(void)
+static void extgl_InitGLX13(void)
 {
-	if (extgl_Extensions.glx.GLX13 == 0)
-		return extgl_error;
+	if (extgl_Extensions.glx.GLX13 != 1)
+		return;
 	glXGetFBConfigs = (glXGetFBConfigsPROC) extgl_GetProcAddress("glXGetFBConfigs");
 	glXChooseFBConfig = (glXChooseFBConfigPROC) extgl_GetProcAddress("glXChooseFBConfig");
 	glXGetFBConfigAttrib = (glXGetFBConfigAttribPROC) extgl_GetProcAddress("glXGetFBConfigAttrib");
@@ -2605,10 +2649,10 @@ int extgl_InitGLX13(void)
 	glXQueryContext = (glXQueryContextPROC) extgl_GetProcAddress("glXQueryContext");
 	glXSelectEvent = (glXSelectEventPROC) extgl_GetProcAddress("glXSelectEvent");
 	glXGetSelectedEvent = (glXGetSelectedEventPROC) extgl_GetProcAddress("glXGetSelectedEvent");
-	return extgl_error;
+	EXTGL_SANITY_CHECK(glx.GLX13)
 }
 
-int extgl_InitGLX12(void)
+static int extgl_InitGLX12(void)
 {
 	glXChooseVisual = (glXChooseVisualPROC) extgl_GetProcAddress("glXChooseVisual");
 	glXCopyContext = (glXCopyContextPROC) extgl_GetProcAddress("glXCopyContext");
@@ -2654,8 +2698,7 @@ int extgl_InitGLX(Display *disp, int screen)
 		return 1;
 	if (major > 1 || (major == 1 && minor >= 3))
 		extgl_Extensions.glx.GLX13 = 1;
-	if (extgl_InitGLX13() != 0)
-		return 1;
+	extgl_InitGLX13();
 	return 0;
 }
 #endif
@@ -3010,6 +3053,7 @@ static void extgl_InitOpenGL1_2()
 	glTexSubImage3D = (glTexSubImage3DPROC) extgl_GetProcAddress("glTexSubImage3D");
 	glCopyTexSubImage3D = (glCopyTexSubImage3DPROC) extgl_GetProcAddress("glCopyTexSubImage3D");
 	glDrawRangeElements = (glDrawRangeElementsPROC) extgl_GetProcAddress("glDrawRangeElements");
+	EXTGL_SANITY_CHECK(OpenGL12)
 #endif /* GL_VERSION_1_2 */
 }
 
@@ -3052,6 +3096,7 @@ static void extgl_InitARBImaging()
 	glMinmax = (glMinmaxPROC) extgl_GetProcAddress("glMinmax");
 	glResetHistogram = (glResetHistogramPROC) extgl_GetProcAddress("glResetHistogram");
 	glResetMinmax = (glResetMinmaxPROC) extgl_GetProcAddress("glResetMinmax");
+	EXTGL_SANITY_CHECK(ARB_imaging)
 #endif /* GL_ARB_imaging */
 }
 
@@ -3112,6 +3157,7 @@ static void extgl_InitOpenGL1_3()
 	glGetCompressedTexImage = (glGetCompressedTexImagePROC) extgl_GetProcAddress("glGetCompressedTexImage");
 
 	glSampleCoverage = (glSampleCoveragePROC) extgl_GetProcAddress("glSampleCoverage");
+	EXTGL_SANITY_CHECK(OpenGL13)
 #endif /* GL_VERSION_1_3 */
 }
 
@@ -3165,6 +3211,7 @@ static void extgl_InitOpenGL1_4()
 	glWindowPos3fv = (glWindowPos3fvPROC) extgl_GetProcAddress("glWindowPos3fv");
 	glWindowPos3iv = (glWindowPos3ivPROC) extgl_GetProcAddress("glWindowPos3iv");
 	glWindowPos3sv = (glWindowPos3svPROC) extgl_GetProcAddress("glWindowPos3sv");
+	EXTGL_SANITY_CHECK(OpenGL14)
 #endif /* GL_VERSION_1_4 */
 }
 
@@ -3318,11 +3365,14 @@ static void extgl_InitSupportedExtensions()
 int extgl_Initialize()
 {
 	extgl_error = 0;
+
 	extgl_InitOpenGL1_1();
 	extgl_InitGLU12();
-	extgl_InitGLU13();
-	extgl_InitSupportedExtensions();
+	if (extgl_error != 0)
+		return extgl_error;
+
 	extgl_InitGLUSupportedExtensions();
+	extgl_InitSupportedExtensions();
 	
 	extgl_InitEXTNurbsTesselator();
 
@@ -3374,6 +3424,8 @@ int extgl_Initialize()
 	extgl_InitOpenGL1_3();
 	extgl_InitOpenGL1_4();
 	
+	extgl_InitGLU13();
+
 #ifdef _WIN32
 	/* load WGL extensions */
 	extgl_InitializeWGL();
@@ -3383,7 +3435,7 @@ int extgl_Initialize()
 	/* load AGL extensions */
 	extgl_InitializeAGL();
 #endif
-	return extgl_error;
+	return 0;
 }
 
 #ifdef _X11
