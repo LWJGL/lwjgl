@@ -281,6 +281,7 @@ public final class GLContext {
 			}
 				
 		}
+		addExtensionClass(exts, exts_names, "EXTTextureCompressionS3TC", "");
 		String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
 		StringTokenizer tokenizer = new StringTokenizer(extensions_string);
 		while (tokenizer.hasMoreTokens()) {
@@ -289,16 +290,28 @@ public final class GLContext {
 			int gl_prefix_index = extension_string.indexOf("GL_");
 			if (gl_prefix_index == -1)
 				continue;
-			for (int i = gl_prefix_index + 3; i < extension_string.length(); i++) {
-				char c;
-				if (extension_string.charAt(i) == '_') {
-					i++;
-					c = Character.toUpperCase(extension_string.charAt(i));
-				} else
-					c = extension_string.charAt(i);
-				converted_name.append(c);
+			System.out.println(extension_string);
+			if (extension_string.equals("GL_EXT_texture_compression_s3tc")) {
+				// Special workaround
+				addExtensionClass(exts, exts_names, "EXTTextureCompressionS3TC", "GL_EXT_texture_compression_s3tc");
+			} else if (extension_string.equals("GL_EXT_texture_lod_bias")) {
+				// Special workaround
+				addExtensionClass(exts, exts_names, "EXTTextureLODBias", "GL_EXT_texture_lod_bias");
+			} else if (extension_string.equals("GL_NV_texture_compression_vtc")) {
+				// Special workaround
+				addExtensionClass(exts, exts_names, "NVTextureCompressionVTC", "GL_NV_texture_compression_vtc");
+			} else {
+				for (int i = gl_prefix_index + 3; i < extension_string.length(); i++) {
+					char c;
+					if (extension_string.charAt(i) == '_') {
+						i++;
+						c = Character.toUpperCase(extension_string.charAt(i));
+					} else
+						c = extension_string.charAt(i);
+					converted_name.append(c);
+				}
+				addExtensionClass(exts, exts_names, converted_name.toString(), extension_string);
 			}
-			addExtensionClass(exts, exts_names, converted_name.toString(), extension_string);
 		}
 		addExtensionClass(exts, exts_names, "ARBBufferObject", null);
 		addExtensionClass(exts, exts_names, "ARBProgram", null);
@@ -306,14 +319,20 @@ public final class GLContext {
 	}
 
 	private static void addExtensionClass(Map exts, Set exts_names, String ext_class_name, String ext_name) {
-		if (ext_name != null)
+		if (ext_name != null) {
+			if (exts_names.contains(ext_name)) {
+				// Already added; ignore
+				return;
+			}
 			exts_names.add(ext_name);
+		}
 		try {
 			Class extension_class = Class.forName("org.lwjgl.opengl." + ext_class_name);
 			extension_class.getDeclaredMethod("initNativeStubs", null); // check for existance of initNativeStubs method
 			exts.put(extension_class, ext_name);
 		} catch (ClassNotFoundException e) {
 			// ignore
+			Sys.log("No support for "+ext_class_name+" in LWJGL "+Sys.VERSION+": "+e);
 		} catch (NoSuchMethodException e) {
 			// ignore
 		}
