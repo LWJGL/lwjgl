@@ -55,8 +55,15 @@ final class LinuxDisplay implements DisplayImplementation {
 	public native void resetDisplayMode();
 	public native int getGammaRampLength();
 	public native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
-	public native String getAdapter();
-	public native String getVersion();
+
+	public String getAdapter() {
+		return null;
+	}
+	
+	public String getVersion() {
+		return null;
+	}
+	
 	public native DisplayMode init();
 	public native void setTitle(String title);
 	public native boolean isCloseRequested();
@@ -72,7 +79,10 @@ final class LinuxDisplay implements DisplayImplementation {
 	public native void reshape(int x, int y, int width, int height);
 	public native DisplayMode[] getAvailableDisplayModes();
 	/* Mouse */
-	public native boolean hasWheel();
+	public boolean hasWheel() {
+		return true;
+	}
+
 	public native int getButtonCount();
 	public native void createMouse();
 	public native void destroyMouse();

@@ -115,7 +115,7 @@ bool checkXError(JNIEnv *env) {
 		if (env != NULL)
 			throwException(env, error_message);
 		else
-			printfDebugJava(env, error_message);
+			printfDebug(error_message);
 		return false;
 	} else
 		return true;
@@ -689,14 +689,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setGammaRamp(JNIEnv *e
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_init(JNIEnv *env, jobject this) {
 	return initDisplay(env, getCurrentScreen());
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getAdapter(JNIEnv *env , jobject this) {
-	return NULL;
-}
-
-JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getVersion(JNIEnv *env, jobject this) {
-	return NULL;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createContext(JNIEnv *env, jobject this, jobject pixel_format) {

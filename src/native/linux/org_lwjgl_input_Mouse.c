@@ -236,10 +236,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getMaxCursorSize
 	return width_return > height_return ? height_return : width_return;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_hasWheel(JNIEnv *env , jobject this) {
-	return JNI_TRUE;
-}
-
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getButtonCount(JNIEnv *env, jobject this) {
 	return NUM_BUTTONS;
 }
