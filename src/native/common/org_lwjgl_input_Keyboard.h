@@ -7,7 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
 #undef org_lwjgl_input_Keyboard_CHAR_NONE
 #define org_lwjgl_input_Keyboard_CHAR_NONE 0L
 #undef org_lwjgl_input_Keyboard_KEY_NONE
@@ -279,14 +278,6 @@ extern "C" {
 /* Inaccessible static: eventState */
 /* Inaccessible static: initialized */
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Keyboard */
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    initIDs
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
-  (JNIEnv *, jclass);
-
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate

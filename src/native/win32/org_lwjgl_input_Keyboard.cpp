@@ -56,17 +56,6 @@ static bool translationEnabled;
 
 static bool useUnicode;
 
-
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    initIDs
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
-  (JNIEnv * env, jclass clazz)
-{
-}
-
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate

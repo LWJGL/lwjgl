@@ -63,14 +63,6 @@ static bool translation_enabled;
 static bool created = false;
 static bool should_grab = false;
 
-/*
- * Class:     org_lwjgl_input_Keyboard
- * Method:    initIDs
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs(JNIEnv * env, jclass clazz) {
-}
-
 static void setRepeatMode(int mode) {
 	XKeyboardControl repeat_mode;
 	repeat_mode.auto_repeat_mode = mode;

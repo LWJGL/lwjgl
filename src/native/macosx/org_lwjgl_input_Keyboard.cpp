@@ -345,9 +345,6 @@ static void setupMappings(void) {
 	key_map[0x79] = org_lwjgl_input_Keyboard_KEY_NEXT;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs(JNIEnv * env, jclass clazz) {
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate(JNIEnv * env, jclass clazz) {
 	buffer_enabled = false;
 	translation_enabled = false;

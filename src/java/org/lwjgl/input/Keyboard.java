@@ -272,14 +272,8 @@ public class Keyboard {
 		if (initialized)
 			return;
 		Sys.initialize();
-		initIDs();
 		initialized = true;
 	}
-	
-	/**
-	 * Register fields with the native library
-	 */
-	private static native void initIDs();
 	
 	/**
 	 * "Create" the keyboard. The display must first have been created. The
