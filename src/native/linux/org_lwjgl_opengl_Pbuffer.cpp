@@ -70,12 +70,23 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
 	glXDestroyPbuffer(getDisplay(), buffer);
 	glXDestroyContext(getDisplay(), context);
 	free(buffer_info);
+	decDisplay();
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jint width, jint height, jobject pixel_format,
   jobject pixelFormatCaps, jobject pBufferAttribs)
 {
-	Display *disp = getDisplay();
+	Display *disp = incDisplay(env);
+	if (disp == NULL) {
+		return -1;
+	}
+	int current_screen = XDefaultScreen(disp);
+	if (!extgl_InitGLX(env, disp, current_screen)) {
+		decDisplay();
+		throwException(env, "Could not init GLX");
+		return -1;
+	}
+
 	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
 	if (configs == 0) {
 		XFree(configs);

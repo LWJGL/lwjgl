@@ -11,7 +11,6 @@ NATIVE = \
   org_lwjgl_input_Cursor.cpp \
   org_lwjgl_opengl_Display.cpp \
   org_lwjgl_opengl_Pbuffer.cpp \
-  org_lwjgl_opengl_GLContext.cpp \
   display.cpp \
   extgl_glx.cpp \
   extxcursor.cpp

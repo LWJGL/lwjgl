@@ -37,6 +37,7 @@ COMMON = \
   org_lwjgl_openal_eax_EAXBufferProperties.h \
   org_lwjgl_openal_eax_EAXListenerProperties.cpp \
   org_lwjgl_openal_eax_EAXListenerProperties.h \
+  org_lwjgl_opengl_GLContext.cpp \
   org_lwjgl_opengl_GL11.cpp \
   org_lwjgl_opengl_GL11.h \
   org_lwjgl_opengl_GL12.cpp \

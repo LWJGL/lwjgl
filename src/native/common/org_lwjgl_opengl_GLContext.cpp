@@ -32,7 +32,6 @@
 
 #include "org_lwjgl_opengl_GLContext.h"
 #include "extgl.h"
-#include "common_tools.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nLoadOpenGLLibrary(JNIEnv * env, jclass clazz) {
 	if (!extgl_Open()) {

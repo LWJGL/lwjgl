@@ -55,6 +55,7 @@
 #include "org_lwjgl_opengl_Display.h"
 
 #define USEGLX13 extgl_Extensions.GLX13
+#define ERR_MSG_SIZE 1024
 
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
@@ -77,6 +78,67 @@ static bool focused;
 static bool closerequested;
 static bool grab;
 static bool ignore_motion_events;
+
+static int current_screen;
+static Display *display_connection = NULL;
+static int display_connection_usage = 0;
+static bool async_x_error;
+static char error_message[ERR_MSG_SIZE];
+static Atom warp_atom;
+
+Atom getWarpAtom(void) {
+	        return warp_atom;
+}
+
+int getCurrentScreen(void) {
+	        return current_screen;
+}
+
+bool checkXError(JNIEnv *env) {
+	XSync(getDisplay(), False);
+	if (async_x_error) {
+		async_x_error = false;
+		throwException(env, error_message);
+		return false;
+	} else
+		return true;
+}
+
+static int errorHandler(Display *disp, XErrorEvent *error) {
+	char err_msg_buffer[ERR_MSG_SIZE];
+	XGetErrorText(disp, error->error_code, err_msg_buffer, ERR_MSG_SIZE);
+	err_msg_buffer[ERR_MSG_SIZE - 1] = '\0';
+	snprintf(error_message, ERR_MSG_SIZE, "X Error - serial: %d, error_code: %s, request_code: %d, minor_code: %d", (int)error->serial, err_msg_buffer, (int)error->request_code, (int)error->minor_code);
+	error_message[ERR_MSG_SIZE - 1] = '\0';
+	async_x_error = true;
+	return 0;
+}
+
+
+Display *getDisplay(void) {
+	return display_connection;
+}
+
+Display *incDisplay(JNIEnv *env) {
+	if (display_connection_usage == 0) {
+		async_x_error = false;
+		XSetErrorHandler(errorHandler);
+		display_connection = XOpenDisplay(NULL);
+		if (display_connection == NULL) {
+			throwException(env, "Could not open X display");
+			return NULL;
+		}
+		warp_atom = XInternAtom(getDisplay(), "ignore_warp_atom", False);
+	}
+	display_connection_usage++;
+	return display_connection;
+}
+
+void decDisplay(void) {
+	display_connection_usage--;
+	if (display_connection_usage == 0)
+		XCloseDisplay(display_connection);
+}
 
 static void waitMapped(Window win) {
 	XEvent event;
@@ -555,6 +617,17 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getVersion(JNIEnv *env, 
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
+	Display *disp = incDisplay(env);
+	if (disp == NULL) {
+		return;
+	}
+	current_screen = XDefaultScreen(disp);
+	if (!extgl_InitGLX(env, disp, current_screen)) {
+		decDisplay();
+		throwException(env, "Could not init GLX");
+		return;
+	}
+
 	if (USEGLX13) {
 		initWindowGLX13(env, pixel_format);
 	} else {
@@ -564,6 +637,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env, jclass clazz) {
 	destroyContext();
+	decDisplay();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen) {
