@@ -8,6 +8,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.glu.GLU;
@@ -158,17 +159,17 @@ public class PositionTest extends BasicTest {
     rightPosition.flip();
     rightVelocity.flip();
 
-    AL.alListener(AL.AL_POSITION, listenerPosition);
-    AL.alListener(AL.AL_VELOCITY, listenerVelocity);
-    AL.alListener(AL.AL_ORIENTATION, listenerOrientation);
+    AL10.alListener(AL10.AL_POSITION, listenerPosition);
+    AL10.alListener(AL10.AL_VELOCITY, listenerVelocity);
+    AL10.alListener(AL10.AL_ORIENTATION, listenerOrientation);
 
     // creating buffers
     Sys.log("Creating buffers");
-    AL.alGenBuffers(soundBuffers);
+    AL10.alGenBuffers(soundBuffers);
     soundBuffers.rewind();
 
     // creating sources
-    AL.alGenSources(soundSources);
+    AL10.alGenSources(soundSources);
     soundSources.rewind();
 
     // load sound files (left, center, right).wav
@@ -176,33 +177,33 @@ public class PositionTest extends BasicTest {
 
     Sys.log("Loading left.wav");
     WaveData left = WaveData.create("left.wav");
-    AL.alBufferData(soundBuffers.get(LEFT), left.format, left.data, left.data.capacity(), left.samplerate);
-    AL.alSourcef(soundSources.get(LEFT), AL.AL_PITCH, 1.0f);
-    AL.alSourcef(soundSources.get(LEFT), AL.AL_GAIN, 1.0f);
-    AL.alSource(soundSources.get(LEFT), AL.AL_POSITION, leftPosition);
-    AL.alSource(soundSources.get(LEFT), AL.AL_VELOCITY, leftVelocity);
-    AL.alSourcei(soundSources.get(LEFT), AL.AL_BUFFER, soundBuffers.get(LEFT));
-    AL.alSourcei(soundSources.get(LEFT), AL.AL_LOOPING, AL.AL_TRUE);
+    AL10.alBufferData(soundBuffers.get(LEFT), left.format, left.data, left.data.capacity(), left.samplerate);
+    AL10.alSourcef(soundSources.get(LEFT), AL10.AL_PITCH, 1.0f);
+    AL10.alSourcef(soundSources.get(LEFT), AL10.AL_GAIN, 1.0f);
+    AL10.alSource(soundSources.get(LEFT), AL10.AL_POSITION, leftPosition);
+    AL10.alSource(soundSources.get(LEFT), AL10.AL_VELOCITY, leftVelocity);
+    AL10.alSourcei(soundSources.get(LEFT), AL10.AL_BUFFER, soundBuffers.get(LEFT));
+    AL10.alSourcei(soundSources.get(LEFT), AL10.AL_LOOPING, AL10.AL_TRUE);
 
     Sys.log("Loading center.wav");
     WaveData center = WaveData.create("center.wav");
-    AL.alBufferData(soundBuffers.get(CENTER), center.format, center.data, center.data.capacity(), center.samplerate);
-    AL.alSourcef(soundSources.get(CENTER), AL.AL_PITCH, 1.0f);
-    AL.alSourcef(soundSources.get(CENTER), AL.AL_GAIN, 1.0f);
-    AL.alSource(soundSources.get(CENTER), AL.AL_POSITION, centerPosition);
-    AL.alSource(soundSources.get(CENTER), AL.AL_VELOCITY, centerVelocity);
-    AL.alSourcei(soundSources.get(CENTER), AL.AL_BUFFER, soundBuffers.get(CENTER));
-    AL.alSourcei(soundSources.get(CENTER), AL.AL_LOOPING, AL.AL_TRUE);
+    AL10.alBufferData(soundBuffers.get(CENTER), center.format, center.data, center.data.capacity(), center.samplerate);
+    AL10.alSourcef(soundSources.get(CENTER), AL10.AL_PITCH, 1.0f);
+    AL10.alSourcef(soundSources.get(CENTER), AL10.AL_GAIN, 1.0f);
+    AL10.alSource(soundSources.get(CENTER), AL10.AL_POSITION, centerPosition);
+    AL10.alSource(soundSources.get(CENTER), AL10.AL_VELOCITY, centerVelocity);
+    AL10.alSourcei(soundSources.get(CENTER), AL10.AL_BUFFER, soundBuffers.get(CENTER));
+    AL10.alSourcei(soundSources.get(CENTER), AL10.AL_LOOPING, AL10.AL_TRUE);
 
     Sys.log("Loading right.wav");
     WaveData right = WaveData.create("right.wav");
-    AL.alBufferData(soundBuffers.get(RIGHT), right.format, right.data, right.data.capacity(), right.samplerate);
-    AL.alSourcef(soundSources.get(RIGHT), AL.AL_PITCH, 1.0f);
-    AL.alSourcef(soundSources.get(RIGHT), AL.AL_GAIN, 1.0f);
-    AL.alSource(soundSources.get(RIGHT), AL.AL_POSITION, rightPosition);
-    AL.alSource(soundSources.get(RIGHT), AL.AL_VELOCITY, rightVelocity);
-    AL.alSourcei(soundSources.get(RIGHT), AL.AL_BUFFER, soundBuffers.get(RIGHT));
-    AL.alSourcei(soundSources.get(RIGHT), AL.AL_LOOPING, AL.AL_TRUE);
+    AL10.alBufferData(soundBuffers.get(RIGHT), right.format, right.data, right.data.capacity(), right.samplerate);
+    AL10.alSourcef(soundSources.get(RIGHT), AL10.AL_PITCH, 1.0f);
+    AL10.alSourcef(soundSources.get(RIGHT), AL10.AL_GAIN, 1.0f);
+    AL10.alSource(soundSources.get(RIGHT), AL10.AL_POSITION, rightPosition);
+    AL10.alSource(soundSources.get(RIGHT), AL10.AL_VELOCITY, rightVelocity);
+    AL10.alSourcei(soundSources.get(RIGHT), AL10.AL_BUFFER, soundBuffers.get(RIGHT));
+    AL10.alSourcei(soundSources.get(RIGHT), AL10.AL_LOOPING, AL10.AL_TRUE);
 
     Sys.log("Soundfiles loaded successfully");
     // -----------------------------------------------------
@@ -281,11 +282,11 @@ public class PositionTest extends BasicTest {
    * Starts playing the sounds at different times
    */
   private void startSounds() {
-    AL.alSourcePlay(soundSources.get(LEFT));
+    AL10.alSourcePlay(soundSources.get(LEFT));
     pause(300);
-    AL.alSourcePlay(soundSources.get(CENTER));
+    AL10.alSourcePlay(soundSources.get(CENTER));
     pause(500);
-    AL.alSourcePlay(soundSources.get(RIGHT));    
+    AL10.alSourcePlay(soundSources.get(RIGHT));    
   }
   
   /**
@@ -297,7 +298,7 @@ public class PositionTest extends BasicTest {
     // if requesting pause, and not paused - pause and stop sound
     if(paused && !pauseMode) {
       pauseMode = true;
-      AL.alSourcePause(soundSources);
+      AL10.alSourcePause(soundSources);
     } 
     
     // else go out of pause mode and start sounds
@@ -325,17 +326,17 @@ public class PositionTest extends BasicTest {
     // Test for play
     // ============================================
     if (Keyboard.isKeyDown(Keyboard.KEY_1)) {
-      AL.alSourcePlay(soundSources.get(LEFT));
+      AL10.alSourcePlay(soundSources.get(LEFT));
       Sys.log("Playing left.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_2)) {
-      AL.alSourcePlay(soundSources.get(CENTER));
+      AL10.alSourcePlay(soundSources.get(CENTER));
       Sys.log("Playing center.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_3)) {
-      AL.alSourcePlay(soundSources.get(RIGHT));
+      AL10.alSourcePlay(soundSources.get(RIGHT));
       Sys.log("Playing right.wav");
     }
     // --------------------------------------------
@@ -343,17 +344,17 @@ public class PositionTest extends BasicTest {
     // Test for stop
     // ============================================
     if (Keyboard.isKeyDown(Keyboard.KEY_4)) {
-      AL.alSourceStop(soundSources.get(LEFT));
+      AL10.alSourceStop(soundSources.get(LEFT));
       Sys.log("Stopped left.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_5)) {
-      AL.alSourceStop(soundSources.get(CENTER));
+      AL10.alSourceStop(soundSources.get(CENTER));
       Sys.log("Stopped center.wav");
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_6)) {
-      AL.alSourceStop(soundSources.get(RIGHT));
+      AL10.alSourceStop(soundSources.get(RIGHT));
       Sys.log("Stopped right.wav");
     }
     // --------------------------------------------
@@ -362,12 +363,12 @@ public class PositionTest extends BasicTest {
     // ============================================
     if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
       listenerPosition.put(0, listenerPosition.get(0) - 0.1f);
-      AL.alListener(AL.AL_POSITION, listenerPosition);
+      AL10.alListener(AL10.AL_POSITION, listenerPosition);
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
       listenerPosition.put(0, listenerPosition.get(0) + 0.1f);
-      AL.alListener(AL.AL_POSITION, listenerPosition);
+      AL10.alListener(AL10.AL_POSITION, listenerPosition);
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
@@ -376,7 +377,7 @@ public class PositionTest extends BasicTest {
       } else {
         listenerPosition.put(2, listenerPosition.get(2) - 0.1f);
       }
-      AL.alListener(AL.AL_POSITION, listenerPosition);
+      AL10.alListener(AL10.AL_POSITION, listenerPosition);
     }
 
     if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
@@ -385,7 +386,7 @@ public class PositionTest extends BasicTest {
       } else {
         listenerPosition.put(2, listenerPosition.get(2) + 0.1f);
       }
-      AL.alListener(AL.AL_POSITION, listenerPosition);
+      AL10.alListener(AL10.AL_POSITION, listenerPosition);
     }
     // --------------------------------------------
     
@@ -400,7 +401,7 @@ public class PositionTest extends BasicTest {
       listenerPosition.put(2, listenerPosition.get(2) + 0.1f);
     }
     
-    AL.alListener(AL.AL_POSITION, listenerPosition);
+    AL10.alListener(AL10.AL_POSITION, listenerPosition);
     
   }
 
@@ -463,9 +464,9 @@ public class PositionTest extends BasicTest {
     Mouse.destroy();
     
     Sys.log("Shutting down OpenAL");
-    AL.alSourceStop(soundSources);
-    AL.alDeleteSources(soundSources);
-    AL.alDeleteBuffers(soundBuffers);
+    AL10.alSourceStop(soundSources);
+    AL10.alDeleteSources(soundSources);
+    AL10.alDeleteBuffers(soundBuffers);
     AL.destroy();
 
     Sys.log("Shutting down Window");

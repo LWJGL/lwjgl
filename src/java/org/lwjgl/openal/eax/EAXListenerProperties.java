@@ -184,9 +184,9 @@ public class EAXListenerProperties {
 
   public static final int EAXLISTENER_MINENVIRONMENT = 0;
   public static final int EAXLISTENER_MAXENVIRONMENT =
-    (EAX.EAX_ENVIRONMENT_COUNT - 1);
+    (EAX20.EAX_ENVIRONMENT_COUNT - 1);
   public static final int EAXLISTENER_DEFAULTENVIRONMENT =
-    EAX.EAX_ENVIRONMENT_GENERIC;
+    EAX20.EAX_ENVIRONMENT_GENERIC;
 
   public static final float EAXLISTENER_MINENVIRONMENTSIZE = 1.0f;
   public static final float EAXLISTENER_MAXENVIRONMENTSIZE = 100.0f;
@@ -226,8 +226,8 @@ public class EAXListenerProperties {
    * Loads current EAX values
    */
   public void loadEAXValues() {
-    EAX.eaxGet(
-        CoreEAX.LISTENER_GUID,
+    EAX20.eaxGet(
+        EAX20.LISTENER_GUID,
         EAXLISTENER_ALLPARAMETERS,
         0,
         eaxListenerProperties,
@@ -269,8 +269,8 @@ public class EAXListenerProperties {
    */
   public void commit() {
     // call eaxSet with Listener guid, setting all parameters
-    EAX.eaxSet(
-        CoreEAX.LISTENER_GUID, EAXLISTENER_ALLPARAMETERS | EAXLISTENER_IMMEDIATE, 
+    EAX20.eaxSet(
+        EAX20.LISTENER_GUID, EAXLISTENER_ALLPARAMETERS | EAXLISTENER_IMMEDIATE, 
         0, eaxListenerProperties, EAXLISTENERPROPERTIES_SIZE);      
   }
   
@@ -575,8 +575,8 @@ public class EAXListenerProperties {
     // only the environment value and its size. Also pass the
     // EAXLISTENER_ENVIRONMENT value (and since we're committing IMMEDIATE too)
     if (autoCommit) {
-      EAX.eaxSet(
-          CoreEAX.LISTENER_GUID, EAXLISTENER_ENVIRONMENT | EAXLISTENER_IMMEDIATE, 
+      EAX20.eaxSet(
+          EAX20.LISTENER_GUID, EAXLISTENER_ENVIRONMENT | EAXLISTENER_IMMEDIATE, 
           0, eaxListenerProperties.position(environment_offset), 4);
       
       // rewind buffer
@@ -609,8 +609,8 @@ public class EAXListenerProperties {
     // only the environment size value and its size. Also pass the
     // EAXLISTENER_ENVIRONMENTSIZE value (and since we're committing IMMEDIATE too)
     if (autoCommit) {
-      EAX.eaxSet(
-          CoreEAX.LISTENER_GUID, EAXLISTENER_ENVIRONMENTSIZE | EAXLISTENER_IMMEDIATE, 
+      EAX20.eaxSet(
+          EAX20.LISTENER_GUID, EAXLISTENER_ENVIRONMENTSIZE | EAXLISTENER_IMMEDIATE, 
           0, eaxListenerProperties.position(environmentSize_offset), 4);
       
       // rewind buffer

@@ -22,14 +22,14 @@ COMMON = \
   org_lwjgl_input_Mouse.h \
   org_lwjgl_openal_ALC.cpp \
   org_lwjgl_openal_ALC.h \
-  org_lwjgl_openal_BaseAL.cpp \
-  org_lwjgl_openal_BaseAL.h \
-  org_lwjgl_openal_CoreAL.cpp \
-  org_lwjgl_openal_CoreAL.h \
-  org_lwjgl_openal_eax_BaseEAX.cpp \
-  org_lwjgl_openal_eax_BaseEAX.h \
-  org_lwjgl_openal_eax_CoreEAX.cpp \
-  org_lwjgl_openal_eax_CoreEAX.h \
+  org_lwjgl_openal_AL.cpp \
+  org_lwjgl_openal_AL.h \
+  org_lwjgl_openal_AL10.cpp \
+  org_lwjgl_openal_AL10.h \
+  org_lwjgl_openal_eax_EAX.cpp \
+  org_lwjgl_openal_eax_EAX.h \
+  org_lwjgl_openal_eax_EAX20.cpp \
+  org_lwjgl_openal_eax_EAX.h \
   org_lwjgl_openal_eax_EAXBufferProperties.cpp \
   org_lwjgl_openal_eax_EAXBufferProperties.h \
   org_lwjgl_openal_eax_EAXListenerProperties.cpp \

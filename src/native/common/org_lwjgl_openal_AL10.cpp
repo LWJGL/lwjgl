@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@
  * @author  Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-#include "org_lwjgl_openal_CoreAL.h"
+#include "org_lwjgl_openal_AL10.h"
 
 /* OpenAL includes */
 #include "checkALerror.h"
@@ -51,7 +51,7 @@
  * C Specification:
  * ALvoid alEnable(ALenum capability);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alEnable (JNIEnv *env, jclass clazz, jint capability) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alEnable (JNIEnv *env, jclass clazz, jint capability) {
 	alEnable((ALenum) capability);
 	CHECK_AL_ERROR
 }
@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alEnable (JNIEnv *env, jclas
  * C Specification:
  * ALvoid alDisable(ALenum capability);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDisable (JNIEnv *env, jclass clazz, jint capability) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alDisable (JNIEnv *env, jclass clazz, jint capability) {
 	alDisable((ALenum) capability);
 	CHECK_AL_ERROR
 }
@@ -73,7 +73,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDisable (JNIEnv *env, jcla
  * C Specification:
  * Alboolean alIsEnabled(ALenum capability);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsEnabled (JNIEnv *env, jclass clazz, jint capability) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_AL10_alIsEnabled (JNIEnv *env, jclass clazz, jint capability) {
 	jboolean result = (jboolean) alIsEnabled((ALenum) capability);
 	
 	CHECK_AL_ERROR
@@ -86,7 +86,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsEnabled (JNIEnv *env
  * C Specification
  * ALvoid alHint(ALenum target, ALenum mode);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alHint (JNIEnv *env, jclass clazz, jint target, jint mode) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alHint (JNIEnv *env, jclass clazz, jint target, jint mode) {
 	//alHint((ALint)target, (ALint)mode);
 	//cannot link with above statement
 	return;
@@ -99,7 +99,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alHint (JNIEnv *env, jclass 
  * C Specification:
  * Alboolean alGetBoolean(ALenum pname);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alGetBoolean (JNIEnv *env, jclass clazz, jint pname) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_AL10_alGetBoolean (JNIEnv *env, jclass clazz, jint pname) {
 	jboolean result = (jboolean) alGetBoolean((ALenum) pname);
 
 	CHECK_AL_ERROR
@@ -112,7 +112,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alGetBoolean (JNIEnv *en
  * C Specification:
  * Alint alGetInteger(ALenum pname);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetInteger (JNIEnv *env, jclass clazz, jint pname) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_AL10_alGetInteger (JNIEnv *env, jclass clazz, jint pname) {
 	jint result = (jint) alGetInteger((ALenum) pname);
 
 	CHECK_AL_ERROR
@@ -125,7 +125,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetInteger (JNIEnv *env, j
  * C Specification:
  * ALfloat alGetFloat(ALenum pname);
  */
-JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetFloat (JNIEnv *env, jclass clazz, jint pname) {
+JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_AL10_alGetFloat (JNIEnv *env, jclass clazz, jint pname) {
 	jfloat result = (jfloat) alGetFloat((ALenum) pname);
 
 	CHECK_AL_ERROR
@@ -138,7 +138,7 @@ JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetFloat (JNIEnv *env, j
  * C Specification:
  * ALvoid alGetFloatv(ALenum pname,ALfloat *data);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGetFloatv (JNIEnv *env, jclass clazz, jint pname, jobject data, int offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalGetFloatv (JNIEnv *env, jclass clazz, jint pname, jobject data, int offset) {
 	alGetFloatv((ALenum) pname, offset + (ALfloat*) env->GetDirectBufferAddress(data));
 	CHECK_AL_ERROR
 }
@@ -149,7 +149,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGetFloatv (JNIEnv *env, j
  * C Specification:
  * ALubyte * alGetString(ALenum pname);
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_alGetString (JNIEnv *env, jclass clazz, jint param) {
+JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_AL10_alGetString (JNIEnv *env, jclass clazz, jint param) {
   jstring string = env->NewStringUTF((char*) alGetString(param));
 	CHECK_AL_ERROR
 	return string;
@@ -161,7 +161,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_CoreAL_alGetString (JNIEnv *env,
  * C Specification:
  * ALenum alGetError(ALvoid);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetError (JNIEnv *env, jclass clazz) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_AL10_alGetError (JNIEnv *env, jclass clazz) {
 	jint result = (jint) alGetError();
 
 	// Don't think we should be checking for errors here..?
@@ -175,7 +175,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetError (JNIEnv *env, jcl
  * C Specification:
  * ALboolean alIsExtensionPresent(ALubyte *extName);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsExtensionPresent (JNIEnv *env, jclass clazz, jstring fname) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_AL10_alIsExtensionPresent (JNIEnv *env, jclass clazz, jstring fname) {
 	ALubyte* functionname = (ALubyte*) (env->GetStringUTFChars(fname, 0));
 	jboolean result = (jboolean) alIsExtensionPresent(functionname);
 	env->ReleaseStringUTFChars((jstring)functionname, 0);
@@ -190,7 +190,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsExtensionPresent (JN
  * C Specification:
  * ALenum alGetEnumValue(ALubyte *enumName);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetEnumValue (JNIEnv *env, jclass clazz, jstring ename) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_AL10_alGetEnumValue (JNIEnv *env, jclass clazz, jstring ename) {
 	ALubyte* functionname = (ALubyte*) (env->GetStringUTFChars(ename, 0));
 	jint result = (jint) alGetEnumValue(functionname);
 	env->ReleaseStringUTFChars((jstring)functionname, 0);
@@ -205,7 +205,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetEnumValue (JNIEnv *env,
  * C Specification:
  * ALvoid alListeneri(ALenum pname,ALint value);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListeneri (JNIEnv *env, jclass clazz, jint pname, jint value) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alListeneri (JNIEnv *env, jclass clazz, jint pname, jint value) {
 	alListeneri((ALenum) pname, (ALint) value);
 	CHECK_AL_ERROR
 }
@@ -216,17 +216,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListeneri (JNIEnv *env, jc
  * C Specification:
  * ALvoid alListenerf(ALenum pname,ALfloat value);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListenerf (JNIEnv *env, jclass clazz, jint pname, jfloat value) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alListenerf (JNIEnv *env, jclass clazz, jint pname, jfloat value) {
 	alListenerf((ALenum) pname, (ALfloat) value);
 	CHECK_AL_ERROR
 }
 
 /*
- * Class:     org_lwjgl_openal_CoreAL
+ * Class:     org_lwjgl_openal_AL10
  * Method:    nalListenerf
  * Signature: (ILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalListenerfv (JNIEnv *env, jclass clazz, jint pname, jobject values, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalListenerfv (JNIEnv *env, jclass clazz, jint pname, jobject values, jint offset) {
   alListenerfv((ALenum) pname, offset + (ALfloat*) env->GetDirectBufferAddress(values));
 }
 
@@ -236,7 +236,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalListenerfv (JNIEnv *env, 
  * C Specification:
  * ALvoid alListener3f(ALenum pname,ALfloat v1,ALfloat v2,ALfloat v3);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListener3f (JNIEnv *env, jclass clazz, jint pname, jfloat v1, jfloat v2, jfloat v3) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alListener3f (JNIEnv *env, jclass clazz, jint pname, jfloat v1, jfloat v2, jfloat v3) {
 	alListener3f((ALenum) pname, (ALfloat) v1, (ALfloat) v2, (ALfloat) v3);
 	CHECK_AL_ERROR
 }
@@ -248,7 +248,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListener3f (JNIEnv *env, j
  * C Specification:
  * ALvoid alGetListeneri(ALenum pname,ALint *value);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetListeneri (JNIEnv *env, jclass clazz, jint pname) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_AL10_alGetListeneri (JNIEnv *env, jclass clazz, jint pname) {
 	ALint value = 0;
 	alGetListeneri((ALenum) pname, &value);
 	CHECK_AL_ERROR
@@ -261,7 +261,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetListeneri (JNIEnv *env,
  * C Specification:
  * ALvoid alGetListenerf(ALenum pname,ALfloat *value);
  */
-JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetListenerf (JNIEnv *env, jclass clazz, jint pname) {
+JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_AL10_alGetListenerf (JNIEnv *env, jclass clazz, jint pname) {
 	ALfloat value = 0.0f;
 	alGetListenerf((ALenum) pname, &value);
 	CHECK_AL_ERROR
@@ -274,7 +274,7 @@ JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetListenerf (JNIEnv *en
  * C Specification:
  * ALvoid alGetListenerfv(ALenum pname,ALfloat *values);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGetListenerfv (JNIEnv *env, jclass clazz, jint pname, jobject values, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalGetListenerfv (JNIEnv *env, jclass clazz, jint pname, jobject values, jint offset) {
 	alGetListenerfv((ALenum) pname, offset + (ALfloat*) env->GetDirectBufferAddress(values));
 	CHECK_AL_ERROR
 }
@@ -285,7 +285,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGetListenerfv (JNIEnv *en
  * C Specification:
  * ALvoid alGenSources(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGenSources (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalGenSources (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
 	alGenSources(n, offset + (ALuint*) env->GetDirectBufferAddress(sources));
 	CHECK_AL_ERROR
 }
@@ -296,7 +296,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGenSources (JNIEnv *env, 
  * C Specification:
  * ALvoid alDeleteSources(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalDeleteSources (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalDeleteSources (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
 	alDeleteSources(n, offset + (ALuint*) env->GetDirectBufferAddress(sources));
 	CHECK_AL_ERROR
 }
@@ -307,7 +307,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalDeleteSources (JNIEnv *en
  * C Specification:
  * Alboolean alIsSource(ALuint source);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsSource (JNIEnv *env, jclass clazz, jint source) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_AL10_alIsSource (JNIEnv *env, jclass clazz, jint source) {
 	jboolean result = (jboolean) alIsSource((ALuint) source);
 
 	CHECK_AL_ERROR
@@ -320,7 +320,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsSource (JNIEnv *env,
  * C Specification:
  * ALvoid alSourcei(ALuint source,ALenum pname,ALint value);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcei (JNIEnv *env, jclass clazz, jint source, jint pname, jint value) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alSourcei (JNIEnv *env, jclass clazz, jint source, jint pname, jint value) {
 	alSourcei((ALuint) source, (ALenum) pname, (ALint) value);
 	CHECK_AL_ERROR
 }
@@ -331,17 +331,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcei (JNIEnv *env, jcla
  * C Specification:
  * ALvoid alSourcef(ALuint source,ALenum pname,ALfloat value);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcef (JNIEnv *env, jclass clazz, jint source, jint pname, jfloat value) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alSourcef (JNIEnv *env, jclass clazz, jint source, jint pname, jfloat value) {
 	alSourcef((ALuint) source, (ALenum) pname, (ALfloat) value);
 	CHECK_AL_ERROR
 }
 
 /*
- * Class:     org_lwjgl_openal_CoreAL
+ * Class:     org_lwjgl_openal_AL10
  * Method:    nalSourcefv
  * Signature: (IILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcefv (JNIEnv *env, jclass clazz, jint source, jint pname, jobject values, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalSourcefv (JNIEnv *env, jclass clazz, jint source, jint pname, jobject values, jint offset) {
   alSourcefv((ALuint) source, (ALenum) pname, offset + (ALfloat*) env->GetDirectBufferAddress(values));
 	CHECK_AL_ERROR
 }
@@ -352,7 +352,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcefv (JNIEnv *env, jc
  * C Specification:
  * ALvoid alSource3f(ALuint source,ALenum pname,ALfloat v1,ALfloat v2,ALfloat v3);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSource3f (JNIEnv *env, jclass clazz, jint source, jint pname, jfloat v1, jfloat v2, jfloat v3) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alSource3f (JNIEnv *env, jclass clazz, jint source, jint pname, jfloat v1, jfloat v2, jfloat v3) {
 	alSource3f((ALuint) source, (ALenum) pname, (ALfloat) v1, (ALfloat) v2, (ALfloat) v3);
 	CHECK_AL_ERROR
 }
@@ -363,7 +363,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSource3f (JNIEnv *env, jcl
  * C Specification:
  * ALvoid alGetSourcei(ALuint source,ALenum pname,ALint *value);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetSourcei (JNIEnv *env, jclass clazz, jint source, jint pname) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_AL10_alGetSourcei (JNIEnv *env, jclass clazz, jint source, jint pname) {
 	ALint value = 0;
 	alGetSourcei((ALuint) source, (ALenum) pname, &value);
 	CHECK_AL_ERROR
@@ -376,7 +376,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetSourcei (JNIEnv *env, j
  * C Specification:
  * ALvoid alGetSourcef(ALuint source,ALenum pname,ALfloat *value);
  */
-JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetSourcef (JNIEnv *env, jclass clazz, jint source, jint pname) {
+JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_AL10_alGetSourcef (JNIEnv *env, jclass clazz, jint source, jint pname) {
 	ALfloat value = 0.0f;
 	alGetSourcef((ALuint) source, (ALenum) pname, &value);
 	CHECK_AL_ERROR
@@ -389,7 +389,7 @@ JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetSourcef (JNIEnv *env,
  * C Specification:
  * ALvoid alGetSourcefv(ALuint source,ALenum pname,ALfloat *values);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGetSourcefv (JNIEnv *env, jclass clazz, jint source, jint pname, jobject values, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalGetSourcefv (JNIEnv *env, jclass clazz, jint source, jint pname, jobject values, jint offset) {
 	alGetSourcefv((ALuint) source, (ALenum) pname, offset + (ALfloat*) env->GetDirectBufferAddress(values));
 	CHECK_AL_ERROR
 }
@@ -400,7 +400,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGetSourcefv (JNIEnv *env,
  * C Specification:
  * ALvoid alSourcePlayv(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcePlayv (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalSourcePlayv (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
 	alSourcePlayv(n, offset + (ALuint*) env->GetDirectBufferAddress(sources));
 	CHECK_AL_ERROR
 }
@@ -411,7 +411,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcePlayv (JNIEnv *env,
  * C Specification:
  * ALvoid alSourcePausev(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcePausev (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalSourcePausev (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
 	alSourcePausev(n, offset + (ALuint*) env->GetDirectBufferAddress(sources));
 	CHECK_AL_ERROR
 }
@@ -422,7 +422,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcePausev (JNIEnv *env
  * C Specification:
  * ALvoid alSourceStopv(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceStopv (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalSourceStopv (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
 	alSourceStopv(n, offset + (ALuint*) env->GetDirectBufferAddress(sources));
 	CHECK_AL_ERROR
 }
@@ -433,7 +433,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceStopv (JNIEnv *env,
  * C Specification:
  * ALvoid alSourceRewindv(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceRewindv (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalSourceRewindv (JNIEnv *env, jclass clazz, jint n, jobject sources, jint offset) {
 	alSourceRewindv(n, offset + (ALuint*) env->GetDirectBufferAddress(sources));
 	CHECK_AL_ERROR
 }
@@ -444,7 +444,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceRewindv (JNIEnv *en
  * C Specification:
  * ALvoid alSourcePlay(ALuint source);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePlay (JNIEnv *env, jclass clazz, jint source) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alSourcePlay (JNIEnv *env, jclass clazz, jint source) {
 	alSourcePlay((ALuint) source);
 	CHECK_AL_ERROR
 }
@@ -455,7 +455,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePlay (JNIEnv *env, j
  * C Specification:
  * ALvoid alSourcePause(ALuint source);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePause (JNIEnv *env, jclass clazz, jint source) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alSourcePause (JNIEnv *env, jclass clazz, jint source) {
 	alSourcePause((ALuint) source);
 	CHECK_AL_ERROR
 }
@@ -466,7 +466,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcePause (JNIEnv *env, 
  * C Specification:
  * ALvoid alSourceStop(ALuint source);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceStop (JNIEnv *env, jclass clazz, jint source) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alSourceStop (JNIEnv *env, jclass clazz, jint source) {
 	alSourceStop((ALuint) source);
 	CHECK_AL_ERROR
 }
@@ -477,7 +477,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceStop (JNIEnv *env, j
  * C Specification:
  * ALvoid alSourceRewind(ALuint source);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceRewind (JNIEnv *env, jclass clazz, jint source) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alSourceRewind (JNIEnv *env, jclass clazz, jint source) {
 	alSourceRewind((ALuint) source);
 	CHECK_AL_ERROR
 }
@@ -488,7 +488,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourceRewind (JNIEnv *env,
  * C Specification:
  * ALvoid alGenBuffers(ALsizei n,ALuint *buffers);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGenBuffers (JNIEnv *env, jclass clazz, jint n, jobject buffers, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalGenBuffers (JNIEnv *env, jclass clazz, jint n, jobject buffers, jint offset) {
 	alGenBuffers(n, offset + (ALuint*) env->GetDirectBufferAddress(buffers));
 	CHECK_AL_ERROR
 }
@@ -499,7 +499,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalGenBuffers (JNIEnv *env, 
  * C Specification:
  * ALvoid alDeleteBuffers(ALsizei n,ALuint *buffers);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalDeleteBuffers (JNIEnv *env, jclass clazz, jint n, jobject buffers, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalDeleteBuffers (JNIEnv *env, jclass clazz, jint n, jobject buffers, jint offset) {
 	alDeleteBuffers(n, offset + (ALuint*) env->GetDirectBufferAddress(buffers));
 	CHECK_AL_ERROR
 }
@@ -510,7 +510,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalDeleteBuffers (JNIEnv *en
  * C Specification:
  * Alboolean alIsBuffer(ALuint buffer);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsBuffer (JNIEnv *env, jclass clazz, jint buffer) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_AL10_alIsBuffer (JNIEnv *env, jclass clazz, jint buffer) {
 	jboolean result = (jboolean) alIsBuffer((ALuint) buffer);
 
 	CHECK_AL_ERROR
@@ -523,7 +523,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_CoreAL_alIsBuffer (JNIEnv *env,
  * C Specification:
  * ALvoid alBufferData(ALuint buffer,ALenum format,ALvoid *data,ALsizei size,ALsizei freq);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalBufferData (JNIEnv *env, jclass clazz, jint buffer, jint format, jobject data, jint offset, jint size, jint freq) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalBufferData (JNIEnv *env, jclass clazz, jint buffer, jint format, jobject data, jint offset, jint size, jint freq) {
 	alBufferData(buffer, format, (void*) (offset + (ALubyte *)env->GetDirectBufferAddress(data)), size, freq);
 	CHECK_AL_ERROR
 }
@@ -534,7 +534,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalBufferData (JNIEnv *env, 
  * C Specification:
  * ALvoid alGetBufferi(ALuint buffer,ALenum pname,ALint *value);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetBufferi (JNIEnv *env, jclass clazz, jint buffer, jint pname) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_AL10_alGetBufferi (JNIEnv *env, jclass clazz, jint buffer, jint pname) {
 	ALint value = 0;
 	alGetBufferi((ALuint) buffer, (ALenum) pname, &value);
 	CHECK_AL_ERROR
@@ -547,7 +547,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreAL_alGetBufferi (JNIEnv *env, j
  * C Specification:
  * ALvoid alGetBufferf(ALuint buffer,ALenum pname,ALfloat *value);
  */
-JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetBufferf (JNIEnv *env, jclass clazz, jint buffer, jint pname) {
+JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_AL10_alGetBufferf (JNIEnv *env, jclass clazz, jint buffer, jint pname) {
 	ALfloat value = 0.0f;
 	alGetBufferf((ALuint) buffer, (ALenum) pname, &value);
 	CHECK_AL_ERROR
@@ -560,7 +560,7 @@ JNIEXPORT jfloat JNICALL Java_org_lwjgl_openal_CoreAL_alGetBufferf (JNIEnv *env,
  * C Specification:
  * ALvoid alSourceQueueBuffers( ALuint source, ALsizei n, ALuint* buffers );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceQueueBuffers (JNIEnv *env, jclass clazz, jint source, jint n, jobject buffers, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalSourceQueueBuffers (JNIEnv *env, jclass clazz, jint source, jint n, jobject buffers, jint offset) {
 	alSourceQueueBuffers((ALuint) source, (ALsizei) n, offset + (ALuint*) env->GetDirectBufferAddress(buffers));
 	CHECK_AL_ERROR
 }
@@ -571,7 +571,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceQueueBuffers (JNIEn
  * C Specification:
  * ALvoid alSourceUnqueueBuffers( ALuint source, ALsizei n, ALuint* buffers );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceUnqueueBuffers (JNIEnv *env, jclass clazz, jint source, jint n, jobject buffers, jint offset) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_nalSourceUnqueueBuffers (JNIEnv *env, jclass clazz, jint source, jint n, jobject buffers, jint offset) {
 	alSourceUnqueueBuffers((ALuint) source, (ALsizei) n, offset + (ALuint*) env->GetDirectBufferAddress(buffers));
 	CHECK_AL_ERROR
 }
@@ -583,7 +583,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourceUnqueueBuffers (JNI
  * ALvoid alDistanceModel( ALenum value );
  */
 
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDistanceModel (JNIEnv *env, jclass clazz, jint value) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alDistanceModel (JNIEnv *env, jclass clazz, jint value) {
 	alDistanceModel((ALenum) value);
 	CHECK_AL_ERROR
 }
@@ -594,7 +594,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDistanceModel (JNIEnv *env
  * C Specification:
  * ALvoid alDopplerFactor( ALfloat value );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDopplerFactor (JNIEnv *env, jclass clazz, jfloat value) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alDopplerFactor (JNIEnv *env, jclass clazz, jfloat value) {
 	alDopplerFactor((ALfloat) value);
 	CHECK_AL_ERROR
 }
@@ -605,7 +605,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDopplerFactor (JNIEnv *env
  * C Specification:
  * ALvoid alDopplerVelocity( ALfloat value );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alDopplerVelocity (JNIEnv *env, jclass clazz, jfloat value) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL10_alDopplerVelocity (JNIEnv *env, jclass clazz, jfloat value) {
 	alDopplerVelocity((ALfloat) value);
 	CHECK_AL_ERROR
 }

@@ -31,6 +31,13 @@
  */
 package org.lwjgl.openal;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.StringTokenizer;
+
+import org.lwjgl.Display;
+import org.lwjgl.Sys;
+
 /**
  * $Id$
  * <br>
@@ -39,7 +46,7 @@ package org.lwjgl.openal;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public abstract class AL extends CoreAL {
+public abstract class AL {
 
 	/** ALC instance. */
 	protected static ALC alc;
@@ -53,7 +60,8 @@ public abstract class AL extends CoreAL {
 	/** 
 	 * String that requests a certain device or device configuration. 
 	 * If null is specified, the implementation will provide an 
-	 * implementation specific default. */
+	 * implementation specific default. 
+   */
 	protected static String deviceArguments;
 
 	/** Frequency for mixing output buffer, in units of Hz. */
@@ -65,6 +73,40 @@ public abstract class AL extends CoreAL {
 	/** Flag, indicating a synchronous context. */
 	protected static int contextSynchronized = ALC.ALC_FALSE;
 
+  /** Have we been created? */
+  protected static boolean created;
+
+  static {
+    initialize();
+  }
+
+  /**
+   * Static initialization
+   */
+  private static void initialize() {
+    System.loadLibrary(org.lwjgl.Sys.getLibraryName());
+  }
+
+  /**
+   * Native method to create AL instance
+   * 
+   * @param oalPaths Array of strings containing paths to search for OpenAL library
+   * @return true if the AL creation process succeeded
+   */
+  protected static native void nCreate(String[] oalPaths) throws OpenALException;
+
+  /**
+   * Native method the destroy the AL
+   */
+  protected static native void nDestroy();
+  
+  /**
+   * @return true if AL has been created
+   */
+  public static boolean isCreated() {
+    return created;
+  }  
+  
 	/**
 	* Creates an OpenAL instance. Using this constructor will cause OpenAL to
 	* open the device using supplied device argument, and create a context using the context values
@@ -99,10 +141,52 @@ public abstract class AL extends CoreAL {
     if(created) {
       return;
     }
-    
-		BaseAL.create();
 
-		ALC.create();
+    // need to pass path of possible locations of OAL to native side
+    String libpath = System.getProperty("java.library.path");
+    String seperator = System.getProperty("path.separator");
+    String libname;
+    String jwsLibname;
+
+    // libname is hardcoded atm - this will change in a near future...
+    switch (Display.getPlatform()) {
+      case Display.PLATFORM_WGL:
+        libname = "lwjglaudio.dll";
+        jwsLibname = "lwjglaudio";
+        break;
+      case Display.PLATFORM_GLX:
+        libname = "libopenal.so";
+        jwsLibname = "openal";
+        break;
+      case Display.PLATFORM_AGL:
+        libname = "openal.dylib";
+        jwsLibname = "openal";
+        break;
+      default:
+        throw new OpenALException("Unknown platform");
+    }
+    
+    String jwsPath = getPathFromJWS(jwsLibname);
+    if (jwsPath != null) {
+      libpath += seperator
+        + jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
+    }
+
+    StringTokenizer st = new StringTokenizer(libpath, seperator);
+
+    //create needed string array
+    String[] oalPaths = new String[st.countTokens() + 1];
+
+    //build paths
+    for (int i = 0; i < oalPaths.length - 1; i++) {
+      oalPaths[i] = st.nextToken() + File.separator + libname;
+    }
+
+    //add cwd path
+    oalPaths[oalPaths.length - 1] = libname;
+    nCreate(oalPaths);
+
+    ALC.create();
 
 		device = ALC.alcOpenDevice(deviceArguments);
 
@@ -118,6 +202,7 @@ public abstract class AL extends CoreAL {
 
 		ALC.alcMakeContextCurrent(context.context);
 
+    created = true;
 	}
 
 	/**
@@ -140,7 +225,36 @@ public abstract class AL extends CoreAL {
 		contextFrequency = -1;
 		contextRefresh = -1;
 		contextSynchronized = ALC.ALC_FALSE;
-
-		BaseAL.destroy();
+    
+    created = false;
+    nDestroy();    
 	}
+  
+  /**
+   * Tries to locate OpenAL from the JWS Library path
+   * This method exists because OpenAL is loaded from native code, and as such
+   * is exempt from JWS library loading rutines. OpenAL therefore always fails.
+   * We therefore invoke the protected method of the JWS classloader to see if it can
+   * locate it. 
+   * 
+   * @param libname Name of library to search for
+   * @return Absolute path to library if found, otherwise null
+   */
+  private static String getPathFromJWS(String libname) {
+    try {     
+
+      Sys.log("JWS Classloader looking for: " + libname);
+      
+      Object o = AL.class.getClassLoader();
+      Class c = o.getClass();
+      Method findLibrary =
+        c.getMethod("findLibrary", new Class[] { String.class });
+      Object[] arguments = new Object[] { libname };
+      return (String) findLibrary.invoke(o, arguments);
+
+    } catch (Exception e) {
+      Sys.log("Failure locating OpenAL using classloader:" + e);
+    }
+    return null;
+  }  
 }

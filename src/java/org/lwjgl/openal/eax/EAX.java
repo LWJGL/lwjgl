@@ -39,5 +39,66 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class EAX extends CoreEAX {
+public class EAX {
+
+  /** Has the EAX object been created? */
+  protected static boolean created;
+  
+  static {
+    initialize();
+  }
+
+  /**
+   * Static initialization
+   */
+  private static void initialize() {
+    System.loadLibrary(org.lwjgl.Sys.getLibraryName());
+  }
+
+  /**
+   * Loads the EAX functions
+   * 
+   * @throws Exception if the EAX extensions couldn't be loaded
+   */
+  public static void create() throws Exception {
+    if (created) {
+      return;
+    }
+
+    if (!nCreate()) {
+      throw new Exception("EAX instance could not be created.");
+    }
+    EAX20.init();
+    created = true;
+  }
+
+  /**
+   * Native method to create EAX instance
+   * 
+   * @return true if the EAX extensions could be found
+   */
+  protected static native boolean nCreate();
+
+  /**
+   * "Destroy" the EAX object
+   */
+  public static void destroy() {
+    if (!created) {
+      return;
+    }
+    created = false;
+    nDestroy();
+  }
+
+  /**
+   * Native method the destroy the EAX
+   */
+  protected static native void nDestroy();
+  
+  /**
+   * @return true if EAX has been created
+   */
+  public static boolean isCreated() {
+    return created;
+  }  
 }

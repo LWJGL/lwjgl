@@ -38,7 +38,9 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.eax.EAX;
+import org.lwjgl.openal.eax.EAX20;
 import org.lwjgl.openal.eax.EAXBufferProperties;
 import org.lwjgl.openal.eax.EAXListenerProperties;
 
@@ -94,9 +96,9 @@ public class EAXTest extends BasicTest {
       runTest();
       
       // kill sources and buffers
-      AL.alSourceStop(soundSources.get(0));
-      AL.alDeleteSources(soundSources);
-      AL.alDeleteBuffers(soundBuffers);
+      AL10.alSourceStop(soundSources.get(0));
+      AL10.alDeleteSources(soundSources);
+      AL10.alDeleteBuffers(soundBuffers);
       
       EAX.destroy();
     }
@@ -108,22 +110,22 @@ public class EAXTest extends BasicTest {
   private boolean initialize() {
     // creating buffers
     Sys.log("Creating buffers");
-    AL.alGenBuffers(soundBuffers);
+    AL10.alGenBuffers(soundBuffers);
     soundBuffers.rewind();
 
     // creating sources
     Sys.log("Creating sources");
-    AL.alGenSources(soundSources);
+    AL10.alGenSources(soundSources);
     soundSources.rewind();
 
     // load sound files (left, center, right).wav
     Sys.log("Loading Footsteps.wav");
     WaveData footsteps = WaveData.create("Footsteps.wav");
-    AL.alBufferData(soundBuffers.get(0), footsteps.format, footsteps.data, footsteps.data.capacity(), footsteps.samplerate);
-    AL.alSourcef(soundSources.get(0), AL.AL_PITCH, 1.0f);
-    AL.alSourcef(soundSources.get(0), AL.AL_GAIN, 1.0f);
-    AL.alSourcei(soundSources.get(0), AL.AL_BUFFER, soundBuffers.get(0));
-    AL.alSourcei(soundSources.get(0), AL.AL_LOOPING, AL.AL_TRUE);
+    AL10.alBufferData(soundBuffers.get(0), footsteps.format, footsteps.data, footsteps.data.capacity(), footsteps.samplerate);
+    AL10.alSourcef(soundSources.get(0), AL10.AL_PITCH, 1.0f);
+    AL10.alSourcef(soundSources.get(0), AL10.AL_GAIN, 1.0f);
+    AL10.alSourcei(soundSources.get(0), AL10.AL_BUFFER, soundBuffers.get(0));
+    AL10.alSourcei(soundSources.get(0), AL10.AL_LOOPING, AL10.AL_TRUE);
     
     // create eax property objects
     listenerProperties = new EAXListenerProperties();
@@ -132,7 +134,7 @@ public class EAXTest extends BasicTest {
     // set buffer to work on source 0
     bufferProperties.setCurrentSource(soundSources.get(0));
     
-    return AL.alGetError() == AL.AL_NO_ERROR;
+    return AL10.alGetError() == AL10.AL_NO_ERROR;
   }
 
   /**
@@ -142,7 +144,7 @@ public class EAXTest extends BasicTest {
     boolean running = true;
     char key;
     
-    assert AL.alIsBuffer(soundBuffers.get(0)) : "Failed to validate buffer";
+    assert AL10.alIsBuffer(soundBuffers.get(0)) : "Failed to validate buffer";
 
     // handle menu
     do {
@@ -152,25 +154,25 @@ public class EAXTest extends BasicTest {
       switch (key) {
         // play sound
         case '1' : {
-          AL.alSourcePlay(soundSources.get(0));
+          AL10.alSourcePlay(soundSources.get(0));
           break;
         }
 
         // stop sound
         case '2' : {
-          AL.alSourceStop(soundSources.get(0));
+          AL10.alSourceStop(soundSources.get(0));
           break;
         }
 
         // add reverb
         case '3' : {
-          listenerProperties.setEnvironment(EAX.EAX_ENVIRONMENT_HANGAR);
+          listenerProperties.setEnvironment(EAX20.EAX_ENVIRONMENT_HANGAR);
           break;
         }
 
           // remove reverb
         case '4' : {
-          listenerProperties.setEnvironment(EAX.EAX_ENVIRONMENT_GENERIC);
+          listenerProperties.setEnvironment(EAX20.EAX_ENVIRONMENT_GENERIC);
           break;
         }
 

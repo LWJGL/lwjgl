@@ -36,6 +36,7 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 
 /**
  * $Id$
@@ -87,7 +88,7 @@ public class OpenALCreationTest {
 	 * @param error Error code causing exit
 	 */
 	protected void exit(int error) {
-		System.out.println("OpenAL Error: " + AL.alGetString(error));
+		System.out.println("OpenAL Error: " + AL10.alGetString(error));
 		alExit();
 		System.exit(-1);
 	}
@@ -137,14 +138,14 @@ public class OpenALCreationTest {
 
 		// al generate buffers and sources
     buffers.position(0).limit(1);
-    AL.alGenBuffers(buffers);
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alGenBuffers(buffers);
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
     sources.position(0).limit(1);
-    AL.alGenSources(sources);
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alGenSources(sources);
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
@@ -152,13 +153,13 @@ public class OpenALCreationTest {
 		WaveData wavefile = WaveData.create("Footsteps.wav");
 
 		//copy to buffers
-    AL.alBufferData(
+    AL10.alBufferData(
 			buffers.get(0),
 			wavefile.format,
 			wavefile.data,
 			wavefile.data.capacity(),
 			wavefile.samplerate);
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
@@ -166,20 +167,20 @@ public class OpenALCreationTest {
 		wavefile.dispose();
 
 		//set up source input
-    AL.alSourcei(sources.get(0), AL.AL_BUFFER, buffers.get(0));
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alSourcei(sources.get(0), AL10.AL_BUFFER, buffers.get(0));
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
 		//lets loop the sound
-    AL.alSourcei(sources.get(0), AL.AL_LOOPING, AL.AL_TRUE);
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alSourcei(sources.get(0), AL10.AL_LOOPING, AL10.AL_TRUE);
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
 		//play source 0
-    AL.alSourcePlay(sources.get(0));
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alSourcePlay(sources.get(0));
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
@@ -192,21 +193,21 @@ public class OpenALCreationTest {
 		System.out.println("done");
 
 		//stop source 0
-    AL.alSourceStop(sources.get(0));
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alSourceStop(sources.get(0));
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
 		//delete buffers and sources
     sources.position(0).limit(1);
-    AL.alDeleteSources(sources);
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alDeleteSources(sources);
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
     buffers.position(0).limit(1);
-    AL.alDeleteBuffers(buffers);
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+    AL10.alDeleteBuffers(buffers);
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 			exit(lastError);
 		}
 	}

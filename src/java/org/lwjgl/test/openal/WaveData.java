@@ -42,7 +42,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
-import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 
 /**
  * $Id$
@@ -131,17 +131,17 @@ public class WaveData {
 		int channels = 0;
 		if (audioformat.getChannels() == 1) {
 			if (audioformat.getSampleSizeInBits() == 8) {
-				channels = AL.AL_FORMAT_MONO8;
+				channels = AL10.AL_FORMAT_MONO8;
 			} else if (audioformat.getSampleSizeInBits() == 16) {
-				channels = AL.AL_FORMAT_MONO16;
+				channels = AL10.AL_FORMAT_MONO16;
 			} else {
 				assert false : "Illegal sample size";
 			}
 		} else if (audioformat.getChannels() == 2) {
 			if (audioformat.getSampleSizeInBits() == 8) {
-				channels = AL.AL_FORMAT_STEREO8;
+				channels = AL10.AL_FORMAT_STEREO8;
 			} else if (audioformat.getSampleSizeInBits() == 16) {
-				channels = AL.AL_FORMAT_STEREO16;
+				channels = AL10.AL_FORMAT_STEREO16;
 			} else {
 				assert false : "Illegal sample size";
 			}

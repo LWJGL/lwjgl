@@ -33,7 +33,7 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.OpenALException;
 
 /**
@@ -97,15 +97,15 @@ public class SourceLimitTest extends BasicTest {
 
 		//Create sourcesToCreate sources in one fell swoop
     sources.position(0).limit(sourcesToCreate);
-		AL.alGenSources(sources);
-		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
-			System.out.println("failed to create " + sourcesToCreate + " sources (" + AL.alGetString(lastError) + ")");
+		AL10.alGenSources(sources);
+		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
+			System.out.println("failed to create " + sourcesToCreate + " sources (" + AL10.alGetString(lastError) + ")");
 			return;
 		}
 
 		//delete sources
     sources.position(0).limit(sourcesToCreate);
-		AL.alDeleteSources(sources);
+		AL10.alDeleteSources(sources);
 
 		System.out.println("created " + sourcesToCreate + " sources successfully!");
 	}
@@ -124,8 +124,8 @@ public class SourceLimitTest extends BasicTest {
 		for (int i = 0; i <= sourcesToCreate; i++) {
       sources[i] = createIntBuffer(1);
       sources[i].position(0).limit(1);
-			AL.alGenSources(sources[i]);
-			if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+			AL10.alGenSources(sources[i]);
+			if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
 				System.out.println("failed to create source: " + (i + 1));
 				break;
 			}
@@ -136,9 +136,9 @@ public class SourceLimitTest extends BasicTest {
 		for (int i = 0; i < sourcesCreated; i++) {
 			//delete buffers and sources
       sources[i].position(0).limit(1);
-			AL.alDeleteSources(sources[i]);
-			if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
-				System.out.println("failed to delete source: " + i + "(" + AL.alGetString(lastError) + ")");
+			AL10.alDeleteSources(sources[i]);
+			if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
+				System.out.println("failed to delete source: " + i + "(" + AL10.alGetString(lastError) + ")");
 				break;
 			}
 		}

@@ -37,6 +37,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 
 /**
  * $Id$
@@ -115,7 +116,7 @@ public abstract class BasicTest {
    * @param error Error code causing exit
    */
   protected void exit(int error) {
-    System.out.println("OpenAL Error: " + AL.alGetString(error));
+    System.out.println("OpenAL Error: " + AL10.alGetString(error));
     alExit();
     System.exit(-1);
   }

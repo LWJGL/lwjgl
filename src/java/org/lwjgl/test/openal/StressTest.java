@@ -33,7 +33,7 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 
 /**
  * $Id$
@@ -81,8 +81,8 @@ public class StressTest extends BasicTest {
   private void createSources() {
     sources = createIntBuffer(4);
     sources.position(0).limit(4);
-    AL.alGenSources(sources);
-    if (AL.alGetError() != AL.AL_NO_ERROR) {
+    AL10.alGenSources(sources);
+    if (AL10.alGetError() != AL10.AL_NO_ERROR) {
       System.out.println("Unable to create 4 sources");
       alExit();
     }
@@ -91,32 +91,32 @@ public class StressTest extends BasicTest {
   private void createBuffers() {
     buffers = createIntBuffer(10);
     buffers.position(0).limit(10);
-    AL.alGenBuffers(buffers);
-    if (AL.alGetError() != AL.AL_NO_ERROR) {
+    AL10.alGenBuffers(buffers);
+    if (AL10.alGetError() != AL10.AL_NO_ERROR) {
       System.out.println("Unable to create 10 buffers");
       sources.position(0).limit(4);
-      AL.alDeleteSources(sources);
+      AL10.alDeleteSources(sources);
       alExit();
     }
   }
 
   private void loadSamples() throws Exception {
-    AL.alGetError();
+    AL10.alGetError();
     WaveData data = WaveData.create("ding.wav");
     for (int i = 1; i <= 10; i++) {
-      AL.alBufferData(
+      AL10.alBufferData(
         buffers.get(i - 1),
         data.format,
         data.data,
         data.data.capacity(),
         data.samplerate);
 
-      if (AL.alGetError() != AL.AL_NO_ERROR) {
+      if (AL10.alGetError() != AL10.AL_NO_ERROR) {
         System.out.println("Failed to load " + i + ".wav into buffer");
         sources.position(0).limit(4);
-        AL.alDeleteSources(sources);
+        AL10.alDeleteSources(sources);
         buffers.position(0).limit(10);
-        AL.alDeleteBuffers(buffers);
+        AL10.alDeleteBuffers(buffers);
 
         alExit();
       }
@@ -132,11 +132,11 @@ public class StressTest extends BasicTest {
     long startTime = System.currentTimeMillis();
 
     //mark background source as looping
-    AL.alSourcei(sources.get(0), AL.AL_LOOPING, AL.AL_TRUE);
+    AL10.alSourcei(sources.get(0), AL10.AL_LOOPING, AL10.AL_TRUE);
 
     //play background
-    AL.alSourcei(sources.get(0), AL.AL_BUFFER, buffers.get(0));
-    AL.alSourcePlay(sources.get(0));
+    AL10.alSourcei(sources.get(0), AL10.AL_BUFFER, buffers.get(0));
+    AL10.alSourcePlay(sources.get(0));
 
     while (System.currentTimeMillis() - startTime < (2000)) {
 
@@ -144,22 +144,22 @@ public class StressTest extends BasicTest {
       System.out.println("random:" + randomBuffer);
 
       //stop source at slot
-      AL.alSourceStop(sources.get(nextSlot));
-      if (AL.alGetError() != AL.AL_NO_ERROR) {
+      AL10.alSourceStop(sources.get(nextSlot));
+      if (AL10.alGetError() != AL10.AL_NO_ERROR) {
         System.out.println("Error stopping source.");
       }
       System.out.println("Stopped source: " + nextSlot);
 
       //link source<->buffer
-      AL.alSourcei(sources.get(nextSlot), AL.AL_BUFFER, buffers.get(randomBuffer));
-      if (AL.alGetError() != AL.AL_NO_ERROR) {
+      AL10.alSourcei(sources.get(nextSlot), AL10.AL_BUFFER, buffers.get(randomBuffer));
+      if (AL10.alGetError() != AL10.AL_NO_ERROR) {
         System.out.println("Error linking buffer and source.");
       }
       System.out.println("linked source " + nextSlot + " with buffer " + randomBuffer);
 
       //start playing
       System.out.println("playing source " + nextSlot);
-      AL.alSourcePlay(sources.get(nextSlot++));
+      AL10.alSourcePlay(sources.get(nextSlot++));
       if (nextSlot == 4) {
         nextSlot = startSlot;
       }
@@ -182,7 +182,7 @@ public class StressTest extends BasicTest {
     
     //stop all sources
     for (int i = 0; i < 4; i++) {
-      AL.alSourceStop(sources.get(i));
+      AL10.alSourceStop(sources.get(i));
       System.out.println("Stopping source " + (i+1));
     }    
 
@@ -200,9 +200,9 @@ public class StressTest extends BasicTest {
     }
 
     sources.position(0).limit(4);
-    AL.alDeleteSources(sources);
+    AL10.alDeleteSources(sources);
     buffers.position(0).limit(10);
-    AL.alDeleteBuffers(buffers);
+    AL10.alDeleteBuffers(buffers);
   }
 
   private int getRandomBuffer() {

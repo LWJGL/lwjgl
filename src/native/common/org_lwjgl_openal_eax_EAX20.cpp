@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-#include "org_lwjgl_openal_eax_CoreEAX.h"
+#include "org_lwjgl_openal_eax_EAX20.h"
 
 /* OpenAL includes */
 #include "checkALerror.h"
@@ -48,9 +48,8 @@
 /*
  * Determines available EAX extensions
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExtensions (JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAX20_determineAvailableExtensions (JNIEnv *env, jclass clazz) {
 #ifdef _WIN32    
-
 	bool EAXSupported = false;
 
 	//check that we have a current context
@@ -81,14 +80,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExten
  * ALenum EAXGet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_neaxGet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint offset, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAX20_neaxGet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint offset, jint size) {
 #ifdef _WIN32
 	jint result = 0;
 
   // determine buffer or listener
-  if (propertySetID == org_lwjgl_openal_eax_CoreEAX_BUFFER_GUID) {
+  if (propertySetID == org_lwjgl_openal_eax_EAX20_BUFFER_GUID) {
     result = (jint) eaxGet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
-	} else if (propertySetID == org_lwjgl_openal_eax_CoreEAX_LISTENER_GUID) {
+	} else if (propertySetID == org_lwjgl_openal_eax_EAX20_LISTENER_GUID) {
 	  result = (jint) eaxGet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) property, (ALuint) source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
 	}
   CHECK_AL_ERROR  
@@ -106,14 +105,14 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_neaxGet (JNIEnv *env, j
  * ALenum EAXSet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_neaxSet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint offset, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAX20_neaxSet (JNIEnv *env, jclass clazz, jint propertySetID, jint property, jint source, jobject value, jint offset, jint size) {
 #ifdef _WIN32
   jint result = 0;
   
   // determine buffer or listener
-  if (propertySetID == org_lwjgl_openal_eax_CoreEAX_BUFFER_GUID) {
+  if (propertySetID == org_lwjgl_openal_eax_EAX20_BUFFER_GUID) {
     result = (jint) eaxSet(&DSPROPSETID_EAX20_BufferProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
-	} else if (propertySetID == org_lwjgl_openal_eax_CoreEAX_LISTENER_GUID) {
+	} else if (propertySetID == org_lwjgl_openal_eax_EAX20_LISTENER_GUID) {
 	  result = (jint) eaxSet(&DSPROPSETID_EAX20_ListenerProperties, (ALuint) (property), source, (ALvoid*) (offset + (const char*) env->GetDirectBufferAddress(value)), (ALuint) size);
 	}	
   CHECK_AL_ERROR

@@ -229,8 +229,8 @@ public class EAXBufferProperties {
    * Loads current EAX values from current source
    */
   public void loadEAXValues() {
-    EAX.eaxGet(
-        CoreEAX.BUFFER_GUID,
+    EAX20.eaxGet(
+        EAX20.BUFFER_GUID,
         EAXBUFFER_ALLPARAMETERS,
         currentSource,
         eaxBufferProperties,
@@ -271,8 +271,8 @@ public class EAXBufferProperties {
    */
   public void commit() {
     // call eaxSet with Buffer guid, setting all parameters
-    EAX.eaxSet(
-        CoreEAX.BUFFER_GUID, EAXBUFFER_ALLPARAMETERS, 
+    EAX20.eaxSet(
+        EAX20.BUFFER_GUID, EAXBUFFER_ALLPARAMETERS, 
         currentSource, eaxBufferProperties, EAXBUFFERPROPERTIES_SIZE);      
   }
   

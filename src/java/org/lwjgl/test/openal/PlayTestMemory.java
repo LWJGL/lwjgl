@@ -37,7 +37,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 
 /**
  * $Id$
@@ -70,7 +70,7 @@ public class PlayTestMemory extends BasicTest {
         
         if(args[0].endsWith(".ogg")) {
           System.out.print("Attempting to load Ogg Vorbis file, checking for extension...");
-          if(AL.alIsExtensionPresent("AL_EXT_vorbis")) {
+          if(AL10.alIsExtensionPresent("AL_EXT_vorbis")) {
             System.out.println("found");
             usingVorbis = true;
           } else {
@@ -88,14 +88,14 @@ public class PlayTestMemory extends BasicTest {
         
         // al generate buffers and sources
         buffers.position(0).limit(1);
-        AL.alGenBuffers(buffers);
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alGenBuffers(buffers);
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }
 
         sources.position(0).limit(1);
-        AL.alGenSources(sources);
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alGenSources(sources);
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }
         
@@ -111,40 +111,40 @@ public class PlayTestMemory extends BasicTest {
         //ALUTLoadWAVData file = alut.loadWAVMemory(Sys.getDirectBufferAddress(filebuffer));
         if(usingVorbis) {
           // pass directly to buffer data
-          AL.alBufferData(buffers.get(0), AL.AL_FORMAT_VORBIS_EXT, filebuffer, -1, -1);
+          AL10.alBufferData(buffers.get(0), AL10.AL_FORMAT_VORBIS_EXT, filebuffer, -1, -1);
           filebuffer.clear();
         } else {
           // load wave data from buffer
           WaveData wavefile = WaveData.create(filebuffer.array());
 
           //copy to buffers
-          AL.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
+          AL10.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
         
           //unload file again
           wavefile.dispose();        
         }
         
         // check for errors
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }
   
         
         //set up source input            
-        AL.alSourcei(sources.get(0), AL.AL_BUFFER, buffers.get(0));
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alSourcei(sources.get(0), AL10.AL_BUFFER, buffers.get(0));
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }        
         
         //lets loop the sound
-        AL.alSourcei(sources.get(0), AL.AL_LOOPING, AL.AL_TRUE);
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alSourcei(sources.get(0), AL10.AL_LOOPING, AL10.AL_TRUE);
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }        
         
         //play source 0
-        AL.alSourcePlay(sources.get(0));
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alSourcePlay(sources.get(0));
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }        
         
@@ -156,21 +156,21 @@ public class PlayTestMemory extends BasicTest {
         }
         
         //stop source 0
-        AL.alSourceStop(sources.get(0));
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alSourceStop(sources.get(0));
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }        
         
         //delete buffers and sources
         sources.position(0).limit(1);
-        AL.alDeleteSources(sources);
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alDeleteSources(sources);
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }
         
         buffers.position(0).limit(1);
-        AL.alDeleteBuffers(buffers);
-        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+        AL10.alDeleteBuffers(buffers);
+        if((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
             exit(lastError);
         }        
         
