@@ -529,7 +529,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
   (JNIEnv * env, jclass clazz)
 {
 	dirty = false;
-	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+	SwapBuffers(hdc);
+//	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 }
 
 /*
