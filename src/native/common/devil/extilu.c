@@ -1,4 +1,5 @@
 #include "extilu.h"
+#define devILhandle muhko;
 
 /* Handle to ilu Library */
 #ifdef _WIN32
@@ -13,6 +14,7 @@ static void* devILUhandle;
 #include <string.h>
 // note, we use the IL handle since it's all in one lib
 extern const struct mach_header* devILhandle;
+static const struct mach_header* devILUhandle; // never actually used, just makes it shut up
 #endif
 
 /**
@@ -21,7 +23,7 @@ extern const struct mach_header* devILhandle;
  */
 static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _WIN32
-	return GetProcAddress(devILhandle, function);
+	return GetProcAddress(devILUhandle, function);
 #endif
 #ifdef _X11
 	return dlsym(devILUhandle, function);
@@ -114,4 +116,3 @@ void extilu_Close(void) {
 #endif
 	devILUhandle = NULL;
 }
-

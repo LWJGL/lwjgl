@@ -12,7 +12,8 @@ static void* devILUThandle;
 #include <stdlib.h>
 #include <string.h>
 // note, we use the IL handle since it's all in one lib
-extern const struct mach_header* devILUThandle;
+extern const struct mach_header* devILhandle;
+static const struct mach_header* devILUThandle; // never actually used, just makes it shut up
 #endif
 
 /**
