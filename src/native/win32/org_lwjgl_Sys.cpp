@@ -62,6 +62,17 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
 
 /*
  * Class:     org_lwjgl_Sys
+ * Method:    createARBVBOBuffer
+ * Signature: (I)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createARBVBOBuffer
+  (JNIEnv *env, jclass clazz, jint address)
+{
+	return env->NewDirectByteBuffer((void *)address, 0);
+}
+
+/*
+ * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution
  * Signature: ()J
  */

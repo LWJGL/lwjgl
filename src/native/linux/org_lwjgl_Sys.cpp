@@ -58,6 +58,17 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
 {
 	return env->NewDirectByteBuffer(NULL, 0);
 }
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    createARBVBOBuffer
+ * Signature: (I)Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createARBVBOBuffer
+  (JNIEnv *env, jclass clazz, jint address)
+{
+	return env->NewDirectByteBuffer((void *)address, 0);
+}
   
 /*
  * Class:     org_lwjgl_Sys

@@ -127,12 +127,29 @@ public final class Sys {
 	private static void initialize() {
 		System.loadLibrary(LIBRARY_NAME);
 		setTime(0);
-	}		
+	}
 
         /**
          * Gets the native NULL constant value
          */
         private static native ByteBuffer nGetNULLValue();
+
+	/**
+	 * Create a buffer representing an index into a ARB_vertex_buffer_object buffer.
+	 *
+	 * Example:
+	 *
+	 * ByteBuffer b = Sys.createARBVBOBuffer(0);
+	 * gl.glVertexPointer(3, GL.GL_INT, 0, b);
+	 *
+	 * is equivalent to the C call:
+	 *
+	 * glVertexPointer(3, GL.GL_INT, 0, 0);
+	 *
+	 * @param index The VBO index to represent
+	 * @return a ByteBuffer representing the VBO index
+	 */
+	public static native ByteBuffer createARBVBOBuffer(int index);
 
 	/**
 	 * Obtains the number of ticks that the hires timer does in a second.
