@@ -734,9 +734,7 @@ public class ContextCapabilities {
 	long GL20_glGetProgramInfoLog_pointer;
 	long GL20_glGetShaderInfoLog_pointer;
 	long GL20_glGetProgramiv_pointer;
-	long GL20_glGetProgramfv_pointer;
 	long GL20_glGetShaderiv_pointer;
-	long GL20_glGetShaderfv_pointer;
 	long GL20_glUniformMatrix4fv_pointer;
 	long GL20_glUniformMatrix3fv_pointer;
 	long GL20_glUniformMatrix2fv_pointer;
@@ -1665,9 +1663,7 @@ public class ContextCapabilities {
 			(GL20_glGetProgramInfoLog_pointer = GLContext.getFunctionAddress("glGetProgramInfoLog")) != 0 &&
 			(GL20_glGetShaderInfoLog_pointer = GLContext.getFunctionAddress("glGetShaderInfoLog")) != 0 &&
 			(GL20_glGetProgramiv_pointer = GLContext.getFunctionAddress("glGetProgramiv")) != 0 &&
-			(GL20_glGetProgramfv_pointer = GLContext.getFunctionAddress("glGetProgramfv")) != 0 &&
 			(GL20_glGetShaderiv_pointer = GLContext.getFunctionAddress("glGetShaderiv")) != 0 &&
-			(GL20_glGetShaderfv_pointer = GLContext.getFunctionAddress("glGetShaderfv")) != 0 &&
 			(GL20_glUniformMatrix4fv_pointer = GLContext.getFunctionAddress("glUniformMatrix4fv")) != 0 &&
 			(GL20_glUniformMatrix3fv_pointer = GLContext.getFunctionAddress("glUniformMatrix3fv")) != 0 &&
 			(GL20_glUniformMatrix2fv_pointer = GLContext.getFunctionAddress("glUniformMatrix2fv")) != 0 &&
