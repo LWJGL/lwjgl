@@ -147,7 +147,6 @@ static void handleWheelEvent(EventRef event) {
 #endif
 		return;
 	}
-printf("wheel delta %d\n", (int)delta);
 	last_dz += (int)delta;
 }
 
