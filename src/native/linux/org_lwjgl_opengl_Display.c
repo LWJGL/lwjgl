@@ -245,13 +245,16 @@ static void checkInput(void) {
 	if (win == current_win) {
 		acquireInput();
 		focused = true;
+	} else {
+		releaseInput();
+		focused = false;
 	}
 }
 
 void handleMessages(void) {
 	XEvent event;
-	Window win;
-	int revert_mode;
+/*	Window win;
+	int revert_mode;*/
 	while (XPending(getDisplay()) > 0) {
 		XNextEvent(getDisplay(), &event);
 		if (XFilterEvent(&event, None) == True)
@@ -263,7 +266,7 @@ void handleMessages(void) {
 				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					closerequested = true;
 				break;
-			case FocusOut:
+/*			case FocusOut:
 				XGetInputFocus(getDisplay(), &win, &revert_mode);
 				if (win != current_win) {
 					releaseInput();
@@ -272,7 +275,7 @@ void handleMessages(void) {
 				break;
 			case FocusIn:
 				checkInput();
-				break;
+				break;*/
 			case MapNotify:
 				dirty = true;
 				minimized = false;
@@ -299,6 +302,7 @@ void handleMessages(void) {
 				break;
 		}
 	}
+	checkInput();
 }
 
 static void setWindowTitle(const char *title) {
@@ -367,7 +371,7 @@ static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 	root_win = RootWindow(getDisplay(), getCurrentScreen());
 	cmap = XCreateColormap(getDisplay(), root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
-	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+	attribs.event_mask = ExposureMask | /*FocusChangeMask | */VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
 	attribs.win_gravity = NorthWestGravity;
 	attribmask = CWColormap | CWBackPixel | CWEventMask | CWWinGravity;
