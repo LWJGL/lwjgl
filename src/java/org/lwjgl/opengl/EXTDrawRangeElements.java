@@ -15,19 +15,19 @@ public final class EXTDrawRangeElements {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static void glDrawRangeElementsEXT(int mode, int start, int end, ShortBuffer pIndices) {
-		GLBufferChecks.ensureElementVBOdisabled();
-		BufferChecks.checkDirect(pIndices);
-		long function_pointer = GLContext.getCapabilities().EXT_draw_range_elements_glDrawRangeElementsEXT_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglDrawRangeElementsEXT(mode, start, end, (pIndices.remaining()), GL11.GL_UNSIGNED_SHORT, pIndices, pIndices.position() << 1, function_pointer);
-	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, IntBuffer pIndices) {
 		GLBufferChecks.ensureElementVBOdisabled();
 		BufferChecks.checkDirect(pIndices);
 		long function_pointer = GLContext.getCapabilities().EXT_draw_range_elements_glDrawRangeElementsEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglDrawRangeElementsEXT(mode, start, end, (pIndices.remaining()), GL11.GL_UNSIGNED_INT, pIndices, pIndices.position() << 2, function_pointer);
+	}
+	public static void glDrawRangeElementsEXT(int mode, int start, int end, ShortBuffer pIndices) {
+		GLBufferChecks.ensureElementVBOdisabled();
+		BufferChecks.checkDirect(pIndices);
+		long function_pointer = GLContext.getCapabilities().EXT_draw_range_elements_glDrawRangeElementsEXT_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglDrawRangeElementsEXT(mode, start, end, (pIndices.remaining()), GL11.GL_UNSIGNED_SHORT, pIndices, pIndices.position() << 1, function_pointer);
 	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ByteBuffer pIndices) {
 		GLBufferChecks.ensureElementVBOdisabled();

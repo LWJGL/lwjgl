@@ -1,7 +1,6 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
-#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glPointParameterfvEXTPROC) (GLenum pname, const GLfloat * pfParams);

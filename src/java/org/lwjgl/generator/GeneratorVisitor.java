@@ -206,8 +206,6 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		native_writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 		native_writer.println();
 		native_writer.println("#include <jni.h>");
-		if (context_specific)
-			native_writer.println("#include <inttypes.h>");
 		type_map.printNativeIncludes(native_writer);
 		native_writer.println();
 		TypedefsGenerator.generateNativeTypedefs(type_map, native_writer, d.getMethods());

@@ -203,13 +203,6 @@ public final class GL20 {
 	}
 	private static native void nglEnableVertexAttribArray(int index, long function_pointer);
 
-	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
-		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
-	}
 	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(buffer);
@@ -223,6 +216,13 @@ public final class GL20 {
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglVertexAttribPointer(index, size, GL11.GL_FLOAT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
+	}
+	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
 	}
 	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
 		GLBufferChecks.ensureArrayVBOdisabled();

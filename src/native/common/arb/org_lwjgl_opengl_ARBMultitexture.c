@@ -1,7 +1,6 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
-#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glMultiTexCoord4sARBPROC) (GLenum target, GLshort s, GLshort t, GLshort r, GLshort q);

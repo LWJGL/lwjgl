@@ -1,7 +1,6 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
-#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glCopyTexSubImage3DPROC) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);

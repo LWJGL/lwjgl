@@ -1,7 +1,6 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
-#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glGetSeparableFilterPROC) (GLenum target, GLenum format, GLenum type, GLvoid * row, GLvoid * column, GLvoid * span);

@@ -30,6 +30,13 @@ public final class ATIElementArray {
 	}
 	private static native void nglDrawElementArrayATI(int mode, int count, long function_pointer);
 
+	public static void glElementPointerATI(ShortBuffer pPointer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		long function_pointer = GLContext.getCapabilities().ATI_element_array_glElementPointerATI_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglElementPointerATI(GL11.GL_UNSIGNED_SHORT, pPointer, pPointer.position() << 1, function_pointer);
+	}
 	public static void glElementPointerATI(IntBuffer pPointer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pPointer);
@@ -43,13 +50,6 @@ public final class ATIElementArray {
 		long function_pointer = GLContext.getCapabilities().ATI_element_array_glElementPointerATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglElementPointerATI(GL11.GL_UNSIGNED_BYTE, pPointer, pPointer.position(), function_pointer);
-	}
-	public static void glElementPointerATI(ShortBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
-		long function_pointer = GLContext.getCapabilities().ATI_element_array_glElementPointerATI_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglElementPointerATI(GL11.GL_UNSIGNED_SHORT, pPointer, pPointer.position() << 1, function_pointer);
 	}
 	private static native void nglElementPointerATI(int type, Buffer pPointer, int pPointer_position, long function_pointer);
 	public static void glElementPointerATI(int type, int pPointer_buffer_offset) {

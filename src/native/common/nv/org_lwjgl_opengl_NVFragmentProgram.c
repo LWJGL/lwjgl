@@ -1,7 +1,6 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
-#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glGetProgramNamedParameterfvNVPROC) (GLuint id, GLsizei length, const GLubyte * name, GLfloat * params);

@@ -67,6 +67,10 @@ typedef enum {false, true} bool;
 
 #ifdef _WIN32
 #define inline __inline
+#include <Basetsd.h>
+typedef INT_PTR intptr_t;
+#else
+#include <inttypes.h>
 #endif
 
 static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {

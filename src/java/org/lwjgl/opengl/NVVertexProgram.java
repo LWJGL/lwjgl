@@ -225,13 +225,6 @@ public final class NVVertexProgram extends NVProgram {
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglVertexAttribPointerNV(index, size, type, stride, buffer, buffer.position() << 1, function_pointer);
 	}
-	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, IntBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
-		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribPointerNV_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
-		nglVertexAttribPointerNV(index, size, type, stride, buffer, buffer.position() << 2, function_pointer);
-	}
 	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, ByteBuffer buffer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(buffer);
@@ -240,6 +233,13 @@ public final class NVVertexProgram extends NVProgram {
 		nglVertexAttribPointerNV(index, size, type, stride, buffer, buffer.position(), function_pointer);
 	}
 	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, FloatBuffer buffer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribPointerNV_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
+		nglVertexAttribPointerNV(index, size, type, stride, buffer, buffer.position() << 2, function_pointer);
+	}
+	public static void glVertexAttribPointerNV(int index, int size, int type, int stride, IntBuffer buffer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().NV_vertex_program_glVertexAttribPointerNV_pointer;

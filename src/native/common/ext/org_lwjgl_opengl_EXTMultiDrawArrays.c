@@ -1,7 +1,6 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
-#include <inttypes.h>
 #include "extgl.h"
 
 typedef void (APIENTRY *glMultiDrawArraysEXTPROC) (GLenum mode, GLint * piFirst, GLsizei * piCount, GLint primcount);

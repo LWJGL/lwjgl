@@ -30,15 +30,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <inttypes.h>
+#include <jni.h>
+#include "common_tools.h"
 #include "org_lwjgl_opengl_GLContext.h"
 #include "extgl.h"
 
 JNIEXPORT jlong JNICALL Java_org_lwjgl_opengl_GLContext_getFunctionAddress(JNIEnv *env, jclass clazz, jstring function_name) {
+	jlong address_jlong;
 	char *function_name_pointer = GetStringNativeChars(env, function_name);
 	void *address = extgl_GetProcAddress(function_name_pointer);
 	free(function_name_pointer);
-	jlong address_jlong = (jlong)(intptr_t)address;
+	address_jlong = (jlong)(intptr_t)address;
 	return address_jlong;
 }
 
