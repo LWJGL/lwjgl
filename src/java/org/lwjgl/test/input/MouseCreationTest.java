@@ -167,7 +167,7 @@ public class MouseCreationTest {
 			Mouse.poll();
 
 			position.x += Mouse.dx;
-			position.y -= Mouse.dy;
+			position.y += Mouse.dy;
       
       if(position.x<0) {
         position.x = 0;
