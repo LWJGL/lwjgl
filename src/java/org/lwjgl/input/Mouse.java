@@ -357,14 +357,14 @@ public class Mouse {
 			// clamp x, y
 			if (x < 0) {
 				x = 0;
-			} else if (x > Window.getWidth()) {
-				x = Window.getWidth();
+			} else if (x >= Window.getWidth()) {
+				x = Window.getWidth() - 1;
 			}
 
 			if (y < 0) {
 				y = 0;
-			} else if (y > Window.getHeight()) {
-				y = Window.getHeight();
+			} else if (y >= Window.getHeight()) {
+				y = Window.getHeight() - 1;
 			}
 		}
 		if (readBuffer != null) read();
