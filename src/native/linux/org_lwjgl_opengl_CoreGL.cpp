@@ -459,6 +459,200 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4us(JNIEnv * env, jobje
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3bv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3bv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3bv((signed char *)v);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3dv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3dv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3dv((double *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3fv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3fv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3fv((float *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3iv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3iv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3iv((int *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3sv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3sv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3sv((short *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3ubv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3ubv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3ubv((unsigned char *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3uiv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3uiv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3uiv((unsigned int *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color3usv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3usv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor3usv((unsigned short *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color4bv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4bv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor4bv((signed char *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color4dv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4dv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor4dv((double *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color4fv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4fv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor4fv((float *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color4iv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4iv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor4iv((int *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color4sv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4sv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor4sv((short *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color4ubv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4ubv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor4ubv((unsigned char *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    color4uiv
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4uiv
+  (JNIEnv *env, jobject obj, jint v)
+{
+	glColor4uiv((unsigned int *)v);
+	CHECK_GL_ERROR
+}
+
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
  * Method:    clipPlane
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_clipPlane(JNIEnv * env, jobject obj, jint p0, jint p1)
