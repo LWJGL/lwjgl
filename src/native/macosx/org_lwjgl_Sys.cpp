@@ -71,7 +71,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
   (JNIEnv * env, jclass clazz)
 {
-	return 0L;
+      return 0L;
 }
 
 /*
@@ -82,6 +82,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
   (JNIEnv * env, jclass clazz)
 {
+      return 0L;
 }
 
 /*

@@ -41,7 +41,9 @@
 
 #include "extgl.h"
 #include "org_lwjgl_opengl_BaseGL.h"
+#include "RenderingContext.h"
 
+extern RenderingContext * renderingContext;
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
@@ -51,7 +53,42 @@
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
   (JNIEnv * env, jobject obj, jint colorBits, jint alphaBits, jint depthBits, jint stencilBits)
 {
-	return JNI_TRUE;
+      AGLPixelFormat 				fmt;
+      GLboolean      				ok;
+      GLint         			 	attrib[] = { AGL_RGBA, AGL_NONE };
+      
+      /* Choose an rgb pixel format */
+      fmt = aglChoosePixelFormat(NULL, 0, attrib);
+      if(fmt == NULL)
+      {
+          return JNI_FALSE;
+      }
+
+      /* Create an AGL context */
+      renderingContext->aglContext = aglCreateContext(fmt, NULL);
+      if( renderingContext->aglContext == NULL)
+      {
+          return JNI_FALSE;
+      }
+
+      /* Attach the window to the context */
+      ok = aglSetDrawable(renderingContext->aglContext, GetWindowPort(renderingContext->windowPtr) );
+      if(!ok)
+      {
+          return JNI_FALSE;
+      }
+
+      /* Make the context the current context */
+      ok = aglSetCurrentContext(renderingContext->aglContext);
+      if(!ok)
+      {
+          return JNI_FALSE;
+      }
+
+      /* Pixel format is no longer needed */
+      aglDestroyPixelFormat(fmt);
+      
+      return JNI_TRUE;
 }
 
 /*
@@ -62,6 +99,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
   (JNIEnv * env, jobject obj)
 {
+      // clear out the current rendering context
+      //
+      aglSetCurrentContext( NULL );
+
+      // destroy the context
+      //
+      aglDestroyContext( renderingContext->aglContext );
 }
 
 /*
@@ -71,6 +115,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jobject obj)
 {
+    // swap the rendering buffer
+    //
+    aglSwapBuffers( renderingContext->aglContext );
 }
 
 /*
@@ -81,6 +128,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jo
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
   (JNIEnv * env, jobject obj)
 {
+      // make the current context the one we have stored
+      //
+      aglSetCurrentContext( renderingContext->aglContext );
 }
 
 /*
@@ -91,4 +141,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
   (JNIEnv *, jobject)
 {
+      // release the context
+      //
+      aglSetCurrentContext( NULL );
 }

@@ -69,7 +69,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNumButtons(JNIEnv *env, jclass clazz) {
-	return (jint)NUM_BUTTONS;
+	return (jint)2;
 }
 
 /*

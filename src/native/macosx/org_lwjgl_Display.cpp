@@ -33,11 +33,11 @@
 #include <AGL/agl.h>
 #include <OpenGL/gl.h>
 #include <JavaVM/jni.h>
-#include "RenderingContext.h"
 #include "org_lwjgl_Display.h"
+#include "RenderingContext.h"
 
 
-RenderingContext *		renderingContext;
+RenderingContext *			renderingContext;
 
 
 /*
@@ -61,38 +61,37 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 {
 #ifdef _DEBUG
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
-#endif
-      renderingContext = new RenderingContext();
+#endif      
+
       
       InitCursor();
 
+      SetRect( &renderingContext->rect, 0, 0, width, height );
+      renderingContext->windowPtr = NewCWindow( NULL, &renderingContext->rect, "LWJGL", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
 
-      Rect			rect;      
-      SetRect( &rect, 0, 0, width, height );
-      
-      WindowPtr windowPtr = NewCWindow( NULL, &rect, "LWJGL", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
+      /*
+      CreateNewWindow( 	kDocumentWindowClass,
+                        kWindowStandardDocumentAttributes |
+                        kWindowStandardHandlerAttribute,
+                        &rect,
+                        &windowPtr );
+       */
         
-      SetPortWindowPort( windowPtr );
+      SetPortWindowPort( renderingContext->windowPtr );
         
-      if ( windowPtr == NULL )
+      if ( renderingContext->windowPtr == NULL )
       {
           printf("Failed to create a window\n");
-          return 1;
+          return JNI_TRUE;
       }
         
-      ShowWindow( windowPtr );
-/*
-      pAGLContext = setupAGL(   attrib, (AGLDrawable) windowPtr);
-      if(ctx == NULL)
-      {
-          return 1;
-      }        
-*/
+      ShowWindow( renderingContext->windowPtr );
+
 
       jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
-      env->SetStaticIntField(clazz, fid_handle, (jint) windowPtr );
+      env->SetStaticIntField(clazz, fid_handle, (jint) renderingContext->windowPtr );
 
-      return 0;
+      return JNI_TRUE;
 }
 
 /*
@@ -105,7 +104,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
 {
       // cleanup the AGL context
       //
-      renderingContext->destroy();
+      aglSetCurrentContext(NULL);
+      aglSetDrawable(renderingContext->aglContext, NULL);
+      aglDestroyContext(renderingContext->aglContext);
+
+      // cleanup the window
+      //
+      DisposeWindow( renderingContext->windowPtr );
 
         
 #ifdef _DEBUG
