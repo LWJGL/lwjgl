@@ -117,7 +117,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
 	alutLoadWAVFile(filename, (ALenum*) &format, (void**) &data, (ALsizei*) &size, (ALsizei*) &freq, (ALboolean*) &loop);
 
 	/* get class */
-	alutLoadWAVFile_class = env->FindClass("org/lwjgl/openal/ALUTLoadWAVFile");
+	alutLoadWAVFile_class = env->FindClass("org/lwjgl/openal/ALUTLoadWAVData");
 
 	/* get constructor */
 	methodID = env->GetMethodID(alutLoadWAVFile_class, "<init>", "(IIIIZ)V");
@@ -168,7 +168,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env,
 	alutLoadWAVMemory(bufferlocation, (ALenum*) &format, (void**) &data, (ALsizei*) &size, (ALsizei*) &freq, (ALboolean*) &loop);
 
 	/* get class */
-	alutLoadWAVFile_class = env->FindClass("org/lwjgl/openal/ALUTLoadWAVFile");
+	alutLoadWAVFile_class = env->FindClass("org/lwjgl/openal/ALUTLoadWAVData");
 
 	/* get constructor */
 	methodID = env->GetMethodID(alutLoadWAVFile_class, "<init>", "(IIIIZ)V");

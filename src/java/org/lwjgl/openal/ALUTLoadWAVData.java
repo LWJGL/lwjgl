@@ -42,7 +42,7 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class ALUTLoadWAVFile {
+ public class ALUTLoadWAVData {
     
     /* format of file */
     public final int format;
@@ -68,7 +68,7 @@ public class ALUTLoadWAVFile {
      * @param freq frequency of the data
      * @param loop looping indicator for the WAV data
      */
-    public ALUTLoadWAVFile(int format, int data, int size, int freq, boolean loop) {
+    public ALUTLoadWAVData(int format, int data, int size, int freq, boolean loop) {
         this.format     = format;
         this.data       = data;
         this.size       = size;

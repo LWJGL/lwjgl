@@ -31,6 +31,9 @@
  */
 package org.lwjgl.openal;
 
+
+import java.io.*;
+import java.net.*;
 /**
  * $Id$
  *
@@ -72,7 +75,12 @@ public class OpenALTest {
         al.genSources(1, sources);
         
         /* load data */
-        ALUTLoadWAVFile file = alut.loadWAVFile("footsteps.wav");
+        ALUTLoadWAVData file = alut.loadWAVFile("footsteps.wav");
+        //byte[] buffer = getBufferFor("footsteps.wav");
+        
+        //System.out.println("buffersize: " + buffer.length);
+        
+        //ALUTLoadWAVData file = alut.loadWAVMemory(buffer);
         
         /* copy to buffers */
         al.bufferData(buffers[0], file.format, file.data, file.size, file.freq);
@@ -107,5 +115,41 @@ public class OpenALTest {
         
         /* shutdown */
         alut.exit();
+    }
+    
+    private static byte[] getBufferFor(String filename) {
+        URL url = null;
+
+        String cwd = System.getProperty("user.dir");
+
+        try {
+            url = new URL("file:///" + cwd + "/" + filename);
+        } catch (MalformedURLException mue) {
+            mue.printStackTrace();
+        }
+        
+        System.out.println("Attempting to load: " + url);
+        
+        try {
+            BufferedInputStream bis = new BufferedInputStream(url.openStream());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            
+            int bufferLength = 4096;
+            byte[] readBuffer = new byte[bufferLength];
+            int read = -1;
+            
+            while((read = bis.read(readBuffer, 0, bufferLength)) != -1) {
+                baos.write(readBuffer, 0, read);
+            }
+            
+            //done reading, close
+            bis.close();
+            
+            return baos.toByteArray();
+        } catch (Exception ioe) {
+            ioe.printStackTrace();
+        }
+        System.exit(-1);
+        return null;
     }
 }

@@ -66,9 +66,17 @@ public class ALUT {
      * Loads a wave file into memory
      *
      * @param file name of file to load (in current working directory)
-     * @return ALUTLoadWAVFile object containing information regarding file loaded
+     * @return ALUTLoadWAVData object containing information regarding wave data loaded
      */
-    public native ALUTLoadWAVFile       loadWAVFile(String file);
+    public native ALUTLoadWAVData       loadWAVFile(String file);
+    
+    /**
+     * Loads a byte buffer into memory
+     *
+     * @param buffer byte buffer containing file
+     * @return ALUTLoadWAVData object containing information regarding wave data loaded
+     */
+    public native ALUTLoadWAVData       loadWAVMemory(byte[] buffer);
     
     /**
      * Unloads the specified file from memory
