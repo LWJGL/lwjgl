@@ -129,7 +129,39 @@ int SetDisplayMode(int width, int height, int bpp, int freq)
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
-	return NULL;
+
+	DEVMODE mode;
+
+	// First count the number of display modes.
+	int i = 0, n = 0;
+	while (EnumDisplaySettings(NULL, i ++, &mode) != 0) {
+		// Filter out indexed modes
+		if (mode.dmBitsPerPel < 16) {
+			continue;
+		} else
+			n ++;
+	}
+		; // Do nothing
+
+	// Allocate an array of DisplayModes big enough
+	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+	jobjectArray ret = env->NewObjectArray(n, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
+
+	i = n = 0;
+	while (EnumDisplaySettings(NULL, i ++, &mode) != 0) {
+		// Filter out indexed modes
+		if (mode.dmBitsPerPel < 16) {
+			continue;
+		} else {
+			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, mode.dmPelsWidth, mode.dmPelsHeight,
+				mode.dmBitsPerPel, mode.dmDisplayFrequency);
+
+			env->SetObjectArrayElement(ret, n ++, displayMode);
+		}
+	}
+
+	return ret;
 }
 
 /*
@@ -138,13 +170,13 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
  * Signature: (IIIIZ)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
-  (JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jboolean debug)
+  (JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jboolean fullscreen)
 {
 #ifdef _DEBUG
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
 #endif
 
-	if (!debug && SetDisplayMode(width, height, bpp, freq) != 1)
+	if (fullscreen && SetDisplayMode(width, height, bpp, freq) != 1)
 		return JNI_FALSE;
 
 	/*

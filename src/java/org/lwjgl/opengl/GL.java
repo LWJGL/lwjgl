@@ -1520,6 +1520,10 @@ public class GL extends CoreGL implements GLConstants {
 	public boolean SGIS_generate_mipmap;
 	public boolean SGIX_shadow;
 	public boolean SGIX_depth_texture;
+	public boolean OpenGL11;
+	public boolean OpenGL12;
+	public boolean OpenGL13;
+	public boolean OpenGL14;
 
 	/**
 	 * Constructor for GL.
@@ -1559,6 +1563,22 @@ public class GL extends CoreGL implements GLConstants {
 			
 		}
 		
+		// Let's see what openGL version we are too:
+		String version = getString(VERSION);
+		int i = version.indexOf("1.");
+		if (i > -1) {
+			char c = version.charAt(i + 2);
+			if (c == '2') {
+				OpenGL12 = true;
+			} else if (c == '3') {
+				OpenGL12 = true;
+				OpenGL13 = true;
+			} else if (c == '4') {
+				OpenGL12 = true;
+				OpenGL13 = true;
+				OpenGL14 = true;
+			}
+		}
 	}
 	
 	/*
@@ -1570,6 +1590,7 @@ public class GL extends CoreGL implements GLConstants {
 	public static boolean WGL_ARB_pixel_format;
 	public static boolean WGL_ARB_render_texture; 
 	public static boolean WGL_EXT_extensions_string;
+	public static boolean WGL_EXT_swap_control;
 
 	/**
 	 * Checks and sets WGL_EXT_extensions_string and WGL_ARB_extensions_string
@@ -1601,10 +1622,13 @@ public class GL extends CoreGL implements GLConstants {
 			exts = wglGetExtensionsStringARB(Display.getHandle()); // Remember - this is an HWND not an HDC, which is what's required
 		else
 			exts = wglGetExtensionsStringEXT();
-			
+
+		System.out.println("Available WGL extensions:");			
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
+			
+			System.out.println(ext);
 			
 			Field f = (Field) map.get(ext);
 			if (f != null) {

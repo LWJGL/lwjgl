@@ -13,6 +13,12 @@ extern "C" {
 /* Inaccessible static: dx */
 /* Inaccessible static: dy */
 /* Inaccessible static: dz */
+/* Inaccessible static: readBuffer */
+/* Inaccessible static: readBufferAddress */
+#undef org_lwjgl_input_Mouse_MOUSE_EVENT_SIZE
+#define org_lwjgl_input_Mouse_MOUSE_EVENT_SIZE 20L
+#undef org_lwjgl_input_Mouse_MOUSE_EVENT_STRIDE
+#define org_lwjgl_input_Mouse_MOUSE_EVENT_STRIDE 32L
 /* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_input_Mouse
@@ -45,6 +51,38 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGetNumButtons
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNumButtons
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nHasZValue
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasZValue
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nEnableBuffer
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nRead
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
+  (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus
 }
