@@ -32,6 +32,7 @@
 
 package org.lwjgl.opengl;
 
+import java.nio.*;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.Buffer;
@@ -46,30 +47,35 @@ import java.nio.Buffer;
  */
 public class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
 	public static native void glFogCoordf (float coord);
-	public static native void glFogCoordd (double coord);
-	public static native void glFogCoordPointer (int type, int stride, Buffer data);
-        public static native void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount, int primcount);
+	public static void glFogCoordPointer (int stride, FloatBuffer data) {
+		nglFogCoordPointer(GL_FLOAT, stride, data, data.position() << 2);
+	}
+	private static native void nglFogCoordPointer (int type, int stride, Buffer data, int data_offset);
+	public static void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount, int primcount) {
+		nglMultiDrawArrays(mode, piFirst, piFirst.position(), piCount, piCount.position(), primcount);
+	}
+	private static native void nglMultiDrawArrays(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset, int primcount);
 /*        public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);*/
 	public static native void glPointParameterf (int pname, float param);
-	public static native void glPointParameterfv (int pname, FloatBuffer params);
+	public static void glPointParameterfv (int pname, FloatBuffer params) {
+		nglPointParameter(pname, params, params.position());
+	}
+	private static native void nglPointParameter (int pname, FloatBuffer params, int params_offset);
 	public static native void glSecondaryColor3b (byte red, byte green, byte blue);
-	public static native void glSecondaryColor3d (double red, double green, double blue);
 	public static native void glSecondaryColor3f (float red, float green, float blue);
-	public static native void glSecondaryColor3i (int red, int green, int blue);
-	public static native void glSecondaryColor3s (short red, short green, short blue);
 	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
-	public static native void glSecondaryColor3ui (int red, int green, int blue);
-	public static native void glSecondaryColor3us (short red, short green, short blue);
-	public static native void glSecondaryColorPointer (int size, int type, int stride, Buffer data);
+	public static void glSecondaryColorPointer (int size, boolean unsigned, int stride, ByteBuffer data) {
+		nglSecondaryColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, data, data.position());
+	}
+	public static void glSecondaryColorPointer (int size, int stride, FloatBuffer data) {
+		nglSecondaryColorPointer(size, GL_FLOAT, stride, data, data.position() << 2);
+	}
+	private static native void nglSecondaryColorPointer (int size, int type, int stride, Buffer data, int data_offset);
 	public static native void glBlendFuncSeparate (int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha);
-	public static native void glWindowPos2d (double x, double y);
 	public static native void glWindowPos2f (float x, float y);
 	public static native void glWindowPos2i (int x, int y);
-	public static native void glWindowPos2s (short x, short y);
-	public static native void glWindowPos3d (double x, double y, double z);
 	public static native void glWindowPos3f (float x, float y, float z);
 	public static native void glWindowPos3i (int x, int y, int z);
-	public static native void glWindowPos3s (short x, short y, short z);
 }
 
 
