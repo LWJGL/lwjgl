@@ -190,7 +190,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers(JNIEnv * env, jo
  * Method:    nMakeCurrent
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_makeContextCurrent
   (JNIEnv * env, jobject obj)
 {
 	makeCurrent();
@@ -201,7 +201,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
  * Method:    nFreeContext
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_releaseContext
   (JNIEnv *, jobject)
 {
 	releaseContext();
