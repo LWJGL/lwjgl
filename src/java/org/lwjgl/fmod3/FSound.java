@@ -3023,7 +3023,7 @@ public class FSound {
    * @param unit DSP unit to have its priority changed
    * @param priority Order in the priority chain. Valid numbers are 0 to 1000, 0 being highest priority (first), with 1000 being lowest priority (last).
    */
-  public static void FSOUND_DSP_GetActive(FSoundDSPUnit unit, int priority) {
+  public static void FSOUND_DSP_SetPriority(FSoundDSPUnit unit, int priority) {
    nFSOUND_DSP_SetPriority(unit.dspHandle, priority);
   }
   private static native void nFSOUND_DSP_SetPriority(ByteBuffer dspUnitHandle, int priority);  
