@@ -1,3 +1,5 @@
+package org.lwjgl.test.opengl;
+
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.*;
