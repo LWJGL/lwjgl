@@ -63,7 +63,6 @@ import org.lwjgl.opengl.wgl.WGLMakeCurrentRead;
 
 public interface GLConstants
 	extends
-		CoreGL14Constants,
 		ARBCubeMap,
 		ARBDepthTexture,
 		ARBMatrixPalette,
