@@ -270,9 +270,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void grabMouse(boolean grab) {
-		nGrabMouse(grab);
 		mouse_queue.setGrabbed(grab);
 		warpCursor();
+		nGrabMouse(grab);
 	}
 
 	private native void nWarpCursor(int x, int y);
@@ -294,7 +294,7 @@ final class MacOSXDisplay implements DisplayImplementation {
 			  with another setCursor.
 		   2. When the cursor is moving in the top pixel row (y = 0 in AWT coordinates) in fullscreen 
 		   	  mode, no mouse moved events are reported, even though mouse pressed/released and dragged
-			  are reported
+			  events are reported
 		*/
 		return 0;
 	}

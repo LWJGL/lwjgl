@@ -43,12 +43,18 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include "common_tools.h"
 
+static bool is_grabbed;
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nGrabMouse(JNIEnv *env, jobject this, jboolean grab) {
-	CGAssociateMouseAndMouseCursorPosition(grab == JNI_TRUE ? FALSE : TRUE);
-	if (grab == JNI_TRUE)
-		CGDisplayHideCursor(kCGDirectMainDisplay);
-	else
-		CGDisplayShowCursor(kCGDirectMainDisplay);
+	bool new_grabbed = grab == JNI_TRUE;
+	if (is_grabbed != new_grabbed) {
+		is_grabbed = new_grabbed;
+		CGAssociateMouseAndMouseCursorPosition(is_grabbed ? FALSE : TRUE);
+		if (is_grabbed)
+			CGDisplayHideCursor(kCGDirectMainDisplay);
+		else
+			CGDisplayShowCursor(kCGDirectMainDisplay);
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nWarpCursor(JNIEnv *env, jobject this, jint x, jint y) {
