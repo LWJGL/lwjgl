@@ -428,11 +428,11 @@ struct ExtensionTypes
 extern struct ExtensionTypes extgl_Extensions;
 #endif
 
-typedef GLenum (APIENTRY * glGetErrorPROC) (void);
-typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
+//typedef GLenum (APIENTRY * glGetErrorPROC) (void);
+//typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
 
-extern glGetErrorPROC glGetError;
-extern glGetStringPROC glGetString;
+//extern glGetErrorPROC glGetError;
+//extern glGetStringPROC glGetString;
 
 /* initializes everything, call this right after the rc is created. the function returns true if successful */
 extern bool extgl_Open(JNIEnv *env);

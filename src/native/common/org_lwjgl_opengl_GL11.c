@@ -110,7 +110,7 @@ typedef void (APIENTRY * glGenTexturesPROC) (GLsizei n, GLuint *textures);
 typedef void (APIENTRY * glGetBooleanvPROC) (GLenum pname, GLboolean *params);
 typedef void (APIENTRY * glGetClipPlanePROC) (GLenum plane, GLdouble *equation);
 typedef void (APIENTRY * glGetDoublevPROC) (GLenum pname, GLdouble *params);
-//typedef GLenum (APIENTRY * glGetErrorPROC) (void);
+typedef GLenum (APIENTRY * glGetErrorPROC) (void);
 typedef void (APIENTRY * glGetFloatvPROC) (GLenum pname, GLfloat *params);
 typedef void (APIENTRY * glGetIntegervPROC) (GLenum pname, GLint *params);
 typedef void (APIENTRY * glGetLightfvPROC) (GLenum light, GLenum pname, GLfloat *params);
@@ -124,7 +124,7 @@ typedef void (APIENTRY * glGetPixelMapuivPROC) (GLenum map, GLuint *values);
 typedef void (APIENTRY * glGetPixelMapusvPROC) (GLenum map, GLushort *values);
 typedef void (APIENTRY * glGetPointervPROC) (GLenum pname, GLvoid* *params);
 typedef void (APIENTRY * glGetPolygonStipplePROC) (GLubyte *mask);
-//typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
+typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
 typedef void (APIENTRY * glGetTexEnvfvPROC) (GLenum target, GLenum pname, GLfloat *params);
 typedef void (APIENTRY * glGetTexEnvivPROC) (GLenum target, GLenum pname, GLint *params);
 typedef void (APIENTRY * glGetTexGenfvPROC) (GLenum coord, GLenum pname, GLfloat *params);
@@ -312,7 +312,7 @@ static glGenTexturesPROC glGenTextures;
 static glGetBooleanvPROC glGetBooleanv;
 static glGetClipPlanePROC glGetClipPlane;
 static glGetDoublevPROC glGetDoublev;
-glGetErrorPROC glGetError = NULL;
+static glGetErrorPROC glGetError;
 static glGetFloatvPROC glGetFloatv;
 static glGetIntegervPROC glGetIntegerv;
 static glGetLightfvPROC glGetLightfv;
@@ -326,7 +326,7 @@ static glGetPixelMapuivPROC glGetPixelMapuiv;
 static glGetPixelMapusvPROC glGetPixelMapusv;
 static glGetPointervPROC glGetPointerv;
 static glGetPolygonStipplePROC glGetPolygonStipple;
-glGetStringPROC glGetString = NULL;
+static glGetStringPROC glGetString;
 static glGetTexEnvfvPROC glGetTexEnvfv;
 static glGetTexEnvivPROC glGetTexEnviv;
 static glGetTexGenfvPROC glGetTexGenfv;
@@ -1497,7 +1497,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnviv(JNIEnv * env, jcla
 static jstring JNICALL Java_org_lwjgl_opengl_GL11_glGetString(JNIEnv * env, jclass clazz, jint p0)
 {
 	const GLubyte * string = glGetString((GLenum) p0);
-	return NewStringNative(env, (const char *) string);
+	return NewStringNative(env, string);
 }
 
 /*
