@@ -3291,7 +3291,7 @@ void extgl_Close(void);
 void extgl_removeExtension(JNIEnv *env, jobject ext_set, const char *ext);
 
 #define EXTGL_SANITY_CHECK(e,h,x) 	if (extgl_error) { \
-						extgl_Extensions.x = 0; \
+						extgl_Extensions.x = false; \
 						printf("NOTICE: %s disabled because of missing driver symbols\n", #x); \
 						extgl_error = false; \
 						if (h != NULL) { \

@@ -734,69 +734,40 @@ void *extgl_GetProcAddress(const char *name)
 }
 
 static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name)
-
 {
-
 	const GLubyte *start;
-
 	GLubyte *where, *terminator;
 
-
-
 	if (extensions == NULL) {
-
 		printfDebug("NULL extension string\n");
-
 		extgl_error = true;
-
 		return false;
-
 	}
 
 	/* Extension names should not have spaces. */
-
 	where = (GLubyte *) strchr(name, ' ');
-
 	if (where || *name == '\0')
-
 		return false;
 
 	/* It takes a bit of care to be fool-proof about parsing the
-
 		 OpenGL extensions string. Don't be fooled by sub-strings,
-
 		etc. */
-
 	start = extensions;
-
 	for (;;)
-
 	{
-
 		where = (GLubyte *) strstr((const char *) start, name);
-
 		if (!where)
-
 			break;
-
 		terminator = where + strlen(name);
-
 		if (where == start || *(where - 1) == ' ')
-
 			if (*terminator == ' ' || *terminator == '\0') {
-
 				if (ext_set != NULL) { 
 					insertExtension(env, ext_set, name);
 				}
-
 				return true;
-
 			}
-
 		start = terminator;
-
 	}
-
 	return false;
 
 }
@@ -976,10 +947,10 @@ bool extgl_InitAGL(JNIEnv *env, jobject ext_set)
 
 #ifdef _X11
 /** returns true if the extention is available */
-static bool GLXQueryExtension(JNIEnv* env, jobject ext_set, Display *disp, int screen, const char *name)
+static bool GLXQueryExtension(JNIEnv* env, Display *disp, int screen, const char *name)
 {
 	const GLubyte *exts = (const GLubyte *)glXQueryExtensionsString(disp, screen);
-	return QueryExtension(env, ext_set, exts, name);
+	return QueryExtension(env, NULL, exts, name);
 }
 #endif
 
@@ -1022,7 +993,7 @@ static void extgl_InitEXTCullVertex(JNIEnv *env, jobject ext_set)
 */
 
 #ifdef _X11
-static void extgl_InitGLX13(JNIEnv *env, jobject ext_set)
+static void extgl_InitGLX13(JNIEnv *env)
 {
 	if (extgl_Extensions.GLX13 != 1)
 		return;
@@ -1044,7 +1015,7 @@ static void extgl_InitGLX13(JNIEnv *env, jobject ext_set)
 	glXQueryContext = (glXQueryContextPROC) extgl_GetProcAddress("glXQueryContext");
 	glXSelectEvent = (glXSelectEventPROC) extgl_GetProcAddress("glXSelectEvent");
 	glXGetSelectedEvent = (glXGetSelectedEventPROC) extgl_GetProcAddress("glXGetSelectedEvent");
-	EXTGL_SANITY_CHECK(env, ext_set, GLX13)
+	EXTGL_SANITY_CHECK(env, (jobject)NULL, GLX13);
 }
 
 static bool extgl_InitGLX12(void)
@@ -1072,23 +1043,23 @@ static bool extgl_InitGLX12(void)
 	return !extgl_error;
 }
 
-static void extgl_InitGLXSupportedExtensions(JNIEnv *env, jobject ext_set, Display *disp, int screen)
+static void extgl_InitGLXSupportedExtensions(JNIEnv *env, Display *disp, int screen)
 {
-	extgl_Extensions.GLX_EXT_visual_info = GLXQueryExtension(env, ext_set, disp, screen, "GLX_EXT_visual_info");
-	extgl_Extensions.GLX_EXT_visual_rating = GLXQueryExtension(env, ext_set, disp, screen, "GLX_EXT_visual_rating");
-	extgl_Extensions.GLX_SGI_swap_control = GLXQueryExtension(env, ext_set, disp, screen, "GLX_SGI_swap_control");
-	extgl_Extensions.GLX_ARB_multisample = GLXQueryExtension(env, ext_set, disp, screen, "GLX_ARB_multisample");
+	extgl_Extensions.GLX_EXT_visual_info = GLXQueryExtension(env, disp, screen, "GLX_EXT_visual_info");
+	extgl_Extensions.GLX_EXT_visual_rating = GLXQueryExtension(env, disp, screen, "GLX_EXT_visual_rating");
+	extgl_Extensions.GLX_SGI_swap_control = GLXQueryExtension(env, disp, screen, "GLX_SGI_swap_control");
+	extgl_Extensions.GLX_ARB_multisample = GLXQueryExtension(env, disp, screen, "GLX_ARB_multisample");
 }
 
-static void extgl_InitGLXSGISwapControl(JNIEnv *env, jobject ext_set)
+static void extgl_InitGLXSGISwapControl(JNIEnv *env)
 {
 	if (extgl_Extensions.GLX_SGI_swap_control != 1)
 		return;
 	glXSwapIntervalSGI = (glXSwapIntervalSGIPROC)extgl_GetProcAddress("glXSwapIntervalSGI");
-	EXTGL_SANITY_CHECK(env, ext_set, GLX_SGI_swap_control)
+	EXTGL_SANITY_CHECK(env, (jobject)NULL, GLX_SGI_swap_control);
 }
 
-bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen)
+bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
 {
 	int major, minor;
 	/* Assume glx ver >= 1.2 */
@@ -1098,13 +1069,13 @@ bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen)
 		return false;
 	if (!extgl_InitGLX12())
 		return false;
-	extgl_InitGLXSupportedExtensions(env, ext_set, disp, screen);
+	extgl_InitGLXSupportedExtensions(env, disp, screen);
 	if (glXQueryVersion(disp, &major, &minor) != True)
 		return false;
 	if (major > 1 || (major == 1 && minor >= 3))
 		extgl_Extensions.GLX13 = true;
-	extgl_InitGLX13(env, ext_set);
-	extgl_InitGLXSGISwapControl(env, ext_set);
+	extgl_InitGLX13(env);
+	extgl_InitGLXSGISwapControl(env);
 	return true;
 }
 #endif

@@ -457,7 +457,7 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
  * Signature: (IIII)Z
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples, jobject ext_set)
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	int screen;
 	Display *disp;
@@ -493,7 +493,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		throwException(env, "Could not create window");
 		return;
 	}
-	if (!extgl_Initialize(env, ext_set)) {
+/*	if (!extgl_Initialize(env, ext_set)) {
 		destroy();
 		throwException(env, "Could not init gl function pointers");
 		return;
@@ -501,7 +501,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	if (ISDEBUGENABLED()) {
 		const GLubyte * extensions = glGetString(GL_EXTENSIONS);
 		printf("Supported extensions: %s\n", extensions);
-	}
+	}*/
 }
 
 /*
