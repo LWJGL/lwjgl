@@ -87,13 +87,11 @@ jobjectArray GetAvailableDisplayModesOSX(JNIEnv * env)
     displayModes = CGDisplayAvailableModes( kCGDirectMainDisplay );
     count = CFArrayGetCount( displayModes );
 
-    printf("Found %d displaymodes\n", count );
-
     // get a count of the number of display modes on this machine with a bpp greater than 8
     //
     for ( i = 0; i < count; i++ )
     {
-        CFDictionaryRef mode = CFArrayGetValueAtIndex( displayModes, i );
+        CFDictionaryRef mode = static_cast<CFDictionaryRef>( CFArrayGetValueAtIndex( displayModes, i ) );
         long bpp = _getDictLong( mode, kCGDisplayBitsPerPixel );
 
         if ( bpp > 8 )
@@ -105,13 +103,12 @@ jobjectArray GetAvailableDisplayModesOSX(JNIEnv * env)
     // now that we have the count create the classes, and add 'em all - we'll remove dups in Java
     // Allocate an array of DisplayModes big enough
     jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
-
     jobjectArray ret = env->NewObjectArray( availableModes, displayModeClass, NULL);
     jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
     
     for ( i = 0; i < count; i++ )
     {
-        CFDictionaryRef modeDict = CFArrayGetValueAtIndex( displayModes, i );
+        CFDictionaryRef modeDict = static_cast<CFDictionaryRef>( CFArrayGetValueAtIndex( displayModes, i ) );
         long width = _getDictLong( modeDict, kCGDisplayWidth );
         long height = _getDictLong( modeDict, kCGDisplayHeight );
         long freq = (long)(_getDictDouble( modeDict, kCGDisplayRefreshRate ) + 0.5 );
