@@ -40,21 +40,21 @@ public final class EXTFramebufferObject {
 
 
 	/**
-	 * Accepted by the <target> parameter of BindFramebufferEXT,
+	 * Accepted by the &lt;target&gt; parameter of BindFramebufferEXT,
 	 * CheckFramebufferStatusEXT, FramebufferTexture{1D|2D|3D}EXT, and
 	 * FramebufferRenderbufferEXT:
 	 */
 	public static final int GL_FRAMEBUFFER_EXT = 0x8D40;
 
 	/**
-	 * Accepted by the <target> parameter of BindRenderbufferEXT,
+	 * Accepted by the &lt;target&gt; parameter of BindRenderbufferEXT,
 	 * RenderbufferStorageEXT, and GetRenderbufferParameterivEXT, and
 	 * returned by GetFramebufferAttachmentParameterivEXT:
 	 */
 	public static final int GL_RENDERBUFFER_EXT = 0x8D41;
 
 	/**
-	 * Accepted by the <internalformat> parameter of
+	 * Accepted by the &lt;internalformat&gt; parameter of
 	 * RenderbufferStorageEXT:
 	 */
 	public static final int GL_STENCIL_INDEX_EXT = 0x8D45;
@@ -64,14 +64,14 @@ public final class EXTFramebufferObject {
 	public static final int GL_STENCIL_INDEX16_EXT = 0x8D49;
 
 	/**
-	 * Accepted by the <pname> parameter of GetRenderbufferParameterivEXT:
+	 * Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT:
 	 */
 	public static final int GL_RENDERBUFFER_WIDTH_EXT = 0x8D42;
 	public static final int GL_RENDERBUFFER_HEIGHT_EXT = 0x8D43;
 	public static final int GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = 0x8D44;
 
 	/**
-	 * Accepted by the <pname> parameter of
+	 * Accepted by the &lt;pname&gt; parameter of
 	 * GetFramebufferAttachmentParameterivEXT:
 	 */
 	public static final int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT = 0x8CD0;
@@ -81,7 +81,7 @@ public final class EXTFramebufferObject {
 	public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT = 0x8CD4;
 
 	/**
-	 * Accepted by the <attachment> parameter of
+	 * Accepted by the &lt;attachment&gt; parameter of
 	 * FramebufferTexture{1D|2D|3D}EXT, FramebufferRenderbufferEXT, and
 	 * GetFramebufferAttachmentParameterivEXT
 	 */
