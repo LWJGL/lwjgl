@@ -252,4 +252,7 @@ public class Vector4f extends Vector implements Serializable {
 		return this;
 	}
 
+	public String toString() {
+		return "Vector4f: " + x + " " + y + " " + z + " " + w;
+	}
 }
