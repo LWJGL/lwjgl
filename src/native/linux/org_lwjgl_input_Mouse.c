@@ -302,7 +302,7 @@ void handleButtonPress(XButtonEvent *event) {
 		default: 
 			break;
 	}
-	dz += delta;
+	accum_dz += delta;
 	handleButton(event, 1);
 }
 
