@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package org.lwjgl.input;
 
 import org.lwjgl.Sys;
@@ -57,51 +57,51 @@ public class Joystick {
 	static {
 		initialize();
 	}
-	
+
 	/** Has the joystick been created? */
 	private static boolean created;
-	
+
 	/** The joystick buttons status */
 	private static boolean[] buttons;
-	
+
 	/** X position, range -1000 to 1000 */
 	public static int x = -1;
-	
+
 	/** Y position, range -1000 to 1000 */
 	public static int y = -1;
-	
+
 	/** Z position, range -1000 to 1000 */
 	public static int z = -1;
-    
-    /** Position of Point of View from -1 to 27000 (360 degrees) */
-    public static int pov;
-    
-    /** Constant specifying centered POV */
-    public static final int POV_CENTER  = -1;
 
-    /** Constant specifying nortward POV */
-    public static final int POV_NORTH   = 0;
+	/** Position of Point of View from -1 to 27000 (360 degrees) */
+	public static int pov;
 
-    /** Constant specifying southward POV */
-    public static final int POV_SOUTH   = 18000;
+	/** Constant specifying centered POV */
+	public static final int POV_CENTER = -1;
 
-    /** Constant specifying eastward POV */
-    public static final int POV_EAST    = 27000;
+	/** Constant specifying nortward POV */
+	public static final int POV_NORTH = 0;
 
-    /** Constant specifying westward POV */
-    public static final int POV_WEST    = 9000;
-    
-    /* Joystick capabilities */
-    public static int buttonCount  = -1;
-    public static boolean hasZAxis = false;
-    public static boolean hasPOV   = false;
-	
+	/** Constant specifying southward POV */
+	public static final int POV_SOUTH = 18000;
+
+	/** Constant specifying eastward POV */
+	public static final int POV_EAST = 27000;
+
+	/** Constant specifying westward POV */
+	public static final int POV_WEST = 9000;
+
+	/* Joystick capabilities */
+	public static int buttonCount = -1;
+	public static boolean hasZAxis = false;
+	public static boolean hasPOV = false;
+
 	/**
 	 * Joystick cannot be constructed.
 	 */
 	private Joystick() {
 	}
-	
+
 	/**
 	 * Static initialization
 	 */
@@ -109,7 +109,7 @@ public class Joystick {
 		System.loadLibrary(Sys.getLibraryName());
 		initIDs();
 	}
-	
+
 	/**
 	 * "Create" the joystick. The display must first have been created.
 	 * @throws Exception if the joystick could not be created for any reason
@@ -117,22 +117,22 @@ public class Joystick {
 	public static void create() throws Exception {
 		if (created) {
 			return;
-        }
-        
+		}
+
 		if (!nCreate()) {
 			throw new Exception("The joystick could not be created.");
-        }
+		}
 		created = true;
 	}
-	
+
 	/**
 	 * "Destroy" the joystick
 	 */
 	public static void destroy() {
 		if (!created) {
 			return;
-        }
-        
+		}
+
 		created = false;
 		nDestroy();
 	}
@@ -143,8 +143,8 @@ public class Joystick {
 	public static void poll() {
 		assert created : "The joystick has not been created.";
 		nPoll();
-	}		
-	
+	}
+
 	/**
 	 * See if a particular mouse button is down.
 	 * 
@@ -156,24 +156,24 @@ public class Joystick {
 		assert created : "The joystick has not been created.";
 		return buttons[button];
 	}
-    
+
 	/**
 	 * Native method to poll the joystick
 	 */
-	private static native void nPoll();    
-    
+	private static native void nPoll();
+
 	/**
 	 * Native method to create the joystick
 	 * 
 	 * @return true if the joystick was created
 	 */
-	private static native boolean nCreate();    
-    
-    /**
-	 * Native method the destroy the joystick
-	 */
+	private static native boolean nCreate();
+
+	/**
+	* Native method the destroy the joystick
+	*/
 	private static native void nDestroy();
-    
+
 	/**
 	 * Register fields with the native library
 	 */
