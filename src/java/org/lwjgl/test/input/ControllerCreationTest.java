@@ -50,9 +50,6 @@ public class ControllerCreationTest {
   /** position of quad to draw */
   private Vector2f position = new Vector2f(320.0f, 240.0f);
   
-  /** Display mode selected */
-  private DisplayMode displayMode;
-
   /** Creates a new instance of MouseTest */
   public ControllerCreationTest() {
   }
@@ -122,7 +119,6 @@ public class ControllerCreationTest {
     try {
       Display.destroy();
       initialize(true);
-      Display.setDisplayMode(displayMode);
     } catch (Exception e) {
       e.printStackTrace();
     }
