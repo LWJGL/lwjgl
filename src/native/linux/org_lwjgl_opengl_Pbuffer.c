@@ -152,7 +152,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv 
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	bool result;
 	result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs, shared_context);
-	if (!result || !checkXError(env)) {
+	if (!result)
+		return;
+	if (!checkXError(env)) {
 		decDisplay();
 		destroyPbuffer(buffer_info);
 		return;
