@@ -68,17 +68,33 @@ public class Mouse {
 	/** animation native cursor */
 	public final static int		CURSOR_ANIMATION						= 4;
 
+	/** Mouse minimum and maximum sensitivity */
+	public static final int MAX_SENSITIVITY = 8;
+	public static final int MIN_SENSITIVITY = 1;
+
+	/** Mouse sensitivity: 1...8 */
+	private static int sensitivity = MAX_SENSITIVITY;
+
+	/** Mouse constraint */
+	private static int width, height;
+	
 	/** Has the mouse been created? */
 	private static boolean		created;
 
 	/** The mouse buttons status from the last poll */
 	private static ByteBuffer	buttons;
 
-	/** X */
+	/** Mouse absolute X position in 16:16FP */
 	private static int				x;
 
-	/** Y */
+	/** Mouse absolute Y position in 16:16FP */
 	private static int				y;
+
+	/** Mouse X scroll position in 16:16FP */
+	private static int				scrollX;
+
+	/** Mouse Y scroll position in 16:16FP */
+	private static int				scrollY;
 
 	/** Buffer to hold the deltas dx, dy and dwheel */
 	private static IntBuffer	coord_buffer;
@@ -93,19 +109,19 @@ public class Mouse {
 	private static int				dwheel;
 
 	/** Number of buttons supported by the mouse */
-	private static int				buttonCount									= -1;
+	private static int			buttonCount									= -1;
 
 	/** Does this mouse support a scroll wheel */
-	private static boolean		hasWheel										= false;
+	private static boolean		hasWheel									= false;
 
 	/** The current native cursor, if any */
-	private static Cursor			currentCursor;
+	private static Cursor		currentCursor;
 
 	/** Button names. These are set upon create(), to names like BUTTON0, BUTTON1, etc. */
 	private static String[]		buttonName;
 
 	/** hashmap of button names, for fast lookup */
-	private static final Map	buttonMap										= new HashMap(16);
+	private static final Map	buttonMap									= new HashMap(16);
 
 	/** Lazy initialization */
 	private static boolean		initialized;
@@ -124,6 +140,9 @@ public class Mouse {
 
 	private static boolean		isGrabbed;
 
+	/** Whether absolute mouse tracking is enabled */
+	private static boolean		trackingEnabled								= true;
+	
 	/**
 	 * Mouse cannot be constructed.
 	 */
@@ -252,8 +271,10 @@ public class Mouse {
 		created = true;
 		currentCursor = null;
 		dx = dy = dwheel = 0;
-    x = Window.getWidth() / 2;
-    y = Window.getHeight() / 2;      
+		width = Window.getWidth();
+		height = Window.getHeight();
+		x = width / 2;
+		y = height / 2;      
     
 		// set mouse buttons
 		buttonCount = nGetButtonCount();
@@ -344,29 +365,37 @@ public class Mouse {
 		int poll_dx = coord_buffer.get(0);
 		int poll_dy = coord_buffer.get(1);
 		int poll_dwheel = coord_buffer.get(2);
-		// set absolute position
-		x += poll_dx;
-		y += poll_dy;
+
 		dx += poll_dx;
 		dy += poll_dy;
 		dwheel += poll_dwheel;
-    
-		// if window has been created, clamp to edges
-		if (Window.isCreated()) {
+
+		// Calculate the new absolute position unless tracking is disabled
+		if (trackingEnabled) {
+			x += ((poll_dx * sensitivity) << 16) / MAX_SENSITIVITY;
+			y += ((poll_dy * sensitivity) << 16) / MAX_SENSITIVITY;
+
 			// clamp x, y
 			if (x < 0) {
+				scrollX = x;
 				x = 0;
-			} else if (x >= Window.getWidth()) {
-				x = Window.getWidth() - 1;
+			} else if (x >= width) {
+				scrollX = x - width;
+				x = width - 1;
 			}
 
 			if (y < 0) {
+				scrollY = y;
 				y = 0;
-			} else if (y >= Window.getHeight()) {
-				y = Window.getHeight() - 1;
+			} else if (y >= height) {
+				scrollY = y - height;
+				y = height - 1;
 			}
 		}
-		if (readBuffer != null) read();
+		
+		if (readBuffer != null) {
+			read();
+		}
 	}
 
 	private static void read() {
@@ -479,22 +508,22 @@ public class Mouse {
 
 	/**
 	 * Retrieves the absolute position. If the Window has been created
-	 * x will be clamped to 0...Window.getWidth() - 1.
+	 * x will be clamped to 0...width-1.
 	 * 
 	 * @return Absolute x axis position of mouse
 	 */
 	public static int getX() {
-		return x;
+		return x >> 16;
 	}
 
 	/**
 	 * Retrieves the absolute position. If the Window has been created
-	 * y will be clamped to 0...Window.getHeight() -1.
+	 * y will be clamped to 0...height-1.
 	 *
 	 * @return Absolute y axis position of mouse
 	 */
 	public static int getY() {
-		return y;
+		return y >> 16;
 	}
 
 	/**
@@ -530,6 +559,20 @@ public class Mouse {
 	public static int getButtonCount() {
 		return buttonCount;
 	}
+	
+	/**
+	 * @return the amount the mouse tried to move past its constraints on the X axis since the last poll
+	 */
+	public static int getScrollX() {
+		return scrollX >> 16;
+	}
+
+	/**
+	 * @return the amount the mouse tried to move past its constraints on the Y axis since the last poll
+	 */
+	public static int getScrollY() {
+		return scrollY >> 16;
+	}
 
 	/**
 	 * @return Whether or not this mouse has wheel support
@@ -550,20 +593,20 @@ public class Mouse {
 	 * (and thus hidden).
 	 */
 	public static void setGrabbed(boolean grab) {
-    isGrabbed = grab;
-		nGrabMouse(isGrabbed);
-    
-    if(!grab) {
-      x = Window.getWidth() / 2;
-      y = Window.getHeight() / 2;      
-    }
+	    isGrabbed = grab;
+			nGrabMouse(isGrabbed);
+	    
+	    if(!grab) {
+			x = width / 2;
+			y = height / 2;      
+	    }
 	}
 	private static native void nGrabMouse(boolean grab);
 
 	/**
 	 * Updates the cursor, so that animation can be changed if needed.
 	 * This method is called automatically by the window on its update, and 
-   * shouldn't be called otherwise
+     * shouldn't be called otherwise
 	 */
 	public static void updateCursor() {
 		if (System.getProperty("os.name").startsWith("Win") && currentCursor != null && currentCursor.hasTimedOut()) {
@@ -574,5 +617,69 @@ public class Mouse {
 				if (Sys.DEBUG) e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * Sets the mouse sensitivity, which is expressed as a value from 1 to 8.
+	 * Values outside this range are clamped to [1..8]. 8 is the most sensitive;
+	 * other values slow down the mouse to a minimum of 1/8th its original speed.
+	 * @param newSensitivity The mouse sensitivity
+	 */
+	public static void setSensitivity(int newSensitivity) {
+		sensitivity = Math.min(MAX_SENSITIVITY, Math.max(MIN_SENSITIVITY, newSensitivity));
+	}
+
+	/**
+	 * @return the current mouse sensitivity (guaranteed in the range 1..8)
+	 */
+	public static int getSensitivity() {
+		return sensitivity;
+	}
+	
+	/**
+	 * Sets the absolute position of the mouse. The position is capped to the
+	 * current size.
+	 * 
+	 * @param newx
+	 * @param newy
+	 */
+	public static void setPosition(int newx, int newy) {
+		x = Math.min(Math.max(0, newx << 16), width - 1);
+		y = Math.min(Math.max(0, newy << 16), height - 1);
+	}
+	
+
+	/**
+	 * Sets the dimensions of the mouse's constraint.
+	 * @param width
+	 * @param height
+	 */
+	public static void setDimensions(int width, int height) {
+		Mouse.width = width << 16;
+		Mouse.height = height << 16;
+		
+		// Clamp the mouse absolute coordinates just in case
+		if (x >= Mouse.width) {
+			x = Mouse.width - 1;
+		}
+		if (y >= Mouse.height) {
+			y = Mouse.height - 1;
+		}
+	}
+
+	/**
+	 * Enable or disable absolute mouse coordinate tracking.
+	 * @param enabled
+	 */
+	public static void setTrackingEnabled(boolean enabled) {
+		Mouse.trackingEnabled = enabled;
+	}
+	
+	/**
+	 * Determine if mouse coordinate tracking is enabled
+	 * @return boolean
+	 */
+	public static boolean isTrackingEnabled() {
+		return trackingEnabled;
 	}
 }
