@@ -54,13 +54,13 @@ public class Timer {
 	private static int queryCount = 0;
 
 	// Globally keeps track of time for all instances of Timer	
-	private static long currentTime;
+	private static int currentTime;
 	
 	// When the timer was started
-	private long startTime;
+	private int startTime;
 	
 	// The last time recorded by getTime()
-	private long lastTime;
+	private int lastTime;
 
 	// Whether the timer is paused
 	private boolean paused;
@@ -133,7 +133,7 @@ public class Timer {
 	 * @param newTime the new time, in seconds
 	 */
 	public void set(float newTime) {
-		long newTimeInTicks = (long) ((double) newTime * (double) resolution);
+		int newTimeInTicks = (int) ((double) newTime * (double) resolution);
 		startTime = currentTime - newTimeInTicks;
 		lastTime = newTimeInTicks;
 	}
@@ -144,7 +144,7 @@ public class Timer {
 	 * from it.
 	 */
 	public static void tick() {
-		currentTime = Sys.getTime();
+		currentTime = (int) Sys.getTime();
 		
 		// Periodically refresh the timer resolution:
 		queryCount ++;
