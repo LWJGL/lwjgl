@@ -592,7 +592,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
   (JNIEnv *env, jclass clazz) {
-	return isDirty ? JNI_TRUE : JNI_FALSE;
+	bool result = isDirty;
+	isDirty = false;
+	return result ? JNI_TRUE : JNI_FALSE;
 }
 
 /*

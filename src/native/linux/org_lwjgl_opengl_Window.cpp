@@ -526,7 +526,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jc
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
   (JNIEnv *env, jclass clazz) {
-	return dirty ? JNI_TRUE : JNI_FALSE;
+	bool result = dirty;
+	dirty = false;
+	return result ? JNI_TRUE : JNI_FALSE;
 }
 
 /*
