@@ -159,9 +159,7 @@ public class PlayTestMemory extends BasicTest {
         
         //no errorchecking from now on, since our context is gone.
         //shutdown
-        alc.makeContextCurrent(null);
-        alc.destroyContext(context);
-        alc.closeDevice(device);
+        alExit();
     }
     
     /**

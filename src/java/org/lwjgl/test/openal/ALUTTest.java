@@ -67,8 +67,8 @@ public class ALUTTest extends BasicTest {
         
         int lastError;
         
-        //initialize AL, using ALUT
-        alut.init(args);
+        //initialize AL
+        alInitialize();
         
         //create 1 buffer and 1 source
         ByteBuffer buffers = ByteBuffer.allocateDirect(4);
@@ -149,8 +149,8 @@ public class ALUTTest extends BasicTest {
             exit(lastError);
         }        
 
-        //shutdown using ALUT
-        alut.exit();
+        //shutdown
+        alExit();
     }
     
     /**

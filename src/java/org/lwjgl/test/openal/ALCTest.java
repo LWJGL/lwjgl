@@ -133,11 +133,7 @@ public class ALCTest extends BasicTest {
         //get an enumerstion value
         System.out.println("Value of ALC_MAJOR_VERSION: " + alc.getEnumValue(device, "ALC_MAJOR_VERSION"));
         
-        //close context again
-        alc.destroyContext(context);
-        
-        //close it
-        alc.closeDevice(device);
+        alExit();
     }
     
     /**

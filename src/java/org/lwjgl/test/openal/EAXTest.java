@@ -67,9 +67,7 @@ public class EAXTest extends BasicTest {
         
         //no errorchecking from now on, since our context is gone.
         //shutdown
-        alc.makeContextCurrent(null);
-        alc.destroyContext(context);
-        alc.closeDevice(device);
+        alExit();
         
         System.out.println("test done.");
     }
