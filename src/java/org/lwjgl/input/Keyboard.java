@@ -35,7 +35,7 @@ package org.lwjgl.input;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.lwjgl.Display;
+import org.lwjgl.*;
 import org.lwjgl.Sys;
 
 /**
@@ -249,7 +249,7 @@ public class Keyboard {
 	public static void create() throws Exception {
 		if (created)
 			return;
-		if (!Display.isCreated())
+		if (!Window.isCreated())
 			throw new Exception("The display has not yet been created.");
 		if (!nCreate())
 			throw new Exception("The keyboard could not be created.");

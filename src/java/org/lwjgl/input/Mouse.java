@@ -32,8 +32,7 @@
 
 package org.lwjgl.input;
 
-import org.lwjgl.Display;
-import org.lwjgl.Sys;
+import org.lwjgl.*;
 
 /**
  * $Id$
@@ -102,7 +101,7 @@ public class Mouse {
 	public static void create() throws Exception {
 		if (created)
 			return;
-		if (!Display.isCreated())
+		if (!Window.isCreated())
 			throw new Exception("The display has not yet been created.");
 		if (!nCreate())
 			throw new Exception("The mouse could not be created.");
