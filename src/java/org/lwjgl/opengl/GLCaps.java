@@ -160,6 +160,7 @@ public abstract class GLCaps {
 	public static boolean OpenGL12;
 	public static boolean OpenGL13;
 	public static boolean OpenGL14;
+	public static boolean OpenGL15;
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());
@@ -189,7 +190,7 @@ public abstract class GLCaps {
 	 * called _after_ a GLWindow or Pbuffer has been created (or a context from some other GL library).
 	 * Using LWJGL, this method is called automatically for you when the LWJGL Window is created and there
 	 * is no need to call it yourself.
-	 * 
+	 *
 	 * @param exts A Set of OpenGL extension string names
 	 */
 	public static void determineAvailableExtensions(Set exts) {
