@@ -106,8 +106,9 @@ public final class Sys {
 	 * is true.
 	 */
 	public static void log(String msg) {
-		if (Sys.DEBUG)
+		if (Sys.DEBUG) {
 			System.err.println(msg);
+		}
 	}
 
 	/**
@@ -133,7 +134,7 @@ public final class Sys {
 	}
 
 	/**
-         * Set the debug level of the native library
+     * Set the debug level of the native library
 	 */
 	private static native void setDebug(boolean debug);
 
