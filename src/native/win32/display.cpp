@@ -46,16 +46,18 @@
 
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 
+#define GAMMA_SIZE (3*256)
+
 static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
 static jobjectArray GetAvailableDisplayModes(JNIEnv * env);
 static char * getDriver();
-bool modeSet = false; // Whether we've done a display mode change
-WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
-WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
-DEVMODE devmode; // Now we'll remember this value for the future
-extern HWND				display_hwnd = NULL;						              // Handle to the window
+static bool modeSet = false; // Whether we've done a display mode change
+static WORD originalGamma[256 * 3]; // Original gamma settings
+static WORD currentGamma[256 * 3]; // Current gamma settings
+static DEVMODE devmode; // Now we'll remember this value for the future
+extern HWND				display_hwnd;						              // Handle to the window
 extern RECT clientSize;
-char * driver = getDriver();
+static char * driver = getDriver();
 
 jobjectArray getAvailableDisplayModes(JNIEnv *env)
 {
@@ -282,6 +284,7 @@ jobject initDisplay(JNIEnv * env)
 	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
 		printfDebug("Failed to get initial device gamma\n");
 	}
+	memcpy(currentGamma, originalGamma, sizeof(WORD)*GAMMA_SIZE);
 	ReleaseDC(NULL, screenDC);
 	return newMode;
 }
