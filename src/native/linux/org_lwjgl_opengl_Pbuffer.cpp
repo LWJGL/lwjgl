@@ -161,7 +161,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
 	if (glXMakeContextCurrent(getCurrentDisplay(), buffer, buffer, context) == False) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Could not make pbuffer current");
+		printfDebug("Could not make pbuffer current");
 	}
 }
 

@@ -61,8 +61,8 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 	return hires_timer_freq;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugLevel(JNIEnv *env, jclass clazz, jint debug_level) {
-	setDebugLevel(debug_level);
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugEnabled(JNIEnv *env, jclass clazz, jboolean enabled) {
+	setDebugEnabled(enabled == JNI_TRUE ? true : false);
 }
 
 /*
@@ -120,7 +120,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 	}
 
 	if (!SetPriorityClass(me, win32priority)) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Failed to set priority class.\n");
+		printfDebug("Failed to set priority class.\n");
 	}
 }
 
@@ -137,7 +137,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
 	const char * cTitleBarText = env->GetStringUTFChars(title, &copy);
 	MessageBox(hwnd, eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
-	printfDebug(org_lwjgl_Sys_DEBUG, "*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
+	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	
 	env->ReleaseStringUTFChars(message, eMessageText);
 	env->ReleaseStringUTFChars(title, cTitleBarText);
@@ -191,7 +191,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 		&pi )			 // Pointer to PROCESS_INFORMATION structure.
 	) 
 	{
-		printfDebug(org_lwjgl_Sys_DEBUG, "Failed to open URL %s\n", urlString);
+		printfDebug("Failed to open URL %s\n", urlString);
 	}
 
 	// Close process and thread handles. 

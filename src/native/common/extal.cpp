@@ -182,7 +182,7 @@ static void *NativeGetFunctionPointer(const char *function) {
 static void* GetFunctionPointer(const char* function) {
 	void *p = NativeGetFunctionPointer(function);
 	if (p == NULL) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Could not locate symbol %s\n", function);
+		printfDebug("Could not locate symbol %s\n", function);
 	}
 	return p;
 }
@@ -193,11 +193,11 @@ static void* GetFunctionPointer(const char* function) {
 static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 
 	jsize pathcount = env->GetArrayLength(oalPaths);
-	printfDebug(org_lwjgl_Sys_DEBUG, "Found %d OpenAL paths\n", (int)pathcount);
+	printfDebug("Found %d OpenAL paths\n", (int)pathcount);
 	for(int i=0;i<pathcount;i++) {
 		jstring path = (jstring) env->GetObjectArrayElement(oalPaths, i);
 		const char *path_str = env->GetStringUTFChars(path, NULL);
-		printfDebug(org_lwjgl_Sys_DEBUG, "Testing '%s'\n", path_str);
+		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
 		handleOAL = LoadLibrary(path_str);
 #endif
@@ -208,7 +208,7 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 		handleOAL = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
 #endif
 		if (handleOAL != NULL) {
-			printfDebug(org_lwjgl_Sys_DEBUG, "Found OpenAL at '%s'\n", path_str);
+			printfDebug("Found OpenAL at '%s'\n", path_str);
 			return true;
 		}
 		env->ReleaseStringUTFChars(path, path_str);

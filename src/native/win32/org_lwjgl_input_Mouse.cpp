@@ -135,7 +135,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 	/* Aquire the Mouse */
 	hr = mDIDevice->Acquire();
 	if(FAILED(hr)) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Failed to acquire mouse\n");
+		printfDebug("Failed to acquire mouse\n");
 	}
 }
 
@@ -197,19 +197,19 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
 	if (ret == DI_OK) {
 		return bufferButtons(bufsize, rgdod);
 	} else if (ret == DI_BUFFEROVERFLOW) { 
-		printfDebug(org_lwjgl_Sys_DEBUG, "Buffer overflowed\n");
+		printfDebug("Buffer overflowed\n");
 	} else if (ret == DIERR_INPUTLOST) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Input lost\n");
+		printfDebug("Input lost\n");
 	} else if (ret == DIERR_NOTACQUIRED) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "not acquired\n");
+		printfDebug("not acquired\n");
 	} else if (ret == DIERR_INVALIDPARAM) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "invalid parameter\n");
+		printfDebug("invalid parameter\n");
 	} else if (ret == DIERR_NOTBUFFERED) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "not buffered\n");
+		printfDebug("not buffered\n");
 	} else if (ret == DIERR_NOTINITIALIZED) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "not inited\n");
+		printfDebug("not inited\n");
 	} else {
-		printfDebug(org_lwjgl_Sys_DEBUG, "unknown keyboard error\n");
+		printfDebug("unknown keyboard error\n");
 	}
 	return 0;
 }
@@ -331,7 +331,7 @@ void EnumerateMouseCapabilities() {
 	HRESULT hr;
 	hr = mDIDevice->EnumObjects(EnumMouseObjectsCallback, NULL, DIDFT_ALL);
 	if FAILED(hr) { 
-		printfDebug(org_lwjgl_Sys_DEBUG, "EnumObjects failed\n");
+		printfDebug("EnumObjects failed\n");
 		mCreate_success = false;
 		return;
 	}
@@ -339,7 +339,7 @@ void EnumerateMouseCapabilities() {
 	//check for > 4 buttons - need to clamp since we're using dx 5
 	if(mButtoncount > 4) {
 		mButtoncount = 4;
-		printfDebug(org_lwjgl_Sys_DEBUG, "WARNING: Clamping to 4 mouse buttons\n");
+		printfDebug("WARNING: Clamping to 4 mouse buttons\n");
 	}
 	
 	mCreate_success = true;
@@ -349,7 +349,7 @@ void EnumerateMouseCapabilities() {
  * Callback from EnumObjects. Called for each "object" on the Mouse.
  */
 BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
-	printfDebug(org_lwjgl_Sys_DEBUG, "found %s\n", lpddoi->tszName);
+	printfDebug("found %s\n", lpddoi->tszName);
 	if(lpddoi->guidType == GUID_Button) {
 		mButtoncount++;
 	} else if(lpddoi->guidType == GUID_XAxis) {
@@ -357,7 +357,7 @@ BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID 
 	} else if(lpddoi->guidType == GUID_ZAxis) {
 		mHaswheel = true;
 	} else {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Unhandled object found: %s\n", lpddoi->tszName);
+		printfDebug("Unhandled object found: %s\n", lpddoi->tszName);
 	}
 	return DIENUM_CONTINUE;
 }
@@ -369,7 +369,7 @@ void CreateMouse() {
 	HRESULT hr;
 	hr = lpdi->CreateDevice(GUID_SysMouse, &mDIDevice, NULL);
 	if FAILED(hr) {	
-		printfDebug(org_lwjgl_Sys_DEBUG, "CreateDevice failed\n");
+		printfDebug("CreateDevice failed\n");
 		mCreate_success = false;
 		return;
 	}
@@ -382,7 +382,7 @@ void CreateMouse() {
 void SetupMouse() {
 	// set Mouse data format
 	if(mDIDevice->SetDataFormat(&c_dfDIMouse) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetDataFormat failed\n");
+		printfDebug("SetDataFormat failed\n");
 		mCreate_success = false;
 		return;
 	}
@@ -397,7 +397,7 @@ void SetupMouse() {
 
 	// set the cooperative level
 	if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetCooperativeLevel failed\n");
+		printfDebug("SetCooperativeLevel failed\n");
 		mCreate_success = false;
 		return;
 	}
@@ -457,7 +457,7 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
 		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
 			mDIDevice->Acquire();
 		} else {
-			printfDebug(org_lwjgl_Sys_DEBUG, "Error getting mouse state: %d\n", hRes);
+			printfDebug("Error getting mouse state: %d\n", hRes);
 		}
 	}
 

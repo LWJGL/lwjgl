@@ -80,7 +80,7 @@ public final class Display {
 	static {
 		System.loadLibrary(Sys.getLibraryName());
 		init();
-		Sys.log(Sys.DEBUG, "Adapter: "+getAdapter()+" Version: "+getVersion());
+		Sys.log("Adapter: "+getAdapter()+" Version: "+getVersion());
 	}
 
 	/**
@@ -118,7 +118,7 @@ public final class Display {
 		DisplayMode[] filteredModes = new DisplayMode[modes.size()];
 		modes.toArray(filteredModes);
 
-		Sys.log(Sys.DEBUG, "Removed " + (unfilteredModes.length - filteredModes.length) + " duplicate displaymodes");
+		Sys.log("Removed " + (unfilteredModes.length - filteredModes.length) + " duplicate displaymodes");
 
 		return filteredModes;
 	}
@@ -235,7 +235,7 @@ public final class Display {
 			gammaRamp.put(i, rampEntry);
 		}
 		setGammaRamp(gammaRamp);
-		Sys.log(Sys.DEBUG, "Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
+		Sys.log("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
 	}
 
 	/**

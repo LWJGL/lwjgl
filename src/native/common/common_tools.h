@@ -43,11 +43,11 @@
 #include <jni.h>
 #include "org_lwjgl_Sys.h"
 
-extern int debug_level;
+extern bool debug;
 
 // Must be x * max_event_size + 1
 #define EVENT_BUFFER_SIZE (25 * 4 + 1)
-#define ATDEBUGLEVEL(level) (debug_level >= level)
+#define ISDEBUGENABLED() (debug)
 
 typedef struct {
 	unsigned char input_event_buffer[EVENT_BUFFER_SIZE];
@@ -64,7 +64,7 @@ extern unsigned char *getOutputList(event_queue_t *queue);
 extern int getEventBufferSize(event_queue_t *event_queue);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
-extern void setDebugLevel(int level);
-extern void printfDebug(int level, const char *format, ...);
+extern void setDebugEnabled(bool enable);
+extern void printfDebug(const char *format, ...);
 
 #endif

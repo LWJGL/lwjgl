@@ -64,15 +64,15 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 static long queryTime(void) {
     struct timeval tv;
     if (gettimeofday(&tv, NULL) == -1) {
-        printfDebug(org_lwjgl_Sys_DEBUG, "Could not read current time\n");
+        printfDebug("Could not read current time\n");
     }
     long result = tv.tv_sec * 1000000l + tv.tv_usec;
 
     return result;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugLevel(JNIEnv *env, jclass clazz, jint debug_level) {
-	setDebugLevel(debug_level);
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugEnabled(JNIEnv *env, jclass clazz, jboolean enabled) {
+	setDebugEnabled(enabled == JNI_TRUE ? true : false);
 }
 
 /*
@@ -110,7 +110,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 (JNIEnv * env, jclass clazz, jint priority)
 {
-    printfDebug(org_lwjgl_Sys_DEBUG, "WARNING: setProcessPriority unsupported\n");
+    printfDebug("WARNING: setProcessPriority unsupported\n");
 }
 
 /*

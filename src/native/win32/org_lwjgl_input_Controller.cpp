@@ -120,7 +120,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jcla
 	HRESULT hr;
 	hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &cDI, NULL); 
 	if (FAILED(hr)) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "DirectInputCreate failed\n");
+		printfDebug("DirectInputCreate failed\n");
 		ShutdownController();
 		return;
 	}
@@ -199,12 +199,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nPoll(JNIEnv * env, jclas
 	// poll the Controller to read the current state
 	hRes = cDIDevice->Poll();
 	if (FAILED(hRes)) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Poll fail\n");
+		printfDebug("Poll fail\n");
 
 		//check if we need to reaquire
 		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
 			cDIDevice->Acquire();
-			printfDebug(org_lwjgl_Sys_DEBUG, "DIERR_INPUTLOST, reaquiring input : cCreate_success=%d\n", cCreate_success);
+			printfDebug("DIERR_INPUTLOST, reaquiring input : cCreate_success=%d\n", cCreate_success);
 			}
 		return;
 	}
@@ -231,7 +231,7 @@ static void EnumerateControllerCapabilities() {
 	HRESULT hr;
 	hr = cDIDevice->EnumObjects(EnumControllerObjectsCallback, NULL, DIDFT_ALL);
 	if FAILED(hr) { 
-		printfDebug(org_lwjgl_Sys_DEBUG, "EnumObjects failed\n");
+		printfDebug("EnumObjects failed\n");
 		cCreate_success = false;
 		return;
 	}
@@ -245,7 +245,7 @@ static void EnumerateControllers() {
 	HRESULT hr;
 	hr = cDI->EnumDevices(DIDEVTYPE_JOYSTICK, EnumControllerCallback, 0, DIEDFL_ATTACHEDONLY);
 	if FAILED(hr) { 
-		printfDebug(org_lwjgl_Sys_DEBUG, "EnumDevices failed\n");
+		printfDebug("EnumDevices failed\n");
 		cCreate_success = false;
 		return;
 	} 
@@ -267,7 +267,7 @@ BOOL CALLBACK EnumControllerCallback(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef) {
  * Callback from EnumObjects. Called for each "object" on the Controller.
  */
 BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
-	printfDebug(org_lwjgl_Sys_DEBUG, "found %s\n", lpddoi->tszName);
+	printfDebug("found %s\n", lpddoi->tszName);
 	if(lpddoi->guidType == GUID_Button) {
 		cButtoncount++;
 	} else if(lpddoi->guidType == GUID_XAxis) {
@@ -287,7 +287,7 @@ BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LP
 	} else if (lpddoi->guidType == GUID_RzAxis) {
 		cHasrz = true;
 	} else {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Unhandled object found: %s\n", lpddoi->tszName);
+		printfDebug("Unhandled object found: %s\n", lpddoi->tszName);
 	}
 	return DIENUM_CONTINUE;
 }
@@ -299,7 +299,7 @@ static void CreateController(LPCDIDEVICEINSTANCE lpddi) {
 	HRESULT hr;
 	hr = cDI->CreateDevice(lpddi->guidInstance, (LPDIRECTINPUTDEVICE*) &cDIDevice, NULL);
 	if FAILED(hr) {	
-		printfDebug(org_lwjgl_Sys_DEBUG, "CreateDevice failed\n");
+		printfDebug("CreateDevice failed\n");
 		cCreate_success = false;
 		return;
 	}
@@ -312,14 +312,14 @@ static void CreateController(LPCDIDEVICEINSTANCE lpddi) {
 static void SetupController() {
 	// set Controller data format
 	if(cDIDevice->SetDataFormat(&c_dfDIJoystick2) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetDataFormat failed\n");
+		printfDebug("SetDataFormat failed\n");
 		cCreate_success = false;
 		return;
 	}
 
 	// set the cooperative level
 	if(cDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetCooperativeLevel failed\n");
+		printfDebug("SetCooperativeLevel failed\n");
 		cCreate_success = false;
 		return;
 	}
@@ -337,7 +337,7 @@ static void SetupController() {
 	if(cHasx) {
 		diprg.diph.dwObj				= DIJOFS_X;
 		if(cDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetProperty(DIJOFS_X) failed\n");
+		printfDebug("SetProperty(DIJOFS_X) failed\n");
 			cCreate_success = false;
 			return;
 		}
@@ -347,7 +347,7 @@ static void SetupController() {
 	if(cHasrx) {
 		diprg.diph.dwObj				= DIJOFS_RX;
 		if(cDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetProperty(DIJOFS_RX) failed\n");
+		printfDebug("SetProperty(DIJOFS_RX) failed\n");
 			cCreate_success = false;
 			return;
 		}
@@ -358,7 +358,7 @@ static void SetupController() {
 	if(cHasy) {
 		diprg.diph.dwObj				= DIJOFS_Y;
 		if(cDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetProperty(DIJOFS_Y) failed\n");
+		printfDebug("SetProperty(DIJOFS_Y) failed\n");
 			cCreate_success = false;
 			return;
 		}
@@ -368,7 +368,7 @@ static void SetupController() {
 	if(cHasry) {
 		diprg.diph.dwObj				= DIJOFS_RY;
 		if(cDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetProperty(DIJOFS_RY) failed\n");
+		printfDebug("SetProperty(DIJOFS_RY) failed\n");
 			cCreate_success = false;
 			return;
 		}
@@ -378,7 +378,7 @@ static void SetupController() {
 	if(cHasz) {
 		diprg.diph.dwObj				= DIJOFS_Z;
 		if(cDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetProperty(DIJOFS_Z) failed\n");
+		printfDebug("SetProperty(DIJOFS_Z) failed\n");
 			cCreate_success = false;
 			return;
 		}
@@ -389,7 +389,7 @@ static void SetupController() {
 	if(cHasrz) {
 		diprg.diph.dwObj				= DIJOFS_RZ;
 		if(cDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetProperty(DIJOFS_RZ) failed\n");
+		printfDebug("SetProperty(DIJOFS_RZ) failed\n");
 			cCreate_success = false;
 			return;
 		}
@@ -402,7 +402,7 @@ static void SetupController() {
 	if(cHasslider) {
 		diprg.diph.dwObj				= DIJOFS_Z;
 		if(cDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "SetProperty(DIJOFS_Z(SLIDER)) failed\n");
+		printfDebug("SetProperty(DIJOFS_Z(SLIDER)) failed\n");
 			cCreate_success = false;
 			return;
 		}
@@ -435,9 +435,9 @@ static void UpdateControllerFields(JNIEnv *env, jclass clsController) {
 		// if so, then attempt to reacquire. 
 		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
 			cDIDevice->Acquire();
-			printfDebug(org_lwjgl_Sys_DEBUG, "DIERR_INPUTLOST, reaquiring input : cCreate_success=%d\n", cCreate_success);
+			printfDebug("DIERR_INPUTLOST, reaquiring input : cCreate_success=%d\n", cCreate_success);
 		}
-		printfDebug(org_lwjgl_Sys_DEBUG, "Error getting controller state: %d\n", hRes);
+		printfDebug("Error getting controller state: %d\n", hRes);
 		return;
 	}
 

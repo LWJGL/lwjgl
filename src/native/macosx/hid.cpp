@@ -123,7 +123,7 @@ static void searchDictionaryElement(CFDictionaryRef dict, CFStringRef key, hid_d
 static void addToDeviceQueue(hid_device_t *hid_dev, IOHIDElementCookie cookie, int index) {
 	HRESULT result = (*hid_dev->device_queue)->addElement(hid_dev->device_queue, cookie, 0);
 	if (result != S_OK) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Could not add cookie to queue\n");
+		printfDebug("Could not add cookie to queue\n");
 		return;
 	}
 	CFDictionaryAddValue(hid_dev->cookie_map, cookie, (void *)index);
@@ -191,7 +191,7 @@ bool findDevice(hid_device_t *hid_dev, long device_usage_page, long device_usage
 	CFDictionaryRef matching_dic = IOServiceMatching(kIOHIDDeviceKey);
 	IOReturn err = IOServiceGetMatchingServices(kIOMasterPortDefault, matching_dic, &device_iterator);
 	if (err != kIOReturnSuccess) {
-		printfDebug(org_lwjgl_Sys_DEBUG, "Could not find matching devices\n");
+		printfDebug("Could not find matching devices\n");
 		return false;
 	}
 	while (!success && (hid_device = IOIteratorNext(device_iterator)) != NULL) {
@@ -201,7 +201,7 @@ bool findDevice(hid_device_t *hid_dev, long device_usage_page, long device_usage
 			long usage_page;
 			if (getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsageKey), &usage) &&
 			    getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey), &usage_page)) {
-				if (ATDEBUGLEVEL(org_lwjgl_Sys_DEBUG)) {
+				if (ISDEBUGENABLED()) {
 					printf("Considering device '");
 					printProperty(dev_props, CFSTR(kIOHIDProductKey));
 					printf("', usage page %ld usage %ld\n", usage_page, usage);

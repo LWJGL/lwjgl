@@ -47,14 +47,6 @@ import org.lwjgl.input.Mouse;
  * @version $Revision$
  */
 public final class Sys {
-	/** Debug level constants */
-	public static final int DEBUG = 6;
-	public static final int INFO = 5;
-	public static final int WARN = 4;
-	public static final int ERROR = 3;
-	public static final int FATAL = 2;
-	public static final int NONE = 1;
-
 	/** Low process priority. @see #setProcessPriority() */
 	public static final int LOW_PRIORITY = -1;
 
@@ -90,25 +82,14 @@ public final class Sys {
 	/**
 	 * Debug level. 
 	 */
-	public static final int debug_level;
+	public static final boolean debug;
 
 	static {
-		String debug_level_prop = System.getProperty("lwjgl.debuglevel", "NONE");
-		int _debug = NONE;
-		if (debug_level_prop.equals("DEBUG")) {
-			_debug = DEBUG;
-		} else if (debug_level_prop.equals("INFO")) {
-			_debug = INFO;
-		} else if (debug_level_prop.equals("WARN")) {
-			_debug = WARN;
-		} else if (debug_level_prop.equals("ERROR")) {
-			_debug = ERROR;
-		} else if (debug_level_prop.equals("FATAL")) {
-			_debug = FATAL;
-		} else if (debug_level_prop.equals("NONE")) {
-			_debug = NONE;
-		}
-		debug_level = _debug;
+		String debug_level_prop = System.getProperty("org.lwjgl.Sys.debug", "false");
+		if (debug_level_prop.equals("true"))
+			debug = true;
+		else
+			debug = false;
 		initialize();
 	}
 
@@ -126,19 +107,19 @@ public final class Sys {
 	}
 
 	/**
-	 * Prints the given message to System.err if atDebugLevel(debug_level)
+	 * Prints the given message to System.err if isDebugEnabled()
 	 * is true.
 	 */
-	public static void log(int debug_level, String msg) {
-		if (atDebugLevel(debug_level))
+	public static void log(String msg) {
+		if (isDebugEnabled())
 			System.err.println(msg);
 	}
 
 	/**
 	 * @return true if the debug level is greater than or equal to level
 	 */
-	public static boolean atDebugLevel(int level) {
-		return debug_level >= level;
+	public static boolean isDebugEnabled() {
+		return debug;
 	}
 
 	/**
@@ -146,7 +127,7 @@ public final class Sys {
 	 */
 	private static void initialize() {
 		System.loadLibrary(LIBRARY_NAME);
-		setDebugLevel(debug_level);
+		setDebug(debug);
 		setTime(0);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -166,7 +147,7 @@ public final class Sys {
 	/**
          * Set the debug level of the native library
 	 */
-	private static native void setDebugLevel(int level);
+	private static native void setDebug(boolean debug);
 
 	/**
 	 * Obtains the number of ticks that the hires timer does in a second.

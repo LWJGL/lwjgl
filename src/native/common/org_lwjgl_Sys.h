@@ -7,18 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef org_lwjgl_Sys_DEBUG
-#define org_lwjgl_Sys_DEBUG 6L
-#undef org_lwjgl_Sys_INFO
-#define org_lwjgl_Sys_INFO 5L
-#undef org_lwjgl_Sys_WARN
-#define org_lwjgl_Sys_WARN 4L
-#undef org_lwjgl_Sys_ERROR
-#define org_lwjgl_Sys_ERROR 3L
-#undef org_lwjgl_Sys_FATAL
-#define org_lwjgl_Sys_FATAL 2L
-#undef org_lwjgl_Sys_NONE
-#define org_lwjgl_Sys_NONE 1L
 #undef org_lwjgl_Sys_LOW_PRIORITY
 #define org_lwjgl_Sys_LOW_PRIORITY -1L
 #undef org_lwjgl_Sys_NORMAL_PRIORITY
@@ -28,14 +16,14 @@ extern "C" {
 #undef org_lwjgl_Sys_REALTIME_PRIORITY
 #define org_lwjgl_Sys_REALTIME_PRIORITY 2L
 /* Inaccessible static: LIBRARY_NAME */
-/* Inaccessible static: debug_level */
+/* Inaccessible static: debug */
 /*
  * Class:     org_lwjgl_Sys
- * Method:    setDebugLevel
- * Signature: (I)V
+ * Method:    setDebug
+ * Signature: (Z)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugLevel
-  (JNIEnv *, jclass, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebug
+  (JNIEnv *, jclass, jboolean);
 
 /*
  * Class:     org_lwjgl_Sys
