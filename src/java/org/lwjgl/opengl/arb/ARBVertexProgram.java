@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl.arb;
 
-import org.lwjgl.opengl.CoreGL11Constants;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.VBOTracker;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -286,22 +286,22 @@ public class ARBVertexProgram extends ARBProgram {
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerARB(index, size, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE : CoreGL11Constants.GL_BYTE, normalized, stride, buffer, buffer.position());
+		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, normalized, stride, buffer, buffer.position());
 	}
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerARB(index, size, unsigned ? CoreGL11Constants.GL_UNSIGNED_SHORT : CoreGL11Constants.GL_SHORT, normalized, stride, buffer, buffer.position() << 1);
+		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, normalized, stride, buffer, buffer.position() << 1);
 	}
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean normalized, int stride, FloatBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerARB(index, size, CoreGL11Constants.GL_FLOAT, normalized, stride, buffer, buffer.position() << 2);
+		nglVertexAttribPointerARB(index, size, GL11.GL_FLOAT, normalized, stride, buffer, buffer.position() << 2);
 	}
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerARB(index, size, unsigned ? CoreGL11Constants.GL_UNSIGNED_INT : CoreGL11Constants.GL_INT, normalized, stride, buffer, buffer.position() << 2);
+		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2);
 	}
 
 	private static native void nglVertexAttribPointerARB(int index, int size, int type, boolean normalized, int stride, Buffer buffer, int bufferOffset);

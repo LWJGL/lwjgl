@@ -44,7 +44,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.VBOTracker;
-import org.lwjgl.opengl.CoreGL11Constants;
+import org.lwjgl.opengl.GL11;
 
 public class EXTSecondaryColor {
 	public static final int GL_COLOR_SUM_EXT                                        = 0x8458;
@@ -63,11 +63,11 @@ public class EXTSecondaryColor {
 
 	public static void glSecondaryColorPointerEXT(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglSecondaryColorPointerEXT(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE: CoreGL11Constants.GL_BYTE, stride, pPointer, pPointer.position());
+		nglSecondaryColorPointerEXT(size, unsigned ? GL11.GL_UNSIGNED_BYTE: GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglSecondaryColorPointerEXT(size, CoreGL11Constants.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+		nglSecondaryColorPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglSecondaryColorPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 

@@ -52,8 +52,8 @@ public interface GLUConstants {
 	public static final int GLU_EXTENSIONS          = 100801;
 	
 	/* Boolean */
-	public static final int GLU_TRUE                = CoreGL11Constants.GL_TRUE;
-	public static final int GLU_FALSE               = CoreGL11Constants.GL_FALSE;
+	public static final int GLU_TRUE                = GL11.GL_TRUE;
+	public static final int GLU_FALSE               = GL11.GL_FALSE;
 	
 	
 }

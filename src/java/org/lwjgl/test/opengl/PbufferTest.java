@@ -184,49 +184,49 @@ public class PbufferTest {
     pbuffer.makeCurrent();
     // Pbuffer rendering
     //clear background
-    CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT);
+    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
     // draw white quad
-    CoreGL11.glPushMatrix();
+    GL11.glPushMatrix();
     {
-      CoreGL11.glTranslatef(quadPosition.x, quadPosition.y, 0);
-      CoreGL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
-      CoreGL11.glColor3f(1.0f, 1.0f, 1.0f);
-      CoreGL11.glBegin(CoreGL11.GL_QUADS);
+      GL11.glTranslatef(quadPosition.x, quadPosition.y, 0);
+      GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
+      GL11.glColor3f(1.0f, 1.0f, 1.0f);
+      GL11.glBegin(GL11.GL_QUADS);
       {
-        CoreGL11.glVertex2i(-50, -50);
-        CoreGL11.glVertex2i(50, -50);
-        CoreGL11.glVertex2i(50, 50);
-        CoreGL11.glVertex2i(-50, 50);
+        GL11.glVertex2i(-50, -50);
+        GL11.glVertex2i(50, -50);
+        GL11.glVertex2i(50, 50);
+        GL11.glVertex2i(-50, 50);
       }
-      CoreGL11.glEnd();
+      GL11.glEnd();
     }
-    CoreGL11.glPopMatrix();
-    CoreGL11.glCopyTexImage2D(CoreGL11.GL_TEXTURE_2D, 0, CoreGL11.GL_RGB, 0, 0, 512, 512, 0);
+    GL11.glPopMatrix();
+    GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 0, 0, 512, 512, 0);
     Pbuffer.releaseContext();
 
     // OpenGL window rendering
-    CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT);
+    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     // draw white quad
-    CoreGL11.glPushMatrix();
+    GL11.glPushMatrix();
     {
-      CoreGL11.glTranslatef(quadPosition.x, quadPosition.y, 0);
-      CoreGL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
-      CoreGL11.glColor3f(1.0f, 1.0f, 0.0f);
-      CoreGL11.glBegin(CoreGL11.GL_QUADS);
+      GL11.glTranslatef(quadPosition.x, quadPosition.y, 0);
+      GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
+      GL11.glColor3f(1.0f, 1.0f, 0.0f);
+      GL11.glBegin(GL11.GL_QUADS);
       {
-        CoreGL11.glTexCoord2f(0f, 0f);
-        CoreGL11.glVertex2i(-50, -50);
-        CoreGL11.glTexCoord2f(1f, 0f);
-        CoreGL11.glVertex2i(50, -50);
-        CoreGL11.glTexCoord2f(1f, 1f);
-        CoreGL11.glVertex2i(50, 50);
-        CoreGL11.glTexCoord2f(0f, 1f);
-        CoreGL11.glVertex2i(-50, 50);
+        GL11.glTexCoord2f(0f, 0f);
+        GL11.glVertex2i(-50, -50);
+        GL11.glTexCoord2f(1f, 0f);
+        GL11.glVertex2i(50, -50);
+        GL11.glTexCoord2f(1f, 1f);
+        GL11.glVertex2i(50, 50);
+        GL11.glTexCoord2f(0f, 1f);
+        GL11.glVertex2i(-50, 50);
       }
-      CoreGL11.glEnd();
+      GL11.glEnd();
     }
-    CoreGL11.glPopMatrix();
+    GL11.glPopMatrix();
   }
 
   private void initPbuffer() {
@@ -234,7 +234,7 @@ public class PbufferTest {
           pbuffer = new Pbuffer(512, 512, mode.bpp, 0, 0, 0);
           pbuffer.makeCurrent();
           initGLState(256, 256, 0.5f);
-          CoreGL11.glBindTexture(CoreGL11.GL_TEXTURE_2D, tex_handle);
+          GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex_handle);
           Pbuffer.releaseContext();
       } catch (Exception e) {
           e.printStackTrace();
@@ -335,7 +335,7 @@ public class PbufferTest {
   private void destroyTexture() {
     IntBuffer buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
     buffer.put(0, tex_handle);
-    CoreGL11.glDeleteTextures(buffer);
+    GL11.glDeleteTextures(buffer);
   }
 
   /**
@@ -370,15 +370,15 @@ public class PbufferTest {
   }
 
   private void initGLState(int width, int height, float color) {
-    CoreGL11.glMatrixMode(CoreGL11.GL_PROJECTION);
-    CoreGL11.glLoadIdentity();
+    GL11.glMatrixMode(GL11.GL_PROJECTION);
+    GL11.glLoadIdentity();
     GLU.gluOrtho2D(0, mode.width, 0, mode.height);
-    CoreGL11.glMatrixMode(CoreGL11.GL_MODELVIEW);
-    CoreGL11.glLoadIdentity();
-    CoreGL11.glViewport(0, 0, width, height);
+    GL11.glMatrixMode(GL11.GL_MODELVIEW);
+    GL11.glLoadIdentity();
+    GL11.glViewport(0, 0, width, height);
 
     //set clear color to black
-    CoreGL11.glClearColor(color, color, color, 0.0f);
+    GL11.glClearColor(color, color, color, 0.0f);
   }
 
   /**
@@ -388,17 +388,17 @@ public class PbufferTest {
     //sync frame (only works on windows)
     Window.setVSyncEnabled(true);
     
-    CoreGL11.glTexEnvf(CoreGL11.GL_TEXTURE_ENV, CoreGL11.GL_TEXTURE_ENV_MODE, CoreGL11.GL_REPLACE);
-    CoreGL11.glEnable(CoreGL11.GL_TEXTURE_2D);
+    GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_REPLACE);
+    GL11.glEnable(GL11.GL_TEXTURE_2D);
     // Create shared texture
     IntBuffer buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-    CoreGL11.glGenTextures(buffer);
+    GL11.glGenTextures(buffer);
     tex_handle = buffer.get(0);
-    CoreGL11.glBindTexture(CoreGL11.GL_TEXTURE_2D, tex_handle);
-    CoreGL11.glTexParameteri(CoreGL11.GL_TEXTURE_2D, CoreGL11.GL_TEXTURE_WRAP_S, CoreGL11.GL_CLAMP);
-    CoreGL11.glTexParameteri(CoreGL11.GL_TEXTURE_2D, CoreGL11.GL_TEXTURE_WRAP_T, CoreGL11.GL_CLAMP);
-    CoreGL11.glTexParameteri(CoreGL11.GL_TEXTURE_2D, CoreGL11.GL_TEXTURE_MIN_FILTER, CoreGL11.GL_LINEAR);
-    CoreGL11.glTexParameteri(CoreGL11.GL_TEXTURE_2D, CoreGL11.GL_TEXTURE_MAG_FILTER, CoreGL11.GL_LINEAR);
+    GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex_handle);
+    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
     initGLState(mode.width, mode.height, 0f);
   }
 

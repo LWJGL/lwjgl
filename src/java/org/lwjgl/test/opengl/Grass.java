@@ -147,7 +147,7 @@ public class Grass {
 			NVVertexProgram.GL_VERTEX_PROGRAM_NV,
 			program_handle,
 			program_buf);
-		/*CoreGL11.glGetInteger(CoreGL11.PROGRAM_ERROR_POSITION_NV, int_buf);
+		/*GL11.glGetInteger(GL11.PROGRAM_ERROR_POSITION_NV, int_buf);
 		System.out.println("error position: " + int_buf.get(0));*/
 
 		genMesh();
@@ -160,24 +160,24 @@ public class Grass {
 		light_buf_f.rewind();
 		light_buf_f.put(LightDiffuse);
 
-		CoreGL11.glLightfv(
-			CoreGL11.GL_LIGHT0,
-			CoreGL11.GL_DIFFUSE,
+		GL11.glLightfv(
+			GL11.GL_LIGHT0,
+			GL11.GL_DIFFUSE,
 			light_buf_f);
 		light_buf_f.rewind();
 		light_buf_f.put(LightPosition);
-		CoreGL11.glLightfv(
-			CoreGL11.GL_LIGHT0,
-			CoreGL11.GL_POSITION,
+		GL11.glLightfv(
+			GL11.GL_LIGHT0,
+			GL11.GL_POSITION,
 			light_buf_f);
-		CoreGL11.glEnable(CoreGL11.GL_LIGHT0);
-		CoreGL11.glEnable(CoreGL11.GL_LIGHTING);
-		CoreGL11.glEnable(CoreGL11.GL_DEPTH_TEST);
-		CoreGL11.glBlendFunc(CoreGL11.GL_SRC_ALPHA, CoreGL11.GL_ONE_MINUS_SRC_ALPHA);
-		CoreGL11.glEnable(CoreGL11.GL_BLEND);
-		CoreGL11.glMatrixMode(CoreGL11.GL_PROJECTION);
+		GL11.glEnable(GL11.GL_LIGHT0);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GLU.gluPerspective(40.0, 1.0, 1.0, 50.0);
-		CoreGL11.glMatrixMode(CoreGL11.GL_MODELVIEW);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 		GLU.gluLookAt(14.0, 10.0, -16.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
@@ -193,7 +193,7 @@ public class Grass {
 			degree *= (0.5 + myrand());
 
 			ptrAnimate(degree);
-			CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT | CoreGL11.GL_DEPTH_BUFFER_BIT);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 			//ptrDraw();
 
@@ -239,16 +239,16 @@ public class Grass {
 		fRigid = ((fRigid = myrand()) < 0.2f) ? 0.2f : fRigid;
 
 		if (myrand() < 0.3)
-			CoreGL11.glBegin(CoreGL11.GL_LINE_STRIP);
+			GL11.glBegin(GL11.GL_LINE_STRIP);
 		else
-			CoreGL11.glBegin(CoreGL11.GL_QUAD_STRIP);
+			GL11.glBegin(GL11.GL_QUAD_STRIP);
 
 		for (cFaces = 0; cFaces < numFaces; cFaces++) {
 			for (cWidth = frndWidth;
 				cWidth >= -frndWidth;
 				cWidth -= (frndWidth * 2.0f)) {
-				CoreGL11.glColor4f(fX, fRigid, fZ, (float) cFaces / (float) numFaces);
-				CoreGL11.glVertex3f(
+				GL11.glColor4f(fX, fRigid, fZ, (float) cFaces / (float) numFaces);
+				GL11.glVertex3f(
 					(float) (((cFaces - 2) * 0.1f)
 						* java.lang.Math.cos(fRotate)
 						+ (cWidth) * java.lang.Math.sin(fRotate)),
@@ -259,7 +259,7 @@ public class Grass {
 			}
 			frndWidth -= fDecWidth;
 		}
-		CoreGL11.glEnd();
+		GL11.glEnd();
 
 	}
 
@@ -267,18 +267,18 @@ public class Grass {
 		float cI, cJ, fArea;
 
 		fArea = 20.0f;
-		mesh = CoreGL11.glGenLists(1);
-		CoreGL11.glNewList(mesh, CoreGL11.GL_COMPILE);
+		mesh = GL11.glGenLists(1);
+		GL11.glNewList(mesh, GL11.GL_COMPILE);
 		for (cI = -fArea / 2; cI < fArea / 2; cI += 0.25f) {
 			for (cJ = -fArea / 2; cJ < fArea / 2; cJ += 0.25f) {
 				genGrass(0.5f, 0.1f, cI, cJ);
 			}
 		}
-		CoreGL11.glEndList();
+		GL11.glEndList();
 	}
 
 	private static void grsDraw() {
-		CoreGL11.glEnable(NVVertexProgram.GL_VERTEX_PROGRAM_NV);
+		GL11.glEnable(NVVertexProgram.GL_VERTEX_PROGRAM_NV);
 		NVVertexProgram.glBindProgramNV(NVVertexProgram.GL_VERTEX_PROGRAM_NV, program_handle);
 		NVVertexProgram.glTrackMatrixNV(
 			NVVertexProgram.GL_VERTEX_PROGRAM_NV,
@@ -426,8 +426,8 @@ public class Grass {
 			0.5f,
 			1f);
 		NVVertexProgram.glProgramParameter4fNV(NVVertexProgram.GL_VERTEX_PROGRAM_NV, 26, 0.7f, 0.4f, 0f, 0f);
-		CoreGL11.glCallList(mesh);
-		CoreGL11.glDisable(NVVertexProgram.GL_VERTEX_PROGRAM_NV);
+		GL11.glCallList(mesh);
+		GL11.glDisable(NVVertexProgram.GL_VERTEX_PROGRAM_NV);
 
 	}
 

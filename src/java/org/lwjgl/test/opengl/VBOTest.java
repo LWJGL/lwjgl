@@ -147,10 +147,10 @@ public final class VBOTest {
       * All rendering is done in here
       */
      private static void render() {
-       CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT);
-       CoreGL11.glPushMatrix();
-       CoreGL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
-       CoreGL11.glRotatef(angle, 0, 0, 1.0f);
+       GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+       GL11.glPushMatrix();
+       GL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+       GL11.glRotatef(angle, 0, 0, 1.0f);
 	ByteBuffer new_mapped_buffer = ARBVertexBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, ARBVertexBufferObject.GL_WRITE_ONLY_ARB, 2*4*4, mapped_buffer);
 	if (new_mapped_buffer != mapped_buffer)
 		mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -159,8 +159,8 @@ public final class VBOTest {
 	vertices.rewind();
 	mapped_float_buffer.put(vertices);
 	if (ARBVertexBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB))
-		CoreGL11.glDrawArrays(CoreGL11.GL_QUADS, 0, 4);
-       CoreGL11.glPopMatrix();
+		GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+       GL11.glPopMatrix();
      }
  
     /**
@@ -174,12 +174,12 @@ public final class VBOTest {
          Sys.setProcessPriority(Sys.HIGH_PRIORITY);
          System.out.println("Timer resolution: " + Sys.getTimerResolution());
          // Go into orthographic projection mode.
-       CoreGL11.glMatrixMode(CoreGL11.GL_PROJECTION);
-       CoreGL11.glLoadIdentity();
+       GL11.glMatrixMode(GL11.GL_PROJECTION);
+       GL11.glLoadIdentity();
          GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());
-       CoreGL11.glMatrixMode(CoreGL11.GL_MODELVIEW);
-       CoreGL11.glLoadIdentity();
-       CoreGL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+       GL11.glMatrixMode(GL11.GL_MODELVIEW);
+       GL11.glLoadIdentity();
+       GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 	if (!GLCaps.GL_ARB_vertex_buffer_object) {
 		System.out.println("ARB VBO not supported!");
 		System.exit(1);
@@ -191,8 +191,8 @@ public final class VBOTest {
 	vertices = ByteBuffer.allocateDirect(2*4*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
 	ARBVertexBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, 2*4*4, (ByteBuffer)null, ARBVertexBufferObject.GL_STREAM_DRAW_ARB);
-	CoreGL11.glEnableClientState(CoreGL11.GL_VERTEX_ARRAY);
-	CoreGL11.glVertexPointer(2, CoreGL11.GL_FLOAT, 0, 0);
+	GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+	GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, 0);
      }
  
     /**

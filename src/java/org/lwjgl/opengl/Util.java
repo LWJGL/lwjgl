@@ -39,6 +39,7 @@ import java.nio.*;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
+
 abstract class Util {
 	private final static IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
 	/**
@@ -58,7 +59,7 @@ abstract class Util {
 	}
 
 	static int getGLInteger(int gl_enum) {
-		CoreGL11.glGetInteger(gl_enum, int_buffer);
+		GL11.glGetInteger(gl_enum, int_buffer);
 		return int_buffer.get(0);
 	}
 }

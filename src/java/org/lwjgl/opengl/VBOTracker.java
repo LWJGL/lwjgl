@@ -49,7 +49,7 @@ public class VBOTracker {
 	}
 
 	public VBOTracker() {
-		int stack_size = Util.getGLInteger(CoreGL11Constants.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH);
+		int stack_size = Util.getGLInteger(GL11.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH);
 		vbo_array_stack = new StateStack(stack_size, 0);
 		vbo_element_stack = new StateStack(stack_size, 0);
 		attrib_stack = new StateStack(stack_size, 0);

@@ -41,7 +41,7 @@ package org.lwjgl.opengl.nv;
 import java.nio.*;
 
 import org.lwjgl.opengl.VBOTracker;
-import org.lwjgl.opengl.CoreGL11Constants;
+import org.lwjgl.opengl.GL11;
 
 public class NVVertexProgram extends NVProgram {
 
@@ -260,22 +260,22 @@ public class NVVertexProgram extends NVProgram {
 
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE : CoreGL11Constants.GL_BYTE, stride, buffer, buffer.position());
+		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, buffer, buffer.position());
 	}
 
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, unsigned ? CoreGL11Constants.GL_UNSIGNED_SHORT : CoreGL11Constants.GL_SHORT, stride, buffer, buffer.position() << 1);
+		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, buffer, buffer.position() << 1);
 	}
 
 	public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, CoreGL11Constants.GL_FLOAT, stride, buffer, buffer.position() << 2);
+		nglVertexAttribPointerNV(index, size, GL11.GL_FLOAT, stride, buffer, buffer.position() << 2);
 	}
 
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer buffer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglVertexAttribPointerNV(index, size, unsigned ? CoreGL11Constants.GL_UNSIGNED_INT : CoreGL11Constants.GL_INT, stride, buffer, buffer.position() << 2);
+		nglVertexAttribPointerNV(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, buffer, buffer.position() << 2);
 	}
 
 	private static native void nglVertexAttribPointerNV(int index, int size, int type, int stride, Buffer buffer, int bufferOffset);

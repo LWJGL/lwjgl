@@ -46,7 +46,7 @@ import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.VBOTracker;
-import org.lwjgl.opengl.CoreGL11Constants;
+import org.lwjgl.opengl.GL11;
 
 public class ARBVertexBlend {
 	public static final int GL_MAX_VERTEX_UNITS_ARB                                 = 0x86A4;
@@ -129,19 +129,19 @@ public class ARBVertexBlend {
 
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglWeightPointerARB(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_BYTE : CoreGL11Constants.GL_BYTE, stride, pPointer, pPointer.position());
+		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglWeightPointerARB(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_SHORT : CoreGL11Constants.GL_SHORT, stride, pPointer, pPointer.position()<<1);
+		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglWeightPointerARB(size, CoreGL11Constants.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
+		nglWeightPointerARB(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
 		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
-		nglWeightPointerARB(size, unsigned ? CoreGL11Constants.GL_UNSIGNED_INT : CoreGL11Constants.GL_INT, stride, pPointer, pPointer.position()<<2);
+		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 	public static void glWeightPointerARB(int size, int type, int stride, int buffer_offset) {

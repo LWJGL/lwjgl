@@ -35,7 +35,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.CoreGL11;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.GLU;
 import org.lwjgl.vector.Vector2f;
@@ -91,7 +91,7 @@ public class MouseCreationTest {
 	}
   
 	private void initializeOpenGL() {
-    CoreGL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     GLU.gluOrtho2D(0.0, 640, 0, 480);
 	}
 
@@ -200,9 +200,9 @@ public class MouseCreationTest {
   }
 
 	private void render() {
-    CoreGL11.glClear(CoreGL11.GL_COLOR_BUFFER_BIT);
+    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-    CoreGL11.glBegin(CoreGL11.GL_POLYGON);
+    GL11.glBegin(GL11.GL_POLYGON);
     {
       float color = 1.0f;
       int buttonDown = 0;
@@ -213,15 +213,15 @@ public class MouseCreationTest {
           break; 
         }
       }
-      CoreGL11.glColor3f(color, color, color);
+      GL11.glColor3f(color, color, color);
       
-      CoreGL11.glVertex2f(position.x + 0.0f, position.y + 0.0f);
-      CoreGL11.glVertex2f(position.x + 0.0f, position.y + 30.0f);
-      CoreGL11.glVertex2f(position.x + 40.0f, position.y + 30.0f);
-      CoreGL11.glVertex2f(position.x + 60.0f, position.y + 15.f);
-      CoreGL11.glVertex2f(position.x + 40.0f, position.y + 0.0f);
+      GL11.glVertex2f(position.x + 0.0f, position.y + 0.0f);
+      GL11.glVertex2f(position.x + 0.0f, position.y + 30.0f);
+      GL11.glVertex2f(position.x + 40.0f, position.y + 30.0f);
+      GL11.glVertex2f(position.x + 60.0f, position.y + 15.f);
+      GL11.glVertex2f(position.x + 40.0f, position.y + 0.0f);
     }
-    CoreGL11.glEnd();
+    GL11.glEnd();
 	}
 
 	/**
