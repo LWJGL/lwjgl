@@ -33,14 +33,15 @@
 /**
  * $Id$
  *
- * Win32 specific library for display handdling.
+ * Win32 specific library for display handling.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "Window.h"
-#include "org_lwjgl_Display.h"
+#include <windows.h>
+#include <jni.h>
+#include "display.h"
 #include "common_tools.h"
 
 #define WINDOWCLASSNAME "LWJGLWINDOW"
@@ -54,13 +55,7 @@ WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
 DEVMODE devmode; // Now we'll remember this value for the future
 char * driver = getDriver();
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    nGetAvailableDisplayModes
- * Signature: ()[Lorg/lwjgl/DisplayMode;
- */
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
-  (JNIEnv * env, jclass clazz)
+jobjectArray getAvailableDisplayModes(JNIEnv *env)
 {
 	jobjectArray result = GetAvailableDisplayModesEx(env);
 	if (result == NULL) {
@@ -124,7 +119,7 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
   
 	// now that we have the count create the classes, and add 'em all - we'll remove dups in Java
 	// Allocate an array of DisplayModes big enough
-	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+	jclass displayModeClass = env->FindClass("org/lwjgl/opengl/DisplayMode");
 
 	jobjectArray ret = env->NewObjectArray(AvailableModes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
@@ -177,7 +172,7 @@ static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
   
 	// now that we have the count create the classes, and add 'em all - we'll remove dups in Java
 	// Allocate an array of DisplayModes big enough
-	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+	jclass displayModeClass = env->FindClass("org/lwjgl/opengl/DisplayMode");
 
 	jobjectArray ret = env->NewObjectArray(AvailableModes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");  
@@ -196,16 +191,10 @@ static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	return ret;
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    setDisplayMode
- * Signature: (Lorg/lwjgl/DisplayMode;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
-  (JNIEnv * env, jclass clazz, jobject mode)
+void switchDisplayMode(JNIEnv * env, jobject mode)
 {
 
-	jclass cls_displayMode = env->FindClass("org/lwjgl/DisplayMode");
+	jclass cls_displayMode = env->GetObjectClass(mode);
 	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
 	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
 	jfieldID fid_bpp = env->GetFieldID(cls_displayMode, "bpp", "I");
@@ -242,60 +231,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 		}
 	}
 
-	// The change was successful but might not be the exact change we were expecting.
-	// Now we'll construct a new DisplayMode instance and stash it back in the Display
-	// class's mode instance variable.
-
-	// Get the screen
-	HDC screenDC = GetDC(NULL);
-	// Get the device caps
-	width = GetDeviceCaps(screenDC, HORZRES);
-	height = GetDeviceCaps(screenDC, VERTRES);
-	bpp = GetDeviceCaps(screenDC, BITSPIXEL);
-	freq = GetDeviceCaps(screenDC, VREFRESH);
-	if (freq <= 1)
-		freq = 0; // Unknown
-	ReleaseDC(NULL, screenDC);
-
-	jmethodID ctor = env->GetMethodID(cls_displayMode, "<init>", "(IIII)V");
-	jobject newMode = env->NewObject(cls_displayMode, ctor, width, height, bpp, freq);
-	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
-	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
-	env->DeleteLocalRef(newMode);
-
 	modeSet = true;
-}
-
-/*
- * Class:     org_lwjgl_Display
- * Method:    resetDisplayMode
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
-  (JNIEnv * env, jclass clazz)
-{
-
-	// Return device gamma to normal
-	HDC screenDC = GetDC(NULL);
-	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-		printfDebug("Could not reset device gamma\n");
-	}
-	ReleaseDC(NULL, screenDC);	
-
-	if (modeSet) {
-		modeSet = false;
-		// Under Win32, all we have to do is:
-		ChangeDisplaySettings(NULL, 0);
-
-		// And we'll call init() again to put the correct mode back in Display
-		Java_org_lwjgl_Display_init(env, clazz);
-	}
 }
 
 /*
  * Temporarily reset display settings. This is called when the window is minimized.
  */
-static void tempResetDisplayMode() {
+/*static void tempResetDisplayMode() {
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
@@ -310,11 +252,11 @@ static void tempResetDisplayMode() {
 		ChangeDisplaySettings(NULL, 0);
 	}
 }
-
+*/
 /*
  * Put display settings back to what they were when the window is maximized.
  */
-static void tempRestoreDisplayMode() {
+/*static void tempRestoreDisplayMode() {
 	// Restore gamma
 	HDC screenDC = GetDC(NULL);
 	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
@@ -332,26 +274,14 @@ static void tempRestoreDisplayMode() {
 		}
 	}
 }
+*/
 
-
-/*
- * Class:     org_lwjgl_Display
- * Method:    getGammaRampLength
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
-  (JNIEnv *env, jclass clazz)
+int getGammaRampLength(void)
 {
 	return 256;
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    setGammaRamp
- * Signature: (I)Z
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv * env, jclass clazz, jobject gammaRampBuffer)
+void setGammaRamp(JNIEnv * env, jobject gammaRampBuffer)
 {
 	const float *gammaRamp = (const float *)env->GetDirectBufferAddress(gammaRampBuffer);
 	// Turn array of floats into array of RGB WORDs
@@ -371,20 +301,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
 }
 
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    init
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
-  (JNIEnv * env, jclass clazz)
+jobject initDisplay(JNIEnv * env)
 {
 	// Determine the current screen resolution
 	// Get the screen
 	HDC screenDC = GetDC(NULL);
 	if (!screenDC) {
-		printf("Couldn't get screen DC!\n");
-		return;
+		throwException(env, "Couldn't get screen DC!");
+		return NULL;
 	}
 	// Get the device caps
 	int width = GetDeviceCaps(screenDC, HORZRES);
@@ -394,19 +318,36 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	if (freq <= 1)
 		freq = 0; // Unknown
 
-	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
+	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/opengl/DisplayMode");
 	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
 	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, width, height, bpp, freq);
-	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
-	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
-	env->DeleteLocalRef(newMode);
 
 	// Get the default gamma ramp
 	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
 		printfDebug("Failed to get initial device gamma\n");
 	}
 	ReleaseDC(NULL, screenDC);
+	return newMode;
+}
 
+void resetDisplayMode(JNIEnv * env)
+{
+
+	// Return device gamma to normal
+	HDC screenDC = GetDC(NULL);
+	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
+		printfDebug("Could not reset device gamma\n");
+	}
+	ReleaseDC(NULL, screenDC);	
+
+	if (modeSet) {
+		modeSet = false;
+		// Under Win32, all we have to do is:
+		ChangeDisplaySettings(NULL, 0);
+
+		// And we'll call init() again to put the correct mode back in Display
+		initDisplay(env);
+	}
 }
 
 static char * getDriver() {
@@ -466,12 +407,7 @@ static char * getDriver() {
 	return szDriverValue;
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    getAdapter
- */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
-  (JNIEnv * env, jclass clazz)
+jstring getAdapter(JNIEnv * env)
 {
 
 	jstring ret = NULL;
@@ -486,12 +422,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
 
 
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    getVersion
- */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
-  (JNIEnv * env, jclass clazz)
+jstring getVersion(JNIEnv * env)
 {
 	jstring ret = NULL;
 

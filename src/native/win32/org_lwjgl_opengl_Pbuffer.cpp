@@ -66,7 +66,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
   (JNIEnv *env, jclass clazz)
 {
 	int caps = 0;
-
 	if ( extgl_Extensions.WGL_ARB_pixel_format && extgl_Extensions.WGL_ARB_pbuffer )
 		caps |= org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED;
 
@@ -88,49 +87,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
   (JNIEnv *env, jclass clazz,
-  jint width, jint height,
-  jint bpp, jint alpha, jint depth, jint stencil,
-  jint samples,
-  jobject pixelFormatCaps, jint pixelFormatCapsSize, jobject pBufferAttribs, jint pBufferAttribsSize)
+  jint width, jint height, jobject pixel_format,
+  jobject pixelFormatCaps, jobject pBufferAttribs)
 {
-	int iPixelFormat;
-	unsigned int num_formats_returned;
-	int pixelAttribList[] = {WGL_DRAW_TO_PBUFFER_ARB, TRUE,
-					     WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
-						 WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
-						 WGL_DOUBLE_BUFFER_ARB, FALSE,
-					     WGL_SUPPORT_OPENGL_ARB, TRUE,
-					     WGL_COLOR_BITS_ARB, bpp,
-					     WGL_ALPHA_BITS_ARB, alpha,
-					     WGL_DEPTH_BITS_ARB, depth,
-					     WGL_STENCIL_BITS_ARB, stencil,
-						 0, 0, /* For ARB_multisample */
-						 0, 0, /*                     */
-						 0, 0, /* For WGL_ARB_render_texture */
-						 0, 0, /*							 */
-						 0};
-
-	if (samples > 0 && extgl_Extensions.WGL_ARB_multisample) {
-		pixelAttribList[18] = WGL_SAMPLE_BUFFERS_ARB;
-		pixelAttribList[19] = 1;
-		pixelAttribList[20] = WGL_SAMPLES_ARB;
-		pixelAttribList[21] = samples;
-	}
-
-	if ( pixelFormatCaps != NULL ) {
-		if ( !extgl_Extensions.WGL_ARB_render_texture ) {
-			throwException(env, "The render-to-texture extension is not supported.");
-			return (jint)NULL;
-		}
-
-		GLuint *pixelFormatCaps_ptr = (GLuint *)env->GetDirectBufferAddress(pixelFormatCaps);
-
-		for ( int i = 0; i < pixelFormatCapsSize; )
-			pixelAttribList[22 + i++] = pixelFormatCaps_ptr[i];
-	}
-
-	BOOL result = wglChoosePixelFormatARB(hdc, pixelAttribList, NULL, 1, &iPixelFormat, &num_formats_returned);
-	if (result == FALSE || num_formats_returned < 1) {
+	int iPixelFormat = findPixelFormatARB(env, pixel_format, pixelFormatCaps, false, false, true);
+	if (iPixelFormat == -1) {
 		throwException(env, "Could not choose pixel formats.");
 		return (jint)NULL;
 
@@ -140,10 +101,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 
 	if ( pBufferAttribs != NULL ) {
 		GLuint *pBufferAttribs_ptr = (GLuint *)env->GetDirectBufferAddress(pBufferAttribs);
+		jlong pBufferAttribsSize = env->GetDirectBufferCapacity(pBufferAttribs);
 
 		int pBufferAttribList[9];
 
-		int i;
+		jlong i;
 		for ( i = 0; i < pBufferAttribsSize; )
 			pBufferAttribList[i++] = pBufferAttribs_ptr[i];
 

@@ -69,10 +69,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
- * Signature: (IILorg/lwjgl/opengl/PixelFormat;Ljava/nio/IntBuffer;ILjava/nio/IntBuffer;I)I
+ * Signature: (IILorg/lwjgl/opengl/PixelFormat;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *, jclass, jint, jint, jobject, jobject, jint, jobject, jint);
+  (JNIEnv *, jclass, jint, jint, jobject, jobject, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer

@@ -182,11 +182,11 @@ public final class Pbuffer {
 		this.height = height;
 
 		if ( renderTexture == null )
-			handle = nCreate(width, height, pixel_format, null, 0, null, 0);
+			handle = nCreate(width, height, pixel_format, null, null);
 		else
 			handle = nCreate(width, height, pixel_format,
-			                 renderTexture.pixelFormatCaps, renderTexture.pixelFormatCaps.limit(),
-			                 renderTexture.pBufferAttribs, renderTexture.pBufferAttribs.limit());
+			                 renderTexture.pixelFormatCaps,
+			                 renderTexture.pBufferAttribs);
 	}
 
 	/**
@@ -230,8 +230,8 @@ public final class Pbuffer {
 	 * Native method to create a Pbuffer
 	 */
 	private static native int nCreate(int width, int height, PixelFormat pixel_format,
-	                                  IntBuffer pixelFormatCaps, int pixelFormatCapsSize,
-	                                  IntBuffer pBufferAttribs, int pBufferAttribsSize) throws LWJGLException;
+	                                  IntBuffer pixelFormatCaps,
+	                                  IntBuffer pBufferAttribs) throws LWJGLException;
 
 	/**
 	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context - regardless of whether this Pbuffer was

@@ -168,6 +168,8 @@ public final class Display {
 	 */
 	private static void createWindow() throws LWJGLException {
 		nCreateWindow(current_mode, fullscreen);
+		if (title != null)
+			nSetTitle(title);
 		initControls();
 	}
 
@@ -360,10 +362,9 @@ public final class Display {
 	 * @param newTitle The new window title
 	 */
 	public static void setTitle(String newTitle) {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot set title on uncreated window");
 		title = newTitle;
-		nSetTitle(title);
+		if (isCreated())
+			nSetTitle(title);
 	}
 
 	/**
@@ -606,11 +607,6 @@ public final class Display {
 	public static Object getContext() {
 		return context;
 	}
-
-	/**
-	 * Destroy the native window peer.
-	 */
-	private static native void nDestroy();
 
 	/**
 	 * @return true if the window's native peer has been created

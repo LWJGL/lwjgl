@@ -88,7 +88,7 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
  * Method:    nCreate
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jint width, jint height, jobject pixel_format,
-  jobject pixelFormatCaps, jint pixelFormatCapsSize, jobject pBufferAttribs, jint pBufferAttribsSize)
+  jobject pixelFormatCaps, jobject pBufferAttribs)
 {
 	Display *disp = incDisplay(env);
 	if (disp == NULL)

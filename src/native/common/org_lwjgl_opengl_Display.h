@@ -171,14 +171,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext
 
 /*
  * Class:     org_lwjgl_opengl_Display
- * Method:    nDestroy
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nDestroy
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_opengl_Display
  * Method:    nUpdate
  * Signature: ()V
  */

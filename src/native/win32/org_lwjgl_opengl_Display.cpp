@@ -33,7 +33,7 @@
 /**
  * $Id$
  *
- * Base Win32 window
+ * Base Win32 display
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
@@ -42,7 +42,8 @@
 #define _PRIVATE_WINDOW_H_
 #include "Window.h"
 #include "common_tools.h"
-#include "org_lwjgl_opengl_Window.h"
+#include "display.h"
+#include "org_lwjgl_opengl_Display.h"
 
 static bool				oneShotInitialised = false;			// Registers the LWJGL window class
 
@@ -58,7 +59,7 @@ extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
 RECT clientSize;
 
 static bool closerequested;
-static jboolean allowSoftwareOpenGL;              // Whether to allow software opengl
+static int pixel_format_index;
 
 #define WINDOWCLASSNAME "LWJGL"
 
@@ -77,29 +78,56 @@ static bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {
 	return true;
 }
 
-static int findPixelFormatARB(JNIEnv *env, int bpp, int alpha, int depth, int stencil, int samples) {
+static int findPixelFormatARBFromBPP(JNIEnv *env, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool pbuffer) {
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
+	int depth = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "depth", "I"));
+	int stencil = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "stencil", "I"));
+	int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
+	int num_aux_buffers = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "num_aux_buffers", "I"));
+	int accum_bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_bpp", "I"));
+	int accum_alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_alpha", "I"));
+	jboolean stereo = env->GetBooleanField(pixel_format, env->GetFieldID(cls_pixel_format, "stereo", "Z"));
 	int iPixelFormat;
 	unsigned int num_formats_returned;
-	int attrib_list[] = {WGL_DRAW_TO_WINDOW_ARB, TRUE,
-					     WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
-						 WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
-						 WGL_DOUBLE_BUFFER_ARB, TRUE,
-					     WGL_SUPPORT_OPENGL_ARB, TRUE,
-					     WGL_COLOR_BITS_ARB, bpp,
-					     WGL_ALPHA_BITS_ARB, alpha,
-					     WGL_DEPTH_BITS_ARB, depth,
-					     WGL_STENCIL_BITS_ARB, stencil,
-						 0, 0, /* For ARB_multisample */
-						 0, 0, /*                     */
-						 0};
-
-	if (samples > 0 && extgl_Extensions.WGL_ARB_multisample) {
-		attrib_list[18] = WGL_SAMPLE_BUFFERS_ARB;
-		attrib_list[19] = 1;
-		attrib_list[20] = WGL_SAMPLES_ARB;
-		attrib_list[21] = samples;
+	attrib_list_t attrib_list;
+	initAttribList(&attrib_list);
+	if (window) {
+		putAttrib(&attrib_list, WGL_DRAW_TO_WINDOW_ARB); putAttrib(&attrib_list, TRUE);
 	}
-	BOOL result = wglChoosePixelFormatARB(hdc, attrib_list, NULL, 1, &iPixelFormat, &num_formats_returned);
+	if (pbuffer) {
+		putAttrib(&attrib_list, WGL_DRAW_TO_PBUFFER_ARB); putAttrib(&attrib_list, TRUE);
+	}
+	putAttrib(&attrib_list, WGL_ACCELERATION_ARB); putAttrib(&attrib_list, WGL_FULL_ACCELERATION_ARB);
+	putAttrib(&attrib_list, WGL_PIXEL_TYPE_ARB); putAttrib(&attrib_list, WGL_TYPE_RGBA_ARB);
+	putAttrib(&attrib_list, WGL_DOUBLE_BUFFER_ARB); putAttrib(&attrib_list, TRUE);
+	putAttrib(&attrib_list, WGL_SUPPORT_OPENGL_ARB); putAttrib(&attrib_list, TRUE);
+	putAttrib(&attrib_list, WGL_COLOR_BITS_ARB); putAttrib(&attrib_list, bpp);
+	putAttrib(&attrib_list, WGL_ALPHA_BITS_ARB); putAttrib(&attrib_list, alpha);
+	putAttrib(&attrib_list, WGL_DEPTH_BITS_ARB); putAttrib(&attrib_list, depth);
+	putAttrib(&attrib_list, WGL_STENCIL_BITS_ARB); putAttrib(&attrib_list, stencil);
+	if (samples > 0 && extgl_Extensions.WGL_ARB_multisample) {
+		putAttrib(&attrib_list, WGL_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
+		putAttrib(&attrib_list, WGL_SAMPLES_ARB); putAttrib(&attrib_list, samples);
+	}
+	putAttrib(&attrib_list, WGL_ACCUM_BITS_ARB); putAttrib(&attrib_list, accum_bpp);
+	putAttrib(&attrib_list, WGL_ACCUM_ALPHA_BITS_ARB); putAttrib(&attrib_list, accum_alpha);
+	putAttrib(&attrib_list, WGL_STEREO_ARB); putAttrib(&attrib_list, stereo ? TRUE : FALSE);
+	putAttrib(&attrib_list, WGL_AUX_BUFFERS_ARB); putAttrib(&attrib_list, num_aux_buffers);
+	if ( pixelFormatCaps != NULL ) {
+		if ( !extgl_Extensions.WGL_ARB_render_texture ) {
+			throwException(env, "The render-to-texture extension is not supported.");
+			return -1;
+		}
+
+		GLuint *pixelFormatCaps_ptr = (GLuint *)env->GetDirectBufferAddress(pixelFormatCaps);
+		jlong pixelFormatCapsSize = env->GetDirectBufferCapacity(pixelFormatCaps);
+
+		for (jlong i = 0; i < pixelFormatCapsSize;)
+			putAttrib(&attrib_list, pixelFormatCaps_ptr[i]);
+	}
+	putAttrib(&attrib_list, 0); putAttrib(&attrib_list, 0);
+	BOOL result = wglChoosePixelFormatARB(hdc, attrib_list.attribs, NULL, 1, &iPixelFormat, &num_formats_returned);
 
 	if (result == FALSE || num_formats_returned < 1) {
 		throwException(env, "Could not choose ARB pixel formats.");
@@ -108,15 +136,41 @@ static int findPixelFormatARB(JNIEnv *env, int bpp, int alpha, int depth, int st
 	return iPixelFormat;
 }
 
+int findPixelFormatARB(JNIEnv *env, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer) {
+	int bpp;
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	if (use_hdc_bpp) {
+		bpp = GetDeviceCaps(hdc, BITSPIXEL);
+		int iPixelFormat = findPixelFormatARBFromBPP(env, pixel_format, pixelFormatCaps, bpp, window, pbuffer);
+		if (iPixelFormat == -1)
+			bpp = 16;
+		else
+			return iPixelFormat;
+	} else
+		bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "bpp", "I"));
+	return findPixelFormatARBFromBPP(env, pixel_format, pixelFormatCaps, bpp, window, pbuffer);
+}
+
 /*
  * Find an appropriate pixel format
  */
-static int findPixelFormat(JNIEnv *env, int bpp, int alpha, int depth, int stencil)
+static int findPixelFormat(JNIEnv *env, jobject pixel_format)
 {
+	int bpp = GetDeviceCaps(hdc, BITSPIXEL);
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
+	int depth = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "depth", "I"));
+	int stencil = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "stencil", "I"));
+	int samples = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "samples", "I"));
+	int num_aux_buffers = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "num_aux_buffers", "I"));
+	int accum_bpp = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_bpp", "I"));
+	int accum_alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "accum_alpha", "I"));
+	jboolean stereo = env->GetBooleanField(pixel_format, env->GetFieldID(cls_pixel_format, "stereo", "Z"));
 	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window 
 		PFD_SUPPORT_OPENGL |   // support OpenGL 
 		PFD_DOUBLEBUFFER;      // double buffered 
-
+	if (stereo)
+		flags = flags | PFD_STEREO;
 	PIXELFORMATDESCRIPTOR pfd = { 
 		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
 		1,                     // version number 
@@ -126,11 +180,11 @@ static int findPixelFormat(JNIEnv *env, int bpp, int alpha, int depth, int stenc
 		0, 0, 0, 0, 0, 0,      // color bits ignored 
 		(BYTE)alpha,       
 		0,                     // shift bit ignored 
-		0,                     // no accumulation buffer 
+		accum_bpp + accum_alpha,                     // no accumulation buffer 
 		0, 0, 0, 0,            // accum bits ignored 
 		(BYTE)depth,       
 		(BYTE)stencil,     
-		0,                     // No auxiliary buffer 
+		num_aux_buffers, 
 		PFD_MAIN_PLANE,        // main layer
 		0,                     // reserved 
 		0, 0, 0                // layer masks ignored
@@ -170,10 +224,11 @@ static int findPixelFormat(JNIEnv *env, int bpp, int alpha, int depth, int stenc
 	}
 
 	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
-	  // secondary check for software override
-	  if(!allowSoftwareOpenGL) {
-		  throwException(env, "Mode not supported by hardware");
-		  return -1;
+		jboolean allowSoftwareOpenGL = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+		// secondary check for software override
+		if(!allowSoftwareOpenGL) {
+			throwException(env, "Mode not supported by hardware");
+			return -1;
 		}
 	}
 
@@ -342,7 +397,7 @@ static void handleMessages(JNIEnv * env, jclass clazz)
  * 
  * Returns true for success, or false for failure
  */
-static bool createWindow(JNIEnv *env, jstring title_obj, int x, int y, int width, int height, bool fullscreen, bool undecorated)
+static bool createWindow(JNIEnv *env, int width, int height, bool fullscreen, bool undecorated)
 {
 	int exstyle, windowflags;
 
@@ -372,45 +427,23 @@ static bool createWindow(JNIEnv *env, jstring title_obj, int x, int y, int width
 	);
 
 	// Create the window now, using that class:
-	const char * title = env->GetStringUTFChars(title_obj, NULL);
 	hwnd = CreateWindowEx (
 		 exstyle, 
 		 WINDOWCLASSNAME,
-		 title,
+		 "",
 		 windowflags,
-		 x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
+		 0, 0, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
 		 NULL,
 		 NULL,
 		 dll_handle,
 		 NULL);
 
-	env->ReleaseStringUTFChars(title_obj, title);
 	if (hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
 		return false;
 	}
 
 	hdc = GetDC(hwnd);  
-
-	return true;
-}
-
-static bool createContext(JNIEnv *env, int iPixelFormat) {
-	if (iPixelFormat == -1) {
-		closeWindow();
-		return false;
-	}
-	if (!applyPixelFormat(env, hdc, iPixelFormat)) {
-		closeWindow();
-		return false;
-	}
-	hglrc = wglCreateContext(hdc);
-	if (hglrc == NULL) {
-		throwException(env, "Failed to create OpenGL rendering context");
-		closeWindow();
-		return false;
-	}
-	wglMakeCurrent(hdc, hglrc);
 	return true;
 }
 
@@ -419,7 +452,7 @@ static bool createContext(JNIEnv *env, int iPixelFormat) {
  * Method:    nSetTitle
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetTitle
   (JNIEnv * env, jclass clazz, jstring title_obj)
 {
 	const char * title = env->GetStringUTFChars(title_obj, NULL);
@@ -432,7 +465,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
  * Method:    update
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nUpdate
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nUpdate
   (JNIEnv * env, jclass clazz)
 {
 	handleMessages(env, clazz);
@@ -444,7 +477,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nUpdate
  * Method:    swapBuffers
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_swapBuffers
   (JNIEnv * env, jclass clazz)
 {
 	isDirty = false;
@@ -453,96 +486,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers
 }
 
 /*
- * Class:     org_lwjgl_Window
- * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIII)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
-  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
-{
-	closerequested = false;
-	isMinimized = false;
-	isFocused = true;
-	isDirty = true;
-	isFullScreen = fullscreen == JNI_TRUE;
-	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
-
-  // Speacial option for allowing software opengl	
-	allowSoftwareOpenGL = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
-	
-	// 1. Register window class if necessary
-	if (!registerWindow()) {
-		throwException(env, "Could not register window class");
-		return;
-	}
-
-	if (!extgl_Open()) {
-		throwException(env, "Failed to open extgl");
-		return;
-	}
-
-	if (!createWindow(env, title, x, y, width, height, isFullScreen, isUndecorated)) {
-		extgl_Close();
-		return;
-	}
-	int iPixelFormat = findPixelFormat(env, bpp, alpha, depth, stencil);
-	if (!createContext(env, iPixelFormat)) {
-		extgl_Close();
-		return;
-	}
-
-	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
-	// of multisamples we want. If the extension is present we'll delete the existing
-	// rendering context and start over, using the ARB extension instead to pick the context.
-	extgl_InitWGL(env);
-	if (extgl_Extensions.WGL_ARB_pixel_format && samples > 0) {
-		wglMakeCurrent(NULL, NULL);
-		wglDeleteContext(hglrc);
-		closeWindow();
-		if (!createWindow(env, title, x, y, width, height, isFullScreen, isUndecorated)) {
-			extgl_Close();
-			return;
-		}
-		iPixelFormat = findPixelFormatARB(env, bpp, alpha, depth, stencil, samples);
-		if (!createContext(env, iPixelFormat)) {
-			extgl_Close();
-			return;
-		}
-		extgl_InitWGL(env);
-	}
-
-	ShowWindow(hwnd, SW_SHOW);
-	UpdateWindow(hwnd);
-	SetForegroundWindow(hwnd);
-	SetFocus(hwnd);
-}
-
-/*
- * Class:     org_lwjgl_Window
- * Method:    doDestroy
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
-  (JNIEnv * env, jclass clazz)
-{
-	wglMakeCurrent(NULL, NULL);
-
-	// Delete the rendering context
-	if (hglrc != NULL) {
-		printfDebug("Deleting GL context\n");
-		wglDeleteContext(hglrc); 
-		hglrc = NULL;
-	}
-	closeWindow();
-	extgl_Close();
-}
-
-/*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nIsDirty
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsDirty
   (JNIEnv *env, jclass clazz) {
 	bool result = isDirty;
 	isDirty = false;
@@ -554,7 +502,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
  * Method:    nIsVisible
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVisible
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsVisible
   (JNIEnv *env, jclass clazz) {
 	return isMinimized ? JNI_FALSE : JNI_TRUE;
 }
@@ -564,7 +512,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVisible
  * Method:    nIsCloseRequested
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsCloseRequested
   (JNIEnv *, jclass) {
 	bool saved = closerequested;
 	closerequested = false;
@@ -576,7 +524,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested
  * Method:    nIsActive
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsActive
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsActive
   (JNIEnv *env, jclass clazz) {
 	return isFocused;
 }
@@ -586,7 +534,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsActive
  * Method:    nSetVSyncEnabled
  * Signature: (Z)Z
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSetVSyncEnabled
   (JNIEnv * env, jclass clazz, jboolean sync)
 {
 	if (extgl_Extensions.WGL_EXT_swap_control) {
@@ -598,14 +546,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
   (JNIEnv *env, jclass clazz)
 {
 	wglMakeCurrent(hdc, hglrc);
 }
 
 /*
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nReshape
   (JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height)
 {
 	if (isFullScreen) {
@@ -640,3 +588,131 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nReshape
 		clientSize.bottom - clientSize.top, SWP_NOZORDER);
 }
 */
+
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Display_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz) {
+	return getAvailableDisplayModes(env);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen) {
+	closerequested = false;
+	isMinimized = false;
+	isFocused = true;
+	isDirty = true;
+	isFullScreen = fullscreen == JNI_TRUE;
+	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
+	jclass cls_displayMode = env->GetObjectClass(mode);
+	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
+	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
+	int width = env->GetIntField(mode, fid_width);
+	int height = env->GetIntField(mode, fid_height);
+
+	if (!createWindow(env, width, height, isFullScreen, isUndecorated)) {
+		return;
+	}
+	if (!applyPixelFormat(env, hdc, pixel_format_index)) {
+		closeWindow();
+		return;
+	}
+
+	wglMakeCurrent(hdc, hglrc);
+	ShowWindow(hwnd, SW_SHOW);
+	UpdateWindow(hwnd);
+	SetForegroundWindow(hwnd);
+	SetFocus(hwnd);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nDestroyWindow(JNIEnv *env, jclass clazz) {
+	closeWindow();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_switchDisplayMode(JNIEnv *env, jclass clazz, jobject mode) {
+	switchDisplayMode(env, mode);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_resetDisplayMode(JNIEnv *env, jclass clazz) {
+	resetDisplayMode(env);
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
+	return getGammaRampLength();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
+	setGammaRamp(env, gamma_buffer);
+}
+
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getAdapter(JNIEnv *env, jclass clazz) {
+	return getAdapter(env);
+}
+
+JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getVersion(JNIEnv *env, jclass clazz) {
+	return getVersion(env);
+}
+
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Display_init(JNIEnv *env, jclass clazz) {
+	return initDisplay(env);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
+	if (!extgl_Open()) {
+		throwException(env, "Failed to open extgl");
+		return;
+	}
+
+	// 1. Register window class if necessary
+	if (!registerWindow()) {
+		throwException(env, "Could not register window class");
+		return;
+	}
+
+	if (!createWindow(env, 1, 1, false, false)) {
+		extgl_Close();
+		return;
+	}
+	pixel_format_index = findPixelFormat(env, pixel_format);
+	// Special option for allowing software opengl	
+	if (!applyPixelFormat(env, hdc, pixel_format_index)) {
+		closeWindow();
+		extgl_Close();
+		return;
+	}
+	
+	hglrc = wglCreateContext(hdc);
+	if (hglrc == NULL) {
+		throwException(env, "Failed to create OpenGL rendering context");
+		extgl_Close();
+		return;
+	}
+	wglMakeCurrent(hdc, hglrc);
+	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
+	// of multisamples we want. If the extension is present we'll delete the existing
+	// rendering context and start over, using the ARB extension instead to pick the context.
+	extgl_InitWGL(env);
+	if (extgl_Extensions.WGL_ARB_pixel_format) {
+		pixel_format_index = findPixelFormatARB(env, pixel_format, NULL, true, true, false);
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(hglrc);
+		hglrc = wglCreateContext(hdc);
+		if (hglrc == NULL) {
+			throwException(env, "Failed to create OpenGL rendering context (ARB)");
+			closeWindow();
+			extgl_Close();
+			return;
+		}
+		wglMakeCurrent(hdc, hglrc);
+		extgl_InitWGL(env);
+	}
+	closeWindow();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env, jclass clazz) {
+	wglMakeCurrent(NULL, NULL);
+
+	// Delete the rendering context
+	if (hglrc != NULL) {
+		printfDebug("Deleting GL context\n");
+		wglDeleteContext(hglrc); 
+		hglrc = NULL;
+	}
+	extgl_Close();
+}
