@@ -359,7 +359,7 @@ static char * getDriver() {
 
 	// szAdapterKey now contains something like \Registry\Machine\System\CurrentControlSet\Control\Video\{B70DBD2A-90C4-41CF-A58E-F3BA69F1A6BC}\0000
 	// We'll check for the first chunk:
-	if (strncmp("\\Registry\\Machine", szAdapterKey, 17) == 0) {
+	if (strnicmp("\\Registry\\Machine", szAdapterKey, 17) == 0) {
 		// Yes, it's right, so let's look for that key now
 
 		TCHAR szDriverKey[MY_BUFSIZE];
