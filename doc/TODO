@@ -3,20 +3,13 @@ Todo:
 1.  Apple extensions
 2.  Pbuffers - means opening up some internals like HDC and HWNDs that are
     meaningless to other operating systems but who cares...
-3.  Debug build: check for function availabilty macro and throw an OpenGL
-    exception instead of blowing up the VM
 4.  Javadoc for GL commands. For now why not just paste in the OpenGL man
     docs in there as they're in the public domain? If anyone complains we'll
     just have to sort something else out...
 5.  Change callback mechanism for GLUQuadrics to use an interface
 
 6.  Pbuffers for linux (and maybe macosx) - it's possible afaik
-7.  Check that returned modes really are hw accelerated. 
-    (PFD_GENERIC_ACCELERATED, PFD_GENERIC_FORMAT)
-8.  The linux mouse behaviour hacks - at least the alt+tab hack.
 9.  Mode switching when alt+tabbing from fullscreen - if possible.
-10. Maybe a flag to tell which platform you're on? Or sort out the 
-    GL_NV_vertex_array_range allocation in a xplatform way.
 11. OS X version
 12. BSD Version?
 13. Better documentation/tutorials
