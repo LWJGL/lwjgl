@@ -17,6 +17,8 @@ extern "C" {
 #undef org_lwjgl_Sys_REALTIME_PRIORITY
 #define org_lwjgl_Sys_REALTIME_PRIORITY 2L
 /* Inaccessible static: LIBRARY_NAME */
+/* Inaccessible static: DEBUG */
+/* Inaccessible static: _debug */
 /* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Sys
@@ -65,6 +67,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
   (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    alert
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
+  (JNIEnv *, jclass, jstring, jstring);
 
 #ifdef __cplusplus
 }
