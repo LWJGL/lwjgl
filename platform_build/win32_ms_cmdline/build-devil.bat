@@ -6,7 +6,7 @@ if "%CHOME%" == "" goto errorchome
 if "%DEVILHOME%" == "" goto errordevilhome
 set COPTIONS=/I"%DEVILHOME%\include" /I"%PLTSDKHOME%\include" /I"%CHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"..\..\src\native\common" /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W0 /nologo /c /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "LWJGL_EXPORTS" /D "_WINDLL"
 set LINKEROPTS=/link /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /LIBPATH:"%DEVILHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL
-set LIBS=user32.lib Gdi32.lib Advapi32.lib ILU.lib DevIL.lib
+set LIBS=user32.lib Gdi32.lib Advapi32.lib DevIL.lib ILU.lib ILUT.lib
 
 for %%x in (..\..\src\native\common\devil\*.c) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\*common*.c) do cl %COPTIONS% %%x

@@ -183,9 +183,67 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluGenImage(JNIEnv *env, jclass 
 /*
  * Class:     org_lwjgl_devil_ILU
  * Method:    iluGetImageInfo
- * Signature: ([Lorg/lwjgl/devil/ILinfo;)V
+ * Signature: (Lorg/lwjgl/devil/ILinfo;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluGetImageInfo(JNIEnv *env, jclass clazz, jobjectArray info) {
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluGetImageInfo(JNIEnv *env, jclass clazz, jobject info) {
+    jfieldID fieldId;
+    ILinfo *imageInfo;
+
+    if(info == 0) {
+        throwException(env, "ILinfo object must not be null.");
+    }
+
+    imageInfo = (ILinfo *)malloc(sizeof(ILinfo));
+    iluGetImageInfo(imageInfo);
+
+    clazz = (*env)->GetObjectClass(env, info);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "id", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->Id);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "width", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->Width);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "height", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->Height);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "depth", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->Depth);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "bpp", "B");
+    (*env)->SetByteField(env, info, fieldId, (jbyte)imageInfo->Bpp);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "sizeOfData", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->SizeOfData);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "format", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->Format);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "type", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->Type);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "origin", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->Origin);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "palType", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->PalType);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "palSize", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->PalSize);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "cubeFlags", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->CubeFlags);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "numNext", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->NumNext);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "numMips", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->NumMips);
+
+    fieldId = (*env)->GetFieldID(env, clazz, "numLayers", "I");
+    (*env)->SetIntField(env, info, fieldId, (jint)imageInfo->NumLayers);
+
+    free(imageInfo);
 }
 
 /*
@@ -298,6 +356,43 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluPixelize(JNIEnv *env, jcl
  * Signature: ([Lorg/lwjgl/devil/ILpointf;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluRegionfv(JNIEnv *env, jclass clazz, jobjectArray points, jint n) {
+    jfieldID fieldId;
+    jmethodID methodId;
+    jobject element;
+    int i;
+    ILpointf *pointInfo;
+
+    if(points == 0) {
+        throwException(env, "ILpointf array must not be null.");
+    }
+
+    pointInfo = (ILpointf *)malloc(sizeof(ILpointf) * n);
+    iluGetImageInfo(pointInfo, n);
+
+    clazz = (*env)->FindClass(env, "org/lwjgl/devil/ILpointf");
+    methodId = (*env)->GetMethodID(env, clazz, "<init>", "()V");
+
+    for(i=1;i<n;i++) {
+        element = (*env)->NewObject(env, clazz, methodId);
+
+        fieldId = (*env)->GetFieldID(env, clazz, "x", "F");
+        (*env)->SetFloatField(env, element, fieldId, (jfloat)((pointInfo + i)->x));
+
+        fieldId = (*env)->GetFieldID(env, clazz, "y", "F");
+        (*env)->SetFloatField(env, element, fieldId, (jfloat)((pointInfo + i)->y));
+    printf("\nHere 3");
+    printf("\n                         (pointInfo + i)->x) = %f", (pointInfo + i)->x);
+    printf("\n(*env)->GetFloatField(env, element, fieldId) = %f", (*env)->GetFloatField(env, element, fieldId));
+
+    printf("\npoints address=%p", points);
+    printf("\nelement address=%p", element);
+    printf("\ni = %d", i);
+        (*env)->SetObjectArrayElement(env, points, i, element);
+    printf("\nHere 4");
+    }
+    printf("\nHere 5");
+
+    free(pointInfo);
 }
 
 /*
@@ -395,7 +490,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILU_iluWave(JNIEnv *env, jclass 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_nCreate(JNIEnv *env, jclass clazz) {
     /*if (!extilu_Open(env)) {
-        throwException(env, "Failed to load DevIL library");
+        throwException(env, "Failed to load ILU library");
         return;
     }*/
 }
