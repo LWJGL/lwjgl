@@ -504,6 +504,8 @@ static bool initWindowGLX13(JNIEnv *env, int screen, jstring title, int x, int y
 		return false;
 	}
 	bool window_created = createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
+	if (isDebugEnabled())
+		dumpVisualInfo(vis_info);
 	XFree(vis_info);
 	if (!window_created) {
 		glXDestroyContext(getDisplay(), context);
@@ -512,8 +514,6 @@ static bool initWindowGLX13(JNIEnv *env, int screen, jstring title, int x, int y
 	}
 	glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
 	makeCurrent();
-	if (isDebugEnabled())
-		dumpVisualInfo(vis_info);
 	XFree(configs);
 	if (!checkXError(env)) {
 		glXDestroyWindow(getDisplay(), glx_window);

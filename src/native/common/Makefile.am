@@ -1,19 +1,22 @@
-noinst_LTLIBRARIES = libcommon.la
+noinst_LTLIBRARIES = libcommon.la libtools.la
 
 SUBDIRS = arb ati ext nv
 
 libcommon_la_SOURCES = $(COMMON)
 libcommon_la_LIBADD = $(DEP_LIBS)
 libcommon_la_DEPENDENCIES = $(DEP_LIBS)
-DEP_LIBS=arb/libarb.la ati/libati.la ext/libext.la nv/libnv.la
+libtools_la_SOURCES = $(TOOLS)
+DEP_LIBS=libtools.la arb/libarb.la ati/libati.la ext/libext.la nv/libnv.la
+
+TOOLS = \
+  common_tools.cpp \
+  common_tools.h
 
 COMMON = \
   extal.cpp \
   extal.h \
   extgl.cpp \
   extgl.h \
-  common_tools.cpp \
-  common_tools.h \
   org_lwjgl_Display.h \
   org_lwjgl_Sys.h \
   org_lwjgl_input_GamePad.h \
