@@ -49,6 +49,7 @@
 #include <jni.h>
 #include "common_tools.h"
 #include "extgl.h"
+#include "extgl_glx.h"
 #include "Window.h"
 #include "org_lwjgl_opengl_Window.h"
 

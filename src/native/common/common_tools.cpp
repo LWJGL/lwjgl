@@ -142,6 +142,20 @@ jclass ext_ResetClass(JNIEnv *env, const char *class_name) {
 	return clazz;
 }
 
+bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions) {
+	for (int i = 0; i < num_functions; i++) {
+		ExtFunction *function = functions + i;
+		if (function->ext_function_name != NULL) {
+			void *ext_func_pointer = gpa(function->ext_function_name);
+			if (ext_func_pointer == NULL)
+				return false;
+			void **ext_function_pointer_pointer = function->ext_function_pointer;
+			*ext_function_pointer_pointer = ext_func_pointer;
+		}
+	}
+	return true;
+}
+
 bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
 	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
 	for (int i = 0; i < num_functions; i++) {

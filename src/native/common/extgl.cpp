@@ -47,49 +47,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef _X11
 
 #include <dlfcn.h>
-
-glXGetFBConfigsPROC glXGetFBConfigs = NULL;
-glXChooseFBConfigPROC glXChooseFBConfig = NULL;
-glXGetFBConfigAttribPROC glXGetFBConfigAttrib = NULL;
-glXGetVisualFromFBConfigPROC glXGetVisualFromFBConfig = NULL;
-glXCreateWindowPROC glXCreateWindow = NULL;
-glXDestroyWindowPROC glXDestroyWindow = NULL;
-glXCreatePixmapPROC glXCreatePixmap = NULL;
-glXDestroyPixmapPROC glXDestroyPixmap = NULL;
-glXCreatePbufferPROC glXCreatePbuffer = NULL;
-glXDestroyPbufferPROC glXDestroyPbuffer = NULL;
-glXQueryDrawablePROC glXQueryDrawable = NULL;
-glXCreateNewContextPROC glXCreateNewContext = NULL;
-glXMakeContextCurrentPROC glXMakeContextCurrent = NULL;
-glXGetCurrentReadDrawablePROC glXGetCurrentReadDrawable = NULL;
-glXGetCurrentDisplayPROC glXGetCurrentDisplay = NULL;
-glXQueryContextPROC glXQueryContext = NULL;
-glXSelectEventPROC glXSelectEvent = NULL;
-glXGetSelectedEventPROC glXGetSelectedEvent = NULL;
-glXGetProcAddressARBPROC glXGetProcAddressARB = NULL;
-glXChooseVisualPROC glXChooseVisual = NULL;
-glXCopyContextPROC glXCopyContext = NULL;
-glXCreateContextPROC glXCreateContext = NULL;
-glXCreateGLXPixmapPROC glXCreateGLXPixmap = NULL;
-glXDestroyContextPROC glXDestroyContext = NULL;
-glXDestroyGLXPixmapPROC glXDestroyGLXPixmap = NULL;
-glXGetConfigPROC glXGetConfig = NULL;
-glXGetCurrentContextPROC glXGetCurrentContext = NULL;
-glXGetCurrentDrawablePROC glXGetCurrentDrawable = NULL;
-glXIsDirectPROC glXIsDirect = NULL;
-glXMakeCurrentPROC glXMakeCurrent = NULL;
-glXQueryExtensionPROC glXQueryExtension = NULL;
-glXQueryVersionPROC glXQueryVersion = NULL;
-glXSwapBuffersPROC glXSwapBuffers = NULL;
-glXUseXFontPROC glXUseXFont = NULL;
-glXWaitGLPROC glXWaitGL = NULL;
-glXWaitXPROC glXWaitX = NULL;
-glXGetClientStringPROC glXGetClientString = NULL;
-glXQueryServerStringPROC glXQueryServerString = NULL;
-glXQueryExtensionsStringPROC glXQueryExtensionsString = NULL;
-
-/* GLX_SGI_swap_control */
-glXSwapIntervalSGIPROC glXSwapIntervalSGI = NULL;
 #endif
 
 #ifdef _AGL
@@ -199,6 +156,10 @@ HMODULE lib_gl_handle = NULL;
 
 #ifdef _X11
 void * lib_gl_handle = NULL;
+
+typedef void * (APIENTRY * glXGetProcAddressARBPROC) (const GLubyte *procName);
+
+static glXGetProcAddressARBPROC glXGetProcAddressARB;
 #endif
 
 #ifdef _AGL
@@ -208,7 +169,7 @@ CFBundleRef agl_bundle_ref = NULL;
 
 /* getProcAddress */
 
-static void *extgl_GetProcAddress(const char *name)
+void *extgl_GetProcAddress(const char *name)
 {
 #ifdef _WIN32
 	void *t = wglGetProcAddress(name);
@@ -257,6 +218,9 @@ bool extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const cha
 	return ext_InitializeClass(env, clazz, ext_set, ext_name, &extgl_GetProcAddress, num_functions, functions);
 }
 
+bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions) {
+	return ext_InitializeFunctions(&extgl_GetProcAddress, num_functions, functions);
+}
 
 static void insertExtension(JNIEnv *env, jobject ext_set, const char *ext) {
 	doExtension(env, ext_set, "add", ext);
@@ -333,7 +297,7 @@ static void aglUnloadFramework(CFBundleRef f)
 
 #endif
 
-static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name)
+bool extgl_QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name)
 {
 	const GLubyte *start;
 	GLubyte *where, *terminator;
@@ -390,7 +354,7 @@ static bool WGLQueryExtension(JNIEnv *env, const char *name)
 			extensions = (GLubyte*)wglGetExtensionsStringEXT();
 	else
 		extensions = (GLubyte*)wglGetExtensionsStringARB(wglGetCurrentDC());
-	return QueryExtension(env, NULL, extensions, name);
+	return extgl_QueryExtension(env, NULL, extensions, name);
 }
 
 /*static void extgl_InitWGLARBBufferRegion(JNIEnv *env)
@@ -545,107 +509,11 @@ bool extgl_InitAGL(JNIEnv *env)
 /* AGL stuff END*/
 /*-----------------------------------------------------*/
 
-#ifdef _X11
-/** returns true if the extention is available */
-static bool GLXQueryExtension(JNIEnv* env, Display *disp, int screen, const char *name)
-{
-	const GLubyte *exts = (const GLubyte *)glXQueryExtensionsString(disp, screen);
-	return QueryExtension(env, NULL, exts, name);
-}
-#endif
-
 /** returns true if the extention is available */
 static bool GLQueryExtension(JNIEnv *env, jobject ext_set, const char *name)
 {
-	return QueryExtension(env, ext_set, glGetString(GL_EXTENSIONS), name);
+	return extgl_QueryExtension(env, ext_set, glGetString(GL_EXTENSIONS), name);
 }
-
-
-#ifdef _X11
-static void extgl_InitGLX13(JNIEnv *env)
-{
-	if (extgl_Extensions.GLX13 != 1)
-		return;
-	glXGetFBConfigs = (glXGetFBConfigsPROC) extgl_GetProcAddress("glXGetFBConfigs");
-	glXChooseFBConfig = (glXChooseFBConfigPROC) extgl_GetProcAddress("glXChooseFBConfig");
-	glXGetFBConfigAttrib = (glXGetFBConfigAttribPROC) extgl_GetProcAddress("glXGetFBConfigAttrib");
-	glXGetVisualFromFBConfig = (glXGetVisualFromFBConfigPROC) extgl_GetProcAddress("glXGetVisualFromFBConfig");
-	glXCreateWindow = (glXCreateWindowPROC) extgl_GetProcAddress("glXCreateWindow");
-	glXDestroyWindow = (glXDestroyWindowPROC) extgl_GetProcAddress("glXDestroyWindow");
-	glXCreatePixmap = (glXCreatePixmapPROC) extgl_GetProcAddress("glXCreatePixmap");
-	glXDestroyPixmap = (glXDestroyPixmapPROC) extgl_GetProcAddress("glXDestroyPixmap");
-	glXCreatePbuffer = (glXCreatePbufferPROC) extgl_GetProcAddress("glXCreatePbuffer");
-	glXDestroyPbuffer = (glXDestroyPbufferPROC) extgl_GetProcAddress("glXDestroyPbuffer");
-	glXQueryDrawable = (glXQueryDrawablePROC) extgl_GetProcAddress("glXQueryDrawable");
-	glXCreateNewContext = (glXCreateNewContextPROC) extgl_GetProcAddress("glXCreateNewContext");
-	glXMakeContextCurrent = (glXMakeContextCurrentPROC) extgl_GetProcAddress("glXMakeContextCurrent");
-	glXGetCurrentReadDrawable = (glXGetCurrentReadDrawablePROC) extgl_GetProcAddress("glXGetCurrentReadDrawable");
-	glXGetCurrentDisplay = (glXGetCurrentDisplayPROC) extgl_GetProcAddress("glXGetCurrentDisplay");
-	glXQueryContext = (glXQueryContextPROC) extgl_GetProcAddress("glXQueryContext");
-	glXSelectEvent = (glXSelectEventPROC) extgl_GetProcAddress("glXSelectEvent");
-	glXGetSelectedEvent = (glXGetSelectedEventPROC) extgl_GetProcAddress("glXGetSelectedEvent");
-	EXTGL_SANITY_CHECK(env, GLX13);
-}
-
-static bool extgl_InitGLX12(void)
-{
-	glXChooseVisual = (glXChooseVisualPROC) extgl_GetProcAddress("glXChooseVisual");
-	glXCopyContext = (glXCopyContextPROC) extgl_GetProcAddress("glXCopyContext");
-	glXCreateContext = (glXCreateContextPROC) extgl_GetProcAddress("glXCreateContext");
-	glXCreateGLXPixmap = (glXCreateGLXPixmapPROC) extgl_GetProcAddress("glXCreateGLXPixmap");
-	glXDestroyContext = (glXDestroyContextPROC) extgl_GetProcAddress("glXDestroyContext");
-	glXDestroyGLXPixmap = (glXDestroyGLXPixmapPROC) extgl_GetProcAddress("glXDestroyGLXPixmap");
-	glXGetConfig = (glXGetConfigPROC) extgl_GetProcAddress("glXGetConfig");
-	glXGetCurrentContext = (glXGetCurrentContextPROC) extgl_GetProcAddress("glXGetCurrentContext");
-	glXGetCurrentDrawable = (glXGetCurrentDrawablePROC) extgl_GetProcAddress("glXGetCurrentDrawable");
-	glXIsDirect = (glXIsDirectPROC) extgl_GetProcAddress("glXIsDirect");
-	glXMakeCurrent = (glXMakeCurrentPROC) extgl_GetProcAddress("glXMakeCurrent");
-	glXQueryExtension = (glXQueryExtensionPROC) extgl_GetProcAddress("glXQueryExtension");
-	glXQueryVersion = (glXQueryVersionPROC) extgl_GetProcAddress("glXQueryVersion");
-	glXSwapBuffers = (glXSwapBuffersPROC) extgl_GetProcAddress("glXSwapBuffers");
-	glXUseXFont = (glXUseXFontPROC) extgl_GetProcAddress("glXUseXFont");
-	glXWaitGL = (glXWaitGLPROC) extgl_GetProcAddress("glXWaitGL");
-	glXWaitX = (glXWaitXPROC) extgl_GetProcAddress("glXWaitX");
-	glXGetClientString = (glXGetClientStringPROC) extgl_GetProcAddress("glXGetClientString");
-	glXQueryServerString = (glXQueryServerStringPROC) extgl_GetProcAddress("glXQueryServerString");
-	glXQueryExtensionsString = (glXQueryExtensionsStringPROC) extgl_GetProcAddress("glXQueryExtensionsString");
-	return !extgl_error;
-}
-
-static void extgl_InitGLXSupportedExtensions(JNIEnv *env, Display *disp, int screen)
-{
-	extgl_Extensions.GLX_EXT_visual_info = GLXQueryExtension(env, disp, screen, "GLX_EXT_visual_info");
-	extgl_Extensions.GLX_EXT_visual_rating = GLXQueryExtension(env, disp, screen, "GLX_EXT_visual_rating");
-	extgl_Extensions.GLX_SGI_swap_control = GLXQueryExtension(env, disp, screen, "GLX_SGI_swap_control");
-	extgl_Extensions.GLX_ARB_multisample = GLXQueryExtension(env, disp, screen, "GLX_ARB_multisample");
-}
-
-static void extgl_InitGLXSGISwapControl(JNIEnv *env)
-{
-	if (extgl_Extensions.GLX_SGI_swap_control != 1)
-		return;
-	glXSwapIntervalSGI = (glXSwapIntervalSGIPROC)extgl_GetProcAddress("glXSwapIntervalSGI");
-	EXTGL_SANITY_CHECK(env, GLX_SGI_swap_control);
-}
-
-bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
-{
-	int major, minor;
-	/* Assume glx ver >= 1.2 */
-	extgl_Extensions.GLX12 = true;
-	if (!extgl_InitGLX12())
-		return false;
-	extgl_InitGLXSupportedExtensions(env, disp, screen);
-	if (glXQueryVersion(disp, &major, &minor) != True)
-		return false;
-	if (major > 1 || (major == 1 && minor >= 3))
-		extgl_Extensions.GLX13 = true;
-	extgl_InitGLX13(env);
-	extgl_InitGLXSGISwapControl(env);
-	return true;
-}
-#endif
-
 
 static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 {

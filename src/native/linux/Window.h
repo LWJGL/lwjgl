@@ -47,6 +47,7 @@
 	#include <X11/Xlib.h>
 	#include <X11/Xutil.h>
 	#include "extgl.h"
+        #include "extgl_glx.h"
 
 	/*
 	 * update input grabbing(keyboard, mouse)

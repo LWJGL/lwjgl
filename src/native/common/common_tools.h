@@ -95,10 +95,16 @@ typedef struct {
 	void **ext_function_pointer;
 } JavaMethodAndExtFunction;
 
+typedef struct {
+	char *ext_function_name;
+	void **ext_function_pointer;
+} ExtFunction;
+
 #define NUMFUNCTIONS(x) (sizeof(x)/sizeof(JavaMethodAndExtFunction));
 
 extern void doExtension(JNIEnv *env, jobject ext_set, const char *method_name, const char *ext);
 extern jclass ext_ResetClass(JNIEnv *env, const char *class_name);
 extern bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions);
+extern bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions);
 
 #endif
