@@ -47,7 +47,7 @@
 	#include <X11/Xlib.h>
 	#include <X11/Xutil.h>
 	#include "extgl.h"
-        #include "extgl_glx.h"
+	#include "extgl_glx.h"
 
 	extern GLXFBConfig *chooseVisualGLX13(JNIEnv *env, jobject pixel_format, bool use_display_bpp, int drawable_type, bool double_buffer);
 	/*
