@@ -207,13 +207,6 @@ public class Cursor {
 	protected void nextCursor() {
 		index = ++index % cursors.length;
 	}
-
-	/** 
-	 * Resets the index of the cursor animation to the first in the list. 
-	 */
-	public void resetAnimation() {
-		index = 0;
-	}
 	
 	/**
 	 * Native method to create a native cursor
