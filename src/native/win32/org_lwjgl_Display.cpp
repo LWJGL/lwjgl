@@ -141,21 +141,31 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 			case SC_MONITORPOWER:
 				return 0L;
 				break;
+      case SC_MINIMIZE:
+        isMinimized = true;
+        appActivate(true);
+        break;
+      case SC_RESTORE:
+        isMinimized = false;
+        appActivate(false);
 			default:
 				break;
 			}
 		}
 		case WM_ACTIVATE:
 		{
-			int	fActive, fMinimized;
 
-			fActive = LOWORD(wParam);
-			fMinimized = (BOOL) HIWORD(wParam);
-
-			appActivate(fActive != WA_INACTIVE && !fMinimized);
-			isMinimized = fMinimized == TRUE || (fActive == WA_INACTIVE && isFullscreen);
+      switch(LOWORD(wParam)) {
+        case WA_ACTIVE:
+        case WA_CLICKACTIVE:
+          isMinimized = false;
+          break;
+        case WA_INACTIVE:
+          isMinimized = true;
+          break;
+      }
+      appActivate(!isMinimized);
 		}
-				
 	}
 
 	// default action
