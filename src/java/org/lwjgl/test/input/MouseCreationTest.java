@@ -37,7 +37,7 @@ import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLU;
-import org.lwjgl.vector.Vector4f;
+import org.lwjgl.vector.Vector2f;
 
 /**
  * $Id$
@@ -47,7 +47,7 @@ import org.lwjgl.vector.Vector4f;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class MouseTest {
+public class MouseCreationTest {
 
 	/** OpenGL instance */
 	private GL gl;
@@ -56,13 +56,13 @@ public class MouseTest {
 	private GLU glu;
 
 	/** position of quad to draw */
-	private Vector4f position = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
+	private Vector2f position = new Vector2f(320.0f, 240.0f);
   
   /** Display mode selected */
   private DisplayMode displayMode;
 
 	/** Creates a new instance of MouseTest */
-	public MouseTest() {
+	public MouseCreationTest() {
 	}
 
 	private void initialize() {
@@ -211,7 +211,7 @@ public class MouseTest {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		MouseTest mt = new MouseTest();
+		MouseCreationTest mt = new MouseCreationTest();
 		mt.executeTest();
 	}
 }
