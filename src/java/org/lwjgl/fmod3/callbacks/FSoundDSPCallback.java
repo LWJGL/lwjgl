@@ -41,5 +41,13 @@ import java.nio.ByteBuffer;
  * @version $Revision$
  */
 public interface FSoundDSPCallback {
-  public void FSOUND_DSPCALLBACK(ByteBuffer originalbuffer, ByteBuffer newbuffer, int length);
+  
+  /**
+   * 
+   * @param originalbuffer
+   * @param newbuffer
+   * @param length
+   * @return
+   */
+  public ByteBuffer FSOUND_DSPCALLBACK(ByteBuffer originalbuffer, ByteBuffer newbuffer, int length);
 }

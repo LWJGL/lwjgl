@@ -36,6 +36,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.fmod3.callbacks.FSoundCloseCallback;
 import org.lwjgl.fmod3.callbacks.FSoundDSPCallback;
 import org.lwjgl.fmod3.callbacks.FSoundMetaDataCallback;
@@ -1275,7 +1276,7 @@ public class FSound {
   public static int nFSOUND_PlaySoundEx(int channel, FSoundSample sample, FSoundDSPUnit dspunit, boolean startpaused) {
     return nFSOUND_PlaySoundEx(channel, sample.sampleHandle, dspunit.dspHandle, startpaused);
   }
-  private static native int nFSOUND_PlaySoundEx(int channel, long sample, long dspunit, boolean startpaused);  
+  private static native int nFSOUND_PlaySoundEx(int channel, long sample, ByteBuffer dspunit, boolean startpaused);  
   
   /**
    * Stops a specified sound channel from playing, and frees it up for re-use
@@ -2111,13 +2112,13 @@ public class FSound {
    * @return On success, a sync point handle is returned. On failure, NULL is returned.
    */
   public static FSoundSyncPoint FSOUND_Stream_AddSyncPoint(FSoundStream stream, int pcmoffset, String name) {
-   long result = nFSOUND_Stream_AddSyncPoint(stream.streamHandle, pcmoffset, name);
-   if(result != 0) {
+   ByteBuffer result = nFSOUND_Stream_AddSyncPoint(stream.streamHandle, pcmoffset, name);
+   if(result != null) {
     return new FSoundSyncPoint(result);
    }
    return null;
   }
-  private static native long nFSOUND_Stream_AddSyncPoint(long streamhandle, int pcmoffset, String name);  
+  private static native ByteBuffer nFSOUND_Stream_AddSyncPoint(long streamhandle, int pcmoffset, String name);  
   
   /**
    * Creates a user definable stream file ready for playing. The stream is serviced through a callback
@@ -2158,15 +2159,18 @@ public class FSound {
    * @return On success, a handle to the FSoundDSPUnit is returned. All DSP functions are performable on this. On failure, null is returned
    */
   public static FSoundDSPUnit FSOUND_Stream_CreateDSP(FSoundStream stream, FSoundDSPCallback callback, int priority) {
+   ByteBuffer dspID     = (ByteBuffer) BufferUtils.createByteBuffer(8).putLong(FSoundDSPUnit.getNextId()).flip(); 
    FSoundDSPUnit unit = null;
-   long result = nFSOUND_Stream_CreateDSP(stream.streamHandle, priority);
-   if(result != 0) {
-    unit = new FSoundDSPUnit(result);
-    FMOD.registerCallback(FMOD.FSOUND_DSPCALLBACK, unit.dspHandle, unit, callback);
+   
+   ByteBuffer dspHandle = nFSOUND_Stream_CreateDSP(stream.streamHandle, priority, dspID);
+   
+   if(dspHandle != null) {
+    unit = new FSoundDSPUnit(dspHandle, dspID);
+    FMOD.registerCallback(FMOD.FSOUND_DSPCALLBACK, dspID.getLong(0), unit, callback);
    }
    return unit;
   }
-  private static native long nFSOUND_Stream_CreateDSP(long streamHandle, int priority);
+  private static native ByteBuffer nFSOUND_Stream_CreateDSP(long streamHandle, int priority, ByteBuffer dspID);
   
   /**
    * Removes a user synchronization callback point from a stream.
@@ -2177,7 +2181,7 @@ public class FSound {
   public static boolean FSOUND_Stream_DeleteSyncPoint(FSoundSyncPoint point) {
    return nFSOUND_Stream_DeleteSyncPoint(point.syncpointHandle);
   }
-  private static native boolean nFSOUND_Stream_DeleteSyncPoint(long syncpointHandle);  
+  private static native boolean nFSOUND_Stream_DeleteSyncPoint(ByteBuffer syncpointHandle);  
   
   /**
    * Find a tag field associated with an open stream by name and type
@@ -2322,13 +2326,13 @@ public class FSound {
    * @return On success, a handle to a sync point is returned. On failure, NULL is returned. 
    */
   public static FSoundSyncPoint FSOUND_Stream_GetSyncPoint(FSoundStream stream, int index) {
-    long result = nFSOUND_Stream_GetSyncPoint(stream.streamHandle, index);
-    if(result != 0) {
+    ByteBuffer result = nFSOUND_Stream_GetSyncPoint(stream.streamHandle, index);
+    if(result != null) {
       return new FSoundSyncPoint(result); 
     }
     return null;
   }
-  private static native long nFSOUND_Stream_GetSyncPoint(long streamHandle, int index);
+  private static native ByteBuffer nFSOUND_Stream_GetSyncPoint(long streamHandle, int index);
   
   /**
    * Retrieves the name and pcm offset in samples for a specified sync point
@@ -2342,7 +2346,7 @@ public class FSound {
   public static String FSOUND_Stream_GetSyncPointInfo(FSoundSyncPoint point, IntBuffer pcmoffset) {
     return nFSOUND_Stream_GetSyncPointInfo(point.syncpointHandle, pcmoffset, (pcmoffset != null) ? pcmoffset.position() : 0);
   }
-  private static native String nFSOUND_Stream_GetSyncPointInfo(long pointHandle, IntBuffer pcmoffset, int bufferOffset);  
+  private static native String nFSOUND_Stream_GetSyncPointInfo(ByteBuffer pointHandle, IntBuffer pcmoffset, int bufferOffset);  
   
   /**
    * Get a tag field associated with an open stream
@@ -2496,7 +2500,7 @@ public class FSound {
   public static int FSOUND_Stream_PlayEx(int channel, FSoundStream stream, FSoundDSPUnit dspunit, boolean paused) {
     return nFSOUND_Stream_PlayEx(channel, stream.streamHandle, dspunit.dspHandle, paused);
   }
-  private static native int nFSOUND_Stream_PlayEx(int channel, long stream, long dspunit, boolean paused);  
+  private static native int nFSOUND_Stream_PlayEx(int channel, long stream, ByteBuffer dspunit, boolean paused);  
 
   /**
    * Sets the internal file buffersize for audio streaming of data for the NEXT stream opened with FSOUND_Stream_Open. 
@@ -2916,15 +2920,16 @@ public class FSound {
    * @return On success, a new valid DSP unit is returned. On failure, NULL is returned.
    */
   public static FSoundDSPUnit FSOUND_DSP_Create(FSoundDSPCallback callbackHandler, int priority) {
-   FSoundDSPUnit dspUnit = null;
-    long unit = nFSOUND_DSP_Create(priority);
-    if(unit != 0) {
-    	dspUnit= new FSoundDSPUnit(unit);
-    	FMOD.registerCallback(FMOD.FSOUND_DSPCALLBACK, dspUnit.dspHandle, dspUnit, callbackHandler);
+  	FSoundDSPUnit dspUnit = null;
+    ByteBuffer handle = nFSOUND_DSP_Create(priority);
+    if(handle != null) {
+      ByteBuffer dspID     = (ByteBuffer) BufferUtils.createByteBuffer(8).putLong(FSoundDSPUnit.getNextId()).flip(); 
+    	dspUnit= new FSoundDSPUnit(handle, dspID);
+    	FMOD.registerCallback(FMOD.FSOUND_DSPCALLBACK, dspID.getLong(0), dspUnit, callbackHandler);
     }
     return dspUnit;
   }
-  private static native long nFSOUND_DSP_Create(int priority);
+  private static native ByteBuffer nFSOUND_DSP_Create(int priority);
   
   /**
    * Frees and removes a DSP unit from the DSP chain
@@ -2933,9 +2938,9 @@ public class FSound {
    */
   public static void FSOUND_DSP_Free(FSoundDSPUnit unit) {
   	nFSOUND_DSP_Free(unit.dspHandle);
-  	FMOD.registerCallback(FMOD.FSOUND_DSPCALLBACK, unit.dspHandle, unit, null);
+  	FMOD.registerCallback(FMOD.FSOUND_DSPCALLBACK, unit.dspTrackingID.get(0), unit, null);
   }
-  private static native void nFSOUND_DSP_Free(long dspUnitHandle);  
+  private static native void nFSOUND_DSP_Free(ByteBuffer dspUnitHandle);  
   
   /**
    * Allows the user to toggle a DSP unit on or off
@@ -2949,7 +2954,7 @@ public class FSound {
   public static void FSOUND_DSP_SetActive(FSoundDSPUnit unit, boolean active) {
    nFSOUND_DSP_SetActive(unit.dspHandle, active);
   }
-  private static native void nFSOUND_DSP_SetActive(long dspUnitHandle, boolean active);  
+  private static native void nFSOUND_DSP_SetActive(ByteBuffer dspUnitHandle, boolean active);  
   
   /**
    * Returns if a DSP unit is active or not
@@ -2963,7 +2968,7 @@ public class FSound {
   public static boolean FSOUND_DSP_GetActive(FSoundDSPUnit unit) {
    return nFSOUND_DSP_GetActive(unit.dspHandle);
   }
-  private static native boolean nFSOUND_DSP_GetActive(long dspUnitHandle);  
+  private static native boolean nFSOUND_DSP_GetActive(ByteBuffer dspUnitHandle);  
   
   /**
    * Returns the buffer lenth passed by the DSP system to DSP unit callbacks, so you can allocate memory etc 
@@ -3004,7 +3009,7 @@ public class FSound {
   public static void FSOUND_DSP_GetActive(FSoundDSPUnit unit, int priority) {
    nFSOUND_DSP_SetPriority(unit.dspHandle, priority);
   }
-  private static native void nFSOUND_DSP_SetPriority(long dspUnitHandle, int priority);  
+  private static native void nFSOUND_DSP_SetPriority(ByteBuffer dspUnitHandle, int priority);  
   
   /**
    * Returns the priority status in the DSP chain, of a specified unit.
@@ -3019,7 +3024,7 @@ public class FSound {
   public static int FSOUND_DSP_GetPriority(FSoundDSPUnit unit) {
    return nFSOUND_DSP_GetPriority(unit.dspHandle);
   }
-  private static native int nFSOUND_DSP_GetPriority(long dspUnitHandle);
+  private static native int nFSOUND_DSP_GetPriority(ByteBuffer dspUnitHandle);
   
   /**
    * Returns a reference to FSOUND's system DSP clear unit
@@ -3035,7 +3040,7 @@ public class FSound {
    }
    return FMOD.fmodClearUnit;
   }
-  private static native long nFSOUND_DSP_GetClearUnit();  
+  private static native ByteBuffer nFSOUND_DSP_GetClearUnit();  
   
   /**
    * Returns a reference to FSOUND's system Clip and Copy DSP unit
@@ -3051,7 +3056,7 @@ public class FSound {
    }
    return FMOD.fmodClipAndCopyUnit;
   }
-  private static native long nFSOUND_DSP_GetClipAndCopyUnit();  
+  private static native ByteBuffer nFSOUND_DSP_GetClipAndCopyUnit();  
   
   /**
    * Returns a reference to FSOUND's system DSP Music mixer unit
@@ -3067,7 +3072,7 @@ public class FSound {
    }
    return FMOD.fmodMusicUnit;
   }
-  private static native long nFSOUND_DSP_GetMusicUnit();  
+  private static native ByteBuffer nFSOUND_DSP_GetMusicUnit();  
   
   /**
    * Returns a reference to FSOUND's system DSP SFX mixer unit
@@ -3083,7 +3088,7 @@ public class FSound {
    }
    return FMOD.fmodSFXUnit;
   }
-  private static native long nFSOUND_DSP_GetSFXUnit();  
+  private static native ByteBuffer nFSOUND_DSP_GetSFXUnit();  
   
   /**
    * Returns a reference to FSOUND's system DSP FFT processing unit
@@ -3100,7 +3105,7 @@ public class FSound {
    }
    return FMOD.fmodFFTUnit;
   }
-  private static native long nFSOUND_DSP_GetFFTUnit();  
+  private static native ByteBuffer nFSOUND_DSP_GetFFTUnit();  
   
   /**
    * Function to return a FloatBuffer to the current spectrum buffer. The buffer contains 512 floating
@@ -3547,14 +3552,12 @@ public class FSound {
    * @param handle Handle to native object being monitored
    * @param param parameter passed to callback
    */
-  private static void dsp_callback(long dspHandle, ByteBuffer originalbuffer, ByteBuffer newbuffer, int length) {
+  private static ByteBuffer dsp_callback(long dsp_id, ByteBuffer originalbuffer, ByteBuffer newbuffer, int length) {
     // we got a callback - notify everybody
-    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_DSPCALLBACK, dspHandle);
-    for(int i=0; i<handlers.size(); i++) {
-      FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get(i);   
-      FSoundDSPCallback callback = (FSoundDSPCallback) wCallback.callback;  
-      callback.FSOUND_DSPCALLBACK(originalbuffer, newbuffer, length);
-    }    
+    ArrayList handlers = FMOD.getCallbacks(FMOD.FSOUND_DSPCALLBACK, dsp_id);
+    FMOD.WrappedCallback wCallback = (FMOD.WrappedCallback) handlers.get((int)0);
+    FSoundDSPCallback callback = (FSoundDSPCallback) wCallback.callback;
+    return callback.FSOUND_DSPCALLBACK(originalbuffer, newbuffer, length);
   }
   
   /**

@@ -52,6 +52,13 @@ jmethodID music_rowcallback;
 jmethodID music_zxxcallback;
 jclass fmusic;
 
+// FSound cached fields
+jmethodID sound_dspcallback;
+jclass fsound;
+
+// size of dsp buffer (in bytes)
+int fsound_dsp_buffer_size;
+
 #ifdef _WIN32
 /**
  * DLL entry point for Windows. Called when Java loads the .dll
@@ -75,6 +82,25 @@ void fmod_create(JNIEnv *env, char* path) {
     music_ordercallback = env->GetStaticMethodID(fmusic, "music_ordercallback", "(JI)V");
     music_rowcallback = env->GetStaticMethodID(fmusic, "music_rowcallback", "(JI)V");
     music_zxxcallback = env->GetStaticMethodID(fmusic, "music_zxxcallback", "(JI)V");
+		
+		fsound = env->FindClass("org/lwjgl/fmod3/FSound");
+		sound_dspcallback = env->GetStaticMethodID(fsound, "dsp_callback", "(JLjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;I)Ljava/nio/ByteBuffer;");
+		
+		// cache some data
+		switch(fmod_instance->FSOUND_GetMixer()) {
+			case FSOUND_MIXER_AUTODETECT:
+			case FSOUND_MIXER_BLENDMODE:
+			case FSOUND_MIXER_QUALITY_AUTODETECT:
+			case FSOUND_MIXER_QUALITY_FPU:
+			case FSOUND_MIXER_MONO:
+			case FSOUND_MIXER_QUALITY_MONO:
+			case FSOUND_MIXER_MAX:
+				fsound_dsp_buffer_size = 8;
+				break;
+			default:
+				fsound_dsp_buffer_size = 4;
+				break;
+		}
   }
 }
 

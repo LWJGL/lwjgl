@@ -31,6 +31,8 @@
  */
 package org.lwjgl.fmod3;
 
+import java.nio.ByteBuffer;
+
 /**
  * This class is a representation of a SyncPoint in FMod.
  * $Id$
@@ -39,15 +41,15 @@ package org.lwjgl.fmod3;
  * @version $Revision$
  */
 public class FSoundSyncPoint {
-  /** Handle to syncpoint */
-  long syncpointHandle;
+  /** Opaque handle to syncpoint */
+  ByteBuffer syncpointHandle;
   
   /**
    * Creates a new FSoundSyncPoint
    * 
    * @param syncpointHandle handle to syncpoint
    */
-  FSoundSyncPoint(long syncpointHandle) {
+  FSoundSyncPoint(ByteBuffer syncpointHandle) {
    this.syncpointHandle = syncpointHandle; 
   }
 }

@@ -31,6 +31,8 @@
  */
 package org.lwjgl.fmod3;
 
+import java.nio.ByteBuffer;
+
 /**
  * This class is a representation of a DSPUnit in FMod.
  * $Id$
@@ -39,15 +41,43 @@ package org.lwjgl.fmod3;
  * @version $Revision$
  */
 public class FSoundDSPUnit {
-  /** Handle to dsp unit */
-  long dspHandle;
+  /** Opaque handle to dsp unit */
+  ByteBuffer dspHandle;
+  
+  /** DSP id, used for tracking which dsp needs to call which 
+   * object (when entering from native side) */
+  ByteBuffer dspTrackingID;
+  
+  /** ID for next dsp unit */
+  static long nextDspTrackingID;
   
   /**
    * Creates a new FSoundDSPUnit
    * 
    * @param dspHandle handle to dsp unit
    */
-  FSoundDSPUnit(long dspHandle) {
-   this.dspHandle = dspHandle; 
+  FSoundDSPUnit(ByteBuffer dspHandle) {
+   this.dspHandle = dspHandle;
+  }
+  
+  /**
+   * Creates a new FSoundDSPUnit
+   * 
+   * @param dspHandle handle to dsp unit
+   */
+  FSoundDSPUnit(ByteBuffer dspHandle, ByteBuffer dspTrackingID) {
+   this.dspHandle         = dspHandle;
+   this.dspTrackingID     = dspTrackingID;
+  }
+  
+  /**
+   * @return Next dsp id
+   */
+  static long getNextId() {
+    // To infinity and beyond!... well almost
+    if(nextDspTrackingID == Long.MAX_VALUE) {
+    	nextDspTrackingID = 0;
+    }
+  	return nextDspTrackingID++;
   }
 }

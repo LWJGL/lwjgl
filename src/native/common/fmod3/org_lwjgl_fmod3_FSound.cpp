@@ -32,6 +32,8 @@
 #include "org_lwjgl_fmod3_FSound.h"
 #include "extfmod3.h"
 
+void * F_CALLBACKAPI fsound_dspcallback(void *originalbuffer, void *newbuffer, int length, void *userdata);
+
 /*
 * Class:     org_lwjgl_fmod3_FSound
 * Method:    FSOUND_Close
@@ -553,8 +555,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1PlaySound(JNIEnv * e
 * Method:    nFSOUND_PlaySoundEx
 * Signature: (IJJZ)I
 */
-JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1PlaySoundEx(JNIEnv * env, jclass clazz, jint channel, jlong sptr, jlong dsp, jboolean startpaused) {
-  return fmod_instance->FSOUND_PlaySoundEx(channel, (FSOUND_SAMPLE*) sptr, (FSOUND_DSPUNIT*) dsp, startpaused);
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1PlaySoundEx(JNIEnv * env, jclass clazz, jint channel, jlong sptr, jobject dsp, jboolean startpaused) {
+	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+  return fmod_instance->FSOUND_PlaySoundEx(channel, (FSOUND_SAMPLE*) sptr, nDsp, startpaused);
 }
 
 /*
@@ -968,8 +971,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Play(JNIEnv 
  * Method:    nFSOUND_Stream_PlayEx
  * Signature: (IJJZ)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1PlayEx(JNIEnv * env, jclass clazz, jint channel, jlong stream, jlong dsp, jboolean startpaused) {
-  return fmod_instance->FSOUND_Stream_PlayEx(channel, (FSOUND_STREAM*) stream, (FSOUND_DSPUNIT*) dsp, startpaused);
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1PlayEx(JNIEnv * env, jclass clazz, jint channel, jlong stream, jobject dsp, jboolean startpaused) {
+	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+  return fmod_instance->FSOUND_Stream_PlayEx(channel, (FSOUND_STREAM*) stream, nDsp, startpaused);
 }
 
 /*
@@ -1014,10 +1018,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1SetSubStream
 * Method:    nFSOUND_Stream_AddSyncPoint
 * Signature: (JILjava/lang/String;)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1AddSyncPoint(JNIEnv * env, jclass clazz, jlong, jint, jstring) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return 0;
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1AddSyncPoint(JNIEnv * env, jclass clazz, jlong stream, jint pcmOffset, jstring name) {
+	const char * nName = env->GetStringUTFChars(name, 0);
+	FSOUND_SYNCPOINT * result = fmod_instance->FSOUND_Stream_AddSyncPoint((FSOUND_STREAM*) stream, pcmOffset, (void *) nName);
+	env->ReleaseStringUTFChars (name, nName);
+	return safeNewBuffer(env, result, 0);;
 }
 
 /*
@@ -1036,10 +1041,10 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Create(JNIE
 * Method:    nFSOUND_Stream_CreateDSP
 * Signature: (JI)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1CreateDSP(JNIEnv * env, jclass clazz, jlong, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return 0;
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1CreateDSP(JNIEnv * env, jclass clazz, jlong stream, jint priority, jobject dspID) {
+	long * nDspID = (long *) env->GetDirectBufferAddress(dspID);
+	FSOUND_DSPUNIT* dsp = fmod_instance->FSOUND_Stream_CreateDSP((FSOUND_STREAM*) stream, fsound_dspcallback, priority, nDspID);
+	return safeNewBuffer(env, dsp, 0);
 }
 
 /*
@@ -1103,9 +1108,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetNumSyncPo
 * Method:    nFSOUND_Stream_GetNumTagFields
 * Signature: (JLjava/nio/IntBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetNumTagFields(JNIEnv * env, jclass clazz, jlong, jobject, jint) {
-  // XXX
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetNumTagFields(JNIEnv * env, jclass clazz, jlong stream, jobject num, jint numOffset) {
+		int* nNum = numOffset + (int*) env->GetDirectBufferAddress(num);
+		return fmod_instance->FSOUND_Stream_GetNumTagFields((FSOUND_STREAM*) stream, &nNum[0]);
 }
 
 /*
@@ -1140,8 +1145,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSample(J
 * Method:    nFSOUND_Stream_GetSyncPoint
 * Signature: (JI)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSyncPoint(JNIEnv * env, jclass clazz, jlong stream, jint index) {
-  return (jlong) fmod_instance->FSOUND_Stream_GetSyncPoint((FSOUND_STREAM*) stream, index);
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSyncPoint(JNIEnv * env, jclass clazz, jlong stream, jint index) {
+	FSOUND_SYNCPOINT * point = fmod_instance->FSOUND_Stream_GetSyncPoint((FSOUND_STREAM*) stream, index);
+	return safeNewBuffer(env, point, 0);
 }
 
 /*
@@ -1149,10 +1155,14 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSyncPoin
 * Method:    nFSOUND_Stream_GetSyncPointInfo
 * Signature: (JLjava/nio/IntBuffer;I)Ljava/lang/String;
 */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSyncPointInfo(JNIEnv * env, jclass clazz, jlong, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return NULL;
+JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetSyncPointInfo(JNIEnv * env, jclass clazz, jobject point, jobject pcmOffset, jint pcmOffsetPosition) {
+	FSOUND_SYNCPOINT * nPoint = (FSOUND_SYNCPOINT *) env->GetDirectBufferAddress(point);
+	unsigned int * nPcmOffset = pcmOffsetPosition + (unsigned int *) env->GetDirectBufferAddress(pcmOffset);
+	char * result = fmod_instance->FSOUND_Stream_GetSyncPointInfo(nPoint, nPcmOffset);
+	if(result != NULL) {
+		return env->NewStringUTF(result);
+	}
+	return NULL;
 }
 
 /*
@@ -1180,10 +1190,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetTime(JNIE
 * Method:    nFSOUND_Stream_Net_GetBufferProperties
 * Signature: (Ljava/nio/IntBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1GetBufferProperties(JNIEnv * env, jclass clazz, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1GetBufferProperties(JNIEnv * env, jclass clazz, jobject status, jint statusOffset) {
+		int* nStatus = statusOffset + (int*) env->GetDirectBufferAddress(status);
+		return fmod_instance->FSOUND_Stream_Net_GetBufferProperties(&nStatus[0], &nStatus[1], &nStatus[2]);
 }
 
 /*
@@ -1200,10 +1209,9 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1GetLa
 * Method:    nFSOUND_Stream_Net_GetStatus
 * Signature: (JLjava/nio/IntBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1GetStatus(JNIEnv * env, jclass clazz, jlong, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1GetStatus(JNIEnv * env, jclass clazz, jlong stream, jobject status, jint statusOffset) {
+		int* nStatus = statusOffset + (int*) env->GetDirectBufferAddress(status);
+		return fmod_instance->FSOUND_Stream_Net_GetStatus((FSOUND_STREAM*) stream, &nStatus[0], &nStatus[1], &nStatus[2], (unsigned int *) &nStatus[3]);
 }
 
 /*
@@ -1211,10 +1219,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1Get
 * Method:    FSOUND_Stream_Net_SetBufferProperties
 * Signature: (III)Ljava/lang/String;
 */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1SetBufferProperties(JNIEnv * env, jclass clazz, jint, jint, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return NULL;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1SetBufferPropertie(JNIEnv * env, jclass clazz, jint buffersize, jint prebuffer_percent, jint rebuffer_percent) {
+		return fmod_instance->FSOUND_Stream_Net_SetBufferProperties(buffersize, prebuffer_percent, rebuffer_percent);
 }
 
 /*
@@ -1451,11 +1457,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1DSP_1ClearMixBuffer(J
 * Method:    nFSOUND_DSP_Create
 * Signature: (I)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1Create(JNIEnv * env, jclass clazz, jint priority) {
-  //XXX
-  //return (jlong) fmod_instance->FSOUND_DSP_Create(fmod_dsp_callback, priority, NULL);
-  throwFMODException(env, "missing implementation");
-  return 0;
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1Create(JNIEnv * env, jclass clazz, jint priority, jobject dspID) {
+	long * nDspID = (long *) env->GetDirectBufferAddress(dspID);
+  FSOUND_DSPUNIT* dsp = fmod_instance->FSOUND_DSP_Create(fsound_dspcallback, priority, nDspID);
+	return safeNewBuffer(env, dsp, 0);
 }
 
 /*
@@ -1463,8 +1468,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1Create(JNIEnv 
 * Method:    nFSOUND_DSP_Free
 * Signature: (J)V
 */
-JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1Free(JNIEnv * env, jclass clazz, jlong dsp) {
-  fmod_instance->FSOUND_DSP_Free((FSOUND_DSPUNIT*) dsp);
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1Free(JNIEnv * env, jclass clazz, jobject dsp) {
+	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+  fmod_instance->FSOUND_DSP_Free(nDsp);
 }
 
 /*
@@ -1472,8 +1478,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1Free(JNIEnv * e
 * Method:    nFSOUND_DSP_SetActive
 * Signature: (JZ)V
 */
-JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1SetActive(JNIEnv * env, jclass clazz, jlong dsp, jboolean active) {
-  fmod_instance->FSOUND_DSP_SetActive((FSOUND_DSPUNIT*) dsp, active);
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1SetActive(JNIEnv * env, jclass clazz, jobject dsp, jboolean active) {
+	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+  fmod_instance->FSOUND_DSP_SetActive(nDsp, active);
 }
 
 /*
@@ -1481,8 +1488,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1SetActive(JNIEn
 * Method:    nFSOUND_DSP_GetActive
 * Signature: (J)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetActive(JNIEnv * env, jclass clazz, jlong dsp) {
-  return fmod_instance->FSOUND_DSP_GetActive((FSOUND_DSPUNIT*) dsp);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetActive(JNIEnv * env, jclass clazz, jobject dsp) {
+	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+  return fmod_instance->FSOUND_DSP_GetActive(nDsp);
 }
 
 /*
@@ -1508,8 +1516,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1DSP_1GetBufferLengthT
 * Method:    nFSOUND_DSP_SetPriority
 * Signature: (JI)V
 */
-JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1SetPriority(JNIEnv * env, jclass clazz, jlong dsp, jint priority) {
-  fmod_instance->FSOUND_DSP_SetPriority((FSOUND_DSPUNIT*) dsp, priority);
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1SetPriority(JNIEnv * env, jclass clazz, jobject dsp, jint priority) {
+	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+  fmod_instance->FSOUND_DSP_SetPriority(nDsp, priority);
 }
 
 /*
@@ -1517,8 +1526,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1SetPriority(JNI
 * Method:    nFSOUND_DSP_GetPriority
 * Signature: (J)I
 */
-JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetPriority(JNIEnv * env, jclass clazz, jlong dsp) {
-  return fmod_instance->FSOUND_DSP_GetPriority((FSOUND_DSPUNIT*) dsp);
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetPriority(JNIEnv * env, jclass clazz, jobject dsp) {
+	FSOUND_DSPUNIT* nDsp = (FSOUND_DSPUNIT*) env->GetDirectBufferAddress(dsp);
+  return fmod_instance->FSOUND_DSP_GetPriority(nDsp);
 }
 
 /*
@@ -1526,8 +1536,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetPriority(JNI
 * Method:    nFSOUND_DSP_GetClearUnit
 * Signature: ()J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetClearUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod_instance->FSOUND_DSP_GetClearUnit();
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetClearUnit(JNIEnv * env, jclass clazz) {
+	FSOUND_DSPUNIT* dsp = fmod_instance->FSOUND_DSP_GetClearUnit();
+	return safeNewBuffer(env, dsp, 0);
 }
 
 /*
@@ -1535,8 +1546,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetClearUnit(J
 * Method:    nFSOUND_DSP_GetClipAndCopyUnit
 * Signature: ()J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetClipAndCopyUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod_instance->FSOUND_DSP_GetClipAndCopyUnit();
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetClipAndCopyUnit(JNIEnv * env, jclass clazz) {
+	FSOUND_DSPUNIT* dsp = fmod_instance->FSOUND_DSP_GetClipAndCopyUnit();
+	return safeNewBuffer(env, dsp, 0);
 }
 
 /*
@@ -1544,8 +1556,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetClipAndCopy
 * Method:    nFSOUND_DSP_GetMusicUnit
 * Signature: ()J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetMusicUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod_instance->FSOUND_DSP_GetMusicUnit();
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetMusicUnit(JNIEnv * env, jclass clazz) {
+	FSOUND_DSPUNIT* dsp = fmod_instance->FSOUND_DSP_GetMusicUnit();
+	return safeNewBuffer(env, dsp, 0);
 }
 
 /*
@@ -1553,8 +1566,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetMusicUnit(J
 * Method:    nFSOUND_DSP_GetSFXUnit
 * Signature: ()J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetSFXUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod_instance->FSOUND_DSP_GetSFXUnit();
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetSFXUnit(JNIEnv * env, jclass clazz) {
+	FSOUND_DSPUNIT* dsp = fmod_instance->FSOUND_DSP_GetSFXUnit();
+	return safeNewBuffer(env, dsp, 0);
 }
 
 /*
@@ -1562,8 +1576,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetSFXUnit(JNI
 * Method:    nFSOUND_DSP_GetFFTUnit
 * Signature: ()J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetFFTUnit(JNIEnv * env, jclass clazz) {
-  return (jlong) fmod_instance->FSOUND_DSP_GetFFTUnit();
+JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetFFTUnit(JNIEnv * env, jclass clazz) {
+	FSOUND_DSPUNIT* dsp = fmod_instance->FSOUND_DSP_GetFFTUnit();
+	return safeNewBuffer(env, dsp, 0);
 }
 
 /*
@@ -1580,10 +1595,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1GetSpectrum(
 * Method:    nFSOUND_DSP_MixBuffers
 * Signature: (Ljava/nio/ByteBuffer;ILjava/nio/ByteBuffer;IIIIII)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1MixBuffers(JNIEnv * env, jclass clazz, jobject, jint, jobject, jint, jint, jint, jint, jint, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1DSP_1MixBuffers(JNIEnv * env, jclass clazz, jobject destBuffer, jint destBufferOffset, jobject srcBuffer, jint srcBufferOffset, jint len, jint freq, jint vol, jint pan, jint mode) {
+	void * nDestBuffer = destBufferOffset + (char *) env->GetDirectBufferAddress(destBuffer);
+	void * nSrcBuffer = srcBufferOffset + (char *) env->GetDirectBufferAddress(srcBuffer);
+	return fmod_instance->FSOUND_DSP_MixBuffers(nDestBuffer, nSrcBuffer, len, freq, vol, pan, mode);
 }
 
 /*
@@ -1760,7 +1775,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Record_1Stop(JNIE
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1SetProperties(JNIEnv * env, jclass clazz, jlong prop) {
-  return fmod_instance->FSOUND_Reverb_SetProperties((FSOUND_REVERB_PROPERTIES*) prop);
+	throwFMODException(env, "missing implementation");
+  //return fmod_instance->FSOUND_Reverb_SetProperties((FSOUND_REVERB_PROPERTIES*) prop);
+	return false;
 }
 
 /*
@@ -1769,7 +1786,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1SetPrope
 * Signature: (J)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1GetProperties(JNIEnv * env, jclass clazz, jlong prop) {
-  return fmod_instance->FSOUND_Reverb_GetProperties((FSOUND_REVERB_PROPERTIES*) prop);
+	throwFMODException(env, "missing implementation");
+  //return fmod_instance->FSOUND_Reverb_GetProperties((FSOUND_REVERB_PROPERTIES*) prop);
+	return false;
 }
 
 /*
@@ -1778,7 +1797,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1GetPrope
 * Signature: (IJ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1SetChannelProperties(JNIEnv * env, jclass clazz, jint channel, jlong prop) {
-  return fmod_instance->FSOUND_Reverb_SetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
+	throwFMODException(env, "missing implementation");
+  //return fmod_instance->FSOUND_Reverb_SetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
+	return false;
 }
 
 /*
@@ -1787,5 +1808,18 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1SetChann
 * Signature: (IJ)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1GetChannelProperties(JNIEnv * env, jclass clazz, jint channel, jlong prop) {
-  return fmod_instance->FSOUND_Reverb_GetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
+	throwFMODException(env, "missing implementation");
+  //return fmod_instance->FSOUND_Reverb_GetChannelProperties(channel, (FSOUND_REVERB_CHANNELPROPERTIES*) prop);
+	return false;
+}
+
+// FSound callbacks
+// =======================================
+void * F_CALLBACKAPI fsound_dspcallback(void *originalbuffer, void *newbuffer, int length, void *userdata) {
+  if (mixer_jnienv == NULL) { attachMixerThread(); }
+	int size = length * fsound_dsp_buffer_size;
+	jobject origBuffer = mixer_jnienv->NewDirectByteBuffer(originalbuffer, size);
+	jobject newBuffer = mixer_jnienv->NewDirectByteBuffer(newbuffer, size);
+	jobject resultBuffer = mixer_jnienv->CallStaticObjectMethod(fsound, sound_dspcallback, (jlong) *((long *)userdata), origBuffer, newBuffer, (jint) length);
+	return mixer_jnienv->GetDirectBufferAddress(resultBuffer);
 }
