@@ -21,6 +21,8 @@ cl /LD /Felwjgl.dll *.obj %LINKEROPTS% %LIBS%
 
 del *.obj *.exp *.lib
 
+copy lwjgl.dll ..\..\libs\
+
 goto end
 
 :errorjavahome
