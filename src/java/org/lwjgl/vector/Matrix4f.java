@@ -717,6 +717,7 @@ public class Matrix4f extends Matrix implements Serializable {
                         m20 m21 m22 m23
                         m30 m31 m32 m33    
                     */
+                    float determinant_inv = 1f/determinant;
                     
                     // first row
                     float t00 = determinant3x3(	m11, m12, m13, m21, m22, m23, m31, m32, m33 );
@@ -740,22 +741,22 @@ public class Matrix4f extends Matrix implements Serializable {
                     float t33 = determinant3x3( m00, m01, m02, m10, m11, m12, m20, m21, m22 );  
         
                     // transpose and divide by the determinant
-                    m00 = t00/determinant;
-                    m11 = t11/determinant;
-                    m22 = t22/determinant;
-                    m33 = t33/determinant;
-                    m01 = t10/determinant;
-                    m10 = t01/determinant;
-                    m20 = t02/determinant;
-                    m02 = t20/determinant;
-                    m12 = t21/determinant;
-                    m21 = t12/determinant;
-                    m03 = t30/determinant;
-                    m30 = t03/determinant;
-                    m13 = t31/determinant;
-                    m31 = t13/determinant;
-                    m32 = t23/determinant;
-                    m23 = t32/determinant;
+                    m00 = t00*determinant_inv;
+                    m11 = t11*determinant_inv;
+                    m22 = t22*determinant_inv;
+                    m33 = t33*determinant_inv;
+                    m01 = t10*determinant_inv;
+                    m10 = t01*determinant_inv;
+                    m20 = t02*determinant_inv;
+                    m02 = t20*determinant_inv;
+                    m12 = t21*determinant_inv;
+                    m21 = t12*determinant_inv;
+                    m03 = t30*determinant_inv;
+                    m30 = t03*determinant_inv;
+                    m13 = t31*determinant_inv;
+                    m31 = t13*determinant_inv;
+                    m32 = t23*determinant_inv;
+                    m23 = t32*determinant_inv;
                 }
 		return this;
 	}
