@@ -50,9 +50,6 @@ public class MouseCreationTest {
 		/** position of quad to draw */
 	private Vector2f position = new Vector2f(320.0f, 240.0f);
   
-  /** Display mode selected */
-  private DisplayMode displayMode;
-
 	/** Creates a new instance of MouseTest */
 	public MouseCreationTest() {
 	}
@@ -62,6 +59,7 @@ public class MouseCreationTest {
         setDisplayMode();
         Display.setFullscreen(fullscreen);
         Display.create();
+        Mouse.setGrabbed(true);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -118,7 +116,6 @@ public class MouseCreationTest {
     try {
       Display.destroy();
       initialize(true);
-      Display.setDisplayMode(displayMode);
     } catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -144,10 +141,13 @@ public class MouseCreationTest {
 
 		long statustime = Sys.getTime();
 		long endtime = Sys.getTime() + Sys.getTimerResolution() * 5;
-
+    
 		while (Sys.getTime() < endtime) {
       Display.update();
 
+      // empty mouse buffer
+      while(Mouse.next());
+      
 			position.x += Mouse.getDX();
 			position.y += Mouse.getDY();
       
