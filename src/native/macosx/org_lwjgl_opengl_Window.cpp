@@ -51,7 +51,7 @@ static bool vsync_enabled;
 static bool current_fullscreen;
  
 static void destroyMode(JNIEnv *env, jclass clazz) {
-	if (!current_fullscreen);
+	if (!current_fullscreen)
 		resetMode(env);
 }
 
