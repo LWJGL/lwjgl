@@ -152,13 +152,6 @@ public class Controller {
 		Sys.initialize();
 		initIDs();
 		
-		// Assign names to all the buttons
-		buttonName = new String[8];
-		for (int i = 0; i < 8; i ++) {
-			buttonName[i] = "BUTTON" + i;
-			buttonMap.put(buttonName[i], new Integer(i));
-		}
-		
 		initialized = true;
 	}
 
@@ -176,6 +169,13 @@ public class Controller {
 		}
 
 		nCreate();
+    
+    // Assign names to all the buttons
+    buttonName = new String[buttons.length];
+    for (int i = 0; i < buttons.length; i ++) {
+      buttonName[i] = "BUTTON" + i;
+      buttonMap.put(buttonName[i], new Integer(i));
+    }    
 		
 		created = true;
 	}
