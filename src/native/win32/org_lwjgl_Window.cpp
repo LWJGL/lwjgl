@@ -386,6 +386,8 @@ void handleMessages(JNIEnv * env, jobject obj)
 		TranslateMessage(&msg);
       	DispatchMessage(&msg);
 	};
+	environment = NULL;
+	window = NULL;
 }
 
 /*
