@@ -85,7 +85,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
 static void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint format, jint type, jobject buffer, jint offset)
 {
-	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer) + offset;
+	GLvoid *buffer_ptr = (GLvoid *)((char *)safeGetBufferAddress(env, buffer) + offset);
 	glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, buffer_ptr);
 }
 
