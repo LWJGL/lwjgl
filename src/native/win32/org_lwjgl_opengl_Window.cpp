@@ -59,6 +59,7 @@ RECT clientSize;
 
 static bool closerequested;
 static jboolean vsync;
+static jboolean allowSoftwareOpenGL;              // Whether to allow software opengl
 
 //CAS: commented these out as no longer used
 //extern	void			tempRestoreDisplayMode();
@@ -174,8 +175,11 @@ static int findPixelFormat(JNIEnv *env, int bpp, int alpha, int depth, int stenc
 	}
 
 	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
-		throwException(env, "Mode not supported by hardware");
-		return -1;
+	  // secondary check for software override
+	  if(!allowSoftwareOpenGL) {
+		  throwException(env, "Mode not supported by hardware");
+		  return -1;
+		}
 	}
 
 	if ((desc.dwFlags & flags) != flags) {
@@ -528,6 +532,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	isFullScreen = fullscreen == JNI_TRUE;
 	vsync = JNI_FALSE;
 
+  // Speacial option for allowing software opengl	
+	allowSoftwareOpenGL = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+	
 	// 1. Register window class if necessary
 	if (!registerWindow()) {
 		throwException(env, "Could not register window class");

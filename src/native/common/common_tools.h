@@ -66,6 +66,7 @@ extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void setDebugEnabled(bool enable);
 extern void printfDebug(const char *format, ...);
+extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
 
 static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer, int offset) {
 	if (buffer == NULL)

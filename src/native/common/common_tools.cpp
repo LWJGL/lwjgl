@@ -184,3 +184,9 @@ bool ext_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char 
 	return true;
 }
 
+bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
+  jstring property = env->NewStringUTF(propertyName);
+  jclass booleanClass = env->FindClass("java/lang/Boolean");
+  jmethodID getBoolean = env->GetStaticMethodID(booleanClass, "getBoolean", "(Ljava/lang/String;)Z");
+  return env->CallStaticBooleanMethod(booleanClass, getBoolean, property);
+}
