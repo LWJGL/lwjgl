@@ -59,6 +59,7 @@ static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
 
 static Atom delete_atom;
+static Colormap cmap;
 static Window current_win;
 static int current_screen;
 static bool current_fullscreen;
@@ -246,7 +247,6 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	Window root_win;
 	Window win;
 	XSetWindowAttributes attribs;
-	Colormap cmap;
 	int attribmask;
 
 	current_screen = screen;
@@ -262,11 +262,11 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	attribs.background_pixel = 0xFF000000;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
 	if (fullscreen || undecorated) {
+	printf("Depth: %d\n", vis_info->depth);
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
 	win = XCreateWindow(getDisplay(), root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
-	XFreeColormap(getDisplay(), cmap);
 	printfDebug("Created window\n");
 	current_win = win;
 	Java_org_lwjgl_opengl_Window_nSetTitle(env, NULL, title);
@@ -289,6 +289,7 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 
 static void destroyWindow() {
 	XDestroyWindow(getDisplay(), current_win);
+	XFreeColormap(getDisplay(), cmap);
 }
 
 int getCurrentScreen(void) {
