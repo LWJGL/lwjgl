@@ -50,39 +50,6 @@ long int		hires_timer;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    nGetNULLValue
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_nGetNULLValue
-(JNIEnv *, jclass)
-{
-    return (jint)NULL;
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    getDirectBufferAddress
- * Signature: (Ljava/nio/Buffer;)I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getDirectBufferAddress
-(JNIEnv * env, jclass clazz, jobject buf)
-{
-    return (jint) env->GetDirectBufferAddress(buf);
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    createDirectBuffer
- * Signature: (II)Ljava/nio/ByteBuffer;
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
-(JNIEnv * env, jclass clazz, jint address, jint length)
-{
-    return env->NewDirectByteBuffer((void *)address, length);
-}
-
-/*
- * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution
  * Signature: ()J
  */
@@ -92,7 +59,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
     return hires_timer_freq;
 }
 
-long queryTime(void) {
+static long queryTime(void) {
     struct timeval tv;
     if (gettimeofday(&tv, NULL) == -1) {
 #ifdef _DEBUG

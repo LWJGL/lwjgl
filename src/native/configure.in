@@ -30,6 +30,7 @@ AC_CANONICAL_HOST
 
 case "$host_os" in
         darwin*)        _BUILD_FLAGS="-D_AGL -fpascal-strings"
+	                LIBS="-framework Carbon -framework JavaVM"
 			NATIVE_BUILD_DIR=macosx
                         CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"

@@ -41,6 +41,7 @@
 
 #include <JavaVM/jni.h>
 #include <Carbon/Carbon.h>
+#include "org_lwjgl_opengl_Window.h"
 
 static WindowRef win_ref;
  
