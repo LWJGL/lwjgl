@@ -51,8 +51,8 @@ if test "x$JAVA_HOME" = x; then
 else
   AC_MSG_RESULT($JAVA_HOME)
   JAVA_HOME="$JAVA_HOME"
-  CPPFLAGS="$CPPFLAGS -D_X11 -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
-  CFLAGS="$CFLAGS -D_X11 -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+  CPPFLAGS="$CPPFLAGS -D_DEBUG -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+  CFLAGS="$CFLAGS -D_DEBUG -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 fi
 
 dnl Checks for libraries.
@@ -64,8 +64,6 @@ dnl Replace `main' with a function in -lXext:
 AC_CHECK_LIB(Xext, main,, AC_MSG_ERROR(Xext is required))
 dnl Replace `main' with a function in -lXxf86vm:
 AC_CHECK_LIB(Xxf86vm, main,, AC_MSG_ERROR(Xxf86vm is required))
-dnl Replace `main' with a function in -lopenal:
-AC_CHECK_LIB(openal, main,, AC_MSG_ERROR(openal is required))
 
 dnl Checks for header files.
 

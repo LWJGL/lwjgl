@@ -257,9 +257,6 @@ void handleKeyEvent(XKeyEvent *event) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
   (JNIEnv * env, jclass clazz, jint buf)
 {
-	XEvent event;
-	unsigned char state;
-	
 	handleMessages(env);
 	updateGrab();
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
@@ -273,10 +270,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
 JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
   (JNIEnv * env, jclass clazz)
 {
-	XEvent event;
 	XKeyEvent *key_event;
 	int buf_count = 0;
-	int state;
 	int num_events = 0;
 
 	handleMessages(env);

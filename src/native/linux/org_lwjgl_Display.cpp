@@ -64,7 +64,6 @@ static int win_height;
 static XF86VidModeModeInfo **avail_modes;
 static XVisualInfo * vis_info;
 static Atom delete_atom;
-static bool gl_loaded = false;
 static jclass saved_clazz;
 
 extern void handlePointerMotion(XMotionEvent *);
@@ -83,70 +82,6 @@ struct pixelformat {
 	int stencil;
 };
 
-/*static int fillFormat(struct pixelformat *formats, int index, int bpp, int depth, int alpha, int stencil) {
-	for (int i = 0; i < index; i++)
-		if (formats[i].bpp == bpp &&
-		    formats[i].depth == depth &&
-		    formats[i].alpha == alpha &&
-		    formats[i].stencil == stencil)
-			return 0;
-	formats[index].bpp = bpp;
-	formats[index].depth = depth;
-	formats[index].stencil = stencil;
-	formats[index].alpha = alpha;
-	return 1;
-}
-
-static struct pixelformat *getGLXAvailablePixelFormats(Display *disp, int screen, int *length) {
-	if (extgl_Extensions.glx.GLX13 == 1) {
-		int num_formats;
-		int attriblist[] = {GLX_DOUBLEBUFFER, True,
-				   GLX_STEREO, False,
-				   GLX_RENDER_TYPE, GLX_RGBA_BIT,
-				   GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
-				   GLX_CONFIG_CAVEAT, GLX_NONE,
-				   None};
-		GLXFBConfig *configs = glXChooseFBConfig(disp, screen, attriblist, &num_formats);
-		struct pixelformat *formats = (struct pixelformat *)malloc(num_formats*sizeof(struct pixelformat));
-		*length = 0;
-		for (int i = 0; i < num_formats; i++) {
-			int bpp, depth, alpha, stencil;
-			int val;
-			if (glXGetFBConfigAttrib(disp, configs[i], GLX_RED_SIZE, &val) != 0) {
-				ree(formats);
-				return NULL;
-			}
-			bpp = val;
-			if (glXGetFBConfigAttrib(disp, configs[i], GLX_GREEN_SIZE, &val) != 0) {
-				free(formats);
-				return NULL;
-			}
-			bpp += val;
-			if (glXGetFBConfigAttrib(disp, configs[i], GLX_BLUE_SIZE, &val) != 0) {
-				free(formats);
-				return NULL;
-			}
-			bpp += val;
-			if (glXGetFBConfigAttrib(disp, configs[i], GLX_ALPHA_SIZE, &alpha) != 0) {
-				free(formats);
-				return NULL;
-			}
-			if (glXGetFBConfigAttrib(disp, configs[i], GLX_DEPTH_SIZE, &depth) != 0) {
-				free(formats);
-				return NULL;
-			}
-			if (glXGetFBConfigAttrib(disp, configs[i], GLX_STENCIL_SIZE, &stencil) != 0) {
-				free(formats);
-				return NULL;
-			}
-			if (fillFormat(formats, *length, bpp, depth, alpha, stencil) == 1)
-				(*length)++;
-		}
-		return formats;
-	}
-	return NULL;
-}
-*/
 static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
 	int bpe;
 	switch (bpp) {
@@ -173,27 +108,16 @@ static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, 
 	return glXChooseVisual(disp, screen, attriblist);
 }
 
-/*static struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, int *length) {
-	struct pixelformat *formats = getGLXAvailablePixelFormats(disp, screen, length);
-	if (formats != NULL)
-		return formats;
-	*length = 16;
-       	formats = (struct pixelformat *)malloc((*length)*sizeof(struct pixelformat));
-	*length = 0;
-	for (int bpp = 16; bpp <= 24; bpp += 8)
-		for (int depth = 16; depth <= 24; depth += 8)
-			for (int alpha = 0; alpha <= 8; alpha += 8)
-				for (int stencil = 0; stencil <= 8; stencil += 8) {
-					XVisualInfo * visual = chooseVisual(disp, screen, bpp, depth, alpha, stencil);
-					if (visual != NULL) {
-						if (fillFormat(formats, *length, bpp, depth, alpha, stencil) == 1)
-							(*length)++;
-						XFree(visual);
-					}
-				}
-	return formats;
+static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
+	int alpha, depth, stencil, r, g, b;
+	glXGetConfig(disp, vis_info, GLX_RED_SIZE, &r);
+	glXGetConfig(disp, vis_info, GLX_GREEN_SIZE, &g);
+	glXGetConfig(disp, vis_info, GLX_BLUE_SIZE, &b);
+	glXGetConfig(disp, vis_info, GLX_ALPHA_SIZE, &alpha);
+	glXGetConfig(disp, vis_info, GLX_DEPTH_SIZE, &depth);
+	glXGetConfig(disp, vis_info, GLX_STENCIL_SIZE, &stencil);
+	printf("Pixel format chosen sizes: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d\n", r, g, b, alpha, depth, stencil);
 }
-*/
 
 static void waitMapped(Display *disp, Window win) {
 	XEvent event;
@@ -234,7 +158,7 @@ void handleMessages(JNIEnv *env) {
 		XNextEvent(disp, &event);
 		switch (event.type) {
 			case ClientMessage:
-				if ((event.xclient.format == 32) && (event.xclient.data.l[0] == delete_atom))
+				if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					env->SetStaticBooleanField(saved_clazz, fid_close, JNI_TRUE);
 				break;
 			case FocusIn:
@@ -264,20 +188,16 @@ void handleMessages(JNIEnv *env) {
 }
 
 static bool loadGL(Display *disp, int screen) {
-	if (gl_loaded == true)
-		return true;
 	if (extgl_Open(disp, screen) != 0) {
 #ifdef _DEBUG
 		printf("Could not load gl libs\n");
 #endif
 		return false;
 	}
-	gl_loaded = true;
 	return true;
 }
 
 static void closeGL(void) {
-	gl_loaded = false;
 	extgl_Close();
 }
 
@@ -373,6 +293,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	}
 	root_win = RootWindow(disp, screen);
 	vis_info = chooseVisual(disp, screen, bpp, depth_bits, alpha_bits, stencil_bits);
+	XSync(disp, False);
         if (vis_info == NULL) {
 		XCloseDisplay(disp);
 #ifdef _DEBUG
@@ -380,7 +301,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 #endif
 		return JNI_FALSE;
 	}
-
+#ifdef _DEBUG
+	dumpVisualInfo(disp, vis_info);
+#endif
 	cmap = XCreateColormap(disp, root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
 	attribs.event_mask = FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
@@ -391,6 +314,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		attribs.override_redirect = True;
 	}
 	win = XCreateWindow(disp, root_win, 0, 0, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
+	XFreeColormap(disp, cmap);
 #ifdef _DEBUG
 	printf("Created window\n");
 #endif
@@ -425,6 +349,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 #endif
 					return JNI_FALSE;
 				}
+				break;
 			}
 		}
 		XF86VidModeSetViewPort(disp, screen, 0, 0);
@@ -446,8 +371,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 		}
 	}
 	XFree(avail_modes);
+	avail_modes = NULL;
 	XFree(vis_info);
+	vis_info = NULL;
 	XCloseDisplay(disp);
+	disp = NULL;
 	closeGL();
 #ifdef _DEBUG
 	printf("Closed X connection\n");
@@ -479,13 +407,6 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	screen = DefaultScreen(disp);
 	int bpp = XDefaultDepth(disp, screen);
 	
-	if (!loadGL(disp, screen)) {
-#ifdef _DEBUG
-		printf("Could not load GL\n");
-#endif
-		XCloseDisplay(disp);
-		return NULL;
-	}
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 #ifdef _DEBUG
 		printf("Could not get display modes\n");
@@ -493,22 +414,15 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 		XCloseDisplay(disp);
 		return NULL;
 	}
-	int num_pixelformats;
-//	struct pixelformat *formats = getAvailablePixelFormats(disp, screen, &num_pixelformats);
 	// Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
-	jobjectArray ret = env->NewObjectArray(num_modes/**num_pixelformats*/, displayModeClass, NULL);
+	jobjectArray ret = env->NewObjectArray(num_modes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
 	
 	for (i = 0; i < num_modes; i++) {
-/*		for (int j = 0; j < num_pixelformats; j++) {
-			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, formats[j].bpp, 0, formats[j].alpha, formats[j].depth, formats[j].stencil);
-			env->SetObjectArrayElement(ret, i*num_pixelformats + j, displayMode);
-		}*/
 		jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, bpp, 0);
 		env->SetObjectArrayElement(ret, i, displayMode);
 	}
-//	free(formats);
 	XFree(avail_modes);
 	XCloseDisplay(disp);
 	return ret;

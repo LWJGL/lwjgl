@@ -2484,13 +2484,11 @@ int extgl_InitGLX12(void)
 	return extgl_error;
 }
 
-#ifdef _X11
 void extgl_InitGLXSupportedExtensions(Display *disp, int screen)
 {
 	extgl_Extensions.glx.EXT_visual_info = GLXQueryExtension(disp, screen, "GLX_EXT_visual_info");
 	extgl_Extensions.glx.EXT_visual_rating = GLXQueryExtension(disp, screen, "GLX_EXT_visual_rating");
 }
-#endif
 
 int extgl_InitGLX(Display *disp, int screen)
 {
@@ -3239,11 +3237,11 @@ int extgl_Initialize()
 #ifdef _X11
 int extgl_Open(Display *disp, int screen)
 {
-    lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
+    lib_gl_handle = dlopen("libGL.so.1", RTLD_NOW | RTLD_GLOBAL);
     if (lib_gl_handle == NULL)
         return 1;
 	
-    lib_glu_handle = dlopen("libGLU.so", RTLD_LAZY | RTLD_GLOBAL);
+    lib_glu_handle = dlopen("libGLU.so", RTLD_NOW | RTLD_GLOBAL);
     if (lib_glu_handle == NULL)
         return 1;
     if (extgl_InitGLX(disp, screen) != 0)

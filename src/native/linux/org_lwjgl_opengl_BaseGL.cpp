@@ -65,15 +65,20 @@ static void releaseContext(void) {
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
   (JNIEnv * env, jobject obj)
 {
-
-	if (!getVisualInfo()) {
+	if (disp == NULL) {
+#ifdef _DEBUG
+		printf("No display\n");
+#endif
+		return JNI_FALSE;
+	}
+	if (getVisualInfo() == NULL) {
 #ifdef _DEBUG
 		printf("No visual info\n");
 #endif
 		return JNI_FALSE;
 	}
 	context = glXCreateContext(disp, getVisualInfo(), NULL, True);
-	if (!context) {
+	if (context == NULL) {
 #ifdef _DEBUG
 		printf("Could not create context\n");
 #endif
@@ -103,9 +108,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
   (JNIEnv * env, jobject obj)
 {
 	releaseContext();
-	// Delete the rendering context
-	if (context != NULL)
-		glXDestroyContext(disp, context); 
+	glXDestroyContext(disp, context); 
+	context = NULL;
 }
 
 /*

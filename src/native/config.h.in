@@ -6,9 +6,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `openal' library (-lopenal). */
-#undef HAVE_LIBOPENAL
-
 /* Define to 1 if you have the `X11' library (-lX11). */
 #undef HAVE_LIBX11
 
