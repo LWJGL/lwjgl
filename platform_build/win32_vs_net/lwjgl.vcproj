@@ -188,10 +188,13 @@
 			Name="win32"
 			Filter="">
 			<File
-				RelativePath="..\..\src\native\win32\LWJGL.cpp">
+				RelativePath="..\..\src\native\win32\display.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\win32\org_lwjgl_Display.cpp">
+				RelativePath="..\..\src\native\win32\extgl_wgl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\native\win32\LWJGL.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\native\win32\org_lwjgl_input_Controller.cpp">
@@ -206,10 +209,10 @@
 				RelativePath="..\..\src\native\win32\org_lwjgl_input_Mouse.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Pbuffer.cpp">
+				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Display.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Window.cpp">
+				RelativePath="..\..\src\native\win32\org_lwjgl_opengl_Pbuffer.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\native\win32\org_lwjgl_Sys.cpp">
