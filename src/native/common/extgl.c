@@ -209,10 +209,11 @@ bool extgl_Open(JNIEnv *env) {
 		return true;
 	opengl_lib_handle = loadImage("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib");
 	if (opengl_lib_handle != NULL) {
-		throwException(env, "Could not load OpenGL library");
 		return true;
-	} else
+	} else {
+		throwException(env, "Could not load OpenGL library");
 		return false;
+	}
 }
 #endif
 
