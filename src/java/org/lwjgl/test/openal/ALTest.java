@@ -298,6 +298,10 @@ public class ALTest extends BasicTest {
         // Initialize Open AL manually
         //Open device
         device = alc.openDevice(null);
+	if (device == null) {
+		System.out.println("Could not create ALC device");
+		System.exit(-1);
+	}
         //Create context(s)
         context = alc.createContext(device, 0);
         //Set active context

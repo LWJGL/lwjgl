@@ -168,30 +168,26 @@ void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 #ifdef _DEBUG
   printf("Found %d OpenAL paths\n", pathcount);
 #endif  
-#ifdef _WIN32
   for(int i=0;i<pathcount;i++) {
     jstring path = (jstring) env->GetObjectArrayElement(oalPaths, i);
+    const char *path_str = env->GetStringUTFChars(path, NULL);
 #ifdef _DEBUG
-  printf("Testing '%s'\n", env->GetStringUTFChars(path, NULL));
+    printf("Testing '%s'\n", path_str);
 #endif  
-    handleOAL = LoadLibrary(env->GetStringUTFChars(path, NULL));
-    if (handleOAL != NULL) {
-#ifdef _DEBUG
-  printf("Found OpenAL at '%s'\n", env->GetStringUTFChars(path, NULL));
-#endif  
-      break;
-    }
-  }
+#ifdef _WIN32
+    handleOAL = LoadLibrary(path_str);
 #endif
 #ifdef _X11
-  for(int i=0;i<pathcount;i++) {
-    jstring path = (jstring) env->GetObjectArrayElement(oalPaths, i);
-    handleOAL = dlopen(env->GetStringUTFChars(path, NULL), RTLD_LAZY);
+    handleOAL = dlopen(path_str, RTLD_LAZY);
+#endif
     if (handleOAL != NULL) {
+#ifdef _DEBUG
+      printf("Found OpenAL at '%s'\n", path_str);
+#endif  
       break;
     }
-  }   
-#endif
+    env->ReleaseStringUTFChars(path, path_str);
+  }
 }
 
 /**
@@ -199,10 +195,10 @@ void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
  */
 void UnLoadOpenAL() {
 #ifdef _WIN32
-  //FreeLibrary(handleOAL);
+  FreeLibrary(handleOAL);
 #endif
 #ifdef _X11
-   dlclose(handleOAL);
+  dlclose(handleOAL);
 #endif
 }
 
