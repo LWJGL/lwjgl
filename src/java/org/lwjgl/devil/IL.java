@@ -36,7 +36,6 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
-
 /**
  * $Id$
  *
@@ -297,7 +296,7 @@ public class IL {
     public static final int IL_EOF = -1; 
     
     static {
-      System.loadLibrary("DevIL");
+        System.loadLibrary("DevIL");
     	System.loadLibrary("lwjgl-devil");
     }
     
@@ -310,96 +309,142 @@ public class IL {
 
     public static native void initNativeStubs() throws LWJGLException;
     
-//    public static native boolean ilActiveImage(ILuint Number);
-//    public static native boolean ilActiveLayer(ILuint Number);
-//    public static native boolean ilActiveMipmap(ILuint Number);
-//    public static native boolean ilApplyPal(const ILstring FileName);
-//    public static native boolean ilApplyProfile(const ILstring InProfile, const ILstring OutProfile);
+    public static native boolean ilActiveImage(int Number);
+    public static native boolean ilActiveLayer(int Number);
+    public static native boolean ilActiveMipmap(int Number);
+    public static native boolean ilApplyPal(String FileName);
+    public static native boolean ilApplyProfile(String InProfile, String OutProfile);
     public static native void ilBindImage(int image);
-//    public static native boolean ilBlit(ILuint Source, ILint DestX, ILint DestY, ILint DestZ, ILuint SrcX, ILuint SrcY, ILuint SrcZ, ILuint Width, ILuint Height, ILuint Depth);
-//    public static native void ilClearColour(ILclampf Red, ILclampf Green, ILclampf Blue, ILclampf Alpha);
-//    public static native boolean ilClearImage(ILvoid);
-//    public static native int ilCloneCurImage(ILvoid);
-//    public static native boolean ilCompressFunc(ILenum Mode);
-//    public static native boolean ilConvertImage(ILenum DestFormat, ILenum DestType);
-//    public static native boolean ilConvertPal(ILenum DestFormat);
-//    public static native boolean ilCopyImage(ILuint Src);
-//    public static native int ilCopyPixels(ILuint XOff, ILuint YOff, ILuint ZOff, ILuint Width, ILuint Height, ILuint Depth, ILenum Format, ILenum Type, ILvoid *Data);
-//    public static native int ilCreateSubImage(ILenum Type, ILuint Num);
-//    public static native boolean ilDefaultImage(ILvoid);
+    public static native boolean ilBlit(int Source, int DestX, int DestY, int DestZ, int SrcX, int SrcY, int SrcZ, int Width, int Height, int Depth);
+    public static native void ilClearColour(float Red, float Green, float Blue, float Alpha);
+    public static native boolean ilClearImage();
+    public static native int ilCloneCurImage();
+    public static native boolean ilCompressFunc(int Mode);
+    public static native boolean ilConvertImage(int DestFormat, int DestType);
+    public static native boolean ilConvertPal(int DestFormat);
+    public static native boolean ilCopyImage(int Src);
+    public static int ilCopyPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data) {
+        BufferChecks.checkDirect(Data);
+        return nilCopyPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
+    }
+    public static native int nilCopyPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data, int data_offset);
+    public static native int ilCreateSubImage(int Type, int Num);
+    public static native boolean ilDefaultImage();
     public static void ilDeleteImages(int num, IntBuffer images) {
         BufferChecks.checkDirect(images);
-        nilGenImages(num, images, images.position());
+        nilDeleteImages(num, images, images.position());
     }
     public static native void nilDeleteImages(int num, IntBuffer images, int images_offset);
-//    public static native boolean ilDisable(ILenum Mode);
-//    public static native boolean ilEnable(ILenum Mode);
-//    public static native boolean ilFormatFunc(ILenum Mode);
+    public static native boolean ilDisable(int Mode);
+    public static native boolean ilEnable(int Mode);
+    public static native boolean ilFormatFunc(int Mode);
     public static void ilGenImages(int num, IntBuffer images) {
         BufferChecks.checkDirect(images);
         nilGenImages(num, images, images.position());
     }
     public static native void nilGenImages(int num, IntBuffer images, int images_offset);
-//    public static native byte[] ilGetAlpha(ILenum Type);//ILubyte*
-//    public static native void ilModAlpha( ILint AlphaValue );
-//    public static native void ilSetAlpha( ILuint AlphaValue );
-//    public static native boolean ilGetBoolean(ILenum Mode);
-//    public static native void ilGetBooleanv(ILenum Mode, ILboolean *Param);
+    public static native ByteBuffer ilGetAlpha(int Type);//ILubyte*
+    public static native void ilModAlpha( int AlphaValue );
+    public static native void ilSetAlpha( int AlphaValue );
+    public static native boolean ilGetBoolean(int Mode);
+//    public static native void ilGetBooleanv(int Mode, boolean *Param);
     public static native ByteBuffer ilGetData();
-//    public static native int ilGetDXTCData(ILvoid *Buffer, ILuint BufferSize, ILenum DXTCFormat);
+//    public static native int ilGetDXTCData(ILvoid *Buffer, int BufferSize, int DXTCFormat);
     public static native int ilGetError();
     public static native int ilGetInteger(int mode);
-//    public static native void ilGetIntegerv(ILenum Mode, ILint *Param);
-//    public static native int ilGetLumpPos(ILvoid);
-//    public static native byte[] ilGetPalette(ILvoid);//ILubyte*
-//    public static native String ilGetString(ILenum StringName);//const ILstring
-//    public static native void ilHint(ILenum Target, ILenum Mode);
+//    public static native void ilGetIntegerv(int Mode, int *Param);
+    public static native int ilGetLumpPos();
+    public static native ByteBuffer ilGetPalette();//ILubyte*
+    public static native String ilGetString(int StringName);//String
+    public static native void ilHint(int Target, int Mode);
     public static native void ilInit();
-//    public static native boolean ilIsDisabled(ILenum Mode);
-//    public static native boolean ilIsEnabled(ILenum Mode);
-//    public static native boolean ilIsImage(ILuint Image);
-//    public static native boolean ilIsValid(ILenum Type, const ILstring FileName);
-//    public static native boolean ilIsValidF(ILenum Type, ILHANDLE File);
-//    public static native boolean ilIsValidL(ILenum Type, ILvoid *Lump, ILuint Size);
-//    public static native void ilKeyColour(ILclampf Red, ILclampf Green, ILclampf Blue, ILclampf Alpha);
-//    public static native boolean ilLoad(ILenum Type, const ILstring FileName);
-//    public static native boolean ilLoadF(ILenum Type, ILHANDLE File);
+    public static native boolean ilIsDisabled(int Mode);
+    public static native boolean ilIsEnabled(int Mode);
+    public static native boolean ilIsImage(int Image);
+    public static native boolean ilIsValid(int Type, String FileName);
+    //ilIsValidF() uses a Windows file handle so will not be implemented
+//    public static native boolean ilIsValidF(int Type, ILHANDLE File);
+    public static boolean ilIsValidL(int Type, ByteBuffer Lump, int Size) {
+        BufferChecks.checkDirect(Lump);
+        return nilIsValidL(Type, Lump, Lump.position(), Size);
+    }
+    public static native boolean nilIsValidL(int Type, ByteBuffer Lump,  int lump_offset, int Size);
+    public static native void ilKeyColour(float Red, float Green, float Blue, float Alpha);
+    public static native boolean ilLoad(int Type, String FileName);
+    //ilLoadF() uses a Windows file handle so will not be implemented
+//    public static native boolean ilLoadF(int Type, ILHANDLE File);
     public static native boolean ilLoadImage(String fileName);
-//    public static native boolean ilLoadL(ILenum Type, ILvoid *Lump, ILuint Size);
-//    public static native boolean ilLoadPal(const ILstring FileName);
-//    public static native boolean ilOriginFunc(ILenum Mode);
-//    public static native boolean ilOverlayImage(ILuint Source, ILint XCoord, ILint YCoord, ILint ZCoord);
-//    public static native void ilPopAttrib(ILvoid);
-//    public static native void ilPushAttrib(ILuint Bits);
-//    public static native void ilRegisterFormat(ILenum Format);
-//    public static native boolean ilRegisterLoad(const ILstring Ext, IL_LOADPROC Load);
-//    public static native boolean ilRegisterMipNum(ILuint Num);
-//    public static native boolean ilRegisterNumImages(ILuint Num);
-//    public static native void ilRegisterOrigin(ILenum Origin);
-//    public static native void ilRegisterPal(ILvoid *Pal, ILuint Size, ILenum Type);
-//    public static native boolean ilRegisterSave(const ILstring Ext, IL_SAVEPROC Save);
-//    public static native void ilRegisterType(ILenum Type);
-//    public static native boolean ilRemoveLoad(const ILstring Ext);
-//    public static native boolean ilRemoveSave(const ILstring Ext);
-//    public static native void ilResetMemory(ILvoid);
-//    public static native void ilResetRead(ILvoid);
-//    public static native void ilResetWrite(ILvoid);
-//    public static native boolean ilSave(ILenum Type, const ILstring FileName);
-//    public static native int ilSaveF(ILenum Type, ILHANDLE File);
-//    public static native boolean ilSaveImage(const ILstring FileName);
-//    public static native int ilSaveL(ILenum Type, ILvoid *Lump, ILuint Size);
-//    public static native boolean ilSavePal(const ILstring FileName);
-//    public static native boolean ilSetData(ILvoid *Data);
-//    public static native boolean ilSetDuration(ILuint Duration);
-//    public static native void ilSetInteger(ILenum Mode, ILint Param);
+    public static boolean ilLoadL(int Type, ByteBuffer Lump, int Size) {
+        BufferChecks.checkDirect(Lump);
+        return nilIsValidL(Type, Lump, Lump.position(), Size);
+    }
+    public static native boolean nilLoadL(int Type, ByteBuffer Lump, int lump_offset, int Size);
+    public static native boolean ilLoadPal(String FileName);
+    public static native boolean ilOriginFunc(int Mode);
+    public static native boolean ilOverlayImage(int Source, int XCoord, int YCoord, int ZCoord);
+    public static native void ilPopAttrib();
+    public static native void ilPushAttrib(int Bits);
+//    public static native void ilRegisterFormat(int Format);
+//    public static native boolean ilRegisterLoad(String Ext, IL_LOADPROC Load);
+//    public static native boolean ilRegisterMipNum(int Num);
+//    public static native boolean ilRegisterNumImages(int Num);
+//    public static native void ilRegisterOrigin(int Origin);
+//    public static void ilRegisterPal(ByteBuffer Pal, int Size, int Type) {
+//        BufferChecks.checkDirect(Pal);
+//        nilRegisterPal(Pal, Pal.position(), Size, Type);
+//    }
+//    public static native void nilRegisterPal(ByteBuffer Pal, int pal_position, int Size, int Type);
+//    public static native boolean ilRegisterSave(String Ext, IL_SAVEPROC Save);
+//    public static native void ilRegisterType(int Type);
+    public static native boolean ilRemoveLoad(String Ext);
+    public static native boolean ilRemoveSave(String Ext);
+    public static native void ilResetMemory();
+    public static native void ilResetRead();
+    public static native void ilResetWrite();
+    public static native boolean ilSave(int Type, String FileName);
+    //ilSaveF() uses a Windows file handle so will not be implemented
+//    public static native int ilSaveF(int Type, ILHANDLE File);
+    public static native boolean ilSaveImage(String FileName);
+    public static int ilSaveL(int Type, ByteBuffer Lump, int Size) {
+        BufferChecks.checkDirect(Lump);
+        return nilSaveL(Type, Lump, Lump.position(), Size);
+    }
+    public static native int nilSaveL(int Type, ByteBuffer Lump, int lump_offset, int Size);
+    public static native boolean ilSavePal(String FileName);
+    public static boolean ilSetData(ByteBuffer Data) {
+        BufferChecks.checkDirect(Data);
+        return nilSetData(Data, Data.position());
+    }
+    public static native boolean nilSetData(ByteBuffer Data, int data_offset);
+    public static native boolean ilSetDuration(int Duration);
+    public static native void ilSetInteger(int Mode, int Param);
 //    public static native void ilSetMemory(mAlloc, mFree);
-//    public static native void ilSetPixels(ILint XOff, ILint YOff, ILint ZOff, ILuint Width, ILuint Height, ILuint Depth, ILenum Format, ILenum Type, ILvoid *Data);
+    public static void ilSetPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data) {
+        BufferChecks.checkDirect(Data);
+        nilSetPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
+    }
+    public static native void nilSetPixels(int XOff, int YOff, int ZOff, int Width, int Height, int Depth, int Format, int Type, ByteBuffer Data, int data_offset);
 //    public static native void ilSetRead(fOpenRProc, fCloseRProc, fEofProc, fGetcProc, fReadProc, fSeekRProc, fTellRProc);
-//    public static native void ilSetString(ILenum Mode, const char *String);
+    public static native void ilSetString(int Mode, String string);
 //    public static native void ilSetWrite(fOpenWProc, fCloseWProc, fPutcProc, fSeekWProc, fTellWProc, fWriteProc);
-//    public static native void ilShutDown(ILvoid);
-//    public static native boolean ilTexImage(ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp, ILenum Format, ILenum Type, ILvoid *Data);
-//    public static native boolean ilTypeFunc(ILenum Mode);
+    public static native void ilShutDown();
+    public static boolean ilTexImage(int Width, int Height, int Depth, byte Bpp, int Format, int Type, ByteBuffer Data) {
+        BufferChecks.checkDirect(Data);
+        return nilTexImage(Width, Height, Depth, Bpp, Format, Type, Data, Data.position());
+    }
+    public static native boolean nilTexImage(int Width, int Height, int Depth, byte Bpp, int Format, int Type, ByteBuffer Data, int data_offset);
+    public static native boolean ilTypeFunc(int Mode);
+    public static native boolean ilLoadData(String FileName, int Width, int Height, int Depth, byte Bpp);
+//    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);
+    public static boolean ilLoadDataL(ByteBuffer Lump, int Size, int Width, int Height, int Depth, byte Bpp) {
+        BufferChecks.checkDirect(Lump);
+        return nilLoadDataL(Lump, Lump.position(), Size, Width, Height, Depth, Bpp);
+    }
+    public static native boolean nilLoadDataL(ByteBuffer Lump, int lump_offset, int Size, int Width, int Height, int Depth, byte Bpp);
+    public static native boolean ilSaveData(String FileName);
+
+//    public static native boolean ilLoadFromJpegStruct(ILvoid* JpegDecompressorPtr);
+//    public static native boolean ilSaveFromJpegStruct(ILvoid* JpegCompressorPtr);
 
 		/**
 		 * 
@@ -407,16 +452,8 @@ public class IL {
     public static void create() throws LWJGLException {
     	if (!created) {
     		IL.initNativeStubs();
-        IL.ilInit();
+    		IL.ilInit();
     		created = true;
     	}
     }
-
-//    public static native boolean ilLoadData(const ILstring FileName, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
-//    public static native boolean ilLoadDataF(ILHANDLE File, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
-//    public static native boolean ilLoadDataL(ILvoid *Lump, ILuint Size, ILuint Width, ILuint Height, ILuint Depth, ILubyte Bpp);
-//    public static native boolean ilSaveData(const ILstring FileName);
-
-//    public static native boolean ilLoadFromJpegStruct(ILvoid* JpegDecompressorPtr);
-//    public static native boolean ilSaveFromJpegStruct(ILvoid* JpegCompressorPtr);
 }
