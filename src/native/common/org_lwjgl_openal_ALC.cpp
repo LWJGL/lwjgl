@@ -39,8 +39,10 @@
  * @version $Revision$
  */
 #include "org_lwjgl_openal_ALC.h"
-#include "extal.h"
+
+/* OpenAL includes */
 #include "checkALerror.h"
+#include <AL/alc.h>
 
 /*
  * Class:     org_lwjgl_openal_ALC

@@ -40,13 +40,12 @@
  * @version $Revision$
  */
 #include "org_lwjgl_openal_ALUT.h"
-/* OpenAL includes */
-#include "extal.h"
-
-#include "checkALerror.h"
-
 
 #include <stdlib.h>
+
+/* OpenAL includes */
+#include "checkALerror.h"
+#include <AL/alut.h>
 
 /*
  * Class:     org_lwjgl_openal_ALUT
