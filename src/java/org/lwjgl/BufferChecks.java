@@ -63,7 +63,7 @@ public class BufferChecks {
 	 */
 	public static void checkFunctionAddress(long pointer) {
 		if (pointer == 0) {
-			throw new IllegalStateException("Function is unsupported");
+			throw new IllegalStateException("Function is not supported");
 		}
 	}
 
