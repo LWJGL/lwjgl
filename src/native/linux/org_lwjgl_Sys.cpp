@@ -187,3 +187,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 	printf("*** Please visit %s\n", urlString);
 	env->ReleaseStringUTFChars(url, urlString);
 }
+
