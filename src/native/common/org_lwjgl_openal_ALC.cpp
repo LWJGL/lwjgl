@@ -199,10 +199,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_alcCreateContext (JNIEnv *en
  * ALCboolean alcMakeContextCurrent(ALCcontext *context);
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent (JNIEnv *env, jclass clazz, jint contextaddress) {
-	if(contextaddress == NULL) {
+	ALCcontext* context = (ALCcontext*) contextaddress;
+	if(context == NULL) {
 		return alcMakeContextCurrent(NULL);
 	}
-	return alcMakeContextCurrent((ALCcontext*) contextaddress);
+	return alcMakeContextCurrent(context);
 }
 
 /**
