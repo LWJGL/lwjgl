@@ -1049,6 +1049,7 @@ glVertexStream1ivATIPROC glVertexStream1ivATI = NULL;
 glVertexStream1fATIPROC glVertexStream1fATI = NULL;
 glVertexStream1fvATIPROC glVertexStream1fvATI = NULL;
 glVertexStream1dATIPROC glVertexStream1dATI = NULL;
+glVertexStream1dvATIPROC glVertexStream1dvATI = NULL;
 glVertexStream2sATIPROC glVertexStream2sATI = NULL;
 glVertexStream2svATIPROC glVertexStream2svATI = NULL;
 glVertexStream2iATIPROC glVertexStream2iATI = NULL;
@@ -1460,38 +1461,71 @@ static void *extgl_GetProcAddress(char *name)
 }
 
 static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name)
+
 {
+
 	const GLubyte *start;
+
 	GLubyte *where, *terminator;
 
+
+
 	if (extensions == NULL) {
+
 		printfDebug("NULL extension string\n");
+
 		extgl_error = true;
+
 		return false;
+
 	}
+
 	/* Extension names should not have spaces. */
+
 	where = (GLubyte *) strchr(name, ' ');
+
 	if (where || *name == '\0')
+
 		return false;
+
 	/* It takes a bit of care to be fool-proof about parsing the
+
 		 OpenGL extensions string. Don't be fooled by sub-strings,
+
 		etc. */
+
 	start = extensions;
+
 	for (;;) 
+
 	{
+
 		where = (GLubyte *) strstr((const char *) start, name);
+
 		if (!where)
+
 			break;
+
 		terminator = where + strlen(name);
+
 		if (where == start || *(where - 1) == ' ')
+
 			if (*terminator == ' ' || *terminator == '\0') {
+
 				insertExtension(env, ext_set, name);
+
 				return true;
+
 			}
+
 		start = terminator;
+
 	}
+
 	return false;
+
 }
+
 /*-----------------------------------------------------*/
 /* WGL stuff */
 /*-----------------------------------------------------*/
@@ -1521,6 +1555,7 @@ static void extgl_InitWGLARBBufferRegion(JNIEnv *env, jobject ext_set)
 	wglDeleteBufferRegionARB = (wglDeleteBufferRegionARBPROC) extgl_GetProcAddress("wglDeleteBufferRegionARB");
 	wglSaveBufferRegionARB = (wglSaveBufferRegionARBPROC) extgl_GetProcAddress("wglSaveBufferRegionARB");
 	wglRestoreBufferRegionARB = (wglRestoreBufferRegionARBPROC) extgl_GetProcAddress("wglRestoreBufferRegionARB");
+
 	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_buffer_region);
 }
 
@@ -1534,6 +1569,7 @@ static void extgl_InitWGLARBPbuffer(JNIEnv *env, jobject ext_set)
 	wglDestroyPbufferARB = (wglDestroyPbufferARBPROC) extgl_GetProcAddress("wglDestroyPbufferARB");
 	wglQueryPbufferARB = (wglQueryPbufferARBPROC) extgl_GetProcAddress("wglQueryPbufferARB");
 	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_pbuffer);
+
 }
 
 static void extgl_InitWGLARBPixelFormat(JNIEnv *env, jobject ext_set)
@@ -1544,6 +1580,7 @@ static void extgl_InitWGLARBPixelFormat(JNIEnv *env, jobject ext_set)
 	wglGetPixelFormatAttribfvARB = (wglGetPixelFormatAttribfvARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribfvARB");
 	wglChoosePixelFormatARB = (wglChoosePixelFormatARBPROC) extgl_GetProcAddress("wglChoosePixelFormatARB");
 	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_pixel_format);
+
 }
 
 static void extgl_InitWGLARBRenderTexture(JNIEnv *env, jobject ext_set)
@@ -1554,6 +1591,7 @@ static void extgl_InitWGLARBRenderTexture(JNIEnv *env, jobject ext_set)
 	wglReleaseTexImageARB = (wglReleaseTexImageARBPROC) extgl_GetProcAddress("wglReleaseTexImageARB");
 	wglSetPbufferAttribARB = (wglSetPbufferAttribARBPROC) extgl_GetProcAddress("wglSetPbufferAttribARB");
 	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_render_texture);
+
 }
 
 static void extgl_InitWGLEXTSwapControl(JNIEnv *env, jobject ext_set)
@@ -1563,6 +1601,7 @@ static void extgl_InitWGLEXTSwapControl(JNIEnv *env, jobject ext_set)
 	wglSwapIntervalEXT = (wglSwapIntervalEXTPROC) extgl_GetProcAddress("wglSwapIntervalEXT");
 	wglGetSwapIntervalEXT = (wglGetSwapIntervalEXTPROC) extgl_GetProcAddress("wglGetSwapIntervalEXT");
 	EXTGL_SANITY_CHECK(env, ext_set, WGL_EXT_swap_control);
+
 }
 
 static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env, jobject ext_set)
@@ -1572,6 +1611,7 @@ static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env, jobject ext_set)
 	wglMakeContextCurrentARB = (wglMakeContextCurrentARBPROC) extgl_GetProcAddress("wglMakeContextCurrentARB");
 	wglGetCurrentReadDCARB = (wglGetCurrentReadDCARBPROC) extgl_GetProcAddress("wglGetCurrentReadDCARB");
 	EXTGL_SANITY_CHECK(env, ext_set, WGL_ARB_make_current_read);
+
 }
 
 static void extgl_InitSupportedWGLExtensions(JNIEnv *env, jobject ext_set)
