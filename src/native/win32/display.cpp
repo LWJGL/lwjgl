@@ -213,7 +213,6 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 	devmode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFLAGS;
 	if (freq != 0)
 		devmode.dmFields |= DM_DISPLAYFREQUENCY;
-
 	LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 	if (cdsret != DISP_CHANGE_SUCCESSFUL) {
