@@ -131,7 +131,7 @@ void releaseKeyboard(void) {
  * Method:    nCreate
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	for (int i =  0; i < KEYBOARD_SIZE; i++)
@@ -162,7 +162,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	buffer_enabled = false;
 	should_grab = true;
 	updateGrab();
-	return JNI_TRUE;
 }
 
 /*
@@ -300,11 +299,10 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
  * Method:    nEnableTranslation
  * Signature: ()I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
   (JNIEnv *env, jclass clazz)
 {
 	translation_enabled = true;
-	return JNI_TRUE;
 }
 
 /*

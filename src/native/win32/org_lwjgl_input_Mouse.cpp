@@ -102,7 +102,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass c
 /**
  * Called when the Mouse instance is to be created
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
 	HRESULT hr;
 
 	mEnvironment = env;
@@ -120,11 +120,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
 		/* Enumerate capabilities of Mouse */
 		EnumerateMouseCapabilities();
 		if (!mCreate_success) {
-#if _DEBUG
-			printf("EnumerateMouseCapabilities failed\n");
-#endif
+			throwException(env, "Failed to enumerate.");
 			ShutdownMouse();
-			return JNI_FALSE;
+			return;
 		}
 		/* Do setup of Mouse */
 		SetupMouse();
@@ -171,9 +169,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			throwException(env, "null device!");
 		mDIDevice->Unacquire();
 		if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-#if _DEBUG
-			printf("SetCooperativeLevel failed\n");
-#endif
 			throwException(env, "Could not set the CooperativeLevel.");
 		    return;
 		}
@@ -197,9 +192,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			SetCursor(NULL);
 			mDIDevice->Unacquire();
 			if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-#if _DEBUG
-				printf("SetCooperativeLevel failed\n");
-#endif
 				throwException(env, "Could not set the CooperativeLevel.");
 				return;
 			}

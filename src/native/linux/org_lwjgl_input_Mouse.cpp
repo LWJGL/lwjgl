@@ -265,7 +265,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
  * Method:    nCreate
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	int i;
@@ -276,10 +276,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = JNI_FALSE;
 	if (!blankCursor()) {
-#ifdef _DEBUG
-		printf("Could not create blank cursor\n");
-#endif
-		return JNI_FALSE;
+		throwException(env, "Could not create blank cursor");
+		return;
 	}
 	current_cursor = blank_cursor;
         native_cursor = false;
@@ -288,7 +286,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
         pointer_grabbed = false;
 	updateGrab();
 	loadXcursor();
-	return JNI_TRUE;
 }
 
 /*

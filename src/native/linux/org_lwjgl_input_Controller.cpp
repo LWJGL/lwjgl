@@ -38,6 +38,7 @@
  * @version $Revision$
  */
 #include <jni.h>
+#include <Window.h>
 #include "org_lwjgl_input_Controller.h"
 
 /**
@@ -49,8 +50,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jcl
 /**
  * Called when the Controller instance is to be created
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
-  return JNI_FALSE;
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
+	throwException(env, "Controller not implemented");
 }
 
 /*

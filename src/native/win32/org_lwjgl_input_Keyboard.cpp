@@ -80,38 +80,30 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
  * Method:    nCreate
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	translationEnabled = false;
 	// Check to see if we're already initialized
 	if (lpdiKeyboard != NULL) {
-#ifdef _DEBUG
-		printf("Keyboard already created.\n");
-#endif
-		return JNI_FALSE;
+		throwException(env, "Keyboard already created.");
+		return;
 	}
 
 	if (hwnd == NULL) {
-#ifdef _DEBUG
-		printf("No window\n");
-#endif
-		return JNI_FALSE;
+		throwException(env, "No window.");
+		return;
 	}
 
 	// Create a keyboard device
 	if (lpdi->CreateDevice(GUID_SysKeyboard, &lpdiKeyboard, NULL) != DI_OK) {
-#ifdef _DEBUG
-		printf("Failed to create keyboard\n");
-#endif
-		return JNI_FALSE;
+		throwException(env, "Failed to create keyboard.");
+		return;
 	}
 
 	if (lpdiKeyboard->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-#ifdef _DEBUG
-		printf("Failed to set keyboard cooperation mode\n");
-#endif
-		return JNI_FALSE;
+		throwException(env, "Failed to set keyboard cooperation mode.");
+		return;
 	}
 
 	// Tell 'em wot format to be in (the default "you are a mouse and keyboard" format)
@@ -131,9 +123,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 		printf("Failed to acquire keyboard\n");
 #endif	
 	}
-
-	return JNI_TRUE;
-
 }
 
 /*
@@ -308,7 +297,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
  * Method:    nEnableTranslation
  * Signature: ()V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
   (JNIEnv *, jclass)
 {
 	// We can't do translation on DOS boxes it seems so we'll have to throw a wobbler
@@ -324,7 +313,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
 		useUnicode = false;
 	}
 	translationEnabled = true;
-	return JNI_TRUE;
 }
 
 /*

@@ -118,7 +118,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jcl
 /**
  * Called when the Controller instance is to be created
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
   // Create the DirectInput object. 
   HRESULT hr;
   hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &cDI, NULL); 
@@ -127,26 +127,22 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
     printf("DirectInputCreate failed\n");
  #endif
     ShutdownController();
-    return JNI_FALSE;
+    return;
   }
 
   /*  Find all Controllers */
   EnumerateControllers();
   if (!cCreate_success) {
-#if _DEBUG
-    printf("EnumerateControllers failed\n");
-#endif
+    throwException(env, "Failed to enumerate.");
     ShutdownController();
-    return JNI_FALSE;
+    return;
   }
 
   /* check that we got at least 1 controller */
   if (cDIDevice == NULL) {
-#if _DEBUG
-    printf("No devices found during enumeration\n");
-#endif
+    throwException(env, "No devices found.");
     ShutdownController();
-    return JNI_FALSE;
+    return;
   }
 
   //check for first time initialization - need to detect capabilities
@@ -157,11 +153,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
   /* Enumerate capabilities of Controller */
   EnumerateControllerCapabilities();
   if (!cCreate_success) {
-#if _DEBUG
-    printf("EnumerateControllerCapabilities failed\n");
-#endif
+    throwException(env, "Falied to enumerate capabilities.");
     ShutdownController();
-    return JNI_FALSE;
+    return;
   }
 
   /* Do setup of Controller */
@@ -185,11 +179,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
   /* Aquire the Controller */
   hr = cDIDevice->Acquire();
   if(FAILED(hr)) {
-#if _DEBUG
-    printf("Acquire failed\n");
-#endif
+    throwException(env, "Acquire failed");
     ShutdownController();
-    return JNI_FALSE;
+    return;
   }
   return cCreate_success ? JNI_TRUE : JNI_FALSE;
 }
@@ -234,7 +226,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nPoll(JNIEnv * env, jclas
 /**
  * Shutdown DI
  */
-void ShutdownController() {
+static void ShutdownController() {
   // release device
   if (cDIDevice != NULL) {
     cDIDevice->Unacquire();
@@ -246,7 +238,7 @@ void ShutdownController() {
 /**
  * Enumerates the capabilities of the Controller attached to the system
  */
-void EnumerateControllerCapabilities() {
+static void EnumerateControllerCapabilities() {
   HRESULT hr;
   hr = cDIDevice->EnumObjects(EnumControllerObjectsCallback, NULL, DIDFT_ALL);
   if FAILED(hr) { 
@@ -262,7 +254,7 @@ void EnumerateControllerCapabilities() {
 /**
  * Enumerates the Controllers attached to the system
  */
-void EnumerateControllers() {
+static void EnumerateControllers() {
   HRESULT hr;
   hr = cDI->EnumDevices(DIDEVTYPE_JOYSTICK, EnumControllerCallback, 0, DIEDFL_ATTACHEDONLY);
   if FAILED(hr) { 
@@ -322,7 +314,7 @@ BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LP
 /**
  * Creates the specified device as a Controller
  */
-void CreateController(LPCDIDEVICEINSTANCE lpddi) {
+static void CreateController(LPCDIDEVICEINSTANCE lpddi) {
   HRESULT hr;
   hr = cDI->CreateDevice(lpddi->guidInstance, (LPDIRECTINPUTDEVICE*) &cDIDevice, NULL);
   if FAILED(hr) {	
@@ -338,7 +330,7 @@ void CreateController(LPCDIDEVICEINSTANCE lpddi) {
 /**
  * Sets up the Controller properties
  */ 
-void SetupController() {
+static void SetupController() {
   // set Controller data format
   if(cDIDevice->SetDataFormat(&c_dfDIJoystick2) != DI_OK) {
 #if _DEBUG
@@ -460,7 +452,7 @@ void SetupController() {
 /**
  * Sets the fields on the Controller
  */
-void InitializeControllerFields() {
+static void InitializeControllerFields() {
   //create buttons array
   jbooleanArray cButtonsArray = cEnvironment->NewBooleanArray(cButtoncount);
   
@@ -471,7 +463,7 @@ void InitializeControllerFields() {
 /**
  * Updates the fields on the Controller
  */
-void UpdateControllerFields() {
+static void UpdateControllerFields() {
   HRESULT                 hRes; 
 
   // get data from the Controller 
@@ -543,7 +535,7 @@ void UpdateControllerFields() {
 /**
  * Sets the capabilities of the Controller
  */
-void SetControllerCapabilities() {
+static void SetControllerCapabilities() {
   //set buttoncount
   cEnvironment->SetStaticIntField(clsController, fidCButtonCount, cButtoncount);
 
@@ -567,7 +559,7 @@ void SetControllerCapabilities() {
 /**
  * Caches the field ids for quicker access
  */
-void CacheControllerFields() {
+static void CacheControllerFields() {
   fidCButtonCount  = cEnvironment->GetStaticFieldID(clsController, "buttonCount", "I");
   fidCHasXAxis     = cEnvironment->GetStaticFieldID(clsController, "hasXAxis", "Z");
   fidCHasRXAxis    = cEnvironment->GetStaticFieldID(clsController, "hasRXAxis", "Z");
