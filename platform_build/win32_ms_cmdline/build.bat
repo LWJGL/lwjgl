@@ -6,11 +6,23 @@ if "%CHOME%" == "" goto errorchome
 if "%ALHOME%" == "" goto erroralhome
 if "%DXHOME%" == "" goto errordxhome
 set COPTIONS=/I"%DXHOME%\include" /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /I"%JAVA_HOME%\include" /I"%JAVA_HOME%\include\win32" /I"%ALHOME%\include" /I"..\..\src\native\common" /Ox /Ob2 /Oi /Ot /Oy /FD /EHsc /MT /Gy /W2 /nologo /c /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "LWJGL_EXPORTS" /D "_WINDLL"
-rem Can't get /DELAYLOAD to work
-rem set LINKEROPTS=/link /LIBPATH:"%JAVA_HOME%\lib" /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL /DELAYLOAD:jawt.dll
-rem set LIBS=dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib
+rem *************************************************
+rem ** Build using free compiler requires jawt.dll **
+rem ** and awt.dll in current dir. /delayload      **
+rem ** fixes this, but is not available in free		 **
+rem ** toolkit. Alternatively, remove AWT support  **
+rem ** all together (only works on win32)          **
+rem *************************************************
 set LINKEROPTS=/link /LIBPATH:"%JAVA_HOME%\lib" /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL
-set LIBS=Kernel32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib winmm.lib
+set LIBS=dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib winmm.lib
+
+rem *************************************************
+rem ** Use the following lines below to build      **
+rem ** using the commercial toolkit which allows   **
+rem ** delayload option. íe. Release build.        **
+rem *************************************************
+rem set LINKEROPTS=/link /LIBPATH:"%JAVA_HOME%\lib" /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /NOLOGO /DLL /DELAYLOAD:jawt.dll
+rem set LIBS=Kernel32.lib dinput.lib dxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib jawt.lib delayimp.lib winmm.lib
 
 for %%x in (..\..\src\native\win32\*.c) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\*.c) do cl %COPTIONS% %%x
