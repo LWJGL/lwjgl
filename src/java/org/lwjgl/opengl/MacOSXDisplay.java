@@ -280,10 +280,23 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nGrabMouse(boolean grab);
 
 	public int getNativeCursorCaps() {
+		/*
 		int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
 		boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
 		int caps = supported ? Mouse.CURSOR_8_BIT_ALPHA | Mouse.CURSOR_ONE_BIT_TRANSPARENCY: 0;
 		return caps;
+		*/
+		/* Return no capability, as there are two unsolved bugs (both reported to apple along with
+		   minimal test case):
+		   1. When a custom cursor (or some standard) java.awt.Cursor is assigned to a
+		      Componennt, it is reset to the default pointer cursor when the window is de-
+			  activated and the re-activated. The Cursor can not be reset to the custom cursor,
+			  with another setCursor.
+		   2. When the cursor is moving in the top pixel row (y = 0 in AWT coordinates) in fullscreen 
+		   	  mode, no mouse moved events are reported, even though mouse pressed/released and dragged
+			  are reported
+		*/
+		return 0;
 	}
 	
 	public void setNativeCursor(Object handle) throws LWJGLException {
