@@ -35,6 +35,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
+
 /**
  * $Id$
  * <br>
@@ -44,30 +46,30 @@ import java.nio.IntBuffer;
  * @version $Revision$
  */
 final class ALCcontext {
-    
-    /** address of actual context */
-    final int context;
-    
-    /** 
-     * Creates a new instance of ALCcontext 
-     * 
-     * @param context address of actual context
-     */
-    ALCcontext(int context) {
-        this.context = context;
-    }
-    
-    static IntBuffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
-      IntBuffer attribList = ByteBuffer.allocateDirect(7*4).order(ByteOrder.nativeOrder()).asIntBuffer();
-      
-      attribList.put(ALC.ALC_FREQUENCY);
-      attribList.put(contextFrequency);
-      attribList.put(ALC.ALC_REFRESH);
-      attribList.put(contextRefresh);
-      attribList.put(ALC.ALC_SYNC);
-      attribList.put(contextSynchronized);
-      attribList.put(0); //terminating int
-      
-      return attribList;
-    }
+
+	/** address of actual context */
+	final int context;
+
+	/** 
+	 * Creates a new instance of ALCcontext 
+	 * 
+	 * @param context address of actual context
+	 */
+	ALCcontext(int context) {
+		this.context = context;
+	}
+
+	static IntBuffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
+		IntBuffer attribList = BufferUtils.createIntBuffer(7);
+
+		attribList.put(ALC.ALC_FREQUENCY);
+		attribList.put(contextFrequency);
+		attribList.put(ALC.ALC_REFRESH);
+		attribList.put(contextRefresh);
+		attribList.put(ALC.ALC_SYNC);
+		attribList.put(contextSynchronized);
+		attribList.put(0); //terminating int
+
+		return attribList;
+	}
 }

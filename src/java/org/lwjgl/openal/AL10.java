@@ -38,6 +38,7 @@ import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 /**
  * $Id$
@@ -465,8 +466,7 @@ public final class AL10 {
 		* @param data Buffer to place the integers in
 		*/
 	public static void alGetInteger(int pname, IntBuffer data) {
-		if (data.remaining() <= 0)
-			throw new IllegalArgumentException("data.remaining() <= 0");
+		BufferChecks.checkBuffer(data, 1);
 		nalGetIntegerv(pname, data, data.position());
 	}
 	private static native void nalGetIntegerv(int pname, IntBuffer data, int offset);
@@ -486,8 +486,7 @@ public final class AL10 {
 		* @param data Buffer to place the floats in
 		*/
 	public static void alGetFloat(int pname, FloatBuffer data) {
-		if (data.remaining() <= 0)
-			throw new IllegalArgumentException("data.remaining() <= 0");
+		BufferChecks.checkBuffer(data, 1);
 		nalGetFloatv(pname, data, data.position());
 	}
 	private static native void nalGetFloatv(int pname, FloatBuffer data, int position);
@@ -639,6 +638,7 @@ public final class AL10 {
 	 * @param value FloatBuffer containing value to set the attribute to
 	 */
 	public static void alListener(int pname, FloatBuffer value) {
+		BufferChecks.checkBuffer(value, 1);
 		nalListenerfv(pname, value, value.position());
 	}
 	public static native void nalListenerfv(int pname, FloatBuffer value, int offset);	
@@ -680,6 +680,8 @@ public final class AL10 {
 	 * @param floatdata Buffer to write floats to
 	 */
 	public static void alGetListener(int pname, FloatBuffer floatdata) {
+		// TODO: What's the real minimum number of elements?
+		BufferChecks.checkBuffer(floatdata, 1);
 		nalGetListenerfv(pname, floatdata, floatdata.position());
 	}
 	private static native void nalGetListenerfv(int pname, FloatBuffer floatdata, int offset);
@@ -690,6 +692,7 @@ public final class AL10 {
 	 * @param sources array holding sources
 	 */
 	public static void alGenSources(IntBuffer sources) {
+		BufferChecks.checkDirect(sources);
 		nalGenSources(sources.remaining(), sources, sources.position());
 	}
 	private static native void nalGenSources(int n, IntBuffer sources, int offset);
@@ -699,10 +702,11 @@ public final class AL10 {
 	 *
 	 * @param source Source array to delete from
 	 */
-	public static void alDeleteSources(IntBuffer source) {
-		nalDeleteSources(source.remaining(), source, source.position());
+	public static void alDeleteSources(IntBuffer sources) {
+		BufferChecks.checkDirect(sources);
+		nalDeleteSources(sources.remaining(), sources, sources.position());
 	}
-	private static native void nalDeleteSources(int n, IntBuffer source, int offset);
+	private static native void nalDeleteSources(int n, IntBuffer sources, int offset);
 
 	/**
 	 * The application can verify whether a source name is valid using the IsSource query.
@@ -736,11 +740,13 @@ public final class AL10 {
 	 * Specifies the position and other properties as taken into account during
 	 * sound processing.
 	 *
-	 * @param source Source to det property on
+	 * @param source Source to set property on
 	 * @param pname property to set
 	 * @param value FloatBuffer containing value of property
 	 */
 	public static void alSource(int source, int pname, FloatBuffer value) {
+		// TODO: What's the correct minimum value?
+		BufferChecks.checkBuffer(value, 1);
 		nalSourcefv(source, pname, value, value.position());
 	}
 	public static native void nalSourcefv(int source, int pname, FloatBuffer value, int offset);
@@ -795,8 +801,8 @@ public final class AL10 {
 	 * @param floatdata Buffer to write floats to
 	 */
 	public static void alGetSource(int source, int pname, FloatBuffer floatdata) {
-		if (floatdata.remaining() <= 0)
-			throw new IllegalArgumentException("floatdata.remaining() <= 0");
+		// TODO: What's the correct minimum value?
+		BufferChecks.checkBuffer(floatdata, 1);
 		nalGetSourcefv(source, pname, floatdata, floatdata.position());
 	}
 	private static native void nalGetSourcefv(int source, int pname, FloatBuffer floatdata, int position);
@@ -814,6 +820,7 @@ public final class AL10 {
 	 * @param sources array of sources to play
 	 */
 	public static void alSourcePlay(IntBuffer sources) {
+		BufferChecks.checkDirect(sources);
 		nalSourcePlayv(sources.remaining(), sources, sources.position());
 	}
 	private static native void nalSourcePlayv(int n, IntBuffer sources, int offset);
@@ -827,6 +834,7 @@ public final class AL10 {
 	 * @param sources array of sources to pause
 	 */
 	public static void alSourcePause(IntBuffer sources) {
+		BufferChecks.checkDirect(sources);
 		nalSourcePausev(sources.remaining(), sources, sources.position());
 	}
 	private static native void nalSourcePausev(int n, IntBuffer sources, int offset);
@@ -841,6 +849,7 @@ public final class AL10 {
 	 * @param sources array of sources to stop
 	 */
 	public static void alSourceStop(IntBuffer sources) {
+		BufferChecks.checkDirect(sources);
 		nalSourceStopv(sources.remaining(), sources, sources.position());
 	}
 	private static native void nalSourceStopv(int n, IntBuffer sources, int offset);
@@ -857,6 +866,7 @@ public final class AL10 {
 	 * @param sources array of sources to rewind
 	 */
 	public static void alSourceRewind(IntBuffer sources) {
+		BufferChecks.checkDirect(sources);
 		nalSourceRewindv(sources.remaining(), sources, sources.position());
 	}
 	private static native void nalSourceRewindv(int n, IntBuffer sources, int offset);
@@ -915,6 +925,7 @@ public final class AL10 {
 	 * @param buffers holding buffers
 	 */
 	public static void alGenBuffers(IntBuffer buffers) {
+		BufferChecks.checkDirect(buffers);
 		nalGenBuffers(buffers.remaining(), buffers, buffers.position());
 	}
 	private static native void nalGenBuffers(int n, IntBuffer buffers, int offset);
@@ -936,6 +947,7 @@ public final class AL10 {
 	 * @param buffers Buffer to delete from
 	 */
 	public static void alDeleteBuffers(IntBuffer buffers) {
+		BufferChecks.checkDirect(buffers);
 		nalDeleteBuffers(buffers.remaining(), buffers, buffers.position());
 	}
 	private static native void nalDeleteBuffers(int n, IntBuffer buffers, int offset);
@@ -980,6 +992,7 @@ public final class AL10 {
 		int format,
 		ByteBuffer data,
 		int freq) {
+			BufferChecks.checkDirect(data);
 			nalBufferData(buffer, format, data, data.position(), data.remaining(), freq);
 		}
 	public static void alBufferData(
@@ -987,6 +1000,7 @@ public final class AL10 {
 		int format,
 		ShortBuffer data,
 		int freq) {
+			BufferChecks.checkDirect(data);
 			nalBufferData(buffer, format, data, data.position() << 1, data.remaining() << 1, freq);
 		}
 	public static void alBufferData(
@@ -994,6 +1008,7 @@ public final class AL10 {
 		int format,
 		IntBuffer data,
 		int freq) {
+			BufferChecks.checkDirect(data);
 			nalBufferData(buffer, format, data, data.position() << 2, data.remaining() << 2, freq);
 		}
 	private static native void nalBufferData(
@@ -1041,6 +1056,7 @@ public final class AL10 {
 	 * @param buffers buffers to be queued
 	 */
 	public static void alSourceQueueBuffers(int source, IntBuffer buffers) {
+		BufferChecks.checkDirect(buffers);
 		nalSourceQueueBuffers(source, buffers.remaining(), buffers, buffers.position());
 	}
 	private static native void nalSourceQueueBuffers(int source, int n, IntBuffer buffers, int offset);

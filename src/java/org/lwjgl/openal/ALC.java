@@ -36,6 +36,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.Sys;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
 
 /**
  * $Id$
@@ -192,6 +193,7 @@ public class ALC {
 	 * @param integerdata ByteBuffer to write integers to
 	 */
 	public static void alcGetInteger(int pname, IntBuffer integerdata) {
+		BufferChecks.checkDirect(integerdata);
 		nalcGetIntegerv(AL.device.device, pname, integerdata.remaining(), integerdata, integerdata.position());
 	}
 
