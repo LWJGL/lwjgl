@@ -142,7 +142,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		return JNI_FALSE;
 	}
 	root_win = RootWindow(disp, screen);
-	extgl_Open();
+	if (extgl_Open() != 0) {
+#ifdef _DEBUG
+		printf("Could not load gl libs\n");
+#endif
+		return JNI_FALSE;
+	}
 	vis_info = glXChooseVisual(disp, screen, attriblist);
 
         /* might be a better way to handle not being able to set GLX_ALPHA_SIZE... */
