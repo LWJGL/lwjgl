@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -84,8 +84,14 @@ public abstract class Vector {
 	 * @return this
 	 */
 	public final Vector normalize() {
-		float l = 1.0f / length();
-		return scale(l);
+		float len = length();
+		if (len != 0.0f) {
+			float l = 1.0f / len;
+			return scale(l);
+		} else {
+			assert false;
+			return this;
+		}
 	}
 	
 
