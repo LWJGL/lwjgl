@@ -77,8 +77,16 @@ public class Timer {
 	 * @return the time in seconds, as a float
 	 */
 	public float getTime() {
-		if (!paused)
-			lastTime = currentTime - startTime;
+		if (!paused) {
+			if (currentTime > startTime) {
+				lastTime = currentTime - startTime;
+			} else {
+				// The timer seems to have wrapped round. We don't know
+				// when it wrapped round, so the only thing we can reasonably
+				// do is reset the starttime and have a "glitch"
+				startTime = currentTime;
+			}
+		}
 
 		return (float) ((double) lastTime / (double) resolution);
 	}
