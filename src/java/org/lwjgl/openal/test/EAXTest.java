@@ -31,7 +31,7 @@
  */
 package org.lwjgl.openal.test;
 
-import org.lwjgl.openal.EAX;
+import org.lwjgl.openal.eax.EAX;
 
 /**
  * $Id$
