@@ -26,7 +26,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricCallback
     }
 
     /* get the callback container for this quad */
-    ((GLUQuadricCallbacks) CallbackManager.get(quad))->add(new JavaMethod(env, obj, (char*) method), (GLenum) type);
+    ((GLUQuadricCallbacks *) CallbackManager.get(quad))->add(new JavaMethod(env, obj, (char*) method), (GLenum) type);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_deleteQuadric
