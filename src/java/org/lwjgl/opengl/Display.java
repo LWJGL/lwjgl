@@ -201,13 +201,13 @@ public final class Display {
 	 * A native context must exist, and it will be attached to the window.
 	 */
 	private static void createWindow() throws LWJGLException {
-    // if no display location set, center window
-    if(x == -1 && y == -1) {
-      setLocation(Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2),
-                  Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2));
-    }
-    
 		display_impl.createWindow(current_mode, fullscreen, (fullscreen) ? 0 : x, (fullscreen) ? 0 : y);
+		// if no display location set, center window
+		if(x == -1 && y == -1) {
+			setLocation(Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2),
+					Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2));
+		}
+
 		setTitle(title);
 		initControls();
 		setVSyncEnabled(vsync);
