@@ -359,7 +359,7 @@ public class Keyboard {
 		assert created : "The keyboard has not been created.";
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
         
-        translationEnabled = nEnableTranslation();
+		translationEnabled = nEnableTranslation();
 		return translationEnabled;
 	}
 	
