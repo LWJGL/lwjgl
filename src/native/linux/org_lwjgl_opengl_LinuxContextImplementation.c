@@ -99,18 +99,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nSetVSyn
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nCreate
-  (JNIEnv *env , jclass clazz, jobject peer_handle, jobject context_handle, jobject shared_context_handle) {
-	if ((*env)->GetDirectBufferCapacity(env, context_handle) < sizeof(X11Context)) {
-		throwException(env, "Handle buffer not large enough");
-		return;
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nCreate
+  (JNIEnv *env , jclass clazz, jobject peer_handle, jobject shared_context_handle) {
+	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(X11Context));
+	if (context_handle == NULL) {
+		throwException(env, "Could not allocate handle buffer");
+		return NULL;
 	}
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_handle);
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
 	
 	if (!extgl_InitGLX(env, peer_info->display, peer_info->screen)) {
 		throwException(env, "Could not initialize GLX");
-		return;
+		return NULL;
 	}
 	GLXContext shared_context = NULL;
 	if (shared_context_handle != NULL) {
@@ -122,6 +123,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nCreate
 	} else {
 		createContextGLX(env, peer_info, context_info, shared_context);
 	}
+	return context_handle;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nDestroy

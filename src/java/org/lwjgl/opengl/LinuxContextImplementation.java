@@ -43,20 +43,16 @@ import org.lwjgl.BufferUtils;
  * @version $Revision$
  */
 final class LinuxContextImplementation implements ContextImplementation {
-	private final static int HANDLE_SIZE = 64;
-
 	private static PeerInfo getCurrentPeerInfo() {
 		return Context.getCurrentContext().getPeerInfo();
 	}
 
 	public ByteBuffer create(PeerInfo peer_info, ByteBuffer shared_context_handle) throws LWJGLException {
-		ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
 		LinuxDisplay.lockAWT();
 		try {
 			ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 			try {
-				nCreate(peer_handle, handle, shared_context_handle);
-				return handle;
+				return nCreate(peer_handle, shared_context_handle);
 			} finally {
 				peer_info.unlock();
 			}
@@ -65,7 +61,7 @@ final class LinuxContextImplementation implements ContextImplementation {
 		}
 	}
 
-	private static native void nCreate(ByteBuffer peer_handle, ByteBuffer context_handle, ByteBuffer shared_context_handle) throws LWJGLException;
+	private static native ByteBuffer nCreate(ByteBuffer peer_handle, ByteBuffer shared_context_handle) throws LWJGLException;
 	
 	public void swapBuffers() throws LWJGLException {
 		PeerInfo current_peer_info = getCurrentPeerInfo();
