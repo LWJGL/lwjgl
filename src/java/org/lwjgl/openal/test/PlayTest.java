@@ -49,30 +49,13 @@ import java.net.*;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class PlayTest {
-    
-    /** OpenAL instance */
-    protected AL al;
-    
-    /** OpenAL Context instance */
-    protected ALC alc;
-    
-    /** OpenAL Util library instance */
-    protected ALUT alut;
-    
-    /** OpenAL context */
-    protected ALCcontext context;
-    
-    /** OpenAL device */
-    protected ALCdevice device;   
+public class PlayTest extends BasicTest {
     
     /**
      * Creates an instance of PlayTest
      */
     public PlayTest() {
-        al      = new AL();
-        alc     = new ALC();
-        alut    = new ALUT();
+        super();
     }
     
     protected void execute(String[] args) {
@@ -166,36 +149,6 @@ public class PlayTest {
         //shutdown
         alc.destroyContext(context);
         alc.closeDevice(device);
-    }
-    
-    /**
-     * Initializes OpenAL
-     */
-    protected void alInitialize() {
-        
-        //get default device
-        device = alc.openDevice("");
-        if(device == null) {
-            throw new RuntimeException("Error creating device");
-        }
-        
-        //create context (no attributes specified)
-        context = alc.createContext(device, 0);
-        if(context == null) {
-            throw new RuntimeException("Error creating context");
-        }
-        
-        //make context current
-        alc.makeContextCurrent(context);
-        if(alc.getError(device) != ALC.NO_ERROR) {
-            throw new RuntimeException("An error occurred while making context current");
-        }
-    }
-    
-    protected void exit(int error) {
-        System.out.println("OpenAL Error: " + al.getString(error));
-        alut.exit();
-        System.exit(-1);
     }
     
     /**
