@@ -210,6 +210,10 @@ public final class Sys {
 		if (grabbed) {
 			Mouse.setGrabbed(false);
 		}
+		if (title == null)
+			title = "";
+		if (message == null)
+			message = "";
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Windows")) {
 			nAlert(title, message);
