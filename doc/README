@@ -19,9 +19,6 @@ To run some of the included tests:
   
  where TEST is one of the following: 
  
-  org.lwjgl.test.input.ControllerCreationTest (Requires attached Controller)
-  org.lwjgl.test.input.ControllerTest (Requires attached Controller)
-  org.lwjgl.test.input.ControllerFieldTest (Requires attached Controller)
   org.lwjgl.test.input.MouseCreationTest
   org.lwjgl.test.input.MouseTest
   org.lwjgl.test.input.HWCursorTest

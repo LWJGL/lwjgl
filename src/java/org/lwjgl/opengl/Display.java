@@ -50,7 +50,6 @@ import java.util.HashSet;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -231,9 +230,6 @@ public final class Display {
 		}
 		if (Keyboard.isCreated()) {
 			Keyboard.destroy();
-		}
-		if (Controller.isCreated()) {
-			Controller.destroy();
 		}
 		display_impl.destroyWindow();
 	}
@@ -483,9 +479,6 @@ public final class Display {
 		if (Keyboard.isCreated()) {
 			Keyboard.poll();
 		}
-		if (Controller.isCreated()) {
-			Controller.poll();
-		}
 	}
 
 	/**
@@ -591,17 +584,6 @@ public final class Display {
 						e.printStackTrace(System.err);
 					} else {
 						Sys.log("Failed to create Keyboard: "+e);
-					}
-				}
-			}
-			if (System.getProperty("os.name").startsWith("Win") && !Controller.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nocontroller")) {
-				try {
-					Controller.create();
-				} catch (LWJGLException e) {
-					if (Sys.DEBUG) {
-						e.printStackTrace(System.err);
-					} else {
-						Sys.log("Failed to create Controller: "+e);
 					}
 				}
 			}

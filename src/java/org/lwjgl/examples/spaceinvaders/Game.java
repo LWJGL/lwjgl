@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -554,20 +553,17 @@ public class Game {
     	case Keyboard.KEY_LEFT:
         return 
           Keyboard.isKeyDown(Keyboard.KEY_LEFT) ||
-          mouseX < 0 ||
-          (Controller.isCreated() && Controller.getX() < 0);
+          mouseX < 0;
       
       case Keyboard.KEY_RIGHT:
         return 
           Keyboard.isKeyDown(Keyboard.KEY_RIGHT) ||
-          mouseX > 0 ||
-          (Controller.isCreated() && Controller.getX() > 0);
+          mouseX > 0;
       
       case Keyboard.KEY_SPACE:
         return 
           Keyboard.isKeyDown(Keyboard.KEY_SPACE) ||
-          Mouse.isButtonDown(0) ||
-          (Controller.isCreated() && Controller.isButtonDown(0));
+          Mouse.isButtonDown(0);
     }
 		return false;
 	}
