@@ -242,18 +242,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListenerfv
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    genSources
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genSources
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    deleteSources
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteSources
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
@@ -330,34 +330,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcefv
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    sourcePlayv
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlayv
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    sourcePausev
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePausev
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    sourceStopv
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStopv
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    sourceRewindv
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewindv
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
@@ -394,18 +394,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewind
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    genBuffers
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genBuffers
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    deleteBuffers
- * Signature: (I[I)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteBuffers
-  (JNIEnv *, jobject, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
@@ -442,18 +442,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBufferf
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    sourceQueueBuffers
- * Signature: (II[I)V
+ * Signature: (III)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceQueueBuffers
-  (JNIEnv *, jobject, jint, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    sourceUnqueueBuffers
- * Signature: (II[I)V
+ * Signature: (III)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceUnqueueBuffers
-  (JNIEnv *, jobject, jint, jint, jintArray);
+  (JNIEnv *, jobject, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL

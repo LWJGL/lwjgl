@@ -31,12 +31,12 @@
  */
 package org.lwjgl.openal.test;
 
+import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCcontext;
-import org.lwjgl.openal.ALCdevice;
-import org.lwjgl.openal.ALUT;
 import org.lwjgl.openal.ALUTLoadWAVData;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * $Id$
@@ -71,16 +71,19 @@ public class PlayTest extends BasicTest {
         alInitialize();
         
         //create 1 buffer and 1 source
-        int[] buffers   = new int[1];
-        int[] sources   = new int[1];
+        ByteBuffer buffers = ByteBuffer.allocateDirect(4);
+        buffers.order(ByteOrder.nativeOrder());
+        
+        ByteBuffer sources = ByteBuffer.allocateDirect(4);
+        sources.order(ByteOrder.nativeOrder());
         
         // al generate buffers and sources
-        al.genBuffers(1, buffers);
+        al.genBuffers(1, Sys.getDirectBufferAddress(buffers));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }
 
-        al.genSources(1, sources);        
+        al.genSources(1, Sys.getDirectBufferAddress(sources));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }
@@ -93,7 +96,7 @@ public class PlayTest extends BasicTest {
         
         
         //copy to buffers
-        al.bufferData(buffers[0], file.format, file.data, file.size, file.freq);
+        al.bufferData(buffers.getInt(0), file.format, file.data, file.size, file.freq);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -105,19 +108,19 @@ public class PlayTest extends BasicTest {
         }        
         
         //set up source input
-        al.sourcei(sources[0], AL.BUFFER, buffers[0]);
+        al.sourcei(sources.getInt(0), AL.BUFFER, buffers.getInt(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //lets loop the sound
-        al.sourcei(sources[0], AL.LOOPING, AL.TRUE);
+        al.sourcei(sources.getInt(0), AL.LOOPING, AL.TRUE);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //play source 0
-        al.sourcePlay(sources[0]);
+        al.sourcePlay(sources.getInt(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -130,18 +133,18 @@ public class PlayTest extends BasicTest {
         }
         
         //stop source 0
-        al.sourceStop(sources[0]);
+        al.sourceStop(sources.getInt(0));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //delete buffers and sources
-        al.deleteSources(1, sources);
+        al.deleteSources(1, Sys.getDirectBufferAddress(sources));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }
         
-        al.deleteBuffers(1, buffers);
+        al.deleteBuffers(1, Sys.getDirectBufferAddress(buffers));
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
@@ -155,7 +158,7 @@ public class PlayTest extends BasicTest {
     
     /**
      * main entry point
-     *
+     *+
      * @param args String array containing arguments
      */
     public static void main(String[] args) {

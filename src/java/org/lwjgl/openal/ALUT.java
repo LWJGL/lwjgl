@@ -73,10 +73,10 @@ public class ALUT {
     /**
      * Loads a byte buffer into memory
      *
-     * @param buffer byte buffer containing file
+     * @param buffer buffer address containing file
      * @return ALUTLoadWAVData object containing information regarding wave data loaded
      */
-    public native ALUTLoadWAVData       loadWAVMemory(byte[] buffer);
+    public native ALUTLoadWAVData       loadWAVMemory(int buffer);
     
     /**
      * Unloads the specified file from memory

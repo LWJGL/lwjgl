@@ -354,10 +354,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getListenerfv (JNIEnv *env, 
  * C Specification:
  * ALvoid alGenSources(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genSources (JNIEnv *env, jobject obj, jint n, jintArray sources) {
-	int* array = (int*) env->GetIntArrayElements(sources, 0);
-	alGenSources(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(sources, (jint*) array, 0);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genSources (JNIEnv *env, jobject obj, jint n, jint sources) {
+	alGenSources(n, (ALuint*) sources);
 	CHECK_AL_ERROR
 }
 
@@ -367,10 +365,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genSources (JNIEnv *env, job
  * C Specification:
  * ALvoid alDeleteSources(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteSources (JNIEnv *env, jobject obj, jint n, jintArray source) {
-	int* array = (int*) env->GetIntArrayElements(source, 0);
-	alDeleteSources(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(source, (jint*) array, 0);	
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteSources (JNIEnv *env, jobject obj, jint n, jint sources) {
+	alDeleteSources(n, (ALuint*) sources);
 	CHECK_AL_ERROR
 }
 
@@ -479,10 +475,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getSourcefv (JNIEnv *env, jo
  * C Specification:
  * ALvoid alSourcePlayv(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlayv (JNIEnv *env, jobject obj, jint n, jintArray sources) {
-	int* array = (int*) env->GetIntArrayElements(sources, 0);
-	alSourcePlayv(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlayv (JNIEnv *env, jobject obj, jint n, jint sources) {
+	alSourcePlayv(n, (ALuint*) sources);
 	CHECK_AL_ERROR
 }
 
@@ -492,10 +486,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePlayv (JNIEnv *env, jo
  * C Specification:
  * ALvoid alSourcePausev(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePausev (JNIEnv *env, jobject obj, jint n, jintArray sources) {
-	int* array = (int*) env->GetIntArrayElements(sources, 0);
-	alSourcePausev(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePausev (JNIEnv *env, jobject obj, jint n, jint sources) {
+	alSourcePausev(n, (ALuint*) sources);
 	CHECK_AL_ERROR
 }
 
@@ -505,10 +497,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourcePausev (JNIEnv *env, j
  * C Specification:
  * ALvoid alSourceStopv(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStopv (JNIEnv *env, jobject obj, jint n, jintArray sources) {
-	int* array = (int*) env->GetIntArrayElements(sources, 0);
-	alSourceStopv(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStopv (JNIEnv *env, jobject obj, jint n, jint sources) {
+	alSourceStopv(n, (ALuint*) sources);
 	CHECK_AL_ERROR
 }
 
@@ -518,10 +508,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceStopv (JNIEnv *env, jo
  * C Specification:
  * ALvoid alSourceRewindv(ALsizei n,ALuint *sources);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewindv (JNIEnv *env, jobject obj, jint n, jintArray sources) {
-	int* array = (int*) env->GetIntArrayElements(sources, 0);
-	alSourceRewindv(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(sources, (jint*) array, 0);	
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewindv (JNIEnv *env, jobject obj, jint n, jint sources) {
+	alSourceRewindv(n, (ALuint*) sources);
 	CHECK_AL_ERROR
 }
 
@@ -575,10 +563,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceRewind (JNIEnv *env, j
  * C Specification:
  * ALvoid alGenBuffers(ALsizei n,ALuint *buffers);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genBuffers (JNIEnv *env, jobject obj, jint n, jintArray buffers) {
-	int* array = (int*) env->GetIntArrayElements(buffers, 0);
-	alGenBuffers(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(buffers, (jint*) array, 0);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genBuffers (JNIEnv *env, jobject obj, jint n, jint buffers) {
+	alGenBuffers(n, (ALuint*) buffers);
 	CHECK_AL_ERROR
 }
 
@@ -588,10 +574,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_genBuffers (JNIEnv *env, job
  * C Specification:
  * ALvoid alDeleteBuffers(ALsizei n,ALuint *buffers);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteBuffers (JNIEnv *env, jobject obj, jint n, jintArray buffer) {
-	int* array = (int*) env->GetIntArrayElements(buffer, 0);
-	alDeleteBuffers(n, (ALuint*) array);
-	env->ReleaseIntArrayElements(buffer, (jint*) array, 0);	
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_deleteBuffers (JNIEnv *env, jobject obj, jint n, jint buffers) {
+	alDeleteBuffers(n, (ALuint*) buffers);
 	CHECK_AL_ERROR
 }
 
@@ -647,10 +631,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_getBufferf (JNIEnv *env, job
  * C Specification:
  * ALvoid alSourceQueueBuffers( ALuint source, ALsizei n, ALuint* buffers );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceQueueBuffers (JNIEnv *env, jobject obj, jint source, jint n, jintArray buffers) {
-	int* array = (int*) env->GetIntArrayElements(buffers, 0);
-	alSourceQueueBuffers((ALuint) source, (ALsizei) n, (ALuint*) array);
-	env->ReleaseIntArrayElements(buffers, (jint*) array, 0);	
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceQueueBuffers (JNIEnv *env, jobject obj, jint source, jint n, jint buffers) {
+	alSourceQueueBuffers((ALuint) source, (ALsizei) n, (ALuint*) buffers);
 	CHECK_AL_ERROR
 }
 
@@ -660,10 +642,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceQueueBuffers (JNIEnv *
  * C Specification:
  * ALvoid alSourceUnqueueBuffers( ALuint source, ALsizei n, ALuint* buffers );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceUnqueueBuffers (JNIEnv *env, jobject obj, jint source, jint n, jintArray buffers) {
-	int* array = (int*) env->GetIntArrayElements(buffers, 0);
-	alSourceUnqueueBuffers((ALuint) source, (ALsizei) n, (ALuint*) array);
-	env->ReleaseIntArrayElements(buffers, (jint*) array, 0);
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_sourceUnqueueBuffers (JNIEnv *env, jobject obj, jint source, jint n, jint buffers) {
+	alSourceUnqueueBuffers((ALuint) source, (ALsizei) n, (ALuint*) buffers);
 	CHECK_AL_ERROR
 }
 

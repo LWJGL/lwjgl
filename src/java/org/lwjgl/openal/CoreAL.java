@@ -255,7 +255,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of sources to generate
      * @param sources array holding sources
      */
-    public native void          genSources(int n, int[] sources);
+    public native void          genSources(int n, int sources);
   
     /**
      * Delete one or more sources.
@@ -263,7 +263,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n Number of sources to delete
      * @param source Source array to delete from
      */
-    public native void          deleteSources(int n, int[] source);
+    public native void          deleteSources(int n, int source);
 
     /**
      * Tests if a source is valid.
@@ -355,7 +355,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of sources to play
      * @param source array of sources to play
      */
-    public native void          sourcePlayv(int n, int[] sources);
+    public native void          sourcePlayv(int n, int sources);
 
     /**
      * Pauses a set of sources.
@@ -363,7 +363,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of sources to pause
      * @param source array of sources to pause
      */
-    public native void          sourcePausev(int n, int[] sources);
+    public native void          sourcePausev(int n, int sources);
 
     /**
      * Stops a set of sources.
@@ -371,7 +371,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of sources to stop
      * @param source array of sources to stop
      */
-    public native void          sourceStopv(int n, int[] sources);
+    public native void          sourceStopv(int n, int sources);
     
     /**
      * Rewinds a set of sources.
@@ -379,7 +379,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of sources to rewind
      * @param source array of sources to rewind
      */
-    public native void          sourceRewindv(int n, int[] sources);
+    public native void          sourceRewindv(int n, int sources);
         
     /**
      * Play a source.
@@ -415,7 +415,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of buffers to generate
      * @param buffers array holding buffers
      */
-    public native void          genBuffers(int n, int[] buffers);
+    public native void          genBuffers(int n, int buffers);
     
     /**
      * Delete one or more buffers.
@@ -423,7 +423,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n Number of buffers to delete
      * @param buffers Buffer array to delete from
      */
-    public native void          deleteBuffers(int n, int[] buffers);    
+    public native void          deleteBuffers(int n, int buffers);    
     
     /**
      * Tests if buffer is valid.
@@ -469,7 +469,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of buffers to be queued
      * @param buffers buffers to be queued
      */
-    public native void          sourceQueueBuffers(int source, int n, int[] buffers);
+    public native void          sourceQueueBuffers(int source, int n, int buffers);
     
     /**
      * Unqueues a set of buffers attached to a source.
@@ -478,7 +478,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param n number of buffers to be unqueued
      * @param buffers buffers to be unqueued
      */    
-    public native void          sourceUnqueueBuffers(int source, int n, int[] buffers);
+    public native void          sourceUnqueueBuffers(int source, int n, int buffers);
     
     /**
      * Selects the OpenAL distance model.
