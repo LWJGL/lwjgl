@@ -121,13 +121,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 		fid_dwheel = env->GetStaticFieldID(clazz, "dwheel", "I");
 }
 
-static int blankCursor(void) {
+static bool blankCursor(void) {
 	unsigned int best_width, best_height;
 	if (XQueryBestCursor(getCurrentDisplay(), getCurrentWindow(), 1, 1, &best_width, &best_height) == 0) {
 #ifdef _DEBUG
 		printf("Could not query best cursor size\n");
 #endif
-		return 0;
+		return false;
 	}
 	Pixmap mask = XCreatePixmap(getCurrentDisplay(), getCurrentWindow(), best_width, best_height, 1);
 	XGCValues gc_values;
@@ -138,7 +138,7 @@ static int blankCursor(void) {
 	XColor dummy_color;
 	blank_cursor = XCreatePixmapCursor(getCurrentDisplay(), mask, mask, &dummy_color, &dummy_color, 0, 0);
 	XFreePixmap(getCurrentDisplay(), mask);
-	return 1;
+	return true;
 }
 
 bool isNativeCursor(void) {
