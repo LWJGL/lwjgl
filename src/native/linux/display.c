@@ -230,7 +230,7 @@ static bool setMode(JNIEnv *env, Display *disp, int screen, int width, int heigh
 		return false;
 	int num_modes, i;
 	mode_info *avail_modes = getDisplayModes(disp, screen, &num_modes);
-	if (avail_modes == NULL) {
+	if (avail_modes == NULL || num_modes == 0) {
 		printfDebugJava(env, "Could not get display modes");
 		return false;
 	}
@@ -404,8 +404,10 @@ void switchDisplayMode(JNIEnv * env, jobject mode, int screen) {
 
 void resetDisplayMode(JNIEnv *env, int screen, bool temporary) {
 	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL)
+	if (disp == NULL) {
+		printfDebugJava(env, "Failed to contact X Server");
 		return;
+	}
 	if (!setMode(env, disp, screen, saved_width, saved_height, saved_freq, temporary)) {
 		printfDebugJava(env, "Failed to reset mode");
 	}
