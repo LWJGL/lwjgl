@@ -58,7 +58,7 @@
 		extern HDC		hdc;								// Device context
 		extern LPDIRECTINPUT	lpdi;						// DirectInput
 		extern bool		isFullScreen;						// Whether we're fullscreen or not
-
+		extern bool		isMinimized;						// Whether we're minimized or not
 	#endif /* _PRIVATE_WINDOW_H_ */
 
 	/*

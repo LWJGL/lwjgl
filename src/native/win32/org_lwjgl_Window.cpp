@@ -48,6 +48,7 @@ HWND				hwnd = NULL;						// Handle to the window
 HDC					hdc = NULL;							// Device context
 LPDIRECTINPUT		lpdi = NULL;						// DirectInput
 bool				isFullScreen = false;				// Whether we're fullscreen or not
+bool				isMinimized = false;				// Whether we're minimized or not
 JNIEnv *			environment;						// Cached environment
 jobject				window;								// Cached Java Window instance handle
 extern HINSTANCE	dll_handle;							// Handle to the LWJGL dll
@@ -169,11 +170,11 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		break;
 		case WM_ACTIVATE:
 		{
-			bool isMinimized = false;
 			switch(LOWORD(wParam)) {
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), false);
+				isMinimized = false;
 				break;
 			case WA_INACTIVE:
 				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), true);
@@ -222,6 +223,7 @@ bool registerWindow()
 			printf("Failed to register window class\n");
 			return false;
 		}
+		printf("Window registered\n");
 		oneShotInitialised = true;
 	}
 
@@ -373,8 +375,8 @@ void handleMessages(JNIEnv * env, jobject obj)
 		0,  // first message
 		0,  // last message
 		PM_REMOVE      // removal options
-		)) {
-
+		))
+	{
 		TranslateMessage(&msg);
       	DispatchMessage(&msg);
 	};

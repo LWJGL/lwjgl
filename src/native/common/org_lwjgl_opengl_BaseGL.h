@@ -8,21 +8,20 @@
 extern "C" {
 #endif
 /* Inaccessible static: currentWindow */
-/* Inaccessible static: currentContext */
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZIIII)V
+ * Signature: (IIIIIIIIZ)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv *, jobject, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint);
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint, jint, jint, jboolean);
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
- * Method:    nDestroy
+ * Method:    nDestroyGL
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

@@ -51,16 +51,37 @@ import org.lwjgl.Window;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public abstract class BaseGL extends Window {
+public class BaseGL extends Window {
 		
+	static {
+		System.loadLibrary(Sys.getLibraryName());
+	}
+	
 	/** The current rendering context */
-	private static BaseGL currentContext;
+	//private static BaseGL currentContext;
 	
 	/** Has the GL been created yet? */
 	private boolean created;
 	
 	/** Handle to the native GL rendering context */
 	protected int handle;
+	
+	/** Color bits */
+	protected final int color;
+	
+	/** Alpha bits */
+	protected final int alpha;
+	
+	/** Depth bits */
+	protected final int depth;
+	
+	/** Stencil bits */
+	protected final int stencil;
+	
+	private int x, y;
+	
+	/** Fullscreen */
+	protected final boolean fullscreen;
 
 	/**
 	 * Construct a windowed instance of GL. If the underlying OS does not
@@ -78,7 +99,14 @@ public abstract class BaseGL extends Window {
 	public BaseGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
 		super(title, x, y, width, height);
 		
-		nCreate(title, x, y, width, height, false, bpp, alpha, depth, stencil);
+		this.x = x;
+		this.y = y;
+		this.color = bpp;
+		this.alpha = alpha;
+		this.depth = depth;
+		this.stencil = stencil;
+		this.fullscreen = false;
+		
 	}
 
 	/**
@@ -92,33 +120,44 @@ public abstract class BaseGL extends Window {
 	public BaseGL(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
 		super(title, 0, 0, Display.getWidth(), Display.getHeight());
 		
-		nCreate(title, 0, 0, Display.getWidth(), Display.getHeight(), true, bpp, alpha, depth, stencil);
+		this.x = 0;
+		this.y = 0;
+		this.color = bpp;
+		this.alpha = alpha;
+		this.depth = depth;
+		this.stencil = stencil;
+		this.fullscreen = true;
+
+	}
+	
+	protected void doCreate() throws Exception {
+		nCreate(x, y, getWidth(), getHeight(), color, alpha, depth, stencil, fullscreen);
 	}
 	
 	/**
 	 * Native method to create a windowed GL
 	 */
-	private native void nCreate(String title, int x, int y, int width, int height, boolean fullscreen, int bpp, int alpha, int depth, int stencil) throws Exception;
-
-	/**
-	 * Finalizer, marked final. Ensures the window is destroyed.
-	 */
-	public final void finalize() throws Throwable {
-		super.finalize();
-		
-		destroy();
-	}
-	/* (non-Javadoc)
-	 * @see org.lwjgl.Window#destroy()
-	 */
-	public void destroy() {
-		// Do native destroy first
-		super.destroy();
-	}
+	private native void nCreate(
+		int x,
+		int y,
+		int width,
+		int height,
+		int bpp,
+		int alpha,
+		int depth,
+		int stencil,
+		boolean fullscreen) throws Exception;
 	
+	/* (non-Javadoc)
+	 * @see org.lwjgl.Window#doDestroy()
+	 */
+	protected void doDestroy() {
+		nDestroyGL();
+	}
+
 	/**
 	 * Natively destroy any GL-related stuff
 	 */
-	private native void nDestroy();
+	private native void nDestroyGL();
 
 }

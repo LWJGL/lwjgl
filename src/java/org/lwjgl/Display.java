@@ -48,11 +48,6 @@ import java.util.Arrays;
 
 public final class Display {
 
-	static {
-		System.loadLibrary(Sys.getLibraryName());
-		init();
-	}
-
 	/** Has the display been created? */
 	private static boolean created;
 
@@ -78,6 +73,11 @@ public final class Display {
 	
 	/** MacOSX platform */
 	public static final int PLATFORM_AGL = 2;
+
+	static {
+		System.loadLibrary(Sys.getLibraryName());
+		init();
+	}
 
 	/**
 	 * No construction allowed.

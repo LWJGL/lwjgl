@@ -26,8 +26,11 @@ public abstract class Window {
 		System.loadLibrary(Sys.getLibraryName());
 	}
 	
-	/** Whether we have a window already */
+	/** The currently created window */
 	private static Window currentWindow;
+	
+	/** Whether the window is currently created, ie. has a native peer */
+	private boolean created;
 
 	/** The window's native data structure. On Win32 this is an HWND. */
 	private int handle;
@@ -66,7 +69,7 @@ public abstract class Window {
 	 * In this abstract base class, no actual window peer is constructed. This should be
 	 * done in specialised derived classes.
 	 * 
-	 * Only one Window can be constructed at a time; to create another Window you must
+	 * Only one Window can be created() at a time; to create another Window you must
 	 * first destroy() the first window.
 	 *
 	 * @param title The window's title
@@ -76,15 +79,12 @@ public abstract class Window {
 	 * @throws RuntimeException if you attempt to create more than one window at the same time
 	 */
 	protected Window(String title, int x, int y, int width, int height) {
-		if (currentWindow != null)
-			throw new RuntimeException("Only one LWJGL window may be instantiated at any one time.");
 		this.title = title;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		
-		currentWindow = this;
 	}
 
 	/**
@@ -165,12 +165,38 @@ public abstract class Window {
 	private native void swapBuffers();
 	
 	/**
+	 * Create the window.
+	 */
+	public final void create() throws Exception {
+		if (currentWindow != null)
+			throw new RuntimeException("Only one LWJGL window may be instantiated at any one time.");
+		doCreate();
+		currentWindow = this;
+		created = true;
+	}
+	
+	/**
+	 * Create the window (derived classes).
+	 * @throws Exception
+	 */
+	protected abstract void doCreate() throws Exception;
+	
+	/**
 	 * Destroy the window.
 	 */
-	public void destroy() {
-		currentWindow = null;
+	public final void destroy() {
+		if (!created)
+			return;
+		doDestroy();
 		nDestroy();
+		currentWindow = null;
+		created = false;
 	}
+	
+	/**
+	 * Destroy the window (derived classes)
+	 */
+	protected abstract void doDestroy();
 	
 	/**
 	 * Natively destroy the window
@@ -185,10 +211,10 @@ public abstract class Window {
 	}
 	
 	/**
-	 * @return true if a window has been created
+	 * @return true if the window's native peer has been created
 	 */
-	public static boolean isCreated() {
-		return currentWindow != null;
+	public final boolean isCreated() {
+		return created;
 	}
 	
 	/**
@@ -196,5 +222,21 @@ public abstract class Window {
 	 * to handle window close requests, moves, paints, etc.
 	 */
 	public final native void tick();
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	protected void finalize() throws Throwable {
+		super.finalize();
+		
+		destroy();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "Window["+title+"]";
+	}
 
 }

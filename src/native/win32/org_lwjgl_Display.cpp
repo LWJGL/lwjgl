@@ -191,16 +191,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
   (JNIEnv * env, jclass clazz, jobject mode)
 {
 
-	jfieldID fid_width = env->GetFieldID(clazz, "width", "I");
-	jfieldID fid_height = env->GetFieldID(clazz, "height", "I");
-	jfieldID fid_bpp = env->GetFieldID(clazz, "bpp", "I");
-	jfieldID fid_freq = env->GetFieldID(clazz, "freq", "I");
+	jclass cls_displayMode = env->FindClass("org/lwjgl/DisplayMode");
+	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
+	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
+	jfieldID fid_bpp = env->GetFieldID(cls_displayMode, "bpp", "I");
+	jfieldID fid_freq = env->GetFieldID(cls_displayMode, "freq", "I");
 
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
 	int bpp = env->GetIntField(mode, fid_bpp);
 	int freq = env->GetIntField(mode, fid_freq);
-
 
 	DEVMODE devmode;
 	devmode.dmSize = sizeof(DEVMODE);
@@ -229,6 +229,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 			printf("Failed to set display mode using dual monitors\n");
 #endif
 			throwException(env, "Failed to set display mode.");
+			return;
 		}
 	}
 
@@ -245,13 +246,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 	freq = GetDeviceCaps(screenDC, VREFRESH);
 	if (freq <= 1)
 		freq = 0; // Unknown
-	ReleaseDC(NULL, screenDC);
+	DeleteDC(screenDC);
 
-	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
-	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
-	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, width, height, bpp, freq);
-	jfieldID fid_mode= env->GetStaticFieldID(clazz, "mode", "[org/lwjgl/DisplayMode;");
-	env->SetStaticObjectField(clazz, fid_mode, newMode);
+	jmethodID ctor = env->GetMethodID(cls_displayMode, "<init>", "(IIII)V");
+	jobject newMode = env->NewObject(cls_displayMode, ctor, width, height, bpp, freq);
+	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
+	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 	env->DeleteLocalRef(newMode);
 
 }
@@ -302,9 +302,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
   (JNIEnv * env, jclass clazz)
 {
 	// Determine the current screen resolution
-
 	// Get the screen
 	HDC screenDC = CreateCompatibleDC(NULL);
+	if (!screenDC) {
+		printf("Couldn't get screen DC!\n");
+		return;
+	}
 	// Get the device caps
 	int width = GetDeviceCaps(screenDC, HORZRES);
 	int height = GetDeviceCaps(screenDC, VERTRES);
@@ -312,13 +315,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	int freq = GetDeviceCaps(screenDC, VREFRESH);
 	if (freq <= 1)
 		freq = 0; // Unknown
-	ReleaseDC(NULL, screenDC);
+	DeleteDC(screenDC);
 
 	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
 	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
 	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, width, height, bpp, freq);
-	
-	jfieldID fid_initialMode = env->GetFieldID(clazz, "initialMode", "[org/lwjgl/DisplayMode;");
+	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
 	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 	env->DeleteLocalRef(newMode);
 }

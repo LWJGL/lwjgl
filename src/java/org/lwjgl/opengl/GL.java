@@ -62,7 +62,6 @@ public class GL extends CoreGL implements GLConstants {
 	 */
 	public GL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
 		super(title, x, y, width, height, bpp, alpha, depth, stencil);
-		determineAvailableExtensions();
 	}
 
 	/**
@@ -75,8 +74,17 @@ public class GL extends CoreGL implements GLConstants {
 	 */
 	public GL(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
 		super(title, bpp, alpha, depth, stencil);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.lwjgl.opengl.BaseGL#doCreate()
+	 */
+	protected void doCreate() throws Exception {
+		super.doCreate();
+		
 		determineAvailableExtensions();
 	}
+
 
 	public native void activeStencilFaceEXT(int face);
 
@@ -1573,7 +1581,7 @@ public class GL extends CoreGL implements GLConstants {
 	/**
 	 * Determine which extensions are available
 	 */
-	private void determineAvailableExtensions() {
+	public void determineAvailableExtensions() {
 
 		determineAvailableWGLExtensions();
 

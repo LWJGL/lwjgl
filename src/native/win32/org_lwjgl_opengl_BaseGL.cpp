@@ -43,22 +43,24 @@
 #include "org_lwjgl_opengl_BaseGL.h"
 #include "extgl.h"
 #include "Window.h"
+#include "jni.h"
 
 HGLRC			hglrc = NULL;						// OpenGL rendering context
-
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
- * Signature: (Ljava/lang/String;IIIIZ)V
+ * Signature: (Ljava/lang/String;IIIIIIIIZ)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
-  (JNIEnv * env, jobject obj, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil)
+  (JNIEnv * env, jobject obj, 
+	jstring title, jint x, jint y, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jboolean fullscreen)
 {
+
 	// 1. Create a window
 	const char * titleString = env->GetStringUTFChars(title, NULL);
 	if (!createWindow(titleString, x, y, width, height, fullscreen == JNI_TRUE ? true : false)) {
-		env->ReleaseStringUTFChars(title, titleString);
+		env->ReleaseStringUTFChars((jstring) title, titleString);
 		closeWindow();
 		throwException(env, "Failed to create the window.");
 		return;
@@ -156,16 +158,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 
 	// 4. Initialise other things now
 	if (extgl_Open() != 0) {
-		closeWindow();
 		throwException(env, "Failed to open extgl");
+		closeWindow();
 		return;
 	}
 
 	// Create a rendering context
 	hglrc = wglCreateContext(hdc);
 	if (hglrc == NULL) {
-		closeWindow();
 		throwException(env, "Failed to create OpenGL rendering context");
+		closeWindow();
 		return;
 	}
 
@@ -189,13 +191,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
   (JNIEnv * env, jobject obj)
 {
 	wglMakeCurrent(NULL, NULL);
 
 	// Delete the rendering context
-	if (hglrc != NULL)
+	if (hglrc != NULL) {
 		wglDeleteContext(hglrc); 
+		hglrc = NULL;
+	}
+
 	extgl_Close();
 }
