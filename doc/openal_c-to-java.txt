@@ -1,0 +1,45 @@
+Author: Brian Matzon <brian@matzon.dk>
+
+When converting C/C++ OpenAL code to Java the following 
+conversion rules, typically apply:
+
+When using an array of some data type in C/C++ you will typically convert that
+to the corresponding ByteBuffer type. ie:
+ ALfloat floatv[3];
+becomes
+ FloatBuffer floatv = createFloatBuffer(3);
+
+In this example, createFloatBuffer is this utility method:
+public FloatBuffer createFloatBuffer(int size) {
+  //allocate bytebuffer, using 4 bytes per float
+  ByteBuffer temp = ByteBuffer.allocateDirect(4*size);
+  temp.order(ByteOrder.nativeOrder());
+        
+  return temp.asFloatBuffer();
+}
+
+Using the above FloatBuffer, you would typically use it like this:
+(examples taken from altest.c/ALTest.java):
+example 1:
+ alGetListenerfv(AL_POSITION, floatv);
+becomes
+ al.getListenerfv(AL.POSITION, Sys.getDirectBufferAddress(floatv));
+
+example 2:
+ if (floatv[0] != 100.0)) {
+becomes:
+ if (floatv.get(0) != 100.0f) {
+
+example 3:
+ alGetListener3f(AL_POSITION, &floatv[0], 
+                                &floatv[1], 
+                                &floatv[2]);
+becomes
+ al.getListener3f(AL.POSITION, Sys.getDirectBufferAddress(floatv), 
+                                Sys.getDirectBufferAddress(floatv) + 4, 
+                                Sys.getDirectBufferAddress(floatv) + 8);
+
+the last case is a bit special, since we start of by getting the base 
+address of the buffer, and then add the datatype size to the base address
+to get the address of that specific index. This is just how it has to 
+be in Java.
