@@ -153,7 +153,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBOcclusionQuery_nglGetQueryiv
  * Class:	org.lwjgl.opengl.arb.ARBOcclusionQuery
  * Method:	nglGetQueryObjectivARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBOcclusionQuery_nglGetQueryObjectiv
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_arb_ARBOcclusionQuery_nglGetQueryObjectivARB
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
 	CHECK_EXISTS(glGetQueryObjectivARB)
