@@ -42,84 +42,102 @@ import org.lwjgl.Sys;
  * @version $Revision$
  */
 public class AL extends CoreAL {
-  
-  /** ALC instance. */
-  protected ALC alc;
 
-  /** ALCdevice instance. */
-  protected ALCdevice device;
+	/** ALC instance. */
+	protected ALC alc;
 
-  /** Current ALCcontext. */
-  protected ALCcontext context;
-  
-  /** 
-   * String that requests a certain device or device configuration. 
-   * If null is specified, the implementation will provide an 
-   * implementation specific default. */
-  protected String deviceArguments;
-  
-  /** Frequency for mixing output buffer, in units of Hz. */
-  protected int contextFrequency = -1;
-  
-  /** Refresh intervalls, in units of Hz. */
-  protected int contextRefresh = -1;
-  
-  /** Flag, indicating a synchronous context. */
-  protected int contextSynchronized = ALC.FALSE;
+	/** ALCdevice instance. */
+	protected ALCdevice device;
 
-  /**
-   * Creates an OpenAL instance. The empty constructor will cause OpenAL to
-   * open the default device, and create a context using default values. 
-   */
-  public AL() {
-  }
+	/** Current ALCcontext. */
+	protected ALCcontext context;
+
+	/** 
+	 * String that requests a certain device or device configuration. 
+	 * If null is specified, the implementation will provide an 
+	 * implementation specific default. */
+	protected String deviceArguments;
+
+	/** Frequency for mixing output buffer, in units of Hz. */
+	protected int contextFrequency = -1;
+
+	/** Refresh intervalls, in units of Hz. */
+	protected int contextRefresh = -1;
+
+	/** Flag, indicating a synchronous context. */
+	protected int contextSynchronized = ALC.FALSE;
 
 	/**
-   * Creates an OpenAL instance. Using this constructor will cause OpenAL to
-   * open the device using supplied device argument, and create a context using the context values
-   * supplied. 
-   * 
-   * @param deviceArguments Arguments supplied to native device
-   * @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
-   * @param contextRefresh Refresh intervalls, in units of Hz.
-   * @param contextSynchronized Flag, indicating a synchronous context.* 
+	 * Creates an OpenAL instance. The empty constructor will cause OpenAL to
+	 * open the default device, and create a context using default values. 
+	 */
+	public AL() {
+	}
+
+	/**
+	* Creates an OpenAL instance. Using this constructor will cause OpenAL to
+	* open the device using supplied device argument, and create a context using the context values
+	* supplied. 
+	* 
+	* @param deviceArguments Arguments supplied to native device
+	* @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
+	* @param contextRefresh Refresh intervalls, in units of Hz.
+	* @param contextSynchronized Flag, indicating a synchronous context.* 
 	 */
 	public AL(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized) {
-    this.deviceArguments = deviceArguments;
-    this.contextFrequency = contextFrequency;
-    this.contextRefresh = contextRefresh;
-    this.contextSynchronized = contextSynchronized ? ALC.TRUE : ALC.FALSE;
+		this.deviceArguments = deviceArguments;
+		this.contextFrequency = contextFrequency;
+		this.contextRefresh = contextRefresh;
+		this.contextSynchronized = contextSynchronized ? ALC.TRUE : ALC.FALSE;
 	}
-  
-  
-  /**
+
+	/**
 	 * @see org.lwjgl.openal.BaseAL#create()
 	 */
 	public void create() throws OpenALException {
 		super.create();
-    
-    alc = new ALC(this);
-    alc.create();
-    
-    device = alc.openDevice(deviceArguments);
 
-    //check if doing default values or not
-    if (contextFrequency == -1) {
-      context = alc.createContext(device.device, 0);    
-    } else {
-    context = alc.createContext(device.device, 
-                Sys.getDirectBufferAddress(
-                  ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized)));
-    }
+		alc = new ALC(this);
+		alc.create();
 
-                  
-    alc.makeContextCurrent(context.context);     
+		device = alc.openDevice(deviceArguments);
+
+		//check if doing default values or not
+		if (contextFrequency == -1) {
+			context = alc.createContext(device.device, 0);
+		} else {
+			context =
+				alc.createContext(
+					device.device,
+					Sys.getDirectBufferAddress(
+						ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized)));
+		}
+
+		alc.makeContextCurrent(context.context);
 	}
-  
-  /**
-   * Retrieves the AL Context class 
-   */
-  public ALC getALC() {
-    return alc;
-  }
+	
+	/**
+	 * Exit cleanly by calling destroy.
+	 */
+	public void destroy() {
+		alc.destroyContext(context.context);
+		alc.closeDevice(device.device);
+		alc.destroy();
+	}
+	
+	/**
+	 * Emergency finalizer!
+	 */
+	protected void finalize() throws Throwable {
+		super.finalize();
+		
+		destroy();
+	}
+
+	/**
+	 * Retrieves the AL Context class 
+	 */
+	public final ALC getALC() {
+		return alc;
+	}
 }
