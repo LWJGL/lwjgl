@@ -32,6 +32,7 @@
 package org.lwjgl.fmod3;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -274,6 +275,12 @@ public class FMOD {
       dllName = FMOD_LINUX_LIBRARY_NAME;
     }
     
+    String jwsPath = getPathFromJWS(dllName.substring(0, dllName.indexOf(".")));
+    if (jwsPath != null) {
+      libpath += seperator
+        + jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
+    }    
+    
     // split, and rebuild library path to path + dll
     StringTokenizer st = new StringTokenizer(libpath, seperator);
     String[] paths = new String[st.countTokens() + 1];
@@ -284,7 +291,7 @@ public class FMOD {
     }
 
     //add cwd path
-    paths[paths.length - 1] = dllName;    
+    paths[paths.length - 1] = dllName;   
 		return paths;
 	}
 
@@ -304,6 +311,31 @@ public class FMOD {
     created = false;
     nDestroy();
   }
+  
+  /**
+   * Tries to locate FMOD from the JWS Library path
+   * This method exists because FMOD is loaded from native code, and as such
+   * is exempt from JWS library loading rutines. FMOD therefore always fails.
+   * We therefore invoke the protected method of the JWS classloader to see if it can
+   * locate it. 
+   * 
+   * @param libname Name of library to search for
+   * @return Absolute path to library if found, otherwise null
+   */
+  private static String getPathFromJWS(String libname) {
+    try {    
+      Object o = FMOD.class.getClassLoader();
+      Class c = o.getClass();
+      Method findLibrary =
+        c.getMethod("findLibrary", new Class[] { String.class });
+      Object[] arguments = new Object[] { libname };
+      return (String) findLibrary.invoke(o, arguments);
+
+    } catch (Exception e) {
+      System.out.println("Failure locating FMOD using classloader:" + e);
+    }
+    return null;
+  }  
 
   /**
    * Native method the destroy the FMOD
