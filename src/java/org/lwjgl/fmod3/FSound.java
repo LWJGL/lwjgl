@@ -623,7 +623,10 @@ public class FSound {
    * @param caps IntBuffer to have the caps bits stored
    * @return On success, TRUE is returned. On failure, FALSE is returned
    */
-  public static native boolean FSOUND_GetDriverCaps(int driverid, IntBuffer caps);
+  public static boolean FSOUND_GetDriverCaps(int driverid, IntBuffer caps) {
+    return nFSOUND_GetDriverCaps(driverid, caps, caps.position());
+  }
+  private static native boolean nFSOUND_GetDriverCaps(int driverid, IntBuffer caps, int offset);
 
   /**
    * Returns the name of the selected driver. Drivers are enumerated when selecting a driver with

@@ -193,9 +193,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetDriver(JNIEnv * en
 * Method:    FSOUND_GetDriverCaps
 * Signature: (ILjava/nio/IntBuffer;)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetDriverCaps(JNIEnv * env, jclass clazz, jint, jobject) {
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1GetDriverCaps(JNIEnv * env, jclass clazz, jint id, jobject buffer, jint offset) {
+	unsigned int* caps = offset + (unsigned int *) env->GetDirectBufferAddress(buffer);
+	return fmod_instance->FSOUND_GetDriverCaps(id, caps);
 }
 
 /*
