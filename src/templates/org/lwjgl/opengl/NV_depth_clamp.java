@@ -32,5 +32,5 @@
 package org.lwjgl.opengl;
 
 public interface NV_depth_clamp {
-	public static final int GL_DEPTH_CLAMP_NV = 0x864F;
+	int GL_DEPTH_CLAMP_NV = 0x864F;
 }

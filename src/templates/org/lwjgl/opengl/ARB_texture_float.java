@@ -35,33 +35,33 @@ public interface ARB_texture_float {
 	/*
 	 * Accepted by the <value> parameter of GetTexLevelParameter:
 	 */
-	public static final int TEXTURE_RED_TYPE_ARB = 0x8C10;
-	public static final int TEXTURE_GREEN_TYPE_ARB = 0x8C11;
-	public static final int TEXTURE_BLUE_TYPE_ARB = 0x8C12;
-	public static final int TEXTURE_ALPHA_TYPE_ARB = 0x8C13;
-	public static final int TEXTURE_LUMINANCE_TYPE_ARB = 0x8C14;
-	public static final int TEXTURE_INTENSITY_TYPE_ARB = 0x8C15;
-	public static final int TEXTURE_DEPTH_TYPE_ARB = 0x8C16;
+	int TEXTURE_RED_TYPE_ARB = 0x8C10;
+	int TEXTURE_GREEN_TYPE_ARB = 0x8C11;
+	int TEXTURE_BLUE_TYPE_ARB = 0x8C12;
+	int TEXTURE_ALPHA_TYPE_ARB = 0x8C13;
+	int TEXTURE_LUMINANCE_TYPE_ARB = 0x8C14;
+	int TEXTURE_INTENSITY_TYPE_ARB = 0x8C15;
+	int TEXTURE_DEPTH_TYPE_ARB = 0x8C16;
 
 	/*
 	 * Returned by the <params> parameter of GetTexLevelParameter:
 	 */
-	public static final int UNSIGNED_NORMALIZED_ARB = 0x8C17;
+	int UNSIGNED_NORMALIZED_ARB = 0x8C17;
 
 	/*
 	 * Accepted by the <internalFormat> parameter of TexImage1D,
 	 * TexImage2D, and TexImage3D:
 	 */
-	public static final int RGBA32F_ARB = 0x8814;
-	public static final int RGB32F_ARB = 0x8815;
-	public static final int ALPHA32F_ARB = 0x8816;
-	public static final int INTENSITY32F_ARB = 0x8817;
-	public static final int LUMINANCE32F_ARB = 0x8818;
-	public static final int LUMINANCE_ALPHA32F_ARB = 0x8819;
-	public static final int RGBA16F_ARB = 0x881A;
-	public static final int RGB16F_ARB = 0x881B;
-	public static final int ALPHA16F_ARB = 0x881C;
-	public static final int INTENSITY16F_ARB = 0x881D;
-	public static final int LUMINANCE16F_ARB = 0x881E;
-	public static final int LUMINANCE_ALPHA16F_ARB = 0x881F;
+	int RGBA32F_ARB = 0x8814;
+	int RGB32F_ARB = 0x8815;
+	int ALPHA32F_ARB = 0x8816;
+	int INTENSITY32F_ARB = 0x8817;
+	int LUMINANCE32F_ARB = 0x8818;
+	int LUMINANCE_ALPHA32F_ARB = 0x8819;
+	int RGBA16F_ARB = 0x881A;
+	int RGB16F_ARB = 0x881B;
+	int ALPHA16F_ARB = 0x881C;
+	int INTENSITY16F_ARB = 0x881D;
+	int LUMINANCE16F_ARB = 0x881E;
+	int LUMINANCE_ALPHA16F_ARB = 0x881F;
 }

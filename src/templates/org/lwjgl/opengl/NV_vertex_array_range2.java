@@ -32,5 +32,5 @@
 package org.lwjgl.opengl;
 
 public interface NV_vertex_array_range2 {
-	public static final int GL_VERTEX_ARRAY_RANGE_WITHOUT_FLUSH_NV = 0x8533;
+	int GL_VERTEX_ARRAY_RANGE_WITHOUT_FLUSH_NV = 0x8533;
 }

@@ -36,5 +36,5 @@ public interface NV_vertex_program3 {
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = 0x8B4C;
+	int GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = 0x8B4C;
 }

@@ -34,46 +34,46 @@ package org.lwjgl.opengl;
 import org.lwjgl.generator.*;
 
 public interface ATI_vertex_streams {
-	public static final int GL_MAX_VERTEX_STREAMS_ATI = 0x876B;
-	public static final int GL_VERTEX_SOURCE_ATI = 0x876C;
-	public static final int GL_VERTEX_STREAM0_ATI = 0x876D;
-	public static final int GL_VERTEX_STREAM1_ATI = 0x876E;
-	public static final int GL_VERTEX_STREAM2_ATI = 0x876F;
-	public static final int GL_VERTEX_STREAM3_ATI = 0x8770;
-	public static final int GL_VERTEX_STREAM4_ATI = 0x8771;
-	public static final int GL_VERTEX_STREAM5_ATI = 0x8772;
-	public static final int GL_VERTEX_STREAM6_ATI = 0x8773;
-	public static final int GL_VERTEX_STREAM7_ATI = 0x8774;
+	int GL_MAX_VERTEX_STREAMS_ATI = 0x876B;
+	int GL_VERTEX_SOURCE_ATI = 0x876C;
+	int GL_VERTEX_STREAM0_ATI = 0x876D;
+	int GL_VERTEX_STREAM1_ATI = 0x876E;
+	int GL_VERTEX_STREAM2_ATI = 0x876F;
+	int GL_VERTEX_STREAM3_ATI = 0x8770;
+	int GL_VERTEX_STREAM4_ATI = 0x8771;
+	int GL_VERTEX_STREAM5_ATI = 0x8772;
+	int GL_VERTEX_STREAM6_ATI = 0x8773;
+	int GL_VERTEX_STREAM7_ATI = 0x8774;
 
-	public void glVertexStream2fATI(@GLenum int stream, float x, float y);
+	void glVertexStream2fATI(@GLenum int stream, float x, float y);
 
-	public void glVertexStream2iATI(@GLenum int stream, int x, int y);
+	void glVertexStream2iATI(@GLenum int stream, int x, int y);
 
-	public void glVertexStream2sATI(@GLenum int stream, short x, short y);
+	void glVertexStream2sATI(@GLenum int stream, short x, short y);
 
-	public void glVertexStream3fATI(@GLenum int stream, float x, float y, float z);
+	void glVertexStream3fATI(@GLenum int stream, float x, float y, float z);
 
-	public void glVertexStream3iATI(@GLenum int stream, int x, int y, int z);
+	void glVertexStream3iATI(@GLenum int stream, int x, int y, int z);
 
-	public void glVertexStream3sATI(@GLenum int stream, short x, short y, short z);
+	void glVertexStream3sATI(@GLenum int stream, short x, short y, short z);
 
-	public void glVertexStream4fATI(@GLenum int stream, float x, float y, float z, float w);
+	void glVertexStream4fATI(@GLenum int stream, float x, float y, float z, float w);
 
-	public void glVertexStream4iATI(@GLenum int stream, int x, int y, int z, int w);
+	void glVertexStream4iATI(@GLenum int stream, int x, int y, int z, int w);
 
-	public void glVertexStream4sATI(@GLenum int stream, short x, short y, short z, short w);
+	void glVertexStream4sATI(@GLenum int stream, short x, short y, short z, short w);
 
-	public void glNormalStream3bATI(@GLenum int stream, byte x, byte y, byte z);
+	void glNormalStream3bATI(@GLenum int stream, byte x, byte y, byte z);
 
-	public void glNormalStream3fATI(@GLenum int stream, float x, float y, float z);
+	void glNormalStream3fATI(@GLenum int stream, float x, float y, float z);
 
-	public void glNormalStream3iATI(@GLenum int stream, int x, int y, int z);
+	void glNormalStream3iATI(@GLenum int stream, int x, int y, int z);
 
-	public void glNormalStream3sATI(@GLenum int stream, short x, short y, short z);
+	void glNormalStream3sATI(@GLenum int stream, short x, short y, short z);
 
-	public void glClientActiveVertexStreamATI(@GLenum int stream);
+	void glClientActiveVertexStreamATI(@GLenum int stream);
 
-	public void glVertexBlendEnvfATI(@GLenum int pname, float param);
+	void glVertexBlendEnvfATI(@GLenum int pname, float param);
 
-	public void glVertexBlendEnviATI(@GLenum int pname, int param);
+	void glVertexBlendEnviATI(@GLenum int pname, int param);
 }

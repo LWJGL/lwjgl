@@ -32,6 +32,6 @@
 package org.lwjgl.opengl;
 
 public interface EXT_stencil_wrap {
-	public static final int GL_INCR_WRAP_EXT = 0x8507;
-	public static final int GL_DECR_WRAP_EXT = 0x8508;
+	int GL_INCR_WRAP_EXT = 0x8507;
+	int GL_DECR_WRAP_EXT = 0x8508;
 }

@@ -31,71 +31,70 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_multitexture {
-	public static final int GL_TEXTURE0_ARB = 0x84C0;
-	public static final int GL_TEXTURE1_ARB = 0x84C1;
-	public static final int GL_TEXTURE2_ARB = 0x84C2;
-	public static final int GL_TEXTURE3_ARB = 0x84C3;
-	public static final int GL_TEXTURE4_ARB = 0x84C4;
-	public static final int GL_TEXTURE5_ARB = 0x84C5;
-	public static final int GL_TEXTURE6_ARB = 0x84C6;
-	public static final int GL_TEXTURE7_ARB = 0x84C7;
-	public static final int GL_TEXTURE8_ARB = 0x84C8;
-	public static final int GL_TEXTURE9_ARB = 0x84C9;
-	public static final int GL_TEXTURE10_ARB = 0x84CA;
-	public static final int GL_TEXTURE11_ARB = 0x84CB;
-	public static final int GL_TEXTURE12_ARB = 0x84CC;
-	public static final int GL_TEXTURE13_ARB = 0x84CD;
-	public static final int GL_TEXTURE14_ARB = 0x84CE;
-	public static final int GL_TEXTURE15_ARB = 0x84CF;
-	public static final int GL_TEXTURE16_ARB = 0x84D0;
-	public static final int GL_TEXTURE17_ARB = 0x84D1;
-	public static final int GL_TEXTURE18_ARB = 0x84D2;
-	public static final int GL_TEXTURE19_ARB = 0x84D3;
-	public static final int GL_TEXTURE20_ARB = 0x84D4;
-	public static final int GL_TEXTURE21_ARB = 0x84D5;
-	public static final int GL_TEXTURE22_ARB = 0x84D6;
-	public static final int GL_TEXTURE23_ARB = 0x84D7;
-	public static final int GL_TEXTURE24_ARB = 0x84D8;
-	public static final int GL_TEXTURE25_ARB = 0x84D9;
-	public static final int GL_TEXTURE26_ARB = 0x84DA;
-	public static final int GL_TEXTURE27_ARB = 0x84DB;
-	public static final int GL_TEXTURE28_ARB = 0x84DC;
-	public static final int GL_TEXTURE29_ARB = 0x84DD;
-	public static final int GL_TEXTURE30_ARB = 0x84DE;
-	public static final int GL_TEXTURE31_ARB = 0x84DF;
-	public static final int GL_ACTIVE_TEXTURE_ARB = 0x84E0;
-	public static final int GL_CLIENT_ACTIVE_TEXTURE_ARB = 0x84E1;
-	public static final int GL_MAX_TEXTURE_UNITS_ARB = 0x84E2;
+	int GL_TEXTURE0_ARB = 0x84C0;
+	int GL_TEXTURE1_ARB = 0x84C1;
+	int GL_TEXTURE2_ARB = 0x84C2;
+	int GL_TEXTURE3_ARB = 0x84C3;
+	int GL_TEXTURE4_ARB = 0x84C4;
+	int GL_TEXTURE5_ARB = 0x84C5;
+	int GL_TEXTURE6_ARB = 0x84C6;
+	int GL_TEXTURE7_ARB = 0x84C7;
+	int GL_TEXTURE8_ARB = 0x84C8;
+	int GL_TEXTURE9_ARB = 0x84C9;
+	int GL_TEXTURE10_ARB = 0x84CA;
+	int GL_TEXTURE11_ARB = 0x84CB;
+	int GL_TEXTURE12_ARB = 0x84CC;
+	int GL_TEXTURE13_ARB = 0x84CD;
+	int GL_TEXTURE14_ARB = 0x84CE;
+	int GL_TEXTURE15_ARB = 0x84CF;
+	int GL_TEXTURE16_ARB = 0x84D0;
+	int GL_TEXTURE17_ARB = 0x84D1;
+	int GL_TEXTURE18_ARB = 0x84D2;
+	int GL_TEXTURE19_ARB = 0x84D3;
+	int GL_TEXTURE20_ARB = 0x84D4;
+	int GL_TEXTURE21_ARB = 0x84D5;
+	int GL_TEXTURE22_ARB = 0x84D6;
+	int GL_TEXTURE23_ARB = 0x84D7;
+	int GL_TEXTURE24_ARB = 0x84D8;
+	int GL_TEXTURE25_ARB = 0x84D9;
+	int GL_TEXTURE26_ARB = 0x84DA;
+	int GL_TEXTURE27_ARB = 0x84DB;
+	int GL_TEXTURE28_ARB = 0x84DC;
+	int GL_TEXTURE29_ARB = 0x84DD;
+	int GL_TEXTURE30_ARB = 0x84DE;
+	int GL_TEXTURE31_ARB = 0x84DF;
+	int GL_ACTIVE_TEXTURE_ARB = 0x84E0;
+	int GL_CLIENT_ACTIVE_TEXTURE_ARB = 0x84E1;
+	int GL_MAX_TEXTURE_UNITS_ARB = 0x84E2;
 
-	public void glClientActiveTextureARB(@GLenum int texture);
+	void glClientActiveTextureARB(@GLenum int texture);
 
-	public void glActiveTextureARB(@GLenum int texture);
+	void glActiveTextureARB(@GLenum int texture);
 
-	public void glMultiTexCoord1fARB(@GLenum int target, float s);
+	void glMultiTexCoord1fARB(@GLenum int target, float s);
 
-	public void glMultiTexCoord1iARB(@GLenum int target, int s);
+	void glMultiTexCoord1iARB(@GLenum int target, int s);
 
-	public void glMultiTexCoord1sARB(@GLenum int target, short s);
+	void glMultiTexCoord1sARB(@GLenum int target, short s);
 
-	public void glMultiTexCoord2fARB(@GLenum int target, float s, float t);
+	void glMultiTexCoord2fARB(@GLenum int target, float s, float t);
 
-	public void glMultiTexCoord2iARB(@GLenum int target, int s, int t);
+	void glMultiTexCoord2iARB(@GLenum int target, int s, int t);
 
-	public void glMultiTexCoord2sARB(@GLenum int target, short s, short t);
+	void glMultiTexCoord2sARB(@GLenum int target, short s, short t);
 
-	public void glMultiTexCoord3fARB(@GLenum int target, float s, float t, float r);
+	void glMultiTexCoord3fARB(@GLenum int target, float s, float t, float r);
 
-	public void glMultiTexCoord3iARB(@GLenum int target, int s, int t, int r);
+	void glMultiTexCoord3iARB(@GLenum int target, int s, int t, int r);
 
-	public void glMultiTexCoord3sARB(@GLenum int target, short s, short t, short r);
+	void glMultiTexCoord3sARB(@GLenum int target, short s, short t, short r);
 
-	public void glMultiTexCoord4fARB(@GLenum int target, float s, float t, float r, float q);
+	void glMultiTexCoord4fARB(@GLenum int target, float s, float t, float r, float q);
 
-	public void glMultiTexCoord4iARB(@GLenum int target, int s, int t, int r, int q);
+	void glMultiTexCoord4iARB(@GLenum int target, int s, int t, int r, int q);
 
-	public void glMultiTexCoord4sARB(@GLenum int target, short s, short t, short r, short q);
+	void glMultiTexCoord4sARB(@GLenum int target, short s, short t, short r, short q);
 }

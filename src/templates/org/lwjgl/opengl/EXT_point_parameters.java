@@ -36,13 +36,13 @@ import java.nio.FloatBuffer;
 import org.lwjgl.generator.*;
 
 public interface EXT_point_parameters {
-	public static final int GL_POINT_SIZE_MIN_EXT = 0x8126;
-	public static final int GL_POINT_SIZE_MAX_EXT = 0x8127;
-	public static final int GL_POINT_FADE_THRESHOLD_SIZE_EXT = 0x8128;
-	public static final int GL_DISTANCE_ATTENUATION_EXT = 0x8129;
+	int GL_POINT_SIZE_MIN_EXT = 0x8126;
+	int GL_POINT_SIZE_MAX_EXT = 0x8127;
+	int GL_POINT_FADE_THRESHOLD_SIZE_EXT = 0x8128;
+	int GL_DISTANCE_ATTENUATION_EXT = 0x8129;
 
-	public void glPointParameterfEXT(@GLenum int pname, float param);
+	void glPointParameterfEXT(@GLenum int pname, float param);
 
 	@StripPostfix("pfParams")
-	public void glPointParameterfvEXT(@GLenum int pname, @Check("4") @Const FloatBuffer pfParams);
+	void glPointParameterfvEXT(@GLenum int pname, @Check("4") @Const FloatBuffer pfParams);
 }

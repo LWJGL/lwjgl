@@ -37,22 +37,22 @@ import java.nio.IntBuffer;
 import org.lwjgl.generator.*;
 
 public interface ATI_envmap_bumpmap {
-	public static final int GL_BUMP_ROT_MATRIX_ATI = 0x8775;
-	public static final int GL_BUMP_ROT_MATRIX_SIZE_ATI = 0x8776;
-	public static final int GL_BUMP_NUM_TEX_UNITS_ATI = 0x8777;
-	public static final int GL_BUMP_TEX_UNITS_ATI = 0x8778;
-	public static final int GL_DUDV_ATI = 0x8779;
-	public static final int GL_DU8DV8_ATI = 0x877A;
-	public static final int GL_BUMP_ENVMAP_ATI = 0x877B;
-	public static final int GL_BUMP_TARGET_ATI = 0x877C;
+	int GL_BUMP_ROT_MATRIX_ATI = 0x8775;
+	int GL_BUMP_ROT_MATRIX_SIZE_ATI = 0x8776;
+	int GL_BUMP_NUM_TEX_UNITS_ATI = 0x8777;
+	int GL_BUMP_TEX_UNITS_ATI = 0x8778;
+	int GL_DUDV_ATI = 0x8779;
+	int GL_DU8DV8_ATI = 0x877A;
+	int GL_BUMP_ENVMAP_ATI = 0x877B;
+	int GL_BUMP_TARGET_ATI = 0x877C;
 
 	@StripPostfix("param")
-	public void glTexBumpParameterfvATI(@GLenum int pname, @Check("4") FloatBuffer param);
+	void glTexBumpParameterfvATI(@GLenum int pname, @Check("4") FloatBuffer param);
 	@StripPostfix("param")
-	public void glTexBumpParameterivATI(@GLenum int pname, @Check("4") IntBuffer param);
+	void glTexBumpParameterivATI(@GLenum int pname, @Check("4") IntBuffer param);
 
 	@StripPostfix("param")
-	public void glGetTexBumpParameterfvATI(@GLenum int pname, @Check("4") FloatBuffer param);
+	void glGetTexBumpParameterfvATI(@GLenum int pname, @Check("4") FloatBuffer param);
 	@StripPostfix("param")
-	public void glGetTexBumpParameterivATI(@GLenum int pname, @Check("4") IntBuffer param);
+	void glGetTexBumpParameterivATI(@GLenum int pname, @Check("4") IntBuffer param);
 }

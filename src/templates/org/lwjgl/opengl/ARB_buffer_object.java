@@ -31,8 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.BufferChecks;
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 import java.nio.*;
@@ -42,49 +40,49 @@ public interface ARB_buffer_object {
 	/*
 	 * Accepted by the <usage> parameter of BufferDataARB:
 	 */
-	public static final int GL_STREAM_DRAW_ARB = 0x88E0;
-	public static final int GL_STREAM_READ_ARB = 0x88E1;
-	public static final int GL_STREAM_COPY_ARB = 0x88E2;
-	public static final int GL_STATIC_DRAW_ARB = 0x88E4;
-	public static final int GL_STATIC_READ_ARB = 0x88E5;
-	public static final int GL_STATIC_COPY_ARB = 0x88E6;
-	public static final int GL_DYNAMIC_DRAW_ARB = 0x88E8;
-	public static final int GL_DYNAMIC_READ_ARB = 0x88E9;
-	public static final int GL_DYNAMIC_COPY_ARB = 0x88EA;
+	int GL_STREAM_DRAW_ARB = 0x88E0;
+	int GL_STREAM_READ_ARB = 0x88E1;
+	int GL_STREAM_COPY_ARB = 0x88E2;
+	int GL_STATIC_DRAW_ARB = 0x88E4;
+	int GL_STATIC_READ_ARB = 0x88E5;
+	int GL_STATIC_COPY_ARB = 0x88E6;
+	int GL_DYNAMIC_DRAW_ARB = 0x88E8;
+	int GL_DYNAMIC_READ_ARB = 0x88E9;
+	int GL_DYNAMIC_COPY_ARB = 0x88EA;
 
 	/*
 	 * Accepted by the <access> parameter of MapBufferARB:
 	*/
-	public static final int GL_READ_ONLY_ARB = 0x88B8;
-	public static final int GL_WRITE_ONLY_ARB = 0x88B9;
-	public static final int GL_READ_WRITE_ARB = 0x88BA;
+	int GL_READ_ONLY_ARB = 0x88B8;
+	int GL_WRITE_ONLY_ARB = 0x88B9;
+	int GL_READ_WRITE_ARB = 0x88BA;
 
 	/*
 	 * Accepted by the <pname> parameter of GetBufferParameterivARB:
 	*/
-	public static final int GL_BUFFER_SIZE_ARB = 0x8764;
-	public static final int GL_BUFFER_USAGE_ARB = 0x8765;
-	public static final int GL_BUFFER_ACCESS_ARB = 0x88BB;
-	public static final int GL_BUFFER_MAPPED_ARB = 0x88BC;
-	public static final int GL_BUFFER_MAP_POINTER_ARB = 0x88BD;
+	int GL_BUFFER_SIZE_ARB = 0x8764;
+	int GL_BUFFER_USAGE_ARB = 0x8765;
+	int GL_BUFFER_ACCESS_ARB = 0x88BB;
+	int GL_BUFFER_MAPPED_ARB = 0x88BC;
+	int GL_BUFFER_MAP_POINTER_ARB = 0x88BD;
 
 	@Code(	"		BufferObjectTracker.bindBuffer(target, buffer);")
-	public void glBindBufferARB(@GLenum int target, @GLuint int buffer);
+	void glBindBufferARB(@GLenum int target, @GLuint int buffer);
 	@Code(	"		BufferObjectTracker.deleteBuffers(buffers);")
-	public void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
-	public void glGenBuffersARB(@AutoSize("buffers") int n, @GLuint IntBuffer buffers);
-	public boolean glIsBufferARB(@GLuint int buffer);
+	void glDeleteBuffersARB(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
+	void glGenBuffersARB(@AutoSize("buffers") int n, @GLuint IntBuffer buffers);
+	boolean glIsBufferARB(@GLuint int buffer);
 
 	@GenerateAutos
-	public void glBufferDataARB(@GLenum int target, @AutoSize("data") @GLsizeiptrARB int size,
+	void glBufferDataARB(@GLenum int target, @AutoSize("data") @GLsizeiptrARB int size,
 			@Const
 			@GLbyte
 			@GLshort
 			@GLint
 			@GLfloat
 			Buffer data, @GLenum int usage);
-	
-	public void glBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
+
+	void glBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
 			@Check
 			@Const
 			@GLbyte
@@ -93,7 +91,7 @@ public interface ARB_buffer_object {
 			@GLfloat
 			Buffer data);
 
-	public void glGetBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
+	void glGetBufferSubDataARB(@GLenum int target, @GLintptrARB int offset, @AutoSize("data") @GLsizeiptrARB int size,
 			@Check
 			@GLbyte
 			@GLshort
@@ -115,13 +113,13 @@ public interface ARB_buffer_object {
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
 	@CachedResult
-	public @GLvoid ByteBuffer glMapBufferARB(@GLenum int target, @GLenum int access);
+	@GLvoid ByteBuffer glMapBufferARB(@GLenum int target, @GLenum int access);
 
-	public boolean glUnmapBufferARB(@GLenum int target);
+	boolean glUnmapBufferARB(@GLenum int target);
 
 	@StripPostfix("params")
-	public void glGetBufferParameterivARB(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetBufferParameterivARB(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
-	public void glGetBufferPointervARB(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
+	void glGetBufferPointervARB(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
 }

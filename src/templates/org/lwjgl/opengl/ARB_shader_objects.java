@@ -31,74 +31,72 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_shader_objects {
 	/*
 	* Accepted by the <pname> argument of GetHandleARB:
 	*/
-	public static final int GL_PROGRAM_OBJECT_ARB = 0x8B40;
+	int GL_PROGRAM_OBJECT_ARB = 0x8B40;
 
 	/*
 	* Accepted by the <pname> parameter of GetObjectParameter{fi}vARB:
 	*/
-	public static final int GL_OBJECT_TYPE_ARB = 0x8B4E;
-	public static final int GL_OBJECT_SUBTYPE_ARB = 0x8B4F;
-	public static final int GL_OBJECT_DELETE_STATUS_ARB = 0x8B80;
-	public static final int GL_OBJECT_COMPILE_STATUS_ARB = 0x8B81;
-	public static final int GL_OBJECT_LINK_STATUS_ARB = 0x8B82;
-	public static final int GL_OBJECT_VALIDATE_STATUS_ARB = 0x8B83;
-	public static final int GL_OBJECT_INFO_LOG_LENGTH_ARB = 0x8B84;
-	public static final int GL_OBJECT_ATTACHED_OBJECTS_ARB = 0x8B85;
-	public static final int GL_OBJECT_ACTIVE_UNIFORMS_ARB = 0x8B86;
-	public static final int GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB = 0x8B87;
-	public static final int GL_OBJECT_SHADER_SOURCE_LENGTH_ARB = 0x8B88;
+	int GL_OBJECT_TYPE_ARB = 0x8B4E;
+	int GL_OBJECT_SUBTYPE_ARB = 0x8B4F;
+	int GL_OBJECT_DELETE_STATUS_ARB = 0x8B80;
+	int GL_OBJECT_COMPILE_STATUS_ARB = 0x8B81;
+	int GL_OBJECT_LINK_STATUS_ARB = 0x8B82;
+	int GL_OBJECT_VALIDATE_STATUS_ARB = 0x8B83;
+	int GL_OBJECT_INFO_LOG_LENGTH_ARB = 0x8B84;
+	int GL_OBJECT_ATTACHED_OBJECTS_ARB = 0x8B85;
+	int GL_OBJECT_ACTIVE_UNIFORMS_ARB = 0x8B86;
+	int GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB = 0x8B87;
+	int GL_OBJECT_SHADER_SOURCE_LENGTH_ARB = 0x8B88;
 
 	/*
 	* Returned by the <params> parameter of GetObjectParameter{fi}vARB:
 	*/
-	public static final int GL_SHADER_OBJECT_ARB = 0x8B48;
+	int GL_SHADER_OBJECT_ARB = 0x8B48;
 
 	/*
 	* Returned by the <type> parameter of GetActiveUniformARB:
 	*/
-	public static final int GL_FLOAT = 0x1406;
-	public static final int GL_FLOAT_VEC2_ARB = 0x8B50;
-	public static final int GL_FLOAT_VEC3_ARB = 0x8B51;
-	public static final int GL_FLOAT_VEC4_ARB = 0x8B52;
-	public static final int GL_INT = 0x1404;
-	public static final int GL_INT_VEC2_ARB = 0x8B53;
-	public static final int GL_INT_VEC3_ARB = 0x8B54;
-	public static final int GL_INT_VEC4_ARB = 0x8B55;
-	public static final int GL_BOOL_ARB = 0x8B56;
-	public static final int GL_BOOL_VEC2_ARB = 0x8B57;
-	public static final int GL_BOOL_VEC3_ARB = 0x8B58;
-	public static final int GL_BOOL_VEC4_ARB = 0x8B59;
-	public static final int GL_FLOAT_MAT2_ARB = 0x8B5A;
-	public static final int GL_FLOAT_MAT3_ARB = 0x8B5B;
-	public static final int GL_FLOAT_MAT4_ARB = 0x8B5C;
-	public static final int GL_SAMPLER_1D_ARB = 0x8B5D;
-	public static final int GL_SAMPLER_2D_ARB = 0x8B5E;
-	public static final int GL_SAMPLER_3D_ARB = 0x8B5F;
-	public static final int GL_SAMPLER_CUBE_ARB = 0x8B60;
-	public static final int GL_SAMPLER_1D_SHADOW_ARB = 0x8B61;
-	public static final int GL_SAMPLER_2D_SHADOW_ARB = 0x8B62;
-	public static final int GL_SAMPLER_2D_RECT_ARB = 0x8B63;
-	public static final int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8B64;
+	int GL_FLOAT = 0x1406;
+	int GL_FLOAT_VEC2_ARB = 0x8B50;
+	int GL_FLOAT_VEC3_ARB = 0x8B51;
+	int GL_FLOAT_VEC4_ARB = 0x8B52;
+	int GL_INT = 0x1404;
+	int GL_INT_VEC2_ARB = 0x8B53;
+	int GL_INT_VEC3_ARB = 0x8B54;
+	int GL_INT_VEC4_ARB = 0x8B55;
+	int GL_BOOL_ARB = 0x8B56;
+	int GL_BOOL_VEC2_ARB = 0x8B57;
+	int GL_BOOL_VEC3_ARB = 0x8B58;
+	int GL_BOOL_VEC4_ARB = 0x8B59;
+	int GL_FLOAT_MAT2_ARB = 0x8B5A;
+	int GL_FLOAT_MAT3_ARB = 0x8B5B;
+	int GL_FLOAT_MAT4_ARB = 0x8B5C;
+	int GL_SAMPLER_1D_ARB = 0x8B5D;
+	int GL_SAMPLER_2D_ARB = 0x8B5E;
+	int GL_SAMPLER_3D_ARB = 0x8B5F;
+	int GL_SAMPLER_CUBE_ARB = 0x8B60;
+	int GL_SAMPLER_1D_SHADOW_ARB = 0x8B61;
+	int GL_SAMPLER_2D_SHADOW_ARB = 0x8B62;
+	int GL_SAMPLER_2D_RECT_ARB = 0x8B63;
+	int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8B64;
 
-	public void glDeleteObjectARB(@GLhandleARB int obj);
+	void glDeleteObjectARB(@GLhandleARB int obj);
 
-	public @GLhandleARB int glGetHandleARB(@GLenum int pname);
+	@GLhandleARB int glGetHandleARB(@GLenum int pname);
 
-	public void glDetachObjectARB(@GLhandleARB int containerObj, @GLhandleARB int attachedObj);
+	void glDetachObjectARB(@GLhandleARB int containerObj, @GLhandleARB int attachedObj);
 
-	public @GLhandleARB int glCreateShaderObjectARB(@GLenum int shaderType);
+	@GLhandleARB int glCreateShaderObjectARB(@GLenum int shaderType);
 
 	/**
 	 * The ARB_shader_objects extension allows multiple, optionally null-terminated, source strings to define a shader program.
@@ -108,7 +106,7 @@ public interface ARB_shader_objects {
 	 * @param shaderObj
 	 * @param string
 	 */
-	public void glShaderSourceARB(@GLhandleARB int shader, @Constant("1") @GLsizei int count,
+	void glShaderSourceARB(@GLhandleARB int shader, @Constant("1") @GLsizei int count,
 			@Indirect
 			@Check
 			@Const
@@ -120,71 +118,71 @@ public interface ARB_shader_objects {
 			@GLint
 			int length);
 
-	public void glCompileShaderARB(@GLhandleARB int shaderObj);
+	void glCompileShaderARB(@GLhandleARB int shaderObj);
 
-	public @GLhandleARB int glCreateProgramObjectARB();
+	@GLhandleARB int glCreateProgramObjectARB();
 
-	public void glAttachObjectARB(@GLhandleARB int containerObj, @GLhandleARB int obj);
+	void glAttachObjectARB(@GLhandleARB int containerObj, @GLhandleARB int obj);
 
-	public void glLinkProgramARB(@GLhandleARB int programObj);
+	void glLinkProgramARB(@GLhandleARB int programObj);
 
-	public void glUseProgramObjectARB(@GLhandleARB int programObj);
+	void glUseProgramObjectARB(@GLhandleARB int programObj);
 
-	public void glValidateProgramARB(@GLhandleARB int programObj);
+	void glValidateProgramARB(@GLhandleARB int programObj);
 
-	public void glUniform1fARB(int location, float v0);
+	void glUniform1fARB(int location, float v0);
 
-	public void glUniform2fARB(int location, float v0, float v1);
+	void glUniform2fARB(int location, float v0, float v1);
 
-	public void glUniform3fARB(int location, float v0, float v1, float v2);
+	void glUniform3fARB(int location, float v0, float v1, float v2);
 
-	public void glUniform4fARB(int location, float v0, float v1, float v2, float v3);
+	void glUniform4fARB(int location, float v0, float v1, float v2, float v3);
 
-	public void glUniform1iARB(int location, int v0);
+	void glUniform1iARB(int location, int v0);
 
-	public void glUniform2iARB(int location, int v0, int v1);
+	void glUniform2iARB(int location, int v0, int v1);
 
-	public void glUniform3iARB(int location, int v0, int v1, int v2);
+	void glUniform3iARB(int location, int v0, int v1, int v2);
 
-	public void glUniform4iARB(int location, int v0, int v1, int v2, int v3);
-
-	@StripPostfix("values")
-	public void glUniform1fvARB(int location, @AutoSize("values") @GLsizei int count, FloatBuffer values);
-	@StripPostfix("values")
-	public void glUniform2fvARB(int location, @AutoSize(value="values", expression=" >> 1") @GLsizei int count, FloatBuffer values);
-	@StripPostfix("values")
-	public void glUniform3fvARB(int location, @AutoSize(value="values", expression=" / 3") @GLsizei int count, FloatBuffer values);
-	@StripPostfix("values")
-	public void glUniform4fvARB(int location, @AutoSize(value="values", expression=" >> 2") @GLsizei int count, FloatBuffer values);
+	void glUniform4iARB(int location, int v0, int v1, int v2, int v3);
 
 	@StripPostfix("values")
-	public void glUniform1ivARB(int location, @AutoSize(value="values") @GLsizei int count, IntBuffer values);
+	void glUniform1fvARB(int location, @AutoSize("values") @GLsizei int count, FloatBuffer values);
 	@StripPostfix("values")
-	public void glUniform2ivARB(int location, @AutoSize(value="values", expression=" >> 1") @GLsizei int count, IntBuffer values);
+	void glUniform2fvARB(int location, @AutoSize(value="values", expression=" >> 1") @GLsizei int count, FloatBuffer values);
 	@StripPostfix("values")
-	public void glUniform3ivARB(int location, @AutoSize(value="values", expression=" / 3") @GLsizei int count, IntBuffer values);
+	void glUniform3fvARB(int location, @AutoSize(value="values", expression=" / 3") @GLsizei int count, FloatBuffer values);
 	@StripPostfix("values")
-	public void glUniform4ivARB(int location, @AutoSize(value="values", expression=" >> 2") @GLsizei int count, IntBuffer values);
+	void glUniform4fvARB(int location, @AutoSize(value="values", expression=" >> 2") @GLsizei int count, FloatBuffer values);
+
+	@StripPostfix("values")
+	void glUniform1ivARB(int location, @AutoSize(value="values") @GLsizei int count, IntBuffer values);
+	@StripPostfix("values")
+	void glUniform2ivARB(int location, @AutoSize(value="values", expression=" >> 1") @GLsizei int count, IntBuffer values);
+	@StripPostfix("values")
+	void glUniform3ivARB(int location, @AutoSize(value="values", expression=" / 3") @GLsizei int count, IntBuffer values);
+	@StripPostfix("values")
+	void glUniform4ivARB(int location, @AutoSize(value="values", expression=" >> 2") @GLsizei int count, IntBuffer values);
 
 	@StripPostfix("matrices")
-	public void glUniformMatrix2fvARB(int location, @AutoSize(value="matrices", expression=" >> 2") @GLsizei int count, boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix2fvARB(int location, @AutoSize(value="matrices", expression=" >> 2") @GLsizei int count, boolean transpose, FloatBuffer matrices);
 	@StripPostfix("matrices")
-	public void glUniformMatrix3fvARB(int location, @AutoSize(value="matrices", expression=" / (3 * 3)") @GLsizei int count, boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix3fvARB(int location, @AutoSize(value="matrices", expression=" / (3 * 3)") @GLsizei int count, boolean transpose, FloatBuffer matrices);
 	@StripPostfix("matrices")
-	public void glUniformMatrix4fvARB(int location, @AutoSize(value="matrices", expression=" >> 4") @GLsizei int count, boolean transpose, FloatBuffer matrices);
+	void glUniformMatrix4fvARB(int location, @AutoSize(value="matrices", expression=" >> 4") @GLsizei int count, boolean transpose, FloatBuffer matrices);
 
 	@StripPostfix("params")
-	public void glGetObjectParameterfvARB(@GLhandleARB int obj, @GLenum int pname, @Check FloatBuffer params);
+	void glGetObjectParameterfvARB(@GLhandleARB int obj, @GLenum int pname, @Check FloatBuffer params);
 	@StripPostfix("params")
-	public void glGetObjectParameterivARB(@GLhandleARB int obj, @GLenum int pname, @Check IntBuffer params);
+	void glGetObjectParameterivARB(@GLhandleARB int obj, @GLenum int pname, @Check IntBuffer params);
 
-	public void glGetInfoLogARB(@GLhandleARB int obj, @AutoSize("infoLog") @GLsizei int maxLength,
-			@Check(value="1", canBeNull=true)
-			@GLsizei IntBuffer length,
-			@GLcharARB
-			ByteBuffer infoLog);
+	void glGetInfoLogARB(@GLhandleARB int obj, @AutoSize("infoLog") @GLsizei int maxLength,
+		@Check(value="1", canBeNull=true)
+		@GLsizei IntBuffer length,
+		@GLcharARB
+		ByteBuffer infoLog);
 
-	public void glGetAttachedObjectsARB(@GLhandleARB int containerObj, @AutoSize("obj") @GLsizei int maxCount,
+	void glGetAttachedObjectsARB(@GLhandleARB int containerObj, @AutoSize("obj") @GLsizei int maxCount,
 			@Check(value="1", canBeNull=true)
 			@GLsizei
 			IntBuffer count,
@@ -199,9 +197,9 @@ public interface ARB_shader_objects {
 	 *
 	 * @return
 	 */
-	public int glGetUniformLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
+	int glGetUniformLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
 
-	public void glGetActiveUniformARB(@GLhandleARB int programObj, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
+	void glGetActiveUniformARB(@GLhandleARB int programObj, @GLuint int index, @AutoSize("name") @GLsizei int maxLength,
 			@Check(value="1", canBeNull=true)
 			@GLsizei
 			IntBuffer length,
@@ -214,11 +212,11 @@ public interface ARB_shader_objects {
 			ByteBuffer name);
 
 	@StripPostfix("params")
-	public void glGetUniformfvARB(@GLhandleARB int programObj, int location, @Check FloatBuffer params);
+	void glGetUniformfvARB(@GLhandleARB int programObj, int location, @Check FloatBuffer params);
 	@StripPostfix("params")
-	public void glGetUniformivARB(@GLhandleARB int programObj, int location, @Check IntBuffer params);
+	void glGetUniformivARB(@GLhandleARB int programObj, int location, @Check IntBuffer params);
 
-	public void glGetShaderSourceARB(@GLhandleARB int obj, @AutoSize("source") @GLsizei int maxLength,
+	void glGetShaderSourceARB(@GLhandleARB int obj, @AutoSize("source") @GLsizei int maxLength,
 			@Check(value="1", canBeNull=true)
 			@GLsizei
 			IntBuffer length,

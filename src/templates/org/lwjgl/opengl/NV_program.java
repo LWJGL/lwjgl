@@ -42,43 +42,43 @@ public interface NV_program {
 	/*
 	   Accepted by the <pname> parameter of GetProgramivNV:
 	 */
-	public static final int GL_PROGRAM_TARGET_NV = 0x8646;
-	public static final int GL_PROGRAM_LENGTH_NV = 0x8627;
-	public static final int GL_PROGRAM_RESIDENT_NV = 0x8647;
+	int GL_PROGRAM_TARGET_NV = 0x8646;
+	int GL_PROGRAM_LENGTH_NV = 0x8627;
+	int GL_PROGRAM_RESIDENT_NV = 0x8647;
 
 	/*
 	   Accepted by the <pname> parameter of GetProgramStringNV:
 	 */
-	public static final int GL_PROGRAM_STRING_NV = 0x8628;
+	int GL_PROGRAM_STRING_NV = 0x8628;
 
 	/*
 	   Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	   GetFloatv, and GetDoublev:
 	 */
-	public static final int GL_PROGRAM_ERROR_POSITION_NV = 0x864B;
+	int GL_PROGRAM_ERROR_POSITION_NV = 0x864B;
 
 	/*
 	   Accepted by the <name> parameter of GetString:
 	 */
-	public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
+	int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
 
-	public void glLoadProgramNV(@GLenum int target, @GLuint int programID, @AutoSize("string") @GLsizei int length, @Const @GLubyte Buffer string);
+	void glLoadProgramNV(@GLenum int target, @GLuint int programID, @AutoSize("string") @GLsizei int length, @Const @GLubyte Buffer string);
 
-	public void glBindProgramNV(@GLenum int target, @GLuint int programID);
+	void glBindProgramNV(@GLenum int target, @GLuint int programID);
 
-	public void glDeleteProgramsNV(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
-	public void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
+	void glDeleteProgramsNV(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
+	void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
 
 	@StripPostfix("params")
-	public void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @Check @GLint IntBuffer params);
+	void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @Check @GLint IntBuffer params);
 
-	public void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @Check @GLubyte Buffer paramString);
+	void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @Check @GLubyte Buffer paramString);
 
-	public boolean glIsProgramNV(@GLuint int programID);
+	boolean glIsProgramNV(@GLuint int programID);
 
 	@Code(	"		if (programIDs.remaining() != programResidences.remaining())\n" +
 			"			throw new IllegalArgumentException(\"programIDs.remaining() != programResidences.remaining()\");")
-	public boolean glAreProgramsResidentNV(@AutoSize("programIDs") @GLsizei int n,
+	boolean glAreProgramsResidentNV(@AutoSize("programIDs") @GLsizei int n,
 			@Const
 			@GLuint
 			IntBuffer programIDs,
@@ -86,6 +86,6 @@ public interface NV_program {
 			@GLboolean
 			ByteBuffer programResidences);
 
-	public void glRequestResidentProgramsNV(@AutoSize("programIDs") @GLsizei int n, @GLuint IntBuffer programIDs);
+	void glRequestResidentProgramsNV(@AutoSize("programIDs") @GLsizei int n, @GLuint IntBuffer programIDs);
 }
 

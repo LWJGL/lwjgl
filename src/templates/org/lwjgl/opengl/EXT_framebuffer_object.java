@@ -41,124 +41,124 @@ public interface EXT_framebuffer_object {
 	 * CheckFramebufferStatusEXT, FramebufferTexture{1D|2D|3D}EXT, and
 	 * FramebufferRenderbufferEXT:
 	 */
-	public static final int GL_FRAMEBUFFER_EXT = 0x8D40;
+	int GL_FRAMEBUFFER_EXT = 0x8D40;
 
 	/*
 	 * Accepted by the &lt;target&gt; parameter of BindRenderbufferEXT,
 	 * RenderbufferStorageEXT, and GetRenderbufferParameterivEXT, and
 	 * returned by GetFramebufferAttachmentParameterivEXT:
 	 */
-	public static final int GL_RENDERBUFFER_EXT = 0x8D41;
+	int GL_RENDERBUFFER_EXT = 0x8D41;
 
 	/*
 	 * Accepted by the &lt;internalformat&gt; parameter of
 	 * RenderbufferStorageEXT:
 	 */
-	public static final int GL_STENCIL_INDEX_EXT = 0x8D45;
-	public static final int GL_STENCIL_INDEX1_EXT = 0x8D46;
-	public static final int GL_STENCIL_INDEX4_EXT = 0x8D47;
-	public static final int GL_STENCIL_INDEX8_EXT = 0x8D48;
-	public static final int GL_STENCIL_INDEX16_EXT = 0x8D49;
+	int GL_STENCIL_INDEX_EXT = 0x8D45;
+	int GL_STENCIL_INDEX1_EXT = 0x8D46;
+	int GL_STENCIL_INDEX4_EXT = 0x8D47;
+	int GL_STENCIL_INDEX8_EXT = 0x8D48;
+	int GL_STENCIL_INDEX16_EXT = 0x8D49;
 
 	/*
 	 * Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT:
 	 */
-	public static final int GL_RENDERBUFFER_WIDTH_EXT = 0x8D42;
-	public static final int GL_RENDERBUFFER_HEIGHT_EXT = 0x8D43;
-	public static final int GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = 0x8D44;
+	int GL_RENDERBUFFER_WIDTH_EXT = 0x8D42;
+	int GL_RENDERBUFFER_HEIGHT_EXT = 0x8D43;
+	int GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = 0x8D44;
 
 	/*
 	 * Accepted by the &lt;pname&gt; parameter of
 	 * GetFramebufferAttachmentParameterivEXT:
 	 */
-	public static final int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT = 0x8CD0;
-	public static final int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT = 0x8CD1;
-	public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT = 0x8CD2;
-	public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT = 0x8CD3;
-	public static final int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT = 0x8CD4;
+	int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT = 0x8CD0;
+	int GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT = 0x8CD1;
+	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT = 0x8CD2;
+	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT = 0x8CD3;
+	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT = 0x8CD4;
 
 	/*
 	 * Accepted by the &lt;attachment&gt; parameter of
 	 * FramebufferTexture{1D|2D|3D}EXT, FramebufferRenderbufferEXT, and
 	 * GetFramebufferAttachmentParameterivEXT
 	 */
-	public static final int GL_COLOR_ATTACHMENT0_EXT = 0x8CE0;
-	public static final int GL_COLOR_ATTACHMENT1_EXT = 0x8CE1;
-	public static final int GL_COLOR_ATTACHMENT2_EXT = 0x8CE2;
-	public static final int GL_COLOR_ATTACHMENT3_EXT = 0x8CE3;
-	public static final int GL_COLOR_ATTACHMENT4_EXT = 0x8CE4;
-	public static final int GL_COLOR_ATTACHMENT5_EXT = 0x8CE5;
-	public static final int GL_COLOR_ATTACHMENT6_EXT = 0x8CE6;
-	public static final int GL_COLOR_ATTACHMENT7_EXT = 0x8CE7;
-	public static final int GL_COLOR_ATTACHMENT8_EXT = 0x8CE8;
-	public static final int GL_COLOR_ATTACHMENT9_EXT = 0x8CE9;
-	public static final int GL_COLOR_ATTACHMENT10_EXT = 0x8CEA;
-	public static final int GL_COLOR_ATTACHMENT11_EXT = 0x8CEB;
-	public static final int GL_COLOR_ATTACHMENT12_EXT = 0x8CEC;
-	public static final int GL_COLOR_ATTACHMENT13_EXT = 0x8CED;
-	public static final int GL_COLOR_ATTACHMENT14_EXT = 0x8CEE;
-	public static final int GL_COLOR_ATTACHMENT15_EXT = 0x8CEF;
-	public static final int GL_DEPTH_ATTACHMENT_EXT = 0x8D00;
-	public static final int GL_STENCIL_ATTACHMENT_EXT = 0x8D20;
+	int GL_COLOR_ATTACHMENT0_EXT = 0x8CE0;
+	int GL_COLOR_ATTACHMENT1_EXT = 0x8CE1;
+	int GL_COLOR_ATTACHMENT2_EXT = 0x8CE2;
+	int GL_COLOR_ATTACHMENT3_EXT = 0x8CE3;
+	int GL_COLOR_ATTACHMENT4_EXT = 0x8CE4;
+	int GL_COLOR_ATTACHMENT5_EXT = 0x8CE5;
+	int GL_COLOR_ATTACHMENT6_EXT = 0x8CE6;
+	int GL_COLOR_ATTACHMENT7_EXT = 0x8CE7;
+	int GL_COLOR_ATTACHMENT8_EXT = 0x8CE8;
+	int GL_COLOR_ATTACHMENT9_EXT = 0x8CE9;
+	int GL_COLOR_ATTACHMENT10_EXT = 0x8CEA;
+	int GL_COLOR_ATTACHMENT11_EXT = 0x8CEB;
+	int GL_COLOR_ATTACHMENT12_EXT = 0x8CEC;
+	int GL_COLOR_ATTACHMENT13_EXT = 0x8CED;
+	int GL_COLOR_ATTACHMENT14_EXT = 0x8CEE;
+	int GL_COLOR_ATTACHMENT15_EXT = 0x8CEF;
+	int GL_DEPTH_ATTACHMENT_EXT = 0x8D00;
+	int GL_STENCIL_ATTACHMENT_EXT = 0x8D20;
 
 	/**
 	 * Returned by CheckFramebufferStatusEXT():
 	 */
-	public static final int GL_FRAMEBUFFER_COMPLETE_EXT = 0x8CD5;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT = 0x8CD6;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT = 0x8CD7;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT = 0x8CD8;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT = 0x8CD9;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT = 0x8CDA;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT = 0x8CDB;
-	public static final int GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT = 0x8CDC;
-	public static final int GL_FRAMEBUFFER_UNSUPPORTED_EXT = 0x8CDD;
-	public static final int GL_FRAMEBUFFER_STATUS_ERROR_EXT = 0x8CDE;
+	int GL_FRAMEBUFFER_COMPLETE_EXT = 0x8CD5;
+	int GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT = 0x8CD6;
+	int GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT = 0x8CD7;
+	int GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT = 0x8CD8;
+	int GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT = 0x8CD9;
+	int GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT = 0x8CDA;
+	int GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT = 0x8CDB;
+	int GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT = 0x8CDC;
+	int GL_FRAMEBUFFER_UNSUPPORTED_EXT = 0x8CDD;
+	int GL_FRAMEBUFFER_STATUS_ERROR_EXT = 0x8CDE;
 
 	/**
 	 * Accepted by GetIntegerv():
 	 */
-	public static final int GL_FRAMEBUFFER_BINDING_EXT = 0x8CA6;
-	public static final int GL_RENDERBUFFER_BINDING_EXT = 0x8CA7;
-	public static final int GL_MAX_COLOR_ATTACHMENTS_EXT = 0x8CDF;
-	public static final int GL_MAX_RENDERBUFFER_SIZE_EXT = 0x84E8;
+	int GL_FRAMEBUFFER_BINDING_EXT = 0x8CA6;
+	int GL_RENDERBUFFER_BINDING_EXT = 0x8CA7;
+	int GL_MAX_COLOR_ATTACHMENTS_EXT = 0x8CDF;
+	int GL_MAX_RENDERBUFFER_SIZE_EXT = 0x84E8;
 
 	/**
 	 * Returned by GetError():
 	 */
-	public static final int GL_INVALID_FRAMEBUFFER_OPERATION_EXT = 0x0506;
+	int GL_INVALID_FRAMEBUFFER_OPERATION_EXT = 0x0506;
 
-	public boolean glIsRenderbufferEXT(@GLuint int renderbuffer);
+	boolean glIsRenderbufferEXT(@GLuint int renderbuffer);
 
-	public void glBindRenderbufferEXT(@GLenum int target, @GLuint int renderbuffer);
+	void glBindRenderbufferEXT(@GLenum int target, @GLuint int renderbuffer);
 
-	public void glDeleteRenderbuffersEXT(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
-	public void glGenRenderbuffersEXT(@AutoSize("renderbuffers") int n, @GLuint IntBuffer renderbuffers);
+	void glDeleteRenderbuffersEXT(@AutoSize("renderbuffers") int n, @Const @GLuint IntBuffer renderbuffers);
+	void glGenRenderbuffersEXT(@AutoSize("renderbuffers") int n, @GLuint IntBuffer renderbuffers);
 
-	public void glRenderbufferStorageEXT(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
-
-	@StripPostfix("params")
-	public void glGetRenderbufferParameterivEXT(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
-
-	public boolean glIsFramebufferEXT(@GLuint int framebuffer);
-
-	public void glBindFramebufferEXT(@GLenum int target, @GLuint int framebuffer);
-
-	public void glDeleteFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
-	public void glGenFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
-
-	public @GLenum int glCheckFramebufferStatusEXT(@GLenum int target);
-
-	public void glFramebufferTexture1DEXT(@GLenum int target, @GLenum int attachment, @GLenum int textarget, @GLuint int texture, int level);
-
-	public void glFramebufferTexture2DEXT(@GLenum int target, @GLenum int attachment, @GLenum int textarget, @GLuint int texture, int level);
-
-	public void glFramebufferTexture3DEXT(@GLenum int target, @GLenum int attachment, @GLenum int textarget, @GLuint int texture, int level, int zoffset);
-
-	public void glFramebufferRenderbufferEXT(@GLenum int target, @GLenum int attachment, @GLenum int renderbuffertarget, @GLuint int renderbuffer);
+	void glRenderbufferStorageEXT(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height);
 
 	@StripPostfix("params")
-	public void glGetFramebufferAttachmentParameterivEXT(@GLenum int target, @GLenum int attachment, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetRenderbufferParameterivEXT(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
-	public void glGenerateMipmapEXT(@GLenum int target);
+	boolean glIsFramebufferEXT(@GLuint int framebuffer);
+
+	void glBindFramebufferEXT(@GLenum int target, @GLuint int framebuffer);
+
+	void glDeleteFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
+	void glGenFramebuffersEXT(@AutoSize("framebuffers") int n, @Const @GLuint IntBuffer framebuffers);
+
+	@GLenum int glCheckFramebufferStatusEXT(@GLenum int target);
+
+	void glFramebufferTexture1DEXT(@GLenum int target, @GLenum int attachment, @GLenum int textarget, @GLuint int texture, int level);
+
+	void glFramebufferTexture2DEXT(@GLenum int target, @GLenum int attachment, @GLenum int textarget, @GLuint int texture, int level);
+
+	void glFramebufferTexture3DEXT(@GLenum int target, @GLenum int attachment, @GLenum int textarget, @GLuint int texture, int level, int zoffset);
+
+	void glFramebufferRenderbufferEXT(@GLenum int target, @GLenum int attachment, @GLenum int renderbuffertarget, @GLuint int renderbuffer);
+
+	@StripPostfix("params")
+	void glGetFramebufferAttachmentParameterivEXT(@GLenum int target, @GLenum int attachment, @GLenum int pname, @Check("4") IntBuffer params);
+
+	void glGenerateMipmapEXT(@GLenum int target);
 }

@@ -34,10 +34,10 @@ package org.lwjgl.opengl;
 import org.lwjgl.generator.*;
 
 public interface EXT_blend_func_separate {
-	public static final int GL_BLEND_DST_RGB_EXT = 0x80C8;
-	public static final int GL_BLEND_SRC_RGB_EXT = 0x80C9;
-	public static final int GL_BLEND_DST_ALPHA_EXT = 0x80CA;
-	public static final int GL_BLEND_SRC_ALPHA_EXT = 0x80CB;
+	int GL_BLEND_DST_RGB_EXT = 0x80C8;
+	int GL_BLEND_SRC_RGB_EXT = 0x80C9;
+	int GL_BLEND_DST_ALPHA_EXT = 0x80CA;
+	int GL_BLEND_SRC_ALPHA_EXT = 0x80CB;
 
-	public void glBlendFuncSeparateEXT(@GLenum int sfactorRGB, @GLenum int dfactorRGB, @GLenum int sfactorAlpha, @GLenum int dfactorAlpha);
+	void glBlendFuncSeparateEXT(@GLenum int sfactorRGB, @GLenum int dfactorRGB, @GLenum int sfactorAlpha, @GLenum int dfactorAlpha);
 }

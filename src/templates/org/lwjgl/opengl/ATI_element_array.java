@@ -32,18 +32,15 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import org.lwjgl.generator.*;
 
 public interface ATI_element_array {
-	public static final int GL_ELEMENT_ARRAY_ATI = 0x8768;
-	public static final int GL_ELEMENT_ARRAY_TYPE_ATI = 0x8769;
-	public static final int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876A;
+	int GL_ELEMENT_ARRAY_ATI = 0x8768;
+	int GL_ELEMENT_ARRAY_TYPE_ATI = 0x8769;
+	int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876A;
 
-	public void glElementPointerATI(@AutoType("pPointer") @GLenum int type,
+	void glElementPointerATI(@AutoType("pPointer") @GLenum int type,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
@@ -52,7 +49,7 @@ public interface ATI_element_array {
 			@GLuint
 			Buffer pPointer);
 
-	public void glDrawElementArrayATI(@GLenum int mode, @GLsizei int count);
+	void glDrawElementArrayATI(@GLenum int mode, @GLsizei int count);
 
-	public void glDrawRangeElementArrayATI(@GLenum int mode, @GLuint int start, @GLuint int end, @GLsizei int count);
+	void glDrawRangeElementArrayATI(@GLenum int mode, @GLuint int start, @GLuint int end, @GLsizei int count);
 }

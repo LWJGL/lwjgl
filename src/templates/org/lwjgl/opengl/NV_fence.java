@@ -36,20 +36,20 @@ import java.nio.IntBuffer;
 import org.lwjgl.generator.*;
 
 public interface NV_fence {
-	public static final int GL_ALL_COMPLETED_NV = 0x84F2;
-	public static final int GL_FENCE_STATUS_NV = 0x84F3;
-	public static final int GL_FENCE_CONDITION_NV = 0x84F4;
+	int GL_ALL_COMPLETED_NV = 0x84F2;
+	int GL_FENCE_STATUS_NV = 0x84F3;
+	int GL_FENCE_CONDITION_NV = 0x84F4;
 
-	public void glGenFencesNV(@AutoSize("piFences") @GLsizei int n, @GLuint IntBuffer piFences);
-	public void glDeleteFencesNV(@AutoSize("piFences") @GLsizei int n, @Const @GLuint IntBuffer piFences);
+	void glGenFencesNV(@AutoSize("piFences") @GLsizei int n, @GLuint IntBuffer piFences);
+	void glDeleteFencesNV(@AutoSize("piFences") @GLsizei int n, @Const @GLuint IntBuffer piFences);
 
-	public void glSetFenceNV(@GLuint int fence, @GLenum int condition);
+	void glSetFenceNV(@GLuint int fence, @GLenum int condition);
 
-	public boolean glTestFenceNV(@GLuint int fence);
+	boolean glTestFenceNV(@GLuint int fence);
 
-	public void glFinishFenceNV(@GLuint int fence);
+	void glFinishFenceNV(@GLuint int fence);
 
-	public boolean glIsFenceNV(@GLuint int fence);
+	boolean glIsFenceNV(@GLuint int fence);
 
-	public void glGetFenceivNV(@GLuint int fence, @GLenum int pname, @Check("4") IntBuffer piParams);
+	void glGetFenceivNV(@GLuint int fence, @GLenum int pname, @Check("4") IntBuffer piParams);
 }

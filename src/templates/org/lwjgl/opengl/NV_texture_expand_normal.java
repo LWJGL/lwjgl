@@ -37,5 +37,5 @@ public interface NV_texture_expand_normal {
 	 * TexParameteriv, TexParameterf, TexParameterfv, GetTexParameteri,
 	 * and GetTexParameteriv:
 	*/
-	public static final int GL_TEXTURE_UNSIGNED_REMAP_MODE_NV = 0x888F;
+	int GL_TEXTURE_UNSIGNED_REMAP_MODE_NV = 0x888F;
 }

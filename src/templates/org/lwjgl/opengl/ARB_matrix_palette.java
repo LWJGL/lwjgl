@@ -36,25 +36,23 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
 import org.lwjgl.generator.*;
 
 public interface ARB_matrix_palette {
-	public static final int GL_MATRIX_PALETTE_ARB = 0x8840;
-	public static final int GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB = 0x8841;
-	public static final int GL_MAX_PALETTE_MATRICES_ARB = 0x8842;
-	public static final int GL_CURRENT_PALETTE_MATRIX_ARB = 0x8843;
-	public static final int GL_MATRIX_INDEX_ARRAY_ARB = 0x8844;
-	public static final int GL_CURRENT_MATRIX_INDEX_ARB = 0x8845;
-	public static final int GL_MATRIX_INDEX_ARRAY_SIZE_ARB = 0x8846;
-	public static final int GL_MATRIX_INDEX_ARRAY_TYPE_ARB = 0x8847;
-	public static final int GL_MATRIX_INDEX_ARRAY_STRIDE_ARB = 0x8848;
-	public static final int GL_MATRIX_INDEX_ARRAY_POINTER_ARB = 0x8849;
+	int GL_MATRIX_PALETTE_ARB = 0x8840;
+	int GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB = 0x8841;
+	int GL_MAX_PALETTE_MATRICES_ARB = 0x8842;
+	int GL_CURRENT_PALETTE_MATRIX_ARB = 0x8843;
+	int GL_MATRIX_INDEX_ARRAY_ARB = 0x8844;
+	int GL_CURRENT_MATRIX_INDEX_ARB = 0x8845;
+	int GL_MATRIX_INDEX_ARRAY_SIZE_ARB = 0x8846;
+	int GL_MATRIX_INDEX_ARRAY_TYPE_ARB = 0x8847;
+	int GL_MATRIX_INDEX_ARRAY_STRIDE_ARB = 0x8848;
+	int GL_MATRIX_INDEX_ARRAY_POINTER_ARB = 0x8849;
 
-	public void glCurrentPaletteMatrixARB(int index);
+	void glCurrentPaletteMatrixARB(int index);
 
-	public void glMatrixIndexPointerARB(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
+	void glMatrixIndexPointerARB(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@GLubyte
@@ -63,9 +61,9 @@ public interface ARB_matrix_palette {
 			Buffer pPointer);
 
 	@StripPostfix("pIndices")
-	public void glMatrixIndexubvARB(@AutoSize("pIndices") int size, @GLubyte ByteBuffer pIndices);
+	void glMatrixIndexubvARB(@AutoSize("pIndices") int size, @GLubyte ByteBuffer pIndices);
 	@StripPostfix("pIndices")
-	public void glMatrixIndexusvARB(@AutoSize("pIndices") int size, @GLushort ShortBuffer pIndices);
+	void glMatrixIndexusvARB(@AutoSize("pIndices") int size, @GLushort ShortBuffer pIndices);
 	@StripPostfix("pIndices")
-	public void glMatrixIndexuivARB(@AutoSize("pIndices") int size, @GLuint IntBuffer pIndices);
+	void glMatrixIndexuivARB(@AutoSize("pIndices") int size, @GLuint IntBuffer pIndices);
 }

@@ -45,20 +45,20 @@ public interface NV_fragment_program extends NV_program {
 	 * ProgramLocalParameter4fARB, ProgramLocalParameter4fvARB,
 	 * GetProgramLocalParameterdvARB, and GetProgramLocalParameterfvARB:
 	 */
-	public static final int GL_FRAGMENT_PROGRAM_NV = 0x8870;
+	int GL_FRAGMENT_PROGRAM_NV = 0x8870;
 
 	/*
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
 	 * and GetDoublev:
 	 */
-	public static final int GL_MAX_TEXTURE_COORDS_NV = 0x8871;
-	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_NV = 0x8872;
-	public static final int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;
-	public static final int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;
+	int GL_MAX_TEXTURE_COORDS_NV = 0x8871;
+	int GL_MAX_TEXTURE_IMAGE_UNITS_NV = 0x8872;
+	int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;
+	int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;
 
-	public void glProgramNamedParameter4fNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, float x, float y, float z, float w);
+	void glProgramNamedParameter4fNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, float x, float y, float z, float w);
 
 	@StripPostfix("params")
-	public void glGetProgramNamedParameterfvNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, @Check("4") FloatBuffer params);
+	void glGetProgramNamedParameterfvNV(@GLuint int id, @AutoSize("name") @GLsizei int length, @Const @GLubyte ByteBuffer name, @Check("4") FloatBuffer params);
 }
 

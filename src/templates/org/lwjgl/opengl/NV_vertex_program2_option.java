@@ -35,6 +35,6 @@ public interface NV_vertex_program2_option {
 	/*
 	 * Accepted by the <pname> parameter of GetProgramivARB:
 	*/
-	public static final int GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV = 0x88F4;
-	public static final int GL_MAX_PROGRAM_CALL_DEPTH_NV = 0x88F5;
+	int GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV = 0x88F4;
+	int GL_MAX_PROGRAM_CALL_DEPTH_NV = 0x88F5;
 }

@@ -38,27 +38,27 @@ public interface ARB_vertex_buffer_object extends ARB_buffer_object {
 	 * GetBufferSubDataARB, GetBufferParameterivARB, and
 	 * GetBufferPointervARB:
 	*/
-	public static final int GL_ARRAY_BUFFER_ARB = 0x8892;
-	public static final int GL_ELEMENT_ARRAY_BUFFER_ARB = 0x8893;
+	int GL_ARRAY_BUFFER_ARB = 0x8892;
+	int GL_ELEMENT_ARRAY_BUFFER_ARB = 0x8893;
 
 	/*
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_ARRAY_BUFFER_BINDING_ARB = 0x8894;
-	public static final int GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB = 0x8895;
-	public static final int GL_VERTEX_ARRAY_BUFFER_BINDING_ARB = 0x8896;
-	public static final int GL_NORMAL_ARRAY_BUFFER_BINDING_ARB = 0x8897;
-	public static final int GL_COLOR_ARRAY_BUFFER_BINDING_ARB = 0x8898;
-	public static final int GL_INDEX_ARRAY_BUFFER_BINDING_ARB = 0x8899;
-	public static final int GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING_ARB = 0x889A;
-	public static final int GL_EDGE_FLAG_ARRAY_BUFFER_BINDING_ARB = 0x889B;
-	public static final int GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING_ARB = 0x889C;
-	public static final int GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING_ARB = 0x889D;
-	public static final int GL_WEIGHT_ARRAY_BUFFER_BINDING_ARB = 0x889E;
+	int GL_ARRAY_BUFFER_BINDING_ARB = 0x8894;
+	int GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB = 0x8895;
+	int GL_VERTEX_ARRAY_BUFFER_BINDING_ARB = 0x8896;
+	int GL_NORMAL_ARRAY_BUFFER_BINDING_ARB = 0x8897;
+	int GL_COLOR_ARRAY_BUFFER_BINDING_ARB = 0x8898;
+	int GL_INDEX_ARRAY_BUFFER_BINDING_ARB = 0x8899;
+	int GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING_ARB = 0x889A;
+	int GL_EDGE_FLAG_ARRAY_BUFFER_BINDING_ARB = 0x889B;
+	int GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING_ARB = 0x889C;
+	int GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING_ARB = 0x889D;
+	int GL_WEIGHT_ARRAY_BUFFER_BINDING_ARB = 0x889E;
 
 	/*
 	 * Accepted by the <pname> parameter of GetVertexAttribivARB:
 	 */
-	public static final int GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB = 0x889F;
+	int GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB = 0x889F;
 }

@@ -33,7 +33,6 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_occlusion_query {
@@ -41,37 +40,37 @@ public interface ARB_occlusion_query {
 	 * Accepted by the <target> parameter of BeginQueryARB, EndQueryARB,
 	 * and GetQueryivARB:
 	*/
-	public static final int GL_SAMPLES_PASSED_ARB = 0x8914;
+	int GL_SAMPLES_PASSED_ARB = 0x8914;
 
 	/*
 	 * Accepted by the <pname> parameter of GetQueryivARB:
 	*/
-	public static final int GL_QUERY_COUNTER_BITS_ARB = 0x8864;
-	public static final int GL_CURRENT_QUERY_ARB = 0x8865;
+	int GL_QUERY_COUNTER_BITS_ARB = 0x8864;
+	int GL_CURRENT_QUERY_ARB = 0x8865;
 
 	/*
 	 * Accepted by the <pname> parameter of GetQueryObjectivARB and
 	 * GetQueryObjectuivARB:
 	*/
-	public static final int GL_QUERY_RESULT_ARB = 0x8866;
-	public static final int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
+	int GL_QUERY_RESULT_ARB = 0x8866;
+	int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
 
-	public void glGenQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	void glGenQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 
-	public void glDeleteQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	void glDeleteQueriesARB(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
 
-	public boolean glIsQueryARB(@GLuint int id);
+	boolean glIsQueryARB(@GLuint int id);
 
-	public void glBeginQueryARB(@GLenum int target, @GLuint int id);
+	void glBeginQueryARB(@GLenum int target, @GLuint int id);
 
-	public void glEndQueryARB(@GLenum int target);
-
-	@StripPostfix("params")
-	public void glGetQueryivARB(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glEndQueryARB(@GLenum int target);
 
 	@StripPostfix("params")
-	public void glGetQueryObjectivARB(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetQueryivARB(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	public void glGetQueryObjectuivARB(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetQueryObjectivARB(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
+
+	@StripPostfix("params")
+	void glGetQueryObjectuivARB(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
 }

@@ -34,8 +34,8 @@ package org.lwjgl.opengl;
 import org.lwjgl.generator.*;
 
 public interface EXT_stencil_two_side {
-	public static final int GL_STENCIL_TEST_TWO_SIDE_EXT = 0x8910;
-	public static final int GL_ACTIVE_STENCIL_FACE_EXT = 0x8911;
+	int GL_STENCIL_TEST_TWO_SIDE_EXT = 0x8910;
+	int GL_ACTIVE_STENCIL_FACE_EXT = 0x8911;
 
-	public void glActiveStencilFaceEXT(@GLenum int face);
+	void glActiveStencilFaceEXT(@GLenum int face);
 }

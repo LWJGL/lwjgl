@@ -32,8 +32,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.generator.*;
-import org.lwjgl.BufferChecks;
-import org.lwjgl.LWJGLException;
 
 import java.nio.*;
 
@@ -42,55 +40,55 @@ public interface GL15 {
 	// ---------------------- ARB_vertex_buffer_object ----------------------
 	// ----------------------------------------------------------------------
 
-	public static final int GL_ARRAY_BUFFER = 0x8892;
-	public static final int GL_ELEMENT_ARRAY_BUFFER = 0x8893;
-	public static final int GL_ARRAY_BUFFER_BINDING = 0x8894;
-	public static final int GL_ELEMENT_ARRAY_BUFFER_BINDING = 0x8895;
-	public static final int GL_VERTEX_ARRAY_BUFFER_BINDING = 0x8896;
-	public static final int GL_NORMAL_ARRAY_BUFFER_BINDING = 0x8897;
-	public static final int GL_COLOR_ARRAY_BUFFER_BINDING = 0x8898;
-	public static final int GL_INDEX_ARRAY_BUFFER_BINDING = 0x8899;
-	public static final int GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING = 0x889A;
-	public static final int GL_EDGE_FLAG_ARRAY_BUFFER_BINDING = 0x889B;
-	public static final int GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING = 0x889C;
-	public static final int GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING = 0x889D;
-	public static final int GL_WEIGHT_ARRAY_BUFFER_BINDING = 0x889E;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = 0x889F;
-	public static final int GL_STREAM_DRAW = 0x88E0;
-	public static final int GL_STREAM_READ = 0x88E1;
-	public static final int GL_STREAM_COPY = 0x88E2;
-	public static final int GL_STATIC_DRAW = 0x88E4;
-	public static final int GL_STATIC_READ = 0x88E5;
-	public static final int GL_STATIC_COPY = 0x88E6;
-	public static final int GL_DYNAMIC_DRAW = 0x88E8;
-	public static final int GL_DYNAMIC_READ = 0x88E9;
-	public static final int GL_DYNAMIC_COPY = 0x88EA;
-	public static final int GL_READ_ONLY = 0x88B8;
-	public static final int GL_WRITE_ONLY = 0x88B9;
-	public static final int GL_READ_WRITE = 0x88BA;
-	public static final int GL_BUFFER_SIZE = 0x8764;
-	public static final int GL_BUFFER_USAGE = 0x8765;
-	public static final int GL_BUFFER_ACCESS = 0x88BB;
-	public static final int GL_BUFFER_MAPPED = 0x88BC;
-	public static final int GL_BUFFER_MAP_POINTER = 0x88BD;
+	int GL_ARRAY_BUFFER = 0x8892;
+	int GL_ELEMENT_ARRAY_BUFFER = 0x8893;
+	int GL_ARRAY_BUFFER_BINDING = 0x8894;
+	int GL_ELEMENT_ARRAY_BUFFER_BINDING = 0x8895;
+	int GL_VERTEX_ARRAY_BUFFER_BINDING = 0x8896;
+	int GL_NORMAL_ARRAY_BUFFER_BINDING = 0x8897;
+	int GL_COLOR_ARRAY_BUFFER_BINDING = 0x8898;
+	int GL_INDEX_ARRAY_BUFFER_BINDING = 0x8899;
+	int GL_TEXTURE_COORD_ARRAY_BUFFER_BINDING = 0x889A;
+	int GL_EDGE_FLAG_ARRAY_BUFFER_BINDING = 0x889B;
+	int GL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING = 0x889C;
+	int GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING = 0x889D;
+	int GL_WEIGHT_ARRAY_BUFFER_BINDING = 0x889E;
+	int GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = 0x889F;
+	int GL_STREAM_DRAW = 0x88E0;
+	int GL_STREAM_READ = 0x88E1;
+	int GL_STREAM_COPY = 0x88E2;
+	int GL_STATIC_DRAW = 0x88E4;
+	int GL_STATIC_READ = 0x88E5;
+	int GL_STATIC_COPY = 0x88E6;
+	int GL_DYNAMIC_DRAW = 0x88E8;
+	int GL_DYNAMIC_READ = 0x88E9;
+	int GL_DYNAMIC_COPY = 0x88EA;
+	int GL_READ_ONLY = 0x88B8;
+	int GL_WRITE_ONLY = 0x88B9;
+	int GL_READ_WRITE = 0x88BA;
+	int GL_BUFFER_SIZE = 0x8764;
+	int GL_BUFFER_USAGE = 0x8765;
+	int GL_BUFFER_ACCESS = 0x88BB;
+	int GL_BUFFER_MAPPED = 0x88BC;
+	int GL_BUFFER_MAP_POINTER = 0x88BD;
 
 	@Code(	"		BufferObjectTracker.bindBuffer(target, buffer);")
-	public void glBindBuffer(@GLenum int target, @GLuint int buffer);
+	void glBindBuffer(@GLenum int target, @GLuint int buffer);
 	@Code(	"		BufferObjectTracker.deleteBuffers(buffers);")
-	public void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
+	void glDeleteBuffers(@AutoSize("buffers") @GLsizei int n, @Const @GLuint IntBuffer buffers);
 
-	public void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @GLuint IntBuffer buffers);
-	public boolean glIsBuffer(@GLuint int buffer);
-	
+	void glGenBuffers(@AutoSize("buffers") @GLsizei int n, @GLuint IntBuffer buffers);
+	boolean glIsBuffer(@GLuint int buffer);
+
 	@GenerateAutos
-	public void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr int size,
+	void glBufferData(@GLenum int target, @AutoSize("data") @GLsizeiptr int size,
 			@Const
 			@GLbyte
 			@GLshort
 			@GLint
 			@GLfloat
 			Buffer data, @GLenum int usage);
-	public void glBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
+	void glBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
 			@Check
 			@Const
 			@GLbyte
@@ -98,8 +96,8 @@ public interface GL15 {
 			@GLint
 			@GLfloat
 			Buffer data);
-	
-	public void glGetBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
+
+	void glGetBufferSubData(@GLenum int target, @GLintptr int offset, @AutoSize("data") @GLsizeiptr int size,
 			@Check
 			@GLbyte
 			@GLshort
@@ -123,15 +121,15 @@ public interface GL15 {
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
 	@CachedResult
-	public @GLvoid ByteBuffer glMapBuffer(@GLenum int target, @GLenum int access);
+	@GLvoid ByteBuffer glMapBuffer(@GLenum int target, @GLenum int access);
 
-	public boolean glUnmapBuffer(@GLenum int target);
+	boolean glUnmapBuffer(@GLenum int target);
 
 	@StripPostfix("params")
-	public void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetBufferParameteriv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
-	public void glGetBufferPointerv(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
+	void glGetBufferPointerv(@GLenum int target, @GLenum int pname, @Result @GLvoid ByteBuffer pointer);
 
 	// -----------------------------------------------------------------
 	// ---------------------- ARB_occlusion_query ----------------------
@@ -141,34 +139,34 @@ public interface GL15 {
 	* Accepted by the <target> parameter of BeginQuery, EndQuery,
 	* and GetQueryiv:
 	*/
-	public static final int GL_SAMPLES_PASSED = 0x8914;
+	int GL_SAMPLES_PASSED = 0x8914;
 
 	/*
 	Accepted by the <pname> parameter of GetQueryiv:
 	*/
-	public static final int GL_QUERY_COUNTER_BITS = 0x8864;
-	public static final int GL_CURRENT_QUERY = 0x8865;
+	int GL_QUERY_COUNTER_BITS = 0x8864;
+	int GL_CURRENT_QUERY = 0x8865;
 
 	/*
 	Accepted by the <pname> parameter of GetQueryObjectiv and
 	GetQueryObjectuiv:
 	*/
-	public static final int GL_QUERY_RESULT = 0x8866;
-	public static final int GL_QUERY_RESULT_AVAILABLE = 0x8867;
+	int GL_QUERY_RESULT = 0x8866;
+	int GL_QUERY_RESULT_AVAILABLE = 0x8867;
 
-	public void glGenQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
-	public void glDeleteQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
-	public boolean glIsQuery(@GLuint int id);
+	void glGenQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	void glDeleteQueries(@AutoSize("ids") @GLsizei int n, @GLuint IntBuffer ids);
+	boolean glIsQuery(@GLuint int id);
 
-	public void glBeginQuery(@GLenum int target, @GLuint int id);
-	public void glEndQuery(@GLenum int target);
-
-	@StripPostfix("params")
-	public void glGetQueryiv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
+	void glBeginQuery(@GLenum int target, @GLuint int id);
+	void glEndQuery(@GLenum int target);
 
 	@StripPostfix("params")
-	public void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @Check("4") @GLint IntBuffer params);
+	void glGetQueryiv(@GLenum int target, @GLenum int pname, @Check("4") IntBuffer params);
 
 	@StripPostfix("params")
-	public void glGetQueryObjectuiv(@GLenum int id, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+	void glGetQueryObjectiv(@GLenum int id, @GLenum int pname, @Check("4") @GLint IntBuffer params);
+
+	@StripPostfix("params")
+	void glGetQueryObjectuiv(@GLenum int id, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 }

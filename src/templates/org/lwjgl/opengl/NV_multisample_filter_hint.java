@@ -36,5 +36,5 @@ public interface NV_multisample_filter_hint {
 	 * Accepted by the <target> parameter of Hint and by the <pname>
 	 * parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_MULTISAMPLE_FILTER_HINT_NV = 0x8534;
+	int GL_MULTISAMPLE_FILTER_HINT_NV = 0x8534;
 }

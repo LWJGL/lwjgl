@@ -35,5 +35,5 @@ import org.lwjgl.generator.*;
 
 @Extension(postfix="ATI", className="ATITextureCompression3DC")
 public interface ATI_texture_compression_3dc {
-	public static final int GL_COMPRESSED_RGB_3DC_ATI = 0x8837;
+	int GL_COMPRESSED_RGB_3DC_ATI = 0x8837;
 }

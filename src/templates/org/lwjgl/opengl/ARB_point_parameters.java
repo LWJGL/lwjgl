@@ -33,17 +33,16 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_point_parameters {
-	public static final int GL_POINT_SIZE_MIN_ARB = 0x8126;
-	public static final int GL_POINT_SIZE_MAX_ARB = 0x8127;
-	public static final int GL_POINT_FADE_THRESHOLD_SIZE_ARB = 0x8128;
-	public static final int GL_POINT_DISTANCE_ATTENUATION_ARB = 0x8129;
+	int GL_POINT_SIZE_MIN_ARB = 0x8126;
+	int GL_POINT_SIZE_MAX_ARB = 0x8127;
+	int GL_POINT_FADE_THRESHOLD_SIZE_ARB = 0x8128;
+	int GL_POINT_DISTANCE_ATTENUATION_ARB = 0x8129;
 
-	public void glPointParameterfARB(@GLenum int pname, float param);
+	void glPointParameterfARB(@GLenum int pname, float param);
 
 	@StripPostfix("pfParams")
-	public void glPointParameterfvARB(@GLenum int pname, @Check("4") FloatBuffer pfParams);
+	void glPointParameterfvARB(@GLenum int pname, @Check("4") FloatBuffer pfParams);
 }

@@ -32,6 +32,6 @@
 package org.lwjgl.opengl;
 
 public interface NV_light_max_exponent {
-	public static final int GL_MAX_SHININESS_NV = 0x8504;
-	public static final int GL_MAX_SPOT_EXPONENT_NV = 0x8505;
+	int GL_MAX_SHININESS_NV = 0x8504;
+	int GL_MAX_SPOT_EXPONENT_NV = 0x8505;
 }

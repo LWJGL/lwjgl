@@ -40,15 +40,15 @@ public interface NV_primitive_restart {
 	* the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
 	* GetDoublev:
 	*/
-	public static final int GL_PRIMITIVE_RESTART_NV = 0x8558;
+	int GL_PRIMITIVE_RESTART_NV = 0x8558;
 
 	/*
 	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	* GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
+	int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
 
-	public void glPrimitiveRestartNV();
+	void glPrimitiveRestartNV();
 
-	public void glPrimitiveRestartIndexNV(@GLuint int index);
+	void glPrimitiveRestartIndexNV(@GLuint int index);
 }

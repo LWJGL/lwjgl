@@ -38,7 +38,7 @@ public interface EXT_texture_mirror_clamp {
 	 * when their <pname> parameter is TEXTURE_WRAP_S, TEXTURE_WRAP_T,
 	 * or TEXTURE_WRAP_R:
 	*/
-	public static final int GL_MIRROR_CLAMP_EXT = 0x8742;
-	public static final int GL_MIRROR_CLAMP_TO_EDGE_EXT = 0x8743;
-	public static final int GL_MIRROR_CLAMP_TO_BORDER_EXT = 0x8912;
+	int GL_MIRROR_CLAMP_EXT = 0x8742;
+	int GL_MIRROR_CLAMP_TO_EDGE_EXT = 0x8743;
+	int GL_MIRROR_CLAMP_TO_BORDER_EXT = 0x8912;
 }

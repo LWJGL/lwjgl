@@ -32,6 +32,6 @@
 package org.lwjgl.opengl;
 
 public interface EXT_texture_env_dot3 {
-	public static final int GL_DOT3_RGB_EXT = 0x8740;
-	public static final int GL_DOT3_RGBA_EXT = 0x8741;
+	int GL_DOT3_RGB_EXT = 0x8740;
+	int GL_DOT3_RGBA_EXT = 0x8741;
 }

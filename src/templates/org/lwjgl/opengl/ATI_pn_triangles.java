@@ -34,17 +34,17 @@ package org.lwjgl.opengl;
 import org.lwjgl.generator.*;
 
 public interface ATI_pn_triangles {
-	public static final int GL_PN_TRIANGLES_ATI = 0x87F0;
-	public static final int GL_MAX_PN_TRIANGLES_TESSELATION_LEVEL_ATI = 0x87F1;
-	public static final int GL_PN_TRIANGLES_POINT_MODE_ATI = 0x87F2;
-	public static final int GL_PN_TRIANGLES_NORMAL_MODE_ATI = 0x87F3;
-	public static final int GL_PN_TRIANGLES_TESSELATION_LEVEL_ATI = 0x87F4;
-	public static final int GL_PN_TRIANGLES_POINT_MODE_LINEAR_ATI = 0x87F5;
-	public static final int GL_PN_TRIANGLES_POINT_MODE_CUBIC_ATI = 0x87F6;
-	public static final int GL_PN_TRIANGLES_NORMAL_MODE_LINEAR_ATI = 0x87F7;
-	public static final int GL_PN_TRIANGLES_NORMAL_MODE_QUADRATIC_ATI = 0x87F8;
+	int GL_PN_TRIANGLES_ATI = 0x87F0;
+	int GL_MAX_PN_TRIANGLES_TESSELATION_LEVEL_ATI = 0x87F1;
+	int GL_PN_TRIANGLES_POINT_MODE_ATI = 0x87F2;
+	int GL_PN_TRIANGLES_NORMAL_MODE_ATI = 0x87F3;
+	int GL_PN_TRIANGLES_TESSELATION_LEVEL_ATI = 0x87F4;
+	int GL_PN_TRIANGLES_POINT_MODE_LINEAR_ATI = 0x87F5;
+	int GL_PN_TRIANGLES_POINT_MODE_CUBIC_ATI = 0x87F6;
+	int GL_PN_TRIANGLES_NORMAL_MODE_LINEAR_ATI = 0x87F7;
+	int GL_PN_TRIANGLES_NORMAL_MODE_QUADRATIC_ATI = 0x87F8;
 
-	public void glPNTrianglesfATI(@GLenum int pname, float param);
+	void glPNTrianglesfATI(@GLenum int pname, float param);
 
-	public void glPNTrianglesiATI(@GLenum int pname, int param);
+	void glPNTrianglesiATI(@GLenum int pname, int param);
 }

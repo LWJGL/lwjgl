@@ -32,6 +32,6 @@
 package org.lwjgl.opengl;
 
 public interface ATI_texture_mirror_once {
-	public static final int GL_MIRROR_CLAMP_ATI = 0x8742;
-	public static final int GL_MIRROR_CLAMP_TO_EDGE_ATI = 0x8743;
+	int GL_MIRROR_CLAMP_ATI = 0x8742;
+	int GL_MIRROR_CLAMP_TO_EDGE_ATI = 0x8743;
 }

@@ -43,23 +43,23 @@ public interface ARB_texture_rectangle {
 	 * GetTexLevelParameteriv, GetTexLevelParameterfv, TexImage2D,
 	 * CopyTexImage2D, TexSubImage2D and CopySubTexImage2D:
 	*/
-	public static final int GL_TEXTURE_RECTANGLE_ARB = 0x84F5;
+	int GL_TEXTURE_RECTANGLE_ARB = 0x84F5;
 
 	/*
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv and GetDoublev:
 	*/
-	public static final int GL_TEXTURE_BINDING_RECTANGLE_ARB = 0x84F6;
+	int GL_TEXTURE_BINDING_RECTANGLE_ARB = 0x84F6;
 
 	/*
 	* Accepted by the <target> parameter of GetTexLevelParameteriv,
 	* GetTexLevelParameterfv, GetTexParameteriv and TexImage2D:
 	*/
-	public static final int GL_PROXY_TEXTURE_RECTANGLE_ARB = 0x84F7;
+	int GL_PROXY_TEXTURE_RECTANGLE_ARB = 0x84F7;
 
 	/*
 	* Accepted by the <pname> parameter of GetBooleanv, GetDoublev,
 	* GetIntegerv and GetFloatv:
 	*/
-	public static final int GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB = 0x84F8;
+	int GL_MAX_RECTANGLE_TEXTURE_SIZE_ARB = 0x84F8;
 }

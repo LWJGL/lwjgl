@@ -39,13 +39,13 @@ public interface EXT_depth_bounds_test {
 	and by the <pname> parameter of GetBooleanv, GetIntegerv,
 	GetFloatv, and GetDoublev:
 	*/
-	public static final int DEPTH_BOUNDS_TEST_EXT = 0x8890;
+	int GL_DEPTH_BOUNDS_TEST_EXT = 0x8890;
 
 	/*
 	Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	GetFloatv, and GetDoublev:
 	*/
-	public static final int DEPTH_BOUNDS_EXT = 0x8891;
+	int GL_DEPTH_BOUNDS_EXT = 0x8891;
 
-	public void glDepthBoundsEXT(@GLclampd double zmin, @GLclampd double zmax);
+	void glDepthBoundsEXT(@GLclampd double zmin, @GLclampd double zmax);
 }

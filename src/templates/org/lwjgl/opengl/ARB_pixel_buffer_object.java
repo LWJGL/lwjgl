@@ -37,13 +37,13 @@ public interface ARB_pixel_buffer_object extends ARB_buffer_object {
 	 * BufferSubData, MapBuffer, UnmapBuffer, GetBufferSubData,
 	 * GetBufferParameteriv, and GetBufferPointerv:
 	*/
-	public static final int GL_PIXEL_PACK_BUFFER_ARB = 0x88EB;
-	public static final int GL_PIXEL_UNPACK_BUFFER_ARB = 0x88EC;
+	int GL_PIXEL_PACK_BUFFER_ARB = 0x88EB;
+	int GL_PIXEL_UNPACK_BUFFER_ARB = 0x88EC;
 
 	/*
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	*/
-	public static final int PIXEL_PACK_BUFFER_BINDING_ARB = 0x88ED;
-	public static final int PIXEL_UNPACK_BUFFER_BINDING_ARB = 0x88EF;
+	int PIXEL_PACK_BUFFER_BINDING_ARB = 0x88ED;
+	int PIXEL_UNPACK_BUFFER_BINDING_ARB = 0x88EF;
 }

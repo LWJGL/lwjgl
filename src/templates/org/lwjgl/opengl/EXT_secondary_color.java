@@ -32,27 +32,25 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 import org.lwjgl.generator.*;
 
 public interface EXT_secondary_color {
-	public static final int GL_COLOR_SUM_EXT = 0x8458;
-	public static final int GL_CURRENT_SECONDARY_COLOR_EXT = 0x8459;
-	public static final int GL_SECONDARY_COLOR_ARRAY_SIZE_EXT = 0x845A;
-	public static final int GL_SECONDARY_COLOR_ARRAY_TYPE_EXT = 0x845B;
-	public static final int GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT = 0x845C;
-	public static final int GL_SECONDARY_COLOR_ARRAY_POINTER_EXT = 0x845D;
-	public static final int GL_SECONDARY_COLOR_ARRAY_EXT = 0x845E;
+	int GL_COLOR_SUM_EXT = 0x8458;
+	int GL_CURRENT_SECONDARY_COLOR_EXT = 0x8459;
+	int GL_SECONDARY_COLOR_ARRAY_SIZE_EXT = 0x845A;
+	int GL_SECONDARY_COLOR_ARRAY_TYPE_EXT = 0x845B;
+	int GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT = 0x845C;
+	int GL_SECONDARY_COLOR_ARRAY_POINTER_EXT = 0x845D;
+	int GL_SECONDARY_COLOR_ARRAY_EXT = 0x845E;
 
-	public void glSecondaryColor3bEXT(byte red, byte green, byte blue);
+	void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 
-	public void glSecondaryColor3fEXT(float red, float green, float blue);
+	void glSecondaryColor3fEXT(float red, float green, float blue);
 
-	public void glSecondaryColor3ubEXT(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
+	void glSecondaryColor3ubEXT(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
-	public void glSecondaryColorPointerEXT(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
+	void glSecondaryColorPointerEXT(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@GLbyte

@@ -32,27 +32,26 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.generator.*;
-import org.lwjgl.LWJGLException;
 
 public interface ARB_color_buffer_float {
 	/*
      * Accepted by the <pname> parameters of GetBooleanv, GetIntegerv,
      * GetFloatv, and GetDoublev:
      */
-	public static final int RGBA_FLOAT_MODE_ARB = 0x8820;
+	int GL_RGBA_FLOAT_MODE_ARB = 0x8820;
 
 	/*
      * Accepted by the <target> parameter of ClampColorARB and the <pname>
      * parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev.
 	 */
-	public static final int CLAMP_VERTEX_COLOR_ARB = 0x891A;
-	public static final int CLAMP_FRAGMENT_COLOR_ARB = 0x891B;
-	public static final int CLAMP_READ_COLOR_ARB = 0x891C;
+	int GL_CLAMP_VERTEX_COLOR_ARB = 0x891A;
+	int GL_CLAMP_FRAGMENT_COLOR_ARB = 0x891B;
+	int GL_CLAMP_READ_COLOR_ARB = 0x891C;
 
 	/*
 	 * Accepted by the <clamp> parameter of ClampColorARB.
 	 */
-	public static final int FIXED_ONLY_ARB = 0x891D;
+	int GL_FIXED_ONLY_ARB = 0x891D;
 
 	/*
 	 * Accepted as a value in the <piAttribIList> and <pfAttribFList>
@@ -60,18 +59,18 @@ public interface ARB_color_buffer_float {
 	 * <piValues> parameter array of wglGetPixelFormatAttribivARB, and the
 	 * <pfValues> parameter array of wglGetPixelFormatAttribfvARB:
 	 */
-	static final int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
+	int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
 
 	/*
 	 * Accepted as values of the <render_type> arguments in the
 	 * glXCreateNewContext and glXCreateContext functions
 	 */
-	static final int GLX_RGBA_FLOAT_TYPE = 0x20B9;
+	int GLX_RGBA_FLOAT_TYPE = 0x20B9;
 
 	/*
 	 * Accepted as a bit set in the GLX_RENDER_TYPE variable
 	 */
-	static final int GLX_RGBA_FLOAT_BIT = 0x00000004;
+	int GLX_RGBA_FLOAT_BIT = 0x00000004;
 
-	public void glClampColorARB(@GLenum int target, @GLenum int clamp);
+	void glClampColorARB(@GLenum int target, @GLenum int clamp);
 }

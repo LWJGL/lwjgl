@@ -48,82 +48,82 @@ public interface NV_vertex_program extends NV_program {
 	ExecuteProgramNV, GetProgramParameter[df]vNV, GetTrackMatrixivNV,
 	LoadProgramNV, ProgramParameter[s]4[df][v]NV, and TrackMatrixNV:
 	*/
-	public static final int GL_VERTEX_PROGRAM_NV = 0x8620;
+	int GL_VERTEX_PROGRAM_NV = 0x8620;
 
 	/*
 	Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,
 	and by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
 	and GetDoublev:
 	*/
-	public static final int GL_VERTEX_PROGRAM_POINT_SIZE_NV = 0x8642;
-	public static final int GL_VERTEX_PROGRAM_TWO_SIDE_NV = 0x8643;
+	int GL_VERTEX_PROGRAM_POINT_SIZE_NV = 0x8642;
+	int GL_VERTEX_PROGRAM_TWO_SIDE_NV = 0x8643;
 
 	/*
 	Accepted by the <target> parameter of ExecuteProgramNV and
 	LoadProgramNV:
 	*/
-	public static final int GL_VERTEX_STATE_PROGRAM_NV = 0x8621;
+	int GL_VERTEX_STATE_PROGRAM_NV = 0x8621;
 
 	/*
 	Accepted by the <pname> parameter of GetVertexAttrib[dfi]vNV:
 	*/
-	public static final int GL_ATTRIB_ARRAY_SIZE_NV = 0x8623;
-	public static final int GL_ATTRIB_ARRAY_STRIDE_NV = 0x8624;
-	public static final int GL_ATTRIB_ARRAY_TYPE_NV = 0x8625;
-	public static final int GL_CURRENT_ATTRIB_NV = 0x8626;
+	int GL_ATTRIB_ARRAY_SIZE_NV = 0x8623;
+	int GL_ATTRIB_ARRAY_STRIDE_NV = 0x8624;
+	int GL_ATTRIB_ARRAY_TYPE_NV = 0x8625;
+	int GL_CURRENT_ATTRIB_NV = 0x8626;
 
 	/*
 	Accepted by the <pname> parameter of GetProgramParameterfvNV
 	and GetProgramParameterdvNV:
 	*/
-	public static final int GL_PROGRAM_PARAMETER_NV = 0x8644;
+	int GL_PROGRAM_PARAMETER_NV = 0x8644;
 
 	/*
 	Accepted by the <pname> parameter of GetVertexAttribPointervNV:
 	*/
-	public static final int GL_ATTRIB_ARRAY_POINTER_NV = 0x8645;
+	int GL_ATTRIB_ARRAY_POINTER_NV = 0x8645;
 
 	/*
 	Accepted by the <pname> parameter of GetTrackMatrixivNV:
 	*/
-	public static final int GL_TRACK_MATRIX_NV = 0x8648;
-	public static final int GL_TRACK_MATRIX_TRANSFORM_NV = 0x8649;
+	int GL_TRACK_MATRIX_NV = 0x8648;
+	int GL_TRACK_MATRIX_TRANSFORM_NV = 0x8649;
 
 	/*
 	Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_MAX_TRACK_MATRIX_STACK_DEPTH_NV = 0x862E;
-	public static final int GL_MAX_TRACK_MATRICES_NV = 0x862F;
-	public static final int GL_CURRENT_MATRIX_STACK_DEPTH_NV = 0x8640;
-	public static final int GL_CURRENT_MATRIX_NV = 0x8641;
-	public static final int GL_VERTEX_PROGRAM_BINDING_NV = 0x864A;
+	int GL_MAX_TRACK_MATRIX_STACK_DEPTH_NV = 0x862E;
+	int GL_MAX_TRACK_MATRICES_NV = 0x862F;
+	int GL_CURRENT_MATRIX_STACK_DEPTH_NV = 0x8640;
+	int GL_CURRENT_MATRIX_NV = 0x8641;
+	int GL_VERTEX_PROGRAM_BINDING_NV = 0x864A;
 
 	/*
 	Accepted by the <matrix> parameter of TrackMatrixNV:
 	*/
-	public static final int GL_MODELVIEW_PROJECTION_NV = 0x8629;
+	int GL_MODELVIEW_PROJECTION_NV = 0x8629;
 
 	/*
 	Accepted by the <matrix> parameter of TrackMatrixNV and by the
 	<mode> parameter of MatrixMode:
 	*/
-	public static final int GL_MATRIX0_NV = 0x8630;
-	public static final int GL_MATRIX1_NV = 0x8631;
-	public static final int GL_MATRIX2_NV = 0x8632;
-	public static final int GL_MATRIX3_NV = 0x8633;
-	public static final int GL_MATRIX4_NV = 0x8634;
-	public static final int GL_MATRIX5_NV = 0x8635;
-	public static final int GL_MATRIX6_NV = 0x8636;
-	public static final int GL_MATRIX7_NV = 0x8637;
+	int GL_MATRIX0_NV = 0x8630;
+	int GL_MATRIX1_NV = 0x8631;
+	int GL_MATRIX2_NV = 0x8632;
+	int GL_MATRIX3_NV = 0x8633;
+	int GL_MATRIX4_NV = 0x8634;
+	int GL_MATRIX5_NV = 0x8635;
+	int GL_MATRIX6_NV = 0x8636;
+	int GL_MATRIX7_NV = 0x8637;
 
 	/*
 	Accepted by the <transform> parameter of TrackMatrixNV:
 	*/
-	public static final int GL_IDENTITY_NV = 0x862A;
-	public static final int GL_INVERSE_NV = 0x862B;
-	public static final int GL_TRANSPOSE_NV = 0x862C;
-	public static final int GL_INVERSE_TRANSPOSE_NV = 0x862D;
+	int GL_IDENTITY_NV = 0x862A;
+	int GL_INVERSE_NV = 0x862B;
+	int GL_TRANSPOSE_NV = 0x862C;
+	int GL_INVERSE_TRANSPOSE_NV = 0x862D;
 
 	/*
 	Accepted by the <array> parameter of EnableClientState and
@@ -131,22 +131,22 @@ public interface NV_vertex_program extends NV_program {
 	the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
 	GetDoublev:
 	*/
-	public static final int GL_VERTEX_ATTRIB_ARRAY0_NV = 0x8650;
-	public static final int GL_VERTEX_ATTRIB_ARRAY1_NV = 0x8651;
-	public static final int GL_VERTEX_ATTRIB_ARRAY2_NV = 0x8652;
-	public static final int GL_VERTEX_ATTRIB_ARRAY3_NV = 0x8653;
-	public static final int GL_VERTEX_ATTRIB_ARRAY4_NV = 0x8654;
-	public static final int GL_VERTEX_ATTRIB_ARRAY5_NV = 0x8655;
-	public static final int GL_VERTEX_ATTRIB_ARRAY6_NV = 0x8656;
-	public static final int GL_VERTEX_ATTRIB_ARRAY7_NV = 0x8657;
-	public static final int GL_VERTEX_ATTRIB_ARRAY8_NV = 0x8658;
-	public static final int GL_VERTEX_ATTRIB_ARRAY9_NV = 0x8659;
-	public static final int GL_VERTEX_ATTRIB_ARRAY10_NV = 0x865A;
-	public static final int GL_VERTEX_ATTRIB_ARRAY11_NV = 0x865B;
-	public static final int GL_VERTEX_ATTRIB_ARRAY12_NV = 0x865C;
-	public static final int GL_VERTEX_ATTRIB_ARRAY13_NV = 0x865D;
-	public static final int GL_VERTEX_ATTRIB_ARRAY14_NV = 0x865E;
-	public static final int GL_VERTEX_ATTRIB_ARRAY15_NV = 0x865F;
+	int GL_VERTEX_ATTRIB_ARRAY0_NV = 0x8650;
+	int GL_VERTEX_ATTRIB_ARRAY1_NV = 0x8651;
+	int GL_VERTEX_ATTRIB_ARRAY2_NV = 0x8652;
+	int GL_VERTEX_ATTRIB_ARRAY3_NV = 0x8653;
+	int GL_VERTEX_ATTRIB_ARRAY4_NV = 0x8654;
+	int GL_VERTEX_ATTRIB_ARRAY5_NV = 0x8655;
+	int GL_VERTEX_ATTRIB_ARRAY6_NV = 0x8656;
+	int GL_VERTEX_ATTRIB_ARRAY7_NV = 0x8657;
+	int GL_VERTEX_ATTRIB_ARRAY8_NV = 0x8658;
+	int GL_VERTEX_ATTRIB_ARRAY9_NV = 0x8659;
+	int GL_VERTEX_ATTRIB_ARRAY10_NV = 0x865A;
+	int GL_VERTEX_ATTRIB_ARRAY11_NV = 0x865B;
+	int GL_VERTEX_ATTRIB_ARRAY12_NV = 0x865C;
+	int GL_VERTEX_ATTRIB_ARRAY13_NV = 0x865D;
+	int GL_VERTEX_ATTRIB_ARRAY14_NV = 0x865E;
+	int GL_VERTEX_ATTRIB_ARRAY15_NV = 0x865F;
 
 	/*
 	Accepted by the <target> parameter of GetMapdv, GetMapfv, GetMapiv,
@@ -154,22 +154,22 @@ public interface NV_vertex_program extends NV_program {
 	IsEnabled, and by the <pname> parameter of GetBooleanv, GetIntegerv,
 	GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_MAP1_VERTEX_ATTRIB0_4_NV = 0x8660;
-	public static final int GL_MAP1_VERTEX_ATTRIB1_4_NV = 0x8661;
-	public static final int GL_MAP1_VERTEX_ATTRIB2_4_NV = 0x8662;
-	public static final int GL_MAP1_VERTEX_ATTRIB3_4_NV = 0x8663;
-	public static final int GL_MAP1_VERTEX_ATTRIB4_4_NV = 0x8664;
-	public static final int GL_MAP1_VERTEX_ATTRIB5_4_NV = 0x8665;
-	public static final int GL_MAP1_VERTEX_ATTRIB6_4_NV = 0x8666;
-	public static final int GL_MAP1_VERTEX_ATTRIB7_4_NV = 0x8667;
-	public static final int GL_MAP1_VERTEX_ATTRIB8_4_NV = 0x8668;
-	public static final int GL_MAP1_VERTEX_ATTRIB9_4_NV = 0x8669;
-	public static final int GL_MAP1_VERTEX_ATTRIB10_4_NV = 0x866A;
-	public static final int GL_MAP1_VERTEX_ATTRIB11_4_NV = 0x866B;
-	public static final int GL_MAP1_VERTEX_ATTRIB12_4_NV = 0x866C;
-	public static final int GL_MAP1_VERTEX_ATTRIB13_4_NV = 0x866D;
-	public static final int GL_MAP1_VERTEX_ATTRIB14_4_NV = 0x866E;
-	public static final int GL_MAP1_VERTEX_ATTRIB15_4_NV = 0x866F;
+	int GL_MAP1_VERTEX_ATTRIB0_4_NV = 0x8660;
+	int GL_MAP1_VERTEX_ATTRIB1_4_NV = 0x8661;
+	int GL_MAP1_VERTEX_ATTRIB2_4_NV = 0x8662;
+	int GL_MAP1_VERTEX_ATTRIB3_4_NV = 0x8663;
+	int GL_MAP1_VERTEX_ATTRIB4_4_NV = 0x8664;
+	int GL_MAP1_VERTEX_ATTRIB5_4_NV = 0x8665;
+	int GL_MAP1_VERTEX_ATTRIB6_4_NV = 0x8666;
+	int GL_MAP1_VERTEX_ATTRIB7_4_NV = 0x8667;
+	int GL_MAP1_VERTEX_ATTRIB8_4_NV = 0x8668;
+	int GL_MAP1_VERTEX_ATTRIB9_4_NV = 0x8669;
+	int GL_MAP1_VERTEX_ATTRIB10_4_NV = 0x866A;
+	int GL_MAP1_VERTEX_ATTRIB11_4_NV = 0x866B;
+	int GL_MAP1_VERTEX_ATTRIB12_4_NV = 0x866C;
+	int GL_MAP1_VERTEX_ATTRIB13_4_NV = 0x866D;
+	int GL_MAP1_VERTEX_ATTRIB14_4_NV = 0x866E;
+	int GL_MAP1_VERTEX_ATTRIB15_4_NV = 0x866F;
 
 	/*
 	Accepted by the <target> parameter of GetMapdv, GetMapfv, GetMapiv,
@@ -177,49 +177,49 @@ public interface NV_vertex_program extends NV_program {
 	IsEnabled, and by the <pname> parameter of GetBooleanv, GetIntegerv,
 	GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_MAP2_VERTEX_ATTRIB0_4_NV = 0x8670;
-	public static final int GL_MAP2_VERTEX_ATTRIB1_4_NV = 0x8671;
-	public static final int GL_MAP2_VERTEX_ATTRIB2_4_NV = 0x8672;
-	public static final int GL_MAP2_VERTEX_ATTRIB3_4_NV = 0x8673;
-	public static final int GL_MAP2_VERTEX_ATTRIB4_4_NV = 0x8674;
-	public static final int GL_MAP2_VERTEX_ATTRIB5_4_NV = 0x8675;
-	public static final int GL_MAP2_VERTEX_ATTRIB6_4_NV = 0x8676;
-	public static final int GL_MAP2_VERTEX_ATTRIB7_4_NV = 0x8677;
-	public static final int GL_MAP2_VERTEX_ATTRIB8_4_NV = 0x8678;
-	public static final int GL_MAP2_VERTEX_ATTRIB9_4_NV = 0x8679;
-	public static final int GL_MAP2_VERTEX_ATTRIB10_4_NV = 0x867A;
-	public static final int GL_MAP2_VERTEX_ATTRIB11_4_NV = 0x867B;
-	public static final int GL_MAP2_VERTEX_ATTRIB12_4_NV = 0x867C;
-	public static final int GL_MAP2_VERTEX_ATTRIB13_4_NV = 0x867D;
-	public static final int GL_MAP2_VERTEX_ATTRIB14_4_NV = 0x867E;
-	public static final int GL_MAP2_VERTEX_ATTRIB15_4_NV = 0x867F;
+	int GL_MAP2_VERTEX_ATTRIB0_4_NV = 0x8670;
+	int GL_MAP2_VERTEX_ATTRIB1_4_NV = 0x8671;
+	int GL_MAP2_VERTEX_ATTRIB2_4_NV = 0x8672;
+	int GL_MAP2_VERTEX_ATTRIB3_4_NV = 0x8673;
+	int GL_MAP2_VERTEX_ATTRIB4_4_NV = 0x8674;
+	int GL_MAP2_VERTEX_ATTRIB5_4_NV = 0x8675;
+	int GL_MAP2_VERTEX_ATTRIB6_4_NV = 0x8676;
+	int GL_MAP2_VERTEX_ATTRIB7_4_NV = 0x8677;
+	int GL_MAP2_VERTEX_ATTRIB8_4_NV = 0x8678;
+	int GL_MAP2_VERTEX_ATTRIB9_4_NV = 0x8679;
+	int GL_MAP2_VERTEX_ATTRIB10_4_NV = 0x867A;
+	int GL_MAP2_VERTEX_ATTRIB11_4_NV = 0x867B;
+	int GL_MAP2_VERTEX_ATTRIB12_4_NV = 0x867C;
+	int GL_MAP2_VERTEX_ATTRIB13_4_NV = 0x867D;
+	int GL_MAP2_VERTEX_ATTRIB14_4_NV = 0x867E;
+	int GL_MAP2_VERTEX_ATTRIB15_4_NV = 0x867F;
 
-	public void glExecuteProgramNV(@GLenum int target, @GLuint int id, @Check("4") @Const FloatBuffer params);
-
-	@StripPostfix("params")
-	public void glGetProgramParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
+	void glExecuteProgramNV(@GLenum int target, @GLuint int id, @Check("4") @Const FloatBuffer params);
 
 	@StripPostfix("params")
-	public void glGetTrackMatrixivNV(@GLenum int target, @GLuint int address, @GLenum int parameterName, @Check("4") IntBuffer params);
+	void glGetProgramParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	public void glGetVertexAttribfvNV(@GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
+	void glGetTrackMatrixivNV(@GLenum int target, @GLuint int address, @GLenum int parameterName, @Check("4") IntBuffer params);
+
 	@StripPostfix("params")
-	public void glGetVertexAttribivNV(@GLuint int index, @GLenum int parameterName, @Check("4") IntBuffer params);
+	void glGetVertexAttribfvNV(@GLuint int index, @GLenum int parameterName, @Check("4") FloatBuffer params);
+	@StripPostfix("params")
+	void glGetVertexAttribivNV(@GLuint int index, @GLenum int parameterName, @Check("4") IntBuffer params);
 
 	@StripPostfix("pointer")
-	public void glGetVertexAttribPointervNV(@GLuint int index, @GLenum int parameterName, @Result @GLvoid ByteBuffer pointer);
+	void glGetVertexAttribPointervNV(@GLuint int index, @GLenum int parameterName, @Result @GLvoid ByteBuffer pointer);
 
-	public void glProgramParameter4fNV(@GLenum int target, @GLuint int index, float x, float y, float z, float w);
+	void glProgramParameter4fNV(@GLenum int target, @GLuint int index, float x, float y, float z, float w);
 
 	@StripPostfix("params")
-	public void glProgramParameters4fvNV(@GLenum int target, @GLuint int index, @AutoSize(value="params", expression=" >> 2") @GLuint int count,
+	void glProgramParameters4fvNV(@GLenum int target, @GLuint int index, @AutoSize(value="params", expression=" >> 2") @GLuint int count,
 			@Const
 			FloatBuffer params);
 
-	public void glTrackMatrixNV(@GLenum int target, @GLuint int address, @GLenum int matrix, @GLenum int transform);
+	void glTrackMatrixNV(@GLenum int target, @GLuint int address, @GLenum int matrix, @GLenum int transform);
 
-	public void glVertexAttribPointerNV(@GLuint int index, int size, @GLenum int type, @GLsizei int stride,
+	void glVertexAttribPointerNV(@GLuint int index, int size, @GLenum int type, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
@@ -232,41 +232,41 @@ public interface NV_vertex_program extends NV_program {
 			@GLfloat
 			Buffer buffer);
 
-	public void glVertexAttrib1sNV(@GLuint int index, short x);
+	void glVertexAttrib1sNV(@GLuint int index, short x);
 
-	public void glVertexAttrib1fNV(@GLuint int index, float x);
+	void glVertexAttrib1fNV(@GLuint int index, float x);
 
-	public void glVertexAttrib2sNV(@GLuint int index, short x, short y);
+	void glVertexAttrib2sNV(@GLuint int index, short x, short y);
 
-	public void glVertexAttrib2fNV(@GLuint int index, float x, float y);
+	void glVertexAttrib2fNV(@GLuint int index, float x, float y);
 
-	public void glVertexAttrib3sNV(@GLuint int index, short x, short y, short z);
+	void glVertexAttrib3sNV(@GLuint int index, short x, short y, short z);
 
-	public void glVertexAttrib3fNV(@GLuint int index, float x, float y, float z);
+	void glVertexAttrib3fNV(@GLuint int index, float x, float y, float z);
 
-	public void glVertexAttrib4sNV(@GLuint int index, short x, short y, short z, short w);
+	void glVertexAttrib4sNV(@GLuint int index, short x, short y, short z, short w);
 
-	public void glVertexAttrib4fNV(@GLuint int index, float x, float y, float z, float w);
+	void glVertexAttrib4fNV(@GLuint int index, float x, float y, float z, float w);
 
-	public void glVertexAttrib4ubNV(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
-
-	@StripPostfix("v")
-	public void glVertexAttribs1svNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const ShortBuffer v);
-	@StripPostfix("v")
-	public void glVertexAttribs1fvNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const FloatBuffer v);
+	void glVertexAttrib4ubNV(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
 	@StripPostfix("v")
-	public void glVertexAttribs2svNV(@GLuint int index, @AutoSize(value="v", expression=" >> 1") @GLsizei int n, @Const ShortBuffer v);
+	void glVertexAttribs1svNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const ShortBuffer v);
 	@StripPostfix("v")
-	public void glVertexAttribs2fvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 1") @GLsizei int n, @Const FloatBuffer v);
-	
-	@StripPostfix("v")
-	public void glVertexAttribs3svNV(@GLuint int index, @AutoSize(value="v", expression=" / 3") @GLsizei int n, @Const ShortBuffer v);
-	@StripPostfix("v")
-	public void glVertexAttribs3fvNV(@GLuint int index, @AutoSize(value="v", expression=" / 3") @GLsizei int n, @Const FloatBuffer v);
+	void glVertexAttribs1fvNV(@GLuint int index, @AutoSize("v") @GLsizei int n, @Const FloatBuffer v);
 
 	@StripPostfix("v")
-	public void glVertexAttribs4svNV(@GLuint int index, @AutoSize(value="v", expression=" >> 2") @GLsizei int n, @Const ShortBuffer v);
+	void glVertexAttribs2svNV(@GLuint int index, @AutoSize(value="v", expression=" >> 1") @GLsizei int n, @Const ShortBuffer v);
 	@StripPostfix("v")
-	public void glVertexAttribs4fvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 2") @GLsizei int n, @Const FloatBuffer v);
+	void glVertexAttribs2fvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 1") @GLsizei int n, @Const FloatBuffer v);
+
+	@StripPostfix("v")
+	void glVertexAttribs3svNV(@GLuint int index, @AutoSize(value="v", expression=" / 3") @GLsizei int n, @Const ShortBuffer v);
+	@StripPostfix("v")
+	void glVertexAttribs3fvNV(@GLuint int index, @AutoSize(value="v", expression=" / 3") @GLsizei int n, @Const FloatBuffer v);
+
+	@StripPostfix("v")
+	void glVertexAttribs4svNV(@GLuint int index, @AutoSize(value="v", expression=" >> 2") @GLsizei int n, @Const ShortBuffer v);
+	@StripPostfix("v")
+	void glVertexAttribs4fvNV(@GLuint int index, @AutoSize(value="v", expression=" >> 2") @GLsizei int n, @Const FloatBuffer v);
 }

@@ -37,13 +37,13 @@ import java.nio.ByteBuffer;
 import org.lwjgl.generator.*;
 
 public interface NV_vertex_array_range {
-	public static final int GL_VERTEX_ARRAY_RANGE_NV = 0x851D;
-	public static final int GL_VERTEX_ARRAY_RANGE_LENGTH_NV = 0x851E;
-	public static final int GL_VERTEX_ARRAY_RANGE_VALID_NV = 0x851F;
-	public static final int GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV = 0x8520;
-	public static final int GL_VERTEX_ARRAY_RANGE_POINTER_NV = 0x8521;
+	int GL_VERTEX_ARRAY_RANGE_NV = 0x851D;
+	int GL_VERTEX_ARRAY_RANGE_LENGTH_NV = 0x851E;
+	int GL_VERTEX_ARRAY_RANGE_VALID_NV = 0x851F;
+	int GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV = 0x8520;
+	int GL_VERTEX_ARRAY_RANGE_POINTER_NV = 0x8521;
 
-	public void glVertexArrayRangeNV(@AutoSize("pPointer") @GLsizei int size,
+	void glVertexArrayRangeNV(@AutoSize("pPointer") @GLsizei int size,
 			@Const
 			@GLbyte
 			@GLshort
@@ -51,11 +51,11 @@ public interface NV_vertex_array_range {
 			@GLfloat
 			Buffer pPointer);
 
-	public void glFlushVertexArrayRangeNV();
+	void glFlushVertexArrayRangeNV();
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})
-	public @GLvoid ByteBuffer glAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority);
+	@GLvoid ByteBuffer glAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority);
 
 	@PlatformDependent({Platform.WGL, Platform.GLX})
-	public void glFreeMemoryNV(@Check @GLbyte Buffer pointer);
+	void glFreeMemoryNV(@Check @GLbyte Buffer pointer);
 }

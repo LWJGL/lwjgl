@@ -35,5 +35,5 @@ public interface ARB_shading_language_100 {
 	/**
      * Accepted by the <name> parameter of GetString:
     */
-	public static final int GL_SHADING_LANGUAGE_VERSION_ARB = 0x8B8C;
+	int GL_SHADING_LANGUAGE_VERSION_ARB = 0x8B8C;
 }

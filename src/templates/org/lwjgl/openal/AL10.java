@@ -1,39 +1,37 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.lwjgl.openal;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
@@ -42,7 +40,7 @@ import org.lwjgl.generator.*;
 /**
  * $Id$
  * <br>
- * This is the core OpenAL class. This class implements 
+ * This is the core OpenAL class. This class implements
  * AL.h version 1.0
  *
  * @author Brian Matzon <brian@matzon.dk>
@@ -50,42 +48,42 @@ import org.lwjgl.generator.*;
  */
 public interface AL10 {
 	/** Bad value */
-	public static final int AL_INVALID = -1;
+	int AL_INVALID = -1;
 
 	/** Disable value */
-	public static final int AL_NONE = 0;
+	int AL_NONE = 0;
 
 	/** Boolean False */
-	public static final int AL_FALSE = 0;
+	int AL_FALSE = 0;
 
 	/** Boolean True */
-	public static final int AL_TRUE = 1;
+	int AL_TRUE = 1;
 
 	/**
 	 * Indicate the type of SOURCE.
 	 * Sources can be spatialized
 	 */
-	public static final int AL_SOURCE_TYPE = 0x200;
+	int AL_SOURCE_TYPE = 0x200;
 
 	/** Indicate source has absolute coordinates */
-	public static final int AL_SOURCE_ABSOLUTE = 0x201;
+	int AL_SOURCE_ABSOLUTE = 0x201;
 
 	/** Indicate Source has listener relative coordinates */
-	public static final int AL_SOURCE_RELATIVE = 0x202;
+	int AL_SOURCE_RELATIVE = 0x202;
 
 	/**
 	 * Directional source, inner cone angle, in degrees
 	 * Range:		[0-360]
 	 * Default:	360
 	 */
-	public static final int AL_CONE_INNER_ANGLE = 0x1001;
+	int AL_CONE_INNER_ANGLE = 0x1001;
 
 	/**
 	 * Directional source, outer cone angle, in degrees.
 	 * Range:		[0-360]
 	 * Default:	360
 	 */
-	public static final int AL_CONE_OUTER_ANGLE = 0x1002;
+	int AL_CONE_OUTER_ANGLE = 0x1002;
 
 	/**
 	 * Specify the pitch to be applied, either at source,
@@ -93,7 +91,7 @@ public interface AL10 {
 	 * Range:	[0.5-2.0]
 	 * Default:	1.0
 	 */
-	public static final int AL_PITCH = 0x1003;
+	int AL_PITCH = 0x1003;
 
 	/**
 	 * Specify the current location in three dimensional space.
@@ -105,13 +103,13 @@ public interface AL10 {
 	 * sign on the Z coordinate.
 	 * Listener position is always in the world coordinate system.
 	 */
-	public static final int AL_POSITION = 0x1004;
+	int AL_POSITION = 0x1004;
 
 	/** Specify the current direction as forward vector. */
-	public static final int AL_DIRECTION = 0x1005;
+	int AL_DIRECTION = 0x1005;
 
 	/** Specify the current velocity in three dimensional space. */
-	public static final int AL_VELOCITY = 0x1006;
+	int AL_VELOCITY = 0x1006;
 
 	/**
 	 * Indicate whether source has to loop infinite.
@@ -119,14 +117,14 @@ public interface AL10 {
 	 * Range:		[TRUE, FALSE]
 	 * Default:	FALSE
 	 */
-	public static final int AL_LOOPING = 0x1007;
+	int AL_LOOPING = 0x1007;
 
 	/**
 	 * Indicate the buffer to provide sound samples.
 	 * Type: ALuint.
 	 * Range: any valid Buffer id.
 	 */
-	public static final int AL_BUFFER = 0x1009;
+	int AL_BUFFER = 0x1009;
 
 	/**
 	 * Indicate the gain (volume amplification) applied.
@@ -139,28 +137,28 @@ public interface AL10 {
 	 * scale; it is interpreted as zero volume - the channel
 	 * is effectively disabled.
 	 */
-	public static final int AL_GAIN = 0x100A;
+	int AL_GAIN = 0x100A;
 
 	/**
 	 * Indicate minimum source attenuation.
 	 * Type:		 ALfloat
 	 * Range:	[0.0 - 1.0]
 	 */
-	public static final int AL_MIN_GAIN = 0x100D;
+	int AL_MIN_GAIN = 0x100D;
 
 	/**
 	 * Indicate maximum source attenuation.
 	 * Type:	 ALfloat
 	 * Range:	[0.0 - 1.0]
 	 */
-	public static final int AL_MAX_GAIN = 0x100E;
+	int AL_MAX_GAIN = 0x100E;
 
 	/**
 	 * Specify the current orientation.
 	 * Type:	 ALfv6 (at/up)
 	 * Range:	N/A
 	 */
-	public static final int AL_ORIENTATION = 0x100F;
+	int AL_ORIENTATION = 0x100F;
 
 	/* byte offset into source (in canon format).	-1 if source
 	 * is not playing.	Don't set this, get this.
@@ -169,7 +167,7 @@ public interface AL10 {
 	 * Range:		[0.0 - ]
 	 * Default:	1.0
 	 */
-	public static final int AL_REFERENCE_DISTANCE = 0x1020;
+	int AL_REFERENCE_DISTANCE = 0x1020;
 
 	/**
 	 * Indicate the rolloff factor for the source.
@@ -177,7 +175,7 @@ public interface AL10 {
 	 * Range:		[0.0 - ]
 	 * Default:	1.0
 	 */
-	public static final int AL_ROLLOFF_FACTOR = 0x1021;
+	int AL_ROLLOFF_FACTOR = 0x1021;
 
 	/**
 	 * Indicate the gain (volume amplification) applied.
@@ -190,57 +188,57 @@ public interface AL10 {
 	 * scale; it is interpreted as zero volume - the channel
 	 * is effectively disabled.
 	 */
-	public static final int AL_CONE_OUTER_GAIN = 0x1022;
+	int AL_CONE_OUTER_GAIN = 0x1022;
 
 	/**
 	 * Specify the maximum distance.
 	 * Type:	 ALfloat
 	 * Range:	[0.0 - ]
 	 */
-	public static final int AL_MAX_DISTANCE = 0x1023;
+	int AL_MAX_DISTANCE = 0x1023;
 
 	/**
 	 * Specify the channel mask. (Creative)
 	 * Type:	 ALuint
 	 * Range:	[0 - 255]
 	 */
-	public static final int AL_CHANNEL_MASK = 0x3000;
+	int AL_CHANNEL_MASK = 0x3000;
 
 	/** Source state information */
-	public static final int AL_SOURCE_STATE = 0x1010;
+	int AL_SOURCE_STATE = 0x1010;
 
 	/** Source state information */
-	public static final int AL_INITIAL = 0x1011;
+	int AL_INITIAL = 0x1011;
 
 	/** Source state information */
-	public static final int AL_PLAYING = 0x1012;
+	int AL_PLAYING = 0x1012;
 
 	/** Source state information */
-	public static final int AL_PAUSED = 0x1013;
+	int AL_PAUSED = 0x1013;
 
 	/** Source state information */
-	public static final int AL_STOPPED = 0x1014;
+	int AL_STOPPED = 0x1014;
 
 	/** Buffer Queue params */
-	public static final int AL_BUFFERS_QUEUED = 0x1015;
+	int AL_BUFFERS_QUEUED = 0x1015;
 
 	/** Buffer Queue params */
-	public static final int AL_BUFFERS_PROCESSED = 0x1016;
+	int AL_BUFFERS_PROCESSED = 0x1016;
 
 	/** Sound buffers: format specifier. */
-	public static final int AL_FORMAT_MONO8 = 0x1100;
+	int AL_FORMAT_MONO8 = 0x1100;
 
 	/** Sound buffers: format specifier. */
-	public static final int AL_FORMAT_MONO16 = 0x1101;
+	int AL_FORMAT_MONO16 = 0x1101;
 
 	/** Sound buffers: format specifier. */
-	public static final int AL_FORMAT_STEREO8 = 0x1102;
+	int AL_FORMAT_STEREO8 = 0x1102;
 
 	/** Sound buffers: format specifier. */
-	public static final int AL_FORMAT_STEREO16 = 0x1103;
-	
+	int AL_FORMAT_STEREO16 = 0x1103;
+
 	/** Ogg Vorbis format specifier. */
-	public static final int AL_FORMAT_VORBIS_EXT = 0x10003;	
+	int AL_FORMAT_VORBIS_EXT = 0x10003;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -248,7 +246,7 @@ public interface AL10 {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int AL_FREQUENCY = 0x2001;
+	int AL_FREQUENCY = 0x2001;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -256,7 +254,7 @@ public interface AL10 {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int AL_BITS = 0x2002;
+	int AL_BITS = 0x2002;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -264,7 +262,7 @@ public interface AL10 {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int AL_CHANNELS = 0x2003;
+	int AL_CHANNELS = 0x2003;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -272,7 +270,7 @@ public interface AL10 {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int AL_SIZE = 0x2004;
+	int AL_SIZE = 0x2004;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -280,43 +278,43 @@ public interface AL10 {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int AL_DATA = 0x2005;
+	int AL_DATA = 0x2005;
 
 	/**
 	 * Buffer state.
 	 *
 	 * Not supported for public use (yet).
 	 */
-	public static final int AL_UNUSED = 0x2010;
+	int AL_UNUSED = 0x2010;
 
 	/**
 	 * Buffer state.
 	 *
 	 * Not supported for public use (yet).
 	 */
-	public static final int AL_PENDING = 0x2011;
+	int AL_PENDING = 0x2011;
 
 	/**
 	 * Buffer state.
 	 *
 	 * Not supported for public use (yet).
 	 */
-	public static final int AL_PROCESSED = 0x2012;
+	int AL_PROCESSED = 0x2012;
 
 	/** Errors: No Error. */
-	public static final int AL_NO_ERROR = AL_FALSE;
+	int AL_NO_ERROR = AL_FALSE;
 
 	/** Illegal name passed as an argument to an AL call. */
-	public static final int AL_INVALID_NAME = 0xA001;
+	int AL_INVALID_NAME = 0xA001;
 
 	/** Illegal enum passed as an argument to an AL call. */
-	public static final int AL_INVALID_ENUM = 0xA002;
+	int AL_INVALID_ENUM = 0xA002;
 
 	/**
 	 * Illegal value passed as an argument to an AL call.
 	 * Applies to parameter values, but not to enumerations.
 	 */
-	public static final int AL_INVALID_VALUE = 0xA003;
+	int AL_INVALID_VALUE = 0xA003;
 
 	/**
 	 * A function was called at inappropriate time,
@@ -324,40 +322,40 @@ public interface AL10 {
 	 * This can be an incompatible ALenum, object ID,
 	 *	and/or function.
 	 */
-	public static final int AL_INVALID_OPERATION = 0xA004;
+	int AL_INVALID_OPERATION = 0xA004;
 
 	/**
 	 * A function could not be completed,
 	 * because there is not enough memory available.
 	 */
-	public static final int AL_OUT_OF_MEMORY = 0xA005;
+	int AL_OUT_OF_MEMORY = 0xA005;
 
 	/** Context strings: Vendor */
-	public static final int AL_VENDOR = 0xB001;
+	int AL_VENDOR = 0xB001;
 
 	/** Context strings: Version */
-	public static final int AL_VERSION = 0xB002;
+	int AL_VERSION = 0xB002;
 
 	/** Context strings: Renderer */
-	public static final int AL_RENDERER = 0xB003;
+	int AL_RENDERER = 0xB003;
 
 	/** Context strings: Extensions */
-	public static final int AL_EXTENSIONS = 0xB004;
+	int AL_EXTENSIONS = 0xB004;
 
 	/** Doppler scale.	Default 1.0 */
-	public static final int AL_DOPPLER_FACTOR = 0xC000;
+	int AL_DOPPLER_FACTOR = 0xC000;
 
 	/** Doppler velocity.	Default 1.0 */
-	public static final int AL_DOPPLER_VELOCITY = 0xC001;
+	int AL_DOPPLER_VELOCITY = 0xC001;
 
 	/** Distance model.	Default INVERSE_DISTANCE_CLAMPED */
-	public static final int AL_DISTANCE_MODEL = 0xD000;
+	int AL_DISTANCE_MODEL = 0xD000;
 
 	/** Distance model */
-	public static final int AL_INVERSE_DISTANCE = 0xD001;
+	int AL_INVERSE_DISTANCE = 0xD001;
 
 	/** Distance model */
-	public static final int AL_INVERSE_DISTANCE_CLAMPED = 0xD002;	
+	int AL_INVERSE_DISTANCE_CLAMPED = 0xD002;
 
 	/**
 	 * The application can temporarily disable certain AL capabilities on a per Context
@@ -367,7 +365,7 @@ public interface AL10 {
 	 * @param capability name of a capability to enable
 	 */
 	@ALvoid
-	public void alEnable(int capability);
+	void alEnable(int capability);
 
 	/**
 	 * The application can temporarily disable certain AL capabilities on a per Context
@@ -377,7 +375,7 @@ public interface AL10 {
 	 * @param capability name of a capability to disable
 	 */
 	@ALvoid
-	public void alDisable(@ALenum int capability);
+	void alDisable(@ALenum int capability);
 
 	/**
 	 * The application can also query whether a given capability is currently enabled or
@@ -393,7 +391,7 @@ public interface AL10 {
 	 * @param capability name of a capability to check
 	 * @return true if named feature is enabled
 	 */
-	public boolean alIsEnabled(@ALenum int capability);
+	boolean alIsEnabled(@ALenum int capability);
 
 	/**
 	 * Hinting for implementation
@@ -403,11 +401,11 @@ public interface AL10 {
 	 * @param mode Mode to hint
 	 */
 //	@ALvoid
-//	public void alHint(@ALenum int target, @ALenum int mode);
+//	void alHint(@ALenum int target, @ALenum int mode);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 *
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -418,11 +416,11 @@ public interface AL10 {
 	 *
 	 * @return boolean state described by pname will be returned.
 	 */
-	public boolean alGetBoolean(@ALenum int pname);
+	boolean alGetBoolean(@ALenum int pname);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 *
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -433,11 +431,11 @@ public interface AL10 {
 	 *
 	 * @return int state described by pname will be returned.
 	 */
-	public int alGetInteger(@ALenum int pname);
+	int alGetInteger(@ALenum int pname);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 *
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -448,11 +446,11 @@ public interface AL10 {
 	 *
 	 * @return float state described by pname will be returned.
 	 */
-	public float alGetFloat(@ALenum int pname);
+	float alGetFloat(@ALenum int pname);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 *
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -466,11 +464,11 @@ public interface AL10 {
 		*/
 	@StripPostfix("data")
 	@ALvoid
-	public void alGetIntegerv(@ALenum int pname, @Check("1") IntBuffer data);
+	void alGetIntegerv(@ALenum int pname, @Check("1") IntBuffer data);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
+	 *
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -484,7 +482,7 @@ public interface AL10 {
 		*/
 	@StripPostfix("data")
 	@ALvoid
-	public void alGetFloatv(@ALenum int pname, @Check("1") FloatBuffer data);
+	void alGetFloatv(@ALenum int pname, @Check("1") FloatBuffer data);
 
 	/**
 	 * The application can retrieve state information global to the current AL Context.
@@ -497,7 +495,7 @@ public interface AL10 {
 	 * @return OpenAL String property
 	 */
 	@NoErrorCheck
-	public String alGetString(@ALenum int pname);
+	String alGetString(@ALenum int pname);
 
 	/**
 	 * The AL detects only a subset of those conditions that could be considered errors.
@@ -577,7 +575,7 @@ public interface AL10 {
 	 * @return current error state
 	 */
 	@NoErrorCheck
-	public @ALenum int alGetError();
+	@ALenum int alGetError();
 
 	/**
 	 * To verify that a given extension is available for the current context and the device it
@@ -585,12 +583,12 @@ public interface AL10 {
 	 * <p>
 	 * A <code>null</code> name argument returns AL_FALSE, as do invalid and unsupported string
 	 * tokens. A <code>null</code> deviceHandle will result in an INVALID_DEVICE error.
-	 * </p> 
+	 * </p>
 	 *
 	 * @param fname String describing the desired extension
 	 * @return true if extension is available, false if not
 	 */
-	public boolean alIsExtensionPresent(String fname);
+	boolean alIsExtensionPresent(String fname);
 
 	/**
 	 * <p>
@@ -610,7 +608,7 @@ public interface AL10 {
 	 * @param ename String describing an OpenAL enum
 	 * @return Actual int for the described enumeration name
 	 */
-	public @ALenum int alGetEnumValue(String ename);
+	@ALenum int alGetEnumValue(String ename);
 
 	/**
 	 * Listener attributes are changed using the Listener group of commands.
@@ -619,7 +617,7 @@ public interface AL10 {
 	 * @param value value to set the attribute to
 	 */
 	@ALvoid
-	public void alListeneri(@ALenum int pname, int value);
+	void alListeneri(@ALenum int pname, int value);
 
 	/**
 	 * Listener attributes are changed using the Listener group of commands.
@@ -628,8 +626,8 @@ public interface AL10 {
 	 * @param value floating point value to set the attribute to
 	 */
 	@ALvoid
-	public void alListenerf(@ALenum int pname, float value);
-	
+	void alListenerf(@ALenum int pname, float value);
+
 	/**
 	 * Listener attributes are changed using the Listener group of commands.
 	 *
@@ -638,8 +636,8 @@ public interface AL10 {
 	 */
 	@StripPostfix("value")
 	@ALvoid
-	public void alListenerfv(@ALenum int pname, @Check("1") FloatBuffer value);	
-	
+	void alListenerfv(@ALenum int pname, @Check("1") FloatBuffer value);
+
 	/**
 	 * Listener attributes are changed using the Listener group of commands.
 	 *
@@ -649,8 +647,7 @@ public interface AL10 {
 	 * @param v3 float value 3
 	 */
 	@ALvoid
-	public void alListener3f(@ALenum int pname, float v1, float v2, float v3);
-	
+	void alListener3f(@ALenum int pname, float v1, float v2, float v3);
 
 	/**
 	 * Listener state is maintained inside the AL implementation and can be queried in
@@ -659,7 +656,7 @@ public interface AL10 {
 	 * @param pname name of the attribute to be retrieved
 	 * @return int
 	 */
-	public int alGetListeneri(@ALenum int pname);
+	int alGetListeneri(@ALenum int pname);
 
 	/**
 	 * Listener state is maintained inside the AL implementation and can be queried in
@@ -668,7 +665,7 @@ public interface AL10 {
 	 * @param pname name of the attribute to be retrieved
 	 * @return float
 	 */
-	public float alGetListenerf(@ALenum int pname);
+	float alGetListenerf(@ALenum int pname);
 
 	/**
 	 * Listener state is maintained inside the AL implementation and can be queried in
@@ -680,7 +677,7 @@ public interface AL10 {
 	// TODO: What's the real minimum number of elements?
 	@StripPostfix("floatdata")
 	@ALvoid
-	public void alGetListenerfv(@ALenum int pname, @Check("1") FloatBuffer floatdata);
+	void alGetListenerfv(@ALenum int pname, @Check("1") FloatBuffer floatdata);
 
 	/**
 	 * The application requests a number of Sources using GenSources.
@@ -688,15 +685,15 @@ public interface AL10 {
 	 * @param sources array holding sources
 	 */
 	@ALvoid
-	public void alGenSources(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+	void alGenSources(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
 
 	/**
 	 * The application requests deletion of a number of Sources by DeleteSources.
 	 *
-	 * @param source Source array to delete from
+	 * @param sources Source array to delete from
 	 */
 	@ALvoid
-	public void alDeleteSources(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+	void alDeleteSources(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
 
 	/**
 	 * The application can verify whether a source name is valid using the IsSource query.
@@ -704,7 +701,7 @@ public interface AL10 {
 	 * @param id id of source to be testes for validity
 	 * @return true if id is valid, false if not
 	 */
-	public boolean alIsSource(@ALuint int id);
+	boolean alIsSource(@ALuint int id);
 
 	/**
 	 * Specifies the position and other properties as taken into account during
@@ -715,7 +712,7 @@ public interface AL10 {
 	 * @param value value of property
 	 */
 	@ALvoid
-	public void alSourcei(@ALuint int source, @ALenum int pname, int value);
+	void alSourcei(@ALuint int source, @ALenum int pname, int value);
 
 	/**
 	 * Specifies the position and other properties as taken into account during
@@ -726,8 +723,8 @@ public interface AL10 {
 	 * @param value value of property
 	 */
 	@ALvoid
-	public void alSourcef(@ALuint int source, @ALenum int pname, float value);
-	
+	void alSourcef(@ALuint int source, @ALenum int pname, float value);
+
 	/**
 	 * Specifies the position and other properties as taken into account during
 	 * sound processing.
@@ -739,8 +736,8 @@ public interface AL10 {
 	// TODO: What's the correct minimum value?
 	@StripPostfix("value")
 	@ALvoid
-	public void alSourcefv(@ALuint int source, @ALenum int pname, @Check("1") FloatBuffer value);
-	
+	void alSourcefv(@ALuint int source, @ALenum int pname, @Check("1") FloatBuffer value);
+
 	/**
 	 * Specifies the position and other properties as taken into account during
 	 * sound processing.
@@ -752,13 +749,13 @@ public interface AL10 {
 	 * @param v3 value 3 of property
 	 */
 	@ALvoid
-	public void alSource3f(
+	void alSource3f(
 		@ALuint int source,
 		@ALenum int pname,
 		float v1,
 		float v2,
 		float v3);
-	
+
 
 	/**
 	 * Source state is maintained inside the AL implementation, and the current attributes
@@ -770,7 +767,7 @@ public interface AL10 {
 	 * @return int
 	 */
 	@ALvoid
-	public void alGetSourcei(@ALuint int source, @ALenum int pname, @Result int value);
+	void alGetSourcei(@ALuint int source, @ALenum int pname, @Result int value);
 
 	/**
 	 * Source state is maintained inside the AL implementation, and the current attributes
@@ -782,7 +779,7 @@ public interface AL10 {
 	 * @return float
 	 */
 	@ALvoid
-	public void alGetSourcef(@ALuint int source, @ALenum int pname, @Result float value);
+	void alGetSourcef(@ALuint int source, @ALenum int pname, @Result float value);
 
 	/**
 	 * Source state is maintained inside the AL implementation, and the current attributes
@@ -796,7 +793,7 @@ public interface AL10 {
 	// TODO: What's the correct minimum value?
 	@StripPostfix("floatdata")
 	@ALvoid
-	public void alGetSourcefv(@ALuint int source, @ALenum int pname, @Check("1") FloatBuffer floatdata);
+	void alGetSourcefv(@ALuint int source, @ALenum int pname, @Check("1") FloatBuffer floatdata);
 
 	/**
 	 * Play() applied to an AL_INITIAL Source will promote the Source to AL_PLAYING, thus
@@ -812,7 +809,7 @@ public interface AL10 {
 	 */
 	@StripPostfix("sources")
 	@ALvoid
-	public void alSourcePlayv(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+	void alSourcePlayv(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
 
 	/**
 	 * Pause() applied to an AL_INITIAL Source is a legal NOP. Pause() applied to a
@@ -824,7 +821,7 @@ public interface AL10 {
 	 */
 	@StripPostfix("sources")
 	@ALvoid
-	public void alSourcePausev(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+	void alSourcePausev(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
 
 	/**
 	 * Stop() applied to an AL_INITIAL Source is a legal NOP. Stop() applied to a AL_PLAYING
@@ -837,7 +834,7 @@ public interface AL10 {
 	 */
 	@StripPostfix("sources")
 	@ALvoid
-	public void alSourceStopv(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+	void alSourceStopv(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
 
 	/**
 	 * Rewind() applied to an AL_INITIAL Source is a legal NOP. Rewind() applied to a
@@ -852,7 +849,7 @@ public interface AL10 {
 	 */
 	@StripPostfix("sources")
 	@ALvoid
-	public void alSourceRewindv(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
+	void alSourceRewindv(@AutoSize("sources") @ALsizei int n, @ALuint IntBuffer sources);
 
 	/**
 	 * Play() applied to an AL_INITIAL Source will promote the Source to AL_PLAYING, thus
@@ -867,7 +864,7 @@ public interface AL10 {
 	 * @param source Source to play
 	 */
 	@ALvoid
-	public void alSourcePlay(@ALuint int source);
+	void alSourcePlay(@ALuint int source);
 
 	/**
 	 * Pause() applied to an AL_INITIAL Source is a legal NOP. Pause() applied to a
@@ -878,7 +875,7 @@ public interface AL10 {
 	 * @param source Source to pause
 	 */
 	@ALvoid
-	public void alSourcePause(@ALuint int source);
+	void alSourcePause(@ALuint int source);
 
 	/**
 	 * Stop() applied to an AL_INITIAL Source is a legal NOP. Stop() applied to a AL_PLAYING
@@ -890,7 +887,7 @@ public interface AL10 {
 	 * @param source Source to stop
 	 */
 	@ALvoid
-	public void alSourceStop(@ALuint int source);
+	void alSourceStop(@ALuint int source);
 
 	/**
 	 * Rewind() applied to an AL_INITIAL Source is a legal NOP. Rewind() applied to a
@@ -904,7 +901,7 @@ public interface AL10 {
 	 * @param source Source to rewind
 	 */
 	@ALvoid
-	public void alSourceRewind(@ALuint int source);
+	void alSourceRewind(@ALuint int source);
 
 	/**
 	 * The application requests a number of Buffers using GenBuffers.
@@ -912,7 +909,7 @@ public interface AL10 {
 	 * @param buffers holding buffers
 	 */
 	@ALvoid
-	public void alGenBuffers(@AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
+	void alGenBuffers(@AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
 
 	/**
 	 * <p>
@@ -931,7 +928,7 @@ public interface AL10 {
 	 * @param buffers Buffer to delete from
 	 */
 	@ALvoid
-	public void alDeleteBuffers(@AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
+	void alDeleteBuffers(@AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
 
 	/**
 	 * The application can verify whether a buffer Name is valid using the IsBuffer query.
@@ -939,7 +936,7 @@ public interface AL10 {
 	 * @param buffer buffer to be tested for validity
 	 * @return true if supplied buffer is valid, false if not
 	 */
-	public boolean alIsBuffer(@ALuint int buffer);
+	boolean alIsBuffer(@ALuint int buffer);
 
 	/**
 	 * <p>
@@ -965,11 +962,11 @@ public interface AL10 {
 	 *
 	 * @param buffer Buffer to fill
 	 * @param format format sound data is in
-	 * @param data location of data 
+	 * @param data location of data
 	 * @param freq frequency of data
 	 */
 	@ALvoid
-	public void alBufferData(
+	void alBufferData(
 		@ALuint int buffer,
 		@ALenum int format,
 		@ALbyte
@@ -989,7 +986,7 @@ public interface AL10 {
 	 * @param pname name of property to retrieve
 	 */
 	@ALvoid
-	public void alGetBufferi(@ALuint int buffer, @ALenum int pname, @Result int value);
+	void alGetBufferi(@ALuint int buffer, @ALenum int pname, @Result int value);
 
 	/**
 	 * Buffer state is maintained inside the AL implementation and can be queried in full.<br>
@@ -1001,7 +998,7 @@ public interface AL10 {
 	 * @return float
 	 */
 	@ALvoid
-	public void alGetBufferf(@ALuint int buffer, @ALenum int pname, @Result float value);
+	void alGetBufferf(@ALuint int buffer, @ALenum int pname, @Result float value);
 
 	/**
 	 * <p>
@@ -1019,7 +1016,7 @@ public interface AL10 {
 	 * @param buffers buffers to be queued
 	 */
 	@ALvoid
-	public void alSourceQueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
+	void alSourceQueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
 
 	/**
 	 * <p>
@@ -1041,7 +1038,7 @@ public interface AL10 {
 	 * @param buffers buffers to be unqueued
 	 */
 	@ALvoid
-	public void alSourceUnqueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
+	void alSourceUnqueueBuffers(@ALuint int source, @AutoSize("buffers") @ALsizei int n, @ALuint IntBuffer buffers);
 
 	/**
 	 * <p>
@@ -1058,7 +1055,7 @@ public interface AL10 {
 	 * distance and other attenuation might ultimately limit the overall AL_GAIN to a value
 	 * below 1.0.
 	 * </p>
-	 * <p> 
+	 * <p>
 	 * AL currently supports three modes of operation with respect to distance
 	 * attenuation. It supports two distance-dependent attenuation models, one which is
 	 * similar to the IASIG I3DL2 (and DS3D) model. The application choses one of these
@@ -1067,22 +1064,22 @@ public interface AL10 {
 	 * </p>
 	 * <p>
 	 * Legal arguments are AL_NONE, AL_INVERSE_DISTANCE, and
-	 * AL_INVERSE_DISTANCE_CLAMPED. 
+	 * AL_INVERSE_DISTANCE_CLAMPED.
 	 * <br>
 	 * <br>
 	 * AL_NONE bypasses all distance attenuation
 	 * calculation for all Sources. The implementation is expected to optimize this
-	 * situation. 
+	 * situation.
 	 * <br>
 	 * <br>
 	 * AL_INVERSE_DISTANCE_CLAMPED is the DS3D model, with
 	 * AL_REFERENCE_DISTANCE indicating both the reference distance and the distance
-	 * below which gain will be clamped. 
+	 * below which gain will be clamped.
 	 * <br>
 	 * <br>
 	 * AL_INVERSE_DISTANCE is equivalent to the DS3D
 	 * model with the exception that AL_REFERENCE_DISTANCE does not imply any
-	 * clamping. 
+	 * clamping.
 	 * <br>
 	 * <br>
 	 * The AL implementation is still free to apply any range clamping as
@@ -1093,7 +1090,7 @@ public interface AL10 {
 	 * @param value distance model to be set
 	 */
 	@ALvoid
-	public void alDistanceModel(@ALenum int value);
+	void alDistanceModel(@ALenum int value);
 
 	/**
 	 * The Doppler Effect depends on the velocities of Source and Listener relative to the
@@ -1109,7 +1106,7 @@ public interface AL10 {
 	 * of the medium (air, water) moving with respect to listener and source are ignored.
 	 * AL_DOPPLER_VELOCITY is the propagation speed relative to which the Source
 	 * velocities are interpreted.
-	 * 
+	 *
 	 * <p>
 	 * <pre>
 	 *	 VD: AL_DOPPLER_VELOCITY
@@ -1118,9 +1115,9 @@ public interface AL10 {
 	 *	 vs: Source verlocity (scalar, projected on source-listener vector)
 	 *	 f: Frequency in sample
 	 *	 f': effective Doppler shifted frequency
-	 *	 
+	 *
 	 *	 f' = DF * f * (VD-vl)/(VD+vs)
-	 * 
+	 *
 	 *	 vl<0, vs>0 : source and listener approaching each other
 	 *	 vl>0, vs<0 : source and listener moving away from each other
 	 * </pre>
@@ -1148,7 +1145,7 @@ public interface AL10 {
 	 * @param value Doppler scale value to set
 	 */
 	@ALvoid
-	public void alDopplerFactor(float value);
+	void alDopplerFactor(float value);
 
 	/**
 	 * The Doppler Effect depends on the velocities of Source and Listener relative to the
@@ -1164,7 +1161,7 @@ public interface AL10 {
 	 * of the medium (air, water) moving with respect to listener and source are ignored.
 	 * AL_DOPPLER_VELOCITY is the propagation speed relative to which the Source
 	 * velocities are interpreted.
-	 * 
+	 *
 	 * <p>
 	 * <pre>
 	 *	 VD: AL_DOPPLER_VELOCITY
@@ -1173,9 +1170,9 @@ public interface AL10 {
 	 *	 vs: Source verlocity (scalar, projected on source-listener vector)
 	 *	 f: Frequency in sample
 	 *	 f': effective Doppler shifted frequency
-	 *	 
+	 *
 	 *	 f' = DF * f * (VD-vl)/(VD+vs)
-	 * 
+	 *
 	 *	 vl<0, vs>0 : source and listener approaching each other
 	 *	 vl>0, vs<0 : source and listener moving away from each other
 	 * </pre>
@@ -1203,5 +1200,5 @@ public interface AL10 {
 	 * @param value Doppler velocity value to set
 	 */
 	@ALvoid
-	public void alDopplerVelocity(float value);
+	void alDopplerVelocity(float value);
 }

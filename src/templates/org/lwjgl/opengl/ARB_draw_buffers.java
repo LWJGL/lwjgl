@@ -31,8 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.BufferChecks;
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 import java.nio.IntBuffer;
@@ -42,23 +40,23 @@ public interface ARB_draw_buffers {
 	 * Accepted by the <pname> parameters of GetIntegerv, GetFloatv,
 	 * and GetDoublev:
 	 */
-	public static final int GL_MAX_DRAW_BUFFERS_ARB = 0x8824;
-	public static final int GL_DRAW_BUFFER0_ARB = 0x8825;
-	public static final int GL_DRAW_BUFFER1_ARB = 0x8826;
-	public static final int GL_DRAW_BUFFER2_ARB = 0x8827;
-	public static final int GL_DRAW_BUFFER3_ARB = 0x8828;
-	public static final int GL_DRAW_BUFFER4_ARB = 0x8829;
-	public static final int GL_DRAW_BUFFER5_ARB = 0x882A;
-	public static final int GL_DRAW_BUFFER6_ARB = 0x882B;
-	public static final int GL_DRAW_BUFFER7_ARB = 0x882C;
-	public static final int GL_DRAW_BUFFER8_ARB = 0x882D;
-	public static final int GL_DRAW_BUFFER9_ARB = 0x882E;
-	public static final int GL_DRAW_BUFFER10_ARB = 0x882F;
-	public static final int GL_DRAW_BUFFER11_ARB = 0x8830;
-	public static final int GL_DRAW_BUFFER12_ARB = 0x8831;
-	public static final int GL_DRAW_BUFFER13_ARB = 0x8832;
-	public static final int GL_DRAW_BUFFER14_ARB = 0x8833;
-	public static final int GL_DRAW_BUFFER15_ARB = 0x8834;
+	int GL_MAX_DRAW_BUFFERS_ARB = 0x8824;
+	int GL_DRAW_BUFFER0_ARB = 0x8825;
+	int GL_DRAW_BUFFER1_ARB = 0x8826;
+	int GL_DRAW_BUFFER2_ARB = 0x8827;
+	int GL_DRAW_BUFFER3_ARB = 0x8828;
+	int GL_DRAW_BUFFER4_ARB = 0x8829;
+	int GL_DRAW_BUFFER5_ARB = 0x882A;
+	int GL_DRAW_BUFFER6_ARB = 0x882B;
+	int GL_DRAW_BUFFER7_ARB = 0x882C;
+	int GL_DRAW_BUFFER8_ARB = 0x882D;
+	int GL_DRAW_BUFFER9_ARB = 0x882E;
+	int GL_DRAW_BUFFER10_ARB = 0x882F;
+	int GL_DRAW_BUFFER11_ARB = 0x8830;
+	int GL_DRAW_BUFFER12_ARB = 0x8831;
+	int GL_DRAW_BUFFER13_ARB = 0x8832;
+	int GL_DRAW_BUFFER14_ARB = 0x8833;
+	int GL_DRAW_BUFFER15_ARB = 0x8834;
 
-	public void glDrawBuffersARB(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
+	void glDrawBuffersARB(@AutoSize("buffers") @GLsizei int size, @Const @GLenum IntBuffer buffers);
 }

@@ -38,6 +38,6 @@ public interface EXT_cg_shader {
 	 * can pass GL_CG_FRAGMENT_SHADER_EXT to glCreateShaderARB instead of GL_FRAGMENT_SHADER_ARB to create a fragment shader object
 	 * that will parse and compile its shader source with the Cg front-end rather than the GLSL front-end.
 	 */
-	public static final int GL_CG_VERTEX_SHADER_EXT = 0x890E;
-	public static final int GL_CG_FRAGMENT_SHADER_EXT = 0x890F;
+	int GL_CG_VERTEX_SHADER_EXT = 0x890E;
+	int GL_CG_FRAGMENT_SHADER_EXT = 0x890F;
 }

@@ -32,5 +32,5 @@
 package org.lwjgl.opengl;
 
 public interface ARB_texture_mirrored_repeat {
-	public static final int GL_MIRRORED_REPEAT_ARB = 0x8370;
+	int GL_MIRRORED_REPEAT_ARB = 0x8370;
 }

@@ -33,17 +33,16 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_transpose_matrix {
-	public static final int GL_TRANSPOSE_MODELVIEW_MATRIX_ARB = 0x84E3;
-	public static final int GL_TRANSPOSE_PROJECTION_MATRIX_ARB = 0x84E4;
-	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB = 0x84E5;
-	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB = 0x84E6;
+	int GL_TRANSPOSE_MODELVIEW_MATRIX_ARB = 0x84E3;
+	int GL_TRANSPOSE_PROJECTION_MATRIX_ARB = 0x84E4;
+	int GL_TRANSPOSE_TEXTURE_MATRIX_ARB = 0x84E5;
+	int GL_TRANSPOSE_COLOR_MATRIX_ARB = 0x84E6;
 
 	@StripPostfix("pfMtx")
-	public void glLoadTransposeMatrixfARB(@Check("16") FloatBuffer pfMtx);
+	void glLoadTransposeMatrixfARB(@Check("16") FloatBuffer pfMtx);
 	@StripPostfix("pfMtx")
-	public void glMultTransposeMatrixfARB(@Check("16") FloatBuffer pfMtx);
+	void glMultTransposeMatrixfARB(@Check("16") FloatBuffer pfMtx);
 }

@@ -32,13 +32,10 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.generator.*;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
 
 /**
  * $Id$
@@ -49,53 +46,53 @@ import org.lwjgl.BufferChecks;
  * @version $Revision$
  */
 public interface GL14 {
-	public static final int GL_GENERATE_MIPMAP = 0x8191;
-	public static final int GL_GENERATE_MIPMAP_HINT = 0x8192;
-	public static final int GL_DEPTH_COMPONENT16 = 0x81A5;
-	public static final int GL_DEPTH_COMPONENT24 = 0x81A6;
-	public static final int GL_DEPTH_COMPONENT32 = 0x81A7;
-	public static final int GL_TEXTURE_DEPTH_SIZE = 0x884A;
-	public static final int GL_DEPTH_TEXTURE_MODE = 0x884B;
-	public static final int GL_TEXTURE_COMPARE_MODE = 0x884C;
-	public static final int GL_TEXTURE_COMPARE_FUNC = 0x884D;
-	public static final int GL_COMPARE_R_TO_TEXTURE = 0x884E;
-	public static final int GL_FOG_COORDINATE_SOURCE = 0x8450;
-	public static final int GL_FOG_COORDINATE = 0x8451;
-	public static final int GL_FRAGMENT_DEPTH = 0x8452;
-	public static final int GL_CURRENT_FOG_COORDINATE = 0x8453;
-	public static final int GL_FOG_COORDINATE_ARRAY_TYPE = 0x8454;
-	public static final int GL_FOG_COORDINATE_ARRAY_STRIDE = 0x8455;
-	public static final int GL_FOG_COORDINATE_ARRAY_POINTER = 0x8456;
-	public static final int GL_FOG_COORDINATE_ARRAY = 0x8457;
-	public static final int GL_POINT_SIZE_MIN = 0x8126;
-	public static final int GL_POINT_SIZE_MAX = 0x8127;
-	public static final int GL_POINT_FADE_THRESHOLD_SIZE = 0x8128;
-	public static final int GL_POINT_DISTANCE_ATTENUATION = 0x8129;
-	public static final int GL_COLOR_SUM = 0x8458;
-	public static final int GL_CURRENT_SECONDARY_COLOR = 0x8459;
-	public static final int GL_SECONDARY_COLOR_ARRAY_SIZE = 0x845A;
-	public static final int GL_SECONDARY_COLOR_ARRAY_TYPE = 0x845B;
-	public static final int GL_SECONDARY_COLOR_ARRAY_STRIDE = 0x845C;
-	public static final int GL_SECONDARY_COLOR_ARRAY_POINTER = 0x845D;
-	public static final int GL_SECONDARY_COLOR_ARRAY = 0x845E;
-	public static final int GL_BLEND_DST_RGB = 0x80C8;
-	public static final int GL_BLEND_SRC_RGB = 0x80C9;
-	public static final int GL_BLEND_DST_ALPHA = 0x80CA;
-	public static final int GL_BLEND_SRC_ALPHA = 0x80CB;
-	public static final int GL_INCR_WRAP = 0x8507;
-	public static final int GL_DECR_WRAP = 0x8508;
-	public static final int GL_TEXTURE_FILTER_CONTROL = 0x8500;
-	public static final int GL_TEXTURE_LOD_BIAS = 0x8501;
-	public static final int GL_MAX_TEXTURE_LOD_BIAS = 0x84FD;
-	public static final int GL_GL_MIRRORED_REPEAT = 0x8370;
+	int GL_GENERATE_MIPMAP = 0x8191;
+	int GL_GENERATE_MIPMAP_HINT = 0x8192;
+	int GL_DEPTH_COMPONENT16 = 0x81A5;
+	int GL_DEPTH_COMPONENT24 = 0x81A6;
+	int GL_DEPTH_COMPONENT32 = 0x81A7;
+	int GL_TEXTURE_DEPTH_SIZE = 0x884A;
+	int GL_DEPTH_TEXTURE_MODE = 0x884B;
+	int GL_TEXTURE_COMPARE_MODE = 0x884C;
+	int GL_TEXTURE_COMPARE_FUNC = 0x884D;
+	int GL_COMPARE_R_TO_TEXTURE = 0x884E;
+	int GL_FOG_COORDINATE_SOURCE = 0x8450;
+	int GL_FOG_COORDINATE = 0x8451;
+	int GL_FRAGMENT_DEPTH = 0x8452;
+	int GL_CURRENT_FOG_COORDINATE = 0x8453;
+	int GL_FOG_COORDINATE_ARRAY_TYPE = 0x8454;
+	int GL_FOG_COORDINATE_ARRAY_STRIDE = 0x8455;
+	int GL_FOG_COORDINATE_ARRAY_POINTER = 0x8456;
+	int GL_FOG_COORDINATE_ARRAY = 0x8457;
+	int GL_POINT_SIZE_MIN = 0x8126;
+	int GL_POINT_SIZE_MAX = 0x8127;
+	int GL_POINT_FADE_THRESHOLD_SIZE = 0x8128;
+	int GL_POINT_DISTANCE_ATTENUATION = 0x8129;
+	int GL_COLOR_SUM = 0x8458;
+	int GL_CURRENT_SECONDARY_COLOR = 0x8459;
+	int GL_SECONDARY_COLOR_ARRAY_SIZE = 0x845A;
+	int GL_SECONDARY_COLOR_ARRAY_TYPE = 0x845B;
+	int GL_SECONDARY_COLOR_ARRAY_STRIDE = 0x845C;
+	int GL_SECONDARY_COLOR_ARRAY_POINTER = 0x845D;
+	int GL_SECONDARY_COLOR_ARRAY = 0x845E;
+	int GL_BLEND_DST_RGB = 0x80C8;
+	int GL_BLEND_SRC_RGB = 0x80C9;
+	int GL_BLEND_DST_ALPHA = 0x80CA;
+	int GL_BLEND_SRC_ALPHA = 0x80CB;
+	int GL_INCR_WRAP = 0x8507;
+	int GL_DECR_WRAP = 0x8508;
+	int GL_TEXTURE_FILTER_CONTROL = 0x8500;
+	int GL_TEXTURE_LOD_BIAS = 0x8501;
+	int GL_MAX_TEXTURE_LOD_BIAS = 0x84FD;
+	int GL_GL_MIRRORED_REPEAT = 0x8370;
 
-	public void glBlendEquation(@GLenum int mode);
+	void glBlendEquation(@GLenum int mode);
 
-	public void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
+	void glBlendColor(@GLclampf float red, @GLclampf float green, @GLclampf float blue, @GLclampf float alpha);
 
-	public void glFogCoordf(float coord);
+	void glFogCoordf(float coord);
 
-	public void glFogCoordPointer(@AutoType("data") @GLenum int type, @GLsizei int stride,
+	void glFogCoordPointer(@AutoType("data") @GLenum int type, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
@@ -105,22 +102,22 @@ public interface GL14 {
 	@Code(	"		if (piFirst.remaining() != piCount.remaining()) {\n" +
 			"			throw new IllegalArgumentException(\"piFirst.remaining() != piCount.remaining()\");\n" +
 			"		}")
-	public void glMultiDrawArrays(@GLenum int mode, IntBuffer piFirst, @Check @GLsizei IntBuffer piCount, @AutoSize("piFirst") @GLsizei int primcount);
+	void glMultiDrawArrays(@GLenum int mode, IntBuffer piFirst, @Check @GLsizei IntBuffer piCount, @AutoSize("piFirst") @GLsizei int primcount);
 
-	//public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);
+	//void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);
 
-	public void glPointParameteri(@GLenum int pname, int param);
-	public void glPointParameterf(@GLenum int pname, float param);
+	void glPointParameteri(@GLenum int pname, int param);
+	void glPointParameterf(@GLenum int pname, float param);
 	@StripPostfix("params")
-	public void glPointParameteriv(@GLenum int pname, @Check("4") IntBuffer params);
+	void glPointParameteriv(@GLenum int pname, @Check("4") IntBuffer params);
 	@StripPostfix("params")
-	public void glPointParameterfv(@GLenum int pname, @Check("4") FloatBuffer params);
+	void glPointParameterfv(@GLenum int pname, @Check("4") FloatBuffer params);
 
-	public void glSecondaryColor3b(byte red, byte green, byte blue);
-	public void glSecondaryColor3f(float red, float green, float blue);
-	public void glSecondaryColor3ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
+	void glSecondaryColor3b(byte red, byte green, byte blue);
+	void glSecondaryColor3f(float red, float green, float blue);
+	void glSecondaryColor3ub(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
-	public void glSecondaryColorPointer(int size, @AutoType("data") @GLenum int type, @GLsizei int stride,
+	void glSecondaryColorPointer(int size, @AutoType("data") @GLenum int type, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
@@ -129,10 +126,10 @@ public interface GL14 {
 			@GLfloat
 			Buffer data);
 
-	public void glBlendFuncSeparate(@GLenum int sfactorRGB, @GLenum int dfactorRGB, @GLenum int sfactorAlpha, @GLenum int dfactorAlpha);
-	public void glWindowPos2f(float x, float y);
-	public void glWindowPos2i(int x, int y);
-	public void glWindowPos3f(float x, float y, float z);
-	public void glWindowPos3i(int x, int y, int z);
+	void glBlendFuncSeparate(@GLenum int sfactorRGB, @GLenum int dfactorRGB, @GLenum int sfactorAlpha, @GLenum int dfactorAlpha);
+	void glWindowPos2f(float x, float y);
+	void glWindowPos2i(int x, int y);
+	void glWindowPos3f(float x, float y, float z);
+	void glWindowPos3i(int x, int y, int z);
 }
 

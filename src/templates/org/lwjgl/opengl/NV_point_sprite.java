@@ -36,12 +36,12 @@ import java.nio.IntBuffer;
 import org.lwjgl.generator.*;
 
 public interface NV_point_sprite {
-	public static final int GL_POINT_SPRITE_NV = 0x8861;
-	public static final int GL_COORD_REPLACE_NV = 0x8862;
-	public static final int GL_POINT_SPRITE_R_MODE_NV = 0x8863;
+	int GL_POINT_SPRITE_NV = 0x8861;
+	int GL_COORD_REPLACE_NV = 0x8862;
+	int GL_POINT_SPRITE_R_MODE_NV = 0x8863;
 
-	public void glPointParameteriNV(@GLenum int pname, int param);
+	void glPointParameteriNV(@GLenum int pname, int param);
 
 	@StripPostfix("params")
-	public void glPointParameterivNV(@GLenum int pname, @Check("4") @Const IntBuffer params);
+	void glPointParameterivNV(@GLenum int pname, @Check("4") @Const IntBuffer params);
 }

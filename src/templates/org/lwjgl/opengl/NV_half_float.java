@@ -43,54 +43,54 @@ public interface NV_half_float {
 	 * DrawPixels, ReadPixels, TexImage1D, TexImage2D, TexImage3D, TexSubImage1D,
 	 * TexSubImage2D, TexSubImage3D, and GetTexImage:
 	*/
-	public static final int GL_HALF_FLOAT_NV = 0x140B;
+	int GL_HALF_FLOAT_NV = 0x140B;
 
-	public void glVertex2hNV(@GLhalf short x, @GLhalf short y);
+	void glVertex2hNV(@GLhalf short x, @GLhalf short y);
 
-	public void glVertex3hNV(@GLhalf short x, @GLhalf short y, @GLhalf short z);
+	void glVertex3hNV(@GLhalf short x, @GLhalf short y, @GLhalf short z);
 
-	public void glVertex4hNV(@GLhalf short x, @GLhalf short y, @GLhalf short z, @GLhalf short w);
+	void glVertex4hNV(@GLhalf short x, @GLhalf short y, @GLhalf short z, @GLhalf short w);
 
-	public void glNormal3hNV(@GLhalf short nx, @GLhalf short ny, @GLhalf short nz);
+	void glNormal3hNV(@GLhalf short nx, @GLhalf short ny, @GLhalf short nz);
 
-	public void glColor3hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue);
+	void glColor3hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue);
 
-	public void glColor4hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue, @GLhalf short alpha);
+	void glColor4hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue, @GLhalf short alpha);
 
-	public void glTexCoord1hNV(@GLhalf short s);
+	void glTexCoord1hNV(@GLhalf short s);
 
-	public void glTexCoord2hNV(@GLhalf short s, @GLhalf short t);
+	void glTexCoord2hNV(@GLhalf short s, @GLhalf short t);
 
-	public void glTexCoord3hNV(@GLhalf short s, @GLhalf short t, @GLhalf short r);
+	void glTexCoord3hNV(@GLhalf short s, @GLhalf short t, @GLhalf short r);
 
-	public void glTexCoord4hNV(@GLhalf short s, @GLhalf short t, @GLhalf short r, @GLhalf short q);
+	void glTexCoord4hNV(@GLhalf short s, @GLhalf short t, @GLhalf short r, @GLhalf short q);
 
-	public void glMultiTexCoord1hNV(@GLenum int target, @GLhalf short s);
+	void glMultiTexCoord1hNV(@GLenum int target, @GLhalf short s);
 
-	public void glMultiTexCoord2hNV(@GLenum int target, @GLhalf short s, @GLhalf short t);
+	void glMultiTexCoord2hNV(@GLenum int target, @GLhalf short s, @GLhalf short t);
 
-	public void glMultiTexCoord3hNV(@GLenum int target, @GLhalf short s, @GLhalf short t, @GLhalf short r);
+	void glMultiTexCoord3hNV(@GLenum int target, @GLhalf short s, @GLhalf short t, @GLhalf short r);
 
-	public void glMultiTexCoord4hNV(@GLenum int target, @GLhalf short s, @GLhalf short t, @GLhalf short r, @GLhalf short q);
+	void glMultiTexCoord4hNV(@GLenum int target, @GLhalf short s, @GLhalf short t, @GLhalf short r, @GLhalf short q);
 
-	public void glFogCoordhNV(@GLhalf short fog);
+	void glFogCoordhNV(@GLhalf short fog);
 
-	public void glSecondaryColor3hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue);
+	void glSecondaryColor3hNV(@GLhalf short red, @GLhalf short green, @GLhalf short blue);
 
-	public void glVertexAttrib1hNV(@GLuint int index, @GLhalf short x);
+	void glVertexAttrib1hNV(@GLuint int index, @GLhalf short x);
 
-	public void glVertexAttrib2hNV(@GLuint int index, @GLhalf short x, @GLhalf short y);
+	void glVertexAttrib2hNV(@GLuint int index, @GLhalf short x, @GLhalf short y);
 
-	public void glVertexAttrib3hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z);
+	void glVertexAttrib3hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z);
 
-	public void glVertexAttrib4hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z, @GLhalf short w);
+	void glVertexAttrib4hNV(@GLuint int index, @GLhalf short x, @GLhalf short y, @GLhalf short z, @GLhalf short w);
 
 	@StripPostfix("attribs")
-	public void glVertexAttribs1hvNV(@GLuint int index, @AutoSize("attribs") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+	void glVertexAttribs1hvNV(@GLuint int index, @AutoSize("attribs") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 	@StripPostfix("attribs")
-	public void glVertexAttribs2hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" >> 1") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+	void glVertexAttribs2hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" >> 1") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 	@StripPostfix("attribs")
-	public void glVertexAttribs3hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" / 3") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+	void glVertexAttribs3hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" / 3") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 	@StripPostfix("attribs")
-	public void glVertexAttribs4hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" >> 2") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
+	void glVertexAttribs4hvNV(@GLuint int index, @AutoSize(value="attribs", expression=" >> 2") @GLsizei int n, @Const @GLhalf ShortBuffer attribs);
 }

@@ -36,25 +36,25 @@ import java.nio.IntBuffer;
 import org.lwjgl.generator.*;
 
 public interface NV_occlusion_query {
-	public static final int GL_OCCLUSION_TEST_HP = 0x8165;
-	public static final int GL_OCCLUSION_TEST_RESULT_HP = 0x8166;
+	int GL_OCCLUSION_TEST_HP = 0x8165;
+	int GL_OCCLUSION_TEST_RESULT_HP = 0x8166;
 	/* HP_occlusion_test */
-	public static final int GL_PIXEL_COUNTER_BITS_NV = 0x8864;
-	public static final int GL_CURRENT_OCCLUSION_QUERY_ID_NV = 0x8865;
-	public static final int GL_PIXEL_COUNT_NV = 0x8866;
-	public static final int GL_PIXEL_COUNT_AVAILABLE_NV = 0x8867;
+	int GL_PIXEL_COUNTER_BITS_NV = 0x8864;
+	int GL_CURRENT_OCCLUSION_QUERY_ID_NV = 0x8865;
+	int GL_PIXEL_COUNT_NV = 0x8866;
+	int GL_PIXEL_COUNT_AVAILABLE_NV = 0x8867;
 
-	public void glGenOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @GLuint IntBuffer piIDs);
-	public void glDeleteOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @Const @GLuint IntBuffer piIDs);
+	void glGenOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @GLuint IntBuffer piIDs);
+	void glDeleteOcclusionQueriesNV(@AutoSize("piIDs") @GLsizei int n, @Const @GLuint IntBuffer piIDs);
 
-	public boolean glIsOcclusionQueryNV(@GLuint int id);
+	boolean glIsOcclusionQueryNV(@GLuint int id);
 
-	public void glBeginOcclusionQueryNV(@GLuint int id);
+	void glBeginOcclusionQueryNV(@GLuint int id);
 
-	public void glEndOcclusionQueryNV();
+	void glEndOcclusionQueryNV();
 
 	@StripPostfix("params")
-	public void glGetOcclusionQueryuivNV(@GLuint int id, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
+	void glGetOcclusionQueryuivNV(@GLuint int id, @GLenum int pname, @Check("4") @GLuint IntBuffer params);
 	@StripPostfix("params")
-	public void glGetOcclusionQueryivNV(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetOcclusionQueryivNV(@GLuint int id, @GLenum int pname, @Check("4") IntBuffer params);
 }

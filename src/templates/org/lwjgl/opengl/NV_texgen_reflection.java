@@ -32,6 +32,6 @@
 package org.lwjgl.opengl;
 
 public interface NV_texgen_reflection {
-	public static final int GL_NORMAL_MAP_NV = 0x8511;
-	public static final int GL_REFLECTION_MAP_NV = 0x8512;
+	int GL_NORMAL_MAP_NV = 0x8511;
+	int GL_REFLECTION_MAP_NV = 0x8512;
 }

@@ -34,7 +34,6 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_vertex_shader {
@@ -42,64 +41,64 @@ public interface ARB_vertex_shader {
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
 	 * returned by the <params> parameter of GetObjectParameter{if}vARB:
 	*/
-	public static final int GL_VERTEX_SHADER_ARB = 0x8B31;
+	int GL_VERTEX_SHADER_ARB = 0x8B31;
 
 	/*
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB = 0x8B4A;
-	public static final int GL_MAX_VARYING_FLOATS_ARB = 0x8B4B;
-	public static final int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
-	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
-	public static final int GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = 0x8B4C;
-	public static final int GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS_ARB = 0x8B4D;
-	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
+	int GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB = 0x8B4A;
+	int GL_MAX_VARYING_FLOATS_ARB = 0x8B4B;
+	int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
+	int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
+	int GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB = 0x8B4C;
+	int GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS_ARB = 0x8B4D;
+	int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
 
 	/*
 	 * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, and
 	 * by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
 	 * GetDoublev:
 	*/
-	public static final int GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 0x8642;
-	public static final int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
+	int GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 0x8642;
+	int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
 
 	/*
 	* Accepted by the <pname> parameter GetObjectParameter{if}vARB:
 	*/
-	public static final int GL_OBJECT_ACTIVE_ATTRIBUTES_ARB = 0x8B89;
-	public static final int GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB = 0x8B8A;
+	int GL_OBJECT_ACTIVE_ATTRIBUTES_ARB = 0x8B89;
+	int GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB = 0x8B8A;
 
 	/*
 	 * Accepted by the <pname> parameter of GetVertexAttrib{dfi}vARB:
 	*/
-	public static final int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = 0x8625;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886A;
-	public static final int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
+	int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
+	int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
+	int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
+	int GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = 0x8625;
+	int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886A;
+	int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
 
 	/*
 	 * Accepted by the <pname> parameter of GetVertexAttribPointervARB:
 	*/
-	public static final int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
+	int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
 
 	/*
 	 * Returned by the <type> parameter of GetActiveAttribARB:
 	*/
-	public static final int GL_FLOAT = 0x1406;
-	public static final int GL_FLOAT_VEC2_ARB = 0x8B50;
-	public static final int GL_FLOAT_VEC3_ARB = 0x8B51;
-	public static final int GL_FLOAT_VEC4_ARB = 0x8B52;
-	public static final int GL_FLOAT_MAT2_ARB = 0x8B5A;
-	public static final int GL_FLOAT_MAT3_ARB = 0x8B5B;
-	public static final int GL_FLOAT_MAT4_ARB = 0x8B5C;
+	int GL_FLOAT = 0x1406;
+	int GL_FLOAT_VEC2_ARB = 0x8B50;
+	int GL_FLOAT_VEC3_ARB = 0x8B51;
+	int GL_FLOAT_VEC4_ARB = 0x8B52;
+	int GL_FLOAT_MAT2_ARB = 0x8B5A;
+	int GL_FLOAT_MAT3_ARB = 0x8B5B;
+	int GL_FLOAT_MAT4_ARB = 0x8B5C;
 
-	public void glBindAttribLocationARB(@GLhandleARB int programObj, @GLuint int index, @NullTerminated @Const @GLcharARB ByteBuffer name);
+	void glBindAttribLocationARB(@GLhandleARB int programObj, @GLuint int index, @NullTerminated @Const @GLcharARB ByteBuffer name);
 
 	// ---------------------------
-	public void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index,
+	void glGetActiveAttribARB(@GLhandleARB int programObj, @GLuint int index,
 			@AutoSize("name")
 			@GLsizei
 			int maxLength,
@@ -114,5 +113,5 @@ public interface ARB_vertex_shader {
 			@GLcharARB
 			ByteBuffer name);
 
-	public int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
+	int glGetAttribLocationARB(@GLhandleARB int programObj, @NullTerminated @Const @GLcharARB ByteBuffer name);
 }

@@ -36,11 +36,11 @@ import java.nio.FloatBuffer;
 import org.lwjgl.generator.*;
 
 public interface NV_register_combiners2 {
-	public static final int GL_PER_STAGE_CONSTANTS_NV = 0x8535;
+	int GL_PER_STAGE_CONSTANTS_NV = 0x8535;
 
 	@StripPostfix("params")
-	public void glCombinerStageParameterfvNV(@GLenum int stage, @GLenum int pname, @Const @Check("4") FloatBuffer params);
+	void glCombinerStageParameterfvNV(@GLenum int stage, @GLenum int pname, @Const @Check("4") FloatBuffer params);
 
 	@StripPostfix("params")
-	public void glGetCombinerStageParameterfvNV(@GLenum int stage, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetCombinerStageParameterfvNV(@GLenum int stage, @GLenum int pname, @Check("4") FloatBuffer params);
 }

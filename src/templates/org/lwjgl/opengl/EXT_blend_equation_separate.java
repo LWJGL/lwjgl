@@ -38,8 +38,8 @@ public interface EXT_blend_equation_separate {
 	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	 * GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_BLEND_EQUATION_RGB_EXT = 0x8009;
-	public static final int GL_BLEND_EQUATION_ALPHA_EXT = 0x883D;
+	int GL_BLEND_EQUATION_RGB_EXT = 0x8009;
+	int GL_BLEND_EQUATION_ALPHA_EXT = 0x883D;
 
-	public void glBlendEquationSeparateEXT(@GLenum int modeRGB, @GLenum int modeAlpha);
+	void glBlendEquationSeparateEXT(@GLenum int modeRGB, @GLenum int modeAlpha);
 }

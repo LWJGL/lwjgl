@@ -32,15 +32,8 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import org.lwjgl.generator.*;
-
-import org.lwjgl.BufferChecks;
-import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -53,47 +46,47 @@ import org.lwjgl.LWJGLException;
 
 public interface GL12 {
 	/* Error codes */
-	public static final int GL_TABLE_TOO_LARGE = 0x8031;
+	int GL_TABLE_TOO_LARGE = 0x8031;
 
 	/* Enums */
-	public static final int GL_PACK_SKIP_IMAGES = 0x806B;
-	public static final int GL_PACK_IMAGE_HEIGHT = 0x806C;
-	public static final int GL_UNPACK_SKIP_IMAGES = 0x806D;
-	public static final int GL_UNPACK_IMAGE_HEIGHT = 0x806E;
-	public static final int GL_TEXTURE_3D = 0x806F;
-	public static final int GL_PROXY_TEXTURE_3D = 0x8070;
-	public static final int GL_TEXTURE_DEPTH = 0x8071;
-	public static final int GL_TEXTURE_WRAP_R = 0x8072;
-	public static final int GL_MAX_3D_TEXTURE_SIZE = 0x8073;
-	public static final int GL_BGR = 0x80E0;
-	public static final int GL_BGRA = 0x80E1;
-	public static final int GL_UNSIGNED_BYTE_3_3_2 = 0x8032;
-	public static final int GL_UNSIGNED_BYTE_2_3_3_REV = 0x8362;
-	public static final int GL_UNSIGNED_SHORT_5_6_5 = 0x8363;
-	public static final int GL_UNSIGNED_SHORT_5_6_5_REV = 0x8364;
-	public static final int GL_UNSIGNED_SHORT_4_4_4_4 = 0x8033;
-	public static final int GL_UNSIGNED_SHORT_4_4_4_4_REV = 0x8365;
-	public static final int GL_UNSIGNED_SHORT_5_5_5_1 = 0x8034;
-	public static final int GL_UNSIGNED_SHORT_1_5_5_5_REV = 0x8366;
-	public static final int GL_UNSIGNED_INT_8_8_8_8 = 0x8035;
-	public static final int GL_UNSIGNED_INT_8_8_8_8_REV = 0x8367;
-	public static final int GL_UNSIGNED_INT_10_10_10_2 = 0x8036;
-	public static final int GL_UNSIGNED_INT_2_10_10_10_REV = 0x8368;
-	public static final int GL_RESCALE_NORMAL = 0x803A;
-	public static final int GL_LIGHT_MODEL_COLOR_CONTROL = 0x81F8;
-	public static final int GL_SINGLE_COLOR = 0x81F9;
-	public static final int GL_SEPARATE_SPECULAR_COLOR = 0x81FA;
-	public static final int GL_CLAMP_TO_EDGE = 0x812F;
-	public static final int GL_TEXTURE_MIN_LOD = 0x813A;
-	public static final int GL_TEXTURE_MAX_LOD = 0x813B;
-	public static final int GL_TEXTURE_BASE_LEVEL = 0x813C;
-	public static final int GL_TEXTURE_MAX_LEVEL = 0x813D;
-	public static final int GL_MAX_ELEMENTS_VERTICES = 0x80E8;
-	public static final int GL_MAX_ELEMENTS_INDICES = 0x80E9;
-	public static final int GL_ALIASED_POINT_SIZE_RANGE = 0x846D;
-	public static final int GL_ALIASED_LINE_WIDTH_RANGE = 0x846E;
+	int GL_PACK_SKIP_IMAGES = 0x806B;
+	int GL_PACK_IMAGE_HEIGHT = 0x806C;
+	int GL_UNPACK_SKIP_IMAGES = 0x806D;
+	int GL_UNPACK_IMAGE_HEIGHT = 0x806E;
+	int GL_TEXTURE_3D = 0x806F;
+	int GL_PROXY_TEXTURE_3D = 0x8070;
+	int GL_TEXTURE_DEPTH = 0x8071;
+	int GL_TEXTURE_WRAP_R = 0x8072;
+	int GL_MAX_3D_TEXTURE_SIZE = 0x8073;
+	int GL_BGR = 0x80E0;
+	int GL_BGRA = 0x80E1;
+	int GL_UNSIGNED_BYTE_3_3_2 = 0x8032;
+	int GL_UNSIGNED_BYTE_2_3_3_REV = 0x8362;
+	int GL_UNSIGNED_SHORT_5_6_5 = 0x8363;
+	int GL_UNSIGNED_SHORT_5_6_5_REV = 0x8364;
+	int GL_UNSIGNED_SHORT_4_4_4_4 = 0x8033;
+	int GL_UNSIGNED_SHORT_4_4_4_4_REV = 0x8365;
+	int GL_UNSIGNED_SHORT_5_5_5_1 = 0x8034;
+	int GL_UNSIGNED_SHORT_1_5_5_5_REV = 0x8366;
+	int GL_UNSIGNED_INT_8_8_8_8 = 0x8035;
+	int GL_UNSIGNED_INT_8_8_8_8_REV = 0x8367;
+	int GL_UNSIGNED_INT_10_10_10_2 = 0x8036;
+	int GL_UNSIGNED_INT_2_10_10_10_REV = 0x8368;
+	int GL_RESCALE_NORMAL = 0x803A;
+	int GL_LIGHT_MODEL_COLOR_CONTROL = 0x81F8;
+	int GL_SINGLE_COLOR = 0x81F9;
+	int GL_SEPARATE_SPECULAR_COLOR = 0x81FA;
+	int GL_CLAMP_TO_EDGE = 0x812F;
+	int GL_TEXTURE_MIN_LOD = 0x813A;
+	int GL_TEXTURE_MAX_LOD = 0x813B;
+	int GL_TEXTURE_BASE_LEVEL = 0x813C;
+	int GL_TEXTURE_MAX_LEVEL = 0x813D;
+	int GL_MAX_ELEMENTS_VERTICES = 0x80E8;
+	int GL_MAX_ELEMENTS_INDICES = 0x80E9;
+	int GL_ALIASED_POINT_SIZE_RANGE = 0x846D;
+	int GL_ALIASED_LINE_WIDTH_RANGE = 0x846E;
 
-	public void glDrawRangeElements(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("indices") @GLsizei int count,
+	void glDrawRangeElements(@GLenum int mode, @GLuint int start, @GLuint int end, @AutoSize("indices") @GLsizei int count,
 			@AutoType("indices")
 			@GLenum
 			int type,
@@ -103,8 +96,8 @@ public interface GL12 {
 			@GLushort
 			@GLuint
 			Buffer indices);
-	
-	public void glTexImage3D(@GLenum int target, int level, int internalFormat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLenum int format, @GLenum int type,
+
+	void glTexImage3D(@GLenum int target, int level, int internalFormat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check(value="GLBufferChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border)", canBeNull=true)
 			@Const
@@ -114,7 +107,7 @@ public interface GL12 {
 			@GLfloat
 			Buffer pixels);
 
-	public void glTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLenum int type,
+	void glTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check("GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, depth)")
 			@Const
@@ -123,6 +116,6 @@ public interface GL12 {
 			@GLint
 			@GLfloat
 			Buffer pixels);
-	public void glCopyTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, @GLsizei int width, @GLsizei int height);
+	void glCopyTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, @GLsizei int width, @GLsizei int height);
 }
 

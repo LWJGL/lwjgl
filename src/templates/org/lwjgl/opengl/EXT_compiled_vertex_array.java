@@ -34,10 +34,10 @@ package org.lwjgl.opengl;
 import org.lwjgl.generator.*;
 
 public interface EXT_compiled_vertex_array {
-	public static final int GL_ARRAY_ELEMENT_LOCK_FIRST_EXT = 0x81A8;
-	public static final int GL_ARRAY_ELEMENT_LOCK_COUNT_EXT = 0x81A9;
+	int GL_ARRAY_ELEMENT_LOCK_FIRST_EXT = 0x81A8;
+	int GL_ARRAY_ELEMENT_LOCK_COUNT_EXT = 0x81A9;
 
-	public void glLockArraysEXT(int first, @GLsizei int count);
+	void glLockArraysEXT(int first, @GLsizei int count);
 
-	public void glUnlockArraysEXT();
+	void glUnlockArraysEXT();
 }

@@ -37,10 +37,10 @@ import java.nio.IntBuffer;
 import org.lwjgl.generator.*;
 
 public interface ATI_vertex_attrib_array_object {
-	public void glVertexAttribArrayObjectATI(@GLuint int index, int size, @GLenum int type, boolean normalized, @GLsizei int stride, @GLuint int buffer, @GLuint int offset);
+	void glVertexAttribArrayObjectATI(@GLuint int index, int size, @GLenum int type, boolean normalized, @GLsizei int stride, @GLuint int buffer, @GLuint int offset);
 
 	@StripPostfix("params")
-	public void glGetVertexAttribArrayObjectfvATI(@GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetVertexAttribArrayObjectfvATI(@GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
 	@StripPostfix("params")
-	public void glGetVertexAttribArrayObjectivATI(@GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetVertexAttribArrayObjectivATI(@GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
 }

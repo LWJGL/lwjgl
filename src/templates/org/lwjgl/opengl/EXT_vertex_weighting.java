@@ -32,28 +32,27 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.FloatBuffer;
 
 import org.lwjgl.generator.*;
 
 public interface EXT_vertex_weighting {
-	public static final int GL_MODELVIEW0_STACK_DEPTH_EXT = 0x0BA3;
-	public static final int GL_MODELVIEW1_STACK_DEPTH_EXT = 0x8502;
-	public static final int GL_MODELVIEW0_MATRIX_EXT = 0x0BA6;
-	public static final int GL_MODELVIEW1_MATRIX_EXT = 0x8506;
-	public static final int GL_VERTEX_WEIGHTING_EXT = 0x8509;
-	public static final int GL_MODELVIEW0_EXT = 0x1700;
-	public static final int GL_MODELVIEW1_EXT = 0x850A;
-	public static final int GL_CURRENT_VERTEX_WEIGHT_EXT = 0x850B;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_EXT = 0x850C;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT = 0x850D;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT = 0x850E;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT = 0x850F;
-	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = 0x8510;
+	int GL_MODELVIEW0_STACK_DEPTH_EXT = 0x0BA3;
+	int GL_MODELVIEW1_STACK_DEPTH_EXT = 0x8502;
+	int GL_MODELVIEW0_MATRIX_EXT = 0x0BA6;
+	int GL_MODELVIEW1_MATRIX_EXT = 0x8506;
+	int GL_VERTEX_WEIGHTING_EXT = 0x8509;
+	int GL_MODELVIEW0_EXT = 0x1700;
+	int GL_MODELVIEW1_EXT = 0x850A;
+	int GL_CURRENT_VERTEX_WEIGHT_EXT = 0x850B;
+	int GL_VERTEX_WEIGHT_ARRAY_EXT = 0x850C;
+	int GL_VERTEX_WEIGHT_ARRAY_SIZE_EXT = 0x850D;
+	int GL_VERTEX_WEIGHT_ARRAY_TYPE_EXT = 0x850E;
+	int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT = 0x850F;
+	int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = 0x8510;
 
-	public void glVertexWeightfEXT(float weight);
+	void glVertexWeightfEXT(float weight);
 
-	public void glVertexWeightPointerEXT(@GLsizei int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
+	void glVertexWeightPointerEXT(@GLsizei int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const

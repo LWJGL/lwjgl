@@ -35,9 +35,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_vertex_program extends ARB_program {
@@ -49,65 +47,65 @@ public interface ARB_vertex_program extends ARB_program {
 	* GetProgramEnvParameter[df]vARB, GetProgramLocalParameter[df]vARB,
 	* GetProgramivARB, and GetProgramStringARB.
 	*/
-	public static final int GL_VERTEX_PROGRAM_ARB = 0x8620;
+	int GL_VERTEX_PROGRAM_ARB = 0x8620;
 
 	/*
 	* Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, and by
 	* the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
 	* GetDoublev:
 	*/
-	public static final int GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 0x8642;
-	public static final int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
-	public static final int GL_COLOR_SUM_ARB = 0x8458;
+	int GL_VERTEX_PROGRAM_POINT_SIZE_ARB = 0x8642;
+	int GL_VERTEX_PROGRAM_TWO_SIDE_ARB = 0x8643;
+	int GL_COLOR_SUM_ARB = 0x8458;
 
 	/*
 	* Accepted by the <pname> parameter of GetVertexAttrib[dfi]vARB:
 	*/
-	public static final int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = 0x8625;
-	public static final int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886A;
-	public static final int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
+	int GL_VERTEX_ATTRIB_ARRAY_ENABLED_ARB = 0x8622;
+	int GL_VERTEX_ATTRIB_ARRAY_SIZE_ARB = 0x8623;
+	int GL_VERTEX_ATTRIB_ARRAY_STRIDE_ARB = 0x8624;
+	int GL_VERTEX_ATTRIB_ARRAY_TYPE_ARB = 0x8625;
+	int GL_VERTEX_ATTRIB_ARRAY_NORMALIZED_ARB = 0x886A;
+	int GL_CURRENT_VERTEX_ATTRIB_ARB = 0x8626;
 
 	/*
 	* Accepted by the <pname> parameter of GetVertexAttribPointervARB:
 	*/
-	public static final int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
+	int GL_VERTEX_ATTRIB_ARRAY_POINTER_ARB = 0x8645;
 
 	/*
 	* Accepted by the <pname> parameter of GetProgramivARB:
 	*/
-	public static final int GL_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88B0;
-	public static final int GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88B1;
-	public static final int GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88B2;
-	public static final int GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88B3;
+	int GL_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88B0;
+	int GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88B1;
+	int GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88B2;
+	int GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88B3;
 
 	/*
 	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	* GetFloatv, and GetDoublev:
 	*/
-	public static final int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
+	int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
 
-	public void glVertexAttrib1sARB(@GLuint int index, short x);
+	void glVertexAttrib1sARB(@GLuint int index, short x);
 
-	public void glVertexAttrib1fARB(@GLuint int index, float x);
+	void glVertexAttrib1fARB(@GLuint int index, float x);
 
-	public void glVertexAttrib2sARB(@GLuint int index, short x, short y);
+	void glVertexAttrib2sARB(@GLuint int index, short x, short y);
 
-	public void glVertexAttrib2fARB(@GLuint int index, float x, float y);
+	void glVertexAttrib2fARB(@GLuint int index, float x, float y);
 
-	public void glVertexAttrib3sARB(@GLuint int index, short x, short y, short z);
+	void glVertexAttrib3sARB(@GLuint int index, short x, short y, short z);
 
-	public void glVertexAttrib3fARB(@GLuint int index, float x, float y, float z);
+	void glVertexAttrib3fARB(@GLuint int index, float x, float y, float z);
 
-	public void glVertexAttrib4sARB(@GLuint int index, short x, short y, short z, short w);
+	void glVertexAttrib4sARB(@GLuint int index, short x, short y, short z, short w);
 
-	public void glVertexAttrib4fARB(@GLuint int index, float x, float y, float z, float w);
+	void glVertexAttrib4fARB(@GLuint int index, float x, float y, float z, float w);
 
-	public void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
+	void glVertexAttrib4NubARB(@GLuint int index, @GLubyte byte x, @GLubyte byte y, @GLubyte byte z, @GLubyte byte w);
 
-	public void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
+	void glVertexAttribPointerARB(@GLuint int index, int size, @AutoType("buffer") @GLenum int type, boolean normalized, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
@@ -120,15 +118,15 @@ public interface ARB_vertex_program extends ARB_program {
 			@GLfloat
 			Buffer buffer);
 
-	public void glEnableVertexAttribArrayARB(@GLuint int index);
+	void glEnableVertexAttribArrayARB(@GLuint int index);
 
-	public void glDisableVertexAttribArrayARB(@GLuint int index);
+	void glDisableVertexAttribArrayARB(@GLuint int index);
 
 	@StripPostfix("params")
-	public void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @Check FloatBuffer params);
+	void glGetVertexAttribfvARB(@GLuint int index, @GLenum int pname, @Check FloatBuffer params);
 	@StripPostfix("params")
-	public void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @Check IntBuffer params);
+	void glGetVertexAttribivARB(@GLuint int index, @GLenum int pname, @Check IntBuffer params);
 
 	@StripPostfix("result")
-	public void glGetVertexAttribPointervARB(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer result);
+	void glGetVertexAttribPointervARB(@GLuint int index, @GLenum int pname, @Result @GLvoid ByteBuffer result);
 }

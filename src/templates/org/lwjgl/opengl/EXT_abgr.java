@@ -32,5 +32,5 @@
 package org.lwjgl.opengl;
 
 public interface EXT_abgr {
-	public static final int GL_ABGR_EXT = 0x8000;
+	int GL_ABGR_EXT = 0x8000;
 }

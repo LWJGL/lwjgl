@@ -31,8 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.generator.*;
-
 public interface ARB_point_sprite {
 	/*
 	 * Accepted by the <cap> parameter of Enable, Disable, and IsEnabled, by
@@ -40,12 +38,12 @@ public interface ARB_point_sprite {
 	 * GetDoublev, and by the <target> parameter of TexEnvi, TexEnviv,
 	 * TexEnvf, TexEnvfv, GetTexEnviv, and GetTexEnvfv:
 	*/
-	public static final int GL_POINT_SPRITE_ARB = 0x8861;
+	int GL_POINT_SPRITE_ARB = 0x8861;
 
 	/*
 	* When the <target> parameter of TexEnvf, TexEnvfv, TexEnvi, TexEnviv,
 	* GetTexEnvfv, or GetTexEnviv is POINT_SPRITE_ARB, then the value of
 	* <pname> may be:
 	*/
-	public static final int GL_COORD_REPLACE_ARB = 0x8862;
+	int GL_COORD_REPLACE_ARB = 0x8862;
 }

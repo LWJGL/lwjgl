@@ -36,19 +36,19 @@ public interface ARB_depth_texture {
 	 * Accepted by the <internalFormat> parameter of TexImage1D, TexImage2D,
 	 * CopyTexImage1D and CopyTexImage2D:
 	*/
-	public static final int GL_DEPTH_COMPONENT16_ARB = 0x81A5;
-	public static final int GL_DEPTH_COMPONENT24_ARB = 0x81A6;
-	public static final int GL_DEPTH_COMPONENT32_ARB = 0x81A7;
+	int GL_DEPTH_COMPONENT16_ARB = 0x81A5;
+	int GL_DEPTH_COMPONENT24_ARB = 0x81A6;
+	int GL_DEPTH_COMPONENT32_ARB = 0x81A7;
 
 	/*
 	* Accepted by the <pname> parameter of GetTexLevelParameterfv and
 	* GetTexLevelParameteriv:
 	*/
-	public static final int GL_TEXTURE_DEPTH_SIZE_ARB = 0x884A;
+	int GL_TEXTURE_DEPTH_SIZE_ARB = 0x884A;
 
 	/*
 	* Accepted by the <pname> parameter of TexParameterf, TexParameteri,
 	* TexParameterfv, TexParameteriv, GetTexParameterfv, and GetTexParameteriv:
 	*/
-	public static final int GL_DEPTH_TEXTURE_MODE_ARB = 0x884B;
+	int GL_DEPTH_TEXTURE_MODE_ARB = 0x884B;
 }

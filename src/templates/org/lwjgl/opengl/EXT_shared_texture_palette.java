@@ -32,5 +32,5 @@
 package org.lwjgl.opengl;
 
 public interface EXT_shared_texture_palette {
-	public static final int GL_SHARED_TEXTURE_PALETTE_EXT = 0x81FB;
+	int GL_SHARED_TEXTURE_PALETTE_EXT = 0x81FB;
 }

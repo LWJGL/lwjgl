@@ -32,23 +32,22 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.FloatBuffer;
 
 import org.lwjgl.generator.*;
 
 public interface EXT_fog_coord {
-	public static final int GL_FOG_COORDINATE_SOURCE_EXT = 0x8450;
-	public static final int GL_FOG_COORDINATE_EXT = 0x8451;
-	public static final int GL_FRAGMENT_DEPTH_EXT = 0x8452;
-	public static final int GL_CURRENT_FOG_COORDINATE_EXT = 0x8453;
-	public static final int GL_FOG_COORDINATE_ARRAY_TYPE_EXT = 0x8454;
-	public static final int GL_FOG_COORDINATE_ARRAY_STRIDE_EXT = 0x8455;
-	public static final int GL_FOG_COORDINATE_ARRAY_POINTER_EXT = 0x8456;
-	public static final int GL_FOG_COORDINATE_ARRAY_EXT = 0x8457;
+	int GL_FOG_COORDINATE_SOURCE_EXT = 0x8450;
+	int GL_FOG_COORDINATE_EXT = 0x8451;
+	int GL_FRAGMENT_DEPTH_EXT = 0x8452;
+	int GL_CURRENT_FOG_COORDINATE_EXT = 0x8453;
+	int GL_FOG_COORDINATE_ARRAY_TYPE_EXT = 0x8454;
+	int GL_FOG_COORDINATE_ARRAY_STRIDE_EXT = 0x8455;
+	int GL_FOG_COORDINATE_ARRAY_POINTER_EXT = 0x8456;
+	int GL_FOG_COORDINATE_ARRAY_EXT = 0x8457;
 
-	public void glFogCoordfEXT(float coord);
+	void glFogCoordfEXT(float coord);
 
-	public void glFogCoordPointerEXT(@AutoType("data") @GLenum int type, @GLsizei int stride,
+	void glFogCoordPointerEXT(@AutoType("data") @GLenum int type, @GLsizei int stride,
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const

@@ -32,14 +32,9 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import org.lwjgl.generator.*;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
 
 /**
  * $Id$
@@ -50,112 +45,112 @@ import org.lwjgl.BufferChecks;
  * @version $Revision$
  */
 public interface GL13 {
-	public static final int GL_TEXTURE0 = 0x84C0;
-	public static final int GL_TEXTURE1 = 0x84C1;
-	public static final int GL_TEXTURE2 = 0x84C2;
-	public static final int GL_TEXTURE3 = 0x84C3;
-	public static final int GL_TEXTURE4 = 0x84C4;
-	public static final int GL_TEXTURE5 = 0x84C5;
-	public static final int GL_TEXTURE6 = 0x84C6;
-	public static final int GL_TEXTURE7 = 0x84C7;
-	public static final int GL_TEXTURE8 = 0x84C8;
-	public static final int GL_TEXTURE9 = 0x84C9;
-	public static final int GL_TEXTURE10 = 0x84CA;
-	public static final int GL_TEXTURE11 = 0x84CB;
-	public static final int GL_TEXTURE12 = 0x84CC;
-	public static final int GL_TEXTURE13 = 0x84CD;
-	public static final int GL_TEXTURE14 = 0x84CE;
-	public static final int GL_TEXTURE15 = 0x84CF;
-	public static final int GL_TEXTURE16 = 0x84D0;
-	public static final int GL_TEXTURE17 = 0x84D1;
-	public static final int GL_TEXTURE18 = 0x84D2;
-	public static final int GL_TEXTURE19 = 0x84D3;
-	public static final int GL_TEXTURE20 = 0x84D4;
-	public static final int GL_TEXTURE21 = 0x84D5;
-	public static final int GL_TEXTURE22 = 0x84D6;
-	public static final int GL_TEXTURE23 = 0x84D7;
-	public static final int GL_TEXTURE24 = 0x84D8;
-	public static final int GL_TEXTURE25 = 0x84D9;
-	public static final int GL_TEXTURE26 = 0x84DA;
-	public static final int GL_TEXTURE27 = 0x84DB;
-	public static final int GL_TEXTURE28 = 0x84DC;
-	public static final int GL_TEXTURE29 = 0x84DD;
-	public static final int GL_TEXTURE30 = 0x84DE;
-	public static final int GL_TEXTURE31 = 0x84DF;
-	public static final int GL_ACTIVE_TEXTURE = 0x84E0;
-	public static final int GL_CLIENT_ACTIVE_TEXTURE = 0x84E1;
-	public static final int GL_MAX_TEXTURE_UNITS = 0x84E2;
+	int GL_TEXTURE0 = 0x84C0;
+	int GL_TEXTURE1 = 0x84C1;
+	int GL_TEXTURE2 = 0x84C2;
+	int GL_TEXTURE3 = 0x84C3;
+	int GL_TEXTURE4 = 0x84C4;
+	int GL_TEXTURE5 = 0x84C5;
+	int GL_TEXTURE6 = 0x84C6;
+	int GL_TEXTURE7 = 0x84C7;
+	int GL_TEXTURE8 = 0x84C8;
+	int GL_TEXTURE9 = 0x84C9;
+	int GL_TEXTURE10 = 0x84CA;
+	int GL_TEXTURE11 = 0x84CB;
+	int GL_TEXTURE12 = 0x84CC;
+	int GL_TEXTURE13 = 0x84CD;
+	int GL_TEXTURE14 = 0x84CE;
+	int GL_TEXTURE15 = 0x84CF;
+	int GL_TEXTURE16 = 0x84D0;
+	int GL_TEXTURE17 = 0x84D1;
+	int GL_TEXTURE18 = 0x84D2;
+	int GL_TEXTURE19 = 0x84D3;
+	int GL_TEXTURE20 = 0x84D4;
+	int GL_TEXTURE21 = 0x84D5;
+	int GL_TEXTURE22 = 0x84D6;
+	int GL_TEXTURE23 = 0x84D7;
+	int GL_TEXTURE24 = 0x84D8;
+	int GL_TEXTURE25 = 0x84D9;
+	int GL_TEXTURE26 = 0x84DA;
+	int GL_TEXTURE27 = 0x84DB;
+	int GL_TEXTURE28 = 0x84DC;
+	int GL_TEXTURE29 = 0x84DD;
+	int GL_TEXTURE30 = 0x84DE;
+	int GL_TEXTURE31 = 0x84DF;
+	int GL_ACTIVE_TEXTURE = 0x84E0;
+	int GL_CLIENT_ACTIVE_TEXTURE = 0x84E1;
+	int GL_MAX_TEXTURE_UNITS = 0x84E2;
 
-	public static final int GL_NORMAL_MAP = 0x8511;
-	public static final int GL_REFLECTION_MAP = 0x8512;
-	public static final int GL_TEXTURE_CUBE_MAP = 0x8513;
-	public static final int GL_TEXTURE_BINDING_CUBE_MAP = 0x8514;
-	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515;
-	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_X = 0x8516;
-	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Y = 0x8517;
-	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Y = 0x8518;
-	public static final int GL_TEXTURE_CUBE_MAP_POSITIVE_Z = 0x8519;
-	public static final int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z = 0x851A;
-	public static final int GL_PROXY_TEXTURE_CUBE_MAP = 0x851B;
-	public static final int GL_MAX_CUBE_MAP_TEXTURE_SIZE = 0x851C;
+	int GL_NORMAL_MAP = 0x8511;
+	int GL_REFLECTION_MAP = 0x8512;
+	int GL_TEXTURE_CUBE_MAP = 0x8513;
+	int GL_TEXTURE_BINDING_CUBE_MAP = 0x8514;
+	int GL_TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515;
+	int GL_TEXTURE_CUBE_MAP_NEGATIVE_X = 0x8516;
+	int GL_TEXTURE_CUBE_MAP_POSITIVE_Y = 0x8517;
+	int GL_TEXTURE_CUBE_MAP_NEGATIVE_Y = 0x8518;
+	int GL_TEXTURE_CUBE_MAP_POSITIVE_Z = 0x8519;
+	int GL_TEXTURE_CUBE_MAP_NEGATIVE_Z = 0x851A;
+	int GL_PROXY_TEXTURE_CUBE_MAP = 0x851B;
+	int GL_MAX_CUBE_MAP_TEXTURE_SIZE = 0x851C;
 
-	public static final int GL_COMPRESSED_ALPHA = 0x84E9;
-	public static final int GL_COMPRESSED_LUMINANCE = 0x84EA;
-	public static final int GL_COMPRESSED_LUMINANCE_ALPHA = 0x84EB;
-	public static final int GL_COMPRESSED_INTENSITY = 0x84EC;
-	public static final int GL_COMPRESSED_RGB = 0x84ED;
-	public static final int GL_COMPRESSED_RGBA = 0x84EE;
-	public static final int GL_TEXTURE_COMPRESSION_HINT = 0x84EF;
-	public static final int GL_TEXTURE_COMPRESSED_IMAGE_SIZE = 0x86A0;
-	public static final int GL_TEXTURE_COMPRESSED = 0x86A1;
-	public static final int GL_NUM_COMPRESSED_TEXTURE_FORMATS = 0x86A2;
-	public static final int GL_COMPRESSED_TEXTURE_FORMATS = 0x86A3;
+	int GL_COMPRESSED_ALPHA = 0x84E9;
+	int GL_COMPRESSED_LUMINANCE = 0x84EA;
+	int GL_COMPRESSED_LUMINANCE_ALPHA = 0x84EB;
+	int GL_COMPRESSED_INTENSITY = 0x84EC;
+	int GL_COMPRESSED_RGB = 0x84ED;
+	int GL_COMPRESSED_RGBA = 0x84EE;
+	int GL_TEXTURE_COMPRESSION_HINT = 0x84EF;
+	int GL_TEXTURE_COMPRESSED_IMAGE_SIZE = 0x86A0;
+	int GL_TEXTURE_COMPRESSED = 0x86A1;
+	int GL_NUM_COMPRESSED_TEXTURE_FORMATS = 0x86A2;
+	int GL_COMPRESSED_TEXTURE_FORMATS = 0x86A3;
 
-	public static final int GL_MULTISAMPLE = 0x809D;
-	public static final int GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
-	public static final int GL_SAMPLE_ALPHA_TO_ONE = 0x809F;
-	public static final int GL_SAMPLE_COVERAGE = 0x80A0;
-	public static final int GL_SAMPLE_BUFFERS = 0x80A8;
-	public static final int GL_SAMPLES = 0x80A9;
-	public static final int GL_SAMPLE_COVERAGE_VALUE = 0x80AA;
-	public static final int GL_SAMPLE_COVERAGE_INVERT = 0x80AB;
-	public static final int GL_MULTISAMPLE_BIT = 0x20000000;
+	int GL_MULTISAMPLE = 0x809D;
+	int GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
+	int GL_SAMPLE_ALPHA_TO_ONE = 0x809F;
+	int GL_SAMPLE_COVERAGE = 0x80A0;
+	int GL_SAMPLE_BUFFERS = 0x80A8;
+	int GL_SAMPLES = 0x80A9;
+	int GL_SAMPLE_COVERAGE_VALUE = 0x80AA;
+	int GL_SAMPLE_COVERAGE_INVERT = 0x80AB;
+	int GL_MULTISAMPLE_BIT = 0x20000000;
 
-	public static final int GL_TRANSPOSE_MODELVIEW_MATRIX = 0x84E3;
-	public static final int GL_TRANSPOSE_PROJECTION_MATRIX = 0x84E4;
-	public static final int GL_TRANSPOSE_TEXTURE_MATRIX = 0x84E5;
-	public static final int GL_TRANSPOSE_COLOR_MATRIX = 0x84E6;
+	int GL_TRANSPOSE_MODELVIEW_MATRIX = 0x84E3;
+	int GL_TRANSPOSE_PROJECTION_MATRIX = 0x84E4;
+	int GL_TRANSPOSE_TEXTURE_MATRIX = 0x84E5;
+	int GL_TRANSPOSE_COLOR_MATRIX = 0x84E6;
 
-	public static final int GL_COMBINE = 0x8570;
-	public static final int GL_COMBINE_RGB = 0x8571;
-	public static final int GL_COMBINE_ALPHA = 0x8572;
-	public static final int GL_SOURCE0_RGB = 0x8580;
-	public static final int GL_SOURCE1_RGB = 0x8581;
-	public static final int GL_SOURCE2_RGB = 0x8582;
-	public static final int GL_SOURCE0_ALPHA = 0x8588;
-	public static final int GL_SOURCE1_ALPHA = 0x8589;
-	public static final int GL_SOURCE2_ALPHA = 0x858A;
-	public static final int GL_OPERAND0_RGB = 0x8590;
-	public static final int GL_OPERAND1_RGB = 0x8591;
-	public static final int GL_OPERAND2_RGB = 0x8592;
-	public static final int GL_OPERAND0_ALPHA = 0x8598;
-	public static final int GL_OPERAND1_ALPHA = 0x8599;
-	public static final int GL_OPERAND2_ALPHA = 0x859A;
-	public static final int GL_RGB_SCALE = 0x8573;
-	public static final int GL_ADD_SIGNED = 0x8574;
-	public static final int GL_INTERPOLATE = 0x8575;
-	public static final int GL_SUBTRACT = 0x84E7;
-	public static final int GL_CONSTANT = 0x8576;
-	public static final int GL_PRIMARY_COLOR = 0x8577;
-	public static final int GL_PREVIOUS = 0x8578;
-	public static final int GL_DOT3_RGB = 0x86AE;
-	public static final int GL_DOT3_RGBA = 0x86AF;
-	public static final int GL_CLAMP_TO_BORDER = 0x812D;
+	int GL_COMBINE = 0x8570;
+	int GL_COMBINE_RGB = 0x8571;
+	int GL_COMBINE_ALPHA = 0x8572;
+	int GL_SOURCE0_RGB = 0x8580;
+	int GL_SOURCE1_RGB = 0x8581;
+	int GL_SOURCE2_RGB = 0x8582;
+	int GL_SOURCE0_ALPHA = 0x8588;
+	int GL_SOURCE1_ALPHA = 0x8589;
+	int GL_SOURCE2_ALPHA = 0x858A;
+	int GL_OPERAND0_RGB = 0x8590;
+	int GL_OPERAND1_RGB = 0x8591;
+	int GL_OPERAND2_RGB = 0x8592;
+	int GL_OPERAND0_ALPHA = 0x8598;
+	int GL_OPERAND1_ALPHA = 0x8599;
+	int GL_OPERAND2_ALPHA = 0x859A;
+	int GL_RGB_SCALE = 0x8573;
+	int GL_ADD_SIGNED = 0x8574;
+	int GL_INTERPOLATE = 0x8575;
+	int GL_SUBTRACT = 0x84E7;
+	int GL_CONSTANT = 0x8576;
+	int GL_PRIMARY_COLOR = 0x8577;
+	int GL_PREVIOUS = 0x8578;
+	int GL_DOT3_RGB = 0x86AE;
+	int GL_DOT3_RGBA = 0x86AF;
+	int GL_CLAMP_TO_BORDER = 0x812D;
 
-	public void glActiveTexture(@GLenum int texture);
+	void glActiveTexture(@GLenum int texture);
 
-	public void glClientActiveTexture(@GLenum int texture);
-	public void glCompressedTexImage1D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, int border, @GLsizei int imageSize,
+	void glClientActiveTexture(@GLenum int texture);
+	void glCompressedTexImage1D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, int border, @GLsizei int imageSize,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check
 			@Const
@@ -165,7 +160,7 @@ public interface GL13 {
 			@GLfloat
 			Buffer data);
 
-	public void glCompressedTexImage2D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, int border, @GLsizei int imageSize,
+	void glCompressedTexImage2D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, int border, @GLsizei int imageSize,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check
 			@Const
@@ -175,17 +170,7 @@ public interface GL13 {
 			@GLfloat
 			Buffer data);
 
-	public void glCompressedTexImage3D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLsizei int imageSize,
-			@BufferObject(BufferKind.UnpackPBO)
-			@Check
-			@Const
-			@GLbyte
-			@GLshort
-			@GLint
-			@GLfloat
-			Buffer data);
-	
-	public void glCompressedTexSubImage1D(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @GLsizei int imageSize,
+	void glCompressedTexImage3D(@GLenum int target, int level, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLsizei int imageSize,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check
 			@Const
@@ -195,7 +180,7 @@ public interface GL13 {
 			@GLfloat
 			Buffer data);
 
-	public void glCompressedTexSubImage2D(@GLenum int target, int level, int xoffset, int yoffset, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLsizei int imageSize,
+	void glCompressedTexSubImage1D(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @GLsizei int imageSize,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check
 			@Const
@@ -205,7 +190,7 @@ public interface GL13 {
 			@GLfloat
 			Buffer data);
 
-	public void glCompressedTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLsizei int imageSize,
+	void glCompressedTexSubImage2D(@GLenum int target, int level, int xoffset, int yoffset, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLsizei int imageSize,
 			@BufferObject(BufferKind.UnpackPBO)
 			@Check
 			@Const
@@ -214,9 +199,19 @@ public interface GL13 {
 			@GLint
 			@GLfloat
 			Buffer data);
-	
+
+	void glCompressedTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLsizei int imageSize,
+			@BufferObject(BufferKind.UnpackPBO)
+			@Check
+			@Const
+			@GLbyte
+			@GLshort
+			@GLint
+			@GLfloat
+			Buffer data);
+
 	// TODO: check buffer size valid
-	public void glGetCompressedTexImage(@GLenum int target, int lod,
+	void glGetCompressedTexImage(@GLenum int target, int lod,
 			@BufferObject(BufferKind.PackPBO)
 			@Check
 			@GLbyte
@@ -224,20 +219,20 @@ public interface GL13 {
 			@GLint
 			Buffer img);
 
-	public void glMultiTexCoord1f(@GLenum int target, float s);
+	void glMultiTexCoord1f(@GLenum int target, float s);
 
-	public void glMultiTexCoord2f(@GLenum int target, float s, float t);
+	void glMultiTexCoord2f(@GLenum int target, float s, float t);
 
-	public void glMultiTexCoord3f(@GLenum int target, float s, float t, float r);
+	void glMultiTexCoord3f(@GLenum int target, float s, float t, float r);
 
-	public void glMultiTexCoord4f(@GLenum int target, float s, float t, float r, float q);
-
-	@StripPostfix("m")
-	public void glLoadTransposeMatrixf(@Check("16") @Const FloatBuffer m);
+	void glMultiTexCoord4f(@GLenum int target, float s, float t, float r, float q);
 
 	@StripPostfix("m")
-	public void glMultTransposeMatrixf(@Check("16") @Const FloatBuffer m);
+	void glLoadTransposeMatrixf(@Check("16") @Const FloatBuffer m);
 
-	public void glSampleCoverage(@GLclampf float value, boolean invert);
+	@StripPostfix("m")
+	void glMultTransposeMatrixf(@Check("16") @Const FloatBuffer m);
+
+	void glSampleCoverage(@GLclampf float value, boolean invert);
 }
 

@@ -31,19 +31,18 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.generator.*;
 
 public interface ARB_multisample {
-	public static final int GL_MULTISAMPLE_ARB = 0x809D;
-	public static final int GL_SAMPLE_ALPHA_TO_COVERAGE_ARB = 0x809E;
-	public static final int GL_SAMPLE_ALPHA_TO_ONE_ARB = 0x809F;
-	public static final int GL_SAMPLE_COVERAGE_ARB = 0x80A0;
-	public static final int GL_SAMPLE_BUFFERS_ARB = 0x80A8;
-	public static final int GL_SAMPLES_ARB = 0x80A9;
-	public static final int GL_SAMPLE_COVERAGE_VALUE_ARB = 0x80AA;
-	public static final int GL_SAMPLE_COVERAGE_INVERT_ARB = 0x80AB;
-	public static final int GL_MULTISAMPLE_BIT_ARB = 0x20000000;
+	int GL_MULTISAMPLE_ARB = 0x809D;
+	int GL_SAMPLE_ALPHA_TO_COVERAGE_ARB = 0x809E;
+	int GL_SAMPLE_ALPHA_TO_ONE_ARB = 0x809F;
+	int GL_SAMPLE_COVERAGE_ARB = 0x80A0;
+	int GL_SAMPLE_BUFFERS_ARB = 0x80A8;
+	int GL_SAMPLES_ARB = 0x80A9;
+	int GL_SAMPLE_COVERAGE_VALUE_ARB = 0x80AA;
+	int GL_SAMPLE_COVERAGE_INVERT_ARB = 0x80AB;
+	int GL_MULTISAMPLE_BIT_ARB = 0x20000000;
 
-	public void glSampleCoverageARB(@GLclampf float value, boolean invert);
+	void glSampleCoverageARB(@GLclampf float value, boolean invert);
 }

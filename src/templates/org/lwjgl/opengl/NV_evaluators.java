@@ -38,53 +38,53 @@ import java.nio.IntBuffer;
 import org.lwjgl.generator.*;
 
 public interface NV_evaluators {
-	public static final int GL_EVAL_2D_NV = 0x86C0;
-	public static final int GL_EVAL_TRIANGULAR_2D_NV = 0x86C1;
-	public static final int GL_MAP_TESSELLATION_NV = 0x86C2;
-	public static final int GL_MAP_ATTRIB_U_ORDER_NV = 0x86C3;
-	public static final int GL_MAP_ATTRIB_V_ORDER_NV = 0x86C4;
-	public static final int GL_EVAL_FRACTIONAL_TESSELLATION_NV = 0x86C5;
-	public static final int GL_EVAL_VERTEX_ATTRIB0_NV = 0x86C6;
-	public static final int GL_EVAL_VERTEX_ATTRIB1_NV = 0x86C7;
-	public static final int GL_EVAL_VERTEX_ATTRIB2_NV = 0x86C8;
-	public static final int GL_EVAL_VERTEX_ATTRIB3_NV = 0x86C9;
-	public static final int GL_EVAL_VERTEX_ATTRIB4_NV = 0x86CA;
-	public static final int GL_EVAL_VERTEX_ATTRIB5_NV = 0x86CB;
-	public static final int GL_EVAL_VERTEX_ATTRIB6_NV = 0x86CC;
-	public static final int GL_EVAL_VERTEX_ATTRIB7_NV = 0x86CD;
-	public static final int GL_EVAL_VERTEX_ATTRIB8_NV = 0x86CE;
-	public static final int GL_EVAL_VERTEX_ATTRIB9_NV = 0x86CF;
-	public static final int GL_EVAL_VERTEX_ATTRIB10_NV = 0x86D0;
-	public static final int GL_EVAL_VERTEX_ATTRIB11_NV = 0x86D1;
-	public static final int GL_EVAL_VERTEX_ATTRIB12_NV = 0x86D2;
-	public static final int GL_EVAL_VERTEX_ATTRIB13_NV = 0x86D3;
-	public static final int GL_EVAL_VERTEX_ATTRIB14_NV = 0x86D4;
-	public static final int GL_EVAL_VERTEX_ATTRIB15_NV = 0x86D5;
-	public static final int GL_MAX_MAP_TESSELLATION_NV = 0x86D6;
-	public static final int GL_MAX_RATIONAL_EVAL_ORDER_NV = 0x86D7;
+	int GL_EVAL_2D_NV = 0x86C0;
+	int GL_EVAL_TRIANGULAR_2D_NV = 0x86C1;
+	int GL_MAP_TESSELLATION_NV = 0x86C2;
+	int GL_MAP_ATTRIB_U_ORDER_NV = 0x86C3;
+	int GL_MAP_ATTRIB_V_ORDER_NV = 0x86C4;
+	int GL_EVAL_FRACTIONAL_TESSELLATION_NV = 0x86C5;
+	int GL_EVAL_VERTEX_ATTRIB0_NV = 0x86C6;
+	int GL_EVAL_VERTEX_ATTRIB1_NV = 0x86C7;
+	int GL_EVAL_VERTEX_ATTRIB2_NV = 0x86C8;
+	int GL_EVAL_VERTEX_ATTRIB3_NV = 0x86C9;
+	int GL_EVAL_VERTEX_ATTRIB4_NV = 0x86CA;
+	int GL_EVAL_VERTEX_ATTRIB5_NV = 0x86CB;
+	int GL_EVAL_VERTEX_ATTRIB6_NV = 0x86CC;
+	int GL_EVAL_VERTEX_ATTRIB7_NV = 0x86CD;
+	int GL_EVAL_VERTEX_ATTRIB8_NV = 0x86CE;
+	int GL_EVAL_VERTEX_ATTRIB9_NV = 0x86CF;
+	int GL_EVAL_VERTEX_ATTRIB10_NV = 0x86D0;
+	int GL_EVAL_VERTEX_ATTRIB11_NV = 0x86D1;
+	int GL_EVAL_VERTEX_ATTRIB12_NV = 0x86D2;
+	int GL_EVAL_VERTEX_ATTRIB13_NV = 0x86D3;
+	int GL_EVAL_VERTEX_ATTRIB14_NV = 0x86D4;
+	int GL_EVAL_VERTEX_ATTRIB15_NV = 0x86D5;
+	int GL_MAX_MAP_TESSELLATION_NV = 0x86D6;
+	int GL_MAX_RATIONAL_EVAL_ORDER_NV = 0x86D7;
 
-	public void glGetMapControlPointsNV(@GLenum int target, @GLuint int index, @GLenum int type, @GLsizei int ustride, @GLsizei int vstride, boolean packed,
+	void glGetMapControlPointsNV(@GLenum int target, @GLuint int index, @GLenum int type, @GLsizei int ustride, @GLsizei int vstride, boolean packed,
 			@Check
 			@Const
 			@GLfloat
 			Buffer pPoints);
 
-	public void glMapControlPointsNV(@GLenum int target, @GLuint int index, @GLenum int type, @GLsizei int ustride, @GLsizei int vstride, int uorder, int vorder, boolean packed, @Check @Const @GLfloat Buffer pPoints);
+	void glMapControlPointsNV(@GLenum int target, @GLuint int index, @GLenum int type, @GLsizei int ustride, @GLsizei int vstride, int uorder, int vorder, boolean packed, @Check @Const @GLfloat Buffer pPoints);
 
 	@StripPostfix("params")
-	public void glMapParameterfvNV(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
+	void glMapParameterfvNV(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 	@StripPostfix("params")
-	public void glMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
+	void glMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
-	public void glGetMapParameterfvNV(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
+	void glGetMapParameterfvNV(@GLenum int target, @GLenum int pname, @Check("4") @Const FloatBuffer params);
 	@StripPostfix("params")
-	public void glGetMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
+	void glGetMapParameterivNV(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	@StripPostfix("params")
-	public void glGetMapAttribParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
+	void glGetMapAttribParameterfvNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") FloatBuffer params);
 	@StripPostfix("params")
-	public void glGetMapAttribParameterivNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
+	void glGetMapAttribParameterivNV(@GLenum int target, @GLuint int index, @GLenum int pname, @Check("4") IntBuffer params);
 
-	public void glEvalMapsNV(@GLenum int target, @GLenum int mode);
+	void glEvalMapsNV(@GLenum int target, @GLenum int mode);
 }

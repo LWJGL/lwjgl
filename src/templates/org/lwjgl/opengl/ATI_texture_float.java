@@ -36,16 +36,16 @@ public interface ATI_texture_float {
 	 * Accepted by the <internalFormat> parameter of TexImage1D,
 	 * TexImage2D, and TexImage3D:
 	*/
-	public static final int GL_RGBA_FLOAT32_ATI = 0x8814;
-	public static final int GL_RGB_FLOAT32_ATI = 0x8815;
-	public static final int GL_ALPHA_FLOAT32_ATI = 0x8816;
-	public static final int GL_INTENSITY_FLOAT32_ATI = 0x8817;
-	public static final int GL_LUMINANCE_FLOAT32_ATI = 0x8818;
-	public static final int GL_LUMINANCE_ALPHA_FLOAT32_ATI = 0x8819;
-	public static final int GL_RGBA_FLOAT16_ATI = 0x881A;
-	public static final int GL_RGB_FLOAT16_ATI = 0x881B;
-	public static final int GL_ALPHA_FLOAT16_ATI = 0x881C;
-	public static final int GL_INTENSITY_FLOAT16_ATI = 0x881D;
-	public static final int GL_LUMINANCE_FLOAT16_ATI = 0x881E;
-	public static final int GL_LUMINANCE_ALPHA_FLOAT16_ATI = 0x881F;
+	int GL_RGBA_FLOAT32_ATI = 0x8814;
+	int GL_RGB_FLOAT32_ATI = 0x8815;
+	int GL_ALPHA_FLOAT32_ATI = 0x8816;
+	int GL_INTENSITY_FLOAT32_ATI = 0x8817;
+	int GL_LUMINANCE_FLOAT32_ATI = 0x8818;
+	int GL_LUMINANCE_ALPHA_FLOAT32_ATI = 0x8819;
+	int GL_RGBA_FLOAT16_ATI = 0x881A;
+	int GL_RGB_FLOAT16_ATI = 0x881B;
+	int GL_ALPHA_FLOAT16_ATI = 0x881C;
+	int GL_INTENSITY_FLOAT16_ATI = 0x881D;
+	int GL_LUMINANCE_FLOAT16_ATI = 0x881E;
+	int GL_LUMINANCE_ALPHA_FLOAT16_ATI = 0x881F;
 }

@@ -31,19 +31,17 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-
 public interface ARB_window_pos {
 
-	public void glWindowPos2fARB(float x, float y);
+	void glWindowPos2fARB(float x, float y);
 
-	public void glWindowPos2iARB(int x, int y);
+	void glWindowPos2iARB(int x, int y);
 
-	public void glWindowPos2sARB(short x, short y);
+	void glWindowPos2sARB(short x, short y);
 
-	public void glWindowPos3fARB(float x, float y, float z);
+	void glWindowPos3fARB(float x, float y, float z);
 
-	public void glWindowPos3iARB(int x, int y, int z);
+	void glWindowPos3iARB(int x, int y, int z);
 
-	public void glWindowPos3sARB(short x, short y, short z);
+	void glWindowPos3sARB(short x, short y, short z);
 }
