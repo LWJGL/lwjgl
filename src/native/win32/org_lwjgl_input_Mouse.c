@@ -359,10 +359,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 			throwException(env, "Could not set the CooperativeLevel (Unkown error code).");
 			return;
 	}
-	if (IDirectInputDevice_SetCooperativeLevel(mDIDevice, getCurrentHWND(), mouseMask) != DI_OK) {
-		throwException(env, "Could not set the CooperativeLevel.");
-		return;
-	}
 	IDirectInputDevice_Acquire(mDIDevice);
 	initEventQueue(&event_queue, EVENT_SIZE);
 }
