@@ -117,8 +117,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	lpdiKeyboard->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
 
 	HRESULT ret = lpdiKeyboard->Acquire();
-	if (ret != DI_OK && ret != S_FALSE) {
-		printf("Failed to acquire keyboard\n");
+	if(FAILED(ret)) {
+#if _DEBUG
+    printf("Failed to acquire keyboard\n");
+#endif	
 	}
 
 	return JNI_TRUE;

@@ -136,10 +136,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
   hr = mDIDevice->Acquire();
   if(FAILED(hr)) {
 #if _DEBUG
-    printf("Acquire failed\n");
+    printf("Failed to acquire mouse\n");
 #endif
-    ShutdownMouse();
-    return JNI_FALSE;
   }
 
   return mCreate_success;
@@ -160,6 +158,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass c
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
+  mDIDevice->Acquire();
   UpdateMouseFields();
 }
 
