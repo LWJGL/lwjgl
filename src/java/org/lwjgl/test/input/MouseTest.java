@@ -118,11 +118,16 @@ public class MouseTest {
 
   private void wiggleMouse() {
     while (!gl.isCloseRequested()) {
+      gl.tick();
+      
       if(gl.isMinimized()) {
+        try {
+					Thread.sleep(100);
+				} catch (InterruptedException inte) {
+					inte.printStackTrace();
+				}
         continue;
       }
-      
-      gl.tick();
 
       Mouse.poll();
       Keyboard.poll();
