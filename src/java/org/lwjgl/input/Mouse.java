@@ -270,6 +270,7 @@ public class Mouse {
 		if (currentCursor != null)
 			setNativeCursor(currentCursor);
 		setGrabbed(isGrabbed);
+		enableBuffer();
 	}
 
 	/**
@@ -277,13 +278,6 @@ public class Mouse {
 	 */
 	public static boolean isCreated() {
 		return created;
-	}
-
-	/**
-	 * @return true if buffering is enabled
-	 */
-	public static boolean isBuffered() {
-		return readBuffer != null;
 	}
 
 	/**
@@ -302,11 +296,9 @@ public class Mouse {
 	 * Polls the mouse for its current state. Access the polled values using the
 	 * get<value> methods.
 	 * By using this method, it is possible to "miss" mouse click events if you don't
-	 * poll fast enough. To receive all button events, enable buffering by calling
-	 * <code>enableBuffer</code>.
+	 * poll fast enough. 
 	 *
-	 * If buffering is enabled, this method also reads all button events since last read.
-	 * To use these values, you have to call <code>next</code> for each event you
+	 * To use buffered values, you have to call <code>next</code> for each event you
 	 * want to read. You can query which button caused the event by using
 	 * <code>getEventButton</code>. To get the state of that button, for that event, use
 	 * <code>getEventButtonState</code>.
@@ -320,7 +312,6 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#getDX()
 	 * @see org.lwjgl.input.Mouse#getDY()
 	 * @see org.lwjgl.input.Mouse#getDWheel()
-	 * @see org.lwjgl.input.Mouse#enableBuffer()
 	 */
 	public static void poll() {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can poll it");
@@ -396,7 +387,7 @@ public class Mouse {
 	/**
 	 * Enable mouse button buffering. Must be called after the mouse is created.
 	 */
-	public static void enableBuffer() throws LWJGLException {
+	private static void enableBuffer() throws LWJGLException {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can enable buffering");
 		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE * BUFFER_SIZE);
 		readBuffer.limit(0);

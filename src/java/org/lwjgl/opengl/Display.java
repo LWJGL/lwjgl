@@ -565,7 +565,6 @@ public final class Display {
 			if (!Mouse.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nomouse")) {
 				try {
 					Mouse.create();
-					Mouse.enableBuffer();
 				} catch (LWJGLException e) {
 					if (Sys.DEBUG) {
 						e.printStackTrace(System.err);
@@ -577,8 +576,6 @@ public final class Display {
 			if (!Keyboard.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nokeyboard")) {
 				try {
 					Keyboard.create();
-					Keyboard.enableBuffer();
-					Keyboard.enableTranslation();
 				} catch (LWJGLException e) {
 					if (Sys.DEBUG) {
 						e.printStackTrace(System.err);

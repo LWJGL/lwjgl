@@ -48,8 +48,6 @@ import org.lwjgl.LWJGLException;
  * <br>
  * A raw Keyboard interface. This can be used to poll the current state of the
  * keys, or read all the keyboard presses / releases since the last read.
- * Buffering must be explicitly enabled; the size of the buffer is determined
- * by the native implementation at its discretion.
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @author elias_naur <elias_naur@users.sourceforge.net>
@@ -244,7 +242,7 @@ public class Keyboard {
 
 	/**
 	 * The key events from the last read: a sequence of pairs of key number,
-	 * followed by state. If translation is enabled, the state is followed by
+	 * followed by state. The state is followed by
 	 * a 2 byte java char representing the translated character.
 	 */
 	private static IntBuffer readBuffer;
@@ -295,6 +293,8 @@ public class Keyboard {
 			return;
 		Display.getImplementation().createKeyboard();
 		created = true;
+		enableBuffer();
+		enableTranslation();
 	}
 
 	/**
@@ -318,11 +318,9 @@ public class Keyboard {
 	 * Polls the keyboard for its current state. Access the polled values using the
 	 * <code>isKeyDown</code> method.
 	 * By using this method, it is possible to "miss" keyboard keys if you don't
-	 * poll fast enough. To receive all events, enable buffering by calling
-	 * <code>enableBuffer</code>.
+	 * poll fast enough. 
 	 *
-	 * This method also reads all keyboard events since last read if keyboard buffering is enabled.
-	 * To use these values, you have to call <code>next</code> for each event you
+	 * To use buffered values, you have to call <code>next</code> for each event you
 	 * want to read. You can query which key caused the event by using
 	 * <code>getEventKey</code>. To get the state of that key, for that event, use
 	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
@@ -331,7 +329,6 @@ public class Keyboard {
 	 * @see org.lwjgl.input.Keyboard#isKeyDown(int key)
 	 * @see org.lwjgl.input.Keyboard#isStateKeySet(int key)
 	 * @see org.lwjgl.input.Keyboard#next()
-	 * @see org.lwjgl.input.Keyboard#enableBuffer()
 	 * @see org.lwjgl.input.Keyboard#getEventKey()
 	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
 	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
@@ -355,7 +352,7 @@ public class Keyboard {
 	 * Enable keyboard translation. Must be called after the keyboard is created,
 	 * and keyboard buffering must be enabled.
 	 */
-	public static void enableTranslation() throws LWJGLException {
+	private static void enableTranslation() throws LWJGLException {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 		if (readBuffer == null)
@@ -367,7 +364,7 @@ public class Keyboard {
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
 	 */
-	public static void enableBuffer() throws LWJGLException {
+	private static void enableBuffer() throws LWJGLException {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can enable buffering");
 		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE*BUFFER_SIZE);
@@ -384,20 +381,6 @@ public class Keyboard {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can query key state");
 		return keyDownBuffer.get(key) != 0;
-	}
-
-	/**
-	 * @return true if buffering is enabled
-	 */
-	public static boolean isBuffered() {
-		return readBuffer != null;
-	}
-
-	/**
-	 * @return true if translation is enabled
-	 */
-	public static boolean isTranslationEnabled() {
-		return translationEnabled;
 	}
 
 	/**

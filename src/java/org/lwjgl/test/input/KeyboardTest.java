@@ -127,8 +127,6 @@ public class KeyboardTest {
   private void createKeyboard() {
     try {
       Keyboard.create();
-      Keyboard.enableBuffer();
-      Keyboard.enableTranslation();
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
