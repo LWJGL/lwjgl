@@ -32,6 +32,26 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.opengl.arb.*;
+import org.lwjgl.opengl.ati.*;
+import org.lwjgl.opengl.ati.ATIElementArray;
+import org.lwjgl.opengl.ati.ATIEnvmapBumpmap;
+import org.lwjgl.opengl.atix.ATIXPointSprites;
+import org.lwjgl.opengl.atix.ATIXTextureEnvRoute;
+import org.lwjgl.opengl.ext.*;
+import org.lwjgl.opengl.ext.EXTAgbr;
+import org.lwjgl.opengl.ext.EXTCompiledVertexArray;
+import org.lwjgl.opengl.hp.HPOcclusionTest;
+import org.lwjgl.opengl.nv.*;
+import org.lwjgl.opengl.nv.NVCopyDepthToColor;
+import org.lwjgl.opengl.nv.NVDepthClamp;
+import org.lwjgl.opengl.sgis.SGISGenerateMipmap;
+import org.lwjgl.opengl.sgix.SGIXDepthTexture;
+import org.lwjgl.opengl.sgix.SGIXShadow;
+import org.lwjgl.opengl.wgl.*;
+import org.lwjgl.opengl.wgl.WGLBufferRegion;
+import org.lwjgl.opengl.wgl.WGLMakeCurrentRead;
+
 /**
  * $Id$
  *
@@ -41,6 +61,77 @@ package org.lwjgl.opengl;
  * @version $Revision$
  */
 
-public interface GLConstants extends CoreGLConstants {
+public interface GLConstants
+	extends
+		CoreGLConstants,
+		ARBCubeMap,
+		ARBDepthTexture,
+		ARBMatrixPalette,
+		ARBMultisample,
+		ARBMultitexture,
+		ARBPointParameters,
+		ARBShadow,
+		ARBShadowAmbient,
+		ARBTextureBorderClamp,
+		ARBTextureCompression,
+		ARBTextureEnvCombine,
+		ARBTextureEnvDot3,
+		ARBTextureMirroredRepeat,
+		ARBTransposeMatrix,
+		ARBVertexBlend,
+		ARBVertexProgram,
+		ATIElementArray,
+		ATIEnvmapBumpmap,
+		ATIFragmentShader,
+		ATIPnTriangles,
+		ATITextureMirrorOnce,
+		ATIVertexArrayObject,
+		ATIVertexStreams,
+		ATIXPointSprites,
+		ATIXTextureEnvRoute,
+		EXTAgbr,
+		EXTCompiledVertexArray,
+		EXTDrawRangeElements,
+		EXTFogCoord,
+		EXTPointParameters,
+		EXTSecondaryColor,
+		EXTStencilTwoSide,
+		EXTStencilWrap,
+		EXTTextureCompressionS3TC,
+		EXTTextureFilterAnisotropic,
+		EXTTextureLODBias,
+		EXTVertexShader,
+		EXTVertexWeighting,
+		HPOcclusionTest,
+		NVCopyDepthToColor,
+		NVDepthClamp,
+		NVEvaluators,
+		NVFence,
+		NVFogDistance,
+		NVLightMaxExponent,
+		NVOcclusionQuery,
+		NVPackedDepthStencil,
+		NVPointSprite,
+		NVRegisterCombiners,
+		NVRegisterCombiners2,
+		NVTexgenReflection,
+		NVTextureEnvCombine4,
+		NVTextureRectangle,
+		NVTextureShader,
+		NVTextureShader2,
+		NVTextureShader3,
+		NVVertexArrayRange,
+		NVVertexArrayRange2,
+		NVVertexProgram,
+		SGISGenerateMipmap,
+		SGIXDepthTexture,
+		SGIXShadow,
+		WGLBufferRegion,
+		WGLMakeCurrentRead,
+		WGLMultisample,
+		WGLPBuffer,
+		WGLPixelFormat,
+		WGLRenderTexture
+{
 
 }

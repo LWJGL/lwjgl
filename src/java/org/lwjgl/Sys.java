@@ -163,4 +163,14 @@ public final class Sys {
 	 */
 	public static native void setProcessPriority(int priority);
 	
+	/**
+	 * @return the optimum alignment for structures for use by the vector library
+	 */
+	public static native int getFastStructureAlignment();
+	
+	/**
+	 * @return the optimum alignment for structure members for use by the vector library
+	 */
+	public static native int getFastMemberAlignment();
+	
 } 
