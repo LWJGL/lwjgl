@@ -68,14 +68,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
     CGDisplaySwitchToMode( displayID, displayMode );
 
     CGLPixelFormatAttribute attribs[2];
+    long swapInterval;
+    
     attribs[0] = kCGLPFAFullScreen;
-    attribs[1] = NULL;
+    attribs[1] = kCGLPFADoubleBuffer;
 
     CGLChoosePixelFormat( attribs, &pixelFormatObj, &numPixelFormats );
     if ( pixelFormatObj != NULL )
     {
         CGLCreateContext( pixelFormatObj, NULL, &contextObj );
         CGLDestroyPixelFormat( pixelFormatObj );
+
+        swapInterval = 1;
+        CGLSetParameter( contextObj, kCGLCPSwapInterval, &swapInterval );
     }
 
     CGLSetCurrentContext( contextObj );
@@ -108,6 +113,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
 (JNIEnv *, jobject)
 {
+    CGLFlushDrawable( contextObj );
 }
 
 
