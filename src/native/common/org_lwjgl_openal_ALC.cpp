@@ -74,11 +74,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nDestroy (JNIEnv *env, jobject 
  * C Specification:
  * ALubyte * alcGetString(ALCdevice *device, ALenum token);
  */
-JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_getString (JNIEnv *env, jobject obj, jobject device, jint token) {
-	jclass class_device		= env->GetObjectClass(device);
-	jfieldID field_device	= env->GetFieldID(class_device, "device", "I");
-	jint deviceaddress = env->GetIntField(device, field_device);
-
+JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_nGetString (JNIEnv *env, jobject obj, jint deviceaddress, jint token) {
 	const char* alcString = (const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token);
 	if(alcString == NULL) {
 		return NULL;
@@ -96,11 +92,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_getString (JNIEnv *env, jobj
  * C Specification:
  * ALvoid alcGetIntegerv(ALCdevice *device, ALenum token, ALsizei size, ALint *dest);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_getIntegerv (JNIEnv *env, jobject obj, jobject device, jint token, jint size, jint dest) {
-	jclass device_class		= env->GetObjectClass(device);
-	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(device, device_field);
-
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nGetIntegerv (JNIEnv *env, jobject obj, jint deviceaddress, jint token, jint size, jint dest) {
 	alcGetIntegerv((ALCdevice*) deviceaddress, (ALenum) token, (ALsizei) size, (ALint*) dest);
 	CHECK_ALC_ERROR
 }
@@ -157,11 +149,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_openDevice (JNIEnv *env, job
  * C Specification:
  * void alcCloseDevice( ALCdevice *dev );
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_closeDevice (JNIEnv *env, jobject obj, jobject device) {
-	jclass device_class		= env->GetObjectClass(device);
-	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(device, device_field);
-
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_closeDevice (JNIEnv *env, jobject obj, jint deviceaddress) {
 	alcCloseDevice((ALCdevice*) deviceaddress);
 	CHECK_ALC_ERROR
 }
@@ -172,12 +160,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_closeDevice (JNIEnv *env, jobje
  * C Specification:
  * ALCcontext* alcCreateContext( ALCdevice *dev, ALint* attrlist );
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_createContext (JNIEnv *env, jobject obj, jobject device, jint attrlist) {
-	/* get device address */
-	jclass device_class		= env->GetObjectClass(device);
-	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(device, device_field);
-
+JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_createContext (JNIEnv *env, jobject obj, jint deviceaddress, jint attrlist) {
 	ALCcontext* context = alcCreateContext((ALCdevice*) deviceaddress, (ALint*) attrlist); 
 	
 	/* if error - get out */
@@ -207,16 +190,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_createContext (JNIEnv *env, 
  * C Specification:
  * ALCboolean alcMakeContextCurrent(ALCcontext *context);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_makeContextCurrent (JNIEnv *env, jobject obj, jobject context) {
-	if(context == NULL) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_makeContextCurrent (JNIEnv *env, jobject obj, jint contextaddress) {
+	if(contextaddress == NULL) {
 		return alcMakeContextCurrent(NULL);
 	}
-	
-	/* get context address */
-	jclass context_class	= env->GetObjectClass(context);
-	jfieldID context_field	= env->GetFieldID(context_class, "context", "I");
-	jint contextaddress		= env->GetIntField(context, context_field);
-
 	return alcMakeContextCurrent((ALCcontext*) contextaddress);
 }
 
@@ -226,12 +203,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_makeContextCurrent (JNIEnv 
  * C Specification:
  * void alcProcessContext(ALCcontext *context);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_processContext (JNIEnv *env, jobject obj, jobject context) {
-	/* get context address */
-	jclass context_class	= env->GetObjectClass(context);
-	jfieldID context_field	= env->GetFieldID(context_class, "context", "I");
-	jint contextaddress		= env->GetIntField(context, context_field);
-
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nProcessContext (JNIEnv *env, jobject obj, jint contextaddress) {
 	alcProcessContext((ALCcontext*) contextaddress);
 }
 
@@ -269,12 +241,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_getCurrentContext (JNIEnv *e
  * C Specification:
  * ALCdevice* alcGetContextsDevice(ALCcontext *context);
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_getContextsDevice (JNIEnv *env, jobject obj, jobject context) {
-
-	/* get context address */
-	jclass context_class	= env->GetObjectClass(context);
-	jfieldID context_field	= env->GetFieldID(context_class, "context", "I");
-	jint contextaddress		= env->GetIntField(context, context_field);
+JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_getContextsDevice (JNIEnv *env, jobject obj, jint contextaddress) {
 
 	ALCdevice* device = alcGetContextsDevice((ALCcontext*) contextaddress); 
 	if(device == NULL) {
@@ -302,12 +269,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_getContextsDevice (JNIEnv *e
  * C Specification:
  * void alcSuspendContext(ALCcontext *context);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_suspendContext (JNIEnv *env, jobject obj, jobject context) {
-	/* get context address */
-	jclass context_class	= env->GetObjectClass(context);
-	jfieldID context_field	= env->GetFieldID(context_class, "context", "I");
-	jint contextaddress		= env->GetIntField(context, context_field);
-
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_suspendContext (JNIEnv *env, jobject obj, jint contextaddress) {
 	alcSuspendContext((ALCcontext*) contextaddress);
 }
 
@@ -317,12 +279,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_suspendContext (JNIEnv *env, jo
  * C Specification:
  * void alcDestroyContext(ALCcontext *context);
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_destroyContext (JNIEnv *env, jobject obj, jobject context) {
-	/* get context address */
-	jclass context_class	= env->GetObjectClass(context);
-	jfieldID context_field	= env->GetFieldID(context_class, "context", "I");
-	jint contextaddress		= env->GetIntField(context, context_field);
-
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_destroyContext (JNIEnv *env, jobject obj, jint contextaddress) {
 	alcDestroyContext((ALCcontext*) contextaddress);
 }
 
@@ -332,12 +289,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_destroyContext (JNIEnv *env, jo
  * C Specification:
  * ALCenum alcGetError(ALCdevice *device);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getError (JNIEnv *env, jobject obj, jobject device) {
-	/* get device address */
-	jclass device_class		= env->GetObjectClass(device);
-	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(device, device_field);
-
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nGetError (JNIEnv *env, jobject obj, jint deviceaddress) {
 	jint result = alcGetError((ALCdevice*) deviceaddress);
 	CHECK_ALC_ERROR
 	return result;
@@ -349,12 +301,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getError (JNIEnv *env, jobject 
  * C Specification:
  * ALboolean alcIsExtensionPresent(ALCdevice *device, ALubyte *extName);
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_isExtensionPresent (JNIEnv *env, jobject obj, jobject device, jstring extName) {
-	/* get device address */
-	jclass device_class		= env->GetObjectClass(device);
-	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(device, device_field);
-	
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nIsExtensionPresent (JNIEnv *env, jobject obj, jint deviceaddress, jstring extName) {
 	/* get extension */
 	ALubyte* functionname = (ALubyte*) (env->GetStringUTFChars(extName, 0));
 	
@@ -372,12 +319,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_isExtensionPresent (JNIEnv 
  * C Specification:
  * ALenum alcGetEnumValue(ALCdevice *device, ALubyte *enumName);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_getEnumValue (JNIEnv *env, jobject obj, jobject device, jstring enumName) {
-	/* get device address */
-	jclass device_class		= env->GetObjectClass(device);
-	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(device, device_field);
-	
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_ALC_nGetEnumValue (JNIEnv *env, jobject obj, jint deviceaddress, jstring enumName) {	
 	/* get extension */
 	ALubyte* enumerationname = (ALubyte*) (env->GetStringUTFChars(enumName, 0));
 	

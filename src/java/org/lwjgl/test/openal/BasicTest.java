@@ -33,8 +33,6 @@ package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCcontext;
-import org.lwjgl.openal.ALCdevice;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -53,30 +51,16 @@ public abstract class BasicTest {
     /** OpenAL instance */
     protected AL al;
     
-    /** OpenAL Context instance */
+    /** OpenALC instance */
     protected ALC alc;
-       
-    /** OpenAL context */
-    protected ALCcontext context;
-    
-    /** OpenAL device */
-    protected ALCdevice device;   
-    
+        
     /**
      * Creates an instance of PlayTest
      */
     public BasicTest() {
-        al      = new AL();
+        al      = new AL(null, 44100, 40, false);
         try {
             al.create();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }        
-        
-        alc     = new ALC();
-        try {
-            alc.create();
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -84,48 +68,10 @@ public abstract class BasicTest {
     }
     
     /**
-     * Initializes OpenAL
-     */
-    protected void alInitialize() {
-        
-        //get default device
-        device = alc.openDevice(null);
-        if(device == null) {
-            throw new RuntimeException("Error creating device");
-        }
-        
-        //create context (no attributes specified)
-        context = alc.createContext(device, 0);
-        if(context == null) {
-            throw new RuntimeException("Error creating context");
-        }
-        
-        //make context current
-        alc.makeContextCurrent(context);
-        if(alc.getError(device) != ALC.NO_ERROR) {
-            throw new RuntimeException("An error occurred while making context current");
-        }
-    }
-    
-    /**
      * Shutdowns OpenAL
      */
     protected void alExit() {
-        
-      //Get active context
-      context = alc.getCurrentContext();
-      
-      //Get device for active context
-      device = alc.getContextsDevice(context);
-      
-      //Disable context
-      alc.makeContextCurrent(null);
-      
-      //Release context(s)
-      alc.destroyContext(context);
-      
-      //Close device
-      alc.closeDevice(device);
+      al.destroy();
     }
     
     /**

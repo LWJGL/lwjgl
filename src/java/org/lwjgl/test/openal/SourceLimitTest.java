@@ -70,9 +70,6 @@ public class SourceLimitTest extends BasicTest {
 			}
 		}
 
-		//initialize AL
-		alInitialize();
-    
     System.out.print("Creating " + sourcesToCreate + " in one go...");
     CreateAllSources();
     

@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -29,7 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal;
+package org.lwjgl.openal;
+
+import org.lwjgl.Sys;
 
 /**
  * $Id$
@@ -40,10 +42,69 @@
  * @version $Revision$
  */
 public class AL extends CoreAL {
+  
+  /** ALC instance. */
+  protected ALC alc;
+
+  /** ALCdevice instance. */
+  protected ALCdevice device;
+
+  /** Current ALCcontext. */
+  protected ALCcontext context;
+  
+  /** 
+   * String that requests a certain device or device configuration. 
+   * If null is specified, the implementation will provide an 
+   * implementation specific default. */
+  protected String deviceArguments;
+  
+  /** Frequency for mixing output buffer, in units of Hz. */
+  protected int contextFrequency;
+  
+  /** Refresh intervalls, in units of Hz. */
+  protected int contextRefresh;
+  
+  /** Flag, indicating a synchronous context. */
+  protected int contextSynchronized;
+
+	/**
+   * Creates an OpenAL instance
+   * 
+   * @param deviceArguments Arguments supplied to native device
+   * @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
+   * @param contextRefresh Refresh intervalls, in units of Hz.
+   * @param contextSynchronized Flag, indicating a synchronous context.* 
+	 */
+	public AL(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized) {
+    this.deviceArguments = deviceArguments;
+    this.contextFrequency = contextFrequency;
+    this.contextRefresh = contextRefresh;
+    this.contextSynchronized = contextSynchronized ? ALC.TRUE : ALC.FALSE;
+	}
+  
+  
+  /**
+	 * @see org.lwjgl.openal.BaseAL#create()
+	 */
+	public void create() throws OpenALException {
+		super.create();
     
-    /**
-     * Nothing to se here - please move along
-     */
-    public AL() {
-    }
+    alc = new ALC(this);
+    alc.create();
+    
+    device = alc.openDevice(deviceArguments);
+    
+    context = alc.createContext(device.device, 
+                Sys.getDirectBufferAddress(
+                  ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized)));
+                  
+    alc.makeContextCurrent(context.context);     
+	}
+  
+  /**
+   * Retrieves the AL Context class 
+   */
+  public ALC getALC() {
+    return alc;
+  }
 }

@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
+ * * Neither the name of 'Lightweight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
  * 
@@ -29,7 +29,10 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal;
+package org.lwjgl.openal;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * $Id$
@@ -39,7 +42,7 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class ALCcontext {
+class ALCcontext {
     
     /** address of actual context */
     public final int context;
@@ -51,5 +54,19 @@ public class ALCcontext {
      */
     public ALCcontext(int context) {
         this.context = context;
-    }    
+    }
+    
+    public static ByteBuffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
+      ByteBuffer attribList = ByteBuffer.allocateDirect(7*4).order(ByteOrder.nativeOrder());
+      
+      attribList.putInt(ALC.FREQUENCY);
+      attribList.putInt(contextFrequency);
+      attribList.putInt(ALC.REFRESH);
+      attribList.putInt(contextRefresh);
+      attribList.putInt(ALC.SYNC);
+      attribList.putInt(contextSynchronized);
+      attribList.putInt(0); //terminating int
+      
+      return attribList;
+    }
 }

@@ -32,8 +32,6 @@
 package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCcontext;
-import org.lwjgl.openal.ALCdevice;
 import org.lwjgl.Sys;
 
 import java.nio.IntBuffer;
@@ -47,102 +45,73 @@ import java.nio.IntBuffer;
  * @version $Revision$
  */
 public class ALCTest extends BasicTest {
-    
-    /**
-     * Creates an instance of ALCTest
-     */
-    public ALCTest() {
-        super();
-    }
-    
-    /**
-     * Runs the actual test, using supplied arguments
-     */
-    protected void execute(String[] args) {
-        //error stuff
-        int lastError = ALC.NO_ERROR;
-        
-        //create a device
-        device = alc.openDevice(null);
-        if(device == null) {
-            System.out.println("Unable to create device");
-            System.exit(-1);
-        }
-        
-        //create attribute list for context creation
-        IntBuffer buffer = createIntBuffer(7);
-        buffer.put(ALC.FREQUENCY);
-        buffer.put(44100);
-        buffer.put(ALC.REFRESH);
-        buffer.put(15);
-        buffer.put(ALC.SYNC);
-        buffer.put(ALC.FALSE);
-        buffer.put(0); //terminating int
-        
-        //create a context, using above attributes
-        context = alc.createContext(device, Sys.getDirectBufferAddress(buffer));
-        if(context == null) {
-            System.out.println("Unable to create context");
-            System.exit(-1);
-        }
-        
-        if((lastError = alc.getError(device)) != ALC.NO_ERROR) {
-            System.out.println("ALC Error: " + alc.getString(device, lastError));
-            System.exit(-1);
-        }
-        
-        //make current
-        alc.makeContextCurrent(context);
-        
-        //process
-        alc.processContext(context);
 
-        //suspend
-       // alc.suspendContext(context);
-        
-        //query        
-        System.out.println("DEFAULT_DEVICE_SPECIFIER: " + alc.getString(device, ALC.DEFAULT_DEVICE_SPECIFIER));
-        System.out.println("DEVICE_SPECIFIER: " + alc.getString(device, ALC.DEVICE_SPECIFIER));
-        System.out.println("EXTENSIONS: " + alc.getString(device, ALC.EXTENSIONS));
-        
-        //mo query
-        buffer.rewind();
-        alc.getIntegerv(device, ALC.MAJOR_VERSION, 4, Sys.getDirectBufferAddress(buffer));
-        alc.getIntegerv(device, ALC.MINOR_VERSION, 4, Sys.getDirectBufferAddress(buffer)+4);
+	/** instance of alc */
+	private ALC alc;
 
-        System.out.println("ALC_MAJOR_VERSION: " + buffer.get(0));
-        System.out.println("ALC_MINOR_VERSION: " + buffer.get(1));
-        
-        //no check for ALC_ALL_ATTRIBUTES / ALC_ATTRIBUTES_SIZE since it 
-        //is buggy on win32 - my dev platform
+	/**
+	 * Creates an instance of ALCTest
+	 */
+	public ALCTest() {
+		super();
+    alc = al.getALC();
+	}
 
-        //check current context
-        ALCcontext currentContext = alc.getCurrentContext();
-        if(context.context != currentContext.context) {
-            System.out.println("Serious error! - context copy != current context");
-            System.exit(-1);
-        } 
+	/**
+	 * Runs the actual test, using supplied arguments
+	 */
+	protected void execute(String[] args) {
+		//error stuff
+		int lastError = ALC.NO_ERROR;
 
-        //check contexts device
-        ALCdevice currentDevice = alc.getContextsDevice(context);
-        if(device.device != currentDevice.device) {
-            System.out.println("Serious error! - device copy != current contexts device");
-            System.exit(-1);
-        }
-        
-        //get an enumerstion value
-        System.out.println("Value of ALC_MAJOR_VERSION: " + alc.getEnumValue(device, "ALC_MAJOR_VERSION"));
-        
-        alExit();
-    }
-    
-    /**
-     * main entry point
-     *
-     * @param args String array containing arguments
-     */
-    public static void main(String[] args) {
-        ALCTest alcTest = new ALCTest();
-        alcTest.execute(args);
-    }
+		//create attribute list for context creation
+		IntBuffer buffer = createIntBuffer(7);
+
+		if ((lastError = alc.getError()) != ALC.NO_ERROR) {
+			System.out.println("ALC Error: " + alc.getString(lastError));
+			System.exit(-1);
+		}
+
+		//query        
+		System.out.println(
+			"DEFAULT_DEVICE_SPECIFIER: "
+				+ alc.getString(ALC.DEFAULT_DEVICE_SPECIFIER));
+		System.out.println(
+			"DEVICE_SPECIFIER: " + alc.getString(ALC.DEVICE_SPECIFIER));
+		System.out.println("EXTENSIONS: " + alc.getString(ALC.EXTENSIONS));
+
+		//mo query
+		buffer.rewind();
+		alc.getIntegerv(
+			ALC.MAJOR_VERSION,
+			4,
+			Sys.getDirectBufferAddress(buffer));
+		alc.getIntegerv(
+			ALC.MINOR_VERSION,
+			4,
+			Sys.getDirectBufferAddress(buffer) + 4);
+
+		System.out.println("ALC_MAJOR_VERSION: " + buffer.get(0));
+		System.out.println("ALC_MINOR_VERSION: " + buffer.get(1));
+
+		//no check for ALC_ALL_ATTRIBUTES / ALC_ATTRIBUTES_SIZE since it 
+		//is buggy on win32 - my dev platform
+
+		//get an enumerstion value
+		System.out.println(
+			"Value of ALC_MAJOR_VERSION: "
+				+ alc.getEnumValue("ALC_MAJOR_VERSION"));
+
+		alExit();
+	}
+
+	/**
+	 * main entry point
+	 *
+	 * @param args String array containing arguments
+	 */
+	public static void main(String[] args) {
+		ALCTest alcTest = new ALCTest();
+		alcTest.execute(args);
+	}
 }

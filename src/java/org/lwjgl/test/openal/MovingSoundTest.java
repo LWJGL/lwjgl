@@ -83,10 +83,6 @@ public class MovingSoundTest extends BasicTest {
     IntBuffer Env = null;
     EAXBufferProperties eaxBufferProp = null;
     
-
-		//initialize AL, using ALC
-		alInitialize();
-    
     //initialize keyboard
     try {
       Keyboard.create();

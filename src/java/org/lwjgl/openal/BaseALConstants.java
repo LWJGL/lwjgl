@@ -81,7 +81,7 @@ public interface BaseALConstants {
 
 	/**
 	 * Specify the pitch to be applied, either at source,
-	 *  or on mixer results, at listener.
+	 * or on mixer results, at listener.
 	 * Range:	 [0.5-2.0]
 	 * Default:  1.0
 	 */
@@ -90,11 +90,11 @@ public interface BaseALConstants {
 	/**
 	 * Specify the current location in three dimensional space.
 	 * OpenAL, like OpenGL, uses a right handed coordinate system,
-	 *  where in a frontal default view X (thumb) points right,
-	 *  Y points up (index finger), and Z points towards the
-	 *  viewer/camera (middle finger).
+	 * where in a frontal default view X (thumb) points right,
+	 * Y points up (index finger), and Z points towards the
+	 * viewer/camera (middle finger).
 	 * To switch from a left handed coordinate system, flip the
-	 *  sign on the Z coordinate.
+	 * sign on the Z coordinate.
 	 * Listener position is always in the world coordinate system.
 	 */
 	public static final int POSITION = 0x1004;
@@ -128,8 +128,8 @@ public interface BaseALConstants {
 	 * Each division by 2 equals an attenuation of -6dB.
 	 * Each multiplicaton with 2 equals an amplification of +6dB.
 	 * A value of 0.0 is meaningless with respect to a logarithmic
-	 *  scale; it is interpreted as zero volume - the channel
-	 *  is effectively disabled.
+	 * scale; it is interpreted as zero volume - the channel
+	 * is effectively disabled.
 	 */
 	public static final int GAIN = 0x100A;
 
@@ -179,8 +179,8 @@ public interface BaseALConstants {
 	 * Each division by 2 equals an attenuation of -6dB.
 	 * Each multiplicaton with 2 equals an amplification of +6dB.
 	 * A value of 0.0 is meaningless with respect to a logarithmic
-	 *  scale; it is interpreted as zero volume - the channel
-	 *  is effectively disabled.
+	 * scale; it is interpreted as zero volume - the channel
+	 * is effectively disabled.
 	 */
 	public static final int CONE_OUTER_GAIN = 0x1022;
 
@@ -234,40 +234,40 @@ public interface BaseALConstants {
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
 	 * This is the number of samples per second. Half of the
-	 *  sample frequency marks the maximum significant
-	 *  frequency component.
+	 * sample frequency marks the maximum significant
+	 * frequency component.
 	 */
 	public static final int FREQUENCY = 0x2001;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
 	 * This is the number of samples per second. Half of the
-	 *  sample frequency marks the maximum significant
-	 *  frequency component.
+	 * sample frequency marks the maximum significant
+	 * frequency component.
 	 */
 	public static final int BITS = 0x2002;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
 	 * This is the number of samples per second. Half of the
-	 *  sample frequency marks the maximum significant
-	 *  frequency component.
+	 * sample frequency marks the maximum significant
+	 * frequency component.
 	 */
 	public static final int CHANNELS = 0x2003;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
 	 * This is the number of samples per second. Half of the
-	 *  sample frequency marks the maximum significant
-	 *  frequency component.
+	 * sample frequency marks the maximum significant
+	 * frequency component.
 	 */
 	public static final int SIZE = 0x2004;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
 	 * This is the number of samples per second. Half of the
-	 *  sample frequency marks the maximum significant
-	 *  frequency component.
+	 * sample frequency marks the maximum significant
+	 * frequency component.
 	 */
 	public static final int DATA = 0x2005;
 
@@ -295,14 +295,10 @@ public interface BaseALConstants {
 	/** Errors: No Error. */
 	public static final int NO_ERROR = FALSE;
 
-	/**
-	 * Illegal name passed as an argument to an AL call.
-	 */
+	/** Illegal name passed as an argument to an AL call. */
 	public static final int INVALID_NAME = 0xA001;
 
-	/**
-	 * Illegal enum passed as an argument to an AL call.
-	 */
+	/** Illegal enum passed as an argument to an AL call. */
 	public static final int INVALID_ENUM = 0xA002;
 
 	/**
@@ -337,19 +333,13 @@ public interface BaseALConstants {
 	/** Context strings: Extensions */
 	public static final int EXTENSIONS = 0xB004;
 
-	/**
-	 * Doppler scale.  Default 1.0
-	 */
+	/** Doppler scale.  Default 1.0 */
 	public static final int DOPPLER_FACTOR = 0xC000;
 
-	/**
-	 * Doppler velocity.  Default 1.0
-	 */
+	/** Doppler velocity.  Default 1.0 */
 	public static final int DOPPLER_VELOCITY = 0xC001;
 
-	/**
-	 * Distance model.  Default INVERSE_DISTANCE_CLAMPED
-	 */
+	/** Distance model.  Default INVERSE_DISTANCE_CLAMPED */
 	public static final int DISTANCE_MODEL = 0xD000;
 
 	/** Distance model */

@@ -64,10 +64,7 @@ public class PlayTest extends BasicTest {
         }        
         
         int lastError;
-        
-        //initialize AL, using ALC
-        alInitialize();
-        
+
         //create 1 buffer and 1 source
         IntBuffer buffers = createIntBuffer(1);
         IntBuffer sources = createIntBuffer(1);

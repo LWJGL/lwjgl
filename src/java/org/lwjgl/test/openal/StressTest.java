@@ -63,8 +63,6 @@ public class StressTest extends BasicTest {
    */
   protected void execute(String[] args) {
 
-    alInitialize();
-
     createSources();
 
     createBuffers();
@@ -134,7 +132,7 @@ public class StressTest extends BasicTest {
     al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));
     al.sourcePlay(sources.get(0));
 
-    while (System.currentTimeMillis() - startTime < (60000 * 60)) {
+    while (System.currentTimeMillis() - startTime < (2000)) {
 
       randomBuffer = getRandomBuffer();
       System.out.println("random:" + randomBuffer);
@@ -175,6 +173,12 @@ public class StressTest extends BasicTest {
         System.out.println("========================");
       }
     }
+    
+    //stop all sources
+    for (int i = 0; i < 4; i++) {
+      al.sourceStop(sources.get(i));
+      System.out.println("Stopping source " + (i+1));
+    }    
 
     //test done - ask for user input
     try {
@@ -188,10 +192,6 @@ public class StressTest extends BasicTest {
     } catch (Exception e) {
     }
 
-    //stop all sources
-    for (int i = 0; i < 4; i++) {
-      al.sourceStop(sources.get(i));
-    }
     al.deleteSources(4, Sys.getDirectBufferAddress(sources));
     al.deleteBuffers(10, Sys.getDirectBufferAddress(buffers));
   }

@@ -33,8 +33,6 @@ package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCcontext;
-import org.lwjgl.openal.ALCdevice;
 import org.lwjgl.openal.eax.EAX;
 import org.lwjgl.openal.eax.EAXBufferProperties;
 import org.lwjgl.openal.eax.EAXListenerProperties;
@@ -280,8 +278,6 @@ public class ALTest extends BasicTest {
         String szFnName;
         int	ch = -1;
         int error;
-        ALCcontext context;
-        ALCdevice device;
         
         FloatBuffer listenerPos = createFloatBuffer(3);
         listenerPos.put(new float[] {0.0f, 0.0f, 0.0f});
@@ -296,17 +292,6 @@ public class ALTest extends BasicTest {
         System.out.print("=======================\n\n");
         
         // Initialize Open AL manually
-        //Open device
-        device = alc.openDevice(null);
-	if (device == null) {
-		System.out.println("Could not create ALC device");
-		System.exit(-1);
-	}
-        //Create context(s)
-        context = alc.createContext(device, 0);
-        //Set active context
-        alc.makeContextCurrent(context);
-        
         // Clear Error Code
         al.getError();
         
@@ -518,16 +503,16 @@ public class ALTest extends BasicTest {
             System.out.print("\nQ to quit\n\n\n");
             
             try {
-                ch = System.in.read();
+                ch = Character.toLowerCase((char) System.in.read());
                 eatInput();
             } catch (IOException ioe) {
             }
             
             switch (ch) {
-                case 'A':
+                case 'a':
                     fullAutoTests();
                     break;
-                case 'B':
+                case 'b':
                     semiAutoTests();
                     break;
                 case '1':
@@ -567,7 +552,7 @@ public class ALTest extends BasicTest {
                 default:
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
     }
     
     protected void fullAutoTests() {
@@ -963,7 +948,7 @@ public class ALTest extends BasicTest {
         
         while (true) {
             ch = CRToContinue();
-            if ((ch == 'S') || (ch == 's')) {
+            if (ch == 's') {
                 return 0;
             }
             if (ch == 10) {
@@ -976,7 +961,7 @@ public class ALTest extends BasicTest {
         int current = -1;
         try {
             //read one, and eat the rest
-            current = System.in.read();
+            current = Character.toLowerCase((char) System.in.read());
             eatInput();
         } catch (Exception e) {
         }
@@ -1004,11 +989,7 @@ public class ALTest extends BasicTest {
             
             String tempString;
             
-            ALCcontext pContext;
-            ALCdevice pDevice;
-            pContext = alc.getCurrentContext();
-            pDevice = alc.getContextsDevice(pContext);
-            tempString = alc.getString(pDevice, ALC.DEVICE_SPECIFIER);
+            tempString = alc.getString(ALC.DEVICE_SPECIFIER);
             System.out.print("OpenAL Context Device Specifier is '" + tempString + "'\n");
             tempString = al.getString(AL.RENDERER);
             System.out.print("OpenAL Renderer is '" + tempString + "'\n");
@@ -1869,7 +1850,7 @@ public class ALTest extends BasicTest {
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             
@@ -1895,7 +1876,7 @@ public class ALTest extends BasicTest {
                         displayALError("alSourceStop source 1 : ", error);
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // Release resources
         al.sourceStopv(2, Sys.getDirectBufferAddress(source));
@@ -2006,7 +1987,7 @@ public class ALTest extends BasicTest {
         System.out.print("\nSource 0 : Not looping Source 1 : Not looping\n");
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             
@@ -2056,7 +2037,7 @@ public class ALTest extends BasicTest {
                     al.sourcei(source.get(1), AL.LOOPING, bLooping1);
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         System.out.print("\n");
         
@@ -2171,12 +2152,12 @@ public class ALTest extends BasicTest {
         System.out.print("Press '8' to remove occlusion from source 0 (DEFERRED)\n");
         System.out.print("Press '9' to obstruct source 1 (IMMEDIATE)\n");
         System.out.print("Press '0' to remove obstruction from source 1 (IMMEDIATE)\n");
-        System.out.print("Press 'c' to COMMIT EAX settings\n");
-        System.out.print("Press 'q' to quit\n\n");
+        System.out.print("Press 'C' to COMMIT EAX settings\n");
+        System.out.print("Press 'Q' to quit\n\n");
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             switch (ch) {
@@ -2244,7 +2225,7 @@ public class ALTest extends BasicTest {
                         displayALError("eaxSet EAXBUFFER_OBSTRUCTION : \n", error);
                     break;
                     
-                case 'C':
+                case 'c':
                     // Commit settings on source 0
                     eax.eaxSet(EAX.BUFFER_GUID, EAXBufferProperties.COMMITDEFERREDSETTINGS,
                     	source.get(0), 0, 0);
@@ -2258,7 +2239,7 @@ public class ALTest extends BasicTest {
                         displayALError("eaxSet EAXLISTENER_COMMITDEFERREDSETTINGSENVIRONMENT : \n", error);
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // reset EAX level
         Room.put(0, -10000);
@@ -2363,7 +2344,7 @@ public class ALTest extends BasicTest {
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             switch (ch) {
@@ -2423,7 +2404,7 @@ public class ALTest extends BasicTest {
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 (buffer 0) : ", error);
                 break;
-            case 'A':
+            case 'a':
                 // Unqueue first Buffer
                 al.sourceUnqueueBuffers(source.get(0), 1, Sys.getDirectBufferAddress(buffersremoved));
                           
@@ -2446,7 +2427,7 @@ public class ALTest extends BasicTest {
                     System.out.print("\nRemoved Buffer " + buffersremoved.get(0) + " from queue\n");
                 }
                 break;
-            case 'B':
+            case 'b':
                 // Unqueue first 2 Buffers
                 al.sourceUnqueueBuffers(source.get(0), 2, Sys.getDirectBufferAddress(buffersremoved));
                           
@@ -2472,7 +2453,7 @@ public class ALTest extends BasicTest {
                     System.out.print("\nRemoved Buffers " + buffersremoved.get(0) + " and " + buffersremoved.get(1) + " from queue\n");
                 }
                 break;
-            case 'C':
+            case 'c':
                 // Unqueue first 3 Buffers
                 al.sourceUnqueueBuffers(source.get(0), 3, Sys.getDirectBufferAddress(buffersremoved));
                 if ((error = al.getError()) != AL.NO_ERROR)
@@ -2499,7 +2480,7 @@ public class ALTest extends BasicTest {
                                      buffersremoved.get(2) +" from queue\n");
                 }
                 break;
-            case 'D':
+            case 'd':
                 // Unqueue first 4 Buffers
                 al.sourceUnqueueBuffers(source.get(0), 4, Sys.getDirectBufferAddress(buffersremoved));
                           
@@ -2529,7 +2510,7 @@ public class ALTest extends BasicTest {
                                      " from queue\n");
                 }
                 break;
-            case 'E':
+            case 'e':
                 // Unqueue first 5 Buffers
                 al.sourceUnqueueBuffers(source.get(0), 5, Sys.getDirectBufferAddress(buffersremoved));
                           
@@ -2560,7 +2541,7 @@ public class ALTest extends BasicTest {
                                      " from queue\n");
                 }
                 break;
-            case 'F':
+            case 'f':
                 al.sourcei(source.get(0), AL.BUFFER, 0);
                 if ((error = al.getError()) != AL.NO_ERROR)
                     displayALError("alSource AL_BUFFER NULL : ", error);
@@ -2593,7 +2574,7 @@ public class ALTest extends BasicTest {
                 BuffersInQueue.clear();                          
                 break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // Release resources
         al.sourceStop(source.get(0));
@@ -2650,7 +2631,7 @@ public class ALTest extends BasicTest {
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             
@@ -2690,7 +2671,7 @@ public class ALTest extends BasicTest {
                         displayALError("alSourceStop 0 : ", error);
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // Release resources
         al.sourceStopv(1, Sys.getDirectBufferAddress(source));
@@ -2751,7 +2732,7 @@ public class ALTest extends BasicTest {
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             
@@ -2773,7 +2754,7 @@ public class ALTest extends BasicTest {
                         displayALError("alSourcef source 0 AL PITCH 0.5: ", error);
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // Release resources
         al.sourceStopv(1, Sys.getDirectBufferAddress(source));
@@ -2824,7 +2805,7 @@ public class ALTest extends BasicTest {
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             
@@ -2964,7 +2945,7 @@ public class ALTest extends BasicTest {
              
                 break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // Release resources
         al.sourceStop(source.get(0));
@@ -3066,7 +3047,7 @@ public class ALTest extends BasicTest {
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             
@@ -3111,28 +3092,28 @@ public class ALTest extends BasicTest {
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alSourcef 0 AL_GAIN 0.0 : \n", error);
                     break;
-                case 'A':
+                case 'a':
                     al.listenerf(AL.GAIN,1.0f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alListenerf AL_GAIN 1.0 : \n", error);
                     break;
-                case 'B':
+                case 'b':
                     al.listenerf(AL.GAIN,0.5f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alListenerf AL_GAIN 0.5 : \n", error);
                     break;
-                case 'C':
+                case 'c':
                     al.listenerf(AL.GAIN,0.25f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alListenerf AL_GAIN 0.25 : \n", error);
                     break;
-                case 'D':
+                case 'd':
                     al.listenerf(AL.GAIN,0.0f);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("alListenerf AL_GAIN 0.0 : \n", error);
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // Reset & Release resources
         al.listenerf(AL.GAIN,1.0f);
@@ -3207,7 +3188,7 @@ public class ALTest extends BasicTest {
         
         do {
             try {
-                ch = System.in.read();
+              ch = Character.toLowerCase((char) System.in.read());
             } catch (IOException ioe) {
             }
             switch (ch) {
@@ -3227,7 +3208,7 @@ public class ALTest extends BasicTest {
                         displayALError("alSourceStopv : ", error);
                     break;
             }
-        } while (ch != 'Q');
+        } while (ch != 'q');
         
         // Delete the Sources
         al.deleteSources(numSources, Sys.getDirectBufferAddress(Sources));

@@ -54,8 +54,6 @@ public class EAXTest extends BasicTest {
      * Runs the actual test, using supplied arguments
      */
     protected void execute(String[] args) {
-        alInitialize();
-        
         EAX eax = new EAX();
         try {
             eax.create();
