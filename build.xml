@@ -1,12 +1,13 @@
-<project name="LWJGL" default="compile" basedir=".">
+<project name="LWJGL" default="compile_java" basedir=".">
 
 	<!-- ================================================================== -->
 	<!-- Global properties for build 										-->
 	<!-- ================================================================== -->	
-	<property name="lwjgl.src.headers"    value="${lwjgl.src}/native/common"/>
 	<property name="lwjgl.src"            value="./src"/>
+	<property name="lwjgl.src.headers"    value="${lwjgl.src}/native/common"/>
+	<property name="lwjgl.src.native"     value="./src/native"/>
 	<property name="lwjgl.bin"            value="./bin"/>
-	<property name="lwjgl.lib"            value="./lib"/>
+	<property name="lwjgl.lib"            value="./libs"/>
 	<property name="lwjgl.dist"           value="./dist"/>
 	<property name="lwjgl.docs"           value="./doc"/>
 	<property name="lwjgl.temp"           value="./temp"/>
@@ -53,7 +54,7 @@
 	</patternset>  
   
 	<!-- Files to include in linux, glibc2.3 package -->
-	<patternset id="lwjgl-linux-glibc2.3.fileset">
+	<patternset id="lwjgl-linux.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="liblwjgl.so"/>
 		<include name="liblwjgl_d.so"/>
@@ -128,11 +129,11 @@
 
 	<!-- Cleans up any files created during the execution of this script -->
 	<target name="clean" description="Cleans the diectories controlled by this ant script (temp, dist, lib, javadoc, class files in bin)">
-		<delete dir="${lwjgl.temp}" quiet="true" taskname="cleaning temp folder"/>
-		<delete dir="${lwjgl.dist}" quiet="true" taskname="cleaning dist folder"/>
-		<delete dir="${lwjgl.docs}/javadoc" quiet="true" taskname="cleaning javadoc folder"/>
-		<delete dir="${lwjgl.bin}/org" quiet="true" taskname="cleaning bin folder"/>    
-		<delete taskname="cleaning bin folder">
+		<delete dir="${lwjgl.temp}" quiet="true" failonerror="false" taskname="cleaning temp folder"/>
+		<delete dir="${lwjgl.dist}" quiet="true" failonerror="false" taskname="cleaning dist folder"/>
+		<delete dir="${lwjgl.docs}/javadoc" quiet="true" failonerror="false" taskname="cleaning javadoc folder"/>
+		<delete dir="${lwjgl.bin}/org" quiet="true" failonerror="false" taskname="cleaning bin folder"/>    
+		<delete taskname="cleaning bin folder" failonerror="false">
 		  <fileset dir="${lwjgl.bin}" includes="*.class"/>
 		</delete>
 	</target>
@@ -180,13 +181,37 @@
 	<!-- Compiles LWJGL on Linux platforms  -->
 	<target name="compile_native_linux" description="Compiles LWJGL on Linux platforms" if="lwjgl.platform.linux">
 		<echo>Compiling Linux LWJGL version</echo>
-		<apply executable="make"/>
+		<apply executable="sh" dir="${lwjgl.src.native}">
+		  <fileset dir="${lwjgl.src.native}">
+		    <include name="build.sh"/>
+		  </fileset>
+		</apply>
+		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl.so"/>
+
+		<apply executable="sh" dir="${lwjgl.src.native}">
+		  <fileset dir="${lwjgl.src.native}">
+		    <include name="build_debug.sh"/>
+		  </fileset>
+		</apply>
+		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl_d.so"/>
 	</target>	
 	
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
 	<target name="compile_native_mac" description="Compiles LWJGL on Mac OS X platforms" if="lwjgl.platform.mac">
 		<echo>Compiling Mac OS X LWJGL version</echo>
-		<apply executable="make"/>
+    <apply executable="sh" dir="${lwjgl.src.native}">
+		  <fileset dir="${lwjgl.src.native}">
+		    <include name="build.sh"/>
+		  </fileset>
+		</apply>
+		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl.jnilib"/>
+
+		<apply executable="sh" dir="${lwjgl.src.native}">
+		  <fileset dir="${lwjgl.src.native}">
+		    <include name="build_debug.sh"/>
+		  </fileset>
+		</apply>
+		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl_d.jnilib"/>
 	</target>	
   	
   	<!-- Packages the files -->
@@ -226,7 +251,7 @@
 		<available file="LWJGL/build.xml" property="lwjgl.preexistingfiles"/>
 		<available file="${lwjgl.src}/java/org/lwjgl/Sys.java" property="lwjgl.preexistingfiles"/>
 		<fail if="lwjgl.preexistingfiles" message="Cannot perform webbuild from nonempty folder"/>
-
+		
 		<!-- checkout files and build using checked out buildfiles 'all' target -->
 		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/build.xml" dest="."/>
 		<cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/src" dest="."/>
@@ -235,11 +260,10 @@
 	</target>  
   
 	<!-- Generates the native headers from source files -->
-	<target name="headers" description="invokes javah on java classes, producing the headers needed for native compilation" depends="compile">
+	<target name="headers" description="invokes javah on java classes, producing the headers needed for native compilation" depends="compile_java">
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
 			<class name="org.lwjgl.Display"/>
 			<class name="org.lwjgl.Sys"/>
-			<class name="org.lwjgl.Window"/>
 			  
 			<class name="org.lwjgl.input.Controller"/>
 			<class name="org.lwjgl.input.Cursor"/>
@@ -261,7 +285,7 @@
 			<class name="org.lwjgl.opengl.GL"/>
 			<class name="org.lwjgl.opengl.GLU"/>
 			<class name="org.lwjgl.opengl.GLCaps"/>
-			<class name="org.lwjgl.opengl.GLWindow"/>
+			<class name="org.lwjgl.opengl.Window"/>
 			<class name="org.lwjgl.opengl.Pbuffer"/>
 		</javah>    
 	</target>
