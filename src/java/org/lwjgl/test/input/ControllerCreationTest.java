@@ -83,7 +83,7 @@ public class ControllerCreationTest {
   
   private void setupDisplay(boolean fullscreen) {
     try {
-      gl = new GL("ControllerCreationTest", 50, 50, 640, 480, 32, 0, 0, 0);
+      gl = new GL("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
       gl.create();
 
       glu = new GLU(gl);

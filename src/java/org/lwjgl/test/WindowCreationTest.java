@@ -21,7 +21,7 @@ public class WindowCreationTest {
     System.out.println("Found " + modes.length + " display modes");
     
     try {
-      gl = new GL("WindowCreationTest", 50, 50, 320, 240, 32, 0, 0, 0);
+      gl = new GL("WindowCreationTest", 50, 50, 320, 240, 16, 0, 0, 0);
     } catch (Exception e) {
 			e.printStackTrace();
 		}

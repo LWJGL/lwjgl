@@ -78,7 +78,7 @@ public class MouseTest {
   
   private void setupDisplay(boolean fullscreen) {
     try {
-      gl = new GL("MouseTest", 50, 50, 640, 480, 32, 0, 0, 0);
+      gl = new GL("MouseTest", 50, 50, 640, 480, 16, 0, 0, 0);
       gl.create();
 
       glu = new GLU(gl);
