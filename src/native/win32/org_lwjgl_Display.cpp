@@ -285,7 +285,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		windowClass.cbWndExtra = 0;
 		windowClass.hInstance = dll_handle;
 		windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		windowClass.hCursor = LoadIcon(NULL, IDC_ARROW);
+		windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 		windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		windowClass.lpszMenuName = NULL;
 		windowClass.lpszClassName = WINDOWCLASSNAME;
@@ -344,7 +344,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 
 	// And we never look at windowClass again...
 
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd, SW_SHOWNORMAL);
 	UpdateWindow(hwnd);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
@@ -360,9 +360,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 	// Hide the mouse in fullscreen
 	if (fullscreen)
 		ShowCursor(FALSE);
-	else {
-		SetCursor(LoadCursor(dll_handle, MAKEINTRESOURCE(IDC_ARROW)));
-	}
 	
 
 
