@@ -45,22 +45,34 @@
 
 #define NUM_BUTTONS 7
 
+static jfieldID fid_dx;
+static jfieldID fid_dy;
+static jfieldID fid_dwheel;
+static jfieldID fid_buttons;
+
 static unsigned char button_state[NUM_BUTTONS];
 static int last_x;
 static int last_y;
+static int wheel_dz;
 
 static pascal OSStatus doMouseDown(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 printf("Mouse down\n");
+	lock();
+	unlock();
 	return eventNotHandledErr; // allow the event to propagate
 }
 
 static pascal OSStatus doMouseUp(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 printf("Mouse up\n");
+	lock();
+	unlock();
 	return eventNotHandledErr; // allow the event to propagate
 }
 
 static pascal OSStatus doMouseWheel(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 printf("Mouse wheel\n");
+	lock();
+	unlock();
 	return noErr;
 }
 
@@ -80,6 +92,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 }
     
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass clazz) {
+	fid_dx = env->GetStaticFieldID(clazz, "dx", "I");
+	fid_dy = env->GetStaticFieldID(clazz, "dy", "I");
+	fid_dwheel = env->GetStaticFieldID(clazz, "dwheel", "I");
+	fid_buttons = env->GetStaticFieldID(clazz, "buttons", "[Z");
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps(JNIEnv *env, jclass clazz) {
@@ -97,18 +113,32 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize(JNIEnv *env,
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass clazz) {
 	last_x = 0;
 	last_y = 0;
+	wheel_dz = 0;
+	CGAssociateMouseAndMouseCursorPosition(FALSE);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass clazz) {
+	CGAssociateMouseAndMouseCursorPosition(TRUE);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
-	Point cursor_pos;
+	lock();
+	/*Point cursor_pos;
 	GetMouse(&cursor_pos);
 	int dx = cursor_pos.v - last_x;
 	int dy = cursor_pos.h - last_y;
 	last_x += dx;
-	last_y += dy;
+	last_y += dy;*/
+	CGMouseDelta dx, dy;
+	CGGetLastMouseDelta(&dx, &dy);
+	env->SetStaticIntField(clazz, fid_dx, (jint)dx);
+	env->SetStaticIntField(clazz, fid_dy, (jint)dy);
+	env->SetStaticIntField(clazz, fid_dwheel, (jint)wheel_dz);
+	jbooleanArray buttons_array = (jbooleanArray)env->GetStaticObjectField(clazz, fid_buttons);
+	env->SetBooleanArrayRegion(buttons_array, 0, NUM_BUTTONS, button_state);
+	wheel_dz = 0;
+	unlock();
+/*
 	if (dx != 0 || dy != 0)
-		printf("dx %d dy %d, lx %d ly %d\n", dx, dy, last_x, last_y);
+		printf("dx %d dy %d, lx %d ly %d\n", dx, dy, last_x, last_y);*/
 }

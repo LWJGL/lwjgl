@@ -77,14 +77,14 @@ static pascal OSStatus doMiniaturized(EventHandlerCallRef next_handler, EventRef
 	lock();
 	miniaturized = true;
 	unlock();
-	return noErr;
+	return eventNotHandledErr;
 }
 
 static pascal OSStatus doMaximize(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 	lock();
 	miniaturized = false;
 	unlock();
-	return noErr;
+	return eventNotHandledErr;
 }
 
 static pascal OSStatus doActivate(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
@@ -92,14 +92,14 @@ static pascal OSStatus doActivate(EventHandlerCallRef next_handler, EventRef eve
 	miniaturized = false;
 	activated = true;
 	unlock();
-	return noErr;
+	return eventNotHandledErr;
 }
 
 static pascal OSStatus doDeactivate(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 	lock();
 	activated = false;
 	unlock();
-	return noErr;
+	return eventNotHandledErr;
 }
 
 static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
@@ -232,6 +232,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 	}
 	ShowWindow(win_ref);
 	SelectWindow(win_ref);
+	CGPoint p = {x, y};
+	CGWarpMouseCursorPosition(p);
+	CGPostMouseEvent(p, FALSE, 1, TRUE);
+	CGPostMouseEvent(p, FALSE, 1, FALSE);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle(JNIEnv * env, jclass clazz, jstring title_obj) {
