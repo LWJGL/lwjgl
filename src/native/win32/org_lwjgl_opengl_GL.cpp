@@ -3787,8 +3787,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetCurrentReadDCARB(JNIEnv * 
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringARB(JNIEnv * env, jclass clazz, jint p0)
 {
-	jstring ret = env->NewStringUTF(wglGetExtensionsStringARB(GetDC((HWND) p0)));
-	return ret;
+	if (wglGetExtensionsStringARB)
+		return env->NewStringUTF(wglGetExtensionsStringARB(GetDC((HWND) p0)));
+	else
+		return NULL;
 }
 
 /*
