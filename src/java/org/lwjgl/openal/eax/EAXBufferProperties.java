@@ -40,7 +40,9 @@ import java.lang.reflect.*;
 /**
  * $Id$
  *
- * This class encapsultaes the EAXBUFFERPROPERTIES struct
+ * This class encapsultaes the EAXBUFFERPROPERTIES struct. Since longs 
+ * are 64 bit in Java and "typically" 32 on other platforms, we cheat by reading an
+ * int when reading a long field.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
@@ -202,8 +204,8 @@ public class EAXBufferProperties {
      *
      * @return direct path level
      */
-    public long getDirect() {
-        return eaxBufferProperties.getLong(direct_offset);
+    public int getDirect() {
+        return eaxBufferProperties.getInt(direct_offset);
     }
     
     /**
@@ -211,8 +213,8 @@ public class EAXBufferProperties {
      *
      * @param direct direct path level to set to
      */
-    public void setDirect(long direct) {
-        eaxBufferProperties.putLong(direct_offset, direct);
+    public void setDirect(int direct) {
+        eaxBufferProperties.putInt(direct_offset, direct);
     }
     
     /**
@@ -220,8 +222,8 @@ public class EAXBufferProperties {
      *
      * @return direct path level at high frequencies
      */
-    public long getDirectHF() {
-        return eaxBufferProperties.getLong(directHF_offset);
+    public int getDirectHF() {
+        return eaxBufferProperties.getInt(directHF_offset);
     }
     
     /**
@@ -229,8 +231,8 @@ public class EAXBufferProperties {
      *
      * @param direct direct path level at high frequencies to set to
      */
-    public void setDirectHF(long directHF) {
-        eaxBufferProperties.putLong(directHF_offset, directHF);
+    public void setDirectHF(int directHF) {
+        eaxBufferProperties.putInt(directHF_offset, directHF);
     }
     
     /**
@@ -238,8 +240,8 @@ public class EAXBufferProperties {
      *
      * @return room effect level
      */
-    public long getRoom() {
-        return eaxBufferProperties.getLong(room_offset);
+    public int getRoom() {
+        return eaxBufferProperties.getInt(room_offset);
     }
     
     /**
@@ -247,8 +249,8 @@ public class EAXBufferProperties {
      *
      * @param room room effect level to set to
      */
-    public void setRoom(long room) {
-        eaxBufferProperties.putLong(room_offset, room);
+    public void setRoom(int room) {
+        eaxBufferProperties.putInt(room_offset, room);
     }
     
     /**
@@ -256,8 +258,8 @@ public class EAXBufferProperties {
      *
      * @return room effect level at high frequencies
      */
-    public long getRoomHF() {
-        return eaxBufferProperties.getLong(roomHF_offset);
+    public int getRoomHF() {
+        return eaxBufferProperties.getInt(roomHF_offset);
     }
     
     /**
@@ -265,8 +267,8 @@ public class EAXBufferProperties {
      *
      * @param room room effect level at high frequencies to set to 
      */
-    public void setRoomHF(long roomHF) {
-        eaxBufferProperties.putLong(roomHF_offset, roomHF);
+    public void setRoomHF(int roomHF) {
+        eaxBufferProperties.putInt(roomHF_offset, roomHF);
     }
     
     /**
@@ -292,8 +294,8 @@ public class EAXBufferProperties {
      *
      * @return main obstruction control (attenuation at high frequencies)
      */
-    public long getObstruction() {
-        return eaxBufferProperties.getLong(obstruction_offset);
+    public int getObstruction() {
+        return eaxBufferProperties.getInt(obstruction_offset);
     }
     
     /**
@@ -301,8 +303,8 @@ public class EAXBufferProperties {
      *
      * @param obstruction main obstruction control (attenuation at high frequencies) to set to
      */
-    public void setObstruction(long obstruction) {
-        eaxBufferProperties.putLong(obstruction_offset, obstruction);
+    public void setObstruction(int obstruction) {
+        eaxBufferProperties.putInt(obstruction_offset, obstruction);
     }
     
     /**
@@ -328,8 +330,8 @@ public class EAXBufferProperties {
      *
      * @return main occlusion control (attenuation at high frequencies)
      */
-    public long getOcclusion() {
-        return eaxBufferProperties.getLong(occlusion_offset);
+    public int getOcclusion() {
+        return eaxBufferProperties.getInt(occlusion_offset);
     }
     
     /**
@@ -337,8 +339,8 @@ public class EAXBufferProperties {
      *
      * @param occlusion main occlusion control (attenuation at high frequencies) to set to
      */
-    public void setOcclusion(long occlusion) {
-        eaxBufferProperties.putLong(occlusion_offset, occlusion);
+    public void setOcclusion(int occlusion) {
+        eaxBufferProperties.putInt(occlusion_offset, occlusion);
     }
     
     /**
@@ -382,8 +384,8 @@ public class EAXBufferProperties {
      *
      * @return OutsideVolumeHF
      */
-    public long getOutsideVolumeHF() {
-        return eaxBufferProperties.getLong(outsideVolumeHF_offset);
+    public int getOutsideVolumeHF() {
+        return eaxBufferProperties.getInt(outsideVolumeHF_offset);
     }
     
     /**
@@ -391,8 +393,8 @@ public class EAXBufferProperties {
      *
      * @param outsideVolumeHF OutsideVolumeHF to set to
      */
-    public void setOutsideVolumeHF(long outsideVolumeHF) {
-        eaxBufferProperties.putLong(outsideVolumeHF_offset, outsideVolumeHF);
+    public void setOutsideVolumeHF(int outsideVolumeHF) {
+        eaxBufferProperties.putInt(outsideVolumeHF_offset, outsideVolumeHF);
     }
     
     /**
@@ -418,8 +420,8 @@ public class EAXBufferProperties {
      *
      * @return modifier for behavior of properties
      */
-    public long getFlags() {
-        return eaxBufferProperties.getLong(flags_offset);
+    public int getFlags() {
+        return eaxBufferProperties.getInt(flags_offset);
     }
     
     /**
@@ -427,8 +429,8 @@ public class EAXBufferProperties {
      *
      * @param flags modifier for behavior of properties to set to
      */
-    public void setFlags(long flags) {
-        eaxBufferProperties.putLong(flags_offset, flags);
+    public void setFlags(int flags) {
+        eaxBufferProperties.putInt(flags_offset, flags);
     }
     
     /**
