@@ -9,15 +9,15 @@ extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: currentContext */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024BaseGL */
 /* Inaccessible static: WGL_ARB_buffer_region */
 /* Inaccessible static: WGL_ARB_extensions_string */
 /* Inaccessible static: WGL_ARB_pbuffer */
 /* Inaccessible static: WGL_ARB_pixel_format */
 /* Inaccessible static: WGL_ARB_render_texture */
 /* Inaccessible static: WGL_EXT_extensions_string */
-/* Inaccessible static: class_000240 */
-/* Inaccessible static: class_000241 */
+/* Inaccessible static: WGL_EXT_swap_control */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL */
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    activeStencilFaceEXT
@@ -3036,6 +3036,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightusvARB
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    glXAllocateMemoryNV
+ * Signature: (IFFF)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_glXAllocateMemoryNV
+  (JNIEnv *, jclass, jint, jfloat, jfloat, jfloat);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    glXFreeMemoryNV
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glXFreeMemoryNV
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    wglAllocateMemoryNV
  * Signature: (IFFF)I
  */
@@ -3357,7 +3373,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_writeMaskEXT
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    checkWGLExtensionsString
- * Signature: ()Z
+ * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_checkWGLExtensionsString
   (JNIEnv *, jclass);

@@ -3698,6 +3698,29 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightusvARB(JNIEnv * env, jobje
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    glXAllocateMemoryNV
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_glXAllocateMemoryNV(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jfloat p3)
+{
+#ifdef _X11
+	jint ret = (jint) glXAllocateMemoryNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	return ret;
+#endif
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    wglFreeMemoryNV
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glXFreeMemoryNV(JNIEnv * env, jclass clazz, jint p0)
+{
+#ifdef _X11
+	glXFreeMemoryNV((void *) p0);
+#endif
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    wglAllocateMemoryNV
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglAllocateMemoryNV(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jfloat p3)

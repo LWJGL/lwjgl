@@ -1299,6 +1299,14 @@ public class GL extends CoreGL implements GLConstants {
 
 	public native void weightusvARB(int size, int psWeights);
 
+	public static native int glXAllocateMemoryNV(
+		int size,
+		float readFrequency,
+		float writeFrequency,
+		float priority);
+
+	public static native void glXFreeMemoryNV(int pointer);
+
 	// #ifdef _WIN32
 
 	public static native int wglAllocateMemoryNV(
