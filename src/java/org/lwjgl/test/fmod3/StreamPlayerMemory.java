@@ -102,8 +102,7 @@ public class StreamPlayerMemory {
 	/**
 	 * Reads the file into a ByteBuffer
 	 * 
-	 * @param filename
-	 *          Name of file to load
+	 * @param filename Name of file to load
 	 * @return ByteBuffer containing file data
 	 */
 	static protected ByteBuffer getData(String filename) {
@@ -126,8 +125,8 @@ public class StreamPlayerMemory {
 			
 			//done reading, close
 			bis.close();
-			
-			// if ogg vorbis data, we need to pass it unmodified to alBufferData
+
+      // place it in a buffer
 			buffer = ByteBuffer.allocateDirect(baos.size());
 			buffer.order(ByteOrder.nativeOrder());
 			buffer.put(baos.toByteArray());
