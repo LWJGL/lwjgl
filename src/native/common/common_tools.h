@@ -43,7 +43,6 @@
 #include <jni.h>
 #include <string.h>
 #include <stdlib.h>
-#include "org_lwjgl_Sys.h"
 
 #define EVENT_BUFFER_SIZE 256
 #define ATTRIB_LIST_SIZE (256)
