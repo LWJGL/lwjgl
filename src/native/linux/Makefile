@@ -48,7 +48,7 @@ LIBCPPSRC=$(shell find . -name \*.cpp -print|grep -v CVS) $(shell find ../common
 LIBCPPOBJS=$(LIBCPPSRC:.cpp=.o)
 LIBCOBJS=$(LIBCSRC:.c=.o)
 LIBOBJS=$(LIBCOBJS) $(LIBCPPOBJS)
-#DEBUG_FLAGS=-D_DEBUG
+DEBUG_FLAGS=-D_DEBUG
 LINKOPTS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU -lopenal
 BUILDOPTS=-O3 -Wall
 

@@ -51,6 +51,7 @@ unsigned char readBuffer[KEYBOARD_BUFFER_SIZE * 2];
 jfieldID fid_readBuffer;
 jfieldID fid_readBufferAddress;
 unsigned char key_buf[KEYBOARD_SIZE];
+unsigned char key_map[KEYBOARD_SIZE];
 
 bool keyboard_grabbed;
 
@@ -122,6 +123,26 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 #endif
 		return JNI_FALSE;
 	}
+	for (int i =  0; i < KEYBOARD_SIZE; i++)
+		key_map[i] = i;
+	key_map[0x6b] = 0xdb; // Left doze key
+	key_map[0x6c] = 0xdc; // Right doze key
+	key_map[0x6d] = 0xdd; // Apps key
+	key_map[0x5a] = 0xc8; // Up arrow
+	key_map[0x5c] = 0xcb; // Left arrow
+	key_map[0x5e] = 0xcd; // Right arrow
+	key_map[0x60] = 0xd0; // Down arrow
+	key_map[0x59] = 0xc7; // Home
+	key_map[0x62] = 0xd2; // Insert
+	key_map[0x63] = 0xd3; // Delete
+	key_map[0x5f] = 0xcf; // End
+	key_map[0x5b] = 0xc9; // Page up
+	key_map[0x61] = 0xd1; // Page down
+	key_map[0x67] = 0xb7; // SysRQ
+	key_map[0x66] = 0xc5; // Pause
+	key_map[0x64] = 0x9c; // Numpad enter
+	key_map[0x68] = 0xb5; // Numpad divide
+	
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	return JNI_TRUE;
 }
@@ -147,6 +168,7 @@ int checkKeyEvents(unsigned char *result_buf) {
 	while (XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
 		count++;
 		unsigned char keycode = (unsigned char)((event.xkey.keycode - 8) & 0xff);
+		keycode = key_map[keycode];
 		if (event.type == KeyPress) {
 			state = 1;
 		} else if (event.type == KeyRelease) {
