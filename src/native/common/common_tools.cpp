@@ -49,7 +49,7 @@ void printfDebug(const char *format, ...) {
 	va_list ap;
 	va_start(ap, format);
 	if (ISDEBUGENABLED())
-		vprintf(format, ap);
+		vfprintf(stderr, format, ap);
 	va_end(ap);
 }
 
