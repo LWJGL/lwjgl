@@ -53,6 +53,47 @@ import java.nio.Buffer;
  * @version $Revision$
  */
 public class GL extends CoreGL implements GLConstants {
+	private static GL gl_instance = null;
+
+	/**
+	 * Construct a windowed instance of GL. If the underlying OS does not
+	 * support windowed mode, then the width and height must match the current
+	 * display resolution, or an Exception will be thrown. Otherwise a fullscreen
+	 * window will be created.
+	 *
+	 * @param title
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param bpp
+	 * @param alpha
+	 * @param depth
+	 * @param stencil
+	 */
+	public static void createContext(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
+		new GL(title, x, y, width, height, bpp, alpha, depth, stencil);
+	}
+
+	/**
+	 * Construct a fullscreen instance of GL. If the underlying OS does not
+	 * support fullscreen mode, then a window will be created instead. If this
+	 * fails too then an Exception will be thrown.
+	 *
+	 * @param title
+	 * @param bpp
+	 * @param alpha
+	 * @param depth
+	 * @param stencil
+	 */
+	public static void createContext(String title, int bpp, int alpha, int depth, int stencil) {
+		new GL(title, bpp, alpha, depth, stencil);
+	}
+
+	public static void destroyContext() {
+		getCurrentWindow().destroy();
+	}
+	
 	/**
 	 * @param title
 	 * @param x
@@ -64,7 +105,7 @@ public class GL extends CoreGL implements GLConstants {
 	 * @param depth
 	 * @param stencil
 	 */
-	public GL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
+	protected GL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
 		super(title, x, y, width, height, bpp, alpha, depth, stencil);
 	}
 
@@ -75,7 +116,7 @@ public class GL extends CoreGL implements GLConstants {
 	 * @param depth
 	 * @param stencil
 	 */
-	public GL(String title, int bpp, int alpha, int depth, int stencil) {
+	protected GL(String title, int bpp, int alpha, int depth, int stencil) {
 		super(title, bpp, alpha, depth, stencil);
 	}
 	

@@ -59,7 +59,7 @@ public class CoreGL extends BaseGL implements CoreGLConstants {
 	 * @param depth
 	 * @param stencil
 	 */
-	public CoreGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
+	protected CoreGL(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) {
 		super(title, x, y, width, height, bpp, alpha, depth, stencil);
 	}
 
@@ -70,7 +70,7 @@ public class CoreGL extends BaseGL implements CoreGLConstants {
 	 * @param depth
 	 * @param stencil
 	 */
-	public CoreGL(String title, int bpp, int alpha, int depth, int stencil) {
+	protected CoreGL(String title, int bpp, int alpha, int depth, int stencil) {
 		super(title, bpp, alpha, depth, stencil);
 	}
 
