@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
 import org.lwjgl.fmod3.FMOD;
 import org.lwjgl.fmod3.FMODException;
 import org.lwjgl.fmod3.FMusic;
