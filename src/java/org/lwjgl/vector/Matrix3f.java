@@ -364,13 +364,11 @@ public class Matrix3f extends Matrix implements Serializable {
 
 	/**
 	 * Invert this matrix
-	 * @return this
+	 * @return this if successful, null otherwise
 	 */
 	public Matrix invert() 
         {
-		float determinant = m00 * (m11 * m22 - m12 * m21)
-				  + m01 * (m12 * m20 - m10 * m22)
-				  + m02 * (m10 * m21 - m11 * m20);
+		float determinant = determinant();
                 
                 if (determinant != 0)
                 {
@@ -382,6 +380,7 @@ public class Matrix3f extends Matrix implements Serializable {
                         m10 m11 m12
                         m20 m21 m22  
                     */
+                    float determinant_inv = 1f/determinant;
                     
                     // get the conjugate matrix
                     float t00 = m11 * m22 - m12* m22;
@@ -395,19 +394,18 @@ public class Matrix3f extends Matrix implements Serializable {
                     float t22 = m00 * m11 - m01 * m10;
                     
                     
-                    m00 = t00/determinant;
-                    m11 = t11/determinant;
-                    m22 = t22/determinant;
-                    m01 = t10/determinant;
-                    m10 = t01/determinant;
-                    m20 = t02/determinant;
-                    m02 = t20/determinant;
-                    m12 = t21/determinant;
-                    m21 = t12/determinant;
-                }
-                
-                    
-		return this;
+                    m00 = t00*determinant_inv;
+                    m11 = t11*determinant_inv;
+                    m22 = t22*determinant_inv;
+                    m01 = t10*determinant_inv;
+                    m10 = t01*determinant_inv;
+                    m20 = t02*determinant_inv;
+                    m02 = t20*determinant_inv;
+                    m12 = t21*determinant_inv;
+                    m21 = t12*determinant_inv;
+		    return this;
+                } else
+                    return null;
 	}
 
 	/**
