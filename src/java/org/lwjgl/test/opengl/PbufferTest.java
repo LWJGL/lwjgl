@@ -233,7 +233,7 @@ public class PbufferTest {
 
   private void initPbuffer() {
       try {
-          pbuffer = new Pbuffer(512, 512, mode.bpp, 0, 0, 0, 0);
+          pbuffer = new Pbuffer(512, 512, mode.bpp, 0, 0, 0, 0, null);
           pbuffer.makeCurrent();
           initGLState(256, 256, 0.5f);
           GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex_handle);
