@@ -631,7 +631,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Win32Display_getAvailableDi
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y) {
 	closerequested = false;
 	isMinimized = false;
-	isFocused = true;
+	isFocused = false;
 	isDirty = true;
 	isFullScreen = fullscreen == JNI_TRUE;
 	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
