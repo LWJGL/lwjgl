@@ -36,7 +36,7 @@ import java.util.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.Sys;
 
 /**
@@ -68,7 +68,7 @@ public final class Display {
 		int minFreq, int maxFreq) 
 	{
 		// First get the available display modes
-		DisplayMode[] modes = org.lwjgl.Display.getAvailableDisplayModes();
+		DisplayMode[] modes = org.lwjgl.opengl.Display.getAvailableDisplayModes();
 		
 		if (Sys.DEBUG || DEBUG) {
 			System.out.println("Available screen modes:");
@@ -81,24 +81,24 @@ public final class Display {
 
 		for (int i = 0; i < modes.length; i ++) {
 			assert modes[i] != null : ""+i+" "+modes.length;
-			if (minWidth != -1 && modes[i].width < minWidth)
+			if (minWidth != -1 && modes[i].getWidth() < minWidth)
 				continue;
-			if (maxWidth != -1 && modes[i].width > maxWidth)
+			if (maxWidth != -1 && modes[i].getWidth() > maxWidth)
 				continue;
-			if (minHeight != -1 && modes[i].height < minHeight)
+			if (minHeight != -1 && modes[i].getHeight() < minHeight)
 				continue;
-			if (maxHeight != -1 && modes[i].height > maxHeight)
+			if (maxHeight != -1 && modes[i].getHeight() > maxHeight)
 				continue;
-			if (minBPP != -1 && modes[i].bpp < minBPP)
+			if (minBPP != -1 && modes[i].getBitsPerPixel() < minBPP)
 				continue;
-			if (maxBPP != -1 && modes[i].bpp > maxBPP)
+			if (maxBPP != -1 && modes[i].getBitsPerPixel() > maxBPP)
 				continue;
 			//if (modes[i].bpp == 24)
 			//	continue;
-			if (modes[i].freq != 0) {
-				if (minFreq != -1 && modes[i].freq < minFreq)
+			if (modes[i].getFrequency() != 0) {
+				if (minFreq != -1 && modes[i].getFrequency() < minFreq)
 					continue;
-				if (maxFreq != -1 && modes[i].freq > maxFreq)
+				if (maxFreq != -1 && modes[i].getFrequency() > maxFreq)
 					continue;
 			}
 			matches.add(modes[i]);
@@ -219,7 +219,7 @@ public final class Display {
 			try {
 				if (Sys.DEBUG || DEBUG)
 					System.out.println("Attempting to set displaymode: "+dm[i]);
-				org.lwjgl.Display.setDisplayMode(dm[i]);
+				org.lwjgl.opengl.Display.setDisplayMode(dm[i]);
 				return dm[i];
 			} catch (Exception e) {
 				if (Sys.DEBUG || DEBUG) {
