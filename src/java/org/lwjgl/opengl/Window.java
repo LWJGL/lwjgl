@@ -320,8 +320,8 @@ public final class Window {
 		HashSet extensions = new HashSet();
 		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil, extensions);
 		GLCaps.determineAvailableExtensions(extensions);
-		created = true;
 		context = new Window();
+		created = true;
 	}
 
 	/**
