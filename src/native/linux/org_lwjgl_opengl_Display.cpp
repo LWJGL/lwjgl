@@ -55,7 +55,6 @@
 #include "org_lwjgl_opengl_Display.h"
 
 #define USEGLX13 extgl_Extensions.GLX13
-#define ERR_MSG_SIZE 1024
 
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
@@ -65,7 +64,6 @@ static GLXFBConfig *configs;
 static Atom delete_atom;
 static Colormap cmap;
 static Window current_win;
-static int current_screen;
 static bool current_fullscreen;
 static int current_height;
 static int current_width;
@@ -79,61 +77,6 @@ static bool focused;
 static bool closerequested;
 static bool grab;
 static bool ignore_motion_events;
-
-static Display *display_connection = NULL;
-static Atom warp_atom;
-static int display_connection_usage = 0;
-static bool async_x_error;
-static char error_message[ERR_MSG_SIZE];
-
-bool checkXError(JNIEnv *env) {
-	XSync(getDisplay(), False);
-	if (async_x_error) {
-		async_x_error = false;
-		throwException(env, error_message);
-		return false;
-	} else
-		return true;
-}
-
-static int errorHandler(Display *disp, XErrorEvent *error) {
-	char err_msg_buffer[ERR_MSG_SIZE];
-	XGetErrorText(disp, error->error_code, err_msg_buffer, ERR_MSG_SIZE);
-	err_msg_buffer[ERR_MSG_SIZE - 1] = '\0';
-	snprintf(error_message, ERR_MSG_SIZE, "X Error - serial: %d, error_code: %s, request_code: %d, minor_code: %d", (int)error->serial, err_msg_buffer, (int)error->request_code, (int)error->minor_code);
-	error_message[ERR_MSG_SIZE - 1] = '\0';
-	async_x_error = true;
-	return 0;
-}
-
-Display *getDisplay(void) {
-	return display_connection;
-}
-
-Display *incDisplay(JNIEnv *env) {
-	if (display_connection_usage == 0) {
-		async_x_error = false;
-		XSetErrorHandler(errorHandler);
-		display_connection = XOpenDisplay(NULL);
-		if (display_connection == NULL) {
-			throwException(env, "Could not open X display");
-			return NULL;
-		}
-		warp_atom = XInternAtom(getDisplay(), "ignore_warp_atom", False);
-	}
-	display_connection_usage++;
-	return display_connection;
-}
-
-Atom getWarpAtom(void) {
-	return warp_atom;
-}
-
-void decDisplay(void) {
-	display_connection_usage--;
-	if (display_connection_usage == 0)
-		XCloseDisplay(display_connection);
-}
 
 static void waitMapped(Window win) {
 	XEvent event;
@@ -209,7 +152,7 @@ static void handleMessages() {
 		XNextEvent(getDisplay(), &event);
 		switch (event.type) {
 			case ClientMessage:
-				if (event.xclient.message_type == warp_atom) {
+				if (event.xclient.message_type == getWarpAtom()) {
 					ignore_motion_events = event.xclient.data.b[0] == 1 ? true : false;
 				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					closerequested = true;
@@ -323,10 +266,6 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 		return false;
 	}
 	return true;
-}
-
-int getCurrentScreen(void) {
-	return current_screen;
 }
 
 Window getCurrentWindow(void) {
@@ -511,15 +450,14 @@ static void dumpVisualInfo(XVisualInfo *vis_info) {
 
 static void destroyContext(void) {
 	releaseContext();
+	context = NULL;
 	if (USEGLX13) {
 		glXDestroyWindow(getDisplay(), glx_window);
 		XFree(configs);
 	}
 	XFree(vis_info);
 	glXDestroyContext(getDisplay(), context);
-	context = NULL;
         setRepeatMode(AutoRepeatModeDefault);
-	decDisplay();
 }
 
 static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
@@ -617,24 +555,10 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getVersion(JNIEnv *env, 
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
-	Display *disp = incDisplay(env);
-	if (disp == NULL)
-		return;
-	current_screen = XDefaultScreen(disp);
-	if (!extgl_InitGLX(env, disp, current_screen)) {
-		decDisplay();
-		throwException(env, "Could not init GLX");
-		return;
-	}
-	bool create_success;
 	if (USEGLX13) {
-		create_success = initWindowGLX13(env, pixel_format);
+		initWindowGLX13(env, pixel_format);
 	} else {
-		create_success = initWindowGLX(env, pixel_format);
-	}
-	if (!create_success) {
-		decDisplay();
-		return;
+		initWindowGLX(env, pixel_format);
 	}
 }
 

@@ -161,9 +161,8 @@ public final class Pbuffer {
 	/**
 	 * Construct an instance of a Pbuffer. If this fails then an LWJGLException will be thrown. The buffer is single-buffered.
 	 * <p/>
-	 * NOTE: An OpenGL window must be created before a Pbuffer can be created. The Pbuffer will have its own context that shares
-	 * display lists and textures with the OpenGL window context, but it will have its own OpenGL state. Therefore, state changes
-	 * to a pbuffer will not be seen in the window context and vice versa.
+	 * NOTE: The Pbuffer will have its own context that shares display lists and textures with the Display context (if it is created),
+	 * but it will have its own OpenGL state. Therefore, state changes to a pbuffer will not be seen in the window context and vice versa.
 	 * <p/>
 	 * NOTE: Some OpenGL implementations requires the shared contexts to use the same pixel format. So if possible, use the same
 	 * bpp, alpha, depth and stencil values used to create the main window.
@@ -181,12 +180,18 @@ public final class Pbuffer {
 		this.width = width;
 		this.height = height;
 
-		if ( renderTexture == null )
-			handle = nCreate(width, height, pixel_format, null, null);
-		else
-			handle = nCreate(width, height, pixel_format,
-			                 renderTexture.pixelFormatCaps,
-			                 renderTexture.pBufferAttribs);
+		GLContext.loadOpenGLLibrary();
+		try {
+			if ( renderTexture == null )
+				handle = nCreate(width, height, pixel_format, null, null);
+			else
+				handle = nCreate(width, height, pixel_format,
+				                 renderTexture.pixelFormatCaps,
+				                 renderTexture.pBufferAttribs);
+		} catch (LWJGLException e) {
+			GLContext.unloadOpenGLLibrary();
+			throw e;
+		}
 	}
 
 	/**
@@ -245,6 +250,7 @@ public final class Pbuffer {
 			int error = GL11.glGetError();
 			nDestroy(handle);
 			GLContext.useContext(null);
+			GLContext.unloadOpenGLLibrary();
 			if (error != GL11.GL_NO_ERROR)
 				throw new OpenGLException(error);
 		} catch (LWJGLException e) {

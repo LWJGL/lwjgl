@@ -50,11 +50,6 @@ typedef struct _PbufferInfo {
 	GLXContext context;
 } PbufferInfo;
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nIsBufferLost
- * Signature: (I)Z
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
   (JNIEnv *env, jclass clazz, jint handle)
 {
@@ -62,11 +57,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
 	return JNI_FALSE;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    isPbufferSupported
- * Signature: ()Z
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
   (JNIEnv *env, jclass clazz)
 {
@@ -80,19 +70,12 @@ static void destroyPbuffer(PbufferInfo *buffer_info) {
 	glXDestroyPbuffer(getDisplay(), buffer);
 	glXDestroyContext(getDisplay(), context);
 	free(buffer_info);
-	decDisplay();
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nCreate
- */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jint width, jint height, jobject pixel_format,
   jobject pixelFormatCaps, jobject pBufferAttribs)
 {
-	Display *disp = incDisplay(env);
-	if (disp == NULL)
-		return 0;
+	Display *disp = getDisplay();
 	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
 	if (configs == 0) {
 		XFree(configs);
@@ -142,11 +125,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 	return (jint)buffer_info;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nMakeCurrent
- * Signature: (I)V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
   (JNIEnv *env, jclass clazz, jint handle)
 {
