@@ -36,8 +36,14 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
+#ifdef _X11
 #include <AL/altypes.h>
 #include <AL/alctypes.h>
+#else
+#include <altypes.h>
+#include <alctypes.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
