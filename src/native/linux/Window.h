@@ -82,9 +82,22 @@
 	extern int getWindowHeight(void);
 	
 	/*
+	 * Increment display usage (and possible open it).
+	 * Return the display handle.
+	 * If the function fails, it will return NULL
+	 * and throw a java exception through the env argument
+	 */
+	extern Display *incDisplay(JNIEnv *env);
+	
+	/*
+	 * Decrement display usage and possibly release it
+	 */
+	extern void decDisplay(void);
+	
+	/*
 	 * get the current display
 	 */
-	extern Display *getCurrentDisplay(void);
+	extern Display *getDisplay(void);
 	
 	/*
 	 * get the current screen

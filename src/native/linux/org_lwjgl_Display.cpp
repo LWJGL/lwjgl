@@ -49,6 +49,7 @@
 #include <jni.h>
 #include "org_lwjgl_Display.h"
 #include "common_tools.h"
+#include "Window.h"
 
 static int saved_width;
 static int saved_height;
@@ -134,11 +135,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
         int num_modes;
         XF86VidModeModeInfo **avail_modes;
 	int screen;
-	Display *disp = XOpenDisplay(NULL);
-        if (disp == NULL) {
-                printfDebug("Could not open X connection\n");
+	Display *disp = incDisplay(env);
+        if (disp == NULL)
 		return;
-        }
 	screen = DefaultScreen(disp);
 	
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
@@ -165,7 +164,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 		if (!XF86VidModeGetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp))
 			freeSavedGammaRamps();
 	}
-	XCloseDisplay(disp);
+	decDisplay();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclass clazz, jobject mode) {
@@ -179,57 +178,50 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclas
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
 	int screen;
-	Display *disp = XOpenDisplay(NULL);
+	Display *disp = incDisplay(env);
 
-	if (disp == NULL) {
-		throwException(env, "Could not open X connection.");
+	if (disp == NULL)
 		return;
-	}
 	screen = DefaultScreen(disp);
 	if (setMode(disp, screen, width, height, true)) {
 		jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
 		env->SetStaticObjectField(clazz, fid_initialMode, mode);
 	} else
 		throwException(env, "Could not switch mode.");
-	XCloseDisplay(disp);
+	decDisplay();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv * env, jclass clazz) {
 	int screen;
-	Display *disp = XOpenDisplay(NULL);
-
-	if (disp == NULL) {
-		printfDebug("Could not open X connection\n");
+	Display *disp = incDisplay(env);
+	if (disp == NULL)
 		return;
-	}
 	screen = DefaultScreen(disp);
 	setMode(disp, screen, saved_width, saved_height, false);
 	if (gamma_ramp_length > 0) {
 		XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp);
 		freeSavedGammaRamps();
 	}
-	XCloseDisplay(disp);
+	decDisplay();
 }
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
 	int num_modes, i;
-	Display *disp = XOpenDisplay(NULL);
 	int screen;
 	XF86VidModeModeInfo **avail_modes;
+	Display *disp = incDisplay(env);
 
-	if (disp == NULL) {
-		printfDebug("Could not open X connection\n");
+	if (disp == NULL)
 		return NULL;
-	}
 	
 	screen = DefaultScreen(disp);
 	int bpp = XDefaultDepth(disp, screen);
 	
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 		printfDebug("Could not get display modes\n");
-		XCloseDisplay(disp);
+		decDisplay();
 		return NULL;
 	}
 	// Allocate an array of DisplayModes big enough
@@ -242,7 +234,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 		env->SetObjectArrayElement(ret, i, displayMode);
 	}
 	XFree(avail_modes);
-	XCloseDisplay(disp);
+	decDisplay();
 	return ret;
 }
 
@@ -259,11 +251,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass c
 		throwException(env, "gamma ramp length == 0.");
 		return;
 	}
-	Display * disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		throwException(env, "Could not open X connection.");
+	Display * disp = incDisplay(env);
+	if (disp == NULL)
 		return;
-	}
 	int screen = DefaultScreen(disp);
 	const float *gamma_ramp = (const float *)env->GetDirectBufferAddress(gamma_ramp_buffer);
 	unsigned short *ramp;
@@ -275,7 +265,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jclass c
 	if (XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, ramp, ramp, ramp) == False) {
 		throwException(env, "Could not set gamma ramp.");
 	}
-	XCloseDisplay(disp);
+	decDisplay();
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter

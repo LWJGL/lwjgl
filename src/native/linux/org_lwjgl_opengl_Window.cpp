@@ -59,7 +59,6 @@ static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
 
 static Atom delete_atom;
-static Display *current_disp;
 static Window current_win;
 static int current_screen;
 static bool current_fullscreen;
@@ -74,11 +73,36 @@ static bool minimized;
 static bool focused;
 static bool closerequested;
 
-static void waitMapped(Display *disp, Window win) {
+static Display *display_connection = NULL;
+static int display_connection_usage = 0;
+
+Display *getDisplay(void) {
+	return display_connection;
+}
+
+Display *incDisplay(JNIEnv *env) {
+	if (display_connection_usage == 0) {
+		display_connection = XOpenDisplay(NULL);
+		if (display_connection == NULL) {
+			throwException(env, "Could not open X display");
+			return NULL;
+		}
+	}
+	display_connection_usage++;
+	return display_connection;
+}
+
+void decDisplay(void) {
+	display_connection_usage--;
+	if (display_connection_usage == 0)
+		XCloseDisplay(display_connection);
+}
+
+static void waitMapped(Window win) {
 	XEvent event;
 
 	do {
-		XMaskEvent(disp, StructureNotifyMask, &event);
+		XMaskEvent(getDisplay(), StructureNotifyMask, &event);
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
@@ -118,22 +142,22 @@ static void handleMessages() {
 	XEvent event;
 	Window win;
 	int revert_mode;
-	while (XPending(current_disp) > 0) {
-		XNextEvent(current_disp, &event);
+	while (XPending(getDisplay()) > 0) {
+		XNextEvent(getDisplay(), &event);
 		switch (event.type) {
 			case ClientMessage:
 				if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					closerequested = true;
 				break;
 			case FocusOut:
-				XGetInputFocus(current_disp, &win, &revert_mode);
+				XGetInputFocus(getDisplay(), &win, &revert_mode);
 				if (win != current_win) {
 					releaseInput();
 					focused = false;
 				}
 				break;
 			case FocusIn:
-				XGetInputFocus(current_disp, &win, &revert_mode);
+				XGetInputFocus(getDisplay(), &win, &revert_mode);
 				if (win == current_win) {
 					acquireInput();
 					focused = true;
@@ -147,7 +171,6 @@ static void handleMessages() {
 				minimized = true;
 				break;
 			case Expose:
-//				XSetInputFocus(current_disp, current_win, RevertToParent, CurrentTime);
 				dirty = true;
 				break;
 			case ButtonPress:
@@ -168,7 +191,7 @@ static void handleMessages() {
 }
 
 static void setWindowTitle(const char *title) {
-	XStoreName(current_disp, current_win, title);
+	XStoreName(getDisplay(), current_win, title);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
@@ -179,7 +202,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
 	env->ReleaseStringUTFChars(title_obj, title);
 }
 
-static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen, bool undecorated) {
+static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen, bool undecorated) {
 	dirty = true;
 	focused = true;
 	minimized = false;
@@ -191,15 +214,14 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	Colormap cmap;
 	int attribmask;
 
-	current_disp = disp;
 	current_screen = screen;
 	input_released = false;
 	current_fullscreen = fullscreen;
 	current_width = width;
 	current_height = height;
 
-	root_win = RootWindow(disp, screen);
-	cmap = XCreateColormap(disp, root_win, vis_info->visual, AllocNone);
+	root_win = RootWindow(getDisplay(), screen);
+	cmap = XCreateColormap(getDisplay(), root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
 	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
@@ -208,8 +230,8 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
-	win = XCreateWindow(disp, root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
-	XFreeColormap(disp, cmap);
+	win = XCreateWindow(getDisplay(), root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
+	XFreeColormap(getDisplay(), cmap);
 	printfDebug("Created window\n");
 	current_win = win;
 	Java_org_lwjgl_opengl_Window_nSetTitle(env, NULL, title);
@@ -219,23 +241,18 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	size_hints->max_width = width;
 	size_hints->min_height = height;
 	size_hints->max_height = height;
-	XSetWMNormalHints(disp, win, size_hints);
+	XSetWMNormalHints(getDisplay(), win, size_hints);
 	XFree(size_hints);
-	delete_atom = XInternAtom(disp, "WM_DELETE_WINDOW", False);
-	XSetWMProtocols(disp, win, &delete_atom, 1);
-	XMapRaised(disp, win);
-	waitMapped(disp, win);
-	XClearWindow(disp, win);
-	XSync(disp, True);
+	delete_atom = XInternAtom(getDisplay(), "WM_DELETE_WINDOW", False);
+	XSetWMProtocols(getDisplay(), win, &delete_atom, 1);
+	XMapRaised(getDisplay(), win);
+	waitMapped(win);
+	XClearWindow(getDisplay(), win);
+	XSync(getDisplay(), True);
 }
 
 static void destroyWindow() {
-	XDestroyWindow(current_disp, current_win);
-	current_disp = NULL;
-}
-
-Display *getCurrentDisplay(void) {
-	return current_disp;
+	XDestroyWindow(getDisplay(), current_win);
 }
 
 int getCurrentScreen(void) {
@@ -278,16 +295,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
 
 void makeCurrent(void) {
 	if (USEGLX13)
-		glXMakeContextCurrent(getCurrentDisplay(), glx_window, glx_window, context);
+		glXMakeContextCurrent(getDisplay(), glx_window, glx_window, context);
 	else
-		glXMakeCurrent(getCurrentDisplay(), getCurrentWindow(), context);
+		glXMakeCurrent(getDisplay(), getCurrentWindow(), context);
 }
 
 static void releaseContext(void) {
 	if (USEGLX13)
-		glXMakeContextCurrent(getCurrentDisplay(), None, None, NULL);
+		glXMakeContextCurrent(getDisplay(), None, None, NULL);
 	else
-		glXMakeCurrent(getCurrentDisplay(), None, NULL);
+		glXMakeCurrent(getDisplay(), None, NULL);
 }
 
 int convertToBPE(int bpp) {
@@ -309,7 +326,7 @@ GLXContext getCurrentContext(void) {
 	return context;
 }
 
-static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int depth, int alpha, int stencil, int samples) {
+static GLXFBConfig *chooseVisualGLX13(int screen, int bpp, int depth, int alpha, int stencil, int samples) {
 	int bpe = convertToBPE(bpp);
 	int attriblist[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
 			    GLX_DOUBLEBUFFER, True,
@@ -330,7 +347,7 @@ static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int de
 		attriblist[20] = GLX_SAMPLES_ARB;
 		attriblist[21] = samples;
 	}
-	GLXFBConfig* configs = glXChooseFBConfig(disp, screen, attriblist, &num_formats);
+	GLXFBConfig* configs = glXChooseFBConfig(getDisplay(), screen, attriblist, &num_formats);
 	if (num_formats > 0)
 		return configs;
 	else {
@@ -340,7 +357,7 @@ static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int de
 	}
 }
 
-static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil, int samples) {
+static XVisualInfo *chooseVisual(int screen, int bpp, int depth, int alpha, int stencil, int samples) {
 	int bpe = convertToBPE(bpp);
 	int attriblist[] = {GLX_RGBA,
 			    GLX_DOUBLEBUFFER,
@@ -359,22 +376,22 @@ static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, 
 		attriblist[16] = GLX_SAMPLES_ARB;
 		attriblist[17] = samples;
 	}
-	return glXChooseVisual(disp, screen, attriblist);
+	return glXChooseVisual(getDisplay(), screen, attriblist);
 }
 
-static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
+static void dumpVisualInfo(XVisualInfo *vis_info) {
 	int alpha, depth, stencil, r, g, b;
 	int sample_buffers = 0;
 	int samples = 0;
-	glXGetConfig(disp, vis_info, GLX_RED_SIZE, &r);
-	glXGetConfig(disp, vis_info, GLX_GREEN_SIZE, &g);
-	glXGetConfig(disp, vis_info, GLX_BLUE_SIZE, &b);
-	glXGetConfig(disp, vis_info, GLX_ALPHA_SIZE, &alpha);
-	glXGetConfig(disp, vis_info, GLX_DEPTH_SIZE, &depth);
-	glXGetConfig(disp, vis_info, GLX_STENCIL_SIZE, &stencil);
+	glXGetConfig(getDisplay(), vis_info, GLX_RED_SIZE, &r);
+	glXGetConfig(getDisplay(), vis_info, GLX_GREEN_SIZE, &g);
+	glXGetConfig(getDisplay(), vis_info, GLX_BLUE_SIZE, &b);
+	glXGetConfig(getDisplay(), vis_info, GLX_ALPHA_SIZE, &alpha);
+	glXGetConfig(getDisplay(), vis_info, GLX_DEPTH_SIZE, &depth);
+	glXGetConfig(getDisplay(), vis_info, GLX_STENCIL_SIZE, &stencil);
 	if (extgl_Extensions.GLX_ARB_multisample) {
-		glXGetConfig(disp, vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
-		glXGetConfig(disp, vis_info, GLX_SAMPLES_ARB, &samples);
+		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
+		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLES_ARB, &samples);
 	}
 	printf("Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d\n", r, g, b, alpha, depth, stencil, sample_buffers, samples);
 }
@@ -382,73 +399,72 @@ static void dumpVisualInfo(Display *disp, XVisualInfo *vis_info) {
 static void destroy(void) {
 	releaseContext();
 	if (USEGLX13)
-		glXDestroyWindow(getCurrentDisplay(), glx_window);
-	glXDestroyContext(getCurrentDisplay(), context);
+		glXDestroyWindow(getDisplay(), glx_window);
+	glXDestroyContext(getDisplay(), context);
 	context = NULL;
-	Display *disp = getCurrentDisplay();
 	destroyWindow();
-	XCloseDisplay(disp);
+	decDisplay();
 	extgl_Close();
 }
 
-static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
-	GLXFBConfig *configs = chooseVisualGLX13(disp, screen, bpp, depth, alpha, stencil, samples);
+static bool initWindowGLX13(JNIEnv *env, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
+	GLXFBConfig *configs = chooseVisualGLX13(screen, bpp, depth, alpha, stencil, samples);
 	if (configs == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
 	}
-	context = glXCreateNewContext(disp, configs[0], GLX_RGBA_TYPE, NULL, True);
+	context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, NULL, True);
 	if (context == NULL) {
 		XFree(configs);
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
 	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
-	if (!allow_software_acceleration && (glXIsDirect(disp, context) == False)) {
-		glXDestroyContext(disp, context);
+	if (!allow_software_acceleration && (glXIsDirect(getDisplay(), context) == False)) {
+		glXDestroyContext(getDisplay(), context);
 		XFree(configs);
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
-	XVisualInfo * vis_info = glXGetVisualFromFBConfig(disp, configs[0]);
+	XVisualInfo * vis_info = glXGetVisualFromFBConfig(getDisplay(), configs[0]);
 	if (vis_info == NULL) {
-		glXDestroyContext(disp, context);
+		glXDestroyContext(getDisplay(), context);
 		XFree(configs);
 		throwException(env, "Could not create visual info from FB config");
 		return false;
 	}
-	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
-	glx_window = glXCreateWindow(disp, configs[0], getCurrentWindow(), NULL);
+	createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
+	glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
 	makeCurrent();
 	if (isDebugEnabled())
-		dumpVisualInfo(disp, vis_info);
+		dumpVisualInfo(vis_info);
 	XFree(configs);
 	XFree(vis_info);
 	return true;
 }
 
-static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
-	XVisualInfo *vis_info = chooseVisual(disp, screen, bpp, depth, alpha, stencil, samples);
+static bool initWindowGLX(JNIEnv *env, int screen, jstring title, int x, int y, int width, int height, int bpp, int depth, int alpha, int stencil, int samples, bool fscreen, bool undecorated) {
+	XVisualInfo *vis_info = chooseVisual(screen, bpp, depth, alpha, stencil, samples);
 	if (vis_info == NULL) {
 		throwException(env, "Could not find a matching pixel format");
 		return false;
 	}
 	if (isDebugEnabled())
-		dumpVisualInfo(disp, vis_info);
-	context = glXCreateContext(disp, vis_info, NULL, True);
+		dumpVisualInfo(vis_info);
+	context = glXCreateContext(getDisplay(), vis_info, NULL, True);
 	if (context == NULL) {
 		XFree(vis_info);
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
 	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
-	if (!allow_software_acceleration && glXIsDirect(disp, context) == False) {
-		glXDestroyContext(disp, context);
+	if (!allow_software_acceleration && glXIsDirect(getDisplay(), context) == False) {
+		glXDestroyContext(getDisplay(), context);
 		XFree(vis_info);
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
-	createWindow(env, disp, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
+	createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
 	makeCurrent();
 	XFree(vis_info);
 	return true;
@@ -458,7 +474,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
   (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	int screen;
-	Display *disp;
 	bool fscreen = false;
 	if (fullscreen == JNI_TRUE)
 		fscreen = true;
@@ -468,26 +483,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 		throwException(env, "Could not load gl libs");
 		return;
 	}
-	disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
-		throwException(env, "Could not open X display");
+	Display *disp = incDisplay(env);
+	if (disp == NULL)
 		return;
-	}
 	screen = XDefaultScreen(disp);
 	if (!extgl_InitGLX(env, disp, screen)) {
-		XCloseDisplay(disp);
+		decDisplay();
 		extgl_Close();
 		throwException(env, "Could not init GLX");
 		return;
 	}
 	bool create_success;
 	if (USEGLX13) {
-		create_success = initWindowGLX13(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
+		create_success = initWindowGLX13(env, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
 	} else {
-		create_success = initWindowGLX(env, disp, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
+		create_success = initWindowGLX(env, screen, title, x, y, width, height, bpp, depth, alpha, stencil, samples, fscreen, isUndecorated);
 	}
 	if (!create_success) {
-		XCloseDisplay(disp);
+		decDisplay();
 		extgl_Close();
 		return;
 	}
@@ -513,9 +526,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jc
 {
 	dirty = false;
 	if (USEGLX13)
-		glXSwapBuffers(getCurrentDisplay(), glx_window);
+		glXSwapBuffers(getDisplay(), glx_window);
 	else
-		glXSwapBuffers(getCurrentDisplay(), getCurrentWindow());
+		glXSwapBuffers(getDisplay(), getCurrentWindow());
 }
 
 

@@ -85,7 +85,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
   jint samples,
   jobject pixelFormatCaps, jint pixelFormatCapsSize, jobject pBufferAttribs, jint pBufferAttribsSize)
 {
-
+	Display *disp = incDisplay(env);
+	if (disp == NULL)
+		return 0;
 	int bpe = convertToBPE(bpp);
 	int attrib_list[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
 				   GLX_DOUBLEBUFFER, False,
@@ -106,34 +108,34 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 		attrib_list[20] = GLX_SAMPLES_ARB;
 		attrib_list[21] = samples;
 	}
-	GLXFBConfig *configs = glXChooseFBConfig(getCurrentDisplay(), getCurrentScreen(), attrib_list, &num_configs);
+	GLXFBConfig *configs = glXChooseFBConfig(disp, getCurrentScreen(), attrib_list, &num_configs);
 	if (num_configs == 0) {
 		XFree(configs);
 		throwException(env, "No matching pixel format");
 		return -1;
 	}
 	int max;
-	glXGetFBConfigAttrib(getCurrentDisplay(), configs[0], GLX_MAX_PBUFFER_WIDTH, &max);
+	glXGetFBConfigAttrib(disp, configs[0], GLX_MAX_PBUFFER_WIDTH, &max);
 	if (max < width) {
 		XFree(configs);
 		throwException(env, "Width too large");
 		return -1;
 	}
-	glXGetFBConfigAttrib(getCurrentDisplay(), configs[0], GLX_MAX_PBUFFER_HEIGHT, &max);
+	glXGetFBConfigAttrib(disp, configs[0], GLX_MAX_PBUFFER_HEIGHT, &max);
 	if (max < height) {
 		XFree(configs);
 		throwException(env, "Height too large");
 		return -1;
 	}
-        GLXContext context = glXCreateNewContext(getCurrentDisplay(), configs[0], GLX_RGBA_TYPE, getCurrentContext(), True);
+        GLXContext context = glXCreateNewContext(disp, configs[0], GLX_RGBA_TYPE, getCurrentContext(), True);
         if (context == NULL) {
                 XFree(configs);
                 throwException(env, "Could not create a GLX context");
                 return false;
         }
 	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
-        if (!allow_software_acceleration && glXIsDirect(getCurrentDisplay(), context) == False) {
-                glXDestroyContext(getCurrentDisplay(), context);
+        if (!allow_software_acceleration && glXIsDirect(disp, context) == False) {
+                glXDestroyContext(disp, context);
                 XFree(configs);
                 throwException(env, "Could not create a direct GLX context");
                 return false;
@@ -143,7 +145,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 				      GLX_PRESERVED_CONTENTS, True,
 				      GLX_LARGEST_PBUFFER, False};
 
-	GLXPbuffer buffer = glXCreatePbuffer(getCurrentDisplay(), configs[0], buffer_attribs);
+	GLXPbuffer buffer = glXCreatePbuffer(disp, configs[0], buffer_attribs);
 	XFree(configs);
 	PbufferInfo *buffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
 	buffer_info->buffer = buffer;
@@ -162,7 +164,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
 	PbufferInfo *buffer_info = (PbufferInfo *)handle;
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
-	if (glXMakeContextCurrent(getCurrentDisplay(), buffer, buffer, context) == False) {
+	if (glXMakeContextCurrent(getDisplay(), buffer, buffer, context) == False) {
 		printfDebug("Could not make pbuffer current");
 	}
 }
@@ -178,9 +180,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
 	PbufferInfo *buffer_info = (PbufferInfo *)handle;
 	GLXPbuffer buffer = buffer_info->buffer;
 	GLXContext context = buffer_info->context;
-	glXDestroyPbuffer(getCurrentDisplay(), buffer);
-	glXDestroyContext(getCurrentDisplay(), context);
+	glXDestroyPbuffer(getDisplay(), buffer);
+	glXDestroyContext(getDisplay(), context);
 	free(buffer_info);
+	decDisplay();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib

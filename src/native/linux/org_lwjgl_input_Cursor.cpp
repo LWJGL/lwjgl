@@ -52,6 +52,9 @@
 JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
   (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset)
 {
+	Display *disp = incDisplay(env);
+	if (disp == NULL)
+		return 0;
 	XcursorPixel *pixels = (XcursorPixel *)env->GetDirectBufferAddress(image_buffer) + images_offset;
 	int stride = width*height;
 	XcursorImages *cursor_images = XcursorImagesCreate(num_images);
@@ -65,7 +68,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 		cursor_image->pixels = &(pixels[stride*i]);
 		cursor_images->images[i] = cursor_image;
 	}
-	Cursor cursor = XcursorImagesLoadCursor(getCurrentDisplay(), cursor_images);
+	Cursor cursor = XcursorImagesLoadCursor(disp, cursor_images);
 	XcursorImagesDestroy(cursor_images);
 	return cursor;
 }
@@ -79,5 +82,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor
   (JNIEnv *env, jclass clazz, jlong cursor_handle)
 {
 	Cursor cursor = (Cursor)cursor_handle;
-	XFreeCursor(getCurrentDisplay(), cursor);
+	XFreeCursor(getDisplay(), cursor);
+	decDisplay();
 }

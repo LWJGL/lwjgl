@@ -74,17 +74,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs(JNIEnv * env, jclas
 static void setRepeatMode(int mode) {
 	XKeyboardControl repeat_mode;
 	repeat_mode.auto_repeat_mode = mode;
-	XChangeKeyboardControl(getCurrentDisplay(), KBAutoRepeatMode, &repeat_mode);
+	XChangeKeyboardControl(getDisplay(), KBAutoRepeatMode, &repeat_mode);
 }
 
 static void grabKeyboard(void) {
 	if (isFullscreen() || !isNativeCursor()) {
 		if (!keyboard_grabbed) {
-			int result = XGrabKeyboard(getCurrentDisplay(), getCurrentWindow(), False, GrabModeAsync, GrabModeAsync, CurrentTime);
+			int result = XGrabKeyboard(getDisplay(), getCurrentWindow(), False, GrabModeAsync, GrabModeAsync, CurrentTime);
 			if (result == GrabSuccess) {
 				keyboard_grabbed = true;
 				setRepeatMode(AutoRepeatModeOff);
-				XFlush(getCurrentDisplay());
+				XFlush(getDisplay());
 			}
 		}
 	} else
@@ -94,8 +94,8 @@ static void grabKeyboard(void) {
 static void ungrabKeyboard(void) {
 	if (keyboard_grabbed) {
 		keyboard_grabbed = false;
-		XUngrabKeyboard(getCurrentDisplay(), CurrentTime);
-		XFlush(getCurrentDisplay());
+		XUngrabKeyboard(getDisplay(), CurrentTime);
+		XFlush(getDisplay());
 	}
 	setRepeatMode(AutoRepeatModeDefault);
 }
@@ -128,6 +128,9 @@ void releaseKeyboard(void) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
+	Display *disp = incDisplay(env);
+	if (disp == NULL)
+		return;
 	for (int i =  0; i < KEYBOARD_SIZE; i++)
 		key_map[i] = i;
 	key_map[0x6b] = 0xdb; // Left doze key
@@ -169,6 +172,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 {
 	ungrabKeyboard();
 	created = false;
+	decDisplay();
 }
 
 static unsigned char getKeycode(XKeyEvent *event) {

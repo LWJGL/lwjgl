@@ -103,19 +103,19 @@ static void centerCursor() {
 
 static bool blankCursor(void) {
 	unsigned int best_width, best_height;
-	if (XQueryBestCursor(getCurrentDisplay(), getCurrentWindow(), 1, 1, &best_width, &best_height) == 0) {
+	if (XQueryBestCursor(getDisplay(), getCurrentWindow(), 1, 1, &best_width, &best_height) == 0) {
 		printfDebug("Could not query best cursor size\n");
 		return false;
 	}
-	Pixmap mask = XCreatePixmap(getCurrentDisplay(), getCurrentWindow(), best_width, best_height, 1);
+	Pixmap mask = XCreatePixmap(getDisplay(), getCurrentWindow(), best_width, best_height, 1);
 	XGCValues gc_values;
 	gc_values.foreground = 0;
-	GC gc = XCreateGC(getCurrentDisplay(), mask, GCForeground, &gc_values);
-	XFillRectangle(getCurrentDisplay(), mask, gc, 0, 0, best_width, best_height);
-	XFreeGC(getCurrentDisplay(), gc);
+	GC gc = XCreateGC(getDisplay(), mask, GCForeground, &gc_values);
+	XFillRectangle(getDisplay(), mask, gc, 0, 0, best_width, best_height);
+	XFreeGC(getDisplay(), gc);
 	XColor dummy_color;
-	blank_cursor = XCreatePixmapCursor(getCurrentDisplay(), mask, mask, &dummy_color, &dummy_color, 0, 0);
-	XFreePixmap(getCurrentDisplay(), mask);
+	blank_cursor = XCreatePixmapCursor(getDisplay(), mask, mask, &dummy_color, &dummy_color, 0, 0);
+	XFreePixmap(getDisplay(), mask);
 	return true;
 }
 
@@ -128,13 +128,13 @@ static void grabPointer(void) {
 		if (!pointer_grabbed) {
 			int result;
 			int grab_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
-			result = XGrabPointer(getCurrentDisplay(), getCurrentWindow(), False, grab_mask, GrabModeAsync, 
+			result = XGrabPointer(getDisplay(), getCurrentWindow(), False, grab_mask, GrabModeAsync, 
 						GrabModeAsync, getCurrentWindow(), current_cursor, CurrentTime);
 			if (result == GrabSuccess) {
 				pointer_grabbed = true;
 				// make sure we have a centered window
-				XF86VidModeSetViewPort(getCurrentDisplay(), getCurrentScreen(), 0, 0);
-				XFlush(getCurrentDisplay());
+				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
+				XFlush(getDisplay());
 			}
 		}
 	}
@@ -143,8 +143,8 @@ static void grabPointer(void) {
 static void ungrabPointer(void) {
 	if (pointer_grabbed) {
 		pointer_grabbed = false;
-		XUngrabPointer(getCurrentDisplay(), CurrentTime);
-		XFlush(getCurrentDisplay());
+		XUngrabPointer(getDisplay(), CurrentTime);
+		XFlush(getDisplay());
 	}
 }
 
@@ -171,11 +171,11 @@ void releasePointer(void) {
 static void doWarpPointer(void ) {
 	int i;
 	centerCursor();
-	XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
+	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
 	XEvent event;
 	// Try to catch the warp pointer event
 	for (i = 0; i < WARP_RETRY; i++) {
-		XMaskEvent(getCurrentDisplay(), PointerMotionMask, &event);
+		XMaskEvent(getDisplay(), PointerMotionMask, &event);
 		if (event.xmotion.x > current_x - POINTER_WARP_BORDER &&
 			event.xmotion.x < current_x + POINTER_WARP_BORDER &&
 			event.xmotion.y > current_y - POINTER_WARP_BORDER &&
@@ -206,8 +206,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 	int caps = 0;
 	if (!isXcursorLoaded())
 		return caps;
-	XcursorBool argb_supported = XcursorSupportsARGB(getCurrentDisplay());
-	XcursorBool anim_supported = XcursorSupportsAnim(getCurrentDisplay());
+	XcursorBool argb_supported = XcursorSupportsARGB(getDisplay());
+	XcursorBool anim_supported = XcursorSupportsAnim(getDisplay());
 	if (argb_supported)
 		caps |= org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA | org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
 	if (anim_supported)
@@ -229,13 +229,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			doWarpPointer();
 			native_cursor = true;
 		}
-		XDefineCursor(getCurrentDisplay(), getCurrentWindow(), cursor);
+		XDefineCursor(getDisplay(), getCurrentWindow(), cursor);
 		current_cursor = cursor;
 		updateInput();
 	} else {
 		if (native_cursor) {
 			current_cursor = blank_cursor;
-			XUndefineCursor(getCurrentDisplay(), getCurrentWindow());
+			XUndefineCursor(getDisplay(), getCurrentWindow());
 			native_cursor = false;
 			updateInput();
 		}
@@ -252,7 +252,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
 {
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
-	XQueryBestCursor(getCurrentDisplay(), getCurrentWindow(), 1, 1, &width_return, &height_return);
+	XQueryBestCursor(getDisplay(), getCurrentWindow(), 1, 1, &width_return, &height_return);
 	return width_return > height_return ? width_return : height_return;
 }
 
@@ -266,7 +266,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
 {
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
-	XQueryBestCursor(getCurrentDisplay(), getCurrentWindow(), 0xffffffff, 0xffffffff, &width_return, &height_return);
+	XQueryBestCursor(getDisplay(), getCurrentWindow(), 0xffffffff, 0xffffffff, &width_return, &height_return);
 	return width_return > height_return ? height_return : width_return;
 }
 
@@ -281,6 +281,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
+	Display *disp = incDisplay(env);
+	if (disp == NULL)
+		return;
 	int i;
 	current_z = last_z = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
@@ -306,9 +309,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 {
 	closeXcursor();
 	ungrabPointer();
-	XFreeCursor(getCurrentDisplay(), blank_cursor);
+	XFreeCursor(getDisplay(), blank_cursor);
 	created = false;
 	should_grab = false;
+	decDisplay();
 }
 
 static unsigned char mapButton(XButtonEvent *event) {
