@@ -43,18 +43,9 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include <OpenGL/OpenGL.h>
 
-typedef struct
-{
-    CGDirectDisplayID			displayID;
-    CGLContextObj			contextObj;
 
-    CGGammaValue			redMin, redMax, redGamma,
-        greenMin, greenMax, greenGamma,
-        blueMin, blueMax, blueGamma;
-} RenderingContext;
-
-static RenderingContext * renderingContext;
-
+static CGLContextObj			contextObj;
+static CGDirectDisplayID		displayID = kCGDirectMainDisplay;
 
 /*
  * Class:     org_lwjgl_opengl_BaseGL
@@ -64,26 +55,22 @@ static RenderingContext * renderingContext;
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 (JNIEnv * env, jobject obj, jstring title, jint x, jint y, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jboolean fullscreen)
 {
-    if ( CGDisplayCapture( renderingContext->displayID ) != kCGErrorSuccess )
+    if ( CGDisplayCapture( displayID ) != kCGErrorSuccess )
     {
         return;
     }
-
-    CGDisplayHideCursor( renderingContext->displayID );
-    CGDisplayMoveCursorToPoint( renderingContext->displayID, CGPointZero );
-    CGAssociateMouseAndMouseCursorPosition( FALSE );
 
     CGLPixelFormatObj pixelFormatObj;
     long numPixelFormats;
 
     CFDictionaryRef displayMode;
-    displayMode = CGDisplayBestModeForParametersAndRefreshRate( kCGDirectMainDisplay,
+    displayMode = CGDisplayBestModeForParametersAndRefreshRate( displayID,
                                                                 bpp,
                                                                 width, height,
                                                                 60,
                                                                 NULL );
 
-    CGDisplaySwitchToMode( kCGDirectMainDisplay, displayMode );
+    CGDisplaySwitchToMode( displayID, displayMode );
 
     CGLPixelFormatAttribute attribs[2];
     attribs[0] = kCGLPFAFullScreen;
@@ -92,12 +79,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
     CGLChoosePixelFormat( attribs, &pixelFormatObj, &numPixelFormats );
     if ( pixelFormatObj != NULL )
     {
-        CGLCreateContext( pixelFormatObj, NULL, &renderingContext->contextObj );
+        CGLCreateContext( pixelFormatObj, NULL, &contextObj );
         CGLDestroyPixelFormat( pixelFormatObj );
     }
 
-    CGLSetCurrentContext( renderingContext->contextObj );
-    CGLSetFullScreen( renderingContext->contextObj );
+    CGLSetCurrentContext( contextObj );
+    CGLSetFullScreen( contextObj );
 }
 
 /*
@@ -108,18 +95,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroyGL
 (JNIEnv * env, jobject obj)
 {
-    if ( renderingContext->contextObj != NULL )
+    if ( contextObj != NULL )
     {
         CGLSetCurrentContext( NULL );
-        CGLClearDrawable( renderingContext->contextObj );
-        CGLDestroyContext( renderingContext->contextObj );
+        CGLClearDrawable( contextObj );
+        CGLDestroyContext( contextObj );
 
-        renderingContext->contextObj = NULL;
+        contextObj = NULL;
     }
 
-    CGAssociateMouseAndMouseCursorPosition( TRUE );
-    CGDisplayShowCursor( kCGDirectMainDisplay );
-    
+
     CGReleaseAllDisplays();        
 }
 
