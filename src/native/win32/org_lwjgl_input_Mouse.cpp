@@ -514,8 +514,8 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
 			diMouseState.rgbButtons[i] = JNI_FALSE;
 		}
 	}
-	jbooleanArray mButtonsArray = (jbooleanArray) env->GetStaticObjectField(clsMouse, fidMButtons);
-	env->SetBooleanArrayRegion(mButtonsArray, 0, mButtoncount, diMouseState.rgbButtons);
+	jbyteArray mButtonsArray = (jbyteArray) env->GetStaticObjectField(clsMouse, fidMButtons);
+	env->SetByteArrayRegion(mButtonsArray, 0, mButtoncount, diMouseState.rgbButtons);
 }
 
 /**

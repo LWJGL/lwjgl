@@ -55,7 +55,7 @@ static jfieldID fid_dy;
 static jfieldID fid_dwheel;
 static jfieldID fid_buttons;
 
-static unsigned char button_states[NUM_BUTTONS];
+static jbyte button_states[NUM_BUTTONS];
 static bool buffer_enabled;
 /*static int x_axis_index = NUM_BUTTONS;
 static int y_axis_index = NUM_BUTTONS + 1;
@@ -67,7 +67,13 @@ static int last_dx;
 static int last_dy;
 static int last_dz;
 
-static void handleButton(unsigned char button_index, unsigned char state) {
+static void handleButton(unsigned char button_index, jbyte state) {
+	if (button_index >= NUM_BUTTONS) {
+#ifdef _DEBUG
+		printf("Button index %d out of range [0..%d]\n", button_index, NUM_BUTTONS);
+#endif
+		return;
+	}
 	button_states[button_index] = state;
 	if (buffer_enabled) {
 		putEventElement(&event_queue, button_index);
@@ -122,7 +128,7 @@ static void handleButtonEvent(EventRef event, unsigned char state) {
 #endif
 		return;
 	}
-	handleButton(button, state);
+	handleButton(button - 1, state);
 }
 
 static void handleMovedEvent(EventRef event) {
@@ -159,6 +165,7 @@ void handleMouseEvent(EventRef event) {
 		case kEventMouseUp:
 			handleButtonEvent(event, 0);
 			break;
+		case kEventMouseDragged:
 		case kEventMouseMoved:
 			handleMovedEvent(event);
 			break;
@@ -253,8 +260,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
 	env->SetStaticIntField(clazz, fid_dx, (jint)dx);
 	env->SetStaticIntField(clazz, fid_dy, (jint)dy);
 	env->SetStaticIntField(clazz, fid_dwheel, (jint)dz);
-	jbooleanArray buttons_array = (jbooleanArray)env->GetStaticObjectField(clazz, fid_buttons);
-	env->SetBooleanArrayRegion(buttons_array, 0, NUM_BUTTONS, button_states);
+	jbyteArray buttons_array = (jbyteArray)env->GetStaticObjectField(clazz, fid_buttons);
+	env->SetByteArrayRegion(buttons_array, 0, NUM_BUTTONS, button_states);
 	resetDeltas();
 }
 
