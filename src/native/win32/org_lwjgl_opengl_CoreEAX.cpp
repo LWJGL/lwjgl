@@ -104,6 +104,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_determineAvailableExtension
 #endif
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_setGUID (JNIEnv *env, jobject obj) {
+#ifdef _WIN32
+	//get class/fields
+	jclass eax_class			= env->FindClass("org/lwjgl/openal/CoreEAX");
+	jfieldID eaxBuffer_field	= env->GetStaticFieldID(eax_class, "BUFFER_GUID", "I");
+	jfieldID eaxListener_field	= env->GetStaticFieldID(eax_class, "LISTENER_GUID", "I");
+
+	//set fields
+	env->SetStaticIntField(eax_class, eaxBuffer_field, (jint) &DSPROPSETID_EAX20_BufferProperties);
+	env->SetStaticIntField(eax_class, eaxListener_field, (jint) &DSPROPSETID_EAX20_ListenerProperties);
+#else
+	ThrowException(env, "EAX extensions not supported");
+#endif
+}
+
 /*
  * This function retrieves an EAX value.
  * 

@@ -45,12 +45,6 @@
  */
 public abstract class BaseEAX {    
     
-    /** GUID for buffer */
-    public static int BUFFER_GUID;
-    
-    /** GUID for listener */
-    public static int LISTENER_GUID;      
-    
 	/** Has the EAX object been created? */
 	protected static boolean created;    
     

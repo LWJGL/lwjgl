@@ -41,6 +41,12 @@
  */
 public class CoreEAX extends BaseEAX implements BaseEAXConstants {  
     
+    /** GUID for buffer */
+    public static int BUFFER_GUID;
+    
+    /** GUID for listener */
+    public static int LISTENER_GUID;    
+    
     /** Creates a new instance of CoreEAX */
     public CoreEAX() {
     }
@@ -50,12 +56,18 @@ public class CoreEAX extends BaseEAX implements BaseEAXConstants {
      */
     protected void init() {        
 		determineAvailableExtensions();
+        setGUID();
     }
     
     /**
      * Determines available EAX extensions
      */
     protected native void determineAvailableExtensions();
+    
+    /**
+     * Sets the GUID's for the buffer and listener objects
+     */
+    protected native void setGUID();
     
     /**
      * Retrieves an EAX Value

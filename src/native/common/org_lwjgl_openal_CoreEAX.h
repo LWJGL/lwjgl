@@ -52,6 +52,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_determineAvailableExtension
 
 /*
  * Class:     org_lwjgl_openal_CoreEAX
+ * Method:    setGUID
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_setGUID
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_lwjgl_openal_CoreEAX
  * Method:    eaxGet
  * Signature: (IIIII)I
  */
