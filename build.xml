@@ -1,14 +1,15 @@
 <project name="LWJGL" default="compile" basedir=".">
 
   <!-- set global properties for this build -->
-  <property name="lwjgl.src"			value="./src"/>
-  <property name="lwjgl.bin"			value="./bin"/>
-  <property name="lwjgl.lib"  		value="./lib"/>
-  <property name="lwjgl.dist"  		value="./dist"/>
-  <property name="lwjgl.docs"  		value="./doc"/>
-  <property name="lwjgl.temp"     value="./temp"/>
-  <property name="lwjgl.res"  		value="./res"/>
-  <property name="lwjgl.version"  value="0.4"/>
+  <property name="lwjgl.src"            value="./src"/>
+  <property name="lwjgl.bin"            value="./bin"/>
+  <property name="lwjgl.lib"            value="./lib"/>
+  <property name="lwjgl.dist"           value="./dist"/>
+  <property name="lwjgl.docs"           value="./doc"/>
+  <property name="lwjgl.temp"           value="./temp"/>
+  <property name="lwjgl.res"            value="./res"/>
+  <property name="lwjgl.version"        value="0.4"/>
+  <property name="lwjgl.src.headers"    value="${lwjgl.src}/native/common"/>
   
   <!-- Creates a splash screen -->
   <target name="splash">
@@ -134,6 +135,41 @@
     <cvs command="export -D 'now'" compressionlevel="3" cvsRoot=":pserver:anonymous@cvs.sf.net:/cvsroot/java-game-lib" package="LWJGL/doc" dest="."/>
     <ant dir="LWJGL" target="package"/>
   </target>  
+  
+  <target name="headers" description="invokes javah on java classes, producing the headers needed for native compilation" depends="compile">
+    <javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
+      <class name="org.lwjgl.Display"/>
+      <class name="org.lwjgl.Sys"/>
+      <class name="org.lwjgl.input.Controller"/>
+      <class name="org.lwjgl.input.Keyboard"/>
+      <class name="org.lwjgl.input.Mouse"/>
+      <class name="org.lwjgl.Math$MatrixOpAdd$MatrixOpSafe"/>
+      <class name="org.lwjgl.Math$MatrixOpAdd$MatrixOpDirect"/>
+      <class name="org.lwjgl.Math$MatrixOpCopy$MatrixOpSafe"/>
+      <class name="org.lwjgl.Math$MatrixOpCopy$MatrixOpDirect"/>
+      <class name="org.lwjgl.Math$MatrixOpInvert$MatrixOpSafe"/>
+      <class name="org.lwjgl.Math$MatrixOpInvert$MatrixOpDirect"/>
+      <class name="org.lwjgl.Math$MatrixOpMultiply$MatrixOpSafe"/>
+      <class name="org.lwjgl.Math$MatrixOpMultiply$MatrixOpDirect"/>
+      <class name="org.lwjgl.Math$MatrixOpNegate$MatrixOpSafe"/>
+      <class name="org.lwjgl.Math$MatrixOpNegate$MatrixOpDirect"/>
+      <class name="org.lwjgl.Math$MatrixOpNormalise$MatrixOpSafe"/>
+      <class name="org.lwjgl.Math$MatrixOpNormalise$MatrixOpDirect"/>
+      <class name="org.lwjgl.Math$MatrixOpSubtract$MatrixOpSafe"/>
+      <class name="org.lwjgl.Math$MatrixOpSubtract$MatrixOpDirect"/>
+      <class name="org.lwjgl.openal.ALC"/>
+      <class name="org.lwjgl.openal.BaseAL"/>
+      <class name="org.lwjgl.openal.CoreAL"/>
+      <class name="org.lwjgl.openal.eax.BaseEAX"/>
+      <class name="org.lwjgl.openal.eax.CoreEAX"/>
+      <class name="org.lwjgl.openal.eax.EAXBufferProperties"/>
+      <class name="org.lwjgl.openal.eax.EAXListenerProperties"/>
+      <class name="org.lwjgl.opengl.BaseGL"/>
+      <class name="org.lwjgl.opengl.CoreGL"/>
+      <class name="org.lwjgl.opengl.GL"/>
+      <class name="org.lwjgl.opengl.GLU"/>
+    </javah>    
+  </target>
   
   <!-- Creates a versioned distribution of dll's and jars -->
   <target name="distribution_application">
