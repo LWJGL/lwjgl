@@ -118,24 +118,28 @@ public final class GL15 {
 
 	public static native boolean glIsBuffer(int buffer);
 
-	public static void glBufferData(int target, int size, ByteBuffer data, int usage) {
-		BufferChecks.checkDirectOrNull(data);
-		nglBufferData(target, data != null ? data.remaining() : size, data, data != null ? data.position() : 0, usage);
+	public static void glBufferData(int target, int size, int usage) {
+		nglBufferData(target, size, null, 0, usage);
 	}
 
-	public static void glBufferData(int target, int size, ShortBuffer data, int usage) {
-		BufferChecks.checkDirectOrNull(data);
-		nglBufferData(target, data != null ? data.remaining() << 1 : size, data, data != null ? data.position() << 1 : 0, usage);
+	public static void glBufferData(int target, ByteBuffer data, int usage) {
+		BufferChecks.checkDirect(data);
+		nglBufferData(target, data.remaining(), data, data.position(), usage);
 	}
 
-	public static void glBufferData(int target, int size, FloatBuffer data, int usage) {
-		BufferChecks.checkDirectOrNull(data);
-		nglBufferData(target, data != null ? data.remaining() << 2 : size, data, data != null ? data.position() << 2 : 0, usage);
+	public static void glBufferData(int target, ShortBuffer data, int usage) {
+		BufferChecks.checkDirect(data);
+		nglBufferData(target, data.remaining() << 1, data, data.position() << 1, usage);
 	}
 
-	public static void glBufferData(int target, int size, IntBuffer data, int usage) {
-		BufferChecks.checkDirectOrNull(data);
-		nglBufferData(target, data != null ? data.remaining() << 2 : size, data, data != null ? data.position() << 2 : 0, usage);
+	public static void glBufferData(int target, FloatBuffer data, int usage) {
+		BufferChecks.checkDirect(data);
+		nglBufferData(target, data.remaining() << 2, data, data.position() << 2, usage);
+	}
+
+	public static void glBufferData(int target, IntBuffer data, int usage) {
+		BufferChecks.checkDirect(data);
+		nglBufferData(target, data.remaining() << 2, data, data.position() << 2, usage);
 	}
 
 	private static native void nglBufferData(int target, int size, Buffer data, int data_offset, int usage);

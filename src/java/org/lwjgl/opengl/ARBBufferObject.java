@@ -118,24 +118,28 @@ public abstract class ARBBufferObject {
 
 	public static native boolean glIsBufferARB(int buffer);
 
-	public static void glBufferDataARB(int target, int size, ByteBuffer data, int usage) {
-		BufferChecks.checkDirectOrNull(data);
-		nglBufferDataARB(target, data != null ? data.remaining() : size, data, data != null ? data.position() : 0, usage);
+	public static void glBufferDataARB(int target, int size, int usage) {
+		nglBufferDataARB(target, size, null, 0, usage);
 	}
 
-	public static void glBufferDataARB(int target, int size, ShortBuffer data, int usage) {
-		BufferChecks.checkDirectOrNull(data);
-		nglBufferDataARB(target, data != null ? data.remaining() << 1 : size, data, data != null ? data.position() << 1 : 0, usage);
+	public static void glBufferDataARB(int target, ByteBuffer data, int usage) {
+		BufferChecks.checkDirect(data);
+		nglBufferDataARB(target, data.remaining(), data, data.position(), usage);
 	}
 
-	public static void glBufferDataARB(int target, int size, FloatBuffer data, int usage) {
-		BufferChecks.checkDirectOrNull(data);
-		nglBufferDataARB(target, data != null ? data.remaining() << 2 : size, data, data != null ? data.position() << 2 : 0, usage);
+	public static void glBufferDataARB(int target, ShortBuffer data, int usage) {
+		BufferChecks.checkDirect(data);
+		nglBufferDataARB(target, data.remaining() << 1, data, data.position() << 1, usage);
 	}
 
-	public static void glBufferDataARB(int target, int size, IntBuffer data, int usage) {
+	public static void glBufferDataARB(int target, FloatBuffer data, int usage) {
 		BufferChecks.checkDirectOrNull(data);
-		nglBufferDataARB(target, data != null ? data.remaining() << 2 : size, data, data != null ? data.position() << 2 : 0, usage);
+		nglBufferDataARB(target, data.remaining() << 2, data, data.position() << 2, usage);
+	}
+
+	public static void glBufferDataARB(int target, IntBuffer data, int usage) {
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferDataARB(target, data.remaining() << 2, data, data.position() << 2, usage);
 	}
 
 	private static native void nglBufferDataARB(int target, int size, Buffer data, int data_offset, int usage);

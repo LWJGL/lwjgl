@@ -161,12 +161,7 @@ public abstract class ARBProgram {
 	private static native void nglGenProgramsARB(int n, IntBuffer programs, int programsOffset);
 	// ---------------------------
 
-	public static native void glProgramEnvParameter4fARB(int target,
-	                                                     int index,
-	                                                     float x,
-	                                                     float y,
-	                                                     float z,
-	                                                     float w);
+	public static native void glProgramEnvParameter4fARB(int target, int index, float x, float y, float z, float w);
 
 	private static void checkProgramEnv(int index, Buffer buf) {
 		if ( index < 0 ) {
@@ -187,12 +182,7 @@ public abstract class ARBProgram {
 	private static native void nglProgramEnvParameter4fvARB(int target, int index, FloatBuffer params, int paramsOffset);
 	// ---------------------------
 
-	public static native void glProgramLocalParameter4fARB(int target,
-	                                                       int index,
-	                                                       float x,
-	                                                       float y,
-	                                                       float z,
-	                                                       float w);
+	public static native void glProgramLocalParameter4fARB(int target, int index, float x, float y, float z, float w);
 
 	// ---------------------------
 	public static void glProgramLocalParameterARB(int target, int index, FloatBuffer params) {

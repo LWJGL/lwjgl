@@ -318,81 +318,91 @@ public class GLImpl implements IGL {
 	/**
 	 * @param target
 	 * @param size
+	 * @param usage
+	 */
+	public void glBufferData(int target, int size, int usage) {
+		GL.glBufferData(target, size, usage);
+	}
+
+	/**
+	 * @param target
 	 * @param data
 	 * @param usage
 	 */
-	public void glBufferData(int target, int size, ByteBuffer data, int usage) {
-		GL.glBufferData(target, size, data, usage);
+	public void glBufferData(int target, ByteBuffer data, int usage) {
+		GL.glBufferData(target, data, usage);
+	}
+
+	/**
+	 * @param target
+	 * @param data
+	 * @param usage
+	 */
+	public void glBufferData(int target, FloatBuffer data, int usage) {
+		GL.glBufferData(target, data, usage);
+	}
+
+	/**
+	 * @param target
+	 * @param data
+	 * @param usage
+	 */
+	public void glBufferData(int target, IntBuffer data, int usage) {
+		GL.glBufferData(target, data, usage);
+	}
+
+	/**
+	 * @param target
+	 * @param data
+	 * @param usage
+	 */
+	public void glBufferData(int target, ShortBuffer data, int usage) {
+		GL.glBufferData(target, data, usage);
 	}
 
 	/**
 	 * @param target
 	 * @param size
-	 * @param data
 	 * @param usage
 	 */
-	public void glBufferData(int target, int size, FloatBuffer data, int usage) {
-		GL.glBufferData(target, size, data, usage);
+	public void glBufferDataARB(int target, int size, int usage) {
+		GL.glBufferDataARB(target, size, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public void glBufferData(int target, int size, IntBuffer data, int usage) {
-		GL.glBufferData(target, size, data, usage);
+	public void glBufferDataARB(int target, ByteBuffer data, int usage) {
+		GL.glBufferDataARB(target, data, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public void glBufferData(int target, int size, ShortBuffer data, int usage) {
-		GL.glBufferData(target, size, data, usage);
+	public void glBufferDataARB(int target, FloatBuffer data, int usage) {
+		GL.glBufferDataARB(target, data, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public void glBufferDataARB(int target, int size, ByteBuffer data, int usage) {
-		GL.glBufferDataARB(target, size, data, usage);
+	public void glBufferDataARB(int target, IntBuffer data, int usage) {
+		GL.glBufferDataARB(target, data, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public void glBufferDataARB(int target, int size, FloatBuffer data, int usage) {
-		GL.glBufferDataARB(target, size, data, usage);
-	}
-
-	/**
-	 * @param target
-	 * @param size
-	 * @param data
-	 * @param usage
-	 */
-	public void glBufferDataARB(int target, int size, IntBuffer data, int usage) {
-		GL.glBufferDataARB(target, size, data, usage);
-	}
-
-	/**
-	 * @param target
-	 * @param size
-	 * @param data
-	 * @param usage
-	 */
-	public void glBufferDataARB(int target, int size, ShortBuffer data, int usage) {
-		GL.glBufferDataARB(target, size, data, usage);
+	public void glBufferDataARB(int target, ShortBuffer data, int usage) {
+		GL.glBufferDataARB(target, data, usage);
 	}
 
 	/**

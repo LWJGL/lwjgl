@@ -3164,41 +3164,46 @@ public class GL {
 	/**
 	 * @param target
 	 * @param size
-	 * @param data
 	 * @param usage
-	 */
-	public static void glBufferData(int target, int size, ByteBuffer data, int usage) {
-		GL15.glBufferData(target, size, data, usage);
+	 */ 
+	public static void glBufferData(int target, int size, int usage) {
+		GL15.glBufferData(target, size, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public static void glBufferData(int target, int size, FloatBuffer data, int usage) {
-		GL15.glBufferData(target, size, data, usage);
+	public static void glBufferData(int target, ByteBuffer data, int usage) {
+		GL15.glBufferData(target, data, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public static void glBufferData(int target, int size, IntBuffer data, int usage) {
-		GL15.glBufferData(target, size, data, usage);
+	public static void glBufferData(int target, FloatBuffer data, int usage) {
+		GL15.glBufferData(target, data, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public static void glBufferData(int target, int size, ShortBuffer data, int usage) {
-		GL15.glBufferData(target, size, data, usage);
+	public static void glBufferData(int target, IntBuffer data, int usage) {
+		GL15.glBufferData(target, data, usage);
+	}
+
+	/**
+	 * @param target
+	 * @param data
+	 * @param usage
+	 */
+	public static void glBufferData(int target, ShortBuffer data, int usage) {
+		GL15.glBufferData(target, data, usage);
 	}
 
 	/**
@@ -3395,41 +3400,46 @@ public class GL {
 	/**
 	 * @param target
 	 * @param size
-	 * @param data
 	 * @param usage
 	 */
-	public static void glBufferDataARB(int target, int size, ByteBuffer data, int usage) {
-		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	public static void glBufferDataARB(int target, int size, int usage) {
+		ARBBufferObject.glBufferDataARB(target, size, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public static void glBufferDataARB(int target, int size, FloatBuffer data, int usage) {
-		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	public static void glBufferDataARB(int target, ByteBuffer data, int usage) {
+		ARBBufferObject.glBufferDataARB(target, data, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public static void glBufferDataARB(int target, int size, IntBuffer data, int usage) {
-		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	public static void glBufferDataARB(int target, FloatBuffer data, int usage) {
+		ARBBufferObject.glBufferDataARB(target, data, usage);
 	}
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	public static void glBufferDataARB(int target, int size, ShortBuffer data, int usage) {
-		ARBBufferObject.glBufferDataARB(target, size, data, usage);
+	public static void glBufferDataARB(int target, IntBuffer data, int usage) {
+		ARBBufferObject.glBufferDataARB(target, data, usage);
+	}
+
+	/**
+	 * @param target
+	 * @param data
+	 * @param usage
+	 */
+	public static void glBufferDataARB(int target, ShortBuffer data, int usage) {
+		ARBBufferObject.glBufferDataARB(target, data, usage);
 	}
 
 	/**

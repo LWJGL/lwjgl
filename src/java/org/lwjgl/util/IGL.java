@@ -2649,34 +2649,37 @@ public interface IGL {
 	/**
 	 * @param target
 	 * @param size
-	 * @param data
 	 * @param usage
 	 */
-	void glBufferData(int target, int size, ByteBuffer data, int usage);
+	void glBufferData(int target, int size, int usage);
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	void glBufferData(int target, int size, FloatBuffer data, int usage);
+	void glBufferData(int target, ByteBuffer data, int usage);
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	void glBufferData(int target, int size, IntBuffer data, int usage);
+	void glBufferData(int target, FloatBuffer data, int usage);
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	void glBufferData(int target, int size, ShortBuffer data, int usage);
+	void glBufferData(int target, IntBuffer data, int usage);
+
+	/**
+	 * @param target
+	 * @param data
+	 * @param usage
+	 */
+	void glBufferData(int target, ShortBuffer data, int usage);
 
 	/**
 	 * @param target
@@ -2836,34 +2839,37 @@ public interface IGL {
 	/**
 	 * @param target
 	 * @param size
-	 * @param data
 	 * @param usage
 	 */
-	void glBufferDataARB(int target, int size, ByteBuffer data, int usage);
+	void glBufferDataARB(int target, int size, int usage);
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	void glBufferDataARB(int target, int size, FloatBuffer data, int usage);
+	void glBufferDataARB(int target, ByteBuffer data, int usage);
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	void glBufferDataARB(int target, int size, IntBuffer data, int usage);
+	void glBufferDataARB(int target, FloatBuffer data, int usage);
 
 	/**
 	 * @param target
-	 * @param size
 	 * @param data
 	 * @param usage
 	 */
-	void glBufferDataARB(int target, int size, ShortBuffer data, int usage);
+	void glBufferDataARB(int target, IntBuffer data, int usage);
+
+	/**
+	 * @param target
+	 * @param data
+	 * @param usage
+	 */
+	void glBufferDataARB(int target, ShortBuffer data, int usage);
 
 	/**
 	 * @param target
