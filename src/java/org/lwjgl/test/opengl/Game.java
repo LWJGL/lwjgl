@@ -108,7 +108,6 @@ public final class Game {
              	 	System.exit(0);
              	 
                  Keyboard.poll();
-                 Keyboard.read();
                  mainLoop();
                  render();
                  gl.paint();
