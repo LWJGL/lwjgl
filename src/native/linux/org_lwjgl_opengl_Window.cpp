@@ -226,7 +226,7 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
 	XClearWindow(disp, win);
-	XSetInputFocus(current_disp, current_win, RevertToParent, CurrentTime);
+//	XSetInputFocus(current_disp, current_win, RevertToParent, CurrentTime);
 	XSync(disp, True);
 }
 
