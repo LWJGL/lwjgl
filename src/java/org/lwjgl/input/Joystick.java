@@ -43,7 +43,7 @@ import org.lwjgl.Sys;
  * 
  * No buffering is available.
  *
- * Currently n (native limits, currently 128) buttons, the x, y, z axis is supported along with a POV (or HAT), where the z axis 
+ * Currently n (native limits, currently 128 - might change) buttons, the x, y, z axis is supported along with a POV (or HAT), where the z axis 
  * represents a throttle. In the future the joystick may support more buttons and
  * axises and other features. but this is a platform issue.
  *
@@ -59,22 +59,22 @@ public class Joystick {
 	}
 	
 	/** Has the joystick been created? */
-	private boolean created;
+	private static boolean created;
 	
 	/** The joystick buttons status */
-	private boolean[] buttons;
+	private static boolean[] buttons;
 	
 	/** X position, range -1000 to 1000 */
-	public int x = -1;
+	public static int x = -1;
 	
 	/** Y position, range -1000 to 1000 */
-	public int y = -1;
+	public static int y = -1;
 	
 	/** Z position, range -1000 to 1000 */
-	public int z = -1;
+	public static int z = -1;
     
     /** Position of Point of View from -1 to 27000 (360 degrees) */
-    public int pov;
+    public static int pov;
     
     /** Constant specifying centered POV */
     public static final int POV_CENTER  = -1;
@@ -92,14 +92,14 @@ public class Joystick {
     public static final int POV_WEST    = 9000;
     
     /* Joystick capabilities */
-    public int buttonCount  = -1;
-    public boolean hasZAxis = false;
-    public boolean hasPOV   = false;
+    public static int buttonCount  = -1;
+    public static boolean hasZAxis = false;
+    public static boolean hasPOV   = false;
 	
 	/**
 	 * Joystick cannot be constructed.
 	 */
-	public Joystick() {
+	private Joystick() {
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class Joystick {
 	 * "Create" the joystick. The display must first have been created.
 	 * @throws Exception if the joystick could not be created for any reason
 	 */
-	public void create() throws Exception {
+	public static void create() throws Exception {
 		if (created) {
 			return;
         }
@@ -128,7 +128,7 @@ public class Joystick {
 	/**
 	 * "Destroy" the joystick
 	 */
-	public void destroy() {
+	public static void destroy() {
 		if (!created) {
 			return;
         }
@@ -140,7 +140,7 @@ public class Joystick {
 	/**
 	 * Polls the joystick.
 	 */
-	public void poll() {
+	public static void poll() {
 		assert created : "The joystick has not been created.";
 		nPoll();
 	}		
@@ -152,7 +152,7 @@ public class Joystick {
 	 * @return true if the specified button is down
 	 * @see #getNumButtons()
 	 */
-	public boolean isButtonDown(int button) {
+	public static boolean isButtonDown(int button) {
 		assert created : "The joystick has not been created.";
 		return buttons[button];
 	}
@@ -160,19 +160,19 @@ public class Joystick {
 	/**
 	 * Native method to poll the joystick
 	 */
-	private native void nPoll();    
+	private static native void nPoll();    
     
 	/**
 	 * Native method to create the joystick
 	 * 
 	 * @return true if the joystick was created
 	 */
-	private native boolean nCreate();    
+	private static native boolean nCreate();    
     
     /**
 	 * Native method the destroy the joystick
 	 */
-	private native void nDestroy();
+	private static native void nDestroy();
     
 	/**
 	 * Register fields with the native library

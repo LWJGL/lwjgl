@@ -16,20 +16,17 @@ import org.lwjgl.input.Joystick;
  */
 public class JoystickTest extends Panel {
     
-    private Joystick joystick = null;
-    
     private int counter = 0;
     
     public Thread animationThread;
     
     /** Creates a new instance of JoystickTest */
     public JoystickTest() {
-        joystick = new Joystick();
         try {
-            joystick.create();
+            Joystick.create();
         } catch (Exception e) {
             e.printStackTrace();
-            joystick = null;
+            return;
         }
         
         animationThread = new Thread() {
@@ -58,37 +55,34 @@ public class JoystickTest extends Panel {
         
         int y = 100;
         int x = 100;
-        if (joystick != null) {
-            joystick.poll();
-            
-            g.setColor(Color.blue);
-            g.drawString("Buttoncount: " + joystick.buttonCount, x, y);
+        Joystick.poll();
+        
+        g.setColor(Color.blue);
+        g.drawString("Buttoncount: " + Joystick.buttonCount, x, y);
+        y += 20;
+        g.drawString("-----------------------------------------------", x, y);
+        y += 20;
+        g.drawString("x  : " + Joystick.x, x, y);
+        y += 20;
+        g.drawString("y  : " + Joystick.y, x, y);
+        y += 20;
+        if(Joystick.hasZAxis) {
+            g.drawString("z  : " + Joystick.z, x, y);
             y += 20;
-            g.drawString("-----------------------------------------------", x, y);
+        }
+        if(Joystick.hasPOV) {
+            g.drawString("pov: " + Joystick.pov, x, y);
             y += 20;
-            g.drawString("x  : " + joystick.x, x, y);
-            y += 20;
-            g.drawString("y  : " + joystick.y, x, y);
-            y += 20;
-            if(joystick.hasZAxis) {
-                g.drawString("z  : " + joystick.z, x, y);
-                y += 20;
+        }
+        
+        //paint buttons
+        g.drawString("btn: ", x, y);
+        x += g.getFontMetrics().stringWidth("btn: ");
+        for(int i=0; i<Joystick.buttonCount; i++) {
+            if(Joystick.isButtonDown(i)) {
+                g.drawString(i + ", ", x, y);
+                x+= 15;
             }
-            if(joystick.hasPOV) {
-                g.drawString("pov: " + joystick.pov, x, y);
-                y += 20;
-            }
-            
-            //paint buttons
-            g.drawString("btn: ", x, y);
-            x += g.getFontMetrics().stringWidth("btn: ");
-            for(int i=0; i<joystick.buttonCount; i++) {
-                if(joystick.isButtonDown(i)) {
-                    g.drawString(i + ", ", x, y);
-                    x+= 15;
-                }
-            }
-            
         }
     }
     
@@ -96,10 +90,15 @@ public class JoystickTest extends Panel {
         paint(g);
     }
     
+    public void disposing() {
+        Joystick.destroy();
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        final JoystickTest p = new JoystickTest();
         final Frame f = new Frame();
         f.setLayout(null);
         f.setSize(640, 480);
@@ -107,11 +106,11 @@ public class JoystickTest extends Panel {
         f.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
                 f.hide();
+                p.disposing();
                 f.dispose();
             }
         });
         
-        JoystickTest p = new JoystickTest();
         p.setSize(640, 480);
         p.setLocation(0, 0);
         p.setBackground(Color.RED);

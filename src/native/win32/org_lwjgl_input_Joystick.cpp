@@ -64,7 +64,6 @@ bool create_success;                // bool used to determine successfull creati
 
 // Cached fields of Joystick.java
 jclass clsJoystick;
-jobject objJoystick;
 jfieldID fidButtonCount;
 jfieldID fidHasZAxis;
 jfieldID fidHasPOV;
@@ -83,9 +82,9 @@ void Shutdown();
 void CreateJoystick(LPCDIDEVICEINSTANCE lpddi);
 void SetupJoystick();
 void InitializeFields();
+void CacheFields();
 void UpdateFields();
 void SetCapabilities();
-void CacheFields(jobject obj);
 void PrintError(HRESULT error);
 
 /**
@@ -93,15 +92,16 @@ void PrintError(HRESULT error);
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_initIDs(JNIEnv * env, jclass clazz) {
   environment = env;
+  clsJoystick = clazz;
+
+  /* Cache fields in Joystick */
+  CacheFields();
 }
 
 /**
  * Called when the Joystick instance is to be created
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate(JNIEnv *env, jobject obj) {
-  /* Cache fields in Joystick */
-  CacheFields(obj);
-
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate(JNIEnv *env, jclass clazz) {
   // Create the DirectInput object. 
   HRESULT hr;
   hr = DirectInputCreate(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &lpDI, NULL); 
@@ -145,7 +145,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate(JNIEnv *env, jo
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nDestroy(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nDestroy(JNIEnv *env, jclass clazz) {
   Shutdown();
 }
 
@@ -154,7 +154,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nDestroy(JNIEnv *env, jobje
  * Method:    nPoll
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll(JNIEnv * env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll(JNIEnv * env, jclass clazz) {
   HRESULT hRes;
 
   // poll the joystick to read the current state
@@ -183,11 +183,6 @@ void Shutdown() {
     }
     lpDI->Release();
     lpDI = NULL;
-  }
-
-  // Delete are global reference to the Joystick
-  if(objJoystick != NULL) {
-    environment->DeleteGlobalRef(objJoystick);
   }
 }
 
@@ -325,7 +320,7 @@ void SetupJoystick() {
 void InitializeFields() {
   //set buttons array
   jbooleanArray buttonsArray = environment->NewBooleanArray(buttoncount);
-  environment->SetObjectField(objJoystick, fidButtons, buttonsArray);
+  environment->SetStaticObjectField(clsJoystick, fidButtons, buttonsArray);
 }
 
 /**
@@ -350,21 +345,21 @@ void UpdateFields() {
   }
 
   //axis's
-  environment->SetIntField(objJoystick, fidX, js.lX);
-  environment->SetIntField(objJoystick, fidY, js.lY);
+  environment->SetStaticIntField(clsJoystick, fidX, js.lX);
+  environment->SetStaticIntField(clsJoystick, fidY, js.lY);
   if(hasz) {
-    environment->SetIntField(objJoystick, fidZ, js.lZ);
+    environment->SetStaticIntField(clsJoystick, fidZ, js.lZ);
   }
 
   //buttons
-  jbooleanArray buttonsArray = (jbooleanArray) environment->GetObjectField(objJoystick, fidButtons);
+  jbooleanArray buttonsArray = (jbooleanArray) environment->GetStaticObjectField(clsJoystick, fidButtons);
   BYTE * buttons = (BYTE *) environment->GetPrimitiveArrayCritical(buttonsArray, NULL);
   memcpy(buttons, js.rgbButtons, 4);
   environment->ReleasePrimitiveArrayCritical(buttonsArray, buttons, 0);
 
   //pov
   if(haspov) {
-    environment->SetIntField(objJoystick, fidPOV, js.rgdwPOV[0]);
+    environment->SetStaticIntField(clsJoystick, fidPOV, js.rgdwPOV[0]);
   }
 }
 
@@ -373,30 +368,25 @@ void UpdateFields() {
  */
 void SetCapabilities() {
   //set buttoncount
-  environment->SetIntField(objJoystick, fidButtonCount, buttoncount);
+  environment->SetStaticIntField(clsJoystick, fidButtonCount, buttoncount);
 
   //set z axis
-  environment->SetIntField(objJoystick, fidHasZAxis, hasz);
+  environment->SetStaticIntField(clsJoystick, fidHasZAxis, hasz);
 
   //set pov
-  environment->SetIntField(objJoystick, fidHasPOV, haspov);
+  environment->SetStaticIntField(clsJoystick, fidHasPOV, haspov);
 }
 
 /**
  * Caches the field ids for quicker access
  */
-void CacheFields(jobject obj) {
-  /* make certain that we're caching from a global object, and not a local */
-  objJoystick = environment->NewGlobalRef(obj);
-  clsJoystick = environment->GetObjectClass(objJoystick);
-
-  /* cache fields */
-  fidButtonCount	= environment->GetFieldID(clsJoystick, "buttonCount", "I");
-  fidHasZAxis		= environment->GetFieldID(clsJoystick, "hasZAxis", "Z");
-  fidHasPOV		= environment->GetFieldID(clsJoystick, "hasPOV", "Z");
-  fidButtons		= environment->GetFieldID(clsJoystick, "buttons", "[Z");
-  fidX			= environment->GetFieldID(clsJoystick, "x", "I");
-  fidY			= environment->GetFieldID(clsJoystick, "y", "I");
-  fidZ			= environment->GetFieldID(clsJoystick, "z", "I");
-  fidPOV			= environment->GetFieldID(clsJoystick, "pov", "I");
+void CacheFields() {
+  fidButtonCount  = environment->GetStaticFieldID(clsJoystick, "buttonCount", "I");
+  fidHasZAxis     = environment->GetStaticFieldID(clsJoystick, "hasZAxis", "Z");
+  fidHasPOV       = environment->GetStaticFieldID(clsJoystick, "hasPOV", "Z");
+  fidButtons      = environment->GetStaticFieldID(clsJoystick, "buttons", "[Z");
+  fidX            = environment->GetStaticFieldID(clsJoystick, "x", "I");
+  fidY            = environment->GetStaticFieldID(clsJoystick, "y", "I");
+  fidZ            = environment->GetStaticFieldID(clsJoystick, "z", "I");
+  fidPOV          = environment->GetStaticFieldID(clsJoystick, "pov", "I");
 }
