@@ -204,7 +204,7 @@ static void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vi
 	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
 	attribmask = CWColormap | CWBackPixel | CWEventMask;
-	if (fullscreen && undecorated) {
+	if (fullscreen || undecorated) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
