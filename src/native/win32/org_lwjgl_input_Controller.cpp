@@ -119,7 +119,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jcla
   
   // assert that window has been created
 	if(hwnd == NULL) {
-    throwException(env, "Please create the window before initializing input devices\n");
+    throwException(env, "Please create the window before initializing input devices");
     return;
 	}
 	

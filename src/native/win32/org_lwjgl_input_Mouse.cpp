@@ -110,7 +110,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 
   // assert that Direct Input has been created
 	if(lpdi == NULL) {
-    throwException(env, "Please create the window before initializing input devices\n");
+    throwException(env, "Please create the window before initializing input devices");
     return;
 	} 
 
