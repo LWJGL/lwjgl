@@ -271,10 +271,10 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 	int exstyle, windowflags;
 
 	if (fullscreen) {
-		exstyle = WS_EX_TOPMOST;
+		exstyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
 		windowflags = WS_POPUP | WS_VISIBLE;
 	} else {
-		exstyle = 0;
+		exstyle = WS_EX_APPWINDOW;
 		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_VISIBLE | WS_MINIMIZEBOX | WS_SYSMENU;
 	}
 
@@ -313,8 +313,8 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 	printf("Created window\n");
 #endif
 
-	//ShowWindow(hwnd, SW_SHOWNORMAL);
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd, SW_SHOWNORMAL);
+	//ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
