@@ -15,8 +15,7 @@ package org.lwjgl;
  * cannot be changed
  * - the window may be closeable by the user or operating system, and may be minimized
  * by the user or operating system
- * - the operating system may or may not allow more than one window to be constructed
- * at any one time. There is no guarantee that all windows can be visible at once.
+ * - only one window may ever be open at once
  * - the operating system may or may not be able to do fullscreen or windowed windows.
  * 
  * @author foo
@@ -26,6 +25,9 @@ public abstract class Window {
 	static {
 		System.loadLibrary(Sys.getLibraryName());
 	}
+	
+	/** Whether we have a window already */
+	private static boolean created;
 
 	/** The window's native data structure. On Win32 this is an HWND. */
 	private int handle;
@@ -63,18 +65,26 @@ public abstract class Window {
 	 * 
 	 * In this abstract base class, no actual window peer is constructed. This should be
 	 * done in specialised derived classes.
+	 * 
+	 * Only one Window can be constructed at a time; to create another Window you must
+	 * first destroy() the first window.
 	 *
 	 * @param title The window's title
 	 * @param x, y, width, height The position and dimensions of the client area of
 	 * the window. The dimensions may be ignored if the window cannot be made non-
 	 * fullscreen. The position may be ignored in either case.
+	 * @throws RuntimeException if you attempt to create more than one window at the same time
 	 */
 	protected Window(String title, int x, int y, int width, int height) {
+		if (created)
+			throw new RuntimeException("Only one LWJGL window may be instantiated at any one time.");
 		this.title = title;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		
+		created = true;
 	}
 
 	/**
@@ -157,7 +167,15 @@ public abstract class Window {
 	/**
 	 * Destroy the window.
 	 */
-	public final native void destroy();
+	public final void destroy() {
+		created = false;
+		nDestroy();
+	}
+	
+	/**
+	 * Natively destroy the window
+	 */
+	private native void nDestroy();
 	
 	/**
 	 * @return the native window handle
