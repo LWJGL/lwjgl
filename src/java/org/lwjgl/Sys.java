@@ -82,14 +82,14 @@ public final class Sys {
 	/**
 	 * Debug flag.
 	 */
-	public static final boolean debug;
+	public static final boolean DEBUG;
 
 	static {
 		String debug_level_prop = System.getProperty("org.lwjgl.Sys.debug", "false");
 		if (debug_level_prop.equals("true"))
-			debug = true;
+			DEBUG = true;
 		else
-			debug = false;
+			DEBUG = false;
 		initialize();
 	}
 
@@ -111,15 +111,8 @@ public final class Sys {
 	 * is true.
 	 */
 	public static void log(String msg) {
-		if (isDebugEnabled())
+		if (Sys.DEBUG)
 			System.err.println(msg);
-	}
-
-	/**
-	 * @return true if debugging has been enabled
-	 */
-	public static boolean isDebugEnabled() {
-		return debug;
 	}
 
 	/**
@@ -127,7 +120,7 @@ public final class Sys {
 	 */
 	private static void initialize() {
 		System.loadLibrary(LIBRARY_NAME);
-		setDebug(debug);
+		setDebug(DEBUG);
 		setTime(0);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
