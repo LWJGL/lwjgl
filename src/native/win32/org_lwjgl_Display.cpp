@@ -383,6 +383,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		return JNI_FALSE;
 	}
 
+	if (desc.cAlphaBits < alphaBits) {
+		printf("This application requires a greater alpha depth.\n");
+		destroyAll();
+		return JNI_FALSE;
+	}
+
 	if (desc.cStencilBits < stencilBits) {
 		printf("This application requires a greater stencil depth.\n");
 		destroyAll();
