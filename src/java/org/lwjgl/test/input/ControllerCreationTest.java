@@ -178,8 +178,6 @@ public class ControllerCreationTest {
 
       render();
 
-      Window.paint();
-
       if (Sys.getTime() - statustime > Sys.getTimerResolution()) {
         System.out.print(".");
         statustime = Sys.getTime();

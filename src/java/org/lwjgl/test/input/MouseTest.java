@@ -207,7 +207,6 @@ public class MouseTest {
         if(Window.isMinimized()) {
           if(Window.isDirty()) {
             render();
-            Window.paint();
           }          
           pause(100);
           continue;
@@ -216,7 +215,6 @@ public class MouseTest {
         // render and flip
         logic();
         render();
-        Window.paint();
       }
       Thread.yield();
     }

@@ -185,8 +185,6 @@ public class KeyboardTest {
 
       render();
 
-      Window.paint();
-
       try {
         Thread.sleep(0);
       } catch (Exception e) {

@@ -116,7 +116,6 @@ public final class VBOTest {
                  Keyboard.poll();
                  mainLoop();
                  render();
-                 Window.paint();
              }   
          } catch (Throwable t) {
              t.printStackTrace();

@@ -197,7 +197,6 @@ public class ControllerTest {
         if(Window.isMinimized()) {
           if(Window.isDirty()) {
             render();
-            Window.paint();
           }
           pause(100);
           continue;
@@ -206,7 +205,6 @@ public class ControllerTest {
         // render and flip
         logic();
         render();
-        Window.paint();
       }
       Thread.yield();
     }

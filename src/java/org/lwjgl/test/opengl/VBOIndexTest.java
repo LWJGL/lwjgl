@@ -120,7 +120,6 @@ public final class VBOIndexTest {
                  Keyboard.poll();
                  mainLoop();
                  render();
-                 Window.paint();
              }   
          } catch (Throwable t) {
              t.printStackTrace();

@@ -180,8 +180,6 @@ public class MouseCreationTest {
 
 			render();
 
-			Window.paint();
-
 			if (Sys.getTime() - statustime > Sys.getTimerResolution()) {
 				System.out.print(".");
 				statustime = Sys.getTime();

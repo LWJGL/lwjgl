@@ -216,15 +216,11 @@ public class HWCursorTest {
         processKeyboard();
 
         render();
-
-        // paint window
-        Window.paint();
       } else {
 
         // no need to render/paint if nothing has changed (ie. window dragged over)
         if (Window.isDirty()) {
           render();
-          Window.paint();
         }
 
         // don't waste cpu time, sleep more
