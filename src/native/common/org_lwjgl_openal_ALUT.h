@@ -50,7 +50,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_init
 /*
  * Class:     org_lwjgl_openal_ALUT
  * Method:    loadWAVFile
- * Signature: (Ljava/lang/String;)Lorg/lwjgl/openal/ALUTLoadWAVFile;
+ * Signature: (Ljava/lang/String;)Lorg/lwjgl/openal/ALUTLoadWAVData;
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile
   (JNIEnv *, jobject, jstring);
@@ -58,10 +58,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile
 /*
  * Class:     org_lwjgl_openal_ALUT
  * Method:    loadWAVMemory
- * Signature: ([B)Lorg/lwjgl/openal/ALUTLoadWAVFile;
+ * Signature: (I)Lorg/lwjgl/openal/ALUTLoadWAVData;
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory
-  (JNIEnv *, jobject, jbyteArray);
+  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     org_lwjgl_openal_ALUT
