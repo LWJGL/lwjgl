@@ -83,8 +83,8 @@ final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 	public void destroy() {
 		super.destroy();
 		LinuxDisplay.lockAWT();
-		GLContext.unloadOpenGLLibrary();
 		LinuxDisplay.decDisplay();
+		GLContext.unloadOpenGLLibrary();
 		LinuxDisplay.unlockAWT();
 	}
 }
