@@ -2238,7 +2238,7 @@ public class ALTest extends BasicTest {
                     break;
                     
                 case '6':
-                    Room.put(-10000);
+                    Room.put(0, -10000);
                     eax.eaxSet(EAX.LISTENER_GUID, EAXListenerProperties.ROOM | EAXListenerProperties.DEFERRED, 0,
                     	Sys.getDirectBufferAddress(Room), 4);
                     if ((error = al.getError()) != AL.NO_ERROR)
