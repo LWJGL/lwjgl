@@ -269,26 +269,12 @@ public final class GLContext {
 		where the numbers all have one or more digits.
 		*/
 		String version = GL11.glGetString(GL11.GL_VERSION);
+		StringTokenizer version_tokenizer = new StringTokenizer(version, ". ");
+		String major_string = version_tokenizer.nextToken();
+		String minor_string = version_tokenizer.nextToken();
 
-		int majorEnd = version.indexOf('.');
-		int minorEnd = -1;
-		if (majorEnd != -1) {
-			minorEnd = version.indexOf('.', majorEnd + 1);
-		} else {
-			majorEnd = version.length();
-		}
-
-		int majorVersion;
-		if (majorEnd == 0) {
-			throw new OpenGLException("Unable to determine GL version.");
-		}
-		majorVersion = Integer.parseInt(version.substring(0, majorEnd));
-		int minorVersion;
-		if (minorEnd == -1) {
-			minorVersion = 0;
-		} else {
-			minorVersion = Integer.parseInt(version.substring(majorEnd + 1, minorEnd));
-		}
+		int majorVersion = Integer.parseInt(major_string);
+		int minorVersion = Integer.parseInt(minor_string);
 
 		if ( majorVersion == 2 ) {
 			// ----------------------[ 2.X ]----------------------
