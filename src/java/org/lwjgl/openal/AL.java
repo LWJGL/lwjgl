@@ -254,6 +254,7 @@ public final class AL {
 			while (c != null) {
 				try {
 					Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class });
+					findLibrary.setAccessible(true);
 					Object[] arguments = new Object[] { libname };
 					return (String)findLibrary.invoke(o, arguments);
 				} catch (NoSuchMethodException e) {
