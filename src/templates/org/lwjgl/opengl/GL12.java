@@ -99,7 +99,7 @@ public interface GL12 {
 
 	void glTexImage3D(@GLenum int target, int level, int internalFormat, @GLsizei int width, @GLsizei int height, @GLsizei int depth, int border, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check(value="GLBufferChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border)", canBeNull=true)
+			@Check(value="GLChecks.calculateTexImage3DStorage(pixels, format, type, width, height, depth, border)", canBeNull=true)
 			@Const
 			@GLbyte
 			@GLshort
@@ -109,7 +109,7 @@ public interface GL12 {
 
 	void glTexSubImage3D(@GLenum int target, int level, int xoffset, int yoffset, int zoffset, @GLsizei int width, @GLsizei int height, @GLsizei int depth, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, depth)")
+			@Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, depth)")
 			@Const
 			@GLbyte
 			@GLshort

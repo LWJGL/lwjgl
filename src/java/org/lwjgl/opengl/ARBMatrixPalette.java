@@ -24,55 +24,58 @@ public final class ARBMatrixPalette {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMatrixIndexuARB(IntBuffer pIndices) {
-		BufferChecks.checkDirect(pIndices);
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexuivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pIndices);
 		nglMatrixIndexuivARB((pIndices.remaining()), pIndices, pIndices.position(), function_pointer);
 	}
 	private static native void nglMatrixIndexuivARB(int size, IntBuffer pIndices, int pIndices_position, long function_pointer);
 
 	public static void glMatrixIndexuARB(ShortBuffer pIndices) {
-		BufferChecks.checkDirect(pIndices);
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexusvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pIndices);
 		nglMatrixIndexusvARB((pIndices.remaining()), pIndices, pIndices.position(), function_pointer);
 	}
 	private static native void nglMatrixIndexusvARB(int size, ShortBuffer pIndices, int pIndices_position, long function_pointer);
 
 	public static void glMatrixIndexuARB(ByteBuffer pIndices) {
-		BufferChecks.checkDirect(pIndices);
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexubvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pIndices);
 		nglMatrixIndexubvARB((pIndices.remaining()), pIndices, pIndices.position(), function_pointer);
 	}
 	private static native void nglMatrixIndexubvARB(int size, ByteBuffer pIndices, int pIndices_position, long function_pointer);
 
 	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().ARB_matrix_palette_glMatrixIndexPointerARB_pPointer = pPointer;
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_BYTE, stride, pPointer, pPointer.position(), function_pointer);
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().ARB_matrix_palette_glMatrixIndexPointerARB_pPointer = pPointer;
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_INT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, ShortBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().ARB_matrix_palette_glMatrixIndexPointerARB_pPointer = pPointer;
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_SHORT, stride, pPointer, pPointer.position() << 1, function_pointer);
 	}
 	private static native void nglMatrixIndexPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
 	public static void glMatrixIndexPointerARB(int size, int type, int stride, int pPointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().ARB_matrix_palette_glMatrixIndexPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglMatrixIndexPointerARBBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
 	private static native void nglMatrixIndexPointerARBBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);

@@ -1,6 +1,4 @@
 #!/bin/bash
 
-./autogen.sh
-./configure
+cd linux
 make
-strip .libs/liblwjgl.0.0.0

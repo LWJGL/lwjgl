@@ -46,57 +46,61 @@ import java.nio.*;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-class GLBufferChecks {
+class GLChecks {
 
 	/** Static methods only! */
-	private GLBufferChecks() {
+	private GLChecks() {
+	}
+
+	static References getReferences() {
+		return StateTracker.getReferencesStack().getReferences();
 	}
 
 	/** Helper method to ensure that array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOdisabled() {
-		if ( BufferObjectTracker.getVBOArrayStack().getState() != 0 )
+		if (StateTracker.getVBOArrayStack().getState() != 0)
 			throw new OpenGLException("Cannot use Buffers when Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureArrayVBOenabled() {
-		if ( BufferObjectTracker.getVBOArrayStack().getState() == 0 )
+		if (StateTracker.getVBOArrayStack().getState() == 0)
 			throw new OpenGLException("Cannot use offsets when Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureElementVBOdisabled() {
-		if ( BufferObjectTracker.getVBOElementStack().getState() != 0 )
+		if (StateTracker.getVBOElementStack().getState() != 0)
 			throw new OpenGLException("Cannot use Buffers when Element Array Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that element array buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureElementVBOenabled() {
-		if ( BufferObjectTracker.getVBOElementStack().getState() == 0 )
+		if (StateTracker.getVBOElementStack().getState() == 0)
 			throw new OpenGLException("Cannot use offsets when Element Array Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensurePackPBOdisabled() {
-		if ( BufferObjectTracker.getPBOPackStack().getState() != 0 )
+		if (StateTracker.getPBOPackStack().getState() != 0)
 			throw new OpenGLException("Cannot use Buffers when Pixel Pack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel pack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensurePackPBOenabled() {
-		if ( BufferObjectTracker.getPBOPackStack().getState() == 0 )
+		if (StateTracker.getPBOPackStack().getState() == 0)
 			throw new OpenGLException("Cannot use offsets when Pixel Pack Buffer Object is disabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are disabled. If they are enabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOdisabled() {
-		if ( BufferObjectTracker.getPBOUnpackStack().getState() != 0 )
+		if (StateTracker.getPBOUnpackStack().getState() != 0)
 			throw new OpenGLException("Cannot use Buffers when Pixel Unpack Buffer Object is enabled");
 	}
 
 	/** Helper method to ensure that pixel unpack buffer objects are enabled. If they are disabled, we'll throw an OpenGLException */
 	static void ensureUnpackPBOenabled() {
-		if ( BufferObjectTracker.getPBOUnpackStack().getState() == 0 )
+		if (StateTracker.getPBOUnpackStack().getState() == 0)
 			throw new OpenGLException("Cannot use offsets when Pixel Unpack Buffer Object is disabled");
 	}
 

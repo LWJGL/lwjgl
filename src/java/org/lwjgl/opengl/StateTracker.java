@@ -37,16 +37,18 @@ import java.util.Map;
 import java.nio.IntBuffer;
 
 /** Track Vertex Buffer Objects by context. */
-final class BufferObjectTracker {
+final class StateTracker {
 	private final StateStack vbo_array_stack;
 	private final StateStack vbo_element_stack;
 
 	private final StateStack pbo_pack_stack;
 	private final StateStack pbo_unpack_stack;
 
+	private final ReferencesStack references_stack;
+	
 	private final StateStack attrib_stack;
 
-	BufferObjectTracker() {
+	StateTracker() {
 		int stack_size = Math.max(1, Util.glGetInteger(GL11.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH));
 
 		vbo_array_stack = new StateStack(stack_size, 0);
@@ -54,6 +56,8 @@ final class BufferObjectTracker {
 
 		pbo_pack_stack = new StateStack(stack_size, 0);
 		pbo_unpack_stack = new StateStack(stack_size, 0);
+
+		references_stack = new ReferencesStack(stack_size);
 
 		attrib_stack = new StateStack(stack_size, 0);
 	}
@@ -64,6 +68,7 @@ final class BufferObjectTracker {
 			getVBOElementStack().popState();
 			getPBOPackStack().popState();
 			getPBOUnpackStack().popState();
+			getReferencesStack().popState();
 		}
 	}
 	
@@ -75,6 +80,7 @@ final class BufferObjectTracker {
 			getVBOElementStack().pushState();
 			getPBOPackStack().pushState();
 			getPBOUnpackStack().pushState();
+			getReferencesStack().pushState();
 		}
 	}
 
@@ -127,7 +133,11 @@ final class BufferObjectTracker {
 		return GLContext.getCapabilities().tracker.pbo_unpack_stack;
 	}
 
-	static StateStack getClientAttribStack() {
+	static ReferencesStack getReferencesStack() {
+		return GLContext.getCapabilities().tracker.references_stack;
+	}
+	
+	private static StateStack getClientAttribStack() {
 		return GLContext.getCapabilities().tracker.attrib_stack;
 	}
 }

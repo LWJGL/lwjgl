@@ -595,33 +595,34 @@ public final class GL11 {
 	private static native void nglTexCoord1f(float s, long function_pointer);
 
 	public static void glTexCoordPointer(int size, int stride, FloatBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glTexCoordPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glTexCoordPointer_pointer = pointer;
 		nglTexCoordPointer(size, GL11.GL_FLOAT, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	private static native void nglTexCoordPointer(int size, int type, int stride, Buffer pointer, int pointer_position, long function_pointer);
 	public static void glTexCoordPointer(int size, int type, int stride, int pointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glTexCoordPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglTexCoordPointerBO(size, type, stride, pointer_buffer_offset, function_pointer);
 	}
 	private static native void nglTexCoordPointerBO(int size, int type, int stride, int pointer_buffer_offset, long function_pointer);
 
 	public static void glTexEnv(int target, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glTexEnviv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglTexEnviv(target, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglTexEnviv(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glTexEnv(int target, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glTexEnvfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglTexEnvfv(target, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglTexEnvfv(int target, int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -641,9 +642,9 @@ public final class GL11 {
 	private static native void nglTexEnvf(int target, int pname, float param, long function_pointer);
 
 	public static void glTexGen(int coord, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glTexGeniv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglTexGeniv(coord, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglTexGeniv(int coord, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -656,9 +657,9 @@ public final class GL11 {
 	private static native void nglTexGeni(int coord, int pname, int param, long function_pointer);
 
 	public static void glTexGen(int coord, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glTexGenfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglTexGenfv(coord, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglTexGenfv(int coord, int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -671,17 +672,17 @@ public final class GL11 {
 	private static native void nglTexGenf(int coord, int pname, float param, long function_pointer);
 
 	public static void glTexParameter(int target, int pname, IntBuffer param) {
-		BufferChecks.checkBuffer(param, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glTexParameteriv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(param, 4);
 		nglTexParameteriv(target, pname, param, param.position(), function_pointer);
 	}
 	private static native void nglTexParameteriv(int target, int pname, IntBuffer param, int param_position, long function_pointer);
 
 	public static void glTexParameter(int target, int pname, FloatBuffer param) {
-		BufferChecks.checkBuffer(param, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glTexParameterfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(param, 4);
 		nglTexParameterfv(target, pname, param, param.position(), function_pointer);
 	}
 	private static native void nglTexParameterfv(int target, int pname, FloatBuffer param, int param_position, long function_pointer);
@@ -701,157 +702,157 @@ public final class GL11 {
 	private static native void nglTexParameterf(int target, int pname, float param, long function_pointer);
 
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ByteBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position(), function_pointer);
 	}
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, FloatBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, IntBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ShortBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 1, function_pointer);
 	}
 	private static native void nglTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, int pixels_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglTexSubImage2DBO(target, level, xoffset, yoffset, width, height, format, type, pixels_buffer_offset, function_pointer);
 	}
 	private static native void nglTexSubImage2DBO(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, int pixels_buffer_offset, long function_pointer);
 
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ByteBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position(), function_pointer);
 	}
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, FloatBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, IntBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ShortBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, 1, 1));
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 1, function_pointer);
 	}
 	private static native void nglTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, int pixels_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glTexSubImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglTexSubImage1DBO(target, level, xoffset, width, format, type, pixels_buffer_offset, function_pointer);
 	}
 	private static native void nglTexSubImage1DBO(int target, int level, int xoffset, int width, int format, int type, int pixels_buffer_offset, long function_pointer);
 
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ByteBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() : 0, function_pointer);
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, FloatBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0, function_pointer);
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, IntBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0, function_pointer);
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border));
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels != null ? pixels.position() << 1 : 0, function_pointer);
 	}
 	private static native void nglTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, int pixels_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage2D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglTexImage2DBO(target, level, internalformat, width, height, border, format, type, pixels_buffer_offset, function_pointer);
 	}
 	private static native void nglTexImage2DBO(int target, int level, int internalformat, int width, int height, int border, int format, int type, int pixels_buffer_offset, long function_pointer);
 
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ByteBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() : 0, function_pointer);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, FloatBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0, function_pointer);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, IntBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() << 2 : 0, function_pointer);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ShortBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		if (pixels != null)
-			BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		if (pixels != null)
+			BufferChecks.checkBuffer(pixels, GLChecks.calculateTexImage1DStorage(pixels, format, type, width, border));
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels != null ? pixels.position() << 1 : 0, function_pointer);
 	}
 	private static native void nglTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, int pixels_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glTexImage1D_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglTexImage1DBO(target, level, internalformat, width, border, format, type, pixels_buffer_offset, function_pointer);
 	}
 	private static native void nglTexImage1DBO(int target, int level, int internalformat, int width, int border, int format, int type, int pixels_buffer_offset, long function_pointer);
@@ -906,24 +907,26 @@ public final class GL11 {
 	private static native void nglVertex2f(float x, float y, long function_pointer);
 
 	public static void glVertexPointer(int size, int stride, FloatBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glVertexPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glVertexPointer_pointer = pointer;
 		nglVertexPointer(size, GL11.GL_FLOAT, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	public static void glVertexPointer(int size, int stride, IntBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glVertexPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glVertexPointer_pointer = pointer;
 		nglVertexPointer(size, GL11.GL_INT, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	private static native void nglVertexPointer(int size, int type, int stride, Buffer pointer, int pointer_position, long function_pointer);
 	public static void glVertexPointer(int size, int type, int stride, int pointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glVertexPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglVertexPointerBO(size, type, stride, pointer_buffer_offset, function_pointer);
 	}
 	private static native void nglVertexPointerBO(int size, int type, int stride, int pointer_buffer_offset, long function_pointer);
@@ -950,7 +953,7 @@ public final class GL11 {
 	private static native void nglPushAttrib(int mask, long function_pointer);
 
 	public static void glPopClientAttrib() {
-		BufferObjectTracker.popAttrib();
+		StateTracker.popAttrib();
 		long function_pointer = GLContext.getCapabilities().GL11_glPopClientAttrib_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglPopClientAttrib(function_pointer);
@@ -958,7 +961,7 @@ public final class GL11 {
 	private static native void nglPopClientAttrib(long function_pointer);
 
 	public static void glPushClientAttrib(int mask) {
-		BufferObjectTracker.pushAttrib(mask);
+		StateTracker.pushAttrib(mask);
 		long function_pointer = GLContext.getCapabilities().GL11_glPushClientAttrib_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
 		nglPushClientAttrib(mask, function_pointer);
@@ -1043,31 +1046,31 @@ public final class GL11 {
 	private static native void nglReadBuffer(int mode, long function_pointer);
 
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer pixels) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glReadPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position(), function_pointer);
 	}
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, IntBuffer pixels) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glReadPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, ShortBuffer pixels) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glReadPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position() << 1, function_pointer);
 	}
 	private static native void nglReadPixels(int x, int y, int width, int height, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, int pixels_buffer_offset) {
-		GLBufferChecks.ensurePackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glReadPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOenabled();
 		nglReadPixelsBO(x, y, width, height, format, type, pixels_buffer_offset, function_pointer);
 	}
 	private static native void nglReadPixelsBO(int x, int y, int width, int height, int format, int type, int pixels_buffer_offset, long function_pointer);
@@ -1116,9 +1119,10 @@ public final class GL11 {
 	private static native void nglScissor(int x, int y, int width, int height, long function_pointer);
 
 	public static void glSelectBuffer(IntBuffer buffer) {
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().GL11_glSelectBuffer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().GL11_glSelectBuffer_buffer = buffer;
 		nglSelectBuffer((buffer.remaining()), buffer, buffer.position(), function_pointer);
 	}
 	private static native void nglSelectBuffer(int size, IntBuffer buffer, int buffer_position, long function_pointer);
@@ -1131,9 +1135,9 @@ public final class GL11 {
 	private static native void nglShadeModel(int mode, long function_pointer);
 
 	public static void glMultMatrix(FloatBuffer m) {
-		BufferChecks.checkBuffer(m, 16);
 		long function_pointer = GLContext.getCapabilities().GL11_glMultMatrixf_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(m, 16);
 		nglMultMatrixf(m, m.position(), function_pointer);
 	}
 	private static native void nglMultMatrixf(FloatBuffer m, int m_position, long function_pointer);
@@ -1174,31 +1178,34 @@ public final class GL11 {
 	private static native void nglNormal3b(byte nx, byte ny, byte nz, long function_pointer);
 
 	public static void glNormalPointer(int stride, ByteBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glNormalPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glNormalPointer_pointer = pointer;
 		nglNormalPointer(GL11.GL_BYTE, stride, pointer, pointer.position(), function_pointer);
 	}
 	public static void glNormalPointer(int stride, FloatBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glNormalPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glNormalPointer_pointer = pointer;
 		nglNormalPointer(GL11.GL_FLOAT, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	public static void glNormalPointer(int stride, IntBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glNormalPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glNormalPointer_pointer = pointer;
 		nglNormalPointer(GL11.GL_INT, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	private static native void nglNormalPointer(int type, int stride, Buffer pointer, int pointer_position, long function_pointer);
 	public static void glNormalPointer(int type, int stride, int pointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glNormalPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglNormalPointerBO(type, stride, pointer_buffer_offset, function_pointer);
 	}
 	private static native void nglNormalPointerBO(int type, int stride, int pointer_buffer_offset, long function_pointer);
@@ -1218,49 +1225,49 @@ public final class GL11 {
 	private static native void nglPassThrough(float token, long function_pointer);
 
 	public static void glPixelMapu(int map, ShortBuffer values) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL11_glPixelMapusv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(values);
 		nglPixelMapusv(map, (values.remaining()), values, values.position(), function_pointer);
 	}
 	private static native void nglPixelMapusv(int map, int mapsize, ShortBuffer values, int values_position, long function_pointer);
 	public static void glPixelMapusv(int map, int mapsize, int values_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glPixelMapusv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglPixelMapusvBO(map, mapsize, values_buffer_offset, function_pointer);
 	}
 	private static native void nglPixelMapusvBO(int map, int mapsize, int values_buffer_offset, long function_pointer);
 
 	public static void glPixelMapu(int map, IntBuffer values) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL11_glPixelMapuiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(values);
 		nglPixelMapuiv(map, (values.remaining()), values, values.position(), function_pointer);
 	}
 	private static native void nglPixelMapuiv(int map, int mapsize, IntBuffer values, int values_position, long function_pointer);
 	public static void glPixelMapuiv(int map, int mapsize, int values_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glPixelMapuiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglPixelMapuivBO(map, mapsize, values_buffer_offset, function_pointer);
 	}
 	private static native void nglPixelMapuivBO(int map, int mapsize, int values_buffer_offset, long function_pointer);
 
 	public static void glPixelMap(int map, FloatBuffer values) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL11_glPixelMapfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(values);
 		nglPixelMapfv(map, (values.remaining()), values, values.position(), function_pointer);
 	}
 	private static native void nglPixelMapfv(int map, int mapsize, FloatBuffer values, int values_position, long function_pointer);
 	public static void glPixelMapfv(int map, int mapsize, int values_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glPixelMapfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglPixelMapfvBO(map, mapsize, values_buffer_offset, function_pointer);
 	}
 	private static native void nglPixelMapfvBO(int map, int mapsize, int values_buffer_offset, long function_pointer);
@@ -1322,17 +1329,17 @@ public final class GL11 {
 	private static native void nglPolygonOffset(float factor, float units, long function_pointer);
 
 	public static void glPolygonStipple(ByteBuffer mask) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(mask, 1024);
 		long function_pointer = GLContext.getCapabilities().GL11_glPolygonStipple_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(mask, 1024);
 		nglPolygonStipple(mask, mask.position(), function_pointer);
 	}
 	private static native void nglPolygonStipple(ByteBuffer mask, int mask_position, long function_pointer);
 	public static void glPolygonStipple(int mask_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glPolygonStipple_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglPolygonStippleBO(mask_buffer_offset, function_pointer);
 	}
 	private static native void nglPolygonStippleBO(int mask_buffer_offset, long function_pointer);
@@ -1353,17 +1360,17 @@ public final class GL11 {
 	private static native boolean nglIsTexture(int texture, long function_pointer);
 
 	public static void glLight(int light, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glLightiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglLightiv(light, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglLightiv(int light, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glLight(int light, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glLightfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglLightfv(light, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglLightfv(int light, int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -1383,17 +1390,17 @@ public final class GL11 {
 	private static native void nglLightf(int light, int pname, float param, long function_pointer);
 
 	public static void glLightModel(int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glLightModeliv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglLightModeliv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglLightModeliv(int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glLightModel(int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glLightModelfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglLightModelfv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglLightModelfv(int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -1441,9 +1448,9 @@ public final class GL11 {
 	private static native void nglLoadIdentity(long function_pointer);
 
 	public static void glLoadMatrix(FloatBuffer m) {
-		BufferChecks.checkBuffer(m, 16);
 		long function_pointer = GLContext.getCapabilities().GL11_glLoadMatrixf_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(m, 16);
 		nglLoadMatrixf(m, m.position(), function_pointer);
 	}
 	private static native void nglLoadMatrixf(FloatBuffer m, int m_position, long function_pointer);
@@ -1463,17 +1470,17 @@ public final class GL11 {
 	private static native void nglLogicOp(int opcode, long function_pointer);
 
 	public static void glMap1f(int target, float u1, float u2, int stride, int order, FloatBuffer points) {
-		BufferChecks.checkDirect(points);
 		long function_pointer = GLContext.getCapabilities().GL11_glMap1f_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(points);
 		nglMap1f(target, u1, u2, stride, order, points, points.position(), function_pointer);
 	}
 	private static native void nglMap1f(int target, float u1, float u2, int stride, int order, FloatBuffer points, int points_position, long function_pointer);
 
 	public static void glMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points) {
-		BufferChecks.checkDirect(points);
 		long function_pointer = GLContext.getCapabilities().GL11_glMap2f_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(points);
 		nglMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points, points.position(), function_pointer);
 	}
 	private static native void nglMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points, int points_position, long function_pointer);
@@ -1493,17 +1500,17 @@ public final class GL11 {
 	private static native void nglMapGrid1f(int un, float u1, float u2, long function_pointer);
 
 	public static void glMaterial(int face, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glMaterialiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglMaterialiv(face, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglMaterialiv(int face, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glMaterial(int face, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glMaterialfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglMaterialfv(face, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglMaterialfv(int face, int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -1531,17 +1538,17 @@ public final class GL11 {
 	private static native boolean nglIsList(int list, long function_pointer);
 
 	public static void glGetPolygonStipple(ByteBuffer mask) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(mask, 1024);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPolygonStipple_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(mask, 1024);
 		nglGetPolygonStipple(mask, mask.position(), function_pointer);
 	}
 	private static native void nglGetPolygonStipple(ByteBuffer mask, int mask_position, long function_pointer);
 	public static void glGetPolygonStipple(int mask_buffer_offset) {
-		GLBufferChecks.ensurePackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPolygonStipple_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOenabled();
 		nglGetPolygonStippleBO(mask_buffer_offset, function_pointer);
 	}
 	private static native void nglGetPolygonStippleBO(int mask_buffer_offset, long function_pointer);
@@ -1555,95 +1562,95 @@ public final class GL11 {
 	private static native java.lang.String nglGetString(int name, long function_pointer);
 
 	public static void glGetTexEnv(int coord, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexEnvfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexEnvfv(coord, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexEnvfv(int coord, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexEnv(int coord, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexEnviv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexEnviv(coord, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexEnviv(int coord, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexGen(int coord, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexGenfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexGenfv(coord, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexGenfv(int coord, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexGen(int coord, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexGeniv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexGeniv(coord, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexGeniv(int coord, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexImage(int target, int level, int format, int type, ByteBuffer pixels) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, 1, 1, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexImage_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, 1, 1, 1));
 		nglGetTexImage(target, level, format, type, pixels, pixels.position(), function_pointer);
 	}
 	public static void glGetTexImage(int target, int level, int format, int type, IntBuffer pixels) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, 1, 1, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexImage_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, 1, 1, 1));
 		nglGetTexImage(target, level, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glGetTexImage(int target, int level, int format, int type, ShortBuffer pixels) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, 1, 1, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexImage_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, 1, 1, 1));
 		nglGetTexImage(target, level, format, type, pixels, pixels.position() << 1, function_pointer);
 	}
 	private static native void nglGetTexImage(int target, int level, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glGetTexImage(int target, int level, int format, int type, int pixels_buffer_offset) {
-		GLBufferChecks.ensurePackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexImage_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOenabled();
 		nglGetTexImageBO(target, level, format, type, pixels_buffer_offset, function_pointer);
 	}
 	private static native void nglGetTexImageBO(int target, int level, int format, int type, int pixels_buffer_offset, long function_pointer);
 
 	public static void glGetTexLevelParameter(int target, int level, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexLevelParameteriv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexLevelParameteriv(target, level, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexLevelParameteriv(int target, int level, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexLevelParameter(int target, int level, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexLevelParameterfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexLevelParameterfv(target, level, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexLevelParameterfv(int target, int level, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexParameter(int target, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexParameteriv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexParameteriv(target, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexParameteriv(int target, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetTexParameter(int target, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetTexParameterfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetTexParameterfv(target, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetTexParameterfv(int target, int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -1663,38 +1670,38 @@ public final class GL11 {
 	private static native void nglInitNames(long function_pointer);
 
 	public static void glInterleavedArrays(int format, int stride, ByteBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glInterleavedArrays_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
 		nglInterleavedArrays(format, stride, pointer, pointer.position(), function_pointer);
 	}
 	public static void glInterleavedArrays(int format, int stride, FloatBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glInterleavedArrays_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	public static void glInterleavedArrays(int format, int stride, IntBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glInterleavedArrays_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	public static void glInterleavedArrays(int format, int stride, ShortBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glInterleavedArrays_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 1, function_pointer);
 	}
 	private static native void nglInterleavedArrays(int format, int stride, Buffer pointer, int pointer_position, long function_pointer);
 	public static void glInterleavedArrays(int format, int stride, int pointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glInterleavedArrays_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglInterleavedArraysBO(format, stride, pointer_buffer_offset, function_pointer);
 	}
 	private static native void nglInterleavedArraysBO(int format, int stride, int pointer_buffer_offset, long function_pointer);
@@ -1730,17 +1737,17 @@ public final class GL11 {
 	private static native void nglFlush(long function_pointer);
 
 	public static void glFog(int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glFogiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglFogiv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglFogiv(int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glFog(int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glFogfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglFogfv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglFogfv(int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -1782,49 +1789,49 @@ public final class GL11 {
 	private static native int nglGenLists(int range, long function_pointer);
 
 	public static void glGenTextures(IntBuffer textures) {
-		BufferChecks.checkDirect(textures);
 		long function_pointer = GLContext.getCapabilities().GL11_glGenTextures_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(textures);
 		nglGenTextures((textures.remaining()), textures, textures.position(), function_pointer);
 	}
 	private static native void nglGenTextures(int n, IntBuffer textures, int textures_position, long function_pointer);
 
 	public static void glGetInteger(int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 16);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetIntegerv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetIntegerv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetIntegerv(int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetFloat(int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 16);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetFloatv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetFloatv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetFloatv(int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetDouble(int pname, DoubleBuffer params) {
-		BufferChecks.checkBuffer(params, 16);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetDoublev_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetDoublev(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetDoublev(int pname, DoubleBuffer params, int params_position, long function_pointer);
 
 	public static void glGetBoolean(int pname, ByteBuffer params) {
-		BufferChecks.checkBuffer(params, 16);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetBooleanv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 16);
 		nglGetBooleanv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetBooleanv(int pname, ByteBuffer params, int params_position, long function_pointer);
 
 	public static void glGetClipPlane(int plane, DoubleBuffer equation) {
-		BufferChecks.checkBuffer(equation, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetClipPlane_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(equation, 4);
 		nglGetClipPlane(plane, equation, equation.position(), function_pointer);
 	}
 	private static native void nglGetClipPlane(int plane, DoubleBuffer equation, int equation_position, long function_pointer);
@@ -1838,105 +1845,105 @@ public final class GL11 {
 	private static native int nglGetError(long function_pointer);
 
 	public static void glGetLight(int light, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetLightiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetLightiv(light, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetLightiv(int light, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetLight(int light, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetLightfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetLightfv(light, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetLightfv(int light, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetMap(int target, int query, IntBuffer v) {
-		BufferChecks.checkBuffer(v, 256);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetMapiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(v, 256);
 		nglGetMapiv(target, query, v, v.position(), function_pointer);
 	}
 	private static native void nglGetMapiv(int target, int query, IntBuffer v, int v_position, long function_pointer);
 
 	public static void glGetMap(int target, int query, FloatBuffer v) {
-		BufferChecks.checkBuffer(v, 256);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetMapfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(v, 256);
 		nglGetMapfv(target, query, v, v.position(), function_pointer);
 	}
 	private static native void nglGetMapfv(int target, int query, FloatBuffer v, int v_position, long function_pointer);
 
 	public static void glGetMaterial(int face, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetMaterialiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetMaterialiv(face, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetMaterialiv(int face, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetMaterial(int face, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetMaterialfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetMaterialfv(face, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetMaterialfv(int face, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetPixelMapu(int map, ShortBuffer values) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(values, 256);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPixelMapusv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(values, 256);
 		nglGetPixelMapusv(map, values, values.position(), function_pointer);
 	}
 	private static native void nglGetPixelMapusv(int map, ShortBuffer values, int values_position, long function_pointer);
 	public static void glGetPixelMapusv(int map, int values_buffer_offset) {
-		GLBufferChecks.ensurePackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPixelMapusv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOenabled();
 		nglGetPixelMapusvBO(map, values_buffer_offset, function_pointer);
 	}
 	private static native void nglGetPixelMapusvBO(int map, int values_buffer_offset, long function_pointer);
 
 	public static void glGetPixelMapu(int map, IntBuffer values) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(values, 256);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPixelMapuiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(values, 256);
 		nglGetPixelMapuiv(map, values, values.position(), function_pointer);
 	}
 	private static native void nglGetPixelMapuiv(int map, IntBuffer values, int values_position, long function_pointer);
 	public static void glGetPixelMapuiv(int map, int values_buffer_offset) {
-		GLBufferChecks.ensurePackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPixelMapuiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOenabled();
 		nglGetPixelMapuivBO(map, values_buffer_offset, function_pointer);
 	}
 	private static native void nglGetPixelMapuivBO(int map, int values_buffer_offset, long function_pointer);
 
 	public static void glGetPixelMap(int map, FloatBuffer values) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkBuffer(values, 256);
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPixelMapfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOdisabled();
+		BufferChecks.checkBuffer(values, 256);
 		nglGetPixelMapfv(map, values, values.position(), function_pointer);
 	}
 	private static native void nglGetPixelMapfv(int map, FloatBuffer values, int values_position, long function_pointer);
 	public static void glGetPixelMapfv(int map, int values_buffer_offset) {
-		GLBufferChecks.ensurePackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glGetPixelMapfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensurePackPBOenabled();
 		nglGetPixelMapfvBO(map, values_buffer_offset, function_pointer);
 	}
 	private static native void nglGetPixelMapfvBO(int map, int values_buffer_offset, long function_pointer);
 
 	public static void glFeedbackBuffer(int type, FloatBuffer buffer) {
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().GL11_glFeedbackBuffer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(buffer);
 		nglFeedbackBuffer((buffer.remaining()), type, buffer, buffer.position(), function_pointer);
 	}
 	private static native void nglFeedbackBuffer(int size, int type, FloatBuffer buffer, int buffer_position, long function_pointer);
@@ -1977,61 +1984,61 @@ public final class GL11 {
 	private static native void nglDrawBuffer(int mode, long function_pointer);
 
 	public static void glDrawElements(int mode, ByteBuffer indices) {
-		GLBufferChecks.ensureElementVBOdisabled();
-		BufferChecks.checkDirect(indices);
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawElements_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureElementVBOdisabled();
+		BufferChecks.checkDirect(indices);
 		nglDrawElements(mode, (indices.remaining()), GL11.GL_UNSIGNED_BYTE, indices, indices.position(), function_pointer);
 	}
 	public static void glDrawElements(int mode, IntBuffer indices) {
-		GLBufferChecks.ensureElementVBOdisabled();
-		BufferChecks.checkDirect(indices);
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawElements_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureElementVBOdisabled();
+		BufferChecks.checkDirect(indices);
 		nglDrawElements(mode, (indices.remaining()), GL11.GL_UNSIGNED_INT, indices, indices.position() << 2, function_pointer);
 	}
 	public static void glDrawElements(int mode, ShortBuffer indices) {
-		GLBufferChecks.ensureElementVBOdisabled();
-		BufferChecks.checkDirect(indices);
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawElements_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureElementVBOdisabled();
+		BufferChecks.checkDirect(indices);
 		nglDrawElements(mode, (indices.remaining()), GL11.GL_UNSIGNED_SHORT, indices, indices.position() << 1, function_pointer);
 	}
 	private static native void nglDrawElements(int mode, int count, int type, Buffer indices, int indices_position, long function_pointer);
 	public static void glDrawElements(int mode, int count, int type, int indices_buffer_offset) {
-		GLBufferChecks.ensureElementVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawElements_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureElementVBOenabled();
 		nglDrawElementsBO(mode, count, type, indices_buffer_offset, function_pointer);
 	}
 	private static native void nglDrawElementsBO(int mode, int count, int type, int indices_buffer_offset, long function_pointer);
 
 	public static void glDrawPixels(int width, int height, int format, int type, ByteBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglDrawPixels(width, height, format, type, pixels, pixels.position(), function_pointer);
 	}
 	public static void glDrawPixels(int width, int height, int format, int type, IntBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglDrawPixels(width, height, format, type, pixels, pixels.position() << 2, function_pointer);
 	}
 	public static void glDrawPixels(int width, int height, int format, int type, ShortBuffer pixels) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(pixels, GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(pixels, GLChecks.calculateImageStorage(pixels, format, type, width, height, 1));
 		nglDrawPixels(width, height, format, type, pixels, pixels.position() << 1, function_pointer);
 	}
 	private static native void nglDrawPixels(int width, int height, int format, int type, Buffer pixels, int pixels_position, long function_pointer);
 	public static void glDrawPixels(int width, int height, int format, int type, int pixels_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glDrawPixels_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglDrawPixelsBO(width, height, format, type, pixels_buffer_offset, function_pointer);
 	}
 	private static native void nglDrawPixelsBO(int width, int height, int format, int type, int pixels_buffer_offset, long function_pointer);
@@ -2044,17 +2051,18 @@ public final class GL11 {
 	private static native void nglEdgeFlag(boolean flag, long function_pointer);
 
 	public static void glEdgeFlagPointer(int stride, ByteBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glEdgeFlagPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glEdgeFlagPointer_pointer = pointer;
 		nglEdgeFlagPointer(stride, pointer, pointer.position(), function_pointer);
 	}
 	private static native void nglEdgeFlagPointer(int stride, Buffer pointer, int pointer_position, long function_pointer);
 	public static void glEdgeFlagPointer(int stride, int pointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glEdgeFlagPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglEdgeFlagPointerBO(stride, pointer_buffer_offset, function_pointer);
 	}
 	private static native void nglEdgeFlagPointerBO(int stride, int pointer_buffer_offset, long function_pointer);
@@ -2144,9 +2152,9 @@ public final class GL11 {
 	private static native void nglClearStencil(int s, long function_pointer);
 
 	public static void glClipPlane(int plane, DoubleBuffer equation) {
-		BufferChecks.checkBuffer(equation, 4);
 		long function_pointer = GLContext.getCapabilities().GL11_glClipPlane_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(equation, 4);
 		nglClipPlane(plane, equation, equation.position(), function_pointer);
 	}
 	private static native void nglClipPlane(int plane, DoubleBuffer equation, int equation_position, long function_pointer);
@@ -2208,24 +2216,26 @@ public final class GL11 {
 	private static native void nglColorMaterial(int face, int mode, long function_pointer);
 
 	public static void glColorPointer(int size, int stride, FloatBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glColorPointer_pointer = pointer;
 		nglColorPointer(size, GL11.GL_FLOAT, stride, pointer, pointer.position() << 2, function_pointer);
 	}
 	public static void glColorPointer(int size, boolean unsigned, int stride, ByteBuffer pointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pointer);
 		long function_pointer = GLContext.getCapabilities().GL11_glColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pointer);
+		GLChecks.getReferences().GL11_glColorPointer_pointer = pointer;
 		nglColorPointer(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pointer, pointer.position(), function_pointer);
 	}
 	private static native void nglColorPointer(int size, int type, int stride, Buffer pointer, int pointer_position, long function_pointer);
 	public static void glColorPointer(int size, int type, int stride, int pointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglColorPointerBO(size, type, stride, pointer_buffer_offset, function_pointer);
 	}
 	private static native void nglColorPointerBO(int size, int type, int stride, int pointer_buffer_offset, long function_pointer);
@@ -2273,9 +2283,9 @@ public final class GL11 {
 	private static native void nglCullFace(int mode, long function_pointer);
 
 	public static void glDeleteTextures(IntBuffer textures) {
-		BufferChecks.checkDirect(textures);
 		long function_pointer = GLContext.getCapabilities().GL11_glDeleteTextures_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(textures);
 		nglDeleteTextures((textures.remaining()), textures, textures.position(), function_pointer);
 	}
 	private static native void nglDeleteTextures(int n, IntBuffer textures, int textures_position, long function_pointer);
@@ -2323,17 +2333,17 @@ public final class GL11 {
 	private static native void nglBindTexture(int target, int texture, long function_pointer);
 
 	public static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkBuffer(bitmap, (((width + 7)/8)*height));
 		long function_pointer = GLContext.getCapabilities().GL11_glBitmap_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkBuffer(bitmap, (((width + 7)/8)*height));
 		nglBitmap(width, height, xorig, yorig, xmove, ymove, bitmap, bitmap.position(), function_pointer);
 	}
 	private static native void nglBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap, int bitmap_position, long function_pointer);
 	public static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, int bitmap_buffer_offset) {
-		GLBufferChecks.ensureUnpackPBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL11_glBitmap_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureUnpackPBOenabled();
 		nglBitmapBO(width, height, xorig, yorig, xmove, ymove, bitmap_buffer_offset, function_pointer);
 	}
 	private static native void nglBitmapBO(int width, int height, float xorig, float yorig, float xmove, float ymove, int bitmap_buffer_offset, long function_pointer);
@@ -2353,21 +2363,21 @@ public final class GL11 {
 	private static native void nglCallList(int list, long function_pointer);
 
 	public static void glCallLists(ByteBuffer lists) {
-		BufferChecks.checkDirect(lists);
 		long function_pointer = GLContext.getCapabilities().GL11_glCallLists_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(lists);
 		nglCallLists((lists.remaining()), GL11.GL_UNSIGNED_BYTE, lists, lists.position(), function_pointer);
 	}
 	public static void glCallLists(IntBuffer lists) {
-		BufferChecks.checkDirect(lists);
 		long function_pointer = GLContext.getCapabilities().GL11_glCallLists_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(lists);
 		nglCallLists((lists.remaining()), GL11.GL_UNSIGNED_INT, lists, lists.position() << 2, function_pointer);
 	}
 	public static void glCallLists(ShortBuffer lists) {
-		BufferChecks.checkDirect(lists);
 		long function_pointer = GLContext.getCapabilities().GL11_glCallLists_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(lists);
 		nglCallLists((lists.remaining()), GL11.GL_UNSIGNED_SHORT, lists, lists.position() << 1, function_pointer);
 	}
 	private static native void nglCallLists(int n, int type, Buffer lists, int lists_position, long function_pointer);

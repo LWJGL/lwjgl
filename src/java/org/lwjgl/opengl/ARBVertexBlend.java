@@ -63,94 +63,98 @@ public final class ARBVertexBlend {
 	private static native void nglVertexBlendARB(int count, long function_pointer);
 
 	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().ARB_vertex_blend_glWeightPointerARB_pPointer = pPointer;
 		nglWeightPointerARB(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().ARB_vertex_blend_glWeightPointerARB_pPointer = pPointer;
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position(), function_pointer);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().ARB_vertex_blend_glWeightPointerARB_pPointer = pPointer;
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().ARB_vertex_blend_glWeightPointerARB_pPointer = pPointer;
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pPointer, pPointer.position() << 1, function_pointer);
 	}
 	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
 	public static void glWeightPointerARB(int size, int type, int stride, int pPointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglWeightPointerARBBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
 	private static native void nglWeightPointerARBBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);
 
 	public static void glWeightuARB(IntBuffer pWeights) {
-		BufferChecks.checkDirect(pWeights);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightuivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pWeights);
 		nglWeightuivARB((pWeights.remaining()), pWeights, pWeights.position(), function_pointer);
 	}
 	private static native void nglWeightuivARB(int size, IntBuffer pWeights, int pWeights_position, long function_pointer);
 
 	public static void glWeightuARB(ShortBuffer pWeights) {
-		BufferChecks.checkDirect(pWeights);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightusvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pWeights);
 		nglWeightusvARB((pWeights.remaining()), pWeights, pWeights.position(), function_pointer);
 	}
 	private static native void nglWeightusvARB(int size, ShortBuffer pWeights, int pWeights_position, long function_pointer);
 
 	public static void glWeightuARB(ByteBuffer pWeights) {
-		BufferChecks.checkDirect(pWeights);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightubvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pWeights);
 		nglWeightubvARB((pWeights.remaining()), pWeights, pWeights.position(), function_pointer);
 	}
 	private static native void nglWeightubvARB(int size, ByteBuffer pWeights, int pWeights_position, long function_pointer);
 
 	public static void glWeightARB(FloatBuffer pWeights) {
-		BufferChecks.checkDirect(pWeights);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightfvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pWeights);
 		nglWeightfvARB((pWeights.remaining()), pWeights, pWeights.position(), function_pointer);
 	}
 	private static native void nglWeightfvARB(int size, FloatBuffer pWeights, int pWeights_position, long function_pointer);
 
 	public static void glWeightARB(IntBuffer pWeights) {
-		BufferChecks.checkDirect(pWeights);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pWeights);
 		nglWeightivARB((pWeights.remaining()), pWeights, pWeights.position(), function_pointer);
 	}
 	private static native void nglWeightivARB(int size, IntBuffer pWeights, int pWeights_position, long function_pointer);
 
 	public static void glWeightARB(ShortBuffer pWeights) {
-		BufferChecks.checkDirect(pWeights);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightsvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pWeights);
 		nglWeightsvARB((pWeights.remaining()), pWeights, pWeights.position(), function_pointer);
 	}
 	private static native void nglWeightsvARB(int size, ShortBuffer pWeights, int pWeights_position, long function_pointer);
 
 	public static void glWeightARB(ByteBuffer pWeights) {
-		BufferChecks.checkDirect(pWeights);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_blend_glWeightbvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(pWeights);
 		nglWeightbvARB((pWeights.remaining()), pWeights, pWeights.position(), function_pointer);
 	}
 	private static native void nglWeightbvARB(int size, ByteBuffer pWeights, int pWeights_position, long function_pointer);

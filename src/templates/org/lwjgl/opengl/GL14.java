@@ -93,6 +93,7 @@ public interface GL14 {
 	void glFogCoordf(float coord);
 
 	void glFogCoordPointer(@AutoType("data") @GLenum int type, @GLsizei int stride,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const

@@ -206,7 +206,7 @@
 		</javac>
 	</target>
 
-	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities" description="Generates java and native source"/>
+	<target name="generate-all" depends="generate-openal, generate-opengl, generate-opengl-capabilities, generate-opengl-references" description="Generates java and native source"/>
 
 	<target name="generate-openal" depends="generators" description="Generates java and native source for AL">
 		<!-- Generate OpenAL -->
@@ -350,6 +350,20 @@
 		</apply>
 	</target>
 
+	<target name="generate-opengl-references" depends="generators" description="Generates java and native source for GL">
+		<!-- Generate context capabilities -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.util.generator.ReferencesGeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/java"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/*.java"/>
+		</apply>
+	</target>
+	
 	<target name="generate-opengl-capabilities" depends="generators" description="Generates java and native source for GL">
 		<!-- Generate context capabilities -->
 		<apply executable="apt" parallel="true">
@@ -465,7 +479,7 @@
 				<include name="build.sh" />
 			</fileset>
 		</apply>
-		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl.so" />
+		<move file="${lwjgl.src.native}/linux/liblwjgl.so" tofile="${lwjgl.lib}/liblwjgl.so" />
 	</target>
 
 	<!-- Compiles LWJGL on Mac OS X platforms  -->

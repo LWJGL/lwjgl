@@ -19,18 +19,18 @@ public final class NVFragmentProgram extends NVProgram {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, FloatBuffer params) {
-		BufferChecks.checkDirect(name);
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().NV_fragment_program_glGetProgramNamedParameterfvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(name);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetProgramNamedParameterfvNV(id, (name.remaining()), name, name.position(), params, params.position(), function_pointer);
 	}
 	private static native void nglGetProgramNamedParameterfvNV(int id, int length, ByteBuffer name, int name_position, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glProgramNamedParameter4fNV(int id, ByteBuffer name, float x, float y, float z, float w) {
-		BufferChecks.checkDirect(name);
 		long function_pointer = GLContext.getCapabilities().NV_fragment_program_glProgramNamedParameter4fNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(name);
 		nglProgramNamedParameter4fNV(id, (name.remaining()), name, name.position(), x, y, z, w, function_pointer);
 	}
 	private static native void nglProgramNamedParameter4fNV(int id, int length, ByteBuffer name, int name_position, float x, float y, float z, float w, long function_pointer);

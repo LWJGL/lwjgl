@@ -41,6 +41,7 @@ public interface ATI_element_array {
 	int GL_ELEMENT_ARRAY_POINTER_ATI = 0x876A;
 
 	void glElementPointerATI(@AutoType("pPointer") @GLenum int type,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const

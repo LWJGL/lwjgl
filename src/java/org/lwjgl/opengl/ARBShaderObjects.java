@@ -50,39 +50,39 @@ public final class ARBShaderObjects {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetShaderSourceARB(int obj, IntBuffer length, ByteBuffer source) {
+		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetShaderSourceARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkDirect(source);
-		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetShaderSourceARB_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetShaderSourceARB(obj, (source.remaining()), length, length != null ? length.position() : 0, source, source.position(), function_pointer);
 	}
 	private static native void nglGetShaderSourceARB(int obj, int maxLength, IntBuffer length, int length_position, ByteBuffer source, int source_position, long function_pointer);
 
 	public static void glGetUniformARB(int programObj, int location, IntBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetUniformivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetUniformivARB(programObj, location, params, params.position(), function_pointer);
 	}
 	private static native void nglGetUniformivARB(int programObj, int location, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetUniformARB(int programObj, int location, FloatBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetUniformfvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetUniformfvARB(programObj, location, params, params.position(), function_pointer);
 	}
 	private static native void nglGetUniformfvARB(int programObj, int location, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetActiveUniformARB(int programObj, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetActiveUniformARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkBuffer(size, 1);
 		BufferChecks.checkBuffer(type, 1);
 		BufferChecks.checkDirect(name);
-		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetActiveUniformARB_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetActiveUniformARB(programObj, index, (name.remaining()), length, length != null ? length.position() : 0, size, size.position(), type, type.position(), name, name.position(), function_pointer);
 	}
 	private static native void nglGetActiveUniformARB(int programObj, int index, int maxLength, IntBuffer length, int length_position, IntBuffer size, int size_position, IntBuffer type, int type_position, ByteBuffer name, int name_position, long function_pointer);
@@ -94,135 +94,135 @@ public final class ARBShaderObjects {
 	 * @return
 	 */
 	public static int glGetUniformLocationARB(int programObj, ByteBuffer name) {
-		BufferChecks.checkDirect(name);
-		BufferChecks.checkNullTerminated(name);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetUniformLocationARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(name);
+		BufferChecks.checkNullTerminated(name);
 		int __result = nglGetUniformLocationARB(programObj, name, name.position(), function_pointer);
 		return __result;
 	}
 	private static native int nglGetUniformLocationARB(int programObj, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glGetAttachedObjectsARB(int containerObj, IntBuffer count, IntBuffer obj) {
+		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetAttachedObjectsARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (count != null)
 			BufferChecks.checkBuffer(count, 1);
 		BufferChecks.checkDirect(obj);
-		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetAttachedObjectsARB_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetAttachedObjectsARB(containerObj, (obj.remaining()), count, count != null ? count.position() : 0, obj, obj.position(), function_pointer);
 	}
 	private static native void nglGetAttachedObjectsARB(int containerObj, int maxCount, IntBuffer count, int count_position, IntBuffer obj, int obj_position, long function_pointer);
 
 	public static void glGetInfoLogARB(int obj, IntBuffer length, ByteBuffer infoLog) {
+		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetInfoLogARB_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkDirect(infoLog);
-		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetInfoLogARB_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetInfoLogARB(obj, (infoLog.remaining()), length, length != null ? length.position() : 0, infoLog, infoLog.position(), function_pointer);
 	}
 	private static native void nglGetInfoLogARB(int obj, int maxLength, IntBuffer length, int length_position, ByteBuffer infoLog, int infoLog_position, long function_pointer);
 
 	public static void glGetObjectParameterARB(int obj, int pname, IntBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetObjectParameterivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetObjectParameterivARB(obj, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetObjectParameterivARB(int obj, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetObjectParameterARB(int obj, int pname, FloatBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glGetObjectParameterfvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetObjectParameterfvARB(obj, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetObjectParameterfvARB(int obj, int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glUniformMatrix4ARB(int location, boolean transpose, FloatBuffer matrices) {
-		BufferChecks.checkDirect(matrices);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniformMatrix4fvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix4fvARB(location, (matrices.remaining()) >> 4, transpose, matrices, matrices.position(), function_pointer);
 	}
 	private static native void nglUniformMatrix4fvARB(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix3ARB(int location, boolean transpose, FloatBuffer matrices) {
-		BufferChecks.checkDirect(matrices);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniformMatrix3fvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix3fvARB(location, (matrices.remaining()) / (3 * 3), transpose, matrices, matrices.position(), function_pointer);
 	}
 	private static native void nglUniformMatrix3fvARB(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix2ARB(int location, boolean transpose, FloatBuffer matrices) {
-		BufferChecks.checkDirect(matrices);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniformMatrix2fvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix2fvARB(location, (matrices.remaining()) >> 2, transpose, matrices, matrices.position(), function_pointer);
 	}
 	private static native void nglUniformMatrix2fvARB(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniform4ARB(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform4ivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform4ivARB(location, (values.remaining()) >> 2, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform4ivARB(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform3ARB(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform3ivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform3ivARB(location, (values.remaining()) / 3, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform3ivARB(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform2ARB(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform2ivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform2ivARB(location, (values.remaining()) >> 1, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform2ivARB(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform1ARB(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform1ivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform1ivARB(location, (values.remaining()), values, values.position(), function_pointer);
 	}
 	private static native void nglUniform1ivARB(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform4ARB(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform4fvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform4fvARB(location, (values.remaining()) >> 2, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform4fvARB(int location, int count, FloatBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform3ARB(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform3fvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform3fvARB(location, (values.remaining()) / 3, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform3fvARB(int location, int count, FloatBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform2ARB(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform2fvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform2fvARB(location, (values.remaining()) >> 1, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform2fvARB(int location, int count, FloatBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform1ARB(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glUniform1fvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform1fvARB(location, (values.remaining()), values, values.position(), function_pointer);
 	}
 	private static native void nglUniform1fvARB(int location, int count, FloatBuffer values, int values_position, long function_pointer);
@@ -334,9 +334,9 @@ public final class ARBShaderObjects {
 	 * @param string
 	 */
 	public static void glShaderSourceARB(int shader, ByteBuffer string) {
-		BufferChecks.checkDirect(string);
 		long function_pointer = GLContext.getCapabilities().ARB_shader_objects_glShaderSourceARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(string);
 		nglShaderSourceARB(shader, 1, string, string.position(), (string.remaining()), function_pointer);
 	}
 	private static native void nglShaderSourceARB(int shader, int count, ByteBuffer string, int string_position, int length, long function_pointer);

@@ -153,7 +153,7 @@ public class JavaMethodsGenerator {
 
 	private static void printBufferObjectCheck(PrintWriter writer, BufferKind kind, Mode mode) {
 		String bo_check_method_name = kind.toString();
-		writer.print("\t\tGLBufferChecks.ensure" + bo_check_method_name);
+		writer.print("\t\t" + Utils.CHECKS_CLASS_NAME + ".ensure" + bo_check_method_name);
 		if (mode == Mode.BUFFEROBJECT)
 			writer.print("enabled");
 		else
@@ -184,8 +184,6 @@ public class JavaMethodsGenerator {
 		generateParametersJava(writer, method, typeinfos_instance, false, mode);
 		TypeMirror result_type = Utils.getMethodReturnType(method);
 		writer.println(") {");
-		printBufferObjectChecks(writer, method, mode);
-		printParameterChecks(writer, method, mode);
 		Code code_annotation = method.getAnnotation(Code.class);
 		if (code_annotation != null)
 			writer.println(code_annotation.value());
@@ -195,6 +193,9 @@ public class JavaMethodsGenerator {
 			writer.print("\t\tBufferChecks.checkFunctionAddress(");
 			writer.println(Utils.FUNCTION_POINTER_VAR_NAME + ");");
 		}
+		printBufferObjectChecks(writer, method, mode);
+		printParameterChecks(writer, method, mode);
+		printParameterCaching(writer, interface_decl, method, mode);
 		writer.print("\t\t");
 		boolean has_result = !result_type.equals(env.getTypeUtils().getVoidType());
 		if (has_result) {
@@ -389,6 +390,20 @@ public class JavaMethodsGenerator {
 			Utils.printExtraCallArguments(writer, method, result_size_parameter_name);
 		}
 		return first_parameter;
+	}
+
+	private static void printParameterCaching(PrintWriter writer, InterfaceDeclaration  interface_decl, MethodDeclaration method, Mode mode) {
+		for (ParameterDeclaration param : method.getParameters()) {
+			Class java_type = Utils.getJavaType(param.getType());
+			if (Buffer.class.isAssignableFrom(java_type) &&
+				param.getAnnotation(CachedReference.class) != null &&
+					(mode != Mode.BUFFEROBJECT || param.getAnnotation(BufferObject.class) == null) &&
+					param.getAnnotation(Result.class) == null) {
+				writer.print("\t\t" + Utils.CHECKS_CLASS_NAME + ".getReferences().");
+				writer.print(Utils.getReferenceName(interface_decl, method, param) + " = ");
+				writer.println(param.getSimpleName() + ";");
+			}
+		}
 	}
 
 	private static void printParameterChecks(PrintWriter writer, MethodDeclaration method, Mode mode) {

@@ -754,6 +754,7 @@ public interface GL11 {
 	void glCopyPixels(int x, int y, int width, int height, int type);
 
 	void glColorPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
+			@CachedReference
 			@Check
 			@BufferObject(BufferKind.ArrayVBO)
 			@Const
@@ -785,11 +786,17 @@ public interface GL11 {
 	void glDisableClientState(@GLenum int cap);
 	void glEnable(@GLenum int cap);
 	void glDisable(@GLenum int cap);
-	void glEdgeFlagPointer(int stride, @BufferObject(BufferKind.ArrayVBO) @Check @Const @GLbyte Buffer pointer);
+	void glEdgeFlagPointer(int stride, 
+			@CachedReference
+			@BufferObject(BufferKind.ArrayVBO)
+			@Check
+			@Const
+			@GLbyte
+			Buffer pointer);
 
 	void glEdgeFlag(boolean flag);
 	void glDrawPixels(@GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
-			@Check("GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
+			@Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
 			@BufferObject(BufferKind.UnpackPBO)
 			@Const
 			@GLbyte
@@ -898,7 +905,7 @@ public interface GL11 {
 
 	void glGetTexImage(@GLenum int target, int level, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.PackPBO)
-			@Check("GLBufferChecks.calculateImageStorage(pixels, format, type, 1, 1, 1)")
+			@Check("GLChecks.calculateImageStorage(pixels, format, type, 1, 1, 1)")
 			@GLbyte
 			@GLshort
 			@GLint
@@ -988,6 +995,7 @@ public interface GL11 {
 	void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar);
 
 	void glNormalPointer(@AutoType("pointer") @GLenum int type, @GLsizei int stride,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
@@ -1007,7 +1015,7 @@ public interface GL11 {
 
 	void glShadeModel(@GLenum int mode);
 
-	void glSelectBuffer(@AutoSize("buffer") @GLsizei int size, @GLuint IntBuffer buffer);
+	void glSelectBuffer(@AutoSize("buffer") @GLsizei int size, @CachedReference @GLuint IntBuffer buffer);
 
 	void glScissor(int x, int y, @GLsizei int width, @GLsizei int height);
 	void glScalef(float x, float y, float z);
@@ -1018,7 +1026,7 @@ public interface GL11 {
 
 	void glReadPixels(int x, int y, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.PackPBO)
-			@Check("GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
+			@Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
 			@GLbyte
 			@GLshort
 			@GLint
@@ -1036,10 +1044,10 @@ public interface GL11 {
 	void glPushMatrix();
 	void glPopMatrix();
 
-	@Code(	"		BufferObjectTracker.pushAttrib(mask);")
+	@Code(	"		StateTracker.pushAttrib(mask);")
 	void glPushClientAttrib(@GLbitfield int mask);
 
-	@Code(	"		BufferObjectTracker.popAttrib();")
+	@Code(	"		StateTracker.popAttrib();")
 	void glPopClientAttrib();
 
 	void glPushAttrib(@GLbitfield int mask);
@@ -1047,6 +1055,7 @@ public interface GL11 {
 	void glStencilFunc(@GLenum int func, int ref, @GLuint int mask);
 
 	void glVertexPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
@@ -1064,7 +1073,7 @@ public interface GL11 {
 
 	void glTexImage1D(@GLenum int target, int level, int internalformat, @GLsizei int width, int border, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check(value="GLBufferChecks.calculateTexImage1DStorage(pixels, format, type, width, border)", canBeNull=true)
+			@Check(value="GLChecks.calculateTexImage1DStorage(pixels, format, type, width, border)", canBeNull=true)
 			@Const
 			@GLbyte
 			@GLshort
@@ -1074,7 +1083,7 @@ public interface GL11 {
 
 	void glTexImage2D(@GLenum int target, int level, int internalformat, int width, int height, int border, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check(value="GLBufferChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border)", canBeNull=true)
+			@Check(value="GLChecks.calculateTexImage2DStorage(pixels, format, type, width, height, border)", canBeNull=true)
 			@Const
 			@GLbyte
 			@GLshort
@@ -1083,7 +1092,7 @@ public interface GL11 {
 			Buffer pixels);
 	void glTexSubImage1D(@GLenum int target, int level, int xoffset, @GLsizei int width, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLBufferChecks.calculateImageStorage(pixels, format, type, width, 1, 1)")
+			@Check("GLChecks.calculateImageStorage(pixels, format, type, width, 1, 1)")
 			@Const
 			@GLbyte
 			@GLshort
@@ -1092,7 +1101,7 @@ public interface GL11 {
 			Buffer pixels);
 	void glTexSubImage2D(@GLenum int target, int level, int xoffset, int yoffset, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLBufferChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
+			@Check("GLChecks.calculateImageStorage(pixels, format, type, width, height, 1)")
 			@Const
 			@GLbyte
 			@GLshort
@@ -1128,7 +1137,12 @@ public interface GL11 {
 	void glTexEnviv(@GLenum int target, @GLenum int pname, @Check("4") @Const IntBuffer params);
 
 	void glTexCoordPointer(int size, @AutoType("pointer") @GLenum int type, @GLsizei int stride,
-			@BufferObject(BufferKind.ArrayVBO) @Check @Const @GLfloat Buffer pointer);
+			@CachedReference
+			@BufferObject(BufferKind.ArrayVBO)
+			@Check
+			@Const
+			@GLfloat
+			Buffer pointer);
 
 	void glTexCoord1f(float s);
 	void glTexCoord2f(float s, float t);

@@ -38,17 +38,17 @@ public final class ARBVertexProgram extends ARBProgram {
 	private static native java.nio.ByteBuffer nglGetVertexAttribPointervARB(int index, int pname, int result_size, long function_pointer);
 
 	public static void glGetVertexAttribARB(int index, int pname, IntBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glGetVertexAttribivARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetVertexAttribivARB(index, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribivARB(int index, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetVertexAttribARB(int index, int pname, FloatBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glGetVertexAttribfvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetVertexAttribfvARB(index, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribfvARB(int index, int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -68,38 +68,42 @@ public final class ARBVertexProgram extends ARBProgram {
 	private static native void nglEnableVertexAttribArrayARB(int index, long function_pointer);
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean normalized, int stride, FloatBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().ARB_vertex_program_glVertexAttribPointerARB_buffer = buffer;
 		nglVertexAttribPointerARB(index, size, GL11.GL_FLOAT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
 	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().ARB_vertex_program_glVertexAttribPointerARB_buffer = buffer;
 		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, normalized, stride, buffer, buffer.position(), function_pointer);
 	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().ARB_vertex_program_glVertexAttribPointerARB_buffer = buffer;
 		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
 	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().ARB_vertex_program_glVertexAttribPointerARB_buffer = buffer;
 		nglVertexAttribPointerARB(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, normalized, stride, buffer, buffer.position() << 1, function_pointer);
 	}
 	private static native void nglVertexAttribPointerARB(int index, int size, int type, boolean normalized, int stride, Buffer buffer, int buffer_position, long function_pointer);
 	public static void glVertexAttribPointerARB(int index, int size, int type, boolean normalized, int stride, int buffer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().ARB_vertex_program_glVertexAttribPointerARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglVertexAttribPointerARBBO(index, size, type, normalized, stride, buffer_buffer_offset, function_pointer);
 	}
 	private static native void nglVertexAttribPointerARBBO(int index, int size, int type, boolean normalized, int stride, int buffer_buffer_offset, long function_pointer);

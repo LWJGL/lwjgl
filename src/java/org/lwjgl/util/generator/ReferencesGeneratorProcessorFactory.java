@@ -54,12 +54,15 @@ import static com.sun.mirror.util.DeclarationVisitors.*;
 /**
  * $Id$
  *
- * Generator tool for creating the ContexCapabilities class
+ * Generator tool for creating the References class
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public class ContextGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+public class ReferencesGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+	private final static String REFERENCES_CLASS_NAME = "References";
+	private final static String REFERENCES_PARAMETER_NAME = "references";
+
 	private static boolean first_round = true;
 	
 	// Process any set of annotations
@@ -71,7 +74,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 	}
 
 	public Collection<String> supportedOptions() {
-		return unmodifiableCollection(Arrays.asList("-Acontextspecific"));
+		return emptyList();
 	}
 
 	public void roundComplete(RoundCompleteEvent event) {
@@ -95,77 +98,69 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 		}
 
 		public void process() {
-			Map<String, String> options = env.getOptions();
-			boolean context_specific = options.containsKey("-Acontextspecific");
 			try {
-				generateContextCapabilitiesSource(context_specific);
+				generateReferencesSource();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 
-		private void generateContextCapabilitiesSource(boolean context_specific) throws IOException {
-			PrintWriter writer = env.getFiler().createSourceFile("org.lwjgl.opengl." + Utils.CONTEXT_CAPS_CLASS_NAME);
+		private static void generateCopiesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
+			for (ParameterDeclaration param : method.getParameters()) {
+				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
+				if (cached_reference_annotation != null) {
+					Class nio_type = Utils.getNIOBufferType(param.getType());
+					String reference_name = Utils.getReferenceName(interface_decl, method, param);
+					writer.print("\t\tthis." + reference_name + " = ");
+					writer.println(REFERENCES_PARAMETER_NAME + "." + reference_name + ";");
+				}
+			}
+		}
+		
+		private static void generateCopiesFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
+			for (MethodDeclaration method : interface_decl.getMethods()) {
+				generateCopiesFromParameters(writer, interface_decl, method);
+			}
+		}
+
+		private static void generateReferencesFromParameters(PrintWriter writer, InterfaceDeclaration interface_decl, MethodDeclaration method) {
+			for (ParameterDeclaration param : method.getParameters()) {
+				CachedReference cached_reference_annotation = param.getAnnotation(CachedReference.class);
+				if (cached_reference_annotation != null) {
+					Class nio_type = Utils.getNIOBufferType(param.getType());
+					if (nio_type == null)
+						throw new RuntimeException(param + " in method " + method + " in " + interface_decl + " is annotated with "
+								+ cached_reference_annotation.annotationType().getSimpleName() + " but the parameter is not a NIO buffer");
+					writer.print("\t" + nio_type.getName() + " " + Utils.getReferenceName(interface_decl, method, param));
+					writer.println(";");
+				}
+			}
+		}
+		
+		private static void generateReferencesFromMethods(PrintWriter writer, InterfaceDeclaration interface_decl) {
+			for (MethodDeclaration method : interface_decl.getMethods()) {
+				generateReferencesFromParameters(writer, interface_decl, method);
+			}
+		}
+
+		private void generateReferencesSource() throws IOException {
+			PrintWriter writer = env.getFiler().createSourceFile("org.lwjgl.opengl." + REFERENCES_CLASS_NAME);
 			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
 			writer.println();
 			writer.println("package org.lwjgl.opengl;");
 			writer.println();
-			writer.println("import org.lwjgl.LWJGLException;");
-			writer.println("import java.util.Set;");
-			writer.println();
-			ContextCapabilitiesGenerator.generateClassPrologue(writer, context_specific);
+			writer.println("class " + REFERENCES_CLASS_NAME + " {");
 			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
 			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				if (Utils.isFinal(interface_decl))
-					ContextCapabilitiesGenerator.generateField(writer, interface_decl);
+				generateReferencesFromMethods(writer, interface_decl);
 			}
 			writer.println();
+			writer.println("\tvoid copy(" + REFERENCES_CLASS_NAME + " " + REFERENCES_PARAMETER_NAME + ") {");
 			for (TypeDeclaration typedecl : interface_decls) {
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				ContextCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
-			}
-			writer.println();
-			if (context_specific) {
-				for (TypeDeclaration typedecl : interface_decls) {
-					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-					ContextCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
-				}
-				writer.println();
-			}
-			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				if (!Utils.isFinal(interface_decl))
-					ContextCapabilitiesGenerator.generateAddExtension(writer, interface_decl);
-			}
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				String simple_name = interface_decl.getSimpleName();
-				if (simple_name.equals("GL11"))
-					continue;
-				ContextCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
-			}
-			ContextCapabilitiesGenerator.generateInitStubsEpilogue(writer, context_specific);
-			writer.println();
-			writer.println("\tstatic void unloadAllStubs() {");
-			if (!context_specific) {
-				writer.println("\t\tif (!loaded_stubs)");
-				writer.println("\t\t\treturn;");
-				for (TypeDeclaration typedecl : interface_decls) {
-					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-					ContextCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
-				}
-				writer.println("\t\tloaded_stubs = false;");
-			}
-			writer.println("\t}");
-			writer.println();
-			ContextCapabilitiesGenerator.generateInitializerPrologue(writer);
-			for (TypeDeclaration typedecl : interface_decls) {
-				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
-				if (Utils.isFinal(interface_decl))
-					ContextCapabilitiesGenerator.generateInitializer(writer, interface_decl);
+				generateCopiesFromMethods(writer, interface_decl);
 			}
 			writer.println("\t}");
 			writer.println("}");

@@ -127,40 +127,40 @@ public final class GL20 {
 	private static native void nglStencilOpSeparate(int face, int sfail, int dpfail, int dppass, long function_pointer);
 
 	public static void glDrawBuffers(IntBuffer buffers) {
-		BufferChecks.checkDirect(buffers);
 		long function_pointer = GLContext.getCapabilities().GL20_glDrawBuffers_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(buffers);
 		nglDrawBuffers((buffers.remaining()), buffers, buffers.position(), function_pointer);
 	}
 	private static native void nglDrawBuffers(int size, IntBuffer buffers, int buffers_position, long function_pointer);
 
 	public static int glGetAttribLocation(int program, ByteBuffer name) {
-		BufferChecks.checkDirect(name);
-		BufferChecks.checkNullTerminated(name);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetAttribLocation_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(name);
+		BufferChecks.checkNullTerminated(name);
 		int __result = nglGetAttribLocation(program, name, name.position(), function_pointer);
 		return __result;
 	}
 	private static native int nglGetAttribLocation(int program, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glGetActiveAttrib(int program, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		long function_pointer = GLContext.getCapabilities().GL20_glGetActiveAttrib_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkBuffer(size, 1);
 		BufferChecks.checkBuffer(type, 1);
 		BufferChecks.checkDirect(name);
-		long function_pointer = GLContext.getCapabilities().GL20_glGetActiveAttrib_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetActiveAttrib(program, index, (name.remaining()), length, length != null ? length.position() : 0, size, size.position(), type, type.position(), name, name.position(), function_pointer);
 	}
 	private static native void nglGetActiveAttrib(int program, int index, int maxLength, IntBuffer length, int length_position, IntBuffer size, int size_position, IntBuffer type, int type_position, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glBindAttribLocation(int program, int index, ByteBuffer name) {
-		BufferChecks.checkDirect(name);
-		BufferChecks.checkNullTerminated(name);
 		long function_pointer = GLContext.getCapabilities().GL20_glBindAttribLocation_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(name);
+		BufferChecks.checkNullTerminated(name);
 		nglBindAttribLocation(program, index, name, name.position(), function_pointer);
 	}
 	private static native void nglBindAttribLocation(int program, int index, ByteBuffer name, int name_position, long function_pointer);
@@ -174,17 +174,17 @@ public final class GL20 {
 	private static native java.nio.ByteBuffer nglGetVertexAttribPointerv(int index, int pname, int result_size, long function_pointer);
 
 	public static void glGetVertexAttrib(int index, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetVertexAttribiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetVertexAttribiv(index, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribiv(int index, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetVertexAttrib(int index, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetVertexAttribfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetVertexAttribfv(index, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribfv(int index, int pname, FloatBuffer params, int params_position, long function_pointer);
@@ -204,38 +204,42 @@ public final class GL20 {
 	private static native void nglEnableVertexAttribArray(int index, long function_pointer);
 
 	public static void glVertexAttribPointer(int index, int size, boolean normalized, int stride, FloatBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().GL20_glVertexAttribPointer_buffer = buffer;
 		nglVertexAttribPointer(index, size, GL11.GL_FLOAT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
 	}
 	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().GL20_glVertexAttribPointer_buffer = buffer;
 		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, normalized, stride, buffer, buffer.position(), function_pointer);
 	}
 	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().GL20_glVertexAttribPointer_buffer = buffer;
 		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, normalized, stride, buffer, buffer.position() << 2, function_pointer);
 	}
 	public static void glVertexAttribPointer(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer buffer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(buffer);
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(buffer);
+		GLChecks.getReferences().GL20_glVertexAttribPointer_buffer = buffer;
 		nglVertexAttribPointer(index, size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, normalized, stride, buffer, buffer.position() << 1, function_pointer);
 	}
 	private static native void nglVertexAttribPointer(int index, int size, int type, boolean normalized, int stride, Buffer buffer, int buffer_position, long function_pointer);
 	public static void glVertexAttribPointer(int index, int size, int type, boolean normalized, int stride, int buffer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL20_glVertexAttribPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglVertexAttribPointerBO(index, size, type, normalized, stride, buffer_buffer_offset, function_pointer);
 	}
 	private static native void nglVertexAttribPointerBO(int index, int size, int type, boolean normalized, int stride, int buffer_buffer_offset, long function_pointer);
@@ -304,39 +308,39 @@ public final class GL20 {
 	private static native void nglVertexAttrib1s(int index, short x, long function_pointer);
 
 	public static void glGetShaderSource(int shader, IntBuffer length, ByteBuffer source) {
+		long function_pointer = GLContext.getCapabilities().GL20_glGetShaderSource_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkDirect(source);
-		long function_pointer = GLContext.getCapabilities().GL20_glGetShaderSource_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetShaderSource(shader, (source.remaining()), length, length != null ? length.position() : 0, source, source.position(), function_pointer);
 	}
 	private static native void nglGetShaderSource(int shader, int maxLength, IntBuffer length, int length_position, ByteBuffer source, int source_position, long function_pointer);
 
 	public static void glGetUniform(int program, int location, IntBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetUniformiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetUniformiv(program, location, params, params.position(), function_pointer);
 	}
 	private static native void nglGetUniformiv(int program, int location, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetUniform(int program, int location, FloatBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetUniformfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetUniformfv(program, location, params, params.position(), function_pointer);
 	}
 	private static native void nglGetUniformfv(int program, int location, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glGetActiveUniform(int program, int index, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		long function_pointer = GLContext.getCapabilities().GL20_glGetActiveUniform_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkDirect(size);
 		BufferChecks.checkDirect(type);
 		BufferChecks.checkDirect(name);
-		long function_pointer = GLContext.getCapabilities().GL20_glGetActiveUniform_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetActiveUniform(program, index, (name.remaining()), length, length != null ? length.position() : 0, size, size.position(), type, type.position(), name, name.position(), function_pointer);
 	}
 	private static native void nglGetActiveUniform(int program, int index, int maxLength, IntBuffer length, int length_position, IntBuffer size, int size_position, IntBuffer type, int type_position, ByteBuffer name, int name_position, long function_pointer);
@@ -349,145 +353,145 @@ public final class GL20 {
 	 * @return
 	 */
 	public static int glGetUniformLocation(int program, ByteBuffer name) {
-		BufferChecks.checkBuffer(name, 1);
-		BufferChecks.checkNullTerminated(name);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetUniformLocation_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(name, 1);
+		BufferChecks.checkNullTerminated(name);
 		int __result = nglGetUniformLocation(program, name, name.position(), function_pointer);
 		return __result;
 	}
 	private static native int nglGetUniformLocation(int program, ByteBuffer name, int name_position, long function_pointer);
 
 	public static void glGetAttachedShaders(int program, IntBuffer count, IntBuffer shaders) {
+		long function_pointer = GLContext.getCapabilities().GL20_glGetAttachedShaders_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (count != null)
 			BufferChecks.checkBuffer(count, 1);
 		BufferChecks.checkDirect(shaders);
-		long function_pointer = GLContext.getCapabilities().GL20_glGetAttachedShaders_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetAttachedShaders(program, (shaders.remaining()), count, count != null ? count.position() : 0, shaders, shaders.position(), function_pointer);
 	}
 	private static native void nglGetAttachedShaders(int program, int maxCount, IntBuffer count, int count_position, IntBuffer shaders, int shaders_position, long function_pointer);
 
 	public static void glGetProgramInfoLog(int program, IntBuffer length, ByteBuffer infoLog) {
+		long function_pointer = GLContext.getCapabilities().GL20_glGetProgramInfoLog_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkDirect(infoLog);
-		long function_pointer = GLContext.getCapabilities().GL20_glGetProgramInfoLog_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetProgramInfoLog(program, (infoLog.remaining()), length, length != null ? length.position() : 0, infoLog, infoLog.position(), function_pointer);
 	}
 	private static native void nglGetProgramInfoLog(int program, int maxLength, IntBuffer length, int length_position, ByteBuffer infoLog, int infoLog_position, long function_pointer);
 
 	public static void glGetShaderInfoLog(int shader, IntBuffer length, ByteBuffer infoLog) {
+		long function_pointer = GLContext.getCapabilities().GL20_glGetShaderInfoLog_pointer;
+		BufferChecks.checkFunctionAddress(function_pointer);
 		if (length != null)
 			BufferChecks.checkBuffer(length, 1);
 		BufferChecks.checkDirect(infoLog);
-		long function_pointer = GLContext.getCapabilities().GL20_glGetShaderInfoLog_pointer;
-		BufferChecks.checkFunctionAddress(function_pointer);
 		nglGetShaderInfoLog(shader, (infoLog.remaining()), length, length != null ? length.position() : 0, infoLog, infoLog.position(), function_pointer);
 	}
 	private static native void nglGetShaderInfoLog(int shader, int maxLength, IntBuffer length, int length_position, ByteBuffer infoLog, int infoLog_position, long function_pointer);
 
 	public static void glGetProgram(int program, int pname, IntBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetProgramiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetProgramiv(program, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetProgramiv(int program, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetShader(int shader, int pname, IntBuffer params) {
-		BufferChecks.checkDirect(params);
 		long function_pointer = GLContext.getCapabilities().GL20_glGetShaderiv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(params);
 		nglGetShaderiv(shader, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetShaderiv(int shader, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glUniformMatrix4(int location, boolean transpose, FloatBuffer matrices) {
-		BufferChecks.checkDirect(matrices);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniformMatrix4fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix4fv(location, (matrices.remaining()) >> 4, transpose, matrices, matrices.position(), function_pointer);
 	}
 	private static native void nglUniformMatrix4fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix3(int location, boolean transpose, FloatBuffer matrices) {
-		BufferChecks.checkDirect(matrices);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniformMatrix3fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix3fv(location, (matrices.remaining()) / (3 * 3), transpose, matrices, matrices.position(), function_pointer);
 	}
 	private static native void nglUniformMatrix3fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniformMatrix2(int location, boolean transpose, FloatBuffer matrices) {
-		BufferChecks.checkDirect(matrices);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniformMatrix2fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix2fv(location, (matrices.remaining()) >> 2, transpose, matrices, matrices.position(), function_pointer);
 	}
 	private static native void nglUniformMatrix2fv(int location, int count, boolean transpose, FloatBuffer matrices, int matrices_position, long function_pointer);
 
 	public static void glUniform4(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform4iv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform4iv(location, (values.remaining()) >> 2, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform4iv(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform3(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform3iv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform3iv(location, (values.remaining()) / 3, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform3iv(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform2(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform2iv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform2iv(location, (values.remaining()) >> 1, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform2iv(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform1(int location, IntBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform1iv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform1iv(location, (values.remaining()), values, values.position(), function_pointer);
 	}
 	private static native void nglUniform1iv(int location, int count, IntBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform4(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform4fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform4fv(location, (values.remaining()) >> 2, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform4fv(int location, int count, FloatBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform3(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform3fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform3fv(location, (values.remaining()) / 3, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform3fv(int location, int count, FloatBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform2(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform2fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform2fv(location, (values.remaining()) >> 1, values, values.position(), function_pointer);
 	}
 	private static native void nglUniform2fv(int location, int count, FloatBuffer values, int values_position, long function_pointer);
 
 	public static void glUniform1(int location, FloatBuffer values) {
-		BufferChecks.checkDirect(values);
 		long function_pointer = GLContext.getCapabilities().GL20_glUniform1fv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(values);
 		nglUniform1fv(location, (values.remaining()), values, values.position(), function_pointer);
 	}
 	private static native void nglUniform1fv(int location, int count, FloatBuffer values, int values_position, long function_pointer);
@@ -644,9 +648,9 @@ public final class GL20 {
 	 * @param string
 	 */
 	public static void glShaderSource(int shader, ByteBuffer string) {
-		BufferChecks.checkDirect(string);
 		long function_pointer = GLContext.getCapabilities().GL20_glShaderSource_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(string);
 		nglShaderSource(shader, 1, string, string.position(), (string.remaining()), function_pointer);
 	}
 	private static native void nglShaderSource(int shader, int count, ByteBuffer string, int string_position, int length, long function_pointer);

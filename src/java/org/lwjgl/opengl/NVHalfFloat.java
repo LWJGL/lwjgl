@@ -15,33 +15,33 @@ public final class NVHalfFloat {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexAttribs4NV(int index, ShortBuffer attribs) {
-		BufferChecks.checkDirect(attribs);
 		long function_pointer = GLContext.getCapabilities().NV_half_float_glVertexAttribs4hvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs4hvNV(index, (attribs.remaining()) >> 2, attribs, attribs.position(), function_pointer);
 	}
 	private static native void nglVertexAttribs4hvNV(int index, int n, ShortBuffer attribs, int attribs_position, long function_pointer);
 
 	public static void glVertexAttribs3NV(int index, ShortBuffer attribs) {
-		BufferChecks.checkDirect(attribs);
 		long function_pointer = GLContext.getCapabilities().NV_half_float_glVertexAttribs3hvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs3hvNV(index, (attribs.remaining()) / 3, attribs, attribs.position(), function_pointer);
 	}
 	private static native void nglVertexAttribs3hvNV(int index, int n, ShortBuffer attribs, int attribs_position, long function_pointer);
 
 	public static void glVertexAttribs2NV(int index, ShortBuffer attribs) {
-		BufferChecks.checkDirect(attribs);
 		long function_pointer = GLContext.getCapabilities().NV_half_float_glVertexAttribs2hvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs2hvNV(index, (attribs.remaining()) >> 1, attribs, attribs.position(), function_pointer);
 	}
 	private static native void nglVertexAttribs2hvNV(int index, int n, ShortBuffer attribs, int attribs_position, long function_pointer);
 
 	public static void glVertexAttribs1NV(int index, ShortBuffer attribs) {
-		BufferChecks.checkDirect(attribs);
 		long function_pointer = GLContext.getCapabilities().NV_half_float_glVertexAttribs1hvNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs1hvNV(index, (attribs.remaining()), attribs, attribs.position(), function_pointer);
 	}
 	private static native void nglVertexAttribs1hvNV(int index, int n, ShortBuffer attribs, int attribs_position, long function_pointer);

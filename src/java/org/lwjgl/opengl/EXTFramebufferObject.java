@@ -78,9 +78,9 @@ public final class EXTFramebufferObject {
 	private static native void nglGenerateMipmapEXT(int target, long function_pointer);
 
 	public static void glGetFramebufferAttachmentParameterEXT(int target, int attachment, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGetFramebufferAttachmentParameterivEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetFramebufferAttachmentParameterivEXT(target, attachment, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetFramebufferAttachmentParameterivEXT(int target, int attachment, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -122,17 +122,17 @@ public final class EXTFramebufferObject {
 	private static native int nglCheckFramebufferStatusEXT(int target, long function_pointer);
 
 	public static void glGenFramebuffersEXT(IntBuffer framebuffers) {
-		BufferChecks.checkDirect(framebuffers);
 		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGenFramebuffersEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(framebuffers);
 		nglGenFramebuffersEXT((framebuffers.remaining()), framebuffers, framebuffers.position(), function_pointer);
 	}
 	private static native void nglGenFramebuffersEXT(int n, IntBuffer framebuffers, int framebuffers_position, long function_pointer);
 
 	public static void glDeleteFramebuffersEXT(IntBuffer framebuffers) {
-		BufferChecks.checkDirect(framebuffers);
 		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glDeleteFramebuffersEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(framebuffers);
 		nglDeleteFramebuffersEXT((framebuffers.remaining()), framebuffers, framebuffers.position(), function_pointer);
 	}
 	private static native void nglDeleteFramebuffersEXT(int n, IntBuffer framebuffers, int framebuffers_position, long function_pointer);
@@ -153,9 +153,9 @@ public final class EXTFramebufferObject {
 	private static native boolean nglIsFramebufferEXT(int framebuffer, long function_pointer);
 
 	public static void glGetRenderbufferParameterEXT(int target, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGetRenderbufferParameterivEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetRenderbufferParameterivEXT(target, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetRenderbufferParameterivEXT(int target, int pname, IntBuffer params, int params_position, long function_pointer);
@@ -168,17 +168,17 @@ public final class EXTFramebufferObject {
 	private static native void nglRenderbufferStorageEXT(int target, int internalformat, int width, int height, long function_pointer);
 
 	public static void glGenRenderbuffersEXT(IntBuffer renderbuffers) {
-		BufferChecks.checkDirect(renderbuffers);
 		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glGenRenderbuffersEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(renderbuffers);
 		nglGenRenderbuffersEXT((renderbuffers.remaining()), renderbuffers, renderbuffers.position(), function_pointer);
 	}
 	private static native void nglGenRenderbuffersEXT(int n, IntBuffer renderbuffers, int renderbuffers_position, long function_pointer);
 
 	public static void glDeleteRenderbuffersEXT(IntBuffer renderbuffers) {
-		BufferChecks.checkDirect(renderbuffers);
 		long function_pointer = GLContext.getCapabilities().EXT_framebuffer_object_glDeleteRenderbuffersEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(renderbuffers);
 		nglDeleteRenderbuffersEXT((renderbuffers.remaining()), renderbuffers, renderbuffers.position(), function_pointer);
 	}
 	private static native void nglDeleteRenderbuffersEXT(int n, IntBuffer renderbuffers, int renderbuffers_position, long function_pointer);

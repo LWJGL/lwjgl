@@ -66,7 +66,7 @@ public interface EXT_paletted_texture {
 	int GL_TEXTURE_INDEX_SIZE_EXT = 0x80ED;
 
 	void glColorTableEXT(@GLenum int target, @GLenum int internalFormat, @GLsizei int width, @GLenum int format, @GLenum int type,
-			@Check("GLBufferChecks.calculateImageStorage(data, format, type, width, 1, 1)")
+			@Check("GLChecks.calculateImageStorage(data, format, type, width, 1, 1)")
 			@Const
 			@GLbyte
 			@GLshort
@@ -75,7 +75,7 @@ public interface EXT_paletted_texture {
 			Buffer data);
 
 	void glColorSubTableEXT(@GLenum int target, @GLsizei int start, @GLsizei int count, @GLenum int format, @GLenum int type,
-			@Check("GLBufferChecks.calculateImageStorage(data, format, type, count, 1, 1)")
+			@Check("GLChecks.calculateImageStorage(data, format, type, count, 1, 1)")
 			@Const
 			@GLbyte
 			@GLshort

@@ -17,9 +17,9 @@ public final class NVFence {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetFenceivNV(int fence, int pname, IntBuffer piParams) {
-		BufferChecks.checkBuffer(piParams, 4);
 		long function_pointer = GLContext.getCapabilities().NV_fence_glGetFenceivNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(piParams, 4);
 		nglGetFenceivNV(fence, pname, piParams, piParams.position(), function_pointer);
 	}
 	private static native void nglGetFenceivNV(int fence, int pname, IntBuffer piParams, int piParams_position, long function_pointer);
@@ -55,17 +55,17 @@ public final class NVFence {
 	private static native void nglSetFenceNV(int fence, int condition, long function_pointer);
 
 	public static void glDeleteFencesNV(IntBuffer piFences) {
-		BufferChecks.checkDirect(piFences);
 		long function_pointer = GLContext.getCapabilities().NV_fence_glDeleteFencesNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(piFences);
 		nglDeleteFencesNV((piFences.remaining()), piFences, piFences.position(), function_pointer);
 	}
 	private static native void nglDeleteFencesNV(int n, IntBuffer piFences, int piFences_position, long function_pointer);
 
 	public static void glGenFencesNV(IntBuffer piFences) {
-		BufferChecks.checkDirect(piFences);
 		long function_pointer = GLContext.getCapabilities().NV_fence_glGenFencesNV_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(piFences);
 		nglGenFencesNV((piFences.remaining()), piFences, piFences.position(), function_pointer);
 	}
 	private static native void nglGenFencesNV(int n, IntBuffer piFences, int piFences_position, long function_pointer);

@@ -138,6 +138,8 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 						throw new RuntimeException(param + " has no Check, Result nor Constant annotation and no other parameters has" +
 													" an @AutoSize annotation on it in method " + method);
 				}
+				if (param.getAnnotation(CachedReference.class) != null && param.getAnnotation(Result.class) != null)
+					throw new RuntimeException(param + " can't be annotated with both CachedReference and Result");
 				if (param.getAnnotation(BufferObject.class) != null && param.getAnnotation(Result.class) != null)
 					throw new RuntimeException(param + " can't be annotated with both BufferObject and Result");
 				if (param.getAnnotation(Constant.class) != null)
@@ -145,6 +147,8 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 			} else {
 				if (param.getAnnotation(BufferObject.class) != null)
 					throw new RuntimeException(param + " type is not a buffer, but annotated as a BufferObject");
+				if (param.getAnnotation(CachedReference.class) != null)
+					throw new RuntimeException(param + " type is not a buffer, but annotated as a CachedReference");
 			}
 		}
 	}

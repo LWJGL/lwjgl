@@ -51,6 +51,7 @@ public interface EXT_secondary_color {
 	void glSecondaryColor3ubEXT(@GLubyte byte red, @GLubyte byte green, @GLubyte byte blue);
 
 	void glSecondaryColorPointerEXT(int size, @AutoType("pPointer") @GLenum int type, @GLsizei int stride,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@GLbyte

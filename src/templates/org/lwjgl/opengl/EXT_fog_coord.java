@@ -48,6 +48,7 @@ public interface EXT_fog_coord {
 	void glFogCoordfEXT(float coord);
 
 	void glFogCoordPointerEXT(@AutoType("data") @GLenum int type, @GLsizei int stride,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const

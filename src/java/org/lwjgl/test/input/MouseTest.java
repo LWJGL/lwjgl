@@ -63,7 +63,7 @@ public class MouseTest {
   /** Height of window */
   private static int WINDOW_HEIGHT = 640;
   
-  /** Triangle size (in ½) */
+  /** Triangle size */
   private Vector2f triangleSize = new Vector2f(120, 100);
   
   /** Triangle color */

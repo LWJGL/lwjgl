@@ -18,17 +18,17 @@ public final class ARBTransposeMatrix {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMultTransposeMatrixARB(FloatBuffer pfMtx) {
-		BufferChecks.checkBuffer(pfMtx, 16);
 		long function_pointer = GLContext.getCapabilities().ARB_transpose_matrix_glMultTransposeMatrixfARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(pfMtx, 16);
 		nglMultTransposeMatrixfARB(pfMtx, pfMtx.position(), function_pointer);
 	}
 	private static native void nglMultTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_position, long function_pointer);
 
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
-		BufferChecks.checkBuffer(pfMtx, 16);
 		long function_pointer = GLContext.getCapabilities().ARB_transpose_matrix_glLoadTransposeMatrixfARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(pfMtx, 16);
 		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position(), function_pointer);
 	}
 	private static native void nglLoadTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_position, long function_pointer);

@@ -6,7 +6,7 @@ import org.lwjgl.LWJGLException;
 import java.util.Set;
 
 public class ContextCapabilities {
-	final BufferObjectTracker tracker;
+	final StateTracker tracker;
 
 	public final boolean GL_ARB_color_buffer_float;
 	public final boolean GL_ARB_depth_texture;
@@ -1995,7 +1995,7 @@ public class ContextCapabilities {
 
 	ContextCapabilities() throws LWJGLException {
 		Set supported_extensions = initAllStubs();
-		tracker = new BufferObjectTracker();
+		tracker = new StateTracker();
 		this.GL_ARB_color_buffer_float = supported_extensions.contains("GL_ARB_color_buffer_float");
 		this.GL_ARB_depth_texture = supported_extensions.contains("GL_ARB_depth_texture");
 		this.GL_ARB_draw_buffers = supported_extensions.contains("GL_ARB_draw_buffers");

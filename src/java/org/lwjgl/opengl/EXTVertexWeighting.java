@@ -27,17 +27,18 @@ public final class EXTVertexWeighting {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().EXT_vertex_weighting_glVertexWeightPointerEXT_pPointer = pPointer;
 		nglVertexWeightPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	private static native void nglVertexWeightPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
 	public static void glVertexWeightPointerEXT(int size, int type, int stride, int pPointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().EXT_vertex_weighting_glVertexWeightPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglVertexWeightPointerEXTBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
 	private static native void nglVertexWeightPointerEXTBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);

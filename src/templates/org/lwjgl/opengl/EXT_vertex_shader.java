@@ -216,6 +216,7 @@ public interface EXT_vertex_shader {
 	void glVariantuivEXT(@GLuint int id, @Check("4") @GLuint IntBuffer pAddr);
 
 	void glVariantPointerEXT(@GLuint int id, @AutoType("pAddr") @GLenum int type, @GLuint int stride,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@GLbyte

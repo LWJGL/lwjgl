@@ -14,17 +14,17 @@ public final class ATIVertexAttribArrayObject {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetVertexAttribArrayObjectATI(int index, int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().ATI_vertex_attrib_array_object_glGetVertexAttribArrayObjectivATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetVertexAttribArrayObjectivATI(index, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribArrayObjectivATI(int index, int pname, IntBuffer params, int params_position, long function_pointer);
 
 	public static void glGetVertexAttribArrayObjectATI(int index, int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().ATI_vertex_attrib_array_object_glGetVertexAttribArrayObjectfvATI_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglGetVertexAttribArrayObjectfvATI(index, pname, params, params.position(), function_pointer);
 	}
 	private static native void nglGetVertexAttribArrayObjectfvATI(int index, int pname, FloatBuffer params, int params_position, long function_pointer);

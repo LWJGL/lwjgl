@@ -21,24 +21,26 @@ public final class EXTSecondaryColor {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().EXT_secondary_color_glSecondaryColorPointerEXT_pPointer = pPointer;
 		nglSecondaryColorPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position() << 2, function_pointer);
 	}
 	public static void glSecondaryColorPointerEXT(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
 		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		GLChecks.getReferences().EXT_secondary_color_glSecondaryColorPointerEXT_pPointer = pPointer;
 		nglSecondaryColorPointerEXT(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position(), function_pointer);
 	}
 	private static native void nglSecondaryColorPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_position, long function_pointer);
 	public static void glSecondaryColorPointerEXT(int size, int type, int stride, int pPointer_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().EXT_secondary_color_glSecondaryColorPointerEXT_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerEXTBO(size, type, stride, pPointer_buffer_offset, function_pointer);
 	}
 	private static native void nglSecondaryColorPointerEXTBO(int size, int type, int stride, int pPointer_buffer_offset, long function_pointer);

@@ -18,9 +18,9 @@ public final class ARBPointParameters {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glPointParameterARB(int pname, FloatBuffer pfParams) {
-		BufferChecks.checkBuffer(pfParams, 4);
 		long function_pointer = GLContext.getCapabilities().ARB_point_parameters_glPointParameterfvARB_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(pfParams, 4);
 		nglPointParameterfvARB(pname, pfParams, pfParams.position(), function_pointer);
 	}
 	private static native void nglPointParameterfvARB(int pname, FloatBuffer pfParams, int pfParams_position, long function_pointer);

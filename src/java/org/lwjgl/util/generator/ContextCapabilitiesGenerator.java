@@ -64,7 +64,7 @@ public class ContextCapabilitiesGenerator {
 
 	public static void generateClassPrologue(PrintWriter writer, boolean context_specific) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
-		writer.println("\tfinal BufferObjectTracker tracker;");
+		writer.println("\tfinal StateTracker tracker;");
 		writer.println();
 		if (!context_specific) {
 			writer.println("\tprivate static boolean " + STUBS_LOADED_NAME + " = false;");
@@ -74,7 +74,7 @@ public class ContextCapabilitiesGenerator {
 	public static void generateInitializerPrologue(PrintWriter writer) {
 		writer.println("\t" + Utils.CONTEXT_CAPS_CLASS_NAME + "() throws LWJGLException {");
 		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = " + ALL_INIT_METHOD_NAME + "();");
-		writer.println("\t\ttracker = new BufferObjectTracker();");
+		writer.println("\t\ttracker = new StateTracker();");
 	}
 
 	private static String translateFieldName(String interface_name) {

@@ -51,6 +51,7 @@ public class Utils {
 	public static final String TYPEDEF_POSTFIX = "PROC";
 	public static final String FUNCTION_POINTER_VAR_NAME = "function_pointer";
 	public static final String FUNCTION_POINTER_POSTFIX = "_pointer";
+	public static final String CHECKS_CLASS_NAME = "GLChecks";
 	public static final String CONTEXT_CAPS_CLASS_NAME = "ContextCapabilities";
 	public static final String STUB_INITIALIZER_NAME = "initNativeStubs";
 	public static final String BUFFER_OBJECT_METHOD_POSTFIX = "BO";
@@ -90,6 +91,10 @@ public class Utils {
 		List<AnnotationMirror> annotation_list = new ArrayList<AnnotationMirror>(annotations);
 		Collections.sort(annotation_list, new AnnotationMirrorComparator());
 		return annotation_list;
+	}
+
+	public static String getReferenceName(InterfaceDeclaration interface_decl, MethodDeclaration method, ParameterDeclaration param) {
+		return interface_decl.getSimpleName() + "_" + method.getSimpleName() + "_" + param.getSimpleName();
 	}
 
 	public static boolean isAddressableType(TypeMirror type) {

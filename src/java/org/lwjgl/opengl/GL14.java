@@ -88,24 +88,24 @@ public final class GL14 {
 	private static native void nglBlendFuncSeparate(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha, long function_pointer);
 
 	public static void glSecondaryColorPointer(int size, int stride, FloatBuffer data) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(data);
 		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(data);
 		nglSecondaryColorPointer(size, GL11.GL_FLOAT, stride, data, data.position() << 2, function_pointer);
 	}
 	public static void glSecondaryColorPointer(int size, boolean unsigned, int stride, ByteBuffer data) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(data);
 		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(data);
 		nglSecondaryColorPointer(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, data, data.position(), function_pointer);
 	}
 	private static native void nglSecondaryColorPointer(int size, int type, int stride, Buffer data, int data_position, long function_pointer);
 	public static void glSecondaryColorPointer(int size, int type, int stride, int data_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL14_glSecondaryColorPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglSecondaryColorPointerBO(size, type, stride, data_buffer_offset, function_pointer);
 	}
 	private static native void nglSecondaryColorPointerBO(int size, int type, int stride, int data_buffer_offset, long function_pointer);
@@ -132,17 +132,17 @@ public final class GL14 {
 	private static native void nglSecondaryColor3b(byte red, byte green, byte blue, long function_pointer);
 
 	public static void glPointParameter(int pname, FloatBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL14_glPointParameterfv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglPointParameterfv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglPointParameterfv(int pname, FloatBuffer params, int params_position, long function_pointer);
 
 	public static void glPointParameter(int pname, IntBuffer params) {
-		BufferChecks.checkBuffer(params, 4);
 		long function_pointer = GLContext.getCapabilities().GL14_glPointParameteriv_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkBuffer(params, 4);
 		nglPointParameteriv(pname, params, params.position(), function_pointer);
 	}
 	private static native void nglPointParameteriv(int pname, IntBuffer params, int params_position, long function_pointer);
@@ -162,29 +162,30 @@ public final class GL14 {
 	private static native void nglPointParameteri(int pname, int param, long function_pointer);
 
 	public static void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount) {
-		BufferChecks.checkDirect(piFirst);
-		BufferChecks.checkDirect(piCount);
 		if (piFirst.remaining() != piCount.remaining()) {
 			throw new IllegalArgumentException("piFirst.remaining() != piCount.remaining()");
 		}
 		long function_pointer = GLContext.getCapabilities().GL14_glMultiDrawArrays_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		BufferChecks.checkDirect(piFirst);
+		BufferChecks.checkDirect(piCount);
 		nglMultiDrawArrays(mode, piFirst, piFirst.position(), piCount, piCount.position(), (piFirst.remaining()), function_pointer);
 	}
 	private static native void nglMultiDrawArrays(int mode, IntBuffer piFirst, int piFirst_position, IntBuffer piCount, int piCount_position, int primcount, long function_pointer);
 
 	public static void glFogCoordPointer(int stride, FloatBuffer data) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(data);
 		long function_pointer = GLContext.getCapabilities().GL14_glFogCoordPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(data);
+		GLChecks.getReferences().GL14_glFogCoordPointer_data = data;
 		nglFogCoordPointer(GL11.GL_FLOAT, stride, data, data.position() << 2, function_pointer);
 	}
 	private static native void nglFogCoordPointer(int type, int stride, Buffer data, int data_position, long function_pointer);
 	public static void glFogCoordPointer(int type, int stride, int data_buffer_offset) {
-		GLBufferChecks.ensureArrayVBOenabled();
 		long function_pointer = GLContext.getCapabilities().GL14_glFogCoordPointer_pointer;
 		BufferChecks.checkFunctionAddress(function_pointer);
+		GLChecks.ensureArrayVBOenabled();
 		nglFogCoordPointerBO(type, stride, data_buffer_offset, function_pointer);
 	}
 	private static native void nglFogCoordPointerBO(int type, int stride, int data_buffer_offset, long function_pointer);

@@ -203,7 +203,7 @@ public interface ARB_imaging {
 
 	void glConvolutionFilter1D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLBufferChecks.calculateImageStorage(image, format, type, width, 1, 1)")
+			@Check("GLChecks.calculateImageStorage(image, format, type, width, 1, 1)")
 			@GLbyte
 			@GLshort
 			@GLint
@@ -212,7 +212,7 @@ public interface ARB_imaging {
 
 	void glConvolutionFilter2D(@GLenum int target, @GLenum int internalformat, @GLsizei int width, @GLsizei int height, @GLenum int format, @GLenum int type,
 			@BufferObject(BufferKind.UnpackPBO)
-			@Check("GLBufferChecks.calculateImageStorage(image, format, type, width, height, 1)")
+			@Check("GLChecks.calculateImageStorage(image, format, type, width, height, 1)")
 			@GLbyte
 			@GLshort
 			@GLint

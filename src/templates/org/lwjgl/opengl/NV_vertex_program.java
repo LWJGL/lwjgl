@@ -220,6 +220,7 @@ public interface NV_vertex_program extends NV_program {
 	void glTrackMatrixNV(@GLenum int target, @GLuint int address, @GLenum int matrix, @GLenum int transform);
 
 	void glVertexAttribPointerNV(@GLuint int index, int size, @GLenum int type, @GLsizei int stride,
+			@CachedReference
 			@BufferObject(BufferKind.ArrayVBO)
 			@Check
 			@Const
