@@ -176,7 +176,7 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 		method->signature = function->signature;
 		method->fnPtr = function->method_pointer;
 	}
-	jint result = env->RegisterNatives(clazz, methods, num_functions);
+	env->RegisterNatives(clazz, methods, num_functions);
 	free(methods);
 }
 

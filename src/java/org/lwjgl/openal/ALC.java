@@ -67,9 +67,6 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  */
 public class ALC {
-	/** Has the ALC object been created? */
-	protected static boolean created;
-
 	/** Bad value */
 	public static final int ALC_INVALID = -1;
 
@@ -146,41 +143,13 @@ public class ALC {
 		Sys.initialize();
 	}
 
-	/** Creates a new instance of ALC */
-	protected ALC() {
-	}
-
 	/**
 	* Override to provide any initialization code after creation.
 	*/
 	protected static void init() {
 	}
 
-	/**
-	* Creates the ALC instance
-	* 
-	* @throws LWJGLException if a failiure occured in the ALC creation process
-	*/
-	protected static void create() throws LWJGLException {
-		if (created) {
-			return;
-		}
-		initNativeStubs();
-		init();
-		created = true;
-	}
-
-	private static native void initNativeStubs() throws LWJGLException;
-
-	/**
-	 * Calls whatever destruction rutines that are needed
-	 */
-	protected static void destroy() {
-		if (!created) {
-			return;
-		}
-		created = false;
-	}
+	static native void initNativeStubs() throws LWJGLException;
 
 	/**
 	 * The application can obtain certain strings from ALC.
@@ -284,7 +253,7 @@ public class ALC {
 	 * @param context address of context to make current
 	 * @return true if successfull, false if not
 	 */
-	native static boolean alcMakeContextCurrent(int context);
+	native static int alcMakeContextCurrent(int context);
 
 	/**
 	 * The current context is the only context accessible to state changes by AL commands

@@ -125,15 +125,7 @@ public abstract class AL {
 		create();
 	}
 
-	/**
-	 * Creates an OpenAL instance. The empty create will cause OpenAL to
-	 * open the default device, and create a context using default values. 
-	 */
-	public static void create() throws LWJGLException {
-		if(created) {
-			return;
-		}
-
+	private static String[] getOALPaths() throws LWJGLException {
 		// need to pass path of possible locations of OAL to native side
 		String libpath = System.getProperty("java.library.path");
 		String seperator = System.getProperty("path.separator");
@@ -168,43 +160,58 @@ public abstract class AL {
 
 		//add cwd path
 		oalPaths[oalPaths.length - 1] = "";
+		return oalPaths;
+	}
+
+	/**
+	 * Creates an OpenAL instance. The empty create will cause OpenAL to
+	 * open the default device, and create a context using default values. 
+	 */
+	public static void create() throws LWJGLException {
+		if (created) {
+			return;
+		}
+		String[] oalPaths = getOALPaths();
 		nCreate(oalPaths);
-
-		AL10.initNativeStubs();
-		ALC.create();
-
-		device = ALC.alcOpenDevice(deviceArguments);
-		if (device == null) {
-			ALC.destroy();
-			throw new LWJGLException("Could not open ALC device");
-		}
-		//check if doing default values or not
-		if (contextFrequency == -1) {
-			context = ALC.alcCreateContext(device.device, null);
-		} else {
-			context = ALC.alcCreateContext(device.device,
-					ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized));
-		}
-
-		ALC.alcMakeContextCurrent(context.context);
-
 		created = true;
+
+		try {
+			AL10.initNativeStubs();
+			ALC.initNativeStubs();
+
+			device = ALC.alcOpenDevice(deviceArguments);
+			if (device == null)
+				throw new LWJGLException("Could not open ALC device");
+			//check if doing default values or not
+			if (contextFrequency == -1) {
+				context = ALC.alcCreateContext(device.device, null);
+			} else {
+				context = ALC.alcCreateContext(device.device,
+						ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized));
+			}
+			if (ALC.alcMakeContextCurrent(context.context) != 0)
+				throw new LWJGLException("Could not make ALC context current");
+			created = true;
+		} catch (LWJGLException e) {
+			destroy();
+			throw e;
+		}
 	}
 
 	/**
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
-		if(!created) {
-			return;
+		if (context != null) {
+			ALC.alcDestroyContext(context.context);
+			context = null;
 		}
-		
-		ALC.alcDestroyContext(context.context);
-		ALC.alcCloseDevice(device.device);
-		ALC.destroy();
-
-		device = null;
-		context = null;
+		if (device != null) {
+			ALC.alcCloseDevice(device.device);
+			device = null;
+		}
+		resetNativeStubs(AL10.class);
+		resetNativeStubs(ALC.class);
 
 		deviceArguments = null;
 
@@ -212,8 +219,9 @@ public abstract class AL {
 		contextRefresh = -1;
 		contextSynchronized = ALC.ALC_FALSE;
 		
+		if (created)
+			nDestroy();
 		created = false;
-		nDestroy();
 	}
 	
 	/**
@@ -242,5 +250,7 @@ public abstract class AL {
 			Sys.log("Failure locating OpenAL using classloader:" + e);
 		}
 		return null;
-	}	
+	}
+
+	private static native void resetNativeStubs(Class clazz);
 }

@@ -49,7 +49,7 @@ typedef ALCvoid     (ALCAPIENTRY *alcGetIntegervPROC)(ALCdevice *device,ALCenum 
 typedef ALCdevice*  (ALCAPIENTRY *alcOpenDevicePROC)(ALCubyte *deviceName);
 typedef ALCvoid     (ALCAPIENTRY *alcCloseDevicePROC)(ALCdevice *device);
 typedef ALCcontext* (ALCAPIENTRY *alcCreateContextPROC)(ALCdevice *device,ALCint *attrList);
-typedef ALCboolean  (ALCAPIENTRY *alcMakeContextCurrentPROC)(ALCcontext *context);
+typedef ALCenum  (ALCAPIENTRY *alcMakeContextCurrentPROC)(ALCcontext *context);
 typedef ALCvoid	    (ALCAPIENTRY *alcProcessContextPROC)(ALCcontext *context);
 typedef ALCdevice*  (ALCAPIENTRY *alcGetContextsDevicePROC)(ALCcontext *context);
 typedef ALCvoid	    (ALCAPIENTRY *alcSuspendContextPROC)(ALCcontext *context);
@@ -205,12 +205,15 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcCreateContext (JNIEnv *env, 
  * C Specification:
  * ALCboolean alcMakeContextCurrent(ALCcontext *context);
  */
-static jboolean JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent (JNIEnv *env, jclass clazz, jint contextaddress) {
+static jint JNICALL Java_org_lwjgl_openal_ALC_alcMakeContextCurrent (JNIEnv *env, jclass clazz, jint contextaddress) {
 	ALCcontext* context = (ALCcontext*) contextaddress;
+	ALCenum result;
 	if(context == NULL) {
-		return alcMakeContextCurrent(NULL);
+		result = alcMakeContextCurrent(NULL);
+	} else {
+		result = alcMakeContextCurrent(context);
 	}
-	return alcMakeContextCurrent(context);
+	return result;
 }
 
 /**
@@ -360,7 +363,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_initNativeStubs(JNIEnv *env, jc
 		{"alcOpenDevice", "(Ljava/lang/String;)Lorg/lwjgl/openal/ALCdevice;", (void*)&Java_org_lwjgl_openal_ALC_alcOpenDevice, "alcOpenDevice", (void**)&alcOpenDevice},
 		{"alcCloseDevice", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_alcCloseDevice, "alcCloseDevice", (void**)&alcCloseDevice},
 		{"alcCreateContext", "(ILjava/nio/IntBuffer;)Lorg/lwjgl/openal/ALCcontext;", (void*)&Java_org_lwjgl_openal_ALC_alcCreateContext, "alcCreateContext", (void**)&alcCreateContext},
-		{"alcMakeContextCurrent", "(I)Z", (void*)&Java_org_lwjgl_openal_ALC_alcMakeContextCurrent, "alcMakeContextCurrent", (void**)&alcMakeContextCurrent},
+		{"alcMakeContextCurrent", "(I)I", (void*)&Java_org_lwjgl_openal_ALC_alcMakeContextCurrent, "alcMakeContextCurrent", (void**)&alcMakeContextCurrent},
 		{"nalcProcessContext", "(I)V", (void*)&Java_org_lwjgl_openal_ALC_nalcProcessContext, "alcProcessContext", (void**)&alcProcessContext},
 		{"alcGetCurrentContext", "()Lorg/lwjgl/openal/ALCcontext;", (void*)&Java_org_lwjgl_openal_ALC_alcGetCurrentContext, "alcGetCurrentContext", (void**)&alcGetCurrentContext},
 		{"alcGetContextsDevice", "(I)Lorg/lwjgl/openal/ALCdevice;", (void*)&Java_org_lwjgl_openal_ALC_alcGetContextsDevice, "alcGetContextsDevice", (void**)&alcGetContextsDevice},

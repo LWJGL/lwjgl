@@ -43,3 +43,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nCreate (JNIEnv *env, jclass cla
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nDestroy(JNIEnv *env, jclass clazz) {
 	DeInitializeOpenAL();
 }
+
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_resetNativeStubs(JNIEnv *env, jclass clazz, jclass al_class) {
+	env->UnregisterNatives(al_class);
+}

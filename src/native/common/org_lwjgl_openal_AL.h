@@ -15,6 +15,8 @@ extern "C" {
 /* Inaccessible static: contextRefresh */
 /* Inaccessible static: contextSynchronized */
 /* Inaccessible static: created */
+/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024AL10 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024ALC */
 /* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024AL */
 /* Inaccessible static: class_00024java_00024lang_00024String */
 /*
@@ -32,6 +34,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nCreate
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nDestroy
   (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_openal_AL
+ * Method:    resetNativeStubs
+ * Signature: (Ljava/lang/Class;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_resetNativeStubs
+  (JNIEnv *, jclass, jclass);
 
 #ifdef __cplusplus
 }
