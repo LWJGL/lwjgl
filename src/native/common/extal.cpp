@@ -31,6 +31,8 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "extal.h"
 #include "common_tools.h"
 
@@ -125,6 +127,9 @@ EAXGet	eaxGet;																				 // EAXGet function, ret$
 HMODULE handleOAL;
 #endif
 #ifdef _X11
+void* handleOGG;
+void* handleVorbis;
+void* handleVorbisFile;
 void* handleOAL;
 #endif
 #ifdef _AGL
@@ -188,6 +193,35 @@ static void* GetFunctionPointer(const char* function) {
 }
 
 /**
+ * Concatenate two strings
+ */
+static char *concatenate(const char *str1, const char *str2) {
+	int length1 = strlen(str1);
+	int length2 = strlen(str2);
+	char *str = (char *)calloc(length1 + length2 + 1, sizeof(char));
+	strncpy(str, str1, length1);
+	strncpy(str + length1, str2, length2 + 1);
+	return str;
+}
+
+#ifdef _X11
+static void closeVorbisLibs(void) {
+	if (handleOGG != NULL) {
+		dlclose(handleOGG);
+		handleOGG = NULL;
+	}
+	if (handleVorbis != NULL) {
+		dlclose(handleVorbis);
+		handleVorbis = NULL;
+	}
+	if (handleVorbisFile != NULL) {
+		dlclose(handleVorbisFile);
+		handleVorbisFile = NULL;
+	}
+}
+#endif
+
+/**
  * Loads the OpenAL Library
  */
 static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
@@ -199,13 +233,35 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 		const char *path_str = env->GetStringUTFChars(path, NULL);
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
-		handleOAL = LoadLibrary(path_str);
+		char *lib_str = concatenate(path_str, "lwjglaudio.dll");
+		handleOAL = LoadLibrary(lib_str);
+                free(lib_str);
 #endif
 #ifdef _X11
-		handleOAL = dlopen(path_str, RTLD_LAZY);
+		char *lib_str = concatenate(path_str, "libogg.so.0");
+		handleOGG = dlopen(lib_str, RTLD_LAZY);
+                free(lib_str);
+
+		lib_str = concatenate(path_str, "libvorbis.so.0");
+		handleVorbis = dlopen(lib_str, RTLD_LAZY);
+                free(lib_str);
+
+		lib_str = concatenate(path_str, "libvorbisfile.so.3");
+		handleVorbisFile = dlopen(lib_str, RTLD_LAZY);
+                free(lib_str);
+
+		lib_str = concatenate(path_str, "libopenal.so");
+		handleOAL = dlopen(lib_str, RTLD_LAZY);
+                free(lib_str);
+
+		if (handleOAL == NULL) {
+			closeVorbisLibs();
+		}
 #endif
 #ifdef _AGL
-		handleOAL = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+		char *lib_str = concatenate(path_str, "openal.dylib");
+		handleOAL = NSAddImage(lib_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+                free(lib_str);
 #endif
 		if (handleOAL != NULL) {
 			printfDebug("Found OpenAL at '%s'\n", path_str);
@@ -225,7 +281,11 @@ static void UnLoadOpenAL() {
 	FreeLibrary(handleOAL);
 #endif
 #ifdef _X11
-	dlclose(handleOAL);
+	if (handleOAL != NULL) {
+		dlclose(handleOAL);
+		handleOAL = NULL;
+	}
+	closeVorbisLibs();
 #endif
 #ifdef _AGL
 	// Cannot remove the image
