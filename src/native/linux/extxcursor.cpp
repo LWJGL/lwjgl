@@ -39,7 +39,9 @@ bool loadXcursor(void) {
 	load_success = false;
 	xcursor_handle = dlopen(xcursor_lib_name, RTLD_GLOBAL | RTLD_LAZY);
 	if (xcursor_handle == NULL) {
+#ifdef _DEBUG
 		printf("Could not load %s: %s\n", xcursor_lib_name, dlerror());
+#endif
 		return load_success;
 	}
 	loadFunctionPointers();
