@@ -41,8 +41,9 @@ import org.lwjgl.Sys;
  * A raw Mouse interface. This can be used to poll the current state of the
  * mouse buttons, and determine the mouse movement delta since the last poll.
  * 
- * Up to 8 buttons are available. A scrolly wheel, if present, is the z
- * value. This will be in the range of -10000 to +10000.
+ * n buttons supported, n being a native limit. A scrolly wheel is also
+ * supported, if one such is available. All movement is reported as delta from
+ * last position.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
@@ -68,8 +69,10 @@ public class Mouse {
 	/** Delta Z */
 	public static int dwheel;
   
-  /* Mouse capabilities */
+  /** Number of buttons supported by the mouse */
   public static int buttonCount = -1;
+  
+  /** Does this mouse support a scroll wheel */
   public static boolean hasWheel = false;
 
 	/**
@@ -93,6 +96,7 @@ public class Mouse {
 	
 	/**
 	 * "Create" the mouse. The display must first have been created.
+   * 
 	 * @throws Exception if the mouse could not be created for any reason
 	 */
 	public static void create() throws Exception {
@@ -143,7 +147,7 @@ public class Mouse {
 	/**
 	 * See if a particular mouse button is down.
 	 * 
-	 * @param button The index of the button you wish to test (0..buttonCount)
+	 * @param button The index of the button you wish to test (0..buttonCount-1)
 	 * @return true if the specified button is down
 	 */
 	public static boolean isButtonDown(int button) {

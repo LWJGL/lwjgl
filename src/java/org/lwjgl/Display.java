@@ -54,13 +54,13 @@ public final class Display {
 
 	/** The current display mode, if created */
 	private static DisplayMode mode;
-	
+
 	/** A pointer to the native display window. On Windows this will be an hWnd. */
 	private static int handle;
-  
-  /** Whether or not the display has been requested to shutdown by the user */
-  private static boolean closeRequested = false;
-	
+
+	/** Whether or not the display has been requested to shutdown by the user */
+	private static boolean closeRequested = false;
+
 	/**
 	 * No construction allowed.
 	 */
@@ -95,8 +95,9 @@ public final class Display {
 		String title)
 		throws Exception {
 
-		if (created)
+		if (created) {
 			return;
+		}
 
 		if (!nCreate(displayMode.width,
 			displayMode.height,
@@ -106,8 +107,9 @@ public final class Display {
 			displayMode.depth,
 			displayMode.stencil,
 			fullscreen,
-			title))
+			title)) {
 			throw new Exception("Failed to set display mode to " + displayMode);
+		}
 
 		created = true;
 		mode = displayMode;
@@ -135,19 +137,23 @@ public final class Display {
 	 * been created no action is taken.
 	 */
 	public static void destroy() {
-		if (!created)
+		if (!created) {
 			return;
+		}
+
 		nDestroy();
 		created = false;
 		mode = null;
 	}
-	
+
 	/**
 	 * Native method to destroy the display. This will reset the handle.
 	 */
 	private static native void nDestroy();
 
 	/**
+	 * Retrieves the width of the created display
+	 * 
 	 * @return the current display width.
 	 * @throws AssertionError if the display has not been created yet.
 	 */
@@ -157,6 +163,8 @@ public final class Display {
 	}
 
 	/**
+	 * Retrieves the height of the created display
+	 * 
 	 * @return the current display height.
 	 * @throws AssertionError if the display has not been created yet.
 	 */
@@ -166,6 +174,8 @@ public final class Display {
 	}
 
 	/**
+	 * Retrieves the current display depth of the created display
+	 * 
 	 * @return the current display depth.
 	 * @throws AssertionError if the display has not been created yet.
 	 */
@@ -175,6 +185,8 @@ public final class Display {
 	}
 
 	/**
+	 * Retrieves the current display frequency of the created display
+	 * 
 	 * @return the current display frequency.
 	 * @throws AssertionError if the display has not been created yet.
 	 */
@@ -182,8 +194,11 @@ public final class Display {
 		assert created : "The display has not been created yet.";
 		return mode.freq;
 	}
-	
+
 	/**
+	 * Retrieves the <code>DisplayMode</code> that the display has currently been
+	 * set to.
+	 * 
 	 * @return the current display mode, or null if the display is not yet created
 	 * @throws AssertionError if the display has not been created yet.
 	 */
@@ -191,8 +206,10 @@ public final class Display {
 		assert created : "The display has not been created yet.";
 		return mode;
 	}
-	
+
 	/**
+	 * Retrieves the native handle to the created window
+	 * 
 	 * @return the native handle
 	 * @throws AssertionError if the display has not been created yet.
 	 */
@@ -200,8 +217,10 @@ public final class Display {
 		assert created : "The display has not been created yet.";
 		return handle;
 	}
-	
+
 	/**
+	 * Tests whether or not the display has been created
+	 * 
 	 * @return true if the display has been created
 	 */
 	public static boolean isCreated() {
@@ -217,13 +236,16 @@ public final class Display {
 	 * @return true if the display is minimized
 	 */
 	public static native boolean isMinimized();
-  
-  /**
-   * Determines if the user has requested that the application should close.
-   * 
-   * @return true if the user has requested that the application should close
-   */
-  public static boolean isCloseRequested() {
-    return closeRequested;
-  }
+
+	/**
+	 * Determines if the user has requested that the application should close.
+	 * When a user has requested that the application should shutdown, it is up to
+	 * the application to perform the actual shutdown and cleanup of any allocated
+	 * resources.
+	 * 
+	 * @return true if the user has requested that the application should close
+	 */
+	public static boolean isCloseRequested() {
+		return closeRequested;
+	}
 }

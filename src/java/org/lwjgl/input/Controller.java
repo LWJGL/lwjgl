@@ -43,10 +43,8 @@ import org.lwjgl.Sys;
  * 
  * No buffering is available.
  *
- * Currently n (native limits, currently 128 - might change) buttons, the x, y,
- * z axis is supported along with a POV (or HAT) and a slider, where the z axis
- * represents a throttle. In the future the controller may support more buttons
- * and axises and other features. but this is a platform issue.
+ * Currently n (native limits) buttons, the x, y, z axis (also rotational x,y ,
+ * z axis) is supported along with a POV (or HAT) and a slider
  *
  * The Controller implementation currently only supports the first attached device.
  *
@@ -67,27 +65,27 @@ public class Controller {
 
 	/** X position, range -1000 to 1000 */
 	public static int x = 0;
-  
-  /** X rotational position, range -1000 to 1000 */
-  public static int rx = 0;
-  
+
+	/** X rotational position, range -1000 to 1000 */
+	public static int rx = 0;
+
 	/** Y position, range -1000 to 1000 */
 	public static int y = 0;
-  
-  /** Y rotational position, range -1000 to 1000 */
-  public static int ry = 0;
-  
+
+	/** Y rotational position, range -1000 to 1000 */
+	public static int ry = 0;
+
 	/** Z position, range -1000 to 1000 */
 	public static int z = 0;
 
-  /** Z rotational position, range -1000 to 1000 */
-  public static int rz = 0;
+	/** Z rotational position, range -1000 to 1000 */
+	public static int rz = 0;
 
 	/** Position of Point of View from -1 to 27000 (360 degrees) */
 	public static int pov;
-  
-  /** Slider position, range -1000 to 1000 */
-  public static int slider = 0;  
+
+	/** Slider position, range -1000 to 1000 */
+	public static int slider = 0;
 
 	/** Constant specifying centered POV */
 	public static final int POV_CENTER = -1;
@@ -104,16 +102,32 @@ public class Controller {
 	/** Constant specifying westward POV */
 	public static final int POV_WEST = 9000;
 
-	/* Controller capabilities */
+	/** Number of buttons on the controller */
 	public static int buttonCount = -1;
-  public static boolean hasXAxis = false;
-  public static boolean hasRXAxis = false;
-  public static boolean hasYAxis = false;
-  public static boolean hasRYAxis = false;
-  public static boolean hasZAxis = false;
-  public static boolean hasRZAxis = false;
+
+	/** Does this controller support a x axis */
+	public static boolean hasXAxis = false;
+
+	/** Does this controller support a rotational x axis */
+	public static boolean hasRXAxis = false;
+
+	/** Does this controller support an y axis */
+	public static boolean hasYAxis = false;
+
+	/** Does this controller support a rotational y axis */
+	public static boolean hasRYAxis = false;
+
+	/** Does this controller support a z axis */
+	public static boolean hasZAxis = false;
+
+	/** Does this controller support a rotational z axis */
+	public static boolean hasRZAxis = false;
+
+	/** Does this controller support a Point-Of-View (hat) */
 	public static boolean hasPOV = false;
-  public static boolean hasSlider = false;
+
+	/** Does this controller support a slider */
+	public static boolean hasSlider = false;
 
 	/**
 	 * Controller cannot be constructed.
@@ -165,9 +179,9 @@ public class Controller {
 	}
 
 	/**
-	 * See if a particular button is down.
+	 * Tests if a particular button is down.
 	 * 
-	 * @param button The index of the button you wish to test (0..buttonCount)
+	 * @param button The index of the button you wish to test (0..buttonCount-1)
 	 * @return true if the specified button is down
 	 * @see #buttonCount
 	 */
