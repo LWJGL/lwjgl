@@ -62,6 +62,7 @@ extern unsigned char *getOutputList(event_queue_t *queue);
 //extern int getEventBufferSize(event_queue_t *event_queue);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
+extern void throwFMODException(JNIEnv * env, const char * err);
 extern void setDebugEnabled(bool enable);
 extern void printfDebug(const char *format, ...);
 extern bool getBooleanProperty(JNIEnv *env, const char* propertyName);
