@@ -1497,8 +1497,13 @@ static void *extgl_GetProcAddress(char *name)
 #endif
 
 #ifdef _AGL
-	void *t =(void *)aglGetProcAddress(name);
-
+	void *t = aglGetProcAddress(name);
+	if (t == NULL) {
+#ifdef _DEBUG
+		printf("Could not locate symbol %s\n", name);
+#endif
+		extgl_error = 1;
+	}
 	return t;
 #endif 
 }
