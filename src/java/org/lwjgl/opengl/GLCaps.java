@@ -70,6 +70,7 @@ public abstract class GLCaps {
 	public static boolean GL_ARB_transpose_matrix;
 	public static boolean GL_ARB_vertex_blend;
 	public static boolean GL_ARB_vertex_program;
+	public static boolean GL_ARB_fragment_program;
 	public static boolean GL_ARB_vertex_buffer_object;
 	public static boolean GL_ARB_window_pos;
 	public static boolean GL_EXT_abgr;

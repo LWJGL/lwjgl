@@ -76,6 +76,7 @@ public interface GLConstants
 		ARBVertexBlend,
 		ARBVertexBufferObject,
 		ARBVertexProgram,
+		ARBFragmentProgram,
 		ATIElementArray,
 		ATIEnvmapBumpmap,
 		ATIFragmentShader,
