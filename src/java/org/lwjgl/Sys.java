@@ -80,7 +80,7 @@ public final class Sys {
 	private static String LIBRARY_NAME = "lwjgl";
 	
 	/**
-	 * Debug level. 
+	 * Debug flag.
 	 */
 	public static final boolean debug;
 
@@ -116,7 +116,7 @@ public final class Sys {
 	}
 
 	/**
-	 * @return true if the debug level is greater than or equal to level
+	 * @return true if debugging has been enabled
 	 */
 	public static boolean isDebugEnabled() {
 		return debug;

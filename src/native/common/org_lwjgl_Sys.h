@@ -16,7 +16,7 @@ extern "C" {
 #undef org_lwjgl_Sys_REALTIME_PRIORITY
 #define org_lwjgl_Sys_REALTIME_PRIORITY 2L
 /* Inaccessible static: LIBRARY_NAME */
-/* Inaccessible static: debug */
+/* Inaccessible static: DEBUG */
 /*
  * Class:     org_lwjgl_Sys
  * Method:    setDebug
