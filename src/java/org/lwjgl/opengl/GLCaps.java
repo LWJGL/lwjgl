@@ -67,6 +67,7 @@ public abstract class GLCaps {
 	public static boolean GL_ARB_texture_border_clamp;
 	public static boolean GL_ARB_texture_cube_map;
 	public static boolean GL_ARB_texture_mirrored_repeat;
+	public static boolean GL_ARB_texture_non_power_of_two;
 	public static boolean GL_ARB_transpose_matrix;
 	public static boolean GL_ARB_vertex_blend;
 	public static boolean GL_ARB_vertex_program;
