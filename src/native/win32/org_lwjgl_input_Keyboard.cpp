@@ -53,6 +53,7 @@ static BYTE readBuffer[KEYBOARD_BUFFER_SIZE*4];
 static LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
 static jfieldID fid_readBuffer;
 static bool translationEnabled;
+static bool useUnicode;
 
 
 /*
@@ -188,7 +189,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 {
 	
 	static DIDEVICEOBJECTDATA rgdod[KEYBOARD_BUFFER_SIZE];
-	wchar_t transBuf[KEYBOARD_BUFFER_SIZE];
+	wchar_t transBufUnicode[KEYBOARD_BUFFER_SIZE];
+	WORD transBufAscii[KEYBOARD_BUFFER_SIZE];
 
 	BYTE state[256];
 	DWORD bufsize = KEYBOARD_BUFFER_SIZE;
@@ -220,28 +222,35 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 			*buf++ = (unsigned char) rgdod[i].dwData;
 			if (translationEnabled) {
 				UINT virt_key = MapVirtualKey(rgdod[i].dwOfs, 1);
-				if (virt_key != 0) {
-					if (!GetKeyboardState(state)) {
-						*buf++ = 0;
-						*buf++ = 0;
-						continue;
+				if (virt_key != 0 && GetKeyboardState(state)) {
+					if (useUnicode) {
+						num_chars = ToUnicode(virt_key, 
+											  rgdod[i].dwOfs,
+											  state,
+											  transBufUnicode,
+											  KEYBOARD_BUFFER_SIZE, 0);
+					} else {
+						num_chars = ToAscii(virt_key,
+											rgdod[i].dwOfs,
+											state,
+											transBufAscii,
+											0);
 					}
-					num_chars = ToUnicode(virt_key, 
-										  rgdod[i].dwOfs,
-										  state,
-										  transBuf,
-										  KEYBOARD_BUFFER_SIZE, 0);
 					if (num_chars > 0) {
-						wchar_t ch = transBuf[0];
-						*buf++ = (unsigned char) (ch & 0xff);
-						*buf++ = (unsigned char) ((ch & 0xff00) >> 8);
-						for (int i = 1; i < num_chars; i++) {
-							num_events++;
-							ch = transBuf[i];
-							*buf++ = 0;
-							*buf++ = 0;
-							*buf++ = (unsigned char) (ch & 0xff);
-							*buf++ = (unsigned char) ((ch & 0xff00) >> 8);
+						for (int i = 0; i < num_chars; i++) {
+							if (i >= 1) {
+								num_events++;
+								*buf++ = 0;
+								*buf++ = 0;
+							}
+							if (useUnicode) {
+								wchar_t ch = transBufUnicode[i];
+								*buf++ = (unsigned char) (ch & 0xff);
+								*buf++ = (unsigned char) ((ch & 0xff00) >> 8);
+							} else {
+								*buf++ = (unsigned char)transBufAscii[0];
+								*buf++ = 0;
+							}
 						}
 					} else {
 						*buf++ = 0;
@@ -301,12 +310,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
 	GetVersionEx(&osvi);
 	
 	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
-		translationEnabled = true;
-		return JNI_TRUE;
+		useUnicode = true;
 	} else {
-		translationEnabled = false;
-		return JNI_FALSE;
+		useUnicode = false;
 	}
+	translationEnabled = true;
+	return JNI_TRUE;
 }
 
 /*

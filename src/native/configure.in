@@ -51,8 +51,8 @@ if test "x$JAVA_HOME" = x; then
 else
   AC_MSG_RESULT($JAVA_HOME)
   JAVA_HOME="$JAVA_HOME"
-  CPPFLAGS="$CPPFLAGS -D_DEBUG -fno-rtti -fno-exceptions -pthread -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
-  CFLAGS="$CFLAGS -D_DEBUG -pthread -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+  CPPFLAGS="$CPPFLAGS -fno-rtti -fno-exceptions -pthread -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+  CFLAGS="$CFLAGS -pthread -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 fi
 
 dnl Checks for libraries.
