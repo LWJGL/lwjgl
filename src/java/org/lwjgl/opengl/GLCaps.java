@@ -33,8 +33,6 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.Sys;
-import org.lwjgl.Window;
-
 import java.lang.reflect.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -249,7 +247,7 @@ public abstract class GLCaps {
 		final String exts;
 
 		if (WGL_ARB_extensions_string)
-			exts = GL.wglGetExtensionsStringARB(Window.getHandle());
+			exts = GL.wglGetExtensionsStringARB();
 		// Remember - this is an HWND not an HDC, which is what's required. The native
 		// code on the other side of wglGetExtensionsStringARB gets the HDC from the HWND
 		// behind the scenes.

@@ -41,13 +41,9 @@ import org.lwjgl.opengl.atix.ATIXTextureEnvRoute;
 import org.lwjgl.opengl.ext.*;
 import org.lwjgl.opengl.ext.EXTAbgr;
 import org.lwjgl.opengl.ext.EXTCompiledVertexArray;
-import org.lwjgl.opengl.hp.HPOcclusionTest;
 import org.lwjgl.opengl.nv.*;
 import org.lwjgl.opengl.nv.NVCopyDepthToColor;
 import org.lwjgl.opengl.nv.NVDepthClamp;
-import org.lwjgl.opengl.sgis.SGISGenerateMipmap;
-import org.lwjgl.opengl.sgix.SGIXDepthTexture;
-import org.lwjgl.opengl.sgix.SGIXShadow;
 import org.lwjgl.opengl.wgl.*;
 import org.lwjgl.opengl.wgl.WGLBufferRegion;
 import org.lwjgl.opengl.wgl.WGLMakeCurrentRead;
@@ -114,7 +110,6 @@ public interface GLConstants
 		EXTVertexArray,
 		EXTVertexShader,
 		EXTVertexWeighting,
-		HPOcclusionTest,
 		NVCopyDepthToColor,
 		NVDepthClamp,
 		NVEvaluators,
@@ -135,9 +130,6 @@ public interface GLConstants
 		NVVertexArrayRange,
 		NVVertexArrayRange2,
 		NVVertexProgram,
-		SGISGenerateMipmap,
-		SGIXDepthTexture,
-		SGIXShadow,
 		WGLBufferRegion,
 		WGLMakeCurrentRead,
 		WGLMultisample,

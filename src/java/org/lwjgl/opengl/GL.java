@@ -1362,7 +1362,7 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 
 	public static native int wglGetCurrentReadDCARB();
 
-	public static native String wglGetExtensionsStringARB(int hdc);
+	public static native String wglGetExtensionsStringARB();
 
 	public static native String wglGetExtensionsStringEXT();
 
