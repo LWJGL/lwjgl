@@ -153,6 +153,17 @@ final class XMLUtil {
 			return s;
 	}
 
+	/**
+	 * @return true if the specified attribute is present and not empty or null in the element
+	 */
+	static boolean hasAttribute(Element element, String attribute) {
+		String s = element.getAttribute(attribute);
+		if (s == null || "".equals(s))
+			return false;
+		else
+			return true;
+	}
+
 
 
 }

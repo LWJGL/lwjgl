@@ -64,6 +64,12 @@ public class Loader {
 	/** The source document */
 	private final Document src;
 	
+	/** Expected number of vertices */
+	private int numVertices;
+	
+	/** Expected number of bones */
+	private int numBones;
+	
 	/**
 	 * C'tor
 	 */
@@ -78,13 +84,15 @@ public class Loader {
 	 */
 	public Model load() throws Exception {
 		String material = XMLUtil.getString(src.getDocumentElement(), "material");
+		numVertices = XMLUtil.getInt(src.getDocumentElement(), "vertices");
 		if (XMLUtil.getString(src.getDocumentElement(), "type").equals("boned")) {
 			// It's a boned model
+			numBones = XMLUtil.getInt(src.getDocumentElement(), "bones", 0);
 			return new BonedModel(
 					material,
 					loadTriangles(),
 					loadSkin(),
-					loadBoneAnimations(XMLUtil.getInt(src.getDocumentElement(), "bones", 0)), 
+					loadBoneAnimations(), 
 					loadBonedVertices()
 				);
 		} else if (XMLUtil.getString(src.getDocumentElement(), "type").equals("meshed")) {
@@ -107,6 +115,9 @@ public class Loader {
 	 */
 	private BonedVertex[] loadBonedVertices() throws Exception {
 		List vertexElements = XMLUtil.getChildren(src.getDocumentElement(), "vertex");
+		if (vertexElements.size() != numVertices) {
+			throw new Exception("Vertex count incorrect, got "+vertexElements.size()+", expected "+numVertices);
+		}
 		BonedVertex[] vertices = new BonedVertex[vertexElements.size()];
 		int vertexCount = 0;
 		for (Iterator i = vertexElements.iterator(); i.hasNext(); ) {
@@ -123,6 +134,12 @@ public class Loader {
 	 */
 	private Vector2f[] loadSkin() throws Exception {
 		List skinElements = XMLUtil.getChildren(src.getDocumentElement(), "skin");
+		if (skinElements.size() == 0) {
+			return null;
+		}
+		if (skinElements.size() != numVertices) {
+			throw new Exception("Skin count incorrect, got "+skinElements.size()+", expected "+numVertices);
+		}
 		Vector2f[] skins = new Vector2f[skinElements.size()];
 		int skinCount = 0;
 		for (Iterator i = skinElements.iterator(); i.hasNext(); ) {
@@ -150,16 +167,15 @@ public class Loader {
 	
 	/**
 	 * Load all the bone animations
-	 * @param numBones The number of bones in the animations
 	 * @return Map of animation names to BoneFrame[] animations
 	 * @throws Exception
 	 */
-	private Map loadBoneAnimations(int numBones) throws Exception {
+	private Map loadBoneAnimations() throws Exception {
 		List animationElements = XMLUtil.getChildren(src.getDocumentElement(), "animation");
 		Map animations = new HashMap(animationElements.size());
 		for (Iterator i = animationElements.iterator(); i.hasNext(); ) {
 			Element animationElement = (Element) i.next();
-			animations.put(XMLUtil.getString(animationElement, "name"), loadBonedAnimation(animationElement, numBones));
+			animations.put(XMLUtil.getString(animationElement, "name"), loadBonedAnimation(animationElement));
 		}
 		return animations;
 	}
@@ -187,11 +203,16 @@ public class Loader {
 	 */
 	private BonedVertex loadBonedVertex(Element vertexElement) throws Exception {
 		List weightElements = XMLUtil.getChildren(vertexElement, "weight");
-		Weight[] weights = new Weight[weightElements.size()];
-		int weightCount = 0;
-		for (Iterator i = weightElements.iterator(); i.hasNext(); ) {
-			Element weightElement = (Element) i.next();
-			weights[weightCount++] = loadWeight(weightElement);
+		Weight[] weights;
+		if (weightElements.size() == 0) {
+			weights = null;
+		} else {
+			weights = new Weight[weightElements.size()];
+			int weightCount = 0;
+			for (Iterator i = weightElements.iterator(); i.hasNext(); ) {
+				Element weightElement = (Element) i.next();
+				weights[weightCount++] = loadWeight(weightElement);
+			}
 		}
 			
 		return new BonedVertex(
@@ -200,11 +221,13 @@ public class Loader {
 					XMLUtil.getFloat(vertexElement, "y"),
 					XMLUtil.getFloat(vertexElement, "z")
 				),
-				new Vector3f(
-						XMLUtil.getFloat(vertexElement, "nx"),
-						XMLUtil.getFloat(vertexElement, "ny"),
-						XMLUtil.getFloat(vertexElement, "nz")
-					),
+				XMLUtil.hasAttribute(vertexElement, "nx") ?
+					new Vector3f(
+							XMLUtil.getFloat(vertexElement, "nx"),
+							XMLUtil.getFloat(vertexElement, "ny"),
+							XMLUtil.getFloat(vertexElement, "nz")
+						)
+					: null,
 				weights
 			);
 	}
@@ -222,11 +245,13 @@ public class Loader {
 					XMLUtil.getFloat(vertexElement, "y"),
 					XMLUtil.getFloat(vertexElement, "z")
 				),
-				new Vector3f(
-						XMLUtil.getFloat(vertexElement, "nx"),
-						XMLUtil.getFloat(vertexElement, "ny"),
-						XMLUtil.getFloat(vertexElement, "nz")
-					)
+				XMLUtil.hasAttribute(vertexElement, "nx") ?
+					new Vector3f(
+							XMLUtil.getFloat(vertexElement, "nx"),
+							XMLUtil.getFloat(vertexElement, "ny"),
+							XMLUtil.getFloat(vertexElement, "nz")
+						)
+					: null
 			);
 	}
 
@@ -237,8 +262,12 @@ public class Loader {
 	 * @throws Exception
 	 */
 	private Weight loadWeight(Element element) throws Exception {
+		int bone = XMLUtil.getInt(element, "bone");
+		if (bone < 0 || bone >= numBones) {
+			throw new Exception("Bone index out of range");
+		}
 		return new Weight(
-				XMLUtil.getInt(element, "bone"),
+				bone,
 				XMLUtil.getFloat(element, "weight")
 			);
 	}
@@ -246,14 +275,31 @@ public class Loader {
 	/**
 	 * Load a Triangle from XML
 	 * @param element
+	 * @param numVertices
 	 * @return a Triangle
 	 * @throws Exception
 	 */
 	private Triangle loadTriangle(Element element) throws Exception {
+		// Perform sanity checks
+		int a = XMLUtil.getInt(element, "a");
+		if (a < 0 || a >= numVertices) {
+			throw new Exception("'a' is out of range");
+		}
+		int b = XMLUtil.getInt(element, "b");
+		if (b < 0 || b >= numVertices) {
+			throw new Exception("'b' is out of range");
+		}
+		int c = XMLUtil.getInt(element, "c");
+		if (c < 0 || c >= numVertices) {
+			throw new Exception("'c' is out of range");
+		}
+		if (a == b || a == c || b == c) {
+			throw new Exception("Degenerate triangle");
+		}
 		return new Triangle(
-				XMLUtil.getInt(element, "a"),
-				XMLUtil.getInt(element, "b"),
-				XMLUtil.getInt(element, "c"),
+				a,
+				b,
+				c,
 				XMLUtil.getInt(element, "adjacency", 0)
 			);
 	}
@@ -274,17 +320,16 @@ public class Loader {
 	/**
 	 * Load a boned Animation from XML
 	 * @param element
-	 * @param numBones
 	 * @return BoneFrame[] 
 	 * @throws Exception
 	 */
-	private BoneFrame[] loadBonedAnimation(Element element, int numBones) throws Exception {
+	private BoneFrame[] loadBonedAnimation(Element element) throws Exception {
 		List frameElements = XMLUtil.getChildren(element, "frame");
 		BoneFrame[] frames = new BoneFrame[frameElements.size()];
 		int frameCount = 0;
 		for (Iterator i = frameElements.iterator(); i.hasNext(); ) {
 			Element frameElement = (Element) i.next();
-			frames[frameCount++] = loadBoneFrame(frameElement, numBones);
+			frames[frameCount++] = loadBoneFrame(frameElement);
 		}
 		return frames;
 	}
@@ -309,11 +354,10 @@ public class Loader {
 	/**
 	 * Load a Frame from XML
 	 * @param element
-	 * @param numBones
 	 * @return BoneFrame 
 	 * @throws Exception
 	 */
-	private BoneFrame loadBoneFrame(Element element, int numBones) throws Exception {
+	private BoneFrame loadBoneFrame(Element element) throws Exception {
 		List boneElements = XMLUtil.getChildren(element, "bone");
 		if (boneElements.size() != numBones) {
 			throw new Exception("Expected "+numBones+" bones in frame, only got "+boneElements.size());
@@ -339,6 +383,9 @@ public class Loader {
 	private MeshFrame loadMeshFrame(Element element) throws Exception {
 		List vertexElements = XMLUtil.getChildren(element, "vertex");
 		Vertex[] vertices = new Vertex[vertexElements.size()];
+		if (vertices.length != numVertices) {
+			throw new Exception("Vertex count incorrect");
+		}
 		int vertexCount = 0;
 		for (Iterator i = vertexElements.iterator(); i.hasNext(); ) {
 			Element vertexElement = (Element) i.next();
