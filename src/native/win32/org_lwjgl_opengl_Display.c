@@ -662,12 +662,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *e
 		return;
 	}
 
-        result = wglMakeCurrent(display_hdc, display_hglrc);
-	if (!result) {
-		throwException(env, "Could not bind context to window");
-		closeWindow(display_hwnd, display_hdc);
-		return;
-	}
 	extgl_InitWGL(env);
 	ShowWindow(display_hwnd, SW_SHOW);
 	UpdateWindow(display_hwnd);

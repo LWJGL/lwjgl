@@ -202,12 +202,13 @@ public final class Display {
 	 */
 	private static void createWindow() throws LWJGLException {
 		display_impl.createWindow(current_mode, fullscreen, (fullscreen) ? 0 : x, (fullscreen) ? 0 : y);
+		makeCurrent();
 		// if no display location set, center window
 		if(x == -1 && y == -1) {
 			setLocation(Math.max(0, (initial_mode.getWidth() - current_mode.getWidth()) / 2),
 					Math.max(0, (initial_mode.getHeight() - current_mode.getHeight()) / 2));
 		}
-
+		
 		setTitle(title);
 		initControls();
 		setVSyncEnabled(vsync);
