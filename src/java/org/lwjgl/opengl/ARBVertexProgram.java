@@ -44,7 +44,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public final class ARBVertexProgram extends ARBProgram {
+public final class ARBVertexProgram {
 
 	/*
 	* Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
@@ -87,7 +87,7 @@ public final class ARBVertexProgram extends ARBProgram {
 	public static final int GL_MAX_PROGRAM_ADDRESS_REGISTERS_ARB = 0x88B1;
 	public static final int GL_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88B2;
 	public static final int GL_MAX_PROGRAM_NATIVE_ADDRESS_REGISTERS_ARB = 0x88B3;
-	
+
 	/*
 	* Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
 	* GetFloatv, and GetDoublev:

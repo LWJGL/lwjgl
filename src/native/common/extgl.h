@@ -2088,11 +2088,14 @@ struct ExtensionTypes
 	bool GL_EXT_bgra;
 	bool GL_EXT_blend_func_separate;
 	bool GL_EXT_blend_subtract;
+	bool GL_EXT_Cg_shader;
 	bool GL_EXT_compiled_vertex_array;
+	bool GL_EXT_depth_bounds_test;
 	bool GL_EXT_draw_range_elements;
 	bool GL_EXT_fog_coord;
 	bool GL_EXT_multi_draw_arrays;
 	bool GL_EXT_packed_pixels;
+	bool GL_EXT_pixel_buffer_object;
 	bool GL_EXT_point_parameters;
 	bool GL_EXT_rescale_normal;
 	bool GL_EXT_secondary_color;
@@ -2131,6 +2134,7 @@ struct ExtensionTypes
 	bool GL_NV_float_buffer;
 	bool GL_NV_fog_distance;
 	bool GL_NV_fragment_program;
+	bool GL_NV_fragment_program_option;
 	bool GL_NV_half_float;
 	bool GL_NV_light_max_exponent;
 	bool GL_NV_multisample_filter_hint;
@@ -2154,6 +2158,7 @@ struct ExtensionTypes
 	bool GL_NV_vertex_program;
 	bool GL_NV_vertex_program1_1;
 	bool GL_NV_vertex_program2;
+	bool GL_NV_vertex_program2_option;
 };
 
 extern struct ExtensionTypes extgl_Extensions;

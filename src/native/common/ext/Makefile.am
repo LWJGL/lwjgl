@@ -4,6 +4,7 @@ libext_la_SOURCES = $(SRC)
 INCLUDES=-I..
 SRC=org_lwjgl_opengl_EXTBlendFuncSeparate.cpp \
     org_lwjgl_opengl_EXTCompiledVertexArray.cpp \
+    org_lwjgl_opengl_EXTDepthBoundsTest.cpp \
     org_lwjgl_opengl_EXTDrawRangeElements.cpp \
     org_lwjgl_opengl_EXTFogCoord.cpp \
     org_lwjgl_opengl_EXTMultiDrawArrays.cpp \

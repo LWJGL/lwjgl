@@ -41,39 +41,37 @@
 
 package org.lwjgl.test.opengl;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.ARBVertexBufferObject;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.glu.GLU;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 public final class VBOIndexTest {
+
 	static {
 		try {
-      //find first display mode that allows us 640*480*16
+			//find first display mode that allows us 640*480*16
 			int mode = -1;
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
-			for (int i = 0; i < modes.length; i++) {
-				if (modes[i].width == 640
-					&& modes[i].height == 480
-					&& modes[i].bpp >= 16) {
+			for ( int i = 0; i < modes.length; i++ ) {
+				if ( modes[i].width == 640
+				     && modes[i].height == 480
+				     && modes[i].bpp >= 16 ) {
 					mode = i;
 					break;
 				}
 			}
-			if (mode != -1) {
+			if ( mode != -1 ) {
 				//select above found displaymode
-				System.out.println("Setting display mode to "+modes[mode]);
+				System.out.println("Setting display mode to " + modes[mode]);
 				Display.setDisplayMode(modes[mode]);
 				System.out.println("Created display.");
 			}
@@ -81,22 +79,26 @@ public final class VBOIndexTest {
 			System.err.println("Failed to create display due to " + e);
 		}
 	}
- 
-     static {
-         try {
-             Window.create("LWJGL Game Example", 16, 0, 0,0, 0);
-             System.out.println("Created OpenGL.");
-         } catch (Exception e) {
-             System.err.println("Failed to create OpenGL due to "+e);
-             System.exit(1);
-         }
-     }
- 
-    /** Is the game finished? */
-     private static boolean finished;
- 
-    /** A rotating square! */
-     private static float angle;
+
+	static {
+		try {
+			Window.create("LWJGL Game Example", 16, 0, 0, 0, 0);
+			System.out.println("Created OpenGL.");
+		} catch (Exception e) {
+			System.err.println("Failed to create OpenGL due to " + e);
+			System.exit(1);
+		}
+	}
+
+	/**
+	 * Is the game finished?
+	 */
+	private static boolean finished;
+
+	/**
+	 * A rotating square!
+	 */
+	private static float angle;
 	private static int buffer_id;
 	private static int indices_buffer_id;
 	private static FloatBuffer vertices;
@@ -105,134 +107,146 @@ public final class VBOIndexTest {
 	private static IntBuffer indices;
 	private static ByteBuffer mapped_indices_buffer = null;
 	private static IntBuffer mapped_indices_int_buffer = null;
- 
-    public static void main(String[] arguments) {
-         try {
-             init();
-             while (!finished) {
-             	 Window.update();
-             	 
-             	 if (Window.isMinimized())
-             	 	Thread.sleep(200);
-             	 else if (Window.isCloseRequested())
-             	 	System.exit(0);
-             	 
-                 mainLoop();
-                 render();
-             }   
-         } catch (Throwable t) {
-             t.printStackTrace();
-         } finally {
-             cleanup();
-         }
-     }
- 
-    /**
-      * All calculations are done in here
-      */
-     private static void mainLoop() {
-         angle += 1f;
-         if (angle > 360.0f)
-             angle = 0.0f;
- 
-        if (Mouse.getDX() != 0 || Mouse.getDY() != 0 || Mouse.getDWheel() != 0)
-            System.out.println("Mouse moved " + Mouse.getDX() + " " + Mouse.getDY() + " " + Mouse.getDWheel());
-        for (int i = 0; i < Mouse.getButtonCount(); i++)
-            if (Mouse.isButtonDown(i))
-                System.out.println("Button " + i + " down");
-        if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
-             finished = true;
-        for (int i = 0; i < Keyboard.getNumKeyboardEvents(); i++) {
-            Keyboard.next();
-            if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState())
-                finished = true;
-            if (Keyboard.getEventKey() == Keyboard.KEY_T && Keyboard.getEventKeyState())
-                System.out.println("Current time: " + Sys.getTime());
-        }
-     }
- 
-    /**
-      * All rendering is done in here
-      */
-     private static void render() {
-       GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-       GL11.glPushMatrix();
-       GL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
-       GL11.glRotatef(angle, 0, 0, 1.0f);
 
+	public static void main(String[] arguments) {
+		try {
+			init();
+			while ( !finished ) {
+				Window.update();
 
-	ByteBuffer new_mapped_buffer = ARBVertexBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, ARBVertexBufferObject.GL_WRITE_ONLY_ARB, 2*4*4, mapped_buffer);
-	if (new_mapped_buffer != mapped_buffer)
-		mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
-	mapped_buffer = new_mapped_buffer;
+				if ( Window.isMinimized() )
+					Thread.sleep(200);
+				else if ( Window.isCloseRequested() )
+					System.exit(0);
 
-        new_mapped_buffer = ARBVertexBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, ARBVertexBufferObject.GL_WRITE_ONLY_ARB, 4*4, mapped_indices_buffer);
-	if (new_mapped_buffer != mapped_indices_buffer)
-		mapped_indices_int_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asIntBuffer();
-
-	mapped_float_buffer.rewind();
-	vertices.rewind();
-	mapped_float_buffer.put(vertices);
-
-        mapped_indices_int_buffer.rewind();
-        indices.rewind();
-        mapped_indices_int_buffer.put(indices);
-	if (ARBVertexBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB) && 
-            ARBVertexBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB)) {
-		GL11.glDrawElements(GL11.GL_QUADS, 4, GL11.GL_UNSIGNED_INT, 0);
-        }
-       GL11.glPopMatrix();
-     }
- 
-    /**
-      * Initialize
-      */
-     private static void init() throws Exception {
-         Sys.setTime(0);
-         Sys.setProcessPriority(Sys.HIGH_PRIORITY);
-         System.out.println("Timer resolution: " + Sys.getTimerResolution());
-         // Go into orthographic projection mode.
-       GL11.glMatrixMode(GL11.GL_PROJECTION);
-       GL11.glLoadIdentity();
-         GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());
-       GL11.glMatrixMode(GL11.GL_MODELVIEW);
-       GL11.glLoadIdentity();
-       GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
-	if (!GLContext.GL_ARB_vertex_buffer_object) {
-		System.out.println("ARB VBO not supported!");
-		System.exit(1);
+				mainLoop();
+				render();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		} finally {
+			cleanup();
+		}
 	}
-	IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
-	ARBVertexBufferObject.glGenBuffersARB(int_buffer);
-	buffer_id = int_buffer.get(0);
-        indices_buffer_id = int_buffer.get(1);
-	ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, buffer_id);
-	ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, indices_buffer_id);
-	vertices = ByteBuffer.allocateDirect(2*4*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-	vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
-        vertices.rewind();
-        indices = ByteBuffer.allocateDirect(4*4).order(ByteOrder.nativeOrder()).asIntBuffer();
-        indices.put(0).put(1).put(2).put(3);
-        indices.rewind();
-	ARBVertexBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, 2*4*4, (ByteBuffer)null, ARBVertexBufferObject.GL_STREAM_DRAW_ARB);
-	ARBVertexBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, 4*4, (ByteBuffer)null, ARBVertexBufferObject.GL_STREAM_DRAW_ARB);
-	GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-	GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, 0);
-     }
- 
-    /**
-      * Cleanup
-      */
-     private static void cleanup() {
-	IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
-	int_buffer.put(0, buffer_id);
-        int_buffer.put(1, indices_buffer_id);
-	ARBVertexBufferObject.glDeleteBuffersARB(int_buffer);
-         Window.destroy();
-         try {
-         	Display.resetDisplayMode();
-         } catch (Exception e) {
-         	e.printStackTrace();
-         }
-     }
- }
+
+	/**
+	 * All calculations are done in here
+	 */
+	private static void mainLoop() {
+		angle += 1f;
+		if ( angle > 360.0f )
+			angle = 0.0f;
+
+		if ( Mouse.getDX() != 0 || Mouse.getDY() != 0 || Mouse.getDWheel() != 0 )
+			System.out.println("Mouse moved " + Mouse.getDX() + " " + Mouse.getDY() + " " + Mouse.getDWheel());
+		for ( int i = 0; i < Mouse.getButtonCount(); i++ )
+			if ( Mouse.isButtonDown(i) )
+				System.out.println("Button " + i + " down");
+		if ( Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) )
+			finished = true;
+		for ( int i = 0; i < Keyboard.getNumKeyboardEvents(); i++ ) {
+			Keyboard.next();
+			if ( Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState() )
+				finished = true;
+			if ( Keyboard.getEventKey() == Keyboard.KEY_T && Keyboard.getEventKeyState() )
+				System.out.println("Current time: " + Sys.getTime());
+		}
+	}
+
+	/**
+	 * All rendering is done in here
+	 */
+	private static void render() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glPushMatrix();
+		GL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+		GL11.glRotatef(angle, 0, 0, 1.0f);
+
+
+		ByteBuffer new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
+		                                                              ARBBufferObject.GL_WRITE_ONLY_ARB,
+		                                                              2 * 4 * 4,
+		                                                              mapped_buffer);
+		if ( new_mapped_buffer != mapped_buffer )
+			mapped_float_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
+		mapped_buffer = new_mapped_buffer;
+
+		new_mapped_buffer = ARBBufferObject.glMapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB,
+		                                                   ARBBufferObject.GL_WRITE_ONLY_ARB,
+		                                                   4 * 4,
+		                                                   mapped_indices_buffer);
+		if ( new_mapped_buffer != mapped_indices_buffer )
+			mapped_indices_int_buffer = new_mapped_buffer.order(ByteOrder.nativeOrder()).asIntBuffer();
+
+		mapped_float_buffer.rewind();
+		vertices.rewind();
+		mapped_float_buffer.put(vertices);
+
+		mapped_indices_int_buffer.rewind();
+		indices.rewind();
+		mapped_indices_int_buffer.put(indices);
+		if ( ARBBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB) &&
+		     ARBBufferObject.glUnmapBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB) ) {
+			GL11.glDrawElements(GL11.GL_QUADS, 4, GL11.GL_UNSIGNED_INT, 0);
+		}
+		GL11.glPopMatrix();
+	}
+
+	/**
+	 * Initialize
+	 */
+	private static void init() throws Exception {
+		Sys.setTime(0);
+		Sys.setProcessPriority(Sys.HIGH_PRIORITY);
+		System.out.println("Timer resolution: " + Sys.getTimerResolution());
+		// Go into orthographic projection mode.
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		if ( !GLContext.GL_ARB_vertex_buffer_object ) {
+			System.out.println("ARB VBO not supported!");
+			System.exit(1);
+		}
+		IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
+		ARBBufferObject.glGenBuffersARB(int_buffer);
+		buffer_id = int_buffer.get(0);
+		indices_buffer_id = int_buffer.get(1);
+		ARBBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, buffer_id);
+		ARBBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, indices_buffer_id);
+		vertices = ByteBuffer.allocateDirect(2 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
+		vertices.rewind();
+		indices = ByteBuffer.allocateDirect(4 * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
+		indices.put(0).put(1).put(2).put(3);
+		indices.rewind();
+		ARBBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
+		                                2 * 4 * 4,
+		                                (ByteBuffer)null,
+		                                ARBBufferObject.GL_STREAM_DRAW_ARB);
+		ARBBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB,
+		                                4 * 4,
+		                                (ByteBuffer)null,
+		                                ARBBufferObject.GL_STREAM_DRAW_ARB);
+		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+		GL11.glVertexPointer(2, GL11.GL_FLOAT, 0, 0);
+	}
+
+	/**
+	 * Cleanup
+	 */
+	private static void cleanup() {
+		IntBuffer int_buffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder()).asIntBuffer();
+		int_buffer.put(0, buffer_id);
+		int_buffer.put(1, indices_buffer_id);
+		ARBBufferObject.glDeleteBuffersARB(int_buffer);
+		Window.destroy();
+		try {
+			Display.resetDisplayMode();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

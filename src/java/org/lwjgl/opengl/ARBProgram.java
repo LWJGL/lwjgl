@@ -45,7 +45,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-class ARBProgram {
+public final class ARBProgram {
 
 	/*
 	* Accepted by the <format> parameter of ProgramStringARB:

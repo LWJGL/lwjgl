@@ -54,10 +54,7 @@ import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.NVVertexProgram;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.glu.GLU;
 
 public class Grass {
@@ -82,7 +79,7 @@ public class Grass {
 					mode = i;
 					break;
 				}
-			} 
+			}
 
 			if (mode == -1) {
 				System.out.println("did not find suitable mode");
@@ -140,7 +137,7 @@ public class Grass {
 	public static void main(String[] args) {
 		System.out.println("Vertex program supported: " + GLContext.GL_NV_vertex_program);
 		IntBuffer int_buf = BufferUtils.createIntBuffer(1);
-		NVVertexProgram.glGenProgramsNV(int_buf);
+		NVProgram.glGenProgramsNV(int_buf);
 		if (int_buf.get(0) == 0)
 			throw new RuntimeException("Could not allocate new vertex program id!");
 
@@ -150,7 +147,7 @@ public class Grass {
 		program_buf.order(ByteOrder.nativeOrder());
 		program_buf.put(program);
 		program_buf.flip();
-		NVVertexProgram.glLoadProgramNV(
+		NVProgram.glLoadProgramNV(
 			NVVertexProgram.GL_VERTEX_PROGRAM_NV,
 			program_handle,
 			program_buf);
@@ -286,7 +283,7 @@ public class Grass {
 
 	private static void grsDraw() {
 		GL11.glEnable(NVVertexProgram.GL_VERTEX_PROGRAM_NV);
-		NVVertexProgram.glBindProgramNV(NVVertexProgram.GL_VERTEX_PROGRAM_NV, program_handle);
+		NVProgram.glBindProgramNV(NVVertexProgram.GL_VERTEX_PROGRAM_NV, program_handle);
 		NVVertexProgram.glTrackMatrixNV(
 			NVVertexProgram.GL_VERTEX_PROGRAM_NV,
 			0,

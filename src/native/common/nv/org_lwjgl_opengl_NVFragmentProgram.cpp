@@ -36,16 +36,11 @@
 
 #include "extgl.h"
 
-
 typedef void (APIENTRY * glProgramNamedParameter4fNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-typedef void (APIENTRY * glProgramLocalParameter4fARBPROC) (GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 typedef void (APIENTRY * glGetProgramNamedParameterfvNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLfloat *params);
-typedef void (APIENTRY * glGetProgramLocalParameterfvARBPROC) (GLenum target, GLuint index, GLfloat *params);
 
 static glProgramNamedParameter4fNVPROC glProgramNamedParameter4fNV;
-static glProgramLocalParameter4fARBPROC glProgramLocalParameter4fARB;
 static glGetProgramNamedParameterfvNVPROC glGetProgramNamedParameterfvNV;
-static glGetProgramLocalParameterfvARBPROC glGetProgramLocalParameterfvARB;
 
 /*
  * Class:	org.lwjgl.opengl.NVFragmentProgram
@@ -56,7 +51,6 @@ static void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglProgramNamedParam
 {
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	glProgramNamedParameter4fNV(id, length, name_ptr, x, y, z, w);
-	
 }
 
 /*
@@ -69,30 +63,6 @@ static void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramNamedPa
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramNamedParameterfvNV(id, length, name_ptr, params_ptr);
-	
-}
-
-/*
- * Class:	org.lwjgl.opengl.NVFragmentProgram
- * Method:	glProgramLocalParameter4fNV
- */
-static void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_glProgramLocalParameter4fARB
-	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
-{
-	glProgramLocalParameter4fARB(target, index, x, y, z, w);
-	
-}
-
-/*
- * Class:	org.lwjgl.opengl.NVFragmentProgram
- * Method:	nglGetProgramLocalParameterfvNV
- */
-static void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramLocalParameterfvARB
-	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint params_offset)
-{
-	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + params_offset;
-	glGetProgramLocalParameterfvARB(target, index, params_ptr);
-	
 }
 
 void extgl_InitNVFragmentProgram(JNIEnv *env, jobject ext_set)
@@ -100,8 +70,6 @@ void extgl_InitNVFragmentProgram(JNIEnv *env, jobject ext_set)
 	JavaMethodAndExtFunction functions[] = {
 		{"nglProgramNamedParameter4fNV", "(IILjava/nio/ByteBuffer;IFFFF)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglProgramNamedParameter4fNV, "glProgramNamedParameter4fNV", (void**)&glProgramNamedParameter4fNV},
 		{"nglGetProgramNamedParameterfvNV", "(IILjava/nio/ByteBuffer;ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramNamedParameterfvNV, "glGetProgramNamedParameterfvNV", (void**)&glGetProgramNamedParameterfvNV},
-		{"glProgramLocalParameter4fARB", "(IIFFFF)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_glProgramLocalParameter4fARB, "glProgramLocalParameter4fARB", (void**)&glProgramLocalParameter4fARB},
-		{"nglGetProgramLocalParameterfvARB", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramLocalParameterfvARB, "glGetProgramLocalParameterfvARB", (void**)&glGetProgramLocalParameterfvARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	jclass clazz = ext_ResetClass(env, "org/lwjgl/opengl/NVFragmentProgram");

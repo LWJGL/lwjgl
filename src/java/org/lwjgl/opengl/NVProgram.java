@@ -43,7 +43,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-class NVProgram {
+public final class NVProgram {
 
 	/*
 	   Accepted by the <pname> parameter of GetProgramivNV:
@@ -109,33 +109,27 @@ class NVProgram {
 		nglGetProgramStringNV(programID, parameterName, paramString, paramString.position());
 	}
 
-	private static native void nglGetProgramStringNV(
-			int programID,
-			int parameterName,
-			Buffer paramString,
-			int paramStringOffset);
+	private static native void nglGetProgramStringNV(int programID, int parameterName, Buffer paramString, int paramStringOffset);
 	// ---------------------------
 
 	public static native boolean glIsProgramNV(int programID);
 
 	// ---------------------------
 	public static boolean glAreProgramsResidentNV(IntBuffer programIDs, ByteBuffer programResidences) {
-		if (programIDs.remaining() != programResidences.remaining())
+		if ( programIDs.remaining() != programResidences.remaining() )
 			throw new IllegalArgumentException("programIDs.remaining() != programResidences.remaining()");
-		return nglAreProgramsResidentNV(
-				programIDs.remaining(),
-				programIDs,
-				programIDs.position(),
-				programResidences,
-				programResidences.position());
+		return nglAreProgramsResidentNV(programIDs.remaining(),
+		                                programIDs,
+		                                programIDs.position(),
+		                                programResidences,
+		                                programResidences.position());
 	}
 
-	private static native boolean nglAreProgramsResidentNV(
-			int n,
-			IntBuffer programIDs,
-			int programIDsOffset,
-			ByteBuffer programResidences,
-			int programResidencesOffset);
+	private static native boolean nglAreProgramsResidentNV(int n,
+	                                                       IntBuffer programIDs,
+	                                                       int programIDsOffset,
+	                                                       ByteBuffer programResidences,
+	                                                       int programResidencesOffset);
 	// ---------------------------
 
 	// ---------------------------

@@ -42,7 +42,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-public final class NVFragmentProgram extends NVProgram {
+public final class NVFragmentProgram {
 
 	/*
 	   Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
@@ -98,20 +98,5 @@ public final class NVFragmentProgram extends NVProgram {
 
 	// ---------------------------
 
-	public static native void glProgramLocalParameter4fARB(int target, int index, float x, float y, float z, float w);
-
-	// ---------------------------
-
-	public static void glGetProgramLocalParameterARB(int target, int index, FloatBuffer params) {
-		BufferChecks.checkBuffer(params);
-		nglGetProgramLocalParameterfvARB(target, index, params, params.position());
-	}
-
-	private static native void nglGetProgramLocalParameterfvARB(
-			int target,
-			int index,
-			FloatBuffer params,
-			int params_offset);
-	// ---------------------------
 }
 

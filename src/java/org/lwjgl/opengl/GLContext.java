@@ -93,11 +93,14 @@ public final class GLContext {
 	public static boolean GL_EXT_bgra;
 	public static boolean GL_EXT_blend_func_separate;
 	public static boolean GL_EXT_blend_subtract;
+	public static boolean GL_EXT_Cg_shader;
 	public static boolean GL_EXT_compiled_vertex_array;
+	public static boolean GL_EXT_depth_bounds_test;
 	public static boolean GL_EXT_draw_range_elements;
 	public static boolean GL_EXT_fog_coord;
 	public static boolean GL_EXT_multi_draw_arrays;
 	public static boolean GL_EXT_packed_pixels;
+	public static boolean GL_EXT_pixel_buffer_object;
 	public static boolean GL_EXT_point_parameters;
 	public static boolean GL_EXT_rescale_normal;
 	public static boolean GL_EXT_secondary_color;
@@ -136,6 +139,7 @@ public final class GLContext {
 	public static boolean GL_NV_float_buffer;
 	public static boolean GL_NV_fog_distance;
 	public static boolean GL_NV_fragment_program;
+	public static boolean GL_NV_fragment_program_option;
 	public static boolean GL_NV_half_float;
 	public static boolean GL_NV_light_max_exponent;
 	public static boolean GL_NV_multisample_filter_hint;
@@ -159,6 +163,7 @@ public final class GLContext {
 	public static boolean GL_NV_vertex_program;
 	public static boolean GL_NV_vertex_program1_1;
 	public static boolean GL_NV_vertex_program2;
+	public static boolean GL_NV_vertex_program2_option;
 
 	public static boolean OpenGL11;
 	public static boolean OpenGL12;

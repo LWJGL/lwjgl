@@ -545,8 +545,6 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 		}
 	}
 
-	extgl_Extensions.GL_ARB_depth_texture = GLQueryExtension(env, ext_set, "GL_ARB_depth_texture");
-
 	extgl_Extensions.GL_ARB_imaging = GLQueryExtension(env, ext_set, "GL_ARB_imaging");
 	extgl_Extensions.GL_ARB_depth_texture = GLQueryExtension(env, ext_set, "GL_ARB_depth_texture");
 	extgl_Extensions.GL_ARB_fragment_program = GLQueryExtension(env, ext_set, "GL_ARB_fragment_program");
@@ -582,11 +580,14 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_EXT_bgra = GLQueryExtension(env, ext_set, "GL_EXT_bgra");
 	extgl_Extensions.GL_EXT_blend_func_separate = GLQueryExtension(env, ext_set, "GL_EXT_blend_func_separate");
 	extgl_Extensions.GL_EXT_blend_subtract = GLQueryExtension(env, ext_set, "GL_EXT_blend_subtract");
+	extgl_Extensions.GL_EXT_Cg_shader = GLQueryExtension(env, ext_set, "GL_EXT_Cg_shader");
 	extgl_Extensions.GL_EXT_compiled_vertex_array = GLQueryExtension(env, ext_set, "GL_EXT_compiled_vertex_array");
+	extgl_Extensions.GL_EXT_depth_bounds_test = GLQueryExtension(env, ext_set, "GL_EXT_depth_bounds_test");
 	extgl_Extensions.GL_EXT_draw_range_elements = GLQueryExtension(env, ext_set, "GL_EXT_draw_range_elements");
 	extgl_Extensions.GL_EXT_fog_coord = GLQueryExtension(env, ext_set, "GL_EXT_fog_coord");
 	extgl_Extensions.GL_EXT_multi_draw_arrays = GLQueryExtension(env, ext_set, "GL_EXT_multi_draw_arrays");
 	extgl_Extensions.GL_EXT_packed_pixels = GLQueryExtension(env, ext_set, "GL_EXT_packed_pixels");
+	extgl_Extensions.GL_EXT_pixel_buffer_object = GLQueryExtension(env, ext_set, "GL_EXT_pixel_buffer_object");
 	extgl_Extensions.GL_EXT_point_parameters = GLQueryExtension(env, ext_set, "GL_EXT_point_parameters");
 	extgl_Extensions.GL_EXT_rescale_normal = GLQueryExtension(env, ext_set, "GL_EXT_rescale_normal");
 	extgl_Extensions.GL_EXT_secondary_color = GLQueryExtension(env, ext_set, "GL_EXT_secondary_color");
@@ -625,6 +626,7 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_NV_float_buffer = GLQueryExtension(env, ext_set, "GL_NV_float_buffer");
 	extgl_Extensions.GL_NV_fog_distance = GLQueryExtension(env, ext_set, "GL_NV_fog_distance");
 	extgl_Extensions.GL_NV_fragment_program = GLQueryExtension(env, ext_set, "GL_NV_fragment_program");
+	extgl_Extensions.GL_NV_fragment_program_option = GLQueryExtension(env, ext_set, "GL_NV_fragment_program_option");
 	extgl_Extensions.GL_NV_half_float = GLQueryExtension(env, ext_set, "GL_NV_half_float");
 	extgl_Extensions.GL_NV_light_max_exponent = GLQueryExtension(env, ext_set, "GL_NV_light_max_exponent");
 	extgl_Extensions.GL_NV_multisample_filter_hint = GLQueryExtension(env, ext_set, "GL_NV_multisample_filter_hint");
@@ -648,10 +650,12 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_NV_vertex_program = GLQueryExtension(env, ext_set, "GL_NV_vertex_program");
 	extgl_Extensions.GL_NV_vertex_program1_1 = GLQueryExtension(env, ext_set, "GL_NV_vertex_program1_1");
 	extgl_Extensions.GL_NV_vertex_program2 = GLQueryExtension(env, ext_set, "GL_NV_vertex_program2");
+	extgl_Extensions.GL_NV_vertex_program2_option = GLQueryExtension(env, ext_set, "GL_NV_vertex_program2_option");
 }
 
 extern bool extgl_InitOpenGL1_1(JNIEnv *env);
-//extern void extgl_InitARBFragmentProgram(JNIEnv *env, jobject ext_set);
+
+extern void extgl_InitARBBufferObject(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBImaging(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set);
@@ -663,13 +667,13 @@ extern void extgl_InitARBShaderObjects(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBTextureCompression(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBVertexBlend(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBVertexProgram(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBVertexShader(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set);
 
 extern void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set);
 extern void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTDepthBoundsTest(JNIEnv *env, jobject ext_set);
 extern void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set);
 extern void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set);
 extern void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set);
@@ -722,7 +726,7 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	//extgl_InitEXTNurbsTesselator(env, ext_set);
 
 	/* first load the extensions */
-	//	extgl_InitARBFragmentProgram(env, ext_set);
+	extgl_InitARBBufferObject(env, ext_set);
 	extgl_InitARBImaging(env, ext_set);
 	extgl_InitARBMatrixPalette(env, ext_set);
 	extgl_InitARBMultisample(env, ext_set);
@@ -734,14 +738,13 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitARBTextureCompression(env, ext_set);
 	extgl_InitARBTransposeMatrix(env, ext_set);
 	extgl_InitARBVertexBlend(env, ext_set);
-	extgl_InitARBVertexBufferObject(env, ext_set);
 	extgl_InitARBVertexProgram(env, ext_set);
 	extgl_InitARBVertexShader(env, ext_set);
 	extgl_InitARBWindowPos(env, ext_set);
 
 	extgl_InitEXTBlendFuncSeparate(env, ext_set);
 	extgl_InitEXTCompiledVertexArray(env, ext_set);
-	//extgl_InitEXTCullVertex(env, ext_set);
+	extgl_InitEXTDepthBoundsTest(env, ext_set);
 	extgl_InitEXTDrawRangeElements(env, ext_set);
 	extgl_InitEXTFogCoord(env, ext_set);
 	extgl_InitEXTMultiDrawArrays(env, ext_set);
@@ -751,7 +754,6 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitEXTVertexShader(env, ext_set);
 	extgl_InitEXTVertexWeighting(env, ext_set);
 
-	//extgl_InitNVElementArray(env, ext_set);
 	extgl_InitNVEvaluators(env, ext_set);
 	extgl_InitNVFence(env, ext_set);
 	extgl_InitNVFragmentProgram(env, ext_set);
