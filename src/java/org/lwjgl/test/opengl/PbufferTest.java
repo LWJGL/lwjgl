@@ -194,7 +194,7 @@ public class PbufferTest {
     GL.glPushMatrix();
     {
       GL.glTranslatef(quadPosition.x, quadPosition.y, 0);
-      GL.glRotated(angle, 0.0f, 0.0f, 1.0f);
+      GL.glRotatef(angle, 0.0f, 0.0f, 1.0f);
       GL.glColor3f(1.0f, 1.0f, 1.0f);
       GL.glBegin(GL.GL_QUADS);
       {
@@ -215,7 +215,7 @@ public class PbufferTest {
     GL.glPushMatrix();
     {
       GL.glTranslatef(quadPosition.x, quadPosition.y, 0);
-      GL.glRotated(angle, 0.0f, 0.0f, 1.0f);
+      GL.glRotatef(angle, 0.0f, 0.0f, 1.0f);
       GL.glColor3f(1.0f, 1.0f, 0.0f);
       GL.glBegin(GL.GL_QUADS);
       {

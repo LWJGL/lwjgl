@@ -194,8 +194,8 @@ public final class VBOTest {
 	GL.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, 2*4*4, Sys.NULL, GL.GL_STREAM_DRAW_ARB);
 	ByteBuffer index_buffer = Sys.createIndexBuffer(0);
 	GL.glEnableClientState(GL.GL_VERTEX_ARRAY);
-	GL.glVertexPointer(2, GL.GL_FLOAT, 0, index_buffer);
-       GL.glGetIntegerv(GL.GL_MAX_TEXTURE_UNITS_ARB, int_buffer);
+	GL.glVertexPointer(2, 0, index_buffer.asFloatBuffer());
+       GL.glGetInteger(GL.GL_MAX_TEXTURE_UNITS_ARB, int_buffer);
          System.out.println("Number of texture units: " + int_buffer.get(0));
          // Fix the refresh rate to the display frequency.
 //         gl.wglSwapIntervalEXT(1);

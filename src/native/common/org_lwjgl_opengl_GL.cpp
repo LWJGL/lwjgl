@@ -1360,9 +1360,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetVariantIntegervEXT(JNIEnv 
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetVariantPointervEXT
+ * Method:    glGetVariantPointerEXT
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVariantPointervEXT(JNIEnv * env, jclass clazz, jint p0, jint p1, jint size)
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVariantPointerEXT(JNIEnv * env, jclass clazz, jint p0, jint p1, jint size)
 {
 	CHECK_EXISTS(glGetVariantPointervEXT)
 	void *address;
@@ -1421,9 +1421,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetVertexAttribivNV(JNIEnv * 
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetVertexAttribPointervARB
+ * Method:    glGetVertexAttribPointerARB
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointervARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint size)
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointerARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint size)
 {
 	CHECK_EXISTS(glGetVertexAttribPointervARB)
 	void *address;
@@ -1434,9 +1434,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointervARB(
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetVertexAttribPointervNV
+ * Method:    glGetVertexAttribPointerNV
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointervNV(JNIEnv * env, jclass clazz, jint p0, jint p1, jint size)
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointerNV(JNIEnv * env, jclass clazz, jint p0, jint p1, jint size)
 {
 	CHECK_EXISTS(glGetVertexAttribPointervNV)
 	void *address;
@@ -3670,7 +3670,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetBufferParameterivARB(JNIEn
  * Method:    glGetBufferPointervARB
  * Signature: (III)V
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetBufferPointervARB(JNIEnv *env, jclass clazz, jint target, jint pname, jint size)
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetBufferPointerARB(JNIEnv *env, jclass clazz, jint target, jint pname, jint size)
 {
 	CHECK_EXISTS(glGetBufferPointervARB)
 	void *pointer;

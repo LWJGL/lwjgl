@@ -181,7 +181,7 @@ public final class Game {
        GL.glViewport(0, 0, Display.getWidth(), Display.getHeight());
          ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(4);
          num_tex_units_buf.order(ByteOrder.nativeOrder());
-       GL.glGetIntegerv(GL.GL_MAX_TEXTURE_UNITS_ARB, num_tex_units_buf.asIntBuffer());
+       GL.glGetInteger(GL.GL_MAX_TEXTURE_UNITS_ARB, num_tex_units_buf.asIntBuffer());
          System.out.println("Number of texture units: " + num_tex_units_buf.getInt());
          // Fix the refresh rate to the display frequency.
 //         gl.wglSwapIntervalEXT(1);

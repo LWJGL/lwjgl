@@ -850,7 +850,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetTexBumpParameterfvATI
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    nglGetTexBumpParameterivATI
- * Signature: (ILjava/nio/FloatBuffer;I)V
+ * Signature: (ILjava/nio/IntBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetTexBumpParameterivATI
   (JNIEnv *, jclass, jint, jobject, jint);
@@ -905,10 +905,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetVariantIntegervEXT
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetVariantPointervEXT
+ * Method:    glGetVariantPointerEXT
  * Signature: (III)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVariantPointervEXT
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVariantPointerEXT
   (JNIEnv *, jclass, jint, jint, jint);
 
 /*
@@ -945,18 +945,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetVertexAttribivNV
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetVertexAttribPointervARB
+ * Method:    glGetVertexAttribPointerARB
  * Signature: (III)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointervARB
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointerARB
   (JNIEnv *, jclass, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetVertexAttribPointervNV
+ * Method:    glGetVertexAttribPointerNV
  * Signature: (III)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointervNV
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetVertexAttribPointerNV
   (JNIEnv *, jclass, jint, jint, jint);
 
 /*
@@ -2337,10 +2337,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetBufferParameterivARB
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetBufferPointervARB
+ * Method:    glGetBufferPointerARB
  * Signature: (III)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetBufferPointervARB
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glGetBufferPointerARB
   (JNIEnv *, jclass, jint, jint, jint);
 
 #ifdef __cplusplus
