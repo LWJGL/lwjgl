@@ -323,7 +323,7 @@ public class Keyboard {
 	 * <code>isKeyDown</code> method.
 	 * By using this method, it is possible to "miss" keyboard keys if you don't
 	 * poll fast enough. To receive all events, enable buffering by calling 
-	 * <code>enableBuffer</code>, and read those events by calling <code>read</code>
+	 * <code>enableBuffer</code>.
 	 * 
 	 * This method also reads all keyboard events since last read if keyboard buffering is enabled.
 	 * To use these values, you have to call <code>next</code> for each event you
@@ -468,7 +468,7 @@ public class Keyboard {
 	}
 	
 	/**
-	 * Gets the number of keyboard events waiting after doing a read().
+	 * Gets the number of keyboard events waiting after doing a buffer enabled poll().
 	 * @return the number of keyboard events
 	 */
 	public static int getNumKeyboardEvents() {

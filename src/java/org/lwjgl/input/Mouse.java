@@ -334,7 +334,7 @@ public class Mouse {
 	 * get<value> methods.
 	 * By using this method, it is possible to "miss" mouse click events if you don't
 	 * poll fast enough. To receive all button events, enable buffering by calling 
-	 * <code>enableBuffer</code>, and read those events by calling <code>read</code>
+	 * <code>enableBuffer</code>.
 	 * 
 	 * If buffering is enabled, this method also reads all button events since last read.
 	 * To use these values, you have to call <code>next</code> for each event you
