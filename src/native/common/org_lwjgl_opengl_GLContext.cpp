@@ -42,7 +42,12 @@
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_init
   (JNIEnv * env, jclass clazz, jobject exts)
 {
+	if (!extgl_Open()) {
+		throwException(env, "Failed to load OpenGL library");
+		return;
+	}
 	if (!extgl_Initialize(env, exts)) {
 		throwException(env, "Failed to initialize GL extensions");
+		return;
 	}
 }

@@ -1064,9 +1064,6 @@ bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
 	int major, minor;
 	/* Assume glx ver >= 1.2 */
 	extgl_Extensions.GLX12 = true;
-	glXGetProcAddressARB = (glXGetProcAddressARBPROC) dlsym(lib_gl_handle, "glXGetProcAddressARB");
-	if (glXGetProcAddressARB == NULL)
-		return false;
 	if (!extgl_InitGLX12())
 		return false;
 	extgl_InitGLXSupportedExtensions(env, disp, screen);
@@ -1273,10 +1270,6 @@ extern void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set);
 /* extgl_Init the extensions and load all the functions */
 bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 {
-	if (!extgl_Open()) {
-		return false;
-	}
-
 	extgl_error = false;
 	extgl_InitOpenGL1_1();
 	if (extgl_error)
@@ -1375,6 +1368,11 @@ bool extgl_Open()
 	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
 	if (lib_gl_handle == NULL) {
 		printfDebug("Error loading libGL.so.1: %s\n", dlerror());
+		return false;
+	}
+	glXGetProcAddressARB = (glXGetProcAddressARBPROC) dlsym(lib_gl_handle, "glXGetProcAddressARB");
+	if (glXGetProcAddressARB == NULL) {
+		extgl_Close();
 		return false;
 	}
 	return true;
