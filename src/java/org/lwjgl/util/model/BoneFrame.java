@@ -31,49 +31,35 @@
  */
 package org.lwjgl.util.model;
 
-import java.io.Serializable;
-
-import org.lwjgl.util.vector.ReadableVector3f;
+import org.lwjgl.util.vector.Matrix4f;
 
 /**
  * $Id$
- * 
- * A single vertex in a mesh.
- * 
+ * A BoneFrame describes a set of new positions for Bones in an animation.
  * @author $Author$
  * @version $Revision$
  */
-public class Vertex implements Serializable {
+public class BoneFrame extends Frame {
 	
 	public static final long serialVersionUID = 1L;
 	
-	/** Coordinates */
-	private final ReadableVector3f coords;
-	
-	/** Normal */
-	private final ReadableVector3f normal;
+	/** The new transformations for each Bone in the Skeleton */
+	private final Matrix4f[] bone;
 	
 	/**
 	 * C'tor
-	 * @param coords
-	 * @param normal
+	 * @param time
+	 * @param bone[]
 	 */
-	public Vertex(ReadableVector3f coords, ReadableVector3f normal) {
-		this.coords = coords;
-		this.normal = normal;
-	}
-
-	/**
-	 * @return Returns the coords.
-	 */
-	public ReadableVector3f getCoords() {
-		return coords;
+	public BoneFrame(float time, Matrix4f[] bone) {
+		super(time);
+		this.bone = bone;
 	}
 	
 	/**
-	 * @return Returns the normal.
+	 * @return the Bones
 	 */
-	public ReadableVector3f getNormal() {
-		return normal;
+	public Matrix4f[] getBone() {
+		return bone;
 	}
 }

@@ -31,49 +31,38 @@
  */
 package org.lwjgl.util.model;
 
-import java.io.Serializable;
-
 import org.lwjgl.util.vector.ReadableVector3f;
 
 /**
  * $Id$
  * 
- * A single vertex in a mesh.
+ * A BonedVerex is a Vertex influenced by bone Weights
  * 
  * @author $Author$
  * @version $Revision$
  */
-public class Vertex implements Serializable {
+public class BonedVertex extends Vertex {
 	
 	public static final long serialVersionUID = 1L;
 	
-	/** Coordinates */
-	private final ReadableVector3f coords;
-	
-	/** Normal */
-	private final ReadableVector3f normal;
-	
+	/** Bone weights */
+	private final Weight[] weight;
+
 	/**
 	 * C'tor
 	 * @param coords
 	 * @param normal
+	 * @param skin
 	 */
-	public Vertex(ReadableVector3f coords, ReadableVector3f normal) {
-		this.coords = coords;
-		this.normal = normal;
+	public BonedVertex(ReadableVector3f coords, ReadableVector3f normal, Weight[] skin) {
+		super(coords, normal);
+		this.weight = skin;
 	}
 
 	/**
-	 * @return Returns the coords.
+	 * @return Returns the skin.
 	 */
-	public ReadableVector3f getCoords() {
-		return coords;
-	}
-	
-	/**
-	 * @return Returns the normal.
-	 */
-	public ReadableVector3f getNormal() {
-		return normal;
+	public Weight[] getWeight() {
+		return weight;
 	}
 }

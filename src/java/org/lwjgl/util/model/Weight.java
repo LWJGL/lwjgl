@@ -39,7 +39,7 @@ import java.io.Serializable;
  * @author $Author$
  * @version $Revision$
  */
-public class Skin implements Serializable {
+public class Weight implements Serializable {
 	
 	public static final long serialVersionUID = 1L;
 	
@@ -52,7 +52,7 @@ public class Skin implements Serializable {
 	/**
 	 * C'tor
 	 */
-	public Skin(int bone, float weight) {
+	public Weight(int bone, float weight) {
 		this.bone = bone;
 		this.weight = weight;
 	}

@@ -36,11 +36,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.util.model.Frame;
-import org.lwjgl.util.model.Model;
-import org.lwjgl.util.model.Skin;
+import org.lwjgl.util.model.*;
+import org.lwjgl.util.model.BoneFrame;
+import org.lwjgl.util.model.BonedModel;
+import org.lwjgl.util.model.BonedVertex;
+import org.lwjgl.util.model.MeshedModel;
 import org.lwjgl.util.model.Triangle;
 import org.lwjgl.util.model.Vertex;
+import org.lwjgl.util.model.Weight;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -74,28 +77,59 @@ public class Loader {
 	 * @throws Exception
 	 */
 	public Model load() throws Exception {
-		return new Model(
-				XMLUtil.getString(src.getDocumentElement(), "material"),
-				loadVertices(),
-				loadTriangles(),
-				loadAnimations(XMLUtil.getInt(src.getDocumentElement(), "bones"))
-			);
+		String material = XMLUtil.getString(src.getDocumentElement(), "material");
+		if (XMLUtil.getString(src.getDocumentElement(), "type").equals("boned")) {
+			// It's a boned model
+			return new BonedModel(
+					material,
+					loadTriangles(),
+					loadSkin(),
+					loadBoneAnimations(XMLUtil.getInt(src.getDocumentElement(), "bones", 0)), 
+					loadBonedVertices()
+				);
+		} else if (XMLUtil.getString(src.getDocumentElement(), "type").equals("meshed")) {
+			// It's a mesh keyframe model
+			return new MeshedModel(
+					material,
+					loadTriangles(),
+					loadSkin(),
+					loadMeshAnimations()
+				);
+		} else {
+			throw new Exception("Unsupported model type.");
+		}
 	}
 	
 	/**
-	 * Load all the Vertices
+	 * Load all the BonedVertices
 	 * @return Vertex[]
 	 * @throws Exception
 	 */
-	private Vertex[] loadVertices() throws Exception {
+	private BonedVertex[] loadBonedVertices() throws Exception {
 		List vertexElements = XMLUtil.getChildren(src.getDocumentElement(), "vertex");
-		Vertex[] vertices = new Vertex[vertexElements.size()];
+		BonedVertex[] vertices = new BonedVertex[vertexElements.size()];
 		int vertexCount = 0;
 		for (Iterator i = vertexElements.iterator(); i.hasNext(); ) {
 			Element vertexElement = (Element) i.next();
-			vertices[vertexCount++] = loadVertex(vertexElement);
+			vertices[vertexCount++] = loadBonedVertex(vertexElement);
 		}
 		return vertices;
+	}
+	
+	/**
+	 * Load the skin
+	 * @return Vector2f[]
+	 * @throws Exception
+	 */
+	private Vector2f[] loadSkin() throws Exception {
+		List skinElements = XMLUtil.getChildren(src.getDocumentElement(), "skin");
+		Vector2f[] skins = new Vector2f[skinElements.size()];
+		int skinCount = 0;
+		for (Iterator i = skinElements.iterator(); i.hasNext(); ) {
+			Element skinElement = (Element) i.next();
+			skins[skinCount++] = loadTexCoord(skinElement);
+		}
+		return skins;
 	}
 	
 	/**
@@ -115,17 +149,32 @@ public class Loader {
 	}
 	
 	/**
-	 * Load all the animations
+	 * Load all the bone animations
 	 * @param numBones The number of bones in the animations
-	 * @return Map of animation names to Frame[] animations
+	 * @return Map of animation names to BoneFrame[] animations
 	 * @throws Exception
 	 */
-	private Map loadAnimations(int numBones) throws Exception {
+	private Map loadBoneAnimations(int numBones) throws Exception {
 		List animationElements = XMLUtil.getChildren(src.getDocumentElement(), "animation");
 		Map animations = new HashMap(animationElements.size());
 		for (Iterator i = animationElements.iterator(); i.hasNext(); ) {
 			Element animationElement = (Element) i.next();
-			animations.put(XMLUtil.getString(animationElement, "name"), loadAnimation(animationElement, numBones));
+			animations.put(XMLUtil.getString(animationElement, "name"), loadBonedAnimation(animationElement, numBones));
+		}
+		return animations;
+	}
+	
+	/**
+	 * Load all the mesh keyframe animations
+	 * @return Map of animation names to MeshFrame[] animations
+	 * @throws Exception
+	 */
+	private Map loadMeshAnimations() throws Exception {
+		List animationElements = XMLUtil.getChildren(src.getDocumentElement(), "animation");
+		Map animations = new HashMap(animationElements.size());
+		for (Iterator i = animationElements.iterator(); i.hasNext(); ) {
+			Element animationElement = (Element) i.next();
+			animations.put(XMLUtil.getString(animationElement, "name"), loadMeshAnimation(animationElement));
 		}
 		return animations;
 	}
@@ -136,16 +185,16 @@ public class Loader {
 	 * @return a Vertex
 	 * @throws Exception
 	 */
-	private Vertex loadVertex(Element vertexElement) throws Exception {
-		List skinElements = XMLUtil.getChildren(vertexElement, "skin");
-		Skin[] skins = new Skin[skinElements.size()];
-		int skinCount = 0;
-		for (Iterator i = skinElements.iterator(); i.hasNext(); ) {
-			Element skinElement = (Element) i.next();
-			skins[skinCount++] = loadSkin(skinElement);
+	private BonedVertex loadBonedVertex(Element vertexElement) throws Exception {
+		List weightElements = XMLUtil.getChildren(vertexElement, "weight");
+		Weight[] weights = new Weight[weightElements.size()];
+		int weightCount = 0;
+		for (Iterator i = weightElements.iterator(); i.hasNext(); ) {
+			Element weightElement = (Element) i.next();
+			weights[weightCount++] = loadWeight(weightElement);
 		}
 			
-		return new Vertex(
+		return new BonedVertex(
 				new Vector3f(
 					XMLUtil.getFloat(vertexElement, "x"),
 					XMLUtil.getFloat(vertexElement, "y"),
@@ -156,22 +205,39 @@ public class Loader {
 						XMLUtil.getFloat(vertexElement, "ny"),
 						XMLUtil.getFloat(vertexElement, "nz")
 					),
-				new Vector2f(
-						XMLUtil.getFloat(vertexElement, "u"),
-						XMLUtil.getFloat(vertexElement, "v")
-					),
-				skins
+				weights
 			);
 	}
 
 	/**
-	 * Load a Skin from XML
+	 * Load a Vertex from XML
+	 * @param vertexElement
+	 * @return a Vertex
+	 * @throws Exception
+	 */
+	private Vertex loadMeshVertex(Element vertexElement) throws Exception {
+		return new Vertex(
+				new Vector3f(
+					XMLUtil.getFloat(vertexElement, "x"),
+					XMLUtil.getFloat(vertexElement, "y"),
+					XMLUtil.getFloat(vertexElement, "z")
+				),
+				new Vector3f(
+						XMLUtil.getFloat(vertexElement, "nx"),
+						XMLUtil.getFloat(vertexElement, "ny"),
+						XMLUtil.getFloat(vertexElement, "nz")
+					)
+			);
+	}
+
+	/**
+	 * Load a Weight from XML
 	 * @param element
 	 * @return a Skin
 	 * @throws Exception
 	 */
-	private Skin loadSkin(Element element) throws Exception {
-		return new Skin(
+	private Weight loadWeight(Element element) throws Exception {
+		return new Weight(
 				XMLUtil.getInt(element, "bone"),
 				XMLUtil.getFloat(element, "weight")
 			);
@@ -193,19 +259,49 @@ public class Loader {
 	}
 	
 	/**
-	 * Load an Animation from XML
+	 * Load a texture coordinate from XML
 	 * @param element
-	 * @param numBones
-	 * @return Frame[] 
+	 * @return a Vector2f
 	 * @throws Exception
 	 */
-	private Frame[] loadAnimation(Element element, int numBones) throws Exception {
+	private Vector2f loadTexCoord(Element element) throws Exception {
+		return new Vector2f(
+				XMLUtil.getFloat(element, "u"),
+				XMLUtil.getFloat(element, "v")
+			);
+	}
+	
+	/**
+	 * Load a boned Animation from XML
+	 * @param element
+	 * @param numBones
+	 * @return BoneFrame[] 
+	 * @throws Exception
+	 */
+	private BoneFrame[] loadBonedAnimation(Element element, int numBones) throws Exception {
 		List frameElements = XMLUtil.getChildren(element, "frame");
-		Frame[] frames = new Frame[frameElements.size()];
+		BoneFrame[] frames = new BoneFrame[frameElements.size()];
 		int frameCount = 0;
 		for (Iterator i = frameElements.iterator(); i.hasNext(); ) {
 			Element frameElement = (Element) i.next();
-			frames[frameCount++] = loadFrame(frameElement, numBones);
+			frames[frameCount++] = loadBoneFrame(frameElement, numBones);
+		}
+		return frames;
+	}
+	
+	/**
+	 * Load a mesh Animation from XML
+	 * @param element
+	 * @return MeshFrame[] 
+	 * @throws Exception
+	 */
+	private MeshFrame[] loadMeshAnimation(Element element) throws Exception {
+		List frameElements = XMLUtil.getChildren(element, "frame");
+		MeshFrame[] frames = new MeshFrame[frameElements.size()];
+		int frameCount = 0;
+		for (Iterator i = frameElements.iterator(); i.hasNext(); ) {
+			Element frameElement = (Element) i.next();
+			frames[frameCount++] = loadMeshFrame(frameElement);
 		}
 		return frames;
 	}
@@ -214,10 +310,10 @@ public class Loader {
 	 * Load a Frame from XML
 	 * @param element
 	 * @param numBones
-	 * @return Frame 
+	 * @return BoneFrame 
 	 * @throws Exception
 	 */
-	private Frame loadFrame(Element element, int numBones) throws Exception {
+	private BoneFrame loadBoneFrame(Element element, int numBones) throws Exception {
 		List boneElements = XMLUtil.getChildren(element, "bone");
 		if (boneElements.size() != numBones) {
 			throw new Exception("Expected "+numBones+" bones in frame, only got "+boneElements.size());
@@ -228,9 +324,29 @@ public class Loader {
 			Element boneElement = (Element) i.next();
 			bones[boneCount++] = loadBone(boneElement);
 		}
-		return new Frame(
+		return new BoneFrame(
 				XMLUtil.getFloat(element, "time", 0.0f),
 				bones
+			);
+	}
+
+	/**
+	 * Load a Frame from XML
+	 * @param element
+	 * @return MeshFrame 
+	 * @throws Exception
+	 */
+	private MeshFrame loadMeshFrame(Element element) throws Exception {
+		List vertexElements = XMLUtil.getChildren(element, "vertex");
+		Vertex[] vertices = new Vertex[vertexElements.size()];
+		int vertexCount = 0;
+		for (Iterator i = vertexElements.iterator(); i.hasNext(); ) {
+			Element vertexElement = (Element) i.next();
+			vertices[vertexCount++] = loadMeshVertex(vertexElement);
+		}
+		return new MeshFrame(
+				XMLUtil.getFloat(element, "time", 0.0f),
+				vertices
 			);
 	}
 

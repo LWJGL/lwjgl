@@ -32,7 +32,6 @@
 
 package org.lwjgl.util.model;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -41,27 +40,20 @@ import org.lwjgl.util.vector.Vector2f;
 /**
  * $Id$
  * 
- * Base class for the two kinds of model supported. A Model has a single "material"
- * and a single triangular mesh with a single skin, and any number of animations.
+ * A simple animated, skinned, boned 3D model, consisting of a single mesh
+ * with a single material. The model's internal format is optimised for RAM storage;
+ * no metadata is held in memory - in other words this is not a good class to use
+ * for, say, a 3d modelling application.
  * 
  * @author $Author$
  * @version $Revision$
  */
-public abstract class Model implements Serializable {
+public class BonedModel extends Model {
 	
 	public static final long serialVersionUID = 1L;
 	
-	/** Material */
-	private final String material;
-	
-	/** Triangles */
-	private final Triangle[] triangle;
-	
-	/** Skin */
-	private final Vector2f[] skin;
-	
-	/** The animations: a Map of string names to Frame[] arrays */
-	private final Map animation;
+	/** Vertices */
+	private final BonedVertex[] vertex;
 	
 	/**
 	 * C'tor
@@ -69,42 +61,19 @@ public abstract class Model implements Serializable {
 	 * @param triangle
 	 * @param skin[]
 	 * @param animation
+	 * @param vertex
 	 */
-	public Model(String material, Triangle[] triangle, Vector2f[] skin, Map animation) {
-		this.material = material;
-		this.triangle = triangle;
-		this.skin = skin;
-		this.animation = animation;
+	public BonedModel(String material, Triangle[] triangle, Vector2f[] skin, Map animation, BonedVertex[] vertex) {
+		super(material, triangle, skin, animation);
+		this.vertex = vertex;
 	}
 	
 	/**
-	 * Get a named animation from the Model
-	 * @param name The name of the animation
-	 * @return the Frames of an animation (or null, if no such animation exists)
+	 * @return Returns the vertices
 	 */
-	public final BoneFrame[] getAnimation(String name) {
-		return (BoneFrame[]) animation.get(name);
+	public BonedVertex[] getVertex() {
+		return vertex;
 	}
 	
-	/**
-	 * @return Returns the material.
-	 */
-	public final String getMaterial() {
-		return material;
-	}
-	
-	/**
-	 * @return Returns the triangles.
-	 */
-	public final Triangle[] getTriangle() {
-		return triangle;
-	}
-	
-	/**
-	 * @return Returns the skin.
-	 */
-	public final Vector2f[] getSkin() {
-		return skin;
-	}
-	
+
 }

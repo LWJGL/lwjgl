@@ -31,49 +31,34 @@
  */
 package org.lwjgl.util.model;
 
-import java.io.Serializable;
-
-import org.lwjgl.util.vector.ReadableVector3f;
 
 /**
  * $Id$
- * 
- * A single vertex in a mesh.
- * 
+ * A MeshFrame describes a set of new positions for Vertices in an animation.
  * @author $Author$
  * @version $Revision$
  */
-public class Vertex implements Serializable {
+public class MeshFrame extends Frame {
 	
 	public static final long serialVersionUID = 1L;
 	
-	/** Coordinates */
-	private final ReadableVector3f coords;
-	
-	/** Normal */
-	private final ReadableVector3f normal;
+	/** The vertices */
+	private final Vertex[] vertex;
 	
 	/**
 	 * C'tor
-	 * @param coords
-	 * @param normal
+	 * @param time
+	 * @param bone[]
 	 */
-	public Vertex(ReadableVector3f coords, ReadableVector3f normal) {
-		this.coords = coords;
-		this.normal = normal;
-	}
-
-	/**
-	 * @return Returns the coords.
-	 */
-	public ReadableVector3f getCoords() {
-		return coords;
+	public MeshFrame(float time, Vertex[] vertex) {
+		super(time);
+		this.vertex = vertex;
 	}
 	
 	/**
-	 * @return Returns the normal.
+	 * @return the Vertices
 	 */
-	public ReadableVector3f getNormal() {
-		return normal;
+	public Vertex[] getVertex() {
+		return vertex;
 	}
 }

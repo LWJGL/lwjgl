@@ -34,8 +34,8 @@ package org.lwjgl.util.model.renderer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.util.model.Frame;
-import org.lwjgl.util.model.Model;
+import org.lwjgl.util.model.BoneFrame;
+import org.lwjgl.util.model.BonedModel;
 
 /**
  * $Id$
@@ -67,7 +67,7 @@ public class Renderer {
 	 * @param animation The name of the animation
 	 * @param time The time for the animation
 	 */
-	public void render(Model model, String animation, float time) {
+	public void render(BonedModel model, String animation, float time) {
 		
 		// 1. Set up GL state from the Model's material
 		Renderable material = (Renderable) materials.get(model.getMaterial());
@@ -76,7 +76,7 @@ public class Renderer {
 		}
 		
 		// 2. Get the animation
-		Frame[] frame = model.getAnimation(animation);
+		BoneFrame[] frame = model.getAnimation(animation);
 		if (frame == null) {
 			return;
 		}

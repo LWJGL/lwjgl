@@ -33,41 +33,31 @@ package org.lwjgl.util.model;
 
 import java.io.Serializable;
 
-import org.lwjgl.util.vector.Matrix4f;
-
 /**
- * A Frame describes a set of new positions for Bones.
+ * $Id$
+ * The base class for animation frames.
+ * @author $Author$
+ * @version $Revision$
  */
-public class Frame implements Serializable {
+public abstract class Frame implements Serializable {
 	
 	public static final long serialVersionUID = 1L;
-	
-	/** The new transformations for each Bone in the Skeleton */
-	private final Matrix4f[] bone;
 	
 	/** Frame time */
 	private final float time;
 	
 	/**
 	 * C'tor
-	 * @param bone[]
+	 * @param time
 	 */
-	public Frame(float time, Matrix4f[] bone) {
+	public Frame(float time) {
 		this.time = time;
-		this.bone = bone;
-	}
-	
-	/**
-	 * @return the Bones
-	 */
-	public Matrix4f[] getBone() {
-		return bone;
 	}
 	
 	/**
 	 * @return the frame time
 	 */
-	public float getTime() {
+	public final float getTime() {
 		return time;
 	}
 }
