@@ -7,15 +7,15 @@
 	Error checking for OpenGL bindings
 */
 
-#ifndef _CHECKERROR_H_INCLUDED_
-#define _CHECKERROR_H_INCLUDED_
+#ifndef _CHECKGLERROR_H_INCLUDED_
+#define _CHECKGLERROR_H_INCLUDED_
 
 #ifdef _DEBUG
 
 #include <jni.h>
 #include <gl/glu.h>
 
-#define CHECK_ERROR \
+#define CHECK_GL_ERROR \
 	{ \
 		int err = glGetError(); \
 		if (err != GL_NO_ERROR) { \
@@ -27,8 +27,8 @@
 
 #else
 
-#define CHECK_ERROR
+#define CHECK_GL_ERROR
 
 #endif /* _DEBUG */
 
-#endif /* _CHECKERROR_H_INCLUDED_ */
+#endif /* _CHECKGLERROR_H_INCLUDED_ */
