@@ -44,8 +44,8 @@
 
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 
-jobjectArray GetAvailableDisplayModesNT(JNIEnv * env);
-jobjectArray GetAvailableDisplayModes9x(JNIEnv * env);
+jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
+jobjectArray GetAvailableDisplayModes(JNIEnv * env);
 bool modeSet = false; // Whether we've done a display mode change
 WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
 WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
@@ -67,23 +67,24 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	osvi.dwOSVersionInfoSize = sizeof(osvi);
 	GetVersionEx(&osvi);
 	
-	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
+	if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5 ||
+            osvi.swPlatformId == VER_PLATFORM_WIN32_WINDOWS && osvi.dwMinorVersion >= 10) {
 #ifdef _DEBUG
-  printf("Selecting NT display mode check\n");
+		printf("Selecting extended display mode check\n");
 #endif	
-    return GetAvailableDisplayModesNT(env);
-  }
-  
+		return GetAvailableDisplayModesEx(env);
+	} else {
 #ifdef _DEBUG
-  printf("Selecting 9x display mode check");
+		printf("Selecting standard display mode check");
 #endif	
-  return GetAvailableDisplayModes9x(env);
+		return GetAvailableDisplayModes(env);
+	}
 }
 
 /**
- * Choose displaymodes using NT codepath (multiple displaydevices)
+ * Choose displaymodes using extended codepath (multiple displaydevices)
  */
-jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
+jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	int i = 0, j = 0, n = 0;
 	int AvailableModes = 0;
 
@@ -142,9 +143,9 @@ jobjectArray GetAvailableDisplayModesNT(JNIEnv * env) {
 }
 
 /**
- * Choose displaymodes using 9x codepath (single displaydevice)
+ * Choose displaymodes using standard codepath (single displaydevice)
  */
-jobjectArray GetAvailableDisplayModes9x(JNIEnv * env) {
+jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	int i = 0, j = 0, n = 0;
 	int AvailableModes = 0;
 
