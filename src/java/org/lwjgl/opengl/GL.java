@@ -677,7 +677,7 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 	}
 	private static native void nglLoadProgramNV(int target, int id, int len, ByteBuffer pProgram, int pProgram_offset);
 
-	public static void glLoadTransposeMatrixfARB(FloatBuffer pfMtx) {
+	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
 		nglLoadTransposeMatrixfARB(pfMtx, pfMtx.position());
 	}
 	private static native void nglLoadTransposeMatrixfARB(FloatBuffer pfMtx, int pfMtx_offset);

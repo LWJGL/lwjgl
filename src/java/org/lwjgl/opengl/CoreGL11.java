@@ -350,7 +350,7 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	private static native void nglMap1f(int target, float u1, float u2, int stride, int order, FloatBuffer points, int points_offset);
 	public static native void glLogicOp(int opcode);
 	public static native void glLoadName(int name);
-	public static void glLoadMatrixf(FloatBuffer m) {
+	public static void glLoadMatrix(FloatBuffer m) {
 		nglLoadMatrixf(m, m.position());
 	}
 	private static native void nglLoadMatrixf(FloatBuffer m, int m_offset);
