@@ -53,9 +53,14 @@
 JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_getString (JNIEnv *env, jobject obj, jobject device, jint token) {
 	jclass class_device		= env->GetObjectClass(device);
 	jfieldID field_device	= env->GetFieldID(class_device, "device", "I");
-	jint deviceaddress = env->GetIntField(obj, field_device);
+	jint deviceaddress = env->GetIntField(device, field_device);
 
-	jstring string = env->NewStringUTF((const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token));
+	const char* alcString = (const char*) alcGetString((ALCdevice*) deviceaddress, (ALenum) token);
+	if(alcString == NULL) {
+		return NULL;
+	}
+
+	jstring string = env->NewStringUTF(alcString);
 
 	CHECK_ALC_ERROR
 	return string;
@@ -70,7 +75,7 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_openal_ALC_getString (JNIEnv *env, jobj
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_getIntegerv (JNIEnv *env, jobject obj, jobject device, jint token, jint size, jint dest) {
 	jclass device_class		= env->GetObjectClass(device);
 	jfieldID device_field	= env->GetFieldID(device_class, "device", "I");
-	jint deviceaddress		= env->GetIntField(obj, device_field);
+	jint deviceaddress		= env->GetIntField(device, device_field);
 
 	alcGetIntegerv((ALCdevice*) deviceaddress, (ALenum) token, (ALsizei) size, (ALint*) dest);
 	CHECK_ALC_ERROR
