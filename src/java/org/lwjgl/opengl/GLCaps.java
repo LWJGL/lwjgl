@@ -57,6 +57,7 @@ public abstract class GLCaps {
 	public static boolean GL_ARB_multisample;
 	public static boolean GL_ARB_multitexture;
 	public static boolean GL_ARB_point_parameters;
+	public static boolean GL_ARB_shading_language_100;
 	public static boolean GL_ARB_shadow;
 	public static boolean GL_ARB_shadow_ambient;
 	public static boolean GL_ARB_texture_compression;
@@ -130,6 +131,7 @@ public abstract class GLCaps {
 	public static boolean GL_NV_vertex_array_range2;
 	public static boolean GL_NV_vertex_program;
 	public static boolean GL_NV_vertex_program1_1;
+	public static boolean GL_NV_vertex_program2;
 	public static boolean OpenGL11;
 	public static boolean OpenGL12;
 	public static boolean OpenGL13;
