@@ -528,7 +528,6 @@ public final class Display {
 				try {
 					context = new Display();
 					createWindow();
-					makeCurrent();
 					initContext();
 				} catch (LWJGLException e) {
 					display_impl.destroyContext();
