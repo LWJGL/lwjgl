@@ -30,7 +30,42 @@ public final class Window {
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());
+		/* 
+		 * elias: Mac OS X hacks. We need to fetch the toolkit to acquire a Dock icon, a system menu 
+		 * and to make windows behave normally. We also need to intercept the quit event from
+		 * Swing. Luckily, Swing can be assumed to be present on Mac OS X. Because some of this
+		 * is apple extensions to java, we need stub files to successfully compile on other platforms.
+		 *
+		 * Additionally, because of the way swing works, applications now need to do an
+		 * explicit System.exit() to quit. Returning from the main thread is not enough any
+		 * more.
+		 *
+		 * I've wasted a significant amount of time searching for an acceptable solution, without 
+		 * finding a way to avoid Swing. AFAIK,
+		 *
+		 * 1. There's no way to acquire the Dock icon, system menu and normal window behaviour.
+		 *    For that, you either need a proper bundled, native application or initialize Swing.
+		 * 2. Even if there were a way around it, Swing is automatically started anyway if you
+		 *    use Java Web Start.
+		 * 3. Swing gains total control over the main event loop, so the native library need to
+		 *    work around by maintaining an internal event queue. That's really boring stuff, indeed.
+		 *
+		 * I have posted a bug report to apple regarding the behaviour.
+		 *
+		 */
+		if (Display.getPlatform() == Display.PLATFORM_AGL) {
+			java.awt.Toolkit.getDefaultToolkit();
+			new com.apple.eawt.Application().addApplicationListener(new com.apple.eawt.ApplicationAdapter() {
+				public void handleQuit(com.apple.eawt.ApplicationEvent e) {
+					e.setHandled(false);
+					apple_quit = true;
+				}
+			});
+		}
 	}
+
+	/** Special quit boolean set from the apple version */
+	private static boolean apple_quit;
 
 	/** Whether the window is currently created, ie. has a native peer */
 	private static boolean created;
@@ -150,7 +185,9 @@ public final class Window {
 	 */
 	public static boolean isCloseRequested() {
 		assert isCreated()  : "Cannot determine state of uncreated window";
-		return nIsCloseRequested();
+		boolean result = nIsCloseRequested() || apple_quit;
+		apple_quit = false;
+		return result;
 	}
 
 	private static native boolean nIsCloseRequested();
@@ -305,6 +342,7 @@ public final class Window {
 		throws Exception;
 
 	private static void createWindow() throws Exception {
+		apple_quit = false;
 		HashSet extensions = new HashSet();
 		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil, extensions);
 		GLCaps.determineAvailableExtensions(extensions);

@@ -88,6 +88,42 @@ glXQueryServerStringPROC glXQueryServerString = NULL;
 glXQueryExtensionsStringPROC glXQueryExtensionsString = NULL;
 #endif
 
+#ifdef _AGL
+aglChoosePixelFormatPROC aglChoosePixelFormat = NULL;
+aglDestroyPixelFormatPROC aglDestroyPixelFormat = NULL;
+aglNextPixelFormatPROC aglNextPixelFormat = NULL;
+aglDescribePixelFormatPROC aglDescribePixelFormat = NULL;
+aglDevicesOfPixelFormatPROC aglDevicesOfPixelFormat = NULL;
+aglQueryRendererInfoPROC aglQueryRendererInfo = NULL;
+aglDestroyRendererInfoPROC aglDestroyRendererInfo = NULL;
+aglNextRendererInfoPROC aglNextRendererInfo = NULL;
+aglDescribeRendererPROC aglDescribeRenderer = NULL;
+aglCreateContextPROC aglCreateContext = NULL;
+aglDestroyContextPROC aglDestroyContext = NULL;
+aglCopyContextPROC aglCopyContext = NULL;
+aglUpdateContextPROC aglUpdateContext = NULL;
+aglSetCurrentContextPROC aglSetCurrentContext = NULL;
+aglGetCurrentContextPROC aglGetCurrentContext = NULL;
+aglSetDrawablePROC aglSetDrawable = NULL;
+aglSetOffScreenPROC aglSetOffScreen = NULL;
+aglSetFullScreenPROC aglSetFullScreen = NULL;
+aglGetDrawablePROC aglGetDrawable = NULL;
+aglSetVirtualScreenPROC aglSetVirtualScreen = NULL;
+aglGetVirtualScreenPROC aglGetVirtualScreen = NULL;
+aglGetVersionPROC aglGetVersion = NULL;
+aglSwapBuffersPROC aglSwapBuffers = NULL;
+aglEnablePROC aglEnable = NULL;
+aglDisablePROC aglDisable = NULL;
+aglIsEnabledPROC aglIsEnabled = NULL;
+aglSetIntegerPROC aglSetInteger = NULL;
+aglGetIntegerPROC aglGetInteger = NULL;
+aglUseFontPROC aglUseFont = NULL;
+aglGetErrorPROC aglGetError = NULL;
+aglErrorStringPROC aglErrorString = NULL;
+aglResetLibraryPROC aglResetLibrary = NULL;
+aglSurfaceTexturePROC aglSurfaceTexture = NULL; 
+#endif
+
 gluBeginCurvePROC gluBeginCurve = NULL;
 gluBeginPolygonPROC gluBeginPolygon = NULL;
 gluBeginSurfacePROC gluBeginSurface = NULL;
@@ -1311,7 +1347,9 @@ OSStatus aglInitEntryPoints (void)
 
 	if (noErr != err)
 	{
-		DebugStr ("\pCould make FSref to frameworks folder");
+#ifdef _DEBUG
+		printf("Could make FSref to frameworks folder\n");
+#endif
 		return err;
 	}
 
@@ -1320,7 +1358,9 @@ OSStatus aglInitEntryPoints (void)
 	bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
 	if (!bundleURLOpenGL)
 	{
-		DebugStr ("\pCould create OpenGL Framework bundle URL");
+#ifdef _DEBUG
+		printf("Could create OpenGL Framework bundle URL\n");
+#endif
 		return paramErr;
 	}
 
@@ -1329,7 +1369,9 @@ OSStatus aglInitEntryPoints (void)
 	gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,bundleURLOpenGL);
 	if (!gBundleRefOpenGL)
 	{
-		DebugStr ("\pCould not create OpenGL Framework bundle");
+#ifdef _DEBUG
+		printf("Could not create OpenGL Framework bundle\n");
+#endif
 		return paramErr;
 	}
 
@@ -1340,7 +1382,9 @@ OSStatus aglInitEntryPoints (void)
 	// if the code was successfully loaded, look for our function.
 	if (!CFBundleLoadExecutable (gBundleRefOpenGL))
 	{
-		DebugStr ("\pCould not load MachO executable");
+#ifdef _DEBUG
+		printf("Could not load MachO executable\n");
+#endif
 		return paramErr;
 	}
 
@@ -1362,7 +1406,10 @@ static void aglDellocEntryPoints (void)
 
 static void * aglGetProcAddress (char * pszProc)
 {
-	return CFBundleGetFunctionPointerForName (gBundleRefOpenGL,CFStringCreateWithCStringNoCopy (NULL, pszProc, CFStringGetSystemEncoding (), NULL));
+	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, pszProc, kCFStringEncodingUTF8, kCFAllocatorNull);
+	void *func_pointer = CFBundleGetFunctionPointerForName(gBundleRefOpenGL, str);
+	CFRelease(str);
+	return func_pointer;
 }
 #endif
 
@@ -1579,11 +1626,42 @@ static void extgl_InitializeWGL(JNIEnv *env, jobject ext_set)
 /*-----------------------------------------------------*/
 #ifdef _AGL
 
-static int extgl_InitializeAGL(JNIEnv *env, jobject ext_set)
+bool extgl_InitAGL(JNIEnv *env, jobject ext_set)
 {
-	// add in AGL extensions here
-
-	return 0;
+	aglChoosePixelFormat = (aglChoosePixelFormatPROC)extgl_GetProcAddress("aglChoosePixelFormat");
+	aglDestroyPixelFormat = (aglDestroyPixelFormatPROC)extgl_GetProcAddress("aglDestroyPixelFormat");
+	aglNextPixelFormat = (aglNextPixelFormatPROC)extgl_GetProcAddress("aglNextPixelFormat");
+	aglDescribePixelFormat = (aglDescribePixelFormatPROC)extgl_GetProcAddress("aglDescribePixelFormat");
+	aglDevicesOfPixelFormat = (aglDevicesOfPixelFormatPROC)extgl_GetProcAddress("aglDevicesOfPixelFormat");
+	aglQueryRendererInfo = (aglQueryRendererInfoPROC)extgl_GetProcAddress("aglQueryRendererInfo");
+	aglDestroyRendererInfo = (aglDestroyRendererInfoPROC)extgl_GetProcAddress("aglDestroyRendererInfo");
+	aglNextRendererInfo = (aglNextRendererInfoPROC)extgl_GetProcAddress("aglNextRendererInfo");
+	aglDescribeRenderer = (aglDescribeRendererPROC)extgl_GetProcAddress("aglDescribeRenderer");
+	aglCreateContext = (aglCreateContextPROC)extgl_GetProcAddress("aglCreateContext");
+	aglDestroyContext = (aglDestroyContextPROC)extgl_GetProcAddress("aglDestroyContext");
+	aglCopyContext = (aglCopyContextPROC)extgl_GetProcAddress("aglCopyContext");
+	aglUpdateContext = (aglUpdateContextPROC)extgl_GetProcAddress("aglUpdateContext");
+	aglSetCurrentContext = (aglSetCurrentContextPROC)extgl_GetProcAddress("aglSetCurrentContext");
+	aglGetCurrentContext = (aglGetCurrentContextPROC)extgl_GetProcAddress("aglGetCurrentContext");
+	aglSetDrawable = (aglSetDrawablePROC)extgl_GetProcAddress("aglSetDrawable");
+	aglSetOffScreen = (aglSetOffScreenPROC)extgl_GetProcAddress("aglSetOffScreen");
+	aglSetFullScreen = (aglSetFullScreenPROC)extgl_GetProcAddress("aglSetFullScreen");
+	aglGetDrawable = (aglGetDrawablePROC)extgl_GetProcAddress("aglGetDrawable");
+	aglSetVirtualScreen = (aglSetVirtualScreenPROC)extgl_GetProcAddress("aglSetVirtualScreen");
+	aglGetVirtualScreen = (aglGetVirtualScreenPROC)extgl_GetProcAddress("aglGetVirtualScreen");
+	aglGetVersion = (aglGetVersionPROC)extgl_GetProcAddress("aglGetVersion");
+	aglSwapBuffers = (aglSwapBuffersPROC)extgl_GetProcAddress("aglSwapBuffers");
+	aglEnable = (aglEnablePROC)extgl_GetProcAddress("aglEnable");
+	aglDisable = (aglDisablePROC)extgl_GetProcAddress("aglDisable");
+	aglIsEnabled = (aglIsEnabledPROC)extgl_GetProcAddress("aglIsEnabled");
+	aglSetInteger = (aglSetIntegerPROC)extgl_GetProcAddress("aglSetInteger");
+	aglGetInteger = (aglGetIntegerPROC)extgl_GetProcAddress("aglGetInteger");
+	aglUseFont = (aglUseFontPROC)extgl_GetProcAddress("aglUseFont");
+	aglGetError = (aglGetErrorPROC)extgl_GetProcAddress("aglGetError");
+	aglErrorString = (aglErrorStringPROC)extgl_GetProcAddress("aglErrorString");
+	aglResetLibrary = (aglResetLibraryPROC)extgl_GetProcAddress("aglResetLibrary");
+	aglSurfaceTexture = (aglSurfaceTexturePROC)extgl_GetProcAddress("aglSurfaceTexture");
+	return !extgl_error;
 }
 
 #endif
@@ -3046,7 +3124,6 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.OpenGL12 = false;
 	extgl_Extensions.OpenGL13 = false;
 	extgl_Extensions.OpenGL14 = false;
-
 	if (s != NULL)
 	{
 		// Fall trhough
@@ -3154,7 +3231,6 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 {
 	extgl_error = false;
-
 	extgl_InitOpenGL1_1();
 	extgl_InitGLU12();
 	if (extgl_error)
@@ -3218,11 +3294,6 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 #ifdef _WIN32
 	/* load WGL extensions */
 	extgl_InitializeWGL(env, ext_set);
-#endif
-
-#ifdef _AGL
-	/* load AGL extensions */
-	extgl_InitializeAGL(env, ext_set);
 #endif
 	return true;
 }
