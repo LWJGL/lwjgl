@@ -35,6 +35,9 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
@@ -130,49 +133,49 @@ public final class AL {
 
 	private static String[] getOALPaths() throws LWJGLException {
 		// need to pass path of possible locations of OAL to native side
-		String libpath = System.getProperty("java.library.path");
-		String seperator = System.getProperty("path.separator");
-		String jwsLibname;
-
+		List possible_paths = new ArrayList();
+		
 		String osName = System.getProperty("os.name");
+
+		String libname;
 		if (osName.startsWith("Win")) {
-			jwsLibname = "lwjglaudio";
+			libname = "lwjglaudio";
 		} else if (osName.startsWith("Lin")) {
-			jwsLibname = "openal";
+			libname = "openal";
 		} else if (osName.startsWith("Mac")) {
-			jwsLibname = "openal";
+			libname = "openal";
 		} else {
 			throw new LWJGLException("Unknown platform: "+osName);
 		}
 		
-		String jwsPath = getPathFromClassLoader(jwsLibname);
-		if (jwsPath != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + jwsPath);
-			libpath += seperator
-				+ jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
-		}
-		String lwjgl_jws_path = getPathFromClassLoader("lwjgl");
-		if (lwjgl_jws_path != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + lwjgl_jws_path);
-			libpath += seperator
-				+ lwjgl_jws_path.substring(0, lwjgl_jws_path.lastIndexOf(File.separator));
-		}
-		StringTokenizer st = new StringTokenizer(libpath, seperator);
+		String platform_lib_name = System.mapLibraryName(libname);
 
-		//create needed string array
-		String[] oalPaths = new String[st.countTokens() + 1];
-
-		//build paths
-		for (int i = 0; i < oalPaths.length - 1; i++) {
-			oalPaths[i] = st.nextToken() + File.separator;
+		// Add all possible paths from java.library.path
+		String java_library_path = System.getProperty("java.library.path");
+		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
+		while (st.hasMoreTokens()) {
+			String path = st.nextToken();
+			possible_paths.add(path + File.separator + platform_lib_name);
 		}
-
-		for(int i=0 ; i<oalPaths.length; i++) {
-			Sys.log("Will search " + oalPaths[i] + " for " + jwsLibname);
+		
+		String classloader_path = getPathFromClassLoader(libname);
+		if (classloader_path != null) {
+			Sys.log("getPathFromClassLoader: Path found: " + classloader_path);
+			possible_paths.add(classloader_path);
+		}
+		String lwjgl_classloader_path = getPathFromClassLoader("lwjgl");
+		if (lwjgl_classloader_path != null) {
+			Sys.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
+			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
+				+ File.separator + platform_lib_name);
 		}
 
 		//add cwd path
-		oalPaths[oalPaths.length - 1] = "";
+		possible_paths.add(platform_lib_name);
+		//create needed string array
+		String[] oalPaths = new String[possible_paths.size()];
+		possible_paths.toArray(oalPaths);
+
 		return oalPaths;
 	}
 

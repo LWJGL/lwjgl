@@ -96,8 +96,7 @@ extern "C" {
 void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths);
 void DeInitializeOpenAL();
 
-typedef ALvoid*	    (ALAPIENTRY *alGetProcAddressPROC)( ALubyte* fname );
-extern alGetProcAddressPROC alGetProcAddress;
+//extern alGetProcAddressPROC alGetProcAddress;
 
 typedef ALCcontext* (ALCAPIENTRY *alcGetCurrentContextPROC)(ALCvoid);
 extern alcGetCurrentContextPROC alcGetCurrentContext;
