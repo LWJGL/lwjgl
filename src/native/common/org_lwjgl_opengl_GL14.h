@@ -7,7 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
 #undef org_lwjgl_opengl_GL14_GL_ACCUM
 #define org_lwjgl_opengl_GL14_GL_ACCUM 256L
 #undef org_lwjgl_opengl_GL14_GL_LOAD
@@ -1072,8 +1071,6 @@ extern "C" {
 #define org_lwjgl_opengl_GL14_GL_LOGIC_OP 3057L
 #undef org_lwjgl_opengl_GL14_GL_TEXTURE_COMPONENTS
 #define org_lwjgl_opengl_GL14_GL_TEXTURE_COMPONENTS 4099L
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL11 */
-/* Inaccessible static: _00024assertionsDisabled */
 #undef org_lwjgl_opengl_GL14_GL_RESCALE_NORMAL
 #define org_lwjgl_opengl_GL14_GL_RESCALE_NORMAL 32826L
 #undef org_lwjgl_opengl_GL14_GL_CLAMP_TO_EDGE
@@ -1298,7 +1295,6 @@ extern "C" {
 #define org_lwjgl_opengl_GL14_GL_FUNC_REVERSE_SUBTRACT 32779L
 #undef org_lwjgl_opengl_GL14_GL_BLEND_COLOR
 #define org_lwjgl_opengl_GL14_GL_BLEND_COLOR 32773L
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL12 */
 #undef org_lwjgl_opengl_GL14_GL_TEXTURE0
 #define org_lwjgl_opengl_GL14_GL_TEXTURE0 33984L
 #undef org_lwjgl_opengl_GL14_GL_TEXTURE1
@@ -1491,7 +1487,6 @@ extern "C" {
 #define org_lwjgl_opengl_GL14_GL_DOT3_RGBA 34479L
 #undef org_lwjgl_opengl_GL14_GL_CLAMP_TO_BORDER
 #define org_lwjgl_opengl_GL14_GL_CLAMP_TO_BORDER 33069L
-/* Inaccessible static: _00024assertionsDisabled */
 #undef org_lwjgl_opengl_GL14_GL_GENERATE_MIPMAP
 #define org_lwjgl_opengl_GL14_GL_GENERATE_MIPMAP 33169L
 #undef org_lwjgl_opengl_GL14_GL_GENERATE_MIPMAP_HINT
@@ -1570,7 +1565,22 @@ extern "C" {
 #define org_lwjgl_opengl_GL14_GL_MAX_TEXTURE_LOD_BIAS 34045L
 #undef org_lwjgl_opengl_GL14_GL_GL_MIRRORED_REPEAT
 #define org_lwjgl_opengl_GL14_GL_GL_MIRRORED_REPEAT 33648L
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL14 */
+/*
+ * Class:     org_lwjgl_opengl_GL14
+ * Method:    glBlendEquation
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendEquation
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL14
+ * Method:    glBlendColor
+ * Signature: (FFFF)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendColor
+  (JNIEnv *, jclass, jfloat, jfloat, jfloat, jfloat);
+
 /*
  * Class:     org_lwjgl_opengl_GL14
  * Method:    glFogCoordf

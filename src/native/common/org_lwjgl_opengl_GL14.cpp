@@ -43,8 +43,8 @@
 #include "checkGLerror.h"
 #include "extgl.h"
 
-typedef void (APIENTRY * glBlendColorPROC) (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha );
-typedef void (APIENTRY * glBlendEquationPROC) (GLenum mode );
+typedef void (APIENTRY * glBlendColorPROC) (GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+typedef void (APIENTRY * glBlendEquationPROC) (GLenum mode);
 typedef void (APIENTRY * glFogCoordfPROC) (GLfloat coord);
 typedef void (APIENTRY * glFogCoordfvPROC) (const GLfloat *coord);
 typedef void (APIENTRY * glFogCoorddPROC) (GLdouble coord);
@@ -185,6 +185,22 @@ void extgl_InitOpenGL1_4(JNIEnv *env, jobject ext_set)
 	glWindowPos3iv = (glWindowPos3ivPROC) extgl_GetProcAddress("glWindowPos3iv");
 	glWindowPos3sv = (glWindowPos3svPROC) extgl_GetProcAddress("glWindowPos3sv");
 	EXTGL_SANITY_CHECK(env, ext_set, OpenGL14)
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendEquation
+  (JNIEnv *env, jclass clazz, jint mode)
+{
+	CHECK_EXISTS(glBlendEquation)
+	glBlendEquation(mode);
+	CHECK_GL_ERROR
+}
+
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL14_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+{
+	CHECK_EXISTS(glBlendColor)
+	glBlendColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	CHECK_GL_ERROR
 }
 
 /*

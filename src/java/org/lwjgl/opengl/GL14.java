@@ -86,6 +86,8 @@ public abstract class GL14 extends GL13 {
 	public static final int GL_MAX_TEXTURE_LOD_BIAS                                 = 0x84FD;
 	public static final int GL_GL_MIRRORED_REPEAT                                   = 0x8370;
 
+        public static native void glBlendEquation(int mode);
+        public static native void glBlendColor(float red, float green, float blue, float alpha);
 	public static native void glFogCoordf(float coord);
 	public static void glFogCoordPointer(int stride, FloatBuffer data) {
 		BufferChecks.ensureArrayVBOdisabled();
