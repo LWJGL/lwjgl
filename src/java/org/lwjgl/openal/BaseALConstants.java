@@ -42,42 +42,42 @@ package org.lwjgl.openal;
 public interface BaseALConstants {
 
 	/** Bad value */
-	public static final int INVALID = -1;
+	public static final int AL_INVALID = -1;
 
 	/** Disable value */
-	public static final int NONE = 0;
+	public static final int AL_NONE = 0;
 
 	/** Boolean False */
-	public static final int FALSE = 0;
+	public static final int AL_FALSE = 0;
 
 	/** Boolean True */
-	public static final int TRUE = 1;
+	public static final int AL_TRUE = 1;
 
 	/**
 	 * Indicate the type of SOURCE.
 	 * Sources can be spatialized
 	 */
-	public static final int SOURCE_TYPE = 0x200;
+	public static final int AL_SOURCE_TYPE = 0x200;
 
 	/** Indicate source has absolute coordinates */
-	public static final int SOURCE_ABSOLUTE = 0x201;
+	public static final int AL_SOURCE_ABSOLUTE = 0x201;
 
 	/** Indicate Source has listener relative coordinates */
-	public static final int SOURCE_RELATIVE = 0x202;
+	public static final int AL_SOURCE_RELATIVE = 0x202;
 
 	/**
 	 * Directional source, inner cone angle, in degrees
 	 * Range:    [0-360]
 	 * Default:  360
 	 */
-	public static final int CONE_INNER_ANGLE = 0x1001;
+	public static final int AL_CONE_INNER_ANGLE = 0x1001;
 
 	/**
 	 * Directional source, outer cone angle, in degrees.
 	 * Range:    [0-360]
 	 * Default:  360
 	 */
-	public static final int CONE_OUTER_ANGLE = 0x1002;
+	public static final int AL_CONE_OUTER_ANGLE = 0x1002;
 
 	/**
 	 * Specify the pitch to be applied, either at source,
@@ -85,7 +85,7 @@ public interface BaseALConstants {
 	 * Range:	 [0.5-2.0]
 	 * Default:  1.0
 	 */
-	public static final int PITCH = 0x1003;
+	public static final int AL_PITCH = 0x1003;
 
 	/**
 	 * Specify the current location in three dimensional space.
@@ -97,13 +97,13 @@ public interface BaseALConstants {
 	 * sign on the Z coordinate.
 	 * Listener position is always in the world coordinate system.
 	 */
-	public static final int POSITION = 0x1004;
+	public static final int AL_POSITION = 0x1004;
 
 	/** Specify the current direction as forward vector. */
-	public static final int DIRECTION = 0x1005;
+	public static final int AL_DIRECTION = 0x1005;
 
 	/** Specify the current velocity in three dimensional space. */
-	public static final int VELOCITY = 0x1006;
+	public static final int AL_VELOCITY = 0x1006;
 
 	/**
 	 * Indicate whether source has to loop infinite.
@@ -111,14 +111,14 @@ public interface BaseALConstants {
 	 * Range:    [TRUE, FALSE]
 	 * Default:  FALSE
 	 */
-	public static final int LOOPING = 0x1007;
+	public static final int AL_LOOPING = 0x1007;
 
 	/**
 	 * Indicate the buffer to provide sound samples.
 	 * Type: ALuint.
 	 * Range: any valid Buffer id.
 	 */
-	public static final int BUFFER = 0x1009;
+	public static final int AL_BUFFER = 0x1009;
 
 	/**
 	 * Indicate the gain (volume amplification) applied.
@@ -131,28 +131,28 @@ public interface BaseALConstants {
 	 * scale; it is interpreted as zero volume - the channel
 	 * is effectively disabled.
 	 */
-	public static final int GAIN = 0x100A;
+	public static final int AL_GAIN = 0x100A;
 
 	/**
 	 * Indicate minimum source attenuation.
 	 * Type:     ALfloat
 	 * Range:	 [0.0 - 1.0]
 	 */
-	public static final int MIN_GAIN = 0x100D;
+	public static final int AL_MIN_GAIN = 0x100D;
 
 	/**
 	 * Indicate maximum source attenuation.
 	 * Type:	 ALfloat
 	 * Range:	 [0.0 - 1.0]
 	 */
-	public static final int MAX_GAIN = 0x100E;
+	public static final int AL_MAX_GAIN = 0x100E;
 
 	/**
 	 * Specify the current orientation.
 	 * Type:	 ALfv6 (at/up)
 	 * Range:	 N/A
 	 */
-	public static final int ORIENTATION = 0x100F;
+	public static final int AL_ORIENTATION = 0x100F;
 
 	/* byte offset into source (in canon format).  -1 if source
 	 * is not playing.  Don't set this, get this.
@@ -161,7 +161,7 @@ public interface BaseALConstants {
 	 * Range:    [0.0 - ]
 	 * Default:  1.0
 	 */
-	public static final int REFERENCE_DISTANCE = 0x1020;
+	public static final int AL_REFERENCE_DISTANCE = 0x1020;
 
 	/**
 	 * Indicate the rolloff factor for the source.
@@ -169,7 +169,7 @@ public interface BaseALConstants {
 	 * Range:    [0.0 - ]
 	 * Default:  1.0
 	 */
-	public static final int ROLLOFF_FACTOR = 0x1021;
+	public static final int AL_ROLLOFF_FACTOR = 0x1021;
 
 	/**
 	 * Indicate the gain (volume amplification) applied.
@@ -182,54 +182,54 @@ public interface BaseALConstants {
 	 * scale; it is interpreted as zero volume - the channel
 	 * is effectively disabled.
 	 */
-	public static final int CONE_OUTER_GAIN = 0x1022;
+	public static final int AL_CONE_OUTER_GAIN = 0x1022;
 
 	/**
 	 * Specify the maximum distance.
 	 * Type:	 ALfloat
 	 * Range:	 [0.0 - ]
 	 */
-	public static final int MAX_DISTANCE = 0x1023;
+	public static final int AL_MAX_DISTANCE = 0x1023;
 
 	/**
 	 * Specify the channel mask. (Creative)
 	 * Type:	 ALuint
 	 * Range:	 [0 - 255]
 	 */
-	public static final int CHANNEL_MASK = 0x3000;
+	public static final int AL_CHANNEL_MASK = 0x3000;
 
 	/** Source state information */
-	public static final int SOURCE_STATE = 0x1010;
+	public static final int AL_SOURCE_STATE = 0x1010;
 
 	/** Source state information */
-	public static final int INITIAL = 0x1011;
+	public static final int AL_INITIAL = 0x1011;
 
 	/** Source state information */
-	public static final int PLAYING = 0x1012;
+	public static final int AL_PLAYING = 0x1012;
 
 	/** Source state information */
-	public static final int PAUSED = 0x1013;
+	public static final int AL_PAUSED = 0x1013;
 
 	/** Source state information */
-	public static final int STOPPED = 0x1014;
+	public static final int AL_STOPPED = 0x1014;
 
 	/** Buffer Queue params */
-	public static final int BUFFERS_QUEUED = 0x1015;
+	public static final int AL_BUFFERS_QUEUED = 0x1015;
 
 	/** Buffer Queue params */
-	public static final int BUFFERS_PROCESSED = 0x1016;
+	public static final int AL_BUFFERS_PROCESSED = 0x1016;
 
 	/** Sound buffers: format specifier. */
-	public static final int FORMAT_MONO8 = 0x1100;
+	public static final int AL_FORMAT_MONO8 = 0x1100;
 
 	/** Sound buffers: format specifier. */
-	public static final int FORMAT_MONO16 = 0x1101;
+	public static final int AL_FORMAT_MONO16 = 0x1101;
 
 	/** Sound buffers: format specifier. */
-	public static final int FORMAT_STEREO8 = 0x1102;
+	public static final int AL_FORMAT_STEREO8 = 0x1102;
 
 	/** Sound buffers: format specifier. */
-	public static final int FORMAT_STEREO16 = 0x1103;
+	public static final int AL_FORMAT_STEREO16 = 0x1103;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -237,7 +237,7 @@ public interface BaseALConstants {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int FREQUENCY = 0x2001;
+	public static final int AL_FREQUENCY = 0x2001;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -245,7 +245,7 @@ public interface BaseALConstants {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int BITS = 0x2002;
+	public static final int AL_BITS = 0x2002;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -253,7 +253,7 @@ public interface BaseALConstants {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int CHANNELS = 0x2003;
+	public static final int AL_CHANNELS = 0x2003;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -261,7 +261,7 @@ public interface BaseALConstants {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int SIZE = 0x2004;
+	public static final int AL_SIZE = 0x2004;
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
@@ -269,43 +269,43 @@ public interface BaseALConstants {
 	 * sample frequency marks the maximum significant
 	 * frequency component.
 	 */
-	public static final int DATA = 0x2005;
+	public static final int AL_DATA = 0x2005;
 
 	/**
 	 * Buffer state.
 	 *
 	 * Not supported for public use (yet).
 	 */
-	public static final int UNUSED = 0x2010;
+	public static final int AL_UNUSED = 0x2010;
 
 	/**
 	 * Buffer state.
 	 *
 	 * Not supported for public use (yet).
 	 */
-	public static final int PENDING = 0x2011;
+	public static final int AL_PENDING = 0x2011;
 
 	/**
 	 * Buffer state.
 	 *
 	 * Not supported for public use (yet).
 	 */
-	public static final int PROCESSED = 0x2012;
+	public static final int AL_PROCESSED = 0x2012;
 
 	/** Errors: No Error. */
-	public static final int NO_ERROR = FALSE;
+	public static final int AL_NO_ERROR = AL_FALSE;
 
 	/** Illegal name passed as an argument to an AL call. */
-	public static final int INVALID_NAME = 0xA001;
+	public static final int AL_INVALID_NAME = 0xA001;
 
 	/** Illegal enum passed as an argument to an AL call. */
-	public static final int INVALID_ENUM = 0xA002;
+	public static final int AL_INVALID_ENUM = 0xA002;
 
 	/**
 	 * Illegal value passed as an argument to an AL call.
 	 * Applies to parameter values, but not to enumerations.
 	 */
-	public static final int INVALID_VALUE = 0xA003;
+	public static final int AL_INVALID_VALUE = 0xA003;
 
 	/**
 	 * A function was called at inappropriate time,
@@ -313,38 +313,38 @@ public interface BaseALConstants {
 	 * This can be an incompatible ALenum, object ID,
 	 *  and/or function.
 	 */
-	public static final int INVALID_OPERATION = 0xA004;
+	public static final int AL_INVALID_OPERATION = 0xA004;
 
 	/**
 	 * A function could not be completed,
 	 * because there is not enough memory available.
 	 */
-	public static final int OUT_OF_MEMORY = 0xA005;
+	public static final int AL_OUT_OF_MEMORY = 0xA005;
 
 	/** Context strings: Vendor */
-	public static final int VENDOR = 0xB001;
+	public static final int AL_VENDOR = 0xB001;
 
 	/** Context strings: Version */
-	public static final int VERSION = 0xB002;
+	public static final int AL_VERSION = 0xB002;
 
 	/** Context strings: Renderer */
-	public static final int RENDERER = 0xB003;
+	public static final int AL_RENDERER = 0xB003;
 
 	/** Context strings: Extensions */
-	public static final int EXTENSIONS = 0xB004;
+	public static final int AL_EXTENSIONS = 0xB004;
 
 	/** Doppler scale.  Default 1.0 */
-	public static final int DOPPLER_FACTOR = 0xC000;
+	public static final int AL_DOPPLER_FACTOR = 0xC000;
 
 	/** Doppler velocity.  Default 1.0 */
-	public static final int DOPPLER_VELOCITY = 0xC001;
+	public static final int AL_DOPPLER_VELOCITY = 0xC001;
 
 	/** Distance model.  Default INVERSE_DISTANCE_CLAMPED */
-	public static final int DISTANCE_MODEL = 0xD000;
+	public static final int AL_DISTANCE_MODEL = 0xD000;
 
 	/** Distance model */
-	public static final int INVERSE_DISTANCE = 0xD001;
+	public static final int AL_INVERSE_DISTANCE = 0xD001;
 
 	/** Distance model */
-	public static final int INVERSE_DISTANCE_CLAMPED = 0xD002;
+	public static final int AL_INVERSE_DISTANCE_CLAMPED = 0xD002;
 }

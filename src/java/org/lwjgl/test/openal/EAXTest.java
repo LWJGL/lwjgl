@@ -54,16 +54,14 @@ public class EAXTest extends BasicTest {
      * Runs the actual test, using supplied arguments
      */
     protected void execute(String[] args) {
-        EAX eax = new EAX();
         try {
-            eax.create();
+          System.out.print("Testing EAX support...");
+          EAX.create();
+          System.out.println("supported!");
         } catch (Exception e) {
-            e.printStackTrace();
-            return;
+            System.out.println("no supported!");
         }
-        System.out.print("EAX supported...");
         
-        //no errorchecking from now on, since our context is gone.
         //shutdown
         alExit();
         

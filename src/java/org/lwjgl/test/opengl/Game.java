@@ -73,7 +73,6 @@ public final class Game {
 	}
  
     public static final GL gl = new GL("LWJGL Game Example", 16, 0, 0,0);
-    public static final GLU glu = new GLU(gl);
      static {
          try {
              gl.create();
@@ -150,17 +149,17 @@ public final class Game {
       * All rendering is done in here
       */
      private static void render() {
-         gl.clear(GL.COLOR_BUFFER_BIT);
-         gl.pushMatrix();
-         gl.translatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
-         gl.rotatef(angle, 0, 0, 1.0f);
-         gl.begin(GL.QUADS);
-         gl.vertex2i(-50, -50);
-         gl.vertex2i(50, -50);
-         gl.vertex2i(50, 50);
-         gl.vertex2i(-50, 50);
-         gl.end();
-         gl.popMatrix();
+       GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+       GL.glPushMatrix();
+       GL.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+       GL.glRotatef(angle, 0, 0, 1.0f);
+       GL.glBegin(GL.GL_QUADS);
+       GL.glVertex2i(-50, -50);
+       GL.glVertex2i(50, -50);
+       GL.glVertex2i(50, 50);
+       GL.glVertex2i(-50, 50);
+       GL.glEnd();
+       GL.glPopMatrix();
      }
  
     /**
@@ -174,16 +173,15 @@ public final class Game {
          Sys.setProcessPriority(Sys.HIGH_PRIORITY);
          System.out.println("Timer resolution: " + Sys.getTimerResolution());
          // Go into orthographic projection mode.
-         gl.matrixMode(GL.PROJECTION);
-         gl.loadIdentity();
-         glu.ortho2D(0, Display.getWidth(), 0, Display.getHeight());
-         gl.matrixMode(GL.MODELVIEW);
-         gl.loadIdentity();
-         gl.viewport(0, 0, Display.getWidth(), Display.getHeight());
+       GL.glMatrixMode(GL.GL_PROJECTION);
+       GL.glLoadIdentity();
+         GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());
+       GL.glMatrixMode(GL.GL_MODELVIEW);
+       GL.glLoadIdentity();
+       GL.glViewport(0, 0, Display.getWidth(), Display.getHeight());
          ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(4);
          num_tex_units_buf.order(ByteOrder.nativeOrder());
-         int buf_addr = Sys.getDirectBufferAddress(num_tex_units_buf);
-         gl.getIntegerv(GL.MAX_TEXTURE_UNITS_ARB, buf_addr);
+       GL.glGetIntegerv(GL.GL_MAX_TEXTURE_UNITS_ARB, num_tex_units_buf.asIntBuffer());
          System.out.println("Number of texture units: " + num_tex_units_buf.getInt());
          // Fix the refresh rate to the display frequency.
 //         gl.wglSwapIntervalEXT(1);

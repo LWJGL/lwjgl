@@ -101,7 +101,6 @@ public class PbufferTest {
       gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
 //      gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
       gl.create();
-      glu = new GLU(gl);
       if ((Pbuffer.getPbufferCaps() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
           System.out.println("No Pbuffer support!");
           System.exit(1);
@@ -189,49 +188,49 @@ public class PbufferTest {
     pbuffer.makeCurrent();
     // Pbuffer rendering
     //clear background
-    gl.clear(GL.COLOR_BUFFER_BIT);
+    GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
     // draw white quad
-    gl.pushMatrix();
+    GL.glPushMatrix();
     {
-      gl.translatef(quadPosition.x, quadPosition.y, 0);
-      gl.rotated(angle, 0.0f, 0.0f, 1.0f);
-      gl.color3f(1.0f, 1.0f, 1.0f);
-      gl.begin(GL.QUADS);
+      GL.glTranslatef(quadPosition.x, quadPosition.y, 0);
+      GL.glRotated(angle, 0.0f, 0.0f, 1.0f);
+      GL.glColor3f(1.0f, 1.0f, 1.0f);
+      GL.glBegin(GL.GL_QUADS);
       {
-        gl.vertex2i(-50, -50);
-        gl.vertex2i(50, -50);
-        gl.vertex2i(50, 50);
-        gl.vertex2i(-50, 50);
+        GL.glVertex2i(-50, -50);
+        GL.glVertex2i(50, -50);
+        GL.glVertex2i(50, 50);
+        GL.glVertex2i(-50, 50);
       }
-      gl.end();
+      GL.glEnd();
     }
-    gl.popMatrix();
-    gl.copyTexImage2D(GL.TEXTURE_2D, 0, GL.RGB, 0, 0, 256, 256, 0);
+    GL.glPopMatrix();
+    GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, 0, 0, 256, 256, 0);
     Pbuffer.releaseContext();
 
     // OpenGL window rendering
-    gl.clear(GL.COLOR_BUFFER_BIT);
+    GL.glClear(GL.GL_COLOR_BUFFER_BIT);
     // draw white quad
-    gl.pushMatrix();
+    GL.glPushMatrix();
     {
-      gl.translatef(quadPosition.x, quadPosition.y, 0);
-      gl.rotated(angle, 0.0f, 0.0f, 1.0f);
-      gl.color3f(1.0f, 1.0f, 0.0f);
-      gl.begin(GL.QUADS);
+      GL.glTranslatef(quadPosition.x, quadPosition.y, 0);
+      GL.glRotated(angle, 0.0f, 0.0f, 1.0f);
+      GL.glColor3f(1.0f, 1.0f, 0.0f);
+      GL.glBegin(GL.GL_QUADS);
       {
-        gl.texCoord2f(0f, 0f);
-        gl.vertex2i(-50, -50);
-        gl.texCoord2f(1f, 0f);
-        gl.vertex2i(50, -50);
-        gl.texCoord2f(1f, 1f);
-        gl.vertex2i(50, 50);
-        gl.texCoord2f(0f, 1f);
-        gl.vertex2i(-50, 50);
+        GL.glTexCoord2f(0f, 0f);
+        GL.glVertex2i(-50, -50);
+        GL.glTexCoord2f(1f, 0f);
+        GL.glVertex2i(50, -50);
+        GL.glTexCoord2f(1f, 1f);
+        GL.glVertex2i(50, 50);
+        GL.glTexCoord2f(0f, 1f);
+        GL.glVertex2i(-50, 50);
       }
-      gl.end();
+      GL.glEnd();
     }
-    gl.popMatrix();
+    GL.glPopMatrix();
   }
 
   private void initPbuffer() {
@@ -239,7 +238,7 @@ public class PbufferTest {
           pbuffer = new Pbuffer(256, 256, mode.bpp, 0, 0, 0);
           pbuffer.makeCurrent();
           initGLState(256, 256, 0.5f);
-          gl.bindTexture(GL.TEXTURE_2D, tex_handle);
+          GL.glBindTexture(GL.GL_TEXTURE_2D, tex_handle);
           Pbuffer.releaseContext();
       } catch (Exception e) {
           e.printStackTrace();
@@ -267,7 +266,6 @@ public class PbufferTest {
         gl.create();
         glInit();
         initPbuffer();
-        glu = new GLU(gl);
 
         Keyboard.create();
       } catch (Exception e) {
@@ -289,7 +287,6 @@ public class PbufferTest {
         gl.create();
         glInit();
         initPbuffer();
-        glu = new GLU(gl);
 
 
         Keyboard.create();
@@ -344,7 +341,7 @@ public class PbufferTest {
   private void destroyTexture() {
     IntBuffer buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
     buffer.put(0, tex_handle);
-    gl.deleteTextures(1, Sys.getDirectBufferAddress(buffer));
+    GL.glDeleteTextures(1, buffer);
   }
 
   /**
@@ -379,15 +376,15 @@ public class PbufferTest {
   }
 
   private void initGLState(int width, int height, float color) {
-    gl.matrixMode(GL.PROJECTION);
-    gl.loadIdentity();
-    glu.ortho2D(0, mode.width, 0, mode.height);
-    gl.matrixMode(GL.MODELVIEW);
-    gl.loadIdentity();
-    gl.viewport(0, 0, width, height);
+    GL.glMatrixMode(GL.GL_PROJECTION);
+    GL.glLoadIdentity();
+    GLU.gluOrtho2D(0, mode.width, 0, mode.height);
+    GL.glMatrixMode(GL.GL_MODELVIEW);
+    GL.glLoadIdentity();
+    GL.glViewport(0, 0, width, height);
 
     //set clear color to black
-    gl.clearColor(color, color, color, 0.0f);
+    GL.glClearColor(color, color, color, 0.0f);
   }
 
   /**
@@ -400,17 +397,17 @@ public class PbufferTest {
     if (GL.WGL_EXT_swap_control) {
       GL.wglSwapIntervalEXT(1);
     }
-    gl.texEnvf(GL.TEXTURE_ENV, GL.TEXTURE_ENV_MODE, GL.REPLACE);
-    gl.enable(GL.TEXTURE_2D);
+    GL.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
+    GL.glEnable(GL.GL_TEXTURE_2D);
     // Create shared texture
     IntBuffer buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-    gl.genTextures(1, Sys.getDirectBufferAddress(buffer));
+    GL.glGenTextures(1, buffer);
     tex_handle = buffer.get(0);
-    gl.bindTexture(GL.TEXTURE_2D, tex_handle);
-    gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP);
-    gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP);
-    gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
-    gl.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+    GL.glBindTexture(GL.GL_TEXTURE_2D, tex_handle);
+    GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP);
+    GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP);
+    GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+    GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
     initGLState(mode.width, mode.height, 0f);
   }
 

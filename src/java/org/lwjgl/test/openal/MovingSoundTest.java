@@ -34,10 +34,10 @@ package org.lwjgl.test.openal;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.eax.*;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL;
 
 import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 /**
  * $Id$
@@ -77,11 +77,10 @@ public class MovingSoundTest extends BasicTest {
 
 
 		int lastError;
-    float sourcex = 0.0f, sourcey = 0.0f, sourcez = 0.0f;
-    float listenerx = 0.0f, listenery = 0.0f, listenerz = 0.0f;
+    FloatBuffer sourcePosition = createFloatBuffer(3);
+    FloatBuffer listenerPosition = createFloatBuffer(3);
     boolean eaxApplied = false;
-    IntBuffer Env = null;
-    EAXBufferProperties eaxBufferProp = null;
+    EAXListenerProperties eaxListenerProp = null;
     
     //initialize keyboard
     try {
@@ -96,13 +95,13 @@ public class MovingSoundTest extends BasicTest {
 		IntBuffer sources = createIntBuffer(1);
 
 		// al generate buffers and sources
-		al.genBuffers(1, Sys.getDirectBufferAddress(buffers));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+		AL.alGenBuffers(1, buffers);
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
-		al.genSources(1, Sys.getDirectBufferAddress(sources));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+    AL.alGenSources(1, sources);
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
@@ -110,13 +109,13 @@ public class MovingSoundTest extends BasicTest {
 		WaveData wavefile = WaveData.create(args[0]);
 
 		//copy to buffers
-		al.bufferData(
+    AL.alBufferData(
 			buffers.get(0),
 			wavefile.format,
-			Sys.getDirectBufferAddress(wavefile.data),
+			wavefile.data,
 			wavefile.data.capacity(),
 			wavefile.samplerate);
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
@@ -124,36 +123,32 @@ public class MovingSoundTest extends BasicTest {
 		wavefile.dispose();
 
 		//set up source input
-		al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+    AL.alSourcei(sources.get(0), AL.AL_BUFFER, buffers.get(0));
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
-    al.sourcef(sources.get(0), AL.REFERENCE_DISTANCE, 1024.0f);
-    al.sourcef(sources.get(0), AL.ROLLOFF_FACTOR, 0.5f);
+    AL.alSourcef(sources.get(0), AL.AL_REFERENCE_DISTANCE, 1024.0f);
+    AL.alSourcef(sources.get(0), AL.AL_ROLLOFF_FACTOR, 0.5f);
 
 		//lets loop the sound
-		al.sourcei(sources.get(0), AL.LOOPING, AL.TRUE);
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+    AL.alSourcei(sources.get(0), AL.AL_LOOPING, AL.AL_TRUE);
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
 		//play source 0
-		al.sourcePlay(sources.get(0));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+    AL.alSourcePlay(sources.get(0));
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
     
     //setup EAX if possible
-    EAX eax = null;
-    if (al.isExtensionPresent("EAX")) {
-      eax = new EAX();
+    if (AL.alIsExtensionPresent("EAX")) {
       try {
-          eax.create();
-          Env = createIntBuffer(1);
-          eaxBufferProp = new EAXBufferProperties();          
+          EAX.create();
+          eaxListenerProp = new EAXListenerProperties();          
       } catch (Exception e) {
-        eax = null;
       }
     }    
     
@@ -165,46 +160,36 @@ public class MovingSoundTest extends BasicTest {
       Keyboard.poll();
       if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
         if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-          listenerx -= MOVEMENT;
-          al.listener3f(AL.POSITION, listenerx, listenery, listenerz);
-          System.out.println("listenerx: " + listenerx);
+          listenerPosition.put(0, listenerPosition.get(0) - MOVEMENT);
+          AL.alListenerfv(AL.AL_POSITION, listenerPosition);
+          System.out.println("listenerx: " + listenerPosition.get(0));
         } else {
-          sourcex -= MOVEMENT;
-          al.source3f(sources.get(0), AL.POSITION, sourcex, sourcey, sourcez);
-          System.out.println("sourcex: " + sourcex);
+          sourcePosition.put(0, sourcePosition.get(0) - MOVEMENT);
+          AL.alSourcefv(sources.get(0), AL.AL_POSITION, sourcePosition);
+          System.out.println("sourcex: " + sourcePosition.get(0));
         }
       }      
       if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
         if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-          listenerx += MOVEMENT;
-          al.listener3f(AL.POSITION, listenerx, listenery, listenerz);
-          System.out.println("listenerx: " + listenerx);
+          listenerPosition.put(0, listenerPosition.get(0) + MOVEMENT);
+          AL.alListenerfv(AL.AL_POSITION, listenerPosition);
+          System.out.println("listenerx: " + listenerPosition.get(0));
         } else {        
-          sourcex += MOVEMENT;
-          al.source3f(sources.get(0), AL.POSITION, sourcex, sourcey, sourcez);
-          System.out.println("sourcex: " + sourcex);
+          sourcePosition.put(0, sourcePosition.get(0) + MOVEMENT);
+          AL.alSourcefv(sources.get(0), AL.AL_POSITION, sourcePosition);
+          System.out.println("sourcex: " + sourcePosition.get(0));
         }
       }
       
       if(Keyboard.isKeyDown(Keyboard.KEY_E)) {
-        if(eax != null) {
           if(eaxApplied) {
-            Env.put(0, EAX.ENVIRONMENT_GENERIC);
-            eax.eaxSet( EAX.LISTENER_GUID,
-                        EAXListenerProperties.ENVIRONMENT,
-                        0,
-                        Sys.getDirectBufferAddress(Env),
-                        4);
+            eaxListenerProp.setEnvironment(EAX.EAX_ENVIRONMENT_GENERIC);
+            EAX.eaxSetProperty(eaxListenerProp, EAXListenerProperties.EAXLISTENER_ENVIRONMENT, 0); 
           } else {
-            Env.put(0, EAX.ENVIRONMENT_HANGAR);
-            eax.eaxSet( EAX.LISTENER_GUID,
-                        EAXListenerProperties.ENVIRONMENT,
-                        0, 
-                        Sys.getDirectBufferAddress(Env), 
-                        4);
+            eaxListenerProp.setEnvironment(EAX.EAX_ENVIRONMENT_HANGAR);
+            EAX.eaxSetProperty(eaxListenerProp, EAXListenerProperties.EAXLISTENER_ENVIRONMENT, 0); 
           }
           eaxApplied = !eaxApplied;
-        }
       }
       
       if(gl.isCloseRequested()) {
@@ -218,19 +203,19 @@ public class MovingSoundTest extends BasicTest {
     }
 
 		//stop source 0
-		al.sourceStop(sources.get(0));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+    AL.alSourceStop(sources.get(0));
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
 		//delete buffers and sources
-		al.deleteSources(1, Sys.getDirectBufferAddress(sources));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+    AL.alDeleteSources(1, sources);
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 
-		al.deleteBuffers(1, Sys.getDirectBufferAddress(buffers));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
+    AL.alDeleteBuffers(1, buffers);
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 			exit(lastError);
 		}
 

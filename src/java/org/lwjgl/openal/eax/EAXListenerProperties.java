@@ -31,8 +31,6 @@
  */
 package org.lwjgl.openal.eax;
 
-import org.lwjgl.Sys;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -94,124 +92,120 @@ public class EAXListenerProperties {
     /** modifies the behavior of properties offset */
     protected static int flags_offset;
     
-    public static final int NONE                                = 0;
-    public static final int ALLPARAMETERS                       = 1;
-    public static final int ROOM                                = 2;
-    public static final int ROOMHF                              = 3;
-    public static final int ROOMROLLOFFFACTOR                   = 4;
-    public static final int DECAYTIME                           = 5;
-    public static final int DECAYHFRATIO                        = 6;
-    public static final int REFLECTIONS                         = 7;
-    public static final int REFLECTIONSDELAY                    = 8;
-    public static final int REVERB                              = 9;
-    public static final int REVERBDELAY                         = 10;
-    public static final int ENVIRONMENT                         = 11;
-    public static final int ENVIRONMENTSIZE                     = 12;
-    public static final int ENVIRONMENTDIFFUSION                = 13;
-    public static final int AIRABSORPTIONHF                     = 14;
-    public static final int FLAGS                               = 15;
+    public static final int EAXLISTENER_NONE                                = 0;
+    public static final int EAXLISTENER_ALLPARAMETERS                       = 1;
+    public static final int EAXLISTENER_ROOM                                = 2;
+    public static final int EAXLISTENER_ROOMHF                              = 3;
+    public static final int EAXLISTENER_ROOMROLLOFFFACTOR                   = 4;
+    public static final int EAXLISTENER_DECAYTIME                           = 5;
+    public static final int EAXLISTENER_DECAYHFRATIO                        = 6;
+    public static final int EAXLISTENER_REFLECTIONS                         = 7;
+    public static final int EAXLISTENER_REFLECTIONSDELAY                    = 8;
+    public static final int EAXLISTENER_REVERB                              = 9;
+    public static final int EAXLISTENER_REVERBDELAY                         = 10;
+    public static final int EAXLISTENER_ENVIRONMENT                         = 11;
+    public static final int EAXLISTENER_ENVIRONMENTSIZE                     = 12;
+    public static final int EAXLISTENER_ENVIRONMENTDIFFUSION                = 13;
+    public static final int EAXLISTENER_AIRABSORPTIONHF                     = 14;
+    public static final int EAXLISTENER_FLAGS                               = 15;
                                                                 
     /** changes take effect immediately */                      
-    public static final int IMMEDIATE                           = 0x00000000;
+    public static final int EAXLISTENER_IMMEDIATE                           = 0x00000000;
                                                                 
     /** changes take effect later */                            
-    public static final int DEFERRED                            = 0x80000000;
+    public static final int EAXLISTENER_DEFERRED                            = 0x80000000;
     
-    public static final int COMMITDEFERREDSETTINGS              = (NONE | IMMEDIATE);    
+    public static final int EAXLISTENER_COMMITDEFERREDSETTINGS              = (EAXLISTENER_NONE | EAXLISTENER_IMMEDIATE);    
     
     /** reverberation decay time */
-    public static final int FLAGS_DECAYTIMESCALE                = 0x00000001;
+    public static final int EAXLISTENERFLAGS_DECAYTIMESCALE                = 0x00000001;
     
     /** reflection level */
-    public static final int FLAGS_REFLECTIONSSCALE              = 0x00000002;
+    public static final int EAXLISTENERFLAGS_REFLECTIONSSCALE              = 0x00000002;
     
     /** initial reflection delay time */
-    public static final int FLAGS_REFLECTIONSDELAYSCALE         = 0x00000004;
+    public static final int EAXLISTENERFLAGS_REFLECTIONSDELAYSCALE         = 0x00000004;
 
     /** reflections level */
-    public static final int FLAGS_REVERBSCALE                   = 0x00000008;
+    public static final int EAXLISTENERFLAGS_REVERBSCALE                   = 0x00000008;
 
     /** late reverberation delay time */
-    public static final int FLAGS_REVERBDELAYSCALE              = 0x00000010;
+    public static final int EAXLISTENERFLAGS_REVERBDELAYSCALE              = 0x00000010;
 
     /** This flag limits high-frequency decay time according to air absorption. */
-    public static final int FLAGS_DECAYHFLIMIT                  = 0x00000020;
+    public static final int EAXLISTENERFLAGS_DECAYHFLIMIT                  = 0x00000020;
 
     /** reserved future use */
-    public static final int FLAGS_RESERVED                      = 0xFFFFFFC0;
+    public static final int EAXLISTENERFLAGS_RESERVED                      = 0xFFFFFFC0;
 
     // property ranges and defaults:
-    public static final int MINROOM                             = -10000;
-    public static final int MAXROOM                             = 0;
-    public static final int DEFAULTROOM                         = -1000;
+    public static final int EAXLISTENER_MINROOM                             = -10000;
+    public static final int EAXLISTENER_MAXROOM                             = 0;
+    public static final int EAXLISTENER_DEFAULTROOM                         = -1000;
                                                                 
-    public static final int MINROOMHF                           = -10000;
-    public static final int MAXROOMHF                           = 0;
-    public static final int DEFAULTROOMHF                       = -100;
+    public static final int EAXLISTENER_MINROOMHF                           = -10000;
+    public static final int EAXLISTENER_MAXROOMHF                           = 0;
+    public static final int EAXLISTENER_DEFAULTROOMHF                       = -100;
                                                                 
-    public static final float MINROOMROLLOFFFACTOR              = 0.0f;
-    public static final float MAXROOMROLLOFFFACTOR              = 10.0f;
-    public static final float DEFAULTROOMROLLOFFFACTOR          = 0.0f;
+    public static final float EAXLISTENER_MINROOMROLLOFFFACTOR              = 0.0f;
+    public static final float EAXLISTENER_MAXROOMROLLOFFFACTOR              = 10.0f;
+    public static final float EAXLISTENER_DEFAULTROOMROLLOFFFACTOR          = 0.0f;
                                                                 
-    public static final float MINDECAYTIME                      = 0.1f;
-    public static final float MAXDECAYTIME                      = 20.0f;
-    public static final float DEFAULTDECAYTIME                  = 1.49f;
+    public static final float EAXLISTENER_MINDECAYTIME                      = 0.1f;
+    public static final float EAXLISTENER_MAXDECAYTIME                      = 20.0f;
+    public static final float EAXLISTENER_DEFAULTDECAYTIME                  = 1.49f;
                                                                 
-    public static final float MINDECAYHFRATIO                   = 0.1f;
-    public static final float MAXDECAYHFRATIO                   = 2.0f;
-    public static final float DEFAULTDECAYHFRATIO               = 0.83f;
+    public static final float EAXLISTENER_MINDECAYHFRATIO                   = 0.1f;
+    public static final float EAXLISTENER_MAXDECAYHFRATIO                   = 2.0f;
+    public static final float EAXLISTENER_DEFAULTDECAYHFRATIO               = 0.83f;
                                                                 
-    public static final int MINREFLECTIONS                      = -10000;
-    public static final int MAXREFLECTIONS                      = 1000;
-    public static final int DEFAULTREFLECTIONS                  = -2602;
+    public static final int EAXLISTENER_MINREFLECTIONS                      = -10000;
+    public static final int EAXLISTENER_MAXREFLECTIONS                      = 1000;
+    public static final int EAXLISTENER_DEFAULTREFLECTIONS                  = -2602;
                                                                 
-    public static final float MINREFLECTIONSDELAY               = 0.0f;
-    public static final float MAXREFLECTIONSDELAY               = 0.3f;
-    public static final float DEFAULTREFLECTIONSDELAY           = 0.007f;
+    public static final float EAXLISTENER_MINREFLECTIONSDELAY               = 0.0f;
+    public static final float EAXLISTENER_MAXREFLECTIONSDELAY               = 0.3f;
+    public static final float EAXLISTENER_DEFAULTREFLECTIONSDELAY           = 0.007f;
                                                                 
-    public static final int MINREVERB                           = -10000;
-    public static final int MAXREVERB                           = 2000;
-    public static final int DEFAULTREVERB                       = 200;
+    public static final int EAXLISTENER_MINREVERB                           = -10000;
+    public static final int EAXLISTENER_MAXREVERB                           = 2000;
+    public static final int EAXLISTENER_DEFAULTREVERB                       = 200;
                                                                 
-    public static final float MINREVERBDELAY                    = 0.0f;
-    public static final float MAXREVERBDELAY                    = 0.1f;
-    public static final float DEFAULTREVERBDELAY                = 0.011f;
+    public static final float EAXLISTENER_MINREVERBDELAY                    = 0.0f;
+    public static final float EAXLISTENER_MAXREVERBDELAY                    = 0.1f;
+    public static final float EAXLISTENER_DEFAULTREVERBDELAY                = 0.011f;
                                                                 
-    public static final int MINENVIRONMENT                      = 0;
-    public static final int MAXENVIRONMENT                      = (EAX.ENVIRONMENT_COUNT-1);
-    public static final int DEFAULTENVIRONMENT                  = EAX.ENVIRONMENT_GENERIC;
+    public static final int EAXLISTENER_MINENVIRONMENT                      = 0;
+    public static final int EAXLISTENER_MAXENVIRONMENT                      = (EAX.EAX_ENVIRONMENT_COUNT-1);
+    public static final int EAXLISTENER_DEFAULTENVIRONMENT                  = EAX.EAX_ENVIRONMENT_GENERIC;
                                                                 
-    public static final float MINENVIRONMENTSIZE                = 1.0f;
-    public static final float MAXENVIRONMENTSIZE                = 100.0f;
-    public static final float DEFAULTENVIRONMENTSIZE            = 7.5f;
+    public static final float EAXLISTENER_MINENVIRONMENTSIZE                = 1.0f;
+    public static final float EAXLISTENER_MAXENVIRONMENTSIZE                = 100.0f;
+    public static final float EAXLISTENER_DEFAULTENVIRONMENTSIZE            = 7.5f;
                                                                 
-    public static final float MINENVIRONMENTDIFFUSION           = 0.0f;
-    public static final float MAXENVIRONMENTDIFFUSION           = 1.0f;
-    public static final float DEFAULTENVIRONMENTDIFFUSION       = 1.0f;
+    public static final float EAXLISTENER_MINENVIRONMENTDIFFUSION           = 0.0f;
+    public static final float EAXLISTENER_MAXENVIRONMENTDIFFUSION           = 1.0f;
+    public static final float EAXLISTENER_DEFAULTENVIRONMENTDIFFUSION       = 1.0f;
                                                                 
-    public static final float MINAIRABSORPTIONHF                = -100.0f;
-    public static final float MAXAIRABSORPTIONHF                = 0.0f;
-    public static final float DEFAULTAIRABSORPTIONHF            = -5.0f;
+    public static final float EAXLISTENER_MINAIRABSORPTIONHF                = -100.0f;
+    public static final float EAXLISTENER_MAXAIRABSORPTIONHF                = 0.0f;
+    public static final float EAXLISTENER_DEFAULTAIRABSORPTIONHF            = -5.0f;
                                                                 
-    public static final int DEFAULTFLAGS                        = (FLAGS_DECAYTIMESCALE |
-                                                                    FLAGS_REFLECTIONSSCALE |
-                                                                    FLAGS_REFLECTIONSDELAYSCALE |
-                                                                    FLAGS_REVERBSCALE |
-                                                                    FLAGS_REVERBDELAYSCALE |
-                                                                    FLAGS_DECAYHFLIMIT);        
-
+    public static final int EAXLISTENER_DEFAULTFLAGS                        = ( EAXLISTENERFLAGS_DECAYTIMESCALE |
+                                                                                  EAXLISTENERFLAGS_REFLECTIONSSCALE |
+                                                                                  EAXLISTENERFLAGS_REFLECTIONSDELAYSCALE |
+                                                                                  EAXLISTENERFLAGS_REVERBSCALE |
+                                                                                  EAXLISTENERFLAGS_REVERBDELAYSCALE |
+                                                                                  EAXLISTENERFLAGS_DECAYHFLIMIT);
     static {
-        System.loadLibrary(org.lwjgl.Sys.getLibraryName());        
-        EAXLISTENERPROPERTIES_SIZE = sizeOfEaxListenerProperties();
-        assignOffsets();
+      System.loadLibrary(org.lwjgl.Sys.getLibraryName());        
+      EAXLISTENERPROPERTIES_SIZE = sizeOfEaxListenerProperties();
+      assignOffsets();
     }
     
-    /** 
-     * Creates a new instance of EAXBufferProperties 
-     */
     public EAXListenerProperties() {
-        eaxListenerProperties = ByteBuffer.allocateDirect(EAXLISTENERPROPERTIES_SIZE);
-        eaxListenerProperties.order(ByteOrder.nativeOrder());
+      eaxListenerProperties = ByteBuffer.allocateDirect(EAXLISTENERPROPERTIES_SIZE);
+      eaxListenerProperties.order(ByteOrder.nativeOrder());      
     }
     
     /**
@@ -464,13 +458,6 @@ public class EAXListenerProperties {
      */
     public void setFlags(int flags) {
         eaxListenerProperties.putInt(flags_offset, flags);
-    }
-    
-    /**
-     * Retrieves the address of this EAXBufferProperties
-     */
-    public int getAddress() {
-        return Sys.getDirectBufferAddress(eaxListenerProperties);
     }
     
     /**

@@ -81,7 +81,6 @@ public class MouseTest {
       gl = new GL("MouseTest", 50, 50, 640, 480, 16, 0, 0, 0);
       gl.create();
 
-      glu = new GLU(gl);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -91,8 +90,8 @@ public class MouseTest {
   }
 
   private void initializeOpenGL() {
-    gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glu.ortho2D(0.0, 640, 0, 480);
+    GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    GLU.gluOrtho2D(0.0, 640, 0, 480);
   }
 
   public void executeTest() {
@@ -159,9 +158,9 @@ public class MouseTest {
   }
   
   private void render() {
-    gl.clear(GL.COLOR_BUFFER_BIT);
+    GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
-    gl.begin(GL.POLYGON);
+    GL.glBegin(GL.GL_POLYGON);
     {
       float color = 1.0f;
       int buttonDown = 0;
@@ -172,15 +171,15 @@ public class MouseTest {
           break; 
         }
       }
-      gl.color3f(color, color, color);
+      GL.glColor3f(color, color, color);
       
-      gl.vertex2f(position.x + 0.0f, position.y + 0.0f);
-      gl.vertex2f(position.x + 0.0f, position.y + 30.0f);
-      gl.vertex2f(position.x + 40.0f, position.y + 30.0f);
-      gl.vertex2f(position.x + 60.0f, position.y + 15.f);
-      gl.vertex2f(position.x + 40.0f, position.y + 0.0f);
+      GL.glVertex2f(position.x + 0.0f, position.y + 0.0f);
+      GL.glVertex2f(position.x + 0.0f, position.y + 30.0f);
+      GL.glVertex2f(position.x + 40.0f, position.y + 30.0f);
+      GL.glVertex2f(position.x + 60.0f, position.y + 15.f);
+      GL.glVertex2f(position.x + 40.0f, position.y + 0.0f);
     }
-    gl.end();
+    GL.glEnd();
   }
 
   /**

@@ -85,7 +85,6 @@ public class HWCursorTest {
       // start of in windowed mode
       gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
       gl.create();
-      glu = new GLU(gl);
 
       glInit();
 
@@ -139,7 +138,7 @@ public class HWCursorTest {
       try {
           if ((Mouse.getNativeCursorCaps() | Mouse.CURSOR_ANIMATION) == 0)
               num_images = 1;
-          cursor = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, num_images, Sys.getDirectBufferAddress(cursor_images), Sys.getDirectBufferAddress(delays));
+          cursor = new Cursor(Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize(), Mouse.getMaxCursorSize()/2, Mouse.getMaxCursorSize()/2, num_images, cursor_images, delays);
           Mouse.setNativeCursor(cursor);
       } catch (Exception e) {
           e.printStackTrace();
@@ -186,23 +185,23 @@ public class HWCursorTest {
    */
   private void render() {
     //clear background
-    gl.clear(GL.COLOR_BUFFER_BIT);
+    GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
     // draw white quad
-    gl.pushMatrix();
+    GL.glPushMatrix();
     {
-      gl.translatef(mouse_x, 600 - mouse_y, 0);
-      gl.color3f(1.0f, 1.0f, 1.0f);
-      gl.begin(GL.QUADS);
+      GL.glTranslatef(mouse_x, 600 - mouse_y, 0);
+      GL.glColor3f(1.0f, 1.0f, 1.0f);
+      GL.glBegin(GL.GL_QUADS);
       {
-        gl.vertex2i(-50, -50);
-        gl.vertex2i(50, -50);
-        gl.vertex2i(50, 50);
-        gl.vertex2i(-50, 50);
+        GL.glVertex2i(-50, -50);
+        GL.glVertex2i(50, -50);
+        GL.glVertex2i(50, 50);
+        GL.glVertex2i(-50, 50);
       }
-      gl.end();
+      GL.glEnd();
     }
-    gl.popMatrix();
+    GL.glPopMatrix();
   }
 
   /**
@@ -236,8 +235,7 @@ public class HWCursorTest {
         Display.setDisplayMode(mode);
         gl = new GL("Test", mode.bpp, 0, 0, 0);
         gl.create();
-        glu = new GLU(gl);
-
+        
         glInit();
 
         Keyboard.create();
@@ -264,7 +262,6 @@ public class HWCursorTest {
         Display.resetDisplayMode();
         gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
         gl.create();
-        glu = new GLU(gl);
 
         glInit();
 
@@ -336,15 +333,15 @@ public class HWCursorTest {
   private void glInit() {
     // Go into orthographic projection mode.
     gl.determineAvailableExtensions();
-    gl.matrixMode(GL.PROJECTION);
-    gl.loadIdentity();
-    glu.ortho2D(0, mode.width, 0, mode.height);
-    gl.matrixMode(GL.MODELVIEW);
-    gl.loadIdentity();
-    gl.viewport(0, 0, mode.width, mode.height);
+    GL.glMatrixMode(GL.GL_PROJECTION);
+    GL.glLoadIdentity();
+    GLU.gluOrtho2D(0, mode.width, 0, mode.height);
+    GL.glMatrixMode(GL.GL_MODELVIEW);
+    GL.glLoadIdentity();
+    GL.glViewport(0, 0, mode.width, mode.height);
 
     //set clear color to black
-    gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     //sync frame (only works on windows)
     if (GL.WGL_EXT_swap_control) {

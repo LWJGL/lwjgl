@@ -32,11 +32,11 @@
 package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 /**
  * $Id$
@@ -47,55 +47,62 @@ import java.nio.IntBuffer;
  * @version $Revision$
  */
 public abstract class BasicTest {
-    
-    /** OpenAL instance */
-    protected AL al;
-    
-    /** OpenALC instance */
-    protected ALC alc;
-        
-    /**
-     * Creates an instance of PlayTest
-     */
-    public BasicTest() {
-        al      = new AL();
-        try {
-            al.create();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }              
+
+  /**
+   * Creates an instance of PlayTest
+   */
+  public BasicTest() {
+    try {
+      AL.create();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return;
     }
-    
-    /**
-     * Shutdowns OpenAL
-     */
-    protected void alExit() {
-      al.destroy();
-    }
-    
-    /**
-     * Creates an integer buffer to hold specified ints
-     * - strictly a utility method
-     *
-     * @param size how many int to contain
-     * @return created IntBuffer
-     */
-    protected IntBuffer createIntBuffer(int size) {
-        ByteBuffer temp = ByteBuffer.allocateDirect(4*size);
-        temp.order(ByteOrder.nativeOrder());
-        
-        return temp.asIntBuffer();
-    }
-    
-    /**
-     * Exits the test NOW, printing errorcode to stdout
-     *
-     * @param error Error code causing exit
-     */
-    protected void exit(int error) {
-        System.out.println("OpenAL Error: " + al.getString(error));
-        alExit();
-        System.exit(-1);
-    }
+  }
+
+  /**
+   * Shutdowns OpenAL
+   */
+  protected void alExit() {
+    AL.destroy();
+  }
+
+  /**
+   * Creates an integer buffer to hold specified ints
+   * - strictly a utility method
+   *
+   * @param size how many int to contain
+   * @return created IntBuffer
+   */
+  protected IntBuffer createIntBuffer(int size) {
+    ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
+    temp.order(ByteOrder.nativeOrder());
+
+    return temp.asIntBuffer();
+  }
+
+  /**
+   * Creates a float buffer to hold specified floats
+   * - strictly a utility method
+   *
+   * @param size how many floats to contain
+   * @return created FloatBuffer
+   */
+  protected FloatBuffer createFloatBuffer(int size) {
+    ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
+    temp.order(ByteOrder.nativeOrder());
+
+    return temp.asFloatBuffer();
+  }
+
+  /**
+   * Exits the test NOW, printing errorcode to stdout
+   *
+   * @param error Error code causing exit
+   */
+  protected void exit(int error) {
+    System.out.println("OpenAL Error: " + AL.alGetString(error));
+    alExit();
+    System.exit(-1);
+  }
 }

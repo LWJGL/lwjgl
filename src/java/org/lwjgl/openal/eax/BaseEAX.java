@@ -55,7 +55,7 @@ public abstract class BaseEAX {
 	/**
 	 * Override to provide any initialization code after creation.
 	 */
-	protected void init() {
+	protected static void init() {
 	}
 
 	/**
@@ -70,7 +70,7 @@ public abstract class BaseEAX {
 	 * 
 	 * @throws Exception if the EAX extensions couldn't be loaded
 	 */
-	public void create() throws Exception {
+	public static void create() throws Exception {
 		if (created) {
 			return;
 		}
@@ -87,12 +87,12 @@ public abstract class BaseEAX {
 	 * 
 	 * @return true if the EAX extensions could be found
 	 */
-	protected native boolean nCreate();
+	protected static native boolean nCreate();
 
 	/**
 	 * "Destroy" the EAX object
 	 */
-	public void destroy() {
+	public static void destroy() {
 		if (!created) {
 			return;
 		}
@@ -101,15 +101,7 @@ public abstract class BaseEAX {
 	}
 
 	/**
-	 * Finalizer, marked final. 
-	 */
-	public void finalize() throws Throwable {
-		super.finalize();
-		destroy();
-	}
-
-	/**
 	 * Native method the destroy the EAX
 	 */
-	protected native void nDestroy();
+	protected static native void nDestroy();
 }

@@ -29,7 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal.eax;
+package org.lwjgl.openal.eax;
+
+import java.nio.Buffer;
 
 /**
  * $Id$
@@ -47,27 +49,23 @@ public class CoreEAX extends BaseEAX implements BaseEAXConstants {
     /** GUID for listener */
     public static int LISTENER_GUID;    
     
-    /** Creates a new instance of CoreEAX */
-    public CoreEAX() {
-    }
-    
     /**
      * Load extensions
      */
-    protected void init() {        
-		determineAvailableExtensions();
-        setGUID();
+    protected static void init() {        
+		  determineAvailableExtensions();
+      setGUID();
     }
     
     /**
      * Determines available EAX extensions
      */
-    protected native void determineAvailableExtensions();
+    protected static native void determineAvailableExtensions();
     
     /**
      * Sets the GUID's for the buffer and listener objects
      */
-    protected native void setGUID();
+    protected static native void setGUID();
     
     /**
      * Retrieves an EAX Value
@@ -75,11 +73,11 @@ public class CoreEAX extends BaseEAX implements BaseEAXConstants {
      * @param propertySetID adress to the property set GUID of the object being queried (a listener or a source)
      * @param property property being queried
      * @param source the source to be queried
-     * @param data address to write value to
+     * @param data Buffer to write value to
      * @param size size of area being written to
      * @return OpenAL Error code
      */
-    public native int eaxGet(int propertySetID, int property, int source, int data, int size);
+    public static native int eaxGet(int propertySetID, int property, int source, Buffer data, int size);
     
     /**
      * Sets an EAX Value
@@ -87,9 +85,9 @@ public class CoreEAX extends BaseEAX implements BaseEAXConstants {
      * @param propertySetID adress to the property set GUID of the object being queried (a listener or a source)
      * @param property property being queried
      * @param source the source to be queried
-     * @param data address to write value to
+     * @param data Buffer to write value to
      * @param size size of area being written to
      * @return OpenAL Error code
      */
-    public native int eaxSet(int propertySetID, int property, int source, int data, int size);
+    public static native int eaxSet(int propertySetID, int property, int source, Buffer data, int size);
 }

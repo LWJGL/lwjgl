@@ -31,6 +31,8 @@
  */
 package org.lwjgl.openal;
 
+import java.nio.Buffer;
+
 /**
  * $Id$
  *
@@ -44,72 +46,68 @@ public class ALC {
 	/** Has the ALC object been created? */
 	protected static boolean created;
   
-  /** Parent AL instance */
-  protected AL al = null; 
-
 	/** Bad value */
-	public static final int INVALID = -1;
+	public static final int ALC_INVALID = -1;
 
 	/** Boolean False */
-	public static final int FALSE = 0;
+	public static final int ALC_FALSE = 0;
 
 	/** Boolean True */
-	public static final int TRUE = 1;
+	public static final int ALC_TRUE = 1;
 
 	/** Errors: No Error */
-	public static final int NO_ERROR = FALSE;
+	public static final int ALC_NO_ERROR = ALC_FALSE;
 
-	public static final int MAJOR_VERSION = 0x1000;
-	public static final int MINOR_VERSION = 0x1001;
-	public static final int ATTRIBUTES_SIZE = 0x1002;
-	public static final int ALL_ATTRIBUTES = 0x1003;
+	public static final int ALC_MAJOR_VERSION = 0x1000;
+	public static final int ALC_MINOR_VERSION = 0x1001;
+	public static final int ALC_ATTRIBUTES_SIZE = 0x1002;
+	public static final int ALC_ALL_ATTRIBUTES = 0x1003;
 
-	public static final int DEFAULT_DEVICE_SPECIFIER = 0x1004;
-	public static final int DEVICE_SPECIFIER = 0x1005;
-	public static final int EXTENSIONS = 0x1006;
+	public static final int ALC_DEFAULT_DEVICE_SPECIFIER = 0x1004;
+	public static final int ALC_DEVICE_SPECIFIER = 0x1005;
+	public static final int ALC_EXTENSIONS = 0x1006;
 
-	public static final int FREQUENCY = 0x1007;
-	public static final int REFRESH = 0x1008;
-	public static final int SYNC = 0x1009;
+	public static final int ALC_FREQUENCY = 0x1007;
+	public static final int ALC_REFRESH = 0x1008;
+	public static final int ALC_SYNC = 0x1009;
 
 	/** The device argument does not name a valid device */
-	public static final int INVALID_DEVICE = 0xA001;
+	public static final int ALC_INVALID_DEVICE = 0xA001;
 
 	/** The context argument does not name a valid context */
-	public static final int INVALID_CONTEXT = 0xA002;
+	public static final int ALC_INVALID_CONTEXT = 0xA002;
 
 	/**
 	 * A function was called at inappropriate time, or in an inappropriate way, 
 	 * causing an illegal state. This can be an incompatible ALenum, object ID,
 	 * and/or function.
 	 */
-	public static final int INVALID_ENUM = 0xA003;
+	public static final int ALC_INVALID_ENUM = 0xA003;
 
 	/**
 	 * Illegal value passed as an argument to an AL call.
 	 * Applies to parameter values, but not to enumerations.
 	 */
-	public static final int INVALID_VALUE = 0xA004;
+	public static final int ALC_INVALID_VALUE = 0xA004;
 
 	/**
 	 * A function could not be completed, because there is not enough 
 	 * memory available.
 	 */
-	public static final int OUT_OF_MEMORY = 0xA005;
+	public static final int ALC_OUT_OF_MEMORY = 0xA005;
 
 	static {
 		initialize();
 	}
 
 	/** Creates a new instance of ALC */
-  protected ALC(AL al) {
-    this.al = al;
+  protected ALC() {
   }
 
 	/**
 	* Override to provide any initialization code after creation.
 	*/
-	protected void init() {
+	protected static void init() {
 	}
 
 	/**
@@ -124,7 +122,7 @@ public class ALC {
 	* 
 	* @throws Exception if a failiure occured in the ALC creation process
 	*/
-  protected void create() throws OpenALException {
+  protected static void create() throws OpenALException {
 		if (created) {
 			return;
 		}
@@ -141,12 +139,12 @@ public class ALC {
 	 * 
 	 * @return true if the ALC creation process succeeded
 	 */
-	protected native boolean nCreate();
+	protected static native boolean nCreate();
 
 	/**
 	 * Calls whatever destruction rutines that are needed
 	 */
-  protected void destroy() {
+  protected static void destroy() {
 		if (!created) {
 			return;
 		}
@@ -157,7 +155,7 @@ public class ALC {
 	/**
 	 * Native method the destroy the ALC
 	 */
-	protected native void nDestroy();
+	protected static native void nDestroy();
 
   /**
    * Returns strings related to the context.
@@ -165,24 +163,24 @@ public class ALC {
    * @param pname Property to get
    * @return String property from device
    */
-	public String getString(int pname) {
-    return nGetString(al.device.device, pname);
+	public static String alcGetString(int pname) {
+    return nGetString(AL.device.device, pname);
 	}
   
-  native String nGetString(int device, int pname);
+  native static String nGetString(int device, int pname);
 
 	/**
 	 * Returns integers related to the context.
 	 *
 	 * @param pname Property to get
 	 * @param size Size of destination buffer provided
-	 * @param integerdata address of ByteBuffer to write integers to
+	 * @param integerdata ByteBuffer to write integers to
 	 */
-	public void getIntegerv(int pname, int size, int integerdata) {
-      nGetIntegerv(al.device.device, pname, size, integerdata);
+	public static void alcGetIntegerv(int pname, int size, Buffer integerdata) {
+      nGetIntegerv(AL.device.device, pname, size, integerdata);
 		}
     
-  native void nGetIntegerv(int device, int pname, int size, int integerdata);    
+  native static void nGetIntegerv(int device, int pname, int size, Buffer integerdata);    
 
 	/**
 	 * Opens the named device. If null is specied, the implementation will
@@ -191,23 +189,23 @@ public class ALC {
 	 * @param devicename name of device to open
 	 * @return opened device, or null
 	 */
-	native ALCdevice openDevice(String devicename);
+	native static ALCdevice alcOpenDevice(String devicename);
 
 	/**
 	 * Closes the supplied device.
 	 *
 	 * @param device address of native device to close
 	 */
-	native void closeDevice(int device);
+	native static void alcCloseDevice(int device);
 
 	/**
 	 * Creates a context using a specified device.
 	 *
 	 * @param device address of device to associate context to
-	 * @param attrList address of ByteBuffer to read attributes from
+	 * @param attrList Buffer to read attributes from
 	 * @return New context, or null if creation failed
 	 */
-	native ALCcontext createContext(int device, int attrList);
+	native static ALCcontext alcCreateContext(int device, Buffer attrList);
 
 	/**
 	 * Makes the supplied context the current one
@@ -215,23 +213,23 @@ public class ALC {
 	 * @param context address of context to make current
 	 * @return true if successfull, false if not
 	 */
-	native boolean makeContextCurrent(int context);
+	native static boolean alcMakeContextCurrent(int context);
 
   /**
    * Tells a context to begin processing.
    */
-  public void processContext() {
-    nProcessContext(al.context.context);
+  public static void alcProcessContext() {
+    nProcessContext(AL.context.context);
   }
   
-  native void nProcessContext(int context);
+  native static void nProcessContext(int context);
 
 	/**
 	 * Gets the current context
 	 *
 	 * @return Current ALCcontext
 	 */
-	native ALCcontext getCurrentContext();
+	native static ALCcontext alcGetCurrentContext();
 
 	/**
 	 * Retrives the device associated with the supplied context
@@ -239,32 +237,32 @@ public class ALC {
 	 * @param context address of context to get device for
 	 * @param ALCdevice associated with context
 	 */
-	native ALCdevice getContextsDevice(int context);
+	native static ALCdevice alcGetContextsDevice(int context);
 
 	/**
 	 * Suspends processing on supplied context
 	 *
 	 * @param context address of context to suspend
 	 */
-	native void suspendContext(int context);
+	native static void alcSuspendContext(int context);
 
 	/**
 	 * Destroys supplied context
 	 *
 	 * @param context address of context to Destroy
 	 */
-	native void destroyContext(int context);
+	native static void alcDestroyContext(int context);
 
 	/**
 	 * Retrieves the current context error state.
 	 *
 	 * @return Errorcode from ALC statemachine
 	 */
-  public int getError() {
-    return nGetError(al.device.device);
+  public static int alcGetError() {
+    return nGetError(AL.device.device);
   }
   
-	native int nGetError(int device);
+	native static int nGetError(int device);
 
 	/**
 	 * Query if a specified context extension is available.
@@ -272,11 +270,11 @@ public class ALC {
 	 * @param extName name of extension to find
 	 * @return true if extension is available, false if not
 	 */
-  public boolean isExtensionPresent(String extName) {
-    return nIsExtensionPresent(al.device.device, extName);
+  public static boolean alcIsExtensionPresent(String extName) {
+    return nIsExtensionPresent(AL.device.device, extName);
   }
   
-	native boolean nIsExtensionPresent(int device, String extName);
+	native static boolean nIsExtensionPresent(int device, String extName);
 
 	/**
 	 * retrieves the enum value for a specified enumeration name.
@@ -284,9 +282,9 @@ public class ALC {
 	 * @param enumName name of enum to find
 	 * @return value of enumeration
 	 */
-  public int getEnumValue(String enumName) {
-    return nGetEnumValue(al.device.device, enumName);
+  public static int alcGetEnumValue(String enumName) {
+    return nGetEnumValue(AL.device.device, enumName);
   }
   
-	native int nGetEnumValue(int device, String enumName);
+	native static int nGetEnumValue(int device, String enumName);
 }

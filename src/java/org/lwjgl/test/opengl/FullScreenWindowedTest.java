@@ -98,7 +98,6 @@ public class FullScreenWindowedTest {
       // start of in windowed mode
       gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
       gl.create();
-      glu = new GLU(gl);
 
       glInit();
 
@@ -172,24 +171,24 @@ public class FullScreenWindowedTest {
 
   private void render() {
     //clear background
-    gl.clear(GL.COLOR_BUFFER_BIT);
+    GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
     // draw white quad
-    gl.pushMatrix();
+    GL.glPushMatrix();
     {
-      gl.translatef(quadPosition.x, quadPosition.y, 0);
-      gl.rotated(angle, 0.0f, 0.0f, 1.0f);
-      gl.color3f(1.0f, 1.0f, 1.0f);
-      gl.begin(GL.QUADS);
+      GL.glTranslatef(quadPosition.x, quadPosition.y, 0);
+      GL.glRotated(angle, 0.0f, 0.0f, 1.0f);
+      GL.glColor3f(1.0f, 1.0f, 1.0f);
+      GL.glBegin(GL.GL_QUADS);
       {
-        gl.vertex2i(-50, -50);
-        gl.vertex2i(50, -50);
-        gl.vertex2i(50, 50);
-        gl.vertex2i(-50, 50);
+        GL.glVertex2i(-50, -50);
+        GL.glVertex2i(50, -50);
+        GL.glVertex2i(50, 50);
+        GL.glVertex2i(-50, 50);
       }
-      gl.end();
+      GL.glEnd();
     }
-    gl.popMatrix();
+    GL.glPopMatrix();
   }
 
   /**
@@ -208,7 +207,6 @@ public class FullScreenWindowedTest {
         Display.setDisplayMode(mode);
         gl = new GL("Test", mode.bpp, 0, 0, 0);
         gl.create();
-        glu = new GLU(gl);
 
         glInit();
 
@@ -227,7 +225,6 @@ public class FullScreenWindowedTest {
         Display.resetDisplayMode();
         gl = new GL("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
         gl.create();
-        glu = new GLU(gl);
 
         glInit();
 
@@ -314,15 +311,15 @@ public class FullScreenWindowedTest {
   private void glInit() {
     // Go into orthographic projection mode.
     gl.determineAvailableExtensions();
-    gl.matrixMode(GL.PROJECTION);
-    gl.loadIdentity();
-    glu.ortho2D(0, mode.width, 0, mode.height);
-    gl.matrixMode(GL.MODELVIEW);
-    gl.loadIdentity();
-    gl.viewport(0, 0, mode.width, mode.height);
+    GL.glMatrixMode(GL.GL_PROJECTION);
+    GL.glLoadIdentity();
+    GLU.gluOrtho2D(0, mode.width, 0, mode.height);
+    GL.glMatrixMode(GL.GL_MODELVIEW);
+    GL.glLoadIdentity();
+    GL.glViewport(0, 0, mode.width, mode.height);
 
     //set clear color to black
-    gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     //sync frame (only works on windows)
     if (GL.WGL_EXT_swap_control) {

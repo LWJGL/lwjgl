@@ -31,8 +31,8 @@
  */
 package org.lwjgl.test.openal;
 
-import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
+import org.lwjgl.openal.OpenALException;
 
 import java.nio.IntBuffer;
 
@@ -71,11 +71,17 @@ public class SourceLimitTest extends BasicTest {
 		}
 
     System.out.print("Creating " + sourcesToCreate + " in one go...");
-    CreateAllSources();
+    try {
+      CreateAllSources();
+    } catch(OpenALException oale) {
+    }
+
     
     System.out.print("Creating " + sourcesToCreate + " one at a time...");
-    CreateSourcesStep();
-
+    try {
+      CreateSourcesStep();
+    } catch(Exception e) {
+    }
 		//shutdown
 		alExit();
 	}
@@ -90,14 +96,14 @@ public class SourceLimitTest extends BasicTest {
 		IntBuffer sources = createIntBuffer(sourcesToCreate);
 
 		//Create sourcesToCreate sources in one fell swoop
-		al.genSources(sourcesToCreate, Sys.getDirectBufferAddress(sources));
-		if ((lastError = al.getError()) != AL.NO_ERROR) {
-			System.out.println("failed to create " + sourcesToCreate + " sources");
+		AL.alGenSources(sourcesToCreate, sources);
+		if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+			System.out.println("failed to create " + sourcesToCreate + " sources (" + AL.alGetString(lastError) + ")");
 			return;
 		}
 
 		//delete sources
-		al.deleteSources(sourcesToCreate, Sys.getDirectBufferAddress(sources));
+		AL.alDeleteSources(sourcesToCreate, sources);
 
 		System.out.println("created " + sourcesToCreate + " sources successfully!");
 	}
@@ -110,24 +116,25 @@ public class SourceLimitTest extends BasicTest {
 		int sourcesCreated = 0;
 
 		//make bytbuffer that can hold sourcesToCreate sources
-		IntBuffer sources = createIntBuffer(sourcesToCreate);
+		IntBuffer[] sources = new IntBuffer[sourcesToCreate];
 
     //create the sources
-		for (int i = 0; i < sourcesToCreate; i++) {
-			al.genSources(1, Sys.getDirectBufferAddress(sources) + (i * 4));
-			if ((lastError = al.getError()) != AL.NO_ERROR) {
+		for (int i = 0; i <= sourcesToCreate; i++) {
+      sources[i] = createIntBuffer(1);
+			AL.alGenSources(1, sources[i]);
+			if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
 				System.out.println("failed to create source: " + (i + 1));
 				break;
 			}
       sourcesCreated++;
 		}
-
+    
     //delete allocated sources
 		for (int i = 0; i < sourcesCreated; i++) {
 			//delete buffers and sources
-			al.deleteSources(1, Sys.getDirectBufferAddress(sources) + (i * 4));
-			if ((lastError = al.getError()) != AL.NO_ERROR) {
-				System.out.println("failed to delete source: " + i);
+			AL.alDeleteSources(1, sources[i]);
+			if ((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
+				System.out.println("failed to delete source: " + i + "(" + AL.alGetString(lastError) + ")");
 				break;
 			}
 		}

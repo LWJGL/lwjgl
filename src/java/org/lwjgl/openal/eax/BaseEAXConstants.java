@@ -40,71 +40,71 @@ package org.lwjgl.openal.eax;
  * @version $Revision$
  */
 public interface BaseEAXConstants {
-    public static final int ENVIRONMENT_GENERIC                         = 0;
-    public static final int ENVIRONMENT_PADDEDCELL                      = 1;
-    public static final int ENVIRONMENT_ROOM                            = 2;
-    public static final int ENVIRONMENT_BATHROOM                        = 3;
-    public static final int ENVIRONMENT_LIVINGROOM                      = 4;
-    public static final int ENVIRONMENT_STONEROOM                       = 5;
-    public static final int ENVIRONMENT_AUDITORIUM                      = 6;
-    public static final int ENVIRONMENT_CONCERTHALL                     = 7;
-    public static final int ENVIRONMENT_CAVE                            = 8;
-    public static final int ENVIRONMENT_ARENA                           = 9;
-    public static final int ENVIRONMENT_HANGAR                          = 10;
-    public static final int ENVIRONMENT_CARPETEDHALLWAY                 = 11;
-    public static final int ENVIRONMENT_HALLWAY                         = 12;
-    public static final int ENVIRONMENT_STONECORRIDOR                   = 13;
-    public static final int ENVIRONMENT_ALLEY                           = 14;
-    public static final int ENVIRONMENT_FOREST                          = 15;
-    public static final int ENVIRONMENT_CITY                            = 16;
-    public static final int ENVIRONMENT_MOUNTAINS                       = 17;
-    public static final int ENVIRONMENT_QUARRY                          = 18;
-    public static final int ENVIRONMENT_PLAIN                           = 19;
-    public static final int ENVIRONMENT_PARKINGLOT                      = 20;
-    public static final int ENVIRONMENT_SEWERPIPE                       = 21;
-    public static final int ENVIRONMENT_UNDERWATER                      = 22;
-    public static final int ENVIRONMENT_DRUGGED                         = 23;
-    public static final int ENVIRONMENT_DIZZY                           = 24;
-    public static final int ENVIRONMENT_PSYCHOTIC                       = 25;
-    public static final int ENVIRONMENT_COUNT                           = 26;
+    public static final int EAX_ENVIRONMENT_GENERIC                         = 0;
+    public static final int EAX_ENVIRONMENT_PADDEDCELL                      = 1;
+    public static final int EAX_ENVIRONMENT_ROOM                            = 2;
+    public static final int EAX_ENVIRONMENT_BATHROOM                        = 3;
+    public static final int EAX_ENVIRONMENT_LIVINGROOM                      = 4;
+    public static final int EAX_ENVIRONMENT_STONEROOM                       = 5;
+    public static final int EAX_ENVIRONMENT_AUDITORIUM                      = 6;
+    public static final int EAX_ENVIRONMENT_CONCERTHALL                     = 7;
+    public static final int EAX_ENVIRONMENT_CAVE                            = 8;
+    public static final int EAX_ENVIRONMENT_ARENA                           = 9;
+    public static final int EAX_ENVIRONMENT_HANGAR                          = 10;
+    public static final int EAX_ENVIRONMENT_CARPETEDHALLWAY                 = 11;
+    public static final int EAX_ENVIRONMENT_HALLWAY                         = 12;
+    public static final int EAX_ENVIRONMENT_STONECORRIDOR                   = 13;
+    public static final int EAX_ENVIRONMENT_ALLEY                           = 14;
+    public static final int EAX_ENVIRONMENT_FOREST                          = 15;
+    public static final int EAX_ENVIRONMENT_CITY                            = 16;
+    public static final int EAX_ENVIRONMENT_MOUNTAINS                       = 17;
+    public static final int EAX_ENVIRONMENT_QUARRY                          = 18;
+    public static final int EAX_ENVIRONMENT_PLAIN                           = 19;
+    public static final int EAX_ENVIRONMENT_PARKINGLOT                      = 20;
+    public static final int EAX_ENVIRONMENT_SEWERPIPE                       = 21;
+    public static final int EAX_ENVIRONMENT_UNDERWATER                      = 22;
+    public static final int EAX_ENVIRONMENT_DRUGGED                         = 23;
+    public static final int EAX_ENVIRONMENT_DIZZY                           = 24;
+    public static final int EAX_ENVIRONMENT_PSYCHOTIC                       = 25;
+    public static final int EAX_ENVIRONMENT_COUNT                           = 26;
     
     // Single window material preset
-    public static final int MATERIAL_SINGLEWINDOW                       = -2800;
-    public static final float MATERIAL_SINGLEWINDOWLF                   = 0.71f;
-    public static final float MATERIAL_SINGLEWINDOWROOMRATIO            = 0.43f;
+    public static final int EAX_MATERIAL_SINGLEWINDOW                       = -2800;
+    public static final float EAX_MATERIAL_SINGLEWINDOWLF                   = 0.71f;
+    public static final float EAX_MATERIAL_SINGLEWINDOWROOMRATIO            = 0.43f;
     
     // Double window material preset
-    public static final int MATERIAL_DOUBLEWINDOW                       = -5000;
-    public static final float MATERIAL_DOUBLEWINDOWHF                   = 0.40f;
-    public static final float MATERIAL_DOUBLEWINDOWROOMRATIO            = 0.24f;
+    public static final int EAX_MATERIAL_DOUBLEWINDOW                       = -5000;
+    public static final float EAX_MATERIAL_DOUBLEWINDOWHF                   = 0.40f;
+    public static final float EAX_MATERIAL_DOUBLEWINDOWROOMRATIO            = 0.24f;
     
     // Thin door material preset
-    public static final int MATERIAL_THINDOOR                           = -1800;
-    public static final float MATERIAL_THINDOORLF                       = 0.66f;
-    public static final float MATERIAL_THINDOORROOMRATIO                = 0.66f;
+    public static final int EAX_MATERIAL_THINDOOR                           = -1800;
+    public static final float EAX_MATERIAL_THINDOORLF                       = 0.66f;
+    public static final float EAX_MATERIAL_THINDOORROOMRATIO                = 0.66f;
     
     // Thick door material preset
-    public static final int MATERIAL_THICKDOOR                          = -4400;
-    public static final float MATERIAL_THICKDOORLF                      = 0.64f;
-    public static final float MATERIAL_THICKDOORROOMRTATION             = 0.27f;
+    public static final int EAX_MATERIAL_THICKDOOR                          = -4400;
+    public static final float EAX_MATERIAL_THICKDOORLF                      = 0.64f;
+    public static final float EAX_MATERIAL_THICKDOORROOMRTATION             = 0.27f;
     
     // Wood wall material preset
-    public static final int MATERIAL_WOODWALL                           = -4000;
-    public static final float MATERIAL_WOODWALLLF                       = 0.50f;
-    public static final float MATERIAL_WOODWALLROOMRATIO                = 0.30f;
+    public static final int EAX_MATERIAL_WOODWALL                           = -4000;
+    public static final float EAX_MATERIAL_WOODWALLLF                       = 0.50f;
+    public static final float EAX_MATERIAL_WOODWALLROOMRATIO                = 0.30f;
     
     // Brick wall material preset
-    public static final int MATERIAL_BRICKWALL                          = -5000;
-    public static final float MATERIAL_BRICKWALLLF                      = 0.60f;
-    public static final float MATERIAL_BRICKWALLROOMRATIO               = 0.24f;
+    public static final int EAX_MATERIAL_BRICKWALL                          = -5000;
+    public static final float EAX_MATERIAL_BRICKWALLLF                      = 0.60f;
+    public static final float EAX_MATERIAL_BRICKWALLROOMRATIO               = 0.24f;
     
     // Stone wall material preset
-    public static final int MATERIAL_STONEWALL                          = -6000;
-    public static final float MATERIAL_STONEWALLLF                      = 0.68f;
-    public static final float MATERIAL_STONEWALLROOMRATIO               = 0.20f;
+    public static final int EAX_MATERIAL_STONEWALL                          = -6000;
+    public static final float EAX_MATERIAL_STONEWALLLF                      = 0.68f;
+    public static final float EAX_MATERIAL_STONEWALLROOMRATIO               = 0.20f;
     
     // Curtain material preset
-    public static final int MATERIAL_CURTAIN                            = -1200;
-    public static final float MATERIAL_CURTAINLF                        = 0.15f;
-    public static final float MATERIAL_CURTAINROOMRATIO                 = 1.00f;
+    public static final int EAX_MATERIAL_CURTAIN                            = -1200;
+    public static final float EAX_MATERIAL_CURTAINLF                        = 0.15f;
+    public static final float EAX_MATERIAL_CURTAINROOMRATIO                 = 1.00f;
 }

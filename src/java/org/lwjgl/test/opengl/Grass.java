@@ -89,7 +89,6 @@ public class Grass {
 	}
 
 	public static final GL gl = new GL("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0);
-	public static final GLU glu = new GLU(gl);
 
 	static {
 		try {
@@ -133,7 +132,7 @@ public class Grass {
 		ByteBuffer byte_buf = ByteBuffer.allocateDirect(4);
 		byte_buf.order(ByteOrder.nativeOrder());
 		System.out.println("Vertex program supported: " + gl.NV_vertex_program);
-		gl.genProgramsNV(1, Sys.getDirectBufferAddress(byte_buf));
+    GL.glGenProgramsNV(1, byte_buf.asIntBuffer());
 		IntBuffer int_buf = byte_buf.asIntBuffer();
 		if (int_buf.get(0) == 0)
 			throw new RuntimeException("Could not allocate new vertex program id!");
@@ -145,11 +144,11 @@ public class Grass {
 		program_buf.rewind();
 		program_buf.put(program);
 		program_buf.rewind();
-		gl.loadProgramNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glLoadProgramNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			program_handle,
 			program_buf.remaining(),
-			Sys.getDirectBufferAddress(program_buf));
+			program_buf);
 		/*gl.getIntegerv(GL.PROGRAM_ERROR_POSITION_NV, Sys.getDirectBufferAddress(int_buf));
 		System.out.println("error position: " + int_buf.get(0));*/
 
@@ -163,31 +162,31 @@ public class Grass {
 		light_buf_f.rewind();
 		light_buf_f.put(LightDiffuse);
 
-		gl.lightfv(
-			GL.LIGHT0,
-			GL.DIFFUSE,
-			Sys.getDirectBufferAddress(light_buf_f));
+    GL.glLightfv(
+			GL.GL_LIGHT0,
+			GL.GL_DIFFUSE,
+			light_buf_f);
 		light_buf_f.rewind();
 		light_buf_f.put(LightPosition);
-		gl.lightfv(
-			GL.LIGHT0,
-			GL.POSITION,
-			Sys.getDirectBufferAddress(light_buf_f));
-		gl.enable(GL.LIGHT0);
+    GL.glLightfv(
+			GL.GL_LIGHT0,
+			GL.GL_POSITION,
+			light_buf_f);
+    GL.glEnable(GL.GL_LIGHT0);
 
-		gl.enable(GL.LIGHTING);
+    GL.glEnable(GL.GL_LIGHTING);
 
-		gl.enable(GL.DEPTH_TEST);
+    GL.glEnable(GL.GL_DEPTH_TEST);
 
-		gl.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
-		gl.enable(GL.BLEND);
+    GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+    GL.glEnable(GL.GL_BLEND);
 
-		gl.matrixMode(GL.PROJECTION);
-		glu.perspective(40.0, 1.0, 1.0, 50.0);
+    GL.glMatrixMode(GL.GL_PROJECTION);
+    GLU.gluPerspective(40.0, 1.0, 1.0, 50.0);
 
-		gl.matrixMode(GL.MODELVIEW);
+    GL.glMatrixMode(GL.GL_MODELVIEW);
 
-		glu.lookAt(14.0, 10.0, -16.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+		GLU.gluLookAt(14.0, 10.0, -16.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
 		aslod.angle = 2.6179935f;
 		aslod.value = 0.2f;
@@ -201,7 +200,7 @@ public class Grass {
 			degree *= (0.5 + myrand());
 
 			ptrAnimate(degree);
-			gl.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+      GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 			//ptrDraw();
 
@@ -247,16 +246,16 @@ public class Grass {
 		fRigid = ((fRigid = myrand()) < 0.2f) ? 0.2f : fRigid;
 
 		if (myrand() < 0.3)
-			gl.begin(GL.LINE_STRIP);
+    GL.glBegin(GL.GL_LINE_STRIP);
 		else
-			gl.begin(GL.QUAD_STRIP);
+    GL.glBegin(GL.GL_QUAD_STRIP);
 
 		for (cFaces = 0; cFaces < numFaces; cFaces++) {
 			for (cWidth = frndWidth;
 				cWidth >= -frndWidth;
 				cWidth -= (frndWidth * 2.0f)) {
-				gl.color4f(fX, fRigid, fZ, (float) cFaces / (float) numFaces);
-				gl.vertex3f(
+          GL.glColor4f(fX, fRigid, fZ, (float) cFaces / (float) numFaces);
+          GL.glVertex3f(
 					(float) (((cFaces - 2) * 0.1f)
 						* java.lang.Math.cos(fRotate)
 						+ (cWidth) * java.lang.Math.sin(fRotate)),
@@ -267,7 +266,7 @@ public class Grass {
 			}
 			frndWidth -= fDecWidth;
 		}
-		gl.end();
+    GL.glEnd();
 
 	}
 
@@ -275,112 +274,112 @@ public class Grass {
 		float cI, cJ, fArea;
 
 		fArea = 20.0f;
-		mesh = gl.genLists(1);
-		gl.newList(mesh, GL.COMPILE);
+		mesh = GL.glGenLists(1);
+    GL.glNewList(mesh, GL.GL_COMPILE);
 		for (cI = -fArea / 2; cI < fArea / 2; cI += 0.25f) {
 			for (cJ = -fArea / 2; cJ < fArea / 2; cJ += 0.25f) {
 				genGrass(0.5f, 0.1f, cI, cJ);
 			}
 		}
-		gl.endList();
+    GL.glEndList();
 
 	}
 
 	private static void grsDraw() {
-		gl.enable(GL.VERTEX_PROGRAM_NV);
-		gl.bindProgramNV(GL.VERTEX_PROGRAM_NV, program_handle);
-		gl.trackMatrixNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glEnable(GL.GL_VERTEX_PROGRAM_NV);
+    GL.glBindProgramNV(GL.GL_VERTEX_PROGRAM_NV, program_handle);
+    GL.glTrackMatrixNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			0,
-			GL.MODELVIEW_PROJECTION_NV,
-			GL.IDENTITY_NV);
+			GL.GL_MODELVIEW_PROJECTION_NV,
+			GL.GL_IDENTITY_NV);
 
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			4,
 			0.0f,
 			0.0f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			5,
 			0.0f,
 			0.0f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			6,
 			1.763609f,
 			0.496495f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			7,
 			-0.943599f,
 			3.203737f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			8,
 			4.101107f,
 			0.943413f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			9,
 			-1.218603f,
 			6.259399f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			10,
 			7.214299f,
 			1.352961f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			11,
 			-1.540748f,
 			10.080958f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			12,
 			10.880035f,
 			1.759046f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			13,
 			-1.852705f,
 			14.468674f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			14,
 			14.292879f,
 			1.973329f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			15,
 			-1.973387f,
 			18.506531f,
 			0.0f,
 			0.0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			16,
 			(float) (java.lang.Math.sin(aslod.angle)
 				* (aslod.value + aslod.ripple)),
@@ -389,54 +388,54 @@ public class Grass {
 				* (aslod.value + aslod.ripple)),
 			0.0f);
 
-		gl.programParameter4fNV(GL.VERTEX_PROGRAM_NV, 17, 1.7f, 5f, 2f, 0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(GL.GL_VERTEX_PROGRAM_NV, 17, 1.7f, 5f, 2f, 0f);
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			18,
 			-0.0187293f,
 			0.074261f,
 			0.2121144f,
 			1.570729f);
-		gl.programParameter4fNV(GL.VERTEX_PROGRAM_NV, 20, 0f, 0.5f, 1f, 0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(GL.GL_VERTEX_PROGRAM_NV, 20, 0f, 0.5f, 1f, 0f);
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			21,
 			0.25f,
 			-9f,
 			0.75f,
 			0.1591549f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			22,
 			24.9808f,
 			-24.9808f,
 			-60.14581f,
 			60.14581f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			23,
 			85.45379f,
 			-85.45379f,
 			-64.93935f,
 			64.93935f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			24,
 			19.73921f,
 			-19.73921f,
 			-1f,
 			1f);
-		gl.programParameter4fNV(GL.VERTEX_PROGRAM_NV, 25, 0f, 4f, 0f, 0f);
-		gl.programParameter4fNV(
-			GL.VERTEX_PROGRAM_NV,
+    GL.glProgramParameter4fNV(GL.GL_VERTEX_PROGRAM_NV, 25, 0f, 4f, 0f, 0f);
+    GL.glProgramParameter4fNV(
+			GL.GL_VERTEX_PROGRAM_NV,
 			19,
 			1f,
 			3.141593f,
 			0.5f,
 			1f);
-		gl.programParameter4fNV(GL.VERTEX_PROGRAM_NV, 26, 0.7f, 0.4f, 0f, 0f);
-		gl.callList(mesh);
-		gl.disable(GL.VERTEX_PROGRAM_NV);
+    GL.glProgramParameter4fNV(GL.GL_VERTEX_PROGRAM_NV, 26, 0.7f, 0.4f, 0f, 0f);
+    GL.glCallList(mesh);
+    GL.glDisable(GL.GL_VERTEX_PROGRAM_NV);
 
 	}
 

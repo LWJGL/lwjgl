@@ -31,7 +31,6 @@
  */
 package org.lwjgl.test.openal;
 
-import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
 
 import java.io.BufferedInputStream;
@@ -74,13 +73,13 @@ public class PlayTestMemory extends BasicTest {
         IntBuffer sources = createIntBuffer(1);        
         
         // al generate buffers and sources
-        al.genBuffers(1, Sys.getDirectBufferAddress(buffers));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alGenBuffers(1, buffers);
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }
 
-        al.genSources(1, Sys.getDirectBufferAddress(sources));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alGenSources(1, sources);
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }
         
@@ -96,8 +95,8 @@ public class PlayTestMemory extends BasicTest {
         
         
         //copy to buffers
-        al.bufferData(buffers.get(0), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alBufferData(buffers.get(0), wavefile.format, wavefile.data, wavefile.data.capacity(), wavefile.samplerate);
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }
   
@@ -105,20 +104,20 @@ public class PlayTestMemory extends BasicTest {
         wavefile.dispose();        
         
         //set up source input            
-        al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alSourcei(sources.get(0), AL.AL_BUFFER, buffers.get(0));
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }        
         
         //lets loop the sound
-        al.sourcei(sources.get(0), AL.LOOPING, AL.TRUE);
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alSourcei(sources.get(0), AL.AL_LOOPING, AL.AL_TRUE);
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }        
         
         //play source 0
-        al.sourcePlay(sources.get(0));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alSourcePlay(sources.get(0));
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }        
         
@@ -130,19 +129,19 @@ public class PlayTestMemory extends BasicTest {
         }
         
         //stop source 0
-        al.sourceStop(sources.get(0));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alSourceStop(sources.get(0));
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }        
         
         //delete buffers and sources
-        al.deleteSources(1, Sys.getDirectBufferAddress(sources));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alDeleteSources(1, sources);
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }
         
-        al.deleteBuffers(1, Sys.getDirectBufferAddress(buffers));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
+        AL.alDeleteBuffers(1, buffers);
+        if((lastError = AL.alGetError()) != AL.AL_NO_ERROR) {
             exit(lastError);
         }        
         

@@ -52,9 +52,6 @@ public class ControllerCreationTest {
   /** OpenGL instance */
   private GL gl;
 
-  /** GLU instance */
-  private GLU glu;
-
   /** position of quad to draw */
   private Vector2f position = new Vector2f(320.0f, 240.0f);
   
@@ -65,7 +62,7 @@ public class ControllerCreationTest {
   public ControllerCreationTest() {
   }
 
-  private void initialize() {
+  private void initialize(boolean fullscreen) {
     //  find first display mode that allows us 640*480*16
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     for (int i = 0; i < modes.length; i++) {
@@ -75,18 +72,17 @@ public class ControllerCreationTest {
         displayMode = modes[i];
         break;
       }
-    }
-
-    // create display and opengl
-    setupDisplay(false);
-  }
-  
-  private void setupDisplay(boolean fullscreen) {
+    }    
+    
     try {
-      gl = new GL("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+      if(fullscreen) {
+        Display.setDisplayMode(displayMode);
+        gl = new GL("MouseCreationTest", 16, 0, 0, 0);
+      } else {
+        gl = new GL("MouseCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+      }
       gl.create();
 
-      glu = new GLU(gl);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -94,14 +90,14 @@ public class ControllerCreationTest {
 
     initializeOpenGL();    
   }
-
+  
   private void initializeOpenGL() {
-    gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glu.ortho2D(0.0, Display.getWidth(), 0, Display.getHeight());
+    GL.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    GLU.gluOrtho2D(0.0, 640, 0, 480);
   }
 
   public void executeTest() {
-    initialize();
+    initialize(false);
 
     System.out.println("Test ready:\n");
     
@@ -121,7 +117,13 @@ public class ControllerCreationTest {
     System.out.println("success");
     
     System.out.print("Entering fullscreen mode...");
-    setupDisplay(true);
+    try {
+      gl.destroy();
+      initialize(true);
+      Display.setDisplayMode(displayMode);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     System.out.println("success");
     
     
@@ -197,24 +199,24 @@ public class ControllerCreationTest {
   }
 
   private void render() {
-    gl.clear(GL.COLOR_BUFFER_BIT);
+    GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
-    gl.pushMatrix();
-    gl.begin(GL.POLYGON);
+    GL.glPushMatrix();
+    GL.glBegin(GL.GL_POLYGON);
     {
-      gl.color3f(0.0f, 1.0f, 1.0f);
-      gl.vertex2f(position.x + 0.0f, position.y + 0.0f);
+      GL.glColor3f(0.0f, 1.0f, 1.0f);
+      GL.glVertex2f(position.x + 0.0f, position.y + 0.0f);
 
-      gl.color3f(1.0f, 0.0f, 1.0f);
-      gl.vertex2f(position.x + 0.0f, position.y + 30.0f);
-      gl.vertex2f(position.x + 40.0f, position.y + 30.0f);
+      GL.glColor3f(1.0f, 0.0f, 1.0f);
+      GL.glVertex2f(position.x + 0.0f, position.y + 30.0f);
+      GL.glVertex2f(position.x + 40.0f, position.y + 30.0f);
 
-      gl.color3f(1.0f, 1.0f, 0.0f);
-      gl.vertex2f(position.x + 60.0f, position.y + 15.f);
-      gl.vertex2f(position.x + 40.0f, position.y + 0.0f);
+      GL.glColor3f(1.0f, 1.0f, 0.0f);
+      GL.glVertex2f(position.x + 60.0f, position.y + 15.f);
+      GL.glVertex2f(position.x + 40.0f, position.y + 0.0f);
     }
-    gl.end();
-    gl.popMatrix();
+    GL.glEnd();
+    GL.glPopMatrix();
   }
 
   /**

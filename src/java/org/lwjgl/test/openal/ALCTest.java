@@ -32,7 +32,6 @@
 package org.lwjgl.test.openal;
 
 import org.lwjgl.openal.ALC;
-import org.lwjgl.Sys;
 
 import java.nio.IntBuffer;
 
@@ -46,15 +45,11 @@ import java.nio.IntBuffer;
  */
 public class ALCTest extends BasicTest {
 
-	/** instance of alc */
-	private ALC alc;
-
 	/**
 	 * Creates an instance of ALCTest
 	 */
 	public ALCTest() {
 		super();
-    alc = al.getALC();
 	}
 
 	/**
@@ -62,34 +57,34 @@ public class ALCTest extends BasicTest {
 	 */
 	protected void execute(String[] args) {
 		//error stuff
-		int lastError = ALC.NO_ERROR;
+		int lastError = ALC.ALC_NO_ERROR;
 
 		//create attribute list for context creation
 		IntBuffer buffer = createIntBuffer(7);
 
-		if ((lastError = alc.getError()) != ALC.NO_ERROR) {
-			System.out.println("ALC Error: " + alc.getString(lastError));
+		if ((lastError = ALC.alcGetError()) != ALC.ALC_NO_ERROR) {
+			System.out.println("ALC Error: " + ALC.alcGetString(lastError));
 			System.exit(-1);
 		}
 
 		//query        
 		System.out.println(
 			"DEFAULT_DEVICE_SPECIFIER: "
-				+ alc.getString(ALC.DEFAULT_DEVICE_SPECIFIER));
+				+ ALC.alcGetString(ALC.ALC_DEFAULT_DEVICE_SPECIFIER));
 		System.out.println(
-			"DEVICE_SPECIFIER: " + alc.getString(ALC.DEVICE_SPECIFIER));
-		System.out.println("EXTENSIONS: " + alc.getString(ALC.EXTENSIONS));
+			"DEVICE_SPECIFIER: " + ALC.alcGetString(ALC.ALC_DEVICE_SPECIFIER));
+		System.out.println("EXTENSIONS: " + ALC.alcGetString(ALC.ALC_EXTENSIONS));
 
 		//mo query
 		buffer.rewind();
-		alc.getIntegerv(
-			ALC.MAJOR_VERSION,
+		ALC.alcGetIntegerv(
+			ALC.ALC_MAJOR_VERSION,
 			4,
-			Sys.getDirectBufferAddress(buffer));
-		alc.getIntegerv(
-			ALC.MINOR_VERSION,
+			buffer);
+		ALC.alcGetIntegerv(
+			ALC.ALC_MINOR_VERSION,
 			4,
-			Sys.getDirectBufferAddress(buffer) + 4);
+			((IntBuffer)buffer.position(4)).slice());
 
 		System.out.println("ALC_MAJOR_VERSION: " + buffer.get(0));
 		System.out.println("ALC_MINOR_VERSION: " + buffer.get(1));
@@ -100,7 +95,7 @@ public class ALCTest extends BasicTest {
 		//get an enumerstion value
 		System.out.println(
 			"Value of ALC_MAJOR_VERSION: "
-				+ alc.getEnumValue("ALC_MAJOR_VERSION"));
+				+ ALC.alcGetEnumValue("ALC_MAJOR_VERSION"));
 
 		alExit();
 	}

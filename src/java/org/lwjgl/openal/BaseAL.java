@@ -60,7 +60,7 @@ public abstract class BaseAL {
 	/**
 	 * Override to provide any initialization code after creation.
 	 */
-	protected void init() throws OpenALException {
+	protected static void init() throws OpenALException {
 	}
 
 	/**
@@ -75,7 +75,7 @@ public abstract class BaseAL {
 	 * 
 	 * @throws Exception if a failiure occured in the AL creation process
 	 */
-  public void create() throws OpenALException {
+  public static void create() throws OpenALException {
     if (created) {
       return;
     }
@@ -133,7 +133,7 @@ public abstract class BaseAL {
    * @param libname Name of library to search for
    * @return Absolute path to library if found, otherwise null
    */
-  private String getPathFromJWS(String libname) {
+  private static String getPathFromJWS(String libname) {
     try {      
 
       if(Sys.DEBUG) {      
@@ -162,12 +162,12 @@ public abstract class BaseAL {
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
 	 * @return true if the AL creation process succeeded
 	 */
-	protected native boolean nCreate(String[] oalPaths);
+	protected static native boolean nCreate(String[] oalPaths);
 
 	/**
 	 * Calls whatever destruction rutines that are needed
 	 */
-	public void destroy() {
+	public static void destroy() {
 		if (!created) {
 			return;
 		}
@@ -178,5 +178,5 @@ public abstract class BaseAL {
 	/**
 	 * Native method the destroy the AL
 	 */
-	protected native void nDestroy();
+	protected static native void nDestroy();
 }

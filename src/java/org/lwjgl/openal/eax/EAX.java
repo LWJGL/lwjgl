@@ -40,10 +40,128 @@
  * @version $Revision$
  */
 public class EAX extends CoreEAX {
-    
-    /**
-     * Nothing to se here - please move along
-     */
-    public EAX() {
+  
+  /**
+   * Sets an EAX Value
+   *
+   * @param listener EAXListenerProperties to set values from
+   * @param property property being queried
+   * @param source the source to be queried
+   */
+  public static void eaxSetProperty(EAXListenerProperties listener, int property, int source) {
+    System.out.println("EAX has been disapled for this release, due to \"issues\" with the implementation");
+    //CoreEAX.eaxSet(CoreEAX.LISTENER_GUID, property, source, listener.eaxListenerProperties, EAXListenerProperties.EAXLISTENERPROPERTIES_SIZE);
+  }
+  
+  /**
+   * Sets an EAX Value
+   *
+   * @param buffer EAXBufferProperties to set values from
+   * @param property property being queried
+   * @param source the source to be queried
+   */
+  public static void eaxSetProperty(EAXBufferProperties buffer, int property, int source) {
+    System.out.println("EAX has been disapled for this release, due to \"issues\" with the implementation");
+    //CoreEAX.eaxSet(CoreEAX.BUFFER_GUID, property, source, buffer.eaxBufferProperties, EAX.getSizeOfProperty(CoreEAX.BUFFER_GUID, property));
+  }
+  
+  /**
+   * Gets an EAX Value
+   *
+   * @param listener EAXListenerProperties to set values on
+   * @param property property being queried
+   * @param source the source to be queried
+   */
+  public static void eaxGetProperty(EAXListenerProperties listener, int property, int source) {
+    System.out.println("EAX has been disapled for this release, due to \"issues\" with the implementation");
+    //CoreEAX.eaxGet(CoreEAX.LISTENER_GUID, property, source, listener.eaxListenerProperties, EAX.getSizeOfProperty(CoreEAX.LISTENER_GUID, property));
+  }
+  
+  /**
+   * Sets an EAX Value
+   *
+   * @param buffer EAXBufferProperties to set values on
+   * @param property property being queried
+   * @param source the source to be queried
+   */
+  public static void eaxGetProperty(EAXBufferProperties buffer, int property, int source) {
+    System.out.println("EAX has been disapled for this release, due to \"issues\" with the implementation");
+    //CoreEAX.eaxGet(CoreEAX.BUFFER_GUID, property, source, buffer.eaxBufferProperties, EAX.getSizeOfProperty(CoreEAX.BUFFER_GUID, property));
+  }  
+  
+  /**
+   * Retrieves the size of the property
+   * 
+   * @param guid Listener or Source guid
+   * @param property Property to determine size of
+   * @return size of property
+   */
+  private static int getSizeOfProperty(int guid, int property) {
+    if (guid == CoreEAX.LISTENER_GUID) {
+      switch(property) {
+          case EAXListenerProperties.EAXLISTENER_NONE:
+            return 0;
+      
+          /* long */
+          case EAXListenerProperties.EAXLISTENER_ROOM:
+          case EAXListenerProperties.EAXLISTENER_ROOMHF:
+          case EAXListenerProperties.EAXLISTENER_REFLECTIONS:
+          case EAXListenerProperties.EAXLISTENER_REVERB:
+          
+          /* float */
+          case EAXListenerProperties.EAXLISTENER_ROOMROLLOFFFACTOR:
+          case EAXListenerProperties.EAXLISTENER_DECAYTIME:
+          case EAXListenerProperties.EAXLISTENER_DECAYHFRATIO:
+          case EAXListenerProperties.EAXLISTENER_REFLECTIONSDELAY:
+          case EAXListenerProperties.EAXLISTENER_REVERBDELAY:
+          case EAXListenerProperties.EAXLISTENER_ENVIRONMENTSIZE:
+          case EAXListenerProperties.EAXLISTENER_ENVIRONMENTDIFFUSION:
+          case EAXListenerProperties.EAXLISTENER_AIRABSORPTIONHF:
+
+          /* unsigned long */
+          case EAXListenerProperties.EAXLISTENER_ENVIRONMENT:
+          case EAXListenerProperties.EAXLISTENER_FLAGS:
+            return 4;
+            
+          case EAXListenerProperties.EAXLISTENER_ALLPARAMETERS:
+            return EAXListenerProperties.EAXLISTENERPROPERTIES_SIZE;
+
+          default:
+            throw new IllegalArgumentException("No such property '" + property + "'");
+
+      }
+    } else {      
+      switch(property) {
+          case EAXBufferProperties.EAXBUFFER_NONE:
+            return 0;
+      
+          /* long */
+          case EAXBufferProperties.EAXBUFFER_DIRECT:
+          case EAXBufferProperties.EAXBUFFER_DIRECTHF:
+          case EAXBufferProperties.EAXBUFFER_ROOM:
+          case EAXBufferProperties.EAXBUFFER_ROOMHF:
+          case EAXBufferProperties.EAXBUFFER_OBSTRUCTION:
+          case EAXBufferProperties.EAXBUFFER_OCCLUSION:
+          case EAXBufferProperties.EAXBUFFER_OUTSIDEVOLUMEHF:
+          
+          /* float */
+          case EAXBufferProperties.EAXBUFFER_ROOMROLLOFFFACTOR:
+          case EAXBufferProperties.EAXBUFFER_OBSTRUCTIONLFRATIO:
+          case EAXBufferProperties.EAXBUFFER_OCCLUSIONLFRATIO:
+          case EAXBufferProperties.EAXBUFFER_OCCLUSIONROOMRATIO:
+          case EAXBufferProperties.EAXBUFFER_AIRABSORPTIONFACTOR:
+
+          /* unsigned long */
+          case EAXBufferProperties.EAXBUFFER_FLAGS:
+            return 4;
+            
+          case EAXBufferProperties.EAXBUFFER_ALLPARAMETERS:
+            return EAXBufferProperties.EAXBUFFERPROPERTIES_SIZE;
+            
+          default:
+            throw new IllegalArgumentException("No such property '" + property + "'");
+
+      }
     }
+  }
 }

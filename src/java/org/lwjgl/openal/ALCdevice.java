@@ -39,17 +39,17 @@ package org.lwjgl.openal;
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-class ALCdevice {
+final class ALCdevice {
     
     /** address of actual device */
-    public final int device;
+    final int device;
     
     /** 
      * Creates a new instance of ALCdevice 
      *
      * @param device address of actual device
      */
-    public ALCdevice(int device) {
+    ALCdevice(int device) {
         this.device = device;
     }   
 }
