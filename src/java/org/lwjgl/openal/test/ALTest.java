@@ -970,20 +970,20 @@ public class ALTest extends BasicTest {
     protected void semiAutoTests() {
         sA_StringQueries();  // String Queries Test
         sA_SourceGain();  // Source Gain Test
-        //SA_ListenerGain();  // Listener Gain Test
-        //SA_Position();  // Position Test
-        //SA_SourceRelative();  // Source Relative Test
-        //SA_ListenerOrientation();  // Listener Orientation Test
-        //SA_SourceCone();  // Source Cone Test
-        //SA_MinMaxGain();  // MIN/MAX Gain Test
-        //SA_ReferenceDistance();  // Reference Distance Test
-        //SA_RolloffFactor();  // Rolloff Factor Test
-        //SA_DistanceModel();  // Distance Model Test
+        sA_ListenerGain();  // Listener Gain Test
+        sA_Position();  // Position Test
+        sA_SourceRelative();  // Source Relative Test
+        sA_ListenerOrientation();  // Listener Orientation Test
+        sA_SourceCone();  // Source Cone Test
+        sA_MinMaxGain();  // MIN/MAX Gain Test
+        sA_ReferenceDistance();  // Reference Distance Test
+        sA_RolloffFactor();  // Rolloff Factor Test
+        sA_DistanceModel();  // Distance Model Test
         sA_Doppler();  // Doppler Test
-        //SA_Frequency();  // Frequency Test
-        //SA_Stereo();  // Stereo Test
-        //SA_Streaming(); // Streaming Test
-        //SA_QueuingUnderrunPerformance(); // test underrun performance
+        sA_Frequency();  // Frequency Test
+        sA_Stereo();  // Stereo Test
+        sA_Streaming(); // Streaming Test
+        sA_QueuingUnderrunPerformance(); // test underrun performance
         
         System.out.print("\nDone with this series of tests. Going back to the main menu...");
         delay_ms(1000);
@@ -1097,8 +1097,526 @@ public class ALTest extends BasicTest {
             al.sourcei(testSources.get(0), AL.BUFFER, 0);
             al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
         }
-    }    
+    }  
     
+    protected void sA_ListenerGain() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Listener Gain Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The following sound effect will be played at full listener gain (Press Return):\n");
+            CRToContinue();
+            al.listenerf(AL.GAIN,1.0f);
+            al.sourcePlay(testSources.get(0));
+            System.out.print("The following sound effect will be played at half listener gain (Press Return):\n");
+            CRToContinue();
+            al.listenerf(AL.GAIN,0.5f);
+            al.sourcePlay(testSources.get(0));
+            System.out.print("The following sound effect will be played at quarter listener gain (Press Return):\n");
+            CRToContinue();
+            al.listenerf(AL.GAIN,0.25f);
+            al.sourcePlay(testSources.get(0));
+            System.out.print("The following sound effect will be played at 1/20th listener gain (Press Return):\n");
+            CRToContinue();
+            al.listenerf(AL.GAIN,0.05f);
+            al.sourcePlay(testSources.get(0));
+            CRForNextTest();
+            al.listenerf(AL.GAIN,1.0f);
+            FloatBuffer f = createFloatBuffer(1);
+            al.getListenerf(AL.GAIN, Sys.getDirectBufferAddress(f));
+            if (f.get(0) != 1.0) { System.out.print("ERROR:  alGetListenerf failed.\n"); }
+            al.sourceStop(testSources.get(0));
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_Position() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        int i;
+        FloatBuffer tempFVect = createFloatBuffer(6);
+        
+        System.out.print("Position Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("Trying Left-to-Right sweep by moving listener(Press Return):\n");
+            CRToContinue();
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+            al.listener3f(AL.POSITION, 100.0f, 0.0f, 0.0f);
+            al.getListener3f(AL.POSITION, Sys.getDirectBufferAddress(tempFVect), Sys.getDirectBufferAddress(tempFVect) + 4, Sys.getDirectBufferAddress(tempFVect) + 8);
+            if ((tempFVect.get(0) != 100.0f) || (tempFVect.get(1) != 0.0f) || (tempFVect.get(2) != 0.0f)) {
+                System.out.print("ERROR: alGetListener3f(AL_POSITION, ...).\n");
+            }
+            al.getListenerfv(AL.POSITION, Sys.getDirectBufferAddress(tempFVect));
+            if ((tempFVect.get(0) != 100.0f) || (tempFVect.get(1) != 0.0) || (tempFVect.get(2) != 0.0f)) {
+                System.out.print("ERROR: alGetListenerfv(AL_POSITION, ...).\n");
+            }
+            al.sourcePlay(testSources.get(0));
+            for (i = -100; i < 100; i++) {
+                al.listener3f(AL.POSITION, (float) -i, 0.0f, 0.0f);
+                delay_ms(100);
+                
+                al.getListenerfv(AL.POSITION, Sys.getDirectBufferAddress(tempFVect));
+                System.out.print("Position: " + tempFVect.get(0) + ", " + tempFVect.get(1) + ", " + tempFVect.get(2) + "\n");
+            }
+            al.listener3f(AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourceStop(testSources.get(0));
+            System.out.print("Trying Left-to-Right sweep by moving source (Press Return):\n");
+            CRToContinue();
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+            al.source3f(testSources.get(0), AL.POSITION, -100.0f, 0.0f, 0.0f);
+            al.sourcePlay(testSources.get(0));
+            for (i = -100; i < 100; i++) {
+                al.source3f(testSources.get(0), AL.POSITION, (float) i, 0.0f, 0.0f);
+                delay_ms(100);
+            }
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourceStop(testSources.get(0));
+            System.out.print("Trying Back-to-Front sweep (Press Return):\n");
+            CRToContinue();
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -100.0f);
+            al.getSource3f(testSources.get(0), AL.POSITION, Sys.getDirectBufferAddress(tempFVect), Sys.getDirectBufferAddress(tempFVect) + 4, Sys.getDirectBufferAddress(tempFVect) + 8);
+            if ((tempFVect.get(0) != 0.0f) || (tempFVect.get(1) != 0.0f) || (tempFVect.get(2) != -100.0f)) {
+                System.out.print("ERROR: alGetSource3f(..., AL_POSITION, ...).\n");
+            }
+            al.getSourcefv(testSources.get(0), AL.POSITION, Sys.getDirectBufferAddress(tempFVect));
+            if ((tempFVect.get(0) != 0.0f) || (tempFVect.get(1) != 0.0f) || (tempFVect.get(2) != -100.0f)) {
+                System.out.print("ERROR: alGetSourcefv(..., AL_POSITION, ...).\n");
+            }
+            al.sourcePlay(testSources.get(0));
+            for (i = -100; i < 100; i++) {
+                al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, (float) -i);
+                delay_ms(100);
+            }
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourceStop(testSources.get(0));
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_SourceRelative() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        int i;
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Source Relative Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("Placing Listener at (100, 0, 0) and sweeping source from (0, 0, 0) to (100, 0, 0).  The sound should pan from left to center (Press Return):\n");
+            CRToContinue();
+            al.listener3f(AL.POSITION, 100.0f, 0.0f, 0.0f);
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+            al.source3f(testSources.get(0), AL.POSITION, -10.0f, 0.0f, 0.0f);
+            al.sourcePlay(testSources.get(0));
+            for (i = 00; i < 100; i++) {
+                al.source3f(testSources.get(0), AL.POSITION, (float) i, 0.0f, 0.0f);
+                delay_ms(100);
+            }
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourceStop(testSources.get(0));
+            
+            System.out.print("Turning on source relative mode, placing Listener at (100, 0, 0), and sweeping source from (0, 0, 0) to (100, 0, 0).  The sound should pan from center to right (Press Return):\n");
+            CRToContinue();
+            al.sourcei(testSources.get(0), AL.SOURCE_RELATIVE, AL.TRUE);
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+            al.source3f(testSources.get(0), AL.POSITION, -100.0f, 0.0f, 0.0f);
+            al.sourcePlay(testSources.get(0));
+            for (i = 0; i < 100; i++) {
+                al.source3f(testSources.get(0), AL.POSITION, (float) i, 0.0f, 0.0f);
+                delay_ms(100);
+            }
+            
+            al.listener3f(AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourcei(testSources.get(0), AL.SOURCE_RELATIVE, AL.FALSE);
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourceStop(testSources.get(0));
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_ListenerOrientation() {
+        IntBuffer testSources = createIntBuffer(2);
+        
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Listener Orientation Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The listener will be placed at (1, 0, 0) and will face the -X direction.  The sound should be centered. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.listenerf(AL.GAIN,1.0f);
+            FloatBuffer f = createFloatBuffer(1);
+            al.getSourcef(testSources.get(0), AL.GAIN, Sys.getDirectBufferAddress(f));
+            if (f.get(0) != 1.0f) { System.out.print("ERROR: alGetSourcef(..., AL_GAIN, ...).\n"); }
+            al.listener3f(AL.POSITION, 1.0f, 0.0f, 0.0f);
+            listenerOri.put(0, listenerOri.get(0)-1.0f);
+            listenerOri.put(1, 0.0f);
+            listenerOri.put(2, 0.0f);
+            listenerOri.put(3, 0.0f);
+            listenerOri.put(4, 1.0f);
+            listenerOri.put(5, 0.0f);
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+            al.sourcePlay(testSources.get(0));
+            delay_ms(4000);
+            al.sourceStop(testSources.get(0));
+            
+            System.out.print("The listener will now be oriented down the -Z axis.  The sound should be to the left. (Press Return):\n");
+            CRToContinue();
+            listenerOri.put(0, 0.0f);
+            listenerOri.put(1, 0.0f);
+            listenerOri.put(2, listenerOri.get(2)-1.0f);
+            listenerOri.put(3, 0.0f);
+            listenerOri.put(4, 1.0f);
+            listenerOri.put(5, 0.0f);
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            al.sourcePlay(testSources.get(0));
+            delay_ms(4000);
+            al.sourceStop(testSources.get(0));
+            
+            System.out.print("The listener will now be turned upside-down (the 'up' direction will be (0, -1, 0)).  The sound should be to the right. (Press Return):\n");
+            CRToContinue();
+            listenerOri.put(0, 0.0f);
+            listenerOri.put(1, 0.0f);
+            listenerOri.put(2, listenerOri.get(2)-1.0f);
+            listenerOri.put(3, 0.0f);
+            listenerOri.put(4, listenerOri.get(4)-1.0f);
+            listenerOri.put(5, 0.0f);
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            al.sourcePlay(testSources.get(0));
+            delay_ms(4000);
+            al.sourceStop(testSources.get(0));
+            
+            System.out.print("The listener will now be oriented down the +Z axis (and the 'up' direction is now (0, 1, 0) again).  The sound should be to the right. (Press Return):\n");
+            CRToContinue();
+            listenerOri.put(0, 0.0f);
+            listenerOri.put(1, 0.0f);
+            listenerOri.put(2, 1.0f);
+            listenerOri.put(3, 0.0f);
+            listenerOri.put(4, 1.0f);
+            listenerOri.put(5, 0.0f);
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            al.sourcePlay(testSources.get(0));
+            delay_ms(4000);
+            al.sourceStop(testSources.get(0));
+            
+            CRForNextTest();
+            al.listenerf(AL.GAIN,1.0f);
+            al.listener3f(AL.POSITION, 0.0f, 0.0f, 0.0f);
+            listenerOri.put(0, 0.0f);
+            listenerOri.put(1, 0.0f);
+            listenerOri.put(2, listenerOri.get(2)-1.0f);
+            listenerOri.put(3, 0.0f);
+            listenerOri.put(4, 1.0f);
+            listenerOri.put(5, 0.0f);
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_SourceCone() {
+        
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer	sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {0.0f,0.0f,1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer	sourceOri2 = createFloatBuffer(6);
+        sourceOri2.put(new float[] {1.0f,0.0f,1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer	sourceOri3 = createFloatBuffer(6);
+        sourceOri3.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Source Cone Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The listener will be at (0,0,0).  The source will be at (0,0,-1).  The source will be directly facing the listener and should be loud. (Press Return):\n");
+            CRToContinue();
+            al.listener3f(AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            al.sourcef(testSources.get(0), AL.CONE_INNER_ANGLE, 10.0f);
+            al.sourcef(testSources.get(0), AL.CONE_OUTER_ANGLE, 270.0f);
+            al.sourcef(testSources.get(0), AL.CONE_OUTER_GAIN, (float)0.01);
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -1.0f);
+            al.sourcefv(testSources.get(0), AL.DIRECTION, Sys.getDirectBufferAddress(sourceOri));
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will now point between the inner and outer cones, and should be at medium volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcefv(testSources.get(0), AL.DIRECTION, Sys.getDirectBufferAddress(sourceOri2));
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will now point behind the outer cone and will be at low volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcefv(testSources.get(0), AL.DIRECTION, Sys.getDirectBufferAddress(sourceOri3));
+            al.sourcePlay(testSources.get(0));
+            
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_MinMaxGain() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("MIN/MAX Gain Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The source will be played at GAIN 1.0 with MAX gain set to 1.0. This should be high volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.GAIN, 1.0f);
+            al.sourcef(testSources.get(0), AL.MAX_GAIN, 1.0f);
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played at GAIN 0.1 with MIN gain set to 0.6.  This should be at medium volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.GAIN, (float) 0.1);
+            al.sourcef(testSources.get(0), AL.MIN_GAIN, (float) 0.6);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played at GAIN 1.0 with MAX gain set to 0.1.  This should be low volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.GAIN, 1.0f);
+            al.sourcef(testSources.get(0), AL.MAX_GAIN, (float) 0.1);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played at GAIN 0.1 with MIN gain set to 0.0.  This should be low volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.GAIN, (float) 0.1);
+            al.sourcef(testSources.get(0), AL.MIN_GAIN, 0.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played at GAIN 1.0 with MAX gain set to 0.0.  This should be zero volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.GAIN, (float) 1.0);
+            al.sourcef(testSources.get(0), AL.MAX_GAIN, 0.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            CRForNextTest();
+            al.sourcef(testSources.get(0), AL.GAIN, 1.0f);
+            al.sourcef(testSources.get(0), AL.MAX_GAIN, 1.0f);
+            al.sourcef(testSources.get(0), AL.MIN_GAIN, 0.0f);
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_ReferenceDistance() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Reference Distance Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The source will be placed at (0, 0, -10), and the reference distance set at 1.0. This should be low volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -10.0f);
+            al.sourcef(testSources.get(0), AL.REFERENCE_DISTANCE, 1.0f);
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played with the reference distance set to 3.0.  This should be medium volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.REFERENCE_DISTANCE, 3.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played with the reference distance set to 10.0.  This should be high volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.REFERENCE_DISTANCE, 10.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            CRForNextTest();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourcef(testSources.get(0), AL.REFERENCE_DISTANCE, 1.0f);
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+
+    protected void sA_RolloffFactor() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Rolloff Factor Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The source will be played with the rolloff factor set to 0.0.  This should be high volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -10.0f);
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
+            al.sourcef(testSources.get(0), AL.ROLLOFF_FACTOR, 0.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be placed at (0, 0, -10), and the rolloff factor set at 1.0. This should be medium volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.ROLLOFF_FACTOR, 1.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played with the rolloff factor set to 3.0.  This should be low volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.ROLLOFF_FACTOR, 3.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be played with the rolloff factor set to 10.0.  This should be very low volume. (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0), AL.ROLLOFF_FACTOR, 10.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_DistanceModel() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Distance Model Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The source will be placed at (0, 0, -10). This should be low volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -10.0f);
+            al.distanceModel(AL.INVERSE_DISTANCE);
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be placed at (0, 0, -1). This should be high volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -1.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be placed at (0, 0, -10) and the distance model will be set to AL_NONE. This should be high volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -10.0f);
+            al.distanceModel(AL.NONE);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be placed at (0, 0, -100) and the distance model will remain AL_NONE. This should be high volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -100.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be placed at (0, 0, -100) and the distance model will be AL_INVERSE_DISTANCE_CLAMPED. AL_MAX_DISTANCE will be set to 100.0.  This should be low volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -100.0f);
+            al.distanceModel(AL.INVERSE_DISTANCE_CLAMPED);
+            al.sourcef(testSources.get(0), AL.MAX_DISTANCE, 100.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be placed at (0, 0, -100) and the distance model will be AL_INVERSE_DISTANCE_CLAMPED. AL_MAX_DISTANCE will be set to 20.0.  This should be louder. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -100.0f);
+            al.sourcef(testSources.get(0), AL.MAX_DISTANCE, 20.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            System.out.print("The source will be placed at (0, 0, -100) and the distance model will be AL_INVERSE_DISTANCE_CLAMPED. AL_MAX_DISTANCE will be set to 5.0.  This should be high volume. (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, -100.0f);
+            al.sourcef(testSources.get(0), AL.MAX_DISTANCE, 5.0f);
+            al.sourcePlay(testSources.get(0));
+            
+            CRForNextTest();
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.distanceModel(AL.INVERSE_DISTANCE);
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+
     protected void sA_Doppler() {
         IntBuffer testSources = createIntBuffer(2);
         int i;
@@ -1162,7 +1680,139 @@ public class ALTest extends BasicTest {
         }
     }
     
+    protected void sA_Frequency() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        int i;
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Frequency Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("A source will be played eight times -- going from one-half to double it's native frequency (Press Return):\n");
+            CRToContinue();
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
+            for (i = 0; i < 8; i++) {
+                al.sourcef(testSources.get(0), AL.PITCH, (float) (0.5 + (float) i * 0.2));
+                al.sourcePlay(testSources.get(0));
+                delay_ms(2000);
+            }
+            al.sourceStop(testSources.get(0));
+            al.sourcef(testSources.get(0), AL.PITCH, 1.0f);
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
     
+    protected void sA_Stereo() {
+        IntBuffer testSources = createIntBuffer(2);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        int error;
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Stereo Test:");
+        if (ContinueOrSkip() == 1) {
+            // clear error state
+            al.getError();
+            
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("A stereo buffer will play twice in succession (Press Return):\n");
+            CRToContinue();
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
+            if ((error = al.getError()) != AL.NO_ERROR)
+                displayALError("Init error : ", error);
+            al.sourceQueueBuffers(testSources.get(0), 1, Sys.getDirectBufferAddress(buffers) + 4*6);
+            if ((error = al.getError()) != AL.NO_ERROR)
+                displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
+            al.sourceQueueBuffers(testSources.get(0), 1, Sys.getDirectBufferAddress(buffers) + 4*6);
+            if ((error = al.getError()) != AL.NO_ERROR)
+                displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
+            al.sourcePlay(testSources.get(0));
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
+    protected void sA_Streaming() {
+        System.out.print("Streaming Test:");
+        if (ContinueOrSkip() == 1) {
+            System.out.print("A stereo audio file will now be streamed from a file (Press Return):\n");
+            CRToContinue();
+            //I_StreamingTest();
+            CRForNextTest();
+        }
+    }
+    
+    protected void sA_QueuingUnderrunPerformance() {
+        IntBuffer testSources = createIntBuffer(2);
+        IntBuffer bufferName = createIntBuffer(1);
+        int error;
+        IntBuffer tempInt = createIntBuffer(1);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Queuing Underrun Performance Test:");
+        if (ContinueOrSkip() == 1) {
+            System.out.print("A stereo buffer will play once, there will be a brief pause, and then the buffer will play again (Press Return):\n");
+            CRToContinue();
+            al.getError();
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.FALSE);
+            if ((error = al.getError()) != AL.NO_ERROR)
+                displayALError("Init error : ", error);
+            al.sourceQueueBuffers(testSources.get(0), 1, Sys.getDirectBufferAddress(buffers) + 4*6);
+            if ((error = al.getError()) != AL.NO_ERROR)
+                displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
+            al.sourcePlay(testSources.get(0));
+            delay_ms(4000);
+            al.getSourcei(testSources.get(0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(tempInt));
+            if (tempInt.get(0) != AL.STOPPED)
+                System.out.print("Wrong underrun state -- should be AL_STOPPED. ");
+            al.getSourcei(testSources.get(0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(tempInt));
+            if (tempInt.get(0) != 1) {
+                System.out.print("Wrong underrun state -- should have one buffer processed. ");
+            } else {
+                al.sourceUnqueueBuffers(testSources.get(0), tempInt.get(0), Sys.getDirectBufferAddress(bufferName));
+            }
+            al.sourceQueueBuffers(testSources.get(0), 1, Sys.getDirectBufferAddress(buffers) + 4*6);
+            if ((error = al.getError()) != AL.NO_ERROR)
+                displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
+            al.sourcePlay(testSources.get(0));
+            delay_ms(3000);
+            System.out.print("The stereo buffer will now play twice with no pause (Press Return):\n");
+            CRToContinue();
+            al.sourceQueueBuffers(testSources.get(0), 1, Sys.getDirectBufferAddress(buffers) + 4*6);
+            al.sourcePlay(testSources.get(0));
+            delay_ms(4000);
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+
     protected void i_PositionTest() {
         int error;
         
