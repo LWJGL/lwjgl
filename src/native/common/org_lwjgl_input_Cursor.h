@@ -8,22 +8,23 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: initialized */
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Cursor */
 /*
  * Class:     org_lwjgl_input_Cursor
  * Method:    nCreateCursor
- * Signature: (IIIIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)I
+ * Signature: (IIIIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)J
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
+JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
   (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_input_Cursor
  * Method:    nDestroyCursor
- * Signature: (I)V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus
 }

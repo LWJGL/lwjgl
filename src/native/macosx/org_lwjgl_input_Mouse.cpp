@@ -46,16 +46,8 @@
 #define NUM_BUTTONS 7
 
 static unsigned char button_state[NUM_BUTTONS];
-
-static pascal OSStatus doMouseDragged(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-printf("Mouse dragged\n");
-	return eventNotHandledErr; // allow the event to propagate
-}
-
-static pascal OSStatus doMouseMoved(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-printf("Mouse moved\n");
-	return eventNotHandledErr; // allow the event to propagate
-}
+static int last_x;
+static int last_y;
 
 static pascal OSStatus doMouseDown(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 printf("Mouse down\n");
@@ -69,14 +61,12 @@ printf("Mouse up\n");
 
 static pascal OSStatus doMouseWheel(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 printf("Mouse wheel\n");
-	return eventNotHandledErr; // allow the event to propagate
+	return noErr;
 }
 
 bool registerMouseHandler(JNIEnv* env, WindowRef win_ref) {
 	bool error = registerHandler(env, win_ref, doMouseDown, kEventClassMouse, kEventMouseDown);
 	error = error || registerHandler(env, win_ref, doMouseUp, kEventClassMouse, kEventMouseUp);
-	error = error || registerHandler(env, win_ref, doMouseMoved, kEventClassMouse, kEventMouseMoved);
-	error = error || registerHandler(env, win_ref, doMouseDragged, kEventClassMouse, kEventMouseDragged);
 	error = error || registerHandler(env, win_ref, doMouseWheel, kEventClassMouse, kEventMouseWheelMoved);
 	return !error;
 }
@@ -95,7 +85,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass c
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps(JNIEnv *env, jclass clazz) {
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor(JNIEnv *env, jclass clazz, jint cursor_handle) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor(JNIEnv *env, jclass clazz, jlong cursor_handle) {
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize(JNIEnv *env, jclass clazz) {
@@ -105,15 +95,20 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize(JNIEnv *env,
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass clazz) {
+	last_x = 0;
+	last_y = 0;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass clazz) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
-	CGMouseDelta x;
-	CGMouseDelta y;
-	CGGetLastMouseDelta(&x, &y);
-	if (x != 0 || y != 0)
-		printf("delta x %d y %d\n", x, y);
+	Point cursor_pos;
+	GetMouse(&cursor_pos);
+	int dx = cursor_pos.v - last_x;
+	int dy = cursor_pos.h - last_y;
+	last_x += dx;
+	last_y += dy;
+	if (dx != 0 || dy != 0)
+		printf("dx %d dy %d, lx %d ly %d\n", dx, dy, last_x, last_y);
 }

@@ -146,7 +146,7 @@ public class Mouse {
 	}
 
 	/** Native method to set the native cursor */
-	private static native void nSetNativeCursor(int handle) throws Exception;
+	private static native void nSetNativeCursor(long handle) throws Exception;
 
 	/**
 	 * Gets the minimum size of a native cursor. Can only be called if

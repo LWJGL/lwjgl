@@ -56,7 +56,7 @@ public class Cursor {
 	/**
 	 * The native handle to the cursor
 	 */
-	private final int nativeHandle;
+	private final long nativeHandle;
 
 	/**
 	 * Constructs a new Cursor, with the given parameters. Mouse must have been created before you can create
@@ -123,17 +123,17 @@ public class Cursor {
 	/**
 	 * Gets the native handle associated with the cursor object.
 	 */
-	public int getHandle() {
+	public long getHandle() {
 		return nativeHandle;
 	}
 
 	/**
 	 * Native method to create a native cursor
 	 */
-	private static native int nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset);
+	private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset);
 
 	/**
 	 * Native method to destroy a native cursor
 	 */
-	private static native void nDestroyCursor(int handle);
+	private static native void nDestroyCursor(long handle);
 }

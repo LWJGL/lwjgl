@@ -204,7 +204,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
-  (JNIEnv *env, jclass clazz, jint cursor_handle)
+  (JNIEnv *env, jclass clazz, jlong cursor_handle)
 {
 	if (cursor_handle != 0) {
 		Cursor cursor = (Cursor)cursor_handle;

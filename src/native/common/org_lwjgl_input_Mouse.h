@@ -37,10 +37,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nSetNativeCursor
- * Signature: (I)V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_lwjgl_input_Mouse
