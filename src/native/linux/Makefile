@@ -39,7 +39,8 @@
 # version $Revision$
 #
 
-GCC = g++
+GCC = gcc
+G++ = g++
 LINK = g++
 JAVAHOME=/usr/java/j2sdk1.4.1_01
 LIBCSRC=../common/extgl.c
@@ -61,9 +62,12 @@ liblwjgl.so: $(LIBOBJS)
 	$(LINK) -shared -o $@ $^ $(LINKOPTS)
 	cp $@ ../../../bin/
 
-.SUFFIXES:      .cpp .so .o .java .h .class
+.SUFFIXES:      .cpp .so .o .java .h .class .c
 
 %.o : %.cpp
+	$(G++) $(DEBUG_FLAGS) -Wall -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
+
+%.o : %.c
 	$(GCC) $(DEBUG_FLAGS) -Wall -I$(JAVAHOME)/include -I../common -I$(JAVAHOME)/include/linux -c -o $@ $< 
 
 testprog : main.o
