@@ -234,6 +234,7 @@ static void handleMessages() {
 				minimized = false;
 				break;
 			case UnmapNotify:
+				dirty = true;
 				minimized = true;
 				break;
 			case Expose:
