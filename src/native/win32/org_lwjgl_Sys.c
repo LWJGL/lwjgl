@@ -95,7 +95,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Win32SysImplementation_alert
  * Method:    openURL
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Win32SysImplementation_openURL
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Win32SysImplementation_openURL
   (JNIEnv * env, jobject ignored, jstring url)
 {
 	STARTUPINFO si;
@@ -127,12 +127,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Win32SysImplementation_openURL
 	) 
 	{
 		printfDebug("Failed to open URL %s\n", urlString);
+		return JNI_FALSE;
 	}
 
 	// Close process and thread handles. 
 	CloseHandle( pi.hProcess );
 	CloseHandle( pi.hThread );
 
+	return JNI_TRUE;
 }
 
 
