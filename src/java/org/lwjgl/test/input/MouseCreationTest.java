@@ -74,9 +74,9 @@ public class MouseCreationTest {
     try {
       if(fullscreen) {
         Display.setDisplayMode(displayMode);
-        Window.create("MouseCreationTest", 16, 0, 0, 0);
+        Window.create("MouseCreationTest", 16, 0, 0, 0, 0);
       } else {
-        Window.create("MouseCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+        Window.create("MouseCreationTest", 50, 50, 640, 480, 16, 0, 0, 0, 0);
       }
 
     } catch (Exception e) {

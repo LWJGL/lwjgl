@@ -118,9 +118,9 @@ public class MouseTest {
   private void setupDisplay() {
     try {
       if (FULLSCREEN) {
-        Window.create("MouseTest", 16, 0, 0, 0);
+        Window.create("MouseTest", 16, 0, 0, 0, 0);
       } else {
-        Window.create("MouseTest", 50, 50, WINDOW_WIDTH, WINDOW_HEIGHT, 16, 0, 0, 0);
+        Window.create("MouseTest", 50, 50, WINDOW_WIDTH, WINDOW_HEIGHT, 16, 0, 0, 0, 0);
       }
       Window.setVSyncEnabled(true);
     } catch (Exception e) {

@@ -100,7 +100,7 @@ public class Grass {
 
 	static {
 		try {
-			Window.create("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0);
+			Window.create("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0, 0);
 			Keyboard.create();
 			Keyboard.enableBuffer();
 			Mouse.create();

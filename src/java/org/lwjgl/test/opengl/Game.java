@@ -81,7 +81,7 @@ public final class Game {
  
      static {
          try {
-             Window.create("LWJGL Game Example", 16, 0, 0,0);
+             Window.create("LWJGL Game Example", 16, 0, 0,0, 0);
              System.out.println("Created OpenGL.");
          } catch (Exception e) {
              System.err.println("Failed to create OpenGL due to "+e);

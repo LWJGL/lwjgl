@@ -119,7 +119,7 @@ public class PositionTest extends BasicTest {
     int centerY = (Display.getHeight() - WINDOW_HEIGHT) / 2;
 
     // setup window
-    Window.create("PositionTest", centerX, centerY, WINDOW_WIDTH, WINDOW_HEIGHT, Display.getDepth(), 0, 8, 0);
+    Window.create("PositionTest", centerX, centerY, WINDOW_WIDTH, WINDOW_HEIGHT, Display.getDepth(), 0, 8, 0, 0);
     // -----------------------------------------------------
 
     // Setup OpenGL

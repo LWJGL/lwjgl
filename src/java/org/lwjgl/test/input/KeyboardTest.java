@@ -76,7 +76,7 @@ public class KeyboardTest {
 
   private void setupDisplay(boolean fullscreen) {
     try {
-      Window.create("KeyboardTest", 50, 50, 640, 480, 16, 0, 0, 0);
+      Window.create("KeyboardTest", 50, 50, 640, 480, 16, 0, 0, 0, 0);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);

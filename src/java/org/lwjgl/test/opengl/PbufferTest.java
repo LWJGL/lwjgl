@@ -98,7 +98,7 @@ public class PbufferTest {
       mode = findDisplayMode(800, 600, 16);
 
       // start of in windowed mode
-      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
 //      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
       if ((Pbuffer.getPbufferCaps() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
           System.out.println("No Pbuffer support!");
@@ -261,7 +261,7 @@ public class PbufferTest {
         Window.destroy();
 
         Display.setDisplayMode(mode);
-        Window.create("Test", mode.bpp, 0, 0, 0);
+        Window.create("Test", mode.bpp, 0, 0, 0, 0);
         glInit();
         initPbuffer();
 
@@ -281,7 +281,7 @@ public class PbufferTest {
         Window.destroy();
 
         Display.resetDisplayMode();
-        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
         glInit();
         initPbuffer();
 

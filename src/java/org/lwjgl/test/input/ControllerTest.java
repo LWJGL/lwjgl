@@ -117,9 +117,9 @@ public class ControllerTest {
   private void setupDisplay() {
     try {
       if (FULLSCREEN) {
-        Window.create("ControllerTest", 16, 0, 0, 0);
+        Window.create("ControllerTest", 16, 0, 0, 0, 0);
       } else {
-        Window.create("ControllerTest", 50, 50, WINDOW_WIDTH, WINDOW_HEIGHT, 16, 0, 0, 0);
+        Window.create("ControllerTest", 50, 50, WINDOW_WIDTH, WINDOW_HEIGHT, 16, 0, 0, 0, 0);
       }
       Window.setVSyncEnabled(true);
     } catch (Exception e) {

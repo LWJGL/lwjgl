@@ -93,7 +93,7 @@ public class FullScreenWindowedTest {
       mode = findDisplayMode(800, 600, 16);
 
       // start of in windowed mode
-      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
 
       glInit();
 
@@ -202,7 +202,7 @@ public class FullScreenWindowedTest {
         Window.destroy();
 
         Display.setDisplayMode(mode);
-        Window.create("Test", mode.bpp, 0, 0, 0);
+        Window.create("Test", mode.bpp, 0, 0, 0, 0);
 
         glInit();
 
@@ -219,7 +219,7 @@ public class FullScreenWindowedTest {
         Window.destroy();
 
         Display.resetDisplayMode();
-        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
+        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
 
         glInit();
 

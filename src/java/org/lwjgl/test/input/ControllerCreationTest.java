@@ -74,9 +74,9 @@ public class ControllerCreationTest {
     try {
       if(fullscreen) {
         Display.setDisplayMode(displayMode);
-        Window.create("ControllerCreationTest", 16, 0, 0, 0);
+        Window.create("ControllerCreationTest", 16, 0, 0, 0, 0);
       } else {
-        Window.create("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+        Window.create("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0, 0);
       }
 
     } catch (Exception e) {

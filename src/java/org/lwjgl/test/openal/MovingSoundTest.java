@@ -70,7 +70,7 @@ public class MovingSoundTest extends BasicTest {
 		}
 
     try {
-        Window.create("Moving Sound Test", 100, 100, 320, 240, 32, 0 ,0 ,0);
+        Window.create("Moving Sound Test", 100, 100, 320, 240, 32, 0 ,0 ,0, 0);
     } catch (Exception e) {
 			e.printStackTrace();
 		} 

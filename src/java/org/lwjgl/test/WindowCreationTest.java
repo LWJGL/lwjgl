@@ -55,7 +55,7 @@ public class WindowCreationTest {
     
     // Create the actual window
     try {
-      Window.create("WindowCreationTest", 50, 50, 320, 240, 16, 0, 0, 0);
+      Window.create("WindowCreationTest", 50, 50, 320, 240, 16, 0, 0, 0, 0);
     } catch (Exception e) {
 			e.printStackTrace();
       System.out.println("Unable to create window!, exiting...");
