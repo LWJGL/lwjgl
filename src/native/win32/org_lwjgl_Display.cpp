@@ -305,7 +305,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		windowflags = WS_POPUP | WS_VISIBLE;
 	} else {
 		exstyle = 0;
-		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_VISIBLE;
+		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_VISIBLE | WS_MINIMIZEBOX | WS_SYSMENU;
 	}
 	isFullscreen = fullscreen == JNI_TRUE;
 
@@ -341,6 +341,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		 dll_handle,
 		 NULL);
 	env->ReleaseStringUTFChars(title, titleString);
+
+  // Disable close button
+  HMENU SysMen = GetSystemMenu(hwnd, false);
+  EnableMenuItem(SysMen, SC_CLOSE, MF_BYCOMMAND | MF_DISABLED);
 
 	// And we never look at windowClass again...
 
