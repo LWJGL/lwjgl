@@ -1,6 +1,8 @@
 package org.lwjgl.opengl.glu;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,7 +13,7 @@ import org.lwjgl.opengl.GL11;
  * Created 23-dec-2003
  * @author Erik Duijs
  */
-public class GLU extends Util implements GLUConstants {
+public class GLU implements GLUConstants {
 
 	/**
 	 * Method gluLookAt
@@ -26,15 +28,15 @@ public class GLU extends Util implements GLUConstants {
 	 * @param upz
 	 */
 	public static void gluLookAt(
-		float eyex,
-		float eyey,
-		float eyez,
-		float centerx,
-		float centery,
-		float centerz,
-		float upx,
-		float upy,
-		float upz) {
+			float eyex,
+			float eyey,
+			float eyez,
+			float centerx,
+			float centery,
+			float centerz,
+			float upx,
+			float upy,
+			float upz) {
 
 		Project.gluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz);
 	}
@@ -47,10 +49,10 @@ public class GLU extends Util implements GLUConstants {
 	 * @param top
 	 */
 	public static void gluOrtho2D(
-		float left,
-		float right,
-		float bottom,
-		float top) {
+			float left,
+			float right,
+			float bottom,
+			float top) {
 		
 		GL11.glOrtho(left, right, bottom, top, -1.0, 1.0);
 	}
@@ -63,14 +65,57 @@ public class GLU extends Util implements GLUConstants {
 	 * @param zFar
 	 */
 	public static void gluPerspective(
-		float fovy,
-		float aspect,
-		float zNear,
-		float zFar) {
+			float fovy,
+			float aspect,
+			float zNear,
+			float zFar) {
 
 		Project.gluPerspective(fovy, aspect, zNear, zFar);
 	}
 
+	/**
+	 * Method gluProject
+	 * @param objx
+	 * @param objy
+	 * @param objz
+	 * @param modelMatrix
+	 * @param projMatrix
+	 * @param viewport
+	 * @param winx
+	 * @param winy
+	 * @param winz
+	 * @return
+	 */
+	public static boolean gluProject(float objx, float objy, float objz, 
+			FloatBuffer modelMatrix, 
+			FloatBuffer projMatrix,
+			IntBuffer viewport,
+			FloatBuffer winx, FloatBuffer winy, FloatBuffer winz)
+	{
+		return Project.gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, winx, winy, winz);
+	}
+
+	/**
+	 * Method gluUnproject
+	 * @param winx
+	 * @param winy
+	 * @param winz
+	 * @param modelMatrix
+	 * @param projMatrix
+	 * @param viewport
+	 * @param objx
+	 * @param objy
+	 * @param objz
+	 * @return
+	 */
+	public static boolean gluUnProject(float winx, float winy, float winz,
+			FloatBuffer modelMatrix, 
+			FloatBuffer projMatrix,
+			IntBuffer viewport,
+			FloatBuffer objx, FloatBuffer objy, FloatBuffer objz)
+	{
+		return Project.gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, objx, objy, objz);
+	}
 
 	/**
 	 * Method gluPickMatrix
@@ -81,11 +126,11 @@ public class GLU extends Util implements GLUConstants {
 	 * @param viewport
 	 */
 	public static void gluPickMatrix(
-		float x,
-		float y,
-		float width,
-		float height,
-		int viewport[]) {
+			float x,
+			float y,
+			float width,
+			float height,
+			int viewport[]) {
 		
 		Project.gluPickMatrix(x, y, width, height, viewport);
 	}
@@ -121,14 +166,14 @@ public class GLU extends Util implements GLUConstants {
 	 * @return int
 	 */
 	public static int gluBuild2DMipmaps(
-		int target,
-		int components,
-		int width,
-		int height,
-		int format,
-		int type,
-		ByteBuffer data) {
-			
+			int target,
+			int components,
+			int width,
+			int height,
+			int format,
+			int type,
+			ByteBuffer data) {
+		
 		return MipMap.gluBuild2DMipmaps(target, components, width, height, format, type, data);
 	}
 
@@ -146,15 +191,15 @@ public class GLU extends Util implements GLUConstants {
 	 * @return int
 	 */
 	public static int gluScaleImage(
-		int format,
-		int widthIn,
-		int heightIn,
-		int typeIn,
-		ByteBuffer dataIn,
-		int widthOut,
-		int heightOut,
-		int typeOut,
-		ByteBuffer dataOut) {
+			int format,
+			int widthIn,
+			int heightIn,
+			int typeIn,
+			ByteBuffer dataIn,
+			int widthOut,
+			int heightOut,
+			int typeOut,
+			ByteBuffer dataOut) {
 		
 		return MipMap.gluScaleImage(format, widthIn, heightIn, typeIn, dataIn, widthOut, heightOut, typeOut, dataOut);
 	}
