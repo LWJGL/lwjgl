@@ -320,3 +320,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
 	buffer_enabled = true;
 	return KEYBOARD_BUFFER_SIZE;
 }
+
+/*
+ * Class:     org_lwjgl_input_Keyboard
+ * Method:    nisStateKeySet
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet(JNIEnv *env, jclass clazz, jint key)
+{
+  return org_lwjgl_input_Keyboard_STATE_UNKNOWN;
+}
