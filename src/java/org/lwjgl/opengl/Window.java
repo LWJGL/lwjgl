@@ -49,6 +49,8 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public final class Window {
@@ -86,6 +88,15 @@ public final class Window {
 	
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static Window context;
+	
+	/** Whether we created the Mouse */
+	private static boolean createdMouse;
+
+	/** Whether we created the Keyboard */
+	private static boolean createdKeyboard;
+
+	/** Whether we created the Controller */
+	private static boolean createdController;
 
 	/**
 	 * Only constructed by ourselves
@@ -206,12 +217,37 @@ public final class Window {
 	private static native boolean nIsDirty();
 
 	/**
-	 * Paint the window. This clears the dirty flag and swaps the buffers.
+	 * Update the window. This processes operating system events, and if the window is visible
+	 * clears the dirty flag and swaps the buffers.
+	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
-	public static void paint() {
+	public static void update() {
 		assert isCreated()  : "Cannot paint uncreated window";
-		Util.checkGLError();
-		swapBuffers();
+		nUpdate();
+		if ((isDirty() && !isMinimized()) || (isFocused() && !isMinimized())) {
+			Util.checkGLError();
+			swapBuffers();
+		}
+		// Poll the input devices while we're here
+		if (Mouse.isCreated()) {
+			Mouse.poll();
+			if (Mouse.isBuffered()) {
+				Mouse.read();
+			}
+			Mouse.updateCursor();
+		}
+		if (Keyboard.isCreated()) {
+			Keyboard.poll();
+			if (Keyboard.isBuffered()) {
+				Keyboard.read();
+			}
+		}
+		if (Controller.isCreated()) {
+			Controller.poll();
+			if (Controller.isBuffered()) {
+				Controller.read();
+			}
+		}
 	}
 
 	/**
@@ -232,7 +268,35 @@ public final class Window {
 	 * Make the window the current rendering context for GL calls.
 	 */
 	private static native void nMakeCurrent();
+	
+	/**
+	 * Create a fullscreen window that matches the current display depth. Default common values are chosen
+	 * for common OpenGL rendering operations: you will get at least a 16-bit depth buffer, an 8 bit stencil
+	 * buffer, probably no alpha buffer, and probably no multisampling.
+	 * @param title
+	 * @throws Exception
+	 */
+	public static void create(String title) throws Exception {
+		create(title, Display.getDepth(), 0, 16, 8, 0);
+	}
 
+	/**
+	 * Create a fullscreen window. If the underlying OS does not
+	 * support fullscreen mode, then a window will be created instead. If this
+	 * fails too then an Exception will be thrown.
+	 * 
+	 * @param title The title of the window
+	 * @param bpp Minimum bits per pixel
+	 * @param alpha Minimum bits per pixel in alpha buffer
+	 * @param depth Minimum bits per pixel in depth buffer
+	 * @param stencil Minimum bits per pixel in stencil buffer
+	 * @throws Exception if the window could not be created for any reason; typically because
+	 * the minimum requirements could not be met satisfactorily
+	 */
+	public static void create(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
+		create(title, bpp, alpha, depth, stencil, 0);
+	}
+	
 	/**
 	 * Create a fullscreen window. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
@@ -258,6 +322,29 @@ public final class Window {
 		Window.height = Display.getHeight();
 		Window.title = title;
 		createWindow(bpp, alpha, depth, stencil, samples);
+	}
+
+	/**
+	 * Create a window. If the underlying OS does not have "floating" windows, then a fullscreen
+	 * display will be created instead. If this fails too then an Exception will be thrown.
+	 * If the window is created fullscreen, then its size may not match the specified size
+	 * here.
+	 * 
+	 * @param title The title of the window
+	 * @param x The position of the window on the x axis. May be ignored.
+	 * @param y The position of the window on the y axis. May be ignored.
+	 * @param width The width of the window's client area
+	 * @param height The height of the window's client area
+	 * @param bpp Minimum bits per pixel
+	 * @param alpha Minimum bits per pixel in alpha buffer
+	 * @param depth Minimum bits per pixel in depth buffer
+	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
+			  Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
+	 * @throws Exception if the window could not be created for any reason; typically because
+	 * the minimum requirements could not be met satisfactorily
+	 */
+	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
+		create(title, x, y, width, height, bpp, alpha, depth, stencil, 0);
 	}
 
 	/**
@@ -315,6 +402,47 @@ public final class Window {
 		nCreate(title, x, y, width, height, fullscreen, bpp, alpha, depth, stencil, samples);
 		context = new Window();
 		makeCurrent();
+		
+		// Automatically create mouse, keyboard and controller
+		if (!Mouse.isCreated()) {
+			try {
+				Mouse.create();
+				createdMouse = true;
+				Mouse.enableBuffer();
+			} catch (Exception e) {
+				if (Sys.DEBUG) {
+					e.printStackTrace(System.err);
+				} else {
+					Sys.log("Failed to create Mouse: "+e);
+				}
+			}
+		}
+		if (!Keyboard.isCreated()) {
+			try {
+				Keyboard.create();
+				createdKeyboard = true;
+				Keyboard.enableBuffer();
+				Keyboard.enableTranslation();
+			} catch (Exception e) {
+				if (Sys.DEBUG) {
+					e.printStackTrace(System.err);
+				} else {
+					Sys.log("Failed to create Keyboard: "+e);
+				}
+			}
+		}
+		if (!Controller.isCreated()) {
+			try {
+				Controller.create();
+				createdController = true;
+			} catch (Exception e) {
+				if (Sys.DEBUG) {
+					e.printStackTrace(System.err);
+				} else {
+					Sys.log("Failed to create Controller: "+e);
+				}
+			}
+		}
 	}
 
 	/**
@@ -325,6 +453,21 @@ public final class Window {
 		if (context == null) {
 			return;
 		}
+		
+		// Automatically destroy keyboard, mouse, and controller
+		if (createdMouse && Mouse.isCreated()) {
+			Mouse.destroy();
+			createdMouse = false;
+		}
+		if (createdKeyboard && Keyboard.isCreated()) {
+			Keyboard.destroy();
+			createdKeyboard = false;
+		}
+		if (createdController && Controller.isCreated()) {
+			Controller.destroy();
+			createdController = false;
+		}
+		
 		makeCurrent();
 		nDestroy();
 		context = null;
@@ -353,15 +496,7 @@ public final class Window {
 	 * Updates the windows internal state. This must be called at least once per video frame
 	 * to handle window close requests, moves, paints, etc.
 	 */
-	public static void update() {
-		nUpdate();
-    
-    // notify Mouse that we've had an update, so that it may update its cursor if needed
-    if(Mouse.isCreated()) {
-    	Mouse.updateCursor();
-    }
-  }
-  public static native void nUpdate();
+	private static native void nUpdate();
 
 	/**
 	 * Determines to the best of the platform's ability whether monitor vysnc is enabled on
