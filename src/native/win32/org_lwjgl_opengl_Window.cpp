@@ -43,15 +43,13 @@
 #include "Window.h"
 #include "org_lwjgl_opengl_Window.h"
 
-bool				oneShotInitialised = false;			// Registers the LWJGL window class
+static bool				oneShotInitialised = false;			// Registers the LWJGL window class
 HWND				hwnd = NULL;						// Handle to the window
 HDC					hdc = NULL;							// Device context
 HGLRC				hglrc = NULL;						// OpenGL context
 LPDIRECTINPUT		lpdi = NULL;						// DirectInput
-bool				isFullScreen = false;				// Whether we're fullscreen or not
-bool				isMinimized = false;				// Whether we're minimized or not
-/*JNIEnv *			environment = NULL;					// Cached environment
-jclass				window;								// Cached Java Window class*/
+static bool				isFullScreen = false;				// Whether we're fullscreen or not
+static bool				isMinimized = false;				// Whether we're minimized or not
 extern HINSTANCE	dll_handle;							// Handle to the LWJGL dll
 RECT clientSize;
 
@@ -614,7 +612,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty
   (JNIEnv *env, jclass clazz) {
-	return dirty;
+	bool result = dirty;
+	dirty = false;
+	return result;
 }
 
 /*
