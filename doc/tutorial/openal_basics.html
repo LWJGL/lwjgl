@@ -29,99 +29,50 @@ would be a good thing before continuing - but it isn't required...<br>
 <br>
 <b>1.2 Basic setup</b><br>
 Lets start out by creating a skeleton class for some very basic sound. We'll
-start of by creating the required OpenAL objects<br>
+start of by creating the required OpenAL object<br>
 <p
  style="border-style: solid; border-width: 1px; padding: 3px; background-color: rgb(255,255,204);"><tt>import
 org.lwjgl.openal.AL;<br>
-import org.lwjgl.openal.ALC;<br>
-import org.lwjgl.openal.ALCcontext;<br>
-import org.lwjgl.openal.ALCdevice;<br>
-<br>
 <br>
 public class PlayTest {<br>
     <br>
   /** OpenAL instance */<br>
   protected AL al;<br>
-    <br>
-  /** OpenAL Context instance */<br>
-  protected ALC alc;<br>
-    <br>
-  /** OpenAL context */<br>
-  protected ALCcontext context;<br>
-    <br>
-  /** OpenAL device */<br>
-  protected ALCdevice device;   <br>
-    <br>
+  <br>
+
   /**<br>
    * Creates an instance of PlayTest<br>
    */<br>
   public PlayTest() {<br>
     try {<br>
 </tt>          
-<tt> al      = new AL();<br>
-      alc     = new ALC();<br>
-<br>
+<tt> al = new AL();<br>
       al.create();<br>
-      alc.create();<br>
    } catch (Exception e) {<br>
       e.printStackTrace();<br>
     }</tt><tt><br>
   }<br>
-}</tt><code></code></p>
-We need instances of the following classes:<br>
-<ul>
-  <li><tt>AL  </tt>- basic source, buffer and listener interaction</li>
-  <li><tt>ALC </tt>- context and device creatiuon</li>
-</ul>
-<b>1.3 OpenAL initialization</b><br>
-Now that we have created a basic class containing instances of the relevant
-OpenAL classes, lets start of by initializing OpenAL - that is create a device
-and a context:<br>
-<p
- style="border-style: solid; border-width: 1px; padding: 3px; background-color: rgb(255,255,204);"> <tt>
-/**<br>
-   * Initializes OpenAL<br>
-   */<br>
-  protected void alInitialize() {       <br>
-    //get default device<br>
-    device = alc.openDevice(null);<br>
-        <br>
-    //create context (no attributes specified)<br>
-    context = alc.createContext(device, 0);<br>
-        <br>
-    //make context current<br>
-    alc.makeContextCurrent(context);<br>
-  }</tt><code><br>
-</code></p>
-Start of by opening a device using the <tt>openDevice </tt>method. <tt>openDevice
-</tt>takes a <tt>String </tt>as argument, containing the name of the device
-to open. If no name is supplied, the default device will be used (OpenAL
-currently doesn't support enumeration of devices available).<br>
-<br>
-Having opened a device, create a context to that device using <tt>createContext</tt>.
-<tt>createContext</tt> takes two arguments: device to use and a list of attributes
-(see specification for list of attributes). Since we're going by default context,
-we just specify <tt>0</tt> for attributes.<br>
-<br>
-Finish of by making the created context current. Do this by calling <tt>makeContextCurrent</tt>,
-supplying just created context as argument.<br>
-<p><b>1.4 Buffer and Source creation</b><br>
-Now that we have opened a device and gotten a context, we need to create
+}</tt></p>
+<p><b>1.3 Buffer and Source creation</b><br>
+Now that we have created the AL instance, we need to create
 two things to actually get some sound. We need to create a buffer to hold
-sounddata, and a source that is to play the sounddata.<br>
+sound data, and a source that is to play the sound data.<br>
 Lets start of by creating one source, and one buffer:</p>
-<p
- style="border-style: solid; border-width: 1px; padding: 3px; background-color: rgb(255,255,204);"><tt> 
-//create one IntBuffer as buffer and one as source<br>
+<p style="border-style: solid; border-width: 1px; padding: 3px; background-color: rgb(255,255,204);">
+<tt>
+&nbsp;&nbsp;//create one IntBuffer as buffer and one as source<br>
+&nbsp;&nbsp;//createIntBuffer is a utility method which allocates a direct ByteBuffer in native order<br>
   IntBuffer buffers = createIntBuffer(1);<br>
   IntBuffer sources = createIntBuffer(1);<br>
 <br>
   //generate buffers and sources<br>
   al.genBuffers(1, Sys.getDirectBufferAddress(buffers));<br>
-  al.genSources(1, Sys.getDirectBufferAddress(sources));</tt></p>
-<p>There, all set for actually loading some sounddata into the buffer.<br>
+  al.genSources(1, Sys.getDirectBufferAddress(sources));
+</tt>
 </p>
-<b>1.5 Loading sounddata and setting up a buffer</b><br>
+<p>There, all set for actually loading some sound data into the buffer.<br>
+</p>
+<b>1.4 Loading sound data and setting up a buffer</b><br>
 Now that we have a buffer, we need to load some sound data into this buffer.
 This is done using the <tt>al.bufferData</tt> method. In our example we will
 "cheat" a bit, by using the <tt>WaveData</tt> class to load
@@ -138,11 +89,11 @@ a wave file, and copy this into the buffer:<br>
   wavefile.dispose();        <br>
 </tt></p>
 Having loaded the data, we pass it to <tt>bufferData</tt>. Once the buffer
-has been filled with sounddata, we unload it from the system using <tt>wavefile.dispose()</tt>.
-Don't worry about deleting it this soon - the sounddata has been <b>copied</b>
+has been filled with sound data, we unload it from the system using <tt>wavefile.dispose()</tt>.
+Don't worry about deleting it this soon - the sound data has been <b>copied</b>
 to the buffer.<br>
 <br>
-<b>1.6 Associating sources and buffers</b><br>
+<b>1.5 Associating sources and buffers</b><br>
 To associate a source to a buffer we set the integer BUFFER attribute on
 the source, and assign it a value of the buffer to play:<br>
 <p
@@ -150,7 +101,7 @@ the source, and assign it a value of the buffer to play:<br>
 //set up source input<br>
   al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));</tt><tt><br>
 </tt></p>
-<b>1.7 Setting source properties</b><br>
+<b>1.6 Setting source properties</b><br>
 Having set up the source, it is time to set some attributes on the source
 - there are many that can be set, but in this example we only set the looping
 attribute to true by doing the following:<br>
@@ -159,7 +110,7 @@ attribute to true by doing the following:<br>
 //loop source<br>
   al.sourcei(sources.get(0), AL.LOOPING, AL.TRUE);</tt><tt><br>
 </tt></p>
-<b>1.8 Sound...<br>
+<b>1.7 Sound...<br>
 </b>There, ready to play the sound, do this using the <tt>sourcePlay </tt>method
 of the <tt>AL </tt>class. to stop and pause use <tt>sourcePause </tt>and
 <tt>sourceStop </tt>respectively, and supply the source to affect:<br>
@@ -177,12 +128,11 @@ of the <tt>AL </tt>class. to stop and pause use <tt>sourcePause </tt>and
         <br>
   //stop source 0<br>
   al.sourceStop(sources.get(0));</tt></p>
-<b>1.9 Cleaning up<br>
+<b>1.8 Cleaning up<br>
 </b>Having had loads of fun playing a sound (!), it is now time to do some
 house chores. We need to clean up what we have created, this amounts to:<br>
  - deleting source and buffer<br>
- - deleting context<br>
- - closing devce<br>
+ - destroying AL<br>
 as is shown here:<b><br>
 </b>
 <p
@@ -192,9 +142,9 @@ as is shown here:<b><br>
   al.deleteBuffers(1, Sys.getDirectBufferAddress(buffers));<br>
         <br>
   //shutdown<br>
-  alc.makeContextCurrent(null);<br>
-  alc.destroyContext(context);<br>
-  alc.closeDevice(device);</tt></p>
+  al.destroy();<br>
+</tt>
+</p>
 There, all set. Now you should be able to play some basic sound!<br>
 This tutorial is rather short, and the above examples feature no error checking.
 For the complete source code, look at the classes in the <br>
