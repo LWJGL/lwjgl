@@ -38,7 +38,6 @@
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-
 #ifndef _LWJGL_WINDOW_H_INCLUDED_
 	#define _LWJGL_WINDOW_H_INCLUDED_
 
@@ -46,7 +45,6 @@
 	#define _WIN32_WINDOWS 0x0410
 	#define WINVER 0x0410
 	#define _WIN32_WINNT 0x0400
-
 
 	#include <windows.h>
 	#include <jni.h>
@@ -56,7 +54,6 @@
 		#define WINDOW_H_API
 	#else
 		#define WINDOW_H_API extern
-
 		extern bool		isFullScreen;				// Whether we're fullscreen or not
 		extern bool		isMinimized;				// Whether we're minimized or not
 		extern bool		isFocused;					// Whether we're focused or not
