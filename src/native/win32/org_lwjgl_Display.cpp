@@ -46,7 +46,6 @@
 #define DIRECTINPUT_VERSION 0x0300
 
 #include <dinput.h>
-#include <hash_map>
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 
 void handleMessages();
@@ -670,5 +669,3 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_isMinimized
 
 	return isMinimized ? JNI_TRUE : JNI_FALSE;
 }
-
-
