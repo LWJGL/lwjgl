@@ -92,6 +92,95 @@ public class EAXBufferProperties {
     /** modifies the behavior of properties offset */
     protected static int flags_offset;
     
+    public static final int NONE                                = 0;
+    public static final int ALLPARAMETERS                       = 1;
+    public static final int DIRECT                              = 2;
+    public static final int DIRECTHF                            = 3;
+    public static final int ROOM                                = 4;
+    public static final int ROOMHF                              = 5;
+    public static final int ROOMROLLOFFFACTOR                   = 6;
+    public static final int OBSTRUCTION                         = 7;
+    public static final int OBSTRUCTIONLFRATIO                  = 8;
+    public static final int OCCLUSION                           = 9;
+    public static final int OCCLUSIONLFRATIO                    = 10;
+    public static final int OCCLUSIONROOMRATIO                  = 11;
+    public static final int OUTSIDEVOLUMEHF                     = 12;
+    public static final int AIRABSORPTIONFACTOR                 = 13;
+    public static final int FLAGS                               = 14;
+
+    /** changes take effect immediately */
+    public static final int IMMEDIATE                           = 0x00000000;
+    
+    /** changes take effect later */
+    public static final int DEFERRED                            = 0x80000000;
+    public static final int COMMITDEFERREDSETTINGS              = (NONE | IMMEDIATE);
+
+    /** affects DSPROPERTY_EAXBUFFER_DIRECTHF */
+    public static final int FLAGS_DIRECTHFAUTO                  = 0x00000001;
+    
+    /** affects DSPROPERTY_EAXBUFFER_ROOM */
+    public static final int FLAGS_ROOMAUTO                      = 0x00000002;
+    
+    /** affects DSPROPERTY_EAXBUFFER_ROOMHF */
+    public static final int FLAGS_ROOMHFAUTO                    = 0x00000004;
+    
+    /** reserved future use */
+    public static final int FLAGS_RESERVED                      = 0xFFFFFFF8;
+    
+    // property ranges and defaults:
+    
+    public static final int MINDIRECT                           = -10000;
+    public static final int MAXDIRECT                           = 1000;
+    public static final int DEFAULTDIRECT                       = 0;
+    
+    public static final int MINDIRECTHF                         = -10000;
+    public static final int MAXDIRECTHF                         = 0;
+    public static final int DEFAULTDIRECTHF                     = 0;
+    
+    public static final int MINROOM                             = -10000;
+    public static final int MAXROOM                             = 1000;
+    public static final int DEFAULTROOM                         = 0;
+    
+    public static final int MINROOMHF                           = -10000;
+    public static final int MAXROOMHF                           = 0;
+    public static final int DEFAULTROOMHF                       = 0;
+    
+    public static final float MINROOMROLLOFFFACTOR              = 0.0f;
+    public static final float MAXROOMROLLOFFFACTOR              = 10.f;
+    public static final float DEFAULTROOMROLLOFFFACTOR          = 0.0f;
+    
+    public static final int MINOBSTRUCTION                      = -10000;
+    public static final int MAXOBSTRUCTION                      = 0;
+    public static final int DEFAULTOBSTRUCTION                  = 0;
+    
+    public static final float MINOBSTRUCTIONLFRATIO             = 0.0f;
+    public static final float MAXOBSTRUCTIONLFRATIO             = 1.0f;
+    public static final float DEFAULTOBSTRUCTIONLFRATIO         = 0.0f;
+    
+    public static final int MINOCCLUSION                        = -10000;
+    public static final int MAXOCCLUSION                        = 0;
+    public static final int DEFAULTOCCLUSION                    = 0;
+    
+    public static final float MINOCCLUSIONLFRATIO               = 0.0f;
+    public static final float MAXOCCLUSIONLFRATIO               = 1.0f;
+    public static final float DEFAULTOCCLUSIONLFRATIO           = 0.25f;
+    
+    public static final float MINOCCLUSIONROOMRATIO             = 0.0f;
+    public static final float MAXOCCLUSIONROOMRATIO             = 10.0f;
+    public static final float DEFAULTOCCLUSIONROOMRATIO         = 0.5f;
+    
+    public static final int MINOUTSIDEVOLUMEHF                  = -10000;
+    public static final int MAXOUTSIDEVOLUMEHF                  = 0;
+    public static final int DEFAULTOUTSIDEVOLUMEHF              = 0;
+    
+    public static final float MINAIRABSORPTIONFACTOR            = 0.0f;
+    public static final float MAXAIRABSORPTIONFACTOR            = 10.0f;
+    public static final float DEFAULTAIRABSORPTIONFACTOR        = 1.0f;
+    
+    public static final int DEFAULTFLAGS                        = (FLAGS_DIRECTHFAUTO |
+                                                                    FLAGS_ROOMAUTO |
+                                                                    FLAGS_ROOMHFAUTO);    
+    
     static {
         System.loadLibrary(org.lwjgl.Sys.getLibraryName());
         EAXBUFFERPROPERTIES_SIZE = sizeOfEaxBufferProperties();

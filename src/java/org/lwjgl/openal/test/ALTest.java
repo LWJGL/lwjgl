@@ -39,6 +39,7 @@ import org.lwjgl.openal.ALUT;
 import org.lwjgl.openal.ALUTLoadWAVData;
 import org.lwjgl.openal.eax.EAX;
 import org.lwjgl.openal.eax.EAXBufferProperties;
+import org.lwjgl.openal.eax.EAXListenerProperties;
 import org.lwjgl.Sys;
 
 import java.nio.ByteBuffer;
@@ -551,6 +552,7 @@ public class ALTest extends BasicTest {
             
             try {
                 ch = System.in.read();
+                System.in.read();
             } catch (IOException ioe) {
             }
             
@@ -966,9 +968,200 @@ public class ALTest extends BasicTest {
     }
 
     protected void semiAutoTests() {
-        System.out.println("semiAutoTests");
-        delay_ms(3000);
+        sA_StringQueries();  // String Queries Test
+        sA_SourceGain();  // Source Gain Test
+        //SA_ListenerGain();  // Listener Gain Test
+        //SA_Position();  // Position Test
+        //SA_SourceRelative();  // Source Relative Test
+        //SA_ListenerOrientation();  // Listener Orientation Test
+        //SA_SourceCone();  // Source Cone Test
+        //SA_MinMaxGain();  // MIN/MAX Gain Test
+        //SA_ReferenceDistance();  // Reference Distance Test
+        //SA_RolloffFactor();  // Rolloff Factor Test
+        //SA_DistanceModel();  // Distance Model Test
+        sA_Doppler();  // Doppler Test
+        //SA_Frequency();  // Frequency Test
+        //SA_Stereo();  // Stereo Test
+        //SA_Streaming(); // Streaming Test
+        //SA_QueuingUnderrunPerformance(); // test underrun performance
+        
+        System.out.print("\nDone with this series of tests. Going back to the main menu...");
+        delay_ms(1000);
     }
+    
+    protected int ContinueOrSkip() {
+        int ch = -1;
+        
+        System.out.print("\nPress Return to run this test, or 'S' to skip:\n");
+        
+        while (true) {
+            ch = CRToContinue();
+            if ((ch == 'S') || (ch == 's')) {
+                return 0;
+            }
+            if (ch == 0) {
+                return 1;
+            }
+        }
+    }  
+    
+    protected int CRToContinue() {
+        int ch = 0;
+        int lastchar = 0;
+        
+        do {
+            lastchar = ch;
+            try {
+                ch = System.in.read();
+                System.in.read();
+            } catch (IOException ioe) {
+            }
+        } while (ch != 10);
+        
+        return lastchar;
+    }
+    
+    protected void CRForNextTest() {
+        System.out.print("\nPress Return to continue on to the next test.\n");
+        
+        CRToContinue();
+    }
+    
+    protected void sA_StringQueries() {
+        System.out.print("String Queries Test:");
+        if (ContinueOrSkip() == 1) {
+            System.out.print("Check that the following values are reasonable:\n");
+            
+            String tempString;
+            
+            ALCcontext pContext;
+            ALCdevice pDevice;
+            pContext = alc.getCurrentContext();
+            pDevice = alc.getContextsDevice(pContext);
+            tempString = alc.getString(pDevice, ALC.DEVICE_SPECIFIER);
+            System.out.print("OpenAL Context Device Specifier is '" + tempString + "'\n");
+            tempString = al.getString(AL.RENDERER);
+            System.out.print("OpenAL Renderer is '" + tempString + "'\n");
+            tempString = al.getString(AL.VERSION);
+            System.out.print("OpenAL Version is '" + tempString + "'\n");
+            tempString = al.getString(AL.VENDOR);
+            System.out.print("OpenAL Vendor is '" + tempString + "'\n");
+            tempString = al.getString(AL.EXTENSIONS);
+            System.out.print("OpenAL Extensions supported are :\n" + tempString + "\n");
+            System.out.print("\nError Codes are :-\n");
+            System.out.print("AL_NO_ERROR : '" + al.getString(AL.NO_ERROR) + "'\n");
+            
+            System.out.print("AL_INVALID_ENUM : '" + al.getString(AL.INVALID_ENUM) + "'\n");
+            System.out.print("AL_INVALID_VALUE : '" + al.getString(AL.INVALID_VALUE) + "'\n");
+            
+            System.out.print("AL_INVALID_OPERATION : '" + al.getString(AL.INVALID_OPERATION) + "'\n");
+            System.out.print("AL_OUT_OF_MEMORY : '" + al.getString(AL.OUT_OF_MEMORY) + "'\n");
+            CRForNextTest();
+        }
+    }
+    
+    protected void sA_SourceGain() {
+        IntBuffer testSources = createIntBuffer(1);
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[]{0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer	sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[]{1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Source Gain Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("The following sound effect will be played at full source gain (Press Return):\n");
+            CRToContinue();
+            al.sourcef(Sys.getDirectBufferAddress(testSources),AL.GAIN,1.0f);
+            al.sourcePlay(testSources.get(0));
+            System.out.print("The following sound effect will be played at half source gain (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0),AL.GAIN,0.5f);
+            al.sourcePlay(testSources.get(0));
+            System.out.print("The following sound effect will be played at quarter source gain (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0),AL.GAIN,0.25f);
+            al.sourcePlay(testSources.get(0));
+            System.out.print("The following sound effect will be played at 1/20th source gain (Press Return):\n");
+            CRToContinue();
+            al.sourcef(testSources.get(0),AL.GAIN,0.05f);
+            al.sourcePlay(testSources.get(0));
+            CRForNextTest();
+            al.sourcef(testSources.get(0),AL.GAIN,1.0f);
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }    
+    
+    protected void sA_Doppler() {
+        IntBuffer testSources = createIntBuffer(2);
+        int i;
+        FloatBuffer	listenerOri = createFloatBuffer(6);
+        listenerOri.put(new float[] {0.0f,0.0f,-1.0f, 0.0f,1.0f,0.0f});
+        
+        FloatBuffer sourceOri = createFloatBuffer(6);
+        sourceOri.put(new float[] {1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f});
+        
+        System.out.print("Doppler Test:");
+        if (ContinueOrSkip() == 1) {
+            // load up sources
+            al.genSources(1, Sys.getDirectBufferAddress(testSources));
+            al.sourcei(testSources.get(0), AL.BUFFER, buffers.get(1));
+            
+            System.out.print("Trying Left-to-Right sweep with doppler shift (Press Return):\n");
+            CRToContinue();
+            al.listenerfv(AL.ORIENTATION, Sys.getDirectBufferAddress(listenerOri));
+            al.sourcei(testSources.get(0), AL.LOOPING, AL.TRUE);
+            al.source3f(testSources.get(0), AL.POSITION, -100.0f, 0.0f, 0.0f);
+            al.source3f(testSources.get(0), AL.VELOCITY, 10.0f, 0.0f, 0.0f);
+            al.sourcefv(testSources.get(0), AL.ORIENTATION, Sys.getDirectBufferAddress(sourceOri));
+            al.sourcePlay(testSources.get(0));
+            for (i = -100; i < 100; i++) {
+                al.source3f(testSources.get(0), AL.POSITION, (float) i, 0.0f, 0.0f);
+                delay_ms(100);
+            }
+            al.sourceStop(testSources.get(0));
+            System.out.print("Trying Left-to-Right sweep with DopplerFactor set to 4.0 -- should be more extreme (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, -100.0f, 0.0f, 0.0f);
+            al.source3f(testSources.get(0), AL.VELOCITY, 10.0f, 0.0f, 0.0f);
+            al.dopplerFactor(4.0f);
+            if (al.getFloat(AL.DOPPLER_FACTOR) != 4.0f) { System.out.print(" alGetFloat(AL_DOPPLER_FACTOR) error.\n"); }
+            al.sourcePlay(testSources.get(0));
+            for (i = -100; i < 100; i++) {
+                al.source3f(testSources.get(0), AL.POSITION, (float) i, 0.0f, 0.0f);
+                delay_ms(100);
+            }
+            al.sourceStop(testSources.get(0));
+            al.dopplerFactor(1.0f);
+            System.out.print("Trying Left-to-Right sweep with DopplerVelocity set to 86 -- should remain extreme (Press Return):\n");
+            CRToContinue();
+            al.source3f(testSources.get(0), AL.POSITION, -100.0f, 0.0f, 0.0f);
+            al.source3f(testSources.get(0), AL.VELOCITY, 10.0f, 0.0f, 0.0f);
+            al.dopplerVelocity(86);
+            if (al.getFloat(AL.DOPPLER_VELOCITY) != 86) { System.out.print(" alGetFloat(AL_DOPPLER_VELOCITY) error.\n"); }
+            al.sourcePlay(testSources.get(0));
+            for (i = -100; i < 100; i++) {
+                al.source3f(testSources.get(0), AL.POSITION, (float) i, 0.0f, 0.0f);
+                delay_ms(100);
+            }
+            al.dopplerVelocity(343);
+            al.source3f(testSources.get(0), AL.POSITION, 0.0f, 0.0f, 0.0f);
+            al.sourceStop(testSources.get(0));
+            CRForNextTest();
+            
+            // dispose of sources
+            al.sourcei(testSources.get(0), AL.BUFFER, 0);
+            al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        }
+    }
+    
     
     protected void i_PositionTest() {
         int error;
@@ -1388,7 +1581,7 @@ public class ALTest extends BasicTest {
                     break;
                 case '5':
                     Env.put(0, EAX.ENVIRONMENT_HANGAR);
-                    eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_ENVIRONMENT | EAX.DSPROPERTY_EAXLISTENER_DEFERRED,
+                    eax.eaxSet(EAX.LISTENER_GUID, EAXListenerProperties.ENVIRONMENT | EAXListenerProperties.DEFERRED,
                     	0, Sys.getDirectBufferAddress(Env), 4);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXLISTENER_ENVIRONMENT | EAXLISTENER_DEFERRED : \n", error);
@@ -1396,19 +1589,19 @@ public class ALTest extends BasicTest {
                     
                 case '6':
                     Room.put(-10000);
-                    eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_ROOM | EAX.DSPROPERTY_EAXLISTENER_DEFERRED, 0,
+                    eax.eaxSet(EAX.LISTENER_GUID, EAXListenerProperties.ROOM | EAXListenerProperties.DEFERRED, 0,
                     	Sys.getDirectBufferAddress(Room), 4);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXLISTENER_ROOM | EAXLISTENER_DEFERRED : \n", error);
                     break;
                     
                 case '7':
-                    eax.eaxGet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_ALLPARAMETERS, source.get(0),
+                    eax.eaxGet(EAX.BUFFER_GUID, EAXBufferProperties.ALLPARAMETERS, source.get(0),
                         eaxBufferProp0.getAddress(), eaxBufferProp0.getSize());
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxGet EAXBUFFER_ALLPARAMETERS : \n", error);
                     eaxBufferProp0.setOcclusion(-5000);
-                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_ALLPARAMETERS | EAX.DSPROPERTY_EAXBUFFER_DEFERRED, source.get(0),
+                    eax.eaxSet(EAX.BUFFER_GUID, EAXBufferProperties.ALLPARAMETERS | EAXBufferProperties.DEFERRED, source.get(0),
                     	eaxBufferProp0.getAddress(), eaxBufferProp0.getSize());
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXBUFFER_ALLPARAMETERS | EAXBUFFER_DEFERRED : \n", error);
@@ -1416,7 +1609,7 @@ public class ALTest extends BasicTest {
                     
                 case '8':
                     Occlusion.put(0, 0);
-                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_OCCLUSION | EAX.DSPROPERTY_EAXBUFFER_DEFERRED, source.get(0),
+                    eax.eaxSet(EAX.BUFFER_GUID, EAXBufferProperties.OCCLUSION | EAXBufferProperties.DEFERRED, source.get(0),
                     	Sys.getDirectBufferAddress(Occlusion), 4);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXBUFFER_OCCLUSION | EAXBUFFER_DEFERRED : \n", error);
@@ -1424,7 +1617,7 @@ public class ALTest extends BasicTest {
                     
                 case '9':
                     Obstruction.put(0, -5000);
-                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_OBSTRUCTION, source.get(1),
+                    eax.eaxSet(EAX.BUFFER_GUID, EAXBufferProperties.OBSTRUCTION, source.get(1),
                     	Sys.getDirectBufferAddress(Obstruction), 4);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXBUFFER_OBSTRUCTION : \n", error);
@@ -1432,7 +1625,7 @@ public class ALTest extends BasicTest {
                     
                 case '0':
                     Obstruction.put(0, 0);
-                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_OBSTRUCTION, source.get(1),
+                    eax.eaxSet(EAX.BUFFER_GUID, EAXBufferProperties.OBSTRUCTION, source.get(1),
                     	Sys.getDirectBufferAddress(Obstruction), 4);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXBUFFER_OBSTRUCTION : \n", error);
@@ -1440,13 +1633,13 @@ public class ALTest extends BasicTest {
                     
                 case 'C':
                     // Commit settings on source 0
-                    eax.eaxSet(EAX.BUFFER_GUID, EAX.DSPROPERTY_EAXBUFFER_COMMITDEFERREDSETTINGS,
+                    eax.eaxSet(EAX.BUFFER_GUID, EAXBufferProperties.COMMITDEFERREDSETTINGS,
                     	source.get(0), 0, 0);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXBUFFER_COMMITDEFERREDSETTINGS : \n", error);
                     
                     // Commit Listener settings
-                    eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_COMMITDEFERREDSETTINGS,
+                    eax.eaxSet(EAX.LISTENER_GUID, EAXListenerProperties.COMMITDEFERREDSETTINGS,
                     	0, 0, 0);
                     if ((error = al.getError()) != AL.NO_ERROR)
                         displayALError("eaxSet EAXLISTENER_COMMITDEFERREDSETTINGSENVIRONMENT : \n", error);
@@ -1456,7 +1649,7 @@ public class ALTest extends BasicTest {
         
         // reset EAX level
         Room.put(0, -10000);
-        eax.eaxSet(EAX.LISTENER_GUID, EAX.DSPROPERTY_EAXLISTENER_ROOM, 0, Sys.getDirectBufferAddress(Room), 4);
+        eax.eaxSet(EAX.LISTENER_GUID, EAXListenerProperties.ROOM, 0, Sys.getDirectBufferAddress(Room), 4);
         if ((error = al.getError()) != AL.NO_ERROR)
             displayALError("eaxSet EAXLISTENER_ROOM : \n", error);
         
