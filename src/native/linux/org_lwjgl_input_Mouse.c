@@ -67,7 +67,6 @@ static int last_poll_x;
 static int last_poll_y;
 static int last_event_x;
 static int last_event_y;
-static int last_z;
 static jbyte buttons[NUM_BUTTONS];
 static event_queue_t event_queue;
 static bool buffer_enabled;
@@ -251,7 +250,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createMouse
 	if (disp == NULL)
 		return;
 	int i;
-	last_z = last_poll_y = last_poll_x = last_event_x = last_event_y = accum_dx = accum_dy = accum_dz = 0;
+	last_poll_y = last_poll_x = last_event_x = last_event_y = accum_dx = accum_dy = accum_dz = 0;
 	resetCursorToCenter();
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;

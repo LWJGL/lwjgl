@@ -399,6 +399,7 @@ extern aglSurfaceTexturePROC aglSurfaceTexture;
 
 /* helper stuff */
 
+#ifndef _MACOSX
 struct ExtensionTypes
 {
 #ifdef _WIN32 /* WGL extensions */
@@ -425,6 +426,7 @@ struct ExtensionTypes
 };
 
 extern struct ExtensionTypes extgl_Extensions;
+#endif
 
 typedef GLenum (APIENTRY * glGetErrorPROC) (void);
 typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);

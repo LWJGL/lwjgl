@@ -85,7 +85,9 @@ aglResetLibraryPROC aglResetLibrary = NULL;
 aglSurfaceTexturePROC aglSurfaceTexture = NULL;
 #endif
 
+#ifndef _MACOSX
 struct ExtensionTypes extgl_Extensions;
+#endif
 
 #ifdef _WIN32
 HMODULE lib_gl_handle = NULL;
@@ -100,8 +102,8 @@ static glXGetProcAddressARBPROC glXGetProcAddressARB;
 #endif
 
 #ifdef _MACOSX
-CFBundleRef opengl_bundle_ref = NULL;
-//CFBundleRef agl_bundle_ref = NULL;
+#include <mach-o/dyld.h>
+static const struct mach_header *opengl_lib_handle = NULL;
 #endif
 
 /* getProcAddress */
@@ -135,16 +137,16 @@ void *extgl_GetProcAddress(const char *name)
 #endif
 
 #ifdef _MACOSX
-	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNull);
-	void *func_pointer = CFBundleGetFunctionPointerForName(opengl_bundle_ref, str);
-	if (func_pointer == NULL) {
-/*		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
-		if (func_pointer == NULL) {*/
-			printfDebug("Could not locate symbol %s\n", name);
-//		}
-	}
-	CFRelease(str);
-	return func_pointer;
+	#define BUFFER_SIZE 1024
+	char mach_name[BUFFER_SIZE] = "_";
+	strncat(mach_name, name, BUFFER_SIZE - 1);
+
+	if (NSIsSymbolNameDefinedInImage(opengl_lib_handle, mach_name)) {           
+		NSSymbol sym = NSLookupSymbolInImage(opengl_lib_handle, mach_name, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+		void *address = NSAddressOfSymbol(sym);
+		return address;
+	} else
+		return NULL;
 #endif
 }
 
@@ -157,74 +159,9 @@ bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions) {
 }
 
 #ifdef _MACOSX
-// -------------------------
-static CFBundleRef loadBundle(const Str255 frameworkName)
-{
-	OSStatus err = noErr;
-	FSRefParam fileRefParam;
-	FSRef fileRef;
-	CFURLRef bundleURLOpenGL;
-	CFBundleRef bundle_ref;
-
-	memset(&fileRefParam, 0, sizeof(fileRefParam));
-	memset(&fileRef, 0, sizeof(fileRef));
-	fileRefParam.ioNamePtr  = frameworkName;
-	fileRefParam.newRef = &fileRef;
-
-	// Frameworks directory/folder
-	//
-	err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
-	if (noErr != err)
-	{
-		printfDebug("Could not find frameworks folder\n");
-		return NULL;
-	}
-
-	// make FSRef for folder
-	//
-	err = PBMakeFSRefSync (&fileRefParam);
-
-
-	if (noErr != err)
-	{
-		printfDebug("Could make FSref to frameworks folder\n");
-		return NULL;
-	}
-
-	// create URL to folder
-	//
-	bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
-	if (!bundleURLOpenGL)
-	{
-		printfDebug("Could create framework URL\n");
-		return NULL;
-	}
-
-	bundle_ref = CFBundleCreate(kCFAllocatorDefault,bundleURLOpenGL);
-	CFRelease (bundleURLOpenGL);
-	if (bundle_ref == NULL)
-	{
-		printfDebug("Could not load framework\n");
-		return NULL;
-	}
-
-	// if the code was successfully loaded, look for our function.
-	if (!CFBundleLoadExecutable(bundle_ref))
-	{
-		printfDebug("Could not load MachO executable\n");
-		CFRelease(bundle_ref);
-		return NULL;
-	}
-
-	return bundle_ref;
+static const struct mach_header *loadImage(const char *lib_name) {   
+	return NSAddImage(lib_name, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
 }
-
-static void aglUnloadFramework(CFBundleRef f)
-{
-	CFBundleUnloadExecutable(f);
-	CFRelease(f);
-}
-
 #endif
 
 bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *name)
@@ -262,69 +199,16 @@ bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *nam
 
 }
 
-
-/*-----------------------------------------------------*/
-/* AGL stuff BEGIN*/
-/*-----------------------------------------------------*/
-#ifdef _MACOSX
-
-// Commecnted out as AGL is not needed
-/*bool extgl_InitAGL(JNIEnv *env)
-{
-	aglChoosePixelFormat = (aglChoosePixelFormatPROC)extgl_GetProcAddress("aglChoosePixelFormat");
-	aglDestroyPixelFormat = (aglDestroyPixelFormatPROC)extgl_GetProcAddress("aglDestroyPixelFormat");
-	aglNextPixelFormat = (aglNextPixelFormatPROC)extgl_GetProcAddress("aglNextPixelFormat");
-	aglDescribePixelFormat = (aglDescribePixelFormatPROC)extgl_GetProcAddress("aglDescribePixelFormat");
-	aglDevicesOfPixelFormat = (aglDevicesOfPixelFormatPROC)extgl_GetProcAddress("aglDevicesOfPixelFormat");
-	aglQueryRendererInfo = (aglQueryRendererInfoPROC)extgl_GetProcAddress("aglQueryRendererInfo");
-	aglDestroyRendererInfo = (aglDestroyRendererInfoPROC)extgl_GetProcAddress("aglDestroyRendererInfo");
-	aglNextRendererInfo = (aglNextRendererInfoPROC)extgl_GetProcAddress("aglNextRendererInfo");
-	aglDescribeRenderer = (aglDescribeRendererPROC)extgl_GetProcAddress("aglDescribeRenderer");
-	aglCreateContext = (aglCreateContextPROC)extgl_GetProcAddress("aglCreateContext");
-	aglDestroyContext = (aglDestroyContextPROC)extgl_GetProcAddress("aglDestroyContext");
-	aglCopyContext = (aglCopyContextPROC)extgl_GetProcAddress("aglCopyContext");
-	aglUpdateContext = (aglUpdateContextPROC)extgl_GetProcAddress("aglUpdateContext");
-	aglSetCurrentContext = (aglSetCurrentContextPROC)extgl_GetProcAddress("aglSetCurrentContext");
-	aglGetCurrentContext = (aglGetCurrentContextPROC)extgl_GetProcAddress("aglGetCurrentContext");
-	aglSetDrawable = (aglSetDrawablePROC)extgl_GetProcAddress("aglSetDrawable");
-	aglSetOffScreen = (aglSetOffScreenPROC)extgl_GetProcAddress("aglSetOffScreen");
-	aglSetFullScreen = (aglSetFullScreenPROC)extgl_GetProcAddress("aglSetFullScreen");
-	aglGetDrawable = (aglGetDrawablePROC)extgl_GetProcAddress("aglGetDrawable");
-	aglSetVirtualScreen = (aglSetVirtualScreenPROC)extgl_GetProcAddress("aglSetVirtualScreen");
-	aglGetVirtualScreen = (aglGetVirtualScreenPROC)extgl_GetProcAddress("aglGetVirtualScreen");
-	aglGetVersion = (aglGetVersionPROC)extgl_GetProcAddress("aglGetVersion");
-	aglSwapBuffers = (aglSwapBuffersPROC)extgl_GetProcAddress("aglSwapBuffers");
-	aglEnable = (aglEnablePROC)extgl_GetProcAddress("aglEnable");
-	aglDisable = (aglDisablePROC)extgl_GetProcAddress("aglDisable");
-	aglIsEnabled = (aglIsEnabledPROC)extgl_GetProcAddress("aglIsEnabled");
-	aglSetInteger = (aglSetIntegerPROC)extgl_GetProcAddress("aglSetInteger");
-	aglGetInteger = (aglGetIntegerPROC)extgl_GetProcAddress("aglGetInteger");
-	aglUseFont = (aglUseFontPROC)extgl_GetProcAddress("aglUseFont");
-	aglGetError = (aglGetErrorPROC)extgl_GetProcAddress("aglGetError");
-	aglErrorString = (aglErrorStringPROC)extgl_GetProcAddress("aglErrorString");
-	aglResetLibrary = (aglResetLibraryPROC)extgl_GetProcAddress("aglResetLibrary");
-	aglSurfaceTexture = (aglSurfaceTexturePROC)extgl_GetProcAddress("aglSurfaceTexture");
-	return !extgl_error; // Split out AGL into extgl_agl.cpp like wgl and glx and replace with InitializeFunctions
-}
-*/
-#endif
 /*-----------------------------------------------------*/
 /* AGL stuff END*/
 /*-----------------------------------------------------*/
 
 #ifdef _MACOSX
 bool extgl_Open(void) {
-	if (opengl_bundle_ref != NULL)
+	if (opengl_lib_handle != NULL)
 		return true;
-	opengl_bundle_ref = loadBundle("\pOpenGL.framework");
-	if (opengl_bundle_ref == NULL)
-		return false;
-/*	agl_bundle_ref = loadBundle("\pAGL.framework");
-	if (agl_bundle_ref == NULL) {
-		aglUnloadFramework(opengl_bundle_ref);
-		return false;
-	}*/
-	return true;
+	opengl_lib_handle = loadImage("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib");
+	return opengl_lib_handle != NULL;
 }
 #endif
 
@@ -372,9 +256,7 @@ void extgl_Close(void)
 	lib_gl_handle = NULL;
 #endif
 #ifdef _MACOSX
-	aglUnloadFramework(opengl_bundle_ref);
-//	aglUnloadFramework(agl_bundle_ref);
-	opengl_bundle_ref = NULL;
+	opengl_lib_handle = NULL;
 #endif
 }
 

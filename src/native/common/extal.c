@@ -144,7 +144,6 @@ static void closeVorbisLibs(void) {
  * Loads the OpenAL Library
  */
 static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
-
 	jsize pathcount = (*env)->GetArrayLength(env, oalPaths);
 	int i;
 	jstring path;
@@ -159,33 +158,33 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 #ifdef _WIN32
 		lib_str = concatenate(path_str, "lwjglaudio.dll");
 		handleOAL = LoadLibrary(lib_str);
-                free(lib_str);
+		free(lib_str);
 #endif
 #ifdef _X11
-		char *lib_str = concatenate(path_str, "libogg.so.0");
+		lib_str = concatenate(path_str, "libogg.so.0");
 		handleOGG = dlopen(lib_str, RTLD_LAZY);
-                free(lib_str);
+		free(lib_str);
 
 		lib_str = concatenate(path_str, "libvorbis.so.0");
 		handleVorbis = dlopen(lib_str, RTLD_LAZY);
-                free(lib_str);
+		free(lib_str);
 
 		lib_str = concatenate(path_str, "libvorbisfile.so.3");
 		handleVorbisFile = dlopen(lib_str, RTLD_LAZY);
-                free(lib_str);
+		free(lib_str);
 
 		lib_str = concatenate(path_str, "libopenal.so");
 		handleOAL = dlopen(lib_str, RTLD_LAZY);
-                free(lib_str);
+		free(lib_str);
 
 		if (handleOAL == NULL) {
 			closeVorbisLibs();
 		}
 #endif
 #ifdef _MACOSX
-		char *lib_str = concatenate(path_str, "openal.dylib");
+		lib_str = concatenate(path_str, "openal.dylib");
 		handleOAL = NSAddImage(lib_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
-                free(lib_str);
+		free(lib_str);
 #endif
 		if (handleOAL != NULL) {
 			printfDebug("Found OpenAL at '%s'\n", path_str);
