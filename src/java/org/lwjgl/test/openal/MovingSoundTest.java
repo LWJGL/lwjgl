@@ -39,7 +39,7 @@ import org.lwjgl.openal.eax.EAX;
 import org.lwjgl.openal.eax.EAX20;
 import org.lwjgl.openal.eax.EAXListenerProperties;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.vector.Vector3f;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * $Id$

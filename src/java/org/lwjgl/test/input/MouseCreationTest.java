@@ -37,7 +37,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.vector.Vector2f;
+import org.lwjgl.util.vector.Vector2f;
 
 /**
  * $Id$

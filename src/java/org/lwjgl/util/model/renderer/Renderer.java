@@ -65,6 +65,10 @@ public class Renderer {
 	 * @param model The model to render
 	 */
 	public void render(Model model) {
+		
+		// 1. Set up GL state from the Model's material
+		Renderable material = (Renderable) materials.get(model.getMesh().getMaterial());
+		
 	}
 	
 	/**

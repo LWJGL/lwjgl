@@ -42,7 +42,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.glu.GLU;
-import org.lwjgl.vector.Vector2f;
+import org.lwjgl.util.vector.Vector2f;
 
 /**
  * $Id$

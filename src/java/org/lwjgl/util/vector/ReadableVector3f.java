@@ -29,26 +29,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.vector;
-
-import java.nio.FloatBuffer;
+package org.lwjgl.util.vector;
 
 /**
  * @author foo
  */
-public interface ReadableVector {
+public interface ReadableVector3f extends ReadableVector2f {
 	/**
-	 * @return the length of the vector
+	 * @return z
 	 */
-	public float length();
-	/**
-	 * @return the length squared of the vector
-	 */
-	public float lengthSquared();
-	/**
-	 * Store this vector in a FloatBuffer
-	 * @param buf The buffer to store it in, at the current position
-	 * @return this
-	 */
-	public Vector store(FloatBuffer buf);
+	public float getZ();
 }

@@ -29,14 +29,18 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.vector;
+package org.lwjgl.util.vector;
 
 /**
  * @author foo
  */
-public interface ReadableVector3f extends ReadableVector2f {
+public interface ReadableVector2f extends ReadableVector {
 	/**
-	 * @return z
+	 * @return x
 	 */
-	public float getZ();
+	public float getX();
+	/**
+	 * @return y
+	 */
+	public float getY();
 }
