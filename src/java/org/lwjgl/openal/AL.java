@@ -144,7 +144,7 @@ public final class AL {
 		}
 		String[] oalPaths = LWJGLUtil.getLibraryPaths(new String[]{
                                                   "lwjglaudio", "lwjglaudio.dll",
-                                                  "openal", "openal.so",
+                                                  "openal", "libopenal.so",
                                                   "openal", "openal.dylib"}, AL.class.getClassLoader());
 		nCreate(oalPaths);
 		created = true;
