@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002 Light Weight Java Game Library Project
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -32,27 +32,27 @@
 /**
  * $Id$
  *
- * Win32 analogue joystick handling.
+ * Win32 controller handling.
  *
  * @author Brian Matzon <brian@matzon.com>
  * @version $Revision$
  */
 
 #define WIN32_LEAN_AND_MEAN
-#include "org_lwjgl_input_Joystick.h"
+#include "org_lwjgl_input_Controller.h"
 #include <windows.h>
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0500
 #include <dinput.h>
 
-#define JOYMAX 1000                 // Maxmimum range to which we'll gauge the swing
-#define JOYMIN -1000                // Minimum range to which we'll gauge the swing
+#define AXISMAX 1000                 // Maxmimum range to which we'll gauge the swing
+#define AXISMIN -1000                // Minimum range to which we'll gauge the swing
 
 extern HWND hwnd;                   // Handle to window
 
 IDirectInput* lpDI;                 // DI instance
 IDirectInputDevice2* lpDIDevice;    // DI Device instance
-DIJOYSTATE2 js;                     // State of joystick
+DIJOYSTATE2 js;                     // State of Controller
 
 int buttoncount = 0;                // Temporary buttoncount
 bool hasz;                          // Temporary zaxis check
@@ -62,8 +62,8 @@ JNIEnv* environment;                // JNIEnvironment copy
 
 bool create_success;                // bool used to determine successfull creation
 
-// Cached fields of Joystick.java
-jclass clsJoystick;
+// Cached fields of Controller.java
+jclass clsController;
 jfieldID fidButtonCount;
 jfieldID fidHasZAxis;
 jfieldID fidHasPOV;
@@ -75,12 +75,12 @@ jfieldID fidPOV;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 void EnumerateCapabilities();
-void EnumerateJoysticks();
-BOOL CALLBACK EnumJoystickCallback(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef);
-BOOL CALLBACK EnumJoystickObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
+void EnumerateControllers();
+BOOL CALLBACK EnumControllerCallback(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef);
+BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
 void Shutdown();
-void CreateJoystick(LPCDIDEVICEINSTANCE lpddi);
-void SetupJoystick();
+void CreateController(LPCDIDEVICEINSTANCE lpddi);
+void SetupController();
 void InitializeFields();
 void CacheFields();
 void UpdateFields();
@@ -90,18 +90,18 @@ void PrintError(HRESULT error);
 /**
  * Initializes any field ids
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_initIDs(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jclass clazz) {
   environment = env;
-  clsJoystick = clazz;
+  clsController = clazz;
 
-  /* Cache fields in Joystick */
+  /* Cache fields in Controller */
   CacheFields();
 }
 
 /**
- * Called when the Joystick instance is to be created
+ * Called when the Controller instance is to be created
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate(JNIEnv *env, jclass clazz) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
   // Create the DirectInput object. 
   HRESULT hr;
   hr = DirectInputCreate(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &lpDI, NULL); 
@@ -110,27 +110,27 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate(JNIEnv *env, jc
     return JNI_FALSE;
   }
 
-  /*  Find all joysticks */
-  EnumerateJoysticks();
+  /*  Find all Controllers */
+  EnumerateControllers();
   if (!create_success) {
     Shutdown();
     return JNI_FALSE;
   }
 
-  /* Enumerate capabilities of joystick */
+  /* Enumerate capabilities of Controller */
   EnumerateCapabilities();
   if (!create_success) {
     Shutdown();
     return JNI_FALSE;
   }
 
-  /* Initialize any fields on the Joystick */
+  /* Initialize any fields on the Controller */
   InitializeFields();
 
   /* Set capabilities */
   SetCapabilities();
 
-  /* Aquire the joystick */
+  /* Aquire the Controller */
   hr = lpDIDevice->Acquire();
   if(FAILED(hr)) {
     Shutdown();
@@ -141,23 +141,23 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate(JNIEnv *env, jc
 }
 
 /*
- * Class:     org_lwjgl_input_Joystick
+ * Class:     org_lwjgl_input_Controller
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nDestroy(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nDestroy(JNIEnv *env, jclass clazz) {
   Shutdown();
 }
 
 /*
- * Class:     org_lwjgl_input_Joystick
+ * Class:     org_lwjgl_input_Controller
  * Method:    nPoll
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nPoll(JNIEnv * env, jclass clazz) {
   HRESULT hRes;
 
-  // poll the joystick to read the current state
+  // poll the Controller to read the current state
   hRes = lpDIDevice->Poll();
   if (FAILED(hRes)) {
 #if _DEBUG
@@ -187,11 +187,11 @@ void Shutdown() {
 }
 
 /**
- * Enumerates the capabilities of the joystick attached to the system
+ * Enumerates the capabilities of the Controller attached to the system
  */
 void EnumerateCapabilities() {
   HRESULT hr;
-  hr = lpDIDevice->EnumObjects(EnumJoystickObjectsCallback, NULL, DIDFT_ALL);
+  hr = lpDIDevice->EnumObjects(EnumControllerObjectsCallback, NULL, DIDFT_ALL);
   if FAILED(hr) { 
     create_success = false;
     return;
@@ -200,11 +200,11 @@ void EnumerateCapabilities() {
 }
 
 /**
- * Enumerates the joysticks attached to the system
+ * Enumerates the Controllers attached to the system
  */
-void EnumerateJoysticks() {
+void EnumerateControllers() {
   HRESULT hr;
-  hr = lpDI->EnumDevices(DIDEVTYPE_JOYSTICK, EnumJoystickCallback, 0, DIEDFL_ATTACHEDONLY);
+  hr = lpDI->EnumDevices(DIDEVTYPE_JOYSTICK, EnumControllerCallback, 0, DIEDFL_ATTACHEDONLY);
   if FAILED(hr) { 
     create_success = false;
     return;
@@ -213,24 +213,24 @@ void EnumerateJoysticks() {
 }
 
 /**
- * Callback from EnumDevices. Called for each joystick attached to the system
+ * Callback from EnumDevices. Called for each Controller attached to the system
  */
-BOOL CALLBACK EnumJoystickCallback(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef) {
-  /* Add the joystick */
-  CreateJoystick(pdinst);
+BOOL CALLBACK EnumControllerCallback(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef) {
+  /* Add the Controller */
+  CreateController(pdinst);
   if(create_success) {
-    /* Do setup of joystick */
-    SetupJoystick();
+    /* Do setup of Controller */
+    SetupController();
   }
 
-  /* just stop after 1st joystick */
+  /* just stop after 1st Controller */
   return DIENUM_STOP;
 }
 
 /**
- * Callback from EnumObjects. Called for each "object" on the joystick.
+ * Callback from EnumObjects. Called for each "object" on the Controller.
  */
-BOOL CALLBACK EnumJoystickObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
+BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
   if(lpddoi->guidType == GUID_Button) {
     buttoncount++;
   } else if(lpddoi->guidType == GUID_XAxis || lpddoi->guidType == GUID_YAxis) {
@@ -248,9 +248,9 @@ BOOL CALLBACK EnumJoystickObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVO
 }
 
 /**
- * Creates the specified device as a joystick
+ * Creates the specified device as a Controller
  */
-void CreateJoystick(LPCDIDEVICEINSTANCE lpddi) {
+void CreateController(LPCDIDEVICEINSTANCE lpddi) {
   HRESULT hr;
   hr = lpDI->CreateDevice(lpddi->guidInstance, (LPDIRECTINPUTDEVICE*) &lpDIDevice, NULL);
   if FAILED(hr) {	
@@ -261,10 +261,10 @@ void CreateJoystick(LPCDIDEVICEINSTANCE lpddi) {
 }
 
 /**
- * Sets up the joystick properties
+ * Sets up the Controller properties
  */ 
-void SetupJoystick() {
-  // set joystick data format
+void SetupController() {
+  // set Controller data format
   if(lpDIDevice->SetDataFormat(&c_dfDIJoystick2) != DI_OK) {
     create_success = false;
     return;
@@ -283,8 +283,8 @@ void SetupJoystick() {
   diprg.diph.dwHeaderSize = sizeof(diprg.diph);
   diprg.diph.dwObj        = DIJOFS_X;
   diprg.diph.dwHow        = DIPH_BYOFFSET;
-  diprg.lMin              = JOYMIN;
-  diprg.lMax              = JOYMAX;
+  diprg.lMin              = AXISMIN;
+  diprg.lMax              = AXISMAX;
 
   if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
     create_success = false;
@@ -315,21 +315,21 @@ void SetupJoystick() {
 }
 
 /**
- * Sets the fields on the Joystick
+ * Sets the fields on the Controller
  */
 void InitializeFields() {
   //set buttons array
   jbooleanArray buttonsArray = environment->NewBooleanArray(buttoncount);
-  environment->SetStaticObjectField(clsJoystick, fidButtons, buttonsArray);
+  environment->SetStaticObjectField(clsController, fidButtons, buttonsArray);
 }
 
 /**
- * Updates the fields on the Joystick
+ * Updates the fields on the Controller
  */
 void UpdateFields() {
   HRESULT                 hRes; 
 
-  // get data from the joystick 
+  // get data from the Controller 
   hRes = lpDIDevice->GetDeviceState(sizeof(DIJOYSTATE2), &js); 
 
   if (hRes != DI_OK) { 
@@ -345,48 +345,48 @@ void UpdateFields() {
   }
 
   //axis's
-  environment->SetStaticIntField(clsJoystick, fidX, js.lX);
-  environment->SetStaticIntField(clsJoystick, fidY, js.lY);
+  environment->SetStaticIntField(clsController, fidX, js.lX);
+  environment->SetStaticIntField(clsController, fidY, js.lY);
   if(hasz) {
-    environment->SetStaticIntField(clsJoystick, fidZ, js.lZ);
+    environment->SetStaticIntField(clsController, fidZ, js.lZ);
   }
 
   //buttons
-  jbooleanArray buttonsArray = (jbooleanArray) environment->GetStaticObjectField(clsJoystick, fidButtons);
+  jbooleanArray buttonsArray = (jbooleanArray) environment->GetStaticObjectField(clsController, fidButtons);
   BYTE * buttons = (BYTE *) environment->GetPrimitiveArrayCritical(buttonsArray, NULL);
   memcpy(buttons, js.rgbButtons, buttoncount);
   environment->ReleasePrimitiveArrayCritical(buttonsArray, buttons, 0);
 
   //pov
   if(haspov) {
-    environment->SetStaticIntField(clsJoystick, fidPOV, js.rgdwPOV[0]);
+    environment->SetStaticIntField(clsController, fidPOV, js.rgdwPOV[0]);
   }
 }
 
 /**
- * Sets the capabilities of the joystick
+ * Sets the capabilities of the Controller
  */
 void SetCapabilities() {
   //set buttoncount
-  environment->SetStaticIntField(clsJoystick, fidButtonCount, buttoncount);
+  environment->SetStaticIntField(clsController, fidButtonCount, buttoncount);
 
   //set z axis
-  environment->SetStaticIntField(clsJoystick, fidHasZAxis, hasz);
+  environment->SetStaticIntField(clsController, fidHasZAxis, hasz);
 
   //set pov
-  environment->SetStaticIntField(clsJoystick, fidHasPOV, haspov);
+  environment->SetStaticIntField(clsController, fidHasPOV, haspov);
 }
 
 /**
  * Caches the field ids for quicker access
  */
 void CacheFields() {
-  fidButtonCount  = environment->GetStaticFieldID(clsJoystick, "buttonCount", "I");
-  fidHasZAxis     = environment->GetStaticFieldID(clsJoystick, "hasZAxis", "Z");
-  fidHasPOV       = environment->GetStaticFieldID(clsJoystick, "hasPOV", "Z");
-  fidButtons      = environment->GetStaticFieldID(clsJoystick, "buttons", "[Z");
-  fidX            = environment->GetStaticFieldID(clsJoystick, "x", "I");
-  fidY            = environment->GetStaticFieldID(clsJoystick, "y", "I");
-  fidZ            = environment->GetStaticFieldID(clsJoystick, "z", "I");
-  fidPOV          = environment->GetStaticFieldID(clsJoystick, "pov", "I");
+  fidButtonCount  = environment->GetStaticFieldID(clsController, "buttonCount", "I");
+  fidHasZAxis     = environment->GetStaticFieldID(clsController, "hasZAxis", "Z");
+  fidHasPOV       = environment->GetStaticFieldID(clsController, "hasPOV", "Z");
+  fidButtons      = environment->GetStaticFieldID(clsController, "buttons", "[Z");
+  fidX            = environment->GetStaticFieldID(clsController, "x", "I");
+  fidY            = environment->GetStaticFieldID(clsController, "y", "I");
+  fidZ            = environment->GetStaticFieldID(clsController, "z", "I");
+  fidPOV          = environment->GetStaticFieldID(clsController, "pov", "I");
 }

@@ -37,32 +37,32 @@ import org.lwjgl.Sys;
 /**
  * $Id$
  * <br>
- * A raw Joystick interface. This can be used to poll the current state of the
- * joystick buttons, and determine the joystick position. The joystick position
- * is returned as ints in the range -1000 to 1000.
+ * A raw Controller interface. This can be used to poll the current state of a
+ * controllers buttons, and axis positions. The axis positions
+ * are returned as ints in the range -1000 to 1000.
  * 
  * No buffering is available.
  *
  * Currently n (native limits, currently 128 - might change) buttons, the x, y,
  * z axis is supported along with a POV (or HAT) and a slider, where the z axis
- * represents a throttle. In the future the joystick may support more buttons
+ * represents a throttle. In the future the controller may support more buttons
  * and axises and other features. but this is a platform issue.
  *
- * The joystick implementation currently only supports the first attached joystick.
+ * The Controller implementation currently only supports the first attached device.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public class Joystick {
+public class Controller {
 
 	static {
 		initialize();
 	}
 
-	/** Has the joystick been created? */
+	/** Has the controller been created? */
 	private static boolean created;
 
-	/** The joystick buttons status */
+	/** The controller buttons status */
 	private static boolean[] buttons;
 
 	/** X position, range -1000 to 1000 */
@@ -95,7 +95,7 @@ public class Joystick {
 	/** Constant specifying westward POV */
 	public static final int POV_WEST = 9000;
 
-	/* Joystick capabilities */
+	/* Controller capabilities */
 	public static int buttonCount = -1;
   public static boolean hasXAxis = false;
   public static boolean hasYAxis = false;
@@ -104,9 +104,9 @@ public class Joystick {
   public static boolean hasSlider = false;
 
 	/**
-	 * Joystick cannot be constructed.
+	 * Controller cannot be constructed.
 	 */
-	private Joystick() {
+	private Controller() {
 	}
 
 	/**
@@ -118,8 +118,8 @@ public class Joystick {
 	}
 
 	/**
-	 * "Create" the joystick. The display must first have been created.
-	 * @throws Exception if the joystick could not be created for any reason
+	 * "Create" the controller. The display must first have been created.
+	 * @throws Exception if the controller could not be created for any reason
 	 */
 	public static void create() throws Exception {
 		if (created) {
@@ -127,13 +127,13 @@ public class Joystick {
 		}
 
 		if (!nCreate()) {
-			throw new Exception("The joystick could not be created.");
+			throw new Exception("The controller could not be created.");
 		}
 		created = true;
 	}
 
 	/**
-	 * "Destroy" the joystick
+	 * "Destroy" the controller
 	 */
 	public static void destroy() {
 		if (!created) {
@@ -145,39 +145,39 @@ public class Joystick {
 	}
 
 	/**
-	 * Polls the joystick.
+	 * Polls the controller.
 	 */
 	public static void poll() {
-		assert created : "The joystick has not been created.";
+		assert created : "The controller has not been created.";
 		nPoll();
 	}
 
 	/**
-	 * See if a particular mouse button is down.
+	 * See if a particular button is down.
 	 * 
 	 * @param button The index of the button you wish to test (0..buttonCount)
 	 * @return true if the specified button is down
 	 * @see #buttonCount
 	 */
 	public static boolean isButtonDown(int button) {
-		assert created : "The joystick has not been created.";
+		assert created : "The controller has not been created.";
 		return buttons[button];
 	}
 
 	/**
-	 * Native method to poll the joystick
+	 * Native method to poll the controller
 	 */
 	private static native void nPoll();
 
 	/**
-	 * Native method to create the joystick
+	 * Native method to create the controller
 	 * 
-	 * @return true if the joystick was created
+	 * @return true if the controller was created
 	 */
 	private static native boolean nCreate();
 
 	/**
-	* Native method the destroy the joystick
+	* Native method the destroy the controller
 	*/
 	private static native void nDestroy();
 
