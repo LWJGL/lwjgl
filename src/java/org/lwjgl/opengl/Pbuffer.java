@@ -171,7 +171,7 @@ public final class Pbuffer {
 	 * Create an instance of a Pbuffer using the Display context. The buffer is double-buffered, like the Display.
 	 * <p/>
 	 * NOTE: The Pbuffer will use the same context as the Display and requires that the Display has been created. Therefore,
-	 * no pixel format or render to texture parameters can be specified. All OpenGL state,
+	 * no separate pixel format can be specified. All OpenGL state,
 	 * including display lists, textures etc. is shared between the Pbuffer and the Display. If the Display is destroyed,
 	 * the Pbuffer will not be usable, even if the Display is created again.
 	 * <p/>
@@ -180,10 +180,10 @@ public final class Pbuffer {
 	 * @param width         Pbuffer width
 	 * @param height        Pbuffer height
 	 */
-	public static Pbuffer createPbufferUsingDisplayContext(int width, int height) throws LWJGLException {
+	public static Pbuffer createPbufferUsingDisplayContext(int width, int height, RenderTexture renderTexture) throws LWJGLException {
 		if (!Display.isCreated())
 			throw new IllegalStateException("The Display must be created before a shared Pbuffer can be created that use the Display context");
-		int handle = createPbuffer(true, width, height, null, null);
+		int handle = createPbuffer(true, width, height, null, renderTexture);
 		return new Pbuffer(width, height, Display.getContext(), handle);
 	}
 
