@@ -46,6 +46,7 @@
 	#include <Carbon/Carbon.h>
 	extern void resetMode(JNIEnv *env);
 	extern bool switchMode(JNIEnv *env, long width, long height, long bpp, long freq);
+	extern bool switchToNearestMode(JNIEnv *env, long width, long height, long bpp, long freq);
 	extern void handleKeyboardEvent(EventRef event);
 	extern void handleMouseEvent(EventRef event);
 

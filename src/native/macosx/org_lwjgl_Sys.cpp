@@ -146,12 +146,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 
 	CopyCStringToPascal(urlString, urlStr);
 	env->ReleaseStringUTFChars(url, urlString);
-
-    err = ICStart(&inst, '????'); // Use your creator code if you have one!
+/*	err = ICStart(&inst, '????'); // Use your creator code if you have one!
 	if (err == noErr) {
 		startSel = 0;
 		endSel = urlStr[0];
 		err = ICLaunchURL(inst, "\p", (char *) &urlStr[1], urlStr[0], &startSel, &endSel);
 		(void) ICStop(inst);
-	}
+	}*/
 }

@@ -43,6 +43,7 @@
 #include "tools.h"
 #include "org_lwjgl_input_Keyboard.h"
 #include "common_tools.h"
+#include <CoreServices/CoreServices.h>
 
 #define KEYBOARD_SIZE 256
 #define TRANSLATION_BUFFER_SIZE 10
@@ -52,6 +53,7 @@ static unsigned char key_map[KEYBOARD_SIZE];
 static bool buffer_enabled = false;
 static bool translation_enabled = false;
 static event_queue_t event_queue;
+static UInt32 deadKeyState;
 
 static bool handleMappedKey(unsigned char mapped_code, unsigned char state) {
 	unsigned char old_state = key_buf[mapped_code];
@@ -109,7 +111,7 @@ static bool writeUniChars(int num_chars, const UniChar *buffer) {
 	return true;
 }
 
-static bool writeAsciiChars(int num_chars, const char *buffer) {
+static bool writeAsciiChars(int num_chars, const unsigned char *buffer) {
 	if (num_chars == 0)
 		return false;
 	unsigned char c = buffer[0];
@@ -125,64 +127,69 @@ static bool writeAsciiChars(int num_chars, const char *buffer) {
 	return true;
 }
 
-static bool handleUnicode(EventRef event) {
-	UniChar unicode_buffer[TRANSLATION_BUFFER_SIZE];
-	UInt32 data_size;
-	int num_chars;
-	OSStatus err = GetEventParameter(event, kEventParamKeyUnicodes, typeUnicodeText, NULL, 0, &data_size, NULL);
-	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get unicode char count\n");
-#endif
-		return false;
-	}
-	num_chars = data_size/sizeof(UniChar);
-	if (num_chars >= TRANSLATION_BUFFER_SIZE) {
-#ifdef _DEBUG
-		printf("Unicode chars could not fit in buffer\n");
-#endif
-		return false;
-	}
-	err = GetEventParameter(event, kEventParamKeyUnicodes, typeUnicodeText, NULL, data_size, NULL, unicode_buffer);
-	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get unicode chars\n");
-#endif
-		return false;
-	}
-	return writeUniChars(num_chars, unicode_buffer);
-}
+static bool handleTranslation(EventRef event, bool state) {
+	UniChar unicodeInputString[TRANSLATION_BUFFER_SIZE];
 
-static bool handleAscii(EventRef event) {
-	char ascii_buffer[TRANSLATION_BUFFER_SIZE];
-	UInt32 data_size;
-	int num_chars;
-	OSStatus err = GetEventParameter(event, kEventParamKeyMacCharCodes, typeChar, NULL, 0, &data_size, NULL);
+	KeyboardLayoutRef layout;
+	OSStatus err = KLGetCurrentKeyboardLayout(&layout);
 	if (err != noErr) {
 #ifdef _DEBUG
-		printf("Could not get ascii char count\n");
+		printf("Could not get current keyboard layout\n");
 #endif
 		return false;
 	}
-	num_chars = data_size/sizeof(char);
-	if (num_chars >= TRANSLATION_BUFFER_SIZE) {
-#ifdef _DEBUG
-		printf("Ascii chars could not fit in buffer\n");
-#endif
-		return false;
-	}
-	err = GetEventParameter(event, kEventParamKeyMacCharCodes, typeChar, NULL, data_size, NULL, ascii_buffer);
-	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get ascii chars\n");
-#endif
-		return false;
-	}
-	return writeAsciiChars(num_chars, ascii_buffer);
-}
 
-static bool handleTranslation(EventRef event) {
-	return handleUnicode(event) || handleAscii(event); 
+	UInt32 keyboardType;
+	UInt32 modifierKeyState;
+	UInt32 virtualKeyCode;
+	UniCharCount actualStringLength;
+	OSStatus status;
+	UCKeyboardLayout *uchrHandle;
+	bool success = GetEventParameter(event, kEventParamKeyCode, typeUInt32, NULL, sizeof(virtualKeyCode), NULL, &virtualKeyCode) == noErr;
+	success = success && GetEventParameter(event, kEventParamKeyboardType, typeUInt32, NULL, sizeof(keyboardType), NULL, &keyboardType) == noErr;
+	success = success && GetEventParameter(event, kEventParamKeyModifiers, typeUInt32, NULL, sizeof(modifierKeyState), NULL, &modifierKeyState) == noErr;
+	if (!success) {
+#ifdef _DEBUG
+		printf("Could not get event parameters for character translation\n");
+#endif
+		return false;
+	}
+	err = KLGetKeyboardLayoutProperty(layout, kKLuchrData, (const void **)&uchrHandle);
+	if (err == noErr && uchrHandle != NULL) {
+		UInt16 action = state ? kUCKeyActionDown : kUCKeyActionUp;
+		status = UCKeyTranslate(uchrHandle, virtualKeyCode, action,
+					modifierKeyState, keyboardType, 0,
+					&deadKeyState, TRANSLATION_BUFFER_SIZE,
+					&actualStringLength, unicodeInputString);
+		if (state)
+			return writeUniChars(actualStringLength, unicodeInputString);
+	} else {
+		void * kchrHandle;
+		err = KLGetKeyboardLayoutProperty(layout, kKLKCHRData, (const void **)&kchrHandle);
+		if (err == noErr && kchrHandle != NULL) {
+			UInt16 action = state ? 0x80 : 0x00;
+			UInt16 key_code = (virtualKeyCode & 0x7f);
+			UInt16 modifier_code = (modifierKeyState & 0xff00);
+			UInt16 code = modifier_code | action | key_code;
+			UInt32 character = KeyTranslate(kchrHandle, code, &deadKeyState);
+			int count = 0;
+			unsigned char ascii_buffer[2];
+			unsigned char c1 = (unsigned char)(character & 0xff);
+			if (c1 != 0)
+				ascii_buffer[count++] = c1;
+			unsigned char c2 = (unsigned char)((character & 0xff0000) >> 16);
+			if (c2 != 0)
+				ascii_buffer[count++] = c2;
+			if (state)
+				return writeAsciiChars(count, ascii_buffer);
+		} else {
+#ifdef _DEBUG
+			printf("Could not translate key\n");
+#endif
+			return false;
+		}
+	}
+	return false;
 }
 
 static void doKeyDown(EventRef event) {
@@ -194,7 +201,7 @@ static void doKeyDown(EventRef event) {
 #endif
 		return;
 	}
-	if (handleKey(key_code, 1) && !handleTranslation(event)) {
+	if (handleKey(key_code, 1) && !handleTranslation(event, true)) {
 		putEventElement(&event_queue, 0);
 		putEventElement(&event_queue, 0);
 	}
@@ -209,7 +216,7 @@ static void doKeyUp(EventRef event) {
 #endif
 		return;
 	}
-	if (handleKey(key_code, 0) && !handleTranslation(event)) {
+	if (handleKey(key_code, 0) && !handleTranslation(event, false)) {
 		putEventElement(&event_queue, 0);
 		putEventElement(&event_queue, 0);
 	}
@@ -360,6 +367,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs(JNIEnv * env, jclas
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate(JNIEnv * env, jclass clazz) {
 	buffer_enabled = false;
 	translation_enabled = false;
+	deadKeyState = 0;
 	initEventQueue(&event_queue);
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	setupMappings();
