@@ -74,8 +74,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpD
         float * sourceRecord, * destRecord;
         float magnitude, magnitude_squared;
         
-        int i;
-        register int j;
+        int i, j;
         
         for (i = 0; i < source.elements; i++)
         {
@@ -84,12 +83,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Math_00024MatrixOpNormalise_00024MatrixOpD
             sourceRecord = source.nextRecord();
             destRecord = dest.nextRecord();
             
-            for (j = 0 ; j < sourceWidth*sourceHeight; i++)
+            for (j = 0 ; j < sourceWidth*sourceHeight; j++)
                 magnitude_squared += sourceRecord[j] * sourceRecord[j];
                 
             magnitude = (float) sqrt((double) magnitude_squared);
                 
-            for (j = 0; j < sourceWidth*sourceHeight; i++)
+            for (j = 0; j < sourceWidth*sourceHeight; j++)
                 destRecord[j] = sourceRecord[j] / magnitude;
             
             dest.writeRecord();
