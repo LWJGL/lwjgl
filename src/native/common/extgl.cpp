@@ -85,7 +85,6 @@ aglResetLibraryPROC aglResetLibrary = NULL;
 aglSurfaceTexturePROC aglSurfaceTexture = NULL;
 #endif
 
-static bool extgl_error = false;
 
 struct ExtensionTypes extgl_Extensions;
 
@@ -118,7 +117,6 @@ void *extgl_GetProcAddress(const char *name)
 		if (t == NULL)
 		{
 			printfDebug("Could not locate symbol %s\n", name);
-			extgl_error = true;
 		}
 	}
 	return t;
@@ -132,7 +130,6 @@ void *extgl_GetProcAddress(const char *name)
 		if (t == NULL)
 		{
 			printfDebug("Could not locate symbol %s\n", name);
-			extgl_error = true;
 		}
 	}
 	return t;
@@ -145,7 +142,6 @@ void *extgl_GetProcAddress(const char *name)
 		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
 		if (func_pointer == NULL) {
 			printfDebug("Could not locate symbol %s\n", name);
-			extgl_error = true;
 		}
 	}
 	CFRelease(str);
@@ -243,7 +239,6 @@ bool extgl_QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions
 
 	if (extensions == NULL) {
 		printfDebug("NULL extension string\n");
-		extgl_error = true;
 		return false;
 	}
 
@@ -316,7 +311,7 @@ bool extgl_InitAGL(JNIEnv *env)
 	aglErrorString = (aglErrorStringPROC)extgl_GetProcAddress("aglErrorString");
 	aglResetLibrary = (aglResetLibraryPROC)extgl_GetProcAddress("aglResetLibrary");
 	aglSurfaceTexture = (aglSurfaceTexturePROC)extgl_GetProcAddress("aglSurfaceTexture");
-	return !extgl_error;
+	return !extgl_error; // Split out AGL into extgl_agl.cpp like wgl and glx and replace with InitializeFunctions
 }
 
 #endif
@@ -533,7 +528,6 @@ extern void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set);
 /* extgl_Init the extensions and load all the functions */
 bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 {
-	extgl_error = false;
 	bool result = extgl_InitOpenGL1_1(env);
 	if (!result)
 		return false;

@@ -538,7 +538,6 @@ struct ExtensionTypes
 };
 
 extern struct ExtensionTypes extgl_Extensions;
-//extern bool extgl_error;
 
 typedef GLenum (APIENTRY * glGetErrorPROC) (void);
 typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
@@ -556,12 +555,6 @@ extern void extgl_Close(void);
 extern bool extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions);
 extern bool extgl_QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extensions, const char *name);
-
-#define EXTGL_SANITY_CHECK(e,x)		if (extgl_error) { \
-						extgl_Extensions.x = false; \
-						printf("NOTICE: %s disabled because of missing driver symbols\n", #x); \
-						extgl_error = false; \
-					}
 
 #ifdef __cplusplus
 }
