@@ -383,8 +383,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_reshape(JNIEnv *env, j
 		windowflags = WS_POPUP;
 	} else {
 		exstyle = WS_EX_APPWINDOW;
-		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_MINIMIZEBOX | WS_SYSMENU;
+		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 	}
+	windowflags = windowflags | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 	
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar:
