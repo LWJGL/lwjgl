@@ -1481,6 +1481,18 @@ public class GL extends CoreGL implements GLConstants {
 		int outZ,
 		int outW);
 
+	public native void bindBufferARB(int target, int buffer);
+	public native void deleteBuffersARB(int n, int buffers);
+	public native void genBuffersARB(int n, int buffers);
+	public native boolean isBufferARB(int buffer);
+	public native void bufferDataARB(int target, int size, int data, int usage);
+	public native void bufferSubDataARB(int target, int offset, int size, int data);
+	public native void getBufferSubDataARB(int target, int offset, int size, int data);
+	public native int mapBufferARB(int target, int access);
+	public native boolean unmapBufferARB(int target);
+	public native void getBufferParameterivARB(int target, int pname, int params);
+	public native void getBufferPointervARB(int target, int pname, int params);
+
 	/*
 	 * Available extensions
 	 */
@@ -1503,6 +1515,7 @@ public class GL extends CoreGL implements GLConstants {
 	public boolean ARB_transpose_matrix;
 	public boolean ARB_vertex_blend;
 	public boolean ARB_vertex_program;
+	public boolean ARB_vertex_buffer_object;
 	public boolean ARB_window_pos;
 	public boolean EXT_abgr;
 	public boolean EXT_bgra;

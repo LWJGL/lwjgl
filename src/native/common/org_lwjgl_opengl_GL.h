@@ -7,9 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: currentContext */
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024BaseGL */
+/* Inaccessible static: currentWindow */
 /* Inaccessible static: WGL_ARB_buffer_region */
 /* Inaccessible static: WGL_ARB_extensions_string */
 /* Inaccessible static: WGL_ARB_pbuffer */
@@ -3369,6 +3367,94 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3svARB
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_writeMaskEXT
   (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    bindBufferARB
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindBufferARB
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    deleteBuffersARB
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteBuffersARB
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    genBuffersARB
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genBuffersARB
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    isBufferARB
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isBufferARB
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    bufferDataARB
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bufferDataARB
+  (JNIEnv *, jobject, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    bufferSubDataARB
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bufferSubDataARB
+  (JNIEnv *, jobject, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    getBufferSubDataARB
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getBufferSubDataARB
+  (JNIEnv *, jobject, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    mapBufferARB
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_mapBufferARB
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    unmapBufferARB
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_unmapBufferARB
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    getBufferParameterivARB
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getBufferParameterivARB
+  (JNIEnv *, jobject, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    getBufferPointervARB
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getBufferPointervARB
+  (JNIEnv *, jobject, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GL

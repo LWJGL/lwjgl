@@ -4656,6 +4656,141 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_writeMaskEXT(JNIEnv * env, jobje
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    bindBufferARB
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindBufferARB(JNIEnv *env, jobject obj, jint target, jint buffer)
+{
+	CHECK_EXISTS(glBindBufferARB)
+	glBindBufferARB((GLenum) target, (GLuint) buffer);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    deleteBuffersARB
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteBuffersARB(JNIEnv *env , jobject obj, jint n, jint buffers)
+{
+	CHECK_EXISTS(glDeleteBuffersARB)
+	glDeleteBuffersARB((GLsizei)n, (const GLuint *)buffers);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    genBuffersARB
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genBuffersARB(JNIEnv *env, jobject obj, jint n, jint buffers)
+{
+	CHECK_EXISTS(glGenBuffersARB)
+	glGenBuffersARB((GLsizei)n, (GLuint *)buffers);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    isBufferARB
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isBufferARB(JNIEnv *env, jobject obj, jint buffer)
+{
+	CHECK_EXISTS(glIsBufferARB)
+	jboolean ret = glIsBufferARB((GLuint)buffer);
+	CHECK_GL_ERROR
+	return ret;
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    bufferDataARB
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bufferDataARB(JNIEnv *env, jobject obj, jint target, jint size, jint data, jint usage)
+{
+	CHECK_EXISTS(glBufferDataARB)
+	glBufferDataARB((GLenum)target, (GLsizeiptrARB)size, (const GLvoid *)data, (GLenum)usage);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    bufferSubDataARB
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bufferSubDataARB(JNIEnv *env, jobject obj, jint target, jint offset, jint size, jint data)
+{
+	CHECK_EXISTS(glBufferSubDataARB)
+	glBufferSubDataARB((GLenum)target, (GLintptrARB)offset, (GLsizeiptrARB)size, (const GLvoid *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    getBufferSubDataARB
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getBufferSubDataARB(JNIEnv *env, jobject obj, jint target, jint offset, jint size, jint data)
+{
+	CHECK_EXISTS(glGetBufferSubDataARB)
+	glGetBufferSubDataARB((GLenum)target, (GLintptrARB)offset, (GLsizeiptrARB)size, (GLvoid *)data);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    mapBufferARB
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_mapBufferARB(JNIEnv *env, jobject obj, jint target, jint access)
+{
+	CHECK_EXISTS(glMapBufferARB)
+	jint ret = (jint)glMapBufferARB((GLenum)target, (GLenum)access);
+	CHECK_GL_ERROR
+	return ret;
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    unmapBufferARB
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_unmapBufferARB(JNIEnv *env, jobject obj, jint target)
+{
+	CHECK_EXISTS(glUnmapBufferARB)
+	jboolean ret = glUnmapBufferARB((GLenum)target);
+	CHECK_GL_ERROR
+	return ret;
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    getBufferParameterivARB
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getBufferParameterivARB(JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	CHECK_EXISTS(glGetBufferParameterivARB)
+	glGetBufferParameterivARB((GLenum)target, (GLenum)pname, (GLint *)params);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    getBufferPointervARB
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getBufferPointervARB(JNIEnv *env, jobject obj, jint target, jint pname, jint params)
+{
+	CHECK_EXISTS(glGetBufferPointervARB)
+	glGetBufferPointervARB((GLenum)target, (GLenum)pname, (GLvoid **)params);
+	CHECK_GL_ERROR
+}
+		      
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    checkWGLExtensionsString
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_checkWGLExtensionsString(JNIEnv * env, jclass clazz)

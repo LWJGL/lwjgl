@@ -805,7 +805,22 @@ glGetFinalCombinerInputParameterfvNVPROC glGetFinalCombinerInputParameterfvNV = 
 glGetFinalCombinerInputParameterivNVPROC glGetFinalCombinerInputParameterivNV = NULL;
 #endif /* GL_NV_register_combiners */
 
-/* ARB_multisample */
+/* ARB_vertex_buffer_object */
+
+#ifdef GL_ARB_vertex_buffer_object
+glBindBufferARBPROC glBindBufferARB = NULL;
+glDeleteBuffersARBPROC glDeleteBuffersARB = NULL;
+glGenBuffersARBPROC glGenBuffersARB = NULL;
+glIsBufferARBPROC glIsBufferARB = NULL;
+glBufferDataARBPROC glBufferDataARB = NULL;
+glBufferSubDataARBPROC glBufferSubDataARB = NULL;
+glGetBufferSubDataARBPROC glGetBufferSubDataARB = NULL;
+glMapBufferARBPROC glMapBufferARB = NULL;
+glUnmapBufferARBPROC glUnmapBufferARB = NULL;
+glGetBufferParameterivARBPROC glGetBufferParameterivARB = NULL;
+glGetBufferPointervARBPROC glGetBufferPointervARB = NULL;
+#endif /* GL_ARB_vertex_buffer_object */
+/* ARB_vertex_buffer_object */
 
 #ifdef GL_ARB_multisample
 glSampleCoverageARBPROC glSampleCoverageARB = NULL;
@@ -1688,6 +1703,25 @@ void extgl_InitEXTCullVertex()
         return;
     glCullParameterfvEXT = (glCullParameterfvEXTPROC) extgl_GetProcAddress("glCullParameterfvEXT");
     glCullParameterdvEXT = (glCullParameterdvEXTPROC) extgl_GetProcAddress("glCullParameterdvEXT");
+#endif
+}
+
+void extgl_InitARBVertexBufferObject()
+{
+#ifdef GL_ARB_vertex_buffer_object
+    if (!extgl_Extensions.ARB_vertex_buffer_object)
+        return;
+    glBindBufferARB = (glBindBufferARBPROC) extgl_GetProcAddress("glBindBufferARB");
+    glDeleteBuffersARB = (glDeleteBuffersARBPROC) extgl_GetProcAddress("glDeleteBuffersARB");
+    glGenBuffersARB = (glGenBuffersARBPROC) extgl_GetProcAddress("glGenBuffersARB");
+    glIsBufferARB = (glIsBufferARBPROC) extgl_GetProcAddress("glIsBufferARB");
+    glBufferDataARB = (glBufferDataARBPROC) extgl_GetProcAddress("glBufferDataARB");
+    glBufferSubDataARB = (glBufferSubDataARBPROC) extgl_GetProcAddress("glBufferSubDataARB");
+    glGetBufferSubDataARB = (glGetBufferSubDataARBPROC) extgl_GetProcAddress("glGetBufferSubDataARB");
+    glMapBufferARB = (glMapBufferARBPROC) extgl_GetProcAddress("glMapBufferARB");
+    glUnmapBufferARB = (glUnmapBufferARBPROC) extgl_GetProcAddress("glUnmapBufferARB");
+    glGetBufferParameterivARB = (glGetBufferParameterivARBPROC) extgl_GetProcAddress("glGetBufferParameterivARB");
+    glGetBufferPointervARB = (glGetBufferPointervARBPROC) extgl_GetProcAddress("glGetBufferPointervARB");
 #endif
 }
 
@@ -3097,6 +3131,7 @@ void extgl_InitSupportedExtensions()
     extgl_Extensions.ARB_texture_mirrored_repeat = GLQueryExtension("GL_ARB_texture_mirrored_repeat");
     extgl_Extensions.ARB_transpose_matrix = GLQueryExtension("GL_ARB_transpose_matrix");
     extgl_Extensions.ARB_vertex_blend = GLQueryExtension("GL_ARB_vertex_blend");
+    extgl_Extensions.ARB_vertex_buffer_object = GLQueryExtension("GL_ARB_vertex_buffer_object");
     extgl_Extensions.ARB_vertex_program = GLQueryExtension("GL_ARB_vertex_program");
     extgl_Extensions.ARB_window_pos = GLQueryExtension("GL_ARB_window_pos");
     extgl_Extensions.EXT_abgr = GLQueryExtension("GL_EXT_abgr");
@@ -3206,6 +3241,7 @@ int extgl_Initialize()
     extgl_InitEXTDrawRangeElements();
     extgl_InitEXTStencilTwoSide();
     extgl_InitARBVertexProgram();
+    extgl_InitARBVertexBufferObject();
     extgl_InitEXTCullVertex();
     extgl_InitEXTBlendFuncSeparate();
     extgl_InitARBImaging();
