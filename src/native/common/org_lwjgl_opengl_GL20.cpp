@@ -821,13 +821,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL20_initNativeStubs(JNIEnv *env, j
 		{"nglGetActiveUniform", "(IIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetActiveUniform, "glGetActiveUniform", (void**)&glGetActiveUniform},
 		{"nglGetUniformfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetUniformfv, "glGetUniformfv", (void**)&glGetUniformfv},
 		{"nglGetUniformiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetUniformiv, "glGetUniformiv", (void**)&glGetUniformiv},
-		{"nglGetShaderSource", "(IILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetShaderSource, "glGetShaderSource", (void**)&glGetShaderSource}
+		{"nglGetShaderSource", "(IILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetShaderSource, "glGetShaderSource", (void**)&glGetShaderSource},
 		// ARB_vertex_shader
 		{"nglBindAttribLocation", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglBindAttribLocation, "glBindAttribLocation", (void**)&glBindAttribLocation},
 		{"nglGetActiveAttrib", "(IIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglGetActiveAttrib, "glGetActiveAttrib", (void**)&glGetActiveAttrib},
-		{"nglGetAttribLocation", "(ILjava/nio/ByteBuffer;I)I", (void*)&Java_org_lwjgl_opengl_GL20_nglGetAttribLocation, "glGetAttribLocation", (void**)&glGetAttribLocation}
+		{"nglGetAttribLocation", "(ILjava/nio/ByteBuffer;I)I", (void*)&Java_org_lwjgl_opengl_GL20_nglGetAttribLocation, "glGetAttribLocation", (void**)&glGetAttribLocation},
 		// ARB_draw_buffers
-		{"nglDrawBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglDrawBuffers, "glDrawBuffers", (void**)&glDrawBuffers}
+		{"nglDrawBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL20_nglDrawBuffers, "glDrawBuffers", (void**)&glDrawBuffers},
 		// Two-Sided Stencil
 		{"glStencilFuncSeparate", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL20_glStencilFuncSeparate, "glStencilFuncSeparate", (void**)&glStencilFuncSeparate},
 		{"glStencilOpSeparate", "(IIII)V", (void*)&Java_org_lwjgl_opengl_GL20_glStencilOpSeparate, "glStencilOpSeparate", (void**)&glStencilOpSeparate}
