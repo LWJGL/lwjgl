@@ -4,17 +4,21 @@ Unless otherwise stated, all files distributed or in CVS are covered by
 the license as stated in the LICENSE file. If you have not received this
 file, please download it from the cvs server.
 
+Please note that DevIL and OpenAL are distributed along side. Their license is also included.
+
 To run some of the included tests:
  Extract the archive, and cd into directory
- Extract the media files into lwjgl folder (only needed for openal tests)
+ Extract media archive into a new root folder called 'res'
+ (please substitute ; and \ according to platform)
 
-  java -cp lwjgl.jar;lwjgl_media.jar;lwjgl_test.jar;lwjgl_util.jar;lwjgl_fmod3.jar; TEST
-  or
-  java -cp lwjgl.jar;lwjgl_media.jar;lwjgl_test.jar;lwjgl_util.jar;lwjgl_fmod3.jar; -Djava.library.path=. TEST 
-  (this specifies that the jvm should locate the lwjgl native libs in current 
-  directory)
+  java -cp .;res;jar\lwjgl.jar;jar\lwjgl_media.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar;jar\lwjgl_fmod3.jar;jar\lwjgl_devil.jar; -Djava.library.path=native TEST 
+  (this specifies that the jvm should locate the lwjgl native libs in 'native' directory)
   
  where TEST is one of the following: 
+ 
+ 	org.lwjgl.test.WindowCreationTest
+ 	org.lwjgl.test.SysTest
+ 	org.lwjgl.test.DisplayTest
  
   org.lwjgl.test.input.MouseCreationTest
   org.lwjgl.test.input.MouseTest
@@ -50,8 +54,10 @@ To run some of the included tests:
   org.lwjgl.test.fmod3.StreamTest
   org.lwjgl.test.fmod3.SyncTest
   
+  org.lwjgl.test.devil.BasicTest
+  
 You may also run the Space invaders demo by executing:
-  java -cp lwjgl.jar;lwjgl_media.jar;lwjgl_test.jar;lwjgl_util.jar; org.lwjgl.examples.spaceinvaders.Game
+  java -cp jar\lwjgl.jar;jar\lwjgl_media.jar;jar\lwjgl_test.jar;jar\lwjgl_util.jar; -Djava.library.path=native org.lwjgl.examples.spaceinvaders.Game
   
 Project Webpage: www.lwjgl.org
 Project Forum: forum.lwjgl.org
