@@ -1862,6 +1862,7 @@ public class ContextCapabilities {
 			(NV_vertex_program_glExecuteProgramNV_pointer = GLContext.getFunctionAddress("glExecuteProgramNV")) != 0;
 	}
 
+
 	private Set initAllStubs() throws LWJGLException {
 		if (!GL11_initNativeFunctionAddresses())
 			throw new LWJGLException("GL11 not supported");

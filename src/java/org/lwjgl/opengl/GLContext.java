@@ -56,7 +56,6 @@ public final class GLContext {
 	/** Map of classes that have native stubs loaded */
 	private static int gl_ref_count;
 	private static boolean did_auto_load;
-	private static boolean loaded_stubs;
 
 	static {
 		Sys.initialize();
@@ -173,10 +172,7 @@ public final class GLContext {
 	}
 
 	private static void loadStubs() throws LWJGLException {
-		if (loaded_stubs)
-			return;
 		new ContextCapabilities();
-		loaded_stubs = true;
 	}
 
 	/**
@@ -194,7 +190,7 @@ public final class GLContext {
 	 * @throws LWJGLException if context non-null, and the gl library can't be loaded or the basic GL11 functions can't be loaded
 	 */
 	public static void useContext(Object context) throws LWJGLException {
-		if ( context == null ) {
+		if (context == null) {
 			ContextCapabilities.unloadAllStubs();
 			setCapabilities(null);
 			if (did_auto_load)
@@ -202,8 +198,7 @@ public final class GLContext {
 			BufferObjectTracker.setCurrent(null);
 			return;
 		}
-		// Ok, now it's the current context.
-		if ( gl_ref_count == 0 ) {
+		if (gl_ref_count == 0) {
 			loadOpenGLLibrary();
 			did_auto_load = true;
 		}

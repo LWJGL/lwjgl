@@ -55,14 +55,18 @@ import java.lang.annotation.Annotation;
  * @version $Revision$
  */
 public class ContextCapabilitiesGenerator {
+	private final static String STUBS_LOADED_NAME = "loaded_stubs";
 	private final static String ALL_INIT_METHOD_NAME = "initAllStubs";
 	private final static String POINTER_INITIALIZER_POSTFIX = "_initNativeFunctionAddresses";
 	private final static String CACHED_EXTS_VAR_NAME = "supported_extensions";
 	private final static String EXTENSION_PREFIX = "GL_";
 	private final static String CORE_PREFIX = "Open";
 
-	public static void generateClassPrologue(PrintWriter writer) {
+	public static void generateClassPrologue(PrintWriter writer, boolean context_specific) {
 		writer.println("public class " + Utils.CONTEXT_CAPS_CLASS_NAME + " {");
+		if (!context_specific) {
+			writer.println("\tprivate static boolean " + STUBS_LOADED_NAME + " = false;");
+		}
 	}
 
 	public static void generateInitializerPrologue(PrintWriter writer) {
@@ -101,6 +105,8 @@ public class ContextCapabilitiesGenerator {
 	public static void generateInitStubsPrologue(PrintWriter writer, boolean context_specific) {
 		writer.println("\tprivate Set " + ALL_INIT_METHOD_NAME + "() throws LWJGLException {");
 		if (!context_specific) {
+			writer.println("\t\tif (" + STUBS_LOADED_NAME + ")");
+			writer.println("\t\t\treturn GLContext.getSupportedExtensions();");
 			writer.println("\t\torg.lwjgl.opengl.GL11.initNativeStubs();");
 		} else {
 			writer.println("\t\tif (!" + getAddressesInitializerName("GL11") + "())");
@@ -110,7 +116,10 @@ public class ContextCapabilitiesGenerator {
 		writer.println("\t\tSet " + CACHED_EXTS_VAR_NAME + " = GLContext.getSupportedExtensions();");
 	}
 
-	public static void generateInitStubsEpilogue(PrintWriter writer) {
+	public static void generateInitStubsEpilogue(PrintWriter writer, boolean context_specific) {
+		if (!context_specific) {
+			writer.println("\t\t" + STUBS_LOADED_NAME + " = true;");
+		}
 		writer.println("\t\treturn " + CACHED_EXTS_VAR_NAME + ";");
 		writer.println("\t}");
 	}

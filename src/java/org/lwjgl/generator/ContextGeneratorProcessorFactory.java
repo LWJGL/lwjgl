@@ -114,7 +114,7 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 			writer.println("import org.lwjgl.LWJGLException;");
 			writer.println("import java.util.Set;");
 			writer.println();
-			ContextCapabilitiesGenerator.generateClassPrologue(writer);
+			ContextCapabilitiesGenerator.generateClassPrologue(writer, context_specific);
 			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
 			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
 			for (TypeDeclaration typedecl : interface_decls) {
@@ -127,12 +127,13 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 				ContextCapabilitiesGenerator.generateSymbolAddresses(writer, interface_decl);
 			}
+			writer.println();
 			if (context_specific) {
-				writer.println();
 				for (TypeDeclaration typedecl : interface_decls) {
 					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 					ContextCapabilitiesGenerator.generateAddressesInitializers(writer, interface_decl);
 				}
+				writer.println();
 			}
 			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer, context_specific);
 			for (TypeDeclaration typedecl : interface_decls) {
@@ -147,14 +148,17 @@ public class ContextGeneratorProcessorFactory implements AnnotationProcessorFact
 					continue;
 				ContextCapabilitiesGenerator.generateInitStubs(writer, interface_decl, context_specific);
 			}
-			ContextCapabilitiesGenerator.generateInitStubsEpilogue(writer);
+			ContextCapabilitiesGenerator.generateInitStubsEpilogue(writer, context_specific);
 			writer.println();
 			writer.println("\tstatic void unloadAllStubs() {");
 			if (!context_specific) {
+				writer.println("\t\tif (!loaded_stubs)");
+				writer.println("\t\t\treturn;");
 				for (TypeDeclaration typedecl : interface_decls) {
 					InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
 					ContextCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
 				}
+				writer.println("\t\tloaded_stubs = false;");
 			}
 			writer.println("\t}");
 			writer.println();
