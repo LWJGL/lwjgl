@@ -37,25 +37,12 @@
 /*
  * Class:     org_lwjgl_opengl_GLContext
  * Method:    init
- * Signature: (Ljava/util/Set;)I
+ * Signature: (Ljava/util/Set;)V
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLContext_init
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_init
   (JNIEnv * env, jclass clazz, jobject exts)
 {
 	if (!extgl_Initialize(env, exts)) {
 		throwException(env, "Failed to initialize GL extensions");
-		return -1;
 	}
-
-	return 0;
-}
-
-/*
- * Class:     org_lwjgl_opengl_GLContext
- * Method:    reinit
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_reinit
-  (JNIEnv * env, jclass clazz, jint context)
-{
 }

@@ -81,7 +81,7 @@ public class Grass {
 					mode = i;
 					break;
 				}
-			}
+			} 
 
 			if (mode == -1) {
 				System.out.println("did not find suitable mode");

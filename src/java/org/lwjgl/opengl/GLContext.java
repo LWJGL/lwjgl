@@ -35,9 +35,7 @@ package org.lwjgl.opengl;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.lwjgl.Sys;
@@ -56,13 +54,7 @@ public final class GLContext {
 	
 	/** The currently initialised context */
 	private static WeakReference currentContext;
-	
-	/** A map of WeakReferences to contexts to LWJGL pointers-to-extension-structs */
-	private static final Map contextMap = new HashMap();
-	
-	/** A map of WeakReferences to contents to Sets of extension names */
-	private static final Map extensionsMap = new HashMap();
-	
+
 	/*
 	 * Available extensions
 	 */
@@ -212,7 +204,10 @@ public final class GLContext {
 	 * in the future, freeing up a little RAM.
 	 * @param context The context object, which uniquely identifies a GL context
 	 */
-	public static synchronized void setContext(Object context) {
+	public static synchronized void useContext(Object context) {
+		if (context == null) {
+			throw new NullPointerException("Can't use a null context");
+		}
 		// Is this the same as last time?
 		Object current = currentContext == null ? null : currentContext.get();
 		if (current == context) {
@@ -222,35 +217,16 @@ public final class GLContext {
 		
 		// Ok, now it's the current context.
 		currentContext = new WeakReference(context);
-		
-		// Look in the context map to see if we've encountered this context before
-		Integer encountered = (Integer) contextMap.get(currentContext);
-		Set exts;
-		if (encountered != null) {
-			exts = (Set) extensionsMap.get(currentContext);
-			reinit(encountered.intValue());
-		} else {
-			exts = new HashSet();
-			contextMap.put(currentContext, new Integer(init(exts)));
-		}
-		
+		HashSet exts = new HashSet();
+		init(exts);
 		determineAvailableExtensions(exts);
-		
 		VBOTracker.setCurrent(currentContext);
 	}
 	
 	/**
-	 * Native method to initialize a context from scratch or load its function pointers from a 
-	 * cache.
+	 * Native method to initialize a context
 	 * @param exts An empty Set of Strings that will be filled with the names of enabled extensions
-	 * @return a LWJGL context-index-pointer
 	 */
-	private static native int init(Set exts);
-	
-	/**
-	 * Native method to re-initialize a context.
-	 * @param context Hash code of the context object
-	 */
-	private static native void reinit(int context);
+	private static native void init(Set exts);
 
 }

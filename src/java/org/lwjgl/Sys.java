@@ -204,7 +204,7 @@ public final class Sys {
 	 */
 	public static void alert(String title, String message) {
 		String osName = System.getProperty("os.name");
-		if (osName.startsWith("Windoxws")) {
+		if (osName.startsWith("Windows")) {
 			nAlert(title, message);
 		} else {
 			try {

@@ -119,18 +119,10 @@ extern "C" {
 /*
  * Class:     org_lwjgl_opengl_GLContext
  * Method:    init
- * Signature: (Ljava/util/Set;)I
+ * Signature: (Ljava/util/Set;)V
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLContext_init
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_init
   (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_GLContext
- * Method:    reinit
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_reinit
-  (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus
 }

@@ -185,7 +185,7 @@ public final class Game {
        GL11.glMatrixMode(GL11.GL_MODELVIEW);
        GL11.glLoadIdentity();
        GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
-         ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(4);
+         ByteBuffer num_tex_units_buf = ByteBuffer.allocateDirect(64);
          num_tex_units_buf.order(ByteOrder.nativeOrder());
        GL11.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS, num_tex_units_buf.asIntBuffer());
          System.out.println("Number of texture units: " + num_tex_units_buf.getInt());

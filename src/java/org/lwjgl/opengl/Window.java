@@ -225,7 +225,7 @@ public final class Window {
 	public static synchronized void makeCurrent() {
 		assert isCreated() : "No window has been created.";
 		nMakeCurrent();
-		GLContext.setContext(context);
+		GLContext.useContext(context);
 	}
 	
 	/**
