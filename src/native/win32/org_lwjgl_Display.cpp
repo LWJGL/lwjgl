@@ -103,10 +103,16 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
   
 	//enumerate all displays, and all of their displaymodes
 	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
+	  // continue if mirroring device
+	  if(DisplayDevice.StateFlags && DISPLAY_DEVICE_MIRRORING_DRIVER) {
+	    continue;
+	  }
+		
+		// go ahead
 		printfDebug("Querying %s device\n", DisplayDevice.DeviceString);
 		j = 0;
 		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
-			if (DevMode.dmBitsPerPel > 8) {
+			if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 				AvailableModes++;
 			}
 		}
@@ -123,10 +129,15 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
   
 	i = 0, n = 0;
 	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
+	  // continue if mirroring device
+	  if(DisplayDevice.StateFlags && DISPLAY_DEVICE_MIRRORING_DRIVER) {
+	    continue;
+	  }	
+	
 		j = 0;
 		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
 			// Filter out indexed modes
-			if (DevMode.dmBitsPerPel > 8) {
+			if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 				jobject displayMode;
 				displayMode = env->NewObject(displayModeClass, displayModeConstructor, 
 											 DevMode.dmPelsWidth, DevMode.dmPelsHeight,
