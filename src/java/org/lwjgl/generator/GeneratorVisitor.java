@@ -231,10 +231,10 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 
 	public void visitInterfaceDeclaration(InterfaceDeclaration d) {
 		try {
-			generateJavaSource(d);
-			if (d.getMethods().size() > 0) {
+			if (d.getMethods().size() > 0 || d.getFields().size() > 0)
+				generateJavaSource(d);
+			if (d.getMethods().size() > 0)
 				generateNativeSource(d);
-			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

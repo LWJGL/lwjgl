@@ -87,7 +87,7 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 		if (first_round) {
 			env.addListener(this);
 			return new GeneratorProcessor(env);
-		}
+		} else
 			return AnnotationProcessors.NO_OP;
 	}
 
