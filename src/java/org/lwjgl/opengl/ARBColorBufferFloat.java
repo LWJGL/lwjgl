@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) 2002-2004 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.opengl;
+
+import org.lwjgl.LWJGLException;
+
+public final class ARBColorBufferFloat {
+
+	/*
+     * Accepted by the <pname> parameters of GetBooleanv, GetIntegerv,
+     * GetFloatv, and GetDoublev:
+     */
+	public static final int RGBA_FLOAT_MODE_ARB = 0x8820;
+
+	/*
+     * Accepted by the <target> parameter of ClampColorARB and the <pname>
+     * parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev.
+	 */
+	public static final int CLAMP_VERTEX_COLOR_ARB = 0x891A;
+	public static final int CLAMP_FRAGMENT_COLOR_ARB = 0x891B;
+	public static final int CLAMP_READ_COLOR_ARB = 0x891C;
+
+	/*
+	 * Accepted by the <clamp> parameter of ClampColorARB.
+	 */
+	public static final int FIXED_ONLY_ARB = 0x891D;
+
+	/*
+	 * Accepted as a value in the <piAttribIList> and <pfAttribFList>
+	 * parameter arrays of wglChoosePixelFormatARB, and returned in the
+	 * <piValues> parameter array of wglGetPixelFormatAttribivARB, and the
+	 * <pfValues> parameter array of wglGetPixelFormatAttribfvARB:
+	 */
+	public static final int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
+
+	/*
+	 * Accepted as values of the <render_type> arguments in the
+	 * glXCreateNewContext and glXCreateContext functions
+	 */
+	public static final int GLX_RGBA_FLOAT_TYPE = 0x20B9;
+
+	/*
+	 * Accepted as a bit set in the GLX_RENDER_TYPE variable
+	 */
+	public static final int GLX_RGBA_FLOAT_BIT = 0x00000004;
+
+	private ARBColorBufferFloat() {
+	}
+
+	static native void initNativeStubs() throws LWJGLException;
+
+	public static native void glClampColorARB(int target, int clamp);
+
+}

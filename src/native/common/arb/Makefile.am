@@ -3,6 +3,7 @@ noinst_LTLIBRARIES = libarb.la
 libarb_la_SOURCES = $(SRC)
 INCLUDES=-I..
 SRC = org_lwjgl_opengl_ARBBufferObject.c \
+	org_lwjgl_opengl_ARBColorBufferFloat.c \
 	org_lwjgl_opengl_ARBDrawBuffers.c \
 	org_lwjgl_opengl_ARBProgram.c \
 	org_lwjgl_opengl_ARBMatrixPalette.c \

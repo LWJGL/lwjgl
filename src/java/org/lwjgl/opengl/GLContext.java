@@ -60,11 +60,13 @@ public final class GLContext {
 	/*
 	 * Available extensions
 	 */
+	public static boolean GL_ARB_color_buffer_float;
 	public static boolean GL_ARB_depth_texture;
 	public static boolean GL_ARB_draw_buffers;
 	public static boolean GL_ARB_fragment_program;
 	public static boolean GL_ARB_fragment_program_shadow;
 	public static boolean GL_ARB_fragment_shader;
+	public static boolean GL_ARB_half_float_pixel;
 	public static boolean GL_ARB_imaging;
 	public static boolean GL_ARB_matrix_palette;
 	public static boolean GL_ARB_multisample;
@@ -83,6 +85,7 @@ public final class GLContext {
 	public static boolean GL_ARB_texture_env_combine;
 	public static boolean GL_ARB_texture_env_crossbar;
 	public static boolean GL_ARB_texture_env_dot3;
+	public static boolean GL_ARB_texture_float;
 	public static boolean GL_ARB_texture_mirrored_repeat;
 	public static boolean GL_ARB_texture_non_power_of_two;
 	public static boolean GL_ARB_texture_rectangle;
