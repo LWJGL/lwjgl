@@ -6,7 +6,7 @@ INCLUDES = -I../common
 NATIVE = \
   org_lwjgl_Display.cpp \
   org_lwjgl_Sys.cpp \
-#  org_lwjgl_input_Controller.cpp \
+  org_lwjgl_input_Controller.cpp \
   org_lwjgl_input_Keyboard.cpp \
   org_lwjgl_opengl_MacOSX.cpp \
   tools.cpp \

@@ -1,5 +1,5 @@
-/* 
- * Copyright (c) 2002 Light Weight Java Game Library Project
+/*
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -16,8 +16,7 @@
  * * Neither the name of 'Light Weight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
@@ -33,20 +32,25 @@
 /**
  * $Id$
  *
- * Include file to access public window features
+ * Mac OS X controller handling.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author Elias Naur <brian@matzon.com>
  * @version $Revision$
  */
 
-#ifndef _LWJGL_WINDOW_H_INCLUDED_
-	#define _LWJGL_WINDOW_H_INCLUDED_
+#include "org_lwjgl_input_Controller.h"
+#include "common_tools.h"
 
-	#include <jni.h>
-	#include <Carbon/Carbon.h>
-	extern void setQuitRequested(void);
-	extern bool registerKeyboardHandler(JNIEnv* env, WindowRef win_ref);
-//	extern bool registerMouseHandler(JNIEnv* env, WindowRef win_ref);
-	extern bool isMouseCreated(void);
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jclass clazz) {
+}
 
-#endif /* _LWJGL_WINDOW_H_INCLUDED_ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
+	throwException(env, "Controller not implemented");
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nDestroy(JNIEnv *env, jclass clazz) {
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nPoll(JNIEnv * env, jclass clazz) {
+}
+

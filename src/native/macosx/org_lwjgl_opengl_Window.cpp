@@ -99,7 +99,7 @@ static pascal OSStatus doActivate(EventHandlerCallRef next_handler, EventRef eve
 	lock();
 	miniaturized = false;
 	activated = true;
-	if (isMouseCreatedAndNotNativeCursor())
+	if (isMouseCreated())
 		warpCursorToCenter();
 	unlock();
 	return eventNotHandledErr;

@@ -60,7 +60,7 @@ static jfieldID fid_buttons;
 static unsigned char button_states[NUM_BUTTONS];
 /*static int last_x;
 static int last_y;*/
-static bool native_cursor;
+//static bool native_cursor;
 static bool created;
 static bool buffer_enabled;
 static IOHIDDeviceInterface **device_interface;
@@ -79,8 +79,8 @@ static int last_dz;
 static void searchDictionary(CFDictionaryRef dict);
 static void searchObject(CFTypeRef object);
 
-bool isMouseCreatedAndNotNativeCursor(void) {
-	return created && !native_cursor;
+bool isMouseCreated(void) {
+	return created/* && !native_cursor*/;
 }
 
 /*static pascal OSStatus doMouseMoved(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
@@ -362,19 +362,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass c
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps(JNIEnv *env, jclass clazz) {
+	return 0;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor(JNIEnv *env, jclass clazz, jlong cursor_handle) {
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize(JNIEnv *env, jclass clazz) {
+	return 16;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize(JNIEnv *env, jclass clazz) {
+	return 16;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass clazz) {
-	native_cursor = false;
+//	native_cursor = false;
 	buffer_enabled = false;
 	x_axis_cookie = NULL;
 	y_axis_cookie = NULL;
@@ -396,10 +399,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass c
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass clazz) {
 	shutdownDevice();
-	if (!native_cursor) {
+//	if (!native_cursor) {
 		CGAssociateMouseAndMouseCursorPosition(TRUE);
 		CGDisplayShowCursor(CGMainDisplayID());
-	}
+//	}
 	created = false;
 }
 
@@ -407,17 +410,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
 	int dx, dy, dz;
 	pollDevice();
 	dz = last_dz;
-	if (!native_cursor) {
+	//if (!native_cursor) {
 		dx = last_dx;
 		dy = -last_dy;
-	} else {
-	/*	Point cursor_pos;
+	/*} else {
+		Point cursor_pos;
 		GetMouse(&cursor_pos);
 		dx = cursor_pos.v - last_x;
 		dy = cursor_pos.h - last_y;
 		last_x += dx;
-		last_y += dy;*/
-	}
+		last_y += dy;
+	}*/
 	env->SetStaticIntField(clazz, fid_dx, (jint)dx);
 	env->SetStaticIntField(clazz, fid_dy, (jint)dy);
 	env->SetStaticIntField(clazz, fid_dwheel, (jint)dz);
