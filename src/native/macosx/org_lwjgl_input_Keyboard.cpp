@@ -45,7 +45,7 @@
 #include "common_tools.h"
 
 #define KEYBOARD_SIZE 256
-#define UNICODE_BUFFER_SIZE 10
+#define TRANSLATION_BUFFER_SIZE 10
 
 static unsigned char key_buf[KEYBOARD_SIZE];
 static unsigned char key_map[KEYBOARD_SIZE];
@@ -60,7 +60,7 @@ static bool handleMappedKey(unsigned char mapped_code, unsigned char state) {
 		if (buffer_enabled) {
 			putEventElement(&event_queue, mapped_code);
 			putEventElement(&event_queue, state);
-			return true;
+			return translation_enabled;
 		}
 	}
 	return false;
@@ -91,7 +91,7 @@ static unsigned char getFirstByte(UniChar ch) {
 	return (unsigned char)((ch & 0xff00) >> 16);
 }
 
-static bool writeChars(int num_chars, UniChar *buffer) {
+static bool writeUniChars(int num_chars, const UniChar *buffer) {
 	if (num_chars == 0)
 		return false;
 	unsigned char b0 = getFirstByte(buffer[0]);
@@ -109,8 +109,24 @@ static bool writeChars(int num_chars, UniChar *buffer) {
 	return true;
 }
 
+static bool writeAsciiChars(int num_chars, const char *buffer) {
+	if (num_chars == 0)
+		return false;
+	unsigned char c = buffer[0];
+	putEventElement(&event_queue, 0);
+	putEventElement(&event_queue, c);
+	for (int i = 1; i < num_chars; i++) {
+		putEventElement(&event_queue, 0);
+		putEventElement(&event_queue, 0);
+		unsigned char c = buffer[i];
+		putEventElement(&event_queue, 0);
+		putEventElement(&event_queue, c);
+	}
+	return true;
+}
+
 static bool handleUnicode(EventRef event) {
-	UniChar unicode_buffer[UNICODE_BUFFER_SIZE];
+	UniChar unicode_buffer[TRANSLATION_BUFFER_SIZE];
 	UInt32 data_size;
 	int num_chars;
 	OSStatus err = GetEventParameter(event, kEventParamKeyUnicodes, typeUnicodeText, NULL, 0, &data_size, NULL);
@@ -121,7 +137,7 @@ static bool handleUnicode(EventRef event) {
 		return false;
 	}
 	num_chars = data_size/sizeof(UniChar);
-	if (num_chars >= UNICODE_BUFFER_SIZE) {
+	if (num_chars >= TRANSLATION_BUFFER_SIZE) {
 #ifdef _DEBUG
 		printf("Unicode chars could not fit in buffer\n");
 #endif
@@ -134,7 +150,39 @@ static bool handleUnicode(EventRef event) {
 #endif
 		return false;
 	}
-	return writeChars(num_chars, unicode_buffer);
+	return writeUniChars(num_chars, unicode_buffer);
+}
+
+static bool handleAscii(EventRef event) {
+	char ascii_buffer[TRANSLATION_BUFFER_SIZE];
+	UInt32 data_size;
+	int num_chars;
+	OSStatus err = GetEventParameter(event, kEventParamKeyMacCharCodes, typeChar, NULL, 0, &data_size, NULL);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not get ascii char count\n");
+#endif
+		return false;
+	}
+	num_chars = data_size/sizeof(char);
+	if (num_chars >= TRANSLATION_BUFFER_SIZE) {
+#ifdef _DEBUG
+		printf("Ascii chars could not fit in buffer\n");
+#endif
+		return false;
+	}
+	err = GetEventParameter(event, kEventParamKeyMacCharCodes, typeChar, NULL, data_size, NULL, ascii_buffer);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not get ascii chars\n");
+#endif
+		return false;
+	}
+	return writeAsciiChars(num_chars, ascii_buffer);
+}
+
+static bool handleTranslation(EventRef event) {
+	return handleUnicode(event) || handleAscii(event); 
 }
 
 static void doKeyDown(EventRef event) {
@@ -146,16 +194,9 @@ static void doKeyDown(EventRef event) {
 #endif
 		return;
 	}
-	if (handleKey(key_code, 1)) {
-		if (translation_enabled) {
-			if (!handleUnicode(event)) {
-				putEventElement(&event_queue, 0);
-				putEventElement(&event_queue, 0);
-			}
-		} else {
-			putEventElement(&event_queue, 0);
-			putEventElement(&event_queue, 0);
-		}
+	if (handleKey(key_code, 1) && !handleTranslation(event)) {
+		putEventElement(&event_queue, 0);
+		putEventElement(&event_queue, 0);
 	}
 }
 
@@ -168,7 +209,7 @@ static void doKeyUp(EventRef event) {
 #endif
 		return;
 	}
-	if (handleKey(key_code, 0)) {
+	if (handleKey(key_code, 0) && !handleTranslation(event)) {
 		putEventElement(&event_queue, 0);
 		putEventElement(&event_queue, 0);
 	}

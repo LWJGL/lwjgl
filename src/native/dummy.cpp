@@ -1,1 +1,2 @@
-int blah;
+void dummy() {
+}

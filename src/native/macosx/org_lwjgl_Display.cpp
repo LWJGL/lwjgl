@@ -108,6 +108,24 @@ bool switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 	return false;
 }
 
+bool switchToNearestMode(JNIEnv *env, long width, long height, long bpp, long freq) {
+	init(env);
+	if (display_captured)
+		return false;
+	display_captured = true;
+	CGDisplayCapture(kCGDirectMainDisplay);
+	boolean_t match;
+	CFDictionaryRef mode = CGDisplayBestModeForParametersAndRefreshRate(kCGDirectMainDisplay, bpp, width, height, freq, &match);
+	if (mode == NULL)
+		return false;
+	CGDisplayErr err = CGDisplaySwitchToMode(kCGDirectMainDisplay, mode);
+	if (!err) {
+		saveMode(env, width, height, bpp, freq);
+		return true;
+	} else
+		return false;
+}
+
 void resetMode(JNIEnv *env) {
 	init(env);
 	if (!display_captured)

@@ -113,7 +113,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		return;
 	}
 	if (!current_fullscreen) {
-		if (!switchMode(env, width, height, bpp, 60)) {
+		if (!switchToNearestMode(env, width, height, bpp, 60)) {
 			destroyMode(env, clazz);
 			extgl_Close();
 			throwException(env, "Could not switch mode.");
