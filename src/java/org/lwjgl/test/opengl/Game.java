@@ -155,7 +155,7 @@ public final class Game {
          Keyboard.enableBuffer();
          Mouse.create();
          Sys.setTime(0);
-         Sys.setProcessPriority(Sys.REALTIME_PRIORITY);
+         Sys.setProcessPriority(Sys.HIGH_PRIORITY);
          System.out.println("Timer resolution: " + Sys.getTimerResolution());
          // Go into orthographic projection mode.
          gl.matrixMode(GL.PROJECTION);
