@@ -613,7 +613,7 @@ public final class Display {
 		try {
 			GLContext.useContext(null);
 		} catch (LWJGLException e) {
-			// ignore exception
+			Sys.log("Failed to reset GLContext due to: " + e);
 		}
 		reset();
 	}
