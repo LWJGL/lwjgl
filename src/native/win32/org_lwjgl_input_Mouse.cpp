@@ -192,7 +192,7 @@ void EnumerateMouseCapabilities() {
   
   //check for > 4 buttons - need to clamp since we're using dx 5
   if(mButtoncount > 4) {
-    mButtoncount = 2;
+    mButtoncount = 4;
 #ifdef _DEBUG
   printf("WARNING: Clamping to 4 mouse buttons");
 #endif
