@@ -239,6 +239,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *env, j
 	return NUM_BUTTONS;
 }
 
+static void resetCursorToCenter(void) {
+	resetCursor(getWindowWidth()/2, transformY(getWindowHeight()/2));
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
@@ -247,6 +251,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 		return;
 	int i;
 	last_z = last_poll_y = last_poll_x = last_event_x = last_event_y = accum_dx = accum_dy = accum_dz = 0;
+	resetCursorToCenter();
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -260,7 +265,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	buffer_enabled = false;
 	updatePointerGrab();
 	initEventQueue(&event_queue, 5);
-	doWarpPointer(getWindowWidth()/2, getWindowHeight()/2);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
@@ -386,6 +390,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass claz
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
 	setGrab(new_grab == JNI_TRUE ? true : false);
-	resetCursor(getWindowWidth()/2, transformY(getWindowHeight()/2));
+	resetCursorToCenter();
 	accum_dx = accum_dy = 0;
 }
