@@ -54,6 +54,7 @@
 #include "org_lwjgl_opengl_Window.h"
 
 #define USEGLX13 extgl_Extensions.GLX13
+#define ERR_MSG_SIZE 1024
 
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXWindow glx_window;
@@ -79,6 +80,28 @@ static bool ignore_motion_events;
 static Display *display_connection = NULL;
 static Atom warp_atom;
 static int display_connection_usage = 0;
+static bool async_x_error;
+static char error_message[ERR_MSG_SIZE];
+
+bool checkXError(JNIEnv *env) {
+	XSync(getDisplay(), False);
+	if (async_x_error) {
+		async_x_error = false;
+		throwException(env, error_message);
+		return false;
+	} else
+		return true;
+}
+
+static int errorHandler(Display *disp, XErrorEvent *error) {
+	char err_msg_buffer[ERR_MSG_SIZE];
+	XGetErrorText(disp, error->error_code, err_msg_buffer, ERR_MSG_SIZE);
+	err_msg_buffer[ERR_MSG_SIZE - 1] = '\0';
+	snprintf(error_message, ERR_MSG_SIZE, "X Error - serial: %d, error_code: %s, request_code: %d, minor_code: %d", (int)error->serial, err_msg_buffer, (int)error->request_code, (int)error->minor_code);
+	error_message[ERR_MSG_SIZE - 1] = '\0';
+	async_x_error = true;
+	return 0;
+}
 
 Display *getDisplay(void) {
 	return display_connection;
@@ -86,6 +109,8 @@ Display *getDisplay(void) {
 
 Display *incDisplay(JNIEnv *env) {
 	if (display_connection_usage == 0) {
+		async_x_error = false;
+		XSetErrorHandler(errorHandler);
 		display_connection = XOpenDisplay(NULL);
 		if (display_connection == NULL) {
 			throwException(env, "Could not open X display");
@@ -236,7 +261,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
 	env->ReleaseStringUTFChars(title_obj, title);
 }
 
-static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen, bool undecorated) {
+static void destroyWindow() {
+	XDestroyWindow(getDisplay(), current_win);
+	XFreeColormap(getDisplay(), cmap);
+}
+
+static bool createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring title, int x, int y, int width, int height, bool fullscreen, bool undecorated) {
 	dirty = true;
 	focused = true;
 	minimized = false;
@@ -266,6 +296,10 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 		attribs.override_redirect = True;
 	}
 	win = XCreateWindow(getDisplay(), root_win, x, y, width, height, 0, vis_info->depth, InputOutput, vis_info->visual, attribmask, &attribs);
+	if (!checkXError(env)) {
+		XFreeColormap(getDisplay(), cmap);
+		return false;
+	}
 	printfDebug("Created window\n");
 	current_win = win;
 	Java_org_lwjgl_opengl_Window_nSetTitle(env, NULL, title);
@@ -283,12 +317,11 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
         setRepeatMode(AutoRepeatModeOff);
-	XSync(getDisplay(), True);
-}
-
-static void destroyWindow() {
-	XDestroyWindow(getDisplay(), current_win);
-	XFreeColormap(getDisplay(), cmap);
+	if (!checkXError(env)) {
+		destroyWindow();
+		return false;
+	}
+	return true;
 }
 
 int getCurrentScreen(void) {
@@ -470,13 +503,23 @@ static bool initWindowGLX13(JNIEnv *env, int screen, jstring title, int x, int y
 		throwException(env, "Could not create visual info from FB config");
 		return false;
 	}
-	createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
+	bool window_created = createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
+	XFree(vis_info);
+	if (!window_created) {
+		glXDestroyContext(getDisplay(), context);
+		XFree(configs);
+		return false;
+	}
 	glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
 	makeCurrent();
 	if (isDebugEnabled())
 		dumpVisualInfo(vis_info);
 	XFree(configs);
-	XFree(vis_info);
+	if (!checkXError(env)) {
+		glXDestroyWindow(getDisplay(), glx_window);
+		glXDestroyContext(getDisplay(), context);
+		return false;
+	}
 	return true;
 }
 
@@ -501,9 +544,18 @@ static bool initWindowGLX(JNIEnv *env, int screen, jstring title, int x, int y, 
 		throwException(env, "Could not create a direct GLX context");
 		return false;
 	}
-	createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
-	makeCurrent();
+	bool window_created = createWindow(env, screen, vis_info, title, x, y, width, height, fscreen, undecorated);
 	XFree(vis_info);
+	if (!window_created) {
+		glXDestroyContext(getDisplay(), context);
+		return false;
+	}
+	makeCurrent();
+	if (!checkXError(env)) {
+		glXDestroyContext(getDisplay(), context);
+		destroyWindow();
+		return false;
+	}
 	return true;
 }
 

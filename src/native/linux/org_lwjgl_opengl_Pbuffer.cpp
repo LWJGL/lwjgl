@@ -74,6 +74,15 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 	return extgl_Extensions.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
+static void destroyPbuffer(PbufferInfo *buffer_info) {
+	GLXPbuffer buffer = buffer_info->buffer;
+	GLXContext context = buffer_info->context;
+	glXDestroyPbuffer(getDisplay(), buffer);
+	glXDestroyContext(getDisplay(), context);
+	free(buffer_info);
+	decDisplay();
+}
+
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
  * Method:    nCreate
@@ -131,14 +140,14 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
         if (context == NULL) {
                 XFree(configs);
                 throwException(env, "Could not create a GLX context");
-                return false;
+                return -1;
         }
 	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
         if (!allow_software_acceleration && glXIsDirect(disp, context) == False) {
                 glXDestroyContext(disp, context);
                 XFree(configs);
                 throwException(env, "Could not create a direct GLX context");
-                return false;
+                return -1;
         }
 	const int buffer_attribs[] = {GLX_PBUFFER_WIDTH, width,
 				      GLX_PBUFFER_HEIGHT, height,
@@ -150,6 +159,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 	PbufferInfo *buffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
 	buffer_info->buffer = buffer;
 	buffer_info->context = context;
+	if (!checkXError(env)) {
+		destroyPbuffer(buffer_info);
+		return -1;
+	}
 	return (jint)buffer_info;
 }
 
@@ -178,12 +191,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
   (JNIEnv *env, jclass clazz, jint handle)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)handle;
-	GLXPbuffer buffer = buffer_info->buffer;
-	GLXContext context = buffer_info->context;
-	glXDestroyPbuffer(getDisplay(), buffer);
-	glXDestroyContext(getDisplay(), context);
-	free(buffer_info);
-	decDisplay();
+	destroyPbuffer(buffer_info);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib

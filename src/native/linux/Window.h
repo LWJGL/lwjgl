@@ -56,6 +56,8 @@
 
 	extern void resetCursor(int x, int y);
 
+	extern bool checkXError(JNIEnv *env);
+	
 	extern Atom getWarpAtom(void);
 
 	/*
