@@ -107,7 +107,7 @@ int InitializeOpenAL();
 void DeInitializeOpenAL();
 
 //alc
-typedef ALCubyte*   (/*ALCAPIENTRY*/ *alcGetStringPROC)(ALCdevice *device,ALCenum param);
+typedef ALCubyte*   (ALCAPIENTRY *alcGetStringPROC)(ALCdevice *device,ALCenum param);
 typedef ALCvoid     (ALCAPIENTRY *alcGetIntegervPROC)(ALCdevice *device,ALCenum param,ALCsizei size,ALCint *data);
 typedef ALCdevice*  (ALCAPIENTRY *alcOpenDevicePROC)(ALCubyte *deviceName);
 typedef ALCvoid     (ALCAPIENTRY *alcCloseDevicePROC)(ALCdevice *device);

@@ -33,6 +33,10 @@
 #include <stdio.h>
 #include "extal.h"
 
+#ifndef _WIN32
+#include <dlfcn.h>
+#endif
+
 /**
  * $Id$
  *
@@ -150,7 +154,7 @@ void* GetFunctionPointer(const char* function) {
 #ifdef _WIN32
   return GetProcAddress(handleOAL, function);
 #else
-  return NULL;
+  return dlsym(handleOAL, function);
 #endif
 }
 
@@ -161,7 +165,7 @@ void LoadOpenAL() {
 #ifdef _WIN32
   handleOAL = LoadLibrary("OpenAL32.dll");
 #else
-   handleOAL = NULL;
+   handleOAL = dlopen("libopenal.so", RTLD_LAZY);
 #endif
 }
 
