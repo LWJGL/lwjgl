@@ -39,6 +39,7 @@
  * @version $Revision$
  */
 
+#include <sched.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 #include "org_lwjgl_Sys.h"
@@ -130,12 +131,40 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
   (JNIEnv * env, jclass clazz, jint priority)
 {
 	int linux_priority;
+	int max_pri, min_pri;
+	struct sched_param sched_pri;
+	
+	if (sched_getscheduler(0) != SCHED_OTHER) {
+		// Reset scheduler to normal
+		sched_pri.sched_priority = 0;
+		if (sched_setscheduler(0, SCHED_OTHER, &sched_pri) != 0) {
+#ifdef _DEBUG
+			printf("Could not set realtime priority\n");
+#endif
+			return;
+		}
+	}
+	
 	switch (priority) {
 	case org_lwjgl_Sys_REALTIME_PRIORITY:
-		linux_priority = -20;
-		break;
+		min_pri = sched_get_priority_min(SCHED_FIFO);
+		max_pri = sched_get_priority_max(SCHED_FIFO);
+		if (min_pri == -1 || max_pri == -1) {
+#ifdef _DEBUG
+			printf("Failed to set realtime priority\n");
+#endif
+			return;
+		}
+		sched_pri.sched_priority = (max_pri + min_pri)/2;
+		if (sched_setscheduler(0, SCHED_FIFO, &sched_pri) != 0) {
+#ifdef _DEBUG
+			printf("Could not set realtime priority\n");
+#endif
+			return;
+		}
+		return;
 	case org_lwjgl_Sys_HIGH_PRIORITY:
-		linux_priority = -10;
+		linux_priority = -20;
 		break;
 	case org_lwjgl_Sys_NORMAL_PRIORITY:
 		linux_priority = 0;
