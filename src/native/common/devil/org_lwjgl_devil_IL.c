@@ -88,5 +88,4 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jcla
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jclass clazz) {
-	printf("initNativeStubs\n");
 }
