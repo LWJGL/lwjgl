@@ -310,28 +310,22 @@ void subMatrix (const float * src, int side, float * dst , int col_omit, int row
 float determinant (const float * matrix , int side)
 {
 
-	// We'll keep a scratch bit of memory around for doing temporary calculations:
-	static int current_side_size = 0;
-	static float * temp_matrix = NULL;
 
     // we are assuming for this case that the data is in column major format
     
     float det = 0;
 
     if (side == 2)
-        // your basic cross product
+        // your basic cross product aka 2x2 determinant
         det = matrix[0] * matrix[3] - matrix[2] * matrix[1];	
     else
     {
-        int   temp_side  = side - 1;			// the dimensions of the sub matrix
-		if (temp_side > current_side_size) {
-			if (temp_matrix)
-				delete[] temp_matrix;
-			current_side_size = temp_side;
-			temp_matrix = new float[current_side_size * current_side_size];
-		}
+        // create room to store the sub matrix
+        int   temp_side  = side - 1;				// the dimensions of the sub matrix
+        float * temp_matrix = new float[temp_side * temp_side];
 
-        bool  sign_pos = 1;				// the sign is positive
+        // keep the sign (this way we avoid an additional branch in the inner loop)
+        float	sign = 1;
         
         for (int row = 0; row < side; row++)
         {
@@ -339,12 +333,13 @@ float determinant (const float * matrix , int side)
             subMatrix(matrix, side, temp_matrix, 0, row);
             
             // add to the determinant sign * [a]i0 * [M]i0
-            det += ((sign_pos) ? matrix[row] : 
-                                -matrix[row]) * determinant (temp_matrix, temp_side);
+            det += sign * matrix[row] * determinant (temp_matrix, temp_side);
             
             // alternate the sign
-            sign_pos ^= 1;
+            sign *= -1;
         }
+        
+        delete [] temp_matrix;
     }
     
     return det;
