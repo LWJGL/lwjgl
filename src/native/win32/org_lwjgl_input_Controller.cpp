@@ -56,8 +56,11 @@ DIJOYSTATE2 js;                     // State of Controller
 
 int buttoncount = 0;                // Temporary buttoncount
 bool hasx;                          // Temporary xaxis check
+bool hasrx;                          // Temporary rotational xaxis check
 bool hasy;                          // Temporary yaxis check
+bool hasry;                          // Temporary rotational yaxis check
 bool hasz;                          // Temporary zaxis check
+bool hasrz;                          // Temporary rotational zaxis check
 bool haspov;                        // Temporary pov check
 bool hasslider;                     // Temporary slider check
 
@@ -69,14 +72,20 @@ bool create_success;                // bool used to determine successfull creati
 jclass clsController;
 jfieldID fidButtonCount;
 jfieldID fidHasXAxis;
+jfieldID fidHasRXAxis;
 jfieldID fidHasYAxis;
+jfieldID fidHasRYAxis;
 jfieldID fidHasZAxis;
+jfieldID fidHasRZAxis;
 jfieldID fidHasPOV;
 jfieldID fidHasSlider;
 jfieldID fidButtons;
 jfieldID fidX;
+jfieldID fidRX;
 jfieldID fidY;
+jfieldID fidRY;
 jfieldID fidZ;
+jfieldID fidRZ;
 jfieldID fidPOV;
 jfieldID fidSlider;
 
@@ -271,6 +280,12 @@ BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LP
     haspov = true;
   } else if (lpddoi->guidType == GUID_Slider){
 	  hasslider = true;
+  } else if (lpddoi->guidType == GUID_RxAxis) {
+    hasrx = true;
+  } else if (lpddoi->guidType == GUID_RyAxis) {
+    hasry = true;
+  } else if (lpddoi->guidType == GUID_RzAxis) {
+    hasrz = true;
 #if _DEBUG
   } else {
     printf("Unhandled object found: %s\n", lpddoi->tszName);
@@ -316,18 +331,19 @@ void SetupController() {
     create_success = false;
     return;
   }
-
-  // set X-axis range to (-1000 ... +1000)
+  
+  // set range to (-1000 ... +1000)
   // This lets us test against 0 to see which way the stick is pointed.
   DIPROPRANGE diprg;
   diprg.diph.dwSize       = sizeof(diprg);
   diprg.diph.dwHeaderSize = sizeof(diprg.diph);
-  diprg.diph.dwObj        = DIJOFS_X;
   diprg.diph.dwHow        = DIPH_BYOFFSET;
   diprg.lMin              = AXISMIN;
   diprg.lMax              = AXISMAX;
 
+  // set X-axis
   if(hasx) {
+    diprg.diph.dwObj        = DIJOFS_X;
 	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
 #if _DEBUG
     printf("SetProperty(DIJOFS_X) failed\n");
@@ -337,9 +353,20 @@ void SetupController() {
 	  }
   }
 
-  //
-  // And again for Y-axis range
-  //
+  // set RX-axis
+  if(hasrx) {
+    diprg.diph.dwObj        = DIJOFS_RX;
+	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
+#if _DEBUG
+    printf("SetProperty(DIJOFS_RX) failed\n");
+#endif
+		  create_success = false;
+		  return;
+	  }
+  }
+
+
+  // set Y-axis
   if(hasy) {
 	  diprg.diph.dwObj        = DIJOFS_Y;
 	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
@@ -351,14 +378,37 @@ void SetupController() {
 	  }
   }
 
-  //
-  // And again for Z-axis range
-  //
+  // set RY-axis
+  if(hasry) {
+	  diprg.diph.dwObj        = DIJOFS_RY;
+	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
+#if _DEBUG
+    printf("SetProperty(DIJOFS_RY) failed\n");
+#endif
+		  create_success = false;
+		  return;
+	  }
+  }
+
+  // set Z-axis
   if(hasz) {
 	  diprg.diph.dwObj        = DIJOFS_Z;
 	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
 #if _DEBUG
     printf("SetProperty(DIJOFS_Z) failed\n");
+#endif
+		  create_success = false;
+		  return;
+	  }
+  }
+
+
+  // set RZ-axis
+  if(hasrz) {
+	  diprg.diph.dwObj        = DIJOFS_RZ;
+	  if(lpDIDevice->SetProperty(DIPROP_RANGE, &diprg.diph) != DI_OK) {
+#if _DEBUG
+    printf("SetProperty(DIJOFS_RZ) failed\n");
 #endif
 		  create_success = false;
 		  return;
@@ -414,15 +464,28 @@ void UpdateFields() {
 
   //axis's
   if(hasx) {
-	environment->SetStaticIntField(clsController, fidX, js.lX);
+	  environment->SetStaticIntField(clsController, fidX, js.lX);
   }
 
   if(hasy) {
-	environment->SetStaticIntField(clsController, fidY, js.lY);
+	  environment->SetStaticIntField(clsController, fidY, js.lY);
   }
 
   if(hasz) {
     environment->SetStaticIntField(clsController, fidZ, js.lZ);
+  }
+
+  //rotational axis
+  if(hasrx) {
+	  environment->SetStaticIntField(clsController, fidRX, js.lRx);
+  }
+
+  if(hasry) {
+	  environment->SetStaticIntField(clsController, fidRY, js.lRy);
+  }
+
+  if(hasrz) {
+    environment->SetStaticIntField(clsController, fidRZ, js.lRz);
   }
 
   //buttons
@@ -454,6 +517,11 @@ void SetCapabilities() {
   environment->SetStaticIntField(clsController, fidHasYAxis, hasy);
   environment->SetStaticIntField(clsController, fidHasZAxis, hasz);
 
+  //set rotational axis
+  environment->SetStaticIntField(clsController, fidHasRXAxis, hasrx);
+  environment->SetStaticIntField(clsController, fidHasRYAxis, hasry);
+  environment->SetStaticIntField(clsController, fidHasRZAxis, hasrz);
+
   //set pov
   environment->SetStaticIntField(clsController, fidHasPOV, haspov);
 
@@ -467,14 +535,20 @@ void SetCapabilities() {
 void CacheFields() {
   fidButtonCount  = environment->GetStaticFieldID(clsController, "buttonCount", "I");
   fidHasXAxis     = environment->GetStaticFieldID(clsController, "hasXAxis", "Z");
+  fidHasRXAxis     = environment->GetStaticFieldID(clsController, "hasRXAxis", "Z");
   fidHasYAxis     = environment->GetStaticFieldID(clsController, "hasYAxis", "Z");
+  fidHasRYAxis     = environment->GetStaticFieldID(clsController, "hasRYAxis", "Z");
   fidHasZAxis     = environment->GetStaticFieldID(clsController, "hasZAxis", "Z");
+  fidHasRZAxis     = environment->GetStaticFieldID(clsController, "hasRZAxis", "Z");
   fidHasPOV       = environment->GetStaticFieldID(clsController, "hasPOV", "Z");
   fidHasSlider    = environment->GetStaticFieldID(clsController, "hasSlider", "Z");
   fidButtons      = environment->GetStaticFieldID(clsController, "buttons", "[Z");
   fidX            = environment->GetStaticFieldID(clsController, "x", "I");
+  fidRX            = environment->GetStaticFieldID(clsController, "rx", "I");
   fidY            = environment->GetStaticFieldID(clsController, "y", "I");
+  fidRY            = environment->GetStaticFieldID(clsController, "ry", "I");
   fidZ            = environment->GetStaticFieldID(clsController, "z", "I");
+  fidRZ            = environment->GetStaticFieldID(clsController, "rz", "I");
   fidPOV          = environment->GetStaticFieldID(clsController, "pov", "I");
   fidSlider       = environment->GetStaticFieldID(clsController, "slider", "I");
 }

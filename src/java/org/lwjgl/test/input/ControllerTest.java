@@ -95,18 +95,33 @@ public class ControllerTest extends Panel {
     if(Controller.hasXAxis) {
 		  g.drawString("x  : " + Controller.x, x, y);
       y += 20;
-    }    
+    }
+    
+    if(Controller.hasRXAxis) {
+      g.drawString("rx  : " + Controller.rx, x, y);
+      y += 20;
+    }
     
     if(Controller.hasYAxis) {
   		g.drawString("y  : " + Controller.y, x, y);
       y += 20;
     }
 		
+    if(Controller.hasRYAxis) {
+      g.drawString("ry  : " + Controller.ry, x, y);
+      y += 20;
+    }
+    
     if (Controller.hasZAxis) {
 			g.drawString("z  : " + Controller.z, x, y);
 			y += 20;
 		}
 		
+    if (Controller.hasRZAxis) {
+      g.drawString("rz  : " + Controller.rz, x, y);
+      y += 20;
+    }
+    
     if (Controller.hasPOV) {
 			g.drawString("pov: " + Controller.pov, x, y);
 			y += 20;

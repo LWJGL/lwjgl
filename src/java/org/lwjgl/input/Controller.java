@@ -67,12 +67,21 @@ public class Controller {
 
 	/** X position, range -1000 to 1000 */
 	public static int x = 0;
-
+  
+  /** X rotational position, range -1000 to 1000 */
+  public static int rx = 0;
+  
 	/** Y position, range -1000 to 1000 */
 	public static int y = 0;
-
+  
+  /** Y rotational position, range -1000 to 1000 */
+  public static int ry = 0;
+  
 	/** Z position, range -1000 to 1000 */
 	public static int z = 0;
+
+  /** Z rotational position, range -1000 to 1000 */
+  public static int rz = 0;
 
 	/** Position of Point of View from -1 to 27000 (360 degrees) */
 	public static int pov;
@@ -98,8 +107,11 @@ public class Controller {
 	/* Controller capabilities */
 	public static int buttonCount = -1;
   public static boolean hasXAxis = false;
+  public static boolean hasRXAxis = false;
   public static boolean hasYAxis = false;
-	public static boolean hasZAxis = false;
+  public static boolean hasRYAxis = false;
+  public static boolean hasZAxis = false;
+  public static boolean hasRZAxis = false;
 	public static boolean hasPOV = false;
   public static boolean hasSlider = false;
 
