@@ -1,0 +1,157 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-gb">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Lightweight Java Game Library Tutorial Index</title>
+<style>
+<!--
+.document_title { text-align: Center; font-size: 24pt; letter-spacing: 4 }
+.code_snippet { font-family: Courier New }
+-->
+</style>
+</head>
+
+<body>
+
+<p class="document_title">Lightweight Java Game Library</p>
+<p class="document_title">Tutorial</p>
+<p align="center">Written by Caspian Rychlik-Prince</p>
+<p align="center">Please direct comments, errata, and flames to the author at <a href="mailto:cix_foo@users.sourceforge.net">cix_foo@users.sourceforge.net</a></p>
+<p align="center">Last modified <!--webbot bot="Timestamp" S-Type="EDITED"
+S-Format="%d %B %Y" startspan -->23 August 2002<!--webbot bot="Timestamp" endspan i-checksum="31308" -->
+</p>
+<p>&nbsp;</p>
+<p><a name="Introduction">1.0 Introduction</a></p>
+<p>The Lightweight Java Game Library (LWJGL) is a solution aimed directly at
+professional and amateur Java programmers alike to enable commercial quality
+games to be written in Java. This tutorial is nonetheless aimed at <i>experienced
+</i>programmers and won't be explaining some obvious techniques. Currently the
+LWJGL supports only the Win32 platform, and JDK1.4.&nbsp;</p>
+<p>LWJGL is not meant to make writing games particularly <i>easy;</i> it is
+primarily an <i>enabling technology </i>which allows developers to get at
+resources that are simply otherwise unavailable or poorly implemented on the
+existing Java platform. We anticipate that the LWJGL will, through evolution and
+extension, become the foundation for more complete game libraries and &quot;game
+engines&quot; as they have popularly become known, and hide some of the new
+evils we have had to expose in the APIs.</p>
+<p>2.0 Contents</p>
+<p>&nbsp;</p>
+<p>3.0 Aims &amp; Design</p>
+<p>Because the LWJGL API is not meant to be a fully featured game engine it has
+been ruthlessly pruned of all non-essential code. Its ultimate philosophy is
+that it provides the <i>bare minimum</i> of API functionality which will let a
+game programmer produce games in Java without having to write native code in
+order to get <i>performance </i>or <i>access some hardware feature not exposed
+by Java 2</i>. We settled on using two other open technologies as our major
+foundations, namely OpenGL and OpenAL for graphics and sound respectively.</p>
+<p>A sub-requirement of the LWJGL is that it be freed Java programmers from the
+requirement to ship a whole JRE with their games. Currently the Sun licensing
+terms dictate that J2SE be shipped in its entirety, even for the tiniest of
+demos. As this could easily triple the size of a demo and discourage end users
+with configuration issues we have made it a primary concern that games written
+using LWJGL can be compiled into completely standalone native binary executables
+by compilers such as GNU's GCJ and Excelsior's JET. We have done this by
+implementing the library in such a way that <i>no dependencies </i>on Sun's
+proprietry JRE binaries are present in the library.</p>
+<p>The final aim of LWJGL is to make the library available for Win32 systems
+above all others, for that is what most commercial programmers need.</p>
+<p>Linuxians and Macophiles do not despair! There's nothing inherently
+non-portable about the LWJGL - we just don't have the time and expertise to do
+it yet. But it will happen.</p>
+<p>3.1 General API</p>
+<p>The general API gives us the foundations of game programming: we have a
+Display class, for initialising the display and querying its available modes; we
+have a Math class to provide us with some floating point maths functions (rather
+than the double-precision ones provided by Java), and matrix batch operations;
+and a Sys class, which gives us our <i>most useful gaming functions:</i> the
+ability to get the address of a direct byte buffer so we can cache it on the
+Java side of the JNI barrier, and hence access all those lovely hardware calls
+we need for performance; and the ability to use the system's <i>hires timer</i>,
+which is so critical for animation timing. In addition we can also create a
+direct byte buffer at <i>any address in memory.</i></p>
+<p>The Evil Of Pointers And What It Means For Security</p>
+<p>Yes, we have exposed <i>pointers</i> to Java programmers. Yes, you can write
+to just about any bit of memory you so please, and cause untold havoc. You can
+break things. You can bypass security constraints and exploit the dreaded <i>buffer
+vuln.</i></p>
+<p>But <i>why?</i> Because without pointers, all those nice easy native API
+calls would suddenly become complex and behave slightly differently to their C
+counterparts, and require us to pass direct ByteBuffers to JNI for every call.
+This requires that every single call which takes a pointer calls the JNI method
+GetDirectBufferAddress every time, which is an unnecessary overhead.</p>
+<p>The implications for security are simple and final: your game can <b>no
+longer be considered secure</b> and part of the Java security model. This puts
+it in exactly the same boat as any other application on the user's system. This
+also means you will not be able to use it in applets or with Webstart without
+getting your code signed and trusted. LWJGL itself will not be signed nor
+trusted; you are expected to deliver it bundled in with every application you
+ship and verify that your entire distribution is safe.</p>
+<p>We feel that our target developer, the commercial game developer, should not
+be concerned with this issue as the status quo is merely maintained from the old
+ways of programming with any other language; and used wisely, your exposure to
+pointers is unlikely to cause you any problems.</p>
+<p>If you are concerned about security, or wish to write games which will run as
+applets or from Webstart, or would rather have a full game library which takes
+care of things for you, you don't want to use LWJGL at all - it's that simple!
+What you need is Sun's Java Gaming Profile, or Java3D. If you feel a need to
+argue, you're using LWJGL for the wrong reasons.</p>
+<p>3.2 Graphics</p>
+<p>Graphics is based on the latest OpenGL1.4, and all the extensions we could
+implement that might be vaguely useful for games programmers. These include <i>all</i>
+of Nvidia's and ATI's proprietry extensions, and <i>all</i> the ARB extensions,
+and most of the EXT extensions, as well as numerous other miscellaneous ones.</p>
+<p>For Windows programmers, our primary target, the WGL extensions are present.</p>
+<p>All OpenGL functions that take pointers are passed ints. These pointers can
+be obtained from direct ByteBuffers using the Sys.getDirectBufferAddress()
+method. There are a very few native methods that return pointers as ints as
+well. Be sure to read the caveat about using pointers in Java!</p>
+<p>3.3 Sounds</p>
+<p>Sound is based on the latest OpenAL1.0 specification, which comes with but
+one extension, EAX, for interesting environmental effects. The LWJGL binary
+distribution includes the OpenAL .dlls for Win32.</p>
+<p>3.4 Input</p>
+<p>Input can be a complicated topic. A user can have all sorts of strange fancy
+force-feedback hardware installed on their systems, with scrolly knobs and
+twistgrips and bristling with many buttons. However, the vast majority of gamers
+have just a keyboard and a mouse; some of them have analogue joysticks too, and
+some of them have a gamepad attached from some console or other. For our first
+cut of the input library we've just kept it all rather simple, and decided that
+there is but one of each of these devices, and that force feedback and multiple
+potentiometers is a feature we may add another time.</p>
+<p>So in the interests of keeping things simple, the four input classes -
+Keyboard, Mouse, Gamepad and Joystick - are all static, and can all be polled
+once per game loop iteration to determine where they've moved since you last
+looked and what buttons are down at the time. The Gamepad and Keyboard may
+additionally support <i>buffering</i> which is a more reliable way of detecting
+rapid changes of state which may occur rather more quickly than your framerate.</p>
+<p>3.5 Maths</p>
+<p>Java's maths performance leaves much to be desired, particularly with respect
+to bulk operations for 3D rendering engines. The main problem is that the
+existing maths libraries use double precision when single precision is entirely
+adequate for most realtime games programming; and that no clever
+processor-specific optimisations can be done because the Hotspot compiler is
+simply not supplied enough semantic context to understand that it could use some
+special SIMD instruction to achieve the effect you desire in a fraction of the
+cycles. Furthermore, all maths in Java is done in Java - and once you've
+computed the results you usually have to subsequently copy them into a buffer to
+pass to a native rendering method in OpenGL anyway.</p>
+<p>The Math class provides two <i>totally generic</i> vector operators for unary
+and binary vector operations performed on direct ByteBuffers containing packed
+floating point vectors. The idea is to set up the source(s) of the operations
+and then perform a single call to JNI to perform a <i>highly optimised operation</i>
+on the whole lot in one go. The JNI code is specially optimised for the common
+cases in 3d games programming to use processor-specific instructions and take
+advantage, where feasible, of memory caching architecture. And the end result is
+placed directly back in memory, ready to simply send as a pointer direct to
+OpenGL or some other API.</p>
+<p>In addition we provide implementations of common Vector and Matrix sizes
+similar to those provided by the javax.vecmath package, but ours are <i>open
+source</i> and available without downloading the whole of Java3D.</p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>
