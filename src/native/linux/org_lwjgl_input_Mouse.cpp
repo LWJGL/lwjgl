@@ -182,6 +182,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 #endif
 		return JNI_FALSE;
 	}
+	XWarpPointer(disp, None, win, 0, 0, 0, 0, 0, 0);
+	XEvent event;
+	while (XCheckMaskEvent(disp, ButtonPressMask | ButtonReleaseMask | PointerMotionMask, &event))
+		; // delete events that are pending
 	return JNI_TRUE;
 }
 
