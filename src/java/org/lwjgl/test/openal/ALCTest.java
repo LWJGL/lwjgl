@@ -33,6 +33,7 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.ALC;
 
 /**
@@ -60,7 +61,7 @@ public class ALCTest extends BasicTest {
 		int lastError = ALC.ALC_NO_ERROR;
 
 		//create attribute list for context creation
-		IntBuffer buffer = createIntBuffer(7);
+		IntBuffer buffer = BufferUtils.createIntBuffer(7);
 
 		if ((lastError = ALC.alcGetError()) != ALC.ALC_NO_ERROR) {
 			System.out.println("ALC Error: " + ALC.alcGetString(lastError));

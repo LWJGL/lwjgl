@@ -37,6 +37,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
 /**
@@ -83,8 +84,8 @@ public class PlayTest extends BasicTest {
         int lastError;
 
         //create 1 buffer and 1 source
-        IntBuffer buffers = createIntBuffer(1);
-        IntBuffer sources = createIntBuffer(1);
+        IntBuffer buffers = BufferUtils.createIntBuffer(1);
+        IntBuffer sources = BufferUtils.createIntBuffer(1);
         
         // al generate buffers and sources
         buffers.position(0).limit(1);

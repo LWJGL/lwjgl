@@ -34,6 +34,7 @@ package org.lwjgl.test.openal;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -82,10 +83,10 @@ public class PositionTest extends BasicTest {
   // ===================================================
 
   /** OpenAL buffers */
-  private IntBuffer soundBuffers = createIntBuffer(3);
+  private IntBuffer soundBuffers = BufferUtils.createIntBuffer(3);
 
   /** OpenAL sources */
-  private IntBuffer soundSources = createIntBuffer(3);
+  private IntBuffer soundSources = BufferUtils.createIntBuffer(3);
 
   /** Position of listener */
   private FloatBuffer listenerPosition = createFloatBuffer(new float[] { 0.0f, 0.0f, 0.0f });
@@ -150,6 +151,7 @@ public class PositionTest extends BasicTest {
     int centerY = (Display.getDisplayMode().getHeight() - WINDOW_HEIGHT) / 2;
 
     // setup window
+    setDisplayMode();
     Display.create();
     // -----------------------------------------------------
 

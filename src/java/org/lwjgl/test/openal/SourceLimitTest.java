@@ -33,6 +33,7 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.OpenALException;
 
@@ -93,7 +94,7 @@ public class SourceLimitTest extends BasicTest {
 		int lastError;
 
 		//make bytbuffer that can hold sourcesToCreate sources
-		IntBuffer sources = createIntBuffer(sourcesToCreate);
+		IntBuffer sources = BufferUtils.createIntBuffer(sourcesToCreate);
 
 		//Create sourcesToCreate sources in one fell swoop
     sources.position(0).limit(sourcesToCreate);
@@ -122,7 +123,7 @@ public class SourceLimitTest extends BasicTest {
 
     //create the sources
 		for (int i = 0; i <= sourcesToCreate; i++) {
-      sources[i] = createIntBuffer(1);
+      sources[i] = BufferUtils.createIntBuffer(1);
       sources[i].position(0).limit(1);
 			AL10.alGenSources(sources[i]);
 			if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {

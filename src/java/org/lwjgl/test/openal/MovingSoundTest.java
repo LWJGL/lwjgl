@@ -33,6 +33,7 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.eax.EAX;
@@ -71,6 +72,7 @@ public class MovingSoundTest extends BasicTest {
 		}
 
     try {
+        setDisplayMode();
         Display.create();
     } catch (Exception e) {
 			e.printStackTrace();
@@ -92,8 +94,8 @@ public class MovingSoundTest extends BasicTest {
 		}
 
 		//create 1 buffer and 1 source
-		IntBuffer buffers = createIntBuffer(1);
-		IntBuffer sources = createIntBuffer(1);
+		IntBuffer buffers = BufferUtils.createIntBuffer(1);
+		IntBuffer sources = BufferUtils.createIntBuffer(1);
 
 		// al generate buffers and sources
     buffers.position(0).limit(1);

@@ -33,6 +33,7 @@ package org.lwjgl.test.openal;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
 /**
@@ -79,7 +80,7 @@ public class StressTest extends BasicTest {
   }
 
   private void createSources() {
-    sources = createIntBuffer(4);
+    sources = BufferUtils.createIntBuffer(4);
     sources.position(0).limit(4);
     AL10.alGenSources(sources);
     if (AL10.alGetError() != AL10.AL_NO_ERROR) {
@@ -89,7 +90,7 @@ public class StressTest extends BasicTest {
   }
 
   private void createBuffers() {
-    buffers = createIntBuffer(10);
+    buffers = BufferUtils.createIntBuffer(10);
     buffers.position(0).limit(10);
     AL10.alGenBuffers(buffers);
     if (AL10.alGetError() != AL10.AL_NO_ERROR) {

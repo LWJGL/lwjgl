@@ -31,13 +31,12 @@
  */
 package org.lwjgl.test.openal;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.opengl.DisplayMode;
 
 /**
  * $Id$
@@ -69,34 +68,6 @@ public abstract class BasicTest {
       AL.destroy();
     }
   }
-
-  /**
-   * Creates an integer buffer to hold specified ints
-   * - strictly a utility method
-   *
-   * @param size how many int to contain
-   * @return created IntBuffer
-   */
-  protected IntBuffer createIntBuffer(int size) {
-    ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-    temp.order(ByteOrder.nativeOrder());
-
-    return temp.asIntBuffer();
-  }
-
-  /**
-   * Creates a float buffer to hold specified floats
-   * - strictly a utility method
-   *
-   * @param size how many floats to contain
-   * @return created FloatBuffer
-   */
-  protected FloatBuffer createFloatBuffer(int size) {
-    ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-    temp.order(ByteOrder.nativeOrder());
-
-    return temp.asFloatBuffer();
-  }
   
   /**
    * Creates a float buffer to hold specified float array
@@ -106,7 +77,7 @@ public abstract class BasicTest {
    * @return created FloatBuffer
    */
   protected FloatBuffer createFloatBuffer(float[] data) {
-    FloatBuffer temp = createFloatBuffer(data.length).put(data);
+    FloatBuffer temp = BufferUtils.createFloatBuffer(data.length).put(data);
     temp.flip();
     return temp;
   }  
@@ -133,4 +104,26 @@ public abstract class BasicTest {
     alExit();
     System.exit(-1);
   }
+  
+  /**
+   * Sets the display mode for fullscreen mode
+   */
+  protected boolean setDisplayMode() {
+    // get modes
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + 640,
+          "height=" + 480,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }  
 }

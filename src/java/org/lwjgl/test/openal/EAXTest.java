@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
@@ -55,10 +56,10 @@ import org.lwjgl.openal.eax.EAXListenerProperties;
 public class EAXTest extends BasicTest {
 
   /** OpenAL buffers */
-  private IntBuffer soundBuffers = createIntBuffer(1);
+  private IntBuffer soundBuffers = BufferUtils.createIntBuffer(1);
 
   /** OpenAL sources */
-  private IntBuffer soundSources = createIntBuffer(1);
+  private IntBuffer soundSources = BufferUtils.createIntBuffer(1);
   
   /** Listener EAX property object */
   private EAXListenerProperties listenerProperties;
