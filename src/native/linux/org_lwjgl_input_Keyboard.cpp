@@ -161,6 +161,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	translation_enabled = false;
 	buffer_enabled = false;
 	should_grab = true;
+	list_start = 0;
+	list_end = 0;
 	updateGrab();
 }
 

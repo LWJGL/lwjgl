@@ -26,7 +26,7 @@ void destroyLock(void) {
 	}
 }
 
-void lock(void) {
+void lockLWJGL(void) {
 	OSStatus err = MPEnterCriticalRegion(critical_region, kDurationForever);
 	if (err != noErr) {
 #ifdef _DEBUG
@@ -35,7 +35,7 @@ void lock(void) {
 	}
 }
 
-void unlock(void) {
+void unlockLWJGL(void) {
 	OSStatus err = MPExitCriticalRegion(critical_region);
 	if (err != noErr) {
 #ifdef _DEBUG

@@ -188,8 +188,9 @@ static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint st
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv *, jclass) {
+	bool saved;
 	lock();
-	const bool saved = close_requested;
+	saved = close_requested;
 	close_requested = false;
 	unlock();
 	return saved;
@@ -273,8 +274,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy(JNIEnv *env, jclass
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused(JNIEnv *env, jclass clazz) {
+	bool result;
 	lock();
-	bool result = activated;
+	result = activated;
 	unlock();
 	return result;
 }
@@ -284,8 +286,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty(JNIEnv *env, jc
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsMinimized(JNIEnv *env, jclass clazz) {
+	bool result;
 	lock();
-	bool result = miniaturized;
+	result = miniaturized;
 	unlock();
 	return result;
 }
