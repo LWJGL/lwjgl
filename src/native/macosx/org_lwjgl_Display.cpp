@@ -32,13 +32,12 @@
 #include <Carbon/Carbon.h>
 #include <AGL/agl.h>
 #include <OpenGL/gl.h>
+#include <JavaVM/jni.h>
+#include "RenderingContext.h"
 #include "org_lwjgl_Display.h"
 
 
-
-AGLContext		ctx;
-Rect			rect;
-WindotPtr		win;
+RenderingContext *		renderingContext;
 
 
 /*
@@ -63,36 +62,37 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 #ifdef _DEBUG
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
 #endif
-        
-        InitCursor();
-        
-        SetRect( &rect, 0, 0, width, height );
-        win = NewCWindow( NULL, &rect, "Lightweight Java Gaming Library", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
-        
-        SetPortWindowPort( win );
-        
-        if ( win==null )
-        {
-            printf("Failed to create a window\n");
-            return 1;
-        }
-        
-        ShowWindow( win );
-        
-	/* Setup the OpenGL context */
-        GLint          attrib[] = { AGL_RGBA, AGL_NONE };
-        
-	ctx = setupAGL(   attrib, (AGLDrawable) win);
-	if(ctx == NULL) 
-        {
-            return JNI_FALSE;
-        }        
+      renderingContext = new RenderingContext();
+      
+      InitCursor();
 
 
-	jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
-	env->SetStaticIntField(clazz, fid_handle, (jint) win);
+      Rect			rect;      
+      SetRect( &rect, 0, 0, width, height );
+      
+      WindowPtr windowPtr = NewCWindow( NULL, &rect, "Lightweight Java Gaming Library", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
+        
+      SetPortWindowPort( windowPtr );
+        
+      if ( windowPtr == NULL )
+      {
+          printf("Failed to create a window\n");
+          return 1;
+      }
+        
+      ShowWindow( windowPtr );
+/*
+      pAGLContext = setupAGL(   attrib, (AGLDrawable) windowPtr);
+      if(ctx == NULL)
+      {
+          return 1;
+      }        
+*/
 
-	return JNI_TRUE;
+      jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
+      env->SetStaticIntField(clazz, fid_handle, (jint) windowPtr );
+
+      return 0;
 }
 
 /*
@@ -103,13 +103,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-        // cleanup the AGL context
-        //
-        cleanupAGL( ctx );
-        
-        // cleanup the window
-        //
-        DisposeWindow( win );
+      // cleanup the AGL context
+      //
+      renderingContext->destroy();
+
         
 #ifdef _DEBUG
 	printf("Destroyed display\n");
@@ -117,55 +114,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy
 }
 
 
-/*
-** OpenGL Setup
-*/
-static AGLContext setupAGL( GLint* attrib, AGLDrawable win)
-{
-	AGLPixelFormat fmt;
-	AGLContext     ctx;
-	GLboolean      ok;
 
-	/* Choose an rgb pixel format */
-	fmt = aglChoosePixelFormat(NULL, 0, attrib);
-	if(fmt == NULL) 
-        {
-            return NULL;
-        }
-
-	/* Create an AGL context */
-	ctx = aglCreateContext(fmt, NULL);
-	if(ctx == NULL)
-        {
-            return NULL;
-        }
-
-	/* Attach the window to the context */
-	ok = aglSetDrawable(ctx, GetWindowPort(win) );
-	if(!ok) 
-        {
-            return NULL;
-        }
-	
-	/* Make the context the current context */
-	ok = aglSetCurrentContext(ctx);
-	if(!ok) 
-        {
-            return NULL;
-        }
-
-	/* Pixel format is no longer needed */
-	aglDestroyPixelFormat(fmt);
-
-	return ctx;
-}
-
-/*
-** OpenGL Cleanup
-*/
-static void cleanupAGL(AGLContext ctx)
-{
-	aglSetCurrentContext(NULL);
-	aglSetDrawable(ctx, NULL);
-	aglDestroyContext(ctx);
-}
