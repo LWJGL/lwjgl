@@ -47,6 +47,10 @@
 #include "checkGLerror.h"
 #include "extgl.h"
 
+static inline const void *offsetToPointer(jint offset) {
+	return (const char *)NULL + offset;
+}
+
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
  * Method:    glColorTable
@@ -518,7 +522,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetSeparableFilter
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
- * Method:    glDrawRangeElements
+ * Method:    nglDrawRangeElements
  * Signature: (IIIIII)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglDrawRangeElements
@@ -527,6 +531,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglDrawRangeElements
 	CHECK_EXISTS(glDrawRangeElements)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glDrawRangeElements(mode, start, end, count, type, address);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL12
+ * Method:    nglDrawRangeElementsVBO
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglDrawRangeElementsVBO
+  (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint buffer_offset)
+{
+	CHECK_EXISTS(glDrawRangeElements)
+	glDrawRangeElements(mode, start, end, count, type, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
 }
 

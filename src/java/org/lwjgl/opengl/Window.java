@@ -66,6 +66,9 @@ public final class Window {
 	/** Fullscreen */
 	private static boolean fullscreen;
 
+	/** Tracks VBO state for the window context */
+	private static VBOTracker vbo_tracker;
+
 	/**
 	 * Construct a Window. Some OSs may not support non-fullscreen windows; in
 	 * which case the window will be fullscreen regardless.
@@ -232,8 +235,7 @@ public final class Window {
 		Window.title = title;
 		Window.width = Display.getWidth();
 		Window.height = Display.getHeight();
-		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil);
-		created = true;
+		createWindow();
 	}
 
 	/**
@@ -268,8 +270,7 @@ public final class Window {
 		Window.stencil = stencil;
 		Window.fullscreen = false;
 		Window.title = title;
-		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil);
-		created = true;
+		createWindow();
 	}
 
 	/**
@@ -288,6 +289,11 @@ public final class Window {
 		int depth,
 		int stencil)
 		throws Exception;
+
+	private static void createWindow() throws Exception {
+		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil);
+		created = true;
+	}
 
 	/**
 	 * Destroy the window.

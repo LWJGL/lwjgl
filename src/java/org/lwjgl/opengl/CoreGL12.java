@@ -191,15 +191,23 @@ public abstract class CoreGL12 extends CoreGL11 implements CoreGL12Constants {
 	}
 	private static native void nglGetSeparableFilter(int target, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset, Buffer span, int span_offset);
 	public static void glDrawRangeElements(int mode, int start, int end, ByteBuffer indices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, ShortBuffer indices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, IntBuffer indices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
 	private static native void nglDrawRangeElements(int mode, int start, int end, int count, int type, Buffer indices, int indices_offset);
+	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, int buffer_offset) {
+		assert VBOTracker.getVBOElementStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglDrawRangeElementsVBO(mode, start, end, count, type, buffer_offset);
+	}
+	private static native void nglDrawRangeElementsVBO(int mode, int start, int end, int count, int type, int buffer_offset);
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ByteBuffer pixels) {
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels.position());
 	}

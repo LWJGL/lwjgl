@@ -65,6 +65,10 @@ static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
 		return env->NewDirectByteBuffer(p, size);
 }
 
+static inline const void *offsetToPointer(jint offset) {
+        return (const char *)NULL + offset;
+}
+
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    glActiveStencilFaceEXT
@@ -2713,6 +2717,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglVertexAttribPointerARB(JNIEnv
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    nglVertexAttribPointerARBVBO
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglVertexAttribPointerARBVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jboolean p3, jint p4, jint buffer_offset)
+{
+	CHECK_EXISTS(glVertexAttribPointerARB)
+	glVertexAttribPointerARB((GLuint) p0, (GLint) p1, (GLuint) p2, (GLboolean) p3, (GLint) p4, offsetToPointer(buffer_offset));
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    nglVertexAttribPointerNV
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglVertexAttribPointerNV(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jobject buffer, jint buffer_offset)
@@ -3018,6 +3033,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglWeightPointerARB(JNIEnv * env
 	CHECK_EXISTS(glWeightPointerARB)
 	GLubyte *address = (GLubyte *)env->GetDirectBufferAddress(buffer);
 	glWeightPointerARB((GLint) p0, (GLuint) p1, (GLint) p2, address + buffer_offset);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    nglWeightPointerARBVBO
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglWeightPointerARBVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
+{
+	CHECK_EXISTS(glWeightPointerARB)
+	glWeightPointerARB((GLint) p0, (GLuint) p1, (GLint) p2, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
 }
 
@@ -3544,10 +3570,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glWriteMaskEXT(JNIEnv * env, jcl
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glBindBufferARB
+ * Method:    nglBindBufferARB
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glBindBufferARB(JNIEnv *env, jclass clazz, jint target, jint buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglBindBufferARB(JNIEnv *env, jclass clazz, jint target, jint buffer)
 {
 	CHECK_EXISTS(glBindBufferARB)
 	glBindBufferARB((GLenum) target, (GLuint) buffer);

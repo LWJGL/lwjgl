@@ -87,12 +87,19 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	public static native void glCopyTexImage1D(int target, int level, int internalFormat, int x, int y, int width, int border);
 	public static native void glCopyPixels(int x, int y, int width, int height, int type);
 	public static void glColorPointer(int size, boolean unsigned, int stride, ByteBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glColorPointer(int size, int stride, FloatBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglColorPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglColorPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
+	public static void glColorPointer(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglColorPointerVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglColorPointerVBO(int size, int type, int stride, int buffer_offset);
 	public static native void glColorMaterial(int face, int mode);
 	public static native void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
 	public static native void glColor3b(byte red, byte green, byte blue);
@@ -118,9 +125,15 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	public static native void glEnable(int cap);
 	public static native void glDisable(int cap);
 	public static void glEdgeFlagPointer(int stride, ByteBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglEdgeFlagPointer(stride, pointer, pointer.position());
 	}
 	private static native void nglEdgeFlagPointer(int stride, Buffer pointer, int pointer_offset);
+	public static void glEdgeFlagPointer(int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglEdgeFlagPointerVBO(stride, buffer_offset);
+	}
+	private static native void nglEdgeFlagPointerVBO(int stride, int buffer_offset);
 	public static native void glEdgeFlag(boolean flag);
 	public static void glDrawPixels(int width, int height, int format, int type, ByteBuffer pixels) {
 		nglDrawPixels(width, height, format, type, pixels, pixels.position());
@@ -133,15 +146,23 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	}
 	private static native void nglDrawPixels(int width, int height, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glDrawElements(int mode, ByteBuffer indices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
 	}
 	public static void glDrawElements(int mode, ShortBuffer indices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
 	public static void glDrawElements(int mode, IntBuffer indices) {
+		assert VBOTracker.getVBOElementStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
 	private static native void nglDrawElements(int mode, int count, int type, Buffer indices, int indices_offset);
+	public static void glDrawElements(int mode, int count, int type, int buffer_offset) {
+		assert VBOTracker.getVBOElementStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglDrawElementsVBO(mode, count, type, buffer_offset);
+	}
+	private static native void nglDrawElementsVBO(int mode, int count, int type, int buffer_offset);
 	public static native void glDrawBuffer(int mode);
 	public static native void glDrawArrays(int mode, int first, int count);
 	public static native void glDepthRange(double zNear, double zFar);
@@ -237,18 +258,27 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	public static native ByteBuffer glGetPointerv(int pname, int size);
 	public static native boolean glIsEnabled(int cap);
 	public static void glInterleavedArrays(int format, int stride, ByteBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglInterleavedArrays(format, stride, pointer, pointer.position());
 	}
 	public static void glInterleavedArrays(int format, int stride, ShortBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 1);
 	}
 	public static void glInterleavedArrays(int format, int stride, IntBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	public static void glInterleavedArrays(int format, int stride, FloatBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglInterleavedArrays(int format, int stride, Buffer pointer, int pointer_offset);
+	public static void glInterleavedArrays(int format, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglInterleavedArraysVBO(format, stride, buffer_offset);
+	}
+	private static native void nglInterleavedArraysVBO(int format, int stride, int buffer_offset);
 	public static native void glInitNames();
 	public static native void glHint(int target, int mode);
 	public static void glGetTexParameter(int target, int pname, FloatBuffer params) {
@@ -377,15 +407,23 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	public static native void glPassThrough(float token);
 	public static native void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar);
 	public static void glNormalPointer(int stride, ByteBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglNormalPointer(GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glNormalPointer(int stride, IntBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglNormalPointer(GL_INT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glNormalPointer(int stride, FloatBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglNormalPointer(GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglNormalPointer(int type, int stride, Buffer pointer, int pointer_offset);
+	public static void glNormalPointer(int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglNormalPointerVBO(type, stride, buffer_offset);
+	}
+	private static native void nglNormalPointerVBO(int type, int stride, int buffer_offset);
 	public static native void glNormal3b(byte nx, byte ny, byte nz);
 	public static native void glNormal3f(float nx, float ny, float nz);
 	public static native void glNormal3i(int nx, int ny, int nz);
@@ -427,18 +465,41 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	public static native void glPopName();
 	public static native void glPushMatrix();
 	public static native void glPopMatrix();
-	public static native void glPushClientAttrib(int mask);
-	public static native void glPopClientAttrib();
+	public static void glPushClientAttrib(int mask) {
+		VBOTracker.getClientAttribStack().pushState();
+		VBOTracker.getClientAttribStack().setState(mask);
+		if ((mask & GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
+			VBOTracker.getVBOArrayStack().pushState();
+			VBOTracker.getVBOElementStack().pushState();
+		}
+		nglPushClientAttrib(mask);
+	}
+	private static native void nglPushClientAttrib(int mask);
+	public static void glPopClientAttrib() {
+		if ((VBOTracker.getClientAttribStack().popState() & GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
+			VBOTracker.getVBOArrayStack().popState();
+                        VBOTracker.getVBOElementStack().popState();
+		}
+		nglPopClientAttrib();
+	}
+	private static native void nglPopClientAttrib();
 	public static native void glPushAttrib(int mask);
 	public static native void glPopAttrib();
 	public static native void glStencilFunc(int func, int ref, int mask);
 	public static void glVertexPointer(int size, int stride, FloatBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglVertexPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glVertexPointer(int size, int stride, IntBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglVertexPointer(size, GL_INT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglVertexPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
+	public static void glVertexPointer(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglVertexPointerVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglVertexPointerVBO(int size, int type, int stride, int buffer_offset);
 	public static native void glVertex2f(float x, float y);
 	public static native void glVertex2i(int x, int y);
 	public static native void glVertex3f(float x, float y, float z);
@@ -509,9 +570,15 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	}
 	private static native void nglTexEnviv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glTexCoordPointer(int size, int stride, FloatBuffer pointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglTexCoordPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglTexCoordPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
+	public static void glTexCoordPointer(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglTexCoordPointerVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglTexCoordPointerVBO(int size, int type, int stride, int buffer_offset);
 	public static native void glTexCoord1f(float s);
 	public static native void glTexCoord2f(float s, float t);
 	public static native void glTexCoord3f(float s, float t, float r);

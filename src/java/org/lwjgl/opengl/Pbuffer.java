@@ -50,15 +50,18 @@ import org.lwjgl.*;
 public class Pbuffer {
 	public final static int PBUFFER_SUPPORTED = 1;
 		
+	/** Current Pbuffer */
+	private static Pbuffer currentBuffer = null;
+	
+	/** Handle to the native GL rendering context */
+	private final int handle;
+
+	/** Tracks VBO state */
+	private final VBOTracker vbo_tracker;
+
 	static {
 		System.loadLibrary(Sys.getLibraryName());
 	}
-	
-	/** Handle to the native GL rendering context */
-	protected final int handle;
-
-	/** Current Pbuffer */
-	private static Pbuffer currentBuffer = null;
 	
 	/**
 	 * Construct an instance of a Pbuffer. If this fails then an Exception will be thrown.
@@ -81,6 +84,7 @@ public class Pbuffer {
 	 */
 	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
 		handle = nCreate(width, height, bpp, alpha, depth, stencil);
+		vbo_tracker = new VBOTracker();
 	}
 
 	/**
@@ -88,6 +92,7 @@ public class Pbuffer {
 	 */
 	public static void releaseContext() {
 		currentBuffer = null;
+		VBOTracker.releaseCurrent();
 		nReleaseContext();
 	}
 
@@ -119,6 +124,7 @@ public class Pbuffer {
 	 */
 	public void makeCurrent() {
 		currentBuffer = this;
+		VBOTracker.setCurrent(vbo_tracker);
 		nMakeCurrent(handle);
 	}
 
@@ -150,7 +156,8 @@ public class Pbuffer {
 	 * Destroys the Pbuffer. The buffer must not be current.
 	 */
 	public void destroy() {
-		assert currentBuffer != this : "Pbuffers must not be current when releasing it";
+		if (currentBuffer == this)
+			releaseContext();
 		nDestroy(handle);
 	}
 

@@ -8,9 +8,13 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL11 */
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL12 */
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL14 */
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL */
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    glActiveStencilFaceEXT
@@ -1861,6 +1865,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglVertexAttribPointerARB
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    nglVertexAttribPointerARBVBO
+ * Signature: (IIIZII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglVertexAttribPointerARBVBO
+  (JNIEnv *, jclass, jint, jint, jint, jboolean, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    nglVertexAttribPointerNV
  * Signature: (IIIILjava/nio/Buffer;I)V
  */
@@ -2085,6 +2097,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglWeightPointerARB
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    nglWeightPointerARBVBO
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglWeightPointerARBVBO
+  (JNIEnv *, jclass, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    nglWeightsvARB
  * Signature: (ILjava/nio/ShortBuffer;I)V
  */
@@ -2261,10 +2281,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glWriteMaskEXT
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glBindBufferARB
+ * Method:    nglBindBufferARB
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glBindBufferARB
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglBindBufferARB
   (JNIEnv *, jclass, jint, jint);
 
 /*

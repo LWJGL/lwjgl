@@ -7,6 +7,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL11 */
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL12 */
 /*
  * Class:     org_lwjgl_opengl_CoreGL12
  * Method:    nglColorTable
@@ -286,6 +290,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglGetSeparableFilter
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglDrawRangeElements
   (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL12
+ * Method:    nglDrawRangeElementsVBO
+ * Signature: (IIIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL12_nglDrawRangeElementsVBO
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL12

@@ -8,6 +8,10 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL11 */
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL12 */
+/* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL14 */
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
@@ -24,6 +28,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glFogCoordf
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglFogCoordPointer
   (JNIEnv *, jclass, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL14
+ * Method:    nglFogCoordPointerVBO
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglFogCoordPointerVBO
+  (JNIEnv *, jclass, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
@@ -80,6 +92,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3ub
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglSecondaryColorPointer
   (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL14
+ * Method:    nglSecondaryColorPointerVBO
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglSecondaryColorPointerVBO
+  (JNIEnv *, jclass, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14

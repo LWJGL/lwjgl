@@ -46,11 +46,17 @@ import java.nio.Buffer;
  * @version $Revision: 1.23 $
  */
 public abstract class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
-	public static native void glFogCoordf (float coord);
-	public static void glFogCoordPointer (int stride, FloatBuffer data) {
+	public static native void glFogCoordf(float coord);
+	public static void glFogCoordPointer(int stride, FloatBuffer data) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglFogCoordPointer(GL_FLOAT, stride, data, data.position() << 2);
 	}
-	private static native void nglFogCoordPointer (int type, int stride, Buffer data, int data_offset);
+	private static native void nglFogCoordPointer(int type, int stride, Buffer data, int data_offset);
+	public static void glFogCoordPointer(int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglFogCoordPointerVBO(type, stride, buffer_offset);
+	}
+	private static native void nglFogCoordPointerVBO(int type, int stride, int buffer_offset);
 	public static void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount) {
 		assert piFirst.remaining() == piCount.remaining(): "piFirst.remaining() != piCount.remaining()";
 		nglMultiDrawArrays(mode, piFirst, piFirst.position(), piCount, piCount.position(), piFirst.remaining());
@@ -65,13 +71,20 @@ public abstract class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
 	public static native void glSecondaryColor3b (byte red, byte green, byte blue);
 	public static native void glSecondaryColor3f (float red, float green, float blue);
 	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
-	public static void glSecondaryColorPointer (int size, boolean unsigned, int stride, ByteBuffer data) {
+	public static void glSecondaryColorPointer(int size, boolean unsigned, int stride, ByteBuffer data) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglSecondaryColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, data, data.position());
 	}
-	public static void glSecondaryColorPointer (int size, int stride, FloatBuffer data) {
+	public static void glSecondaryColorPointer(int size, int stride, FloatBuffer data) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglSecondaryColorPointer(size, GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglSecondaryColorPointer (int size, int type, int stride, Buffer data, int data_offset);
+	public static void glSecondaryColorPointer(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglSecondaryColorPointerVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglSecondaryColorPointerVBO(int size, int type, int stride, int buffer_offset);
 	public static native void glBlendFuncSeparate (int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha);
 	public static native void glWindowPos2f (float x, float y);
 	public static native void glWindowPos2i (int x, int y);

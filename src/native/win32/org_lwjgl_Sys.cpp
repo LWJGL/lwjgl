@@ -51,18 +51,6 @@ __int64		hires_timer;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    createIndexBuffer
- * Signature: (I)Ljava/nio/ByteBuffer;
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createIndexBuffer
-  (JNIEnv *env, jclass clazz, jint index)
-{
-	void *p = (char *)NULL + index;
-	return env->NewDirectByteBuffer(p, 0);
-}
-
-/*
- * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution
  * Signature: ()J
  */

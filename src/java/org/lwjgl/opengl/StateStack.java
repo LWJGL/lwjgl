@@ -29,36 +29,36 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.lwjgl.opengl;
 
-import java.nio.*;
+public class StateStack {
+	/** Only int state is tracked */
+	private final int[] state_stack;
+	private int stack_pos;
 
-/**
- * Simple utility class.
- * 
- * @author cix_foo <cix_foo@users.sourceforge.net>
- * @version $Revision$
- */
-abstract class Util {
-	private final static IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-	/**
-	 * A helper function which is used to get the byte offset in an arbitrary buffer
-	 * based on its position
-	 * @return the position of the buffer, in BYTES
-	 */
-	static int getOffset(Buffer buffer) {
-		if (buffer instanceof FloatBuffer || buffer instanceof IntBuffer)
-			return buffer.position() << 2;
-		else if (buffer instanceof ShortBuffer || buffer instanceof CharBuffer)
-			return buffer.position() << 1;
-		else if (buffer instanceof DoubleBuffer || buffer instanceof LongBuffer)
-			return buffer.position() << 3;
-		else
-			return buffer.position();
+	public int getState() {
+		return state_stack[stack_pos];
 	}
 
-	static int getGLInteger(int enum) {
-		CoreGL11.glGetInteger(enum, int_buffer);
-		return int_buffer.get(0);
+	public void setState(int new_state) {
+		state_stack[stack_pos] = new_state;
+	}
+
+	public void pushState() {
+		stack_pos++;
+		state_stack[stack_pos] = state_stack[stack_pos - 1];
+	}
+
+	public int popState() {
+		int result = state_stack[stack_pos];
+		stack_pos--;
+		return result;
+	}
+
+	public StateStack(int stack_size, int initial_value) {
+		state_stack = new int[stack_size];
+		stack_pos = 0;
+		state_stack[stack_pos] = initial_value;
 	}
 }

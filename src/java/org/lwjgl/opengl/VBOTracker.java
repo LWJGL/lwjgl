@@ -29,36 +29,41 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.lwjgl.opengl;
 
-import java.nio.*;
+public class VBOTracker {
+	private static VBOTracker default_tracker = new VBOTracker();
+	private static VBOTracker current_tracker = default_tracker;
 
-/**
- * Simple utility class.
- * 
- * @author cix_foo <cix_foo@users.sourceforge.net>
- * @version $Revision$
- */
-abstract class Util {
-	private final static IntBuffer int_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
-	/**
-	 * A helper function which is used to get the byte offset in an arbitrary buffer
-	 * based on its position
-	 * @return the position of the buffer, in BYTES
-	 */
-	static int getOffset(Buffer buffer) {
-		if (buffer instanceof FloatBuffer || buffer instanceof IntBuffer)
-			return buffer.position() << 2;
-		else if (buffer instanceof ShortBuffer || buffer instanceof CharBuffer)
-			return buffer.position() << 1;
-		else if (buffer instanceof DoubleBuffer || buffer instanceof LongBuffer)
-			return buffer.position() << 3;
-		else
-			return buffer.position();
+	private final StateStack vbo_array_stack;
+	private final StateStack vbo_element_stack;
+	private final StateStack attrib_stack;
+
+	public static void setCurrent(VBOTracker tracker) {
+		current_tracker = tracker;
 	}
 
-	static int getGLInteger(int enum) {
-		CoreGL11.glGetInteger(enum, int_buffer);
-		return int_buffer.get(0);
+	public static void releaseCurrent() {
+		current_tracker = default_tracker;
+	}
+
+	public VBOTracker() {
+		int stack_size = Util.getGLInteger(CoreGL11Constants.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH);
+		vbo_array_stack = new StateStack(stack_size, 0);
+		vbo_element_stack = new StateStack(stack_size, 0);
+		attrib_stack = new StateStack(stack_size, 0);
+	}
+
+	public static StateStack getVBOArrayStack() {
+		return current_tracker.vbo_array_stack;
+	}
+
+	public static StateStack getVBOElementStack() {
+		return current_tracker.vbo_element_stack;
+	}
+
+	public static StateStack getClientAttribStack() {
+		return current_tracker.attrib_stack;
 	}
 }

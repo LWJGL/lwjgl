@@ -47,6 +47,10 @@
 #include "checkGLerror.h"
 #include "extgl.h"
 
+static inline const void *offsetToPointer(jint offset) {
+        return (const char *)NULL + offset;
+}
+
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
  * Method:    glFogCoordf
@@ -61,7 +65,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glFogCoordf
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glFogCoordPointer
+ * Method:    nglFogCoordPointer
  * Signature: (IILjava/nio/Buffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglFogCoordPointer
@@ -69,6 +73,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglFogCoordPointer
 	CHECK_EXISTS(glFogCoordPointer)
 	GLvoid *address = (GLvoid *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glFogCoordPointer(p1, p2, address);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL14
+ * Method:    nglFogCoordPointerVBO
+ * Signature: (IILjava/nio/Buffer;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglFogCoordPointerVBO
+  (JNIEnv *env, jclass clazz, jint p1, jint p2, jint buffer_offset) {
+	CHECK_EXISTS(glFogCoordPointer)
+	glFogCoordPointer(p1, p2, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
 }
 
@@ -163,14 +179,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glSecondaryColor3ub
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    glSecondaryColorPointer
+ * Method:    nglSecondaryColorPointer
  * Signature: (IIILjava/nio/Buffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglSecondaryColorPointer
   (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jobject buffer, jint offset) {
 	CHECK_EXISTS(glSecondaryColorPointer)
-	GLvoid *address = (GLvoid *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
+	const GLvoid *address = (const GLvoid *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glSecondaryColorPointer(p1, p2, p3, address);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL14
+ * Method:    nglSecondaryColorPointerVBO
+ * Signature: (IIILjava/nio/Buffer;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglSecondaryColorPointerVBO
+  (JNIEnv *env, jclass clazz, jint p1, jint p2, jint p3, jint buffer_offset) {
+	CHECK_EXISTS(glSecondaryColorPointer)
+	glSecondaryColorPointer(p1, p2, p3, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
 }
 

@@ -7,6 +7,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024CoreGL11 */
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glAccum
@@ -193,6 +195,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglColorPointer
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglColorPointerVBO
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglColorPointerVBO
+  (JNIEnv *, jclass, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glColorMaterial
  * Signature: (II)V
  */
@@ -369,6 +379,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglEdgeFlagPointer
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglEdgeFlagPointerVBO
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglEdgeFlagPointerVBO
+  (JNIEnv *, jclass, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glEdgeFlag
  * Signature: (Z)V
  */
@@ -390,6 +408,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglDrawPixels
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglDrawElements
   (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglDrawElementsVBO
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglDrawElementsVBO
+  (JNIEnv *, jclass, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
@@ -662,6 +688,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_CoreGL11_glIsEnabled
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglInterleavedArrays
   (JNIEnv *, jclass, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglInterleavedArraysVBO
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglInterleavedArraysVBO
+  (JNIEnv *, jclass, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
@@ -1089,6 +1123,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglNormalPointer
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglNormalPointerVBO
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglNormalPointerVBO
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glNormal3b
  * Signature: (BBB)V
  */
@@ -1297,18 +1339,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glPopMatrix
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
- * Method:    glPushClientAttrib
+ * Method:    nglPushClientAttrib
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glPushClientAttrib
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglPushClientAttrib
   (JNIEnv *, jclass, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
- * Method:    glPopClientAttrib
+ * Method:    nglPopClientAttrib
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glPopClientAttrib
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglPopClientAttrib
   (JNIEnv *, jclass);
 
 /*
@@ -1342,6 +1384,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glStencilFunc
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglVertexPointer
   (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglVertexPointerVBO
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglVertexPointerVBO
+  (JNIEnv *, jclass, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
@@ -1518,6 +1568,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglTexEnviv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglTexCoordPointer
   (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL11
+ * Method:    nglTexCoordPointerVBO
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglTexCoordPointerVBO
+  (JNIEnv *, jclass, jint, jint, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11

@@ -2625,7 +2625,7 @@ typedef void (APIENTRY * glSecondaryColor3uiPROC) (GLuint red, GLuint green, GLu
 typedef void (APIENTRY * glSecondaryColor3uivPROC) (const GLuint *v);
 typedef void (APIENTRY * glSecondaryColor3usPROC) (GLushort red, GLushort green, GLushort blue);
 typedef void (APIENTRY * glSecondaryColor3usvPROC) (const GLushort *v);
-typedef void (APIENTRY * glSecondaryColorPointerPROC) (GLint size, GLenum type, GLsizei stride, GLvoid *pointer);
+typedef void (APIENTRY * glSecondaryColorPointerPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 typedef void (APIENTRY * glBlendFuncSeparatePROC) (GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha);
 typedef void (APIENTRY * glWindowPos2dPROC) (GLdouble x, GLdouble y);
 typedef void (APIENTRY * glWindowPos2fPROC) (GLfloat x, GLfloat y);
@@ -4078,7 +4078,7 @@ typedef void (APIENTRY * glWeightdvARBPROC) (GLint size, GLdouble *weights);
 typedef void (APIENTRY * glWeightubvARBPROC) (GLint size, GLubyte *weights);
 typedef void (APIENTRY * glWeightusvARBPROC) (GLint size, GLushort *weights);
 typedef void (APIENTRY * glWeightuivARBPROC) (GLint size, GLuint *weights);
-typedef void (APIENTRY * glWeightPointerARBPROC) (GLint size, GLenum type, GLsizei stride, GLvoid *pointer);
+typedef void (APIENTRY * glWeightPointerARBPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 typedef void (APIENTRY * glVertexBlendARBPROC) (GLint count);
 
 extern glWeightbvARBPROC glWeightbvARB;

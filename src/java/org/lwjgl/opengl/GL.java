@@ -1149,19 +1149,27 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 	private static native void nglVertexAttrib4usvARB(int index, ShortBuffer psV, int psV_offset);
 
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ByteBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglVertexAttribPointerARB(index, size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, normalized, stride, pPointer, pPointer.position());
 	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, ShortBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglVertexAttribPointerARB(index, size, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, normalized, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean normalized, int stride, FloatBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglVertexAttribPointerARB(index, size, GL_FLOAT, normalized, stride, pPointer, pPointer.position()<<2);
 	}
 	public static void glVertexAttribPointerARB(int index, int size, boolean unsigned, boolean normalized, int stride, IntBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglVertexAttribPointerARB(index, size, unsigned ? GL_UNSIGNED_INT : GL_INT, normalized, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglVertexAttribPointerARB(int index, int size, int type, boolean normalized, int stride, Buffer pPointer, int pPointer_offset);
-
+	public static void glVertexAttribPointerARB(int index, int size, int type, boolean normalized, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglVertexAttribPointerARBVBO(index, size, type, normalized, stride, buffer_offset);
+	}
+	private static native void nglVertexAttribPointerARBVBO(int index, int size, int type, boolean normalized, int stride, int buffer_offset);
 	public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer pPointer) {
 		nglVertexAttribPointerNV(index, size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pPointer, pPointer.position());
 	}
@@ -1283,18 +1291,27 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 	private static native void nglWeightivARB(int size, IntBuffer piWeights, int piWeights_offset);
 
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglWeightPointerARB(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglWeightPointerARB(size, unsigned ? GL_UNSIGNED_SHORT : GL_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglWeightPointerARB(size, GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
+		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
 		nglWeightPointerARB(size, unsigned ? GL_UNSIGNED_INT : GL_INT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglWeightPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
+	public static void glWeightPointerARB(int size, int type, int stride, int buffer_offset) {
+		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		nglWeightPointerARBVBO(size, type, stride, buffer_offset);
+	}
+	private static native void nglWeightPointerARBVBO(int size, int type, int stride, int buffer_offset);
 
 	public static void glWeightARB(ShortBuffer psWeights) {
 		nglWeightsvARB(psWeights.remaining(), psWeights, psWeights.position());
@@ -1444,8 +1461,27 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 		int outZ,
 		int outW);
 
-	public static native void glBindBufferARB(int target, int buffer);
+	public static void glBindBufferARB(int target, int buffer) {
+		switch (target) {
+			case GL_ELEMENT_ARRAY_BUFFER_ARB:
+				VBOTracker.getVBOElementStack().setState(buffer);
+				break;
+			case GL_ARRAY_BUFFER_ARB:
+				VBOTracker.getVBOArrayStack().setState(buffer);
+				break;
+			default: assert false: "Unsupported VBO target " + target;
+		}
+		nglBindBufferARB(target, buffer);
+	}
+	private static native void nglBindBufferARB(int target, int buffer);
 	public static void glDeleteBuffersARB(IntBuffer buffers) {
+		for (int i = buffers.position(); i < buffers.limit(); i++) {
+			int buffer_handle = buffers.get(i);
+			if (VBOTracker.getVBOElementStack().getState() == buffer_handle)
+				VBOTracker.getVBOElementStack().setState(0);
+			if (VBOTracker.getVBOArrayStack().getState() == buffer_handle)
+				VBOTracker.getVBOArrayStack().setState(0);
+		}
 		nglDeleteBuffersARB(buffers.remaining(), buffers, buffers.position());
 	}
 	private static native void nglDeleteBuffersARB(int n, IntBuffer buffers, int buffers_offset);

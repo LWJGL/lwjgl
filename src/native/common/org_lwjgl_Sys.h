@@ -22,14 +22,6 @@ extern "C" {
 /* Inaccessible static: class_00024org_00024lwjgl_00024Sys */
 /*
  * Class:     org_lwjgl_Sys
- * Method:    createIndexBuffer
- * Signature: (I)Ljava/nio/ByteBuffer;
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createIndexBuffer
-  (JNIEnv *, jclass, jint);
-
-/*
- * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution
  * Signature: ()J
  */
