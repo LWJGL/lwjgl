@@ -155,9 +155,8 @@ int findPixelFormatARB(JNIEnv *env, jobject pixel_format, jobject pixelFormatCap
 /*
  * Find an appropriate pixel format
  */
-static int findPixelFormat(JNIEnv *env, jobject pixel_format)
+static int findPixelFormatFromBPP(JNIEnv *env, jobject pixel_format, int bpp)
 {
-	int bpp = GetDeviceCaps(hdc, BITSPIXEL);
 	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
 	int alpha = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "alpha", "I"));
 	int depth = (int)env->GetIntField(pixel_format, env->GetFieldID(cls_pixel_format, "depth", "I"));
@@ -239,6 +238,17 @@ static int findPixelFormat(JNIEnv *env, jobject pixel_format)
 	}
 
 	return iPixelFormat;
+}
+
+static int findPixelFormat(JNIEnv *env, jobject pixel_format) {
+	int bpp;
+	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
+	bpp = GetDeviceCaps(hdc, BITSPIXEL);
+	int iPixelFormat = findPixelFormatFromBPP(env, pixel_format, bpp);
+	if (iPixelFormat == -1) {
+		return findPixelFormatFromBPP(env, pixel_format, 16);
+	} else
+		return iPixelFormat;
 }
 
 /*
@@ -444,7 +454,7 @@ static bool createWindow(JNIEnv *env, int width, int height, bool fullscreen, bo
 		return false;
 	}
 
-	hdc = GetDC(hwnd);  
+	hdc = GetDC(hwnd);
 	return true;
 }
 
@@ -677,6 +687,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		return;
 	}
 	pixel_format_index = findPixelFormat(env, pixel_format);
+	if (pixel_format_index == -1) {
+		extgl_Close();
+		return;
+	}
 	// Special option for allowing software opengl	
 	if (!applyPixelFormat(env, hdc, pixel_format_index)) {
 		closeWindow();
@@ -705,6 +719,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		pixel_format_index = findPixelFormatARB(env, pixel_format, NULL, true, true, true);
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(hglrc);
+		if (pixel_format_index == -1) {
+			extgl_Close();
+			return;
+		}
 		hglrc = wglCreateContext(hdc);
 		closeWindow();
 		if (hglrc == NULL) {
