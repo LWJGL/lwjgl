@@ -202,5 +202,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_unloadWAV (JNIEnv *env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_exit (JNIEnv *env, jobject obj) {
 	alutExit();
-	CHECK_AL_ERROR
 }
