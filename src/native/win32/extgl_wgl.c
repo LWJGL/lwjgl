@@ -114,7 +114,7 @@ void extgl_Close(void)
 }
 
 /** returns true if the extension is available */
-static bool WGLQueryExtension(JNIEnv *env, const char *name)
+static bool WGLQueryExtension(const char *name)
 {
 	const GLubyte *extensions;
 
@@ -125,10 +125,10 @@ static bool WGLQueryExtension(JNIEnv *env, const char *name)
 			extensions = (GLubyte*)wglGetExtensionsStringEXT();
 	else
 		extensions = (GLubyte*)wglGetExtensionsStringARB(wglGetCurrentDC());
-	return extgl_QueryExtension(env, extensions, name);
+	return extgl_QueryExtension(extensions, name);
 }
 
-static void extgl_InitWGLARBPbuffer(JNIEnv *env)
+static void extgl_InitWGLARBPbuffer()
 {
 	ExtFunction functions[] = {
 		{"wglCreatePbufferARB", (void **)&wglCreatePbufferARB},
@@ -140,7 +140,7 @@ static void extgl_InitWGLARBPbuffer(JNIEnv *env)
 		extension_flags.WGL_ARB_pbuffer = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLARBPixelFormat(JNIEnv *env)
+static void extgl_InitWGLARBPixelFormat()
 {
 	ExtFunction functions[] = {
 		{"wglGetPixelFormatAttribivARB", (void **)&wglGetPixelFormatAttribivARB},
@@ -150,7 +150,7 @@ static void extgl_InitWGLARBPixelFormat(JNIEnv *env)
 		extension_flags.WGL_ARB_pixel_format = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLARBRenderTexture(JNIEnv *env)
+static void extgl_InitWGLARBRenderTexture()
 {
 	ExtFunction functions[] = {
 		{"wglBindTexImageARB", (void **)&wglBindTexImageARB},
@@ -160,7 +160,7 @@ static void extgl_InitWGLARBRenderTexture(JNIEnv *env)
 		extension_flags.WGL_ARB_render_texture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLEXTSwapControl(JNIEnv *env)
+static void extgl_InitWGLEXTSwapControl()
 {
 	ExtFunction functions[] = {
 		{"wglSwapIntervalEXT", (void **)&wglSwapIntervalEXT},
@@ -169,7 +169,7 @@ static void extgl_InitWGLEXTSwapControl(JNIEnv *env)
 		extension_flags.WGL_EXT_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env)
+static void extgl_InitWGLARBMakeCurrentRead()
 {
 	ExtFunction functions[] = {
 		{"wglMakeContextCurrentARB", (void **)&wglMakeContextCurrentARB},
@@ -178,20 +178,20 @@ static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env)
 		extension_flags.WGL_ARB_make_current_read = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitSupportedWGLExtensions(JNIEnv *env)
+static void extgl_InitSupportedWGLExtensions()
 {
-	extension_flags.WGL_ARB_buffer_region = WGLQueryExtension(env, "WGL_ARB_buffer_region");
-	extension_flags.WGL_ARB_make_current_read = WGLQueryExtension(env, "WGL_ARB_make_current_read");
-	extension_flags.WGL_ARB_multisample = WGLQueryExtension(env, "WGL_ARB_multisample");
-	extension_flags.WGL_ARB_pbuffer = WGLQueryExtension(env, "WGL_ARB_pbuffer");
-	extension_flags.WGL_ARB_pixel_format = WGLQueryExtension(env, "WGL_ARB_pixel_format");
-	extension_flags.WGL_ARB_render_texture = WGLQueryExtension(env, "WGL_ARB_render_texture");
-	extension_flags.WGL_EXT_swap_control = WGLQueryExtension(env, "WGL_EXT_swap_control");
-	extension_flags.WGL_NV_render_depth_texture = WGLQueryExtension(env, "WGL_NV_render_depth_texture");
-	extension_flags.WGL_NV_render_texture_rectangle = WGLQueryExtension(env, "WGL_NV_render_texture_rectangle");
+	extension_flags.WGL_ARB_buffer_region = WGLQueryExtension("WGL_ARB_buffer_region");
+	extension_flags.WGL_ARB_make_current_read = WGLQueryExtension("WGL_ARB_make_current_read");
+	extension_flags.WGL_ARB_multisample = WGLQueryExtension("WGL_ARB_multisample");
+	extension_flags.WGL_ARB_pbuffer = WGLQueryExtension("WGL_ARB_pbuffer");
+	extension_flags.WGL_ARB_pixel_format = WGLQueryExtension("WGL_ARB_pixel_format");
+	extension_flags.WGL_ARB_render_texture = WGLQueryExtension("WGL_ARB_render_texture");
+	extension_flags.WGL_EXT_swap_control = WGLQueryExtension("WGL_EXT_swap_control");
+	extension_flags.WGL_NV_render_depth_texture = WGLQueryExtension("WGL_NV_render_depth_texture");
+	extension_flags.WGL_NV_render_texture_rectangle = WGLQueryExtension("WGL_NV_render_texture_rectangle");
 }
 
-void extgl_InitWGL(JNIEnv *env)
+void extgl_InitWGL()
 {
 	ExtFunction functions[] = {
 		{"wglGetExtensionsStringARB", (void **)&wglGetExtensionsStringARB},
@@ -200,12 +200,11 @@ void extgl_InitWGL(JNIEnv *env)
 	extension_flags.WGL_ARB_extensions_string = wglGetExtensionsStringARB != NULL;
 	extension_flags.WGL_EXT_extensions_string = wglGetExtensionsStringEXT != NULL;
 
-	extgl_InitSupportedWGLExtensions(env);
+	extgl_InitSupportedWGLExtensions();
 
-	extgl_InitWGLARBMakeCurrentRead(env);
-	extgl_InitWGLEXTSwapControl(env);
-	extgl_InitWGLARBRenderTexture(env);
-	extgl_InitWGLARBPixelFormat(env);
-	extgl_InitWGLARBPbuffer(env);
-	//extgl_InitWGLARBBufferRegion(env);
+	extgl_InitWGLARBMakeCurrentRead();
+	extgl_InitWGLEXTSwapControl();
+	extgl_InitWGLARBRenderTexture();
+	extgl_InitWGLARBPixelFormat();
+	extgl_InitWGLARBPbuffer();
 }

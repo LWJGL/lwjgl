@@ -247,7 +247,7 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 		return false;
 	}
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
-	if (!extgl_InitGLX(env, display, screen)) {
+	if (!extgl_InitGLX(display, screen)) {
 		throwException(env, "Could not init GLX");
 		return false;
 	}

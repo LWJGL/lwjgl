@@ -365,6 +365,6 @@ extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
 
 extern glXSwapIntervalSGIPROC glXSwapIntervalSGI;
 
-extern bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen);
+extern bool extgl_InitGLX(Display *disp, int screen);
 
 #endif

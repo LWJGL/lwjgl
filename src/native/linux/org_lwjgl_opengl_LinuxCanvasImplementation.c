@@ -48,7 +48,7 @@
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxCanvasImplementation_nFindVisualIDFromFormat
 	(JNIEnv *env, jclass clazz, jint screen, jobject pixel_format) {
-	if (!extgl_InitGLX(env, getDisplay(), screen)) {
+	if (!extgl_InitGLX(getDisplay(), screen)) {
 		throwException(env, "Could not initialize GLX");
 		return -1;
 	}

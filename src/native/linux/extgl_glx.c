@@ -125,13 +125,13 @@ void extgl_Close(void)
 }
 
 /** returns true if the extention is available */
-static bool GLXQueryExtension(JNIEnv* env, Display *disp, int screen, const char *name)
+static bool GLXQueryExtension(Display *disp, int screen, const char *name)
 {
 	const GLubyte *exts = (const GLubyte *)glXQueryExtensionsString(disp, screen);
-	return extgl_QueryExtension(env, exts, name);
+	return extgl_QueryExtension(exts, name);
 }
 
-static void extgl_InitGLX13(JNIEnv *env)
+static void extgl_InitGLX13()
 {
 	ExtFunction functions[] = {
 		{"glXGetFBConfigs", (void*)&glXGetFBConfigs},
@@ -182,15 +182,15 @@ static bool extgl_InitGLX12(void)
 	return extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitGLXSupportedExtensions(JNIEnv *env, Display *disp, int screen)
+static void extgl_InitGLXSupportedExtensions(Display *disp, int screen)
 {
-	extension_flags.GLX_EXT_visual_info = GLXQueryExtension(env, disp, screen, "GLX_EXT_visual_info");
-	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(env, disp, screen, "GLX_EXT_visual_rating");
-	extension_flags.GLX_SGI_swap_control = GLXQueryExtension(env, disp, screen, "GLX_SGI_swap_control");
-	extension_flags.GLX_ARB_multisample = GLXQueryExtension(env, disp, screen, "GLX_ARB_multisample");
+	extension_flags.GLX_EXT_visual_info = GLXQueryExtension(disp, screen, "GLX_EXT_visual_info");
+	extension_flags.GLX_EXT_visual_rating = GLXQueryExtension(disp, screen, "GLX_EXT_visual_rating");
+	extension_flags.GLX_SGI_swap_control = GLXQueryExtension(disp, screen, "GLX_SGI_swap_control");
+	extension_flags.GLX_ARB_multisample = GLXQueryExtension(disp, screen, "GLX_ARB_multisample");
 }
 
-static void extgl_InitGLXSGISwapControl(JNIEnv *env)
+static void extgl_InitGLXSGISwapControl()
 {
 	ExtFunction functions[] = {
 		{"glXSwapIntervalSGI", (void*)&glXSwapIntervalSGI}};
@@ -198,7 +198,7 @@ static void extgl_InitGLXSGISwapControl(JNIEnv *env)
 		extension_flags.GLX_SGI_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
+bool extgl_InitGLX(Display *disp, int screen)
 {
 	int major, minor;
 	/* Assume glx ver >= 1.2 */
@@ -209,8 +209,8 @@ bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
 		return false;
 	if (major > 1 || (major == 1 && minor >= 3))
 		extension_flags.GLX13 = true;
-	extgl_InitGLX13(env);
-	extgl_InitGLXSupportedExtensions(env, disp, screen);
-	extgl_InitGLXSGISwapControl(env);
+	extgl_InitGLX13();
+	extgl_InitGLXSupportedExtensions(disp, screen);
+	extgl_InitGLXSGISwapControl();
 	return true;
 }

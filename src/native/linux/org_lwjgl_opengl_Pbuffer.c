@@ -60,7 +60,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilitie
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nInitHandle
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint width, jint height, jobject pixel_format) {
-	if (!extgl_InitGLX(env, getDisplay(), getCurrentScreen()) || !isPbuffersSupported()) {
+	if (!extgl_InitGLX(getDisplay(), getCurrentScreen()) || !isPbuffersSupported()) {
 		throwException(env, "No Pbuffer support");
 		return;
 	}

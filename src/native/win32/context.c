@@ -368,7 +368,7 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 			throwException(env, "Could not bind context to dummy window");
 			return -1;
 		}
-		extgl_InitWGL(env);
+		extgl_InitWGL();
 		
 		if (!extension_flags.WGL_ARB_pixel_format) {
 			throwException(env, "No support for WGL_ARB_pixel_format");

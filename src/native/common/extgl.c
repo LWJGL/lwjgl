@@ -46,7 +46,7 @@ bool extgl_InitializeFunctions(int num_functions, ExtFunction *functions) {
 	return ext_InitializeFunctions(&extgl_GetProcAddress, num_functions, functions);
 }
 
-bool extgl_QueryExtension(JNIEnv *env, const GLubyte*extensions, const char *name)
+bool extgl_QueryExtension(const GLubyte*extensions, const char *name)
 {
 	const GLubyte *start;
 	GLubyte *where, *terminator;

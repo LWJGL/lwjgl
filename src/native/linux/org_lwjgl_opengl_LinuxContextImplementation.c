@@ -109,7 +109,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxContextImplementation_nCrea
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_handle);
 	X11Context *context_info = (*env)->GetDirectBufferAddress(env, context_handle);
 	
-	if (!extgl_InitGLX(env, peer_info->display, peer_info->screen)) {
+	if (!extgl_InitGLX(peer_info->display, peer_info->screen)) {
 		throwException(env, "Could not initialize GLX");
 		return NULL;
 	}
