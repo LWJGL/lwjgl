@@ -47,10 +47,12 @@
 
 static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
 static jobjectArray GetAvailableDisplayModes(JNIEnv * env);
+static char * getDriver();
 bool modeSet = false; // Whether we've done a display mode change
 WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
 WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
 DEVMODE devmode; // Now we'll remember this value for the future
+char * driver = getDriver();
 
 /*
  * Class:     org_lwjgl_Display
@@ -485,7 +487,6 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
 {
 
 	jstring ret = NULL;
-	char * driver = getDriver();
 	if (driver == NULL) {
 		return NULL;
 	}
@@ -508,7 +509,6 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
 
 	TCHAR driverDLL[256] = "\0";
 
-	char * driver = getDriver();
 	if (driver == NULL) {
 		return NULL;
 	}
