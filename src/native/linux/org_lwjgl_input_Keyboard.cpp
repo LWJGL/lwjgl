@@ -90,6 +90,7 @@ static void grabKeyboard(void) {
 			if (result == GrabSuccess) {
 				keyboard_grabbed = true;
 				setRepeatMode(AutoRepeatModeOff);
+				XFlush(getCurrentDisplay());
 			}
 		}
 	} else
@@ -100,6 +101,7 @@ static void ungrabKeyboard(void) {
 	if (keyboard_grabbed) {
 		keyboard_grabbed = false;
 		XUngrabKeyboard(getCurrentDisplay(), CurrentTime);
+		XFlush(getCurrentDisplay());
 	}
 	setRepeatMode(AutoRepeatModeDefault);
 }
@@ -132,11 +134,6 @@ void releaseKeyboard(void) {
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
-	keyboard_grabbed = false;
-	translation_enabled = false;
-	buffer_enabled = false;
-	should_grab = true;
-	updateGrab();
 	for (int i =  0; i < KEYBOARD_SIZE; i++)
 		key_map[i] = i;
 	key_map[0x6b] = 0xdb; // Left doze key
@@ -160,6 +157,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	created = true;
+	keyboard_grabbed = false;
+	translation_enabled = false;
+	buffer_enabled = false;
+	should_grab = true;
+	updateGrab();
 	return JNI_TRUE;
 }
 

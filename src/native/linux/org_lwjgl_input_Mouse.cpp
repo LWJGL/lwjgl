@@ -137,6 +137,7 @@ static void grabPointer(void) {
 				pointer_grabbed = true;
 				// make sure we have a centered window
 				XF86VidModeSetViewPort(getCurrentDisplay(), getCurrentScreen(), 0, 0);
+				XFlush(getCurrentDisplay());
 			}
 		}
 	}
@@ -146,6 +147,7 @@ static void ungrabPointer(void) {
 	if (pointer_grabbed) {
 		pointer_grabbed = false;
 		XUngrabPointer(getCurrentDisplay(), CurrentTime);
+		XFlush(getCurrentDisplay());
 	}
 }
 

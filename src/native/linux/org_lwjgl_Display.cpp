@@ -75,7 +75,7 @@ static bool getVidModeExtensionVersion(Display *disp, int screen, int *major, in
 		return false;
 	}
 #ifdef _DEBUG
-	printf("XF86VidMode extension version %i.%i\n", major, minor);
+	printf("XF86VidMode extension version %i.%i\n", *major, *minor);
 #endif
 	return true;
 }
