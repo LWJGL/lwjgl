@@ -38,7 +38,7 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-#include "org_lwjgl_openal_CoreEAX.h"
+#include "org_lwjgl_openal_eax_CoreEAX.h"
 #include "checkALerror.h"
 
 #include "extal.h"
@@ -54,7 +54,7 @@ void ThrowException(JNIEnv *env, const char* message) {
 /*
  * Determines available EAX extensions
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_determineAvailableExtensions (JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_determineAvailableExtensions (JNIEnv *env, jobject obj) {
 #ifdef _WIN32    
 	bool EAXSupported = false;
 	ALCcontext *Context;
@@ -104,10 +104,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_determineAvailableExtension
 #endif
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_setGUID (JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_CoreEAX_setGUID (JNIEnv *env, jobject obj) {
 #ifdef _WIN32
 	//get class/fields
-	jclass eax_class			= env->FindClass("org/lwjgl/openal/CoreEAX");
+	jclass eax_class			= env->FindClass("org/lwjgl/openal/eax/CoreEAX");
 	jfieldID eaxBuffer_field	= env->GetStaticFieldID(eax_class, "BUFFER_GUID", "I");
 	jfieldID eaxListener_field	= env->GetStaticFieldID(eax_class, "LISTENER_GUID", "I");
 
@@ -126,7 +126,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreEAX_setGUID (JNIEnv *env, jobje
  * ALenum EAXGet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreEAX_eaxGet (JNIEnv *env, jobject obj, jint propertySetID, jint property, jint source, jint value, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxGet (JNIEnv *env, jobject obj, jint propertySetID, jint property, jint source, jint value, jint size) {
 #ifdef _WIN32
 	jint result = (jint) eaxGet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) value, (ALuint) size);
 	CHECK_AL_ERROR
@@ -144,7 +144,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreEAX_eaxGet (JNIEnv *env, jobjec
  * ALenum EAXGet(const struct _GUID *propertySetID,ALuint property,ALuint source,ALvoid
  * *value,ALuint size);
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_openal_CoreEAX_eaxSet (JNIEnv *env, jobject obj, jint propertySetID, jint property, jint source, jint value, jint size) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_CoreEAX_eaxSet (JNIEnv *env, jobject obj, jint propertySetID, jint property, jint source, jint value, jint size) {
 #ifndef _WIN32
 	jint result = (jint) eaxSet((const struct _GUID*)propertySetID, (ALuint) property, (ALuint) source, (ALvoid*) value, (ALuint) size);
 	CHECK_AL_ERROR
