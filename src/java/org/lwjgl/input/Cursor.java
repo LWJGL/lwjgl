@@ -59,7 +59,8 @@ public class Cursor {
 	 * Constructs a new Cursor, with the given parameters. Mouse must have been created before you can create
 	 * Cursor objects. Cursor images are in ARGB format, but only one bit transparancy is guaranteed to be supported.
 	 * So to maximize portability, lwjgl applications should only create cursor images with 0x00 or 0xff as alpha values.
-	 * 
+	 * The constructor will copy the images and delays, so there's no need to keep them around.
+	 *
 	 * @param width cursor image width
 	 * @param height cursor image height
 	 * @param xHotspot the x coordinate of the cursor hotspot
