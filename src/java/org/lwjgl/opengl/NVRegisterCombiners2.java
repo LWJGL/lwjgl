@@ -36,9 +36,11 @@ import java.nio.FloatBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
-public final class NVRegisterCombiners2
-{
+public final class NVRegisterCombiners2 {
 	public static final int GL_PER_STAGE_CONSTANTS_NV                               = 0x8535;
+
+	private NVRegisterCombiners2() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

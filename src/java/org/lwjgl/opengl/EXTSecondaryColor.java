@@ -47,6 +47,9 @@ public final class EXTSecondaryColor {
 	public static final int GL_SECONDARY_COLOR_ARRAY_POINTER_EXT                    = 0x845D;
 	public static final int GL_SECONDARY_COLOR_ARRAY_EXT                            = 0x845E;
 	
+	private EXTSecondaryColor() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glSecondaryColor3bEXT(byte red, byte green, byte blue);

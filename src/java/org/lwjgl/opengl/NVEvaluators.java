@@ -64,6 +64,9 @@ public final class NVEvaluators {
 	public static final int GL_MAX_MAP_TESSELLATION_NV                              = 0x86D6;
 	public static final int GL_MAX_RATIONAL_EVAL_ORDER_NV                           = 0x86D7;
 
+	private NVEvaluators() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, FloatBuffer pPoints) {

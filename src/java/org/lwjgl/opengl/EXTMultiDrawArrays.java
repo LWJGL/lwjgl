@@ -37,6 +37,9 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class EXTMultiDrawArrays {
+	private EXTMultiDrawArrays() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst, IntBuffer piCount) {

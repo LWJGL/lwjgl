@@ -151,6 +151,9 @@ public final class GL13 {
 	public static final int GL_DOT3_RGBA                = 0x86AF;
 	public static final int GL_CLAMP_TO_BORDER          = 0x812D;
 
+	private GL13() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glActiveTexture(int texture);

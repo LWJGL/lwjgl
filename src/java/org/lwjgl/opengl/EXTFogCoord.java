@@ -47,7 +47,9 @@ public final class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_ARRAY_POINTER_EXT                     = 0x8456;
 	public static final int GL_FOG_COORDINATE_ARRAY_EXT                             = 0x8457;
 
-	
+	private EXTFogCoord() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glFogCoordfEXT(float coord);

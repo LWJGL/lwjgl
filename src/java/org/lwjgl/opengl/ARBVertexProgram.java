@@ -41,7 +41,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class ARBVertexProgram extends ARBProgram {
-
 	/*
 	* Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
 	* <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
@@ -89,6 +88,9 @@ public final class ARBVertexProgram extends ARBProgram {
 	* GetFloatv, and GetDoublev:
 	*/
 	public static final int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
+
+	private ARBVertexProgram() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

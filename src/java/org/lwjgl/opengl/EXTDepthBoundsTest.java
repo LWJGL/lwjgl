@@ -34,7 +34,6 @@ package org.lwjgl.opengl;
 import org.lwjgl.LWJGLException;
 
 public final class EXTDepthBoundsTest {
-
 	/*
 	Accepted by the <cap> parameter of Enable, Disable, and IsEnabled,
 	and by the <pname> parameter of GetBooleanv, GetIntegerv,
@@ -47,6 +46,9 @@ public final class EXTDepthBoundsTest {
 	GetFloatv, and GetDoublev:
 	*/
 	public static final int DEPTH_BOUNDS_EXT = 0x8891;
+
+	private EXTDepthBoundsTest() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

@@ -92,6 +92,9 @@ public final class GL12 {
 	public static final int GL_ALIASED_POINT_SIZE_RANGE       = 0x846D;
 	public static final int GL_ALIASED_LINE_WIDTH_RANGE       = 0x846E;
 
+	private GL12() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glDrawRangeElements(int mode, int start, int end, ByteBuffer indices) {

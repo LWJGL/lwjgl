@@ -69,7 +69,10 @@ public final class ARBMultitexture {
 	public static final int GL_ACTIVE_TEXTURE_ARB                                   = 0x84E0;
 	public static final int GL_CLIENT_ACTIVE_TEXTURE_ARB                            = 0x84E1;
 	public static final int GL_MAX_TEXTURE_UNITS_ARB                                = 0x84E2;
-	
+
+	private ARBMultitexture() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glClientActiveTextureARB(int texture);

@@ -37,7 +37,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class NVHalfFloat {
-
 	/*
 	 * Accepted by the <type> argument of VertexPointer, NormalPointer,
 	 * ColorPointer, TexCoordPointer, FogCoordPointerEXT,
@@ -46,6 +45,9 @@ public final class NVHalfFloat {
 	 * TexSubImage2D, TexSubImage3D, and GetTexImage:
 	*/
 	public static final int GL_HALF_FLOAT_NV = 0x140B;
+
+	private NVHalfFloat() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

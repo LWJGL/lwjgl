@@ -42,7 +42,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class NVVertexProgram extends NVProgram {
-
 	/*
 	Accepted by the <cap> parameter of Disable, Enable, and IsEnabled,
 	and by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
@@ -195,6 +194,9 @@ public final class NVVertexProgram extends NVProgram {
 	public static final int GL_MAP2_VERTEX_ATTRIB13_4_NV = 0x867D;
 	public static final int GL_MAP2_VERTEX_ATTRIB14_4_NV = 0x867E;
 	public static final int GL_MAP2_VERTEX_ATTRIB15_4_NV = 0x867F;
+
+	private NVVertexProgram() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

@@ -50,6 +50,9 @@ public final class ATIVertexArrayObject {
 	public static final int GL_ARRAY_OBJECT_BUFFER_ATI                              = 0x8766;
 	public static final int GL_ARRAY_OBJECT_OFFSET_ATI                              = 0x8767;
 	
+	private ATIVertexArrayObject() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static int glNewObjectBufferATI(int size, ByteBuffer pPointer, int usage) {

@@ -40,7 +40,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class ARBShaderObjects {
-
 	/*
 	* Accepted by the <pname> argument of GetHandleARB:
 	*/
@@ -92,6 +91,9 @@ public final class ARBShaderObjects {
 	public static final int GL_SAMPLER_2D_SHADOW_ARB = 0x8B62;
 	public static final int GL_SAMPLER_2D_RECT_ARB = 0x8B63;
 	public static final int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8B64;
+
+	private ARBShaderObjects() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class ARBDepthTexture {
-
 	/*
 	 * Accepted by the <internalFormat> parameter of TexImage1D, TexImage2D,
 	 * CopyTexImage1D and CopyTexImage2D:
@@ -53,4 +52,6 @@ public final class ARBDepthTexture {
 	*/
 	public static final int GL_DEPTH_TEXTURE_MODE_ARB = 0x884B;
 
+	private ARBDepthTexture() {
+	}
 }

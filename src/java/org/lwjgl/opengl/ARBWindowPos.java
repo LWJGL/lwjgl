@@ -34,6 +34,9 @@ package org.lwjgl.opengl;
 import org.lwjgl.LWJGLException;
 
 public final class ARBWindowPos {
+	private ARBWindowPos() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glWindowPos2fARB(float x, float y);

@@ -38,7 +38,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
-public class NVProgram {
+public abstract class NVProgram {
 
 	/*
 	   Accepted by the <pname> parameter of GetProgramivNV:

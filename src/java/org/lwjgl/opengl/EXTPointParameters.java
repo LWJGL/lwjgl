@@ -42,6 +42,9 @@ public final class EXTPointParameters {
 	public static final int GL_POINT_FADE_THRESHOLD_SIZE_EXT                        = 0x8128;
 	public static final int GL_DISTANCE_ATTENUATION_EXT                             = 0x8129;
 
+	private EXTPointParameters() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glPointParameterfEXT(int pname, float param);

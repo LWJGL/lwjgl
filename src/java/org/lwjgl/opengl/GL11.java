@@ -724,6 +724,9 @@ public final class GL11 {
 	public static final int GL_LOGIC_OP = GL_INDEX_LOGIC_OP;
 	public static final int GL_TEXTURE_COMPONENTS = GL_TEXTURE_INTERNAL_FORMAT;
 
+	private GL11() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glAccum(int op, float value);

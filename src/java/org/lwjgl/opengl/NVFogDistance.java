@@ -31,9 +31,11 @@
  */
 package org.lwjgl.opengl;
 
-public final class NVFogDistance
-{
+public final class NVFogDistance {
 	public static final int GL_FOG_DISTANCE_MODE_NV                                 = 0x855A;
 	public static final int GL_EYE_RADIAL_NV                                        = 0x855B;
 	public static final int GL_EYE_PLANE_ABSOLUTE_NV                                = 0x855C;
+
+	private NVFogDistance() {
+	}
 }

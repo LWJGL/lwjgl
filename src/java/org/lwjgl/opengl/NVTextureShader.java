@@ -31,8 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-public final class NVTextureShader
-{
+public final class NVTextureShader {
 	public static final int GL_TEXTURE_SHADER_NV                                    = 0x86DE;
 	public static final int GL_RGBA_UNSIGNED_DOT_PRODUCT_MAPPING_NV                 = 0x86D9;
 	public static final int GL_SHADER_OPERATION_NV                                  = 0x86DF;
@@ -103,4 +102,7 @@ public final class NVTextureShader
 	public static final int GL_TEXTURE_DS_SIZE_NV                                   = 0x871D;
 	public static final int GL_TEXTURE_DT_SIZE_NV                                   = 0x871E;
 	public static final int GL_TEXTURE_MAG_SIZE_NV                                  = 0x871F;
+
+	private NVTextureShader() {
+	}
 }

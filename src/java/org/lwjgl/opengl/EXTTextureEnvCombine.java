@@ -57,4 +57,7 @@ public final class EXTTextureEnvCombine {
 	public static final int GL_CONSTANT_EXT				= 0x8576;
 	public static final int GL_PRIMARY_COLOR_EXT		= 0x8577;
 	public static final int GL_PREVIOUS_EXT				= 0x8578;
+
+	private EXTTextureEnvCombine() {
+	}
 }

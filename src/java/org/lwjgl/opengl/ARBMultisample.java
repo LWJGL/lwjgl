@@ -44,6 +44,9 @@ public final class ARBMultisample {
 	public static final int GL_SAMPLE_COVERAGE_INVERT_ARB                           = 0x80AB;
 	public static final int GL_MULTISAMPLE_BIT_ARB                                  = 0x20000000;
 
+	private ARBMultisample() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glSampleCoverageARB(float value, boolean invert);

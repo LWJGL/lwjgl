@@ -84,6 +84,9 @@ public final class ARBVertexBlend {
 	public static final int GL_MODELVIEW30_ARB                                      = 0x873E;
 	public static final int GL_MODELVIEW31_ARB                                      = 0x873F;
 	
+	private ARBVertexBlend() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glWeightARB(ByteBuffer pWeights) {

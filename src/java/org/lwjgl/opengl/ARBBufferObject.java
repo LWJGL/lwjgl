@@ -40,8 +40,7 @@ import java.nio.ShortBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
-public final class ARBBufferObject {
-
+public abstract class ARBBufferObject {
 	/*
 	 * Accepted by the <usage> parameter of BufferDataARB:
 	 */

@@ -45,6 +45,9 @@ public final class NVOcclusionQuery {
 	public static final int GL_PIXEL_COUNT_NV                                       = 0x8866;
 	public static final int GL_PIXEL_COUNT_AVAILABLE_NV                             = 0x8867;
 
+	private NVOcclusionQuery() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGenOcclusionQueriesNV(IntBuffer piIDs) {

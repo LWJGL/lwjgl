@@ -44,6 +44,9 @@ public final class ATIElementArray {
 	public static final int GL_ELEMENT_ARRAY_TYPE_ATI                               = 0x8769;
 	public static final int GL_ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;
 
+	private ATIElementArray() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glElementPointerATI(ByteBuffer pPointer) {

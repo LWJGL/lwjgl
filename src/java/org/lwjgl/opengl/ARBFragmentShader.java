@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class ARBFragmentShader {
-
 	/*
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
 	 * returned by the <params> parameter of GetObjectParameter{fi}vARB:
@@ -54,4 +53,6 @@ public final class ARBFragmentShader {
 	*/
 	public static final int GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB = 0x8B8B;
 
+	private ARBFragmentShader() {
+	}
 }

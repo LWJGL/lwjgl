@@ -144,10 +144,7 @@ public class ALC {
 		Sys.initialize();
 	}
 
-	/**
-	* Override to provide any initialization code after creation.
-	*/
-	protected static void init() {
+	private ALC() {
 	}
 
 	static native void initNativeStubs() throws LWJGLException;

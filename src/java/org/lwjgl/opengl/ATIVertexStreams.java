@@ -45,6 +45,9 @@ public final class ATIVertexStreams {
 	public static final int GL_VERTEX_STREAM6_ATI                                   = 0x8773;
 	public static final int GL_VERTEX_STREAM7_ATI                                   = 0x8774;
 
+	private ATIVertexStreams() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glVertexStream1fATI(int stream, float x);

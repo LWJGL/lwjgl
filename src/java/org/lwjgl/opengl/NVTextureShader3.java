@@ -31,8 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-public final class NVTextureShader3
-{
+public final class NVTextureShader3 {
 	public static final int GL_OFFSET_PROJECTIVE_TEXTURE_2D_NV                      = 0x8850;
 	public static final int GL_OFFSET_PROJECTIVE_TEXTURE_2D_SCALE_NV                = 0x8851;
 	public static final int GL_OFFSET_PROJECTIVE_TEXTURE_RECTANGLE_NV               = 0x8852;
@@ -50,4 +49,7 @@ public final class NVTextureShader3
 	public static final int GL_HILO8_NV                                             = 0x885E;
 	public static final int GL_SIGNED_HILO8_NV                                      = 0x885F;
 	public static final int GL_FORCE_BLUE_TO_ONE_NV                                 = 0x8860;
+
+	private NVTextureShader3() {
+	}
 }

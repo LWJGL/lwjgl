@@ -37,7 +37,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class ARBOcclusionQuery {
-
 	/*
 	 * Accepted by the <target> parameter of BeginQueryARB, EndQueryARB,
 	 * and GetQueryivARB:
@@ -56,7 +55,10 @@ public final class ARBOcclusionQuery {
 	*/
 	public static final int GL_QUERY_RESULT_ARB = 0x8866;
 	public static final int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
-	
+
+	private ARBOcclusionQuery() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------

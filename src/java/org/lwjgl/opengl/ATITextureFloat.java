@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class ATITextureFloat {
-
 	/*
 	 * Accepted by the <internalFormat> parameter of TexImage1D,
 	 * TexImage2D, and TexImage3D:
@@ -50,4 +49,6 @@ public final class ATITextureFloat {
 	public static final int GL_LUMINANCE_FLOAT16_ATI = 0x881E;
 	public static final int GL_LUMINANCE_ALPHA_FLOAT16_ATI = 0x881F;
 
+	private ATITextureFloat() {
+	}
 }

@@ -47,6 +47,9 @@ public final class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_ENVMAP_ATI                                      = 0x877B;
 	public static final int GL_BUMP_TARGET_ATI                                      = 0x877C;
 
+	private ATIEnvmapBumpmap() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glTexBumpParameterATI(int pname, FloatBuffer pfParam) {

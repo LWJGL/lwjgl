@@ -38,7 +38,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class ARBVertexShader {
-
 	/*
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB and
 	 * returned by the <params> parameter of GetObjectParameter{if}vARB:
@@ -96,6 +95,9 @@ public final class ARBVertexShader {
 	public static final int GL_FLOAT_MAT2_ARB = 0x8B5A;
 	public static final int GL_FLOAT_MAT3_ARB = 0x8B5B;
 	public static final int GL_FLOAT_MAT4_ARB = 0x8B5C;
+
+	private ARBVertexShader() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

@@ -38,6 +38,8 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class ATIVertexAttribArrayObject {
+	private ATIVertexAttribArrayObject() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

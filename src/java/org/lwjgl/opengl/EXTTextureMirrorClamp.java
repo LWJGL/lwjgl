@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class EXTTextureMirrorClamp {
-
 	/*
 	 * Accepted by the <param> parameter of TexParameteri and TexParameterf,
 	 * and by the <params> parameter of TexParameteriv and TexParameterfv,
@@ -43,4 +42,6 @@ public final class EXTTextureMirrorClamp {
 	public static final int GL_MIRROR_CLAMP_TO_EDGE_EXT = 0x8743;
 	public static final int GL_MIRROR_CLAMP_TO_BORDER_EXT = 0x8912;
 
+	private EXTTextureMirrorClamp() {
+	}
 }

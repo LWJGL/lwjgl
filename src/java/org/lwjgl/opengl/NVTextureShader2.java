@@ -31,8 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-public final class NVTextureShader2
-{
+public final class NVTextureShader2 {
 	public static final int GL_DOT_PRODUCT_TEXTURE_3D_NV                            = 0x86EF;
 	public static final int GL_HILO_NV                                              = 0x86F4;
 	public static final int GL_DSDT_NV                                              = 0x86F5;
@@ -61,4 +60,7 @@ public final class NVTextureShader2
 	public static final int GL_DSDT8_MAG8_NV                                        = 0x870A;
 	public static final int GL_DSDT_MAG_INTENSITY_NV                                = 0x86DC;
 	public static final int GL_DSDT8_MAG8_INTENSITY8_NV                             = 0x870B;
+
+	private NVTextureShader2() {
+	}
 }

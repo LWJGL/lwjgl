@@ -45,5 +45,6 @@ public final class ARBTextureCubeMap {
 	public static final int GL_PROXY_TEXTURE_CUBE_MAP_ARB                           = 0x851B;
 	public static final int GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB                        = 0x851C;
 
-
+	private ARBTextureCubeMap() {
+	}
 }

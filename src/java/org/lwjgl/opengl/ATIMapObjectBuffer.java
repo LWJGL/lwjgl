@@ -36,6 +36,8 @@ import java.nio.ByteBuffer;
 import org.lwjgl.LWJGLException;
 
 public final class ATIMapObjectBuffer {
+	private ATIMapObjectBuffer() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

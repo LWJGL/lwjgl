@@ -38,7 +38,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class NVFragmentProgram extends NVProgram {
-
 	/*
 	   Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
 	   <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
@@ -57,6 +56,9 @@ public final class NVFragmentProgram extends NVProgram {
 	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_NV = 0x8872;
 	public static final int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;
 	public static final int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;
+
+	private NVFragmentProgram() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

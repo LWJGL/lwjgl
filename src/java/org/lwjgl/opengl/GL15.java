@@ -74,6 +74,9 @@ public final class GL15 {
 	public static final int GL_BUFFER_MAPPED = 0x88BC;
 	public static final int GL_BUFFER_MAP_POINTER = 0x88BD;
 
+	private GL15() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glBindBuffer(int target, int buffer) {

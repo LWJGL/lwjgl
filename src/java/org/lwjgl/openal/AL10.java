@@ -363,6 +363,9 @@ public final class AL10 {
 
 	static native void initNativeStubs() throws LWJGLException;
 
+	private AL10() {
+	}
+
 	/**
 	 * The application can temporarily disable certain AL capabilities on a per Context
 	 * basis. This allows the driver implementation to optimize for certain subsets of

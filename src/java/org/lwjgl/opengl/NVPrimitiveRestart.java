@@ -34,7 +34,6 @@ package org.lwjgl.opengl;
 import org.lwjgl.LWJGLException;
 
 public final class NVPrimitiveRestart {
-
 	/*
 	* Accepted by the <array> parameter of EnableClientState and
 	* DisableClientState, by the <cap> parameter of IsEnabled, and by
@@ -49,10 +48,12 @@ public final class NVPrimitiveRestart {
 	*/
 	public static final int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
 
+	private NVPrimitiveRestart() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glPrimitiveRestartNV();
 
 	public static native void glPrimitiveRestartIndexNV(int index);
-
 }

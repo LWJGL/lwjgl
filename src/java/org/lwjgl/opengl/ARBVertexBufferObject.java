@@ -31,8 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-public final class ARBVertexBufferObject extends ARBProgram {
-
+public final class ARBVertexBufferObject extends ARBBufferObject {
 	/*
 	 * Accepted by the <target> parameters of BindBufferARB, BufferDataARB,
 	 * BufferSubDataARB, MapBufferARB, UnmapBufferARB,
@@ -63,4 +62,6 @@ public final class ARBVertexBufferObject extends ARBProgram {
 	*/
 	public static final int GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING_ARB       = 0x889F;
 
+	private ARBVertexBufferObject() {
+	}
 }

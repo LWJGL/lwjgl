@@ -44,6 +44,9 @@ public final class NVVertexArrayRange {
 	public static final int GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV                    = 0x8520;
 	public static final int GL_VERTEX_ARRAY_RANGE_POINTER_NV                        = 0x8521;
 
+	private NVVertexArrayRange() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {

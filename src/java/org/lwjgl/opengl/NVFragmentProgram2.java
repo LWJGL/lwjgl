@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class NVFragmentProgram2 {
-
 	/*
 	 * Accepted by the <pname> parameter of GetProgramivARB:
 	*/
@@ -42,4 +41,6 @@ public final class NVFragmentProgram2 {
 	public static final int GL_MAX_PROGRAM_LOOP_DEPTH_NV = 0x88F7;
 	public static final int GL_MAX_PROGRAM_LOOP_COUNT_NV = 0x88F8;
 
+	private NVFragmentProgram2() {
+	}
 }

@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class ARBFragmentProgram extends ARBProgram {
-
 	/*
 	 * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
 	 * <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
@@ -65,5 +64,8 @@ public final class ARBFragmentProgram extends ARBProgram {
 	 */
 	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
 	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
+
+	private ARBFragmentProgram() {
+	}
 }
 

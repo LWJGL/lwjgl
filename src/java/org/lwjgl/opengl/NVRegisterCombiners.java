@@ -90,6 +90,9 @@ public final class NVRegisterCombiners {
 	public static final int GL_COLOR_SUM_CLAMP_NV                                   = 0x854F;
 	public static final int GL_MAX_GENERAL_COMBINERS_NV                             = 0x854D;
 
+	private NVRegisterCombiners() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glCombinerParameterfNV(int pname, float param);

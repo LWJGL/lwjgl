@@ -40,8 +40,7 @@ import java.nio.ShortBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
-public final class ARBTextureCompression
-{
+public final class ARBTextureCompression {
 	public static final int GL_COMPRESSED_ALPHA_ARB                                 = 0x84E9;
 	public static final int GL_COMPRESSED_LUMINANCE_ARB                             = 0x84EA;
 	public static final int GL_COMPRESSED_LUMINANCE_ALPHA_ARB                       = 0x84EB;
@@ -53,6 +52,9 @@ public final class ARBTextureCompression
 	public static final int GL_TEXTURE_COMPRESSED_ARB                               = 0x86A1;
 	public static final int GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB                   = 0x86A2;
 	public static final int GL_COMPRESSED_TEXTURE_FORMATS_ARB                       = 0x86A3;
+
+	private ARBTextureCompression() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

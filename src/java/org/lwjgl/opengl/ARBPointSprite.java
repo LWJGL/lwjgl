@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class ARBPointSprite {
-
 	/*
 	 * Accepted by the <cap> parameter of Enable, Disable, and IsEnabled, by
 	 * the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and
@@ -49,4 +48,6 @@ public final class ARBPointSprite {
 
 	public static final int GL_COORD_REPLACE_ARB = 0x8862;
 
+	private ARBPointSprite() {
+	}
 }

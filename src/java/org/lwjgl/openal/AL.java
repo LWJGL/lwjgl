@@ -80,6 +80,9 @@ public abstract class AL {
 		Sys.initialize();
 	}
 
+	private AL() {
+	}
+
 	/**
 	 * Native method to create AL instance
 	 * 

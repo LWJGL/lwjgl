@@ -41,8 +41,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
-public class ARBProgram {
-
+public abstract class ARBProgram {
 	/*
 	* Accepted by the <format> parameter of ProgramStringARB:
 	*/
@@ -130,7 +129,6 @@ public class ARBProgram {
 	public static final int GL_MATRIX29_ARB = 0x88DD;
 	public static final int GL_MATRIX30_ARB = 0x88DE;
 	public static final int GL_MATRIX31_ARB = 0x88DF;
-
 
 	static native void initNativeStubs() throws LWJGLException;
 

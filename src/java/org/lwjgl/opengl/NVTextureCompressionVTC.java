@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class NVTextureCompressionVTC {
-
 	/*
 	 * Accepted by the <internalformat> parameter of TexImage3D and
 	 * CompressedTexImage3DARB and the <format> parameter of
@@ -43,4 +42,6 @@ public final class NVTextureCompressionVTC {
 	public static final int COMPRESSED_RGBA_S3TC_DXT3_EXT                  =0x83F2;
 	public static final int COMPRESSED_RGBA_S3TC_DXT5_EXT                  =0x83F3;
 
+	private NVTextureCompressionVTC() {
+	}
 }

@@ -41,7 +41,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
 
 public final class NVPixelDataRange {
-
 	/*
 	* Accepted by the <target> parameter of PixelDataRangeNV and
 	* FlushPixelDataRangeNV, and by the <cap> parameter of
@@ -62,6 +61,9 @@ public final class NVPixelDataRange {
 	*/
 	public static final int GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV = 0x887C;
 	public static final int GL_READ_PIXEL_DATA_RANGE_POINTER_NV = 0x887D;
+
+	private NVPixelDataRange() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 

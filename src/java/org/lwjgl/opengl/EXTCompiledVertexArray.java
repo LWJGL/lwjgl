@@ -37,6 +37,9 @@ public final class EXTCompiledVertexArray {
 	public static final int GL_ARRAY_ELEMENT_LOCK_FIRST_EXT                         = 0x81A8;
 	public static final int GL_ARRAY_ELEMENT_LOCK_COUNT_EXT                         = 0x81A9;
 
+	private EXTCompiledVertexArray() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glLockArraysEXT(int first, int count);

@@ -32,7 +32,6 @@
 package org.lwjgl.opengl;
 
 public final class NVFloatBuffer {
-
 	/*
 	 * Accepted by the <internalformat> parameter of TexImage2D and
 	 * CopyTexImage2D:
@@ -84,4 +83,6 @@ public final class NVFloatBuffer {
 	public static final int GL_WGL_TEXTURE_FLOAT_RGB_NV = 0x20B7;
 	public static final int GL_WGL_TEXTURE_FLOAT_RGBA_NV = 0x20B8;
 
+	private NVFloatBuffer() {
+	}
 }

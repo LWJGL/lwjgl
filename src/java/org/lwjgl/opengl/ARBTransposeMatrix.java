@@ -42,6 +42,9 @@ public final class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
 	
+	private ARBTransposeMatrix() {
+	}
+
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {

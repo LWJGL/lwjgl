@@ -31,8 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-public final class EXTPixelBufferObject extends ARBProgram {
-
+public final class EXTPixelBufferObject extends ARBBufferObject {
 	/*
 	* Accepted by the <target> parameters of BindBuffer, BufferData, 
 	* BufferSubData, MapBuffer, UnmapBuffer, GetBufferSubData,
@@ -48,4 +47,6 @@ public final class EXTPixelBufferObject extends ARBProgram {
 	public static final int PIXEL_PACK_BUFFER_BINDING_EXT = 0x88ED;
 	public static final int PIXEL_UNPACK_BUFFER_BINDING_EXT = 0x88EF;
 
+	private EXTPixelBufferObject() {
+	}
 }

@@ -60,6 +60,8 @@ public final class ATIDrawBuffers {
 	public static final int GL_DRAW_BUFFER14_ATI = 0x8833;
 	public static final int GL_DRAW_BUFFER15_ATI = 0x8834;
 
+	private ATIDrawBuffers() {
+	}
 
 	static native void initNativeStubs() throws LWJGLException;
 
