@@ -83,6 +83,12 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_openDevice (JNIEnv *env, job
 	/* get device */
 	ALCdevice* device = alcOpenDevice(tokenstring);
 
+	/* if error - cleanup and get out */
+	if(device == NULL) {
+		env->ReleaseStringUTFChars((jstring)tokenstring, 0);
+		return NULL;
+	}
+
 	/* get ready to create ALCdevice instance */
 	jobject alcDevice_object	= NULL;
 	jclass alcDevice_class		= NULL;
@@ -128,6 +134,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_createContext (JNIEnv *env, 
 	jint deviceaddress		= env->GetIntField(obj, device_field);
 
 	ALCcontext* context = alcCreateContext((ALCdevice*) deviceaddress, (ALint*) attrlist); 
+	/* if error - get out */
+	if(context == NULL) {
+		return NULL;
+	}
 
 	/* get ready to create ALCcontext instance */
 	jobject alcContext_object	= NULL;
@@ -182,7 +192,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_processContext (JNIEnv *env, jo
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_getCurrentContext (JNIEnv *env, jobject obj) {
 
-	ALCcontext* context = alcGetCurrentContext(); 
+	ALCcontext* context = alcGetCurrentContext();
+	if(context == NULL) {
+		return NULL;
+	}
 
 	/* get ready to create ALCcontext instance */
 	jobject alcContext_object	= NULL;
@@ -213,8 +226,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_getContextsDevice (JNIEnv *e
 	jint contextaddress		= env->GetIntField(obj, context_field);
 
 	ALCdevice* device = alcGetContextsDevice((ALCcontext*) contextaddress); 
+	if(device == NULL) {
+		return NULL;
+	}
 
-		/* get ready to create ALCdevice instance */
+	/* get ready to create ALCdevice instance */
 	jobject alcDevice_object	= NULL;
 	jclass alcDevice_class		= NULL;
 	jmethodID alcDevice_method	= NULL;
