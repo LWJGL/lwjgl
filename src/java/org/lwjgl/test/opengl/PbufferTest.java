@@ -96,7 +96,7 @@ public class PbufferTest {
   private void initialize() {
     try {
       //find displaymode
-      pbuffer = new Pbuffer(512, 512, new PixelFormat(), null);
+      pbuffer = new Pbuffer(512, 512, new PixelFormat(), null, null);
       mode = findDisplayMode(800, 600, 16);
       Display.setDisplayMode(mode);
       // start of in windowed mode
@@ -176,7 +176,7 @@ public class PbufferTest {
         System.out.println("Buffer contents lost - will recreate the buffer");
         pbuffer.destroy();
 	try {
-	        pbuffer = new Pbuffer(512, 512, new PixelFormat(), null);
+	        pbuffer = new Pbuffer(512, 512, new PixelFormat(), null, null);
         	initPbuffer();
 	} catch (LWJGLException e) {
 		e.printStackTrace();

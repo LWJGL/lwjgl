@@ -233,8 +233,36 @@ public interface DisplayImplementation {
 
 	void destroyCursor(Object cursor_handle);
 
-	/* Pbuffer caps */
+	/* Pbuffer */
 	int getPbufferCaps();
+
+	/**
+	 * Method to test for buffer integrity
+	 */
+	public boolean isBufferLost(ByteBuffer handle);
+
+	/**
+	 * Method to make a pbuffer current.
+	 */
+	public void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
+
+	/**
+	 * Method to create a Pbuffer
+	 */
+	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
+
+	/**
+	 * Destroy pbuffer
+	 */
+	public void destroyPbuffer(ByteBuffer handle);
+
+	public void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
+
+	public void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
+
+	public void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
 
 	boolean openURL(String url);
 }

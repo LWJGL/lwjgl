@@ -55,9 +55,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 
 final class MacOSXDisplay implements DisplayImplementation {
+	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int GAMMA_LENGTH = 256;
 
 	private MacOSXFrame frame;
@@ -425,5 +427,37 @@ final class MacOSXDisplay implements DisplayImplementation {
 				handleQuit();
 			return null;
 		}
+	}
+
+	public boolean isBufferLost(ByteBuffer handle) {
+		return false;
+	}
+	
+	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
+
+	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
+		ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
+		nCreatePbuffer(handle, width, height, pixel_format, pixelFormatCaps, pBufferAttribs, shared_pbuffer_handle);
+		return handle;
+	}
+
+	private native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
+
+	public native void destroyPbuffer(ByteBuffer handle);
+
+	public void setPbufferAttrib(ByteBuffer handle, int attrib, int value) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void bindTexImageToPbuffer(ByteBuffer handle, int buffer) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer) {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -47,6 +47,7 @@ import org.lwjgl.LWJGLException;
 
 final class Win32Display implements DisplayImplementation {
 	private static final int CURSOR_HANDLE_SIZE = 8;
+	private static final int PBUFFER_HANDLE_SIZE = 24;
 
 	public native void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 	public native void destroyWindow();
@@ -104,6 +105,27 @@ final class Win32Display implements DisplayImplementation {
 
 	public native void destroyCursor(Object cursorHandle);
 	public native int getPbufferCaps();
+	public native boolean isBufferLost(ByteBuffer handle);
+	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
+
+	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
+		ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
+		nCreatePbuffer(handle, width, height, pixel_format, pixelFormatCaps, pBufferAttribs, shared_pbuffer_handle);
+		return handle;
+	}
+
+	private native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
+			IntBuffer pixelFormatCaps,
+			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
+
+	public native void destroyPbuffer(ByteBuffer handle);
+
+	public native void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
+	public native void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
+	public native void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
+
 	public boolean openURL(String url) {
 		nOpenURL(url);
 		return true;

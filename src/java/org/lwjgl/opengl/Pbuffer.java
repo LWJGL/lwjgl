@@ -137,11 +137,6 @@ public final class Pbuffer {
 	public static final int DEPTH_BUFFER = RenderTexture.WGL_DEPTH_COMPONENT_NV;
 
 	/**
-	 * The maximum number of bytes in the native handle
-	 */
-	private static final int HANDLE_SIZE = 24;
-
-	/**
 	 * Handle to the native GL rendering context
 	 */
 	private final ByteBuffer handle;
@@ -163,38 +158,38 @@ public final class Pbuffer {
 	/**
 	 * Create an instance of a Pbuffer with a unique OpenGL context. The buffer is single-buffered.
 	 * <p/>
-	 * NOTE: The Pbuffer will have its own context that shares display lists and textures with the Display context (if it is created),
-	 * but it will have its own OpenGL state. Therefore, state changes to a pbuffer will not be seen in the window context and vice versa.
-	 * <p/>
-	 * This kind of Pbuffer is primarily intended for non interactive use, since the makeCurrent context switch will be more expensive
-	 * than a Pbuffer using the Display context.
+	 * NOTE: The Pbuffer will have its own context that shares display lists and textures with <code>shared_context</code>,
+	 * or, if <code>shared_context</code> is <code>null</code>, the Display context if it is created. The Pbuffer
+	 * will have its own OpenGL state. Therefore, state changes to a pbuffer will not be seen in the window context and vice versa.
 	 * <p/>
 	 * The renderTexture parameter defines the necessary state for enabling render-to-texture. When this parameter is null,
 	 * render-to-texture is not available. Before using render-to-texture, the Pbuffer capabilities must be queried to ensure that
 	 * it is supported.
+	 * <p/>
 	 *
 	 * @param width         Pbuffer width
 	 * @param height        Pbuffer height
 	 * @param pixel_format  Minimum Pbuffer context properties
 	 * @param renderTexture
+	 * @param shared_context If non-null the Pbuffer will share display lists and textures with it. Otherwise, the Pbuffer will share
+	 * 						 with the Display context (if created).
 	 */
-	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
+	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Pbuffer shared_context) throws LWJGLException {
 		this.width = width;
 		this.height = height;
-		this.handle = createPbuffer(width, height, pixel_format, renderTexture);
+		this.handle = createPbuffer(width, height, pixel_format, renderTexture, shared_context != null ? shared_context.handle : null);
 	}
 
-	private static ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture) throws LWJGLException {
+	private static ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, ByteBuffer shared_context_handle) throws LWJGLException {
 		GLContext.loadOpenGLLibrary();
 		try {
-			ByteBuffer handle = BufferUtils.createByteBuffer(HANDLE_SIZE);
 			if ( renderTexture == null )
-				nCreate(handle, width, height, pixel_format, null, null);
+				return Display.getImplementation().createPbuffer(width, height, pixel_format, null, null, shared_context_handle);
 			else
-				nCreate(handle, width, height, pixel_format,
+				return Display.getImplementation().createPbuffer(width, height, pixel_format,
 								renderTexture.pixelFormatCaps,
-								renderTexture.pBufferAttribs);
-			return handle;
+								renderTexture.pBufferAttribs,
+								shared_context_handle);
 		} catch (LWJGLException e) {
 			GLContext.unloadOpenGLLibrary();
 			throw e;
@@ -209,27 +204,17 @@ public final class Pbuffer {
 	 * @return true if the buffer is lost and destroyed, false if the buffer is valid.
 	 */
 	public boolean isBufferLost() {
-		return nIsBufferLost(handle);
+		return Display.getImplementation().isBufferLost(handle);
 	}
-
-	/**
-	 * Native method to test for buffer integrity
-	 */
-	private static native boolean nIsBufferLost(ByteBuffer handle);
 
 	/**
 	 * Method to make the Pbuffer context current. All subsequent OpenGL calls will go to this buffer.
 	 * @throws LWJGLException if the context could not be made current
 	 */
 	public void makeCurrent() throws LWJGLException {
-		nMakeCurrent(handle);
+		Display.getImplementation().makePbufferCurrent(handle);
 		GLContext.useContext(this);
 	}
-
-	/**
-	 * Native method to make a pbuffer current.
-	 */
-	private static native void nMakeCurrent(ByteBuffer handle) throws LWJGLException;
 
 	/**
 	 * Gets the Pbuffer capabilities.
@@ -241,13 +226,6 @@ public final class Pbuffer {
 	}
 
 	/**
-	 * Native method to create a Pbuffer
-	 */
-	private static native void nCreate(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
-	                                  IntBuffer pixelFormatCaps,
-	                                  IntBuffer pBufferAttribs) throws LWJGLException;
-
-	/**
 	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context - regardless of whether this Pbuffer was
 	 * the current rendering context or not.
 	 */
@@ -255,7 +233,7 @@ public final class Pbuffer {
 		try {
 			makeCurrent();
 			int error = GL11.glGetError();
-			nDestroy(handle);
+			Display.getImplementation().destroyPbuffer(handle);
 			GLContext.useContext(null);
 			GLContext.unloadOpenGLLibrary();
 			if (error != GL11.GL_NO_ERROR)
@@ -264,11 +242,6 @@ public final class Pbuffer {
 			// ignore exception
 		}
 	}
-
-	/**
-	 * Natively destroy any GL-related stuff
-	 */
-	private static native void nDestroy(ByteBuffer handle);
 
 	// -----------------------------------------------------------------------------------------
 	// ------------------------------- Render-to-Texture Methods -------------------------------
@@ -287,10 +260,8 @@ public final class Pbuffer {
 	 * @param value
 	 */
 	public void setAttrib(int attrib, int value) {
-		nSetAttrib(handle, attrib, value);
+		Display.getImplementation().setPbufferAttrib(handle, attrib, value);
 	}
-
-	private static native void nSetAttrib(ByteBuffer handle, int attrib, int value);
 
 	/**
 	 * Binds the currently bound texture to the buffer specified. The buffer can be one of the following:
@@ -300,10 +271,8 @@ public final class Pbuffer {
 	 * @param buffer
 	 */
 	public void bindTexImage(int buffer) {
-		nBindTexImage(handle, buffer);
+		Display.getImplementation().bindTexImageToPbuffer(handle, buffer);
 	}
-
-	private static native void nBindTexImage(ByteBuffer handle, int buffer);
 
 	/**
 	 * Releases the currently bound texture from the buffer specified.
@@ -311,10 +280,8 @@ public final class Pbuffer {
 	 * @param buffer
 	 */
 	public void releaseTexImage(int buffer) {
-		nReleaseTexImage(handle, buffer);
+		Display.getImplementation().releaseTexImageFromPbuffer(handle, buffer);
 	}
-
-	private static native void nReleaseTexImage(ByteBuffer handle, int buffer);
 
 	/**
 	 * @return Returns the height.

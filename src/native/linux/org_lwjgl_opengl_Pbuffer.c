@@ -51,13 +51,6 @@ typedef struct _PbufferInfo {
 	GLXContext context;
 } PbufferInfo;
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
-  (JNIEnv *env, jclass clazz, jobject handle_buffer)
-{
-	// The buffer is never lost, because of the GLX_PRESERVED_CONTENTS flag
-	return JNI_FALSE;
-}
-
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getPbufferCaps
   (JNIEnv *env, jobject this)
 {
@@ -96,7 +89,7 @@ static bool checkPbufferCaps(JNIEnv *env, GLXFBConfig config, int width, int hei
 	return true;
 }
 
-static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_info, jobject pixel_format, int width, int height, const int *buffer_attribs) {
+static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_info, jobject pixel_format, int width, int height, const int *buffer_attribs, GLXContext shared_context) {
 	GLXFBConfig *configs = chooseVisualGLX13(env, pixel_format, false, GLX_PBUFFER_BIT, false);
 	if (configs == NULL) {
 		throwException(env, "No matching pixel format");
@@ -106,7 +99,7 @@ static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_in
 		XFree(configs);
 		return false;
 	}
-	GLXContext context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, getCurrentGLXContext(), True);
+	GLXContext context = glXCreateNewContext(getDisplay(), configs[0], GLX_RGBA_TYPE, shared_context, True);
 	if (context == NULL) {
 		XFree(configs);
 		throwException(env, "Could not create a GLX context");
@@ -126,7 +119,7 @@ static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_in
 	return true;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv *env, jobject this, jobject handle_buffer, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs, jobject shared_context_handle_buffer)
 {
 	Display *disp = incDisplay(env);
 	if (disp == NULL) {
@@ -150,9 +143,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 		throwException(env, "Handle buffer not large enough");
 		return;
 	}
+	GLXContext shared_context = getCurrentGLXContext();
+	if (shared_context_handle_buffer != NULL) {
+		PbufferInfo *shared_buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, shared_context_handle_buffer);
+		shared_context = shared_buffer_info->context;
+	}
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	bool result;
-	result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs);
+	result = createPbufferUsingUniqueContext(env, buffer_info, pixel_format, width, height, buffer_attribs, shared_context);
 	if (!result || !checkXError(env)) {
 		decDisplay();
 		destroyPbuffer(buffer_info);
@@ -160,8 +158,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
-  (JNIEnv *env, jclass clazz, jobject handle_buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_makePbufferCurrent
+  (JNIEnv *env, jobject this, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	GLXPbuffer buffer = buffer_info->buffer;
@@ -171,27 +169,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
-  (JNIEnv *env, jclass clazz, jobject handle_buffer)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyPbuffer
+  (JNIEnv *env, jobject this, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 	destroyPbuffer(buffer_info);
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nSetAttrib
-  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint attrib, jint value)
-{
-	throwException(env, "The render-to-texture extension is not supported.");
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nBindTexImage
-  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint buffer)
-{
-	throwException(env, "The render-to-texture extension is not supported.");
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseTexImage
-  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint buffer)
-{
-	throwException(env, "The render-to-texture extension is not supported.");
 }

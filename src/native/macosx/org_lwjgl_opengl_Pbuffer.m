@@ -41,6 +41,7 @@
 
 #import <jni.h>
 #import <OpenGL/gl.h>
+#import "org_lwjgl_opengl_MacOSXDisplay.h"
 #import "org_lwjgl_opengl_Pbuffer.h"
 #import "display.h"
 
@@ -65,11 +66,7 @@ static PbufferInfo *getPbufferInfoFromBuffer(JNIEnv *env, jobject pbuffer_handle
 		return NULL;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost(JNIEnv *env, jclass clazz, jobject pbuffer_handle) {
-	return JNI_FALSE;
-}
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent(JNIEnv *env, jclass clazz, jobject pbuffer_handle) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_makePbufferCurrent(JNIEnv *env, jobject this, jobject pbuffer_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	PbufferInfo *pbuffer_handle_ptr = getPbufferInfoFromBuffer(env, pbuffer_handle);
 	if (pbuffer_handle_ptr == NULL)
@@ -78,7 +75,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent(JNIEnv *env, j
 	[pool release];
 }
 
-static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint height, jobject pixel_format) {
+static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, NSOpenGLContext shared_context) {
 	if (!checkCapacity(env, pbuffer_handle))
 		return;
 	NSOpenGLPixelBuffer *pbuffer = [[NSOpenGLPixelBuffer alloc] initWithTextureTarget:GL_TEXTURE_2D textureInternalFormat:GL_RGBA textureMaxMipMapLevel:0 pixelsWide:width pixelsHigh:height];
@@ -86,8 +83,7 @@ static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint 
 		throwException(env, "Could not allocate Pbuffer");
 		return;
 	}
-	NSOpenGLContext *display_context = getDisplayContext();
-	NSOpenGLContext *context = createContext(env, pixel_format, false, false, NSOpenGLPFAPixelBuffer, display_context);
+	NSOpenGLContext *context = createContext(env, pixel_format, false, false, NSOpenGLPFAPixelBuffer, shared_context);
 	if (context == nil)
 		return;
 	int screen;
@@ -101,13 +97,18 @@ static void createPbuffer(JNIEnv *env, jobject pbuffer_handle, jint width, jint 
 	pbuffer_handle_ptr->context = context;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nCreatePbuffer(JNIEnv *env, jobject this, jobject pbuffer_handle, jint width, jint height, jobject pixel_format, jobject pixelFormatCaps, jobject pBufferAttribs, jobject shared_context_handle_buffer) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	createPbuffer(env, pbuffer_handle, width, height, pixel_format);
+	NSOpenGLContext shared_context = getDisplayContext();
+	if (shared_context_handle_buffer != NULL) {
+		PbufferInfo *pbuffer_handle_ptr = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, shared_context_handle_buffer);
+		shared_context = pbuffer_handle_ptr->context;
+	}
+	createPbuffer(env, pbuffer_handle, width, height, pixel_format, shared_context);
 	[pool release];
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy(JNIEnv *env, jclass clazz, jobject pbuffer_handle) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_destroyPbuffer(JNIEnv *env, jobject this, jobject pbuffer_handle) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	PbufferInfo *pbuffer_handle_ptr = getPbufferInfoFromBuffer(env, pbuffer_handle);
 	if (pbuffer_handle_ptr == NULL)
