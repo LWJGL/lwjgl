@@ -43,7 +43,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Vector3f extends Vector implements Serializable {
+public class Vector3f extends Vector implements Serializable, ReadableVector3f {
 
 	public float x, y, z;
 
@@ -57,7 +57,7 @@ public class Vector3f extends Vector implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public Vector3f(Vector3f src) {
+	public Vector3f(ReadableVector3f src) {
 		set(src);
 	}
 	
@@ -84,10 +84,10 @@ public class Vector3f extends Vector implements Serializable {
 	 * @param src The source vector
 	 * @return this
 	 */
-	public Vector3f set(Vector3f src) {
-		x = src.x;
-		y = src.y;
-		z = src.z;
+	public Vector3f set(ReadableVector3f src) {
+		x = src.getX();
+		y = src.getY();
+		z = src.getZ();
 		return this;
 	}
 	
@@ -290,5 +290,48 @@ public class Vector3f extends Vector implements Serializable {
 		return sb.toString();
 	}
 
+	/**
+	 * @return x
+	 */
+	public final float getX() {
+		return x;
+	}
+	
+	/**
+	 * @return y
+	 */
+	public final float getY() {
+		return y;
+	}
+	
+	/**
+	 * Set X
+	 * @param x
+	 */
+	public final void setX(float x) {
+		this.x = x;
+	}
+	
+	/**
+	 * Set Y
+	 * @param y
+	 */
+	public final void setY(float y) {
+		this.y = y;
+	}
 
+	/**
+	 * Set Z
+	 * @param z
+	 */
+	public void setZ(float z) {
+		this.z = z;
+	}
+
+	/* (Overrides)
+	 * @see org.lwjgl.vector.ReadableVector3f#getZ()
+	 */
+	public float getZ() {
+		return z;
+	}
 }

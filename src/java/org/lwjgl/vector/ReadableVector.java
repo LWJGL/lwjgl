@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2003 Shaven Puppy Ltd
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -13,9 +13,9 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Lightweight Java Game Library' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
- *   from this software without specific prior written permission.
+ * * Neither the name of 'Shaven Puppy' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
+ *   without specific prior written permission.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -31,84 +31,24 @@
  */
 package org.lwjgl.vector;
 
-import java.io.Serializable;
 import java.nio.FloatBuffer;
 
 /**
- * $Id$
- *
- * Base class for vectors.
- *
- * @author cix_foo <cix_foo@users.sourceforge.net>
- * @version $Revision$
+ * @author foo
  */
-public abstract class Vector implements Serializable, ReadableVector {
-
-	/**
-	 * Constructor for Vector.
-	 */
-	public Vector() {
-		super();
-	}
-
+public interface ReadableVector {
 	/**
 	 * @return the length of the vector
 	 */
-	public final float length() {
-		return (float) Math.sqrt(lengthSquared());
-	}
-	
-
+	public float length();
 	/**
 	 * @return the length squared of the vector
 	 */
-	public abstract float lengthSquared();
-	
-    /**
-     * Load this vector from a FloatBuffer
-     * @param buf The buffer to load it from, at the current position
-     * @return this
-     */
-    public abstract Vector load(FloatBuffer buf);	
-
+	public float lengthSquared();
 	/**
-	 * Negate a vector
+	 * Store this vector in a FloatBuffer
+	 * @param buf The buffer to store it in, at the current position
 	 * @return this
 	 */
-	public abstract Vector negate();
-	
-
-	/**
-	 * Normalise this vector
-	 * @return this
-	 */
-	public final Vector normalise() {
-		float len = length();
-		if (len != 0.0f) {
-			float l = 1.0f / len;
-			return scale(l);
-		} else {
-			assert false;
-			return this;
-		}
-	}
-	
-
-    /**
-     * Store this vector in a FloatBuffer
-     * @param buf The buffer to store it in, at the current position
-     * @return this
-     */
-    public abstract Vector store(FloatBuffer buf);    
-
-
-    /**
-     * Scale this vector
-     * @param scale The scale factor
-     * @return this
-     */
-    public abstract Vector scale(float scale);    
-
-
-
+	public Vector store(FloatBuffer buf);
 }

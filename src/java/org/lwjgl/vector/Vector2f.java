@@ -43,7 +43,7 @@ import java.nio.FloatBuffer;
  * @version $Revision$
  */
 
-public class Vector2f extends Vector implements Serializable {
+public class Vector2f extends Vector implements Serializable, ReadableVector2f {
 	
 	public float x, y;
 
@@ -57,7 +57,7 @@ public class Vector2f extends Vector implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public Vector2f(Vector2f src) {
+	public Vector2f(ReadableVector2f src) {
 		set(src);
 	}
 
@@ -83,9 +83,9 @@ public class Vector2f extends Vector implements Serializable {
 	 * @param src The source vector
 	 * @return this
 	 */
-	public Vector2f set(Vector2f src) {
-		x = src.x;
-		y = src.y;
+	public Vector2f set(ReadableVector2f src) {
+		x = src.getX();
+		y = src.getY();
 		return this;
 	}
 	
@@ -254,4 +254,35 @@ public class Vector2f extends Vector implements Serializable {
 		sb.append(']');
 		return sb.toString();
 	}
+	
+	/**
+	 * @return x
+	 */
+	public final float getX() {
+		return x;
+	}
+	
+	/**
+	 * @return y
+	 */
+	public final float getY() {
+		return y;
+	}
+	
+	/**
+	 * Set X
+	 * @param x
+	 */
+	public final void setX(float x) {
+		this.x = x;
+	}
+	
+	/**
+	 * Set Y
+	 * @param y
+	 */
+	public final void setY(float y) {
+		this.y = y;
+	}
+
 }
