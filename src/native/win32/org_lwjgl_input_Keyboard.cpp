@@ -48,10 +48,11 @@
 #include "Window.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
-BYTE readBuffer[KEYBOARD_BUFFER_SIZE*4];
-LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
-jfieldID fid_readBuffer;
-bool translationEnabled;
+
+static BYTE readBuffer[KEYBOARD_BUFFER_SIZE*4];
+static LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
+static jfieldID fid_readBuffer;
+static bool translationEnabled;
 
 
 /*

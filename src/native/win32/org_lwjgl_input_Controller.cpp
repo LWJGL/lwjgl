@@ -51,45 +51,45 @@
 extern HINSTANCE dll_handle;
 extern HWND hwnd;
 
-IDirectInput* cDI;                   // DI instance
-IDirectInputDevice2* cDIDevice;       // DI Device instance
-DIJOYSTATE2 cJS;                      // State of Controller
+static IDirectInput* cDI;                   // DI instance
+static IDirectInputDevice2* cDIDevice;       // DI Device instance
+static DIJOYSTATE2 cJS;                      // State of Controller
 
-int cButtoncount = 0;                 // Temporary buttoncount
-bool cHasx;                           // Temporary xaxis check
-bool cHasrx;                          // Temporary rotational xaxis check
-bool cHasy;                           // Temporary yaxis check
-bool cHasry;                          // Temporary rotational yaxis check
-bool cHasz;                           // Temporary zaxis check
-bool cHasrz;                          // Temporary rotational zaxis check
-bool cHaspov;                         // Temporary pov check
-bool cHasslider;                      // Temporary slider check
+static int cButtoncount = 0;                 // Temporary buttoncount
+static bool cHasx;                           // Temporary xaxis check
+static bool cHasrx;                          // Temporary rotational xaxis check
+static bool cHasy;                           // Temporary yaxis check
+static bool cHasry;                          // Temporary rotational yaxis check
+static bool cHasz;                           // Temporary zaxis check
+static bool cHasrz;                          // Temporary rotational zaxis check
+static bool cHaspov;                         // Temporary pov check
+static bool cHasslider;                      // Temporary slider check
 
-JNIEnv* cEnvironment;                 // JNIEnvironment copy
+static JNIEnv* cEnvironment;                 // JNIEnvironment copy
 
-bool cCreate_success;                 // bool used to determine successfull creation
-bool cFirstTimeInitialization = true; // boolean to determine first time initialization
+static bool cCreate_success;                 // bool used to determine successfull creation
+static bool cFirstTimeInitialization = true; // boolean to determine first time initialization
 
 // Cached fields of Controller.java
-jclass clsController;
-jfieldID fidCButtonCount;
-jfieldID fidCHasXAxis;
-jfieldID fidCHasRXAxis;
-jfieldID fidCHasYAxis;
-jfieldID fidCHasRYAxis;
-jfieldID fidCHasZAxis;
-jfieldID fidCHasRZAxis;
-jfieldID fidCHasPOV;
-jfieldID fidCHasSlider;
-jfieldID fidCButtons;
-jfieldID fidCX;
-jfieldID fidCRX;
-jfieldID fidCY;
-jfieldID fidCRY;
-jfieldID fidCZ;
-jfieldID fidCRZ;
-jfieldID fidCPOV;
-jfieldID fidCSlider;
+static jclass clsController;
+static jfieldID fidCButtonCount;
+static jfieldID fidCHasXAxis;
+static jfieldID fidCHasRXAxis;
+static jfieldID fidCHasYAxis;
+static jfieldID fidCHasRYAxis;
+static jfieldID fidCHasZAxis;
+static jfieldID fidCHasRZAxis;
+static jfieldID fidCHasPOV;
+static jfieldID fidCHasSlider;
+static jfieldID fidCButtons;
+static jfieldID fidCX;
+static jfieldID fidCRX;
+static jfieldID fidCY;
+static jfieldID fidCRY;
+static jfieldID fidCZ;
+static jfieldID fidCRZ;
+static jfieldID fidCPOV;
+static jfieldID fidCSlider;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 void EnumerateControllerCapabilities();

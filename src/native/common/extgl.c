@@ -3331,7 +3331,6 @@ int extgl_Open(void)
 void extgl_Close(void)
 {
 #ifdef _X11
-	printf("closing handles\n");
 	dlclose(lib_glu_handle);
 	dlclose(lib_gl_handle);
 #endif

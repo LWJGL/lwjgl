@@ -68,21 +68,36 @@ static void waitMapped(Display *disp, Window win) {
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
 }
 
-bool releaseInput(void) {
-	if (current_fullscreen || input_released)
-		return false;
-	releaseKeyboard();
-	releasePointer();
-	input_released = true;
-	return true;
-}
-
 static void acquireInput(void) {
 	if (input_released) {
 		acquireKeyboard();
 		acquirePointer();
 		input_released = false;
 	}
+}
+
+static void doReleaseInput(void) {
+	releaseKeyboard();
+	releasePointer();
+	input_released = true;
+}
+
+void updateInput(void) {
+	if (!input_released) {
+		doReleaseInput();
+		acquireInput();
+	}
+}
+
+bool releaseInput(void) {
+	if (current_fullscreen || input_released)
+		return false;
+	doReleaseInput();
+	return true;
+}
+
+bool isFullscreen(void) {
+	return current_fullscreen;
 }
 
 static void handleMessages(JNIEnv *env, jobject window_obj) {
@@ -108,6 +123,7 @@ static void handleMessages(JNIEnv *env, jobject window_obj) {
 				env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "minimized", "Z"), JNI_TRUE);
 				break;
 			case Expose:
+//				XSetInputFocus(current_disp, current_win, RevertToParent, CurrentTime);
 				env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "dirty", "Z"), JNI_TRUE);
 				break;
 			case ButtonPress:
@@ -183,6 +199,7 @@ void createWindow(JNIEnv* env, Display *disp, int screen, XVisualInfo *vis_info,
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
 	XClearWindow(disp, win);
+	XSetInputFocus(current_disp, current_win, RevertToParent, CurrentTime);
 	XSync(disp, True);
 }
 

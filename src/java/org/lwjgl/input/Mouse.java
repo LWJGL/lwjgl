@@ -70,6 +70,9 @@ public class Mouse {
 	/** Does this mouse support a scroll wheel */
 	public static boolean hasWheel = false;
 
+	/** The current native cursor, if any */
+	private static Cursor currentCursor;
+
 	static {
 		initialize();
 	}
@@ -79,6 +82,83 @@ public class Mouse {
 	 */
 	private Mouse() {
 	}
+
+	/**
+	 * Gets the currently bound native cursor, if any.
+	 *
+	 * @return the currently bound native cursor, if any.
+	public Cursor getNativeCursor() {
+		return currentCursor;
+	}
+
+	/**
+	 * Check native cursor support
+	 * @return true if native cursors are supported
+	 */
+	public static boolean isNativeCursorSupported() {
+		return nIsNativeCursorSupported();
+	}
+
+	/**
+	 * Native function to determine native cursor support
+	 */
+	private static native boolean nIsNativeCursorSupported();
+
+	/**
+	 * Binds a native cursor. If the cursor argument is null, the
+	 * native cursor is disabled, as if native cursors were not supported.
+	 * The Mouse must be created before a native cursor can be bound.
+	 *
+	 * NOTE: The native cursor is not constrained to the window, but
+	 * relative events will not be generated if the cursor is outside.
+	 * The initial position of the cursor is in the upper left corner of
+	 * the window, and the cursor will be moved to this origin when a
+	 * native cursor is set and the previous cursor is null.
+	 *
+	 * @param cursor the native cursor object to bind. May be null.
+	 * @return The previous Cursor object set, or null.
+         * @throws Exception if the cursor could not be set for any reason
+	 */
+	public static Cursor setNativeCursor(Cursor cursor) throws Exception {
+		assert created && isNativeCursorSupported();
+		Cursor oldCursor = currentCursor;
+		currentCursor = cursor;
+		if (currentCursor != null) {
+			nSetNativeCursor(currentCursor.getHandle());
+		} else {
+			nSetNativeCursor(Sys.NULL);
+		}
+		return oldCursor;
+	}
+
+	/** Native method to set the native cursor */
+	private static native void nSetNativeCursor(int handle);
+
+	/**
+	 * Gets the minimum size of a native cursor. Can only be called if
+	 * The Mouse is created and isNativeCursorSupported() returns true 
+	 *
+	 * @return the maximum size of a native cursor
+	 */
+	public static int getMinCursorSize() {
+		return nGetMinCursorSize();
+	}
+
+	/** Native method returning the minimum cursor size */
+	private static native int nGetMinCursorSize();
+
+	/**
+	 * Gets the maximum size of a native cursor. Can only be called if
+	 * The Mouse is created and isNativeCursorSupported() returns true 
+	 *
+	 * @return the maximum size of a native cursor
+	 */
+	public static int getMaxCursorSize() {
+		return nGetMaxCursorSize();
+	}
+
+	/** Native method returning the maximum cursor size */
+	private static native int nGetMaxCursorSize();
 
 	/**
 	 * Static initialization
@@ -104,13 +184,14 @@ public class Mouse {
 		if (!nCreate())
 			throw new Exception("The mouse could not be created.");
 		created = true;
+		currentCursor = null;
 
 		//set mouse buttons
 		buttons = new boolean[buttonCount];
 	}
 
 	/**
-	 * Native method to create the mouse
+	 * Native method to create the mouse.
 	 * 
 	 * @return true if the mouse was created
 	 */
@@ -124,13 +205,16 @@ public class Mouse {
 	}
 
 	/**
-	 * "Destroy" the mouse
+	 * "Destroy" the mouse. Remember to reset the native cursor if
+	 * setNativeCursor() has been called with anything else than null.
 	 */
 	public static void destroy() {
+		assert currentCursor == null;
 		if (!created)
 			return;
 		created = false;
 		buttons = null;
+		currentCursor = null;
 
 		nDestroy();
 	}

@@ -59,6 +59,7 @@
 		extern LPDIRECTINPUT	lpdi;						// DirectInput
 		extern bool		isFullScreen;						// Whether we're fullscreen or not
 		extern bool		isMinimized;						// Whether we're minimized or not
+		extern RECT		clientSize;
 	#endif /* _PRIVATE_WINDOW_H_ */
 
 	/*
@@ -81,7 +82,6 @@
 	 * Close the window
 	 */
 	WINDOW_H_API void closeWindow();
-
 
 	/*
 	 * Utility function to throw an Exception

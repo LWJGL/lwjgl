@@ -48,6 +48,11 @@
 	#include <X11/Xutil.h>
 
 	/*
+	 * update input grabbing(keyboard, mouse)
+	 */
+	extern void updateInput(void);
+
+	/*
 	 * release input (keyboard, mouse)
 	 */
 	extern bool releaseInput(void);
@@ -98,6 +103,16 @@
 	 * get the current window
 	 */
 	extern Window getCurrentWindow(void);
+
+	/*
+	 * Return true if a native cursor is active
+	 */
+	extern bool isNativeCursor(void);
+
+	/*
+	 * Return true if we are in fullscreen mode
+	 */
+	extern bool isFullscreen(void);
 
 	/*
 	 * Utility function to throw an Exception

@@ -52,6 +52,7 @@ bool				isMinimized = false;				// Whether we're minimized or not
 JNIEnv *			environment = NULL;					// Cached environment
 jobject				window;								// Cached Java Window instance handle
 extern HINSTANCE	dll_handle;							// Handle to the LWJGL dll
+RECT clientSize;
 
 #define WINDOWCLASSNAME "LWJGL"
 
@@ -140,9 +141,7 @@ void closeWindow()
 	}
 
 	// Show the mouse
-	if (isFullScreen) {
-		ShowCursor(TRUE);
-	}
+	ShowCursor(TRUE);
 }
 
 /*
@@ -153,8 +152,9 @@ void appActivate(bool active)
 	if (active) {
 		SetForegroundWindow(hwnd);
 		ShowWindow(hwnd, SW_RESTORE);
-	} else if (isFullScreen)
+	} else if (isFullScreen) {
 		ShowWindow(hwnd, SW_MINIMIZE);
+	}
 }
 
 /*
@@ -239,7 +239,7 @@ bool registerWindow()
 		windowClass.cbWndExtra = 0;
 		windowClass.hInstance = dll_handle;
 		windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+		windowClass.hCursor = NULL/*LoadCursor(NULL, IDC_ARROW)*/;
 		windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		windowClass.lpszMenuName = NULL;
 		windowClass.lpszClassName = WINDOWCLASSNAME;
@@ -283,7 +283,6 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar:
-	RECT clientSize;
 	clientSize.bottom = height;
 	clientSize.left = 0;
 	clientSize.right = width;
@@ -296,16 +295,13 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 	  exstyle   // extended window style
 	);
 
-	clientSize.bottom -= clientSize.top;
-	clientSize.right -= clientSize.left;
-
 	// Create the window now, using that class:
 	hwnd = CreateWindowEx (
 		 exstyle, 
 		 WINDOWCLASSNAME,
 		 title,
 		 windowflags,
-		 x, y, clientSize.right, clientSize.bottom,
+		 x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
 		 NULL,
 		 NULL,
 		 dll_handle,
@@ -332,9 +328,7 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
 
 	// 3. Hide the mouse if necessary
 	isFullScreen = fullscreen == JNI_TRUE;
-	if (isFullScreen) {
-		ShowCursor(FALSE);
-	}
+	ShowCursor(FALSE);
 
 	// 4. Create DirectInput
 	if (!createDirectInput()) {

@@ -15,7 +15,40 @@ extern "C" {
 /* Inaccessible static: dwheel */
 /* Inaccessible static: buttonCount */
 /* Inaccessible static: hasWheel */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: currentCursor */
+/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Mouse */
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nIsNativeCursorSupported
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nIsNativeCursorSupported
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nSetNativeCursor
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGetMinCursorSize
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGetMaxCursorSize
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
+  (JNIEnv *, jclass);
+
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    initIDs

@@ -83,28 +83,34 @@ static void setRepeatMode(int mode) {
 	XChangeKeyboardControl(getCurrentDisplay(), KBAutoRepeatMode, &repeat_mode);
 }
 
-static int grabKeyboard(void) {
-	int result = XGrabKeyboard(getCurrentDisplay(), getCurrentWindow(), False, GrabModeAsync, GrabModeAsync, CurrentTime);
-	if (result == GrabSuccess) {
-		keyboard_grabbed = true;
+static void grabKeyboard(void) {
+	if (isFullscreen() || !isNativeCursor()) {
+		if (!keyboard_grabbed) {
+			int result = XGrabKeyboard(getCurrentDisplay(), getCurrentWindow(), False, GrabModeAsync, GrabModeAsync, CurrentTime);
+			if (result == GrabSuccess) {
+				keyboard_grabbed = true;
+				setRepeatMode(AutoRepeatModeOff);
+			}
+		}
+	} else
 		setRepeatMode(AutoRepeatModeOff);
-	}
-	return result;
 }
 
 static void ungrabKeyboard(void) {
-	keyboard_grabbed = false;
-	XUngrabKeyboard(getCurrentDisplay(), CurrentTime);
+	if (keyboard_grabbed) {
+		keyboard_grabbed = false;
+		XUngrabKeyboard(getCurrentDisplay(), CurrentTime);
+	}
 	setRepeatMode(AutoRepeatModeDefault);
 }
 
 static void updateGrab(void) {
+	if (!created)
+		return;
 	if (should_grab) {
-		if (!keyboard_grabbed)
-			grabKeyboard();
+		grabKeyboard();
 	} else {
-		if (keyboard_grabbed)
-			ungrabKeyboard();
+		ungrabKeyboard();
 	}
 }
 
@@ -165,8 +171,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
   (JNIEnv * env, jclass clazz)
 {
-	if (keyboard_grabbed)
-		ungrabKeyboard();
+	ungrabKeyboard();
 	created = false;
 }
 
@@ -259,7 +264,6 @@ void handleKeyEvent(XKeyEvent *event) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
   (JNIEnv * env, jclass clazz, jint buf)
 {
-	updateGrab();
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
@@ -275,7 +279,6 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 	int buf_count = 0;
 	int num_events = 0;
 
-	updateGrab();
 	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && (key_event = nextEventElement()) != NULL) {
 		num_events++;
 		unsigned char keycode = getKeycode(key_event);
@@ -286,7 +289,6 @@ JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
 		if (translation_enabled)
 			num_events += translateEvent(&buf_count, key_event);
 	}
-
 	return num_events;
 }
 

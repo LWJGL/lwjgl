@@ -46,25 +46,26 @@
 #include "Window.h"
 #include <dinput.h>
 
-extern HINSTANCE dll_handle;
-LPDIRECTINPUTDEVICE mDIDevice;        // DI Device instance
-DIMOUSESTATE diMouseState;            // State of Mouse
+static LPDIRECTINPUTDEVICE mDIDevice;        // DI Device instance
+static int mButtoncount = 0;                 // Temporary buttoncount
+static bool mHaswheel;                       // Temporary wheel check
+static JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
-int mButtoncount = 0;                 // Temporary buttoncount
-bool mHaswheel;                       // Temporary wheel check
-JNIEnv* mEnvironment;                 // JNIEnvironment copy
-
-bool mCreate_success;                 // bool used to determine successfull creation
-bool mFirstTimeInitialization = true; // boolean to determine first time initialization
+static bool mCreate_success;                 // bool used to determine successfull creation
+static bool mFirstTimeInitialization = true; // boolean to determine first time initialization
 
 // Cached fields of Mouse.java
-jclass clsMouse;
-jfieldID fidMButtonCount;
-jfieldID fidMButtons;
-jfieldID fidMDX;
-jfieldID fidMDY;
-jfieldID fidMDWheel;
-jfieldID fidMHasWheel;
+static jclass clsMouse;
+static jfieldID fidMButtonCount;
+static jfieldID fidMButtons;
+static jfieldID fidMDX;
+static jfieldID fidMDY;
+static jfieldID fidMDWheel;
+static jfieldID fidMHasWheel;
+
+static POINT cursorPos;
+static RECT windowRect;
+static bool usingNativeCursor;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 void EnumerateMouseCapabilities();
@@ -76,6 +77,16 @@ void InitializeMouseFields();
 void CacheMouseFields();
 void UpdateMouseFields();
 void SetMouseCapabilities();
+
+static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
+{
+	GetClientRect(hwnd, clientRect);
+	// transform clientRect to screen coordinates
+	clientRect->top = -clientSize.top + windowRect->top;
+	clientRect->left = -clientSize.left + windowRect->left;
+	clientRect->bottom += clientRect->top;
+	clientRect->right += clientRect->left;
+}
 
 /**
  * Initializes any field ids
@@ -92,51 +103,131 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass c
  * Called when the Mouse instance is to be created
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
-  HRESULT hr;
+	HRESULT hr;
 
-  mEnvironment = env;
-  clsMouse = clazz;
+	mEnvironment = env;
+	clsMouse = clazz;
 
-  CacheMouseFields();
+	CacheMouseFields();
 
-  /* skip enumeration, since we only want system mouse */
-  CreateMouse();
+	/* skip enumeration, since we only want system mouse */
+	CreateMouse();
 
-  //check for first time initialization - need to detect capabilities
-  if (mFirstTimeInitialization) {
-    mFirstTimeInitialization = false;
-
-    /* Enumerate capabilities of Mouse */
-    EnumerateMouseCapabilities();
-    if (!mCreate_success) {
-  #if _DEBUG
-      printf("EnumerateMouseCapabilities failed\n");
-  #endif
-      ShutdownMouse();
-      return JNI_FALSE;
-    }
-
-	  /* Do setup of Mouse */
-	  SetupMouse();
-
-    /* Set capabilities */
-    SetMouseCapabilities();
-  } else {
-    if(mCreate_success) {
-      /* Do setup of Mouse */
-      SetupMouse();   
-    }
-  }
-
-  /* Aquire the Mouse */
-  hr = mDIDevice->Acquire();
-  if(FAILED(hr)) {
+	//check for first time initialization - need to detect capabilities
+	if (mFirstTimeInitialization) {
+		mFirstTimeInitialization = false;
+		/* Enumerate capabilities of Mouse */
+		EnumerateMouseCapabilities();
+		if (!mCreate_success) {
 #if _DEBUG
-    printf("Failed to acquire mouse\n");
+			printf("EnumerateMouseCapabilities failed\n");
 #endif
-  }
+			ShutdownMouse();
+			return JNI_FALSE;
+		}
+		/* Do setup of Mouse */
+		SetupMouse();
 
-  return mCreate_success ? JNI_TRUE : JNI_FALSE;
+		/* Set capabilities */
+		SetMouseCapabilities();
+	} else {
+		if(mCreate_success) {
+			/* Do setup of Mouse */
+			SetupMouse();   
+		}
+	}
+	/* Aquire the Mouse */
+	hr = mDIDevice->Acquire();
+	if(FAILED(hr)) {
+#if _DEBUG
+		printf("Failed to acquire mouse\n");
+#endif
+	}
+	return mCreate_success ? JNI_TRUE : JNI_FALSE;
+}
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nIsNativeCursorSupported
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nIsNativeCursorSupported
+  (JNIEnv *env, jclass clazz)
+{
+	return JNI_TRUE;
+}
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nSetNativeCursor
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
+  (JNIEnv *env, jclass clazz, jint cursor_handle)
+{
+	if (cursor_handle != NULL) {
+		if (mDIDevice == NULL)
+			throwException(env, "null device!");
+		mDIDevice->Unacquire();
+		if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+#if _DEBUG
+			printf("SetCooperativeLevel failed\n");
+#endif
+			throwException(env, "Could not set the CooperativeLevel.");
+		    return;
+		}
+		HCURSOR cursor = (HCURSOR)cursor_handle;
+		SetClassLong(hwnd, GCL_HCURSOR, (LONG)cursor);
+		SetCursor(cursor);
+		if (!usingNativeCursor) {
+			/* Reset cursor position to 0, 0 */
+			RECT clientRect;
+			GetWindowRect(hwnd, &windowRect);
+			getScreenClientRect(&clientRect, &windowRect);
+			SetCursorPos(clientRect.left, clientRect.top);
+			cursorPos.x = clientRect.left;
+			cursorPos.y = clientRect.top;
+			while (ShowCursor(TRUE) < 0)
+				;
+			usingNativeCursor = true;
+		}
+	} else {
+		while (ShowCursor(FALSE) >= 0)
+			;
+		SetClassLong(hwnd, GCL_HCURSOR, (LONG)NULL);
+		SetCursor(NULL);
+		mDIDevice->Unacquire();
+		if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+#if _DEBUG
+			printf("SetCooperativeLevel failed\n");
+#endif
+			throwException(env, "Could not set the CooperativeLevel.");
+		    return;
+		}
+		usingNativeCursor = false;
+	}
+}
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGetMaxCursorSize
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
+  (JNIEnv *env, jclass clazz)
+{
+	return GetSystemMetrics(SM_CXCURSOR);
+}
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGetMaxCursorSize
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
+  (JNIEnv *env, jclass clazz)
+{
+	return GetSystemMetrics(SM_CXCURSOR);
 }
 
 /*
@@ -177,25 +268,25 @@ void ShutdownMouse() {
  * Enumerates the capabilities of the Mouse attached to the system
  */
 void EnumerateMouseCapabilities() {
-  HRESULT hr;
-  hr = mDIDevice->EnumObjects(EnumMouseObjectsCallback, NULL, DIDFT_ALL);
-  if FAILED(hr) { 
+	HRESULT hr;
+	hr = mDIDevice->EnumObjects(EnumMouseObjectsCallback, NULL, DIDFT_ALL);
+	if FAILED(hr) { 
 #if _DEBUG
-    printf("EnumObjects failed\n");
+		printf("EnumObjects failed\n");
 #endif
-    mCreate_success = false;
-    return;
-  }
+		mCreate_success = false;
+		return;
+	}
   
-  //check for > 4 buttons - need to clamp since we're using dx 5
-  if(mButtoncount > 4) {
-    mButtoncount = 4;
+	//check for > 4 buttons - need to clamp since we're using dx 5
+	if(mButtoncount > 4) {
+		mButtoncount = 4;
 #ifdef _DEBUG
-  printf("WARNING: Clamping to 4 mouse buttons");
+		printf("WARNING: Clamping to 4 mouse buttons\n");
 #endif
-  }
+	}
   
-  mCreate_success = true;
+	mCreate_success = true;
 }
 
 /**
@@ -259,46 +350,80 @@ void SetupMouse() {
   mCreate_success = true;
 }
 
+static void getGDICursorDelta(int* return_dx, int* return_dy) {
+	int dx = 0;
+	int dy = 0;
+
+	POINT newCursorPos;
+	GetCursorPos(&newCursorPos);
+	RECT clientRect;
+	RECT newWindowRect;
+	GetWindowRect(hwnd, &newWindowRect);
+	cursorPos.x += newWindowRect.left - windowRect.left;
+	cursorPos.y += newWindowRect.top - windowRect.top;
+	windowRect = newWindowRect;
+	getScreenClientRect(&clientRect, &windowRect);
+	// Clip the position to the client rect
+	if (newCursorPos.x < clientRect.right && newCursorPos.x >= clientRect.left &&
+		newCursorPos.y < clientRect.bottom && newCursorPos.y >= clientRect.top) {
+		dx = newCursorPos.x - cursorPos.x;
+		dy = newCursorPos.y - cursorPos.y;
+		cursorPos.x += dx;
+		cursorPos.y += dy;
+	}
+	*return_dx = dx;
+	*return_dy = dy;
+}
+
 /**
  * Updates the fields on the Mouse
  */
 void UpdateMouseFields() {
-  HRESULT                 hRes; 
+	HRESULT                 hRes; 
+	DIMOUSESTATE diMouseState;            // State of Mouse
+	int dx, dy;
 
-  // get data from the Mouse 
-  hRes = mDIDevice->GetDeviceState(sizeof(DIMOUSESTATE), &diMouseState);
-  if (hRes != DI_OK) { 
-    // Don't allow the mouse to drift when failed
-    diMouseState.lX = 0;
-    diMouseState.lY = 0;
-    diMouseState.lZ = 0;
-    // did the read fail because we lost input for some reason? 
-    // if so, then attempt to reacquire. 
-    if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
-      mDIDevice->Acquire();
+	// get data from the Mouse 
+	hRes = mDIDevice->GetDeviceState(sizeof(DIMOUSESTATE), &diMouseState);
+	if (hRes != DI_OK) { 
+		// Don't allow the mouse to drift when failed
+		diMouseState.lX = 0;
+		diMouseState.lY = 0;
+		diMouseState.lZ = 0;
+		// did the read fail because we lost input for some reason? 
+		// if so, then attempt to reacquire. 
+		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
+			mDIDevice->Acquire();
 #if _DEBUG
-      printf("DIERR_INPUTLOST, reaquiring input : mCreate_success=%d\n", mCreate_success);
+			printf("DIERR_INPUTLOST, reaquiring input : mCreate_success=%d\n", mCreate_success);
 #endif
-    } else {
+		} else {
 #if _DEBUG
-      printf("Error getting mouse state: %d\n", hRes);
+			printf("Error getting mouse state: %d\n", hRes);
 #endif
-    }
-  }
+		}
+	}
 
-  mEnvironment->SetStaticIntField(clsMouse, fidMDX, (jint) diMouseState.lX);
-	mEnvironment->SetStaticIntField(clsMouse, fidMDY, (jint) diMouseState.lY);
-	mEnvironment->SetStaticIntField(clsMouse, fidMDWheel, (jint) diMouseState.lZ);
+	if (usingNativeCursor) {
+		getGDICursorDelta(&dx, &dy);
+	} else {
+		dx = diMouseState.lX;
+		dy = diMouseState.lY;
+	}
+
+	mEnvironment->SetStaticIntField(clsMouse, fidMDX, (jint)dx);
+	mEnvironment->SetStaticIntField(clsMouse, fidMDY, (jint)dy);
+	mEnvironment->SetStaticIntField(clsMouse, fidMDWheel, (jint)diMouseState.lZ);
 	
-  for (int i = 0; i < mButtoncount; i++) {
-    if (diMouseState.rgbButtons[i] != 0) {
-      diMouseState.rgbButtons[i] = JNI_TRUE;
-    } else {
-				diMouseState.rgbButtons[i] = JNI_FALSE;
-    }
-  }
-  jbooleanArray mButtonsArray = (jbooleanArray) mEnvironment->GetStaticObjectField(clsMouse, fidMButtons);
-  mEnvironment->SetBooleanArrayRegion(mButtonsArray, 0, mButtoncount, diMouseState.rgbButtons);
+	for (int i = 0; i < mButtoncount; i++) {
+		if (diMouseState.rgbButtons[i] != 0) {
+			diMouseState.rgbButtons[i] = JNI_TRUE;
+		} else {
+			diMouseState.rgbButtons[i] = JNI_FALSE;
+		}
+	}
+	jbooleanArray mButtonsArray = (jbooleanArray) mEnvironment->GetStaticObjectField(clsMouse, fidMButtons);
+	mEnvironment->SetBooleanArrayRegion(mButtonsArray, 0, mButtoncount, diMouseState.rgbButtons);
 }
 
 /**
