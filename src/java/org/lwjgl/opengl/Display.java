@@ -88,6 +88,8 @@ public final class Display {
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static Display context;
 
+	private static boolean window_created = false;
+
 	static {
 		Sys.initialize();
 		display_impl = createDisplayImplementation();
@@ -182,7 +184,9 @@ public final class Display {
 		current_mode = mode;
 		if (isCreated()) {
 			destroyWindow();
-			setFullscreen(mode.isFullscreen());
+			// If mode is not fullscreen capable, make sure we are in windowed mode
+			if (!mode.isFullscreen())
+				resetFullscreen();
 			try {
 				if (fullscreen)
 					switchDisplayMode();
@@ -200,6 +204,8 @@ public final class Display {
 	 * A native context must exist, and it will be attached to the window.
 	 */
 	private static void createWindow() throws LWJGLException {
+		if (window_created)
+			throw new InternalError("Window already created");
 		int window_x;
 		int window_y;
 		if (!fullscreen) {
@@ -221,9 +227,12 @@ public final class Display {
 		setTitle(title);
 		initControls();
 		setVSyncEnabled(vsync);
+		window_created = true;
 	}
 
 	private static void destroyWindow() {
+		if (!window_created)
+			throw new InternalError("Window already created");
 		// Automatically destroy keyboard, mouse, and controller
 		if (Mouse.isCreated()) {
 			Mouse.destroy();
@@ -232,6 +241,7 @@ public final class Display {
 			Keyboard.destroy();
 		}
 		display_impl.destroyWindow();
+		window_created = false;
 	}
 
 	private static void switchDisplayMode() throws LWJGLException {
@@ -341,6 +351,13 @@ public final class Display {
 	 */
 	public static String getTitle() {
 		return title;
+	}
+
+	private static void resetFullscreen() {
+		if (Display.fullscreen) {
+			Display.fullscreen = false;
+			display_impl.resetDisplayMode();
+		}
 	}
 
 	/**
