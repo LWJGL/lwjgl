@@ -51,30 +51,26 @@ import java.util.List;
 import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Frame;
-import javax.swing.JFrame;
 import java.awt.Insets;
 import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.GraphicsEnvironment;
-import java.awt.GraphicsDevice;
 import java.awt.image.BufferedImage;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 
-final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation {
-	private JFrame frame;
-	private MacOSXGLCanvas canvas;
-	private boolean close_requested;
+final class MacOSXDisplay implements DisplayImplementation {
+	private MacOSXFrame frame;
 	private MouseEventQueue mouse_queue;
 	private KeyboardEventQueue keyboard_queue;
 	private java.awt.DisplayMode requested_mode;
+
+	/* States */
+	private boolean close_requested;
 	
 	public MacOSXDisplay() {
 		new MacOSXApplicationListener();
@@ -82,33 +78,12 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		close_requested = false;
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.addWindowListener(this);
-		canvas = new MacOSXGLCanvas();
-		frame.getContentPane().add(canvas, BorderLayout.CENTER);
-		frame.setUndecorated(fullscreen);
-		if (fullscreen) {
-			getDevice().setFullScreenWindow(frame);
-			getDevice().setDisplayMode(requested_mode);
-			/** For some strange reason, the display mode is sometimes silently capped even though the mode is reported as supported */
-			if (requested_mode.getWidth() != getDevice().getDisplayMode().getWidth() || requested_mode.getHeight() != getDevice().getDisplayMode().getHeight()) {
-				destroyWindow();
-				throw new LWJGLException("AWT capped mode");
-			}
+		try {
+			frame = new MacOSXFrame(mode, requested_mode, fullscreen, x, y);
+		} catch (LWJGLException e) {
+			destroyWindow();
+			throw e;
 		}
-		frame.pack();
-		reshape(x, y, mode.getWidth(), mode.getHeight());
-		frame.setVisible(true);
-		frame.requestFocus();
-		canvas.requestFocus();
-		canvas.waitForCanvasCreated();
-	}
-
-	private GraphicsDevice getDevice() {
-		GraphicsEnvironment g_env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice device = g_env.getDefaultScreenDevice();
-		return device;
 	}
 
 	private void handleQuit() {
@@ -117,21 +92,12 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 		}
 	}
 
-	public void windowClosing(WindowEvent e) {
-		handleQuit();
-	}
-	
-	public void windowActivated(WindowEvent e) {
-		warpCursor();
-	}
-
 	public void destroyWindow() {
-		if (getDevice().getFullScreenWindow() != null)
-			getDevice().setFullScreenWindow(null);
+		if (MacOSXFrame.getDevice().getFullScreenWindow() != null)
+			MacOSXFrame.getDevice().setFullScreenWindow(null);
 		setView(null);
-		frame.dispose();
+		frame.syncDispose();
 		frame = null;
-		canvas = null;
 	}
 	
 	public int getGammaRampLength() {
@@ -156,7 +122,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	}
 
 	public void switchDisplayMode(DisplayMode mode) throws LWJGLException {
-		java.awt.DisplayMode[] awt_modes = getDevice().getDisplayModes();
+		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
 		for (int i = 0; i < awt_modes.length; i++)
 			if (equals(awt_modes[i], mode)) {
 				requested_mode = awt_modes[i];
@@ -166,8 +132,8 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	}
 	
 	public void resetDisplayMode() {
-		if (getDevice().getFullScreenWindow() != null)
-			getDevice().setFullScreenWindow(null);
+		if (MacOSXFrame.getDevice().getFullScreenWindow() != null)
+			MacOSXFrame.getDevice().setFullScreenWindow(null);
 		requested_mode = null;
 	}
 	
@@ -188,11 +154,11 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	}
 	
 	public DisplayMode init() {
-		return createLWJGLDisplayMode(getDevice().getDisplayMode());
+		return createLWJGLDisplayMode(MacOSXFrame.getDevice().getDisplayMode());
 	}
 	
 	public DisplayMode[] getAvailableDisplayModes() {
-		java.awt.DisplayMode[] awt_modes = getDevice().getDisplayModes();
+		java.awt.DisplayMode[] awt_modes = MacOSXFrame.getDevice().getDisplayModes();
 		List modes = new ArrayList();
 		for (int i = 0; i < awt_modes.length; i++)
 			if (awt_modes[i].getBitDepth() >= 16)
@@ -203,7 +169,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	}
 	
 	public void setTitle(String title) {
-		frame.setTitle(title);
+		frame.syncSetTitle(title);
 	}
 	
 	public boolean isCloseRequested() {
@@ -216,15 +182,15 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	}
 
 	public boolean isVisible() {
-		return frame.isShowing();
+		return frame.syncIsVisible();
 	}
 	
 	public boolean isActive() {
-		return frame.isFocused();
+		return frame.syncIsActive();
 	}
 	
 	public boolean isDirty() {
-		return canvas.isDirty();
+		return frame.getCanvas().syncIsDirty();
 	}
 
 	public native void setView(MacOSXGLCanvas canvas);
@@ -238,10 +204,10 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	public native void destroyContext();
 
 	public void update() {
-		if (canvas.shouldUpdateContext()) {
+		if (frame.syncShouldUpdateContext()) {
 			updateContext();
 			/* This is necessary to make sure the context won't "forget" about the view size */
-			GL11.glViewport(0, 0, canvas.getWidth(), canvas.getHeight());
+			GL11.glViewport(0, 0, frame.getCanvas().syncGetWidth(), frame.getCanvas().syncGetHeight());
 			warpCursor();
 		}
 		mouse_queue.updateDeltas();
@@ -249,7 +215,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	
 	private void warpCursor() {
 		if (mouse_queue != null && mouse_queue.isGrabbed()) {
-			Rectangle bounds = frame.getBounds();
+			Rectangle bounds = frame.syncGetBounds();
 			int x = bounds.x + bounds.width/2;
 			int y = bounds.y + bounds.height/2;
 			nWarpCursor(x, y);
@@ -263,8 +229,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	public native void setVSyncEnabled(boolean sync);
 
 	public void reshape(int x, int y, int width, int height) {
-		Insets insets = frame.getInsets();
-		frame.setBounds(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);
+		frame.syncReshape(x, y, width, height);
 	}
 
 	/* Mouse */
@@ -277,6 +242,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	}
 	
 	public void createMouse() {
+		MacOSXGLCanvas canvas = frame.getCanvas();
 		this.mouse_queue = new MouseEventQueue(canvas.getWidth(), canvas.getHeight());
 		canvas.addMouseListener(mouse_queue);
 		canvas.addMouseMotionListener(mouse_queue);
@@ -284,6 +250,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	}
 
 	public void destroyMouse() {
+		MacOSXGLCanvas canvas = frame.getCanvas();
 		canvas.removeMouseListener(mouse_queue);
 		canvas.removeMouseWheelListener(mouse_queue);
 		canvas.removeMouseMotionListener(mouse_queue);
@@ -321,7 +288,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 	
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		Cursor awt_cursor = (Cursor)handle;
-		canvas.setCursor(awt_cursor);
+		frame.syncSetCursor(awt_cursor);
 	}
 
 	public int getMinCursorSize() {
@@ -336,6 +303,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 
 	/* Keyboard */
 	public void createKeyboard() throws LWJGLException {
+		MacOSXGLCanvas canvas = frame.getCanvas();
 		this.keyboard_queue = new KeyboardEventQueue();
 		canvas.addKeyListener(keyboard_queue);
 	}
@@ -345,7 +313,7 @@ final class MacOSXDisplay extends WindowAdapter implements DisplayImplementation
 		 * This line is commented out to work around AWT bug 4867453:
 		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4867453
 		 */
-//		canvas.removeKeyListener(keyboard_queue);
+//		frame.getCanvas().removeKeyListener(keyboard_queue);
 
 		this.keyboard_queue = null;
 	}

@@ -39,21 +39,17 @@ package org.lwjgl.opengl;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Graphics;
-import java.awt.event.HierarchyBoundsListener;
-import java.awt.event.HierarchyEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
 
-final class MacOSXGLCanvas extends Canvas implements HierarchyBoundsListener {
+final class MacOSXGLCanvas extends Canvas implements ComponentListener {
+	private int width;
+	private int height;
 	private boolean context_update;
 	private boolean canvas_created;
 	private boolean dirty;
-
-	public MacOSXGLCanvas() {
-		setFocusTraversalKeysEnabled(false);
-		/* Input methods are not enabled in fullscreen anyway, so disable always */
-		enableInputMethods(false);
-		addHierarchyBoundsListener(this);
-	}
 
 	public void update(Graphics g) {
 		paint(g);
@@ -63,6 +59,10 @@ final class MacOSXGLCanvas extends Canvas implements HierarchyBoundsListener {
 		synchronized (this) {
 			dirty = true;
 			if (!canvas_created) {
+				setFocusTraversalKeysEnabled(false);
+				/* Input methods are not enabled in fullscreen anyway, so disable always */
+				enableInputMethods(false);
+				addComponentListener(this);
 				((MacOSXDisplay)Display.getImplementation()).setView(this);
 				canvas_created = true;
 				setUpdate();
@@ -71,7 +71,7 @@ final class MacOSXGLCanvas extends Canvas implements HierarchyBoundsListener {
 		}
 	}
 
-	public boolean isDirty() {
+	public boolean syncIsDirty() {
 		boolean result;
 		synchronized (this) {
 			result = dirty;
@@ -92,7 +92,7 @@ final class MacOSXGLCanvas extends Canvas implements HierarchyBoundsListener {
 		}
 	}
 	
-	public boolean shouldUpdateContext() {
+	public boolean syncShouldUpdateContext() {
 		boolean should_update;
 		synchronized (this) {
 			should_update = context_update;
@@ -102,14 +102,36 @@ final class MacOSXGLCanvas extends Canvas implements HierarchyBoundsListener {
 	}
 	
 	private synchronized void setUpdate() {
-		context_update = true;
+		synchronized (this) {
+			width = getWidth();
+			height = getHeight();
+			context_update = true;
+		}
 	}
 
-	public void ancestorResized(HierarchyEvent e) {
+	public int syncGetWidth() {
+		synchronized (this) {
+			return width;
+		}
+	}
+	
+	public int syncGetHeight() {
+		synchronized (this) {
+			return height;
+		}
+	}
+	
+	public void componentShown(ComponentEvent e) {
+	}
+
+	public void componentHidden(ComponentEvent e) {
+	}
+
+	public void componentResized(ComponentEvent e) {
 		setUpdate();
 	}
 
-	public void ancestorMoved(HierarchyEvent e) {
+	public void componentMoved(ComponentEvent e) {
 		setUpdate();
 	}
 
