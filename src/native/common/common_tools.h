@@ -46,15 +46,14 @@
 // shared VM instance
 extern JavaVM *jvm;
 
-// Must be x * max_event_size + 1
-#define EVENT_BUFFER_SIZE (25 * 4 + 1)
+#define EVENT_BUFFER_SIZE 256
 #define ATTRIB_LIST_SIZE (256)
 
 typedef struct {
+	int event_size;
+	int position;
+	int limit;
 	jint input_event_buffer[EVENT_BUFFER_SIZE];
-
-	int list_start;
-	int list_end;
 } event_queue_t;
 
 typedef struct {
@@ -124,9 +123,9 @@ extern void putAttrib(attrib_list_t *list, int attrib);
 
 extern bool isDebugEnabled(void);
 extern jstring getVersionString(JNIEnv *env);
-extern void initEventQueue(event_queue_t *event_queue);
-extern int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int buffer_size, int event_size);
-extern void putEventElement(event_queue_t *queue, jint byte);
+extern void initEventQueue(event_queue_t *event_queue, int event_size);
+extern int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int buffer_size);
+extern bool putEvent(event_queue_t *queue, jint *event);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void throwFMODException(JNIEnv * env, const char * err);

@@ -120,7 +120,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	keyboard_grabbed = false;
 	translation_enabled = false;
 	buffer_enabled = false;
-	initEventQueue(&event_queue);
+	initEventQueue(&event_queue, 3);
 	updateKeyboardGrab();
 }
 
@@ -138,14 +138,19 @@ static unsigned char getKeycode(XKeyEvent *event) {
 	return keycode;
 }
 
-static int translateEvent(XKeyEvent *event) {
+static void putKeyboardEvent(jint keycode, jint state, jint ch) {
+	int event_list[] = {keycode, state, ch};
+	putEvent(&event_queue, event_list);
+}
+
+static int translateEvent(XKeyEvent *event, jint keycode, jint state) {
 	static char temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
 	static XComposeStatus status;
 	int num_chars, i;
 	jint ch;
 
 	if (!translation_enabled || event->type == KeyRelease) {
-		putEventElement(&event_queue, 0);
+		putKeyboardEvent(keycode, state, 0);
 		return 0;
 	}
 	num_chars = XLookupString(event, temp_translation_buffer, KEYBOARD_BUFFER_SIZE, NULL, &status);
@@ -153,15 +158,13 @@ static int translateEvent(XKeyEvent *event) {
 		num_chars--;
 		/* Assume little endian byte order */
 		ch = (jint)temp_translation_buffer[0] & 0xFF;
-		putEventElement(&event_queue, ch);
+		putKeyboardEvent(keycode, state, ch);
 		for (i = 0; i < num_chars; i++) {
-			putEventElement(&event_queue, 0);
-			putEventElement(&event_queue, 0);
 			ch = ((jint)temp_translation_buffer[i + 1]) & 0xFF;
-			putEventElement(&event_queue, ch);
+			putKeyboardEvent(0, 0, ch);
 		}
 	} else {
-		putEventElement(&event_queue, 0);
+		putKeyboardEvent(keycode, state, 0);
 	}
 	return num_chars;
 }
@@ -179,9 +182,7 @@ static void bufferEvent(XKeyEvent *key_event) {
 	unsigned char keycode = getKeycode(key_event);
 	unsigned char state = eventState(key_event);
 	//printf("Reading a key %d %d count %d\n", (int)keycode, (int)state, num_events);
-	putEventElement(&event_queue, keycode);
-	putEventElement(&event_queue, state);
-	translateEvent(key_event);
+	translateEvent(key_event, keycode, state);
 }
 
 void handleKeyEvent(XKeyEvent *event) {
@@ -199,11 +200,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll(JNIEnv * env, jclass 
 }
 
 JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead(JNIEnv * env, jclass clazz, jobject buffer, jint buffer_position) {
-	int event_size = 3;
 	handleMessages();
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
-	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, event_size);
+	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation(JNIEnv *env, jclass clazz) {

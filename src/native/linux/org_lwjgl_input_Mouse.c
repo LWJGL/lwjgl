@@ -53,7 +53,6 @@
 #define NUM_BUTTONS 3
 
 #define POINTER_WARP_BORDER 10
-#define WARP_RETRY 5
 // scale the mouse wheel according to win32
 #define WHEEL_SCALE 120 
 
@@ -63,8 +62,11 @@ static bool created;
 static int accum_dx;
 static int accum_dy;
 static int accum_dz;
-static int last_x;
-static int last_y;
+static int last_poll_x;
+static int last_poll_y;
+static int last_event_x;
+static int last_event_y;
+static int last_z;
 static jbyte buttons[NUM_BUTTONS];
 static event_queue_t event_queue;
 static bool buffer_enabled;
@@ -72,24 +74,24 @@ static bool buffer_enabled;
 static Cursor blank_cursor;
 static Cursor current_cursor;
 
-static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
-	if (buffer_enabled) {
-		putEventElement(&event_queue, button);
-		putEventElement(&event_queue, state);
-		putEventElement(&event_queue, dx);
-		putEventElement(&event_queue, -dy);
-		putEventElement(&event_queue, dz);
-	}
+static bool putMouseEvent(jint button, jint state, jint dx, jint dy, jint dz) {
+	jint event[] = {button, state, dx, dy, dz};
+	return putEvent(&event_queue, event);
 }
 
 static void setCursorPos(int x, int y) {
-	jint event_dx = x - last_x;
-	jint event_dy = y - last_y;
-	accum_dx += event_dx;
-	accum_dy += event_dy;
-	last_x = x;
-	last_y = y;
-	putEvent(-1, 0, event_dx, event_dy, 0);
+	jint poll_dx = x - last_poll_x;
+	jint poll_dy = y - last_poll_y;
+	accum_dx += poll_dx;
+	accum_dy += poll_dy;
+	last_poll_x = x;
+	last_poll_y = y;
+	jint event_dx = x - last_event_x;
+	jint event_dy = y - last_event_y;
+	if (putMouseEvent(-1, 0, event_dx, -event_dy, 0)) {
+		last_event_x = x;
+		last_event_y = y;
+	}
 }
 
 static int transformY(int y) {
@@ -97,8 +99,10 @@ static int transformY(int y) {
 }
 
 static void resetCursor(int x, int y) {
-	last_x = x;
-	last_y = y;
+	last_poll_x = x;
+	last_poll_y = y;
+	last_event_x = x;
+	last_event_y = y;
 }
 
 static bool blankCursor(void) {
@@ -242,7 +246,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	if (disp == NULL)
 		return;
 	int i;
-	last_y = last_x = accum_dx = accum_dy = accum_dz = 0;
+	last_z = last_poll_y = last_poll_x = last_event_x = last_event_y = accum_dx = accum_dy = accum_dz = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -255,7 +259,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	pointer_grabbed = false;
 	buffer_enabled = false;
 	updatePointerGrab();
-	initEventQueue(&event_queue);
+	initEventQueue(&event_queue, 5);
 	doWarpPointer(getWindowWidth()/2, getWindowHeight()/2);
 }
 
@@ -285,7 +289,7 @@ static void handleButton(XButtonEvent *event, unsigned char state) {
 	if (button_num == NUM_BUTTONS)
 		return;
 	buttons[button_num] = state;
-	putEvent(button_num, state, 0, 0, 0);
+	putMouseEvent(button_num, state, 0, 0, 0);
 }
 
 void handleButtonPress(XButtonEvent *event) {
@@ -293,11 +297,11 @@ void handleButtonPress(XButtonEvent *event) {
 	switch (event->button) {
 		case Button4:
 			delta = WHEEL_SCALE;
-			putEvent(-1, 0, 0, 0, delta);
+			putMouseEvent(-1, 0, 0, 0, delta);
 			break;
 		case Button5:
 			delta = -WHEEL_SCALE;
-			putEvent(-1, 0, 0, 0, delta);
+			putMouseEvent(-1, 0, 0, 0, delta);
 			break;
 		default: 
 			break;
@@ -377,7 +381,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass claz
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	handleMessages();
-	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, 5);
+	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {

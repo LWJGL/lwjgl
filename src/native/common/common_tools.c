@@ -78,46 +78,64 @@ void printfDebug(const char *format, ...) {
 	va_end(ap);
 }
 
-static void incListStart(event_queue_t *queue) {
-	queue->list_start = (queue->list_start + 1)%EVENT_BUFFER_SIZE;
+int getElementCapacity(event_queue_t *queue) {
+	return queue->limit - queue->position;
 }
 
-void initEventQueue(event_queue_t *event_queue) {
-	event_queue->list_start = 0;
-	event_queue->list_end = 0;
+void initEventQueue(event_queue_t *queue, int event_size) {
+	queue->position = 0;
+	queue->limit = EVENT_BUFFER_SIZE;
+	queue->event_size = event_size;
 }
 
-void putEventElement(event_queue_t *queue, jint s) {
-	int next_index = (queue->list_end + 1)%EVENT_BUFFER_SIZE;
-	if (next_index == queue->list_start) {
-		printfDebug("Event buffer overflow!\n");
-		return;
-	}
-	queue->input_event_buffer[queue->list_end] = s;
-	queue->list_end = next_index;
-}
-
-static bool hasMoreEvents(event_queue_t *queue) {
-	return queue->list_start != queue->list_end;
-}
-
-static void copyEvent(event_queue_t *queue, jint *output_event_buffer, int output_index, int event_size) {
+bool putEvent(event_queue_t *queue, jint *event) {
 	int i;
-	for (i = 0; i < event_size; i++) {
-		output_event_buffer[output_index] = queue->input_event_buffer[queue->list_start];
-		incListStart(queue);
+	if (getElementCapacity(queue) < queue->event_size) {
+		printfDebug("Event buffer overflow!\n");
+		return false;
+	}
+	for (i = 0; i < queue->event_size; i++) {
+		queue->input_event_buffer[queue->position] = event[i];
+		queue->position++;
+	}
+	return true;
+}
+
+static void flip(event_queue_t *queue) {
+	queue->limit = queue->position;
+	queue->position = 0;
+}
+
+static void compact(event_queue_t *queue) {
+	int new_position = 0;
+	while (getElementCapacity(queue) > 0) {
+		queue->input_event_buffer[new_position] = queue->input_event_buffer[queue->position];
+		queue->position++;
+		new_position++;
+	}
+	queue->position = new_position;
+	queue->limit = EVENT_BUFFER_SIZE;
+}
+
+static void copyEvent(event_queue_t *queue, jint *output_event_buffer, int output_index) {
+	int i;
+	for (i = 0; i < queue->event_size; i++) {
+		output_event_buffer[output_index] = queue->input_event_buffer[queue->position];
+		queue->position++;
 		output_index++;
 	}
 }
 
-int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int buffer_size, int event_size) {
+int copyEvents(event_queue_t *queue, jint *output_event_buffer, int buffer_size) {
 	int num_events = 0;
 	int index = 0;
-	while (index + event_size <= buffer_size && hasMoreEvents(event_queue)) {
-		copyEvent(event_queue, output_event_buffer, index, event_size);
+	flip(queue);
+	while (index + queue->event_size <= buffer_size && getElementCapacity(queue) >= queue->event_size) {
+		copyEvent(queue, output_event_buffer, index);
 		num_events++;
-		index += event_size;
+		index += queue->event_size;
 	}
+	compact(queue);
 	return num_events;
 }
 
