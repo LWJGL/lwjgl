@@ -53,6 +53,8 @@
 
 #define NUM_BUTTONS 3
 
+#define EVENT_SIZE 5
+
 #define POINTER_WARP_BORDER 10
 // scale the mouse wheel according to win32
 #define WHEEL_SCALE 120 
@@ -241,6 +243,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getButtonCount(JNIEnv 
 
 static void resetCursorToCenter(void) {
 	resetCursor(getWindowWidth()/2, transformY(getWindowHeight()/2));
+	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createMouse
@@ -264,7 +267,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createMouse
 	pointer_grabbed = false;
 	buffer_enabled = false;
 	updatePointerGrab();
-	initEventQueue(&event_queue, 5);
+	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyMouse
