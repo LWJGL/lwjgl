@@ -538,6 +538,9 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, IntBuffer pixels) {
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
 	}
+	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, FloatBuffer pixels) {
+		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
+	}
 	private static native void nglTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ByteBuffer pixels) {
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position());
@@ -546,6 +549,9 @@ public abstract class CoreGL11 implements CoreGL11Constants {
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, IntBuffer pixels) {
+		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
+	}
+	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, FloatBuffer pixels) {
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, Buffer pixels, int pixels_offset);
