@@ -35,8 +35,10 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
+import org.lwjgl.Sys;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 /**
  * $Id$
  *
@@ -69,17 +71,18 @@ public class ALCTest extends BasicTest {
         }
         
         //create attribute list for context creation
-        ByteBuffer buffer = ByteBuffer.allocate(28);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(28);
+        buffer.order(ByteOrder.nativeOrder());
         buffer.putInt(ALC.FREQUENCY);
         buffer.putInt(44100);
-        buffer.putInt(ALC.SYNC);
-        buffer.putInt(ALC.FALSE);
         buffer.putInt(ALC.REFRESH);
         buffer.putInt(15);
+        buffer.putInt(ALC.SYNC);
+        buffer.putInt(ALC.FALSE);
         buffer.putInt(0); //terminating int
         
-        //create a context
-        context = alc.createContext(device, org.lwjgl.Sys.getDirectBufferAddress(buffer));
+        //create a context, using above attributes
+        context = alc.createContext(device, Sys.getDirectBufferAddress(buffer));
         if(context == null) {
             System.out.println("Unable to create context");
             System.exit(-1);
@@ -94,31 +97,27 @@ public class ALCTest extends BasicTest {
         alc.makeContextCurrent(context);
         
         //process
-        //NOTE - weird bug exposed!
-        //calling alcProcessContext on a non suspended context hangs
-        //this is a OpenAL specific bug - not our code
-        //alc.processContext(context);
+        alc.processContext(context);
 
         //suspend
         alc.suspendContext(context);
-        
-        //process again
-        alc.processContext(context);
         
         //query        
         System.out.println("DEFAULT_DEVICE_SPECIFIER: " + alc.getString(device, ALC.DEFAULT_DEVICE_SPECIFIER));
         System.out.println("DEVICE_SPECIFIER: " + alc.getString(device, ALC.DEVICE_SPECIFIER));
         System.out.println("EXTENSIONS: " + alc.getString(device, ALC.EXTENSIONS));
         
-        //mo query - hmmmmm don't get alcGetIntegerv
-        /*buffer.rewind();
-        alc.getIntegerv(device, ALC.MAJOR_VERSION, 32, org.lwjgl.Sys.getDirectBufferAddress(buffer));
+        //mo query
+        buffer.rewind();
+        alc.getIntegerv(device, ALC.MAJOR_VERSION, 4, Sys.getDirectBufferAddress(buffer));
+        alc.getIntegerv(device, ALC.MINOR_VERSION, 4, Sys.getDirectBufferAddress(buffer)+4);
+
         System.out.println("ALC_MAJOR_VERSION: " + buffer.getInt());
-        
-        alc.getIntegerv(device, ALC.MINOR_VERSION, 4, org.lwjgl.Sys.getDirectBufferAddress(buffer));
         System.out.println("ALC_MINOR_VERSION: " + buffer.getInt());
-        */
         
+        //no check for ALC_ALL_ATTRIBUTES / ALC_ATTRIBUTES_SIZE since it 
+        //is buggy on win32 - my dev platform
+
         //check current context
         ALCcontext currentContext = alc.getCurrentContext();
         if(context.context != currentContext.context) {
@@ -131,7 +130,10 @@ public class ALCTest extends BasicTest {
         if(device.device != currentDevice.device) {
             System.out.println("Serious error! - device copy != current contexts device");
             System.exit(-1);
-        }         
+        }
+        
+        //get an enumerstion value
+        System.out.println("Value of ALC_MAJOR_VERSION: " + alc.getEnumValue(device, "ALC_MAJOR_VERSION"));
         
         //close context again
         alc.destroyContext(context);
