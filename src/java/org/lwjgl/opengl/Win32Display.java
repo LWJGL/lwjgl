@@ -48,8 +48,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 
 final class Win32Display implements DisplayImplementation {
-//	private static final int PBUFFER_HANDLE_SIZE = 24;
-
 	private static Win32DisplayPeerInfo peer_info;
 
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
@@ -70,14 +68,10 @@ final class Win32Display implements DisplayImplementation {
 	public native boolean isVisible();
 	public native boolean isActive();
 	public native boolean isDirty();
-//	public native void swapBuffers();
-//	public native void makeCurrent() throws LWJGLException;
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		peer_info = new Win32DisplayPeerInfo(pixel_format);
 		return peer_info;
 	}
-//	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
-//	public native void destroyContext();
 	public void update() {
 		nUpdate();
 		if (didMaximize()) {
@@ -97,7 +91,6 @@ final class Win32Display implements DisplayImplementation {
 	private native void nUpdate();
 	private native boolean didMaximize();
 
-//	public native void setVSyncEnabled(boolean sync);
 	public native void reshape(int x, int y, int width, int height);
 	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
 
@@ -136,29 +129,12 @@ final class Win32Display implements DisplayImplementation {
 		return ((Win32PbufferPeerInfo)handle).isBufferLost();
 	}
 
-//	public native boolean isBufferLost(ByteBuffer handle);
-//	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
-
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
 		return new Win32PbufferPeerInfo(width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
 	}
 	
-/*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
-			IntBuffer pixelFormatCaps,
-			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
-		ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
-		nCreatePbuffer(handle, width, height, pixel_format, pixelFormatCaps, pBufferAttribs, shared_pbuffer_handle);
-		return handle;
-	}
-
-	private native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
-			IntBuffer pixelFormatCaps,
-			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
-*/
-//	public native void destroyPbuffer(ByteBuffer handle);
-
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
 		((Win32PbufferPeerInfo)handle).setPbufferAttrib(attrib, value);
 	}
@@ -170,7 +146,4 @@ final class Win32Display implements DisplayImplementation {
 	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
 		((Win32PbufferPeerInfo)handle).releaseTexImageFromPbuffer(buffer);
 	}
-/*	public native void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
-	public native void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
-	public native void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);*/
 }

@@ -201,19 +201,9 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return frame.getCanvas().syncIsDirty();
 	}
 
-//	public native void setView(MacOSXGLCanvas canvas);
-
-//	public native void swapBuffers();
-
-//	public native void makeCurrent() throws LWJGLException;
-
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		return new MacOSXDisplayPeerInfo(pixel_format);
 	}
-//	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
-
-//	public native void destroyPeerInfo();
-//	public native void destroyContext();
 
 	public void update() {
 		if (frame.getCanvas().syncShouldUpdateContext()) {
@@ -245,8 +235,6 @@ final class MacOSXDisplay implements DisplayImplementation {
 	native void getMouseDeltas(IntBuffer delta_buffer);
 
 	private native void updateContext();
-
-//	public native void setVSyncEnabled(boolean sync);
 
 	public void reshape(int x, int y, int width, int height) {
 		frame.resize(x, y, width, height);
@@ -423,27 +411,11 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return false;
 	}
 	
-//	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
-
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
 		return new MacOSXPbufferPeerInfo(width, height, pixel_format);
 	}
-
-/*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
-			IntBuffer pixelFormatCaps,
-			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
-		ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
-		nCreatePbuffer(handle, width, height, pixel_format, pixelFormatCaps, pBufferAttribs, shared_pbuffer_handle);
-		return handle;
-	}
-
-	private native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
-			IntBuffer pixelFormatCaps,
-			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
-*/
-//	public native void destroyPbuffer(ByteBuffer handle);
 
 	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
 		throw new UnsupportedOperationException();

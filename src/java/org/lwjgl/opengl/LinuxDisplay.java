@@ -48,7 +48,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
-//	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int NUM_BUTTONS = 3;
 
 	private static PeerInfo peer_info;
@@ -370,40 +369,6 @@ final class LinuxDisplay implements DisplayImplementation {
 		return false;
 	}
 
-/*	public void makePbufferCurrent(ByteBuffer handle) throws LWJGLException {
-		lockAWT();
-		try {
-			nMakePbufferCurrent(handle);
-		} finally {
-			unlockAWT();
-		}
-	}
-	
-	private static native void nMakePbufferCurrent(ByteBuffer handle) throws LWJGLException;
-*/
-/*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
-			IntBuffer pixelFormatCaps,
-			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException {
-		lockAWT();
-		try {
-			ByteBuffer handle = BufferUtils.createByteBuffer(PBUFFER_HANDLE_SIZE);
-			incDisplay();
-			try {
-				nCreatePbuffer(handle, width, height, pixel_format, pixelFormatCaps, pBufferAttribs, shared_pbuffer_handle);
-				return handle;
-			} catch (LWJGLException e) {
-				decDisplay();
-				throw e;
-			}
-		} finally {
-			unlockAWT();
-		}
-	}
-
-	private static native void nCreatePbuffer(ByteBuffer handle, int width, int height, PixelFormat pixel_format,
-			IntBuffer pixelFormatCaps,
-			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
-*/
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
