@@ -259,5 +259,13 @@ public final class Sys {
 	 * Where necessary, we use a native implementation of openURL.
 	 */
 	private static native void nOpenURL(String url);
+
+	/**
+	 * Get the contents of the system clipboard. The system might not have a clipboard
+	 * (particularly if it doesn't even have a keyboard) in which case we return null.
+	 * Otherwise we return a String, which may be the empty string "".
+	 * @return a String, or null if there is no system clipboard.
+	 */
+	public static native String getClipboard();
 		
 } 
