@@ -480,7 +480,7 @@ public class Mouse {
 
 	/**
 	 * Retrieves the absolute position. If the Window has been created
-	 * x will be clamped to 0 - Window.getWidth().
+	 * x will be clamped to 0...Window.getWidth() - 1.
 	 * 
 	 * @return Absolute x axis position of mouse
 	 */
@@ -490,7 +490,7 @@ public class Mouse {
 
 	/**
 	 * Retrieves the absolute position. If the Window has been created
-	 * y will be clamped to 0 - Window.getHeight().
+	 * y will be clamped to 0...Window.getHeight() -1.
 	 *
 	 * @return Absolute y axis position of mouse
 	 */
