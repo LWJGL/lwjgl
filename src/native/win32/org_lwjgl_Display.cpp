@@ -11,6 +11,9 @@
 
 #include <windows.h>
 #include "org_lwjgl_Display.h"
+
+#define DIRECTINPUT_VERSION 0x0700
+
 #include <dinput.h>
 
 #define WINDOWCLASSNAME "JGLIBWINDOW"
