@@ -128,7 +128,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1StopSong
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMusic_FMUSIC_1StopAllSongs
   (JNIEnv *env, jclass clazz){
-    return fmod_instance->FMUSIC_StopAllSongs();
+    fmod_instance->FMUSIC_StopAllSongs();
   }
 
 /*
@@ -493,21 +493,28 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1GetUserData(JNIEn
  * priority to max value
  */
 void attachMixerThread() {
+  jclass threadClass;
+  jmethodID currentThread;
+  jobject myThread;
+  jfieldID highPriority;
+  jint highPriorityValue;
+  jmethodID priority;
+  
   (*jvm)->AttachCurrentThreadAsDaemon(jvm, (void*)&mixer_jnienv, NULL);
   
   // set to high priority
   // ==============================
   // get current thread
-  jclass threadClass = (*mixer_jnienv)->FindClass(mixer_jnienv, "java/lang/Thread");
-  jmethodID currentThread = (*mixer_jnienv)->GetStaticMethodID(mixer_jnienv, threadClass, "currentThread", "()Ljava/lang/Thread;");
-  jobject myThread = (*mixer_jnienv)->CallStaticObjectMethod(mixer_jnienv, threadClass, currentThread);
+  threadClass = (*mixer_jnienv)->FindClass(mixer_jnienv, "java/lang/Thread");
+  currentThread = (*mixer_jnienv)->GetStaticMethodID(mixer_jnienv, threadClass, "currentThread", "()Ljava/lang/Thread;");
+  myThread = (*mixer_jnienv)->CallStaticObjectMethod(mixer_jnienv, threadClass, currentThread);
   
   // get value of high priority
-  jfieldID highPriority = (*mixer_jnienv)->GetStaticFieldID(mixer_jnienv, threadClass, "MAX_PRIORITY", "I");
-  jint highPriorityValue = (*mixer_jnienv)->GetStaticIntField(mixer_jnienv, threadClass, highPriority);
+  highPriority = (*mixer_jnienv)->GetStaticFieldID(mixer_jnienv, threadClass, "MAX_PRIORITY", "I");
+  highPriorityValue = (*mixer_jnienv)->GetStaticIntField(mixer_jnienv, threadClass, highPriority);
   
   // call set priority
-  jmethodID priority = (*mixer_jnienv)->GetMethodID(mixer_jnienv, threadClass, "setPriority", "(I)V");
+  priority = (*mixer_jnienv)->GetMethodID(mixer_jnienv, threadClass, "setPriority", "(I)V");
   (*mixer_jnienv)->CallVoidMethod(mixer_jnienv, myThread, priority, highPriorityValue);
   // ------------------------------
 }

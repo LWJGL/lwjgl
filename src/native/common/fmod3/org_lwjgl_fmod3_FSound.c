@@ -157,7 +157,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetOutput(JNIEnv 
 * Signature: (F)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetPanSeperation(JNIEnv * env, jclass clazz, jfloat pansep) {
-  return fmod_instance->FSOUND_SetPanSeperation(pansep);
+  fmod_instance->FSOUND_SetPanSeperation(pansep);
 }
 
 /*
@@ -949,7 +949,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_13D_1SetDistanceFactor
 * Signature: (F)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_13D_1SetDopplerFactor(JNIEnv * env, jclass clazz, jfloat scale) {
-  return fmod_instance->FSOUND_3D_SetDopplerFactor(scale);
+  fmod_instance->FSOUND_3D_SetDopplerFactor(scale);
 }
 
 /*
@@ -958,7 +958,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_13D_1SetDopplerFactor(
 * Signature: (F)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_13D_1SetRolloffFactor(JNIEnv * env, jclass clazz, jfloat scale) {
-  return fmod_instance->FSOUND_3D_SetRolloffFactor(scale);
+  fmod_instance->FSOUND_3D_SetRolloffFactor(scale);
 }
 
 /*
@@ -1097,7 +1097,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1FindTagF
 * Method:    nFSOUND_Stream_GetLength
 * Signature: (J)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetLength(JNIEnv * env, jclass clazz, jlong stream) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetLength(JNIEnv * env, jclass clazz, jlong stream) {
   return fmod_instance->FSOUND_Stream_GetLength((FSOUND_STREAM*) stream);
 }
 
@@ -1106,7 +1106,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetLengt
 * Method:    nFSOUND_Stream_GetLengthMs
 * Signature: (J)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetLengthMs(JNIEnv * env, jclass clazz, jlong stream) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1GetLengthMs(JNIEnv * env, jclass clazz, jlong stream) {
   return fmod_instance->FSOUND_Stream_GetLengthMs((FSOUND_STREAM*) stream);
 }
 
@@ -1432,7 +1432,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1CD_1SetPaused(JNI
 * Signature: (CI)V
 */
 JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1CD_1SetPlayMode(JNIEnv * env, jclass clazz, jchar drive, jint mode) {
-  return fmod_instance->FSOUND_CD_SetPlayMode(drive, mode);
+  fmod_instance->FSOUND_CD_SetPlayMode(drive, mode);
 }
 
 /*
@@ -1839,21 +1839,28 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Reverb_1GetChann
  * priority to max value
  */
 void attachStreamThread() {
+  jclass threadClass;
+  jmethodID currentThread;
+  jobject myThread;
+  jfieldID highPriority;
+  jint highPriorityValue;
+  jmethodID priority;
+    
   (*jvm)->AttachCurrentThreadAsDaemon(jvm, (void*)&stream_jnienv, NULL);
   
   // set to high priority
   // ==============================
   // get current thread
-  jclass threadClass = (*stream_jnienv)->FindClass(stream_jnienv, "java/lang/Thread");
-  jmethodID currentThread = (*stream_jnienv)->GetStaticMethodID(stream_jnienv, threadClass, "currentThread", "()Ljava/lang/Thread;");
-  jobject myThread = (*stream_jnienv)->CallStaticObjectMethod(stream_jnienv, threadClass, currentThread);
+  threadClass = (*stream_jnienv)->FindClass(stream_jnienv, "java/lang/Thread");
+  currentThread = (*stream_jnienv)->GetStaticMethodID(stream_jnienv, threadClass, "currentThread", "()Ljava/lang/Thread;");
+  myThread = (*stream_jnienv)->CallStaticObjectMethod(stream_jnienv, threadClass, currentThread);
   
   // get value of high priority
-  jfieldID highPriority = (*stream_jnienv)->GetStaticFieldID(stream_jnienv, threadClass, "MAX_PRIORITY", "I");
-  jint highPriorityValue = (*stream_jnienv)->GetStaticIntField(stream_jnienv, threadClass, highPriority);
+  highPriority = (*stream_jnienv)->GetStaticFieldID(stream_jnienv, threadClass, "MAX_PRIORITY", "I");
+  highPriorityValue = (*stream_jnienv)->GetStaticIntField(stream_jnienv, threadClass, highPriority);
   
   // call set priority
-  jmethodID priority = (*stream_jnienv)->GetMethodID(stream_jnienv, threadClass, "setPriority", "(I)V");
+  priority = (*stream_jnienv)->GetMethodID(stream_jnienv, threadClass, "setPriority", "(I)V");
   (*stream_jnienv)->CallVoidMethod(stream_jnienv, myThread, priority, highPriorityValue);
   // ------------------------------
 }
@@ -1861,11 +1868,16 @@ void attachStreamThread() {
 // FSound callbacks
 // =======================================
 void * F_CALLBACKAPI fsound_dspcallback(void *originalbuffer, void *newbuffer, int length, void *userdata) {
+	int size;
+	jobject origBuffer;
+	jobject newBuffer;
+	jobject resultBuffer;
+  
   if (mixer_jnienv == NULL) { attachMixerThread(); }
-	int size = length * fsound_dsp_buffer_size;
-	jobject origBuffer = (*mixer_jnienv)->NewDirectByteBuffer(mixer_jnienv, originalbuffer, size);
-	jobject newBuffer = (*mixer_jnienv)->NewDirectByteBuffer(mixer_jnienv, newbuffer, size);
-	jobject resultBuffer = (*mixer_jnienv)->CallStaticObjectMethod(mixer_jnienv, fsound, sound_dspcallback, (jlong) *((long *)userdata), origBuffer, newBuffer, (jint) length);
+	size = length * fsound_dsp_buffer_size;
+	origBuffer = (*mixer_jnienv)->NewDirectByteBuffer(mixer_jnienv, originalbuffer, size);
+	newBuffer = (*mixer_jnienv)->NewDirectByteBuffer(mixer_jnienv, newbuffer, size);
+	resultBuffer = (*mixer_jnienv)->CallStaticObjectMethod(mixer_jnienv, fsound, sound_dspcallback, (jlong) *((long *)userdata), origBuffer, newBuffer, (jint) length);
 	return (*mixer_jnienv)->GetDirectBufferAddress(mixer_jnienv, resultBuffer);
 }
 
@@ -1876,8 +1888,9 @@ signed char F_CALLBACKAPI fsound_stream_endcallback(FSOUND_STREAM *stream, void 
 }
 
 signed char F_CALLBACKAPI fsound_stream_synccallback(FSOUND_STREAM *stream, void *buff, int len, void *param) {
+  int length;
   if (stream_jnienv == NULL) { attachStreamThread(); }
-	int length = strlen((const char *) buff);
+	length = strlen((const char *) buff);
 	(*stream_jnienv)->CallStaticVoidMethod(stream_jnienv, fsound, sound_stream_synccallback, (jlong) stream, safeNewBuffer(stream_jnienv, buff, length), (jint) len);
 	return true;
 }
