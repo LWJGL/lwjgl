@@ -202,7 +202,7 @@ public class PbufferTest {
       GL.glEnd();
     }
     GL.glPopMatrix();
-    GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, 0, 0, 256, 256, 0);
+    GL.glCopyTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, 0, 0, 512, 512, 0);
     Pbuffer.releaseContext();
 
     // OpenGL window rendering
@@ -231,7 +231,7 @@ public class PbufferTest {
 
   private void initPbuffer() {
       try {
-          pbuffer = new Pbuffer(256, 256, mode.bpp, 0, 0, 0);
+          pbuffer = new Pbuffer(512, 512, mode.bpp, 0, 0, 0);
           pbuffer.makeCurrent();
           initGLState(256, 256, 0.5f);
           GL.glBindTexture(GL.GL_TEXTURE_2D, tex_handle);
