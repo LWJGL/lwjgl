@@ -51,6 +51,9 @@
 
 #define KEYBOARD_BUFFER_SIZE 50
 
+extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
+
+static LPDIRECTINPUT		lpdi = NULL;						          // DirectInput
 static LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
 static bool translationEnabled;
 
@@ -64,6 +67,13 @@ static bool useUnicode;
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
+	// Create input
+	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
+	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION) {
+		throwException(env, "Failed to create DirectInput");
+		return;
+	}
+
 	translationEnabled = false;
 	// Check to see if we're already initialized
 	if (lpdiKeyboard != NULL) {
@@ -98,7 +108,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 	dipropdw.dwData = KEYBOARD_BUFFER_SIZE;
 	lpdiKeyboard->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
 
-	HRESULT ret = lpdiKeyboard->Acquire();
+	ret = lpdiKeyboard->Acquire();
 	if(FAILED(ret)) {
 		printfDebug("Failed to acquire keyboard\n");
 	}
@@ -117,6 +127,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 		lpdiKeyboard->Unacquire();
 		lpdiKeyboard->Release();
 		lpdiKeyboard = NULL;
+	}
+	// Release DirectInput
+	if (lpdi != NULL) {
+		printfDebug("Destroying directinput\n");
+		lpdi->Release();
+		lpdi = NULL;
 	}
 }
 

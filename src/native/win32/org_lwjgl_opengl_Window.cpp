@@ -49,7 +49,6 @@ static bool				oneShotInitialised = false;			// Registers the LWJGL window class
 HWND				hwnd = NULL;						              // Handle to the window
 HDC					hdc = NULL;							              // Device context
 HGLRC				hglrc = NULL;						              // OpenGL context
-LPDIRECTINPUT		lpdi = NULL;						          // DirectInput
 static bool				isFullScreen = false;		        // Whether we're fullscreen or not
 static bool				isMinimized = false;		        // Whether we're minimized or not
 static bool       isFocused = false;              // whether we're focused or not
@@ -190,46 +189,12 @@ static int findPixelFormat(JNIEnv *env, int bpp, int alpha, int depth, int stenc
 
 	return iPixelFormat;
 }
-/*
- * Create DirectInput.
- * Returns true for success, or false for failure
- */
-static bool createDirectInput(JNIEnv *env)
-{
-	// Create input
-	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
-	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION ) {
-		switch (ret) {
-			case DIERR_INVALIDPARAM :
-				throwException(env, "Failed to create DirectInput - Invalid parameter\n");
-				break;
-			case DIERR_OLDDIRECTINPUTVERSION :
-				throwException(env, "Failed to create DirectInput - Old Version\n");
-				break;
-			case DIERR_OUTOFMEMORY :
-				throwException(env, "Failed to create DirectInput - Out Of Memory\n");
-				break;
-			default:
-				throwException(env, "Failed to create DirectInput - Unknown failure\n");
-		}
-		return false;
-	} else {
-		return true;
-	}
-}
 
 /*
  * Close the window
  */
 static void closeWindow()
 {
-	// Release DirectInput
-	if (lpdi != NULL) {
-		printfDebug("Destroying directinput\n");
-		lpdi->Release();
-		lpdi = NULL;
-	}
-
 	// Release device context
 	if (hdc != NULL && hwnd != NULL) {
 		printfDebug("Releasing DC\n");
@@ -549,13 +514,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 			extgl_Close();
 			return;
 		}
-	}
-
-	if (!createDirectInput(env)) {
-		// Close the window
-		closeWindow();
-		extgl_Close();
-		return;
 	}
 
 	ShowWindow(hwnd, SW_SHOW);

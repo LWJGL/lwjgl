@@ -43,10 +43,12 @@
 #include <windows.h>
 #undef	DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
+#include <dinput.h>
 #include "Window.h"
 #include "common_tools.h"
-#include <dinput.h>
 
+extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
+static LPDIRECTINPUT		lpdi = NULL;						          // DirectInput
 static LPDIRECTINPUTDEVICE mDIDevice;				// DI Device instance
 static int mButtoncount = 0;								 // Temporary buttoncount
 static bool mHaswheel;											 // Temporary wheel check
@@ -92,11 +94,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
 	HRESULT hr;
 
-  // assert that Direct Input has been created
-	if(lpdi == NULL) {
-    throwException(env, "Please create the window before initializing input devices");
-    return;
-	} 
+	// Create input
+	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
+	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION) {
+		throwException(env, "Failed to create DirectInput");
+		return;
+	}
 
 	/* skip enumeration, since we only want system mouse */
 	CreateMouse();
@@ -313,18 +316,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
 /**
  * Shutdown DI
  */
-void ShutdownMouse() {
+static void ShutdownMouse() {
 	// release device
 	if (mDIDevice != NULL) {
 		mDIDevice->Unacquire();
 		mDIDevice->Release();
 		mDIDevice = NULL;
 	}
+	// Release DirectInput
+	if (lpdi != NULL) {
+		printfDebug("Destroying directinput\n");
+		lpdi->Release();
+		lpdi = NULL;
+	}
 }
 /**
  * Enumerates the capabilities of the Mouse attached to the system
  */
-void EnumerateMouseCapabilities() {
+static void EnumerateMouseCapabilities() {
 	HRESULT hr;
 	hr = mDIDevice->EnumObjects(EnumMouseObjectsCallback, NULL, DIDFT_ALL);
 	if FAILED(hr) { 
@@ -345,7 +354,7 @@ void EnumerateMouseCapabilities() {
 /**
  * Callback from EnumObjects. Called for each "object" on the Mouse.
  */
-BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
+static BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
 	printfDebug("found %s\n", lpddoi->tszName);
 	if(lpddoi->guidType == GUID_Button) {
 		mButtoncount++;
@@ -362,7 +371,7 @@ BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID 
 /**
  * Creates the specified device as a Mouse
  */
-void CreateMouse() {
+static void CreateMouse() {
 	HRESULT hr;
 	hr = lpdi->CreateDevice(GUID_SysMouse, &mDIDevice, NULL);
 	if FAILED(hr) {	
@@ -376,7 +385,7 @@ void CreateMouse() {
 /**
  * Sets up the Mouse properties
  */ 
-void SetupMouse() {
+static void SetupMouse() {
 	// set Mouse data format
 	if(mDIDevice->SetDataFormat(&c_dfDIMouse) != DI_OK) {
 		printfDebug("SetDataFormat failed\n");

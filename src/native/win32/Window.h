@@ -45,9 +45,6 @@
 	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
 	#include <jni.h>
-	#undef  DIRECTINPUT_VERSION
-	#define DIRECTINPUT_VERSION 0x0500
-	#include <dinput.h>
 	#include "extgl.h"
 
 	#ifdef _PRIVATE_WINDOW_H_
@@ -57,7 +54,6 @@
 
 		extern HWND		hwnd;								// Handle to the window
 		extern HDC		hdc;								// Device context
-		extern LPDIRECTINPUT	lpdi;				// DirectInput
 		extern bool		isFullScreen;				// Whether we're fullscreen or not
 		extern bool		isMinimized;				// Whether we're minimized or not
 		extern bool		isFocused;					// Whether we're focused or not
