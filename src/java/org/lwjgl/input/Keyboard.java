@@ -439,6 +439,10 @@ public class Keyboard {
 	}
 
 	/**
+   * Please note that the key code returned is NOT valid against the
+   * current keyboard layout. To get the actual character pressed call
+   * getEventCharacter
+   * 
 	 * @return The key from the current event
 	 */
 	public static int getEventKey() {
