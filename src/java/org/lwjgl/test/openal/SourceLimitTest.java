@@ -75,6 +75,7 @@ public class SourceLimitTest extends BasicTest {
     try {
       CreateAllSources();
     } catch(OpenALException oale) {
+		oale.printStackTrace();
     }
 
     
@@ -82,6 +83,7 @@ public class SourceLimitTest extends BasicTest {
     try {
       CreateSourcesStep();
     } catch(Exception e) {
+		e.printStackTrace();
     }
 		//shutdown
 		alExit();
@@ -122,7 +124,7 @@ public class SourceLimitTest extends BasicTest {
 		IntBuffer[] sources = new IntBuffer[sourcesToCreate];
 
     //create the sources
-		for (int i = 0; i <= sourcesToCreate; i++) {
+		for (int i = 0; i < sourcesToCreate; i++) {
       sources[i] = BufferUtils.createIntBuffer(1);
       sources[i].position(0).limit(1);
 			AL10.alGenSources(sources[i]);
