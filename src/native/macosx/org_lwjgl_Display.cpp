@@ -36,20 +36,6 @@
 
 RenderingContext * renderingContext;
 
-static int numberForKey( CFDictionaryRef desc, CFStringRef key )
-{
-    CFNumberRef			value;
-    int				num = 0;
-
-    if ( (value = CFDictionaryGetValue(desc, key)) == NULL )
-    {
-        return 0;
-    }
-
-    CFNumberGetValue( value, kCFNumberIntType, &num );
-    return num;
-}
-
 /*
  * Class:     org_lwjgl_Display
  * Method:    getAvailableDisplayModes
@@ -58,54 +44,23 @@ static int numberForKey( CFDictionaryRef desc, CFStringRef key )
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
-      CGDirectDisplayID * displays = renderingContext->enumerateDisplays();
-      CFArrayRef modeList = renderingContext->enumerateDisplayModes( displays[0] );
 
-      // count the display modes
-      //
-      int cnt = CFArrayGetCount( modeList );
+      printf("Getting default display mode - 1024x768x32");
 
       // Allocate an array of DisplayModes big enough
       jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
 
-      // Note the * 16 - this is because we are manufacturing available alpha/depth/stencil combos.
-      jobjectArray ret = env->NewObjectArray(cnt * 16, displayModeClass, NULL);
+      jobjectArray ret = env->NewObjectArray(1, displayModeClass, NULL);
       jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");
 
-      CFDictionaryRef mode;
-      for ( int i=0; i< cnt; i++ )
-      {
-          mode = CFArrayGetValueAtIndex( modeList, i );
+      jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor,
+                                   1024, 768, 32, 0,
+                                   0,0,0 );
 
-          int width = numberForKey( mode, kCGDisplayWidth );
-          int height = numberForKey( mode, kCGDisplayHeight );
-          int bpp = numberForKey( mode, kCGDisplayBitsPerPixel );
-          int refreshRate = numberForKey( mode, kCGDisplayRefreshRate );
+      env->SetObjectArrayElement( ret, 0, displayMode );
 
-          if ( bpp <= 8 )
-          {
-              continue;
-          }
-          else
-          {
-              jobject displayMode;
 
-              for ( int depthBits = 0; depthBits <= 24; depthBits += 8 )
-              {
-                  for ( int stencilBits = 0; stencilBits <= 8; stencilBits += 8 )
-                  {
-                      for ( int alphaBits = 0; alphaBits <= 8; alphaBits += 8 )
-                      {
-                          displayMode = env->NewObject(displayModeClass, displayModeConstructor,
-                                                       width, height, bpp, refreshRate,
-                                                       alphaBits, depthBits, stencilBits );
-
-                          env->SetObjectArrayElement( ret, i, displayMode );
-                      }
-                  }
-              }
-          }
-      }      
+      return ret;
 }
 
 /*
@@ -116,10 +71,6 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
   (JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jboolean debug)
 {
-#ifdef _DEBUG
-	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
-#endif      
-
       renderingContext = new RenderingContext();
 
       renderingContext->createDisplay( width, height, bpp, freq );
@@ -128,9 +79,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
       jfieldID fid_handle = env->GetStaticFieldID(clazz, "handle", "I");
       env->SetStaticIntField(clazz, fid_handle, (jint) renderingContext->windowPtr );
 
-#ifdef _DEBUG
       printf("Display created\n");
-#endif      
 
       return JNI_TRUE;
 }

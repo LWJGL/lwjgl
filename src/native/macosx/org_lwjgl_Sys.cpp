@@ -130,6 +130,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
   (JNIEnv * env, jclass clazz, jint priority)
 {
+      printf("Not supported on OSX \n");
 }
 
 /*

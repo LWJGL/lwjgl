@@ -41,189 +41,76 @@
 
 #include "RenderingContext.h"
 
-#define kMaxDisplays		16
-
-CGDirectDisplayID display[kMaxDisplays];
-
 RenderingContext::RenderingContext()
 {
 }
 
 bool RenderingContext::createDisplay( int width, int height, int bpp, int freq  )
 {
-    InitCursor();
+    printf("Creating display");
 
-    SetRect( &rect, 0, 0, width, height );
-    windowPtr = NewCWindow( NULL, &rect, "LWJGL", true, kWindowShadowDialogProc, (WindowPtr) -1L, true, 0L );
-
-    SetPortWindowPort( windowPtr );
-
-    if ( windowPtr == NULL )
+    CGDisplayCapture( kCGDirectMainDisplay ) ;
+    CGDisplaySwitchToMode( kCGDirectMainDisplay,
+                           CGDisplayBestModeForParameters( kCGDirectMainDisplay,
+                                                           bpp, width, height, freq ) ) ;
+    
+    CGOpenGLDisplayMask displayMask = CGDisplayIDToOpenGLDisplayMask( kCGDirectMainDisplay ) ;
+    CGLPixelFormatAttribute attribs[] =
     {
-        printf("Failed to create a window\n");
-        return false;
-    }
+        kCGLPFAFullScreen,
+        kCGLPFADisplayMask,
+        displayMask,
+        NULL
+    } ;
 
-    ShowWindow( windowPtr );
+    CGLPixelFormatObj pixelFormatObj ;
+    long numPixelFormats ;
+
+    CGLChoosePixelFormat( attribs, &pixelFormatObj, &numPixelFormats );
+
+    long swapInterval ;
+
+    CGLCreateContext( pixelFormatObj, NULL, &contextObj ) ;
+    CGLDestroyPixelFormat( pixelFormatObj ) ;
+
+    swapInterval = 1 ;
+    CGLSetParameter( contextObj, kCGLCPSwapInterval, &swapInterval ) ;
+
+    CGLSetCurrentContext( contextObj ) ;
+    CGLSetFullScreen( contextObj ) ;
+    
 
     return true;
 }
 
 void RenderingContext::destroyDisplay()
 {
-    // cleanup the AGL context
-    //
-    
-    aglSetCurrentContext(NULL);
-    aglSetDrawable(aglContext, NULL);
-    aglDestroyContext(aglContext);
-    
-    // cleanup the window
-    //
-    DisposeWindow( windowPtr );
-}
+    CGLClearDrawable( contextObj ) ;
+    CGLDestroyContext( contextObj ) ;
 
-CGDirectDisplayID * RenderingContext::enumerateDisplays()
-{
+    CGReleaseAllDisplays();
 
-    CGDisplayCount numDisplays;
-    CGDisplayErr err;
-
-    err = CGGetActiveDisplayList( kMaxDisplays,
-                                  display,
-                                  &numDisplays );
-
-    if ( err != CGDisplayNoErr )
-    {
-        printf("Cannot get displays (%d). \n", err );
-    }
-
-    return display;
-}
-
-CFArrayRef RenderingContext::enumerateDisplayModes( CGDirectDisplayID display )
-{
-    CFArrayRef modeList;
-
-    modeList = CGDisplayAvailableModes( display );
-    if ( modeList = NULL )
-    {
-        printf("Error. Display requested is invalid.\n");
-        return NULL;
-    }
-
-    return modeList;
-}
-
-
-
-
-bool RenderingContext::createGL( int colorBits, int alphaBits, int depthBits, int stencilBits )
-{
-
-    AGLPixelFormat 				fmt;
-    GLboolean      				ok;
-    GLint         			 	attrib[] = { AGL_RGBA, AGL_NONE };
-
-
-    if ( extgl_Open() != 0 )
-    {
-        printf("extgl_Open failed");
-        return false;
-    }
-
-    // Choose an rgb pixel format
-    //
-    fmt = aglChoosePixelFormat(NULL, 0, attrib);
-    if(fmt == NULL)
-    {
-        return false;
-    }
-
-    // Create an AGL context
-    //
-    aglContext = aglCreateContext(fmt, NULL);
-    if( aglContext == NULL)
-    {
-        return false;
-    }
-
-    // Attach the window to the context
-    //
-    ok = aglSetDrawable(aglContext, GetWindowPort(windowPtr) );
-    if(!ok)
-    {
-        return false;
-    }
-
-    // Make the context the current context
-    //
-    ok = aglSetCurrentContext(aglContext);
-    if(!ok)
-    {
-        return false;
-    }
-
-    if ( extgl_Initialize() != 0 )
-    {
-        printf("Failed to initialize GL [extgl_Initialize()]\n");
-        return false;
-    }
-
-    // Pixel format is no longer needed
-    //
-    aglDestroyPixelFormat(fmt);
-
-#ifdef _DEBUG
-    char * p = (char * ) glGetString( GL_EXTENSIONS );
-    if ( NULL == p )
-    {
-        printf("NO extensions available");
-    }
-    else
-    {
-        printf("Available extensions:\n%s\n", p);
-    }
-#endif 
-
-    return true;
-    
-}
-
-void RenderingContext::destroyGL()
-{
-    // clear out the current rendering context
-    //
-    aglSetCurrentContext( NULL );
-
-    // destroy the context
-    //
-    aglDestroyContext( aglContext );
-
-    // close the gl extension context
-    //
-    extgl_Close();
 }
 
 void RenderingContext::swap()
 {
     // swap the rendering buffer
     //
-    aglSwapBuffers( aglContext );    
+    CGLFlushDrawable( contextObj )    
 }
 
 void RenderingContext::makeContextCurrent()
 {
     // make the current context the one we have stored
     //
-    aglSetCurrentContext( aglContext );
+    CGLSetCurrentContext( contextObj ) ;
 }
 
 void RenderingContext::releaseContext()
 {
     // release the context
     //
-    aglSetCurrentContext( NULL );
+    CGLSetCurrentContext( NULL ) ;
 }
 
 RenderingContext::~RenderingContext()
