@@ -71,8 +71,8 @@ public final class BufferUtils {
 	/**
 	 * Construct a direct native-order shortbuffer with the specified number
 	 * of elements.
-	 * @param size The size, in shorts
-	 * @return a ShortBuffer
+	 * @param size The size, in ints
+	 * @return an IntBuffer
 	 */
 	public static IntBuffer createIntBuffer(int size) {
 		return createByteBuffer(size << 2).asIntBuffer();
@@ -81,8 +81,8 @@ public final class BufferUtils {
 	/**
 	 * Construct a direct native-order shortbuffer with the specified number
 	 * of elements.
-	 * @param size The size, in shorts
-	 * @return a ShortBuffer
+	 * @param size The size, in floats
+	 * @return a FloatBuffer
 	 */
 	public static FloatBuffer createFloatBuffer(int size) {
 		return createByteBuffer(size << 2).asFloatBuffer();
