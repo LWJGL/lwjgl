@@ -124,6 +124,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
 
 	/* create object */
 	alutLoadWAVFile_object = env->NewObject(alutLoadWAVFile_class, methodID, format, (int) data, size, freq, loop);
+	
+	/* release chars */
+	env->ReleaseStringUTFChars((jstring)filename, 0);
 
 	return alutLoadWAVFile_object;
 }
