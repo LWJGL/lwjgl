@@ -55,7 +55,8 @@ DIMOUSESTATE diMouseState;            // State of Mouse
 
 int mButtoncount = 0;                 // Temporary buttoncount
 bool mHaswheel;                       // Temporary wheel check
-
+jbooleanArray mButtonsArray = NULL;	  // Handle to Java-side buttons array
+jobject mButtonsReference = NULL;	  // Native-side global ref to mButtonsArray
 JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
 bool mCreate_success;                 // bool used to determine successfull creation
@@ -256,10 +257,13 @@ void SetupMouse() {
  */
 void InitializeMouseFields() {
   //create buttons array
-  jbooleanArray mButtonsArray = mEnvironment->NewBooleanArray(mButtoncount);
+  mButtonsArray = mEnvironment->NewBooleanArray(mButtoncount);
   
+  //create global reference
+  mButtonsReference = mEnvironment->NewGlobalRef(mButtonsArray);
+
   //set buttons array  
-  mEnvironment->SetStaticObjectField(clsMouse, fidMButtons, (jbooleanArray) mButtonsReference);
+  mEnvironment->SetStaticObjectField(clsMouse, fidMButtons, mButtonsReference);
 }
 
 /**
