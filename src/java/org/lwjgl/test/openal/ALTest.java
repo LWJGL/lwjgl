@@ -834,10 +834,10 @@ public class ALTest extends BasicTest {
     }  
     
     protected void fA_GetBufferProperties() {
-        ByteBuffer freq = createByteBuffer(16);
-        ByteBuffer bits = ((ByteBuffer) freq.position(4)).slice().order(ByteOrder.nativeOrder());
-        ByteBuffer chan = ((ByteBuffer) freq.position(8)).slice().order(ByteOrder.nativeOrder());
-        ByteBuffer size = ((ByteBuffer) freq.position(12)).slice().order(ByteOrder.nativeOrder());
+        IntBuffer freq = createByteBuffer(16).asIntBuffer();
+        IntBuffer bits = ((IntBuffer) freq.position(4)).slice();
+        IntBuffer chan = ((IntBuffer) freq.position(8)).slice();
+        IntBuffer size = ((IntBuffer) freq.position(12)).slice();
         boolean passNULL;
         
         System.out.print("\nGet Buffer Properties Test. ");
@@ -849,7 +849,7 @@ public class ALTest extends BasicTest {
         passNULL = !(AL.alIsBuffer(0));  // the NULL buffer should cause alIsBuffer to be FALSE
         
         //       FREQ                         BITS                      CH                         SIZE
-        if ((freq.getInt(0) == 44100) && (bits.getInt(0) == 16) && (chan.getInt(0) == 1) && (size.getInt(0) == 282626) && (passNULL == true)) {
+        if ((freq.get(0) == 44100) && (bits.get(0) == 16) && (chan.get(0) == 1) && (size.get(0) == 282626) && (passNULL == true)) {
             System.out.print("PASSED.");
         } else {
             System.out.print("FAILED.");
@@ -1639,10 +1639,10 @@ public class ALTest extends BasicTest {
             AL.alSourcei(testSources.get(0), AL.AL_LOOPING, AL.AL_FALSE);
             if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                 displayALError("Init error : ", error);
-            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().order(ByteOrder.nativeOrder()));
+            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().asIntBuffer());
             if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                 displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
-            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().order(ByteOrder.nativeOrder()));
+            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().asIntBuffer());
             if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                 displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
             AL.alSourcePlay(testSources.get(0));
@@ -1685,7 +1685,7 @@ public class ALTest extends BasicTest {
             AL.alSourcei(testSources.get(0), AL.AL_LOOPING, AL.AL_FALSE);
             if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                 displayALError("Init error : ", error);
-            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().order(ByteOrder.nativeOrder()));
+            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().asIntBuffer());
             if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                 displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
             AL.alSourcePlay(testSources.get(0));
@@ -1699,14 +1699,14 @@ public class ALTest extends BasicTest {
             } else {
                 AL.alSourceUnqueueBuffers(testSources.get(0), tempInt.get(0), bufferName);
             }
-            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().order(ByteOrder.nativeOrder()));
+            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().asIntBuffer());
             if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                 displayALError("alSourceQueueBuffers 1 (stereo) : ", error);
             AL.alSourcePlay(testSources.get(0));
             delay_ms(3000);
             System.out.print("The stereo buffer will now play twice with no pause (Press Return):\n");
             CRToContinue();
-            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().order(ByteOrder.nativeOrder()));
+            AL.alSourceQueueBuffers(testSources.get(0), 1, ((ByteBuffer)buffers.position(4*6)).slice().asIntBuffer());
             AL.alSourcePlay(testSources.get(0));
             delay_ms(4000);
             CRForNextTest();
@@ -2352,28 +2352,28 @@ public class ALTest extends BasicTest {
                     displayALError("alSourceQueueBuffers 4 : ", error);
                 break;
             case '5':
-                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*0)).slice().order(ByteOrder.nativeOrder()));
+                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*0)).slice().asIntBuffer());
                 if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '6':
-                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*1)).slice().order(ByteOrder.nativeOrder()));
+                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*1)).slice().asIntBuffer());
                 if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '7':
-                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*2)).slice().order(ByteOrder.nativeOrder()));
+                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*2)).slice().asIntBuffer());
                 if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '8':
-                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*3)).slice().order(ByteOrder.nativeOrder()));
+                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*3)).slice().asIntBuffer());
                 if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 : ", error);
                 break;
             case '9':
                 // Queue buffer 0
-                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*4)).slice().order(ByteOrder.nativeOrder()));
+                AL.alSourceQueueBuffers(source.get(0), 1, ((ByteBuffer)buffers.position(4*4)).slice().asIntBuffer());
                 if ((error = AL.alGetError()) != AL.AL_NO_ERROR)
                     displayALError("alSourceQueueBuffers 1 (buffer 0) : ", error);
                 break;

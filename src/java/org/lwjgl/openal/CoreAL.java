@@ -31,7 +31,11 @@
  */
 package org.lwjgl.openal;
 
-import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
+
 
 /**
  * $Id$
@@ -109,7 +113,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	  * @param pname state to be queried
 	  * @param data Buffer to place the booleans in
 	  */
-	public static native void alGetBooleanv(int pname, Buffer data);
+	public static native void alGetBooleanv(int pname, ByteBuffer data);
 
 	/**
 	  * Returns an integer OpenAL state.
@@ -117,7 +121,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	  * @param pname state to be queried
 	  * @param data Buffer to place the integers in
 	  */
-	public static native void alGetIntegerv(int pname, Buffer data);
+	public static native void alGetIntegerv(int pname, IntBuffer data);
 
 	/**
 	  * Returns a floating point OpenAL state.
@@ -125,7 +129,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	  * @param pname state to be queried
 	  * @param data Buffer to place the floats in
 	  */
-	public static native void alGetFloatv(int pname, Buffer data);
+	public static native void alGetFloatv(int pname, FloatBuffer data);
 
 	/**
 	  * Returns a double OpenAL state.
@@ -133,7 +137,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	  * @param pname state to be queried
 	  * @param data Buffer to place the floats in
 	  */
-	public static native void alGetDoublev(int pname, Buffer data);
+	public static native void alGetDoublev(int pname, DoubleBuffer data);
 
 	/**
 	 * Retrieve an OpenAL string property.
@@ -199,7 +203,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of the attribute to be set
 	 * @param floatdata Buffer to read floats from
 	 */
-	public static native void alListenerfv(int pname, Buffer floatdata);
+	public static native void alListenerfv(int pname, FloatBuffer floatdata);
 
 	/**
 	 * Gets an integer property of the listener.
@@ -207,7 +211,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of the attribute to be retrieved
 	 * @param integerdata Buffer to write integer to
 	 */
-	public static native void alGetListeneri(int pname, Buffer integerdata);
+	public static native void alGetListeneri(int pname, IntBuffer integerdata);
 
 	/**
 	 * Gets a floating point property of the listener.
@@ -215,7 +219,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of the attribute to be retrieved
 	 * @param floatdata Buffer to write float to
 	 */
-	public static native void alGetListenerf(int pname, Buffer floatdata);
+	public static native void alGetListenerf(int pname, FloatBuffer floatdata);
 
 	/**
 	 * Retrieves a floating point vector property of the listener.
@@ -223,7 +227,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of the attribute to be retrieved
 	 * @param floatdata Buffer to write floats to
 	 */
-	public static native void alGetListenerfv(int pname, Buffer floatdata);
+	public static native void alGetListenerfv(int pname, FloatBuffer floatdata);
 
 	/**
 	 * Generate one or more sources.
@@ -231,7 +235,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of sources to generate
 	 * @param sources array holding sources
 	 */
-	public static native void alGenSources(int n, Buffer sources);
+	public static native void alGenSources(int n, IntBuffer sources);
 
 	/**
 	 * Delete one or more sources.
@@ -239,7 +243,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n Number of sources to delete
 	 * @param source Source array to delete from
 	 */
-	public static native void alDeleteSources(int n, Buffer source);
+	public static native void alDeleteSources(int n, IntBuffer source);
 
 	/**
 	 * Tests if a source is valid.
@@ -291,7 +295,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of the attribute being set 
 	 * @param floatdata Buffer to read floats from
 	 */
-	public static native void alSourcefv(int source, int pname, Buffer floatdata);
+	public static native void alSourcefv(int source, int pname, FloatBuffer floatdata);
 
 	/**
 	 * Retrieves an integer property of a source.
@@ -300,7 +304,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of property
 	 * @param integerdata Buffer to write integer to
 	 */
-	public static native void alGetSourcei(int source, int pname, Buffer integerdata);
+	public static native void alGetSourcei(int source, int pname, IntBuffer integerdata);
 
 	/**
 	 * Retrieves a floating point property of a source.
@@ -309,7 +313,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of property
 	 * @param floatdata Buffer to write float to
 	 */
-	public static native void alGetSourcef(int source, int pname, Buffer floatdata);
+	public static native void alGetSourcef(int source, int pname, FloatBuffer floatdata);
 
 	/**
 	 * Gets a floating point vector property from a Source object.
@@ -318,7 +322,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname property to get
 	 * @param floatdata Buffer to write floats to
 	 */
-	public static native void alGetSourcefv(int source, int pname, Buffer floatdata);
+	public static native void alGetSourcefv(int source, int pname, FloatBuffer floatdata);
 
 	/**
 	 * Plays a set of sources.
@@ -326,7 +330,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of sources to play
 	 * @param sources array of sources to play
 	 */
-	public static native void alSourcePlayv(int n, Buffer sources);
+	public static native void alSourcePlayv(int n, IntBuffer sources);
 
 	/**
 	 * Pauses a set of sources.
@@ -334,7 +338,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of sources to pause
 	 * @param sources array of sources to pause
 	 */
-	public static native void alSourcePausev(int n, Buffer sources);
+	public static native void alSourcePausev(int n, IntBuffer sources);
 
 	/**
 	 * Stops a set of sources.
@@ -342,7 +346,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of sources to stop
 	 * @param sources array of sources to stop
 	 */
-	public static native void alSourceStopv(int n, Buffer sources);
+	public static native void alSourceStopv(int n, IntBuffer sources);
 
 	/**
 	 * Rewinds a set of sources.
@@ -350,7 +354,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of sources to rewind
 	 * @param sources array of sources to rewind
 	 */
-	public static native void alSourceRewindv(int n, Buffer sources);
+	public static native void alSourceRewindv(int n, IntBuffer sources);
 
 	/**
 	 * Play a source.
@@ -386,7 +390,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of buffers to generate
 	 * @param buffers holding buffers
 	 */
-	public static native void alGenBuffers(int n, Buffer buffers);
+	public static native void alGenBuffers(int n, IntBuffer buffers);
 
 	/**
 	 * Delete one or more buffers.
@@ -394,7 +398,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n Number of buffers to delete
 	 * @param buffers Buffer to delete from
 	 */
-	public static native void alDeleteBuffers(int n, Buffer buffers);
+	public static native void alDeleteBuffers(int n, IntBuffer buffers);
 
 	/**
 	 * Tests if buffer is valid.
@@ -416,7 +420,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	public static native void alBufferData(
 		int buffer,
 		int format,
-    Buffer data,
+    ByteBuffer data,
 		int size,
 		int freq);
 
@@ -427,7 +431,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of property to retrieve
 	 * @param integerdata Buffer to write integer to
 	 */
-	public static native void alGetBufferi(int buffer, int pname, Buffer integerdata);
+	public static native void alGetBufferi(int buffer, int pname, IntBuffer integerdata);
 
 	/**
 	 * Retrieves a floating point property from a buffer.
@@ -436,7 +440,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param pname name of property to retrieve
 	 * @param floatdata Buffer to write float to
 	 */
-	public static native void alGetBufferf(int buffer, int pname, Buffer floatdata);
+	public static native void alGetBufferf(int buffer, int pname, FloatBuffer floatdata);
 
 	/**
 	 * Queues a set of buffers on a source.
@@ -445,7 +449,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of buffers to be queued
 	 * @param buffers buffers to be queued
 	 */
-	public static native void alSourceQueueBuffers(int source, int n, Buffer buffers);
+	public static native void alSourceQueueBuffers(int source, int n, IntBuffer buffers);
 
 	/**
 	 * Unqueues a set of buffers attached to a source.
@@ -454,7 +458,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param n number of buffers to be unqueued
 	 * @param buffers buffers to be unqueued
 	 */
-	public static native void alSourceUnqueueBuffers(int source, int n, Buffer buffers);
+	public static native void alSourceUnqueueBuffers(int source, int n, IntBuffer buffers);
 
 	/**
 	 * Selects the OpenAL distance model.
