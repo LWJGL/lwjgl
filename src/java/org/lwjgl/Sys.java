@@ -259,28 +259,5 @@ public final class Sys {
 	 * Where necessary, we use a native implementation of openURL.
 	 */
 	private static native void nOpenURL(String url);
-	
-	/**
-	 * Get the contents of the system clipboard. The system might not have a clipboard
-	 * (particularly if it doesn't even have a keyboard) in which case we return null.
-	 * Otherwise we return a String, which may be the empty string "".
-	 * @return a String, or null if there is no system clipboard.
-	 */
-	public static native String getClipboard();
-	
-	/**
-	 * Set the contents of the system clipboard. The system might not have a clipboard
-	 * (particularly if it doesn't even have a keyboard) in which case we silently
-	 * ignore this method as a no-op.<p>Passing null is allowed and is effectively the
-	 * same as passing the empty string "".
-	 * @param newClip the new clipboard contents
-	 */
-	public static void setClipboard(String newClip) {
-		if (newClip == null) {
-			newClip = "";
-		}
-		nSetClipboard(newClip);
-	}
-	private static native void nSetClipboard(String newClip);
-	
+		
 } 
