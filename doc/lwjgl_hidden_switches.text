@@ -12,7 +12,7 @@ Do not create the keyboard when creating the display
 org.lwjgl.Sys.debug
 Whether to output debug info
 
-org.lwjgl.opengl.Window.allowSoftwareOpenGL
+org.lwjgl.opengl.Display.allowSoftwareOpenGL
 Whether to allow creation of a software only opengl context
 
 org.lwjgl.opengl.Window.undecorated
