@@ -65,7 +65,7 @@ public class MouseCreationTest {
 	public MouseCreationTest() {
 	}
 
-	private void initialize() {
+	private void initialize(boolean fullscreen) {
     //  find first display mode that allows us 640*480*16
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     for (int i = 0; i < modes.length; i++) {
@@ -78,7 +78,12 @@ public class MouseCreationTest {
     }    
     
     try {
-      gl = new GL("MouseCreationTest", 50, 50, 640, 480, 32, 0, 0, 0);
+      if(fullscreen) {
+        Display.setDisplayMode(displayMode);
+        gl = new GL("MouseCreationTest", 16, 0, 0, 0);
+      } else {
+        gl = new GL("MouseCreationTest", 50, 50, 640, 480, 16, 0, 0, 0);
+      }
       gl.create();
 
       glu = new GLU(gl);
@@ -96,7 +101,7 @@ public class MouseCreationTest {
 	}
 
 	public void executeTest() {
-		initialize();
+		initialize(false);
 
 		System.out.println("Test ready:\n");
     
@@ -118,7 +123,7 @@ public class MouseCreationTest {
     System.out.print("Entering fullscreen mode...");
     try {
       gl.destroy();
-      initialize();
+      initialize(true);
       Display.setDisplayMode(displayMode);
     } catch (Exception e) {
 			e.printStackTrace();
