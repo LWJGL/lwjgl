@@ -179,4 +179,12 @@ public abstract class BaseAL {
 	 * Native method the destroy the AL
 	 */
 	protected static native void nDestroy();
+	
+	
+	/**
+	 * @return true if AL has been created
+	 */
+	public static boolean isCreated() {
+		return created;
+	}
 }
