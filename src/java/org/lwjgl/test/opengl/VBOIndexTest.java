@@ -43,6 +43,7 @@ package org.lwjgl.test.opengl;
 
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.opengl.arb.*;
 import org.lwjgl.input.*;
 
@@ -129,9 +130,9 @@ public final class VBOIndexTest {
              angle = 0.0f;
  
         Mouse.poll();
-        if (Mouse.dx != 0 || Mouse.dy != 0 || Mouse.dwheel != 0)
-            System.out.println("Mouse moved " + Mouse.dx + " " + Mouse.dy + " " + Mouse.dwheel);
-        for (int i = 0; i < Mouse.buttonCount; i++)
+        if (Mouse.getDX() != 0 || Mouse.getDY() != 0 || Mouse.getDWheel() != 0)
+            System.out.println("Mouse moved " + Mouse.getDX() + " " + Mouse.getDY() + " " + Mouse.getDWheel());
+        for (int i = 0; i < Mouse.getButtonCount(); i++)
             if (Mouse.isButtonDown(i))
                 System.out.println("Button " + i + " down");
 /*        Keyboard.poll(); 
@@ -140,9 +141,9 @@ public final class VBOIndexTest {
         Keyboard.read();
         for (int i = 0; i < Keyboard.getNumKeyboardEvents(); i++) {
             Keyboard.next();
-            if (Keyboard.key == Keyboard.KEY_ESCAPE && Keyboard.state)
+            if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState())
                 finished = true;
-            if (Keyboard.key == Keyboard.KEY_T && Keyboard.state)
+            if (Keyboard.getEventKey() == Keyboard.KEY_T && Keyboard.getEventKeyState())
                 System.out.println("Current time: " + Sys.getTime());
         }
      }

@@ -43,6 +43,7 @@ package org.lwjgl.test.opengl;
 
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.opengl.nv.*;
 import org.lwjgl.*;
 
@@ -176,10 +177,10 @@ public class Grass {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GLU.gluPerspective(40.0, 1.0, 1.0, 50.0);
+		GLU.gluPerspective(40.0f, 1.0f, 1.0f, 50.0f);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
-		GLU.gluLookAt(14.0, 10.0, -16.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+		GLU.gluLookAt(14.0f, 10.0f, -16.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 		aslod.angle = 2.6179935f;
 		aslod.value = 0.2f;
@@ -442,9 +443,9 @@ public class Grass {
 		Keyboard.read();
 		for (int i = 0; i < Keyboard.getNumKeyboardEvents(); i++) {
 			Keyboard.next();
-			if (!Keyboard.state)
+			if (!Keyboard.getEventKeyState())
 				continue;
-			switch (Keyboard.key) {
+			switch (Keyboard.getEventKey()) {
 				case Keyboard.KEY_A :
 					aslod.angle += 0.1;
 					break;

@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.*;
 import org.lwjgl.openal.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.input.*;
 
 /**
@@ -125,7 +126,7 @@ public class PositionTest extends BasicTest {
     GL11.glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     GL11.glMatrixMode(GL11.GL_PROJECTION);
     GL11.glLoadIdentity();
-    GLU.gluPerspective(50.0, WINDOW_WIDTH / WINDOW_HEIGHT, 0.0, 50.0);
+    GLU.gluPerspective(50.0f, (float) WINDOW_WIDTH / WINDOW_HEIGHT, 0.0f, 50.0f);
     GL11.glMatrixMode(GL11.GL_MODELVIEW);
     GL11.glLoadIdentity();
     GL11.glTranslatef(0.0f, 0.0f, -6.6f);
@@ -387,8 +388,8 @@ public class PositionTest extends BasicTest {
     
     // Test for movement with Mouse
     // ============================================
-    listenerPosition.put(0, listenerPosition.get(0) + (0.01f * Mouse.dx));
-    listenerPosition.put(1, listenerPosition.get(1) + (0.01f * Mouse.dy));
+    listenerPosition.put(0, listenerPosition.get(0) + (0.01f * Mouse.getDX()));
+    listenerPosition.put(1, listenerPosition.get(1) + (0.01f * Mouse.getDY()));
     if (Mouse.isButtonDown(0)) {
       listenerPosition.put(2, listenerPosition.get(2) - 0.1f);
     }

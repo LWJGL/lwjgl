@@ -34,6 +34,7 @@ package org.lwjgl.test.opengl;
 import org.lwjgl.*;
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 
 /**
@@ -48,9 +49,6 @@ public class FullScreenWindowedTest {
 
   /** Intended deiplay mode */
   private DisplayMode mode;
-
-  /** GLU instance */
-  private GLU glu;
 
   /** our quad moving around */
   private Vector2f quadPosition;
