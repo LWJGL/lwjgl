@@ -2,6 +2,6 @@
 
 make distclean
 ./autogen.sh
-./configure
+./configure --enable-debug
 make
 strip .libs/liblwjgl.0
