@@ -33,56 +33,30 @@
 /**
  * $Id$
  *
- * Include file to access public window features
- *
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-#ifndef _LWJGL_WINDOW_H_INCLUDED_
-	#define _LWJGL_WINDOW_H_INCLUDED_
+#ifndef _COMMON_TOOLS_H
+#define _COMMON_TOOLS_H
 
-	#define WIN32_LEAN_AND_MEAN
-	#include <windows.h>
-	#include <jni.h>
-	#undef  DIRECTINPUT_VERSION
-	#define DIRECTINPUT_VERSION 0x0300
-	#include <dinput.h>
-	#include "extgl.h"
+#include <jni.h>
 
-	#ifdef _PRIVATE_WINDOW_H_
-		#define WINDOW_H_API
-	#else
-		#define WINDOW_H_API extern
+#define EVENT_BUFFER_SIZE 100
 
-		extern HWND		hwnd;								// Handle to the window
-		extern HDC		hdc;								// Device context
-		extern LPDIRECTINPUT	lpdi;						// DirectInput
-		extern bool		isFullScreen;						// Whether we're fullscreen or not
-		extern bool		isMinimized;						// Whether we're minimized or not
-		extern RECT		clientSize;
-		extern HGLRC	hglrc;
-	#endif /* _PRIVATE_WINDOW_H_ */
+typedef struct {
+	unsigned char input_event_buffer[EVENT_BUFFER_SIZE];
+	unsigned char output_event_buffer[EVENT_BUFFER_SIZE];
 
-	/*
-	 * Create a window with the specified title, position, size, and
-	 * fullscreen attribute. The window will have DirectInput associated
-	 * with it.
-	 * 
-	 * Returns true for success, or false for failure
-	 */
-	WINDOW_H_API bool createWindow(const char * title, int x, int y, int width, int height, bool fullscreen);
+	int list_start;
+	int list_end;
+} event_queue_t;
 
+extern void initEventQueue(event_queue_t *event_queue);
+extern int copyEvents(event_queue_t *event_queue, int event_size);
+extern void putEventElement(event_queue_t *queue, unsigned char byte);
+extern unsigned char *getOutputList(event_queue_t *queue);
+extern int getEventBufferSize(event_queue_t *event_queue);
+extern void throwException(JNIEnv *env, const char *msg);
 
-	/*
-	 * Handle native Win32 messages
-	 */
-	WINDOW_H_API void handleMessage(JNIEnv * env, jobject obj);
-
-
-	/*
-	 * Close the window
-	 */
-	WINDOW_H_API void closeWindow();
-
-#endif /* _LWJGL_WINDOW_H_INCLUDED_ */
+#endif

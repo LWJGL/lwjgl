@@ -45,7 +45,8 @@
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0500
 #include <dinput.h>
-#include <Window.h>
+#include "Window.h"
+#include "common_tools.h"
 
 #define CONTROLLER_AXISMAX 1000       // Maxmimum range to which we'll gauge the swing
 #define CONTROLLER_AXISMIN -1000      // Minimum range to which we'll gauge the swing
@@ -67,13 +68,10 @@ static bool cHasrz;                          // Temporary rotational zaxis check
 static bool cHaspov;                         // Temporary pov check
 static bool cHasslider;                      // Temporary slider check
 
-static JNIEnv* cEnvironment;                 // JNIEnvironment copy
-
 static bool cCreate_success;                 // bool used to determine successfull creation
 static bool cFirstTimeInitialization = true; // boolean to determine first time initialization
 
 // Cached fields of Controller.java
-static jclass clsController;
 static jfieldID fidCButtonCount;
 static jfieldID fidCHasXAxis;
 static jfieldID fidCHasRXAxis;
@@ -101,20 +99,17 @@ BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LP
 void ShutdownController();
 void CreateController(LPCDIDEVICEINSTANCE lpddi);
 void SetupController();
-void InitializeControllerFields();
-void CacheControllerFields();
-void UpdateControllerFields();
-void SetControllerCapabilities();
+void InitializeControllerFields(JNIEnv *env, jclass clsController);
+void CacheControllerFields(JNIEnv *env, jclass clsController);
+void UpdateControllerFields(JNIEnv *env, jclass clsController);
+void SetControllerCapabilities(JNIEnv *env, jclass clsController);
 
 /**
  * Initializes any field ids
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jclass clazz) {
-  cEnvironment = env;
-  clsController = clazz;
-
   /* Cache fields in Controller */
-  CacheControllerFields();
+  CacheControllerFields(env, clazz);
 }
 
 /**
@@ -164,17 +159,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jcla
   SetupController();
 
   /* Initialize any fields on the Controller */
-  InitializeControllerFields();
+  InitializeControllerFields(env, clazz);
 
   /* Set capabilities */
-  SetControllerCapabilities();
+  SetControllerCapabilities(env, clazz);
   } else {
     if(cCreate_success) {
       /* Do setup of Controller */
       SetupController();
       
       /* Initialize any fields on the Controller */
-      InitializeControllerFields();
+      InitializeControllerFields(env, clazz);
     }
   }
 
@@ -221,7 +216,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nPoll(JNIEnv * env, jclas
     return;
   }
 
-  UpdateControllerFields();
+  UpdateControllerFields(env, clazz);
 }
 
 /**
@@ -453,18 +448,18 @@ static void SetupController() {
 /**
  * Sets the fields on the Controller
  */
-static void InitializeControllerFields() {
+static void InitializeControllerFields(JNIEnv *env, jclass clsController) {
   //create buttons array
-  jbooleanArray cButtonsArray = cEnvironment->NewBooleanArray(cButtoncount);
+  jbooleanArray cButtonsArray = env->NewBooleanArray(cButtoncount);
   
   //set buttons array  
-  cEnvironment->SetStaticObjectField(clsController, fidCButtons, cButtonsArray);
+  env->SetStaticObjectField(clsController, fidCButtons, cButtonsArray);
 }
 
 /**
  * Updates the fields on the Controller
  */
-static void UpdateControllerFields() {
+static void UpdateControllerFields(JNIEnv *env, jclass clsController) {
   HRESULT                 hRes; 
 
   // get data from the Controller 
@@ -487,96 +482,96 @@ static void UpdateControllerFields() {
 
   //axis's
   if(cHasx) {
-	  cEnvironment->SetStaticIntField(clsController, fidCX, cJS.lX);
+	  env->SetStaticIntField(clsController, fidCX, cJS.lX);
   }
 
   if(cHasy) {
-	  cEnvironment->SetStaticIntField(clsController, fidCY, cJS.lY);
+	  env->SetStaticIntField(clsController, fidCY, cJS.lY);
   }
 
   if(cHasz) {
-    cEnvironment->SetStaticIntField(clsController, fidCZ, cJS.lZ);
+    env->SetStaticIntField(clsController, fidCZ, cJS.lZ);
   }
 
   //rotational axis
   if(cHasrx) {
-	  cEnvironment->SetStaticIntField(clsController, fidCRX, cJS.lRx);
+	  env->SetStaticIntField(clsController, fidCRX, cJS.lRx);
   }
 
   if(cHasry) {
-	  cEnvironment->SetStaticIntField(clsController, fidCRY, cJS.lRy);
+	  env->SetStaticIntField(clsController, fidCRY, cJS.lRy);
   }
 
   if(cHasrz) {
-    cEnvironment->SetStaticIntField(clsController, fidCRZ, cJS.lRz);
+    env->SetStaticIntField(clsController, fidCRZ, cJS.lRz);
   }
 
   //buttons
   for (int i = 0; i < cButtoncount; i++) {
     if (cJS.rgbButtons[i] != 0) {
-      cJS.rgbButtons[i] = JNI_TRUE;
+      cJS.rgbButtons[i] = 1;
     } else {
-				cJS.rgbButtons[i] = JNI_FALSE;
+				cJS.rgbButtons[i] = 0;
     }
   }
-  jbooleanArray buttonsArray = (jbooleanArray) cEnvironment->GetStaticObjectField(clsController, fidCButtons);
-  cEnvironment->SetBooleanArrayRegion(buttonsArray, 0, cButtoncount, cJS.rgbButtons);  
+  jbyteArray buttonsArray = (jbyteArray) env->GetStaticObjectField(clsController, fidCButtons);
+  env->SetByteArrayRegion(buttonsArray, 0, cButtoncount, (jbyte *)cJS.rgbButtons);  
 
   //pov
   if(cHaspov) {
-    cEnvironment->SetStaticIntField(clsController, fidCPOV, cJS.rgdwPOV[0]);
+    env->SetStaticIntField(clsController, fidCPOV, cJS.rgdwPOV[0]);
   }
 
   //slider
   if(cHasslider) {
-    cEnvironment->SetStaticIntField(clsController, fidCSlider, cJS.lZ);
+    env->SetStaticIntField(clsController, fidCSlider, cJS.lZ);
   }
 }
 
 /**
  * Sets the capabilities of the Controller
  */
-static void SetControllerCapabilities() {
+static void SetControllerCapabilities(JNIEnv *env, jclass clsController) {
   //set buttoncount
-  cEnvironment->SetStaticIntField(clsController, fidCButtonCount, cButtoncount);
+  env->SetStaticIntField(clsController, fidCButtonCount, cButtoncount);
 
   //set axis
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasXAxis, cHasx);
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasYAxis, cHasy);
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasZAxis, cHasz);
+  env->SetStaticBooleanField(clsController, fidCHasXAxis, cHasx);
+  env->SetStaticBooleanField(clsController, fidCHasYAxis, cHasy);
+  env->SetStaticBooleanField(clsController, fidCHasZAxis, cHasz);
 
   //set rotational axis
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasRXAxis, cHasrx);
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasRYAxis, cHasry);
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasRZAxis, cHasrz);
+  env->SetStaticBooleanField(clsController, fidCHasRXAxis, cHasrx);
+  env->SetStaticBooleanField(clsController, fidCHasRYAxis, cHasry);
+  env->SetStaticBooleanField(clsController, fidCHasRZAxis, cHasrz);
 
   //set pov
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasPOV, cHaspov);
+  env->SetStaticBooleanField(clsController, fidCHasPOV, cHaspov);
 
   //set slider
-  cEnvironment->SetStaticBooleanField(clsController, fidCHasSlider, cHasslider);
+  env->SetStaticBooleanField(clsController, fidCHasSlider, cHasslider);
 }
 
 /**
  * Caches the field ids for quicker access
  */
-static void CacheControllerFields() {
-  fidCButtonCount  = cEnvironment->GetStaticFieldID(clsController, "buttonCount", "I");
-  fidCHasXAxis     = cEnvironment->GetStaticFieldID(clsController, "hasXAxis", "Z");
-  fidCHasRXAxis    = cEnvironment->GetStaticFieldID(clsController, "hasRXAxis", "Z");
-  fidCHasYAxis     = cEnvironment->GetStaticFieldID(clsController, "hasYAxis", "Z");
-  fidCHasRYAxis    = cEnvironment->GetStaticFieldID(clsController, "hasRYAxis", "Z");
-  fidCHasZAxis     = cEnvironment->GetStaticFieldID(clsController, "hasZAxis", "Z");
-  fidCHasRZAxis    = cEnvironment->GetStaticFieldID(clsController, "hasRZAxis", "Z");
-  fidCHasPOV       = cEnvironment->GetStaticFieldID(clsController, "hasPOV", "Z");
-  fidCHasSlider    = cEnvironment->GetStaticFieldID(clsController, "hasSlider", "Z");
-  fidCButtons      = cEnvironment->GetStaticFieldID(clsController, "buttons", "[Z");
-  fidCX            = cEnvironment->GetStaticFieldID(clsController, "x", "I");
-  fidCRX           = cEnvironment->GetStaticFieldID(clsController, "rx", "I");
-  fidCY            = cEnvironment->GetStaticFieldID(clsController, "y", "I");
-  fidCRY           = cEnvironment->GetStaticFieldID(clsController, "ry", "I");
-  fidCZ            = cEnvironment->GetStaticFieldID(clsController, "z", "I");
-  fidCRZ           = cEnvironment->GetStaticFieldID(clsController, "rz", "I");
-  fidCPOV          = cEnvironment->GetStaticFieldID(clsController, "pov", "I");
-  fidCSlider       = cEnvironment->GetStaticFieldID(clsController, "slider", "I");
+static void CacheControllerFields(JNIEnv *env, jclass clsController) {
+  fidCButtonCount  = env->GetStaticFieldID(clsController, "buttonCount", "I");
+  fidCHasXAxis     = env->GetStaticFieldID(clsController, "hasXAxis", "Z");
+  fidCHasRXAxis    = env->GetStaticFieldID(clsController, "hasRXAxis", "Z");
+  fidCHasYAxis     = env->GetStaticFieldID(clsController, "hasYAxis", "Z");
+  fidCHasRYAxis    = env->GetStaticFieldID(clsController, "hasRYAxis", "Z");
+  fidCHasZAxis     = env->GetStaticFieldID(clsController, "hasZAxis", "Z");
+  fidCHasRZAxis    = env->GetStaticFieldID(clsController, "hasRZAxis", "Z");
+  fidCHasPOV       = env->GetStaticFieldID(clsController, "hasPOV", "Z");
+  fidCHasSlider    = env->GetStaticFieldID(clsController, "hasSlider", "Z");
+  fidCButtons      = env->GetStaticFieldID(clsController, "buttons", "[Z");
+  fidCX            = env->GetStaticFieldID(clsController, "x", "I");
+  fidCRX           = env->GetStaticFieldID(clsController, "rx", "I");
+  fidCY            = env->GetStaticFieldID(clsController, "y", "I");
+  fidCRY           = env->GetStaticFieldID(clsController, "ry", "I");
+  fidCZ            = env->GetStaticFieldID(clsController, "z", "I");
+  fidCRZ           = env->GetStaticFieldID(clsController, "rz", "I");
+  fidCPOV          = env->GetStaticFieldID(clsController, "pov", "I");
+  fidCSlider       = env->GetStaticFieldID(clsController, "slider", "I");
 }

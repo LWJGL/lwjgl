@@ -377,18 +377,18 @@ public class Keyboard {
 	 */
 	public static int enableBuffer() throws Exception {
 		assert created : "The keyboard has not been created.";
-		int buf_len = nEnableBuffer();
+		readBuffer = nEnableBuffer();
 		if (readBuffer != null)
 			readBuffer.order(ByteOrder.nativeOrder());
-		return buf_len;
+		return readBuffer.capacity()/2;
 	}
 	
 	/**
 	 * Native method to enable the buffer
-	 * @return the size of the buffer allocated, in events (1 event is 2 bytes),
-	 * or 0 if no buffer can be allocated
+	 * @return the event buffer,
+	 * or null if no buffer can be allocated
 	 */
-	private static native int nEnableBuffer() throws Exception;
+	private static native ByteBuffer nEnableBuffer() throws Exception;
 	
 	/**
 	 * Checks to see if a key is down.

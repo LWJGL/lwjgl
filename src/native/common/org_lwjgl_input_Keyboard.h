@@ -329,9 +329,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nEnableBuffer
- * Signature: ()I
+ * Signature: ()Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
+JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv *, jclass);
 
 /*

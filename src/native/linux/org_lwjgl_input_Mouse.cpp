@@ -45,7 +45,8 @@
 #include <X11/extensions/xf86vmode.h>
 #include <assert.h>
 #include <string.h>
-#include <Window.h>
+#include "Window.h"
+#include "common_tools.h"
 #include "org_lwjgl_input_Mouse.h"
 #include "extxcursor.h"
 
@@ -72,7 +73,9 @@ static int last_z;
 static int current_x;
 static int current_y;
 static int current_z;
-static unsigned char buttons[NUM_BUTTONS];
+static jbyte buttons[NUM_BUTTONS];
+static event_queue_t event_queue;
+static bool buffer_enabled;
 
 static Cursor blank_cursor;
 static Cursor current_cursor;
@@ -112,7 +115,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
   (JNIEnv * env, jclass clazz)
 {
 	if (fid_buttons == NULL)
-		fid_buttons = env->GetStaticFieldID(clazz, "buttons", "[Z");
+		fid_buttons = env->GetStaticFieldID(clazz, "buttons", "[B");
 	if (fid_dx == NULL)
 		fid_dx = env->GetStaticFieldID(clazz, "dx", "I");
 	if (fid_dy == NULL)
@@ -191,11 +194,12 @@ void releasePointer(void) {
 }
 
 static void doWarpPointer(void ) {
-        centerCursor();
+	int i;
+	centerCursor();
 	XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
 	XEvent event;
 	// Try to catch the warp pointer event
-	for (int i = 0; i < WARP_RETRY; i++) {
+	for (i = 0; i < WARP_RETRY; i++) {
 		XMaskEvent(getCurrentDisplay(), PointerMotionMask, &event);
 		if (event.xmotion.x > current_x - POINTER_WARP_BORDER &&
 			event.xmotion.x < current_x + POINTER_WARP_BORDER &&
@@ -228,12 +232,12 @@ static void warpPointer(void) {
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz) {
-        int caps = 0;
+	int caps = 0;
 	if (!isXcursorLoaded())
 		return caps;
 	XcursorBool argb_supported = XcursorSupportsARGB(getCurrentDisplay());
 	XcursorBool anim_supported = XcursorSupportsAnim(getCurrentDisplay());
-        if (argb_supported)
+	if (argb_supported)
 		caps |= org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA | org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
 	if (anim_supported)
 		caps |= org_lwjgl_input_Mouse_CURSOR_ANIMATION;
@@ -315,17 +319,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	centerCursor();
 	current_z = last_z = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
-		buttons[i] = JNI_FALSE;
+		buttons[i] = 0;
 	if (!blankCursor()) {
 		throwException(env, "Could not create blank cursor");
 		return;
 	}
 	current_cursor = blank_cursor;
-        native_cursor = false;
+	native_cursor = false;
 	created = true;
 	should_grab = true;
-        pointer_grabbed = false;
+	pointer_grabbed = false;
+	buffer_enabled = false;
 	updateGrab();
+	initEventQueue(&event_queue);
 	loadXcursor();
 }
 
@@ -344,72 +350,76 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
 	should_grab = false;
 }
 
+static unsigned char mapButton(XButtonEvent *event) {
+	switch (event->button) {
+		case Button1:
+			return 0;
+		case Button2:
+			return 2;
+		case Button3:
+			return 1;
+		default: return NUM_BUTTONS;
+	}
+}
+
+static void handleButton(XButtonEvent *event, unsigned char state) {
+	unsigned char button_num = mapButton(event);
+	if (button_num == NUM_BUTTONS)
+		return;
+	buttons[button_num] = state;
+	if (buffer_enabled) {
+		putEventElement(&event_queue, button_num);
+		putEventElement(&event_queue, state);
+	}
+}
+
 void handleButtonPress(XButtonEvent *event) {
 	if (pointer_grabbed || native_cursor) {
 		switch (event->button) {
-			case Button1:
-				buttons[0] = JNI_TRUE;
-				break;
-			case Button2:
-				buttons[2] = JNI_TRUE;
-				break;
-			case Button3:
-				buttons[1] = JNI_TRUE;
-				break;
 			case Button4:
 				current_z += WHEEL_SCALE;
 				break;
 			case Button5:
 				current_z -= WHEEL_SCALE;
 				break;
-			default: assert(0);
+			default: break;
 		}
+		handleButton(event, 1);
 	}
 }
 
 void handleButtonRelease(XButtonEvent *event) {
 	if (pointer_grabbed || native_cursor) {
-		switch (event->button) {
-			case Button1:
-				buttons[0] = JNI_FALSE;
-				break;
-			case Button2:
-				buttons[2] = JNI_FALSE;
-				break;
-			case Button3:
-				buttons[1] = JNI_FALSE;
-				break;
-			case Button4: /* Fall through */
-			case Button5:
-				break;
-			default: assert(0);
-		}
+		handleButton(event, 0);
 	}
 }
 
 void handlePointerMotion(XMotionEvent *event) {
 	if (pointer_grabbed || native_cursor)
-                setCursorPos(event->x, event->y);
+		setCursorPos(event->x, event->y);
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nPoll
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
-  (JNIEnv * env, jclass clazz)
-{
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
 	int moved_x = current_x - last_x;
-	int moved_y = current_y - last_y;
+	int moved_y = -(current_y - last_y);
 	int moved_z = current_z - last_z;
 	env->SetStaticIntField(clazz, fid_dx, (jint)moved_x);
-	env->SetStaticIntField(clazz, fid_dy, (jint)-moved_y);
+	env->SetStaticIntField(clazz, fid_dy, (jint)moved_y);
 	env->SetStaticIntField(clazz, fid_dwheel, (jint)moved_z);
 	last_x = current_x;
 	last_y = current_y;
 	last_z = current_z;
-	jbooleanArray buttons_array = (jbooleanArray)env->GetStaticObjectField(clazz, fid_buttons);
-	env->SetBooleanArrayRegion(buttons_array, 0, NUM_BUTTONS, buttons);
+	jbyteArray buttons_array = (jbyteArray)env->GetStaticObjectField(clazz, fid_buttons);
+	env->SetByteArrayRegion(buttons_array, 0, NUM_BUTTONS, buttons);
 	warpPointer();
+}
+
+JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, jclass clazz) {
+	jobject newBuffer = env->NewDirectByteBuffer(getOutputList(&event_queue), getEventBufferSize(&event_queue));
+	buffer_enabled = true;
+	return newBuffer;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass clazz) {
+	return copyEvents(&event_queue, 2);
 }

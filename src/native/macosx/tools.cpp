@@ -3,11 +3,6 @@
 
 MPCriticalRegionID critical_region;
 
-void throwException(JNIEnv* env, const char* msg) {
-	jclass cls = env->FindClass("java/lang/Exception");
-	env->ThrowNew(cls, msg);
-}
-
 bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_class, UInt32 event_kind) {
 	EventTypeSpec event_type;
 	EventHandlerUPP handler_upp = NewEventHandlerUPP(func);

@@ -1,6 +1,7 @@
 #include <windows.h>
 #include "org_lwjgl_input_Cursor.h"
 #include "Window.h"
+#include "common_tools.h"
 
 /*
  * Class:     org_lwjgl_input_Cursor

@@ -34,6 +34,8 @@ package org.lwjgl.input;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import org.lwjgl.*;
 
@@ -59,7 +61,7 @@ public class Mouse {
 	private static boolean created;
 
 	/** The mouse buttons status from the last poll */
-	private static boolean[] buttons;
+	private static byte[] buttons;
 
 	/** Delta X */
 	public static int dx;
@@ -85,6 +87,18 @@ public class Mouse {
 
 	/** Lazy initialization */
 	private static boolean initialized;
+
+	 /**
+	 * The mouse button events from the last read: a sequence of pairs of button number,
+	 * followed by state.
+	 */
+	private static ByteBuffer readBuffer;
+
+	/** The current mouse event button being examined */
+	public static int button;
+
+	/** The current state of the button being examined in the event queue */
+	public static boolean state;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -218,7 +232,7 @@ public class Mouse {
 
 		// set mouse buttons
 		buttonCount = nGetButtonCount();
-		buttons = new boolean[buttonCount];
+		buttons = new byte[buttonCount];
 	}
 
 	private static native boolean nHasWheel();
@@ -283,7 +297,7 @@ public class Mouse {
 		if (button >= buttonCount)
 			return false;
 		else
-			return buttons[button];
+			return buttons[button] == 1;
 	}
 	
 	/**
@@ -310,4 +324,57 @@ public class Mouse {
 			return ret.intValue();
 	}
 
+	/**
+	 * Enable mouse button buffering. Must be called after the mouse is created.
+	 * @return the size of the mouse buffer in events, or 0 if no buffering
+	 * can be enabled for any reason
+	 */
+	public static int enableBuffer() throws Exception {
+		assert created : "The mouse has not been created.";
+		readBuffer = nEnableBuffer();
+		if (readBuffer != null)
+			readBuffer.order(ByteOrder.nativeOrder());
+		return readBuffer.capacity()/2;
+	}
+
+	/**
+	 * Native method to enable the buffer
+	 * @return the event buffer,
+	 * or null if no buffer can be allocated
+	 */
+	private static native ByteBuffer nEnableBuffer() throws Exception;
+
+	/**
+	 * Reads the mouse buffer.
+	 */
+	public static void read() {
+		assert created : "The mouse has not been created.";
+		assert readBuffer != null : "Mouse buffering has not been enabled.";
+		int numEvents = nRead();
+		readBuffer.clear();
+		readBuffer.limit(numEvents << 1);
+	}
+
+	/**
+	 * Native method to read the keyboard buffer
+	 * @return the total number of events read.
+	 */
+	private static native int nRead();
+
+	/**
+	 * Gets the next mouse event. This is stored in the publicly accessible
+	 * static fields button and state.
+	 * @return true if a mouse event was read, false otherwise
+	 */
+	public static boolean next() {
+		assert created : "The mouse has not been created.";
+		assert readBuffer != null : "Mouse buffering has not been enabled.";
+
+		if (readBuffer.hasRemaining()) {
+			button = readBuffer.get() & 0xFF;
+			state = readBuffer.get() != 0;
+			return true;
+		} else
+			return false;
+	}
 }

@@ -106,16 +106,6 @@
 	extern bool isFullscreen(void);
 
 	/*
-	 * Utility function to throw an Exception
-	 */
-	extern void throwException(JNIEnv * env, const char * err);
-
-	/*
-	 * Utility function to throw a RuntimeException
-	 */
-	extern void throwRuntimeException(JNIEnv * env, const char * err);
-
-	/*
 	 * convert bit-per-pixel to bits-per-element
 	 */
 	extern int convertToBPE(int bpp);

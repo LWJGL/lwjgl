@@ -47,6 +47,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <jni.h>
+#include "common_tools.h"
 #include "extgl.h"
 #include "Window.h"
 #include "org_lwjgl_opengl_Window.h"
@@ -263,26 +264,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv *env, jclass clazz)
 {
 	handleMessages();
-}
-
-/*
- * Utility function to throw an Exception
- */
-void throwException(JNIEnv * env, const char * err)
-{
-	jclass cls = env->FindClass("java/lang/Exception");
-	env->ThrowNew(cls, err);
-	env->DeleteLocalRef(cls);
-}
-
-/*
- * Utility function to throw a RuntimeException
- */
-void throwRuntimeException(JNIEnv * env, const char * err)
-{
-	jclass cls = env->FindClass("java/lang/RuntimeException");
-	env->ThrowNew(cls, err);
-	env->DeleteLocalRef(cls);
 }
 
 void makeCurrent(void) {

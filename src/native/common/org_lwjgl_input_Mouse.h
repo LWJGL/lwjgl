@@ -25,6 +25,9 @@ extern "C" {
 /* Inaccessible static: buttonName */
 /* Inaccessible static: buttonMap */
 /* Inaccessible static: initialized */
+/* Inaccessible static: readBuffer */
+/* Inaccessible static: button */
+/* Inaccessible static: state */
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Mouse */
 /*
  * Class:     org_lwjgl_input_Mouse
@@ -104,6 +107,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nEnableBuffer
+ * Signature: ()Ljava/nio/ByteBuffer;
+ */
+JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nRead
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus

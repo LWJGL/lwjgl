@@ -38,7 +38,8 @@
  * @version $Revision$
  */
 #include <jni.h>
-#include <Window.h>
+#include "Window.h"
+#include "common_tools.h"
 #include "org_lwjgl_input_Controller.h"
 
 /**

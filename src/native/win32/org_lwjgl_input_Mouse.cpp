@@ -44,7 +44,10 @@
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
 #include "Window.h"
+#include "common_tools.h"
 #include <dinput.h>
+
+static BYTE readBuffer[EVENT_BUFFER_SIZE];
 
 static LPDIRECTINPUTDEVICE mDIDevice;        // DI Device instance
 static int mButtoncount = 0;                 // Temporary buttoncount
@@ -136,6 +139,95 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 		printf("Failed to acquire mouse\n");
 #endif
 	}
+}
+
+JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv * env, jclass clazz) {
+	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, EVENT_BUFFER_SIZE);
+	return newBuffer;
+}
+
+static unsigned char mapButton(DWORD button_id) {
+	switch (button_id) {
+	case DIMOFS_BUTTON0: return 0;
+	case DIMOFS_BUTTON1: return 1;
+	case DIMOFS_BUTTON2: return 2;
+	case DIMOFS_BUTTON3: return 3;
+/*	case DIMOFS_BUTTON4: return 4;
+	case DIMOFS_BUTTON5: return 5;
+	case DIMOFS_BUTTON6: return 6;
+	case DIMOFS_BUTTON7: return 7;*/
+	default: return mButtoncount;
+	}
+}
+
+static int bufferButtons(int count, DIDEVICEOBJECTDATA *di_buffer) {
+	int buffer_index = 0;
+	for (int i = 0; i < count; i++) {
+		unsigned char button = mapButton(di_buffer[i].dwOfs);
+		if (button >= 0 && button < mButtoncount) {
+			unsigned char state = (unsigned char)di_buffer[i].dwData & 0x80;
+			if (state != 0)
+				state = 1;
+			readBuffer[buffer_index++] = button;
+			readBuffer[buffer_index++] = state;
+			if (buffer_index == EVENT_BUFFER_SIZE)
+				break;
+		}
+	}
+	return buffer_index/2;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
+  (JNIEnv * env, jclass clazz)
+{
+	
+	static DIDEVICEOBJECTDATA rgdod[EVENT_BUFFER_SIZE];
+	DWORD bufsize = EVENT_BUFFER_SIZE;
+
+	HRESULT ret;
+
+	ret = mDIDevice->Acquire();
+	if (ret != DI_OK && ret != S_FALSE)
+		return 0;
+
+	ret = mDIDevice->GetDeviceData( 
+		sizeof(DIDEVICEOBJECTDATA), 
+		rgdod, 
+		&bufsize,
+		0); 
+
+	if (ret == DI_OK) {
+		return bufferButtons(bufsize, rgdod);
+	} else if (ret == DI_BUFFEROVERFLOW) { 
+#ifdef _DEBUG
+		printf("Buffer overflowed\n");
+#endif
+	} else if (ret == DIERR_INPUTLOST) {
+#ifdef _DEBUG
+		printf("Input lost\n");
+#endif
+	} else if (ret == DIERR_NOTACQUIRED) {
+#ifdef _DEBUG
+		printf("not acquired\n");
+#endif
+	} else if (ret == DIERR_INVALIDPARAM) {
+#ifdef _DEBUG
+		printf("invalid parameter\n");
+#endif
+	} else if (ret == DIERR_NOTBUFFERED) {
+#ifdef _DEBUG
+		printf("not buffered\n");
+#endif
+	} else if (ret == DIERR_NOTINITIALIZED) {
+#ifdef _DEBUG
+		printf("not inited\n");
+#endif
+	} else {
+#ifdef _DEBUG
+		printf("unknown keyboard error\n");
+#endif
+	}
+	return 0;
 }
 
 /*
@@ -322,7 +414,15 @@ void SetupMouse() {
     return;
   }
 
-  // set the cooperative level
+	DIPROPDWORD dipropdw;
+	dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
+	dipropdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	dipropdw.diph.dwObj = 0;
+	dipropdw.diph.dwHow = DIPH_DEVICE;
+	dipropdw.dwData = EVENT_BUFFER_SIZE;
+	mDIDevice->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
+
+	// set the cooperative level
   if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 #if _DEBUG
     printf("SetCooperativeLevel failed\n");
@@ -425,7 +525,7 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
  * Caches the field ids for quicker access
  */
 void CacheMouseFields(JNIEnv* env, jclass clsMouse) {
-  fidMButtons      = env->GetStaticFieldID(clsMouse, "buttons", "[Z");
+  fidMButtons      = env->GetStaticFieldID(clsMouse, "buttons", "[B");
   fidMDX           = env->GetStaticFieldID(clsMouse, "dx", "I");
   fidMDY           = env->GetStaticFieldID(clsMouse, "dy", "I");
   fidMDWheel       = env->GetStaticFieldID(clsMouse, "dwheel", "I");

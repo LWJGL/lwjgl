@@ -1,6 +1,7 @@
 #include "org_lwjgl_input_Cursor.h"
 #include "extxcursor.h"
 #include "Window.h"
+#include "common_tools.h"
 
 /*
  * Class:     org_lwjgl_input_Cursor

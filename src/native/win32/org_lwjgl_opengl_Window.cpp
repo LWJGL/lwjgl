@@ -41,6 +41,7 @@
 
 #define _PRIVATE_WINDOW_H_
 #include "Window.h"
+#include "common_tools.h"
 #include "org_lwjgl_opengl_Window.h"
 
 static bool				oneShotInitialised = false;			// Registers the LWJGL window class
@@ -63,26 +64,6 @@ static bool dirty;
 //extern	void			tempResetDisplayMode();
 
 #define WINDOWCLASSNAME "LWJGL"
-
-/*
- * Utility function to throw an Exception
- */
-void throwException(JNIEnv * env, const char * err)
-{
-	jclass cls = env->FindClass("java/lang/Exception");
-	env->ThrowNew(cls, err);
-	env->DeleteLocalRef(cls);
-}
-
-/*
- * Utility function to throw a RuntimeException
- */
-void throwRuntimeException(JNIEnv * env, const char * err)
-{
-	jclass cls = env->FindClass("java/lang/RuntimeException");
-	env->ThrowNew(cls, err);
-	env->DeleteLocalRef(cls);
-}
 
 /*
  * Find an appropriate pixel format

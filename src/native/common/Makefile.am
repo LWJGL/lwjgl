@@ -7,6 +7,8 @@ COMMON = \
   extal.h \
   extgl.cpp \
   extgl.h \
+  common_tools.cpp \
+  common_tools.h \
   org_lwjgl_Display.h \
   org_lwjgl_Sys.h \
   org_lwjgl_input_GamePad.h \

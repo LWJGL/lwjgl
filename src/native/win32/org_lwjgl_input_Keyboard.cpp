@@ -46,12 +46,12 @@
 #include <dinput.h>
 #include "org_lwjgl_input_Keyboard.h"
 #include "Window.h"
+#include "common_tools.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
 
 static BYTE readBuffer[KEYBOARD_BUFFER_SIZE*4];
 static LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
-static jfieldID fid_readBuffer;
 static bool translationEnabled;
 static bool useUnicode;
 
@@ -64,15 +64,6 @@ static bool useUnicode;
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
   (JNIEnv * env, jclass clazz)
 {
-	/*
-	// Get a global class instance, just to be sure
-	static jobject globalClassLock = NULL;
-
-	if (globalClassLock == NULL) {
-		globalClassLock = env->NewGlobalRef(clazz);
-	}
-	*/
-	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
 }
 
 /*
@@ -320,12 +311,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
  * Method:    nEnableBuffer
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
+JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv * env, jclass clazz)
 {
 	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE*4);
-	env->SetStaticObjectField(clazz, fid_readBuffer, newBuffer);
-	return KEYBOARD_BUFFER_SIZE;
+	return newBuffer;
 }
 
 /*

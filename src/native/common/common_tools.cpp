@@ -33,56 +33,61 @@
 /**
  * $Id$
  *
- * Include file to access public window features
- *
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-#ifndef _LWJGL_WINDOW_H_INCLUDED_
-	#define _LWJGL_WINDOW_H_INCLUDED_
+#include "common_tools.h"
 
-	#define WIN32_LEAN_AND_MEAN
-	#include <windows.h>
-	#include <jni.h>
-	#undef  DIRECTINPUT_VERSION
-	#define DIRECTINPUT_VERSION 0x0300
-	#include <dinput.h>
-	#include "extgl.h"
+void initEventQueue(event_queue_t *event_queue) {
+	event_queue->list_start = 0;
+	event_queue->list_end = 0;
+}
 
-	#ifdef _PRIVATE_WINDOW_H_
-		#define WINDOW_H_API
-	#else
-		#define WINDOW_H_API extern
+void putEventElement(event_queue_t *queue, unsigned char byte) {
+	int next_index = (queue->list_end + 1)%EVENT_BUFFER_SIZE;
+	if (next_index == queue->list_start) {
+#ifdef _DEBUG
+		printf("Keyboard buffer overflow!\n");
+#endif
+		return;
+	}
+	queue->input_event_buffer[queue->list_end] = byte;
+	queue->list_end = next_index;
+}
 
-		extern HWND		hwnd;								// Handle to the window
-		extern HDC		hdc;								// Device context
-		extern LPDIRECTINPUT	lpdi;						// DirectInput
-		extern bool		isFullScreen;						// Whether we're fullscreen or not
-		extern bool		isMinimized;						// Whether we're minimized or not
-		extern RECT		clientSize;
-		extern HGLRC	hglrc;
-	#endif /* _PRIVATE_WINDOW_H_ */
+static bool hasMoreEvents(event_queue_t *queue) {
+	return queue->list_start != queue->list_end;
+}
 
-	/*
-	 * Create a window with the specified title, position, size, and
-	 * fullscreen attribute. The window will have DirectInput associated
-	 * with it.
-	 * 
-	 * Returns true for success, or false for failure
-	 */
-	WINDOW_H_API bool createWindow(const char * title, int x, int y, int width, int height, bool fullscreen);
+static void copyEvent(event_queue_t *queue, int event_size, int event_index) {
+	int output_index = event_index*event_size;
+	for (int i = 0; i < event_size; i++) {
+		queue->output_event_buffer[output_index] = queue->input_event_buffer[queue->list_start];
+		queue->list_start = (queue->list_start + 1)%EVENT_BUFFER_SIZE;
+		output_index++;
+	}
+}
 
+int copyEvents(event_queue_t *event_queue, int event_size) {
+	int num_events = 0;
+	while (hasMoreEvents(event_queue)) {
+		copyEvent(event_queue, event_size, num_events);
+		num_events++;
+	}
+	return num_events;
+}
 
-	/*
-	 * Handle native Win32 messages
-	 */
-	WINDOW_H_API void handleMessage(JNIEnv * env, jobject obj);
+unsigned char *getOutputList(event_queue_t *queue) {
+	return queue->output_event_buffer;
+}
 
+int getEventBufferSize(event_queue_t *event_queue) {
+	return EVENT_BUFFER_SIZE;
+}
 
-	/*
-	 * Close the window
-	 */
-	WINDOW_H_API void closeWindow();
-
-#endif /* _LWJGL_WINDOW_H_INCLUDED_ */
+void throwException(JNIEnv * env, const char * err) {
+	jclass cls = env->FindClass("java/lang/Exception");
+	env->ThrowNew(cls, err);
+	env->DeleteLocalRef(cls);
+}

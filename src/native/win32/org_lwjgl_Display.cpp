@@ -41,6 +41,7 @@
 
 #include "Window.h"
 #include "org_lwjgl_Display.h"
+#include "common_tools.h"
 
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 

@@ -2,6 +2,7 @@
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "Window.h"
 #include "extgl.h"
+#include "common_tools.h"
 
 typedef struct _PbufferInfo {
 	HGLRC Pbuffer_context;
