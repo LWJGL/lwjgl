@@ -115,6 +115,7 @@ public class AWTGLCanvas extends Canvas {
 	 * Destroy the OpenGL context. This occurs when the component is no longer displayable.
 	 */
 	private synchronized void destroyContext() throws LWJGLException {
+		nDestroyContext();
 	}
 	private native void nDestroyContext() throws LWJGLException;
 	
