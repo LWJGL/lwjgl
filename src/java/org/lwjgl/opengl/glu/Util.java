@@ -1,29 +1,32 @@
 package org.lwjgl.opengl.glu;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.nio.IntBuffer;
+
 /**
  * Util.java
- *
- *
+ * <p/>
+ * <p/>
  * Created 7-jan-2004
+ *
  * @author Erik Duijs
  */
 public class Util {
 
-	/** temp IntBuffer of one for getting an int from some GL functions */
-	private static IntBuffer scratch = createIntBuffer(256);
+	/**
+	 * temp IntBuffer of one for getting an int from some GL functions
+	 */
+	private static IntBuffer scratch = BufferUtils.createIntBuffer(16);
 
 	/**
 	 * Return ceiling of integer division
+	 *
 	 * @param a
 	 * @param b
+	 *
 	 * @return int
 	 */
 	protected static int ceil(int a, int b) {
@@ -32,25 +35,30 @@ public class Util {
 
 	/**
 	 * Normalize vector
+	 *
 	 * @param v
+	 *
 	 * @return float[]
 	 */
 	protected static float[] normalize(float[] v) {
 		float r;
 
-		r = (float) Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-		if (r == 0.0)
+		r = (float)Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+		if ( r == 0.0 )
 			return v;
 
-		v[0] /= r;
-		v[1] /= r;
-		v[2] /= r;
+		r = 1.0f / r;
+
+		v[0] *= r;
+		v[1] *= r;
+		v[2] *= r;
 
 		return v;
 	}
 
 	/**
 	 * Calculate cross-product
+	 *
 	 * @param v1
 	 * @param v2
 	 * @param result
@@ -63,28 +71,30 @@ public class Util {
 
 	/**
 	 * Method compPerPix.
+	 *
 	 * @param format
+	 *
 	 * @return int
 	 */
 	protected static int compPerPix(int format) {
 		/* Determine number of components per pixel */
-		switch (format) {
-			case GL11.GL_COLOR_INDEX :
-			case GL11.GL_STENCIL_INDEX :
-			case GL11.GL_DEPTH_COMPONENT :
-			case GL11.GL_RED :
-			case GL11.GL_GREEN :
-			case GL11.GL_BLUE :
-			case GL11.GL_ALPHA :
-			case GL11.GL_LUMINANCE :
+		switch ( format ) {
+			case GL11.GL_COLOR_INDEX:
+			case GL11.GL_STENCIL_INDEX:
+			case GL11.GL_DEPTH_COMPONENT:
+			case GL11.GL_RED:
+			case GL11.GL_GREEN:
+			case GL11.GL_BLUE:
+			case GL11.GL_ALPHA:
+			case GL11.GL_LUMINANCE:
 				return 1;
-			case GL11.GL_LUMINANCE_ALPHA :
+			case GL11.GL_LUMINANCE_ALPHA:
 				return 2;
-			case GL11.GL_RGB :
-			case GL12.GL_BGR :
+			case GL11.GL_RGB:
+			case GL12.GL_BGR:
 				return 3;
-			case GL11.GL_RGBA :
-			case GL12.GL_BGRA :
+			case GL11.GL_RGBA:
+			case GL12.GL_BGRA:
 				return 4;
 			default :
 				return -1;
@@ -93,11 +103,11 @@ public class Util {
 
 	/**
 	 * Method nearestPower.
-	 *
-	 * Compute the nearest power of 2 number.  This algorithm is a little
-	 * strange, but it works quite well.
+	 * <p/>
+	 * Compute the nearest power of 2 number.  This algorithm is a little strange, but it works quite well.
 	 *
 	 * @param value
+	 *
 	 * @return int
 	 */
 	protected static int nearestPower(int value) {
@@ -106,14 +116,14 @@ public class Util {
 		i = 1;
 
 		/* Error! */
-		if (value == 0)
+		if ( value == 0 )
 			return -1;
 
-		for (;;) {
-			if (value == 1) {
+		for ( ; ; ) {
+			if ( value == 1 ) {
 				return i;
-			} else if (value == 3) {
-				return i * 4;
+			} else if ( value == 3 ) {
+				return i << 2;
 			}
 			value >>= 1;
 			i <<= 1;
@@ -122,62 +132,64 @@ public class Util {
 
 	/**
 	 * Method bytesPerPixel.
+	 *
 	 * @param format
 	 * @param type
+	 *
 	 * @return int
 	 */
 	protected static int bytesPerPixel(int format, int type) {
 		int n, m;
 
-		switch (format) {
-			case GL11.GL_COLOR_INDEX :
-			case GL11.GL_STENCIL_INDEX :
-			case GL11.GL_DEPTH_COMPONENT :
-			case GL11.GL_RED :
-			case GL11.GL_GREEN :
-			case GL11.GL_BLUE :
-			case GL11.GL_ALPHA :
-			case GL11.GL_LUMINANCE :
+		switch ( format ) {
+			case GL11.GL_COLOR_INDEX:
+			case GL11.GL_STENCIL_INDEX:
+			case GL11.GL_DEPTH_COMPONENT:
+			case GL11.GL_RED:
+			case GL11.GL_GREEN:
+			case GL11.GL_BLUE:
+			case GL11.GL_ALPHA:
+			case GL11.GL_LUMINANCE:
 				n = 1;
 				break;
-			case GL11.GL_LUMINANCE_ALPHA :
+			case GL11.GL_LUMINANCE_ALPHA:
 				n = 2;
 				break;
-			case GL11.GL_RGB :
-			case GL12.GL_BGR :
+			case GL11.GL_RGB:
+			case GL12.GL_BGR:
 				n = 3;
 				break;
-			case GL11.GL_RGBA :
-			case GL12.GL_BGRA :
+			case GL11.GL_RGBA:
+			case GL12.GL_BGRA:
 				n = 4;
 				break;
 			default :
 				n = 0;
 		}
 
-		switch (type) {
-			case GL11.GL_UNSIGNED_BYTE :
+		switch ( type ) {
+			case GL11.GL_UNSIGNED_BYTE:
 				m = 1;
 				break;
-			case GL11.GL_BYTE :
+			case GL11.GL_BYTE:
 				m = 1;
 				break;
-			case GL11.GL_BITMAP :
+			case GL11.GL_BITMAP:
 				m = 1;
 				break;
-			case GL11.GL_UNSIGNED_SHORT :
+			case GL11.GL_UNSIGNED_SHORT:
 				m = 2;
 				break;
-			case GL11.GL_SHORT :
+			case GL11.GL_SHORT:
 				m = 2;
 				break;
-			case GL11.GL_UNSIGNED_INT :
+			case GL11.GL_UNSIGNED_INT:
 				m = 4;
 				break;
-			case GL11.GL_INT :
+			case GL11.GL_INT:
 				m = 4;
 				break;
-			case GL11.GL_FLOAT :
+			case GL11.GL_FLOAT:
 				m = 4;
 				break;
 			default :
@@ -188,34 +200,10 @@ public class Util {
 	}
 
 	/**
-	 * Create a FloatBuffer of specified size.
-	 * @param size
-	 * @return FloatBuffer
-	 */
-	protected static FloatBuffer createFloatBuffer(int size) {
-		ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-		temp.order(ByteOrder.nativeOrder());
-
-		return temp.asFloatBuffer();
-	}
-
-	/**
-	 * Create IntBuffer of specified size.
-	 * @param size
-	 * @return IntBuffer
-	 */
-	protected static IntBuffer createIntBuffer(int size) {
-		ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-		temp.order(ByteOrder.nativeOrder());
-
-		return temp.asIntBuffer();
-	}
-
-	/**
-	 * Convenience method for returning an int,
-	 * rather than getting it out of a buffer yourself.
+	 * Convenience method for returning an int, rather than getting it out of a buffer yourself.
 	 *
 	 * @param what
+	 *
 	 * @return int
 	 */
 	protected static int glGetIntegerv(int what) {
