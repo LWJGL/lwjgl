@@ -67,19 +67,24 @@ public interface NV_float_buffer {
 	* wglGetPixelFormatAttribfvARB and in the <piAttribIList> and
 	* <pfAttribFList> arrays of wglChoosePixelFormatARB:
 	*/
+    /*
 	int WGL_FLOAT_COMPONENTS_NV = 0x20B0;
 	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_R_NV = 0x20B1;
 	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RG_NV = 0x20B2;
 	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGB_NV = 0x20B3;
 	int WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGBA_NV = 0x20B4;
+	*/
 
 	/*
 	* Accepted in the <piAttribIList> array of wglCreatePbufferARB and returned
 	* in the <value> parameter of wglQueryPbufferARB when <iAttribute> is
 	* WGL_TEXTURE_FORMAT_ARB:
 	*/
+    /*
 	int WGL_TEXTURE_FLOAT_R_NV = 0x20B5;
 	int WGL_TEXTURE_FLOAT_RG_NV = 0x20B6;
 	int WGL_TEXTURE_FLOAT_RGB_NV = 0x20B7;
 	int WGL_TEXTURE_FLOAT_RGBA_NV = 0x20B8;
+	*/
+
 }
