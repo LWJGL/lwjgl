@@ -119,7 +119,7 @@ public final class Math {
 	};
 
 	/** Straight copy */
-	public static final class MatrixOpCopy extends UnaryMatrixOperation {
+	private static final class MatrixOpCopy extends UnaryMatrixOperation {
 		
 		MatrixOpCopy() {
 			super(0, "copy");
@@ -183,7 +183,7 @@ public final class Math {
 	public static final MatrixOpCopy MATRIXOP_COPY = new MatrixOpCopy();
 
 	/** Negate the vector */
-	public static final class MatrixOpNegate extends UnaryMatrixOperation {
+	private static final class MatrixOpNegate extends UnaryMatrixOperation {
 		
 		MatrixOpNegate() {
 			super(1, "negate");
@@ -247,7 +247,7 @@ public final class Math {
 	public static final MatrixOpNegate MATRIXOP_NEGATE = new MatrixOpNegate();
 
 	/** Normalise the vector (set to length 1) */
-	public static final class MatrixOpNormalise extends UnaryMatrixOperation {
+	private static final class MatrixOpNormalise extends UnaryMatrixOperation {
 		
 		MatrixOpNormalise() {
 			super(2, "normalise");
@@ -311,7 +311,7 @@ public final class Math {
 	public static final MatrixOpNormalise MATRIXOP_NORMALISE = new MatrixOpNormalise();
 
 	/** Compute the inverse matrix */
-	public static final class MatrixOpInvert extends UnaryMatrixOperation {
+	private static final class MatrixOpInvert extends UnaryMatrixOperation {
 		
 		MatrixOpInvert() {
 			super(3, "invert");
@@ -392,10 +392,11 @@ public final class Math {
 		
 		/**
 		 * Check the compatibility of a binary matrix operation.
+		 * @return the miniumum stride, in bytes
 		 * @throws IllegalArgumentException if the source and destinations are not
 		 * compatible
 		 */
-		abstract void checkCompatibility(
+		abstract int checkCompatibility(
 			int leftSourceWidth,
 			int leftSourceHeight,
 			boolean transposeLeftSource,
@@ -410,13 +411,13 @@ public final class Math {
 
 
 	/** Multiply left source by right source */
-	public static final class MatrixOpMultiply extends BinaryMatrixOperation {
+	private static final class MatrixOpMultiply extends BinaryMatrixOperation {
 		
 		MatrixOpMultiply() {
 			super(0, "multiply");
 		}
 		
-		void checkCompatibility(
+		int checkCompatibility(
 			int leftSourceWidth,
 			int leftSourceHeight,
 			boolean transposeLeftSource,
@@ -430,6 +431,9 @@ public final class Math {
 			int rightHeight = transposeRightSource ? rightSourceWidth : rightSourceHeight;
 			if (leftWidth != rightHeight)
 				throw new IllegalArgumentException("Left and right matrices are not compatible.");
+			int leftHeight = transposeLeftSource ? leftSourceWidth : leftSourceHeight;
+			int rightWidth = transposeRightSource ? rightSourceHeight : rightSourceWidth;
+			return (rightWidth * leftHeight) << 2;
 		}
 		MatrixOpClassification classify() {
 			return MATRIXOP_NONE;
@@ -502,13 +506,13 @@ public final class Math {
 	public static final MatrixOpMultiply MATRIXOP_MULTIPLY = new MatrixOpMultiply();
 
 	/** Add right source to left source */
-	public static final class MatrixOpAdd extends BinaryMatrixOperation {
+	private static final class MatrixOpAdd extends BinaryMatrixOperation {
 		
 		MatrixOpAdd() {
 			super(1, "add");
 		}
 		
-		void checkCompatibility(
+		int checkCompatibility(
 			int leftSourceWidth,
 			int leftSourceHeight,
 			boolean transposeLeftSource,
@@ -526,6 +530,7 @@ public final class Math {
 				if (leftSourceWidth != rightSourceHeight || leftSourceHeight != rightSourceWidth)
 					throw new IllegalArgumentException("Left and right matrices are not the same size.");
 			}
+			return (leftSourceWidth * leftSourceHeight) << 2;
 		}
 		
 		MatrixOpClassification classify() {
@@ -599,13 +604,13 @@ public final class Math {
 	public static final MatrixOpAdd MATRIXOP_ADD = new MatrixOpAdd();
 
 	/** Subtract right source from left source */
-	public static final class MatrixOpSubtract extends BinaryMatrixOperation {
+	private static final class MatrixOpSubtract extends BinaryMatrixOperation {
 		
 		MatrixOpSubtract() {
 			super(2, "subtract");
 		}
 		
-		void checkCompatibility(
+		int checkCompatibility(
 			int leftSourceWidth,
 			int leftSourceHeight,
 			boolean transposeLeftSource,
@@ -615,7 +620,7 @@ public final class Math {
 			boolean transposeDest)
 		{
 			// Same as for add, obviously...
-			MATRIXOP_ADD.checkCompatibility(
+			return MATRIXOP_ADD.checkCompatibility(
 				leftSourceWidth,
 				leftSourceHeight,
 				transposeLeftSource,
@@ -994,7 +999,7 @@ public final class Math {
 			rightSourceStride = rightSourceWidth * rightSourceHeight;
 
 		// Ensure the source and destination matrices are compatible
-		operation.checkCompatibility(
+		int minStride = operation.checkCompatibility(
 			leftSourceWidth,
 			leftSourceHeight,
 			transposeLeftSource,
@@ -1003,10 +1008,8 @@ public final class Math {
 			transposeRightSource,
 			transposeDest);
 
-		if (destStride == 0) {
-			// Calculate the destination stride from the input matrix sizes
-
-		}
+		if (destStride == 0)
+			destStride = minStride;
 		
 		// Check unary matrix operation type
 		MatrixOpClassification op = operation.classify().check(leftSourceAddress, leftSourceStride, leftElements, destAddress, destStride);

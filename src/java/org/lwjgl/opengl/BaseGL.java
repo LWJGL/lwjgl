@@ -88,7 +88,7 @@ abstract class BaseGL {
 	 * @param alphaBits the number of alpha bits (eg. 0 or 8)
 	 * @param depthBits the number of depth bits (eg. 16 or 24)
 	 * @param stencilBits the number of stencil bits (eg. 0 or 8)
-	 * @see create()
+	 * @see #create()
 	 */
 	public BaseGL(int colorBits, int alphaBits, int depthBits, int stencilBits) {
 		this.colorBits = colorBits;
@@ -125,7 +125,7 @@ abstract class BaseGL {
 	 * created by calling its setDisplayMode() method.
 	 * 
 	 * @return true if the GL was created successfully
-	 * @see org.lwjgl.Display#create()
+	 * @see org.lwjgl.Display#create(org.lwjgl.DisplayMode, boolean)
 	 */
 	private native boolean nCreate(int colorBits, int alphaBits, int depthBits, int stencilBits);
 	
@@ -157,7 +157,7 @@ abstract class BaseGL {
 	 * Finalizer, marked final. To perform specialized cleanup override the
 	 * cleanup() method.
 	 * 
-	 * @see cleanup()
+	 * @see #cleanup()
 	 */
 	public final void finalize() throws Throwable {
 		super.finalize();

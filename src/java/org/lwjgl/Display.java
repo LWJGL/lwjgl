@@ -83,7 +83,7 @@ public final class Display {
 	 * @param displayMode a display mode to choose
 	 * @param fullscreen whether to create the display fullscreen
 	 * @throws Exception if the display mode could not be set
-	 * @see destroy()
+	 * @see #destroy()
 	 */
 	public static void create(
 		DisplayMode displayMode,
@@ -108,7 +108,7 @@ public final class Display {
 	 * Native method to create the display. This will set the handle if it is
 	 * successful.
 	 * @return true if the display was successfully created
-	 * @see create()
+	 * @see #create(org.lwjgl.DisplayMode, boolean)
 	 */
 	private static native boolean nCreate(
 		int width,

@@ -43,18 +43,18 @@ package org.lwjgl;
 
 public final class DisplayMode {
 	
-	public final int width, height, freq, bpp;
+	public final int width, height, bpp, freq;
 
 	/**
 	 * Construct a display mode.
 	 * 
 	 * @see Display
 	 */
-	public DisplayMode(int width, int height, int freq, int bpp) {
+	public DisplayMode(int width, int height, int bpp, int freq) {
 		this.width = width;
 		this.height = height;
-		this.freq = freq;
 		this.bpp = bpp;
+		this.freq = freq;
 	}
 	
 

@@ -54,7 +54,7 @@ public final class Sys {
 	 * inside a process which is already a different priority then this will not
 	 * be the initial priority.
 	 * 
-	 * @see #setProcessPriority()
+	 * @see #setProcessPriority(int)
 	 */
 	public static final int NORMAL_PRIORITY = 0;
 
@@ -70,7 +70,7 @@ public final class Sys {
 	 * 
 	 * This priority is <strong>not</strong> recommended for gaming applications.
 	 * 
-	 * @see #setProcessPriority()
+	 * @see #setProcessPriority(int)
 	 */
 	public static final int REALTIME_PRIORITY = 2;
 
