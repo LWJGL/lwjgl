@@ -45,7 +45,6 @@ import java.nio.ShortBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.BufferChecks;
-import org.lwjgl.opengl.VBOTracker;
 import org.lwjgl.opengl.GL11;
 
 public class ARBMatrixPalette {

@@ -41,7 +41,7 @@ package org.lwjgl.opengl.nv;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import org.lwjgl.opengl.arb.ARBFragmentProgram;
+
 
 public class NVFragmentProgram extends NVProgram {
 

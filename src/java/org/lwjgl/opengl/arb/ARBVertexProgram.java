@@ -40,7 +40,6 @@ package org.lwjgl.opengl.arb;
 
 import org.lwjgl.opengl.BufferChecks;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.VBOTracker;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;

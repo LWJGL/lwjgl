@@ -38,8 +38,6 @@ import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.Buffer;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * $Id$

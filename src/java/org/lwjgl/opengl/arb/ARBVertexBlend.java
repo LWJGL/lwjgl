@@ -46,7 +46,6 @@ import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.BufferChecks;
-import org.lwjgl.opengl.VBOTracker;
 import org.lwjgl.opengl.GL11;
 
 public class ARBVertexBlend {
