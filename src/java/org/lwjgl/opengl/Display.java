@@ -166,7 +166,7 @@ public final class Display {
 				createWindow();
 			} catch (LWJGLException e) {
 				destroyContext();
-				reset();
+				resetDisplayMode();
 				throw e;
 			}
 		}
@@ -376,7 +376,7 @@ public final class Display {
 				createWindow();
 			} catch (LWJGLException e) {
 				destroyContext();
-				reset();
+				resetDisplayMode();
 				throw e;
 			}
 		}
@@ -565,7 +565,7 @@ public final class Display {
 				throw e;
 			}
 		} catch (LWJGLException e) {
-			reset();
+			resetDisplayMode();
 			throw e;
 		}
 	}
@@ -657,10 +657,8 @@ public final class Display {
 	 * in the static constructor
 	 */
 	private static void reset() {
-		if (!current_mode.equals(initial_mode)) {
-			resetDisplayMode();
-			current_mode = initial_mode;
-		}
+		resetDisplayMode();
+		current_mode = initial_mode;
 	}
 	
 	/**
