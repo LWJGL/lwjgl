@@ -51,7 +51,7 @@ typedef struct _PbufferInfo {
 	GLXContext context;
 } PbufferInfo;
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getPbufferCaps
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCaps
   (JNIEnv *env, jobject this)
 {
 	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
@@ -158,7 +158,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv 
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_makePbufferCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nMakePbufferCurrent
   (JNIEnv *env, jobject this, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);
@@ -169,7 +169,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_makePbufferCurrent
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyPbuffer
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyPbuffer
   (JNIEnv *env, jobject this, jobject handle_buffer)
 {
 	PbufferInfo *buffer_info = (PbufferInfo *)(*env)->GetDirectBufferAddress(env, handle_buffer);

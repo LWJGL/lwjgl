@@ -46,6 +46,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <jni.h>
+#include <jawt.h>
 #include "common_tools.h"
 #include "extgl.h"
 #include "extgl_glx.h"
@@ -317,7 +318,7 @@ static void setWindowTitle(const char *title) {
 	XStoreName(getDisplay(), current_win, title);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setTitle(JNIEnv * env, jobject this, jstring title_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle(JNIEnv * env, jobject this, jstring title_obj) {
 	char * title = GetStringNativeChars(env, title_obj);
 	setWindowTitle(title);
 	free(title);
@@ -356,7 +357,7 @@ static bool isNetWMFullscreenSupported(JNIEnv *env) {
 	return supported;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_reshape(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReshape(JNIEnv *env, jobject this, jint x, jint y, jint width, jint height) {
 	XMoveWindow(getDisplay(), getCurrentWindow(), x, y);
 }
 
@@ -436,7 +437,7 @@ int getWindowHeight(void) {
 	return current_height;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_update
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nUpdate
   (JNIEnv *env, jobject this)
 {
 	handleMessages(env);
@@ -449,7 +450,7 @@ static bool makeCurrent(void) {
 		return glXMakeCurrent(getDisplay(), getCurrentWindow(), context) == True;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_makeCurrent
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nMakeCurrent
   (JNIEnv *env, jobject this)
 {
 	if (!makeCurrent())
@@ -667,31 +668,31 @@ static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
 	return true;
 }
 
-JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getAvailableDisplayModes(JNIEnv *env, jobject this) {
+JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(JNIEnv *env, jobject this) {
 	return getAvailableDisplayModes(env, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_switchDisplayMode(JNIEnv *env, jobject this, jobject mode) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwitchDisplayMode(JNIEnv *env, jobject this, jobject mode) {
 	switchDisplayMode(env, mode, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_resetDisplayMode(JNIEnv *env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nResetDisplayMode(JNIEnv *env, jobject this) {
 	resetDisplayMode(env, getCurrentScreen(), false);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getGammaRampLength(JNIEnv *env, jobject this) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetGammaRampLength(JNIEnv *env, jobject this) {
 	return (jint)getGammaRampLength(env, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setGammaRamp(JNIEnv *env, jobject this, jobject gamma_buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetGammaRamp(JNIEnv *env, jobject this, jobject gamma_buffer) {
 	setGammaRamp(env, gamma_buffer, getCurrentScreen());
 }
 
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_init(JNIEnv *env, jobject this) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nInit(JNIEnv *env, jobject this) {
 	return initDisplay(env, getCurrentScreen());
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createContext(JNIEnv *env, jobject this, jobject pixel_format) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateContext(JNIEnv *env, jobject this, jobject pixel_format) {
 	Display *disp = incDisplay(env);
 	if (disp == NULL) {
 		return;
@@ -710,12 +711,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createContext(JNIEnv *
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyContext(JNIEnv *env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyContext(JNIEnv *env, jobject this) {
 	destroyContext();
 	decDisplay();
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createWindow(JNIEnv *env, jobject this, jobject mode, jboolean fullscreen, int x, int y) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow(JNIEnv *env, jobject this, jobject mode, jboolean fullscreen, int x, int y) {
 	bool current_fullscreen = fullscreen == JNI_TRUE;
 	if (current_fullscreen) {
 		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported(env)) {
@@ -746,11 +747,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createWindow(JNIEnv *e
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyWindow(JNIEnv *env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyWindow(JNIEnv *env, jobject this) {
 	destroyWindow(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_swapBuffers(JNIEnv * env, jobject this)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSwapBuffers(JNIEnv * env, jobject this)
 {
 	dirty = false;
 	if (USEGLX13)
@@ -759,31 +760,31 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_swapBuffers(JNIEnv * e
 		glXSwapBuffers(getDisplay(), getCurrentWindow());
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isDirty
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsDirty
   (JNIEnv *env, jobject this) {
 	bool result = dirty;
 	dirty = false;
 	return result ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isVisible
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsVisible
   (JNIEnv *env, jobject this) {
 	return minimized ? JNI_FALSE : JNI_TRUE;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isCloseRequested
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsCloseRequested
   (JNIEnv *env, jobject this) {
 	bool saved = closerequested;
 	closerequested = false;
 	return saved;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isActive
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nIsActive
   (JNIEnv *env, jobject this) {
 	return focused || isLegacyFullscreen() ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setVSyncEnabled
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetVSyncEnabled
   (JNIEnv *env, jobject this, jboolean sync)
 {
 	if (extgl_Extensions.GLX_SGI_swap_control) {
@@ -796,3 +797,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setVSyncEnabled
 	}
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_lockAWT(JNIEnv *env, jobject this) {
+	JAWT jawt;
+	jawt.version = JAWT_VERSION_1_4;
+	if (JAWT_GetAWT(env, &jawt) != JNI_TRUE) {
+		throwGeneralException(env, "java/lang/RuntimeException", "GetAWT failed");
+		return;
+	}
+	jawt.Lock(env);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_unlockAWT(JNIEnv *env, jobject this) {
+	JAWT jawt;
+	jawt.version = JAWT_VERSION_1_4;
+	if (JAWT_GetAWT(env, &jawt) != JNI_TRUE) {
+		throwGeneralException(env, "java/lang/RuntimeException", "GetAWT failed");
+		return;
+	}
+	jawt.Unlock(env);
+}

@@ -126,6 +126,7 @@ extern jstring getVersionString(JNIEnv *env);
 extern void initEventQueue(event_queue_t *event_queue, int event_size);
 extern int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int buffer_size);
 extern bool putEvent(event_queue_t *queue, jint *event);
+extern void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void throwFMODException(JNIEnv * env, const char * err);

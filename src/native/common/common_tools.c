@@ -167,7 +167,7 @@ int copyEvents(event_queue_t *queue, jint *output_event_buffer, int buffer_size)
 	return num_events;
 }
 
-static void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err) {
+void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err) {
 	jclass cls;
 
 	if ((*env)->ExceptionCheck(env) == JNI_TRUE)

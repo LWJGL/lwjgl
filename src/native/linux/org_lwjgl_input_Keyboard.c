@@ -120,7 +120,7 @@ static void setupIMEventMask() {
 	XSetICFocus(xic);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createKeyboard
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
   (JNIEnv * env, jobject this)
 {
 	Display *disp = incDisplay(env);
@@ -172,7 +172,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createKeyboard
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyKeyboard
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyKeyboard
   (JNIEnv * env, jobject this)
 {
 	closeUnicodeStructs();
@@ -285,27 +285,23 @@ void handleKeyEvent(XKeyEvent *event) {
 		bufferEvent(event);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollKeyboard(JNIEnv * env, jobject this, jobject buffer) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollKeyboard(JNIEnv * env, jobject this, jobject buffer) {
 	unsigned char *new_keyboard_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
 	handleMessages(env);
 	memcpy(new_keyboard_buffer, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
 
-JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_readKeyboard(JNIEnv * env, jobject this, jobject buffer, jint buffer_position) {
+JNIEXPORT int JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadKeyboard(JNIEnv * env, jobject this, jobject buffer, jint buffer_position) {
 	handleMessages(env);
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_enableTranslation(JNIEnv *env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nEnableTranslation(JNIEnv *env, jobject this) {
 	translation_enabled = true;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_enableKeyboardBuffer(JNIEnv * env, jobject this) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nEnableKeyboardBuffer(JNIEnv * env, jobject this) {
 	buffer_enabled = true;
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_isStateKeySet(JNIEnv *env, jobject this, jint key) {
-	return org_lwjgl_input_Keyboard_STATE_UNKNOWN;
 }
