@@ -7,15 +7,15 @@
  * met:
  *
  * * Redistributions of source code must retain the above copyright
- *   notice, this list of conditions and the following disclaimer.
+ *	 notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
+ *	 notice, this list of conditions and the following disclaimer in the
+ *	 documentation and/or other materials provided with the distribution.
  *
  * * Neither the name of 'Light Weight Java Game Library' nor the names of
- *   its contributors may be used to endorse or promote products derived
- *   from this software without specific prior written permission.
+ *	 its contributors may be used to endorse or promote products derived
+ *	 from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -34,6 +34,8 @@ package org.lwjgl.test.openal;
 import org.lwjgl.openal.AL;
 
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.nio.ByteOrder;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -74,12 +76,12 @@ public class WaveData {
 		this.samplerate = samplerate;
 	}
 
-  /**
-   * Disposes the wavedata
-   */
-  public void dispose() {
-    data.clear();
-  }
+	/**
+	 * Disposes the wavedata
+	 */
+	public void dispose() {
+		data.clear();
+	}
 
 	/**
 	 * Creates a WaveData container from the specified filename
@@ -88,32 +90,32 @@ public class WaveData {
 	 * @return WaveData containing data, or null if a failure occured
 	 */
 	public static WaveData create(String filepath) {
-    try {
-      return create(
-        AudioSystem.getAudioInputStream(
-          new BufferedInputStream(WaveData.class.getClassLoader().getResourceAsStream(filepath))));
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }    
+		try {
+			return create(
+				AudioSystem.getAudioInputStream(
+					new BufferedInputStream(WaveData.class.getClassLoader().getResourceAsStream(filepath))));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}		
 	}
-  
-  /**
-   * Creates a WaveData container from the specified bytes
-   *
-   * @param buffer array of bytes containing the complete wave file
-   * @return WaveData containing data, or null if a failure occured
-   */
-  public static WaveData create(byte[] buffer) {
-    try {
-      return create(
-        AudioSystem.getAudioInputStream(
-          new BufferedInputStream(new ByteArrayInputStream(buffer))));
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }  
+	
+	/**
+	 * Creates a WaveData container from the specified bytes
+	 *
+	 * @param buffer array of bytes containing the complete wave file
+	 * @return WaveData containing data, or null if a failure occured
+	 */
+	public static WaveData create(byte[] buffer) {
+		try {
+			return create(
+				AudioSystem.getAudioInputStream(
+					new BufferedInputStream(new ByteArrayInputStream(buffer))));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}	
 
 	/**
 	 * Creates a WaveData container from the specified stream
@@ -164,20 +166,39 @@ public class WaveData {
 		}
 
 		//insert data into bytebuffer
-		ByteBuffer buffer = ByteBuffer.allocateDirect(buf.length);
+		ByteBuffer buffer = convertAudioBytes(buf, audioformat.getSampleSizeInBits() == 16);
+/*		ByteBuffer buffer = ByteBuffer.allocateDirect(buf.length);
 		buffer.put(buf);
-    buffer.rewind();
+		buffer.rewind();*/
 
-    //create our result
+		//create our result
 		WaveData wavedata =
 			new WaveData(buffer, channels, (int) audioformat.getSampleRate());
 
-    //close stream
+		//close stream
 		try {
 			ais.close();
 		} catch (IOException ioe) {
 		}
 
 		return wavedata;
+	}
+
+	private static ByteBuffer convertAudioBytes(byte[] audio_bytes, boolean two_bytes_data) {
+		ByteBuffer dest = ByteBuffer.allocateDirect(audio_bytes.length);
+		dest.order(ByteOrder.nativeOrder());
+		ByteBuffer src = ByteBuffer.wrap(audio_bytes);
+		src.order(ByteOrder.LITTLE_ENDIAN);
+		if (two_bytes_data) {
+			ShortBuffer dest_short = dest.asShortBuffer();
+			ShortBuffer src_short = src.asShortBuffer();
+			while (src_short.hasRemaining())
+				dest_short.put(src_short.get());
+		} else {
+			while (src.hasRemaining())
+				dest.put(src.get());
+		}
+		dest.rewind();
+		return dest;
 	}
 }
