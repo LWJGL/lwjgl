@@ -79,7 +79,18 @@ public final class Sys {
 	}
 	
 	/** The native library name */
-	public static final String LIBRARY_NAME = "lwjgl_d";
+	public static String LIBRARY_NAME;
+	
+	static {
+		try {
+			assert false;
+			LIBRARY_NAME = "lwjgl";
+		} catch (AssertionError e) {
+			// Assertions are enabled, so we'll use the debug version of the
+			// library
+			LIBRARY_NAME = "lwjgl_d";
+		}
+	}
 
 	/**
 	 * No constructor for Sys.
@@ -162,15 +173,5 @@ public final class Sys {
 	 * HIGH_PRIORITY, NORMAL_PRIORITY, or LOW_PRIORITY.
 	 */
 	public static native void setProcessPriority(int priority);
-	
-	/**
-	 * @return the optimum alignment for structures for use by the vector library
-	 */
-	public static native int getFastStructureAlignment();
-	
-	/**
-	 * @return the optimum alignment for structure members for use by the vector library
-	 */
-	public static native int getFastMemberAlignment();
-	
+		
 } 

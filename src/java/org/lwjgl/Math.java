@@ -48,37 +48,871 @@ public final class Math {
 	static {
 		System.loadLibrary(Sys.LIBRARY_NAME);
 	}
-	
+
 	/** Floating point version of pi */
-	public static final float PI = (float)java.lang.Math.PI;
-	
+	public static final float PI = (float) java.lang.Math.PI;
+
 	/*
 	 * Unary matrix operations
 	 */
-	/** Perform no operation (except possibly transposition) */
-	public static final int MATRIXOP_NOOP = 0;
+	private static abstract class UnaryMatrixOperation {
+		private final int enum;
+		private final String name;
+		
+		UnaryMatrixOperation(int enum, String name) {
+			this.enum = enum;
+			this.name = name;
+		}
+		
+		public String toString() {
+			return name;
+		}
+		
+		abstract MatrixOpClassification classify();
+		
+	}
+
+	/**
+	 * A matrix operation is unsafe if the source and destination overlap,
+	 * and either the strides are not equal, or destination > source, which
+	 * would give an undefined result
+	 */
+	private static final MatrixOpClassification MATRIXOP_UNSAFE = new MatrixOpClassification() {
+		protected MatrixOpClassification unsafe() { return this; }
+		protected MatrixOpClassification safe() { return this; }
+		protected MatrixOpClassification direct() { return this; }
+		protected MatrixOpClassification offset() { return this; }
+
+		void execute(
+			int leftSourceAddress,
+			int leftSourceStride,
+			int leftElements,
+			int leftSourceWidth,
+			int leftSourceHeight,
+			boolean transposeLeftSource,
+			int rightSourceAddress,
+			int rightSourceStride,
+			int rightElements,
+			int rightSourceWidth,
+			int rightSourceHeight,
+			boolean transposeRightSource,
+			int destAddress,
+			int destStride,
+			boolean transposeDest)
+		{
+			throw new IllegalArgumentException("Unsafe matrix operation.");
+		}
+
+		void execute(
+			int sourceAddress,
+			int sourceStride,
+			int numElements,
+			int sourceWidth,
+			int sourceHeight,
+			boolean transposeSource,
+			int destAddress,
+			int destStride,
+			boolean transposeDest)
+		{
+			throw new IllegalArgumentException("Unsafe matrix operation.");
+		}
+	};
+
+	/** Straight copy */
+	public static final class MatrixOpCopy extends UnaryMatrixOperation {
+		
+		MatrixOpCopy() {
+			super(0, "copy");
+		}
+				
+		MatrixOpClassification classify() {
+			return MATRIXOP_NONE;
+		}
+		
+		/**
+		 * Unclassified (initial state) matrix operation.
+		 */
+		private final MatrixOpClassification MATRIXOP_NONE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+		};
+		
+		/**
+		 * A matrix operation is direct if the source and destination addresses
+		 * are the same, and the strides are the same.
+		 */
+		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
 	
+	
+		/**
+		 * A matrix operation is offset if source > destination, and the
+		 * strides are the same
+		 */
+		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return this; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	
+	
+		/**
+		 * A matrix operation is safe if the source and destination do not
+		 * overlap in any way
+		 */
+		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	};
+	public static final MatrixOpCopy MATRIXOP_COPY = new MatrixOpCopy();
+
 	/** Negate the vector */
-	public static final int MATRIXOP_NEGATE = 1;
+	public static final class MatrixOpNegate extends UnaryMatrixOperation {
+		
+		MatrixOpNegate() {
+			super(1, "negate");
+		}
+		
+		MatrixOpClassification classify() {
+			return MATRIXOP_NONE;
+		}
+		
+		/**
+		 * Unclassified (initial state) matrix operation.
+		 */
+		private final MatrixOpClassification MATRIXOP_NONE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+		};
+		
+		/**
+		 * A matrix operation is direct if the source and destination addresses
+		 * are the same, and the strides are the same.
+		 */
+		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
 	
+	
+		/**
+		 * A matrix operation is offset if source > destination, and the
+		 * strides are the same
+		 */
+		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return this; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	
+	
+		/**
+		 * A matrix operation is safe if the source and destination do not
+		 * overlap in any way
+		 */
+		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	};
+	public static final MatrixOpNegate MATRIXOP_NEGATE = new MatrixOpNegate();
+
 	/** Normalise the vector (set to length 1) */
-	public static final int MATRIXOP_NORMALIZE = 2;
+	public static final class MatrixOpNormalise extends UnaryMatrixOperation {
+		
+		MatrixOpNormalise() {
+			super(2, "normalise");
+		}
+		
+		MatrixOpClassification classify() {
+			return MATRIXOP_NONE;
+		}
+		
+		/**
+		 * Unclassified (initial state) matrix operation.
+		 */
+		private final MatrixOpClassification MATRIXOP_NONE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+		};
+		
+		/**
+		 * A matrix operation is direct if the source and destination addresses
+		 * are the same, and the strides are the same.
+		 */
+		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
 	
+	
+		/**
+		 * A matrix operation is offset if source > destination, and the
+		 * strides are the same
+		 */
+		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return this; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	
+	
+		/**
+		 * A matrix operation is safe if the source and destination do not
+		 * overlap in any way
+		 */
+		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	};
+	public static final MatrixOpNormalise MATRIXOP_NORMALISE = new MatrixOpNormalise();
+
 	/** Compute the inverse matrix */
-	public static final int MATRIXOP_INVERT = 3;
+	public static final class MatrixOpInvert extends UnaryMatrixOperation {
+		
+		MatrixOpInvert() {
+			super(3, "invert");
+		}
+		
+		MatrixOpClassification classify() {
+			return MATRIXOP_NONE;
+		}
+		
+		/**
+		 * Unclassified (initial state) matrix operation.
+		 */
+		private final MatrixOpClassification MATRIXOP_NONE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+		};
+		
+		/**
+		 * A matrix operation is direct if the source and destination addresses
+		 * are the same, and the strides are the same.
+		 */
+		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
 	
+	
+		/**
+		 * A matrix operation is offset if source > destination, and the
+		 * strides are the same
+		 */
+		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return this; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	
+	
+		/**
+		 * A matrix operation is safe if the source and destination do not
+		 * overlap in any way
+		 */
+		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int sourceAddress,
+				int sourceStride,
+				int numElements,
+				int sourceWidth,
+				int sourceHeight,
+				boolean transposeSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	};
+	public static final MatrixOpInvert MATRIXOP_INVERT = new MatrixOpInvert();
+
 	/*
 	 * Binary matrix operations
 	 */
-	 
+	private static abstract class BinaryMatrixOperation {
+		private final int enum;
+		private final String name;
+		
+		BinaryMatrixOperation(int enum, String name) {
+			this.enum = enum;
+			this.name = name;
+		}
+		
+		public String toString() {
+			return name;
+		}
+		
+		/**
+		 * Check the compatibility of a binary matrix operation.
+		 * @throws IllegalArgumentException if the source and destinations are not
+		 * compatible
+		 */
+		abstract void checkCompatibility(
+			int leftSourceWidth,
+			int leftSourceHeight,
+			boolean transposeLeftSource,
+			int rightSourceWidth,
+			int rightSourceHeight,
+			boolean transposeRightSource,
+			boolean transposeDest);
+			
+		abstract MatrixOpClassification classify();
+		
+	}
+
+
 	/** Multiply left source by right source */
-	public static final int MATRIXOP_MULTIPLY = 4;
+	public static final class MatrixOpMultiply extends BinaryMatrixOperation {
+		
+		MatrixOpMultiply() {
+			super(0, "multiply");
+		}
+		
+		void checkCompatibility(
+			int leftSourceWidth,
+			int leftSourceHeight,
+			boolean transposeLeftSource,
+			int rightSourceWidth,
+			int rightSourceHeight,
+			boolean transposeRightSource,
+			boolean transposeDest)
+		{
+			// Left matrix width must be the same as right matrix height.
+			int leftWidth = transposeLeftSource ? leftSourceHeight : leftSourceWidth;
+			int rightHeight = transposeRightSource ? rightSourceWidth : rightSourceHeight;
+			if (leftWidth != rightHeight)
+				throw new IllegalArgumentException("Left and right matrices are not compatible.");
+		}
+		MatrixOpClassification classify() {
+			return MATRIXOP_NONE;
+		}
+		
+		/**
+		 * Unclassified (initial state) matrix operation.
+		 */
+		private final MatrixOpClassification MATRIXOP_NONE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+		};
+		
+		/**
+		 * A matrix operation is direct if the source and destination addresses
+		 * are the same, and the strides are the same.
+		 */
+		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
 	
+	
+		/**
+		 * A matrix operation is offset if source > destination, and the
+		 * strides are the same
+		 */
+		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return this; }
+			void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	
+	
+		/**
+		 * A matrix operation is safe if the source and destination do not
+		 * overlap in any way
+		 */
+		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	};
+	public static final MatrixOpMultiply MATRIXOP_MULTIPLY = new MatrixOpMultiply();
+
 	/** Add right source to left source */
-	public static final int MATRIXOP_ADD = 5;
+	public static final class MatrixOpAdd extends BinaryMatrixOperation {
+		
+		MatrixOpAdd() {
+			super(1, "add");
+		}
+		
+		void checkCompatibility(
+			int leftSourceWidth,
+			int leftSourceHeight,
+			boolean transposeLeftSource,
+			int rightSourceWidth,
+			int rightSourceHeight,
+			boolean transposeRightSource,
+			boolean transposeDest)
+		{
+			if (transposeLeftSource == transposeRightSource) {
+				// Left and right must be the same size
+				if (leftSourceWidth != rightSourceWidth || leftSourceHeight != rightSourceHeight)
+					throw new IllegalArgumentException("Left and right matrices are not the same size.");
+			} else {
+				// Left and right must be the same size but one of them is transposed
+				if (leftSourceWidth != rightSourceHeight || leftSourceHeight != rightSourceWidth)
+					throw new IllegalArgumentException("Left and right matrices are not the same size.");
+			}
+		}
+		
+		MatrixOpClassification classify() {
+			return MATRIXOP_NONE;
+		}
+		
+		/**
+		 * Unclassified (initial state) matrix operation.
+		 */
+		private final MatrixOpClassification MATRIXOP_NONE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+		};
+		
+		/**
+		 * A matrix operation is direct if the source and destination addresses
+		 * are the same, and the strides are the same.
+		 */
+		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
 	
+	
+		/**
+		 * A matrix operation is offset if source > destination, and the
+		 * strides are the same
+		 */
+		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return this; }
+			void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	
+	
+		/**
+		 * A matrix operation is safe if the source and destination do not
+		 * overlap in any way
+		 */
+		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest)
+			{
+			}
+		};
+	};
+	public static final MatrixOpAdd MATRIXOP_ADD = new MatrixOpAdd();
+
 	/** Subtract right source from left source */
-	public static final int MATRIXOP_SUBTRACT = 6;
+	public static final class MatrixOpSubtract extends BinaryMatrixOperation {
+		
+		MatrixOpSubtract() {
+			super(2, "subtract");
+		}
+		
+		void checkCompatibility(
+			int leftSourceWidth,
+			int leftSourceHeight,
+			boolean transposeLeftSource,
+			int rightSourceWidth,
+			int rightSourceHeight,
+			boolean transposeRightSource,
+			boolean transposeDest)
+		{
+			// Same as for add, obviously...
+			MATRIXOP_ADD.checkCompatibility(
+				leftSourceWidth,
+				leftSourceHeight,
+				transposeLeftSource,
+				rightSourceWidth,
+				rightSourceHeight,
+				transposeRightSource,
+				transposeDest
+			);
+		}
+		MatrixOpClassification classify() {
+			return MATRIXOP_NONE;
+		}
+		
+		/**
+		 * Unclassified (initial state) matrix operation.
+		 */
+		private final MatrixOpClassification MATRIXOP_NONE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+		};
+		
+		/**
+		 * A matrix operation is direct if the source and destination addresses
+		 * are the same, and the strides are the same.
+		 */
+		private final MatrixOpClassification MATRIXOP_DIRECT = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			native void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest);
+		};
+	
+	
+		/**
+		 * A matrix operation is offset if source > destination, and the
+		 * strides are the same
+		 */
+		private final MatrixOpClassification MATRIXOP_OFFSET = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return this; }
+			protected MatrixOpClassification direct() { return this; }
+			protected MatrixOpClassification offset() { return this; }
+			native void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest);
+		};
+	
+	
+		/**
+		 * A matrix operation is safe if the source and destination do not
+		 * overlap in any way
+		 */
+		private final MatrixOpClassification MATRIXOP_SAFE = new MatrixOpClassification() {
+			protected MatrixOpClassification unsafe() { return MATRIXOP_UNSAFE; }
+			protected MatrixOpClassification safe() { return MATRIXOP_SAFE; }
+			protected MatrixOpClassification direct() { return MATRIXOP_DIRECT; }
+			protected MatrixOpClassification offset() { return MATRIXOP_OFFSET; }
+			native void execute(
+				int leftSourceAddress,
+				int leftSourceStride,
+				int leftElements,
+				int leftSourceWidth,
+				int leftSourceHeight,
+				boolean transposeLeftSource,
+				int rightSourceAddress,
+				int rightSourceStride,
+				int rightElements,
+				int rightSourceWidth,
+				int rightSourceHeight,
+				boolean transposeRightSource,
+				int destAddress,
+				int destStride,
+				boolean transposeDest);
+		};
+	};
+	public static final MatrixOpSubtract MATRIXOP_SUBTRACT = new MatrixOpSubtract();
 
 	/**
 	 * No constructor for Math.
@@ -86,14 +920,16 @@ public final class Math {
 	private Math() {
 		super();
 	}
-	
+
 	/**
 	 * Return the sine of theta
 	 *
 	 * @param theta angle in degrees
 	 * @return sin(theta)
 	 */
-	public static native float sin(float theta);
+	public static float sin(float theta) {
+		return (float) java.lang.Math.sin(java.lang.Math.toRadians(theta));
+	}
 
 	/**
 	 * Return the cosine of theta
@@ -101,15 +937,19 @@ public final class Math {
 	 * @param theta angle in degrees
 	 * @return cos(theta)
 	 */
-	public static native float cos(float theta);
-
+	public static float cos(float theta) {
+		return (float) java.lang.Math.cos(java.lang.Math.toRadians(theta));
+	}
+	
 	/**
 	 * Return the tangent of theta
 	 *
 	 * @param theta angle in degrees
 	 * @return tan(theta)
 	 */
-	public static native float tan(float theta);
+	public static float tan(float theta) {
+		return (float) java.lang.Math.tan(java.lang.Math.toRadians(theta));
+	}
 
 	/**
 	 * Return the inverse sine of theta
@@ -117,7 +957,9 @@ public final class Math {
 	 * @param theta angle in degrees
 	 * @return asin(theta)
 	 */
-	public static native float asin(float theta);
+	public static float asin(float theta) {
+		return (float) java.lang.Math.toDegrees(java.lang.Math.asin(theta));
+	}
 
 	/**
 	 * Return the inverse cosine of theta
@@ -125,22 +967,108 @@ public final class Math {
 	 * @param theta angle in degrees
 	 * @return acos(theta)
 	 */
-	public static native float acos(float theta);
-
+	public static float acos(float theta) {
+		return (float) java.lang.Math.toDegrees(java.lang.Math.acos(theta));
+	}
+	
 	/**
 	 * Return the inverse tangent of theta
 	 *
 	 * @param theta angle in degrees
 	 * @return atan(theta)
 	 */
-	public static native float atan(float theta);
+	public static float atan(float theta) {
+		return (float) java.lang.Math.toDegrees(java.lang.Math.atan(theta));
+	}
 	
 	/**
 	 * Return the square root of a value
 	 * @param n the number for which you want the square root
 	 * @return sqrt(n)
 	 */
-	public static native float sqrt(float n);
+	public static float sqrt(float n) {
+		return (float) java.lang.Math.sqrt(n);
+	}
+
+	/*
+	 * Matrix operation classifications
+	 */
+	private static abstract class MatrixOpClassification {
+		
+		abstract MatrixOpClassification unsafe();
+		abstract MatrixOpClassification safe();
+		abstract MatrixOpClassification direct();
+		abstract MatrixOpClassification offset();
+		
+		/**
+		 * Execute a unary matrix operation.
+		 * The default implementation does nothing.
+		 */
+		void execute(
+			int sourceAddress,
+			int sourceStride,
+			int numElements,
+			int sourceWidth,
+			int sourceHeight,
+			boolean transposeSource,
+			int destAddress,
+			int destStride,
+			boolean transposeDest) {
+		}
+		
+		/**
+		 * Execute a binary matrix operation.
+		 * The default implementation does nothing.
+		 */
+		void execute(
+			int leftSourceAddress,
+			int leftSourceStride,
+			int leftElements,
+			int leftSourceWidth,
+			int leftSourceHeight,
+			boolean transposeLeftSource,
+			int rightSourceAddress,
+			int rightSourceStride,
+			int rightElements,
+			int rightSourceWidth,
+			int rightSourceHeight,
+			boolean transposeRightSource,
+			int destAddress,
+			int destStride,
+			boolean transposeDest) {
+		}
+		
+		public final MatrixOpClassification check(
+			int sourceAddress,
+			int sourceStride,
+			int numElements,
+			int destAddress,
+			int destStride) 
+		{
+			int sourceEnd = sourceAddress + sourceStride * numElements;
+			int destEnd = destAddress + destStride * numElements;
+			// Check to see if source is somewhere inside the destination
+			if ((sourceAddress >= destAddress && sourceAddress <= destEnd)
+				|| (sourceEnd >= destAddress && sourceEnd <= destEnd)) {
+	
+				// Check out the strides first
+				if (destAddress > sourceAddress || sourceStride != destStride)
+					return unsafe();
+				else if (destAddress < sourceAddress)
+					return offset();
+				else
+					return direct();
+	
+			} else {
+	
+				// Completely safe
+				return safe();
+	
+			}
+		}
+	}
+	
+
 	
 	/**
 	 * Apply a unary matrix operation to an array of matrices.
@@ -166,8 +1094,8 @@ public final class Math {
 	 * @param transposeDest The destination can be transposed before being
 	 * written
 	 */
-	public static native void matrixOp(
-		int operation,
+	public static void matrixOp(
+		UnaryMatrixOperation operation,
 		int sourceAddress,
 		int sourceStride,
 		int numElements,
@@ -176,8 +1104,40 @@ public final class Math {
 		boolean transposeSource,
 		int destAddress,
 		int destStride,
-		boolean transposeDest
-	);
+		boolean transposeDest) {
+
+		// Check that certain parameters are legal in the first place
+		assert sourceAddress != 0 : "0 source address";
+		assert sourceStride >= 0 : "Illegal source stride";
+		assert numElements >= 0 : "Illegal number of elements";
+		assert sourceWidth >= 1 : "Illegal source width";
+		assert sourceHeight >= 1 : "Illegal source height";
+		assert destAddress != 0 : "0 dest address";
+		assert destStride >= 0 : "Illegal dest stride";
+
+		// Calculate actual strides
+		if (sourceStride == 0)
+			sourceStride = sourceWidth * sourceHeight;
+		if (destStride == 0)
+			destStride = sourceStride;
+
+		// Check unary matrix operation type
+		MatrixOpClassification op = operation.classify().check(sourceAddress, sourceStride, numElements, destAddress, destStride);
+
+		op.execute(
+			sourceAddress,
+			sourceStride,
+			numElements,
+			sourceWidth,
+			sourceHeight,
+			transposeSource,
+			destAddress,
+			destStride,
+			transposeDest
+		);
+		
+		
+	}
 	
 	/**
 	 * Apply a binary matrix operation to two arrays of matrices. The results
@@ -214,22 +1174,82 @@ public final class Math {
 	 * overlap and the strides are different then the result is undefined.
 	 * @param transposeDest The destination can be transposed before being
 	 * written
+	 * @throws IllegalArgumentException if the source matrices are incompatible
 	 */
-	public static native void matrixOp(
-		int operation,
+	public static void matrixOp(
+		BinaryMatrixOperation operation,
 		int leftSourceAddress,
 		int leftSourceStride,
+		int leftElements,
 		int leftSourceWidth,
 		int leftSourceHeight,
 		boolean transposeLeftSource,
 		int rightSourceAddress,
 		int rightSourceStride,
+		int rightElements,
 		int rightSourceWidth,
 		int rightSourceHeight,
 		boolean transposeRightSource,
 		int destAddress,
 		int destStride,
-		boolean transposeDest
-	);
+		boolean transposeDest) {
+			
+		// Check that certain parameters are legal in the first place
+		assert leftSourceAddress != 0 : "0 left source address";
+		assert leftSourceStride >= 0 : "Illegal left source stride";
+		assert leftElements >= 0 : "Illegal number of left elements";
+		assert leftSourceWidth >= 1 : "Illegal left source width";
+		assert leftSourceHeight >= 1 : "Illegal left source height";
+		assert rightSourceAddress != 0 : "0 right source address";
+		assert rightSourceStride >= 0 : "Illegal right source stride";
+		assert rightElements >= 0 : "Illegal number of right elements";
+		assert rightSourceWidth >= 1 : "Illegal right source width";
+		assert rightSourceHeight >= 1 : "Illegal right source height";
+		assert destAddress != 0 : "0 dest address";
+		assert destStride >= 0 : "Illegal dest stride";
+
+		// Calculate actual strides
+		if (leftSourceStride == 0)
+			leftSourceStride = leftSourceWidth * leftSourceHeight;
+		if (rightSourceStride == 0)
+			rightSourceStride = rightSourceWidth * rightSourceHeight;
+
+		// Ensure the source and destination matrices are compatible
+		operation.checkCompatibility(
+			leftSourceWidth,
+			leftSourceHeight,
+			transposeLeftSource,
+			rightSourceWidth,
+			rightSourceWidth,
+			transposeRightSource,
+			transposeDest);
+
+		if (destStride == 0) {
+			// Calculate the destination stride from the input matrix sizes
+
+		}
+		
+		// Check unary matrix operation type
+		MatrixOpClassification op = operation.classify().check(leftSourceAddress, leftSourceStride, leftElements, destAddress, destStride);
+		op = op.check(rightSourceAddress, rightSourceStride, rightElements, destAddress, destStride);
+		op.execute(
+			leftSourceAddress,
+			leftSourceStride,
+			leftElements,
+			leftSourceWidth,
+			leftSourceHeight,
+			transposeLeftSource,
+			rightSourceAddress,
+			rightSourceStride,
+			rightElements,
+			rightSourceWidth,
+			rightSourceHeight,
+			transposeRightSource,
+			destAddress,
+			destStride,
+			transposeDest
+		);
+
+	}
 
 }
