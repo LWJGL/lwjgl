@@ -50,17 +50,17 @@ public class Timer {
 	private static long resolution = Sys.getTimerResolution();
 	
 	// Every so often we will re-query the timer resolution
-	private static final int QUERY_INTERVAL = 1000; // in calls to tick()
+	private static final int QUERY_INTERVAL = 50; // in calls to tick()
 	private static int queryCount = 0;
 
 	// Globally keeps track of time for all instances of Timer	
-	private static int currentTime;
+	private static long currentTime;
 	
 	// When the timer was started
-	private int startTime;
+	private long startTime;
 	
 	// The last time recorded by getTime()
-	private int lastTime;
+	private long lastTime;
 
 	// Whether the timer is paused
 	private boolean paused;
@@ -126,7 +126,7 @@ public class Timer {
 	 * @param newTime the new time, in seconds
 	 */
 	public void set(float newTime) {
-		int newTimeInTicks = (int) ((double) newTime * (double) resolution);
+		long newTimeInTicks = (long) ((double) newTime * (double) resolution);
 		startTime = currentTime - newTimeInTicks;
 		lastTime = newTimeInTicks;
 	}
@@ -137,7 +137,7 @@ public class Timer {
 	 * from it.
 	 */
 	public static void tick() {
-		currentTime = (int) Sys.getTime();
+		currentTime = Sys.getTime();
 		
 		// Periodically refresh the timer resolution:
 		queryCount ++;
