@@ -44,6 +44,8 @@
 JNIEXPORT jint JNICALL Java_org_lwjgl_openal_eax_EAXBufferProperties_sizeOfEaxBufferProperties(JNIEnv *env, jobject obj) {
 #ifdef _WIN32
 	return sizeof(EAXBUFFERPROPERTIES);
+#else
+    return 0;
 #endif
 }
 
