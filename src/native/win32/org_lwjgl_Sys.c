@@ -40,12 +40,10 @@
  */
 
 #include "Window.h"
+#include "mmsystem.h"
 #include "org_lwjgl_NativeSysImplementation.h"
 #include "common_tools.h"
 #include <malloc.h>
-
-unsigned __int64		hires_timer_freq = 0;			// Hires timer frequency
-unsigned __int64		hires_timer = 0;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
@@ -55,8 +53,7 @@ unsigned __int64		hires_timer = 0;				// Hires timer current time
 JNIEXPORT jlong JNICALL Java_org_lwjgl_NativeSysImplementation_getTimerResolution
   (JNIEnv * env, jobject ignored)
 {
-	QueryPerformanceFrequency((LARGE_INTEGER*) &hires_timer_freq);
-	return (jlong) hires_timer_freq;
+	return (jlong) 1000L;
 }
 
 /*
@@ -67,8 +64,15 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_NativeSysImplementation_getTimerResolutio
 JNIEXPORT jlong JNICALL Java_org_lwjgl_NativeSysImplementation_getTime
   (JNIEnv * env, jobject ignored)
 {
-	QueryPerformanceCounter((LARGE_INTEGER*) &hires_timer);
-	return (jlong) hires_timer;
+
+	MMRESULT result;
+	DWORD time;
+
+	result = timeBeginPeriod(1);
+	time = timeGetTime();
+	result = timeEndPeriod(1);
+
+	return time;
 }
 
 /*
