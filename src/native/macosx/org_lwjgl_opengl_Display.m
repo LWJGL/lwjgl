@@ -40,23 +40,25 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <OpenGL/OpenGL.h>
 #import <Carbon/Carbon.h>
 #import <jawt_md.h>
 #import <jni.h>
 #import <unistd.h>
+#import "display.h"
 #import "common_tools.h"
 
 #define WAIT_DELAY 100
 
 static NSOpenGLContext *gl_context;
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_createContext(JNIEnv *env, jobject this, jobject pixel_format) {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	size_t bpp = CGDisplayBitsPerPixel(kCGDirectMainDisplay);
-	
+NSOpenGLContext *createContext(JNIEnv *env, jobject pixel_format, bool double_buffered, bool use_display_bpp, long drawable_type, NSOpenGLContext *share_context) {
+	int bpp;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
+	if (use_display_bpp)
+		bpp = CGDisplayBitsPerPixel(kCGDirectMainDisplay);
+	else
+		bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
+	
 	int alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "alpha", "I"));
 	int depth = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "depth", "I"));
 	int stencil = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stencil", "I"));
@@ -66,37 +68,45 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_createContext(JNIEnv 
 	int accum_alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "accum_alpha", "I"));
 	bool stereo = (bool)(*env)->GetBooleanField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "stereo", "Z"));
 
-	NSOpenGLPixelFormatAttribute attribs[] = {
-		NSOpenGLPFAAccelerated,
-		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAColorSize, bpp,
-		NSOpenGLPFAAlphaSize, alpha,
-		NSOpenGLPFADepthSize, depth,
-		NSOpenGLPFAStencilSize, stencil,
-		NSOpenGLPFAAccumSize, accum_bpp + accum_alpha,
-		NSOpenGLPFASampleBuffers, samples > 0 ? 1 : 0,
-		NSOpenGLPFASamples, samples,
-		NSOpenGLPFAAuxBuffers, num_aux_buffers,
-		NSOpenGLPFAWindow,
-		0,
-		0
-	};
-
+	attrib_list_t attribs;
+	initAttribList(&attribs);
+	putAttrib(&attribs, NSOpenGLPFAAccelerated);
+	if (double_buffered)
+		putAttrib(&attribs, NSOpenGLPFADoubleBuffer);
+	putAttrib(&attribs, NSOpenGLPFAColorSize); putAttrib(&attribs, bpp);
+	putAttrib(&attribs, NSOpenGLPFAAlphaSize); putAttrib(&attribs, alpha);
+	putAttrib(&attribs, NSOpenGLPFADepthSize); putAttrib(&attribs, depth);
+	putAttrib(&attribs, NSOpenGLPFAStencilSize); putAttrib(&attribs, stencil);
+	putAttrib(&attribs, NSOpenGLPFAAccumSize); putAttrib(&attribs, accum_bpp + accum_alpha);
+	putAttrib(&attribs, NSOpenGLPFASampleBuffers); putAttrib(&attribs, samples > 0 ? 1 : 0);
+	putAttrib(&attribs, NSOpenGLPFASamples); putAttrib(&attribs, samples);
+	putAttrib(&attribs, NSOpenGLPFAAuxBuffers); putAttrib(&attribs, num_aux_buffers);
+	putAttrib(&attribs, drawable_type);
 	if (stereo)
-		attribs[19] = NSOpenGLPFAStereo;
-	NSOpenGLPixelFormat* fmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+		putAttrib(&attribs, NSOpenGLPFAStereo);
+	putAttrib(&attribs, 0);
+	NSOpenGLPixelFormat* fmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute *)attribs.attribs];
 
 	if (fmt == nil) {
 		throwException(env, "Could not create pixel format");
-		[pool release];
-		return;
+		return NULL;
 	}
 
-	gl_context = [[NSOpenGLContext alloc] initWithFormat:fmt shareContext:nil];
+	NSOpenGLContext *context = [[NSOpenGLContext alloc] initWithFormat:fmt shareContext:share_context];
 
 	[fmt release];
-	if (gl_context == nil)
+	if (context == nil)
 		throwException(env, "Could not create context");
+	return context;
+}
+
+NSOpenGLContext *getDisplayContext() {
+	return gl_context;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_createContext(JNIEnv *env, jobject this, jobject pixel_format) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	gl_context = createContext(env, pixel_format, true, true, NSOpenGLPFAWindow, nil);
 	[pool release];
 }
 

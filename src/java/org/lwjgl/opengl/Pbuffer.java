@@ -236,7 +236,9 @@ public final class Pbuffer {
 	 *
 	 * @return a bitmask of Pbuffer capabilities.
 	 */
-	public static native int getPbufferCaps();
+	public static int getPbufferCaps() {
+		return Display.getImplementation().getPbufferCaps();
+	}
 
 	/**
 	 * Native method to create a Pbuffer

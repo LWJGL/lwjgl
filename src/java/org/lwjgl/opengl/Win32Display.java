@@ -102,4 +102,5 @@ final class Win32Display implements DisplayImplementation {
 	}
 
 	public native void destroyCursor(Object cursorHandle);
+	public native int getPbufferCaps();
 }

@@ -33,14 +33,16 @@
 /**
  * $Id$
  *
- * Mac OS X Pbuffer.
+ * Mac OS Xspecific display functions.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include <jni.h>
+#import <Cocoa/Cocoa.h>
+#import "common_tools.h"
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps(JNIEnv *env, jclass clazz) {
-	return 0;
-}
+/* Will return NULL and throw exception if it fails */
+extern NSOpenGLContext *createContext(JNIEnv *env, jobject pixel_format, bool double_buffered, bool use_display_bpp, long drawable_type, NSOpenGLContext *share_context);
+extern NSOpenGLContext *getDisplayContext();
+

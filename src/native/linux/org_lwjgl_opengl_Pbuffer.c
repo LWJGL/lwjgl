@@ -40,6 +40,7 @@
  */
 
 #include <stdlib.h>
+#include "org_lwjgl_opengl_LinuxDisplay.h"
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "extgl.h"
 #include "Window.h"
@@ -57,8 +58,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
 	return JNI_FALSE;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
-  (JNIEnv *env, jclass clazz)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getPbufferCaps
+  (JNIEnv *env, jobject this)
 {
 	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
 	return extgl_Extensions.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;

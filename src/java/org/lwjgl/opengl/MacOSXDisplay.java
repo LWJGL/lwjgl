@@ -376,6 +376,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	public void destroyCursor(Object cursor_handle) {
 	}
 
+	public int getPbufferCaps() {
+		return GL11.glGetString(GL11.GL_EXTENSIONS).indexOf("GL_APPLE_pixel_buffer") != -1 ? Pbuffer.PBUFFER_SUPPORTED : 0;
+	}
+
 	/**
 	 * This class captures com.apple.eawt.ApplicationEvents through reflection
 	 * to enable compilation on other platforms than Mac OS X

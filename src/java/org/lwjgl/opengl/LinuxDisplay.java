@@ -102,4 +102,5 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	public native void destroyCursor(Object cursorHandle);
+	public native int getPbufferCaps();
 }

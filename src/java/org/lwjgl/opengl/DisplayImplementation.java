@@ -234,4 +234,7 @@ public interface DisplayImplementation {
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException;
 
 	public void destroyCursor(Object cursor_handle);
+
+	/* Pbuffer caps */
+	public int getPbufferCaps();
 }

@@ -40,6 +40,7 @@
  */
 
 #include <stdlib.h>
+#include "org_lwjgl_opengl_Win32Display.h"
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "Window.h"
 
@@ -54,13 +55,8 @@ typedef struct _PbufferInfo {
 	HDC Pbuffer_dc;
 } PbufferInfo;
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    isPbufferSupported
- * Signature: ()Z
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
-  (JNIEnv *env, jclass clazz)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCaps
+  (JNIEnv *env, jobject self)
 {
 	int caps = 0;
 	if ( extgl_Extensions.WGL_ARB_pixel_format && extgl_Extensions.WGL_ARB_pbuffer )
