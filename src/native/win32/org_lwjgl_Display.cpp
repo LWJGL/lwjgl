@@ -156,7 +156,7 @@ jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	DevMode.dmSize = sizeof(DEVMODE);
   
 	//enumerate all displaymodes
-	while(EnumDisplaySettingsEx(NULL, j++, &DevMode, 0) != 0) {
+	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
 		if (DevMode.dmBitsPerPel > 8) {
 			AvailableModes++;
 		}
@@ -174,7 +174,7 @@ jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");  
   
 	i = 0, j = 0, n = 0;
-	while(EnumDisplaySettingsEx(NULL, j++, &DevMode, 0) != 0) {
+	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
 		// Filter out indexed modes
 		if (DevMode.dmBitsPerPel > 8) {
 			jobject displayMode;
