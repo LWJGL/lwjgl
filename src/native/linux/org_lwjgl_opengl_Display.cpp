@@ -387,13 +387,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
 		throwException(env, "Could not make display context current");
 }
 
-/*static void releaseContext(void) {
-	if (USEGLX13)
-		glXMakeContextCurrent(getDisplay(), None, None, NULL);
-	else
-		glXMakeCurrent(getDisplay(), None, NULL);
-}
-*/
 int convertToBPE(int bpp) {
 	int bpe;
 	switch (bpp) {
@@ -531,7 +524,6 @@ static void dumpVisualInfo(XVisualInfo *vis_info) {
 }
 
 static void destroyContext(void) {
-//	releaseContext();
 	if (USEGLX13) {
 		XFree(configs);
 		configs = NULL;
