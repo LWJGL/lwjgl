@@ -94,7 +94,6 @@ static bool createFullscreenContext(JNIEnv *env, jint bpp, jint alpha, jint dept
 	}
 	CGLSetFullScreen(context);
 	CGLSetCurrentContext(context);
-	FlushEventQueue(GetMainEventQueue());
 	return true;
 }
 
