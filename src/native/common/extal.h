@@ -49,3 +49,4 @@ EAXGet  eaxGet;                                         // EAXGet function, ret$
 #include <AL/alc.h>
 #include <AL/alut.h>
 #endif
+#endif
