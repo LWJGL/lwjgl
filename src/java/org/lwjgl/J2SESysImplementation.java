@@ -31,47 +31,42 @@
  */
 package org.lwjgl;
 
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+
 /**
  * $Id$
+ * A SysImplementation which delegates as much as it can to J2SE.
  * <p>
- * This exception is supplied to make exception handling more generic for LWJGL
- * specific exceptions
- * </p>
- * 
- * @author Brian Matzon <brian@matzon.dk>
+ * @author $Author$
  * @version $Revision$
  */
-public class LWJGLException extends Exception {
+abstract class J2SESysImplementation extends DefaultSysImplementation {
 
-	/**
-	 * Plain c'tor
-	 */
-	public LWJGLException() {
-		super();
+	public long getTime() {
+		return System.currentTimeMillis();
 	}
 
-	/**
-	 * Creates a new LWJGLException
-	 * 
-	 * @param msg
-	 *            String identifier for exception
-	 */
-	public LWJGLException(String msg) {
-		super(msg);
+	public void alert(String title, String message) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(Exception e) {
+		}
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public LWJGLException(String message, Throwable cause) {
-		super(message, cause);
+	public String getClipboard() {
+		try {
+			java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+			java.awt.datatransfer.Transferable transferable = clipboard.getContents(null);
+			if (transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
+				return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+			}
+		} catch (Exception e) {
+			Sys.log("Exception while getting clipboard: " + e);
+		}
+		return null;
 	}
 
-	/**
-	 * @param cause
-	 */
-	public LWJGLException(Throwable cause) {
-		super(cause);
-	}
+
 }

@@ -31,9 +31,6 @@
  */
 package org.lwjgl;
 
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
 import java.io.IOException;
 
 /**
@@ -42,7 +39,7 @@ import java.io.IOException;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-class LinuxSysImplementation extends DefaultSysImplementation {
+class LinuxSysImplementation extends J2SESysImplementation {
 	public boolean openURL(String url) {
 		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
 		// right anyway.

@@ -32,8 +32,6 @@
 package org.lwjgl;
 
 import java.lang.reflect.Method;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 /**
  * $Id$
@@ -41,7 +39,7 @@ import javax.swing.UIManager;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-class MacOSXSysImplementation extends DefaultSysImplementation {
+class MacOSXSysImplementation extends J2SESysImplementation {
 	public boolean openURL(String url) {
 		try {
 			Class com_apple_eio_FileManager = Class.forName("com.apple.eio.FileManager");

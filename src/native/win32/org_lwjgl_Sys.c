@@ -41,7 +41,7 @@
 
 #include "Window.h"
 #include "org_lwjgl_Sys.h"
-#include "org_lwjgl_Win32SysImplementation.h"
+#include "org_lwjgl_NativeSysImplementation.h"
 #include "common_tools.h"
 #include <malloc.h>
 
@@ -53,7 +53,7 @@ unsigned __int64		hires_timer = 0;				// Hires timer current time
  * Method:    getTimerResolution
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_Win32SysImplementation_getTimerResolution
+JNIEXPORT jlong JNICALL Java_org_lwjgl_NativeSysImplementation_getTimerResolution
   (JNIEnv * env, jobject ignored)
 {
 	QueryPerformanceFrequency((LARGE_INTEGER*) &hires_timer_freq);
@@ -65,7 +65,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Win32SysImplementation_getTimerResolution
  * Method:    ngetTime
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_Win32SysImplementation_getTime
+JNIEXPORT jlong JNICALL Java_org_lwjgl_NativeSysImplementation_getTime
   (JNIEnv * env, jobject ignored)
 {
 	QueryPerformanceCounter((LARGE_INTEGER*) &hires_timer);
@@ -77,7 +77,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Win32SysImplementation_getTime
  * Method:    alert
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Win32SysImplementation_alert
+JNIEXPORT void JNICALL Java_org_lwjgl_NativeSysImplementation_alert
   (JNIEnv * env, jobject ignored, jstring title, jstring message)
 {
 	char * eMessageText = GetStringNativeChars(env, message);
@@ -95,7 +95,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Win32SysImplementation_alert
  * Method:    openURL
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Win32SysImplementation_openURL
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_NativeSysImplementation_openURL
   (JNIEnv * env, jobject ignored, jstring url)
 {
 	STARTUPINFO si;
@@ -163,7 +163,7 @@ const void * getClipboard(int type)
 
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_Win32SysImplementation_getClipboard
+JNIEXPORT jstring JNICALL Java_org_lwjgl_NativeSysImplementation_getClipboard
   (JNIEnv * env, jobject ignored)
 {
 	// Check to see if there's text available in the clipboard

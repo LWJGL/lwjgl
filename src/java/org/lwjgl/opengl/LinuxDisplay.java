@@ -41,11 +41,10 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.io.IOException;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
 	private static final int CURSOR_HANDLE_SIZE = 8;

@@ -36,7 +36,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 
 /**
  * $Id$

@@ -31,22 +31,21 @@
  */
 package org.lwjgl;
 
-
 /**
  * $Id$
- *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * A SysImplementation that uses native calls only.
+ * <p>
+ * @author $Author$
  * @version $Revision$
  */
-abstract class DefaultSysImplementation implements SysImplementation {
-	public native String getNativeLibraryVersion();
-	public native void setDebug(boolean debug);
+class NativeSysImplementation extends DefaultSysImplementation {
+	public native long getTimerResolution();
 
-	public long getTimerResolution() {
-		return 1000;
-	}
+	public native long getTime();
 
-	public abstract long getTime();
-	public abstract void alert(String title, String message);
-	public abstract String getClipboard();
+	public native void alert(String title, String message);
+
+	public native boolean openURL(String url);
+
+	public native String getClipboard();
 }
