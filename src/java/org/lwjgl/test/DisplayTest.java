@@ -147,6 +147,7 @@ public class DisplayTest {
     try {
       Display.setDisplayMode(mode);
       Display.setFullscreen(true);
+      Display.create();
     } catch (Exception e) {
       System.out.println("error\nFATAL: Error setting mode");
       System.exit(-1);

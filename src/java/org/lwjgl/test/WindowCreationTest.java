@@ -55,6 +55,7 @@ public class WindowCreationTest {
     
     // Create the actual window
     try {
+      setDisplayMode();
       Display.create();
     } catch (Exception e) {
 			e.printStackTrace();
@@ -82,4 +83,26 @@ public class WindowCreationTest {
     // nuke window and get out
     Display.destroy();
 	}
+  
+  /**
+   * Sets the display mode for fullscreen mode
+   */
+  protected static boolean setDisplayMode() {
+    // get modes
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(640, 480, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + 640,
+          "height=" + 480,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }  
 }
