@@ -44,6 +44,7 @@ import java.net.*;
  * $Id$
  *
  * This is a basic play test
+ * Yes, over zealous use of getError ;)
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
