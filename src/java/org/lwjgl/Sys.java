@@ -31,7 +31,9 @@
  */
 package org.lwjgl;
 
-import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -239,13 +241,32 @@ public final class Sys {
 	 * @return false if we are CERTAIN the call has failed
 	 */
 	public static boolean openURL(String url) {
-		return Display.getImplementation().openURL(url);
+		// Attempt to use Webstart if we have it available
+		try {
+			// Lookup the javax.jnlp.BasicService object
+			Class serviceManagerClass = Class.forName("javax.jnlp.ServiceManager");
+			Method lookupMethod = serviceManagerClass.getMethod("lookup", new Class[] {String.class});
+			Object basicService = lookupMethod.invoke(serviceManagerClass, new Object[] {"javax.jnlp.BasicService"});
+			Class basicServiceClass = Class.forName("javax.jnlp.BasicService");
+			Method showDocumentMethod = basicServiceClass.getMethod("showDocument", new Class[] {URL.class});
+			try {
+				Boolean ret = (Boolean) showDocumentMethod.invoke(basicService, new Object[] {new URL(url)});
+				return ret.booleanValue();
+			} catch (MalformedURLException e) {
+				e.printStackTrace(System.err);
+				return false;
+			}
+		} catch (Exception ue) {
+			return Display.getImplementation().openURL(url);
+		}
 	}
 
 	/**
-	 * Get the contents of the system clipboard. The system might not have a clipboard
-	 * (particularly if it doesn't even have a keyboard) in which case we return null.
-	 * Otherwise we return a String, which may be the empty string "".
+	 * Get the contents of the system clipboard. The system might not have a
+	 * clipboard (particularly if it doesn't even have a keyboard) in which case
+	 * we return null. Otherwise we return a String, which may be the empty
+	 * string "".
+	 * 
 	 * @return a String, or null if there is no system clipboard.
 	 */
 	public static String getClipboard() {
