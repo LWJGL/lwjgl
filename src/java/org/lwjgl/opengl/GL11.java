@@ -1426,25 +1426,13 @@ public final class GL11 {
 	public static native void glPopMatrix();
 
 	public static void glPushClientAttrib(int mask) {
-		BufferObjectTracker.getClientAttribStack().pushState();
-		BufferObjectTracker.getClientAttribStack().setState(mask);
-		if ((mask & GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			BufferObjectTracker.getVBOArrayStack().pushState();
-			BufferObjectTracker.getVBOElementStack().pushState();
-			BufferObjectTracker.getPBOPackStack().pushState();
-			BufferObjectTracker.getPBOUnpackStack().pushState();
-		}
+		BufferObjectTracker.pushAttrib(mask);
 		nglPushClientAttrib(mask);
 	}
 	private static native void nglPushClientAttrib(int mask);
 
 	public static void glPopClientAttrib() {
-		if ((BufferObjectTracker.getClientAttribStack().popState() & GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
-			BufferObjectTracker.getVBOArrayStack().popState();
-			BufferObjectTracker.getVBOElementStack().popState();
-			BufferObjectTracker.getPBOPackStack().popState();
-			BufferObjectTracker.getPBOUnpackStack().popState();
-		}
+		BufferObjectTracker.popAttrib();
 		nglPopClientAttrib();
 	}
 	private static native void nglPopClientAttrib();

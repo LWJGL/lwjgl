@@ -61,6 +61,26 @@ final class BufferObjectTracker {
 		attrib_stack = new StateStack(stack_size, 0);
 	}
 
+	static void popAttrib() {
+		if ((getClientAttribStack().popState() & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
+			getVBOArrayStack().popState();
+			getVBOElementStack().popState();
+			getPBOPackStack().popState();
+			getPBOUnpackStack().popState();
+		}
+	}
+	
+	static void pushAttrib(int mask) {
+		getClientAttribStack().pushState();
+		getClientAttribStack().setState(mask);
+		if ((mask & GL11.GL_CLIENT_VERTEX_ARRAY_BIT) != 0) {
+			getVBOArrayStack().pushState();
+			getVBOElementStack().pushState();
+			getPBOPackStack().pushState();
+			getPBOUnpackStack().pushState();
+		}
+	}
+
 	static StateStack getVBOArrayStack() {
 		return current_tracker.vbo_array_stack;
 	}
