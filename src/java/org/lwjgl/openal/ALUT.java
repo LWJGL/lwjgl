@@ -44,9 +44,9 @@ public class ALUT {
     
     static {
         try {
-            System.loadLibrary(org.lwjgl.Sys.LIBRARY_NAME);
+            System.loadLibrary(org.lwjgl.Sys.getLibraryName());
         } catch (UnsatisfiedLinkError ule) {
-            System.out.println("Failed to load OpenAL library: " + org.lwjgl.Sys.LIBRARY_NAME);
+            System.out.println("Failed to load OpenAL library: " + org.lwjgl.Sys.getLibraryName());
             ule.printStackTrace();
         }
     }
