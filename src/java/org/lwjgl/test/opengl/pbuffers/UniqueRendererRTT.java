@@ -67,12 +67,12 @@ final class UniqueRendererRTT extends TextureRenderer {
 		super.enable();
 
 		// Put the renderer contents to the texture
-		pbuffer.releaseTexImage(Pbuffer.BACK_LEFT_BUFFER);
+		pbuffer.releaseTexImage(Pbuffer.FRONT_LEFT_BUFFER);
 	}
 
 	void updateTexture() {
 		// Bind the texture after rendering.
-		pbuffer.bindTexImage(Pbuffer.BACK_LEFT_BUFFER);
+		pbuffer.bindTexImage(Pbuffer.FRONT_LEFT_BUFFER);
 	}
 
 }
