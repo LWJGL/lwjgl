@@ -8,15 +8,29 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: currentWindow */
-/* Inaccessible static: class_00024org_00024lwjgl_00024Window */
+/* Inaccessible static: created */
+/* Inaccessible static: minimized */
+/* Inaccessible static: focused */
+/* Inaccessible static: closeRequested */
+/* Inaccessible static: dirty */
+/* Inaccessible static: x */
+/* Inaccessible static: y */
+/* Inaccessible static: width */
+/* Inaccessible static: height */
+/* Inaccessible static: title */
+/* Inaccessible static: color */
+/* Inaccessible static: alpha */
+/* Inaccessible static: depth */
+/* Inaccessible static: stencil */
+/* Inaccessible static: fullscreen */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Window
  * Method:    nSetTitle
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_nSetTitle
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     org_lwjgl_Window
@@ -24,7 +38,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_nSetTitle
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_Window
@@ -32,7 +46,31 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    swapBuffers
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_swapBuffers
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    nCreate
+ * Signature: (Ljava/lang/String;IIIIZIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_nCreate
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jboolean, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    nDestroy
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_nDestroy
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_Window
@@ -40,7 +78,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_tick
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

@@ -8,7 +8,9 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL */
+/* Inaccessible static: class_000240 */
+/* Inaccessible static: _00024assertionsDisabled */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    glActiveStencilFaceEXT
@@ -2164,10 +2166,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetCurrentReadDCARB
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    wglGetExtensionsStringARB
- * Signature: (I)Ljava/lang/String;
+ * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringARB
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_opengl_GL

@@ -46,16 +46,18 @@
 bool				oneShotInitialised = false;			// Registers the LWJGL window class
 HWND				hwnd = NULL;						// Handle to the window
 HDC					hdc = NULL;							// Device context
+HGLRC				hglrc = NULL;						// OpenGL context
 LPDIRECTINPUT		lpdi = NULL;						// DirectInput
 bool				isFullScreen = false;				// Whether we're fullscreen or not
 bool				isMinimized = false;				// Whether we're minimized or not
 JNIEnv *			environment = NULL;					// Cached environment
-jobject				window;								// Cached Java Window instance handle
+jclass				window;								// Cached Java Window class
 extern HINSTANCE	dll_handle;							// Handle to the LWJGL dll
 RECT clientSize;
 
-extern	void			tempRestoreDisplayMode();
-extern	void			tempResetDisplayMode();
+//CAS: commented these out as no longer used
+//extern	void			tempRestoreDisplayMode();
+//extern	void			tempResetDisplayMode();
 
 #define WINDOWCLASSNAME "LWJGL"
 
@@ -80,10 +82,96 @@ void throwRuntimeException(JNIEnv * env, const char * err)
 }
 
 /*
+ * Find an appropriate pixel format
+ */
+static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, int depth, int stencil)
+{
+	PIXELFORMATDESCRIPTOR pfd = { 
+		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
+		1,                     // version number 
+		flags,         // RGBA type 
+		PFD_TYPE_RGBA,
+		(BYTE)bpp,       
+		0, 0, 0, 0, 0, 0,      // color bits ignored 
+		(BYTE)alpha,       
+		0,                     // shift bit ignored 
+		0,                     // no accumulation buffer 
+		0, 0, 0, 0,            // accum bits ignored 
+		(BYTE)depth,       
+		(BYTE)stencil,     
+		0,                     // No auxiliary buffer 
+		PFD_MAIN_PLANE,        // main layer
+		0,                     // reserved 
+		0, 0, 0                // layer masks ignored
+	};
+
+	// get the best available match of pixel format for the device context  
+	int iPixelFormat = ChoosePixelFormat(hdc, &pfd);
+	if (iPixelFormat == 0) {
+		throwException(env, "Failed to choose pixel format");
+		return -1;
+	}
+
+#ifdef _DEBUG
+	printf("Pixel format is %d\n", iPixelFormat);
+#endif
+
+	// make that the pixel format of the device context 
+	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
+		printf("Failed to set pixel format\n");
+		throwException(env, "Failed to choose pixel format");
+		return -1;
+	}
+
+	// 3. Check the chosen format matches or exceeds our specifications
+	PIXELFORMATDESCRIPTOR desc;
+	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
+		throwException(env, "Could not describe pixel format");
+		return -1;
+	}
+
+	if (desc.cColorBits < bpp) {
+		throwException(env, "This application requires a greater colour depth");
+		return -1;
+	}
+
+	if (desc.cAlphaBits < alpha) {
+		throwException(env, "This application requires a greater alpha depth");
+		return -1;
+	}
+
+	if (desc.cStencilBits < stencil) {
+		throwException(env, "This application requires a greater stencil depth");
+		return -1;
+	}
+
+	if (desc.cDepthBits < depth) {
+		throwException(env, "This application requires a greater depth buffer depth");
+		return -1;
+	}
+
+	if ((desc.dwFlags & PFD_GENERIC_FORMAT) != 0 || (desc.dwFlags & PFD_GENERIC_ACCELERATED) != 0) {
+		throwException(env, "Mode not supported by hardware");
+		return -1;
+	}
+
+	if ((desc.dwFlags & flags) != flags) {
+		throwException(env, "Capabilities not supported");
+		return -1;
+	}
+
+	// 4. Initialise other things now
+	if (extgl_Open() != 0) {
+		throwException(env, "Failed to open extgl");
+		return -1;
+	}
+	return iPixelFormat;
+}
+/*
  * Create DirectInput.
  * Returns true for success, or false for failure
  */
-bool createDirectInput()
+static bool createDirectInput()
 {
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
@@ -111,7 +199,7 @@ bool createDirectInput()
 /*
  * Close the window
  */
-void closeWindow()
+static void closeWindow()
 {
 	// Release DirectInput
 	if (lpdi != NULL) {
@@ -147,7 +235,7 @@ void closeWindow()
 /*
  * Called when the application is alt-tabbed to or from
  */
-void appActivate(bool active)
+static void appActivate(bool active)
 {
 //	if (!active) {
 //		tempResetDisplayMode();
@@ -184,15 +272,15 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			case SC_MONITORPOWER:
 				return 0L;
 			case SC_MINIMIZE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
+				environment->SetStaticBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
 				appActivate(false);
 				break;
 			case SC_RESTORE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
+				environment->SetStaticBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
 				appActivate(true);
 				break;
 			case SC_CLOSE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), JNI_TRUE);
+				environment->SetStaticBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), JNI_TRUE);
 				//don't continue processing this command since this 
 				//would shutdown the window, which the application might not want to
 				return 0L;
@@ -204,12 +292,12 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			switch(LOWORD(wParam)) {
 			case WA_ACTIVE:
 			case WA_CLICKACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
+				environment->SetStaticBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_FALSE);
 				isMinimized = false;
 
 				break;
 			case WA_INACTIVE:
-				environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
+				environment->SetStaticBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "minimized", "Z"), JNI_TRUE);
 				isMinimized = true;
 
 				break;
@@ -219,12 +307,12 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		break;
 		case WM_QUIT:
 		{
-			environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), JNI_TRUE);
+			environment->SetStaticBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "closeRequested", "Z"), JNI_TRUE);
 			return 0L;
 		}
 		case WM_PAINT:
 		{
-			environment->SetBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "dirty", "Z"), JNI_TRUE);
+			environment->SetStaticBooleanField(window, environment->GetFieldID(environment->GetObjectClass(window), "dirty", "Z"), JNI_TRUE);
 		}
 	}
 
@@ -236,7 +324,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
  * Register the LWJGL window class.
  * Returns true for success, or false for failure
  */
-bool registerWindow()
+static bool registerWindow()
 {
 	if (!oneShotInitialised) {
 		WNDCLASS windowClass;
@@ -266,13 +354,43 @@ bool registerWindow()
 }
 
 /*
+ * Handle native Win32 messages
+ */
+static void handleMessages(JNIEnv * env, jclass clazz)
+{
+	// Cache env and obj
+	environment = env;
+	window = clazz;
+
+	/*
+	 * Now's our chance to deal with Windows messages that are
+	 * otherwise just piling up and causing everything not to
+	 * work properly
+	 */
+	MSG msg;
+	while (PeekMessage(
+		&msg,         // message information
+		hwnd,           // handle to window
+		0,  // first message
+		0,  // last message
+		PM_REMOVE      // removal options
+		))
+	{
+		TranslateMessage(&msg);
+      	DispatchMessage(&msg);
+	};
+	environment = NULL;
+	window = NULL;
+}
+
+/*
  * Create a window with the specified title, position, size, and
  * fullscreen attribute. The window will have DirectInput associated
  * with it.
  * 
  * Returns true for success, or false for failure
  */
-bool createWindow(const char * title, int x, int y, int width, int height, bool fullscreen)
+static bool createWindow(const char * title, int x, int y, int width, int height, bool fullscreen)
 {
 	// 1. Register window class if necessary
 	if (!registerWindow())
@@ -355,41 +473,11 @@ bool createWindow(const char * title, int x, int y, int width, int height, bool 
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_nSetTitle
-  (JNIEnv * env, jobject obj, jstring title_obj)
+  (JNIEnv * env, jclass clazz, jstring title_obj)
 {
 	const char * title = env->GetStringUTFChars(title_obj, NULL);
 	SetWindowText(hwnd, title);
 	env->ReleaseStringUTFChars(title_obj, title);
-}
-
-/*
- * Handle native Win32 messages
- */
-void handleMessages(JNIEnv * env, jobject obj)
-{
-	// Cache env and obj
-	environment = env;
-	window = obj;
-
-	/*
-	 * Now's our chance to deal with Windows messages that are
-	 * otherwise just piling up and causing everything not to
-	 * work properly
-	 */
-	MSG msg;
-	while (PeekMessage(
-		&msg,         // message information
-		hwnd,           // handle to window
-		0,  // first message
-		0,  // last message
-		PM_REMOVE      // removal options
-		))
-	{
-		TranslateMessage(&msg);
-      	DispatchMessage(&msg);
-	};
-	environment = NULL;
-	window = NULL;
 }
 
 /*
@@ -398,9 +486,9 @@ void handleMessages(JNIEnv * env, jobject obj)
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_tick
-  (JNIEnv * env, jobject obj)
+  (JNIEnv * env, jclass clazz)
 {
-	handleMessages(env, obj);
+	handleMessages(env, clazz);
 }
 
 
@@ -410,7 +498,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_tick
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
-  (JNIEnv * env, jobject obj)
+  (JNIEnv * env, jclass clazz)
 {
 	if (isMinimized)
 		return;
@@ -423,10 +511,90 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Window_minimize
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Window_restore
-  (JNIEnv * env, jobject obj)
+  (JNIEnv * env, jclass clazz)
 {
 	if (!isMinimized)
 		return;
 
 	ShowWindow(hwnd, SW_RESTORE);
+}
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    swapBuffers
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_swapBuffers
+  (JNIEnv * env, jclass clazz)
+{
+	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+}
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    nCreate
+ * Signature: (Ljava/lang/String;IIIIZIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_nCreate
+  (JNIEnv * env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil)
+{
+	// 1. Create a window
+	const char * titleString = env->GetStringUTFChars(title, NULL);
+	if (!createWindow(titleString, x, y, width, height, fullscreen == JNI_TRUE ? true : false)) {
+		env->ReleaseStringUTFChars((jstring) title, titleString);
+		closeWindow();
+		throwException(env, "Failed to create the window.");
+		return;
+	}
+	env->ReleaseStringUTFChars(title, titleString);
+
+	// 2. Choose a pixel format and set it
+	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window 
+		PFD_SUPPORT_OPENGL |   // support OpenGL 
+		PFD_DOUBLEBUFFER;      // double buffered 
+
+	int iPixelFormat = findPixelFormat(env, flags, bpp, alpha, depth, stencil);
+	if (iPixelFormat == -1) {
+		closeWindow();
+		return;
+	}
+	// Create a rendering context
+	hglrc = wglCreateContext(hdc);
+	if (hglrc == NULL) {
+		throwException(env, "Failed to create OpenGL rendering context");
+		closeWindow();
+		return;
+	}
+
+	// Automatically make it the current context
+	wglMakeCurrent(hdc, hglrc);
+
+	// Initialise GL extensions
+	if (extgl_Initialize() != 0) {
+		closeWindow();
+		throwException(env, "Failed to initialize GL extensions");
+		return;
+	}
+}
+
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    doDestroy
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Window_nDestroy
+  (JNIEnv * env, jclass clazz)
+{
+	wglMakeCurrent(NULL, NULL);
+
+	// Delete the rendering context
+	if (hglrc != NULL) {
+#ifdef _DEBUG
+		printf("Delete GL context\n");
+#endif
+		wglDeleteContext(hglrc); 
+		hglrc = NULL;
+	}
+	closeWindow();
+	extgl_Close();
 }
