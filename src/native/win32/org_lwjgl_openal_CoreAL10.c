@@ -1,5 +1,5 @@
 /**
- * $ID$
+ * $Id$
  *
  * This is the actual JNI implementation of the OpenAL core. It handles 
  * whatever is needed for proper OpenAL support via using Java.
