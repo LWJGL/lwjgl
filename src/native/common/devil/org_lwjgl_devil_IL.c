@@ -270,7 +270,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilGetBoolean(JNIEnv *env, jcl
 JNIEXPORT jobject JNICALL Java_org_lwjgl_devil_IL_ilGetData(JNIEnv * env, jclass clazz) {
 	ILubyte *data = ilGetData();
 
-	int size = sizeof(data);
+	int size = ilGetInteger(IL_IMAGE_WIDTH) * ilGetInteger(IL_IMAGE_HEIGHT) * ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
 	jobject result = safeNewBuffer(env, data, size);
 
 	return result;
@@ -438,9 +438,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jcla
  * Signature: (ILjava/nio/ByteBuffer;II)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadL(JNIEnv *env, jclass clazz, jint type, jobject lump_buffer, jint lump_offset, jint size) {
-	ILbyte *lump = (ILbyte *)(*env)->GetDirectBufferAddress(env, lump_buffer);
+	ILbyte *lump = (ILbyte *)safeGetBufferAddress(env, lump_buffer, lump_offset);
 
-	return ilLoadL((ILenum)type, (ILvoid *)(lump + lump_offset), (ILuint)size);
+	return ilLoadL((ILenum)type, (ILvoid *)(lump), (ILuint)size);
 }
 
 /*
