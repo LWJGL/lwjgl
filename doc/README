@@ -12,6 +12,10 @@ To run some of the included tests:
  Extract the media files into lwjgl folder (only needed for openal tests)
 
   java -cp .;lwjgl_test.jar;lwjgl.jar; DEMO
+  or
+  java -cp .;lwjgl_test.jar;lwjgl.jar; -Djava.library.path=. DEMO 
+  (this specifies that the jvm should locate the lwjgl libs in current 
+  directory)
   
  where DEMO is one of the following: 
  
@@ -30,7 +34,6 @@ To run some of the included tests:
   org.lwjgl.test.opengl.Grass (Requires nVidia hardware)
   org.lwjgl.test.opengl.Game
   
-Please read this thread, for upgrading issues:
-http://www.puppygames.net/forums/viewtopic.php?t=204
-  
 Project Webpage: www.lwjgl.org
+Project Forum: forum.lwjgl.org
+Project CVS: cvs.lwjgl.org
