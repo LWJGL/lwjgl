@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBOcclusionQuery {
 
 	/*
@@ -54,7 +56,7 @@ public final class ARBOcclusionQuery {
 	public static final int GL_QUERY_RESULT_ARB = 0x8866;
 	public static final int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------
 	public static void glGenQueriesARB(IntBuffer ids) {

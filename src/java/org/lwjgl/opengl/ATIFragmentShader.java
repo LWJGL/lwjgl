@@ -38,6 +38,8 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIFragmentShader {
 	public static final int GL_FRAGMENT_SHADER_ATI                                  = 0x8920;
 	public static final int GL_REG_0_ATI                                            = 0x8921;
@@ -144,7 +146,7 @@ public final class ATIFragmentShader {
 	public static final int GL_NEGATE_BIT_ATI                                       = 0x00000004;
 	public static final int GL_BIAS_BIT_ATI                                         = 0x00000008;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native int glGenFragmentShadersATI(int range);
 

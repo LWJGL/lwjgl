@@ -37,6 +37,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class EXTVertexShader {
 	public static final int GL_VERTEX_SHADER_EXT                                    = 0x8780;
@@ -150,7 +151,7 @@ public final class EXTVertexShader {
 	public static final int GL_LOCAL_CONSTANT_VALUE_EXT                             = 0x87EC;
 	public static final int GL_LOCAL_CONSTANT_DATATYPE_EXT                          = 0x87ED;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glBeginVertexShaderEXT();
 	public static native void glEndVertexShaderEXT();

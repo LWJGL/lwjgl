@@ -34,6 +34,8 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_ROT_MATRIX_ATI                                  = 0x8775;
 	public static final int GL_BUMP_ROT_MATRIX_SIZE_ATI                             = 0x8776;
@@ -44,7 +46,7 @@ public final class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_ENVMAP_ATI                                      = 0x877B;
 	public static final int GL_BUMP_TARGET_ATI                                      = 0x877C;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glTexBumpParameterATI(int pname, FloatBuffer pfParam) {
 		BufferChecks.checkBuffer(pfParam);

@@ -36,6 +36,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class ARBMatrixPalette {
 	public static final int GL_MATRIX_PALETTE_ARB                                   = 0x8840;
@@ -49,7 +50,7 @@ public final class ARBMatrixPalette {
 	public static final int GL_MATRIX_INDEX_ARRAY_STRIDE_ARB                        = 0x8848;
 	public static final int GL_MATRIX_INDEX_ARRAY_POINTER_ARB                       = 0x8849;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glCurrentPaletteMatrixARB(int index);
 	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {

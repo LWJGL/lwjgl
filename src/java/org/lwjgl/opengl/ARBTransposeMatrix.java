@@ -33,13 +33,15 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_MODELVIEW_MATRIX_ARB                       = 0x84E3;
 	public static final int GL_TRANSPOSE_PROJECTION_MATRIX_ARB                      = 0x84E4;
 	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB                           = 0x84E6;
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glLoadTransposeMatrixARB(FloatBuffer pfMtx) {
 		BufferChecks.checkBuffer(pfMtx, 16);

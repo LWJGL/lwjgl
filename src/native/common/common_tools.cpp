@@ -153,10 +153,10 @@ bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFu
 	return true;
 }
 
-bool ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
+void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
 	if (clazz == NULL) {
 		throwException(env, "Null class");
-		return false;
+		return;
 	}
 	JNINativeMethod *methods = (JNINativeMethod *)malloc(num_functions*sizeof(JNINativeMethod));
 	for (int i = 0; i < num_functions; i++) {
@@ -166,7 +166,7 @@ bool ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 			if (ext_func_pointer == NULL) {
 				free(methods);
 				throwException(env, "Missing driver symbols");
-				return false;
+				return;
 			}
 			void **ext_function_pointer_pointer = function->ext_function_pointer;
 			*ext_function_pointer_pointer = ext_func_pointer;
@@ -178,10 +178,6 @@ bool ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 	}
 	jint result = env->RegisterNatives(clazz, methods, num_functions);
 	free(methods);
-	if (result != 0) {
-		return false;
-	} else
-		return true;
 }
 
 bool getBooleanProperty(JNIEnv *env, const char* propertyName) {

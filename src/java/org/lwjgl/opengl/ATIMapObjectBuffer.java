@@ -33,9 +33,11 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIMapObjectBuffer {
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	/**
 	 * glMapObjectBufferATI maps a gl object buffer to a ByteBuffer. The oldBuffer argument can be

@@ -35,6 +35,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class EXTSecondaryColor {
 	public static final int GL_COLOR_SUM_EXT                                        = 0x8458;
@@ -45,7 +46,7 @@ public final class EXTSecondaryColor {
 	public static final int GL_SECONDARY_COLOR_ARRAY_POINTER_EXT                    = 0x845D;
 	public static final int GL_SECONDARY_COLOR_ARRAY_EXT                            = 0x845E;
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 

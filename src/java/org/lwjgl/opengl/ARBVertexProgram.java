@@ -37,6 +37,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBVertexProgram extends ARBProgram {
 
 	/*
@@ -87,7 +89,7 @@ public final class ARBVertexProgram extends ARBProgram {
 	*/
 	public static final int GL_MAX_VERTEX_ATTRIBS_ARB = 0x8869;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glVertexAttrib1sARB(int index, short x);
 

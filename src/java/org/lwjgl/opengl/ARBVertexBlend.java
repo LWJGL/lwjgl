@@ -37,6 +37,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class ARBVertexBlend {
 	public static final int GL_MAX_VERTEX_UNITS_ARB                                 = 0x86A4;
@@ -82,7 +83,7 @@ public final class ARBVertexBlend {
 	public static final int GL_MODELVIEW30_ARB                                      = 0x873E;
 	public static final int GL_MODELVIEW31_ARB                                      = 0x873F;
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glWeightARB(ByteBuffer pWeights) {
 		nglWeightbvARB(pWeights.remaining(), pWeights, pWeights.position());

@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_SOURCE_EXT                            = 0x8450;
@@ -46,7 +47,7 @@ public final class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_ARRAY_EXT                             = 0x8457;
 
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glFogCoordfEXT(float coord);
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {

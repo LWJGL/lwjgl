@@ -38,6 +38,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVVertexProgram extends NVProgram {
 
 	/*
@@ -271,7 +273,7 @@ public final class NVVertexProgram extends NVProgram {
 
 	public static final int GL_MAP2_VERTEX_ATTRIB15_4_NV = 0x867F;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------
 

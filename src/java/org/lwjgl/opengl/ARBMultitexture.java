@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBMultitexture {
 	public static final int GL_TEXTURE0_ARB                                         = 0x84C0;
 	public static final int GL_TEXTURE1_ARB                                         = 0x84C1;
@@ -68,7 +70,7 @@ public final class ARBMultitexture {
 	public static final int GL_CLIENT_ACTIVE_TEXTURE_ARB                            = 0x84E1;
 	public static final int GL_MAX_TEXTURE_UNITS_ARB                                = 0x84E2;
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glClientActiveTextureARB(int texture);
 

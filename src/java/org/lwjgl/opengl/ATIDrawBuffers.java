@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIDrawBuffers {
 
 	/*
@@ -58,7 +60,7 @@ public final class ATIDrawBuffers {
 	public static final int GL_DRAW_BUFFER15_ATI = 0x8834;
 
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------
 	public static void glDrawBuffersATI(IntBuffer buffers) {

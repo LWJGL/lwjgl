@@ -37,6 +37,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBTextureCompression
 {
 	public static final int GL_COMPRESSED_ALPHA_ARB                                 = 0x84E9;
@@ -51,7 +53,7 @@ public final class ARBTextureCompression
 	public static final int GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB                   = 0x86A2;
 	public static final int GL_COMPRESSED_TEXTURE_FORMATS_ARB                       = 0x86A3;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer pData) {
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position());

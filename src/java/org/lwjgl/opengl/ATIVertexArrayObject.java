@@ -37,6 +37,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIVertexArrayObject {
 	public static final int GL_STATIC_ATI                                           = 0x8760;
 	public static final int GL_DYNAMIC_ATI                                          = 0x8761;
@@ -47,7 +49,7 @@ public final class ATIVertexArrayObject {
 	public static final int GL_ARRAY_OBJECT_BUFFER_ATI                              = 0x8766;
 	public static final int GL_ARRAY_OBJECT_OFFSET_ATI                              = 0x8767;
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static int glNewObjectBufferATI(int size, ByteBuffer pPointer, int usage) {
 		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position() : 0, usage);

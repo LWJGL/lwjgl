@@ -33,12 +33,14 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVFence {
 	public static final int GL_ALL_COMPLETED_NV                                     = 0x84F2;
 	public static final int GL_FENCE_STATUS_NV                                      = 0x84F3;
 	public static final int GL_FENCE_CONDITION_NV                                   = 0x84F4;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGenFencesNV(IntBuffer piFences) {
 		nglGenFencesNV(piFences.remaining(), piFences, piFences.position());

@@ -33,12 +33,14 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVPointSprite {
 	public static final int GL_POINT_SPRITE_NV                                      = 0x8861;
 	public static final int GL_COORD_REPLACE_NV                                     = 0x8862;
 	public static final int GL_POINT_SPRITE_R_MODE_NV                               = 0x8863;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glPointParameteriNV(int pname, int param);
 

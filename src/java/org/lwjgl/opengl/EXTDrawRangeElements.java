@@ -36,12 +36,13 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class EXTDrawRangeElements {
 	public static final int GL_MAX_ELEMENTS_VERTICES_EXT                            = 0x80E8;
 	public static final int GL_MAX_ELEMENTS_INDICES_EXT                             = 0x80E9;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ByteBuffer pIndices) {
 		BufferChecks.ensureElementVBOdisabled();

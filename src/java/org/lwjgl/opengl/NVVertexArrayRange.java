@@ -34,6 +34,8 @@ package org.lwjgl.opengl;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVVertexArrayRange {
 	public static final int GL_VERTEX_ARRAY_RANGE_NV                                = 0x851D;
 	public static final int GL_VERTEX_ARRAY_RANGE_LENGTH_NV                         = 0x851E;
@@ -41,7 +43,7 @@ public final class NVVertexArrayRange {
 	public static final int GL_MAX_VERTEX_ARRAY_RANGE_ELEMENT_NV                    = 0x8520;
 	public static final int GL_VERTEX_ARRAY_RANGE_POINTER_NV                        = 0x8521;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {
 		nglVertexArrayRangeNV(pPointer.remaining(), pPointer, pPointer.position());

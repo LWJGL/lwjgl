@@ -36,6 +36,8 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBShaderObjects {
 
 	/*
@@ -90,7 +92,7 @@ public final class ARBShaderObjects {
 	public static final int GL_SAMPLER_2D_RECT_ARB = 0x8B63;
 	public static final int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8B64;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glDeleteObjectARB(int obj);
 

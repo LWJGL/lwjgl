@@ -35,6 +35,8 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVEvaluators {
 	public static final int GL_EVAL_2D_NV                                           = 0x86C0;
 	public static final int GL_EVAL_TRIANGULAR_2D_NV                                = 0x86C1;
@@ -61,7 +63,7 @@ public final class NVEvaluators {
 	public static final int GL_MAX_MAP_TESSELLATION_NV                              = 0x86D6;
 	public static final int GL_MAX_RATIONAL_EVAL_ORDER_NV                           = 0x86D7;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, FloatBuffer pPoints) {
 		// TODO:Check buffer size

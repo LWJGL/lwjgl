@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVOcclusionQuery {
 	public static final int GL_OCCLUSION_TEST_HP                                    = 0x8165;
 	public static final int GL_OCCLUSION_TEST_RESULT_HP                             = 0x8166;
@@ -42,7 +44,7 @@ public final class NVOcclusionQuery {
 	public static final int GL_PIXEL_COUNT_NV                                       = 0x8866;
 	public static final int GL_PIXEL_COUNT_AVAILABLE_NV                             = 0x8867;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGenOcclusionQueriesNV(IntBuffer piIDs) {
 		nglGenOcclusionQueriesNV(piIDs.remaining(), piIDs, piIDs.position());

@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVPrimitiveRestart {
 
 	/*
@@ -47,7 +49,7 @@ public final class NVPrimitiveRestart {
 	*/
 	public static final int GL_PRIMITIVE_RESTART_INDEX_NV = 0x8559;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glPrimitiveRestartNV();
 

@@ -170,7 +170,7 @@ public class ALC {
 		created = true;
 	}
 
-	private static native void initNativeStubs();
+	private static native void initNativeStubs() throws LWJGLException;
 
 	/**
 	 * Calls whatever destruction rutines that are needed

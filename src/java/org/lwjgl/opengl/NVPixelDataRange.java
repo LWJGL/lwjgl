@@ -37,6 +37,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVPixelDataRange {
 
 	/*
@@ -60,7 +62,7 @@ public final class NVPixelDataRange {
 	public static final int GL_WRITE_PIXEL_DATA_RANGE_POINTER_NV = 0x887C;
 	public static final int GL_READ_PIXEL_DATA_RANGE_POINTER_NV = 0x887D;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------
 	public static void glPixelDataRangeNV(int target, ByteBuffer data) {

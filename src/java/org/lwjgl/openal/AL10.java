@@ -36,6 +36,9 @@ import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+
+import org.lwjgl.LWJGLException;
+
 /**
  * $Id$
  * <br>
@@ -357,7 +360,7 @@ public final class AL10 {
 	/** Distance model */
 	public static final int AL_INVERSE_DISTANCE_CLAMPED = 0xD002;	
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	/**
 	 * The application can temporarily disable certain AL capabilities on a per Context

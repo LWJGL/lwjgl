@@ -37,6 +37,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBBufferObject {
 
 	/*
@@ -68,7 +70,7 @@ public final class ARBBufferObject {
 	public static final int GL_BUFFER_MAPPED_ARB                            = 0x88BC;
 	public static final int GL_BUFFER_MAP_POINTER_ARB                       = 0x88BD;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glBindBufferARB(int target, int buffer) {
 		switch (target) {

@@ -34,9 +34,11 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIVertexAttribArrayObject {
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glVertexAttribArrayObjectATI(int index, int size, int type,
 	                                                       boolean normalized, int stride, int buffer,

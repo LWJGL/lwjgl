@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 public final class EXTDepthBoundsTest {
 
 	/*
@@ -46,7 +48,7 @@ public final class EXTDepthBoundsTest {
 	*/
 	public static final int DEPTH_BOUNDS_EXT = 0x8891;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glDepthBoundsEXT(float zmin, float zmax);
 

@@ -34,6 +34,8 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVFragmentProgram extends NVProgram {
 
 	/*
@@ -55,7 +57,7 @@ public final class NVFragmentProgram extends NVProgram {
 	public static final int GL_FRAGMENT_PROGRAM_BINDING_NV = 0x8873;
 	public static final int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------
 

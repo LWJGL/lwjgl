@@ -34,6 +34,8 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBVertexShader {
 
 	/*
@@ -94,7 +96,7 @@ public final class ARBVertexShader {
 	public static final int GL_FLOAT_MAT3_ARB = 0x8B5B;
 	public static final int GL_FLOAT_MAT4_ARB = 0x8B5C;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------
 	public static void glBindAttribLocationARB(int programObj, int index, ByteBuffer name) {

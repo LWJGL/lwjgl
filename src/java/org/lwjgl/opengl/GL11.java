@@ -40,6 +40,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 /**
  * $Id$
  *
@@ -720,7 +722,7 @@ public final class GL11 {
 	public static final int GL_LOGIC_OP = GL_INDEX_LOGIC_OP;
 	public static final int GL_TEXTURE_COMPONENTS = GL_TEXTURE_INTERNAL_FORMAT;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glAccum(int op, float value);
 	public static native void glAlphaFunc(int func, float ref);

@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 public final class ARBMultisample {
 	public static final int GL_MULTISAMPLE_ARB                                      = 0x809D;
 	public static final int GL_SAMPLE_ALPHA_TO_COVERAGE_ARB                         = 0x809E;
@@ -42,7 +44,7 @@ public final class ARBMultisample {
 	public static final int GL_SAMPLE_COVERAGE_INVERT_ARB                           = 0x80AB;
 	public static final int GL_MULTISAMPLE_BIT_ARB                                  = 0x20000000;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glSampleCoverageARB(float value, boolean invert);
 }

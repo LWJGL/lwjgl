@@ -35,6 +35,8 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public class NVProgram {
 
 	/*
@@ -60,7 +62,7 @@ public class NVProgram {
 	 */
 	public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	// ---------------------------
 	public static void glLoadProgramNV(int target, int programID, ByteBuffer string) {

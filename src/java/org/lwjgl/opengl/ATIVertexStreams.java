@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIVertexStreams {
 	public static final int GL_MAX_VERTEX_STREAMS_ATI                               = 0x876B;
 	public static final int GL_VERTEX_SOURCE_ATI                                    = 0x876C;
@@ -43,7 +45,7 @@ public final class ATIVertexStreams {
 	public static final int GL_VERTEX_STREAM6_ATI                                   = 0x8773;
 	public static final int GL_VERTEX_STREAM7_ATI                                   = 0x8774;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glVertexStream1fATI(int stream, float x);
 	public static native void glVertexStream1iATI(int stream, int x);

@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 public final class ATIPnTriangles {
 	public static final int GL_PN_TRIANGLES_ATI                                     = 0x87F0;
 	public static final int GL_MAX_PN_TRIANGLES_TESSELATION_LEVEL_ATI               = 0x87F1;
@@ -42,7 +44,7 @@ public final class ATIPnTriangles {
 	public static final int GL_PN_TRIANGLES_NORMAL_MODE_LINEAR_ATI                  = 0x87F7;
 	public static final int GL_PN_TRIANGLES_NORMAL_MODE_QUADRATIC_ATI               = 0x87F8;
 	
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glPNTrianglesfATI(int pname, float param);
 

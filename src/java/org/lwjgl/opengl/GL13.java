@@ -37,6 +37,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 /**
  * $Id$
  *
@@ -148,7 +150,7 @@ public final class GL13 {
 	public static final int GL_DOT3_RGBA                = 0x86AF;
 	public static final int GL_CLAMP_TO_BORDER          = 0x812D;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glActiveTexture(int texture);
 	public static native void glClientActiveTexture(int texture);

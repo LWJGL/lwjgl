@@ -39,6 +39,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -126,7 +127,7 @@ public final class ARBImaging {
 	public static final int GL_MINMAX_FORMAT                  = 0x802F;
 	public static final int GL_MINMAX_SINK                    = 0x8030;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, ByteBuffer data) {
 		BufferChecks.checkBuffer(data, 256);

@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 /**
  * Insert the type's description here.
  * Creation date: (29/06/2000 00:45:10)
@@ -41,7 +43,7 @@ public final class EXTBlendFuncSeparate {
 	public static final int GL_BLEND_DST_ALPHA_EXT              = 0x80CA;
 	public static final int GL_BLEND_SRC_ALPHA_EXT              = 0x80CB;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glBlendFuncSeparateEXT(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha);
 }

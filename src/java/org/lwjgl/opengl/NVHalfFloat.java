@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
+
 public final class NVHalfFloat {
 
 	/*
@@ -44,7 +46,7 @@ public final class NVHalfFloat {
 	*/
 	public static final int GL_HALF_FLOAT_NV = 0x140B;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glVertex2hNV(short x, short y);
 

@@ -114,7 +114,7 @@ typedef struct {
 
 #define NUMFUNCTIONS(x) (sizeof(x)/sizeof(JavaMethodAndExtFunction));
 
-extern bool ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions);
+extern void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions);
 extern bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions);
 
 #endif

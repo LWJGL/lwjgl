@@ -182,9 +182,7 @@ public abstract class AL {
 		if (contextFrequency == -1) {
 			context = ALC.alcCreateContext(device.device, null);
 		} else {
-			context =
-				ALC.alcCreateContext(
-					device.device,
+			context = ALC.alcCreateContext(device.device,
 					ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized));
 		}
 
@@ -215,7 +213,7 @@ public abstract class AL {
 		contextSynchronized = ALC.ALC_FALSE;
 		
 		created = false;
-		nDestroy();		
+		nDestroy();
 	}
 	
 	/**

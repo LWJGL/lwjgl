@@ -36,13 +36,14 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class ATIElementArray {
 	public static final int GL_ELEMENT_ARRAY_ATI                                    = 0x8768;
 	public static final int GL_ELEMENT_ARRAY_TYPE_ATI                               = 0x8769;
 	public static final int GL_ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glElementPointerATI(ByteBuffer pPointer) {
 		BufferChecks.ensureArrayVBOdisabled();

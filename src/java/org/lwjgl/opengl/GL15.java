@@ -33,6 +33,8 @@ package org.lwjgl.opengl;
 
 import java.nio.*;
 
+import org.lwjgl.LWJGLException;
+
 public final class GL15 {
 
 	// ----------------------------------------------------------------------
@@ -71,7 +73,7 @@ public final class GL15 {
 	public static final int GL_BUFFER_MAPPED = 0x88BC;
 	public static final int GL_BUFFER_MAP_POINTER = 0x88BD;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glBindBuffer(int target, int buffer) {
 		switch ( target ) {

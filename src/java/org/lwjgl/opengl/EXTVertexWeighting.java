@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.LWJGLException;
 
 public final class EXTVertexWeighting {
 	public static final int GL_MODELVIEW0_STACK_DEPTH_EXT                           = 0x0BA3;  /* alias to MODELVIEW_STACK_DEPTH */
@@ -50,7 +51,7 @@ public final class EXTVertexWeighting {
 	public static final int GL_VERTEX_WEIGHT_ARRAY_STRIDE_EXT                       = 0x850F;
 	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT                      = 0x8510;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glVertexWeightfEXT(float weight);
 

@@ -31,11 +31,13 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+
 public final class EXTStencilTwoSide {
 	public static final int GL_STENCIL_TEST_TWO_SIDE_EXT                            = 0x8910;
 	public static final int GL_ACTIVE_STENCIL_FACE_EXT                              = 0x8911;
 
-	static native void initNativeStubs();
+	static native void initNativeStubs() throws LWJGLException;
 
 	public static native void glActiveStencilFaceEXT(int face);
 }
