@@ -265,21 +265,21 @@ int findPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format) {
 /*
  * Close the window
  */
-void closeWindow(HWND hwnd, HDC hdc)
+void closeWindow(HWND *hwnd, HDC *hdc)
 {
 	// Release device context
-	if (hdc != NULL && hwnd != NULL) {
+	if (*hdc != NULL && *hwnd != NULL) {
 		printfDebug("Releasing DC\n");
-		ReleaseDC(hwnd, hdc);
-		hdc = NULL;
+		ReleaseDC(*hwnd, *hdc);
+		*hdc = NULL;
 	}
 
 	// Close the window
-	if (hwnd != NULL) {
-		ShowWindow(hwnd, SW_HIDE);
+	if (*hwnd != NULL) {
+		ShowWindow(*hwnd, SW_HIDE);
 		printfDebug("Destroy window\n");
-		DestroyWindow(hwnd);
-		hwnd = NULL;
+		DestroyWindow(*hwnd);
+		*hwnd = NULL;
 	}
 }
 
@@ -655,7 +655,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *e
 	}
 	display_hdc = GetDC(display_hwnd);
 	if (!applyPixelFormat(display_hdc, pixel_format_index)) {
-		closeWindow(display_hwnd, display_hdc);
+		closeWindow(&display_hwnd, &display_hdc);
 		throwException(env, "Could not apply pixel format to window");
 		return;
 	}
@@ -667,7 +667,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *e
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyWindow(JNIEnv *env, jobject self) {
-	closeWindow(display_hwnd, display_hdc);
+	closeWindow(&display_hwnd, &display_hdc);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_switchDisplayMode(JNIEnv *env, jobject self, jobject mode) {
@@ -723,12 +723,12 @@ static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_f
 
 	arb_hdc = GetDC(arb_hwnd);
 	if ( !applyPixelFormat(arb_hdc, pixel_format_index) ) {
-		closeWindow(arb_hwnd, arb_hdc);
+		closeWindow(&arb_hwnd, &arb_hdc);
 		return false;
 	}	
 
 	arb_context = wglCreateContext(arb_hdc);
-	closeWindow(arb_hwnd, arb_hdc);
+	closeWindow(&arb_hwnd, &arb_hdc);
 	if ( arb_context == NULL )
 		return false;
 
@@ -764,13 +764,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *
 		return;
 	}
 	if (!applyPixelFormat(dummy_hdc, pixel_format_index)) {
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Could not apply pixel format to window");
 		return;
 	}
 	display_hglrc = wglCreateContext(dummy_hdc);
 	if (display_hglrc == NULL) {
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Failed to create OpenGL rendering context");
 		return;
 	}
@@ -778,7 +778,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *
 	if (!result) {
 		throwException(env, "Could not bind context to dummy window");
 		wglDeleteContext(display_hglrc);
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		return;
 	}
 	extgl_InitWGL(env);
@@ -786,7 +786,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *
         samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
 	if (samples > 0) {
                 arb_success = createARBContextAndPixelFormat(env, dummy_hdc, pixel_format, &pixel_format_index_arb, &context_arb);
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		wglDeleteContext(display_hglrc);
 		if (!arb_success) {
 			throwException(env, "Samples > 0 but could not find a suitable ARB pixel format");
@@ -795,7 +795,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *
 		display_hglrc = context_arb;
 		pixel_format_index = pixel_format_index_arb;
 	} else
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyContext(JNIEnv *env, jobject self) {

@@ -66,7 +66,7 @@
 
 	WINDOW_H_API bool applyPixelFormat(HDC hdc, int iPixelFormat);
 
-	WINDOW_H_API void closeWindow(HWND hwnd, HDC hdc);
+	WINDOW_H_API void closeWindow(HWND *hwnd, HDC *hdc);
 
 	WINDOW_H_API void handleMouseMoved(int x, int y);
 
@@ -100,11 +100,5 @@
 	 * Handle native Win32 messages
 	 */
 	WINDOW_H_API void handleMessage(JNIEnv * env, jobject obj);
-
-
-	/*
-	 * Close the window
-	 */
-	WINDOW_H_API void closeWindow();
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

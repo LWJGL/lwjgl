@@ -97,21 +97,21 @@ static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pix
 		return NULL;
 	}
 	if (!applyPixelFormat(dummy_hdc, iPixelFormat)) {
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Could not apply pixel format to window");
 		return NULL;
 	}
 	
         dummy_hglrc = wglCreateContext(dummy_hdc);
 	if (dummy_hglrc == NULL) {
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Failed to create OpenGL rendering context");
 		return NULL;
 	}
         result = wglMakeCurrent(dummy_hdc, dummy_hglrc);
 	if (!result) {
 		wglDeleteContext(dummy_hglrc);
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Could not bind context to dummy window");
 		return NULL;
 	}
@@ -122,17 +122,17 @@ static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pix
 		iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, true);
 	wglDeleteContext(dummy_hglrc);
 	if (!pbuffers_supported) {
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "No Pbuffer support.");
 		return NULL;
 	}
 	if (iPixelFormat == -1) {
-		closeWindow(dummy_hwnd, dummy_hdc);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Could not find suitable pixel format.");
 		return NULL;
 	}
 	Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, pBufferAttribs_ptr);
-	closeWindow(dummy_hwnd, dummy_hdc);
+	closeWindow(&dummy_hwnd, &dummy_hdc);
 	return Pbuffer;
 }
 
