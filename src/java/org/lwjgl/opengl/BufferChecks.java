@@ -27,7 +27,7 @@
  */
 package org.lwjgl.opengl;
 import java.nio.Buffer;
-import java.nio.BufferOverflowException;
+
 /**
  * $Id$ A class to
  * check buffer boundaries in GL methods. Many GL methods read data from the GL
