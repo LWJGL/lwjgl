@@ -57,7 +57,6 @@ public abstract class GLCaps {
 	public static boolean GL_ARB_depth_texture;
 	public static boolean GL_ARB_fragment_program;
 	public static boolean GL_ARB_fragment_shader;
-	public static boolean GL_ARB_imaging;
 	public static boolean GL_ARB_matrix_palette;
 	public static boolean GL_ARB_multisample;
 	public static boolean GL_ARB_multitexture;
