@@ -45,6 +45,7 @@
 #include <X11/extensions/xf86vmode.h>
 #include <assert.h>
 #include <string.h>
+#include <math.h>
 #include <Window.h>
 #include "org_lwjgl_input_Mouse.h"
 #include "extxcursor.h"
@@ -87,9 +88,17 @@ static int cap(int val, int min, int max) {
 }
 
 static void setCursorPos(int x, int y) {
-	y = getWindowHeight() - 1 - y;
 	current_x = cap(x, 0, getWindowWidth() - 1);
 	current_y = cap(y, 0, getWindowHeight() - 1);
+}
+
+static void centerCursor() {
+	// transform to OpenGL coordinate system center
+	int x = getWindowWidth()/2;
+	int y = (int)ceil(getWindowHeight()/2.0f);
+	setCursorPos(x, y);
+	last_x = current_x;
+	last_y = current_y;
 }
 
 /*
@@ -179,6 +188,37 @@ void releasePointer(void) {
 	updateGrab();
 }
 
+static void doWarpPointer(void ) {
+        centerCursor();
+	XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
+	XEvent event;
+	// Try to catch the warp pointer event
+	for (int i = 0; i < WARP_RETRY; i++) {
+		XMaskEvent(getCurrentDisplay(), PointerMotionMask, &event);
+		if (event.xmotion.x > current_x - POINTER_WARP_BORDER &&
+			event.xmotion.x < current_x + POINTER_WARP_BORDER &&
+			event.xmotion.y > current_y - POINTER_WARP_BORDER &&
+			event.xmotion.y < current_y + POINTER_WARP_BORDER)
+			break;
+#ifdef _DEBUG
+		printf("Skipped event searching for warp event %d, %d\n", event.xmotion.x, event.xmotion.y);
+#endif
+	}
+#ifdef _DEBUG
+	if (i == WARP_RETRY)
+		printf("Never got warp event\n");
+#endif
+}
+
+static void warpPointer(void) {
+	if (!pointer_grabbed || native_cursor)
+		return;
+	// Reset pointer to middle of screen if outside a certain inner border
+	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
+			current_x > getWindowWidth() - POINTER_WARP_BORDER || current_y > getWindowHeight() - POINTER_WARP_BORDER)
+		doWarpPointer();
+}
+
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nIsNativeCursorSupported
@@ -209,8 +249,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 	if (cursor_handle != 0) {
 		Cursor cursor = (Cursor)cursor_handle;
 		if (!native_cursor) {
-			setCursorPos(0, 0);
-			XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
+			doWarpPointer();
 			native_cursor = true;
 		}
 		XDefineCursor(getCurrentDisplay(), getCurrentWindow(), cursor);
@@ -271,8 +310,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
   (JNIEnv * env, jclass clazz)
 {
 	int i;
-	setCursorPos(0, 0);
-	current_z = last_x = last_y = last_z = 0;
+	centerCursor();
+	current_z = last_z = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = JNI_FALSE;
 	if (!blankCursor()) {
@@ -351,37 +390,6 @@ void handlePointerMotion(XMotionEvent *event) {
                 setCursorPos(event->x, event->y);
 }
 
-static void warpPointer(void) {
-	int i;
-	if (!pointer_grabbed || native_cursor)
-		return;
-	// Reset pointer to middle of screen if inside a certain inner border
-	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
-			current_x > getWindowWidth() - POINTER_WARP_BORDER || current_y > getWindowHeight() - POINTER_WARP_BORDER) {
-		setCursorPos(getWindowWidth()>>1, getWindowHeight()>>1);
-		last_x = current_x;
-		last_y = current_y;
-		XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
-		XEvent event;
-		// Try to catch the warp pointer event
-		for (i = 0; i < WARP_RETRY; i++) {
-			XMaskEvent(getCurrentDisplay(), PointerMotionMask, &event);
-			if (event.xmotion.x > current_x - POINTER_WARP_BORDER &&
-				event.xmotion.x < current_x + POINTER_WARP_BORDER &&
-				event.xmotion.y > current_y - POINTER_WARP_BORDER &&
-				event.xmotion.y < current_y + POINTER_WARP_BORDER)
-				break;
-#ifdef _DEBUG
-			printf("Skipped event searching for warp event %d, %d\n", event.xmotion.x, event.xmotion.y);
-#endif
-		}
-#ifdef _DEBUG
-		if (i == WARP_RETRY)
-			printf("Never got warp event\n");
-#endif
-	}
-}
-
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nPoll
@@ -394,7 +402,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	int moved_y = current_y - last_y;
 	int moved_z = current_z - last_z;
 	env->SetStaticIntField(clazz, fid_dx, (jint)moved_x);
-	env->SetStaticIntField(clazz, fid_dy, (jint)moved_y);
+	env->SetStaticIntField(clazz, fid_dy, (jint)-moved_y);
 	env->SetStaticIntField(clazz, fid_dwheel, (jint)moved_z);
 	last_x = current_x;
 	last_y = current_y;

@@ -125,8 +125,9 @@ public class Mouse {
 	 *
 	 * NOTE: The native cursor is not constrained to the window, but
 	 * relative events will not be generated if the cursor is outside.
-	 * The initial position of the cursor is in the upper left corner of
-	 * the window, and the cursor will be moved to this origin when a
+	 * The initial position of the cursor is the middle of the window,
+	 * that is, {window_width/2, window_height/2}.
+	 * The cursor will be moved to this origin when a
 	 * native cursor is set and the previous cursor is null.
 	 *
 	 * @param cursor the native cursor object to bind. May be null.

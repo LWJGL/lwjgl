@@ -41,6 +41,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "org_lwjgl_input_Mouse.h"
 #include <windows.h>
+#include <math.h>
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
 #include "Window.h"
@@ -49,13 +50,11 @@
 static LPDIRECTINPUTDEVICE mDIDevice;        // DI Device instance
 static int mButtoncount = 0;                 // Temporary buttoncount
 static bool mHaswheel;                       // Temporary wheel check
-static JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
 static bool mCreate_success;                 // bool used to determine successfull creation
 static bool mFirstTimeInitialization = true; // boolean to determine first time initialization
 
 // Cached fields of Mouse.java
-static jclass clsMouse;
 static jfieldID fidMButtons;
 static jfieldID fidMDX;
 static jfieldID fidMDY;
@@ -72,8 +71,8 @@ void ShutdownMouse();
 void CreateMouse();
 void SetupMouse();
 void InitializeMouseFields();
-void CacheMouseFields();
-void UpdateMouseFields();
+void CacheMouseFields(JNIEnv *env, jclass clsMouse);
+void UpdateMouseFields(JNIEnv *env, jclass clsMouse);
 
 static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
 {
@@ -89,11 +88,8 @@ static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
  * Initializes any field ids
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass clazz) {
-  mEnvironment = env;
-  clsMouse = clazz;
-
   /* Cache fields in Mouse */
-  CacheMouseFields();
+  CacheMouseFields(env, clazz);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
@@ -110,11 +106,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
 	HRESULT hr;
 
-	mEnvironment = env;
-	clsMouse = clazz;
-
 	ShowCursor(FALSE);
-	CacheMouseFields();
+	CacheMouseFields(env, clazz);
 
 	/* skip enumeration, since we only want system mouse */
 	CreateMouse();
@@ -177,12 +170,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 		SetClassLong(hwnd, GCL_HCURSOR, (LONG)cursor);
 		SetCursor(cursor);
 		if (!usingNativeCursor) {
-			/* Reset cursor position to 0, 0 */
+			/* Reset cursor position to middle of the window */
 			RECT clientRect;
 			GetWindowRect(hwnd, &windowRect);
 			getScreenClientRect(&clientRect, &windowRect);
-			cursorPos.x = clientRect.left;
-			cursorPos.y = clientRect.bottom - 1;
+			cursorPos.x = (clientRect.left + clientRect.right)/2;
+			cursorPos.y = (int)ceil((clientRect.top + clientRect.bottom)/2.0f);
 			SetCursorPos(cursorPos.x, cursorPos.y);
 			ShowCursor(TRUE);
 			usingNativeCursor = true;
@@ -230,8 +223,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
-	mEnvironment = env;
-	clsMouse = clazz;
 	ShowCursor(TRUE);
 	ShutdownMouse();
 }
@@ -243,9 +234,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass c
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
   mDIDevice->Acquire();
-  mEnvironment = env;
-  clsMouse = clazz;
-  UpdateMouseFields();
+  UpdateMouseFields(env, clazz);
 }
 
 /**
@@ -381,7 +370,7 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
 /**
  * Updates the fields on the Mouse
  */
-void UpdateMouseFields() {
+static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
 	HRESULT                 hRes; 
 	DIMOUSESTATE diMouseState;            // State of Mouse
 	int dx, dy;
@@ -418,9 +407,9 @@ void UpdateMouseFields() {
 	}
 	dy = -dy;
 
-	mEnvironment->SetStaticIntField(clsMouse, fidMDX, (jint)dx);
-	mEnvironment->SetStaticIntField(clsMouse, fidMDY, (jint)dy);
-	mEnvironment->SetStaticIntField(clsMouse, fidMDWheel, (jint)diMouseState.lZ);
+	env->SetStaticIntField(clsMouse, fidMDX, (jint)dx);
+	env->SetStaticIntField(clsMouse, fidMDY, (jint)dy);
+	env->SetStaticIntField(clsMouse, fidMDWheel, (jint)diMouseState.lZ);
 	
 	for (int i = 0; i < mButtoncount; i++) {
 		if (diMouseState.rgbButtons[i] != 0) {
@@ -429,16 +418,16 @@ void UpdateMouseFields() {
 			diMouseState.rgbButtons[i] = JNI_FALSE;
 		}
 	}
-	jbooleanArray mButtonsArray = (jbooleanArray) mEnvironment->GetStaticObjectField(clsMouse, fidMButtons);
-	mEnvironment->SetBooleanArrayRegion(mButtonsArray, 0, mButtoncount, diMouseState.rgbButtons);
+	jbooleanArray mButtonsArray = (jbooleanArray) env->GetStaticObjectField(clsMouse, fidMButtons);
+	env->SetBooleanArrayRegion(mButtonsArray, 0, mButtoncount, diMouseState.rgbButtons);
 }
 
 /**
  * Caches the field ids for quicker access
  */
-void CacheMouseFields() {
-  fidMButtons      = mEnvironment->GetStaticFieldID(clsMouse, "buttons", "[Z");
-  fidMDX           = mEnvironment->GetStaticFieldID(clsMouse, "dx", "I");
-  fidMDY           = mEnvironment->GetStaticFieldID(clsMouse, "dy", "I");
-  fidMDWheel       = mEnvironment->GetStaticFieldID(clsMouse, "dwheel", "I");
+void CacheMouseFields(JNIEnv* env, jclass clsMouse) {
+  fidMButtons      = env->GetStaticFieldID(clsMouse, "buttons", "[Z");
+  fidMDX           = env->GetStaticFieldID(clsMouse, "dx", "I");
+  fidMDY           = env->GetStaticFieldID(clsMouse, "dy", "I");
+  fidMDWheel       = env->GetStaticFieldID(clsMouse, "dwheel", "I");
 }
