@@ -177,12 +177,16 @@ static void doWarpPointer(int center_x, int center_y) {
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz) {
 	int caps = 0;
+	Display *disp = incDisplay(env);
+	if (disp == NULL)
+		return caps;
 	XcursorBool argb_supported = XcursorSupportsARGB(getDisplay());
 	XcursorBool anim_supported = XcursorSupportsAnim(getDisplay());
 	if (argb_supported)
 		caps |= org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA | org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
 	if (anim_supported)
 		caps |= org_lwjgl_input_Mouse_CURSOR_ANIMATION;
+	decDisplay();
 	return caps;
 }
 
