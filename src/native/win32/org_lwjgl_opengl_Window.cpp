@@ -66,11 +66,61 @@ static jboolean vsync;
 
 #define WINDOWCLASSNAME "LWJGL"
 
+static bool applyPixelFormat(JNIEnv *env, HDC hdc, int iPixelFormat) {
+	PIXELFORMATDESCRIPTOR desc;
+	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
+		throwException(env, "Could not describe pixel format");
+		return false;
+	}
+
+	// make that the pixel format of the device context 
+	if (SetPixelFormat(hdc, iPixelFormat, &desc) == FALSE) {
+		throwException(env, "Failed to set pixel format");
+		return false;
+	}
+	return true;
+}
+
+static int findPixelFormatARB(JNIEnv *env, int bpp, int alpha, int depth, int stencil, int samples) {
+	int iPixelFormat;
+	unsigned int num_formats_returned;
+	int attrib_list[] = {WGL_DRAW_TO_WINDOW_ARB, TRUE,
+					     WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
+						 WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+						 WGL_DOUBLE_BUFFER_ARB, TRUE,
+					     WGL_SUPPORT_OPENGL_ARB, TRUE,
+					     WGL_COLOR_BITS_ARB, bpp,
+					     WGL_ALPHA_BITS_ARB, alpha,
+					     WGL_DEPTH_BITS_ARB, depth,
+					     WGL_STENCIL_BITS_ARB, stencil,
+						 0, 0, /* For ARB_multisample */
+						 0, 0, /*                     */
+						 0};
+
+	if (samples > 0 && extgl_Extensions.WGL_ARB_multisample) {
+		attrib_list[18] = WGL_SAMPLE_BUFFERS_ARB;
+		attrib_list[19] = 1;
+		attrib_list[20] = WGL_SAMPLES_ARB;
+		attrib_list[21] = samples;
+	}
+	BOOL result = wglChoosePixelFormatARB(hdc, attrib_list, NULL, 1, &iPixelFormat, &num_formats_returned);
+
+	if (result == FALSE || num_formats_returned < 1) {
+		throwException(env, "Could not choose ARB pixel formats.");
+		return -1;
+	}
+	return iPixelFormat;
+}
+
 /*
  * Find an appropriate pixel format
  */
-static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, int depth, int stencil)
+static int findPixelFormat(JNIEnv *env, int bpp, int alpha, int depth, int stencil)
 {
+	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window 
+		PFD_SUPPORT_OPENGL |   // support OpenGL 
+		PFD_DOUBLEBUFFER;      // double buffered 
+
 	PIXELFORMATDESCRIPTOR pfd = { 
 		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
 		1,                     // version number 
@@ -97,16 +147,6 @@ static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, 
 		return -1;
 	}
 
-	printfDebug("Pixel format is %d\n", iPixelFormat);
-
-	// make that the pixel format of the device context 
-	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
-		printf("Failed to set pixel format\n");
-		throwException(env, "Failed to choose pixel format");
-		return -1;
-	}
-
-	// 3. Check the chosen format matches or exceeds our specifications
 	PIXELFORMATDESCRIPTOR desc;
 	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
 		throwException(env, "Could not describe pixel format");
@@ -143,11 +183,6 @@ static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, 
 		return -1;
 	}
 
-	// 4. Initialise other things now
-	if (!extgl_Open()) {
-		throwException(env, "Failed to open extgl");
-		return -1;
-	}
 	return iPixelFormat;
 }
 /*
@@ -201,9 +236,7 @@ static void closeWindow()
 	if (hwnd != NULL) {
 		ShowWindow(hwnd, SW_HIDE);
 		printfDebug("Destroy window\n");
-		// Vape the window
 		DestroyWindow(hwnd);
-		printfDebug("Destroyed window\n");
 		hwnd = NULL;
 	}
 }
@@ -213,18 +246,12 @@ static void closeWindow()
  */
 static void appActivate(bool active)
 {
-//	if (!active) {
-//		tempResetDisplayMode();
-//	}
 	if (active) {
 		SetForegroundWindow(hwnd);
 		ShowWindow(hwnd, SW_RESTORE);
 	} else if (isFullScreen) {
 		ShowWindow(hwnd, SW_MINIMIZE);
 	}
-//	if (active) {
-//		tempRestoreDisplayMode();
-//	}
 }
 
 /*
@@ -354,12 +381,8 @@ static void handleMessages(JNIEnv * env, jclass clazz)
  * 
  * Returns true for success, or false for failure
  */
-static bool createWindow(const char * title, int x, int y, int width, int height, bool fullscreen)
+static bool createWindow(JNIEnv *env, jstring title_obj, int x, int y, int width, int height, bool fullscreen)
 {
-	// 1. Register window class if necessary
-	if (!registerWindow())
-		return false;
-
 	// 2. Create the window
 	int exstyle, windowflags;
 
@@ -386,6 +409,7 @@ static bool createWindow(const char * title, int x, int y, int width, int height
 	);
 
 	// Create the window now, using that class:
+	const char * title = env->GetStringUTFChars(title_obj, NULL);
 	hwnd = CreateWindowEx (
 		 exstyle, 
 		 WINDOWCLASSNAME,
@@ -397,36 +421,33 @@ static bool createWindow(const char * title, int x, int y, int width, int height
 		 dll_handle,
 		 NULL);
 
+	env->ReleaseStringUTFChars(title_obj, title);
 	if (hwnd == NULL) {
-		printfDebug("Failed to create window\n");
+		throwException(env, "Failed to create the window.");
 		return false;
 	}
-
-	printfDebug("Created window\n");
-
-	ShowWindow(hwnd, SW_SHOW);
-	UpdateWindow(hwnd);
-	SetForegroundWindow(hwnd);
-	SetFocus(hwnd);
 
 	hdc = GetWindowDC(hwnd);  
 
-	// Success! Now you need to initialize a GL object, which creates a GL rendering context;
-	// and then to issue commands to it, you need to call gl::makeCurrent().
+	return true;
+}
 
-	// 3. Hide the mouse if necessary
-	isFullScreen = fullscreen == JNI_TRUE;
-
-	// 4. Create DirectInput
-	if (!createDirectInput()) {
-		// Close the window
+static bool createContext(JNIEnv *env, int iPixelFormat) {
+	if (iPixelFormat == -1) {
 		closeWindow();
 		return false;
-
 	}
-
-	vsync = JNI_FALSE;
-
+	if (!applyPixelFormat(env, hdc, iPixelFormat)) {
+		closeWindow();
+		return false;
+	}
+	hglrc = wglCreateContext(hdc);
+	if (hglrc == NULL) {
+		throwException(env, "Failed to create OpenGL rendering context");
+		closeWindow();
+		return false;
+	}
+	wglMakeCurrent(hdc, hglrc);
 	return true;
 }
 
@@ -507,44 +528,62 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	minimized = false;
 	focused = true;
 	dirty = true;
+	isFullScreen = fullscreen == JNI_TRUE;
+	vsync = JNI_FALSE;
 
-	// 1. Create a window
-	const char * titleString = env->GetStringUTFChars(title, NULL);
-	if (!createWindow(titleString, x, y, width, height, fullscreen == JNI_TRUE ? true : false)) {
-		env->ReleaseStringUTFChars((jstring) title, titleString);
-		closeWindow();
-		throwException(env, "Failed to create the window.");
-		return;
-	}
-	env->ReleaseStringUTFChars(title, titleString);
-
-	// 2. Choose a pixel format and set it
-	unsigned int flags = PFD_DRAW_TO_WINDOW |   // support window 
-		PFD_SUPPORT_OPENGL |   // support OpenGL 
-		PFD_DOUBLEBUFFER;      // double buffered 
-
-	int iPixelFormat = findPixelFormat(env, flags, bpp, alpha, depth, stencil);
-	if (iPixelFormat == -1) {
-		closeWindow();
-		return;
-	}
-	// Create a rendering context
-	hglrc = wglCreateContext(hdc);
-	if (hglrc == NULL) {
-		throwException(env, "Failed to create OpenGL rendering context");
-		closeWindow();
+	// 1. Register window class if necessary
+	if (!registerWindow()) {
+		throwException(env, "Could not register window class");
 		return;
 	}
 
-	// Automatically make it the current context
-	wglMakeCurrent(hdc, hglrc);
+	if (!extgl_Open()) {
+		throwException(env, "Failed to open extgl");
+		return;
+	}
 
-	// Initialise GL extensions
+	if (!createWindow(env, title, x, y, width, height, isFullScreen)) {
+		extgl_Close();
+		return;
+	}
+	int iPixelFormat = findPixelFormat(env, bpp, alpha, depth, stencil);
+	if (!createContext(env, iPixelFormat)) {
+		extgl_Close();
+		return;
+	}
+
+	extgl_InitWGL(env, ext_set);
+	if (extgl_Extensions.WGL_ARB_pixel_format) {
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(hglrc);
+		closeWindow();
+		if (!createWindow(env, title, x, y, width, height, isFullScreen)) {
+			extgl_Close();
+			return;
+		}
+		iPixelFormat = findPixelFormatARB(env, bpp, alpha, depth, stencil, samples);
+		if (!createContext(env, iPixelFormat)) {
+			extgl_Close();
+			return;
+		}
+	}
 	if (!extgl_Initialize(env, ext_set)) {
 		closeWindow();
+		extgl_Close();
 		throwException(env, "Failed to initialize GL extensions");
 		return;
 	}
+	if (!createDirectInput()) {
+		// Close the window
+		closeWindow();
+		extgl_Close();
+		return;
+	}
+
+	ShowWindow(hwnd, SW_SHOW);
+	UpdateWindow(hwnd);
+	SetForegroundWindow(hwnd);
+	SetFocus(hwnd);
 }
 
 /*

@@ -42,14 +42,24 @@
 #include <stdlib.h>
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "Window.h"
+
 #include "extgl.h"
+
 #include "common_tools.h"
 
+
+
 typedef struct _PbufferInfo {
+
 	HGLRC Pbuffer_context;
+
 	HPBUFFERARB Pbuffer;
+
 	HDC Pbuffer_dc;
+
 } PbufferInfo;
+
+
 
 /*
  * Class:     org_lwjgl_opengl_Pbuffer
@@ -59,7 +69,8 @@ typedef struct _PbufferInfo {
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
   (JNIEnv *env, jclass clazz)
 {
-	return extgl_Extensions.WGL_ARB_pbuffer ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
+	bool supported = extgl_Extensions.WGL_ARB_pixel_format && extgl_Extensions.WGL_ARB_pbuffer;
+	return supported ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
 /*
@@ -70,6 +81,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
   (JNIEnv *env, jclass clazz, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
+
 	int iPixelFormat;
 	unsigned int num_formats_returned;
 	int attrib_list[] = {WGL_DRAW_TO_PBUFFER_ARB, TRUE,
@@ -81,11 +93,21 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 					     WGL_ALPHA_BITS_ARB, alpha,
 					     WGL_DEPTH_BITS_ARB, depth,
 					     WGL_STENCIL_BITS_ARB, stencil,
+						 0, 0, /* For ARB_multisample */
+						 0, 0, /*                     */
 						 0};
+
+	if (samples > 0 && extgl_Extensions.WGL_ARB_multisample) {
+		attrib_list[18] = WGL_SAMPLE_BUFFERS_ARB;
+		attrib_list[19] = 1;
+		attrib_list[20] = WGL_SAMPLES_ARB;
+		attrib_list[21] = samples;
+	}
 	BOOL result = wglChoosePixelFormatARB(hdc, attrib_list, NULL, 1, &iPixelFormat, &num_formats_returned);
-	if (result == FALSE) {
+	if (result == FALSE || num_formats_returned < 1) {
 		throwException(env, "Could not choose pixel formats.");
 		return (jint)NULL;
+
 	}
 	HPBUFFERARB Pbuffer = wglCreatePbufferARB(hdc, iPixelFormat, width, height, NULL);
 	if (Pbuffer == NULL) {
@@ -98,6 +120,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 		throwException(env, "Could not get Pbuffer dc.");
 		return (jint)NULL;
 	}
+
 	// Create a rendering context
 	HGLRC Pbuffer_context = wglCreateContext(Pbuffer_dc);
 	if (Pbuffer_context == NULL) {
@@ -112,6 +135,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 		wglDestroyPbufferARB(Pbuffer);
 		throwException(env, "Could not share buffer context.");
 		return (jint)NULL;
+
 	}
 	PbufferInfo *Pbuffer_info = (PbufferInfo *)malloc(sizeof(PbufferInfo));
 	Pbuffer_info->Pbuffer = Pbuffer;
@@ -120,22 +144,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 	return (jint)Pbuffer_info;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nReleaseContext
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseContext
   (JNIEnv *env, jclass clazz)
 {
 	wglMakeCurrent(hdc, hglrc);
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nIsBufferLost
- * Signature: (I)Z
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
   (JNIEnv *env, jclass clazz, jint handle)
 {
@@ -145,11 +159,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost
 	return buffer_lost ? JNI_TRUE : JNI_FALSE;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nMakeCurrent
- * Signature: (I)V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
   (JNIEnv *env, jclass clazz, jint handle)
 {
@@ -157,11 +166,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nMakeCurrent
 	wglMakeCurrent(Pbuffer_info->Pbuffer_dc, Pbuffer_info->Pbuffer_context);
 }
 
-/*
- * Class:     org_lwjgl_opengl_Pbuffer
- * Method:    nDestroyGL
- * Signature: (I)V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nDestroy
   (JNIEnv *env, jclass clazz, jint handle)
 {

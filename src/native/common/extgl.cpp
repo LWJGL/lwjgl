@@ -900,7 +900,7 @@ static void extgl_InitSupportedWGLExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.WGL_NV_render_texture_rectangle = WGLQueryExtension(env, ext_set, "WGL_NV_render_texture_rectangle");
 }
 
-static void extgl_InitializeWGL(JNIEnv *env, jobject ext_set)
+void extgl_InitWGL(JNIEnv *env, jobject ext_set)
 {
 	wglGetExtensionsStringARB = (wglGetExtensionsStringARBPROC) extgl_GetProcAddress("wglGetExtensionsStringARB");
 	wglGetExtensionsStringEXT = (wglGetExtensionsStringEXTPROC) extgl_GetProcAddress("wglGetExtensionsStringEXT");
@@ -1371,10 +1371,6 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitOpenGL1_4(env, ext_set);
 	extgl_InitOpenGL1_5(env, ext_set);
 
-#ifdef _WIN32
-	/* load WGL extensions */
-	extgl_InitializeWGL(env, ext_set);
-#endif
 	return true;
 }
 

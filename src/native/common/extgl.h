@@ -3277,6 +3277,9 @@ extern glGetStringPROC glGetString;
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
 bool extgl_Initialize(JNIEnv *env, jobject gl_extensions);
 bool extgl_Open(void);
+#ifdef _WIN32
+void extgl_InitWGL(JNIEnv *env, jobject ext_set);
+#endif
 #ifdef _X11
 bool extgl_InitGLX(JNIEnv *env, jobject ext_set, Display *disp, int screen);
 #endif
