@@ -47,7 +47,11 @@ import org.lwjgl.Sys;
 public class Timer {
 
 	// Record the timer resolution on classload
-	private static final long resolution = Sys.getTimerResolution();
+	private static long resolution = Sys.getTimerResolution();
+	
+	// Every so often we will re-query the timer resolution
+	private static final int QUERY_INTERVAL = 1000; // in calls to tick()
+	private static int queryCount = 0;
 
 	// Globally keeps track of time for all instances of Timer	
 	private static long currentTime;
@@ -129,6 +133,13 @@ public class Timer {
 	 */
 	public static void tick() {
 		currentTime = Sys.getTime();
+		
+		// Periodically refresh the timer resolution:
+		queryCount ++;
+		if (queryCount > QUERY_INTERVAL) {
+			queryCount = 0;
+			resolution = Sys.getTimerResolution();
+		}
 	}
 	
 	/**
