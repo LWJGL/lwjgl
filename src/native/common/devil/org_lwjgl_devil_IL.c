@@ -5,6 +5,7 @@
 
 #ifdef __cplusplus
 extern "C" {
+#endif
 /*
  * Class:     org_lwjgl_devil_IL
  * Method:    ilActiveImage
@@ -39,7 +40,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveMipmap(JNIEnv *env, j
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyPal(JNIEnv *env, jclass clazz, jstring fileName) {
 	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
-	jboolean result = ilApplyPal((const ILstring*)strFileName);
+	jboolean result = ilApplyPal((const ILstring)strFileName);
 	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
 
 	return result;
@@ -424,7 +425,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoad(JNIEnv *env, jclass cl
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jclass clazz, jstring fileName) {
 	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
-	jboolean result = ilLoadImage((const ILstring*)strFileName);
+	jboolean result = ilLoadImage((const ILstring)strFileName);
 	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
 
 	return result;
@@ -499,7 +500,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilPushAttrib(JNIEnv *env, jclass 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jclass clazz, jstring ext) {
 	const char *strExt = (*env)->GetStringUTFChars(env, ext, 0);
 	jboolean result = ilRemoveLoad((const ILstring)strExt);
-	(*env)->ReleaseStringUTFChars(env, fileName, strExt);
+	(*env)->ReleaseStringUTFChars(env, ext, strExt);
 
 	return result;
 }
@@ -512,7 +513,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jcl
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveSave(JNIEnv *env, jclass clazz, jstring ext) {
 	const char *strExt = (*env)->GetStringUTFChars(env, ext, 0);
 	jboolean result = ilRemoveSave((const ILstring)strExt);
-	(*env)->ReleaseStringUTFChars(env, fileName, strExt);
+	(*env)->ReleaseStringUTFChars(env, ext, strExt);
 
 	return result;
 }
@@ -717,5 +718,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jcla
 
 #ifdef __cplusplus
 }
-#endif
 #endif
