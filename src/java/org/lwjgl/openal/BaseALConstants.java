@@ -230,6 +230,9 @@ public interface BaseALConstants {
 
 	/** Sound buffers: format specifier. */
 	public static final int AL_FORMAT_STEREO16 = 0x1103;
+  
+  /** Ogg Vorbis format specifier. */
+  public static final int AL_FORMAT_VORBIS_EXT = 0x1110;  
 
 	/**
 	 * Sound buffers: frequency, in units of Hertz [Hz].
