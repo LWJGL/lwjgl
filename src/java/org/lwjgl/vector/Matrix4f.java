@@ -31,6 +31,7 @@
  */
 package org.lwjgl.vector;
 
+import org.lwjgl.Math;
 import java.nio.FloatBuffer;
 
 /**
@@ -47,6 +48,18 @@ public class Matrix4f extends Matrix {
 	 */
 	public Matrix4f() {
 		super();
+	}
+
+	/**
+	 * Returns a string representation of this matrix
+	 */
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append(m00).append(' ').append(m10).append(' ').append(m20).append(' ').append(m30).append('\n');
+		buf.append(m01).append(' ').append(m11).append(' ').append(m21).append(' ').append(m31).append('\n');
+		buf.append(m02).append(' ').append(m12).append(' ').append(m22).append(' ').append(m32).append('\n');
+		buf.append(m03).append(' ').append(m13).append(' ').append(m23).append(' ').append(m33).append('\n');
+		return buf.toString();
 	}
 
 	/**
@@ -450,8 +463,108 @@ public class Matrix4f extends Matrix {
 		m33 += m03 * vec.x + m13 * vec.y + m23 * vec.z;
 		return this;
 	}
-		
 	
+	/**
+	 * Rotates the matrix around the given axis the specified angle
+	 * @param angle the angle, in degrees.
+	 * @param axis The vector representing the rotation axis. Must be normalized.
+	 * @return this
+	 */
+	public Matrix4f rotate(float angle, Vector3f axis) {
+		float c = Math.cos(angle);
+		float s = Math.sin(angle);
+		float oneminusc = 1.0f - c;
+		float xy = axis.x*axis.y;
+		float yz = axis.y*axis.z;
+		float xz = axis.x*axis.z;
+		float xs = axis.x*s;
+		float ys = axis.y*s;
+		float zs = axis.z*s;
+
+		float f00 = axis.x*axis.x*oneminusc+c;
+		float f01 = xy*oneminusc+zs;
+		float f02 = xz*oneminusc-ys;
+		// n[3] not used
+		float f10 = xy*oneminusc-zs;
+		float f11 = axis.y*axis.y*oneminusc+c;
+		float f12 = yz*oneminusc+xs;
+		// n[7] not used
+		float f20 = xz*oneminusc+ys;
+		float f21 = yz*oneminusc-xs;
+		float f22 = axis.z*axis.z*oneminusc+c;
+
+		float t00 = m00 * f00 + m10 * f01 + m20 * f02;
+		float t01 = m01 * f00 + m11 * f01 + m21 * f02;
+		float t02 = m02 * f00 + m12 * f01 + m22 * f02;
+		float t03 = m03 * f00 + m13 * f01 + m23 * f02;
+		float t10 = m00 * f10 + m10 * f11 + m20 * f12;
+		float t11 = m01 * f10 + m11 * f11 + m21 * f12;
+		float t12 = m02 * f10 + m12 * f11 + m22 * f12;
+		float t13 = m03 * f10 + m13 * f11 + m23 * f12;
+		m20 = m00 * f20 + m10 * f21 + m20 * f22;
+		m21 = m01 * f20 + m11 * f21 + m21 * f22;
+		m22 = m02 * f20 + m12 * f21 + m22 * f22;
+		m23 = m03 * f20 + m13 * f21 + m23 * f22;
+                m00 = t00;
+                m01 = t01;
+                m02 = t02;
+                m03 = t03;
+                m10 = t10;
+                m11 = t11;
+                m12 = t12;
+                m13 = t13;
+                return this;
+	}
+
+	/**
+	 * Rotates the matrix around the given axis the specified angle, and stores it in the specified destination
+	 * @param angle the angle, in degrees.
+	 * @param axis The vector representing the rotation axis. Must be normalized.
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 * @return The rotated matrix
+	 */
+	public Matrix4f rotate(float angle, Vector3f axis, Matrix4f dest) {
+		if (dest == null)
+			dest = new Matrix4f();
+		else if (dest == this)
+			return rotate(angle, axis);
+		float c = Math.cos(angle);
+		float s = Math.sin(angle);
+		float oneminusc = 1.0f - c;
+		float xy = axis.x*axis.y;
+		float yz = axis.y*axis.z;
+		float xz = axis.x*axis.z;
+		float xs = axis.x*s;
+		float ys = axis.y*s;
+		float zs = axis.z*s;
+
+		float f0 = axis.x*axis.x*oneminusc+c;
+		float f1 = xy*oneminusc+zs;
+		float f2 = xz*oneminusc-ys;
+		// n[3] not used
+		float f4 = xy*oneminusc-zs;
+		float f5 = axis.y*axis.y*oneminusc+c;
+		float f6 = yz*oneminusc+xs;
+		// n[7] not used
+		float f8 = xz*oneminusc+ys;
+		float f9 = yz*oneminusc-xs;
+		float f10 = axis.z*axis.z*oneminusc+c;
+
+		/* m[12] to m[15] are not changed by a rotate */
+		dest.m00 = m00 * f0 + m10 * f1 + m20 * f2;
+		dest.m01 = m01 * f0 + m11 * f1 + m21 * f2;
+		dest.m02 = m02 * f0 + m12 * f1 + m22 * f2;
+		dest.m03 = m03 * f0 + m13 * f1 + m23 * f2;
+		dest.m10 = m00 * f4 + m10 * f5 + m20 * f6;
+		dest.m11 = m01 * f4 + m11 * f5 + m21 * f6;
+		dest.m12 = m02 * f4 + m12 * f5 + m22 * f6;
+		dest.m13 = m03 * f4 + m13 * f5 + m23 * f6;
+		dest.m20 = m00 * f8 + m10 * f9 + m20 * f10;
+		dest.m21 = m01 * f8 + m11 * f9 + m21 * f10;
+		dest.m22 = m02 * f8 + m12 * f9 + m22 * f10;
+		dest.m23 = m03 * f8 + m13 * f9 + m23 * f10;
+                return dest;
+	}
 
 	/**
 	 * Translate this matrix and stash the result in another matrix
