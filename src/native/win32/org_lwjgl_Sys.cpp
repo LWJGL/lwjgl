@@ -42,6 +42,9 @@
 #include <windows.h>
 #include "org_lwjgl_Sys.h"
 
+// Handle to the application's window
+extern HWND hwnd;
+
 __int64		hires_timer_freq;			// Hires timer frequency
 __int64		hires_timer_start;			// Hires timer start
 __int64		hires_timer;				// Hires timer current time
@@ -138,4 +141,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 		printf("Failed to set priority class.\n");
 #endif
 	}
+}
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    alert
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
+  (JNIEnv * env, jclass clazz, jstring title, jstring message)
+{
+	jboolean copy = JNI_FALSE;
+	const char * eMessageText = env->GetStringUTFChars(message, &copy);
+	const char * cTitleBarText = env->GetStringUTFChars(title, &copy);
+	MessageBox(hwnd, eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
+
+#ifdef _DEBUG
+	printf("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
+#endif
+	
+	env->ReleaseStringUTFChars(message, eMessageText);
+	env->ReleaseStringUTFChars(title, cTitleBarText);
 }

@@ -198,19 +198,30 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 
 	// Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
-	jobjectArray ret = env->NewObjectArray(n, displayModeClass, NULL);
-	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
+
+	// Note the * 32 - this is because we are manufacturing available alpha/depth/stencil combos.
+	jobjectArray ret = env->NewObjectArray(n * 32, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIIIIII)V");
 
 	i = n = 0;
 	while (EnumDisplaySettings(NULL, i ++, &mode) != 0) {
 		// Filter out indexed modes
-		if (mode.dmBitsPerPel < 16) {
+		if (mode.dmBitsPerPel <= 8) {
 			continue;
 		} else {
-			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, mode.dmPelsWidth, mode.dmPelsHeight,
-				mode.dmBitsPerPel, mode.dmDisplayFrequency);
+			jobject displayMode;
 
-			env->SetObjectArrayElement(ret, n ++, displayMode);
+			for (int depthBits = 0; depthBits <= 24; depthBits += 8) {
+				for (int stencilBits = 0; stencilBits <= 8; stencilBits += 8) {
+					for (int alphaBits = 0; alphaBits <= 8; alphaBits += 8) {
+			
+						displayMode = env->NewObject(displayModeClass, displayModeConstructor, mode.dmPelsWidth, mode.dmPelsHeight,
+							mode.dmBitsPerPel, mode.dmDisplayFrequency, alphaBits, depthBits, stencilBits);
+
+						env->SetObjectArrayElement(ret, n ++, displayMode);
+					}
+				}
+			}
 		}
 	}
 
@@ -258,16 +269,24 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		oneShotInitialised = true;
 	}
 
+	int windowflags;
+
+	if (fullscreen) {
+		windowflags = WS_POPUP;
+	} else {
+		windowflags = WS_POPUP | WS_CAPTION;
+	}
+
 	// Create the window now, using that class:
 	hwnd = CreateWindow(
 		WINDOWCLASSNAME,
 		"LWJGL",
-		WS_POPUP, // | WS_MAXIMIZE,
+		windowflags,
 		0, 0,
 		width, height,
 		NULL,
 		NULL,
-		GetModuleHandle(NULL),
+		dll_handle,
 		NULL);
 	// And we never look at windowClass again...
 
@@ -327,7 +346,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		0, 0, 0, 0,            // accum bits ignored 
 		(BYTE)depthBits,       
 		(BYTE)stencilBits,     
-		0,                     // One auxiliary buffer 
+		0,                     // No auxiliary buffer 
 		PFD_MAIN_PLANE,        // main layer
 		0,                     // reserved 
 		0, 0, 0                // layer masks ignored
