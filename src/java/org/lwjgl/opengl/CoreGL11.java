@@ -76,7 +76,10 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native void glArrayElement(int i);
 	public static native void glClearDepth(double depth);
 	public static native void glDeleteLists(int list, int range);
-	public static native void glDeleteTextures(int n, IntBuffer textures);
+	public static void glDeleteTextures(int n, IntBuffer textures) {
+		nglDeleteTextures(n, textures, textures.position());
+	}
+	private static native void nglDeleteTextures(int n, IntBuffer textures, int textures_offset);
 	public static native void glCullFace(int mode);
 	public static native void glCopyTexSubImage2D(int target, int level, int xoffset, int yoffset, int x, int y, int width, int height);
 	public static native void glCopyTexSubImage1D(int target, int level, int xoffset, int x, int y, int width);

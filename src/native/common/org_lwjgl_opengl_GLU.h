@@ -41,11 +41,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluPerspective
 
 /*
  * Class:     org_lwjgl_opengl_GLU
- * Method:    gluPickMatrix
- * Signature: (DDDDLjava/nio/IntBuffer;)V
+ * Method:    ngluPickMatrix
+ * Signature: (DDDDLjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluPickMatrix
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jdouble, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_ngluPickMatrix
+  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jdouble, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GLU
@@ -57,131 +57,43 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluLookAt
 
 /*
  * Class:     org_lwjgl_opengl_GLU
- * Method:    gluProject
- * Signature: (DDDLjava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/IntBuffer;Ljava/nio/DoubleBuffer;)I
+ * Method:    ngluProject
+ * Signature: (DDDLjava/nio/DoubleBuffer;ILjava/nio/DoubleBuffer;ILjava/nio/IntBuffer;ILjava/nio/DoubleBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluProject
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jobject, jobject, jobject);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluProject
+  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jint, jobject, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GLU
- * Method:    gluUnProject
- * Signature: (DDDLjava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/IntBuffer;Ljava/nio/DoubleBuffer;)I
+ * Method:    ngluUnProject
+ * Signature: (DDDLjava/nio/DoubleBuffer;ILjava/nio/DoubleBuffer;ILjava/nio/IntBuffer;ILjava/nio/DoubleBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluUnProject
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jobject, jobject, jobject);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluUnProject
+  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jint, jobject, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GLU
- * Method:    gluScaleImage
- * Signature: (IIIILjava/nio/ByteBuffer;IIILjava/nio/ByteBuffer;)I
+ * Method:    ngluScaleImage
+ * Signature: (IIIILjava/nio/ByteBuffer;IIIILjava/nio/ByteBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluScaleImage
-  (JNIEnv *, jclass, jint, jint, jint, jint, jobject, jint, jint, jint, jobject);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluScaleImage
+  (JNIEnv *, jclass, jint, jint, jint, jint, jobject, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GLU
- * Method:    gluBuild1DMipmaps
- * Signature: (IIIIILjava/nio/ByteBuffer;)I
+ * Method:    ngluBuild1DMipmaps
+ * Signature: (IIIIILjava/nio/ByteBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluBuild1DMipmaps
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluBuild1DMipmaps
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GLU
- * Method:    gluBuild2DMipmaps
- * Signature: (IIIIIILjava/nio/ByteBuffer;)I
+ * Method:    ngluBuild2DMipmaps
+ * Signature: (IIIIIILjava/nio/ByteBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluBuild2DMipmaps
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluNewQuadric
- * Signature: ()Ljava/nio/ByteBuffer;
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GLU_gluNewQuadric
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluCylinder
- * Signature: (Ljava/nio/ByteBuffer;DDDII)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluCylinder
-  (JNIEnv *, jclass, jobject, jdouble, jdouble, jdouble, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluDeleteQuadric
- * Signature: (Ljava/nio/ByteBuffer;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluDeleteQuadric
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluDisk
- * Signature: (Ljava/nio/ByteBuffer;DDII)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluDisk
-  (JNIEnv *, jclass, jobject, jdouble, jdouble, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluPartialDisk
- * Signature: (Ljava/nio/ByteBuffer;DDIIDD)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluPartialDisk
-  (JNIEnv *, jclass, jobject, jdouble, jdouble, jint, jint, jdouble, jdouble);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluQuadricDrawStyle
- * Signature: (Ljava/nio/ByteBuffer;I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricDrawStyle
-  (JNIEnv *, jclass, jobject, jint);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluQuadricNormals
- * Signature: (Ljava/nio/ByteBuffer;I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricNormals
-  (JNIEnv *, jclass, jobject, jint);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluQuadricOrientation
- * Signature: (Ljava/nio/ByteBuffer;I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricOrientation
-  (JNIEnv *, jclass, jobject, jint);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluQuadricTexture
- * Signature: (Ljava/nio/ByteBuffer;Z)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricTexture
-  (JNIEnv *, jclass, jobject, jboolean);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluSphere
- * Signature: (Ljava/nio/ByteBuffer;DII)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluSphere
-  (JNIEnv *, jclass, jobject, jdouble, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_GLU
- * Method:    gluQuadricCallback
- * Signature: (Ljava/nio/ByteBuffer;ILjava/lang/Object;Ljava/lang/String;)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluQuadricCallback
-  (JNIEnv *, jclass, jobject, jint, jobject, jstring);
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluBuild2DMipmaps
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jobject, jint);
 
 #ifdef __cplusplus
 }

@@ -1088,7 +1088,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglMaterialiv(JNIEnv * env
  * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glMapGrid1f
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglMapGrid1f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glMapGrid1f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2)
 {
 	glMapGrid1f((GLint) p0, (GLfloat) p1, (GLfloat) p2);
 	CHECK_GL_ERROR
@@ -1099,7 +1099,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglMapGrid1f(JNIEnv * env,
  * Class:     org_lwjgl_opengl_CoreGL11
  * Method:    glMapGrid2f
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglMapGrid2f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jfloat p4, jfloat p5)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glMapGrid2f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jfloat p4, jfloat p5)
 {
 	glMapGrid2f((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLint) p3, (GLfloat) p4, (GLfloat) p5);
 	CHECK_GL_ERROR
@@ -1940,9 +1940,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glTexGenf(JNIEnv * env, jc
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
- * Method:    glTexGenfv
+ * Method:    nglTexGenfv
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glTexGenfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglTexGenfv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glTexGenfv((GLint) p0, (GLint) p1, address);

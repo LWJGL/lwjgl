@@ -43,7 +43,7 @@
 #include "extgl.h"
 #include "checkGLerror.h"
 
-#include "callbacks/GLUQuadricCallbacks.h"
+//#include "callbacks/GLUQuadricCallbacks.h"
 
 /*
  * Class:     org_lwjgl_opengl_GLU
@@ -91,7 +91,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluPerspective(JNIEnv * env, jc
  * Class:     org_lwjgl_opengl_GLU
  * Method:    pickMatrix
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluPickMatrix(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jobject buffer, jint offset)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_ngluPickMatrix(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	gluPickMatrix((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, address);
@@ -112,7 +112,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluLookAt(JNIEnv * env, jclass 
  * Class:     org_lwjgl_opengl_GLU
  * Method:    project
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jint buffer_offset, jobject buffer2, jint buffer2_offset, jobject buffer3, jint buffer3_offset, jobject win_buffer, jint win_offset)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jint buffer_offset, jobject buffer2, jint buffer2_offset, jobject buffer3, jint buffer3_offset, jobject win_buffer, jint win_offset)
 {
 	const GLdouble *address = buffer_offset + (const GLdouble *)env->GetDirectBufferAddress(buffer);
 	const GLdouble *address2 = buffer2_offset + (const GLdouble *)env->GetDirectBufferAddress(buffer2);
@@ -127,7 +127,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluProject(JNIEnv * env, jclass
  * Class:     org_lwjgl_opengl_GLU
  * Method:    unProject
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluUnProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jint buffer_offset, jobject buffer2, jint buffer2_offset, jobject buffer3, jint buffer3_offset, jobject obj_buffer, jint obj_buffer_offset)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluUnProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jint buffer_offset, jobject buffer2, jint buffer2_offset, jobject buffer3, jint buffer3_offset, jobject obj_buffer, jint obj_buffer_offset)
 {
 	const GLdouble *address = buffer_offset + (const GLdouble *)env->GetDirectBufferAddress(buffer);
 	const GLdouble *address2 = buffer2_offset + (const GLdouble *)env->GetDirectBufferAddress(buffer2);
@@ -142,7 +142,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluUnProject(JNIEnv * env, jcla
  * Class:     org_lwjgl_opengl_GLU
  * Method:    scaleImage
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluScaleImage(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jobject buffer, jint offset, jint p5, jint p6, jint p7, jobject buffer2, jint offset2)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluScaleImage(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jobject buffer, jint offset, jint p5, jint p6, jint p7, jobject buffer2, jint offset2)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	void *address2 = (void *)(offset2 + (GLbyte *)env->GetDirectBufferAddress(buffer2));
@@ -155,7 +155,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluScaleImage(JNIEnv * env, jcl
  * Class:     org_lwjgl_opengl_GLU
  * Method:    build1DMipmaps
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluBuild1DMipmaps(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jobject buffer, jint offset)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluBuild1DMipmaps(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	jint ret = (jint) gluBuild1DMipmaps((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, address);
@@ -167,7 +167,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluBuild1DMipmaps(JNIEnv * env,
  * Class:     org_lwjgl_opengl_GLU
  * Method:    build2DMipmaps
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluBuild2DMipmaps(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jobject buffer, jint offset)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_ngluBuild2DMipmaps(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jobject buffer, jint offset)
 {
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	jint ret = (jint) gluBuild2DMipmaps((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, address);

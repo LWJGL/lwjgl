@@ -74,13 +74,10 @@ public class GLU implements GLUConstants {
 		double zNear,
 		double zFar);
 
-	public static native void gluPickMatrix(
-		double x,
-		double y,
-		double width,
-		double height,
-		IntBuffer viewport
-	);
+	public static void gluPickMatrix(double x, double y, double width, double height, IntBuffer viewport) {
+		ngluPickMatrix(x, y, width, height, viewport, viewport.position());
+	}
+	private static native void ngluPickMatrix(double x, double y, double width, double height, IntBuffer viewport, int viewport_offset);
 
 	public static native void gluLookAt(
 		double eyex,

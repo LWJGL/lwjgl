@@ -129,11 +129,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glDeleteLists
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
- * Method:    glDeleteTextures
- * Signature: (ILjava/nio/IntBuffer;)V
+ * Method:    nglDeleteTextures
+ * Signature: (ILjava/nio/IntBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glDeleteTextures
-  (JNIEnv *, jclass, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_nglDeleteTextures
+  (JNIEnv *, jclass, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11
@@ -1110,14 +1110,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glNormal3f
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glNormal3i
   (JNIEnv *, jclass, jint, jint, jint);
-
-/*
- * Class:     org_lwjgl_opengl_CoreGL11
- * Method:    glNormal3s
- * Signature: (SSS)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL11_glNormal3s
-  (JNIEnv *, jclass, jshort, jshort, jshort);
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL11

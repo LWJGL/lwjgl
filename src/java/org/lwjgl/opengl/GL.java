@@ -707,9 +707,9 @@ public class GL extends CoreGL14 implements GLConstants {
 	private static native void nglMatrixIndexusvARB(int size, ShortBuffer psIndices, int psIndices_offset);
 
 	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst, IntBuffer piCount, int primcount) {
-		nglMultiDrawArraysEXT(mode, piFirst, piFirst.position(), piCount, piCount.position());
+		nglMultiDrawArraysEXT(mode, piFirst, piFirst.position(), piCount, piCount.position(), primcount);
 	}
-	private static native void nglMultiDrawArraysEXT(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset);
+	private static native void nglMultiDrawArraysEXT(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset, int primcount);
 
 //	public static native void glMultiDrawElementsEXT(int mode, int piCount, int type, int pIndices, int primcount);
 
@@ -1320,10 +1320,7 @@ public class GL extends CoreGL14 implements GLConstants {
 		float writeFrequency,
 		float priority);
 
-	public static void glXFreeMemoryNV(ByteBuffer pointer) {
-		nglXFreeMemoryNV(pointer, pointer.position());
-	}
-	private static native void nglXFreeMemoryNV(ByteBuffer pointer, int pointer_offset);
+	private static native void glXFreeMemoryNV(ByteBuffer pointer);
 
 	// #ifdef _WIN32
 
@@ -1481,7 +1478,19 @@ public class GL extends CoreGL14 implements GLConstants {
 		nglBufferSubDataARB(target, offset, size, data, data.position()<<2);
 	}
 	private static native void nglBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);
-	public static native void glGetBufferSubDataARB(int target, int offset, int size, Buffer data);
+	public static void glGetBufferSubDataARB(int target, int offset, int size, ByteBuffer data) {
+		nglGetBufferSubDataARB(target, offset, size, data, data.position());
+	}
+	public static void glGetBufferSubDataARB(int target, int offset, int size, ShortBuffer data) {
+		nglGetBufferSubDataARB(target, offset, size, data, data.position()<<1);
+	}
+	public static void glGetBufferSubDataARB(int target, int offset, int size, IntBuffer data) {
+		nglGetBufferSubDataARB(target, offset, size, data, data.position()<<2);
+	}
+	public static void glGetBufferSubDataARB(int target, int offset, int size, FloatBuffer data) {
+		nglGetBufferSubDataARB(target, offset, size, data, data.position()<<2);
+	}
+	private static native void nglGetBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);
 	/**
 	 * glMapBufferARB maps a gl vertex buffer buffer to a ByteBuffer. The oldBuffer argument can be null, in
 	 * which case a new ByteBuffer will be created, pointing to the returned memory. If oldBuffer is non-null,

@@ -41,10 +41,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_glPointParameterf
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL14
- * Method:    nglPointParameter
+ * Method:    nglPointParameterfv
  * Signature: (ILjava/nio/FloatBuffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglPointParameter
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL14_nglPointParameterfv
   (JNIEnv *, jclass, jint, jobject, jint);
 
 /*

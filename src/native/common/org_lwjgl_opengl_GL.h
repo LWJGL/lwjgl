@@ -1098,10 +1098,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglMatrixIndexusvARB
 /*
  * Class:     org_lwjgl_opengl_GL
  * Method:    nglMultiDrawArraysEXT
- * Signature: (ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)V
+ * Signature: (ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;II)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglMultiDrawArraysEXT
-  (JNIEnv *, jclass, jint, jobject, jint, jobject, jint);
+  (JNIEnv *, jclass, jint, jobject, jint, jobject, jint, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GL
@@ -2121,11 +2121,11 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL_glXAllocateMemoryNV
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    nglXFreeMemoryNV
- * Signature: (Ljava/nio/ByteBuffer;I)V
+ * Method:    glXFreeMemoryNV
+ * Signature: (Ljava/nio/ByteBuffer;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglXFreeMemoryNV
-  (JNIEnv *, jclass, jobject, jint);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glXFreeMemoryNV
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_GL
@@ -2305,11 +2305,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglBufferSubDataARB
 
 /*
  * Class:     org_lwjgl_opengl_GL
- * Method:    glGetBufferSubDataARB
- * Signature: (IIILjava/nio/Buffer;)V
+ * Method:    nglGetBufferSubDataARB
+ * Signature: (IIILjava/nio/Buffer;I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glGetBufferSubDataARB
-  (JNIEnv *, jclass, jint, jint, jint, jobject);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_nglGetBufferSubDataARB
+  (JNIEnv *, jclass, jint, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_opengl_GL

@@ -7,7 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: GL_ARB_imaging */
 /* Inaccessible static: GL_ARB_depth_texture */
 /* Inaccessible static: GL_ARB_matrix_palette */
@@ -109,7 +108,7 @@ extern "C" {
 /* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GLCaps */
 /*
  * Class:     org_lwjgl_opengl_GLCaps
- * Method:    isWGLEXTExtensionsStringAvaiable
+ * Method:    isWGLEXTExtensionsStringAvailable
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLEXTExtensionsStringAvailable
@@ -117,7 +116,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLEXTExtensionsString
 
 /*
  * Class:     org_lwjgl_opengl_GLCaps
- * Method:    isWGLARBExtensionsStringAvaiable
+ * Method:    isWGLARBExtensionsStringAvailable
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GLCaps_isWGLARBExtensionsStringAvailable

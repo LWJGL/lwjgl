@@ -57,10 +57,10 @@ public class CoreGL14 extends CoreGL13 implements CoreGL14Constants {
 	private static native void nglMultiDrawArrays(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset, int primcount);
 /*        public static native void glMultiDrawElements(int mode, int piCount, int type, int pIndices, int primcount);*/
 	public static native void glPointParameterf (int pname, float param);
-	public static void glPointParameterfv (int pname, FloatBuffer params) {
-		nglPointParameter(pname, params, params.position());
+	public static void glPointParameter(int pname, FloatBuffer params) {
+		nglPointParameterfv(pname, params, params.position());
 	}
-	private static native void nglPointParameter (int pname, FloatBuffer params, int params_offset);
+	private static native void nglPointParameterfv(int pname, FloatBuffer params, int params_offset);
 	public static native void glSecondaryColor3b (byte red, byte green, byte blue);
 	public static native void glSecondaryColor3f (float red, float green, float blue);
 	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
