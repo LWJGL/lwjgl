@@ -332,7 +332,7 @@ public class Matrix2f extends Matrix {
 	 * Set this matrix to be the identity matrix.
 	 * @return this
 	 */
-	public Matrix identity() {
+	public Matrix setIdentity() {
 		m00 = 1.0f;
 		m01 = 0.0f;
 		m10 = 0.0f;
@@ -344,7 +344,7 @@ public class Matrix2f extends Matrix {
 	 * Set this matrix to 0.
 	 * @return this
 	 */
-	public Matrix zero() {
+	public Matrix setZero() {
 		m00 = 0.0f;
 		m01 = 0.0f;
 		m10 = 0.0f;

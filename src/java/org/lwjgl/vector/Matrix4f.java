@@ -43,7 +43,7 @@ public class Matrix4f extends Matrix {
 	 * Set this matrix to be the identity matrix.
 	 * @return this
 	 */
-	public Matrix4f setIdentity() {
+	public Matrix setIdentity() {
 		m00 = 1.0f;
 		m01 = 0.0f;
 		m02 = 0.0f;
@@ -69,7 +69,7 @@ public class Matrix4f extends Matrix {
 	 * Set this matrix to 0.
 	 * @return this
 	 */
-	public Matrix4f setZero() {
+	public Matrix setZero() {
 		m00 = 0.0f;
 		m01 = 0.0f;
 		m02 = 0.0f;
@@ -134,7 +134,7 @@ public class Matrix4f extends Matrix {
 	 * @param buf A float buffer to read from
 	 * @return this
 	 */
-	public Matrix4f load(FloatBuffer buf) {
+	public Matrix load(FloatBuffer buf) {
 		
 		m00 = buf.get();
 		m10 = buf.get();
@@ -163,7 +163,7 @@ public class Matrix4f extends Matrix {
 	 * @param buf A float buffer to read from
 	 * @return this
 	 */
-	public Matrix4f loadTranspose(FloatBuffer buf) {
+	public Matrix loadTranspose(FloatBuffer buf) {
 		
 		m00 = buf.get();
 		m01 = buf.get();
@@ -190,7 +190,7 @@ public class Matrix4f extends Matrix {
 	 * major (openGL) order.
 	 * @param buf The buffer to store this matrix in
 	 */
-	public void store(FloatBuffer buf) {
+	public Matrix store(FloatBuffer buf) {
 		buf.put(m00);
 		buf.put(m10);
 		buf.put(m20);
@@ -207,6 +207,7 @@ public class Matrix4f extends Matrix {
 		buf.put(m13);
 		buf.put(m23);
 		buf.put(m33);
+		return this;
 	}
 	
 	/**
@@ -214,7 +215,7 @@ public class Matrix4f extends Matrix {
 	 * major (maths) order.
 	 * @param buf The buffer to store this matrix in
 	 */
-	public void storeTranspose(FloatBuffer buf) {
+	public Matrix storeTranspose(FloatBuffer buf) {
 		buf.put(m00);
 		buf.put(m01);
 		buf.put(m02);
@@ -231,6 +232,7 @@ public class Matrix4f extends Matrix {
 		buf.put(m31);
 		buf.put(m32);
 		buf.put(m33);
+		return this;
 	}	
 	
 	
@@ -398,7 +400,7 @@ public class Matrix4f extends Matrix {
 	 * Transpose this matrix
 	 * @return this
 	 */
-	public Matrix4f transpose() {
+	public Matrix transpose() {
 
 		float f = m10;
 		m10 = m01;
@@ -485,7 +487,7 @@ public class Matrix4f extends Matrix {
 	 * Invert this matrix
 	 * @return this
 	 */
-	public Matrix4f invert() {
+	public Matrix invert() {
 		return this;
 	}
 	
@@ -493,7 +495,7 @@ public class Matrix4f extends Matrix {
 	 * Negate this matrix
 	 * @return this
 	 */
-	public Matrix4f negate() {
+	public Matrix negate() {
 		m00 = -m00;
 		m01 = -m01;
 		m02 = -m02;

@@ -411,7 +411,7 @@ public class Matrix3f extends Matrix {
 	 * Set this matrix to be the identity matrix.
 	 * @return this
 	 */
-	public Matrix3f setIdentity() {
+	public Matrix setIdentity() {
 		m00 = 1.0f;
 		m01 = 0.0f;
 		m02 = 0.0f;
@@ -428,7 +428,7 @@ public class Matrix3f extends Matrix {
 	 * Set this matrix to 0.
 	 * @return this
 	 */
-	public Matrix3f setZero() {
+	public Matrix setZero() {
 		m00 = 0.0f;
 		m01 = 0.0f;
 		m02 = 0.0f;

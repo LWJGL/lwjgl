@@ -54,7 +54,7 @@ public abstract class Matrix {
 	 * Set this matrix to be the identity matrix.
 	 * @return this
 	 */
-	public abstract Matrix identity();
+	public abstract Matrix setIdentity();
 	
 
 	/**
@@ -120,7 +120,7 @@ public abstract class Matrix {
 	 * Set this matrix to 0.
 	 * @return this
 	 */
-	public abstract Matrix zero();
+	public abstract Matrix setZero();
 	
 
 	/**
