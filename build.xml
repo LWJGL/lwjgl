@@ -203,7 +203,7 @@
 		    <include name="build.sh"/>
 		  </fileset>
 		</apply>
-		<move file="${lwjgl.src.native}/.libs/liblwjgl.so.0.0.0" tofile="${lwjgl.lib}/liblwjgl.so"/>
+		<move file="${lwjgl.src.native}/.libs/liblwjgl.0.0.0" tofile="${lwjgl.lib}/liblwjgl.so"/>
 	</target>	
 	
 	<!-- Compiles LWJGL on Mac OS X platforms  -->
