@@ -87,7 +87,8 @@ public final class Point implements ReadablePoint, WritablePoint, Serializable {
 	
 	/**
 	 * Translate a point.
-	 * @param x, y The translation to apply
+	 * @param dx The translation to apply
+   * @param dy The translation to apply
 	 */
 	public void translate(int dx, int dy) {
 		this.x += dx;

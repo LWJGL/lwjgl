@@ -447,8 +447,8 @@ public final class Color implements ReadableColor, Serializable, WritableColor {
 	 * RGB to HSB conversion, pinched from java.awt.Color.
 	 * The HSB value is returned in dest[] if dest[] is supplied.
 	 * Values range from 0..1
-	 * @param dest[] Destination floats, or null
-	 * @return dest[], or a new float[]
+	 * @param dest Destination floats, or null
+	 * @return dest, or a new float array
 	 */
 	public float[] toHSB(float dest[]) {
 		int r = getRed();

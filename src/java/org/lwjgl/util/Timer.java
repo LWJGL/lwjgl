@@ -97,7 +97,7 @@ public class Timer {
 	
 	/**
 	 * Reset the timer. Equivalent to set(0.0f);
-	 * @see #set()
+	 * @see #set(float)
 	 */
 	public void reset() {
 		set(0.0f);

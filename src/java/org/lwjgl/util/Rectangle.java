@@ -145,7 +145,8 @@ public final class Rectangle implements ReadableRectangle, WritableRectangle, Se
 
 	/**
 	 * Translate the rectangle by an amount.
-	 * @param x, y The translation amount
+	 * @param x The translation amount on the x axis
+   * @param y The translation amount on the y axis
 	 */
 	public void translate(int x, int y) {
 		this.x += x;
@@ -187,7 +188,8 @@ public final class Rectangle implements ReadableRectangle, WritableRectangle, Se
 	 * Checks whether or not this <code>Rectangle</code> contains the 
 	 * point at the specified location
 	 * (<i>x</i>,&nbsp;<i>y</i>).
-	 * @param  X,&nbsp;Y  the specified coordinates
+	 * @param X the specified x coordinate
+   * @param Y the specified y coordinate
 	 * @return    <code>true</code> if the point 
 	 *            (<i>x</i>,&nbsp;<i>y</i>) is inside this 
 	 *		  <code>Rectangle</code>; 
@@ -229,7 +231,8 @@ public final class Rectangle implements ReadableRectangle, WritableRectangle, Se
 	 * the <code>Rectangle</code>
 	 * at the specified location (<i>X</i>,&nbsp;<i>Y</i>) with the
 	 * specified dimensions (<i>W</i>,&nbsp;<i>H</i>).
-	 * @param     X,&nbsp;Y  the specified coordinates
+   * @param X the specified x coordinate
+   * @param Y the specified y coordinate
 	 * @param     W   the width of the <code>Rectangle</code>
 	 * @param     H   the height of the <code>Rectangle</code>
 	 * @return    <code>true</code> if the <code>Rectangle</code> specified by
@@ -393,7 +396,8 @@ public final class Rectangle implements ReadableRectangle, WritableRectangle, Se
 	 * falls on the right or bottom edge of the enlarged 
 	 * <code>Rectangle</code>, <code>contains</code> returns 
 	 * <code>false</code> for that point.
-	 * @param newx,&nbsp;newy   the coordinates of the new point
+	 * @param newx the x coordinates of the new point
+   * @param newy the y coordinates of the new point
 	 */
 	public void add(int newx, int newy) {
 		int x1 = Math.min(x, newx);

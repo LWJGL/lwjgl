@@ -48,7 +48,10 @@ public interface WritableVector4f extends WritableVector3f {
 	
 	/**
 	 * Set the X,Y,Z,W values
-	 * @param x, y, z, w
+	 * @param x
+   * @param y
+   * @param z
+   * @param w
 	 */
 	public void set(float x, float y, float z, float w);
 	

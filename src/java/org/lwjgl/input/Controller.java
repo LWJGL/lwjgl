@@ -213,7 +213,7 @@ public class Controller {
 	 * 
 	 * @param button The index of the button you wish to test (0..buttonCount-1)
 	 * @return true if the specified button is down
-	 * @see #buttonCount
+	 * @see #getButtonCount()
 	 */
 	public static boolean isButtonDown(int button) {
 		if (!created)

@@ -122,14 +122,12 @@ public final class Display {
 	 * and an array with the order in which you would like them sorted in descending order.
 	 * This method attempts to create the topmost display mode; if that fails, it will try the next one,
 	 * and so on, until there are no modes left. If no mode is set at the end, an exception is thrown.
-	 * @param dm[] a list of display modes to choose from
-	 * @param param[] the names of the DisplayMode fields in the order in which you would like them sorted.
-	 * @param fullscreen whether to go fullscreen
-	 * @param title The app title
+	 * @param dm a list of display modes to choose from
+	 * @param param the names of the DisplayMode fields in the order in which you would like them sorted.
 	 * @return the chosen display mode
 	 * @throws NoSuchFieldException if one of the params is not a field in DisplayMode
 	 * @throws Exception if no display mode could be set
-	 * @see org.lwjgj.DisplayMode
+	 * @see org.lwjgl.DisplayMode
 	 */
 	public static DisplayMode setDisplayMode(DisplayMode[] dm, final String[] param) throws Exception {
 		

@@ -41,7 +41,10 @@ public interface WritableRectangle extends WritablePoint, WritableDimension {
 	
 	/**
 	 * Sets the bounds of the rectangle
-	 * @param x, y, width, height
+	 * @param x Position of rectangle on x axis
+   * @param y Position of rectangle on y axis
+   * @param width Width of rectangle
+   * @param height Height of rectangle
 	 */
 	public void setBounds(int x, int y, int width, int height);
 	

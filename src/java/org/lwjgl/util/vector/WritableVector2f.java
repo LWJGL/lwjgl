@@ -54,7 +54,8 @@ public interface WritableVector2f {
 	
 	/**
 	 * Set the X,Y values
-	 * @param x, y
+	 * @param x
+   * @param y
 	 */
 	public void set(float x, float y);
 	
