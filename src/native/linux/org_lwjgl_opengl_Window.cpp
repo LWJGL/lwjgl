@@ -68,7 +68,6 @@ static int current_width;
 
 static bool input_released;
 
-static bool isUndecorated;
 static bool dirty;
 static bool vsync_enabled;
 static bool minimized;
@@ -463,7 +462,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	bool fscreen = false;
 	if (fullscreen == JNI_TRUE)
 		fscreen = true;
-	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
+	bool isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 
 	if (!extgl_Open()) {
 		throwException(env, "Could not load gl libs");
