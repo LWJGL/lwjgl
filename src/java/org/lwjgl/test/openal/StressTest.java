@@ -193,6 +193,7 @@ public class StressTest extends BasicTest {
       System.out.println("FreeMemory: " + Runtime.getRuntime().freeMemory() / 1024);
       System.out.println("TotalMemory: " + Runtime.getRuntime().totalMemory() / 1024);
       System.out.println("========================");
+      System.out.println("Push any key to exit...");
       System.in.read();
     } catch (Exception e) {
     }
