@@ -113,33 +113,33 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * Returns a boolean OpenAL state.
      *
      * @param parameter state to be queried
-     * @return boolean state described by pname will be returned.
+     * @param data address of ByteBuffer to place the booleans in
      */    
-    public native boolean       getBooleanv(int pname);
+    public native void          getBooleanv(int pname, int data);
     
    /**
      * Returns an integer OpenAL state.
      *
      * @param parameter state to be queried
-     * @return integer state described by pname will be returned.
+     * @param data address of ByteBuffer to place the integers in
      */    
-    public native int           getIntegerv(int pname);
+    public native void          getIntegerv(int pname, int data);
     
    /**
      * Returns a floating point OpenAL state.
      *
      * @param parameter state to be queried
-     * @return floating point state described by pname will be returned.
+     * @param data address of ByteBuffer to place the floats in
      */    
-    public native float         getFloatv(int pname);
+    public native void         getFloatv(int pname, int data);
     
    /**
      * Returns a double OpenAL state.
      *
      * @param parameter state to be queried
-     * @return double state described by pname will be returned.
+     * @param data address of ByteBuffer to place the floats in
      */    
-    public native double        getDoublev(int pname);    
+    public native void          getDoublev(int pname, int data);    
     
     /**
      * Retrieve an OpenAL string property.
@@ -147,7 +147,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param pname The property to be returned
      * @return OpenAL String property
      */
-    public native String        getString(int pname);    
+    public native String        getString(int pname);
     
     /**
      * Retrieve the current error state and then clears the error state.
@@ -210,9 +210,9 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * Sets a floating point vector property of the listener
      *
      * @param pname name of the attribute to be set
-     * @param vector floating point values representing vector
+     * @param floatdata bytebuffer address to read floats from
      */     
-    public native void          listenerfv(int pname, float[] vector);     
+    public native void          listenerfv(int pname, int floatdata);     
     
     /**
      * Gets an integer property of the listener.
@@ -220,7 +220,7 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param pname name of the attribute to be retrieved
      * @return integer value of property
      */
-    public native int          getListeneri(int pname);
+    public native int           getListeneri(int pname);
     
     /**
      * Gets a floating point property of the listener.
@@ -228,24 +228,27 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      * @param pname name of the attribute to be retrieved
      * @return floating point value of property
      */    
-    public native float        getListenerf(int pname);
+    public native float         getListenerf(int pname);
     
     /**
      * Retrieves a set of three floating point values from a 
      * property of the listener.
      *
      * @param pname name of the attribute to be retrieved
+     * @param v1 bytebuffer address to write float 1 to
+     * @param v2 bytebuffer address to write float 2 to
+     * @param v3 bytebuffer address to write float 3 to
      * @return array of floats containing floating point values
      */
-    public native float[]       getListener3f(int pname); 
+    public native void          getListener3f(int pname, int v1, int v2, int v3); 
     
     /**
      * Retrieves a floating point vector property of the listener.
      *
      * @param pname name of the attribute to be retrieved
-     * @return array of floats representing vector
+     * @param floatdata bytebuffer address to write floats to
      */
-    public native float[]       getListenerfv(int pname); 
+    public native void          getListenerfv(int pname, int floatdata); 
     
     /**
      * Generate one or more sources.
@@ -305,9 +308,9 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      *
      * @param source source whichs attribute is being set
      * @param pname name of the attribute being set 
-     * @param vector float array (representing vector) to set the attribute to
+     * @param floatdata bytebuffer address to read floats from
      */
-    public native void          sourcefv(int source, int pname, float[] vector); 
+    public native void          sourcefv(int source, int pname, int floatdata); 
     
     /**
      * Retrieves an integer property of a source.
@@ -332,18 +335,18 @@ public class CoreAL extends BaseAL implements BaseALConstants {
      *
      * @param source Source to get property from
      * @param pname property to get
-     * @return floating point array containing values
+     * @param floatdata bytebuffer address to write floats to
      */    
-    public native float[]       getSource3f(int source, int pname);
+    public native void          getSource3f(int source, int pname, int floatdata);
     
     /**
      * Gets a floating point vector property from a Source object.
      *
      * @param source Source to get property from
      * @param pname property to get
-     * @return floating point array representing vector
+     * @param floatdata bytebuffer address to write floats to
      */    
-    public native float[]       getSourcefv(int source, int pname);    
+    public native void          getSourcefv(int source, int pname, int floatdata);    
     
     /**
      * Plays a set of sources.
