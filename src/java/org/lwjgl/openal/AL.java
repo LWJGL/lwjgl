@@ -37,6 +37,7 @@ import java.util.StringTokenizer;
 
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLErrorException;
 
 /**
  * $Id$
@@ -86,7 +87,7 @@ public abstract class AL {
 	 * @param oalPaths Array of strings containing paths to search for OpenAL library
 	 * @return true if the AL creation process succeeded
 	 */
-	protected static native void nCreate(String[] oalPaths) throws OpenALException;
+	protected static native void nCreate(String[] oalPaths) throws LWJGLErrorException;
 
 	/**
 	 * Native method the destroy the AL
@@ -101,17 +102,17 @@ public abstract class AL {
 	}	
 	
 	/**
-	* Creates an OpenAL instance. Using this constructor will cause OpenAL to
-	* open the device using supplied device argument, and create a context using the context values
-	* supplied. 
-	* 
-	* @param deviceArguments Arguments supplied to native device
-	* @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
-	* @param contextRefresh Refresh intervalls, in units of Hz.
-	* @param contextSynchronized Flag, indicating a synchronous context.* 
+	 * Creates an OpenAL instance. Using this constructor will cause OpenAL to
+	 * open the device using supplied device argument, and create a context using the context values
+	 * supplied. 
+	 * 
+	 * @param deviceArguments Arguments supplied to native device
+	 * @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
+	 * @param contextRefresh Refresh intervalls, in units of Hz.
+	 * @param contextSynchronized Flag, indicating a synchronous context.* 
 	 */
 	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized)
-		throws OpenALException {
+		throws LWJGLErrorException {
 			
 		if (created) {
 			return;
@@ -130,7 +131,7 @@ public abstract class AL {
 	 * Creates an OpenAL instance. The empty create will cause OpenAL to
 	 * open the default device, and create a context using default values. 
 	 */
-	public static void create() throws OpenALException {
+	public static void create() throws LWJGLErrorException {
 		if(created) {
 			return;
 		}
@@ -151,7 +152,7 @@ public abstract class AL {
 				jwsLibname = "openal";
 				break;
 			default:
-				throw new OpenALException("Unknown platform");
+				throw new LWJGLErrorException("Unknown platform");
 		}
 		
 		String jwsPath = getPathFromJWS(jwsLibname);

@@ -37,6 +37,7 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLErrorException;
 
 /**
  * $Id$
@@ -68,9 +69,9 @@ public class Cursor {
 	 * @param numImages number of cursor images specified. Must be 1 if animations are not supported.
 	 * @param images A buffer containing the images. The origin is at the lower left corner, like OpenGL.
 	 * @param delays An int buffer of animation frame delays, if numImages is greater than 1, else null
-	 * @throws Exception if the cursor could not be created for any reason
+	 * @throws LWJGLErrorException if the cursor could not be created for any reason
 	 */	
-	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
+	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLErrorException {
 		if (!Mouse.isCreated())
 			throw new IllegalStateException("Mouse must be created before creating cursor objects");
 		if (width*height*numImages > images.remaining())
@@ -94,7 +95,7 @@ public class Cursor {
 	/**
 	 * Creates the actual cursor, using a platform specific class
 	 */
-	private void createCursors(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
+	private void createCursors(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLErrorException {
 		// create copy and flip images to match ogl
 		IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		flipImages(width, height, numImages, images, images_copy);

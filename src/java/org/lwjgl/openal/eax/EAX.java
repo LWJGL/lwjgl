@@ -33,6 +33,7 @@
 package org.lwjgl.openal.eax;
 
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLErrorException;
 
 /**
  * $Id$
@@ -53,15 +54,15 @@ public class EAX {
 	/**
 	 * Loads the EAX functions
 	 * 
-	 * @throws Exception if the EAX extensions couldn't be loaded
+	 * @throws LWJGLErrorException if the EAX extensions couldn't be loaded
 	 */
-	public static void create() throws Exception {
+	public static void create() throws LWJGLErrorException {
 		if (created) {
 			return;
 		}
 
 		if (!nCreate()) {
-			throw new Exception("EAX instance could not be created.");
+			throw new LWJGLErrorException("EAX instance could not be created.");
 		}
 		EAX20.init();
 		created = true;

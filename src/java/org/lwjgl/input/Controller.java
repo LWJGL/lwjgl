@@ -37,6 +37,7 @@ import java.util.Map;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
+import org.lwjgl.LWJGLErrorException;
 
 /**
  * $Id$
@@ -163,9 +164,9 @@ public class Controller {
 
 	/**
 	 * "Create" the controller. The display must first have been created.
-	 * @throws Exception if the controller could not be created for any reason
+	 * @throws LWJGLErrorException if the controller could not be created for any reason
 	 */
-	public static void create() throws Exception {
+	public static void create() throws LWJGLErrorException {
 		if (!Window.isCreated())
 			throw new IllegalStateException("Window must be created before you can create Controller");
 		initialize();
@@ -267,7 +268,7 @@ public class Controller {
 	/**
 	 * Native method to create the controller
 	 */
-	private static native void nCreate() throws Exception;
+	private static native void nCreate() throws LWJGLErrorException;
 
 	/**
 	* Native method the destroy the controller
@@ -278,122 +279,122 @@ public class Controller {
 	 * Register fields with the native library
 	 */
 	private static native void initIDs();
-  /**
-   * @return Returns the buttonCount.
-   */
-  public static int getButtonCount() {
-    return buttonCount;
-  }
+	/**
+	 * @return Returns the buttonCount.
+	 */
+	public static int getButtonCount() {
+		return buttonCount;
+	}
 
-  /**
-   * @return Returns whether POV is supported
-   */
-  public static boolean hasPOV() {
-    return hasPOV;
-  }
+	/**
+	 * @return Returns whether POV is supported
+	 */
+	public static boolean hasPOV() {
+		return hasPOV;
+	}
 
-  /**
-   * @return Returns whether a rotational x axis is supported
-   */
-  public static boolean hasRXAxis() {
-    return hasRXAxis;
-  }
+	/**
+	 * @return Returns whether a rotational x axis is supported
+	 */
+	public static boolean hasRXAxis() {
+		return hasRXAxis;
+	}
 
-  /**
-   * @return Returns whether a rotational y axis is supported
-   */
-  public static boolean hasRYAxis() {
-    return hasRYAxis;
-  }
+	/**
+	 * @return Returns whether a rotational y axis is supported
+	 */
+	public static boolean hasRYAxis() {
+		return hasRYAxis;
+	}
 
-  /**
-   * @return Returns whether a rotational z axis is supported
-   */
-  public static boolean hasRZAxis() {
-    return hasRZAxis;
-  }
+	/**
+	 * @return Returns whether a rotational z axis is supported
+	 */
+	public static boolean hasRZAxis() {
+		return hasRZAxis;
+	}
 
-  /**
-   * @return Returns whether a slider is supported
-   */
-  public static boolean hasSlider() {
-    return hasSlider;
-  }
+	/**
+	 * @return Returns whether a slider is supported
+	 */
+	public static boolean hasSlider() {
+		return hasSlider;
+	}
 
-  /**
-   * @return Returns whether a x axis is supported
-   */
-  public static boolean hasXAxis() {
-    return hasXAxis;
-  }
+	/**
+	 * @return Returns whether a x axis is supported
+	 */
+	public static boolean hasXAxis() {
+		return hasXAxis;
+	}
 
-  /**
-   * @return Returns whether a y axis is supported
-   */
-  public static boolean hasYAxis() {
-    return hasYAxis;
-  }
+	/**
+	 * @return Returns whether a y axis is supported
+	 */
+	public static boolean hasYAxis() {
+		return hasYAxis;
+	}
 
-  /**
-   * @return Returns whether a z axis is supported
-   */
-  public static boolean hasZAxis() {
-    return hasZAxis;
-  }
+	/**
+	 * @return Returns whether a z axis is supported
+	 */
+	public static boolean hasZAxis() {
+		return hasZAxis;
+	}
 
-  /**
-   * @return Returns the POV value
-   */
-  public static int getPov() {
-    return pov;
-  }
+	/**
+	 * @return Returns the POV value
+	 */
+	public static int getPov() {
+		return pov;
+	}
 
-  /**
-   * @return Returns the rotational value of the x axis
-   */
-  public static int getRx() {
-    return rx;
-  }
+	/**
+	 * @return Returns the rotational value of the x axis
+	 */
+	public static int getRx() {
+		return rx;
+	}
 
-  /**
-   * @return Returns the rotational value of the y axis
-   */
-  public static int getRy() {
-    return ry;
-  }
+	/**
+	 * @return Returns the rotational value of the y axis
+	 */
+	public static int getRy() {
+		return ry;
+	}
 
-  /**
-   * @return Returns the rotational value of the z axis
-   */
-  public static int getRz() {
-    return rz;
-  }
+	/**
+	 * @return Returns the rotational value of the z axis
+	 */
+	public static int getRz() {
+		return rz;
+	}
 
-  /**
-   * @return Returns the slider value
-   */
-  public static int getSlider() {
-    return slider;
-  }
+	/**
+	 * @return Returns the slider value
+	 */
+	public static int getSlider() {
+		return slider;
+	}
 
-  /**
-   * @return Returns the x axis value
-   */
-  public static int getX() {
-    return x;
-  }
+	/**
+	 * @return Returns the x axis value
+	 */
+	public static int getX() {
+		return x;
+	}
 
-  /**
-   * @return Returns the y axis value
-   */
-  public static int getY() {
-    return y;
-  }
+	/**
+	 * @return Returns the y axis value
+	 */
+	public static int getY() {
+		return y;
+	}
 
-  /**
-   * @return Returns the z axis value
-   */
-  public static int getZ() {
-    return z;
-  }
+	/**
+	 * @return Returns the z axis value
+	 */
+	public static int getZ() {
+		return z;
+	}
 }

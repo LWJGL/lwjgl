@@ -120,7 +120,7 @@ void throwOpenALException(JNIEnv * env, const char * err) {
 }
 
 void throwException(JNIEnv * env, const char * err) {
-	throwGeneralException(env, "java/lang/Exception", err);
+	throwGeneralException(env, "org/lwjgl/LWJGLErrorException", err);
 }
 
 void doExtension(JNIEnv *env, jobject ext_set, const char *method_name, const char *ext) {

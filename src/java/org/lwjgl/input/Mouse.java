@@ -39,6 +39,7 @@ import java.util.Map;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
+import org.lwjgl.LWJGLErrorException;
 
 /**
  * $Id$
@@ -164,9 +165,9 @@ public class Mouse {
 	 *
 	 * @param cursor the native cursor object to bind. May be null.
 	 * @return The previous Cursor object set, or null.
-	 * @throws Exception if the cursor could not be set for any reason
+	 * @throws LWJGLErrorException if the cursor could not be set for any reason
 	 */
-	public static Cursor setNativeCursor(Cursor cursor) throws Exception {
+	public static Cursor setNativeCursor(Cursor cursor) throws LWJGLErrorException {
 		if (!created)
 			throw new IllegalStateException("Create the Mouse before setting the native cursor");
 		if ((getNativeCursorCaps() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
@@ -183,7 +184,7 @@ public class Mouse {
 	}
 
 	/** Native method to set the native cursor */
-	private static native void nSetNativeCursor(long handle) throws Exception;
+	private static native void nSetNativeCursor(long handle) throws LWJGLErrorException;
 
 	/**
 	 * Gets the minimum size of a native cursor. Can only be called if
@@ -238,9 +239,9 @@ public class Mouse {
 	/**
 	 * "Create" the mouse. The display must first have been created.
 	* 
-	 * @throws Exception if the mouse could not be created for any reason
+	 * @throws LWJGLErrorException if the mouse could not be created for any reason
 	 */
-	public static void create() throws Exception {
+	public static void create() throws LWJGLErrorException {
 		
 		if (!Window.isCreated())
 			throw new IllegalStateException("Window must be created prior to creating mouse");
@@ -293,7 +294,7 @@ public class Mouse {
 		if (currentCursor != null) {
 			try {
 				setNativeCursor(null);
-			} catch (Exception e) {
+			} catch (LWJGLErrorException e) {
 				if (Sys.DEBUG)
 					e.printStackTrace();
 			}
@@ -401,7 +402,7 @@ public class Mouse {
 	/**
 	 * Enable mouse button buffering. Must be called after the mouse is created.
 	 */
-	public static void enableBuffer() throws Exception {
+	public static void enableBuffer() throws LWJGLErrorException {
 		if (!created)
 			throw new IllegalStateException("Mouse must be created before you can enable buffering");
 		readBuffer = BufferUtils.createByteBuffer(2*BUFFER_SIZE);
@@ -414,7 +415,7 @@ public class Mouse {
 	 * @return the event buffer,
 	 * or null if no buffer can be allocated
 	 */
-	private static native void nEnableBuffer() throws Exception;
+	private static native void nEnableBuffer() throws LWJGLErrorException;
 
 	/**
 	 * Reads all button events since last read.
@@ -545,7 +546,7 @@ public class Mouse {
 			currentCursor.nextCursor();
 			try {
 				setNativeCursor(currentCursor);
-			} catch (Exception e) {
+			} catch (LWJGLErrorException e) {
 				if (Sys.DEBUG)
 					e.printStackTrace();
 			}

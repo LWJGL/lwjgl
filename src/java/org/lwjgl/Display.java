@@ -131,9 +131,9 @@ public final class Display {
 	 * still need to query the display's characteristics using getDisplayMode().
    *
 	 * @param mode The new display mode to set
-	 * @throws Exception if the display mode could not be set
+	 * @throws LWJGLErrorException if the display mode could not be set
 	 */
-	public static native void setDisplayMode(DisplayMode mode) throws Exception;
+	public static native void setDisplayMode(DisplayMode mode) throws LWJGLErrorException;
 
 	/**
 	 * Reset the display mode to whatever it was when LWJGL was initialized.
@@ -195,14 +195,14 @@ public final class Display {
 	 * @param brightness The brightness value between -1.0 and 1.0, inclusive
 	 * @param contrast The contrast, larger than 0.0.
 	 */
-	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws Exception {
+	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws LWJGLErrorException {
 		if (brightness < -1.0f || brightness > 1.0f)
 			throw new IllegalArgumentException("Invalid brightness value");
 		if (contrast < 0.0f)
 			throw new IllegalArgumentException("Invalid contrast value");
 		int rampSize = getGammaRampLength();
 		if (rampSize == 0) {
-			throw new Exception("Display configuration not supported");
+			throw new LWJGLErrorException("Display configuration not supported");
 		}
 		FloatBuffer gammaRamp = ByteBuffer.allocateDirect(rampSize*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		for (int i = 0; i < rampSize; i++) {
@@ -235,7 +235,7 @@ public final class Display {
 	/**
 	 * Native method to set the gamma ramp.
 	 */
-	private static native void setGammaRamp(FloatBuffer gammaRamp) throws Exception ;
+	private static native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLErrorException;
 
 	/**
 	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",

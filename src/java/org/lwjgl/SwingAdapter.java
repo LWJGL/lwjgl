@@ -52,7 +52,7 @@ final class SwingAdapter implements PlatformAdapter {
 	 */
 	SwingAdapter() {
 	}
-  
+
 	/**
 	 * Spawn a "modal" dialog in the centre of the screen with a message in it
 	 * and an OK button. This method blocks until the dialog is dismissed.
@@ -60,10 +60,10 @@ final class SwingAdapter implements PlatformAdapter {
 	 * @param message Message to show in alert
 	 */
 	public void alert(String title, String message) {
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch(Exception e) {
-    }
-    JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(Exception e) {
+		}
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 }

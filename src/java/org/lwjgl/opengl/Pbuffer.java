@@ -33,6 +33,7 @@
 package org.lwjgl.opengl;
 
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLErrorException;
 
 import java.nio.IntBuffer;
 
@@ -159,7 +160,7 @@ public final class Pbuffer {
 	}
 
 	/**
-	 * Construct an instance of a Pbuffer. If this fails then an Exception will be thrown. The buffer is single-buffered.
+	 * Construct an instance of a Pbuffer. If this fails then an LWJGLErrorException will be thrown. The buffer is single-buffered.
 	 * <p/>
 	 * NOTE: An OpenGL window must be created before a Pbuffer can be created. The Pbuffer will have its own context that shares
 	 * display lists and textures with the OpenGL window context, but it will have its own OpenGL state. Therefore, state changes
@@ -182,7 +183,7 @@ public final class Pbuffer {
 	 *                      0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
 	 * @param renderTexture
 	 */
-	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil, int samples, RenderTexture renderTexture) throws Exception {
+	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil, int samples, RenderTexture renderTexture) throws LWJGLErrorException {
 		this.width = width;
 		this.height = height;
 
@@ -240,7 +241,7 @@ public final class Pbuffer {
 	                                  int bpp, int alpha, int depth, int stencil,
 	                                  int samples,
 	                                  IntBuffer pixelFormatCaps, int pixelFormatCapsSize,
-	                                  IntBuffer pBufferAttribs, int pBufferAttribsSize) throws Exception;
+	                                  IntBuffer pBufferAttribs, int pBufferAttribsSize) throws LWJGLErrorException;
 
 	/**
 	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context - regardless of whether this Pbuffer was

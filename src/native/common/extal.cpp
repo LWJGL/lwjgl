@@ -197,7 +197,7 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 		}
 		env->ReleaseStringUTFChars(path, path_str);
 	}
-	throwOpenALException(env, "Could not load openal library.");
+	throwException(env, "Could not load openal library.");
 	return false;
 }
 
@@ -235,27 +235,27 @@ void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 	alGetProcAddress = (alGetProcAddressPROC)extal_GetProcAddress("alGetProcAddress");
 	if (alGetProcAddress == NULL) {
 		DeInitializeOpenAL();
-		throwOpenALException(env, "Could not load alGetProcAddress function pointer.");
+		throwException(env, "Could not load alGetProcAddress function pointer.");
 		return;
 	}
 	//load basic OpenAL functions
 	if(!LoadAL(env)) {
 		DeInitializeOpenAL();
-		throwOpenALException(env, "Could not load OpenAL function pointers.");
+		throwException(env, "Could not load OpenAL function pointers.");
 		return;
 	}
 
 	//load OpenAL context functions
 	if(!LoadALC(env)) {
 		DeInitializeOpenAL();
-		throwOpenALException(env, "Could not load ALC function pointers.");
+		throwException(env, "Could not load ALC function pointers.");
 		return;
 	}
 
 	//load OpenAL extensions
 	if(!LoadALExtensions()) {
 		DeInitializeOpenAL();
-		throwOpenALException(env, "Could not load AL extension function pointers.");
+		throwException(env, "Could not load AL extension function pointers.");
 		return;
 	}
 }

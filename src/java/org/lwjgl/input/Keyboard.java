@@ -41,6 +41,7 @@ import java.util.Map;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
+import org.lwjgl.LWJGLErrorException;
 
 /**
  * $Id$
@@ -284,9 +285,9 @@ public class Keyboard {
 	 * "Create" the keyboard. The display must first have been created. The
 	 * reason for this is so the keyboard has a window to "focus" in.
 	 * 
-	 * @throws Exception if the keyboard could not be created for any reason
+	 * @throws LWJGLErrorException if the keyboard could not be created for any reason
 	 */
-	public static void create() throws Exception {
+	public static void create() throws LWJGLErrorException {
 		if (!Window.isCreated())
 			throw new IllegalStateException("Window must be created before you can create Keyboard");
 		if (!initialized)
@@ -300,7 +301,7 @@ public class Keyboard {
 	/**
 	 * Native method to create the keyboard
 	 */
-	private static native void nCreate() throws Exception;
+	private static native void nCreate() throws LWJGLErrorException;
 
 	/**
 	 * @return true if the keyboard has been created
@@ -388,7 +389,7 @@ public class Keyboard {
 	 * Enable keyboard translation. Must be called after the keyboard is created,
 	 * and keyboard buffering must be enabled.
 	 */
-	public static void enableTranslation() throws Exception {
+	public static void enableTranslation() throws LWJGLErrorException {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 		if (readBuffer == null)
@@ -400,12 +401,12 @@ public class Keyboard {
 	/**
 	 * Native method to enable the translation buffer
 	 */
-	private static native void nEnableTranslation() throws Exception;
+	private static native void nEnableTranslation() throws LWJGLErrorException;
 	
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
 	 */
-	public static void enableBuffer() throws Exception {
+	public static void enableBuffer() throws LWJGLErrorException {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can enable buffering");
 		readBuffer = BufferUtils.createByteBuffer(4*BUFFER_SIZE);
@@ -418,7 +419,7 @@ public class Keyboard {
 	 * @return the event buffer,
 	 * or null if no buffer can be allocated
 	 */
-	private static native void nEnableBuffer() throws Exception;
+	private static native void nEnableBuffer() throws LWJGLErrorException;
 	
 	/**
 	 * Checks to see if a key is down.
