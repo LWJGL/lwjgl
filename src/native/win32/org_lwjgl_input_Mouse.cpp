@@ -55,8 +55,6 @@ DIMOUSESTATE diMouseState;            // State of Mouse
 
 int mButtoncount = 0;                 // Temporary buttoncount
 bool mHaswheel;                       // Temporary wheel check
-jbooleanArray mButtonsArray = NULL;	  // Handle to Java-side buttons array
-jobject mButtonsReference = NULL;	  // Native-side global ref to mButtonsArray
 JNIEnv* mEnvironment;                 // JNIEnvironment copy
 
 bool mCreate_success;                 // bool used to determine successfull creation
@@ -121,21 +119,15 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
       return JNI_FALSE;
     }
 
-	/* Do setup of Mouse */
-	SetupMouse();
-
-    /* Initialize any fields on the Mouse */
-    InitializeMouseFields();
+	  /* Do setup of Mouse */
+	  SetupMouse();
 
     /* Set capabilities */
     SetMouseCapabilities();
   } else {
     if(mCreate_success) {
       /* Do setup of Mouse */
-      SetupMouse();
-      
-      /* Initialize any fields on the Mouse */
-      InitializeMouseFields();      
+      SetupMouse();   
     }
   }
 
@@ -181,7 +173,7 @@ void ShutdownMouse() {
   if (mDIDevice != NULL) {
     mDIDevice->Unacquire();
     mDIDevice->Release();
-	mDIDevice = NULL;
+	  mDIDevice = NULL;
   }
 }
 /**
@@ -197,6 +189,15 @@ void EnumerateMouseCapabilities() {
     mCreate_success = false;
     return;
   }
+  
+  //check for > 4 buttons - need to clamp since we're using dx 5
+  if(mButtoncount > 4) {
+    mButtoncount = 2;
+#ifdef _DEBUG
+  printf("WARNING: Clamping to 4 mouse buttons");
+#endif
+  }
+  
   mCreate_success = true;
 }
 
@@ -262,20 +263,6 @@ void SetupMouse() {
 }
 
 /**
- * Sets the fields on the Mouse
- */
-void InitializeMouseFields() {
-  //create buttons array
-  mButtonsArray = mEnvironment->NewBooleanArray(mButtoncount);
-  
-  //create global reference
-  mButtonsReference = mEnvironment->NewGlobalRef(mButtonsArray);
-
-  //set buttons array  
-  mEnvironment->SetStaticObjectField(clsMouse, fidMButtons, mButtonsReference);
-}
-
-/**
  * Updates the fields on the Mouse
  */
 void UpdateMouseFields() {
@@ -313,7 +300,8 @@ void UpdateMouseFields() {
 				diMouseState.rgbButtons[i] = JNI_FALSE;
     }
   }
-  mEnvironment->SetBooleanArrayRegion((jbooleanArray) mButtonsReference, 0, mButtoncount, diMouseState.rgbButtons);
+  jbooleanArray mButtonsArray = (jbooleanArray) mEnvironment->GetStaticObjectField(clsMouse, fidMButtons);
+  mEnvironment->SetBooleanArrayRegion(mButtonsArray, 0, mButtoncount, diMouseState.rgbButtons);
 }
 
 /**
