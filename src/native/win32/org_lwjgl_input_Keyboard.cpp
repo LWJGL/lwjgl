@@ -81,18 +81,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 		return;
 	}
 
-	if (display_hwnd == NULL) {
-		throwException(env, "No window.");
-		return;
-	}
-
 	// Create a keyboard device
 	if (lpdi->CreateDevice(GUID_SysKeyboard, &lpdiKeyboard, NULL) != DI_OK) {
 		throwException(env, "Failed to create keyboard.");
 		return;
 	}
 
-	if (lpdiKeyboard->SetCooperativeLevel(display_hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+	if (lpdiKeyboard->SetCooperativeLevel(getCurrentHWND(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 		throwException(env, "Failed to set keyboard cooperation mode.");
 		return;
 	}

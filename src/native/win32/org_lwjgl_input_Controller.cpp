@@ -318,7 +318,7 @@ static void SetupController() {
 	}
 
 	// set the cooperative level
-	if(cDIDevice->SetCooperativeLevel(display_hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+	if(cDIDevice->SetCooperativeLevel(getCurrentHWND(), DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
 		printfDebug("SetCooperativeLevel failed\n");
 		cCreate_success = false;
 		return;

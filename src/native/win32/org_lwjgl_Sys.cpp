@@ -123,7 +123,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
 	jboolean copy = JNI_FALSE;
 	const char * eMessageText = env->GetStringUTFChars(message, &copy);
 	const char * cTitleBarText = env->GetStringUTFChars(title, &copy);
-	MessageBox(display_hwnd, eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
+	MessageBox(getCurrentHWND(), eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
 	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	

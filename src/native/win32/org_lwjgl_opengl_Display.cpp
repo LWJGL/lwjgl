@@ -49,7 +49,7 @@
 
 static bool				oneShotInitialised = false;			// Registers the LWJGL window class
 
-HWND				display_hwnd = NULL;						              // Handle to the window
+static HWND				display_hwnd = NULL;						              // Handle to the window
 static HDC					display_hdc = NULL;							              // Device context
 static HGLRC				display_hglrc = NULL;						              // OpenGL context
 static bool				isFullScreen = false;		        // Whether we're fullscreen or not
@@ -58,7 +58,6 @@ static bool       isFocused = false;              // whether we're focused or no
 static bool       isDirty = false;                // Whether we're dirty or not
 static bool       isUndecorated = false;                // Whether we're undecorated or not
 extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
-RECT clientSize;
 
 static bool closerequested;
 static int pixel_format_index;
@@ -76,6 +75,10 @@ bool applyPixelFormat(HDC hdc, int iPixelFormat) {
 		return false;
 	}
 	return true;
+}
+
+HWND getCurrentHWND() {
+	return display_hwnd;
 }
 
 HGLRC getCurrentContext() {
@@ -440,6 +443,7 @@ HWND createWindow(int width, int height, bool fullscreen, bool undecorated)
 
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar (unless undecorated)
+	RECT clientSize;
 	clientSize.bottom = height;
 	clientSize.left = 0;
 	clientSize.right = width;
@@ -572,43 +576,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nMakeCurrent
 	if (!result)
 		throwException(env, "Could not make display context current");
 }
-
-/*
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nReshape
-  (JNIEnv *env, jclass clazz, jint x, jint y, jint width, jint height)
-{
-	if (isFullScreen) {
-		return;
-	}
-
-	int exstyle, windowflags;
-
-	if (isUndecorated) {
-		exstyle = WS_EX_APPWINDOW;
-		windowflags = WS_OVERLAPPED;
-	} else {
-		exstyle = WS_EX_APPWINDOW;
-		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_MINIMIZEBOX | WS_SYSMENU;
-	}
-
-	// If we're not a fullscreen window, adjust the height to account for the
-	// height of the title bar:
-	clientSize.bottom = height;
-	clientSize.left = 0;
-	clientSize.right = width;
-	clientSize.top = 0;
-	
-	AdjustWindowRectEx(
-	  &clientSize,    // client-rectangle structure
-	  windowflags,    // window styles
-	  FALSE,       // menu-present option
-	  exstyle   // extended window style
-	);
-
-	SetWindowPos(hwnd, HWND_TOP, x, y, clientSize.right - clientSize.left, 
-		clientSize.bottom - clientSize.top, SWP_NOZORDER);
-}
-*/
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Display_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz) {
 	return getAvailableDisplayModes(env);

@@ -71,25 +71,29 @@ void SetupMouse();
 void InitializeMouseFields();
 void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj);
 
-static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
+/* Return the RECT of the current client area in the current window
+ * in screen coordinates
+ */
+static void getScreenClientRect(RECT* screen_client_rect)
 {
-	GetClientRect(display_hwnd, clientRect);
-	// transform clientRect to screen coordinates
-	clientRect->top = -clientSize.top + windowRect->top;
-	clientRect->left = -clientSize.left + windowRect->left;
-	clientRect->bottom += clientRect->top;
-	clientRect->right += clientRect->left;
+	/* We can't use GetClientRect directly, because it is in
+	 * local window coordinates and we can't use GetWindowRect
+	 * because it returns the screen coordinate RECT of the entire
+	 * window, inluding decoration. Luckily, the WINDOWINFO structure contains
+	 * the client rect in screen coordinates.
+	 */
+	WINDOWINFO window_info;
+	window_info.cbSize = sizeof(WINDOWINFO);
+	GetWindowInfo(getCurrentHWND(), &window_info);
+	*screen_client_rect = window_info.rcClient;
 }
 
 static void resetCursorPos(void) {
 	/* Reset cursor position to middle of the window */
 	RECT clientRect;
-	GetWindowRect(display_hwnd, &windowRect);
-	getScreenClientRect(&clientRect, &windowRect);
+	getScreenClientRect(&clientRect);
 	cursorPos.x = (clientRect.left + clientRect.right)/2;
 	cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
-/*	SetCursorPos(cursorPos.x, cursorPos.y);
-	GetCursorPos(&cursorPos);*/
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
@@ -230,11 +234,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 	if (handle_buffer != NULL) {
 		HCURSOR *cursor_handle = (HCURSOR *)env->GetDirectBufferAddress(handle_buffer);
 		HCURSOR cursor = *cursor_handle;
-//		HCURSOR cursor = (HCURSOR)cursor_handle;
-		SetClassLong(display_hwnd, GCL_HCURSOR, (LONG)cursor);
+		SetClassLong(getCurrentHWND(), GCL_HCURSOR, (LONG)cursor);
 		SetCursor(cursor);
 	} else {
-		SetClassLong(display_hwnd, GCL_HCURSOR, (LONG)NULL);
+		SetClassLong(getCurrentHWND(), GCL_HCURSOR, (LONG)NULL);
 		SetCursor(LoadCursor(NULL, IDC_ARROW));
 	}
 }
@@ -279,7 +282,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
 		resetCursorPos();
 	}
 	mDIDevice->Unacquire();
-	if(mDIDevice->SetCooperativeLevel(display_hwnd, mouseMask) != DI_OK) {
+	if(mDIDevice->SetCooperativeLevel(getCurrentHWND(), mouseMask) != DI_OK) {
 	  throwException(env, "Could not set the CooperativeLevel.");
 		return;
 	}
@@ -375,7 +378,7 @@ static void SetupMouse() {
 	mDIDevice->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
 
 	// set the cooperative level
-	if(mDIDevice->SetCooperativeLevel(display_hwnd, mouseMask) != DI_OK) {
+	if(mDIDevice->SetCooperativeLevel(getCurrentHWND(), mouseMask) != DI_OK) {
 		printfDebug("SetCooperativeLevel failed\n");
 		mCreate_success = false;
 		return;
@@ -394,18 +397,18 @@ static int cap(int val, int min, int max) {
 }
 
 static void getGDICursorDelta(int* return_dx, int* return_dy) {
-	int dx = 0;
-	int dy = 0;
+	int dx;
+	int dy;
 
 	POINT newCursorPos;
 	GetCursorPos(&newCursorPos);
 	RECT clientRect;
 	RECT newWindowRect;
-	GetWindowRect(display_hwnd, &newWindowRect);
+	GetWindowRect(getCurrentHWND(), &newWindowRect);
 	cursorPos.x += newWindowRect.left - windowRect.left;
 	cursorPos.y += newWindowRect.top - windowRect.top;
 	windowRect = newWindowRect;
-	getScreenClientRect(&clientRect, &windowRect);
+	getScreenClientRect(&clientRect);
 	// Clip the position to the client rect
 	newCursorPos.x = cap(newCursorPos.x, clientRect.left, clientRect.right - 1);
 	newCursorPos.y = cap(newCursorPos.y, clientRect.top, clientRect.bottom - 1);
