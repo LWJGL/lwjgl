@@ -43,6 +43,11 @@ package org.lwjgl.input;
  */
 
 public class Cursor {
+
+        static {
+                System.loadLibrary(Sys.getLibraryName());
+        }
+
 	/**
 	 * The native handle to the cursor
 	 */

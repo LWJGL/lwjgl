@@ -116,12 +116,12 @@ public class BaseGL extends Window {
 	 * Construct a fullscreen instance of GL. If the underlying OS does not
 	 * support fullscreen mode, then a window will be created instead. If this
 	 * fails too then an Exception will be thrown.
-   * 
+	 * 
 	 * @param title The title of the window
-   * @param bpp Minimum bits per pixel
-   * @param alpha Minimum bits per pixel in alpha buffer
-   * @param depth Minimum bits per pixel in depth buffer
-   * @param stencil Minimum bits per pixel in stencil buffer
+	 * @param bpp Minimum bits per pixel
+	 * @param alpha Minimum bits per pixel in alpha buffer
+	 * @param depth Minimum bits per pixel in depth buffer
+	 * @param stencil Minimum bits per pixel in stencil buffer
 	 */
 	public BaseGL(String title, int bpp, int alpha, int depth, int stencil) {
 		super(title, 0, 0, Display.getWidth(), Display.getHeight());
