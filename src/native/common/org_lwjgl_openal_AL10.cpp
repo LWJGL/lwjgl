@@ -776,7 +776,7 @@ bool LoadAL(JNIEnv *env) {
 		{"nalGenBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_openal_AL10_nalGenBuffers, "alGenBuffers", (void**)&alGenBuffers},
 		{"nalDeleteBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_openal_AL10_nalDeleteBuffers, "alDeleteBuffers", (void**)&alDeleteBuffers},
 		{"alIsBuffer", "(I)Z", (void*)&Java_org_lwjgl_openal_AL10_alIsBuffer, "alIsBuffer", (void**)&alIsBuffer},
-		{"nalBufferData", "(IILjava/nio/ByteBuffer;III)V", (void*)&Java_org_lwjgl_openal_AL10_nalBufferData, "alBufferData", (void**)&alBufferData},
+		{"nalBufferData", "(IILjava/nio/Buffer;III)V", (void*)&Java_org_lwjgl_openal_AL10_nalBufferData, "alBufferData", (void**)&alBufferData},
 		{"alGetBufferi", "(II)I", (void*)&Java_org_lwjgl_openal_AL10_alGetBufferi, "alGetBufferi", (void**)&alGetBufferi},
 		{"alGetBufferf", "(II)F", (void*)&Java_org_lwjgl_openal_AL10_alGetBufferf, "alGetBufferf", (void**)&alGetBufferf},
 		{"nalSourceQueueBuffers", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_openal_AL10_nalSourceQueueBuffers, "alSourceQueueBuffers", (void**)&alSourceQueueBuffers},
