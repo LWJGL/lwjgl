@@ -495,7 +495,18 @@ public class CoreGL extends BaseGL implements CoreGLConstants {
 	public native void stencilOp(int fail, int zfail, int zpass);
 	public native void stencilMask(int mask);
 	public native void viewport(int x, int y, int width, int height);
+        public native void multiDrawArrays(
+                int mode,
+                int piFirst,
+                int piCount,
+                int primcount);
 
+        public native void multiDrawElements(
+                int mode,
+                int piCount,
+                int type,
+                int pIndices,
+                int primcount);
 }
 
 

@@ -3346,6 +3346,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_stencilMask
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_viewport
   (JNIEnv *, jobject, jint, jint, jint, jint);
 
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiDrawArrays
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiDrawArrays
+  (JNIEnv *, jobject, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiDrawElements
+ * Signature: (IIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiDrawElements
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

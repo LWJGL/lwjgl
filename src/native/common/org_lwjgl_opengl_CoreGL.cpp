@@ -3887,6 +3887,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_getCompressedTexImage
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiDrawArrays
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiDrawArrays
+  (JNIEnv *, jobject, jint mode, jint first, jint count, jint primcount) {
+	glMultiDrawArrays(mode, (GLint *)first, (GLsizei *)count, primcount);
+}
+  
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
+ * Method:    multiDrawElements
+ * Signature: (IIIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_multiDrawElements
+  (JNIEnv *, jobject, jint mode, jint count, jint type, jint indices, jint primcount) {
+	glMultiDrawElements(mode, (GLsizei *)count, type, (const void **)indices, primcount);
+}
+    
+    
+/*
+ * Class:     org_lwjgl_opengl_CoreGL
  * Method:    multiTexCoord1d
  * Signature: (ID)V
  */
