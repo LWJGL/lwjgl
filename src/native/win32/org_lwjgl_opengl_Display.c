@@ -298,10 +298,10 @@ static void appActivate(bool active)
 		if (isFullScreen) {
 			restoreDisplayMode();
 		}
-		ShowWindow(display_hwnd, SW_RESTORE);
+		ShowWindow(display_hwnd, SW_SHOWDEFAULT);
 		SetForegroundWindow(display_hwnd);
 	} else if (isFullScreen) {
-		ShowWindow(display_hwnd, SW_MINIMIZE);
+		ShowWindow(display_hwnd, SW_SHOWMINIMIZED);
 		resetDisplayMode(NULL);
 	}
 	inAppActivate = false;
@@ -320,6 +320,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
         int dwheel;
         bool oldIsMinimized;
         bool oldIsFocused;
+	LRESULT res;
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
 		case WM_SYSCOMMAND:
@@ -337,6 +338,19 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 			}
 		}
 		break;
+		case WM_ACTIVATE:
+			// default action
+			//res = DefWindowProc(hWnd, msg, wParam, lParam);
+			switch (wParam) {
+				case WA_ACTIVE:
+				case WA_CLICKACTIVE:
+					appActivate(true);
+					break;
+				case WA_INACTIVE:
+					appActivate(false);
+					break;
+			}
+			return 0L;
 		case WM_MOUSEMOVE:
 		{
                         xPos = GET_X_LPARAM(lParam); 
@@ -390,26 +404,6 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		{
 			isDirty = true;
 		}
-    /*case WM_MOVE:  {
-      // get fields of display
-            jclass cls_display = (*env)->FindClass(env, "org/lwjgl/opengl/Display");
-            jfieldID fid_x = (*env)->GetStaticFieldID(env, cls_display, "x", "I");
-            jfieldID fid_y = (*env)->GetStaticFieldID(env, cls_display, "y", "I");
-	    
-	    // set fields
-            (*env)->SetStaticIntField(env, cls_display, fid_x, (int)(short) LOWORD(lParam));
-            (*env)->SetStaticIntField(env, cls_display, fid_y, (int)(short) HIWORD(lParam));
-	    
-    }*/
-	}
-
-	// Update window state directly having processed window messages
-        oldIsMinimized = isMinimized;
-        oldIsFocused = isFocused;
-	isMinimized = IsIconic(display_hwnd); 
-	isFocused = GetForegroundWindow() == display_hwnd;
-	if (oldIsMinimized != isMinimized || oldIsFocused != isFocused) {
-		appActivate(isFocused && !isMinimized);
 	}
 
 	// default action
@@ -424,14 +418,14 @@ static bool registerWindow()
 {
         WNDCLASS windowClass;
 	if (!oneShotInitialised) {
-		windowClass.style = CS_GLOBALCLASS | CS_OWNDC;
+		windowClass.style = CS_OWNDC;
 		windowClass.lpfnWndProc = lwjglWindowProc;
 		windowClass.cbClsExtra = 0;
 		windowClass.cbWndExtra = 0;
 		windowClass.hInstance = dll_handle;
 		windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 		windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-		windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+		windowClass.hbrBackground = NULL;
 		windowClass.lpszMenuName = NULL;
 		windowClass.lpszClassName = WINDOWCLASSNAME;
 
@@ -660,7 +654,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *e
 		return;
 	}
 
-	ShowWindow(display_hwnd, SW_SHOW);
+	ShowWindow(display_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(display_hwnd);
 	SetForegroundWindow(display_hwnd);
 	SetFocus(display_hwnd);
