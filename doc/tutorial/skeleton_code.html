@@ -144,134 +144,129 @@ thing finished on time and under budget!</i></p>
 write a fullscreen Java game using LWJGL. Because we're games programmers, we
 don't want to do a Hello World as we'd probably rather shoot it. But before we
 can make bullets we must pay homage to the <i>rotating square!</i></p>
-<p style="background-color: #FFFFCC; border-style: solid; border-width: 1; padding: 3"><code>public
+<p style="background-color: #FFFFCC; border-style: solid; border-width: 1; padding: 3"><code>import
+org.lwjgl.*;<br>
+import org.lwjgl.opengl.*;<br>
+import org.lwjgl.input.*;<br>
+<br>
+<br>
+public
 final class Game {<br>
-static {<br>
-try {<br>
-DisplayMode[] modes = Display.getAvailableDisplayModes();<br>
-System.out.println(&quot;Available display modes:&quot;);<br>
-for (int i = 0; i &lt; modes.length; i ++)<br>
+&nbsp;&nbsp;&nbsp; static {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DisplayMode[] modes = Display.getAvailableDisplayModes();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;Available display modes:&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; modes.length; i ++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 System.out.println(modes[i]);<br>
-// For now let's just pick a mode we're certain to have<br>
-Display.create(new DisplayMode(640, 480, 16, 60), true);<br>
-System.out.println(&quot;Created display.&quot;);<br>
-} catch (Exception e) {<br>
-System.err.println(&quot;Failed to create display due to &quot;+e);<br>
-System.exit(1);<br>
-}<br>
-}<br>
-public static final GL gl = new GL(16, 0, 16, 8);<br>
-static {<br>
-try {<br>
-gl.create();<br>
-System.out.println(&quot;Created OpenGL.&quot;);<br>
-} catch (Exception e) {<br>
-System.err.println(&quot;Failed to create OpenGL due to &quot;+e);<br>
-System.exit(1);<br>
-}<br>
-}<br>
-/** A handy number formatter for use displaying FPS and the like */<br>
-public static NumberFormat fmt = new DecimalFormat();<br>
-static {<br>
-fmt.setMaximumFractionDigits(1);<br>
-fmt.setMinimumFractionDigits(1);<br>
-fmt.setGroupingUsed(false);<br>
-}<br>
-/** Is the game finished? */<br>
-private static boolean finished;<br>
-/** A rotating square! */<br>
-private static float angle;<br>
-/**<br>
-* No construction allowed<br>
-*/<br>
-private Game() {<br>
-}<br>
-public static void main(String[] arguments) {<br>
-try {<br>
-init();<br>
-int frames = 0;<br>
-float fps = 0.0f;<br>
-Timer timer = new Timer();<br>
-timer.reset();<br>
-timer.resume();<br>
-while (!finished) {<br>
-AbsMouse.poll();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // For now let's just pick a mode we're certain to have<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Display.create(new DisplayMode(640, 480, 16, 60), true);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;Created display.&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.err.println(&quot;Failed to create display due to &quot;+e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.exit(1);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp; public static final GL gl = new GL(16, 0, 16, 8);<br>
+&nbsp;&nbsp;&nbsp; static {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.create();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;Created OpenGL.&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.err.println(&quot;Failed to create OpenGL due to &quot;+e);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.exit(1);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp; /** Is the game finished? */<br>
+&nbsp;&nbsp;&nbsp; private static boolean finished;<br>
+<br>
+&nbsp;&nbsp;&nbsp; /** A rotating square! */<br>
+&nbsp;&nbsp;&nbsp; private static float angle;<br>
+<br>
+&nbsp;&nbsp;&nbsp; /**<br>
+&nbsp;&nbsp;&nbsp;&nbsp; * No construction allowed<br>
+&nbsp;&nbsp;&nbsp;&nbsp; */<br>
+&nbsp;&nbsp;&nbsp; private Game() {<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp; public static void main(String[] arguments) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; init();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (!finished) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Keyboard.poll();<br>
-Keyboard.read();<br>
-gl.clear(GL.COLOR_BUFFER_BIT);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 mainLoop();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 render();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 gl.swapBuffers();<br>
-// Count the frames per second. Do with this what you will..<br>
-frames++;<br>
-float time = timer.getTime();<br>
-if (time &gt;= 1.0f) {<br>
-fps = (int) (frames / time);<br>
-timer.reset();<br>
-frames = 0;<br>
-}<br>
-}<br>
-} catch (Throwable t) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</code>&nbsp;&nbsp;&nbsp;<code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (Throwable t) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 t.printStackTrace();<br>
-} finally {<br>
-cleanup();<br>
-}<br>
-}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } finally {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cleanup();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
 <br>
-/**<br>
-* All calculations are done in here<br>
-*/<br>
-private static void mainLoop() {<br>
-angle += 1f;<br>
-if (angle &gt; 360.0f)<br>
-angle = 0.0f;<br>
+&nbsp;&nbsp;&nbsp; /**<br>
+&nbsp;&nbsp;&nbsp;&nbsp; * All calculations are done in here<br>
+&nbsp;&nbsp;&nbsp;&nbsp; */<br>
+&nbsp;&nbsp;&nbsp; private static void mainLoop() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; angle += 1f;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (angle &gt; 360.0f)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; angle = 0.0f;<br>
 <br>
-if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))<br>
-finished = true;<br>
-}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Keyboard.poll();
 <br>
-/**<br>
-* All rendering is done in here<br>
-*/<br>
-private static void render() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; finished = true;<br>
+&nbsp;&nbsp;&nbsp; }<br>
 <br>
-gl.pushMatrix();<br>
-gl.translatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);<br>
-gl.rotatef(angle, 0, 0, 1.0f);<br>
-gl.begin(GL.QUADS);<br>
-gl.vertex2i(-50, -50);<br>
-gl.vertex2i(50, -50);<br>
-gl.vertex2i(50, 50);<br>
-gl.vertex2i(-50, 50);<br>
-gl.end();<br>
-gl.popMatrix();<br>
-}<br>
-/**<br>
-* Initialize<br>
-*/<br>
-private static void init() throws Exception {<br>
-Keyboard.create();<br>
-Keyboard.enableBuffer();<br>
-Mouse.create();<br>
-// Go into orthographic projection mode.<br>
-gl.matrixMode(GL.PROJECTION);<br>
-gl.loadIdentity();<br>
-gl.glu.ortho2D(0, Display.getWidth(), 0, Display.getHeight());<br>
-gl.matrixMode(GL.MODELVIEW);<br>
-gl.loadIdentity();<br>
-gl.viewport(0, 0, Display.getWidth(), Display.getHeight());<br>
-// Fix the refresh rate to the display frequency.<br>
-gl.wglSwapIntervalEXT(1);<br>
-}<br>
-/**<br>
-* Cleanup<br>
-*/<br>
-private static void cleanup() {<br>
-Keyboard.destroy();<br>
-Mouse.destroy();<br>
-gl.destroy();<br>
-Display.destroy();<br>
-}<br>
+&nbsp;&nbsp;&nbsp; /**<br>
+&nbsp;&nbsp;&nbsp;&nbsp; * All rendering is done in here<br>
+&nbsp;&nbsp;&nbsp;&nbsp; */<br>
+&nbsp;&nbsp;&nbsp; private static void render() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.clear(GL.COLOR_BUFFER_BIT);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.pushMatrix();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.translatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.rotatef(angle, 0, 0, 1.0f);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.begin(GL.QUADS);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.vertex2i(-50, -50);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.vertex2i(50, -50);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.vertex2i(50, 50);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.vertex2i(-50, 50);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.end();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.popMatrix();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp; /**<br>
+&nbsp;&nbsp;&nbsp;&nbsp; * Initialize<br>
+&nbsp;&nbsp;&nbsp;&nbsp; */<br>
+&nbsp;&nbsp;&nbsp; private static void init() throws Exception {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Keyboard.create();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Go into orthographic projection mode.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.matrixMode(GL.PROJECTION);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.loadIdentity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; glu.ortho2D(0, Display.getWidth(), 0, Display.getHeight());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.matrixMode(GL.MODELVIEW);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.loadIdentity();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.viewport(0, 0, Display.getWidth(), Display.getHeight());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Fix the refresh rate to the display frequency.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gl.wglSwapIntervalEXT(1);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp; /**<br>
+&nbsp;&nbsp;&nbsp;&nbsp; * Cleanup<br>
+&nbsp;&nbsp;&nbsp;&nbsp; */<br>
+&nbsp;&nbsp;&nbsp; private static void cleanup() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Keyboard.destroy();<br>
+&nbsp;&nbsp;&nbsp;</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>gl.destroy();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Display.destroy();<br>
+&nbsp;&nbsp;&nbsp; }<br>
 }</code></p>
 
 </body>
