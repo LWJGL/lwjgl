@@ -495,7 +495,7 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 *
 	 * @param sources array of sources to play
 	 */
-	public static void alSourcePlay(int n, IntBuffer sources) {
+	public static void alSourcePlay(IntBuffer sources) {
 		nalSourcePlayv(sources.remaining(), sources, sources.position());
 	}
 	private static native void nalSourcePlayv(int n, IntBuffer sources, int offset);
