@@ -206,8 +206,10 @@ public final class ShadersTest {
 		// Setup lighting for when we have fixed function fragment rendering.
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_LIGHT0);
+		if (shader == null ) {
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_LIGHT0);
+		}
 
 		vectorBuffer.clear();
 		vectorBuffer.put(1.0f).put(1.0f).put(1.0f).put(1.0f);

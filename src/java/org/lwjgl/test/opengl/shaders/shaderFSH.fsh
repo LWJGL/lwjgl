@@ -5,7 +5,7 @@ varying vec2 dots;
 void main(void) {
 	// Offset window-space fragment position.
 	vec3 color2D = vec3(gl_FragCoord + UNIFORMS.zwxx);
-	
+
 	// Normalize position.
 	// Multiply with current sin.
 	color2D.xy = normalize(color2D) * UNIFORMS.x;
