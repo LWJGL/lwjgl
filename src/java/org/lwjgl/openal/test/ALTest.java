@@ -509,7 +509,7 @@ public class ALTest extends BasicTest {
         
         do {
             System.out.print("\n\n\nAutomated Test Series:\n\n");
-            System.out.print("*A) Run Fully Automated Tests\n");
+            System.out.print("A) Run Fully Automated Tests\n");
             System.out.print("*B) Run Semi-Automated Tests\n");
             System.out.print("\nInteractive Tests:\n\n");
             System.out.print("1 Position Test\n");
@@ -581,7 +581,7 @@ public class ALTest extends BasicTest {
         fA_VectorStateTransition();  // Vector State Transistion Testing
         fA_GetBufferProperties();  // Get Buffer Properties
         fA_EnumerationValue(); // Enumeration Value Test
-        //fA_QueuingUnderrunStates(); // test underrun while queuing
+        fA_QueuingUnderrunStates(); // test underrun while queuing
 
         System.out.print("\n\n");
         delay_ms(1000);
@@ -906,6 +906,75 @@ public class ALTest extends BasicTest {
         }
         
         if(result == true) {
+            System.out.print("PASSED.");
+        } else {
+            System.out.print("FAILED.");
+        }
+    }
+    
+    protected void fA_QueuingUnderrunStates() {
+        ByteBuffer testSources = ByteBuffer.allocateDirect(4*1);
+        testSources.order(ByteOrder.nativeOrder()); 
+        
+        ByteBuffer tempInt = ByteBuffer.allocateDirect(4);
+        tempInt.order(ByteOrder.nativeOrder()); 
+        int error;
+        ByteBuffer bufferName = ByteBuffer.allocateDirect(4);
+        bufferName.order(ByteOrder.nativeOrder()); 
+        
+        ByteBuffer listenerOri = ByteBuffer.allocateDirect(24);
+        listenerOri.order(ByteOrder.nativeOrder());
+        listenerOri.putFloat(0.0f);
+        listenerOri.putFloat(0.0f);
+        listenerOri.putFloat(-1.0f);
+        listenerOri.putFloat(0.0f);
+        listenerOri.putFloat(1.0f);
+        listenerOri.putFloat(0.0f);        
+        
+        ByteBuffer sourceOri = ByteBuffer.allocateDirect(24);
+        sourceOri.order(ByteOrder.nativeOrder());
+        sourceOri.putFloat(1.0f);
+        sourceOri.putFloat(0.0f);
+        sourceOri.putFloat(0.0f);
+        sourceOri.putFloat(0.0f);
+        sourceOri.putFloat(1.0f);
+        sourceOri.putFloat(0.0f);               
+        
+        boolean localResultOK;
+        
+        System.out.print("\nQueuing Underrun States Test. ");
+        localResultOK = true;
+        al.getError();
+        al.genSources(1, Sys.getDirectBufferAddress(testSources));
+        al.sourcei(testSources.getInt(4*0), AL.BUFFER, 0);
+        al.sourcei(testSources.getInt(4*0), AL.LOOPING, AL.FALSE);
+        if ((error = al.getError()) != AL.NO_ERROR)
+            displayALError("Init error : ", error);
+        al.sourceQueueBuffers(testSources.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
+        if ((error = al.getError()) != AL.NO_ERROR) localResultOK = false;
+        al.sourcePlay(testSources.getInt(4*0));
+        delay_ms(1000);
+        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(tempInt));
+        if (tempInt.getInt(0) != AL.STOPPED) localResultOK = false;
+        al.getSourcei(testSources.getInt(4*0), AL.BUFFERS_PROCESSED, Sys.getDirectBufferAddress(tempInt));
+        if (tempInt.getInt(0) != 1) {
+            localResultOK = false;
+        } else {
+            al.sourceUnqueueBuffers(testSources.getInt(4*0), tempInt.getInt(0), Sys.getDirectBufferAddress(bufferName));
+        }
+        al.sourceQueueBuffers(testSources.getInt(4*0), 1, Sys.getDirectBufferAddress(buffers) + (4*1));
+        if ((error = al.getError()) != AL.NO_ERROR) localResultOK = false;
+        al.sourcePlay(testSources.getInt(4*0));
+        delay_ms(100);
+        al.getSourcei(testSources.getInt(4*0), AL.SOURCE_STATE, Sys.getDirectBufferAddress(tempInt));
+        if (tempInt.getInt(0) != AL.PLAYING) localResultOK = false;
+        
+        // cleanup
+        al.sourcei(testSources.getInt(4*0), AL.BUFFER, 0);
+        al.deleteSources(1, Sys.getDirectBufferAddress(testSources));
+        
+        // display result
+        if (localResultOK == true) {
             System.out.print("PASSED.");
         } else {
             System.out.print("FAILED.");
