@@ -55,6 +55,23 @@ HWND			hwnd = NULL;						// Handle to the window
 HDC				hdc = NULL;							// Device context
 LPDIRECTINPUT	lpdi = NULL;
 
+void dumpLastError(void) {
+	LPVOID lpMsgBuf;
+	FormatMessage( 
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+		FORMAT_MESSAGE_FROM_SYSTEM | 
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		GetLastError(),
+		0, // Default language
+		(LPTSTR) &lpMsgBuf,
+		0,
+		NULL
+	);
+	printf("System error: %s\n", lpMsgBuf);
+	LocalFree(lpMsgBuf);
+}
+
 /*
  *	A dummy WindowProc which does nothing. Used so we can have an invisible OpenGL window
  */
@@ -179,7 +196,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 #ifdef _DEBUG
 	printf("Creating display: size %dx%d %dhz %dbpp...\n", width, height, freq, bpp);
 #endif
-
 	if (fullscreen && SetDisplayMode(width, height, bpp, freq) != 1)
 		return JNI_FALSE;
 
@@ -187,7 +203,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		Register a window. This window does nothing, it's just a requirement that we get
 		a handle to it so we can do other things
 	*/
-
 	if (!oneShotInitialised) {
 		WNDCLASS windowClass;
 
@@ -203,6 +218,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate
 		windowClass.lpszClassName = WINDOWCLASSNAME;
 
 		if (RegisterClass(&windowClass) == 0) {
+			dumpLastError();
 			printf("Failed to register window class\n");
 			return JNI_FALSE;
 		}
