@@ -177,8 +177,44 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 }
 
 
+
+const void * getClipboard(int type)
+{
+
+	void * ret;
+
+	// Open the clipboard
+	if (!OpenClipboard(NULL)) 
+		return NULL; 
+
+	HANDLE hglb = GetClipboardData(type); 
+	if (hglb != NULL) { 
+		ret = GlobalLock(hglb); 
+		if (ret != NULL) { 
+			GlobalUnlock(hglb); 
+		} 
+	} 
+
+	// Close the clipboard now we're done
+	CloseClipboard(); 
+
+	return ret;
+
+}
+
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getClipboard
   (JNIEnv * env, jclass clazz)
 {
-	return NULL;
+	// Check to see if there's text available in the clipboard
+	BOOL textAvailable = IsClipboardFormatAvailable(CF_TEXT);
+	BOOL unicodeAvailable = IsClipboardFormatAvailable(CF_UNICODETEXT);
+
+	if (unicodeAvailable) {
+		const wchar_t * str = (const wchar_t *) getClipboard(CF_UNICODETEXT);
+		return env->NewString(str, wcslen(str));
+	} else if (textAvailable) {
+		return env->NewStringUTF((const char *) getClipboard(CF_TEXT));
+	} else {
+		return NULL;
+	}
 }

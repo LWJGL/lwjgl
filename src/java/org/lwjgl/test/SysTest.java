@@ -59,6 +59,7 @@ public class SysTest {
     testTimer();
     testPriority();
     testUrl();
+    testClipboard();
   }
   
   /**
@@ -172,6 +173,13 @@ public class SysTest {
       Thread.sleep(time);
     } catch (InterruptedException inte) {
     }
+  }
+  
+  /**
+   * Tests the clipboard. Helps to have something in it first...
+   */
+  private void testClipboard() {
+  	System.out.println("Contents of clipboard: '"+Sys.getClipboard()+"'");
   }
   
   /**
