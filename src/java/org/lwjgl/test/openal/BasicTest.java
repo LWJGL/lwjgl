@@ -120,6 +120,27 @@ public abstract class BasicTest {
     }
     
     /**
+     * Shutdowns OpenAL
+     */
+    protected void alExit() {
+        
+      //Get active context
+      context = alc.getCurrentContext();
+      
+      //Get device for active context
+      device = alc.getContextsDevice(context);
+      
+      //Disable context
+      alc.makeContextCurrent(null);
+      
+      //Release context(s)
+      alc.destroyContext(context);
+      
+      //Close device
+      alc.closeDevice(device);
+    }
+    
+    /**
      * Creates an integer buffer to hold specified ints
      * - strictly a utility method
      *
@@ -140,7 +161,7 @@ public abstract class BasicTest {
      */
     protected void exit(int error) {
         System.out.println("OpenAL Error: " + al.getString(error));
-        alut.exit();
+        alExit();
         System.exit(-1);
     }
 }
