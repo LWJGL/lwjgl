@@ -83,14 +83,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_getIntegerv (JNIEnv *env, jobje
  * ALCdevice *alcOpenDevice( const ALubyte *tokstr );
  */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALC_openDevice (JNIEnv *env, jobject obj, jstring tokstr) {
-	ALubyte* tokenstring = (ALubyte*) (env->GetStringUTFChars(tokstr, 0));
+	ALubyte* tokenstring;
+
+	if(tokstr != NULL) {
+		tokenstring = (ALubyte*) (env->GetStringUTFChars(tokstr, 0));
+	} else {
+		tokenstring = NULL;
+	}
 
 	/* get device */
 	ALCdevice* device = alcOpenDevice(tokenstring);
 
 	/* if error - cleanup and get out */
 	if(device == NULL) {
-		env->ReleaseStringUTFChars((jstring)tokenstring, 0);
+		if(tokenstring != NULL) {
+			env->ReleaseStringUTFChars((jstring)tokenstring, 0);
+		}
 		return NULL;
 	}
 
