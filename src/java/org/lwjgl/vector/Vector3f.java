@@ -283,5 +283,22 @@ public class Vector3f extends Vector {
 		
 		return this;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer sb = new StringBuffer(64);
+		
+		sb.append("Vector3f[");
+		sb.append(x);
+		sb.append(", ");
+		sb.append(y);
+		sb.append(", ");
+		sb.append(z);
+		sb.append(']');
+		return sb.toString();
+	}
+
 
 }

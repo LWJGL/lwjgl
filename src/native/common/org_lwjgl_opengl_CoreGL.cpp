@@ -183,7 +183,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_end(JNIEnv * env, jobject ob
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_arrayElement(JNIEnv * env, jobject obj, jint p0)
 {
 	glArrayElement((GLint) p0);
-	CHECK_GL_ERROR
 }
 
 /*
