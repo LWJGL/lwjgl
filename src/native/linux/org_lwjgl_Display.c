@@ -31,12 +31,12 @@
  */
 
 /**
- * $id$
+ * $Id$
  *
  * Linux specific library for display handdling.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
- * @version $revision$
+ * @version $Revision$
  */
 
 
