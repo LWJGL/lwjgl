@@ -196,9 +196,8 @@ public final class Display {
 							continue;
 						else
 							return -order[i];
-						
-					} catch (Exception e) {
-						assert false : e.getMessage();						
+					} catch (IllegalAccessException e) {
+						throw new RuntimeException(e);
 					}
 				}
 				
