@@ -19,9 +19,6 @@ import org.lwjgl.Sys;
  * @author foo
  */
 public class Keyboard {
-
-	// Keyboard key codes.
-
 	public static final int KEY_ESCAPE          = 0x01;
 	public static final int KEY_1               = 0x02;
 	public static final int KEY_2               = 0x03;

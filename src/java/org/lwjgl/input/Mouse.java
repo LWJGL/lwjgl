@@ -13,8 +13,8 @@ import org.lwjgl.Sys;
  * mouse buttons, and determine the mouse movement delta since the last poll.
  * No buffering is available.
  * 
- * Up to 8 buttons are available. The scrolly wheel, if present, is the z
- * value.
+ * Up to 8 buttons are available. A scrolly wheel, if present, is the z
+ * value. This will be in the range of -10000 to +10000.
  * 
  * @author foo
  */
@@ -106,4 +106,34 @@ public class Mouse {
 	 * Native method to poll the mouse
 	 */
 	private static native void nPoll();
+
+	/**
+	 * Queries the number of buttons the mouse has
+	 * @return the number of buttons the mouse has
+	 */
+	public static int getNumButtons() {
+		assert created : "The mouse has not been created.";
+		return nGetNumButtons();
+	}
+
+	/**
+	 * Native implementation of getNumButtons()
+	 */
+	private static native int nGetNumButtons();
+	
+	/**
+	 * Queries whether the joystick has a Z value
+	 * @return true if the joystick has a Z value
+	 */
+	public static boolean hasZValue() {
+		assert created : "The mouse has not been created.";
+		return nHasZValue();
+	}
+
+	/**
+	 * Native implementation of hasZValue()
+	 */
+	private static native boolean nHasZValue();
+
+
 }
