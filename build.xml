@@ -244,6 +244,11 @@
 		<jar destfile="${lwjgl.lib}/lwjgl_fmod3.jar" taskname="lwjgl_fmod3.jar">
 			<fileset refid="lwjgl_fmod3.fileset"/>
 		</jar>		
+		
+		<!-- Create lwjgl_media.jar -->
+		<jar destfile="${lwjgl.lib}/lwjgl_media.jar" taskname="lwjgl_media.jar">
+			<fileset refid="lwjgl.media.fileset"/>
+		</jar>		
 	</target>
   
 	<!-- Creates the Javadoc -->
