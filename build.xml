@@ -3,11 +3,11 @@
 	<!-- ================================================================== -->
 	<!-- Global properties for build 										-->
 	<!-- ================================================================== -->
-	<property name="lwjgl.src" value="./src" />
+	<property name="lwjgl.src" value="./SRC" />
 	<property name="lwjgl.src.native" value="${lwjgl.src}/native" />
 	<property name="lwjgl.src.headers" value="${lwjgl.src.native}/common" />
 	<property name="lwjgl.src.templates" value="${lwjgl.src}/templates" />
-	<property name="lwjgl.bin" value="./bin" />
+	<property name="lwjgl.bin" value="./BIN" />
 	<property name="lwjgl.lib" value="./libs" />
 	<property name="lwjgl.dist" value="./dist" />
 	<property name="lwjgl.docs" value="./doc" />
@@ -297,6 +297,48 @@
 			<arg path="${lwjgl.src.headers}/nv"/>
 			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
 			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/NV*.java"/>
+		</apply>
+		<!-- Generate HP -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg path="${lwjgl.src.headers}/hp"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/HP*.java"/>
+		</apply>
+		<!-- Generate IBM -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg path="${lwjgl.src.headers}/ibm"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/IBM*.java"/>
+		</apply>
+		<!-- Generate SUN -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg path="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg path="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg path="${lwjgl.src.headers}/sun"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/SUN*.java"/>
 		</apply>
 	</target>
 	
