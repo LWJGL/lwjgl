@@ -65,12 +65,9 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	private int accum_dy;
 	private int accum_dz;
 
-	/** The last polled mouse position */
-	private int last_poll_x;
-	private int last_poll_y;
-	/** The last event mouse position */
-	private int last_event_x;
-	private int last_event_y;
+	/** The last mouse position */
+	private int last_x;
+	private int last_y;
 
 	/** Event scratch array */
 	private final int[] event = new int[EVENT_SIZE];
@@ -94,29 +91,32 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 		return grabbed;
 	}
 
+	private int transformY(int y) {
+		return height - 1 - y;
+	}
+
 	private void resetCursorToCenter() {
-		int center_x = width/2;
-		int center_y = height - 1 - height/2;
-		last_poll_x = center_x;
-		last_poll_y = center_y;
-		last_event_x = center_x;
-		last_event_y = center_y;
 		clearEvents();
 		accum_dx = accum_dy = 0;
 	}
 
-	private boolean putMouseEvent(int button, int state, int dx, int dy, int dz) {
+	private boolean putMouseEvent(int button, int state, int coord1, int coord2, int dz) {
 		event[0] = button;
 		event[1] = state;
-		event[2] = dx;
-		event[3] = dy;
+		event[2] = coord1;
+		event[3] = coord2;
 		event[4] = dz;
 		return putEvent(event);
 	}
 
 	public synchronized void poll(IntBuffer coord_buffer, ByteBuffer buttons_buffer) {
-		coord_buffer.put(0, accum_dx);
-		coord_buffer.put(1, accum_dy);
+		if (grabbed) {
+			coord_buffer.put(0, accum_dx);
+			coord_buffer.put(1, accum_dy);
+		} else {
+			coord_buffer.put(0, last_x);
+			coord_buffer.put(1, last_y);
+		}
 		coord_buffer.put(2, accum_dz);
 		accum_dx = accum_dy = accum_dz = 0;
 		int old_position = buttons_buffer.position();
@@ -127,18 +127,13 @@ final class MouseEventQueue extends EventQueue implements MouseListener, MouseMo
 	private synchronized void setCursorPos(int x, int y) {
 		if (grabbed)
 			return;
-		int poll_dx = x - last_poll_x;
-		int poll_dy = y - last_poll_y;
-		accum_dx += poll_dx;
-		accum_dy += poll_dy;
-		last_poll_x = x;
-		last_poll_y = y;
-		int event_dx = x - last_event_x;
-		int event_dy = y - last_event_y;
-		if (putMouseEvent(-1, 0, event_dx, -event_dy, 0)) {
-			last_event_x = x;
-			last_event_y = y;
-		}
+		int dx = x - last_x;
+		int dy = y - last_y;
+		accum_dx += dx;
+		accum_dy += dy;
+		last_x = x;
+		last_y = y;
+		putMouseEvent(-1, 0, x, transformY(y), 0);
 	}
 
 	public void mouseClicked(MouseEvent e) {
