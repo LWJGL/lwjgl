@@ -19,16 +19,16 @@ AC_PROG_CXX
 AC_CANONICAL_HOST
 
 case "$host_os" in
-        darwin*)        _BUILD_FLAGS="-D_AGL -fpascal-strings"
-	                LDFLAGS="-Xlinker -framework -Xlinker JavaVM -Xlinker -framework -Xlinker ApplicationServices -Xlinker -framework -Xlinker CoreServices -Xlinker -framework -Xlinker Carbon"
-			NATIVE_BUILD_DIR=macosx
-                        CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
-                        CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
-                        ;;
+	darwin*)	_BUILD_FLAGS="-D_AGL -fpascal-strings"
+				LDFLAGS="-Xlinker -framework -Xlinker JavaVM -Xlinker -framework -Xlinker ApplicationServices -Xlinker -framework -Xlinker CoreServices -Xlinker -framework -Xlinker Carbon"
+				NATIVE_BUILD_DIR=macosx
+				CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
+				CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
+				;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    AC_LIBTOOL_DLOPEN
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
-								   LDFLAGS="-Wl,-static,-lXcursor,-lXrender,-call_shared"
+								   LDFLAGS="-Wl,-static,-lXcursor,-lXrender,-lXrandr,-call_shared"
                                    AC_CHECK_HEADERS([AL/altypes.h AL/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
 								   NATIVE_BUILD_DIR=linux
                                    CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"

@@ -42,6 +42,7 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/xf86vmode.h>
+#include <X11/extensions/Xrandr.h>
 #include <X11/Xutil.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,14 +51,28 @@
 #include "common_tools.h"
 #include "Window.h"
 
+typedef enum {XRANDR, XF86VIDMODE, NONE} extension;
+
+typedef struct {
+	int width;
+	int height;
+	int freq;
+	union {
+		int size_index;
+		XF86VidModeModeInfo xf86vm_modeinfo;
+	} mode_data;
+} mode_info;
+
 static int saved_width;
 static int saved_height;
+static int saved_freq;
 static int gamma_ramp_length = 0;
 static unsigned short *r_ramp;
 static unsigned short *g_ramp;
 static unsigned short *b_ramp;
+static extension current_extension = NONE;
 
-static bool getVidModeExtensionVersion(Display *disp, int screen, int *major, int *minor) {
+static bool getXF86VidModeVersion(Display *disp, int *major, int *minor) {
 	int event_base, error_base;
 
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
@@ -65,45 +80,170 @@ static bool getVidModeExtensionVersion(Display *disp, int screen, int *major, in
 		return false;
 	}
 	if (!XF86VidModeQueryVersion(disp, major, minor)) {
-		printfDebug("Could not determine XF86VidMode version\n");
+		printfDebug("Could not query XF86VidMode version\n");
 		return false;
 	}
 	printfDebug("XF86VidMode extension version %i.%i\n", *major, *minor);
 	return true;
 }
 
-static bool getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
-	int minor_ver, major_ver;
-	if (!getVidModeExtensionVersion(disp, screen, &major_ver, &minor_ver))
+static bool getXrandrVersion(Display *disp, int *major, int *minor) {
+	int event_base, error_base;
+
+	if (!XRRQueryExtension(disp, &event_base, &error_base)) {
+		printfDebug("Xrandr extension not available\n");
 		return false;
-	XF86VidModeGetAllModeLines(disp, screen, num_modes, avail_modes);
+	}
+	if (!XRRQueryVersion(disp, major, minor)) {
+		printfDebug("Could not query Xrandr version\n");
+		return false;
+	}
+	printfDebug("Xrandr extension version %i.%i\n", *major, *minor);
 	return true;
 }
 
-static bool setMode(Display *disp, int screen, int width, int height, bool lock_mode) {
+static bool isXrandrSupported(Display *disp) {
+	int major, minor;
+	if (!getXrandrVersion(disp, &major, &minor))
+		return false;
+	return major >= 1;
+}
+
+static bool isXF86VidModeSupported(Display *disp) {
+	int minor_ver, major_ver;
+	if (!getXF86VidModeVersion(disp, &major_ver, &minor_ver))
+		return false;
+	return major_ver >= 2;
+}
+	
+static extension getBestDisplayModeExtension(Display *disp) {
+	if (isXrandrSupported(disp))
+		return XRANDR;
+	else if (isXF86VidModeSupported(disp))
+		return XF86VIDMODE;
+	else
+		return NONE;
+}
+
+static mode_info *getXrandrDisplayModes(Display *disp, int screen, int *num_modes) {
+	int num_randr_sizes;
+	XRRScreenSize *sizes = XRRSizes(disp, screen, &num_randr_sizes);
+	/* Count number of modes */
+	int num_randr_modes = 0;
+	for (int i = 0; i < num_randr_sizes; i++) {
+		int num_randr_rates;
+		XRRRates(disp, screen, i, &num_randr_rates);
+		num_randr_modes += num_randr_rates;
+	}
+	mode_info *avail_modes = (mode_info *)malloc(sizeof(mode_info)*num_randr_modes);
+	if (avail_modes == NULL)
+		return NULL;
+	int mode = 0;
+	for (int i = 0; i < num_randr_sizes; i++) {
+		int num_randr_rates;
+		short *freqs = XRRRates(disp, screen, i, &num_randr_rates);
+		for (int j = 0; j < num_randr_rates; j++) {
+			avail_modes[mode].width = sizes[i].width;
+			avail_modes[mode].height = sizes[i].height;
+			avail_modes[mode].freq = freqs[j];
+			avail_modes[mode].mode_data.size_index = i;
+			mode++;
+		}
+	}
+	*num_modes = num_randr_modes;
+	return avail_modes;
+}
+
+static mode_info *getXF86VidModeDisplayModes(Display *disp, int screen, int *num_modes) {
+	int num_xf86vm_modes;
+	XF86VidModeModeInfo **avail_xf86vm_modes;
+	XF86VidModeGetAllModeLines(disp, screen, &num_xf86vm_modes, &avail_xf86vm_modes);
+	mode_info *avail_modes = (mode_info *)malloc(sizeof(mode_info)*num_xf86vm_modes);
+	if (avail_modes == NULL) {
+		XFree(avail_xf86vm_modes);
+		return NULL;
+	}
+	for (int i = 0; i < num_xf86vm_modes; i++) {
+		avail_modes[i].width = avail_xf86vm_modes[i]->hdisplay;
+		avail_modes[i].height = avail_xf86vm_modes[i]->vdisplay;
+		avail_modes[i].freq = 0; // No frequency support in XF86VidMode
+		avail_modes[i].mode_data.xf86vm_modeinfo = *avail_xf86vm_modes[i];
+	}
+	XFree(avail_xf86vm_modes);
+	*num_modes = num_xf86vm_modes;
+	return avail_modes;
+}
+
+static mode_info *getDisplayModes(Display *disp, int screen, int *num_modes) {
+	switch (current_extension) {
+		case XF86VIDMODE:
+			return getXF86VidModeDisplayModes(disp, screen, num_modes);
+		case XRANDR:
+			return getXrandrDisplayModes(disp, screen, num_modes);
+		case NONE:
+			// fall through
+		default:
+			// Should never happen
+			return NULL;
+	}
+}
+
+static bool setXF86VidModeMode(Display *disp, int screen, mode_info *mode) {
+	return True == XF86VidModeSwitchToMode(disp, screen, &mode->mode_data.xf86vm_modeinfo);
+}
+
+static bool setXrandrMode(Display *disp, int screen, mode_info *mode) {
+	Status success;
+	do {
+		Time config_time;
+		Drawable root_window = RootWindow(disp, screen);
+		XRRScreenConfiguration *screen_configuration = XRRGetScreenInfo (disp, root_window);
+		XRRConfigTimes(screen_configuration, &config_time);
+		Rotation current_rotation;
+		XRRConfigRotations(screen_configuration, &current_rotation);
+		success = XRRSetScreenConfigAndRate(disp, screen_configuration, root_window, mode->mode_data.size_index, current_rotation, mode->freq, config_time);
+		XRRFreeScreenConfigInfo(screen_configuration);
+	} while (success != 0);
+	return true;
+}
+
+static bool setMode(Display *disp, int screen, int width, int height, int freq/*, bool lock_mode*/) {
+	if (current_extension == NONE)
+		return false;
 	int num_modes, i;
-	XF86VidModeModeInfo **avail_modes;
-	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
+	mode_info *avail_modes = getDisplayModes(disp, screen, &num_modes);
+	if (avail_modes == NULL) {
 		printfDebug("Could not get display modes\n");
 		return false;
 	}
-	XF86VidModeLockModeSwitch(disp, screen, 0);
+	bool result = false;
 	for ( i = 0; i < num_modes; ++i ) {
-		printfDebug("Mode %d: %dx%d\n", i, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay);
-		if (avail_modes[i]->hdisplay == width && avail_modes[i]->vdisplay == height) {
-			if (!XF86VidModeSwitchToMode(disp, screen, avail_modes[i])) {
-				printfDebug("Could not switch mode\n");
-				break;
+		printfDebug("Mode %d: %dx%d @%d\n", i, avail_modes[i].width, avail_modes[i].height, avail_modes[i].freq);
+		if (avail_modes[i].width == width && avail_modes[i].height == height && avail_modes[i].freq == freq) {
+			switch (current_extension) {
+				case XF86VIDMODE:
+					if (!setXF86VidModeMode(disp, screen, &avail_modes[i])) {
+						printfDebug("Could not switch mode\n");
+						continue;
+					}
+					break;
+				case XRANDR:
+					if (!setXrandrMode(disp, screen, &avail_modes[i])) {
+						printfDebug("Could not switch mode\n");
+						continue;
+					}
+					break;
+				case NONE: // Should never happen
+				default:   // Should never happen
+					continue;
 			}
-			if (lock_mode)
-				XF86VidModeLockModeSwitch(disp, screen, 1);
-			XFree(avail_modes);
-			return true;
+			result = true;
+			break;
 		}
 	}
-	XFree(avail_modes);
+	free(avail_modes);
 	XFlush(disp);
-	return false;
+	return result;
 }
 
 static void freeSavedGammaRamps() {
@@ -117,8 +257,8 @@ static void freeSavedGammaRamps() {
 }
 
 static int getGammaRampLength(Display *disp, int screen) {
-	int minor_ver, major_ver, ramp_size;
-	if (!getVidModeExtensionVersion(disp, screen, &major_ver, &minor_ver) || major_ver < 2) {
+	int ramp_size;
+	if (!isXF86VidModeSupported(disp)) {
 		printfDebug("XF86VidMode extension version >= 2 not found\n");
 		return 0;
 	}
@@ -131,7 +271,7 @@ static int getGammaRampLength(Display *disp, int screen) {
 
 jobject initDisplay(JNIEnv *env) {
 	int num_modes;
-	XF86VidModeModeInfo **avail_modes;
+	mode_info *avail_modes;
 	int screen;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
@@ -140,19 +280,28 @@ jobject initDisplay(JNIEnv *env) {
 	}
 	screen = DefaultScreen(disp);
 
-	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
-		throwException(env, "Could not get display modes");
+	current_extension = getBestDisplayModeExtension(disp);
+	if (current_extension == NONE) {
+		throwException(env, "No display mode extension is available");
+		XCloseDisplay(disp);
 		return NULL;
 	}
-	saved_width = avail_modes[0]->hdisplay;
-	saved_height = avail_modes[0]->vdisplay;
+	avail_modes = getDisplayModes(disp, screen, &num_modes);
+	if (avail_modes == NULL) {
+		throwException(env, "Could not get display modes");
+		XCloseDisplay(disp);
+		return NULL;
+	}
+	saved_width = avail_modes[0].width;
+	saved_height = avail_modes[0].height;
+	saved_freq = avail_modes[0].freq;
 	int bpp = XDefaultDepth(disp, screen);
-	printfDebug("Original display dimensions: width %d, height %d\n", saved_width, saved_height);
+	printfDebug("Original display dimensions: width %d, height %d freq %d\n", saved_width, saved_height, saved_freq);
 	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/opengl/DisplayMode");
 	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
-	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, saved_width, saved_height, bpp, 0);
+	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, saved_width, saved_height, bpp, saved_freq);
 
-	XFree(avail_modes);
+	free(avail_modes);
 
 	/* Fetch the current gamma ramp */
 	gamma_ramp_length = getGammaRampLength(disp, screen);
@@ -175,8 +324,10 @@ void switchDisplayMode(JNIEnv * env, jobject mode) {
 	jclass cls_displayMode = env->GetObjectClass(mode);
 	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
 	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
+	jfieldID fid_freq = env->GetFieldID(cls_displayMode, "freq", "I");
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
+	int freq = env->GetIntField(mode, fid_freq);
 	int screen;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
@@ -184,7 +335,7 @@ void switchDisplayMode(JNIEnv * env, jobject mode) {
 		return;
 	}
 	screen = DefaultScreen(disp);
-	if (!setMode(disp, screen, width, height, true))
+	if (!setMode(disp, screen, width, height, freq))
 		throwException(env, "Could not switch mode.");
 	XCloseDisplay(disp);
 }
@@ -196,7 +347,7 @@ void resetDisplayMode(JNIEnv *env) {
 	if (disp == NULL)
 		return;
 	screen = DefaultScreen(disp);
-	if (!setMode(disp, screen, saved_width, saved_height, false)) {
+	if (!setMode(disp, screen, saved_width, saved_height, saved_freq)) {
 		printfDebug("Failed to reset mode");
 	}
 	if (gamma_ramp_length > 0) {
@@ -210,7 +361,7 @@ void resetDisplayMode(JNIEnv *env) {
 jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 	int num_modes, i;
 	int screen;
-	XF86VidModeModeInfo **avail_modes;
+	mode_info *avail_modes;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 		throwException(env, "Could not open display");
@@ -219,8 +370,8 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 
 	screen = DefaultScreen(disp);
 	int bpp = XDefaultDepth(disp, screen);
-
-	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
+	avail_modes = getDisplayModes(disp, screen, &num_modes);
+	if (avail_modes == NULL) {
 		printfDebug("Could not get display modes\n");
 		XCloseDisplay(disp);
 		return NULL;
@@ -231,10 +382,10 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
 
 	for (i = 0; i < num_modes; i++) {
-		jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, bpp, 0);
+		jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i].width, avail_modes[i].height, bpp, avail_modes[i].freq);
 		env->SetObjectArrayElement(ret, i, displayMode);
 	}
-	XFree(avail_modes);
+	free(avail_modes);
 	XCloseDisplay(disp);
 	return ret;
 }
