@@ -82,39 +82,6 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_ngetTime
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    setProcessPriority
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
-  (JNIEnv * env, jclass clazz, jint priority)
-{
-	HANDLE me = GetCurrentProcess();
-	int win32priority;
-
-	switch (priority) {
-	case org_lwjgl_Sys_REALTIME_PRIORITY:
-		win32priority = REALTIME_PRIORITY_CLASS;
-		break;
-	case org_lwjgl_Sys_HIGH_PRIORITY:
-		win32priority = HIGH_PRIORITY_CLASS;
-		break;
-	case org_lwjgl_Sys_NORMAL_PRIORITY:
-		win32priority = NORMAL_PRIORITY_CLASS;
-		break;
-	case org_lwjgl_Sys_LOW_PRIORITY:
-		win32priority = IDLE_PRIORITY_CLASS;
-		break;
-	default:
-		return;
-	}
-
-	if (!SetPriorityClass(me, win32priority)) {
-		printfDebug("Failed to set priority class.\n");
-	}
-}
-
-/*
- * Class:     org_lwjgl_Sys
  * Method:    alert
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */

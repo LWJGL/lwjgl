@@ -85,11 +85,6 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env
 	return getVersionString(env);
 }
 
-
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority(JNIEnv * env, jclass clazz, jint priority) {
-    printfDebug("WARNING: setProcessPriority unsupported\n");
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jstring title, jstring message)
 {
 }

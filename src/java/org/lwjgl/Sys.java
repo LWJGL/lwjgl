@@ -50,35 +50,6 @@ public final class Sys {
 
 	public static final String VERSION = "0.94";
 
-	/** Low process priority. @see #setProcessPriority() */
-	public static final int LOW_PRIORITY = -1;
-
-	/**
-	 * Normal process priority. This priority equates to the priority that the
-	 * JVM has when it is started up normally. Note that if the JVM is started
-	 * inside a process which is already a different priority then this will not
-	 * be the initial priority.
-	 *
-	 * @see #setProcessPriority(int)
-	 */
-	public static final int NORMAL_PRIORITY = 0;
-
-	/** High process priority. @see #setProcessPriority() */
-	public static final int HIGH_PRIORITY = 1;
-
-	/**
-	 * Realtime priority. Use at your own risk. This will set the java process
-	 * priority to the highest priority the OS will normally allow. It is likely
-	 * that this puts it at a higher priority than many OS critical tasks, such
-	 * as disk writes or mouse input and the like. Hence it is quite possible to
-	 * completely freeze your machine if you have an errant thread.
-	 *
-	 * This priority is <strong>not</strong> recommended for gaming applications.
-	 *
-	 * @see #setProcessPriority(int)
-	 */
-	public static final int REALTIME_PRIORITY = 2;
-
 	/** The native library name */
 	private static String LIBRARY_NAME = "lwjgl";
 
@@ -165,27 +136,6 @@ public final class Sys {
 		return ngetTime() & 0x7FFFFFFFFFFFFFFFL;
 	}
 	private static native long ngetTime();
-
-	/**
-	 * Set the process priority in a system independent way. Because of the various
-	 * differences in operating systems this might or might not have any effect or
-	 * the correct effect.
-	 *
-	 * The default process priority is NORMAL_PRIORITY.
-	 *
-	 * REALTIME_PRIORITY processes should theoretically be the maximum priority of
-	 * any process on the system and may have side effects on I/O and other fundamental
-	 * operating system functions - use with caution.
-	 *
-	 * It is unlikely that any games will want to change the priority of the Java
-	 * process; but there are some other applications for this library which require
-	 * process priority adjustments, such as in soft-realtime graphics rendering
-	 * for broadcast television.
-	 *
-	 * @param priority a priority class, which will be one of REALTIME_PRIORITY,
-	 * HIGH_PRIORITY, NORMAL_PRIORITY, or LOW_PRIORITY.
-	 */
-	public static native void setProcessPriority(int priority);
 
 	/**
 	 * Attempt to display a modal alert to the user. This method should be used

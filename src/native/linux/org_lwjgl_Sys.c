@@ -39,7 +39,6 @@
  * @version $Revision$
  */
 
-#include <sched.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 #include "org_lwjgl_Sys.h"
@@ -83,59 +82,6 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_ngetTime
 {
 	hires_timer = queryTime(env);
 	return (jlong) hires_timer;
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    setProcessPriority
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
-  (JNIEnv * env, jclass clazz, jint priority)
-{
-	int linux_priority;
-	int max_pri, min_pri;
-	struct sched_param sched_pri;
-
-	if (sched_getscheduler(0) != SCHED_OTHER) {
-		// Reset scheduler to normal
-		sched_pri.sched_priority = 0;
-		if (sched_setscheduler(0, SCHED_OTHER, &sched_pri) != 0) {
-			printfDebugJava(env, "Could not set realtime priority");
-			return;
-		}
-	}
-
-	switch (priority) {
-	case org_lwjgl_Sys_REALTIME_PRIORITY:
-		min_pri = sched_get_priority_min(SCHED_FIFO);
-		max_pri = sched_get_priority_max(SCHED_FIFO);
-		if (min_pri == -1 || max_pri == -1) {
-			printfDebugJava(env, "Failed to set realtime priority");
-			return;
-		}
-		sched_pri.sched_priority = (max_pri + min_pri)/2;
-		if (sched_setscheduler(0, SCHED_FIFO, &sched_pri) != 0) {
-			printfDebugJava(env, "Could not set realtime priority");
-			return;
-		}
-		return;
-	case org_lwjgl_Sys_HIGH_PRIORITY:
-		linux_priority = -20;
-		break;
-	case org_lwjgl_Sys_NORMAL_PRIORITY:
-		linux_priority = 0;
-		break;
-	case org_lwjgl_Sys_LOW_PRIORITY:
-		linux_priority = 20;
-		break;
-	default:
-		return;
-	}
-
-	if (setpriority(PRIO_PROCESS, 0, linux_priority) == -1) {
-		printfDebugJava(env, "Failed to set priority.");
-	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jstring title, jstring message)
