@@ -201,19 +201,34 @@ public final class Display {
 
 	/**
 	 * Obtains the display's gamma ramp. The gamma ramp returned is an array of
-	 * integers in the range 0..255. If gamma is not supported by the underlying
-	 * hardware then null is returned.
-	 * @return an array of ints, or null
+	 * 16:16 fixed point values representing 0.0...1.0. The gamma ramp consists of three consecutive
+	 * arrays, one for red, one for green, and one for blue. The length of the
+	 * array is 768 values (so red will be 0..255, green 256...511, and blue 512..767)
+	 * 
+	 * If gamma is not supported by the underlying hardware then false is returned.
+	 * 
+	 * @param red[] An array of ints to store red gamma in. Must be 256 in length.
+	 * @param green[] An array of ints to store green gamma in. Must be 256 in length.
+	 * @param blue[] An array of ints to store blue gamma in. Must be 256 in length.
+	 * @return true if it succeeds, false if it fails
 	 */
-	public static native int[] getGammaRamp();
+	public static native boolean getGammaRamp(int[] red, int[] green, int[] blue);
 	
 	/**
 	 * Sets the display's gamma ramp. The gamma ramp should be an array of ints
-	 * in the range 0...255. The length of the array should match the length of the
-	 * array returned by getGammaRamp().
+	 * in 16:16 fixed point format, arranged as for getGammaRamp().
+	 * The length of the array must be 768.
 	 * 
 	 * If the underlying hardware does not support gamma then this command is a no-op.
+	 * 
+	 * When LWJGL exits, any gamma changes are automatically undone.
+	 *
+	 * @param red[] An array of ints to store red gamma in. Must be 256 in length.
+	 * @param green[] An array of ints to store green gamma in. Must be 256 in length.
+	 * @param blue[] An array of ints to store blue gamma in. Must be 256 in length.
+	 * 
+	 * @return true if it succeeds, false if it fails
 	 */
-	public static native void setGammaRamp(int[] gamma);
+	public static native boolean setGammaRamp(int[] red, int[] green, int[] blue);
 
 }

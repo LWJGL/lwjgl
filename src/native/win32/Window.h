@@ -88,4 +88,9 @@
 	 */
 	WINDOW_H_API void throwException(JNIEnv * env, const char * err);
 
+	/*
+	 * Utility function to throw a RuntimeException
+	 */
+	WINDOW_H_API void throwRuntimeException(JNIEnv * env, const char * err);
+
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

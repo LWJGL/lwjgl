@@ -66,6 +66,16 @@ void throwException(JNIEnv * env, const char * err)
 }
 
 /*
+ * Utility function to throw a RuntimeException
+ */
+void throwRuntimeException(JNIEnv * env, const char * err)
+{
+	jclass cls = env->FindClass("java/lang/RuntimeException");
+	env->ThrowNew(cls, err);
+	env->DeleteLocalRef(cls);
+}
+
+/*
  * Create DirectInput.
  * Returns true for success, or false for failure
  */

@@ -47,6 +47,7 @@
 jobjectArray GetAvailableDisplayModesNT(JNIEnv * env);
 jobjectArray GetAvailableDisplayModes9x(JNIEnv * env);
 bool modeSet = false; // Whether we've done a display mode change
+WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
 
 
 /*
@@ -238,7 +239,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 	// class's mode instance variable.
 
 	// Get the screen
-	HDC screenDC = CreateCompatibleDC(NULL);
+	HDC screenDC = GetDC(NULL);
 	// Get the device caps
 	width = GetDeviceCaps(screenDC, HORZRES);
 	height = GetDeviceCaps(screenDC, VERTRES);
@@ -246,7 +247,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 	freq = GetDeviceCaps(screenDC, VREFRESH);
 	if (freq <= 1)
 		freq = 0; // Unknown
-	DeleteDC(screenDC);
+	ReleaseDC(NULL, screenDC);
 
 	jmethodID ctor = env->GetMethodID(cls_displayMode, "<init>", "(IIII)V");
 	jobject newMode = env->NewObject(cls_displayMode, ctor, width, height, bpp, freq);
@@ -265,6 +266,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
   (JNIEnv * env, jclass clazz)
 {
+	
+	// Return device gamma to normal
+	HDC screenDC = GetDC(NULL);
+	SetDeviceGammaRamp(screenDC, originalGamma);
+	ReleaseDC(NULL, screenDC);	
+
 	if (modeSet) {
 		modeSet = false;
 		// Under Win32, all we have to do is:
@@ -280,20 +287,127 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
  * Method:    getGammaRamp
  * Signature: ()[I
  */
-JNIEXPORT jintArray JNICALL Java_org_lwjgl_Display_getGammaRamp
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_getGammaRamp
+  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
 {
-	return NULL;
+#ifdef _DEBUG
+	if (red == NULL) {
+		throwRuntimeException(env, "Null red array.");
+		return JNI_FALSE;
+	}
+	if (green == NULL) {
+		throwRuntimeException(env, "Null green array.");
+		return JNI_FALSE;
+	}
+	if (blue == NULL) {
+		throwRuntimeException(env, "Null blue array.");
+		return JNI_FALSE;
+	}
+	if (env->GetArrayLength(red) != 256) {
+		throwRuntimeException(env, "Red array is not 256 long.");
+		return JNI_FALSE;
+	}
+	if (env->GetArrayLength(green) != 256) {
+		throwRuntimeException(env, "Green array is not 256 long.");
+		return JNI_FALSE;
+	}
+	if (env->GetArrayLength(blue) != 256) {
+		throwRuntimeException(env, "Blue array is not 256 long.");
+		return JNI_FALSE;
+	}
+#endif
+
+	jint * redPtr = env->GetIntArrayElements(red, NULL);
+	jint * greenPtr = env->GetIntArrayElements(green, NULL);
+	jint * bluePtr = env->GetIntArrayElements(blue, NULL);
+
+	WORD currentGamma[768];
+	HDC screenDC = GetDC(NULL);
+	if (GetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
+#ifdef _DEBUG
+			printf("Failed to get device gamma\n");
+#endif
+		env->ReleaseIntArrayElements(red, redPtr, JNI_ABORT);
+		env->ReleaseIntArrayElements(green, greenPtr, JNI_ABORT);
+		env->ReleaseIntArrayElements(blue, bluePtr, JNI_ABORT);
+		ReleaseDC(NULL, screenDC);
+		return JNI_FALSE;
+	}
+	ReleaseDC(NULL, screenDC);
+	for (int i = 0; i < 256; i ++) {
+		redPtr[i] = (jint) currentGamma[i];
+		greenPtr[i] = (jint) currentGamma[i + 256];
+		bluePtr[i] = (jint) currentGamma[i + 512];
+	}
+	env->ReleaseIntArrayElements(red, redPtr, 0);
+	env->ReleaseIntArrayElements(green, greenPtr, 0);
+	env->ReleaseIntArrayElements(blue, bluePtr, 0);
+	return JNI_TRUE;
 }
 
 /*
  * Class:     org_lwjgl_Display
  * Method:    setGammaRamp
- * Signature: ([I)V
+ * Signature: ([I[I[I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv * env, jclass clazz, jintArray gamma)
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
+  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
 {
+#ifdef _DEBUG
+	if (red == NULL) {
+		throwRuntimeException(env, "Null red array.");
+		return JNI_FALSE;
+	}
+	if (green == NULL) {
+		throwRuntimeException(env, "Null green array.");
+		return JNI_FALSE;
+	}
+	if (blue == NULL) {
+		throwRuntimeException(env, "Null blue array.");
+		return JNI_FALSE;
+	}
+	if (env->GetArrayLength(red) != 256) {
+		throwRuntimeException(env, "Red array is not 256 long.");
+		return JNI_FALSE;
+	}
+	if (env->GetArrayLength(green) != 256) {
+		throwRuntimeException(env, "Green array is not 256 long.");
+		return JNI_FALSE;
+	}
+	if (env->GetArrayLength(blue) != 256) {
+		throwRuntimeException(env, "Blue array is not 256 long.");
+		return JNI_FALSE;
+	}
+#endif
+
+	jint * redPtr = env->GetIntArrayElements(red, NULL);
+	jint * greenPtr = env->GetIntArrayElements(green, NULL);
+	jint * bluePtr = env->GetIntArrayElements(blue, NULL);
+
+	// Turn array of ints into array of RGB WORDs
+	WORD newGamma[768];
+	for (int i = 0; i < 256; i ++) {
+		newGamma[i] = (WORD)(min(0x00010000, redPtr[i]));
+		newGamma[i + 256] = (WORD)(min(0x00010000, greenPtr[i]));
+		newGamma[i + 512] = (WORD)(min(0x00010000, bluePtr[i]));
+	}
+	jboolean ret;
+	HDC screenDC = GetDC(NULL);
+	if (SetDeviceGammaRamp(screenDC, newGamma) == FALSE) {
+#ifdef _DEBUG
+		printf("Failed to set device gamma\n");
+#endif
+		ret = JNI_FALSE;
+	} else {
+		ret = JNI_TRUE;
+	}
+	ReleaseDC(NULL, screenDC);
+
+	env->ReleaseIntArrayElements(red, redPtr, JNI_ABORT);
+	env->ReleaseIntArrayElements(green, greenPtr, JNI_ABORT);
+	env->ReleaseIntArrayElements(blue, bluePtr, JNI_ABORT);
+
+	return ret;
 }
 
 
@@ -307,7 +421,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 {
 	// Determine the current screen resolution
 	// Get the screen
-	HDC screenDC = CreateCompatibleDC(NULL);
+	HDC screenDC = GetDC(NULL);
 	if (!screenDC) {
 		printf("Couldn't get screen DC!\n");
 		return;
@@ -319,7 +433,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	int freq = GetDeviceCaps(screenDC, VREFRESH);
 	if (freq <= 1)
 		freq = 0; // Unknown
-	DeleteDC(screenDC);
 
 	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
 	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
@@ -327,6 +440,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
 	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 	env->DeleteLocalRef(newMode);
+
+	// Get the default gamma ramp
+	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
+#ifdef _DEBUG
+		printf("Failed to get initial device gamma\n");
+#endif
+	}
+	ReleaseDC(NULL, screenDC);
 }
 
 

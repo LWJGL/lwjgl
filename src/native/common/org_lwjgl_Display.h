@@ -62,18 +62,18 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
 /*
  * Class:     org_lwjgl_Display
  * Method:    getGammaRamp
- * Signature: ()[I
+ * Signature: ([I[I[I)Z
  */
-JNIEXPORT jintArray JNICALL Java_org_lwjgl_Display_getGammaRamp
-  (JNIEnv *, jclass);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_getGammaRamp
+  (JNIEnv *, jclass, jintArray, jintArray, jintArray);
 
 /*
  * Class:     org_lwjgl_Display
  * Method:    setGammaRamp
- * Signature: ([I)V
+ * Signature: ([I[I[I)Z
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv *, jclass, jintArray);
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
+  (JNIEnv *, jclass, jintArray, jintArray, jintArray);
 
 #ifdef __cplusplus
 }
