@@ -66,7 +66,7 @@ class BufferChecks {
 	 */
 	static void checkBuffer(Buffer buf, int size) {
 		if (buf.remaining() < size) {
-			throw new BufferOverflowException();
+			throw new IllegalArgumentException("Number of remaining buffer elements is " + buf.remaining() + ", must be at least " + size);
 		}
 	}
 	/**
