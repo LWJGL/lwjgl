@@ -202,6 +202,7 @@ public class FullScreenWindowedTest {
     if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 
       try {
+        Keyboard.destroy();
         gl.destroy();
 
         Display.setDisplayMode(mode);
@@ -211,7 +212,6 @@ public class FullScreenWindowedTest {
 
         glInit();
 
-        Keyboard.destroy();
         Keyboard.create();
       } catch (Exception e) {
         e.printStackTrace();
@@ -221,6 +221,7 @@ public class FullScreenWindowedTest {
     //check for window key
     if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
       try {
+        Keyboard.destroy();
         gl.destroy();
 
         Display.resetDisplayMode();
@@ -230,7 +231,6 @@ public class FullScreenWindowedTest {
 
         glInit();
 
-        Keyboard.destroy();
         Keyboard.create();
       } catch (Exception e) {
         e.printStackTrace();
@@ -284,8 +284,8 @@ public class FullScreenWindowedTest {
    *  Cleans up the test
    */
   private void cleanup() {
-    gl.destroy();
     Keyboard.destroy();
+    gl.destroy();
   }
 
   /**
