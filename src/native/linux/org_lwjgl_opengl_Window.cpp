@@ -256,10 +256,10 @@ int getWindowHeight(void) {
 
 /*
  * Class:     org_lwjgl_Window
- * Method:    update
+ * Method:    updateState
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_updateState
   (JNIEnv *env, jclass clazz)
 {
 	handleMessages();

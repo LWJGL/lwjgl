@@ -19,6 +19,7 @@ extern "C" {
 /* Inaccessible static: depth */
 /* Inaccessible static: stencil */
 /* Inaccessible static: fullscreen */
+/* Inaccessible static: vbo_tracker */
 /* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024Window */
 /*
  * Class:     org_lwjgl_opengl_Window
@@ -102,10 +103,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
 
 /*
  * Class:     org_lwjgl_opengl_Window
- * Method:    update
+ * Method:    updateState
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_updateState
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus
