@@ -5,6 +5,8 @@ typedef ILboolean		(ILAPIENTRY *ilutDisablePROC) (ILenum Mode);
 typedef ILboolean		(ILAPIENTRY *ilutEnablePROC) (ILenum Mode);
 typedef ILboolean		(ILAPIENTRY *ilutGetBooleanPROC) (ILenum Mode);
 typedef ILint			(ILAPIENTRY *ilutGetIntegerPROC) (ILenum Mode);
+typedef void			(ILAPIENTRY *ilutGetBooleanvPROC) (ILenum Mode, ILboolean *Param);
+typedef void			(ILAPIENTRY *ilutGetIntegervPROC) (ILenum Mode, ILint *Param);
 typedef const ILstring	(ILAPIENTRY *ilutGetStringPROC) (ILenum StringName);
 typedef ILvoid			(ILAPIENTRY *ilutInitPROC) (ILvoid);
 typedef ILboolean		(ILAPIENTRY *ilutIsDisabledPROC) (ILenum Mode);
@@ -27,6 +29,8 @@ static ilutDisablePROC ilutDisable;
 static ilutEnablePROC ilutEnable;
 static ilutGetBooleanPROC ilutGetBoolean;
 static ilutGetIntegerPROC ilutGetInteger;
+static ilutGetBooleanvPROC ilutGetBooleanv;
+static ilutGetIntegervPROC ilutGetIntegerv;
 static ilutGetStringPROC ilutGetString;
 static ilutInitPROC ilutInit;
 static ilutIsDisabledPROC  ilutIsDisabled;
@@ -87,6 +91,26 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILUT_ilutGetBoolean(JNIEnv *env,
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILUT_ilutGetInteger(JNIEnv *env, jclass clazz, jint mode){
     return ilutGetInteger((ILenum)mode);
+}
+
+/*
+ * Class:     org_lwjgl_devil_ILUT
+ * Method:    ilutGetBooleanv
+ * Signature: (ILjava/nio/CharBuffer;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_ilutGetBooleanv(JNIEnv *env, jclass clazz, jint mode, jobject param) {
+	ILboolean* destination = (ILboolean*) safeGetBufferAddress(env, param);
+	ilutGetBooleanv(mode, destination);
+}
+
+/*
+ * Class:     org_lwjgl_devil_ILUT
+ * Method:    ilutGetIntegerv
+ * Signature: (ILjava/nio/IntBuffer;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILUT_ilutGetIntegerv(JNIEnv *env, jclass clazz, jint mode, jobject param) {
+	ILint* destination = (ILint*) safeGetBufferAddress(env, param);
+	ilutGetIntegerv(mode, destination);
 }
 
 /*
@@ -188,7 +212,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILUT_ilutGLLoadImage(JNIEnv *env, jc
     char *strFileName = GetStringNativeChars(env, fileName);
     jint result = ilutGLLoadImage((const ILstring)strFileName);
     free(strFileName);
-
     return result;
 }
 
@@ -219,7 +242,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_ILUT_ilutGLSaveImage(JNIEnv *env
     char *strFileName = GetStringNativeChars(env, fileName);
     jboolean result = ilutGLSaveImage((const ILstring)strFileName, texID);
     free(strFileName);
-
     return result;
 }
 
@@ -268,6 +290,8 @@ JavaMethodAndExtFunction functions[] = {
 		{"ilutEnable", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutEnable, "ilutEnable", (void*)&ilutEnable},
 		{"ilutGetBoolean", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetBoolean, "ilutGetBoolean", (void*)&ilutGetBoolean},
 		{"ilutGetInteger", "(I)I", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetInteger, "ilutGetInteger", (void*)&ilutGetInteger},
+		{"ilutGetBooleanv", "(ILjava/nio/ByteBuffer;)V", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetBooleanv, "ilutGetBooleanv", (void*)&ilutGetBooleanv},
+		{"ilutGetIntegerv", "(ILjava/nio/IntBuffer;)V", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetIntegerv, "ilutGetIntegerv", (void*)&ilutGetIntegerv},
 		{"ilutGetString", "(I)Ljava/lang/String;", (void*)&Java_org_lwjgl_devil_ILUT_ilutGetString, "ilutGetString", (void*)&ilutGetString},
 		{"ilutInit", "()V", (void*)&Java_org_lwjgl_devil_ILUT_ilutInit, "ilutInit", (void*)&ilutInit},
 		{"ilutIsDisabled", "(I)Z", (void*)&Java_org_lwjgl_devil_ILUT_ilutIsDisabled, "ilutIsDisabled", (void*)&ilutIsDisabled},

@@ -33,6 +33,8 @@ package org.lwjgl.devil;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -94,15 +96,16 @@ public class ILUT {
     public static native boolean ilutEnable(int mode);
     public static native boolean ilutGetBoolean(int mode);
     public static native int ilutGetInteger(int mode);
-    public static native String ilutGetString(int stringName);
+		public static native void ilutGetBooleanv(int mode, ByteBuffer param);
+		public static native void ilutGetIntegerv(int mode, IntBuffer Param);
+		public static native String ilutGetString(int stringName);
     private static native void ilutInit();
     public static native boolean ilutIsDisabled(int mode);
     public static native boolean ilutIsEnabled(int mode);
     public static native void ilutPopAttrib();
     public static native void ilutPushAttrib(int bits);
     public static native void ilutSetInteger(int Mode, int param);
-		// public static native void ilutGetBooleanv(int mode, ILboolean *Param);
-		// public static native void ilutGetIntegerv(int mode, ILint *Param);
+
 
 		// ImageLib Utility Toolkit's OpenGL Functions
     public static native int ilutGLBindTexImage();
