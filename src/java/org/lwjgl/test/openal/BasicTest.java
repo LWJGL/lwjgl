@@ -94,6 +94,18 @@ public abstract class BasicTest {
 
     return temp.asFloatBuffer();
   }
+  
+  /**
+   * Pauses the invoking thread for specified milliseconds
+   * 
+   * @param time Milliseconds to sleep
+   */
+  protected void pause(long time) {
+    try {
+      Thread.sleep(time); 
+    } catch (InterruptedException inte) {
+    }
+  }
 
   /**
    * Exits the test NOW, printing errorcode to stdout
