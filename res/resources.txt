@@ -1,0 +1,13 @@
+The following files are included in the resource archive:
+Wave1.WAV - from openal.org cvs
+Wave2.WAV - from openal.org cvs
+Wave3.WAV - from openal.org cvs
+Wave4.WAV - from openal.org cvs
+stereo.wav - from openal.org cvs
+mono.wav - from openal.org cvs
+Footsteps.wav - from openal.org cvs
+ding.wav - from openal.org cvs
+left.wav - sampled by matzon
+right.wav - sampled by matzon
+center.wav - sampled by matzon
+Missing_you.mod - Missing You, by Doh (Nicolas Desessart, http://doh.av7.net)
