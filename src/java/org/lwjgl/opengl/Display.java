@@ -90,15 +90,6 @@ public final class Display {
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static Display context;
 	
-	/** Whether we created the Mouse */
-	private static boolean createdMouse;
-
-	/** Whether we created the Keyboard */
-	private static boolean createdKeyboard;
-
-	/** Whether we created the Controller */
-	private static boolean createdController;
-
 	/**
 	 * Only constructed by ourselves
 	 */
@@ -149,7 +140,8 @@ public final class Display {
 	 * Set the current display mode. If no OpenGL context has been created, the given mode will apply to
 	 * the context when create() is called, and no immediate mode switching will happen. If there is a
 	 * context already, it will be resized according to the given mode. If the context is also a
-	 * fullscreen context, the mode will also be switched immediately.
+	 * fullscreen context, the mode will also be switched immediately. The native cursor position
+	 * is also reset.
 	 *
 	 * @param mode The new display mode to set
 	 * @throws LWJGLException if the display mode could not be set
@@ -181,17 +173,14 @@ public final class Display {
 
 	private static void destroyWindow() {
 		// Automatically destroy keyboard, mouse, and controller
-		if (createdMouse && Mouse.isCreated()) {
+		if (Mouse.isCreated()) {
 			Mouse.destroy();
-			createdMouse = false;
 		}
-		if (createdKeyboard && Keyboard.isCreated()) {
+		if (Keyboard.isCreated()) {
 			Keyboard.destroy();
-			createdKeyboard = false;
 		}
-		if (createdController && Controller.isCreated()) {
+		if (Controller.isCreated()) {
 			Controller.destroy();
-			createdController = false;
 		}
 		nDestroyWindow();
 	}
@@ -323,7 +312,7 @@ public final class Display {
 	 * the mode will apply when create() is called. If fullscreen is true, the context will become
 	 * a fullscreen context and the display mode is switched to the mode given by getDisplayMode(). If
 	 * fullscreen is false, the context will become a windowed context with the dimensions given in the
-	 * mode returned by getDisplayMode().
+	 * mode returned by getDisplayMode(). The native cursor position is also reset.
 	 *
 	 * @param fullscreen Specify the fullscreen mode of the context.
 	 */
@@ -549,7 +538,6 @@ public final class Display {
 			if (!Mouse.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nomouse")) {
 				try {
 					Mouse.create();
-					createdMouse = true;
 					Mouse.enableBuffer();
 				} catch (LWJGLException e) {
 					if (Sys.DEBUG) {
@@ -562,7 +550,6 @@ public final class Display {
 			if (!Keyboard.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nokeyboard")) {
 				try {
 					Keyboard.create();
-					createdKeyboard = true;
 					Keyboard.enableBuffer();
 					Keyboard.enableTranslation();
 				} catch (LWJGLException e) {
@@ -576,7 +563,6 @@ public final class Display {
 			if (!Controller.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nocontroller")) {
 				try {
 					Controller.create();
-					createdController = true;
 				} catch (LWJGLException e) {
 					if (Sys.DEBUG) {
 						e.printStackTrace(System.err);
