@@ -266,9 +266,13 @@ void UpdateMouseFields() {
   HRESULT                 hRes; 
 
   // get data from the Mouse 
-  hRes = mDIDevice->GetDeviceState(sizeof(DIMOUSESTATE), &diMouseState); 
-
+  hRes = mDIDevice->GetDeviceState(sizeof(DIMOUSESTATE), &diMouseState);
   if (hRes != DI_OK) { 
+    // Don't allow the mouse to drift when failed
+    diMouseState.lX = 0;
+    diMouseState.lY = 0;
+    diMouseState.lZ = 0;
+
     // did the read fail because we lost input for some reason? 
     // if so, then attempt to reacquire. 
     if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
@@ -281,7 +285,6 @@ void UpdateMouseFields() {
       printf("Error getting mouse state: %d\n", hRes);
 #endif
     }
-    return;
   }
 
   mEnvironment->SetStaticIntField(clsMouse, fidMDX, (jint) diMouseState.lX);
