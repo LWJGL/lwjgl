@@ -44,7 +44,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public class ARBVertexProgram extends ARBProgram {
+public final class ARBVertexProgram extends ARBProgram {
 
 	/*
 	* Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the

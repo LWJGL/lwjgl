@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-public class NVFence {
+public final class NVFence {
 	public static final int GL_ALL_COMPLETED_NV                                     = 0x84F2;
 	public static final int GL_FENCE_STATUS_NV                                      = 0x84F3;
 	public static final int GL_FENCE_CONDITION_NV                                   = 0x84F4;

@@ -40,7 +40,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-public class ATIDrawBuffers {
+public final class ATIDrawBuffers {
 
 	/*
 	 * Accepted by the <pname> parameters of GetIntegerv, GetFloatv,

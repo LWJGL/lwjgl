@@ -45,7 +45,7 @@ import java.nio.IntBuffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public abstract class GL14 extends GL13 {
+public final class GL14 {
 	public static final int GL_GENERATE_MIPMAP                                      = 0x8191;
 	public static final int GL_GENERATE_MIPMAP_HINT                                 = 0x8192;
 	public static final int GL_DEPTH_COMPONENT16                                    = 0x81A5;
@@ -91,7 +91,7 @@ public abstract class GL14 extends GL13 {
 	public static native void glFogCoordf(float coord);
 	public static void glFogCoordPointer(int stride, FloatBuffer data) {
 		BufferChecks.ensureArrayVBOdisabled();
-		nglFogCoordPointer(GL_FLOAT, stride, data, data.position() << 2);
+		nglFogCoordPointer(GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglFogCoordPointer(int type, int stride, Buffer data, int data_offset);
 	public static void glFogCoordPointer(int type, int stride, int buffer_offset) {
@@ -118,11 +118,11 @@ public abstract class GL14 extends GL13 {
 	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
 	public static void glSecondaryColorPointer(int size, boolean unsigned, int stride, ByteBuffer data) {
 		BufferChecks.ensureArrayVBOdisabled();
-		nglSecondaryColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, data, data.position());
+		nglSecondaryColorPointer(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, data, data.position());
 	}
 	public static void glSecondaryColorPointer(int size, int stride, FloatBuffer data) {
 		BufferChecks.ensureArrayVBOdisabled();
-		nglSecondaryColorPointer(size, GL_FLOAT, stride, data, data.position() << 2);
+		nglSecondaryColorPointer(size, GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglSecondaryColorPointer (int size, int type, int stride, Buffer data, int data_offset);
 	public static void glSecondaryColorPointer(int size, int type, int stride, int buffer_offset) {

@@ -40,7 +40,7 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 
-public class ATIMapObjectBuffer {
+public final class ATIMapObjectBuffer {
 
 	/**
 	 * glMapObjectBufferATI maps a gl object buffer to a ByteBuffer. The oldBuffer argument can be

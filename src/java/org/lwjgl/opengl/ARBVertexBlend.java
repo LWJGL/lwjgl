@@ -46,7 +46,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 
-public class ARBVertexBlend {
+public final class ARBVertexBlend {
 	public static final int GL_MAX_VERTEX_UNITS_ARB                                 = 0x86A4;
 	public static final int GL_ACTIVE_VERTEX_UNITS_ARB                              = 0x86A5;
 	public static final int GL_WEIGHT_SUM_UNITY_ARB                                 = 0x86A6;

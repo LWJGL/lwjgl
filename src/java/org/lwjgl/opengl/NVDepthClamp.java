@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class NVDepthClamp
+public final class NVDepthClamp
 {
 	public static final int GL_DEPTH_CLAMP_NV                                       = 0x864F;
 }

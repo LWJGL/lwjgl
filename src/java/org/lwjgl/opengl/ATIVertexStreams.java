@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class ATIVertexStreams {
+public final class ATIVertexStreams {
 	public static final int GL_MAX_VERTEX_STREAMS_ATI                               = 0x876B;
 	public static final int GL_VERTEX_SOURCE_ATI                                    = 0x876C;
 	public static final int GL_VERTEX_STREAM0_ATI                                   = 0x876D;

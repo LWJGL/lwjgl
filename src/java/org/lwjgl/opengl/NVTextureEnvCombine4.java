@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class NVTextureEnvCombine4
+public final class NVTextureEnvCombine4
 {
 	public static final int GL_COMBINE4_NV                                          = 0x8503;
 	public static final int GL_SOURCE3_RGB_NV                                       = 0x8583;

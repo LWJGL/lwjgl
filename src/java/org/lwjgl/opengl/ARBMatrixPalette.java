@@ -45,7 +45,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 
-public class ARBMatrixPalette {
+public final class ARBMatrixPalette {
 	public static final int GL_MATRIX_PALETTE_ARB                                   = 0x8840;
 	public static final int GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB                   = 0x8841;
 	public static final int GL_MAX_PALETTE_MATRICES_ARB                             = 0x8842;

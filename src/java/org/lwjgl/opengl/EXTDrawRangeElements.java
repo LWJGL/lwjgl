@@ -45,7 +45,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 
-public class EXTDrawRangeElements {
+public final class EXTDrawRangeElements {
 	public static final int GL_MAX_ELEMENTS_VERTICES_EXT                            = 0x80E8;
 	public static final int GL_MAX_ELEMENTS_INDICES_EXT                             = 0x80E9;
 

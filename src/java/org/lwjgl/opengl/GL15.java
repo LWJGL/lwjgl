@@ -40,7 +40,7 @@ package org.lwjgl.opengl;
 
 import java.nio.*;
 
-public abstract class GL15 extends GL14 {
+public final class GL15 {
 
 	// ----------------------------------------------------------------------
 	// ---------------------- ARB_vertex_buffer_object ----------------------

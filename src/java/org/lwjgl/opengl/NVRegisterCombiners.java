@@ -42,7 +42,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class NVRegisterCombiners {
+public final class NVRegisterCombiners {
 	public static final int GL_REGISTER_COMBINERS_NV                                = 0x8522;
 	public static final int GL_COMBINER0_NV                                         = 0x8550;
 	public static final int GL_COMBINER1_NV                                         = 0x8551;

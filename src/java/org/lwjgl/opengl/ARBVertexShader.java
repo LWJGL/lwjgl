@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-public class ARBVertexShader {
+public final class ARBVertexShader {
 
 	/*
 	* Accepted by the <shaderType> argument of CreateShaderObjectARB:

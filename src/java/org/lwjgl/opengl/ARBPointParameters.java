@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-public class ARBPointParameters {
+public final class ARBPointParameters {
 	public static final int GL_POINT_SIZE_MIN_ARB                                   = 0x8126;
 	public static final int GL_POINT_SIZE_MAX_ARB                                   = 0x8127;
 	public static final int GL_POINT_FADE_THRESHOLD_SIZE_ARB                        = 0x8128;

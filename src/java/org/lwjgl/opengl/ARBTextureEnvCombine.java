@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class ARBTextureEnvCombine
+public final class ARBTextureEnvCombine
 {
 	public static final int GL_COMBINE_ARB                                          = 0x8570;
 	public static final int GL_COMBINE_RGB_ARB                                      = 0x8571;

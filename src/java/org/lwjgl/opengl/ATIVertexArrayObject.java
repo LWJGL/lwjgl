@@ -45,7 +45,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public class ATIVertexArrayObject {
+public final class ATIVertexArrayObject {
 	public static final int GL_STATIC_ATI                                           = 0x8760;
 	public static final int GL_DYNAMIC_ATI                                          = 0x8761;
 	public static final int GL_PRESERVE_ATI                                         = 0x8762;

@@ -45,7 +45,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 
-public class ATIElementArray {
+public final class ATIElementArray {
 	public static final int GL_ELEMENT_ARRAY_ATI                                    = 0x8768;
 	public static final int GL_ELEMENT_ARRAY_TYPE_ATI                               = 0x8769;
 	public static final int GL_ELEMENT_ARRAY_POINTER_ATI                            = 0x876A;

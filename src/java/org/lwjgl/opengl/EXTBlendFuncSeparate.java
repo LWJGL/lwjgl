@@ -36,7 +36,7 @@ package org.lwjgl.opengl;
  * Insert the type's description here.
  * Creation date: (29/06/2000 00:45:10)
  */
-public class EXTBlendFuncSeparate {
+public final class EXTBlendFuncSeparate {
 	public static final int GL_BLEND_DST_RGB_EXT                = 0x80C8;
 	public static final int GL_BLEND_SRC_RGB_EXT                = 0x80C9;
 	public static final int GL_BLEND_DST_ALPHA_EXT              = 0x80CA;

@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class ARBMultisample {
+public final class ARBMultisample {
 	public static final int GL_MULTISAMPLE_ARB                                      = 0x809D;
 	public static final int GL_SAMPLE_ALPHA_TO_COVERAGE_ARB                         = 0x809E;
 	public static final int GL_SAMPLE_ALPHA_TO_ONE_ARB                              = 0x809F;

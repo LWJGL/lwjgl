@@ -32,7 +32,7 @@
 
 package org.lwjgl.opengl;
 
-public class ARBFragmentProgram extends ARBProgram {
+public final class ARBFragmentProgram extends ARBProgram {
 
   /*
    * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the

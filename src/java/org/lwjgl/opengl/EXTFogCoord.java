@@ -43,7 +43,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
 
-public class EXTFogCoord {
+public final class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_SOURCE_EXT                            = 0x8450;
 	public static final int GL_FOG_COORDINATE_EXT                                   = 0x8451;
 	public static final int GL_FRAGMENT_DEPTH_EXT                                   = 0x8452;

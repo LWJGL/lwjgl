@@ -44,7 +44,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public class NVPixelDataRange {
+public final class NVPixelDataRange {
 
 	/*
 	* Accepted by the <target> parameter of PixelDataRangeNV and

@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-public class NVPointSprite {
+public final class NVPointSprite {
 	public static final int GL_POINT_SPRITE_NV                                      = 0x8861;
 	public static final int GL_COORD_REPLACE_NV                                     = 0x8862;
 	public static final int GL_POINT_SPRITE_R_MODE_NV                               = 0x8863;

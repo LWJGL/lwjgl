@@ -42,7 +42,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-public class NVFragmentProgram extends NVProgram {
+public final class NVFragmentProgram extends NVProgram {
 
   /*
   Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the

@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class ATIVertexAttribArrayObject {
+public final class ATIVertexAttribArrayObject {
 
 	public static native void glVertexAttribArrayObjectATI(int index, int size, int type,
 	                                                       boolean normalized, int stride, int buffer,

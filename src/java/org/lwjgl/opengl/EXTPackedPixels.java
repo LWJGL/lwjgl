@@ -36,7 +36,7 @@ package org.lwjgl.opengl;
  * Insert the type's description here.
  * Creation date: (07/11/99 19:16:17)
  */
-public class EXTPackedPixels {
+public final class EXTPackedPixels {
 	public static final int GL_UNSIGNED_BYTE_3_3_2_EXT          = 0x8032;
 	public static final int GL_UNSIGNED_SHORT_4_4_4_4_EXT       = 0x8033;
 	public static final int GL_UNSIGNED_SHORT_5_5_5_1_EXT       = 0x8034;

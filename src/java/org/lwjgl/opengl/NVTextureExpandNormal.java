@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public class NVTextureExpandNormal {
+public final class NVTextureExpandNormal {
 
 	/*
 	 * Accepted by the <pname> parameters of TexParameteri,

@@ -45,7 +45,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public class ARBTextureCompression
+public final class ARBTextureCompression
 {
 	public static final int GL_COMPRESSED_ALPHA_ARB                                 = 0x84E9;
 	public static final int GL_COMPRESSED_LUMINANCE_ARB                             = 0x84EA;

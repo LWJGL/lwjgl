@@ -45,7 +45,7 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-public class ATIFragmentShader {
+public final class ATIFragmentShader {
 	public static final int GL_FRAGMENT_SHADER_ATI                                  = 0x8920;
 	public static final int GL_REG_0_ATI                                            = 0x8921;
 	public static final int GL_REG_1_ATI                                            = 0x8922;

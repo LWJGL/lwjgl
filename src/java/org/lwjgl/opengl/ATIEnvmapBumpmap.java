@@ -42,7 +42,7 @@ package org.lwjgl.opengl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class ATIEnvmapBumpmap {
+public final class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_ROT_MATRIX_ATI                                  = 0x8775;
 	public static final int GL_BUMP_ROT_MATRIX_SIZE_ATI                             = 0x8776;
 	public static final int GL_BUMP_NUM_TEX_UNITS_ATI                               = 0x8777;

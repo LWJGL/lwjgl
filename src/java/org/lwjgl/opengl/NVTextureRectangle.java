@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class NVTextureRectangle
+public final class NVTextureRectangle
 {
 	public static final int GL_TEXTURE_RECTANGLE_NV                                 = 0x84F5;
 	public static final int GL_TEXTURE_BINDING_RECTANGLE_NV                         = 0x84F6;

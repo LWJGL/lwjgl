@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class NVTextureShader2
+public final class NVTextureShader2
 {
 	public static final int GL_DOT_PRODUCT_TEXTURE_3D_NV                            = 0x86EF;
 	public static final int GL_HILO_NV                                              = 0x86F4;

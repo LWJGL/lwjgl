@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class ARBMultitexture {
+public final class ARBMultitexture {
 	public static final int GL_TEXTURE0_ARB                                         = 0x84C0;
 	public static final int GL_TEXTURE1_ARB                                         = 0x84C1;
 	public static final int GL_TEXTURE2_ARB                                         = 0x84C2;

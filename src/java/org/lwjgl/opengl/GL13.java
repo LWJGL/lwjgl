@@ -46,7 +46,7 @@ import java.nio.ShortBuffer;
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-public abstract class GL13 extends GL12 {
+public final class GL13 {
 	public static final int GL_TEXTURE0                    = 0x84C0;
 	public static final int GL_TEXTURE1                    = 0x84C1;
 	public static final int GL_TEXTURE2                    = 0x84C2;

@@ -43,7 +43,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class ARBShaderObjects {
+public final class ARBShaderObjects {
 
 	/*
 	* Accepted by the <pname> argument of GetHandleARB:

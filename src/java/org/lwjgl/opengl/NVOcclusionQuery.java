@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-public class NVOcclusionQuery {
+public final class NVOcclusionQuery {
 	public static final int GL_OCCLUSION_TEST_HP                                    = 0x8165;
 	public static final int GL_OCCLUSION_TEST_RESULT_HP                             = 0x8166;
 	/* HP_occlusion_test */

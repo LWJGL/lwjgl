@@ -42,7 +42,7 @@ package org.lwjgl.opengl;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
-public class NVVertexArrayRange {
+public final class NVVertexArrayRange {
 	public static final int GL_VERTEX_ARRAY_RANGE_NV                                = 0x851D;
 	public static final int GL_VERTEX_ARRAY_RANGE_LENGTH_NV                         = 0x851E;
 	public static final int GL_VERTEX_ARRAY_RANGE_VALID_NV                          = 0x851F;

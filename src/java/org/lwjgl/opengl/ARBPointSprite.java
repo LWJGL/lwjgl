@@ -7,7 +7,7 @@
 
 package org.lwjgl.opengl;
 
-public class ARBPointSprite {
+public final class ARBPointSprite {
 
 	/*
 	 * Accepted by the <cap> parameter of Enable, Disable, and IsEnabled, by

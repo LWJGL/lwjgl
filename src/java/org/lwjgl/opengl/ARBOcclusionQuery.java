@@ -40,7 +40,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-public class ARBOcclusionQuery {
+public final class ARBOcclusionQuery {
 
 	/*
 	 * Accepted by the <target> parameter of BeginQueryARB, EndQueryARB,

@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public class NVTextureCompressionVTC {
+public final class NVTextureCompressionVTC {
 
 	/*
 	 * Accepted by the <internalformat> parameter of TexImage3D and

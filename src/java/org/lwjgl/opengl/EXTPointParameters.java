@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-public class EXTPointParameters {
+public final class EXTPointParameters {
 	public static final int GL_POINT_SIZE_MIN_EXT                                   = 0x8126;
 	public static final int GL_POINT_SIZE_MAX_EXT                                   = 0x8127;
 	public static final int GL_POINT_FADE_THRESHOLD_SIZE_EXT                        = 0x8128;

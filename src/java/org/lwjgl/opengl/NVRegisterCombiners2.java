@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-public class NVRegisterCombiners2
+public final class NVRegisterCombiners2
 {
 	public static final int GL_PER_STAGE_CONSTANTS_NV                               = 0x8535;
 

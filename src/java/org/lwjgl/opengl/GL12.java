@@ -48,7 +48,7 @@ import java.nio.ShortBuffer;
  * @version $Revision$
  */
 
-public abstract class GL12 extends GL11 {
+public final class GL12 {
 	public static final int GL_PACK_SKIP_IMAGES               = 0x806B;
 	public static final int GL_PACK_IMAGE_HEIGHT              = 0x806C;
 	public static final int GL_UNPACK_SKIP_IMAGES             = 0x806D;
@@ -88,15 +88,15 @@ public abstract class GL12 extends GL11 {
 
 	public static void glDrawRangeElements(int mode, int start, int end, ByteBuffer indices) {
 		BufferChecks.ensureElementVBOdisabled();
-		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
+		nglDrawRangeElements(mode, start, end, indices.remaining(), GL11.GL_UNSIGNED_BYTE, indices, indices.position());
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, ShortBuffer indices) {
 		BufferChecks.ensureElementVBOdisabled();
-		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
+		nglDrawRangeElements(mode, start, end, indices.remaining(), GL11.GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, IntBuffer indices) {
 		BufferChecks.ensureElementVBOdisabled();
-		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
+		nglDrawRangeElements(mode, start, end, indices.remaining(), GL11.GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
 	private static native void nglDrawRangeElements(int mode, int start, int end, int count, int type, Buffer indices, int indices_offset);
 	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, int buffer_offset) {

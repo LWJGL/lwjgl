@@ -43,7 +43,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class NVEvaluators {
+public final class NVEvaluators {
 	public static final int GL_EVAL_2D_NV                                           = 0x86C0;
 	public static final int GL_EVAL_TRIANGULAR_2D_NV                                = 0x86C1;
 	public static final int GL_MAP_TESSELLATION_NV                                  = 0x86C2;

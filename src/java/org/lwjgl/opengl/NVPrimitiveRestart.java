@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public class NVPrimitiveRestart {
+public final class NVPrimitiveRestart {
 
 	/*
 	* Accepted by the <array> parameter of EnableClientState and

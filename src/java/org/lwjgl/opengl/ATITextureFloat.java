@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public class ATITextureFloat {
+public final class ATITextureFloat {
 
 	/*
 	 * Accepted by the <internalFormat> parameter of TexImage1D,

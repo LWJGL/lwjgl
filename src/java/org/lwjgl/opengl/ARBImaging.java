@@ -48,7 +48,7 @@ import java.nio.ShortBuffer;
  * @version $Revision$
  */
 
-public abstract class ARBImaging {
+public final class ARBImaging {
 	public static final int GL_CONSTANT_COLOR                 = 0x8001;
 	public static final int GL_ONE_MINUS_CONSTANT_COLOR       = 0x8002;
 	public static final int GL_CONSTANT_ALPHA                 = 0x8003;

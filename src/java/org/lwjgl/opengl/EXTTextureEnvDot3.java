@@ -37,7 +37,7 @@ package org.lwjgl.opengl;
  * EXT_texture_env_dot3 constants.
  * @author cas
  */
-public class EXTTextureEnvDot3 {
+public final class EXTTextureEnvDot3 {
 	public static final int GL_DOT3_RGB_EXT                             = 0x8740;
 	public static final int GL_DOT3_RGBA_EXT                            = 0x8741;
 }

@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.IntBuffer;
 
-public class EXTMultiDrawArrays {
+public final class EXTMultiDrawArrays {
 	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst, IntBuffer piCount) {
 		if (piFirst.remaining() != piCount.remaining()) {
 			throw new IllegalArgumentException("piFirst.remaining() != piCount.remaining()");

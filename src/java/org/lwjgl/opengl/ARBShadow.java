@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class ARBShadow
+public final class ARBShadow
 {
 	public static final int GL_TEXTURE_COMPARE_MODE_ARB                             = 0x884C;
 	public static final int GL_TEXTURE_COMPARE_FUNC_ARB                             = 0x884D;

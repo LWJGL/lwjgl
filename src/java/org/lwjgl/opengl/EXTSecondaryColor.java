@@ -44,7 +44,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 
-public class EXTSecondaryColor {
+public final class EXTSecondaryColor {
 	public static final int GL_COLOR_SUM_EXT                                        = 0x8458;
 	public static final int GL_CURRENT_SECONDARY_COLOR_EXT                          = 0x8459;
 	public static final int GL_SECONDARY_COLOR_ARRAY_SIZE_EXT                       = 0x845A;

@@ -46,7 +46,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 
-public class EXTVertexShader {
+public final class EXTVertexShader {
 	public static final int GL_VERTEX_SHADER_EXT                                    = 0x8780;
 	public static final int GL_VERTEX_SHADER_BINDING_EXT                            = 0x8781;
 	public static final int GL_OP_INDEX_EXT                                         = 0x8782;

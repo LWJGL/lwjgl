@@ -48,7 +48,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 
-public class ARBVertexBufferObject {
+public final class ARBVertexBufferObject {
 	public static final int GL_ARRAY_BUFFER_ARB                             = 0x8892;
 	public static final int GL_ELEMENT_ARRAY_BUFFER_ARB                     = 0x8893;
 	public static final int GL_ARRAY_BUFFER_BINDING_ARB                     = 0x8894;

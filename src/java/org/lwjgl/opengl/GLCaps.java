@@ -48,7 +48,7 @@ import org.lwjgl.Sys;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public abstract class GLCaps {
+public final class GLCaps {
 
 	/*
 	 * Available extensions

@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public class ARBFragmentShader {
+public final class ARBFragmentShader {
 
 	/*
 	 * Accepted by the <shaderType> argument of CreateShaderObjectARB:

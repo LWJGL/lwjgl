@@ -43,7 +43,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
 
-public class EXTVertexWeighting {
+public final class EXTVertexWeighting {
 	public static final int GL_MODELVIEW0_STACK_DEPTH_EXT                           = 0x0BA3;  /* alias to MODELVIEW_STACK_DEPTH */
 	public static final int GL_MODELVIEW1_STACK_DEPTH_EXT                           = 0x8502;
 	public static final int GL_MODELVIEW0_MATRIX_EXT                                = 0x0BA6;  /* alias to MODELVIEW_MATRIX */

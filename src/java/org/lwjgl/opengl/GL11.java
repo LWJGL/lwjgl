@@ -50,7 +50,7 @@ import java.nio.ShortBuffer;
  * @version $Revision$
  */
 
-public abstract class GL11 {
+public final class GL11 {
 	
 	/* AccumOp */
 	public static final int GL_ACCUM                          = 0x0100;

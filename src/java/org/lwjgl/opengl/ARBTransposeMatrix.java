@@ -41,7 +41,7 @@ package org.lwjgl.opengl;
 
 import java.nio.FloatBuffer;
 
-public class ARBTransposeMatrix {
+public final class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_MODELVIEW_MATRIX_ARB                       = 0x84E3;
 	public static final int GL_TRANSPOSE_PROJECTION_MATRIX_ARB                      = 0x84E4;
 	public static final int GL_TRANSPOSE_TEXTURE_MATRIX_ARB                         = 0x84E5;

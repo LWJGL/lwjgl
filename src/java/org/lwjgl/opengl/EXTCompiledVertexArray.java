@@ -39,7 +39,7 @@
  */
 package org.lwjgl.opengl;
 
-public class EXTCompiledVertexArray {
+public final class EXTCompiledVertexArray {
 	public static final int GL_ARRAY_ELEMENT_LOCK_FIRST_EXT                         = 0x81A8;
 	public static final int GL_ARRAY_ELEMENT_LOCK_COUNT_EXT                         = 0x81A9;
 

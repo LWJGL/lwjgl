@@ -40,7 +40,7 @@ package org.lwjgl.opengl;
 
 import java.nio.ShortBuffer;
 
-public class NVHalfFloat {
+public final class NVHalfFloat {
 
 	/*
 	 * Accepted by the <type> argument of VertexPointer, NormalPointer,

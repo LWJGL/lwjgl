@@ -34,7 +34,7 @@
 
 package org.lwjgl.opengl;
 
-public class ARBWindowPos {
+public final class ARBWindowPos {
         public static native void glWindowPos2fARB(float x, float y);
 
         public static native void glWindowPos2iARB(int x, int y);
