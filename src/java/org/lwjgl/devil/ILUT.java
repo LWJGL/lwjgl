@@ -85,7 +85,7 @@ public class ILUT {
     public static final int ILUT_OPENGL = 0;
 
     static {
-        System.loadLibrary("ILU");
+//        System.loadLibrary("ILU");
         System.loadLibrary("lwjgl-devil");
     }
     

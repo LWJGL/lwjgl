@@ -82,7 +82,7 @@ public class ILU {
 //    public static final int ILU_VENDOR =                         IL_VENDOR;
 
     static {
-        System.loadLibrary("ILU");
+//        System.loadLibrary("ILU");
         System.loadLibrary("lwjgl-devil");
     }
     

@@ -300,7 +300,7 @@ public class IL {
     public static final int IL_EOF = -1; 
     
     static {
-        System.loadLibrary("DevIL");
+        //System.loadLibrary("DevIL");
     	System.loadLibrary("lwjgl-devil");
     }
     
