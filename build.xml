@@ -7,7 +7,7 @@
   <property name="lwjgl.dist"  		value="./dist"/>
   <property name="lwjgl.docs"  		value="./doc"/>
   <property name="lwjgl.temp"     value="./temp"/>
-  <property name="lwjgl.test"  		value="./test"/>
+  <property name="lwjgl.res"  		value="./res"/>
   <property name="lwjgl.version"  value="0.4"/>
   
   <!-- Creates a splash screen -->
@@ -21,7 +21,7 @@
     <mkdir dir="${lwjgl.lib}" taskname="initialiazing lib folder"/>
     <mkdir dir="${lwjgl.dist}" taskname="initialiazing dist folder"/>
     <mkdir dir="${lwjgl.docs}/javadoc" taskname="initialiazing docs folder"/>
-    <mkdir dir="${lwjgl.test}" taskname="initialiazing test folder"/>
+    <mkdir dir="${lwjgl.res}" taskname="initialiazing res folder"/>
     <mkdir dir="${lwjgl.temp}" taskname="initialiazing temp folder"/>
   </target>
   
@@ -90,6 +90,9 @@
         <fileset dir="${lwjgl.bin}">
           <include name="**.class"/>
         </fileset>
+        <fileset dir="${lwjgl.res}">
+          <include name="data/**"/>
+        </fileset>
       </jar>
       
       <!-- copy dll/so to lib directory -->
@@ -98,16 +101,6 @@
             <include name="lwjgl.*"/>
             <include name="lwjgl_d.*"/>
         </fileset>
-      </copy>
-      
-      <!-- Copy relevant files to test directory -->
-      <copy todir="${lwjgl.test}" taskname="jar">
-        <fileset dir="${lwjgl.lib}"/>
-      </copy>
-      
-      <!-- copy data files for example -->
-      <copy todir="${lwjgl.test}/data" taskname="data">
-        <fileset dir="examples/data"/>
       </copy>
   </target>
   
