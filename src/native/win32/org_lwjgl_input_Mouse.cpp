@@ -469,9 +469,12 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer
 		// did the read fail because we lost input for some reason? 
 		// if so, then attempt to reacquire. 
 		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
-			mDIDevice->Acquire();
+			hRes = mDIDevice->Acquire();
+			if (hRes != DI_OK)
+				return;
 		} else {
 			printfDebug("Error getting mouse state: %d\n", hRes);
+			return;
 		}
 	}
 
