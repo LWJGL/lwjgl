@@ -163,8 +163,22 @@ void* GetFunctionPointer(const char* function) {
 /**
  * Loads the OpenAL Library
  */
-void LoadOpenAL() {
+void LoadOpenAL(JNIEnv *env) {
 #ifdef _WIN32
+  jstring propertykey;
+  jstring librarypath;
+  jclass systemclass;
+  jmethodID propertymethod;
+  //compile bitch!
+  //propertykey = env->NewStringUTF("java.library.path");
+  ///*systemclass = */env->FindClass("java/lang/System");
+  //propertymethod = env->GetStaticMethodID(systemclass, "getProperty", "(Ljava/lang/String;)Ljava/lang/String");
+  //librarypath = env->CallStaticObjectMethod(systemclass, jmethodID, propertykey);
+  printf("Loaded library path: %s", librarypath);
+  
+  //parse string
+  
+  //try to load for each path
   handleOAL = LoadLibrary("OpenAL32.dll");
 #endif
 #ifdef _X11
@@ -187,13 +201,13 @@ void UnLoadOpenAL() {
 /**
  * Initializes OpenAL by loading the library
  */
-int InitializeOpenAL() {
+int InitializeOpenAL(JNIEnv *env) {
   if(handleOAL != 0) {
     return JNI_TRUE;
   }
 
   //load our library
-  LoadOpenAL();
+  LoadOpenAL(env);
 
   // if we couldn't load the library, get out
   if(handleOAL == 0) {
