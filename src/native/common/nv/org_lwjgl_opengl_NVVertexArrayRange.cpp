@@ -127,7 +127,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_initNativeStubs(
 		{"glXAllocateMemoryNV", "(IFFF)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_glXAllocateMemoryNV, "glXAllocateMemoryNV", (void**)&glXAllocateMemoryNV},
 		{"glXFreeMemoryNV", "(Ljava/nio/ByteBuffer;)V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_glXFreeMemoryNV, "glXFreeMemoryNV", (void**)&glXFreeMemoryNV},
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 		{"wglAllocateMemoryNV", "(IFFF)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_wglAllocateMemoryNV, "wglAllocateMemoryNV", (void**)&wglAllocateMemoryNV},
 		{"wglFreeMemoryNV", "(Ljava/nio/ByteBuffer;)V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_wglFreeMemoryNV, "wglFreeMemoryNV", (void**)&wglFreeMemoryNV}
 #endif
