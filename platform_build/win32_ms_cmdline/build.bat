@@ -10,7 +10,7 @@ set COPTIONS=/I"%DXHOME%\include" /I"%CHOME%\include" /I"%PLTSDKHOME%\include" /
 set LINKEROPTS=/link /LIBPATH:"%ALHOME%\libs" /LIBPATH:"%EAXHOME%\Libs" /LIBPATH:"%DXHOME%\Lib" /LIBPATH:"%PLTSDKHOME%\Lib" /LIBPATH:"%CHOME%\Lib"
 set LIBS=dinput.lib dxguid.lib OpenAL32.lib alut.lib eaxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib
 
-for %%x in (..\..\src\native\win32\*.cpp) do cl %COPTIONS% %%x
+for %%x in (..\..\src\native\win32\*.c) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\*.c) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\arb\*.c) do cl %COPTIONS% %%x
 for %%x in (..\..\src\native\common\nv\*.c) do cl %COPTIONS% %%x
