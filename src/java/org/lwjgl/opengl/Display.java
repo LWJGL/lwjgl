@@ -63,7 +63,6 @@ public final class Display {
 		Sys.initialize();
 		current_mode = init();
 		assert current_mode != null;
-		System.out.println("Current mode "+current_mode);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				reset();
