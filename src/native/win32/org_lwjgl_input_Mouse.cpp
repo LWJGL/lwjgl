@@ -244,8 +244,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 	} else {
 		if (usingNativeCursor) {
 			SetClassLong(hwnd, GCL_HCURSOR, (LONG)NULL);
-			SetCursor(NULL);
-			ShowCursor(TRUE);
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
 			mDIDevice->Unacquire();
 			if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
 				throwException(env, "Could not set the CooperativeLevel.");
@@ -253,6 +252,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			}
 			usingNativeCursor = false;
 			mDIDevice->Acquire();
+			ShowCursor(TRUE);
 		}
 	}
 }
@@ -305,9 +305,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
   (JNIEnv * env, jclass clazz, jboolean grab) {
-  if(usingNativeCursor) {
-    return;
-  }  
   
   if(grab) {
     mouseMask = DISCL_EXCLUSIVE | DISCL_FOREGROUND;
