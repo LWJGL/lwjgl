@@ -47,6 +47,8 @@
 #include "org_lwjgl_opengl_Win32Display.h"
 #include "org_lwjgl_input_Mouse.h"
 
+#define EVENT_SIZE 5
+
 extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
 static LPDIRECTINPUT		lpdi = NULL;						          // DirectInput
 static LPDIRECTINPUTDEVICE mDIDevice;				// DI Device instance
@@ -110,7 +112,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getButtonCount(JNIEnv 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *env, jobject self) {
 	HRESULT hr;
 
-	initEventQueue(&event_queue, 5);
+	initEventQueue(&event_queue, EVENT_SIZE);
 
 	last_poll_x = last_poll_y = last_event_x = last_event_y = accum_dx = accum_dy = accum_dwheel = 0;
 	buffer_enabled = false;
@@ -331,7 +333,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 	  throwException(env, "Could not set the CooperativeLevel.");
 		return;
 	}
-	mDIDevice->Acquire();  
+	mDIDevice->Acquire();
+	initEventQueue(&event_queue, EVENT_SIZE);
 }
 
 /**
