@@ -185,9 +185,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			RECT clientRect;
 			GetWindowRect(hwnd, &windowRect);
 			getScreenClientRect(&clientRect, &windowRect);
-			SetCursorPos(clientRect.left, clientRect.top);
 			cursorPos.x = clientRect.left;
-			cursorPos.y = clientRect.top;
+			cursorPos.y = clientRect.bottom - 1;
+			SetCursorPos(cursorPos.x, cursorPos.y);
 			ShowCursor(TRUE);
 			usingNativeCursor = true;
 		}
@@ -352,6 +352,15 @@ void SetupMouse() {
   mCreate_success = true;
 }
 
+static int cap(int val, int min, int max) {
+	if (val < min)
+		return min;
+	else if (val > max)
+		return max;
+	else
+		return val;
+}
+
 static void getGDICursorDelta(int* return_dx, int* return_dy) {
 	int dx = 0;
 	int dy = 0;
@@ -366,13 +375,12 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
 	windowRect = newWindowRect;
 	getScreenClientRect(&clientRect, &windowRect);
 	// Clip the position to the client rect
-	if (newCursorPos.x < clientRect.right && newCursorPos.x >= clientRect.left &&
-		newCursorPos.y < clientRect.bottom && newCursorPos.y >= clientRect.top) {
-		dx = newCursorPos.x - cursorPos.x;
-		dy = newCursorPos.y - cursorPos.y;
-		cursorPos.x += dx;
-		cursorPos.y += dy;
-	}
+	newCursorPos.x = cap(newCursorPos.x, clientRect.left, clientRect.right - 1);
+	newCursorPos.y = cap(newCursorPos.y, clientRect.top, clientRect.bottom - 1);
+	dx = newCursorPos.x - cursorPos.x;
+	dy = newCursorPos.y - cursorPos.y;
+	cursorPos.x += dx;
+	cursorPos.y += dy;
 	*return_dx = dx;
 	*return_dy = dy;
 }
@@ -415,6 +423,7 @@ void UpdateMouseFields() {
 		dx = diMouseState.lX;
 		dy = diMouseState.lY;
 	}
+	dy = -dy;
 
 	mEnvironment->SetStaticIntField(clsMouse, fidMDX, (jint)dx);
 	mEnvironment->SetStaticIntField(clsMouse, fidMDY, (jint)dy);

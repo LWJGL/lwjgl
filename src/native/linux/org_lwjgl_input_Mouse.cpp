@@ -79,6 +79,21 @@ static unsigned char buttons[NUM_BUTTONS];
 static Cursor blank_cursor;
 static Cursor current_cursor;
 
+static int cap(int val, int min, int max) {
+	if (val < min)
+		return min;
+	else if (val > max)
+		return max;
+	else
+		return val;
+}
+
+static void setCursorPos(int x, int y) {
+	y = getWindowHeight() - 1 - y;
+	current_x = cap(x, 0, getWindowWidth() - 1);
+	current_y = cap(y, 0, getWindowHeight() - 1);
+}
+
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    initIDs
@@ -200,7 +215,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 	if (cursor_handle != 0) {
 		Cursor cursor = (Cursor)cursor_handle;
 		if (!native_cursor) {
-			current_x = current_y = 0;
+			setCursorPos(0, 0);
 			XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
 			native_cursor = true;
 		}
@@ -256,7 +271,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	int i;
 	env->SetStaticIntField(clazz, fid_button_count, NUM_BUTTONS);
 	env->SetStaticBooleanField(clazz, fid_has_wheel, JNI_TRUE);
-	current_x = current_y = current_z = last_x = last_y = last_z;
+	setCursorPos(0, 0);
+	current_z = last_x = last_y = last_z = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = JNI_FALSE;
 	if (!blankCursor()) {
@@ -334,10 +350,8 @@ void handleButtonRelease(XButtonEvent *event) {
 }
 
 void handlePointerMotion(XMotionEvent *event) {
-	if (pointer_grabbed || native_cursor) {
-		current_x = event->x;
-		current_y = event->y;
-	}
+	if (pointer_grabbed || native_cursor)
+                setCursorPos(event->x, event->y);
 }
 
 static void warpPointer(void) {
@@ -347,8 +361,9 @@ static void warpPointer(void) {
 	// Reset pointer to middle of screen if inside a certain inner border
 	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
 			current_x > getWindowWidth() - POINTER_WARP_BORDER || current_y > getWindowHeight() - POINTER_WARP_BORDER) {
-		current_x = last_x = getWindowWidth()/2;
-		current_y = last_y = getWindowHeight()/2;
+		setCursorPos(getWindowWidth()>>1, getWindowHeight()>>1);
+		last_x = current_x;
+		last_y = current_y;
 		XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
 		XEvent event;
 		// Try to catch the warp pointer event
