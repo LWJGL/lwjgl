@@ -77,6 +77,12 @@ public abstract class AL extends CoreAL {
 	 */
 	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized)
 		throws OpenALException {
+      
+	  if (created) {
+		  return;
+    }
+      
+      
 		AL.deviceArguments = deviceArguments;
 		AL.contextFrequency = contextFrequency;
 		AL.contextRefresh = contextRefresh;
@@ -90,6 +96,10 @@ public abstract class AL extends CoreAL {
 	 * open the default device, and create a context using default values. 
 	 */
 	public static void create() throws OpenALException {
+    if(created) {
+      return;
+    }
+    
 		BaseAL.create();
 
 		ALC.create();
