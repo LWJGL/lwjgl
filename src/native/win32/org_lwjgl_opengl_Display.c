@@ -289,17 +289,24 @@ void closeWindow(HWND *hwnd, HDC *hdc)
 static void appActivate(bool active)
 {
 	static bool inAppActivate = false;
-	isFocused = active;
 	if (inAppActivate) {
 		return;
 	}
 	inAppActivate = true;
+	isFocused = active;
 	if (active) {
 		if (isFullScreen) {
 			restoreDisplayMode();
 		}
 		ShowWindow(display_hwnd, SW_RESTORE);
 		SetForegroundWindow(display_hwnd);
+		SetFocus(display_hwnd);
+		/*
+		 * Calling wglMakeCurrent() (redundantly) seems to help some gfx cards
+		 * restore from minimized to fullscreen.
+		 */
+		if (wglGetCurrentContext() == display_hglrc)
+			wglMakeCurrent(display_hdc, display_hglrc);
 	} else if (isFullScreen) {
 		ShowWindow(display_hwnd, SW_SHOWMINNOACTIVE);
 		resetDisplayMode(NULL);
@@ -315,9 +322,9 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 							     WPARAM wParam,
 							     LPARAM lParam)
 {
-        int xPos; 
-        int yPos;
-        int dwheel;
+      int xPos; 
+      int yPos;
+      int dwheel;
 	switch (msg) {
 		// disable screen saver and monitor power down messages which wreak havoc
 		case WM_SYSCOMMAND:
@@ -356,7 +363,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 					isMinimized = true;
 					break;
 			}
-			return 0L;
+			break;
 		case WM_MOUSEMOVE:
 		{
                         xPos = GET_X_LPARAM(lParam); 
