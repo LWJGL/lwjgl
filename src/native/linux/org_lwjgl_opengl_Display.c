@@ -254,6 +254,8 @@ void handleMessages(void) {
 	int revert_mode;
 	while (XPending(getDisplay()) > 0) {
 		XNextEvent(getDisplay(), &event);
+		if (XFilterEvent(&event, None) == True)
+			continue;
 		switch (event.type) {
 			case ClientMessage:
 				if (event.xclient.message_type == warp_atom) {
@@ -367,7 +369,7 @@ static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 	root_win = RootWindow(getDisplay(), getCurrentScreen());
 	cmap = XCreateColormap(getDisplay(), root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
-	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask| StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+	attribs.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	attribs.background_pixel = 0xFF000000;
 	attribs.win_gravity = NorthWestGravity;
 	attribmask = CWColormap | CWBackPixel | CWEventMask | CWWinGravity;

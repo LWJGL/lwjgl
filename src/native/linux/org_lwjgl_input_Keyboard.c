@@ -107,6 +107,16 @@ static void closeUnicodeStructs() {
 	}
 }
 
+static void setupIMEventMask() {
+	long im_event_mask;
+	XWindowAttributes win_attributes;
+	
+	XGetWindowAttributes(getDisplay(), getCurrentWindow(), &win_attributes);
+	XGetICValues(xic, XNFilterEvents, &im_event_mask, NULL);
+	XSelectInput(getDisplay(), getCurrentWindow(), win_attributes.your_event_mask | im_event_mask);
+	XSetICFocus(xic);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
@@ -149,7 +159,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
 		xim = XOpenIM(getDisplay(), NULL, NULL, NULL);
 		if (xim != NULL) {
 			xic = XCreateIC(xim,  XNClientWindow, getCurrentWindow(), XNFocusWindow, getCurrentWindow(), XNInputStyle, XIMPreeditNothing | XIMStatusNothing, NULL);
-			if (xic == NULL) {
+			if (xic != NULL) {
+				setupIMEventMask();
+			} else {
 				closeUnicodeStructs();
 			}
 		} else
@@ -190,6 +202,7 @@ static int lookupStringISO88591(XKeyEvent *event, jint *translation_buffer) {
 
 static int lookupStringUnicode(XKeyEvent *event, jint *translation_buffer) {
 	char utf8_translation_buffer[KEYBOARD_BUFFER_SIZE];
+	
 	jchar ucs2_translation_buffer[KEYBOARD_BUFFER_SIZE];
 	char *utf8_buf = utf8_translation_buffer;
 	jchar *ucs2_buf = ucs2_translation_buffer;
@@ -197,11 +210,9 @@ static int lookupStringUnicode(XKeyEvent *event, jint *translation_buffer) {
 	Status status;
 	int i;
 	
-	XSetICFocus(xic);
 	size_t utf8_bytes = Xutf8LookupString(xic, event, utf8_translation_buffer, KEYBOARD_BUFFER_SIZE*sizeof(char), NULL, &status);
 	if (status != XLookupChars && status != XLookupBoth)
 		return 0;
-	XUnsetICFocus(xic);
 	// reset converter
 	iconv(iconv_descriptor, NULL, NULL, NULL, NULL);
 	// convert from UTF-8 to UCS-2
