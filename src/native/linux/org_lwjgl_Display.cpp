@@ -234,14 +234,12 @@ int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeIn
 	return 1;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jint alpha_bits, jint depth_bits, jint stencil_bits, jboolean fullscreen) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass clazz, jint width, jint height, jint bpp, jint freq, jint alpha_bits, jint depth_bits, jint stencil_bits, jboolean fullscreen, jstring title) {
 	Window root_win;
 	XSetWindowAttributes attribs;
 	Colormap cmap;
 	int attribmask;
         int num_modes, i;
-                            
-
 
 	win_width = width;
 	win_height = height;
@@ -291,6 +289,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 #ifdef _DEBUG
 	printf("Created window\n");
 #endif
+	const char * title_str = env->GetStringUTFChars(title, NULL);
+	XStoreName(disp, win, title_str);
+	env->ReleaseStringUTFChars(title, title_str);
 	XMapRaised(disp, win);
 	waitMapped(disp, win);
 	if (fullscreen) {
