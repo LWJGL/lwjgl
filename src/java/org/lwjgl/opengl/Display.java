@@ -32,13 +32,13 @@
 package org.lwjgl.opengl;
 
 /**
- * This is the abstract class for a Window in LWJGL. LWJGL windows have some
+ * This is the abstract class for a Display in LWJGL. LWJGL displays have some
  * peculiar characteristics:
  * 
- * - the window may be closeable by the user or operating system, and may be minimized
+ * - the display may be closeable by the user or operating system, and may be minimized
  * by the user or operating system
- * - only one window may ever be open at once
- * - the operating system may or may not be able to do fullscreen or windowed windows.
+ * - only one display may ever be open at once
+ * - the operating system may or may not be able to do fullscreen or windowed displays.
  * 
  * @author foo
  */
