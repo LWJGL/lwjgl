@@ -5,7 +5,7 @@ set ALHOME="c:\Program Files\OpenAL 1.0 Software Development Kit"
 set EAXHOME="c:\Program Files\Creative Labs\EAX 2.0 Extensions SDK"
 set DXHOME="C:\Program Files\DX90SDK"
 set PLTSDKHOME="C:\Program Files\Microsoft SDK"
-set COPTIONS=/I%DXHOME%\Include /I%PLTSDKHOME%\include /I%JAVAHOME%\include /I%JAVAHOME%\include\win32 /I%ALHOME%\Include /I%EAXHOME%\Include /I..\..\src\native\common /O2 /nologo /c
+set COPTIONS=-DWIN32 /I%DXHOME%\Include /I%PLTSDKHOME%\include /I%JAVAHOME%\include /I%JAVAHOME%\include\win32 /I%ALHOME%\Include /I%EAXHOME%\Include /I..\..\src\native\common /O2 /nologo /c
 set LINKEROPTS=/link /LIBPATH:%ALHOME%\libs /LIBPATH:%EAXHOME%\Libs /LIBPATH:%DXHOME%\Lib /LIBPATH:%PLTSDKHOME%\Lib
 set LIBS=dinput.lib dxguid.lib OpenAL32.lib alut.lib eaxguid.lib OpenGL32.Lib Version.lib user32.lib Gdi32.lib Advapi32.lib
 
