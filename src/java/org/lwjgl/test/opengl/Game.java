@@ -55,9 +55,9 @@ public final class Game {
           for (int i = 0; i < modes.length; i ++) {
             if( modes[i].width == 640 && 
                 modes[i].height == 480 && 
-                modes[i].bpp == 16 && 
-                modes[i].freq == 60) {
+                modes[i].bpp >= 16) {
                   mode = i;
+                  break;
             }       
           } 
              // For now let's just pick a mode we're certain to have
