@@ -47,20 +47,20 @@
 #include "Window.h"
 #include "common_tools.h"
 
-static bool isPbuffersSupported() {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities
+  (JNIEnv *env, jclass clazz)
+{
+	GLXExtensions extension_flags;
+	if (!extgl_InitGLX(getDisplay(), getCurrentScreen(), &extension_flags))
+		return 0;
 	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
 	return extension_flags.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities
-  (JNIEnv *env, jclass clazz)
-{
-	return isPbuffersSupported() ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nInitHandle
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint width, jint height, jobject pixel_format) {
-	if (!extgl_InitGLX(getDisplay(), getCurrentScreen()) || !isPbuffersSupported()) {
+	GLXExtensions extension_flags;
+	if (!extgl_InitGLX(getDisplay(), getCurrentScreen(), &extension_flags) || !extension_flags.GLX13) {
 		throwException(env, "No Pbuffer support");
 		return;
 	}
@@ -75,7 +75,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nInitHandle
 
 	X11PeerInfo *peer_info = (X11PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	GLXFBConfig *config = getFBConfigFromPeerInfo(env, peer_info);
-	GLXPbuffer buffer = glXCreatePbuffer(peer_info->display, *config, buffer_attribs);
+	GLXPbuffer buffer = _glXCreatePbuffer(peer_info->display, *config, buffer_attribs);
 	XFree(config);
 	peer_info->drawable = buffer;
 }
@@ -83,5 +83,5 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nInitHandle
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nDestroy
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	X11PeerInfo *peer_info = (X11PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	glXDestroyPbuffer(peer_info->display, peer_info->drawable);
+	_glXDestroyPbuffer(peer_info->display, peer_info->drawable);
 }

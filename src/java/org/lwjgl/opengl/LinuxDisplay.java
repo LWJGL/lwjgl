@@ -359,9 +359,17 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	public int getPbufferCapabilities() {
 		lockAWT();
-		int caps = nGetPbufferCapabilities();
-		unlockAWT();
-		return caps;
+		try {
+			incDisplay();
+			int caps = nGetPbufferCapabilities();
+			decDisplay();
+			return caps;
+		} catch (LWJGLException e) {
+			Sys.log("Exception occurred in getPbufferCapabilities: " + e);
+			return 0;
+		} finally {
+			unlockAWT();
+		}
 	}
 	private static native int nGetPbufferCapabilities();
 

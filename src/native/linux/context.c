@@ -70,7 +70,7 @@ XVisualInfo *getVisualInfoFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 		GLXFBConfig *configs = getFBConfigFromPeerInfo(env, peer_info);
 		if (configs == NULL)
 			return NULL;
-		vis_info = glXGetVisualFromFBConfig(peer_info->display, configs[0]);
+		vis_info = _glXGetVisualFromFBConfig(peer_info->display, configs[0]);
 		if (vis_info == NULL)
 			throwException(env, "Could not get VisualInfo from GLX 1.3 config");
 		XFree(configs);
@@ -81,7 +81,7 @@ XVisualInfo *getVisualInfoFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 GLXFBConfig *getFBConfigFromPeerInfo(JNIEnv *env, X11PeerInfo *peer_info) {
 	int attribs[] = {GLX_FBCONFIG_ID, peer_info->config.glx13_config.config_id, None, None};
 	int num_elements;
-	GLXFBConfig *configs = glXChooseFBConfig(peer_info->display, peer_info->screen, attribs, &num_elements);
+	GLXFBConfig *configs = _glXChooseFBConfig(peer_info->display, peer_info->screen, attribs, &num_elements);
 	if (configs == NULL) {
 		throwException(env, "Could not find GLX 1.3 config from peer info");
 		return NULL;
@@ -140,13 +140,14 @@ static GLXFBConfig *chooseVisualGLX13FromBPP(JNIEnv *env, Display *disp, int scr
 	putAttrib(&attrib_list, GLX_ACCUM_BLUE_SIZE); putAttrib(&attrib_list, accum_bpe);
 	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
 	putAttrib(&attrib_list, GLX_STEREO); putAttrib(&attrib_list, stereo ? True : False);
-	if (samples > 0 && extension_flags.GLX_ARB_multisample) {
+	// Assume the caller has checked support for multisample
+	if (samples > 0) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
 	putAttrib(&attrib_list, None); putAttrib(&attrib_list, None);
 	int num_formats = 0;
-	GLXFBConfig* configs = glXChooseFBConfig(disp, screen, attrib_list.attribs, &num_formats);
+	GLXFBConfig* configs = _glXChooseFBConfig(disp, screen, attrib_list.attribs, &num_formats);
 	if (num_formats > 0) {
 		return configs;
 	} else {
@@ -201,12 +202,13 @@ static XVisualInfo *chooseVisualGLXFromBPP(JNIEnv *env, Display *disp, int scree
 	putAttrib(&attrib_list, GLX_ACCUM_ALPHA_SIZE); putAttrib(&attrib_list, accum_alpha);
 	if (stereo)
 		putAttrib(&attrib_list, GLX_STEREO);
-	if (samples > 0 && extension_flags.GLX_ARB_multisample) {
+	// Assume the caller has checked support for multisample
+	if (samples > 0) {
 		putAttrib(&attrib_list, GLX_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, GLX_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
 	putAttrib(&attrib_list, None);
-	return glXChooseVisual(disp, screen, attrib_list.attribs);
+	return _glXChooseVisual(disp, screen, attrib_list.attribs);
 }
 
 XVisualInfo *chooseVisualGLX(JNIEnv *env, Display *disp, int screen, jobject pixel_format, bool use_display_bpp, bool double_buffer) {
@@ -224,19 +226,19 @@ XVisualInfo *chooseVisualGLX(JNIEnv *env, Display *disp, int screen, jobject pix
 	return chooseVisualGLXFromBPP(env, disp, screen, pixel_format, bpp, double_buffer);
 }
 
-static void dumpVisualInfo(JNIEnv *env, Display *display, XVisualInfo *vis_info) {
+static void dumpVisualInfo(JNIEnv *env, Display *display, GLXExtensions *extension_flags, XVisualInfo *vis_info) {
 	int alpha, depth, stencil, r, g, b;
 	int sample_buffers = 0;
 	int samples = 0;
-	glXGetConfig(display, vis_info, GLX_RED_SIZE, &r);
-	glXGetConfig(display, vis_info, GLX_GREEN_SIZE, &g);
-	glXGetConfig(display, vis_info, GLX_BLUE_SIZE, &b);
-	glXGetConfig(display, vis_info, GLX_ALPHA_SIZE, &alpha);
-	glXGetConfig(display, vis_info, GLX_DEPTH_SIZE, &depth);
-	glXGetConfig(display, vis_info, GLX_STENCIL_SIZE, &stencil);
-	if (extension_flags.GLX_ARB_multisample) {
-		glXGetConfig(display, vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
-		glXGetConfig(display, vis_info, GLX_SAMPLES_ARB, &samples);
+	_glXGetConfig(display, vis_info, GLX_RED_SIZE, &r);
+	_glXGetConfig(display, vis_info, GLX_GREEN_SIZE, &g);
+	_glXGetConfig(display, vis_info, GLX_BLUE_SIZE, &b);
+	_glXGetConfig(display, vis_info, GLX_ALPHA_SIZE, &alpha);
+	_glXGetConfig(display, vis_info, GLX_DEPTH_SIZE, &depth);
+	_glXGetConfig(display, vis_info, GLX_STENCIL_SIZE, &stencil);
+	if (extension_flags->GLX_ARB_multisample) {
+		_glXGetConfig(display, vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
+		_glXGetConfig(display, vis_info, GLX_SAMPLES_ARB, &samples);
 	}
 	printfDebugJava(env, "Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d", r, g, b, alpha, depth, stencil, sample_buffers, samples);
 }
@@ -247,7 +249,8 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 		return false;
 	}
 	X11PeerInfo *peer_info = (*env)->GetDirectBufferAddress(env, peer_info_handle);
-	if (!extgl_InitGLX(display, screen)) {
+	GLXExtensions extension_flags;
+	if (!extgl_InitGLX(display, screen, &extension_flags)) {
 		throwException(env, "Could not init GLX");
 		return false;
 	}
@@ -255,18 +258,24 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 		throwException(env, "GLX13 is required, but is not available");
 		return false;
 	}
+	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
+	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
+	if (samples > 0 && !extension_flags.GLX_ARB_multisample) {
+		throwException(env, "Samples > 0 specified but there's no support for GLX_ARB_multisample");
+		return false;
+	}
 	peer_info->glx13 = extension_flags.GLX13;
 	if (peer_info->glx13) {
 		GLXFBConfig *configs = chooseVisualGLX13(env, display, screen, pixel_format, use_display_bpp, drawable_type, double_buffered);
 		if (isDebugEnabled()) {
-			XVisualInfo *vis_info = glXGetVisualFromFBConfig(display, configs[0]);
+			XVisualInfo *vis_info = _glXGetVisualFromFBConfig(display, configs[0]);
 			if (vis_info != NULL) {
-				dumpVisualInfo(env, display, vis_info);
+				dumpVisualInfo(env, display, &extension_flags, vis_info);
 				XFree(vis_info);
 			}
 		}
 		int config_id;
-		int result = glXGetFBConfigAttrib(display, configs[0], GLX_FBCONFIG_ID, &config_id);
+		int result = _glXGetFBConfigAttrib(display, configs[0], GLX_FBCONFIG_ID, &config_id);
 		XFree(configs);
 		if (result != Success) {
 			throwException(env, "Could not choose GLX13 config");
@@ -283,7 +292,7 @@ bool initPeerInfo(JNIEnv *env, jobject peer_info_handle, Display *display, int s
 		peer_info->config.glx_config.depth = vis_info->depth;
 		peer_info->screen = vis_info->screen;
 		if (isDebugEnabled())
-			dumpVisualInfo(env, display, vis_info);
+			dumpVisualInfo(env, display, &extension_flags, vis_info);
 		XFree(vis_info);
 	}
 	peer_info->display = display;

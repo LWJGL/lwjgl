@@ -37,7 +37,7 @@
 #include "extgl.h"
 
 /*
- * Names for attributes to glXGetConfig.
+ * Names for attributes to _glXGetConfig.
  */
 #define GLX_USE_GL              1       /* support GLX rendering */
 #define GLX_BUFFER_SIZE         2       /* depth of the color buffer */
@@ -91,7 +91,7 @@
 #define GLX_OPTIMAL_PBUFFER_HEIGHT_SGIX 0x801A
 
 /*
- * Error return values from glXGetConfig.  Success is indicated by
+ * Error return values from _glXGetConfig.  Success is indicated by
  * a value of 0.
  */
 #define GLX_BAD_SCREEN                  1  /* screen # is bad */
@@ -106,7 +106,7 @@
 /* FBConfig attribute values */
 
 /*
- * Generic "don't care" value for glX ChooseFBConfig attributes (except
+ * Generic "don't care" value for _glX ChooseFBConfig attributes (except
  * GLX_LEVEL).
  */
 #define GLX_DONT_CARE                   0xFFFFFFFF
@@ -143,7 +143,7 @@
 #define GLX_TRANSPARENT_RGB             0x8008
 #define GLX_TRANSPARENT_INDEX           0x8009
 
-/* glXCreateGLXPbuffer attributes */
+/* _glXCreateGLXPbuffer attributes */
 #define GLX_PRESERVED_CONTENTS          0x801B
 #define GLX_LARGEST_PBUFFER             0x801C
 #define GLX_PBUFFER_HEIGHT              0x8040  /* New for GLX 1.3 */
@@ -151,7 +151,7 @@
 #define GLX_PRESERVED_CONTENTS_SGIX     GLX_PRESERVED_CONTENTS
 #define GLX_LARGEST_PBUFFER_SGIX        GLX_LARGEST_PBUFFER
 
-/* glXQueryGLXPBuffer attributes */
+/* _glXQueryGLXPBuffer attributes */
 #define GLX_WIDTH                       0x801D
 #define GLX_HEIGHT                      0x801E
 #define GLX_EVENT_MASK                  0x801F
@@ -159,18 +159,18 @@
 #define GLX_HEIGHT_SGIX                 GLX_HEIGHT
 #define GLX_EVENT_MASK_SGIX             GLX_EVENT_MASK
 
-/* glXCreateNewContext render_type attribute values */
+/* _glXCreateNewContext render_type attribute values */
 #define GLX_RGBA_TYPE                   0x8014
 #define GLX_COLOR_INDEX_TYPE            0x8015
 #define GLX_RGBA_TYPE_SGIX              GLX_RGBA_TYPE
 #define GLX_COLOR_INDEX_TYPE_SGIX       GLX_COLOR_INDEX_TYPE
 
-/* glXQueryContext attributes */
+/* _glXQueryContext attributes */
 /* #define GLX_FBCONFIG_ID                0x8013 */
 /* #define GLX_RENDER_TYPE                0x8011 */
 #define GLX_SCREEN                      0x800C
 
-/* glXSelectEvent event mask bits */
+/* _glXSelectEvent event mask bits */
 #define GLX_PBUFFER_CLOBBER_MASK        0x08000000
 #define GLX_PBUFFER_CLOBBER_MASK_SGIX   GLX_PBUFFER_CLOBBER_MASK
 
@@ -205,8 +205,8 @@
 #define GLX_ACCUM_BUFFER_BIT_SGIX       GLX_ACCUM_BUFFER_BIT
 
 /*
- * Extension return values from glXGetConfig.  These are also
- * accepted as parameter values for glXChooseVisual.
+ * Extension return values from _glXGetConfig.  These are also
+ * accepted as parameter values for _glXChooseVisual.
  */
 
 #define GLX_X_VISUAL_TYPE_EXT           0x22    /* visual_info extension type */
@@ -236,14 +236,14 @@
 #define GLX_NON_CONFORMANT_VISUAL_EXT   0x800D
 
 /*
- * Names for attributes to glXGetClientString.
+ * Names for attributes to _glXGetClientString.
  */
 #define GLX_VENDOR                      0x1
 #define GLX_VERSION                     0x2
 #define GLX_EXTENSIONS                  0x3
 
 /*
- * Names for attributes to glXQueryContextInfoEXT.
+ * Names for attributes to _glXQueryContextInfoEXT.
  */
 #define GLX_SHARE_CONTEXT_EXT           0x800A  /* id of share context */
 #define GLX_VISUAL_ID_EXT               0x800B  /* id of context's visual */
@@ -315,56 +315,55 @@ typedef void (APIENTRY * glXSwapIntervalSGIPROC)(int interval);
 typedef struct {
     bool GLX12;
     bool GLX13;
-    bool GLX_EXT_visual_info;
-    bool GLX_EXT_visual_rating;
+/*    bool GLX_EXT_visual_info;
+    bool GLX_EXT_visual_rating;*/
     bool GLX_SGI_swap_control;
     bool GLX_ARB_multisample;
 } GLXExtensions;
 
-extern GLXExtensions extension_flags;
+/* Add _ to global symbols to avoid symbol clash with the OpenGL library */
+extern glXGetFBConfigsPROC _glXGetFBConfigs;
+extern glXChooseFBConfigPROC _glXChooseFBConfig;
+extern glXGetFBConfigAttribPROC _glXGetFBConfigAttrib;
+extern glXGetVisualFromFBConfigPROC _glXGetVisualFromFBConfig;
+extern glXCreateWindowPROC _glXCreateWindow;
+extern glXDestroyWindowPROC _glXDestroyWindow;
+extern glXCreatePixmapPROC _glXCreatePixmap;
+extern glXDestroyPixmapPROC _glXDestroyPixmap;
+extern glXCreatePbufferPROC _glXCreatePbuffer;
+extern glXDestroyPbufferPROC _glXDestroyPbuffer;
+extern glXQueryDrawablePROC _glXQueryDrawable;
+extern glXCreateNewContextPROC _glXCreateNewContext;
+extern glXMakeContextCurrentPROC _glXMakeContextCurrent;
+extern glXGetCurrentReadDrawablePROC _glXGetCurrentReadDrawable;
+extern glXGetCurrentDisplayPROC _glXGetCurrentDisplay;
+extern glXQueryContextPROC _glXQueryContext;
+extern glXSelectEventPROC _glXSelectEvent;
+extern glXGetSelectedEventPROC _glXGetSelectedEvent;
 
-extern glXGetFBConfigsPROC glXGetFBConfigs;
-extern glXChooseFBConfigPROC glXChooseFBConfig;
-extern glXGetFBConfigAttribPROC glXGetFBConfigAttrib;
-extern glXGetVisualFromFBConfigPROC glXGetVisualFromFBConfig;
-extern glXCreateWindowPROC glXCreateWindow;
-extern glXDestroyWindowPROC glXDestroyWindow;
-extern glXCreatePixmapPROC glXCreatePixmap;
-extern glXDestroyPixmapPROC glXDestroyPixmap;
-extern glXCreatePbufferPROC glXCreatePbuffer;
-extern glXDestroyPbufferPROC glXDestroyPbuffer;
-extern glXQueryDrawablePROC glXQueryDrawable;
-extern glXCreateNewContextPROC glXCreateNewContext;
-extern glXMakeContextCurrentPROC glXMakeContextCurrent;
-extern glXGetCurrentReadDrawablePROC glXGetCurrentReadDrawable;
-extern glXGetCurrentDisplayPROC glXGetCurrentDisplay;
-extern glXQueryContextPROC glXQueryContext;
-extern glXSelectEventPROC glXSelectEvent;
-extern glXGetSelectedEventPROC glXGetSelectedEvent;
+extern glXChooseVisualPROC _glXChooseVisual;
+extern glXCopyContextPROC _glXCopyContext;
+extern glXCreateContextPROC _glXCreateContext;
+extern glXCreateGLXPixmapPROC _glXCreateGLXPixmap;
+extern glXDestroyContextPROC _glXDestroyContext;
+extern glXDestroyGLXPixmapPROC _glXDestroyGLXPixmap;
+extern glXGetConfigPROC _glXGetConfig;
+extern glXGetCurrentContextPROC _glXGetCurrentContext;
+extern glXGetCurrentDrawablePROC _glXGetCurrentDrawable;
+extern glXIsDirectPROC _glXIsDirect;
+extern glXMakeCurrentPROC _glXMakeCurrent;
+extern glXQueryExtensionPROC _glXQueryExtension;
+extern glXQueryVersionPROC _glXQueryVersion;
+extern glXSwapBuffersPROC _glXSwapBuffers;
+extern glXUseXFontPROC _glXUseXFont;
+extern glXWaitGLPROC _glXWaitGL;
+extern glXWaitXPROC _glXWaitX;
+extern glXGetClientStringPROC _glXGetClientString;
+extern glXQueryServerStringPROC _glXQueryServerString;
+extern glXQueryExtensionsStringPROC _glXQueryExtensionsString;
 
-extern glXChooseVisualPROC glXChooseVisual;
-extern glXCopyContextPROC glXCopyContext;
-extern glXCreateContextPROC glXCreateContext;
-extern glXCreateGLXPixmapPROC glXCreateGLXPixmap;
-extern glXDestroyContextPROC glXDestroyContext;
-extern glXDestroyGLXPixmapPROC glXDestroyGLXPixmap;
-extern glXGetConfigPROC glXGetConfig;
-extern glXGetCurrentContextPROC glXGetCurrentContext;
-extern glXGetCurrentDrawablePROC glXGetCurrentDrawable;
-extern glXIsDirectPROC glXIsDirect;
-extern glXMakeCurrentPROC glXMakeCurrent;
-extern glXQueryExtensionPROC glXQueryExtension;
-extern glXQueryVersionPROC glXQueryVersion;
-extern glXSwapBuffersPROC glXSwapBuffers;
-extern glXUseXFontPROC glXUseXFont;
-extern glXWaitGLPROC glXWaitGL;
-extern glXWaitXPROC glXWaitX;
-extern glXGetClientStringPROC glXGetClientString;
-extern glXQueryServerStringPROC glXQueryServerString;
-extern glXQueryExtensionsStringPROC glXQueryExtensionsString;
+extern glXSwapIntervalSGIPROC _glXSwapIntervalSGI;
 
-extern glXSwapIntervalSGIPROC glXSwapIntervalSGI;
-
-extern bool extgl_InitGLX(Display *disp, int screen);
+extern bool extgl_InitGLX(Display *disp, int screen, GLXExtensions *extension_flags);
 
 #endif

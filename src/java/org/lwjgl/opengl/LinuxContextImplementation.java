@@ -35,6 +35,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.Sys;
 
 /**
  * $Id$
@@ -131,11 +132,16 @@ final class LinuxContextImplementation implements ContextImplementation {
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setVSync(boolean enabled) {
-		LinuxDisplay.lockAWT();
-		nSetVSync(enabled);
-		LinuxDisplay.unlockAWT();
+		Context current_context = Context.getCurrentContext();
+		if (current_context == null)
+			throw new IllegalStateException("No context is current");
+		synchronized (current_context) {
+			LinuxDisplay.lockAWT();
+			nSetVSync(current_context.getHandle(), enabled);
+			LinuxDisplay.unlockAWT();
+		}
 	}
-	private static native void nSetVSync(boolean enabled);
+	private static native void nSetVSync(ByteBuffer context_handle, boolean enabled);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		LinuxDisplay.lockAWT();
