@@ -31,7 +31,7 @@ public class WindowCreationTest {
     System.out.println("Display created");
 
     while(!Window.isCloseRequested()) {    
-      Window.updateState();
+      Window.update();
       try {
         Thread.sleep(100);
       } catch (Exception e) {

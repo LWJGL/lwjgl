@@ -103,10 +103,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
 
 /*
  * Class:     org_lwjgl_opengl_Window
- * Method:    updateState
+ * Method:    update
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_updateState
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus

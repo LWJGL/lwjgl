@@ -477,10 +477,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle
 
 /*
  * Class:     org_lwjgl_Window
- * Method:    updateState
+ * Method:    update
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_updateState
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
   (JNIEnv * env, jclass clazz)
 {
 	handleMessages(env, clazz);
