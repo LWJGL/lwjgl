@@ -41,6 +41,7 @@
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <string.h>
 #include <assert.h>
 #include "org_lwjgl_input_Keyboard.h"
@@ -51,20 +52,16 @@
 
 unsigned char readBuffer[KEYBOARD_BUFFER_SIZE * 2];
 jfieldID fid_readBuffer;
-jfieldID fid_readBufferAddress;
 unsigned char key_buf[KEYBOARD_SIZE];
 unsigned char key_map[KEYBOARD_SIZE];
 
-typedef struct {
-	unsigned char keycode;
-	unsigned char state;
-} input_event;
-
-input_event saved_key_events[KEY_EVENT_BACKLOG];
+XKeyEvent saved_key_events[KEY_EVENT_BACKLOG];
 int list_start = 0;
 int list_end = 0;
 
 bool keyboard_grabbed;
+bool buffer_enabled;
+bool translation_enabled;
 
 extern Display *disp;
 extern Window win;
@@ -88,7 +85,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 	}
 
 	fid_readBuffer = env->GetStaticFieldID(clazz, "readBuffer", "Ljava/nio/ByteBuffer;");
-	fid_readBufferAddress = env->GetStaticFieldID(clazz, "readBufferAddress", "I");
 }
 
 int grabKeyboard(void) {
@@ -127,7 +123,10 @@ int updateKeyboardGrab(void) {
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
-	keyboard_grabbed = 0;
+	keyboard_grabbed = false;
+	translation_enabled = false;
+	buffer_enabled = false;
+
 	if (updateKeyboardGrab() != GrabSuccess) {
 #ifdef _DEBUG
 		printf("Could not grab keyboard\n");
@@ -170,27 +169,66 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nDestroy
 		ungrabKeyboard();
 }
 
-input_event *nextEventElement(void) {
+XKeyEvent *nextEventElement(void) {
 	if (list_start == list_end)
 		return NULL;
-	input_event *result = &(saved_key_events[list_start]);
+	XKeyEvent *result = &(saved_key_events[list_start]);
 	list_start = (list_start + 1)%KEY_EVENT_BACKLOG;
 	return result;
 }
 
-void putEventElement(unsigned char keycode, unsigned char state) {
+void putEventElement(XKeyEvent *event) {
 	int next_index = (list_end + 1)%KEY_EVENT_BACKLOG;
 	if (next_index == list_start)
 		return;
-	saved_key_events[list_end].keycode = keycode;
-	saved_key_events[list_end].state = state;
+	saved_key_events[list_end] = *event;
 	list_end = next_index;
 }
 
-unsigned char getKeycode(XEvent *event) {
-	unsigned char keycode = (unsigned char)((event->xkey.keycode - 8) & 0xff);
+unsigned char getKeycode(XKeyEvent *event) {
+	unsigned char keycode = (unsigned char)((event->keycode - 8) & 0xff);
 	keycode = key_map[keycode];
 	return keycode;
+}
+
+int translateEvent(int *position, XKeyEvent *event) {
+	static char temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
+	static XComposeStatus status;
+        int num_chars, i;
+
+	if (*position >= KEYBOARD_BUFFER_SIZE * 2)
+		return 0;
+       	if (event->type == KeyRelease) {
+		readBuffer[(*position)++] = 0;
+                readBuffer[(*position)++] = 0;
+		return 0;
+	}
+	num_chars = XLookupString(event, temp_translation_buffer, KEYBOARD_BUFFER_SIZE, NULL, &status);
+	if (num_chars > 0) {
+		num_chars--;
+		/* Assume little endian byte order */
+		readBuffer[(*position)++] = temp_translation_buffer[0];
+		readBuffer[(*position)++] = 0;
+		for (i = 0; i < num_chars; i++) {
+			readBuffer[(*position)++] = 0;
+			readBuffer[(*position)++] = 0;
+	                readBuffer[(*position)++] = temp_translation_buffer[i + 1];
+			readBuffer[(*position)++] = 0;
+		}
+	} else {
+		readBuffer[(*position)++] = 0;
+                readBuffer[(*position)++] = 0;
+	}
+	return num_chars;
+}
+
+unsigned char eventState(XKeyEvent *event) {
+	if (event->type == KeyPress) {
+		return 1;
+	} else if (event->type == KeyRelease) {
+		return 0;
+	} else
+		assert(0);
 }
 
 /*
@@ -202,20 +240,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
   (JNIEnv * env, jclass clazz, jint buf)
 {
 	XEvent event;
-	int state;
+	unsigned char state;
 	
 	updateKeyboardGrab();
 
 	while (XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
-		unsigned char keycode = getKeycode(&event);
-		if (event.type == KeyPress) {
-			state = 1;
-		} else if (event.type == KeyRelease) {
-			state = 0;
-		} else
-			assert(0);
+		unsigned char keycode = getKeycode(&(event.xkey));
+		state = eventState(&(event.xkey));
 		key_buf[keycode] = state;
-		putEventElement(keycode, state);
+		if (buffer_enabled)
+			putEventElement(&(event.xkey));
 	}
 	memcpy((unsigned char*)buf, key_buf, KEYBOARD_SIZE*sizeof(unsigned char));
 }
@@ -225,43 +259,51 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll
  * Method:    nRead
  * Signature: (I)V
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
-  (JNIEnv * env, jclass clazz, jint keys)
+JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead
+  (JNIEnv * env, jclass clazz)
 {
 	XEvent event;
-	int count = 0;
+	XKeyEvent *key_event;
 	int buf_count = 0;
 	int state;
-	input_event *input_ev;
-	unsigned char *result_buf = (unsigned char *)keys;
+	int num_events = 0;
 
 	updateKeyboardGrab();
 
-	while ((input_ev = nextEventElement()) != NULL) {
-		count++;
-//		printf("Reading a key %d %d count %d\n", (int)input_ev->keycode, (int)input_ev->state, count);
-		result_buf[buf_count++] = input_ev->keycode;
-		result_buf[buf_count++] = input_ev->state;
-		if (buf_count >= KEYBOARD_BUFFER_SIZE * 2)
-			return count;
+	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && (key_event = nextEventElement()) != NULL) {
+		num_events++;
+		unsigned char keycode = getKeycode(key_event);
+		unsigned char state = eventState(key_event);
+//		printf("Reading a key %d %d count %d\n", (int)keycode, (int)state, num_events);
+		readBuffer[buf_count++] = keycode;
+		readBuffer[buf_count++] = state;
+		if (translation_enabled)
+			num_events += translateEvent(&buf_count, key_event);
 	}
 
-	while (XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
-		count++;
-		unsigned char keycode = getKeycode(&event);
-		if (event.type == KeyPress) {
-			state = 1;
-		} else if (event.type == KeyRelease) {
-			state = 0;
-		} else
-			assert(0);
+	while (buf_count < KEYBOARD_BUFFER_SIZE * 2 && XCheckMaskEvent(disp, KeyPressMask | KeyReleaseMask, &event)) {
+		num_events++;
+		unsigned char keycode = getKeycode(&(event.xkey));
+		unsigned char state = eventState(&(event.xkey));
+//		printf("Reading a key %d %d count %d\n", (int)keycode, (int)state, num_events);
 		key_buf[keycode] = state;
-		result_buf[buf_count++] = keycode;
-		result_buf[buf_count++] = state;
-		if (buf_count >= KEYBOARD_BUFFER_SIZE * 2)
-			return count;
+		readBuffer[buf_count++] = keycode;
+		readBuffer[buf_count++] = state;
+		if (translation_enabled)
+			num_events += translateEvent(&buf_count, &(event.xkey));
 	}
-	return count;
+	return num_events;
+}
+
+/*
+ * Class:     org_lwjgl_input_Keyboard
+ * Method:    nEnableTranslation
+ * Signature: ()I
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
+  (JNIEnv *env, jclass clazz)
+{
+	translation_enabled = true;
 }
 
 /*
@@ -274,6 +316,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
 {
 	jobject newBuffer = env->NewDirectByteBuffer(&readBuffer, KEYBOARD_BUFFER_SIZE * 2);
 	env->SetStaticObjectField(clazz, fid_readBuffer, newBuffer);
-	env->SetStaticIntField(clazz, fid_readBufferAddress, (jint) (&readBuffer));
+	buffer_enabled = true;
 	return KEYBOARD_BUFFER_SIZE;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002 Light Weight Java Game Library Project
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -32,39 +32,39 @@
 /**
  * $Id$
  *
- * Win32 analogue joystick handling.
+ * Win32 controller handling.
  *
  * @author Brian Matzon <brian@matzon.com>
  * @version $Revision$
  */
-
-#include "org_lwjgl_input_Joystick.h"
+#include <jni.h>
 
 /**
  * Initializes any field ids
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_initIDs(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jclass clazz) {
 }
 
 /**
- * Called when the Joystick instance is to be created
+ * Called when the Controller instance is to be created
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate(JNIEnv *env, jclass clazz) {
-	return JNI_FALSE;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
+  return JNI_FALSE;
 }
 
 /*
- * Class:     org_lwjgl_input_Joystick
+ * Class:     org_lwjgl_input_Controller
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nDestroy(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nDestroy(JNIEnv *env, jclass clazz) {
 }
 
 /*
- * Class:     org_lwjgl_input_Joystick
+ * Class:     org_lwjgl_input_Controller
  * Method:    nPoll
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nPoll(JNIEnv * env, jclass clazz) {
 }
+
