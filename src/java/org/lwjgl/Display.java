@@ -34,6 +34,9 @@ package org.lwjgl;
 
 import java.util.HashSet;
 import java.util.Arrays;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.ByteOrder;
 
 /**
  * $Id$
@@ -201,34 +204,51 @@ public final class Display {
 	public static native int getPlatform();
 
 	/**
-	 * Obtains the display's gamma ramp. The gamma ramp returned is an array of
-	 * 16:16 fixed point values representing 0.0...1.0. The gamma ramp consists of three
-	 * arrays, one for red, one for green, and one for blue. The array lengths must be 256.
-	 * 
-	 * If gamma is not supported by the underlying hardware then false is returned.
-	 * 
-	 * @param red An array of ints to store red gamma in. Must be 256 in length.
-	 * @param green An array of ints to store green gamma in. Must be 256 in length.
-	 * @param blue An array of ints to store blue gamma in. Must be 256 in length.
-	 * @return true if it succeeds, false if it fails
-	 */
-	public static native boolean getGammaRamp(int[] red, int[] green, int[] blue);
-	
-	/**
-	 * Sets the display's gamma ramp. The gamma ramp should be an array of ints
-	 * in 16:16 fixed point format, arranged as for getGammaRamp().
-	 * The length of the arrays must be 256.
-	 * 
-	 * If the underlying hardware does not support gamma then this command is a no-op.
-	 * 
-	 * When resetDisplaMode is called, any gamma changes are automatically undone.
+	 * Set the display configuration to the specified gamma, brightness and contrast.
+	 * The configuration changes will be reset when resetDisplayMode is called.
 	 *
-	 * @param red An array of ints to store red gamma in. Must be 256 in length.
-	 * @param green An array of ints to store green gamma in. Must be 256 in length.
-	 * @param blue An array of ints to store blue gamma in. Must be 256 in length.
-	 * 
-	 * @return true if it succeeds, false if it fails
+	 * @param gamma The gamma value
+	 * @param brightness The brightness value between -1.0 and 1.0, inclusive
+	 * @param contrast The contrast, larger than 0.0.
+	 * @return true if the call succeeded, false otherwise
 	 */
-	public static native boolean setGammaRamp(int[] red, int[] green, int[] blue);
+	public static boolean setDisplayConfiguration(float gamma, float brightness, float contrast) {
+		assert brightness >= -1.0f && brightness <= 1.0f;
+		assert contrast >= 0.0f;
+		int rampSize = getGammaRampLength();
+		if (rampSize == 0)
+			return false;
+		FloatBuffer gammaRamp = ByteBuffer.allocateDirect(rampSize*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		for (int i = 0; i < rampSize; i++) {
+			float intensity = (float)i/(rampSize - 1);
+			// apply gamma
+			float rampEntry = (float)java.lang.Math.pow(intensity, gamma);
+			// apply brightness
+			rampEntry += brightness;
+			// apply contrast
+			rampEntry = (rampEntry - 0.5f)*contrast + 0.5f;
+			// Clamp entry to [0, 1]
+			if (rampEntry > 1.0f)
+				rampEntry = 1.0f;
+			else if (rampEntry < 0.0f)
+				rampEntry = 0.0f;
+			gammaRamp.put(i, rampEntry);
+		}
+		if (!setGammaRamp(Sys.getDirectBufferAddress(gammaRamp)))
+			return false;
+		return true;
+	}
 
+	/**
+	 * Return the length of the gamma ramp arrays. Returns 0 if gamma settings are
+	 * unsupported.
+	 *
+	 * @return the length of each gamma ramp array, or 0 if gamma settings are unsupported.
+	 */
+	private static native int getGammaRampLength();
+
+	/**
+	 * Native method to set the gamma ramp.
+	 */
+	private static native boolean setGammaRamp(int gammaRampAddress);
 }

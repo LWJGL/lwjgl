@@ -48,44 +48,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include <jni.h>
 #include "org_lwjgl_Display.h"
 
 static int saved_width;
 static int saved_height;
+static int gamma_ramp_length = 0;
+static unsigned short *r_ramp;
+static unsigned short *g_ramp;
+static unsigned short *b_ramp;
 
-static int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
-	int event_base, error_base, xvid_ver, xvid_rev;
+static bool getVidModeExtensionVersion(Display *disp, int screen, int *major, int *minor) {
+	int event_base, error_base;
 	
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
 #ifdef _DEBUG
 		printf("XF86VidMode extension not available\n");
 #endif
-		return 0;
-	}
-	XF86VidModeQueryVersion(disp, &xvid_ver, &xvid_rev);
-#ifdef _DEBUG
-	printf("XF86VidMode extension version %i.%i\n", xvid_ver, xvid_rev);
-#endif
-	XF86VidModeGetAllModeLines(disp, screen, num_modes, avail_modes);
-	return 1;
-}
-
-static bool setMode(int width, int height, bool lock_mode) {
-        int num_modes, i;
-        XF86VidModeModeInfo **avail_modes;
-	int screen;
-	Display *disp = XOpenDisplay(NULL);
-
-	if (disp == NULL) {
-#ifdef _DEBUG
-		printf("Could not open X connection\n");
-#endif
 		return false;
 	}
-	screen = DefaultScreen(disp);
+	XF86VidModeQueryVersion(disp, major, minor);
+#ifdef _DEBUG
+	printf("XF86VidMode extension version %i.%i\n", major, minor);
+#endif
+	return true;
+}
+
+static bool getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
+	int minor_ver, major_ver;
+	if (!getVidModeExtensionVersion(disp, screen, &major_ver, &minor_ver))
+		return false;
+	XF86VidModeGetAllModeLines(disp, screen, num_modes, avail_modes);
+	return true;
+}
+
+static bool setMode(Display *disp, int screen, int width, int height, bool lock_mode) {
+        int num_modes, i;
+        XF86VidModeModeInfo **avail_modes;
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
-		XCloseDisplay(disp);
 #ifdef _DEBUG
 		printf("Could not get display modes\n");
 #endif
@@ -107,13 +108,38 @@ static bool setMode(int width, int height, bool lock_mode) {
 			if (lock_mode)
 				XF86VidModeLockModeSwitch(disp, screen, 1);
 			XFree(avail_modes);
-			XCloseDisplay(disp);
 			return true;
 		}
 	}
 	XFree(avail_modes);
-	XCloseDisplay(disp);
 	return false;
+}
+
+static void freeSavedGammaRamps() {
+	free(r_ramp);
+	free(g_ramp);
+	free(b_ramp);
+	r_ramp = NULL;
+	g_ramp = NULL;
+	b_ramp = NULL;
+	gamma_ramp_length = 0;
+}
+
+static int getGammaRampLength(Display *disp, int screen) {
+	int minor_ver, major_ver, ramp_size;
+	if (!getVidModeExtensionVersion(disp, screen, &major_ver, &minor_ver) || major_ver < 2) {
+#ifdef _DEBUG
+		printf("XF86VidMode extension version >= 2 not found\n");
+#endif
+		return 0;
+	}
+	if (XF86VidModeGetGammaRampSize(disp, screen, &ramp_size) == False) {
+#ifdef _DEBUG
+		printf("XF86VidModeGetGammaRampSize call failed\n");
+#endif
+		return 0;
+	}
+	return ramp_size;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
@@ -149,6 +175,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 
 	XFree(avail_modes);
+
+	/* Fetch the current gamma ramp */
+	gamma_ramp_length = getGammaRampLength(disp, screen);
+	if (gamma_ramp_length > 0) {
+		r_ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
+		g_ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
+		b_ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
+		if (!XF86VidModeGetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp))
+			freeSavedGammaRamps();
+	}
 	XCloseDisplay(disp);
 }
 
@@ -158,14 +194,40 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclas
 	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
-	if (setMode(width, height, true)) {
+	int screen;
+	Display *disp = XOpenDisplay(NULL);
+
+	if (disp == NULL) {
+#ifdef _DEBUG
+		printf("Could not open X connection\n");
+#endif
+		return;
+	}
+	screen = DefaultScreen(disp);
+	if (setMode(disp, screen, width, height, true)) {
 		jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
 		env->SetStaticObjectField(clazz, fid_initialMode, mode);
 	}
+	XCloseDisplay(disp);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv * env, jclass clazz) {
-	setMode(saved_width, saved_height, false);
+	int screen;
+	Display *disp = XOpenDisplay(NULL);
+
+	if (disp == NULL) {
+#ifdef _DEBUG
+		printf("Could not open X connection\n");
+#endif
+		return;
+	}
+	screen = DefaultScreen(disp);
+	setMode(disp, screen, saved_width, saved_height, false);
+	if (gamma_ramp_length > 0) {
+		XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp);
+		freeSavedGammaRamps();
+	}
+	XCloseDisplay(disp);
 }
 
 /*
@@ -225,22 +287,48 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
 
 /*
  * Class:     org_lwjgl_Display
- * Method:    getGammaRamp
- * Signature: ()[I
+ * Method:    getGammaRampLength
+ * Signature: ()I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_getGammaRamp
-  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
+  (JNIEnv *env, jclass clazz)
 {
-	return false;
+	return gamma_ramp_length;
 }
 
 /*
  * Class:     org_lwjgl_Display
  * Method:    setGammaRamp
- * Signature: ([I[I[I)V
+ * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
+  (JNIEnv *env, jclass clazz, jint gamma_ramp_address)
 {
-	return false;
+	if (gamma_ramp_length == 0)
+		return JNI_FALSE;
+	Display * disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+#ifdef _DEBUG
+		printf("Could not open X connection\n");
+#endif
+		return JNI_FALSE;
+	}
+	int screen = DefaultScreen(disp);
+	float *gamma_ramp = (float *)gamma_ramp_address;
+	unsigned short *ramp;
+	ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
+	for (int i = 0; i < gamma_ramp_length; i++) {
+		float scaled_gamma = gamma_ramp[i]*0xffff;
+		ramp[i] = (unsigned short)round(scaled_gamma);
+	}
+	if (XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, ramp, ramp, ramp) == False) {
+#ifdef _DEBUG
+		printf("Could not set gamma ramp\n");
+#endif
+		XCloseDisplay(disp);
+		return JNI_FALSE;
+	}
+	XCloseDisplay(disp);
+	return JNI_TRUE;
 }
+

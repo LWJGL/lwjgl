@@ -272,7 +272,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 	
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
-	SetDeviceGammaRamp(screenDC, originalGamma);
+	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
+#ifdef _DEBUG
+		printf("Could not reset device gamma\n");
+#endif
+	}
 	ReleaseDC(NULL, screenDC);	
 
 	if (modeSet) {
@@ -287,112 +291,32 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 
 /*
  * Class:     org_lwjgl_Display
- * Method:    getGammaRamp
- * Signature: ()[I
+ * Method:    getGammaRampLength
+ * Signature: ()I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_getGammaRamp
-  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
+  (JNIEnv *env, jclass clazz)
 {
-#ifdef _DEBUG
-	if (red == NULL) {
-		throwRuntimeException(env, "Null red array.");
-		return JNI_FALSE;
-	}
-	if (green == NULL) {
-		throwRuntimeException(env, "Null green array.");
-		return JNI_FALSE;
-	}
-	if (blue == NULL) {
-		throwRuntimeException(env, "Null blue array.");
-		return JNI_FALSE;
-	}
-	if (env->GetArrayLength(red) != 256) {
-		throwRuntimeException(env, "Red array is not 256 long.");
-		return JNI_FALSE;
-	}
-	if (env->GetArrayLength(green) != 256) {
-		throwRuntimeException(env, "Green array is not 256 long.");
-		return JNI_FALSE;
-	}
-	if (env->GetArrayLength(blue) != 256) {
-		throwRuntimeException(env, "Blue array is not 256 long.");
-		return JNI_FALSE;
-	}
-#endif
-
-	jint * redPtr = env->GetIntArrayElements(red, NULL);
-	jint * greenPtr = env->GetIntArrayElements(green, NULL);
-	jint * bluePtr = env->GetIntArrayElements(blue, NULL);
-
-	WORD currentGamma[768];
-	HDC screenDC = GetDC(NULL);
-	if (GetDeviceGammaRamp(screenDC, currentGamma) == FALSE) {
-#ifdef _DEBUG
-			printf("Failed to get device gamma\n");
-#endif
-		env->ReleaseIntArrayElements(red, redPtr, JNI_ABORT);
-		env->ReleaseIntArrayElements(green, greenPtr, JNI_ABORT);
-		env->ReleaseIntArrayElements(blue, bluePtr, JNI_ABORT);
-		ReleaseDC(NULL, screenDC);
-		return JNI_FALSE;
-	}
-	ReleaseDC(NULL, screenDC);
-	for (int i = 0; i < 256; i ++) {
-		redPtr[i] = (jint) currentGamma[i];
-		greenPtr[i] = (jint) currentGamma[i + 256];
-		bluePtr[i] = (jint) currentGamma[i + 512];
-	}
-	env->ReleaseIntArrayElements(red, redPtr, 0);
-	env->ReleaseIntArrayElements(green, greenPtr, 0);
-	env->ReleaseIntArrayElements(blue, bluePtr, 0);
-	return JNI_TRUE;
+	return 256;
 }
 
 /*
  * Class:     org_lwjgl_Display
  * Method:    setGammaRamp
- * Signature: ([I[I[I)V
+ * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv * env, jclass clazz, jintArray red, jintArray green, jintArray blue)
+  (JNIEnv * env, jclass clazz, jint gammaRampAddress)
 {
-#ifdef _DEBUG
-	if (red == NULL) {
-		throwRuntimeException(env, "Null red array.");
-		return JNI_FALSE;
-	}
-	if (green == NULL) {
-		throwRuntimeException(env, "Null green array.");
-		return JNI_FALSE;
-	}
-	if (blue == NULL) {
-		throwRuntimeException(env, "Null blue array.");
-		return JNI_FALSE;
-	}
-	if (env->GetArrayLength(red) != 256) {
-		throwRuntimeException(env, "Red array is not 256 long.");
-		return JNI_FALSE;
-	}
-	if (env->GetArrayLength(green) != 256) {
-		throwRuntimeException(env, "Green array is not 256 long.");
-		return JNI_FALSE;
-	}
-	if (env->GetArrayLength(blue) != 256) {
-		throwRuntimeException(env, "Blue array is not 256 long.");
-		return JNI_FALSE;
-	}
-#endif
-
-	jint * redPtr = env->GetIntArrayElements(red, NULL);
-	jint * greenPtr = env->GetIntArrayElements(green, NULL);
-	jint * bluePtr = env->GetIntArrayElements(blue, NULL);
-
-	// Turn array of ints into array of RGB WORDs
+	float *gammaRamp = (float *)gammaRampAddress;
+	// Turn array of floats into array of RGB WORDs
 	WORD newGamma[768];
 	for (int i = 0; i < 256; i ++) {
-		newGamma[i] = (WORD)(min(0x00010000, redPtr[i]));
-		newGamma[i + 256] = (WORD)(min(0x00010000, greenPtr[i]));
-		newGamma[i + 512] = (WORD)(min(0x00010000, bluePtr[i]));
+		float scaledRampEntry = gammaRamp[i]*0xffff;
+		WORD rampEntry = (WORD)scaledRampEntry;
+		newGamma[i] = rampEntry;
+		newGamma[i + 256] = rampEntry;
+		newGamma[i + 512] = rampEntry;
 	}
 	jboolean ret;
 	HDC screenDC = GetDC(NULL);
@@ -405,10 +329,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
 		ret = JNI_TRUE;
 	}
 	ReleaseDC(NULL, screenDC);
-
-	env->ReleaseIntArrayElements(red, redPtr, JNI_ABORT);
-	env->ReleaseIntArrayElements(green, greenPtr, JNI_ABORT);
-	env->ReleaseIntArrayElements(blue, bluePtr, JNI_ABORT);
 
 	return ret;
 }

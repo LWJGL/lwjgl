@@ -18,7 +18,7 @@ extern "C" {
 #define org_lwjgl_Display_PLATFORM_GLX 1L
 #undef org_lwjgl_Display_PLATFORM_AGL
 #define org_lwjgl_Display_PLATFORM_AGL 2L
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024Display */
 /*
  * Class:     org_lwjgl_Display
  * Method:    init
@@ -61,19 +61,19 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
 
 /*
  * Class:     org_lwjgl_Display
- * Method:    getGammaRamp
- * Signature: ([I[I[I)Z
+ * Method:    getGammaRampLength
+ * Signature: ()I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_getGammaRamp
-  (JNIEnv *, jclass, jintArray, jintArray, jintArray);
+JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength
+  (JNIEnv *, jclass);
 
 /*
  * Class:     org_lwjgl_Display
  * Method:    setGammaRamp
- * Signature: ([I[I[I)Z
+ * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp
-  (JNIEnv *, jclass, jintArray, jintArray, jintArray);
+  (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus
 }
