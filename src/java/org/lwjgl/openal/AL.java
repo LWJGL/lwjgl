@@ -65,33 +65,33 @@ public class AL extends CoreAL {
 	/** Flag, indicating a synchronous context. */
 	protected static int contextSynchronized = ALC.ALC_FALSE;
 
-  /**
-  * Creates an OpenAL instance. Using this constructor will cause OpenAL to
-  * open the device using supplied device argument, and create a context using the context values
-  * supplied. 
-  * 
-  * @param deviceArguments Arguments supplied to native device
-  * @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
-  * @param contextRefresh Refresh intervalls, in units of Hz.
-  * @param contextSynchronized Flag, indicating a synchronous context.* 
-   */
-  public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized) throws OpenALException {
-    AL.deviceArguments = deviceArguments;
-    AL.contextFrequency = contextFrequency;
-    AL.contextRefresh = contextRefresh;
-    AL.contextSynchronized = contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE;
-    
-    create();
-  }
+	/**
+	* Creates an OpenAL instance. Using this constructor will cause OpenAL to
+	* open the device using supplied device argument, and create a context using the context values
+	* supplied. 
+	* 
+	* @param deviceArguments Arguments supplied to native device
+	* @param contextFrequency Frequency for mixing output buffer, in units of Hz (Common values include 11025, 22050, and 44100).
+	* @param contextRefresh Refresh intervalls, in units of Hz.
+	* @param contextSynchronized Flag, indicating a synchronous context.* 
+	 */
+	public static void create(String deviceArguments, int contextFrequency, int contextRefresh, boolean contextSynchronized)
+		throws OpenALException {
+		AL.deviceArguments = deviceArguments;
+		AL.contextFrequency = contextFrequency;
+		AL.contextRefresh = contextRefresh;
+		AL.contextSynchronized = contextSynchronized ? ALC.ALC_TRUE : ALC.ALC_FALSE;
 
+		create();
+	}
 
-  /**
-   * Creates an OpenAL instance. The empty create will cause OpenAL to
-   * open the default device, and create a context using default values. 
-   */
+	/**
+	 * Creates an OpenAL instance. The empty create will cause OpenAL to
+	 * open the default device, and create a context using default values. 
+	 */
 	public static void create() throws OpenALException {
 		BaseAL.create();
-    
+
 		ALC.create();
 
 		device = ALC.alcOpenDevice(deviceArguments);
@@ -101,31 +101,32 @@ public class AL extends CoreAL {
 			context = ALC.alcCreateContext(device.device, null);
 		} else {
 			context =
-      ALC.alcCreateContext(
+				ALC.alcCreateContext(
 					device.device,
 					ALCcontext.createAttributeList(contextFrequency, contextRefresh, contextSynchronized));
 		}
 
-    ALC.alcMakeContextCurrent(context.context);
+		ALC.alcMakeContextCurrent(context.context);
+
 	}
-	
+
 	/**
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
-    ALC.alcDestroyContext(context.context);
-    ALC.alcCloseDevice(device.device);
-    ALC.destroy();
-    
-    device = null;
-    context = null;
-    
-    deviceArguments = null;
+		ALC.alcDestroyContext(context.context);
+		ALC.alcCloseDevice(device.device);
+		ALC.destroy();
 
-    contextFrequency = -1;
-    contextRefresh = -1;
-    contextSynchronized = ALC.ALC_FALSE;    
-    
-    BaseAL.destroy();
+		device = null;
+		context = null;
+
+		deviceArguments = null;
+
+		contextFrequency = -1;
+		contextRefresh = -1;
+		contextSynchronized = ALC.ALC_FALSE;
+
+		BaseAL.destroy();
 	}
 }
