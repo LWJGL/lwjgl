@@ -4,7 +4,7 @@ STRIP=strip
 CFLAGS_LINK=-shared -Wall
 LIBS=-lpthread
 CFLAGS_O=-fPIC -O2 -D_X11 -Wall -pthread -c -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
-SRC=$(wildcard *.c)
+SRC=$(wildcard *.c) ../common_tools.c
 OBJECTS=$(subst .c,.o,$(SRC))
 LIBRARY=liblwjgl-fmod3.so
 
