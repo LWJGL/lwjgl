@@ -137,8 +137,8 @@
     <available file="${lwjgl.lib}/OpenAL32.dll" property="lwjgl.OpenAL32_dll.exists"/>
     <fail unless="lwjgl.OpenAL32_dll.exists" message="Missing OpenAL32.dll in lib directory"/>
     
-    <available file="${lwjgl.lib}/OpenAL32.so" property="lwjgl.OpenAL32_so.exists"/>
-    <fail unless="lwjgl.OpenAL32_so.exists" message="Missing OpenAL32.so in lib directory"/>    
+    <available file="${lwjgl.lib}/libopenal.so" property="lwjgl.libopenal_so.exists"/>
+    <fail unless="lwjgl.libopenal_so.exists" message="Missing libopenal.so in lib directory"/>    
     
     <available file="${lwjgl.lib}/lwjgl.dll" property="lwjgl.lwjgl_dll.exists"/>
     <fail unless="lwjgl.lwjgl_dll.exists" message="Missing lwjgl.dll in lib directory"/>
@@ -146,11 +146,11 @@
     <available file="${lwjgl.lib}/lwjgl_d.dll" property="lwjgl.lwjgl_d_dll.exists"/>
     <fail unless="lwjgl.lwjgl_d_dll.exists" message="Missing lwjgl_d.dll in lib directory"/>
 
-    <available file="${lwjgl.lib}/lwjgl.so" property="lwjgl.lwjgl_so.exists"/>
-    <fail unless="lwjgl.lwjgl_so.exists" message="Missing lwjgl.so in lib directory"/>
+    <available file="${lwjgl.lib}/liblwjgl.so" property="lwjgl.liblwjgl_so.exists"/>
+    <fail unless="lwjgl.liblwjgl_so.exists" message="Missing liblwjgl.so in lib directory"/>
 
-    <available file="${lwjgl.lib}/lwjgl_d.so" property="lwjgl.lwjgl_d_so.exists"/>
-    <fail unless="lwjgl.lwjgl_d_so.exists" message="Missing lwjgl_d.so in lib directory"/>
+    <available file="${lwjgl.lib}/liblwjgl_d.so" property="lwjgl.liblwjgl_d_so.exists"/>
+    <fail unless="lwjgl.liblwjgl_d_so.exists" message="Missing liblwjgl_d.so in lib directory"/>
     
     <available file="${lwjgl.lib}/lwjgl.jar" property="lwjgl.lwjgl_jar.exists"/>
     <fail unless="lwjgl.lwjgl_jar.exists" message="Missing lwjgl.jar in lib directory"/>
