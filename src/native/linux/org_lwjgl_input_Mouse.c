@@ -74,9 +74,16 @@ static bool buffer_enabled;
 static Cursor blank_cursor;
 static Cursor current_cursor;
 
-static bool putMouseEvent(jint button, jint state, jint coord1, jint coord2, jint dz) {
+static bool putMouseEventWithCoords(jint button, jint state, jint coord1, jint coord2, jint dz) {
 	jint event[] = {button, state, coord1, coord2, dz};
 	return putEvent(&event_queue, event);
+}
+
+static bool putMouseEvent(jint button, jint state, jint dz) {
+	if (pointer_grabbed)
+		return putMouseEventWithCoords(button, state, 0, 0, dz);
+	else
+		return putMouseEventWithCoords(button, state, last_x, last_y, dz);
 }
 
 static int transformY(int y) {
@@ -84,6 +91,7 @@ static int transformY(int y) {
 }
 
 static void setCursorPos(int x, int y) {
+	y = transformY(y);
 	jint dx = x - last_x;
 	jint dy = y - last_y;
 	accum_dx += dx;
@@ -91,9 +99,9 @@ static void setCursorPos(int x, int y) {
 	last_x = x;
 	last_y = y;
 	if (pointer_grabbed) {
-		putMouseEvent(-1, 0, dx, -dy, 0);
+		putMouseEventWithCoords(-1, 0, dx, dy, 0);
 	} else {
-		putMouseEvent(-1, 0, x, transformY(y), 0);
+		putMouseEventWithCoords(-1, 0, x, y, 0);
 	}
 }
 
@@ -290,7 +298,7 @@ static void handleButton(XButtonEvent *event, unsigned char state) {
 	if (button_num == NUM_BUTTONS)
 		return;
 	buttons[button_num] = state;
-	putMouseEvent(button_num, state, 0, 0, 0);
+	putMouseEvent(button_num, state, 0);
 }
 
 void handleButtonPress(XButtonEvent *event) {
@@ -298,11 +306,11 @@ void handleButtonPress(XButtonEvent *event) {
 	switch (event->button) {
 		case Button4:
 			delta = WHEEL_SCALE;
-			putMouseEvent(-1, 0, 0, 0, delta);
+			putMouseEvent(-1, 0, delta);
 			break;
 		case Button5:
 			delta = -WHEEL_SCALE;
-			putMouseEvent(-1, 0, 0, 0, delta);
+			putMouseEvent(-1, 0, delta);
 			break;
 		default: 
 			break;
@@ -364,10 +372,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollMouse(JNIEnv * env
 	}
 	if (pointer_grabbed) {
 		coords[0] = accum_dx;
-		coords[1] = -accum_dy;
+		coords[1] = accum_dy;
 	} else {
 		coords[0] = last_x;
-		coords[1] = transformY(last_y);
+		coords[1] = last_y;
 	}
 	coords[2] = accum_dz;
 	accum_dx = accum_dy = accum_dz = 0;
