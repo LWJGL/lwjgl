@@ -290,7 +290,7 @@ public final class Display {
 	 */
 	private static long timeLate;
 	public static void sync2(int fps) {
-		long gapTo = Sys.getTimerResolution() / fps + timeThen;
+		long gapTo = Sys.getTimerResolution() / (fps > 1 ? fps - 1 : 1) + timeThen;
 		timeNow = Sys.getTime();
 
 		while (gapTo > timeNow + timeLate) {
