@@ -48,6 +48,8 @@
 #include "checkGLerror.h"
 #include "GL/glu.h"
 
+#include "callbacks/GLUQuadricCallbacks.h"
+
 /*
  * Class:     org_lwjgl_opengl_GLU
  * Method:    getString
@@ -272,6 +274,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_sphere
   (JNIEnv * env, jobject obj, jint quad, jdouble radius, jint slices, jint stacks)
 {
     gluSphere((GLUquadricObj *) quad, (GLdouble) radius, (GLint) slices, (GLint) stacks);
+    CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricCallback
+ * Signature: (IILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricCallback__IILjava_lang_String_2
+  (JNIEnv * env, jobject obj, jint quad, jint type, jstring method)
+{
+    GLUQuadricCallbacks::set(quad, 
+                             new JavaMethod(env, obj, env->GetStringUTFChars(method, 0)),
+                             type);
+    CHECK_GL_ERROR  
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricCallback
+ * Signature: (IILjava/lang/Object;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricCallback__IILjava_lang_Object_2Ljava_lang_String_2
+  (JNIEnv * env, jobject obj, jint quad, jint type, jobject target, jstring method)
+{
+    GLUQuadricCallbacks::set(quad, 
+                             new JavaMethod(env, target, env->GetStringUTFChars(method, 0)),
+                             type);
     CHECK_GL_ERROR
 }
 

@@ -14,26 +14,24 @@
 #include <stdio.h>
 
 #include "JavaMethod.h"
-#include "CallbackContainer.h"
 
 #ifndef CALLBACK
 #define CALLBACK
 #endif
 
 
-class GLUQuadricCallbacks : public CallbackContainer {
+class GLUQuadricCallbacks {
 public:
-	GLUQuadricCallbacks(GLUquadricObj *quad);
+	GLUQuadricCallbacks();
 	~GLUQuadricCallbacks();
-        void add(JavaMethod*, GLenum);
         
-        void CALLBACK gluError(GLenum);
+        static void CALLBACK gluError(GLenum);
+        static void set(jint, JavaMethod*, jint);
+        static void clear();
 protected:
 
 private:
-        JavaMethod* errorCallback;
-        GLUquadricObj* quadric;
+        static JavaMethod* errorCallback;
 };
-
 #endif	/* _GLUQuadricCallbacks_H */
 

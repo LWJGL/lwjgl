@@ -6,11 +6,6 @@ libcallbacks_la_CPPFLAGS = -D_DEBUG
 INCLUDES = -I../
 
 COMMON = \
-  CallbackContainer.cpp \
-  CallbackContainer.h \
-  CallbackManager.cpp \
-  CallbackManager.h \
-  JavaMethod.cpp \
   JavaMethod.h
   
 CALLBACKS = \

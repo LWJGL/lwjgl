@@ -353,4 +353,18 @@ public class GLU implements GLUConstants {
                 int slices,
                 int stacks
         );
+        
+        
+        public native void quadricCallback(
+                int target,
+                int type,
+                String method
+        );
+        public native void quadricCallback(
+                int target,
+                int type,
+                Object obj,
+                String method
+        );
+        
 }

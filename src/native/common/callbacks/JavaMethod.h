@@ -12,12 +12,20 @@
 
 class JavaMethod {
 public:
-	JavaMethod(JNIEnv *, jobject, std::string);
-	~JavaMethod();
+    JavaMethod(JNIEnv *newEnv, jobject newObj, std::string newMethod)
+    {
+        env = newEnv;
+        obj = newObj;
+        method = newMethod;
+    }
+    ~JavaMethod()
+    {
         
-        JNIEnv* env;
-        jobject obj;
-        std::string method;
+    }
+        
+    JNIEnv* env;
+    jobject obj;
+    std::string method;
 protected:
 
 private:

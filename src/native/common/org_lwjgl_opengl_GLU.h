@@ -175,6 +175,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricTexture
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_sphere
   (JNIEnv *, jobject, jint, jdouble, jint, jint);
 
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricCallback
+ * Signature: (IILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricCallback__IILjava_lang_String_2
+  (JNIEnv *, jobject, jint, jint, jstring);
+
+/*
+ * Class:     org_lwjgl_opengl_GLU
+ * Method:    quadricCallback
+ * Signature: (IILjava/lang/Object;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_quadricCallback__IILjava_lang_Object_2Ljava_lang_String_2
+  (JNIEnv *, jobject, jint, jint, jobject, jstring);
+
 #ifdef __cplusplus
 }
 #endif

@@ -7,13 +7,13 @@
 
 #include "GLUQuadricCallbacks.h"
 
+JavaMethod* GLUQuadricCallbacks::errorCallback;
+
 //
 // Constructor
 ///
-GLUQuadricCallbacks::GLUQuadricCallbacks(GLUquadricObj *quad):
-    CallbackContainer()
+GLUQuadricCallbacks::GLUQuadricCallbacks()
 {
-        quadric = quad;
         errorCallback = NULL;
 }
 
@@ -22,38 +22,58 @@ GLUQuadricCallbacks::GLUQuadricCallbacks(GLUquadricObj *quad):
 //
 GLUQuadricCallbacks::~GLUQuadricCallbacks()
 {
+    clear();
+}
+
+void GLUQuadricCallbacks::clear() {
     if (errorCallback != NULL) {
         delete errorCallback;
-    }
+    }   
 }
 
 typedef void (GLAPIENTRY *callback_t)();
 
-
-/* having a couple issues. I cant use a pointer to a method as a function pointer? */
-
-void GLUQuadricCallbacks::add(JavaMethod *cb, GLenum type)
-{
-    /* If we are already refering to a callback, get rid of it */
-    if (errorCallback != NULL) {
-        delete errorCallback;
-    }
-    
+void GLUQuadricCallbacks::set(jint globj, JavaMethod* cb, jint type)
+{   
     switch (type) {
         case GLU_ERROR:
-            errorCallback = cb;
-//            gluQuadricCallback(quadric, type, (callback_t) this->gluError);
+            /* If we are already refering to a callback, get rid of it */
+            if (errorCallback != NULL) {
+                delete errorCallback;
+            }
+            if (cb == NULL) {
+                gluQuadricCallback((GLUquadricObj *) globj, 
+                                   (GLenum) type, 
+                                   NULL);                
+            }
+            else {
+                errorCallback = cb;
+                gluQuadricCallback((GLUquadricObj *) globj, 
+                                   (GLenum) type, 
+                                   (callback_t) GLUQuadricCallbacks::gluError);
+            }
             break;
     }
 }
 
 void CALLBACK GLUQuadricCallbacks::gluError(GLenum type) {
 
-//    jclass cls = (*errorCallback->env)->GetObjectClass(errorCallback->env, errorCallback->obj);
-//    jmethodID mid = (*errorCallback->env)->getMethodID(errorCallback->env, cls, errorCallback->method.c_str());
-//    if (mid == 0) {
-//        return;
-//    }
-//    /* Hopefully this will end up calling the java method for handling GLU_ERROR for this quad */
-//    (*errorCallback->env)->CallVoidMethod(errorCallback->env, errorCallback->obj, mid, (jint) type);
+    if (errorCallback == NULL) {
+        return;
+    }
+    
+    JNIEnv * env = errorCallback->env;
+    jobject obj = errorCallback->obj;
+    
+    jclass cls = (jclass) env->GetObjectClass(obj);
+    
+    jmethodID mid = env->GetMethodID(cls, 
+                                     errorCallback->method.c_str(),
+                                     "(I)V");
+    
+    if (mid == 0) {
+        return;
+    }
+    /* Hopefully this will end up calling the java method for handling GLU_ERROR for this quad */
+    env->CallVoidMethod(obj, mid, (jint) type);
 }
