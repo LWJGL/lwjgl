@@ -34,6 +34,7 @@ package org.lwjgl.test.input;
 import org.lwjgl.*;
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.glu.GLU;
 
 import java.nio.*;
 
@@ -49,9 +50,6 @@ public class HWCursorTest {
 
   /** Intended deiplay mode */
   private DisplayMode mode;
-
-  /** GLU instance */
-  private GLU glu;
 
   /** The native cursor */
   private static Cursor cursor = null;

@@ -37,7 +37,7 @@ import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.opengl.GLU;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 
 /**
@@ -49,10 +49,7 @@ import org.lwjgl.vector.Vector2f;
  * @version $Revision$
  */
 public class MouseCreationTest {
-	/** GLU instance */
-	private GLU glu;
-
-	/** position of quad to draw */
+		/** position of quad to draw */
 	private Vector2f position = new Vector2f(320.0f, 240.0f);
   
   /** Display mode selected */
@@ -92,7 +89,7 @@ public class MouseCreationTest {
   
 	private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0, 640, 0, 480);
+    GLU.gluOrtho2D(0.0f, 640f, 0f, 480f);
 	}
 
 	public void executeTest() {

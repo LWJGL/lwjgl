@@ -35,7 +35,7 @@ import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.opengl.GLU;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 
 /**
@@ -48,15 +48,12 @@ import org.lwjgl.vector.Vector2f;
  */
 public class KeyboardTest {
 
-  /** GLU instance */
-  private GLU glu;
-
   /** position of quad to draw */
   private Vector2f position = new Vector2f(320.0f, 240.0f);
-  
+
   /** Display mode selected */
   private DisplayMode displayMode;
-  
+
   private boolean bufferedKeyboard;
   private boolean translatedKeyboard;
   private int bufferSize;
@@ -76,7 +73,7 @@ public class KeyboardTest {
       System.exit(-1);
     }
   }
-  
+
   private void setupDisplay(boolean fullscreen) {
     try {
       Window.create("KeyboardTest", 50, 50, 640, 480, 16, 0, 0, 0);
@@ -85,12 +82,12 @@ public class KeyboardTest {
       System.exit(-1);
     }
 
-    initializeOpenGL();    
+    initializeOpenGL();
   }
 
   private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0, 640, 0, 480);
+    GLU.gluOrtho2D(0.0f, 640f, 0f, 480f);
   }
 
   public void executeTest() {
@@ -119,8 +116,8 @@ public class KeyboardTest {
 
     while (!Window.isCloseRequested()) {
       Window.update();
-      
-      if(Window.isMinimized()) {
+
+      if (Window.isMinimized()) {
         try {
           Thread.sleep(100);
         } catch (InterruptedException inte) {
@@ -134,69 +131,69 @@ public class KeyboardTest {
       Keyboard.read();
 
       int count = Keyboard.getNumKeyboardEvents();
-      while(Keyboard.next()) {
+      while (Keyboard.next()) {
         System.out.println("Checking key:" + Keyboard.getKeyName(Keyboard.getEventKey()));
-	System.out.println("Key character: " + Keyboard.getCharacter());
-        if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+        System.out.println("Key character: " + Keyboard.getCharacter());
+        
+        if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
           return;
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
           position.x += 1;
         }
-        
+
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
           position.x -= 1;
         }
-      
+
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
           position.y += 1;
         }
-      
+
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
           position.y -= 1;
         }
-        
-        if(Keyboard.isStateKeySet(Keyboard.KEY_SCROLL) == Keyboard.STATE_ON) {
+
+        if (Keyboard.isStateKeySet(Keyboard.KEY_SCROLL) == Keyboard.STATE_ON) {
           System.out.println("SCROLL lock on");
         }
-        
-        if(Keyboard.isStateKeySet(Keyboard.KEY_CAPITAL) == Keyboard.STATE_ON) {
+
+        if (Keyboard.isStateKeySet(Keyboard.KEY_CAPITAL) == Keyboard.STATE_ON) {
           System.out.println("CAPS lock on");
         }
-        
-        if(Keyboard.isStateKeySet(Keyboard.KEY_NUMLOCK) == Keyboard.STATE_ON) {
+
+        if (Keyboard.isStateKeySet(Keyboard.KEY_NUMLOCK) == Keyboard.STATE_ON) {
           System.out.println("NUM lock on");
         }
       }
       if (count > 0) {
         System.out.println();
       }
-      
-      if(position.x<0) {
+
+      if (position.x < 0) {
         position.x = 0;
-      } else if (position.x>640-60) {
-        position.x = 640-60;
+      } else if (position.x > 640 - 60) {
+        position.x = 640 - 60;
       }
-      
-      if(position.y < 0) {
+
+      if (position.y < 0) {
         position.y = 0;
-      } else if (position.y>480-30) {
-        position.y = 480-30;
+      } else if (position.y > 480 - 30) {
+        position.y = 480 - 30;
       }
-      
 
       render();
 
       Window.paint();
-      
+
       try {
         Thread.sleep(0);
       } catch (Exception e) {
       }
     }
   }
-  
+
   private void render() {
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
@@ -205,7 +202,7 @@ public class KeyboardTest {
       float color = 1.0f;
       int buttonDown = 0;
       GL11.glColor3f(color, color, color);
-      
+
       GL11.glVertex2f(position.x + 0.0f, position.y + 0.0f);
       GL11.glVertex2f(position.x + 0.0f, position.y + 30.0f);
       GL11.glVertex2f(position.x + 40.0f, position.y + 30.0f);

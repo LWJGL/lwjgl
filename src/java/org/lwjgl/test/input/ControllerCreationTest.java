@@ -37,7 +37,7 @@ import org.lwjgl.DisplayMode;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.opengl.GLU;
+import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 
 /**
@@ -89,7 +89,7 @@ public class ControllerCreationTest {
   
   private void initializeOpenGL() {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    GLU.gluOrtho2D(0.0, 640, 0, 480);
+    GLU.gluOrtho2D(0.0f, 640f, 0f, 480f);
   }
 
   public void executeTest() {
