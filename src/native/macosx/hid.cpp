@@ -41,6 +41,7 @@
 
 #include "hid.h"
 #include "tools.h"
+#include "common_tools.h"
 
 static void searchDictionary(CFDictionaryRef dict, hid_device_t *hid_dev, int num_cookies, hid_cookie_t *hid_cookies);
 static void searchObject(CFTypeRef object, hid_device_t *hid_dev, int num_cookies, hid_cookie_t *hid_cookies);
