@@ -35,11 +35,12 @@
  *
  * GL extensions library.
  *
- * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
 
 #include "org_lwjgl_opengl_GL.h"
+#include "extgl.h"
 #include "checkGLerror.h"
 
 /*
@@ -48,8 +49,8 @@
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_activeStencilFaceEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glActiveStencilFaceEXT((GLint) p0);
-//CHECK_GL_ERROR
+	glActiveStencilFaceEXT((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -58,8 +59,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_activeStencilFaceEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_activeTextureARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glActiveTextureARB((GLint) p0);
-//CHECK_GL_ERROR
+	glActiveTextureARB((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -68,8 +69,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_activeTextureARB(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_alphaFragmentOp1ATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//glAlphaFragmentOp1ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
-//CHECK_GL_ERROR
+	glAlphaFragmentOp1ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -78,8 +79,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_alphaFragmentOp1ATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_alphaFragmentOp2ATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint p8)
 {
-//glAlphaFragmentOp2ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8);
-//CHECK_GL_ERROR
+	glAlphaFragmentOp2ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -88,8 +89,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_alphaFragmentOp2ATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_alphaFragmentOp3ATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint p8, jint p9, jint p10, jint p11)
 {
-//glAlphaFragmentOp3ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9, (GLint) p10, (GLint) p11);
-//CHECK_GL_ERROR
+	glAlphaFragmentOp3ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9, (GLint) p10, (GLint) p11);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -98,9 +99,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_alphaFragmentOp3ATI(JNIEnv * env
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_areProgramsResidentNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//jboolean ret = (jboolean) glAreProgramsResidentNV((GLint) p0, (const GLuint *) p1, (GLubyte *) p2);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glAreProgramsResidentNV((GLint) p0, (const GLuint *) p1, (GLubyte *) p2);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -109,8 +110,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_areProgramsResidentNV(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_arrayObjectATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//glArrayObjectATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
-//CHECK_GL_ERROR
+	glArrayObjectATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -119,8 +120,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_arrayObjectATI(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_beginFragmentShaderATI(JNIEnv * env, jobject obj)
 {
-//glBeginFragmentShaderATI();
-//CHECK_GL_ERROR
+	glBeginFragmentShaderATI();
+	CHECK_GL_ERROR
 }
 
 /*
@@ -129,8 +130,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_beginFragmentShaderATI(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_beginOcclusionQueryNV(JNIEnv * env, jobject obj, jint p0)
 {
-//glBeginOcclusionQueryNV((GLint) p0);
-//CHECK_GL_ERROR
+	glBeginOcclusionQueryNV((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -139,8 +140,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_beginOcclusionQueryNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_beginVertexShaderEXT(JNIEnv * env, jobject obj)
 {
-//glBeginVertexShaderEXT();
-//CHECK_GL_ERROR
+	glBeginVertexShaderEXT();
+	CHECK_GL_ERROR
 }
 
 /*
@@ -149,8 +150,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_beginVertexShaderEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindFragmentShaderATI(JNIEnv * env, jobject obj, jint p0)
 {
-//glBindFragmentShaderATI((GLint) p0);
-//CHECK_GL_ERROR
+	glBindFragmentShaderATI((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -159,9 +160,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindFragmentShaderATI(JNIEnv * e
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindLightParameterEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//jint ret = (jint) glBindLightParameterEXT((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glBindLightParameterEXT((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -170,9 +171,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindLightParameterEXT(JNIEnv * e
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindMaterialParameterEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//jint ret = (jint) glBindMaterialParameterEXT((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glBindMaterialParameterEXT((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -181,9 +182,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindMaterialParameterEXT(JNIEnv 
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindParameterEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//jint ret = (jint) glBindParameterEXT((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glBindParameterEXT((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -192,8 +193,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindParameterEXT(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindProgramARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glBindProgramARB((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glBindProgramARB((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -202,8 +203,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindProgramARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindProgramNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glBindProgramNV((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glBindProgramNV((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -212,9 +213,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindProgramNV(JNIEnv * env, jobj
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindTexGenParameterEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//jint ret = (jint) glBindTexGenParameterEXT((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glBindTexGenParameterEXT((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -223,9 +224,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindTexGenParameterEXT(JNIEnv * 
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindTextureUnitParameterEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//jint ret = (jint) glBindTextureUnitParameterEXT((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glBindTextureUnitParameterEXT((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -234,8 +235,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_bindTextureUnitParameterEXT(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindVertexShaderEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glBindVertexShaderEXT((GLint) p0);
-//CHECK_GL_ERROR
+	glBindVertexShaderEXT((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -244,8 +245,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_bindVertexShaderEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_clientActiveTextureARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glClientActiveTextureARB((GLint) p0);
-//CHECK_GL_ERROR
+	glClientActiveTextureARB((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -254,8 +255,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_clientActiveTextureARB(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_clientActiveVertexStreamATI(JNIEnv * env, jobject obj, jint p0)
 {
-//glClientActiveVertexStreamATI((GLint) p0);
-//CHECK_GL_ERROR
+	glClientActiveVertexStreamATI((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -264,8 +265,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_clientActiveVertexStreamATI(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_colorFragmentOp1ATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6)
 {
-//glColorFragmentOp1ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6);
-//CHECK_GL_ERROR
+	glColorFragmentOp1ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -274,8 +275,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_colorFragmentOp1ATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_colorFragmentOp2ATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint p8, jint p9)
 {
-//glColorFragmentOp2ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9);
-//CHECK_GL_ERROR
+	glColorFragmentOp2ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -284,8 +285,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_colorFragmentOp2ATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_colorFragmentOp3ATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint p8, jint p9, jint p10, jint p11, jint p12)
 {
-//glColorFragmentOp3ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9, (GLint) p10, (GLint) p11, (GLint) p12);
-//CHECK_GL_ERROR
+	glColorFragmentOp3ATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9, (GLint) p10, (GLint) p11, (GLint) p12);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -294,8 +295,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_colorFragmentOp3ATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerInputNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//glCombinerInputNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
-//CHECK_GL_ERROR
+	glCombinerInputNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -304,8 +305,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerInputNV(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerOutputNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jboolean p7, jboolean p8, jboolean p9)
 {
-//glCombinerOutputNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLboolean) p7, (GLboolean) p8, (GLboolean) p9);
-//CHECK_GL_ERROR
+	glCombinerOutputNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLboolean) p7, (GLboolean) p8, (GLboolean) p9);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -314,8 +315,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerOutputNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameterfNV(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glCombinerParameterfNV((GLint) p0, (GLfloat) p1);
-//CHECK_GL_ERROR
+	glCombinerParameterfNV((GLint) p0, (GLfloat) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -324,8 +325,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameterfNV(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glCombinerParameterfvNV((GLuint) p0, (const GLfloat *) p1);
-//CHECK_GL_ERROR
+	glCombinerParameterfvNV((GLuint) p0, (const GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -334,8 +335,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameterfvNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameteriNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glCombinerParameteriNV((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glCombinerParameteriNV((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -344,8 +345,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameteriNV(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glCombinerParameterivNV((GLint) p0, (const GLint *) p1);
-//CHECK_GL_ERROR
+	glCombinerParameterivNV((GLint) p0, (const GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -354,8 +355,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerParameterivNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerStageParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glCombinerStageParameterfvNV((GLint) p0, (GLint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glCombinerStageParameterfvNV((GLint) p0, (GLint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -364,8 +365,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_combinerStageParameterfvNV(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexImage1DARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6)
 {
-//glCompressedTexImage1DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (const void *) p6);
-//CHECK_GL_ERROR
+	glCompressedTexImage1DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (const void *) p6);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -374,8 +375,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexImage1DARB(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexImage2DARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7)
 {
-//glCompressedTexImage2DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (const void *) p7);
-//CHECK_GL_ERROR
+	glCompressedTexImage2DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (const void *) p7);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -384,8 +385,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexImage2DARB(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexImage3DARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint p8)
 {
-//glCompressedTexImage3DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (const void *) p8);
-//CHECK_GL_ERROR
+	glCompressedTexImage3DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (const void *) p8);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -394,8 +395,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexImage3DARB(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexSubImage1DARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6)
 {
-//glCompressedTexSubImage1DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (const void *) p6);
-//CHECK_GL_ERROR
+	glCompressedTexSubImage1DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (const void *) p6);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -404,8 +405,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexSubImage1DARB(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexSubImage2DARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint p8)
 {
-//glCompressedTexSubImage2DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (const void *) p8);
-//CHECK_GL_ERROR
+	glCompressedTexSubImage2DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (const void *) p8);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -414,8 +415,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexSubImage2DARB(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexSubImage3DARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jint p8, jint p9, jint p10)
 {
-//glCompressedTexSubImage3DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9, (const void *) p10);
-//CHECK_GL_ERROR
+	glCompressedTexSubImage3DARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, (GLint) p8, (GLint) p9, (const void *) p10);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -424,8 +425,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_compressedTexSubImage3DARB(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_currentPaletteMatrixARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glCurrentPaletteMatrixARB((GLint) p0);
-//CHECK_GL_ERROR
+	glCurrentPaletteMatrixARB((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -434,8 +435,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_currentPaletteMatrixARB(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteFencesNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glDeleteFencesNV((GLint) p0, (const GLuint *) p1);
-//CHECK_GL_ERROR
+	glDeleteFencesNV((GLint) p0, (const GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -444,8 +445,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteFencesNV(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteFragmentShaderATI(JNIEnv * env, jobject obj, jint p0)
 {
-//glDeleteFragmentShaderATI((GLint) p0);
-//CHECK_GL_ERROR
+	glDeleteFragmentShaderATI((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -454,8 +455,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteFragmentShaderATI(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteOcclusionQueriesNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glDeleteOcclusionQueriesNV((GLint) p0, (const GLuint *) p1);
-//CHECK_GL_ERROR
+	glDeleteOcclusionQueriesNV((GLint) p0, (const GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -464,8 +465,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteOcclusionQueriesNV(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteProgramsARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glDeleteProgramsARB((GLint) p0, (const GLuint *) p1);
-//CHECK_GL_ERROR
+	glDeleteProgramsARB((GLint) p0, (const GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -474,8 +475,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteProgramsARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteProgramsNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glDeleteProgramsNV((GLint) p0, (const GLuint *) p1);
-//CHECK_GL_ERROR
+	glDeleteProgramsNV((GLint) p0, (const GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -484,8 +485,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteProgramsNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteVertexShaderEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glDeleteVertexShaderEXT((GLint) p0);
-//CHECK_GL_ERROR
+	glDeleteVertexShaderEXT((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -494,8 +495,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_deleteVertexShaderEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_disableVariantClientStateEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glDisableVariantClientStateEXT((GLint) p0);
-//CHECK_GL_ERROR
+	glDisableVariantClientStateEXT((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -504,8 +505,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_disableVariantClientStateEXT(JNI
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_disableVertexAttribArrayARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glDisableVertexAttribArrayARB((GLint) p0);
-//CHECK_GL_ERROR
+	glDisableVertexAttribArrayARB((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -514,8 +515,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_disableVertexAttribArrayARB(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_drawElementArrayATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glDrawElementArrayATI((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glDrawElementArrayATI((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -524,8 +525,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_drawElementArrayATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_drawRangeElementArrayATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glDrawRangeElementArrayATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-//CHECK_GL_ERROR
+	glDrawRangeElementArrayATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -534,8 +535,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_drawRangeElementArrayATI(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_drawRangeElementsEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//glDrawRangeElementsEXT((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint) p3, (GLuint) p4, (const void *) p5);
-//CHECK_GL_ERROR
+	glDrawRangeElementsEXT((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint) p3, (GLuint) p4, (const void *) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -544,8 +545,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_drawRangeElementsEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_elementPointerATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glElementPointerATI((GLint) p0, (const void *) p1);
-//CHECK_GL_ERROR
+	glElementPointerATI((GLint) p0, (const void *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -554,8 +555,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_elementPointerATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_enableVariantClientStateEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glEnableVariantClientStateEXT((GLint) p0);
-//CHECK_GL_ERROR
+	glEnableVariantClientStateEXT((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -564,8 +565,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_enableVariantClientStateEXT(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_enableVertexAttribArrayARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glEnableVertexAttribArrayARB((GLint) p0);
-//CHECK_GL_ERROR
+	glEnableVertexAttribArrayARB((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -574,8 +575,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_enableVertexAttribArrayARB(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_endFragmentShaderATI(JNIEnv * env, jobject obj)
 {
-//glEndFragmentShaderATI();
-//CHECK_GL_ERROR
+	glEndFragmentShaderATI();
+	CHECK_GL_ERROR
 }
 
 /*
@@ -584,8 +585,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_endFragmentShaderATI(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_endOcclusionQueryNV(JNIEnv * env, jobject obj)
 {
-//glEndOcclusionQueryNV();
-//CHECK_GL_ERROR
+	glEndOcclusionQueryNV();
+	CHECK_GL_ERROR
 }
 
 /*
@@ -594,8 +595,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_endOcclusionQueryNV(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_endVertexShaderEXT(JNIEnv * env, jobject obj)
 {
-//glEndVertexShaderEXT();
-//CHECK_GL_ERROR
+	glEndVertexShaderEXT();
+	CHECK_GL_ERROR
 }
 
 /*
@@ -604,8 +605,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_endVertexShaderEXT(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_evalMapsNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glEvalMapsNV((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glEvalMapsNV((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -614,8 +615,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_evalMapsNV(JNIEnv * env, jobject
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_executeProgramNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glExecuteProgramNV((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
-//CHECK_GL_ERROR
+	glExecuteProgramNV((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -624,8 +625,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_executeProgramNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_extractComponentEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glExtractComponentEXT((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
+	glExtractComponentEXT((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -634,8 +635,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_extractComponentEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_finalCombinerInputNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glFinalCombinerInputNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-//CHECK_GL_ERROR
+	glFinalCombinerInputNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -644,8 +645,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_finalCombinerInputNV(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_finishFenceNV(JNIEnv * env, jobject obj, jint p0)
 {
-//glFinishFenceNV((GLint) p0);
-//CHECK_GL_ERROR
+	glFinishFenceNV((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -654,8 +655,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_finishFenceNV(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_flushVertexArrayRangeNV(JNIEnv * env, jobject obj)
 {
-//glFlushVertexArrayRangeNV();
-//CHECK_GL_ERROR
+	glFlushVertexArrayRangeNV();
+	CHECK_GL_ERROR
 }
 
 /*
@@ -664,7 +665,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_flushVertexArrayRangeNV(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoorddEXT(JNIEnv * env, jobject obj, jdouble p0)
 {
-//glFogCoorddEXT((GLdouble) p0);
+	glFogCoorddEXT((GLdouble) p0);
 }
 
 /*
@@ -673,7 +674,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoorddEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoorddvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glFogCoorddvEXT((const GLdouble *) p0);
+	glFogCoorddvEXT((const GLdouble *) p0);
 }
 
 /*
@@ -682,7 +683,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoorddvEXT(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoordfEXT(JNIEnv * env, jobject obj, jfloat p0)
 {
-//glFogCoordfEXT((GLfloat) p0);
+	glFogCoordfEXT((GLfloat) p0);
 }
 
 /*
@@ -691,7 +692,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoordfEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoordfvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glFogCoordfvEXT((const GLfloat *) p0);
+	glFogCoordfvEXT((const GLfloat *) p0);
 }
 
 /*
@@ -700,8 +701,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoordfvEXT(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoordPointerEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glFogCoordPointerEXT((GLuint) p0, (GLint) p1, (const void *) p2);
-//CHECK_GL_ERROR
+	glFogCoordPointerEXT((GLuint) p0, (GLint) p1, (const void *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -710,8 +711,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_fogCoordPointerEXT(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_freeObjectBufferATI(JNIEnv * env, jobject obj, jint p0)
 {
-//glFreeObjectBufferATI((GLint) p0);
-//CHECK_GL_ERROR
+	glFreeObjectBufferATI((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -720,8 +721,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_freeObjectBufferATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genFencesNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glGenFencesNV((GLint) p0, (GLuint *) p1);
-//CHECK_GL_ERROR
+	glGenFencesNV((GLint) p0, (GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -730,9 +731,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genFencesNV(JNIEnv * env, jobjec
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_genFragmentShadersATI(JNIEnv * env, jobject obj, jint p0)
 {
-//jint ret = (jint) glGenFragmentShadersATI((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glGenFragmentShadersATI((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -741,8 +742,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_genFragmentShadersATI(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genOcclusionQueriesNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glGenOcclusionQueriesNV((GLint) p0, (GLuint *) p1);
-//CHECK_GL_ERROR
+	glGenOcclusionQueriesNV((GLint) p0, (GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -751,8 +752,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genOcclusionQueriesNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genProgramsARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glGenProgramsARB((GLint) p0, (GLuint *) p1);
-//CHECK_GL_ERROR
+	glGenProgramsARB((GLint) p0, (GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -761,8 +762,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genProgramsARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genProgramsNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glGenProgramsNV((GLint) p0, (GLuint *) p1);
-//CHECK_GL_ERROR
+	glGenProgramsNV((GLint) p0, (GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -771,9 +772,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_genProgramsNV(JNIEnv * env, jobj
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_genSymbolsEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//jint ret = (jint) glGenSymbolsEXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glGenSymbolsEXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -782,9 +783,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_genSymbolsEXT(JNIEnv * env, jobj
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_genVertexShadersEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//jint ret = (jint) glGenVertexShadersEXT((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glGenVertexShadersEXT((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -793,8 +794,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_genVertexShadersEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getArrayObjectfvATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetArrayObjectfvATI((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetArrayObjectfvATI((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -803,8 +804,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getArrayObjectfvATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getArrayObjectivATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetArrayObjectivATI((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetArrayObjectivATI((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -813,8 +814,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getArrayObjectivATI(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerInputParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glGetCombinerInputParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLuint) p3, (GLfloat *) p4);
-//CHECK_GL_ERROR
+	glGetCombinerInputParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLuint) p3, (GLfloat *) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -823,8 +824,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerInputParameterfvNV(JN
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerInputParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glGetCombinerInputParameterivNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLuint) p3, (GLint *) p4);
-//CHECK_GL_ERROR
+	glGetCombinerInputParameterivNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLuint) p3, (GLint *) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -833,8 +834,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerInputParameterivNV(JN
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerOutputParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glGetCombinerOutputParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLfloat *) p3);
-//CHECK_GL_ERROR
+	glGetCombinerOutputParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLfloat *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -843,8 +844,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerOutputParameterfvNV(J
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerOutputParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glGetCombinerOutputParameterivNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint *) p3);
-//CHECK_GL_ERROR
+	glGetCombinerOutputParameterivNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -853,8 +854,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerOutputParameterivNV(J
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerStageParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetCombinerStageParameterfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetCombinerStageParameterfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -863,8 +864,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCombinerStageParameterfvNV(JN
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCompressedTexImageARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetCompressedTexImageARB((GLuint) p0, (GLint) p1, (void *) p2);
-//CHECK_GL_ERROR
+	glGetCompressedTexImageARB((GLuint) p0, (GLint) p1, (void *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -873,8 +874,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getCompressedTexImageARB(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getFenceivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetFenceivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetFenceivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -883,8 +884,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getFenceivNV(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getFinalCombinerInputParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetFinalCombinerInputParameterfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetFinalCombinerInputParameterfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -893,8 +894,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getFinalCombinerInputParameterfv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getFinalCombinerInputParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetFinalCombinerInputParameterivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetFinalCombinerInputParameterivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -903,8 +904,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getFinalCombinerInputParameteriv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getInvariantBooleanvEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetInvariantBooleanvEXT((GLuint) p0, (GLuint) p1, (GLubyte *) p2);
-//CHECK_GL_ERROR
+	glGetInvariantBooleanvEXT((GLuint) p0, (GLuint) p1, (GLubyte *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -913,8 +914,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getInvariantBooleanvEXT(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getInvariantFloatvEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetInvariantFloatvEXT((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetInvariantFloatvEXT((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -923,8 +924,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getInvariantFloatvEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getInvariantIntegervEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetInvariantIntegervEXT((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetInvariantIntegervEXT((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -933,8 +934,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getInvariantIntegervEXT(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getLocalConstantBooleanvEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetLocalConstantBooleanvEXT((GLuint) p0, (GLuint) p1, (GLubyte *) p2);
-//CHECK_GL_ERROR
+	glGetLocalConstantBooleanvEXT((GLuint) p0, (GLuint) p1, (GLubyte *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -943,8 +944,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getLocalConstantBooleanvEXT(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getLocalConstantFloatvEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetLocalConstantFloatvEXT((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetLocalConstantFloatvEXT((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -953,8 +954,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getLocalConstantFloatvEXT(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getLocalConstantIntegervEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetLocalConstantIntegervEXT((GLint) p0, (GLint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetLocalConstantIntegervEXT((GLint) p0, (GLint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -963,8 +964,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getLocalConstantIntegervEXT(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapAttribParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glGetMapAttribParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLfloat *) p3);
-//CHECK_GL_ERROR
+	glGetMapAttribParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLfloat *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -973,8 +974,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapAttribParameterfvNV(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapAttribParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glGetMapAttribParameterivNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint *) p3);
-//CHECK_GL_ERROR
+	glGetMapAttribParameterivNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -983,8 +984,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapAttribParameterivNV(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapControlPointsNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jboolean p5, jint p6)
 {
-//glGetMapControlPointsNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint) p3, (GLint) p4, (GLboolean) p5, (void *) p6);
-//CHECK_GL_ERROR
+	glGetMapControlPointsNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint) p3, (GLint) p4, (GLboolean) p5, (void *) p6);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -993,8 +994,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapControlPointsNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetMapParameterfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetMapParameterfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1003,8 +1004,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapParameterfvNV(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetMapParameterivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetMapParameterivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1013,8 +1014,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getMapParameterivNV(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getObjectBufferfvATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetObjectBufferfvATI((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetObjectBufferfvATI((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1023,8 +1024,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getObjectBufferfvATI(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getObjectBufferivATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetObjectBufferivATI((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetObjectBufferivATI((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1033,8 +1034,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getObjectBufferivATI(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getOcclusionQueryivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetOcclusionQueryivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetOcclusionQueryivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1043,8 +1044,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getOcclusionQueryivNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getOcclusionQueryuivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetOcclusionQueryuivNV((GLuint) p0, (GLuint) p1, (GLuint *) p2);
-//CHECK_GL_ERROR
+	glGetOcclusionQueryuivNV((GLuint) p0, (GLuint) p1, (GLuint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1053,8 +1054,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getOcclusionQueryuivNV(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramEnvParameterdvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramEnvParameterdvARB((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
-//CHECK_GL_ERROR
+	glGetProgramEnvParameterdvARB((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1063,8 +1064,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramEnvParameterdvARB(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramEnvParameterfvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramEnvParameterfvARB((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetProgramEnvParameterfvARB((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1073,8 +1074,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramEnvParameterfvARB(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramivARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramivARB((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetProgramivARB((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1083,8 +1084,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramivARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetProgramivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1093,8 +1094,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramivNV(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramLocalParameterdvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramLocalParameterdvARB((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
-//CHECK_GL_ERROR
+	glGetProgramLocalParameterdvARB((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1103,8 +1104,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramLocalParameterdvARB(JN
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramLocalParameterfvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramLocalParameterfvARB((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetProgramLocalParameterfvARB((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1113,8 +1114,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramLocalParameterfvARB(JN
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramParameterdvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glGetProgramParameterdvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLdouble *) p3);
-//CHECK_GL_ERROR
+	glGetProgramParameterdvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLdouble *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1123,8 +1124,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramParameterdvNV(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glGetProgramParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLfloat *) p3);
-//CHECK_GL_ERROR
+	glGetProgramParameterfvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLfloat *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1133,8 +1134,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramParameterfvNV(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramStringARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramStringARB((GLuint) p0, (GLuint) p1, (void *) p2);
-//CHECK_GL_ERROR
+	glGetProgramStringARB((GLuint) p0, (GLuint) p1, (void *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1143,8 +1144,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramStringARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramStringNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetProgramStringNV((GLuint) p0, (GLuint) p1, (GLubyte *) p2);
-//CHECK_GL_ERROR
+	glGetProgramStringNV((GLuint) p0, (GLuint) p1, (GLubyte *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1153,8 +1154,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getProgramStringNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getTexBumpParameterfvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glGetTexBumpParameterfvATI((GLuint) p0, (GLfloat *) p1);
-//CHECK_GL_ERROR
+	glGetTexBumpParameterfvATI((GLuint) p0, (GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1163,8 +1164,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getTexBumpParameterfvATI(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getTexBumpParameterivATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glGetTexBumpParameterivATI((GLuint) p0, (GLint *) p1);
-//CHECK_GL_ERROR
+	glGetTexBumpParameterivATI((GLuint) p0, (GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1173,8 +1174,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getTexBumpParameterivATI(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getTrackMatrixivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glGetTrackMatrixivNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint *) p3);
-//CHECK_GL_ERROR
+	glGetTrackMatrixivNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1183,8 +1184,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getTrackMatrixivNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantArrayObjectfvATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVariantArrayObjectfvATI((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetVariantArrayObjectfvATI((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1193,8 +1194,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantArrayObjectfvATI(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantArrayObjectivATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVariantArrayObjectivATI((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetVariantArrayObjectivATI((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1203,8 +1204,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantArrayObjectivATI(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantBooleanvEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVariantBooleanvEXT((GLuint) p0, (GLuint) p1, (GLboolean *) p2);
-//CHECK_GL_ERROR
+	glGetVariantBooleanvEXT((GLuint) p0, (GLuint) p1, (GLboolean *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1213,8 +1214,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantBooleanvEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantFloatvEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVariantFloatvEXT((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetVariantFloatvEXT((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1223,8 +1224,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantFloatvEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantIntegervEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVariantIntegervEXT((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetVariantIntegervEXT((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1233,8 +1234,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantIntegervEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantPointervEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVariantPointervEXT((GLuint) p0, (GLuint) p1, (void **) p2);
-//CHECK_GL_ERROR
+	glGetVariantPointervEXT((GLuint) p0, (GLuint) p1, (void **) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1243,8 +1244,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVariantPointervEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribdvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribdvARB((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribdvARB((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1253,8 +1254,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribdvARB(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribdvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribdvNV((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribdvNV((GLuint) p0, (GLuint) p1, (GLdouble *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1263,8 +1264,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribdvNV(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribfvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribfvARB((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribfvARB((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1273,8 +1274,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribfvARB(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribfvNV((GLuint) p0, (GLuint) p1, (GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1283,8 +1284,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribfvNV(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribivARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribivARB((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribivARB((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1293,8 +1294,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribivARB(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribivNV((GLuint) p0, (GLuint) p1, (GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1303,8 +1304,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribivNV(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribPointervARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribPointervARB((GLuint) p0, (GLuint) p1, (void **) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribPointervARB((GLuint) p0, (GLuint) p1, (void **) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1313,8 +1314,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribPointervARB(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribPointervNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glGetVertexAttribPointervNV((GLuint) p0, (GLuint) p1, (void **) p2);
-//CHECK_GL_ERROR
+	glGetVertexAttribPointervNV((GLuint) p0, (GLuint) p1, (void **) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1323,8 +1324,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_getVertexAttribPointervNV(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_insertComponentEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glInsertComponentEXT((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
+	glInsertComponentEXT((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1333,9 +1334,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_insertComponentEXT(JNIEnv * env,
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isFenceNV(JNIEnv * env, jobject obj, jint p0)
 {
-//jboolean ret = (jboolean) glIsFenceNV((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glIsFenceNV((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -1344,9 +1345,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isFenceNV(JNIEnv * env, jobj
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isObjectBufferATI(JNIEnv * env, jobject obj, jint p0)
 {
-//jboolean ret = (jboolean) glIsObjectBufferATI((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glIsObjectBufferATI((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -1355,9 +1356,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isObjectBufferATI(JNIEnv * e
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isOcclusionQueryNV(JNIEnv * env, jobject obj, jint p0)
 {
-//jboolean ret = (jboolean) glIsOcclusionQueryNV((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glIsOcclusionQueryNV((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -1366,9 +1367,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isOcclusionQueryNV(JNIEnv * 
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isProgramARB(JNIEnv * env, jobject obj, jint p0)
 {
-//jboolean ret = (jboolean) glIsProgramARB((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glIsProgramARB((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -1377,9 +1378,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isProgramARB(JNIEnv * env, j
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isProgramNV(JNIEnv * env, jobject obj, jint p0)
 {
-//jboolean ret = (jboolean) glIsProgramNV((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glIsProgramNV((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -1388,9 +1389,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isProgramNV(JNIEnv * env, jo
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isVariantEnabledEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//jboolean ret = (jboolean) glIsVariantEnabledEXT((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glIsVariantEnabledEXT((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -1399,8 +1400,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_isVariantEnabledEXT(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_loadProgramNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glLoadProgramNV((GLuint) p0, (GLuint) p1, (GLint) p2, (const GLubyte *) p3);
-//CHECK_GL_ERROR
+	glLoadProgramNV((GLuint) p0, (GLuint) p1, (GLint) p2, (const GLubyte *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1409,8 +1410,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_loadProgramNV(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_loadTransposeMatrixdARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glLoadTransposeMatrixdARB((const GLdouble *) p0);
-//CHECK_GL_ERROR
+	glLoadTransposeMatrixdARB((const GLdouble *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1419,8 +1420,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_loadTransposeMatrixdARB(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_loadTransposeMatrixfARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glLoadTransposeMatrixfARB((const GLfloat *) p0);
-//CHECK_GL_ERROR
+	glLoadTransposeMatrixfARB((const GLfloat *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1429,8 +1430,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_loadTransposeMatrixfARB(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_lockArraysEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glLockArraysEXT((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glLockArraysEXT((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1439,8 +1440,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_lockArraysEXT(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_mapControlPointsNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jboolean p7, jint p8)
 {
-//glMapControlPointsNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLboolean) p7, (const void *) p8);
-//CHECK_GL_ERROR
+	glMapControlPointsNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLboolean) p7, (const void *) p8);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1449,8 +1450,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_mapControlPointsNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_mapParameterfvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glMapParameterfvNV((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
-//CHECK_GL_ERROR
+	glMapParameterfvNV((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1459,8 +1460,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_mapParameterfvNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_mapParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glMapParameterivNV((GLuint) p0, (GLuint) p1, (const GLint *) p2);
-//CHECK_GL_ERROR
+	glMapParameterivNV((GLuint) p0, (GLuint) p1, (const GLint *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1469,8 +1470,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_mapParameterivNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexPointerARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glMatrixIndexPointerARB((GLint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
-//CHECK_GL_ERROR
+	glMatrixIndexPointerARB((GLint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1479,8 +1480,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexPointerARB(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexubvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMatrixIndexubvARB((GLint) p0, (GLubyte *) p1);
-//CHECK_GL_ERROR
+	glMatrixIndexubvARB((GLint) p0, (GLubyte *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1489,8 +1490,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexubvARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexuivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMatrixIndexuivARB((GLint) p0, (GLuint *) p1);
-//CHECK_GL_ERROR
+	glMatrixIndexuivARB((GLint) p0, (GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1499,8 +1500,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexuivARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexusvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMatrixIndexusvARB((GLint) p0, (GLushort *) p1);
-//CHECK_GL_ERROR
+	glMatrixIndexusvARB((GLint) p0, (GLushort *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1509,8 +1510,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_matrixIndexusvARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiDrawArraysEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glMultiDrawArraysEXT((GLuint) p0, (GLint *) p1, (GLint *) p2, (GLint) p3);
-//CHECK_GL_ERROR
+	glMultiDrawArraysEXT((GLuint) p0, (GLint *) p1, (GLint *) p2, (GLint) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1519,8 +1520,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiDrawArraysEXT(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiDrawElementsEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glMultiDrawElementsEXT((GLuint) p0, (GLint *) p1, (GLuint) p2, (const void **) p3, (GLint) p4);
-//CHECK_GL_ERROR
+	glMultiDrawElementsEXT((GLuint) p0, (GLint *) p1, (GLuint) p2, (const void **) p3, (GLint) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1529,7 +1530,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiDrawElementsEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1)
 {
-//glMultiTexCoord1dARB((GLint) p0, (GLdouble) p1);
+	glMultiTexCoord1dARB((GLint) p0, (GLdouble) p1);
 }
 
 /*
@@ -1538,7 +1539,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1dARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord1dvARB((GLuint) p0, (const GLdouble *) p1);
+	glMultiTexCoord1dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -1547,7 +1548,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1dvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glMultiTexCoord1fARB((GLuint) p0, (GLfloat) p1);
+	glMultiTexCoord1fARB((GLuint) p0, (GLfloat) p1);
 }
 
 /*
@@ -1556,7 +1557,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1fARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord1fvARB((GLint) p0, (const GLfloat *) p1);
+	glMultiTexCoord1fvARB((GLint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -1565,7 +1566,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1fvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1iARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord1iARB((GLint) p0, (GLint) p1);
+	glMultiTexCoord1iARB((GLint) p0, (GLint) p1);
 }
 
 /*
@@ -1574,7 +1575,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1iARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1ivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord1ivARB((GLuint) p0, (const GLint *) p1);
+	glMultiTexCoord1ivARB((GLuint) p0, (const GLint *) p1);
 }
 
 /*
@@ -1583,7 +1584,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1ivARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1sARB(JNIEnv * env, jobject obj, jint p0, jshort p1)
 {
-//glMultiTexCoord1sARB((GLint) p0, (GLshort) p1);
+	glMultiTexCoord1sARB((GLint) p0, (GLshort) p1);
 }
 
 /*
@@ -1592,7 +1593,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1sARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord1svARB((GLuint) p0, (const GLshort *) p1);
+	glMultiTexCoord1svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -1601,7 +1602,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord1svARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2)
 {
-//glMultiTexCoord2dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2);
+	glMultiTexCoord2dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2);
 }
 
 /*
@@ -1610,7 +1611,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2dARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord2dvARB((GLuint) p0, (const GLdouble *) p1);
+	glMultiTexCoord2dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -1619,7 +1620,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2dvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2)
 {
-//glMultiTexCoord2fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2);
+	glMultiTexCoord2fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2);
 }
 
 /*
@@ -1628,7 +1629,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2fARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord2fvARB((GLuint) p0, (const GLfloat *) p1);
+	glMultiTexCoord2fvARB((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -1637,7 +1638,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2fvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2iARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glMultiTexCoord2iARB((GLint) p0, (GLint) p1, (GLint) p2);
+	glMultiTexCoord2iARB((GLint) p0, (GLint) p1, (GLint) p2);
 }
 
 /*
@@ -1646,7 +1647,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2iARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2ivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord2ivARB((GLuint) p0, (const GLint *) p1);
+	glMultiTexCoord2ivARB((GLuint) p0, (const GLint *) p1);
 }
 
 /*
@@ -1655,7 +1656,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2ivARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2sARB(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2)
 {
-//glMultiTexCoord2sARB((GLint) p0, (GLshort) p1, (GLshort) p2);
+	glMultiTexCoord2sARB((GLint) p0, (GLshort) p1, (GLshort) p2);
 }
 
 /*
@@ -1664,7 +1665,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2sARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord2svARB((GLuint) p0, (const GLshort *) p1);
+	glMultiTexCoord2svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -1673,7 +1674,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord2svARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3)
 {
-//glMultiTexCoord3dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
+	glMultiTexCoord3dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
 }
 
 /*
@@ -1682,7 +1683,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3dARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord3dvARB((GLuint) p0, (const GLdouble *) p1);
+	glMultiTexCoord3dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -1691,7 +1692,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3dvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3)
 {
-//glMultiTexCoord3fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	glMultiTexCoord3fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 }
 
 /*
@@ -1700,7 +1701,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3fARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord3fvARB((GLuint) p0, (const GLfloat *) p1);
+	glMultiTexCoord3fvARB((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -1709,7 +1710,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3fvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3iARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glMultiTexCoord3iARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	glMultiTexCoord3iARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
 }
 
 /*
@@ -1718,7 +1719,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3iARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3ivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord3ivARB((GLuint) p0, (const GLint *) p1);
+	glMultiTexCoord3ivARB((GLuint) p0, (const GLint *) p1);
 }
 
 /*
@@ -1727,7 +1728,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3ivARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3sARB(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3)
 {
-//glMultiTexCoord3sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
+	glMultiTexCoord3sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
 }
 
 /*
@@ -1736,7 +1737,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3sARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord3svARB((GLuint) p0, (const GLshort *) p1);
+	glMultiTexCoord3svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -1745,7 +1746,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord3svARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4)
 {
-//glMultiTexCoord4dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
+	glMultiTexCoord4dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
 }
 
 /*
@@ -1754,7 +1755,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4dARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord4dvARB((GLuint) p0, (const GLdouble *) p1);
+	glMultiTexCoord4dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -1763,7 +1764,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4dvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3, jfloat p4)
 {
-//glMultiTexCoord4fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
+	glMultiTexCoord4fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
 }
 
 /*
@@ -1772,7 +1773,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4fARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord4fvARB((GLuint) p0, (const GLfloat *) p1);
+	glMultiTexCoord4fvARB((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -1781,7 +1782,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4fvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4iARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glMultiTexCoord4iARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
+	glMultiTexCoord4iARB((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
 }
 
 /*
@@ -1790,7 +1791,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4iARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4ivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord4ivARB((GLuint) p0, (const GLint *) p1);
+	glMultiTexCoord4ivARB((GLuint) p0, (const GLint *) p1);
 }
 
 /*
@@ -1799,7 +1800,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4ivARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4sARB(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3, jshort p4)
 {
-//glMultiTexCoord4sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
+	glMultiTexCoord4sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
 }
 
 /*
@@ -1808,7 +1809,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4sARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glMultiTexCoord4svARB((GLuint) p0, (const GLshort *) p1);
+	glMultiTexCoord4svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -1817,8 +1818,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multiTexCoord4svARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multTransposeMatrixdARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glMultTransposeMatrixdARB((const GLdouble *) p0);
-//CHECK_GL_ERROR
+	glMultTransposeMatrixdARB((const GLdouble *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1827,8 +1828,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multTransposeMatrixdARB(JNIEnv *
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multTransposeMatrixfARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glMultTransposeMatrixfARB((const GLfloat *) p0);
-//CHECK_GL_ERROR
+	glMultTransposeMatrixfARB((const GLfloat *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1837,9 +1838,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_multTransposeMatrixfARB(JNIEnv *
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_newObjectBufferATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//jint ret = (jint) glNewObjectBufferATI((GLint) p0, (const void *) p1, (GLuint) p2);
-//CHECK_GL_ERROR
-//return ret;
+	jint ret = (jint) glNewObjectBufferATI((GLint) p0, (const void *) p1, (GLuint) p2);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -1848,8 +1849,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_newObjectBufferATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3bATI(JNIEnv * env, jobject obj, jint p0, jbyte p1, jbyte p2, jbyte p3)
 {
-//glNormalStream3bATI((GLint) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3);
-//CHECK_GL_ERROR
+	glNormalStream3bATI((GLint) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1858,8 +1859,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3bATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3bvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glNormalStream3bvATI((GLint) p0, (const GLbyte *) p1);
-//CHECK_GL_ERROR
+	glNormalStream3bvATI((GLint) p0, (const GLbyte *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1868,8 +1869,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3bvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3dATI(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3)
 {
-//glNormalStream3dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
-//CHECK_GL_ERROR
+	glNormalStream3dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1878,8 +1879,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3dATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3dvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glNormalStream3dvATI((GLuint) p0, (const GLdouble *) p1);
-//CHECK_GL_ERROR
+	glNormalStream3dvATI((GLuint) p0, (const GLdouble *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1888,8 +1889,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3dvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3fATI(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3)
 {
-//glNormalStream3fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-//CHECK_GL_ERROR
+	glNormalStream3fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1898,8 +1899,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3fATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3fvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glNormalStream3fvATI((GLuint) p0, (const GLfloat *) p1);
-//CHECK_GL_ERROR
+	glNormalStream3fvATI((GLuint) p0, (const GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1908,8 +1909,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3fvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3iATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glNormalStream3iATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-//CHECK_GL_ERROR
+	glNormalStream3iATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1918,8 +1919,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3iATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3ivATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glNormalStream3ivATI((GLuint) p0, (const GLint *) p1);
-//CHECK_GL_ERROR
+	glNormalStream3ivATI((GLuint) p0, (const GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1928,8 +1929,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3ivATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3sATI(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3)
 {
-//glNormalStream3sATI((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
-//CHECK_GL_ERROR
+	glNormalStream3sATI((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1938,8 +1939,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3sATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3svATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glNormalStream3svATI((GLuint) p0, (const GLshort *) p1);
-//CHECK_GL_ERROR
+	glNormalStream3svATI((GLuint) p0, (const GLshort *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1948,8 +1949,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_normalStream3svATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_passTexCoordATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glPassTexCoordATI((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
+	glPassTexCoordATI((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1958,8 +1959,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_passTexCoordATI(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_PNTrianglesfATI(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glPNTrianglesfATI((GLint) p0, (GLfloat) p1);
-//CHECK_GL_ERROR
+	glPNTrianglesfATI((GLint) p0, (GLfloat) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1968,8 +1969,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_PNTrianglesfATI(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_PNTrianglesiATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glPNTrianglesiATI((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glPNTrianglesiATI((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1978,8 +1979,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_PNTrianglesiATI(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfARB(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glPointParameterfARB((GLint) p0, (GLfloat) p1);
-//CHECK_GL_ERROR
+	glPointParameterfARB((GLint) p0, (GLfloat) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1988,8 +1989,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfEXT(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glPointParameterfEXT((GLint) p0, (GLfloat) p1);
-//CHECK_GL_ERROR
+	glPointParameterfEXT((GLint) p0, (GLfloat) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -1998,8 +1999,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfEXT(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glPointParameterfvARB((GLuint) p0, (GLfloat *) p1);
-//CHECK_GL_ERROR
+	glPointParameterfvARB((GLuint) p0, (GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2008,8 +2009,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfvEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glPointParameterfvEXT((GLuint) p0, (const GLfloat *) p1);
-//CHECK_GL_ERROR
+	glPointParameterfvEXT((GLuint) p0, (const GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2018,8 +2019,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterfvEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameteriNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glPointParameteriNV((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glPointParameteriNV((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2028,8 +2029,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameteriNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterivNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glPointParameterivNV((GLuint) p0, (const GLint *) p1);
-//CHECK_GL_ERROR
+	glPointParameterivNV((GLuint) p0, (const GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2038,8 +2039,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_pointParameterivNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4dARB(JNIEnv * env, jobject obj, jint p0, jint p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
 {
-//glProgramEnvParameter4dARB((GLint) p0, (GLint) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
-//CHECK_GL_ERROR
+	glProgramEnvParameter4dARB((GLint) p0, (GLint) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2048,8 +2049,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4dARB(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4dvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glProgramEnvParameter4dvARB((GLuint) p0, (GLuint) p1, (const GLdouble *) p2);
-//CHECK_GL_ERROR
+	glProgramEnvParameter4dvARB((GLuint) p0, (GLuint) p1, (const GLdouble *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2058,8 +2059,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4dvARB(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4fARB(JNIEnv * env, jobject obj, jint p0, jint p1, jfloat p2, jfloat p3, jfloat p4, jfloat p5)
 {
-//glProgramEnvParameter4fARB((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5);
-//CHECK_GL_ERROR
+	glProgramEnvParameter4fARB((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2068,8 +2069,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4fARB(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4fvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glProgramEnvParameter4fvARB((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
-//CHECK_GL_ERROR
+	glProgramEnvParameter4fvARB((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2078,8 +2079,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programEnvParameter4fvARB(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4dARB(JNIEnv * env, jobject obj, jint p0, jint p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
 {
-//glProgramLocalParameter4dARB((GLint) p0, (GLint) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
-//CHECK_GL_ERROR
+	glProgramLocalParameter4dARB((GLint) p0, (GLint) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2088,8 +2089,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4dARB(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4dvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glProgramLocalParameter4dvARB((GLuint) p0, (GLuint) p1, (const GLdouble *) p2);
-//CHECK_GL_ERROR
+	glProgramLocalParameter4dvARB((GLuint) p0, (GLuint) p1, (const GLdouble *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2098,8 +2099,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4dvARB(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4fARB(JNIEnv * env, jobject obj, jint p0, jint p1, jfloat p2, jfloat p3, jfloat p4, jfloat p5)
 {
-//glProgramLocalParameter4fARB((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5);
-//CHECK_GL_ERROR
+	glProgramLocalParameter4fARB((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2108,8 +2109,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4fARB(JNIEn
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4fvARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glProgramLocalParameter4fvARB((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
-//CHECK_GL_ERROR
+	glProgramLocalParameter4fvARB((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2118,8 +2119,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programLocalParameter4fvARB(JNIE
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4dNV(JNIEnv * env, jobject obj, jint p0, jint p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
 {
-//glProgramParameter4dNV((GLint) p0, (GLint) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
-//CHECK_GL_ERROR
+	glProgramParameter4dNV((GLint) p0, (GLint) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2128,8 +2129,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4dNV(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4dvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glProgramParameter4dvNV((GLuint) p0, (GLuint) p1, (const GLdouble *) p2);
-//CHECK_GL_ERROR
+	glProgramParameter4dvNV((GLuint) p0, (GLuint) p1, (const GLdouble *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2138,8 +2139,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4dvNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4fNV(JNIEnv * env, jobject obj, jint p0, jint p1, jfloat p2, jfloat p3, jfloat p4, jfloat p5)
 {
-//glProgramParameter4fNV((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5);
-//CHECK_GL_ERROR
+	glProgramParameter4fNV((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2148,8 +2149,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4fNV(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4fvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glProgramParameter4fvNV((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
-//CHECK_GL_ERROR
+	glProgramParameter4fvNV((GLuint) p0, (GLuint) p1, (const GLfloat *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2158,8 +2159,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameter4fvNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameters4dvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glProgramParameters4dvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (const GLdouble *) p3);
-//CHECK_GL_ERROR
+	glProgramParameters4dvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (const GLdouble *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2168,8 +2169,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameters4dvNV(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameters4fvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glProgramParameters4fvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (const GLfloat *) p3);
-//CHECK_GL_ERROR
+	glProgramParameters4fvNV((GLuint) p0, (GLuint) p1, (GLuint) p2, (const GLfloat *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2178,8 +2179,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programParameters4fvNV(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programStringARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glProgramStringARB((GLuint) p0, (GLuint) p1, (GLint) p2, (const void *) p3);
-//CHECK_GL_ERROR
+	glProgramStringARB((GLuint) p0, (GLuint) p1, (GLint) p2, (const void *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2188,8 +2189,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_programStringARB(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_requestResidentProgramsNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glRequestResidentProgramsNV((GLint) p0, (GLuint *) p1);
-//CHECK_GL_ERROR
+	glRequestResidentProgramsNV((GLint) p0, (GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2198,8 +2199,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_requestResidentProgramsNV(JNIEnv
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_sampleCoverageARB(JNIEnv * env, jobject obj, jfloat p0, jboolean p1)
 {
-//glSampleCoverageARB((GLfloat) p0, (GLboolean) p1);
-//CHECK_GL_ERROR
+	glSampleCoverageARB((GLfloat) p0, (GLboolean) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2208,8 +2209,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_sampleCoverageARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_sampleMapATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glSampleMapATI((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
+	glSampleMapATI((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2218,7 +2219,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_sampleMapATI(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3bEXT(JNIEnv * env, jobject obj, jbyte p0, jbyte p1, jbyte p2)
 {
-//glSecondaryColor3bEXT((GLbyte) p0, (GLbyte) p1, (GLbyte) p2);
+	glSecondaryColor3bEXT((GLbyte) p0, (GLbyte) p1, (GLbyte) p2);
 }
 
 /*
@@ -2227,7 +2228,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3bEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3bvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3bvEXT((const GLbyte *) p0);
+	glSecondaryColor3bvEXT((const GLbyte *) p0);
 }
 
 /*
@@ -2236,7 +2237,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3bvEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3dEXT(JNIEnv * env, jobject obj, jdouble p0, jdouble p1, jdouble p2)
 {
-//glSecondaryColor3dEXT((GLdouble) p0, (GLdouble) p1, (GLdouble) p2);
+	glSecondaryColor3dEXT((GLdouble) p0, (GLdouble) p1, (GLdouble) p2);
 }
 
 /*
@@ -2245,7 +2246,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3dEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3dvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3dvEXT((const GLdouble *) p0);
+	glSecondaryColor3dvEXT((const GLdouble *) p0);
 }
 
 /*
@@ -2254,7 +2255,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3dvEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3fEXT(JNIEnv * env, jobject obj, jfloat p0, jfloat p1, jfloat p2)
 {
-//glSecondaryColor3fEXT((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
+	glSecondaryColor3fEXT((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
 }
 
 /*
@@ -2263,7 +2264,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3fEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3fvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3fvEXT((const GLfloat *) p0);
+	glSecondaryColor3fvEXT((const GLfloat *) p0);
 }
 
 /*
@@ -2272,7 +2273,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3fvEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3iEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glSecondaryColor3iEXT((GLint) p0, (GLint) p1, (GLint) p2);
+	glSecondaryColor3iEXT((GLint) p0, (GLint) p1, (GLint) p2);
 }
 
 /*
@@ -2281,7 +2282,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3iEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3ivEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3ivEXT((const GLint *) p0);
+	glSecondaryColor3ivEXT((const GLint *) p0);
 }
 
 /*
@@ -2290,7 +2291,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3ivEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3sEXT(JNIEnv * env, jobject obj, jshort p0, jshort p1, jshort p2)
 {
-//glSecondaryColor3sEXT((GLshort) p0, (GLshort) p1, (GLshort) p2);
+	glSecondaryColor3sEXT((GLshort) p0, (GLshort) p1, (GLshort) p2);
 }
 
 /*
@@ -2299,7 +2300,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3sEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3svEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3svEXT((const GLshort *) p0);
+	glSecondaryColor3svEXT((const GLshort *) p0);
 }
 
 /*
@@ -2308,7 +2309,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3svEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3ubEXT(JNIEnv * env, jobject obj, jbyte p0, jbyte p1, jbyte p2)
 {
-//glSecondaryColor3ubEXT((GLbyte) p0, (GLbyte) p1, (GLbyte) p2);
+	glSecondaryColor3ubEXT((GLbyte) p0, (GLbyte) p1, (GLbyte) p2);
 }
 
 /*
@@ -2317,7 +2318,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3ubEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3ubvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3ubvEXT((const GLubyte *) p0);
+	glSecondaryColor3ubvEXT((const GLubyte *) p0);
 }
 
 /*
@@ -2326,7 +2327,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3ubvEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3uiEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glSecondaryColor3uiEXT((GLint) p0, (GLint) p1, (GLint) p2);
+	glSecondaryColor3uiEXT((GLint) p0, (GLint) p1, (GLint) p2);
 }
 
 /*
@@ -2335,7 +2336,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3uiEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3uivEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3uivEXT((const GLuint *) p0);
+	glSecondaryColor3uivEXT((const GLuint *) p0);
 }
 
 /*
@@ -2344,7 +2345,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3uivEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3usEXT(JNIEnv * env, jobject obj, jshort p0, jshort p1, jshort p2)
 {
-//glSecondaryColor3usEXT((GLshort) p0, (GLshort) p1, (GLshort) p2);
+	glSecondaryColor3usEXT((GLshort) p0, (GLshort) p1, (GLshort) p2);
 }
 
 /*
@@ -2353,7 +2354,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3usEXT(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3usvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glSecondaryColor3usvEXT((const GLushort *) p0);
+	glSecondaryColor3usvEXT((const GLushort *) p0);
 }
 
 /*
@@ -2362,7 +2363,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColor3usvEXT(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColorPointerEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glSecondaryColorPointerEXT((GLint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
+	glSecondaryColorPointerEXT((GLint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
 }
 
 /*
@@ -2371,8 +2372,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_secondaryColorPointerEXT(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setFenceNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glSetFenceNV((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glSetFenceNV((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2381,8 +2382,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setFenceNV(JNIEnv * env, jobject
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setFragmentShaderConstantATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glSetFragmentShaderConstantATI((GLuint) p0, (const GLfloat *) p1);
-//CHECK_GL_ERROR
+	glSetFragmentShaderConstantATI((GLuint) p0, (const GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2391,8 +2392,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setFragmentShaderConstantATI(JNI
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setInvariantEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glSetInvariantEXT((GLuint) p0, (GLuint) p1, (void *) p2);
-//CHECK_GL_ERROR
+	glSetInvariantEXT((GLuint) p0, (GLuint) p1, (void *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2401,8 +2402,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setInvariantEXT(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setLocalConstantEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glSetLocalConstantEXT((GLuint) p0, (GLuint) p1, (void *) p2);
-//CHECK_GL_ERROR
+	glSetLocalConstantEXT((GLuint) p0, (GLuint) p1, (void *) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2411,8 +2412,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_setLocalConstantEXT(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_shaderOp1EXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glShaderOp1EXT((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
+	glShaderOp1EXT((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2421,8 +2422,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_shaderOp1EXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_shaderOp2EXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glShaderOp2EXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-//CHECK_GL_ERROR
+	glShaderOp2EXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2431,8 +2432,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_shaderOp2EXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_shaderOp3EXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glShaderOp3EXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
-//CHECK_GL_ERROR
+	glShaderOp3EXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2441,8 +2442,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_shaderOp3EXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_swizzleEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//glSwizzleEXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
-//CHECK_GL_ERROR
+	glSwizzleEXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2451,9 +2452,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_swizzleEXT(JNIEnv * env, jobject
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_testFenceNV(JNIEnv * env, jobject obj, jint p0)
 {
-//jboolean ret = (jboolean) glTestFenceNV((GLint) p0);
-//CHECK_GL_ERROR
-//return ret;
+	jboolean ret = (jboolean) glTestFenceNV((GLint) p0);
+	CHECK_GL_ERROR
+	return ret;
 }
 
 /*
@@ -2462,8 +2463,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_testFenceNV(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_texBumpParameterfvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glTexBumpParameterfvATI((GLuint) p0, (GLfloat *) p1);
-//CHECK_GL_ERROR
+	glTexBumpParameterfvATI((GLuint) p0, (GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2472,8 +2473,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_texBumpParameterfvATI(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_texBumpParameterivATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glTexBumpParameterivATI((GLuint) p0, (GLint *) p1);
-//CHECK_GL_ERROR
+	glTexBumpParameterivATI((GLuint) p0, (GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2482,8 +2483,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_texBumpParameterivATI(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_trackMatrixNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glTrackMatrixNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-//CHECK_GL_ERROR
+	glTrackMatrixNV((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2492,8 +2493,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_trackMatrixNV(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_unlockArraysEXT(JNIEnv * env, jobject obj)
 {
-//glUnlockArraysEXT();
-//CHECK_GL_ERROR
+	glUnlockArraysEXT();
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2502,8 +2503,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_unlockArraysEXT(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_updateObjectBufferATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glUpdateObjectBufferATI((GLuint) p0, (GLuint) p1, (GLint) p2, (const void *) p3, (GLuint) p4);
-//CHECK_GL_ERROR
+	glUpdateObjectBufferATI((GLuint) p0, (GLuint) p1, (GLint) p2, (const void *) p3, (GLuint) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2512,8 +2513,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_updateObjectBufferATI(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantArrayObjectATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glVariantArrayObjectATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
-//CHECK_GL_ERROR
+	glVariantArrayObjectATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2522,8 +2523,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantArrayObjectATI(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantbvEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantbvEXT((GLuint) p0, (GLbyte *) p1);
-//CHECK_GL_ERROR
+	glVariantbvEXT((GLuint) p0, (GLbyte *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2532,8 +2533,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantbvEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantdvEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantdvEXT((GLuint) p0, (GLdouble *) p1);
-//CHECK_GL_ERROR
+	glVariantdvEXT((GLuint) p0, (GLdouble *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2542,8 +2543,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantdvEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantfvEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantfvEXT((GLuint) p0, (GLfloat *) p1);
-//CHECK_GL_ERROR
+	glVariantfvEXT((GLuint) p0, (GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2552,8 +2553,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantfvEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantivEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantivEXT((GLuint) p0, (GLint *) p1);
-//CHECK_GL_ERROR
+	glVariantivEXT((GLuint) p0, (GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2562,8 +2563,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantivEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantPointerEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glVariantPointerEXT((GLuint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
-//CHECK_GL_ERROR
+	glVariantPointerEXT((GLuint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2572,8 +2573,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantPointerEXT(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantsvEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantsvEXT((GLuint) p0, (GLshort *) p1);
-//CHECK_GL_ERROR
+	glVariantsvEXT((GLuint) p0, (GLshort *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2582,8 +2583,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantsvEXT(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantubvEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantubvEXT((GLuint) p0, (GLubyte *) p1);
-//CHECK_GL_ERROR
+	glVariantubvEXT((GLuint) p0, (GLubyte *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2592,8 +2593,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantubvEXT(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantuivEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantuivEXT((GLuint) p0, (GLuint *) p1);
-//CHECK_GL_ERROR
+	glVariantuivEXT((GLuint) p0, (GLuint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2602,8 +2603,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantuivEXT(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantusvEXT(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVariantusvEXT((GLuint) p0, (GLushort *) p1);
-//CHECK_GL_ERROR
+	glVariantusvEXT((GLuint) p0, (GLushort *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2612,8 +2613,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_variantusvEXT(JNIEnv * env, jobj
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexArrayRangeNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexArrayRangeNV((GLint) p0, (const void *) p1);
-//CHECK_GL_ERROR
+	glVertexArrayRangeNV((GLint) p0, (const void *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -2622,7 +2623,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexArrayRangeNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1)
 {
-//glVertexAttrib1dARB((GLint) p0, (GLdouble) p1);
+	glVertexAttrib1dARB((GLint) p0, (GLdouble) p1);
 }
 
 /*
@@ -2631,7 +2632,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dNV(JNIEnv * env, jobject obj, jint p0, jdouble p1)
 {
-//glVertexAttrib1dNV((GLint) p0, (GLdouble) p1);
+	glVertexAttrib1dNV((GLint) p0, (GLdouble) p1);
 }
 
 /*
@@ -2640,7 +2641,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib1dvARB((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib1dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2649,7 +2650,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib1dvNV((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib1dvNV((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2658,7 +2659,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1dvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glVertexAttrib1fARB((GLint) p0, (GLfloat) p1);
+	glVertexAttrib1fARB((GLint) p0, (GLfloat) p1);
 }
 
 /*
@@ -2667,7 +2668,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fNV(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glVertexAttrib1fNV((GLint) p0, (GLfloat) p1);
+	glVertexAttrib1fNV((GLint) p0, (GLfloat) p1);
 }
 
 /*
@@ -2676,7 +2677,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib1fvARB((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib1fvARB((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -2685,7 +2686,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib1fvNV((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib1fvNV((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -2694,7 +2695,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1fvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1sARB(JNIEnv * env, jobject obj, jint p0, jshort p1)
 {
-//glVertexAttrib1sARB((GLint) p0, (GLshort) p1);
+	glVertexAttrib1sARB((GLint) p0, (GLshort) p1);
 }
 
 /*
@@ -2703,7 +2704,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1sARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1sNV(JNIEnv * env, jobject obj, jint p0, jshort p1)
 {
-//glVertexAttrib1sNV((GLint) p0, (GLshort) p1);
+	glVertexAttrib1sNV((GLint) p0, (GLshort) p1);
 }
 
 /*
@@ -2712,7 +2713,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1sNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib1svARB((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib1svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -2721,7 +2722,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1svARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1svNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib1svNV((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib1svNV((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -2730,7 +2731,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib1svNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2)
 {
-//glVertexAttrib2dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2);
+	glVertexAttrib2dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2);
 }
 
 /*
@@ -2739,7 +2740,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dNV(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2)
 {
-//glVertexAttrib2dNV((GLint) p0, (GLdouble) p1, (GLdouble) p2);
+	glVertexAttrib2dNV((GLint) p0, (GLdouble) p1, (GLdouble) p2);
 }
 
 /*
@@ -2748,7 +2749,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib2dvARB((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib2dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2757,7 +2758,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib2dvNV((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib2dvNV((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2766,7 +2767,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2dvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2)
 {
-//glVertexAttrib2fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2);
+	glVertexAttrib2fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2);
 }
 
 /*
@@ -2775,7 +2776,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fNV(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2)
 {
-//glVertexAttrib2fNV((GLint) p0, (GLfloat) p1, (GLfloat) p2);
+	glVertexAttrib2fNV((GLint) p0, (GLfloat) p1, (GLfloat) p2);
 }
 
 /*
@@ -2784,7 +2785,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib2fvARB((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib2fvARB((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -2793,7 +2794,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib2fvNV((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib2fvNV((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -2802,7 +2803,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2fvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2sARB(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2)
 {
-//glVertexAttrib2sARB((GLint) p0, (GLshort) p1, (GLshort) p2);
+	glVertexAttrib2sARB((GLint) p0, (GLshort) p1, (GLshort) p2);
 }
 
 /*
@@ -2811,7 +2812,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2sARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2sNV(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2)
 {
-//glVertexAttrib2sNV((GLint) p0, (GLshort) p1, (GLshort) p2);
+	glVertexAttrib2sNV((GLint) p0, (GLshort) p1, (GLshort) p2);
 }
 
 /*
@@ -2820,7 +2821,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2sNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib2svARB((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib2svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -2829,7 +2830,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2svARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2svNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib2svNV((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib2svNV((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -2838,7 +2839,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib2svNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3)
 {
-//glVertexAttrib3dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
+	glVertexAttrib3dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
 }
 
 /*
@@ -2847,7 +2848,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dNV(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3)
 {
-//glVertexAttrib3dNV((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
+	glVertexAttrib3dNV((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
 }
 
 /*
@@ -2856,7 +2857,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib3dvARB((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib3dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2865,7 +2866,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib3dvNV((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib3dvNV((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2874,7 +2875,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3dvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3)
 {
-//glVertexAttrib3fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	glVertexAttrib3fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 }
 
 /*
@@ -2883,7 +2884,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fNV(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3)
 {
-//glVertexAttrib3fNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	glVertexAttrib3fNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 }
 
 /*
@@ -2892,7 +2893,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib3fvARB((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib3fvARB((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -2901,7 +2902,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib3fvNV((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib3fvNV((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -2910,7 +2911,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3fvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3sARB(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3)
 {
-//glVertexAttrib3sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
+	glVertexAttrib3sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
 }
 
 /*
@@ -2919,7 +2920,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3sARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3sNV(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3)
 {
-//glVertexAttrib3sNV((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
+	glVertexAttrib3sNV((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
 }
 
 /*
@@ -2928,7 +2929,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3sNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib3svARB((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib3svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -2937,7 +2938,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3svARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3svNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib3svNV((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib3svNV((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -2946,7 +2947,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib3svNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4bvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4bvARB((GLuint) p0, (const GLbyte *) p1);
+	glVertexAttrib4bvARB((GLuint) p0, (const GLbyte *) p1);
 }
 
 /*
@@ -2955,7 +2956,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4bvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dARB(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4)
 {
-//glVertexAttrib4dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
+	glVertexAttrib4dARB((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
 }
 
 /*
@@ -2964,7 +2965,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dNV(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4)
 {
-//glVertexAttrib4dNV((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
+	glVertexAttrib4dNV((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
 }
 
 /*
@@ -2973,7 +2974,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4dvARB((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib4dvARB((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2982,7 +2983,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4dvNV((GLuint) p0, (const GLdouble *) p1);
+	glVertexAttrib4dvNV((GLuint) p0, (const GLdouble *) p1);
 }
 
 /*
@@ -2991,7 +2992,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4dvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fARB(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3, jfloat p4)
 {
-//glVertexAttrib4fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
+	glVertexAttrib4fARB((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
 }
 
 /*
@@ -3000,7 +3001,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fNV(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3, jfloat p4)
 {
-//glVertexAttrib4fNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
+	glVertexAttrib4fNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
 }
 
 /*
@@ -3009,7 +3010,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4fvARB((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib4fvARB((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -3018,7 +3019,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fvARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4fvNV((GLuint) p0, (const GLfloat *) p1);
+	glVertexAttrib4fvNV((GLuint) p0, (const GLfloat *) p1);
 }
 
 /*
@@ -3027,7 +3028,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4fvNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4ivARB((GLuint) p0, (const GLint *) p1);
+	glVertexAttrib4ivARB((GLuint) p0, (const GLint *) p1);
 }
 
 /*
@@ -3036,7 +3037,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ivARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NbvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4NbvARB((GLuint) p0, (const GLbyte *) p1);
+	glVertexAttrib4NbvARB((GLuint) p0, (const GLbyte *) p1);
 }
 
 /*
@@ -3045,7 +3046,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NbvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4NivARB((GLuint) p0, (const GLint *) p1);
+	glVertexAttrib4NivARB((GLuint) p0, (const GLint *) p1);
 }
 
 /*
@@ -3054,7 +3055,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NivARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NsvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4NsvARB((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib4NsvARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -3063,7 +3064,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NsvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NubARB(JNIEnv * env, jobject obj, jint p0, jbyte p1, jbyte p2, jbyte p3, jbyte p4)
 {
-//glVertexAttrib4NubARB((GLint) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3, (GLbyte) p4);
+	glVertexAttrib4NubARB((GLint) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3, (GLbyte) p4);
 }
 
 /*
@@ -3072,7 +3073,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NubARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NubvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4NubvARB((GLuint) p0, (const GLubyte *) p1);
+	glVertexAttrib4NubvARB((GLuint) p0, (const GLubyte *) p1);
 }
 
 /*
@@ -3081,7 +3082,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NubvARB(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NuivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4NuivARB((GLuint) p0, (const GLuint *) p1);
+	glVertexAttrib4NuivARB((GLuint) p0, (const GLuint *) p1);
 }
 
 /*
@@ -3090,7 +3091,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NuivARB(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NusvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4NusvARB((GLuint) p0, (const GLushort *) p1);
+	glVertexAttrib4NusvARB((GLuint) p0, (const GLushort *) p1);
 }
 
 /*
@@ -3099,7 +3100,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4NusvARB(JNIEnv * en
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4sARB(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3, jshort p4)
 {
-//glVertexAttrib4sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
+	glVertexAttrib4sARB((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
 }
 
 /*
@@ -3108,7 +3109,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4sARB(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4sNV(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3, jshort p4)
 {
-//glVertexAttrib4sNV((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
+	glVertexAttrib4sNV((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
 }
 
 /*
@@ -3117,7 +3118,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4sNV(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4svARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4svARB((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib4svARB((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -3126,7 +3127,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4svARB(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4svNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4svNV((GLuint) p0, (const GLshort *) p1);
+	glVertexAttrib4svNV((GLuint) p0, (const GLshort *) p1);
 }
 
 /*
@@ -3135,7 +3136,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4svNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ubNV(JNIEnv * env, jobject obj, jint p0, jbyte p1, jbyte p2, jbyte p3, jbyte p4)
 {
-//glVertexAttrib4ubNV((GLint) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3, (GLbyte) p4);
+	glVertexAttrib4ubNV((GLint) p0, (GLbyte) p1, (GLbyte) p2, (GLbyte) p3, (GLbyte) p4);
 }
 
 /*
@@ -3144,7 +3145,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ubNV(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ubvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4ubvARB((GLuint) p0, (const GLubyte *) p1);
+	glVertexAttrib4ubvARB((GLuint) p0, (const GLubyte *) p1);
 }
 
 /*
@@ -3153,7 +3154,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ubvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ubvNV(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4ubvNV((GLuint) p0, (const GLubyte *) p1);
+	glVertexAttrib4ubvNV((GLuint) p0, (const GLubyte *) p1);
 }
 
 /*
@@ -3162,7 +3163,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4ubvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4uivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4uivARB((GLuint) p0, (const GLuint *) p1);
+	glVertexAttrib4uivARB((GLuint) p0, (const GLuint *) p1);
 }
 
 /*
@@ -3171,7 +3172,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4uivARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4usvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexAttrib4usvARB((GLuint) p0, (const GLushort *) p1);
+	glVertexAttrib4usvARB((GLuint) p0, (const GLushort *) p1);
 }
 
 /*
@@ -3180,8 +3181,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttrib4usvARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribPointerARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jboolean p3, jint p4, jint p5)
 {
-//glVertexAttribPointerARB((GLuint) p0, (GLint) p1, (GLuint) p2, (GLboolean) p3, (GLint) p4, (const void *) p5);
-//CHECK_GL_ERROR
+	glVertexAttribPointerARB((GLuint) p0, (GLint) p1, (GLuint) p2, (GLboolean) p3, (GLint) p4, (const void *) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3190,8 +3191,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribPointerARB(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribPointerNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glVertexAttribPointerNV((GLuint) p0, (GLint) p1, (GLuint) p2, (GLint) p3, (const void *) p4);
-//CHECK_GL_ERROR
+	glVertexAttribPointerNV((GLuint) p0, (GLint) p1, (GLuint) p2, (GLint) p3, (const void *) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3200,7 +3201,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribPointerNV(JNIEnv * e
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs1dvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs1dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
+	glVertexAttribs1dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
 }
 
 /*
@@ -3209,7 +3210,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs1dvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs1fvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs1fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
+	glVertexAttribs1fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
 }
 
 /*
@@ -3218,7 +3219,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs1fvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs1svNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs1svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
+	glVertexAttribs1svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
 }
 
 /*
@@ -3227,7 +3228,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs1svNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs2dvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs2dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
+	glVertexAttribs2dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
 }
 
 /*
@@ -3236,7 +3237,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs2dvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs2fvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs2fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
+	glVertexAttribs2fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
 }
 
 /*
@@ -3245,7 +3246,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs2fvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs2svNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs2svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
+	glVertexAttribs2svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
 }
 
 /*
@@ -3254,7 +3255,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs2svNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs3dvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs3dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
+	glVertexAttribs3dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
 }
 
 /*
@@ -3263,7 +3264,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs3dvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs3fvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs3fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
+	glVertexAttribs3fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
 }
 
 /*
@@ -3272,7 +3273,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs3fvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs3svNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs3svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
+	glVertexAttribs3svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
 }
 
 /*
@@ -3281,7 +3282,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs3svNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4dvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs4dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
+	glVertexAttribs4dvNV((GLuint) p0, (GLint) p1, (const GLdouble *) p2);
 }
 
 /*
@@ -3290,7 +3291,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4dvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4fvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs4fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
+	glVertexAttribs4fvNV((GLuint) p0, (GLint) p1, (const GLfloat *) p2);
 }
 
 /*
@@ -3299,7 +3300,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4fvNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4svNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs4svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
+	glVertexAttribs4svNV((GLuint) p0, (GLint) p1, (const GLshort *) p2);
 }
 
 /*
@@ -3308,7 +3309,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4svNV(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4ubvNV(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexAttribs4ubvNV((GLuint) p0, (GLint) p1, (const GLubyte *) p2);
+	glVertexAttribs4ubvNV((GLuint) p0, (GLint) p1, (const GLubyte *) p2);
 }
 
 /*
@@ -3317,8 +3318,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexAttribs4ubvNV(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexBlendARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glVertexBlendARB((GLint) p0);
-//CHECK_GL_ERROR
+	glVertexBlendARB((GLint) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3327,8 +3328,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexBlendARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexBlendEnvfATI(JNIEnv * env, jobject obj, jint p0, jfloat p1)
 {
-//glVertexBlendEnvfATI((GLint) p0, (GLfloat) p1);
-//CHECK_GL_ERROR
+	glVertexBlendEnvfATI((GLint) p0, (GLfloat) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3337,8 +3338,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexBlendEnvfATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexBlendEnviATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexBlendEnviATI((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glVertexBlendEnviATI((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3347,8 +3348,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexBlendEnviATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2dATI(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2)
 {
-//glVertexStream2dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2);
-//CHECK_GL_ERROR
+	glVertexStream2dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3357,8 +3358,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2dATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2dvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream2dvATI((GLuint) p0, (const GLdouble *) p1);
-//CHECK_GL_ERROR
+	glVertexStream2dvATI((GLuint) p0, (const GLdouble *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3367,8 +3368,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2dvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2fATI(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2)
 {
-//glVertexStream2fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2);
-//CHECK_GL_ERROR
+	glVertexStream2fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3377,8 +3378,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2fATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2fvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream2fvATI((GLuint) p0, (const GLfloat *) p1);
-//CHECK_GL_ERROR
+	glVertexStream2fvATI((GLuint) p0, (const GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3387,8 +3388,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2fvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2iATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glVertexStream2iATI((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
+	glVertexStream2iATI((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3397,8 +3398,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2iATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2ivATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream2ivATI((GLuint) p0, (const GLint *) p1);
-//CHECK_GL_ERROR
+	glVertexStream2ivATI((GLuint) p0, (const GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3407,8 +3408,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2ivATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2sATI(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2)
 {
-//glVertexStream2sATI((GLint) p0, (GLshort) p1, (GLshort) p2);
-//CHECK_GL_ERROR
+	glVertexStream2sATI((GLint) p0, (GLshort) p1, (GLshort) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3417,8 +3418,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2sATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2svATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream2svATI((GLuint) p0, (const GLshort *) p1);
-//CHECK_GL_ERROR
+	glVertexStream2svATI((GLuint) p0, (const GLshort *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3427,8 +3428,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream2svATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3dATI(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3)
 {
-//glVertexStream3dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
-//CHECK_GL_ERROR
+	glVertexStream3dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3437,8 +3438,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3dATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3dvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream3dvATI((GLuint) p0, (const GLdouble *) p1);
-//CHECK_GL_ERROR
+	glVertexStream3dvATI((GLuint) p0, (const GLdouble *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3447,8 +3448,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3dvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3fATI(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3)
 {
-//glVertexStream3fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-//CHECK_GL_ERROR
+	glVertexStream3fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3457,8 +3458,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3fATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3fvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream3fvATI((GLuint) p0, (const GLfloat *) p1);
-//CHECK_GL_ERROR
+	glVertexStream3fvATI((GLuint) p0, (const GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3467,8 +3468,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3fvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3iATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glVertexStream3iATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-//CHECK_GL_ERROR
+	glVertexStream3iATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3477,8 +3478,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3iATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3ivATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream3ivATI((GLuint) p0, (const GLint *) p1);
-//CHECK_GL_ERROR
+	glVertexStream3ivATI((GLuint) p0, (const GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3487,8 +3488,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3ivATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3sATI(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3)
 {
-//glVertexStream3sATI((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
-//CHECK_GL_ERROR
+	glVertexStream3sATI((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3497,8 +3498,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3sATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3svATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream3svATI((GLuint) p0, (const GLshort *) p1);
-//CHECK_GL_ERROR
+	glVertexStream3svATI((GLuint) p0, (const GLshort *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3507,8 +3508,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream3svATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4dATI(JNIEnv * env, jobject obj, jint p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4)
 {
-//glVertexStream4dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
-//CHECK_GL_ERROR
+	glVertexStream4dATI((GLint) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3517,8 +3518,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4dATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4dvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream4dvATI((GLuint) p0, (const GLdouble *) p1);
-//CHECK_GL_ERROR
+	glVertexStream4dvATI((GLuint) p0, (const GLdouble *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3527,8 +3528,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4dvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4fATI(JNIEnv * env, jobject obj, jint p0, jfloat p1, jfloat p2, jfloat p3, jfloat p4)
 {
-//glVertexStream4fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
-//CHECK_GL_ERROR
+	glVertexStream4fATI((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3537,8 +3538,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4fATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4fvATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream4fvATI((GLuint) p0, (const GLfloat *) p1);
-//CHECK_GL_ERROR
+	glVertexStream4fvATI((GLuint) p0, (const GLfloat *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3547,8 +3548,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4fvATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4iATI(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//glVertexStream4iATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
-//CHECK_GL_ERROR
+	glVertexStream4iATI((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3557,8 +3558,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4iATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4ivATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream4ivATI((GLuint) p0, (const GLint *) p1);
-//CHECK_GL_ERROR
+	glVertexStream4ivATI((GLuint) p0, (const GLint *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3567,8 +3568,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4ivATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4sATI(JNIEnv * env, jobject obj, jint p0, jshort p1, jshort p2, jshort p3, jshort p4)
 {
-//glVertexStream4sATI((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
-//CHECK_GL_ERROR
+	glVertexStream4sATI((GLint) p0, (GLshort) p1, (GLshort) p2, (GLshort) p3, (GLshort) p4);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3577,8 +3578,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4sATI(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4svATI(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glVertexStream4svATI((GLuint) p0, (const GLshort *) p1);
-//CHECK_GL_ERROR
+	glVertexStream4svATI((GLuint) p0, (const GLshort *) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3587,7 +3588,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexStream4svATI(JNIEnv * env,
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexWeightfEXT(JNIEnv * env, jobject obj, jfloat p0)
 {
-//glVertexWeightfEXT((GLfloat) p0);
+	glVertexWeightfEXT((GLfloat) p0);
 }
 
 /*
@@ -3596,7 +3597,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexWeightfEXT(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexWeightfvEXT(JNIEnv * env, jobject obj, jint p0)
 {
-//glVertexWeightfvEXT((const GLfloat *) p0);
+	glVertexWeightfvEXT((const GLfloat *) p0);
 }
 
 /*
@@ -3605,8 +3606,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexWeightfvEXT(JNIEnv * env, 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexWeightPointerEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glVertexWeightPointerEXT((GLint) p0, (GLuint) p1, (GLint) p2, (const void *) p3);
-//CHECK_GL_ERROR
+	glVertexWeightPointerEXT((GLint) p0, (GLuint) p1, (GLint) p2, (const void *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3615,7 +3616,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_vertexWeightPointerEXT(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightbvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightbvARB((GLint) p0, (GLbyte *) p1);
+	glWeightbvARB((GLint) p0, (GLbyte *) p1);
 }
 
 /*
@@ -3624,7 +3625,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightbvARB(JNIEnv * env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightdvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightdvARB((GLint) p0, (GLdouble *) p1);
+	glWeightdvARB((GLint) p0, (GLdouble *) p1);
 }
 
 /*
@@ -3633,7 +3634,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightdvARB(JNIEnv * env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightfvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightfvARB((GLint) p0, (GLfloat *) p1);
+	glWeightfvARB((GLint) p0, (GLfloat *) p1);
 }
 
 /*
@@ -3642,7 +3643,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightfvARB(JNIEnv * env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightivARB((GLint) p0, (GLint *) p1);
+	glWeightivARB((GLint) p0, (GLint *) p1);
 }
 
 /*
@@ -3651,8 +3652,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightivARB(JNIEnv * env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightPointerARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3)
 {
-//glWeightPointerARB((GLint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
-//CHECK_GL_ERROR
+	glWeightPointerARB((GLint) p0, (GLuint) p1, (GLint) p2, (void *) p3);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3661,7 +3662,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightPointerARB(JNIEnv * env, j
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightsvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightsvARB((GLint) p0, (GLshort *) p1);
+	glWeightsvARB((GLint) p0, (GLshort *) p1);
 }
 
 /*
@@ -3670,7 +3671,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightsvARB(JNIEnv * env, jobjec
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightubvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightubvARB((GLint) p0, (GLubyte *) p1);
+	glWeightubvARB((GLint) p0, (GLubyte *) p1);
 }
 
 /*
@@ -3679,7 +3680,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightubvARB(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightuivARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightuivARB((GLint) p0, (GLuint *) p1);
+	glWeightuivARB((GLint) p0, (GLuint *) p1);
 }
 
 /*
@@ -3688,7 +3689,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightuivARB(JNIEnv * env, jobje
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightusvARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWeightusvARB((GLint) p0, (GLushort *) p1);
+	glWeightusvARB((GLint) p0, (GLushort *) p1);
 }
 
 /*
@@ -3697,8 +3698,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_weightusvARB(JNIEnv * env, jobje
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglAllocateMemoryNV(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jfloat p3)
 {
-//jint ret = (jint) wglAllocateMemoryNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-//return ret;
+/*	jint ret = (jint) wglAllocateMemoryNV((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
+	return ret;*/
 }
 
 /*
@@ -3707,8 +3708,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglAllocateMemoryNV(JNIEnv * env
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglBindTexImageARB(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
-//jboolean ret = (jboolean) wglBindTexImageARB((HPBUFFERARB) p0, (GLint) p1);
-//return ret;
+/*	jboolean ret = (jboolean) wglBindTexImageARB((HPBUFFERARB) p0, (GLint) p1);
+	return ret;*/
 }
 
 /*
@@ -3717,8 +3718,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglBindTexImageARB(JNIEnv * 
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglChoosePixelFormatARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//jboolean ret = (jboolean) wglChoosePixelFormatARB((HDC) p0, (const GLint *) p1, (const GLfloat *) p2, (GLuint) p3, (GLint *) p4, (GLuint *) p5);
-//return ret;
+/*	jboolean ret = (jboolean) wglChoosePixelFormatARB((HDC) p0, (const GLint *) p1, (const GLfloat *) p2, (GLuint) p3, (GLint *) p4, (GLuint *) p5);
+	return ret;*/
 }
 
 /*
@@ -3727,8 +3728,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglChoosePixelFormatARB(JNIE
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglCreateBufferRegionARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
-//jint ret = (jint) wglCreateBufferRegionARB((HDC) p0, (GLint) p1, (GLint) p2);
-//return ret;
+/*	jint ret = (jint) wglCreateBufferRegionARB((HDC) p0, (GLint) p1, (GLint) p2);
+	return ret;*/
 }
 
 /*
@@ -3737,8 +3738,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglCreateBufferRegionARB(JNIEnv 
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglCreatePbufferARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//jint ret = (jint) wglCreatePbufferARB((HDC) p0, (GLint) p1, (GLint) p2, (GLint) p3, (const GLint *) p4);
-//return ret;
+/*	jint ret = (jint) wglCreatePbufferARB((HDC) p0, (GLint) p1, (GLint) p2, (GLint) p3, (const GLint *) p4);
+	return ret;*/
 }
 
 /*
@@ -3747,7 +3748,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglCreatePbufferARB(JNIEnv * env
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_wglDeleteBufferRegionARB(JNIEnv * env, jclass clazz, jint p0)
 {
-//wglDeleteBufferRegionARB((void *) p0);
+/*	wglDeleteBufferRegionARB((void *) p0);*/
 }
 
 /*
@@ -3756,8 +3757,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_wglDeleteBufferRegionARB(JNIEnv 
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglDestroyPbufferARB(JNIEnv * env, jclass clazz, jint p0)
 {
-//jboolean ret = (jboolean) wglDestroyPbufferARB((HPBUFFERARB) p0);
-//return ret;
+/*	jboolean ret = (jboolean) wglDestroyPbufferARB((HPBUFFERARB) p0);
+	return ret;*/
 }
 
 /*
@@ -3766,7 +3767,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglDestroyPbufferARB(JNIEnv 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_wglFreeMemoryNV(JNIEnv * env, jclass clazz, jint p0)
 {
-//wglFreeMemoryNV((void *) p0);
+/*	wglFreeMemoryNV((void *) p0);*/
 }
 
 /*
@@ -3775,8 +3776,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_wglFreeMemoryNV(JNIEnv * env, jc
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetCurrentReadDCARB(JNIEnv * env, jclass clazz)
 {
-//jint ret = (jint) wglGetCurrentReadDCARB();
-//return ret;
+/*	jint ret = (jint) wglGetCurrentReadDCARB();
+	return ret;*/
 }
 
 /*
@@ -3785,10 +3786,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetCurrentReadDCARB(JNIEnv * 
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringARB(JNIEnv * env, jclass clazz, jint p0)
 {
-//if (wglGetExtensionsStringARB)
-//	return env->NewStringUTF(wglGetExtensionsStringARB(GetDC((HWND) p0)));
-//else
-//	return NULL;
+/*	if (wglGetExtensionsStringARB)
+		return env->NewStringUTF(wglGetExtensionsStringARB(GetDC((HWND) p0)));
+	else
+		return NULL;*/
 }
 
 /*
@@ -3797,8 +3798,8 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringARB(JNI
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringEXT(JNIEnv * env, jclass clazz)
 {
-//jstring ret = env->NewStringUTF(wglGetExtensionsStringEXT());
-//return ret;
+/*	jstring ret = env->NewStringUTF(wglGetExtensionsStringEXT());
+	return ret;*/
 }
 
 /*
@@ -3807,8 +3808,8 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_GL_wglGetExtensionsStringEXT(JNI
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetPbufferDCARB(JNIEnv * env, jclass clazz, jint p0)
 {
-//jint ret = (jint) wglGetPbufferDCARB((HPBUFFERARB) p0);
-//return ret;
+/*	jint ret = (jint) wglGetPbufferDCARB((HPBUFFERARB) p0);
+	return ret;*/
 }
 
 /*
@@ -3817,8 +3818,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetPbufferDCARB(JNIEnv * env,
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglGetPixelFormatAttribfvARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//jboolean ret = (jboolean) wglGetPixelFormatAttribfvARB((HDC) p0, (GLint) p1, (GLint) p2, (GLuint) p3, (const GLint *) p4, (GLfloat *) p5);
-//return ret;
+/*	jboolean ret = (jboolean) wglGetPixelFormatAttribfvARB((HDC) p0, (GLint) p1, (GLint) p2, (GLuint) p3, (const GLint *) p4, (GLfloat *) p5);
+	return ret;*/
 }
 
 /*
@@ -3827,8 +3828,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglGetPixelFormatAttribfvARB
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglGetPixelFormatAttribivARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//jboolean ret = (jboolean) wglGetPixelFormatAttribivARB((HDC) p0, (GLint) p1, (GLint) p2, (GLuint) p3, (const GLint *) p4, (GLint *) p5);
-//return ret;
+/*	jboolean ret = (jboolean) wglGetPixelFormatAttribivARB((HDC) p0, (GLint) p1, (GLint) p2, (GLuint) p3, (const GLint *) p4, (GLint *) p5);
+	return ret;*/
 }
 
 /*
@@ -3837,8 +3838,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglGetPixelFormatAttribivARB
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetSwapIntervalEXT(JNIEnv * env, jclass clazz)
 {
-//jint ret = (jint) wglGetSwapIntervalEXT();
-//return ret;
+/*	jint ret = (jint) wglGetSwapIntervalEXT();
+	return ret;*/
 }
 
 /*
@@ -3847,8 +3848,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglGetSwapIntervalEXT(JNIEnv * e
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglMakeContextCurrentARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
-//jboolean ret = (jboolean) wglMakeContextCurrentARB((HDC) p0, (HDC) p1, (HGLRC) p2);
-//return ret;
+/*	jboolean ret = (jboolean) wglMakeContextCurrentARB((HDC) p0, (HDC) p1, (HGLRC) p2);
+	return ret;*/
 }
 
 /*
@@ -3857,8 +3858,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglMakeContextCurrentARB(JNI
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglQueryPbufferARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
-//jboolean ret = (jboolean) wglQueryPbufferARB((HPBUFFERARB) p0, (GLint) p1, (GLint *) p2);
-//return ret;
+/*	jboolean ret = (jboolean) wglQueryPbufferARB((HPBUFFERARB) p0, (GLint) p1, (GLint *) p2);
+	return ret;*/
 }
 
 /*
@@ -3867,8 +3868,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglQueryPbufferARB(JNIEnv * 
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglReleasePbufferDCARB(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
-//jint ret = (jint) wglReleasePbufferDCARB((HPBUFFERARB) p0, (HDC) p1);
-//return ret;
+/*	jint ret = (jint) wglReleasePbufferDCARB((HPBUFFERARB) p0, (HDC) p1);
+	return ret;*/
 }
 
 /*
@@ -3877,8 +3878,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GL_wglReleasePbufferDCARB(JNIEnv * 
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglReleaseTexImageARB(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
-//jboolean ret = (jboolean) wglReleaseTexImageARB((HPBUFFERARB) p0, (GLint) p1);
-//return ret;
+/*	jboolean ret = (jboolean) wglReleaseTexImageARB((HPBUFFERARB) p0, (GLint) p1);
+	return ret;*/
 }
 
 /*
@@ -3887,8 +3888,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglReleaseTexImageARB(JNIEnv
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglRestoreBufferRegionARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6)
 {
-//jboolean ret = (jboolean) wglRestoreBufferRegionARB((void *) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6);
-//return ret;
+/*	jboolean ret = (jboolean) wglRestoreBufferRegionARB((void *) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6);
+	return ret;*/
 }
 
 /*
@@ -3897,8 +3898,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglRestoreBufferRegionARB(JN
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSaveBufferRegionARB(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
-//jboolean ret = (jboolean) wglSaveBufferRegionARB((void *) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
-//return ret;
+/*	jboolean ret = (jboolean) wglSaveBufferRegionARB((void *) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
+	return ret;*/
 }
 
 /*
@@ -3907,8 +3908,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSaveBufferRegionARB(JNIEn
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSetPbufferAttribARB(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
-//jboolean ret = (jboolean) wglSetPbufferAttribARB((HPBUFFERARB) p0, (const GLint *) p1);
-//return ret;
+/*	jboolean ret = (jboolean) wglSetPbufferAttribARB((HPBUFFERARB) p0, (const GLint *) p1);
+	return ret;*/
 }
 
 /*
@@ -3917,8 +3918,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSetPbufferAttribARB(JNIEn
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSwapIntervalEXT(JNIEnv * env, jclass clazz, jint p0)
 {
-//jboolean ret = (jboolean) wglSwapIntervalEXT((GLint) p0);
-//return ret;
+/*	jboolean ret = (jboolean) wglSwapIntervalEXT((GLint) p0);
+	return ret;*/
 }
 
 /*
@@ -3927,8 +3928,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL_wglSwapIntervalEXT(JNIEnv * 
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2dARB(JNIEnv * env, jobject obj, jdouble p0, jdouble p1)
 {
-//glWindowPos2dARB((GLdouble) p0, (GLdouble) p1);
-//CHECK_GL_ERROR
+	glWindowPos2dARB((GLdouble) p0, (GLdouble) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3937,8 +3938,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2dARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2dvARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos2dvARB((const GLdouble *) p0);
-//CHECK_GL_ERROR
+	glWindowPos2dvARB((const GLdouble *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3947,8 +3948,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2dvARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2fARB(JNIEnv * env, jobject obj, jfloat p0, jfloat p1)
 {
-//glWindowPos2fARB((GLfloat) p0, (GLfloat) p1);
-//CHECK_GL_ERROR
+	glWindowPos2fARB((GLfloat) p0, (GLfloat) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3957,8 +3958,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2fARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2fvARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos2fvARB((const GLfloat *) p0);
-//CHECK_GL_ERROR
+	glWindowPos2fvARB((const GLfloat *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3967,8 +3968,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2fvARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2iARB(JNIEnv * env, jobject obj, jint p0, jint p1)
 {
-//glWindowPos2iARB((GLint) p0, (GLint) p1);
-//CHECK_GL_ERROR
+	glWindowPos2iARB((GLint) p0, (GLint) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3977,8 +3978,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2iARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2ivARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos2ivARB((const GLint *) p0);
-//CHECK_GL_ERROR
+	glWindowPos2ivARB((const GLint *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3987,8 +3988,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2ivARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2sARB(JNIEnv * env, jobject obj, jshort p0, jshort p1)
 {
-//glWindowPos2sARB((GLshort) p0, (GLshort) p1);
-//CHECK_GL_ERROR
+	glWindowPos2sARB((GLshort) p0, (GLshort) p1);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -3997,8 +3998,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2sARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2svARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos2svARB((const GLshort *) p0);
-//CHECK_GL_ERROR
+	glWindowPos2svARB((const GLshort *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4007,8 +4008,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos2svARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3dARB(JNIEnv * env, jobject obj, jdouble p0, jdouble p1, jdouble p2)
 {
-//glWindowPos3dARB((GLdouble) p0, (GLdouble) p1, (GLdouble) p2);
-//CHECK_GL_ERROR
+	glWindowPos3dARB((GLdouble) p0, (GLdouble) p1, (GLdouble) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4017,8 +4018,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3dARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3dvARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos3dvARB((const GLdouble *) p0);
-//CHECK_GL_ERROR
+	glWindowPos3dvARB((const GLdouble *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4027,8 +4028,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3dvARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3fARB(JNIEnv * env, jobject obj, jfloat p0, jfloat p1, jfloat p2)
 {
-//glWindowPos3fARB((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
-//CHECK_GL_ERROR
+	glWindowPos3fARB((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4037,8 +4038,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3fARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3fvARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos3fvARB((const GLfloat *) p0);
-//CHECK_GL_ERROR
+	glWindowPos3fvARB((const GLfloat *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4047,8 +4048,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3fvARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3iARB(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2)
 {
-//glWindowPos3iARB((GLint) p0, (GLint) p1, (GLint) p2);
-//CHECK_GL_ERROR
+	glWindowPos3iARB((GLint) p0, (GLint) p1, (GLint) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4057,8 +4058,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3iARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3ivARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos3ivARB((const GLint *) p0);
-//CHECK_GL_ERROR
+	glWindowPos3ivARB((const GLint *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4067,8 +4068,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3ivARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3sARB(JNIEnv * env, jobject obj, jshort p0, jshort p1, jshort p2)
 {
-//glWindowPos3sARB((GLshort) p0, (GLshort) p1, (GLshort) p2);
-//CHECK_GL_ERROR
+	glWindowPos3sARB((GLshort) p0, (GLshort) p1, (GLshort) p2);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4077,8 +4078,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3sARB(JNIEnv * env, job
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3svARB(JNIEnv * env, jobject obj, jint p0)
 {
-//glWindowPos3svARB((const GLshort *) p0);
-//CHECK_GL_ERROR
+	glWindowPos3svARB((const GLshort *) p0);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4087,8 +4088,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_windowPos3svARB(JNIEnv * env, jo
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_writeMaskEXT(JNIEnv * env, jobject obj, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
-//glWriteMaskEXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
-//CHECK_GL_ERROR
+	glWriteMaskEXT((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
+	CHECK_GL_ERROR
 }
 
 /*
@@ -4098,13 +4099,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_writeMaskEXT(JNIEnv * env, jobje
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_checkWGLExtensionsString(JNIEnv * env, jclass clazz)
 {
 
-//jfieldID fid_WGL_ARB_extensions_string = env->GetStaticFieldID(clazz, "WGL_ARB_extensions_string", "Z");
-//jfieldID fid_WGL_EXT_extensions_string = env->GetStaticFieldID(clazz, "WGL_EXT_extensions_string", "Z");
+/*	jfieldID fid_WGL_ARB_extensions_string = (*env)->GetStaticFieldID(env, clazz, "WGL_ARB_extensions_string", "Z");
+	jfieldID fid_WGL_EXT_extensions_string = (*env)->GetStaticFieldID(env, clazz, "WGL_EXT_extensions_string", "Z");
 
-//if (wglGetExtensionsStringARB)
-//	env->SetStaticBooleanField(clazz, fid_WGL_ARB_extensions_string, JNI_TRUE);
-//if (wglGetExtensionsStringEXT)
-//	env->SetStaticBooleanField(clazz, fid_WGL_EXT_extensions_string, JNI_TRUE);
-
+	if (wglGetExtensionsStringARB)
+		(*env)->SetStaticBooleanField(env, clazz, fid_WGL_ARB_extensions_string, JNI_TRUE);
+	if (wglGetExtensionsStringEXT)
+		(*env)->SetStaticBooleanField(env, clazz, fid_WGL_EXT_extensions_string, JNI_TRUE);
+*/
 }
 

@@ -42,7 +42,7 @@
 GCC = gcc
 LINK = gcc
 JAVAHOME=/usr/java/j2sdk1.4.1_01
-LIBOBJS=org_lwjgl_Display.o org_lwjgl_Sys.o org_lwjgl_opengl_BaseGL.o org_lwjgl_opengl_GL.o org_lwjgl_opengl_CoreGL.o org_lwjgl_input_Keyboard.o org_lwjgl_opengl_GLU.o org_lwjgl_input_Mouse.o
+LIBOBJS=extgl.o org_lwjgl_Display.o org_lwjgl_Sys.o org_lwjgl_opengl_BaseGL.o org_lwjgl_opengl_GL.o org_lwjgl_opengl_CoreGL.o org_lwjgl_input_Keyboard.o org_lwjgl_opengl_GLU.o org_lwjgl_input_Mouse.o
 DEBUG_FLAGS=-D_DEBUG
 LINKOPTS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86vm -lGL -lGLU
 
