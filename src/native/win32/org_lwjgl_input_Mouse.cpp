@@ -1,5 +1,5 @@
-/* 
- * Copyright (c) 2002 Light Weight Java Game Library Project
+/*
+ * Copyright (c) 2002 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -16,8 +16,7 @@
  * * Neither the name of 'Light Weight Java Game Library' nor the names of 
  *   its contributors may be used to endorse or promote products derived 
  *   from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
@@ -35,107 +34,112 @@
  *
  * Win32 mouse handling.
  *
- * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author Brian Matzon <brian@matzon.com>
  * @version $Revision$
  */
 
-
 #define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
 #include "org_lwjgl_input_Mouse.h"
+#include <windows.h>
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
 #include <dinput.h>
 
-extern LPDIRECTINPUT lpdi;
-LPDIRECTINPUTDEVICE		lpdiMouse;
-extern HWND				hwnd; // The display, which must have been created
-jfieldID fid_button;
-jfieldID fid_dx;
-jfieldID fid_dy;
-jfieldID fid_dz;
+extern HINSTANCE dll_handle;
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    initIDs
- * Signature: ()V
+extern HWND hwnd;                   // Handle to window
+
+extern LPDIRECTINPUT lpdi;          // DI instance
+LPDIRECTINPUTDEVICE mDIDevice;     // DI Device instance
+DIMOUSESTATE diMouseState;          // State of Mouse
+
+int mButtoncount = 0;               // Temporary buttoncount
+bool mHaswheel;                     // Temporary wheel check
+
+JNIEnv* mEnvironment;                // JNIEnvironment copy
+
+bool mCreate_success;                // bool used to determine successfull creation
+
+// Cached fields of Mouse.java
+jclass clsMouse;
+jfieldID fidMButtonCount;
+jfieldID fidMButtons;
+jfieldID fidMDX;
+jfieldID fidMDY;
+jfieldID fidMDWheel;
+jfieldID fidMHasWheel;
+
+// Function prototypes (defined in the cpp file, since header file is generic across platforms
+void EnumerateMouseCapabilities();
+BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
+void ShutdownMouse();
+void CreateMouse();
+void SetupMouse();
+void InitializeMouseFields();
+void CacheMouseFields();
+void UpdateMouseFields();
+void SetMouseCapabilities();
+
+/**
+ * Initializes any field ids
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
-  (JNIEnv * env, jclass clazz)
-{
-	// Get a global class instance, just to be sure
-	static jobject globalClassLock = NULL;
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass clazz) {
+  mEnvironment = env;
+  clsMouse = clazz;
 
-	if (globalClassLock == NULL) {
-		globalClassLock = env->NewGlobalRef(clazz);
-	}
-
-	// Now cache the field IDs:
-	if (fid_button == NULL) {
-		fid_button = env->GetStaticFieldID(clazz, "button", "[Z");
-	}
-	if (fid_dx == NULL) {
-		fid_dx = env->GetStaticFieldID(clazz, "dx", "I");
-	}
-	if (fid_dy == NULL) {
-		fid_dy = env->GetStaticFieldID(clazz, "dy", "I");
-	}
-	if (fid_dz == NULL) {
-		fid_dz = env->GetStaticFieldID(clazz, "dz", "I");
-	}
+  /* Cache fields in Mouse */
+  CacheMouseFields();
 }
 
-/*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nCreate
- * Signature: ()Z
+/**
+ * Called when the Mouse instance is to be created
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
-  (JNIEnv * env, jclass clazz)
-{
-	// Check to see if we're already initialized
-	if (lpdiMouse != NULL) {
-		printf("Mouse already created.\n");
-		return JNI_FALSE;
-	}
-
-	if (hwnd == NULL) {
-		printf("No window\n");
-		return JNI_FALSE;
-	}
-
-	// First get reference to directinput:
-	if (lpdi == NULL) {
-		HRESULT ret = DirectInputCreate((HINSTANCE)GetCurrentProcess(), DIRECTINPUT_VERSION, &lpdi, NULL);
-		if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION ) {
-			printf("Failed to create directinput\n");
-			return JNI_FALSE;
-		}
-	}
-
-	// Get mouse device
-	if (lpdi->CreateDevice(GUID_SysMouse, &lpdiMouse, NULL) != DI_OK) {
-		printf("Failed to create mouse\n");
-		return JNI_FALSE;
-	}
-
-	// Grab non-exclusive foreground access to device
-	if (lpdiMouse->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-		printf("Failed to set mouse coop\n");
-		return JNI_FALSE;
-	}
-
-	// Tell 'em wot format to be in (the default "you are a mouse and keyboard" format)
-	lpdiMouse->SetDataFormat(&c_dfDIMouse);
-
-	HRESULT ret = lpdiMouse->Acquire();
-	if (ret != DI_OK && ret != S_FALSE) {
-#ifdef _DEBUG
-		printf("Failed to acquire mouse\n");
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
+  // Create the DirectInput object. 
+  HRESULT hr;
+  hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL); 
+  if (FAILED(hr)) {
+#if _DEBUG
+    printf("DirectInputCreate failed\n");
 #endif
-	}
-	return JNI_TRUE;
+    ShutdownMouse();
+    return JNI_FALSE;
+  }
+
+  /* skip enumeration, since we only want system mouse */
+  CreateMouse();
+
+  /* Enumerate capabilities of Mouse */
+  EnumerateMouseCapabilities();
+  if (!mCreate_success) {
+#if _DEBUG
+    printf("EnumerateMouseCapabilities failed\n");
+#endif
+    ShutdownMouse();
+    return JNI_FALSE;
+  }
+
+  if(mCreate_success) {
+    /* Do setup of Mouse */
+    SetupMouse();
+  }
+
+  /* Initialize any fields on the Mouse */
+  InitializeMouseFields();
+
+  /* Set capabilities */
+  SetMouseCapabilities();
+
+  /* Aquire the Mouse */
+  hr = mDIDevice->Acquire();
+  if(FAILED(hr)) {
+#if _DEBUG
+    printf("Acquire failed\n");
+#endif
+    ShutdownMouse();
+    return JNI_FALSE;
+  }
+  return mCreate_success;
 }
 
 /*
@@ -143,51 +147,174 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
  * Method:    nDestroy
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
-  (JNIEnv * env, jclass clazz)
-{
-	
-	// Release mouse
-	if (lpdiMouse != NULL) {
-		lpdiMouse->Unacquire();
-		lpdiMouse->Release();
-		lpdiMouse = NULL;
-	}
-
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
+  ShutdownMouse();
 }
 
 /*
- * Class:     org_lwjgl_input_Mouse
+ * Class:     org_lwjgl_input_Controller
  * Method:    nPoll
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
-  (JNIEnv * env, jclass clazz)
-{
-	DIMOUSESTATE diMouseState;
-	HRESULT ret;
-	while (ret = lpdiMouse->GetDeviceState(sizeof(diMouseState), &diMouseState) != DI_OK) {
-		ret = lpdiMouse->Acquire();
-		if (ret != DI_OK && ret != S_FALSE) {
-			return;
-		}
-	}
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
+  UpdateMouseFields();
+}
 
-	if (ret == DI_OK) {
-		env->SetStaticIntField(clazz, fid_dx, (jint)diMouseState.lX);
-		env->SetStaticIntField(clazz, fid_dy, (jint)diMouseState.lY);
-		env->SetStaticIntField(clazz, fid_dz, (jint)diMouseState.lZ);
-		jbooleanArray buttonsArray = (jbooleanArray) env->GetStaticObjectField(clazz, fid_button);
-		for (int i = 0; i < 4; i++)
-			if (diMouseState.rgbButtons[i] != 0)
-				diMouseState.rgbButtons[i] = JNI_TRUE;
-			else
-				diMouseState.rgbButtons[i] = JNI_FALSE;
-		env->SetBooleanArrayRegion(buttonsArray, 0, 4, diMouseState.rgbButtons);
-	} else {
-#ifdef _DEBUG
-		printf("Failed to get mouse device state\n");
+/**
+ * Shutdown DI
+ */
+void ShutdownMouse() {
+  // release device
+  if (mDIDevice != NULL) {
+    mDIDevice->Unacquire();
+    mDIDevice->Release();
+  }
+}
+/**
+ * Enumerates the capabilities of the Mouse attached to the system
+ */
+void EnumerateMouseCapabilities() {
+  HRESULT hr;
+  hr = mDIDevice->EnumObjects(EnumMouseObjectsCallback, NULL, DIDFT_ALL);
+  if FAILED(hr) { 
+#if _DEBUG
+    printf("EnumObjects failed\n");
 #endif
-	}
+    mCreate_success = false;
+    return;
+  }
+  mCreate_success = true;
+}
 
+/**
+ * Callback from EnumObjects. Called for each "object" on the Mouse.
+ */
+BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
+#if _DEBUG
+  printf("found %s\n", lpddoi->tszName);
+#endif
+  if(lpddoi->guidType == GUID_Button) {
+    mButtoncount++;
+  } else if(lpddoi->guidType == GUID_XAxis) {
+  } else if(lpddoi->guidType == GUID_YAxis) {
+  } else if(lpddoi->guidType == GUID_ZAxis) {
+    mHaswheel = true;
+#if _DEBUG
+  } else {
+    printf("Unhandled object found: %s\n", lpddoi->tszName);
+#endif
+  }
+  return DIENUM_CONTINUE;
+}
+
+/**
+ * Creates the specified device as a Mouse
+ */
+void CreateMouse() {
+  HRESULT hr;
+  hr = lpdi->CreateDevice(GUID_SysMouse, &mDIDevice, NULL);
+  if FAILED(hr) {	
+#if _DEBUG
+    printf("CreateDevice failed\n");
+#endif
+    mCreate_success = false;
+    return;
+  }
+  mCreate_success = true;
+}
+
+/**
+ * Sets up the Mouse properties
+ */ 
+void SetupMouse() {
+  // set Mouse data format
+  if(mDIDevice->SetDataFormat(&c_dfDIMouse) != DI_OK) {
+#if _DEBUG
+    printf("SetDataFormat failed\n");
+#endif
+    mCreate_success = false;
+    return;
+  }
+
+  // set the cooperative level
+  if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+#if _DEBUG
+    printf("SetCooperativeLevel failed\n");
+#endif
+    mCreate_success = false;
+    return;
+  }
+  mCreate_success = true;
+}
+
+/**
+ * Sets the fields on the Mouse
+ */
+void InitializeMouseFields() {
+  //set buttons array
+  jbooleanArray buttonsArray = mEnvironment->NewBooleanArray(mButtoncount);
+  mEnvironment->SetStaticObjectField(clsMouse, fidMButtons, buttonsArray);
+}
+
+/**
+ * Updates the fields on the Mouse
+ */
+void UpdateMouseFields() {
+  HRESULT                 hRes; 
+
+  // get data from the Mouse 
+  hRes = mDIDevice->GetDeviceState(sizeof(DIMOUSESTATE), &diMouseState); 
+
+  if (hRes != DI_OK) { 
+    // did the read fail because we lost input for some reason? 
+    // if so, then attempt to reacquire. 
+    if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
+      mDIDevice->Acquire();
+#if _DEBUG
+      printf("DIERR_INPUTLOST, reaquiring input : mCreate_success=%d\n", mCreate_success);
+#endif
+    } else {
+#if _DEBUG
+      printf("Error getting mouse state: %d\n", hRes);
+#endif
+    }
+    return;
+  }
+
+  mEnvironment->SetStaticIntField(clsMouse, fidMDX, (jint) diMouseState.lX);
+	mEnvironment->SetStaticIntField(clsMouse, fidMDY, (jint) diMouseState.lY);
+	mEnvironment->SetStaticIntField(clsMouse, fidMDWheel, (jint) diMouseState.lZ);
+	
+  jbooleanArray buttonsArray = (jbooleanArray) mEnvironment->GetStaticObjectField(clsMouse, fidMButtons);
+  for (int i = 0; i < mButtoncount; i++) {
+    if (diMouseState.rgbButtons[i] != 0) {
+      diMouseState.rgbButtons[i] = JNI_TRUE;
+    } else {
+				diMouseState.rgbButtons[i] = JNI_FALSE;
+    }
+  }
+  mEnvironment->SetBooleanArrayRegion(buttonsArray, 0, mButtoncount, diMouseState.rgbButtons);
+}
+
+/**
+ * Sets the capabilities of the Mouse
+ */
+void SetMouseCapabilities() {
+  //set buttoncount
+  mEnvironment->SetStaticIntField(clsMouse, fidMButtonCount, mButtoncount);
+
+  //set wheel
+  mEnvironment->SetStaticBooleanField(clsMouse, fidMHasWheel, mHaswheel);
+}
+
+/**
+ * Caches the field ids for quicker access
+ */
+void CacheMouseFields() {
+  fidMButtonCount  = mEnvironment->GetStaticFieldID(clsMouse, "buttonCount", "I");
+  fidMHasWheel     = mEnvironment->GetStaticFieldID(clsMouse, "hasWheel", "Z");
+  fidMButtons      = mEnvironment->GetStaticFieldID(clsMouse, "buttons", "[Z");
+  fidMDX           = mEnvironment->GetStaticFieldID(clsMouse, "dx", "I");
+  fidMDY           = mEnvironment->GetStaticFieldID(clsMouse, "dy", "I");
+  fidMDWheel       = mEnvironment->GetStaticFieldID(clsMouse, "dwheel", "I");
 }

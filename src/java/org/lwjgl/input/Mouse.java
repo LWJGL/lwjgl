@@ -32,8 +32,6 @@
  
 package org.lwjgl.input;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
 
@@ -59,7 +57,7 @@ public class Mouse {
 	private static boolean created;
 	
 	/** The mouse buttons status from the last poll */
-	private static boolean[] button = new boolean[8];
+	private static boolean[] buttons;
 	
 	/** Delta X */
 	public static int dx;
@@ -68,22 +66,11 @@ public class Mouse {
 	public static int dy;
 	
 	/** Delta Z */
-	public static int dz;
-
-	/**
-	 * The mouse events from the last read: a sequence of Events
-	 */
-	private static ByteBuffer readBuffer;
-	
-	/** Address of the read buffer */
-	private static int readBufferAddress;
-		
-	/** The size in bytes of a single mouse event */
-	private static final int MOUSE_EVENT_SIZE = 20;
-	
-	/** The stride in bytes of a single mouse event */
-	private static final int MOUSE_EVENT_STRIDE = 32;
-	
+	public static int dwheel;
+  
+  /* Mouse capabilities */
+  public static int buttonCount = -1;
+  public static boolean hasWheel = false;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -152,109 +139,15 @@ public class Mouse {
 	 * Native method to poll the mouse
 	 */
 	private static native void nPoll();
-
-	/**
-	 * Queries the number of buttons the mouse has
-	 * @return the number of buttons the mouse has
-	 */
-	public static int getNumButtons() {
-		assert created : "The mouse has not been created.";
-		return nGetNumButtons();
-	}
-
-	/**
-	 * Native implementation of getNumButtons()
-	 */
-	private static native int nGetNumButtons();
-	
-	/**
-	 * Queries whether the mouse has a Z value
-	 * @return true if the mouse has a Z value
-	 */
-	public static boolean hasZValue() {
-		assert created : "The mouse has not been created.";
-		return nHasZValue();
-	}
-
-	/**
-	 * Native implementation of hasZValue()
-	 */
-	private static native boolean nHasZValue();
 	
 	/**
 	 * See if a particular mouse button is down.
 	 * 
-	 * @param button The index of the button you wish to test (0..getNumButtons())
+	 * @param button The index of the button you wish to test (0..buttonCount)
 	 * @return true if the specified button is down
-	 * @see #getNumButtons()
 	 */
 	public static boolean isButtonDown(int button) {
 		assert created : "The mouse has not been created.";
-		return Mouse.button[button];
+		return Mouse.buttons[button];
 	}
-	
-//	/**
-//	 * Enable mouse buffering. Must be called after the mouse is created.
-//	 * @return the size of the mouse buffer in events, or 0 if no buffering
-//	 * can be enabled for any reason
-//	 */
-//	public static int enableBuffer() {
-//		assert created : "The mouse has not been created.";
-//		return nEnableBuffer();
-//	}
-//	
-//
-//	/**
-//	 * Native method to enable the buffer
-//	 * @return the size of the buffer allocated, in events (1 event is 2 bytes),
-//	 * or 0 if no buffer can be allocated
-//	 */
-//	private static native int nEnableBuffer();
-	
-
-	/**
-	 * Gets the next mouse event. This returns its results as if a poll() had
-	 * been called.
-	 * 
-	 * @return true if a mouse event was read, false otherwise
-	 */
-	public static boolean next() {
-		assert created : "The mouse has not been created.";
-		assert readBuffer != null : "Mouse buffering has not been enabled.";
-		
-		if (readBuffer.hasRemaining()) {
-			dx = readBuffer.getInt();
-			dy = readBuffer.getInt();
-			dz = readBuffer.getInt();
-			for (int i = 0; i < button.length; i ++)
-				button[i] = readBuffer.get() != (byte)0;
-			readBuffer.position(readBuffer.position() + (MOUSE_EVENT_STRIDE - MOUSE_EVENT_SIZE));
-			return true;
-		} else
-			return false;
-		
-	}
-
-
-	/**
-	 * Native method to read the gamepad buffer
-	 * 
-	 * @param readBufferAddress the address of the mouse buffer
-	 * @return the number of mouse events read
-	 */
-	private static native int nRead(int readBufferAddress);
-	
-
-	/**
-	 * Reads the mouse buffer.
-	 */
-	public static void read() {
-		assert created : "The mouse has not been created.";
-		assert readBuffer != null : "Mouse buffering has not been enabled.";
-		readBuffer.clear();
-		readBuffer.limit(nRead(readBufferAddress) * MOUSE_EVENT_SIZE);
-	}
-	
-
-	
 }
