@@ -45,8 +45,8 @@
 
 #define WINDOWCLASSNAME "LWJGLWINDOW"
 
-jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
-jobjectArray GetAvailableDisplayModes(JNIEnv * env);
+static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
+static jobjectArray GetAvailableDisplayModes(JNIEnv * env);
 bool modeSet = false; // Whether we've done a display mode change
 WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
 WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
@@ -62,9 +62,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 {
 	jobjectArray result = GetAvailableDisplayModesEx(env);
 	if (result == NULL) {
-#ifdef _DEBUG
-		printf("Extended display mode selection failed, using fallback\n");
-#endif
+		printfDebug("Extended display mode selection failed, using fallback\n");
 		result = GetAvailableDisplayModes(env);
 	}
 	return result;
@@ -73,7 +71,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 /**
  * Choose displaymodes using extended codepath (multiple displaydevices)
  */
-jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
+static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	typedef BOOL (WINAPI * EnumDisplayDevicesAPROC)(IN LPCSTR lpDevice, IN DWORD iDevNum, OUT PDISPLAY_DEVICEA lpDisplayDevice, IN DWORD dwFlags);
 	typedef BOOL (WINAPI * EnumDisplaySettingsExAPROC)(IN LPCSTR lpszDeviceName, IN DWORD iModeNum, OUT LPDEVMODEA lpDevMode, IN DWORD dwFlags);
 	EnumDisplayDevicesAPROC EnumDisplayDevicesA;
@@ -81,9 +79,7 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 
 	HMODULE lib_handle = LoadLibrary("user32.dll");
 	if (lib_handle == NULL) {
-#ifdef _DEBUG
-		printf("Could not load user32.dll\n");
-#endif
+		printfDebug("Could not load user32.dll\n");
 		return NULL;
 	}
 	EnumDisplayDevicesA = (EnumDisplayDevicesAPROC)GetProcAddress(lib_handle, "EnumDisplayDevicesA");
@@ -105,25 +101,18 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 	DevMode.dmSize = sizeof(DEVMODE);
 	DisplayDevice.cb = sizeof(DISPLAY_DEVICE);
   
-  //enumerate all displays, and all of their displaymodes
+	//enumerate all displays, and all of their displaymodes
 	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
-#ifdef _DEBUG
-	  printf("Querying %s device\n", DisplayDevice.DeviceString);
-#endif
+		printfDebug("Querying %s device\n", DisplayDevice.DeviceString);
 		j = 0;
 		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
-//#ifdef _DEBUG
-//			printf("Checking setting #%d\n", j);
-//#endif
 			if (DevMode.dmBitsPerPel > 8) {
 				AvailableModes++;
 			}
 		}
 	}
 
-#ifdef _DEBUG
-	printf("Found %d displaymodes\n", AvailableModes);
-#endif
+	printfDebug("Found %d displaymodes\n", AvailableModes);
   
 	// now that we have the count create the classes, and add 'em all - we'll remove dups in Java
 	// Allocate an array of DisplayModes big enough
@@ -154,7 +143,7 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 /**
  * Choose displaymodes using standard codepath (single displaydevice)
  */
-jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
+static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	int i = 0, j = 0, n = 0;
 	int AvailableModes = 0;
 
@@ -171,9 +160,7 @@ jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 		}
 	}
 		
-#ifdef _DEBUG
-	printf("Found %d displaymodes\n", AvailableModes);
-#endif
+	printfDebug("Found %d displaymodes\n", AvailableModes);
   
 	// now that we have the count create the classes, and add 'em all - we'll remove dups in Java
 	// Allocate an array of DisplayModes big enough
@@ -243,16 +230,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode
 
 	if (cdsret != DISP_CHANGE_SUCCESSFUL) {
 		// Failed: so let's check to see if it's a wierd dual screen display
-#ifdef _DEBUG
-		printf("Failed to set display mode... assuming dual monitors\n");
-#endif
+		printfDebug("Failed to set display mode... assuming dual monitors\n");
 		devmode.dmPelsWidth = width * 2;
 		cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-#ifdef _DEBUG
-			printf("Failed to set display mode using dual monitors\n");
-#endif
+			printfDebug("Failed to set display mode using dual monitors\n");
 			throwException(env, "Failed to set display mode.");
 			return;
 		}
@@ -295,9 +278,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 	HDC screenDC = GetDC(NULL);
 	try {
 		if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-	#ifdef _DEBUG
-			printf("Could not reset device gamma\n");
-	#endif
+			printfDebug("Could not reset device gamma\n");
 		}
 	} catch (...) {
 		printf("Exception occurred in SetDeviceGammaRamp\n");
@@ -317,14 +298,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 /*
  * Temporarily reset display settings. This is called when the window is minimized.
  */
-void tempResetDisplayMode() {
+static void tempResetDisplayMode() {
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	try {
 		if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-	#ifdef _DEBUG
-			printf("Could not reset device gamma\n");
-	#endif
+			printfDebug("Could not reset device gamma\n");
 		}
 	} catch (...) {
 		printf("Exception occurred in SetDeviceGammaRamp\n");
@@ -332,9 +311,7 @@ void tempResetDisplayMode() {
 	ReleaseDC(NULL, screenDC);	
 
 	if (modeSet) {
-#ifdef _DEBUG
-		printf("Attempting to temporarily reset the display mode\n");
-#endif
+		printfDebug("Attempting to temporarily reset the display mode\n");
 		modeSet = false;
 		// Under Win32, all we have to do is:
 		ChangeDisplaySettings(NULL, 0);
@@ -344,14 +321,12 @@ void tempResetDisplayMode() {
 /*
  * Put display settings back to what they were when the window is maximized.
  */
-void tempRestoreDisplayMode() {
+static void tempRestoreDisplayMode() {
 	// Restore gamma
 	HDC screenDC = GetDC(NULL);
 	try { 
 		if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
-	#ifdef _DEBUG
-			printf("Could not restore device gamma\n");
-	#endif
+			printfDebug("Could not restore device gamma\n");
 		}
 	} catch (...) {
 		printf("Exception occurred in SetDeviceGammaRamp\n");
@@ -359,18 +334,13 @@ void tempRestoreDisplayMode() {
 	ReleaseDC(NULL, screenDC);
 
 	if (!modeSet) {
-
-#ifdef _DEBUG
-		printf("Attempting to restore the display mode\n");
-#endif
+		printfDebug("Attempting to restore the display mode\n");
 		modeSet = true;
 		LONG cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
-#ifdef _DEBUG
 		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-			printf("Failed to restore display mode\n");
+			printfDebug("Failed to restore display mode\n");
 		}
-#endif
 	}
 }
 
@@ -445,9 +415,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	// Get the default gamma ramp
 	try {
 		if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
-	#ifdef _DEBUG
-			printf("Failed to get initial device gamma\n");
-	#endif
+			printfDebug("Failed to get initial device gamma\n");
 		}
 	} catch (...) {
 		printf("Exception occurred in GetDeviceGammaRamp\n");
@@ -457,34 +425,32 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 
 }
 
-char * getDriver() {
-    #define MY_BUFSIZE 256
+static char * getDriver() {
+	#define MY_BUFSIZE 256
 
-    HKEY hKey;
-    static TCHAR szAdapterKey[MY_BUFSIZE], szDriverValue[MY_BUFSIZE];
-    DWORD dwBufLen = MY_BUFSIZE;
-    LONG lRet;
+	HKEY hKey;
+	static TCHAR szAdapterKey[MY_BUFSIZE], szDriverValue[MY_BUFSIZE];
+	DWORD dwBufLen = MY_BUFSIZE;
+	LONG lRet;
 
-    if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-        TEXT("HARDWARE\\DeviceMap\\Video"),
-                    0,
-                    KEY_QUERY_VALUE,
-                    &hKey) != ERROR_SUCCESS) return NULL;
+	if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+		TEXT("HARDWARE\\DeviceMap\\Video"),
+					0,
+					KEY_QUERY_VALUE,
+					&hKey) != ERROR_SUCCESS) return NULL;
 
-    lRet = RegQueryValueEx(hKey,
-                    TEXT("\\Device\\Video0"),
-                    NULL,
-                    NULL,
-                    (LPBYTE)szAdapterKey,
-                    &dwBufLen);
+	lRet = RegQueryValueEx(hKey,
+					TEXT("\\Device\\Video0"),
+					NULL,
+					NULL,
+					(LPBYTE)szAdapterKey,
+					&dwBufLen);
 
-    RegCloseKey(hKey);
+	RegCloseKey(hKey);
 
-    if(lRet != ERROR_SUCCESS) return NULL;
+	if(lRet != ERROR_SUCCESS) return NULL;
 
-#ifdef _DEBUG
-	printf("Adapter key: %s\n", szAdapterKey);
-#endif
+	printfDebug("Adapter key: %s\n", szAdapterKey);
 
 	// szAdapterKey now contains something like \Registry\Machine\System\CurrentControlSet\Control\Video\{B70DBD2A-90C4-41CF-A58E-F3BA69F1A6BC}\0000
 	// We'll check for the first chunk:
@@ -493,9 +459,6 @@ char * getDriver() {
 
 		TCHAR szDriverKey[MY_BUFSIZE];
 		strcpy(szDriverKey, &szAdapterKey[18]);
-//#ifdef _DEBUG
-//		printf("Driver key: %s\n", szDriverKey);
-//#endif
 
 		if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 			TEXT(szDriverKey),
@@ -557,27 +520,17 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
 	}
 	strcat(driverDLL, driver);
 	strcat(driverDLL, ".dll");
-//#ifdef _DEBUG
-//	printf("Driver dll = %s\n", driverDLL);
-//#endif
 	DWORD var = 0;
 	DWORD dwInfoSize = GetFileVersionInfoSize(driverDLL, &var);
 	LPVOID lpInfoBuff = new unsigned char[dwInfoSize];
 	BOOL bRetval = GetFileVersionInfo(driverDLL, NULL, dwInfoSize, lpInfoBuff);
 	if (bRetval == 0) {
-//#ifdef _DEBUG
-//		printf("GetFileVersionInfo failed\n");
-//#endif
 	} else {
 		VS_FIXEDFILEINFO * fxdFileInfo;
 
 		UINT uiLen = 0;
 		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void **) &fxdFileInfo, &uiLen);
-		if (bRetval == 0) {
-//#ifdef _DEBUG
-//			printf("VerQueryValue failed\n");
-//#endif
-		} else {
+		if (bRetval != 0) {
 			TCHAR version[256];
 			TCHAR ms[10], ls[10];
 			sprintf(ms, "%d.%d\0", fxdFileInfo->dwProductVersionMS >> 16, fxdFileInfo->dwProductVersionMS & 0xFFFF);
@@ -593,12 +546,4 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
 
 	return ret;
 }
-
-
-
-
-
-
-
-
 

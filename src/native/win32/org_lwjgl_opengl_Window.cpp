@@ -97,9 +97,7 @@ static int findPixelFormat(JNIEnv *env, unsigned int flags, int bpp, int alpha, 
 		return -1;
 	}
 
-#ifdef _DEBUG
-	printf("Pixel format is %d\n", iPixelFormat);
-#endif
+	printfDebug("Pixel format is %d\n", iPixelFormat);
 
 	// make that the pixel format of the device context 
 	if (SetPixelFormat(hdc, iPixelFormat, &pfd) == FALSE) {
@@ -161,22 +159,20 @@ static bool createDirectInput()
 	// Create input
 	HRESULT ret = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL);
 	if (ret != DI_OK && ret != DIERR_BETADIRECTINPUTVERSION ) {
-#ifdef _DEBUG
-		printf("Failed to create directinput");
+		printfDebug("Failed to create directinput");
 		switch (ret) {
 			case DIERR_INVALIDPARAM :
-				printf(" - Invalid parameter\n");
+				printfDebug(" - Invalid parameter\n");
 				break;
 			case DIERR_OLDDIRECTINPUTVERSION :
-				printf(" - Old Version\n");
+				printfDebug(" - Old Version\n");
 				break;
 			case DIERR_OUTOFMEMORY :
-				printf(" - Out Of Memory\n");
+				printfDebug(" - Out Of Memory\n");
 				break;
 			default:
-				printf(" - Unknown failure\n");
+				printfDebug(" - Unknown failure\n");
 		}
-#endif
 		return false;
 	} else {
 		return true;
@@ -190,31 +186,23 @@ static void closeWindow()
 {
 	// Release DirectInput
 	if (lpdi != NULL) {
-#ifdef _DEBUG
-		printf("Destroying directinput\n");
-#endif
+		printfDebug("Destroying directinput\n");
 		lpdi->Release();
 		lpdi = NULL;
 	}
 
 	// Release device context
 	if (hdc != NULL && hwnd != NULL) {
-#ifdef _DEBUG
-		printf("Releasing DC\n");
-#endif
+		printfDebug("Releasing DC\n");
 		ReleaseDC(hwnd, hdc);
 	}
 
 	// Close the window
 	if (hwnd != NULL) {
-#ifdef _DEBUG
-		printf("Destroy window\n");
-#endif
+		printfDebug("Destroy window\n");
 		// Vape the window
 		DestroyWindow(hwnd);
-#ifdef _DEBUG
-		printf("Destroyed window\n");
-#endif
+		printfDebug("Destroyed window\n");
 		hwnd = NULL;
 	}
 }
@@ -324,14 +312,10 @@ static bool registerWindow()
 		windowClass.lpszClassName = WINDOWCLASSNAME;
 
 		if (RegisterClass(&windowClass) == 0) {
-#ifdef _DEBUG
-			printf("Failed to register window class\n");
-#endif
+			printfDebug("Failed to register window class\n");
 			return false;
 		}
-#ifdef _DEBUG
-		printf("Window registered\n");
-#endif
+		printfDebug("Window registered\n");
 		oneShotInitialised = true;
 	}
 
@@ -413,15 +397,11 @@ static bool createWindow(const char * title, int x, int y, int width, int height
 		 NULL);
 
 	if (hwnd == NULL) {
-#ifdef _DEBUG
-		printf("Failed to create window\n");
-#endif
+		printfDebug("Failed to create window\n");
 		return false;
 	}
 
-#ifdef _DEBUG
-	printf("Created window\n");
-#endif
+	printfDebug("Created window\n");
 
 	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
@@ -578,9 +558,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
 
 	// Delete the rendering context
 	if (hglrc != NULL) {
-#ifdef _DEBUG
-		printf("Delete GL context\n");
-#endif
+		printfDebug("Deleting GL context\n");
 		wglDeleteContext(hglrc); 
 		hglrc = NULL;
 	}

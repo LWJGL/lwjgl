@@ -7,15 +7,15 @@
  * met:
  * 
  * * Redistributions of source code must retain the above copyright 
- *   notice, this list of conditions and the following disclaimer.
+ *	 notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
+ *	 notice, this list of conditions and the following disclaimer in the
+ *	 documentation and/or other materials provided with the distribution.
  *
  * * Neither the name of 'Light Weight Java Game Library' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
- *   from this software without specific prior written permission.
+ *	 its contributors may be used to endorse or promote products derived 
+ *	 from this software without specific prior written permission.
  * * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -41,7 +41,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "org_lwjgl_input_Mouse.h"
 #include <windows.h>
-#undef  DIRECTINPUT_VERSION
+#undef	DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0300
 #include "Window.h"
 #include "common_tools.h"
@@ -49,11 +49,11 @@
 
 static BYTE readBuffer[EVENT_BUFFER_SIZE];
 
-static LPDIRECTINPUTDEVICE mDIDevice;        // DI Device instance
-static int mButtoncount = 0;                 // Temporary buttoncount
-static bool mHaswheel;                       // Temporary wheel check
+static LPDIRECTINPUTDEVICE mDIDevice;				// DI Device instance
+static int mButtoncount = 0;								 // Temporary buttoncount
+static bool mHaswheel;											 // Temporary wheel check
 
-static bool mCreate_success;                 // bool used to determine successfull creation
+static bool mCreate_success;								 // bool used to determine successfull creation
 static bool mFirstTimeInitialization = true; // boolean to determine first time initialization
 
 // Cached fields of Mouse.java
@@ -90,8 +90,8 @@ static void getScreenClientRect(RECT* clientRect, RECT* windowRect)
  * Initializes any field ids
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs(JNIEnv * env, jclass clazz) {
-  /* Cache fields in Mouse */
-  CacheMouseFields(env, clazz);
+	/* Cache fields in Mouse */
+	CacheMouseFields(env, clazz);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
@@ -129,15 +129,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 	} else {
 		if(mCreate_success) {
 			/* Do setup of Mouse */
-			SetupMouse();   
+			SetupMouse();	 
 		}
 	}
 	/* Aquire the Mouse */
 	hr = mDIDevice->Acquire();
 	if(FAILED(hr)) {
-#if _DEBUG
-		printf("Failed to acquire mouse\n");
-#endif
+		printfDebug("Failed to acquire mouse\n");
 	}
 }
 
@@ -178,7 +176,7 @@ static int bufferButtons(int count, DIDEVICEOBJECTDATA *di_buffer) {
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
-  (JNIEnv * env, jclass clazz)
+	(JNIEnv * env, jclass clazz)
 {
 	
 	static DIDEVICEOBJECTDATA rgdod[EVENT_BUFFER_SIZE];
@@ -199,55 +197,41 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead
 	if (ret == DI_OK) {
 		return bufferButtons(bufsize, rgdod);
 	} else if (ret == DI_BUFFEROVERFLOW) { 
-#ifdef _DEBUG
-		printf("Buffer overflowed\n");
-#endif
+		printfDebug("Buffer overflowed\n");
 	} else if (ret == DIERR_INPUTLOST) {
-#ifdef _DEBUG
-		printf("Input lost\n");
-#endif
+		printfDebug("Input lost\n");
 	} else if (ret == DIERR_NOTACQUIRED) {
-#ifdef _DEBUG
-		printf("not acquired\n");
-#endif
+		printfDebug("not acquired\n");
 	} else if (ret == DIERR_INVALIDPARAM) {
-#ifdef _DEBUG
-		printf("invalid parameter\n");
-#endif
+		printfDebug("invalid parameter\n");
 	} else if (ret == DIERR_NOTBUFFERED) {
-#ifdef _DEBUG
-		printf("not buffered\n");
-#endif
+		printfDebug("not buffered\n");
 	} else if (ret == DIERR_NOTINITIALIZED) {
-#ifdef _DEBUG
-		printf("not inited\n");
-#endif
+		printfDebug("not inited\n");
 	} else {
-#ifdef _DEBUG
-		printf("unknown keyboard error\n");
-#endif
+		printfDebug("unknown keyboard error\n");
 	}
 	return 0;
 }
 
 /*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nIsNativeCursorSupported
+ * Class:		 org_lwjgl_input_Mouse
+ * Method:		nIsNativeCursorSupported
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
-  (JNIEnv *env, jclass clazz)
+	(JNIEnv *env, jclass clazz)
 {
 	return org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
 }
 
 /*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nSetNativeCursor
+ * Class:		 org_lwjgl_input_Mouse
+ * Method:		nSetNativeCursor
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
-  (JNIEnv *env, jclass clazz, jlong cursor_handle)
+	(JNIEnv *env, jclass clazz, jlong cursor_handle)
 {
 	if (mDIDevice == NULL)
 		throwException(env, "null device!");
@@ -288,30 +272,30 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 }
 
 /*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nGetMaxCursorSize
+ * Class:		 org_lwjgl_input_Mouse
+ * Method:		nGetMaxCursorSize
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
-  (JNIEnv *env, jclass clazz)
+	(JNIEnv *env, jclass clazz)
 {
 	return GetSystemMetrics(SM_CXCURSOR);
 }
 
 /*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nGetMaxCursorSize
+ * Class:		 org_lwjgl_input_Mouse
+ * Method:		nGetMaxCursorSize
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
-  (JNIEnv *env, jclass clazz)
+	(JNIEnv *env, jclass clazz)
 {
 	return GetSystemMetrics(SM_CXCURSOR);
 }
 
 /*
- * Class:     org_lwjgl_input_Mouse
- * Method:    nDestroy
+ * Class:		 org_lwjgl_input_Mouse
+ * Method:		nDestroy
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
@@ -320,25 +304,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass c
 }
 
 /*
- * Class:     org_lwjgl_input_Controller
- * Method:    nPoll
+ * Class:		 org_lwjgl_input_Controller
+ * Method:		nPoll
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
-  mDIDevice->Acquire();
-  UpdateMouseFields(env, clazz);
+	mDIDevice->Acquire();
+	UpdateMouseFields(env, clazz);
 }
 
 /**
  * Shutdown DI
  */
 void ShutdownMouse() {
-  // release device
-  if (mDIDevice != NULL) {
-    mDIDevice->Unacquire();
-    mDIDevice->Release();
-	  mDIDevice = NULL;
-  }
+	// release device
+	if (mDIDevice != NULL) {
+		mDIDevice->Unacquire();
+		mDIDevice->Release();
+		mDIDevice = NULL;
+	}
 }
 /**
  * Enumerates the capabilities of the Mouse attached to the system
@@ -347,21 +331,17 @@ void EnumerateMouseCapabilities() {
 	HRESULT hr;
 	hr = mDIDevice->EnumObjects(EnumMouseObjectsCallback, NULL, DIDFT_ALL);
 	if FAILED(hr) { 
-#if _DEBUG
-		printf("EnumObjects failed\n");
-#endif
+		printfDebug("EnumObjects failed\n");
 		mCreate_success = false;
 		return;
 	}
-  
+	
 	//check for > 4 buttons - need to clamp since we're using dx 5
 	if(mButtoncount > 4) {
 		mButtoncount = 4;
-#ifdef _DEBUG
-		printf("WARNING: Clamping to 4 mouse buttons\n");
-#endif
+		printfDebug("WARNING: Clamping to 4 mouse buttons\n");
 	}
-  
+	
 	mCreate_success = true;
 }
 
@@ -369,51 +349,43 @@ void EnumerateMouseCapabilities() {
  * Callback from EnumObjects. Called for each "object" on the Mouse.
  */
 BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef) {
-#if _DEBUG
-  printf("found %s\n", lpddoi->tszName);
-#endif
-  if(lpddoi->guidType == GUID_Button) {
-    mButtoncount++;
-  } else if(lpddoi->guidType == GUID_XAxis) {
-  } else if(lpddoi->guidType == GUID_YAxis) {
-  } else if(lpddoi->guidType == GUID_ZAxis) {
-    mHaswheel = true;
-#if _DEBUG
-  } else {
-    printf("Unhandled object found: %s\n", lpddoi->tszName);
-#endif
-  }
-  return DIENUM_CONTINUE;
+	printfDebug("found %s\n", lpddoi->tszName);
+	if(lpddoi->guidType == GUID_Button) {
+		mButtoncount++;
+	} else if(lpddoi->guidType == GUID_XAxis) {
+	} else if(lpddoi->guidType == GUID_YAxis) {
+	} else if(lpddoi->guidType == GUID_ZAxis) {
+		mHaswheel = true;
+	} else {
+		printfDebug("Unhandled object found: %s\n", lpddoi->tszName);
+	}
+	return DIENUM_CONTINUE;
 }
 
 /**
  * Creates the specified device as a Mouse
  */
 void CreateMouse() {
-  HRESULT hr;
-  hr = lpdi->CreateDevice(GUID_SysMouse, &mDIDevice, NULL);
-  if FAILED(hr) {	
-#if _DEBUG
-    printf("CreateDevice failed\n");
-#endif
-    mCreate_success = false;
-    return;
-  }
-  mCreate_success = true;
+	HRESULT hr;
+	hr = lpdi->CreateDevice(GUID_SysMouse, &mDIDevice, NULL);
+	if FAILED(hr) {	
+		printfDebug("CreateDevice failed\n");
+		mCreate_success = false;
+		return;
+	}
+	mCreate_success = true;
 }
 
 /**
  * Sets up the Mouse properties
  */ 
 void SetupMouse() {
-  // set Mouse data format
-  if(mDIDevice->SetDataFormat(&c_dfDIMouse) != DI_OK) {
-#if _DEBUG
-    printf("SetDataFormat failed\n");
-#endif
-    mCreate_success = false;
-    return;
-  }
+	// set Mouse data format
+	if(mDIDevice->SetDataFormat(&c_dfDIMouse) != DI_OK) {
+		printfDebug("SetDataFormat failed\n");
+		mCreate_success = false;
+		return;
+	}
 
 	DIPROPDWORD dipropdw;
 	dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
@@ -424,14 +396,12 @@ void SetupMouse() {
 	mDIDevice->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
 
 	// set the cooperative level
-  if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-#if _DEBUG
-    printf("SetCooperativeLevel failed\n");
-#endif
-    mCreate_success = false;
-    return;
-  }
-  mCreate_success = true;
+	if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+		printfDebug("SetCooperativeLevel failed\n");
+		mCreate_success = false;
+		return;
+	}
+	mCreate_success = true;
 }
 
 static int cap(int val, int min, int max) {
@@ -471,8 +441,8 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
  * Updates the fields on the Mouse
  */
 static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
-	HRESULT                 hRes; 
-	DIMOUSESTATE diMouseState;            // State of Mouse
+	HRESULT								 hRes; 
+	DIMOUSESTATE diMouseState;						// State of Mouse
 	int dx, dy;
 
 	// get data from the Mouse 
@@ -486,13 +456,8 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
 		// if so, then attempt to reacquire. 
 		if(hRes == DIERR_INPUTLOST || hRes == DIERR_NOTACQUIRED) {
 			mDIDevice->Acquire();
-#if _DEBUG
-			//printf("DIERR_INPUTLOST, reaquiring input : mCreate_success=%d\n", mCreate_success);
-#endif
 		} else {
-#if _DEBUG
-			printf("Error getting mouse state: %d\n", hRes);
-#endif
+			printfDebug("Error getting mouse state: %d\n", hRes);
 		}
 	}
 
@@ -523,8 +488,8 @@ static void UpdateMouseFields(JNIEnv *env, jclass clsMouse) {
  * Caches the field ids for quicker access
  */
 void CacheMouseFields(JNIEnv* env, jclass clsMouse) {
-  fidMButtons      = env->GetStaticFieldID(clsMouse, "buttons", "[B");
-  fidMDX           = env->GetStaticFieldID(clsMouse, "dx", "I");
-  fidMDY           = env->GetStaticFieldID(clsMouse, "dy", "I");
-  fidMDWheel       = env->GetStaticFieldID(clsMouse, "dwheel", "I");
+	fidMButtons	= env->GetStaticFieldID(clsMouse, "buttons", "[B");
+	fidMDX		= env->GetStaticFieldID(clsMouse, "dx", "I");
+	fidMDY		= env->GetStaticFieldID(clsMouse, "dy", "I");
+	fidMDWheel	= env->GetStaticFieldID(clsMouse, "dwheel", "I");
 }

@@ -43,6 +43,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include "org_lwjgl_Sys.h"
+#include "common_tools.h"
 
 static long int		hires_timer_freq;			// Hires timer frequency
 static long int		hires_timer_start;			// Hires timer start
@@ -62,13 +63,15 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 static long queryTime(void) {
 	struct timeval tv;
 	if (gettimeofday(&tv, NULL) == -1) {
-#ifdef _DEBUG
-		printf("Could not read current time\n");
-#endif
+		printfDebug("Could not read current time\n");
 	}
 	long result = tv.tv_sec * 1000000l + tv.tv_usec;
 
 	return result;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugLevel(JNIEnv *env, jclass clazz, jint debug_level) {
+	setDebugLevel(debug_level);
 }
 
 /*
@@ -114,9 +117,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 		// Reset scheduler to normal
 		sched_pri.sched_priority = 0;
 		if (sched_setscheduler(0, SCHED_OTHER, &sched_pri) != 0) {
-#ifdef _DEBUG
-			printf("Could not set realtime priority\n");
-#endif
+			printfDebug("Could not set realtime priority\n");
 			return;
 		}
 	}
@@ -126,16 +127,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 		min_pri = sched_get_priority_min(SCHED_FIFO);
 		max_pri = sched_get_priority_max(SCHED_FIFO);
 		if (min_pri == -1 || max_pri == -1) {
-#ifdef _DEBUG
-			printf("Failed to set realtime priority\n");
-#endif
+			printfDebug("Failed to set realtime priority\n");
 			return;
 		}
 		sched_pri.sched_priority = (max_pri + min_pri)/2;
 		if (sched_setscheduler(0, SCHED_FIFO, &sched_pri) != 0) {
-#ifdef _DEBUG
-			printf("Could not set realtime priority\n");
-#endif
+			printfDebug("Could not set realtime priority\n");
 			return;
 		}
 		return;
@@ -153,9 +150,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 	}
 
 	if (setpriority(PRIO_PROCESS, 0, linux_priority) == -1) {
-#ifdef _DEBUG
-		printf("Failed to set priority.\n");
-#endif
+		printfDebug("Failed to set priority.\n");
 	}
 }
 

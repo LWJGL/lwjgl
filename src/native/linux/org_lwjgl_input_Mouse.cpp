@@ -122,9 +122,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 static bool blankCursor(void) {
 	unsigned int best_width, best_height;
 	if (XQueryBestCursor(getCurrentDisplay(), getCurrentWindow(), 1, 1, &best_width, &best_height) == 0) {
-#ifdef _DEBUG
-		printf("Could not query best cursor size\n");
-#endif
+		printfDebug("Could not query best cursor size\n");
 		return false;
 	}
 	Pixmap mask = XCreatePixmap(getCurrentDisplay(), getCurrentWindow(), best_width, best_height, 1);
@@ -201,14 +199,10 @@ static void doWarpPointer(void ) {
 			event.xmotion.y > current_y - POINTER_WARP_BORDER &&
 			event.xmotion.y < current_y + POINTER_WARP_BORDER)
 			break;
-#ifdef _DEBUG
-		printf("Skipped event searching for warp event %d, %d\n", event.xmotion.x, event.xmotion.y);
-#endif
+		printfDebug("Skipped event searching for warp event %d, %d\n", event.xmotion.x, event.xmotion.y);
 	}
-#ifdef _DEBUG
 	if (i == WARP_RETRY)
-		printf("Never got warp event\n");
-#endif
+		printfDebug("Never got warp event\n");
 }
 
 static void warpPointer(void) {

@@ -33,9 +33,10 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 */						 
 
-#include "extgl.h"
 #include <stdio.h>
 #include <string.h>
+#include "extgl.h"
+#include "common_tools.h"
 
 /* turn off the warning for the borland compiler*/
 #ifdef __BORLANDC__
@@ -1338,9 +1339,7 @@ static CFBundleRef loadBundle(const Str255 frameworkName)
 	err = FindFolder (kSystemDomain, kFrameworksFolderType, false, &fileRefParam.ioVRefNum, &fileRefParam.ioDirID);
 	if (noErr != err)
 	{
-#ifdef _DEBUG
-		printf("Could not find frameworks folder\n");
-#endif
+		printfDebug("Could not find frameworks folder\n");
 		return NULL;
 	}
 
@@ -1351,9 +1350,7 @@ static CFBundleRef loadBundle(const Str255 frameworkName)
 
 	if (noErr != err)
 	{
-#ifdef _DEBUG
-		printf("Could make FSref to frameworks folder\n");
-#endif
+		printfDebug("Could make FSref to frameworks folder\n");
 		return NULL;
 	}
 
@@ -1362,9 +1359,7 @@ static CFBundleRef loadBundle(const Str255 frameworkName)
 	bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault, &fileRef);
 	if (!bundleURLOpenGL)
 	{
-#ifdef _DEBUG
-		printf("Could create framework URL\n");
-#endif
+		printfDebug("Could create framework URL\n");
 		return NULL;
 	}
 
@@ -1372,18 +1367,14 @@ static CFBundleRef loadBundle(const Str255 frameworkName)
 	CFRelease (bundleURLOpenGL);
 	if (bundle_ref == NULL)
 	{
-#ifdef _DEBUG
-		printf("Could not load framework\n");
-#endif
+		printfDebug("Could not load framework\n");
 		return NULL;
 	}
 
 	// if the code was successfully loaded, look for our function.
 	if (!CFBundleLoadExecutable(bundle_ref))
 	{
-#ifdef _DEBUG
-		printf("Could not load MachO executable\n");
-#endif
+		printfDebug("Could not load MachO executable\n");
 		CFRelease(bundle_ref);
 		return NULL;
 	}
@@ -1412,9 +1403,7 @@ static void *extgl_GetProcAddress(char *name)
 		{
 			t = GetProcAddress(lib_glu_handle, name);
 			if (t == NULL) {
-#ifdef _DEBUG
-				printf("Could not locate symbol %s\n", name);
-#endif
+				printfDebug("Could not locate symbol %s\n", name);
 				extgl_error = true;
 			}
 		}
@@ -1431,9 +1420,7 @@ static void *extgl_GetProcAddress(char *name)
 		{
 			t = dlsym(lib_glu_handle, name);
 			if (t == NULL) {
-#ifdef _DEBUG
-				printf("Could not locate symbol %s\n", name);
-#endif
+				printfDebug("Could not locate symbol %s\n", name);
 				extgl_error = true;
 			}
 		}
@@ -1447,9 +1434,7 @@ static void *extgl_GetProcAddress(char *name)
 	if (func_pointer == NULL) {
 		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
 		if (func_pointer == NULL) {
-#ifdef _DEBUG
-			printf("Could not locate symbol %s\n", name);
-#endif
+			printfDebug("Could not locate symbol %s\n", name);
 			extgl_error = true;
 		}
 	}
@@ -1464,9 +1449,7 @@ static bool QueryExtension(JNIEnv *env, jobject ext_set, const GLubyte*extension
 	GLubyte *where, *terminator;
 
 	if (extensions == NULL) {
-#ifdef _DEBUG
-		printf("NULL extension string\n");
-#endif
+		printfDebug("NULL extension string\n");
 		extgl_error = true;
 		return false;
 	}
@@ -3308,16 +3291,12 @@ bool extgl_Open()
 {
 	lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
 	if (lib_gl_handle == NULL) {
-#ifdef _DEBUG
-	printf("Error loading libGL.so.1: %s\n", dlerror());
-#endif
+		printfDebug("Error loading libGL.so.1: %s\n", dlerror());
 		return false;
 	}
 	lib_glu_handle = dlopen("libGLU.so.1", RTLD_LAZY | RTLD_GLOBAL);
 	if (lib_glu_handle == NULL) {
-#ifdef _DEBUG
-	printf("Error loading libGLU.so.1: %s\n", dlerror());
-#endif
+		printfDebug("Error loading libGLU.so.1: %s\n", dlerror());
 		dlclose(lib_gl_handle);
 		return false;
 	}

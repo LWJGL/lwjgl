@@ -61,20 +61,14 @@ static bool getVidModeExtensionVersion(Display *disp, int screen, int *major, in
 	int event_base, error_base;
 	
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
-#ifdef _DEBUG
-		printf("XF86VidMode extension not available\n");
-#endif
+		printfDebug("XF86VidMode extension not available\n");
 		return false;
 	}
 	if (!XF86VidModeQueryVersion(disp, major, minor)) {
-#ifdef _DEBUG
-		printf("Could not determine XF86VidMode version\n");
-#endif
+		printfDebug("Could not determine XF86VidMode version\n");
 		return false;
 	}
-#ifdef _DEBUG
-	printf("XF86VidMode extension version %i.%i\n", *major, *minor);
-#endif
+	printfDebug("XF86VidMode extension version %i.%i\n", *major, *minor);
 	return true;
 }
 
@@ -90,24 +84,17 @@ static bool setMode(Display *disp, int screen, int width, int height, bool lock_
         int num_modes, i;
         XF86VidModeModeInfo **avail_modes;
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
-#ifdef _DEBUG
-		printf("Could not get display modes\n");
-#endif
+		printfDebug("Could not get display modes\n");
 		return false;
 	}
 	XF86VidModeLockModeSwitch(disp, screen, 0);
 	for ( i = 0; i < num_modes; ++i ) {
-#ifdef _DEBUG
-		printf("Mode %d: %dx%d\n", i, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay);
-#endif
+		printfDebug("Mode %d: %dx%d\n", i, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay);
 		if (avail_modes[i]->hdisplay == width && avail_modes[i]->vdisplay == height) {
 			if (!XF86VidModeSwitchToMode(disp, screen, avail_modes[i])) {
-#ifdef _DEBUG
-				printf("Could not switch mode\n");
-#endif
+				printfDebug("Could not switch mode\n");
 				break;
 			}
-//			XF86VidModeSetViewPort(disp, screen, 0, 0);
 			if (lock_mode)
 				XF86VidModeLockModeSwitch(disp, screen, 1);
 			XFree(avail_modes);
@@ -131,15 +118,11 @@ static void freeSavedGammaRamps() {
 static int getGammaRampLength(Display *disp, int screen) {
 	int minor_ver, major_ver, ramp_size;
 	if (!getVidModeExtensionVersion(disp, screen, &major_ver, &minor_ver) || major_ver < 2) {
-#ifdef _DEBUG
-		printf("XF86VidMode extension version >= 2 not found\n");
-#endif
+		printfDebug("XF86VidMode extension version >= 2 not found\n");
 		return 0;
 	}
 	if (XF86VidModeGetGammaRampSize(disp, screen, &ramp_size) == False) {
-#ifdef _DEBUG
-		printf("XF86VidModeGetGammaRampSize call failed\n");
-#endif
+		printfDebug("XF86VidModeGetGammaRampSize call failed\n");
 		return 0;
 	}
 	return ramp_size;
@@ -153,24 +136,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	int screen;
 	Display *disp = XOpenDisplay(NULL);
         if (disp == NULL) {
-#ifdef _DEBUG
-                printf("Could not open X connection\n");
-#endif
+                printfDebug("Could not open X connection\n");
 		return;
         }
 	screen = DefaultScreen(disp);
 	
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
-#ifdef _DEBUG
-		printf("Could not get display modes\n");
-#endif
+		printfDebug("Could not get display modes\n");
 	}
 	saved_width = avail_modes[0]->hdisplay;
 	saved_height = avail_modes[0]->vdisplay;
 	int bpp = XDefaultDepth(disp, screen);
-#ifdef _DEBUG
-	printf("Saved width, height %d, %d\n", saved_width, saved_height);
-#endif
+	printfDebug("Saved width, height %d, %d\n", saved_width, saved_height);
 	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
 	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
 	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, saved_width, saved_height, bpp, 0);
@@ -218,9 +195,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv * env, jcl
 	Display *disp = XOpenDisplay(NULL);
 
 	if (disp == NULL) {
-#ifdef _DEBUG
-		printf("Could not open X connection\n");
-#endif
+		printfDebug("Could not open X connection\n");
 		return;
 	}
 	screen = DefaultScreen(disp);
@@ -232,11 +207,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv * env, jcl
 	XCloseDisplay(disp);
 }
 
-/*
- * Class:     org_lwjgl_Display
- * Method:    nGetAvailableDisplayModes
- * Signature: ()[Lorg/lwjgl/DisplayMode;
- */
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
   (JNIEnv * env, jclass clazz)
 {
@@ -246,9 +216,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	XF86VidModeModeInfo **avail_modes;
 
 	if (disp == NULL) {
-#ifdef _DEBUG
-		printf("Could not open X connection\n");
-#endif
+		printfDebug("Could not open X connection\n");
 		return NULL;
 	}
 	
@@ -256,9 +224,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	int bpp = XDefaultDepth(disp, screen);
 	
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
-#ifdef _DEBUG
-		printf("Could not get display modes\n");
-#endif
+		printfDebug("Could not get display modes\n");
 		XCloseDisplay(disp);
 		return NULL;
 	}

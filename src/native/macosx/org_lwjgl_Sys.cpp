@@ -44,6 +44,7 @@
 #include <sys/resource.h>
 #include <Carbon/Carbon.h>
 #include "org_lwjgl_Sys.h"
+#include "common_tools.h"
 
 long int		hires_timer_freq;			// Hires timer frequency
 long int		hires_timer_start;			// Hires timer start
@@ -63,13 +64,15 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 static long queryTime(void) {
     struct timeval tv;
     if (gettimeofday(&tv, NULL) == -1) {
-#ifdef _DEBUG
-        printf("Could not read current time\n");
-#endif
+        printfDebug("Could not read current time\n");
     }
     long result = tv.tv_sec * 1000000l + tv.tv_usec;
 
     return result;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugLevel(JNIEnv *env, jclass clazz, jint debug_level) {
+	setDebugLevel(debug_level);
 }
 
 /*
@@ -107,9 +110,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 (JNIEnv * env, jclass clazz, jint priority)
 {
-#ifdef _DEBUG
-    printf("Unsupported\n");
-#endif
+    printfDebug("WARNING: setProcessPriority unsupported\n");
 }
 
 /*

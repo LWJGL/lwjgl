@@ -41,6 +41,7 @@
 
 #include <windows.h>
 #include "org_lwjgl_Sys.h"
+#include "common_tools.h"
 
 // Handle to the application's window
 extern HWND hwnd;
@@ -58,6 +59,10 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
   (JNIEnv * env, jclass clazz)
 {
 	return hires_timer_freq;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugLevel(JNIEnv *env, jclass clazz, jint debug_level) {
+	setDebugLevel(debug_level);
 }
 
 /*
@@ -115,9 +120,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 	}
 
 	if (!SetPriorityClass(me, win32priority)) {
-#ifdef _DEBUG
-		printf("Failed to set priority class.\n");
-#endif
+		printfDebug("Failed to set priority class.\n");
 	}
 }
 
@@ -134,9 +137,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
 	const char * cTitleBarText = env->GetStringUTFChars(title, &copy);
 	MessageBox(hwnd, eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
-#ifdef _DEBUG
-	printf("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
-#endif
+	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	
 	env->ReleaseStringUTFChars(message, eMessageText);
 	env->ReleaseStringUTFChars(title, cTitleBarText);
@@ -170,33 +171,31 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 	strncat(command, urlString, 200); // Prevent buffer overflow
 	env->ReleaseStringUTFChars(url, urlString);
 
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+	PROCESS_INFORMATION pi;
 
-    ZeroMemory( &si, sizeof(si) );
-    si.cb = sizeof(si);
-    ZeroMemory( &pi, sizeof(pi) );
+	ZeroMemory( &si, sizeof(si) );
+	si.cb = sizeof(si);
+	ZeroMemory( &pi, sizeof(pi) );
 
-    // Start the child process. 
-    if( !CreateProcess( NULL, // No module name (use command line). 
-        command,		  // Command line. 
-        NULL,             // Process handle not inheritable. 
-        NULL,             // Thread handle not inheritable. 
-        FALSE,            // Set handle inheritance to FALSE. 
-        0,                // No creation flags. 
-        NULL,             // Use parent's environment block. 
-        NULL,             // Use parent's starting directory. 
-        &si,              // Pointer to STARTUPINFO structure.
-        &pi )             // Pointer to PROCESS_INFORMATION structure.
-    ) 
-    {
-#ifdef _DEBUG
-		printf("Failed to open URL %s\n", urlString);
-#endif
-    }
+	// Start the child process. 
+	if( !CreateProcess( NULL, // No module name (use command line). 
+		command,		  // Command line. 
+		NULL,			 // Process handle not inheritable. 
+		NULL,			 // Thread handle not inheritable. 
+		FALSE,			// Set handle inheritance to FALSE. 
+		0,				// No creation flags. 
+		NULL,			 // Use parent's environment block. 
+		NULL,			 // Use parent's starting directory. 
+		&si,			  // Pointer to STARTUPINFO structure.
+		&pi )			 // Pointer to PROCESS_INFORMATION structure.
+	) 
+	{
+		printfDebug("Failed to open URL %s\n", urlString);
+	}
 
-    // Close process and thread handles. 
-    CloseHandle( pi.hProcess );
-    CloseHandle( pi.hThread );
+	// Close process and thread handles. 
+	CloseHandle( pi.hProcess );
+	CloseHandle( pi.hThread );
 
 }

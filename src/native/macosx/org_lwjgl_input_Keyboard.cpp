@@ -70,16 +70,12 @@ static bool handleMappedKey(unsigned char mapped_code, unsigned char state) {
 
 static bool handleKey(UInt32 key_code, unsigned char state) {
 	if (key_code >= KEYBOARD_SIZE) {
-#ifdef _DEBUG
-		printf("Key code >= %d %x\n", KEYBOARD_SIZE, (unsigned int)key_code);
-#endif
+		printfDebug("Key code >= %d %x\n", KEYBOARD_SIZE, (unsigned int)key_code);
 		return false;
 	}
 	unsigned char mapped_code = key_map[key_code];
 	if (mapped_code == 0) {
-#ifdef _DEBUG
-		printf("unknown key code: %x\n", (unsigned int)key_code);
-#endif
+		printfDebug("unknown key code: %x\n", (unsigned int)key_code);
 		return false;
 	}
 	return handleMappedKey(mapped_code, state);
@@ -133,9 +129,7 @@ static bool handleTranslation(EventRef event, bool state) {
 	KeyboardLayoutRef layout;
 	OSStatus err = KLGetCurrentKeyboardLayout(&layout);
 	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get current keyboard layout\n");
-#endif
+		printfDebug("Could not get current keyboard layout\n");
 		return false;
 	}
 
@@ -149,9 +143,7 @@ static bool handleTranslation(EventRef event, bool state) {
 	success = success && GetEventParameter(event, kEventParamKeyboardType, typeUInt32, NULL, sizeof(keyboardType), NULL, &keyboardType) == noErr;
 	success = success && GetEventParameter(event, kEventParamKeyModifiers, typeUInt32, NULL, sizeof(modifierKeyState), NULL, &modifierKeyState) == noErr;
 	if (!success) {
-#ifdef _DEBUG
-		printf("Could not get event parameters for character translation\n");
-#endif
+		printfDebug("Could not get event parameters for character translation\n");
 		return false;
 	}
 	err = KLGetKeyboardLayoutProperty(layout, kKLuchrData, (const void **)&uchrHandle);
@@ -183,9 +175,7 @@ static bool handleTranslation(EventRef event, bool state) {
 			if (state)
 				return writeAsciiChars(count, ascii_buffer);
 		} else {
-#ifdef _DEBUG
-			printf("Could not translate key\n");
-#endif
+			printfDebug("Could not translate key\n");
 			return false;
 		}
 	}
@@ -196,9 +186,7 @@ static void doKeyDown(EventRef event) {
 	UInt32 key_code;
 	OSStatus err = GetEventParameter(event, kEventParamKeyCode, typeUInt32, NULL, sizeof(key_code), NULL, &key_code);
 	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get event key code\n");
-#endif
+		printfDebug("Could not get event key code\n");
 		return;
 	}
 	if (handleKey(key_code, 1) && !handleTranslation(event, true)) {
@@ -211,9 +199,7 @@ static void doKeyUp(EventRef event) {
 	UInt32 key_code;
 	OSStatus err = GetEventParameter(event, kEventParamKeyCode, typeUInt32, NULL, sizeof(key_code), NULL, &key_code);
 	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get event key code\n");
-#endif
+		printfDebug("Could not get event key code\n");
 		return;
 	}
 	if (handleKey(key_code, 0) && !handleTranslation(event, false)) {
@@ -236,9 +222,7 @@ static void doKeyModifier(EventRef event) {
 	UInt32 modifier_bits;
 	OSStatus err = GetEventParameter(event, kEventParamKeyModifiers, typeUInt32, NULL, sizeof(modifier_bits), NULL, &modifier_bits);
 	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get event key code\n");
-#endif
+		printfDebug("Could not get event key code\n");
 		return;
 	}
 	handleModifier(modifier_bits, controlKey, 0x1d);

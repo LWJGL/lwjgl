@@ -8,6 +8,10 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
+#undef org_lwjgl_Sys_DEBUG_DISABLED
+#define org_lwjgl_Sys_DEBUG_DISABLED 1L
+#undef org_lwjgl_Sys_DEBUG_ENABLED
+#define org_lwjgl_Sys_DEBUG_ENABLED 2L
 #undef org_lwjgl_Sys_LOW_PRIORITY
 #define org_lwjgl_Sys_LOW_PRIORITY -1L
 #undef org_lwjgl_Sys_NORMAL_PRIORITY
@@ -18,8 +22,15 @@ extern "C" {
 #define org_lwjgl_Sys_REALTIME_PRIORITY 2L
 /* Inaccessible static: LIBRARY_NAME */
 /* Inaccessible static: DEBUG */
-/* Inaccessible static: _debug */
 /* Inaccessible static: class_00024org_00024lwjgl_00024Sys */
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    setDebugLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugLevel
+  (JNIEnv *, jclass, jint);
+
 /*
  * Class:     org_lwjgl_Sys
  * Method:    getTimerResolution

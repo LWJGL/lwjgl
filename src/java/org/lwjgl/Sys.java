@@ -47,6 +47,9 @@ import org.lwjgl.input.Mouse;
  * @version $Revision$
  */
 public final class Sys {
+	/** Debug level constants */
+	public static final int DEBUG_DISABLED = 1;
+	public static final int DEBUG_ENABLED = 2;
 
 	/** Low process priority. @see #setProcessPriority() */
 	public static final int LOW_PRIORITY = -1;
@@ -78,38 +81,26 @@ public final class Sys {
 	public static final int REALTIME_PRIORITY = 2;
 
 	/** The native library name */
-	private static String LIBRARY_NAME;
+	private static String LIBRARY_NAME = "lwjgl";
 	
 	/**
-	 * Debug flag. This will tell you if you are using the debug version of
+	 * Debug level. This will tell you if you are using the debug version of
 	 * the library, and whether assertions are enabled or not.
 	 */
-	public static final boolean DEBUG;
+	public static final int DEBUG;
 
-	/**
-	 * The ByteBuffer equivalent of the native NULL constant
-	 */
-//	public static final ByteBuffer NULL;
-	
-	
-	private static boolean _debug;
 	static {
+		int _debug = DEBUG_DISABLED;
 		try {
 			assert false;
-			LIBRARY_NAME = "lwjgl";
-			_debug = false;
 		} catch (AssertionError e) {
-			// Assertions are enabled, so we'll use the debug version of the
-			// library
-			LIBRARY_NAME = "lwjgl_d";
-			_debug = true;
+			// Assertions are enabled, so we'll enabled debugging
+			_debug = DEBUG_ENABLED;
 		} finally {
 			DEBUG = _debug;
 			initialize();
 		}
 	}
-	
-	
 
 	/**
 	 * @return the name of the native library to load
@@ -124,11 +115,16 @@ public final class Sys {
 	private Sys() {
 	}
 	
+	public static boolean atDebugLevel() {
+		return DEBUG >= DEBUG_ENABLED;
+	}
+
 	/**
 	 * Initialization.
 	 */
 	private static void initialize() {
 		System.loadLibrary(LIBRARY_NAME);
+		setDebugLevel(DEBUG);
 		setTime(0);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -144,6 +140,11 @@ public final class Sys {
 		});
 		
 	}
+
+	/**
+         * Set the debug level of the native library
+	 */
+	private static native void setDebugLevel(int level);
 
 	/**
 	 * Obtains the number of ticks that the hires timer does in a second.

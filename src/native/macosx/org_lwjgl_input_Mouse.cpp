@@ -70,9 +70,7 @@ static bool created;
 
 static void handleButton(unsigned char button_index, jbyte state) {
 	if (button_index >= NUM_BUTTONS) {
-#ifdef _DEBUG
-		printf("Button index %d out of range [0..%d]\n", button_index, NUM_BUTTONS);
-#endif
+		printfDebug("Button index %d out of range [0..%d]\n", button_index, NUM_BUTTONS);
 		return;
 	}
 	button_states[button_index] = state;
@@ -108,9 +106,7 @@ cont:
 				}
 			}
 		}
-#ifdef _DEBUG
-		printf("Recieved an unknown HID device event\n");
-#endif
+		printfDebug("Recieved an unknown HID device event\n");
 	}
 }
 */
@@ -124,9 +120,7 @@ static void handleButtonEvent(EventRef event, unsigned char state) {
 	EventMouseButton button;
 	OSStatus err = GetEventParameter(event, kEventParamMouseButton, typeMouseButton, NULL, sizeof(button), NULL, &button);
 	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get button parameter from event\n");
-#endif
+		printfDebug("Could not get button parameter from event\n");
 		return;
 	}
 	handleButton(button - 1, state);
@@ -136,9 +130,7 @@ static void handleMovedEvent(EventRef event) {
 	HIPoint delta;
 	OSStatus err = GetEventParameter(event, kEventParamMouseDelta, typeHIPoint, NULL, sizeof(delta), NULL, &delta);
 	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not delta parameter from event\n");
-#endif
+		printfDebug("Could not delta parameter from event\n");
 		return;
 	}
 	last_dx += (int)delta.x;
@@ -149,9 +141,7 @@ static void handleWheelEvent(EventRef event) {
 	long delta;
 	OSStatus err = GetEventParameter(event, kEventParamMouseWheelDelta, typeLongInteger, NULL, sizeof(delta), NULL, &delta);
 	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not delta parameter from event\n");
-#endif
+		printfDebug("Could not delta parameter from event\n");
 		return;
 	}
 	last_dz += (int)delta;

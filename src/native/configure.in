@@ -16,32 +16,22 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
 AC_PROG_CXX
-AC_ARG_ENABLE(debug,
-AC_HELP_STRING([--disable-debug], [Disable debug build]),
-[build_debug=$enableval], [build_debug=no])
-
-if test $build_debug = yes; then
-  DEBUG_FLAGS=-D_DEBUG
-else
-  DEBUG_FLAGS=
-fi
-
 AC_CANONICAL_HOST
 
 case "$host_os" in
         darwin*)        _BUILD_FLAGS="-D_AGL -fpascal-strings"
 	                LDFLAGS="-Xlinker -framework -Xlinker JavaVM -Xlinker -framework -Xlinker ApplicationServices -Xlinker -framework -Xlinker CoreServices -Xlinker -framework -Xlinker Carbon"
 			NATIVE_BUILD_DIR=macosx
-                        CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
-                        CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
+                        CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
+                        CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
                         ;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
                                    AC_LIBTOOL_DLOPEN
                                    _BUILD_FLAGS="-pthread -D_X11 $X_CFLAGS"
                                    AC_CHECK_HEADERS([AL/altypes.h AL/alctypes.h],, AC_MSG_ERROR([OpenAL headers required]))
 				   NATIVE_BUILD_DIR=linux
-                                   CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
-                                   CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
+                                   CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
+                                   CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
                                    LIBS="$LIBS $X_LIBS"
                                    AC_CHECK_LIB(X11, XOpenDisplay,, AC_MSG_ERROR(X11 is required))
                                    AC_CHECK_LIB(Xext, main,, AC_MSG_ERROR(Xext is required))
