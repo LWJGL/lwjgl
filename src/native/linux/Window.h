@@ -55,15 +55,12 @@
 	 */
 	extern bool releaseInput(void);
 
-	extern void resetCursor(int x, int y);
-
 	extern bool checkXError(JNIEnv *env);
-	
 	extern Atom getWarpAtom(void);
-
 	/*
 	 * Various functions to release/acquire keyboard and mouse
 	 */
+	extern void handleWarpEvent(XClientMessageEvent *);
 	extern void handlePointerMotion(XMotionEvent *);
 	extern void handleButtonPress(XButtonEvent *);
 	extern void handleButtonRelease(XButtonEvent *);

@@ -73,6 +73,14 @@ static unsigned short *g_ramp;
 static unsigned short *b_ramp;
 static extension current_extension = NONE;
 
+int getScreenModeWidth(void) {
+	return current_width;
+}
+
+int getScreenModeHeight(void) {
+	return current_height;
+}
+
 extension getCurrentDisplayModeExtension(void) {
 	return current_extension;
 }

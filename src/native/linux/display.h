@@ -46,6 +46,8 @@
 
 typedef enum {XRANDR, XF86VIDMODE, NONE} extension;
 
+extern int getScreenModeWidth(void);
+extern int getScreenModeHeight(void);
 extern jobject initDisplay(JNIEnv *env, int screen);
 extern void switchDisplayMode(JNIEnv * env, jobject mode, int screen);
 extern void resetDisplayMode(JNIEnv * env, int screen);

@@ -39,17 +39,16 @@
  * @version $Revision$
  */
 
-
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/xf86vmode.h>
+#include <X11/Xcursor/Xcursor.h>
 #include <assert.h>
 #include <string.h>
 #include "Window.h"
 #include "common_tools.h"
+#include "display.h"
 #include "org_lwjgl_input_Mouse.h"
-#include <X11/Xcursor/Xcursor.h>
-//#include "extxcursor.h"
 
 #define NUM_BUTTONS 3
 
@@ -61,12 +60,12 @@
 static bool pointer_grabbed;
 static bool created;
 
+static int dx;
+static int dy;
+static int dz;
 static int last_x;
 static int last_y;
 static int last_z;
-static int current_x;
-static int current_y;
-static int current_z;
 static jbyte buttons[NUM_BUTTONS];
 static event_queue_t event_queue;
 static bool buffer_enabled;
@@ -84,24 +83,21 @@ static int cap(int val, int min, int max) {
 }
 
 static void setCursorPos(int x, int y) {
-	current_x = cap(x, 0, getWindowWidth() - 1);
-	current_y = cap(y, 0, getWindowHeight() - 1);
+	int current_x = x;
+	int current_y = y;
+	dx += current_x - last_x;
+	dy += current_y - last_y;
+	last_x = current_x;
+	last_y = current_y;
 }
 
 static int transformY(int y) {
 	return getWindowHeight() - 1 - y;
 }
 
-static void transformCursorPos(int x, int y) {
-	// transform to OpenGL coordinate system center
-	y = transformY(y);
-	setCursorPos(x, y);
-}
-
-void resetCursor(int x, int y) {
-	transformCursorPos(x, y);
-	last_x = current_x;
-	last_y = current_y;
+static void resetCursor(int x, int y) {
+	last_x = x;
+	last_y = y;
 }
 
 static bool blankCursor(void) {
@@ -170,27 +166,21 @@ void updatePointerGrab(void) {
 	updateCursor();
 }
 
-static void doWarpPointer(void ) {
-	XEvent ignore_warp_guard;
-	ignore_warp_guard.type = ClientMessage;
-	ignore_warp_guard.xclient.message_type = getWarpAtom();
-	ignore_warp_guard.xclient.format = 8;
-	// Tell event loop to start ignoring motion events
-	ignore_warp_guard.xclient.data.b[0] = 1;
-	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
-	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, getWindowWidth()/2, transformY(getWindowHeight()/2));
-	// Tell event loop to stop ignoring motion events
-	ignore_warp_guard.xclient.data.b[0] = 0;
-	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
+void handleWarpEvent(XClientMessageEvent *event) {
+	int center_x = event->data.l[0];
+	int center_y = event->data.l[1];
+	resetCursor(center_x, center_y);
 }
 
-static void warpPointer(void) {
-	if (!pointer_grabbed || !shouldGrab())
-		return;
-	// Reset pointer to middle of screen if outside a certain inner border
-	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
-			current_x > getWindowWidth() - POINTER_WARP_BORDER || current_y > getWindowHeight() - POINTER_WARP_BORDER)
-		doWarpPointer();
+static void doWarpPointer(int center_x, int center_y) {
+	XEvent warp_event;
+	warp_event.type = ClientMessage;
+	warp_event.xclient.message_type = getWarpAtom();
+	warp_event.xclient.format = 32;
+	warp_event.xclient.data.l[0] = center_x;
+	warp_event.xclient.data.l[1] = center_y;
+	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &warp_event);
+	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, center_x, center_y);
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
@@ -247,7 +237,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	if (disp == NULL)
 		return;
 	int i;
-	current_z = last_z = 0;
+	last_z = last_y = last_x = dx = dy = dz = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor()) {
@@ -261,7 +251,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	buffer_enabled = false;
 	updatePointerGrab();
 	initEventQueue(&event_queue);
-	doWarpPointer();
+	doWarpPointer(getWindowWidth()/2, getWindowHeight()/2);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
@@ -299,10 +289,10 @@ static void handleButton(XButtonEvent *event, unsigned char state) {
 void handleButtonPress(XButtonEvent *event) {
 	switch (event->button) {
 		case Button4:
-			current_z += WHEEL_SCALE;
+			dz += WHEEL_SCALE;
 			break;
 		case Button5:
-			current_z -= WHEEL_SCALE;
+			dz -= WHEEL_SCALE;
 			break;
 		default: break;
 	}
@@ -313,14 +303,44 @@ void handleButtonRelease(XButtonEvent *event) {
 	handleButton(event, 0);
 }
 
+static int max(int v1, int v2) {
+	return v1 > v2 ? v1 : v2;
+}
+
+static int min(int v1, int v2) {
+	return v1 < v2 ? v1 : v2;
+}
+
 void handlePointerMotion(XMotionEvent *event) {
-	setCursorPos(event->x, event->y);
+	int x = event->x;
+	int y = event->y;
+	setCursorPos(x, y);
+	if (!pointer_grabbed || !shouldGrab())
+		return;
+	int x_root = event->x_root;
+	int y_root = event->y_root;
+	// find the window position in root coordinates
+	int win_left = x_root - x;
+	int win_top = y_root - y;
+	int win_right = win_left + getWindowWidth();
+	int win_bottom = win_top + getWindowHeight();
+	// cap the window position to the screen dimensions
+	int border_left = max(0, win_left);
+	int border_top = max(0, win_top);
+	int border_right = min(getScreenModeWidth(), win_right);
+	int border_bottom = min(getScreenModeHeight(), win_bottom);
+	// determine whether the cursor is outside the bounds
+	bool outside_limits = 	x_root < border_left + POINTER_WARP_BORDER || y_root < border_top + POINTER_WARP_BORDER ||
+							x_root > border_right - POINTER_WARP_BORDER || y_root > border_bottom - POINTER_WARP_BORDER;
+	if (outside_limits) {
+		// Find the center of the limits in window coordinates
+		int center_x = (border_right - border_left)/2;
+		int center_y = (border_bottom - border_top)/2;
+		doWarpPointer(center_x, center_y);
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
-	int moved_x = current_x - last_x;
-	int moved_y = -(current_y - last_y);
-	int moved_z = current_z - last_z;
 	int *coords = (int *)env->GetDirectBufferAddress(coord_buffer_obj);
 	int coords_length = env->GetDirectBufferCapacity(coord_buffer_obj);
 	unsigned char *buttons_buffer = (unsigned char *)env->GetDirectBufferAddress(button_buffer_obj);
@@ -329,18 +349,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
 		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
 		return;
 	}
-	coords[0] = moved_x;
-	coords[1] = moved_y;
-	coords[2] = moved_z;
-	last_x = current_x;
-	last_y = current_y;
-	last_z = current_z;
+	coords[0] = dx;
+	coords[1] = -dy;
+	coords[2] = dz;
+	dx = 0;
+	dy = 0;
+	dz = 0;
 	int num_buttons = NUM_BUTTONS;
 	if (num_buttons > buttons_length)
 		num_buttons = buttons_length;
 	for (int i = 0; i < num_buttons; i++)
 		buttons_buffer[i] = buttons[i];
-	warpPointer();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, jclass clazz) {

@@ -88,7 +88,6 @@ static bool minimized;
 static bool focused;
 static bool closerequested;
 static bool grab;
-static bool ignore_motion_events;
 
 static int current_screen;
 static Display *display_connection = NULL;
@@ -103,10 +102,6 @@ GLXFBConfig getCurrentGLXFBConfig(void) {
 
 GLXContext getCurrentGLXContext(void) {
 	return context;
-}
-
-Atom getWarpAtom(void) {
-	return warp_atom;
 }
 
 int getCurrentScreen(void) {
@@ -153,11 +148,15 @@ Display *incDisplay(JNIEnv *env) {
 				printfDebug("Could not open X display connection\n");
 			return NULL;
 		}
-		warp_atom = XInternAtom(getDisplay(), "ignore_warp_atom", False);
+		warp_atom = XInternAtom(display_connection, "_LWJGL_WARP", False);
 	}
 	async_x_error = false;
 	display_connection_usage++;
 	return display_connection;
+}
+
+Atom getWarpAtom(void) {
+	return warp_atom;
 }
 
 void decDisplay(void) {
@@ -231,14 +230,6 @@ void setGrab(bool new_grab) {
 	}
 }
 
-static void handleMotion(XMotionEvent *event) {
-	if (ignore_motion_events) {
-		resetCursor(event->x, event->y);
-	} else {
-		handlePointerMotion(event);
-	}
-}
-
 static void checkInput(void) {
 	Window win;
 	int revert_mode;
@@ -256,8 +247,8 @@ static void handleMessages() {
 		XNextEvent(getDisplay(), &event);
 		switch (event.type) {
 			case ClientMessage:
-				if (event.xclient.message_type == getWarpAtom()) {
-					ignore_motion_events = event.xclient.data.b[0] == 1 ? true : false;
+				if (event.xclient.message_type == warp_atom) {
+					handleWarpEvent(&(event.xclient));
 				} else if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					closerequested = true;
 				break;
@@ -289,7 +280,7 @@ static void handleMessages() {
 				handleButtonRelease(&(event.xbutton));
 				break;
 			case MotionNotify:
-				handleMotion(&(event.xmotion));
+				handlePointerMotion(&(event.xmotion));
 				break;
 			case KeyPress:
 			case KeyRelease:
@@ -351,7 +342,6 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	closerequested = false;
 	vsync_enabled = false;
 	grab = false;
-	ignore_motion_events = false;
 	Window root_win;
 	Window win;
 	XSetWindowAttributes attribs;
@@ -367,7 +357,7 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	attribs.background_pixel = 0xFF000000;
 	attribs.win_gravity = NorthWestGravity;
 	attribmask = CWColormap | CWBackPixel | CWEventMask | CWWinGravity;
-	if (isLegacyFullscreen()/* || undecorated*/) {
+	if (isLegacyFullscreen()) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
