@@ -623,6 +623,9 @@ public final class Window {
 
 	/**
 	 * Set the window's location. This is a no-op on fullscreen windows.
+	 * The window is clamped to remain entirely on the screen. If you attempt
+	 * to position the window such that it would extend off the screen, the window
+	 * is simply placed as close to the edge as possible.
 	 * @param x, y The new window location
 	 */
 	public static void setLocation(int x, int y) {
@@ -631,14 +634,16 @@ public final class Window {
 		if (fullscreen) {
 			return;
 		}
-		Window.x = x;
-		Window.y = y;
+		Window.x = Math.max(0, Math.min(Display.getWidth() - Window.width, x));
+		Window.y = Math.max(0, Math.min(Display.getHeight() - Window.height, y));
 		nReshape(Window.x, Window.y, Window.width, Window.height);
 	}
 
 	/**
 	 * Set the window's size. This is a no-op on fullscreen windows.
-	 * The window's size is clipped to the screen bounds.
+	 * The window is clamped to remain entirely on the screen. If you attempt
+	 * to position the window such that it would extend off the screen, the window
+	 * is simply placed as close to the edge as possible.
 	 * @param width, height The new window dimensions
 	 */
 	public static void setSize(int width, int height) {
@@ -647,13 +652,14 @@ public final class Window {
 		if (fullscreen) {
 			return;
 		}
-		Window.width = width;
-		Window.height = height;
+		Window.width = Math.max(0, Math.min(Display.getWidth() - Window.x, width));
+		Window.height = Math.max(0, Math.min(Display.getHeight() - Window.y, height));
 		nReshape(Window.x, Window.y, Window.width, Window.height);
 	}
 	
 	/**
-	 * Set the window's wounds. This is a no-op on fullscreen windows.
+	 * Set the window's bounds. This is a no-op on fullscreen windows.
+	 * The window is clamped to remain entirely on the screen.
 	 * @param x, y The new window location
 	 * @param width, height The new window dimensions
 	 */
@@ -663,10 +669,12 @@ public final class Window {
 		if (fullscreen) {
 			return;
 		}
-		Window.x = x;
-		Window.y = y;
-		Window.width = width;
-		Window.height = height;
+		width = Math.max(0, Math.min(Display.getWidth(), width));
+		height = Math.max(0, Math.min(Display.getHeight(), height));
+		Window.x = Math.max(0, Math.min(Display.getWidth() - width, x));
+		Window.y = Math.max(0, Math.min(Display.getHeight() - height, y));
+		Window.width = Math.max(0, Math.min(Display.getWidth() - Window.x, width));
+		Window.height = Math.max(0, Math.min(Display.getHeight() - Window.y, height));
 		nReshape(Window.x, Window.y, Window.width, Window.height);
 	}
 	
