@@ -308,6 +308,9 @@
 				Name="ext"
 				Filter="">
 				<File
+					RelativePath="..\..\src\native\common\ext\org_lwjgl_opengl_EXTBlendEquationSeparate.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\native\common\ext\org_lwjgl_opengl_EXTBlendFuncSeparate.cpp">
 				</File>
 				<File
