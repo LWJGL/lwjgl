@@ -100,9 +100,7 @@ public class GLU implements GLUConstants {
 		DoubleBuffer modelMatrix,
 		DoubleBuffer projMatrix,
 		IntBuffer viewport,
-		DoubleBuffer winx,
-		DoubleBuffer winy,
-		DoubleBuffer winz
+		DoubleBuffer win
 	);
 
 	public static native int gluUnProject(
@@ -112,9 +110,7 @@ public class GLU implements GLUConstants {
 		DoubleBuffer modelMatrix,
 		DoubleBuffer projMatrix,
 		IntBuffer viewport,
-		DoubleBuffer objx,
-		DoubleBuffer objy,
-		DoubleBuffer objz
+		DoubleBuffer obj
 	);
 
 	public static native int gluScaleImage(

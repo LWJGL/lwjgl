@@ -58,18 +58,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluLookAt
 /*
  * Class:     org_lwjgl_opengl_GLU
  * Method:    gluProject
- * Signature: (DDDLjava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/IntBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;)I
+ * Signature: (DDDLjava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/IntBuffer;Ljava/nio/DoubleBuffer;)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluProject
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jobject, jobject, jobject, jobject, jobject);
+  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jobject, jobject, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_GLU
  * Method:    gluUnProject
- * Signature: (DDDLjava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/IntBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;)I
+ * Signature: (DDDLjava/nio/DoubleBuffer;Ljava/nio/DoubleBuffer;Ljava/nio/IntBuffer;Ljava/nio/DoubleBuffer;)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluUnProject
-  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jobject, jobject, jobject, jobject, jobject);
+  (JNIEnv *, jclass, jdouble, jdouble, jdouble, jobject, jobject, jobject, jobject);
 
 /*
  * Class:     org_lwjgl_opengl_GLU

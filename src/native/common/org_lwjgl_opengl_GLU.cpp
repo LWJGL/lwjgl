@@ -112,15 +112,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLU_gluLookAt(JNIEnv * env, jclass 
  * Class:     org_lwjgl_opengl_GLU
  * Method:    project
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jobject buffer2, jobject buffer3, jobject buffer4, jobject buffer5, jobject buffer6)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jobject buffer2, jobject buffer3, jobject win_buffer)
 {
 	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
 	const GLdouble *address2 = (const GLdouble *)env->GetDirectBufferAddress(buffer2);
 	const GLint *address3 = (const GLint *)env->GetDirectBufferAddress(buffer3);
-	GLdouble *address4 = (GLdouble *)env->GetDirectBufferAddress(buffer4);
-	GLdouble *address5 = (GLdouble *)env->GetDirectBufferAddress(buffer5);
-	GLdouble *address6 = (GLdouble *)env->GetDirectBufferAddress(buffer6);
-	jint ret = (jint) gluProject((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, address, address2, address3, address4, address5, address6);
+	GLdouble *win_address = (GLdouble *)env->GetDirectBufferAddress(win_buffer);
+	jint ret = (jint) gluProject((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, address, address2, address3, win_address, win_address + 1, win_address + 2);
 	CHECK_GL_ERROR
 	return ret;
 }
@@ -129,15 +127,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluProject(JNIEnv * env, jclass
  * Class:     org_lwjgl_opengl_GLU
  * Method:    unProject
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluUnProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jobject buffer2, jobject buffer3, jobject buffer4, jobject buffer5, jobject buffer6)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_GLU_gluUnProject(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jobject buffer, jobject buffer2, jobject buffer3, jobject obj_buffer)
 {
 	const GLdouble *address = (const GLdouble *)env->GetDirectBufferAddress(buffer);
 	const GLdouble *address2 = (const GLdouble *)env->GetDirectBufferAddress(buffer2);
 	const GLint *address3 = (const GLint *)env->GetDirectBufferAddress(buffer3);
-	GLdouble *address4 = (GLdouble *)env->GetDirectBufferAddress(buffer4);
-	GLdouble *address5 = (GLdouble *)env->GetDirectBufferAddress(buffer5);
-	GLdouble *address6 = (GLdouble *)env->GetDirectBufferAddress(buffer6);
-	jint ret = (jint) gluUnProject((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, address, address2, address3, address4, address5, address6);
+	GLdouble *obj_address = (GLdouble *)env->GetDirectBufferAddress(obj_buffer);
+	jint ret = (jint) gluUnProject((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, address, address2, address3, obj_address, obj_address + 1, obj_address + 2);
 	CHECK_GL_ERROR
 	return ret;
 }
