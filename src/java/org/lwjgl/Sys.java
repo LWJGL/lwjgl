@@ -32,8 +32,6 @@
 
 package org.lwjgl;
 
-import java.nio.ByteBuffer;
-
 /**
  * $Id$
  *
