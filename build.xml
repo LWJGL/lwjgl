@@ -8,7 +8,8 @@
   <property name="lwjgl.docs"           value="./doc"/>
   <property name="lwjgl.temp"           value="./temp"/>
   <property name="lwjgl.res"            value="./res"/>
-  <property name="lwjgl.version"        value="0.5"/>
+  <property name="lwjgl.examples"       value="./examples"/>
+  <property name="lwjgl.version"        value="0.6"/>
   <property name="lwjgl.src.headers"    value="${lwjgl.src}/native/common"/>
   
   <!-- Creates a splash screen -->
@@ -65,7 +66,7 @@
        <javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" taskname="opengl"/>
        <javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" taskname="test"/>
        <javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/vector/**" source="1.4" taskname="vector"/>
-       <javac srcdir="examples/" destdir="${lwjgl.bin}/" includes="**" source="1.4" taskname="examples"/>
+       <javac srcdir="${lwjgl.examples}" destdir="${lwjgl.bin}/" includes="**" source="1.4" taskname="examples"/>
   </target>
 
   <target name="package" depends="compile" description="packages the java source files">
@@ -99,10 +100,10 @@
       <!-- copy dll/so to lib directory -->
       <copy todir="${lwjgl.lib}" taskname="libraries">
         <fileset dir="${lwjgl.bin}">
-            <include name="lwjgl.dll"/>
-            <include name="lwjgl_d.dll"/>
-            <include name="liblwjgl.so"/>
-            <include name="liblwjgl_d.so"/>
+            <include name="win32/lwjgl.dll"/>
+            <include name="win32/lwjgl_d.dll"/>
+            <include name="linux/liblwjgl.so"/>
+            <include name="linux/liblwjgl_d.so"/>
         </fileset>
       </copy>
   </target>
@@ -111,12 +112,12 @@
     <javadoc destdir="${lwjgl.docs}/javadoc" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
     
       <fileset dir="${lwjgl.src}/java">
-        <include name="**" />
+        <include name="**/*.java" />
         <exclude name="org/lwjgl/test/**"/>
       </fileset>
     
       <doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
-      <bottom><![CDATA[<i>Copyright &#169; 2002 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+      <bottom><![CDATA[<i>Copyright &#169; 2003 lwjgl.org. All Rights Reserved.</i>]]></bottom>
     </javadoc>
   </target>  
   
@@ -173,7 +174,7 @@
     </javah>    
   </target>
   
-  <!-- Creates a versioned distribution of dll's and jars -->
+  <!-- Creates a versioned distribution for all supported platforms -->
   <target name="distribution_application">
     <!-- check for file presence -->
     <available file="${lwjgl.lib}/OpenAL32.dll" property="lwjgl.OpenAL32_dll.exists"/>
@@ -210,8 +211,10 @@
       <fileset dir="${lwjgl.lib}/">
         <include name="lwjgl.dll"/>
         <include name="lwjgl_d.dll"/>
-        <include name="lwjgl.so"/>
-        <include name="lwjgl_d.so"/>
+        <include name="OpenAL32.dll"/>
+        <include name="liblwjgl.so"/>
+        <include name="liblwjgl_d.so"/>
+        <include name="libopenal.so"/>        
         <include name="lwjgl.jar"/>
         <include name="lwjgl_test.jar"/>
         <include name="examples.jar"/>
@@ -226,6 +229,94 @@
     <!-- zip 'em up -->
     <zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" basedir="${lwjgl.temp}/"/>
   </target>
+    
+  <!-- Creates a versioned distribution for win32 -->
+  <target name="distribution_application_win32">
+    <!-- check for file presence -->
+    <available file="${lwjgl.lib}/OpenAL32.dll" property="lwjgl.OpenAL32_dll.exists"/>
+    <fail unless="lwjgl.OpenAL32_dll.exists" message="Missing OpenAL32.dll in lib directory"/>
+    
+    <available file="${lwjgl.lib}/lwjgl.dll" property="lwjgl.lwjgl_dll.exists"/>
+    <fail unless="lwjgl.lwjgl_dll.exists" message="Missing lwjgl.dll in lib directory"/>
+
+    <available file="${lwjgl.lib}/lwjgl_d.dll" property="lwjgl.lwjgl_d_dll.exists"/>
+    <fail unless="lwjgl.lwjgl_d_dll.exists" message="Missing lwjgl_d.dll in lib directory"/>
+
+    <available file="${lwjgl.lib}/lwjgl.jar" property="lwjgl.lwjgl_jar.exists"/>
+    <fail unless="lwjgl.lwjgl_jar.exists" message="Missing lwjgl.jar in lib directory"/>
+
+    <available file="${lwjgl.lib}/lwjgl_test.jar" property="lwjgl.lwjgl_test_jar.exists"/>
+    <fail unless="lwjgl.lwjgl_test_jar.exists" message="Missing lwjgl_test.jar in lib directory"/>
+
+    <available file="${lwjgl.lib}/examples.jar" property="lwjgl.examples_jar.exists"/>
+    <fail unless="lwjgl.examples_jar.exists" message="Missing examples.jar in lib directory"/>
+    
+    <mkdir dir="${lwjgl.temp}/lwjgl-${lwjgl.version}"/>
+    
+    <!-- copy files to lwjgl directory for proper zipping -->
+    <copy todir="${lwjgl.temp}/lwjgl-${lwjgl.version}">
+      <fileset dir="${lwjgl.lib}/">
+        <include name="lwjgl.dll"/>
+        <include name="lwjgl_d.dll"/>
+        <include name="OpenAL32.dll"/>
+        <include name="lwjgl.jar"/>
+        <include name="lwjgl_test.jar"/>
+        <include name="examples.jar"/>
+      </fileset>
+      <fileset dir="${lwjgl.docs}">
+        <include name="CREDITS"/>
+        <include name="LICENSE"/>
+        <include name="README"/>
+      </fileset>
+    </copy>
+        
+    <!-- zip 'em up -->
+    <zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" basedir="${lwjgl.temp}/"/>
+  </target>
+  
+  <!-- Creates a versioned distribution for linux -->
+  <target name="distribution_application_linux">
+    <!-- check for file presence -->
+    <available file="${lwjgl.lib}/libopenal.so" property="lwjgl.libopenal_so.exists"/>
+    <fail unless="lwjgl.libopenal_so.exists" message="Missing libopenal.so in lib directory"/>    
+    
+    <available file="${lwjgl.lib}/liblwjgl.so" property="lwjgl.liblwjgl_so.exists"/>
+    <fail unless="lwjgl.liblwjgl_so.exists" message="Missing liblwjgl.so in lib directory"/>
+
+    <available file="${lwjgl.lib}/liblwjgl_d.so" property="lwjgl.liblwjgl_d_so.exists"/>
+    <fail unless="lwjgl.liblwjgl_d_so.exists" message="Missing liblwjgl_d.so in lib directory"/>
+    
+    <available file="${lwjgl.lib}/lwjgl.jar" property="lwjgl.lwjgl_jar.exists"/>
+    <fail unless="lwjgl.lwjgl_jar.exists" message="Missing lwjgl.jar in lib directory"/>
+
+    <available file="${lwjgl.lib}/lwjgl_test.jar" property="lwjgl.lwjgl_test_jar.exists"/>
+    <fail unless="lwjgl.lwjgl_test_jar.exists" message="Missing lwjgl_test.jar in lib directory"/>
+
+    <available file="${lwjgl.lib}/examples.jar" property="lwjgl.examples_jar.exists"/>
+    <fail unless="lwjgl.examples_jar.exists" message="Missing examples.jar in lib directory"/>
+    
+    <mkdir dir="${lwjgl.temp}/lwjgl-${lwjgl.version}"/>
+    
+    <!-- copy files to lwjgl directory for proper zipping -->
+    <copy todir="${lwjgl.temp}/lwjgl-${lwjgl.version}">
+      <fileset dir="${lwjgl.lib}/">
+        <include name="lwjgl.so"/>
+        <include name="lwjgl_d.so"/>
+        <include name="libopenal.so"/>
+        <include name="lwjgl.jar"/>
+        <include name="lwjgl_test.jar"/>
+        <include name="examples.jar"/>
+      </fileset>
+      <fileset dir="${lwjgl.docs}">
+        <include name="CREDITS"/>
+        <include name="LICENSE"/>
+        <include name="README"/>
+      </fileset>
+    </copy>
+        
+    <!-- zip 'em up -->
+    <zip destfile="${lwjgl.dist}/lwjgl-${lwjgl.version}.zip" basedir="${lwjgl.temp}/"/>
+  </target>  
   
   <!-- Creates a versioned distribution of javadocs -->
   <target name="distribution_javadoc">
@@ -246,6 +337,13 @@
           <exclude name="**/.*"/>
         </patternset>        
       </fileset>    
+		<fileset dir=".">
+        <patternset>
+          <include name="examples/*.java"/>
+          <exclude name="**/*CVS*"/>
+          <exclude name="**/.*"/>
+        </patternset>        
+      </fileset>          
     </zip>
   </target>
   
