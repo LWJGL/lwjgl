@@ -1561,14 +1561,18 @@ public class GL extends CoreGL implements GLConstants {
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
-
+			if (ext.startsWith("GL_"))
+				ext = ext.substring(3);
 			Field f = (Field) map.get(ext);
 			if (f != null) {
+				//System.out.println("Extension : "+ext+" : present");
 				try {
 					f.setBoolean(this, true);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace(System.err);
 				}
+//			} else {
+//				System.out.println("Extension : "+ext+" : NOT AVAILABLE");
 			}
 
 		}
