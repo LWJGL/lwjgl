@@ -112,9 +112,9 @@ jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 #endif
 		j = 0;
 		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
-#ifdef _DEBUG
-			printf("Checking setting #%d\n", j);
-#endif
+//#ifdef _DEBUG
+//			printf("Checking setting #%d\n", j);
+//#endif
 			if (DevMode.dmBitsPerPel > 8) {
 				AvailableModes++;
 			}
@@ -493,9 +493,9 @@ char * getDriver() {
 
 		TCHAR szDriverKey[MY_BUFSIZE];
 		strcpy(szDriverKey, &szAdapterKey[18]);
-#ifdef _DEBUG
-		printf("Driver key: %s\n", szDriverKey);
-#endif
+//#ifdef _DEBUG
+//		printf("Driver key: %s\n", szDriverKey);
+//#endif
 
 		if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 			TEXT(szDriverKey),
@@ -557,26 +557,26 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
 	}
 	strcat(driverDLL, driver);
 	strcat(driverDLL, ".dll");
-#ifdef _DEBUG
-	printf("Driver dll = %s\n", driverDLL);
-#endif
+//#ifdef _DEBUG
+//	printf("Driver dll = %s\n", driverDLL);
+//#endif
 	DWORD var = 0;
 	DWORD dwInfoSize = GetFileVersionInfoSize(driverDLL, &var);
 	LPVOID lpInfoBuff = new unsigned char[dwInfoSize];
 	BOOL bRetval = GetFileVersionInfo(driverDLL, NULL, dwInfoSize, lpInfoBuff);
 	if (bRetval == 0) {
-#ifdef _DEBUG
-		printf("GetFileVersionInfo failed\n");
-#endif
+//#ifdef _DEBUG
+//		printf("GetFileVersionInfo failed\n");
+//#endif
 	} else {
 		VS_FIXEDFILEINFO * fxdFileInfo;
 
 		UINT uiLen = 0;
 		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void **) &fxdFileInfo, &uiLen);
 		if (bRetval == 0) {
-#ifdef _DEBUG
-			printf("VerQueryValue failed\n");
-#endif
+//#ifdef _DEBUG
+//			printf("VerQueryValue failed\n");
+//#endif
 		} else {
 			TCHAR version[256];
 			TCHAR ms[10], ls[10];
