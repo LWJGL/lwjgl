@@ -1547,7 +1547,7 @@ public class GL extends CoreGL implements GLConstants {
 				map.put(fields[i].getName(), fields[i]);
 		}
 		
-		String exts = wglGetExtensionsStringEXT();
+		String exts = getString(EXTENSIONS);
 		StringTokenizer st = new StringTokenizer(exts);
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
@@ -1622,6 +1622,9 @@ public class GL extends CoreGL implements GLConstants {
 			exts = wglGetExtensionsStringARB(Display.getHandle()); // Remember - this is an HWND not an HDC, which is what's required
 		else
 			exts = wglGetExtensionsStringEXT();
+			
+		if (exts == null)
+			return;
 
 		System.out.println("Available WGL extensions:");			
 		StringTokenizer st = new StringTokenizer(exts);
