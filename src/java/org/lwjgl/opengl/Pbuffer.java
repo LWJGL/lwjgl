@@ -244,7 +244,6 @@ public final class Pbuffer {
 	 * the current rendering context or not.
 	 */
 	public synchronized void destroy() {
-		VBOTracker.remove(this);
 		try {
 			makeCurrent();
 			int error = GL11.glGetError();

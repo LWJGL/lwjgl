@@ -31,7 +31,7 @@
  */
 package org.lwjgl.opengl;
 
-import java.util.HashMap;
+import java.util.WeakHashMap;
 import java.util.Map;
 
 /**
@@ -40,7 +40,7 @@ import java.util.Map;
 class VBOTracker {
 	private static VBOTracker current_tracker = null;
 	
-	private static final Map contextToTracker = new HashMap(3, 1.0f);
+	private static final Map contextToTracker = new WeakHashMap(3, 1.0f);
 
 	private final StateStack vbo_array_stack;
 	private final StateStack vbo_element_stack;
@@ -75,17 +75,6 @@ class VBOTracker {
 		if (current_tracker == null) {
 			current_tracker = new VBOTracker();
 			contextToTracker.put(context, current_tracker);
-		}
-	}
-	
-	/**
-	 * Remove a context when it is about to be destroyed.
-	 * @param context
-	 */
-	static synchronized void remove(Object context) {
-		contextToTracker.remove(context);
-		if (current_tracker == context) {
-			current_tracker = null;
 		}
 	}
 }

@@ -252,7 +252,7 @@ public final class GLContext {
 			GL11.initNativeStubs();
 			loadStubs();
 			currentContext = new WeakReference(context);
-			VBOTracker.setCurrent(currentContext);
+			VBOTracker.setCurrent(context);
 		} catch (LWJGLException e) {
 			if (did_auto_load)
 				unloadOpenGLLibrary();
