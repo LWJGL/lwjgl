@@ -41,7 +41,7 @@
 
 #include "org_lwjgl_opengl_CoreGL.h"
 #include "checkGLerror.h"
-#include <GL/gl.h>
+#include "extgl.h"
 
 /*
  * Class:     org_lwjgl_opengl_CoreGL

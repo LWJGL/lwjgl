@@ -70,6 +70,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		return JNI_FALSE;
 	}
 	
+	if (extgl_Initialize() != 0) {
+#ifdef _DEBUG
+		printf("Could not init gl function pointers\n");
+#endif
+		return JNI_FALSE;
+	}
 	return JNI_TRUE;
 }
 
