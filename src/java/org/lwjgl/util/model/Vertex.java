@@ -54,10 +54,10 @@ public class Vertex implements Serializable {
 	/** Texture coordinates */
 	private final float u, v;
 	
-	/** Bone indices */
+	/** Bone indices: these look up into the current Frame's bone array */
 	private final int[] bone;
 	
-	/** Bone weights */
+	/** Bone weights (always sum to 1.0f) */
 	private final float[] weight;
 	
 	/**

@@ -29,34 +29,51 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.model;
+package org.lwjgl.util.model.renderer;
 
-import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.model.Model;
 
 /**
- * A Frame describes a set of new positions for Bones.
+ * $Id$
+ * 
+ * A simple (and very inefficient) Model renderer. This calculates the model vertices on the fly
+ * and uses GL immediate mode to render the result. This is of course very slow.
+ * <p>
+ * Material lookups are performed by mapping the material name to a Renderable thing. You must
+ * suppy appropriate Renderables - typically something that binds a 2D texture and sets up some
+ * GL state.
+ * 
+ * @author $Author$
+ * @version $Revision$
  */
-public class Frame implements Serializable {
+public class Renderer {
 	
-	public static final long serialVersionUID = 1L;
-	
-	/** The new transformations for each Bone in the Skeleton */
-	private final Matrix4f[] bone;
+	/** Material map: String name->Renderable */
+	private final Map materials = new HashMap();
 	
 	/**
 	 * C'tor
-	 * @param bone[]
 	 */
-	public Frame(Matrix4f[] bone) {
-		this.bone = bone;
+	public Renderer() {
 	}
 	
 	/**
-	 * @return the Bones
+	 * Render a Model
+	 * @param model The model to render
 	 */
-	public Matrix4f[] getBone() {
-		return bone;
+	public void render(Model model) {
 	}
+	
+	/**
+	 * Add a material
+	 * @param name The material's name
+	 * @param renderable The renderable object
+	 */
+	public void putMaterial(String name, Renderable renderable) {
+		materials.put(name, renderable);
+	}
+	
 }

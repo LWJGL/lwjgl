@@ -29,34 +29,21 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.model;
-
-import java.io.Serializable;
-
-import org.lwjgl.util.vector.Matrix4f;
+package org.lwjgl.util.model.renderer;
 
 /**
- * A Frame describes a set of new positions for Bones.
+ * $Id$
+ * 
+ * Simple interface to things that can be Rendered.
+ * 
+ * @author $Author$
+ * @version $Revision$
  */
-public class Frame implements Serializable {
-	
-	public static final long serialVersionUID = 1L;
-	
-	/** The new transformations for each Bone in the Skeleton */
-	private final Matrix4f[] bone;
+public interface Renderable {
 	
 	/**
-	 * C'tor
-	 * @param bone[]
+	 * "Render" this thing. This will involve calls to the GL.
 	 */
-	public Frame(Matrix4f[] bone) {
-		this.bone = bone;
-	}
+	public void render();
 	
-	/**
-	 * @return the Bones
-	 */
-	public Matrix4f[] getBone() {
-		return bone;
-	}
 }

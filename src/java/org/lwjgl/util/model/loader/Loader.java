@@ -29,34 +29,37 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.util.model;
+package org.lwjgl.util.model.loader;
 
-import java.io.Serializable;
-
-import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.model.Model;
+import org.w3c.dom.Document;
 
 /**
- * A Frame describes a set of new positions for Bones.
+ * $Id$
+ * 
+ * Loads a Model from an XML document.
+ * 
+ * @author $Author$
+ * @version $Revision$
  */
-public class Frame implements Serializable {
+public class Loader {
 	
-	public static final long serialVersionUID = 1L;
-	
-	/** The new transformations for each Bone in the Skeleton */
-	private final Matrix4f[] bone;
+	/** The source document */
+	private final Document src;
 	
 	/**
 	 * C'tor
-	 * @param bone[]
 	 */
-	public Frame(Matrix4f[] bone) {
-		this.bone = bone;
+	public Loader(Document src) {
+		this.src = src;
 	}
 	
 	/**
-	 * @return the Bones
+	 * Load the model from the XML document and return it.
+	 * @return Model
+	 * @throws Exception
 	 */
-	public Matrix4f[] getBone() {
-		return bone;
+	public Model load() throws Exception {
 	}
+	
 }

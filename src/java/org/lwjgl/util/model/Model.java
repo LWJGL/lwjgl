@@ -33,13 +33,16 @@
 package org.lwjgl.util.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 
 /**
  * $Id$
  * 
  * A simple animated, skinned, boned 3D model, consisting of a single mesh
- * with a single material.
+ * with a single material. The model's internal format is optimised for RAM storage;
+ * no metadata is held in memory - in other words this is not a good class to use
+ * for, say, a 3d modelling application.
  * 
  * @author $Author$
  * @version $Revision$
@@ -51,24 +54,25 @@ public class Model implements Serializable {
 	/** The Mesh */
 	private final Mesh mesh;
 	
-	/** The animations */
-	private final Frame[] frame;
+	/** The animations: a Map of string names to Frame[] arrays */
+	private final Map animation;
 	
 	/**
 	 * C'tor
 	 * @param mesh
 	 * @param frame
 	 */
-	public Model(Mesh mesh, Frame[] frame) {
+	public Model(Mesh mesh, Map animation) {
 		this.mesh = mesh;
-		this.frame = frame;
+		this.animation = animation;
 	}
 	
 	/**
-	 * @return the Frames
+	 * @param name The name of the animation
+	 * @return the Frames of an animation (or null, if no such animation exists)
 	 */
-	public Frame[] getFrame() {
-		return frame;
+	public Frame[] getAnimation(String name) {
+		return (Frame[]) animation.get(name);
 	}
 	
 	/**
