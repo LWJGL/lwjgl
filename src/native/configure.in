@@ -15,14 +15,12 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
-AC_PROG_CXX
 AC_CANONICAL_HOST
 
 case "$host_os" in
 	darwin*)	_BUILD_FLAGS="-D_AGL -fpascal-strings"
 				LDFLAGS="-Xlinker -framework -Xlinker JavaVM -Xlinker -framework -Xlinker ApplicationServices -Xlinker -framework -Xlinker CoreServices -Xlinker -framework -Xlinker Carbon"
 				NATIVE_BUILD_DIR=macosx
-				CXXFLAGS="$CXXFLAGS -Wall $_BUILD_FLAGS"
 				CFLAGS="$CFLAGS -Wall $_BUILD_FLAGS"
 				;;
 	bsdi* | linux* | solaris*) AC_PATH_XTRA
@@ -42,13 +40,13 @@ case "$host_os" in
         *)              AC_MSG_ERROR([Unsupported system $host_os]);;
 esac
 
-CC="$CXX"
 AC_PROG_LIBTOOL 
 
 AC_JNI_INCLUDE_DIR
 
 for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
 do
+    CFLAGS="$CFLAGS -I$JNI_INCLUDE_DIR"
     CXXFLAGS="$CXXFLAGS -I$JNI_INCLUDE_DIR"
 done
 

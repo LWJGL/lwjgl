@@ -30,35 +30,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
+// ----------------------------------
+// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIPnTriangles
+// ----------------------------------
 
-#include <jni.h>
-#include "extal.h"
-#include "common_tools.h"
+#include "extgl.h"
 
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+typedef void (APIENTRY * glPNTrianglesiATIPROC) (GLenum pname, GLint param);
+typedef void (APIENTRY * glPNTrianglesfATIPROC) (GLenum pname, GLfloat param);
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+static glPNTrianglesiATIPROC glPNTrianglesiATI;
+static glPNTrianglesfATIPROC glPNTrianglesfATI;
+
+/*
+ * Class:	org.lwjgl.opengl.ATIPnTriangles
+ * Method:	glPNTrianglesfATI
+ */
+static void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI
+	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
+{
+	glPNTrianglesfATI(pname, param);
+}
+
+/*
+ * Class:	org.lwjgl.opengl.ATIPnTriangles
+ * Method:	glPNTrianglesiATI
+ */
+static void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI
+	(JNIEnv * env, jclass clazz, jint pname, jint param)
+{
+	glPNTrianglesiATI(pname, param);
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_initNativeStubs(JNIEnv *env, jclass clazz) {
+	JavaMethodAndExtFunction functions[] = {
+		{"glPNTrianglesfATI", "(IF)V", (void*)&Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI, "glPNTrianglesfATI", (void*)&glPNTrianglesfATI},
+		{"glPNTrianglesiATI", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI, "glPNTrianglesiATI", (void*)&glPNTrianglesiATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
+#ifdef __cplusplus
+}
+#endif
+

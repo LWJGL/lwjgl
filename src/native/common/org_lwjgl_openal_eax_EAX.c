@@ -30,35 +30,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
-
-#include <jni.h>
-#include "extal.h"
+#include "org_lwjgl_openal_eax_EAX.h"
 #include "common_tools.h"
 
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+/*
+ * Class:     org_lwjgl_openal_eax_EAX
+ * Method:    nCreate
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_eax_EAX_nCreate (JNIEnv *env, jclass clazz) {
+#ifdef _WIN32
+	return true;
+#else
+	return false;
+#endif
+}
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+/*
+ * Class:     org_lwjgl_openal_eax_EAX
+ * Method:    nDestroy
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_eax_EAX_nDestroy (JNIEnv *env, jclass clazz) {
+}

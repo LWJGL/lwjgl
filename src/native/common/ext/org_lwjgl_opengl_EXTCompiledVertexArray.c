@@ -30,35 +30,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
+// ----------------------------------
+// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTCompiledVertexArray
+// ----------------------------------
 
-#include <jni.h>
-#include "extal.h"
-#include "common_tools.h"
+#include "extgl.h"
 
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+typedef void (APIENTRY * glLockArraysEXTPROC) (GLint first, GLsizei count);
+typedef void (APIENTRY * glUnlockArraysEXTPROC) ();
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+static glLockArraysEXTPROC glLockArraysEXT;
+static glUnlockArraysEXTPROC glUnlockArraysEXT;
+
+/*
+ * Class:	org.lwjgl.opengl.EXTCompiledVertexArray
+ * Method:	glLockArraysEXT
+ */
+static void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT
+	(JNIEnv * env, jclass clazz, jint first, jint count)
+{
+	glLockArraysEXT(first, count);
+}
+
+/*
+ * Class:	org.lwjgl.opengl.EXTCompiledVertexArray
+ * Method:	glUnlockArraysEXT
+ */
+static void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT
+	(JNIEnv * env, jclass clazz)
+{
+	glUnlockArraysEXT();
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_initNativeStubs(JNIEnv *env, jclass clazz) {
+	JavaMethodAndExtFunction functions[] = {
+		{"glLockArraysEXT", "(II)V", (void*)&Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT, "glLockArraysEXT", (void*)&glLockArraysEXT},
+		{"glUnlockArraysEXT", "()V", (void*)&Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT, "glUnlockArraysEXT", (void*)&glUnlockArraysEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
+#ifdef __cplusplus
+}
+#endif
+

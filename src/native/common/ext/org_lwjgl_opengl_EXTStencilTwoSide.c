@@ -30,35 +30,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
+// ----------------------------------
+// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTStencilTwoSide
+// ----------------------------------
 
-#include <jni.h>
-#include "extal.h"
-#include "common_tools.h"
+#include "extgl.h"
 
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+typedef void (APIENTRY * glActiveStencilFaceEXTPROC) (GLenum face);
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+static glActiveStencilFaceEXTPROC glActiveStencilFaceEXT;
+
+/*
+ * Class:	org.lwjgl.opengl.EXTStencilTwoSide
+ * Method:	glActiveStencilFaceEXT
+ */
+static void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT
+	(JNIEnv * env, jclass clazz, jint face)
+{
+	glActiveStencilFaceEXT(face);
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_initNativeStubs(JNIEnv *env, jclass clazz) {
+	JavaMethodAndExtFunction functions[] = {
+		{"glActiveStencilFaceEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT, "glActiveStencilFaceEXT", (void*)&glActiveStencilFaceEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
+#ifdef __cplusplus
+}
+#endif
+

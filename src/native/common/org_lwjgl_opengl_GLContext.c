@@ -30,35 +30,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
+#include "org_lwjgl_opengl_GLContext.h"
+#include "extgl.h"
 
-#include <jni.h>
-#include "extal.h"
-#include "common_tools.h"
-
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nLoadOpenGLLibrary(JNIEnv * env, jclass clazz) {
+	if (!extgl_Open()) {
+		throwException(env, "Failed to load OpenGL library");
+		return;
 	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+}
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nUnloadOpenGLLibrary(JNIEnv * env, jclass clazz) {
+	extgl_Close();
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_resetNativeStubs(JNIEnv *env, jclass clazz, jclass gl_class) {
+	(*env)->UnregisterNatives(env, gl_class);
+}

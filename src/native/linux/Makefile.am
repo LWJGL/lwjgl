@@ -6,14 +6,13 @@ libnative_la_SOURCES = $(NATIVE)
 INCLUDES = -I../common
 
 NATIVE = \
-  org_lwjgl_Sys.cpp \
-  org_lwjgl_input_Controller.cpp \
-  org_lwjgl_input_Keyboard.cpp \
-  org_lwjgl_input_Mouse.cpp \
-  org_lwjgl_input_Cursor.cpp \
-  org_lwjgl_opengl_Display.cpp \
-  org_lwjgl_opengl_Pbuffer.cpp \
-  display.cpp \
-  extgl_glx.cpp
-#  extxcursor.cpp
+  org_lwjgl_Sys.c \
+  org_lwjgl_input_Controller.c \
+  org_lwjgl_input_Keyboard.c \
+  org_lwjgl_input_Mouse.c \
+  org_lwjgl_input_Cursor.c \
+  org_lwjgl_opengl_Display.c \
+  org_lwjgl_opengl_Pbuffer.c \
+  display.c \
+  extgl_glx.c
   

@@ -29,7 +29,7 @@ public final class SignatureDump {
 					System.out.print("NULL");
 				System.out.print(", ");
 				if (gl_name != null) {
-					System.out.print("(void**)&");
+					System.out.print("(void*)&");
 					System.out.print(gl_name);
 				} else
 					System.out.print("NULL");

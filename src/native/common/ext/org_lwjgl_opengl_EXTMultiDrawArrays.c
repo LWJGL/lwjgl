@@ -30,35 +30,40 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
+// ----------------------------------
+// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTMultiDrawArrays
+// ----------------------------------
 
-#include <jni.h>
-#include "extal.h"
-#include "common_tools.h"
+#include "extgl.h"
 
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+typedef void (APIENTRY * glMultiDrawArraysEXTPROC) (GLenum mode, GLint *first, GLsizei *count, GLsizei primcount);
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+static glMultiDrawArraysEXTPROC glMultiDrawArraysEXT;
+
+/*
+ * Class:	org.lwjgl.opengl.EXTMultiDrawArrays
+ * Method:	nglMultiDrawArraysEXT
+ */
+static void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT
+	(JNIEnv * env, jclass clazz, jint mode, jobject piFirst, jint piFirst_offset, jobject piCount, jint piCount_offset, jint primcount)
+{
+	GLint *piFirst_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, piFirst) + piFirst_offset;
+	GLint *piCount_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, piCount) + piCount_offset;
+	glMultiDrawArraysEXT(mode, piFirst_ptr, piCount_ptr, primcount);
+	
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_initNativeStubs(JNIEnv *env, jclass clazz) {
+	JavaMethodAndExtFunction functions[] = {
+		{"nglMultiDrawArraysEXT", "(ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;II)V", (void*)&Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT, "glMultiDrawArraysEXT", (void*)&glMultiDrawArraysEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
+#ifdef __cplusplus
+}
+#endif
+

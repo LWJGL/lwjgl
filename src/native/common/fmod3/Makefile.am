@@ -5,7 +5,7 @@ liblwjgl_fmod3_la_DEPENDENCIES = $(DEP_LIBS)
 INCLUDES = -I..
 DEP_LIBS = ../libtools.la
 
-FMOD_SOURCE = extfmod3.cpp \
-              org_lwjgl_fmod3_FMOD.cpp \
-              org_lwjgl_fmod3_FMusic.cpp \
-              org_lwjgl_fmod3_FSound.cpp
+FMOD_SOURCE = extfmod3.c \
+              org_lwjgl_fmod3_FMOD.c \
+              org_lwjgl_fmod3_FMusic.c \
+              org_lwjgl_fmod3_FSound.c

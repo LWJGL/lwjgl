@@ -122,6 +122,7 @@ extern "C" {
 /* Inaccessible static: OpenGL13 */
 /* Inaccessible static: OpenGL14 */
 /* Inaccessible static: OpenGL15 */
+/* Inaccessible static: OpenGL20 */
 /* Inaccessible static: exts */
 /* Inaccessible static: gl_ref_count */
 /* Inaccessible static: did_auto_load */

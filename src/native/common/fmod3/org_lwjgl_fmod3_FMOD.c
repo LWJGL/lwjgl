@@ -29,36 +29,57 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+ 
+#include "org_lwjgl_fmod3_FMOD.h"
+#include "extfmod3.h"
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
+static const char* VERSION = "0.9a";
 
-#include <jni.h>
-#include "extal.h"
-#include "common_tools.h"
+/*
+ * Class:     org_lwjgl_fmod3_FMOD
+ * Method:    getNativeLibraryVersion
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_getNativeLibraryVersion(JNIEnv * env, jclass clazz) {
+  return (*env)->NewStringUTF(env, VERSION);
+}
 
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
+/*
+ * Class:     org_lwjgl_fmod3_FMOD
+ * Method:    nCreate
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nCreate(JNIEnv *env, jclass clazz, jobjectArray paths) {
+	jsize pathcount = (*env)->GetArrayLength(env, paths);
+	int i;
+	for(i=0;i<pathcount;i++) {
+		jstring path = (jstring) (*env)->GetObjectArrayElement(env, paths, i);
+		char *path_str = (char *) (*env)->GetStringUTFChars(env, path, NULL);
+		printfDebug("Trying to load fmod_instance from %s\n", path_str);
+		fmod_create(env, path_str);
+		(*env)->ReleaseStringUTFChars(env, path, path_str);
+
+		if(fmod_instance != NULL) {
+			return;
+		}
 	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+	throwFMODException(env, "Unable to load fmod library");
+}
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+/*
+ * Class:     org_lwjgl_fmod3_FMOD
+ * Method:    nDestroy
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nDestroy(JNIEnv *env, jclass clazz) {
+  fmod_destroy();
+}
+
+/*
+ * Class:     org_lwjgl_fmod3_FMOD
+ * Method:    FMOD_ErrorString
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_FMOD_1ErrorString(JNIEnv *env, jclass clazz, jint errorcode) {
+  return (*env)->NewStringUTF(env, FMOD_ErrorString(errorcode));  
+}

@@ -30,35 +30,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CHECKALERROR_H_INCLUDED_
-#define _CHECKALERROR_H_INCLUDED_
+// ----------------------------------
+// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTBlendEquationSeparate
+// ----------------------------------
 
-#include <jni.h>
-#include "extal.h"
-#include "common_tools.h"
+#include "extgl.h"
 
-#define CHECK_AL_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alGetError(); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
-/* only available if deviceaddress is specified in method */
-#define CHECK_ALC_ERROR \
-	{ \
-		if (isDebugEnabled()) { \
-			int err = alcGetError((ALCdevice*) deviceaddress); \
-			if (err != AL_NO_ERROR) { \
-				jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-				(*env)->ThrowNew(env, cls, (const char*) alcGetString((ALCdevice*) deviceaddress, err)); \
-				(*env)->DeleteLocalRef(env, cls); \
-			} \
-		} \
-	}
+typedef void (APIENTRY * glBlendEquationSeparateEXTPROC) (GLenum modeRGB, GLenum modeAlpha);
 
-#endif /* _CHECKALERROR_H_INCLUDED_ */
+static glBlendEquationSeparateEXTPROC glBlendEquationSeparateEXT;
+
+/*
+ * Class:	org.lwjgl.opengl.EXTBlendEquationSeparate
+ * Method:	glBlendEquationSeparateEXT
+ */
+static void JNICALL Java_org_lwjgl_opengl_EXTBlendEquationSeparate_glBlendEquationSeparateEXT
+	(JNIEnv * env, jclass clazz, jint modeRGB, jint modeAlpha)
+{
+	glBlendEquationSeparateEXT(modeRGB, modeAlpha);
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTBlendEquationSeparate_initNativeStubs(JNIEnv *env, jclass clazz) {
+	JavaMethodAndExtFunction functions[] = {
+		{"glBlendEquationSeparateEXT", "(II)V", (void*)&Java_org_lwjgl_opengl_EXTBlendEquationSeparate_glBlendEquationSeparateEXT, "glBlendEquationSeparateEXT", (void*)&glBlendEquationSeparateEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	extgl_InitializeClass(env, clazz, num_functions, functions);
+}
+#ifdef __cplusplus
+}
+#endif
+

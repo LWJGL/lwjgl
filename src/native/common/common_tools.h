@@ -62,6 +62,12 @@ typedef struct {
 	int attribs[ATTRIB_LIST_SIZE];
 } attrib_list_t;
 
+#ifndef __cplusplus
+typedef unsigned char bool;
+#define true 1
+#define false 0
+#endif
+
 extern void initAttribList(attrib_list_t *list);
 extern void putAttrib(attrib_list_t *list, int attrib);
 
@@ -71,7 +77,6 @@ extern void initEventQueue(event_queue_t *event_queue);
 extern int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, int buffer_size, int event_size);
 extern void putEventElement(event_queue_t *queue, unsigned char byte);
 extern unsigned char *getOutputList(event_queue_t *queue);
-//extern int getEventBufferSize(event_queue_t *event_queue);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void throwFMODException(JNIEnv * env, const char * err);
@@ -83,14 +88,14 @@ static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer, int offse
 	if (buffer == NULL)
 		return NULL;
 	else
-		return (void *)((char *)env->GetDirectBufferAddress(buffer) + offset);
+		return (void *)((char *)(*env)->GetDirectBufferAddress(env, buffer) + offset);
 }
 
 static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
 	if (p == NULL)
 		return NULL;
 	else
-		return env->NewDirectByteBuffer(p, size);
+		return (*env)->NewDirectByteBuffer(env, p, size);
 }
 
 static inline const void *offsetToPointer(jint offset) {
