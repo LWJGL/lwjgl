@@ -60,40 +60,123 @@ int win_width;
 int win_height;
 XF86VidModeModeInfo **avail_modes;
 XVisualInfo * vis_info;
+int gl_loaded = 0;
 
 struct pixelformat {
+	int bpp;
 	int depth;
 	int alpha;
 	int stencil;
 };
 
-struct pixelformat * getAvailablePixelFormats(int *length) {
-	*length = 8;
-	struct pixelformat *formats = (struct pixelformat *)malloc((*length)*sizeof(struct pixelformat));
-	formats[0].depth = 24;
-	formats[0].alpha = 8;
-	formats[0].stencil = 8;
-	formats[1].depth = 16;
-	formats[1].alpha = 8;
-	formats[1].stencil = 8;
-	formats[2].depth = 24;
-	formats[2].alpha = 0;
-	formats[2].stencil = 8;
-	formats[3].depth = 16;
-	formats[3].alpha = 0;
-	formats[3].stencil = 8;
-	formats[4].depth = 24;
-	formats[4].alpha = 8;
-	formats[4].stencil = 0;
-	formats[5].depth = 16;
-	formats[5].alpha = 8;
-	formats[5].stencil = 0;
-	formats[6].depth = 24;
-	formats[6].alpha = 0;
-	formats[6].stencil = 0;
-	formats[7].depth = 16;
-	formats[7].alpha = 0;
-	formats[7].stencil = 0;
+int fillFormat(struct pixelformat *formats, int index, int bpp, int depth, int alpha, int stencil) {
+	for (int i = 0; i < index; i++)
+		if (formats[i].bpp == bpp &&
+		    formats[i].depth == depth &&
+		    formats[i].alpha == alpha &&
+		    formats[i].stencil == stencil)
+			return 0;
+	formats[index].bpp = bpp;
+	formats[index].depth = depth;
+	formats[index].stencil = stencil;
+	formats[index].alpha = alpha;
+	return 1;
+}
+
+struct pixelformat *getGLXAvailablePixelFormats(Display *disp, int screen, int *length) {
+	if (extgl_Extensions.glx.GLX13 == 1) {
+		int num_formats;
+		int attriblist[] = {GLX_DOUBLEBUFFER, True,
+				   GLX_STEREO, False,
+				   GLX_RENDER_TYPE, GLX_RGBA_BIT,
+				   GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+				   GLX_CONFIG_CAVEAT, GLX_NONE,
+				   None};
+		GLXFBConfig *configs = glXChooseFBConfig(disp, screen, attriblist, &num_formats);
+		struct pixelformat *formats = (struct pixelformat *)malloc(num_formats*sizeof(struct pixelformat));
+		*length = 0;
+		for (int i = 0; i < num_formats; i++) {
+			int bpp, depth, alpha, stencil;
+			int val;
+			if (glXGetFBConfigAttrib(disp, configs[i], GLX_RED_SIZE, &val) != 0) {
+				free(formats);
+				return NULL;
+			}
+			bpp = val;
+			if (glXGetFBConfigAttrib(disp, configs[i], GLX_GREEN_SIZE, &val) != 0) {
+				free(formats);
+				return NULL;
+			}
+			bpp += val;
+			if (glXGetFBConfigAttrib(disp, configs[i], GLX_BLUE_SIZE, &val) != 0) {
+				free(formats);
+				return NULL;
+			}
+			bpp += val;
+			if (glXGetFBConfigAttrib(disp, configs[i], GLX_ALPHA_SIZE, &alpha) != 0) {
+				free(formats);
+				return NULL;
+			}
+			if (glXGetFBConfigAttrib(disp, configs[i], GLX_DEPTH_SIZE, &depth) != 0) {
+				free(formats);
+				return NULL;
+			}
+			if (glXGetFBConfigAttrib(disp, configs[i], GLX_STENCIL_SIZE, &stencil) != 0) {
+				free(formats);
+				return NULL;
+			}
+			if (fillFormat(formats, *length, bpp, depth, alpha, stencil) == 1)
+				(*length)++;
+		}
+		return formats;
+	}
+	return NULL;
+}
+
+XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
+	int bpe;
+	switch (bpp) {
+		case 32:
+		case 24:
+			bpe = 8;
+			break;
+		case 16:
+			bpe = 4;
+			break;
+		default:
+			return JNI_FALSE;
+	}
+	
+	int attriblist[] = { GLX_RGBA,
+                             GLX_DOUBLEBUFFER,
+                             GLX_DEPTH_SIZE, depth,
+                             GLX_RED_SIZE, bpe,
+                             GLX_GREEN_SIZE, bpe,
+                             GLX_BLUE_SIZE, bpe,
+                             GLX_ALPHA_SIZE, alpha,
+			     GLX_STENCIL_SIZE, stencil,
+                             None };
+	return glXChooseVisual(disp, screen, attriblist);
+}
+
+struct pixelformat *getAvailablePixelFormats(Display *disp, int screen, int *length) {
+	struct pixelformat *formats = getGLXAvailablePixelFormats(disp, screen, length);
+	if (formats != NULL)
+		return formats;
+	*length = 16;
+       	formats = (struct pixelformat *)malloc((*length)*sizeof(struct pixelformat));
+	*length = 0;
+	for (int bpp = 16; bpp <= 24; bpp += 8)
+		for (int depth = 16; depth <= 24; depth += 8)
+			for (int alpha = 0; alpha <= 8; alpha += 8)
+				for (int stencil = 0; stencil <= 8; stencil += 8) {
+					XVisualInfo * visual = chooseVisual(disp, screen, bpp, depth, alpha, stencil);
+					if (visual != NULL) {
+						if (fillFormat(formats, *length, bpp, depth, alpha, stencil) == 1)
+							(*length)++;
+						XFree(visual);
+					}
+				}
 	return formats;
 }
 
@@ -114,6 +197,19 @@ int isFocused(void) {
 			current_focused = 0;
 	}
 	return current_focused;
+}
+
+int loadGL(Display *disp, int screen) {
+	if (gl_loaded == 1)
+		return JNI_TRUE;
+	if (extgl_Open(disp, screen) != 0) {
+#ifdef _DEBUG
+		printf("Could not load gl libs\n");
+#endif
+		return JNI_FALSE;
+	}
+	gl_loaded = 1;
+	return JNI_TRUE;
 }
 
 int getDisplayModes(Display *disp, int screen, int *num_modes, XF86VidModeModeInfo ***avail_modes) {
@@ -138,38 +234,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	XSetWindowAttributes attribs;
 	Colormap cmap;
 	int attribmask;
-	int bpe;
-	switch (bpp) {
-		case 32:
-		case 24:
-			bpe = 8;
-			break;
-		case 16:
-			bpe = 4;
-			break;
-		default:
-			return JNI_FALSE;
-	}
-	if (depth_bits == 32)
-		depth_bits = 24;
-	
-	int attriblist[] = { GLX_RGBA,
-                             GLX_DOUBLEBUFFER,
-                             GLX_DEPTH_SIZE, depth_bits,
-                             GLX_RED_SIZE, bpe,
-                             GLX_GREEN_SIZE, bpe,
-                             GLX_BLUE_SIZE, bpe,
-                             GLX_ALPHA_SIZE, alpha_bits,
-			     GLX_STENCIL_SIZE, stencil_bits,
-                             None };
-/*	int attriblistna[] = { GLX_RGBA,
-                             GLX_DOUBLEBUFFER,
-                             GLX_DEPTH_SIZE, bpp,
-                             GLX_RED_SIZE, bpe,
-                             GLX_GREEN_SIZE, bpe,
-                             GLX_BLUE_SIZE, bpe,
-                             None };
-*/
         int num_modes, i;
                             
 
@@ -186,6 +250,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		return JNI_FALSE;
 	}
 	screen = DefaultScreen(disp);
+	if (loadGL(disp, screen) != JNI_TRUE) {
+#ifdef _DEBUG
+		printf("Could not load GL libs\n");
+#endif
+		return JNI_FALSE;
+	}
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 		XCloseDisplay(disp);
 #ifdef _DEBUG
@@ -194,19 +264,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		return JNI_FALSE;
 	}
 	root_win = RootWindow(disp, screen);
-	if (extgl_Open() != 0) {
-#ifdef _DEBUG
-		printf("Could not load gl libs\n");
-#endif
-		return JNI_FALSE;
-	}
-	vis_info = glXChooseVisual(disp, screen, attriblist);
-
-        /* might be a better way to handle not being able to set GLX_ALPHA_SIZE... */
-/*        if (vis_info == NULL) {
-            vis_info = glXChooseVisual(disp, screen, attriblistna);
-        }
-*/	
+	vis_info = chooseVisual(disp, screen, bpp, depth_bits, alpha_bits, stencil_bits);
         if (vis_info == NULL) {
 		XCloseDisplay(disp);
 #ifdef _DEBUG
@@ -288,22 +346,29 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 	int screen = DefaultScreen(disp);
 	XF86VidModeModeInfo **avail_modes;
 
-	int depth = DefaultDepth(disp, screen);
-
 	if (disp == NULL) {
 #ifdef _DEBUG
 		printf("Could not open X connection\n");
 #endif
+		XCloseDisplay(disp);
 		return NULL;
+	}
+	if (loadGL(disp, screen) != JNI_TRUE) {
+#ifdef _DEBUG
+		printf("Could not load GL\n");
+#endif
+		XCloseDisplay(disp);
+		return JNI_FALSE;
 	}
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 #ifdef _DEBUG
 		printf("Could not get display modes\n");
 #endif
+		XCloseDisplay(disp);
 		return NULL;
 	}
 	int num_pixelformats;
-	struct pixelformat *formats = getAvailablePixelFormats(&num_pixelformats);
+	struct pixelformat *formats = getAvailablePixelFormats(disp, screen, &num_pixelformats);
 	// Allocate an array of DisplayModes big enough
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
 	jobjectArray ret = env->NewObjectArray(num_modes*num_pixelformats, displayModeClass, NULL);
@@ -311,7 +376,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 	
 	for (i = 0; i < num_modes; i++) {
 		for (int j = 0; j < num_pixelformats; j++) {
-			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, depth, 0, formats[j].alpha, formats[j].depth, formats[j].stencil);
+			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, formats[j].bpp, 0, formats[j].alpha, formats[j].depth, formats[j].stencil);
 			env->SetObjectArrayElement(ret, i*num_pixelformats + j, displayMode);
 		}
 	}

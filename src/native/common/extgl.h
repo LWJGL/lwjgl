@@ -354,12 +354,12 @@ extern glXQueryContextPROC glXQueryContext;
 extern glXSelectEventPROC glXSelectEvent;
 extern glXGetSelectedEventPROC glXGetSelectedEvent;
 
-extern glXGetContextIDEXTPROC glXGetContextIDEXT;
+/*extern glXGetContextIDEXTPROC glXGetContextIDEXT;
 extern glXGetCurrentDrawableEXTPROC glXGetCurrentDrawableEXT;
 extern glXImportContextEXTPROC glXImportContextEXT;
 extern glXFreeContextEXTPROC glXFreeContextEXT;
 extern glXQueryContextInfoEXTPROC glXQueryContextInfoEXT;
-
+*/
 extern glXGetProcAddressARBPROC glXGetProcAddressARB;
 
 extern glXChooseVisualPROC glXChooseVisual;
@@ -5547,6 +5547,8 @@ struct GLXExtensionTypes
 {
     int GLX12;
     int GLX13;
+    int EXT_visual_info;
+    int EXT_visual_rating;
 };
 
 #endif /* WIN32 */
@@ -5661,7 +5663,11 @@ extern struct ExtensionTypes SupportedExtensions; /* deprecated, please do not u
 
 /* initializes everything, call this right after the rc is created. the function returns 0 if successful */
 int extgl_Initialize();
+#ifndef _WIN32
+int extgl_Open(Display *disp, int screen);
+#else
 int extgl_Open(void);
+#endif
 void extgl_Close(void);
 
 int glInitialize(); /* deprecated, please do not use */

@@ -72,12 +72,12 @@ glXQueryContextPROC glXQueryContext = NULL;
 glXSelectEventPROC glXSelectEvent = NULL;
 glXGetSelectedEventPROC glXGetSelectedEvent = NULL;
 
-glXGetContextIDEXTPROC glXGetContextIDEXT = NULL;
+/*glXGetContextIDEXTPROC glXGetContextIDEXT = NULL;
 glXGetCurrentDrawableEXTPROC glXGetCurrentDrawableEXT = NULL;
 glXImportContextEXTPROC glXImportContextEXT = NULL;
 glXFreeContextEXTPROC glXFreeContextEXT = NULL;
 glXQueryContextInfoEXTPROC glXQueryContextInfoEXT = NULL;
-
+*/
 glXGetProcAddressARBPROC glXGetProcAddressARB = NULL;
 
 glXChooseVisualPROC glXChooseVisual = NULL;
@@ -1376,8 +1376,9 @@ void *extgl_GetProcAddress(char *name)
 		if (t == NULL)
 		{
 	        t = dlsym(lib_glu_handle, name);
-			if (t == NULL)
+			if (t == NULL) {
 			    extgl_error = 1;
+			}
 		}
     }
     return t;
@@ -1560,6 +1561,14 @@ int QueryExtension(const GLubyte*extensions, const char *name)
     }
     return 0;
 }
+
+#ifndef _WIN32
+/** returns true if the extention is available */
+int GLXQueryExtension(Display *disp, int screen, const char *name)
+{
+    return QueryExtension(glXQueryExtensionsString(disp, screen), name);
+}
+#endif
 
 /** returns true if the extention is available */
 int GLUQueryExtension(const char *name)
@@ -2410,7 +2419,7 @@ int extgl_InitEXTNurbsTesselator(void)
 int extgl_InitGLX13(void)
 {
 	if (extgl_Extensions.glx.GLX13 == 0)
-		return 1;
+		return extgl_error;
 	glXGetFBConfigs = (glXGetFBConfigsPROC) extgl_GetProcAddress("glXGetFBConfigs");
 	glXChooseFBConfig = (glXChooseFBConfigPROC) extgl_GetProcAddress("glXChooseFBConfig");
 	glXGetFBConfigAttrib = (glXGetFBConfigAttribPROC) extgl_GetProcAddress("glXGetFBConfigAttrib");
@@ -2434,12 +2443,12 @@ int extgl_InitGLX13(void)
 
 int extgl_InitGLX12(void)
 {
-	glXGetContextIDEXT = (glXGetContextIDEXTPROC) extgl_GetProcAddress("glXGetContextIDEXT");
+/*	glXGetContextIDEXT = (glXGetContextIDEXTPROC) extgl_GetProcAddress("glXGetContextIDEXT");
 	glXGetCurrentDrawableEXT = (glXGetCurrentDrawableEXTPROC) extgl_GetProcAddress("glXGetCurrentDrawableEXT");
 	glXImportContextEXT = (glXImportContextEXTPROC) extgl_GetProcAddress("glXImportContextEXT");
 	glXFreeContextEXT = (glXFreeContextEXTPROC) extgl_GetProcAddress("glXFreeContextEXT");
 	glXQueryContextInfoEXT = (glXQueryContextInfoEXTPROC) extgl_GetProcAddress("glXQueryContextInfoEXT");
-
+*/
 	glXChooseVisual = (glXChooseVisualPROC) extgl_GetProcAddress("glXChooseVisual");
 	glXCopyContext = (glXCopyContextPROC) extgl_GetProcAddress("glXCopyContext");
 	glXCreateContext = (glXCreateContextPROC) extgl_GetProcAddress("glXCreateContext");
@@ -2463,18 +2472,30 @@ int extgl_InitGLX12(void)
 	return extgl_error;
 }
 
-int extgl_InitGLX(void)
+#ifndef _WIN32
+void extgl_InitGLXSupportedExtensions(Display *disp, int screen)
 {
-	/* Assume glx ver >= 1.3 */
-	extgl_Extensions.glx.GLX12 = 1;
-	extgl_Extensions.glx.GLX13 = 1;
+	extgl_Extensions.glx.EXT_visual_info = GLXQueryExtension(disp, screen, "GLX_EXT_visual_info");
+	extgl_Extensions.glx.EXT_visual_rating = GLXQueryExtension(disp, screen, "GLX_EXT_visual_rating");
+}
+#endif
 
+int extgl_InitGLX(Display *disp, int screen)
+{
+    int major, minor;
+    /* Assume glx ver >= 1.2 */
+    extgl_Extensions.glx.GLX12 = 1;
     glXGetProcAddressARB = (glXGetProcAddressARBPROC) dlsym(lib_gl_handle, "glXGetProcAddressARB");
     if (glXGetProcAddressARB == NULL)
         return 1;
 
     if (extgl_InitGLX12() != 0)
         return 1;
+    extgl_InitGLXSupportedExtensions(disp, screen);
+    if (glXQueryVersion(disp, &major, &minor) != True)
+        return 1;
+    if (major > 1 || (major == 1 && minor >= 3))
+        extgl_Extensions.glx.GLX13 = 1;
     if (extgl_InitGLX13() != 0)
         return 1;
     return 0;
@@ -2989,6 +3010,7 @@ void extgl_InitOpenGL1_4()
 #endif /* GL_VERSION_1_4 */
 }
 
+
 void extgl_InitGLUSupportedExtensions()
 {
     char *s = (char*) gluGetString(GLU_VERSION);
@@ -3198,9 +3220,9 @@ int extgl_Initialize()
     return extgl_error;
 }
 
-int extgl_Open(void)
-{
 #ifndef _WIN32
+int extgl_Open(Display *disp, int screen)
+{
     lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_gl_handle == NULL)
         return 1;
@@ -3208,9 +3230,13 @@ int extgl_Open(void)
     lib_glu_handle = dlopen("libGLU.so", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_glu_handle == NULL)
         return 1;
-
-    extgl_InitGLX();
+    if (extgl_InitGLX(disp, screen) != 0)
+	    return 1;
+    return 0;
+}
 #else
+int extgl_Open(void)
+{
 
     lib_gl_handle = LoadLibrary("opengl32.dll");
 	if (lib_gl_handle == NULL)
@@ -3218,10 +3244,9 @@ int extgl_Open(void)
 	lib_glu_handle = LoadLibrary("glu32.dll");
     if (lib_glu_handle == NULL)
         return 1;
-#endif
-	
-	return 0;
+    return 0;
 }
+#endif
 
 void extgl_Close(void)
 {
