@@ -332,18 +332,18 @@ public class IL {
 
 	public static native int ilCreateSubImage(int Type, int Num);
 	public static native boolean ilDefaultImage();
-	public static void ilDeleteImages(int num, IntBuffer images) {
+	public static void ilDeleteImages(IntBuffer images) {
 		BufferChecks.checkDirect(images);
-		nilDeleteImages(num, images, images.position());
+		nilDeleteImages(images.remaining(), images, images.position());
 	}
 
 	private static native void nilDeleteImages(int num, IntBuffer images, int images_offset);
 	public static native boolean ilDisable(int Mode);
 	public static native boolean ilEnable(int Mode);
 	public static native boolean ilFormatFunc(int Mode);
-	public static void ilGenImages(int num, IntBuffer images) {
+	public static void ilGenImages(IntBuffer images) {
 		BufferChecks.checkDirect(images);
-		nilGenImages(num, images, images.position());
+		nilGenImages(images.remaining(), images, images.position());
 	}
 	private static native void nilGenImages(int num, IntBuffer images, int images_offset);
 
@@ -363,18 +363,18 @@ public class IL {
 	public static native boolean ilIsEnabled(int Mode);
 	public static native boolean ilIsImage(int Image);
 	public static native boolean ilIsValid(int Type, String FileName);
-	public static boolean ilIsValidL(int Type, ByteBuffer Lump, int Size) {
+	public static boolean ilIsValidL(int Type, ByteBuffer Lump) {
 		BufferChecks.checkDirect(Lump);
-		return nilIsValidL(Type, Lump, Lump.position(), Size);
+		return nilIsValidL(Type, Lump, Lump.position(), Lump.remaining());
 	}
 	private static native boolean nilIsValidL(int Type, ByteBuffer Lump, int lump_offset, int Size);
 
 	public static native void ilKeyColour(float Red, float Green, float Blue, float Alpha);
 	public static native boolean ilLoad(int Type, String FileName);
 	public static native boolean ilLoadImage(String fileName);
-	public static boolean ilLoadL(int Type, ByteBuffer Lump, int Size) {
+	public static boolean ilLoadL(int Type, ByteBuffer Lump) {
 		BufferChecks.checkDirect(Lump);
-		return nilLoadL(Type, Lump, Lump.position(), Size);
+		return nilLoadL(Type, Lump, Lump.position(), Lump.remaining());
 	}
 
 	private static native boolean nilLoadL(int Type, ByteBuffer Lump, int lump_offset, int Size);
@@ -390,9 +390,9 @@ public class IL {
 	public static native void ilResetWrite();
 	public static native boolean ilSave(int Type, String FileName);
 	public static native boolean ilSaveImage(String FileName);
-	public static int ilSaveL(int Type, ByteBuffer Lump, int Size) {
+	public static int ilSaveL(int Type, ByteBuffer Lump) {
 		BufferChecks.checkDirect(Lump);
-		return nilSaveL(Type, Lump, Lump.position(), Size);
+		return nilSaveL(Type, Lump, Lump.position(), Lump.remaining());
 	}
 	private static native int nilSaveL(int Type, ByteBuffer Lump, int lump_offset, int Size);
 
@@ -524,7 +524,7 @@ public class IL {
 			ByteBuffer lump = ByteBuffer.allocateDirect(buffer.length);
 			lump.put(buffer);
 			lump.flip();
-			result = ilLoadL(type, lump, buffer.length);
+			result = ilLoadL(type, lump);
 		} catch (IOException e) {
 			e.printStackTrace();
 			result = false;
@@ -643,7 +643,6 @@ public class IL {
 		}
 
 		// Add all possible paths from java.library.path
-		String java_library_path = System.getProperty("java.library.path");
 		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
 		while (st.hasMoreTokens()) {
 			String path = st.nextToken();
