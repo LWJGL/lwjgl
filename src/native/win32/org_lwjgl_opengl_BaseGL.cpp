@@ -60,15 +60,16 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 		printf("No window handle\n");
 		return JNI_FALSE;
 	}
+	int flags = PFD_DRAW_TO_WINDOW |   // support window 
+		PFD_SUPPORT_OPENGL |   // support OpenGL 
+		PFD_GENERIC_ACCELERATED |
+		PFD_DOUBLEBUFFER;      // double buffered 
 
 	PIXELFORMATDESCRIPTOR pfd = { 
 		sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd 
 		1,                     // version number 
-		PFD_DRAW_TO_WINDOW |   // support window 
-		PFD_SUPPORT_OPENGL |   // support OpenGL 
-		PFD_GENERIC_ACCELERATED |
-		PFD_DOUBLEBUFFER,      // double buffered 
-		PFD_TYPE_RGBA,         // RGBA type 
+		flags,         // RGBA type 
+		PFD_TYPE_RGBA,
 		(BYTE)colorBits,       
 		0, 0, 0, 0, 0, 0,      // color bits ignored 
 		(BYTE)alphaBits,       
@@ -86,7 +87,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 	// Ensure desktop color depth is adequate
 	int availableBitDepth = GetDeviceCaps(hdc, BITSPIXEL);
 	if (availableBitDepth < colorBits) {
-		printf("This application requires a greater colour depth.");
+		printf("This application requires a greater colour depth.\n");
 		return JNI_FALSE;
 	};
 
@@ -96,6 +97,32 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 	iPixelFormat = ChoosePixelFormat(hdc, &pfd);
 	if (iPixelFormat == 0) {
 		printf("Failed to choose pixel format.\n");
+		return JNI_FALSE;
+	}
+
+	PIXELFORMATDESCRIPTOR desc;
+	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
+		printf("Could not describe pixel format\n");
+		return JNI_FALSE;
+	}
+
+	if (desc.cColorBits < colorBits) {
+		printf("This application requires a greater colour depth.\n");
+		return JNI_FALSE;
+	}
+
+	if (desc.cStencilBits < stencilBits) {
+		printf("This application requires a greater stencil depth.\n");
+		return JNI_FALSE;
+	}
+
+	if (desc.cDepthBits < depthBits) {
+		printf("This application requires a greater depth buffer depth.\n");
+		return JNI_FALSE;
+	}
+
+	if ((desc.dwFlags & flags) == 0) {
+		printf("Capabilities not supported.\n");
 		return JNI_FALSE;
 	}
 
