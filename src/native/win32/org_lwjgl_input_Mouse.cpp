@@ -249,18 +249,18 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
   (JNIEnv *env, jclass clazz, jlong cursor_handle)
 {
+	if (mDIDevice == NULL)
+		throwException(env, "null device!");
 	if (cursor_handle != 0) {
-		if (mDIDevice == NULL)
-			throwException(env, "null device!");
-		mDIDevice->Unacquire();
-		if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
-			throwException(env, "Could not set the CooperativeLevel.");
-		    return;
-		}
 		HCURSOR cursor = (HCURSOR)cursor_handle;
 		SetClassLong(hwnd, GCL_HCURSOR, (LONG)cursor);
 		SetCursor(cursor);
 		if (!usingNativeCursor) {
+			mDIDevice->Unacquire();
+			if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+				throwException(env, "Could not set the CooperativeLevel.");
+				return;
+			}
 			/* Reset cursor position to middle of the window */
 			RECT clientRect;
 			GetWindowRect(hwnd, &windowRect);
@@ -282,6 +282,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			}
 			ShowCursor(FALSE);
 			usingNativeCursor = false;
+			mDIDevice->Acquire();
 		}
 	}
 }
