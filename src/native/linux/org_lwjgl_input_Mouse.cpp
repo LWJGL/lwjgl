@@ -49,10 +49,15 @@
 
 #define NUM_BUTTONS 3
 
+#define POINTER_WARP_BORDER 10
+#define WARP_RETRY 5
+
 extern Display *disp;
 extern Window win;
 extern int screen;
 extern int current_fullscreen;
+extern int win_width;
+extern int win_height;
 
 bool pointer_grabbed;
 
@@ -182,10 +187,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 #endif
 		return JNI_FALSE;
 	}
-	XWarpPointer(disp, None, win, 0, 0, 0, 0, 0, 0);
-	XEvent event;
-	while (XCheckMaskEvent(disp, ButtonPressMask | ButtonReleaseMask | PointerMotionMask, &event))
-		; // delete events that are pending
 	return JNI_TRUE;
 }
 
@@ -266,13 +267,41 @@ int checkPointer() {
 				}
 				break;
 			case MotionNotify:
-				current_x = event.xbutton.x;
-				current_y = event.xbutton.y;
+				current_x = event.xmotion.x;
+				current_y = event.xmotion.y;
 				break;
 			default: assert(0);
 		}
 	}
 	return count;
+}
+
+void warpPointer(void) {
+	int i;
+	// Reset pointer to middle of screen if inside a certain inner border
+	if (current_x < POINTER_WARP_BORDER || current_y < POINTER_WARP_BORDER || 
+			current_x > win_width - POINTER_WARP_BORDER || current_y > win_height - POINTER_WARP_BORDER) {
+		current_x = last_x = win_width/2;
+		current_y = last_y = win_height/2;
+		XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
+		XEvent event;
+		// Try to catch the warp pointer event
+		for (i = 0; i < WARP_RETRY; i++) {
+			XMaskEvent(disp, PointerMotionMask, &event);
+			if (event.xmotion.x > current_x - POINTER_WARP_BORDER &&
+				event.xmotion.x < current_x + POINTER_WARP_BORDER &&
+				event.xmotion.y > current_y - POINTER_WARP_BORDER &&
+				event.xmotion.y < current_y + POINTER_WARP_BORDER)
+				break;
+#ifdef _DEBUG
+			printf("Skipped event searching for warp event %d, %d\n", event.xmotion.x, event.xmotion.y);
+#endif
+		}
+#ifdef _DEBUG
+		if (i == WARP_RETRY)
+			printf("Never got warp event\n");
+#endif
+	}
 }
 
 /*
@@ -297,4 +326,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
 	unsigned char * class_buttons = (unsigned char *) env->GetPrimitiveArrayCritical(buttonsArray, NULL);
 	memcpy(class_buttons, buttons, NUM_BUTTONS*sizeof(unsigned char));
 	env->ReleasePrimitiveArrayCritical(buttonsArray, class_buttons, 0);
+	if (current_fullscreen)
+		warpPointer();
 }

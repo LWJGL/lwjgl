@@ -57,6 +57,8 @@ int screen;
 int current_fullscreen;
 int current_focused;
 Window win;
+int win_width;
+int win_height;
 XF86VidModeModeInfo **avail_modes;
 XVisualInfo * vis_info;
 
@@ -122,7 +124,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
                             
 
 
-
+	win_width = width;
+	win_height = height;
 	current_fullscreen = fullscreen;
 	current_focused = 0;
 	disp = XOpenDisplay(NULL);
