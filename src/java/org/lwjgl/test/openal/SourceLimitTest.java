@@ -31,10 +31,10 @@
  */
 package org.lwjgl.test.openal;
 
+import java.nio.IntBuffer;
+
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.OpenALException;
-
-import java.nio.IntBuffer;
 
 /**
  * $Id$

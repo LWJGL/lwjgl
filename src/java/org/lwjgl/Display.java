@@ -32,11 +32,11 @@
 
 package org.lwjgl;
 
-import java.util.HashSet;
-import java.util.Arrays;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * $Id$

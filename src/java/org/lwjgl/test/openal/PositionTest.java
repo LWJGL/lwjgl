@@ -3,11 +3,14 @@ package org.lwjgl.test.openal;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.*;
-import org.lwjgl.openal.*;
-import org.lwjgl.opengl.*;
+import org.lwjgl.Display;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.glu.GLU;
-import org.lwjgl.input.*;
 
 /**
  * $Id$

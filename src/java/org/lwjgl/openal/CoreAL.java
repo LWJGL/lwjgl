@@ -32,8 +32,8 @@
 package org.lwjgl.openal;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 /**
  * $Id$
  * <br>

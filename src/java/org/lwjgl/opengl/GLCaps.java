@@ -32,13 +32,13 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.Sys;
-
-import java.lang.reflect.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.lwjgl.Sys;
 
 /**
  * $Id$

@@ -31,12 +31,12 @@
  */
 package org.lwjgl.test.openal;
 
-import org.lwjgl.openal.AL;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.openal.AL;
 
 /**
  * $Id$

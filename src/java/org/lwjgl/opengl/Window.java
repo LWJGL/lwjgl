@@ -47,10 +47,10 @@ package org.lwjgl.opengl;
  * @author foo
  */
 
+import java.util.HashSet;
+
 import org.lwjgl.Display;
 import org.lwjgl.Sys;
-
-import java.util.HashSet;
 
 public final class Window {
 

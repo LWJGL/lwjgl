@@ -32,7 +32,7 @@
 
 package org.lwjgl.opengl;
 
-public class StateStack {
+class StateStack {
 	/** Only int state is tracked */
 	private final int[] state_stack;
 	private int stack_pos;

@@ -41,13 +41,21 @@
 
 package org.lwjgl.test.opengl;
 
-import org.lwjgl.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.opengl.glu.GLU;
-import org.lwjgl.opengl.arb.*;
-import org.lwjgl.input.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
-import java.nio.*;
+import org.lwjgl.Display;
+import org.lwjgl.DisplayMode;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.ARBVertexBufferObject;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLCaps;
+import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.glu.GLU;
 
 public final class VBOIndexTest {
 	static {

@@ -31,19 +31,18 @@
  */
 package org.lwjgl.test.openal;
 
-import org.lwjgl.openal.AL;
-
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
-import java.nio.ByteOrder;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.*;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+
+import org.lwjgl.openal.AL;
 
 /**
  * $Id$

@@ -31,8 +31,8 @@
  */
 package org.lwjgl.test.input;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.glu.GLU;

@@ -1,0 +1,158 @@
+/*
+* Copyright (c) 2002 Lightweight Java Game Library Project
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are
+* met:
+*
+* * Redistributions of source code must retain the above copyright
+*   notice, this list of conditions and the following disclaimer.
+*
+* * Redistributions in binary form must reproduce the above copyright
+*   notice, this list of conditions and the following disclaimer in the
+*   documentation and/or other materials provided with the distribution.
+*
+* * Neither the name of 'Light Weight Java Game Library' nor the names of
+*   its contributors may be used to endorse or promote products derived
+*   from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+* TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+* PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+// ----------------------------------
+// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVOcclusionQuery
+// ----------------------------------
+
+#include "org_lwjgl_opengl_NVOcclusionQuery.h"
+#include "extgl.h"
+#include "checkGLerror.h"
+
+typedef void (APIENTRY * glGenOcclusionQueriesNVPROC) (GLsizei n, GLuint *ids);
+typedef void (APIENTRY * glDeleteOcclusionQueriesNVPROC) (GLsizei n, const GLuint *ids);
+typedef GLboolean (APIENTRY * glIsOcclusionQueryNVPROC) (GLuint id);
+typedef void (APIENTRY * glBeginOcclusionQueryNVPROC) (GLuint id);
+typedef void (APIENTRY * glEndOcclusionQueryNVPROC) (void);
+typedef void (APIENTRY * glGetOcclusionQueryivNVPROC) (GLuint id, GLenum pname, GLint *params);
+typedef void (APIENTRY * glGetOcclusionQueryuivNVPROC) (GLuint id, GLenum pname, GLuint *params);
+
+static glGenOcclusionQueriesNVPROC glGenOcclusionQueriesNV;
+static glDeleteOcclusionQueriesNVPROC glDeleteOcclusionQueriesNV;
+static glIsOcclusionQueryNVPROC glIsOcclusionQueryNV;
+static glBeginOcclusionQueryNVPROC glBeginOcclusionQueryNV;
+static glEndOcclusionQueryNVPROC glEndOcclusionQueryNV;
+static glGetOcclusionQueryivNVPROC glGetOcclusionQueryivNV;
+static glGetOcclusionQueryuivNVPROC glGetOcclusionQueryuivNV;
+
+void extgl_InitNVOcclusionQuery(JNIEnv *env, jobject ext_set)
+{
+	if (!extgl_Extensions.GL_NV_occlusion_query)
+		return;
+	glGenOcclusionQueriesNV = (glGenOcclusionQueriesNVPROC) extgl_GetProcAddress("glGenOcclusionQueriesNV");
+	glDeleteOcclusionQueriesNV = (glDeleteOcclusionQueriesNVPROC) extgl_GetProcAddress("glDeleteOcclusionQueriesNV");
+	glIsOcclusionQueryNV = (glIsOcclusionQueryNVPROC) extgl_GetProcAddress("glIsOcclusionQueryNV");
+	glBeginOcclusionQueryNV = (glBeginOcclusionQueryNVPROC) extgl_GetProcAddress("glBeginOcclusionQueryNV");
+	glEndOcclusionQueryNV = (glEndOcclusionQueryNVPROC) extgl_GetProcAddress("glEndOcclusionQueryNV");
+	glGetOcclusionQueryivNV = (glGetOcclusionQueryivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryivNV");
+	glGetOcclusionQueryuivNV = (glGetOcclusionQueryuivNVPROC) extgl_GetProcAddress("glGetOcclusionQueryuivNV");
+	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_occlusion_query)
+}
+
+/*
+ * Class:	org.lwjgl.opengl.NVOcclusionQuery
+ * Method:	nglGenOcclusionQueriesNV
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGenOcclusionQueriesNV
+	(JNIEnv * env, jclass clazz, jint n, jobject piIDs, jint piIDs_offset)
+{
+	CHECK_EXISTS(glGenOcclusionQueriesNV)
+	GLuint *piIDs_ptr = (GLuint *)env->GetDirectBufferAddress(piIDs) + piIDs_offset;
+	glGenOcclusionQueriesNV(n, piIDs_ptr);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:	org.lwjgl.opengl.NVOcclusionQuery
+ * Method:	nglDeleteOcclusionQueriesNV
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglDeleteOcclusionQueriesNV
+	(JNIEnv * env, jclass clazz, jint n, jobject piIDs, jint piIDs_offset)
+{
+	CHECK_EXISTS(glDeleteOcclusionQueriesNV)
+	GLuint *piIDs_ptr = (GLuint *)env->GetDirectBufferAddress(piIDs) + piIDs_offset;
+	glDeleteOcclusionQueriesNV(n, piIDs_ptr);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:	org.lwjgl.opengl.NVOcclusionQuery
+ * Method:	glIsOcclusionQueryNV
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glIsOcclusionQueryNV
+	(JNIEnv * env, jclass clazz, jint id)
+{
+	CHECK_EXISTS(glIsOcclusionQueryNV)
+	GLboolean result = glIsOcclusionQueryNV(id);
+	CHECK_GL_ERROR
+	return result;
+}
+
+/*
+ * Class:	org.lwjgl.opengl.NVOcclusionQuery
+ * Method:	glBeginOcclusionQueryNV
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glBeginOcclusionQueryNV
+	(JNIEnv * env, jclass clazz, jint id)
+{
+	CHECK_EXISTS(glBeginOcclusionQueryNV)
+	glBeginOcclusionQueryNV(id);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:	org.lwjgl.opengl.NVOcclusionQuery
+ * Method:	glEndOcclusionQueryNV
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_glEndOcclusionQueryNV
+	(JNIEnv * env, jclass clazz)
+{
+	CHECK_EXISTS(glEndOcclusionQueryNV)
+	glEndOcclusionQueryNV();
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:	org.lwjgl.opengl.NVOcclusionQuery
+ * Method:	nglGetOcclusionQueryivNV
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryivNV
+	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject piParams, jint piParams_offset)
+{
+	CHECK_EXISTS(glGetOcclusionQueryivNV)
+	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
+	glGetOcclusionQueryivNV(id, pname, piParams_ptr);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:	org.lwjgl.opengl.NVOcclusionQuery
+ * Method:	nglGetOcclusionQueryuivNV
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVOcclusionQuery_nglGetOcclusionQueryuivNV
+	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject piParams, jint piParams_offset)
+{
+	CHECK_EXISTS(glGetOcclusionQueryuivNV)
+	GLuint *piParams_ptr = (GLuint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
+	glGetOcclusionQueryuivNV(id, pname, piParams_ptr);
+	CHECK_GL_ERROR
+}

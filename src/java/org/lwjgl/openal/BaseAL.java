@@ -32,11 +32,11 @@
 package org.lwjgl.openal;
 
 import java.io.File;
-import java.util.StringTokenizer;
 import java.lang.reflect.Method;
+import java.util.StringTokenizer;
 
-import org.lwjgl.Sys;
 import org.lwjgl.Display;
+import org.lwjgl.Sys;
 
 /**
  * $Id$

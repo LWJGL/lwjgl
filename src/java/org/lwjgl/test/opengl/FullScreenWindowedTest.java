@@ -31,9 +31,11 @@
  */
 package org.lwjgl.test.opengl;
 
-import org.lwjgl.*;
-import org.lwjgl.input.*;
-import org.lwjgl.opengl.*;
+import org.lwjgl.Display;
+import org.lwjgl.DisplayMode;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.Window;
 import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.vector.Vector2f;
 

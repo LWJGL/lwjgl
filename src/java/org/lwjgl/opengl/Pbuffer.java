@@ -32,7 +32,7 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.*;
+import org.lwjgl.Sys;
 
 /**
  * $Id$

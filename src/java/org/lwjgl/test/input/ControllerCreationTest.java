@@ -31,9 +31,9 @@
  */
 package org.lwjgl.test.input;
 
-import org.lwjgl.Sys;
 import org.lwjgl.Display;
 import org.lwjgl.DisplayMode;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Window;

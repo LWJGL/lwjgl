@@ -31,12 +31,18 @@
  */
 package org.lwjgl.test.input;
 
-import org.lwjgl.*;
-import org.lwjgl.input.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.opengl.glu.GLU;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 
-import java.nio.*;
+import org.lwjgl.Display;
+import org.lwjgl.DisplayMode;
+import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.glu.GLU;
 
 /**
  * $Id$

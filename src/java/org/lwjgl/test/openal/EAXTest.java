@@ -36,9 +36,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.IntBuffer;
 
-import org.lwjgl.openal.eax.*;
-import org.lwjgl.openal.*;
 import org.lwjgl.Sys;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.eax.EAX;
+import org.lwjgl.openal.eax.EAXBufferProperties;
+import org.lwjgl.openal.eax.EAXListenerProperties;
 
 /**
  * $Id$

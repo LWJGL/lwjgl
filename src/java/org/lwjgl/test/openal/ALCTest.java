@@ -31,9 +31,9 @@
  */
 package org.lwjgl.test.openal;
 
-import org.lwjgl.openal.ALC;
-
 import java.nio.IntBuffer;
+
+import org.lwjgl.openal.ALC;
 
 /**
  * $Id$

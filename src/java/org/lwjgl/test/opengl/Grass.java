@@ -41,15 +41,23 @@
 
 package org.lwjgl.test.opengl;
 
-import org.lwjgl.input.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.opengl.glu.GLU;
-import org.lwjgl.opengl.nv.*;
-import org.lwjgl.*;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.Random;
 
-import java.io.*;
-import java.nio.*;
-import java.util.*;
+import org.lwjgl.Display;
+import org.lwjgl.DisplayMode;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLCaps;
+import org.lwjgl.opengl.NVVertexProgram;
+import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.glu.GLU;
 
 public class Grass {
 

@@ -32,11 +32,11 @@
 
 package org.lwjgl.input;
 
-import org.lwjgl.Sys;
-
-import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+
+import org.lwjgl.Sys;
 
 /**
  * $Id$

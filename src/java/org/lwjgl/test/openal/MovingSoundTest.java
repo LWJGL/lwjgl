@@ -31,13 +31,14 @@
  */
 package org.lwjgl.test.openal;
 
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.eax.*;
+import java.nio.IntBuffer;
+
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.eax.EAX;
+import org.lwjgl.openal.eax.EAXListenerProperties;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.vector.Vector3f;
-
-import java.nio.IntBuffer;
 
 /**
  * $Id$

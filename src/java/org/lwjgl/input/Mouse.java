@@ -32,12 +32,12 @@
 
 package org.lwjgl.input;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.lwjgl.*;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
 
 /**
@@ -235,7 +235,7 @@ public class Mouse {
 	 */
 	public static void create() throws Exception {
     
-    assert Window.isCreated() : "Window must be created prior to creating mouse";
+		assert Window.isCreated() : "Window must be created prior to creating mouse";
     
 		if (!initialized) {
 			initialize();
