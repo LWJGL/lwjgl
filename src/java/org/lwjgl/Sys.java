@@ -79,7 +79,7 @@ public final class Sys {
 	}
 	
 	/** The native library name */
-	public static String LIBRARY_NAME;
+	private static String LIBRARY_NAME;
 	
 	static {
 		try {
@@ -90,6 +90,13 @@ public final class Sys {
 			// library
 			LIBRARY_NAME = "lwjgl_d";
 		}
+	}
+	
+	/**
+	 * @return the name of the native library to load
+	 */
+	public static String getLibraryName() {
+		return LIBRARY_NAME;
 	}
 
 	/**

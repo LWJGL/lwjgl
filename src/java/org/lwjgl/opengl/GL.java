@@ -1443,10 +1443,6 @@ public class GL extends CoreGL implements GLConstants {
 		int outZ,
 		int outW);
 
-	static {
-		System.loadLibrary(Sys.LIBRARY_NAME);
-	}
-	
 	/*
 	 * Available extensions
 	 */

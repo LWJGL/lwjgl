@@ -45,7 +45,7 @@ import org.lwjgl.Sys;
 public class GLU implements GLUConstants {
 
 	static {
-		System.loadLibrary(Sys.LIBRARY_NAME);
+		System.loadLibrary(Sys.getLibraryName());
 	}
 
 	/** Handle to GL */

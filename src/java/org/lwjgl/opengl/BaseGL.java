@@ -53,7 +53,7 @@ import org.lwjgl.Sys;
 abstract class BaseGL {
 	
 	static {
-		System.loadLibrary(Sys.LIBRARY_NAME);
+		System.loadLibrary(Sys.getLibraryName());
 	}
 	
 	/** The current rendering context */

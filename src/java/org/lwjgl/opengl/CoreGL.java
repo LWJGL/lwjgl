@@ -44,10 +44,6 @@ import org.lwjgl.Sys;
  */
 public class CoreGL extends BaseGL implements CoreGLConstants {
 	
-	static {
-		System.loadLibrary(Sys.LIBRARY_NAME);
-	}
-
 	/**
 	 * Constructor for CoreGL.
 	 */

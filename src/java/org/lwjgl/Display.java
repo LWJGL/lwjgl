@@ -46,7 +46,7 @@ package org.lwjgl;
 public final class Display {
 
 	static {
-		System.loadLibrary(Sys.LIBRARY_NAME);
+		System.loadLibrary(Sys.getLibraryName());
 	}
 
 	/** Has the display been created? */
