@@ -105,6 +105,7 @@ public final class GLContext {
 	public static boolean GL_EXT_depth_bounds_test;
 	public static boolean GL_EXT_draw_range_elements;
 	public static boolean GL_EXT_fog_coord;
+	public static boolean GL_EXT_framebuffer_object;
 	public static boolean GL_EXT_multi_draw_arrays;
 	public static boolean GL_EXT_packed_pixels;
 	public static boolean GL_EXT_paletted_texture;
