@@ -38,8 +38,8 @@
 #define OPENAL
 
 #include <windows.h>
-#include <al.h>
-#include <alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #include <eax.h>
 
 EAXSet	eaxSet;						// EAXSet function, retrieved if EAX Extension is supported
