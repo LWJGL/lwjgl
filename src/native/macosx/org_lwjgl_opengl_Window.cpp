@@ -162,8 +162,8 @@ static void destroy(void) {
 static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
 	AGLDrawable drawable = GetWindowPort(win_ref);
 	SetPort(drawable);
-	GLint attrib[] = {AGL_RGBA, 
-			  AGL_DOUBLEBUFFER, 
+	GLint attrib[] = {AGL_RGBA,
+			  AGL_DOUBLEBUFFER,
 			  AGL_ACCELERATED,
 			  AGL_NO_RECOVERY,
 			  AGL_MINIMUM_POLICY,
@@ -227,7 +227,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		return;
 	}
 	if (current_fullscreen)
-		status = BeginFullScreen(&fullscreen_ptr, NULL, 0, 0, &win_ref, NULL, 0);
+		status = BeginFullScreen(&fullscreen_ptr, NULL, NULL, NULL, &win_ref, NULL, 0);
 	else
 		status = CreateNewWindow(kDocumentWindowClass, window_attr, &rect, &win_ref);
 	if (noErr != status) {
@@ -274,7 +274,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle(JNIEnv * env, jcla
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update(JNIEnv *env, jclass clazz) {
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz) {                                                                                                                                                                                              
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz) {
 	aglSwapBuffers(context);
 }
                                                                                                                                                                 

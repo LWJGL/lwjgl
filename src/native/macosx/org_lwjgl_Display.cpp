@@ -39,16 +39,80 @@
  * @version $Revision$
  */
 
-#include <JavaVM/jni.h>
 #include "org_lwjgl_Display.h"
+#include "common_tools.h"
+#include "tools.h"
+
+static CFDictionaryRef original_mode;
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_init(JNIEnv * env, jclass clazz) {
+	original_mode = CGDisplayCurrentMode(kCGDirectMainDisplay);
+	long width;
+	long height;
+	long bpp;
+	long freq;
+	getDictLong(original_mode, kCGDisplayWidth, &width);
+	getDictLong(original_mode, kCGDisplayHeight, &height);
+	getDictLong(original_mode, kCGDisplayBitsPerPixel, &bpp);
+	getDictLong(original_mode, kCGDisplayRefreshRate, &freq);
+	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/DisplayMode");
+	jmethodID ctor = env->GetMethodID(jclass_DisplayMode, "<init>", "(IIII)V");
+	jobject newMode = env->NewObject(jclass_DisplayMode, ctor, width, height, bpp, freq);
+	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
+	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_setDisplayMode(JNIEnv * env, jclass clazz, jobject mode) {
+	jclass cls_displayMode = env->FindClass("org/lwjgl/DisplayMode");
+	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
+	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
+	jfieldID fid_bpp = env->GetFieldID(cls_displayMode, "bpp", "I");
+	jfieldID fid_freq = env->GetFieldID(cls_displayMode, "freq", "I");
+	int width = env->GetIntField(mode, fid_width);
+	int height = env->GetIntField(mode, fid_height);
+	int bpp = env->GetIntField(mode, fid_bpp);
+	int freq = env->GetIntField(mode, fid_freq);
+	CGDisplayCapture(kCGDirectMainDisplay);
+	CFDictionaryRef displayMode = CGDisplayBestModeForParametersAndRefreshRate(kCGDirectMainDisplay, bpp, width, height, freq, NULL);
+	CGDisplaySwitchToMode(kCGDirectMainDisplay, displayMode);
+	            
+	jmethodID ctor = env->GetMethodID(cls_displayMode, "<init>", "(IIII)V");
+	jobject newMode = env->NewObject(cls_displayMode, ctor, width, height, bpp, freq);
+	jfieldID fid_initialMode = env->GetStaticFieldID(clazz, "mode", "Lorg/lwjgl/DisplayMode;");
+	env->SetStaticObjectField(clazz, fid_initialMode, newMode);
 }
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes(JNIEnv * env, jclass clazz) {
+	CFArrayRef modes = CGDisplayAvailableModes(kCGDirectMainDisplay);
+	int size = CFArrayGetCount(modes);
+	int avail_modes = 0;
+	for (int i = 0; i < size; i++) {
+		CFDictionaryRef mode = (CFDictionaryRef)CFArrayGetValueAtIndex(modes, i);
+		long bpp;
+		getDictLong(mode, kCGDisplayBitsPerPixel, &bpp);
+		if (bpp > 8)
+			avail_modes++;
+	}
+	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
+	jobjectArray ret = env->NewObjectArray(avail_modes, displayModeClass, NULL);
+	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
+	int array_index = 0;
+	for (int i = 0; i < size; i++) {
+		CFDictionaryRef mode = (CFDictionaryRef)CFArrayGetValueAtIndex(modes, i);
+		long width;
+		long height;
+		long bpp;
+		long freq;
+		getDictLong(mode, kCGDisplayWidth, &width);
+		getDictLong(mode, kCGDisplayHeight, &height);
+		getDictLong(mode, kCGDisplayBitsPerPixel, &bpp);
+		getDictLong(mode, kCGDisplayRefreshRate, &freq);
+		if (bpp > 8) {
+			jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, width, height, bpp, freq);
+			env->SetObjectArrayElement(ret, array_index++, displayMode);
+		}
+	}
+	return ret;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform(JNIEnv * env, jclass clazz) {
@@ -62,6 +126,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_setGammaRamp(JNIEnv *env, jcla
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode(JNIEnv *, jclass) {
+	CGDisplaySwitchToMode(kCGDirectMainDisplay, original_mode);
+	CGDisplayRelease(kCGDirectMainDisplay);
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter(JNIEnv * , jclass) {

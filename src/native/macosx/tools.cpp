@@ -4,6 +4,17 @@
 
 MPCriticalRegionID critical_region;
 
+bool getDictLong(CFDictionaryRef dict, CFStringRef key, long *key_value) {
+	CFTypeRef val = CFDictionaryGetValue(dict, key);
+	if (val != NULL) {
+		CFTypeID type = CFGetTypeID(val);
+		if (type == CFNumberGetTypeID())
+			if (CFNumberGetValue((CFNumberRef)val, kCFNumberLongType, key_value))
+				return true;
+	}
+	return false;
+}
+
 bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_class, UInt32 event_kind) {
 	EventTypeSpec event_type;
 	EventHandlerUPP handler_upp = NewEventHandlerUPP(func);

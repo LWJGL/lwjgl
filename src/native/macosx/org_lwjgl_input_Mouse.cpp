@@ -134,16 +134,6 @@ static void printCFNumber(CFNumberRef num) {
 		printf("0x%lx (%ld)", number, number);
 }
 */
-static bool getLongProperty(CFDictionaryRef dict, CFStringRef key, long *key_value) {
-	CFTypeRef val = CFDictionaryGetValue(dict, key);
-	if (val != NULL) {
-		CFTypeID type = CFGetTypeID(val);
-		if (type == CFNumberGetTypeID())
-			if (CFNumberGetValue((CFNumberRef)val, kCFNumberLongType, key_value))
-				return true;
-	}
-	return false;
-}
 
 /*static void printProperty(CFDictionaryRef dict, CFStringRef key) {
 	CFTypeRef val = CFDictionaryGetValue(dict, key);
@@ -224,9 +214,9 @@ static void searchDictionary(CFDictionaryRef dict) {
 	long cookie_num;
 	long usage;
 	long usage_page;
-	if (!getLongProperty(dict, CFSTR(kIOHIDElementCookieKey), &cookie_num) ||
-	    !getLongProperty(dict, CFSTR(kIOHIDElementUsageKey), &usage) ||
-	    !getLongProperty(dict, CFSTR(kIOHIDElementUsagePageKey), &usage_page))
+	if (!getDictLong(dict, CFSTR(kIOHIDElementCookieKey), &cookie_num) ||
+	    !getDictLong(dict, CFSTR(kIOHIDElementUsageKey), &usage) ||
+	    !getDictLong(dict, CFSTR(kIOHIDElementUsagePageKey), &usage_page))
 		return;
 	testCookie(usage_page, usage, (IOHIDElementCookie)cookie_num, &x_axis_cookie, kHIDPage_GenericDesktop, kHIDUsage_GD_X);
 	testCookie(usage_page, usage, (IOHIDElementCookie)cookie_num, &y_axis_cookie, kHIDPage_GenericDesktop, kHIDUsage_GD_Y);
@@ -284,8 +274,8 @@ static bool findDevice(void) {
 		if (kern_err == KERN_SUCCESS && dev_props != NULL) {
 			long usage;
 			long usage_page;
-			if (getLongProperty(dev_props, CFSTR(kIOHIDPrimaryUsageKey), &usage) &&
-			    getLongProperty(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey), &usage_page) &&
+			if (getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsageKey), &usage) &&
+			    getDictLong(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey), &usage_page) &&
 			    usage_page == kHIDPage_GenericDesktop && usage == kHIDUsage_GD_Mouse) {
 				success = initDevice(hid_device, dev_props);
 			}
