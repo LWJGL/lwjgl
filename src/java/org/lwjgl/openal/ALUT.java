@@ -54,8 +54,8 @@ public class ALUT {
 	}
 
 	/**
-	* Override to provide any initialization code after creation.
-	*/
+		* Override to provide any initialization code after creation.
+		*/
 	protected void init() {
 	}
 
@@ -107,13 +107,6 @@ public class ALUT {
 	protected native void nDestroy();
 
 	/**
-	 * Initializes the OpenAL engine
-	 *
-	 * @param args String array of arguments to engine
-	 */
-	public native void init(String[] args);
-
-	/**
 	 * Loads a wave file into memory
 	 *
 	 * @param file name of file to load (in current working directory)
@@ -138,9 +131,4 @@ public class ALUT {
 	 * @param freq frequency of the data
 	 */
 	public native void unloadWAV(int format, int data, int size, int freq);
-
-	/**
-	 * Deinitializes the OpenAL engine
-	 */
-	public native void exit();
 }
