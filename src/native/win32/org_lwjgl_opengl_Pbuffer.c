@@ -53,10 +53,7 @@ static bool isPbufferSupported(WGLExtensions *extensions) {
 	return extensions->WGL_ARB_pixel_format && extensions->WGL_ARB_pbuffer;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilities
-  (JNIEnv *env, jobject self, jobject pixel_format)
-{
-	int caps = 0;
+static bool getExtensions(JNIEnv *env, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps) {
 	int origin_x = 0; int origin_y = 0;
 	HWND dummy_hwnd;
 	HDC dummy_hdc;
@@ -64,27 +61,26 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilitie
 	HDC saved_hdc;
 	HGLRC saved_context;
 	int pixel_format_id;
-	WGLExtensions extensions;
 	
-	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, NULL, false, true, true, false);
+	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, true, false, false);
 	if (pixel_format_id == -1)
-		return 0;
+		return false;
 	dummy_hwnd = createDummyWindow(origin_x, origin_y);
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Could not create dummy window");
-		return 0;
+		return false;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
 	if (!applyPixelFormat(dummy_hdc, pixel_format_id)) {
 		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Could not apply pixel format");
-		return 0;
+		return false;
 	}
 	dummy_context = wglCreateContext(dummy_hdc);
 	if (dummy_context == NULL) {
 		closeWindow(&dummy_hwnd, &dummy_hdc);
 		throwException(env, "Could not create dummy context");
-		return 0;
+		return false;
 	}
 	saved_hdc = wglGetCurrentDC();
 	saved_context = wglGetCurrentContext();
@@ -93,9 +89,23 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilitie
 		closeWindow(&dummy_hwnd, &dummy_hdc);
 		wglDeleteContext(dummy_context);
 		throwException(env, "Could not make dummy context current");
-		return 0;
+		return false;
 	}
-	extgl_InitWGL(&extensions);
+	extgl_InitWGL(extensions);
+	if (!wglMakeCurrent(saved_hdc, saved_context))
+		printfDebug("ERROR: Could not restore current context\n");
+	closeWindow(&dummy_hwnd, &dummy_hdc);
+	wglDeleteContext(dummy_context);
+	return true;
+}
+
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilities
+  (JNIEnv *env, jobject self, jobject pixel_format)
+{
+	int caps = 0;
+	WGLExtensions extensions;
+	if (!getExtensions(env, &extensions, pixel_format, NULL))
+		return 0;
 	if (isPbufferSupported(&extensions))
 		caps |= org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED;
 
@@ -107,10 +117,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilitie
 
 	if (extensions.WGL_NV_render_depth_texture)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED;
-	if (!wglMakeCurrent(saved_hdc, saved_context))
-		printfDebug("ERROR: Could not restore current context\n");
-	closeWindow(&dummy_hwnd, &dummy_hdc);
-	wglDeleteContext(dummy_context);
 
 	return caps;
 }
@@ -138,8 +144,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nCreate
 	} else {
 		pBufferAttribs_ptr = NULL;
 	}
-	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, true, true, false);
+	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, false, true, false);
 	if (pixel_format_id == -1)
+		return;
+	if (!getExtensions(env, &extensions, pixel_format, pixelFormatCaps))
 		return;
 	dummy_hwnd = createDummyWindow(origin_x, origin_y);
 	if (dummy_hwnd == NULL) {
@@ -147,34 +155,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nCreate
 		return;
 	}
 	dummy_hdc = GetDC(dummy_hwnd);
-	if (!applyPixelFormat(dummy_hdc, pixel_format_id)) {
-		closeWindow(&dummy_hwnd, &dummy_hdc);
-		throwException(env, "Could not apply pixel format");
-		return;
-	}
-	dummy_context = wglCreateContext(dummy_hdc);
-	if (dummy_context == NULL) {
-		closeWindow(&dummy_hwnd, &dummy_hdc);
-		throwException(env, "Could not create dummy context");
-		return;
-	}
-	saved_hdc = wglGetCurrentDC();
-	saved_context = wglGetCurrentContext();
-	if (!wglMakeCurrent(dummy_hdc, dummy_context)) {
-		wglMakeCurrent(saved_hdc, saved_context);
-		wglDeleteContext(dummy_context);
-		closeWindow(&dummy_hwnd, &dummy_hdc);
-		throwException(env, "Could not make context current");
-		return;
-	}
-	extgl_InitWGL(&extensions);
-	wglMakeCurrent(saved_hdc, saved_context);
-	wglDeleteContext(dummy_context);
-	closeWindow(&dummy_hwnd, &dummy_hdc);
-	if (!isPbufferSupported(&extensions)) {
-		throwException(env, "Pbuffers are not supported");
-		return;
-	}
 	Pbuffer = extensions.wglCreatePbufferARB(dummy_hdc, pixel_format_id, width, height, pBufferAttribs_ptr);
 	closeWindow(&dummy_hwnd, &dummy_hdc);
 	if (Pbuffer == NULL) {
