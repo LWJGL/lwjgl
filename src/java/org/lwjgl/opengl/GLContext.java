@@ -278,6 +278,8 @@ public final class GLContext {
 		where the numbers all have one or more digits.
 		*/
 		String version = GL11.glGetString(GL11.GL_VERSION);
+		if (version == null)
+			throw new IllegalStateException("glGetString(GL_VERSION) returned null - possibly caused by missing current context.");
 		StringTokenizer version_tokenizer = new StringTokenizer(version, ". ");
 		String major_string = version_tokenizer.nextToken();
 		String minor_string = version_tokenizer.nextToken();
@@ -285,7 +287,7 @@ public final class GLContext {
 		int majorVersion = Integer.parseInt(major_string);
 		int minorVersion = Integer.parseInt(minor_string);
 
-		if ( majorVersion == 2 ) {
+		if (majorVersion == 2) {
 			// ----------------------[ 2.X ]----------------------
 			addExtensionClass(exts, exts_names, "GL20", "OpenGL20");
 			// ----------------------[ 1.X ]----------------------
@@ -294,7 +296,7 @@ public final class GLContext {
 			addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
 			addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
 		} else {
-			switch ( minorVersion ) {
+			switch (minorVersion) {
 				case 5:
 					addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
 					// Intentional fall through
