@@ -1,5 +1,4 @@
 #include "extilu.h"
-#define devILhandle muhko;
 
 /* Handle to ilu Library */
 #ifdef _WIN32
