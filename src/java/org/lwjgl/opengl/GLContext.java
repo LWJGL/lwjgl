@@ -332,7 +332,6 @@ public final class GLContext {
 			exts.put(extension_class, ext_name);
 		} catch (ClassNotFoundException e) {
 			// ignore
-			Sys.log("No support for "+ext_class_name+" in LWJGL "+Sys.VERSION+": "+e);
 		} catch (NoSuchMethodException e) {
 			// ignore
 		}
