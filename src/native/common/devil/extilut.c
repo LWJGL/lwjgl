@@ -11,7 +11,8 @@ static void* devILUThandle;
 #include <mach-o/dyld.h>
 #include <stdlib.h>
 #include <string.h>
-static const struct mach_header* devILUThandle;
+// note, we use the IL handle since it's all in one lib
+extern const struct mach_header* devILUThandle;
 #endif
 
 /**
@@ -31,7 +32,7 @@ static void *NativeGetFunctionPointer(const char *function) {
 		return NULL;
 	mac_symbol_name[0] = '_';
 	strcpy(&(mac_symbol_name[1]), function);
-	NSSymbol symbol = NSLookupSymbolInImage(devILUThandle, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
+	NSSymbol symbol = NSLookupSymbolInImage(devILhandle, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
 	free(mac_symbol_name);
 	if (symbol == NULL)
 		return NULL;
