@@ -1582,6 +1582,7 @@ public class GL extends CoreGL implements GLConstants {
 	public boolean SGIS_generate_mipmap;
 	public boolean SGIX_shadow;
 	public boolean SGIX_depth_texture;
+	public boolean OpenGL10;
 	public boolean OpenGL11;
 	public boolean OpenGL12;
 	public boolean OpenGL13;
@@ -1628,15 +1629,21 @@ public class GL extends CoreGL implements GLConstants {
 		int i = version.indexOf("1.");
 		if (i > -1) {
 			char c = version.charAt(i + 2);
-			if (c == '2') {
-				OpenGL12 = true;
-			} else if (c == '3') {
-				OpenGL12 = true;
-				OpenGL13 = true;
-			} else if (c == '4') {
-				OpenGL12 = true;
-				OpenGL13 = true;
-				OpenGL14 = true;
+                        // Each case intentionally falls through! 
+                        switch (c) { 
+				case '4': 
+					OpenGL14 = true; 
+				case '3': 
+					OpenGL13 = true; 
+				case '2': 
+					OpenGL12 = true; 
+				case '1': 
+					OpenGL11 = true; 
+				case '0': 
+					OpenGL10 = true; 
+					break ; 
+				default: 
+					// Unexpected character - ignore 
 			}
 		}
 	}
