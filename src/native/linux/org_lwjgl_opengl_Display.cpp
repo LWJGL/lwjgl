@@ -520,7 +520,6 @@ static void destroyContext(void) {
 	context = NULL;
         setRepeatMode(AutoRepeatModeDefault);
 	decDisplay();
-	extgl_Close();
 }
 
 static bool initWindowGLX13(JNIEnv *env, jobject pixel_format) {
@@ -618,17 +617,12 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getVersion(JNIEnv *env, 
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
-	if (!extgl_Open()) {
-		throwException(env, "Could not load gl libs");
-		return;
-	}
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
 		return;
 	current_screen = XDefaultScreen(disp);
 	if (!extgl_InitGLX(env, disp, current_screen)) {
 		decDisplay();
-		extgl_Close();
 		throwException(env, "Could not init GLX");
 		return;
 	}
@@ -640,7 +634,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 	}
 	if (!create_success) {
 		decDisplay();
-		extgl_Close();
 		return;
 	}
 }

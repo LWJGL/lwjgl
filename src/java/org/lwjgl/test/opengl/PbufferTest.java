@@ -97,6 +97,7 @@ public class PbufferTest {
   private void initialize() {
     try {
       //find displaymode
+      pbuffer = new Pbuffer(512, 512, new PixelFormat(), null);
       mode = findDisplayMode(800, 600, 16);
       Display.setDisplayMode(mode);
       // start of in windowed mode
@@ -175,7 +176,12 @@ public class PbufferTest {
     if (pbuffer.isBufferLost()) {
         System.out.println("Buffer contents lost - will recreate the buffer");
         pbuffer.destroy();
-        initPbuffer();
+	try {
+	        pbuffer = new Pbuffer(512, 512, new PixelFormat(), null);
+        	initPbuffer();
+	} catch (LWJGLException e) {
+		e.printStackTrace();
+	}
     }
 	try {
 	    pbuffer.makeCurrent();
@@ -235,7 +241,6 @@ public class PbufferTest {
 
   private void initPbuffer() {
       try {
-          pbuffer = new Pbuffer(512, 512, new PixelFormat(), null);
           pbuffer.makeCurrent();
           initGLState(256, 256, 0.5f);
           GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex_handle);

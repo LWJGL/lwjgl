@@ -120,15 +120,25 @@ extern "C" {
 /* Inaccessible static: OpenGL13 */
 /* Inaccessible static: OpenGL14 */
 /* Inaccessible static: OpenGL15 */
-/* Inaccessible static: extension_classes */
-/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL12 */
+/* Inaccessible static: exts */
+/* Inaccessible static: gl_ref_count */
+/* Inaccessible static: did_auto_load */
 /* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GLContext */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024GL11 */
 /*
  * Class:     org_lwjgl_opengl_GLContext
- * Method:    loadOpenGLLibrary
+ * Method:    nLoadOpenGLLibrary
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_loadOpenGLLibrary
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nLoadOpenGLLibrary
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     org_lwjgl_opengl_GLContext
+ * Method:    nUnloadOpenGLLibrary
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nUnloadOpenGLLibrary
   (JNIEnv *, jclass);
 
 /*

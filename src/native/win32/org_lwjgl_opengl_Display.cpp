@@ -674,11 +674,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Display_init(JNIEnv *env, jclass
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, jclass clazz, jobject pixel_format) {
-	if (!extgl_Open()) {
-		throwException(env, "Failed to open extgl");
-		return;
-	}
-
 	// 1. Register window class if necessary
 	if (!registerWindow()) {
 		throwException(env, "Could not register window class");
@@ -686,25 +681,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 	}
 
 	if (!createWindow(env, 1, 1, false, false)) {
-		extgl_Close();
 		return;
 	}
 	pixel_format_index = findPixelFormat(env, pixel_format);
 	if (pixel_format_index == -1) {
-		extgl_Close();
 		return;
 	}
 	// Special option for allowing software opengl	
 	if (!applyPixelFormat(env, hdc, pixel_format_index)) {
 		closeWindow();
-		extgl_Close();
 		return;
 	}
 	
 	hglrc = wglCreateContext(hdc);
 	if (hglrc == NULL) {
 		throwException(env, "Failed to create OpenGL rendering context");
-		extgl_Close();
 		return;
 	}
 	BOOL result = wglMakeCurrent(hdc, hglrc);
@@ -724,23 +715,19 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_createContext(JNIEnv *env, 
 		wglDeleteContext(hglrc);
 		closeWindow();
 		if (pixel_format_index == -1) {
-			extgl_Close();
 			return;
 		}
 		if (!createWindow(env, 1, 1, false, false)) {
-			extgl_Close();
 			return;
 		}
 		if (!applyPixelFormat(env, hdc, pixel_format_index)) {
 			closeWindow();
-			extgl_Close();
 			return;
 		}	
 		hglrc = wglCreateContext(hdc);
 		closeWindow();
 		if (hglrc == NULL) {
 			throwException(env, "Failed to create OpenGL rendering context (ARB)");
-			extgl_Close();
 			return;
 		}
 	} else
@@ -756,5 +743,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env,
 		wglDeleteContext(hglrc);
 		hglrc = NULL;
 	}
-	extgl_Close();
 }

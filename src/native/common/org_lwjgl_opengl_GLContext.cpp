@@ -34,11 +34,15 @@
 #include "extgl.h"
 #include "common_tools.h"
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_loadOpenGLLibrary(JNIEnv * env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nLoadOpenGLLibrary(JNIEnv * env, jclass clazz) {
 	if (!extgl_Open()) {
 		throwException(env, "Failed to load OpenGL library");
 		return;
 	}
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_nUnloadOpenGLLibrary(JNIEnv * env, jclass clazz) {
+	extgl_Close();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GLContext_resetNativeStubs(JNIEnv *env, jclass clazz, jclass gl_class) {

@@ -59,7 +59,6 @@ static void destroy(JNIEnv *env, jclass clazz) {
 	CGLSetCurrentContext(NULL);
 	CGLDestroyContext(context);
 	destroyMode(env, clazz);
-	extgl_Close();
 }
 
 static bool createFullscreenContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
@@ -114,10 +113,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples) {
 	vsync_enabled = false;
 	current_fullscreen = fullscreen == JNI_TRUE;
-	if (!extgl_Open()) {
-		throwException(env, "Could not load gl library");
-		return;
-	}
 	if (!extgl_InitAGL(env)) {
 		throwException(env, "Could not load agl symbols");
 		return;
@@ -125,14 +120,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 	if (!current_fullscreen) {
 		if (!switchToNearestMode(env, width, height, bpp, 60)) {
 			destroyMode(env, clazz);
-			extgl_Close();
 			throwException(env, "Could not switch mode.");
 			return;
 		}
 	}
 	if (!createFullscreenContext(env, bpp, alpha, depth, stencil)) {
 		destroyMode(env, clazz);
-		extgl_Close();
 		return;
 	}
 	FlushEventQueue(GetMainEventQueue());

@@ -183,6 +183,8 @@ public final class GLContext {
 
 	/** Map of classes that have native stubs loaded */
 	private static Map exts;
+	private static int gl_ref_count = 0;
+	private static boolean did_auto_load = false;
 
 	static {
 		Sys.initialize();
@@ -228,6 +230,8 @@ public final class GLContext {
 	public static synchronized void useContext(Object context) throws LWJGLException {
 		if (context == null) {
 			unloadStubs();
+			if (did_auto_load)
+				unloadOpenGLLibrary();
 			return;
 		}
 		// Is this the same as last time?
@@ -238,11 +242,19 @@ public final class GLContext {
 		}
 		
 		// Ok, now it's the current context.
-		loadOpenGLLibrary();
-		GL11.initNativeStubs();
-		loadStubs();
-		currentContext = new WeakReference(context);
-		VBOTracker.setCurrent(currentContext);
+		if (gl_ref_count == 0) {
+			loadOpenGLLibrary();
+			did_auto_load = true;
+		}
+		try {
+			GL11.initNativeStubs();
+			loadStubs();
+			currentContext = new WeakReference(context);
+			VBOTracker.setCurrent(currentContext);
+		} catch (LWJGLException e) {
+			if (did_auto_load)
+				unloadOpenGLLibrary();
+		}
 	}
 
 	private static void getExtensionClassesAndNames(Map exts, Set exts_names) {
@@ -338,9 +350,28 @@ public final class GLContext {
 	}
 
 	/**
-	 * Native method to load the OpenGL library
+	 * If the OpenGL reference count is 0, the library is loaded. The
+	 * reference count is then incremented.
 	 */
-	private static native void loadOpenGLLibrary();
+	public static void loadOpenGLLibrary() throws LWJGLException {
+		if (gl_ref_count == 0)
+			nLoadOpenGLLibrary();
+		gl_ref_count++;
+	}
+
+	private static native void nLoadOpenGLLibrary() throws LWJGLException;
+
+	/**
+	 * The OpenGL library reference count is decremented, and if it 
+	 * reaches 0, the library is unloaded.
+	 */
+	public static void unloadOpenGLLibrary() {
+		gl_ref_count--;
+		if (gl_ref_count == 0)
+			nUnloadOpenGLLibrary();
+	}
+
+	private static native void nUnloadOpenGLLibrary();
 
 	/**
 	 * Native method to clear native stub bindings

@@ -508,19 +508,29 @@ public final class Display {
 			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
 		if (fullscreen)
 			switchDisplayMode(current_mode);
-		createContext(pixel_format);
-		context = new Display();
 		try {
-			createWindow();
+			GLContext.loadOpenGLLibrary();
+			try {
+				createContext(pixel_format);
+				try {
+					context = new Display();
+					createWindow();
+					makeCurrent();
+					initContext();
+				} catch (LWJGLException e) {
+					destroyContext();
+					context = null;
+					throw e;
+				}
+			} catch (LWJGLException e) {
+				GLContext.unloadOpenGLLibrary();
+				throw e;
+			}
 		} catch (LWJGLException e) {
-			destroyContext();
-			context = null;
 			if (fullscreen)
 				resetDisplayMode();
 			throw e;
 		}
-		makeCurrent();
-		initContext();
 	}
 
 	/**
@@ -595,6 +605,7 @@ public final class Display {
 		
 		destroyWindow();
 		destroyContext();
+		GLContext.unloadOpenGLLibrary();
 		context = null;
 		try {
 			GLContext.useContext(null);
