@@ -51,7 +51,7 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 	static int getScreenFromDevice(GraphicsDevice device) throws LWJGLException {
 		try {
 			Method getScreen_method = device.getClass().getMethod("getScreen", null);
-			Integer screen = (Integer)getScreen_method.invoke(null, null);
+			Integer screen = (Integer)getScreen_method.invoke(device, null);
 			return screen.intValue();
 		} catch (Exception e) {
 			throw new LWJGLException(e);
@@ -61,7 +61,7 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 	private static int getVisualIDFromConfiguration(GraphicsConfiguration configuration) throws LWJGLException {
 		try {
 			Method getVisual_method = configuration.getClass().getMethod("getVisual", null);
-			Integer visual = (Integer)getVisual_method.invoke(null, null);
+			Integer visual = (Integer)getVisual_method.invoke(configuration, null);
 			return visual.intValue();
 		} catch (Exception e) {
 			throw new LWJGLException(e);
