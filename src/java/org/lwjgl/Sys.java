@@ -102,7 +102,7 @@ public final class Sys {
 		} finally {
 			DEBUG = _debug;
 			initialize();
-                	NULL = nGetNULLValue();
+			NULL = nGetNULLValue();
 		}
 	}
 	
@@ -129,27 +129,29 @@ public final class Sys {
 		setTime(0);
 	}
 
-        /**
-         * Gets the native NULL constant value
-         */
-        private static native ByteBuffer nGetNULLValue();
+	/**
+	 * Gets the native NULL constant value
+	 */
+	private static native ByteBuffer nGetNULLValue();
 
 	/**
-	 * Create a buffer representing an index into a ARB_vertex_buffer_object buffer.
+	 * Create a buffer representing an integer index. Use it with functions that in C can take
+	 * both a pointer and an integer argument, like the ARB_vertex_buffer_object extension specifies
+	 * gl*Pointer to do (among others).
 	 *
 	 * Example:
 	 *
-	 * ByteBuffer b = Sys.createARBVBOBuffer(0);
+	 * ByteBuffer b = Sys.createIndexBuffer(0);
 	 * gl.glVertexPointer(3, GL.GL_INT, 0, b);
 	 *
 	 * is equivalent to the C call:
 	 *
 	 * glVertexPointer(3, GL.GL_INT, 0, 0);
 	 *
-	 * @param index The VBO index to represent
-	 * @return a ByteBuffer representing the VBO index
+	 * @param index The index to represent
+	 * @return a ByteBuffer representing the index
 	 */
-	public static native ByteBuffer createARBVBOBuffer(int index);
+	public static native ByteBuffer createIndexBuffer(int index);
 
 	/**
 	 * Obtains the number of ticks that the hires timer does in a second.

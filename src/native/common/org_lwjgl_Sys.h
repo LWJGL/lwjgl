@@ -31,10 +31,10 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_nGetNULLValue
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    createARBVBOBuffer
+ * Method:    createIndexBuffer
  * Signature: (I)Ljava/nio/ByteBuffer;
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createARBVBOBuffer
+JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createIndexBuffer
   (JNIEnv *, jclass, jint);
 
 /*
