@@ -70,7 +70,7 @@ class VBOTracker {
 	 * VBO tracker.
 	 * @param context
 	 */
-	static synchronized void setCurrent(Object context) {
+	static void setCurrent(Object context) {
 		if (context == null) {
 			current_tracker = null;
 			return;

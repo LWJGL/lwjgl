@@ -229,7 +229,7 @@ public final class GLContext {
 	 * 		  the native stubs are unloaded.
 	 * @throws LWJGLException if context non-null, and the gl library can't be loaded or the basic GL11 functions can't be loaded
 	 */
-	public static synchronized void useContext(Object context) throws LWJGLException {
+	public static void useContext(Object context) throws LWJGLException {
 		if (context == null) {
 			unloadStubs();
 			if (did_auto_load)

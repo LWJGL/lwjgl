@@ -494,7 +494,7 @@ public final class Display {
 	 * Make the Display the current rendering context for GL calls. Also initialize native stubs.
 	 * @throws LWJGLException If the context could not be made current
 	 */
-	public static synchronized void makeCurrent() throws LWJGLException {
+	public static void makeCurrent() throws LWJGLException {
 		if (!isCreated())
 			throw new IllegalStateException("No window created to make current");
 		nMakeCurrent();
@@ -627,7 +627,7 @@ public final class Display {
 	 * Destroy the Display. After this call, there will be no current GL rendering context,
 	 * regardless of whether the Display was the current rendering context.
 	 */
-	public static synchronized void destroy() {
+	public static void destroy() {
 		if (!isCreated()) {
 			return;
 		}

@@ -248,7 +248,7 @@ public final class Pbuffer {
 	 *
 	 * @return true if the buffer is lost and destroyed, false if the buffer is valid.
 	 */
-	public synchronized boolean isBufferLost() {
+	public boolean isBufferLost() {
 		return nIsBufferLost(handle);
 	}
 
@@ -261,7 +261,7 @@ public final class Pbuffer {
 	 * Method to make the Pbuffer context current. All subsequent OpenGL calls will go to this buffer.
 	 * @throws LWJGLException if the context could not be made current
 	 */
-	public synchronized void makeCurrent() throws LWJGLException {
+	public void makeCurrent() throws LWJGLException {
 		if (display_context != null && display_context != Display.getContext())
 			throw new IllegalStateException("Cannot make a Pbuffer current after the Display has been destroyed");
 		nMakeCurrent(handle);
@@ -292,7 +292,7 @@ public final class Pbuffer {
 	 * Destroys the Pbuffer. After this call, there will be no valid GL rendering context - regardless of whether this Pbuffer was
 	 * the current rendering context or not.
 	 */
-	public synchronized void destroy() {
+	public void destroy() {
 		try {
 			makeCurrent();
 			int error = GL11.glGetError();
@@ -327,7 +327,7 @@ public final class Pbuffer {
 	 * @param attrib
 	 * @param value
 	 */
-	public synchronized void setAttrib(int attrib, int value) {
+	public void setAttrib(int attrib, int value) {
 		nSetAttrib(handle, attrib, value);
 	}
 
@@ -340,7 +340,7 @@ public final class Pbuffer {
 	 *
 	 * @param buffer
 	 */
-	public synchronized void bindTexImage(int buffer) {
+	public void bindTexImage(int buffer) {
 		nBindTexImage(handle, buffer);
 	}
 
@@ -351,7 +351,7 @@ public final class Pbuffer {
 	 *
 	 * @param buffer
 	 */
-	public synchronized void releaseTexImage(int buffer) {
+	public void releaseTexImage(int buffer) {
 		nReleaseTexImage(handle, buffer);
 	}
 
