@@ -56,12 +56,11 @@ static jfieldID fid_dwheel;
 static jfieldID fid_buttons;
 
 static unsigned char button_states[NUM_BUTTONS];
-static bool created;
 static bool buffer_enabled;
-static int x_axis_index = NUM_BUTTONS;
+/*static int x_axis_index = NUM_BUTTONS;
 static int y_axis_index = NUM_BUTTONS + 1;
 static int z_axis_index = NUM_BUTTONS + 2;
-static hid_device_t hid_dev;
+static hid_device_t hid_dev;*/
 static event_queue_t event_queue;
 
 static int last_dx;
@@ -76,7 +75,7 @@ static void handleButton(unsigned char button_index, unsigned char state) {
 	}
 }
 
-static void pollMouseDevice() {
+/*static void pollMouseDevice() {
 	hid_event_t event;
 cont:
 	while (nextDeviceEvent(&hid_dev, &event)) {
@@ -107,11 +106,69 @@ cont:
 #endif
 	}
 }
-
+*/
 static void resetDeltas(void) {
 	last_dx = 0;
 	last_dy = 0;
 	last_dz = 0;
+}
+
+static void handleButtonEvent(EventRef event, unsigned char state) {
+	EventMouseButton button;
+	OSStatus err = GetEventParameter(event, kEventParamMouseButton, typeMouseButton, NULL, sizeof(button), NULL, &button);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not get button parameter from event\n");
+#endif
+		return;
+	}
+	handleButton(button, state);
+}
+
+static void handleMovedEvent(EventRef event) {
+	HIPoint delta;
+	OSStatus err = GetEventParameter(event, kEventParamMouseDelta, typeHIPoint, NULL, sizeof(delta), NULL, &delta);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not delta parameter from event\n");
+#endif
+		return;
+	}
+	last_dx += (int)delta.x;
+	last_dy += (int)delta.y;
+}
+
+static void handleWheelEvent(EventRef event) {
+	long delta;
+	OSStatus err = GetEventParameter(event, kEventParamMouseWheelDelta, typeLongInteger, NULL, sizeof(delta), NULL, &delta);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not delta parameter from event\n");
+#endif
+		return;
+	}
+printf("wheel delta %d\n", (int)delta);
+	last_dz += (int)delta;
+}
+
+void handleMouseEvent(EventRef event) {
+	UInt32 event_kind = GetEventKind(event);
+	switch (event_kind) {
+		case kEventMouseDown:
+			handleButtonEvent(event, 1);
+			break;
+		case kEventMouseUp:
+			handleButtonEvent(event, 0);
+			break;
+		case kEventMouseMoved:
+			handleMovedEvent(event);
+			break;
+		case kEventMouseWheelMoved:
+			handleWheelEvent(event);
+			break;
+		default:
+			break;
+	}
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *, jclass) {
@@ -152,7 +209,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass c
 		button_states[i] = 0;
 	}
 	initEventQueue(&event_queue);
-	hid_cookie_t hid_cookies[NUM_COOKIES];
+/*	hid_cookie_t hid_cookies[NUM_COOKIES];
 	for (int i = 0; i < NUM_BUTTONS; i++) {
 		hid_cookies[i].usage_page = kHIDPage_Button;
 		hid_cookies[i].usage = i + 1;
@@ -166,24 +223,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass c
 	if (!findDevice(&hid_dev, kHIDPage_GenericDesktop, kHIDUsage_GD_Mouse, NUM_COOKIES, hid_cookies, EVENT_BUFFER_SIZE)) {
 		throwException(env, "Could not find HID mouse device");
 		return;
-	}
+	}*/
 	CGAssociateMouseAndMouseCursorPosition(FALSE);
 	CGDisplayHideCursor(CGMainDisplayID());
-	created = true;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass clazz) {
-	shutdownDevice(&hid_dev);
+	//shutdownDevice(&hid_dev);
 //	if (!native_cursor) {
-		CGAssociateMouseAndMouseCursorPosition(TRUE);
 		CGDisplayShowCursor(CGMainDisplayID());
+		CGAssociateMouseAndMouseCursorPosition(TRUE);
 //	}
-	created = false;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
 	int dx, dy, dz;
-	pollMouseDevice();
+	//pollMouseDevice();
 	dz = last_dz*WHEEL_SCALE;
 	//if (!native_cursor) {
 		dx = last_dx;
@@ -211,6 +266,5 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, 
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass clazz) {
-	pollMouseDevice();
 	return copyEvents(&event_queue, 2);
 }

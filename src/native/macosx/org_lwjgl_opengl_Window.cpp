@@ -94,6 +94,7 @@ static bool createFullscreenContext(JNIEnv *env, jint bpp, jint alpha, jint dept
 	}
 	CGLSetFullScreen(context);
 	CGLSetCurrentContext(context);
+	FlushEventQueue(GetMainEventQueue());
 	return true;
 }
 
@@ -140,8 +141,16 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update(JNIEnv *env, jclass c
 	OSStatus err = ReceiveNextEvent(0, NULL, 0, true, &event);
 	if (err == noErr) {
 		UInt32 event_class = GetEventClass(event);
-		if (event_class == kEventClassKeyboard)
-			handleKeyboardEvent(event);
+		switch (event_class) {
+			case kEventClassKeyboard:
+				handleKeyboardEvent(event);
+				break;
+			case kEventClassMouse:
+				handleMouseEvent(event);
+				break;
+			default:
+				break;
+		}
 	}
 }
 

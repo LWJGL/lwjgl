@@ -79,23 +79,12 @@ static void init(JNIEnv *env) {
 	}
 }
 
-static void captureDisplay(void) {
-	if (!display_captured) {
-		display_captured = true;
-		CGDisplayCapture(kCGDirectMainDisplay);
-	}
-}
-
-static void releaseDisplay(void) {
-	if (display_captured) {
-		display_captured = false;
-		CGDisplayRelease(kCGDirectMainDisplay);
-	}
-}
-
 bool switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 	init(env);
-	captureDisplay();
+	if (display_captured)
+		return false;
+	display_captured = true;
+	CGDisplayCapture(kCGDirectMainDisplay);
 	CFArrayRef modes = CGDisplayAvailableModes(kCGDirectMainDisplay);
 	int size = CFArrayGetCount(modes);
 	for (int i = 0; i < size; i++) {
@@ -121,9 +110,12 @@ bool switchMode(JNIEnv *env, long width, long height, long bpp, long freq) {
 
 void resetMode(JNIEnv *env) {
 	init(env);
+	if (!display_captured)
+		return;
+	display_captured = false;
 	CGDisplayRestoreColorSyncSettings();
 	CGDisplaySwitchToMode(kCGDirectMainDisplay, original_mode);
-	releaseDisplay();
+	CGDisplayRelease(kCGDirectMainDisplay);
 	saveOriginalMode(env);
 }
 
