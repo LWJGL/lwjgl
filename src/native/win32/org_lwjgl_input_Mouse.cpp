@@ -108,6 +108,12 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *, jcla
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass clazz) {
 	HRESULT hr;
 
+  // assert that Direct Input has been created
+	if(lpdi == NULL) {
+    throwException(env, "Please create the window before initializing input devices\n");
+    return;
+	} 
+
 	ShowCursor(FALSE);
 	CacheMouseFields(env, clazz);
 
