@@ -895,16 +895,16 @@ public class ALTest extends BasicTest {
         int getVal;
         
         System.out.print("\nEnumeration Value Test. ");
-/*        
-        while (enumeration[i].enumName) {
-            getVal = alGetEnumValue(enumeration[i].enumName);
-            if (getVal != enumeration[i].value) {
-                printf("\n%s has an invalid enum value.", enumeration[i].enumName);
+
+        while (i < enumerationString.length) {
+            getVal = al.getEnumValue(enumerationString[i]);
+            if (getVal != enumeration[i]) {
+                System.out.print("\n" + enumerationString[i] + " has an invalid enum value.");
                 result = false;
             }
             i++;
         }
-*/        
+        
         if(result == true) {
             System.out.print("PASSED.");
         } else {
