@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002-2004 Lightweight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -44,13 +44,15 @@ import org.lwjgl.opengl.Window;
 
 /**
  * $Id$
- *
+ * <br>
  * A raw Keyboard interface. This can be used to poll the current state of the
  * keys, or read all the keyboard presses / releases since the last read.
  * Buffering must be explicitly enabled; the size of the buffer is determined
  * by the native implementation at its discretion.
  * 
  * @author cix_foo <cix_foo@users.sourceforge.net>
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
 public class Keyboard {
@@ -320,7 +322,16 @@ public class Keyboard {
 	private static native void nDestroy();
 
 	/**
-	 * Polls the keyboard.
+   * Polls the keyboard for its current state. Access the polled values using the
+   * <code>isKeyDown</code> method.
+   * By using this method, it is possible to "miss" keyboard keys if you don't
+   * poll fast enough. To receive all events, enable buffering by calling 
+   * <code>enableBuffer</code>, and read those events by calling <code>read</code>
+   * 
+   * @see org.lwjgl.input.Keyboard#isKeyDown(int key) 
+   * @see org.lwjgl.input.Keyboard#isStateKeySet(int key) 
+   * @see org.lwjgl.input.Keyboard#enableBuffer()
+   * @see org.lwjgl.input.Keyboard#read() 
 	 */
 	public static void poll() {
 		assert created : "The keyboard has not been created.";
@@ -336,7 +347,18 @@ public class Keyboard {
 	private static native void nPoll(ByteBuffer keyDownBuffer);
 	
 	/**
-	 * Reads the keyboard buffer.
+   * Reads all keyboard events since last read.
+   * To use these values, you have to call <code>next</code> for each event you
+   * want to read. You can query which key caused the event by using 
+   * <code>getEventKey</code>. To get the state of that key, for that event, use
+   * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
+   * character for that event.
+   * 
+   * @see org.lwjgl.input.Keyboard#next()
+   * @see org.lwjgl.input.Keyboard#enableBuffer()
+   * @see org.lwjgl.input.Keyboard#getEventKey()
+   * @see org.lwjgl.input.Keyboard#getEventKeyState()
+   * @see org.lwjgl.input.Keyboard#getEventCharacter()
 	 */
 	public static void read() {
 		assert created : "The keyboard has not been created.";
@@ -447,9 +469,15 @@ public class Keyboard {
 	}
 	
 	/**
-	 * Gets the next keyboard event. This is stored in the publicly accessible
-	 * static fields key and state.
-	 * @return true if a keyboard event was read, false otherwise
+   * Gets the next keyboard event. You can query which key caused the event by using 
+   * <code>getEventKey</code>. To get the state of that key, for that event, use
+   * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
+   * character for that event.
+   * 
+   * @see org.lwjgl.input.Keyboard#getEventKey()
+   * @see org.lwjgl.input.Keyboard#getEventKeyState()
+   * @see org.lwjgl.input.Keyboard#getEventCharacter()
+   * @return true if a keyboard event was read, false otherwise
 	 */
 	public static boolean next() {
 		assert created : "The keyboard has not been created.";

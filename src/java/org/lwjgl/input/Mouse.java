@@ -401,9 +401,10 @@ public class Mouse {
 	 * Reads all button events since last read.
    * To use these values, you have to call <code>next</code> for each event you
    * want to read. You can query which button caused the event by using 
-   * <code>getEventButton</code>. To get the state of that key, for that event, use
+   * <code>getEventButton</code>. To get the state of that button, for that event, use
    * <code>getEventButtonState</code>.
    * 
+   * @see org.lwjgl.input.Mouse#next()
    * @see org.lwjgl.input.Mouse#enableBuffer()
    * @see org.lwjgl.input.Mouse#getEventButton()
    * @see org.lwjgl.input.Mouse#getEventButtonState()
