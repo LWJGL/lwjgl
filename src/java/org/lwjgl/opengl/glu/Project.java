@@ -302,7 +302,7 @@ public class Project extends Util implements GLUConstants {
 			FloatBuffer modelMatrix, 
 			FloatBuffer projMatrix,
 			IntBuffer viewport,
-			FloatBuffer objx, FloatBuffer objy, FloatBuffer objz)
+			FloatBuffer obj_pos)
 	{
 		float[] in = new float[4];
 		float[] out = new float[4];
@@ -329,9 +329,9 @@ public class Project extends Util implements GLUConstants {
 		out[0] /= out[3];
 		out[1] /= out[3];
 		out[2] /= out[3];
-		objx.put(0, out[0]);
-		objy.put(0, out[1]);
-		objz.put(0, out[2]);
+		obj_pos.put(0, out[0]);
+		obj_pos.put(1, out[1]);
+		obj_pos.put(2, out[2]);
 		return true;
 	}
 
@@ -348,16 +348,16 @@ public class Project extends Util implements GLUConstants {
 			float y,
 			float deltax,
 			float deltay,
-			int[] viewport) {
+			IntBuffer viewport) {
 		if (deltax <= 0 || deltay <= 0) {
 			return;
 		}
 
 		/* Translate and scale the picked region to the entire window */
 		GL11.glTranslatef(
-			(viewport[2] - 2 * (x - viewport[0])) / deltax,
-			(viewport[3] - 2 * (y - viewport[1])) / deltay,
+			(viewport.get(2) - 2 * (x - viewport.get(0))) / deltax,
+			(viewport.get(3) - 2 * (y - viewport.get(1))) / deltay,
 			0);
-		GL11.glScalef(viewport[2] / deltax, viewport[3] / deltay, 1.0f);
+		GL11.glScalef(viewport.get(2) / deltax, viewport.get(3) / deltay, 1.0f);
 	}
 }

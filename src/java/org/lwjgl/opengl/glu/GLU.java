@@ -112,9 +112,9 @@ public class GLU implements GLUConstants {
 			FloatBuffer modelMatrix, 
 			FloatBuffer projMatrix,
 			IntBuffer viewport,
-			FloatBuffer objx, FloatBuffer objy, FloatBuffer objz)
+			FloatBuffer obj_pos)
 	{
-		return Project.gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, objx, objy, objz);
+		return Project.gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, obj_pos);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class GLU implements GLUConstants {
 			float y,
 			float width,
 			float height,
-			int viewport[]) {
+			IntBuffer viewport) {
 		
 		Project.gluPickMatrix(x, y, width, height, viewport);
 	}
