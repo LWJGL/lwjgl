@@ -132,12 +132,16 @@ static bool isXF86VidModeSupported(JNIEnv *env, Display *disp) {
 }
 	
 static extension getBestDisplayModeExtension(JNIEnv *env, Display *disp) {
-	if (isXrandrSupported(env, disp))
+	if (isXrandrSupported(env, disp)) {
+		printfDebugJava(env, "Using Xrandr for display mode switching");
 		return XRANDR;
-	else if (isXF86VidModeSupported(env, disp))
+	} else if (isXF86VidModeSupported(env, disp)) {
+		printfDebugJava(env, "Using XF86VidMode for display mode switching");
 		return XF86VIDMODE;
-	else
+	} else {
+		printfDebugJava(env, "No display mode extensions available");
 		return NONE;
+	}
 }
 
 static mode_info *getXrandrDisplayModes(Display *disp, int screen, int *num_modes) {
