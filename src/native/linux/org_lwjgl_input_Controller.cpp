@@ -38,6 +38,7 @@
  * @version $Revision$
  */
 #include <jni.h>
+#include "org_lwjgl_input_Controller.h"
 
 /**
  * Initializes any field ids
