@@ -36,6 +36,10 @@ package org.lwjgl.opengl;
  * of this class is used as arguments to Display.create() and Pbuffer.create(), to
  * indicate minimum required properties.
  *
+ * WARNING: Some pixel formats are known to cause troubles on certain buggy drivers.
+ *          Example: Under Windows, specifying samples != 0 will enable the ARB
+ *          pixel format selection path, which could trigger a crash.
+ *
  * @author elias_naur@sourceforge.net
  * @version $Revision$
  */
