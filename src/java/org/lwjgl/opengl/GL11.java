@@ -1198,6 +1198,14 @@ public abstract class GL11 {
 	private static native void nglTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels, int pixels_offset);
 	public static native void glTexParameterf(int target, int pname, float param);
 	public static native void glTexParameteri(int target, int pname, int param);
+	public static void glTexParameter(int target, int pname, FloatBuffer param) {
+		nglTexParameterfv(target, pname, param, param.position());
+	}
+	private static native void nglTexParameterfv(int target, int pname, FloatBuffer param, int param_position);
+	public static void glTexParameter(int target, int pname, IntBuffer param) {
+		nglTexParameteriv(target, pname, param, param.position());
+	}
+	private static native void nglTexParameteriv(int target, int pname, IntBuffer param, int param_position);
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ByteBuffer pixels) {
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position());
 	}

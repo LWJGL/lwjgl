@@ -1936,6 +1936,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1D(JNIEnv * env,
 	CHECK_GL_ERROR
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameterfv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject param, jint param_offset) {
+	GLfloat *address = param_offset + (GLfloat *)env->GetDirectBufferAddress(param);
+	glTexParameterfv(target, pname, address);
+}
+  
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameteriv
+  (JNIEnv *env, jclass clazz, jint target, jint pname, jobject param, jint param_offset) {
+	GLint *address = param_offset + (GLint *)env->GetDirectBufferAddress(param);
+	glTexParameteriv(target, pname, address);
+}
+    
 /*
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexParameterf

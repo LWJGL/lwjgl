@@ -2547,6 +2547,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameteri
 
 /*
  * Class:     org_lwjgl_opengl_GL11
+ * Method:    nglTexParameterfv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameterfv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL11
+ * Method:    nglTexParameteriv
+ * Signature: (IILjava/nio/IntBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameteriv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL11
  * Method:    nglTexImage2D
  * Signature: (IIIIIIIILjava/nio/Buffer;I)V
  */
