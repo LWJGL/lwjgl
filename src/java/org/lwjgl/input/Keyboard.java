@@ -326,15 +326,37 @@ public class Keyboard {
 	 * poll fast enough. To receive all events, enable buffering by calling 
 	 * <code>enableBuffer</code>, and read those events by calling <code>read</code>
 	 * 
+	 * This method also reads all keyboard events since last read if keyboard buffering is enabled.
+	 * To use these values, you have to call <code>next</code> for each event you
+	 * want to read. You can query which key caused the event by using 
+	 * <code>getEventKey</code>. To get the state of that key, for that event, use
+	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
+	 * character for that event.
+	 *
 	 * @see org.lwjgl.input.Keyboard#isKeyDown(int key) 
 	 * @see org.lwjgl.input.Keyboard#isStateKeySet(int key) 
+	 * @see org.lwjgl.input.Keyboard#next()
 	 * @see org.lwjgl.input.Keyboard#enableBuffer()
-	 * @see org.lwjgl.input.Keyboard#read() 
+	 * @see org.lwjgl.input.Keyboard#getEventKey()
+	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
+	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
 	 */
 	public static void poll() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can poll the device");
 		nPoll(keyDownBuffer);
+		if (readBuffer != null)
+			read();
+	}
+	
+	private static void read() {
+		readBuffer.compact();
+		int numEvents = nRead(readBuffer, readBuffer.position());
+		if (translationEnabled)
+			readBuffer.position(readBuffer.position() + numEvents*4);
+		else
+			readBuffer.position(readBuffer.position() + numEvents*2);
+		readBuffer.flip();
 	}
 	
 	/**
@@ -344,34 +366,6 @@ public class Keyboard {
 	 * key states in.
 	 */
 	private static native void nPoll(ByteBuffer keyDownBuffer);
-	
-	/**
-	 * Reads all keyboard events since last read.
-	 * To use these values, you have to call <code>next</code> for each event you
-	 * want to read. You can query which key caused the event by using 
-	 * <code>getEventKey</code>. To get the state of that key, for that event, use
-	 * <code>getEventKeyState</code> - finally use <code>getEventCharacter</code> to get the
-	 * character for that event.
-	 * 
-	 * @see org.lwjgl.input.Keyboard#next()
-	 * @see org.lwjgl.input.Keyboard#enableBuffer()
-	 * @see org.lwjgl.input.Keyboard#getEventKey()
-	 * @see org.lwjgl.input.Keyboard#getEventKeyState()
-	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
-	 */
-	public static void read() {
-		if (!created)
-			throw new IllegalStateException("Keyboard must be created before you can read events");
-		if (readBuffer == null)
-			throw new IllegalStateException("Event buffering must be enabled before you can read events");
-		readBuffer.compact();
-		int numEvents = nRead(readBuffer, readBuffer.position());
-		if (translationEnabled)
-			readBuffer.position(readBuffer.position() + numEvents*4);
-		else
-			readBuffer.position(readBuffer.position() + numEvents*2);
-		readBuffer.flip();
-	}
 	
 	/**
 	 * Native method to read the keyboard buffer

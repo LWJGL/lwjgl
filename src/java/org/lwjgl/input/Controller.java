@@ -229,14 +229,6 @@ public class Controller {
 	}
 	
 	/**
-	 * Read the controller's input buffer. This is not yet implemented in LWJGL so
-	 * it always throws a RuntimeException.
-	 */
-	public static void read() {
-		throw new UnsupportedOperationException("Buffering is not implemented for Controllers.");
-	}
-	
-	/**
 	 * Gets a button's name
 	 * @param button The button
 	 * @return a String with the button's human readable name in it or null if the button is unnamed

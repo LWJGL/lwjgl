@@ -128,7 +128,6 @@ public class KeyboardTest {
 
       //check keys, buffered
       Keyboard.poll();
-      Keyboard.read();
 
       int count = Keyboard.getNumKeyboardEvents();
       while (Keyboard.next()) {

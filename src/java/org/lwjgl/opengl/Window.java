@@ -241,22 +241,13 @@ public final class Window {
 		// Poll the input devices while we're here
 		if (Mouse.isCreated()) {
 			Mouse.poll();
-			if (Mouse.isBuffered()) {
-				Mouse.read();
-			}
 			Mouse.updateCursor();
 		}
 		if (Keyboard.isCreated()) {
 			Keyboard.poll();
-			if (Keyboard.isBuffered()) {
-				Keyboard.read();
-			}
 		}
 		if (Controller.isCreated()) {
 			Controller.poll();
-			if (Controller.isBuffered()) {
-				Controller.read();
-			}
 		}
 	}
 

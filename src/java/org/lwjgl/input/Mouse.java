@@ -323,6 +323,15 @@ public class Mouse {
 	 * poll fast enough. To receive all button events, enable buffering by calling 
 	 * <code>enableBuffer</code>, and read those events by calling <code>read</code>
 	 * 
+	 * If buffering is enabled, this method also reads all button events since last read.
+	 * To use these values, you have to call <code>next</code> for each event you
+	 * want to read. You can query which button caused the event by using 
+	 * <code>getEventButton</code>. To get the state of that button, for that event, use
+	 * <code>getEventButtonState</code>.
+	 * 
+	 * @see org.lwjgl.input.Mouse#next()
+	 * @see org.lwjgl.input.Mouse#getEventButton()
+	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 * @see org.lwjgl.input.Mouse#isButtonDown(int button) 
 	 * @see org.lwjgl.input.Mouse#getX() 
 	 * @see org.lwjgl.input.Mouse#getY() 
@@ -330,7 +339,6 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#getDY() 
 	 * @see org.lwjgl.input.Mouse#getDWheel() 
 	 * @see org.lwjgl.input.Mouse#enableBuffer()
-	 * @see org.lwjgl.input.Mouse#read()	
 	 */
 	public static void poll() {
 		if (!created)
@@ -362,6 +370,15 @@ public class Mouse {
 				y = Window.getHeight();
 			}
 		}
+		if (readBuffer != null)
+			read();
+	}
+
+	private static void read() {
+		readBuffer.compact();
+		int numEvents = nRead(readBuffer, readBuffer.position());
+		readBuffer.position(readBuffer.position() + numEvents*2);
+		readBuffer.flip();
 	}
 
 	/**
@@ -425,29 +442,6 @@ public class Mouse {
 	 * or null if no buffer can be allocated
 	 */
 	private static native void nEnableBuffer() throws LWJGLException;
-
-	/**
-	 * Reads all button events since last read.
-	 * To use these values, you have to call <code>next</code> for each event you
-	 * want to read. You can query which button caused the event by using 
-	 * <code>getEventButton</code>. To get the state of that button, for that event, use
-	 * <code>getEventButtonState</code>.
-	 * 
-	 * @see org.lwjgl.input.Mouse#next()
-	 * @see org.lwjgl.input.Mouse#enableBuffer()
-	 * @see org.lwjgl.input.Mouse#getEventButton()
-	 * @see org.lwjgl.input.Mouse#getEventButtonState()
-	 */
-	public static void read() {
-		if (!created)
-			throw new IllegalStateException("Mouse must be created before you can read events");
-		if (readBuffer == null)
-			throw new IllegalStateException("Event buffering must be enabled before you can read events");
-		readBuffer.compact();
-		int numEvents = nRead(readBuffer, readBuffer.position());
-		readBuffer.position(readBuffer.position() + numEvents*2);
-		readBuffer.flip();
-	}
 
 	/**
 	 * Native method to read the keyboard buffer
