@@ -39,14 +39,7 @@ import org.lwjgl.BufferUtils;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsConfiguration;
 
-/*
- * Import the needed SUN specific classes. They
- * are needed since there is no official way to access
- * the screen and visual from GraphicsDevice and
- * GraphicsConfiguration respectively.
- */
-import sun.awt.X11GraphicsDevice;
-import sun.awt.X11GraphicsConfig;
+import java.lang.reflect.Method;
 
 /**
  * $Id$
@@ -55,14 +48,24 @@ import sun.awt.X11GraphicsConfig;
  * @version $Revision$
  */
 final class LinuxCanvasImplementation implements AWTCanvasImplementation {
-	static int getScreenFromDevice(GraphicsDevice device) {
-		X11GraphicsDevice x11_device = (X11GraphicsDevice)device;
-		return x11_device.getScreen();
+	static int getScreenFromDevice(GraphicsDevice device) throws LWJGLException {
+		try {
+			Method getScreen_method = device.getClass().getMethod("getScreen()", null);
+			Integer screen = (Integer)getScreen_method.invoke(null, null);
+			return screen.intValue();
+		} catch (Exception e) {
+			throw new LWJGLException(e);
+		}
 	}
 
-	private static int getVisualIDFromConfiguration(GraphicsConfiguration configuration) {
-		X11GraphicsConfig x11_config = (X11GraphicsConfig)configuration;
-		return x11_config.getVisual();
+	private static int getVisualIDFromConfiguration(GraphicsConfiguration configuration) throws LWJGLException {
+		try {
+			Method getVisual_method = configuration.getClass().getMethod("getVisual()", null);
+			Integer visual = (Integer)getVisual_method.invoke(null, null);
+			return visual.intValue();
+		} catch (Exception e) {
+			throw new LWJGLException(e);
+		}
 	}
 
 	public PeerInfo createPeerInfo(AWTGLCanvas canvas) throws LWJGLException {
@@ -75,7 +78,6 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 	 * @return The GraphicsConfiguration corresponding to a visual that matches the pixel format.
 	 */
 	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
-		X11GraphicsDevice x11_device = (X11GraphicsDevice)device;
 		int screen = getScreenFromDevice(device);
 		int visual_id_matching_format = findVisualIDFromFormat(screen, pixel_format);
 		GraphicsConfiguration[] configurations = device.getConfigurations();
