@@ -794,8 +794,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_initNativeStubs(JNIEnv *env, jcla
         {"ilSaveData", "(Ljava/lang/String;)Z", (void*)&Java_org_lwjgl_devil_IL_ilSaveData, "ilSaveData", (void*)&ilSaveData}
     };
     int num_functions = NUMFUNCTIONS(functions);
-    extil_InitializeFunctions(env, clazz, num_functions, functions);
-    printf("\r\ninitNativeStubs");
+    extil_InitializeClass(env, clazz, num_functions, functions);
 }
 
 #ifdef __cplusplus
