@@ -157,7 +157,7 @@
 	    <!-- archive. -->
 		<antcall target="clean"/>
 		<antcall target="-initialize"/>
-		<antcall target="compile_java"/>
+		<antcall target="compile"/>
 		<antcall target="compile_native"/>
 		<antcall target="-jars"/>
 		<antcall target="-distribution_application"/>
