@@ -231,7 +231,6 @@ public class ILU {
 			}
 
 			// Add all possible paths from java.library.path
-			String java_library_path = System.getProperty("java.library.path");
 			StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
 			while (st.hasMoreTokens()) {
 				String path = st.nextToken();

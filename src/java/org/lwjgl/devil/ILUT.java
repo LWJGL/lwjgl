@@ -165,7 +165,7 @@ public class ILUT {
 		/**
 		 * Native method to create ILUT instance
 		 * 
-		 * @param iluPaths Array of strings containing paths to search for ILUT library
+		 * @param ilutPaths Array of strings containing paths to search for ILUT library
 		 */
 		protected static native void nCreate(String[] ilutPaths) throws LWJGLException;
 
@@ -196,8 +196,7 @@ public class ILUT {
 			}
 
 			// Add all possible paths from java.library.path
-			String java_library_path = System.getProperty("java.library.path");
-			StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
+  			StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
 			while (st.hasMoreTokens()) {
 				String path = st.nextToken();
 				possible_paths.add(path + File.separator + platform_lib_name);
