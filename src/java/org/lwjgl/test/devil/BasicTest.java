@@ -67,5 +67,7 @@ public class BasicTest {
         System.out.println("limit = " + limit);
         
         System.out.println("Version: " + IL.ilGetInteger(IL.IL_VERSION_NUM));
+        System.out.println(IL.ilActiveImage(im.get(0)));
+        System.out.println(IL.ilClearImage());
     }
 }
