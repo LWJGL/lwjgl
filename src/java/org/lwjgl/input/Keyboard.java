@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.Sys;
+import org.lwjgl.opengl.Window;
 
 /**
  * $Id$
@@ -282,6 +283,7 @@ public class Keyboard {
 	 * @throws Exception if the keyboard could not be created for any reason
 	 */
 	public static void create() throws Exception {
+    assert Window.isCreated() : "Window must be created prior to creating keyboard";
 		if (!initialized)
 			initialize();
 		if (created)

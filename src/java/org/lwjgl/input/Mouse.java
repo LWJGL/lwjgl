@@ -234,6 +234,9 @@ public class Mouse {
 	 * @throws Exception if the mouse could not be created for any reason
 	 */
 	public static void create() throws Exception {
+    
+    assert Window.isCreated() : "Window must be created prior to creating mouse";
+    
 		if (!initialized) {
 			initialize();
 		}

@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.Sys;
+import org.lwjgl.opengl.Window;
 
 /**
  * $Id$
@@ -163,6 +164,9 @@ public class Controller {
 	 * @throws Exception if the controller could not be created for any reason
 	 */
 	public static void create() throws Exception {
+    
+    assert Window.isCreated() : "Window must be created prior to creating controller";
+    
 		if (!initialized) {
 			initialize();
 		}
