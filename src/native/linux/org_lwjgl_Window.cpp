@@ -111,9 +111,11 @@ static void handleMessages(JNIEnv *env, jobject window_obj) {
 				break;
 			case FocusOut:
 				releaseInput();
+				env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "focused", "Z"), JNI_FALSE);
 				break;
 			case FocusIn:
 				acquireInput();
+				env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "focused", "Z"), JNI_TRUE);
 				break;
 			case MapNotify:
 				env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "dirty", "Z"), JNI_TRUE);
