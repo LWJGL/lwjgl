@@ -246,7 +246,11 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 
 	private void invokeAWT(Runnable r) {
 		try {
-			java.awt.EventQueue.invokeAndWait(r);
+			if (java.awt.EventQueue.isDispatchThread()) {
+				r.run();
+			} else {
+				java.awt.EventQueue.invokeAndWait(r);
+			}
 		} catch (InterruptedException e) {
 			// ignore
 		} catch (InvocationTargetException e) {
