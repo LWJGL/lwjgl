@@ -2,8 +2,8 @@ package org.lwjgl.opengl.glu;
 
 /**
  * Registry.java
- * 
- * 
+ *
+ *
  * Created 11-jan-2004
  * @author Erik Duijs
  */
@@ -30,17 +30,15 @@ public class Registry extends Util implements GLUConstants {
 
 	/**
 	 * Method gluCheckExtension
-	 * 
+	 *
 	 * @param extName is an extension name.
-	 * @param extString is a string of extensions separated by blank(s). There may or 
+	 * @param extString is a string of extensions separated by blank(s). There may or
 	 * may not be leading or trailing blank(s) in extString.
 	 * This works in cases of extensions being prefixes of another like
 	 * GL_EXT_texture and GL_EXT_texture3D.
 	 * @return boolean true if extName is found otherwise it returns false.
 	 */
 	public static boolean gluCheckExtension(String extName, String extString) {
-		boolean flag = false;
-
 		if (extString == null || extName == null)
 			return false;
 

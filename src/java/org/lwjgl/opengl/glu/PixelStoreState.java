@@ -4,8 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * PixelStoreState.java
- * 
- * 
+ *
+ *
  * Created 11-jan-2004
  * @author Erik Duijs
  */
@@ -19,15 +19,15 @@ class PixelStoreState extends Util implements GLUConstants {
 	public int packAlignment = glGetIntegerv(GL11.GL_PACK_ALIGNMENT);
 	public int packSkipRows = glGetIntegerv(GL11.GL_PACK_SKIP_ROWS);
 	public int packSkipPixels = glGetIntegerv(GL11.GL_PACK_SKIP_PIXELS);
-	
+
 	/**
 	 * Constructor for PixelStoreState.
 	 */
-	public PixelStoreState() {
+	PixelStoreState() {
 		super();
 		load();
 	}
-	
+
 	public void load() {
 		unpackRowLength = glGetIntegerv(GL11.GL_UNPACK_ROW_LENGTH);
 		unpackAlignment = glGetIntegerv(GL11.GL_UNPACK_ALIGNMENT);

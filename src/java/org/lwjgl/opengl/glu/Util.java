@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL12;
 
 /**
  * Util.java
- * 
- * 
+ *
+ *
  * Created 7-jan-2004
  * @author Erik Duijs
  */
@@ -60,7 +60,7 @@ public class Util {
 		result[1] = v1[2] * v2[0] - v1[0] * v2[2];
 		result[2] = v1[0] * v2[1] - v1[1] * v2[0];
 	}
-	
+
 	/**
 	 * Method compPerPix.
 	 * @param format
@@ -93,11 +93,11 @@ public class Util {
 
 	/**
 	 * Method nearestPower.
-	 * 
-	 * Compute the nearest power of 2 number.  This algorithm is a little 
+	 *
+	 * Compute the nearest power of 2 number.  This algorithm is a little
 	 * strange, but it works quite well.
-	 * 
-	 * @param width
+	 *
+	 * @param value
 	 * @return int
 	 */
 	protected static int nearestPower(int value) {
@@ -115,8 +115,8 @@ public class Util {
 			} else if (value == 3) {
 				return i * 4;
 			}
-			value = value >> 1;
-			i *= 2;
+			value >>= 1;
+			i <<= 1;
 		}
 	}
 
@@ -186,7 +186,7 @@ public class Util {
 
 		return n * m;
 	}
-	
+
 	/**
 	 * Create a FloatBuffer of specified size.
 	 * @param size
@@ -214,7 +214,7 @@ public class Util {
 	/**
 	 * Convenience method for returning an int,
 	 * rather than getting it out of a buffer yourself.
-	 * 
+	 *
 	 * @param what
 	 * @return int
 	 */

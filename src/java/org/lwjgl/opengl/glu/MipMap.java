@@ -6,8 +6,8 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * MipMap.java
- * 
- * 
+ *
+ *
  * Created 11-jan-2004
  * @author Erik Duijs
  */
@@ -15,7 +15,7 @@ public class MipMap extends Util implements GLUConstants {
 
 	/**
 	 * Method gluBuild2DMipmaps
-	 * 
+	 *
 	 * @param target
 	 * @param components
 	 * @param width
@@ -123,14 +123,14 @@ public class MipMap extends Util implements GLUConstants {
 	/**
 	 * Method gluScaleImage.
 	 * @param format
-	 * @param width
-	 * @param height
-	 * @param type
-	 * @param data
-	 * @param w
-	 * @param h
-	 * @param type1
-	 * @param image
+	 * @param widthIn
+	 * @param heightIn
+	 * @param typein
+	 * @param dataIn
+	 * @param widthOut
+	 * @param heightOut
+	 * @param typeOut
+	 * @param dataOut
 	 * @return int
 	 */
 	public static int gluScaleImage(
@@ -149,7 +149,7 @@ public class MipMap extends Util implements GLUConstants {
 		float sx, sy;
 		int sizein, sizeout;
 		int rowstride, rowlen;
-		
+
 		components = compPerPix(format);
 		if (components == -1) {
 			return GLU_INVALID_ENUM;
@@ -253,7 +253,7 @@ public class MipMap extends Util implements GLUConstants {
 			}
 		}
 
-		
+
 		// Convert temp output
 		if (pss.packRowLength > 0) {
 			rowlen = pss.packRowLength;

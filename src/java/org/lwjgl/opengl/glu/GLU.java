@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * GLU.java
- * 
- * 
+ *
+ *
  * Created 23-dec-2003
  * @author Erik Duijs
  */
@@ -53,7 +53,7 @@ public class GLU implements GLUConstants {
 			float right,
 			float bottom,
 			float top) {
-		
+
 		GL11.glOrtho(left, right, bottom, top, -1.0, 1.0);
 	}
 
@@ -81,18 +81,16 @@ public class GLU implements GLUConstants {
 	 * @param modelMatrix
 	 * @param projMatrix
 	 * @param viewport
-	 * @param winx
-	 * @param winy
-	 * @param winz
+	 * @param win_pos
 	 * @return
 	 */
-	public static boolean gluProject(float objx, float objy, float objz, 
-			FloatBuffer modelMatrix, 
+	public static boolean gluProject(float objx, float objy, float objz,
+			FloatBuffer modelMatrix,
 			FloatBuffer projMatrix,
 			IntBuffer viewport,
-			FloatBuffer winx, FloatBuffer winy, FloatBuffer winz)
+			FloatBuffer win_pos)
 	{
-		return Project.gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, winx, winy, winz);
+		return Project.gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, win_pos);
 	}
 
 	/**
@@ -107,7 +105,7 @@ public class GLU implements GLUConstants {
 	 * @return
 	 */
 	public static boolean gluUnProject(float winx, float winy, float winz,
-			FloatBuffer modelMatrix, 
+			FloatBuffer modelMatrix,
 			FloatBuffer projMatrix,
 			IntBuffer viewport,
 			FloatBuffer obj_pos)
@@ -129,7 +127,7 @@ public class GLU implements GLUConstants {
 			float width,
 			float height,
 			IntBuffer viewport) {
-		
+
 		Project.gluPickMatrix(x, y, width, height, viewport);
 	}
 
@@ -141,11 +139,11 @@ public class GLU implements GLUConstants {
 	public static String gluGetString(int name) {
 		return Registry.gluGetString(name);
 	}
-	
+
 	/**
 	 * Method gluCheckExtension.
-	 * @param string
-	 * @param string1
+	 * @param extName
+	 * @param extString
 	 * @return boolean
 	 */
 	public static boolean gluCheckExtension(String extName, String extString) {
@@ -171,21 +169,21 @@ public class GLU implements GLUConstants {
 			int format,
 			int type,
 			ByteBuffer data) {
-		
+
 		return MipMap.gluBuild2DMipmaps(target, components, width, height, format, type, data);
 	}
 
 	/**
 	 * Method gluScaleImage.
 	 * @param format
-	 * @param width
-	 * @param height
-	 * @param type
-	 * @param data
-	 * @param w
-	 * @param h
-	 * @param type1
-	 * @param image
+	 * @param widthIn
+	 * @param heightIn
+	 * @param typeIn
+	 * @param dataIn
+	 * @param widthOut
+	 * @param heightOut
+	 * @param typeOut
+	 * @param dataOut
 	 * @return int
 	 */
 	public static int gluScaleImage(
@@ -198,7 +196,7 @@ public class GLU implements GLUConstants {
 			int heightOut,
 			int typeOut,
 			ByteBuffer dataOut) {
-		
+
 		return MipMap.gluScaleImage(format, widthIn, heightIn, typeIn, dataIn, widthOut, heightOut, typeOut, dataOut);
 	}
 

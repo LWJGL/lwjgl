@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * Sphere.java
- * 
- * 
+ *
+ *
  * Created 23-dec-2003
  * @author Erik Duijs
  */
@@ -27,7 +27,7 @@ public class Sphere extends Quadric implements GLUConstants {
 	 * If the orientation is set to GLU.OUTSIDE (with glu.quadricOrientation), then
 	 * any normals generated point away from the center of the sphere. Otherwise,
 	 * they point toward the center of the sphere.
-	
+
 	 * If texturing is turned on (with glu.quadricTexture), then texture
 	 * coordinates are generated so that t ranges from 0.0 at z=-radius to 1.0 at
 	 * z=radius (t increases linearly along longitudinal lines), and s ranges from
@@ -44,11 +44,7 @@ public class Sphere extends Quadric implements GLUConstants {
 		boolean normals;
 		float nsign;
 
-		if (super.normals == GLU_NONE) {
-			normals = false;
-		} else {
-			normals = true;
-		}
+		normals = super.normals != GLU_NONE;
 
 		if (super.orientation == GLU_INSIDE) {
 			nsign = -1.0f;
@@ -125,7 +121,6 @@ public class Sphere extends Quadric implements GLUConstants {
 				GL11.glVertex3f(0.0f, 0.0f, -radius * nsign);
 				rho = PI - drho;
 				s = 1.0f;
-				t = dt;
 				for (j = slices; j >= 0; j--) {
 					theta = (j == slices) ? 0.0f : j * dtheta;
 					x = -sin(theta) * sin(rho);
@@ -141,7 +136,7 @@ public class Sphere extends Quadric implements GLUConstants {
 		} else if (
 			super.drawStyle == GLU_LINE
 				|| super.drawStyle == GLU_SILHOUETTE) {
-			// draw stack lines 
+			// draw stack lines
 			for (i = 1;
 				i < stacks;
 				i++) { // stack line at i==stacks-1 was missing here

@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * Project.java
- * 
- * 
+ *
+ *
  * Created 11-jan-2004
  * @author Erik Duijs
  */
@@ -48,7 +48,7 @@ public class Project extends Util implements GLUConstants {
 	private static void __gluMultMatrixVecf(FloatBuffer finalMatrix, float[] in, float[] out) {
 
 		for (int i=0; i<4; i++) {
-			out[i] = 
+			out[i] =
 				in[0] * finalMatrix.get(0*4+i) +
 				in[1] * finalMatrix.get(1*4+i) +
 				in[2] * finalMatrix.get(2*4+i) +
@@ -57,8 +57,8 @@ public class Project extends Util implements GLUConstants {
 	}
 
 	/**
-	 * @param finalMatrix
-	 * @param finalMatrix2
+	 * @param src
+	 * @param inverse
 	 * @return
 	 */
 	private static boolean __gluInvertMatrixf(FloatBuffer src, FloatBuffer inverse) {
@@ -129,23 +129,23 @@ public class Project extends Util implements GLUConstants {
 	}
 
 	/**
-	 * @param modelMatrix
-	 * @param projMatrix
-	 * @param finalMatrix
+	 * @param a
+	 * @param b
+	 * @param r
 	 */
 	private static void __gluMultMatricesf(FloatBuffer a, FloatBuffer b, FloatBuffer r) {
 
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				r.put(i*4+j, 
+				r.put(i*4+j,
 						a.get(i*4+0)*b.get(0*4+j) +
 						a.get(i*4+1)*b.get(1*4+j) +
 						a.get(i*4+2)*b.get(2*4+j) +
 						a.get(i*4+3)*b.get(3*4+j));
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * Method gluPerspective.
 	 * @param fovy
@@ -199,7 +199,6 @@ public class Project extends Util implements GLUConstants {
 			float upy,
 			float upz) {
 
-		int i;
 		float[] forward = new float[3];
 		float[] side = new float[3];
 		float[] up = new float[3];
@@ -246,16 +245,14 @@ public class Project extends Util implements GLUConstants {
 	 * @param modelMatrix
 	 * @param projMatrix
 	 * @param viewport
-	 * @param winx
-	 * @param winy
-	 * @param winz
+	 * @param win_pos
 	 * @return
 	 */
-	public static boolean gluProject(float objx, float objy, float objz, 
-			FloatBuffer modelMatrix, 
+	public static boolean gluProject(float objx, float objy, float objz,
+			FloatBuffer modelMatrix,
 			FloatBuffer projMatrix,
 			IntBuffer viewport,
-			FloatBuffer winx, FloatBuffer winy, FloatBuffer winz)
+			FloatBuffer win_pos)
 	{
 		float[] in = new float[4];
 		float[] out = new float[4];
@@ -279,9 +276,12 @@ public class Project extends Util implements GLUConstants {
 		in[0] = in[0] * viewport.get(2) + viewport.get(0);
 		in[1] = in[1] * viewport.get(3) + viewport.get(1);
 
-		winx.put(0, in[0]);
-		winy.put(0, in[1]);
-		winz.put(0, in[2]);
+		int pos = win_pos.position();
+
+		win_pos.put(pos++, in[0]);
+		win_pos.put(pos++, in[1]);
+		win_pos.put(pos, in[2]);
+
 		return true;
 	}
 
@@ -293,13 +293,11 @@ public class Project extends Util implements GLUConstants {
 	 * @param modelMatrix
 	 * @param projMatrix
 	 * @param viewport
-	 * @param objx
-	 * @param objy
-	 * @param objz
+	 * @param obj_pos
 	 * @return
 	 */
 	public static boolean gluUnProject(float winx, float winy, float winz,
-			FloatBuffer modelMatrix, 
+			FloatBuffer modelMatrix,
 			FloatBuffer projMatrix,
 			IntBuffer viewport,
 			FloatBuffer obj_pos)
@@ -329,9 +327,13 @@ public class Project extends Util implements GLUConstants {
 		out[0] /= out[3];
 		out[1] /= out[3];
 		out[2] /= out[3];
-		obj_pos.put(0, out[0]);
-		obj_pos.put(1, out[1]);
-		obj_pos.put(2, out[2]);
+
+		int pos = obj_pos.position();
+
+		obj_pos.put(pos++, out[0]);
+		obj_pos.put(pos++, out[1]);
+		obj_pos.put(pos, out[2]);
+
 		return true;
 	}
 
