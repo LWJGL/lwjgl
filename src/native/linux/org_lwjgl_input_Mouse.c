@@ -62,6 +62,8 @@ int current_x;
 int current_y;
 unsigned char buttons[NUM_BUTTONS];
 
+Cursor blank_cursor;
+
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    initIDs
@@ -92,6 +94,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_initIDs
 	}
 }
 
+int blankCursor(void) {
+	int best_width, best_height;
+	if (XQueryBestCursor(disp, win, 1, 1, &best_width, &best_height) == 0) {
+#ifdef _DEBUG
+		printf("Could not query best cursor size\n");
+#endif
+		return 0;
+	}
+	Pixmap mask = XCreatePixmap(disp, win, best_width, best_height, 1);
+	XGCValues gc_values;
+	gc_values.foreground = 0;
+	GC gc = XCreateGC(disp, mask, GCForeground, &gc_values);
+	XFillRectangle(disp, mask, gc, 0, 0, best_width, best_height);
+	XColor dummy_color;
+	blank_cursor = XCreatePixmapCursor(disp, mask, mask, &dummy_color, &dummy_color, 0, 0);
+	XFreePixmap(disp, mask);
+	XFreeGC(disp, gc);
+	XDefineCursor(disp, win, blank_cursor);
+	return 1;
+}
+
 /*
  * Class:     org_lwjgl_input_Mouse
  * Method:    nCreate
@@ -104,6 +127,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	current_x = current_y = last_x = last_y = 0;
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
+	if (!blankCursor()) {
+#ifdef _DEBUG
+		printf("Could not blank cursor\n");
+#endif
+		return JNI_FALSE;
+	}
 	int result = XGrabPointer(disp, win, False, PointerMotionMask | ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, win, None, CurrentTime);
 	if (result != GrabSuccess) {
 #ifdef _DEBUG
@@ -122,6 +151,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
   (JNIEnv * env, jclass clazz)
 {
+	XUndefineCursor(disp, win);
+	XFreeCursor(disp, blank_cursor);
 	XUngrabPointer(disp, CurrentTime);
 }
 

@@ -102,10 +102,18 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 		return JNI_FALSE;
 	}
 	screen = DefaultScreen(disp);
+	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
+		XCloseDisplay(disp);
+#ifdef _DEBUG
+		printf("Could not get display modes\n");
+#endif
+		return JNI_FALSE;
+	}
 	root_win = RootWindow(disp, screen);
 
 	vis_info = glXChooseVisual(disp, screen, attriblist);
 	if (vis_info == NULL) {
+		XCloseDisplay(disp);
 #ifdef _DEBUG
 		printf("Could not choose glx visual\n");
 #endif
@@ -129,18 +137,16 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_Display_nCreate(JNIEnv * env, jclass c
 	if (fullscreen) {
 		XMapRaised(disp, win);
 		waitMapped(disp, win);
-		if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
-#ifdef _DEBUG
-			printf("Could not get display modes\n");
-#endif
-			return JNI_FALSE;
-		}
 		for ( i = 0; i < num_modes; ++i ) {
 #ifdef _DEBUG
 			printf("Mode %d: %dx%d\n", i, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay);
 #endif
 			if (avail_modes[i]->hdisplay == width && avail_modes[i]->vdisplay == height) {
 				if (!XF86VidModeSwitchToMode(disp, screen, avail_modes[i])) {
+					XFree(vis_info);
+					XFree(avail_modes);
+					XDestroyWindow(disp, win);
+					XCloseDisplay(disp);
 #ifdef _DEBUG
 					printf("Could not switch mode\n");
 #endif
@@ -167,8 +173,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_nDestroy(JNIEnv * env, jclass claz
 			printf("Could not switch mode\n");
 #endif
 		}
-		XFree(avail_modes);
 	}
+	XFree(avail_modes);
 	XFree(vis_info);
 	XCloseDisplay(disp);
 #ifdef _DEBUG
