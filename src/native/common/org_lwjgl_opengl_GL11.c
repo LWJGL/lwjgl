@@ -1,35 +1,35 @@
-/* 
+/*
  * Copyright (c) 2002-2004 LWJGL Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
  *
@@ -243,208 +243,208 @@ typedef void (APIENTRY * glVertex4iPROC) (GLint x, GLint y, GLint z, GLint w);
 typedef void (APIENTRY * glVertexPointerPROC) (GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 typedef void (APIENTRY * glViewportPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
 
-static glAccumPROC glAccum; 
-static glAlphaFuncPROC glAlphaFunc; 
-//static glAreTexturesResidentPROC glAreTexturesResident; 
-static glArrayElementPROC glArrayElement; 
-static glBeginPROC glBegin; 
-static glBindTexturePROC glBindTexture; 
-static glBitmapPROC glBitmap; 
-static glBlendFuncPROC glBlendFunc; 
-static glCallListPROC glCallList; 
-static glCallListsPROC glCallLists; 
-static glClearPROC glClear; 
-static glClearAccumPROC glClearAccum; 
-static glClearColorPROC glClearColor; 
-static glClearDepthPROC glClearDepth; 
-static glClearIndexPROC glClearIndex; 
-static glClearStencilPROC glClearStencil; 
-static glClipPlanePROC glClipPlane; 
-static glColor3bPROC glColor3b; 
-static glColor3fPROC glColor3f; 
-static glColor3ubPROC glColor3ub; 
-static glColor4bPROC glColor4b; 
-static glColor4fPROC glColor4f; 
-static glColor4ubPROC glColor4ub; 
-static glColorMaskPROC glColorMask; 
-static glColorMaterialPROC glColorMaterial; 
-static glColorPointerPROC glColorPointer; 
-static glCopyPixelsPROC glCopyPixels; 
-static glCopyTexImage1DPROC glCopyTexImage1D; 
-static glCopyTexImage2DPROC glCopyTexImage2D; 
-static glCopyTexSubImage1DPROC glCopyTexSubImage1D; 
-static glCopyTexSubImage2DPROC glCopyTexSubImage2D; 
-static glCullFacePROC glCullFace; 
-static glDeleteListsPROC glDeleteLists; 
-static glDeleteTexturesPROC glDeleteTextures; 
-static glDepthFuncPROC glDepthFunc; 
-static glDepthMaskPROC glDepthMask; 
-static glDepthRangePROC glDepthRange; 
-static glDisablePROC glDisable; 
-static glDisableClientStatePROC glDisableClientState; 
-static glDrawArraysPROC glDrawArrays; 
-static glDrawBufferPROC glDrawBuffer; 
-static glDrawElementsPROC glDrawElements; 
-static glDrawPixelsPROC glDrawPixels; 
-static glEdgeFlagPROC glEdgeFlag; 
-static glEdgeFlagPointerPROC glEdgeFlagPointer; 
-static glEnablePROC glEnable; 
-static glEnableClientStatePROC glEnableClientState; 
-static glEndPROC glEnd; 
-static glEndListPROC glEndList; 
-static glEvalCoord1fPROC glEvalCoord1f; 
-static glEvalCoord2fPROC glEvalCoord2f; 
-static glEvalMesh1PROC glEvalMesh1; 
-static glEvalMesh2PROC glEvalMesh2; 
-static glEvalPoint1PROC glEvalPoint1; 
-static glEvalPoint2PROC glEvalPoint2; 
-static glFeedbackBufferPROC glFeedbackBuffer; 
-static glFinishPROC glFinish; 
-static glFlushPROC glFlush; 
-static glFogfPROC glFogf; 
-static glFogfvPROC glFogfv; 
-static glFogiPROC glFogi; 
-static glFogivPROC glFogiv; 
-static glFrontFacePROC glFrontFace; 
-static glFrustumPROC glFrustum; 
-static glGenListsPROC glGenLists; 
-static glGenTexturesPROC glGenTextures; 
-static glGetBooleanvPROC glGetBooleanv; 
-static glGetClipPlanePROC glGetClipPlane; 
-static glGetDoublevPROC glGetDoublev; 
+static glAccumPROC glAccum;
+static glAlphaFuncPROC glAlphaFunc;
+//static glAreTexturesResidentPROC glAreTexturesResident;
+static glArrayElementPROC glArrayElement;
+static glBeginPROC glBegin;
+static glBindTexturePROC glBindTexture;
+static glBitmapPROC glBitmap;
+static glBlendFuncPROC glBlendFunc;
+static glCallListPROC glCallList;
+static glCallListsPROC glCallLists;
+static glClearPROC glClear;
+static glClearAccumPROC glClearAccum;
+static glClearColorPROC glClearColor;
+static glClearDepthPROC glClearDepth;
+static glClearIndexPROC glClearIndex;
+static glClearStencilPROC glClearStencil;
+static glClipPlanePROC glClipPlane;
+static glColor3bPROC glColor3b;
+static glColor3fPROC glColor3f;
+static glColor3ubPROC glColor3ub;
+static glColor4bPROC glColor4b;
+static glColor4fPROC glColor4f;
+static glColor4ubPROC glColor4ub;
+static glColorMaskPROC glColorMask;
+static glColorMaterialPROC glColorMaterial;
+static glColorPointerPROC glColorPointer;
+static glCopyPixelsPROC glCopyPixels;
+static glCopyTexImage1DPROC glCopyTexImage1D;
+static glCopyTexImage2DPROC glCopyTexImage2D;
+static glCopyTexSubImage1DPROC glCopyTexSubImage1D;
+static glCopyTexSubImage2DPROC glCopyTexSubImage2D;
+static glCullFacePROC glCullFace;
+static glDeleteListsPROC glDeleteLists;
+static glDeleteTexturesPROC glDeleteTextures;
+static glDepthFuncPROC glDepthFunc;
+static glDepthMaskPROC glDepthMask;
+static glDepthRangePROC glDepthRange;
+static glDisablePROC glDisable;
+static glDisableClientStatePROC glDisableClientState;
+static glDrawArraysPROC glDrawArrays;
+static glDrawBufferPROC glDrawBuffer;
+static glDrawElementsPROC glDrawElements;
+static glDrawPixelsPROC glDrawPixels;
+static glEdgeFlagPROC glEdgeFlag;
+static glEdgeFlagPointerPROC glEdgeFlagPointer;
+static glEnablePROC glEnable;
+static glEnableClientStatePROC glEnableClientState;
+static glEndPROC glEnd;
+static glEndListPROC glEndList;
+static glEvalCoord1fPROC glEvalCoord1f;
+static glEvalCoord2fPROC glEvalCoord2f;
+static glEvalMesh1PROC glEvalMesh1;
+static glEvalMesh2PROC glEvalMesh2;
+static glEvalPoint1PROC glEvalPoint1;
+static glEvalPoint2PROC glEvalPoint2;
+static glFeedbackBufferPROC glFeedbackBuffer;
+static glFinishPROC glFinish;
+static glFlushPROC glFlush;
+static glFogfPROC glFogf;
+static glFogfvPROC glFogfv;
+static glFogiPROC glFogi;
+static glFogivPROC glFogiv;
+static glFrontFacePROC glFrontFace;
+static glFrustumPROC glFrustum;
+static glGenListsPROC glGenLists;
+static glGenTexturesPROC glGenTextures;
+static glGetBooleanvPROC glGetBooleanv;
+static glGetClipPlanePROC glGetClipPlane;
+static glGetDoublevPROC glGetDoublev;
 glGetErrorPROC glGetError = NULL;
-static glGetFloatvPROC glGetFloatv; 
-static glGetIntegervPROC glGetIntegerv; 
-static glGetLightfvPROC glGetLightfv; 
-static glGetLightivPROC glGetLightiv; 
-static glGetMapfvPROC glGetMapfv; 
-static glGetMapivPROC glGetMapiv; 
-static glGetMaterialfvPROC glGetMaterialfv; 
-static glGetMaterialivPROC glGetMaterialiv; 
-static glGetPixelMapfvPROC glGetPixelMapfv; 
-static glGetPixelMapuivPROC glGetPixelMapuiv; 
-static glGetPixelMapusvPROC glGetPixelMapusv; 
-static glGetPointervPROC glGetPointerv; 
-static glGetPolygonStipplePROC glGetPolygonStipple; 
+static glGetFloatvPROC glGetFloatv;
+static glGetIntegervPROC glGetIntegerv;
+static glGetLightfvPROC glGetLightfv;
+static glGetLightivPROC glGetLightiv;
+static glGetMapfvPROC glGetMapfv;
+static glGetMapivPROC glGetMapiv;
+static glGetMaterialfvPROC glGetMaterialfv;
+static glGetMaterialivPROC glGetMaterialiv;
+static glGetPixelMapfvPROC glGetPixelMapfv;
+static glGetPixelMapuivPROC glGetPixelMapuiv;
+static glGetPixelMapusvPROC glGetPixelMapusv;
+static glGetPointervPROC glGetPointerv;
+static glGetPolygonStipplePROC glGetPolygonStipple;
 glGetStringPROC glGetString = NULL;
-static glGetTexEnvfvPROC glGetTexEnvfv; 
-static glGetTexEnvivPROC glGetTexEnviv; 
-static glGetTexGenfvPROC glGetTexGenfv; 
-static glGetTexGenivPROC glGetTexGeniv; 
-static glGetTexImagePROC glGetTexImage; 
-static glGetTexLevelParameterfvPROC glGetTexLevelParameterfv; 
-static glGetTexLevelParameterivPROC glGetTexLevelParameteriv; 
-static glGetTexParameterfvPROC glGetTexParameterfv; 
-static glGetTexParameterivPROC glGetTexParameteriv; 
-static glHintPROC glHint; 
-static glInitNamesPROC glInitNames; 
-static glInterleavedArraysPROC glInterleavedArrays; 
-static glIsEnabledPROC glIsEnabled; 
-static glIsListPROC glIsList; 
-static glIsTexturePROC glIsTexture; 
-static glLightModelfPROC glLightModelf; 
-static glLightModelfvPROC glLightModelfv; 
-static glLightModeliPROC glLightModeli; 
-static glLightModelivPROC glLightModeliv; 
-static glLightfPROC glLightf; 
-static glLightfvPROC glLightfv; 
-static glLightiPROC glLighti; 
-static glLightivPROC glLightiv; 
-static glLineStipplePROC glLineStipple; 
-static glLineWidthPROC glLineWidth; 
-static glListBasePROC glListBase; 
-static glLoadIdentityPROC glLoadIdentity; 
-static glLoadMatrixfPROC glLoadMatrixf; 
-static glLoadNamePROC glLoadName; 
-static glLogicOpPROC glLogicOp; 
-static glMap1fPROC glMap1f; 
-static glMap2fPROC glMap2f; 
-static glMapGrid1fPROC glMapGrid1f; 
-static glMapGrid2fPROC glMapGrid2f; 
-static glMaterialfPROC glMaterialf; 
-static glMaterialfvPROC glMaterialfv; 
-static glMaterialiPROC glMateriali; 
-static glMaterialivPROC glMaterialiv; 
-static glMatrixModePROC glMatrixMode; 
-static glMultMatrixfPROC glMultMatrixf; 
-static glNewListPROC glNewList; 
-static glNormal3bPROC glNormal3b; 
-static glNormal3fPROC glNormal3f; 
-static glNormal3iPROC glNormal3i; 
-static glNormalPointerPROC glNormalPointer; 
-static glOrthoPROC glOrtho; 
-static glPassThroughPROC glPassThrough; 
-static glPixelMapfvPROC glPixelMapfv; 
-static glPixelMapuivPROC glPixelMapuiv; 
-static glPixelMapusvPROC glPixelMapusv; 
-static glPixelStorefPROC glPixelStoref; 
-static glPixelStoreiPROC glPixelStorei; 
-static glPixelTransferfPROC glPixelTransferf; 
-static glPixelTransferiPROC glPixelTransferi; 
-static glPixelZoomPROC glPixelZoom; 
-static glPointSizePROC glPointSize; 
-static glPolygonModePROC glPolygonMode; 
-static glPolygonOffsetPROC glPolygonOffset; 
-static glPolygonStipplePROC glPolygonStipple; 
-static glPopAttribPROC glPopAttrib; 
-static glPopClientAttribPROC glPopClientAttrib; 
-static glPopMatrixPROC glPopMatrix; 
-static glPopNamePROC glPopName; 
-//static glPrioritizeTexturesPROC glPrioritizeTextures; 
-static glPushAttribPROC glPushAttrib; 
-static glPushClientAttribPROC glPushClientAttrib; 
-static glPushMatrixPROC glPushMatrix; 
-static glPushNamePROC glPushName; 
-static glRasterPos2fPROC glRasterPos2f; 
-static glRasterPos2iPROC glRasterPos2i; 
-static glRasterPos3fPROC glRasterPos3f; 
-static glRasterPos3iPROC glRasterPos3i; 
+static glGetTexEnvfvPROC glGetTexEnvfv;
+static glGetTexEnvivPROC glGetTexEnviv;
+static glGetTexGenfvPROC glGetTexGenfv;
+static glGetTexGenivPROC glGetTexGeniv;
+static glGetTexImagePROC glGetTexImage;
+static glGetTexLevelParameterfvPROC glGetTexLevelParameterfv;
+static glGetTexLevelParameterivPROC glGetTexLevelParameteriv;
+static glGetTexParameterfvPROC glGetTexParameterfv;
+static glGetTexParameterivPROC glGetTexParameteriv;
+static glHintPROC glHint;
+static glInitNamesPROC glInitNames;
+static glInterleavedArraysPROC glInterleavedArrays;
+static glIsEnabledPROC glIsEnabled;
+static glIsListPROC glIsList;
+static glIsTexturePROC glIsTexture;
+static glLightModelfPROC glLightModelf;
+static glLightModelfvPROC glLightModelfv;
+static glLightModeliPROC glLightModeli;
+static glLightModelivPROC glLightModeliv;
+static glLightfPROC glLightf;
+static glLightfvPROC glLightfv;
+static glLightiPROC glLighti;
+static glLightivPROC glLightiv;
+static glLineStipplePROC glLineStipple;
+static glLineWidthPROC glLineWidth;
+static glListBasePROC glListBase;
+static glLoadIdentityPROC glLoadIdentity;
+static glLoadMatrixfPROC glLoadMatrixf;
+static glLoadNamePROC glLoadName;
+static glLogicOpPROC glLogicOp;
+static glMap1fPROC glMap1f;
+static glMap2fPROC glMap2f;
+static glMapGrid1fPROC glMapGrid1f;
+static glMapGrid2fPROC glMapGrid2f;
+static glMaterialfPROC glMaterialf;
+static glMaterialfvPROC glMaterialfv;
+static glMaterialiPROC glMateriali;
+static glMaterialivPROC glMaterialiv;
+static glMatrixModePROC glMatrixMode;
+static glMultMatrixfPROC glMultMatrixf;
+static glNewListPROC glNewList;
+static glNormal3bPROC glNormal3b;
+static glNormal3fPROC glNormal3f;
+static glNormal3iPROC glNormal3i;
+static glNormalPointerPROC glNormalPointer;
+static glOrthoPROC glOrtho;
+static glPassThroughPROC glPassThrough;
+static glPixelMapfvPROC glPixelMapfv;
+static glPixelMapuivPROC glPixelMapuiv;
+static glPixelMapusvPROC glPixelMapusv;
+static glPixelStorefPROC glPixelStoref;
+static glPixelStoreiPROC glPixelStorei;
+static glPixelTransferfPROC glPixelTransferf;
+static glPixelTransferiPROC glPixelTransferi;
+static glPixelZoomPROC glPixelZoom;
+static glPointSizePROC glPointSize;
+static glPolygonModePROC glPolygonMode;
+static glPolygonOffsetPROC glPolygonOffset;
+static glPolygonStipplePROC glPolygonStipple;
+static glPopAttribPROC glPopAttrib;
+static glPopClientAttribPROC glPopClientAttrib;
+static glPopMatrixPROC glPopMatrix;
+static glPopNamePROC glPopName;
+//static glPrioritizeTexturesPROC glPrioritizeTextures;
+static glPushAttribPROC glPushAttrib;
+static glPushClientAttribPROC glPushClientAttrib;
+static glPushMatrixPROC glPushMatrix;
+static glPushNamePROC glPushName;
+static glRasterPos2fPROC glRasterPos2f;
+static glRasterPos2iPROC glRasterPos2i;
+static glRasterPos3fPROC glRasterPos3f;
+static glRasterPos3iPROC glRasterPos3i;
 
-static glRasterPos4fPROC glRasterPos4f; 
-static glRasterPos4iPROC glRasterPos4i; 
-static glReadBufferPROC glReadBuffer; 
-static glReadPixelsPROC glReadPixels; 
-static glRectfPROC glRectf; 
-static glRectiPROC glRecti; 
-static glRenderModePROC glRenderMode; 
-static glRotatefPROC glRotatef; 
-static glScalefPROC glScalef; 
-static glScissorPROC glScissor; 
-static glSelectBufferPROC glSelectBuffer; 
-static glShadeModelPROC glShadeModel; 
-static glStencilFuncPROC glStencilFunc; 
-static glStencilMaskPROC glStencilMask; 
-static glStencilOpPROC glStencilOp; 
-static glTexCoord1fPROC glTexCoord1f; 
-static glTexCoord2fPROC glTexCoord2f; 
-static glTexCoord3fPROC glTexCoord3f; 
-static glTexCoord4fPROC glTexCoord4f; 
-static glTexCoordPointerPROC glTexCoordPointer; 
-static glTexEnvfPROC glTexEnvf; 
-static glTexEnvfvPROC glTexEnvfv; 
-static glTexEnviPROC glTexEnvi; 
-static glTexEnvivPROC glTexEnviv; 
-static glTexGenfPROC glTexGenf; 
-static glTexGenfvPROC glTexGenfv; 
-static glTexGeniPROC glTexGeni; 
-static glTexGenivPROC glTexGeniv; 
-static glTexImage1DPROC glTexImage1D; 
-static glTexImage2DPROC glTexImage2D; 
-static glTexParameterfPROC glTexParameterf; 
-static glTexParameterfvPROC glTexParameterfv; 
-static glTexParameteriPROC glTexParameteri; 
-static glTexParameterivPROC glTexParameteriv; 
-static glTexSubImage1DPROC glTexSubImage1D; 
-static glTexSubImage2DPROC glTexSubImage2D; 
-static glTranslatefPROC glTranslatef; 
-static glVertex2fPROC glVertex2f; 
-static glVertex2iPROC glVertex2i; 
-static glVertex3fPROC glVertex3f; 
-static glVertex3iPROC glVertex3i; 
-static glVertex4fPROC glVertex4f; 
-static glVertex4iPROC glVertex4i; 
-static glVertexPointerPROC glVertexPointer; 
-static glViewportPROC glViewport; 
+static glRasterPos4fPROC glRasterPos4f;
+static glRasterPos4iPROC glRasterPos4i;
+static glReadBufferPROC glReadBuffer;
+static glReadPixelsPROC glReadPixels;
+static glRectfPROC glRectf;
+static glRectiPROC glRecti;
+static glRenderModePROC glRenderMode;
+static glRotatefPROC glRotatef;
+static glScalefPROC glScalef;
+static glScissorPROC glScissor;
+static glSelectBufferPROC glSelectBuffer;
+static glShadeModelPROC glShadeModel;
+static glStencilFuncPROC glStencilFunc;
+static glStencilMaskPROC glStencilMask;
+static glStencilOpPROC glStencilOp;
+static glTexCoord1fPROC glTexCoord1f;
+static glTexCoord2fPROC glTexCoord2f;
+static glTexCoord3fPROC glTexCoord3f;
+static glTexCoord4fPROC glTexCoord4f;
+static glTexCoordPointerPROC glTexCoordPointer;
+static glTexEnvfPROC glTexEnvf;
+static glTexEnvfvPROC glTexEnvfv;
+static glTexEnviPROC glTexEnvi;
+static glTexEnvivPROC glTexEnviv;
+static glTexGenfPROC glTexGenf;
+static glTexGenfvPROC glTexGenfv;
+static glTexGeniPROC glTexGeni;
+static glTexGenivPROC glTexGeniv;
+static glTexImage1DPROC glTexImage1D;
+static glTexImage2DPROC glTexImage2D;
+static glTexParameterfPROC glTexParameterf;
+static glTexParameterfvPROC glTexParameterfv;
+static glTexParameteriPROC glTexParameteri;
+static glTexParameterivPROC glTexParameteriv;
+static glTexSubImage1DPROC glTexSubImage1D;
+static glTexSubImage2DPROC glTexSubImage2D;
+static glTranslatefPROC glTranslatef;
+static glVertex2fPROC glVertex2f;
+static glVertex2iPROC glVertex2i;
+static glVertex3fPROC glVertex3f;
+static glVertex3iPROC glVertex3i;
+static glVertex4fPROC glVertex4f;
+static glVertex4iPROC glVertex4i;
+static glVertexPointerPROC glVertexPointer;
+static glViewportPROC glViewport;
 
 /*
  * Class:     org_lwjgl_opengl_GL11
@@ -453,7 +453,7 @@ static glViewportPROC glViewport;
 static void JNICALL Java_org_lwjgl_opengl_GL11_glAccum(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glAccum((GLint) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -463,7 +463,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glAccum(JNIEnv * env, jclass claz
 static void JNICALL Java_org_lwjgl_opengl_GL11_glAlphaFunc(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glAlphaFunc((GLint) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -473,7 +473,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glAlphaFunc(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glClearColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glClearColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	
+
 }
 
 /*
@@ -483,7 +483,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glClearColor(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glClearAccum(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glClearAccum((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	
+
 }
 
 /*
@@ -493,7 +493,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glClearAccum(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glClear(JNIEnv * env, jclass clazz, jint p0)
 {
 	glClear((GLint) p0);
-	
+
 }
 
 /*
@@ -504,7 +504,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglCallLists(JNIEnv * env, jclass
 {
 	GLbyte *lists = (GLbyte *)(*env)->GetDirectBufferAddress(env, lists_buffer);
 	glCallLists((GLint) p0, (GLint) p1, (const void *)(lists + lists_offset));
-	
+
 }
 
 /*
@@ -514,7 +514,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglCallLists(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glCallList(JNIEnv * env, jclass clazz, jint p0)
 {
 	glCallList((GLint) p0);
-	
+
 }
 
 /*
@@ -524,7 +524,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glCallList(JNIEnv * env, jclass c
 static void JNICALL Java_org_lwjgl_opengl_GL11_glBlendFunc(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glBlendFunc((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -535,7 +535,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmap(JNIEnv * env, jclass cl
 {
 	const GLubyte *image = (const GLubyte *)(*env)->GetDirectBufferAddress(env, image_buffer);
 	glBitmap((GLint) p0, (GLint) p1, (GLfloat) p2, (GLfloat) p3, (GLfloat) p4, (GLfloat) p5, image + image_offset);
-	
+
 }
 
 /*
@@ -545,7 +545,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglBitmap(JNIEnv * env, jclass cl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glBindTexture(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glBindTexture((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -564,7 +564,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glBegin(JNIEnv * env, jclass claz
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEnd(JNIEnv * env, jclass clazz)
 {
 	glEnd();
-	
+
 }
 
 /*
@@ -583,7 +583,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glArrayElement(JNIEnv * env, jcla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glClearDepth(JNIEnv * env, jclass clazz, jdouble p0)
 {
 	glClearDepth((GLdouble) p0);
-	
+
 }
 
 /*
@@ -593,7 +593,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glClearDepth(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDeleteLists(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glDeleteLists((GLuint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -604,7 +604,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglDeleteTextures(JNIEnv * env, j
 {
 	const GLuint *address = (const GLuint *)(offset + (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glDeleteTextures((GLint) p0, address);
-	
+
 }
 
 /*
@@ -614,7 +614,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglDeleteTextures(JNIEnv * env, j
 static void JNICALL Java_org_lwjgl_opengl_GL11_glCullFace(JNIEnv * env, jclass clazz, jint p0)
 {
 	glCullFace((GLint) p0);
-	
+
 }
 
 /*
@@ -624,7 +624,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glCullFace(JNIEnv * env, jclass c
 static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7)
 {
 	glCopyTexSubImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7);
-	
+
 }
 
 /*
@@ -634,7 +634,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage2D(JNIEnv * env,
 static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5)
 {
 	glCopyTexSubImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5);
-	
+
 }
 
 /*
@@ -644,7 +644,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexSubImage1D(JNIEnv * env,
 static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7)
 {
 	glCopyTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7);
-	
+
 }
 
 /*
@@ -654,7 +654,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage2D(JNIEnv * env, jc
 static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6)
 {
 	glCopyTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6);
-	
+
 }
 
 /*
@@ -664,7 +664,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyTexImage1D(JNIEnv * env, jc
 static void JNICALL Java_org_lwjgl_opengl_GL11_glCopyPixels(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
 	glCopyPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
-	
+
 }
 
 /*
@@ -675,7 +675,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointer(JNIEnv * env, jcl
 {
 	const GLbyte *address = (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glColorPointer((GLint) p0, (GLint) p1, (GLint) p2, (const void *) (address + buffer_offset));
-	
+
 }
 
 /*
@@ -685,7 +685,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointer(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glColorPointer((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
-	
+
 }
 
 /*
@@ -695,7 +695,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglColorPointerVBO(JNIEnv * env, 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glColorMaterial(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glColorMaterial((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -705,7 +705,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glColorMaterial(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glColorMask(JNIEnv * env, jclass clazz, jboolean p0, jboolean p1, jboolean p2, jboolean p3)
 {
 	glColorMask((GLboolean) p0, (GLboolean) p1, (GLboolean) p2, (GLboolean) p3);
-	
+
 }
 
 /*
@@ -768,9 +768,9 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glColor4ub(JNIEnv * env, jclass c
  */
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglClipPlane(JNIEnv * env, jclass clazz, jint p0, jobject buffer, jint offset)
 {
-	const GLdouble *address = offset + (const GLdouble *)(*env)->GetDirectBufferAddress(env, buffer);	
+	const GLdouble *address = offset + (const GLdouble *)(*env)->GetDirectBufferAddress(env, buffer);
 	glClipPlane((GLint) p0, address + offset);
-	
+
 }
 
 /*
@@ -780,7 +780,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglClipPlane(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glClearStencil(JNIEnv * env, jclass clazz, jint p0)
 {
 	glClearStencil((GLint) p0);
-	
+
 }
 
 /*
@@ -790,7 +790,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glClearStencil(JNIEnv * env, jcla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glClearIndex(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glClearIndex((GLfloat) p0);
-	
+
 }
 
 /*
@@ -800,7 +800,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glClearIndex(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint1(JNIEnv * env, jclass clazz, jint p0)
 {
 	glEvalPoint1((GLint) p0);
-	
+
 }
 
 /*
@@ -810,7 +810,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint1(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint2(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glEvalPoint2((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -820,7 +820,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalPoint2(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh1(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glEvalMesh1((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -830,7 +830,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh1(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh2(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4)
 {
 	glEvalMesh2((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4);
-	
+
 }
 
 /*
@@ -840,7 +840,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalMesh2(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord1f(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glEvalCoord1f((GLfloat) p0);
-	
+
 }
 
 /*
@@ -850,7 +850,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord1f(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glEvalCoord2f((GLfloat) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -860,7 +860,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEvalCoord2f(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEnableClientState(JNIEnv * env, jclass clazz, jint p0)
 {
 	glEnableClientState((GLint) p0);
-	
+
 }
 
 /*
@@ -870,7 +870,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEnableClientState(JNIEnv * env,
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDisableClientState(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDisableClientState((GLint) p0);
-	
+
 }
 
 /*
@@ -880,7 +880,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glDisableClientState(JNIEnv * env
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEnable(JNIEnv * env, jclass clazz, jint p0)
 {
 	glEnable((GLint) p0);
-	
+
 }
 
 /*
@@ -890,7 +890,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glEnable(JNIEnv * env, jclass cla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDisable(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDisable((GLint) p0);
-	
+
 }
 
 /*
@@ -901,7 +901,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointer(JNIEnv * env, 
 {
 	const GLbyte *address = offset + (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glEdgeFlagPointer((GLint) p0, (const void *)address);
-	
+
 }
 
 /*
@@ -911,7 +911,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointer(JNIEnv * env, 
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglEdgeFlagPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint buffer_offset)
 {
 	glEdgeFlagPointer((GLint) p0, offsetToPointer(buffer_offset));
-	
+
 }
 
 /*
@@ -931,7 +931,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawPixels(JNIEnv * env, jclas
 {
 	const GLbyte *address = (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glDrawPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (const void *)(address + offset));
-	
+
 }
 
 /*
@@ -942,7 +942,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElements(JNIEnv * env, jcl
 {
 	const GLbyte *address = (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glDrawElements((GLint) p0, (GLint) p1, (GLint) p2, (const void *)(address + offset));
-	
+
 }
 
 /*
@@ -952,7 +952,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElements(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElementsVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glDrawElements((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
-	
+
 }
 
 /*
@@ -962,7 +962,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglDrawElementsVBO(JNIEnv * env, 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDrawBuffer(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDrawBuffer((GLint) p0);
-	
+
 }
 
 /*
@@ -972,7 +972,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glDrawBuffer(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDrawArrays(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glDrawArrays((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -982,7 +982,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glDrawArrays(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthRange(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1)
 {
 	glDepthRange((GLdouble) p0, (GLdouble) p1);
-	
+
 }
 
 /*
@@ -992,7 +992,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthRange(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthMask(JNIEnv * env, jclass clazz, jboolean p0)
 {
 	glDepthMask((GLboolean) p0);
-	
+
 }
 
 /*
@@ -1002,7 +1002,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthMask(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glDepthFunc(JNIEnv * env, jclass clazz, jint p0)
 {
 	glDepthFunc((GLint) p0);
-	
+
 }
 
 /*
@@ -1013,7 +1013,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglFeedbackBuffer(JNIEnv * env, j
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glFeedbackBuffer((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1024,7 +1024,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapfv(JNIEnv * env, jc
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPixelMapfv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1035,7 +1035,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapuiv(JNIEnv * env, j
 {
 	GLuint *address = offset + (GLuint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPixelMapuiv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1046,7 +1046,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPixelMapusv(JNIEnv * env, j
 {
 	GLushort *address = (GLushort *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPixelMapusv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1057,7 +1057,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialfv(JNIEnv * env, jc
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetMaterialfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1068,7 +1068,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMaterialiv(JNIEnv * env, jc
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetMaterialiv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1079,7 +1079,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapfv(JNIEnv * env, jclass 
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetMapfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1090,7 +1090,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetMapiv(JNIEnv * env, jclass 
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetMapiv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1101,7 +1101,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightfv(JNIEnv * env, jclas
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetLightfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1112,7 +1112,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightiv(JNIEnv * env, jclas
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetLightiv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1122,7 +1122,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetLightiv(JNIEnv * env, jclas
 static jint JNICALL Java_org_lwjgl_opengl_GL11_glGetError(JNIEnv * env, jclass clazz)
 {
 	jint ret = (jint) glGetError();
-	
+
 	return ret;
 }
 
@@ -1134,7 +1134,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetClipPlane(JNIEnv * env, jcl
 {
 	GLdouble *address = offset + (GLdouble *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetClipPlane((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1145,7 +1145,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetBooleanv(JNIEnv * env, jcla
 {
 	GLubyte *address = offset + (GLubyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetBooleanv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1156,7 +1156,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetDoublev(JNIEnv * env, jclas
 {
 	GLdouble *address = offset + (GLdouble *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetDoublev((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1167,7 +1167,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetFloatv(JNIEnv * env, jclass
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetFloatv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1178,7 +1178,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetIntegerv(JNIEnv * env, jcla
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetIntegerv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1189,7 +1189,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGenTextures(JNIEnv * env, jcla
 {
 	GLuint *address = offset + (GLuint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGenTextures((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1199,7 +1199,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGenTextures(JNIEnv * env, jcla
 static jint JNICALL Java_org_lwjgl_opengl_GL11_glGenLists(JNIEnv * env, jclass clazz, jint p0)
 {
 	jint ret = (jint) glGenLists((GLint) p0);
-	
+
 	return ret;
 }
 
@@ -1210,7 +1210,7 @@ static jint JNICALL Java_org_lwjgl_opengl_GL11_glGenLists(JNIEnv * env, jclass c
 static void JNICALL Java_org_lwjgl_opengl_GL11_glFrustum(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
 {
 	glFrustum((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
-	
+
 }
 
 /*
@@ -1220,7 +1220,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glFrustum(JNIEnv * env, jclass cl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glFrontFace(JNIEnv * env, jclass clazz, jint p0)
 {
 	glFrontFace((GLint) p0);
-	
+
 }
 
 /*
@@ -1230,7 +1230,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glFrontFace(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glFogf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glFogf((GLint) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -1240,7 +1240,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glFogf(JNIEnv * env, jclass clazz
 static void JNICALL Java_org_lwjgl_opengl_GL11_glFogi(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glFogi((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -1251,7 +1251,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglFogfv(JNIEnv * env, jclass cla
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glFogfv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1262,7 +1262,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglFogiv(JNIEnv * env, jclass cla
 {
 	const GLint *address = offset + (const GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glFogiv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1272,7 +1272,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglFogiv(JNIEnv * env, jclass cla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glFlush(JNIEnv * env, jclass clazz)
 {
 	glFlush();
-	
+
 }
 
 /*
@@ -1282,7 +1282,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glFlush(JNIEnv * env, jclass claz
 static void JNICALL Java_org_lwjgl_opengl_GL11_glFinish(JNIEnv * env, jclass clazz)
 {
 	glFinish();
-	
+
 }
 
 /*
@@ -1293,7 +1293,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_GL11_glGetPointerv(JNIEnv * env, jc
 {
 	void *pointer;
 	glGetPointerv((GLint) p0, &pointer);
-	
+
 	return safeNewBuffer(env, pointer, size);
 }
 
@@ -1304,7 +1304,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_GL11_glGetPointerv(JNIEnv * env, jc
 static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsEnabled(JNIEnv * env, jclass clazz, jint p0)
 {
 	jboolean ret = (jboolean) glIsEnabled((GLint) p0);
-	
+
 	return ret;
 }
 
@@ -1316,7 +1316,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArrays(JNIEnv * env
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glInterleavedArrays((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1326,7 +1326,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArrays(JNIEnv * env
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArraysVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
 {
 	glInterleavedArrays((GLint) p0, (GLint) p1, offsetToPointer(buffer_offset));
-	
+
 }
 
 /*
@@ -1336,7 +1336,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglInterleavedArraysVBO(JNIEnv * 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glInitNames(JNIEnv * env, jclass clazz)
 {
 	glInitNames();
-	
+
 }
 
 
@@ -1347,7 +1347,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glInitNames(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glHint(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glHint((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -1358,7 +1358,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameterfv(JNIEnv * env
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexParameterfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1369,7 +1369,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexParameteriv(JNIEnv * env
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexParameteriv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1380,7 +1380,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameterfv(JNIEnv 
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexLevelParameterfv((GLint) p0, (GLint) p1, (GLint) p2, address);
-	
+
 }
 
 /*
@@ -1391,7 +1391,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexLevelParameteriv(JNIEnv 
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexLevelParameteriv((GLint) p0, (GLint) p1, (GLint) p2, address);
-	
+
 }
 
 /*
@@ -1402,7 +1402,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexImage(JNIEnv * env, jcla
 {
 	void *address = (void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glGetTexImage((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, address);
-	
+
 }
 
 
@@ -1410,14 +1410,14 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGenfv(JNIEnv * env, jcla
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexGenfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexGeniv(JNIEnv * env, jclass clazz, jint p0, jint p1, jobject buffer, jint offset)
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexGeniv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1428,7 +1428,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnvfv(JNIEnv * env, jcla
 {
 	GLfloat *address = offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexEnvfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1439,7 +1439,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetTexEnviv(JNIEnv * env, jcla
 {
 	GLint *address = offset + (GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetTexEnviv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1460,7 +1460,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple(JNIEnv * env
 {
 	GLubyte *address = offset + (GLubyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glGetPolygonStipple(address);
-	
+
 }
 
 /*
@@ -1470,7 +1470,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglGetPolygonStipple(JNIEnv * env
 static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsList(JNIEnv * env, jclass clazz, jint p0)
 {
 	jboolean ret = (jboolean) glIsList((GLint) p0);
-	
+
 	return ret;
 }
 
@@ -1481,7 +1481,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsList(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glMaterialf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glMaterialf((GLint) p0, (GLint) p1, (GLfloat) p2);
-	
+
 }
 
 /*
@@ -1491,7 +1491,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glMaterialf(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glMateriali(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glMateriali((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -1502,7 +1502,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialfv(JNIEnv * env, jclas
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glMaterialfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1513,7 +1513,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialiv(JNIEnv * env, jclas
 {
 	const GLint *address = offset + (const GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glMaterialiv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 
@@ -1525,7 +1525,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMaterialiv(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid1f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2)
 {
 	glMapGrid1f((GLint) p0, (GLfloat) p1, (GLfloat) p2);
-	
+
 }
 
 
@@ -1536,7 +1536,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid1f(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glMapGrid2f(JNIEnv * env, jclass clazz, jint p0, jfloat p1, jfloat p2, jint p3, jfloat p4, jfloat p5)
 {
 	glMapGrid2f((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLint) p3, (GLfloat) p4, (GLfloat) p5);
-	
+
 }
 
 
@@ -1548,7 +1548,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMap2f(JNIEnv * env, jclass cla
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glMap2f((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLint) p3, (GLint) p4, (GLfloat) p5, (GLfloat) p6, (GLint) p7, (GLint) p8, address);
-	
+
 }
 
 
@@ -1560,7 +1560,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMap1f(JNIEnv * env, jclass cla
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glMap1f((GLint) p0, (GLfloat) p1, (GLfloat) p2, (GLint) p3, (GLint) p4, address);
-	
+
 }
 
 /*
@@ -1570,7 +1570,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMap1f(JNIEnv * env, jclass cla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLogicOp(JNIEnv * env, jclass clazz, jint p0)
 {
 	glLogicOp((GLint) p0);
-	
+
 }
 
 /*
@@ -1580,7 +1580,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glLogicOp(JNIEnv * env, jclass cl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLoadName(JNIEnv * env, jclass clazz, jint p0)
 {
 	glLoadName((GLint) p0);
-	
+
 }
 
 
@@ -1592,7 +1592,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLoadMatrixf(JNIEnv * env, jcla
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glLoadMatrixf(address);
-	
+
 }
 
 /*
@@ -1602,7 +1602,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLoadMatrixf(JNIEnv * env, jcla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLoadIdentity(JNIEnv * env, jclass clazz)
 {
 	glLoadIdentity();
-	
+
 }
 
 /*
@@ -1612,7 +1612,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glLoadIdentity(JNIEnv * env, jcla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glListBase(JNIEnv * env, jclass clazz, jint p0)
 {
 	glListBase((GLint) p0);
-	
+
 }
 
 /*
@@ -1622,7 +1622,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glListBase(JNIEnv * env, jclass c
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLineWidth(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glLineWidth((GLfloat) p0);
-	
+
 }
 
 /*
@@ -1632,7 +1632,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glLineWidth(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLineStipple(JNIEnv * env, jclass clazz, jint p0, jshort p1)
 {
 	glLineStipple((GLint) p0, (GLshort) p1);
-	
+
 }
 
 /*
@@ -1642,7 +1642,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glLineStipple(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLightModelf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glLightModelf((GLint) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -1652,7 +1652,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glLightModelf(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLightModeli(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glLightModeli((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -1663,7 +1663,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModelfv(JNIEnv * env, jcl
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glLightModelfv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1674,7 +1674,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModeliv(JNIEnv * env, jcl
 {
 	const GLint *address = offset + (const GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glLightModeliv((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1684,7 +1684,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightModeliv(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLightf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glLightf((GLint) p0, (GLint) p1, (GLfloat) p2);
-	
+
 }
 
 /*
@@ -1694,7 +1694,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glLightf(JNIEnv * env, jclass cla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glLighti(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glLighti((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -1705,7 +1705,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightfv(JNIEnv * env, jclass c
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glLightfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1716,7 +1716,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightiv(JNIEnv * env, jclass c
 {
 	const GLint *address = offset + (const GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glLightiv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1726,7 +1726,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglLightiv(JNIEnv * env, jclass c
 static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsTexture(JNIEnv * env, jclass clazz, jint p0)
 {
 	jboolean ret = (jboolean) glIsTexture((GLint) p0);
-	
+
 	return ret;
 }
 
@@ -1737,7 +1737,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_GL11_glIsTexture(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glMatrixMode(JNIEnv * env, jclass clazz, jint p0)
 {
 	glMatrixMode((GLint) p0);
-	
+
 }
 
 /*
@@ -1748,7 +1748,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStipple(JNIEnv * env, j
 {
 	const GLubyte *address = offset + (const GLubyte *)(*env)->GetDirectBufferAddress(env, buffer);
 	glPolygonStipple(address);
-	
+
 }
 
 /*
@@ -1758,7 +1758,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPolygonStipple(JNIEnv * env, j
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonOffset(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glPolygonOffset((GLfloat) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -1768,7 +1768,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonOffset(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonMode(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glPolygonMode((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -1778,7 +1778,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPolygonMode(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPointSize(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glPointSize((GLfloat) p0);
-	
+
 }
 
 /*
@@ -1788,7 +1788,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPointSize(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelZoom(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glPixelZoom((GLfloat) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -1798,7 +1798,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelZoom(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferf(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glPixelTransferf((GLint) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -1808,7 +1808,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferf(JNIEnv * env, jc
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferi(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glPixelTransferi((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -1818,7 +1818,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelTransferi(JNIEnv * env, jc
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStoref(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
 {
 	glPixelStoref((GLint) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -1828,7 +1828,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStoref(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPixelStorei(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glPixelStorei((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -1839,7 +1839,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapfv(JNIEnv * env, jclas
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glPixelMapfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1850,7 +1850,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapuiv(JNIEnv * env, jcla
 {
 	const GLuint *address = (const GLuint *)(offset + (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glPixelMapuiv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1861,7 +1861,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusv(JNIEnv * env, jcla
 {
 	const GLushort *address = (const GLushort *)(offset + (const GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glPixelMapusv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1871,7 +1871,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPixelMapusv(JNIEnv * env, jcla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPassThrough(JNIEnv * env, jclass clazz, jfloat p0)
 {
 	glPassThrough((GLfloat) p0);
-	
+
 }
 
 /*
@@ -1881,7 +1881,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPassThrough(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glOrtho(JNIEnv * env, jclass clazz, jdouble p0, jdouble p1, jdouble p2, jdouble p3, jdouble p4, jdouble p5)
 {
 	glOrtho((GLdouble) p0, (GLdouble) p1, (GLdouble) p2, (GLdouble) p3, (GLdouble) p4, (GLdouble) p5);
-	
+
 }
 
 /*
@@ -1892,7 +1892,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointer(JNIEnv * env, jc
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glNormalPointer((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -1902,7 +1902,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointer(JNIEnv * env, jc
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglNormalPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint buffer_offset)
 {
 	glNormalPointer((GLint) p0, (GLint) p1, offsetToPointer(buffer_offset));
-	
+
 }
 
 /*
@@ -1940,7 +1940,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glNormal3i(JNIEnv * env, jclass c
 static void JNICALL Java_org_lwjgl_opengl_GL11_glNewList(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glNewList((GLint) p0, (GLint) p1);
-	
+
 }
 
 /*
@@ -1950,7 +1950,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glNewList(JNIEnv * env, jclass cl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glEndList(JNIEnv * env, jclass clazz)
 {
 	glEndList();
-	
+
 }
 
 
@@ -1962,7 +1962,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMultMatrixf(JNIEnv * env, jcla
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glMultMatrixf(address);
-	
+
 }
 
 /*
@@ -1972,7 +1972,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglMultMatrixf(JNIEnv * env, jcla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glShadeModel(JNIEnv * env, jclass clazz, jint p0)
 {
 	glShadeModel((GLint) p0);
-	
+
 }
 
 /*
@@ -1983,7 +1983,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglSelectBuffer(JNIEnv * env, jcl
 {
 	GLuint *address = offset + (GLuint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glSelectBuffer((GLint) p0, address);
-	
+
 }
 
 /*
@@ -1993,7 +1993,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglSelectBuffer(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glScissor(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glScissor((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-	
+
 }
 
 /*
@@ -2003,7 +2003,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glScissor(JNIEnv * env, jclass cl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glScalef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glScalef((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
-	
+
 }
 
 
@@ -2014,7 +2014,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glScalef(JNIEnv * env, jclass cla
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRotatef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glRotatef((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	
+
 }
 
 /*
@@ -2024,7 +2024,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRotatef(JNIEnv * env, jclass cl
 static jint JNICALL Java_org_lwjgl_opengl_GL11_glRenderMode(JNIEnv * env, jclass clazz, jint p0)
 {
 	jint ret = (jint) glRenderMode((GLint) p0);
-	
+
 	return ret;
 }
 
@@ -2036,7 +2036,7 @@ static jint JNICALL Java_org_lwjgl_opengl_GL11_glRenderMode(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRectf(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glRectf((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	
+
 }
 
 /*
@@ -2046,7 +2046,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRectf(JNIEnv * env, jclass claz
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRecti(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glRecti((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-	
+
 }
 
 
@@ -2058,7 +2058,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixels(JNIEnv * env, jclas
 {
 	void *address = (void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glReadPixels((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, address);
-	
+
 }
 
 /*
@@ -2068,7 +2068,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglReadPixels(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glReadBuffer(JNIEnv * env, jclass clazz, jint p0)
 {
 	glReadBuffer((GLint) p0);
-	
+
 }
 
 
@@ -2080,7 +2080,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glReadBuffer(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1)
 {
 	glRasterPos2f((GLfloat) p0, (GLfloat) p1);
-	
+
 }
 
 /*
@@ -2090,7 +2090,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2f(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2i(JNIEnv * env, jclass clazz, jint p0, jint p1)
 {
 	glRasterPos2i((GLint) p0, (GLint) p1);
-	
+
 }
 
 
@@ -2101,7 +2101,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos2i(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glRasterPos3f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
-	
+
 }
 
 /*
@@ -2111,7 +2111,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3f(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glRasterPos3i((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 
@@ -2123,7 +2123,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos3i(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4f(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
 	glRasterPos4f((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
-	
+
 }
 
 /*
@@ -2133,7 +2133,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4f(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4i(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glRasterPos4i((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-	
+
 }
 
 
@@ -2144,7 +2144,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glRasterPos4i(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPushName(JNIEnv * env, jclass clazz, jint p0)
 {
 	glPushName((GLint) p0);
-	
+
 }
 
 /*
@@ -2154,7 +2154,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPushName(JNIEnv * env, jclass c
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPopName(JNIEnv * env, jclass clazz)
 {
 	glPopName();
-	
+
 }
 
 /*
@@ -2164,7 +2164,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPopName(JNIEnv * env, jclass cl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPushMatrix(JNIEnv * env, jclass clazz)
 {
 	glPushMatrix();
-	
+
 }
 
 /*
@@ -2174,7 +2174,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPushMatrix(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPopMatrix(JNIEnv * env, jclass clazz)
 {
 	glPopMatrix();
-	
+
 }
 
 /*
@@ -2184,7 +2184,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPopMatrix(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglPushClientAttrib(JNIEnv * env, jclass clazz, jint p0)
 {
 	glPushClientAttrib((GLint) p0);
-	
+
 }
 
 /*
@@ -2194,7 +2194,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPushClientAttrib(JNIEnv * env,
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglPopClientAttrib(JNIEnv * env, jclass clazz)
 {
 	glPopClientAttrib();
-	
+
 }
 
 /*
@@ -2204,7 +2204,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglPopClientAttrib(JNIEnv * env, 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPushAttrib(JNIEnv * env, jclass clazz, jint p0)
 {
 	glPushAttrib((GLint) p0);
-	
+
 }
 
 /*
@@ -2214,7 +2214,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPushAttrib(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glPopAttrib(JNIEnv * env, jclass clazz)
 {
 	glPopAttrib();
-	
+
 }
 
 /*
@@ -2224,7 +2224,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glPopAttrib(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilFunc(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glStencilFunc((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -2235,7 +2235,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointer(JNIEnv * env, jc
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glVertexPointer((GLint) p0, (GLint) p1, (GLint) p2, address);
-	
+
 }
 
 /*
@@ -2245,7 +2245,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointer(JNIEnv * env, jc
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglVertexPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glVertexPointer((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
-	
+
 }
 
 /*
@@ -2312,7 +2312,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glVertex4i(JNIEnv * env, jclass c
 static void JNICALL Java_org_lwjgl_opengl_GL11_glTranslatef(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2)
 {
 	glTranslatef((GLfloat) p0, (GLfloat) p1, (GLfloat) p2);
-	
+
 }
 
 /*
@@ -2323,7 +2323,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(JNIEnv * env, jc
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glTexSubImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, address);
-	
+
 }
 
 /*
@@ -2334,7 +2334,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexSubImage1D(JNIEnv * env, jc
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glTexSubImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, address);
-	
+
 }
 
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameterfv
@@ -2342,13 +2342,13 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameterfv
 	GLfloat *address = param_offset + (GLfloat *)(*env)->GetDirectBufferAddress(env, param);
 	glTexParameterfv(target, pname, address);
 }
-  
+
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameteriv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject param, jint param_offset) {
 	GLint *address = param_offset + (GLint *)(*env)->GetDirectBufferAddress(env, param);
 	glTexParameteriv(target, pname, address);
 }
-    
+
 /*
  * Class:     org_lwjgl_opengl_GL11
  * Method:    glTexParameterf
@@ -2356,7 +2356,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexParameteriv
 static void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameterf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glTexParameterf((GLint) p0, (GLint) p1, (GLfloat) p2);
-	
+
 }
 
 /*
@@ -2366,7 +2366,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameterf(JNIEnv * env, jcl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameteri(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glTexParameteri((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -2375,9 +2375,9 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameteri(JNIEnv * env, jcl
  */
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jobject buffer, jint offset)
 {
-	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
-	glTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, address);
-	
+	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer, offset);
+	glTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, buffer);
+
 }
 
 /*
@@ -2386,9 +2386,9 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv * env, jclas
  */
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jobject buffer, jint offset)
 {
-	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
-	glTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, address);
-	
+	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer, offset);
+	glTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, buffer_ptr);
+
 }
 
 
@@ -2399,7 +2399,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glTexGenf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glTexGenf((GLint) p0, (GLint) p1, (GLfloat) p2);
-	
+
 }
 
 
@@ -2411,7 +2411,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGenfv(JNIEnv * env, jclass 
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glTexGenfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -2421,7 +2421,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGenfv(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glTexGeni(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glTexGeni((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 
@@ -2433,7 +2433,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGeniv(JNIEnv * env, jclass 
 {
 	const GLint *address = offset + (const GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glTexGeniv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 
@@ -2445,7 +2445,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexGeniv(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvf(JNIEnv * env, jclass clazz, jint p0, jint p1, jfloat p2)
 {
 	glTexEnvf((GLint) p0, (GLint) p1, (GLfloat) p2);
-	
+
 }
 
 /*
@@ -2455,7 +2455,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvf(JNIEnv * env, jclass cl
 static void JNICALL Java_org_lwjgl_opengl_GL11_glTexEnvi(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glTexEnvi((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -2466,7 +2466,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnvfv(JNIEnv * env, jclass 
 {
 	const GLfloat *address = offset + (const GLfloat *)(*env)->GetDirectBufferAddress(env, buffer);
 	glTexEnvfv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -2477,7 +2477,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexEnviv(JNIEnv * env, jclass 
 {
 	const GLint *address = offset + (const GLint *)(*env)->GetDirectBufferAddress(env, buffer);
 	glTexEnviv((GLint) p0, (GLint) p1, address);
-	
+
 }
 
 /*
@@ -2488,7 +2488,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(JNIEnv * env, 
 {
 	const void *address = (const void *)(offset + (GLbyte *)(*env)->GetDirectBufferAddress(env, buffer));
 	glTexCoordPointer((GLint) p0, (GLint) p1, (GLint) p2, address);
-	
+
 }
 
 /*
@@ -2498,7 +2498,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(JNIEnv * env, 
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexCoordPointerVBO(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint buffer_offset)
 {
 	glTexCoordPointer((GLint) p0, (GLint) p1, (GLint) p2, offsetToPointer(buffer_offset));
-	
+
 }
 
 /*
@@ -2548,7 +2548,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glTexCoord4f(JNIEnv * env, jclass
 static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilOp(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2)
 {
 	glStencilOp((GLint) p0, (GLint) p1, (GLint) p2);
-	
+
 }
 
 /*
@@ -2558,7 +2558,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilOp(JNIEnv * env, jclass 
 static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilMask(JNIEnv * env, jclass clazz, jint p0)
 {
 	glStencilMask((GLint) p0);
-	
+
 }
 
 /*
@@ -2568,7 +2568,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glStencilMask(JNIEnv * env, jclas
 static void JNICALL Java_org_lwjgl_opengl_GL11_glViewport(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
 {
 	glViewport((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3);
-	
+
 }
 
 #ifdef __cplusplus
