@@ -376,7 +376,7 @@ public class IL {
     public static native boolean ilLoadImage(String fileName);
     public static boolean ilLoadL(int Type, ByteBuffer Lump, int Size) {
         BufferChecks.checkDirect(Lump);
-        return nilIsValidL(Type, Lump, Lump.position(), Size);
+        return nilLoadL(Type, Lump, Lump.position(), Size);
     }
     public static native boolean nilLoadL(int Type, ByteBuffer Lump, int lump_offset, int Size);
     public static native boolean ilLoadPal(String FileName);
