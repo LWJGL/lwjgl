@@ -38,12 +38,14 @@
  * @version $Revision$
  */
 
+
 #define WIN32_LEAN_AND_MEAN
 #include "org_lwjgl_input_Controller.h"
 #include <windows.h>
 #undef  DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION 0x0500
 #include <dinput.h>
+#include <Window.h>
 
 #define CONTROLLER_AXISMAX 1000       // Maxmimum range to which we'll gauge the swing
 #define CONTROLLER_AXISMIN -1000      // Minimum range to which we'll gauge the swing
@@ -183,7 +185,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jcla
     ShutdownController();
     return;
   }
-  return cCreate_success ? JNI_TRUE : JNI_FALSE;
 }
 
 /*

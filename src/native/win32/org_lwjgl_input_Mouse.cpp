@@ -142,7 +142,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
 		printf("Failed to acquire mouse\n");
 #endif
 	}
-	return mCreate_success ? JNI_TRUE : JNI_FALSE;
 }
 
 /*
