@@ -233,6 +233,7 @@ public final class GLContext {
 			unloadStubs();
 			if (did_auto_load)
 				unloadOpenGLLibrary();
+			currentContext = null;
 			return;
 		}
 		// Is this the same as last time?
