@@ -39,9 +39,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilActiveMipmap(JNIEnv *env, j
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyPal(JNIEnv *env, jclass clazz, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName, 0);
 	jboolean result = ilApplyPal((const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -52,11 +52,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyPal(JNIEnv *env, jclas
  * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilApplyProfile(JNIEnv *env, jclass clazz, jstring inProfile, jstring outProfile) {
-	const char *strInProfile = (*env)->GetStringUTFChars(env, inProfile, 0);
-	const char *strOutProfile = (*env)->GetStringUTFChars(env, outProfile, 0);
+	char *strInProfile = GetStringNativeChars(env, inProfile);
+	char *strOutProfile = GetStringNativeChars(env, outProfile);
 	jboolean result = ilApplyProfile((const ILstring)strInProfile, (const ILstring)strOutProfile);
-	(*env)->ReleaseStringUTFChars(env, inProfile, strInProfile);
-	(*env)->ReleaseStringUTFChars(env, outProfile, strOutProfile);
+	free(strInProfile);
+	free(strOutProfile);
 
 	return result;
 }
@@ -378,9 +378,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsImage(JNIEnv *env, jclass
  * Signature: (ILjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilIsValid(JNIEnv *env, jclass clazz, jint type, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilIsValid((ILuint)type, (const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -411,9 +411,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilKeyColour(JNIEnv *env, jclass c
  * Signature: (ILjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoad(JNIEnv *env, jclass clazz, jint type, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilLoad((ILenum)type, (const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -424,9 +424,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoad(JNIEnv *env, jclass cl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jclass clazz, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName, 0);
 	jboolean result = ilLoadImage((const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -449,9 +449,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadL(JNIEnv *env, jclass 
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadPal(JNIEnv *env, jclass clazz, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilLoadPal((const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -498,9 +498,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilPushAttrib(JNIEnv *env, jclass 
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jclass clazz, jstring ext) {
-	const char *strExt = (*env)->GetStringUTFChars(env, ext, 0);
+	char *strExt = GetStringNativeChars(env, ext, 0);
 	jboolean result = ilRemoveLoad((const ILstring)strExt);
-	(*env)->ReleaseStringUTFChars(env, ext, strExt);
+	free(strExt);
 
 	return result;
 }
@@ -511,9 +511,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveLoad(JNIEnv *env, jcl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilRemoveSave(JNIEnv *env, jclass clazz, jstring ext) {
-	const char *strExt = (*env)->GetStringUTFChars(env, ext, 0);
+	char *strExt = GetStringNativeChars(env, ext, 0);
 	jboolean result = ilRemoveSave((const ILstring)strExt);
-	(*env)->ReleaseStringUTFChars(env, ext, strExt);
+	free(strExt);
 
 	return result;
 }
@@ -551,9 +551,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilResetWrite(JNIEnv *env, jclass 
  * Signature: (ILjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSave(JNIEnv *env, jclass clazz, jint type, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilSave((ILenum)type, (const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -564,9 +564,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSave(JNIEnv *env, jclass cl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveImage(JNIEnv *env, jclass clazz, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilSaveImage((const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -588,9 +588,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_IL_nilSaveL(JNIEnv *env, jclass claz
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSavePal(JNIEnv *env, jclass clazz, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilSavePal((const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -641,10 +641,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilSetPixels(JNIEnv *env, jclass 
  * Signature: (ILjava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_ilSetString(JNIEnv *env, jclass clazz, jint mode, jstring string) {
-	const char *strString = (*env)->GetStringUTFChars(env, string, 0);
+	char *strString = GetStringNativeChars(env, string);
 
 	ilSetString(mode, (const ILstring)strString);
-	(*env)->ReleaseStringUTFChars(env, string, strString);
+	free(strString);
 }
 
 /*
@@ -682,9 +682,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilTypeFunc(JNIEnv *env, jclas
  * Signature: (Ljava/lang/String;IIIB)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadData(JNIEnv *env, jclass clazz, jstring fileName, jint width, jint height, jint depth, jbyte bpp) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilLoadData((const ILstring)strFileName, (ILuint)width, (ILuint)height, (ILuint)depth, (ILubyte)bpp);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }
@@ -706,9 +706,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadDataL(JNIEnv *env, jcl
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilSaveData(JNIEnv *env, jclass clazz, jstring fileName) {
-	const char *strFileName = (*env)->GetStringUTFChars(env, fileName, 0);
+	char *strFileName = GetStringNativeChars(env, fileName);
 	jboolean result = ilSaveData((const ILstring)strFileName);
-	(*env)->ReleaseStringUTFChars(env, fileName, strFileName);
+	free(strFileName);
 
 	return result;
 }

@@ -42,6 +42,7 @@
 #include "Window.h"
 #include "org_lwjgl_Sys.h"
 #include "common_tools.h"
+#include <malloc.h>
 
 unsigned __int64		hires_timer_freq = 0;			// Hires timer frequency
 unsigned __int64		hires_timer = 0;				// Hires timer current time
@@ -119,15 +120,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
   (JNIEnv * env, jclass clazz, jstring title, jstring message)
 {
-	jboolean copy = JNI_FALSE;
-	const char * eMessageText = env->GetStringUTFChars(message, &copy);
-	const char * cTitleBarText = env->GetStringUTFChars(title, &copy);
+	char * eMessageText = GetStringNativeChars(env, message);
+	char * cTitleBarText = GetStringNativeChars(env, title);
 	MessageBox(getCurrentHWND(), eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
 	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	
-	env->ReleaseStringUTFChars(message, eMessageText);
-	env->ReleaseStringUTFChars(title, cTitleBarText);
+	free(eMessageText);
+	free(cTitleBarText);
 }
 
 /*
@@ -138,13 +138,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
   (JNIEnv * env, jclass clazz, jstring url)
 {
-	const char * urlString = env->GetStringUTFChars(url, NULL);
+	char * urlString = GetStringNativeChars(env, url);
 
 	char command[256];
 	strcpy(command, "");
 	strcat(command, "rundll32 url.dll,FileProtocolHandler ");
 	strncat(command, urlString, 200); // Prevent buffer overflow
-	env->ReleaseStringUTFChars(url, urlString);
+	free(urlString);
 
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;

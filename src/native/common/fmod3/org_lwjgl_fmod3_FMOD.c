@@ -65,12 +65,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nCreate(JNIEnv *env, jclass cla
 	jsize pathcount = (*env)->GetArrayLength(env, paths);
 	int i;
 	jstring path;
-	const char *path_str;
+	char *path_str;
 	char *lib_str;
 	
 	for(i=0;i<pathcount;i++) {
 		path = (jstring) (*env)->GetObjectArrayElement(env, paths, i);
-		path_str = (*env)->GetStringUTFChars(env, path, NULL);
+		path_str = GetStringNativeChars(env, path);
 #ifdef _WIN32
 		lib_str = concatenate(path_str, "fmod.dll");
 #endif
@@ -82,8 +82,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nCreate(JNIEnv *env, jclass cla
 #endif	
 		printfDebug("Testing '%s'\n", lib_str);
 		fmod_create(env, lib_str);
-    free(lib_str);
-		(*env)->ReleaseStringUTFChars(env, path, path_str);
+		free(lib_str);
+		free(path_str);
 
 		if(fmod_instance != NULL) {
 			return;

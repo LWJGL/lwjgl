@@ -449,8 +449,11 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjav
 * Signature: (ILjava/lang/String;III)J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjava_lang_String_2III(JNIEnv * env, jclass clazz, jint index, jstring name, jint inputmode, jint offset, jint length) { 
-	const char* nName = (const char*) ((*env)->GetStringUTFChars(env, name, 0));
-  return (long) fmod_instance->FSOUND_Sample_Load(index, nName, inputmode, offset, length);
+  jlong result;
+  char* nName = GetStringNativeChars(env, name);
+  result = (jlong) fmod_instance->FSOUND_Sample_Load(index, nName, inputmode, offset, length);
+  free(nName);
+  return result;
 }
 
 /*
@@ -977,8 +980,11 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Open__Ljava
 * Signature: (Ljava/lang/String;III)J
 */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Open__Ljava_lang_String_2III(JNIEnv * env, jclass clazz, jstring name, jint mode, jint offset, jint length) {
-  const char* filename = (const char*) ((*env)->GetStringUTFChars(env, name, 0));
-  return (jlong) fmod_instance->FSOUND_Stream_Open(filename, mode, offset, length);
+  jlong result;
+  char* filename = GetStringNativeChars(env, name);
+  result = (jlong) fmod_instance->FSOUND_Stream_Open(filename, mode, offset, length);
+  free(filename);
+  return result;
 }
 
 /*
@@ -1043,9 +1049,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1SetSubStream
 * Signature: (JILjava/lang/String;)J
 */
 JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1AddSyncPoint(JNIEnv * env, jclass clazz, jlong stream, jint pcmOffset, jstring name) {
-	const char * nName = (*env)->GetStringUTFChars(env, name, 0);
+	char * nName = GetStringNativeChars(env, name);
 	FSOUND_SYNCPOINT * result = fmod_instance->FSOUND_Stream_AddSyncPoint((FSOUND_STREAM*) stream, pcmOffset, (void *) nName);
-	(*env)->ReleaseStringUTFChars (env, name, nName);
+	free(nName);
 	return safeNewBuffer(env, result, 0);;
 }
 
@@ -1087,7 +1093,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1CreateDSP
 * Signature: (JILjava/lang/String;Lorg/lwjgl/fmod_instance/FSoundTagField;)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1FindTagField(JNIEnv * env, jclass clazz, jlong stream, jint type, jstring name, jobject tagField) {
-	const char * nName = (*env)->GetStringUTFChars(env, name, 0);
+	char * nName = GetStringNativeChars(env, name);
 	bool result = false;
 	void* value;
 	jint length;
@@ -1100,7 +1106,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1FindTagF
 		(*env)->CallVoidMethod(env, tagField, mid, name, safeNewBuffer(env, value, length), type);
 		result = true;
 	}
-	(*env)->ReleaseStringUTFChars (env, name, nName);
+	free(nName);
 	return result;
 }
 
@@ -1288,9 +1294,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Stream_1Net_1Set
 * Signature: (Ljava/lang/String;)Z
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1Stream_1Net_1SetProxy(JNIEnv * env, jclass clazz, jstring proxy) {
-  const char * proxyString = (*env)->GetStringUTFChars(env, proxy, 0);
+  char * proxyString = GetStringNativeChars(env, proxy);
   jboolean result = fmod_instance->FSOUND_Stream_Net_SetProxy(proxyString);
-  (*env)->ReleaseStringUTFChars(env, proxy, proxyString);
+  free(proxyString);
   return result;
 }
 

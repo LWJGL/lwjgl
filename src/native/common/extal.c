@@ -147,13 +147,13 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 	jsize pathcount = (*env)->GetArrayLength(env, oalPaths);
 	int i;
 	jstring path;
-	const char *path_str;
+	char *path_str;
 	char *lib_str;
 
 	printfDebug("Found %d OpenAL paths\n", (int)pathcount);
 	for(i=0;i<pathcount;i++) {
 		path = (jstring) (*env)->GetObjectArrayElement(env, oalPaths, i);
-		path_str = (*env)->GetStringUTFChars(env, path, NULL);
+		path_str = GetStringNativeChars(env, path);
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
 		lib_str = concatenate(path_str, "lwjglaudio.dll");
@@ -190,7 +190,7 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 			printfDebug("Found OpenAL at '%s'\n", path_str);
 			return true;
 		}
-		(*env)->ReleaseStringUTFChars(env, path, path_str);
+		free(path_str);
 	}
 	throwException(env, "Could not load openal library.");
 	return false;

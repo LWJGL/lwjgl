@@ -294,9 +294,9 @@ static jint JNICALL Java_org_lwjgl_openal_AL10_alGetError (JNIEnv *env, jclass c
  * ALboolean alIsExtensionPresent(ALubyte *extName);
  */
 static jboolean JNICALL Java_org_lwjgl_openal_AL10_alIsExtensionPresent (JNIEnv *env, jclass clazz, jstring fname) {
-	ALubyte* functionname = (ALubyte*) ((*env)->GetStringUTFChars(env, fname, 0));
+	ALubyte* functionname = (ALubyte*) GetStringNativeChars(env, fname);
 	jboolean result = (jboolean) alIsExtensionPresent(functionname);
-	(*env)->ReleaseStringUTFChars(env, (jstring)functionname, 0);
+	free(functionname);
 	
 	CHECK_AL_ERROR
 	return result;
@@ -309,9 +309,9 @@ static jboolean JNICALL Java_org_lwjgl_openal_AL10_alIsExtensionPresent (JNIEnv 
  * ALenum alGetEnumValue(ALubyte *enumName);
  */
 static jint JNICALL Java_org_lwjgl_openal_AL10_alGetEnumValue (JNIEnv *env, jclass clazz, jstring ename) {
-	ALubyte* functionname = (ALubyte*) ((*env)->GetStringUTFChars(env, ename, 0));
+	ALubyte* functionname = (ALubyte*) GetStringNativeChars(env, ename);
 	jint result = (jint) alGetEnumValue(functionname);
-	(*env)->ReleaseStringUTFChars(env, (jstring)functionname, 0);
+	free(functionname);
 
 	CHECK_AL_ERROR
 	return result;

@@ -45,8 +45,11 @@ void F_CALLBACKAPI fmusic_zxxcallback(FMUSIC_MODULE *mod, unsigned char param);
  * Signature: (Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1LoadSong(JNIEnv *env, jclass clazz, jstring name) {
-  const char* filename = (const char*) ((*env)->GetStringUTFChars(env, name, 0));
-  return (jlong) fmod_instance->FMUSIC_LoadSong(filename);
+  jlong result;
+  char* filename = GetStringNativeChars(env, name);
+  result = (jlong) fmod_instance->FMUSIC_LoadSong(filename);
+  free(filename);
+  return result;
 }
 
 /*
@@ -72,12 +75,15 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1LoadSongEx__Ljava_n
  */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FMusic_nFMUSIC_1LoadSongEx__Ljava_lang_String_2IIILjava_nio_IntBuffer_2II
   (JNIEnv *env, jclass clazz, jstring name, jint offset, jint length, jint mode, jobject sampleList, jint sampleListOffset, jint samplelistnum){
-    int *sampleData = NULL;
-    const char* filename = (const char*) ((*env)->GetStringUTFChars(env, name, 0));
+    jlong result;
+	int *sampleData = NULL;
+    char* filename = GetStringNativeChars(env, name);
     if(sampleList != NULL) {
       sampleData = sampleListOffset + (int *) (*env)->GetDirectBufferAddress(env, sampleList);
     }
-    return (jlong) fmod_instance->FMUSIC_LoadSongEx(filename, offset, length, mode, sampleData, samplelistnum);
+    result = (jlong) fmod_instance->FMUSIC_LoadSongEx(filename, offset, length, mode, sampleData, samplelistnum);
+	free(filename);
+	return result;
   }
   
 

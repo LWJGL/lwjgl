@@ -97,7 +97,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jst
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
   (JNIEnv * env, jclass clazz, jstring url)
 {
-/*	const char * urlString = env->GetStringUTFChars(url, NULL);
+/*	char * urlString = GetStringNativeChars(env, url);
 
 	OSStatus err;
 	ICInstance inst;
@@ -106,7 +106,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
 	Str255  urlStr;
 
 	CopyCStringToPascal(urlString, urlStr);
-	env->ReleaseStringUTFChars(url, urlString);
+	free(urlString);
 	err = ICStart(&inst, '????'); // Use your creator code if you have one!
 	if (err == noErr) {
 		startSel = 0;

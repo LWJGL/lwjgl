@@ -140,13 +140,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jstring title, jstring message)
 {
-	jboolean copy = JNI_FALSE;
-	const char * eMessageText = (*env)->GetStringUTFChars(env, message, &copy);
-	const char * cTitleBarText = (*env)->GetStringUTFChars(env, title, &copy);
-	printf("*** Alert ***\n%s\n%s\n", cTitleBarText, eMessageText);
+	char * eMessageText = GetStringNativeChars(env, message);
+	char * cTitleBarText = GetStringNativeChars(env, title);
+	MessageBox(getCurrentHWND(), eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
-	(*env)->ReleaseStringUTFChars(env, message, eMessageText);
-	(*env)->ReleaseStringUTFChars(env, title, cTitleBarText);
+	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
+	
+	free(eMessageText);
+	free(cTitleBarText);
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env, jclass clazz) {
@@ -161,9 +162,9 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nOpenURL
   (JNIEnv * env, jclass clazz, jstring url)
 {
-	const char * urlString = (*env)->GetStringUTFChars(env, url, NULL);
+	char * urlString = GetStringNativeChars(env, url);
 	printf("*** Please visit %s\n", urlString);
-	(*env)->ReleaseStringUTFChars(env, url, urlString);
+	free(urlString);
 }
 
 

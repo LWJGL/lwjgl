@@ -117,16 +117,15 @@ static void JNICALL Java_org_lwjgl_openal_ALC_nalcGetIntegerv (JNIEnv *env, jcla
  * ALCdevice *alcOpenDevice( const ALubyte *tokstr );
  */
 static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jclass clazz, jstring tokstr) {
-	const char * tokenstring;
+	char * tokenstring;
 	ALCdevice* device;
 	/* get ready to create ALCdevice instance */
 	jobject alcDevice_object	= NULL;
 	jclass alcDevice_class		= NULL;
 	jmethodID alcDevice_method	= NULL;
 
-	jboolean isCopy = JNI_FALSE;
 	if(tokstr != NULL) {
-		tokenstring = ((*env)->GetStringUTFChars(env, tokstr, &isCopy));
+		tokenstring = GetStringNativeChars(env, tokstr);
 	} else {
 		tokenstring = NULL;
 	}
@@ -137,7 +136,7 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jcl
 	/* if error - cleanup and get out */
 	if(device == NULL) {
 		if(tokenstring != NULL) {
-			(*env)->ReleaseStringUTFChars(env, tokstr, tokenstring);
+			free(tokenstring);
 		}
 		return NULL;
 	}
@@ -151,7 +150,7 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jcl
 
 	/* clean up */
 	if (tokenstring != NULL)
-		(*env)->ReleaseStringUTFChars(env, tokstr, tokenstring);
+		free(tokenstring);
 
 	return alcDevice_object;
 }
@@ -324,11 +323,11 @@ static jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetError (JNIEnv *env, jclass 
  */
 static jboolean JNICALL Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent (JNIEnv *env, jclass clazz, jint deviceaddress, jstring extName) {
 	/* get extension */
-	ALubyte* functionname = (ALubyte*) ((*env)->GetStringUTFChars(env, extName, 0));
+	ALubyte* functionname = (ALubyte*) GetStringNativeChars(env, extName);
 	
 	jboolean result = (jboolean) alcIsExtensionPresent((ALCdevice*) deviceaddress, functionname);
 	
-	(*env)->ReleaseStringUTFChars(env, extName, (const char *)functionname);
+	free(functionname);
 	
 	CHECK_ALC_ERROR
 	return result;
@@ -342,11 +341,11 @@ static jboolean JNICALL Java_org_lwjgl_openal_ALC_nalcIsExtensionPresent (JNIEnv
  */
 static jint JNICALL Java_org_lwjgl_openal_ALC_nalcGetEnumValue (JNIEnv *env, jclass clazz, jint deviceaddress, jstring enumName) {	
 	/* get extension */
-	ALubyte* enumerationname = (ALubyte*) ((*env)->GetStringUTFChars(env, enumName, 0));
+	ALubyte* enumerationname = (ALubyte*) GetStringNativeChars(env, enumName);
 	
 	jint result = (jint) alcGetEnumValue((ALCdevice*) deviceaddress, enumerationname);
 	
-	(*env)->ReleaseStringUTFChars(env, enumName, (const char *)enumerationname);
+	free(enumerationname);
 	
 	CHECK_ALC_ERROR
 	return result;

@@ -161,6 +161,45 @@ void throwException(JNIEnv * env, const char * err) {
 	throwGeneralException(env, "org/lwjgl/LWJGLException", err);
 }
 
+// retrieves the locale-specific C string
+char * GetStringNativeChars(JNIEnv *env, jstring jstr) { 
+  jbyteArray bytes = 0; 
+  jthrowable exc; 
+  char *result = 0; 
+  jclass jcls_str;
+  jmethodID MID_String_getBytes;
+
+  /* out of memory error? */ 
+  if ((*env)->EnsureLocalCapacity(env, 2) < 0) { 
+    return 0; 
+  } 
+
+  // aquire getBytes method
+  jcls_str = (*env)->FindClass(env, "java/lang/String"); 
+  MID_String_getBytes = (*env)->GetMethodID(env, jcls_str, "getBytes", "()[B"); 
+
+  // get the bytes
+  bytes = (jbyteArray) (*env)->CallObjectMethod(env, jstr, MID_String_getBytes); 
+  exc = (*env)->ExceptionOccurred(env); 
+
+  // if no exception occured while getting bytes - continue
+  if (!exc) { 
+    jint len = (*env)->GetArrayLength(env, bytes); 
+    result = (char *) malloc(len + 1); 
+    if (result == 0) { 
+      throwGeneralException(env, "java/lang/OutOfMemoryError", NULL); 
+      (*env)->DeleteLocalRef(env, bytes); 
+      return 0; 
+    } 
+    (*env)->GetByteArrayRegion(env, bytes, 0, len, (jbyte *) result); 
+    result[len] = 0; /* NULL-terminate */ 
+  } else { 
+    (*env)->DeleteLocalRef(env, exc); 
+  } 
+  (*env)->DeleteLocalRef(env, bytes); 
+  return (char*) result;
+}
+
 bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFunction *functions) {
 	int i;
 	void **ext_function_pointer_pointer;

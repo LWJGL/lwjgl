@@ -310,9 +310,9 @@ static void setWindowTitle(const char *title) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setTitle(JNIEnv * env, jobject this, jstring title_obj) {
-	const char * title = (*env)->GetStringUTFChars(env, title_obj, NULL);
+	char * title = GetStringNativeChars(env, title_obj);
 	setWindowTitle(title);
-	(*env)->ReleaseStringUTFChars(env, title_obj, title);
+	free(title);
 }
 
 static void destroyWindow(void) {

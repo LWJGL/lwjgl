@@ -47,6 +47,7 @@
 #include "extgl_wgl.h"
 #include "display.h"
 #include "org_lwjgl_opengl_Win32Display.h"
+#include <malloc.h>
 
 static bool				oneShotInitialised = false;     // Registers the LWJGL window class
 
@@ -525,9 +526,9 @@ HWND createWindow(int x, int y, int width, int height, bool fullscreen, bool und
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setTitle
   (JNIEnv * env, jobject self, jstring title_obj)
 {
-	const char * title = env->GetStringUTFChars(title_obj, NULL);
+	char * title = GetStringNativeChars(env, title_obj);
 	SetWindowText(display_hwnd, title);
-	env->ReleaseStringUTFChars(title_obj, title);
+	free(title);
 }
 
 /*
