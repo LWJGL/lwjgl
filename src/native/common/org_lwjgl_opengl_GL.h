@@ -1281,6 +1281,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glPNTrianglesiATI
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    glStencilOpSeparateATI
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glStencilOpSeparateATI
+  (JNIEnv *, jclass, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    glStencilFuncSeparateATI
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glStencilFuncSeparateATI
+  (JNIEnv *, jclass, jint, jint, jint, jint);
+
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    glPointParameterfARB
  * Signature: (IF)V
  */

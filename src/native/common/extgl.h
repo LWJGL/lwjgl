@@ -5444,6 +5444,26 @@ extern glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV;
 #endif /* GL_ARB_fragment_program */
 
 /*-------------------------------------------------------------------*/
+/*------------ATI_separate_stencil---------------------------------------*/
+/*-------------------------------------------------------------------*/
+
+#ifndef GL_ATI_separate_stencil
+#define GL_ATI_separate_stencil 1
+
+#define GL_STENCIL_BACK_FUNC_ATI				0x8800
+#define GL_STENCIL_BACK_FAIL_ATI				0x8801
+#define GL_STENCIL_BACK_PASS_DEPTH_FAIL_ATI			0x8802
+#define GL_STENCIL_BACK_PASS_DEPTH_PASS_ATI			0x8803
+
+typedef void (APIENTRY * glStencilOpSeparateATIPROC) (GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);
+typedef void (APIENTRY * glStencilFuncSeparateATIPROC) (GLenum frontfunc, GLenum backfunc, GLint ref, GLuint mask);
+
+extern glStencilOpSeparateATIPROC glStencilOpSeparateATI;
+extern glStencilFuncSeparateATIPROC glStencilFuncSeparateATI;
+
+#endif /* GL_ATI_separate_stencil */
+
+/*-------------------------------------------------------------------*/
 /*------------GL_ATI_TEXT_FRAGMENT_SHADER----------------------------*/
 /*-------------------------------------------------------------------*/
 
@@ -5883,6 +5903,7 @@ struct ExtensionTypes
     int ATI_fragment_shader;
     int ATI_pn_triangles;
     int ATI_point_cull_mode;
+    int ATI_separate_stencil;
     int ATI_text_fragment_shader;
     int ATI_texture_mirror_once;
     int ATI_vertex_array_object;

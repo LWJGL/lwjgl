@@ -813,6 +813,10 @@ public abstract class GL extends CoreGL14 implements GLConstants {
 
 	public static native void glPNTrianglesiATI(int pname, int param);
 
+	public static native void glStencilOpSeparateATI(int face, int sfail, int dpfail, int dppass);
+
+	public static native void glStencilFuncSeparateATI(int frontfunc, int backfunc, int ref, int mask);
+
 	public static native void glPointParameterfARB(int pname, float param);
 
 	public static native void glPointParameterfEXT(int pname, float param);

@@ -936,6 +936,13 @@ glGetMapAttribParameterfvNVPROC glGetMapAttribParameterfvNV = NULL;
 glEvalMapsNVPROC glEvalMapsNV = NULL;
 #endif /* GL_NV_evaluators */
 
+/* ATI_separate_stencil */
+
+#ifdef GL_ATI_separate_stencil
+glStencilOpSeparateATIPROC glStencilOpSeparateATI = NULL;
+glStencilFuncSeparateATIPROC glStencilFuncSeparateATI = NULL;
+#endif /* GL_ATI_separate_stencil */
+
 /* ATI_pn_triangles */
 
 #ifdef GL_ATI_pn_triangles 
@@ -2094,6 +2101,16 @@ void extgl_InitATIPNTriangles()
 #endif
 }
 
+void extgl_InitATISeparateStencil()
+{
+#ifdef GL_ATI_separate_stencil
+    if (!extgl_Extensions.ATI_separate_stencil)
+        return;
+    glStencilOpSeparateATI = (glStencilOpSeparateATIPROC)extgl_GetProcAddress("glStencilOpSeparateATI");
+    glStencilFuncSeparateATI = (glStencilFuncSeparateATIPROC)extgl_GetProcAddress("glStencilFuncSeparateATI");
+#endif
+}
+
 void extgl_InitNVEvaluators()
 {
 #ifdef GL_NV_evaluators
@@ -3163,6 +3180,7 @@ void extgl_InitSupportedExtensions()
     extgl_Extensions.ATI_fragment_shader = GLQueryExtension("GL_ATI_fragment_shader");
     extgl_Extensions.ATI_pn_triangles = GLQueryExtension("GL_ATI_pn_triangles");
     extgl_Extensions.ATI_point_cull_mode = GLQueryExtension("GL_ATI_point_cull_mode");
+    extgl_Extensions.ATI_separate_stencil = GLQueryExtension("GL_ATI_separate_stencil");
     extgl_Extensions.ATI_text_fragment_shader = GLQueryExtension("GL_ATI_text_fragment_shader");
     extgl_Extensions.ATI_texture_mirror_once = GLQueryExtension("GL_ATI_texture_mirror_once");
     extgl_Extensions.ATI_vertex_array_object = GLQueryExtension("GL_ATI_vertex_array_object");
@@ -3228,6 +3246,7 @@ int extgl_Initialize()
     extgl_InitNVFence();
     extgl_InitNVRegisterCombiners2();
     extgl_InitATIPNTriangles();
+    extgl_InitATISeparateStencil();
     extgl_InitARBPointParameters();
     extgl_InitARBVertexBlend();
     extgl_InitEXTMultiDrawArrays();

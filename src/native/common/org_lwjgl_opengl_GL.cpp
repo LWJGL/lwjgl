@@ -1912,6 +1912,32 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glPNTrianglesiATI(JNIEnv * env, 
 
 /*
  * Class:     org_lwjgl_opengl_GL
+ * Method:    glStencilOpSeparateATI
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glStencilOpSeparateATI
+  (JNIEnv *env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
+{
+	CHECK_EXISTS(glStencilOpSeparateATI)
+	glStencilOpSeparateATI(p0, p1, p2, p3);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
+ * Method:    glStencilFuncSeparateATI
+ * Signature: (IIII)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glStencilFuncSeparateATI
+  (JNIEnv *env, jclass clazz, jint p0, jint p1, jint p2, jint p3)
+{
+	CHECK_EXISTS(glStencilFuncSeparateATI)
+	glStencilFuncSeparateATI(p0, p1, p2, p3);
+	CHECK_GL_ERROR
+}
+
+/*
+ * Class:     org_lwjgl_opengl_GL
  * Method:    glPointParameterfARB
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL_glPointParameterfARB(JNIEnv * env, jclass clazz, jint p0, jfloat p1)
