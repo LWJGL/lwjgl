@@ -58,7 +58,6 @@ static bool mCreate_success;								 // bool used to determine successfull creat
 static bool mFirstTimeInitialization = true; // boolean to determine first time initialization
 
 static POINT cursorPos;
-static RECT windowRect;
 static bool mouse_grabbed;
 static int mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
 
@@ -71,27 +70,10 @@ void SetupMouse();
 void InitializeMouseFields();
 void UpdateMouseFields(JNIEnv *env, jclass clsMouse, jobject coord_buffer_obj, jobject button_buffer_obj);
 
-/* Return the RECT of the current client area in the current window
- * in screen coordinates
- */
-static void getScreenClientRect(RECT* screen_client_rect)
-{
-	/* We can't use GetClientRect directly, because it is in
-	 * local window coordinates and we can't use GetWindowRect
-	 * because it returns the screen coordinate RECT of the entire
-	 * window, inluding decoration. Luckily, the WINDOWINFO structure contains
-	 * the client rect in screen coordinates.
-	 */
-	WINDOWINFO window_info;
-	window_info.cbSize = sizeof(WINDOWINFO);
-	GetWindowInfo(getCurrentHWND(), &window_info);
-	*screen_client_rect = window_info.rcClient;
-}
-
 static void resetCursorPos(void) {
 	/* Reset cursor position to middle of the window */
 	RECT clientRect;
-	getScreenClientRect(&clientRect);
+	GetClientRect(getCurrentHWND(), &clientRect);
 	cursorPos.x = (clientRect.left + clientRect.right)/2;
 	cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
 }
@@ -401,17 +383,13 @@ static void getGDICursorDelta(int* return_dx, int* return_dy) {
 	int dy;
 
 	POINT newCursorPos;
-	GetCursorPos(&newCursorPos);
 	RECT clientRect;
-	RECT newWindowRect;
-	GetWindowRect(getCurrentHWND(), &newWindowRect);
-	cursorPos.x += newWindowRect.left - windowRect.left;
-	cursorPos.y += newWindowRect.top - windowRect.top;
-	windowRect = newWindowRect;
-	getScreenClientRect(&clientRect);
-	// Clip the position to the client rect
+	GetCursorPos(&newCursorPos);
+	ScreenToClient(getCurrentHWND(), &newCursorPos);
+	GetClientRect(getCurrentHWND(), &clientRect);
 	newCursorPos.x = cap(newCursorPos.x, clientRect.left, clientRect.right - 1);
 	newCursorPos.y = cap(newCursorPos.y, clientRect.top, clientRect.bottom - 1);
+	// Clip the position to the client rect
 	dx = newCursorPos.x - cursorPos.x;
 	dy = newCursorPos.y - cursorPos.y;
 	cursorPos.x += dx;
