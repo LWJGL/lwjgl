@@ -122,10 +122,11 @@ static int grabPointer(void) {
 	int result;
 	int mask = FocusChangeMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
 	result = XGrabPointer(getCurrentDisplay(), getCurrentWindow(), False, mask, GrabModeAsync, GrabModeAsync, getCurrentWindow(), blank_cursor, CurrentTime);
-	XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
-	XF86VidModeSetViewPort(getCurrentDisplay(), getCurrentScreen(), 0, 0); // make sure we have a centered window
-	if (result == GrabSuccess)
+	if (result == GrabSuccess) {
 		pointer_grabbed = true;
+		XWarpPointer(getCurrentDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
+		XF86VidModeSetViewPort(getCurrentDisplay(), getCurrentScreen(), 0, 0); // make sure we have a centered window
+	}
 	return result;
 }
 
@@ -133,19 +134,6 @@ static void ungrabPointer(void) {
 	pointer_grabbed = false;
 	XUngrabPointer(getCurrentDisplay(), CurrentTime);
 }
-
-void acquirePointer(void) {
-	if (!created)
-		return;
-	should_grab = true;
-}
-
-void releasePointer(void) {
-	if (!created)
-		return;
-	should_grab = false;
-}
-
 
 static void updateGrab(void) {
 	if (should_grab) {
@@ -155,6 +143,16 @@ static void updateGrab(void) {
 		if (pointer_grabbed)
 			ungrabPointer();
 	}
+}
+
+void acquirePointer(void) {
+	should_grab = true;
+	updateGrab();
+}
+
+void releasePointer(void) {
+	should_grab = false;
+	updateGrab();
 }
 
 /*

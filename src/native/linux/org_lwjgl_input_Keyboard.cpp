@@ -98,18 +98,6 @@ static void ungrabKeyboard(void) {
 	setRepeatMode(AutoRepeatModeDefault);
 }
 
-void acquireKeyboard(void) {
-	if (!created)
-		return;
-	should_grab = true;
-}
-
-void releaseKeyboard(void) {
-	if (!created)
-		return;
-	should_grab = false;
-}
-
 static void updateGrab(void) {
 	if (should_grab) {
 		if (!keyboard_grabbed)
@@ -118,6 +106,16 @@ static void updateGrab(void) {
 		if (keyboard_grabbed)
 			ungrabKeyboard();
 	}
+}
+
+void acquireKeyboard(void) {
+	should_grab = true;
+	updateGrab();
+}
+
+void releaseKeyboard(void) {
+	should_grab = false;
+	updateGrab();
 }
 
 /*

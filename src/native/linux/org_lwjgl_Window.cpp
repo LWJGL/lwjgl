@@ -47,7 +47,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <jni.h>
-#include <Window.h>
+#include "Window.h"
 #include "org_lwjgl_Window.h"
 
 static Atom delete_atom;
@@ -69,7 +69,7 @@ static void waitMapped(Display *disp, Window win) {
 }
 
 bool releaseInput(void) {
-	if (current_fullscreen)
+	if (current_fullscreen || input_released)
 		return false;
 	releaseKeyboard();
 	releasePointer();
@@ -93,6 +93,9 @@ static void handleMessages(JNIEnv *env, jobject window_obj) {
 			case ClientMessage:
 				if ((event.xclient.format == 32) && ((Atom)event.xclient.data.l[0] == delete_atom))
 					env->SetBooleanField(window_obj, env->GetFieldID(env->GetObjectClass(window_obj), "closeRequested", "Z"), JNI_TRUE);
+				break;
+			case FocusOut:
+				releaseInput();
 				break;
 			case FocusIn:
 				acquireInput();
