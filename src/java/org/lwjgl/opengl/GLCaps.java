@@ -105,6 +105,7 @@ public final class GLCaps {
 	public static boolean GL_EXT_texture_env_dot3;
 	public static boolean GL_EXT_texture_filter_anisotropic;
 	public static boolean GL_EXT_texture_lod_bias;
+	public static boolean GL_EXT_texture_rectangle;
 	public static boolean GL_EXT_vertex_shader;
 	public static boolean GL_EXT_vertex_weighting;
 
