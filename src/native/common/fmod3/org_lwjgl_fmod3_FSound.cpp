@@ -84,10 +84,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetDriver(JNIEnv 
 * Method:    FSOUND_SetHWND
 * Signature: ()Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetHWND(JNIEnv * env, jclass clazz) { 
-  throwFMODException(env, "missing implementation");
-  return false;
-}
+//JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetHWND(JNIEnv * env, jclass clazz) { 
+//  throwFMODException(env, "missing implementation");
+//  return false;
+//}
 
 /*
 * Class:     org_lwjgl_fmod3_FSound
@@ -239,8 +239,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetMaxChannels(JNIEnv
 * Method:    FSOUND_GetMemoryStats
 * Signature: (Ljava/nio/IntBuffer;)V
 */
-JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetMemoryStats(JNIEnv * env, jclass clazz, jobject) {
-  throwFMODException(env, "missing implementation"); 
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1GetMemoryStats(JNIEnv * env, jclass clazz, jobject buffer, jint offset) {
+	unsigned int * memory = offset + (unsigned int *) env->GetDirectBufferAddress(buffer);
+	fmod_instance->FSOUND_GetMemoryStats(&memory[0], &memory[1]);
 }
 
 /*
@@ -257,9 +258,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetNumDrivers(JNIEnv 
 * Method:    FSOUND_GetNumHWChannels
 * Signature: (Ljava/nio/IntBuffer;)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetNumHWChannels(JNIEnv * env, jclass clazz, jobject) {
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1GetNumHWChannels(JNIEnv * env, jclass clazz, jobject buffer, jint offset) {
+	int * memory = offset + (int *) env->GetDirectBufferAddress(buffer);
+	return fmod_instance->FSOUND_GetNumHWChannels(&memory[0], &memory[1], &memory[2]);
 }
 
 /*
@@ -303,9 +304,8 @@ JNIEXPORT jfloat JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetVersion(JNIEnv *
 * Method:    nFSOUND_Sample_Alloc
 * Signature: (IIIIIII)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Alloc(JNIEnv * env, jclass clazz, jint, jint, jint, jint, jint, jint, jint) { 
-  throwFMODException(env, "missing implementation");
-  return 0;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Alloc(JNIEnv * env, jclass clazz, jint index, jint length, jint mode, jint deffreq, jint defvol, jint defpan, jint defpri) { 
+  return (long) fmod_instance->FSOUND_Sample_Alloc(index, length, mode, deffreq, defvol, defpan, defpri);
 }
 
 /*
@@ -313,9 +313,8 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Alloc(JNIEn
 * Method:    nFSOUND_Sample_Free
 * Signature: (J)V
 */
-JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Free(JNIEnv * env, jclass clazz, jlong) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
+JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Free(JNIEnv * env, jclass clazz, jlong handle) { 
+	fmod_instance->FSOUND_Sample_Free((FSOUND_SAMPLE*) handle);
 }
 
 /*
@@ -332,10 +331,13 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Get(JNIEnv 
 * Method:    nFSOUND_Sample_GetDefaults
 * Signature: (JLjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetDefaults(JNIEnv * env, jclass clazz, jlong, jobject, jint, jobject, jint, jobject, jint, jobject, jint) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetDefaults(JNIEnv * env, jclass clazz, jlong sptr, jobject deffreq, jint deffreqOffset, jobject defvol, jint defvolOffset, jobject defpan, jint defpanOffset, jobject defpri, jint defpriOffset) { 
+	int * nDeffreq = (deffreq != NULL) ? deffreqOffset + (int *) env->GetDirectBufferAddress(deffreq) : NULL;
+	int * nDefvol 	= (defvol != NULL) ? defvolOffset + (int *) env->GetDirectBufferAddress(defvol) : NULL;
+	int * nDefpan 	= (defpan != NULL) ? defpanOffset + (int *) env->GetDirectBufferAddress(defpan) : NULL;
+	int * nDefpri 	= (defpri != NULL) ? defpriOffset + (int *) env->GetDirectBufferAddress(defpri) : NULL;
+
+  return fmod_instance->FSOUND_Sample_GetDefaults((FSOUND_SAMPLE *) sptr, nDeffreq, nDefvol, nDefpan, nDefpri);
 }
 
 /*
@@ -343,10 +345,17 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetDefau
 * Method:    nFSOUND_Sample_GetDefaultsEx
 * Signature: (JLjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetDefaultsEx(JNIEnv * env, jclass clazz, jlong, jobject, jint, jobject, jint, jobject, jint, jobject, jint, jobject, jint, jobject, jint, jobject, jint) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetDefaultsEx(JNIEnv * env, jclass clazz, jlong sptr, jobject deffreq, jint deffreqOffset, jobject defvol, jint defvolOffset, jobject defpan, jint defpanOffset, jobject defpri, jint defpriOffset, 
+jobject varfreq, jint varfreqOffset, jobject varvol, jint varvolOffset, jobject varpan, jint varpanOffset) { 
+	int * nDeffreq = (deffreq != NULL) ? deffreqOffset + (int *) env->GetDirectBufferAddress(deffreq) : NULL;
+	int * nDefvol 	= (defvol != NULL) ? defvolOffset + (int *) env->GetDirectBufferAddress(defvol) : NULL;
+	int * nDefpan 	= (defpan != NULL) ? defpanOffset + (int *) env->GetDirectBufferAddress(defpan) : NULL;
+	int * nDefpri 	= (defpri != NULL) ? defpriOffset + (int *) env->GetDirectBufferAddress(defpri) : NULL;
+	int * nVarfreq 	= (varfreq != NULL) ? varfreqOffset + (int *) env->GetDirectBufferAddress(varfreq) : NULL;
+	int * nVarvol 	= (varvol != NULL) ? varvolOffset + (int *) env->GetDirectBufferAddress(varvol) : NULL;
+	int * nVarpan 	= (varpan != NULL) ? varpanOffset + (int *) env->GetDirectBufferAddress(varpan) : NULL;
+
+  return fmod_instance->FSOUND_Sample_GetDefaultsEx((FSOUND_SAMPLE *) sptr, nDeffreq, nDefvol, nDefpan, nDefpri, nVarfreq, nVarvol, nVarpan);
 }
 
 /*
@@ -363,10 +372,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetLength(JN
 * Method:    nFSOUND_Sample_GetLoopPoints
 * Signature: (JLjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)I
 */
-JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetLoopPoints(JNIEnv * env, jclass clazz, jlong, jobject, jint, jobject, jint) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return 0;
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetLoopPoints(JNIEnv * env, jclass clazz, jlong sptr, jobject loopstart, jint loopstartOffset, jobject loopend, jint loopendOffset) { 
+	int * nLoopstart = (loopstart != NULL) ? loopstartOffset + (int *) env->GetDirectBufferAddress(loopstart) : NULL;
+	int * nLoopend 	= (loopend != NULL) ? loopendOffset + (int *) env->GetDirectBufferAddress(loopend) : NULL;
+  return fmod_instance->FSOUND_Sample_GetLoopPoints((FSOUND_SAMPLE *) sptr, nLoopstart, nLoopend);
 }
 
 /*
@@ -374,10 +383,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetLoopPoint
 * Method:    nFSOUND_Sample_GetMinMaxDistance
 * Signature: (JLjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;I)I
 */
-JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetMinMaxDistance(JNIEnv * env, jclass clazz, jlong, jobject, jint, jobject, jint) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return 0;
+JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetMinMaxDistance(JNIEnv * env, jclass clazz, jlong sptr, jobject min, jint minOffset, jobject max, jint maxOffset) { 
+	float * nMin = (min != NULL) ? minOffset + (float *) env->GetDirectBufferAddress(min) : NULL;
+	float * nMax 	= (max != NULL) ? maxOffset + (float *) env->GetDirectBufferAddress(max) : NULL;
+  return fmod_instance->FSOUND_Sample_GetMinMaxDistance((FSOUND_SAMPLE *) sptr, nMin, nMax);
 }
 
 /*
@@ -403,10 +412,9 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1GetName(J
 * Method:    nFSOUND_Sample_Load
 * Signature: (ILjava/nio/ByteBuffer;IIII)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjava_nio_ByteBuffer_2IIII(JNIEnv * env, jclass clazz, jint, jobject, jint, jint, jint, jint) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return 0;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjava_nio_ByteBuffer_2IIII(JNIEnv * env, jclass clazz, jint index, jobject data, jint dataOffset, jint inputmode, jint offset, jint length) { 
+	const char * nData = dataOffset + (const char *) env->GetDirectBufferAddress(data);
+  return (long) fmod_instance->FSOUND_Sample_Load(index, nData, inputmode, offset, length);
 }
 
 /*
@@ -414,9 +422,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjav
 * Method:    nFSOUND_Sample_Load
 * Signature: (ILjava/lang/String;III)J
 */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjava_lang_String_2III(JNIEnv * env, jclass clazz, jint, jstring, jint, jint, jint) { 
-  //XX
-  return 0;
+JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjava_lang_String_2III(JNIEnv * env, jclass clazz, jint index, jstring name, jint inputmode, jint offset, jint length) { 
+	const char* nName = (const char*) (env->GetStringUTFChars(name, 0));
+  return (long) fmod_instance->FSOUND_Sample_Load(index, nName, inputmode, offset, length);
 }
 
 /*
@@ -424,10 +432,38 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Load__ILjav
 * Method:    nFSOUND_Sample_Lock
 * Signature: (JIILorg/lwjgl/fmod_instance/FSoundSampleLock;)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Lock(JNIEnv * env, jclass clazz, jlong, jint, jint, jobject) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Lock(JNIEnv * env, jclass clazz, jlong sptr, jint offset, jint length, jobject sampleLock) { 
+	void * ptr1;
+	void * ptr2;
+	unsigned int len1;
+	unsigned int len2;
+	signed char result;
+	result = fmod_instance->FSOUND_Sample_Lock((FSOUND_SAMPLE *) sptr, offset, length, &ptr1, &ptr2, &len1, &len2);
+	
+	// if we got true, prime lock
+	if(result) {
+		// get class & fields
+		jclass lock = env->GetObjectClass(sampleLock);
+		jfieldID objPtr1 = env->GetFieldID(lock, "ptr1", "Ljava/nio/ByteBuffer");
+		jfieldID objPtr2 = env->GetFieldID(lock, "ptr2", "Ljava/nio/ByteBuffer");
+		jfieldID objLen1 = env->GetFieldID(lock, "len1", "I");
+		jfieldID objLen2 = env->GetFieldID(lock, "len2", "I");
+		
+		// set buffers
+		if(len1 > 0) {
+			env->SetObjectField(sampleLock, objPtr1, env->NewDirectByteBuffer(ptr1, len1));
+		}
+
+		if(len2 > 0) {
+			env->SetObjectField(sampleLock, objPtr2, env->NewDirectByteBuffer(ptr2, len2));
+		}
+		
+		// set lengths
+		env->SetIntField(sampleLock, objLen1, len1);
+		env->SetIntField(sampleLock, objLen2, len2);
+	}
+	
+  return result;
 }
 
 /*
@@ -435,10 +471,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Lock(JNI
 * Method:    nFSOUND_Sample_SetDefaults
 * Signature: (JIIII)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1SetDefaults(JNIEnv * env, jclass clazz, jlong, jint, jint, jint, jint) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1SetDefaults(JNIEnv * env, jclass clazz, jlong sptr, jint deffreq, jint defvol, jint defpan, jint defpri) { 
+	return fmod_instance->FSOUND_Sample_SetDefaults((FSOUND_SAMPLE *) sptr, deffreq, defvol, defpan, defpri);
 }
 
 /*
@@ -446,10 +480,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1SetDefau
 * Method:    nFSOUND_Sample_SetDefaultsEx
 * Signature: (JIIIIIII)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1SetDefaultsEx(JNIEnv * env, jclass clazz, jlong, jint, jint, jint, jint, jint, jint, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1SetDefaultsEx(JNIEnv * env, jclass clazz, jlong sptr, jint deffreq, jint defvol, jint defpan, jint defpri, jint varfreq, jint varvol, jint varpan) {
+	return fmod_instance->FSOUND_Sample_SetDefaultsEx((FSOUND_SAMPLE *) sptr, deffreq, defvol, defpan, defpri, varfreq, varvol, varpan);
 }
 
 /*
@@ -493,10 +525,8 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1SetLoopP
 * Method:    nFSOUND_Sample_Unlock
 * Signature: (JILorg/lwjgl/fmod_instance/FSoundSampleLock;)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Unlock(JNIEnv * env, jclass clazz, jlong, jint, jobject) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Unlock(JNIEnv * env, jclass clazz, jlong sptr, jobject ptr1, jobject ptr2, jint len1, jint len2) { 
+  return fmod_instance->FSOUND_Sample_Unlock((FSOUND_SAMPLE *) sptr, env->GetDirectBufferAddress(ptr1), env->GetDirectBufferAddress(ptr2), len1, len2);
 }
 
 /*
@@ -504,10 +534,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Unlock(J
 * Method:    nFSOUND_Sample_Upload
 * Signature: (JLjava/nio/ByteBuffer;II)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Upload(JNIEnv * env, jclass clazz, jlong, jobject, jint, jint) { 
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1Sample_1Upload(JNIEnv * env, jclass clazz, jlong sptr, jobject data, jint dataOffset, jint mode) { 
+	void * nData = dataOffset + (char *) env->GetDirectBufferAddress(data);
+	return fmod_instance->FSOUND_Sample_Upload((FSOUND_SAMPLE *) sptr, nData, mode);
 }
 
 /*
@@ -553,7 +582,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetFrequency(JNIE
 */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1SetLevels(JNIEnv * env, jclass clazz, jint, jint, jint, jint, jint, jint, jint) {
   //XBOX only
-  //XXX
   return false;
 }
 
@@ -661,10 +689,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1GetAmplitude(JNIEnv *
 * Method:    nFSOUND_3D_SetAttributes
 * Signature: (ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1SetAttributes(JNIEnv * env, jclass clazz, jint, jobject, jint, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1SetAttributes(JNIEnv * env, jclass clazz, jint channel, jobject pos, jint posOffset, jobject vel, jint velOffset) {
+	float* nPos = posOffset + (float *) env->GetDirectBufferAddress(pos);
+	float* nVel = velOffset + (float *) env->GetDirectBufferAddress(vel);
+  return fmod_instance->FSOUND_3D_SetAttributes(channel, nPos, nVel);
 }
 
 /*
@@ -708,10 +736,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1GetCurrentSample(JN
 * Method:    nFSOUND_GetCurrentLevels
 * Signature: (ILjava/nio/FloatBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1GetCurrentLevels(JNIEnv * env, jclass clazz, jint, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_1GetCurrentLevels(JNIEnv * env, jclass clazz, jint channel , jobject l_rBuffer, jint l_rBufferOffset) {
+	float* nL_R = l_rBufferOffset + (float *) env->GetDirectBufferAddress(l_rBuffer);
+  return fmod_instance->FSOUND_GetCurrentLevels(channel, &nL_R[0], &nL_R[1]);
 }
 
 /*
@@ -827,10 +854,10 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_FSOUND_1IsPlaying(JNIEnv 
 * Method:    nFSOUND_3D_GetAttributes
 * Signature: (ILjava/nio/FloatBuffer;ILjava/nio/FloatBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1GetAttributes(JNIEnv * env, jclass clazz, jint, jobject, jint, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1GetAttributes(JNIEnv * env, jclass clazz, jint channel, jobject pos, jint posOffset, jobject vel, jint velOffset) {
+	float* nPos = posOffset + (float *) env->GetDirectBufferAddress(pos);
+	float* nVel = velOffset + (float *) env->GetDirectBufferAddress(vel);
+  return fmod_instance->FSOUND_3D_GetAttributes(channel, nPos, nVel);
 }
 
 /*
@@ -838,10 +865,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1GetAttribute
 * Method:    nFSOUND_3D_GetMinMaxDistance
 * Signature: (ILjava/nio/FloatBuffer;I)Z
 */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1GetMinMaxDistance(JNIEnv * env, jclass clazz, jint, jobject, jint) {
-  //XXX
-  throwFMODException(env, "missing implementation");
-  return false;
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_fmod3_FSound_nFSOUND_13D_1GetMinMaxDistance(JNIEnv * env, jclass clazz, jint channel, jobject minmax, jint minmaxOffset) {
+	float* nMinMax = minmaxOffset + (float *) env->GetDirectBufferAddress(minmax);
+  return fmod_instance->FSOUND_3D_GetMinMaxDistance(channel, &nMinMax[0], &nMinMax[1]);
 }
 
 /*

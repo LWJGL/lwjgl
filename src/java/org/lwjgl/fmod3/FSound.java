@@ -469,7 +469,7 @@ public class FSound {
 	 * FMOD uses GetForegroundWindow if this function is not called.
 	 * @return On success, TRUE is returned. On failure, FALSE is returned.
 	 */
-	public static native boolean FSOUND_SetHWND();
+  //public static native boolean FSOUND_SetHWND();
 
 	/**
 	 * This sets the maximum allocatable channels on a hardware card. FMOD automatically 
@@ -673,7 +673,10 @@ public class FSound {
    * @param currentallocated_maxallocated IntBuffer to store Currently allocated memory at time of call and
    * Maximum allocated memory since FSOUND_Init or FSOUND_SetMemorySystem
    */
-  public static native void FSOUND_GetMemoryStats(IntBuffer currentallocated_maxallocated);
+  public static void FSOUND_GetMemoryStats(IntBuffer currentallocated_maxallocated) {
+    nFSOUND_GetMemoryStats(currentallocated_maxallocated, currentallocated_maxallocated.position());
+  }
+  private static native void nFSOUND_GetMemoryStats(IntBuffer currentallocated_maxallocated, int offset);
 
   /**
    * Returns the number of sound cards or devices enumerated for the current output type. (Direct
@@ -689,7 +692,10 @@ public class FSound {
    * platforms like PS2 and GameCube, this will be the same as num2d and num3d (and not the sum) because 2d and 3d voices share the same pool)
    * @return On success, TRUE is returned. On failure, FALSE is returned
    */
-  public static native boolean FSOUND_GetNumHWChannels(IntBuffer twoD_threeD_channels_total);
+  public static boolean FSOUND_GetNumHWChannels(IntBuffer twoD_threeD_channels_total) {
+    return nFSOUND_GetNumHWChannels(twoD_threeD_channels_total, twoD_threeD_channels_total.position());
+  }
+  private static native boolean nFSOUND_GetNumHWChannels(IntBuffer twoD_threeD_channels_total, int offset);
 
   /**
    * Returns the current id to the output type.
@@ -764,15 +770,11 @@ public class FSound {
 	 * @param defpri Default priority for this sample
 	 * @return On success, a reference to an allocated sample is returned. On failure, NULL is returned
 	 */
-	public static FSoundSample FSOUND_Sample_Alloc(int index, int length, int mode, int deffreq, int defvol, int defpan,
-			int defpri) {
+	public static FSoundSample FSOUND_Sample_Alloc(int index, int length, int mode, int deffreq, int defvol, int defpan, int defpri) {
 		long result = nFSOUND_Sample_Alloc(index, length, mode, deffreq, defvol, defpan, defpri);
-		if (result != 0) { return new FSoundSample(result); }
-		return null;
+		return (result != 0) ? new FSoundSample(result) : null;
 	}
-
-	private static native long nFSOUND_Sample_Alloc(int index, int length, int mode, int deffreq, int defvol, int defpan,
-			int defpri);
+	private static native long nFSOUND_Sample_Alloc(int index, int length, int mode, int deffreq, int defvol, int defpan, int defpri);
 
 	/**
 	 * Removes a sample from memory and makes its slot available again
@@ -781,7 +783,6 @@ public class FSound {
 	public static void FSOUND_Sample_Free(FSoundSample sample) {
 		nFSOUND_Sample_Free(sample.sampleHandle);
 	}
-
 	private static native void nFSOUND_Sample_Free(long sample);
 
 	/**
@@ -796,8 +797,7 @@ public class FSound {
 	 */
 	public static FSoundSample FSOUND_Sample_Get(int sampno) {
 		long result = nFSOUND_Sample_Get(sampno);
-		if (result != 0) { return new FSoundSample(result); }
-		return null;
+		return (result != 0) ? new FSoundSample(result) : null;
 	}
 
 	private static native long nFSOUND_Sample_Get(int sampno);
@@ -988,6 +988,8 @@ public class FSound {
   /**
    * Returns a reference to the beginning of the sample data for a sample.
    * Data written must be signed.
+   * <b>NOTE:</b> This method creates 2 direct buffers on the native side, that maps to 
+   * the sample data. Calling this method excessively might hurt performance.
    * <p>
    * <b>Remarks</b>
    * You must always unlock the data again after you have finished with it, using FSOUND_Sample_Unlock.
@@ -1003,6 +1005,9 @@ public class FSound {
    * @return On success, true is is returned. On failure, false is returned.
    */
   public static boolean FSOUND_Sample_Lock(FSoundSample sample, int offset, int length, FSoundSampleLock lock) {
+    // reset before entering lock
+    lock.set(null, null, 0, 0);
+    
     return nFSOUND_Sample_Lock(sample.sampleHandle, offset, length, lock);
   }
   private static native boolean nFSOUND_Sample_Lock(long sample, int offset, int length, FSoundSampleLock lock);
@@ -1135,14 +1140,13 @@ public class FSound {
    * Releases previous sample data lock from FSOUND_Sample_Lock
    *
    * @param sample sample definition
-   * @param offset Offset in BYTES to the position you want to unlock in the sample buffer.
    * @param lock lock object that contains lock info
    * @return On success, true is is returned. On failure, false is returned.
    */
-  public static boolean FSOUND_Sample_Unlock(FSoundSample sample, int offset, FSoundSampleLock lock) {
-    return nFSOUND_Sample_Unlock(sample.sampleHandle, offset, lock);
+  public static boolean FSOUND_Sample_Unlock(FSoundSample sample, FSoundSampleLock lock) {
+    return nFSOUND_Sample_Unlock(sample.sampleHandle, lock.getPtr1(), lock.getPtr2(), lock.getLen1(), lock.getLen2());
   }
-  private static native boolean nFSOUND_Sample_Unlock(long sample, int offset, FSoundSampleLock lock);  
+  private static native boolean nFSOUND_Sample_Unlock(long sample, ByteBuffer ptr1, ByteBuffer ptr2, int len1, int len2);  
 
 
   /**
