@@ -107,7 +107,7 @@ static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, 
 	return noErr;
 }
 
-static bool registerWindowHandler(JNIEnv* env, EventHandlerProcPtr func, UInt32 event_kind) {
+static bool registerWindowHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_kind) {
 	EventTypeSpec event_type;
 	OSStatus err;
 	EventHandlerUPP handler_upp = NewEventHandlerUPP(func);
@@ -124,11 +124,11 @@ static bool registerWindowHandler(JNIEnv* env, EventHandlerProcPtr func, UInt32 
 
 static bool registerEventHandlers(JNIEnv *env) {
 	bool error;
-	error = registerWindowHandler(env, doQuit, kEventWindowClose);
-	error = error || registerWindowHandler(env, doActivate, kEventWindowActivated);
-	error = error || registerWindowHandler(env, doDeactivate, kEventWindowDeactivated);
-	error = error || registerWindowHandler(env, doMiniaturized, kEventWindowCollapsed);
-	error = error || registerWindowHandler(env, doMaximize, kEventWindowExpanded);
+	error = registerWindowHandler(env, win_ref, doQuit, kEventWindowClose);
+	error = error || registerWindowHandler(env, win_ref, doActivate, kEventWindowActivated);
+	error = error || registerWindowHandler(env, win_ref, doDeactivate, kEventWindowDeactivated);
+	error = error || registerWindowHandler(env, win_ref, doMiniaturized, kEventWindowCollapsed);
+	error = error || registerWindowHandler(env, win_ref, doMaximize, kEventWindowExpanded);
 	if (error)
 		return false;
 	else
@@ -143,11 +143,11 @@ static void destroyWindow(void) {
 }
 
 static void destroy(void) {
-	destroyLock();
 	aglSetCurrentContext(NULL);
 	aglDestroyContext(context);
 	destroyWindow();
 	extgl_Close();
+	destroyLock();
 }
 
 static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
