@@ -37,6 +37,7 @@
  * @version $Revision$
  */
 
+#include <jni.h>
 #include <stdlib.h>
 #include "common_tools.h"
 
@@ -86,13 +87,13 @@ void initEventQueue(event_queue_t *event_queue) {
 	event_queue->list_end = 0;
 }
 
-void putEventElement(event_queue_t *queue, unsigned char byte) {
+void putEventElement(event_queue_t *queue, jint s) {
 	int next_index = (queue->list_end + 1)%EVENT_BUFFER_SIZE;
 	if (next_index == queue->list_start) {
 		printfDebug("Event buffer overflow!\n");
 		return;
 	}
-	queue->input_event_buffer[queue->list_end] = byte;
+	queue->input_event_buffer[queue->list_end] = s;
 	queue->list_end = next_index;
 }
 
@@ -100,16 +101,16 @@ static bool hasMoreEvents(event_queue_t *queue) {
 	return queue->list_start != queue->list_end;
 }
 
-static void copyEvent(event_queue_t *queue, unsigned char *output_event_buffer, int output_index, int event_size) {
+static void copyEvent(event_queue_t *queue, jint *output_event_buffer, int output_index, int event_size) {
 	int i;
 	for (i = 0; i < event_size; i++) {
 		output_event_buffer[output_index] = queue->input_event_buffer[queue->list_start];
-                incListStart(queue);
+		incListStart(queue);
 		output_index++;
 	}
 }
 
-int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, int buffer_size, int event_size) {
+int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int buffer_size, int event_size) {
 	int num_events = 0;
 	int index = 0;
 	while (index + event_size <= buffer_size && hasMoreEvents(event_queue)) {

@@ -73,13 +73,26 @@ static bool buffer_enabled;
 static Cursor blank_cursor;
 static Cursor current_cursor;
 
+static void putEvent(jint button, jint state, jint dx, jint dy, jint dz) {
+	if (buffer_enabled) {
+		putEventElement(&event_queue, button);
+		putEventElement(&event_queue, state);
+		putEventElement(&event_queue, dx);
+		putEventElement(&event_queue, dy);
+		putEventElement(&event_queue, dz);
+	}
+}
+
 static void setCursorPos(int x, int y) {
 	int current_x = x;
 	int current_y = y;
-	dx += current_x - last_x;
-	dy += current_y - last_y;
+	jint event_dx = current_x - last_x;
+	jint event_dy = current_y - last_y;
+	dx += event_dx;
+	dy += event_dy;
 	last_x = current_x;
 	last_y = current_y;
+	putEvent(-1, 0, event_dx, -event_dy, 0);
 }
 
 static int transformY(int y) {
@@ -275,22 +288,24 @@ static void handleButton(XButtonEvent *event, unsigned char state) {
 	if (button_num == NUM_BUTTONS)
 		return;
 	buttons[button_num] = state;
-	if (buffer_enabled) {
-		putEventElement(&event_queue, button_num);
-		putEventElement(&event_queue, state);
-	}
+	putEvent(button_num, state, 0, 0, 0);
 }
 
 void handleButtonPress(XButtonEvent *event) {
+	jint delta = 0;
 	switch (event->button) {
 		case Button4:
-			dz += WHEEL_SCALE;
+			delta = WHEEL_SCALE;
+			putEvent(-1, 0, 0, 0, delta);
 			break;
 		case Button5:
-			dz -= WHEEL_SCALE;
+			delta = -WHEEL_SCALE;
+			putEvent(-1, 0, 0, 0, delta);
 			break;
-		default: break;
+		default: 
+			break;
 	}
+	dz += delta;
 	handleButton(event, 1);
 }
 
@@ -364,10 +379,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, jcl
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass clazz, jobject buffer, jint buffer_position) {
-	unsigned char* buffer_ptr = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
-	int buffer_size = (*env)->GetDirectBufferCapacity(env, buffer) - buffer_position;
+	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
+	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	handleMessages();
-	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, 2);
+	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, 5);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {

@@ -127,16 +127,23 @@ public class Mouse {
 	private static boolean		initialized;
 
 	/** The mouse button events from the last read */
-	private static ByteBuffer	readBuffer									= null;
+	private static IntBuffer	readBuffer									= null;
 
 	/** The current mouse event button being examined */
 	private static int				eventButton;
 
 	/** The current state of the button being examined in the event queue */
 	private static boolean		eventState;
+	
+	/** The current delta of the mouse in the event queue */
+	private static int			event_dx;
+	private static int			event_dy;
+	private static int			event_dwheel;
 
 	/** Buffer size in events */
 	private final static int	BUFFER_SIZE									= 50;
+	/** Event size in elements */
+	private final static int	EVENT_SIZE									= 5;
 
 	private static boolean		isGrabbed;
 
@@ -404,7 +411,7 @@ public class Mouse {
 	private static void read() {
 		readBuffer.compact();
 		int numEvents = nRead(readBuffer, readBuffer.position());
-		readBuffer.position(readBuffer.position() + numEvents * 2);
+		readBuffer.position(readBuffer.position() + numEvents * EVENT_SIZE);
 		readBuffer.flip();
 	}
 
@@ -456,7 +463,7 @@ public class Mouse {
 	 */
 	public static void enableBuffer() throws LWJGLException {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can enable buffering");
-		readBuffer = BufferUtils.createByteBuffer(2 * BUFFER_SIZE);
+		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE * BUFFER_SIZE);
 		readBuffer.limit(0);
 		nEnableBuffer();
 	}
@@ -472,12 +479,13 @@ public class Mouse {
 	 * Native method to read the keyboard buffer
 	 * @return the total number of events read.
 	 */
-	private static native int nRead(ByteBuffer buffer, int buffer_position);
+	private static native int nRead(IntBuffer buffer, int buffer_position);
 
 	/**
 	 * Gets the next mouse event. You can query which button caused the event by using 
-	 * <code>getEventButton()</code>. To get the state of that key, for that event, use
-	 * <code>getEventButtonState</code>.
+	 * <code>getEventButton()</code> (if any). To get the state of that key, for that event, use
+	 * <code>getEventButtonState</code>. To get the current mouse delta values use <code>getEventDX()</code>,
+	 * <code>getEventDY()</code> and <code>getEventDZ()</code>.
 	 * @see org.lwjgl.input.Mouse#getEventButton()
 	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 * @return true if a mouse event was read, false otherwise
@@ -488,25 +496,53 @@ public class Mouse {
 				throw new IllegalStateException("Event buffering must be enabled before you can read events");
 
 		if (readBuffer.hasRemaining()) {
-			eventButton = readBuffer.get() & 0xFF;
+			eventButton = readBuffer.get();
 			eventState = readBuffer.get() != 0;
+			event_dx = readBuffer.get();
+			event_dy = readBuffer.get();
+			event_dwheel = readBuffer.get();
 			return true;
 		} else
 			return false;
 	}
 
 	/**
-	 * @return Current events button
+	 * @return Current events button. Returns -1 if no button state was changed
 	 */
 	public static int getEventButton() {
 		return eventButton;
 	}
 
 	/**
-	 * @return Current events button state
+	 * Get the current events button state. If <code>getEventButton()</code> is -1,
+	 * and IllegalStateException is thrown.
+	 * @return Current events button state.
 	 */
 	public static boolean getEventButtonState() {
+		if (eventButton == -1)
+			throw new IllegalStateException("Current event has no button state change");
 		return eventState;
+	}
+
+	/**
+	 * @return Current events delta x
+	 */
+	public static int getEventDX() {
+		return event_dx;
+	}
+
+	/**
+	 * @return Current events delta y
+	 */
+	public static int getEventDY() {
+		return event_dy;
+	}
+
+	/**
+	 * @return Current events delta z
+	 */
+	public static int getEventDWheel() {
+		return event_dwheel;
 	}
 
 	/**

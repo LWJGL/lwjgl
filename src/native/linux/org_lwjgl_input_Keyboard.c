@@ -141,10 +141,10 @@ static unsigned char getKeycode(XKeyEvent *event) {
 static int translateEvent(XKeyEvent *event) {
 	static char temp_translation_buffer[KEYBOARD_BUFFER_SIZE];
 	static XComposeStatus status;
-        int num_chars, i;
+	int num_chars, i;
+	jint ch;
 
-       	if (event->type == KeyRelease) {
-		putEventElement(&event_queue, 0);
+	if (!translation_enabled || event->type == KeyRelease) {
 		putEventElement(&event_queue, 0);
 		return 0;
 	}
@@ -152,16 +152,15 @@ static int translateEvent(XKeyEvent *event) {
 	if (num_chars > 0) {
 		num_chars--;
 		/* Assume little endian byte order */
-		putEventElement(&event_queue, temp_translation_buffer[0]);
-		putEventElement(&event_queue, 0);
+		ch = (jint)temp_translation_buffer[0] & 0xFF;
+		putEventElement(&event_queue, ch);
 		for (i = 0; i < num_chars; i++) {
 			putEventElement(&event_queue, 0);
 			putEventElement(&event_queue, 0);
-			putEventElement(&event_queue, temp_translation_buffer[i + 1]);
-			putEventElement(&event_queue, 0);
+			ch = ((jint)temp_translation_buffer[i + 1]) & 0xFF;
+			putEventElement(&event_queue, ch);
 		}
 	} else {
-		putEventElement(&event_queue, 0);
 		putEventElement(&event_queue, 0);
 	}
 	return num_chars;
@@ -182,8 +181,7 @@ static void bufferEvent(XKeyEvent *key_event) {
 	//printf("Reading a key %d %d count %d\n", (int)keycode, (int)state, num_events);
 	putEventElement(&event_queue, keycode);
 	putEventElement(&event_queue, state);
-	if (translation_enabled)
-		translateEvent(key_event);
+	translateEvent(key_event);
 }
 
 void handleKeyEvent(XKeyEvent *event) {
@@ -201,14 +199,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nPoll(JNIEnv * env, jclass 
 }
 
 JNIEXPORT int JNICALL Java_org_lwjgl_input_Keyboard_nRead(JNIEnv * env, jclass clazz, jobject buffer, jint buffer_position) {
-	int event_size;
+	int event_size = 3;
 	handleMessages();
-	if (translation_enabled)
-		event_size = 4;
-	else
-		event_size = 2;
-	unsigned char* buffer_ptr = (unsigned char *)(*env)->GetDirectBufferAddress(env, buffer);
-	int buffer_size = (*env)->GetDirectBufferCapacity(env, buffer) - buffer_position;
+	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
+	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, event_size);
 }
 

@@ -51,7 +51,7 @@ extern JavaVM *jvm;
 #define ATTRIB_LIST_SIZE (256)
 
 typedef struct {
-	unsigned char input_event_buffer[EVENT_BUFFER_SIZE];
+	jint input_event_buffer[EVENT_BUFFER_SIZE];
 
 	int list_start;
 	int list_end;
@@ -125,9 +125,8 @@ extern void putAttrib(attrib_list_t *list, int attrib);
 extern bool isDebugEnabled(void);
 extern jstring getVersionString(JNIEnv *env);
 extern void initEventQueue(event_queue_t *event_queue);
-extern int copyEvents(event_queue_t *event_queue, unsigned char *output_event_buffer, int buffer_size, int event_size);
-extern void putEventElement(event_queue_t *queue, unsigned char byte);
-extern unsigned char *getOutputList(event_queue_t *queue);
+extern int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int buffer_size, int event_size);
+extern void putEventElement(event_queue_t *queue, jint byte);
 extern void throwException(JNIEnv *env, const char *msg);
 extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void throwFMODException(JNIEnv * env, const char * err);

@@ -34,6 +34,7 @@ package org.lwjgl.input;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -198,6 +199,8 @@ public class Keyboard {
 
 	/** Buffer size in events */
 	private final static int BUFFER_SIZE = 50;
+	/** Event size in elements */
+	private final static int EVENT_SIZE = 3;
 
 	/** Key names */
 	private static final String[] keyName = new String[255];
@@ -241,7 +244,7 @@ public class Keyboard {
 	 * followed by state. If translation is enabled, the state is followed by
 	 * a 2 byte java char representing the translated character.
 	 */
-	private static ByteBuffer readBuffer;
+	private static IntBuffer readBuffer;
 
 	/** True if translation is enabled */
 	private static boolean translationEnabled;
@@ -351,10 +354,7 @@ public class Keyboard {
 	private static void read() {
 		readBuffer.compact();
 		int numEvents = nRead(readBuffer, readBuffer.position());
-		if (translationEnabled)
-			readBuffer.position(readBuffer.position() + numEvents*4);
-		else
-			readBuffer.position(readBuffer.position() + numEvents*2);
+		readBuffer.position(readBuffer.position() + numEvents*EVENT_SIZE);
 		readBuffer.flip();
 	}
 	
@@ -370,7 +370,7 @@ public class Keyboard {
 	 * Native method to read the keyboard buffer
 	 * @return the total number of events read.
 	 */
-	private static native int nRead(ByteBuffer buffer, int buffer_position);
+	private static native int nRead(IntBuffer buffer, int buffer_position);
 	
 	/**
 	 * Enable keyboard translation. Must be called after the keyboard is created,
@@ -396,7 +396,7 @@ public class Keyboard {
 	public static void enableBuffer() throws LWJGLException {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can enable buffering");
-		readBuffer = BufferUtils.createByteBuffer(4*BUFFER_SIZE);
+		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE*BUFFER_SIZE);
 		readBuffer.limit(0);
 		nEnableBuffer();
 	}
@@ -474,10 +474,7 @@ public class Keyboard {
 	public static int getNumKeyboardEvents() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can read events");
-		if (translationEnabled)
-			return readBuffer.remaining()/4;
-		else
-			return readBuffer.remaining()/2;
+		return readBuffer.remaining()/EVENT_SIZE;
 	}
 	
 	/**
@@ -500,9 +497,8 @@ public class Keyboard {
 		if (readBuffer.hasRemaining()) {
 			eventKey = readBuffer.get() & 0xFF;
 			eventState = readBuffer.get() != 0;
-			if (translationEnabled) {
-				eventCharacter = readBuffer.getChar();
-			}
+			int eventCharacterInt = readBuffer.get() & 0xFFFF;
+			eventCharacter = (char)eventCharacterInt;
 			return true;
 		} else {
 			return false;
