@@ -252,9 +252,8 @@ public class Keyboard {
 	/** The current state of the key being examined in the event queue */
 	public static boolean state;
 	
-	static {
-		initialize();
-	}
+	/** One time initialization */
+	private static boolean initialized;
 	
 	/**
 	 * Keyboard cannot be constructed.
@@ -268,6 +267,7 @@ public class Keyboard {
 	private static void initialize() {
 		System.loadLibrary(Sys.getLibraryName());
 		initIDs();
+		initialized = true;
 	}
 	
 	/**
@@ -282,6 +282,8 @@ public class Keyboard {
 	 * @throws Exception if the keyboard could not be created for any reason
 	 */
 	public static void create() throws Exception {
+		if (!initialized)
+			initialize();
 		if (created)
 			return;
 		if (!nCreate())
