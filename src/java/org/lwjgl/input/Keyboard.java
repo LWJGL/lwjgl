@@ -204,8 +204,8 @@ public class Keyboard {
 			'p',
 			'[',
 			']',
-			'*',
-			'*',
+			0,
+			0,
 			'a',
 			's',
 			'd',
@@ -218,7 +218,7 @@ public class Keyboard {
 			';',
 			'\'',
 			'#',
-			'*',
+			0,
 			'\\',
 			'z',
 			'x',
@@ -230,9 +230,9 @@ public class Keyboard {
 			',',
 			'.',
 			'/',
-			'*',
-			'*',
-			'*',
+			0,
+			0,
+			0,
 			' ' };
 	private static final char shiftMap[] =
 		{
@@ -250,8 +250,8 @@ public class Keyboard {
 			')',
 			'_',
 			'+',
-			'*',
-			'*',
+			0,
+			0,
 			'Q',
 			'W',
 			'E',
@@ -459,7 +459,7 @@ public class Keyboard {
 		assert readBuffer != null : "Keyboard buffering has not been enabled.";
 		
 		if (readBuffer.hasRemaining()) {
-			key = readBuffer.get();
+			key = readBuffer.get() & 0xFF;
 			state = readBuffer.get() != 0;
 			return true;
 		} else
