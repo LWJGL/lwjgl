@@ -1,3 +1,44 @@
+/*
+ * Copyright (c) 2002 Lightweight Java Game Library Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'Light Weight Java Game Library' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/**
+ * $Id$
+ *
+ * Simple java test program.
+ *
+ * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @version $Revision$
+ */
+
 package org.lwjgl.test.opengl;
 
 import org.lwjgl.input.*;
@@ -9,12 +50,12 @@ import java.io.*;
 import java.nio.*;
 import java.util.*;
 
-	class Aslod {	
-		float angle;
-		float value;
-		float ripple;
-		float count;
-	}
+class Aslod {	
+	float angle;
+	float value;
+	float ripple;
+	float count;
+}
 
 public class Grass {
 
@@ -38,6 +79,7 @@ public class Grass {
 
 	public static final GL gl = new GL();
 	public static final GLU glu = new GLU(gl);
+
 	static {
 		try {
 			gl.create();
@@ -79,7 +121,6 @@ public class Grass {
 
 
         public static void main(String[] args) {
-                
 		ByteBuffer byte_buf = ByteBuffer.allocateDirect(4);
                 byte_buf.order(ByteOrder.nativeOrder());
                 System.out.println("Vertex program supported: " + gl.NV_vertex_program);
@@ -171,16 +212,12 @@ public class Grass {
 		numFaces = 5;
 		frndHeight = fFaceHeight + ((fFaceHeight / 1.5f) * (float)java.lang.Math.cos(java.lang.Math.abs(rand.nextInt())));
 		frndWidth = fFaceWidth + ((fFaceWidth / 4.0f) * (float)java.lang.Math.cos(java.lang.Math.abs(rand.nextInt())));
-
 		fDecWidth = frndWidth / 5.0f;
-
 		fRotate = myrand() * 3.1415f;
-
 		fRigid = ((fRigid = myrand()) < 0.2f) ? 0.2f : fRigid;
 
 		if (myrand() < 0.3)
 			gl.begin(GL.LINE_STRIP);
-
 		else
 			gl.begin(GL.QUAD_STRIP);
 
@@ -189,14 +226,11 @@ public class Grass {
 			for (cWidth = frndWidth; cWidth >=-frndWidth; cWidth-=(frndWidth * 2.0f))
 			{
 				gl.color4f(fX, fRigid, fZ, (float)cFaces/(float)numFaces);
-
 				gl.vertex3f((float)(((cFaces-2)*0.1f)*java.lang.Math.cos(fRotate)+(cWidth)*java.lang.Math.sin(fRotate)), cFaces*frndHeight, 
 						-(float)(((cFaces-2)*0.1f)*java.lang.Math.sin(fRotate) + (cWidth)*java.lang.Math.cos(fRotate)));
 			}
-
 			frndWidth -= fDecWidth;
 		}
-
 		gl.end();
 
 	}
@@ -207,7 +241,6 @@ public class Grass {
 		fArea = 20.0f;
                 mesh = gl.genLists(1);
 		gl.newList(mesh, GL.COMPILE);
-
 		for (cI = -fArea/2; cI < fArea/2; cI+=0.25f)
 		{
 			for (cJ = -fArea/2; cJ < fArea/2; cJ+=0.25f)
@@ -215,7 +248,6 @@ public class Grass {
 				genGrass(0.5f, 0.1f, cI, cJ);
 			}
 		}
-
 		gl.endList();
 
 	}
@@ -279,7 +311,6 @@ public class Grass {
 	private static void ptrAnimate(float degree)
 	{
 		aslod.count += degree;
-
 		aslod.ripple = (float)(java.lang.Math.cos(aslod.count) / 80.0);
 
 	}
@@ -293,22 +324,15 @@ public class Grass {
 			switch(Keyboard.key)
 			{
 				case Keyboard.KEY_A:
-
 					aslod.angle += 0.1;
 					break;
-
 				case Keyboard.KEY_D:
-
 					aslod.angle -= 0.1;
 					break;
-
 				case Keyboard.KEY_W:
-
 					aslod.value += (aslod.value >= 0.15) ? 0.0 : 0.0025;
 					break;
-
 				case Keyboard.KEY_S:
-
 					aslod.value -= (aslod.value <= 0.005) ? 0.0 : 0.0025;
 					break;
 				case Keyboard.KEY_ESCAPE:
