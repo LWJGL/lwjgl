@@ -699,42 +699,49 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_init(JNIEnv *env, j
 }
 
 static bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, int *pixel_format_index_return, HGLRC *context_return) {
-        int pixel_format_index;
-        HWND arb_hwnd;
-        HDC arb_hdc;
-        HGLRC arb_context;
+	int pixel_format_index;
+	HWND arb_hwnd;
+	HDC arb_hdc;
+	HGLRC arb_context;
+
 	// Some crazy strangeness here so we can use ARB_pixel_format to specify the number
 	// of multisamples we want. If the extension is present we'll delete the existing
 	// rendering context and start over, using the ARB extension instead to pick the context.
-	if (!extgl_Extensions.WGL_ARB_pixel_format)
+	if ( !extgl_Extensions.WGL_ARB_pixel_format )
 		return false;
-        pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, true, true);
-	if (pixel_format_index == -1) {
-		pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, false, true);		
-		if (pixel_format_index == -1)
+
+	pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, true, true);
+	if ( pixel_format_index == -1 ) {
+		pixel_format_index = findPixelFormatARB(env, hdc, pixel_format, NULL, true, true, false, true);
+		if ( pixel_format_index == -1 )
 			return false;
 	}
-        arb_hwnd = createWindow(0, 0, 1, 1, false, false);
-	if (arb_hwnd == NULL)
+	
+	arb_hwnd = createWindow(0, 0, 1, 1, false, false);
+	if ( arb_hwnd == NULL )
 		return false;
-        arb_hdc = GetDC(arb_hwnd);
-	if (!applyPixelFormat(arb_hdc, pixel_format_index)) {
+
+	arb_hdc = GetDC(arb_hwnd);
+	if ( !applyPixelFormat(arb_hdc, pixel_format_index) ) {
 		closeWindow(arb_hwnd, arb_hdc);
 		return false;
 	}	
-        arb_context = wglCreateContext(arb_hdc);
+
+	arb_context = wglCreateContext(arb_hdc);
 	closeWindow(arb_hwnd, arb_hdc);
-	if (arb_context == NULL) {
+	if ( arb_context == NULL )
 		return false;
-	}
-	if (!wglMakeCurrent(arb_hdc, arb_context)) {
+
+	if ( !wglMakeCurrent(arb_hdc, arb_context) ) {
 		wglDeleteContext(arb_context);
 		return false;
 	}
+
 	extgl_InitWGL(env);
 	*pixel_format_index_return = pixel_format_index;
 	*context_return = arb_context;
-	return;
+
+	return true;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *env, jobject self, jobject pixel_format) {
