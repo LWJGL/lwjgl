@@ -90,8 +90,15 @@ static GLXFBConfig *chooseVisualGLX13(Display *disp, int screen, int bpp, int de
 			    GLX_ALPHA_SIZE, alpha,
 			    GLX_STENCIL_SIZE, stencil,
 			    None};
-	int num_formats;
-	return glXChooseFBConfig(disp, screen, attriblist, &num_formats);
+	int num_formats = 0;
+	GLXFBConfig* configs = glXChooseFBConfig(disp, screen, attriblist, &num_formats);
+	if (num_formats > 0)
+		return configs;
+	else {
+		if (configs != NULL)
+			XFree(configs);
+		return NULL;
+	}
 }
 
 static XVisualInfo *chooseVisual(Display *disp, int screen, int bpp, int depth, int alpha, int stencil) {
@@ -150,6 +157,12 @@ static bool initWindowGLX13(JNIEnv *env, Display *disp, int screen, jstring titl
 		return false;
 	}
 	XVisualInfo * vis_info = glXGetVisualFromFBConfig(disp, configs[0]);
+	if (vis_info == NULL) {
+		glXDestroyContext(disp, context);
+		XFree(configs);
+		throwException(env, "Could not create visual info from FB config");
+		return false;
+	}
 #ifdef _DEBUG
 	dumpVisualInfo(disp, vis_info);
 #endif
