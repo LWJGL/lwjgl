@@ -395,7 +395,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclas
 	
 	setGrab(new_grab == JNI_TRUE ? true : false);
 	resetCursorToCenter();
+	accum_dx = accum_dy = 0;
 	XQueryPointer(getDisplay(), getCurrentWindow(), &root_return, &child_return, &root_x, &root_y, &win_x, &win_y, &mask_return);
 	doHandlePointerMotion(root_x, root_y, win_x, win_y);
-	accum_dx = accum_dy = 0;
 }
