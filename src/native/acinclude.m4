@@ -1,3 +1,28 @@
+# aclocal.m4 generated automatically by aclocal 1.6.3 -*- Autoconf -*-
+
+# Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002
+# Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+dnl aclocal.m4 generated automatically by aclocal 1.4-p5
+
+dnl Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
+dnl This file is free software; the Free Software Foundation
+dnl gives unlimited permission to copy and/or distribute it,
+dnl with or without modifications, as long as this notice is preserved.
+
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+dnl even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+dnl PARTICULAR PURPOSE.
+
 dnl aclocal.m4 generated automatically by aclocal 1.4-p5
 
 dnl Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
@@ -3651,6 +3676,9 @@ AC_DEFUN([AM_PROG_NM],        [AC_PROG_NM])
 # This is just to silence aclocal about the macro not being used
 ifelse([AC_DISABLE_FAST_INSTALL])
 
+<<<<<<< aclocal.m4
+
+=======
 
 
 
@@ -3658,3 +3686,5 @@ ifelse([AC_DISABLE_FAST_INSTALL])
 
 
 
+
+>>>>>>> 1.5

@@ -133,6 +133,7 @@ int grabPointer(void) {
 	int mask = EnterWindowMask | LeaveWindowMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask;
 	if (current_fullscreen) {
 		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, win, blank_cursor, CurrentTime);
+		XWarpPointer(disp, None, win, 0, 0, 0, 0, current_x, current_y);
 		XF86VidModeSetViewPort(disp, screen, 0, 0); // make sure we have a centered window
 	} else
 		result = XGrabPointer(disp, win, False, mask, GrabModeAsync, GrabModeAsync, None, blank_cursor, CurrentTime);
