@@ -214,6 +214,7 @@ public class Game {
 		try {
 			if (fullscreen && setDisplayMode()) {
 				Window.create(WINDOW_TITLE, Display.getDepth(), 0, 8, 0, 0);
+        Window.setVSyncEnabled(true);
 			} else {
 				Window.create(WINDOW_TITLE, 100, 100, width, height, Display.getDepth(), 0, 8, 0, 0);
 			}
@@ -276,21 +277,21 @@ public class Game {
 	 */
 	private boolean setDisplayMode() {
     // get modes
-		DisplayMode[] dm = Display.getAvailableDisplayModes();
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(800, 600, -1, -1, -1, -1, 60, 60);
+    
+    try {
+      org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
+          "width=" + width,
+          "height=" + height,
+          "freq=" + 60,
+          "bpp=" + org.lwjgl.Display.getDepth()
+         }); 
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("Unable to enter fullscreen, continuing in windowed mode");
+    }
 
-		// locate the first one that has 800*600*32
-		for (int i = 0; i < dm.length; i++) {
-			if (dm[i].width == 800 && dm[i].height == 600 && dm[i].bpp == 32) {
-				try {
-					Display.setDisplayMode(dm[i]);
-					return true;
-				} catch (LWJGLException le) {
-					le.printStackTrace();
-					System.out.println("Unable to enter fullscreen, continuing in windowed mode");
-					break;
-				}
-			}
-		}
 		return false;
 	}
 
@@ -582,6 +583,7 @@ public class Game {
 	 * @param argv The arguments that are passed into our game
 	 */
 	public static void main(String argv[]) {
+    System.out.println("Use -fullscreen for fullscreen mode");
 		new Game((argv.length > 0 && argv[0].equalsIgnoreCase("-fullscreen"))).execute();
 	}
 
