@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no"?>
+
+<meshmodel xmlns="x-schema:MeshModelSchema.xml" 
+  modelname="" material="" vertexcount=""
+  type="">
+    <mesh>
+        <triangle a="" b="" c="" adjacency="" />
+    </mesh>
+    <skin>
+        <texcoord u="" v="" />
+    </skin>
+    <colors>
+        <color red="" green="" blue="" alpha=""/>
+    </colors>
+    <animation>
+        <sequence sequencename="">
+            <frame time="">
+                <vertex x="" y="" z="" nx="" ny="" nz=""/>
+                <action></action>
+            </frame>
+        </sequence>
+    </animation>
+</meshmodel>
