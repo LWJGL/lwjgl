@@ -54,7 +54,7 @@ public class Mouse {
 	private static boolean created;
 
 	/** The mouse buttons status from the last poll */
-	private static boolean[] buttons = new boolean[4];
+	private static boolean[] buttons;
 
 	/** Delta X */
 	public static int dx;
@@ -107,6 +107,9 @@ public class Mouse {
 		if (!nCreate())
 			throw new Exception("The mouse could not be created.");
 		created = true;
+    
+    //set mouse buttons
+    buttons = new boolean[buttonCount];
 	}
 
 	/**
@@ -123,6 +126,8 @@ public class Mouse {
 		if (!created)
 			return;
 		created = false;
+    buttons = null;
+    
 		nDestroy();
 	}
 
@@ -152,6 +157,6 @@ public class Mouse {
 	 */
 	public static boolean isButtonDown(int button) {
 		assert created : "The mouse has not been created.";
-		return Mouse.buttons[button];
+		return buttons[button];
 	}
 }
