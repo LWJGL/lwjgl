@@ -51,26 +51,31 @@
 #include "common_tools.h"
 #include "Window.h"
 
-typedef enum {XRANDR, XF86VIDMODE, NONE} extension;
-
 typedef struct {
 	int width;
 	int height;
 	int freq;
 	union {
-		int size_index;
-		XF86VidModeModeInfo xf86vm_modeinfo;
+		int size_index; // Data for Xrandr extension
+		XF86VidModeModeInfo xf86vm_modeinfo; // Data for XF86VidMode extension
 	} mode_data;
 } mode_info;
 
 static int saved_width;
 static int saved_height;
 static int saved_freq;
-static int gamma_ramp_length = 0;
+static int current_width;
+static int current_height;
+static int current_freq;
+static int saved_gamma_ramp_length = 0;
 static unsigned short *r_ramp;
 static unsigned short *g_ramp;
 static unsigned short *b_ramp;
 static extension current_extension = NONE;
+
+extension getCurrentDisplayModeExtension(void) {
+	return current_extension;
+}
 
 static bool getXF86VidModeVersion(Display *disp, int *major, int *minor) {
 	int event_base, error_base;
@@ -253,7 +258,7 @@ static void freeSavedGammaRamps() {
 	r_ramp = NULL;
 	g_ramp = NULL;
 	b_ramp = NULL;
-	gamma_ramp_length = 0;
+	saved_gamma_ramp_length = 0;
 }
 
 static int getGammaRampLength(Display *disp, int screen) {
@@ -269,16 +274,24 @@ static int getGammaRampLength(Display *disp, int screen) {
 	return ramp_size;
 }
 
-jobject initDisplay(JNIEnv *env) {
+int getGammaRampLength(int screen) {
+	Display *disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		printfDebug("Could not open display");
+		return 0;
+	}
+	return getGammaRampLength(disp, screen);
+	XCloseDisplay(disp);
+}
+
+jobject initDisplay(JNIEnv *env, int screen) {
 	int num_modes;
 	mode_info *avail_modes;
-	int screen;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 		throwException(env, "Could not open display");
 		return NULL;
 	}
-	screen = DefaultScreen(disp);
 
 	current_extension = getBestDisplayModeExtension(disp);
 	if (current_extension == NONE) {
@@ -292,9 +305,9 @@ jobject initDisplay(JNIEnv *env) {
 		XCloseDisplay(disp);
 		return NULL;
 	}
-	saved_width = avail_modes[0].width;
-	saved_height = avail_modes[0].height;
-	saved_freq = avail_modes[0].freq;
+	saved_width = current_width = avail_modes[0].width;
+	saved_height = current_height = avail_modes[0].height;
+	saved_freq = current_freq = avail_modes[0].freq;
 	int bpp = XDefaultDepth(disp, screen);
 	printfDebug("Original display dimensions: width %d, height %d freq %d\n", saved_width, saved_height, saved_freq);
 	jclass jclass_DisplayMode = env->FindClass("org/lwjgl/opengl/DisplayMode");
@@ -304,19 +317,43 @@ jobject initDisplay(JNIEnv *env) {
 	free(avail_modes);
 
 	/* Fetch the current gamma ramp */
-	gamma_ramp_length = getGammaRampLength(disp, screen);
-	if (gamma_ramp_length > 0) {
-		r_ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
-		g_ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
-		b_ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);
-		if (!XF86VidModeGetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp))
+	saved_gamma_ramp_length = getGammaRampLength(disp, screen);
+	if (saved_gamma_ramp_length > 0) {
+		r_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
+		g_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
+		b_ramp = (unsigned short *)malloc(sizeof(unsigned short)*saved_gamma_ramp_length);
+		if (!XF86VidModeGetGammaRamp(disp, screen, saved_gamma_ramp_length, r_ramp, g_ramp, b_ramp))
 			freeSavedGammaRamps();
 	}
 	XCloseDisplay(disp);
 	return newMode;
 }
 
-void switchDisplayMode(JNIEnv * env, jobject mode) {
+void temporaryRestoreMode(int screen) {
+	Display *disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		printfDebug("Could not open display");
+		return;
+	}
+	if (!setMode(disp, screen, current_width, current_height, current_freq))
+		printfDebug("Could not restore mode\n");
+	XCloseDisplay(disp);
+	// Don't propagate error to caller
+}
+
+void temporaryResetMode(int screen) {
+	Display *disp = XOpenDisplay(NULL);
+	if (disp == NULL) {
+		printfDebug("Could not open display");
+		return;
+	}
+	if (!setMode(disp, screen, saved_width, saved_height, saved_freq))
+		printfDebug("Could not reset mode\n");
+	XCloseDisplay(disp);
+	// Don't propagate error to caller
+}
+
+void switchDisplayMode(JNIEnv * env, jobject mode, int screen) {
 	if (mode == NULL) {
 		throwException(env, "mode must be non-null");
 		return;
@@ -328,39 +365,38 @@ void switchDisplayMode(JNIEnv * env, jobject mode) {
 	int width = env->GetIntField(mode, fid_width);
 	int height = env->GetIntField(mode, fid_height);
 	int freq = env->GetIntField(mode, fid_freq);
-	int screen;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 		throwException(env, "Could not open display");
 		return;
 	}
-	screen = DefaultScreen(disp);
-	if (!setMode(disp, screen, width, height, freq))
+	if (setMode(disp, screen, width, height, freq)) {
+		current_width = width;
+		current_height = height;
+		current_freq = freq;
+	} else
 		throwException(env, "Could not switch mode.");
 	XCloseDisplay(disp);
 }
 
-void resetDisplayMode(JNIEnv *env) {
-	int screen;
+void resetDisplayMode(JNIEnv *env, int screen) {
 	Display *disp = XOpenDisplay(NULL);
 //	Display *disp = incDisplay(env);
 	if (disp == NULL)
 		return;
-	screen = DefaultScreen(disp);
 	if (!setMode(disp, screen, saved_width, saved_height, saved_freq)) {
 		printfDebug("Failed to reset mode");
 	}
-	if (gamma_ramp_length > 0) {
-		XF86VidModeSetGammaRamp(disp, screen, gamma_ramp_length, r_ramp, g_ramp, b_ramp);
+	if (saved_gamma_ramp_length > 0) {
+		XF86VidModeSetGammaRamp(disp, screen, saved_gamma_ramp_length, r_ramp, g_ramp, b_ramp);
 		freeSavedGammaRamps();
 	}
 //	decDisplay();
 	XCloseDisplay(disp);
 }
 
-jobjectArray getAvailableDisplayModes(JNIEnv * env) {
+jobjectArray getAvailableDisplayModes(JNIEnv * env, int screen) {
 	int num_modes, i;
-	int screen;
 	mode_info *avail_modes;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
@@ -368,7 +404,6 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 		return NULL;
 	}
 
-	screen = DefaultScreen(disp);
 	int bpp = XDefaultDepth(disp, screen);
 	avail_modes = getDisplayModes(disp, screen, &num_modes);
 	if (avail_modes == NULL) {
@@ -390,21 +425,17 @@ jobjectArray getAvailableDisplayModes(JNIEnv * env) {
 	return ret;
 }
 
-int getGammaRampLength(void) {
-	return gamma_ramp_length;
-}
-
-void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer) {
-	if (gamma_ramp_length == 0) {
-		throwException(env, "gamma ramp length == 0.");
-		return;
-	}
+void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer, int screen) {
 	Display * disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
 		throwException(env, "Could not open display");
 		return;
 	}
-	int screen = DefaultScreen(disp);
+	int gamma_ramp_length = getGammaRampLength(disp, screen);
+	if (gamma_ramp_length == 0) {
+		throwException(env, "Gamma ramp not supported");
+		return;
+	}
 	const float *gamma_ramp = (const float *)env->GetDirectBufferAddress(gamma_ramp_buffer);
 	unsigned short *ramp;
 	ramp = (unsigned short *)malloc(sizeof(unsigned short)*gamma_ramp_length);

@@ -124,7 +124,7 @@
 	/*
 	 * Return true if we are in fullscreen mode
 	 */
-	extern bool isFullscreen(void);
+	extern bool isLegacyFullscreen(void);
 
 	/*
 	 * convert bit-per-pixel to bits-per-element

@@ -56,6 +56,8 @@
 #define USEGLX13 extgl_Extensions.GLX13
 #define ERR_MSG_SIZE 1024
 
+typedef enum {FULLSCREEN_LEGACY, FULLSCREEN_NETWM, WINDOWED} window_mode;
+
 static GLXContext context = NULL; // OpenGL rendering context
 static GLXFBConfig *configs = NULL;
 static GLXWindow glx_window;
@@ -64,7 +66,7 @@ static XVisualInfo *vis_info = NULL;
 static Atom delete_atom;
 static Colormap cmap;
 static Window current_win;
-static bool current_fullscreen;
+static window_mode current_window_mode;
 static int current_height;
 static int current_width;
 
@@ -158,7 +160,6 @@ void decDisplay(void) {
 
 static void waitMapped(Window win) {
 	XEvent event;
-
 	do {
 		XMaskEvent(getDisplay(), StructureNotifyMask, &event);
 	} while ((event.type != MapNotify) || (event.xmap.event != win));
@@ -182,27 +183,31 @@ static void setRepeatMode(int mode) {
 }
 
 bool releaseInput(void) {
-	if (current_fullscreen || input_released)
+	if (isLegacyFullscreen() || input_released)
 		return false;
 	input_released = true;
 	setRepeatMode(AutoRepeatModeDefault);
 	updateInputGrab();
-/*	if (current_fullscreen) {
+	if (current_window_mode == FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
-	}*/
+		temporaryResetMode(getCurrentScreen());
+	}
 	return true;
 }
 
 static void acquireInput(void) {
-	if (current_fullscreen || !input_released)
+	if (isLegacyFullscreen() || !input_released)
 		return;
 	input_released = false;
 	setRepeatMode(AutoRepeatModeOff);
 	updateInputGrab();
+	if (current_window_mode == FULLSCREEN_NETWM) {
+		temporaryRestoreMode(getCurrentScreen());
+	}
 }
 
-bool isFullscreen(void) {
-	return current_fullscreen;
+bool isLegacyFullscreen(void) {
+	return current_window_mode == FULLSCREEN_LEGACY;
 }
 
 bool shouldGrab(void) {
@@ -210,8 +215,15 @@ bool shouldGrab(void) {
 }
 
 void setGrab(bool new_grab) {
-	grab = new_grab;
-	updateInputGrab();
+	if (new_grab != grab) {
+		grab = new_grab;
+		updateInputGrab();
+/*		// Attempt to regain focus
+		if (grab) {
+			XMapRaised(getDisplay(), getCurrentWindow());
+			waitMapped(getCurrentWindow());
+		}*/
+	}
 }
 
 static void handleMotion(XMotionEvent *event) {
@@ -303,8 +315,32 @@ static void destroyWindow(void) {
 	setRepeatMode(AutoRepeatModeDefault);
 }
 
+static bool isNetWMFullscreenSupported() {
+	unsigned long nitems;
+	Atom actual_type;
+	int actual_format;
+	unsigned long bytes_after;
+	Atom *supported_list;
+	Atom netwm_supported_atom = XInternAtom(getDisplay(), "_NET_SUPPORTED", False);
+	int result = XGetWindowProperty(getDisplay(), RootWindow(getDisplay(), getCurrentScreen()), netwm_supported_atom, 0, 10000, False, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, (unsigned char **)&supported_list);
+	if (result != Success) {
+		printfDebug("Anable to query _NET_SUPPORTED window property\n");
+		return false;
+	}
+	Atom fullscreen_atom = XInternAtom(getDisplay(), "_NET_WM_STATE_FULLSCREEN", False);
+	bool supported = false;
+	for (unsigned long i = 0; i < nitems; i++) {
+		if (fullscreen_atom == supported_list[i]) {
+			supported = true;
+			break;
+		}
+	}
+	XFree(supported_list);
+	return supported;
+}
+
 static bool createWindow(JNIEnv* env, int width, int height) {
-	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
+//	bool undecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
 	dirty = true;
 	focused = true;
 	minimized = false;
@@ -320,7 +356,6 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	input_released = false;
 	current_width = width;
 	current_height = height;
-
 	root_win = RootWindow(getDisplay(), getCurrentScreen());
 	cmap = XCreateColormap(getDisplay(), root_win, vis_info->visual, AllocNone);
 	attribs.colormap = cmap;
@@ -328,7 +363,7 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	attribs.background_pixel = 0xFF000000;
 	attribs.win_gravity = NorthWestGravity;
 	attribmask = CWColormap | CWBackPixel | CWEventMask | CWWinGravity;
-	if (current_fullscreen || undecorated) {
+	if (isLegacyFullscreen()/* || undecorated*/) {
 		attribmask |= CWOverrideRedirect;
 		attribs.override_redirect = True;
 	}
@@ -349,11 +384,11 @@ static bool createWindow(JNIEnv* env, int width, int height) {
 	XFree(size_hints);
 	delete_atom = XInternAtom(getDisplay(), "WM_DELETE_WINDOW", False);
 	XSetWMProtocols(getDisplay(), win, &delete_atom, 1);
-/*	if (current_fullscreen) {
+	if (current_window_mode == FULLSCREEN_NETWM) {
 		Atom fullscreen_atom = XInternAtom(getDisplay(), "_NET_WM_STATE_FULLSCREEN", False);
 		XChangeProperty(getDisplay(), getCurrentWindow(), XInternAtom(getDisplay(), "_NET_WM_STATE", False),
 						XInternAtom(getDisplay(), "ATOM", False), 32, PropModeReplace, (const unsigned char*)&fullscreen_atom, 1);
-	}*/
+	}
 	XMapRaised(getDisplay(), win);
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
@@ -609,27 +644,27 @@ static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
 }
 
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Display_nGetAvailableDisplayModes(JNIEnv *env, jclass clazz) {
-	return getAvailableDisplayModes(env);
+	return getAvailableDisplayModes(env, getCurrentScreen());
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSwitchDisplayMode(JNIEnv *env, jclass clazz, jobject mode) {
-	switchDisplayMode(env, mode);
+	switchDisplayMode(env, mode, getCurrentScreen());
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_resetDisplayMode(JNIEnv *env, jclass clazz) {
-	resetDisplayMode(env);
+	resetDisplayMode(env, getCurrentScreen());
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
-	return (jint)getGammaRampLength();
+	return (jint)getGammaRampLength(getCurrentScreen());
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_setGammaRamp(JNIEnv *env, jclass clazz, jobject gamma_buffer) {
-	setGammaRamp(env, gamma_buffer);
+	setGammaRamp(env, gamma_buffer, getCurrentScreen());
 }
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Display_init(JNIEnv *env, jclass clazz) {
-	return initDisplay(env);
+	return initDisplay(env, getCurrentScreen());
 }
 
 JNIEXPORT jstring JNICALL Java_org_lwjgl_opengl_Display_getAdapter(JNIEnv *env , jclass clazz) {
@@ -665,7 +700,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_destroyContext(JNIEnv *env,
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nCreateWindow(JNIEnv *env, jclass clazz, jobject mode, jboolean fullscreen) {
-	current_fullscreen = fullscreen == JNI_TRUE;
+	bool current_fullscreen = fullscreen == JNI_TRUE;
+	if (current_fullscreen) {
+		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported())
+			current_window_mode = FULLSCREEN_NETWM;
+		else
+			current_window_mode = FULLSCREEN_LEGACY;
+	} else
+		current_window_mode = WINDOWED;
 	jclass cls_displayMode = env->GetObjectClass(mode);
 	jfieldID fid_width = env->GetFieldID(cls_displayMode, "width", "I");
 	jfieldID fid_height = env->GetFieldID(cls_displayMode, "height", "I");
@@ -689,11 +731,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nDestroyWindow(JNIEnv *env,
 	destroyWindow();
 }
 
-/*
- * Class:     org_lwjgl_opengl_GLWindow
- * Method:    swapBuffers
- * Signature: ()V
- */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_swapBuffers(JNIEnv * env, jclass clazz)
 {
 	dirty = false;
@@ -703,12 +740,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_swapBuffers(JNIEnv * env, j
 		glXSwapBuffers(getDisplay(), getCurrentWindow());
 }
 
-
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nIsDirty
- * Signature: ()Z
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsDirty
   (JNIEnv *env, jclass clazz) {
 	bool result = dirty;
@@ -716,21 +747,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsDirty
 	return result ? JNI_TRUE : JNI_FALSE;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nIsVisible
- * Signature: ()Z
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsVisible
   (JNIEnv *env, jclass clazz) {
 	return minimized ? JNI_FALSE : JNI_TRUE;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nIsCloseRequested
- * Signature: ()Z
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsCloseRequested
   (JNIEnv *, jclass) {
 	bool saved = closerequested;
@@ -738,11 +759,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsCloseRequested
 	return saved;
 }
 
-/*
- * Class:     org_lwjgl_opengl_Window
- * Method:    nIsActive
- * Signature: ()Z
- */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Display_nIsActive
   (JNIEnv *env, jclass clazz) {
 	return focused ? JNI_TRUE : JNI_FALSE;

@@ -44,11 +44,16 @@
 
 #include <jni.h>
 
-extern jobject initDisplay(JNIEnv *env);
-extern void switchDisplayMode(JNIEnv * env, jobject mode);
-extern void resetDisplayMode(JNIEnv * env);
-extern jobjectArray getAvailableDisplayModes(JNIEnv * env);
-extern int getGammaRampLength(void);
-extern void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer);
+typedef enum {XRANDR, XF86VIDMODE, NONE} extension;
+
+extern jobject initDisplay(JNIEnv *env, int screen);
+extern void switchDisplayMode(JNIEnv * env, jobject mode, int screen);
+extern void resetDisplayMode(JNIEnv * env, int screen);
+extern jobjectArray getAvailableDisplayModes(JNIEnv * env, int screen);
+extern int getGammaRampLength(int screen);
+extern void setGammaRamp(JNIEnv *env, jobject gamma_ramp_buffer, int screen);
+extern extension getCurrentDisplayModeExtension();
+extern void temporaryResetMode(int screen);
+extern void temporaryRestoreMode(int screen);
 
 #endif

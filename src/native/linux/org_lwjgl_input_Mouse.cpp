@@ -140,7 +140,7 @@ static void grabPointer(void) {
 		if (result == GrabSuccess) {
 			pointer_grabbed = true;
 			// make sure we have a centered window
-			if (isFullscreen()) {
+			if (isLegacyFullscreen()) {
 				XWindowAttributes win_attribs;
 				XGetWindowAttributes(getDisplay(), getCurrentWindow(), &win_attribs);
 //				XF86VidModeSetViewPort(getDisplay(), getCurrentScreen(), 0, 0);
@@ -162,7 +162,7 @@ static void ungrabPointer(void) {
 void updatePointerGrab(void) {
 	if (!created)
 		return;
-	if (isFullscreen() || shouldGrab()) {
+	if (isLegacyFullscreen() || shouldGrab()) {
 		grabPointer();
 	} else {
 		ungrabPointer();
