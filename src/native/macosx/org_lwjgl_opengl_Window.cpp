@@ -101,6 +101,16 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv
 	return JNI_FALSE;
 }
 
+/*
+ * Class:     org_lwjgl_Window
+ * Method:    nMakeCurrent
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nMakeCurrent
+  (JNIEnv *env, jclass clazz) {
+  CGLSetCurrentContext(context);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jint samples) {
 	vsync_enabled = false;
 	current_fullscreen = fullscreen == JNI_TRUE;
