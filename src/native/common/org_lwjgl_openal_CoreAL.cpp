@@ -221,6 +221,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListenerf (JNIEnv *env, jc
 	CHECK_AL_ERROR
 }
 
+/*
+ * Class:     org_lwjgl_openal_CoreAL
+ * Method:    nalListenerf
+ * Signature: (ILjava/nio/FloatBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalListenerfv (JNIEnv *env, jclass clazz, jint pname, jobject values, jint offset) {
+  alListenerfv((ALenum) pname, offset + (ALfloat*) env->GetDirectBufferAddress(values));
+}
+
 /**
  * This function sets a floating point property for the listener.
  *
@@ -326,6 +335,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcef (JNIEnv *env, jcla
 	alSourcef((ALuint) source, (ALenum) pname, (ALfloat) value);
 	CHECK_AL_ERROR
 }
+
+/*
+ * Class:     org_lwjgl_openal_CoreAL
+ * Method:    nalSourcefv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcefv (JNIEnv *env, jclass clazz, jint source, jint pname, jobject values, jint offset) {
+  alSourcefv((ALuint) source, (ALenum) pname, offset + (ALfloat*) env->GetDirectBufferAddress(values));
+	CHECK_AL_ERROR
+}
+
 
 /**
  * This function sets a source property requiring three floating point values.

@@ -8,10 +8,10 @@
 extern "C" {
 #endif
 /* Inaccessible static: created */
-/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024BaseAL */
-/* Inaccessible static: class_00024java_00024lang_00024String */
+/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_000241 */
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: class_00024org_00024lwjgl_00024openal_00024CoreAL */
+/* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_openal_CoreAL
  * Method:    alEnable
@@ -142,6 +142,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alListenerf
 
 /*
  * Class:     org_lwjgl_openal_CoreAL
+ * Method:    nalListenerfv
+ * Signature: (ILjava/nio/FloatBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalListenerfv
+  (JNIEnv *, jclass, jint, jobject, jint);
+
+/*
+ * Class:     org_lwjgl_openal_CoreAL
  * Method:    alListener3f
  * Signature: (IFFF)V
  */
@@ -211,6 +219,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcei
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_alSourcef
   (JNIEnv *, jclass, jint, jint, jfloat);
+
+/*
+ * Class:     org_lwjgl_openal_CoreAL
+ * Method:    nalSourcefv
+ * Signature: (IILjava/nio/FloatBuffer;I)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_CoreAL_nalSourcefv
+  (JNIEnv *, jclass, jint, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_openal_CoreAL

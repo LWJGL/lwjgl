@@ -319,6 +319,17 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
    * Listener attributes are changed using the Listener group of commands.
    *
    * @param pname name of the attribute to be set
+   * @param value FloatBuffer containing value to set the attribute to
+   */
+  public static void alListener(int pname, FloatBuffer value) {
+    nalListenerfv(pname, value, value.position());
+  }
+  public static native void nalListenerfv(int pname, FloatBuffer value, int offset);  
+  
+  /**
+   * Listener attributes are changed using the Listener group of commands.
+   *
+   * @param pname name of the attribute to be set
    * @param v1 value value 1
    * @param v2 value value 2
    * @param v3 float value 3
@@ -403,6 +414,19 @@ public abstract class CoreAL extends BaseAL implements BaseALConstants {
 	 * @param value value of property
 	 */
 	public static native void alSourcef(int source, int pname, float value);
+  
+  /**
+   * Specifies the position and other properties as taken into account during
+   * sound processing.
+   *
+   * @param source Source to det property on
+   * @param pname property to set
+   * @param value FloatBuffer containing value of property
+   */
+  public static void alSource(int source, int pname, FloatBuffer value) {
+    nalSourcefv(source, pname, value, value.position());
+  }
+  public static native void nalSourcefv(int source, int pname, FloatBuffer value, int offset);
   
   /**
    * Specifies the position and other properties as taken into account during
