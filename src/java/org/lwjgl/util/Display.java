@@ -158,6 +158,7 @@ public final class Display {
 						field[i] = DisplayMode.class.getDeclaredField(param[i]);
 						order[i] = 1;
 					}
+					field[i].setAccessible(true);
 				}
 			}
 			
