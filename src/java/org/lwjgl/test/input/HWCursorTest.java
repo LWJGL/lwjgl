@@ -34,7 +34,6 @@ package org.lwjgl.test.input;
 import org.lwjgl.*;
 import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
-import org.lwjgl.vector.Vector2f;
 
 import java.nio.*;
 
