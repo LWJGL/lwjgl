@@ -151,7 +151,7 @@ public class GLU implements GLUConstants {
          * functions.  A return value of zero means that there is not enough memory to
          * allocate the object
          *
-         * @returns adress to a new quadrics object
+         * @return adress to a new quadrics object
          */
         public native int newQuadric();
         

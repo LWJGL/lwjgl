@@ -34,7 +34,7 @@ package org.lwjgl.opengl.ext;
 
 /**
  * EXT_blend_minmax constants
- * @author: cas
+ * @author cas
  */
 public interface EXTBlendMinmax {
 	public static final int FUNC_ADD_EXT                     = 0x8006;

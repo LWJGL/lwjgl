@@ -35,7 +35,6 @@ package org.lwjgl.opengl.ext;
 /**
  * Insert the type's description here.
  * Creation date: (07/11/99 19:16:17)
- * @author: 
  */
 public interface EXTPackedPixels {
 	public static final int  UNSIGNED_BYTE_3_3_2_EXT          = 0x8032;

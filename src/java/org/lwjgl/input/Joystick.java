@@ -43,9 +43,10 @@ import org.lwjgl.Sys;
  * 
  * No buffering is available.
  *
- * Currently n (native limits, currently 128 - might change) buttons, the x, y, z axis is supported along with a POV (or HAT), where the z axis 
- * represents a throttle. In the future the joystick may support more buttons and
- * axises and other features. but this is a platform issue.
+ * Currently n (native limits, currently 128 - might change) buttons, the x, y,
+ * z axis is supported along with a POV (or HAT) and a slider, where the z axis
+ * represents a throttle. In the future the joystick may support more buttons
+ * and axises and other features. but this is a platform issue.
  *
  * The joystick implementation currently only supports the first attached joystick.
  *
@@ -65,16 +66,19 @@ public class Joystick {
 	private static boolean[] buttons;
 
 	/** X position, range -1000 to 1000 */
-	public static int x = -1;
+	public static int x = 0;
 
 	/** Y position, range -1000 to 1000 */
-	public static int y = -1;
+	public static int y = 0;
 
 	/** Z position, range -1000 to 1000 */
-	public static int z = -1;
+	public static int z = 0;
 
 	/** Position of Point of View from -1 to 27000 (360 degrees) */
 	public static int pov;
+  
+  /** Slider position, range -1000 to 1000 */
+  public static int slider = 0;  
 
 	/** Constant specifying centered POV */
 	public static final int POV_CENTER = -1;
@@ -93,8 +97,11 @@ public class Joystick {
 
 	/* Joystick capabilities */
 	public static int buttonCount = -1;
+  public static boolean hasXAxis = false;
+  public static boolean hasYAxis = false;
 	public static boolean hasZAxis = false;
 	public static boolean hasPOV = false;
+  public static boolean hasSlider = false;
 
 	/**
 	 * Joystick cannot be constructed.
@@ -148,9 +155,9 @@ public class Joystick {
 	/**
 	 * See if a particular mouse button is down.
 	 * 
-	 * @param button The index of the button you wish to test (0..getNumButtons())
+	 * @param button The index of the button you wish to test (0..buttonCount)
 	 * @return true if the specified button is down
-	 * @see #getNumButtons()
+	 * @see #buttonCount
 	 */
 	public static boolean isButtonDown(int button) {
 		assert created : "The joystick has not been created.";

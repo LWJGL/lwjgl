@@ -35,7 +35,6 @@ package org.lwjgl.opengl.ext;
 /**
  * Insert the type's description here.
  * Creation date: (29/06/2000 00:45:10)
- * @author: 
  */
 public interface EXTBlendColor {
 	public static final int 	CONSTANT_COLOR_EXT               = 0x8001;

@@ -34,7 +34,7 @@ package org.lwjgl.opengl.ext;
 
 /**
  * EXT_blend_subtract constants
- * @author: cas
+ * @author cas
  */
 public interface EXTBlendSubtract {
 	public static final int FUNC_SUBTRACT_EXT                = 0x800A;

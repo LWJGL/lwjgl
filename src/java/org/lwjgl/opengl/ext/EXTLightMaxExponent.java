@@ -34,7 +34,7 @@ package org.lwjgl.opengl.ext;
 
 /**
  * EXT_light_max_exponent constants
- * @author: cas
+ * @author cas
  */
 public interface EXTLightMaxExponent {
 	public static final int MAX_SHININESS_EXT                = 0x8504;

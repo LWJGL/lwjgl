@@ -34,7 +34,6 @@ package org.lwjgl.opengl.ext;
 /**
  * Insert the type's description here.
  * Creation date: (07/11/99 18:58:04)
- * @author: 
  */
 public interface EXTVertexArray {
 	public static final int  VERTEX_ARRAY_EXT                 = 0x8074;

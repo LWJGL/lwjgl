@@ -35,7 +35,7 @@
 /**
  * EXT_bgra_constants
  * 
- * @author: cas
+ * @author cas
  */
 public interface EXTBgra {
 	/*

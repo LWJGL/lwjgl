@@ -35,7 +35,7 @@ package org.lwjgl.opengl.ext;
 
 /**
  * EXT_separate_specular_color constants.
- * @author: cas
+ * @author cas
  */
 public interface EXTSeparateSpecularColor {
 	public static final int SINGLE_COLOR_EXT                 = 0x81F9;

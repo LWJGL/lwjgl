@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal.eax;
+package org.lwjgl.openal.eax;
 
 /**
  * $Id$
@@ -43,28 +43,28 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public abstract class BaseEAX {    
-    
+public abstract class BaseEAX {
+
 	/** Has the EAX object been created? */
-	protected static boolean created;    
-    
+	protected static boolean created;
+
 	static {
 		initialize();
-	}     
-    
-    /**
+	}
+
+	/**
 	 * Override to provide any initialization code after creation.
 	 */
 	protected void init() {
 	}
-    
+
 	/**
 	 * Static initialization
 	 */
 	private static void initialize() {
 		System.loadLibrary(org.lwjgl.Sys.getLibraryName());
-	}    
-    
+	}
+
 	/**
 	 * Loads the EAX functions
 	 * 
@@ -73,44 +73,41 @@ public abstract class BaseEAX {
 	public void create() throws Exception {
 		if (created) {
 			return;
-        }
-        
+		}
+
 		if (!nCreate()) {
 			throw new Exception("EAX instance could not be created.");
-        }
+		}
 		created = true;
-        init();
+		init();
 	}
-	
+
 	/**
 	 * Native method to create EAX instance
 	 * 
 	 * @return true if the EAX extensions could be found
 	 */
 	protected native boolean nCreate();
-    
+
 	/**
 	 * "Destroy" the EAX object
 	 */
 	public void destroy() {
 		if (!created) {
 			return;
-        }
-        created = false;
-        nDestroy();
+		}
+		created = false;
+		nDestroy();
 	}
-    
+
 	/**
-	 * Finalizer, marked final. To perform specialized cleanup override the
-	 * cleanup() method.
-	 * 
-	 * @see #cleanup()
+	 * Finalizer, marked final. 
 	 */
 	public void finalize() throws Throwable {
 		super.finalize();
 		destroy();
-	}    
-	
+	}
+
 	/**
 	 * Native method the destroy the EAX
 	 */

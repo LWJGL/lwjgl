@@ -35,7 +35,6 @@ package org.lwjgl.opengl.ext;
 /**
  * Insert the type's description here.
  * Creation date: (22/02/00 01:26:05)
- * @author: 
  */
 public interface EXTTextureEnvCombine {
 	public static final int COMBINE_EXT				= 0x8570;
