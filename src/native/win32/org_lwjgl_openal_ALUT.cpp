@@ -106,7 +106,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
 	/* class type to find */
 	jclass alutLoadWAVFile_class = NULL;
 
-	/* method id - will be set to constructor of alutLoadWAVFile */
+	/* method id - will be set to constructor of alutLoadWAVData */
 	jmethodID methodID = NULL;
 	
 	/* sound data vars */
@@ -141,7 +141,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVFile (JNIEnv *env, j
  * ALvoid alutLoadWAVMemory(ALbyte *memory,ALenum *format,ALvoid **data,ALsizei
  * *size,ALsizei *freq,ALboolean *loop)
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env, jobject obj, jbyteArray buffer) {
+JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env, jobject obj, jint buffer) {
 	
 	/*
 	 * NOTE: Since Java doesn't support modification of supplied 
@@ -158,17 +158,16 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env,
 	/* class type to find */
 	jclass alutLoadWAVFile_class = NULL;
 
-	/* method id - will be set to constructor of alutLoadWAVFile */
+	/* method id - will be set to constructor of alutLoadWAVData */
 	jmethodID methodID = NULL;
 	
 	/* sound data vars */
 	jint format, size, freq;
 	jboolean loop;
 	void* data;
-	ALbyte* bufferlocation = (ALbyte*) (env->GetByteArrayElements(buffer, 0));
-	
+
 	/* load wave from mem */
-	alutLoadWAVMemory(bufferlocation, (ALenum*) &format, (void**) &data, (ALsizei*) &size, (ALsizei*) &freq, (ALboolean*) &loop);
+	alutLoadWAVMemory((ALbyte*) buffer, (ALenum*) &format, (void**) &data, (ALsizei*) &size, (ALsizei*) &freq, (ALboolean*) &loop);
 
 	/* get class */
 	alutLoadWAVFile_class = env->FindClass("org/lwjgl/openal/ALUTLoadWAVData");
@@ -178,9 +177,6 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_openal_ALUT_loadWAVMemory (JNIEnv *env,
 
 	/* create object */
 	alutLoadWAVFile_object = env->NewObject(alutLoadWAVFile_class, methodID, format, (int) data, size, freq, loop);
-
-	/* release bytearray again */
-	env->ReleaseByteArrayElements(buffer, (jbyte*) bufferlocation, 0);
 
 	CHECK_AL_ERROR
 	return alutLoadWAVFile_object;
