@@ -40,6 +40,10 @@ import java.io.IOException;
  * @version $Revision$
  */
 class LinuxSysImplementation extends J2SESysImplementation {
+	static {
+		java.awt.Toolkit.getDefaultToolkit(); // This will make sure libjawt.so is loaded
+	}
+
 	public boolean openURL(String url) {
 		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
 		// right anyway.

@@ -63,8 +63,8 @@ public final class Sys {
 	private final static SysImplementation implementation;
 
 	static {
-		System.loadLibrary(LIBRARY_NAME);
 		implementation = createImplementation();
+		System.loadLibrary(LIBRARY_NAME);
 		String native_version = implementation.getNativeLibraryVersion();
 		if (!native_version.equals(VERSION))
 			throw new LinkageError("Version mismatch: jar version is '" + VERSION +
