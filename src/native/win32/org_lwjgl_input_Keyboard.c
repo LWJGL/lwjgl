@@ -110,8 +110,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
 	}
 }
 
-}
-
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nDestroy
