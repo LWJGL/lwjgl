@@ -190,7 +190,7 @@ public final class GLContext {
 		// Grab all the public static booleans out of this class
 		Field[] fields = GLContext.class.getDeclaredFields();
 		for ( int i = 0; i < fields.length; i++ ) {
-			if ( Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType() == boolean.class ) {
+			if ( Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType().equals(boolean.class) ) {
 				// reset fields
 				try {
 					fields[i].setBoolean(GLContext.class, exts.contains(fields[i].getName()));

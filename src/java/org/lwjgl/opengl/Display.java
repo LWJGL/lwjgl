@@ -56,13 +56,15 @@ import java.util.HashSet;
 
 public final class Display {
 
+	/** The current display mode, if created */
+	private static DisplayMode current_mode;
+
 	static {
 		Sys.initialize();
 		current_mode = init();
+		assert current_mode != null;
+		System.out.println("Current mode "+current_mode);
 	}
-
-	/** The current display mode, if created */
-	private static DisplayMode current_mode;
 
 	/** Timer for sync() */
 	private static long timeNow, timeThen;
@@ -485,7 +487,6 @@ public final class Display {
 	 *
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 *
-	 * @param pixel_format Describes the minimum specifications the context must fulfill.
 	 * @throws LWJGLException
 	 */
 	public static void create() throws LWJGLException {
@@ -544,7 +545,7 @@ public final class Display {
 
 	private static void initControls() {
 		// Automatically create mouse, keyboard and controller
-		if (!Boolean.getBoolean("org.lwjgl.opengl.DIsplay.noinput")) {
+		if (!Boolean.getBoolean("org.lwjgl.opengl.Display.noinput")) {
 			if (!Mouse.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nomouse")) {
 				try {
 					Mouse.create();

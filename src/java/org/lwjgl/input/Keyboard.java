@@ -211,7 +211,7 @@ public class Keyboard {
 				if (Modifier.isStatic(field[i].getModifiers())
 					&& Modifier.isPublic(field[i].getModifiers())
 					&& Modifier.isFinal(field[i].getModifiers())
-					&& field[i].getType() == int.class
+					&& field[i].getType().equals(int.class)
 					&& field[i].getName().startsWith("KEY_")) {
 						
 					int key = field[i].getInt(null);

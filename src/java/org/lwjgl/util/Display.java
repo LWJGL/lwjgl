@@ -32,12 +32,12 @@
 package org.lwjgl.util;
 
 import java.lang.reflect.Field;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.Sys;
+import org.lwjgl.opengl.DisplayMode;
 
 /**
  * $Id$
@@ -150,12 +150,12 @@ public final class Display {
 						preferred[i] = Integer.parseInt(param[i].substring(idx + 1, param[i].length()));
 						usePreferred[i] = true;
 						param[i] = param[i].substring(0, idx);
-						field[i] = DisplayMode.class.getField(param[i]);
+						field[i] = DisplayMode.class.getDeclaredField(param[i]);
 					} else if (param[i].charAt(0) == '-') {
-						field[i] = DisplayMode.class.getField(param[i].substring(1));
+						field[i] = DisplayMode.class.getDeclaredField(param[i].substring(1));
 						order[i] = -1;
 					} else {
-						field[i] = DisplayMode.class.getField(param[i]);
+						field[i] = DisplayMode.class.getDeclaredField(param[i]);
 						order[i] = 1;
 					}
 				}
