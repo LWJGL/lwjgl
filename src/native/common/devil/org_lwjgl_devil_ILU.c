@@ -261,7 +261,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_devil_ILU_iluGetInteger(JNIEnv *env, jclas
  * Signature: (ILjava/nio/IntBuffer;)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_ILU_iluGetIntegerv(JNIEnv *env, jclass clazz, jint mode, jobject param_buffer, jint param_offset) {
-    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, param_buffer, param_offset);
+    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, param_buffer) + param_offset;
     ilGenImages((ILsizei)mode, (ILuint *)lists);
 }
 

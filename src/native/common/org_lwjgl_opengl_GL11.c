@@ -2486,7 +2486,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_glTexParameteri(JNIEnv * env, jcl
  */
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jint p7, jobject buffer, jint offset)
 {
-	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer, offset);
+	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer) + offset;
 	glTexImage2D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, (GLint) p7, buffer_ptr);
 }
 
@@ -2505,7 +2505,7 @@ static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage2DBO(JNIEnv * env, jcl
  */
 static void JNICALL Java_org_lwjgl_opengl_GL11_nglTexImage1D(JNIEnv * env, jclass clazz, jint p0, jint p1, jint p2, jint p3, jint p4, jint p5, jint p6, jobject buffer, jint offset)
 {
-	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer, offset);
+	GLvoid *buffer_ptr = (GLvoid *)safeGetBufferAddress(env, buffer) + offset;
 	glTexImage1D((GLint) p0, (GLint) p1, (GLint) p2, (GLint) p3, (GLint) p4, (GLint) p5, (GLint) p6, buffer_ptr);
 }
 

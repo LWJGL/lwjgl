@@ -37,9 +37,6 @@
 #include <stdlib.h>
 #include "extgl.h"
 
-typedef unsigned char GLcharARB;
-typedef unsigned int GLhandleARB;
-
 typedef void (APIENTRY * glDeleteObjectARBPROC) (GLhandleARB obj);
 typedef GLhandleARB (APIENTRY * glGetHandleARBPROC) (GLenum pname);
 typedef void (APIENTRY * glDetachObjectARBPROC) (GLhandleARB containerObj, GLhandleARB attachedObj);

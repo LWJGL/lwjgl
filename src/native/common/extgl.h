@@ -123,6 +123,18 @@ typedef double GLdouble;
 typedef double GLclampd;
 typedef void GLvoid;
 
+// OpenGL 2.0 types
+typedef int GLintptr;
+typedef unsigned int GLsizeiptr;
+typedef unsigned char GLchar;
+
+// ARB_shader_objects types
+typedef unsigned int GLhandleARB;
+// ARB_vertex_buffer_object types
+typedef int GLintptrARB;
+typedef unsigned int GLsizeiptrARB;
+typedef unsigned char GLcharARB;
+
 #define GL_VERSION                                              0x1F02
 #define GL_EXTENSIONS                                           0x1F03
 

@@ -172,7 +172,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilDefaultImage(JNIEnv *env, j
  * Signature: (ILjava/nio/IntBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilDeleteImages(JNIEnv * env, jclass clazz, jint num, jobject lists_buffer, jint lists_offset) {
-    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
+    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer) + lists_offset;
     ilDeleteImages((ILsizei)num, (ILuint *)lists);
 }
 
@@ -210,7 +210,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilFormatFunc(JNIEnv *env, jcl
  * Signature: (ILjava/nio/IntBuffer;I)V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_devil_IL_nilGenImages(JNIEnv *env , jclass clazz, jint num, jobject lists_buffer, jint lists_offset) {
-    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer, lists_offset);
+    ILbyte *lists = (ILbyte *) safeGetBufferAddress(env, lists_buffer) + lists_offset;
     ilGenImages((ILsizei)num, (ILuint *)lists);
 }
 
@@ -432,7 +432,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_ilLoadImage(JNIEnv *env, jcla
  * Signature: (ILjava/nio/ByteBuffer;II)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_devil_IL_nilLoadL(JNIEnv *env, jclass clazz, jint type, jobject lump_buffer, jint lump_offset, jint size) {
-    ILbyte *lump = (ILbyte *)safeGetBufferAddress(env, lump_buffer, lump_offset);
+    ILbyte *lump = (ILbyte *)safeGetBufferAddress(env, lump_buffer) + lump_offset;
 
     return ilLoadL((ILenum)type, (ILvoid *)(lump), (ILuint)size);
 }

@@ -37,9 +37,6 @@
 #include "extgl.h"
 #include "common_tools.h"
 
-typedef int GLintptr;
-typedef unsigned int GLsizeiptr;
-
 typedef void (APIENTRY * glBindBufferPROC) (GLenum target, GLuint buffer);
 typedef void (APIENTRY * glDeleteBuffersPROC) (GLsizei n, const GLuint *buffers);
 typedef void (APIENTRY * glGenBuffersPROC) (GLsizei n, GLuint *buffers);
@@ -136,7 +133,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
 static void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
 	(JNIEnv * env, jclass clazz, jint target, jint size, jobject data, jint data_offset, jint usage)
 {
-	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data, data_offset);
+	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data) + data_offset;
 	glBufferData(target, size, data_ptr, usage);
 	
 }

@@ -38,11 +38,6 @@
 #include "extgl.h"
 #include "common_tools.h"
 
-typedef int GLintptr;
-typedef unsigned int GLsizeiptr;
-
-typedef unsigned char GLchar;
-
 // ARB_shader_objects
 typedef void (APIENTRY * glAttachShaderPROC) (GLuint program, GLuint shader);
 typedef void (APIENTRY * glCompileShaderPROC) (GLuint shader);

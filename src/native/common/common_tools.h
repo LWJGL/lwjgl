@@ -69,12 +69,12 @@ typedef enum {false, true} bool;
 #define inline __inline
 #endif
 
-static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer, int offset) {
+static inline void * safeGetBufferAddress(JNIEnv *env, jobject buffer) {
 	if (buffer != NULL) {
 #ifdef __cplusplus
-		return (void *)((char *)env->GetDirectBufferAddress(buffer) + offset);
+		return (void *)((char *)env->GetDirectBufferAddress(buffer));
 #else
-		return (void *)((char *)(*env)->GetDirectBufferAddress(env, buffer) + offset);
+		return (void *)((char *)(*env)->GetDirectBufferAddress(env, buffer));
 #endif
 	} else
 		return NULL;

@@ -70,7 +70,7 @@ static glGetVariantArrayObjectivATIPROC glGetVariantArrayObjectivATI;
 static jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint size, jobject pPointer, jint pPointer_offset, jint usage)
 {
-	GLvoid *pPointer_ptr = safeGetBufferAddress(env, pPointer, pPointer_offset);
+	GLvoid *pPointer_ptr = safeGetBufferAddress(env, pPointer) + pPointer_offset;
 	GLuint result = glNewObjectBufferATI(size, pPointer_ptr, usage);
 	
 	return result;

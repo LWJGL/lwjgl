@@ -37,9 +37,6 @@
 #include "extgl.h"
 #include "common_tools.h"
 
-typedef int GLintptrARB;
-typedef unsigned int GLsizeiptrARB;
-
 typedef void (APIENTRY * glBindBufferARBPROC) (GLenum target, GLuint buffer);
 typedef void (APIENTRY * glDeleteBuffersARBPROC) (GLsizei n, const GLuint *buffers);
 typedef void (APIENTRY * glGenBuffersARBPROC) (GLsizei n, GLuint *buffers);
@@ -117,7 +114,7 @@ static jboolean JNICALL Java_org_lwjgl_opengl_ARBBufferObject_glIsBufferARB
 static void JNICALL Java_org_lwjgl_opengl_ARBBufferObject_nglBufferDataARB
 	(JNIEnv * env, jclass clazz, jint target, jint size, jobject data, jint data_offset, jint usage)
 {
-	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data, data_offset);
+	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data) + data_offset;
 	glBufferDataARB(target, size, data_ptr, usage);
 	
 }
@@ -155,7 +152,7 @@ static jobject JNICALL Java_org_lwjgl_opengl_ARBBufferObject_glMapBufferARB
 {
 	void *buffer_address = glMapBufferARB((GLenum)target, (GLenum)access);
 	
-	void *old_buffer_address = safeGetBufferAddress(env, oldBuffer, 0);
+	void *old_buffer_address = safeGetBufferAddress(env, oldBuffer);
 	if (old_buffer_address == buffer_address)
 		return oldBuffer;
 	else
