@@ -64,3 +64,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBColorBufferFloat_initNativeStubs
 #ifdef __cplusplus
 }
 #endif
+

@@ -121,3 +121,4 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPalettedTexture_initNativeStubs(
 #ifdef __cplusplus
 }
 #endif
+

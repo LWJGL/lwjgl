@@ -142,7 +142,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_nAlert(JNIEnv * env, jclass clazz, jst
 {
 	char * eMessageText = GetStringNativeChars(env, message);
 	char * cTitleBarText = GetStringNativeChars(env, title);
-	MessageBox(getCurrentHWND(), eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
 	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	
