@@ -262,11 +262,6 @@
 			<class name="org.lwjgl.openal.eax.EAXBufferProperties"/>
 			<class name="org.lwjgl.openal.eax.EAXListenerProperties"/>
 			  
-			<class name="org.lwjgl.opengl.GL11"/>
-			<class name="org.lwjgl.opengl.GL12"/>
-			<class name="org.lwjgl.opengl.GL13"/>
-			<class name="org.lwjgl.opengl.GL14"/>
-			<class name="org.lwjgl.opengl.GL15"/>
 			<class name="org.lwjgl.opengl.GLContext"/>
 			<class name="org.lwjgl.opengl.Window"/>
 			<class name="org.lwjgl.opengl.Pbuffer"/>
