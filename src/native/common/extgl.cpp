@@ -902,7 +902,7 @@ void extgl_InitWGL(JNIEnv *env)
 /*-----------------------------------------------------*/
 #ifdef _AGL
 
-bool extgl_InitAGL(JNIEnv *env, jobject ext_set)
+bool extgl_InitAGL(JNIEnv *env)
 {
 	aglChoosePixelFormat = (aglChoosePixelFormatPROC)extgl_GetProcAddress("aglChoosePixelFormat");
 	aglDestroyPixelFormat = (aglDestroyPixelFormatPROC)extgl_GetProcAddress("aglDestroyPixelFormat");

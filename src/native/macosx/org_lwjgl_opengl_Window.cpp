@@ -108,12 +108,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not load gl library");
 		return;
 	}
-	/*
-	WARNING COMMENTED OUT, to make compile, needed?, fix?
-	if (!extgl_InitAGL(env, ext_set)) {
+	if (!extgl_InitAGL(env)) {
 		throwException(env, "Could not load agl symbols");
 		return;
-	}*/
+	}
 	if (!current_fullscreen) {
 		if (!switchToNearestMode(env, width, height, bpp, 60)) {
 			destroyMode(env, clazz);
@@ -127,14 +125,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		extgl_Close();
 		return;
 	}
-	/*
-	WARNING COMMENTED OUT, to make compile, needed?, fix?
-	if (!extgl_Initialize(env, ext_set)) {
-		destroy(env, clazz);
-		throwException(env, "Could not load gl function pointers");
-		return;
-	}
-	*/
 	FlushEventQueue(GetMainEventQueue());
 }
 
