@@ -176,22 +176,6 @@ static void doWarpPointer(void ) {
 	// Tell event loop to stop ignoring motion events
 	ignore_warp_guard.xclient.data.b[0] = 0;
 	XSendEvent(getDisplay(), getCurrentWindow(), False, 0, &ignore_warp_guard);
-
-/*	centerCursor();
-	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, current_x, current_y);
-	XEvent event;
-	// Try to catch the warp pointer event
-	for (i = 0; i < WARP_RETRY; i++) {
-		XMaskEvent(getDisplay(), PointerMotionMask, &event);
-		if (event.xmotion.x > current_x - POINTER_WARP_BORDER &&
-			event.xmotion.x < current_x + POINTER_WARP_BORDER &&
-			event.xmotion.y > current_y - POINTER_WARP_BORDER &&
-			event.xmotion.y < current_y + POINTER_WARP_BORDER)
-			break;
-		printfDebug("Skipped event searching for warp event %d, %d\n", event.xmotion.x, event.xmotion.y);
-	}
-	if (i == WARP_RETRY)
-		printfDebug("Never got warp event\n");*/
 }
 
 static void warpPointer(void) {

@@ -173,9 +173,18 @@ public class Cursor {
 	}
 	
 	/**
-	 * Destroy the native cursor. Cursor must not be current.
+	 * Destroy the native cursor. If the cursor is current,
+	 * the current native cursor is set to null (the default
+	 * OS cursor)
 	 */
 	public void destroy() {
+		if (Mouse.getNativeCursor() == this) {
+			try {
+				Mouse.setNativeCursor(null);
+			} catch (LWJGLException e) {
+				// ignore
+			}
+		}
 		for(int i=0; i<cursors.length; i++) {
 			nDestroyCursor(cursors[i].cursorHandle);
 		}

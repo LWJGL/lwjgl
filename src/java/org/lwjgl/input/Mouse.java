@@ -178,7 +178,6 @@ public class Mouse {
 	/**
 	 * Binds a native cursor. If the cursor argument is null, the
 	 * native cursor is disabled, as if native cursors were not supported.
-	 * The Mouse must be created before a native cursor can be bound.
 	 *
 	 * NOTE: The native cursor is not constrained to the window, but
 	 * relative events will not be generated if the cursor is outside.
@@ -192,18 +191,17 @@ public class Mouse {
 	 * @throws LWJGLException if the cursor could not be set for any reason
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
-		if (!created) throw new IllegalStateException("Create the Mouse before setting the native cursor");
 		if ((getNativeCursorCaps() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
 				throw new IllegalStateException("Mouse doesn't support native cursors");
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
-		if (currentCursor != null) {
-      if(currentCursor != oldCursor) {
-  			nSetNativeCursor(currentCursor.getHandle());
-  			currentCursor.setTimeout();
-      }
-		} else {
-			nSetNativeCursor(0);
+		if (isCreated()) {
+			if (currentCursor != null) {
+				nSetNativeCursor(currentCursor.getHandle());
+				currentCursor.setTimeout();
+			} else {
+				nSetNativeCursor(0);
+			}
 		}
 		return oldCursor;
 	}
@@ -261,7 +259,6 @@ public class Mouse {
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
-
 		if (!Display.isCreated()) throw new IllegalStateException("Display must be created prior to creating mouse");
 
 		initialize();
@@ -269,7 +266,6 @@ public class Mouse {
 		nCreate();
 		hasWheel = nHasWheel();
 		created = true;
-		currentCursor = null;
 		dx = dy = dwheel = 0;
 		width = Display.getDisplayMode().getWidth() << 16;
 		height = Display.getDisplayMode().getHeight() << 16;
@@ -280,6 +276,8 @@ public class Mouse {
 		buttonCount = nGetButtonCount();
 		buttons = BufferUtils.createByteBuffer(buttonCount);
 		coord_buffer = BufferUtils.createIntBuffer(3);
+		setNativeCursor(currentCursor);
+		setGrabbed(isGrabbed);
 	}
 
 	/** Native query of wheel support */
@@ -313,18 +311,10 @@ public class Mouse {
 	 * "Destroy" the mouse.
 	 */
 	public static void destroy() {
-		if (currentCursor != null) {
-			try {
-				setNativeCursor(null);
-			} catch (LWJGLException e) {
-				if (Sys.DEBUG) e.printStackTrace();
-			}
-		}
 		if (!created) return;
 		created = false;
 		buttons = null;
 		coord_buffer = null;
-		currentCursor = null;
 
 		nDestroy();
 	}
@@ -597,23 +587,29 @@ public class Mouse {
 
 	/**
 	 * Sets whether or not the mouse has grabbed the cursor 
-	 * (and thus hidden).
+	 * (and thus hidden). If grab is true, and isGrabbed() is
+	 * false, the native cursor position is reset to the middle
+	 * of the screen.
+	 *
+	 * @param grab whether the mouse should be grabbed
 	 */
 	public static void setGrabbed(boolean grab) {
-	    isGrabbed = grab;
+		isGrabbed = grab;
+		if (isCreated()) {
 			nGrabMouse(isGrabbed);
-	    
-	    if(!grab) {
-			x = width / 2;
-			y = height / 2;      
-	    }
+			if(!isGrabbed) {
+				x = width / 2;
+				y = height / 2;      
+			}
+		}
 	}
+
 	private static native void nGrabMouse(boolean grab);
 
 	/**
 	 * Updates the cursor, so that animation can be changed if needed.
 	 * This method is called automatically by the window on its update, and 
-     * shouldn't be called otherwise
+	 * shouldn't be called otherwise
 	 */
 	public static void updateCursor() {
 		if (System.getProperty("os.name").startsWith("Win") && currentCursor != null && currentCursor.hasTimedOut()) {
