@@ -148,36 +148,42 @@ LRESULT CALLBACK WindowProc(HWND hWnd,
 			case SC_SCREENSAVE:
 			case SC_MONITORPOWER:
 				return 0L;
+			case SC_MINIMIZE:
+				isMinimized = true;
+				appActivate(true);
 				break;
-      case SC_MINIMIZE:
-        isMinimized = true;
-        appActivate(true);
-        break;
-      case SC_RESTORE:
-        isMinimized = false;
-        appActivate(false);
-        break;
-      case SC_CLOSE:
-        environment->SetStaticBooleanField(clsDisplay, fidclose, true);
-        //don't continue processing this command since this 
-        //would shutdown the window, which the application might not want to
-        return 0L;
+			case SC_RESTORE:
+				isMinimized = false;
+				appActivate(false);
+				break;
+			case SC_CLOSE:
+				environment->SetStaticBooleanField(clsDisplay, fidclose, true);
+				//don't continue processing this command since this 
+				//would shutdown the window, which the application might not want to
+				return 0L;
 			default:
-				break;
+				return 0L; // don't allow the window menu to show
 			}
 		}
+		break;
 		case WM_ACTIVATE:
 		{
-      switch(LOWORD(wParam)) {
-        case WA_ACTIVE:
-        case WA_CLICKACTIVE:
-          isMinimized = false;
-          break;
-        case WA_INACTIVE:
-          isMinimized = true;
-          break;
-      }
-      appActivate(!isMinimized);
+			switch(LOWORD(wParam)) {
+			case WA_ACTIVE:
+			case WA_CLICKACTIVE:
+				isMinimized = false;
+				break;
+			case WA_INACTIVE:
+				isMinimized = true;
+				break;
+			}
+			appActivate(!isMinimized);
+		}
+		break;
+		case WM_QUIT:
+		{
+			environment->SetStaticBooleanField(clsDisplay, fidclose, true);
+			return 0L;
 		}
 	}
 
@@ -201,15 +207,9 @@ void handleMessages()
 		hwnd,           // handle to window
 		0,  // first message
 		0,  // last message
-		PM_NOREMOVE      // removal options
+		PM_REMOVE      // removal options
 		)) {
 
-		if (GetMessage (&msg, NULL, 0, 0) <= 0) {
-#ifdef _DEBUG
-			printf("We should quit here...\n");
-#endif
-			return;
-		}
 		TranslateMessage(&msg);
       	DispatchMessage(&msg);
 	};
