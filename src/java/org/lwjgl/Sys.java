@@ -74,10 +74,6 @@ public final class Sys {
 	 */
 	public static final int REALTIME_PRIORITY = 2;
 
-	static {
-		initialize();
-	}
-	
 	/** The native library name */
 	private static String LIBRARY_NAME;
 	
@@ -89,6 +85,8 @@ public final class Sys {
 			// Assertions are enabled, so we'll use the debug version of the
 			// library
 			LIBRARY_NAME = "lwjgl_d";
+		} finally {
+			initialize();
 		}
 	}
 	
