@@ -280,7 +280,7 @@ public class WindowCreationTest {
 		                   "L:\t\tList selectable display modes\n" +
 		                   "0-8:\t\tSelection of display modes\n" + 
 		                   "F:\t\tToggle fullscreen\n" +
-		                   "SHIFT-F:\t\tToggle fullscreen with Display.destroy()/create() cycle");
+		                   "SHIFT-F:\tToggle fullscreen with Display.destroy()/create() cycle");
 		
 		WindowCreationTest wct = new WindowCreationTest();
 		if (wct.initialize()) {
