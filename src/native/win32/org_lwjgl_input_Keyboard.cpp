@@ -244,43 +244,36 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead
 				}
 			}
 		}
-		return num_events;
 	} else if (ret == DI_BUFFEROVERFLOW) { 
 #ifdef _DEBUG
 		printf("Keyboard buffer overflowed\n");
 #endif
-		return -1;
 	} else if (ret == DIERR_INPUTLOST) {
 #ifdef _DEBUG
 		printf("Input lost\n");
 #endif
-		return -1;
 	} else if (ret == DIERR_NOTACQUIRED) {
 #ifdef _DEBUG
 		printf("not acquired\n");
 #endif
-		return -1;
 	} else if (ret == DIERR_INVALIDPARAM) {
 #ifdef _DEBUG
 		printf("invalid parameter\n");
 #endif
-		return -1;
 	} else if (ret == DIERR_NOTBUFFERED) {
 #ifdef _DEBUG
 		printf("not buffered\n");
 #endif
-		return -1;
 	} else if (ret == DIERR_NOTINITIALIZED) {
 #ifdef _DEBUG
 		printf("not inited\n");
 #endif
-		return -1;
 	} else {
 #ifdef _DEBUG
 		printf("unknown keyboard error\n");
 #endif
-		return -1;
 	}
+	return num_events;
 }
 
 /*
