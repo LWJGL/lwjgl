@@ -37,7 +37,7 @@ import java.nio.ByteOrder;
 
 /**
  * $Id$
- *
+ * <br>
  * Wrapper class, to make ALC contexts behave like the orginal api.
  *
  * @author Brian Matzon <brian@matzon.dk>

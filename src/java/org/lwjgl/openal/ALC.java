@@ -35,9 +35,29 @@ import java.nio.Buffer;
 
 /**
  * $Id$
- *
+ * 
+ * <p>
  * This is the context class for OpenAL. This class implements functions
  * in alc.h
+ * </p>
+ * 
+ * <p>
+ * ALC introduces the notion of a Device. A Device can be, depending on the
+ * implementation, a hardware device, or a daemon/OS service/actual server. This
+ * mechanism also permits different drivers (and hardware) to coexist within the same
+ * system, as well as allowing several applications to share system resources for audio,
+ * including a single hardware output device. The details are left to the
+ * implementation, which has to map the available backends to unique device
+ * specifiers (represented as strings).
+ * </p>
+ * 
+ * <p>
+ * <b>NOTE:</b><br>
+ * The LWJGL implementation of OpenAL does not expose the device, nor the context.
+ * Whenever <code>AL</code> is created using the <code>create</code> method, an underlying
+ * device and context is created. Thus more advanced usage of multiple contexts and/or devices
+ * are not possible. The above mentioned features are very rarely used in games.
+ * </p>
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
@@ -58,17 +78,39 @@ public class ALC {
 	/** Errors: No Error */
 	public static final int ALC_NO_ERROR = ALC_FALSE;
 
+  /** Major version query. */
 	public static final int ALC_MAJOR_VERSION = 0x1000;
+  
+  /** Minor version query. */
 	public static final int ALC_MINOR_VERSION = 0x1001;
+  
+  /** 
+   * The size required for the zero-terminated attributes list, for the current context.
+   **/
 	public static final int ALC_ATTRIBUTES_SIZE = 0x1002;
+  
+  /**
+   * Expects a destination of ALC_CURRENT_ATTRIBUTES_SIZE,
+   * and provides the attribute list for the current context of the specified device.
+   */
 	public static final int ALC_ALL_ATTRIBUTES = 0x1003;
 
+  /** The specifier string for the default device */
 	public static final int ALC_DEFAULT_DEVICE_SPECIFIER = 0x1004;
+  
+  /** The specifier string for the device */
 	public static final int ALC_DEVICE_SPECIFIER = 0x1005;
+  
+  /** The extensions string for diagnostics and printing */
 	public static final int ALC_EXTENSIONS = 0x1006;
 
+  /** Frequency for mixing output buffer, in units of Hz. */
 	public static final int ALC_FREQUENCY = 0x1007;
+  
+  /** Refresh intervalls, in units of Hz. */ 
 	public static final int ALC_REFRESH = 0x1008;
+  
+  /** Flag, indicating a synchronous context. */
 	public static final int ALC_SYNC = 0x1009;
 
 	/** The device argument does not name a valid device */
@@ -158,8 +200,16 @@ public class ALC {
 	protected static native void nDestroy();
 
   /**
-   * Returns strings related to the context.
+   * The application can obtain certain strings from ALC.
+   * 
+   * <code>ALC_DEFAULT_DEVICE_SPECIFIER</code> - The specifer string for the default device
+   * <code>ALC_DEVICE_SPECIFIER</code> - The specifer string for the device 
+   * <code>ALC_EXTENSIONS</code> - The extensions string for diagnostics and printing.
    *
+   * In addition, printable error message strings are provided for all valid error tokens,
+   * including <code>ALC_NO_ERROR</code>,<code>ALC_INVALID_DEVICE</code>, <code>ALC_INVALID_CONTEXT</code>,
+   * <code>ALC_INVALID_ENUM</code>, <code>ALC_INVALID_VALUE</code>.
+   * 
    * @param pname Property to get
    * @return String property from device
    */
@@ -170,7 +220,21 @@ public class ALC {
   native static String nGetString(int device, int pname);
 
 	/**
-	 * Returns integers related to the context.
+	 * The application can query ALC for information using an integer query function.
+   * For some tokens, <code>null</code> is a legal deviceHandle. In other cases, specifying a <code>null</code>
+   * device will generate an <code>ALC_INVALID_DEVICE</code> error. The application has to
+   * specify the size of the destination buffer provided. A <code>null</code> destination or a zero
+   * size parameter will cause ALC to ignore the query.
+   * 
+   * <code>ALC_MAJOR_VERSION</code> - Major version query.
+   * <code>ALC_MINOR_VERSION</code> - Minor version query.
+   * <code>ALC_ATTRIBUTES_SIZE</code> - The size required for the zero-terminated attributes list, 
+   * for the current context. <code>null</code> is an invalid device. <code>null</code> (no current context 
+   * for the specified device) is legal.
+   * <code>ALC_ALL_ATTRIBUTES</code> - Expects a destination of <code>ALC_CURRENT_ATTRIBUTES_SIZE</code>,
+   * and provides the attribute list for the current context of the specified device.
+   * <code>null</code> is an invalid device. <code>null</code> (no current context for the specified device)
+   * will return the default attributes defined by the specified device.
 	 *
 	 * @param pname Property to get
 	 * @param size Size of destination buffer provided
@@ -183,8 +247,13 @@ public class ALC {
   native static void nGetIntegerv(int device, int pname, int size, Buffer integerdata);    
 
 	/**
-	 * Opens the named device. If null is specied, the implementation will
-	 * provide an implementation specic default.
+	 * The <code>alcOpenDevice</code> function allows the application (i.e. the client program) to
+   * connect to a device (i.e. the server).
+   *
+   * If the function returns <code>null</code>, then no sound driver/device has been found. The
+   * argument is a null terminated string that requests a certain device or device
+   * configuration. If <code>null</code> is specified, the implementation will provide an
+   * implementation specific default.
 	 *
 	 * @param devicename name of device to open
 	 * @return opened device, or null
@@ -192,14 +261,26 @@ public class ALC {
 	native static ALCdevice alcOpenDevice(String devicename);
 
 	/**
-	 * Closes the supplied device.
+	 * The <code>alcCloseDevice</code> function allows the application (i.e. the client program) to
+   * disconnect from a device (i.e. the server).
+   * 
+   * If deviceHandle is <code>null</code> or invalid, an <code>ALC_INVALID_DEVICE</code> error will be
+   * generated. Once closed, a deviceHandle is invalid.
 	 *
 	 * @param device address of native device to close
 	 */
 	native static void alcCloseDevice(int device);
 
 	/**
-	 * Creates a context using a specified device.
+	 * A context is created using <code>alcCreateContext</code>. The device parameter has to be a valid
+   * device. The attribute list can be <code>null</code>, or a zero terminated list of integer pairs
+   * composed of valid ALC attribute tokens and requested values.
+   * 
+   * Context creation will fail if the application requests attributes that, by themselves,
+   * can not be provided. Context creation will fail if the combination of specified
+   * attributes can not be provided. Context creation will fail if a specified attribute, or
+   * the combination of attributes, does not match the default values for unspecified
+   * attributes.
 	 *
 	 * @param device address of device to associate context to
 	 * @param attrList Buffer to read attributes from
@@ -208,7 +289,15 @@ public class ALC {
 	native static ALCcontext alcCreateContext(int device, Buffer attrList);
 
 	/**
-	 * Makes the supplied context the current one
+	 * To make a Context current with respect to AL Operation (state changes by issueing
+   * commands), <code>alcMakeContextCurrent</code> is used. The context parameter can be <code>null</code>
+   * or a valid context pointer. The operation will apply to the device that the context
+   * was created for.
+   * 
+   * For each OS process (usually this means for each application), only one context can
+   * be current at any given time. All AL commands apply to the current context.
+   * Commands that affect objects shared among contexts (e.g. buffers) have side effects
+   * on other contexts.
 	 *
 	 * @param context address of context to make current
 	 * @return true if successfull, false if not
@@ -216,7 +305,15 @@ public class ALC {
 	native static boolean alcMakeContextCurrent(int context);
 
   /**
-   * Tells a context to begin processing.
+   * The current context is the only context accessible to state changes by AL commands
+   * (aside from state changes affecting shared objects). However, multiple contexts can
+   * be processed at the same time. To indicate that a context should be processed (i.e.
+   * that internal execution state like offset increments are supposed to be performed),
+   * the application has to use <code>alcProcessContext</code>.
+   *
+   * Repeated calls to <code>alcProcessContext</code> are legal, and do not affect a context that is
+   * already marked as processing. The default state of a context created by
+   * alcCreateContext is that it is not marked as processing.
    */
   public static void alcProcessContext() {
     nProcessContext(AL.context.context);
@@ -225,14 +322,15 @@ public class ALC {
   native static void nProcessContext(int context);
 
 	/**
-	 * Gets the current context
+	 * The application can query for, and obtain an handle to, the current context for the
+   * application. If there is no current context, <code>null</code> is returned.
 	 *
 	 * @return Current ALCcontext
 	 */
 	native static ALCcontext alcGetCurrentContext();
 
 	/**
-	 * Retrives the device associated with the supplied context
+	 * The application can query for, and obtain an handle to, the device of a given context.
 	 *
 	 * @param context address of context to get device for
 	 * @param ALCdevice associated with context
@@ -240,21 +338,39 @@ public class ALC {
 	native static ALCdevice alcGetContextsDevice(int context);
 
 	/**
-	 * Suspends processing on supplied context
+	 * The application can suspend any context from processing (including the current
+   * one). To indicate that a context should be suspended from processing (i.e. that
+   * internal execution state like offset increments is not supposed to be changed), the
+   * application has to use <code>alcSuspendContext</code>.
+   * 
+   * Repeated calls to <code>alcSuspendContext</code> are legal, and do not affect a context that is
+   * already marked as suspended. The default state of a context created by
+   * <code>alcCreateContext</code> is that it is marked as suspended.
 	 *
 	 * @param context address of context to suspend
 	 */
 	native static void alcSuspendContext(int context);
 
 	/**
-	 * Destroys supplied context
+	 * The correct way to destroy a context is to first release it using <code>alcMakeCurrent</code> and
+   * <code>null</code>. Applications should not attempt to destroy a current context.
 	 *
 	 * @param context address of context to Destroy
 	 */
 	native static void alcDestroyContext(int context);
 
 	/**
-	 * Retrieves the current context error state.
+	 * ALC uses the same conventions and mechanisms as AL for error handling. In
+   * particular, ALC does not use conventions derived from X11 (GLX) or Windows
+   * (WGL). The <code>alcGetError</code> function can be used to query ALC errors.
+   * 
+   * Error conditions are specific to the device.
+   * 
+   * ALC_NO_ERROR - The device handle or specifier does name an accessible driver/server.
+   * <code>ALC_INVALID_DEVICE</code> - The Context argument does not name a valid context.
+   * <code>ALC_INVALID_CONTEXT</code> - The Context argument does not name a valid context.
+   * <code>ALC_INVALID_ENUM</code> - A token used is not valid, or not applicable.
+   * <code>ALC_INVALID_VALUE</code> - An value (e.g. attribute) is not valid, or not applicable.
 	 *
 	 * @return Errorcode from ALC statemachine
 	 */
@@ -265,7 +381,10 @@ public class ALC {
 	native static int nGetError(int device);
 
 	/**
-	 * Query if a specified context extension is available.
+   * Verify that a given extension is available for the current context and the device it
+   * is associated with.
+   * A <code>null</code> name argument returns <code>ALC_FALSE</code>, as do invalid and unsupported string
+   * tokens.
 	 *
 	 * @param extName name of extension to find
 	 * @return true if extension is available, false if not
@@ -277,7 +396,11 @@ public class ALC {
 	native static boolean nIsExtensionPresent(int device, String extName);
 
 	/**
-	 * retrieves the enum value for a specified enumeration name.
+	 * Enumeration/token values are device independend, but tokens defined for
+   * extensions might not be present for a given device. But only the tokens defined
+   * by the AL core are guaranteed. Availability of extension tokens dependends on the ALC extension.
+   * 
+   * Specifying a <code>null</code> name parameter will cause an <code>ALC_INVALID_VALUE</code> error.
 	 *
 	 * @param enumName name of enum to find
 	 * @return value of enumeration

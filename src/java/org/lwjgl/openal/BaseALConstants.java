@@ -33,7 +33,7 @@ package org.lwjgl.openal;
 
 /**
  * $Id$
- *
+ * <br>
  * This class implements all basic OpenAL constants.
  *
  * @author Brian Matzon <brian@matzon.dk>

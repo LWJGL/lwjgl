@@ -33,7 +33,7 @@ package org.lwjgl.openal;
 
 /**
  * $Id$
- *
+ * <br>
  * Thrown by the debug build library of the LWJGL if any OpenAL operation
  * causes an error.
  * 

@@ -33,7 +33,7 @@ package org.lwjgl.openal;
 
 /**
  * $Id$
- *
+ * <br>
  * This is the OpenAL class. It extends the latest core.
  *
  * @author Brian Matzon <brian@matzon.dk>

@@ -39,7 +39,7 @@ import org.lwjgl.Sys;
 
 /**
  * $Id$
- *
+ * <br>
  * The base AL functionality (no actual AL methods).
  *
  * This has been provided as a base class that we can use for either the
