@@ -46,9 +46,9 @@
 // Handle to the application's window
 extern HWND hwnd;
 
-__int64		hires_timer_freq;			// Hires timer frequency
-__int64		hires_timer_start;			// Hires timer start
-__int64		hires_timer;				// Hires timer current time
+unsigned __int64		hires_timer_freq;			// Hires timer frequency
+unsigned __int64		hires_timer_start;			// Hires timer start
+unsigned __int64		hires_timer;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
