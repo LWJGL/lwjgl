@@ -51,8 +51,6 @@
 #include "org_lwjgl_input_Mouse.h"
 #include "org_lwjgl_opengl_LinuxDisplay.h"
 
-#define NUM_BUTTONS 3
-
 #define EVENT_SIZE 5
 
 #define POINTER_WARP_BORDER 10
@@ -67,7 +65,7 @@ static int accum_dy;
 static int accum_dz;
 static int last_x;
 static int last_y;
-static jbyte buttons[NUM_BUTTONS];
+static jbyte buttons[org_lwjgl_opengl_LinuxDisplay_NUM_BUTTONS];
 static event_queue_t event_queue;
 
 static Cursor blank_cursor;
@@ -201,10 +199,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetNativeCursor(JNIEn
 	updateCursor();
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetButtonCount(JNIEnv *env, jobject this) {
-	return NUM_BUTTONS;
-}
-
 static void reset(void) {
 	initEventQueue(&event_queue, EVENT_SIZE);
 }
@@ -218,7 +212,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateMouse
 	int i;
 	last_y = last_x = accum_dx = accum_dy = accum_dz = 0;
 	reset();
-	for (i = 0; i < NUM_BUTTONS; i++)
+	for (i = 0; i < org_lwjgl_opengl_LinuxDisplay_NUM_BUTTONS; i++)
 		buttons[i] = 0;
 	if (!blankCursor(env)) {
 		decDisplay();
@@ -248,13 +242,13 @@ static unsigned char mapButton(XButtonEvent *event) {
 			return 2;
 		case Button3:
 			return 1;
-		default: return NUM_BUTTONS;
+		default: return org_lwjgl_opengl_LinuxDisplay_NUM_BUTTONS;
 	}
 }
 
 static void handleButton(XButtonEvent *event, unsigned char state) {
 	unsigned char button_num = mapButton(event);
-	if (button_num == NUM_BUTTONS)
+	if (button_num == org_lwjgl_opengl_LinuxDisplay_NUM_BUTTONS)
 		return;
 	buttons[button_num] = state;
 	putMouseEvent(button_num, state, 0);
@@ -338,7 +332,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nPollMouse(JNIEnv * en
 	}
 	coords[2] = accum_dz;
 	accum_dx = accum_dy = accum_dz = 0;
-	int num_buttons = NUM_BUTTONS;
+	int num_buttons = org_lwjgl_opengl_LinuxDisplay_NUM_BUTTONS;
 	if (num_buttons > buttons_length)
 		num_buttons = buttons_length;
 	int i;

@@ -50,6 +50,7 @@ import org.lwjgl.LWJGLException;
 final class LinuxDisplay implements DisplayImplementation {
 	private static final int CURSOR_HANDLE_SIZE = 8;
 	private static final int PBUFFER_HANDLE_SIZE = 24;
+	private static final int NUM_BUTTONS = 3;
 
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
 	 * Xlib calls with AWT Xlib calls. Fortunately, JAWT implements LockAWT and UnlockAWT(), to
@@ -220,12 +221,8 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 
 	public int getButtonCount() {
-		lockAWT();
-		int num_buttons = nGetButtonCount();
-		unlockAWT();
-		return num_buttons;
+		return NUM_BUTTONS;
 	}
-	public native int nGetButtonCount();
 
 	public void createMouse() {
 		lockAWT();
