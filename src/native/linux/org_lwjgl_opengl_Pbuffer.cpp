@@ -80,10 +80,10 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps
  * Signature: (IIII)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
-  (JNIEnv *env, jclass clazz, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil)
+  (JNIEnv *env, jclass clazz, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil, jint samples)
 {
 	int bpe = convertToBPE(bpp);
-	const int attrib_list[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
+	int attrib_list[] = {GLX_RENDER_TYPE, GLX_RGBA_BIT,
 				   GLX_DOUBLEBUFFER, False,
 				   GLX_RED_SIZE, bpe,
 				   GLX_GREEN_SIZE, bpe,
@@ -92,8 +92,16 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 				   GLX_DEPTH_SIZE, depth,
 				   GLX_STENCIL_SIZE, stencil,
 				   GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,
+				   None, None, /* for ARB_multisample */
+				   None, None, /*                     */
 				   None};
 	int num_configs;
+	if (samples > 0 && extgl_Extensions.GLX_ARB_multisample) {
+		attrib_list[18] = GLX_SAMPLE_BUFFERS_ARB;
+		attrib_list[19] = 1;
+		attrib_list[20] = GLX_SAMPLES_ARB;
+		attrib_list[21] = samples;
+	}
 	GLXFBConfig *configs = glXChooseFBConfig(getCurrentDisplay(), getCurrentScreen(), attrib_list, &num_configs);
 	if (num_configs == 0) {
 		XFree(configs);

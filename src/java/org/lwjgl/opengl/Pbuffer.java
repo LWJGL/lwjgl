@@ -81,9 +81,11 @@ public class Pbuffer {
 	 * @param alpha Minimum bits per pixel in alpha buffer
 	 * @param depth Minimum bits per pixel in depth buffer
 	 * @param stencil Minimum bits per pixel in stencil buffer
+	 * @param samples Minimum samples in multisample buffer (corresponds to GL_SAMPLES_ARB in GL_ARB_multisample spec).
+		          Pass 0 to disable multisampling. This parameter is ignored if GL_ARB_multisample is not supported.
 	 */
-	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil) throws Exception {
-		handle = nCreate(width, height, bpp, alpha, depth, stencil);
+	public Pbuffer(int width, int height, int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
+		handle = nCreate(width, height, bpp, alpha, depth, stencil, samples);
 		vbo_tracker = new VBOTracker();
 	}
 
@@ -150,7 +152,8 @@ public class Pbuffer {
 		int bpp,
 		int alpha,
 		int depth,
-		int stencil) throws Exception;
+		int stencil,
+		int samples) throws Exception;
 	
 	/**
 	 * Destroys the Pbuffer. The buffer must not be current.
