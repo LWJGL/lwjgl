@@ -730,21 +730,22 @@ public final class GL11 {
 	public static native void glClearAccum(float red, float green, float blue, float alpha);
 	public static native void glClear(int mask);
 	public static void glCallLists(ByteBuffer lists) {
+		BufferChecks.checkDirect(lists);
 		nglCallLists(lists.remaining(), GL_UNSIGNED_BYTE, lists, lists.position());
 	}
 	public static void glCallLists(ShortBuffer lists) {
+		BufferChecks.checkDirect(lists);
 		nglCallLists(lists.remaining(), GL_UNSIGNED_SHORT, lists, lists.position() << 1);
 	}
 	public static void glCallLists(int n, IntBuffer lists) {
+		BufferChecks.checkDirect(lists);
 		nglCallLists(lists.remaining(), GL_UNSIGNED_INT, lists, lists.position() << 2);
 	}
 	private static native void nglCallLists(int n, int type, Buffer lists, int lists_offset);
 	public static native void glCallList(int list);
 	public static native void glBlendFunc(int sfactor, int dfactor);
 	public static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap) {
-		if (bitmap.remaining() < ((width+7)/8) * height) { 
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(bitmap, ((width+7)/8) * height);
 		nglBitmap(width, height, xorig, yorig, xmove, ymove, bitmap, bitmap.position());
 	}
 	private static native void nglBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap, int bitmap_offset);
@@ -755,6 +756,7 @@ public final class GL11 {
 	public static native void glClearDepth(double depth);
 	public static native void glDeleteLists(int list, int range);
 	public static void glDeleteTextures(IntBuffer textures) {
+		BufferChecks.checkDirect(textures);
 		nglDeleteTextures(textures.remaining(), textures, textures.position());
 	}
 	private static native void nglDeleteTextures(int n, IntBuffer textures, int textures_offset);
@@ -766,10 +768,12 @@ public final class GL11 {
 	public static native void glCopyPixels(int x, int y, int width, int height, int type);
 	
 	public static void glColorPointer(int size, boolean unsigned, int stride, ByteBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglColorPointer(size, unsigned ? GL_UNSIGNED_BYTE : GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glColorPointer(int size, int stride, FloatBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglColorPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
@@ -788,9 +792,7 @@ public final class GL11 {
 	public static native void glColor4f(float red, float green, float blue, float alpha);
 	public static native void glColor4ub(byte red, byte green, byte blue, byte alpha);
 	public static void glClipPlane(int plane, DoubleBuffer equation) {
-		if (equation.remaining() < 4) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(equation, 4);
 		nglClipPlane(plane, equation, equation.position() << 3);
 	}
 	private static native void nglClipPlane(int plane, DoubleBuffer equation, int equation_offset);
@@ -807,6 +809,7 @@ public final class GL11 {
 	public static native void glEnable(int cap);
 	public static native void glDisable(int cap);
 	public static void glEdgeFlagPointer(int stride, ByteBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglEdgeFlagPointer(stride, pointer, pointer.position());
 	}
@@ -818,33 +821,30 @@ public final class GL11 {
 	private static native void nglEdgeFlagPointerVBO(int stride, int buffer_offset);
 	public static native void glEdgeFlag(boolean flag);
 	public static void glDrawPixels(int width, int height, int format, int type, ByteBuffer pixels) {
-		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglDrawPixels(width, height, format, type, pixels, pixels.position());
 	}
 	public static void glDrawPixels(int width, int height, int format, int type, ShortBuffer pixels) {
-		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
 		nglDrawPixels(width, height, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glDrawPixels(int width, int height, int format, int type, IntBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
 		nglDrawPixels(width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglDrawPixels(int width, int height, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glDrawElements(int mode, ByteBuffer indices) {
+		BufferChecks.checkDirect(indices);
 		BufferChecks.ensureElementVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
 	}
 	public static void glDrawElements(int mode, ShortBuffer indices) {
+		BufferChecks.checkDirect(indices);
 		BufferChecks.ensureElementVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
 	public static void glDrawElements(int mode, IntBuffer indices) {
+		BufferChecks.checkDirect(indices);
 		BufferChecks.ensureElementVBOdisabled();
 		nglDrawElements(mode, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
@@ -860,6 +860,7 @@ public final class GL11 {
 	public static native void glDepthMask(boolean flag);
 	public static native void glDepthFunc(int func);
 	public static void glFeedbackBuffer(int type, FloatBuffer buffer) {
+		BufferChecks.checkDirect(buffer);
 		nglFeedbackBuffer(buffer.remaining(), type, buffer, buffer.position());
 	}
 	private static native void nglFeedbackBuffer(int size, int type, FloatBuffer buffer, int buffer_offset);
@@ -936,6 +937,7 @@ public final class GL11 {
 	}
 	private static native void nglGetIntegerv(int pname, IntBuffer params, int params_offset);
 	public static void glGenTextures(IntBuffer textures) {
+		BufferChecks.checkDirect(textures);
 		nglGenTextures(textures.remaining(), textures, textures.position());
 	}
 	private static native void nglGenTextures(int n, IntBuffer textures, int textures_offset);
@@ -966,18 +968,22 @@ public final class GL11 {
 	public static native ByteBuffer glGetPointerv(int pname, int size);
 	public static native boolean glIsEnabled(int cap);
 	public static void glInterleavedArrays(int format, int stride, ByteBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position());
 	}
 	public static void glInterleavedArrays(int format, int stride, ShortBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 1);
 	}
 	public static void glInterleavedArrays(int format, int stride, IntBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	public static void glInterleavedArrays(int format, int stride, FloatBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
@@ -1013,27 +1019,21 @@ public final class GL11 {
 		int width = 1;
 		int height = 1;
 		int depth = 1;
-		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, depth));
 		nglGetTexImage(target, level, format, type, pixels, pixels.position());
 	}
 	public static void glGetTexImage(int target, int level, int format, int type, ShortBuffer pixels) {
 		int width = 1;
 		int height = 1;
 		int depth = 1;
-		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, depth)>>1);
 		nglGetTexImage(target, level, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glGetTexImage(int target, int level, int format, int type, IntBuffer pixels) {
 		int width = 1;
 		int height = 1;
 		int depth = 1;
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, depth)>>2);
 		nglGetTexImage(target, level, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglGetTexImage(int target, int level, int format, int type, Buffer pixels, int pixels_offset);
@@ -1083,11 +1083,13 @@ public final class GL11 {
 	public static native void glMapGrid1f(int un, float u1, float u2);
 	public static native void glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2);
 	public static void glMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points) {
+		BufferChecks.checkDirect(points);
 		// TODO: check buffer size valid
 		nglMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points, points.position());
 	}
 	private static native void nglMap2f(int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, FloatBuffer points, int points_offset);
 	public static void glMap1f(int target, float u1, float u2, int stride, int order, FloatBuffer points) {
+		BufferChecks.checkDirect(points);
 		// TODO: check buffer size valid
 		nglMap1f(target, u1, u2, stride, order, points, points.position());
 	}
@@ -1143,28 +1145,34 @@ public final class GL11 {
 	public static native void glPixelStoref(int pname, float param);
 	public static native void glPixelStorei(int pname, int param);
 	public static void glPixelMap(int map, FloatBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglPixelMapfv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapfv(int map, int mapsize, FloatBuffer values, int values_offset);
 	public static void glPixelMap(int map, IntBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglPixelMapuiv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapuiv(int map, int mapsize, IntBuffer values, int values_offset);
 	public static void glPixelMap(int map, ShortBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglPixelMapusv(map, values.remaining(), values, values.position());
 	}
 	private static native void nglPixelMapusv(int map, int mapsize, ShortBuffer values, int values_offset);
 	public static native void glPassThrough(float token);
 	public static native void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar);
 	public static void glNormalPointer(int stride, ByteBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglNormalPointer(GL_BYTE, stride, pointer, pointer.position());
 	}
 	public static void glNormalPointer(int stride, IntBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglNormalPointer(GL_INT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glNormalPointer(int stride, FloatBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglNormalPointer(GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
@@ -1186,6 +1194,7 @@ public final class GL11 {
 	private static native void nglMultMatrixf(FloatBuffer m, int m_offset);
 	public static native void glShadeModel(int mode);
 	public static void glSelectBuffer(IntBuffer buffer) {
+		BufferChecks.checkDirect(buffer);
 		nglSelectBuffer(buffer.remaining(), buffer, buffer.position());
 	}
 	private static native void nglSelectBuffer(int size, IntBuffer buffer, int buffer_offset);
@@ -1196,21 +1205,15 @@ public final class GL11 {
 	public static native void glRectf(float x1, float y1, float x2, float y2);
 	public static native void glRecti(int x1, int y1, int x2, int y2);
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer pixels) {
-		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position());
 	}
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, ShortBuffer pixels) {
-		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glReadPixels(int x, int y, int width, int height, int format, int type, IntBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
 		nglReadPixels(x, y, width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglReadPixels(int x, int y, int width, int height, int format, int type, Buffer pixels, int pixels_offset);
@@ -1247,10 +1250,12 @@ public final class GL11 {
 	public static native void glPopAttrib();
 	public static native void glStencilFunc(int func, int ref, int mask);
 	public static void glVertexPointer(int size, int stride, FloatBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglVertexPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
 	public static void glVertexPointer(int size, int stride, IntBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglVertexPointer(size, GL_INT, stride, pointer, pointer.position() << 2);
 	}
@@ -1268,40 +1273,28 @@ public final class GL11 {
 	public static native void glVertex4i(int x, int y, int z, int w);
 	public static native void glTranslatef(float x, float y, float z);
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ByteBuffer pixels) {
-		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position());
 	}
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, ShortBuffer pixels) {
-		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, IntBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ByteBuffer pixels) {
-		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, 1, 1));
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position());
 	}
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, ShortBuffer pixels) {
-		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>1);
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, IntBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
 		nglTexSubImage1D(target, level, xoffset, width, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels, int pixels_offset);
@@ -1318,52 +1311,36 @@ public final class GL11 {
 	}
 	private static native void nglTexParameteriv(int target, int pname, IntBuffer param, int param_position);
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ByteBuffer pixels) {
-		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position());
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, ShortBuffer pixels) {
-		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, IntBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
 	}
 	public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, FloatBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
 		nglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ByteBuffer pixels) {
-		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, 1, 1));
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position());
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, ShortBuffer pixels) {
-		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>1);
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, IntBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
 	}
 	public static void glTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, FloatBuffer pixels) {
-		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkBuffer(pixels, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
 		nglTexImage1D(target, level, internalformat, width, border, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexImage1D(int target, int level, int internalformat, int width, int border, int format, int type, Buffer pixels, int pixels_offset);
@@ -1392,6 +1369,7 @@ public final class GL11 {
 	}
 	private static native void nglTexEnviv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glTexCoordPointer(int size, int stride, FloatBuffer pointer) {
+		BufferChecks.checkDirect(pointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglTexCoordPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}

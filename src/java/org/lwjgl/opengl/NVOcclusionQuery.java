@@ -47,10 +47,12 @@ public final class NVOcclusionQuery {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGenOcclusionQueriesNV(IntBuffer piIDs) {
+		BufferChecks.checkDirect(piIDs);
 		nglGenOcclusionQueriesNV(piIDs.remaining(), piIDs, piIDs.position());
 	}
 	private static native void nglGenOcclusionQueriesNV(int n, IntBuffer piIDs, int piIDs_offset);
 	public static void glDeleteOcclusionQueriesNV(IntBuffer piIDs) {
+		BufferChecks.checkDirect(piIDs);
 		nglDeleteOcclusionQueriesNV(piIDs.remaining(), piIDs, piIDs.position());
 	}
 	private static native void nglDeleteOcclusionQueriesNV(int n, IntBuffer piIDs, int piIDs_offset);

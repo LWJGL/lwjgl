@@ -239,46 +239,32 @@ public final class ARBImaging {
 	}
 	private static native void nglGetMinmaxParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ByteBuffer image) {
-		if (image.remaining() < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1));
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, ShortBuffer image) {
-		if (image.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>1);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, IntBuffer image) {
-		if (image.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter1D(int target, int internalformat, int width, int format, int type, FloatBuffer image) {
-		if (image.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, 1, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, 1, 1)>>2);
 		nglConvolutionFilter1D(target, internalformat, width, format, type, image, image.position());
 	}
 	private static native void nglConvolutionFilter1D(int target, int internalformat, int width, int format, int type, Buffer image, int image_offset);
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ByteBuffer image) {
-		if (image.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, height, 1));
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position());
 	}
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, ShortBuffer image) {
-		if (image.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>1);
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() <<1);
 	}
 	public static void glConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, IntBuffer image) {
-		if (image.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, 1)) {
-			throw new BufferUnderflowException();
-		}
+		BufferChecks.checkBuffer(image, BufferChecks.calculateImageStorage(format, type, width, height, 1)>>2);
 		nglConvolutionFilter2D(target, internalformat, width, height, format, type, image, image.position() << 2);
 	}
 	private static native void nglConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image, int image_offset);
@@ -297,18 +283,22 @@ public final class ARBImaging {
 	public static native void glCopyConvolutionFilter1D(int target, int internalformat, int x, int y, int width);
 	public static native void glCopyConvolutionFilter2D(int target, int internalformat, int x, int y, int width, int height);
 	public static void glGetConvolutionFilter(int target, int format, int type, ByteBuffer image) {
+		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position());
 	}
 	public static void glGetConvolutionFilter(int target, int format, int type, ShortBuffer image) {
+		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position() << 1);
 	}
 	public static void glGetConvolutionFilter(int target, int format, int type, IntBuffer image) {
+		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position() << 2);
 	}
 	public static void glGetConvolutionFilter(int target, int format, int type, FloatBuffer image) {
+		BufferChecks.checkDirect(image);
 		// TODO: check buffer size valid
 		nglGetConvolutionFilter(target, format, type, image, image.position() << 2);
 	}
@@ -324,11 +314,16 @@ public final class ARBImaging {
 	}
 	private static native void nglGetConvolutionParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
+		BufferChecks.checkDirectBuffer(row);
+		BufferChecks.checkDirectBuffer(column);
 		// TODO: check buffer size valid
 		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, BufferUtils.getOffset(row), column, BufferUtils.getOffset(column));
 	}
 	private static native void nglSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset);
 	public static void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
+		BufferChecks.checkDirectBuffer(row);
+		BufferChecks.checkDirectBuffer(column);
+		BufferChecks.checkDirectBuffer(span);
 		// TODO: check buffer size valid
 		nglGetSeparableFilter(target, format, type, row, BufferUtils.getOffset(row), column, BufferUtils.getOffset(column), span, BufferUtils.getOffset(span));
 	}

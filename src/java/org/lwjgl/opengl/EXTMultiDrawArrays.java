@@ -39,6 +39,8 @@ public final class EXTMultiDrawArrays {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst, IntBuffer piCount) {
+		BufferChecks.checkDirect(piFirst);
+		BufferChecks.checkDirect(piCount);
 		if (piFirst.remaining() != piCount.remaining()) {
 			throw new IllegalArgumentException("piFirst.remaining() != piCount.remaining()");
 		}

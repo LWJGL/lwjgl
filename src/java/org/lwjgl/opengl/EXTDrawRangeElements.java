@@ -45,14 +45,17 @@ public final class EXTDrawRangeElements {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ByteBuffer pIndices) {
+		BufferChecks.checkDirect(pIndices);
 		BufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_BYTE, pIndices, pIndices.position());
 	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, ShortBuffer pIndices) {
+		BufferChecks.checkDirect(pIndices);
 		BufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_SHORT, pIndices, pIndices.position()<<1);
 	}
 	public static void glDrawRangeElementsEXT(int mode, int start, int end, IntBuffer pIndices) {
+		BufferChecks.checkDirect(pIndices);
 		BufferChecks.ensureElementVBOdisabled();
 		nglDrawRangeElementsEXT(mode, start, end, pIndices.remaining(), GL11.GL_UNSIGNED_INT, pIndices, pIndices.position()<<2);
 	}

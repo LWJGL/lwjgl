@@ -175,7 +175,7 @@ public final class Pbuffer {
 	}
 
 	/**
-	 * Create an instance of a Pbuffer using the Display context. The buffer is double-buffered, like the Display.
+	 * Create an instance of a Pbuffer using the Display context. The buffer is single-buffered, unlike the Display.
 	 * <p/>
 	 * NOTE: The Pbuffer will use the same context as the Display and requires that the Display has been created. Therefore,
 	 * no separate pixel format can be specified. All OpenGL state,

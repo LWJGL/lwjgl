@@ -46,6 +46,7 @@ public final class NVVertexArrayRange {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		nglVertexArrayRangeNV(pPointer.remaining(), pPointer, pPointer.position());
 	}
 	private static native void nglVertexArrayRangeNV(int size, Buffer pPointer, int pPointer_offset);

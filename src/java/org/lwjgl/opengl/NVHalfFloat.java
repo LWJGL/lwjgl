@@ -90,6 +90,7 @@ public final class NVHalfFloat {
 
 	// ---------------------------
 	public static void glVertexAttribs1hNV(int index, ShortBuffer attribs) {
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs1hvNV(index, attribs.remaining(), attribs, attribs.position());
 	}
 
@@ -99,6 +100,7 @@ public final class NVHalfFloat {
 
 	// ---------------------------
 	public static void glVertexAttribs2hNV(int index, ShortBuffer attribs) {
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs2hvNV(index, attribs.remaining() >> 1, attribs, attribs.position());
 	}
 
@@ -108,6 +110,7 @@ public final class NVHalfFloat {
 
 	// ---------------------------
 	public static void glVertexAttribs3hNV(int index, ShortBuffer attribs) {
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs3hvNV(index, attribs.remaining() / 3, attribs, attribs.position());
 	}
 
@@ -117,6 +120,7 @@ public final class NVHalfFloat {
 
 	// ---------------------------
 	public static void glVertexAttribs4hNV(int index, ShortBuffer attribs) {
+		BufferChecks.checkDirect(attribs);
 		nglVertexAttribs4hvNV(index, attribs.remaining() >> 2, attribs, attribs.position());
 	}
 

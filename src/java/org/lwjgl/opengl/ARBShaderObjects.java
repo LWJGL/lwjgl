@@ -112,6 +112,7 @@ public final class ARBShaderObjects {
 	 * @param string
 	 */
 	public static void glShaderSourceARB(int shaderObj, ByteBuffer string) {
+		BufferChecks.checkDirect(string);
 		initShaderSource(1);
 		setShaderString(0, string, string.position(), string.remaining());
 
@@ -128,8 +129,10 @@ public final class ARBShaderObjects {
 	 */
 	public static void glShaderSourceARB(int shaderObj, ByteBuffer[] strings) {
 		initShaderSource(strings.length);
-		for ( int i = 0; i < strings.length; i++ )
+		for ( int i = 0; i < strings.length; i++ ) {
+			BufferChecks.checkDirect(strings[i]);
 			setShaderString(i, strings[i], strings[i].position(), strings[i].remaining());
+		}
 
 		nglShaderSourceARB(shaderObj);
 	}
@@ -171,6 +174,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform1ARB(int location, FloatBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform1fvARB(location, values.remaining(), values, values.position());
 	}
 
@@ -179,6 +183,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform2ARB(int location, FloatBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform2fvARB(location, values.remaining() >> 1, values, values.position());
 	}
 
@@ -187,6 +192,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform3ARB(int location, FloatBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform3fvARB(location, values.remaining() / 3, values, values.position());
 	}
 
@@ -195,6 +201,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform4ARB(int location, FloatBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform4fvARB(location, values.remaining() >> 2, values, values.position());
 	}
 
@@ -203,6 +210,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform1ARB(int location, IntBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform1ivARB(location, values.remaining(), values, values.position());
 	}
 
@@ -211,6 +219,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform2ARB(int location, IntBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform2ivARB(location, values.remaining() >> 1, values, values.position());
 	}
 
@@ -219,6 +228,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform3ARB(int location, IntBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform3ivARB(location, values.remaining() / 3, values, values.position());
 	}
 
@@ -227,6 +237,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniform4ARB(int location, IntBuffer values) {
+		BufferChecks.checkDirect(values);
 		nglUniform4ivARB(location, values.remaining() >> 2, values, values.position());
 	}
 
@@ -235,6 +246,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniformMatrix2ARB(int location, boolean transpose, FloatBuffer matrices) {
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix2fvARB(location, matrices.remaining() >> 2, transpose, matrices, matrices.position());
 	}
 
@@ -244,6 +256,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniformMatrix3ARB(int location, boolean transpose, FloatBuffer matrices) {
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix3fvARB(location, matrices.remaining() / (3 * 3), transpose, matrices, matrices.position());
 	}
 
@@ -253,6 +266,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glUniformMatrix4ARB(int location, boolean transpose, FloatBuffer matrices) {
+		BufferChecks.checkDirect(matrices);
 		nglUniformMatrix4fvARB(location, matrices.remaining() >> 4, transpose, matrices, matrices.position());
 	}
 
@@ -262,6 +276,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glGetObjectParameterARB(int obj, int pname, FloatBuffer params) {
+		BufferChecks.checkDirect(params);
 		nglGetObjectParameterfvARB(obj, pname, params, params.position());
 	}
 
@@ -270,6 +285,7 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glGetObjectParameterARB(int obj, int pname, IntBuffer params) {
+		BufferChecks.checkDirect(params);
 		nglGetObjectParameterivARB(obj, pname, params, params.position());
 	}
 
@@ -278,12 +294,11 @@ public final class ARBShaderObjects {
 
 	// ---------------------------
 	public static void glGetInfoLogARB(int obj, IntBuffer length, ByteBuffer infoLog) {
-		if ( length == null )
+		BufferChecks.checkDirect(infoLog);
+		if ( length == null ) {
 			nglGetInfoLogARB(obj, infoLog.remaining(), null, -1, infoLog, infoLog.position());
-		else {
-			if ( length.remaining() == 0 )
-				throw new BufferOverflowException();
-
+		} else {
+			BufferChecks.checkBuffer(length, 1);
 			nglGetInfoLogARB(obj, infoLog.remaining(), length, length.position(), infoLog, infoLog.position());
 		}
 	}

@@ -89,10 +89,11 @@ public final class GL14 {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-        public static native void glBlendEquation(int mode);
-        public static native void glBlendColor(float red, float green, float blue, float alpha);
+	public static native void glBlendEquation(int mode);
+	public static native void glBlendColor(float red, float green, float blue, float alpha);
 	public static native void glFogCoordf(float coord);
 	public static void glFogCoordPointer(int stride, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglFogCoordPointer(GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
@@ -103,6 +104,8 @@ public final class GL14 {
 	}
 	private static native void nglFogCoordPointerVBO(int type, int stride, int buffer_offset);
 	public static void glMultiDrawArrays(int mode, IntBuffer piFirst, IntBuffer piCount) {
+		BufferChecks.checkDirect(piFirst);
+		BufferChecks.checkDirect(piCount);
 		if (piFirst.remaining() != piCount.remaining()) {
 			throw new IllegalArgumentException("piFirst.remaining() != piCount.remaining()");
 		}
@@ -120,10 +123,12 @@ public final class GL14 {
 	public static native void glSecondaryColor3f (float red, float green, float blue);
 	public static native void glSecondaryColor3ub (byte red, byte green, byte blue);
 	public static void glSecondaryColorPointer(int size, boolean unsigned, int stride, ByteBuffer data) {
+		BufferChecks.checkDirect(data);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointer(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, data, data.position());
 	}
 	public static void glSecondaryColorPointer(int size, int stride, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointer(size, GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}

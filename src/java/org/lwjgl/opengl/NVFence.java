@@ -43,10 +43,12 @@ public final class NVFence {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glGenFencesNV(IntBuffer piFences) {
+		BufferChecks.checkDirect(piFences);
 		nglGenFencesNV(piFences.remaining(), piFences, piFences.position());
 	}
 	private static native void nglGenFencesNV(int n, IntBuffer piFences, int piFences_offset);
 	public static void glDeleteFencesNV(IntBuffer piFences) {
+		BufferChecks.checkDirect(piFences);
 		nglDeleteFencesNV(piFences.remaining(), piFences, piFences.position());
 	}
 	private static native void nglDeleteFencesNV(int n, IntBuffer piFences, int piFences_offset);

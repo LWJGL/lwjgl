@@ -46,14 +46,17 @@ public final class ATIElementArray {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glElementPointerATI(ByteBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_BYTE, pPointer, pPointer.position());
 	}
 	public static void glElementPointerATI(ShortBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_SHORT, pPointer, pPointer.position()<<1);
 	}
 	public static void glElementPointerATI(IntBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglElementPointerATI(GL11.GL_UNSIGNED_INT, pPointer, pPointer.position()<<2);
 	}

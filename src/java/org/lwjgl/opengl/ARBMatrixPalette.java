@@ -54,14 +54,17 @@ public final class ARBMatrixPalette {
 
 	public static native void glCurrentPaletteMatrixARB(int index);
 	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, ShortBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_INT, stride, pPointer, pPointer.position()<<2);
 	}
@@ -73,16 +76,19 @@ public final class ARBMatrixPalette {
 	private static native void nglMatrixIndexPointerARBVBO(int size, int type, int stride, int buffer_offset);
 
 	public static void glMatrixIndexuARB(ByteBuffer pIndices) {
+		BufferChecks.checkDirect(pIndices);
 		nglMatrixIndexubvARB(pIndices.remaining(), pIndices, pIndices.position());
 	}
 	private static native void nglMatrixIndexubvARB(int size, ByteBuffer pIndices, int pIndices_offset);
 
 	public static void glMatrixIndexuARB(IntBuffer piIndices) {
+		BufferChecks.checkDirect(piIndices);
 		nglMatrixIndexuivARB(piIndices.remaining(), piIndices, piIndices.position());
 	}
 	private static native void nglMatrixIndexuivARB(int size, IntBuffer piIndices, int piIndices_offset);
 
 	public static void glMatrixIndexuARB(ShortBuffer psIndices) {
+		BufferChecks.checkDirect(psIndices);
 		nglMatrixIndexusvARB(psIndices.remaining(), psIndices, psIndices.position());
 	}
 	private static native void nglMatrixIndexusvARB(int size, ShortBuffer psIndices, int psIndices_offset);

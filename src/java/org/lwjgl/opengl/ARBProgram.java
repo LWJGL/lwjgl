@@ -135,6 +135,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glProgramStringARB(int target, int format, ByteBuffer string) {
+		BufferChecks.checkDirect(string);
 		nglProgramStringARB(target, format, string.remaining(), string, string.position());
 	}
 
@@ -145,6 +146,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glDeleteProgramsARB(IntBuffer programs) {
+		BufferChecks.checkDirect(programs);
 		nglDeleteProgramsARB(programs.remaining(), programs, programs.position());
 	}
 
@@ -153,6 +155,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glGenProgramsARB(IntBuffer programs) {
+		BufferChecks.checkDirect(programs);
 		nglGenProgramsARB(programs.remaining(), programs, programs.position());
 	}
 
@@ -178,6 +181,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glProgramEnvParameterARB(int target, int index, FloatBuffer params) {
+		BufferChecks.checkDirect(params);
 		checkProgramEnv(index, params);
 		nglProgramEnvParameter4fvARB(target, index, params, params.position());
 	}
@@ -195,6 +199,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glProgramLocalParameterARB(int target, int index, FloatBuffer params) {
+		BufferChecks.checkDirect(params);
 		checkProgramEnv(index, params);
 		nglProgramLocalParameter4fvARB(target, index, params, params.position());
 	}
@@ -204,6 +209,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramEnvParameterARB(int target, int index, FloatBuffer params) {
+		BufferChecks.checkDirect(params);
 		checkProgramEnv(index, params);
 		nglGetProgramEnvParameterfvARB(target, index, params, params.position());
 	}
@@ -213,6 +219,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramLocalParameterARB(int target, int index, FloatBuffer params) {
+		BufferChecks.checkDirect(params);
 		checkProgramEnv(index, params);
 		nglGetProgramLocalParameterfvARB(target, index, params, params.position());
 	}
@@ -231,11 +238,7 @@ public class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramStringARB(int target, int parameterName, ByteBuffer paramString) {
-		// TODO: We have no idea just how big programs can be really so let's guess at 16kb and hope that's
-		// good enough. So we ought to find out how big a program can be.
-		if (paramString.remaining() < 16384) {
-			throw new BufferOverflowException();
-		}
+		BufferChecks.checkDirect(paramString);
 		nglGetProgramStringARB(target, parameterName, paramString, paramString.position());
 	}
 

@@ -93,50 +93,64 @@ public final class ARBBufferObject {
 			if (VBOTracker.getVBOArrayStack().getState() == buffer_handle)
 				VBOTracker.getVBOArrayStack().setState(0);
 		}
+		BufferChecks.checkDirect(buffers);
 		nglDeleteBuffersARB(buffers.remaining(), buffers, buffers.position());
 	}
 	private static native void nglDeleteBuffersARB(int n, IntBuffer buffers, int buffers_offset);
 	public static void glGenBuffersARB(IntBuffer buffers) {
+		BufferChecks.checkDirect(buffers);
 		nglGenBuffersARB(buffers.remaining(), buffers, buffers.position());
 	}
 	private static native void nglGenBuffersARB(int n, IntBuffer buffers, int buffers_offset);
 	public static native boolean glIsBufferARB(int buffer);
 	public static void glBufferDataARB(int target, int size, ByteBuffer data, int usage) {
-		nglBufferDataARB(target, size, data, data != null ? data.position() : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferDataARB(target, data != null ? data.remaining() : size, data, data != null ? data.position() : 0, usage);
 	}
 	public static void glBufferDataARB(int target, int size, ShortBuffer data, int usage) {
-		nglBufferDataARB(target, size, data, data != null ? data.position()<<1 : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferDataARB(target, data != null ? data.remaining()<<1 : size, data, data != null ? data.position()<<1 : 0, usage);
 	}
 	public static void glBufferDataARB(int target, int size, FloatBuffer data, int usage) {
-		nglBufferDataARB(target, size, data, data != null ? data.position()<<2 : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferDataARB(target, data != null ? data.remaining()<<2 : size, data, data != null ? data.position()<<2 : 0, usage);
 	}
 	public static void glBufferDataARB(int target, int size, IntBuffer data, int usage) {
-		nglBufferDataARB(target, size, data, data != null ? data.position()<<2 : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferDataARB(target, data != null ? data.remaining()<<2 : size, data, data != null ? data.position()<<2 : 0, usage);
 	}
 	private static native void nglBufferDataARB(int target, int size, Buffer data, int data_offset, int usage);
 	public static void glBufferSubDataARB(int target, int offset, ByteBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubDataARB(target, offset, data.remaining(), data, data.position());
 	}
 	public static void glBufferSubDataARB(int target, int offset, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubDataARB(target, offset, data.remaining()<<1, data, data.position()<<1);
 	}
 	public static void glBufferSubDataARB(int target, int offset, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
 	}
 	public static void glBufferSubDataARB(int target, int offset, IntBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
 	}
 	private static native void nglBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);
 	public static void glGetBufferSubDataARB(int target, int offset, ByteBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubDataARB(target, offset, data.remaining(), data, data.position());
 	}
 	public static void glGetBufferSubDataARB(int target, int offset, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubDataARB(target, offset, data.remaining()<<1, data, data.position()<<1);
 	}
 	public static void glGetBufferSubDataARB(int target, int offset, IntBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
 	}
 	public static void glGetBufferSubDataARB(int target, int offset, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubDataARB(target, offset, data.remaining()<<2, data, data.position()<<2);
 	}
 	private static native void nglGetBufferSubDataARB(int target, int offset, int size, Buffer data, int data_offset);

@@ -128,6 +128,50 @@ static bool createPbufferUsingUniqueContext(JNIEnv *env, PbufferInfo *pbuffer_in
 	return true;
 }
 
+static bool configMatches(const GLXFBConfig config1, const GLXFBConfig config2, int glx_val) {
+	int config_val1;
+	int config_val2;
+	if (glXGetFBConfigAttrib(getDisplay(), config1, glx_val, &config_val1) != Success)
+		return false;
+	if (glXGetFBConfigAttrib(getDisplay(), config2, glx_val, &config_val2) != Success)
+		return false;
+	return config_val1 == config_val2;
+}
+
+static GLXFBConfig chooseSingleBufferedConfigFromConfig(const GLXFBConfig orig_config) {
+	int num_elements;
+	GLXFBConfig *configs = glXGetFBConfigs(getDisplay(), getCurrentScreen(), &num_elements);
+	for (int i = 0; i < num_elements; i++) {
+		GLXFBConfig config = configs[i];
+		int double_buffer;
+		int drawable_type;
+		if (glXGetFBConfigAttrib(getDisplay(), config, GLX_DOUBLEBUFFER, &double_buffer) != Success)
+			return NULL;
+		if (glXGetFBConfigAttrib(getDisplay(), config, GLX_DRAWABLE_TYPE, &drawable_type) != Success)
+			return NULL;
+		if (double_buffer != False || (drawable_type & GLX_PBUFFER_BIT == 0))
+			continue;
+		if (configMatches(config, orig_config, GLX_RED_SIZE) &&
+			configMatches(config, orig_config, GLX_GREEN_SIZE) &&
+			configMatches(config, orig_config, GLX_BLUE_SIZE) &&
+			configMatches(config, orig_config, GLX_ALPHA_SIZE) &&
+			configMatches(config, orig_config, GLX_DEPTH_SIZE) &&
+			configMatches(config, orig_config, GLX_STENCIL_SIZE) &&
+			configMatches(config, orig_config, GLX_STEREO) &&
+			configMatches(config, orig_config, GLX_AUX_BUFFERS) &&
+			configMatches(config, orig_config, GLX_ACCUM_RED_SIZE) &&
+			configMatches(config, orig_config, GLX_ACCUM_GREEN_SIZE) &&
+			configMatches(config, orig_config, GLX_ACCUM_BLUE_SIZE) &&
+			configMatches(config, orig_config, GLX_ACCUM_ALPHA_SIZE) &&
+			configMatches(config, orig_config, GLX_RENDER_TYPE) &&
+			(!extgl_Extensions.GLX_ARB_multisample || (configMatches(config, orig_config, GLX_SAMPLE_BUFFERS_ARB) &&
+													   configMatches(config, orig_config, GLX_SAMPLES_ARB)))) {
+			return config;
+		}
+	}
+	return NULL;
+}
+
 static bool createPbufferUsingDisplayContext(JNIEnv *env, PbufferInfo *buffer_info, int width, int height, const int *buffer_attribs) {
 	if (!checkPbufferCaps(env, getCurrentGLXFBConfig(), width, height)) {
 		return false;
@@ -141,7 +185,12 @@ static bool createPbufferUsingDisplayContext(JNIEnv *env, PbufferInfo *buffer_in
 		throwException(env, "Display context does not support Pbuffers");
 		return false;
 	}
-	GLXPbuffer buffer = glXCreatePbuffer(getDisplay(), getCurrentGLXFBConfig(), buffer_attribs);
+	GLXFBConfig config = chooseSingleBufferedConfigFromConfig(getCurrentGLXFBConfig());
+	if (config == NULL) {
+		throwException(env, "Could not find a suitable GLXFBConfig");
+		return false;
+	}
+	GLXPbuffer buffer = glXCreatePbuffer(getDisplay(), config, buffer_attribs);
 	buffer_info->buffer = buffer;
 	buffer_info->context = getCurrentGLXContext();
 	return true;
@@ -153,7 +202,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass
 	if (disp == NULL) {
 		return;
 	}
-	int current_screen = XDefaultScreen(disp);
+	int current_screen = getCurrentScreen();
 	if (!extgl_InitGLX(env, disp, current_screen)) {
 		decDisplay();
 		throwException(env, "Could not init GLX");

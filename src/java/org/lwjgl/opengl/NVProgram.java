@@ -66,6 +66,7 @@ public class NVProgram {
 
 	// ---------------------------
 	public static void glLoadProgramNV(int target, int programID, ByteBuffer string) {
+		BufferChecks.checkDirect(string);
 		nglLoadProgramNV(target, programID, string.remaining(), string, string.position());
 	}
 
@@ -76,6 +77,7 @@ public class NVProgram {
 	// ---------------------------
 
 	public static void glDeleteProgramsNV(IntBuffer programs) {
+		BufferChecks.checkDirect(programs);
 		nglDeleteProgramsNV(programs.remaining(), programs, programs.position());
 	}
 
@@ -85,6 +87,7 @@ public class NVProgram {
 
 	// ---------------------------
 	public static void glGenProgramsNV(IntBuffer programs) {
+		BufferChecks.checkDirect(programs);
 		nglGenProgramsNV(programs.remaining(), programs, programs.position());
 	}
 
@@ -94,6 +97,7 @@ public class NVProgram {
 
 	// ---------------------------
 	public static void glGetProgramNV(int programID, int parameterName, IntBuffer params) {
+		BufferChecks.checkDirect(params);
 		nglGetProgramivNV(programID, parameterName, params, params.position());
 	}
 
@@ -102,6 +106,7 @@ public class NVProgram {
 
 	// ---------------------------
 	public static void glGetProgramStringNV(int programID, int parameterName, ByteBuffer paramString) {
+		BufferChecks.checkDirect(paramString);
 		nglGetProgramStringNV(programID, parameterName, paramString, paramString.position());
 	}
 
@@ -112,6 +117,8 @@ public class NVProgram {
 
 	// ---------------------------
 	public static boolean glAreProgramsResidentNV(IntBuffer programIDs, ByteBuffer programResidences) {
+		BufferChecks.checkDirect(programIDs);
+		BufferChecks.checkDirect(programResidences);
 		if ( programIDs.remaining() != programResidences.remaining() )
 			throw new IllegalArgumentException("programIDs.remaining() != programResidences.remaining()");
 		return nglAreProgramsResidentNV(programIDs.remaining(),
@@ -130,6 +137,7 @@ public class NVProgram {
 
 	// ---------------------------
 	public static void glRequestResidentProgramsNV(IntBuffer programIDs) {
+		BufferChecks.checkDirect(programIDs);
 		nglRequestResidentProgramsNV(programIDs.remaining(), programIDs, programIDs.position());
 	}
 

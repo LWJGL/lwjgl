@@ -92,6 +92,7 @@ public final class GL15 {
 	private static native void nglBindBuffer(int target, int buffer);
 
 	public static void glDeleteBuffers(IntBuffer buffers) {
+		BufferChecks.checkDirect(buffers);
 		for ( int i = buffers.position(); i < buffers.limit(); i++ ) {
 			int buffer_handle = buffers.get(i);
 			if ( VBOTracker.getVBOElementStack().getState() == buffer_handle )
@@ -105,6 +106,7 @@ public final class GL15 {
 	private static native void nglDeleteBuffers(int n, IntBuffer buffers, int buffers_offset);
 
 	public static void glGenBuffers(IntBuffer buffers) {
+		BufferChecks.checkDirect(buffers);
 		nglGenBuffers(buffers.remaining(), buffers, buffers.position());
 	}
 
@@ -113,19 +115,23 @@ public final class GL15 {
 	public static native boolean glIsBuffer(int buffer);
 
 	public static void glBufferData(int target, int size, ByteBuffer data, int usage) {
-		nglBufferData(target, size, data, data != null ? data.position() : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferData(target, data != null ? data.remaining() : size, data, data != null ? data.position() : 0, usage);
 	}
 
 	public static void glBufferData(int target, int size, ShortBuffer data, int usage) {
-		nglBufferData(target, size, data, data != null ? data.position() << 1 : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferData(target, data != null ? data.remaining()<<1 : size, data, data != null ? data.position() << 1 : 0, usage);
 	}
 
 	public static void glBufferData(int target, int size, FloatBuffer data, int usage) {
-		nglBufferData(target, size, data, data != null ? data.position() << 2 : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferData(target, data != null ? data.remaining()<<2 : size, data, data != null ? data.position() << 2 : 0, usage);
 	}
 
 	public static void glBufferData(int target, int size, IntBuffer data, int usage) {
-		nglBufferData(target, size, data, data != null ? data.position() << 2 : 0, usage);
+		BufferChecks.checkDirectOrNull(data);
+		nglBufferData(target, data != null ? data.remaining()<<2 : size, data, data != null ? data.position() << 2 : 0, usage);
 	}
 
 	private static native void nglBufferData(int target,
@@ -135,18 +141,22 @@ public final class GL15 {
 	                                            int usage);
 
 	public static void glBufferSubData(int target, int offset, ByteBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, data.remaining(), data, data.position());
 	}
 
 	public static void glBufferSubData(int target, int offset, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, data.remaining() << 1, data, data.position() << 1);
 	}
 
 	public static void glBufferSubData(int target, int offset, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, data.remaining() << 2, data, data.position() << 2);
 	}
 
 	public static void glBufferSubData(int target, int offset, IntBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglBufferSubData(target, offset, data.remaining() << 2, data, data.position() << 2);
 	}
 
@@ -157,18 +167,22 @@ public final class GL15 {
 	                                               int data_offset);
 
 	public static void glGetBufferSubData(int target, int offset, ByteBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, data.remaining(), data, data.position());
 	}
 
 	public static void glGetBufferSubData(int target, int offset, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, data.remaining() << 1, data, data.position() << 1);
 	}
 
 	public static void glGetBufferSubData(int target, int offset, IntBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, data.remaining() << 2, data, data.position() << 2);
 	}
 
 	public static void glGetBufferSubData(int target, int offset, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglGetBufferSubData(target, offset, data.remaining() << 2, data, data.position() << 2);
 	}
 
@@ -238,6 +252,7 @@ public final class GL15 {
 
 	// ---------------------------
 	public static void glGenQueries(IntBuffer ids) {
+		BufferChecks.checkDirect(ids);
 		nglGenQueries(ids.remaining(), ids, ids.position());
 	}
 
@@ -246,6 +261,7 @@ public final class GL15 {
 
 	// ---------------------------
 	public static void glDeleteQueries(IntBuffer ids) {
+		BufferChecks.checkDirect(ids);
 		nglDeleteQueries(ids.remaining(), ids, ids.position());
 	}
 
@@ -260,6 +276,7 @@ public final class GL15 {
 
 	// ---------------------------
 	public static void glGetQuery(int target, int pname, IntBuffer params) {
+		BufferChecks.checkDirect(params);
 		nglGetQueryiv(target, pname, params, params.position());
 	}
 

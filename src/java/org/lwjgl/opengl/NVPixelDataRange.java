@@ -66,18 +66,22 @@ public final class NVPixelDataRange {
 
 	// ---------------------------
 	public static void glPixelDataRangeNV(int target, ByteBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglPixelDataRangeNV(target, data.remaining(), data, data.position());
 	}
 
 	public static void glPixelDataRangeNV(int target, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglPixelDataRangeNV(target, data.remaining() << 1, data, data.position() << 1);
 	}
 
 	public static void glPixelDataRangeNV(int target, IntBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglPixelDataRangeNV(target, data.remaining() << 2, data, data.position() << 2);
 	}
 
 	public static void glPixelDataRangeNV(int target, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		nglPixelDataRangeNV(target, data.remaining() << 2, data, data.position() << 2);
 	}
 

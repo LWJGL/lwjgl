@@ -64,9 +64,7 @@ public final class ATIDrawBuffers {
 
 	// ---------------------------
 	public static void glDrawBuffersATI(IntBuffer buffers) {
-		if (buffers.remaining() == 0) {
-			throw new IllegalArgumentException("<buffers> must have at least 1 integer available.");
-		}
+		BufferChecks.checkBuffer(buffers, 1);
 		nglDrawBuffersATI(buffers.remaining(), buffers, buffers.position());
 	}
 

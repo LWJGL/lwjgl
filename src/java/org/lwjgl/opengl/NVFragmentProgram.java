@@ -62,6 +62,7 @@ public final class NVFragmentProgram extends NVProgram {
 	// ---------------------------
 
 	public static void glProgramNamedParameter4fNV(int id, ByteBuffer name, float x, float y, float z, float w) {
+		BufferChecks.checkDirect(name);
 		nglProgramNamedParameter4fNV(id, name.remaining(), name, name.position(), x, y, z, w);
 	}
 
@@ -80,6 +81,7 @@ public final class NVFragmentProgram extends NVProgram {
 	// ---------------------------
 
 	public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, FloatBuffer params) {
+		BufferChecks.checkDirect(name);
 		BufferChecks.checkBuffer(params);
 		nglGetProgramNamedParameterfvNV(id, name.remaining(), name, name.position(), params, params.position());
 	}

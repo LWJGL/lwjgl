@@ -210,6 +210,7 @@ public final class EXTVertexShader {
 		nglSetInvariantEXT(id, GL11.GL_FLOAT, pAddr, pAddr.position()<<2);
 	}
 	public static void glSetInvariantEXT(int id, boolean unsigned, IntBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetInvariantEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, pAddr, pAddr.position()<<2);
 	}
 	private static native void nglSetInvariantEXT(int id, int type, Buffer pAddr, int pAddr_offset);
@@ -274,18 +275,22 @@ public final class EXTVertexShader {
 	}
 	private static native void nglVariantuivEXT(int id, IntBuffer piAddr, int piAddr_offset);
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ByteBuffer pAddr) {
+		BufferChecks.checkDirect(pAddr);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pAddr, pAddr.position());
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ShortBuffer pAddr) {
+		BufferChecks.checkDirect(pAddr);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pAddr, pAddr.position()<<1);
 	}
 	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
+		BufferChecks.checkDirect(pAddr);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, GL11.GL_FLOAT, stride, pAddr, pAddr.position()<<2);
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, IntBuffer pAddr) {
+		BufferChecks.checkDirect(pAddr);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pAddr, pAddr.position()<<2);
 	}
@@ -311,46 +316,55 @@ public final class EXTVertexShader {
 	public static native boolean glIsVariantEnabledEXT(int id, int cap);
 
 	public static void glGetVariantBooleanEXT(int id, int value, ByteBuffer pbData) {
+		BufferChecks.checkDirect(pbData);
 		nglGetVariantBooleanvEXT(id, value, pbData, pbData.position());
 	}
 	private static native void nglGetVariantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
 	public static void glGetVariantIntegerEXT(int id, int value, IntBuffer piData) {
+		BufferChecks.checkDirect(piData);
 		nglGetVariantIntegervEXT(id, value, piData, piData.position());
 	}
 	private static native void nglGetVariantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
 
 	public static void glGetVariantFloatEXT(int id, int value, FloatBuffer pfData) {
+		BufferChecks.checkDirect(pfData);
 		nglGetVariantFloatvEXT(id, value, pfData, pfData.position());
 	}
 	private static native void nglGetVariantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
 
 	public static native ByteBuffer glGetVariantPointerEXT(int id, int value, int size);
 	public static void glGetInvariantBooleanEXT(int id, int value, ByteBuffer pbData) {
+		BufferChecks.checkDirect(pbData);
 		nglGetInvariantBooleanvEXT(id, value, pbData, pbData.position());
 	}
 	private static native void nglGetInvariantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
 
 	public static void glGetInvariantIntegerEXT(int id, int value, IntBuffer piData) {
+		BufferChecks.checkDirect(piData);
 		nglGetInvariantIntegervEXT(id, value, piData, piData.position());
 	}
 	private static native void nglGetInvariantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
 
 	public static void glGetInvariantFloatEXT(int id, int value, FloatBuffer pfData) {
+		BufferChecks.checkDirect(pfData);
 		nglGetInvariantFloatvEXT(id, value, pfData, pfData.position());
 	}
 	private static native void nglGetInvariantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);
 
 	public static void glGetLocalConstantBooleanEXT(int id, int value, ByteBuffer pbData) {
+		BufferChecks.checkDirect(pbData);
 		nglGetLocalConstantBooleanvEXT(id, value, pbData, pbData.position());
 	}
 	private static native void nglGetLocalConstantBooleanvEXT(int id, int value, ByteBuffer pbData, int pbData_offset);
 
 	public static void glGetLocalConstantIntegerEXT(int id, int value, IntBuffer piData) {
+		BufferChecks.checkDirect(piData);
 		nglGetLocalConstantIntegervEXT(id, value, piData, piData.position());
 	}
 	private static native void nglGetLocalConstantIntegervEXT(int id, int value, IntBuffer piData, int piData_offset);
 
 	public static void glGetLocalConstantFloatEXT(int id, int value, FloatBuffer pfData) {
+		BufferChecks.checkDirect(pfData);
 		nglGetLocalConstantFloatvEXT(id, value, pfData, pfData.position());
 	}
 	private static native void nglGetLocalConstantFloatvEXT(int id, int value, FloatBuffer pfData, int pfData_offset);

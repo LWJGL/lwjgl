@@ -60,6 +60,7 @@ public final class ARBOcclusionQuery {
 
 	// ---------------------------
 	public static void glGenQueriesARB(IntBuffer ids) {
+		BufferChecks.checkDirect(ids);
 		nglGenQueriesARB(ids.remaining(), ids, ids.position());
 	}
 
@@ -68,6 +69,7 @@ public final class ARBOcclusionQuery {
 
 	// ---------------------------
 	public static void glDeleteQueriesARB(IntBuffer ids) {
+		BufferChecks.checkDirect(ids);
 		nglDeleteQueriesARB(ids.remaining(), ids, ids.position());
 	}
 

@@ -100,6 +100,7 @@ public final class ARBVertexShader {
 
 	// ---------------------------
 	public static void glBindAttribLocationARB(int programObj, int index, ByteBuffer name) {
+		BufferChecks.checkDirect(name);
 		if ( name.get(name.limit() - 1) != 0 ) {
 			throw new IllegalArgumentException("<name> must be a null-terminated string.");
 		}
@@ -112,12 +113,15 @@ public final class ARBVertexShader {
 	// ---------------------------
 	public static void glGetActiveAttribARB(int programObj, int index,
 	                                        IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
-		BufferChecks.checkBuffer(name);
+		BufferChecks.checkDirect(name);
+		BufferChecks.checkDirect(size);
+		BufferChecks.checkDirect(type);
 
-		if ( length == null )
+		if ( length == null ) {
 			nglGetActiveAttribARB(programObj, index, name.remaining(), null, -1,
 			                      size, size.position(), type, type.position(), name, name.position());
-		else {
+		} else {
+			BufferChecks.checkDirect(length);
 			nglGetActiveAttribARB(programObj, index, name.remaining(), length, length.position(),
 			                      size, size.position(), type, type.position(), name, name.position());
 		}
@@ -132,6 +136,7 @@ public final class ARBVertexShader {
 
 	// ---------------------------
 	public static int glGetAttribLocationARB(int programObj, ByteBuffer name) {
+		BufferChecks.checkDirect(name);
 		if ( name.get(name.limit() - 1) != 0 ) {
 			throw new IllegalArgumentException("<name> must be a null-terminated string.");
 		}

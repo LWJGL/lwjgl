@@ -51,6 +51,7 @@ public final class EXTFogCoord {
 
 	public static native void glFogCoordfEXT(float coord);
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglFogCoordPointerEXT(GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}

@@ -52,40 +52,50 @@ public final class ATIVertexArrayObject {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static int glNewObjectBufferATI(int size, ByteBuffer pPointer, int usage) {
-		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position() : 0, usage);
+		BufferChecks.checkDirectOrNull(pPointer);
+		return nglNewObjectBufferATI(pPointer != null ? pPointer.remaining() : size, pPointer, pPointer != null ? pPointer.position() : 0, usage);
 	}
 	public static int glNewObjectBufferATI(int size, ShortBuffer pPointer, int usage) {
-		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position()<<1 : 0, usage);
+		BufferChecks.checkDirectOrNull(pPointer);
+		return nglNewObjectBufferATI(pPointer != null ? pPointer.remaining()<<1 : size, pPointer, pPointer != null ? pPointer.position()<<1 : 0, usage);
 	}
 	public static int glNewObjectBufferATI(int size, FloatBuffer pPointer, int usage) {
-		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position()<<2 : 0, usage);
+		BufferChecks.checkDirectOrNull(pPointer);
+		return nglNewObjectBufferATI(pPointer != null ? pPointer.remaining()<<2 : size, pPointer, pPointer != null ? pPointer.position()<<2 : 0, usage);
 	}
 	public static int glNewObjectBufferATI(int size, IntBuffer pPointer, int usage) {
-		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position()<<2 : 0, usage);
+		BufferChecks.checkDirectOrNull(pPointer);
+		return nglNewObjectBufferATI(pPointer != null ? pPointer.remaining()<<2 : size, pPointer, pPointer != null ? pPointer.position()<<2 : 0, usage);
 	}
 	private static native int nglNewObjectBufferATI(int size, Buffer pPointer, int pPointer_offset, int usage);
 	public static native boolean glIsObjectBufferATI(int buffer);
 
 	public static void glUpdateObjectBufferATI(int buffer, int offset, ByteBuffer pPointer, int preserve) {
+		BufferChecks.checkDirect(pPointer);
 		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining(), pPointer, pPointer.position(), preserve);
 	}
 	public static void glUpdateObjectBufferATI(int buffer, int offset, ShortBuffer pPointer, int preserve) {
+		BufferChecks.checkDirect(pPointer);
 		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining()<<1, pPointer, pPointer.position()<<1, preserve);
 	}
 	public static void glUpdateObjectBufferATI(int buffer, int offset, FloatBuffer pPointer, int preserve) {
+		BufferChecks.checkDirect(pPointer);
 		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining()<<2, pPointer, pPointer.position()<<2, preserve);
 	}
 	public static void glUpdateObjectBufferATI(int buffer, int offset, IntBuffer pPointer, int preserve) {
+		BufferChecks.checkDirect(pPointer);
 		nglUpdateObjectBufferATI(buffer, offset, pPointer.remaining()<<2, pPointer, pPointer.position()<<2, preserve);
 	}
 	private static native void nglUpdateObjectBufferATI(int buffer, int offset, int size, Buffer pPointer, int pPointer_offset, int preserve);
 
 	public static void glGetObjectBufferATI(int buffer, int pname, FloatBuffer pfParams) {
+		BufferChecks.checkDirect(pfParams);
 		nglGetObjectBufferfvATI(buffer, pname, pfParams, pfParams.position());
 	}
 	private static native void nglGetObjectBufferfvATI(int buffer, int pname, FloatBuffer pfParams, int pfParams_offset);
 
 	public static void glGetObjectBufferATI(int buffer, int pname, IntBuffer piParams) {
+		BufferChecks.checkDirect(piParams);
 		nglGetObjectBufferivATI(buffer, pname, piParams, piParams.position());
 	}
 	private static native void nglGetObjectBufferivATI(int buffer, int pname, IntBuffer piParams, int piParams_offset);

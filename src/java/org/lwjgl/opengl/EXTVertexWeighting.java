@@ -56,6 +56,7 @@ public final class EXTVertexWeighting {
 	public static native void glVertexWeightfEXT(float weight);
 
 	public static void glVertexWeightPointerEXT(int size, int stride, FloatBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglVertexWeightPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}

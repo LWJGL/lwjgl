@@ -46,6 +46,7 @@ public final class EXTPointParameters {
 	public static native void glPointParameterfEXT(int pname, float param);
 
 	public static void glPointParameterEXT(int pname, FloatBuffer pfParams) {
+		BufferChecks.checkDirect(pfParams);
 		BufferChecks.checkBuffer(pfParams);
 		nglPointParameterfvEXT(pname, pfParams, pfParams.position());
 	}

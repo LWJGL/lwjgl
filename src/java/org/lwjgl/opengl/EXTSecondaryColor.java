@@ -55,10 +55,12 @@ public final class EXTSecondaryColor {
 	public static native void glSecondaryColor3ubEXT(byte red, byte green, byte blue);
 
 	public static void glSecondaryColorPointerEXT(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointerEXT(size, unsigned ? GL11.GL_UNSIGNED_BYTE: GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglSecondaryColorPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}

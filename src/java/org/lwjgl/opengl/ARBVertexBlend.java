@@ -86,53 +86,64 @@ public final class ARBVertexBlend {
 	static native void initNativeStubs() throws LWJGLException;
 
 	public static void glWeightARB(ByteBuffer pWeights) {
+		BufferChecks.checkDirect(pWeights);
 		nglWeightbvARB(pWeights.remaining(), pWeights, pWeights.position());
 	}
 	private static native void nglWeightbvARB(int size, ByteBuffer pWeights, int pWeights_offset);
 
 	public static void glWeightARB(FloatBuffer pfWeights) {
+		BufferChecks.checkDirect(pfWeights);
 		nglWeightfvARB(pfWeights.remaining(), pfWeights, pfWeights.position());
 	}
 	private static native void nglWeightfvARB(int size, FloatBuffer pfWeights, int pfWeights_offset);
 
 	public static void glWeightARB(IntBuffer piWeights) {
+		BufferChecks.checkDirect(piWeights);
 		nglWeightivARB(piWeights.remaining(), piWeights, piWeights.position());
 	}
 	private static native void nglWeightivARB(int size, IntBuffer piWeights, int piWeights_offset);
 
 	public static void glWeightARB(ShortBuffer psWeights) {
+		BufferChecks.checkDirect(psWeights);
 		nglWeightsvARB(psWeights.remaining(), psWeights, psWeights.position());
 	}
 	private static native void nglWeightsvARB(int size, ShortBuffer psWeights, int psWeights_offset);
 
 	public static void glWeightuARB(ByteBuffer pWeights) {
+		BufferChecks.checkDirect(pWeights);
 		nglWeightubvARB(pWeights.remaining(), pWeights, pWeights.position());
 	}
 	private static native void nglWeightubvARB(int size, ByteBuffer pWeights, int pWeights_offset);
 
 	public static void glWeightuARB(IntBuffer piWeights) {
+		BufferChecks.checkDirect(piWeights);
 		nglWeightuivARB(piWeights.remaining(), piWeights, piWeights.position());
 	}
 	private static native void nglWeightuivARB(int size, IntBuffer piWeights, int piWeights_offset);
 
 	public static void glWeightuARB(ShortBuffer psWeights) {
+		BufferChecks.checkDirect(psWeights);
 		nglWeightusvARB(psWeights.remaining(), psWeights, psWeights.position());
 	}
 	private static native void nglWeightusvARB(int size, ShortBuffer psWeights, int psWeights_offset);
 
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glWeightPointerARB(int size, int stride, FloatBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
 		BufferChecks.ensureArrayVBOdisabled();
 		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pPointer, pPointer.position()<<2);
 	}
