@@ -511,23 +511,6 @@ public final class Window {
 	private static native void nUpdate();
 
 	/**
-	 * Determines to the best of the platform's ability whether monitor vysnc is enabled on
-	 * this window. The failsafe assumption is that when vsync cannot be determined, this
-	 * method returns false, and you should rely on using a hires timer to throttle your
-	 * framerate rather than relying on monitor sync (even if monitor sync is actually working).
-	 * Therefore you can guarantee that if we return true from this method that we're pretty
-	 * certain vsync is enabled.
-	 * @return boolean
-	 */
-	public static boolean isVSyncEnabled() {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot determine vsync state of uncreated window");
-		return nIsVSyncEnabled();
-	}
-
-	private static native boolean nIsVSyncEnabled();
-	
-	/**
 	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
 	 * the vertical refresh synchronization of the monitor, and is not guaranteed to be successful.
 	 * To check whether the call <em>might</em> have been successful, call isVSyncEnabled().

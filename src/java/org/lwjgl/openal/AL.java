@@ -35,9 +35,8 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
-import org.lwjgl.Display;
-import org.lwjgl.Sys;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 
 /**
  * $Id$
@@ -141,18 +140,15 @@ public abstract class AL {
 		String seperator = System.getProperty("path.separator");
 		String jwsLibname;
 
-		switch (Display.getPlatform()) {
-			case Display.PLATFORM_WGL:
-				jwsLibname = "lwjglaudio";
-				break;
-			case Display.PLATFORM_GLX:
-				jwsLibname = "openal";
-				break;
-			case Display.PLATFORM_AGL:
-				jwsLibname = "openal";
-				break;
-			default:
-				throw new LWJGLException("Unknown platform");
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Win")) {
+			jwsLibname = "lwjglaudio";
+		} else if (osName.startsWith("Lin")) {
+			jwsLibname = "openal";
+		} else if (osName.startsWith("Mac")) {
+			jwsLibname = "openal";
+		} else {
+			throw new LWJGLException("Unknown platform: "+osName);
 		}
 		
 		String jwsPath = getPathFromJWS(jwsLibname);

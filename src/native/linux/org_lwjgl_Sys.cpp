@@ -45,8 +45,6 @@
 #include "org_lwjgl_Sys.h"
 #include "common_tools.h"
 
-static long int		hires_timer_freq;			// Hires timer frequency
-static long int		hires_timer_start;			// Hires timer start
 static long int		hires_timer;				// Hires timer current time
 
 /*
@@ -57,7 +55,8 @@ static long int		hires_timer;				// Hires timer current time
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
   (JNIEnv * env, jclass clazz)
 {
-	return hires_timer_freq;
+	// Constant on linux
+	return 1000000;
 }
 
 static long queryTime(void) {
@@ -76,29 +75,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebug(JNIEnv *env, jclass clazz, jb
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    getTime
+ * Method:    ngetTime
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
+JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_ngetTime
   (JNIEnv * env, jclass clazz)
 {
 	hires_timer = queryTime();
-	hires_timer -= hires_timer_start;
-	return hires_timer;
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    setTime
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
-  (JNIEnv * env, jclass clazz, jlong startTime)
-{
-	hires_timer_start = queryTime();
-	// We don't have a real resolution so assume highest possible
-	hires_timer_freq = 1000000;
-	hires_timer_start -= startTime;
+	return (jlong) hires_timer;
 }
 
 /*

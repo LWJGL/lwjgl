@@ -58,7 +58,6 @@ extern HINSTANCE	dll_handle;							        // Handle to the LWJGL dll
 RECT clientSize;
 
 static bool closerequested;
-static jboolean vsync;
 static jboolean allowSoftwareOpenGL;              // Whether to allow software opengl
 
 //CAS: commented these out as no longer used
@@ -471,7 +470,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate
 	isDirty = true;
 	isFullScreen = fullscreen == JNI_TRUE;
 	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
-	vsync = JNI_FALSE;
 
   // Speacial option for allowing software opengl	
 	allowSoftwareOpenGL = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
@@ -588,17 +586,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsActive
 
 /*
  * Class:     org_lwjgl_opengl_Window
- * Method:    nIsVSyncEnabled
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
-  (JNIEnv * env, jclass clazz)
-{
-	return vsync;
-}
-
-/*
- * Class:     org_lwjgl_opengl_Window
  * Method:    nSetVSyncEnabled
  * Signature: (Z)Z
  */
@@ -611,7 +598,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
 		} else {
 			wglSwapIntervalEXT(0);
 		}
-		vsync = sync;
 	}
 }
 

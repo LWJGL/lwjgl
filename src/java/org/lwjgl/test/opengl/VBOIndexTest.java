@@ -196,8 +196,7 @@ public final class VBOIndexTest {
 	 * Initialize
 	 */
 	private static void init() throws Exception {
-		Sys.setTime(0);
-		Sys.setProcessPriority(Sys.HIGH_PRIORITY);
+
 		System.out.println("Timer resolution: " + Sys.getTimerResolution());
 		// Go into orthographic projection mode.
 		GL11.glMatrixMode(GL11.GL_PROJECTION);

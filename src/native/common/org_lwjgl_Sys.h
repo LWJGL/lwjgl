@@ -45,19 +45,11 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    getTime
+ * Method:    ngetTime
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
+JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_ngetTime
   (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    setTime
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
-  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     org_lwjgl_Sys

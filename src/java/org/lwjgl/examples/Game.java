@@ -109,18 +109,9 @@ public class Game {
 				finished = true;
 			} else if (Window.isActive()) {
 				// The window is in the foreground, so we should play the game
-				long timeThen = Sys.getTime();
 				logic();
 				render();
-				// Stabilise the framerate if we haven't got vsync
-				if (!Window.isVSyncEnabled()) {
-					long timeNow = Sys.getTime();
-					while ((float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < FRAMETIME) {
-						// This is a system-friendly way of allowing other stuff to use CPU if it wants to
-						Thread.yield();
-						timeNow = Sys.getTime();
-					}
-				}				
+				org.lwjgl.Display.sync(FRAMETIME);
 			} else {
 				// The window is not in the foreground, so we can allow other stuff to run and
 				// infrequently update

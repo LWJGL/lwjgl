@@ -38,10 +38,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Display;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
-import org.lwjgl.LWJGLException;
 
 /**
  * $Id$
@@ -568,7 +567,7 @@ public class Mouse {
    * shouldn't be called otherwise
 	 */
 	public static void updateCursor() {
-		if (Display.getPlatform() == Display.PLATFORM_WGL && currentCursor != null && currentCursor.hasTimedOut()) {
+		if (System.getProperty("os.name").startsWith("Win") && currentCursor != null && currentCursor.hasTimedOut()) {
 			currentCursor.nextCursor();
 			try {
 				setNativeCursor(currentCursor);

@@ -67,7 +67,6 @@ public class DisplayTest {
     System.out.println("==== Test Current ====");
     
     System.out.println("Info about current:");
-    System.out.println("Platform: " + getNameForPlatform());
     System.out.println("Graphics card: " + Display.getAdapter() + ", version: " + Display.getVersion());
     System.out.println("Resolution: " + 
         Display.getWidth()      + "x" + 
@@ -227,24 +226,6 @@ public class DisplayTest {
     } catch (InterruptedException inte) {
     }
   }  
-  
-  /**
-   * Returns a String representation of the platform
-   * 
-   * @return String representation of the platform
-   */
-  private String getNameForPlatform() {
-    switch (Display.getPlatform()) {
-      case Display.PLATFORM_WGL:
-        return "WGL";
-      case Display.PLATFORM_GLX:
-        return "GLX";
-      case Display.PLATFORM_AGL:
-        return "AGL";
-      default:
-        return "Unknown platform";
-    }
-  }
   
   /**
    * Tests the Sys class, and serves as basic usage test

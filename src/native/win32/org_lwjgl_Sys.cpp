@@ -46,9 +46,8 @@
 // Handle to the application's window
 extern HWND hwnd;
 
-unsigned __int64		hires_timer_freq;			// Hires timer frequency
-unsigned __int64		hires_timer_start;			// Hires timer start
-unsigned __int64		hires_timer;				// Hires timer current time
+unsigned __int64		hires_timer_freq = 0;			// Hires timer frequency
+unsigned __int64		hires_timer = 0;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
@@ -58,7 +57,8 @@ unsigned __int64		hires_timer;				// Hires timer current time
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
   (JNIEnv * env, jclass clazz)
 {
-	return hires_timer_freq;
+	QueryPerformanceFrequency((LARGE_INTEGER*) &hires_timer_freq);
+	return (jlong) hires_timer_freq;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebug(JNIEnv *env, jclass clazz, jboolean enabled) {
@@ -71,28 +71,14 @@ JNIEXPORT jstring JNICALL Java_org_lwjgl_Sys_getNativeLibraryVersion(JNIEnv *env
 
 /*
  * Class:     org_lwjgl_Sys
- * Method:    getTime
+ * Method:    ngetTime
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
+JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_ngetTime
   (JNIEnv * env, jclass clazz)
 {
 	QueryPerformanceCounter((LARGE_INTEGER*) &hires_timer);
-	hires_timer -= hires_timer_start;
-	return hires_timer;
-}
-
-/*
- * Class:     org_lwjgl_Sys
- * Method:    setTime
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
-  (JNIEnv * env, jclass clazz, jlong startTime)
-{
-	QueryPerformanceFrequency((LARGE_INTEGER*) &hires_timer_freq);
-	QueryPerformanceCounter((LARGE_INTEGER*) &hires_timer_start);
-	hires_timer_start -= startTime;
+	return (jlong) hires_timer;
 }
 
 /*

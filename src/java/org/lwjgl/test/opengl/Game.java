@@ -148,7 +148,6 @@ public final class Game {
 	 */
 	private static void init()
 		throws Exception {
-		Sys.setTime(0);
 		Sys.setProcessPriority(Sys.HIGH_PRIORITY);
 		System.out.println("Timer resolution: " + Sys.getTimerResolution());
 		System.out.println("Number of texture units: " + Util.glGetInteger(GL13.GL_MAX_TEXTURE_UNITS));

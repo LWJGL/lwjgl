@@ -36,9 +36,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import org.lwjgl.Display;
-import org.lwjgl.Sys;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 
 /**
  * $Id$
@@ -108,28 +107,25 @@ public class Cursor {
 		// Win32 or X and do accordingly. This hasn't been implemented on Mac, but we
 		// might want to split it into a X/Win/Mac cursor if it gets too cluttered
 		
-		switch(Display.getPlatform()) {
-			case Display.PLATFORM_GLX:
-				// create our cursor elements
-				cursors = new CursorElement[1];
-				cursors[0] = new CursorElement();
-				cursors[0].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images_copy, images_copy.position(), delays, delays != null ? delays.position() : -1);
-				break;
-			case Display.PLATFORM_WGL:
-				// create our cursor elements
-				cursors = new CursorElement[numImages];
-				for(int i=0; i<numImages; i++) {
-					cursors[i] = new CursorElement();
-					cursors[i].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position(), null, 0);
-					cursors[i].delay = (delays != null) ? delays.get(i) : 0;
-					cursors[i].timeout = System.currentTimeMillis();
-				
-					// offset to next image
-					images_copy.position(width*height*(i+1));
-				}
-				break;
-			case Display.PLATFORM_AGL:
-				break;
+		String osName = System.getProperty("os.name", "");
+		if (osName.startsWith("Win")) {
+			// create our cursor elements
+			cursors = new CursorElement[numImages];
+			for(int i=0; i<numImages; i++) {
+				cursors[i] = new CursorElement();
+				cursors[i].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position(), null, 0);
+				cursors[i].delay = (delays != null) ? delays.get(i) : 0;
+				cursors[i].timeout = System.currentTimeMillis();
+			
+				// offset to next image
+				images_copy.position(width*height*(i+1));
+			}
+		} else if (osName.startsWith("Lin")) {
+			// create our cursor elements
+			cursors = new CursorElement[1];
+			cursors[0] = new CursorElement();
+			cursors[0].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images_copy, images_copy.position(), delays, delays != null ? delays.position() : -1);
+		} else {
 		}
 	} 
 	

@@ -189,9 +189,6 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes(
 	return ret;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform(JNIEnv * env, jclass clazz) {
-	return org_lwjgl_Display_PLATFORM_AGL;
-}
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {
 	return GAMMARAMP_LENGTH;

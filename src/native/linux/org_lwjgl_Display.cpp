@@ -1,4 +1,3 @@
-/*
  * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
  *
@@ -60,7 +59,7 @@ static unsigned short *b_ramp;
 
 static bool getVidModeExtensionVersion(Display *disp, int screen, int *major, int *minor) {
 	int event_base, error_base;
-	
+
 	if (!XF86VidModeQueryExtension(disp, &event_base, &error_base)) {
 		printfDebug("XF86VidMode extension not available\n");
 		return false;
@@ -139,7 +138,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
         if (disp == NULL)
 		return;
 	screen = DefaultScreen(disp);
-	
+
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 		printfDebug("Could not get display modes\n");
 	}
@@ -215,10 +214,10 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 
 	if (disp == NULL)
 		return NULL;
-	
+
 	screen = DefaultScreen(disp);
 	int bpp = XDefaultDepth(disp, screen);
-	
+
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 		printfDebug("Could not get display modes\n");
 		decDisplay();
@@ -228,7 +227,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	jclass displayModeClass = env->FindClass("org/lwjgl/DisplayMode");
 	jobjectArray ret = env->NewObjectArray(num_modes, displayModeClass, NULL);
 	jmethodID displayModeConstructor = env->GetMethodID(displayModeClass, "<init>", "(IIII)V");
-	
+
 	for (i = 0; i < num_modes; i++) {
 		jobject displayMode = env->NewObject(displayModeClass, displayModeConstructor, avail_modes[i]->hdisplay, avail_modes[i]->vdisplay, bpp, 0);
 		env->SetObjectArrayElement(ret, i, displayMode);
@@ -236,10 +235,6 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_nGetAvailableDisplayModes
 	XFree(avail_modes);
 	decDisplay();
 	return ret;
-}
-
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform(JNIEnv * env, jclass clazz) {
-	return org_lwjgl_Display_PLATFORM_GLX;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getGammaRampLength(JNIEnv *env, jclass clazz) {

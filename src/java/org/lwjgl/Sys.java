@@ -81,7 +81,7 @@ public final class Sys {
 	/** The native library name */
 	private static String LIBRARY_NAME = "lwjgl";
 
-	/** The platform being executed on */
+	/** The platform adapter class name */
 	private static String PLATFORM;
 	
 	/**
@@ -131,13 +131,8 @@ public final class Sys {
 			throw new LinkageError("Version mismatch: jar version is '" + VERSION + 
                                                         "', native libary version is '" + native_version + "'");
 		setDebug(DEBUG);
-		setTime(0);
 
-		// check platform name, and default to awt
-		PLATFORM = System.getProperty("org.lwjgl.Sys.platform");
-		if(PLATFORM == null) {
-			PLATFORM = "org.lwjgl.SwingAdapter";
-		}
+		PLATFORM = System.getProperty("org.lwjgl.Sys.platform", "org.lwjgl.SwingAdapter");
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
@@ -173,20 +168,14 @@ public final class Sys {
 	/**
 	 * Gets the current value of the hires timer, in ticks. When the Sys class is first loaded
 	 * the hires timer is reset to 0. If no hires timer is present then this method will always
-	 * return whatever value the timer was last set to.
+	 * return 0.<p><strong>NOTEZ BIEN</strong> that the hires timer WILL wrap around. 
 	 *
-	 * @return the current hires time, in ticks.
+	 * @return the current hires time, in ticks (always >= 0)
 	 */
-	public static native long getTime();
-	
-	/**
-	 * Sets the hires timer to a new time, specified in ticks.
-	 * 
-	 * @param time The new time, in ticks
-	 * @see #getTime()
-	 * @see #getTimerResolution()
-	 */
-	public static native void setTime(long time);
+	public static long getTime() {
+		return ngetTime() & 0x7FFFFFFFFFFFFFFFL;
+	}
+	private static native long ngetTime();
 	
 	/**
 	 * Set the process priority in a system independent way. Because of the various

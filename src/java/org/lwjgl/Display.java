@@ -59,20 +59,9 @@ public final class Display {
 
 	/** Whether or not the display has been requested to shutdown by the user */
 	private static boolean closeRequested = false;
-
-	/*
-	 * Platforms. This will let you determine which platform you are running
-	 * on, which is handy to know for some GL context calls.
-	 */
-
-	/** Windows platform */
-	public static final int PLATFORM_WGL = 0;
-
-	/** GLX (Linux/Unix) platform */
-	public static final int PLATFORM_GLX = 1;
-
-	/** MacOSX platform */
-	public static final int PLATFORM_AGL = 2;
+	
+	/** Timer for sync() */
+	private static long timeNow, timeThen;
 
 	static {
 		Sys.initialize();
@@ -178,16 +167,6 @@ public final class Display {
 	}
 
 	/**
-	 * Returns the operating system windowing platform. This will be one of the
-	 * constants defined above. There is no "unknown" platform; a native library port
-	 * has to provide a unique platform number for this mechanism to work. If the LWJGL
-	 * is ported to, say, QNX, we will have a PLATFORM_QNX at the ready.
-	 *
-	 * @return the windowing system
-	 */
-	public static native int getPlatform();
-
-	/**
 	 * Set the display configuration to the specified gamma, brightness and contrast.
 	 * The configuration changes will be reset when resetDisplayMode is called.
 	 *
@@ -250,5 +229,21 @@ public final class Display {
 	 * @return a String
 	 */
 	public static native String getVersion();
+	
+	/**
+	 * Synchronize the display to a capped frame rate.
+	 * @param frameTime The desired frame time in seconds
+	 */
+	public static void sync(float frameRate) {
+		timeNow = Sys.getTime();
+		System.out.println(Sys.getTimerResolution());
+		System.out.println(timeNow+" "+timeThen+" "+((float) (timeNow - timeThen) / (float) Sys.getTimerResolution()));
+		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameRate) {
+			// This is a system-friendly way of allowing other stuff to use CPU if it wants to
+			Thread.yield();
+			timeNow = Sys.getTime();
+		}
+		timeThen = timeNow;
+	}
 
 }

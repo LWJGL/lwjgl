@@ -613,12 +613,6 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsActive
 	return focused ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled
-  (JNIEnv * env, jclass clazz)
-{
-	return vsync_enabled;
-}
-
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled
   (JNIEnv * env, jclass clazz, jboolean sync)
 {
