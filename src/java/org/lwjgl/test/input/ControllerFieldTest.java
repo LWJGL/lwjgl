@@ -78,7 +78,7 @@ public class ControllerFieldTest {
 	 * 
 	 */
 	private void run() {
-    frame.show();
+    frame.setVisible(true);
     
     String buttons;
     while(frame.isVisible()) {
@@ -143,7 +143,6 @@ public class ControllerFieldTest {
     
     frame.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        frame.hide();
         frame.dispose();
       }
     });
