@@ -287,13 +287,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
-	try {
-		if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-			printfDebug("Could not reset device gamma\n");
-		}
-	} catch (...) {
-		printf("Exception occurred in SetDeviceGammaRamp\n");
-	}	
+	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
+		printfDebug("Could not reset device gamma\n");
+	}
 	ReleaseDC(NULL, screenDC);	
 
 	if (modeSet) {
@@ -312,13 +308,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_resetDisplayMode
 static void tempResetDisplayMode() {
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
-	try {
-		if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-			printfDebug("Could not reset device gamma\n");
-		}
-	} catch (...) {
-		printf("Exception occurred in SetDeviceGammaRamp\n");
-	}	
+	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
+		printfDebug("Could not reset device gamma\n");
+	}
 	ReleaseDC(NULL, screenDC);	
 
 	if (modeSet) {
@@ -335,13 +327,9 @@ static void tempResetDisplayMode() {
 static void tempRestoreDisplayMode() {
 	// Restore gamma
 	HDC screenDC = GetDC(NULL);
-	try { 
-		if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
-			printfDebug("Could not restore device gamma\n");
-		}
-	} catch (...) {
-		printf("Exception occurred in SetDeviceGammaRamp\n");
-	}	
+	if (!SetDeviceGammaRamp(screenDC, currentGamma)) {
+		printfDebug("Could not restore device gamma\n");
+	}
 	ReleaseDC(NULL, screenDC);
 
 	if (!modeSet) {
@@ -424,14 +412,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	env->DeleteLocalRef(newMode);
 
 	// Get the default gamma ramp
-	try {
-		if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
-			printfDebug("Failed to get initial device gamma\n");
-		}
-	} catch (...) {
-		printf("Exception occurred in GetDeviceGammaRamp\n");
+	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
+		printfDebug("Failed to get initial device gamma\n");
 	}
-
 	ReleaseDC(NULL, screenDC);
 
 }
