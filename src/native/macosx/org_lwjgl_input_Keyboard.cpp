@@ -39,16 +39,62 @@
  * @version $Revision$
  */
 
-#include <IOKit/IOKitLib.h>
-#include <IOKit/hid/IOHIDKeys.h>
-#include <CoreFoundation/CoreFoundation.h>
-#include <stdlib.h>
+#include "Window.h"
 #include "tools.h"
 #include "org_lwjgl_input_Keyboard.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
 #define KEYBOARD_SIZE 256
 #define KEY_EVENT_BACKLOG 40
+
+static pascal OSStatus doKeyDown(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	UInt32 key_code;
+	OSStatus err = GetEventParameter(event, kEventParamKeyCode, typeUInt32, NULL, sizeof(key_code), NULL, &key_code);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not get event key code\n");
+#endif
+		return eventNotHandledErr;
+	}
+printf("key down, key %d\n", key_code);
+	return noErr;
+}
+
+static pascal OSStatus doKeyUp(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	UInt32 key_code;
+	OSStatus err = GetEventParameter(event, kEventParamKeyCode, typeUInt32, NULL, sizeof(key_code), NULL, &key_code);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not get event key code\n");
+#endif
+		return eventNotHandledErr;
+	}
+printf("key up, key %d\n", key_code);
+	return noErr;
+}
+
+bool registerKeyboardHandler(JNIEnv* env, WindowRef win_ref) {
+	EventTypeSpec event_types[1];
+	EventHandlerUPP handler_upp = NewEventHandlerUPP(doKeyUp);
+	event_types[0].eventClass = kEventClassKeyboard;
+	event_types[0].eventKind  = kEventRawKeyUp;
+	OSStatus err = InstallWindowEventHandler(win_ref, handler_upp, 1, event_types, NULL, NULL);
+	DisposeEventHandlerUPP(handler_upp);
+	if (noErr != err) {
+		throwException(env, "Could not register window event handler");
+		return false;
+	}
+	handler_upp = NewEventHandlerUPP(doKeyDown);
+	event_types[0].eventClass = kEventClassKeyboard;
+	event_types[0].eventKind  = kEventRawKeyDown;
+	err = InstallWindowEventHandler(win_ref, handler_upp, 1, event_types, NULL, NULL);
+	DisposeEventHandlerUPP(handler_upp);
+	if (noErr != err) {
+		throwException(env, "Could not register window event handler");
+		return false;
+	}
+	return true;
+}
 
 /*
  * Class:     org_lwjgl_input_Keyboard
@@ -60,36 +106,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_initIDs
 {
 }
 
-static void printCFString(CFStringRef str) {
-	CFIndex buffer_size = CFStringGetLength(str) + 1;
-	char * buffer = (char *)malloc(buffer_size);
-	if (buffer != NULL) {
-		if (CFStringGetCString(str, buffer, buffer_size, CFStringGetSystemEncoding()))
-			printf("%s", buffer);
-		free(buffer);
-	}
-}
-
-static void printCFNumber(CFNumberRef num) {
-	long number;
-
-	if (CFNumberGetValue(num, kCFNumberLongType, &number))
-		printf("0x%lx (%ld)", number, number);
-}
-
-static void printProperty(CFDictionaryRef dict, CFStringRef key) {
-	CFTypeRef val = CFDictionaryGetValue(dict, key);
-	if (val != NULL) {
-		CFTypeID type = CFGetTypeID(val);
-		if (type == CFArrayGetTypeID()) printf("array\n");
-		else if (type == CFBooleanGetTypeID()) printf("boolean\n");
-		else if (type == CFDictionaryGetTypeID()) printf("dictionary\n");
-		else if (type == CFNumberGetTypeID()) printCFNumber((CFNumberRef)val);
-		else if (type == CFStringGetTypeID()) printCFString((CFStringRef)val);
-		else printf("<unknown object type>\n");
-	}
-}
-
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nCreate
@@ -98,31 +114,6 @@ static void printProperty(CFDictionaryRef dict, CFStringRef key) {
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Keyboard_nCreate
   (JNIEnv * env, jclass clazz)
 {
-	io_iterator_t device_iterator;
-	io_object_t hid_device;
-	kern_return_t kern_err;
-	CFMutableDictionaryRef dev_props;
-	CFMutableDictionaryRef matching_dic = IOServiceMatching(kIOHIDDeviceKey);
-	IOReturn err = IOServiceGetMatchingServices(kIOMasterPortDefault, matching_dic, &device_iterator);
-	if (err != kIOReturnSuccess) {
-		throwException(env, "Could not find matching devices");
-		return;
-	}
-	while ((hid_device = IOIteratorNext(device_iterator)) != NULL) {
-		kern_err = IORegistryEntryCreateCFProperties(hid_device, &dev_props, kCFAllocatorDefault, kNilOptions);
-		IOObjectRelease(hid_device);
-		if (kern_err == KERN_SUCCESS && dev_props != NULL) {
-			printf("Device found: ");
-			printProperty(dev_props, CFSTR(kIOHIDProductKey));
-			printf(" usage ");
-			printProperty(dev_props, CFSTR(kIOHIDPrimaryUsageKey));
-			printf(" usage page ");
-			printProperty(dev_props, CFSTR(kIOHIDPrimaryUsagePageKey));
-			printf("\n");
-			CFRelease(dev_props);
-		}
-	}
-	IOObjectRelease(device_iterator);
 }
 
 /*

@@ -39,7 +39,8 @@
  * @version $Revision$
  */
 
-#include <Carbon/Carbon.h>
+#include "Window.h"
+#include <QuickTime/Movies.h>
 #include "org_lwjgl_opengl_Window.h"
 #include "extgl.h"
 #include "tools.h"
@@ -47,6 +48,10 @@
 static WindowRef win_ref;
 static AGLContext context;
 static bool close_requested;
+static Ptr fullscreen_ptr;
+static bool current_fullscreen;
+static bool miniaturized;
+static bool activated;
  
 static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 	const char* title = env->GetStringUTFChars(title_obj, NULL);
@@ -63,7 +68,38 @@ static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 }
 
 void setQuitRequested(void) {
+	lock();
 	close_requested = true;
+	unlock();
+}
+
+static pascal OSStatus doMiniaturized(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	lock();
+	miniaturized = true;
+	unlock();
+	return noErr;
+}
+
+static pascal OSStatus doMaximize(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	lock();
+	miniaturized = false;
+	unlock();
+	return noErr;
+}
+
+static pascal OSStatus doActivate(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	lock();
+	miniaturized = false;
+	activated = true;
+	unlock();
+	return noErr;
+}
+
+static pascal OSStatus doDeactivate(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	lock();
+	activated = false;
+	unlock();
+	return noErr;
 }
 
 static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
@@ -71,24 +107,46 @@ static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, 
 	return noErr;
 }
 
-static void registerEventHandlers(JNIEnv *env) {
-	EventTypeSpec event_types[2];
+static bool registerWindowHandler(JNIEnv* env, EventHandlerProcPtr func, UInt32 event_kind) {
+	EventTypeSpec event_type;
 	OSStatus err;
-	EventHandlerUPP handler_upp = NewEventHandlerUPP(doQuit);
-	event_types[0].eventClass = kEventClassWindow;
-	event_types[0].eventKind  = kEventWindowClose;
-	err = InstallWindowEventHandler(win_ref, handler_upp, 1, event_types, NULL, NULL);
+	EventHandlerUPP handler_upp = NewEventHandlerUPP(func);
+	event_type.eventClass = kEventClassWindow;
+	event_type.eventKind  = event_kind;
+	err = InstallWindowEventHandler(win_ref, handler_upp, 1, &event_type, NULL, NULL);
 	DisposeEventHandlerUPP(handler_upp);
 	if (noErr != err) {
 		throwException(env, "Could not register window event handler");
-		return;
+		return true;
 	}
+	return false;
+}
+
+static bool registerEventHandlers(JNIEnv *env) {
+	bool error;
+	error = registerWindowHandler(env, doQuit, kEventWindowClose);
+	error = error || registerWindowHandler(env, doActivate, kEventWindowActivated);
+	error = error || registerWindowHandler(env, doDeactivate, kEventWindowDeactivated);
+	error = error || registerWindowHandler(env, doMiniaturized, kEventWindowCollapsed);
+	error = error || registerWindowHandler(env, doMaximize, kEventWindowExpanded);
+	if (error)
+		return false;
+	else
+		return registerKeyboardHandler(env, win_ref);
+}
+
+static void destroyWindow(void) {
+	if (current_fullscreen)
+		EndFullScreen(fullscreen_ptr, 0);
+	else
+		DisposeWindow(win_ref);
 }
 
 static void destroy(void) {
+	destroyLock();
 	aglSetCurrentContext(NULL);
 	aglDestroyContext(context);
-	DisposeWindow(win_ref);
+	destroyWindow();
 	extgl_Close();
 }
 
@@ -98,7 +156,6 @@ static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint st
 	GLint attrib[] = {AGL_RGBA, 
 			  AGL_DOUBLEBUFFER, 
 			  AGL_ACCELERATED,
-			  //AGL_FULLSCREEN,
 			  AGL_NO_RECOVERY,
 			  AGL_MINIMUM_POLICY,
 			  AGL_PIXEL_SIZE, bpp,
@@ -131,8 +188,10 @@ static bool createContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint st
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv *, jclass) {
+	lock();
 	const bool saved = close_requested;
 	close_requested = false;
+	unlock();
 	return saved;
 }
 
@@ -143,6 +202,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 				       kWindowCollapseBoxAttribute|
 				       kWindowStandardHandlerAttribute;
 	SetRect(&rect, x, y, x + width, y + height);
+	current_fullscreen = fullscreen == JNI_TRUE;
+	miniaturized = false;
+	activated = true;
 	close_requested = false;
 	if (!extgl_Open()) {
 		throwException(env, "Could not load gl library");
@@ -152,17 +214,31 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		throwException(env, "Could not load agl symbols");
 		return;
 	}
-	status = CreateNewWindow(kDocumentWindowClass, window_attr, &rect, &win_ref);
+	if (current_fullscreen)
+		status = BeginFullScreen(&fullscreen_ptr, NULL, 0, 0, &win_ref, NULL, 0);
+	else
+		status = CreateNewWindow(kDocumentWindowClass, window_attr, &rect, &win_ref);
 	if (noErr != status) {
+		extgl_Close();
 		throwException(env, "Could not create window");
 		return;
 	}
-	registerEventHandlers(env);
+	if (!registerEventHandlers(env)) {
+		destroyWindow();
+		extgl_Close();
+		return;
+	}
+	if (!initLock(env)) {
+		destroyWindow();
+		extgl_Close();
+		return;
+	}
 	setWindowTitle(env, title);
-	const RGBColor background_color = { 0, 0, 0 };
+	const RGBColor background_color = {0, 0, 0};
 	SetWindowContentColor(win_ref, &background_color);
 	if (!createContext(env, bpp, alpha, depth, stencil)) {
-		DisposeWindow(win_ref);
+		destroyLock();
+		destroyWindow();
 		extgl_Close();
 		return;
 	}
@@ -175,19 +251,41 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 	SelectWindow(win_ref);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update
-  (JNIEnv *env, jclass clazz) 
-{
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle(JNIEnv * env, jclass clazz, jstring title_obj) {
+	  setWindowTitle(env, title_obj);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz)
-{                                                                                                                                                                                              
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update(JNIEnv *env, jclass clazz) {
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz) {                                                                                                                                                                                              
 	aglSwapBuffers(context);
 }
                                                                                                                                                                 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_minimize(JNIEnv *env, jclass clazz) {
+}
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy
-  (JNIEnv *env, jclass clazz)
-{
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_restore(JNIEnv *env, jclass clazz) {
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy(JNIEnv *env, jclass clazz) {
 	destroy();
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused(JNIEnv *env, jclass clazz) {
+	lock();
+	bool result = activated;
+	unlock();
+	return result;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty(JNIEnv *env, jclass clazz) {
+	return JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsMinimized(JNIEnv *env, jclass clazz) {
+	lock();
+	bool result = miniaturized;
+	unlock();
+	return result;
 }

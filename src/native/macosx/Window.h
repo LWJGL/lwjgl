@@ -43,6 +43,8 @@
 	#define _LWJGL_WINDOW_H_INCLUDED_
 
 	#include <jni.h>
+	#include <Carbon/Carbon.h>
 	extern void setQuitRequested(void);
+	extern bool registerKeyboardHandler(JNIEnv* env, WindowRef win_ref);
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */
