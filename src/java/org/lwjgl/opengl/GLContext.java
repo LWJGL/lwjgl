@@ -271,10 +271,24 @@ public final class GLContext {
 		String version = GL11.glGetString(GL11.GL_VERSION);
 
 		int majorEnd = version.indexOf('.');
-		int minorEnd = version.indexOf('.', majorEnd + 1);
+		int minorEnd = -1;
+		if (majorEnd != -1) {
+			minorEnd = version.indexOf('.', majorEnd + 1);
+		} else {
+			majorEnd = version.length();
+		}
 
-		int majorVersion = Integer.parseInt(version.substring(0, majorEnd));
-		int minorVersion = Integer.parseInt(version.substring(majorEnd + 1, minorEnd));
+		int majorVersion;
+		if (majorEnd == 0) {
+			throw new OpenGLException("Unable to determine GL version.");
+		}
+		majorVersion = Integer.parseInt(version.substring(0, majorEnd));
+		int minorVersion;
+		if (minorEnd == -1) {
+			minorVersion = 0;
+		} else {
+			minorVersion = Integer.parseInt(version.substring(majorEnd + 1, minorEnd));
+		}
 
 		if ( majorVersion == 2 ) {
 			// ----------------------[ 2.X ]----------------------
@@ -288,10 +302,13 @@ public final class GLContext {
 			switch ( minorVersion ) {
 				case 5:
 					addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
+					// Intentional fall through
 				case 4:
 					addExtensionClass(exts, exts_names, "GL14", "OpenGL14");
+					// Intentional fall through
 				case 3:
 					addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
+					// Intentional fall through
 				case 2:
 					addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
 			}
