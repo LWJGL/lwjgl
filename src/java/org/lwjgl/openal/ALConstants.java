@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- package org.lwjgl.openal;
+package org.lwjgl.openal;
 
 /**
  * $Id$
@@ -39,5 +39,5 @@
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public interface ALConstants extends BaseALConstants, BaseEAXConstants {
+public interface ALConstants extends BaseALConstants {
 }
