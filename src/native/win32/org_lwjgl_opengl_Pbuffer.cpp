@@ -112,6 +112,8 @@ static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pix
 	extgl_InitWGL(env);
 
 	iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, false);
+	if (iPixelFormat == -1)
+		iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, true);
 	wglDeleteContext(dummy_hglrc);
 	if (iPixelFormat == -1) {
 		closeWindow(dummy_hwnd, dummy_hdc);
@@ -137,6 +139,54 @@ static HGLRC createPbufferContext(JNIEnv *env, HDC Pbuffer_dc) {
 	return Pbuffer_context;
 }
 
+static bool formatMatches(HDC hdc, int pixel_format1, int pixel_format2, int attribute) {
+	int format_val1;
+	int format_val2;
+	if (wglGetPixelFormatAttribivARB(hdc, pixel_format1, 0, 1, &attribute, &format_val1) != TRUE)
+		return false;
+	if (wglGetPixelFormatAttribivARB(hdc, pixel_format2, 0, 1, &attribute, &format_val2) != TRUE)
+		return false;
+	return format_val1 == format_val2;
+}
+
+static int chooseSingleBufferedFormatFromFormat(HDC hdc, int orig_pixel_format) {
+	int max_pixel_format_index = DescribePixelFormat(hdc, 1, sizeof(PIXELFORMATDESCRIPTOR), NULL);
+	for (int i = 1; i <= max_pixel_format_index; i++) {
+		int attribute = WGL_DOUBLE_BUFFER_ARB;
+		int double_buffer;
+		if (wglGetPixelFormatAttribivARB(hdc, i, 0, 1, &attribute, &double_buffer) != TRUE) {
+			return -1;
+		}
+		attribute = WGL_DRAW_TO_PBUFFER_ARB;
+		int draw_to_pbuffer;
+		if (wglGetPixelFormatAttribivARB(hdc, i, 0, 1, &attribute, &draw_to_pbuffer) != TRUE) {
+			return -1;
+		}
+		if (double_buffer != FALSE || draw_to_pbuffer != TRUE)
+			continue;
+		if (formatMatches(hdc, i, orig_pixel_format, WGL_RED_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_GREEN_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_BLUE_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_ALPHA_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_ACCUM_RED_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_ACCUM_GREEN_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_ACCUM_BLUE_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_ACCUM_ALPHA_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_DEPTH_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_STENCIL_BITS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_ACCELERATION_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_SUPPORT_OPENGL_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_STEREO_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_AUX_BUFFERS_ARB) &&
+			formatMatches(hdc, i, orig_pixel_format, WGL_PIXEL_TYPE_ARB) &&
+			(!extgl_Extensions.WGL_ARB_multisample || (formatMatches(hdc, i, orig_pixel_format, WGL_SAMPLE_BUFFERS_ARB) &&
+													   formatMatches(hdc, i, orig_pixel_format, WGL_SAMPLES_ARB)))) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
   (JNIEnv *env, jclass clazz, jobject buffer_handle, jboolean use_display_context,
   jint width, jint height, jobject pixel_format,
@@ -154,7 +204,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
 		pBufferAttribs_ptr = NULL;
 	}
 	if (use_display_context) {
-		int iPixelFormat = getCurrentPixelFormat();
+		int iPixelFormat = chooseSingleBufferedFormatFromFormat(getCurrentWindowDC(), getCurrentPixelFormat());
+		if (iPixelFormat == -1)
+			iPixelFormat = getCurrentPixelFormat();
 		Pbuffer = wglCreatePbufferARB(getCurrentWindowDC(), iPixelFormat, width, height, pBufferAttribs_ptr);
 	} else {
 		Pbuffer = createPbuffer(env, width, height, pixel_format, pixelFormatCaps, pBufferAttribs_ptr);
