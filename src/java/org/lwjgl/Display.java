@@ -1,31 +1,31 @@
-/* 
+/*
  * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
+ * modification, are permitted provided that the following conditions are
  * met:
- * 
- * * Redistributions of source code must retain the above copyright 
+ *
+ * * Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
  *
  * * Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'Light Weight Java Game Library' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
+ * * Neither the name of 'Light Weight Java Game Library' nor the names of
+ *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -44,7 +44,7 @@ import java.util.HashSet;
  * Encapsulates everything you need for game display.
  * It must be created before any input devices are created.
  * The game display has NO mouse cursor or any other window decorations.
- * 
+ *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
@@ -65,12 +65,12 @@ public final class Display {
 	 * on, which is handy to know for some GL context calls.
 	 */
 
-	/** Windows platform */	
+	/** Windows platform */
 	public static final int PLATFORM_WGL = 0;
-	
+
 	/** GLX (Linux/Unix) platform */
 	public static final int PLATFORM_GLX = 1;
-	
+
 	/** MacOSX platform */
 	public static final int PLATFORM_AGL = 2;
 
@@ -86,7 +86,7 @@ public final class Display {
 	private Display() {
 		super();
 	}
-	
+
 	/**
 	 * Initialize. This determines, natively, the current display mode and stashes
 	 * it back in the mode static member.
@@ -98,7 +98,7 @@ public final class Display {
 	 * particular order. Any given mode is not guaranteed to be available and
 	 * the only certain way to check is to call create() and make sure it works.
 	 * Only non-palette-indexed modes are returned (ie. bpp will be 16, 24, or 32).
-	 * 
+	 *
 	 * @return an array of all display modes the system reckons it can handle.
 	 */
 	public static DisplayMode[] getAvailableDisplayModes() {
@@ -120,21 +120,21 @@ public final class Display {
 		return filteredModes;
 	}
 
-	/** 
+	/**
 	 * Native method for getting displaymodes
 	 */
 	private static native DisplayMode[] nGetAvailableDisplayModes();
-	
+
 	/**
 	 * Set the current display mode. The underlying OS may not use an exact match for
 	 * the specified display mode. After successfully calling setDisplayMode() you will
 	 * still need to query the display's characteristics using getDisplayMode().
-   * 
+   *
 	 * @param mode The new display mode to set
 	 * @throws Exception if the display mode could not be set
 	 */
 	public static native void setDisplayMode(DisplayMode mode) throws Exception;
-	
+
 	/**
 	 * Reset the display mode to whatever it was when LWJGL was initialized.
 	 * Fails silently.
@@ -143,7 +143,7 @@ public final class Display {
 
 	/**
 	 * Retrieves the width of the created display
-	 * 
+	 *
 	 * @return the current display width.
 	 */
 	public static int getWidth() {
@@ -152,7 +152,7 @@ public final class Display {
 
 	/**
 	 * Retrieves the height of the created display
-	 * 
+	 *
 	 * @return the current display height.
 	 */
 	public static int getHeight() {
@@ -161,7 +161,7 @@ public final class Display {
 
 	/**
 	 * Retrieves the current display depth of the created display
-	 * 
+	 *
 	 * @return the current display depth.
 	 */
 	public static int getDepth() {
@@ -170,7 +170,7 @@ public final class Display {
 
 	/**
 	 * Retrieves the current display frequency of the created display
-	 * 
+	 *
 	 * @return the current display frequency.
 	 */
 	public static int getFrequency() {
@@ -182,7 +182,7 @@ public final class Display {
 	 * constants defined above. There is no "unknown" platform; a native library port
 	 * has to provide a unique platform number for this mechanism to work. If the LWJGL
 	 * is ported to, say, QNX, we will have a PLATFORM_QNX at the ready.
-	 * 
+	 *
 	 * @return the windowing system
 	 */
 	public static native int getPlatform();
@@ -194,7 +194,6 @@ public final class Display {
 	 * @param gamma The gamma value
 	 * @param brightness The brightness value between -1.0 and 1.0, inclusive
 	 * @param contrast The contrast, larger than 0.0.
-	 * @return true if the call succeeded, false otherwise
 	 */
 	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws Exception {
 		assert brightness >= -1.0f && brightness <= 1.0f;
@@ -235,19 +234,19 @@ public final class Display {
 	 * Native method to set the gamma ramp.
 	 */
 	private static native void setGammaRamp(FloatBuffer gammaRamp) throws Exception ;
-	
+
 	/**
 	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",
 	 * "Radeon9700". If the adapter cannot be determined, this function returns null.
 	 * @return a String
 	 */
 	public static native String getAdapter();
-	
+
 	/**
 	 * Get the driver version. This is a vendor/adapter specific version string. If the version cannot be determined,
 	 * this function returns null.
 	 * @return a String
 	 */
 	public static native String getVersion();
-	
+
 }
