@@ -363,7 +363,7 @@ JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_Display_getAvailableDisplayModes
 		printf("Could not load GL\n");
 #endif
 		XCloseDisplay(disp);
-		return JNI_FALSE;
+		return NULL;
 	}
 	if (!getDisplayModes(disp, screen, &num_modes, &avail_modes)) {
 #ifdef _DEBUG
