@@ -44,8 +44,8 @@ package org.lwjgl;
  */
 
 public final class DisplayMode {
-	
-  /** properties of the display mode */
+
+	/** properties of the display mode */
 	public final int width, height, bpp, freq, alpha, depth, stencil;
 
 	/**
@@ -62,18 +62,17 @@ public final class DisplayMode {
 		this.depth = depth;
 		this.stencil = stencil;
 	}
-	
 
 	/**
-   * Tests for <code>DisplayMode</code> equality
-   * 
+	 * Tests for <code>DisplayMode</code> equality
+	 * 
 	 * @see java.lang.Object#equals(Object)
 	 */
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof DisplayMode)) {
 			return false;
 		}
-			
+
 		DisplayMode dm = (DisplayMode) obj;
 		return dm.width == width
 			&& dm.height == dm.height
@@ -85,8 +84,8 @@ public final class DisplayMode {
 	}
 
 	/**
-   * Retrieves the hashcode for this object
-   * 
+	 * Retrieves the hashcode for this object
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
@@ -94,8 +93,8 @@ public final class DisplayMode {
 	}
 
 	/**
-   * Retrieves a String representation of this <code>DisplayMode</code>
-   * 
+	 * Retrieves a String representation of this <code>DisplayMode</code>
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
