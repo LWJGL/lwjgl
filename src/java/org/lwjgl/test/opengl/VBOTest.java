@@ -160,12 +160,6 @@ public final class VBOTest {
 	mapped_float_buffer.put(vertices);
 	if (GL.glUnmapBufferARB(GL.GL_ARRAY_BUFFER_ARB))
 		GL.glDrawArrays(GL.GL_QUADS, 0, 4);
-/*       GL.glBegin(GL.GL_QUADS);
-       GL.glVertex2i(-50, -50);
-       GL.glVertex2i(50, -50);
-       GL.glVertex2i(50, 50);
-       GL.glVertex2i(-50, 50);
-       GL.glEnd();*/
        GL.glPopMatrix();
      }
  
@@ -197,7 +191,7 @@ public final class VBOTest {
 	GL.glBindBufferARB(GL.GL_ARRAY_BUFFER_ARB, buffer_id);
 	vertices = ByteBuffer.allocateDirect(2*4*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	vertices.put(-50).put(-50).put(50).put(-50).put(50).put(50).put(-50).put(50);
-	GL.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, 2*4*4, vertices/*Sys.NULL*/, GL.GL_STREAM_DRAW_ARB);
+	GL.glBufferDataARB(GL.GL_ARRAY_BUFFER_ARB, 2*4*4, Sys.NULL, GL.GL_STREAM_DRAW_ARB);
 	ByteBuffer index_buffer = Sys.createIndexBuffer(0);
 	GL.glEnableClientState(GL.GL_VERTEX_ARRAY);
 	GL.glVertexPointer(2, GL.GL_FLOAT, 0, index_buffer);
