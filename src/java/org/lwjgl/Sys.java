@@ -33,11 +33,6 @@ package org.lwjgl;
 
 import java.io.IOException;
 
-import org.lwjgl.input.Controller;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-
 /**
  * $Id$
  *
