@@ -41,6 +41,7 @@
 
 #import <jni.h>
 #import <OpenGL/gl.h>
+#import <OpenGL/glext.h>
 #import "org_lwjgl_opengl_MacOSXDisplay.h"
 #import "org_lwjgl_opengl_Pbuffer.h"
 #import "display.h"

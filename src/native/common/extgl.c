@@ -49,42 +49,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <dlfcn.h>
 #endif
 
-#ifdef _MACOSX
-aglChoosePixelFormatPROC aglChoosePixelFormat = NULL;
-aglDestroyPixelFormatPROC aglDestroyPixelFormat = NULL;
-aglNextPixelFormatPROC aglNextPixelFormat = NULL;
-aglDescribePixelFormatPROC aglDescribePixelFormat = NULL;
-aglDevicesOfPixelFormatPROC aglDevicesOfPixelFormat = NULL;
-aglQueryRendererInfoPROC aglQueryRendererInfo = NULL;
-aglDestroyRendererInfoPROC aglDestroyRendererInfo = NULL;
-aglNextRendererInfoPROC aglNextRendererInfo = NULL;
-aglDescribeRendererPROC aglDescribeRenderer = NULL;
-aglCreateContextPROC aglCreateContext = NULL;
-aglDestroyContextPROC aglDestroyContext = NULL;
-aglCopyContextPROC aglCopyContext = NULL;
-aglUpdateContextPROC aglUpdateContext = NULL;
-aglSetCurrentContextPROC aglSetCurrentContext = NULL;
-aglGetCurrentContextPROC aglGetCurrentContext = NULL;
-aglSetDrawablePROC aglSetDrawable = NULL;
-aglSetOffScreenPROC aglSetOffScreen = NULL;
-aglSetFullScreenPROC aglSetFullScreen = NULL;
-aglGetDrawablePROC aglGetDrawable = NULL;
-aglSetVirtualScreenPROC aglSetVirtualScreen = NULL;
-aglGetVirtualScreenPROC aglGetVirtualScreen = NULL;
-aglGetVersionPROC aglGetVersion = NULL;
-aglSwapBuffersPROC aglSwapBuffers = NULL;
-aglEnablePROC aglEnable = NULL;
-aglDisablePROC aglDisable = NULL;
-aglIsEnabledPROC aglIsEnabled = NULL;
-aglSetIntegerPROC aglSetInteger = NULL;
-aglGetIntegerPROC aglGetInteger = NULL;
-aglUseFontPROC aglUseFont = NULL;
-aglGetErrorPROC aglGetError = NULL;
-aglErrorStringPROC aglErrorString = NULL;
-aglResetLibraryPROC aglResetLibrary = NULL;
-aglSurfaceTexturePROC aglSurfaceTexture = NULL;
-#endif
-
 #ifndef _MACOSX
 struct ExtensionTypes extgl_Extensions;
 #endif
