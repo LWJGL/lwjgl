@@ -190,12 +190,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 
 	//check for first time initialization - need to detect capabilities
 	if (mFirstTimeInitialization) {
-		mFirstTimeInitialization = false;
 		/* Enumerate capabilities of Mouse */
 		if (!EnumerateMouseCapabilities(env)) {
 			ShutdownMouse();
 			return;
 		}
+		mFirstTimeInitialization = false;
 	}
 	/* Do setup of Mouse */
 	if (!SetupMouse(env)) {
