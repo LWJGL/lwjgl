@@ -174,13 +174,8 @@ public class Mouse {
 	 * @return A bit mask with native cursor capabilities.
 	 */
 	public static int getNativeCursorCaps() {
-		return nGetNativeCursorCaps();
+		return Display.getImplementation().getNativeCursorCaps();
 	}
-
-	/**
-	 * Native function to determine native cursor support
-	 */
-	private static native int nGetNativeCursorCaps();
 
 	/**
 	 * Binds a native cursor. If the cursor argument is null, the
@@ -204,17 +199,14 @@ public class Mouse {
 		currentCursor = cursor;
 		if (isCreated()) {
 			if (currentCursor != null) {
-				nSetNativeCursor(currentCursor.getHandle());
+				Display.getImplementation().setNativeCursor(currentCursor.getHandle());
 				currentCursor.setTimeout();
 			} else {
-				nSetNativeCursor(null);
+				Display.getImplementation().setNativeCursor(null);
 			}
 		}
 		return oldCursor;
 	}
-
-	/** Native method to set the native cursor */
-	private static native void nSetNativeCursor(ByteBuffer handle) throws LWJGLException;
 
 	/**
 	 * Gets the minimum size of a native cursor. Can only be called if
@@ -224,11 +216,8 @@ public class Mouse {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMinCursorSize() {
-		return nGetMinCursorSize();
+		return Display.getImplementation().getMinCursorSize();
 	}
-
-	/** Native method returning the minimum cursor size */
-	private static native int nGetMinCursorSize();
 
 	/**
 	 * Gets the maximum size of a native cursor. Can only be called if
@@ -238,11 +227,8 @@ public class Mouse {
 	 * @return the maximum size of a native cursor
 	 */
 	public static int getMaxCursorSize() {
-		return nGetMaxCursorSize();
+		return Display.getImplementation().getMaxCursorSize();
 	}
-
-	/** Native method returning the maximum cursor size */
-	private static native int nGetMaxCursorSize();
 
 	/**
 	 * Static initialization
@@ -281,30 +267,17 @@ public class Mouse {
 		if (!initialized)
 			initialize();
 		if (created) { return; }
-		nCreate();
-		hasWheel = nHasWheel();
+		Display.getImplementation().createMouse();
+		hasWheel = Display.getImplementation().hasWheel();
 		created = true;
-    
+
 		// set mouse buttons
-		buttonCount = nGetButtonCount();
+		buttonCount = Display.getImplementation().getButtonCount();
 		buttons = BufferUtils.createByteBuffer(buttonCount);
 		coord_buffer = BufferUtils.createIntBuffer(3);
 		setNativeCursor(currentCursor);
 		setGrabbed(isGrabbed);
 	}
-
-	/** Native query of wheel support */
-	private static native boolean nHasWheel();
-
-	/** Native query of button count */
-	private static native int nGetButtonCount();
-
-	/**
-	 * Native method to create the mouse.
-	 * 
-	 * @return true if the mouse was created
-	 */
-	private static native void nCreate();
 
 	/**
 	 * @return true if the mouse has been created
@@ -329,13 +302,8 @@ public class Mouse {
 		buttons = null;
 		coord_buffer = null;
 
-		nDestroy();
+		Display.getImplementation().destroyMouse();
 	}
-
-	/**
-	 * Native method the destroy the mouse
-	 */
-	private static native void nDestroy();
 
 	/**
 	 * Polls the mouse for its current state. Access the polled values using the
@@ -363,7 +331,7 @@ public class Mouse {
 	 */
 	public static void poll() {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can poll it");
-		nPoll(coord_buffer, buttons);
+		Display.getImplementation().pollMouse(coord_buffer, buttons);
 
 		int poll_dx = coord_buffer.get(0);
 		int poll_dy = coord_buffer.get(1);
@@ -410,15 +378,10 @@ public class Mouse {
 
 	private static void read() {
 		readBuffer.compact();
-		int numEvents = nRead(readBuffer, readBuffer.position());
+		int numEvents = Display.getImplementation().readMouse(readBuffer, readBuffer.position());
 		readBuffer.position(readBuffer.position() + numEvents * EVENT_SIZE);
 		readBuffer.flip();
 	}
-
-	/**
-	 * Native method to poll the mouse
-	 */
-	private static native void nPoll(IntBuffer coord_buffer, ByteBuffer buttons);
 
 	/**
 	 * See if a particular mouse button is down.
@@ -465,21 +428,8 @@ public class Mouse {
 		if (!created) throw new IllegalStateException("Mouse must be created before you can enable buffering");
 		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE * BUFFER_SIZE);
 		readBuffer.limit(0);
-		nEnableBuffer();
+		Display.getImplementation().enableMouseBuffer();
 	}
-
-	/**
-	 * Native method to enable the buffer
-	 * @return the event buffer,
-	 * or null if no buffer can be allocated
-	 */
-	private static native void nEnableBuffer() throws LWJGLException;
-
-	/**
-	 * Native method to read the keyboard buffer
-	 * @return the total number of events read.
-	 */
-	private static native int nRead(IntBuffer buffer, int buffer_position);
 
 	/**
 	 * Gets the next mouse event. You can query which button caused the event by using 
@@ -638,12 +588,10 @@ public class Mouse {
 	public static void setGrabbed(boolean grab) {
 		isGrabbed = grab;
 		if (isCreated()) {
-			nGrabMouse(isGrabbed);
+			Display.getImplementation().grabMouse(isGrabbed);
 			resetMouse();
 		}
 	}
-
-	private static native void nGrabMouse(boolean grab);
 
 	/**
 	 * Updates the cursor, so that animation can be changed if needed.

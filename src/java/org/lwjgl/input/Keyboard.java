@@ -290,15 +290,10 @@ public class Keyboard {
 			initialize();
 		if (created)
 			return;
-		nCreate();
+		Display.getImplementation().createKeyboard();
 		created = true;
 	}
 	
-	/**
-	 * Native method to create the keyboard
-	 */
-	private static native void nCreate() throws LWJGLException;
-
 	/**
 	 * @return true if the keyboard has been created
 	 */
@@ -313,14 +308,9 @@ public class Keyboard {
 		if (!created)
 			return;
 		created = false;
-		nDestroy();
+		Display.getImplementation().destroyKeyboard();
 	}
 	
-	/**
-	 * Native method to destroy the keyboard
-	 */
-	private static native void nDestroy();
-
 	/**
 	 * Polls the keyboard for its current state. Access the polled values using the
 	 * <code>isKeyDown</code> method.
@@ -346,31 +336,17 @@ public class Keyboard {
 	public static void poll() {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can poll the device");
-		nPoll(keyDownBuffer);
+		Display.getImplementation().pollKeyboard(keyDownBuffer);
 		if (readBuffer != null)
 			read();
 	}
 	
 	private static void read() {
 		readBuffer.compact();
-		int numEvents = nRead(readBuffer, readBuffer.position());
+		int numEvents = Display.getImplementation().readKeyboard(readBuffer, readBuffer.position());
 		readBuffer.position(readBuffer.position() + numEvents*EVENT_SIZE);
 		readBuffer.flip();
 	}
-	
-	/**
-	 * Native method to poll the keyboard.
-	 * 
-	 * @param keyDownBufferAddress the address of a 256-byte buffer to place
-	 * key states in.
-	 */
-	private static native void nPoll(ByteBuffer keyDownBuffer);
-	
-	/**
-	 * Native method to read the keyboard buffer
-	 * @return the total number of events read.
-	 */
-	private static native int nRead(IntBuffer buffer, int buffer_position);
 	
 	/**
 	 * Enable keyboard translation. Must be called after the keyboard is created,
@@ -381,14 +357,9 @@ public class Keyboard {
 			throw new IllegalStateException("Keyboard must be created before you can read events");
 		if (readBuffer == null)
 			throw new IllegalStateException("Event buffering must be enabled before you can read events");
-		nEnableTranslation();
+		Display.getImplementation().enableTranslation();
 		translationEnabled = true;
 	}
-	
-	/**
-	 * Native method to enable the translation buffer
-	 */
-	private static native void nEnableTranslation() throws LWJGLException;
 	
 	/**
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
@@ -398,15 +369,8 @@ public class Keyboard {
 			throw new IllegalStateException("Keyboard must be created before you can enable buffering");
 		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE*BUFFER_SIZE);
 		readBuffer.limit(0);
-		nEnableBuffer();
+		Display.getImplementation().enableKeyboardBuffer();
 	}
-	
-	/**
-	 * Native method to enable the buffer
-	 * @return the event buffer,
-	 * or null if no buffer can be allocated
-	 */
-	private static native void nEnableBuffer() throws LWJGLException;
 	
 	/**
 	 * Checks to see if a key is down.
@@ -442,10 +406,9 @@ public class Keyboard {
 	public static int isStateKeySet(int key) {
 		if (!created)
 			throw new IllegalStateException("Keyboard must be created before you can query key state");
-		return nisStateKeySet(key);
+		return Display.getImplementation().isStateKeySet(key);
 	}
-	private static native int nisStateKeySet(int key);
-	
+
 	/**
 	 * Gets a key's name
 	 * @param key The key

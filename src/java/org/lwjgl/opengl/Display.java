@@ -56,21 +56,14 @@ import org.lwjgl.input.Mouse;
 
 public final class Display {
 
-	/** The current display mode, if created */
-	private static DisplayMode current_mode;
+	/** The display implementor */
+	private final static DisplayImplementation display_impl;
 
 	/** The initial display mode */
 	private final static DisplayMode initial_mode;
 	
-	static {
-		Sys.initialize();
-		current_mode = initial_mode = init();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				reset();
-			}
-		});
-	}
+	/** The current display mode, if created */
+	private static DisplayMode current_mode;
 
 	/** Timer for sync() */
 	private static long timeNow, timeThen;
@@ -96,6 +89,38 @@ public final class Display {
 	/** A unique context object, so we can track different contexts between creates() and destroys() */
 	private static Display context;
 	
+	static {
+		Sys.initialize();
+		display_impl = createDisplayImplementation();
+		current_mode = initial_mode = display_impl.init();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				reset();
+			}
+		});
+	}
+
+	private final static DisplayImplementation createDisplayImplementation() {
+		String class_name;
+		String os_name = System.getProperty("os.name");
+		if (os_name.startsWith("Linux")) {
+			class_name = "org.lwjgl.opengl.LinuxDisplay";
+		} else if (os_name.startsWith("Windows")) {
+			class_name = "org.lwjgl.opengl.Win32Display";
+		} else
+			throw new IllegalStateException("The platform " + os_name + " is not supported");
+		try {
+			Class display_class = Class.forName(class_name);
+			return (DisplayImplementation)display_class.newInstance();
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	/**
 	 * Only constructed by ourselves
 	 */
@@ -113,7 +138,7 @@ public final class Display {
 	 * @return an array of all display modes the system reckons it can handle.
 	 */
 	public static DisplayMode[] getAvailableDisplayModes() {
-		DisplayMode[] unfilteredModes = nGetAvailableDisplayModes();
+		DisplayMode[] unfilteredModes = display_impl.getAvailableDisplayModes();
 
 		if (unfilteredModes == null) {
 			return new DisplayMode[0];
@@ -130,11 +155,6 @@ public final class Display {
 
 		return filteredModes;
 	}
-
-	/**
-	 * Native method for getting displaymodes
-	 */
-	private static native DisplayMode[] nGetAvailableDisplayModes();
 
 	/**
 	 * Return the current display mode, as set by setDisplayMode().
@@ -165,8 +185,8 @@ public final class Display {
 					switchDisplayMode();
 				createWindow();
 			} catch (LWJGLException e) {
-				destroyContext();
-				resetDisplayMode();
+				display_impl.destroyContext();
+				display_impl.resetDisplayMode();
 				throw e;
 			}
 		}
@@ -179,13 +199,11 @@ public final class Display {
 	private static void createWindow() throws LWJGLException {
 		x = Math.max(0, Math.min(initial_mode.getWidth() - current_mode.getWidth(), x));
 		y = Math.max(0, Math.min(initial_mode.getHeight() - current_mode.getHeight(), y));
-		nCreateWindow(current_mode, fullscreen, (fullscreen) ? 0 : x, (fullscreen) ? 0 : y);
-		nSetTitle(title);
+		display_impl.createWindow(current_mode, fullscreen, (fullscreen) ? 0 : x, (fullscreen) ? 0 : y);
+		setTitle(title);
 		initControls();
-		nSetVSyncEnabled(vsync);
+		setVSyncEnabled(vsync);
 	}
-
-	private static native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 
 	private static void destroyWindow() {
 		// Automatically destroy keyboard, mouse, and controller
@@ -198,24 +216,14 @@ public final class Display {
 		if (Controller.isCreated()) {
 			Controller.destroy();
 		}
-		nDestroyWindow();
+		display_impl.destroyWindow();
 	}
-
-	private static native void nDestroyWindow();
 
 	private static void switchDisplayMode() throws LWJGLException {
 		if (!current_mode.isFullscreen())
 			throw new LWJGLException("The current DisplayMode instance cannot be used for fullscreen mode");
-		nSwitchDisplayMode(current_mode);
+		display_impl.switchDisplayMode(current_mode);
 	}
-
-	private static native void nSwitchDisplayMode(DisplayMode mode) throws LWJGLException;
-
-	/**
-	 * Reset the display mode to whatever it was when LWJGL was initialized.
-	 * Fails silently.
-	 */
-	private static native void resetDisplayMode();
 
 	/**
 	 * Set the display configuration to the specified gamma, brightness and contrast.
@@ -233,7 +241,7 @@ public final class Display {
 			throw new IllegalArgumentException("Invalid brightness value");
 		if (contrast < 0.0f)
 			throw new IllegalArgumentException("Invalid contrast value");
-		int rampSize = getGammaRampLength();
+		int rampSize = display_impl.getGammaRampLength();
 		if (rampSize == 0) {
 			throw new LWJGLException("Display configuration not supported");
 		}
@@ -253,37 +261,10 @@ public final class Display {
 				rampEntry = 0.0f;
 			gammaRamp.put(i, rampEntry);
 		}
-		setGammaRamp(gammaRamp);
+		display_impl.setGammaRamp(gammaRamp);
 		Sys.log("Gamma set, gamma = " + gamma + ", brightness = " + brightness + ", contrast = " + contrast);
 	}
 
-	/**
-	 * Return the length of the gamma ramp arrays. Returns 0 if gamma settings are
-	 * unsupported.
-	 *
-	 * @return the length of each gamma ramp array, or 0 if gamma settings are unsupported.
-	 */
-	private static native int getGammaRampLength();
-
-	/**
-	 * Native method to set the gamma ramp.
-	 */
-	private static native void setGammaRamp(FloatBuffer gammaRamp) throws LWJGLException;
-
-	/**
-	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",
-	 * "Radeon9700". If the adapter cannot be determined, this function returns null.
-	 * @return a String
-	 */
-	public static native String getAdapter();
-
-	/**
-	 * Get the driver version. This is a vendor/adapter specific version string. If the version cannot be determined,
-	 * this function returns null.
-	 * @return a String
-	 */
-	public static native String getVersion();
-	
 	/**
 	 * Synchronize the display to a capped frame rate. Note that we are being "smart" about the
 	 * desired results in our implementation; we automatically subtract 1 from the desired framerate
@@ -322,11 +303,6 @@ public final class Display {
 
 		timeThen = timeNow;
 	}
-
-	/**
-	 * Initialize and return the current display mode.
-	 */
-	private static native DisplayMode init();
 
 	/**
 	 * @return the X coordinate of the window (always 0 for fullscreen)
@@ -371,12 +347,12 @@ public final class Display {
 				if (fullscreen) {
 					switchDisplayMode();
 				} else {
-					resetDisplayMode();
+					display_impl.resetDisplayMode();
 				}
 				createWindow();
 			} catch (LWJGLException e) {
-				destroyContext();
-				resetDisplayMode();
+				display_impl.destroyContext();
+				display_impl.resetDisplayMode();
 				throw e;
 			}
 		}
@@ -399,14 +375,8 @@ public final class Display {
 		}
 		title = newTitle;
 		if (isCreated())
-			nSetTitle(title);
+			display_impl.setTitle(title);
 	}
-
-	/**
-	 * Native implementation of setTitle(). This will read the window's title member
-	 * and stash it in the native title of the window.
-	 */
-	private static native void nSetTitle(String title);
 
 	/**
 	 * @return true if the user or operating system has asked the window to close
@@ -414,11 +384,9 @@ public final class Display {
 	public static boolean isCloseRequested() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine close requested state of uncreated window");
-		nUpdate();
-		return nIsCloseRequested();
+		display_impl.update();
+		return display_impl.isCloseRequested();
 	}
-
-	private static native boolean nIsCloseRequested();
 
 	/**
 	 * @return true if the window is visible, false if not
@@ -426,11 +394,9 @@ public final class Display {
 	public static boolean isVisible() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine minimized state of uncreated window");
-		nUpdate();
-		return nIsVisible();
+		display_impl.update();
+		return display_impl.isVisible();
 	}
-
-	private static native boolean nIsVisible();
 
 	/**
 	 * @return true if window is active, that is, the foreground display of the operating system.
@@ -438,11 +404,9 @@ public final class Display {
 	public static boolean isActive() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine focused state of uncreated window");
-		nUpdate();
-		return nIsActive();
+		display_impl.update();
+		return display_impl.isActive();
 	}
-
-	private static native boolean nIsActive();
 
 	/**
 	 * Determine if the window's contents have been damaged by external events.
@@ -457,11 +421,9 @@ public final class Display {
 	public static boolean isDirty() {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot determine dirty state of uncreated window");
-		nUpdate();
-		return nIsDirty();
+		display_impl.update();
+		return display_impl.isDirty();
 	}
-
-	private static native boolean nIsDirty();
 
 	/**
 	 * Update the window. This processes operating system events, and if the window is visible
@@ -475,10 +437,10 @@ public final class Display {
 		// We paint only when the window is visible or dirty
 		if (isVisible() || isDirty()) {
 			Util.checkGLError();
-			swapBuffers();
+			display_impl.swapBuffers();
 		}
 		
-		nUpdate();
+		display_impl.update();
 
 		// Poll the input devices while we're here
 		if (Mouse.isCreated()) {
@@ -494,26 +456,16 @@ public final class Display {
 	}
 
 	/**
-	 * Swap double buffers.
-	 */
-	private static native void swapBuffers();
-	
-	/**
 	 * Make the Display the current rendering context for GL calls. Also initialize native stubs.
 	 * @throws LWJGLException If the context could not be made current
 	 */
 	public static void makeCurrent() throws LWJGLException {
 		if (!isCreated())
 			throw new IllegalStateException("No window created to make current");
-		nMakeCurrent();
+		display_impl.makeCurrent();
 		GLContext.useContext(context);
 	}
 	
-	/**
-	 * Make the window the current rendering context for GL calls.
-	 */
-	private static native void nMakeCurrent() throws LWJGLException;
-
 	/**
 	 * Create the OpenGL context. If isFullscreen() is true or if windowed
 	 * context are not supported on the platform, the display mode will be switched to the mode returned by
@@ -549,14 +501,14 @@ public final class Display {
 		try {
 			GLContext.loadOpenGLLibrary();
 			try {
-				createContext(pixel_format);
+				display_impl.createContext(pixel_format);
 				try {
 					context = new Display();
 					createWindow();
 					makeCurrent();
 					initContext();
 				} catch (LWJGLException e) {
-					destroyContext();
+					display_impl.destroyContext();
 					context = null;
 					throw e;
 				}
@@ -565,18 +517,10 @@ public final class Display {
 				throw e;
 			}
 		} catch (LWJGLException e) {
-			resetDisplayMode();
+			display_impl.resetDisplayMode();
 			throw e;
 		}
 	}
-
-	/**
-	 * Create the native OpenGL context.
-	 * @throws LWJGLException
-	 */
-	private static native void createContext(PixelFormat pixel_format) throws LWJGLException;
-
-	private static native void destroyContext();
 
 	private static void initContext() {
 		// Put the window into orthographic projection mode with 1:1 pixel ratio.
@@ -587,6 +531,10 @@ public final class Display {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		GL11.glViewport(0, 0, current_mode.getWidth(), current_mode.getHeight());
+	}
+
+	public static DisplayImplementation getImplementation() {
+		return display_impl;
 	}
 
 	private static void initControls() {
@@ -641,7 +589,7 @@ public final class Display {
 		}
 		
 		destroyWindow();
-		destroyContext();
+		display_impl.destroyContext();
 		GLContext.unloadOpenGLLibrary();
 		context = null;
 		try {
@@ -657,7 +605,7 @@ public final class Display {
 	 * in the static constructor
 	 */
 	private static void reset() {
-		resetDisplayMode();
+		display_impl.resetDisplayMode();
 		current_mode = initial_mode;
 	}
 	
@@ -676,12 +624,6 @@ public final class Display {
 	}
 
 	/**
-	 * Updates the windows internal state. This must be called at least once per video frame
-	 * to handle window close requests, moves, paints, etc.
-	 */
-	private static native void nUpdate();
-
-	/**
 	 * Enable or disable vertical monitor synchronization. This call is a best-attempt at changing
 	 * the vertical refresh synchronization of the monitor, and is not guaranteed to be successful.
 	 * @param sync true to synchronize; false to ignore synchronization
@@ -689,10 +631,8 @@ public final class Display {
 	public static void setVSyncEnabled(boolean sync) {
 		vsync = sync;
 		if (isCreated())
-			nSetVSyncEnabled(vsync);
+			display_impl.setVSyncEnabled(vsync);
 	}
-
-	private static native void nSetVSyncEnabled(boolean sync);
 
 	/**
 	 * Set the window's location. This is a no-op on fullscreen windows.
@@ -705,17 +645,34 @@ public final class Display {
 		if (fullscreen) {
 			return;
 		}
-    
-    // offset if already created
-    if(isCreated()) {
-    	x = Math.max(0, Math.min(initial_mode.getWidth() - current_mode.getWidth(), x));
-    	y = Math.max(0, Math.min(initial_mode.getHeight() - current_mode.getHeight(), y));
-      nReshape(x, y, current_mode.getWidth(), current_mode.getHeight());    
-    }
 
-    // cache position
-    Display.x = x;
-    Display.y = y;   
+		// offset if already created
+		if(isCreated()) {
+			x = Math.max(0, Math.min(initial_mode.getWidth() - current_mode.getWidth(), x));
+			y = Math.max(0, Math.min(initial_mode.getHeight() - current_mode.getHeight(), y));
+			display_impl.reshape(x, y, current_mode.getWidth(), current_mode.getHeight());
+		}
+
+		// cache position
+		Display.x = x;
+		Display.y = y;   
 	}
-  private static native void nReshape(int x, int y, int width, int height);
+	
+	/**
+	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",
+	 * "Radeon9700". If the adapter cannot be determined, this function returns null.
+	 * @return a String
+	 */
+	public static String getAdapter() {
+		return display_impl.getAdapter();
+	}
+
+	/**
+	 * Get the driver version. This is a vendor/adapter specific version string. If the version cannot be determined,
+	 * this function returns null.
+	 * @return a String
+	 */
+	public static String getVersion() {
+		return display_impl.getVersion();
+	}
 }

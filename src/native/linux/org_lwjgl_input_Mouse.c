@@ -49,6 +49,7 @@
 #include "common_tools.h"
 #include "display.h"
 #include "org_lwjgl_input_Mouse.h"
+#include "org_lwjgl_opengl_LinuxDisplay.h"
 
 #define NUM_BUTTONS 3
 
@@ -188,8 +189,8 @@ static void doWarpPointer(int center_x, int center_y) {
 	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, center_x, center_y);
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
-  (JNIEnv *env, jclass clazz) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getNativeCursorCaps
+  (JNIEnv *env, jobject this) {
 	int caps = 0;
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
@@ -204,7 +205,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
 	return caps;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor(JNIEnv *env, jclass clazz, jobject cursor_handle) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setNativeCursor(JNIEnv *env, jobject this, jobject cursor_handle) {
 	if (cursor_handle != NULL) {
 		Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle);
 		current_cursor = *cursor;
@@ -213,8 +214,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor(JNIEnv *env, 
 	updateCursor();
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
-  (JNIEnv *env, jclass clazz)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getMinCursorSize
+  (JNIEnv *env, jobject this)
 {
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
@@ -222,8 +223,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
 	return width_return > height_return ? width_return : height_return;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
-  (JNIEnv *env, jclass clazz)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getMaxCursorSize
+  (JNIEnv *env, jobject this)
 {
 	unsigned int width_return = 0;
 	unsigned int height_return = 0;
@@ -231,11 +232,11 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMaxCursorSize
 	return width_return > height_return ? height_return : width_return;
 }
 
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nHasWheel(JNIEnv *env , jclass clazz) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_LinuxDisplay_hasWheel(JNIEnv *env , jobject this) {
 	return JNI_TRUE;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetButtonCount(JNIEnv *env, jclass clazz) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_getButtonCount(JNIEnv *env, jobject this) {
 	return NUM_BUTTONS;
 }
 
@@ -243,8 +244,8 @@ static void resetCursorToCenter(void) {
 	resetCursor(getWindowWidth()/2, transformY(getWindowHeight()/2));
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createMouse
+  (JNIEnv * env, jobject this)
 {
 	Display *disp = incDisplay(env);
 	if (disp == NULL)
@@ -267,8 +268,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate
 	initEventQueue(&event_queue, 5);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
-  (JNIEnv * env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyMouse
+  (JNIEnv * env, jobject this)
 {
 	ungrabPointer();
 	XFreeCursor(getDisplay(), blank_cursor);
@@ -355,7 +356,7 @@ void handlePointerMotion(XMotionEvent *event) {
 	doHandlePointerMotion(event->x_root, event->y_root, event->x, event->y);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollMouse(JNIEnv * env, jobject this, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	int *coords = (int *)(*env)->GetDirectBufferAddress(env, coord_buffer_obj);
 	int coords_length = (*env)->GetDirectBufferCapacity(env, coord_buffer_obj);
 	unsigned char *buttons_buffer = (unsigned char *)(*env)->GetDirectBufferAddress(env, button_buffer_obj);
@@ -377,18 +378,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass cla
 		buttons_buffer[i] = buttons[i];
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nEnableBuffer(JNIEnv *env, jclass clazz) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_enableMouseBuffer(JNIEnv *env, jobject this) {
 	buffer_enabled = true;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass clazz, jobject buffer, jint buffer_position) {
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_readMouse(JNIEnv *env, jobject this, jobject buffer, jint buffer_position) {
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer);
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer))/sizeof(jint) - buffer_position;
 	handleMessages();
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_grabMouse(JNIEnv * env, jobject this, jboolean new_grab) {
 	Window root_return, child_return;
 	int root_x, root_y, win_x, win_y;
 	unsigned int mask_return;

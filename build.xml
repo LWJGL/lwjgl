@@ -4,8 +4,8 @@
 	<!-- Global properties for build 										-->
 	<!-- ================================================================== -->
 	<property name="lwjgl.src" value="./src" />
-	<property name="lwjgl.src.headers" value="${lwjgl.src}/native/common" />
-	<property name="lwjgl.src.native" value="./src/native" />
+	<property name="lwjgl.src.native" value="${lwjgl.src}/native" />
+	<property name="lwjgl.src.headers" value="${lwjgl.src.native}/common" />
 	<property name="lwjgl.bin" value="./bin" />
 	<property name="lwjgl.lib" value="./libs" />
 	<property name="lwjgl.dist" value="./dist" />
@@ -137,7 +137,7 @@
 		<antcall target="-initialize" />
 		<antcall target="compile" />
 		<antcall target="compile_native" />
-		<antcall target="-jars" />
+		<antcall target="jars" />
 		<antcall target="-distribution_application" />
 		<antcall target="javadoc" />
 		<antcall target="-distribution_javadoc" />
@@ -159,7 +159,7 @@
 		<antcall target="-initialize"/>
 		<antcall target="compile"/>
 		<antcall target="compile_native"/>
-		<antcall target="-jars"/>
+		<antcall target="jars"/>
 		<antcall target="-distribution_application"/>
 	</target>
 
@@ -254,7 +254,7 @@
 	</target>
 
 	<!-- Packages the java files -->
-	<target name="-jars">
+	<target name="jars">
 		<!-- Create lwjgl.jar -->
 		<jar destfile="${lwjgl.lib}/lwjgl.jar" taskname="lwjgl.jar">
 			<fileset refid="lwjgl.fileset" />
@@ -301,7 +301,7 @@
 	</target>
 
 	<!-- Creates a distribution from the compiled files -->
-	<target name="-distribution" depends="-jars">
+	<target name="-distribution" depends="jars">
 		<antcall target="-distribution_application" />
 		<antcall target="-distribution_javadoc" />
 		<antcall target="-distribution_source" />
@@ -325,6 +325,13 @@
 
 	<!-- Generates the native headers from source files -->
 	<target name="headers" description="invokes javah on java classes" depends="compile">
+		<!-- platform specific classes -->
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/linux" force="yes">
+			<class name="org.lwjgl.opengl.LinuxDisplay" />
+		</javah>
+		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
+			<class name="org.lwjgl.opengl.Win32Display" />
+		</javah>
 		<!-- lwjgl -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}" force="yes">
 			<class name="org.lwjgl.Sys" />
@@ -342,7 +349,6 @@
 			<class name="org.lwjgl.openal.eax.EAXListenerProperties" />
 
 			<class name="org.lwjgl.opengl.GLContext" />
-			<class name="org.lwjgl.opengl.Display" />
 			<class name="org.lwjgl.opengl.Pbuffer" />
 		</javah>
 
