@@ -96,8 +96,10 @@ void updateKeyboardGrab(void) {
 }
 
 static void closeUnicodeStructs() {
-	if (iconv_descriptor != (iconv_t)-1)
+	if (iconv_descriptor != (iconv_t)-1) {
 		iconv_close(iconv_descriptor);
+		iconv_descriptor = (iconv_t)-1;
+	}
 	if (xic != NULL) {
 		XDestroyIC(xic);
 		xic = NULL;
