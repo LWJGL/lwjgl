@@ -29,16 +29,21 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.lwjgl.openal;
+ package org.lwjgl.openal.eax;
 
 /**
  * $Id$
  *
- * This class implements the basic EAX extension constants.
+ * This is the OpenAL EAX class. It extends the latest core.
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
-public interface BaseEAXConstants {
-    //add some...
+public class EAX extends CoreEAX {
+    
+    /**
+     * Nothing to se here - please move along
+     */
+    public EAX() {
+    }
 }
