@@ -52,22 +52,36 @@ public class BasicTest {
             e.printStackTrace();
             System.exit(0);
         }
+        int err = IL.ilGetError();
+        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
         System.out.println("ilGenImages");
         IntBuffer im =  ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
         IL.ilGenImages(1, im);
         System.out.println("ilBindImage");
         IL.ilBindImage(im.get(0));
-        System.out.println("ilLoadImage");
-        IL.ilLoadImage("F:/Apps/Java/eclipse/workspace/LWJGL/res/spaceinvaders/alien2.gif");
-        System.out.println("ilGetError");
-        int err = IL.ilGetError();
+        err = IL.ilGetError();
         System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
+        String imageFile = "F:/Apps/Java/eclipse/workspace/LWJGL/res/ILtest.tga";
+        System.out.println("ilLoadImage " + imageFile);
+        System.out.println("load lump = " + IL.ilLoadFromURL(BasicTest.class.getResource("/res/ILtest.tga")));
+        err = IL.ilGetError();
+        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
+        int newIm = IL.ilCloneCurImage();
+        IL.ilCopyImage(im.get(0));
+        IL.ilBindImage(newIm);
         ByteBuffer buf = IL.ilGetData();
+        System.out.println("ilGetData");
+        err = IL.ilGetError();
+        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
         int limit = buf.limit();
         System.out.println("limit = " + limit);
+        for(int i=0;i<buf.limit();i+=3) {
+            System.out.println(buf.get(i) + " " + buf.get(i + 1) + " " + buf.get(i + 2));
+        }
         
+        System.out.println("current image = " + im.get(0) + " IL.ilGetInteger(IL.IL_ACTIVE_IMAGE) = " + IL.ilGetInteger(IL.IL_ACTIVE_IMAGE));
         System.out.println("Version: " + IL.ilGetInteger(IL.IL_VERSION_NUM));
-        System.out.println(IL.ilActiveImage(im.get(0)));
-        System.out.println(IL.ilClearImage());
+        err = IL.ilGetError();
+        System.out.println("err = " + err + " IL_NO_ERROR = " + IL.IL_NO_ERROR);
     }
 }
