@@ -75,7 +75,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
 	}
 	Cursor cursor = XcursorImagesLoadCursor(disp, cursor_images);
 	XcursorImagesDestroy(cursor_images);
-	return cursor;
+	return (jlong)cursor;
 }
 
 /*
