@@ -258,7 +258,16 @@ extern "C" {
 #define org_lwjgl_input_Keyboard_KEY_POWER 222L
 #undef org_lwjgl_input_Keyboard_KEY_SLEEP
 #define org_lwjgl_input_Keyboard_KEY_SLEEP 223L
+#undef org_lwjgl_input_Keyboard_STATE_ON
+#define org_lwjgl_input_Keyboard_STATE_ON 0L
+#undef org_lwjgl_input_Keyboard_STATE_OFF
+#define org_lwjgl_input_Keyboard_STATE_OFF 1L
+#undef org_lwjgl_input_Keyboard_STATE_UNKNOWN
+#define org_lwjgl_input_Keyboard_STATE_UNKNOWN 2L
 /* Inaccessible static: keyName */
+/* Inaccessible static: keyMap */
+/* Inaccessible static: counter */
+/* Inaccessible static: keyCount */
 /* Inaccessible static: created */
 /* Inaccessible static: keyDownBuffer */
 /* Inaccessible static: readBuffer */
@@ -267,7 +276,8 @@ extern "C" {
 /* Inaccessible static: character */
 /* Inaccessible static: key */
 /* Inaccessible static: state */
-/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Keyboard */
+/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_000241 */
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    initIDs
@@ -323,13 +333,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nEnableTranslation
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nEnableBuffer
   (JNIEnv *, jclass);
-  
+
 /*
  * Class:     org_lwjgl_input_Keyboard
  * Method:    nisStateKeySet
- * Signature: (I)Z
+ * Signature: (I)I
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet
+JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nisStateKeySet
   (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus

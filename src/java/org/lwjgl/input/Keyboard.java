@@ -188,6 +188,10 @@ public class Keyboard {
 	public static final int KEY_APPS            = 0xDD; /* AppMenu key */
 	public static final int KEY_POWER           = 0xDE;
 	public static final int KEY_SLEEP           = 0xDF;
+  
+  public static final int STATE_ON              = 0;
+  public static final int STATE_OFF             = 1;
+  public static final int STATE_UNKNOWN         = 2;
 	
 	/** Key names */
 	private static final String[] keyName = new String[255];
@@ -402,13 +406,13 @@ public class Keyboard {
    * Checks whether one of the state keys are "active"
    * 
    * @param key State key to test (KEY_CAPITAL | KEY_NUMLOCK | KEY_SYSRQ)
-   * @return true if state key is on
+   * @return STATE_ON if on, STATE_OFF if off and STATE_UNKNOWN if the state is unknown
    */
-  public static boolean isStateKeySet(int key) {
+  public static int isStateKeySet(int key) {
     assert created : "The keyboard has not been created.";
     return nisStateKeySet(key);
   }
-  private static native boolean nisStateKeySet(int key);
+  private static native int nisStateKeySet(int key);
 	
 	/**
 	 * Gets a key's name

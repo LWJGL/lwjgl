@@ -159,15 +159,15 @@ public class KeyboardTest {
           position.y -= 1;
         }
         
-        if(Keyboard.isStateKeySet(Keyboard.KEY_SCROLL)) {
+        if(Keyboard.isStateKeySet(Keyboard.KEY_SCROLL) == Keyboard.STATE_ON) {
           System.out.println("SCROLL lock on");
         }
         
-        if(Keyboard.isStateKeySet(Keyboard.KEY_CAPITAL)) {
+        if(Keyboard.isStateKeySet(Keyboard.KEY_CAPITAL) == Keyboard.STATE_ON) {
           System.out.println("CAPS lock on");
         }
         
-        if(Keyboard.isStateKeySet(Keyboard.KEY_NUMLOCK)) {
+        if(Keyboard.isStateKeySet(Keyboard.KEY_NUMLOCK) == Keyboard.STATE_ON) {
           System.out.println("NUM lock on");
         }
       }
