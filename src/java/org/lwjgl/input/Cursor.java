@@ -36,6 +36,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.lwjgl.Display;
 import org.lwjgl.Sys;
 import org.lwjgl.LWJGLException;
 
@@ -100,22 +101,39 @@ public class Cursor {
 		IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		flipImages(width, height, numImages, images, images_copy);
 		
-		// create our cursor elements
-		cursors = new CursorElement[numImages];
-		for(int i=0; i<numImages; i++) {
-			cursors[i] = new CursorElement();
-			cursors[i].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position());
-			cursors[i].delay = (delays != null) ? delays.get(i) : 0;
-			cursors[i].timeout = System.currentTimeMillis();
-			
-			// offset to next image
-			images_copy.position(width*height*(i+1));
-		}
-		
-		// set index
-		index = 0;
-	}
- 
+    // Win32 doesn't (afaik) allow for animation based cursors, except when they're
+    // in the .ani format, which we don't support.
+    // The cursor animation was therefor developed using java side time tracking.
+    // unfortunately X flickers when changing cursor. We therefor check for either
+    // Win32 or X and do accordingly. This hasn't been implemented on Mac, but we
+    // might want to split it into a X/Win/Mac cursor if it gets too cluttered
+    
+    switch(Display.getPlatform()) {
+      case Display.PLATFORM_GLX:
+        // create our cursor elements
+        cursors = new CursorElement[1];
+        cursors[0] = new CursorElement();
+        cursors[0].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images_copy, images_copy.position(), delays, delays.position());
+        break;
+      case Display.PLATFORM_WGL:
+      	// create our cursor elements
+      	cursors = new CursorElement[numImages];
+        for(int i=0; i<numImages; i++) {
+        	cursors[i] = new CursorElement();
+        	cursors[i].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position(), null, 0);
+        	cursors[i].delay = (delays != null) ? delays.get(i) : 0;
+        	cursors[i].timeout = System.currentTimeMillis();
+        
+        	// offset to next image
+        	images_copy.position(width*height*(i+1));
+        }
+        // set index
+        index = 0;
+        break;
+      case Display.PLATFORM_AGL:
+        break;
+    }
+	} 
 	
 	/**
 	 * Flips the images so they're oriented according to opengl
@@ -202,7 +220,7 @@ public class Cursor {
 	/**
 	 * Native method to create a native cursor
 	 */
-	private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset);
+  private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset);
 
 	/**
 	 * Native method to destroy a native cursor

@@ -346,6 +346,11 @@ public class HWCursorTest {
             e.printStackTrace();
         }
     }
+    
+    if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+      Mouse.setGrabbed(!Mouse.isGrabbed());
+      System.out.println("Grabbed: " + Mouse.isGrabbed());
+    }    
   }
 
   /**

@@ -257,3 +257,13 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nRead(JNIEnv *env, jclass claz
 	int buffer_size = env->GetDirectBufferCapacity(buffer) - buffer_position;
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size, 2);
 }
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGrabMouse
+ * Signature: (Z)Z
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
+  (JNIEnv * env, jclass clazz, jboolean grab) {
+  // do it?
+}

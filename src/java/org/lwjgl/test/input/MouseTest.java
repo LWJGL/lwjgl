@@ -242,6 +242,7 @@ public class MouseTest {
     if (Mouse.getDX() == Mouse.getDY() && Mouse.getDX() == 0 && Mouse.getDWheel() == 0) {
       return;
     }
+    
     // determine direction moved
     // ============================
     if(Mouse.getDX() > 0) {
@@ -259,8 +260,8 @@ public class MouseTest {
     if(Mouse.getDY() < 0) {
       direction = 2;
     }
-    // ----------------------------
     
+    // ----------------------------
     if(direction > -1) {
 
       // based on which button was last pushed, update model
@@ -315,6 +316,10 @@ public class MouseTest {
     // closing on ESCAPE
     if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
       closing = true;
+    }
+    
+    if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+    	Mouse.setGrabbed(!Mouse.isGrabbed());
     }
   }
   

@@ -103,6 +103,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll
   (JNIEnv *, jclass, jobject, jobject);
+  
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGrabMouse
+ * Signature: (Z)Z
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
+  (JNIEnv * env, jclass clazz, jboolean grab);
 
 /*
  * Class:     org_lwjgl_input_Mouse

@@ -57,6 +57,7 @@ static bool mFirstTimeInitialization = true; // boolean to determine first time 
 static POINT cursorPos;
 static RECT windowRect;
 static bool usingNativeCursor;
+static int mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 void EnumerateMouseCapabilities();
@@ -96,8 +97,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclass cl
     throwException(env, "Please create the window before initializing input devices");
     return;
 	} 
-
-	ShowCursor(FALSE);
 
 	/* skip enumeration, since we only want system mouse */
 	CreateMouse();
@@ -240,19 +239,18 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nSetNativeCursor
 			cursorPos.x = (clientRect.left + clientRect.right)/2;
 			cursorPos.y = clientRect.bottom - 1 - (clientRect.bottom - clientRect.top)/2;
 			SetCursorPos(cursorPos.x, cursorPos.y);
-			ShowCursor(TRUE);
 			usingNativeCursor = true;
 		}
 	} else {
 		if (usingNativeCursor) {
 			SetClassLong(hwnd, GCL_HCURSOR, (LONG)NULL);
 			SetCursor(NULL);
+			ShowCursor(TRUE);
 			mDIDevice->Unacquire();
-			if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+			if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
 				throwException(env, "Could not set the CooperativeLevel.");
 				return;
 			}
-			ShowCursor(FALSE);
 			usingNativeCursor = false;
 			mDIDevice->Acquire();
 		}
@@ -287,18 +285,41 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetMinCursorSize
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv *env, jclass clazz) {
-	ShowCursor(TRUE);
 	ShutdownMouse();
 }
 
 /*
- * Class:		 org_lwjgl_input_Controller
+ * Class:		 org_lwjgl_input_Mouse
  * Method:		nPoll
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz, jobject coord_buffer_obj, jobject button_buffer_obj) {
 	mDIDevice->Acquire();
 	UpdateMouseFields(env, clazz, coord_buffer_obj, button_buffer_obj);
+}
+
+/*
+ * Class:     org_lwjgl_input_Mouse
+ * Method:    nGrabMouse
+ * Signature: (Z)Z
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nGrabMouse
+  (JNIEnv * env, jclass clazz, jboolean grab) {
+  if(usingNativeCursor) {
+    return;
+  }  
+  
+  if(grab) {
+    mouseMask = DISCL_EXCLUSIVE | DISCL_FOREGROUND;
+  } else {
+    mouseMask = DISCL_NONEXCLUSIVE | DISCL_FOREGROUND;
+  }
+  mDIDevice->Unacquire();
+	if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
+	  throwException(env, "Could not set the CooperativeLevel.");
+		return;
+	}
+	mDIDevice->Acquire();  
 }
 
 /**
@@ -384,7 +405,7 @@ void SetupMouse() {
 	mDIDevice->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
 
 	// set the cooperative level
-	if(mDIDevice->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK) {
+	if(mDIDevice->SetCooperativeLevel(hwnd, mouseMask) != DI_OK) {
 		printfDebug("SetCooperativeLevel failed\n");
 		mCreate_success = false;
 		return;

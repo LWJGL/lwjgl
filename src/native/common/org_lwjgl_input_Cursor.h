@@ -16,7 +16,7 @@ extern "C" {
  * Signature: (IIIIILjava/nio/IntBuffer;I)J
  */
 JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint);
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_input_Cursor

@@ -41,7 +41,7 @@
 
 #include "org_lwjgl_input_Cursor.h"
 
-JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor(JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset) {
+JNIEXPORT jlong JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor(JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Cursor_nDestroyCursor(JNIEnv *env, jclass clazz, jlong cursor_handle) {

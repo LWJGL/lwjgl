@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.Display;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Window;
 import org.lwjgl.LWJGLException;
@@ -59,69 +60,71 @@ import org.lwjgl.LWJGLException;
  * @version $Revision$
  */
 public class Mouse {
-	
+
 	/** 1 bit transparency for native cursor */
-	public final static int CURSOR_ONE_BIT_TRANSPARENCY = 1;
-	
+	public final static int		CURSOR_ONE_BIT_TRANSPARENCY	= 1;
+
 	/** 8 bit alhpa native cursor */
-	public final static int CURSOR_8_BIT_ALPHA = 2;
-	
+	public final static int		CURSOR_8_BIT_ALPHA					= 2;
+
 	/** animation native cursor */
-	public final static int CURSOR_ANIMATION = 4;
+	public final static int		CURSOR_ANIMATION						= 4;
 
 	/** Has the mouse been created? */
-	private static boolean created;
+	private static boolean		created;
 
 	/** The mouse buttons status from the last poll */
-	private static ByteBuffer buttons;
+	private static ByteBuffer	buttons;
 
 	/** X */
-	private static int x;
+	private static int				x;
 
 	/** Y */
-	private static int y;
-	
+	private static int				y;
+
 	/** Buffer to hold the deltas dx, dy and dwheel */
-	private static IntBuffer coord_buffer;
+	private static IntBuffer	coord_buffer;
 
 	/** Delta X */
-	private static int dx;
+	private static int				dx;
 
 	/** Delta Y */
-	private static int dy;
+	private static int				dy;
 
 	/** Delta Z */
-	private static int dwheel;
+	private static int				dwheel;
 
 	/** Number of buttons supported by the mouse */
-	private static int buttonCount = -1;
+	private static int				buttonCount									= -1;
 
 	/** Does this mouse support a scroll wheel */
-	private static boolean hasWheel = false;
+	private static boolean		hasWheel										= false;
 
 	/** The current native cursor, if any */
-	private static Cursor currentCursor;
+	private static Cursor			currentCursor;
 
 	/** Button names. These are set upon create(), to names like BUTTON0, BUTTON1, etc. */
-	private static String[] buttonName;
+	private static String[]		buttonName;
 
 	/** hashmap of button names, for fast lookup */
-	private static final Map buttonMap = new HashMap(16);
+	private static final Map	buttonMap										= new HashMap(16);
 
 	/** Lazy initialization */
-	private static boolean initialized;
+	private static boolean		initialized;
 
 	/** The mouse button events from the last read */
-	private static ByteBuffer readBuffer = null;
+	private static ByteBuffer	readBuffer									= null;
 
 	/** The current mouse event button being examined */
-	private static int eventButton;
+	private static int				eventButton;
 
 	/** The current state of the button being examined in the event queue */
-	private static boolean eventState;
+	private static boolean		eventState;
 
 	/** Buffer size in events */
-	private final static int BUFFER_SIZE = 50;
+	private final static int	BUFFER_SIZE									= 50;
+
+	private static boolean		isGrabbed;
 
 	/**
 	 * Mouse cannot be constructed.
@@ -172,17 +175,17 @@ public class Mouse {
 	 * @throws LWJGLException if the cursor could not be set for any reason
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
-		if (!created)
-			throw new IllegalStateException("Create the Mouse before setting the native cursor");
+		if (!created) throw new IllegalStateException("Create the Mouse before setting the native cursor");
 		if ((getNativeCursorCaps() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
-			throw new IllegalStateException("Mouse doesn't support native cursors");
+				throw new IllegalStateException("Mouse doesn't support native cursors");
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
 		if (currentCursor != null) {
 			nSetNativeCursor(currentCursor.getHandle());
-	 		currentCursor.setTimeout();
-		x = Window.getWidth() / 2;
-		y = Window.getHeight() / 2;      
+			currentCursor.setTimeout();
+			x = Window.getWidth() / 2;
+			y = Window.getHeight() / 2;
+			isGrabbed = false;
 		} else {
 			nSetNativeCursor(0);
 		}
@@ -225,14 +228,14 @@ public class Mouse {
 	 */
 	private static void initialize() {
 		Sys.initialize();
-		
+
 		// Assign names to all the buttons
 		buttonName = new String[16];
-		for (int i = 0; i < 16; i ++) {
+		for (int i = 0; i < 16; i++) {
 			buttonName[i] = "BUTTON" + i;
 			buttonMap.put(buttonName[i], new Integer(i));
 		}
-		
+
 		initialized = true;
 	}
 
@@ -242,14 +245,11 @@ public class Mouse {
 	 * @throws LWJGLException if the mouse could not be created for any reason
 	 */
 	public static void create() throws LWJGLException {
-		
-		if (!Window.isCreated())
-			throw new IllegalStateException("Window must be created prior to creating mouse");
-		
+
+		if (!Window.isCreated()) throw new IllegalStateException("Window must be created prior to creating mouse");
+
 		initialize();
-		if (created) {
-			return;
-		}
+		if (created) { return; }
 		nCreate();
 		hasWheel = nHasWheel();
 		created = true;
@@ -281,7 +281,7 @@ public class Mouse {
 	public static boolean isCreated() {
 		return created;
 	}
-	
+
 	/**
 	 * @return true if buffering is enabled
 	 */
@@ -297,12 +297,10 @@ public class Mouse {
 			try {
 				setNativeCursor(null);
 			} catch (LWJGLException e) {
-				if (Sys.DEBUG)
-					e.printStackTrace();
+				if (Sys.DEBUG) e.printStackTrace();
 			}
 		}
-		if (!created)
-			return;
+		if (!created) return;
 		created = false;
 		buttons = null;
 		coord_buffer = null;
@@ -341,10 +339,9 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#enableBuffer()
 	 */
 	public static void poll() {
-		if (!created)
-			throw new IllegalStateException("Mouse must be created before you can poll it");
+		if (!created) throw new IllegalStateException("Mouse must be created before you can poll it");
 		nPoll(coord_buffer, buttons);
-		
+
 		int poll_dx = coord_buffer.get(0);
 		int poll_dy = coord_buffer.get(1);
 		int poll_dwheel = coord_buffer.get(2);
@@ -356,28 +353,27 @@ public class Mouse {
 		dwheel = poll_dwheel;
 
 		// if window has been created, clamp to edges
-		if(Window.isCreated()) {
+		if (Window.isCreated()) {
 			// clamp x, y
 			if (x < 0) {
 				x = 0;
 			} else if (x > Window.getWidth()) {
 				x = Window.getWidth();
 			}
-			
+
 			if (y < 0) {
 				y = 0;
 			} else if (y > Window.getHeight()) {
 				y = Window.getHeight();
 			}
 		}
-		if (readBuffer != null)
-			read();
+		if (readBuffer != null) read();
 	}
 
 	private static void read() {
 		readBuffer.compact();
 		int numEvents = nRead(readBuffer, readBuffer.position());
-		readBuffer.position(readBuffer.position() + numEvents*2);
+		readBuffer.position(readBuffer.position() + numEvents * 2);
 		readBuffer.flip();
 	}
 
@@ -393,14 +389,13 @@ public class Mouse {
 	 * @return true if the specified button is down
 	 */
 	public static boolean isButtonDown(int button) {
-		if (!created)
-			throw new IllegalStateException("Mouse must be created before you can poll the button state");
+		if (!created) throw new IllegalStateException("Mouse must be created before you can poll the button state");
 		if (button >= buttonCount || button < 0)
 			return false;
 		else
 			return buttons.get(button) == 1;
 	}
-	
+
 	/**
 	 * Gets a button's name
 	 * @param button The button
@@ -412,7 +407,7 @@ public class Mouse {
 		else
 			return buttonName[button];
 	}
-	
+
 	/**
 	 * Get's a button's index. If the button is unrecognised then -1 is returned.
 	 * @param buttonName The button name
@@ -429,9 +424,8 @@ public class Mouse {
 	 * Enable mouse button buffering. Must be called after the mouse is created.
 	 */
 	public static void enableBuffer() throws LWJGLException {
-		if (!created)
-			throw new IllegalStateException("Mouse must be created before you can enable buffering");
-		readBuffer = BufferUtils.createByteBuffer(2*BUFFER_SIZE);
+		if (!created) throw new IllegalStateException("Mouse must be created before you can enable buffering");
+		readBuffer = BufferUtils.createByteBuffer(2 * BUFFER_SIZE);
 		readBuffer.limit(0);
 		nEnableBuffer();
 	}
@@ -458,10 +452,9 @@ public class Mouse {
 	 * @return true if a mouse event was read, false otherwise
 	 */
 	public static boolean next() {
-		if (!created)
-			throw new IllegalStateException("Mouse must be created before you can read events");
+		if (!created) throw new IllegalStateException("Mouse must be created before you can read events");
 		if (readBuffer == null)
-			throw new IllegalStateException("Event buffering must be enabled before you can read events");
+				throw new IllegalStateException("Event buffering must be enabled before you can read events");
 
 		if (readBuffer.hasRemaining()) {
 			eventButton = readBuffer.get() & 0xFF;
@@ -470,14 +463,14 @@ public class Mouse {
 		} else
 			return false;
 	}
-	
+
 	/**
 	 * @return Current events button
 	 */
 	public static int getEventButton() {
 		return eventButton;
 	}
-	
+
 	/**
 	 * @return Current events button state
 	 */
@@ -503,8 +496,8 @@ public class Mouse {
 	 */
 	public static int getY() {
 		return y;
-	}	
-	
+	}
+
 	/**
 	 * @return Movement on the x axis since last time getDX() was called
 	 */
@@ -541,17 +534,33 @@ public class Mouse {
 	}
 
 	/**
+	 * @return whether or not the mouse has grabbed the cursor
+	 */
+	public static boolean isGrabbed() {
+		return isGrabbed;
+	}
+
+	/**
+	 * Sets whether or not the mouse has grabbed the cursor 
+	 * (and thus hidden).
+	 */
+	public static void setGrabbed(boolean grab) {
+		isGrabbed = grab;
+		nGrabMouse(isGrabbed);
+	}
+	private static native void nGrabMouse(boolean grab);
+
+	/**
 	 * Updates the cursor, so that animation can be changed if needed.
 	 * This method is called automatically by the window on its update. 
 	 */
 	public static void updateCursor() {
-		if(currentCursor != null && currentCursor.hasTimedOut()) {
+		if (Display.getPlatform() == Display.PLATFORM_WGL && currentCursor != null && currentCursor.hasTimedOut()) {
 			currentCursor.nextCursor();
 			try {
 				setNativeCursor(currentCursor);
 			} catch (LWJGLException e) {
-				if (Sys.DEBUG)
-					e.printStackTrace();
+				if (Sys.DEBUG) e.printStackTrace();
 			}
 		}
 	}
