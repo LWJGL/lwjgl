@@ -48,7 +48,7 @@
 static CGLContextObj			contextObj;
 static CGDirectDisplayID		displayID = kCGDirectMainDisplay;
 
-/* TODO: move this to Window.cpp when it is ported
+/* 
  * Utility function to throw an Exception
  */
 void throwException(JNIEnv * env, const char * err)
@@ -83,11 +83,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 
     CGDisplaySwitchToMode( displayID, displayMode );
 
-    CGLPixelFormatAttribute attribs[2];
+    CGOpenGLDisplayMask displayMask = CGDisplayIDToOpenGLDisplayMask( kCGDirectMainDisplay ) ;
+    CGLPixelFormatAttribute attribs[] =
+    {
+	kCGLPFAFullScreen,
+	kCGLPFADisplayMask,
+	displayMask,
+	NULL
+    } ;
     long swapInterval;
-    
-    attribs[0] = kCGLPFAFullScreen;
-    attribs[1] = kCGLPFADoubleBuffer;
 
     CGLChoosePixelFormat( attribs, &pixelFormatObj, &numPixelFormats );
     if ( pixelFormatObj != NULL )
@@ -97,18 +101,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 
         swapInterval = 1;
         CGLSetParameter( contextObj, kCGLCPSwapInterval, &swapInterval );
+	CGLSetCurrentContext( contextObj );
+	CGLSetFullScreen( contextObj );
+	if (extgl_Initialize() != 0)
+	{
+	// TODO: destroy stuff created this far
+		throwException( env, "Could not init gl function pointers\n");
+		CGLSetCurrentContext( NULL );
+		CGLClearDrawable( contextObj );
+		CGLDestroyContext( contextObj );
+		contextObj = NULL;
+		return;
+	}
     }
-
-    CGLSetCurrentContext( contextObj );
-    CGLSetFullScreen( contextObj );
-    
-    if (extgl_Initialize() != 0)
+    else
     {
-    // TODO: destroy stuff created this far
-	throwException( env, "Could not init gl function pointers\n");
-        return;
+	throwException( env, "Failed to choose pixel format\n");
     }
-
 }
 
 /*
