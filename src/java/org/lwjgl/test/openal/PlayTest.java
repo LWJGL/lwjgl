@@ -103,7 +103,7 @@ public class PlayTest extends BasicTest {
           ByteBuffer filebuffer = getData(args[0]);
           
           // pass directly to buffer data
-          AL.alBufferData(buffers.get(0), AL.AL_FORMAT_VORBIS_EXT, filebuffer, filebuffer.capacity(), -1);
+          AL.alBufferData(buffers.get(0), AL.AL_FORMAT_VORBIS_EXT, filebuffer, -1, -1);
           filebuffer.clear();
         } else {
           // load wave data from buffer
