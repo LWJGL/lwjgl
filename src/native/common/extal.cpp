@@ -31,7 +31,6 @@
  */
 
 #include <stdio.h>
-#include <jni.h>
 #include "extal.h"
 
 #ifdef _X11

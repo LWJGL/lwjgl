@@ -40,10 +40,17 @@
 #ifdef _X11
 #include <AL/altypes.h>
 #include <AL/alctypes.h>
-#else
+#endif
+#ifdef _WIN32
 #include <altypes.h>
 #include <alctypes.h>
 #endif
+#ifdef _AGL
+#include <OpenAL/alctypes.h>
+#include <OpenAL/altypes.h>
+#endif
+
+#include <jni.h>
 
 #ifdef __cplusplus
 extern "C" {

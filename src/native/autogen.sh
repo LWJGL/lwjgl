@@ -1,4 +1,4 @@
 aclocal
 autoheader
-automake --foreign --include-deps --add-missing --copy
+automake --foreign --include-deps --add-missing
 autoconf
