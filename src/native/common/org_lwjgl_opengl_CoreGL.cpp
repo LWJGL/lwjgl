@@ -470,7 +470,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3bv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3bv((signed char *)v);
-	CHECK_GL_ERROR
 }
 
 /*
@@ -482,7 +481,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3dv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3dv((double *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -495,7 +493,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3fv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3fv((float *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -508,7 +505,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3iv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3iv((int *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -521,7 +517,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3sv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3sv((short *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -534,7 +529,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3ubv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3ubv((unsigned char *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -547,7 +541,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3uiv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3uiv((unsigned int *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -560,7 +553,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color3usv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor3usv((unsigned short *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -573,7 +565,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4bv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor4bv((signed char *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -586,7 +577,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4dv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor4dv((double *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -599,7 +589,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4fv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor4fv((float *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -612,7 +601,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4iv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor4iv((int *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -625,7 +613,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4sv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor4sv((short *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -638,7 +625,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4ubv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor4ubv((unsigned char *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -651,7 +637,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_color4uiv
   (JNIEnv *env, jobject obj, jint v)
 {
 	glColor4uiv((unsigned int *)v);
-	CHECK_GL_ERROR
 }
 
 
@@ -862,7 +847,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_edgeFlagPointer(JNIEnv * env
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_edgeFlag(JNIEnv * env, jobject obj, jboolean p0)
 {
 	glEdgeFlag((GLboolean) p0);
-	CHECK_GL_ERROR
 }
 
 /*
@@ -872,7 +856,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_edgeFlag(JNIEnv * env, jobje
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_CoreGL_edgeFlagv(JNIEnv * env, jobject obj, jint p0)
 {
 	glEdgeFlagv((const unsigned char *) p0);
-	CHECK_GL_ERROR
 }
 
 /*
