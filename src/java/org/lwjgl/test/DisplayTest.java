@@ -124,12 +124,10 @@ public class DisplayTest {
     }
     
     // find a mode
-    System.out.print("Looking for 640x480x16@60...");
+    System.out.print("Looking for 640x480...");
     for(int i=0; i<modes.length;i++) {
       if (modes[i].getWidth()  == 640  &&
-          modes[i].getHeight() == 480  &&
-          modes[i].getBitsPerPixel()    == 16   &&
-          modes[i].getFrequency()   == 60) {
+          modes[i].getHeight() == 480) {
         mode = modes[i];
         System.out.println("found!");
         break;
