@@ -194,7 +194,7 @@ public class Mouse {
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws LWJGLException {
 		if ((getNativeCursorCaps() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
-				throw new IllegalStateException("Mouse doesn't support native cursors");
+			throw new IllegalStateException("Mouse doesn't support native cursors");
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
 		if (isCreated()) {
@@ -275,7 +275,8 @@ public class Mouse {
 		buttonCount = Display.getImplementation().getButtonCount();
 		buttons = BufferUtils.createByteBuffer(buttonCount);
 		coord_buffer = BufferUtils.createIntBuffer(3);
-		setNativeCursor(currentCursor);
+		if (currentCursor != null)
+			setNativeCursor(currentCursor);
 		setGrabbed(isGrabbed);
 	}
 
