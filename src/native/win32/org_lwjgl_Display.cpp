@@ -196,18 +196,6 @@ static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
 	return ret;
 }
 
-
-/*
- * Class:     org_lwjgl_Display
- * Method:    getPlatform
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_Display_getPlatform
-  (JNIEnv * env, jclass clazz)
-{
-	return org_lwjgl_Display_PLATFORM_WGL;
-}
-
 /*
  * Class:     org_lwjgl_Display
  * Method:    setDisplayMode
