@@ -41,17 +41,58 @@
 
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "extgl.h"
+#include <OpenGL/OpenGL.h>
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost(JNIEnv *env, jclass clazz, jint handle) {
 	return JNI_FALSE;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_getPbufferCaps(JNIEnv *env, jclass clazz) {
-	//return org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
+/*	CGLRendererInfoObj renderers;
+	long num_renderers;
+	CGLError err = CGLQueryRendererInfo(~0L, &renderers, &num_renderers);
+	if (err)
+		return 0;
+	int result = 0;
+	for (long i = 0; i < num_renderers; i++) {
+		long pbuffer_supported;
+		err = CGLDescribeRenderer(renderers, i, kCGLRPOffScreen, &pbuffer_supported);
+		if (!err && pbuffer_supported == true)
+			result = org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED;
+	}
+	CGLDestroyRendererInfo(renderers);
+	return result;*/
 	return 0;
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate(JNIEnv *env, jclass clazz, jint width, jint height, jint bpp, jint alpha, jint depth, jint stencil) {
+/*	CGLPixelFormatObj pixel_format;
+	CGLContextObj context;
+	int dummy;
+	CGLPixelFormatAttribute attribs[] = {kCGLPFAOffScreen,
+					     kCGLPFAMinimumPolicy,
+					     kCGLPFAColorSize,
+					     (CGLPixelFormatAttribute)bpp,
+					     kCGLPFAAlphaSize,
+					     (CGLPixelFormatAttribute)alpha,
+					     kCGLPFADepthSize,
+					     (CGLPixelFormatAttribute)depth,
+					     kCGLPFAStencilSize,
+					     (CGLPixelFormatAttribute)stencil,
+					     (CGLPixelFormatAttribute)NULL};
+	CGLChoosePixelFormat(attribs, &pixel_format, &dummy);
+	if (pixel_format == NULL) {
+		throwException(env, "Could not find matching pixel format");
+		return -1;
+	}
+	CGLCreateContext(pixel_format, NULL, &context);
+	CGLDestroyPixelFormat(pixel_format);
+	if (context == NULL) {
+		throwException(env, "Could not create offscreen context");
+		return -1;
+	}
+	CGLSetOffscreen(*/
+	return -1;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Pbuffer_nReleaseContext(JNIEnv *env, jclass clazz) {
