@@ -58,7 +58,7 @@ public abstract class BasicTest {
      * Creates an instance of PlayTest
      */
     public BasicTest() {
-        al      = new AL(null, 44100, 40, false);
+        al      = new AL(null, 44100, 15, false);
         try {
             al.create();
         } catch (Exception e) {
