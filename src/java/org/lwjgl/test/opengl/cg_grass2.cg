@@ -1,0 +1,72 @@
+#pragma bind app2vert.position = ATTR0
+#pragma bind app2vert.normal = ATTR2
+#pragma bind app2vert.color = ATTR3
+
+
+struct app2vert : application2vertex
+{
+  float4 position; //in object space
+  float3 normal; //in object space
+  float4 color;
+};
+
+#pragma bind vert2frag.HPOS = HPOS
+#pragma bind vert2frag.COL0 = COL0
+
+struct vert2frag : vertex2fragment 
+{
+  float4 HPOS;
+  float4 COL0;
+};
+
+vert2frag main(app2vert IN,
+               uniform float4x4 ModelViewProj,
+               uniform float4 Stiff[12],
+               uniform float4 Load)
+{
+	vert2frag OUT;
+	float4 position;
+	float3 normal;
+	float3 disloc;
+    float4 dif;
+    float index;
+    float teta;
+	float alpha;
+
+	alpha = IN.position.y / 1.7;
+
+	// matrix line index
+    index = IN.color.a * 5 * 2;
+
+	// straw stiffness (randomic)
+	Load = Load * IN.color.y;
+
+    disloc.x = IN.position.x + dot(Stiff[index].xy, Load.xz);
+    disloc.y = IN.position.y;
+    disloc.z = IN.position.z + dot(Stiff[index + 1].xy, Load.xz);
+
+	// find the normal
+    teta = acos(IN.position.y / length(disloc));
+
+    normal = IN.position.xyz - disloc.xyz;
+    normal.y = sin(teta) * length(disloc);
+    normal = normalize(normal);
+
+    position.x = disloc.x + IN.color.x;
+    position.y = disloc.y;
+    position.z = disloc.z + IN.color.z;
+    position.w = 1;
+
+    OUT.HPOS = mul(ModelViewProj, position);
+
+	// calculate diffuse lighting off the normal that was just calculated
+    float4 lightPos = float4(0,4,0,0);
+    float4 lightVec = normalize(lightPos - position);
+    float diffuseInten = dot(lightVec.xyz, normal);
+
+	diffuseInten = (diffuseInten < 0.5) ? 0.5 : diffuseInten;
+
+    OUT.COL0 = float4(IN.color.y * 0.7, 0.7, 0.4, alpha) * diffuseInten;
+
+    return OUT;
+}
