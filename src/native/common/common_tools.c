@@ -79,7 +79,11 @@ void printfDebugJava(JNIEnv *env, const char *format, ...) {
 	va_list ap;
 	va_start(ap, format);
 	if (isDebugEnabled()) {
+		#ifdef WIN32
 		_vsnprintf(buffer, BUFFER_SIZE, format, ap);
+		#else
+		vsnprintf(buffer, BUFFER_SIZE, format, ap);
+		#endif
 		buffer[BUFFER_SIZE - 1] = '\0';
 		str = (*env)->NewStringUTF(env, buffer);
 		org_lwjgl_Sys_class = (*env)->FindClass(env, "org/lwjgl/Sys");
