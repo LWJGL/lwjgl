@@ -91,6 +91,16 @@ static inline jobject safeNewBuffer(JNIEnv *env, void *p, int size) {
 		return NULL;
 }
 
+static inline jobject safeNewBufferCached(JNIEnv *env, void *p, int size, jobject old_buffer) {
+	if (old_buffer != NULL) {
+		void *old_buffer_address = (*env)->GetDirectBufferAddress(env, old_buffer);
+		if (old_buffer_address == p)
+			return old_buffer;
+	}
+	return safeNewBuffer(env, p, size);
+
+}
+
 static inline void *offsetToPointer(jint offset) {
 	return (char *)NULL + offset;
 }
@@ -127,7 +137,6 @@ extern int copyEvents(event_queue_t *event_queue, jint *output_event_buffer, int
 extern bool putEvent(event_queue_t *queue, jint *event);
 extern void throwGeneralException(JNIEnv * env, const char *exception_name, const char * err);
 extern void throwException(JNIEnv *env, const char *msg);
-extern void throwOpenALException(JNIEnv * env, const char * err);
 extern void throwFMODException(JNIEnv * env, const char * err);
 extern void setDebugEnabled(bool enable);
 extern void printfDebugJava(JNIEnv *env, const char *format, ...);

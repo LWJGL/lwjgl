@@ -6,6 +6,7 @@
 	<property name="lwjgl.src" value="./src" />
 	<property name="lwjgl.src.native" value="${lwjgl.src}/native" />
 	<property name="lwjgl.src.headers" value="${lwjgl.src.native}/common" />
+	<property name="lwjgl.src.templates" value="${lwjgl.src}/templates" />
 	<property name="lwjgl.bin" value="./bin" />
 	<property name="lwjgl.lib" value="./libs" />
 	<property name="lwjgl.dist" value="./dist" />
@@ -199,8 +200,109 @@
 	</target>
 
 	<!-- Compiles the Java source code -->
+	<target name="generator" description="Compiles the native method generator">
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/generator/**.java" source="1.5" target="1.5" taskname="generator">
+			<compilerarg value="-Xlint:all"/>
+		</javac>
+	</target>
+
+	<target name="generate-all" depends="generate-openal, generate-opengl" description="Generates java and native source"/>
+
+	<target name="generate-openal" depends="generator" description="Generates java and native source for AL">
+		<!-- Generate OpenAL -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg value="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg value="${lwjgl.src.headers}"/>
+			<arg value="-Atypemap=org.lwjgl.generator.ALTypeMap"/>
+			<arg value="-Ageneratechecks"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/openal/AL10.java"/>
+		</apply>
+	</target>
+
+	<target name="generate-opengl" depends="generator" description="Generates java and native source for GL">
+		<!-- there's no apt task in ant yet, so we'll just invoke it manually for now -->
+		<!-- Generate core GL -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg value="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg value="${lwjgl.src.headers}"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/GL*.java"/>
+		</apply>
+		<!-- Generate ARB -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg value="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg value="${lwjgl.src.headers}/arb"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ARB*.java"/>
+		</apply>
+		<!-- Generate ATI -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg value="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg value="${lwjgl.src.headers}/ati"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/ATI*.java"/>
+		</apply>
+		<!-- Generate EXT -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg value="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg value="${lwjgl.src.headers}/ext"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/EXT*.java"/>
+		</apply>
+		<!-- Generate NV -->
+		<apply executable="apt" parallel="true">
+			<arg value="-nocompile"/>
+			<arg value="-factory"/>
+			<arg value="org.lwjgl.generator.GeneratorProcessorFactory"/>
+			<arg value="-cp"/>
+			<arg value="${lwjgl.src}/java:${lwjgl.src.templates}:${lwjgl.bin}:${java.class.path}"/>
+			<arg value="-s"/>
+			<arg value="${lwjgl.src}/java"/>
+			<arg value="-d"/>
+			<arg value="${lwjgl.src.headers}/nv"/>
+			<arg value="-Atypemap=org.lwjgl.generator.GLTypeMap"/>
+			<fileset dir="${lwjgl.src.templates}" includes="org/lwjgl/opengl/NV*.java"/>
+		</apply>
+	</target>
+	
+	<!-- Compiles the Java source code -->
 	<target name="compile" description="Compiles the java source code">
-		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/**.java" source="1.4" target="1.4" taskname="lwjgl" />
+		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/*.java" source="1.4" target="1.4" taskname="lwjgl" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/input/**" source="1.4" target="1.4" taskname="input" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/openal/**" source="1.4" target="1.4" taskname="openal" />
 		<javac debug="yes" srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" target="1.4" taskname="opengl" />

@@ -135,8 +135,8 @@ typedef int GLintptrARB;
 typedef unsigned int GLsizeiptrARB;
 typedef unsigned char GLcharARB;
 
-#define GL_VERSION                                              0x1F02
-#define GL_EXTENSIONS                                           0x1F03
+// NV_half_float types
+typedef unsigned short GLhalf;
 
 /* helper stuff */
 
@@ -168,12 +168,6 @@ struct ExtensionTypes
 
 extern struct ExtensionTypes extgl_Extensions;
 #endif
-
-//typedef GLenum (APIENTRY * glGetErrorPROC) (void);
-//typedef const GLubyte * (APIENTRY * glGetStringPROC) (GLenum name);
-
-//extern glGetErrorPROC glGetError;
-//extern glGetStringPROC glGetString;
 
 /* initializes everything, call this right after the rc is created. the function returns true if successful */
 extern bool extgl_Open(JNIEnv *env);

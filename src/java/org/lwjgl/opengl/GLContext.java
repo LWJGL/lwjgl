@@ -382,7 +382,7 @@ public final class GLContext {
 				Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
 				init_stubs_method.invoke(null, null);
 			} catch (Exception e) {
-				Sys.log("Failed to initialize extension " + extension_class);
+				Sys.log("Failed to initialize extension " + extension_class + " - exception: " + e);
 				exts_it.remove();
 				exts_names.remove(exts.get(extension_class));
 			}

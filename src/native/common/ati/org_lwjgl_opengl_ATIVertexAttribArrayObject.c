@@ -1,97 +1,36 @@
-/* 
- * Copyright (c) 2002-2004 LWJGL Project
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
- * met:
- * 
- * * Redistributions of source code must retain the above copyright 
- *   notice, this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
- *   from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+/* MACHINE GENERATED FILE, DO NOT EDIT */
 
-// ----------------------------------
-// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIVertexAttribArrayObject
-// ----------------------------------
-
+#include <jni.h>
 #include "extgl.h"
 
-typedef void (APIENTRY * glVertexAttribArrayObjectATIPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLuint buffer, GLuint offset);
-typedef void (APIENTRY * glGetVertexAttribArrayObjectfvATIPROC) (GLuint index, GLenum pname, GLfloat *params);
-typedef void (APIENTRY * glGetVertexAttribArrayObjectivATIPROC) (GLuint index, GLenum pname, GLint *params);
+typedef void (APIENTRY *glGetVertexAttribArrayObjectivATIPROC) (GLuint index, GLenum pname, GLint * params);
+typedef void (APIENTRY *glGetVertexAttribArrayObjectfvATIPROC) (GLuint index, GLenum pname, GLfloat * params);
+typedef void (APIENTRY *glVertexAttribArrayObjectATIPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLuint buffer, GLuint offset);
 
-static glVertexAttribArrayObjectATIPROC glVertexAttribArrayObjectATI;
-static glGetVertexAttribArrayObjectfvATIPROC glGetVertexAttribArrayObjectfvATI;
 static glGetVertexAttribArrayObjectivATIPROC glGetVertexAttribArrayObjectivATI;
+static glGetVertexAttribArrayObjectfvATIPROC glGetVertexAttribArrayObjectfvATI;
+static glVertexAttribArrayObjectATIPROC glVertexAttribArrayObjectATI;
 
-/*
- * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
- * Method:	glVertexAttribArrayObjectATI
- */
-static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI
-	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint buffer, jint offset)
-{
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI(JNIEnv *env, jclass clazz, jint index, jint pname, jobject params, jint params_position) {
+	GLint *params_address = ((GLint *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetVertexAttribArrayObjectivATI(index, pname, params_address);
+}
+
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI(JNIEnv *env, jclass clazz, jint index, jint pname, jobject params, jint params_position) {
+	GLfloat *params_address = ((GLfloat *)(*env)->GetDirectBufferAddress(env, params)) + params_position;
+	glGetVertexAttribArrayObjectfvATI(index, pname, params_address);
+}
+
+static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI(JNIEnv *env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint buffer, jint offset) {
 	glVertexAttribArrayObjectATI(index, size, type, normalized, stride, buffer, offset);
-	
 }
 
-/*
- * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
- * Method:	nglGetVertexAttribArrayObjectfvATI
- */
-static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI
-	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
-{
-	GLfloat *params_ptr = (GLfloat *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
-	glGetVertexAttribArrayObjectfvATI(index, pname, params_ptr);
-	
-}
-
-/*
- * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
- * Method:	nglGetVertexAttribArrayObjectivATI
- */
-static void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI
-	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
-{
-	GLint *params_ptr = (GLint *)(*env)->GetDirectBufferAddress(env, params) + paramsOffset;
-	glGetVertexAttribArrayObjectivATI(index, pname, params_ptr);
-	
-}
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"glVertexAttribArrayObjectATI", "(IIIZIII)V", (void*)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI, "glVertexAttribArrayObjectATI", (void*)&glVertexAttribArrayObjectATI},
-		{"nglGetVertexAttribArrayObjectfvATI", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI, "glGetVertexAttribArrayObjectfvATI", (void*)&glGetVertexAttribArrayObjectfvATI},
-		{"nglGetVertexAttribArrayObjectivATI", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI, "glGetVertexAttribArrayObjectivATI", (void*)&glGetVertexAttribArrayObjectivATI}
+		{"nglGetVertexAttribArrayObjectivATI", "(IILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI, "glGetVertexAttribArrayObjectivATI", (void *)&glGetVertexAttribArrayObjectivATI},
+		{"nglGetVertexAttribArrayObjectfvATI", "(IILjava/nio/FloatBuffer;I)V", (void *)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI, "glGetVertexAttribArrayObjectfvATI", (void *)&glGetVertexAttribArrayObjectfvATI},
+		{"glVertexAttribArrayObjectATI", "(IIIZIII)V", (void *)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI, "glVertexAttribArrayObjectATI", (void *)&glVertexAttribArrayObjectATI}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
-#ifdef __cplusplus
-}
-#endif
-

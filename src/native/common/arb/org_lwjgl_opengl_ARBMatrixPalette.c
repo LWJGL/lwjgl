@@ -1,139 +1,58 @@
-/* 
- * Copyright (c) 2002-2004 LWJGL Project
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are 
- * met:
- * 
- * * Redistributions of source code must retain the above copyright 
- *   notice, this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- *
- * * Neither the name of 'LWJGL' nor the names of 
- *   its contributors may be used to endorse or promote products derived 
- *   from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+/* MACHINE GENERATED FILE, DO NOT EDIT */
 
-// ----------------------------------
-// IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBMatrixPalette
-// ----------------------------------
-
+#include <jni.h>
 #include "extgl.h"
 
-typedef void (APIENTRY * glCurrentPaletteMatrixARBPROC) (GLint index);
-typedef void (APIENTRY * glMatrixIndexubvARBPROC) (GLint size, GLubyte *indices);
-typedef void (APIENTRY * glMatrixIndexusvARBPROC) (GLint size, GLushort *indices);
-typedef void (APIENTRY * glMatrixIndexuivARBPROC) (GLint size, GLuint *indices);
-typedef void (APIENTRY * glMatrixIndexPointerARBPROC) (GLint size, GLenum type, GLsizei stride, GLvoid *pointer);
+typedef void (APIENTRY *glMatrixIndexuivARBPROC) (GLint size, GLuint * pIndices);
+typedef void (APIENTRY *glMatrixIndexusvARBPROC) (GLint size, GLushort * pIndices);
+typedef void (APIENTRY *glMatrixIndexubvARBPROC) (GLint size, GLubyte * pIndices);
+typedef void (APIENTRY *glMatrixIndexPointerARBPROC) (GLint size, GLenum type, GLsizei stride, GLvoid * pPointer);
+typedef void (APIENTRY *glCurrentPaletteMatrixARBPROC) (GLint index);
 
-static glCurrentPaletteMatrixARBPROC glCurrentPaletteMatrixARB;
-static glMatrixIndexubvARBPROC glMatrixIndexubvARB;
-static glMatrixIndexusvARBPROC glMatrixIndexusvARB;
 static glMatrixIndexuivARBPROC glMatrixIndexuivARB;
+static glMatrixIndexusvARBPROC glMatrixIndexusvARB;
+static glMatrixIndexubvARBPROC glMatrixIndexubvARB;
 static glMatrixIndexPointerARBPROC glMatrixIndexPointerARB;
+static glCurrentPaletteMatrixARBPROC glCurrentPaletteMatrixARB;
 
-/*
- * Class:	org.lwjgl.opengl.ARBMatrixPalette
- * Method:	glCurrentPaletteMatrixARB
- */
-static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB
-	(JNIEnv * env, jclass clazz, jint index)
-{
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB(JNIEnv *env, jclass clazz, jint size, jobject pIndices, jint pIndices_position) {
+	GLuint *pIndices_address = ((GLuint *)(*env)->GetDirectBufferAddress(env, pIndices)) + pIndices_position;
+	glMatrixIndexuivARB(size, pIndices_address);
+}
+
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB(JNIEnv *env, jclass clazz, jint size, jobject pIndices, jint pIndices_position) {
+	GLushort *pIndices_address = ((GLushort *)(*env)->GetDirectBufferAddress(env, pIndices)) + pIndices_position;
+	glMatrixIndexusvARB(size, pIndices_address);
+}
+
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB(JNIEnv *env, jclass clazz, jint size, jobject pIndices, jint pIndices_position) {
+	GLubyte *pIndices_address = ((GLubyte *)(*env)->GetDirectBufferAddress(env, pIndices)) + pIndices_position;
+	glMatrixIndexubvARB(size, pIndices_address);
+}
+
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_position) {
+	GLvoid *pPointer_address = ((GLvoid *)(((char *)(*env)->GetDirectBufferAddress(env, pPointer)) + pPointer_position));
+	glMatrixIndexPointerARB(size, type, stride, pPointer_address);
+}
+
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBBO(JNIEnv *env, jclass clazz, jint size, jint type, jint stride, jint pPointer_buffer_offset) {
+	GLvoid *pPointer_address = ((GLvoid *)offsetToPointer(pPointer_buffer_offset));
+	glMatrixIndexPointerARB(size, type, stride, pPointer_address);
+}
+
+static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB(JNIEnv *env, jclass clazz, jint index) {
 	glCurrentPaletteMatrixARB(index);
-	
 }
 
-/*
- * Class:	org.lwjgl.opengl.ARBMatrixPalette
- * Method:	nglMatrixIndexPointerARB
- */
-static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB
-	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_offset)
-{
-	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)(*env)->GetDirectBufferAddress(env, pPointer) + pPointer_offset);
-	glMatrixIndexPointerARB(size, type, stride, pPointer_ptr);
-	
-}
-
-/*
- * Class:	org.lwjgl.opengl.ARBMatrixPalette
- * Method:	nglMatrixIndexPointerARBVBO
- */
-static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBVBO
-	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
-{
-	glMatrixIndexPointerARB(size, type, stride, (GLvoid *)buffer_offset);
-	
-}
-
-/*
- * Class:	org.lwjgl.opengl.ARBMatrixPalette
- * Method:	nglMatrixIndexubvARB
- */
-static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB
-	(JNIEnv * env, jclass clazz, jint size, jobject pIndices, jint pIndices_offset)
-{
-	GLubyte *pIndices_ptr = (GLubyte *)(*env)->GetDirectBufferAddress(env, pIndices) + pIndices_offset;
-	glMatrixIndexubvARB(size, pIndices_ptr);
-	
-}
-
-/*
- * Class:	org.lwjgl.opengl.ARBMatrixPalette
- * Method:	nglMatrixIndexuivARB
- */
-static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB
-	(JNIEnv * env, jclass clazz, jint size, jobject piIndices, jint piIndices_offset)
-{
-	GLuint *piIndices_ptr = (GLuint *)(*env)->GetDirectBufferAddress(env, piIndices) + piIndices_offset;
-	glMatrixIndexuivARB(size, piIndices_ptr);
-	
-}
-
-/*
- * Class:	org.lwjgl.opengl.ARBMatrixPalette
- * Method:	nglMatrixIndexusvARB
- */
-static void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB
-	(JNIEnv * env, jclass clazz, jint size, jobject psIndices, jint psIndices_offset)
-{
-	GLushort *psIndices_ptr = (GLushort *)(*env)->GetDirectBufferAddress(env, psIndices) + psIndices_offset;
-	glMatrixIndexusvARB(size, psIndices_ptr);
-	
-}
-
-#ifdef _cplusplus
-extern "C" {
-#endif
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_initNativeStubs(JNIEnv *env, jclass clazz) {
 	JavaMethodAndExtFunction functions[] = {
-		{"glCurrentPaletteMatrixARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB, "glCurrentPaletteMatrixARB", (void*)&glCurrentPaletteMatrixARB},
-		{"nglMatrixIndexPointerARB", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB, "glMatrixIndexPointerARB", (void*)&glMatrixIndexPointerARB},
-		{"nglMatrixIndexPointerARBVBO", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBVBO, NULL, NULL},
-		{"nglMatrixIndexubvARB", "(ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB, "glMatrixIndexubvARB", (void*)&glMatrixIndexubvARB},
-		{"nglMatrixIndexuivARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB, "glMatrixIndexuivARB", (void*)&glMatrixIndexuivARB},
-		{"nglMatrixIndexusvARB", "(ILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB, "glMatrixIndexusvARB", (void*)&glMatrixIndexusvARB}
+		{"nglMatrixIndexuivARB", "(ILjava/nio/IntBuffer;I)V", (void *)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB, "glMatrixIndexuivARB", (void *)&glMatrixIndexuivARB},
+		{"nglMatrixIndexusvARB", "(ILjava/nio/ShortBuffer;I)V", (void *)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB, "glMatrixIndexusvARB", (void *)&glMatrixIndexusvARB},
+		{"nglMatrixIndexubvARB", "(ILjava/nio/ByteBuffer;I)V", (void *)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB, "glMatrixIndexubvARB", (void *)&glMatrixIndexubvARB},
+		{"nglMatrixIndexPointerARB", "(IIILjava/nio/Buffer;I)V", (void *)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB, "glMatrixIndexPointerARB", (void *)&glMatrixIndexPointerARB},
+		{"nglMatrixIndexPointerARBBO", "(IIII)V", (void *)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBBO, "glMatrixIndexPointerARB", (void *)&glMatrixIndexPointerARB},
+		{"glCurrentPaletteMatrixARB", "(I)V", (void *)&Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB, "glCurrentPaletteMatrixARB", (void *)&glCurrentPaletteMatrixARB}
 	};
 	int num_functions = NUMFUNCTIONS(functions);
 	extgl_InitializeClass(env, clazz, num_functions, functions);
 }
-#ifdef __cplusplus
-}
-#endif
-

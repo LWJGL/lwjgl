@@ -34,6 +34,8 @@ package org.lwjgl.opengl;
 import java.util.WeakHashMap;
 import java.util.Map;
 
+import java.nio.IntBuffer;
+
 /** Track Vertex Buffer Objects by context. */
 final class BufferObjectTracker {
 
@@ -81,13 +83,33 @@ final class BufferObjectTracker {
 		}
 	}
 
-	static void bindVBOBuffer(int target, int buffer) {
+	static void deleteBuffers(IntBuffer buffers) {
+		for (int i = buffers.position(); i < buffers.limit(); i++) {
+			int buffer_handle = buffers.get(i);
+			if (getVBOArrayStack().getState() == buffer_handle)
+				getVBOArrayStack().setState(0);
+			if (getVBOElementStack().getState() == buffer_handle)
+				getVBOElementStack().setState(0);
+			if (getPBOPackStack().getState() == buffer_handle)
+				getPBOPackStack().setState(0);
+			if (getPBOUnpackStack().getState() == buffer_handle)
+				getPBOUnpackStack().setState(0);
+		}
+	}
+
+	static void bindBuffer(int target, int buffer) {
 		switch ( target ) {
-			case GL15.GL_ELEMENT_ARRAY_BUFFER:
+			case ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB:
+				getVBOArrayStack().setState(buffer);
+				break;
+			case ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB:
 				getVBOElementStack().setState(buffer);
 				break;
-			case GL15.GL_ARRAY_BUFFER:
-				getVBOArrayStack().setState(buffer);
+			case ARBPixelBufferObject.GL_PIXEL_PACK_BUFFER_ARB:
+				getPBOPackStack().setState(buffer);
+				break;
+			case ARBPixelBufferObject.GL_PIXEL_UNPACK_BUFFER_ARB:
+				getPBOUnpackStack().setState(buffer);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported VBO target " + target);

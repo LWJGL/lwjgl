@@ -653,7 +653,7 @@ public interface IGL {
 	 * @param map
 	 * @param values
 	 */
-	void glGetPixelMap(int map, IntBuffer values);
+	void glGetPixelMapu(int map, IntBuffer values);
 
 	/**
 	 * @param map
@@ -665,7 +665,7 @@ public interface IGL {
 	 * @param map
 	 * @param values
 	 */
-	void glGetPixelMap(int map, ShortBuffer values);
+	void glGetPixelMapu(int map, ShortBuffer values);
 
 	/**
 	 * @param map
@@ -679,7 +679,7 @@ public interface IGL {
 	 *
 	 * @return
 	 */
-	ByteBuffer glGetPointerv(int pname, int size);
+	ByteBuffer glGetPointer(int pname, int size);
 
 	/**
 	 * @param mask
@@ -1104,13 +1104,13 @@ public interface IGL {
 	 * @param map
 	 * @param values
 	 */
-	void glPixelMap(int map, IntBuffer values);
+	void glPixelMapu(int map, IntBuffer values);
 
 	/**
 	 * @param map
 	 * @param values
 	 */
-	void glPixelMap(int map, ShortBuffer values);
+	void glPixelMapu(int map, ShortBuffer values);
 
 	/**
 	 *
@@ -3045,7 +3045,7 @@ public interface IGL {
 	 * @param index
 	 * @param params
 	 */
-	void glProgramEnvParameterARB(int target, int index, FloatBuffer params);
+	void glProgramEnvParameter4ARB(int target, int index, FloatBuffer params);
 
 	/**
 	 * @param target
@@ -3063,7 +3063,7 @@ public interface IGL {
 	 * @param index
 	 * @param params
 	 */
-	void glProgramLocalParameterARB(int target, int index, FloatBuffer params);
+	void glProgramLocalParameter4ARB(int target, int index, FloatBuffer params);
 
 	/**
 	 * @param target
@@ -3267,7 +3267,7 @@ public interface IGL {
 	 * @param pname
 	 * @param params
 	 */
-	void glConvolutionParameteriv(int target, int pname, IntBuffer params);
+	void glConvolutionParameter(int target, int pname, IntBuffer params);
 
 	/**
 	 * @param target
@@ -3518,7 +3518,7 @@ public interface IGL {
 	 * @param column
 	 * @param span
 	 */
-	void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span);
+//	void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span);
 
 	/**
 	 * @param target
@@ -3565,7 +3565,7 @@ public interface IGL {
 	 * @param row
 	 * @param column
 	 */
-	void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column);
+//	void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column);
 
 	/**
 	 * @param target
@@ -3768,14 +3768,14 @@ public interface IGL {
 	 * @param pname
 	 * @param params
 	 */
-	void glGetQueryObjectiARB(int id, int pname, IntBuffer params);
+	void glGetQueryObjectARB(int id, int pname, IntBuffer params);
 
 	/**
 	 * @param id
 	 * @param pname
 	 * @param params
 	 */
-	void glGetQueryObjectuiARB(int id, int pname, IntBuffer params);
+	void glGetQueryObjectuARB(int id, int pname, IntBuffer params);
 
 	/**
 	 * @param id
@@ -4149,7 +4149,7 @@ public interface IGL {
 	/**
 	 * @param pfMtx
 	 */
-	void glMultTransposeMatrixfARB(FloatBuffer pfMtx);
+	void glMultTransposeMatrixARB(FloatBuffer pfMtx);
 
 	/**
 	 * @param count
@@ -4419,7 +4419,7 @@ public interface IGL {
 	 * @param shaderObj
 	 * @param strings
 	 */
-	void glShaderSourceARB(int shaderObj, ByteBuffer[] strings);
+//	void glShaderSourceARB(int shaderObj, ByteBuffer[] strings);
 
 	/**
 	 * @param location
@@ -5266,7 +5266,7 @@ public interface IGL {
 	 * @param shader
 	 * @param strings
 	 */
-	void glShaderSource(int shader, ByteBuffer[] strings);
+//	void glShaderSource(int shader, ByteBuffer[] strings);
 
 	/**
 	 * @param type

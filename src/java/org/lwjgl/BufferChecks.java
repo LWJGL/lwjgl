@@ -67,6 +67,11 @@ public class BufferChecks {
 		}
 	}
 
+	public static void checkNotNull(Object o) {
+		if (o == null)
+			throw new IllegalArgumentException("Null argument");
+	}
+	
 	/**
 	 * Helper methods to ensure a buffer is direct or null.
 	 */

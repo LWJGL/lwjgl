@@ -786,8 +786,8 @@ public class GL {
 	 * @param map
 	 * @param values
 	 */
-	public static void glGetPixelMap(int map, IntBuffer values) {
-		GL11.glGetPixelMap(map, values);
+	public static void glGetPixelMapu(int map, IntBuffer values) {
+		GL11.glGetPixelMapu(map, values);
 	}
 
 	/**
@@ -802,8 +802,8 @@ public class GL {
 	 * @param map
 	 * @param values
 	 */
-	public static void glGetPixelMap(int map, ShortBuffer values) {
-		GL11.glGetPixelMap(map, values);
+	public static void glGetPixelMapu(int map, ShortBuffer values) {
+		GL11.glGetPixelMapu(map, values);
 	}
 
 	/**
@@ -820,8 +820,8 @@ public class GL {
 	 *
 	 * @return
 	 */
-	public static ByteBuffer glGetPointerv(int pname, int size) {
-		return GL11.glGetPointerv(pname, size);
+	public static ByteBuffer glGetPointer(int pname, int size) {
+		return GL11.glGetPointer(pname, size);
 	}
 
 	/** @param mask  */
@@ -1358,8 +1358,8 @@ public class GL {
 	 * @param map
 	 * @param values
 	 */
-	public static void glPixelMap(int map, IntBuffer values) {
-		GL11.glPixelMap(map, values);
+	public static void glPixelMapu(int map, IntBuffer values) {
+		GL11.glPixelMapu(map, values);
 	}
 
 	/**
@@ -1375,8 +1375,8 @@ public class GL {
 	 * @param map
 	 * @param values
 	 */
-	public static void glPixelMap(int map, ShortBuffer values) {
-		GL11.glPixelMap(map, values);
+	public static void glPixelMapu(int map, ShortBuffer values) {
+		GL11.glPixelMapu(map, values);
 	}
 
 	/**
@@ -3655,8 +3655,8 @@ public class GL {
 	 * @param index
 	 * @param params
 	 */
-	public static void glProgramEnvParameterARB(int target, int index, FloatBuffer params) {
-		ARBFragmentProgram.glProgramEnvParameterARB(target, index, params);
+	public static void glProgramEnvParameter4ARB(int target, int index, FloatBuffer params) {
+		ARBFragmentProgram.glProgramEnvParameter4ARB(target, index, params);
 	}
 
 	/**
@@ -3676,8 +3676,8 @@ public class GL {
 	 * @param index
 	 * @param params
 	 */
-	public static void glProgramLocalParameterARB(int target, int index, FloatBuffer params) {
-		ARBFragmentProgram.glProgramLocalParameterARB(target, index, params);
+	public static void glProgramLocalParameter4ARB(int target, int index, FloatBuffer params) {
+		ARBFragmentProgram.glProgramLocalParameter4ARB(target, index, params);
 	}
 
 	/**
@@ -3923,8 +3923,8 @@ public class GL {
 	 * @param pname
 	 * @param params
 	 */
-	public static void glConvolutionParameteriv(int target, int pname, IntBuffer params) {
-		ARBImaging.glConvolutionParameteriv(target, pname, params);
+	public static void glConvolutionParameter(int target, int pname, IntBuffer params) {
+		ARBImaging.glConvolutionParameter(target, pname, params);
 	}
 
 	/**
@@ -4225,10 +4225,10 @@ public class GL {
 	 * @param column
 	 * @param span
 	 */
-	public static void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
+/*	public static void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
 		ARBImaging.glGetSeparableFilter(target, format, type, row, column, span);
 	}
-
+*/
 	/**
 	 * @param target
 	 * @param format
@@ -4280,10 +4280,10 @@ public class GL {
 	 * @param row
 	 * @param column
 	 */
-	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
+/*	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
 		ARBImaging.glSeparableFilter2D(target, internalformat, width, height, format, type, row, column);
 	}
-
+*/
 	/**
 	 * @param target
 	 * @param internalformat
@@ -4524,8 +4524,8 @@ public class GL {
 	 * @param pname
 	 * @param params
 	 */
-	public static void glGetQueryObjectiARB(int id, int pname, IntBuffer params) {
-		ARBOcclusionQuery.glGetQueryObjectiARB(id, pname, params);
+	public static void glGetQueryObjectARB(int id, int pname, IntBuffer params) {
+		ARBOcclusionQuery.glGetQueryObjectARB(id, pname, params);
 	}
 
 	/**
@@ -4533,8 +4533,8 @@ public class GL {
 	 * @param pname
 	 * @param params
 	 */
-	public static void glGetQueryObjectuiARB(int id, int pname, IntBuffer params) {
-		ARBOcclusionQuery.glGetQueryObjectuiARB(id, pname, params);
+	public static void glGetQueryObjectuARB(int id, int pname, IntBuffer params) {
+		ARBOcclusionQuery.glGetQueryObjectuARB(id, pname, params);
 	}
 
 	/**
@@ -4943,8 +4943,8 @@ public class GL {
 	}
 
 	/** @param pfMtx  */
-	public static void glMultTransposeMatrixfARB(FloatBuffer pfMtx) {
-		ARBTransposeMatrix.glMultTransposeMatrixfARB(pfMtx);
+	public static void glMultTransposeMatrixARB(FloatBuffer pfMtx) {
+		ARBTransposeMatrix.glMultTransposeMatrixARB(pfMtx);
 	}
 
 	/** @param count  */
@@ -5269,10 +5269,10 @@ public class GL {
 	 * @param shaderObj
 	 * @param strings
 	 */
-	public static void glShaderSourceARB(int shaderObj, ByteBuffer[] strings) {
+/*	public static void glShaderSourceARB(int shaderObj, ByteBuffer[] strings) {
 		ARBShaderObjects.glShaderSourceARB(shaderObj, strings);
 	}
-
+*/
 	/**
 	 * @param location
 	 * @param values
@@ -6320,10 +6320,10 @@ public class GL {
 	 * @param shader
 	 * @param strings
 	 */
-	public static void glShaderSource(int shader, ByteBuffer[] strings) {
+/*	public static void glShaderSource(int shader, ByteBuffer[] strings) {
 		GL20.glShaderSource(shader, strings);
 	}
-
+*/
 	/**
 	 * @param type
 	 *

@@ -90,6 +90,22 @@ public final class BufferUtils {
 	}
 
 	/**
+	 * @return n, where buffer_element_size=2^n.
+	 */
+	public static int getElementSizeExponent(Buffer buf) {
+		if (buf instanceof ByteBuffer)
+			return 0;
+		else if (buf instanceof ShortBuffer || buf instanceof CharBuffer)
+			return 1;
+		else if (buf instanceof FloatBuffer || buf instanceof IntBuffer)
+			return 2;
+		else if (buf instanceof LongBuffer || buf instanceof DoubleBuffer)
+			return 3;
+		else
+			throw new IllegalStateException("Unsupported buffer type");
+	}
+
+	/**
 	 * Construct a direct native-order doublebuffer with the specified number
 	 * of elements.
 	 * @param size The size, in floats
@@ -105,14 +121,7 @@ public final class BufferUtils {
 	 * @return the position of the buffer, in BYTES
 	 */
 	public static int getOffset(Buffer buffer) {
-		if (buffer instanceof FloatBuffer || buffer instanceof IntBuffer)
-			return buffer.position() << 2;
-		else if (buffer instanceof ShortBuffer || buffer instanceof CharBuffer)
-			return buffer.position() << 1;
-		else if (buffer instanceof DoubleBuffer || buffer instanceof LongBuffer)
-			return buffer.position() << 3;
-		else
-			return buffer.position();
+		return buffer.position() << getElementSizeExponent(buffer);
 	}
 
 }

@@ -37,15 +37,6 @@
 #include "extal.h"
 #include "common_tools.h"
 
-#define CHECK_AL_ERROR \
-	{ \
-		int err = alGetError(); \
-		if (err != AL_NO_ERROR) { \
-			jclass cls = (*env)->FindClass(env, "org/lwjgl/openal/OpenALException"); \
-			(*env)->ThrowNew(env, cls, (const char*) alGetString(err)); \
-			(*env)->DeleteLocalRef(env, cls); \
-		} \
-	}
 /* only available if deviceaddress is specified in method */
 #define CHECK_ALC_ERROR \
 	{ \

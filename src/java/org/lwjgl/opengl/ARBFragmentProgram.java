@@ -1,72 +1,29 @@
-/*
- * Copyright (c) 2002-2004 LWJGL Project
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions of source code must retain the above copyright
- *   notice, this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- *
- * * Neither the name of 'LWJGL' nor the names of
- *   its contributors may be used to endorse or promote products derived
- *   from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+/* MACHINE GENERATED FILE, DO NOT EDIT */
+
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
+
 public final class ARBFragmentProgram extends ARBProgram {
-
-	/*
-	 * Accepted by the <cap> parameter of Disable, Enable, and IsEnabled, by the
-	 * <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev,
-	 * and by the <target> parameter of ProgramStringARB, BindProgramARB,
-	 * ProgramEnvParameter4[df][v]ARB, ProgramLocalParameter4[df][v]ARB,
-	 * GetProgramEnvParameter[df]vARB, GetProgramLocalParameter[df]vARB,
-	 * GetProgramivARB and GetProgramStringARB.
-	 */
-	public static final int GL_FRAGMENT_PROGRAM_ARB = 0x8804;
-
-	/*
-	 * Accepted by the <pname> parameter of GetProgramivARB:
-	 */
-	public static final int GL_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x8805;
-	public static final int GL_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x8806;
-	public static final int GL_PROGRAM_TEX_INDIRECTIONS_ARB = 0x8807;
-	public static final int GL_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x8808;
-	public static final int GL_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x8809;
-	public static final int GL_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x880A;
-	public static final int GL_MAX_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x880B;
-	public static final int GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x880C;
-	public static final int GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB = 0x880D;
-	public static final int GL_MAX_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x880E;
-	public static final int GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x880F;
-	public static final int GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x8810;
-
-	/*
-	 * Accepted by the <pname> parameter of GetBooleanv, GetIntegerv, GetFloatv,
-	 * and GetDoublev:
-	 */
-	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
 	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
+	public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
+	public static final int GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x8810;
+	public static final int GL_MAX_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x880f;
+	public static final int GL_MAX_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x880e;
+	public static final int GL_MAX_PROGRAM_TEX_INDIRECTIONS_ARB = 0x880d;
+	public static final int GL_MAX_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x880c;
+	public static final int GL_MAX_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x880b;
+	public static final int GL_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB = 0x880a;
+	public static final int GL_PROGRAM_NATIVE_TEX_INSTRUCTIONS_ARB = 0x8809;
+	public static final int GL_PROGRAM_NATIVE_ALU_INSTRUCTIONS_ARB = 0x8808;
+	public static final int GL_PROGRAM_TEX_INDIRECTIONS_ARB = 0x8807;
+	public static final int GL_PROGRAM_TEX_INSTRUCTIONS_ARB = 0x8806;
+	public static final int GL_PROGRAM_ALU_INSTRUCTIONS_ARB = 0x8805;
+	public static final int GL_FRAGMENT_PROGRAM_ARB = 0x8804;
 
 	private ARBFragmentProgram() {
 	}
-}
 
+}

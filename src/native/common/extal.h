@@ -97,12 +97,7 @@ void InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths);
 void DeInitializeOpenAL();
 
 typedef ALvoid*	    (ALAPIENTRY *alGetProcAddressPROC)( ALubyte* fname );
-typedef ALubyte*	(ALAPIENTRY *alGetStringPROC)( ALenum param );
-typedef ALenum	    (ALAPIENTRY *alGetErrorPROC)( ALvoid );
-
 extern alGetProcAddressPROC alGetProcAddress;
-extern alGetStringPROC alGetString;
-extern alGetErrorPROC alGetError;
 
 typedef ALCcontext* (ALCAPIENTRY *alcGetCurrentContextPROC)(ALCvoid);
 extern alcGetCurrentContextPROC alcGetCurrentContext;

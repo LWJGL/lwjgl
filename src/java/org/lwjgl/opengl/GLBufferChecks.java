@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import org.lwjgl.BufferUtils;
+import java.nio.*;
 
 /**
  * $Id$ A class to check buffer boundaries in GL methods. Many GL
@@ -99,7 +101,34 @@ class GLBufferChecks {
 	}
 
 	/**
-	 * Calculate the storage required for an image.
+	 * Calculate the storage required for an image in elements
+	 *
+	 * @param format The format of the image (example: GL_RGBA)
+	 * @param type   The type of the image elements (example: GL_UNSIGNED_BYTE)
+	 * @param width  The width of the image
+	 * @param height The height of the image (1 for 1D images)
+	 * @param depth  The depth of the image (1 for 2D images)
+	 *
+	 * @return the size, in elements, of the image
+	 */
+	static int calculateImageStorage(Buffer buffer, int format, int type, int width, int height, int depth) {
+		return calculateImageStorage(format, type, width, height, depth) >> BufferUtils.getElementSizeExponent(buffer);
+	}
+
+	static int calculateTexImage1DStorage(Buffer buffer, int format, int type, int width, int border) {
+		return calculateTexImage1DStorage(format, type, width, border) >> BufferUtils.getElementSizeExponent(buffer);
+	}
+
+	static int calculateTexImage2DStorage(Buffer buffer, int format, int type, int width, int height, int border) {
+		return calculateTexImage2DStorage(format, type, width, height, border) >> BufferUtils.getElementSizeExponent(buffer);
+	}
+
+	static int calculateTexImage3DStorage(Buffer buffer, int format, int type, int width, int height, int depth, int border) {
+		return calculateTexImage3DStorage(format, type, width, height, depth, border) >> BufferUtils.getElementSizeExponent(buffer);
+	}
+
+	/**
+	 * Calculate the storage required for an image in bytes.
 	 *
 	 * @param format The format of the image (example: GL_RGBA)
 	 * @param type   The type of the image elements (example: GL_UNSIGNED_BYTE)
@@ -109,23 +138,23 @@ class GLBufferChecks {
 	 *
 	 * @return the size, in bytes, of the image
 	 */
-	static int calculateImageStorage(int format, int type, int width, int height, int depth) {
-		return calculateBytesPerPixel(type, format) * width * height * depth;
+	private static int calculateImageStorage(int format, int type, int width, int height, int depth) {
+		return calculateBytesPerPixel(format, type) * width * height * depth;
 	}
 
-	static int calculateTexImage1DStorage(int format, int type, int width, int border) {
-		return calculateBytesPerPixel(type, format) * (width + (border << 1));
+	private static int calculateTexImage1DStorage(int format, int type, int width, int border) {
+		return calculateBytesPerPixel(format, type) * (width + (border << 1));
 	}
 
-	static int calculateTexImage2DStorage(int format, int type, int width, int height, int border) {
-		return calculateTexImage1DStorage(type, format, width, border) * (height + (border << 1));
+	private static int calculateTexImage2DStorage(int format, int type, int width, int height, int border) {
+		return calculateTexImage1DStorage(format, type, width, border) * (height + (border << 1));
 	}
 
-	static int calculateTexImage3DStorage(int format, int type, int width, int height, int depth, int border) {
-		return calculateTexImage2DStorage(type, format, width, height, border) * (depth + (border << 1));
+	private static int calculateTexImage3DStorage(int format, int type, int width, int height, int depth, int border) {
+		return calculateTexImage2DStorage(format, type, width, height, border) * (depth + (border << 1));
 	}
 
-	private static int calculateBytesPerPixel(int type, int format) {
+	private static int calculateBytesPerPixel(int format, int type) {
 		int bpe;
 		switch ( type ) {
 			case GL11.GL_UNSIGNED_BYTE:

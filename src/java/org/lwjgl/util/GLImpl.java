@@ -1567,8 +1567,8 @@ public class GLImpl implements IGL {
 	 * @param pname
 	 * @param params
 	 */
-	public void glConvolutionParameteriv(int target, int pname, IntBuffer params) {
-		GL.glConvolutionParameteriv(target, pname, params);
+	public void glConvolutionParameter(int target, int pname, IntBuffer params) {
+		GL.glConvolutionParameter(target, pname, params);
 	}
 
 	/**
@@ -2992,16 +2992,16 @@ public class GLImpl implements IGL {
 	 * @param map
 	 * @param values
 	 */
-	public void glGetPixelMap(int map, IntBuffer values) {
-		GL.glGetPixelMap(map, values);
+	public void glGetPixelMapu(int map, IntBuffer values) {
+		GL.glGetPixelMapu(map, values);
 	}
 
 	/**
 	 * @param map
 	 * @param values
 	 */
-	public void glGetPixelMap(int map, ShortBuffer values) {
-		GL.glGetPixelMap(map, values);
+	public void glGetPixelMapu(int map, ShortBuffer values) {
+		GL.glGetPixelMapu(map, values);
 	}
 
 	/**
@@ -3010,8 +3010,8 @@ public class GLImpl implements IGL {
 	 *
 	 * @return
 	 */
-	public ByteBuffer glGetPointerv(int pname, int size) {
-		return GL.glGetPointerv(pname, size);
+	public ByteBuffer glGetPointer(int pname, int size) {
+		return GL.glGetPointer(pname, size);
 	}
 
 	/**
@@ -3089,8 +3089,8 @@ public class GLImpl implements IGL {
 	 * @param pname
 	 * @param params
 	 */
-	public void glGetQueryObjectiARB(int id, int pname, IntBuffer params) {
-		GL.glGetQueryObjectiARB(id, pname, params);
+	public void glGetQueryObjectARB(int id, int pname, IntBuffer params) {
+		GL.glGetQueryObjectARB(id, pname, params);
 	}
 
 	/**
@@ -3107,8 +3107,8 @@ public class GLImpl implements IGL {
 	 * @param pname
 	 * @param params
 	 */
-	public void glGetQueryObjectuiARB(int id, int pname, IntBuffer params) {
-		GL.glGetQueryObjectuiARB(id, pname, params);
+	public void glGetQueryObjectuARB(int id, int pname, IntBuffer params) {
+		GL.glGetQueryObjectuARB(id, pname, params);
 	}
 
 	/**
@@ -3119,10 +3119,10 @@ public class GLImpl implements IGL {
 	 * @param column
 	 * @param span
 	 */
-	public void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
+/*	public void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
 		GL.glGetSeparableFilter(target, format, type, row, column, span);
 	}
-
+*/
 	/**
 	 * @param obj
 	 * @param length
@@ -4021,8 +4021,8 @@ public class GLImpl implements IGL {
 	/**
 	 * @param pfMtx
 	 */
-	public void glMultTransposeMatrixfARB(FloatBuffer pfMtx) {
-		GL.glMultTransposeMatrixfARB(pfMtx);
+	public void glMultTransposeMatrixARB(FloatBuffer pfMtx) {
+		GL.glMultTransposeMatrixARB(pfMtx);
 	}
 
 	/**
@@ -4124,16 +4124,16 @@ public class GLImpl implements IGL {
 	 * @param map
 	 * @param values
 	 */
-	public void glPixelMap(int map, IntBuffer values) {
-		GL.glPixelMap(map, values);
+	public void glPixelMapu(int map, IntBuffer values) {
+		GL.glPixelMapu(map, values);
 	}
 
 	/**
 	 * @param map
 	 * @param values
 	 */
-	public void glPixelMap(int map, ShortBuffer values) {
-		GL.glPixelMap(map, values);
+	public void glPixelMapu(int map, ShortBuffer values) {
+		GL.glPixelMapu(map, values);
 	}
 
 	/**
@@ -4299,8 +4299,8 @@ public class GLImpl implements IGL {
 	 * @param index
 	 * @param params
 	 */
-	public void glProgramEnvParameterARB(int target, int index, FloatBuffer params) {
-		GL.glProgramEnvParameterARB(target, index, params);
+	public void glProgramEnvParameter4ARB(int target, int index, FloatBuffer params) {
+		GL.glProgramEnvParameter4ARB(target, index, params);
 	}
 
 	/**
@@ -4320,8 +4320,8 @@ public class GLImpl implements IGL {
 	 * @param index
 	 * @param params
 	 */
-	public void glProgramLocalParameterARB(int target, int index, FloatBuffer params) {
-		GL.glProgramLocalParameterARB(target, index, params);
+	public void glProgramLocalParameter4ARB(int target, int index, FloatBuffer params) {
+		GL.glProgramLocalParameter4ARB(target, index, params);
 	}
 
 	/**
@@ -4678,10 +4678,10 @@ public class GLImpl implements IGL {
 	 * @param row
 	 * @param column
 	 */
-	public void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
+/*	public void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
 		GL.glSeparableFilter2D(target, internalformat, width, height, format, type, row, column);
 	}
-
+*/
 	/**
 	 * @param id
 	 * @param unsigned
@@ -4801,10 +4801,10 @@ public class GLImpl implements IGL {
 	 * @param shaderObj
 	 * @param strings
 	 */
-	public void glShaderSourceARB(int shaderObj, ByteBuffer[] strings) {
+/*	public void glShaderSourceARB(int shaderObj, ByteBuffer[] strings) {
 		GL.glShaderSourceARB(shaderObj, strings);
 	}
-
+*/
 	/**
 	 * @param func
 	 * @param ref
@@ -6137,10 +6137,10 @@ public class GLImpl implements IGL {
 	 * @param shader
 	 * @param strings
 	 */
-	public void glShaderSource(int shader, ByteBuffer[] strings) {
+/*	public void glShaderSource(int shader, ByteBuffer[] strings) {
 		GL.glShaderSource(shader, strings);
 	}
-
+*/
 	/**
 	 * @param type
 	 *

@@ -1,0 +1,91 @@
+/*
+ * Copyright (c) 2002-2004 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.lwjgl.opengl;
+
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.generator.*;
+
+@Extension(postfix="NV", isFinal=false)
+public interface NV_program {
+	/*
+	   Accepted by the <pname> parameter of GetProgramivNV:
+	 */
+	public static final int GL_PROGRAM_TARGET_NV = 0x8646;
+	public static final int GL_PROGRAM_LENGTH_NV = 0x8627;
+	public static final int GL_PROGRAM_RESIDENT_NV = 0x8647;
+
+	/*
+	   Accepted by the <pname> parameter of GetProgramStringNV:
+	 */
+	public static final int GL_PROGRAM_STRING_NV = 0x8628;
+
+	/*
+	   Accepted by the <pname> parameter of GetBooleanv, GetIntegerv,
+	   GetFloatv, and GetDoublev:
+	 */
+	public static final int GL_PROGRAM_ERROR_POSITION_NV = 0x864B;
+
+	/*
+	   Accepted by the <name> parameter of GetString:
+	 */
+	public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;
+
+	public void glLoadProgramNV(@GLenum int target, @GLuint int programID, @AutoSize("string") @GLsizei int length, @Const @GLubyte Buffer string);
+
+	public void glBindProgramNV(@GLenum int target, @GLuint int programID);
+
+	public void glDeleteProgramsNV(@AutoSize("programs") @GLsizei int n, @Const @GLuint IntBuffer programs);
+	public void glGenProgramsNV(@AutoSize("programs") @GLsizei int n, @GLuint IntBuffer programs);
+
+	@StripPostfix("params")
+	public void glGetProgramivNV(@GLuint int programID, @GLenum int parameterName, @Check @GLint IntBuffer params);
+
+	public void glGetProgramStringNV(@GLuint int programID, @GLenum int parameterName, @Check @GLubyte Buffer paramString);
+
+	public boolean glIsProgramNV(@GLuint int programID);
+
+	@Code(	"		if (programIDs.remaining() != programResidences.remaining())\n" +
+			"			throw new IllegalArgumentException(\"programIDs.remaining() != programResidences.remaining()\");")
+	public boolean glAreProgramsResidentNV(@AutoSize("programIDs") @GLsizei int n,
+			@Const
+			@GLuint
+			IntBuffer programIDs,
+			@Check
+			@GLboolean
+			ByteBuffer programResidences);
+
+	public void glRequestResidentProgramsNV(@AutoSize("programIDs") @GLsizei int n, @GLuint IntBuffer programIDs);
+}
+

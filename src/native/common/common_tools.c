@@ -180,10 +180,6 @@ void throwGeneralException(JNIEnv * env, const char *exception_name, const char 
 	(*env)->DeleteLocalRef(env, cls);
 }
 
-void throwOpenALException(JNIEnv * env, const char * err) {
-	throwGeneralException(env, "org/lwjgl/openal/OpenALException", err);
-}
-
 void throwFMODException(JNIEnv * env, const char * err) {
 	throwGeneralException(env, "org/lwjgl/fmod3/FMODException", err);
 }
