@@ -47,6 +47,23 @@
 
 #include <stdlib.h>
 
+/*
+ * Class:     org_lwjgl_openal_ALUT
+ * Method:    nCreate
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALUT_nCreate (JNIEnv *env, jobject obj) {
+	return true;
+}
+
+/*
+ * Class:     org_lwjgl_openal_ALUT
+ * Method:    nDestroy
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALUT_nDestroy (JNIEnv *env, jobject obj) {
+}
+
 /**
  * This function initializes OpenAL.
  * 

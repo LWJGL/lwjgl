@@ -44,6 +44,23 @@
 /* OpenAL includes */
 #include <alc.h>
 
+/*
+ * Class:     org_lwjgl_openal_ALC
+ * Method:    nCreate
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nCreate (JNIEnv *env, jobject obj) {
+	return true;
+}
+
+/*
+ * Class:     org_lwjgl_openal_ALC
+ * Method:    nDestroy
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nDestroy (JNIEnv *env, jobject obj) {
+}
+
 /**
  * This function returns strings related to the context.
  *

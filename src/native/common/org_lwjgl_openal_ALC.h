@@ -9,6 +9,22 @@ extern "C" {
 #endif
 /*
  * Class:     org_lwjgl_openal_ALC
+ * Method:    nCreate
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_ALC_nCreate
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_lwjgl_openal_ALC
+ * Method:    nDestroy
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_openal_ALC_nDestroy
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_lwjgl_openal_ALC
  * Method:    getString
  * Signature: (Lorg/lwjgl/openal/ALCdevice;I)Ljava/lang/String;
  */
