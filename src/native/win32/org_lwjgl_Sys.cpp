@@ -61,7 +61,7 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 	return hires_timer_freq;
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebugEnabled(JNIEnv *env, jclass clazz, jboolean enabled) {
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setDebug(JNIEnv *env, jclass clazz, jboolean enabled) {
 	setDebugEnabled(enabled == JNI_TRUE ? true : false);
 }
 
