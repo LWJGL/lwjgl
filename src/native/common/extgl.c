@@ -109,8 +109,10 @@ void *extgl_GetProcAddress(const char *name)
 		NSSymbol sym = NSLookupSymbolInImage(opengl_lib_handle, mach_name, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
 		void *address = NSAddressOfSymbol(sym);
 		return address;
-	} else
+	} else {
+		printfDebug("Could not locate symbol %s\n", name);
 		return NULL;
+	}
 #endif
 }
 

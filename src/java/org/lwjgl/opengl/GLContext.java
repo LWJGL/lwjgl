@@ -34,10 +34,7 @@ package org.lwjgl.opengl;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -48,8 +45,8 @@ import java.util.*;
  * pointers.
  *
  * This class is thread-safe in the sense that multiple threads can safely call all public methods. The class is also
- * thread-aware in the sense that it tracks a per-thread current context (and capabilities). That way, multiple threads
- * can have multiple contexts current and render to them concurrently.
+ * thread-aware in the sense that it tracks a per-thread current context (including capabilities and function pointers). 
+ * That way, multiple threads can have multiple contexts current and render to them concurrently.
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
