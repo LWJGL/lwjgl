@@ -703,7 +703,7 @@ public class Matrix4f extends Matrix implements Serializable {
 
 	/**
 	 * Invert this matrix
-	 * @return this
+	 * @return this if successful, null otherwise
 	 */
 	public Matrix invert() {
 		
@@ -757,8 +757,9 @@ public class Matrix4f extends Matrix implements Serializable {
                     m31 = t13*determinant_inv;
                     m32 = t23*determinant_inv;
                     m23 = t32*determinant_inv;
-                }
-		return this;
+		    return this;
+                } else
+                    return null;
 	}
 	
 	/**
