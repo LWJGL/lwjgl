@@ -441,7 +441,8 @@ static bool initWindowGLX(JNIEnv *env, Display *disp, int screen, jstring title,
 		throwException(env, "Could not create a GLX context");
 		return false;
 	}
-	if (glXIsDirect(disp, context) == False) {
+	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+	if (!allow_software_acceleration && glXIsDirect(disp, context) == False) {
 		glXDestroyContext(disp, context);
 		XFree(vis_info);
 		throwException(env, "Could not create a direct GLX context");

@@ -131,7 +131,8 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Pbuffer_nCreate
                 throwException(env, "Could not create a GLX context");
                 return false;
         }
-        if (glXIsDirect(getCurrentDisplay(), context) == False) {
+	jboolean allow_software_acceleration = getBooleanProperty(env, "org.lwjgl.opengl.Window.allowSoftwareOpenGL");
+        if (!allow_software_acceleration && glXIsDirect(getCurrentDisplay(), context) == False) {
                 glXDestroyContext(getCurrentDisplay(), context);
                 XFree(configs);
                 throwException(env, "Could not create a direct GLX context");
