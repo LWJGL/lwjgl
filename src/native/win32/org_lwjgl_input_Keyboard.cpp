@@ -47,7 +47,7 @@
 #include "org_lwjgl_input_Keyboard.h"
 
 #define KEYBOARD_BUFFER_SIZE 50
-BYTE readBuffer[KEYBOARD_BUFFER_SIZE];
+BYTE readBuffer[KEYBOARD_BUFFER_SIZE*4];
 LPDIRECTINPUTDEVICE lpdiKeyboard		= NULL;
 jfieldID fid_readBuffer;
 bool translationEnabled;
