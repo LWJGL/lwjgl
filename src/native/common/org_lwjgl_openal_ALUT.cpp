@@ -48,7 +48,7 @@
 
 /* OpenAL includes */
 #include "checkALerror.h"
-#include "AL/alut.h"
+#include <AL/alut.h>
 
 /*
  * Class:     org_lwjgl_openal_ALUT
