@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -43,18 +43,21 @@ package org.lwjgl;
 
 public final class DisplayMode {
 	
-	public final int width, height, bpp, freq;
+	public final int width, height, bpp, freq, alpha, depth, stencil;
 
 	/**
 	 * Construct a display mode.
 	 * 
 	 * @see Display
 	 */
-	public DisplayMode(int width, int height, int bpp, int freq) {
+	private DisplayMode(int width, int height, int bpp, int freq, int alpha, int depth, int stencil) {
 		this.width = width;
 		this.height = height;
 		this.bpp = bpp;
 		this.freq = freq;
+		this.alpha = alpha;
+		this.depth = depth;
+		this.stencil = stencil;
 	}
 	
 
@@ -69,14 +72,17 @@ public final class DisplayMode {
 		return dm.width == width
 			&& dm.height == dm.height
 			&& dm.bpp == bpp
-			&& dm.freq == freq;
+			&& dm.freq == freq
+			&& dm.alpha == alpha
+			&& dm.depth == depth
+			&& dm.stencil == stencil;
 	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return width ^ height ^ freq ^ bpp;
+		return width ^ height ^ freq ^ bpp ^ alpha ^ (depth << 8) ^ (stencil << 24);
 	}
 
 	/* (non-Javadoc)
@@ -91,7 +97,13 @@ public final class DisplayMode {
 		sb.append(bpp);
 		sb.append(" @");
 		sb.append(freq);
-		sb.append("Hz");
+		sb.append("Hz ");
+		sb.append(alpha);
+		sb.append("bit alpha, ");
+		sb.append(depth);
+		sb.append("bit depth, ");
+		sb.append(stencil);
+		sb.append("bit stencil");
 		return sb.toString();
 	}
 

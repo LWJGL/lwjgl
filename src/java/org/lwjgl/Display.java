@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 2002 Lightweight Java Game Library Project
+ * Copyright (c) 2002 Light Weight Java Game Library Project
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -81,18 +81,12 @@ public final class Display {
 	 * destroyed.
 	 * 
 	 * @param displayMode a display mode to choose
-	 * @param alpha_bits number of alpha bits required
-	 * @param depth_bits number of depth bits required
-	 * @param stencil_bits number of stencil bits required
 	 * @param fullscreen whether to create the display fullscreen
 	 * @throws Exception if the display mode could not be set
 	 * @see #destroy()
 	 */
 	public static void create(
 		DisplayMode displayMode,
-		int alpha_bits,
-		int depth_bits,
-		int stencil_bits,
 		boolean fullscreen)
 		throws Exception {
 
@@ -103,9 +97,9 @@ public final class Display {
 			displayMode.height,
 			displayMode.bpp,
 			displayMode.freq,
-			alpha_bits,
-			depth_bits,
-			stencil_bits,
+			displayMode.alpha,
+			displayMode.depth,
+			displayMode.stencil,
 			fullscreen))
 			throw new Exception("Failed to set display mode to " + displayMode);
 
