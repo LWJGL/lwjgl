@@ -107,32 +107,14 @@ static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, 
 	return noErr;
 }
 
-static bool registerWindowHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_kind) {
-	EventTypeSpec event_type;
-	OSStatus err;
-	EventHandlerUPP handler_upp = NewEventHandlerUPP(func);
-	event_type.eventClass = kEventClassWindow;
-	event_type.eventKind  = event_kind;
-	err = InstallWindowEventHandler(win_ref, handler_upp, 1, &event_type, NULL, NULL);
-	DisposeEventHandlerUPP(handler_upp);
-	if (noErr != err) {
-		throwException(env, "Could not register window event handler");
-		return true;
-	}
-	return false;
-}
-
 static bool registerEventHandlers(JNIEnv *env) {
 	bool error;
-	error = registerWindowHandler(env, win_ref, doQuit, kEventWindowClose);
-	error = error || registerWindowHandler(env, win_ref, doActivate, kEventWindowActivated);
-	error = error || registerWindowHandler(env, win_ref, doDeactivate, kEventWindowDeactivated);
-	error = error || registerWindowHandler(env, win_ref, doMiniaturized, kEventWindowCollapsed);
-	error = error || registerWindowHandler(env, win_ref, doMaximize, kEventWindowExpanded);
-	if (error)
-		return false;
-	else
-		return registerKeyboardHandler(env, win_ref);
+	error = registerHandler(env, win_ref, doQuit, kEventWindowClose);
+	error = error || registerHandler(env, win_ref, doActivate, kEventWindowActivated);
+	error = error || registerHandler(env, win_ref, doDeactivate, kEventWindowDeactivated);
+	error = error || registerHandler(env, win_ref, doMiniaturized, kEventWindowCollapsed);
+	error = error || registerHandler(env, win_ref, doMaximize, kEventWindowExpanded);
+	return !error && registerKeyboardHandler(env, win_ref) && registerMouseHandler(env, win_ref);
 }
 
 static void destroyWindow(void) {

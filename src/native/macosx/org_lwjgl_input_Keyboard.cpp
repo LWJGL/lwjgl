@@ -76,7 +76,6 @@ static bool hasMoreEvents(void) {
 static void copyEvent(int event_size, int event_index) {
 	int output_index = event_index*event_size;
 	for (int i = 0; i < event_size; i++) {
-printf("list start %d end %d\n", list_start, list_end);
 		output_event_buffer[output_index] = input_event_buffer[list_start];
 		list_start = (list_start + 1)%EVENT_BUFFER_SIZE;
 		output_index++;
@@ -86,11 +85,6 @@ printf("list start %d end %d\n", list_start, list_end);
 static bool handleMappedKey(unsigned char mapped_code, unsigned char state) {
 	unsigned char old_state = key_buf[mapped_code];
 	if (old_state != state) {
-if (state == 1)
-	printf("key down, %x\n", mapped_code);
-else
-	printf("key up,  %x\n", mapped_code);
-		
 		key_buf[mapped_code] = state;
 		if (buffer_enabled) {
 			putEventElement(mapped_code);
@@ -246,20 +240,6 @@ static pascal OSStatus doKeyModifier(EventHandlerCallRef next_handler, EventRef 
 	return noErr;
 }
 
-static bool registerHandler(JNIEnv* env, WindowRef win_ref, EventHandlerProcPtr func, UInt32 event_kind) {
-	EventTypeSpec event_type;
-	EventHandlerUPP handler_upp = NewEventHandlerUPP(func);
-	event_type.eventClass = kEventClassKeyboard;
-	event_type.eventKind  = event_kind;
-	OSStatus err = InstallWindowEventHandler(win_ref, handler_upp, 1, &event_type, NULL, NULL);
-	DisposeEventHandlerUPP(handler_upp);
-	if (noErr != err) {
-		throwException(env, "Could not register window event handler");
-		return true;
-	}
-	return false;
-}
-
 bool registerKeyboardHandler(JNIEnv* env, WindowRef win_ref) {
 	bool error = registerHandler(env, win_ref, doKeyUp, kEventRawKeyUp);
 	error = error || registerHandler(env, win_ref, doKeyDown, kEventRawKeyDown);
@@ -396,8 +376,6 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_input_Keyboard_nRead(JNIEnv * env, jclass 
 		num_events++;
 	}
 	unlock();
-if (num_events != 0)
-	printf("num events: %d\n", num_events);
 	return num_events;
 }
 
