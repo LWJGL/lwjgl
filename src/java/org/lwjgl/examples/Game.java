@@ -33,6 +33,7 @@ package org.lwjgl.examples;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -55,6 +56,9 @@ public class Game {
 	
 	/** Exit the game */
 	private static boolean finished;
+  
+  /** A rotating square! */
+  private static float  angle;
 	
 	/**
 	 * No constructor needed - this class is static
@@ -151,7 +155,9 @@ public class Game {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			finished = true;
 		}
-		// TODO: all your game logic goes here.
+
+    // TODO: all your game logic goes here.
+    angle += 2.0f % 360;
 	}
 	
 	/**
@@ -159,7 +165,18 @@ public class Game {
 	 */
 	private static void render() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-		// TODO: all your rendering goes here
-	}
 
+    // TODO: all your rendering goes here
+    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+    GL11.glPushMatrix();
+    GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
+    GL11.glRotatef(angle, 0, 0, 1.0f);
+    GL11.glBegin(GL11.GL_QUADS);
+    GL11.glVertex2i(-50, -50);
+    GL11.glVertex2i(50, -50);
+    GL11.glVertex2i(50, 50);
+    GL11.glVertex2i(-50, 50);
+    GL11.glEnd();
+    GL11.glPopMatrix();
+	}
 }
