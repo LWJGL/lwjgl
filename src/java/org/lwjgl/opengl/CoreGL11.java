@@ -376,9 +376,6 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static void glNormalPointer(int stride, ByteBuffer pointer) {
 		nglNormalPointer(GL_BYTE, stride, pointer, pointer.position());
 	}
-	public static void glNormalPointer(int stride, ShortBuffer pointer) {
-		nglNormalPointer(GL_SHORT, stride, pointer, pointer.position() << 1);
-	}
 	public static void glNormalPointer(int stride, IntBuffer pointer) {
 		nglNormalPointer(GL_INT, stride, pointer, pointer.position() << 2);
 	}
@@ -389,7 +386,6 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native void glNormal3b(byte nx, byte ny, byte nz);
 	public static native void glNormal3f(float nx, float ny, float nz);
 	public static native void glNormal3i(int nx, int ny, int nz);
-	public static native void glNormal3s(short nx, short ny, short nz);
 	public static native void glNewList(int list, int mode);
 	public static native void glEndList();
 	public static void glMultMatrixf(FloatBuffer m) {

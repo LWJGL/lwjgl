@@ -232,9 +232,9 @@ public class GLCaps {
 		}
 	}
 
-	private static native boolean isWGLEXTExtensionsStringAvaiable();
+	private static native boolean isWGLEXTExtensionsStringAvailable();
 
-	private static native boolean isWGLARBExtensionsStringAvaiable();
+	private static native boolean isWGLARBExtensionsStringAvailable();
 
 	/**
 	 * Determine which WGL extensions are available
@@ -242,8 +242,8 @@ public class GLCaps {
 	private static void determineAvailableWGLExtensions(HashMap field_map) {
 
 		// First we must determine if WGL_EXT_extensions_string is available
-		WGL_ARB_extensions_string = isWGLARBExtensionsStringAvaiable();
-		WGL_EXT_extensions_string = isWGLEXTExtensionsStringAvaiable();
+		WGL_ARB_extensions_string = isWGLARBExtensionsStringAvailable();
+		WGL_EXT_extensions_string = isWGLEXTExtensionsStringAvailable();
 		if (!WGL_EXT_extensions_string && !WGL_ARB_extensions_string)
 			return;
 		final String exts;
