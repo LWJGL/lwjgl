@@ -1316,7 +1316,9 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_ARB_matrix_palette = GLQueryExtension(env, ext_set, "GL_ARB_matrix_palette");
 	extgl_Extensions.GL_ARB_multisample = GLQueryExtension(env, ext_set, "GL_ARB_multisample");
 	extgl_Extensions.GL_ARB_multitexture = GLQueryExtension(env, ext_set, "GL_ARB_multitexture");
+	extgl_Extensions.GL_ARB_occlusion_query = GLQueryExtension(env, ext_set, "GL_ARB_occlusion_query");
 	extgl_Extensions.GL_ARB_point_parameters = GLQueryExtension(env, ext_set, "GL_ARB_point_parameters");
+	extgl_Extensions.GL_ARB_shader_objects = GLQueryExtension(env, ext_set, "GL_ARB_shader_objects");
 	extgl_Extensions.GL_ARB_shadow = GLQueryExtension(env, ext_set, "GL_ARB_shadow");
 	extgl_Extensions.GL_ARB_shadow_ambient = GLQueryExtension(env, ext_set, "GL_ARB_shadow_ambient");
 	extgl_Extensions.GL_ARB_texture_border_clamp = GLQueryExtension(env, ext_set, "GL_ARB_texture_border_clamp");
@@ -1331,7 +1333,9 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_ARB_vertex_blend = GLQueryExtension(env, ext_set, "GL_ARB_vertex_blend");
 	extgl_Extensions.GL_ARB_vertex_buffer_object = GLQueryExtension(env, ext_set, "GL_ARB_vertex_buffer_object");
 	extgl_Extensions.GL_ARB_vertex_program = GLQueryExtension(env, ext_set, "GL_ARB_vertex_program");
+	extgl_Extensions.GL_ARB_vertex_shader = GLQueryExtension(env, ext_set, "GL_ARB_vertex_shaders");
 	extgl_Extensions.GL_ARB_window_pos = GLQueryExtension(env, ext_set, "GL_ARB_window_pos");
+
 	extgl_Extensions.GL_EXT_abgr = GLQueryExtension(env, ext_set, "GL_EXT_abgr");
 	extgl_Extensions.GL_EXT_bgra = GLQueryExtension(env, ext_set, "GL_EXT_bgra");
 	extgl_Extensions.GL_EXT_blend_func_separate = GLQueryExtension(env, ext_set, "GL_EXT_blend_function_separate");
@@ -1352,19 +1356,26 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_EXT_texture_lod_bias = GLQueryExtension(env, ext_set, "GL_EXT_texture_lod_bias");
 	extgl_Extensions.GL_EXT_vertex_shader = GLQueryExtension(env, ext_set, "GL_EXT_vertex_shader");
 	extgl_Extensions.GL_EXT_vertex_weighting = GLQueryExtension(env, ext_set, "GL_EXT_vertex_weighting");
+
+	extgl_Extensions.GL_ATI_draw_buffers = GLQueryExtension(env, ext_set, "GL_ATI_draw_buffers");
 	extgl_Extensions.GL_ATI_element_array = GLQueryExtension(env, ext_set, "GL_ATI_element_array");
 	extgl_Extensions.GL_ATI_envmap_bumpmap = GLQueryExtension(env, ext_set, "GL_ATI_envmap_bumpmap");
 	extgl_Extensions.GL_ATI_fragment_shader = GLQueryExtension(env, ext_set, "GL_ATI_fragment_shader");
+	extgl_Extensions.GL_ATI_map_object_buffer = GLQueryExtension(env, ext_set, "GL_ATI_map_object_buffer");
 	extgl_Extensions.GL_ATI_pn_triangles = GLQueryExtension(env, ext_set, "GL_ATI_pn_triangles");
 	extgl_Extensions.GL_ATI_point_cull_mode = GLQueryExtension(env, ext_set, "GL_ATI_point_cull_mode");
 	extgl_Extensions.GL_ATI_separate_stencil = GLQueryExtension(env, ext_set, "GL_ATI_separate_stencil");
 	extgl_Extensions.GL_ATI_text_fragment_shader = GLQueryExtension(env, ext_set, "GL_ATI_text_fragment_shader");
 	extgl_Extensions.GL_ATI_texture_mirror_once = GLQueryExtension(env, ext_set, "GL_ATI_texture_mirror_once");
 	extgl_Extensions.GL_ATI_vertex_array_object = GLQueryExtension(env, ext_set, "GL_ATI_vertex_array_object");
+	extgl_Extensions.GL_ATI_vertex_attrib_array_object = GLQueryExtension(env, ext_set, "GL_ATI_vertex_attrib_array_object");
 	extgl_Extensions.GL_ATI_vertex_streams = GLQueryExtension(env, ext_set, "GL_ATI_vertex_streams");
+
 	extgl_Extensions.GL_ATIX_point_sprites = GLQueryExtension(env, ext_set, "GL_ATIX_point_sprites");
 	extgl_Extensions.GL_ATIX_texture_env_route = GLQueryExtension(env, ext_set, "GL_ATIX_texture_env_route");
+
 	extgl_Extensions.GL_HP_occlusion_test = GLQueryExtension(env, ext_set, "GL_HP_occlusion_test");
+
 	extgl_Extensions.GL_NV_blend_square = GLQueryExtension(env, ext_set, "GL_NV_blend_square");
 	extgl_Extensions.GL_NV_copy_depth_to_color = GLQueryExtension(env, ext_set, "GL_NV_copy_depth_to_color");
 	extgl_Extensions.GL_NV_depth_clamp = GLQueryExtension(env, ext_set, "GL_NV_depth_clamp");
@@ -1374,9 +1385,11 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_NV_float_buffer = GLQueryExtension(env, ext_set, "GL_NV_float_buffer");
 	extgl_Extensions.GL_NV_fog_distance = GLQueryExtension(env, ext_set, "GL_NV_fog_distance");
 	extgl_Extensions.GL_NV_fragment_program = GLQueryExtension(env, ext_set, "GL_NV_fragment_program");
+	extgl_Extensions.GL_NV_half_float = GLQueryExtensions(env, ext_set, "GL_NV_half_float");
 	extgl_Extensions.GL_NV_light_max_exponent = GLQueryExtension(env, ext_set, "GL_NV_light_max_exponent");
 	extgl_Extensions.GL_NV_occlusion_query = GLQueryExtension(env, ext_set, "GL_NV_occlusion_query");
 	extgl_Extensions.GL_NV_packed_depth_stencil = GLQueryExtension(env, ext_set, "GL_NV_packed_depth_stencil");
+	extgl_Extensions.GL_NV_pixel_data_range = GLQueryExtension(env, ext_set, "GL_NV_pixel_data_range");
 	extgl_Extensions.GL_NV_point_sprite = GLQueryExtension(env, ext_set, "GL_NV_point_sprite");
 	extgl_Extensions.GL_NV_primitive_restart = GLQueryExtension(env, ext_set, "GL_NV_primitive_restart");
 	extgl_Extensions.GL_NV_register_combiners = GLQueryExtension(env, ext_set, "GL_NV_register_combiners");
@@ -1392,52 +1405,66 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_NV_vertex_program = GLQueryExtension(env, ext_set, "GL_NV_vertex_program");
 	extgl_Extensions.GL_NV_vertex_program1_1 = GLQueryExtension(env, ext_set, "GL_NV_vertex_program1_1");
 	extgl_Extensions.GL_NV_vertex_program2 = GLQueryExtension(env, ext_set, "GL_NV_vertex_program2");
+
 	extgl_Extensions.GL_SGIS_generate_mipmap = GLQueryExtension(env, ext_set, "GL_SGIS_generate_mipmap");
 	extgl_Extensions.GL_SGIX_depth_texture = GLQueryExtension(env, ext_set, "GL_SGIX_depth_texture");
 	extgl_Extensions.GL_SGIX_shadow = GLQueryExtension(env, ext_set, "GL_SGIX_shadow");
 }
 
 extern void extgl_InitOpenGL1_1();
-extern void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBPointParameters(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBVertexBlend(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBTextureCompression(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBProgram(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBVertexProgram(JNIEnv *env, jobject ext_set);
 //extern void extgl_InitARBFragmentProgram(JNIEnv *env, jobject ext_set);
-extern void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBImaging(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBMultitexture(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTSecondaryColor(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTPointParameters(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTVertexWeighting(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTVertexShader(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set);
-extern void extgl_InitEXTStencilTwoSide(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBOcclusionQuery(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBPointParameters(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBProgram(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBShaderObjects(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBTextureCompression(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBVertexBlend(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBVertexProgram(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBVertexShader(JNIEnv *env, jobject ext_set);
+extern void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set);
+
 extern void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set);
-extern void extgl_InitNVVertexArrayRange(JNIEnv *env, jobject ext_set);
-extern void extgl_InitNVRegisterCombiners(JNIEnv *env, jobject ext_set);
-extern void extgl_InitNVProgram(JNIEnv *env, jobject ext_set);
-extern void extgl_InitNVVertexProgram(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTPointParameters(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTSecondaryColor(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTStencilTwoSide(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTVertexShader(JNIEnv *env, jobject ext_set);
+extern void extgl_InitEXTVertexWeighting(JNIEnv *env, jobject ext_set);
+
+extern void extgl_InitNVEvaluators(JNIEnv *env, jobject ext_set);
 extern void extgl_InitNVFragmentProgram(JNIEnv *env, jobject ext_set);
 extern void extgl_InitNVFence(JNIEnv *env, jobject ext_set);
-extern void extgl_InitNVRegisterCombiners2(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVHalfFloat(JNIEnv *env, jobject ext_set);
 extern void extgl_InitNVOcclusionQuery(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVPixelDataRange(JNIEnv *env, jobject ext_set);
 extern void extgl_InitNVPointSprite(JNIEnv *env, jobject ext_set);
-extern void extgl_InitNVEvaluators(JNIEnv *env, jobject ext_set);
-extern void extgl_InitATIPNTriangles(JNIEnv *env, jobject ext_set);
-extern void extgl_InitATISeparateStencil(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVPrimitiveRestart(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVProgram(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVRegisterCombiners(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVRegisterCombiners2(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVVertexArrayRange(JNIEnv *env, jobject ext_set);
+extern void extgl_InitNVVertexProgram(JNIEnv *env, jobject ext_set);
+
+extern void extgl_InitATIDrawBuffers(JNIEnv *env, jobject ext_set);
+extern void extgl_InitATIElementArray(JNIEnv *env, jobject ext_set);
 extern void extgl_InitATIEnvmapBumpmap(JNIEnv *env, jobject ext_set);
 extern void extgl_InitATIFragmentShader(JNIEnv *env, jobject ext_set);
-extern void extgl_InitATIElementArray(JNIEnv *env, jobject ext_set);
-extern void extgl_InitATIVertexStreams(JNIEnv *env, jobject ext_set);
+extern void extgl_InitATIMapObjectBuffer(JNIEnv *env, jobject ext_set);
+extern void extgl_InitATIPNTriangles(JNIEnv *env, jobject ext_set);
+extern void extgl_InitATISeparateStencil(JNIEnv *env, jobject ext_set);
 extern void extgl_InitATIVertexArrayObject(JNIEnv *env, jobject ext_set);
+extern void extgl_InitATIVertexAttribArrayObject(JNIEnv *env, jobject ext_set);
+extern void extgl_InitATIVertexStreams(JNIEnv *env, jobject ext_set);
+
 extern void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set);
 extern void extgl_InitOpenGL1_3(JNIEnv *env, jobject ext_set);
 extern void extgl_InitOpenGL1_4(JNIEnv *env, jobject ext_set);
@@ -1457,49 +1484,60 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	//extgl_InitEXTNurbsTesselator(env, ext_set);
 
 	/* first load the extensions */
-	extgl_InitARBTransposeMatrix(env, ext_set);
-	extgl_InitARBMultisample(env, ext_set);
-	extgl_InitARBPointParameters(env, ext_set);
-	extgl_InitARBVertexBlend(env, ext_set);
-	extgl_InitARBMatrixPalette(env, ext_set);
-	extgl_InitARBWindowPos(env, ext_set);
-	extgl_InitARBTextureCompression(env, ext_set);
-	extgl_InitARBProgram(env, ext_set);
-	extgl_InitARBVertexProgram(env, ext_set);
-//	extgl_InitARBFragmentProgram(env, ext_set);
-	extgl_InitARBVertexBufferObject(env, ext_set);
+	//	extgl_InitARBFragmentProgram(env, ext_set);
 	extgl_InitARBImaging(env, ext_set);
+	extgl_InitARBMatrixPalette(env, ext_set);
+	extgl_InitARBMultisample(env, ext_set);
 	extgl_InitARBMultitexture(env, ext_set);
-	extgl_InitEXTCompiledVertexArray(env, ext_set);
-	extgl_InitEXTSecondaryColor(env, ext_set);
-	extgl_InitEXTFogCoord(env, ext_set);
-	extgl_InitEXTPointParameters(env, ext_set);
-	extgl_InitEXTVertexWeighting(env, ext_set);
-	extgl_InitEXTMultiDrawArrays(env, ext_set);
-	extgl_InitEXTVertexShader(env, ext_set);
-	extgl_InitEXTDrawRangeElements(env, ext_set);
-	extgl_InitEXTStencilTwoSide(env, ext_set);
-	//extgl_InitEXTCullVertex(env, ext_set);
+	extgl_InitARBOcclusionQuery(env, ext_set);
+	extgl_InitARBPointParameters(env, ext_set);
+	extgl_InitARBProgram(env, ext_set);
+	extgl_InitARBShaderObjects(env, ext_set);
+	extgl_InitARBTextureCompression(env, ext_set);
+	extgl_InitARBTransposeMatrix(env, ext_set);
+	extgl_InitARBVertexBlend(env, ext_set);
+	extgl_InitARBVertexBufferObject(env, ext_set);
+	extgl_InitARBVertexProgram(env, ext_set);
+	extgl_InitARBVertexShader(env, ext_set);
+	extgl_InitARBWindowPos(env, ext_set);
+	
 	extgl_InitEXTBlendFuncSeparate(env, ext_set);
-	extgl_InitNVVertexArrayRange(env, ext_set);
-	extgl_InitNVRegisterCombiners(env, ext_set);
-	extgl_InitNVFence(env, ext_set);
-	extgl_InitNVRegisterCombiners2(env, ext_set);
-	extgl_InitNVOcclusionQuery(env, ext_set);
-	extgl_InitNVPointSprite(env, ext_set);
+	extgl_InitEXTCompiledVertexArray(env, ext_set);
+	//extgl_InitEXTCullVertex(env, ext_set);
+	extgl_InitEXTDrawRangeElements(env, ext_set);
+	extgl_InitEXTFogCoord(env, ext_set);
+	extgl_InitEXTMultiDrawArrays(env, ext_set);
+	extgl_InitEXTPointParameters(env, ext_set);
+	extgl_InitEXTSecondaryColor(env, ext_set);
+	extgl_InitEXTStencilTwoSide(env, ext_set);
+	extgl_InitEXTVertexShader(env, ext_set);
+	extgl_InitEXTVertexWeighting(env, ext_set);
+
 	//extgl_InitNVElementArray(env, ext_set);
 	extgl_InitNVEvaluators(env, ext_set);
-	extgl_InitNVProgram(env, ext_set);
-	extgl_InitNVVertexProgram(env, ext_set);
+	extgl_InitNVFence(env, ext_set);
 	extgl_InitNVFragmentProgram(env, ext_set);
-	//extgl_InitNVPrimitiveRestart(env, ext_set);
-	extgl_InitATIPNTriangles(env, ext_set);
-	extgl_InitATISeparateStencil(env, ext_set);
+	extgl_InitNVHalfFloat(env, ext_set);
+	extgl_InitNVOcclusionQuery(env, ext_set);
+	extgl_InitNVPixelDataRange(env, ext_set);
+	extgl_InitNVPointSprite(env, ext_set);
+	extgl_InitNVPrimitiveRestart(env, ext_set);
+	extgl_InitNVProgram(env, ext_set);
+	extgl_InitNVRegisterCombiners(env, ext_set);
+	extgl_InitNVRegisterCombiners2(env, ext_set);
+	extgl_InitNVVertexArrayRange(env, ext_set);
+	extgl_InitNVVertexProgram(env, ext_set);
+
+	extgl_InitATIDrawBuffers(env, ext_set);
+	extgl_InitATIElementArray(env, ext_set);
 	extgl_InitATIEnvmapBumpmap(env, ext_set);
 	extgl_InitATIFragmentShader(env, ext_set);
-	extgl_InitATIElementArray(env, ext_set);
-	extgl_InitATIVertexStreams(env, ext_set);
+	extgl_InitATIMapObjectBuffer(env, ext_set);
+	extgl_InitATIPNTriangles(env, ext_set);
+	extgl_InitATISeparateStencil(env, ext_set);
 	extgl_InitATIVertexArrayObject(env, ext_set);
+	extgl_InitATIVertexAttribArrayObject(env, ext_set);
+	extgl_InitATIVertexStreams(env, ext_set);
 	
    /* now load core opengl */
 	extgl_InitOpenGL1_2(env, ext_set);
