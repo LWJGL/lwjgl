@@ -39,6 +39,13 @@
 		<include name="org/lwjgl/util/**"/>
 	</fileset>
 	
+	<!-- Files to include in the lwjgl_fmod.jar file -->
+	<fileset id="lwjgl_fmod.fileset" dir="${lwjgl.bin}">
+		<exclude name="**.*"/>
+		<include name="org/lwjgl/fmod/**"/>
+	</fileset>
+	
+	
 	<!-- Files to make Javadoc from -->
 	<fileset id="lwjgl.javadoc.fileset" dir="${lwjgl.src}/java">
 		<include name="**/*.java" />
@@ -57,6 +64,7 @@
 	<patternset id="lwjgl-win32.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="lwjgl.dll"/>
+		<include name="lwjgl-fmod.dll"/>		
 		<include name="lwjglaudio.dll"/>
 	</patternset>  
   
@@ -64,6 +72,7 @@
 	<patternset id="lwjgl-linux.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="liblwjgl.so"/>
+		<include name="liblwjgl-fmod.so"/>		
 		<include name="libopenal.so"/>
 	</patternset>  
 	
@@ -71,6 +80,7 @@
 	<patternset id="lwjgl-macosx.fileset">
 		<patternset refid="lwjgl-common.fileset"/>
 		<include name="liblwjgl.jnilib"/>
+		<include name="liblwjgl-fmod.jnilib"/>		
 		<include name="openal.dylib"/>
 	</patternset>	
 	
@@ -156,6 +166,7 @@
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/openal/**" source="1.4" taskname="openal"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/opengl/**" source="1.4" taskname="opengl"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/vector/**" source="1.4" taskname="vector"/>
+		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/fmod/**" source="1.4" taskname="fmod"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/test/**" source="1.4" taskname="test"/>
 		<javac srcdir="${lwjgl.src}/java/" destdir="${lwjgl.bin}" includes="org/lwjgl/util/**" source="1.4" taskname="util"/>
 	</target>
@@ -223,6 +234,11 @@
 		<jar destfile="${lwjgl.lib}/lwjgl_util.jar" taskname="lwjgl_util.jar">
 			<fileset refid="lwjgl_util.fileset"/>
 		</jar>		
+		
+		<!-- Create lwjgl_fmod.jar -->
+		<jar destfile="${lwjgl.lib}/lwjgl_fmod.jar" taskname="lwjgl_fmod.jar">
+			<fileset refid="lwjgl_fmod.fileset"/>
+		</jar>		
 	</target>
   
 	<!-- Creates the Javadoc -->
@@ -230,7 +246,7 @@
 		<javadoc destdir="${lwjgl.docs}/javadoc" author="true" version="true" use="true" source="1.4" windowtitle="LWJGL API">
 			<fileset refid="lwjgl.javadoc.fileset"/>
 			<doctitle><![CDATA[<h1>Lightweight Java Game Toolkit</h1>]]></doctitle>
-			<bottom><![CDATA[<i>Copyright &#169; 2003 lwjgl.org. All Rights Reserved.</i>]]></bottom>
+			<bottom><![CDATA[<i>Copyright &#169; 2003-2004 lwjgl.org. All Rights Reserved.</i>]]></bottom>
 		</javadoc>
 	</target>  
   
@@ -283,7 +299,7 @@
 			<class name="org.lwjgl.fmod.FMOD"/>
 			<class name="org.lwjgl.fmod.FMusic"/>
 			<class name="org.lwjgl.fmod.FSound"/>
-                </javah>
+		</javah>
 	</target>
   
 	<!-- Creates a versioned distribution for all supported platforms -->
