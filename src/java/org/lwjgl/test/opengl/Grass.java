@@ -187,6 +187,7 @@ public class Grass {
 		aslod.count = 0.0f;
 
 		while (!finished) {
+			Window.update();
 			keyPoll();
 			float degree = (1.0f + (aslod.value * 20.0f)) * 0.01745329f;
 
