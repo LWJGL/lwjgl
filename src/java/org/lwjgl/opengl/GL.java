@@ -33,13 +33,11 @@
 package org.lwjgl.opengl;
 
 import java.lang.reflect.*;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.lwjgl.Display;
-import org.lwjgl.Sys;
 
 /**
  * $Id$
