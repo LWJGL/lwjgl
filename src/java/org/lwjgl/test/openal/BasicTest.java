@@ -35,7 +35,6 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
-import org.lwjgl.openal.ALUT;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -56,10 +55,7 @@ public abstract class BasicTest {
     
     /** OpenAL Context instance */
     protected ALC alc;
-    
-    /** OpenAL Util library instance */
-    protected ALUT alut;
-    
+       
     /** OpenAL context */
     protected ALCcontext context;
     
@@ -84,15 +80,7 @@ public abstract class BasicTest {
         } catch (Exception e) {
             e.printStackTrace();
             return;
-        }        
-        
-        alut    = new ALUT();
-        try {
-            alut.create();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }                
+        }              
     }
     
     /**
@@ -152,7 +140,7 @@ public abstract class BasicTest {
         temp.order(ByteOrder.nativeOrder());
         
         return temp.asIntBuffer();
-    }    
+    }
     
     /**
      * Exits the test NOW, printing errorcode to stdout

@@ -33,7 +33,6 @@ package org.lwjgl.test.openal;
 
 import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALUTLoadWAVData;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -97,23 +96,18 @@ public class PlayTestMemory extends BasicTest {
             System.exit(-1);
         }
         
-        ALUTLoadWAVData file = alut.loadWAVMemory(Sys.getDirectBufferAddress(filebuffer));
-        if((lastError = al.getError()) != AL.NO_ERROR) {
-            exit(lastError);
-        }
+        //ALUTLoadWAVData file = alut.loadWAVMemory(Sys.getDirectBufferAddress(filebuffer));
+        WaveData wavefile = WaveData.create(filebuffer.array());
         
         
         //copy to buffers
-        al.bufferData(buffers.get(0), file.format, file.data, file.size, file.freq);
+        al.bufferData(buffers.get(0), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
-        }        
-        
+        }
+  
         //unload file again
-        alut.unloadWAV(file.format, file.data, file.size, file.freq);        
-        if((lastError = al.getError()) != AL.NO_ERROR) {
-            exit(lastError);
-        }        
+        wavefile.dispose();        
         
         //set up source input            
         al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));
@@ -158,7 +152,6 @@ public class PlayTestMemory extends BasicTest {
         }        
         
         //no errorchecking from now on, since our context is gone.
-        //shutdown
         alExit();
     }
     
@@ -198,7 +191,7 @@ public class PlayTestMemory extends BasicTest {
             //done reading, close
             bis.close();
             
-            buffer = ByteBuffer.allocateDirect(baos.size());
+            buffer = ByteBuffer.allocate(baos.size());
             buffer.order(ByteOrder.nativeOrder());
             buffer.put(baos.toByteArray());
         } catch (Exception ioe) {

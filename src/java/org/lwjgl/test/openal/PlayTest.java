@@ -33,7 +33,6 @@ package org.lwjgl.test.openal;
 
 import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALUTLoadWAVData;
 
 import java.nio.IntBuffer;
 
@@ -85,23 +84,16 @@ public class PlayTest extends BasicTest {
         }
         
         //load wave data
-        ALUTLoadWAVData file = alut.loadWAVFile(args[0]);
-        if((lastError = al.getError()) != AL.NO_ERROR) {
-            exit(lastError);
-        }
-        
+        WaveData wavefile = WaveData.create(args[0]);
         
         //copy to buffers
-        al.bufferData(buffers.get(0), file.format, file.data, file.size, file.freq);
+        al.bufferData(buffers.get(0), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if((lastError = al.getError()) != AL.NO_ERROR) {
             exit(lastError);
         }        
         
         //unload file again
-        alut.unloadWAV(file.format, file.data, file.size, file.freq);        
-        if((lastError = al.getError()) != AL.NO_ERROR) {
-            exit(lastError);
-        }        
+        wavefile.dispose();
         
         //set up source input
         al.sourcei(sources.get(0), AL.BUFFER, buffers.get(0));

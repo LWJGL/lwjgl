@@ -35,7 +35,6 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCcontext;
 import org.lwjgl.openal.ALCdevice;
-import org.lwjgl.openal.ALUTLoadWAVData;
 import org.lwjgl.openal.eax.EAX;
 import org.lwjgl.openal.eax.EAXBufferProperties;
 import org.lwjgl.openal.eax.EAXListenerProperties;
@@ -340,16 +339,16 @@ public class ALTest extends BasicTest {
         
         // Load in samples to be used by Test functions
         // Load footsteps.wav
-        ALUTLoadWAVData data = alut.loadWAVFile("Footsteps.wav");
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutLoadWAVFile footsteps.wav : ", error);
+        WaveData wavefile = WaveData.create("Footsteps.wav");
+        if (wavefile == null) {
+            displayALError("LoadWAVFile footsteps.wav : ", error);
             // Delete Buffers
             al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
             System.exit(-1);
         }
         
         // Copy footsteps.wav data into AL Buffer 0
-        al.bufferData(buffers.get(0), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(0), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 0 : ", error);
             // Delete buffers
@@ -358,25 +357,20 @@ public class ALTest extends BasicTest {
         }
         
         // Unload footsteps.wav
-        alut.unloadWAV(data.format, data.data, data.size, data.freq);
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutUnloadWAV : ", error);
-            // Delete buffers
-            al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
-            System.exit(-1);
-        }
+        wavefile.dispose();
+        wavefile = null;
         
         // Load ding.wav
-        data = alut.loadWAVFile("ding.wav");
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutLoadWAVFile ding.wav : ", error);
+        wavefile = WaveData.create("ding.wav");
+        if (wavefile == null) {
+            displayALError("LoadWAVFile ding.wav : ", error);
             // Delete Buffers
             al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
             System.exit(-1);
         }
         
         // Copy ding.wav data into AL Buffer 1
-        al.bufferData(buffers.get(1), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(1), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 1 : ", error);
             // Delete buffers
@@ -385,25 +379,20 @@ public class ALTest extends BasicTest {
         }
         
         // Unload footsteps.wav
-        alut.unloadWAV(data.format, data.data, data.size, data.freq);
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutUnloadWAV : ", error);
-            // Delete buffers
-            al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
-            System.exit(-1);
-        }
-        
+        wavefile.dispose();
+        wavefile = null;
+              
         // Load wave1.wav
-        data = alut.loadWAVFile("Wave1.WAV");
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutLoadWAVFile wave1.wav : ", error);
+        wavefile = WaveData.create("Wave1.WAV");
+        if (wavefile == null) {
+            displayALError("LoadWAVFile wave1.wav : ", error);
             // Delete Buffers
             al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
             System.exit(-1);
         }
         
         // Copy wave1.wav data into AL Buffer 2
-        al.bufferData(buffers.get(2), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(2), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 2 : ", error);
             // Delete buffers
@@ -412,25 +401,20 @@ public class ALTest extends BasicTest {
         }
         
         // Unload wave1.wav
-        alut.unloadWAV(data.format, data.data, data.size, data.freq);
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutUnloadWAV : ", error);
-            // Delete buffers
-            al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
-            System.exit(-1);
-        }
+        wavefile.dispose();
+        wavefile = null;
         
         // Load Wave2.wav
-        data = alut.loadWAVFile("Wave2.WAV");
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutLoadWAVFile Wave2.wav : ", error);
+        wavefile = WaveData.create("Wave2.WAV");
+        if (wavefile == null) {
+            displayALError("LoadWAVFile Wave2.wav : ", error);
             // Delete Buffers
             al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
             System.exit(-1);
         }
         
         // Copy Wave2.wav data into AL Buffer 3
-        al.bufferData(buffers.get(3), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(3), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 3 : ", error);
             // Delete buffers
@@ -439,25 +423,20 @@ public class ALTest extends BasicTest {
         }
         
         // Unload Wave2.wav
-        alut.unloadWAV(data.format, data.data, data.size, data.freq);
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutUnloadWAV : ", error);
-            // Delete buffers
-            al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
-            System.exit(-1);
-        }
+        wavefile.dispose();
+        wavefile = null;
         
         // Load wave3.wav
-        data = alut.loadWAVFile("Wave3.WAV");
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutLoadWAVFile wave3.wav : ", error);
+        wavefile = WaveData.create("Wave3.WAV");
+        if (wavefile == null) {
+            displayALError("LoadWAVFile wave3.wav : ", error);
             // Delete Buffers
             al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
             System.exit(-1);
         }
         
         // Copy wave3.wav data into AL Buffer 4
-        al.bufferData(buffers.get(4), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(4), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 4 : ", error);
             // Delete buffers
@@ -466,25 +445,20 @@ public class ALTest extends BasicTest {
         }
         
         // Unload wave3.wav
-        alut.unloadWAV(data.format, data.data, data.size, data.freq);
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutUnloadWAV : ", error);
-            // Delete buffers
-            al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
-            System.exit(-1);
-        }
+        wavefile.dispose();
+        wavefile = null;
         
         // Load wave4.wav
-        data = alut.loadWAVFile("Wave4.WAV");
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutLoadWAVFile wave4.wav : ", error);
+        wavefile = WaveData.create("Wave4.WAV");
+        if (wavefile == null) {
+            displayALError("LoadWAVFile wave4.wav : ", error);
             // Delete Buffers
             al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
             System.exit(-1);
         }
         
         // Copy wave4.wav data into AL Buffer 5
-        al.bufferData(buffers.get(5), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(5), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 5 : ", error);
             // Delete buffers
@@ -493,25 +467,20 @@ public class ALTest extends BasicTest {
         }
         
         // Unload wave4.wav
-        alut.unloadWAV(data.format, data.data, data.size, data.freq);
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutUnloadWAV : ", error);
-            // Delete buffers
-            al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
-            System.exit(-1);
-        }
+        wavefile.dispose();
+        wavefile = null;
         
         // Load stereo.wav
-        data = alut.loadWAVFile("stereo.wav");
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutLoadWAVFile stereo.wav : ", error);
+        wavefile = WaveData.create("stereo.wav");
+        if (wavefile == null) {
+            displayALError("LoadWAVFile stereo.wav : ", error);
             // Delete Buffers
             al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
             System.exit(-1);
         }
         
         // Copy stereo.wav data into AL Buffer 6
-        al.bufferData(buffers.get(6), data.format, data.data, data.size, data.freq);
+        al.bufferData(buffers.get(6), wavefile.format, Sys.getDirectBufferAddress(wavefile.data), wavefile.data.capacity(), wavefile.samplerate);
         if ((error = al.getError()) != AL.NO_ERROR) {
             displayALError("alBufferData buffer 6 : ", error);
             // Delete buffers
@@ -520,13 +489,8 @@ public class ALTest extends BasicTest {
         }
         
         // Unload stereo.wav
-        alut.unloadWAV(data.format, data.data, data.size, data.freq);
-        if ((error = al.getError()) != AL.NO_ERROR) {
-            displayALError("alutUnloadWAV : ", error);
-            // Delete buffers
-            al.deleteBuffers(NUM_BUFFERS, Sys.getDirectBufferAddress(buffers));
-            System.exit(-1);
-        }
+        wavefile.dispose();
+        wavefile = null;
         
         //do EAX check (can only be performed after device / context creation
         eaxAvailable = al.isExtensionPresent("EAX");
