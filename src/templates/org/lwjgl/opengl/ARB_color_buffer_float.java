@@ -59,18 +59,18 @@ public interface ARB_color_buffer_float {
 	 * <piValues> parameter array of wglGetPixelFormatAttribivARB, and the
 	 * <pfValues> parameter array of wglGetPixelFormatAttribfvARB:
 	 */
-	int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
+	//int WGL_TYPE_RGBA_FLOAT_ARB = 0x21A0;
 
 	/*
 	 * Accepted as values of the <render_type> arguments in the
 	 * glXCreateNewContext and glXCreateContext functions
 	 */
-	int GLX_RGBA_FLOAT_TYPE = 0x20B9;
+	//int GLX_RGBA_FLOAT_TYPE = 0x20B9;
 
 	/*
 	 * Accepted as a bit set in the GLX_RENDER_TYPE variable
 	 */
-	int GLX_RGBA_FLOAT_BIT = 0x00000004;
+	//int GLX_RGBA_FLOAT_BIT = 0x00000004;
 
 	void glClampColorARB(@GLenum int target, @GLenum int clamp);
 }
