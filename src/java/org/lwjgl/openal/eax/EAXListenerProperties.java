@@ -219,8 +219,8 @@ public class EAXListenerProperties {
      *
      * @return room effect level
      */
-    public long getRoom() {
-        return eaxListenerProperties.getLong(room_offset);
+    public int getRoom() {
+        return eaxListenerProperties.getInt(room_offset);
     }
     
     /**
@@ -228,8 +228,8 @@ public class EAXListenerProperties {
      *
      * @param room room effect level to set to
      */
-    public void setRoom(long room) {
-        eaxListenerProperties.putLong(room_offset, room);
+    public void setRoom(int room) {
+        eaxListenerProperties.putInt(room_offset, room);
     }
     
     /**
@@ -237,8 +237,8 @@ public class EAXListenerProperties {
      *
      * @return room effect level at high frequencies
      */
-    public long getRoomHF() {
-        return eaxListenerProperties.getLong(roomHF_offset);
+    public int getRoomHF() {
+        return eaxListenerProperties.getInt(roomHF_offset);
     }
     
     /**
@@ -246,8 +246,8 @@ public class EAXListenerProperties {
      *
      * @param room room effect level at high frequencies to set to 
      */
-    public void setRoomHF(long roomHF) {
-        eaxListenerProperties.putLong(roomHF_offset, roomHF);
+    public void setRoomHF(int roomHF) {
+        eaxListenerProperties.putInt(roomHF_offset, roomHF);
     }
     
     /**
@@ -309,8 +309,8 @@ public class EAXListenerProperties {
      *
      * @return early reflections level relative to room effect
      */
-    public long getReflections() {
-        return eaxListenerProperties.getLong(reflections_offset);
+    public int getReflections() {
+        return eaxListenerProperties.getInt(reflections_offset);
     }
     
     /**
@@ -318,8 +318,8 @@ public class EAXListenerProperties {
      *
      * @param reflections early reflections level relative to room effect to set to
      */
-    public void setReflections(long reflections) {
-        eaxListenerProperties.putLong(reflections_offset, reflections);
+    public void setReflections(int reflections) {
+        eaxListenerProperties.putInt(reflections_offset, reflections);
     }
     
     /**
@@ -345,8 +345,8 @@ public class EAXListenerProperties {
      *
      * @return late reverberation level relative to room effect
      */
-    public long getReverb() {
-        return eaxListenerProperties.getLong(reverb_offset);
+    public int getReverb() {
+        return eaxListenerProperties.getInt(reverb_offset);
     }
     
     /**
@@ -354,8 +354,8 @@ public class EAXListenerProperties {
      *
      * @param reverb late reverberation level relative to room effect to set to
      */
-    public void setReverb(long reverb) {
-        eaxListenerProperties.putLong(reverb_offset, reverb);
+    public void setReverb(int reverb) {
+        eaxListenerProperties.putInt(reverb_offset, reverb);
     }
     
     /**
@@ -381,8 +381,8 @@ public class EAXListenerProperties {
      *
      * @return listener properties
      */
-    public long getEnvironment() {
-        return eaxListenerProperties.getLong(environment_offset);
+    public int getEnvironment() {
+        return eaxListenerProperties.getInt(environment_offset);
     }
     
     /**
@@ -390,8 +390,8 @@ public class EAXListenerProperties {
      *
      * @param environment listener properties to set to
      */
-    public void setEnvironment(long environment) {
-        eaxListenerProperties.putLong(environment_offset, environment);
+    public void setEnvironment(int environment) {
+        eaxListenerProperties.putInt(environment_offset, environment);
     }
     
     /**
@@ -453,8 +453,8 @@ public class EAXListenerProperties {
      *
      * @return modifier for behavior of properties
      */
-    public long getFlags() {
-        return eaxListenerProperties.getLong(flags_offset);
+    public int getFlags() {
+        return eaxListenerProperties.getInt(flags_offset);
     }
     
     /**
@@ -462,8 +462,8 @@ public class EAXListenerProperties {
      *
      * @param flags modifier for behavior of properties to set to
      */
-    public void setFlags(long flags) {
-        eaxListenerProperties.putLong(flags_offset, flags);
+    public void setFlags(int flags) {
+        eaxListenerProperties.putInt(flags_offset, flags);
     }
     
     /**
