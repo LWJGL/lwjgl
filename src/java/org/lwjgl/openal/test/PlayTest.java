@@ -57,7 +57,10 @@ public class PlayTest extends BasicTest {
     public PlayTest() {
         super();
     }
-    
+
+    /**
+     * Runs the actual test, using supplied arguments
+     */
     protected void execute(String[] args) {
         if(args.length < 1) {
             System.out.println("please specify filename to play");
