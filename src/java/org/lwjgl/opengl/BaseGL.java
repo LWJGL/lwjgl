@@ -166,6 +166,16 @@ abstract class BaseGL {
 	}
 	
 	/**
+	 * Free the context from the current thread.
+	 */
+	public final void releaseContext() {
+		assert created : "GL has not been created yet.";
+		renderThread = null;
+		currentContext = null;
+		nReleaseContext();
+	}
+	
+	/**
 	 * Make this the current context for the current thread.
 	 */
 	public final void makeCurrent() {
@@ -180,6 +190,11 @@ abstract class BaseGL {
 	 */
 	public native void swapBuffers();
 	
+	/**
+	 * Native method to free the context
+	 */
+	private native void nReleaseContext();
+
 	/**
 	 * Native method to make this the current thread
 	 */

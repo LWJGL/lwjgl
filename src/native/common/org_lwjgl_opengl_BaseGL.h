@@ -9,7 +9,7 @@ extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
 /* Inaccessible static: currentContext */
-/* Inaccessible static: class_000240 */
+/* Inaccessible static: class_00024org_00024lwjgl_00024opengl_00024BaseGL */
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
@@ -32,6 +32,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_swapBuffers
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     org_lwjgl_opengl_BaseGL
+ * Method:    nReleaseContext
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
   (JNIEnv *, jobject);
 
 /*

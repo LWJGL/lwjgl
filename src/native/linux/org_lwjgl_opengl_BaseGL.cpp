@@ -51,6 +51,10 @@ void makeCurrent(void) {
 	glXMakeCurrent(disp, win, context);
 }
 
+void releaseContext(void) {
+	glXMakeCurrent(disp, None, NULL);
+}
+
 /*
  * Class:     org_lwjgl_opengl_BaseGL
  * Method:    nCreate
@@ -92,8 +96,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_BaseGL_nCreate
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nDestroy
   (JNIEnv * env, jobject obj)
 {
-	glXMakeCurrent(disp, None, NULL);
-
+	releaseContext();
 	// Delete the rendering context
 	if (context != NULL)
 		glXDestroyContext(disp, context); 
@@ -120,3 +123,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nMakeCurrent
 	makeCurrent();
 }
 
+/*
+ *  * Class:     org_lwjgl_opengl_BaseGL
+ *   * Method:    nFreeContext
+ *    * Signature: ()V
+ *     */
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_BaseGL_nReleaseContext
+  (JNIEnv *, jobject)
+{
+	releaseContext();
+}
