@@ -134,18 +134,6 @@ public final class Sys {
 
 		PLATFORM = System.getProperty("org.lwjgl.Sys.platform", "org.lwjgl.SwingAdapter");
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				Display.destroy();
-				if (Keyboard.isCreated())
-					Keyboard.destroy();
-				if (Mouse.isCreated())
-					Mouse.destroy();
-				if (Controller.isCreated())
-					Controller.destroy();
-			}
-		});
-		
 	}
 
 	/**

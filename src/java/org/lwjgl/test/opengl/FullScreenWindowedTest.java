@@ -32,6 +32,7 @@
 package org.lwjgl.test.opengl;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -219,7 +220,9 @@ public class FullScreenWindowedTest {
 	 * Cleans up the test
 	 */
 	private void cleanup() {
+//		Display.destroy();
 	}
+
 	/**
 	 * Retrieves a displaymode, if one such is available
 	 * 
@@ -235,6 +238,11 @@ public class FullScreenWindowedTest {
 		DisplayMode[] modes = Display.getAvailableDisplayModes();
 		for (int i = 0; i < modes.length; i++) {
 			if (modes[i].getWidth() == width && modes[i].getHeight() == height && modes[i].getBitsPerPixel() >= bpp && modes[i].getFrequency() <= 60) {
+				try {
+					Display.setDisplayMode(modes[i]);
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+				}
 				return modes[i];
 			}
 		}

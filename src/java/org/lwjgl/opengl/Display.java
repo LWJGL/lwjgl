@@ -64,6 +64,11 @@ public final class Display {
 		current_mode = init();
 		assert current_mode != null;
 		System.out.println("Current mode "+current_mode);
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				reset();
+			}
+		});
 	}
 
 	/** Timer for sync() */
@@ -83,6 +88,9 @@ public final class Display {
 
 	/** Fullscreen */
 	private static boolean fullscreen;
+
+	/** VSync */
+	private static boolean vsync;
 	
 	/** Tracks VBO state for the window context */
 	private static VBOTracker vbo_tracker;
@@ -167,6 +175,7 @@ public final class Display {
 		if (title != null)
 			nSetTitle(title);
 		initControls();
+		nSetVSyncEnabled(vsync);
 	}
 
 	private static native void nCreateWindow(DisplayMode mode, boolean fullscreen) throws LWJGLException;
@@ -587,6 +596,13 @@ public final class Display {
 		destroyWindow();
 		destroyContext();
 		context = null;
+		reset();
+	}
+
+	/*
+	 * Reset display mode if fullscreen. This method is also called from the shutdown hook added in Sys
+	 */
+	private static void reset() {
 		if (fullscreen)
 			resetDisplayMode();
 	}
@@ -617,9 +633,9 @@ public final class Display {
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setVSyncEnabled(boolean sync) {
-		if (!isCreated())
-			throw new IllegalStateException("Cannot set vsync state of uncreated window");
-		nSetVSyncEnabled(sync);
+		vsync = sync;
+		if (isCreated())
+			nSetVSyncEnabled(vsync);
 	}
 
 	private static native void nSetVSyncEnabled(boolean sync);
