@@ -193,23 +193,23 @@ public class Mouse {
 		return Mouse.button[button];
 	}
 	
-	/**
-	 * Enable mouse buffering. Must be called after the mouse is created.
-	 * @return the size of the mouse buffer in events, or 0 if no buffering
-	 * can be enabled for any reason
-	 */
-	public static int enableBuffer() {
-		assert created : "The mouse has not been created.";
-		return nEnableBuffer();
-	}
-	
-
-	/**
-	 * Native method to enable the buffer
-	 * @return the size of the buffer allocated, in events (1 event is 2 bytes),
-	 * or 0 if no buffer can be allocated
-	 */
-	private static native int nEnableBuffer();
+//	/**
+//	 * Enable mouse buffering. Must be called after the mouse is created.
+//	 * @return the size of the mouse buffer in events, or 0 if no buffering
+//	 * can be enabled for any reason
+//	 */
+//	public static int enableBuffer() {
+//		assert created : "The mouse has not been created.";
+//		return nEnableBuffer();
+//	}
+//	
+//
+//	/**
+//	 * Native method to enable the buffer
+//	 * @return the size of the buffer allocated, in events (1 event is 2 bytes),
+//	 * or 0 if no buffer can be allocated
+//	 */
+//	private static native int nEnableBuffer();
 	
 
 	/**
