@@ -140,6 +140,7 @@ public class FullScreenWindowedTest {
         }
       }
     }
+    Display.resetDisplayMode();
   }
 
   /**
@@ -292,7 +293,7 @@ public class FullScreenWindowedTest {
     for (int i = 0; i < modes.length; i++) {
       if (modes[i].width == width
         && modes[i].height == height
-        && modes[i].bpp >= bpp) {
+        && modes[i].bpp >= bpp && modes[i].freq <= 60) {
         return modes[i];
       }
     }

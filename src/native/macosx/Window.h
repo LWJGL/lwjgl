@@ -43,10 +43,8 @@
 	#define _LWJGL_WINDOW_H_INCLUDED_
 
 	#include <jni.h>
-	#include <Carbon/Carbon.h>
 	extern void setQuitRequested(void);
-	extern bool registerKeyboardHandler(JNIEnv* env, WindowRef win_ref);
-//	extern bool registerMouseHandler(JNIEnv* env, WindowRef win_ref);
-	extern bool isMouseCreated(void);
+	extern void resetMode(JNIEnv *env);
+	extern void switchMode(JNIEnv *env, long width, long height, long bpp, long freq);
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

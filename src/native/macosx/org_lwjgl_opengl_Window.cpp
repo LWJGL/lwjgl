@@ -39,167 +39,27 @@
  * @version $Revision$
  */
 
-#include "Window.h"
-#include <QuickTime/Movies.h>
 #include <OpenGL/OpenGL.h>
 #include "org_lwjgl_opengl_Window.h"
+#include "Window.h"
 #include "extgl.h"
 #include "tools.h"
 #include "common_tools.h"
 
-static WindowRef win_ref;
-static AGLContext windowed_context;
-static CGLContextObj fullscreen_context;
-static bool close_requested;
-static Ptr fullscreen_ptr;
+static CGLContextObj context;
+static bool vsync_enabled;
 static bool current_fullscreen;
-static bool miniaturized;
-static bool activated;
-static int center_x;
-static int center_y;
  
-static void setWindowTitle(JNIEnv *env, jstring title_obj) {
-	const char* title = env->GetStringUTFChars(title_obj, NULL);
-	CFStringRef cf_title = CFStringCreateWithCString(NULL, title, kCFStringEncodingUTF8);
-	if (cf_title == NULL) {
-#ifdef _DEBUG
-		printf("Could not set window title\n");
-#endif
-		return;
-	}
-	SetWindowTitleWithCFString(win_ref, cf_title);
-	CFRelease(cf_title);
-	env->ReleaseStringUTFChars(title_obj, title);
+static void destroyMode(JNIEnv *env, jclass clazz) {
+	if (current_fullscreen);
+		resetMode(env);
 }
 
-void setQuitRequested(void) {
-	lock();
-	close_requested = true;
-	unlock();
-}
-
-static pascal OSStatus doMiniaturized(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-	lock();
-	miniaturized = true;
-	unlock();
-	return eventNotHandledErr;
-}
-
-static pascal OSStatus doMaximize(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-	lock();
-	miniaturized = false;
-	unlock();
-	return eventNotHandledErr;
-}
-
-static void warpCursorToCenter(void) {
-	CGPoint p = {center_x, center_y};
-	CGWarpMouseCursorPosition(p);
-}
-
-static pascal OSStatus doActivate(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-	lock();
-	miniaturized = false;
-	activated = true;
-	if (isMouseCreated())
-		warpCursorToCenter();
-	unlock();
-	return eventNotHandledErr;
-}
-
-static pascal OSStatus doDeactivate(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-	lock();
-	activated = false;
-	unlock();
-	return eventNotHandledErr;
-}
-
-static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-	setQuitRequested();
-	return noErr;
-}
-
-static pascal OSStatus doBoundsChanged(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
-	Rect rect;
-	OSStatus err = GetEventParameter(event, kEventParamCurrentBounds, typeQDRectangle, NULL, sizeof(rect), NULL, &rect);
-	if (err != noErr) {
-#ifdef _DEBUG
-		printf("Could not get bounds from bounds changed event\n");
-#endif
-		return eventNotHandledErr;
-	}
-	lock();
-	center_x = (rect.left + rect.right)/2;
-	center_y = (rect.top + rect.bottom)/2;
-	unlock();
-	return noErr;
-}
-
-static bool registerEventHandlers(JNIEnv *env) {
-	bool error;
-	error = registerHandler(env, win_ref, doQuit, kEventClassWindow, kEventWindowClose);
-	error = error || registerHandler(env, win_ref, doActivate, kEventClassWindow, kEventWindowActivated);
-	error = error || registerHandler(env, win_ref, doDeactivate, kEventClassWindow, kEventWindowDeactivated);
-	error = error || registerHandler(env, win_ref, doMiniaturized, kEventClassWindow, kEventWindowCollapsed);
-	error = error || registerHandler(env, win_ref, doMaximize, kEventClassWindow, kEventWindowExpanded);
-	error = error || registerHandler(env, win_ref, doBoundsChanged, kEventClassWindow, kEventWindowBoundsChanged);
-	return !error && registerKeyboardHandler(env, win_ref)/* && registerMouseHandler(env, win_ref)*/;
-}
-
-static void destroyWindow(void) {
-	if (current_fullscreen)
-		EndFullScreen(fullscreen_ptr, 0);
-	else
-		DisposeWindow(win_ref);
-}
-
-static void destroy(void) {
-	if (current_fullscreen) {
-		CGLSetCurrentContext(NULL);
-		CGLDestroyContext(fullscreen_context);
-	} else {
-		aglSetCurrentContext(NULL);
-		aglDestroyContext(windowed_context);
-	}
-	destroyWindow();
+static void destroy(JNIEnv *env, jclass clazz) {
+	CGLSetCurrentContext(NULL);
+	CGLDestroyContext(context);
+	destroyMode(env, clazz);
 	extgl_Close();
-	destroyLock();
-}
-
-static bool createWindowedContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
-	AGLDrawable drawable = GetWindowPort(win_ref);
-	SetPort(drawable);
-	GLint attrib[] = {AGL_RGBA,
-			  AGL_DOUBLEBUFFER,
-			  AGL_ACCELERATED,
-			  AGL_MINIMUM_POLICY,
-			  AGL_PIXEL_SIZE, bpp,
-			  AGL_DEPTH_SIZE, depth, 
-			  AGL_ALPHA_SIZE, alpha,
-			  AGL_STENCIL_SIZE, stencil,
-			  AGL_NONE};
-	AGLPixelFormat format = aglChoosePixelFormat(NULL, 0, attrib);
-	if (format == NULL) {
-		throwException(env, "Could not find matching pixel format");
-		return false;
-	}
-	windowed_context = aglCreateContext (format, NULL);
-	aglDestroyPixelFormat(format);
-	if (windowed_context == NULL) {
-		throwException(env, "Could not create context");
-		return false;
-	}
-	if (aglSetDrawable(windowed_context, drawable) == GL_FALSE) {
-		aglDestroyContext(windowed_context);
-		throwException(env, "Could not attach context");
-		return false;
-	}
-	if (aglSetCurrentContext(windowed_context) == GL_FALSE) {
-		aglDestroyContext(windowed_context);
-		throwException(env, "Could not set current context");
-		return false;
-	}
-	return true;
 }
 
 static bool createFullscreenContext(JNIEnv *env, jint bpp, jint alpha, jint depth, jint stencil) {
@@ -226,39 +86,24 @@ static bool createFullscreenContext(JNIEnv *env, jint bpp, jint alpha, jint dept
 		throwException(env, "Could not find matching pixel format");
 		return false;
 	}
-	CGLCreateContext(pixel_format, NULL, &fullscreen_context);
+	CGLCreateContext(pixel_format, NULL, &context);
 	CGLDestroyPixelFormat(pixel_format);
-	if (fullscreen_context == NULL) {
+	if (context == NULL) {
 		throwException(env, "Could not create fullscreen context");
 		return false;
 	}
-	CGLSetFullScreen(fullscreen_context);
-	CGLSetCurrentContext(fullscreen_context);
+	CGLSetFullScreen(context);
+	CGLSetCurrentContext(context);
 	return true;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsCloseRequested(JNIEnv *, jclass) {
-	bool saved;
-	lock();
-	saved = close_requested;
-	close_requested = false;
-	unlock();
-	return saved;
+	return JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass clazz, jstring title, jint x, jint y, jint width, jint height, jboolean fullscreen, jint bpp, jint alpha, jint depth, jint stencil, jobject ext_set) {
-	Rect rect;
-	OSStatus status;
-	const WindowAttributes window_attr = kWindowCloseBoxAttribute|
-				       kWindowCollapseBoxAttribute|
-				       kWindowStandardHandlerAttribute;
-	SetRect(&rect, x, y, x + width, y + height);
-	center_x = x + width/2;
-	center_y = y + height/2;
-	current_fullscreen = fullscreen == JNI_TRUE;
-	miniaturized = false;
-	activated = true;
-	close_requested = false;
+	vsync_enabled = false;
+	current_fullscreen = fullscreen == JNI_FALSE;
 	if (!extgl_Open()) {
 		throwException(env, "Could not load gl library");
 		return;
@@ -268,65 +113,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 		return;
 	}
 	if (current_fullscreen)
-		status = BeginFullScreen(&fullscreen_ptr, NULL, NULL, NULL, &win_ref, NULL, 0);
-	else
-		status = CreateNewWindow(kDocumentWindowClass, window_attr, &rect, &win_ref);
-	if (noErr != status) {
-		extgl_Close();
-		throwException(env, "Could not create window");
-		return;
-	}
-	if (!initLock(env)) {
-		destroyWindow();
-		extgl_Close();
-		return;
-	}
-	if (!registerEventHandlers(env)) {
-		destroyWindow();
-		extgl_Close();
-		return;
-	}
-	setWindowTitle(env, title);
-	const RGBColor background_color = {0, 0, 0};
-	SetWindowContentColor(win_ref, &background_color);
-	bool success;
-	if (current_fullscreen) {
-		success = createFullscreenContext(env, bpp, alpha, depth, stencil);
-	} else {
-		success = createWindowedContext(env, bpp, alpha, depth, stencil);
-	}
-	if (!success) {
-		destroyLock();
-		destroyWindow();
+		switchMode(env, width, height, bpp, 60);
+	if (!createFullscreenContext(env, bpp, alpha, depth, stencil)) {
+		destroyMode(env, clazz);
 		extgl_Close();
 		return;
 	}
 	if (!extgl_Initialize(env, ext_set)) {
-		destroy();
+		destroy(env, clazz);
 		throwException(env, "Could not load gl function pointers");
 		return;
 	}
-	ShowWindow(win_ref);
-	SelectWindow(win_ref);
-	warpCursorToCenter();
-	CGPoint p = {center_x, center_y};
-	CGPostMouseEvent(p, FALSE, 1, TRUE);
-	CGPostMouseEvent(p, FALSE, 1, FALSE);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetTitle(JNIEnv * env, jclass clazz, jstring title_obj) {
-	  setWindowTitle(env, title_obj);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_update(JNIEnv *env, jclass clazz) {
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_swapBuffers(JNIEnv * env, jclass clazz) {
-	if (current_fullscreen) {
-		CGLFlushDrawable(fullscreen_context);
-	} else {
-		aglSwapBuffers(windowed_context);
-	}
+	CGLFlushDrawable(context);
 }
                                                                                                                                                                 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_minimize(JNIEnv *env, jclass clazz) {
@@ -336,15 +143,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_restore(JNIEnv *env, jclass 
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nDestroy(JNIEnv *env, jclass clazz) {
-	destroy();
+	destroy(env, clazz);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsFocused(JNIEnv *env, jclass clazz) {
-	bool result;
-	lock();
-	result = activated;
-	unlock();
-	return result;
+	return JNI_TRUE;
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty(JNIEnv *env, jclass clazz) {
@@ -352,9 +155,18 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsDirty(JNIEnv *env, jc
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsMinimized(JNIEnv *env, jclass clazz) {
-	bool result;
-	lock();
-	result = miniaturized;
-	unlock();
-	return result;
+	return JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Window_nIsVSyncEnabled(JNIEnv *env, jclass clazz) {
+	return vsync_enabled;
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nSetVSyncEnabled(JNIEnv *env, jclass clazz, jboolean enable) {
+	bool should_enable = enable == JNI_TRUE;
+	if (vsync_enabled != should_enable) {
+		vsync_enabled = should_enable;
+		long swap_interval = vsync_enabled ? 1 : 0;
+		CGLSetParameter(context, kCGLCPSwapInterval, &swap_interval);
+	}
 }

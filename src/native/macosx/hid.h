@@ -33,13 +33,40 @@
 /**
  * $Id$
  *
+ * Mac OS X HID tools.
+ *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
 
-#include "Window.h"
-#include "org_lwjgl_opengl_MacOSX.h"
+#ifndef _HID_H
+#define _HID_H
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSX_setQuitRequested(JNIEnv *, jclass) {
-	setQuitRequested();
-}
+#include <IOKit/IOKitLib.h>
+#include <IOKit/hid/IOHIDKeys.h>
+#include <IOKit/hid/IOHIDLib.h>
+#include <IOKit/hid/IOHIDUsageTables.h>
+#include <IOKit/IOCFPlugIn.h>
+#include <CoreServices/CoreServices.h>
+
+typedef struct {
+	IOHIDDeviceInterface **device_interface;
+	IOHIDQueueInterface **device_queue;
+	CFMutableDictionaryRef cookie_map;
+} hid_device_t;
+
+typedef struct {
+	long usage_page;
+	long usage;
+} hid_cookie_t;
+
+typedef struct {
+	int cookie_index;
+	long value;
+} hid_event_t;
+
+extern void shutdownDevice(hid_device_t *hid_dev);
+extern bool findDevice(hid_device_t *hid_dev, long usage_page_match, long usage_match, int num_cookies, hid_cookie_t *device_cookies, int buffer_size);
+extern bool nextDeviceEvent(hid_device_t *hid_dev, hid_event_t *hid_event);
+
+#endif

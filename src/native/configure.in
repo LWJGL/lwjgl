@@ -30,7 +30,7 @@ AC_CANONICAL_HOST
 
 case "$host_os" in
         darwin*)        _BUILD_FLAGS="-D_AGL -fpascal-strings"
-	                LDFLAGS="-Xlinker -framework -Xlinker Carbon -Xlinker -framework -Xlinker QuickTime -Xlinker -framework -Xlinker JavaVM"
+	                LDFLAGS="-Xlinker -framework -Xlinker JavaVM -Xlinker -framework -Xlinker ApplicationServices -Xlinker -framework -Xlinker CoreServices"
 			NATIVE_BUILD_DIR=macosx
                         CXXFLAGS="$CXXFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"
                         CFLAGS="$CFLAGS $DEBUG_FLAGS -Wall $_BUILD_FLAGS"

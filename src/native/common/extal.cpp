@@ -127,7 +127,8 @@ HMODULE handleOAL;
 void* handleOAL;
 #endif
 #ifdef _AGL
-#include <Carbon/Carbon.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreServices/CoreServices.h>
 OSStatus oalInitEntryPoints (void);
 void oalDellocEntryPoints (void);
 CFBundleRef handleOAL = NULL;
