@@ -12,10 +12,10 @@ extern "C" {
 /*
  * Class:     org_lwjgl_input_Cursor
  * Method:    nCreateCursor
- * Signature: (IIIIILjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;)I
+ * Signature: (IIIIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jobject);
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint, jobject, jint, jobject, jint);
 
 /*
  * Class:     org_lwjgl_input_Cursor

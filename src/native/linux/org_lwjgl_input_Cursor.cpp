@@ -8,12 +8,12 @@
  * Signature: (IIIIIII)I
  */
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Cursor_nCreateCursor
-  (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jobject delay_buffer)
+  (JNIEnv *env, jclass clazz, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
 	const int *delays = NULL;
 	if (delay_buffer != NULL)
-		delays = (const int *)env->GetDirectBufferAddress(delay_buffer);
-	XcursorPixel *pixels = (XcursorPixel *)env->GetDirectBufferAddress(image_buffer);
+		delays = (const int *)env->GetDirectBufferAddress(delay_buffer) + delays_offset;
+	XcursorPixel *pixels = (XcursorPixel *)env->GetDirectBufferAddress(image_buffer) + images_offset;
 	int stride = width*height;
 	XcursorImages *cursor_images = XcursorImagesCreate(num_images);
 	if (cursor_images == NULL)

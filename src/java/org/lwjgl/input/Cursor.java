@@ -74,7 +74,7 @@ public class Cursor {
 	 */
 	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
 		assert Mouse.isCreated();
-		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, delays);
+		nativeHandle = nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : 0);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Cursor {
 	/**
 	 * Native method to create a native cursor
 	 */
-	private static native int nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays);
+	private static native int nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset);
 
 	/**
 	 * Native method to destroy a native cursor
