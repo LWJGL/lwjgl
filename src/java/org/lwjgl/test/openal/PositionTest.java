@@ -226,6 +226,8 @@ public class PositionTest extends BasicTest {
 
     Sys.log("Soundfiles loaded successfully");
     // -----------------------------------------------------
+    
+    Mouse.setGrabbed(true);
   }
 
   /**
@@ -406,6 +408,8 @@ public class PositionTest extends BasicTest {
     
     AL10.alListener(AL10.AL_POSITION, listenerPosition);
     
+    // empty mouse buffer
+    while(Mouse.next());
   }
 
   /**
