@@ -276,6 +276,7 @@ static void createWindow(JNIEnv* env, int screen, XVisualInfo *vis_info, jstring
 	XMapRaised(getDisplay(), win);
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
+        setRepeatMode(AutoRepeatModeOff);
 	XSync(getDisplay(), True);
 }
 
