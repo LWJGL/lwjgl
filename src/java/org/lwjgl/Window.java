@@ -27,7 +27,7 @@ public abstract class Window {
 	}
 	
 	/** Whether we have a window already */
-	private static boolean created;
+	private static Window currentWindow;
 
 	/** The window's native data structure. On Win32 this is an HWND. */
 	private int handle;
@@ -76,7 +76,7 @@ public abstract class Window {
 	 * @throws RuntimeException if you attempt to create more than one window at the same time
 	 */
 	protected Window(String title, int x, int y, int width, int height) {
-		if (created)
+		if (currentWindow != null)
 			throw new RuntimeException("Only one LWJGL window may be instantiated at any one time.");
 		this.title = title;
 		this.x = x;
@@ -84,7 +84,7 @@ public abstract class Window {
 		this.width = width;
 		this.height = height;
 		
-		created = true;
+		currentWindow = this;
 	}
 
 	/**
@@ -168,7 +168,7 @@ public abstract class Window {
 	 * Destroy the window.
 	 */
 	public final void destroy() {
-		created = false;
+		currentWindow = null;
 		nDestroy();
 	}
 	
@@ -182,6 +182,13 @@ public abstract class Window {
 	 */
 	public final int getHandle() {
 		return handle;
+	}
+	
+	/**
+	 * @return true if a window has been created
+	 */
+	public static boolean isCreated() {
+		return currentWindow != null;
 	}
 	
 	/**
