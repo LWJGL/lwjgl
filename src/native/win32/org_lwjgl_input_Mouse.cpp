@@ -155,7 +155,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv *env, jclas
 JNIEXPORT jint JNICALL Java_org_lwjgl_input_Mouse_nGetNativeCursorCaps
   (JNIEnv *env, jclass clazz)
 {
-	return org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARANCY;
+	return org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY;
 }
 
 /*

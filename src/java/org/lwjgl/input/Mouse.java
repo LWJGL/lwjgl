@@ -51,7 +51,7 @@ import org.lwjgl.*;
  * @version $Revision$
  */
 public class Mouse {
-	public final static int CURSOR_ONE_BIT_TRANSPARANCY = 1;
+	public final static int CURSOR_ONE_BIT_TRANSPARENCY = 1;
 	public final static int CURSOR_8_BIT_ALPHA = 2;
 	public final static int CURSOR_ANIMATION = 4;
 
@@ -135,7 +135,7 @@ public class Mouse {
          * @throws Exception if the cursor could not be set for any reason
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws Exception {
-		assert created && ((getNativeCursorCaps() | CURSOR_ONE_BIT_TRANSPARANCY) != 0);
+		assert created && ((getNativeCursorCaps() | CURSOR_ONE_BIT_TRANSPARENCY) != 0);
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
 		if (currentCursor != null) {

@@ -8,8 +8,8 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
-#undef org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARANCY
-#define org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARANCY 1L
+#undef org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY
+#define org_lwjgl_input_Mouse_CURSOR_ONE_BIT_TRANSPARENCY 1L
 #undef org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA
 #define org_lwjgl_input_Mouse_CURSOR_8_BIT_ALPHA 2L
 #undef org_lwjgl_input_Mouse_CURSOR_ANIMATION
@@ -22,6 +22,8 @@ extern "C" {
 /* Inaccessible static: buttonCount */
 /* Inaccessible static: hasWheel */
 /* Inaccessible static: currentCursor */
+/* Inaccessible static: buttonName */
+/* Inaccessible static: buttonMap */
 /* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Mouse */
 /*
  * Class:     org_lwjgl_input_Mouse
