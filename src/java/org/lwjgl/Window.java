@@ -7,7 +7,7 @@
 package org.lwjgl;
 
 /**
- * This is the abstract base class for a Window in LWJGL. LWJGL windows have some
+ * This is the abstract class for a Window in LWJGL. LWJGL windows have some
  * peculiar characteristics:
  * 
  * - width and height are always fixed and cannot be changed
@@ -20,51 +20,60 @@ package org.lwjgl;
  * 
  * @author foo
  */
-public abstract class Window {
+public final class Window {
 
 	static {
 		System.loadLibrary(Sys.getLibraryName());
 	}
-	
-	/** The currently created window */
-	private static Window currentWindow;
-	
+
 	/** Whether the window is currently created, ie. has a native peer */
 	private static boolean created;
 
-	/** The window's native data structure. On Win32 this is an HWND. */
-	private static int handle;
-
 	/** Whether the window is currently minimized */
 	private static boolean minimized;
-  
+
 	/** Whether the window has focus */
 	private static boolean focused = true;
-	
+
 	/** Whether the window has been asked to close by the user or underlying OS */
 	private static boolean closeRequested;
-	
+
 	/** Whether the window is dirty, ie. needs painting */
 	private static boolean dirty;
-	
+
 	/** X coordinate of the window */
 	private static int x;
-	
+
 	/**
 	 * Y coordinate of the window. Y in window coordinates is from the top of the display down,
 	 * unlike GL, where it is typically at the bottom of the display.
 	 */
 	private static int y;
-	
+
 	/** Width of the window */
 	private static int width;
-	
+
 	/** Height of the window */
 	private static int height;
-	
+
 	/** Title of the window */
 	private static String title;
-	
+
+	/** Color bits */
+	private static int color;
+
+	/** Alpha bits */
+	private static int alpha;
+
+	/** Depth bits */
+	private static int depth;
+
+	/** Stencil bits */
+	private static int stencil;
+
+	/** Fullscreen */
+	private static boolean fullscreen;
+
 	/**
 	 * Construct a Window. Some OSs may not support non-fullscreen windows; in
 	 * which case the window will be fullscreen regardless.
@@ -88,13 +97,7 @@ public abstract class Window {
 	 * @param height Height of window
 	 * @throws RuntimeException if you attempt to create more than one window at the same time
 	 */
-	protected Window(String title, int x, int y, int width, int height) {
-		Window.title = title;
-		Window.x = x;
-		Window.y = y;
-		Window.width = width;
-		Window.height = height;
-		
+	private Window() {
 	}
 
 	/**
@@ -103,21 +106,21 @@ public abstract class Window {
 	public static int getWidth() {
 		return width;
 	}
-	
+
 	/**
 	 * @return the height of the window
 	 */
 	public static int getHeight() {
 		return height;
 	}
-	
+
 	/**
 	 * @return the title of the window
 	 */
 	public static String getTitle() {
 		return title;
 	}
-	
+
 	/**
 	 * Set the title of the window. This may be ignored by the underlying OS.
 	 * @param newTitle The new window title
@@ -127,7 +130,7 @@ public abstract class Window {
 		title = newTitle;
 		nSetTitle(title);
 	}
-	
+
 	/**
 	 * Native implementation of setTitle(). This will read the window's title member
 	 * and stash it in the native title of the window.
@@ -144,7 +147,7 @@ public abstract class Window {
 		closeRequested = false;
 		return currentValue;
 	}
-	
+
 	/**
 	 * @return true if the window is minimized or otherwise not visible
 	 */
@@ -152,7 +155,7 @@ public abstract class Window {
 		assert isCreated();
 		return minimized;
 	}
-  
+
 	/**
 	 * @return true if window is focused
 	 */
@@ -160,7 +163,7 @@ public abstract class Window {
 		assert isCreated();
 		return focused;
 	}
-	
+
 	/**
 	 * Minimize the game and allow the operating system's default display to become
 	 * visible. It is the responsibility of LWJGL's native code to restore the display
@@ -169,7 +172,7 @@ public abstract class Window {
 	 * If the display is already minimized then this is a no-op.
 	 */
 	public static native void minimize();
-	
+
 	/**
 	 * Restore the game and hide the operating system away. It is the responsibility of
 	 * LWJGL's native code to restore the display to its game display settings.
@@ -177,7 +180,7 @@ public abstract class Window {
 	 * If the display is not minimized then this is a no-op/
 	 */
 	public static native void restore();
-	
+
 	/**
 	 * Determine if the window's contents have been damaged by external events.
 	 * If you are writing a straightforward game rendering loop and simply paint
@@ -192,83 +195,130 @@ public abstract class Window {
 		assert isCreated();
 		return dirty;
 	}
-	
+
 	/**
 	 * Paint the window. This clears the dirty flag and swaps the buffers.
 	 */
 	public static void paint() {
 		assert isCreated();
 		dirty = false;
-		currentWindow.doPaint();
+		swapBuffers();
 	}
 
-	protected abstract void doPaint();
-	
 	/**
-	 * Create the window.
+	 * Swap double buffers.
 	 */
-	public final void create() throws Exception {
-		if (currentWindow != null)
-			throw new RuntimeException("Only one LWJGL window may be instantiated at any one time.");
-		doCreate();
-		currentWindow = this;
-		created = true;
-  	}
-	
+	private static native void swapBuffers();
+
 	/**
-	 * Create the window (derived classes).
+	 * Create a fullscreen window. If the underlying OS does not
+	 * support fullscreen mode, then a window will be created instead. If this
+	 * fails too then an Exception will be thrown.
+	 * 
+	 * @param title The title of the window
+	 * @param bpp Minimum bits per pixel
+	 * @param alpha Minimum bits per pixel in alpha buffer
+	 * @param depth Minimum bits per pixel in depth buffer
+	 * @param stencil Minimum bits per pixel in stencil buffer
+	 * @throws Exception if the window could not be created for any reason; typically because
+	 * the minimum requirements could not be met satisfactorily
+	 */
+	public static void create(String title, int bpp, int alpha, int depth, int stencil) throws Exception {
+		if (isCreated())
+			throw new Exception("Only one LWJGL window may be instantiated at any one time.");
+		Window.x = 0;
+		Window.y = 0;
+		Window.color = bpp;
+		Window.alpha = alpha;
+		Window.depth = depth;
+		Window.stencil = stencil;
+		Window.fullscreen = true;
+		Window.title = title;
+		Window.width = Display.getWidth();
+		Window.height = Display.getHeight();
+		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil);
+		created = true;
+	}
+
+	/**
+	 * Create a window. If the underlying OS does not have "floating" windows, then a fullscreen
+	 * display will be created instead. If this fails too then an Exception will be thrown.
+	 * If the window is created fullscreen, then its size may not match the specified size
+	 * here.
+	 * 
+	 * @param title The title of the window
+	 * @param x The position of the window on the x axis. May be ignored.
+	 * @param y The position of the window on the y axis. May be ignored.
+	 * @param width The width of the window's client area
+	 * @param height The height of the window's client area
+	 * @param bpp Minimum bits per pixel
+	 * @param alpha Minimum bits per pixel in alpha buffer
+	 * @param depth Minimum bits per pixel in depth buffer
+	 * @param stencil Minimum bits per pixel in stencil buffer
+	 * @throws Exception if the window could not be created for any reason; typically because
+	 * the minimum requirements could not be met satisfactorily
+	 */
+	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil)
+		throws Exception {
+		if (isCreated())
+			throw new Exception("Only one LWJGL window may be instantiated at any one time.");
+		Window.x = x;
+		Window.y = y;
+		Window.width = width;
+		Window.height = height;
+		Window.color = bpp;
+		Window.alpha = alpha;
+		Window.depth = depth;
+		Window.stencil = stencil;
+		Window.fullscreen = false;
+		Window.title = title;
+		nCreate(title, x, y, width, height, fullscreen, color, alpha, depth, stencil);
+		created = true;
+	}
+
+	/**
+	 * Create the native window peer.
 	 * @throws Exception
 	 */
-	protected abstract void doCreate() throws Exception;
-	
+	private static native void nCreate(
+		String title,
+		int x,
+		int y,
+		int width,
+		int height,
+		boolean fullscreen,
+		int bpp,
+		int alpha,
+		int depth,
+		int stencil)
+		throws Exception;
+
 	/**
 	 * Destroy the window.
 	 */
-	public final void destroy() {
+	public static void destroy() {
 		if (!created)
 			return;
-		doDestroy();
-		currentWindow = null;
+		nDestroy();
 		created = false;
 	}
-	
+
 	/**
-	 * Destroy the window (derived classes)
+	 * Destroy the native window peer.
 	 */
-	protected abstract void doDestroy();
-	
-	
-	/**
-	 * @return the native window handle
-	 */
-	public static int getHandle() {
-		return handle;
-	}
-	
+	private native static void nDestroy();
+
 	/**
 	 * @return true if the window's native peer has been created
 	 */
 	public static boolean isCreated() {
 		return created;
 	}
-	
+
 	/**
 	 * 'Tick' the window. This must be called at least once per video frame
 	 * to handle window close requests, moves, paints, etc.
 	 */
 	public static native void tick();
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return "Window["+title+"]";
-	}
-
-	/**
-	 * @return the current window, or null, if there is no current window
-	 */
-	public static Window getCurrentWindow() {
-		return currentWindow;
-	}
 }
