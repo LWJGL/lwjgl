@@ -34,8 +34,8 @@ package org.lwjgl.examples;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
 
 /**
  * $Id$
@@ -84,10 +84,13 @@ public class Game {
 	private static void init() throws Exception {
 		// Create a fullscreen window with 1:1 orthographic 2D projection, and with
 		// mouse, keyboard, and gamepad inputs.
-		Window.create(GAME_TITLE);
+    Display.setTitle(GAME_TITLE);
+    Display.setFullscreen(true);
+
+    // Enable vsync if we can
+    Display.setVSyncEnabled(true);
 		
-		// Enable vsync if we can
-		Window.setVSyncEnabled(true);
+    Display.create();
 		
 		// Start up the sound system
 		AL.create();
@@ -101,16 +104,16 @@ public class Game {
 	private static void run() {
 		while (!finished) {
 			// Always call Window.update(), all the time
-			Window.update();
+			Display.update();
 			
-			if (Window.isCloseRequested()) {
+			if (Display.isCloseRequested()) {
 				// Check for O/S close requests
 				finished = true;
-			} else if (Window.isActive()) {
+			} else if (Display.isActive()) {
 				// The window is in the foreground, so we should play the game
 				logic();
 				render();
-				org.lwjgl.Display.sync(FRAMERATE);
+				Display.sync(FRAMERATE);
 			} else {
 				// The window is not in the foreground, so we can allow other stuff to run and
 				// infrequently update
@@ -119,7 +122,7 @@ public class Game {
 				} catch (InterruptedException e) {
 				}
 				logic();
-				if (Window.isVisible() || Window.isDirty()) {
+				if (Display.isVisible() || Display.isDirty()) {
 					// Only bother rendering if the window is visible or dirty
 					render();
 				}
@@ -137,7 +140,7 @@ public class Game {
 		AL.destroy();
 		
 		// Close the window
-		Window.destroy();
+		Display.destroy();
 	}
 	
 	/**

@@ -33,15 +33,15 @@ package org.lwjgl.examples.spaceinvaders;
 
 import java.util.ArrayList;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
 
 /**
  * The main hook of our game. This class with both act as a manager
@@ -212,13 +212,11 @@ public class Game {
 	public void initialize() {
 		// initialize the window beforehand
 		try {
-			if (fullscreen && setDisplayMode()) {
-				Window.create(WINDOW_TITLE, Display.getDepth(), 0, 8, 0, 0);
-        Window.setVSyncEnabled(true);
-			} else {
-				Window.create(WINDOW_TITLE, 100, 100, width, height, Display.getDepth(), 0, 8, 0, 0);
-			}
-
+      setDisplayMode();
+      Display.setTitle(WINDOW_TITLE);
+      Display.setFullscreen(fullscreen);
+      Display.create();
+      
 			// grab the mouse, dont want that hideous cursor when we're playing!
 			Mouse.setGrabbed(true);
 
@@ -277,14 +275,14 @@ public class Game {
 	 */
 	private boolean setDisplayMode() {
     // get modes
-    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(800, 600, -1, -1, -1, -1, 60, 60);
+    DisplayMode[] dm = org.lwjgl.util.Display.getAvailableDisplayModes(width, height, -1, -1, -1, -1, 60, 60);
     
     try {
       org.lwjgl.util.Display.setDisplayMode(dm, new String[] {
           "width=" + width,
           "height=" + height,
           "freq=" + 60,
-          "bpp=" + org.lwjgl.Display.getDepth()
+          "bpp=" + org.lwjgl.opengl.Display.getDisplayMode().getBitsPerPixel()
          }); 
       return true;
     } catch (Exception e) {
@@ -425,7 +423,7 @@ public class Game {
 			frameRendering();
 
 			// update window contents
-			Window.update();
+			Display.update();
 		}
 	}
 
@@ -447,7 +445,7 @@ public class Game {
 
 		// update our FPS counter if a second has passed
 		if (lastFpsTime >= 1000) {
-			Window.setTitle(WINDOW_TITLE + " (FPS: " + fps + ")");
+			Display.setTitle(WINDOW_TITLE + " (FPS: " + fps + ")");
 			lastFpsTime = 0;
 			fps = 0;
 		}
@@ -543,7 +541,7 @@ public class Game {
 		}
 
 		// if escape has been pressed, stop the game
-		if (Window.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		if (Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			Game.gameRunning = false;
 		}
 	}
@@ -593,7 +591,7 @@ public class Game {
 	private void execute() {
 		gameLoop();
 		soundManager.destroy();
-		Window.destroy();
+		Display.destroy();
 	}
 
 	/**
