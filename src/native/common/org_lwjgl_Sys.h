@@ -19,6 +19,12 @@ extern "C" {
 /* Inaccessible static: LIBRARY_NAME */
 /* Inaccessible static: DEBUG */
 /* Inaccessible static: _debug */
+#undef org_lwjgl_Sys_PLATFORM_WGL
+#define org_lwjgl_Sys_PLATFORM_WGL 0L
+#undef org_lwjgl_Sys_PLATFORM_GLX
+#define org_lwjgl_Sys_PLATFORM_GLX 1L
+#undef org_lwjgl_Sys_PLATFORM_AGL
+#define org_lwjgl_Sys_PLATFORM_AGL 2L
 /* Inaccessible static: class_000240 */
 /*
  * Class:     org_lwjgl_Sys
@@ -75,6 +81,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
   (JNIEnv *, jclass, jstring, jstring);
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    getPlatform
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_org_lwjgl_Sys_getPlatform
+  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

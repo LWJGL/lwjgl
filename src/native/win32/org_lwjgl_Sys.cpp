@@ -49,6 +49,21 @@ __int64		hires_timer_freq;			// Hires timer frequency
 __int64		hires_timer_start;			// Hires timer start
 __int64		hires_timer;				// Hires timer current time
 
+// Platform
+#ifdef _WIN32
+#define PLATFORM 0
+#else
+#ifdef _X11
+#define PLATFORM 1
+#else
+#ifdef APPLE
+#define PLATFORM 2
+#else
+#error Unsupported Platform!
+#endif
+#endif
+
+
 /*
  * Class:     org_lwjgl_Sys
  * Method:    getDirectBufferAddress
@@ -163,3 +178,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert
 	env->ReleaseStringUTFChars(message, eMessageText);
 	env->ReleaseStringUTFChars(title, cTitleBarText);
 }
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    getPlatform
+ * Signature: ()I
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_getPlatform
+  (JNIEnv * env, jclass clazz)
+{
+	return org_lwjgl_Sys_PLATFORM_WGL;
+}
+
