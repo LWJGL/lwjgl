@@ -8,25 +8,24 @@
 extern "C" {
 #endif
 /* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: created */
-/* Inaccessible static: button */
-/* Inaccessible static: x */
-/* Inaccessible static: y */
-/* Inaccessible static: z */
-/* Inaccessible static: readBuffer */
-/* Inaccessible static: readBufferAddress */
-#undef org_lwjgl_input_Joystick_JOYSTICK_EVENT_SIZE
-#define org_lwjgl_input_Joystick_JOYSTICK_EVENT_SIZE 20L
-#undef org_lwjgl_input_Joystick_JOYSTICK_EVENT_STRIDE
-#define org_lwjgl_input_Joystick_JOYSTICK_EVENT_STRIDE 32L
-/* Inaccessible static: class_000240 */
+#undef org_lwjgl_input_Joystick_POV_CENTER
+#define org_lwjgl_input_Joystick_POV_CENTER -1L
+#undef org_lwjgl_input_Joystick_POV_NORTH
+#define org_lwjgl_input_Joystick_POV_NORTH 0L
+#undef org_lwjgl_input_Joystick_POV_SOUTH
+#define org_lwjgl_input_Joystick_POV_SOUTH 18000L
+#undef org_lwjgl_input_Joystick_POV_EAST
+#define org_lwjgl_input_Joystick_POV_EAST 27000L
+#undef org_lwjgl_input_Joystick_POV_WEST
+#define org_lwjgl_input_Joystick_POV_WEST 9000L
+/* Inaccessible static: class_00024org_00024lwjgl_00024input_00024Joystick */
 /*
  * Class:     org_lwjgl_input_Joystick
- * Method:    initIDs
+ * Method:    nPoll
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_initIDs
-  (JNIEnv *, jclass);
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll
+  (JNIEnv *, jobject);
 
 /*
  * Class:     org_lwjgl_input_Joystick
@@ -34,7 +33,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_initIDs
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate
-  (JNIEnv *, jclass);
+  (JNIEnv *, jobject);
 
 /*
  * Class:     org_lwjgl_input_Joystick
@@ -42,46 +41,14 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nCreate
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nDestroy
-  (JNIEnv *, jclass);
+  (JNIEnv *, jobject);
 
 /*
  * Class:     org_lwjgl_input_Joystick
- * Method:    nPoll
+ * Method:    initIDs
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_nPoll
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_input_Joystick
- * Method:    nGetNumButtons
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Joystick_nGetNumButtons
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_input_Joystick
- * Method:    nHasZValue
- * Signature: ()Z
- */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Joystick_nHasZValue
-  (JNIEnv *, jclass);
-
-/*
- * Class:     org_lwjgl_input_Joystick
- * Method:    nRead
- * Signature: (I)I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Joystick_nRead
-  (JNIEnv *, jclass, jint);
-
-/*
- * Class:     org_lwjgl_input_Joystick
- * Method:    nEnableBuffer
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_org_lwjgl_input_Joystick_nEnableBuffer
+JNIEXPORT void JNICALL Java_org_lwjgl_input_Joystick_initIDs
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus
