@@ -493,6 +493,11 @@ public class CoreGL11 implements CoreGL11Constants {
 		nglTexGenfv(coord, pname, params, params.position());
 	}
 	private static native void nglTexGenfv(int coord, int pname, FloatBuffer params, int params_offset);
+	public static native void glTexGeni(int coord, int pname, int param);
+	public static void glTexGen(int coord, int pname, IntBuffer params) {
+		nglTexGenfi(coord, pname, params, params.position());
+	}
+	private static native void nglTexGenfi(int coord, int pname, IntBuffer params, int params_offset);
 	public static native void glTexEnvf(int target, int pname, float param);
 	public static native void glTexEnvi(int target, int pname, int param);
 	public static void glTexEnv(int target, int pname, FloatBuffer params) {
