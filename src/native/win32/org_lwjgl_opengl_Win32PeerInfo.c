@@ -37,17 +37,24 @@
  * @version $Revision$
  */
 
-#ifndef __LWJGL_AWT_TOOLS_H
-#define __LWJGL_AWT_TOOLS_H
-
 #include <jni.h>
-#include <jawt.h>
-#include <jawt_md.h>
+#include "org_lwjgl_opengl_Win32PeerInfo.h"
+#include "context.h"
+#include "common_tools.h"
 
-typedef struct {
-	JAWT awt;
-	JAWT_DrawingSurface* ds;
-	JAWT_DrawingSurfaceInfo *dsi;
-} AWTSurfaceLock;
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32PeerInfo_createHandle
+  (JNIEnv *env, jclass clazz) {
+	return newJavaManagedByteBuffer(env, sizeof(Win32PeerInfo));
+}
 
-#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PeerInfo_nChoosePixelFormat
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint origin_x, jint origin_y, jobject pixel_format, jobject pixel_format_caps, jboolean use_hdc_bpp, jboolean window, jboolean pbuffer, jboolean double_buffer) {
+	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	int pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, window, pbuffer, double_buffer);
+	if (pixel_format_id == -1)
+		return;
+	if (!applyPixelFormat(peer_info->format_hdc, pixel_format_id)) {
+		throwException(env, "Could not apply pixel format");
+		return;
+	}
+}

@@ -40,6 +40,10 @@
  */
 
 #include <windows.h>
+// Multimon.h enables multi monitor emulation on win95 and winnt4
+// So we only need the extended, multi-monitor aware path
+#define COMPILE_MULTIMON_STUBS
+#include <Multimon.h>
 #include <jni.h>
 #include "display.h"
 #include "common_tools.h"
@@ -49,22 +53,18 @@
 #define GAMMA_SIZE (3*256)
 
 static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env);
-static jobjectArray GetAvailableDisplayModes(JNIEnv * env);
 static char * getDriver();
 static bool modeSet = false; // Whether we've done a display mode change
 static WORD originalGamma[GAMMA_SIZE]; // Original gamma settings
 static WORD currentGamma[GAMMA_SIZE]; // Current gamma settings
 static DEVMODE devmode; // Now we'll remember this value for the future
 extern HWND				display_hwnd;						              // Handle to the window
-extern RECT clientSize;
+
+
 
 jobjectArray getAvailableDisplayModes(JNIEnv *env)
 {
 	jobjectArray result = GetAvailableDisplayModesEx(env);
-	if (result == NULL) {
-		printfDebug("Extended display mode selection failed, using fallback\n");
-		result = GetAvailableDisplayModes(env);
-	}
 	return result;
 }
 
@@ -72,12 +72,7 @@ jobjectArray getAvailableDisplayModes(JNIEnv *env)
  * Choose displaymodes using extended codepath (multiple displaydevices)
  */
 static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
-	typedef BOOL (WINAPI * EnumDisplayDevicesAPROC)(IN LPCSTR lpDevice, IN DWORD iDevNum, OUT PDISPLAY_DEVICEA lpDisplayDevice, IN DWORD dwFlags);
-	typedef BOOL (WINAPI * EnumDisplaySettingsExAPROC)(IN LPCSTR lpszDeviceName, IN DWORD iModeNum, OUT LPDEVMODEA lpDevMode, IN DWORD dwFlags);
-	EnumDisplayDevicesAPROC EnumDisplayDevicesA;
-	EnumDisplaySettingsExAPROC EnumDisplaySettingsExA;
 
-	HMODULE lib_handle = LoadLibrary("user32.dll");
         int i = 0, j = 0, n = 0;
 
 	DISPLAY_DEVICE DisplayDevice;
@@ -90,17 +85,6 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
         jobjectArray ret;
         jmethodID displayModeConstructor;
   
-	if (lib_handle == NULL) {
-		printfDebug("Could not load user32.dll\n");
-		return NULL;
-	}
-	EnumDisplayDevicesA = (EnumDisplayDevicesAPROC)GetProcAddress(lib_handle, "EnumDisplayDevicesA");
-	if (EnumDisplayDevicesA == NULL)
-		return NULL;
-	EnumDisplaySettingsExA = (EnumDisplaySettingsExAPROC)GetProcAddress(lib_handle, "EnumDisplaySettingsExA");
-	if (EnumDisplaySettingsExA == NULL)
-		return NULL;
-
 	ZeroMemory(&DevMode, sizeof(DEVMODE));
 	ZeroMemory(&DisplayDevice, sizeof(DISPLAY_DEVICE));
 
@@ -110,14 +94,14 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
       displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
       displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");
  
-	while(EnumDisplayDevicesA(NULL, i++, &DisplayDevice, 0) != 0) {
+	while(EnumDisplayDevices(NULL, i++, &DisplayDevice, 0) != 0) {
 	  // continue if mirroring device
 		if((DisplayDevice.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) != 0) {
 			continue;
 		}
 	
 		j = 0;
-		while(EnumDisplaySettingsExA((const char *) DisplayDevice.DeviceName, j++, &DevMode, 0) != 0) {
+		while(EnumDisplaySettings((const char *) DisplayDevice.DeviceName, j++, &DevMode) != 0) {
 			// Filter out indexed modes
 			if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
 				jobject displayMode;
@@ -141,55 +125,6 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 		(*env)->SetObjectArrayElement(env, ret, i, display_mode_objects[i]);
 	}
 	free(display_mode_objects);   
-	FreeLibrary(lib_handle);
-	return ret;
-}
-
-/**
- * Choose displaymodes using standard codepath (single displaydevice)
- */
-static jobjectArray GetAvailableDisplayModes(JNIEnv * env) {
-	int i = 0, j = 0, n = 0;
-
-	DEVMODE DevMode;
-
-      jclass displayModeClass;
-
-      jobjectArray ret;
-      jmethodID displayModeConstructor;
-	jobject *display_mode_objects = NULL;
-	int list_size = 0;
-
-	ZeroMemory(&DevMode, sizeof(DEVMODE));
-
-	DevMode.dmSize = sizeof(DEVMODE);
-  
-        displayModeClass = (*env)->FindClass(env, "org/lwjgl/opengl/DisplayMode");
-
-        displayModeConstructor = (*env)->GetMethodID(env, displayModeClass, "<init>", "(IIII)V");  
-  
-	while(EnumDisplaySettings(NULL, j++, &DevMode) != 0) {
-		// Filter out indexed modes
-		if (DevMode.dmBitsPerPel > 8 && ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN | CDS_TEST) == DISP_CHANGE_SUCCESSFUL) {
-			jobject displayMode;
-				if (list_size <= n) {
-					list_size += 1;
-					display_mode_objects = (jobject *)realloc(display_mode_objects, sizeof(jobject)*list_size);
-					if (display_mode_objects == NULL)
-						return NULL;
-				}
-                        displayMode = (*env)->NewObject(env, displayModeClass, displayModeConstructor,
-			                              DevMode.dmPelsWidth, DevMode.dmPelsHeight,
-						                  DevMode.dmBitsPerPel, DevMode.dmDisplayFrequency);
-				display_mode_objects[n++] = displayMode;
-		}
-	}
-      ret = (*env)->NewObjectArray(env, n, displayModeClass, NULL);
-	for (i = 0; i < n; i++) {
-		(*env)->SetObjectArrayElement(env, ret, i, display_mode_objects[i]);
-	}
-	free(display_mode_objects);
-	printfDebug("Found %d displaymodes\n", n);  
 	return ret;
 }
 

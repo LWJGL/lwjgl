@@ -48,7 +48,7 @@ interface AWTCanvasImplementation {
 	/**
 	 * Return an opaque handle to the canvas peer information required to create a context from it.
 	 */
-	public PeerInfo createPeerInfo(AWTGLCanvas canvas) throws LWJGLException;
+	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException;
 
 	/**
 	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.

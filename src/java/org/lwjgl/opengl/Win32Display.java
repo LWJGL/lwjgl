@@ -42,15 +42,21 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.Sys;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 
 final class Win32Display implements DisplayImplementation {
-	private static final int CURSOR_HANDLE_SIZE = 8;
-	private static final int PBUFFER_HANDLE_SIZE = 24;
+//	private static final int PBUFFER_HANDLE_SIZE = 24;
 
-	public native void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
+	private static Win32DisplayPeerInfo peer_info;
+
+	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
+		nCreateWindow(mode, fullscreen, x, y);
+		peer_info.initDC();
+	}
+	private native void nCreateWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException;
 	public native void destroyWindow();
 	public native void switchDisplayMode(DisplayMode mode) throws LWJGLException;
 	public native void resetDisplayMode();
@@ -67,13 +73,41 @@ final class Win32Display implements DisplayImplementation {
 //	public native void swapBuffers();
 //	public native void makeCurrent() throws LWJGLException;
 	public PeerInfo createPeerInfo(PixelFormat pixel_format) throws LWJGLException {
-		throw new RuntimeException("Not supported yet");
+		GLContext.loadOpenGLLibrary();
+		try {
+			peer_info = new Win32DisplayPeerInfo(pixel_format);
+			return peer_info;
+		} catch (LWJGLException e) {
+			GLContext.unloadOpenGLLibrary();
+			throw e;
+		}
 	}
 //	public native void createContext(PixelFormat pixel_format) throws LWJGLException;
 //	public native void destroyContext();
-	public native void destroyPeerInfo();
-	public native void update();
-	public native void setVSyncEnabled(boolean sync);
+	public void destroyPeerInfo() {
+		peer_info.destroy();
+		GLContext.unloadOpenGLLibrary();
+	}
+	public void update() {
+		nUpdate();
+		if (didMaximize()) {
+			/**
+			 * WORKAROUND:
+			 * Making the context current (redundantly) when the window
+			 * is maximized helps some gfx recover from fullscreen
+			 */
+			try {
+				if (Display.getContext().isCurrent())
+					Display.getContext().makeCurrent();
+			} catch (LWJGLException e) {
+				Sys.log("Exception occurred while trying to make context current: " + e);
+			}
+		}
+	}
+	private native void nUpdate();
+	private native boolean didMaximize();
+
+//	public native void setVSyncEnabled(boolean sync);
 	public native void reshape(int x, int y, int width, int height);
 	public native DisplayMode[] getAvailableDisplayModes() throws LWJGLException;
 
@@ -100,24 +134,25 @@ final class Win32Display implements DisplayImplementation {
 	public native int readKeyboard(IntBuffer buffer, int buffer_position);
 	public native int isStateKeySet(int key);
 
-	public native void nCreateCursor(ByteBuffer handle, int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
+	public native ByteBuffer nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset, IntBuffer delays, int delays_offset) throws LWJGLException;
 
 	public Object createCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws LWJGLException {
-		ByteBuffer handle = BufferUtils.createByteBuffer(CURSOR_HANDLE_SIZE);
-		nCreateCursor(handle, width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
-		return handle;
+		return nCreateCursor(width, height, xHotspot, yHotspot, numImages, images, images.position(), delays, delays != null ? delays.position() : -1);
 	}
 
 	public native void destroyCursor(Object cursorHandle);
 	public native int getPbufferCapabilities();
-	public native boolean isBufferLost(PeerInfo handle);
+	public boolean isBufferLost(PeerInfo handle) {
+		return ((Win32PbufferPeerInfo)handle).isBufferLost();
+	}
+
 //	public native boolean isBufferLost(ByteBuffer handle);
 //	public native void makePbufferCurrent(ByteBuffer handle) throws LWJGLException;
 
 	public PeerInfo createPbuffer(int width, int height, PixelFormat pixel_format,
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs) throws LWJGLException {
-		throw new RuntimeException("Not yet supported");
+		return new Win32PbufferPeerInfo(width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
 	}
 	
 /*	public ByteBuffer createPbuffer(int width, int height, PixelFormat pixel_format,
@@ -132,12 +167,22 @@ final class Win32Display implements DisplayImplementation {
 			IntBuffer pixelFormatCaps,
 			IntBuffer pBufferAttribs, ByteBuffer shared_pbuffer_handle) throws LWJGLException;
 */
-	public native void destroyPbuffer(PeerInfo handle);
+	public void destroyPbuffer(PeerInfo handle) {
+		((Win32PbufferPeerInfo)handle).destroy();
+	}
 //	public native void destroyPbuffer(ByteBuffer handle);
 
-	public native void setPbufferAttrib(PeerInfo handle, int attrib, int value);
-	public native void bindTexImageToPbuffer(PeerInfo handle, int buffer);
-	public native void releaseTexImageFromPbuffer(PeerInfo handle, int buffer);
+	public void setPbufferAttrib(PeerInfo handle, int attrib, int value) {
+		((Win32PbufferPeerInfo)handle).setPbufferAttrib(attrib, value);
+	}
+
+	public void bindTexImageToPbuffer(PeerInfo handle, int buffer) {
+		((Win32PbufferPeerInfo)handle).bindTexImageToPbuffer(buffer);
+	}
+	
+	public void releaseTexImageFromPbuffer(PeerInfo handle, int buffer) {
+		((Win32PbufferPeerInfo)handle).releaseTexImageFromPbuffer(buffer);
+	}
 /*	public native void setPbufferAttrib(ByteBuffer handle, int attrib, int value);
 	public native void bindTexImageToPbuffer(ByteBuffer handle, int buffer);
 	public native void releaseTexImageFromPbuffer(ByteBuffer handle, int buffer);*/

@@ -37,17 +37,21 @@
  * @version $Revision$
  */
 
-#ifndef __LWJGL_AWT_TOOLS_H
-#define __LWJGL_AWT_TOOLS_H
-
 #include <jni.h>
 #include <jawt.h>
 #include <jawt_md.h>
+#include "awt_tools.h"
+#include "org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo.h"
+#include "context.h"
+#include "common_tools.h"
 
-typedef struct {
-	JAWT awt;
-	JAWT_DrawingSurface* ds;
-	JAWT_DrawingSurfaceInfo *dsi;
-} AWTSurfaceLock;
-
-#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32AWTGLCanvasPeerInfo_nInitHandle
+  (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject peer_info_handle) {
+	const AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
+	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	AWTSurfaceLock *surface = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
+	JAWT_Win32DrawingSurfaceInfo *win32_dsi = (JAWT_Win32DrawingSurfaceInfo *)surface->dsi->platformInfo;
+	peer_info->format_hwnd = win32_dsi->hwnd;
+	peer_info->format_hdc = win32_dsi->hdc;
+	peer_info->drawable_hdc = win32_dsi->hdc;
+}

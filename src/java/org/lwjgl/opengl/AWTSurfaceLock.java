@@ -46,8 +46,12 @@ import java.awt.Canvas;
  * @version $Revision$
  */
 final class AWTSurfaceLock {
-	private final static int LOCK_HANDLE_SIZE = 64;
-	private final ByteBuffer lock_buffer = BufferUtils.createByteBuffer(LOCK_HANDLE_SIZE);
+	private final ByteBuffer lock_buffer;
+
+	public AWTSurfaceLock() {
+		lock_buffer = createHandle();
+	}
+	private static native ByteBuffer createHandle();
 
 	public ByteBuffer lockAndGetHandle(Canvas canvas) throws LWJGLException {
 		lockAndInitHandle(lock_buffer, canvas);

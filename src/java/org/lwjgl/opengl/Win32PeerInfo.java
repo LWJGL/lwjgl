@@ -37,27 +37,22 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 
+import java.nio.IntBuffer;
+
 /**
  * $Id$
  *
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
-	private final AWTGLCanvas canvas;
-	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
+abstract class Win32PeerInfo extends PeerInfo {
+	public Win32PeerInfo() {
+		super(createHandle());
+	}
+	private static native ByteBuffer createHandle();
 
-	public LinuxAWTGLCanvasPeerInfo(AWTGLCanvas canvas) {
-		this.canvas = canvas;
+	protected void choosePixelFormat(int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException {
+		nChoosePixelFormat(getHandle(), origin_x, origin_y, pixel_format, pixel_format_caps, use_hdc_bpp, support_window, support_pbuffer, double_buffered);
 	}
-	
-	protected void doLockAndInitHandle() throws LWJGLException {
-		int screen = LinuxCanvasImplementation.getScreenFromDevice(canvas.getGraphicsConfiguration().getDevice());
-		nInitHandle(screen, awt_surface.lockAndGetHandle(canvas), getHandle());
-	}
-	private static native void nInitHandle(int screen, ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
-
-	protected void doUnlock() throws LWJGLException {
-		awt_surface.unlock();
-	}
+	private static native void nChoosePixelFormat(ByteBuffer peer_info_handle, int origin_x, int origin_y, PixelFormat pixel_format, IntBuffer pixel_format_caps, boolean use_hdc_bpp, boolean support_window, boolean support_pbuffer, boolean double_buffered) throws LWJGLException;
 }

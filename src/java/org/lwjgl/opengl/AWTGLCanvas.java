@@ -51,14 +51,13 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	private final static AWTCanvasImplementation implementation;
 
 	static {
-		System.loadLibrary("jawt");
 		Sys.initialize();
 		String class_name;
 		String OS_NAME = System.getProperty("os.name");
 		if (OS_NAME.startsWith("Linux")) {
 			class_name = "org.lwjgl.opengl.LinuxCanvasImplementation";
 		} else if (OS_NAME.startsWith("Windows")) {
-			class_name = "org.lwjgl.opengl.DefaultCanvasImplementation";
+			class_name = "org.lwjgl.opengl.Win32CanvasImplementation";
 		} else if (OS_NAME.startsWith("Mac")) {
 			class_name = "org.lwjgl.opengl.DefaultCanvasImplementation";
 		} else
@@ -127,7 +126,7 @@ public class AWTGLCanvas extends Canvas implements Drawable {
 	 */
 	public AWTGLCanvas(GraphicsDevice device, PixelFormat pixel_format, Drawable drawable) throws LWJGLException {
 		super(implementation.findConfiguration(device, pixel_format));
-		this.peer_info = implementation.createPeerInfo(this);
+		this.peer_info = implementation.createPeerInfo(this, pixel_format);
 		this.drawable = drawable;
 	}
 	

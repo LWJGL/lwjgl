@@ -40,34 +40,32 @@
  */
 
 #define _PRIVATE_WINDOW_H_
-#include "Window.h"
 #include <windowsx.h>
+#include <malloc.h>
+#include "Window.h"
 #include "extgl_wgl.h"
 #include "common_tools.h"
-#include "extgl_wgl.h"
 #include "display.h"
 #include "org_lwjgl_opengl_Win32Display.h"
-#include <malloc.h>
-
-static bool				oneShotInitialised = false;     // Registers the LWJGL window class
+#include "context.h"
 
 static HWND       display_hwnd = NULL;            // Handle to the window
 static HDC        display_hdc = NULL;             // Device context
-static HGLRC      display_hglrc = NULL;           // OpenGL context
+//static HGLRC      display_hglrc = NULL;           // OpenGL context
 static bool				isFullScreen = false;           // Whether we're fullscreen or not
 static bool				isMinimized = false;            // Whether we're minimized or not
 static bool       isFocused = false;              // whether we're focused or not
 static bool       isDirty = false;                // Whether we're dirty or not
 static bool       isUndecorated = false;          // Whether we're undecorated or not
-extern HINSTANCE	dll_handle;                     // Handle to the LWJGL dll
-RECT clientSize;                                  // client size rect used when creating and positioning window
+static bool		  did_maximize = false; // A flag to tell when a window
+										// has recovered from minimized
 
 static bool closerequested;
-static int pixel_format_index;
+//static int pixel_format_index;
 
 #define WINDOWCLASSNAME "LWJGL"
 
-bool applyPixelFormat(HDC hdc, int iPixelFormat) {
+/*bool applyPixelFormat(HDC hdc, int iPixelFormat) {
 	PIXELFORMATDESCRIPTOR desc;
 	if (DescribePixelFormat(hdc, iPixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &desc) == 0) {
 		return false;
@@ -79,12 +77,17 @@ bool applyPixelFormat(HDC hdc, int iPixelFormat) {
 	}
 	return true;
 }
+*/
+
+HDC getCurrentHDC() {
+	return display_hdc;
+}
 
 HWND getCurrentHWND() {
 	return display_hwnd;
 }
 
-HGLRC getCurrentContext() {
+/*HGLRC getCurrentContext() {
 	return display_hglrc;
 }
 
@@ -164,10 +167,11 @@ int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixel
                 bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
 	return findPixelFormatARBFromBPP(env, hdc, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
 }
-
+*/
 /*
  * Find an appropriate pixel format
  */
+/*
 static int findPixelFormatFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, int bpp)
 {
         jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
@@ -261,28 +265,7 @@ int findPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format) {
 	} else
 		return iPixelFormat;
 }
-
-/*
- * Close the window
- */
-void closeWindow(HWND *hwnd, HDC *hdc)
-{
-	// Release device context
-	if (*hdc != NULL && *hwnd != NULL) {
-		printfDebug("Releasing DC\n");
-		ReleaseDC(*hwnd, *hdc);
-		*hdc = NULL;
-	}
-
-	// Close the window
-	if (*hwnd != NULL) {
-		ShowWindow(*hwnd, SW_HIDE);
-		printfDebug("Destroy window\n");
-		DestroyWindow(*hwnd);
-		*hwnd = NULL;
-	}
-}
-
+*/
 /*
  * Called when the application is alt-tabbed to or from
  */
@@ -301,12 +284,7 @@ static void appActivate(bool active)
 		ShowWindow(display_hwnd, SW_RESTORE);
 		SetForegroundWindow(display_hwnd);
 		SetFocus(display_hwnd);
-		/*
-		 * Calling wglMakeCurrent() (redundantly) seems to help some gfx cards
-		 * restore from minimized to fullscreen.
-		 */
-		if (wglGetCurrentContext() == display_hglrc)
-			wglMakeCurrent(display_hdc, display_hglrc);
+		did_maximize = true;
 	} else if (isFullScreen) {
 		ShowWindow(display_hwnd, SW_SHOWMINNOACTIVE);
 		resetDisplayMode(NULL);
@@ -314,6 +292,12 @@ static void appActivate(bool active)
 	inAppActivate = false;
 }
 
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_didMaximize
+  (JNIEnv *env, jobject self) {
+	jboolean result = did_maximize ? JNI_TRUE : JNI_FALSE;
+	did_maximize = false;
+	return result;
+}
 /*
  *	WindowProc for the GL window.
  */
@@ -427,7 +411,7 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
  * Register the LWJGL window class.
  * Returns true for success, or false for failure
  */
-static bool registerWindow()
+/*static bool registerWindow()
 {
         WNDCLASS windowClass;
 	if (!oneShotInitialised) {
@@ -452,7 +436,7 @@ static bool registerWindow()
 
 	return true;
 }
-
+*/
 /*
  * Handle native Win32 messages
  */
@@ -477,61 +461,6 @@ void handleMessages(void)
 }
 
 /*
- * Create a window with the specified title, position, size, and
- * fullscreen attribute. The window will have DirectInput associated
- * with it.
- * 
- * Returns true for success, or false for failure
- */
-HWND createWindow(int x, int y, int width, int height, bool fullscreen, bool undecorated)
-{
-	int exstyle, windowflags;
-        HWND new_hwnd;
-	// 1. Register window class if necessary
-	if (!registerWindow()) {
-		return NULL;
-	}
-
-	if (fullscreen) {
-		exstyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
-		windowflags = WS_POPUP;
-	} else if (undecorated) {
-		exstyle = WS_EX_APPWINDOW;
-		windowflags = WS_POPUP;
-	} else {
-		exstyle = WS_EX_APPWINDOW;
-		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_MINIMIZEBOX | WS_SYSMENU;
-	}
-
-	// If we're not a fullscreen window, adjust the height to account for the
-	// height of the title bar (unless undecorated)
-	clientSize.bottom = height;
-	clientSize.left = 0;
-	clientSize.right = width;
-	clientSize.top = 0;
-	
-	AdjustWindowRectEx(
-	  &clientSize,    // client-rectangle structure
-	  windowflags,    // window styles
-	  FALSE,       // menu-present option
-	  exstyle   // extended window style
-	);
-	// Create the window now, using that class:
-        new_hwnd = CreateWindowEx (
-		 exstyle, 
-		 WINDOWCLASSNAME,
-		 "",
-		 windowflags,
-		 x, y, clientSize.right - clientSize.left, clientSize.bottom - clientSize.top,
-		 NULL,
-		 NULL,
-		 dll_handle,
-		 NULL);
-
-	return new_hwnd;
-}
-
-/*
  * Class:     org_lwjgl_Window
  * Method:    nSetTitle
  * Signature: ()V
@@ -549,7 +478,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setTitle
  * Method:    update
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_update
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nUpdate
   (JNIEnv * env, jobject self)
 {
 	handleMessages();
@@ -561,13 +490,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_update
  * Method:    swapBuffers
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_swapBuffers
+/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_swapBuffers
   (JNIEnv * env, jobject self)
 {
 	isDirty = false;
 	SwapBuffers(display_hdc);
 }
-
+*/
 /*
  * Class:     org_lwjgl_opengl_Window
  * Method:    nIsDirty
@@ -617,7 +546,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32Display_isActive
  * Method:    nSetVSyncEnabled
  * Signature: (Z)Z
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setVSyncEnabled
+/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setVSyncEnabled
   (JNIEnv * env, jobject self, jboolean sync)
 {
 	if (extension_flags.WGL_EXT_swap_control) {
@@ -636,37 +565,45 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_makeCurrent
 	if (!result)
 		throwException(env, "Could not make display context current");
 }
-
+*/
 JNIEXPORT jobjectArray JNICALL Java_org_lwjgl_opengl_Win32Display_getAvailableDisplayModes(JNIEnv *env, jobject self) {
 	return getAvailableDisplayModes(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y) {
-        jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
-        jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
-        jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
-        int width = (*env)->GetIntField(env, mode, fid_width);
-        int height = (*env)->GetIntField(env, mode, fid_height);
-        BOOL result;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_nCreateWindow(JNIEnv *env, jobject self, jobject mode, jboolean fullscreen, jint x, jint y) {
+	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
+	jfieldID fid_width = (*env)->GetFieldID(env, cls_displayMode, "width", "I");
+	jfieldID fid_height = (*env)->GetFieldID(env, cls_displayMode, "height", "I");
+	int width = (*env)->GetIntField(env, mode, fid_width);
+	int height = (*env)->GetIntField(env, mode, fid_height);
+	BOOL result;
+	static bool oneShotInitialised = false;
+	if (!oneShotInitialised) {
+		if (!registerWindow(lwjglWindowProc, WINDOWCLASSNAME)) {
+			throwException(env, "Could not register window class");
+			return;
+		}
+		oneShotInitialised = true;
+	}
+
 	closerequested = false;
 	isMinimized = false;
 	isFocused = false;
 	isDirty = true;
 	isFullScreen = fullscreen == JNI_TRUE;
 	isUndecorated = getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated");
-
-	display_hwnd = createWindow(x, y, width, height, isFullScreen, isUndecorated);
+	display_hwnd = createWindow(WINDOWCLASSNAME, x, y, width, height, isFullScreen, isUndecorated);
 	if (display_hwnd == NULL) {
 		throwException(env, "Failed to create the window.");
 		return;
 	}
 	display_hdc = GetDC(display_hwnd);
-	if (!applyPixelFormat(display_hdc, pixel_format_index)) {
+/*	if (!applyPixelFormat(display_hdc, pixel_format_index)) {
 		closeWindow(&display_hwnd, &display_hdc);
 		throwException(env, "Could not apply pixel format to window");
 		return;
 	}
-
+*/
 	ShowWindow(display_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(display_hwnd);
 	SetForegroundWindow(display_hwnd);
@@ -705,7 +642,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_init(JNIEnv *env, j
 	return initDisplay(env);
 }
 
-bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, int *pixel_format_index_return, HGLRC *context_return) {
+/*bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, int *pixel_format_index_return, HGLRC *context_return) {
 	int pixel_format_index;
 	HWND arb_hwnd;
 	HDC arb_hdc;
@@ -752,8 +689,8 @@ bool createARBContextAndPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format, 
 
 	return true;
 }
-
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *env, jobject self, jobject pixel_format) {
+*/
+/*JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createContext(JNIEnv *env, jobject self, jobject pixel_format) {
 	HWND dummy_hwnd;
         HDC dummy_hdc;
         BOOL result;
@@ -817,9 +754,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyContext(JNIEnv 
 		display_hglrc = NULL;
 	}
 }
-
+*/
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_reshape(JNIEnv *env, jobject self, jint x, jint y, jint width, jint height) {
 	int exstyle, windowflags;
+	RECT clientSize;
 
 	if (isFullScreen) {
 		return;

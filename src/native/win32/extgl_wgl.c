@@ -35,9 +35,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
 #include <string.h>
-#include "extgl.h"
 #include "extgl_wgl.h"
-#include "common_tools.h"
+#include "extgl.h"
 
 WGLExtensions extension_flags;
 

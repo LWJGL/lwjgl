@@ -37,17 +37,42 @@
  * @version $Revision$
  */
 
-#ifndef __LWJGL_AWT_TOOLS_H
-#define __LWJGL_AWT_TOOLS_H
-
 #include <jni.h>
-#include <jawt.h>
-#include <jawt_md.h>
+#include "Window.h"
+#include "org_lwjgl_opengl_Win32DisplayPeerInfo.h"
+#include "context.h"
+#include "common_tools.h"
 
-typedef struct {
-	JAWT awt;
-	JAWT_DrawingSurface* ds;
-	JAWT_DrawingSurfaceInfo *dsi;
-} AWTSurfaceLock;
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_createDummyDC
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	HWND dummy_hwnd = createDummyWindow(0, 0);
+	HDC dummy_hdc;
+	if (dummy_hwnd == NULL) {
+		throwException(env, "Failed to create a dummy window.");
+		return;
+	}
+	dummy_hdc = GetDC(dummy_hwnd);
+	peer_info->format_hwnd = dummy_hwnd;
+	peer_info->format_hdc = dummy_hdc;
+}
 
-#endif
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_nDestroy
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	closeWindow(&peer_info->format_hwnd, &peer_info->format_hdc);
+}
+
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32DisplayPeerInfo_nInitDC
+  (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
+	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
+	int pixel_format;
+	peer_info->drawable_hdc = getCurrentHDC();
+	pixel_format = GetPixelFormat(peer_info->format_hdc);
+	if (pixel_format == 0) {
+		throwException(env, "Could not get pixel format from dummy hdc");
+		return;
+	}
+	if (!applyPixelFormat(peer_info->drawable_hdc, pixel_format))
+		throwException(env, "Could not apply pixel format to drawable");
+}

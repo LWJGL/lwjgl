@@ -43,19 +43,26 @@ import org.lwjgl.Sys;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
+final class Win32AWTGLCanvasPeerInfo extends Win32PeerInfo {
 	private final AWTGLCanvas canvas;
 	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
+	private final PixelFormat pixel_format;
+	private boolean has_pixel_format= false;
 
-	public LinuxAWTGLCanvasPeerInfo(AWTGLCanvas canvas) {
+	public Win32AWTGLCanvasPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) {
 		this.canvas = canvas;
+		this.pixel_format = pixel_format;
 	}
-	
+
 	protected void doLockAndInitHandle() throws LWJGLException {
-		int screen = LinuxCanvasImplementation.getScreenFromDevice(canvas.getGraphicsConfiguration().getDevice());
-		nInitHandle(screen, awt_surface.lockAndGetHandle(canvas), getHandle());
+		nInitHandle(awt_surface.lockAndGetHandle(canvas), getHandle());
+		if (!has_pixel_format) {
+			// If we haven't applied a pixel format yet, do it now
+			choosePixelFormat(canvas.getX(), canvas.getY(), pixel_format, null, true, true, false, true);
+			has_pixel_format = true;
+		}
 	}
-	private static native void nInitHandle(int screen, ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
+	private static native void nInitHandle(ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
 
 	protected void doUnlock() throws LWJGLException {
 		awt_surface.unlock();

@@ -273,6 +273,13 @@ bool ext_InitializeFunctions(ExtGetProcAddressPROC gpa, int num_functions, ExtFu
 	return true;
 }
 
+jobject newJavaManagedByteBuffer(JNIEnv *env, const int size) {
+  jclass bufferutils_class = (*env)->FindClass(env, "org/lwjgl/BufferUtils");
+  jmethodID createByteBuffer = (*env)->GetStaticMethodID(env, bufferutils_class, "createByteBuffer", "(I)Ljava/nio/ByteBuffer;");
+  jobject buffer = (*env)->CallStaticObjectMethod(env, bufferutils_class, createByteBuffer, size);
+  return buffer;
+}
+
 void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, int num_functions, JavaMethodAndExtFunction *functions) {
 	JNINativeMethod *methods;
 	JavaMethodAndExtFunction *function;

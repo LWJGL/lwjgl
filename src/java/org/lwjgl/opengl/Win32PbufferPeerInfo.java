@@ -32,6 +32,7 @@
 package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -43,21 +44,42 @@ import org.lwjgl.Sys;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
-	private final AWTGLCanvas canvas;
-	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
+final class Win32PbufferPeerInfo extends Win32PeerInfo {
+	public Win32PbufferPeerInfo(int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException {
+		nCreate(getHandle(), width, height, pixel_format, pixelFormatCaps, pBufferAttribs);
+	}
+	private static native void nCreate(ByteBuffer handle, int width, int height, PixelFormat pixel_format, IntBuffer pixelFormatCaps, IntBuffer pBufferAttribs) throws LWJGLException;
 
-	public LinuxAWTGLCanvasPeerInfo(AWTGLCanvas canvas) {
-		this.canvas = canvas;
+	public boolean isBufferLost() {
+		return nIsBufferLost(getHandle());
 	}
+	private static native boolean nIsBufferLost(ByteBuffer handle);
+
+	public void setPbufferAttrib(int attrib, int value) {
+		nSetPbufferAttrib(getHandle(), attrib, value);
+	}
+	private static native void nSetPbufferAttrib(ByteBuffer handle, int attrib, int value);
+
+	public void bindTexImageToPbuffer(int buffer) {
+		nBindTexImageToPbuffer(getHandle(), buffer);
+	}
+	private static native void nBindTexImageToPbuffer(ByteBuffer handle, int buffer);
 	
-	protected void doLockAndInitHandle() throws LWJGLException {
-		int screen = LinuxCanvasImplementation.getScreenFromDevice(canvas.getGraphicsConfiguration().getDevice());
-		nInitHandle(screen, awt_surface.lockAndGetHandle(canvas), getHandle());
+	public void releaseTexImageFromPbuffer(int buffer) {
+		nReleaseTexImageFromPbuffer(getHandle(), buffer);
 	}
-	private static native void nInitHandle(int screen, ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
+	private static native void nReleaseTexImageFromPbuffer(ByteBuffer handle, int buffer);
+	
+	public void destroy() {
+		nDestroy(getHandle());
+	}
+	private static native void nDestroy(ByteBuffer handle);
+
+	protected void doLockAndInitHandle() throws LWJGLException {
+		// NO-OP
+	}
 
 	protected void doUnlock() throws LWJGLException {
-		awt_surface.unlock();
+		// NO-OP
 	}
 }

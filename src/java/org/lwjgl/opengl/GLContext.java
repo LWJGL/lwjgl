@@ -111,6 +111,8 @@ public final class GLContext {
 	static Set getSupportedExtensions() {
 		Set supported_extensions = new HashSet();
 		String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
+		if (extensions_string == null)
+			throw new IllegalStateException("glGetString(GL_EXTENSIONS) returned null - is there a context current?");
 		StringTokenizer tokenizer = new StringTokenizer(extensions_string);
 		while ( tokenizer.hasMoreTokens() ) {
 			String extension_string = tokenizer.nextToken();

@@ -49,7 +49,7 @@ import org.lwjgl.input.Keyboard;
 
 final class LinuxDisplay implements DisplayImplementation {
 	private static final int CURSOR_HANDLE_SIZE = 8;
-	private static final int PBUFFER_HANDLE_SIZE = 24;
+//	private static final int PBUFFER_HANDLE_SIZE = 24;
 	private static final int NUM_BUTTONS = 3;
 
 	private static PeerInfo peer_info;

@@ -46,15 +46,21 @@ import org.lwjgl.Sys;
 final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 	public LinuxDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		LinuxDisplay.lockAWT();
-		initDefaultPeerInfo(getHandle(), pixel_format);
-		LinuxDisplay.unlockAWT();
+		try {
+			initDefaultPeerInfo(getHandle(), pixel_format);
+		} finally {
+			LinuxDisplay.unlockAWT();
+		}
 	}
 	private static native void initDefaultPeerInfo(ByteBuffer peer_info_handle, PixelFormat pixel_format) throws LWJGLException;
 	
 	protected void doLockAndInitHandle() throws LWJGLException {
 		LinuxDisplay.lockAWT();
-		initDrawable(getHandle());
-		LinuxDisplay.unlockAWT();
+		try {
+			initDrawable(getHandle());
+		} finally {
+			LinuxDisplay.unlockAWT();
+		}
 	}
 	private static native void initDrawable(ByteBuffer peer_info_handle);
 	

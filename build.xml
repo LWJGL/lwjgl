@@ -566,8 +566,13 @@
 			<class name="org.lwjgl.opengl.LinuxCanvasImplementation" />
 		</javah>
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/win32" force="yes">
+			<class name="org.lwjgl.opengl.Win32PbufferPeerInfo" />
 			<class name="org.lwjgl.opengl.Win32Display" />
 			<class name="org.lwjgl.NativeSysImplementation" />
+			<class name="org.lwjgl.opengl.Win32AWTGLCanvasPeerInfo" />
+			<class name="org.lwjgl.opengl.Win32PeerInfo" />
+			<class name="org.lwjgl.opengl.Win32DisplayPeerInfo" />
+			<class name="org.lwjgl.opengl.Win32ContextImplementation" />
 		</javah>
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.native}/macosx" force="yes">
 			<class name="org.lwjgl.opengl.MacOSXDisplay" />

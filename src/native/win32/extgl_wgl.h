@@ -37,6 +37,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #define _EXTGL_WGL_H
 
 #include <windows.h>
+#include "extgl.h"
+#include "common_tools.h"
 
 typedef struct {
     bool WGL_ARB_buffer_region;

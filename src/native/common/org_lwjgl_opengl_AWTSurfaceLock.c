@@ -39,7 +39,9 @@
 
 #include <jni.h>
 #include <jawt.h>
-#ifndef _WIN32
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <unistd.h>
 #endif
 #include "org_lwjgl_opengl_AWTSurfaceLock.h"
@@ -48,16 +50,17 @@
 
 #define WAIT_DELAY 100
 
+JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_createHandle
+  (JNIEnv *env, jclass clazz) {
+	return newJavaManagedByteBuffer(env, sizeof(AWTSurfaceLock));
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle
   (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject canvas) {
 	JAWT awt;
 	JAWT_DrawingSurface* ds;
 	JAWT_DrawingSurfaceInfo *dsi;
 	AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
-	if ((*env)->GetDirectBufferCapacity(env, lock_buffer_handle) < sizeof(AWTSurfaceLock)) {
-		throwException(env, "Lock handle buffer not large enough");
-		return;
-	}
 	awt.version = JAWT_VERSION_1_4;
 	while (true) {
 		if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
@@ -84,7 +87,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle
 		printfDebug("Could not get drawing surface info, retrying... \n");
 		ds->Unlock(ds);
 		awt.FreeDrawingSurface(ds);
-		usleep(WAIT_DELAY);
+#ifdef _WIN32
+		Sleep(WAIT_DELAY);
+#else
+		usleep(WAIT_DELAY*1000);
+#endif
 	}
 	awt_lock->awt = awt;
 	awt_lock->ds = ds;

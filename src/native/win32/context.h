@@ -29,69 +29,60 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * $Id$
  *
- * Include file to access public window features
+ * Base Win32 display
  *
  * @author cix_foo <cix_foo@users.sourceforge.net>
  * @version $Revision$
  */
-#ifndef _LWJGL_WINDOW_H_INCLUDED_
-	#define _LWJGL_WINDOW_H_INCLUDED_
 
-	#define WIN32_LEAN_AND_MEAN
-	#define _WIN32_WINDOWS 0x0410
-	#define WINVER 0x0410
-	#define _WIN32_WINNT 0x0400
+#ifndef __LWJGL_CONTEXT_H
+#define __LWJGL_CONTEXT_H
 
-	#include <windows.h>
-	#include <jni.h>
-	#include "extgl.h"
+#include <windows.h>
+#include "common_tools.h"
+#include "extgl.h"
+#include "extgl_wgl.h"
 
-	#ifdef _PRIVATE_WINDOW_H_
-		#define WINDOW_H_API
-	#else
-		#define WINDOW_H_API extern
-		extern bool		isFullScreen;				// Whether we're fullscreen or not
-		extern bool		isMinimized;				// Whether we're minimized or not
-		extern bool		isFocused;					// Whether we're focused or not
-		extern bool		isDirty;					  // Whether we're dirty or not
-	#endif /* _PRIVATE_WINDOW_H_ */
+typedef struct {
+	union {
+		HWND format_hwnd;
+		HPBUFFERARB pbuffer;
+	};
+	HDC format_hdc;
+	HDC drawable_hdc;
+} Win32PeerInfo;
 
-	WINDOW_H_API HWND getCurrentHWND();
-	
-	WINDOW_H_API HDC getCurrentHDC();
+/*
+ * Register the LWJGL window class.
+ * Returns true for success, or false for failure
+ */
+extern bool registerWindow();
 
-//	WINDOW_H_API HGLRC getCurrentContext();
+extern bool applyPixelFormat(HDC hdc, int iPixelFormat);
 
-//	WINDOW_H_API bool applyPixelFormat(HDC hdc, int iPixelFormat);
+/*
+ * Close the window
+ */
+extern void closeWindow(HWND *hwnd, HDC *hdc);
 
-//	WINDOW_H_API void closeWindow(HWND *hwnd, HDC *hdc);
+/**
+ * Create a dummy window suitable to create contexts from
+ */
+extern HWND createDummyWindow(int x, int y);
 
-	WINDOW_H_API void handleMouseMoved(int x, int y);
+/*
+ * Create a window with the specified position, size, and
+ * fullscreen attribute. The window will have DirectInput associated
+ * with it.
+ * 
+ * Returns true for success, or false for failure
+ */
+extern HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated);
 
-	WINDOW_H_API void handleMouseScrolled(int dwheel);
+extern int findPixelFormat(JNIEnv *env, int origin_x, int origin_y, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer);
 
-	WINDOW_H_API void handleMouseButton(int button, int state);
-
-	WINDOW_H_API void handleMessages(void);
-
-	/*
-	 * Find a suitable pixel format
-	 */
-//	WINDOW_H_API int findPixelFormat(JNIEnv *env, HDC hdc, jobject pixel_format);
-
-	/*
-	 * Find a suitable pixel format using the WGL_ARB_pixel_format extension
-	 */
-//	WINDOW_H_API int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer);
-
-
-	/*
-	 * Handle native Win32 messages
-	 */
-	WINDOW_H_API void handleMessage(JNIEnv * env, jobject obj);
-
-#endif /* _LWJGL_WINDOW_H_INCLUDED_ */
+#endif

@@ -79,7 +79,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #if defined(_WIN32) && !defined(APIENTRY)
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
-
 #endif
 
 #define __glext_h_

@@ -33,9 +33,14 @@ package org.lwjgl.opengl;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
+import org.lwjgl.BufferUtils;
+
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsConfiguration;
+import java.awt.Rectangle;
+
+import java.lang.reflect.Method;
 
 /**
  * $Id$
@@ -43,21 +48,21 @@ import org.lwjgl.Sys;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
-	private final AWTGLCanvas canvas;
-	private final AWTSurfaceLock awt_surface = new AWTSurfaceLock();
-
-	public LinuxAWTGLCanvasPeerInfo(AWTGLCanvas canvas) {
-		this.canvas = canvas;
+final class Win32CanvasImplementation implements AWTCanvasImplementation {
+	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
+		return new Win32AWTGLCanvasPeerInfo(canvas, pixel_format);
 	}
-	
-	protected void doLockAndInitHandle() throws LWJGLException {
-		int screen = LinuxCanvasImplementation.getScreenFromDevice(canvas.getGraphicsConfiguration().getDevice());
-		nInitHandle(screen, awt_surface.lockAndGetHandle(canvas), getHandle());
-	}
-	private static native void nInitHandle(int screen, ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;
 
-	protected void doUnlock() throws LWJGLException {
-		awt_surface.unlock();
+	/**
+	 * Find a proper GraphicsConfiguration from the given GraphicsDevice and PixelFormat.
+	 *
+	 * @return The GraphicsConfiguration corresponding to a visual that matches the pixel format.
+	 */
+	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
+		/*
+		 * It seems like the best way is to simply return null and let
+		 * use SetPixelFormat in JNI later.
+		 */
+		return null;
 	}
 }
