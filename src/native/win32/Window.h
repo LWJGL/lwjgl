@@ -65,7 +65,7 @@
 	/*
 	 * Find a suitable pixel format using the WGL_ARB_pixel_format extension
 	 */
-	WINDOW_H_API int findPixelFormatARB(JNIEnv *env, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer);
+	WINDOW_H_API int findPixelFormatARB(JNIEnv *env, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool double_buffer);
 
 	/*
 	 * Create a window with the specified title, position, size, and

@@ -140,7 +140,7 @@ int findPixelFormatARB(JNIEnv *env, jobject pixel_format, jobject pixelFormatCap
 	jclass cls_pixel_format = env->GetObjectClass(pixel_format);
 	if (use_hdc_bpp) {
 		bpp = GetDeviceCaps(hdc, BITSPIXEL);
-		int iPixelFormat = findPixelFormatARBFromBPP(env, pixel_format, pixelFormatCaps, bpp, window, pbuffer);
+		int iPixelFormat = findPixelFormatARBFromBPP(env, pixel_format, pixelFormatCaps, bpp, window, double_buffer);
 		if (iPixelFormat == -1)
 			bpp = 16;
 		else
