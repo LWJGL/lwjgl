@@ -55,17 +55,7 @@ public final class Window {
 		 *
 		 */
 		if (Display.getPlatform() == Display.PLATFORM_AGL)
-			initMacOSX();
-	}
-
-	private static void initMacOSX() {
-		try {
-			Class mac_class = Class.forName("org.lwjgl.opengl.MacOSX");
-			Method init_method = mac_class.getMethod("initMacOSX", null);
-			init_method.invoke(null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			MacOSX.initMacOSX();
 	}
 
 	/** Whether the window is currently created, ie. has a native peer */

@@ -44,6 +44,7 @@
 #include "org_lwjgl_opengl_Window.h"
 #include "extgl.h"
 #include "tools.h"
+#include "common_tools.h"
 
 static WindowRef win_ref;
 static AGLContext context;
@@ -52,6 +53,8 @@ static Ptr fullscreen_ptr;
 static bool current_fullscreen;
 static bool miniaturized;
 static bool activated;
+static int center_x;
+static int center_y;
  
 static void setWindowTitle(JNIEnv *env, jstring title_obj) {
 	const char* title = env->GetStringUTFChars(title_obj, NULL);
@@ -87,10 +90,17 @@ static pascal OSStatus doMaximize(EventHandlerCallRef next_handler, EventRef eve
 	return eventNotHandledErr;
 }
 
+static void warpCursorToCenter(void) {
+	CGPoint p = {center_x, center_y};
+	CGWarpMouseCursorPosition(p);
+}
+
 static pascal OSStatus doActivate(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
 	lock();
 	miniaturized = false;
 	activated = true;
+	if (isMouseCreatedAndNotNativeCursor())
+		warpCursorToCenter();
 	unlock();
 	return eventNotHandledErr;
 }
@@ -107,6 +117,22 @@ static pascal OSStatus doQuit(EventHandlerCallRef next_handler, EventRef event, 
 	return noErr;
 }
 
+static pascal OSStatus doBoundsChanged(EventHandlerCallRef next_handler, EventRef event, void *user_data) {
+	Rect rect;
+	OSStatus err = GetEventParameter(event, kEventParamCurrentBounds, typeQDRectangle, NULL, sizeof(rect), NULL, &rect);
+	if (err != noErr) {
+#ifdef _DEBUG
+		printf("Could not get bounds from bounds changed event\n");
+#endif
+		return eventNotHandledErr;
+	}
+	lock();
+	center_x = (rect.left + rect.right)/2;
+	center_y = (rect.top + rect.bottom)/2;
+	unlock();
+	return noErr;
+}
+
 static bool registerEventHandlers(JNIEnv *env) {
 	bool error;
 	error = registerHandler(env, win_ref, doQuit, kEventClassWindow, kEventWindowClose);
@@ -114,6 +140,7 @@ static bool registerEventHandlers(JNIEnv *env) {
 	error = error || registerHandler(env, win_ref, doDeactivate, kEventClassWindow, kEventWindowDeactivated);
 	error = error || registerHandler(env, win_ref, doMiniaturized, kEventClassWindow, kEventWindowCollapsed);
 	error = error || registerHandler(env, win_ref, doMaximize, kEventClassWindow, kEventWindowExpanded);
+	error = error || registerHandler(env, win_ref, doBoundsChanged, kEventClassWindow, kEventWindowBoundsChanged);
 	return !error && registerKeyboardHandler(env, win_ref) && registerMouseHandler(env, win_ref);
 }
 
@@ -185,6 +212,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 				       kWindowCollapseBoxAttribute|
 				       kWindowStandardHandlerAttribute;
 	SetRect(&rect, x, y, x + width, y + height);
+	center_x = x + width/2;
+	center_y = y + height/2;
 	current_fullscreen = fullscreen == JNI_TRUE;
 	miniaturized = false;
 	activated = true;
@@ -232,8 +261,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Window_nCreate(JNIEnv *env, jclass 
 	}
 	ShowWindow(win_ref);
 	SelectWindow(win_ref);
-	CGPoint p = {x, y};
-	CGWarpMouseCursorPosition(p);
+	warpCursorToCenter();
+	CGPoint p = {center_x, center_y};
 	CGPostMouseEvent(p, FALSE, 1, TRUE);
 	CGPostMouseEvent(p, FALSE, 1, FALSE);
 }

@@ -47,5 +47,6 @@
 	extern void setQuitRequested(void);
 	extern bool registerKeyboardHandler(JNIEnv* env, WindowRef win_ref);
 	extern bool registerMouseHandler(JNIEnv* env, WindowRef win_ref);
+	extern bool isMouseCreatedAndNotNativeCursor(void);
 
 #endif /* _LWJGL_WINDOW_H_INCLUDED_ */

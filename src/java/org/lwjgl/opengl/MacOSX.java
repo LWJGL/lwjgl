@@ -32,24 +32,80 @@
 
 package org.lwjgl.opengl;
 
+import java.lang.reflect.*;
+
+import org.lwjgl.Sys;
+
 /**
  * $Id$
  *
  * Mac OS X specific hacks
  * 
  * @author elias_naur <elias_naur@users.sourceforge.net>
+ * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
 class MacOSX {
+	/** 
+	 * Initializes the Mac OS X specific hack 
+	 */
 	public static void initMacOSX() {
+
 		java.awt.Toolkit.getDefaultToolkit();
-		new com.apple.eawt.Application().addApplicationListener(new com.apple.eawt.ApplicationAdapter() {
-			public void handleQuit(com.apple.eawt.ApplicationEvent e) {
-				e.setHandled(false);
-				setQuitRequested();
+
+		// Add ourselves to quit requested, using reflection to allow
+		// compiling on other platforms
+		try {
+			Class appClass = Class.forName("com.apple.eawt.Application");
+			Class listenerClass = Class.forName("com.apple.eawt.ApplicationListener");
+			Object appInstance = appClass.newInstance();
+			// create proxy for adapter
+			Object proxyInvoker = Proxy.newProxyInstance(listenerClass.getClassLoader(), new Class[]{listenerClass}, new Invokee());
+			Method addApplicationListener = appClass.getMethod("addApplicationListener", new Class[]{listenerClass});
+			addApplicationListener.invoke(appInstance, new Object[]{proxyInvoker});
+		} catch (Exception e) {
+			// validate success
+			if (Sys.DEBUG) {
+				System.out.println("Unable to invoke 'addApplicationListener' method because of " + e);
 			}
-		});
+		}
 	}
 
+	/**
+	 * Even more hackish proxy class for allowing mac os x to be compiled on all platforms
+	 *
+	 * @author Brian Matzon <brian@matzon.dk>
+	 */
+	static private class Invokee implements InvocationHandler {
+		/**
+		 * Called when the actual method of the proxied class is called
+		 * 
+		 * @param proxy Object being proxied
+		 * @param method Method being invoked
+		 * @param args Arguments for that specific method
+		 */
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			try {
+				// Return if we were not called through handleQuit
+				Class applicationEventClass = Class.forName("com.apple.eawt.ApplicationEvent");
+				Class applicationListenerClass = Class.forName("com.apple.eawt.ApplicationListener");
+				Method handleQuitMethod = applicationListenerClass.getMethod("handleQuit", new Class[]{applicationEventClass});
+				if (!method.equals(handleQuitMethod))
+					return null;
+				// invoke setHandled(false); 
+				Method setHandled = args[0].getClass().getMethod("setHandled", new Class[] {boolean.class}); 
+				setHandled.invoke(args[0], new Object[]{new Boolean(false)});
+				// just call setQuitRequested
+				setQuitRequested();
+			} catch (Exception e) {
+				if (Sys.DEBUG) {
+					System.out.println("Unable to invoke 'setHandled' because of " + e);
+				}
+			}
+			return null;
+		}
+	}
+
+	/** Notifies the native implementation that a quit event has been received */
 	private static native void setQuitRequested();
 }
