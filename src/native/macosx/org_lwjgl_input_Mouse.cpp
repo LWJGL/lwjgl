@@ -66,6 +66,7 @@ static event_queue_t event_queue;
 static int last_dx;
 static int last_dy;
 static int last_dz;
+static bool created;
 
 static void handleButton(unsigned char button_index, jbyte state) {
 	if (button_index >= NUM_BUTTONS) {
@@ -232,31 +233,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nCreate(JNIEnv * env, jclass c
 	}*/
 	CGAssociateMouseAndMouseCursorPosition(FALSE);
 	CGDisplayHideCursor(CGMainDisplayID());
+	created = true;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nDestroy(JNIEnv * env, jclass clazz) {
 	//shutdownDevice(&hid_dev);
-//	if (!native_cursor) {
+	if (created) {
+		created = false;
 		CGDisplayShowCursor(CGMainDisplayID());
 		CGAssociateMouseAndMouseCursorPosition(TRUE);
-//	}
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_input_Mouse_nPoll(JNIEnv * env, jclass clazz) {
 	int dx, dy, dz;
 	//pollMouseDevice();
 	dz = last_dz*WHEEL_SCALE;
-	//if (!native_cursor) {
-		dx = last_dx;
-		dy = -last_dy;
-	/*} else {
-		Point cursor_pos;
-		GetMouse(&cursor_pos);
-		dx = cursor_pos.v - last_x;
-		dy = cursor_pos.h - last_y;
-		last_x += dx;
-		last_y += dy;
-	}*/
+	dx = last_dx;
+	dy = -last_dy;
 	env->SetStaticIntField(clazz, fid_dx, (jint)dx);
 	env->SetStaticIntField(clazz, fid_dy, (jint)dy);
 	env->SetStaticIntField(clazz, fid_dwheel, (jint)dz);
