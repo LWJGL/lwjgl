@@ -49,6 +49,10 @@ import java.lang.reflect.Method;
  * @version $Revision$
  */
 final class Win32CanvasImplementation implements AWTCanvasImplementation {
+	static {
+		System.loadLibrary("jawt");
+	}
+
 	public PeerInfo createPeerInfo(AWTGLCanvas canvas, PixelFormat pixel_format) throws LWJGLException {
 		return new Win32AWTGLCanvasPeerInfo(canvas, pixel_format);
 	}
