@@ -52,8 +52,7 @@ extern HINSTANCE dll_handle;
 
 extern HWND hwnd;                     // Handle to window
 
-extern LPDIRECTINPUT lpdi;            // DI instance
-
+IDirectInput* cDI;                   // DI instance
 IDirectInputDevice2* cDIDevice;       // DI Device instance
 DIJOYSTATE2 cJS;                      // State of Controller
 
@@ -70,6 +69,7 @@ bool cHasslider;                      // Temporary slider check
 JNIEnv* cEnvironment;                 // JNIEnvironment copy
 
 bool cCreate_success;                 // bool used to determine successfull creation
+bool cFirstTimeInitialization = true; // boolean to determine first time initialization
 
 // Cached fields of Controller.java
 jclass clsController;
@@ -122,11 +122,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_input_Controller_initIDs(JNIEnv * env, jcl
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, jclass clazz) {
   // Create the DirectInput object. 
   HRESULT hr;
-  hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &lpdi, NULL); 
+  hr = DirectInputCreate(dll_handle, DIRECTINPUT_VERSION, &cDI, NULL); 
   if (FAILED(hr)) {
-#if _DEBUG
+ #if _DEBUG
     printf("DirectInputCreate failed\n");
-#endif
+ #endif
     ShutdownController();
     return JNI_FALSE;
   }
@@ -150,6 +150,11 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
     return JNI_FALSE;
   }
 
+  //check for first time initialization - need to detect capabilities
+  if (cFirstTimeInitialization) {
+    cFirstTimeInitialization = false;
+
+
   /* Enumerate capabilities of Controller */
   EnumerateControllerCapabilities();
   if (!cCreate_success) {
@@ -170,6 +175,12 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_input_Controller_nCreate(JNIEnv *env, 
 
   /* Set capabilities */
   SetControllerCapabilities();
+  } else {
+    if(cCreate_success) {
+      /* Do setup of Controller */
+      SetupController();
+    }
+  }
 
   /* Aquire the Controller */
   hr = cDIDevice->Acquire();
@@ -253,7 +264,7 @@ void EnumerateControllerCapabilities() {
  */
 void EnumerateControllers() {
   HRESULT hr;
-  hr = lpdi->EnumDevices(DIDEVTYPE_JOYSTICK, EnumControllerCallback, 0, DIEDFL_ATTACHEDONLY);
+  hr = cDI->EnumDevices(DIDEVTYPE_JOYSTICK, EnumControllerCallback, 0, DIEDFL_ATTACHEDONLY);
   if FAILED(hr) { 
 #if _DEBUG
     printf("EnumDevices failed\n");
@@ -313,7 +324,7 @@ BOOL CALLBACK EnumControllerObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LP
  */
 void CreateController(LPCDIDEVICEINSTANCE lpddi) {
   HRESULT hr;
-  hr = lpdi->CreateDevice(lpddi->guidInstance, (LPDIRECTINPUTDEVICE*) &cDIDevice, NULL);
+  hr = cDI->CreateDevice(lpddi->guidInstance, (LPDIRECTINPUTDEVICE*) &cDIDevice, NULL);
   if FAILED(hr) {	
 #if _DEBUG
     printf("CreateDevice failed\n");
