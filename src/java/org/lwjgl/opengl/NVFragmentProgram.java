@@ -92,9 +92,8 @@ public class NVFragmentProgram extends NVProgram {
 
   public static void glGetProgramNamedParameterNV(int id, ByteBuffer name, FloatBuffer params) {
 
-    assert params.remaining() >= 4 : "<params> must have 4 floats available.";
-
-    nglGetProgramNamedParameterfvNV(id, name.remaining(), name, name.position(), params, params.position());
+  	BufferChecks.checkBuffer(params);
+  	nglGetProgramNamedParameterfvNV(id, name.remaining(), name, name.position(), params, params.position());
 
   }
 
@@ -114,8 +113,8 @@ public class NVFragmentProgram extends NVProgram {
 
   public static void glGetProgramLocalParameterARB(int target, int index, FloatBuffer params) {
 
-    assert params.remaining() >= 4 : "<params> must have 4 floats available.";
-
+  	BufferChecks.checkBuffer(params);
+  	
     nglGetProgramLocalParameterfvARB(target, index, params, params.position());
 
   }

@@ -39,6 +39,7 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
+import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -133,15 +134,7 @@ class ARBProgram {
 	public static final int GL_MATRIX29_ARB = 0x88DD;
 	public static final int GL_MATRIX30_ARB = 0x88DE;
 	public static final int GL_MATRIX31_ARB = 0x88DF;
-	
-	static {
-		BufferChecks.putGetMap(GL_PROGRAM_ERROR_POSITION_ARB, 1);
-		BufferChecks.putGetMap(GL_CURRENT_MATRIX_ARB, 1);
-		BufferChecks.putGetMap(GL_TRANSPOSE_CURRENT_MATRIX_ARB, 1);
-		BufferChecks.putGetMap(GL_CURRENT_MATRIX_STACK_DEPTH_ARB, 1);
-		BufferChecks.putGetMap(GL_MAX_PROGRAM_MATRICES_ARB, 1);
-		BufferChecks.putGetMap(GL_MAX_PROGRAM_MATRIX_STACK_DEPTH_ARB, 1);
-	}
+
 
 	// ---------------------------
 	public static void glProgramStringARB(int target, int format, ByteBuffer string) {
@@ -232,7 +225,7 @@ class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramARB(int target, int parameterName, IntBuffer params) {
-		// TODO: Check buffer size
+		BufferChecks.checkBuffer(params);
 		nglGetProgramivARB(target, parameterName, params, params.position());
 	}
 
@@ -241,7 +234,11 @@ class ARBProgram {
 
 	// ---------------------------
 	public static void glGetProgramStringARB(int target, int parameterName, ByteBuffer paramString) {
-		// TODO: Check buffer size
+		// TODO: We have no idea just how big programs can be really so let's guess at 16kb and hope that's
+		// good enough. So we ought to find out how big a program can be.
+		if (paramString.remaining() < 16384) {
+			throw new BufferOverflowException();
+		}
 		nglGetProgramStringARB(target, parameterName, paramString, paramString.position());
 	}
 

@@ -151,6 +151,7 @@ public class ATIFragmentShader {
 	public static final int GL_NEGATE_BIT_ATI                                       = 0x00000004;
 	public static final int GL_BIAS_BIT_ATI                                         = 0x00000008;
 
+
 	public static native int glGenFragmentShadersATI(int range);
 
 	public static native void glBindFragmentShaderATI(int id);
@@ -235,6 +236,7 @@ public class ATIFragmentShader {
 		int arg3Mod);
 
 	public static void glSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue) {
+		BufferChecks.checkBuffer(pfValue); // TODO:is this correct?
 		nglSetFragmentShaderConstantATI(dst, pfValue, pfValue.position());
 	}
 	private static native void nglSetFragmentShaderConstantATI(int dst, FloatBuffer pfValue, int pfValue_offset);

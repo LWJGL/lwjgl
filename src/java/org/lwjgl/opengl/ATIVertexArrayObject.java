@@ -54,7 +54,7 @@ public class ATIVertexArrayObject {
 	public static final int GL_OBJECT_BUFFER_USAGE_ATI                              = 0x8765;
 	public static final int GL_ARRAY_OBJECT_BUFFER_ATI                              = 0x8766;
 	public static final int GL_ARRAY_OBJECT_OFFSET_ATI                              = 0x8767;
-
+	
 	public static int glNewObjectBufferATI(int size, ByteBuffer pPointer, int usage) {
 		return nglNewObjectBufferATI(size, pPointer, pPointer != null ? pPointer.position() : 0, usage);
 	}
@@ -103,11 +103,13 @@ public class ATIVertexArrayObject {
 		int offset);
 
 	public static void glGetArrayObjectATI(int array, int pname, FloatBuffer pfParams) {
+		BufferChecks.checkBuffer(pfParams);
 		nglGetArrayObjectfvATI(array, pname, pfParams, pfParams.position());
 	}
 	private static native void nglGetArrayObjectfvATI(int array, int pname, FloatBuffer pfParams, int pfParams_offset);
 
 	public static void glGetArrayObjectATI(int array, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglGetArrayObjectivATI(array, pname, piParams, piParams.position());
 	}
 	private static native void nglGetArrayObjectivATI(int array, int pname, IntBuffer piParams, int piParams_offset);
@@ -120,11 +122,13 @@ public class ATIVertexArrayObject {
 		int offset);
 
 	public static void glGetVariantArrayObjectATI(int id, int pname, FloatBuffer pfParams) {
+		BufferChecks.checkBuffer(pfParams);
 		nglGetVariantArrayObjectfvATI(id, pname, pfParams, pfParams.position());
 	}
 	private static native void nglGetVariantArrayObjectfvATI(int id, int pname, FloatBuffer pfParams, int pfParams_offset_offset);
 
 	public static void glGetVariantArrayObjectATI(int id, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglGetVariantArrayObjectivATI(id, pname, piParams, piParams.position());
 	}
 	private static native void nglGetVariantArrayObjectivATI(int id, int pname, IntBuffer piParams, int piParams_offset);

@@ -49,6 +49,7 @@ public class NVPointSprite {
 	public static native void glPointParameteriNV(int pname, int param);
 
 	public static void glPointParameterNV(int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglPointParameterivNV(pname, piParams, piParams.position());
 	}
 	private static native void nglPointParameterivNV(int pname, IntBuffer piParams, int piParams_offset);

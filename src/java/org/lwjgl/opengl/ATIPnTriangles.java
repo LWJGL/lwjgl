@@ -49,7 +49,7 @@ public class ATIPnTriangles {
 	public static final int GL_PN_TRIANGLES_POINT_MODE_CUBIC_ATI                    = 0x87F6;
 	public static final int GL_PN_TRIANGLES_NORMAL_MODE_LINEAR_ATI                  = 0x87F7;
 	public static final int GL_PN_TRIANGLES_NORMAL_MODE_QUADRATIC_ATI               = 0x87F8;
-
+	
 	public static native void glPNTrianglesfATI(int pname, float param);
 
 	public static native void glPNTrianglesiATI(int pname, int param);

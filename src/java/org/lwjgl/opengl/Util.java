@@ -42,7 +42,7 @@ import java.nio.*;
 
 abstract class Util {
 	
-	final static IntBuffer int_buffer = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder()).asIntBuffer();
+	final static IntBuffer int_buffer = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder()).asIntBuffer();
 
 	/**
 	 * A helper function which is used to get the byte offset in an arbitrary buffer

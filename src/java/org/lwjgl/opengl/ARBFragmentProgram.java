@@ -81,11 +81,6 @@ public class ARBFragmentProgram extends ARBProgram {
   public static final int GL_MAX_TEXTURE_COORDS_ARB = 0x8871;
 
   public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;
-  
-  static {
-  	BufferChecks.putGetMap(GL_FRAGMENT_PROGRAM_ARB, 1);
-  	BufferChecks.putGetMap(GL_MAX_TEXTURE_COORDS_ARB, 1);
-  	BufferChecks.putGetMap(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, 1);
-  }
+
 
 }

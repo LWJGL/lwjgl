@@ -53,14 +53,15 @@ public class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_ARRAY_POINTER_EXT                     = 0x8456;
 	public static final int GL_FOG_COORDINATE_ARRAY_EXT                             = 0x8457;
 
+	
 	public static native void glFogCoordfEXT(float coord);
 	public static void glFogCoordPointerEXT(int stride, FloatBuffer data) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.ensureVBOdisabled();
 		nglFogCoordPointerEXT(GL11.GL_FLOAT, stride, data, data.position() << 2);
 	}
 	private static native void nglFogCoordPointerEXT(int type, int stride, Buffer data, int data_offset);
 	public static void glFogCoordPointerEXT(int type, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.ensureVBOenabled();
 		nglFogCoordPointerEXTVBO(type, stride, buffer_offset);
 	}
 	private static native void nglFogCoordPointerEXTVBO(int type, int stride, int buffer_offset);

@@ -54,9 +54,4 @@ public class ARBTextureCubeMap {
 	public static final int GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB                        = 0x851C;
 
 
-	static {
-		BufferChecks.putGetMap(GL_TEXTURE_BINDING_CUBE_MAP_ARB, 1);
-		BufferChecks.putGetMap(GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB, 1);
-	}
-
 }

@@ -40,6 +40,7 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -283,9 +284,7 @@ public class NVVertexProgram extends NVProgram {
   // ---------------------------
 
   public static void glExecuteProgramNV(int target, int id, FloatBuffer params) {
-
-    assert params.remaining() >= 4 : "<params> must have 4 floats available.";
-
+  	BufferChecks.checkBuffer(params);
     nglExecuteProgramNV(target, id, params, params.position());
 
   }
@@ -297,10 +296,8 @@ public class NVVertexProgram extends NVProgram {
   // ---------------------------
 
   public static void glGetProgramParameterNV(int target, int index, int parameterName, FloatBuffer params) {
-
-    assert params.remaining() >= 4 : "<params> must have 4 floats available.";
-
-    nglGetProgramParameterfvNV(target, index, parameterName, params, params.position());
+  	BufferChecks.checkBuffer(params);
+  	nglGetProgramParameterfvNV(target, index, parameterName, params, params.position());
 
   }
 
@@ -316,7 +313,7 @@ public class NVVertexProgram extends NVProgram {
   // ---------------------------
 
   public static void glGetTrackMatrixNV(int target, int address, int parameterName, IntBuffer params) {
-
+  	BufferChecks.checkBuffer(params);
     nglGetTrackMatrixivNV(target, address, parameterName, params, params.position());
 
   }
@@ -333,7 +330,7 @@ public class NVVertexProgram extends NVProgram {
   // ---------------------------
 
   public static void glGetVertexAttribNV(int index, int parameterName, FloatBuffer params) {
-
+  	BufferChecks.checkBuffer(params);
     nglGetVertexAttribfvNV(index, parameterName, params, params.position());
 
   }
@@ -345,8 +342,8 @@ public class NVVertexProgram extends NVProgram {
   // ---------------------------
 
   public static void glGetVertexAttribNV(int index, int parameterName, IntBuffer params) {
-
-    nglGetVertexAttribivNV(index, parameterName, params, params.position());
+  	BufferChecks.checkBuffer(params);
+  	nglGetVertexAttribivNV(index, parameterName, params, params.position());
 
   }
 
@@ -362,7 +359,10 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glProgramParameters4NV(int target, int index, int count, FloatBuffer params) {
 
-    assert params.remaining() >= 4 * count : "<params> must have " + 4 * count + " floats available.";
+  	// Special case buffer check
+  	if (params.remaining() < count * 4) {
+  		throw new BufferOverflowException();
+  	}
 
     nglProgramParameters4fvNV(target, index, count, params, params.position());
 
@@ -381,7 +381,7 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ByteBuffer buffer) {
 
-    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
+  	BufferChecks.ensureVBOdisabled();
 
     nglVertexAttribPointerNV(
       index,
@@ -395,8 +395,8 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, ShortBuffer buffer) {
 
-    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
-
+  	BufferChecks.ensureVBOdisabled();
+  	
     nglVertexAttribPointerNV(
       index,
       size,
@@ -409,16 +409,16 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, int stride, FloatBuffer buffer) {
 
-    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
-
+  	BufferChecks.ensureVBOdisabled();
+  	
     nglVertexAttribPointerNV(index, size, GL11.GL_FLOAT, stride, buffer, buffer.position() << 2);
 
   }
 
   public static void glVertexAttribPointerNV(int index, int size, boolean unsigned, int stride, IntBuffer buffer) {
 
-    assert VBOTracker.getVBOArrayStack().getState() == 0 : "Cannot use Buffers when VBO is enabled";
-
+  	BufferChecks.ensureVBOdisabled();
+  	
     nglVertexAttribPointerNV(
       index,
       size,
@@ -441,8 +441,8 @@ public class NVVertexProgram extends NVProgram {
 
   public static void glVertexAttribPointerNV(int index, int size, int type, int stride, int bufferOffset) {
 
-    assert VBOTracker.getVBOArrayStack().getState() != 0 : "Cannot use int offsets when VBO is disabled";
-
+  	BufferChecks.ensureVBOenabled();
+  	
     nglVertexAttribPointerNVVBO(index, size, type, stride, bufferOffset);
 
   }

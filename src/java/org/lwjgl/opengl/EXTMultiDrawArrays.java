@@ -43,7 +43,9 @@ import java.nio.IntBuffer;
 
 public class EXTMultiDrawArrays {
 	public static void glMultiDrawArraysEXT(int mode, IntBuffer piFirst, IntBuffer piCount) {
-		assert piFirst.remaining() == piCount.remaining(): "piFirst.remaining() != piCount.remaining()";
+		if (piFirst.remaining() != piCount.remaining()) {
+			throw new IllegalArgumentException("piFirst.remaining() != piCount.remaining()");
+		}
 		nglMultiDrawArraysEXT(mode, piFirst, piFirst.position(), piCount, piCount.position(), piFirst.remaining());
 	}
 	private static native void nglMultiDrawArraysEXT(int mode, IntBuffer piFirst, int piFirst_offset, IntBuffer piCount, int piCount_offset, int primcount);

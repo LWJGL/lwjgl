@@ -64,9 +64,12 @@ public class ATIDrawBuffers {
 	public static final int GL_DRAW_BUFFER14_ATI = 0x8833;
 	public static final int GL_DRAW_BUFFER15_ATI = 0x8834;
 
+
 	// ---------------------------
 	public static void glDrawBuffersATI(IntBuffer buffers) {
-		assert buffers.remaining() > 0 : "<buffers> must have at least 1 integer available.";
+		if (buffers.remaining() == 0) {
+			throw new RuntimeException("<buffers> must have at least 1 integer available.");
+		}
 		nglDrawBuffersATI(buffers.remaining(), buffers, buffers.position());
 	}
 

@@ -64,6 +64,7 @@ public class NVFence {
 	public static native boolean glIsFenceNV(int fence);
 
 	public static void glGetFenceNV(int fence, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglGetFenceivNV(fence, pname, piParams, piParams.position());
 	}
 	private static native void nglGetFenceivNV(int fence, int pname, IntBuffer piParams, int piParams_offset);

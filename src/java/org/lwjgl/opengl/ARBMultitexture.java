@@ -76,12 +76,6 @@ public class ARBMultitexture {
 	public static final int GL_CLIENT_ACTIVE_TEXTURE_ARB                            = 0x84E1;
 	public static final int GL_MAX_TEXTURE_UNITS_ARB                                = 0x84E2;
 	
-	static {
-		BufferChecks.putGetMap(GL_ACTIVE_TEXTURE_ARB, 1);
-		BufferChecks.putGetMap(GL_CLIENT_ACTIVE_TEXTURE_ARB, 1);
-		BufferChecks.putGetMap(GL_MAX_TEXTURE_UNITS_ARB, 1);
-	}
-
 	public static native void glClientActiveTextureARB(int texture);
 
 	public static native void glActiveTextureARB(int texture);

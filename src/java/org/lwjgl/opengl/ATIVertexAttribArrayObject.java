@@ -49,6 +49,7 @@ public class ATIVertexAttribArrayObject {
 
 	// ---------------------------
 	public static void glGetVertexAttribArrayObjectATI(int index, int pname, FloatBuffer params) {
+		BufferChecks.checkBuffer(params);
 		nglGetVertexAttribArrayObjectfvATI(index, pname, params, params.position());
 	}
 
@@ -59,6 +60,7 @@ public class ATIVertexAttribArrayObject {
 
 	// ---------------------------
 	public static void glGetVertexAttribArrayObjectATI(int index, int pname, IntBuffer params) {
+		BufferChecks.checkBuffer(params);
 		nglGetVertexAttribArrayObjectivATI(index, pname, params, params.position());
 	}
 

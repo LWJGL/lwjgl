@@ -53,21 +53,25 @@ public class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_TARGET_ATI                                      = 0x877C;
 
 	public static void glTexBumpParameterATI(int pname, FloatBuffer pfParam) {
+		BufferChecks.checkBuffer(pfParam);
 		nglTexBumpParameterfvATI(pname, pfParam, pfParam.position());
 	}
 	private static native void nglTexBumpParameterfvATI(int pname, FloatBuffer pfParam, int pfParam_offset);
 
 	public static void glTexBumpParameterATI(int pname, IntBuffer piParam) {
+		BufferChecks.checkBuffer(piParam);
 		nglTexBumpParameterivATI(pname, piParam, piParam.position());
 	}
 	private static native void nglTexBumpParameterivATI(int pname, IntBuffer piParam, int piParam_offset);
 
 	public static void glGetTexBumpParameterATI(int pname, FloatBuffer pfParam) {
+		BufferChecks.checkBuffer(pfParam);
 		nglGetTexBumpParameterfvATI(pname, pfParam, pfParam.position());
 	}
 	private static native void nglGetTexBumpParameterfvATI(int pname, FloatBuffer pfParam, int pfParam_offset);
 
 	public static void glGetTexBumpParameterATI(int pname, IntBuffer piParam) {
+		BufferChecks.checkBuffer(piParam);
 		nglGetTexBumpParameterivATI(pname, piParam, piParam.position());
 	}
 	private static native void nglGetTexBumpParameterivATI(int pname, IntBuffer piParam, int piParam_offset);

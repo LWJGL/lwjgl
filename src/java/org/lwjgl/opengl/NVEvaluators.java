@@ -70,37 +70,45 @@ public class NVEvaluators {
 	public static final int GL_MAX_RATIONAL_EVAL_ORDER_NV                           = 0x86D7;
 
 	public static void glGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, FloatBuffer pPoints) {
+		BufferChecks.checkLargeBuffer(pPoints);
 		nglGetMapControlPointsNV(target, index, type, ustride, vstride, packed, pPoints, pPoints.position()<<2);
 	}
 	private static native void nglGetMapControlPointsNV(int target, int index, int type, int ustride, int vstride, boolean packed, Buffer pPoints, int pPoints_offset);
 	public static void glMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, FloatBuffer pPoints) {
+		BufferChecks.checkLargeBuffer(pPoints);
 		nglMapControlPointsNV(target, index, type, ustride, vstride, uorder, vorder, packed, pPoints, pPoints.position()<<2);
 	}
 	private static native void nglMapControlPointsNV(int target, int index, int type, int ustride, int vstride, int uorder, int vorder, boolean packed, Buffer pPoints, int pPoints_offset);
 	public static void glMapParameterNV(int target, int pname, FloatBuffer pfParams) {
+		BufferChecks.checkBuffer(pfParams);
 		nglMapParameterfvNV(target, pname, pfParams, pfParams.position());
 	}
 	private static native void nglMapParameterfvNV(int target, int pname, FloatBuffer pfParams, int pfParams_offset);
 	public static void glMapParameterNV(int target, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglMapParameterivNV(target, pname, piParams, piParams.position());
 	}
 	private static native void nglMapParameterivNV(int target, int pname, IntBuffer piParams, int piParams_offset);
 
 	public static void glGetMapParameterNV(int target, int pname, FloatBuffer pfParams) {
+		BufferChecks.checkBuffer(pfParams);
 		nglGetMapParameterfvNV(target, pname, pfParams, pfParams.position());
 	}
 	private static native void nglGetMapParameterfvNV(int target, int pname, FloatBuffer pfParams, int pfParams_offset);
 
 	public static void glGetMapParameterNV(int target, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglGetMapParameterivNV(target, pname, piParams, piParams.position());
 	}
 	private static native void nglGetMapParameterivNV(int target, int pname, IntBuffer piParams, int piParams_offset);
 	public static void glGetMapAttribParameterNV(int target, int index, int pname, FloatBuffer pfParams) {
+		BufferChecks.checkBuffer(pfParams);
 		nglGetMapAttribParameterfvNV(target, index, pname, pfParams, pfParams.position());
 	}
 	private static native void nglGetMapAttribParameterfvNV(int target, int index, int pname, FloatBuffer pfParams, int pfParams_offset);
 
 	public static void glGetMapAttribParameterNV(int target, int index, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglGetMapAttribParameterivNV(target, index, pname, piParams, piParams.position());
 	}
 	private static native void nglGetMapAttribParameterivNV(int target, int index, int pname, IntBuffer piParams, int piParams_offset);

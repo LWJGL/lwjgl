@@ -52,7 +52,7 @@ public class EXTSecondaryColor {
 	public static final int GL_SECONDARY_COLOR_ARRAY_STRIDE_EXT                     = 0x845C;
 	public static final int GL_SECONDARY_COLOR_ARRAY_POINTER_EXT                    = 0x845D;
 	public static final int GL_SECONDARY_COLOR_ARRAY_EXT                            = 0x845E;
-
+	
 	public static native void glSecondaryColor3bEXT(byte red, byte green, byte blue);
 
 	public static native void glSecondaryColor3fEXT(float red, float green, float blue);
@@ -60,17 +60,17 @@ public class EXTSecondaryColor {
 	public static native void glSecondaryColor3ubEXT(byte red, byte green, byte blue);
 
 	public static void glSecondaryColorPointerEXT(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.ensureVBOdisabled();
 		nglSecondaryColorPointerEXT(size, unsigned ? GL11.GL_UNSIGNED_BYTE: GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glSecondaryColorPointerEXT(int size, int stride, FloatBuffer pPointer) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.ensureVBOdisabled();
 		nglSecondaryColorPointerEXT(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglSecondaryColorPointerEXT(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 
 	public static void glSecondaryColorPointerEXT(int size, int type, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.ensureVBOenabled();
 		nglSecondaryColorPointerEXTVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglSecondaryColorPointerEXTVBO(int size, int type, int stride, int buffer_offset);

@@ -203,12 +203,15 @@ public class EXTVertexShader {
 		int range,
 		int components);
 	public static void glSetInvariantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetInvariantEXT(id, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, pAddr, pAddr.position());
 	}
 	public static void glSetInvariantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetInvariantEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, pAddr, pAddr.position()<<1);
 	}
 	public static void glSetInvariantEXT(int id, FloatBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetInvariantEXT(id, GL11.GL_FLOAT, pAddr, pAddr.position()<<2);
 	}
 	public static void glSetInvariantEXT(int id, boolean unsigned, IntBuffer pAddr) {
@@ -217,72 +220,83 @@ public class EXTVertexShader {
 	private static native void nglSetInvariantEXT(int id, int type, Buffer pAddr, int pAddr_offset);
 
 	public static void glSetLocalConstantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetLocalConstantEXT(id, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, pAddr, pAddr.position());
 	}
 	public static void glSetLocalConstantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetLocalConstantEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, pAddr, pAddr.position()<<1);
 	}
 	public static void glSetLocalConstantEXT(int id, FloatBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetLocalConstantEXT(id, GL11.GL_FLOAT, pAddr, pAddr.position()<<2);
 	}
 	public static void glSetLocalConstantEXT(int id, boolean unsigned, IntBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglSetLocalConstantEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, pAddr, pAddr.position()<<2);
 	}
 	private static native void nglSetLocalConstantEXT(int id, int type, Buffer pAddr, int pAddr_offset);
 
 	public static void glVariantEXT(int id, ByteBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglVariantbvEXT(id, pAddr, pAddr.position());
 	}
 	private static native void nglVariantbvEXT(int id, ByteBuffer pAddr, int pAddr_offset);
 
 	public static void glVariantEXT(int id, ShortBuffer psAddr) {
+		BufferChecks.checkBuffer(psAddr);
 		nglVariantsvEXT(id, psAddr, psAddr.position());
 	}
 	private static native void nglVariantsvEXT(int id, ShortBuffer psAddr, int psAddr_offset);
 
 	public static void glVariantEXT(int id, FloatBuffer pfAddr) {
+		BufferChecks.checkBuffer(pfAddr);
 		nglVariantfvEXT(id, pfAddr, pfAddr.position());
 	}
 	private static native void nglVariantfvEXT(int id, FloatBuffer pfAddr, int pfAddr_offset);
 
 	public static void glVariantEXT(int id, IntBuffer piAddr) {
+		BufferChecks.checkBuffer(piAddr);
 		nglVariantivEXT(id, piAddr, piAddr.position());
 	}
 	private static native void nglVariantivEXT(int id, IntBuffer piAddr, int piAddr_offset);
 
 	public static void glVariantuEXT(int id, ByteBuffer pAddr) {
+		BufferChecks.checkBuffer(pAddr);
 		nglVariantubvEXT(id, pAddr, pAddr.position());
 	}
 	private static native void nglVariantubvEXT(int id, ByteBuffer pAddr, int pAddr_offset);
 
 	public static void glVariantuEXT(int id, ShortBuffer psAddr) {
+		BufferChecks.checkBuffer(psAddr);
 		nglVariantusvEXT(id, psAddr, psAddr.position());
 	}
 	private static native void nglVariantusvEXT(int id, ShortBuffer psAddr, int psAddr_offset);
 
 	public static void glVariantuEXT(int id, IntBuffer piAddr) {
+		BufferChecks.checkBuffer(piAddr);
 		nglVariantuivEXT(id, piAddr, piAddr.position());
 	}
 	private static native void nglVariantuivEXT(int id, IntBuffer piAddr, int piAddr_offset);
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ByteBuffer pAddr) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.ensureVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pAddr, pAddr.position());
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ShortBuffer pAddr) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.ensureVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pAddr, pAddr.position()<<1);
 	}
 	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.ensureVBOdisabled();
 		nglVariantPointerEXT(id, GL11.GL_FLOAT, stride, pAddr, pAddr.position()<<2);
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, IntBuffer pAddr) {
-		assert VBOTracker.getVBOArrayStack().getState() == 0: "Cannot use Buffers when VBO is enabled";
+		BufferChecks.ensureVBOdisabled();
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pAddr, pAddr.position()<<2);
 	}
 	private static native void nglVariantPointerEXT(int id, int type, int stride, Buffer pAddr, int pAddr_offset);
 	public static void glVariantPointerEXT(int id, int type, int stride, int buffer_offset) {
-		assert VBOTracker.getVBOArrayStack().getState() != 0: "Cannot use int offsets when VBO is disabled";
+		BufferChecks.ensureVBOenabled();
 		nglVariantPointerEXTVBO(id, type, stride, buffer_offset);
 	}
 	private static native void nglVariantPointerEXTVBO(int id, int type, int stride, int buffer_offset);

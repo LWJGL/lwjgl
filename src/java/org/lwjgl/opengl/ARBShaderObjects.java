@@ -38,6 +38,7 @@
 
 package org.lwjgl.opengl;
 
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -328,7 +329,9 @@ public class ARBShaderObjects {
 		if ( length == null )
 			nglGetInfoLogARB(obj, infoLog.remaining(), null, -1, infoLog, infoLog.position());
 		else {
-			assert length.remaining() > 0 : "<length> must have at least one element available.";
+			if (length.remaining() == 0) {
+				throw new BufferOverflowException();
+			}
 			nglGetInfoLogARB(obj, infoLog.remaining(), length, length.position(), infoLog, infoLog.position());
 		}
 	}
@@ -348,7 +351,9 @@ public class ARBShaderObjects {
 		if ( count == null )
 			nglGetAttachedObjectsARB(containerObj, obj.remaining(), null, -1, obj, obj.position());
 		else {
-			assert count.remaining() > 0 : "<count> must have at least one element available.";
+			if (count.remaining() == 0) {
+				throw new BufferOverflowException();
+			}
 			nglGetAttachedObjectsARB(containerObj, obj.remaining(), count, count.position(), obj, obj.position());
 		}
 	}
@@ -363,7 +368,9 @@ public class ARBShaderObjects {
 
 	// ---------------------------
 	public static int glGetUniformLocationARB(int programObj, ByteBuffer name) {
-		assert name.get(name.limit()) == 0 : "<name> must be null-terminated.";
+		if (name.get(name.limit() - 1) != 0) {
+			throw new RuntimeException("<name> must be null-terminated.");
+		}
 		return nglGetUniformLocationARB(programObj, name, name.position());
 	}
 
@@ -379,8 +386,12 @@ public class ARBShaderObjects {
 	                                         IntBuffer size,
 	                                         IntBuffer type,
 	                                         ByteBuffer name) {
-		assert size.remaining() > 0 : "<size> must have at least one element available.";
-		assert type.remaining() > 0 : "<type> must have at least one element available.";
+		if (size.remaining() == 0) {
+			throw new BufferOverflowException();
+		}
+		if (type.remaining() == 0) {
+			throw new BufferOverflowException();
+		}
 
 		if ( length == null )
 			nglGetActiveUniformARB(programObj,
@@ -395,7 +406,9 @@ public class ARBShaderObjects {
 			                       name,
 			                       name.position());
 		else {
-			assert length.remaining() > 0 : "<length> must have at least one element available.";
+			if (length.remaining() == 0) {
+				throw new BufferOverflowException();
+			}
 			nglGetActiveUniformARB(programObj,
 			                       index,
 			                       name.remaining(),

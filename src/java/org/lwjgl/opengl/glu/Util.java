@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL12;
 public class Util {
 
 	/** temp IntBuffer of one for getting an int from some GL functions */
-	private static IntBuffer scratch = createIntBuffer(1);
+	private static IntBuffer scratch = createIntBuffer(256);
 
 	/**
 	 * Return ceiling of integer division

@@ -57,32 +57,22 @@ public class ARBMatrixPalette {
 	public static final int GL_MATRIX_INDEX_ARRAY_STRIDE_ARB                        = 0x8848;
 	public static final int GL_MATRIX_INDEX_ARRAY_POINTER_ARB                       = 0x8849;
 
-	static {
-		BufferChecks.putGetMap(GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB, 1);
-		BufferChecks.putGetMap(GL_MAX_PALETTE_MATRICES_ARB, 1);
-		BufferChecks.putGetMap(GL_CURRENT_PALETTE_MATRIX_ARB, 1);
-		BufferChecks.putGetMap(GL_MATRIX_INDEX_ARRAY_SIZE_ARB, 1);
-		BufferChecks.putGetMap(GL_MATRIX_INDEX_ARRAY_TYPE_ARB, 1);
-		BufferChecks.putGetMap(GL_MATRIX_INDEX_ARRAY_STRIDE_ARB, 1);
-		BufferChecks.putGetMap(GL_MATRIX_INDEX_ARRAY_POINTER_ARB, 1); // TODO: figure out what to do with pointers
-	}
-
 	public static native void glCurrentPaletteMatrixARB(int index);
 	public static void glMatrixIndexPointerARB(int size, int stride, ByteBuffer pPointer) {
-		BufferChecks.checkVBOdisabled();
+		BufferChecks.ensureVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, ShortBuffer pPointer) {
-		BufferChecks.checkVBOdisabled();
+		BufferChecks.ensureVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_SHORT, stride, pPointer, pPointer.position()<<1);
 	}
 	public static void glMatrixIndexPointerARB(int size, int stride, IntBuffer pPointer) {
-		BufferChecks.checkVBOdisabled();
+		BufferChecks.ensureVBOdisabled();
 		nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_INT, stride, pPointer, pPointer.position()<<2);
 	}
 	private static native void nglMatrixIndexPointerARB(int size, int type, int stride, Buffer pPointer, int pPointer_offset);
 	public static void glMatrixIndexPointerARB(int size, int type, int stride, int buffer_offset) {
-		BufferChecks.checkVBOenabled();
+		BufferChecks.ensureVBOenabled();
 		nglMatrixIndexPointerARBVBO(size, type, stride, buffer_offset);
 	}
 	private static native void nglMatrixIndexPointerARBVBO(int size, int type, int stride, int buffer_offset);

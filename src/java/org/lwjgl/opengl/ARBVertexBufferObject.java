@@ -80,7 +80,7 @@ public class ARBVertexBufferObject {
 	public static final int GL_BUFFER_ACCESS_ARB                            = 0x88BB;
 	public static final int GL_BUFFER_MAPPED_ARB                            = 0x88BC;
 	public static final int GL_BUFFER_MAP_POINTER_ARB                       = 0x88BD;
-
+	
 	public static void glBindBufferARB(int target, int buffer) {
 		switch (target) {
 			case GL_ELEMENT_ARRAY_BUFFER_ARB:
@@ -169,7 +169,7 @@ public class ARBVertexBufferObject {
 	public static native ByteBuffer glMapBufferARB(int target, int access, int size, ByteBuffer oldBuffer);
 	public static native boolean glUnmapBufferARB(int target);
 	public static void glGetBufferParameterARB(int target, int pname, IntBuffer params) {
-		// TODO:check buffer size
+		BufferChecks.checkBuffer(params);
 		nglGetBufferParameterivARB(target, pname, params, params.position());
 	}
 	private static native void nglGetBufferParameterivARB(int target, int pname, IntBuffer params, int params_offset);

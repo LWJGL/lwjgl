@@ -33,6 +33,7 @@
 package org.lwjgl.opengl;
 
 import java.nio.Buffer;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -232,41 +233,41 @@ public abstract class GL12 extends GL11 {
 	}
 	private static native void nglGetHistogram(int target, boolean reset, int format, int type, Buffer values, int values_offset);
 	public static void glGetHistogramParameter(int target, int pname, FloatBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetHistogramParameterfv(target, pname, params, params.position());
 	}
 	private static native void nglGetHistogramParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 	public static void glGetHistogramParameter(int target, int pname, IntBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetHistogramParameteriv(target, pname, params, params.position());
 	}
 	private static native void nglGetHistogramParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static native void glMinmax(int target, int internalformat, boolean sink);
 	public static native void glResetMinmax(int target);
 	public static void glGetMinmax(int target, boolean reset, int format, int types, ByteBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position());
 	}
 	public static void glGetMinmax(int target, boolean reset, int format, int types, ShortBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position() << 1);
 	}
 	public static void glGetMinmax(int target, boolean reset, int format, int types, IntBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position() << 2);
 	}
 	public static void glGetMinmax(int target, boolean reset, int format, int types, FloatBuffer values) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(values);
 		nglGetMinmax(target, reset, format, types, values, values.position() << 2);
 	}
 	private static native void nglGetMinmax(int target, boolean reset, int format, int types, Buffer values, int values_offset);
 	public static void glGetMinmaxParameter(int target, int pname, FloatBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetMinmaxParameterfv(target, pname, params, params.position());
 	}
 	private static native void nglGetMinmaxParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 	public static void glGetMinmaxParameter(int target, int pname, IntBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglGetMinmaxParameteriv(target, pname, params, params.position());
 	}
 	private static native void nglGetMinmaxParameteriv(int target, int pname, IntBuffer params, int params_offset);
@@ -292,13 +293,13 @@ public abstract class GL12 extends GL11 {
 	private static native void nglConvolutionFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer image, int image_offset);
 	public static native void glConvolutionParameterf(int target, int pname, float params);
 	public static void glConvolutionParameter(int target, int pname, FloatBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglConvolutionParameterfv(target, pname, params, params.position());
 	}
 	private static native void nglConvolutionParameterfv(int target, int pname, FloatBuffer params, int params_offset);
 	public static native void glConvolutionParameteri(int target, int pname, int params);
 	public static void glConvolutionParameteriv(int target, int pname, IntBuffer params) {
-		// TODO: check buffer size valid
+		BufferChecks.checkBuffer(params);
 		nglConvolutionParameteriv(target, pname, params, params.position());
 	}
 	private static native void nglConvolutionParameteriv(int target, int pname, IntBuffer params, int params_offset);
@@ -342,54 +343,70 @@ public abstract class GL12 extends GL11 {
 	}
 	private static native void nglGetSeparableFilter(int target, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset, Buffer span, int span_offset);
 	public static void glDrawRangeElements(int mode, int start, int end, ByteBuffer indices) {
-		BufferChecks.checkVBOdisabled();
+		BufferChecks.ensureVBOdisabled();
 		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_BYTE, indices, indices.position());
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, ShortBuffer indices) {
-		BufferChecks.checkVBOdisabled();
+		BufferChecks.ensureVBOdisabled();
 		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_SHORT, indices, indices.position() << 1);
 	}
 	public static void glDrawRangeElements(int mode, int start, int end, IntBuffer indices) {
-		BufferChecks.checkVBOdisabled();
+		BufferChecks.ensureVBOdisabled();
 		nglDrawRangeElements(mode, start, end, indices.remaining(), GL_UNSIGNED_INT, indices, indices.position() << 2);
 	}
 	private static native void nglDrawRangeElements(int mode, int start, int end, int count, int type, Buffer indices, int indices_offset);
 	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, int buffer_offset) {
-		BufferChecks.checkVBOenabled();
+		BufferChecks.ensureVBOenabled();
 		nglDrawRangeElementsVBO(mode, start, end, count, type, buffer_offset);
 	}
 	private static native void nglDrawRangeElementsVBO(int mode, int start, int end, int count, int type, int buffer_offset);
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ByteBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels.position());
 	}
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, ShortBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, IntBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels.position() << 2);
 	}
 	public static void glTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, FloatBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth, int border, int format, int type, Buffer pixels, int pixels_offset);
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ByteBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position());
 	}
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, ShortBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() * 2 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 1);
 	}
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, IntBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2);
 	}
 	public static void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, FloatBuffer pixels) {
-		// TODO: check buffer size valid
+		if (pixels.remaining() * 4 < BufferChecks.calculateImageStorage(format, type, width, height, depth)) {
+			throw new BufferUnderflowException();
+		}
 		nglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, pixels.position() << 2);
 	}
 	private static native void nglTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels, int pixels_offset);

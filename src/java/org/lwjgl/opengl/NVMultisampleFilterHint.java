@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public interface NVMultisampleFilterHint {
+public class NVMultisampleFilterHint {
 
 	/*
 	 * Accepted by the <target> parameter of Hint and by the <pname>

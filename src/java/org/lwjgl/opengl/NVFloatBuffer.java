@@ -38,7 +38,7 @@
 
 package org.lwjgl.opengl;
 
-public interface NVFloatBuffer {
+public class NVFloatBuffer {
 
 	/*
 	 * Accepted by the <internalformat> parameter of TexImage2D and

@@ -65,11 +65,13 @@ public class NVOcclusionQuery {
 	public static native void glEndOcclusionQueryNV();
 
 	public static void glGetOcclusionQueryNV(int id, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglGetOcclusionQueryivNV(id, pname, piParams, piParams.position());
 	}
 	private static native void nglGetOcclusionQueryivNV(int id, int pname, IntBuffer piParams, int piParams_offset);
 
 	public static void glGetOcclusionQueryuNV(int id, int pname, IntBuffer piParams) {
+		BufferChecks.checkBuffer(piParams);
 		nglGetOcclusionQueryuivNV(id, pname, piParams, piParams.position());
 	}
 	private static native void nglGetOcclusionQueryuivNV(int id, int pname, IntBuffer piParams, int piParams_offset);

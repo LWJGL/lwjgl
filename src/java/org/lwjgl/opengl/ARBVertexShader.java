@@ -63,10 +63,11 @@ public class ARBVertexShader {
 	public static final int GL_OBJECT_ACTIVE_ATTRIBUTES_ARB = 0x8B89;
 	public static final int GL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH_ARB = 0x8B8A;
 
+
 	// ---------------------------
 	public static void glBindAttribLocationARB(int programObj, int index, ByteBuffer name) {
-		if (name.get(name.limit()) != 0) {
-			throw new IllegalArgumentException("<name> must be a null-terminated string.");
+		if (name.get(name.limit() - 1) != 0) {
+			throw new RuntimeException("<name> must be a null-terminated string.");
 		}
 		nglBindAttribLocationARB(programObj, index, name, name.position());
 	}
@@ -78,7 +79,7 @@ public class ARBVertexShader {
 	// ---------------------------
 	public static void glGetActiveAttribARB(int programObj, int index, IntBuffer length,
 	                                        IntBuffer size, IntBuffer type, ByteBuffer name) {
-		// TODO: check buffer size
+		BufferChecks.checkBuffer(name);
 		
 		if ( length == null )
 			nglGetActiveAttribARB(programObj, index, name.remaining(), null, -1, size, size.position(),
@@ -97,8 +98,8 @@ public class ARBVertexShader {
 
 	// ---------------------------
 	public static int glGetAttribLocationARB(int programObj, ByteBuffer name) {
-		if (name.get(name.limit()) != 0) {
-			throw new IllegalArgumentException("<name> must be a null-terminated string.");
+		if (name.get(name.limit() - 1) != 0) {
+			throw new RuntimeException("<name> must be a null-terminated string.");
 		}
 		return nglGetAttribLocationARB(programObj, name, name.position());
 	}
