@@ -46,7 +46,7 @@ extern "C" {
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_BaseAL_nCreate
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jobjectArray);
 
 /*
  * Class:     org_lwjgl_openal_BaseAL

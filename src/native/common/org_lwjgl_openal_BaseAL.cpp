@@ -40,8 +40,8 @@
  * Method:    nCreate
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_BaseAL_nCreate (JNIEnv *env, jobject obj) {
-  if(!InitializeOpenAL(env)) {
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_openal_BaseAL_nCreate (JNIEnv *env, jobject obj, jobjectArray oalPaths) {
+  if(!InitializeOpenAL(env, oalPaths)) {
 	  jclass cls = env->FindClass("org/lwjgl/openal/OpenALException");
 		env->ThrowNew(cls, "Unable to load function pointers to openal.");
 		env->DeleteLocalRef(cls);

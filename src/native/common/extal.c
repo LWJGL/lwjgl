@@ -163,26 +163,35 @@ void* GetFunctionPointer(const char* function) {
 /**
  * Loads the OpenAL Library
  */
-void LoadOpenAL(JNIEnv *env) {
+void LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
+  jsize pathcount = env->GetArrayLength(oalPaths);
+#ifdef _DEBUG
+  printf("Found %d OpenAL paths\n", pathcount);
+#endif  
 #ifdef _WIN32
-  jstring propertykey;
-  jstring librarypath;
-  jclass systemclass;
-  jmethodID propertymethod;
-  //compile bitch!
-  //propertykey = env->NewStringUTF("java.library.path");
-  ///*systemclass = */env->FindClass("java/lang/System");
-  //propertymethod = env->GetStaticMethodID(systemclass, "getProperty", "(Ljava/lang/String;)Ljava/lang/String");
-  //librarypath = env->CallStaticObjectMethod(systemclass, jmethodID, propertykey);
-  printf("Loaded library path: %s", librarypath);
-  
-  //parse string
-  
-  //try to load for each path
-  handleOAL = LoadLibrary("OpenAL32.dll");
+  for(int i=0;i<pathcount;i++) {
+    jstring path = (jstring) env->GetObjectArrayElement(oalPaths, i);
+#ifdef _DEBUG
+  printf("Testing '%s'\n", env->GetStringUTFChars(path, NULL));
+#endif  
+    handleOAL = LoadLibrary(env->GetStringUTFChars(path, NULL));
+    if (handleOAL != NULL) {
+#ifdef _DEBUG
+  printf("Found OpenAL at '%s'\n", env->GetStringUTFChars(path, NULL));
+#endif  
+      break;
+    }
+  }
 #endif
 #ifdef _X11
-   handleOAL = dlopen("libopenal.so", RTLD_LAZY);
+   //handleOAL = dlopen("libopenal.so", RTLD_LAZY);
+  for(int i=0;i<pathcount;i++) {
+    jstring path = (jstring) env->GetObjectArrayElement(oalPaths, i);
+    handleOAL = dlopen(env->GetStringUTFChars(path, NULL), RTLD_LAZY);
+    if (handleOAL != NULL) {
+      break;
+    }
+  }   
 #endif
 }
 
@@ -201,13 +210,13 @@ void UnLoadOpenAL() {
 /**
  * Initializes OpenAL by loading the library
  */
-int InitializeOpenAL(JNIEnv *env) {
+int InitializeOpenAL(JNIEnv *env, jobjectArray oalPaths) {
   if(handleOAL != 0) {
     return JNI_TRUE;
   }
 
   //load our library
-  LoadOpenAL(env);
+  LoadOpenAL(env, oalPaths);
 
   // if we couldn't load the library, get out
   if(handleOAL == 0) {

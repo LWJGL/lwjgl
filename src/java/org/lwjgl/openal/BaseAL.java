@@ -31,6 +31,9 @@
  */
  package org.lwjgl.openal;
 
+import java.io.File;
+import java.util.StringTokenizer;
+
 /**
  * $Id$
  *
@@ -71,10 +74,34 @@ public abstract class BaseAL {
 	 */
 	public void create() throws Exception {
 		if (created) {
-			return;
-        }
+		  return;
+    }
+    
+    
+    // need to pass path of possible locations of OAL to native side
+    String libpath = System.getProperty("java.library.path");
+    String seperator = System.getProperty("path.separator");
+    String libname;
+    
+    // libname is hardcoded atm - this will change in a near future...
+    libname = (System.getProperty("os.name").toLowerCase().indexOf("windows") == -1) 
+            ? "libopenal.so" 
+            : "OpenAL32.dll";     
+    
+    StringTokenizer st = new StringTokenizer(libpath, seperator);
         
-		if (!nCreate()) {
+    //create needed string array
+    String[] oalPaths = new String[st.countTokens()+1];
+    
+    //build paths
+    for(int i=0;i<st.countTokens();i++) {
+      oalPaths[i] = st.nextToken() + File.separator + libname; 
+    }
+    
+    //add cwd path
+    oalPaths[oalPaths.length-1] = libname;
+        
+		if (!nCreate(oalPaths)) {
 			throw new Exception("AL instance could not be created.");
         }
 		created = true;
@@ -86,7 +113,7 @@ public abstract class BaseAL {
 	 * 
 	 * @return true if the AL creation process succeeded
 	 */
-	protected native boolean nCreate();
+	protected native boolean nCreate(String[] oalPaths);
     
 	/**
 	 * Calls whatever destruction rutines that are needed
