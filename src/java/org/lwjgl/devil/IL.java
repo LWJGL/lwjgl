@@ -50,10 +50,12 @@ import org.lwjgl.Sys;
 
 /**
  * $Id$
- *
+ * <p>
  * The core DevIL API.
+ * </p>
  * 
  * @author captainjester <captainjester@users.sourceforge.net>
+ * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$
  */
 public class IL {
@@ -81,8 +83,6 @@ public class IL {
 	public static final int		IL_VENDOR										= 0x1F00;
 
 	// IL-specific public const's 
-	public static final int		IL_VERSION_1_6_0						= 1;
-	public static final int		IL_VERSION									= 160;
 	public static final int		IL_LOAD_EXT									= 0x1F01;
 	public static final int		IL_SAVE_EXT									= 0x1F02;
 
@@ -301,8 +301,7 @@ public class IL {
 	public static final int		IL_EOF											= -1;
 	
 	/** Have we been created? */
-	protected static boolean	created;	
-
+	protected static boolean	created;
 
 	public static native boolean ilActiveImage(int Number);
 	public static native boolean ilActiveLayer(int Number);

@@ -42,8 +42,9 @@ import org.lwjgl.Sys;
 
 /**
  * $Id$
- *
+ * <p>
  * The DevIL ILUT API.
+ * </p>
  * 
  * @author captainjester <captainjester@users.sourceforge.net>
  * @author Brian Matzon <brian@matzon.dk>
@@ -83,6 +84,7 @@ public class ILUT {
     public static final int ILUT_OPENGL = 0;
 		
 		public static final int ILUT_VENDOR = IL.IL_VENDOR;
+		public static final int ILUT_VERSION_NUM = IL.IL_VERSION_NUM;
 		
 		/** Have we been created? */
     protected static boolean created;

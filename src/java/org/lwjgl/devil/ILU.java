@@ -44,8 +44,9 @@ import org.lwjgl.Sys;
 
 /**
  * $Id$
- *
+ * <p>
  * The DevIL ILU API.
+ * </p>
  * 
  * @author captainjester <captainjester@users.sourceforge.net>
  * @author Brian Matzon <brian@matzon.dk>
