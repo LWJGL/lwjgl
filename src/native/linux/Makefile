@@ -61,6 +61,7 @@ liblwjgl_d.so: $(LIBOBJS)
 
 liblwjgl.so: $(LIBOBJS)
 	$(LINK) -shared -o $@ $^ $(LINKOPTS)
+	strip $@
 	cp $@ ../../../bin/
 
 .SUFFIXES:      .cpp .so .o .java .h .class .c
