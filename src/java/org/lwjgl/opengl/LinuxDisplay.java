@@ -50,6 +50,8 @@ import org.lwjgl.input.Keyboard;
 final class LinuxDisplay implements DisplayImplementation {
 	private static final int NUM_BUTTONS = 3;
 
+	private static int display_connection_usage_count = 0;
+
 	private static PeerInfo peer_info;
 
 	/* Since Xlib is not guaranteed to be thread safe, we need a way to synchronize LWJGL
@@ -62,8 +64,24 @@ final class LinuxDisplay implements DisplayImplementation {
 	/**
 	 * increment and decrement display usage.
 	 */
-	static native void incDisplay() throws LWJGLException;
-	static native void decDisplay();
+	static void incDisplay() throws LWJGLException {
+		if (display_connection_usage_count == 0) {
+			openDisplay();
+		}
+		display_connection_usage_count++;
+	}
+	
+	static void decDisplay() {
+		display_connection_usage_count--;
+		if (display_connection_usage_count < 0)
+			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
+		if (display_connection_usage_count == 0) {
+			closeDisplay();
+		}
+	}
+
+	private static native void openDisplay() throws LWJGLException;
+	private static native void closeDisplay();
 
 	public void createWindow(DisplayMode mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		lockAWT();

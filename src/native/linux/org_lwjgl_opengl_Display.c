@@ -90,7 +90,6 @@ static bool grab;
 
 static int current_screen;
 static Display *display_connection = NULL;
-static int display_connection_usage = 0;
 static bool async_x_error;
 static char error_message[ERR_MSG_SIZE];
 static Atom warp_atom;
@@ -127,36 +126,25 @@ Display *getDisplay(void) {
 	return display_connection;
 }
 
-static Display *incDisplay(JNIEnv *env) {
-	if (display_connection_usage == 0) {
-		async_x_error = false;
-		XSetErrorHandler(errorHandler);
-		display_connection = XOpenDisplay(NULL);
-		if (display_connection == NULL) {
-			if (env != NULL)
-				throwException(env, "Could not open X display connection");
-			else
-				printfDebugJava(env, "Could not open X display connection");
-			return NULL;
-		}
-		current_screen = XDefaultScreen(getDisplay());
-		warp_atom = XInternAtom(display_connection, "_LWJGL_WARP", False);
-	}
+static void openDisplay(JNIEnv *env) {
 	async_x_error = false;
-	display_connection_usage++;
-	return display_connection;
+	XSetErrorHandler(errorHandler);
+	display_connection = XOpenDisplay(NULL);
+	if (display_connection == NULL) {
+		throwException(env, "Could not open X display connection");
+		return;
+	}
+	current_screen = XDefaultScreen(getDisplay());
+	warp_atom = XInternAtom(display_connection, "_LWJGL_WARP", False);
 }
 
 Atom getWarpAtom(void) {
 	return warp_atom;
 }
 
-static void decDisplay(void) {
-	display_connection_usage--;
-	if (display_connection_usage == 0) {
-		XCloseDisplay(display_connection);
-		display_connection = NULL;
-	}
+static void closeDisplay(void) {
+	XCloseDisplay(display_connection);
+	display_connection = NULL;
 }
 
 static void waitMapped(Window win) {
@@ -309,12 +297,12 @@ static void setWindowTitle(const char *title) {
 	XStoreName(getDisplay(), current_win, title);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_incDisplay(JNIEnv *env, jclass clazz) {
-	incDisplay(env);
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_openDisplay(JNIEnv *env, jclass clazz) {
+	openDisplay(env);
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_decDisplay(JNIEnv *env, jclass clazz) {
-	decDisplay();
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_closeDisplay(JNIEnv *env, jclass clazz) {
+	closeDisplay();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDrawable(JNIEnv *env, jclass clazz, jobject peer_info_handle) {

@@ -47,17 +47,17 @@ final class LinuxDisplayPeerInfo extends LinuxPeerInfo {
 	public LinuxDisplayPeerInfo(PixelFormat pixel_format) throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
-			LinuxDisplay.incDisplay();
+			GLContext.loadOpenGLLibrary();
 			try {
-				GLContext.loadOpenGLLibrary();
+				LinuxDisplay.incDisplay();
 				try {
 					initDefaultPeerInfo(getHandle(), pixel_format);
 				} catch (LWJGLException e) {
-					GLContext.unloadOpenGLLibrary();
+					LinuxDisplay.decDisplay();
 					throw e;
 				}
 			} catch (LWJGLException e) {
-				LinuxDisplay.decDisplay();
+				GLContext.unloadOpenGLLibrary();
 				throw e;
 			}
 		} finally {

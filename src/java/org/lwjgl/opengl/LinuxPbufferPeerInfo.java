@@ -47,17 +47,17 @@ final class LinuxPbufferPeerInfo extends LinuxPeerInfo {
 	public LinuxPbufferPeerInfo(int width, int height, PixelFormat pixel_format) throws LWJGLException {
 		LinuxDisplay.lockAWT();
 		try {
-			LinuxDisplay.incDisplay();
+			GLContext.loadOpenGLLibrary();
 			try {
-				GLContext.loadOpenGLLibrary();
+				LinuxDisplay.incDisplay();
 				try {
 					nInitHandle(getHandle(), width, height, pixel_format);
 				} catch (LWJGLException e) {
-					GLContext.unloadOpenGLLibrary();
+					LinuxDisplay.decDisplay();
 					throw e;
 				}
 			} catch (LWJGLException e) {
-				LinuxDisplay.decDisplay();
+				GLContext.unloadOpenGLLibrary();
 				throw e;
 			}
 		} finally {
