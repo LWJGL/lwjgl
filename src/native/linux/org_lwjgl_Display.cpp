@@ -39,15 +39,12 @@
  * @version $Revision$
  */
 
-
-#include "extgl.h"
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/xf86vmode.h>
 #include <X11/Xutil.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <math.h>
 #include <jni.h>
 #include "org_lwjgl_Display.h"
