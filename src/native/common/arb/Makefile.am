@@ -1,6 +1,6 @@
 noinst_LTLIBRARIES = libarb.la
 
-libla_SOURCES = $(SRC)
+libarb_la_SOURCES = $(SRC)
 INCLUDES=-I..
 SRC = org_lwjgl_opengl_ARBProgram.cpp \
       org_lwjgl_opengl_ARBProgram.cpp \
