@@ -3275,7 +3275,7 @@ int extgl_Open()
     lib_gl_handle = dlopen("libGL.so.1", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_gl_handle == NULL)
         return 1;
-    lib_glu_handle = dlopen("libGLU.so", RTLD_LAZY | RTLD_GLOBAL);
+    lib_glu_handle = dlopen("libGLU.so.1", RTLD_LAZY | RTLD_GLOBAL);
     if (lib_glu_handle == NULL)
         return 1;
     return 0;
