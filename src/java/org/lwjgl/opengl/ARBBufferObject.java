@@ -48,8 +48,8 @@ public class ARBBufferObject {
 	 * way, an application will normally use glMapBufferARB like this:
 	 * <p/>
 	 * ByteBuffer mapped_buffer; mapped_buffer = glMapBufferARB(..., ..., ..., null); ... // Another map on the same buffer mapped_buffer = glMapBufferARB(..., ..., ..., mapped_buffer);
-	 * @param size      The size of the buffer area.
-	 * @param oldBuffer A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and no new buffer will be created. In that case, size is ignored.
+	 * @param result_size   The size of the buffer area.
+	 * @param old_buffer    A ByteBuffer. If this argument points to the same address as the new mapping, it will be returned and no new buffer will be created. In that case, size is ignored.
 	 * @return A ByteBuffer representing the mapped buffer memory.
 	 */
 	public static java.nio.ByteBuffer glMapBufferARB(int target, int access, int result_size, java.nio.ByteBuffer old_buffer) {
@@ -60,60 +60,60 @@ public class ARBBufferObject {
 	}
 	private static native java.nio.ByteBuffer nglMapBufferARB(int target, int access, int result_size, java.nio.ByteBuffer old_buffer);
 
-	public static void glGetBufferSubDataARB(int target, int offset, ShortBuffer data) {
+	public static void glGetBufferSubDataARB(int target, int offset, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglGetBufferSubDataARB(target, offset, (data.remaining() << 1), data, data.position() << 1);
+		nglGetBufferSubDataARB(target, offset, (data.remaining()), data, data.position());
 	}
 	public static void glGetBufferSubDataARB(int target, int offset, IntBuffer data) {
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubDataARB(target, offset, (data.remaining() << 2), data, data.position() << 2);
 	}
+	public static void glGetBufferSubDataARB(int target, int offset, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
+		nglGetBufferSubDataARB(target, offset, (data.remaining() << 1), data, data.position() << 1);
+	}
 	public static void glGetBufferSubDataARB(int target, int offset, FloatBuffer data) {
 		BufferChecks.checkDirect(data);
 		nglGetBufferSubDataARB(target, offset, (data.remaining() << 2), data, data.position() << 2);
 	}
-	public static void glGetBufferSubDataARB(int target, int offset, ByteBuffer data) {
-		BufferChecks.checkDirect(data);
-		nglGetBufferSubDataARB(target, offset, (data.remaining()), data, data.position());
-	}
 	private static native void nglGetBufferSubDataARB(int target, int offset, int size, Buffer data, int data_position);
 
-	public static void glBufferSubDataARB(int target, int offset, ShortBuffer data) {
+	public static void glBufferSubDataARB(int target, int offset, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
-		nglBufferSubDataARB(target, offset, (data.remaining() << 1), data, data.position() << 1);
+		nglBufferSubDataARB(target, offset, (data.remaining()), data, data.position());
 	}
 	public static void glBufferSubDataARB(int target, int offset, IntBuffer data) {
 		BufferChecks.checkDirect(data);
 		nglBufferSubDataARB(target, offset, (data.remaining() << 2), data, data.position() << 2);
 	}
+	public static void glBufferSubDataARB(int target, int offset, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
+		nglBufferSubDataARB(target, offset, (data.remaining() << 1), data, data.position() << 1);
+	}
 	public static void glBufferSubDataARB(int target, int offset, FloatBuffer data) {
 		BufferChecks.checkDirect(data);
 		nglBufferSubDataARB(target, offset, (data.remaining() << 2), data, data.position() << 2);
-	}
-	public static void glBufferSubDataARB(int target, int offset, ByteBuffer data) {
-		BufferChecks.checkDirect(data);
-		nglBufferSubDataARB(target, offset, (data.remaining()), data, data.position());
 	}
 	private static native void nglBufferSubDataARB(int target, int offset, int size, Buffer data, int data_position);
 
 	public static void glBufferDataARB(int target, int size, int usage) {
 		nglBufferDataARB(target, size, null, 0, usage);
 	}
-	public static void glBufferDataARB(int target, ShortBuffer data, int usage) {
+	public static void glBufferDataARB(int target, ByteBuffer data, int usage) {
 		BufferChecks.checkDirect(data);
-		nglBufferDataARB(target, (data.remaining() << 1), data, data.position() << 1, usage);
+		nglBufferDataARB(target, (data.remaining()), data, data.position(), usage);
 	}
 	public static void glBufferDataARB(int target, IntBuffer data, int usage) {
 		BufferChecks.checkDirect(data);
 		nglBufferDataARB(target, (data.remaining() << 2), data, data.position() << 2, usage);
 	}
+	public static void glBufferDataARB(int target, ShortBuffer data, int usage) {
+		BufferChecks.checkDirect(data);
+		nglBufferDataARB(target, (data.remaining() << 1), data, data.position() << 1, usage);
+	}
 	public static void glBufferDataARB(int target, FloatBuffer data, int usage) {
 		BufferChecks.checkDirect(data);
 		nglBufferDataARB(target, (data.remaining() << 2), data, data.position() << 2, usage);
-	}
-	public static void glBufferDataARB(int target, ByteBuffer data, int usage) {
-		BufferChecks.checkDirect(data);
-		nglBufferDataARB(target, (data.remaining()), data, data.position(), usage);
 	}
 	private static native void nglBufferDataARB(int target, int size, Buffer data, int data_position, int usage);
 

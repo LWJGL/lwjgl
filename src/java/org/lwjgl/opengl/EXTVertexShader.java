@@ -199,20 +199,20 @@ public final class EXTVertexShader {
 
 	public static native void glEnableVariantClientStateEXT(int id);
 
-	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
+	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ShortBuffer pAddr) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pAddr);
-		nglVariantPointerEXT(id, GL11.GL_FLOAT, stride, pAddr, pAddr.position() << 2);
+		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pAddr, pAddr.position() << 1);
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, IntBuffer pAddr) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pAddr);
 		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, stride, pAddr, pAddr.position() << 2);
 	}
-	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ShortBuffer pAddr) {
+	public static void glVariantPointerEXT(int id, int stride, FloatBuffer pAddr) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pAddr);
-		nglVariantPointerEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, stride, pAddr, pAddr.position() << 1);
+		nglVariantPointerEXT(id, GL11.GL_FLOAT, stride, pAddr, pAddr.position() << 2);
 	}
 	public static void glVariantPointerEXT(int id, boolean unsigned, int stride, ByteBuffer pAddr) {
 		GLBufferChecks.ensureArrayVBOdisabled();
@@ -268,17 +268,17 @@ public final class EXTVertexShader {
 	}
 	private static native void nglVariantbvEXT(int id, ByteBuffer pAddr, int pAddr_position);
 
-	public static void glSetLocalConstantEXT(int id, FloatBuffer pAddr) {
+	public static void glSetLocalConstantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);
-		nglSetLocalConstantEXT(id, GL11.GL_FLOAT, pAddr, pAddr.position() << 2);
+		nglSetLocalConstantEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, pAddr, pAddr.position() << 1);
 	}
 	public static void glSetLocalConstantEXT(int id, boolean unsigned, IntBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);
 		nglSetLocalConstantEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, pAddr, pAddr.position() << 2);
 	}
-	public static void glSetLocalConstantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+	public static void glSetLocalConstantEXT(int id, FloatBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);
-		nglSetLocalConstantEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, pAddr, pAddr.position() << 1);
+		nglSetLocalConstantEXT(id, GL11.GL_FLOAT, pAddr, pAddr.position() << 2);
 	}
 	public static void glSetLocalConstantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);
@@ -286,17 +286,17 @@ public final class EXTVertexShader {
 	}
 	private static native void nglSetLocalConstantEXT(int id, int type, Buffer pAddr, int pAddr_position);
 
-	public static void glSetInvariantEXT(int id, FloatBuffer pAddr) {
+	public static void glSetInvariantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);
-		nglSetInvariantEXT(id, GL11.GL_FLOAT, pAddr, pAddr.position() << 2);
+		nglSetInvariantEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, pAddr, pAddr.position() << 1);
 	}
 	public static void glSetInvariantEXT(int id, boolean unsigned, IntBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);
 		nglSetInvariantEXT(id, unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT, pAddr, pAddr.position() << 2);
 	}
-	public static void glSetInvariantEXT(int id, boolean unsigned, ShortBuffer pAddr) {
+	public static void glSetInvariantEXT(int id, FloatBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);
-		nglSetInvariantEXT(id, unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT, pAddr, pAddr.position() << 1);
+		nglSetInvariantEXT(id, GL11.GL_FLOAT, pAddr, pAddr.position() << 2);
 	}
 	public static void glSetInvariantEXT(int id, boolean unsigned, ByteBuffer pAddr) {
 		BufferChecks.checkBuffer(pAddr, 4);

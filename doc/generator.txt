@@ -43,6 +43,10 @@ regular java interfaces containing zero or more constant fields and zero or
 more annotated methods. Each interface will generate a java source file in
 src/java and, if needed, a native source file in src/native/common.
 
+There's an auxillary generator that creates the ContextCapabilities class. It
+is invoked as part of the 'generate-all' and target. It can also be invoked
+stand-alone with the target 'generate-opengl-capabilites'.
+
 Template file format
 --------------------
 A template file is a regular java interface with annotations describing the

@@ -54,8 +54,6 @@ import java.nio.*;
  * @version $Revision$
  */
 public class GeneratorVisitor extends SimpleDeclarationVisitor {
-	private static final String STUB_INITIALIZER_NAME = "initNativeStubs";
-
 	private final AnnotationProcessorEnvironment env;
 	private final TypeMap type_map;
 	private final boolean generate_error_checks;
@@ -170,8 +168,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		java_writer.println("import java.nio.*;");
 		java_writer.println();
 		java_writer.print("public ");
-		Extension extension_annotation = d.getAnnotation(Extension.class);
-		boolean is_final = extension_annotation == null || extension_annotation.isFinal();
+		boolean is_final = Utils.isFinal(d);
 		if (is_final)
 			java_writer.write("final ");
 		java_writer.print("class " + Utils.getSimpleClassName(d));
@@ -192,7 +189,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 			java_writer.println();
 		}
 		if (d.getMethods().size() > 0)
-			java_writer.println("\tstatic native void " + STUB_INITIALIZER_NAME + "() throws LWJGLException;");
+			java_writer.println("\tstatic native void " + Utils.STUB_INITIALIZER_NAME + "() throws LWJGLException;");
 		JavaMethodsGenerator.generateMethodsJava(env, type_map, java_writer, d, generate_error_checks);
 		java_writer.println("}");
 		java_writer.close();
@@ -214,7 +211,7 @@ public class GeneratorVisitor extends SimpleDeclarationVisitor {
 		generateMethodsNativePointers(native_writer, d.getMethods());
 		native_writer.println();
 		NativeMethodStubsGenerator.generateNativeMethodStubs(env, type_map, native_writer, d, generate_error_checks);
-		native_writer.print("JNIEXPORT void JNICALL " + Utils.getQualifiedNativeMethodName(qualified_interface_name, STUB_INITIALIZER_NAME));
+		native_writer.print("JNIEXPORT void JNICALL " + Utils.getQualifiedNativeMethodName(qualified_interface_name, Utils.STUB_INITIALIZER_NAME));
 		native_writer.println("(JNIEnv *env, jclass clazz) {");
 		native_writer.println("\tJavaMethodAndExtFunction functions[] = {");
 		RegisterStubsGenerator.generateMethodsNativeStubBind(native_writer, d, generate_error_checks);

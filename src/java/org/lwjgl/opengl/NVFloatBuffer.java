@@ -7,15 +7,6 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class NVFloatBuffer {
-	public static final int GL_WGL_TEXTURE_FLOAT_RGBA_NV = 0x20b8;
-	public static final int GL_WGL_TEXTURE_FLOAT_RGB_NV = 0x20b7;
-	public static final int GL_WGL_TEXTURE_FLOAT_RG_NV = 0x20b6;
-	public static final int GL_WGL_TEXTURE_FLOAT_R_NV = 0x20b5;
-	public static final int GL_WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGBA_NV = 0x20b4;
-	public static final int GL_WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RGB_NV = 0x20b3;
-	public static final int GL_WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_RG_NV = 0x20b2;
-	public static final int GL_WGL_BIND_TO_TEXTURE_RECTANGLE_FLOAT_R_NV = 0x20b1;
-	public static final int GL_WGL_FLOAT_COMPONENTS_NV = 0x20b0;
 	public static final int GL_FLOAT_RGBA_MODE_NV = 0x888e;
 	public static final int GL_FLOAT_CLEAR_COLOR_VALUE_NV = 0x888d;
 	public static final int GL_TEXTURE_FLOAT_COMPONENTS_NV = 0x888c;

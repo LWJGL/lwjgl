@@ -7,8 +7,8 @@ import org.lwjgl.BufferChecks;
 import java.nio.*;
 
 public final class EXTDepthBoundsTest {
-	public static final int DEPTH_BOUNDS_EXT = 0x8891;
-	public static final int DEPTH_BOUNDS_TEST_EXT = 0x8890;
+	public static final int GL_DEPTH_BOUNDS_EXT = 0x8891;
+	public static final int GL_DEPTH_BOUNDS_TEST_EXT = 0x8890;
 
 	private EXTDepthBoundsTest() {
 	}

@@ -147,26 +147,26 @@ public final class ShadersTest {
 		if ( "NONE".equalsIgnoreCase(args[0]) ) {
 			shader = null;
 		} else if ( "VP".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.GL_ARB_vertex_program )
+			if ( !GLContext.getCapabilities().GL_ARB_vertex_program )
 				kill("The ARB_vertex_program extension is not supported.");
 
 			shader = new ShaderVP("shaderVP.vp");
 		} else if ( "FP".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.GL_ARB_vertex_program )
+			if ( !GLContext.getCapabilities().GL_ARB_vertex_program )
 				kill("The ARB_vertex_program extension is not supported.");
-			if ( !GLContext.GL_ARB_fragment_program )
+			if ( !GLContext.getCapabilities().GL_ARB_fragment_program )
 				kill("The ARB_fragment_program extension is not supported.");
 
 			shader = new ShaderFP("shaderFP.vp", "shaderFP.fp");
 		} else if ( "VSH".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.GL_ARB_vertex_shader )
+			if ( !GLContext.getCapabilities().GL_ARB_vertex_shader )
 				kill("The ARB_vertex_shader extension is not supported.");
 
 			shader = new ShaderVSH("shaderVSH.vsh");
 		} else if ( "FSH".equalsIgnoreCase(args[0]) ) {
-			if ( !GLContext.GL_ARB_vertex_shader )
+			if ( !GLContext.getCapabilities().GL_ARB_vertex_shader )
 				kill("The ARB_vertex_shader extension is not supported.");
-			if ( !GLContext.GL_ARB_fragment_shader )
+			if ( !GLContext.getCapabilities().GL_ARB_fragment_shader )
 				kill("The ARB_fragment_shader extension is not supported.");
 
 			shader = new ShaderFSH("shaderFSH.vsh", "shaderFSH.fsh");

@@ -57,6 +57,11 @@ public final class ARBVertexBlend {
 
 	public static native void glVertexBlendARB(int count);
 
+	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
+		GLBufferChecks.ensureArrayVBOdisabled();
+		BufferChecks.checkDirect(pPointer);
+		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position());
+	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, IntBuffer pPointer) {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pPointer);
@@ -66,11 +71,6 @@ public final class ARBVertexBlend {
 		GLBufferChecks.ensureArrayVBOdisabled();
 		BufferChecks.checkDirect(pPointer);
 		nglWeightPointerARB(size, GL11.GL_FLOAT, stride, pPointer, pPointer.position() << 2);
-	}
-	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ByteBuffer pPointer) {
-		GLBufferChecks.ensureArrayVBOdisabled();
-		BufferChecks.checkDirect(pPointer);
-		nglWeightPointerARB(size, unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE, stride, pPointer, pPointer.position());
 	}
 	public static void glWeightPointerARB(int size, boolean unsigned, int stride, ShortBuffer pPointer) {
 		GLBufferChecks.ensureArrayVBOdisabled();

@@ -34,11 +34,19 @@ package org.lwjgl.generator;
 
 import com.sun.mirror.apt.*;
 import com.sun.mirror.declaration.*;
+import com.sun.mirror.type.*;
+import com.sun.mirror.util.*;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Arrays;
+
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.File;
 
 import static java.util.Collections.*;
 import static com.sun.mirror.util.DeclarationVisitors.*;
@@ -52,22 +60,19 @@ import static com.sun.mirror.util.DeclarationVisitors.*;
  * @author elias_naur <elias_naur@users.sourceforge.net>
  * @version $Revision$
  */
-public class GeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
+public class ContextGeneratorProcessorFactory implements AnnotationProcessorFactory, RoundCompleteListener {
 	private static boolean first_round = true;
-
+	
 	// Process any set of annotations
 	private static final Collection<String> supportedAnnotations =
 		unmodifiableCollection(Arrays.asList("*"));
-
-	private static final Collection<String> supportedOptions =
-		unmodifiableCollection(Arrays.asList("-Atypemap", "-Ageneratechecks"));
 
 	public Collection<String> supportedAnnotationTypes() {
 		return supportedAnnotations;
 	}
 
 	public Collection<String> supportedOptions() {
-		return supportedOptions;
+		return Collections.emptySet();
 	}
 
 	public void roundComplete(RoundCompleteEvent event) {
@@ -91,33 +96,67 @@ public class GeneratorProcessorFactory implements AnnotationProcessorFactory, Ro
 		}
 
 		public void process() {
-			Map<String, String> options = env.getOptions();
-			String typemap_classname = null;
-			boolean generate_error_checks = false;
-			for (String k : options.keySet()) {
-				int delimiter = k.indexOf('=');
-				if (delimiter != -1) {
-					if (k.startsWith("-Atypemap")) {
-						typemap_classname = k.substring(delimiter + 1);
-					}
-				} else if ( "-Ageneratechecks".equals(k)) {
-					generate_error_checks = true;
-				}
-			}
-			if (typemap_classname == null)
-				throw new RuntimeException("No TypeMap class name specified with -Atypemap=<class-name>");
 			try {
-				TypeMap type_map = (TypeMap)(Class.forName(typemap_classname).newInstance());
-				for (TypeDeclaration typedecl : env.getSpecifiedTypeDeclarations()) {
-					typedecl.accept(getDeclarationScanner(new GeneratorVisitor(env, type_map, generate_error_checks), NO_OP));
-				}
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (ClassNotFoundException e) {
+				generateContextCapabilitiesSource();
+			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+		}
+
+		private void generateContextCapabilitiesSource() throws IOException {
+			PrintWriter writer = env.getFiler().createSourceFile("org.lwjgl.opengl." + ContextCapabilitiesGenerator.CONTEXT_CAPS_CLASS_NAME);
+			writer.println("/* MACHINE GENERATED FILE, DO NOT EDIT */");
+			writer.println();
+			writer.println("package org.lwjgl.opengl;");
+			writer.println();
+			writer.println("import org.lwjgl.LWJGLException;");
+			writer.println("import java.util.Set;");
+			writer.println();
+			ContextCapabilitiesGenerator.generateClassPrologue(writer);
+			DeclarationFilter filter = DeclarationFilter.getFilter(InterfaceDeclaration.class);
+			Collection<TypeDeclaration> interface_decls = filter.filter(env.getSpecifiedTypeDeclarations());
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				if (Utils.isFinal(interface_decl))
+					ContextCapabilitiesGenerator.generateField(writer, interface_decl);
+			}
+			writer.println();
+			ContextCapabilitiesGenerator.generateInitStubsPrologue(writer);
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				if (!Utils.isFinal(interface_decl))
+					ContextCapabilitiesGenerator.generateAddExtension(writer, interface_decl);
+			}
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				String simple_name = interface_decl.getSimpleName();
+				if (simple_name.equals("GL11"))
+					continue;
+				ContextCapabilitiesGenerator.generateInitStubs(writer, interface_decl);
+			}
+			ContextCapabilitiesGenerator.generateInitStubsEpilogue(writer);
+			writer.println();
+			writer.println("\tstatic void unloadAllStubs() {");
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				ContextCapabilitiesGenerator.generateUnloadStubs(writer, interface_decl);
+			}
+			writer.println("\t}");
+/*			writer.println();
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				ContextCapabilitiesGenerator.generateSymbolPointers(writer, interface_decl);
+			}*/
+			writer.println();
+			ContextCapabilitiesGenerator.generateInitializerPrologue(writer);
+			for (TypeDeclaration typedecl : interface_decls) {
+				InterfaceDeclaration interface_decl = (InterfaceDeclaration)typedecl;
+				if (Utils.isFinal(interface_decl))
+					ContextCapabilitiesGenerator.generateInitializer(writer, interface_decl);
+			}
+			writer.println("\t}");
+			writer.println("}");
+			writer.close();
 		}
 	}
 }

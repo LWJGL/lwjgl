@@ -51,149 +51,9 @@ import java.util.*;
  * @version $Revision$
  */
 public final class GLContext {
-
-	/** The currently initialised context */
-	private static WeakReference currentContext;
-
-	/*
-	 * Available extensions
-	 */
-	public static boolean GL_ARB_color_buffer_float;
-	public static boolean GL_ARB_depth_texture;
-	public static boolean GL_ARB_draw_buffers;
-	public static boolean GL_ARB_fragment_program;
-	public static boolean GL_ARB_fragment_program_shadow;
-	public static boolean GL_ARB_fragment_shader;
-	public static boolean GL_ARB_half_float_pixel;
-	public static boolean GL_ARB_imaging;
-	public static boolean GL_ARB_matrix_palette;
-	public static boolean GL_ARB_multisample;
-	public static boolean GL_ARB_multitexture;
-	public static boolean GL_ARB_occlusion_query;
-	public static boolean GL_ARB_pixel_buffer_object;
-	public static boolean GL_ARB_point_parameters;
-	public static boolean GL_ARB_point_sprite;
-	public static boolean GL_ARB_shading_language_100;
-	public static boolean GL_ARB_shader_objects;
-	public static boolean GL_ARB_shadow;
-	public static boolean GL_ARB_shadow_ambient;
-	public static boolean GL_ARB_texture_border_clamp;
-	public static boolean GL_ARB_texture_compression;
-	public static boolean GL_ARB_texture_cube_map;
-	public static boolean GL_ARB_texture_env_add;
-	public static boolean GL_ARB_texture_env_combine;
-	public static boolean GL_ARB_texture_env_crossbar;
-	public static boolean GL_ARB_texture_env_dot3;
-	public static boolean GL_ARB_texture_float;
-	public static boolean GL_ARB_texture_mirrored_repeat;
-	public static boolean GL_ARB_texture_non_power_of_two;
-	public static boolean GL_ARB_texture_rectangle;
-	public static boolean GL_ARB_transpose_matrix;
-	public static boolean GL_ARB_vertex_blend;
-	public static boolean GL_ARB_vertex_buffer_object;
-	public static boolean GL_ARB_vertex_program;
-	public static boolean GL_ARB_vertex_shader;
-	public static boolean GL_ARB_window_pos;
-
-	public static boolean GL_EXT_abgr;
-	public static boolean GL_EXT_bgra;
-	public static boolean GL_EXT_blend_equation_separate;
-	public static boolean GL_EXT_blend_func_separate;
-	public static boolean GL_EXT_blend_subtract;
-	public static boolean GL_EXT_Cg_shader;
-	public static boolean GL_EXT_compiled_vertex_array;
-	public static boolean GL_EXT_depth_bounds_test;
-	public static boolean GL_EXT_draw_range_elements;
-	public static boolean GL_EXT_fog_coord;
-	public static boolean GL_EXT_framebuffer_object;
-	public static boolean GL_EXT_multi_draw_arrays;
-	public static boolean GL_EXT_packed_pixels;
-	public static boolean GL_EXT_paletted_texture;
-	public static boolean GL_EXT_pixel_buffer_object;
-	public static boolean GL_EXT_point_parameters;
-	public static boolean GL_EXT_rescale_normal;
-	public static boolean GL_EXT_secondary_color;
-	public static boolean GL_EXT_separate_specular_color;
-	public static boolean GL_EXT_shadow_funcs;
-	public static boolean GL_EXT_shared_texture_palette;
-	public static boolean GL_EXT_stencil_two_side;
-	public static boolean GL_EXT_stencil_wrap;
-	public static boolean GL_EXT_texture_3D;
-	public static boolean GL_EXT_texture_compression_s3tc;
-	public static boolean GL_EXT_texture_env_combine;
-	public static boolean GL_EXT_texture_env_dot3;
-	public static boolean GL_EXT_texture_filter_anisotropic;
-	public static boolean GL_EXT_texture_lod_bias;
-	public static boolean GL_EXT_texture_mirror_clamp;
-	public static boolean GL_EXT_texture_rectangle;
-	public static boolean GL_EXT_vertex_shader;
-	public static boolean GL_EXT_vertex_weighting;
-
-	public static boolean GL_ATI_draw_buffers;
-	public static boolean GL_ATI_element_array;
-	public static boolean GL_ATI_envmap_bumpmap;
-	public static boolean GL_ATI_fragment_shader;
-	public static boolean GL_ATI_map_object_buffer;
-	public static boolean GL_ATI_pn_triangles;
-	public static boolean GL_ATI_separate_stencil;
-	public static boolean GL_ATI_texture_compression_3dc;
-	public static boolean GL_ATI_texture_float;
-	public static boolean GL_ATI_texture_mirror_once;
-	public static boolean GL_ATI_vertex_array_object;
-	public static boolean GL_ATI_vertex_streams;
-	public static boolean GL_ATI_vertex_attrib_array_object;
-
-	public static boolean GL_HP_occlusion_test;
-
-	public static boolean GL_IBM_rasterpos_clip;
-
-	public static boolean GL_NV_blend_square;
-	public static boolean GL_NV_copy_depth_to_color;
-	public static boolean GL_NV_depth_clamp;
-	public static boolean GL_NV_evaluators;
-	public static boolean GL_NV_fence;
-	public static boolean GL_NV_float_buffer;
-	public static boolean GL_NV_fog_distance;
-	public static boolean GL_NV_fragment_program;
-	public static boolean GL_NV_fragment_program2;
-	public static boolean GL_NV_fragment_program_option;
-	public static boolean GL_NV_half_float;
-	public static boolean GL_NV_light_max_exponent;
-	public static boolean GL_NV_multisample_filter_hint;
-	public static boolean GL_NV_occlusion_query;
-	public static boolean GL_NV_packed_depth_stencil;
-	public static boolean GL_NV_pixel_data_range;
-	public static boolean GL_NV_point_sprite;
-	public static boolean GL_NV_primitive_restart;
-	public static boolean GL_NV_register_combiners;
-	public static boolean GL_NV_register_combiners2;
-	public static boolean GL_NV_texgen_reflection;
-	public static boolean GL_NV_texture_compression_vtc;
-	public static boolean GL_NV_texture_env_combine4;
-	public static boolean GL_NV_texture_expand_normal;
-	public static boolean GL_NV_texture_rectangle;
-	public static boolean GL_NV_texture_shader;
-	public static boolean GL_NV_texture_shader2;
-	public static boolean GL_NV_texture_shader3;
-	public static boolean GL_NV_vertex_array_range;
-	public static boolean GL_NV_vertex_array_range2;
-	public static boolean GL_NV_vertex_program;
-	public static boolean GL_NV_vertex_program1_1;
-	public static boolean GL_NV_vertex_program2;
-	public static boolean GL_NV_vertex_program2_option;
-	public static boolean GL_NV_vertex_program3;
-
-	public static boolean GL_SUN_slice_accum;
-
-	public static boolean OpenGL11;
-	public static boolean OpenGL12;
-	public static boolean OpenGL13;
-	public static boolean OpenGL14;
-	public static boolean OpenGL15;
-	public static boolean OpenGL20;
+	private static ThreadLocal current_capabilities = new ThreadLocal();
 
 	/** Map of classes that have native stubs loaded */
-	private static Map exts;
 	private static int gl_ref_count;
 	private static boolean did_auto_load;
 	private static boolean loaded_stubs;
@@ -203,25 +63,91 @@ public final class GLContext {
 	}
 
 	/**
-	 * Determine which extensions are available. Use this to initialize capability fields. Can only be called _after_ the Display
-	 * context or a Pbuffer has been created (or a context from some other GL library). Using LWJGL, this method is called
-	 * automatically for you when the LWJGL Window is created and there is no need to call it yourself.
+	 * Get the current capabilities instance. It contains the flags used
+	 * to test for support of a particular extension.
 	 *
-	 * @param exts A Set of OpenGL extension string names
+	 * @return The current capabilities instance.
 	 */
-	private static void determineAvailableExtensions(Set exts) {
-		// Grab all the public static booleans out of this class
-		Field[] fields = GLContext.class.getDeclaredFields();
-		for ( int i = 0; i < fields.length; i++ ) {
-			if ( Modifier.isStatic(fields[i].getModifiers()) && fields[i].getType().equals(boolean.class) ) {
-				// reset fields
-				try {
-					fields[i].setBoolean(GLContext.class, exts.contains(fields[i].getName()));
-				} catch (IllegalAccessException e) {
-					e.printStackTrace(System.err);
-				}
+	public static ContextCapabilities getCapabilities() {
+		return ((ContextCapabilities)current_capabilities.get());
+	}
+	
+	/**
+	 * Determine which extensions are available. Helper method to ContextCapabilities.
+	 *
+	 * @return A Set containing all available extension strings.
+	 */
+	static Set getSupportedExtensions() {
+		Set supported_extensions = new HashSet();
+		String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
+		StringTokenizer tokenizer = new StringTokenizer(extensions_string);
+		while ( tokenizer.hasMoreTokens() ) {
+			String extension_string = tokenizer.nextToken();
+			supported_extensions.add(extension_string);
+		}
+		String version = GL11.glGetString(GL11.GL_VERSION);
+		if (version == null)
+			throw new IllegalStateException("glGetString(GL_VERSION) returned null - possibly caused by missing current context.");
+		StringTokenizer version_tokenizer = new StringTokenizer(version, ". ");
+		String major_string = version_tokenizer.nextToken();
+		String minor_string = version_tokenizer.nextToken();
+
+		int majorVersion = Integer.parseInt(major_string);
+		int minorVersion = Integer.parseInt(minor_string);
+
+		if (majorVersion == 2) {
+			// ----------------------[ 2.X ]----------------------
+			supported_extensions.add("OpenGL20");
+			// ----------------------[ 1.X ]----------------------
+			supported_extensions.add("OpenGL11");
+			supported_extensions.add("OpenGL12");
+			supported_extensions.add("OpenGL13");
+			supported_extensions.add("OpenGL14");
+			supported_extensions.add("OpenGL15");
+		} else {
+			switch (minorVersion) {
+				case 5:
+					supported_extensions.add("OpenGL15");
+					// Intentional fall through
+				case 4:
+					supported_extensions.add("OpenGL14");
+					// Intentional fall through
+				case 3:
+					supported_extensions.add("OpenGL13");
+					// Intentional fall through
+				case 2:
+					supported_extensions.add("OpenGL12");
+					// Intentional fall through
+				case 1:
+					supported_extensions.add("OpenGL11");
 			}
 		}
+		return supported_extensions;
+	}
+
+	/**
+	 * Helper method to ContextCapabilities. It will try to initialize the native stubs,
+	 * and remove the given extension name from the extension set if the initialization fails.
+	 */
+	static void initNativeStubs(Class extension_class, Set supported_extensions, String ext_name) {
+		resetNativeStubs(extension_class);
+		if (supported_extensions.contains(ext_name)) {
+			try {
+				Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
+				init_stubs_method.invoke(null, null);
+			} catch (Exception e) {
+				Sys.log("Failed to initialize extension " + extension_class + " - exception: " + e);
+				supported_extensions.remove(ext_name);
+			}
+		}
+	}
+
+	private static void loadStubs() throws LWJGLException {
+		if (loaded_stubs)
+			return;
+		Set supported_extensions = ContextCapabilities.initAllStubs();
+		current_capabilities.set(new ContextCapabilities(supported_extensions));
+		loaded_stubs = true;
 	}
 
 	/**
@@ -240,20 +166,13 @@ public final class GLContext {
 	 */
 	public static void useContext(Object context) throws LWJGLException {
 		if ( context == null ) {
-			unloadStubs();
+			ContextCapabilities.unloadAllStubs();
 			if ( did_auto_load )
 				unloadOpenGLLibrary();
-			currentContext = null;
+			current_capabilities = null;
 			BufferObjectTracker.setCurrent(null);
 			return;
 		}
-		// Is this the same as last time?
-		Object current = currentContext == null ? null : currentContext.get();
-		if ( current == context ) {
-			// Yes, so we don't need to do anything. Our caps and function pointers are still valid.
-			return;
-		}
-
 		// Ok, now it's the current context.
 		if ( gl_ref_count == 0 ) {
 			loadOpenGLLibrary();
@@ -261,146 +180,12 @@ public final class GLContext {
 		}
 		try {
 			loadStubs();
-			currentContext = new WeakReference(context);
 			BufferObjectTracker.setCurrent(context);
 		} catch (LWJGLException e) {
 			if ( did_auto_load )
 				unloadOpenGLLibrary();
 			throw e;
 		}
-	}
-
-	private static void getExtensionClassesAndNames(Map exts, Set exts_names) {
-		/*
-		The version number is either of the form
-		<major number>.<minor number>
-		or
-		<major number>.<minor number>.<release number>
-		where the numbers all have one or more digits.
-		*/
-		String version = GL11.glGetString(GL11.GL_VERSION);
-		if (version == null)
-			throw new IllegalStateException("glGetString(GL_VERSION) returned null - possibly caused by missing current context.");
-		StringTokenizer version_tokenizer = new StringTokenizer(version, ". ");
-		String major_string = version_tokenizer.nextToken();
-		String minor_string = version_tokenizer.nextToken();
-
-		int majorVersion = Integer.parseInt(major_string);
-		int minorVersion = Integer.parseInt(minor_string);
-
-		if (majorVersion == 2) {
-			// ----------------------[ 2.X ]----------------------
-			addExtensionClass(exts, exts_names, "GL20", "OpenGL20");
-			// ----------------------[ 1.X ]----------------------
-			addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
-			addExtensionClass(exts, exts_names, "GL14", "OpenGL14");
-			addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
-			addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
-		} else {
-			switch (minorVersion) {
-				case 5:
-					addExtensionClass(exts, exts_names, "GL15", "OpenGL15");
-					// Intentional fall through
-				case 4:
-					addExtensionClass(exts, exts_names, "GL14", "OpenGL14");
-					// Intentional fall through
-				case 3:
-					addExtensionClass(exts, exts_names, "GL13", "OpenGL13");
-					// Intentional fall through
-				case 2:
-					addExtensionClass(exts, exts_names, "GL12", "OpenGL12");
-			}
-		}
-
-		addExtensionClass(exts, exts_names, "EXTTextureCompressionS3TC", "");
-		String extensions_string = GL11.glGetString(GL11.GL_EXTENSIONS);
-		StringTokenizer tokenizer = new StringTokenizer(extensions_string);
-		while ( tokenizer.hasMoreTokens() ) {
-			String extension_string = tokenizer.nextToken();
-			StringBuffer converted_name = new StringBuffer();
-			int gl_prefix_index = extension_string.indexOf("GL_");
-			if ( gl_prefix_index == -1 )
-				continue;
-			if ( "GL_EXT_texture_compression_s3tc".equals(extension_string) ) {
-				// Special workaround
-				addExtensionClass(exts, exts_names, "EXTTextureCompressionS3TC", "GL_EXT_texture_compression_s3tc");
-			} else if ( "GL_EXT_texture_lod_bias".equals(extension_string) ) {
-				// Special workaround
-				addExtensionClass(exts, exts_names, "EXTTextureLODBias", "GL_EXT_texture_lod_bias");
-			} else if ( "GL_NV_texture_compression_vtc".equals(extension_string) ) {
-				// Special workaround
-				addExtensionClass(exts, exts_names, "NVTextureCompressionVTC", "GL_NV_texture_compression_vtc");
-			} else {
-				for ( int i = gl_prefix_index + 3; i < extension_string.length(); i++ ) {
-					char c;
-					if ( extension_string.charAt(i) == '_' ) {
-						i++;
-						c = Character.toUpperCase(extension_string.charAt(i));
-					} else
-						c = extension_string.charAt(i);
-					converted_name.append(c);
-				}
-				addExtensionClass(exts, exts_names, converted_name.toString(), extension_string);
-			}
-		}
-		addExtensionClass(exts, exts_names, "ARBBufferObject", null);
-		addExtensionClass(exts, exts_names, "ARBProgram", null);
-		addExtensionClass(exts, exts_names, "NVProgram", null);
-	}
-
-	private static void addExtensionClass(Map exts, Set exts_names, String ext_class_name, String ext_name) {
-		if ( ext_name != null ) {
-			if ( exts_names.contains(ext_name) ) {
-				// Already added; ignore
-				return;
-			}
-			exts_names.add(ext_name);
-		}
-		try {
-			Class extension_class = Class.forName("org.lwjgl.opengl." + ext_class_name);
-			extension_class.getDeclaredMethod("initNativeStubs", null); // check for existance of initNativeStubs method
-			exts.put(extension_class, ext_name);
-		} catch (ClassNotFoundException e) {
-			// ignore
-		} catch (NoSuchMethodException e) {
-			// ignore
-		}
-	}
-
-	private static void loadStubs() throws LWJGLException {
-		if ( loaded_stubs )
-			return;
-		GL11.initNativeStubs();
-		exts = new HashMap();
-		Set exts_names = new HashSet();
-		getExtensionClassesAndNames(exts, exts_names);
-		Iterator exts_it = exts.keySet().iterator();
-		while ( exts_it.hasNext() ) {
-			Class extension_class = (Class)exts_it.next();
-			resetNativeStubs(extension_class);
-			try {
-				Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
-				init_stubs_method.invoke(null, null);
-			} catch (Exception e) {
-				Sys.log("Failed to initialize extension " + extension_class + " - exception: " + e);
-				exts_it.remove();
-				exts_names.remove(exts.get(extension_class));
-			}
-		}
-		determineAvailableExtensions(exts_names);
-		loaded_stubs = true;
-	}
-
-	private static void unloadStubs() {
-		if ( !loaded_stubs )
-			return;
-		loaded_stubs = false;
-		Iterator exts_it = exts.keySet().iterator();
-		while ( exts_it.hasNext() ) {
-			Class ext_class = (Class)exts_it.next();
-			resetNativeStubs(ext_class);
-		}
-		resetNativeStubs(org.lwjgl.opengl.GL11.class);
 	}
 
 	/** If the OpenGL reference count is 0, the library is loaded. The reference count is then incremented. */
@@ -422,5 +207,5 @@ public final class GLContext {
 	private static native void nUnloadOpenGLLibrary();
 
 	/** Native method to clear native stub bindings */
-	private static native void resetNativeStubs(Class clazz);
+	static native void resetNativeStubs(Class clazz);
 }

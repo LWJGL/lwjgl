@@ -28,21 +28,21 @@ public final class NVVertexArrayRange {
 
 	public static native void glFlushVertexArrayRangeNV();
 
-	public static void glVertexArrayRangeNV(ShortBuffer pPointer) {
+	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
-		nglVertexArrayRangeNV((pPointer.remaining() << 1), pPointer, pPointer.position() << 1);
+		nglVertexArrayRangeNV((pPointer.remaining()), pPointer, pPointer.position());
 	}
 	public static void glVertexArrayRangeNV(IntBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
 		nglVertexArrayRangeNV((pPointer.remaining() << 2), pPointer, pPointer.position() << 2);
 	}
-	public static void glVertexArrayRangeNV(ByteBuffer pPointer) {
-		BufferChecks.checkDirect(pPointer);
-		nglVertexArrayRangeNV((pPointer.remaining()), pPointer, pPointer.position());
-	}
 	public static void glVertexArrayRangeNV(FloatBuffer pPointer) {
 		BufferChecks.checkDirect(pPointer);
 		nglVertexArrayRangeNV((pPointer.remaining() << 2), pPointer, pPointer.position() << 2);
+	}
+	public static void glVertexArrayRangeNV(ShortBuffer pPointer) {
+		BufferChecks.checkDirect(pPointer);
+		nglVertexArrayRangeNV((pPointer.remaining() << 1), pPointer, pPointer.position() << 1);
 	}
 	private static native void nglVertexArrayRangeNV(int size, Buffer pPointer, int pPointer_position);
 }

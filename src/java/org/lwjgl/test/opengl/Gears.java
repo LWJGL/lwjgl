@@ -170,8 +170,8 @@ public class Gears {
 		System.err.println("GL_RENDERER: " + GL11.glGetString(GL11.GL_RENDERER));
 		System.err.println("GL_VERSION: " + GL11.glGetString(GL11.GL_VERSION));
 		System.err.println();
-		System.err.println("glLoadTransposeMatrixfARB() supported: " + GLContext.GL_ARB_transpose_matrix);
-		if (!GLContext.GL_ARB_transpose_matrix) {
+		System.err.println("glLoadTransposeMatrixfARB() supported: " + GLContext.getCapabilities().GL_ARB_transpose_matrix);
+		if (!GLContext.getCapabilities().GL_ARB_transpose_matrix) {
 			// --- not using extensions
 			GL11.glLoadIdentity();
 		} else {

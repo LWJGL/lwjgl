@@ -40,14 +40,6 @@ public final class EXTPalettedTexture {
 	}
 	private static native void nglGetColorTableParameterivEXT(int target, int pname, IntBuffer params, int params_position);
 
-	public static void glGetColorTableEXT(int target, int format, int type, ShortBuffer data) {
-		BufferChecks.checkDirect(data);
-		nglGetColorTableEXT(target, format, type, data, data.position() << 1);
-	}
-	public static void glGetColorTableEXT(int target, int format, int type, FloatBuffer data) {
-		BufferChecks.checkDirect(data);
-		nglGetColorTableEXT(target, format, type, data, data.position() << 2);
-	}
 	public static void glGetColorTableEXT(int target, int format, int type, ByteBuffer data) {
 		BufferChecks.checkDirect(data);
 		nglGetColorTableEXT(target, format, type, data, data.position());
@@ -56,16 +48,16 @@ public final class EXTPalettedTexture {
 		BufferChecks.checkDirect(data);
 		nglGetColorTableEXT(target, format, type, data, data.position() << 2);
 	}
+	public static void glGetColorTableEXT(int target, int format, int type, ShortBuffer data) {
+		BufferChecks.checkDirect(data);
+		nglGetColorTableEXT(target, format, type, data, data.position() << 1);
+	}
+	public static void glGetColorTableEXT(int target, int format, int type, FloatBuffer data) {
+		BufferChecks.checkDirect(data);
+		nglGetColorTableEXT(target, format, type, data, data.position() << 2);
+	}
 	private static native void nglGetColorTableEXT(int target, int format, int type, Buffer data, int data_position);
 
-	public static void glColorSubTableEXT(int target, int start, int count, int format, int type, ShortBuffer data) {
-		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, count, 1, 1));
-		nglColorSubTableEXT(target, start, count, format, type, data, data.position() << 1);
-	}
-	public static void glColorSubTableEXT(int target, int start, int count, int format, int type, FloatBuffer data) {
-		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, count, 1, 1));
-		nglColorSubTableEXT(target, start, count, format, type, data, data.position() << 2);
-	}
 	public static void glColorSubTableEXT(int target, int start, int count, int format, int type, ByteBuffer data) {
 		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, count, 1, 1));
 		nglColorSubTableEXT(target, start, count, format, type, data, data.position());
@@ -74,21 +66,29 @@ public final class EXTPalettedTexture {
 		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, count, 1, 1));
 		nglColorSubTableEXT(target, start, count, format, type, data, data.position() << 2);
 	}
+	public static void glColorSubTableEXT(int target, int start, int count, int format, int type, ShortBuffer data) {
+		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, count, 1, 1));
+		nglColorSubTableEXT(target, start, count, format, type, data, data.position() << 1);
+	}
+	public static void glColorSubTableEXT(int target, int start, int count, int format, int type, FloatBuffer data) {
+		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, count, 1, 1));
+		nglColorSubTableEXT(target, start, count, format, type, data, data.position() << 2);
+	}
 	private static native void nglColorSubTableEXT(int target, int start, int count, int format, int type, Buffer data, int data_position);
 
-	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, ShortBuffer data) {
-		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, width, 1, 1));
-		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position() << 1);
-	}
-	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, FloatBuffer data) {
-		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, width, 1, 1));
-		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position() << 2);
-	}
 	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, ByteBuffer data) {
 		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, width, 1, 1));
 		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position());
 	}
 	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, IntBuffer data) {
+		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, width, 1, 1));
+		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position() << 2);
+	}
+	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, ShortBuffer data) {
+		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, width, 1, 1));
+		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position() << 1);
+	}
+	public static void glColorTableEXT(int target, int internalFormat, int width, int format, int type, FloatBuffer data) {
 		BufferChecks.checkBuffer(data, GLBufferChecks.calculateImageStorage(data, format, type, width, 1, 1));
 		nglColorTableEXT(target, internalFormat, width, format, type, data, data.position() << 2);
 	}

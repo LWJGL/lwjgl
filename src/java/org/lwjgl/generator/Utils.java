@@ -48,12 +48,18 @@ import java.util.*;
 import com.sun.mirror.declaration.*;
 
 public class Utils {
+	public static final String STUB_INITIALIZER_NAME = "initNativeStubs";
 	public static final String BUFFER_OBJECT_METHOD_POSTFIX = "BO";
 	public static final String BUFFER_OBJECT_PARAMETER_POSTFIX = "_buffer_offset";
 	public static final String RESULT_SIZE_NAME = "result_size";
 	public static final String RESULT_VAR_NAME = "__result";
 	public static final String CACHED_BUFFER_NAME = "old_buffer";
 	private static final String OVERLOADED_METHOD_PREFIX = "n";
+
+	public static boolean isFinal(InterfaceDeclaration d) {
+		Extension extension_annotation = d.getAnnotation(Extension.class);
+		return extension_annotation == null || extension_annotation.isFinal();
+	}
 
 	private static class AnnotationMirrorComparator implements Comparator<AnnotationMirror> {
 		public int compare(AnnotationMirror a1, AnnotationMirror a2) {

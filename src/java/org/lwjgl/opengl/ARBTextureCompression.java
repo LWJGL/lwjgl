@@ -24,25 +24,25 @@ public final class ARBTextureCompression {
 
 	static native void initNativeStubs() throws LWJGLException;
 
-	public static void glGetCompressedTexImageARB(int target, int lod, ShortBuffer pImg) {
+	public static void glGetCompressedTexImageARB(int target, int lod, ByteBuffer pImg) {
 		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(pImg);
-		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position() << 1);
+		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position());
 	}
 	public static void glGetCompressedTexImageARB(int target, int lod, IntBuffer pImg) {
 		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(pImg);
 		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position() << 2);
 	}
+	public static void glGetCompressedTexImageARB(int target, int lod, ShortBuffer pImg) {
+		GLBufferChecks.ensurePackPBOdisabled();
+		BufferChecks.checkDirect(pImg);
+		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position() << 1);
+	}
 	public static void glGetCompressedTexImageARB(int target, int lod, FloatBuffer pImg) {
 		GLBufferChecks.ensurePackPBOdisabled();
 		BufferChecks.checkDirect(pImg);
 		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position() << 2);
-	}
-	public static void glGetCompressedTexImageARB(int target, int lod, ByteBuffer pImg) {
-		GLBufferChecks.ensurePackPBOdisabled();
-		BufferChecks.checkDirect(pImg);
-		nglGetCompressedTexImageARB(target, lod, pImg, pImg.position());
 	}
 	private static native void nglGetCompressedTexImageARB(int target, int lod, Buffer pImg, int pImg_position);
 	public static void glGetCompressedTexImageARB(int target, int lod, int pImg_buffer_offset) {
@@ -51,25 +51,25 @@ public final class ARBTextureCompression {
 	}
 	private static native void nglGetCompressedTexImageARBBO(int target, int lod, int pImg_buffer_offset);
 
-	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ByteBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
-		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, pData, pData.position() << 1);
+		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, IntBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, pData, pData.position() << 2);
 	}
+	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ShortBuffer pData) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(pData);
+		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, pData, pData.position() << 1);
+	}
 	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, FloatBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, pData, pData.position() << 2);
-	}
-	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, ByteBuffer pData) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(pData);
-		nglCompressedTexSubImage3DARB(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, pData, pData.position());
 	}
 	private static native void nglCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, Buffer pData, int pData_position);
 	public static void glCompressedTexSubImage3DARB(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, int pData_buffer_offset) {
@@ -78,25 +78,25 @@ public final class ARBTextureCompression {
 	}
 	private static native void nglCompressedTexSubImage3DARBBO(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, int pData_buffer_offset);
 
-	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ByteBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
-		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, format, imageSize, pData, pData.position() << 1);
+		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, format, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, IntBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, format, imageSize, pData, pData.position() << 2);
 	}
+	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ShortBuffer pData) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(pData);
+		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, format, imageSize, pData, pData.position() << 1);
+	}
 	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, FloatBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, format, imageSize, pData, pData.position() << 2);
-	}
-	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, ByteBuffer pData) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(pData);
-		nglCompressedTexSubImage2DARB(target, level, xoffset, yoffset, width, height, format, imageSize, pData, pData.position());
 	}
 	private static native void nglCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, Buffer pData, int pData_position);
 	public static void glCompressedTexSubImage2DARB(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, int pData_buffer_offset) {
@@ -105,25 +105,25 @@ public final class ARBTextureCompression {
 	}
 	private static native void nglCompressedTexSubImage2DARBBO(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, int pData_buffer_offset);
 
-	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, ByteBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
-		nglCompressedTexSubImage1DARB(target, level, xoffset, width, format, imageSize, pData, pData.position() << 1);
+		nglCompressedTexSubImage1DARB(target, level, xoffset, width, format, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, IntBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexSubImage1DARB(target, level, xoffset, width, format, imageSize, pData, pData.position() << 2);
 	}
+	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, ShortBuffer pData) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(pData);
+		nglCompressedTexSubImage1DARB(target, level, xoffset, width, format, imageSize, pData, pData.position() << 1);
+	}
 	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, FloatBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexSubImage1DARB(target, level, xoffset, width, format, imageSize, pData, pData.position() << 2);
-	}
-	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, ByteBuffer pData) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(pData);
-		nglCompressedTexSubImage1DARB(target, level, xoffset, width, format, imageSize, pData, pData.position());
 	}
 	private static native void nglCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, Buffer pData, int pData_position);
 	public static void glCompressedTexSubImage1DARB(int target, int level, int xoffset, int width, int format, int imageSize, int pData_buffer_offset) {
@@ -132,25 +132,25 @@ public final class ARBTextureCompression {
 	}
 	private static native void nglCompressedTexSubImage1DARBBO(int target, int level, int xoffset, int width, int format, int imageSize, int pData_buffer_offset);
 
-	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
-		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position() << 1);
+		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, IntBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position() << 2);
 	}
+	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ShortBuffer pData) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(pData);
+		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position() << 1);
+	}
 	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, FloatBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position() << 2);
-	}
-	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, ByteBuffer pData) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(pData);
-		nglCompressedTexImage3DARB(target, level, internalformat, width, height, depth, border, imageSize, pData, pData.position());
 	}
 	private static native void nglCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, Buffer pData, int pData_position);
 	public static void glCompressedTexImage3DARB(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, int pData_buffer_offset) {
@@ -159,25 +159,25 @@ public final class ARBTextureCompression {
 	}
 	private static native void nglCompressedTexImage3DARBBO(int target, int level, int internalformat, int width, int height, int depth, int border, int imageSize, int pData_buffer_offset);
 
-	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
-		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position() << 1);
+		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, IntBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position() << 2);
 	}
+	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ShortBuffer pData) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(pData);
+		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position() << 1);
+	}
 	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, FloatBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position() << 2);
-	}
-	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, ByteBuffer pData) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(pData);
-		nglCompressedTexImage2DARB(target, level, internalformat, width, height, border, imageSize, pData, pData.position());
 	}
 	private static native void nglCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer pData, int pData_position);
 	public static void glCompressedTexImage2DARB(int target, int level, int internalformat, int width, int height, int border, int imageSize, int pData_buffer_offset) {
@@ -186,25 +186,25 @@ public final class ARBTextureCompression {
 	}
 	private static native void nglCompressedTexImage2DARBBO(int target, int level, int internalformat, int width, int height, int border, int imageSize, int pData_buffer_offset);
 
-	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer pData) {
+	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
-		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position() << 1);
+		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position());
 	}
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, IntBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position() << 2);
 	}
+	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ShortBuffer pData) {
+		GLBufferChecks.ensureUnpackPBOdisabled();
+		BufferChecks.checkDirect(pData);
+		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position() << 1);
+	}
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, FloatBuffer pData) {
 		GLBufferChecks.ensureUnpackPBOdisabled();
 		BufferChecks.checkDirect(pData);
 		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position() << 2);
-	}
-	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, ByteBuffer pData) {
-		GLBufferChecks.ensureUnpackPBOdisabled();
-		BufferChecks.checkDirect(pData);
-		nglCompressedTexImage1DARB(target, level, internalformat, width, border, imageSize, pData, pData.position());
 	}
 	private static native void nglCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, Buffer pData, int pData_position);
 	public static void glCompressedTexImage1DARB(int target, int level, int internalformat, int width, int border, int imageSize, int pData_buffer_offset) {

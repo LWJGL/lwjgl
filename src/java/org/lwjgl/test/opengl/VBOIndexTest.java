@@ -208,7 +208,7 @@ public final class VBOIndexTest {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
-		if ( !GLContext.GL_ARB_vertex_buffer_object ) {
+		if ( !GLContext.getCapabilities().GL_ARB_vertex_buffer_object ) {
 			System.out.println("ARB VBO not supported!");
 			System.exit(1);
 		}

@@ -332,7 +332,6 @@ public final class AL10 {
 	 * of the medium (air, water) moving with respect to listener and source are ignored.
 	 * AL_DOPPLER_VELOCITY is the propagation speed relative to which the Source
 	 * velocities are interpreted.
-	 * 
 	 * <p>
 	 * <pre>
 	 *	 VD: AL_DOPPLER_VELOCITY
@@ -341,9 +340,7 @@ public final class AL10 {
 	 *	 vs: Source verlocity (scalar, projected on source-listener vector)
 	 *	 f: Frequency in sample
 	 *	 f': effective Doppler shifted frequency
-	 *	 
 	 *	 f' = DF * f * (VD-vl)/(VD+vs)
-	 * 
 	 *	 vl<0, vs>0 : source and listener approaching each other
 	 *	 vl>0, vs<0 : source and listener moving away from each other
 	 * </pre>
@@ -389,7 +386,6 @@ public final class AL10 {
 	 * of the medium (air, water) moving with respect to listener and source are ignored.
 	 * AL_DOPPLER_VELOCITY is the propagation speed relative to which the Source
 	 * velocities are interpreted.
-	 * 
 	 * <p>
 	 * <pre>
 	 *	 VD: AL_DOPPLER_VELOCITY
@@ -398,9 +394,7 @@ public final class AL10 {
 	 *	 vs: Source verlocity (scalar, projected on source-listener vector)
 	 *	 f: Frequency in sample
 	 *	 f': effective Doppler shifted frequency
-	 *	 
 	 *	 f' = DF * f * (VD-vl)/(VD+vs)
-	 * 
 	 *	 vl<0, vs>0 : source and listener approaching each other
 	 *	 vl>0, vs<0 : source and listener moving away from each other
 	 * </pre>
@@ -447,7 +441,7 @@ public final class AL10 {
 	 * distance and other attenuation might ultimately limit the overall AL_GAIN to a value
 	 * below 1.0.
 	 * </p>
-	 * <p> 
+	 * <p>
 	 * AL currently supports three modes of operation with respect to distance
 	 * attenuation. It supports two distance-dependent attenuation models, one which is
 	 * similar to the IASIG I3DL2 (and DS3D) model. The application choses one of these
@@ -456,22 +450,22 @@ public final class AL10 {
 	 * </p>
 	 * <p>
 	 * Legal arguments are AL_NONE, AL_INVERSE_DISTANCE, and
-	 * AL_INVERSE_DISTANCE_CLAMPED. 
+	 * AL_INVERSE_DISTANCE_CLAMPED.
 	 * <br>
 	 * <br>
 	 * AL_NONE bypasses all distance attenuation
 	 * calculation for all Sources. The implementation is expected to optimize this
-	 * situation. 
+	 * situation.
 	 * <br>
 	 * <br>
 	 * AL_INVERSE_DISTANCE_CLAMPED is the DS3D model, with
 	 * AL_REFERENCE_DISTANCE indicating both the reference distance and the distance
-	 * below which gain will be clamped. 
+	 * below which gain will be clamped.
 	 * <br>
 	 * <br>
 	 * AL_INVERSE_DISTANCE is equivalent to the DS3D
 	 * model with the exception that AL_REFERENCE_DISTANCE does not imply any
-	 * clamping. 
+	 * clamping.
 	 * <br>
 	 * <br>
 	 * The AL implementation is still free to apply any range clamping as
@@ -584,38 +578,7 @@ public final class AL10 {
 	 * </p>
 	 * @param buffer Buffer to fill
 	 * @param format format sound data is in
-	 * @param data location of data 
-	 * @param freq frequency of data
-	 */
-	public static void alBufferData(int buffer, int format, ShortBuffer data, int freq) {
-		BufferChecks.checkDirect(data);
-		nalBufferData(buffer, format, data, data.position() << 1, (data.remaining() << 1), freq);
-		Util.checkALError();
-	}
-	/**
-	 * <p>
-	 * A special case of Buffer state is the actual sound sample data stored in asociation
-	 * with the Buffer. Applications can specify sample data using BufferData.
-	 * </p>
-	 * <p>
-	 * The data specified is copied to an internal software, or if possible, hardware buffer.
-	 * The implementation is free to apply decompression, conversion, resampling, and
-	 * filtering as needed. The internal format of the Buffer is not exposed to the
-	 * application, and not accessible. Valid formats are AL_FORMAT_MONO8,
-	 * AL_FORMAT_MONO16, AL_FORMAT_STEREO8, and AL_FORMAT_STEREO16. An
-	 * implementation may expose other formats, see the chapter on Extensions for
-	 * information on determining if additional formats are supported.
-	 * </p>
-	 * <p>
-	 * Applications should always check for an error condition after attempting to specify
-	 * buffer data in case an implementation has to generate an AL_OUT_OF_MEMORY or
-	 * conversion related AL_INVALID_VALUE error. The application is free to reuse the
-	 * memory specified by the data pointer once the call to BufferData returns. The
-	 * implementation has to dereference, e.g. copy, the data during BufferData execution.
-	 * </p>
-	 * @param buffer Buffer to fill
-	 * @param format format sound data is in
-	 * @param data location of data 
+	 * @param data location of data
 	 * @param freq frequency of data
 	 */
 	public static void alBufferData(int buffer, int format, IntBuffer data, int freq) {
@@ -646,7 +609,38 @@ public final class AL10 {
 	 * </p>
 	 * @param buffer Buffer to fill
 	 * @param format format sound data is in
-	 * @param data location of data 
+	 * @param data location of data
+	 * @param freq frequency of data
+	 */
+	public static void alBufferData(int buffer, int format, ShortBuffer data, int freq) {
+		BufferChecks.checkDirect(data);
+		nalBufferData(buffer, format, data, data.position() << 1, (data.remaining() << 1), freq);
+		Util.checkALError();
+	}
+	/**
+	 * <p>
+	 * A special case of Buffer state is the actual sound sample data stored in asociation
+	 * with the Buffer. Applications can specify sample data using BufferData.
+	 * </p>
+	 * <p>
+	 * The data specified is copied to an internal software, or if possible, hardware buffer.
+	 * The implementation is free to apply decompression, conversion, resampling, and
+	 * filtering as needed. The internal format of the Buffer is not exposed to the
+	 * application, and not accessible. Valid formats are AL_FORMAT_MONO8,
+	 * AL_FORMAT_MONO16, AL_FORMAT_STEREO8, and AL_FORMAT_STEREO16. An
+	 * implementation may expose other formats, see the chapter on Extensions for
+	 * information on determining if additional formats are supported.
+	 * </p>
+	 * <p>
+	 * Applications should always check for an error condition after attempting to specify
+	 * buffer data in case an implementation has to generate an AL_OUT_OF_MEMORY or
+	 * conversion related AL_INVALID_VALUE error. The application is free to reuse the
+	 * memory specified by the data pointer once the call to BufferData returns. The
+	 * implementation has to dereference, e.g. copy, the data during BufferData execution.
+	 * </p>
+	 * @param buffer Buffer to fill
+	 * @param format format sound data is in
+	 * @param data location of data
 	 * @param freq frequency of data
 	 */
 	public static void alBufferData(int buffer, int format, ByteBuffer data, int freq) {
@@ -939,7 +933,7 @@ public final class AL10 {
 
 	/**
 	 * The application requests deletion of a number of Sources by DeleteSources.
-	 * @param source Source array to delete from
+	 * @param sources Source array to delete from
 	 */
 	public static void alDeleteSources(IntBuffer sources) {
 		BufferChecks.checkDirect(sources);
@@ -1076,7 +1070,7 @@ public final class AL10 {
 	 * <p>
 	 * A <code>null</code> name argument returns AL_FALSE, as do invalid and unsupported string
 	 * tokens. A <code>null</code> deviceHandle will result in an INVALID_DEVICE error.
-	 * </p> 
+	 * </p>
 	 * @param fname String describing the desired extension
 	 * @return true if extension is available, false if not
 	 */
@@ -1178,8 +1172,7 @@ public final class AL10 {
 	public static native java.lang.String alGetString(int pname);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -1198,8 +1191,7 @@ public final class AL10 {
 	private static native void nalGetFloatv(int pname, FloatBuffer data, int data_position);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -1218,8 +1210,7 @@ public final class AL10 {
 	private static native void nalGetIntegerv(int pname, IntBuffer data, int data_position);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -1237,8 +1228,7 @@ public final class AL10 {
 	private static native float nalGetFloat(int pname);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
@@ -1256,8 +1246,7 @@ public final class AL10 {
 	private static native int nalGetInteger(int pname);
 
 	/**
-	 * Like OpenGL, AL uses a simplified interface for querying global state. 
-	 * 
+	 * Like OpenGL, AL uses a simplified interface for querying global state.
 	 * Legal values are e.g. AL_DOPPLER_FACTOR, AL_DOPPLER_VELOCITY,
 	 * AL_DISTANCE_MODEL.
 	 * <p>
