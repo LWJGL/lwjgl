@@ -234,10 +234,10 @@ void handleButtonRelease(XButtonEvent *event) {
 			buttons[0] = JNI_FALSE;
 			break;
 		case Button2:
-			buttons[1] = JNI_FALSE;
+			buttons[2] = JNI_FALSE;
 			break;
 		case Button3:
-			buttons[2] = JNI_FALSE;
+			buttons[1] = JNI_FALSE;
 			break;
 		case Button4: /* Fall through */
 		case Button5:
