@@ -39,22 +39,14 @@ package org.lwjgl.opengl;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.Cursor;
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
-import java.awt.image.BufferedImage;
-import java.awt.event.WindowListener;
-import java.awt.event.ComponentListener;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.InvocationHandler;
+import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 
 import org.lwjgl.LWJGLException;

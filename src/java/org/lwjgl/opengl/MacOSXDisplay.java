@@ -38,30 +38,24 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ByteBuffer;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.input.Keyboard;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import java.awt.Insets;
 import java.awt.Cursor;
-import java.awt.Rectangle;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 
 final class MacOSXDisplay implements DisplayImplementation {
 	private final static int GAMMA_LENGTH = 256;

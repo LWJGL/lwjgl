@@ -37,11 +37,9 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Keyboard;
 

@@ -38,11 +38,10 @@ package org.lwjgl.opengl;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Graphics;
-import java.awt.event.ComponentListener;
+import java.awt.Point;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 final class MacOSXGLCanvas extends Canvas implements ComponentListener {
 	private int width;
