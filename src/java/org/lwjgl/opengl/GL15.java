@@ -87,7 +87,7 @@ public final class GL15 {
 				VBOTracker.getVBOArrayStack().setState(buffer);
 				break;
 			default:
-				assert false: "Unsupported VBO target " + target;
+				throw new IllegalArgumentException("Unsupported VBO target " + target);
 		}
 		nglBindBuffer(target, buffer);
 	}

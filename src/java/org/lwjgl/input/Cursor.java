@@ -50,185 +50,190 @@ import org.lwjgl.Sys;
 
 public class Cursor {
   
-  /** Lazy initialization */
-  private static boolean initialized = false;
-  
-  /** First element to display */
-  private CursorElement[] cursors = null;
-  
-  /** Index into list of cursors */
-  private int index = -1;
-  
-  /**
-   * Constructs a new Cursor, with the given parameters. Mouse must have been created before you can create
-   * Cursor objects. Cursor images are in ARGB format, but only one bit transparancy is guaranteed to be supported.
-   * So to maximize portability, lwjgl applications should only create cursor images with 0x00 or 0xff as alpha values.
-   * The constructor will copy the images and delays, so there's no need to keep them around.
-   *
-   * @param width cursor image width
-   * @param height cursor image height
-   * @param xHotspot the x coordinate of the cursor hotspot
-   * @param yHotspot the y coordinate of the cursor hotspot
-   * @param numImages number of cursor images specified. Must be 1 if animations are not supported.
-   * @param images A buffer containing the images. The origin is at the lower left corner, like OpenGL.
-   * @param delays An int buffer of animation frame delays, if numImages is greater than 1, else null
-   * @throws Exception if the cursor could not be created for any reason
-   */  
-  public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
-    assert Mouse.isCreated();
-    assert width*height*numImages <= images.remaining()       : "width*height*numImages > images.remaining()";
-    assert delays == null || numImages <= delays.remaining()  : "delays != null && numImages > delays.remaining()";
-    assert xHotspot < width && xHotspot >= 0                  : "xHotspot > width || xHotspot < 0";
-    assert yHotspot < height && yHotspot >= 0                 : "yHotspot > height || yHotspot < 0";
-    
-    // initialize
-    if (!initialized) {
-      initialize();
-    }
-    
-    // Hmm 
-    yHotspot = height - 1 - yHotspot;    
-    
-    // create cursor (or cursors if multiple images supplied)
-    createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
-  }
-  
-  /**
-   * Initializes the cursor class
-   */
-  private static void initialize() {
-    System.loadLibrary(Sys.getLibraryName());
-    initialized = true;
-  }  
+	/** Lazy initialization */
+	private static boolean initialized = false;
+	
+	/** First element to display */
+	private CursorElement[] cursors = null;
+	
+	/** Index into list of cursors */
+	private int index = -1;
+	
+	/**
+	 * Constructs a new Cursor, with the given parameters. Mouse must have been created before you can create
+	 * Cursor objects. Cursor images are in ARGB format, but only one bit transparancy is guaranteed to be supported.
+	 * So to maximize portability, lwjgl applications should only create cursor images with 0x00 or 0xff as alpha values.
+	 * The constructor will copy the images and delays, so there's no need to keep them around.
+	 *
+	 * @param width cursor image width
+	 * @param height cursor image height
+	 * @param xHotspot the x coordinate of the cursor hotspot
+	 * @param yHotspot the y coordinate of the cursor hotspot
+	 * @param numImages number of cursor images specified. Must be 1 if animations are not supported.
+	 * @param images A buffer containing the images. The origin is at the lower left corner, like OpenGL.
+	 * @param delays An int buffer of animation frame delays, if numImages is greater than 1, else null
+	 * @throws Exception if the cursor could not be created for any reason
+	 */	
+	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
+		if (!Mouse.isCreated())
+			throw new IllegalStateException("Mouse must be created before creating cursor objects");
+		if (width*height*numImages > images.remaining())
+			throw new IllegalArgumentException("width*height*numImages > images.remaining()");
+		if (delays != null && numImages > delays.remaining())
+			throw new IllegalArgumentException("delays != null && numImages > delays.remaining()");
+		if (xHotspot >= width || xHotspot < 0)
+			throw new IllegalArgumentException("xHotspot > width || xHotspot < 0");
+		if (yHotspot >= height || yHotspot < 0)
+			throw new IllegalArgumentException("yHotspot > height || yHotspot < 0");
+		
+		// initialize
+		if (!initialized) {
+			initialize();
+		}
+		
+		// Hmm 
+		yHotspot = height - 1 - yHotspot;		
+		
+		// create cursor (or cursors if multiple images supplied)
+		createCursors(width, height, xHotspot, yHotspot, numImages, images, delays);
+	}
+	
+	/**
+	 * Initializes the cursor class
+	 */
+	private static void initialize() {
+		System.loadLibrary(Sys.getLibraryName());
+		initialized = true;
+	}	
 
-  /**
-   * Creates the actual cursor, using a platform specific class
-   */
-  private void createCursors(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
-    // create copy and flip images to match ogl
-    IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
-    flipImages(width, height, numImages, images, images_copy);
-    
-    // create our cursor elements
-    cursors = new CursorElement[numImages];
-    for(int i=0; i<numImages; i++) {
-    	cursors[i] = new CursorElement();
-      cursors[i].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position());
-      cursors[i].delay = (delays != null) ? delays.get(i) : 0;
-      cursors[i].timeout = System.currentTimeMillis();
-      
-      // offset to next image
-      images_copy.position(width*height*(i+1));
-    }
-    
-    // set index
-    index = 0;
-  }
+	/**
+	 * Creates the actual cursor, using a platform specific class
+	 */
+	private void createCursors(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, IntBuffer delays) throws Exception {
+		// create copy and flip images to match ogl
+		IntBuffer images_copy = ByteBuffer.allocateDirect(images.remaining()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+		flipImages(width, height, numImages, images, images_copy);
+		
+		// create our cursor elements
+		cursors = new CursorElement[numImages];
+		for(int i=0; i<numImages; i++) {
+			cursors[i] = new CursorElement();
+			cursors[i].cursorHandle = nCreateCursor(width, height, xHotspot, yHotspot, 1, images_copy, images_copy.position());
+			cursors[i].delay = (delays != null) ? delays.get(i) : 0;
+			cursors[i].timeout = System.currentTimeMillis();
+			
+			// offset to next image
+			images_copy.position(width*height*(i+1));
+		}
+		
+		// set index
+		index = 0;
+	}
  
-  
-  /**
-   * Flips the images so they're oriented according to opengl
-   * 
-   * @param width Width of image
-   * @param height Height of images 
-   * @param numImages How many images to flip
-   * @param images Source images
-   * @param images_copy Destination images
-   */
-  private static void flipImages(int width, int height, int numImages, IntBuffer images, IntBuffer images_copy) {
-    for (int i = 0; i < numImages; i++) {
-      int start_index = i*width*height;
-      flipImage(width, height, start_index, images, images_copy);
-    }
-  }
+	
+	/**
+	 * Flips the images so they're oriented according to opengl
+	 * 
+	 * @param width Width of image
+	 * @param height Height of images 
+	 * @param numImages How many images to flip
+	 * @param images Source images
+	 * @param images_copy Destination images
+	 */
+	private static void flipImages(int width, int height, int numImages, IntBuffer images, IntBuffer images_copy) {
+		for (int i = 0; i < numImages; i++) {
+			int start_index = i*width*height;
+			flipImage(width, height, start_index, images, images_copy);
+		}
+	}
 
-  /**
-   * @param width Width of image
-   * @param height Height of images 
-   * @param start_index index into source buffer to copy to
-   * @param images Source images
-   * @param images_copy Destination images
-   */
-  private static void flipImage(int width, int height, int start_index, IntBuffer images, IntBuffer images_copy) {
-    for (int y = 0; y < height>>1; y++) {
-      int index_y_1 = y*width + start_index;
-      int index_y_2 = (height - y - 1)*width + start_index;
-      for (int x = 0; x < width; x++) {
-        int index1 = index_y_1 + x;
-        int index2 = index_y_2 + x;
-        int temp_pixel = images.get(index1 + images.position());
-        images_copy.put(index1, images.get(index2 + images.position()));
-        images_copy.put(index2, temp_pixel);
-      }
-    }
-  }  
-  
-  /**
-   * Gets the native handle associated with the cursor object.
-   */
-  public long getHandle() {
-  	return cursors[index].cursorHandle;
-  }
-  
-  /**
-   * Destroy the native cursor. Cursor must not be current.
-   */
-  public void destroy() {
+	/**
+	 * @param width Width of image
+	 * @param height Height of images 
+	 * @param start_index index into source buffer to copy to
+	 * @param images Source images
+	 * @param images_copy Destination images
+	 */
+	private static void flipImage(int width, int height, int start_index, IntBuffer images, IntBuffer images_copy) {
+		for (int y = 0; y < height>>1; y++) {
+			int index_y_1 = y*width + start_index;
+			int index_y_2 = (height - y - 1)*width + start_index;
+			for (int x = 0; x < width; x++) {
+				int index1 = index_y_1 + x;
+				int index2 = index_y_2 + x;
+				int temp_pixel = images.get(index1 + images.position());
+				images_copy.put(index1, images.get(index2 + images.position()));
+				images_copy.put(index2, temp_pixel);
+			}
+		}
+	}	
+	
+	/**
+	 * Gets the native handle associated with the cursor object.
+	 */
+	public long getHandle() {
+		return cursors[index].cursorHandle;
+	}
+	
+	/**
+	 * Destroy the native cursor. Cursor must not be current.
+	 */
+	public void destroy() {
 		for(int i=0; i<cursors.length; i++) {
-      nDestroyCursor(cursors[i].cursorHandle);
-    }
-  }
+			nDestroyCursor(cursors[i].cursorHandle);
+		}
+	}
 
-  /**
-   * Sets the timout property to the time it should be changed
-   */
-  protected void setTimeout() {
-    cursors[index].timeout = System.currentTimeMillis() + cursors[index].delay;
-  }
+	/**
+	 * Sets the timout property to the time it should be changed
+	 */
+	protected void setTimeout() {
+		cursors[index].timeout = System.currentTimeMillis() + cursors[index].delay;
+	}
 
-  /**
-   * Determines whether this cursor has timed out
-   * @return true if the this cursor has timed out, false if not
-   */
-  protected boolean hasTimedOut() {
-  	return cursors.length > 1 && cursors[index].timeout < System.currentTimeMillis();
-  }
+	/**
+	 * Determines whether this cursor has timed out
+	 * @return true if the this cursor has timed out, false if not
+	 */
+	protected boolean hasTimedOut() {
+		return cursors.length > 1 && cursors[index].timeout < System.currentTimeMillis();
+	}
 
-  /** 
-   * Changes to the next cursor 
-   */
-  protected void nextCursor() {
-    index = ++index % cursors.length;
-  }
+	/** 
+	 * Changes to the next cursor 
+	 */
+	protected void nextCursor() {
+		index = ++index % cursors.length;
+	}
 
-  /** 
-   * Resets the index of the cursor animation to the first in the list. 
-   */
-  public void resetAnimation() {
-    index = 0;
-  }
-  
-  /**
-   * Native method to create a native cursor
-   */
-  private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset);
+	/** 
+	 * Resets the index of the cursor animation to the first in the list. 
+	 */
+	public void resetAnimation() {
+		index = 0;
+	}
+	
+	/**
+	 * Native method to create a native cursor
+	 */
+	private static native long nCreateCursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images, int images_offset);
 
-  /**
-   * Native method to destroy a native cursor
-   */
-  private static native void nDestroyCursor(long cursorHandle);  
-  
-  /**
-   * A single cursor element, used when animating
-   */
-  protected class CursorElement {
-    /** Handle to cursor */
-  	long cursorHandle;
-    
-    /** How long a delay this element should have */
-    long delay;
-    
-    /** Absolute time this element times out */
-    long timeout;
-  }
+	/**
+	 * Native method to destroy a native cursor
+	 */
+	private static native void nDestroyCursor(long cursorHandle);	
+	
+	/**
+	 * A single cursor element, used when animating
+	 */
+	protected class CursorElement {
+		/** Handle to cursor */
+		long cursorHandle;
+		
+		/** How long a delay this element should have */
+		long delay;
+		
+		/** Absolute time this element times out */
+		long timeout;
+	}
 }

@@ -196,8 +196,10 @@ public final class Display {
 	 * @param contrast The contrast, larger than 0.0.
 	 */
 	public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws Exception {
-		assert brightness >= -1.0f && brightness <= 1.0f;
-		assert contrast >= 0.0f;
+		if (brightness < -1.0f || brightness > 1.0f)
+			throw new IllegalArgumentException("Invalid brightness value");
+		if (contrast < 0.0f)
+			throw new IllegalArgumentException("Invalid contrast value");
 		int rampSize = getGammaRampLength();
 		if (rampSize == 0) {
 			throw new Exception("Display configuration not supported");

@@ -108,7 +108,8 @@ public final class Window {
 	 * @return the width of the window
 	 */
 	public static int getWidth() {
-  	  assert isCreated() : "Cannot get width on uncreated window";    
+		if (!isCreated())
+			throw new IllegalStateException("Cannot get width on uncreated window");
 		return width;
 	}
 
@@ -116,7 +117,8 @@ public final class Window {
 	 * @return the height of the window
 	 */
 	public static int getHeight() {
- 	   assert isCreated() : "Cannot get height on uncreated window";    
+		if (!isCreated())
+			throw new IllegalStateException("Cannot get height on uncreated window");
 		return height;
 	}
 
@@ -124,15 +126,17 @@ public final class Window {
 	 * @return the title of the window
 	 */
 	public static String getTitle() {
-   	 assert isCreated() : "Cannot get title on uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot get title on uncreated window");
 		return title;
 	}
-  
+
 	/**
 	 * @return whether this window is in fullscreen mode
 	 */
 	public static boolean isFullscreen() {
-		assert isCreated() : "Cannot determine state of uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot determine fullscreen state of uncreated window");
 		return fullscreen;
 	}
 
@@ -141,7 +145,8 @@ public final class Window {
 	 * @param newTitle The new window title
 	 */
 	public static void setTitle(String newTitle) {
-		assert isCreated() : "Cannot set title of uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot set title on uncreated window");
 		title = newTitle;
 		nSetTitle(title);
 	}
@@ -156,7 +161,8 @@ public final class Window {
 	 * @return true if the user or operating system has asked the window to close
 	 */
 	public static boolean isCloseRequested() {
-		assert isCreated()  : "Cannot determine state of uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot determine close requested state of uncreated window");
 		return nIsCloseRequested();
 	}
 
@@ -166,7 +172,8 @@ public final class Window {
 	 * @return true if the window is minimized or otherwise not visible
 	 */
 	public static boolean isMinimized() {
-		assert isCreated()  : "Cannot determine state of uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot determine minimized state of uncreated window");
 		return nIsMinimized();
 	}
 
@@ -176,7 +183,8 @@ public final class Window {
 	 * @return true if window is focused
 	 */
 	public static boolean isFocused() {
-		assert isCreated()  : "Cannot determine state of uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot determine focused state of uncreated window");
 		return nIsFocused();
 	}
 
@@ -210,7 +218,8 @@ public final class Window {
 	 * and needs to repaint itself
 	 */
 	public static boolean isDirty() {
-		assert isCreated()  : "Cannot determine state of uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot determine dirty state of uncreated window");
 		return nIsDirty();
 	}
 
@@ -222,7 +231,8 @@ public final class Window {
 	 * @throws OpenGLException if an OpenGL error has occured since the last call to GL11.glGetError()
 	 */
 	public static void update() {
-		assert isCreated()  : "Cannot paint uncreated window";
+		if (!isCreated())
+			throw new IllegalStateException("Cannot determine update uncreated window");
 		nUpdate();
 		if ((isDirty() && !isMinimized()) || (isFocused() && !isMinimized())) {
 			Util.checkGLError();
@@ -259,7 +269,8 @@ public final class Window {
 	 * Make the Window the current rendering context for GL calls.
 	 */
 	public static synchronized void makeCurrent() {
-		assert isCreated() : "No window has been created.";
+		if (!isCreated())
+			throw new IllegalStateException("No window created to make current");
 		nMakeCurrent();
 		GLContext.useContext(context);
 	}
@@ -315,7 +326,7 @@ public final class Window {
 	 */
 	public static void create(String title, int bpp, int alpha, int depth, int stencil, int samples) throws Exception {
 		if (isCreated())
-			throw new Exception("Only one LWJGL window may be instantiated at any one time.");
+			throw new IllegalStateException("Only one LWJGL window may be instantiated at any one time.");
 		Window.fullscreen = true;
 		Window.x = 0;
 		Window.y = 0;
@@ -371,7 +382,7 @@ public final class Window {
 	public static void create(String title, int x, int y, int width, int height, int bpp, int alpha, int depth, int stencil, int samples)
 		throws Exception {
 		if (isCreated())
-			throw new Exception("Only one LWJGL window may be instantiated at any one time.");
+			throw new IllegalStateException("Only one LWJGL window may be instantiated at any one time.");
 		Window.fullscreen = false;
 		Window.x = x;
 		Window.y = y;
@@ -518,7 +529,8 @@ public final class Window {
 	 * @return boolean
 	 */
 	public static boolean isVSyncEnabled() {
-		assert isCreated()  : "Cannot determine sync of uncreated window";
+		if (isCreated())
+			throw new IllegalStateException("Cannot determine vsync state of uncreated window");
 		return nIsVSyncEnabled();
 	}
 
@@ -531,11 +543,10 @@ public final class Window {
 	 * @param sync true to synchronize; false to ignore synchronization
 	 */
 	public static void setVSyncEnabled(boolean sync) {
-		assert isCreated() : "Cannot set sync of uncreated window";
+		if (isCreated())
+			throw new IllegalStateException("Cannot set vsync state of uncreated window");
 		nSetVSyncEnabled(sync);
 	}
 
 	private static native void nSetVSyncEnabled(boolean sync);
-
-
 }

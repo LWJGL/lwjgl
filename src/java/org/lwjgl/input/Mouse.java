@@ -167,7 +167,10 @@ public class Mouse {
 	 * @throws Exception if the cursor could not be set for any reason
 	 */
 	public static Cursor setNativeCursor(Cursor cursor) throws Exception {
-		assert created && ((getNativeCursorCaps() | CURSOR_ONE_BIT_TRANSPARENCY) != 0);
+		if (!created)
+			throw new IllegalStateException("Create the Mouse before setting the native cursor");
+		if ((getNativeCursorCaps() & CURSOR_ONE_BIT_TRANSPARENCY) == 0)
+			throw new IllegalStateException("Mouse doesn't support native cursors");
 		Cursor oldCursor = currentCursor;
 		currentCursor = cursor;
 		if (currentCursor != null) {
@@ -239,7 +242,8 @@ public class Mouse {
 	 */
 	public static void create() throws Exception {
 		
-		assert Window.isCreated() : "Window must be created prior to creating mouse";
+		if (!Window.isCreated())
+			throw new IllegalStateException("Window must be created prior to creating mouse");
 		
 		if (!initialized) {
 			initialize();
@@ -327,7 +331,8 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#read()	
 	 */
 	public static void poll() {
-		assert created : "The mouse has not been created.";
+		if (!created)
+			throw new IllegalStateException("Mouse must be created before you can poll it");
 		nPoll();
 		
 		// set absolute position
@@ -363,7 +368,8 @@ public class Mouse {
 	 * @return true if the specified button is down
 	 */
 	public static boolean isButtonDown(int button) {
-		assert created : "The mouse has not been created.";
+		if (!created)
+			throw new IllegalStateException("Mouse must be created before you can poll the button state");
 		if (button >= buttonCount || button < 0)
 			return false;
 		else
@@ -398,7 +404,8 @@ public class Mouse {
 	 * Enable mouse button buffering. Must be called after the mouse is created.
 	 */
 	public static void enableBuffer() throws Exception {
-		assert created : "The mouse has not been created.";
+		if (!created)
+			throw new IllegalStateException("Mouse must be created before you can enable buffering");
 		readBuffer = BufferUtils.createByteBuffer(2*BUFFER_SIZE);
 		readBuffer.limit(0);
 		nEnableBuffer();
@@ -424,8 +431,10 @@ public class Mouse {
 	 * @see org.lwjgl.input.Mouse#getEventButtonState()
 	 */
 	public static void read() {
-		assert created : "The mouse has not been created.";
-		assert readBuffer != null : "Mouse buffering has not been enabled.";
+		if (!created)
+			throw new IllegalStateException("Mouse must be created before you can read events");
+		if (readBuffer == null)
+			throw new IllegalStateException("Event buffering must be enabled before you can read events");
 		readBuffer.compact();
 		int numEvents = nRead(readBuffer, readBuffer.position());
 		readBuffer.position(readBuffer.position() + numEvents*2);
@@ -447,8 +456,10 @@ public class Mouse {
 	 * @return true if a mouse event was read, false otherwise
 	 */
 	public static boolean next() {
-		assert created : "The mouse has not been created.";
-		assert readBuffer != null : "Mouse buffering has not been enabled.";
+		if (!created)
+			throw new IllegalStateException("Mouse must be created before you can read events");
+		if (readBuffer == null)
+			throw new IllegalStateException("Event buffering must be enabled before you can read events");
 
 		if (readBuffer.hasRemaining()) {
 			eventButton = readBuffer.get() & 0xFF;

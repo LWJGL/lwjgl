@@ -89,7 +89,7 @@ public final class ARBVertexBufferObject {
 			case GL_ARRAY_BUFFER_ARB:
 				VBOTracker.getVBOArrayStack().setState(buffer);
 				break;
-			default: assert false: "Unsupported VBO target " + target;
+			default: throw new IllegalArgumentException("Unsupported VBO target " + target);
 		}
 		nglBindBufferARB(target, buffer);
 	}

@@ -164,9 +164,8 @@ public class Controller {
 	 * @throws Exception if the controller could not be created for any reason
 	 */
 	public static void create() throws Exception {
-    
-    assert Window.isCreated() : "Window must be created prior to creating controller";
-    
+		if (!Window.isCreated())
+			throw new IllegalStateException("Window must be created before you can create Controller");
 		if (!initialized) {
 			initialize();
 		}
@@ -203,7 +202,8 @@ public class Controller {
 	 * Polls the controller.
 	 */
 	public static void poll() {
-		assert created : "The controller has not been created.";
+		if (!created)
+			throw new IllegalStateException("Controller must be created before you can poll the device");
 		nPoll();
 	}
 
@@ -215,7 +215,8 @@ public class Controller {
 	 * @see #buttonCount
 	 */
 	public static boolean isButtonDown(int button) {
-		assert created : "The controller has not been created.";
+		if (!created)
+			throw new IllegalStateException("Controller must be created before you can query button state");
 		return buttons[button];
 	}
 	
@@ -231,7 +232,7 @@ public class Controller {
 	 * it always throws a RuntimeException.
 	 */
 	public static void read() {
-		throw new RuntimeException("Buffering is not implemented for Controllers.");
+		throw new UnsupportedOperationException("Buffering is not implemented for Controllers.");
 	}
 	
 	/**

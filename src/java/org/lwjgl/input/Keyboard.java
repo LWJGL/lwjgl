@@ -285,7 +285,8 @@ public class Keyboard {
 	 * @throws Exception if the keyboard could not be created for any reason
 	 */
 	public static void create() throws Exception {
-		assert Window.isCreated() : "Window must be created prior to creating keyboard";
+		if (!Window.isCreated())
+			throw new IllegalStateException("Window must be created before you can create Keyboard");
 		if (!initialized)
 			initialize();
 		if (created)
@@ -334,7 +335,8 @@ public class Keyboard {
 	 * @see org.lwjgl.input.Keyboard#read() 
 	 */
 	public static void poll() {
-		assert created : "The keyboard has not been created.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can poll the device");
 		nPoll(keyDownBuffer);
 	}
 	
@@ -361,8 +363,10 @@ public class Keyboard {
 	 * @see org.lwjgl.input.Keyboard#getEventCharacter()
 	 */
 	public static void read() {
-		assert created : "The keyboard has not been created.";
-		assert readBuffer != null : "Keyboard buffering has not been enabled.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can read events");
+		if (readBuffer == null)
+			throw new IllegalStateException("Event buffering must be enabled before you can read events");
 		readBuffer.compact();
 		int numEvents = nRead(readBuffer, readBuffer.position());
 		if (translationEnabled)
@@ -383,8 +387,10 @@ public class Keyboard {
 	 * and keyboard buffering must be enabled.
 	 */
 	public static void enableTranslation() throws Exception {
-		assert created : "The keyboard has not been created.";
-		assert readBuffer != null : "Keyboard buffering has not been enabled.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can read events");
+		if (readBuffer == null)
+			throw new IllegalStateException("Event buffering must be enabled before you can read events");
 		nEnableTranslation();
 		translationEnabled = true;
 	}
@@ -398,7 +404,8 @@ public class Keyboard {
 	 * Enable keyboard buffering. Must be called after the keyboard is created.
 	 */
 	public static void enableBuffer() throws Exception {
-		assert created : "The keyboard has not been created.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can enable buffering");
 		readBuffer = BufferUtils.createByteBuffer(4*BUFFER_SIZE);
 		readBuffer.limit(0);
 		nEnableBuffer();
@@ -417,7 +424,8 @@ public class Keyboard {
 	 * @return true if the key is down according to the last poll()
 	 */
 	public static boolean isKeyDown(int key) {
-		assert created : "The keyboard has not been created.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can query key state");
 		return keyDownBuffer.get(key) != 0;
 	}
 	
@@ -442,7 +450,8 @@ public class Keyboard {
 	 * @return STATE_ON if on, STATE_OFF if off and STATE_UNKNOWN if the state is unknown
 	 */
 	public static int isStateKeySet(int key) {
-		assert created : "The keyboard has not been created.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can query key state");
 		return nisStateKeySet(key);
 	}
 	private static native int nisStateKeySet(int key);
@@ -473,7 +482,8 @@ public class Keyboard {
 	 * @return the number of keyboard events
 	 */
 	public static int getNumKeyboardEvents() {
-		assert created : "The keyboard has not been created.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can read events");
 		if (translationEnabled)
 			return readBuffer.remaining()/4;
 		else
@@ -492,8 +502,10 @@ public class Keyboard {
 	 * @return true if a keyboard event was read, false otherwise
 	 */
 	public static boolean next() {
-		assert created : "The keyboard has not been created.";
-		assert readBuffer != null : "Keyboard buffering has not been enabled.";
+		if (!created)
+			throw new IllegalStateException("Keyboard must be created before you can read events");
+		if (readBuffer == null)
+			throw new IllegalStateException("Event buffering must be enabled before you can read events");
 		
 		if (readBuffer.hasRemaining()) {
 			eventKey = readBuffer.get() & 0xFF;
