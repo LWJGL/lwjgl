@@ -78,9 +78,9 @@ public class XMLLoader {
 	 * @throws Exception
 	 */
 	public Model load() throws Exception {
-		String name = XMLUtil.getString(src.getDocumentElement(), "name");
+		String name = XMLUtil.getString(src.getDocumentElement(), "modelname");
 		String material = XMLUtil.getString(src.getDocumentElement(), "material");
-		numVertices = XMLUtil.getInt(src.getDocumentElement(), "vertices");
+		numVertices = XMLUtil.getInt(src.getDocumentElement(), "vertexcount");
 		if (XMLUtil.getString(src.getDocumentElement(), "type").equals("boned")) {
 			// It's a boned model
 			numBones = XMLUtil.getInt(src.getDocumentElement(), "bones", 0);
@@ -218,7 +218,7 @@ public class XMLLoader {
 		Map animations = new HashMap(sequenceElements.size());
 		for (Iterator i = sequenceElements.iterator(); i.hasNext(); ) {
 			Element sequenceElement = (Element) i.next();
-			animations.put(XMLUtil.getString(sequenceElement, "name"), loadBonedAnimation(sequenceElement));
+			animations.put(XMLUtil.getString(sequenceElement, "sequencename"), loadBonedAnimation(sequenceElement));
 		}
 		return animations;
 	}
@@ -233,11 +233,11 @@ public class XMLLoader {
 		if (animationElement == null) {
 			return null;
 		}
-		List sequenceElements = XMLUtil.getChildren(src.getDocumentElement(), "sequence");
+		List sequenceElements = XMLUtil.getChildren(animationElement, "sequence");
 		Map animations = new HashMap(sequenceElements.size());
 		for (Iterator i = sequenceElements.iterator(); i.hasNext(); ) {
 			Element sequenceElement = (Element) i.next();
-			animations.put(XMLUtil.getString(sequenceElement, "name"), loadMeshAnimation(sequenceElement));
+			animations.put(XMLUtil.getString(sequenceElement, "sequencename"), loadMeshAnimation(sequenceElement));
 		}
 		return animations;
 	}
@@ -372,10 +372,10 @@ public class XMLLoader {
 	 */
 	private Color loadColor(Element element) throws Exception {
 		return new Color(
-				XMLUtil.getInt(element, "r"),
-				XMLUtil.getInt(element, "g"),
-				XMLUtil.getInt(element, "b"),
-				XMLUtil.getInt(element, "a", 255)
+				XMLUtil.getInt(element, "red"),
+				XMLUtil.getInt(element, "green"),
+				XMLUtil.getInt(element, "blue"),
+				XMLUtil.getInt(element, "alpha", 255)
 			);
 	}
 	
