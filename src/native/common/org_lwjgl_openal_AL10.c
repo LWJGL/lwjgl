@@ -44,7 +44,8 @@
 #include "checkALerror.h"
 #include "extal.h"
 
-//al
+typedef ALboolean   (ALAPIENTRY *alIsExtensionPresentPROC)( ALubyte* fname );
+typedef ALvoid      (ALAPIENTRY *alEnablePROC)( ALenum capability );
 typedef ALvoid	    (ALAPIENTRY *alDisablePROC)( ALenum capability ); 
 typedef ALboolean   (ALAPIENTRY *alIsEnabledPROC)( ALenum capability ); 
 //typedef ALvoid	    (ALAPIENTRY *alHintPROC)( ALenum target, ALenum mode );
@@ -98,11 +99,11 @@ typedef ALvoid	    (ALAPIENTRY *alDistanceModelPROC)( ALenum value );
 typedef ALvoid	    (ALAPIENTRY *alDopplerFactorPROC)( ALfloat value );
 typedef ALvoid	    (ALAPIENTRY *alDopplerVelocityPROC)( ALfloat value );
 
-alIsExtensionPresentPROC alIsExtensionPresent = NULL;
 alGetStringPROC alGetString = NULL;
 alGetErrorPROC alGetError = NULL;
 
-alEnablePROC alEnable = NULL;
+static alIsExtensionPresentPROC alIsExtensionPresent;
+static alEnablePROC alEnable;
 static alDisablePROC alDisable;
 static alIsEnabledPROC alIsEnabled;
 //static alHintPROC alHint;
