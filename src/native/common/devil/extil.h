@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <IL/il.h>
+#include <IL/ilu.h>
 #include "org_lwjgl_devil_IL.h"
+#include "org_lwjgl_devil_ILU.h"
 #include "common_tools.h"
 
 

@@ -419,6 +419,7 @@
 		<!-- devil -->
 		<javah classpath="${lwjgl.bin}" destdir="${lwjgl.src.headers}/devil" force="yes">
 			<class name="org.lwjgl.devil.IL"/>
+			<class name="org.lwjgl.devil.ILU"/>
 		</javah>
 	</target>
 
