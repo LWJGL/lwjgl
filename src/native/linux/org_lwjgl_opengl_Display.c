@@ -726,10 +726,13 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyContext(JNIEnv 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createWindow(JNIEnv *env, jobject this, jobject mode, jboolean fullscreen, int x, int y) {
 	bool current_fullscreen = fullscreen == JNI_TRUE;
 	if (current_fullscreen) {
-		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported(env))
+		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported(env)) {
+			printfDebugJava(env, "Using NetWM for fullscreen window");
 			current_window_mode = FULLSCREEN_NETWM;
-		else
+		} else {
+			printfDebugJava(env, "Using legacy mode for fullscreen window");
 			current_window_mode = FULLSCREEN_LEGACY;
+		}
 	} else
 		current_window_mode = WINDOWED;
 	jclass cls_displayMode = (*env)->GetObjectClass(env, mode);
