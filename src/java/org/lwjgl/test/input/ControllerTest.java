@@ -34,7 +34,7 @@ package org.lwjgl.test.input;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -113,11 +113,11 @@ public class ControllerTest {
   private void setupDisplay() {
     try {
       if (FULLSCREEN) {
-        Window.create("ControllerTest", 16, 0, 0, 0, 0);
+        Display.create();
       } else {
-        Window.create("ControllerTest", 50, 50, WINDOW_WIDTH, WINDOW_HEIGHT, 16, 0, 0, 0, 0);
+        Display.create();
       }
-      Window.setVSyncEnabled(true);
+      Display.setVSyncEnabled(true);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -142,7 +142,7 @@ public class ControllerTest {
 
     runTest();
 
-    Window.destroy();
+    Display.destroy();
   }
   /**
    * Runs the test
@@ -161,7 +161,7 @@ public class ControllerTest {
         
         
         // pause and continue if minimized
-        if(!Window.isVisible()) {
+        if(!Display.isVisible()) {
           pause(100);
           render();
           continue;
@@ -192,8 +192,8 @@ public class ControllerTest {
    * Handles the window
    */
   private void handleWindow() {
-    Window.update();
-    closing = Window.isCloseRequested();
+    Display.update();
+    closing = Display.isCloseRequested();
   }
   
   /**

@@ -40,7 +40,7 @@ import java.awt.event.WindowEvent;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 
 
 /**
@@ -71,7 +71,7 @@ public class ControllerFieldTest {
 	 * 
 	 */
 	private void destroy() {
-    Window.destroy();
+    Display.destroy();
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class ControllerFieldTest {
     String buttons;
     while(frame.isVisible()) {
       buttons = "";
-      Window.update();
+      Display.update();
       
       labels[0].setText("" + Controller.getX());
       labels[1].setText("" + Controller.getRx());
@@ -107,7 +107,7 @@ public class ControllerFieldTest {
 	private void initialize() {
     
     try {
-     Window.create("debug", 10, 10, 10, 10, 16, 0, 0, 0);
+     Display.create();
     } catch (LWJGLException lwjgle) {
     	lwjgle.printStackTrace();
       return;

@@ -31,10 +31,10 @@
  */
 package org.lwjgl.test.input;
 
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -76,7 +76,7 @@ public class KeyboardTest {
 
   private void setupDisplay(boolean fullscreen) {
     try {
-      Window.create("KeyboardTest", 50, 50, 640, 480, 16, 0, 0, 0, 0);
+      Display.create();
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -98,7 +98,7 @@ public class KeyboardTest {
     wiggleKeyboard();
 
     Keyboard.destroy();
-    Window.destroy();
+    Display.destroy();
   }
 
   private void createKeyboard() {
@@ -114,10 +114,10 @@ public class KeyboardTest {
 
   private void wiggleKeyboard() {
 
-    while (!Window.isCloseRequested()) {
-      Window.update();
+    while (!Display.isCloseRequested()) {
+      Display.update();
 
-      if (!Window.isVisible()) {
+      if (!Display.isVisible()) {
         try {
           Thread.sleep(100);
         } catch (InterruptedException inte) {

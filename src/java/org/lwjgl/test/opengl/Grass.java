@@ -50,8 +50,8 @@ import java.nio.IntBuffer;
 import java.util.Random;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
@@ -73,9 +73,9 @@ public class Grass {
 			int mode = -1;
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
 			for (int i = 0; i < modes.length; i++) {
-				if (modes[i].width == 640
-					&& modes[i].height == 480
-					&& modes[i].bpp >= 16) {
+				if (modes[i].getWidth ()== 640
+					&& modes[i].getHeight() == 480
+					&& modes[i].getBitsPerPixel() >= 16) {
 					mode = i;
 					break;
 				}
@@ -98,7 +98,7 @@ public class Grass {
 
 	static {
 		try {
-			Window.create("LWJGL Grass", 50, 50, 640, 480, 16, 0, 0,0, 0);
+			Display.create();
 			Keyboard.create();
 			Keyboard.enableBuffer();
 			Mouse.create();
@@ -190,9 +190,9 @@ public class Grass {
 		aslod.count = 0.0f;
 
 		while (!finished) {
-			if (Window.isCloseRequested()) {
+			if (Display.isCloseRequested()) {
 				finished = true;
-			} else if (Window.isVisible()) {
+			} else if (Display.isVisible()) {
 				keyPoll();
 				float degree = (1.0f + (aslod.value * 20.0f)) * 0.01745329f;
 
@@ -205,9 +205,9 @@ public class Grass {
 
 				grsDraw();
 			}
-			Window.update();
+			Display.update();
 		}
-		Window.destroy();
+		Display.destroy();
 	}
 
 	private static float myrand() {

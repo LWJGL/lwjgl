@@ -34,14 +34,14 @@ package org.lwjgl.test.openal;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.Display;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.glu.GLU;
 
 /**
@@ -147,11 +147,11 @@ public class PositionTest extends BasicTest {
     Sys.log("Setting up window");
 
     // calc center
-    int centerX = (Display.getWidth() - WINDOW_WIDTH) / 2;
-    int centerY = (Display.getHeight() - WINDOW_HEIGHT) / 2;
+    int centerX = (Display.getDisplayMode().getWidth() - WINDOW_WIDTH) / 2;
+    int centerY = (Display.getDisplayMode().getHeight() - WINDOW_HEIGHT) / 2;
 
     // setup window
-    Window.create("PositionTest", centerX, centerY, WINDOW_WIDTH, WINDOW_HEIGHT, Display.getDepth(), 0, 8, 0, 0);
+    Display.create();
     // -----------------------------------------------------
 
     // Setup OpenGL
@@ -168,7 +168,7 @@ public class PositionTest extends BasicTest {
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glut = this.new GLUT();
 
-    Window.setVSyncEnabled(true);
+    Display.setVSyncEnabled(true);
     // -----------------------------------------------------
 
     // Setup OpenAL
@@ -257,10 +257,10 @@ public class PositionTest extends BasicTest {
       handleInput();
 
       // allow window to process internal messages
-      Window.update();
+      Display.update();
       
       // render and paint if !minimized and not dirty
-      if(Window.isVisible()) {
+      if(Display.isVisible()) {
         render();
       } else {
         // sleeeeeep
@@ -268,7 +268,7 @@ public class PositionTest extends BasicTest {
       }
       
       // act on pause mode
-      paused(!(Window.isVisible() || Window.isActive()));
+      paused(!(Display.isVisible() || Display.isActive()));
       
       // start sound after first paint, since we don't want
       // the delay before something is painted on the screen
@@ -318,7 +318,7 @@ public class PositionTest extends BasicTest {
    */
   private void handleInput() {
     // User wants to exit?
-    finished = Window.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE);
+    finished = Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE);
     if (finished) {
       return;
     }
@@ -466,7 +466,7 @@ public class PositionTest extends BasicTest {
     AL.destroy();
 
     Sys.log("Shutting down Window");
-    Window.destroy();
+    Display.destroy();
   }
 
   /**

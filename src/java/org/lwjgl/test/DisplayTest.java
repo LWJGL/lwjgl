@@ -31,8 +31,9 @@
  */
 package org.lwjgl.test;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
 /**
  * $Id$
@@ -69,10 +70,10 @@ public class DisplayTest {
     System.out.println("Info about current:");
     System.out.println("Graphics card: " + Display.getAdapter() + ", version: " + Display.getVersion());
     System.out.println("Resolution: " + 
-        Display.getWidth()      + "x" + 
-        Display.getHeight()     + "x" + 
-        Display.getDepth()      + "@" + 
-        Display.getFrequency()  + "Hz");
+        Display.getDisplayMode().getWidth()      + "x" + 
+        Display.getDisplayMode().getHeight()     + "x" + 
+        Display.getDisplayMode().getBitsPerPixel()      + "@" + 
+        Display.getDisplayMode().getFrequency()  + "Hz");
     System.out.println("---- Test Current ----");
   }
   
@@ -125,10 +126,10 @@ public class DisplayTest {
     // find a mode
     System.out.print("Looking for 640x480x16@60...");
     for(int i=0; i<modes.length;i++) {
-      if (modes[i].width  == 640  &&
-          modes[i].height == 480  &&
-          modes[i].bpp    == 16   &&
-          modes[i].freq   == 60) {
+      if (modes[i].getWidth()  == 640  &&
+          modes[i].getHeight() == 480  &&
+          modes[i].getBitsPerPixel()    == 16   &&
+          modes[i].getFrequency()   == 60) {
         mode = modes[i];
         System.out.println("found!");
         break;
@@ -145,6 +146,7 @@ public class DisplayTest {
     System.out.print("Changing to mode...");
     try {
       Display.setDisplayMode(mode);
+      Display.setFullscreen(true);
     } catch (Exception e) {
       System.out.println("error\nFATAL: Error setting mode");
       System.exit(-1);
@@ -152,16 +154,20 @@ public class DisplayTest {
     System.out.println("done");
     
     System.out.println("Resolution: " + 
-        Display.getWidth()      + "x" + 
-        Display.getHeight()     + "x" + 
-        Display.getDepth()      + "@" + 
-        Display.getFrequency()  + "Hz");
+        Display.getDisplayMode().getWidth()      + "x" + 
+        Display.getDisplayMode().getHeight()     + "x" + 
+        Display.getDisplayMode().getBitsPerPixel()      + "@" + 
+        Display.getDisplayMode().getFrequency()  + "Hz");
     
     pause(5000);
 
     // reset
     System.out.print("Resetting mode...");
-    Display.resetDisplayMode();
+    try {
+        Display.setFullscreen(false);
+    } catch (LWJGLException e) {
+        e.printStackTrace();
+    }
     System.out.println("done");
     
     System.out.println("---- Test setDisplayMode ----");    
@@ -192,7 +198,11 @@ public class DisplayTest {
     changeConfig(1.0f, 0f, 10000.0f);
     
     System.out.print("resetting...");
-    Display.resetDisplayMode();
+    try {
+        Display.setFullscreen(false);
+    } catch (LWJGLException e) {
+        e.printStackTrace();
+    }
     System.out.println("done");
     
     System.out.println("---- Test setDisplayConfigurationTest ----");

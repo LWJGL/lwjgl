@@ -39,15 +39,15 @@
  */
 package org.lwjgl.test.opengl;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.Util;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 
 public final class Game {
 	static {
@@ -56,7 +56,7 @@ public final class Game {
 			int mode = -1;
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
 			for (int i = 0; i < modes.length; i++) {
-				if (modes[i].width == 640 && modes[i].height == 480 && modes[i].bpp >= 16) {
+				if (modes[i].getWidth() == 640 && modes[i].getHeight() == 480 && modes[i].getBitsPerPixel() >= 16) {
 					mode = i;
 					break;
 				}
@@ -73,7 +73,7 @@ public final class Game {
 	}
 	static {
 		try {
-			Window.create("LWJGL Game Example");
+			Display.create();
 			System.out.println("Created OpenGL.");
 		} catch (Exception e) {
 			System.err.println("Failed to create OpenGL due to " + e);
@@ -94,15 +94,15 @@ public final class Game {
 		try {
 			init();
 			while (!finished) {
-				if (!Window.isVisible()) {
+				if (!Display.isVisible()) {
 					Thread.sleep(200);
-				} else if (Window.isCloseRequested()) {
+				} else if (Display.isCloseRequested()) {
 					finished = true;
 				} else {
 					mainLoop();
 					render();
 				}
-				Window.update();
+				Display.update();
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -133,7 +133,7 @@ public final class Game {
 	private static void render() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glPushMatrix();
-		GL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+		GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
 		GL11.glRotatef(angle, 0, 0, 1.0f);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glVertex2i(-50, -50);
@@ -156,7 +156,6 @@ public final class Game {
 	 * Cleanup
 	 */
 	private static void cleanup() {
-		Window.destroy();
-		Display.resetDisplayMode();
+		Display.destroy();
 	}
 }

@@ -31,12 +31,12 @@
  */
 package org.lwjgl.test.input;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
@@ -62,21 +62,18 @@ public class ControllerCreationTest {
     //  find first display mode that allows us 640*480*16
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     for (int i = 0; i < modes.length; i++) {
-      if (modes[i].width == 640
-        && modes[i].height == 480
-        && modes[i].bpp >= 16) {
+      if (modes[i].getWidth() == 640
+        && modes[i].getHeight() == 480
+        && modes[i].getBitsPerPixel() >= 16) {
         displayMode = modes[i];
         break;
       }
     }    
     
     try {
-      if(fullscreen) {
         Display.setDisplayMode(displayMode);
-        Window.create("ControllerCreationTest", 16, 0, 0, 0, 0);
-      } else {
-        Window.create("ControllerCreationTest", 50, 50, 640, 480, 16, 0, 0, 0, 0);
-      }
+        Display.setFullscreen(fullscreen);
+        Display.create();
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -105,12 +102,12 @@ public class ControllerCreationTest {
     
     // recreate display in fullscreen mode
     System.out.print("Destroying display...");
-    Window.destroy();
+    Display.destroy();
     System.out.println("success");
     
     System.out.print("Entering fullscreen mode...");
     try {
-      Window.destroy();
+      Display.destroy();
       initialize(true);
       Display.setDisplayMode(displayMode);
     } catch (Exception e) {
@@ -129,8 +126,7 @@ public class ControllerCreationTest {
     
     System.out.println("Test completed successfully!");
     System.out.print("Shutting down...");
-    Display.resetDisplayMode();
-    Window.destroy();
+    Display.destroy();
     System.out.println("shutdown complete");
   }
 
@@ -142,7 +138,7 @@ public class ControllerCreationTest {
 
     while (Sys.getTime() < endtime) {
 
-      Window.update();
+      Display.update();
 
       //controller is a bit fuzzy
       if(Controller.getX() > 100) {

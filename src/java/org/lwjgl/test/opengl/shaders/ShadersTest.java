@@ -38,12 +38,16 @@
 
 package org.lwjgl.test.opengl.shaders;
 
-import org.lwjgl.*;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.opengl.glu.Sphere;
 
@@ -77,7 +81,7 @@ public final class ShadersTest {
 		long lastFrameTime = 0;
 
 		while ( run ) {
-			if (!Window.isVisible() )
+			if (!Display.isVisible() )
 				Thread.yield();
 			else {
 				// This is the current frame time.
@@ -105,9 +109,9 @@ public final class ShadersTest {
 				GL11.glPushMatrix();
 			}
 
-			Window.update();
+			Display.update();
 
-			if ( Window.isCloseRequested() )
+			if ( Display.isCloseRequested() )
 				break;
 		}
 
@@ -133,7 +137,7 @@ public final class ShadersTest {
 		try {
 			System.out.println("Setting display mode to: " + displayMode);
 			Display.setDisplayMode(displayMode);
-			Window.create("OpenGL Shaders Test", displayMode.bpp, 8, 24, 0);
+			Display.create(new PixelFormat(8, 24, 0));
 		} catch (LWJGLException e) {
 			kill(e.getMessage());
 		}
@@ -170,11 +174,11 @@ public final class ShadersTest {
 			argsError();
 		}
 
-		GL11.glViewport(0, 0, displayMode.width, displayMode.height);
+		GL11.glViewport(0, 0, displayMode.getWidth(), displayMode.getHeight());
 
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluPerspective(45, displayMode.width / (float)displayMode.height, 1.0f, 10.0f);
+		GLU.gluPerspective(45, displayMode.getWidth() / (float)displayMode.getHeight(), 1.0f, 10.0f);
 
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
@@ -259,11 +263,11 @@ public final class ShadersTest {
 	}
 
 	static int getDisplayWidth() {
-		return displayMode.width;
+		return displayMode.getWidth();
 	}
 
 	static int getDisplayHeight() {
-		return displayMode.height;
+		return displayMode.getHeight();
 	}
 
 	static float getSin() {
@@ -284,8 +288,8 @@ public final class ShadersTest {
 
 		for ( int i = 0; i < modes.length; i++ ) {
 			DisplayMode mode = modes[i];
-			if ( mode.width == width && mode.height == height && mode.freq <= 85 ) {
-				if ( bestMode == null || (mode.bpp >= bestMode.bpp && mode.freq > bestMode.freq) )
+			if ( mode.getWidth() == width && mode.getHeight() == height && mode.getFrequency() <= 85 ) {
+				if ( bestMode == null || (mode.getBitsPerPixel() >= bestMode.getBitsPerPixel() && mode.getFrequency() > bestMode.getFrequency()) )
 					bestMode = mode;
 			}
 		}
@@ -298,10 +302,8 @@ public final class ShadersTest {
 		if ( shader != null )
 			shader.cleanup();
 
-		if ( Window.isCreated() )
-			Window.destroy();
-
-		Display.resetDisplayMode();
+		if ( Display.isCreated() )
+			Display.destroy();
 	}
 
 	private static void argsError() {

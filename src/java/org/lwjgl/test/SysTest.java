@@ -31,7 +31,7 @@
  */
 package org.lwjgl.test;
 
-import org.lwjgl.Display;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.Sys;
 
 /**

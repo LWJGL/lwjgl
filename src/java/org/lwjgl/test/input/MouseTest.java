@@ -34,7 +34,7 @@ package org.lwjgl.test.input;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -112,11 +112,11 @@ public class MouseTest {
   private void setupDisplay() {
     try {
       if (FULLSCREEN) {
-        Window.create("MouseTest", 16, 0, 0, 0, 0);
+        Display.create();
       } else {
-        Window.create("MouseTest", 50, 50, WINDOW_WIDTH, WINDOW_HEIGHT, 16, 0, 0, 0, 0);
+        Display.create();
       }
-      Window.setVSyncEnabled(true);
+      Display.setVSyncEnabled(true);
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(-1);
@@ -141,7 +141,7 @@ public class MouseTest {
 
     runTest();
 
-    Window.destroy();
+    Display.destroy();
   }
 
   /**
@@ -173,8 +173,8 @@ public class MouseTest {
         
         
         // pause and continue if minimized
-        if(!Window.isVisible()) {
-          if(Window.isDirty()) {
+        if(!Display.isVisible()) {
+          if(Display.isDirty()) {
             render();
           }          
           pause(100);
@@ -206,8 +206,8 @@ public class MouseTest {
    * Handles the window
    */
   private void handleWindow() {
-    Window.update();
-    closing = Window.isCloseRequested();
+    Display.update();
+    closing = Display.isCloseRequested();
   }
   
   /**

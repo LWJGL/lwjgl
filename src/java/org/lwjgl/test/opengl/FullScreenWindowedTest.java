@@ -31,11 +31,11 @@
  */
 package org.lwjgl.test.opengl;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -82,7 +82,7 @@ public class FullScreenWindowedTest {
 			//find displaymode
 			mode = findDisplayMode(800, 600, 16);
 			// start of in windowed mode
-			Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
+			Display.create();
 			glInit();
 			quadPosition = new Vector2f(100f, 100f);
 			quadVelocity = new Vector2f(1.0f, 1.0f);
@@ -94,8 +94,8 @@ public class FullScreenWindowedTest {
 	 * Runs the main loop of the "test"
 	 */
 	private void mainLoop() {
-		while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !Window.isCloseRequested()) {
-			if (Window.isVisible()) {
+		while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !Display.isCloseRequested()) {
+			if (Display.isVisible()) {
 				// check keyboard input
 				processKeyboard();
 				// do "game" logic, and render it
@@ -104,7 +104,7 @@ public class FullScreenWindowedTest {
 			} else {
 				// no need to render/paint if nothing has changed (ie. window
 				// dragged over)
-				if (Window.isDirty()) {
+				if (Display.isDirty()) {
 					render();
 				}
 				// don't waste cpu time, sleep more
@@ -114,7 +114,7 @@ public class FullScreenWindowedTest {
 				}
 			}
 			// Update window
-			Window.update();
+			Display.update();
 		}
 	}
 	/**
@@ -128,11 +128,11 @@ public class FullScreenWindowedTest {
 		quadPosition.x += quadVelocity.x;
 		quadPosition.y += quadVelocity.y;
 		//check colision with vertical border border
-		if (quadPosition.x + 50 >= mode.width || quadPosition.x - 50 <= 0) {
+		if (quadPosition.x + 50 >= mode.getWidth() || quadPosition.x - 50 <= 0) {
 			quadVelocity.x *= -1;
 		}
 		//check collision with horizontal border
-		if (quadPosition.y + 50 >= mode.height || quadPosition.y - 50 <= 0) {
+		if (quadPosition.y + 50 >= mode.getHeight() || quadPosition.y - 50 <= 0) {
 			quadVelocity.y *= -1;
 		}
 	}
@@ -163,10 +163,7 @@ public class FullScreenWindowedTest {
 		//check for fullscreen key
 		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 			try {
-        Window.destroy();
-				Display.setDisplayMode(mode);
-				Window.create("Test", mode.bpp, 0, 0, 0, 0);
-				glInit();
+				Display.setFullscreen(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -174,10 +171,7 @@ public class FullScreenWindowedTest {
 		//check for window key
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			try {
-        Window.destroy();
-				Display.resetDisplayMode();
-				Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
-				glInit();
+				Display.setFullscreen(false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -240,7 +234,7 @@ public class FullScreenWindowedTest {
 	private DisplayMode findDisplayMode(int width, int height, int bpp) {
 		DisplayMode[] modes = Display.getAvailableDisplayModes();
 		for (int i = 0; i < modes.length; i++) {
-			if (modes[i].width == width && modes[i].height == height && modes[i].bpp >= bpp && modes[i].freq <= 60) {
+			if (modes[i].getWidth() == width && modes[i].getHeight() == height && modes[i].getBitsPerPixel() >= bpp && modes[i].getFrequency() <= 60) {
 				return modes[i];
 			}
 		}
@@ -253,14 +247,14 @@ public class FullScreenWindowedTest {
 		// Go into orthographic projection mode.
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(0, mode.width, 0, mode.height);
+		GLU.gluOrtho2D(0, mode.getWidth(), 0, mode.getHeight());
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, mode.width, mode.height);
+		GL11.glViewport(0, 0, mode.getWidth(), mode.getHeight());
 		//set clear color to black
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		//sync frame (only works on windows)
-		Window.setVSyncEnabled(true);
+		Display.setVSyncEnabled(true);
 	}
 	/**
 	 * Test entry point

@@ -35,12 +35,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Pbuffer;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -96,9 +97,9 @@ public class PbufferTest {
     try {
       //find displaymode
       mode = findDisplayMode(800, 600, 16);
-
+      Display.setDisplayMode(mode);
       // start of in windowed mode
-      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
+      Display.create();
 //      gl = new GLWindow("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0);
       if ((Pbuffer.getPbufferCaps() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
           System.out.println("No Pbuffer support!");
@@ -122,8 +123,8 @@ public class PbufferTest {
 	 * Runs the main loop of the "test"
 	 */
 	private void mainLoop() {
-		while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !Window.isCloseRequested()) {
-			if (Window.isVisible()) {
+		while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !Display.isCloseRequested()) {
+			if (Display.isVisible()) {
 				// check keyboard input
 				processKeyboard();
 				// do "game" logic, and render it
@@ -132,7 +133,7 @@ public class PbufferTest {
 			} else {
 				// no need to render/paint if nothing has changed (ie. window
 				// dragged over)
-				if (Window.isDirty()) {
+				if (Display.isDirty()) {
 					render();
 				}
 				// don't waste cpu time, sleep more
@@ -142,7 +143,7 @@ public class PbufferTest {
 				}
 			}
 			// Update window
-			Window.update();
+			Display.update();
 		}
 	}
 
@@ -159,12 +160,12 @@ public class PbufferTest {
     quadPosition.y += quadVelocity.y;
 
     //check colision with vertical border border
-    if (quadPosition.x + 50 >= mode.width || quadPosition.x - 50 <= 0) {
+    if (quadPosition.x + 50 >= mode.getWidth() || quadPosition.x - 50 <= 0) {
       quadVelocity.x *= -1;
     }
 
     //check collision with horizontal border
-    if (quadPosition.y + 50 >= mode.height || quadPosition.y - 50 <= 0) {
+    if (quadPosition.y + 50 >= mode.getHeight() || quadPosition.y - 50 <= 0) {
       quadVelocity.y *= -1;
     }
   }
@@ -197,7 +198,7 @@ public class PbufferTest {
     }
     GL11.glPopMatrix();
     GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 0, 0, 512, 512, 0);
-    Window.makeCurrent();
+    Display.makeCurrent();
 
     // OpenGL window rendering
     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
@@ -225,11 +226,11 @@ public class PbufferTest {
 
   private void initPbuffer() {
       try {
-          pbuffer = new Pbuffer(512, 512, mode.bpp, 0, 0, 0, 0, null);
+          pbuffer = new Pbuffer(512, 512, new PixelFormat(), null);
           pbuffer.makeCurrent();
           initGLState(256, 256, 0.5f);
           GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex_handle);
-          Window.makeCurrent();
+          Display.makeCurrent();
       } catch (Exception e) {
           e.printStackTrace();
       }
@@ -245,17 +246,8 @@ public class PbufferTest {
     if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 
       try {
-        destroyTexture();
-        Keyboard.destroy();
-        pbuffer.destroy();
-        Window.destroy();
-
         Display.setDisplayMode(mode);
-        Window.create("Test", mode.bpp, 0, 0, 0, 0);
-        glInit();
-        initPbuffer();
-
-        Keyboard.create();
+	Display.setFullscreen(true);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -264,18 +256,7 @@ public class PbufferTest {
     //check for window key
     if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
       try {
-        destroyTexture();
-        Keyboard.destroy();
-        pbuffer.destroy();
-        Window.destroy();
-
-        Display.resetDisplayMode();
-        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
-        glInit();
-        initPbuffer();
-
-
-        Keyboard.create();
+        Display.setFullscreen(false);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -335,9 +316,8 @@ public class PbufferTest {
    */
   private void cleanup() {
     destroyTexture();
-    Keyboard.destroy();
     pbuffer.destroy();
-    Window.destroy();
+    Display.destroy();
   }
 
   /**
@@ -351,9 +331,9 @@ public class PbufferTest {
   private DisplayMode findDisplayMode(int width, int height, int bpp) {
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     for (int i = 0; i < modes.length; i++) {
-      if (modes[i].width == width
-        && modes[i].height == height
-        && modes[i].bpp >= bpp) {
+      if (modes[i].getWidth() == width
+        && modes[i].getHeight() == height
+        && modes[i].getBitsPerPixel() >= bpp) {
         return modes[i];
       }
     }
@@ -363,7 +343,7 @@ public class PbufferTest {
   private void initGLState(int width, int height, float color) {
     GL11.glMatrixMode(GL11.GL_PROJECTION);
     GL11.glLoadIdentity();
-    GLU.gluOrtho2D(0, mode.width, 0, mode.height);
+    GLU.gluOrtho2D(0, mode.getWidth(), 0, mode.getHeight());
     GL11.glMatrixMode(GL11.GL_MODELVIEW);
     GL11.glLoadIdentity();
     GL11.glViewport(0, 0, width, height);
@@ -377,7 +357,7 @@ public class PbufferTest {
    */
   private void glInit() {
     //sync frame (only works on windows)
-    Window.setVSyncEnabled(true);
+    Display.setVSyncEnabled(true);
     
     GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_REPLACE);
     GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -390,7 +370,7 @@ public class PbufferTest {
     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-    initGLState(mode.width, mode.height, 0f);
+    initGLState(mode.getWidth(), mode.getHeight(), 0f);
   }
 
   /**

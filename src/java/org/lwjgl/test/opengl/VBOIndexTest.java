@@ -41,8 +41,8 @@
 
 package org.lwjgl.test.opengl;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -62,9 +62,9 @@ public final class VBOIndexTest {
 			int mode = -1;
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
 			for ( int i = 0; i < modes.length; i++ ) {
-				if ( modes[i].width == 640
-				     && modes[i].height == 480
-				     && modes[i].bpp >= 16 ) {
+				if ( modes[i].getWidth() == 640
+				     && modes[i].getHeight() == 480
+				     && modes[i].getBitsPerPixel() >= 16 ) {
 					mode = i;
 					break;
 				}
@@ -82,7 +82,7 @@ public final class VBOIndexTest {
 
 	static {
 		try {
-			Window.create("LWJGL Game Example", 16, 0, 0, 0, 0);
+			Display.create();
 			System.out.println("Created OpenGL.");
 		} catch (Exception e) {
 			System.err.println("Failed to create OpenGL due to " + e);
@@ -112,11 +112,11 @@ public final class VBOIndexTest {
 		try {
 			init();
 			while ( !finished ) {
-				Window.update();
+				Display.update();
 
-				if ( !Window.isVisible() )
+				if ( !Display.isVisible() )
 					Thread.sleep(200);
-				else if ( Window.isCloseRequested() )
+				else if ( Display.isCloseRequested() )
 					System.exit(0);
 
 				mainLoop();
@@ -159,7 +159,7 @@ public final class VBOIndexTest {
 	private static void render() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glPushMatrix();
-		GL11.glTranslatef(Display.getWidth() / 2, Display.getHeight() / 2, 0.0f);
+		GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
 		GL11.glRotatef(angle, 0, 0, 1.0f);
 
 
@@ -201,10 +201,10 @@ public final class VBOIndexTest {
 		// Go into orthographic projection mode.
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluOrtho2D(0, Display.getWidth(), 0, Display.getHeight());
+		GLU.gluOrtho2D(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight());
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		GL11.glViewport(0, 0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight());
 		if ( !GLContext.GL_ARB_vertex_buffer_object ) {
 			System.out.println("ARB VBO not supported!");
 			System.exit(1);
@@ -241,11 +241,6 @@ public final class VBOIndexTest {
 		int_buffer.put(0, buffer_id);
 		int_buffer.put(1, indices_buffer_id);
 		ARBBufferObject.glDeleteBuffersARB(int_buffer);
-		Window.destroy();
-		try {
-			Display.resetDisplayMode();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Display.destroy();
 	}
 }

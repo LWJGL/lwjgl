@@ -35,13 +35,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.glu.GLU;
 
 /**
@@ -83,9 +83,10 @@ public class HWCursorTest {
     try {
       //find displaymode
       mode = findDisplayMode(800, 600, 16);
+      Display.setDisplayMode(mode);
 
       // start of in windowed mode
-      Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
+      Display.create();
 
       glInit();
 
@@ -201,11 +202,11 @@ public class HWCursorTest {
    */
   private void mainLoop() {
     while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
-      && !Window.isCloseRequested()) {
+      && !Display.isCloseRequested()) {
       // allow subsystem to get a chance to run too
-      Window.update();
+      Display.update();
 
-      if (Window.isVisible()) {
+      if (Display.isVisible()) {
         // check keyboard input
         processKeyboard();
         processMouse();
@@ -214,7 +215,7 @@ public class HWCursorTest {
       } else {
 
         // no need to render/paint if nothing has changed (ie. window dragged over)
-        if (Window.isDirty()) {
+        if (Display.isDirty()) {
           render();
         }
 
@@ -286,10 +287,7 @@ public class HWCursorTest {
         for(int i=0; i<cursor.length; i++) {
         	cursor[i].destroy();
         }
-        Window.destroy();
-
-        Display.setDisplayMode(mode);
-        Window.create("Test", mode.bpp, 0, 0, 0, 0);
+	Display.setFullscreen(true);
         
         glInit();
 
@@ -311,11 +309,7 @@ public class HWCursorTest {
         for(int i=0; i<cursor.length; i++) {
           cursor[i].destroy();
         }
-        Window.destroy();
-
-        Display.resetDisplayMode();
-        Window.create("Test", 50, 50, mode.width, mode.height, mode.bpp, 0, 0, 0, 0);
-
+	Display.setFullscreen(false);
         glInit();
 
         initNativeCursors();
@@ -362,8 +356,7 @@ public class HWCursorTest {
     for(int i=0; i<cursor.length; i++) {
       cursor[i].destroy();
     }
-    Display.resetDisplayMode();
-    Window.destroy();
+    Display.destroy();
   }
 
   /**
@@ -377,9 +370,9 @@ public class HWCursorTest {
   private DisplayMode findDisplayMode(int width, int height, int bpp) {
     DisplayMode[] modes = Display.getAvailableDisplayModes();
     for (int i = 0; i < modes.length; i++) {
-      if (modes[i].width == width
-        && modes[i].height == height
-        && modes[i].bpp >= bpp) {
+      if (modes[i].getWidth() == width
+        && modes[i].getHeight() == height
+        && modes[i].getBitsPerPixel() >= bpp) {
         return modes[i];
       }
     }
@@ -393,16 +386,16 @@ public class HWCursorTest {
     // Go into orthographic projection mode.
     GL11.glMatrixMode(GL11.GL_PROJECTION);
     GL11.glLoadIdentity();
-    GLU.gluOrtho2D(0, mode.width, 0, mode.height);
+    GLU.gluOrtho2D(0, mode.getWidth(), 0, mode.getHeight());
     GL11.glMatrixMode(GL11.GL_MODELVIEW);
     GL11.glLoadIdentity();
-    GL11.glViewport(0, 0, mode.width, mode.height);
+    GL11.glViewport(0, 0, mode.getWidth(), mode.getHeight());
 
     //set clear color to black
     GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     //sync frame (only works on windows)
-    Window.setVSyncEnabled(true);
+    Display.setVSyncEnabled(true);
   }
 
   /**

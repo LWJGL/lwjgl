@@ -31,10 +31,9 @@
  */
 package org.lwjgl.test;
 
-import org.lwjgl.Display;
-import org.lwjgl.DisplayMode;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Window;
 
 /**
  * Small class for testing that the Window is creatable
@@ -56,7 +55,7 @@ public class WindowCreationTest {
     
     // Create the actual window
     try {
-      Window.create("WindowCreationTest", 50, 50, 320, 240, 16, 0, 0, 0, 0);
+      Display.create();
     } catch (Exception e) {
 			e.printStackTrace();
       System.out.println("Unable to create window!, exiting...");
@@ -64,11 +63,11 @@ public class WindowCreationTest {
 		}
 
     System.out.println("Window created");
-    System.out.println(Window.getHeight() + ", " + Window.getWidth() + ", " + Window.getTitle());
+    System.out.println(Display.getDisplayMode().getHeight() + ", " + Display.getDisplayMode().getWidth() + ", " + Display.getTitle());
 
     // wait for user to close window
-    while(!Window.isCloseRequested()) {    
-      Window.update();
+    while(!Display.isCloseRequested()) {    
+      Display.update();
       try {
         Thread.sleep(100);
       } catch (Exception e) {
@@ -81,6 +80,6 @@ public class WindowCreationTest {
     }
     
     // nuke window and get out
-    Window.destroy();
+    Display.destroy();
 	}
 }

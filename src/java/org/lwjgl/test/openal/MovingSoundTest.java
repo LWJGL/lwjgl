@@ -38,7 +38,7 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.eax.EAX;
 import org.lwjgl.openal.eax.EAX20;
 import org.lwjgl.openal.eax.EAXListenerProperties;
-import org.lwjgl.opengl.Window;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -71,7 +71,7 @@ public class MovingSoundTest extends BasicTest {
 		}
 
     try {
-        Window.create("Moving Sound Test", 100, 100, 320, 240, 32, 0 ,0 ,0, 0);
+        Display.create();
     } catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -157,7 +157,7 @@ public class MovingSoundTest extends BasicTest {
     System.out.println("Move source with arrow keys\nMove listener with right shift and arrowkeys\nEnable EAX effect by pressing e (if available)\nExit with ESC");
 
 		while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-      Window.update();
+      Display.update();
       
       Keyboard.poll();
       if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
@@ -192,7 +192,7 @@ public class MovingSoundTest extends BasicTest {
           eaxApplied = !eaxApplied;
       }
       
-      if(Window.isCloseRequested()) {
+      if(Display.isCloseRequested()) {
         break;
       }
      
