@@ -230,7 +230,9 @@ public final class Window {
 		if (!isCreated())
 			throw new IllegalStateException("Cannot update uncreated window");
 		nUpdate();
-		if ((isDirty() && isVisible()) || (isActive() && isVisible())) {
+		
+		// We paint only when the window is visible, and either dirty or active.
+		if (isVisible() && (isDirty() || isActive())) {
 			Util.checkGLError();
 			swapBuffers();
 		}
