@@ -191,7 +191,6 @@ public final class GLContext {
 		if (context == null) {
 			ContextCapabilities.unloadAllStubs();
 			setCapabilities(null);
-			BufferObjectTracker.setCurrent(null);
 			if (did_auto_load)
 				unloadOpenGLLibrary();
 			return;
@@ -213,7 +212,6 @@ public final class GLContext {
 				capability_cache.put(context, getCapabilities());
 			} else
 				setCapabilities(capabilities);
-			BufferObjectTracker.setCurrent(context);
 		} catch (LWJGLException e) {
 			if (did_auto_load)
 				unloadOpenGLLibrary();

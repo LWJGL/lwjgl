@@ -38,11 +38,6 @@ import java.nio.IntBuffer;
 
 /** Track Vertex Buffer Objects by context. */
 final class BufferObjectTracker {
-
-	private static BufferObjectTracker current_tracker;
-
-	private static final Map contextToTracker = new WeakHashMap(3, 1.0f);
-
 	private final StateStack vbo_array_stack;
 	private final StateStack vbo_element_stack;
 
@@ -51,7 +46,7 @@ final class BufferObjectTracker {
 
 	private final StateStack attrib_stack;
 
-	private BufferObjectTracker() {
+	BufferObjectTracker() {
 		int stack_size = Math.max(1, Util.glGetInteger(GL11.GL_MAX_CLIENT_ATTRIB_STACK_DEPTH));
 
 		vbo_array_stack = new StateStack(stack_size, 0);
@@ -117,39 +112,22 @@ final class BufferObjectTracker {
 	}
 
 	static StateStack getVBOArrayStack() {
-		return current_tracker.vbo_array_stack;
+		return GLContext.getCapabilities().tracker.vbo_array_stack;
 	}
 
 	static StateStack getVBOElementStack() {
-		return current_tracker.vbo_element_stack;
+		return GLContext.getCapabilities().tracker.vbo_element_stack;
 	}
 
 	static StateStack getPBOPackStack() {
-		return current_tracker.pbo_pack_stack;
+		return GLContext.getCapabilities().tracker.pbo_pack_stack;
 	}
 
 	static StateStack getPBOUnpackStack() {
-		return current_tracker.pbo_unpack_stack;
+		return GLContext.getCapabilities().tracker.pbo_unpack_stack;
 	}
 
 	static StateStack getClientAttribStack() {
-		return current_tracker.attrib_stack;
-	}
-
-	/**
-	 * Called after a GLContext has been made current. This will set up the current VBO tracker.
-	 *
-	 * @param context
-	 */
-	static void setCurrent(Object context) {
-		if ( context == null ) {
-			current_tracker = null;
-			return;
-		}
-		current_tracker = (BufferObjectTracker)contextToTracker.get(context);
-		if ( current_tracker == null ) {
-			current_tracker = new BufferObjectTracker();
-			contextToTracker.put(context, current_tracker);
-		}
+		return GLContext.getCapabilities().tracker.attrib_stack;
 	}
 }
