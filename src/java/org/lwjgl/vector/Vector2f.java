@@ -60,7 +60,7 @@ public class Vector2f extends Vector implements Serializable {
 	public Vector2f(Vector2f src) {
 		set(src);
 	}
-	
+
 	/**
 	 * Constructor
 	 */
@@ -241,4 +241,17 @@ public class Vector2f extends Vector implements Serializable {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer sb = new StringBuffer(64);
+
+		sb.append("Vector2f[");
+		sb.append(x);
+		sb.append(", ");
+		sb.append(y);
+		sb.append(']');
+		return sb.toString();
+	}
 }

@@ -82,7 +82,7 @@ public abstract class Vector implements Serializable {
 	 * Normalise this vector
 	 * @return this
 	 */
-	public final Vector normalize() {
+	public final Vector normalise() {
 		float len = length();
 		if (len != 0.0f) {
 			float l = 1.0f / len;

@@ -1,76 +1,42 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_INIT(dummy.cpp)
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
 
-dnl These should be changed =)
-LWJGL_MAJOR_VERSION=0
-LWJGL_MINOR_VERSION=0
-LWJGL_MICRO_VERSION=0
-LWJGL_INTERFACE_AGE=1
-LWJGL_BINARY_AGE=1
-LWJGL_VERSION=$LWJGL_MAJOR_VERSION.$LWJGL_MINOR_VERSION.$LWJGL_MICRO_VERSION
+AC_PREREQ(2.57)
+AC_INIT
+AM_INIT_AUTOMAKE(LWJGL, 0.7)
+AC_CONFIG_SRCDIR([autogen.sh])
 
-AC_SUBST(LWJGL_MAJOR_VERSION)
-AC_SUBST(LWJGL_MINOR_VERSION)
-AC_SUBST(LWJGL_MICRO_VERSION)
-AC_SUBST(LWJGL_INTERFACE_AGE)
-AC_SUBST(LWJGL_BINARY_AGE)
-AC_SUBST(LWJGL_VERSION)
+AC_DISABLE_STATIC
+AC_LIBTOOL_DLOPEN
 
-# libtool versioning
-LT_RELEASE=$LWJGL_MAJOR_VERSION.$LWJGL_MINOR_VERSION
-LT_CURRENT=`expr $LWJGL_MICRO_VERSION - $LWJGL_INTERFACE_AGE`
-LT_REVISION=$LWJGL_INTERFACE_AGE
-LT_AGE=`expr $LWJGL_BINARY_AGE - $LWJGL_INTERFACE_AGE`
-
-AC_SUBST(LT_RELEASE)
-AC_SUBST(LT_CURRENT)
-AC_SUBST(LT_REVISION)
-AC_SUBST(LT_AGE)
-
-AC_CONFIG_AUX_DIR(admin)
-
-#AC_CONFIG_SRCDIR(common/org_lwjgl_opengl_CoreGL.cpp)
-
-AM_INIT_AUTOMAKE(lwjgl, $LWJGL_VERSION)
-
-AM_CONFIG_HEADER(config.h)
-
-dnl Checks for programs.
-dnl AC_PROG_CC
-AC_PROG_RANLIB
-AM_PROG_LIBTOOL
-AC_PROG_MAKE_SET
-AC_PROG_CPP
+# Checks for programs.
 AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_LIBTOOL 
 
-AC_REQUIRE_CPP
 
-AC_MSG_CHECKING(for JAVA_HOME)
-if test "x$JAVA_HOME" = x; then
-  AC_MSG_ERROR([*** Please set the JAVA_HOME environment variable ])
-else
-  AC_MSG_RESULT($JAVA_HOME)
-  JAVA_HOME="$JAVA_HOME"
-  CPPFLAGS="$CPPFLAGS -D_DEBUG -fno-rtti -fno-exceptions -pthread -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
-  CFLAGS="$CFLAGS -D_DEBUG -pthread -D_X11 -Wall -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
-fi
+# Checks for libraries.
 
-dnl Checks for libraries.
-LIBS='-L/usr/X11R6/lib'
+# Checks for header files.
 AC_PATH_X
-dnl Replace `main' with a function in -lX11:
-AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is required))
-dnl Replace `main' with a function in -lXext:
-AC_CHECK_LIB(Xext, main,, AC_MSG_ERROR(Xext is required))
-dnl Replace `main' with a function in -lXxf86vm:
-AC_CHECK_LIB(Xxf86vm, main,, AC_MSG_ERROR(Xxf86vm is required))
-dnl Replace `main' with a function in -tpthread:
-AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(pthread is required))
+AC_HEADER_STDC
+AC_CHECK_HEADERS([stddef.h stdlib.h string.h sys/time.h])
 
-dnl Checks for header files.
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+AC_HEADER_TIME
 
-dnl Checks for typedefs, structures, and compiler characteristics.
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_CHECK_FUNCS([gettimeofday memset strchr strstr])
 
-dnl Checks for library functions.
-
-AC_OUTPUT([Makefile common/Makefile linux/Makefile])
+AC_CONFIG_FILES([Makefile
+                 common/Makefile
+                 linux/Makefile])
+AC_OUTPUT
