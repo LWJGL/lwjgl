@@ -104,10 +104,12 @@ public final class Display {
 	}
 
 	/**
-	 * Returns the entire list of display modes as an array, in no
+	 * Returns the entire list of possible fullscreen display modes as an array, in no
 	 * particular order. Any given mode is not guaranteed to be available and
 	 * the only certain way to check is to call create() and make sure it works.
 	 * Only non-palette-indexed modes are returned (ie. bpp will be 16, 24, or 32).
+	 * Only DisplayModes from this call can be used when the Display is in fullscreen
+	 * mode.
 	 *
 	 * @return an array of all display modes the system reckons it can handle.
 	 */
@@ -161,7 +163,7 @@ public final class Display {
 			destroyWindow();
 			try {
 				if (fullscreen)
-					switchDisplayMode(mode);
+					switchDisplayMode();
 				createWindow();
 			} catch (LWJGLException e) {
 				destroyContext();
@@ -200,7 +202,13 @@ public final class Display {
 
 	private static native void nDestroyWindow();
 
-	private static native void switchDisplayMode(DisplayMode mode) throws LWJGLException;
+	private static void switchDisplayMode() throws LWJGLException {
+		if (!current_mode.isFullscreen())
+			throw new LWJGLException("The current DisplayMode instance cannot be used for fullscreen mode");
+		nSwitchDisplayMode(current_mode);
+	}
+
+	private static native void nSwitchDisplayMode(DisplayMode mode) throws LWJGLException;
 
 	/**
 	 * Reset the display mode to whatever it was when LWJGL was initialized.
@@ -353,6 +361,8 @@ public final class Display {
 	 * mode returned by getDisplayMode(). The native cursor position is also reset.
 	 *
 	 * @param fullscreen Specify the fullscreen mode of the context.
+	 * @throws LWJGLException If fullscreen is true, and the current DisplayMode instance is not
+	 *						  from getAvailableDisplayModes() or if the mode switch fails.
 	 */
 	public static void setFullscreen(boolean fullscreen) throws LWJGLException {
 		if (Display.fullscreen != fullscreen) {
@@ -362,7 +372,7 @@ public final class Display {
 			destroyWindow();
 			try {
 				if (fullscreen)
-					switchDisplayMode(current_mode);
+					switchDisplayMode();
 				else
 					resetDisplayMode();
 				createWindow();
@@ -537,7 +547,7 @@ public final class Display {
 		if (isCreated())
 			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
 		if (fullscreen)
-			switchDisplayMode(current_mode);
+			switchDisplayMode();
 		try {
 			GLContext.loadOpenGLLibrary();
 			try {

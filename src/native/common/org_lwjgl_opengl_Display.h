@@ -14,7 +14,6 @@ extern "C" {
 /* Inaccessible static: title */
 /* Inaccessible static: fullscreen */
 /* Inaccessible static: vsync */
-/* Inaccessible static: vbo_tracker */
 /* Inaccessible static: context */
 /* Inaccessible static: timeLate */
 /*
@@ -43,10 +42,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nDestroyWindow
 
 /*
  * Class:     org_lwjgl_opengl_Display
- * Method:    switchDisplayMode
+ * Method:    nSwitchDisplayMode
  * Signature: (Lorg/lwjgl/opengl/DisplayMode;)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_switchDisplayMode
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Display_nSwitchDisplayMode
   (JNIEnv *, jclass, jobject);
 
 /*
