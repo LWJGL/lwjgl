@@ -163,7 +163,6 @@ static jobject JNICALL Java_org_lwjgl_openal_ALC_alcOpenDevice (JNIEnv *env, jcl
  */
 static void JNICALL Java_org_lwjgl_openal_ALC_alcCloseDevice (JNIEnv *env, jclass clazz, jint deviceaddress) {
 	alcCloseDevice((ALCdevice*) deviceaddress);
-	CHECK_ALC_ERROR
 }
 
 /**
