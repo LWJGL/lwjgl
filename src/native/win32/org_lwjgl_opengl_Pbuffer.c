@@ -55,20 +55,24 @@ typedef struct _PbufferInfo {
 	HDC Pbuffer_dc;
 } PbufferInfo;
 
+static bool isPbuffersSupported() {
+	return extgl_Extensions.WGL_ARB_pixel_format && extgl_Extensions.WGL_ARB_pbuffer;
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCapabilities
   (JNIEnv *env, jobject self)
 {
 	int caps = 0;
-	if ( extgl_Extensions.WGL_ARB_pixel_format && extgl_Extensions.WGL_ARB_pbuffer )
+	if (isPbuffersSupported())
 		caps |= org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED;
 
-	if ( extgl_Extensions.WGL_ARB_render_texture )
+	if (extgl_Extensions.WGL_ARB_render_texture)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED;
 
-	if ( extgl_Extensions.WGL_NV_render_texture_rectangle )
+	if (extgl_Extensions.WGL_NV_render_texture_rectangle)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED;
 
-	if ( extgl_Extensions.WGL_NV_render_depth_texture )
+	if (extgl_Extensions.WGL_NV_render_depth_texture)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED;
 
 	return caps;
@@ -110,17 +114,22 @@ static HPBUFFERARB createPbuffer(JNIEnv *env, int width, int height, jobject pix
 		return NULL;
 	}
 	extgl_InitWGL(env);
-
+	bool pbuffers_supported = isPbuffersSupported();
 	iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, false);
 	if (iPixelFormat == -1)
 		iPixelFormat = findPixelFormatARB(env, dummy_hdc, pixel_format, pixelFormatCaps, false, false, true, true);
 	wglDeleteContext(dummy_hglrc);
+	if (!pbuffers_supported) {
+		closeWindow(dummy_hwnd, dummy_hdc);
+		throwException(env, "No Pbuffer support.");
+		return NULL;
+	}
 	if (iPixelFormat == -1) {
 		closeWindow(dummy_hwnd, dummy_hdc);
 		throwException(env, "Could not find suitable pixel format.");
 		return NULL;
 	}
-        Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, pBufferAttribs_ptr);
+	Pbuffer = wglCreatePbufferARB(dummy_hdc, iPixelFormat, width, height, pBufferAttribs_ptr);
 	closeWindow(dummy_hwnd, dummy_hdc);
 	return Pbuffer;
 }

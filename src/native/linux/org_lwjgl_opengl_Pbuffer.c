@@ -51,11 +51,15 @@ typedef struct _PbufferInfo {
 	GLXContext context;
 } PbufferInfo;
 
+static bool isPbuffersSupported() {
+	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
+	return extgl_Extensions.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
+}
+
 JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGetPbufferCapabilities
   (JNIEnv *env, jobject this)
 {
-	// Only support the GLX 1.3 Pbuffers and ignore the GLX_SGIX_pbuffer extension
-	return extgl_Extensions.GLX13 ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
+	return isPbuffersSupported() ? org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED : 0;
 }
 
 static void destroyPbuffer(PbufferInfo *buffer_info) {
@@ -127,9 +131,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreatePbuffer(JNIEnv 
 		return;
 	}
 	int current_screen = getCurrentScreen();
-	if (!extgl_InitGLX(env, disp, current_screen)) {
+	if (!extgl_InitGLX(env, disp, current_screen) || !isPbuffersSupported()) {
 		decDisplay();
-		throwException(env, "Could not init GLX");
+		throwException(env, "No Pbuffer support");
 		return;
 	}
 
