@@ -38,50 +38,9 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "extgl_wgl.h"
 #include "extgl.h"
 
-WGLExtensions extension_flags;
-
-/* WGL_EXT_etxension_string */
-
-wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT = NULL;
-
-/* WGL_ARB_extension_string */
-
-wglGetExtensionsStringARBPROC wglGetExtensionsStringARB = NULL;
-
-/* WGL_ARB_pbuffer */
-
-wglCreatePbufferARBPROC wglCreatePbufferARB = NULL;
-wglGetPbufferDCARBPROC wglGetPbufferDCARB = NULL;
-wglReleasePbufferDCARBPROC wglReleasePbufferDCARB = NULL;
-wglDestroyPbufferARBPROC wglDestroyPbufferARB = NULL;
-wglQueryPbufferARBPROC wglQueryPbufferARB = NULL;
-
-/* WGL_ARB_pixel_format */
-
-wglGetPixelFormatAttribivARBPROC wglGetPixelFormatAttribivARB = NULL;
-wglGetPixelFormatAttribfvARBPROC wglGetPixelFormatAttribfvARB = NULL;
-wglChoosePixelFormatARBPROC wglChoosePixelFormatARB = NULL;
-
-/* WGL_ARB_render_texture */
-
-wglBindTexImageARBPROC wglBindTexImageARB = NULL;
-wglReleaseTexImageARBPROC wglReleaseTexImageARB = NULL;
-wglSetPbufferAttribARBPROC wglSetPbufferAttribARB = NULL;
-
-/* WGL_EXT_swap_control */
-
-wglSwapIntervalEXTPROC wglSwapIntervalEXT = NULL;
-wglGetSwapIntervalEXTPROC wglGetSwapIntervalEXT = NULL;
-
-/* WGL_ARB_make_current_read */
-
-wglMakeContextCurrentARBPROC wglMakeContextCurrentARB = NULL;
-wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB = NULL;
-
 static HMODULE lib_gl_handle = NULL;
 
-void *extgl_GetProcAddress(const char *name)
-{
+void *extgl_GetProcAddress(const char *name) {
 	void *t = wglGetProcAddress(name);
 	if (t == NULL)
 	{
@@ -94,8 +53,7 @@ void *extgl_GetProcAddress(const char *name)
 	return t;
 }
 
-bool extgl_Open(JNIEnv *env)
-{
+bool extgl_Open(JNIEnv *env) {
 	if (lib_gl_handle != NULL)
 		return true;
 	// load the dynamic libraries for OpenGL
@@ -107,104 +65,105 @@ bool extgl_Open(JNIEnv *env)
 	return true;
 }
 
-void extgl_Close(void)
-{
+void extgl_Close(void) {
 	FreeLibrary(lib_gl_handle);
 	lib_gl_handle = NULL;
 }
 
 /** returns true if the extension is available */
-static bool WGLQueryExtension(const char *name)
-{
-	const GLubyte *extensions;
+static bool WGLQueryExtension(WGLExtensions *extensions, const char *name) {
+	const GLubyte *extension_string;
 
-	if (wglGetExtensionsStringARB == NULL)
-		if (wglGetExtensionsStringEXT == NULL)
+	if (extensions->wglGetExtensionsStringARB == NULL)
+		if (extensions->wglGetExtensionsStringEXT == NULL)
 			return false;
 		else
-			extensions = (GLubyte*)wglGetExtensionsStringEXT();
+			extension_string = (GLubyte*)extensions->wglGetExtensionsStringEXT();
 	else
-		extensions = (GLubyte*)wglGetExtensionsStringARB(wglGetCurrentDC());
-	return extgl_QueryExtension(extensions, name);
+		extension_string = (GLubyte*)extensions->wglGetExtensionsStringARB(wglGetCurrentDC());
+	return extgl_QueryExtension(extension_string, name);
 }
 
-static void extgl_InitWGLARBPbuffer()
-{
+static void extgl_InitWGLARBPbuffer(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglCreatePbufferARB", (void **)&wglCreatePbufferARB},
-		{"wglGetPbufferDCARB", (void **)&wglGetPbufferDCARB},
-		{"wglReleasePbufferDCARB", (void **)&wglReleasePbufferDCARB},
-		{"wglDestroyPbufferARB", (void **)&wglDestroyPbufferARB},
-		{"wglQueryPbufferARB", (void **)&wglQueryPbufferARB}};
-	if (extension_flags.WGL_ARB_pbuffer)
-		extension_flags.WGL_ARB_pbuffer = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+		{"wglCreatePbufferARB", (void **)&extensions->wglCreatePbufferARB},
+		{"wglGetPbufferDCARB", (void **)&extensions->wglGetPbufferDCARB},
+		{"wglReleasePbufferDCARB", (void **)&extensions->wglReleasePbufferDCARB},
+		{"wglDestroyPbufferARB", (void **)&extensions->wglDestroyPbufferARB},
+		{"wglQueryPbufferARB", (void **)&extensions->wglQueryPbufferARB}};
+	if (extensions->WGL_ARB_pbuffer)
+		extensions->WGL_ARB_pbuffer = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLARBPixelFormat()
-{
+static void extgl_InitWGLARBPixelFormat(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglGetPixelFormatAttribivARB", (void **)&wglGetPixelFormatAttribivARB},
-		{"wglGetPixelFormatAttribfvARB", (void **)&wglGetPixelFormatAttribfvARB},
-		{"wglChoosePixelFormatARB", (void **)&wglChoosePixelFormatARB}};
-	if (extension_flags.WGL_ARB_pixel_format)
-		extension_flags.WGL_ARB_pixel_format = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+		{"wglGetPixelFormatAttribivARB", (void **)&extensions->wglGetPixelFormatAttribivARB},
+		{"wglGetPixelFormatAttribfvARB", (void **)&extensions->wglGetPixelFormatAttribfvARB},
+		{"wglChoosePixelFormatARB", (void **)&extensions->wglChoosePixelFormatARB}};
+	if (extensions->WGL_ARB_pixel_format)
+		extensions->WGL_ARB_pixel_format = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLARBRenderTexture()
-{
+static void extgl_InitWGLARBRenderTexture(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglBindTexImageARB", (void **)&wglBindTexImageARB},
-		{"wglReleaseTexImageARB", (void **)&wglReleaseTexImageARB},
-		{"wglSetPbufferAttribARB", (void **)&wglSetPbufferAttribARB}};
-	if (extension_flags.WGL_ARB_render_texture)
-		extension_flags.WGL_ARB_render_texture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+		{"wglBindTexImageARB", (void **)&extensions->wglBindTexImageARB},
+		{"wglReleaseTexImageARB", (void **)&extensions->wglReleaseTexImageARB},
+		{"wglSetPbufferAttribARB", (void **)&extensions->wglSetPbufferAttribARB}};
+	if (extensions->WGL_ARB_render_texture)
+		extensions->WGL_ARB_render_texture = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLEXTSwapControl()
-{
+static void extgl_InitWGLEXTSwapControl(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglSwapIntervalEXT", (void **)&wglSwapIntervalEXT},
-		{"wglGetSwapIntervalEXT", (void **)&wglGetSwapIntervalEXT}};
-	if (extension_flags.WGL_EXT_swap_control)
-		extension_flags.WGL_EXT_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+		{"wglSwapIntervalEXT", (void **)&extensions->wglSwapIntervalEXT},
+		{"wglGetSwapIntervalEXT", (void **)&extensions->wglGetSwapIntervalEXT}};
+	if (extensions->WGL_EXT_swap_control)
+		extensions->WGL_EXT_swap_control = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitWGLARBMakeCurrentRead()
-{
+static void extgl_InitWGLARBMakeCurrentRead(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglMakeContextCurrentARB", (void **)&wglMakeContextCurrentARB},
-		{"wglGetCurrentReadDCARB", (void **)&wglGetCurrentReadDCARB}};
-	if (extension_flags.WGL_ARB_make_current_read)
-		extension_flags.WGL_ARB_make_current_read = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+		{"wglMakeContextCurrentARB", (void **)&extensions->wglMakeContextCurrentARB},
+		{"wglGetCurrentReadDCARB", (void **)&extensions->wglGetCurrentReadDCARB}};
+	if (extensions->WGL_ARB_make_current_read)
+		extensions->WGL_ARB_make_current_read = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
 }
 
-static void extgl_InitSupportedWGLExtensions()
-{
-	extension_flags.WGL_ARB_buffer_region = WGLQueryExtension("WGL_ARB_buffer_region");
-	extension_flags.WGL_ARB_make_current_read = WGLQueryExtension("WGL_ARB_make_current_read");
-	extension_flags.WGL_ARB_multisample = WGLQueryExtension("WGL_ARB_multisample");
-	extension_flags.WGL_ARB_pbuffer = WGLQueryExtension("WGL_ARB_pbuffer");
-	extension_flags.WGL_ARB_pixel_format = WGLQueryExtension("WGL_ARB_pixel_format");
-	extension_flags.WGL_ARB_render_texture = WGLQueryExtension("WGL_ARB_render_texture");
-	extension_flags.WGL_EXT_swap_control = WGLQueryExtension("WGL_EXT_swap_control");
-	extension_flags.WGL_NV_render_depth_texture = WGLQueryExtension("WGL_NV_render_depth_texture");
-	extension_flags.WGL_NV_render_texture_rectangle = WGLQueryExtension("WGL_NV_render_texture_rectangle");
+static void extgl_InitSupportedWGLExtensions(WGLExtensions *extensions) {
+	extensions->WGL_ARB_buffer_region = WGLQueryExtension(extensions, "WGL_ARB_buffer_region");
+	extensions->WGL_ARB_make_current_read = WGLQueryExtension(extensions, "WGL_ARB_make_current_read");
+	extensions->WGL_ARB_multisample = WGLQueryExtension(extensions, "WGL_ARB_multisample");
+	extensions->WGL_ARB_pbuffer = WGLQueryExtension(extensions, "WGL_ARB_pbuffer");
+	extensions->WGL_ARB_pixel_format = WGLQueryExtension(extensions, "WGL_ARB_pixel_format");
+	extensions->WGL_ARB_render_texture = WGLQueryExtension(extensions, "WGL_ARB_render_texture");
+	extensions->WGL_EXT_swap_control = WGLQueryExtension(extensions, "WGL_EXT_swap_control");
+	extensions->WGL_NV_render_depth_texture = WGLQueryExtension(extensions, "WGL_NV_render_depth_texture");
+	extensions->WGL_NV_render_texture_rectangle = WGLQueryExtension(extensions, "WGL_NV_render_texture_rectangle");
 }
 
-void extgl_InitWGL()
-{
+static void extgl_InitWGLEXTExtensionsString(WGLExtensions *extensions) {
 	ExtFunction functions[] = {
-		{"wglGetExtensionsStringARB", (void **)&wglGetExtensionsStringARB},
-		{"wglGetExtensionsStringEXT", (void **)&wglGetExtensionsStringEXT}};
-	extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
-	extension_flags.WGL_ARB_extensions_string = wglGetExtensionsStringARB != NULL;
-	extension_flags.WGL_EXT_extensions_string = wglGetExtensionsStringEXT != NULL;
+		{"wglGetExtensionsStringEXT", (void **)&extensions->wglGetExtensionsStringEXT}
+	};
+	extensions->WGL_EXT_extensions_string = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
 
-	extgl_InitSupportedWGLExtensions();
+static void extgl_InitWGLARBExtensionsString(WGLExtensions *extensions) {
+	ExtFunction functions[] = {
+		{"wglGetExtensionsStringARB", (void **)&extensions->wglGetExtensionsStringARB}
+	};
+	extensions->WGL_ARB_extensions_string = extgl_InitializeFunctions(sizeof(functions)/sizeof(ExtFunction), functions);
+}
 
-	extgl_InitWGLARBMakeCurrentRead();
-	extgl_InitWGLEXTSwapControl();
-	extgl_InitWGLARBRenderTexture();
-	extgl_InitWGLARBPixelFormat();
-	extgl_InitWGLARBPbuffer();
+void extgl_InitWGL(WGLExtensions *extensions) {
+	extgl_InitWGLARBExtensionsString(extensions);
+	extgl_InitWGLEXTExtensionsString(extensions);
+		
+	extgl_InitSupportedWGLExtensions(extensions);
+
+	extgl_InitWGLARBMakeCurrentRead(extensions);
+	extgl_InitWGLEXTSwapControl(extensions);
+	extgl_InitWGLARBRenderTexture(extensions);
+	extgl_InitWGLARBPixelFormat(extensions);
+	extgl_InitWGLARBPbuffer(extensions);
 }

@@ -49,31 +49,68 @@
 
 #include "common_tools.h"
 
-typedef struct _PbufferInfo {
-	HGLRC Pbuffer_context;
-	HPBUFFERARB Pbuffer;
-	HDC Pbuffer_dc;
-} PbufferInfo;
-
-static bool isPbuffersSupported() {
-	return extension_flags.WGL_ARB_pixel_format && extension_flags.WGL_ARB_pbuffer;
+static bool isPbufferSupported(WGLExtensions *extensions) {
+	return extensions->WGL_ARB_pixel_format && extensions->WGL_ARB_pbuffer;
 }
 
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_getPbufferCapabilities
-  (JNIEnv *env, jobject self)
+JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_nGetPbufferCapabilities
+  (JNIEnv *env, jobject self, jobject pixel_format)
 {
 	int caps = 0;
-	if (isPbuffersSupported())
+	int origin_x = 0; int origin_y = 0;
+	HWND dummy_hwnd;
+	HDC dummy_hdc;
+	HGLRC dummy_context;
+	HDC saved_hdc;
+	HGLRC saved_context;
+	int pixel_format_id;
+	WGLExtensions extensions;
+	
+	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, NULL, false, false, true, false);
+	if (pixel_format_id == -1)
+		return 0;
+	dummy_hwnd = createDummyWindow(origin_x, origin_y);
+	if (dummy_hwnd == NULL) {
+		throwException(env, "Could not create dummy window");
+		return 0;
+	}
+	dummy_hdc = GetDC(dummy_hwnd);
+	if (!applyPixelFormat(dummy_hdc, pixel_format_id)) {
+		closeWindow(&dummy_hwnd, &dummy_hdc);
+		throwException(env, "Could not apply pixel format");
+		return 0;
+	}
+	dummy_context = wglCreateContext(dummy_hdc);
+	if (dummy_context == NULL) {
+		closeWindow(&dummy_hwnd, &dummy_hdc);
+		throwException(env, "Could not create dummy context");
+		return 0;
+	}
+	saved_hdc = wglGetCurrentDC();
+	saved_context = wglGetCurrentContext();
+	if (!wglMakeCurrent(dummy_hdc, dummy_context)) {
+		wglMakeCurrent(saved_hdc, saved_context);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
+		wglDeleteContext(dummy_context);
+		throwException(env, "Could not create dummy context");
+		return 0;
+	}
+	extgl_InitWGL(&extensions);
+	if (isPbufferSupported(&extensions))
 		caps |= org_lwjgl_opengl_Pbuffer_PBUFFER_SUPPORTED;
 
-	if (extension_flags.WGL_ARB_render_texture)
+	if (extensions.WGL_ARB_render_texture)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_SUPPORTED;
 
-	if (extension_flags.WGL_NV_render_texture_rectangle)
+	if (extensions.WGL_NV_render_texture_rectangle)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_TEXTURE_RECTANGLE_SUPPORTED;
 
-	if (extension_flags.WGL_NV_render_depth_texture)
+	if (extensions.WGL_NV_render_depth_texture)
 		caps |= org_lwjgl_opengl_Pbuffer_RENDER_DEPTH_TEXTURE_SUPPORTED;
+	if (!wglMakeCurrent(saved_hdc, saved_context))
+		printfDebug("ERROR: Could not restore current context\n");
+	closeWindow(&dummy_hwnd, &dummy_hdc);
+	wglDeleteContext(dummy_context);
 
 	return caps;
 }
@@ -86,8 +123,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nCreate
 	int origin_x = 0; int origin_y = 0;
 	HWND dummy_hwnd;
 	HDC dummy_hdc;
+	HGLRC dummy_context;
 	HPBUFFERARB Pbuffer;
 	HDC Pbuffer_dc;
+	HDC saved_hdc;
+	HGLRC saved_context;
+	WGLExtensions extensions;
 	const int *pBufferAttribs_ptr;
 	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	int pixel_format_id;
@@ -98,7 +139,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nCreate
 		pBufferAttribs_ptr = NULL;
 	}
 	pixel_format_id = findPixelFormat(env, origin_x, origin_y, pixel_format, pixelFormatCaps, false, false, true, false);
-
+	if (pixel_format_id == -1)
+		return;
 	dummy_hwnd = createDummyWindow(origin_x, origin_y);
 	if (dummy_hwnd == NULL) {
 		throwException(env, "Could not create dummy window");
@@ -110,36 +152,59 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nCreate
 		throwException(env, "Could not apply pixel format");
 		return;
 	}
-	Pbuffer = wglCreatePbufferARB(dummy_hdc, pixel_format_id, width, height, pBufferAttribs_ptr);
+	dummy_context = wglCreateContext(dummy_hdc);
+	if (dummy_context == NULL) {
+		closeWindow(&dummy_hwnd, &dummy_hdc);
+		throwException(env, "Could not create dummy context");
+		return;
+	}
+	saved_hdc = wglGetCurrentDC();
+	saved_context = wglGetCurrentContext();
+	if (!wglMakeCurrent(dummy_hdc, dummy_context)) {
+		wglMakeCurrent(saved_hdc, saved_context);
+		wglDeleteContext(dummy_context);
+		closeWindow(&dummy_hwnd, &dummy_hdc);
+		throwException(env, "Could not make context current");
+		return;
+	}
+	extgl_InitWGL(&extensions);
+	wglMakeCurrent(saved_hdc, saved_context);
+	wglDeleteContext(dummy_context);
+	closeWindow(&dummy_hwnd, &dummy_hdc);
+	if (!isPbufferSupported(&extensions)) {
+		throwException(env, "Pbuffers are not supported");
+		return;
+	}
+	Pbuffer = extensions.wglCreatePbufferARB(dummy_hdc, pixel_format_id, width, height, pBufferAttribs_ptr);
 	closeWindow(&dummy_hwnd, &dummy_hdc);
 	if (Pbuffer == NULL) {
 		throwException(env, "Could not create Pbuffer");
 		return;
 	}
-	Pbuffer_dc = wglGetPbufferDCARB(Pbuffer);
+	Pbuffer_dc = extensions.wglGetPbufferDCARB(Pbuffer);
 	if (Pbuffer_dc == NULL) {
-		wglDestroyPbufferARB(Pbuffer);
+		extensions.wglDestroyPbufferARB(Pbuffer);
 		throwException(env, "Could not get Pbuffer DC");
 		return;
 	}
 	peer_info->format_hdc = Pbuffer_dc;
-	peer_info->pbuffer = Pbuffer;
+	peer_info->pbuffer.extensions = extensions;
+	peer_info->pbuffer.pbuffer = Pbuffer;
 	peer_info->drawable_hdc = Pbuffer_dc;
-
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nDestroy
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	wglReleasePbufferDCARB(peer_info->pbuffer, peer_info->drawable_hdc);
-	wglDestroyPbufferARB(peer_info->pbuffer);
+	peer_info->pbuffer.extensions.wglReleasePbufferDCARB(peer_info->pbuffer.pbuffer, peer_info->drawable_hdc);
+	peer_info->pbuffer.extensions.wglDestroyPbufferARB(peer_info->pbuffer.pbuffer);
 }
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nIsBufferLost
   (JNIEnv *env, jclass clazz, jobject peer_info_handle) {
 	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	BOOL buffer_lost;
-	wglQueryPbufferARB(peer_info->pbuffer, WGL_PBUFFER_LOST_ARB, &buffer_lost);
+	peer_info->pbuffer.extensions.wglQueryPbufferARB(peer_info->pbuffer.pbuffer, WGL_PBUFFER_LOST_ARB, &buffer_lost);
 	return buffer_lost ? JNI_TRUE : JNI_FALSE;
 }
 
@@ -152,17 +217,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nSetPbufferAtt
 	attribs[1] = value;
 	attribs[2] = 0;
 
-	wglSetPbufferAttribARB(peer_info->pbuffer, attribs);
+	peer_info->pbuffer.extensions.wglSetPbufferAttribARB(peer_info->pbuffer.pbuffer, attribs);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nBindTexImageToPbuffer
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint buffer) {
 	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	wglBindTexImageARB(peer_info->pbuffer, buffer);
+	peer_info->pbuffer.extensions.wglBindTexImageARB(peer_info->pbuffer.pbuffer, buffer);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32PbufferPeerInfo_nReleaseTexImageFromPbuffer
   (JNIEnv *env, jclass clazz, jobject peer_info_handle, jint buffer) {
 	Win32PeerInfo *peer_info = (Win32PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
-	wglReleaseTexImageARB(peer_info->pbuffer, buffer);
+	peer_info->pbuffer.extensions.wglReleaseTexImageARB(peer_info->pbuffer.pbuffer, buffer);
 }

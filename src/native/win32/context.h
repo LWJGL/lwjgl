@@ -50,7 +50,12 @@
 typedef struct {
 	union {
 		HWND format_hwnd;
-		HPBUFFERARB pbuffer;
+		struct {
+			HPBUFFERARB pbuffer;
+			// Contains the function pointers that
+			// created the pbuffer
+			WGLExtensions extensions;
+		} pbuffer;
 	};
 	HDC format_hdc;
 	HDC drawable_hdc;

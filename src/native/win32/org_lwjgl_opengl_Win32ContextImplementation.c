@@ -43,6 +43,7 @@
 #include "common_tools.h"
 
 typedef struct {
+	WGLExtensions extensions;
 	HGLRC context;
 } Win32Context;
 
@@ -53,6 +54,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nCrea
 	Win32Context *context_info;
 	HGLRC context;
 	HGLRC shared_context = NULL;
+	HDC saved_hdc;
+	HGLRC saved_context;
+	WGLExtensions extensions;
 	jobject context_handle = newJavaManagedByteBuffer(env, sizeof(Win32Context));
 	
 	if (context_handle == NULL) {
@@ -74,9 +78,21 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nCrea
 			return NULL;
 		}
 	}
+	saved_hdc = wglGetCurrentDC();
+	saved_context = wglGetCurrentContext();
+	if (!wglMakeCurrent(peer_info->format_hdc, context)) {
+		wglMakeCurrent(saved_hdc, saved_context);
+		wglDeleteContext(context);
+		throwException(env, "Could not make context current");
+		return NULL;
+	}
+	extgl_InitWGL(&extensions);
+	if (!wglMakeCurrent(saved_hdc, saved_context))
+		printfDebug("Failed to restore current context\n");
 	context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
-	return context_handle;		
+	context_info->extensions = extensions;
+	return context_handle;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nSwapBuffers
@@ -105,12 +121,13 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nIsC
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nSetVSync
-  (JNIEnv *env, jclass clazz, jboolean enable) {
-	if (extension_flags.WGL_EXT_swap_control) {
+  (JNIEnv *env, jclass clazz, jobject context_handle, jboolean enable) {
+	Win32Context *context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
+	if (context_info->extensions.WGL_EXT_swap_control) {
 		if (enable == JNI_TRUE) {
-			wglSwapIntervalEXT(1);
+			context_info->extensions.wglSwapIntervalEXT(1);
 		} else {
-			wglSwapIntervalEXT(0);
+			context_info->extensions.wglSwapIntervalEXT(0);
 		}
 	}
 }

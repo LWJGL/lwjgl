@@ -161,7 +161,7 @@ HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height
 	return new_hwnd;
 }
 
-static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool pbuffer, bool double_buffer) {
+static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps, int bpp, bool window, bool pbuffer, bool double_buffer) {
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	int alpha = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "alpha", "I"));
 	int depth = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "depth", "I"));
@@ -195,7 +195,8 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	putAttrib(&attrib_list, WGL_ALPHA_BITS_ARB); putAttrib(&attrib_list, alpha);
 	putAttrib(&attrib_list, WGL_DEPTH_BITS_ARB); putAttrib(&attrib_list, depth);
 	putAttrib(&attrib_list, WGL_STENCIL_BITS_ARB); putAttrib(&attrib_list, stencil);
-	if (samples > 0 && extension_flags.WGL_ARB_multisample) {
+	// Assume caller checked extension availability
+	if (samples > 0) {
 		putAttrib(&attrib_list, WGL_SAMPLE_BUFFERS_ARB); putAttrib(&attrib_list, 1);
 		putAttrib(&attrib_list, WGL_SAMPLES_ARB); putAttrib(&attrib_list, samples);
 	}
@@ -203,11 +204,8 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	putAttrib(&attrib_list, WGL_ACCUM_ALPHA_BITS_ARB); putAttrib(&attrib_list, accum_alpha);
 	putAttrib(&attrib_list, WGL_STEREO_ARB); putAttrib(&attrib_list, stereo ? TRUE : FALSE);
 	putAttrib(&attrib_list, WGL_AUX_BUFFERS_ARB); putAttrib(&attrib_list, num_aux_buffers);
+	// Assume caller checked extension availability
 	if ( pixelFormatCaps != NULL ) {
-		if ( !extension_flags.WGL_ARB_render_texture ) {
-			return -1;
-		}
-
 		pixelFormatCaps_ptr = (GLuint *)(*env)->GetDirectBufferAddress(env, pixelFormatCaps);
 		pixelFormatCapsSize = (*env)->GetDirectBufferCapacity(env, pixelFormatCaps);
 
@@ -215,7 +213,7 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 			putAttrib(&attrib_list, pixelFormatCaps_ptr[i]);
 	}
 	putAttrib(&attrib_list, 0); putAttrib(&attrib_list, 0);
-	result = wglChoosePixelFormatARB(hdc, attrib_list.attribs, NULL, 1, &iPixelFormat, &num_formats_returned);
+	result = extensions->wglChoosePixelFormatARB(hdc, attrib_list.attribs, NULL, 1, &iPixelFormat, &num_formats_returned);
 
 	if (result == FALSE || num_formats_returned < 1) {
 		return -1;
@@ -223,20 +221,20 @@ static int findPixelFormatARBFromBPP(JNIEnv *env, HDC hdc, jobject pixel_format,
 	return iPixelFormat;
 }
 
-static int findPixelFormatARB(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer) {
+static int findPixelFormatARB(JNIEnv *env, HDC hdc, WGLExtensions *extensions, jobject pixel_format, jobject pixelFormatCaps, bool use_hdc_bpp, bool window, bool pbuffer, bool double_buffer) {
 	int bpp;
 	int iPixelFormat;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	if (use_hdc_bpp) {
 		bpp = GetDeviceCaps(hdc, BITSPIXEL);
-		iPixelFormat = findPixelFormatARBFromBPP(env, hdc, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
+		iPixelFormat = findPixelFormatARBFromBPP(env, hdc, extensions, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
 		if (iPixelFormat == -1)
 			bpp = 16;
 		else
 			return iPixelFormat;
 	} else
 		bpp = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "bpp", "I"));
-	return findPixelFormatARBFromBPP(env, hdc, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
+	return findPixelFormatARBFromBPP(env, hdc, extensions, pixel_format, pixelFormatCaps, bpp, window, pbuffer, double_buffer);
 }
 
 /*
@@ -345,6 +343,7 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 	HGLRC dummy_hglrc;
 	HDC saved_current_hdc;
 	HGLRC saved_current_hglrc;
+	WGLExtensions extensions;
 	int pixel_format_id;
 	jclass cls_pixel_format = (*env)->GetObjectClass(env, pixel_format);
 	int samples = (int)(*env)->GetIntField(env, pixel_format, (*env)->GetFieldID(env, cls_pixel_format, "samples", "I"));
@@ -364,17 +363,32 @@ int findPixelFormatOnDC(JNIEnv *env, HDC hdc, jobject pixel_format, jobject pixe
 		saved_current_hdc = wglGetCurrentDC();
 		saved_current_hglrc = wglGetCurrentContext();
 		if (!wglMakeCurrent(hdc, dummy_hglrc)) {
+			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
 			wglDeleteContext(dummy_hglrc);
 			throwException(env, "Could not bind context to dummy window");
 			return -1;
 		}
-		extgl_InitWGL();
+		extgl_InitWGL(&extensions);
 		
-		if (!extension_flags.WGL_ARB_pixel_format) {
+		if (!extensions.WGL_ARB_pixel_format) {
+			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
+			wglDeleteContext(dummy_hglrc);
 			throwException(env, "No support for WGL_ARB_pixel_format");
 			return -1;
 		}
-		pixel_format_id = findPixelFormatARB(env, hdc, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer);
+		if (samples > 0 && !extensions.WGL_ARB_multisample) {
+			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
+			wglDeleteContext(dummy_hglrc);
+			throwException(env, "No support for WGL_ARB_multisample");
+			return -1;
+		}
+		if (pixelFormatCaps != NULL && !extensions.WGL_ARB_render_texture) {
+			wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
+			wglDeleteContext(dummy_hglrc);
+			throwException(env, "No support for WGL_ARB_multisample");
+			return -1;
+		}
+		pixel_format_id = findPixelFormatARB(env, hdc, &extensions, pixel_format, pixelFormatCaps, use_hdc_bpp, window, pbuffer, double_buffer);
 		wglMakeCurrent(saved_current_hdc, saved_current_hglrc);
 		wglDeleteContext(dummy_hglrc);
 	}

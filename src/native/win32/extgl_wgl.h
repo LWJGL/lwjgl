@@ -40,39 +40,17 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include "extgl.h"
 #include "common_tools.h"
 
-typedef struct {
-    bool WGL_ARB_buffer_region;
-    bool WGL_ARB_extensions_string;
-    bool WGL_ARB_make_current_read;
-    bool WGL_ARB_multisample;
-    bool WGL_ARB_pbuffer;
-    bool WGL_ARB_pixel_format;
-    bool WGL_ARB_render_texture;
-    bool WGL_EXT_extensions_string;
-    bool WGL_EXT_swap_control;
-    bool WGL_NV_render_depth_texture;
-    bool WGL_NV_render_texture_rectangle;
-} WGLExtensions;
-
-extern WGLExtensions extension_flags;
-
-extern void extgl_InitWGL();
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_EXT_EXTENSION_STRING-------------------------------*/
 /*-------------------------------------------------------------------*/
 
 typedef const char* (APIENTRY * wglGetExtensionsStringEXTPROC) ();
 
-extern wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_EXTENSION_STRING-------------------------------*/
 /*-------------------------------------------------------------------*/
 
 typedef const char* (APIENTRY * wglGetExtensionsStringARBPROC) (HDC hdc);
-
-extern wglGetExtensionsStringARBPROC wglGetExtensionsStringARB;
 
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_PBUFFER----------------------------------------*/
@@ -95,12 +73,6 @@ typedef HDC (APIENTRY * wglGetPbufferDCARBPROC) (HPBUFFERARB hPbuffer);
 typedef int (APIENTRY * wglReleasePbufferDCARBPROC) (HPBUFFERARB hPbuffer, HDC hDC);
 typedef BOOL (APIENTRY * wglDestroyPbufferARBPROC) (HPBUFFERARB hPbuffer);
 typedef BOOL (APIENTRY * wglQueryPbufferARBPROC) (HPBUFFERARB hPbuffer, int iAttribute, int *piValue);
-
-extern wglCreatePbufferARBPROC wglCreatePbufferARB;
-extern wglGetPbufferDCARBPROC wglGetPbufferDCARB;
-extern wglReleasePbufferDCARBPROC wglReleasePbufferDCARB;
-extern wglDestroyPbufferARBPROC wglDestroyPbufferARB;
-extern wglQueryPbufferARBPROC wglQueryPbufferARB;
 
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_PIXEL_FORMAT-----------------------------------*/
@@ -160,17 +132,9 @@ typedef BOOL (APIENTRY * wglGetPixelFormatAttribivARBPROC) (HDC hdc, int iPixelF
 typedef BOOL (APIENTRY * wglGetPixelFormatAttribfvARBPROC) (HDC hdc, int iPixelFormat, int iLayerPlane, UINT nAttributes, const int *piAttributes, FLOAT *pfValues);
 typedef BOOL (APIENTRY * wglChoosePixelFormatARBPROC) (HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
 
-extern wglGetPixelFormatAttribivARBPROC wglGetPixelFormatAttribivARB;
-extern wglGetPixelFormatAttribfvARBPROC wglGetPixelFormatAttribfvARB;
-extern wglChoosePixelFormatARBPROC wglChoosePixelFormatARB;
-
 typedef BOOL (APIENTRY * wglBindTexImageARBPROC) (HPBUFFERARB hPbuffer, int iBuffer);
 typedef BOOL (APIENTRY * wglReleaseTexImageARBPROC) (HPBUFFERARB hPbuffer, int iBuffer);
 typedef BOOL (APIENTRY * wglSetPbufferAttribARBPROC) (HPBUFFERARB hPbuffer, const int *piAttribList);
-
-extern wglBindTexImageARBPROC wglBindTexImageARB;
-extern wglReleaseTexImageARBPROC wglReleaseTexImageARB;
-extern wglSetPbufferAttribARBPROC wglSetPbufferAttribARB;
 
 /*-------------------------------------------------------------------*/
 /*------------WGL_EXT_SWAP_CONTROL-----------------------------------*/
@@ -178,9 +142,6 @@ extern wglSetPbufferAttribARBPROC wglSetPbufferAttribARB;
 
 typedef BOOL (APIENTRY * wglSwapIntervalEXTPROC) (int interval);
 typedef int (APIENTRY * wglGetSwapIntervalEXTPROC) (void);
-
-extern wglSwapIntervalEXTPROC wglSwapIntervalEXT;
-extern wglGetSwapIntervalEXTPROC wglGetSwapIntervalEXT;
 
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_MAKE_CURRENT_READ------------------------------*/
@@ -192,15 +153,51 @@ extern wglGetSwapIntervalEXTPROC wglGetSwapIntervalEXT;
 typedef BOOL (APIENTRY * wglMakeContextCurrentARBPROC) (HDC hDrawDC, HDC hReadDC, HGLRC hglrc);
 typedef HDC (APIENTRY * wglGetCurrentReadDCARBPROC) (void);
 
-extern wglMakeContextCurrentARBPROC wglMakeContextCurrentARB;
-extern wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
-
 /*-------------------------------------------------------------------*/
 /*------------WGL_ARB_MULTISAMPLE------------------------------------*/
 /*-------------------------------------------------------------------*/
 
 #define WGL_SAMPLE_BUFFERS_ARB                                  0x2041
 #define WGL_SAMPLES_ARB                                         0x2042
+
+typedef struct {
+    bool WGL_ARB_buffer_region;
+    bool WGL_ARB_extensions_string;
+    bool WGL_ARB_make_current_read;
+    bool WGL_ARB_multisample;
+    bool WGL_ARB_pbuffer;
+    bool WGL_ARB_pixel_format;
+    bool WGL_ARB_render_texture;
+    bool WGL_EXT_extensions_string;
+    bool WGL_EXT_swap_control;
+    bool WGL_NV_render_depth_texture;
+    bool WGL_NV_render_texture_rectangle;
+	wglGetExtensionsStringEXTPROC wglGetExtensionsStringEXT;
+
+	wglGetExtensionsStringARBPROC wglGetExtensionsStringARB;
+
+	wglCreatePbufferARBPROC wglCreatePbufferARB;
+	wglGetPbufferDCARBPROC wglGetPbufferDCARB;
+	wglReleasePbufferDCARBPROC wglReleasePbufferDCARB;
+	wglDestroyPbufferARBPROC wglDestroyPbufferARB;
+	wglQueryPbufferARBPROC wglQueryPbufferARB;
+
+	wglGetPixelFormatAttribivARBPROC wglGetPixelFormatAttribivARB;
+	wglGetPixelFormatAttribfvARBPROC wglGetPixelFormatAttribfvARB;
+	wglChoosePixelFormatARBPROC wglChoosePixelFormatARB;
+
+	wglBindTexImageARBPROC wglBindTexImageARB;
+	wglReleaseTexImageARBPROC wglReleaseTexImageARB;
+	wglSetPbufferAttribARBPROC wglSetPbufferAttribARB;
+
+	wglSwapIntervalEXTPROC wglSwapIntervalEXT;
+	wglGetSwapIntervalEXTPROC wglGetSwapIntervalEXT;
+
+	wglMakeContextCurrentARBPROC wglMakeContextCurrentARB;
+	wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB;
+} WGLExtensions;
+
+extern void extgl_InitWGL(WGLExtensions *extensions);
 
 
 #endif

@@ -94,9 +94,14 @@ final class Win32ContextImplementation implements ContextImplementation {
 	private static native boolean nIsCurrent(ByteBuffer context_handle) throws LWJGLException;
 
 	public void setVSync(boolean enabled) {
-		nSetVSync(enabled);
+		Context current_context = Context.getCurrentContext();
+		if (current_context == null)
+			throw new IllegalStateException("No context is current");
+		synchronized (current_context) {
+			nSetVSync(current_context.getHandle(), enabled);
+		}
 	}
-	private static native void nSetVSync(boolean enabled);
+	private static native void nSetVSync(ByteBuffer context_handle, boolean enabled);
 
 	public void destroy(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		nDestroy(handle);

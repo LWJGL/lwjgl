@@ -124,7 +124,17 @@ final class Win32Display implements DisplayImplementation {
 	}
 
 	public native void destroyCursor(Object cursorHandle);
-	public native int getPbufferCapabilities();
+	public int getPbufferCapabilities() {
+		try {
+		// Return the capabilities of a minimum pixel format
+			return nGetPbufferCapabilities(new PixelFormat(0, 0, 0, 0, 0, 0, 0, 0, false));
+		} catch (LWJGLException e) {
+			Sys.log("Exception occurred while determining pbuffer capabilities: " + e);
+			return 0;
+		}
+	}
+	private native int nGetPbufferCapabilities(PixelFormat format) throws LWJGLException;
+	
 	public boolean isBufferLost(PeerInfo handle) {
 		return ((Win32PbufferPeerInfo)handle).isBufferLost();
 	}
