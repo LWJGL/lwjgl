@@ -39,7 +39,13 @@
  * @version $Revision$
  */
 
+#include <sys/time.h>
 #include "org_lwjgl_Sys.h"
+
+
+long int		hires_timer_freq;			// Hires timer frequency
+long int		hires_timer_start;			// Hires timer start
+long int		hires_timer;				// Hires timer current time
 
 /*
  * Class:     org_lwjgl_Sys
@@ -71,7 +77,22 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_Sys_createDirectBuffer
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
   (JNIEnv * env, jclass clazz)
 {
-      return 0L;
+      return hires_timer_freq;
+}
+
+long queryTime(void)
+{
+    struct timeval tv;
+    if (gettimeofday(&tv, NULL) == -1)
+    {
+#ifdef _DEBUG
+        printf("Could not read current time\n");
+#endif
+    }
+    
+    long result = tv.tv_sec * 1000000l + tv.tv_usec;
+
+    return result;
 }
 
 /*
@@ -82,7 +103,9 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTimerResolution
 JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
   (JNIEnv * env, jclass clazz)
 {
-      return 0L;
+      hires_timer = queryTime();
+      hires_timer -= hires_timer_start;
+      return hires_timer;
 }
 
 /*
@@ -93,6 +116,10 @@ JNIEXPORT jlong JNICALL Java_org_lwjgl_Sys_getTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
   (JNIEnv * env, jclass clazz, jlong startTime)
 {
+      hires_timer_start = queryTime();
+      // We don't have a real resolution so assume highest possible
+      hires_timer_freq = 1000000;
+      hires_timer_start -= startTime;      
 }
 
 /*
@@ -103,4 +130,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setTime
 JNIEXPORT void JNICALL Java_org_lwjgl_Sys_setProcessPriority
   (JNIEnv * env, jclass clazz, jint priority)
 {
+}
+
+/*
+ * Class:     org_lwjgl_Sys
+ * Method:    alert
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_lwjgl_Sys_alert(JNIEnv * env, jclass clazz, jstring title, jstring message)
+{
+    jboolean copy = JNI_FALSE;
+    const char * eMessageText = env->GetStringUTFChars(message, &copy);
+    const char * cTitleBarText = env->GetStringUTFChars(title, &copy);
+    printf("*** Alert ***\n%s\n%s\n", cTitleBarText, eMessageText);
+
+    env->ReleaseStringUTFChars(message, eMessageText);
+    env->ReleaseStringUTFChars(title, cTitleBarText);
 }
