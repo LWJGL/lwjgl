@@ -175,6 +175,8 @@ public final class Pbuffer {
 	 * 						 with the Display context (if created).
 	 */
 	public Pbuffer(int width, int height, PixelFormat pixel_format, RenderTexture renderTexture, Pbuffer shared_context) throws LWJGLException {
+		if ((getPbufferCaps() & PBUFFER_SUPPORTED) == 0)
+			throw new IllegalStateException("Pbuffers are not supported");
 		this.width = width;
 		this.height = height;
 		this.handle = createPbuffer(width, height, pixel_format, renderTexture, shared_context != null ? shared_context.handle : null);
