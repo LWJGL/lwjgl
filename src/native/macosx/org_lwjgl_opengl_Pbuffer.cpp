@@ -42,6 +42,7 @@
 #include "org_lwjgl_opengl_Pbuffer.h"
 #include "extgl.h"
 #include <OpenGL/OpenGL.h>
+#include "common_tools.h"
 
 JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_Pbuffer_nIsBufferLost(JNIEnv *env, jclass clazz, jint handle) {
 	return JNI_FALSE;

@@ -719,7 +719,7 @@ void *extgl_GetProcAddress(const char *name)
 #endif
 
 #ifdef _AGL
-	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNULL);
+	CFStringRef str = CFStringCreateWithCStringNoCopy(NULL, name, kCFStringEncodingUTF8, kCFAllocatorNull);
 	void *func_pointer = CFBundleGetFunctionPointerForName(opengl_bundle_ref, str);
 	if (func_pointer == NULL) {
 		func_pointer = CFBundleGetFunctionPointerForName(agl_bundle_ref, str);
