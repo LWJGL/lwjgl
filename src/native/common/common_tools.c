@@ -73,14 +73,17 @@ void setDebugEnabled(bool enable) {
 void printfDebugJava(JNIEnv *env, const char *format, ...) {
 	#define BUFFER_SIZE 4000
 	static char buffer[BUFFER_SIZE];
+	jstring str;
+	jclass org_lwjgl_Sys_class;
+	jmethodID log_method;
 	va_list ap;
 	va_start(ap, format);
 	if (isDebugEnabled()) {
 		vsnprintf(buffer, BUFFER_SIZE, format, ap);
 		buffer[BUFFER_SIZE - 1] = '\0';
-		jstring str = (*env)->NewStringUTF(env, buffer);
-		jclass org_lwjgl_Sys_class = (*env)->FindClass(env, "org/lwjgl/Sys");
-		jmethodID log_method = (*env)->GetStaticMethodID(env, org_lwjgl_Sys_class, "log", "(Ljava/lang/String;)V");
+		str = (*env)->NewStringUTF(env, buffer);
+		org_lwjgl_Sys_class = (*env)->FindClass(env, "org/lwjgl/Sys");
+		log_method = (*env)->GetStaticMethodID(env, org_lwjgl_Sys_class, "log", "(Ljava/lang/String;)V");
 		(*env)->CallStaticVoidMethod(env, org_lwjgl_Sys_class, log_method, str);
 	}
 	va_end(ap);
