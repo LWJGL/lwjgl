@@ -11,7 +11,7 @@ static void* devILhandle;
 #include <mach-o/dyld.h>
 #include <stdlib.h>
 #include <string.h>
-const struct mach_header* devILhandle;
+const struct mach_header* devILhandle = NULL;
 #endif
 
 /**
