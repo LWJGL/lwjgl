@@ -59,7 +59,7 @@ public final class Display {
 	private static int handle;
   
   /** Whether or not the display has been requested to shutdown by the user */
-  public static boolean closeRequested = false;
+  private static boolean closeRequested = false;
 	
 	/**
 	 * No construction allowed.
@@ -217,4 +217,13 @@ public final class Display {
 	 * @return true if the display is minimized
 	 */
 	public static native boolean isMinimized();
+  
+  /**
+   * Determines if the user has requested that the application should close.
+   * 
+   * @return true if the user has requested that the application should close
+   */
+  public static boolean isCloseRequested() {
+    return closeRequested;
+  }
 }
