@@ -272,7 +272,7 @@ public class ILU {
 		private static String getPathFromClassLoader(String libname) {
 			try {
 				Sys.log("getPathFromClassLoader: searching for: " + libname);
-				Object o = IL.class.getClassLoader();
+				Object o = ILU.class.getClassLoader();
 				Class c = o.getClass();
 				while (c != null) {
 					try {

@@ -237,7 +237,7 @@ public class ILUT {
 		private static String getPathFromClassLoader(String libname) {
 			try {
 				Sys.log("getPathFromClassLoader: searching for: " + libname);
-				Object o = IL.class.getClassLoader();
+				Object o = ILUT.class.getClassLoader();
 				Class c = o.getClass();
 				while (c != null) {
 					try {
