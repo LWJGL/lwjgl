@@ -48,7 +48,7 @@
 #include "common_tools.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
-  (JNIEnv *env, jclass clazz, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
+  (JNIEnv *env, jobject this, jobject handle_buffer, jint width, jint height, jint x_hotspot, jint y_hotspot, jint num_images, jobject image_buffer, jint images_offset, jobject delay_buffer, jint delays_offset)
 {
 	if ((*env)->GetDirectBufferCapacity(env, handle_buffer) < sizeof(Cursor)) {
 		throwException(env, "Handle buffer not large enough");
@@ -85,7 +85,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateCursor
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay__destroyCursor
-  (JNIEnv *env, jclass clazz, jobject cursor_handle_buffer)
+  (JNIEnv *env, jobject this, jobject cursor_handle_buffer)
 {
 	Cursor *cursor = (Cursor *)(*env)->GetDirectBufferAddress(env, cursor_handle_buffer);
 //	Cursor cursor = (Cursor)cursor_handle;
