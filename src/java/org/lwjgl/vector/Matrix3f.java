@@ -42,13 +42,308 @@ package org.lwjgl.vector;
 
 public class Matrix3f {
 
-	public float m00, m01, m02, m10, m11, m12, m20, m21, m22;
-	
+	public float m00 = 1.0f,
+		m01,
+		m02,
+		m10,
+		m11 = 1.0f,
+		m12,
+		m20,
+		m21,
+		m22 = 1.0f;
+
 	/**
 	 * Constructor for Matrix3f.
 	 */
 	public Matrix3f() {
 		super();
+	}
+	/**
+	 * Load from another matrix3f
+	 * @param src The source matrix
+	 * @return this
+	 */
+	public Matrix3f load(Matrix3f src) {
+
+		m00 = src.m00;
+		m10 = src.m10;
+		m20 = src.m20;
+		m01 = src.m01;
+		m11 = src.m11;
+		m21 = src.m21;
+		m02 = src.m02;
+		m12 = src.m12;
+		m22 = src.m22;
+
+		return this;
+	}
+
+	/**
+	 * Add two matrices together and place the result in a third matrix.
+	 * @param left The left source matrix
+	 * @param right The right source matrix
+	 * @param dest The destination matrix, or null if a new one is to be created
+	 * @return the destination matrix
+	 */
+	public static Matrix3f add(Matrix3f left, Matrix3f right, Matrix3f dest) {
+
+		Matrix3f temp = null;
+
+		if (dest == null)
+			dest = new Matrix3f();
+		else if (dest == left || dest == right) {
+			temp = dest;
+			dest = new Matrix3f();
+		}
+
+		dest.m00 = left.m00 + right.m00;
+		dest.m01 = left.m01 + right.m01;
+		dest.m02 = left.m02 + right.m02;
+		dest.m10 = left.m10 + right.m10;
+		dest.m11 = left.m11 + right.m11;
+		dest.m12 = left.m12 + right.m12;
+		dest.m20 = left.m20 + right.m20;
+		dest.m21 = left.m21 + right.m21;
+		dest.m22 = left.m22 + right.m22;
+
+		if (temp != null) {
+			temp.load(dest);
+			return temp;
+		} else
+			return dest;
+	}
+
+	/**
+	 * Subtract the right matrix from the left and place the result in a third matrix.
+	 * @param left The left source matrix
+	 * @param right The right source matrix
+	 * @param dest The destination matrix, or null if a new one is to be created
+	 * @return the destination matrix
+	 */
+	public static Matrix3f sub(Matrix3f left, Matrix3f right, Matrix3f dest) {
+
+		Matrix3f temp = null;
+
+		if (dest == null)
+			dest = new Matrix3f();
+		else if (dest == left || dest == right) {
+			temp = dest;
+			dest = new Matrix3f();
+		}
+
+		dest.m00 = left.m00 - right.m00;
+		dest.m01 = left.m01 - right.m01;
+		dest.m02 = left.m02 - right.m02;
+		dest.m10 = left.m10 - right.m10;
+		dest.m11 = left.m11 - right.m11;
+		dest.m12 = left.m12 - right.m12;
+		dest.m20 = left.m20 - right.m20;
+		dest.m21 = left.m21 - right.m21;
+		dest.m22 = left.m22 - right.m22;
+
+		if (temp != null) {
+			temp.load(dest);
+			return temp;
+		} else
+			return dest;
+	}
+
+	/**
+	 * Multiply the right matrix by the left and place the result in a third matrix.
+	 * @param left The left source matrix
+	 * @param right The right source matrix
+	 * @param dest The destination matrix, or null if a new one is to be created
+	 * @return the destination matrix
+	 */
+	public static Matrix3f mul(Matrix3f left, Matrix3f right, Matrix3f dest) {
+
+		Matrix3f temp = null;
+
+		if (dest == null)
+			dest = new Matrix3f();
+		else if (dest == left || dest == right) {
+			temp = dest;
+			dest = new Matrix3f();
+		}
+
+		dest.m00 =
+			left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02;
+		dest.m01 =
+			left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02;
+		dest.m02 =
+			left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02;
+		dest.m10 =
+			left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12;
+		dest.m11 =
+			left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12;
+		dest.m12 =
+			left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12;
+		dest.m20 =
+			left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22;
+		dest.m21 =
+			left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22;
+		dest.m22 =
+			left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22;
+
+		if (temp != null) {
+			temp.load(dest);
+			return temp;
+		} else
+			return dest;
+	}
+
+	/**
+	 * Multiply a Vector by a matrix and return the result in a destination
+	 * vector. 
+	 * @param left The left matrix
+	 * @param right The right vector
+	 * @param dest The destination vector, or null if a new one is to be created
+	 * @return the destination vector
+	 */
+	public static Vector3f mul(Matrix3f left, Vector3f right, Vector3f dest) {
+
+		Vector3f temp = null;
+
+		if (dest == null)
+			dest = new Vector3f();
+		else if (dest == right) {
+			temp = dest;
+			dest = new Vector3f();
+		}
+
+		dest.x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z;
+		dest.y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z;
+		dest.z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z;
+
+		if (temp != null) {
+			temp.set(dest);
+			return temp;
+		} else
+			return dest;
+	}
+
+	/**
+	 * Transpose this matrix
+	 * @return this
+	 */
+	public Matrix3f transpose() {
+		float f = m10;
+		m10 = m01;
+		m01 = f;
+		f = m20;
+		m20 = m02;
+		m02 = f;
+		f = m21;
+		m21 = m12;
+		m12 = f;
+		return this;
+	}
+
+	/**
+	 * Transpose this matrix and place the result in another matrix
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 * @return the transposed matrix
+	 */
+	public Matrix3f transpose(Matrix3f dest) {
+		
+		if (dest == null)
+			dest = new Matrix3f();
+		
+		if (this != dest) {
+			m00 = dest.m00;
+			m01 = dest.m10;
+			m02 = dest.m20;
+			m10 = dest.m01;
+			m11 = dest.m11;
+			m12 = dest.m21;
+			m20 = dest.m02;
+			m21 = dest.m12;
+			m22 = dest.m22;
+		} else
+			transpose();
+		
+		return this;
+		
+	}
+
+	/**
+	 * Invert this matrix
+	 * @return this
+	 */
+	public Matrix3f invert() {
+		return this;
+	}
+
+	/**
+	 * Negate this matrix
+	 * @return this
+	 */
+	public Matrix3f negate() {
+		m00 = -m00;
+		m01 = -m02;
+		m02 = -m01;
+		m10 = -m10;
+		m11 = -m12;
+		m12 = -m11;
+		m20 = -m20;
+		m21 = -m22;
+		m22 = -m21;
+		return this;
+	}
+
+	/**
+	 * Negate this matrix and place the result in a destination matrix.
+	 * @param dest The destination matrix, or null if a new matrix is to be created
+	 * @return the negated matrix
+	 */
+	public Matrix3f negate(Matrix3f dest) {
+		if (dest == null)
+			dest = new Matrix3f();
+
+		dest.m00 = -m00;
+		dest.m01 = -m02;
+		dest.m02 = -m01;
+		dest.m10 = -m10;
+		dest.m11 = -m12;
+		dest.m12 = -m11;
+		dest.m20 = -m20;
+		dest.m21 = -m22;
+		dest.m22 = -m21;
+		return dest;
+	}
+
+	/**
+	 * Set this matrix to be the identity matrix.
+	 * @return this
+	 */
+	public Matrix3f setIdentity() {
+		m00 = 1.0f;
+		m01 = 0.0f;
+		m02 = 0.0f;
+		m10 = 0.0f;
+		m11 = 1.0f;
+		m12 = 0.0f;
+		m20 = 0.0f;
+		m21 = 0.0f;
+		m22 = 1.0f;
+		return this;
+	}
+
+	/**
+	 * Set this matrix to 0.
+	 * @return this
+	 */
+	public Matrix3f setZero() {
+		m00 = 0.0f;
+		m01 = 0.0f;
+		m02 = 0.0f;
+		m10 = 0.0f;
+		m11 = 0.0f;
+		m12 = 0.0f;
+		m20 = 0.0f;
+		m21 = 0.0f;
+		m22 = 0.0f;
+		return this;
 	}
 
 }

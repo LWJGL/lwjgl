@@ -31,6 +31,8 @@
  */
 package org.lwjgl.vector;
 
+import org.lwjgl.Math;
+
 /**
  * $Id$
  *
@@ -50,5 +52,139 @@ public class Vector4f {
 	public Vector4f() {
 		super();
 	}
+	
+	/**
+	 * Constructor
+	 */
+	public Vector4f(Vector4f src) {
+		set(src);
+	}
+	
+	/**
+	 * Constructor
+	 */
+	public Vector4f(float x, float y, float z, float w) {
+		set(x, y, z, w);
+	}
 
+	/**
+	 * Set values
+	 * @return this
+	 */
+	public Vector4f set(float x, float y, float z, float w) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+		return this;
+	}
+
+	/**
+	 * Load from another Vector4f
+	 * @param src The source vector
+	 * @return this
+	 */
+	public Vector4f set(Vector4f src) {
+		x = src.x;
+		y = src.y;
+		z = src.z;
+		w = src.w;
+		return this;
+	}
+	
+	/**
+	 * @return the length of the vector
+	 */
+	public float length() {
+		return Math.sqrt(lengthSquared());
+	}
+	
+	/**
+	 * @return the length squared of the vector
+	 */
+	public float lengthSquared() {
+		return x * x + y * y + z * z + w * w;
+	}
+	
+	/**
+	 * Translate a vector
+	 * @param x The translation in x
+	 * @param y the translation in y
+	 * @return this
+	 */
+	public Vector4f translate(float x, float y, float z, float w) {
+		this.x += x;
+		this.y += y;
+		this.z += z;
+		this.w += w;
+		return this;
+	}
+	
+	/**
+	 * Negate a vector
+	 * @return this
+	 */
+	public Vector4f negate() {
+		x = -x;
+		y = -y;
+		z = -z;
+		w = -w;
+		return this;
+	}
+	
+	/**
+	 * Normalise this vector
+	 * @return this
+	 */
+	public Vector4f normalise() {
+		float l = 1.0f / length();
+		x *= l;
+		y *= l;
+		z *= l;
+		w *= l;
+		return this;
+	}
+	
+	/**
+	 * Normalise this vector and place the result in another vector.
+	 * @param dest The destination vector, or null if a new vector is to be created
+	 * @return the normalised vector
+	 */
+	public Vector4f normalise(Vector4f dest) {
+		float l = length();
+		
+		if (dest == null)
+			dest = new Vector4f(x / l, y / l, z / l, w / l);
+		else
+			dest.set(x / l, y / l, z / l, w / l);
+		
+		return dest;
+	}
+	
+	/**
+	 * The dot product of two vectors is calculated as
+	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w
+	 * @param left The LHS vector
+	 * @param right The RHS vector
+	 * @return left dot right
+	 */
+	public static float dot(Vector4f left, Vector4f right) {
+		return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
+	}
+	
+	/**
+	 * Calculate the angle between two vectors, in degrees
+	 * @param a A vector
+	 * @param b The other vector
+	 * @return the angle between the two vectors, in degrees
+	 */
+    public static float angle(Vector4f a, Vector4f b) {
+        float dls = dot(a, b) / (a.length() * b.length());
+        if (dls < -1f)
+            dls = -1f;
+        else if (dls > 1.0f)
+            dls = 1.0f;
+        return Math.acos(dls);
+    }
+	
 }
