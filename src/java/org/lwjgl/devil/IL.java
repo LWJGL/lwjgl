@@ -47,6 +47,7 @@ import java.util.StringTokenizer;
 import org.lwjgl.BufferChecks;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -585,7 +586,10 @@ public class IL {
 			return;
 		}
 
-		String[] illPaths = getILPaths();
+		String[] illPaths = LWJGLUtil.getLibraryPaths(new String[]{
+                                                  "DevIL", "DevIL.dll",
+                                                  "IL", "libIL.so",
+                                                  "IL", "IL"}, IL.class.getClassLoader());
 		nCreate(illPaths);
 		created = true;
 
@@ -621,85 +625,4 @@ public class IL {
 	 * Native method the destroy the IL
 	 */
 	protected static native void nDestroy();
-
-	private static String[] getILPaths() throws LWJGLException {
-		// need to pass path of possible locations of IL to native side
-		List possible_paths = new ArrayList();
-
-		String osName = System.getProperty("os.name");
-
-		String libname;
-		String platform_lib_name;
-		if (osName.startsWith("Win")) {
-			libname = "DevIL";
-			platform_lib_name = "DevIL.dll";
-		} else if (osName.startsWith("Lin")) {
-			libname = "DevIL";
-			platform_lib_name = "libIL.so";
-		} else if (osName.startsWith("Mac")) {
-			libname = "DevIL";
-			platform_lib_name = "libIL.dylib";
-		} else {
-			throw new LWJGLException("Unknown platform: " + osName);
-		}
-
-		// Add all possible paths from java.library.path
-		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
-		while (st.hasMoreTokens()) {
-			String path = st.nextToken();
-			possible_paths.add(path + File.separator + platform_lib_name);
-		}
-
-		String classloader_path = getPathFromClassLoader(libname);
-		if (classloader_path != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + classloader_path);
-			possible_paths.add(classloader_path);
-		}
-		String lwjgl_classloader_path = getPathFromClassLoader("lwjgl");
-		if (lwjgl_classloader_path != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
-			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
-					+ File.separator + platform_lib_name);
-		}
-
-		//add cwd path
-		possible_paths.add(platform_lib_name);
-		
-		//create needed string array
-		String[] ilPaths = new String[possible_paths.size()];
-		possible_paths.toArray(ilPaths);
-
-		return ilPaths;
-	}
-
-	/**
-	 * Tries to locate Devil from the current ClassLoader
-	 * This method exists because Devil is loaded from native code, and as such
-	 * is exempt from ClassLoader library loading rutines. Devil therefore always fails.
-	 * We therefore invoke the protected method of the ClassLoader to see if it can
-	 * locate it. 
-	 * 
-	 * @param libname Name of library to search for
-	 * @return Absolute path to library if found, otherwise null
-	 */
-	private static String getPathFromClassLoader(String libname) {
-		try {
-			Sys.log("getPathFromClassLoader: searching for: " + libname);
-			Object o = IL.class.getClassLoader();
-			Class c = o.getClass();
-			while (c != null) {
-				try {
-					Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class});
-					findLibrary.setAccessible(true);
-					Object[] arguments = new Object[] { libname};
-					return (String) findLibrary.invoke(o, arguments);
-				} catch (NoSuchMethodException e) {
-					c = c.getSuperclass();
-				}
-			}
-		} catch (Exception e) {
-			Sys.log("Failure locating DevIL using classloader:" + e);
-		}
-		return null;
-	}
 }

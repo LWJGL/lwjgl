@@ -40,6 +40,9 @@ import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
+import org.lwjgl.devil.ILU;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -131,56 +134,6 @@ public final class AL {
 		create();
 	}
 
-	private static String[] getOALPaths() throws LWJGLException {
-		// need to pass path of possible locations of OAL to native side
-		List possible_paths = new ArrayList();
-		
-		String osName = System.getProperty("os.name");
-
-		String libname;
-		String platform_lib_name;
-		if (osName.startsWith("Win")) {
-			libname = "lwjglaudio";
-			platform_lib_name = "lwjglaudio.dll";
-		} else if (osName.startsWith("Lin")) {
-			libname = "openal";
-			platform_lib_name = "libopenal.so";
-		} else if (osName.startsWith("Mac")) {
-			libname = "openal";
-			platform_lib_name = "openal.dylib";
-		} else {
-			throw new LWJGLException("Unknown platform: "+osName);
-		}
-		
-		// Add all possible paths from java.library.path
-		String java_library_path = System.getProperty("java.library.path");
-		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
-		while (st.hasMoreTokens()) {
-			String path = st.nextToken();
-			possible_paths.add(path + File.separator + platform_lib_name);
-		}
-		
-		String classloader_path = getPathFromClassLoader(libname);
-		if (classloader_path != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + classloader_path);
-			possible_paths.add(classloader_path);
-		}
-		String lwjgl_classloader_path = getPathFromClassLoader("lwjgl");
-		if (lwjgl_classloader_path != null) {
-			Sys.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
-			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
-				+ File.separator + platform_lib_name);
-		}
-
-		//add cwd path
-		possible_paths.add(platform_lib_name);
-		//create needed string array
-		String[] oalPaths = new String[possible_paths.size()];
-		possible_paths.toArray(oalPaths);
-
-		return oalPaths;
-	}
-
 	/**
 	 * Creates an OpenAL instance. The empty create will cause OpenAL to
 	 * open the default device, and create a context using default values. 
@@ -189,7 +142,10 @@ public final class AL {
 		if (created) {
 			return;
 		}
-		String[] oalPaths = getOALPaths();
+		String[] oalPaths = LWJGLUtil.getLibraryPaths(new String[]{
+                                                  "lwjglaudio", "lwjglaudio.dll",
+                                                  "openal", "openal.so",
+                                                  "openal", "openal.dylib"}, AL.class.getClassLoader());
 		nCreate(oalPaths);
 		created = true;
 
@@ -239,37 +195,6 @@ public final class AL {
 		if (created)
 			nDestroy();
 		created = false;
-	}
-	
-	/**
-	 * Tries to locate OpenAL from the current ClassLoader
-	 * This method exists because OpenAL is loaded from native code, and as such
-	 * is exempt from ClassLoader library loading rutines. OpenAL therefore always fails.
-	 * We therefore invoke the protected method of the ClassLoader to see if it can
-	 * locate it. 
-	 * 
-	 * @param libname Name of library to search for
-	 * @return Absolute path to library if found, otherwise null
-	 */
-	private static String getPathFromClassLoader(String libname) {
-		try {		 
-			Sys.log("getPathFromClassLoader: searching for: " + libname);
-			Object o = AL.class.getClassLoader();
-			Class c = o.getClass();
-			while (c != null) {
-				try {
-					Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class });
-					findLibrary.setAccessible(true);
-					Object[] arguments = new Object[] { libname };
-					return (String)findLibrary.invoke(o, arguments);
-				} catch (NoSuchMethodException e) {
-					c = c.getSuperclass();
-				}
-			}
-		} catch (Exception e) {
-			Sys.log("Failure locating OpenAL using classloader:" + e);
-		}
-		return null;
 	}
 
 	private static native void resetNativeStubs(Class clazz);

@@ -41,6 +41,7 @@ import java.util.StringTokenizer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -133,7 +134,10 @@ public class ILUT {
 						throw new LWJGLException("Cannot create ILUT without having created IL instance");
 				}
 				
-				String[] ilutPaths = getILUTPaths();
+			  String[] ilutPaths = LWJGLUtil.getLibraryPaths(new String[]{
+                                                  "ILUT", "ILUT.dll",
+                                                  "ILUT", "libILUT.so",
+                                                  "ILUT", "IL"}, ILU.class.getClassLoader());
 				nCreate(ilutPaths);
 				created = true;
 
@@ -173,85 +177,4 @@ public class ILUT {
 		 * Native method the destroy the ILUT
 		 */
 		protected static native void nDestroy();
-
-		private static String[] getILUTPaths() throws LWJGLException {
-			// need to pass path of possible locations of IL to native side
-			List possible_paths = new ArrayList();
-
-			String osName = System.getProperty("os.name");
-
-			String libname;
-			String platform_lib_name;
-			if (osName.startsWith("Win")) {
-				libname = "ILUT";
-				platform_lib_name = "ILUT.dll";
-			} else if (osName.startsWith("Lin")) {
-				libname = "ILUT";
-				platform_lib_name = "libILUT.so";
-			} else if (osName.startsWith("Mac")) {
-				libname = "ILUT";
-				platform_lib_name = "libILUT.dylib";
-			} else {
-				throw new LWJGLException("Unknown platform: " + osName);
-			}
-
-			// Add all possible paths from java.library.path
-  			StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
-			while (st.hasMoreTokens()) {
-				String path = st.nextToken();
-				possible_paths.add(path + File.separator + platform_lib_name);
-			}
-
-			String classloader_path = getPathFromClassLoader(libname);
-			if (classloader_path != null) {
-				Sys.log("getPathFromClassLoader: Path found: " + classloader_path);
-				possible_paths.add(classloader_path);
-			}
-			String lwjgl_classloader_path = getPathFromClassLoader("lwjgl");
-			if (lwjgl_classloader_path != null) {
-				Sys.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
-				possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
-						+ File.separator + platform_lib_name);
-			}
-
-			//add cwd path
-			possible_paths.add(platform_lib_name);
-			
-			//create needed string array
-			String[] ilutPaths = new String[possible_paths.size()];
-			possible_paths.toArray(ilutPaths);
-
-			return ilutPaths;
-		}
-
-		/**
-		 * Tries to locate ILUT from the current ClassLoader
-		 * This method exists because ILUT is loaded from native code, and as such
-		 * is exempt from ClassLoader library loading rutines. ILUT therefore always fails.
-		 * We therefore invoke the protected method of the ClassLoader to see if it can
-		 * locate it. 
-		 * 
-		 * @param libname Name of library to search for
-		 * @return Absolute path to library if found, otherwise null
-		 */
-		private static String getPathFromClassLoader(String libname) {
-			try {
-				Sys.log("getPathFromClassLoader: searching for: " + libname);
-				Object o = ILUT.class.getClassLoader();
-				Class c = o.getClass();
-				while (c != null) {
-					try {
-						Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class});
-						findLibrary.setAccessible(true);
-						Object[] arguments = new Object[] { libname};
-						return (String) findLibrary.invoke(o, arguments);
-					} catch (NoSuchMethodException e) {
-						c = c.getSuperclass();
-					}
-				}
-			} catch (Exception e) {
-				Sys.log("Failure locating ILUT using classloader:" + e);
-			}
-			return null;
-		}
 }
