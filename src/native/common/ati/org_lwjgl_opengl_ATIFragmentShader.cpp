@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIFragmentShader
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIFragmentShader.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -68,35 +67,13 @@ static glAlphaFragmentOp2ATIPROC glAlphaFragmentOp2ATI;
 static glAlphaFragmentOp3ATIPROC glAlphaFragmentOp3ATI;
 static glSetFragmentShaderConstantATIPROC glSetFragmentShaderConstantATI;
 
-void extgl_InitATIFragmentShader(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_fragment_shader)
-		return;
-	glGenFragmentShadersATI = (glGenFragmentShadersATIPROC) extgl_GetProcAddress("glGenFragmentShadersATI");
-	glBindFragmentShaderATI = (glBindFragmentShaderATIPROC) extgl_GetProcAddress("glBindFragmentShaderATI");
-	glDeleteFragmentShaderATI = (glDeleteFragmentShaderATIPROC) extgl_GetProcAddress("glDeleteFragmentShaderATI");
-	glBeginFragmentShaderATI = (glBeginFragmentShaderATIPROC) extgl_GetProcAddress("glBeginFragmentShaderATI");
-	glEndFragmentShaderATI = (glEndFragmentShaderATIPROC) extgl_GetProcAddress("glEndFragmentShaderATI");
-	glPassTexCoordATI = (glPassTexCoordATIPROC) extgl_GetProcAddress("glPassTexCoordATI");
-	glSampleMapATI = (glSampleMapATIPROC) extgl_GetProcAddress("glSampleMapATI");
-	glColorFragmentOp1ATI = (glColorFragmentOp1ATIPROC) extgl_GetProcAddress("glColorFragmentOp1ATI");
-	glColorFragmentOp2ATI = (glColorFragmentOp2ATIPROC) extgl_GetProcAddress("glColorFragmentOp2ATI");
-	glColorFragmentOp3ATI = (glColorFragmentOp3ATIPROC) extgl_GetProcAddress("glColorFragmentOp3ATI");
-	glAlphaFragmentOp1ATI = (glAlphaFragmentOp1ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp1ATI");
-	glAlphaFragmentOp2ATI = (glAlphaFragmentOp2ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp2ATI");
-	glAlphaFragmentOp3ATI = (glAlphaFragmentOp3ATIPROC) extgl_GetProcAddress("glAlphaFragmentOp3ATI");
-	glSetFragmentShaderConstantATI = (glSetFragmentShaderConstantATIPROC) extgl_GetProcAddress("glSetFragmentShaderConstantATI");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_fragment_shader)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glGenFragmentShadersATI
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glGenFragmentShadersATI
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glGenFragmentShadersATI
 	(JNIEnv * env, jclass clazz, jint range)
 {
-	CHECK_EXISTS(glGenFragmentShadersATI)
 	GLuint result = glGenFragmentShadersATI(range);
 	CHECK_GL_ERROR
 	return result;
@@ -106,10 +83,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glGenFragmentShad
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glBindFragmentShaderATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBindFragmentShaderATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBindFragmentShaderATI
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glBindFragmentShaderATI)
 	glBindFragmentShaderATI(id);
 	CHECK_GL_ERROR
 }
@@ -118,10 +94,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBindFragmentSha
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glDeleteFragmentShaderATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glDeleteFragmentShaderATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glDeleteFragmentShaderATI
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glDeleteFragmentShaderATI)
 	glDeleteFragmentShaderATI(id);
 	CHECK_GL_ERROR
 }
@@ -130,10 +105,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glDeleteFragmentS
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glBeginFragmentShaderATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBeginFragmentShaderATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBeginFragmentShaderATI
 	(JNIEnv * env, jclass clazz)
 {
-	CHECK_EXISTS(glBeginFragmentShaderATI)
 	glBeginFragmentShaderATI();
 	CHECK_GL_ERROR
 }
@@ -142,10 +116,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glBeginFragmentSh
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glEndFragmentShaderATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glEndFragmentShaderATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glEndFragmentShaderATI
 	(JNIEnv * env, jclass clazz)
 {
-	CHECK_EXISTS(glEndFragmentShaderATI)
 	glEndFragmentShaderATI();
 	CHECK_GL_ERROR
 }
@@ -154,10 +127,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glEndFragmentShad
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glPassTexCoordATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glPassTexCoordATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glPassTexCoordATI
 	(JNIEnv * env, jclass clazz, jint dst, jint coord, jint swizzle)
 {
-	CHECK_EXISTS(glPassTexCoordATI)
 	glPassTexCoordATI(dst, coord, swizzle);
 	CHECK_GL_ERROR
 }
@@ -166,10 +138,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glPassTexCoordATI
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glSampleMapATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glSampleMapATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glSampleMapATI
 	(JNIEnv * env, jclass clazz, jint dst, jint interp, jint swizzle)
 {
-	CHECK_EXISTS(glSampleMapATI)
 	glSampleMapATI(dst, interp, swizzle);
 	CHECK_GL_ERROR
 }
@@ -178,10 +149,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glSampleMapATI
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glColorFragmentOp1ATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp1ATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp1ATI
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMask, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod)
 {
-	CHECK_EXISTS(glColorFragmentOp1ATI)
 	glColorFragmentOp1ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod);
 	CHECK_GL_ERROR
 }
@@ -190,10 +160,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glColorFragmentOp2ATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp2ATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp2ATI
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMask, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod)
 {
-	CHECK_EXISTS(glColorFragmentOp2ATI)
 	glColorFragmentOp2ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod);
 	CHECK_GL_ERROR
 }
@@ -202,10 +171,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glColorFragmentOp3ATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp3ATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp3ATI
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMask, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod, jint arg3, jint arg3Rep, jint arg3Mod)
 {
-	CHECK_EXISTS(glColorFragmentOp3ATI)
 	glColorFragmentOp3ATI(op, dst, dstMask, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, arg3, arg3Rep, arg3Mod);
 	CHECK_GL_ERROR
 }
@@ -214,10 +182,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glAlphaFragmentOp1ATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp1ATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp1ATI
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod)
 {
-	CHECK_EXISTS(glAlphaFragmentOp1ATI)
 	glAlphaFragmentOp1ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod);
 	CHECK_GL_ERROR
 }
@@ -226,10 +193,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glAlphaFragmentOp2ATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp2ATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp2ATI
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod)
 {
-	CHECK_EXISTS(glAlphaFragmentOp2ATI)
 	glAlphaFragmentOp2ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod);
 	CHECK_GL_ERROR
 }
@@ -238,10 +204,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	glAlphaFragmentOp3ATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp3ATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp3ATI
 	(JNIEnv * env, jclass clazz, jint op, jint dst, jint dstMod, jint arg1, jint arg1Rep, jint arg1Mod, jint arg2, jint arg2Rep, jint arg2Mod, jint arg3, jint arg3Rep, jint arg3Mod)
 {
-	CHECK_EXISTS(glAlphaFragmentOp3ATI)
 	glAlphaFragmentOp3ATI(op, dst, dstMod, arg1, arg1Rep, arg1Mod, arg2, arg2Rep, arg2Mod, arg3, arg3Rep, arg3Mod);
 	CHECK_GL_ERROR
 }
@@ -250,11 +215,34 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp
  * Class:	org.lwjgl.opengl.ATIFragmentShader
  * Method:	nglSetFragmentShaderConstantATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_nglSetFragmentShaderConstantATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIFragmentShader_nglSetFragmentShaderConstantATI
 	(JNIEnv * env, jclass clazz, jint dst, jobject pfValue, jint pfValue_offset)
 {
-	CHECK_EXISTS(glSetFragmentShaderConstantATI)
 	GLfloat *pfValue_ptr = (GLfloat *)env->GetDirectBufferAddress(pfValue) + pfValue_offset;
 	glSetFragmentShaderConstantATI(dst, pfValue_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIFragmentShader(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glGenFragmentShadersATI", "(I)I", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glGenFragmentShadersATI, "glGenFragmentShadersATI", (void**)&glGenFragmentShadersATI},
+		{"glBindFragmentShaderATI", "(I)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glBindFragmentShaderATI, "glBindFragmentShaderATI", (void**)&glBindFragmentShaderATI},
+		{"glDeleteFragmentShaderATI", "(I)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glDeleteFragmentShaderATI, "glDeleteFragmentShaderATI", (void**)&glDeleteFragmentShaderATI},
+		{"glBeginFragmentShaderATI", "()V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glBeginFragmentShaderATI, "glBeginFragmentShaderATI", (void**)&glBeginFragmentShaderATI},
+		{"glEndFragmentShaderATI", "()V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glEndFragmentShaderATI, "glEndFragmentShaderATI", (void**)&glEndFragmentShaderATI},
+		{"glPassTexCoordATI", "(III)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glPassTexCoordATI, "glPassTexCoordATI", (void**)&glPassTexCoordATI},
+		{"glSampleMapATI", "(III)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glSampleMapATI, "glSampleMapATI", (void**)&glSampleMapATI},
+		{"glColorFragmentOp1ATI", "(IIIIIII)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp1ATI, "glColorFragmentOp1ATI", (void**)&glColorFragmentOp1ATI},
+		{"glColorFragmentOp2ATI", "(IIIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp2ATI, "glColorFragmentOp2ATI", (void**)&glColorFragmentOp2ATI},
+		{"glColorFragmentOp3ATI", "(IIIIIIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glColorFragmentOp3ATI, "glColorFragmentOp3ATI", (void**)&glColorFragmentOp3ATI},
+		{"glAlphaFragmentOp1ATI", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp1ATI, "glAlphaFragmentOp1ATI", (void**)&glAlphaFragmentOp1ATI},
+		{"glAlphaFragmentOp2ATI", "(IIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp2ATI, "glAlphaFragmentOp2ATI", (void**)&glAlphaFragmentOp2ATI},
+		{"glAlphaFragmentOp3ATI", "(IIIIIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_glAlphaFragmentOp3ATI, "glAlphaFragmentOp3ATI", (void**)&glAlphaFragmentOp3ATI},
+		{"nglSetFragmentShaderConstantATI", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIFragmentShader_nglSetFragmentShaderConstantATI, "glSetFragmentShaderConstantATI", (void**)&glSetFragmentShaderConstantATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIFragmentShader");
+	if (extgl_Extensions.GL_ATI_fragment_shader)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_fragment_shader", num_functions, functions);
 }

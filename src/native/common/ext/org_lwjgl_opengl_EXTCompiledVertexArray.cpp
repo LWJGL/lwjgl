@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTCompiledVertexArray
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTCompiledVertexArray.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,23 +43,13 @@ typedef void (APIENTRY * glUnlockArraysEXTPROC) ();
 static glLockArraysEXTPROC glLockArraysEXT;
 static glUnlockArraysEXTPROC glUnlockArraysEXT;
 
-void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_compiled_vertex_array)
-		return;
-	glLockArraysEXT = (glLockArraysEXTPROC) extgl_GetProcAddress("glLockArraysEXT");
-	glUnlockArraysEXT = (glUnlockArraysEXTPROC) extgl_GetProcAddress("glUnlockArraysEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_compiled_vertex_array)
-}
-
 /*
  * Class:	org.lwjgl.opengl.EXTCompiledVertexArray
  * Method:	glLockArraysEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT
 	(JNIEnv * env, jclass clazz, jint first, jint count)
 {
-	CHECK_EXISTS(glLockArraysEXT)
 	glLockArraysEXT(first, count);
 	CHECK_GL_ERROR
 }
@@ -69,10 +58,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArrays
  * Class:	org.lwjgl.opengl.EXTCompiledVertexArray
  * Method:	glUnlockArraysEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT
 	(JNIEnv * env, jclass clazz)
 {
-	CHECK_EXISTS(glUnlockArraysEXT)
 	glUnlockArraysEXT();
 	CHECK_GL_ERROR
 }
+
+void extgl_InitEXTCompiledVertexArray(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glLockArraysEXT", "(II)V", (void*)&Java_org_lwjgl_opengl_EXTCompiledVertexArray_glLockArraysEXT, "glLockArraysEXT", (void**)&glLockArraysEXT},
+		{"glUnlockArraysEXT", "()V", (void*)&Java_org_lwjgl_opengl_EXTCompiledVertexArray_glUnlockArraysEXT, "glUnlockArraysEXT", (void**)&glUnlockArraysEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTCompiledVertexArray");
+	if (extgl_Extensions.GL_EXT_compiled_vertex_array)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_compiled_vertex_array", num_functions, functions);
+}
+

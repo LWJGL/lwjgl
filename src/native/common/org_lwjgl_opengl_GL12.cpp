@@ -39,7 +39,6 @@
  * @version $Revision$
  */
 
-#include "org_lwjgl_opengl_GL12.h"
 #include "checkGLerror.h"
 #include "extgl.h"
 
@@ -53,26 +52,14 @@ static glTexImage3DPROC glTexImage3D;
 static glTexSubImage3DPROC glTexSubImage3D;
 static glCopyTexSubImage3DPROC glCopyTexSubImage3D;
 
-void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.OpenGL12)
-		return;
-	glTexImage3D = (glTexImage3DPROC) extgl_GetProcAddress("glTexImage3D");
-	glTexSubImage3D = (glTexSubImage3DPROC) extgl_GetProcAddress("glTexSubImage3D");
-	glCopyTexSubImage3D = (glCopyTexSubImage3DPROC) extgl_GetProcAddress("glCopyTexSubImage3D");
-	glDrawRangeElements = (glDrawRangeElementsPROC) extgl_GetProcAddress("glDrawRangeElements");
-	EXTGL_SANITY_CHECK(env, ext_set, OpenGL12)
-}
-
 /*
  * Class:     org_lwjgl_opengl_GL12
  * Method:    nglDrawRangeElements
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements
   (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glDrawRangeElements)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glDrawRangeElements(mode, start, end, count, type, address);
 	CHECK_GL_ERROR
@@ -83,10 +70,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElements
  * Method:    nglDrawRangeElementsVBO
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
   (JNIEnv *env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint buffer_offset)
 {
-	CHECK_EXISTS(glDrawRangeElements)
 	glDrawRangeElements(mode, start, end, count, type, offsetToPointer(buffer_offset));
 	CHECK_GL_ERROR
 }
@@ -96,10 +82,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO
  * Method:    glTexImage3D
  * Signature: (IIIIIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint internalformat, jint width, jint height, jint depth, jint border, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glTexImage3D)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, address);
 	CHECK_GL_ERROR
@@ -110,10 +95,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexImage3D
  * Method:    glTexSubImage3D
  * Signature: (IIIIIIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint width, jint height, jint depth, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glTexSubImage3D)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, address);
 	CHECK_GL_ERROR
@@ -124,11 +108,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_nglTexSubImage3D
  * Method:    glCopyTexSubImage3D
  * Signature: (IIIIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D
   (JNIEnv *env, jclass clazz, jint target, jint level, jint xoffset, jint yoffset, jint zoffset, jint x, jint y, jint width, jint height)
 {
-	CHECK_EXISTS(glCopyTexSubImage3D)
 	glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitOpenGL1_2(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglDrawRangeElements", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglDrawRangeElements, "glDrawRangeElements", (void**)&glDrawRangeElements},
+		{"nglDrawRangeElementsVBO", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_nglDrawRangeElementsVBO, NULL, NULL},
+		{"nglTexImage3D", "(IIIIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglTexImage3D, "glTexImage3D", (void**)&glTexImage3D},
+		{"nglTexSubImage3D", "(IIIIIIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL12_nglTexSubImage3D, "glTexSubImage3D", (void**)&glTexSubImage3D},
+		{"glCopyTexSubImage3D", "(IIIIIIIII)V", (void*)&Java_org_lwjgl_opengl_GL12_glCopyTexSubImage3D, "glCopyTexSubImage3D", (void**)&glCopyTexSubImage3D}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/GL12");
+	if (extgl_Extensions.OpenGL12)
+		extgl_InitializeClass(env, clazz, ext_set, "OpenGL12", num_functions, functions);
 }
 

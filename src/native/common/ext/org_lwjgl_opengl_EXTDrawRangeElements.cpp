@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTDrawRangeElements
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTDrawRangeElements.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -42,22 +41,13 @@ typedef void (APIENTRY * glDrawRangeElementsEXTPROC) ( GLenum mode, GLuint start
 
 static glDrawRangeElementsEXTPROC glDrawRangeElementsEXT;
 
-void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_draw_range_elements)
-		return;
-	glDrawRangeElementsEXT = (glDrawRangeElementsEXTPROC) extgl_GetProcAddress("glDrawRangeElementsEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_draw_range_elements)
-}
-
 /*
  * Class:	org.lwjgl.opengl.EXTDrawRangeElements
  * Method:	nglDrawRangeElementsEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXT
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jobject pIndices, jint pIndices_offset)
 {
-	CHECK_EXISTS(glDrawRangeElementsEXT)
 	GLvoid *pIndices_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pIndices) + pIndices_offset);
 	glDrawRangeElementsEXT(mode, start, end, count, type, pIndices_ptr);
 	CHECK_GL_ERROR
@@ -67,10 +57,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeEl
  * Class:	org.lwjgl.opengl.EXTDrawRangeElements
  * Method:	nglDrawRangeElementsEXTVBO
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXTVBO
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXTVBO
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count, jint type, jint buffer_offset)
 {
-	CHECK_EXISTS(glDrawRangeElementsEXT)
 	glDrawRangeElementsEXT(mode, start, end, count, type, (GLvoid *)buffer_offset);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitEXTDrawRangeElements(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglDrawRangeElementsEXT", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXT, "glDrawRangeElementsEXT", (void**)&glDrawRangeElementsEXT},
+		{"nglDrawRangeElementsEXTVBO", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_EXTDrawRangeElements_nglDrawRangeElementsEXTVBO, NULL, NULL}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTDrawRangeElements");
+	if (extgl_Extensions.GL_EXT_draw_range_elements)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_draw_range_elements", num_functions, functions);
+}
+

@@ -34,30 +34,32 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBMultisample
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBMultisample.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
-typedef void (APIENTRY * glSampleCoverageARBPROC) (GLclampf value, GLboolean invert );
+typedef void (APIENTRY * glSampleCoverageARBPROC) (GLclampf value, GLboolean invert);
 
 static glSampleCoverageARBPROC glSampleCoverageARB;
-
-void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_multisample)
-		return;
-	glSampleCoverageARB = (glSampleCoverageARBPROC) extgl_GetProcAddress("glSampleCoverageARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_multisample)
-}
 
 /*
  * Class:	org.lwjgl.opengl.ARBMultisample
  * Method:	glSampleCoverageARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultisample_glSampleCoverageARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMultisample_glSampleCoverageARB
 	(JNIEnv * env, jclass clazz, jfloat value, jboolean invert)
 {
-	CHECK_EXISTS(glSampleCoverageARB)
 	glSampleCoverageARB(value, invert);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitARBMultisample(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glSampleCoverageARB", "(FZ)V", (void*)&Java_org_lwjgl_opengl_ARBMultisample_glSampleCoverageARB, "glSampleCoverageARB", (void**)&glSampleCoverageARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBMultisample");
+	if (extgl_Extensions.GL_ARB_multisample)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_multisample", num_functions, functions);
+}
+

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVPrimitiveRestart
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVPrimitiveRestart.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,25 +43,13 @@ typedef void (APIENTRY * glPrimitiveRestartIndexNVPROC) (GLuint index);
 static glPrimitiveRestartNVPROC glPrimitiveRestartNV;
 static glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV;
 
-void extgl_InitNVPrimitiveRestart(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_primitive_restart)
-		return;
-
-	glPrimitiveRestartNV = (glPrimitiveRestartNVPROC) extgl_GetProcAddress("glPrimitiveRestartNV");
-	glPrimitiveRestartIndexNV = (glPrimitiveRestartIndexNVPROC) extgl_GetProcAddress("glPrimitiveRestartIndexNV");
-
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_primitive_restart)
-}
-
 /*
  * Class:	org.lwjgl.opengl.NVPrimitiveRestart
  * Method:	glPrimitiveRestartNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartNV
 	(JNIEnv * env, jclass clazz)
 {
-	CHECK_EXISTS(glPrimitiveRestartNV)
 	glPrimitiveRestartNV();
 	CHECK_GL_ERROR
 }
@@ -71,10 +58,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveResta
  * Class:	org.lwjgl.opengl.NVPrimitiveRestart
  * Method:	glPrimitiveRestartIndexNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartIndexNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartIndexNV
 	(JNIEnv * env, jclass clazz, jint index)
 {
-	CHECK_EXISTS(glPrimitiveRestartIndexNV)
 	glPrimitiveRestartIndexNV(index);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitNVPrimitiveRestart(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glPrimitiveRestartNV", "()V", (void*)&Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartNV, "glPrimitiveRestartNV", (void**)&glPrimitiveRestartNV},
+		{"glPrimitiveRestartIndexNV", "(I)V", (void*)&Java_org_lwjgl_opengl_NVPrimitiveRestart_glPrimitiveRestartIndexNV, "glPrimitiveRestartIndexNV", (void**)&glPrimitiveRestartIndexNV}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVPrimitiveRestart");
+	if (extgl_Extensions.GL_NV_primitive_restart)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_primitive_restart", num_functions, functions);
 }

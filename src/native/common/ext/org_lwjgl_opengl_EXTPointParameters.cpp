@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTPointParameters
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTPointParameters.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,23 +43,13 @@ typedef void (APIENTRY * glPointParameterfvEXTPROC) (GLenum pname, const GLfloat
 static glPointParameterfEXTPROC glPointParameterfEXT;
 static glPointParameterfvEXTPROC glPointParameterfvEXT;
 
-void extgl_InitEXTPointParameters(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_point_parameters)
-		return;
-	glPointParameterfEXT = (glPointParameterfEXTPROC) extgl_GetProcAddress("glPointParameterfEXT");
-	glPointParameterfvEXT = (glPointParameterfvEXTPROC) extgl_GetProcAddress("glPointParameterfvEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_point_parameters)
-}
-
 /*
  * Class:	org.lwjgl.opengl.EXTPointParameters
  * Method:	glPointParameterfEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEXT
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
-	CHECK_EXISTS(glPointParameterfEXT)
 	glPointParameterfEXT(pname, param);
 	CHECK_GL_ERROR
 }
@@ -69,11 +58,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointParameter
  * Class:	org.lwjgl.opengl.EXTPointParameters
  * Method:	nglPointParameterfvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfvEXT
 	(JNIEnv * env, jclass clazz, jint pname, jobject pfParams, jint pfParams_offset)
 {
-	CHECK_EXISTS(glPointParameterfvEXT)
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glPointParameterfvEXT(pname, pfParams_ptr);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitEXTPointParameters(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glPointParameterfEXT", "(IF)V", (void*)&Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEXT, "glPointParameterfEXT", (void**)&glPointParameterfEXT},
+		{"nglPointParameterfvEXT", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfvEXT, "glPointParameterfvEXT", (void**)&glPointParameterfvEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTPointParameters");
+	if (extgl_Extensions.GL_EXT_point_parameters)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_point_parameters", num_functions, functions);
+}
+

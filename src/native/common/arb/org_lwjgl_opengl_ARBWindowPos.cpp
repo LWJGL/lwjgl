@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBWindowPos
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBWindowPos.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -52,27 +51,13 @@ static glWindowPos3fARBPROC glWindowPos3fARB;
 static glWindowPos3iARBPROC glWindowPos3iARB;
 static glWindowPos3sARBPROC glWindowPos3sARB;
 
-void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_window_pos)
-		return;
-	glWindowPos2fARB = (glWindowPos2fARBPROC) extgl_GetProcAddress("glWindowPos2fARB");
-	glWindowPos2iARB = (glWindowPos2iARBPROC) extgl_GetProcAddress("glWindowPos2iARB");
-	glWindowPos2sARB = (glWindowPos2sARBPROC) extgl_GetProcAddress("glWindowPos2sARB");
-	glWindowPos3fARB = (glWindowPos3fARBPROC) extgl_GetProcAddress("glWindowPos3fARB");
-	glWindowPos3iARB = (glWindowPos3iARBPROC) extgl_GetProcAddress("glWindowPos3iARB");
-	glWindowPos3sARB = (glWindowPos3sARBPROC) extgl_GetProcAddress("glWindowPos3sARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_window_pos)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos2fARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB
 	(JNIEnv * env, jclass clazz, jfloat x, jfloat y)
 {
-	CHECK_EXISTS(glWindowPos2fARB)
 	glWindowPos2fARB(x, y);
 	CHECK_GL_ERROR
 }
@@ -81,10 +66,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos2iARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB
 	(JNIEnv * env, jclass clazz, jint x, jint y)
 {
-	CHECK_EXISTS(glWindowPos2iARB)
 	glWindowPos2iARB(x, y);
 	CHECK_GL_ERROR
 }
@@ -93,10 +77,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos2sARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB
 	(JNIEnv * env, jclass clazz, jshort x, jshort y)
 {
-	CHECK_EXISTS(glWindowPos2sARB)
 	glWindowPos2sARB(x, y);
 	CHECK_GL_ERROR
 }
@@ -105,10 +88,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos3fARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fARB
 	(JNIEnv * env, jclass clazz, jfloat x, jfloat y, jfloat z)
 {
-	CHECK_EXISTS(glWindowPos3fARB)
 	glWindowPos3fARB(x, y, z);
 	CHECK_GL_ERROR
 }
@@ -117,10 +99,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fARB
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos3iARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iARB
 	(JNIEnv * env, jclass clazz, jint x, jint y, jint z)
 {
-	CHECK_EXISTS(glWindowPos3iARB)
 	glWindowPos3iARB(x, y, z);
 	CHECK_GL_ERROR
 }
@@ -129,10 +110,26 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iARB
  * Class:	org.lwjgl.opengl.ARBWindowPos
  * Method:	glWindowPos3sARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB
 	(JNIEnv * env, jclass clazz, jshort x, jshort y, jshort z)
 {
-	CHECK_EXISTS(glWindowPos3sARB)
 	glWindowPos3sARB(x, y, z);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitARBWindowPos(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glWindowPos2fARB", "(FF)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2fARB, "glWindowPos2fARB", (void**)&glWindowPos2fARB},
+		{"glWindowPos2iARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2iARB, "glWindowPos2iARB", (void**)&glWindowPos2iARB},
+		{"glWindowPos2sARB", "(SS)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos2sARB, "glWindowPos2sARB", (void**)&glWindowPos2sARB},
+		{"glWindowPos3fARB", "(FFF)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3fARB, "glWindowPos3fARB", (void**)&glWindowPos3fARB},
+		{"glWindowPos3iARB", "(III)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3iARB, "glWindowPos3iARB", (void**)&glWindowPos3iARB},
+		{"glWindowPos3sARB", "(SSS)V", (void*)&Java_org_lwjgl_opengl_ARBWindowPos_glWindowPos3sARB, "glWindowPos3sARB", (void**)&glWindowPos3sARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBWindowPos");
+	if (extgl_Extensions.GL_ARB_window_pos)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_window_pos", num_functions, functions);
+}
+

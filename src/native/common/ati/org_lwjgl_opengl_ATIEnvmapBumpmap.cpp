@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIEnvmapBumpmap
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIEnvmapBumpmap.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -48,25 +47,13 @@ static glTexBumpParameterfvATIPROC glTexBumpParameterfvATI;
 static glGetTexBumpParameterivATIPROC glGetTexBumpParameterivATI;
 static glGetTexBumpParameterfvATIPROC glGetTexBumpParameterfvATI;
 
-void extgl_InitATIEnvmapBumpmap(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_envmap_bumpmap)
-		return;
-	glTexBumpParameterivATI = (glTexBumpParameterivATIPROC) extgl_GetProcAddress("glTexBumpParameterivATI");
-	glTexBumpParameterfvATI = (glTexBumpParameterfvATIPROC) extgl_GetProcAddress("glTexBumpParameterfvATI");
-	glGetTexBumpParameterivATI = (glGetTexBumpParameterivATIPROC) extgl_GetProcAddress("glGetTexBumpParameterivATI");
-	glGetTexBumpParameterfvATI = (glGetTexBumpParameterfvATIPROC) extgl_GetProcAddress("glGetTexBumpParameterfvATI");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_envmap_bumpmap)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglTexBumpParameterfvATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfvATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfvATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject pfParam, jint pfParam_offset)
 {
-	CHECK_EXISTS(glTexBumpParameterfvATI)
 	GLfloat *pfParam_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParam) + pfParam_offset;
 	glTexBumpParameterfvATI(pname, pfParam_ptr);
 	CHECK_GL_ERROR
@@ -76,10 +63,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParamete
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglTexBumpParameterivATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterivATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterivATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject piParam, jint piParam_offset)
 {
-	CHECK_EXISTS(glTexBumpParameterivATI)
 	GLint *piParam_ptr = (GLint *)env->GetDirectBufferAddress(piParam) + piParam_offset;
 	glTexBumpParameterivATI(pname, piParam_ptr);
 	CHECK_GL_ERROR
@@ -89,10 +75,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParamete
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglGetTexBumpParameterfvATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterfvATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterfvATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject pfParam, jint pfParam_offset)
 {
-	CHECK_EXISTS(glGetTexBumpParameterfvATI)
 	GLfloat *pfParam_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParam) + pfParam_offset;
 	glGetTexBumpParameterfvATI(pname, pfParam_ptr);
 	CHECK_GL_ERROR
@@ -102,11 +87,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParam
  * Class:	org.lwjgl.opengl.ATIEnvmapBumpmap
  * Method:	nglGetTexBumpParameterivATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterivATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterivATI
 	(JNIEnv * env, jclass clazz, jint pname, jobject piParam, jint piParam_offset)
 {
-	CHECK_EXISTS(glGetTexBumpParameterivATI)
 	GLint *piParam_ptr = (GLint *)env->GetDirectBufferAddress(piParam) + piParam_offset;
 	glGetTexBumpParameterivATI(pname, piParam_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIEnvmapBumpmap(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglTexBumpParameterfvATI", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterfvATI, "glTexBumpParameterfvATI", (void**)&glTexBumpParameterfvATI},
+		{"nglTexBumpParameterivATI", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglTexBumpParameterivATI, "glTexBumpParameterivATI", (void**)&glTexBumpParameterivATI},
+		{"nglGetTexBumpParameterfvATI", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterfvATI, "glGetTexBumpParameterfvATI", (void**)&glGetTexBumpParameterfvATI},
+		{"nglGetTexBumpParameterivATI", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIEnvmapBumpmap_nglGetTexBumpParameterivATI, "glGetTexBumpParameterivATI", (void**)&glGetTexBumpParameterivATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIEnvmapBumpmap");
+	if (extgl_Extensions.GL_ATI_envmap_bumpmap)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_envmap_bumpmap", num_functions, functions);
 }

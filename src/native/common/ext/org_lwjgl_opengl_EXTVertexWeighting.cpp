@@ -34,36 +34,22 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTVertexWeighting
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTVertexWeighting.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
 typedef void (APIENTRY * glVertexWeightfEXTPROC) (GLfloat weight);
-typedef void (APIENTRY * glVertexWeightfvEXTPROC) (const GLfloat *weight);
 typedef void (APIENTRY * glVertexWeightPointerEXTPROC) (GLsizei size, GLenum type, GLsizei stride, const GLvoid *pointer);
 
 static glVertexWeightfEXTPROC glVertexWeightfEXT;
-static glVertexWeightfvEXTPROC glVertexWeightfvEXT;
 static glVertexWeightPointerEXTPROC glVertexWeightPointerEXT;
-
-void extgl_InitEXTVertexWeighting(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_vertex_weighting)
-		return;
-	glVertexWeightfEXT = (glVertexWeightfEXTPROC) extgl_GetProcAddress("glVertexWeightfEXT");
-	glVertexWeightfvEXT = (glVertexWeightfvEXTPROC) extgl_GetProcAddress("glVertexWeightfvEXT");
-	glVertexWeightPointerEXT = (glVertexWeightPointerEXTPROC) extgl_GetProcAddress("glVertexWeightPointerEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_vertex_weighting)
-}
 
 /*
  * Class:	org.lwjgl.opengl.EXTVertexWeighting
  * Method:	glVertexWeightfEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfEXT
 	(JNIEnv * env, jclass clazz, jfloat weight)
 {
-	CHECK_EXISTS(glVertexWeightfEXT)
 	glVertexWeightfEXT(weight);
 	CHECK_GL_ERROR
 }
@@ -72,10 +58,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfE
  * Class:	org.lwjgl.opengl.EXTVertexWeighting
  * Method:	nglVertexWeightPointerEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXT
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_offset)
 {
-	CHECK_EXISTS(glVertexWeightPointerEXT)
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glVertexWeightPointerEXT(size, type, stride, pPointer_ptr);
 	CHECK_GL_ERROR
@@ -85,10 +70,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightP
  * Class:	org.lwjgl.opengl.EXTVertexWeighting
  * Method:	nglVertexWeightPointerEXTVBO
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXTVBO
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXTVBO
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
-	CHECK_EXISTS(glVertexWeightPointerEXT)
 	glVertexWeightPointerEXT(size, type, stride, (GLvoid *)buffer_offset);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitEXTVertexWeighting(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glVertexWeightfEXT", "(F)V", (void*)&Java_org_lwjgl_opengl_EXTVertexWeighting_glVertexWeightfEXT, "glVertexWeightfEXT", (void**)&glVertexWeightfEXT},
+		{"nglVertexWeightPointerEXT", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXT, "glVertexWeightPointerEXT", (void**)&glVertexWeightPointerEXT},
+		{"nglVertexWeightPointerEXTVBO", "(IIII)V", (void*)&Java_org_lwjgl_opengl_EXTVertexWeighting_nglVertexWeightPointerEXTVBO, NULL, NULL}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTVertexWeighting");
+	if (extgl_Extensions.GL_EXT_vertex_weighting)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_vertex_weighting", num_functions, functions);
 }

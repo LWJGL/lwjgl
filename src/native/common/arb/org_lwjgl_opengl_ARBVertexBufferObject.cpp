@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBVertexBufferObject
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBVertexBufferObject.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -65,32 +64,13 @@ static glUnmapBufferARBPROC glUnmapBufferARB;
 static glGetBufferParameterivARBPROC glGetBufferParameterivARB;
 static glGetBufferPointervARBPROC glGetBufferPointervARB;
 
-void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_vertex_buffer_object)
-		return;
-	glBindBufferARB = (glBindBufferARBPROC) extgl_GetProcAddress("glBindBufferARB");
-	glDeleteBuffersARB = (glDeleteBuffersARBPROC) extgl_GetProcAddress("glDeleteBuffersARB");
-	glGenBuffersARB = (glGenBuffersARBPROC) extgl_GetProcAddress("glGenBuffersARB");
-	glIsBufferARB = (glIsBufferARBPROC) extgl_GetProcAddress("glIsBufferARB");
-	glBufferDataARB = (glBufferDataARBPROC) extgl_GetProcAddress("glBufferDataARB");
-	glBufferSubDataARB = (glBufferSubDataARBPROC) extgl_GetProcAddress("glBufferSubDataARB");
-	glGetBufferSubDataARB = (glGetBufferSubDataARBPROC) extgl_GetProcAddress("glGetBufferSubDataARB");
-	glMapBufferARB = (glMapBufferARBPROC) extgl_GetProcAddress("glMapBufferARB");
-	glUnmapBufferARB = (glUnmapBufferARBPROC) extgl_GetProcAddress("glUnmapBufferARB");
-	glGetBufferParameterivARB = (glGetBufferParameterivARBPROC) extgl_GetProcAddress("glGetBufferParameterivARB");
-	glGetBufferPointervARB = (glGetBufferPointervARBPROC) extgl_GetProcAddress("glGetBufferPointervARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_vertex_buffer_object)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	nglBindBufferARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBindBufferARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBindBufferARB
 	(JNIEnv * env, jclass clazz, jint target, jint buffer)
 {
-	CHECK_EXISTS(glBindBufferARB)
 	glBindBufferARB(target, buffer);
 	CHECK_GL_ERROR
 }
@@ -99,10 +79,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBindBuffer
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	nglDeleteBuffersARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglDeleteBuffersARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglDeleteBuffersARB
 	(JNIEnv * env, jclass clazz, jint n, jobject buffers, jint buffers_offset)
 {
-	CHECK_EXISTS(glDeleteBuffersARB)
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
 	glDeleteBuffersARB(n, buffers_ptr);
 	CHECK_GL_ERROR
@@ -112,10 +91,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglDeleteBuff
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	nglGenBuffersARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGenBuffersARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGenBuffersARB
 	(JNIEnv * env, jclass clazz, jint n, jobject buffers, jint buffers_offset)
 {
-	CHECK_EXISTS(glGenBuffersARB)
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
 	glGenBuffersARB(n, buffers_ptr);
 	CHECK_GL_ERROR
@@ -125,10 +103,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGenBuffers
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	glIsBufferARB
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glIsBufferARB
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glIsBufferARB
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
-	CHECK_EXISTS(glIsBufferARB)
 	GLboolean result = glIsBufferARB(buffer);
 	CHECK_GL_ERROR
 	return result;
@@ -138,10 +115,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glIsBuffe
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	nglBufferDataARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferDataARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferDataARB
 	(JNIEnv * env, jclass clazz, jint target, jint size, jobject data, jint data_offset, jint usage)
 {
-	CHECK_EXISTS(glBufferDataARB)
 	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data, data_offset);
 	glBufferDataARB(target, size, data_ptr, usage);
 	CHECK_GL_ERROR
@@ -151,10 +127,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferData
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	nglBufferSubDataARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferSubDataARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferSubDataARB
 	(JNIEnv * env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_offset)
 {
-	CHECK_EXISTS(glBufferSubDataARB)
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glBufferSubDataARB(target, offset, size, data_ptr);
 	CHECK_GL_ERROR
@@ -164,10 +139,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferSubD
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	nglGetBufferSubDataARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferSubDataARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferSubDataARB
 	(JNIEnv * env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_offset)
 {
-	CHECK_EXISTS(glGetBufferSubDataARB)
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glGetBufferSubDataARB(target, offset, size, data_ptr);
 	CHECK_GL_ERROR
@@ -177,10 +151,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferS
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	glMapBufferARB
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glMapBufferARB
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glMapBufferARB
 	(JNIEnv * env, jclass clazz, jint target, jint access, jint size, jobject oldBuffer)
 {
-	CHECK_EXISTS(glMapBufferARB)
 	void *buffer_address = glMapBufferARB((GLenum)target, (GLenum)access);
 	CHECK_GL_ERROR
 	void *old_buffer_address = safeGetBufferAddress(env, oldBuffer, 0);
@@ -194,10 +167,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glMapBuffe
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	glUnmapBufferARB
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glUnmapBufferARB
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glUnmapBufferARB
 	(JNIEnv * env, jclass clazz, jint target)
 {
-	CHECK_EXISTS(glUnmapBufferARB)
 	GLboolean result = glUnmapBufferARB(target);
 	CHECK_GL_ERROR
 	return result;
@@ -207,10 +179,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glUnmapBu
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	nglGetBufferParameterivARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferParameterivARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferParameterivARB
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject params, jint params_offset)
 {
-	CHECK_EXISTS(glGetBufferParameterivARB)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + params_offset;
 	glGetBufferParameterivARB(target, pname, params_ptr);
 	CHECK_GL_ERROR
@@ -220,12 +191,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferP
  * Class:	org.lwjgl.opengl.ARBVertexBufferObject
  * Method:	glGetBufferPointerARB
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glGetBufferPointerARB
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ARBVertexBufferObject_glGetBufferPointerARB
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jint size)
 {
-        CHECK_EXISTS(glGetBufferPointervARB)
         void *pointer;
         glGetBufferPointervARB((GLenum)target, (GLenum)pname, &pointer);
         CHECK_GL_ERROR
         return safeNewBuffer(env, pointer, size);
 }
+
+void extgl_InitARBVertexBufferObject(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglBindBufferARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBindBufferARB, "glBindBufferARB", (void**)&glBindBufferARB},
+		{"nglDeleteBuffersARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglDeleteBuffersARB, "glDeleteBuffersARB", (void**)&glDeleteBuffersARB},
+		{"nglGenBuffersARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGenBuffersARB, "glGenBuffersARB", (void**)&glGenBuffersARB},
+		{"glIsBufferARB", "(I)Z", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_glIsBufferARB, "glIsBufferARB", (void**)&glIsBufferARB},
+		{"nglBufferDataARB", "(IILjava/nio/Buffer;II)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferDataARB, "glBufferDataARB", (void**)&glBufferDataARB},
+		{"nglBufferSubDataARB", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglBufferSubDataARB, "glBufferSubDataARB", (void**)&glBufferSubDataARB},
+		{"nglGetBufferSubDataARB", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferSubDataARB, "glGetBufferSubDataARB", (void**)&glGetBufferSubDataARB},
+		{"glMapBufferARB", "(IIILjava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_glMapBufferARB, "glMapBufferARB", (void**)&glMapBufferARB},
+		{"glUnmapBufferARB", "(I)Z", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_glUnmapBufferARB, "glUnmapBufferARB", (void**)&glUnmapBufferARB},
+		{"nglGetBufferParameterivARB", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_nglGetBufferParameterivARB, "glGetBufferParameterivARB", (void**)&glGetBufferParameterivARB},
+		{"glGetBufferPointerARB", "(III)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_ARBVertexBufferObject_glGetBufferPointerARB, "glGetBufferPointervARB", (void**)&glGetBufferPointervARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBVertexBufferObject");
+	if (extgl_Extensions.GL_ARB_vertex_buffer_object)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_vertex_buffer_object", num_functions, functions);
+}
+

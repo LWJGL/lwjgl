@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.GL15
 // ----------------------------------
 
-#include "org_lwjgl_opengl_GL15.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -83,42 +82,13 @@ static glGetQueryivPROC glGetQueryiv;
 static glGetQueryObjectivPROC glGetQueryObjectiv;
 static glGetQueryObjectuivPROC glGetQueryObjectuiv;
 
-void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.OpenGL15)
-		return;
-	glBindBuffer = (glBindBufferPROC) extgl_GetProcAddress("glBindBuffer");
-	glDeleteBuffers = (glDeleteBuffersPROC) extgl_GetProcAddress("glDeleteBuffers");
-	glGenBuffers = (glGenBuffersPROC) extgl_GetProcAddress("glGenBuffers");
-	glIsBuffer = (glIsBufferPROC) extgl_GetProcAddress("glIsBuffer");
-	glBufferData = (glBufferDataPROC) extgl_GetProcAddress("glBufferData");
-	glBufferSubData = (glBufferSubDataPROC) extgl_GetProcAddress("glBufferSubData");
-	glGetBufferSubData = (glGetBufferSubDataPROC) extgl_GetProcAddress("glGetBufferSubData");
-	glMapBuffer = (glMapBufferPROC) extgl_GetProcAddress("glMapBuffer");
-	glUnmapBuffer = (glUnmapBufferPROC) extgl_GetProcAddress("glUnmapBuffer");
-	glGetBufferParameteriv = (glGetBufferParameterivPROC) extgl_GetProcAddress("glGetBufferParameteriv");
-	glGetBufferPointerv = (glGetBufferPointervPROC) extgl_GetProcAddress("glGetBufferPointerv");
-
-	glGenQueries = (glGenQueriesPROC) extgl_GetProcAddress("glGenQueries");
-	glDeleteQueries = (glDeleteQueriesPROC) extgl_GetProcAddress("glDeleteQueries");
-	glIsQuery = (glIsQueryPROC) extgl_GetProcAddress("glIsQuery");
-	glBeginQuery = (glBeginQueryPROC) extgl_GetProcAddress("glBeginQuery");
-	glEndQuery = (glEndQueryPROC) extgl_GetProcAddress("glEndQuery");
-	glGetQueryiv = (glGetQueryivPROC) extgl_GetProcAddress("glGetQueryiv");
-	glGetQueryObjectiv = (glGetQueryObjectivPROC) extgl_GetProcAddress("glGetQueryObjectiv");
-	glGetQueryObjectuiv = (glGetQueryObjectuivPROC) extgl_GetProcAddress("glGetQueryObjectuiv");
-
-	EXTGL_SANITY_CHECK(env, ext_set, OpenGL15)
-}
-
 /*
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglBindBuffer
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBindBuffer
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBindBuffer
 	(JNIEnv * env, jclass clazz, jint target, jint buffer)
 {
-	CHECK_EXISTS(glBindBuffer)
 	glBindBuffer(target, buffer);
 	CHECK_GL_ERROR
 }
@@ -127,10 +97,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBindBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglDeleteBuffers
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteBuffers
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteBuffers
 	(JNIEnv * env, jclass clazz, jint n, jobject buffers, jint buffers_offset)
 {
-	CHECK_EXISTS(glDeleteBuffers)
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
 	glDeleteBuffers(n, buffers_ptr);
 	CHECK_GL_ERROR
@@ -140,10 +109,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteBuffers
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGenBuffers
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenBuffers
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenBuffers
 	(JNIEnv * env, jclass clazz, jint n, jobject buffers, jint buffers_offset)
 {
-	CHECK_EXISTS(glGenBuffers)
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffers_offset;
 	glGenBuffers(n, buffers_ptr);
 	CHECK_GL_ERROR
@@ -153,10 +121,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenBuffers
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glIsBuffer
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
-	CHECK_EXISTS(glIsBuffer)
 	GLboolean result = glIsBuffer(buffer);
 	CHECK_GL_ERROR
 	return result;
@@ -166,10 +133,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglBufferData
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
 	(JNIEnv * env, jclass clazz, jint target, jint size, jobject data, jint data_offset, jint usage)
 {
-	CHECK_EXISTS(glBufferData)
 	GLvoid *data_ptr = (GLvoid *)safeGetBufferAddress(env, data, data_offset);
 	glBufferData(target, size, data_ptr, usage);
 	CHECK_GL_ERROR
@@ -179,10 +145,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferData
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglBufferSubData
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData
 	(JNIEnv * env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_offset)
 {
-	CHECK_EXISTS(glBufferSubData)
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glBufferSubData(target, offset, size, data_ptr);
 	CHECK_GL_ERROR
@@ -192,10 +157,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglBufferSubData
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetBufferSubData
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData
 	(JNIEnv * env, jclass clazz, jint target, jint offset, jint size, jobject data, jint data_offset)
 {
-	CHECK_EXISTS(glGetBufferSubData)
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glGetBufferSubData(target, offset, size, data_ptr);
 	CHECK_GL_ERROR
@@ -205,10 +169,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferSubData
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glMapBuffer
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glMapBuffer
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glMapBuffer
 	(JNIEnv * env, jclass clazz, jint target, jint access, jint size, jobject oldBuffer)
 {
-        CHECK_EXISTS(glMapBuffer)
         void *buffer_address = glMapBuffer((GLenum)target, (GLenum)access);
         CHECK_GL_ERROR
         if (oldBuffer != NULL) {
@@ -223,10 +186,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glMapBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glUnmapBuffer
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glUnmapBuffer
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glUnmapBuffer
 	(JNIEnv * env, jclass clazz, jint target)
 {
-	CHECK_EXISTS(glUnmapBuffer)
 	GLboolean result = glUnmapBuffer(target);
 	CHECK_GL_ERROR
 	return result;
@@ -236,10 +198,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glUnmapBuffer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetBufferParameteriv
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject params, jint params_offset)
 {
-	CHECK_EXISTS(glGetBufferParameteriv)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + params_offset;
 	glGetBufferParameteriv(target, pname, params_ptr);
 	CHECK_GL_ERROR
@@ -249,10 +210,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glGetBufferPointer
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glGetBufferPointer
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glGetBufferPointer
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jint size)
 {
-        CHECK_EXISTS(glGetBufferPointerv)
         void *pointer;
         glGetBufferPointerv((GLenum)target, (GLenum)pname, &pointer);
         CHECK_GL_ERROR
@@ -263,10 +223,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_GL15_glGetBufferPointer
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGenQueries
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenQueries
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenQueries
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
-	CHECK_EXISTS(glGenQueries)
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glGenQueries(n, ids_ptr);
 	CHECK_GL_ERROR
@@ -276,10 +235,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGenQueries
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglDeleteQueries
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteQueries
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteQueries
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
-	CHECK_EXISTS(glDeleteQueries)
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glDeleteQueries(n, ids_ptr);
 	CHECK_GL_ERROR
@@ -289,10 +247,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglDeleteQueries
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glIsQuery
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsQuery
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsQuery
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glIsQuery)
 	GLboolean result = glIsQuery(id);
 	CHECK_GL_ERROR
 	return result;
@@ -302,10 +259,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_GL15_glIsQuery
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glBeginQuery
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glBeginQuery
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glBeginQuery
 	(JNIEnv * env, jclass clazz, jint target, jint id)
 {
-	CHECK_EXISTS(glBeginQuery)
 	glBeginQuery(target, id);
 	CHECK_GL_ERROR
 }
@@ -314,10 +270,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glBeginQuery
  * Class:	org.lwjgl.opengl.GL15
  * Method:	glEndQuery
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glEndQuery
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glEndQuery
 	(JNIEnv * env, jclass clazz, jint target)
 {
-	CHECK_EXISTS(glEndQuery)
 	glEndQuery(target);
 	CHECK_GL_ERROR
 }
@@ -326,10 +281,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_glEndQuery
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetQueryiv
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryiv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryiv
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetQueryiv)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryiv(target, pname, params_ptr);
 	CHECK_GL_ERROR
@@ -339,10 +293,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryiv
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetQueryObjectiv
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetQueryObjectiv)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectiv(id, pname, params_ptr);
 	CHECK_GL_ERROR
@@ -352,12 +305,40 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv
  * Class:	org.lwjgl.opengl.GL15
  * Method:	nglGetQueryObjectuiv
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetQueryObjectuiv)
 	GLuint *params_ptr = (GLuint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectuiv(id, pname, params_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglBindBuffer", "(II)V", (void*)&Java_org_lwjgl_opengl_GL15_nglBindBuffer, "glBindBuffer", (void**)&glBindBuffer},
+		{"nglDeleteBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglDeleteBuffers, "glDeleteBuffers", (void**)&glDeleteBuffers},
+		{"nglGenBuffers", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGenBuffers, "glGenBuffers", (void**)&glGenBuffers},
+		{"glIsBuffer", "(I)Z", (void*)&Java_org_lwjgl_opengl_GL15_glIsBuffer, "glIsBuffer", (void**)&glIsBuffer},
+		{"nglBufferData", "(IILjava/nio/Buffer;II)V", (void*)&Java_org_lwjgl_opengl_GL15_nglBufferData, "glBufferData", (void**)&glBufferData},
+		{"nglBufferSubData", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglBufferSubData, "glBufferSubData", (void**)&glBufferSubData},
+		{"nglGetBufferSubData", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGetBufferSubData, "glGetBufferSubData", (void**)&glGetBufferSubData},
+		{"glMapBuffer", "(IIILjava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_GL15_glMapBuffer, "glMapBuffer", (void**)&glMapBuffer},
+		{"glUnmapBuffer", "(I)Z", (void*)&Java_org_lwjgl_opengl_GL15_glUnmapBuffer, "glUnmapBuffer", (void**)&glUnmapBuffer},
+		{"nglGetBufferParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGetBufferParameteriv, "glGetBufferParameteriv", (void**)&glGetBufferParameteriv},
+		{"glGetBufferPointer", "(III)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_GL15_glGetBufferPointer, "glGetBufferPointerv", (void**)&glGetBufferPointerv},
+		{"nglGenQueries", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGenQueries, "glGenQueries", (void**)&glGenQueries},
+		{"nglDeleteQueries", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglDeleteQueries, "glDeleteQueries", (void**)&glDeleteQueries},
+		{"glIsQuery", "(I)Z", (void*)&Java_org_lwjgl_opengl_GL15_glIsQuery, "glIsQuery", (void**)&glIsQuery},
+		{"glBeginQuery", "(II)V", (void*)&Java_org_lwjgl_opengl_GL15_glBeginQuery, "glBeginQuery", (void**)&glBeginQuery},
+		{"glEndQuery", "(I)V", (void*)&Java_org_lwjgl_opengl_GL15_glEndQuery, "glEndQuery", (void**)&glEndQuery},
+		{"nglGetQueryiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGetQueryiv, "glGetQueryiv", (void**)&glGetQueryiv},
+		{"nglGetQueryObjectiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGetQueryObjectiv, "glGetQueryObjectiv", (void**)&glGetQueryObjectiv},
+		{"nglGetQueryObjectuiv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_GL15_nglGetQueryObjectuiv, "glGetQueryObjectuiv", (void**)&glGetQueryObjectuiv}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/GL15");
+	if (extgl_Extensions.OpenGL15)
+		extgl_InitializeClass(env, clazz, ext_set, "OpenGL15", num_functions, functions);
 }
 

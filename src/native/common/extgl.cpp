@@ -594,6 +594,39 @@ CFBundleRef opengl_bundle_ref = NULL;
 CFBundleRef agl_bundle_ref = NULL;
 #endif
 
+jclass extgl_ResetClass(JNIEnv *env, const char *class_name) {
+	jclass clazz = env->FindClass(class_name);
+	jint result = env->UnregisterNatives(clazz);
+	if (result != 0)
+		printfDebug("Could not unregister natives for class %s\n", class_name);
+	return clazz;
+}
+
+void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndGLFunction *functions) {
+	JNINativeMethod methods[num_functions];
+	for (int i = 0; i < num_functions; i++) {
+		JavaMethodAndGLFunction *function = functions + i;
+		if (function->gl_function_name != NULL) {
+			void *gl_func_pointer = extgl_GetProcAddress(function->gl_function_name);
+			if (gl_func_pointer == NULL) {
+				printf("NOTICE: %s disabled because of missing driver symbols\n", ext_name);
+				if (ext_set != NULL)
+					extgl_removeExtension(env, ext_set, ext_name);
+				return;
+			}
+			void **gl_function_pointer_pointer = function->gl_function_pointer;
+			*gl_function_pointer_pointer = gl_func_pointer;
+		}
+		JNINativeMethod *method = methods + i;
+		method->name = function->method_name;
+		method->signature = function->signature;
+		method->fnPtr = function->method_pointer;
+	}
+	jint result = env->RegisterNatives(clazz, methods, num_functions);
+	if (result != 0)
+		printfDebug("Could not register natives for extension %s\n", ext_name);
+}
+
 static void doExtension(JNIEnv *env, jobject ext_set, const char *method_name, const char *ext) {
 	jclass clazz = env->GetObjectClass(ext_set);
 	jmethodID id = env->GetMethodID(clazz, method_name, "(Ljava/lang/Object;)Z");
@@ -802,7 +835,7 @@ static void extgl_InitWGLARBBufferRegion(JNIEnv *env)
 	wglSaveBufferRegionARB = (wglSaveBufferRegionARBPROC) extgl_GetProcAddress("wglSaveBufferRegionARB");
 	wglRestoreBufferRegionARB = (wglRestoreBufferRegionARBPROC) extgl_GetProcAddress("wglRestoreBufferRegionARB");
 
-	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_buffer_region);
+	EXTGL_SANITY_CHECK(env, WGL_ARB_buffer_region);
 }
 
 static void extgl_InitWGLARBPbuffer(JNIEnv *env)
@@ -814,7 +847,7 @@ static void extgl_InitWGLARBPbuffer(JNIEnv *env)
 	wglReleasePbufferDCARB = (wglReleasePbufferDCARBPROC) extgl_GetProcAddress("wglReleasePbufferDCARB");
 	wglDestroyPbufferARB = (wglDestroyPbufferARBPROC) extgl_GetProcAddress("wglDestroyPbufferARB");
 	wglQueryPbufferARB = (wglQueryPbufferARBPROC) extgl_GetProcAddress("wglQueryPbufferARB");
-	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_pbuffer);
+	EXTGL_SANITY_CHECK(env, WGL_ARB_pbuffer);
 
 }
 
@@ -825,7 +858,7 @@ static void extgl_InitWGLARBPixelFormat(JNIEnv *env)
 	wglGetPixelFormatAttribivARB = (wglGetPixelFormatAttribivARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribivARB");
 	wglGetPixelFormatAttribfvARB = (wglGetPixelFormatAttribfvARBPROC) extgl_GetProcAddress("wglGetPixelFormatAttribfvARB");
 	wglChoosePixelFormatARB = (wglChoosePixelFormatARBPROC) extgl_GetProcAddress("wglChoosePixelFormatARB");
-	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_pixel_format);
+	EXTGL_SANITY_CHECK(env, WGL_ARB_pixel_format);
 
 }
 
@@ -836,7 +869,7 @@ static void extgl_InitWGLARBRenderTexture(JNIEnv *env)
 	wglBindTexImageARB = (wglBindTexImageARBPROC) extgl_GetProcAddress("wglBindTexImageARB");
 	wglReleaseTexImageARB = (wglReleaseTexImageARBPROC) extgl_GetProcAddress("wglReleaseTexImageARB");
 	wglSetPbufferAttribARB = (wglSetPbufferAttribARBPROC) extgl_GetProcAddress("wglSetPbufferAttribARB");
-	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_render_texture);
+	EXTGL_SANITY_CHECK(env, WGL_ARB_render_texture);
 
 }
 
@@ -846,7 +879,7 @@ static void extgl_InitWGLEXTSwapControl(JNIEnv *env)
 		return;
 	wglSwapIntervalEXT = (wglSwapIntervalEXTPROC) extgl_GetProcAddress("wglSwapIntervalEXT");
 	wglGetSwapIntervalEXT = (wglGetSwapIntervalEXTPROC) extgl_GetProcAddress("wglGetSwapIntervalEXT");
-	EXTGL_SANITY_CHECK(env, NULL, WGL_EXT_swap_control);
+	EXTGL_SANITY_CHECK(env, WGL_EXT_swap_control);
 
 }
 
@@ -856,7 +889,7 @@ static void extgl_InitWGLARBMakeCurrentRead(JNIEnv *env)
 		return;
 	wglMakeContextCurrentARB = (wglMakeContextCurrentARBPROC) extgl_GetProcAddress("wglMakeContextCurrentARB");
 	wglGetCurrentReadDCARB = (wglGetCurrentReadDCARBPROC) extgl_GetProcAddress("wglGetCurrentReadDCARB");
-	EXTGL_SANITY_CHECK(env, NULL, WGL_ARB_make_current_read);
+	EXTGL_SANITY_CHECK(env, WGL_ARB_make_current_read);
 
 }
 
@@ -960,37 +993,6 @@ static bool GLQueryExtension(JNIEnv *env, jobject ext_set, const char *name)
 	return QueryExtension(env, ext_set, glGetString(GL_EXTENSIONS), name);
 }
 
-/*static void extgl_InitNVPrimitiveRestart(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_primitive_restart)
-		return;
-	glPrimitiveRestartNV = (glPrimitiveRestartNVPROC) extgl_GetProcAddress("glPrimitiveRestartNV");
-	glPrimitiveRestartIndexNV = (glPrimitiveRestartIndexNVPROC) extgl_GetProcAddress("glPrimitiveRestartIndexNV");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_primitive_restart)
-}
-
-static void extgl_InitNVElementArray(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_element_array)
-		return;
-	glElementPointerNV = (glElementPointerNVPROC) extgl_GetProcAddress("glElementPointerNV");
-	glDrawElementArrayNV = (glDrawElementArrayNVPROC) extgl_GetProcAddress("glDrawElementArrayNV");
-	glDrawRangeElementArrayNV = (glDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glDrawRangeElementArrayNV");
-	glMultiDrawElementArrayNV = (glMultiDrawElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawElementArrayNV");
-	glMultiDrawRangeElementArrayNV = (glMultiDrawRangeElementArrayNVPROC) extgl_GetProcAddress("glMultiDrawRangeElementArrayNV");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_element_array)
-}
-
-
-static void extgl_InitEXTCullVertex(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_cull_vertex)
-		return;
-	glCullParameterfvEXT = (glCullParameterfvEXTPROC) extgl_GetProcAddress("glCullParameterfvEXT");
-	glCullParameterdvEXT = (glCullParameterdvEXTPROC) extgl_GetProcAddress("glCullParameterdvEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_cull_vertex)
-}
-*/
 
 #ifdef _X11
 static void extgl_InitGLX13(JNIEnv *env)
@@ -1015,7 +1017,7 @@ static void extgl_InitGLX13(JNIEnv *env)
 	glXQueryContext = (glXQueryContextPROC) extgl_GetProcAddress("glXQueryContext");
 	glXSelectEvent = (glXSelectEventPROC) extgl_GetProcAddress("glXSelectEvent");
 	glXGetSelectedEvent = (glXGetSelectedEventPROC) extgl_GetProcAddress("glXGetSelectedEvent");
-	EXTGL_SANITY_CHECK(env, (jobject)NULL, GLX13);
+	EXTGL_SANITY_CHECK(env, GLX13);
 }
 
 static bool extgl_InitGLX12(void)
@@ -1056,7 +1058,7 @@ static void extgl_InitGLXSGISwapControl(JNIEnv *env)
 	if (extgl_Extensions.GLX_SGI_swap_control != 1)
 		return;
 	glXSwapIntervalSGI = (glXSwapIntervalSGIPROC)extgl_GetProcAddress("glXSwapIntervalSGI");
-	EXTGL_SANITY_CHECK(env, (jobject)NULL, GLX_SGI_swap_control);
+	EXTGL_SANITY_CHECK(env, GLX_SGI_swap_control);
 }
 
 bool extgl_InitGLX(JNIEnv *env, Display *disp, int screen)
@@ -1208,7 +1210,7 @@ static void extgl_InitSupportedExtensions(JNIEnv *env, jobject ext_set)
 	extgl_Extensions.GL_SGIX_shadow = GLQueryExtension(env, ext_set, "GL_SGIX_shadow");
 }
 
-extern void extgl_InitOpenGL1_1();
+extern void extgl_InitOpenGL1_1(JNIEnv *env);
 //extern void extgl_InitARBFragmentProgram(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBImaging(JNIEnv *env, jobject ext_set);
 extern void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set);
@@ -1271,7 +1273,7 @@ extern void extgl_InitOpenGL1_5(JNIEnv *env, jobject ext_set);
 bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 {
 	extgl_error = false;
-	extgl_InitOpenGL1_1();
+	extgl_InitOpenGL1_1(env);
 	if (extgl_error)
 		return false;
 
@@ -1323,7 +1325,6 @@ bool extgl_Initialize(JNIEnv *env, jobject ext_set)
 	extgl_InitNVRegisterCombiners2(env, ext_set);
 	extgl_InitNVVertexArrayRange(env, ext_set);
 	extgl_InitNVVertexProgram(env, ext_set);
-
 	extgl_InitATIDrawBuffers(env, ext_set);
 	extgl_InitATIElementArray(env, ext_set);
 	extgl_InitATIEnvmapBumpmap(env, ext_set);

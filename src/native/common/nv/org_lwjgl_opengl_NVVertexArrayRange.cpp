@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVVertexArrayRange
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVVertexArrayRange.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -64,31 +63,13 @@ static glXFreeMemoryNVPROC glXFreeMemoryNV;
 
 #endif /* X11 */
 
-void extgl_InitNVVertexArrayRange(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_vertex_array_range)
-		return;
-	glFlushVertexArrayRangeNV = (glFlushVertexArrayRangeNVPROC) extgl_GetProcAddress("glFlushVertexArrayRangeNV");
-	glVertexArrayRangeNV = (glVertexArrayRangeNVPROC) extgl_GetProcAddress("glVertexArrayRangeNV");
-#ifdef _WIN32
-	wglAllocateMemoryNV = (wglAllocateMemoryNVPROC) extgl_GetProcAddress("wglAllocateMemoryNV");
-	wglFreeMemoryNV = (wglFreeMemoryNVPROC) extgl_GetProcAddress("wglFreeMemoryNV");
-#endif /* WIN32 */
-#ifdef _X11
-	glXAllocateMemoryNV = (glXAllocateMemoryNVPROC) extgl_GetProcAddress("glXAllocateMemoryNV");
-	glXFreeMemoryNV = (glXFreeMemoryNVPROC) extgl_GetProcAddress("glXFreeMemoryNV");
-#endif /* X11 */
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_vertex_array_range)
-}
-
 /*
  * Class:	org.lwjgl.opengl.NVVertexArrayRange
  * Method:	nglVertexArrayRangeNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglVertexArrayRangeNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglVertexArrayRangeNV
 	(JNIEnv * env, jclass clazz, jint size, jobject pPointer, jint pPointer_offset)
 {
-	CHECK_EXISTS(glVertexArrayRangeNV)
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glVertexArrayRangeNV(size, pPointer_ptr);
 	CHECK_GL_ERROR
@@ -98,75 +79,62 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_nglVertexArrayRa
  * Class:	org.lwjgl.opengl.NVVertexArrayRange
  * Method:	glFlushVertexArrayRangeNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glFlushVertexArrayRangeNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glFlushVertexArrayRangeNV
 	(JNIEnv * env, jclass clazz)
 {
-	CHECK_EXISTS(glFlushVertexArrayRangeNV)
 	glFlushVertexArrayRangeNV();
 	CHECK_GL_ERROR
 }
 
-/*
- * Class:	org.lwjgl.opengl.NVVertexArrayRange
- * Method:	glXAllocateMemoryNV
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glXAllocateMemoryNV
+#ifdef _X11
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glXAllocateMemoryNV
 	(JNIEnv * env, jclass clazz, jint size, jfloat readFrequency, jfloat writeFrequency, jfloat priority)
 {
-#ifdef _X11
-	CHECK_EXISTS(glXAllocateMemoryNV)
 	void *mem_address = glXAllocateMemoryNV((GLint) size, (GLfloat)readFrequency, (GLfloat)writeFrequency, (GLfloat)priority);
 	return safeNewBuffer(env, mem_address, size);
-#else
-	CHECK_EXISTS(NULL)
-	return NULL;
-#endif
 }
 
-/*
- * Class:	org.lwjgl.opengl.NVVertexArrayRange
- * Method:	glXFreeMemoryNV
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glXFreeMemoryNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_glXFreeMemoryNV
 	(JNIEnv * env, jclass clazz, jobject pointer)
 {
-#ifdef _X11
         void *address = (void *)env->GetDirectBufferAddress(pointer);
         glXFreeMemoryNV(address);
-#else
-        CHECK_EXISTS(NULL)
-#endif
 }
+#endif
 
-/*
- * Class:	org.lwjgl.opengl.NVVertexArrayRange
- * Method:	wglAllocateMemoryNV
- */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_wglAllocateMemoryNV
+#ifdef _WIN32
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_wglAllocateMemoryNV
 	(JNIEnv * env, jclass clazz, jint size, jfloat readFrequency, jfloat writeFrequency, jfloat priority)
 {
-#ifdef _WIN32
-        CHECK_EXISTS(wglAllocateMemoryNV)
         void *mem_address = wglAllocateMemoryNV((GLint)size, (GLfloat)readFrequency, (GLfloat)writeFrequency, (GLfloat)priority);
         return safeNewBuffer(env, mem_address, size);
-#else
-        CHECK_EXISTS(NULL)
-        return NULL;
-#endif
 }
 
-/*
- * Class:	org.lwjgl.opengl.NVVertexArrayRange
- * Method:	wglFreeMemoryNV
- */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_wglFreeMemoryNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVVertexArrayRange_wglFreeMemoryNV
 	(JNIEnv * env, jclass clazz, jobject pointer)
 {
-#ifdef _WIN32
-        CHECK_EXISTS(wglFreeMemoryNV)
         void *address = (void *)env->GetDirectBufferAddress(pointer);
         wglFreeMemoryNV(address);
-#else
-        CHECK_EXISTS(NULL)
-#endif
 }
+#endif
+
+void extgl_InitNVVertexArrayRange(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglVertexArrayRangeNV", "(ILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_nglVertexArrayRangeNV, "glVertexArrayRangeNV", (void**)&glVertexArrayRangeNV},
+		{"glFlushVertexArrayRangeNV", "()V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_glFlushVertexArrayRangeNV, "glFlushVertexArrayRangeNV", (void**)&glFlushVertexArrayRangeNV},
+#ifdef _X11
+		{"glXAllocateMemoryNV", "(IFFF)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_glXAllocateMemoryNV, "glXAllocateMemoryNV", (void**)&glXAllocateMemoryNV},
+		{"glXFreeMemoryNV", "(Ljava/nio/ByteBuffer;)V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_glXFreeMemoryNV, "glXFreeMemoryNV", (void**)&glXFreeMemoryNV},
+#endif
+#ifdef WIN32
+		{"wglAllocateMemoryNV", "(IFFF)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_wglAllocateMemoryNV, "wglAllocateMemoryNV", (void**)&wglAllocateMemoryNV},
+		{"wglFreeMemoryNV", "(Ljava/nio/ByteBuffer;)V", (void*)&Java_org_lwjgl_opengl_NVVertexArrayRange_wglFreeMemoryNV, "wglFreeMemoryNV", (void**)&wglFreeMemoryNV}
+#endif
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVVertexArrayRange");
+	if (extgl_Extensions.GL_NV_vertex_array_range)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_vertex_array_range", num_functions, functions);
+}
+

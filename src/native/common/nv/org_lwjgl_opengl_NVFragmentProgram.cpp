@@ -34,45 +34,26 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVFragmentProgram
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVFragmentProgram.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
 typedef void (APIENTRY * glProgramNamedParameter4fNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-typedef void (APIENTRY * glProgramNamedParameter4fvNVPROC) (GLuint id, GLsizei len, const GLubyte *name, const GLfloat v[]);
 typedef void (APIENTRY * glProgramLocalParameter4fARBPROC) (GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-typedef void (APIENTRY * glProgramLocalParameter4fvARBPROC) (GLenum target, GLuint index, const GLfloat *params);
 typedef void (APIENTRY * glGetProgramNamedParameterfvNVPROC) (GLuint id, GLsizei len, const GLubyte *name, GLfloat *params);
 typedef void (APIENTRY * glGetProgramLocalParameterfvARBPROC) (GLenum target, GLuint index, GLfloat *params);
 
 static glProgramNamedParameter4fNVPROC glProgramNamedParameter4fNV;
-static glProgramNamedParameter4fvNVPROC glProgramNamedParameter4fvNV;
 static glProgramLocalParameter4fARBPROC glProgramLocalParameter4fARB;
-static glProgramLocalParameter4fvARBPROC glProgramLocalParameter4fvARB;
 static glGetProgramNamedParameterfvNVPROC glGetProgramNamedParameterfvNV;
 static glGetProgramLocalParameterfvARBPROC glGetProgramLocalParameterfvARB;
-
-void extgl_InitNVFragmentProgram(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_fragment_program)
-		return;
-	glProgramNamedParameter4fNV = (glProgramNamedParameter4fNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fNV");
-	glProgramNamedParameter4fvNV = (glProgramNamedParameter4fvNVPROC) extgl_GetProcAddress("glProgramNamedParameter4fvNV");
-	glGetProgramNamedParameterfvNV = (glGetProgramNamedParameterfvNVPROC) extgl_GetProcAddress("glGetProgramNamedParameterfvNV");
-	glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
-	glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
-	glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_fragment_program)
-}
 
 /*
  * Class:	org.lwjgl.opengl.NVFragmentProgram
  * Method:	nglProgramNamedParameter4fNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglProgramNamedParameter4fNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglProgramNamedParameter4fNV
 	(JNIEnv * env, jclass clazz, jint id, jint length, jobject name, jint nameOffset, jfloat x, jfloat y, jfloat z, jfloat w)
 {
-	CHECK_EXISTS(glProgramNamedParameter4fNV)
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	glProgramNamedParameter4fNV(id, length, name_ptr, x, y, z, w);
 	CHECK_GL_ERROR
@@ -82,10 +63,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglProgramNamedPa
  * Class:	org.lwjgl.opengl.NVFragmentProgram
  * Method:	nglGetProgramNamedParameterfvNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramNamedParameterfvNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramNamedParameterfvNV
 	(JNIEnv * env, jclass clazz, jint id, jint length, jobject name, jint nameOffset, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetProgramNamedParameterfvNV)
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramNamedParameterfvNV(id, length, name_ptr, params_ptr);
@@ -96,10 +76,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramName
  * Class:	org.lwjgl.opengl.NVFragmentProgram
  * Method:	glProgramLocalParameter4fNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_glProgramLocalParameter4fARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_glProgramLocalParameter4fARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
-	CHECK_EXISTS(glProgramLocalParameter4fARB)
 	glProgramLocalParameter4fARB(target, index, x, y, z, w);
 	CHECK_GL_ERROR
 }
@@ -108,11 +87,24 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_glProgramLocalPar
  * Class:	org.lwjgl.opengl.NVFragmentProgram
  * Method:	nglGetProgramLocalParameterfvNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramLocalParameterfvARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramLocalParameterfvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint params_offset)
 {
-	CHECK_EXISTS(glGetProgramLocalParameterfvARB)
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + params_offset;
 	glGetProgramLocalParameterfvARB(target, index, params_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitNVFragmentProgram(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglProgramNamedParameter4fNV", "(IILjava/nio/ByteBuffer;IFFFF)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglProgramNamedParameter4fNV, "glProgramNamedParameter4fNV", (void**)&glProgramNamedParameter4fNV},
+		{"nglGetProgramNamedParameterfvNV", "(IILjava/nio/ByteBuffer;ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramNamedParameterfvNV, "glGetProgramNamedParameterfvNV", (void**)&glGetProgramNamedParameterfvNV},
+		{"glProgramLocalParameter4fARB", "(IIFFFF)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_glProgramLocalParameter4fARB, "glProgramLocalParameter4fARB", (void**)&glProgramLocalParameter4fARB},
+		{"nglGetProgramLocalParameterfvARB", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFragmentProgram_nglGetProgramLocalParameterfvARB, "glGetProgramLocalParameterfvARB", (void**)&glGetProgramLocalParameterfvARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVFragmentProgram");
+	if (extgl_Extensions.GL_NV_fragment_program)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_fragment_program", num_functions, functions);
 }

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVFence
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVFence.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -54,28 +53,13 @@ static glFinishFenceNVPROC glFinishFenceNV;
 static glIsFenceNVPROC glIsFenceNV;
 static glGetFenceivNVPROC glGetFenceivNV;
 
-void extgl_InitNVFence(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_fence)
-		return;
-	glGenFencesNV = (glGenFencesNVPROC) extgl_GetProcAddress("glGenFencesNV");
-	glDeleteFencesNV = (glDeleteFencesNVPROC) extgl_GetProcAddress("glDeleteFencesNV");
-	glSetFenceNV = (glSetFenceNVPROC) extgl_GetProcAddress("glSetFenceNV");
-	glTestFenceNV = (glTestFenceNVPROC) extgl_GetProcAddress("glTestFenceNV");
-	glFinishFenceNV = (glFinishFenceNVPROC) extgl_GetProcAddress("glFinishFenceNV");
-	glIsFenceNV = (glIsFenceNVPROC) extgl_GetProcAddress("glIsFenceNV");
-	glGetFenceivNV = (glGetFenceivNVPROC) extgl_GetProcAddress("glGetFenceivNV");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_fence)
-}
-
 /*
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	nglGenFencesNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGenFencesNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGenFencesNV
 	(JNIEnv * env, jclass clazz, jint n, jobject piFences, jint piFences_offset)
 {
-	CHECK_EXISTS(glGenFencesNV)
 	GLuint *piFences_ptr = (GLuint *)env->GetDirectBufferAddress(piFences) + piFences_offset;
 	glGenFencesNV(n, piFences_ptr);
 	CHECK_GL_ERROR
@@ -85,10 +69,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGenFencesNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	nglDeleteFencesNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV
 	(JNIEnv * env, jclass clazz, jint n, jobject piFences, jint piFences_offset)
 {
-	CHECK_EXISTS(glDeleteFencesNV)
 	GLuint *piFences_ptr = (GLuint *)env->GetDirectBufferAddress(piFences) + piFences_offset;
 	glDeleteFencesNV(n, piFences_ptr);
 	CHECK_GL_ERROR
@@ -98,10 +81,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glSetFenceNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glSetFenceNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glSetFenceNV
 	(JNIEnv * env, jclass clazz, jint fence, jint condition)
 {
-	CHECK_EXISTS(glSetFenceNV)
 	glSetFenceNV(fence, condition);
 	CHECK_GL_ERROR
 }
@@ -110,10 +92,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glSetFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glTestFenceNV
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glTestFenceNV
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glTestFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
-	CHECK_EXISTS(glTestFenceNV)
 	GLboolean result = glTestFenceNV(fence);
 	CHECK_GL_ERROR
 	return result;
@@ -123,10 +104,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glTestFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glFinishFenceNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glFinishFenceNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glFinishFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
-	CHECK_EXISTS(glFinishFenceNV)
 	glFinishFenceNV(fence);
 	CHECK_GL_ERROR
 }
@@ -135,10 +115,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_glFinishFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	glIsFenceNV
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glIsFenceNV
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glIsFenceNV
 	(JNIEnv * env, jclass clazz, jint fence)
 {
-	CHECK_EXISTS(glIsFenceNV)
 	GLboolean result = glIsFenceNV(fence);
 	CHECK_GL_ERROR
 	return result;
@@ -148,11 +127,27 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVFence_glIsFenceNV
  * Class:	org.lwjgl.opengl.NVFence
  * Method:	nglGetFenceivNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV
 	(JNIEnv * env, jclass clazz, jint fence, jint pname, jobject piParams, jint piParams_offset)
 {
-	CHECK_EXISTS(glGetFenceivNV)
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetFenceivNV(fence, pname, piParams_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitNVFence(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglGenFencesNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFence_nglGenFencesNV, "glGenFencesNV", (void**)&glGenFencesNV},
+		{"nglDeleteFencesNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFence_nglDeleteFencesNV, "glDeleteFencesNV", (void**)&glDeleteFencesNV},
+		{"glSetFenceNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVFence_glSetFenceNV, "glSetFenceNV", (void**)&glSetFenceNV},
+		{"glTestFenceNV", "(I)Z", (void*)&Java_org_lwjgl_opengl_NVFence_glTestFenceNV, "glTestFenceNV", (void**)&glTestFenceNV},
+		{"glFinishFenceNV", "(I)V", (void*)&Java_org_lwjgl_opengl_NVFence_glFinishFenceNV, "glFinishFenceNV", (void**)&glFinishFenceNV},
+		{"glIsFenceNV", "(I)Z", (void*)&Java_org_lwjgl_opengl_NVFence_glIsFenceNV, "glIsFenceNV", (void**)&glIsFenceNV},
+		{"nglGetFenceivNV", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVFence_nglGetFenceivNV, "glGetFenceivNV", (void**)&glGetFenceivNV}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVFence");
+	if (extgl_Extensions.GL_NV_fence)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_fence", num_functions, functions);
 }

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTBlendFuncSeparate
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTBlendFuncSeparate.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -42,22 +41,25 @@ typedef void (APIENTRY * glBlendFuncSeparateEXTPROC) (GLenum sfactorRGB, GLenum 
 
 static glBlendFuncSeparateEXTPROC glBlendFuncSeparateEXT;
 
-void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_blend_func_separate)
-		return;
-	glBlendFuncSeparateEXT = (glBlendFuncSeparateEXTPROC) extgl_GetProcAddress("glBlendFuncSeparateEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_blend_func_separate)
-}
-
 /*
  * Class:	org.lwjgl.opengl.EXTBlendFuncSeparate
  * Method:	glBlendFuncSeparateEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSeparateEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSeparateEXT
 	(JNIEnv * env, jclass clazz, jint sfactorRGB, jint dfactorRGB, jint sfactorAlpha, jint dfactorAlpha)
 {
-	CHECK_EXISTS(glBlendFuncSeparateEXT)
 	glBlendFuncSeparateEXT(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitEXTBlendFuncSeparate(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glBlendFuncSeparateEXT", "(IIII)V", (void*)&Java_org_lwjgl_opengl_EXTBlendFuncSeparate_glBlendFuncSeparateEXT, "glBlendFuncSeparateEXT", (void**)&glBlendFuncSeparateEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTBlendFuncSeparate");
+	if (extgl_Extensions.GL_EXT_blend_func_separate)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_blend_func_separate", num_functions, functions);
+}
+

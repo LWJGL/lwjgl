@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVPixelDataRange
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVPixelDataRange.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,25 +43,13 @@ typedef void (APIENTRY * glFlushPixelDataRangeNVPROC) (GLenum target);
 static glPixelDataRangeNVPROC glPixelDataRangeNV;
 static glFlushPixelDataRangeNVPROC glFlushPixelDataRangeNV;
 
-void extgl_InitNVPixelDataRange(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_pixel_data_range)
-		return;
-
-	glPixelDataRangeNV = (glPixelDataRangeNVPROC) extgl_GetProcAddress("glPixelDataRangeNV");
-	glFlushPixelDataRangeNV = (glFlushPixelDataRangeNVPROC) extgl_GetProcAddress("glFlushPixelDataRangeNV");
-
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_pixel_data_range)
-}
-
 /*
  * Class:	org.lwjgl.opengl.NVPixelDataRange
  * Method:	nglPixelDataRangeNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeNV
 	(JNIEnv * env, jclass clazz, jint target, jint length, jobject data, jint dataOffset)
 {
-	CHECK_EXISTS(glPixelDataRangeNV)
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + dataOffset);
 	glPixelDataRangeNV(target, length, data_ptr);
 	CHECK_GL_ERROR
@@ -72,10 +59,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeN
  * Class:	org.lwjgl.opengl.NVPixelDataRange
  * Method:	glFlushPixelDataRangeNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRangeNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRangeNV
 	(JNIEnv * env, jclass clazz, jint target)
 {
-	CHECK_EXISTS(glFlushPixelDataRangeNV)
 	glFlushPixelDataRangeNV(target);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitNVPixelDataRange(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglPixelDataRangeNV", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVPixelDataRange_nglPixelDataRangeNV, "glPixelDataRangeNV", (void**)&glPixelDataRangeNV},
+		{"glFlushPixelDataRangeNV", "(I)V", (void*)&Java_org_lwjgl_opengl_NVPixelDataRange_glFlushPixelDataRangeNV, "glFlushPixelDataRangeNV", (void**)&glFlushPixelDataRangeNV}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVPixelDataRange");
+	if (extgl_Extensions.GL_NV_pixel_data_range)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_pixel_data_range", num_functions, functions);
 }

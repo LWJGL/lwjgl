@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBOcclusionQuery
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBOcclusionQuery.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -56,31 +55,13 @@ static glGetQueryivARBPROC glGetQueryivARB;
 static glGetQueryObjectivARBPROC glGetQueryObjectivARB;
 static glGetQueryObjectuivARBPROC glGetQueryObjectuivARB;
 
-void extgl_InitARBOcclusionQuery(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_occlusion_query)
-		return;
-
-	glGenQueriesARB = (glGenQueriesARBPROC) extgl_GetProcAddress("glGenQueriesARB");
-	glDeleteQueriesARB = (glDeleteQueriesARBPROC) extgl_GetProcAddress("glDeleteQueriesARB");
-	glIsQueryARB = (glIsQueryARBPROC) extgl_GetProcAddress("glIsQueryARB");
-	glBeginQueryARB = (glBeginQueryARBPROC) extgl_GetProcAddress("glBeginQueryARB");
-	glEndQueryARB = (glEndQueryARBPROC) extgl_GetProcAddress("glEndQueryARB");
-	glGetQueryivARB = (glGetQueryivARBPROC) extgl_GetProcAddress("glGetQueryivARB");
-	glGetQueryObjectivARB = (glGetQueryObjectivARBPROC) extgl_GetProcAddress("glGetQueryObjectivARB");
-	glGetQueryObjectuivARB = (glGetQueryObjectuivARBPROC) extgl_GetProcAddress("glGetQueryObjectuivARB");
-
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_occlusion_query)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGenQueriesARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
-	CHECK_EXISTS(glGenQueriesARB)
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glGenQueriesARB(n, ids_ptr);
 	CHECK_GL_ERROR
@@ -90,10 +71,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglDeleteQueriesARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesARB
 	(JNIEnv * env, jclass clazz, jint n, jobject ids, jint idsOffset)
 {
-	CHECK_EXISTS(glDeleteQueriesARB)
 	GLuint *ids_ptr = (GLuint *)env->GetDirectBufferAddress(ids) + idsOffset;
 	glDeleteQueriesARB(n, ids_ptr);
 	CHECK_GL_ERROR
@@ -103,10 +83,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesA
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	glIsQueryARB
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glIsQueryARB)
 	GLboolean result = glIsQueryARB(id);
 	CHECK_GL_ERROR
 	return result;
@@ -116,10 +95,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	glBeginQueryARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQueryARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQueryARB
 	(JNIEnv * env, jclass clazz, jint target, jint id)
 {
-	CHECK_EXISTS(glBeginQueryARB)
 	glBeginQueryARB(target, id);
 	CHECK_GL_ERROR
 }
@@ -128,10 +106,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQueryARB
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	glEndQueryARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQueryARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQueryARB
 	(JNIEnv * env, jclass clazz, jint target)
 {
-	CHECK_EXISTS(glEndQueryARB)
 	glEndQueryARB(target);
 	CHECK_GL_ERROR
 }
@@ -140,10 +117,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQueryARB
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGetQueryivARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryivARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryivARB
 	(JNIEnv * env, jclass clazz, jint target, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetQueryivARB)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryivARB(target, pname, params_ptr);
 	CHECK_GL_ERROR
@@ -153,10 +129,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryivARB
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGetQueryObjectivARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectivARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectivARB
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetQueryObjectivARB)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectivARB(id, pname, params_ptr);
 	CHECK_GL_ERROR
@@ -166,11 +141,29 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObject
  * Class:	org.lwjgl.opengl.ARBOcclusionQuery
  * Method:	nglGetQueryObjectuivARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuivARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuivARB
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetQueryObjectuivARB)
 	GLuint *params_ptr = (GLuint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetQueryObjectuivARB(id, pname, params_ptr);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitARBOcclusionQuery(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglGenQueriesARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGenQueriesARB, "glGenQueriesARB", (void**)&glGenQueriesARB},
+		{"nglDeleteQueriesARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglDeleteQueriesARB, "glDeleteQueriesARB", (void**)&glDeleteQueriesARB},
+		{"glIsQueryARB", "(I)Z", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_glIsQueryARB, "glIsQueryARB", (void**)&glIsQueryARB},
+		{"glBeginQueryARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_glBeginQueryARB, "glBeginQueryARB", (void**)&glBeginQueryARB},
+		{"glEndQueryARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_glEndQueryARB, "glEndQueryARB", (void**)&glEndQueryARB},
+		{"nglGetQueryivARB", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryivARB, "glGetQueryivARB", (void**)&glGetQueryivARB},
+		{"nglGetQueryObjectivARB", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectivARB, "glGetQueryObjectivARB", (void**)&glGetQueryObjectivARB},
+		{"nglGetQueryObjectuivARB", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBOcclusionQuery_nglGetQueryObjectuivARB, "glGetQueryObjectuivARB", (void**)&glGetQueryObjectuivARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBOcclusionQuery");
+	if (extgl_Extensions.GL_ARB_occlusion_query)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_occlusion_query", num_functions, functions);
+}
+

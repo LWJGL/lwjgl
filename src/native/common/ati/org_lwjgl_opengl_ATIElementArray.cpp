@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIElementArray
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIElementArray.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -46,24 +45,13 @@ static glElementPointerATIPROC glElementPointerATI;
 static glDrawElementArrayATIPROC glDrawElementArrayATI;
 static glDrawRangeElementArrayATIPROC glDrawRangeElementArrayATI;
 
-void extgl_InitATIElementArray(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_element_array)
-		return;
-	glElementPointerATI = (glElementPointerATIPROC) extgl_GetProcAddress("glElementPointerATI");
-	glDrawElementArrayATI = (glDrawElementArrayATIPROC) extgl_GetProcAddress("glDrawElementArrayATI");
-	glDrawRangeElementArrayATI = (glDrawRangeElementArrayATIPROC) extgl_GetProcAddress("glDrawRangeElementArrayATI");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_element_array)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	nglElementPointerATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATI
 	(JNIEnv * env, jclass clazz, jint type, jobject pPointer, jint pPointer_offset)
 {
-	CHECK_EXISTS(glElementPointerATI)
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glElementPointerATI(type, pPointer_ptr);
 	CHECK_GL_ERROR
@@ -73,10 +61,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerAT
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	nglElementPointerATIVBO
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIVBO
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIVBO
 	(JNIEnv * env, jclass clazz, jint type, jint buffer_offset)
 {
-	CHECK_EXISTS(glElementPointerATI)
 	glElementPointerATI(type, (GLvoid *)buffer_offset);
 	CHECK_GL_ERROR
 }
@@ -85,10 +72,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerAT
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	glDrawElementArrayATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayATI
 	(JNIEnv * env, jclass clazz, jint mode, jint count)
 {
-	CHECK_EXISTS(glDrawElementArrayATI)
 	glDrawElementArrayATI(mode, count);
 	CHECK_GL_ERROR
 }
@@ -97,10 +83,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayA
  * Class:	org.lwjgl.opengl.ATIElementArray
  * Method:	glDrawRangeElementArrayATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArrayATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArrayATI
 	(JNIEnv * env, jclass clazz, jint mode, jint start, jint end, jint count)
 {
-	CHECK_EXISTS(glDrawRangeElementArrayATI)
 	glDrawRangeElementArrayATI(mode, start, end, count);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIElementArray(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglElementPointerATI", "(ILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATI, "glElementPointerATI", (void**)&glElementPointerATI},
+		{"nglElementPointerATIVBO", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_nglElementPointerATIVBO, NULL, NULL},
+		{"glDrawElementArrayATI", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_glDrawElementArrayATI, "glDrawElementArrayATI", (void**)&glDrawElementArrayATI},
+		{"glDrawRangeElementArrayATI", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ATIElementArray_glDrawRangeElementArrayATI, "glDrawRangeElementArrayATI", (void**)&glDrawRangeElementArrayATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIElementArray");
+	if (extgl_Extensions.GL_ATI_element_array)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_element_array", num_functions, functions);
 }

@@ -3213,19 +3213,19 @@ struct ExtensionTypes
     bool GL_EXT_texture_lod_bias;
     bool GL_EXT_vertex_shader;
     bool GL_EXT_vertex_weighting;
-	bool GL_EXT_draw_range_elements;
-	bool GL_ATI_draw_buffers;
+    bool GL_EXT_draw_range_elements;
+    bool GL_ATI_draw_buffers;
     bool GL_ATI_element_array;
     bool GL_ATI_envmap_bumpmap;
     bool GL_ATI_fragment_shader;
-	bool GL_ATI_map_object_buffer;
+    bool GL_ATI_map_object_buffer;
     bool GL_ATI_pn_triangles;
     bool GL_ATI_point_cull_mode;
     bool GL_ATI_separate_stencil;
     bool GL_ATI_text_fragment_shader;
     bool GL_ATI_texture_mirror_once;
     bool GL_ATI_vertex_array_object;
-	bool GL_ATI_vertex_attrib_array_object;
+    bool GL_ATI_vertex_attrib_array_object;
     bool GL_ATI_vertex_streams;
     bool GL_ATIX_point_sprites;
     bool GL_ATIX_texture_env_route;
@@ -3239,11 +3239,11 @@ struct ExtensionTypes
     bool GL_NV_float_buffer;
     bool GL_NV_fog_distance;
     bool GL_NV_fragment_program;
-	bool GL_NV_half_float;
+    bool GL_NV_half_float;
     bool GL_NV_light_max_exponent;
     bool GL_NV_occlusion_query;
     bool GL_NV_packed_depth_stencil;
-	bool GL_NV_pixel_data_range;
+    bool GL_NV_pixel_data_range;
     bool GL_NV_point_sprite;
     bool GL_NV_primitive_restart;
     bool GL_NV_register_combiners;
@@ -3290,14 +3290,25 @@ void *extgl_GetProcAddress(const char *name);
 void extgl_Close(void);
 void extgl_removeExtension(JNIEnv *env, jobject ext_set, const char *ext);
 
-#define EXTGL_SANITY_CHECK(e,h,x) 	if (extgl_error) { \
+typedef struct {
+	char *method_name;
+	char *signature;
+	void *method_pointer;
+
+	char *gl_function_name;
+	void **gl_function_pointer;
+} JavaMethodAndGLFunction;
+
+#define NUMFUNCTIONS(x) (sizeof(x)/sizeof(JavaMethodAndGLFunction));
+
+jclass extgl_ResetClass(JNIEnv *env, const char *class_name);
+void extgl_InitializeClass(JNIEnv *env, jclass clazz, jobject ext_set, const char *ext_name, int num_functions, JavaMethodAndGLFunction *functions);
+#define EXTGL_SANITY_CHECK(e,x)		if (extgl_error) { \
 						extgl_Extensions.x = false; \
 						printf("NOTICE: %s disabled because of missing driver symbols\n", #x); \
 						extgl_error = false; \
-						if (h != NULL) { \
-							extgl_removeExtension(e, h, #x); \
-						} \
 					}
+
 #ifdef __cplusplus
 }
 #endif

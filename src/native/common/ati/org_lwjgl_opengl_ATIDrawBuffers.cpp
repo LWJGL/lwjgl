@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIDrawBuffers
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIDrawBuffers.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -42,25 +41,25 @@ typedef void (APIENTRY * glDrawBuffersATIPROC) (GLsizei n, const GLenum *bufs);
 
 static glDrawBuffersATIPROC glDrawBuffersATI;
 
-void extgl_InitATIDrawBuffers(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_draw_buffers)
-		return;
-
-	glDrawBuffersATI = (glDrawBuffersATIPROC) extgl_GetProcAddress("glDrawBuffersATI");
-
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_draw_buffers)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIDrawBuffers
  * Method:	nglDrawBuffersATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI
 	(JNIEnv * env, jclass clazz, jint size, jobject buffers, jint buffersOffset)
 {
-	CHECK_EXISTS(glDrawBuffersATI)
 	GLuint *buffers_ptr = (GLuint *)env->GetDirectBufferAddress(buffers) + buffersOffset;
 	glDrawBuffersATI(size, buffers_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIDrawBuffers(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglDrawBuffersATI", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIDrawBuffers_nglDrawBuffersATI, "glDrawBuffersATI", (void**)&glDrawBuffersATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIDrawBuffers");
+	if (extgl_Extensions.GL_ATI_draw_buffers)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_draw_buffers", num_functions, functions);
 }

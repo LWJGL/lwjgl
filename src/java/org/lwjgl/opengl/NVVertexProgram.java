@@ -469,4 +469,48 @@ public final class NVVertexProgram extends NVProgram {
 
   public static native void glVertexAttrib4ubNV(int index, byte x, byte y, byte z, byte w);
 
+  public static void glVertexAttribs1NV(int index, int n, ShortBuffer v) {
+    nglVertexAttribs1svNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs1svNV(int index, int n, ShortBuffer v, int v_offset);
+
+  public static void glVertexAttribs1NV(int index, int n, FloatBuffer v) {
+    nglVertexAttribs1fvNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs1fvNV(int index, int n, FloatBuffer v, int v_offset);
+
+  public static void glVertexAttribs2NV(int index, int n, ShortBuffer v) {
+    nglVertexAttribs2svNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs2svNV(int index, int n, ShortBuffer v, int v_offset);
+
+  public static void glVertexAttribs2NV(int index, int n, FloatBuffer v) {
+    nglVertexAttribs2fvNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs2fvNV(int index, int n, FloatBuffer v, int v_offset);
+
+  public static void glVertexAttribs3NV(int index, int n, ShortBuffer v) {
+    nglVertexAttribs3svNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs3svNV(int index, int n, ShortBuffer v, int v_offset);
+
+  public static void glVertexAttribs3NV(int index, int n, FloatBuffer v) {
+    nglVertexAttribs3fvNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs3fvNV(int index, int n, FloatBuffer v, int v_offset);
+
+  public static void glVertexAttribs4NV(int index, int n, ShortBuffer v) {
+    nglVertexAttribs4svNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs4svNV(int index, int n, ShortBuffer v, int v_offset);
+
+  public static void glVertexAttribs4NV(int index, int n, FloatBuffer v) {
+    nglVertexAttribs4fvNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs4fvNV(int index, int n, FloatBuffer v, int v_offset);
+
+  public static void glVertexAttribs4uNV(int index, int n, ByteBuffer v) {
+    nglVertexAttribs4ubvNV(index, n, v, v.position());
+  }
+  private static native void nglVertexAttribs4ubvNV(int index, int n, ByteBuffer v, int v_offset);
 }

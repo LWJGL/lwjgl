@@ -39,7 +39,6 @@
  * @version $Revision$
  */
 
-#include "org_lwjgl_opengl_ARBImaging.h"
 #include "checkGLerror.h"
 #include "extgl.h"
 
@@ -113,56 +112,14 @@ static glMinmaxPROC glMinmax;
 static glResetHistogramPROC glResetHistogram;
 static glResetMinmaxPROC glResetMinmax;
 
-void extgl_InitARBImaging(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_imaging)
-		return;
-	glBlendColor = (glBlendColorPROC) extgl_GetProcAddress("glBlendColor");
-	glBlendEquation = (glBlendEquationPROC) extgl_GetProcAddress("glBlendEquation");
-	glColorTable = (glColorTablePROC) extgl_GetProcAddress("glColorTable");
-	glColorTableParameterfv = (glColorTableParameterfvPROC) extgl_GetProcAddress("glColorTableParameterfv");
-	glColorTableParameteriv = (glColorTableParameterivPROC) extgl_GetProcAddress("glColorTableParameteriv");
-	glCopyColorTable = (glCopyColorTablePROC) extgl_GetProcAddress("glCopyColorTable");
-	glGetColorTable = (glGetColorTablePROC) extgl_GetProcAddress("glGetColorTable");
-	glGetColorTableParameterfv = (glGetColorTableParameterfvPROC) extgl_GetProcAddress("glGetColorTableParameterfv");
-	glGetColorTableParameteriv = (glGetColorTableParameterivPROC) extgl_GetProcAddress("glGetColorTableParameteriv");
-	glColorSubTable = (glColorSubTablePROC) extgl_GetProcAddress("glColorSubTable");
-	glCopyColorSubTable = (glCopyColorSubTablePROC) extgl_GetProcAddress("glCopyColorSubTable");
-	glConvolutionFilter1D = (glConvolutionFilter1DPROC) extgl_GetProcAddress("glConvolutionFilter1D");
-	glConvolutionFilter2D = (glConvolutionFilter2DPROC) extgl_GetProcAddress("glConvolutionFilter2D");
-	glConvolutionParameterf = (glConvolutionParameterfPROC) extgl_GetProcAddress("glConvolutionParameterf");
-	glConvolutionParameterfv = (glConvolutionParameterfvPROC) extgl_GetProcAddress("glConvolutionParameterfv");
-	glConvolutionParameteri = (glConvolutionParameteriPROC) extgl_GetProcAddress("glConvolutionParameteri");
-	glConvolutionParameteriv = (glConvolutionParameterivPROC) extgl_GetProcAddress("glConvolutionParameteriv");
-	glCopyConvolutionFilter1D = (glCopyConvolutionFilter1DPROC) extgl_GetProcAddress("glCopyConvolutionFilter1D");
-	glCopyConvolutionFilter2D = (glCopyConvolutionFilter2DPROC) extgl_GetProcAddress("glCopyConvolutionFilter2D");
-	glGetConvolutionFilter = (glGetConvolutionFilterPROC) extgl_GetProcAddress("glGetConvolutionFilter");
-	glGetConvolutionParameterfv = (glGetConvolutionParameterfvPROC) extgl_GetProcAddress("glGetConvolutionParameterfv");
-	glGetConvolutionParameteriv = (glGetConvolutionParameterivPROC) extgl_GetProcAddress("glGetConvolutionParameteriv");
-	glGetSeparableFilter = (glGetSeparableFilterPROC) extgl_GetProcAddress("glGetSeparableFilter");
-	glSeparableFilter2D = (glSeparableFilter2DPROC) extgl_GetProcAddress("glSeparableFilter2D");
-	glGetHistogram = (glGetHistogramPROC) extgl_GetProcAddress("glGetHistogram");
-	glGetHistogramParameterfv = (glGetHistogramParameterfvPROC) extgl_GetProcAddress("glGetHistogramParameterfv");
-	glGetHistogramParameteriv = (glGetHistogramParameterivPROC) extgl_GetProcAddress("glGetHistogramParameteriv");
-	glGetMinmax = (glGetMinmaxPROC) extgl_GetProcAddress("glGetMinmax");
-	glGetMinmaxParameterfv = (glGetMinmaxParameterfvPROC) extgl_GetProcAddress("glGetMinmaxParameterfv");
-	glGetMinmaxParameteriv = (glGetMinmaxParameterivPROC) extgl_GetProcAddress("glGetMinmaxParameteriv");
-	glHistogram = (glHistogramPROC) extgl_GetProcAddress("glHistogram");
-	glMinmax = (glMinmaxPROC) extgl_GetProcAddress("glMinmax");
-	glResetHistogram = (glResetHistogramPROC) extgl_GetProcAddress("glResetHistogram");
-	glResetMinmax = (glResetMinmaxPROC) extgl_GetProcAddress("glResetMinmax");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_imaging)
-}
-
 /*
  * Class:     org_lwjgl_opengl_ARBImaging
  * Method:    glColorTable
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTable
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTable
   (JNIEnv * env, jclass clazz, jint target, jint internalFormat, jint width, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glColorTable)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glColorTable(target, internalFormat, width, format, type, address);
 	CHECK_GL_ERROR
@@ -173,10 +130,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTable
  * Method:    glColorSubTable
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorSubTable
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorSubTable
   (JNIEnv * env, jclass clazz, jint target, jint start, jint count, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glColorSubTable)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glColorSubTable(target, start, count, format, type, address);
 	CHECK_GL_ERROR
@@ -187,10 +143,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorSubTable
  * Method:    glGetColorTable
  * Signature: (IIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTable
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTable
   (JNIEnv * env, jclass clazz, jint target, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetColorTable)
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetColorTable(target, format, type, address);
 	CHECK_GL_ERROR
@@ -201,10 +156,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTable
  * Method:    glGetColorTableParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParameteriv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParameteriv
   (JNIEnv * env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetColorTableParameteriv)
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetColorTableParameteriv(target, pname, address);
 	CHECK_GL_ERROR
@@ -215,10 +169,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParamete
  * Method:    glGetColorTableParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParameterfv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParameterfv
   (JNIEnv * env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetColorTableParameterfv)
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetColorTableParameterfv(target, pname, address);
 	CHECK_GL_ERROR
@@ -229,10 +182,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParamete
  * Method:    glColorTableParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameteriv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameteriv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glColorTableParameteriv)
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glColorTableParameteriv(target, pname, address);
 	CHECK_GL_ERROR
@@ -243,10 +195,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameteriv
  * Method:    glColorTableParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameterfv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameterfv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glColorTableParameterfv)
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glColorTableParameterfv(target, pname, address);
 	CHECK_GL_ERROR
@@ -258,10 +209,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameterfv
  * Method:    glCopyColorSubTable
  * Signature: (IIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyColorSubTable
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyColorSubTable
   (JNIEnv *env, jclass clazz, jint target, jint start, jint x, jint y, jint width)
 {
-	CHECK_EXISTS(glCopyColorSubTable)
 	glCopyColorSubTable(target, start, x, y, width);
 	CHECK_GL_ERROR
 }
@@ -272,10 +222,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyColorSubTable
  * Method:    glCopyColorTable
  * Signature: (IIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyColorTable
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyColorTable
   (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint x, jint y, jint width)
 {
-	CHECK_EXISTS(glCopyColorTable)
 	glCopyColorTable(target, internalformat, x, y, width);
 	CHECK_GL_ERROR
 }
@@ -286,10 +235,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyColorTable
  * Method:    glBlendEquation
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glBlendEquation
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glBlendEquation
   (JNIEnv *env, jclass clazz, jint mode)
 {
-	CHECK_EXISTS(glBlendEquation)
 	glBlendEquation(mode);
 	CHECK_GL_ERROR
 }
@@ -298,9 +246,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glBlendEquation
  * Class:     org_lwjgl_opengl_ARBImaging
  * Method:    glBlendColor
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glBlendColor(JNIEnv * env, jclass clazz, jfloat p0, jfloat p1, jfloat p2, jfloat p3)
 {
-	CHECK_EXISTS(glBlendColor)
 	glBlendColor((GLfloat) p0, (GLfloat) p1, (GLfloat) p2, (GLfloat) p3);
 	CHECK_GL_ERROR
 }
@@ -310,10 +257,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glBlendColor(JNIEnv * en
  * Method:    glHistogram
  * Signature: (IIIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glHistogram
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glHistogram
   (JNIEnv *env, jclass clazz, jint target, jint width, jint internalformat, jboolean sink)
 {
-	CHECK_EXISTS(glHistogram)
 	glHistogram(target, width, internalformat, sink);
 	CHECK_GL_ERROR
 }
@@ -323,10 +269,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glHistogram
  * Method:    glResetHistogram
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glResetHistogram
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glResetHistogram
   (JNIEnv *env, jclass clazz, jint target)
 {
-	CHECK_EXISTS(glResetHistogram)
 	glResetHistogram(target);
 	CHECK_GL_ERROR
 }
@@ -336,10 +281,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glResetHistogram
  * Method:    glGetHistogram
  * Signature: (IZIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogram
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogram
   (JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetHistogram)
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetHistogram(target, reset, format, type, address);
 	CHECK_GL_ERROR
@@ -350,10 +294,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogram
  * Method:    glGetHistogramParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameterfv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameterfv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetHistogramParameterfv)
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetHistogramParameterfv(target, pname, address);
 	CHECK_GL_ERROR
@@ -364,10 +307,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameter
  * Method:    glGetHistogramParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameteriv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameteriv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetHistogramParameteriv)
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetHistogramParameteriv(target, pname, address);
 	CHECK_GL_ERROR
@@ -378,10 +320,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameter
  * Method:    glMinmax
  * Signature: (IIZ)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glMinmax
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glMinmax
   (JNIEnv *env, jclass clazz, jint target, jint internalformat, jboolean sink)
 {
-	CHECK_EXISTS(glMinmax)
 	glMinmax(target, internalformat, sink);
 	CHECK_GL_ERROR
 }
@@ -391,10 +332,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glMinmax
  * Method:    glResetMinmax
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glResetMinmax
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glResetMinmax
   (JNIEnv *env, jclass clazz, jint target)
 {
-	CHECK_EXISTS(glResetMinmax)
 	glResetMinmax(target);
 	CHECK_GL_ERROR
 }
@@ -404,10 +344,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glResetMinmax
  * Method:    glGetMinmax
  * Signature: (IZIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmax
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmax
   (JNIEnv *env, jclass clazz, jint target, jboolean reset, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetMinmax)
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetMinmax(target, reset, format, type, address);
 	CHECK_GL_ERROR
@@ -418,10 +357,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmax
  * Method:    glGetMinmaxParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameterfv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameterfv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetMinmaxParameterfv)
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetMinmaxParameterfv(target, pname, address);
 	CHECK_GL_ERROR
@@ -432,10 +370,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameterfv
  * Method:    glGetMinmaxParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameteriv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameteriv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetMinmaxParameteriv)
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetMinmaxParameteriv(target, pname, address);
 	CHECK_GL_ERROR
@@ -446,10 +383,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameteriv
  * Method:    glConvolutionFilter1D
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1D
   (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glConvolutionFilter1D)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glConvolutionFilter1D(target, internalformat, width, format, type, address);
 	CHECK_GL_ERROR
@@ -460,10 +396,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1D
  * Method:    glConvolutionFilter2D
  * Signature: (IIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2D
   (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glConvolutionFilter2D)
 	const void *address = (const void *)(offset + (const GLbyte *)env->GetDirectBufferAddress(buffer));
 	glConvolutionFilter2D(target, internalformat, width, height, format, type, address);
 	CHECK_GL_ERROR
@@ -474,10 +409,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2D
  * Method:    glConvolutionParameterf
  * Signature: (IIF)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameterf
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameterf
   (JNIEnv *env, jclass clazz, jint target, jint pname, jfloat params)
 {
-	CHECK_EXISTS(glConvolutionParameterf)
 	glConvolutionParameterf(target, pname, params);
 	CHECK_GL_ERROR
 }
@@ -487,10 +421,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameterf
  * Method:    glConvolutionParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameterfv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameterfv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glConvolutionParameterfv)
 	const GLfloat *address = offset + (const GLfloat *)env->GetDirectBufferAddress(buffer);
 	glConvolutionParameterfv(target, pname, address);
 	CHECK_GL_ERROR
@@ -501,10 +434,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameterf
  * Method:    glConvolutionParameteri
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameteri
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameteri
   (JNIEnv *env, jclass clazz, jint target, jint pname, jint params)
 {
-	CHECK_EXISTS(glConvolutionParameteri)
 	glConvolutionParameteri(target, pname, params);
 	CHECK_GL_ERROR
 }
@@ -514,10 +446,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameteri
  * Method:    glConvolutionParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameteriv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameteriv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glConvolutionParameteriv)
 	const GLint *address = offset + (const GLint *)env->GetDirectBufferAddress(buffer);
 	glConvolutionParameteriv(target, pname, address);
 	CHECK_GL_ERROR
@@ -528,10 +459,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameteri
  * Method:    glCopyConvolutionFilter1D
  * Signature: (IIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter1D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter1D
   (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint x, jint y, jint width)
 {
-	CHECK_EXISTS(glCopyConvolutionFilter1D)
 	glCopyConvolutionFilter1D(target, internalformat, x, y, width);
 	CHECK_GL_ERROR
 }
@@ -541,10 +471,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter1
  * Method:    glCopyConvolutionFilter2D
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter2D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter2D
   (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint x, jint y, jint width, jint height)
 {
-	CHECK_EXISTS(glCopyConvolutionFilter2D)
 	glCopyConvolutionFilter2D(target, internalformat, x, y, width, height);
 	CHECK_GL_ERROR
 }
@@ -554,10 +483,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter2
  * Method:    glGetConvolutionFilter
  * Signature: (IIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionFilter
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionFilter
   (JNIEnv *env, jclass clazz, jint target, jint format, jint type, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetConvolutionFilter)
 	void *address = (void *)(offset + (GLbyte *)env->GetDirectBufferAddress(buffer));
 	glGetConvolutionFilter(target, format, type, address);
 	CHECK_GL_ERROR
@@ -568,10 +496,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionFilter
  * Method:    glGetConvolutionParameterfv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParameterfv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParameterfv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetConvolutionParameterfv)
 	GLfloat *address = offset + (GLfloat *)env->GetDirectBufferAddress(buffer);
 	glGetConvolutionParameterfv(target, pname, address);
 	CHECK_GL_ERROR
@@ -582,10 +509,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParamet
  * Method:    glGetConvolutionParameteriv
  * Signature: (III)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParameteriv
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParameteriv
   (JNIEnv *env, jclass clazz, jint target, jint pname, jobject buffer, jint offset)
 {
-	CHECK_EXISTS(glGetConvolutionParameteriv)
 	GLint *address = offset + (GLint *)env->GetDirectBufferAddress(buffer);
 	glGetConvolutionParameteriv(target, pname, address);
 	CHECK_GL_ERROR
@@ -596,10 +522,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParamet
  * Method:    glSeparableFilter2D
  * Signature: (IIIIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglSeparableFilter2D
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglSeparableFilter2D
   (JNIEnv *env, jclass clazz, jint target, jint internalformat, jint width, jint height, jint format, jint type, jobject row, jint row_offset, jobject column, jint column_offset)
 {
-	CHECK_EXISTS(glSeparableFilter2D)
 	const void *address = (const void *)(row_offset + (const GLbyte *)env->GetDirectBufferAddress(row));
 	const void *address2 = (const void *)(column_offset + (const GLbyte *)env->GetDirectBufferAddress(column));
 	glSeparableFilter2D(target, internalformat, width, height, format, type, address, address2);
@@ -611,13 +536,57 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglSeparableFilter2D
  * Method:    glGetSeparableFilter
  * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilter
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilter
   (JNIEnv *env, jclass clazz, jint target, jint format, jint type, jobject row, jint row_offset, jobject column, jint column_offset, jobject span, jint span_offset)
 {
-	CHECK_EXISTS(glGetSeparableFilter)
 	void *address = (void *)(row_offset + (GLbyte *)env->GetDirectBufferAddress(row));
 	void *address2 = (void *)(column_offset + (GLbyte *)env->GetDirectBufferAddress(column));
 	void *address3 = (void *)(span_offset + (GLbyte *)env->GetDirectBufferAddress(span));
 	glGetSeparableFilter(target, format, type, address, address2, address3);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitARBImaging(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglColorTable", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglColorTable, "glColorTable", (void**)&glColorTable},
+		{"nglColorSubTable", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglColorSubTable, "glColorSubTable", (void**)&glColorSubTable},
+		{"nglColorTableParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameteriv, "glColorTableParameteriv", (void**)&glColorTableParameteriv},
+		{"nglColorTableParameterfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglColorTableParameterfv, "glColorTableParameterfv", (void**)&glColorTableParameterfv},
+		{"glCopyColorSubTable", "(IIIII)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glCopyColorSubTable, "glCopyColorSubTable", (void**)&glCopyColorSubTable},
+		{"glCopyColorTable", "(IIIII)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glCopyColorTable, "glCopyColorTable", (void**)&glCopyColorTable},
+		{"nglGetColorTable", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetColorTable, "glGetColorTable", (void**)&glGetColorTable},
+		{"nglGetColorTableParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParameteriv, "glGetColorTableParameteriv", (void**)&glGetColorTableParameteriv},
+		{"nglGetColorTableParameterfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetColorTableParameterfv, "glGetColorTableParameterfv", (void**)&glGetColorTableParameterfv},
+		{"glBlendEquation", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glBlendEquation, "glBlendEquation", (void**)&glBlendEquation},
+		{"glBlendColor", "(FFFF)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glBlendColor, "glBlendColor", (void**)&glBlendColor},
+		{"glHistogram", "(IIIZ)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glHistogram, "glHistogram", (void**)&glHistogram},
+		{"glResetHistogram", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glResetHistogram, "glResetHistogram", (void**)&glResetHistogram},
+		{"nglGetHistogram", "(IZIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetHistogram, "glGetHistogram", (void**)&glGetHistogram},
+		{"nglGetHistogramParameterfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameterfv, "glGetHistogramParameterfv", (void**)&glGetHistogramParameterfv},
+		{"nglGetHistogramParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetHistogramParameteriv, "glGetHistogramParameteriv", (void**)&glGetHistogramParameteriv},
+		{"glMinmax", "(IIZ)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glMinmax, "glMinmax", (void**)&glMinmax},
+		{"glResetMinmax", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glResetMinmax, "glResetMinmax", (void**)&glResetMinmax},
+		{"nglGetMinmax", "(IZIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetMinmax, "glGetMinmax", (void**)&glGetMinmax},
+		{"nglGetMinmaxParameterfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameterfv, "glGetMinmaxParameterfv", (void**)&glGetMinmaxParameterfv},
+		{"nglGetMinmaxParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetMinmaxParameteriv, "glGetMinmaxParameteriv", (void**)&glGetMinmaxParameteriv},
+		{"nglConvolutionFilter1D", "(IIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter1D, "glConvolutionFilter1D", (void**)&glConvolutionFilter1D},
+		{"nglConvolutionFilter2D", "(IIIIIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglConvolutionFilter2D, "glConvolutionFilter2D", (void**)&glConvolutionFilter2D},
+		{"glConvolutionParameterf", "(IIF)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameterf, "glConvolutionParameterf", (void**)&glConvolutionParameterf},
+		{"nglConvolutionParameterfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameterfv, "glConvolutionParameterfv", (void**)&glConvolutionParameterfv},
+		{"glConvolutionParameteri", "(III)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glConvolutionParameteri, "glConvolutionParameteri", (void**)&glConvolutionParameteri},
+		{"nglConvolutionParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglConvolutionParameteriv, "glConvolutionParameteriv", (void**)&glConvolutionParameteriv},
+		{"glCopyConvolutionFilter1D", "(IIIII)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter1D, "glCopyConvolutionFilter1D", (void**)&glCopyConvolutionFilter1D},
+		{"glCopyConvolutionFilter2D", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_glCopyConvolutionFilter2D, "glCopyConvolutionFilter2D", (void**)&glCopyConvolutionFilter2D},
+		{"nglGetConvolutionFilter", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionFilter, "glGetConvolutionFilter", (void**)&glGetConvolutionFilter},
+		{"nglGetConvolutionParameterfv", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParameterfv, "glGetConvolutionParameterfv", (void**)&glGetConvolutionParameterfv},
+		{"nglGetConvolutionParameteriv", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetConvolutionParameteriv, "glGetConvolutionParameteriv", (void**)&glGetConvolutionParameteriv},
+		{"nglSeparableFilter2D", "(IIIIIILjava/nio/Buffer;ILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglSeparableFilter2D, "glSeparableFilter2D", (void**)&glSeparableFilter2D},
+		{"nglGetSeparableFilter", "(IIILjava/nio/Buffer;ILjava/nio/Buffer;ILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBImaging_nglGetSeparableFilter, "glGetSeparableFilter", (void**)&glGetSeparableFilter}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBImaging");
+	if (extgl_Extensions.GL_ARB_imaging)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_imaging", num_functions, functions);
+}
+

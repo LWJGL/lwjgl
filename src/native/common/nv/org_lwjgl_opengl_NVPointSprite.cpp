@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVPointSprite
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVPointSprite.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,23 +43,13 @@ typedef void (APIENTRY * glPointParameterivNVPROC) (GLenum pname, const GLint *p
 static glPointParameteriNVPROC glPointParameteriNV;
 static glPointParameterivNVPROC glPointParameterivNV;
 
-void extgl_InitNVPointSprite(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_point_sprite)
-		return;
-	glPointParameteriNV = (glPointParameteriNVPROC) extgl_GetProcAddress("glPointParameteriNV");
-	glPointParameterivNV = (glPointParameterivNVPROC) extgl_GetProcAddress("glPointParameterivNV");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_point_sprite)
-}
-
 /*
  * Class:	org.lwjgl.opengl.NVPointSprite
  * Method:	glPointParameteriNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
-	CHECK_EXISTS(glPointParameteriNV)
 	glPointParameteriNV(pname, param);
 	CHECK_GL_ERROR
 }
@@ -69,11 +58,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV
  * Class:	org.lwjgl.opengl.NVPointSprite
  * Method:	nglPointParameterivNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV
 	(JNIEnv * env, jclass clazz, jint pname, jobject piParams, jint piParams_offset)
 {
-	CHECK_EXISTS(glPointParameterivNV)
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glPointParameterivNV(pname, piParams_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitNVPointSprite(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glPointParameteriNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVPointSprite_glPointParameteriNV, "glPointParameteriNV", (void**)&glPointParameteriNV},
+		{"nglPointParameterivNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVPointSprite_nglPointParameterivNV, "glPointParameterivNV", (void**)&glPointParameterivNV}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVPointSprite");
+	if (extgl_Extensions.GL_NV_point_sprite)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_point_sprite", num_functions, functions);
 }

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTVertexShader
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTVertexShader.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -57,7 +56,6 @@ typedef void (APIENTRY * glVariantbvEXTPROC) (GLuint id, GLbyte *addr);
 typedef void (APIENTRY * glVariantsvEXTPROC) (GLuint id, GLshort *addr);
 typedef void (APIENTRY * glVariantivEXTPROC) (GLuint id, GLint *addr);
 typedef void (APIENTRY * glVariantfvEXTPROC) (GLuint id, GLfloat *addr);
-typedef void (APIENTRY * glVariantdvEXTPROC) (GLuint id, GLdouble *addr);
 typedef void (APIENTRY * glVariantubvEXTPROC) (GLuint id, GLubyte *addr);
 typedef void (APIENTRY * glVariantusvEXTPROC) (GLuint id, GLushort *addr);
 typedef void (APIENTRY * glVariantuivEXTPROC) (GLuint id, GLuint *addr);
@@ -100,7 +98,6 @@ static glVariantbvEXTPROC glVariantbvEXT;
 static glVariantsvEXTPROC glVariantsvEXT;
 static glVariantivEXTPROC glVariantivEXT;
 static glVariantfvEXTPROC glVariantfvEXT;
-static glVariantdvEXTPROC glVariantdvEXT;
 static glVariantubvEXTPROC glVariantubvEXT;
 static glVariantusvEXTPROC glVariantusvEXT;
 static glVariantuivEXTPROC glVariantuivEXT;
@@ -124,63 +121,13 @@ static glGetLocalConstantBooleanvEXTPROC glGetLocalConstantBooleanvEXT;
 static glGetLocalConstantIntegervEXTPROC glGetLocalConstantIntegervEXT;
 static glGetLocalConstantFloatvEXTPROC glGetLocalConstantFloatvEXT;
 
-void extgl_InitEXTVertexShader(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_vertex_shader)
-		return;
-	glBeginVertexShaderEXT = (glBeginVertexShaderEXTPROC) extgl_GetProcAddress("glBeginVertexShaderEXT");
-	glEndVertexShaderEXT = (glEndVertexShaderEXTPROC) extgl_GetProcAddress("glEndVertexShaderEXT");
-	glBindVertexShaderEXT = (glBindVertexShaderEXTPROC) extgl_GetProcAddress("glBindVertexShaderEXT");
-	glGenVertexShadersEXT = (glGenVertexShadersEXTPROC) extgl_GetProcAddress("glGenVertexShadersEXT");
-	glDeleteVertexShaderEXT = (glDeleteVertexShaderEXTPROC) extgl_GetProcAddress("glDeleteVertexShaderEXT");
-	glShaderOp1EXT = (glShaderOp1EXTPROC) extgl_GetProcAddress("glShaderOp1EXT");
-	glShaderOp2EXT = (glShaderOp2EXTPROC) extgl_GetProcAddress("glShaderOp2EXT");
-	glShaderOp3EXT = (glShaderOp3EXTPROC) extgl_GetProcAddress("glShaderOp3EXT");
-	glSwizzleEXT = (glSwizzleEXTPROC) extgl_GetProcAddress("glSwizzleEXT");
-	glWriteMaskEXT = (glWriteMaskEXTPROC) extgl_GetProcAddress("glWriteMaskEXT");
-	glInsertComponentEXT = (glInsertComponentEXTPROC) extgl_GetProcAddress("glInsertComponentEXT");
-	glExtractComponentEXT = (glExtractComponentEXTPROC) extgl_GetProcAddress("glExtractComponentEXT");
-	glGenSymbolsEXT = (glGenSymbolsEXTPROC) extgl_GetProcAddress("glGenSymbolsEXT");
-	glSetInvariantEXT = (glSetInvariantEXTPROC) extgl_GetProcAddress("glSetInvarianceEXT");
-	glSetLocalConstantEXT = (glSetLocalConstantEXTPROC) extgl_GetProcAddress("glSetLocalConstantEXT");
-	glVariantbvEXT = (glVariantbvEXTPROC) extgl_GetProcAddress("glVariantbvEXT");
-	glVariantsvEXT = (glVariantsvEXTPROC) extgl_GetProcAddress("glVariantsvEXT");
-	glVariantivEXT = (glVariantivEXTPROC) extgl_GetProcAddress("glVariantivEXT");
-	glVariantfvEXT = (glVariantfvEXTPROC) extgl_GetProcAddress("glVariantfvEXT");
-	glVariantdvEXT = (glVariantdvEXTPROC) extgl_GetProcAddress("glVariantdvEXT");
-	glVariantubvEXT = (glVariantubvEXTPROC) extgl_GetProcAddress("glVariantubvEXT");
-	glVariantusvEXT = (glVariantusvEXTPROC) extgl_GetProcAddress("glVariantusvEXT");
-	glVariantuivEXT = (glVariantuivEXTPROC) extgl_GetProcAddress("glVariantuivEXT");
-	glVariantPointerEXT = (glVariantPointerEXTPROC) extgl_GetProcAddress("glVariantPointerEXT");
-	glEnableVariantClientStateEXT = (glEnableVariantClientStateEXTPROC) extgl_GetProcAddress("glEnableVariantClientStateEXT");
-	glDisableVariantClientStateEXT = (glDisableVariantClientStateEXTPROC) extgl_GetProcAddress("glDisableVariantClientStateEXT");
-	glBindLightParameterEXT = (glBindLightParameterEXTPROC) extgl_GetProcAddress("glBindLightParameterEXT");
-	glBindMaterialParameterEXT = (glBindMaterialParameterEXTPROC) extgl_GetProcAddress("glBindMaterialParameterEXT");
-	glBindTexGenParameterEXT = (glBindTexGenParameterEXTPROC) extgl_GetProcAddress("glBindTexGenParameterEXT");
-	glBindTextureUnitParameterEXT = (glBindTextureUnitParameterEXTPROC) extgl_GetProcAddress("glBindTextureUnitParameterEXT");
-	glBindParameterEXT = (glBindParameterEXTPROC) extgl_GetProcAddress("glBindParameterEXT");
-	glIsVariantEnabledEXT = (glIsVariantEnabledEXTPROC) extgl_GetProcAddress("glIsVariantEnabledEXT");
-	glGetVariantBooleanvEXT = (glGetVariantBooleanvEXTPROC) extgl_GetProcAddress("glGetVariantBooleanvEXT");
-	glGetVariantIntegervEXT = (glGetVariantIntegervEXTPROC) extgl_GetProcAddress("glGetVariantIntegervEXT");
-	glGetVariantFloatvEXT = (glGetVariantFloatvEXTPROC) extgl_GetProcAddress("glGetVariantFloatvEXT");
-	glGetVariantPointervEXT = (glGetVariantPointervEXTPROC) extgl_GetProcAddress("glGetVariantPointervEXT");
-	glGetInvariantBooleanvEXT = (glGetInvariantBooleanvEXTPROC) extgl_GetProcAddress("glGetInvariantBooleanvEXT");
-	glGetInvariantIntegervEXT = (glGetInvariantIntegervEXTPROC) extgl_GetProcAddress("glGetInvariantIntegervEXT");
-	glGetInvariantFloatvEXT = (glGetInvariantFloatvEXTPROC) extgl_GetProcAddress("glGetInvariantFloatvEXT");
-	glGetLocalConstantBooleanvEXT = (glGetLocalConstantBooleanvEXTPROC) extgl_GetProcAddress("glGetLocalConstantBooleanvEXT");
-	glGetLocalConstantIntegervEXT = (glGetLocalConstantIntegervEXTPROC) extgl_GetProcAddress("glGetLocalConstantIntegervEXT");
-	glGetLocalConstantFloatvEXT = (glGetLocalConstantFloatvEXTPROC) extgl_GetProcAddress("glGetLocalConstantFloatvEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_vertex_shader)
-}
-
 /*
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glBeginVertexShaderEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBeginVertexShaderEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBeginVertexShaderEXT
 	(JNIEnv * env, jclass clazz)
 {
-	CHECK_EXISTS(glBeginVertexShaderEXT)
 	glBeginVertexShaderEXT();
 	CHECK_GL_ERROR
 }
@@ -189,10 +136,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBeginVertexShader
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glEndVertexShaderEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glEndVertexShaderEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glEndVertexShaderEXT
 	(JNIEnv * env, jclass clazz)
 {
-	CHECK_EXISTS(glEndVertexShaderEXT)
 	glEndVertexShaderEXT();
 	CHECK_GL_ERROR
 }
@@ -201,10 +147,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glEndVertexShaderEX
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glBindVertexShaderEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindVertexShaderEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindVertexShaderEXT
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glBindVertexShaderEXT)
 	glBindVertexShaderEXT(id);
 	CHECK_GL_ERROR
 }
@@ -213,10 +158,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindVertexShaderE
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glGenVertexShadersEXT
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGenVertexShadersEXT
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGenVertexShadersEXT
 	(JNIEnv * env, jclass clazz, jint range)
 {
-	CHECK_EXISTS(glGenVertexShadersEXT)
 	GLuint result = glGenVertexShadersEXT(range);
 	CHECK_GL_ERROR
 	return result;
@@ -226,10 +170,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGenVertexShadersE
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glDeleteVertexShaderEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glDeleteVertexShaderEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glDeleteVertexShaderEXT
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glDeleteVertexShaderEXT)
 	glDeleteVertexShaderEXT(id);
 	CHECK_GL_ERROR
 }
@@ -238,10 +181,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glDeleteVertexShade
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glShaderOp1EXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp1EXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp1EXT
 	(JNIEnv * env, jclass clazz, jint op, jint res, jint arg1)
 {
-	CHECK_EXISTS(glShaderOp1EXT)
 	glShaderOp1EXT(op, res, arg1);
 	CHECK_GL_ERROR
 }
@@ -250,10 +192,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp1EXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glShaderOp2EXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp2EXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp2EXT
 	(JNIEnv * env, jclass clazz, jint op, jint res, jint arg1, jint arg2)
 {
-	CHECK_EXISTS(glShaderOp2EXT)
 	glShaderOp2EXT(op, res, arg1, arg2);
 	CHECK_GL_ERROR
 }
@@ -262,10 +203,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp2EXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glShaderOp3EXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp3EXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp3EXT
 	(JNIEnv * env, jclass clazz, jint op, jint res, jint arg1, jint arg2, jint arg3)
 {
-	CHECK_EXISTS(glShaderOp3EXT)
 	glShaderOp3EXT(op, res, arg1, arg2, arg3);
 	CHECK_GL_ERROR
 }
@@ -274,10 +214,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp3EXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glSwizzleEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glSwizzleEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glSwizzleEXT
 	(JNIEnv * env, jclass clazz, jint res, jint in, jint outX, jint outY, jint outZ, jint outW)
 {
-	CHECK_EXISTS(glSwizzleEXT)
 	glSwizzleEXT(res, in, outX, outY, outZ, outW);
 	CHECK_GL_ERROR
 }
@@ -286,10 +225,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glSwizzleEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glWriteMaskEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glWriteMaskEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glWriteMaskEXT
 	(JNIEnv * env, jclass clazz, jint res, jint in, jint outX, jint outY, jint outZ, jint outW)
 {
-	CHECK_EXISTS(glWriteMaskEXT)
 	glWriteMaskEXT(res, in, outX, outY, outZ, outW);
 	CHECK_GL_ERROR
 }
@@ -298,10 +236,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glWriteMaskEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glInsertComponentEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glInsertComponentEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glInsertComponentEXT
 	(JNIEnv * env, jclass clazz, jint res, jint src, jint num)
 {
-	CHECK_EXISTS(glInsertComponentEXT)
 	glInsertComponentEXT(res, src, num);
 	CHECK_GL_ERROR
 }
@@ -310,10 +247,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glInsertComponentEX
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glExtractComponentEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glExtractComponentEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glExtractComponentEXT
 	(JNIEnv * env, jclass clazz, jint res, jint src, jint num)
 {
-	CHECK_EXISTS(glExtractComponentEXT)
 	glExtractComponentEXT(res, src, num);
 	CHECK_GL_ERROR
 }
@@ -322,10 +258,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glExtractComponentE
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glGenSymbolsEXT
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGenSymbolsEXT
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGenSymbolsEXT
 	(JNIEnv * env, jclass clazz, jint dataType, jint storageType, jint range, jint components)
 {
-	CHECK_EXISTS(glGenSymbolsEXT)
 	GLuint result = glGenSymbolsEXT(dataType, storageType, range, components);
 	CHECK_GL_ERROR
 	return result;
@@ -335,10 +270,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGenSymbolsEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglSetInvariantEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetInvariantEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetInvariantEXT
 	(JNIEnv * env, jclass clazz, jint id, jint type, jobject pAddr, jint pAddr_offset)
 {
-	CHECK_EXISTS(glSetInvariantEXT)
 	GLvoid *pAddr_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pAddr) + pAddr_offset);
 	glSetInvariantEXT(id, type, pAddr_ptr);
 	CHECK_GL_ERROR
@@ -348,10 +282,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetInvariantEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglSetLocalConstantEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetLocalConstantEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetLocalConstantEXT
 	(JNIEnv * env, jclass clazz, jint id, jint type, jobject pAddr, jint pAddr_offset)
 {
-	CHECK_EXISTS(glSetLocalConstantEXT)
 	GLvoid *pAddr_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pAddr) + pAddr_offset);
 	glSetLocalConstantEXT(id, type, pAddr_ptr);
 	CHECK_GL_ERROR
@@ -361,10 +294,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglSetLocalConstant
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantbvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantbvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantbvEXT
 	(JNIEnv * env, jclass clazz, jint id, jobject pAddr, jint pAddr_offset)
 {
-	CHECK_EXISTS(glVariantbvEXT)
 	GLbyte *pAddr_ptr = (GLbyte *)env->GetDirectBufferAddress(pAddr) + pAddr_offset;
 	glVariantbvEXT(id, pAddr_ptr);
 	CHECK_GL_ERROR
@@ -374,10 +306,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantbvEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantsvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantsvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantsvEXT
 	(JNIEnv * env, jclass clazz, jint id, jobject psAddr, jint psAddr_offset)
 {
-	CHECK_EXISTS(glVariantsvEXT)
 	GLshort *psAddr_ptr = (GLshort *)env->GetDirectBufferAddress(psAddr) + psAddr_offset;
 	glVariantsvEXT(id, psAddr_ptr);
 	CHECK_GL_ERROR
@@ -387,10 +318,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantsvEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantfvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantfvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantfvEXT
 	(JNIEnv * env, jclass clazz, jint id, jobject pfAddr, jint pfAddr_offset)
 {
-	CHECK_EXISTS(glVariantfvEXT)
 	GLfloat *pfAddr_ptr = (GLfloat *)env->GetDirectBufferAddress(pfAddr) + pfAddr_offset;
 	glVariantfvEXT(id, pfAddr_ptr);
 	CHECK_GL_ERROR
@@ -400,10 +330,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantfvEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantivEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantivEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantivEXT
 	(JNIEnv * env, jclass clazz, jint id, jobject piAddr, jint piAddr_offset)
 {
-	CHECK_EXISTS(glVariantivEXT)
 	GLint *piAddr_ptr = (GLint *)env->GetDirectBufferAddress(piAddr) + piAddr_offset;
 	glVariantivEXT(id, piAddr_ptr);
 	CHECK_GL_ERROR
@@ -413,10 +342,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantivEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantubvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantubvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantubvEXT
 	(JNIEnv * env, jclass clazz, jint id, jobject pAddr, jint pAddr_offset)
 {
-	CHECK_EXISTS(glVariantubvEXT)
 	GLubyte *pAddr_ptr = (GLubyte *)env->GetDirectBufferAddress(pAddr) + pAddr_offset;
 	glVariantubvEXT(id, pAddr_ptr);
 	CHECK_GL_ERROR
@@ -426,10 +354,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantubvEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantusvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantusvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantusvEXT
 	(JNIEnv * env, jclass clazz, jint id, jobject psAddr, jint psAddr_offset)
 {
-	CHECK_EXISTS(glVariantusvEXT)
 	GLushort *psAddr_ptr = (GLushort *)env->GetDirectBufferAddress(psAddr) + psAddr_offset;
 	glVariantusvEXT(id, psAddr_ptr);
 	CHECK_GL_ERROR
@@ -439,10 +366,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantusvEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantuivEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantuivEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantuivEXT
 	(JNIEnv * env, jclass clazz, jint id, jobject piAddr, jint piAddr_offset)
 {
-	CHECK_EXISTS(glVariantuivEXT)
 	GLuint *piAddr_ptr = (GLuint *)env->GetDirectBufferAddress(piAddr) + piAddr_offset;
 	glVariantuivEXT(id, piAddr_ptr);
 	CHECK_GL_ERROR
@@ -452,10 +378,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantuivEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantPointerEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXT
 	(JNIEnv * env, jclass clazz, jint id, jint type, jint stride, jobject pAddr, jint pAddr_offset)
 {
-	CHECK_EXISTS(glVariantPointerEXT)
 	GLvoid *pAddr_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pAddr) + pAddr_offset);
 	glVariantPointerEXT(id, type, stride, pAddr_ptr);
 	CHECK_GL_ERROR
@@ -465,10 +390,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEX
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglVariantPointerEXTVBO
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXTVBO
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXTVBO
 	(JNIEnv * env, jclass clazz, jint id, jint type, jint stride, jint buffer_offset)
 {
-	CHECK_EXISTS(glVariantPointerEXT)
 	glVariantPointerEXT(id, type, stride, (GLvoid *)buffer_offset);
 	CHECK_GL_ERROR
 }
@@ -477,10 +401,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEX
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glEnableVariantClientStateEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glEnableVariantClientStateEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glEnableVariantClientStateEXT
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glEnableVariantClientStateEXT)
 	glEnableVariantClientStateEXT(id);
 	CHECK_GL_ERROR
 }
@@ -489,10 +412,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glEnableVariantClie
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glDisableVariantClientStateEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glDisableVariantClientStateEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glDisableVariantClientStateEXT
 	(JNIEnv * env, jclass clazz, jint id)
 {
-	CHECK_EXISTS(glDisableVariantClientStateEXT)
 	glDisableVariantClientStateEXT(id);
 	CHECK_GL_ERROR
 }
@@ -501,10 +423,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glDisableVariantCli
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glBindLightParameterEXT
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindLightParameterEXT
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindLightParameterEXT
 	(JNIEnv * env, jclass clazz, jint light, jint value)
 {
-	CHECK_EXISTS(glBindLightParameterEXT)
 	GLuint result = glBindLightParameterEXT(light, value);
 	CHECK_GL_ERROR
 	return result;
@@ -514,10 +435,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindLightParamete
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glBindMaterialParameterEXT
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindMaterialParameterEXT
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindMaterialParameterEXT
 	(JNIEnv * env, jclass clazz, jint face, jint value)
 {
-	CHECK_EXISTS(glBindMaterialParameterEXT)
 	GLuint result = glBindMaterialParameterEXT(face, value);
 	CHECK_GL_ERROR
 	return result;
@@ -527,10 +447,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindMaterialParam
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glBindTexGenParameterEXT
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindTexGenParameterEXT
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindTexGenParameterEXT
 	(JNIEnv * env, jclass clazz, jint unit, jint coord, jint value)
 {
-	CHECK_EXISTS(glBindTexGenParameterEXT)
 	GLuint result = glBindTexGenParameterEXT(unit, coord, value);
 	CHECK_GL_ERROR
 	return result;
@@ -540,10 +459,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindTexGenParamet
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glBindTextureUnitParameterEXT
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindTextureUnitParameterEXT
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindTextureUnitParameterEXT
 	(JNIEnv * env, jclass clazz, jint unit, jint value)
 {
-	CHECK_EXISTS(glBindTextureUnitParameterEXT)
 	GLuint result = glBindTextureUnitParameterEXT(unit, value);
 	CHECK_GL_ERROR
 	return result;
@@ -553,10 +471,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindTextureUnitPa
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glBindParameterEXT
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindParameterEXT
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindParameterEXT
 	(JNIEnv * env, jclass clazz, jint value)
 {
-	CHECK_EXISTS(glBindParameterEXT)
 	GLuint result = glBindParameterEXT(value);
 	CHECK_GL_ERROR
 	return result;
@@ -566,10 +483,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glBindParameterEXT
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glIsVariantEnabledEXT
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glIsVariantEnabledEXT
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glIsVariantEnabledEXT
 	(JNIEnv * env, jclass clazz, jint id, jint cap)
 {
-	CHECK_EXISTS(glIsVariantEnabledEXT)
 	GLboolean result = glIsVariantEnabledEXT(id, cap);
 	CHECK_GL_ERROR
 	return result;
@@ -579,10 +495,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glIsVariantEnab
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetVariantBooleanvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantBooleanvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantBooleanvEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject pbData, jint pbData_offset)
 {
-	CHECK_EXISTS(glGetVariantBooleanvEXT)
 	GLubyte *pbData_ptr = (GLubyte *)env->GetDirectBufferAddress(pbData) + pbData_offset;
 	glGetVariantBooleanvEXT(id, value, pbData_ptr);
 	CHECK_GL_ERROR
@@ -592,10 +507,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantBoolea
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetVariantIntegervEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantIntegervEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantIntegervEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject piData, jint piData_offset)
 {
-	CHECK_EXISTS(glGetVariantIntegervEXT)
 	GLint *piData_ptr = (GLint *)env->GetDirectBufferAddress(piData) + piData_offset;
 	glGetVariantIntegervEXT(id, value, piData_ptr);
 	CHECK_GL_ERROR
@@ -605,10 +519,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantIntege
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetVariantFloatvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantFloatvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantFloatvEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject pfData, jint pfData_offset)
 {
-	CHECK_EXISTS(glGetVariantFloatvEXT)
 	GLfloat *pfData_ptr = (GLfloat *)env->GetDirectBufferAddress(pfData) + pfData_offset;
 	glGetVariantFloatvEXT(id, value, pfData_ptr);
 	CHECK_GL_ERROR
@@ -618,10 +531,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantFloatv
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	glGetVariantPointerEXT
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGetVariantPointerEXT
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGetVariantPointerEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jint size)
 {
-        CHECK_EXISTS(glGetVariantPointervEXT)
         void *address;
         glGetVariantPointervEXT((GLuint)id, (GLuint)value, &address);
         CHECK_GL_ERROR
@@ -632,10 +544,9 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_EXTVertexShader_glGetVariantPoin
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetInvariantBooleanvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantBooleanvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantBooleanvEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject pbData, jint pbData_offset)
 {
-	CHECK_EXISTS(glGetInvariantBooleanvEXT)
 	GLubyte *pbData_ptr = (GLubyte *)env->GetDirectBufferAddress(pbData) + pbData_offset;
 	glGetInvariantBooleanvEXT(id, value, pbData_ptr);
 	CHECK_GL_ERROR
@@ -645,10 +556,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantBool
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetInvariantIntegervEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantIntegervEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantIntegervEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject piData, jint piData_offset)
 {
-	CHECK_EXISTS(glGetInvariantIntegervEXT)
 	GLint *piData_ptr = (GLint *)env->GetDirectBufferAddress(piData) + piData_offset;
 	glGetInvariantIntegervEXT(id, value, piData_ptr);
 	CHECK_GL_ERROR
@@ -658,10 +568,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantInte
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetInvariantFloatvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantFloatvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantFloatvEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject pfData, jint pfData_offset)
 {
-	CHECK_EXISTS(glGetInvariantFloatvEXT)
 	GLfloat *pfData_ptr = (GLfloat *)env->GetDirectBufferAddress(pfData) + pfData_offset;
 	glGetInvariantFloatvEXT(id, value, pfData_ptr);
 	CHECK_GL_ERROR
@@ -671,10 +580,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantFloa
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetLocalConstantBooleanvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantBooleanvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantBooleanvEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject pbData, jint pbData_offset)
 {
-	CHECK_EXISTS(glGetLocalConstantBooleanvEXT)
 	GLubyte *pbData_ptr = (GLubyte *)env->GetDirectBufferAddress(pbData) + pbData_offset;
 	glGetLocalConstantBooleanvEXT(id, value, pbData_ptr);
 	CHECK_GL_ERROR
@@ -684,10 +592,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstant
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetLocalConstantIntegervEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantIntegervEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantIntegervEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject piData, jint piData_offset)
 {
-	CHECK_EXISTS(glGetLocalConstantIntegervEXT)
 	GLint *piData_ptr = (GLint *)env->GetDirectBufferAddress(piData) + piData_offset;
 	glGetLocalConstantIntegervEXT(id, value, piData_ptr);
 	CHECK_GL_ERROR
@@ -697,11 +604,62 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstant
  * Class:	org.lwjgl.opengl.EXTVertexShader
  * Method:	nglGetLocalConstantFloatvEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantFloatvEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantFloatvEXT
 	(JNIEnv * env, jclass clazz, jint id, jint value, jobject pfData, jint pfData_offset)
 {
-	CHECK_EXISTS(glGetLocalConstantFloatvEXT)
 	GLfloat *pfData_ptr = (GLfloat *)env->GetDirectBufferAddress(pfData) + pfData_offset;
 	glGetLocalConstantFloatvEXT(id, value, pfData_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitEXTVertexShader(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glBeginVertexShaderEXT", "()V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBeginVertexShaderEXT, "glBeginVertexShaderEXT", (void**)&glBeginVertexShaderEXT},
+		{"glEndVertexShaderEXT", "()V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glEndVertexShaderEXT, "glEndVertexShaderEXT", (void**)&glEndVertexShaderEXT},
+		{"glBindVertexShaderEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBindVertexShaderEXT, "glBindVertexShaderEXT", (void**)&glBindVertexShaderEXT},
+		{"glGenVertexShadersEXT", "(I)I", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glGenVertexShadersEXT, "glGenVertexShadersEXT", (void**)&glGenVertexShadersEXT},
+		{"glDeleteVertexShaderEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glDeleteVertexShaderEXT, "glDeleteVertexShaderEXT", (void**)&glDeleteVertexShaderEXT},
+		{"glShaderOp1EXT", "(III)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp1EXT, "glShaderOp1EXT", (void**)&glShaderOp1EXT},
+		{"glShaderOp2EXT", "(IIII)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp2EXT, "glShaderOp2EXT", (void**)&glShaderOp2EXT},
+		{"glShaderOp3EXT", "(IIIII)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glShaderOp3EXT, "glShaderOp3EXT", (void**)&glShaderOp3EXT},
+		{"glSwizzleEXT", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glSwizzleEXT, "glSwizzleEXT", (void**)&glSwizzleEXT},
+		{"glWriteMaskEXT", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glWriteMaskEXT, "glWriteMaskEXT", (void**)&glWriteMaskEXT},
+		{"glInsertComponentEXT", "(III)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glInsertComponentEXT, "glInsertComponentEXT", (void**)&glInsertComponentEXT},
+		{"glExtractComponentEXT", "(III)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glExtractComponentEXT, "glExtractComponentEXT", (void**)&glExtractComponentEXT},
+		{"glGenSymbolsEXT", "(IIII)I", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glGenSymbolsEXT, "glGenSymbolsEXT", (void**)&glGenSymbolsEXT},
+		{"nglSetInvariantEXT", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglSetInvariantEXT, "glSetInvariantEXT", (void**)&glSetInvariantEXT},
+		{"nglSetLocalConstantEXT", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglSetLocalConstantEXT, "glSetLocalConstantEXT", (void**)&glSetLocalConstantEXT},
+		{"nglVariantbvEXT", "(ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantbvEXT, "glVariantbvEXT", (void**)&glVariantbvEXT},
+		{"nglVariantsvEXT", "(ILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantsvEXT, "glVariantsvEXT", (void**)&glVariantsvEXT},
+		{"nglVariantfvEXT", "(ILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantfvEXT, "glVariantfvEXT", (void**)&glVariantfvEXT},
+		{"nglVariantivEXT", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantivEXT, "glVariantivEXT", (void**)&glVariantivEXT},
+		{"nglVariantubvEXT", "(ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantubvEXT, "glVariantubvEXT", (void**)&glVariantubvEXT},
+		{"nglVariantusvEXT", "(ILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantusvEXT, "glVariantusvEXT", (void**)&glVariantusvEXT},
+		{"nglVariantuivEXT", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantuivEXT, "glVariantuivEXT", (void**)&glVariantuivEXT},
+		{"nglVariantPointerEXT", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXT, "glVariantPointerEXT", (void**)&glVariantPointerEXT},
+		{"nglVariantPointerEXTVBO", "(IIII)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglVariantPointerEXTVBO, NULL, NULL},
+		{"glEnableVariantClientStateEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glEnableVariantClientStateEXT, "glEnableVariantClientStateEXT", (void**)&glEnableVariantClientStateEXT},
+		{"glDisableVariantClientStateEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glDisableVariantClientStateEXT, "glDisableVariantClientStateEXT", (void**)&glDisableVariantClientStateEXT},
+		{"glBindLightParameterEXT", "(II)I", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBindLightParameterEXT, "glBindLightParameterEXT", (void**)&glBindLightParameterEXT},
+		{"glBindMaterialParameterEXT", "(II)I", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBindMaterialParameterEXT, "glBindMaterialParameterEXT", (void**)&glBindMaterialParameterEXT},
+		{"glBindTexGenParameterEXT", "(III)I", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBindTexGenParameterEXT, "glBindTexGenParameterEXT", (void**)&glBindTexGenParameterEXT},
+		{"glBindTextureUnitParameterEXT", "(II)I", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBindTextureUnitParameterEXT, "glBindTextureUnitParameterEXT", (void**)&glBindTextureUnitParameterEXT},
+		{"glBindParameterEXT", "(I)I", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glBindParameterEXT, "glBindParameterEXT", (void**)&glBindParameterEXT},
+		{"glIsVariantEnabledEXT", "(II)Z", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glIsVariantEnabledEXT, "glIsVariantEnabledEXT", (void**)&glIsVariantEnabledEXT},
+		{"nglGetVariantBooleanvEXT", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantBooleanvEXT, "glGetVariantBooleanvEXT", (void**)&glGetVariantBooleanvEXT},
+		{"nglGetVariantIntegervEXT", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantIntegervEXT, "glGetVariantIntegervEXT", (void**)&glGetVariantIntegervEXT},
+		{"nglGetVariantFloatvEXT", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetVariantFloatvEXT, "glGetVariantFloatvEXT", (void**)&glGetVariantFloatvEXT},
+		{"glGetVariantPointerEXT", "(III)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_glGetVariantPointerEXT, "glGetVariantPointervEXT", (void**)&glGetVariantPointervEXT},
+		{"nglGetInvariantBooleanvEXT", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantBooleanvEXT, "glGetInvariantBooleanvEXT", (void**)&glGetInvariantBooleanvEXT},
+		{"nglGetInvariantIntegervEXT", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantIntegervEXT, "glGetInvariantIntegervEXT", (void**)&glGetInvariantIntegervEXT},
+		{"nglGetInvariantFloatvEXT", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetInvariantFloatvEXT, "glGetInvariantFloatvEXT", (void**)&glGetInvariantFloatvEXT},
+		{"nglGetLocalConstantBooleanvEXT", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantBooleanvEXT, "glGetLocalConstantBooleanvEXT", (void**)&glGetLocalConstantBooleanvEXT},
+		{"nglGetLocalConstantIntegervEXT", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantIntegervEXT, "glGetLocalConstantIntegervEXT", (void**)&glGetLocalConstantIntegervEXT},
+		{"nglGetLocalConstantFloatvEXT", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTVertexShader_nglGetLocalConstantFloatvEXT, "glGetLocalConstantFloatvEXT", (void**)&glGetLocalConstantFloatvEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTVertexShader");
+	if (extgl_Extensions.GL_EXT_vertex_shader)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_vertex_shader", num_functions, functions);
 }

@@ -1035,6 +1035,12 @@ public final class GL11 {
 	}
 	private static native void nglGetTexImage(int target, int level, int format, int type, Buffer pixels, int pixels_offset);
 	
+	public static void glGetTexGen(int coord, int pname, IntBuffer params) {
+		BufferChecks.checkBuffer(params);
+		nglGetTexGeniv(coord, pname, params, params.position());
+	}
+	private static native void nglGetTexGeniv(int coord, int pname, IntBuffer params, int params_offset);
+
 	public static void glGetTexGen(int coord, int pname, FloatBuffer params) {
 		BufferChecks.checkBuffer(params);
 		nglGetTexGenfv(coord, pname, params, params.position());

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVProgram
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVProgram.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -58,30 +57,13 @@ static glAreProgramsResidentNVPROC glAreProgramsResidentNV;
 static glRequestResidentProgramsNVPROC glRequestResidentProgramsNV;
 static glGetProgramivNVPROC glGetProgramivNV;
 
-void extgl_InitNVProgram(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_vertex_program)
-		return;
-	glLoadProgramNV = (glLoadProgramNVPROC) extgl_GetProcAddress("glLoadProgramNV");
-	glBindProgramNV = (glBindProgramNVPROC) extgl_GetProcAddress("glBindProgramNV");
-	glDeleteProgramsNV = (glDeleteProgramsNVPROC) extgl_GetProcAddress("glDeleteProgramsNV");
-	glGenProgramsNV = (glGenProgramsNVPROC) extgl_GetProcAddress("glGenProgramsNV");
-	glGetProgramivNV = (glGetProgramivNVPROC) extgl_GetProcAddress("glGetProgramivNV");
-	glGetProgramStringNV = (glGetProgramStringNVPROC) extgl_GetProcAddress("glGetProgramStringNV");
-	glIsProgramNV = (glIsProgramNVPROC) extgl_GetProcAddress("glIsProgramNV");
-	glAreProgramsResidentNV = (glAreProgramsResidentNVPROC) extgl_GetProcAddress("glAreProgramsResidentNV");
-	glRequestResidentProgramsNV = (glRequestResidentProgramsNVPROC) extgl_GetProcAddress("glRequestResidentProgramsNV");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_vertex_program)
-}
-
 /*
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	nglLoadProgramNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglLoadProgramNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglLoadProgramNV
 	(JNIEnv * env, jclass clazz, jint target, jint programID, jint length, jobject string, jint stringOffset)
 {
-	CHECK_EXISTS(glLoadProgramNV)
 	const GLubyte *string_ptr = (const GLubyte *)env->GetDirectBufferAddress(string) + stringOffset;
 	glLoadProgramNV(target, programID, length, string_ptr);
 	CHECK_GL_ERROR
@@ -91,10 +73,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglLoadProgramNV
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	glBindProgramNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_glBindProgramNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_glBindProgramNV
 	(JNIEnv * env, jclass clazz, jint target, jint programID)
 {
-	CHECK_EXISTS(glBindProgramNV)
 	glBindProgramNV(target, programID);
 	CHECK_GL_ERROR
 }
@@ -103,10 +84,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_glBindProgramNV
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	nglDeleteProgramsNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglDeleteProgramsNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglDeleteProgramsNV
 	(JNIEnv * env, jclass clazz, jint n, jobject programs, jint programsOffset)
 {
-	CHECK_EXISTS(glDeleteProgramsNV)
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glDeleteProgramsNV(n, programs_ptr);
 	CHECK_GL_ERROR
@@ -116,10 +96,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglDeleteProgramsNV
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	nglGenProgramsNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGenProgramsNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGenProgramsNV
 	(JNIEnv * env, jclass clazz, jint n, jobject programs, jint programsOffset)
 {
-	CHECK_EXISTS(glGenProgramsNV)
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glGenProgramsNV(n, programs_ptr);
 	CHECK_GL_ERROR
@@ -129,10 +108,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGenProgramsNV
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	nglGetProgramivNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramivNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramivNV
 	(JNIEnv * env, jclass clazz, jint programID, jint parameterName, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetProgramivNV)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramivNV(programID, parameterName, params_ptr);
 	CHECK_GL_ERROR
@@ -142,10 +120,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramivNV
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	nglGetProgramStringNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramStringNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramStringNV
 	(JNIEnv * env, jclass clazz, jint programID, jint parameterName, jobject paramString, jint paramStringOffset)
 {
-	CHECK_EXISTS(glGetProgramStringNV)
 	GLubyte *paramString_ptr = (GLubyte *)env->GetDirectBufferAddress(paramString) + paramStringOffset;
 	glGetProgramStringNV(programID, parameterName, paramString_ptr);
 	CHECK_GL_ERROR
@@ -155,10 +132,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglGetProgramStringNV
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	glIsProgramNV
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_glIsProgramNV
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_glIsProgramNV
 	(JNIEnv * env, jclass clazz, jint programID)
 {
-	CHECK_EXISTS(glIsProgramNV)
 	GLboolean result = glIsProgramNV(programID);
 	CHECK_GL_ERROR
 	return result;
@@ -168,10 +144,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_glIsProgramNV
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	nglAreProgramsResidentNV
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_nglAreProgramsResidentNV
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_nglAreProgramsResidentNV
 	(JNIEnv * env, jclass clazz, jint n, jobject programIDs, jint programIDsOffset, jobject programResidences, jint programResidencesOffset)
 {
-	CHECK_EXISTS(glAreProgramsResidentNV)
 	GLuint *programIDs_ptr = (GLuint *)env->GetDirectBufferAddress(programIDs) + programIDsOffset;
 	GLubyte *programResidences_ptr = (GLubyte *)env->GetDirectBufferAddress(programResidences) + programResidencesOffset;
 	GLboolean result = glAreProgramsResidentNV(n, programIDs_ptr, programResidences_ptr);
@@ -183,11 +158,28 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_NVProgram_nglAreProgramsResiden
  * Class:	org.lwjgl.opengl.NVProgram
  * Method:	nglRequestResidentProgramsNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglRequestResidentProgramsNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVProgram_nglRequestResidentProgramsNV
 	(JNIEnv * env, jclass clazz, jint n, jobject programIDs, jint programIDsOffset)
 {
-	CHECK_EXISTS(glRequestResidentProgramsNV)
 	GLuint *programIDs_ptr = (GLuint *)env->GetDirectBufferAddress(programIDs) + programIDsOffset;
 	glRequestResidentProgramsNV(n, programIDs_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitNVProgram(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglLoadProgramNV", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglLoadProgramNV, "glLoadProgramNV", (void**)&glLoadProgramNV},
+		{"glBindProgramNV", "(II)V", (void*)&Java_org_lwjgl_opengl_NVProgram_glBindProgramNV, "glBindProgramNV", (void**)&glBindProgramNV},
+		{"nglDeleteProgramsNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglDeleteProgramsNV, "glDeleteProgramsNV", (void**)&glDeleteProgramsNV},
+		{"nglGenProgramsNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglGenProgramsNV, "glGenProgramsNV", (void**)&glGenProgramsNV},
+		{"nglGetProgramivNV", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglGetProgramivNV, "glGetProgramivNV", (void**)&glGetProgramivNV},
+		{"nglGetProgramStringNV", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglGetProgramStringNV, "glGetProgramStringNV", (void**)&glGetProgramStringNV},
+		{"glIsProgramNV", "(I)Z", (void*)&Java_org_lwjgl_opengl_NVProgram_glIsProgramNV, "glIsProgramNV", (void**)&glIsProgramNV},
+		{"nglAreProgramsResidentNV", "(ILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)Z", (void*)&Java_org_lwjgl_opengl_NVProgram_nglAreProgramsResidentNV, "glAreProgramsResidentNV", (void**)&glAreProgramsResidentNV},
+		{"nglRequestResidentProgramsNV", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVProgram_nglRequestResidentProgramsNV, "glRequestResidentProgramsNV", (void**)&glRequestResidentProgramsNV}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVProgram");
+	extgl_InitializeClass(env, clazz, NULL, "<NVProgram>", num_functions, functions);
 }

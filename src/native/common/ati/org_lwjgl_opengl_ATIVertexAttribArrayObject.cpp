@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIVertexAttribArrayObject
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIVertexAttribArrayObject.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -46,26 +45,13 @@ static glVertexAttribArrayObjectATIPROC glVertexAttribArrayObjectATI;
 static glGetVertexAttribArrayObjectfvATIPROC glGetVertexAttribArrayObjectfvATI;
 static glGetVertexAttribArrayObjectivATIPROC glGetVertexAttribArrayObjectivATI;
 
-void extgl_InitATIVertexAttribArrayObject(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_vertex_attrib_array_object)
-		return;
-
-	glVertexAttribArrayObjectATI = (glVertexAttribArrayObjectATIPROC) extgl_GetProcAddress("glVertexAttribArrayObjectATI");
-	glGetVertexAttribArrayObjectfvATI = (glGetVertexAttribArrayObjectfvATIPROC) extgl_GetProcAddress("glGetVertexAttribArrayObjectfvATI");
-	glGetVertexAttribArrayObjectivATI = (glGetVertexAttribArrayObjectivATIPROC) extgl_GetProcAddress("glGetVertexAttribArrayObjectivATI");
-
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_vertex_attrib_array_object)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
  * Method:	glVertexAttribArrayObjectATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI
 	(JNIEnv * env, jclass clazz, jint index, jint size, jint type, jboolean normalized, jint stride, jint buffer, jint offset)
 {
-	CHECK_EXISTS(glVertexAttribArrayObjectATI)
 	glVertexAttribArrayObjectATI(index, size, type, normalized, stride, buffer, offset);
 	CHECK_GL_ERROR
 }
@@ -74,10 +60,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertex
  * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
  * Method:	nglGetVertexAttribArrayObjectfvATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI
 	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetVertexAttribArrayObjectfvATI)
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribArrayObjectfvATI(index, pname, params_ptr);
 	CHECK_GL_ERROR
@@ -87,11 +72,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVe
  * Class:	org.lwjgl.opengl.ATIVertexAttribArrayObject
  * Method:	nglGetVertexAttribArrayObjectivATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI
 	(JNIEnv * env, jclass clazz, jint index, jint pname, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetVertexAttribArrayObjectivATI)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetVertexAttribArrayObjectivATI(index, pname, params_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIVertexAttribArrayObject(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glVertexAttribArrayObjectATI", "(IIIZIII)V", (void*)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_glVertexAttribArrayObjectATI, "glVertexAttribArrayObjectATI", (void**)&glVertexAttribArrayObjectATI},
+		{"nglGetVertexAttribArrayObjectfvATI", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectfvATI, "glGetVertexAttribArrayObjectfvATI", (void**)&glGetVertexAttribArrayObjectfvATI},
+		{"nglGetVertexAttribArrayObjectivATI", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexAttribArrayObject_nglGetVertexAttribArrayObjectivATI, "glGetVertexAttribArrayObjectivATI", (void**)&glGetVertexAttribArrayObjectivATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIVertexAttribArrayObject");
+	if (extgl_Extensions.GL_ATI_vertex_attrib_array_object)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_vertex_attrib_array_object", num_functions, functions);
 }

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIVertexArrayObject
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIVertexArrayObject.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -64,33 +63,13 @@ static glVariantArrayObjectATIPROC glVariantArrayObjectATI;
 static glGetVariantArrayObjectfvATIPROC glGetVariantArrayObjectfvATI;
 static glGetVariantArrayObjectivATIPROC glGetVariantArrayObjectivATI;
 
-void extgl_InitATIVertexArrayObject(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_vertex_array_object)
-		return;
-	glNewObjectBufferATI = (glNewObjectBufferATIPROC) extgl_GetProcAddress("glNewObjectBufferATI");
-	glIsObjectBufferATI = (glIsObjectBufferATIPROC) extgl_GetProcAddress("glIsObjectBufferATI");
-	glUpdateObjectBufferATI = (glUpdateObjectBufferATIPROC) extgl_GetProcAddress("glUpdateObjectBufferATI");
-	glGetObjectBufferfvATI = (glGetObjectBufferfvATIPROC) extgl_GetProcAddress("glGetObjectBufferfvATI");
-	glGetObjectBufferivATI = (glGetObjectBufferivATIPROC) extgl_GetProcAddress("glGetObjectBufferivATI");
-	glFreeObjectBufferATI = (glFreeObjectBufferATIPROC) extgl_GetProcAddress("glFreeObjectBufferATI");
-	glArrayObjectATI = (glArrayObjectATIPROC) extgl_GetProcAddress("glArrayObjectATI");
-	glGetArrayObjectfvATI = (glGetArrayObjectfvATIPROC) extgl_GetProcAddress("glGetArrayObjectfvATI");
-	glGetArrayObjectivATI = (glGetArrayObjectivATIPROC) extgl_GetProcAddress("glGetArrayObjectivATI");
-	glVariantArrayObjectATI = (glVariantArrayObjectATIPROC) extgl_GetProcAddress("glVariantArrayObjectATI");
-	glGetVariantArrayObjectfvATI = (glGetVariantArrayObjectfvATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectfvATI");
-	glGetVariantArrayObjectivATI = (glGetVariantArrayObjectivATIPROC) extgl_GetProcAddress("glGetVariantArrayObjectivATI");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_vertex_array_object)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglNewObjectBufferATI
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBufferATI
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint size, jobject pPointer, jint pPointer_offset, jint usage)
 {
-	CHECK_EXISTS(glNewObjectBufferATI)
 	GLvoid *pPointer_ptr = safeGetBufferAddress(env, pPointer, pPointer_offset);
 	GLuint result = glNewObjectBufferATI(size, pPointer_ptr, usage);
 	CHECK_GL_ERROR
@@ -101,10 +80,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBu
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glIsObjectBufferATI
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObjectBufferATI
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
-	CHECK_EXISTS(glIsObjectBufferATI)
 	GLboolean result = glIsObjectBufferATI(buffer);
 	CHECK_GL_ERROR
 	return result;
@@ -114,10 +92,9 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObject
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglUpdateObjectBufferATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpdateObjectBufferATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpdateObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint offset, jint size, jobject pPointer, jint pPointer_offset, jint preserve)
 {
-	CHECK_EXISTS(glUpdateObjectBufferATI)
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glUpdateObjectBufferATI(buffer, offset, size, pPointer_ptr, preserve);
 	CHECK_GL_ERROR
@@ -127,10 +104,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpdateObjec
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetObjectBufferfvATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferfvATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferfvATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint pname, jobject pfParams, jint pfParams_offset)
 {
-	CHECK_EXISTS(glGetObjectBufferfvATI)
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetObjectBufferfvATI(buffer, pname, pfParams_ptr);
 	CHECK_GL_ERROR
@@ -140,10 +116,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBu
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetObjectBufferivATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferivATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferivATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint pname, jobject piParams, jint piParams_offset)
 {
-	CHECK_EXISTS(glGetObjectBufferivATI)
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetObjectBufferivATI(buffer, pname, piParams_ptr);
 	CHECK_GL_ERROR
@@ -153,10 +128,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBu
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glFreeObjectBufferATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeObjectBufferATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
-	CHECK_EXISTS(glFreeObjectBufferATI)
 	glFreeObjectBufferATI(buffer);
 	CHECK_GL_ERROR
 }
@@ -165,10 +139,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeObjectBu
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glArrayObjectATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glArrayObjectATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glArrayObjectATI
 	(JNIEnv * env, jclass clazz, jint array, jint size, jint type, jint stride, jint buffer, jint offset)
 {
-	CHECK_EXISTS(glArrayObjectATI)
 	glArrayObjectATI(array, size, type, stride, buffer, offset);
 	CHECK_GL_ERROR
 }
@@ -177,10 +150,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glArrayObjectA
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetArrayObjectfvATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectfvATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectfvATI
 	(JNIEnv * env, jclass clazz, jint array, jint pname, jobject pfParams, jint pfParams_offset)
 {
-	CHECK_EXISTS(glGetArrayObjectfvATI)
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetArrayObjectfvATI(array, pname, pfParams_ptr);
 	CHECK_GL_ERROR
@@ -190,10 +162,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObj
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetArrayObjectivATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectivATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectivATI
 	(JNIEnv * env, jclass clazz, jint array, jint pname, jobject piParams, jint piParams_offset)
 {
-	CHECK_EXISTS(glGetArrayObjectivATI)
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetArrayObjectivATI(array, pname, piParams_ptr);
 	CHECK_GL_ERROR
@@ -203,10 +174,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObj
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	glVariantArrayObjectATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glVariantArrayObjectATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glVariantArrayObjectATI
 	(JNIEnv * env, jclass clazz, jint id, jint type, jint stride, jint buffer, jint offset)
 {
-	CHECK_EXISTS(glVariantArrayObjectATI)
 	glVariantArrayObjectATI(id, type, stride, buffer, offset);
 	CHECK_GL_ERROR
 }
@@ -215,10 +185,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_glVariantArray
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetVariantArrayObjectfvATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectfvATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectfvATI
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject pfParams, jint pfParams_offset_offset)
 {
-	CHECK_EXISTS(glGetVariantArrayObjectfvATI)
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset_offset;
 	glGetVariantArrayObjectfvATI(id, pname, pfParams_ptr);
 	CHECK_GL_ERROR
@@ -228,11 +197,32 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantA
  * Class:	org.lwjgl.opengl.ATIVertexArrayObject
  * Method:	nglGetVariantArrayObjectivATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectivATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectivATI
 	(JNIEnv * env, jclass clazz, jint id, jint pname, jobject piParams, jint piParams_offset)
 {
-	CHECK_EXISTS(glGetVariantArrayObjectivATI)
 	GLint *piParams_ptr = (GLint *)env->GetDirectBufferAddress(piParams) + piParams_offset;
 	glGetVariantArrayObjectivATI(id, pname, piParams_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIVertexArrayObject(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglNewObjectBufferATI", "(ILjava/nio/Buffer;II)I", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglNewObjectBufferATI, "glNewObjectBufferATI", (void**)&glNewObjectBufferATI},
+		{"glIsObjectBufferATI", "(I)Z", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_glIsObjectBufferATI, "glIsObjectBufferATI", (void**)&glIsObjectBufferATI},
+		{"nglUpdateObjectBufferATI", "(IIILjava/nio/Buffer;II)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglUpdateObjectBufferATI, "glUpdateObjectBufferATI", (void**)&glUpdateObjectBufferATI},
+		{"nglGetObjectBufferfvATI", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferfvATI, "glGetObjectBufferfvATI", (void**)&glGetObjectBufferfvATI},
+		{"nglGetObjectBufferivATI", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetObjectBufferivATI, "glGetObjectBufferivATI", (void**)&glGetObjectBufferivATI},
+		{"glFreeObjectBufferATI", "(I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_glFreeObjectBufferATI, "glFreeObjectBufferATI", (void**)&glFreeObjectBufferATI},
+		{"glArrayObjectATI", "(IIIIII)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_glArrayObjectATI, "glArrayObjectATI", (void**)&glArrayObjectATI},
+		{"nglGetArrayObjectfvATI", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectfvATI, "glGetArrayObjectfvATI", (void**)&glGetArrayObjectfvATI},
+		{"nglGetArrayObjectivATI", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetArrayObjectivATI, "glGetArrayObjectivATI", (void**)&glGetArrayObjectivATI},
+		{"glVariantArrayObjectATI", "(IIIII)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_glVariantArrayObjectATI, "glVariantArrayObjectATI", (void**)&glVariantArrayObjectATI},
+		{"nglGetVariantArrayObjectfvATI", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectfvATI, "glGetVariantArrayObjectfvATI", (void**)&glGetVariantArrayObjectfvATI},
+		{"nglGetVariantArrayObjectivATI", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ATIVertexArrayObject_nglGetVariantArrayObjectivATI, "glGetVariantArrayObjectivATI", (void**)&glGetVariantArrayObjectivATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIVertexArrayObject");
+	if (extgl_Extensions.GL_ATI_vertex_array_object)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_vertex_array_object", num_functions, functions);
 }

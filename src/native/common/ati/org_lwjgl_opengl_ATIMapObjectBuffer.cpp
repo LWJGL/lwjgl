@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIMapObjectBuffer
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIMapObjectBuffer.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,25 +43,13 @@ typedef void (APIENTRY * glUnmapObjectBufferATIPROC) (GLuint buffer);
 static glMapObjectBufferATIPROC glMapObjectBufferATI;
 static glUnmapObjectBufferATIPROC glUnmapObjectBufferATI;
 
-void extgl_InitATIMapObjectBuffer(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_map_object_buffer)
-		return;
-
-	glMapObjectBufferATI = (glMapObjectBufferATIPROC) extgl_GetProcAddress("glMapObjectBufferATI");
-	glUnmapObjectBufferATI = (glUnmapObjectBufferATIPROC) extgl_GetProcAddress("glUnmapObjectBufferATI");
-
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_map_object_buffer)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIMapObjectBuffer
  * Method:	glMapObjectBufferATI
  */
-JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBufferATI
+static JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer, jint size, jobject oldBuffer)
 {
-	CHECK_EXISTS(glMapObjectBufferATI)
 	void *buffer_address = glMapObjectBufferATI((GLenum)buffer);
 	CHECK_GL_ERROR
 	if (oldBuffer != NULL) {
@@ -78,10 +65,21 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBu
  * Class:	org.lwjgl.opengl.ATIMapObjectBuffer
  * Method:	glUnmapObjectBufferATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBufferATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBufferATI
 	(JNIEnv * env, jclass clazz, jint buffer)
 {
-	CHECK_EXISTS(glUnmapObjectBufferATI)
 	glUnmapObjectBufferATI(buffer);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIMapObjectBuffer(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glMapObjectBufferATI", "(IILjava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;", (void*)&Java_org_lwjgl_opengl_ATIMapObjectBuffer_glMapObjectBufferATI, "glMapObjectBufferATI", (void**)&glMapObjectBufferATI},
+		{"glUnmapObjectBufferATI", "(I)V", (void*)&Java_org_lwjgl_opengl_ATIMapObjectBuffer_glUnmapObjectBufferATI, "glUnmapObjectBufferATI", (void**)&glUnmapObjectBufferATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIMapObjectBuffer");
+	if (extgl_Extensions.GL_ATI_map_object_buffer)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_map_object_buffer", num_functions, functions);
 }

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTStencilTwoSide
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTStencilTwoSide.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -42,22 +41,24 @@ typedef void (APIENTRY * glActiveStencilFaceEXTPROC) (GLenum face);
 
 static glActiveStencilFaceEXTPROC glActiveStencilFaceEXT;
 
-void extgl_InitEXTStencilTwoSide(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_stencil_two_side)
-		return;
-	glActiveStencilFaceEXT = (glActiveStencilFaceEXTPROC) extgl_GetProcAddress("glActiveStencilFaceEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_stencil_two_side)
-}
-
 /*
  * Class:	org.lwjgl.opengl.EXTStencilTwoSide
  * Method:	glActiveStencilFaceEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT
 	(JNIEnv * env, jclass clazz, jint face)
 {
-	CHECK_EXISTS(glActiveStencilFaceEXT)
 	glActiveStencilFaceEXT(face);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitEXTStencilTwoSide(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glActiveStencilFaceEXT", "(I)V", (void*)&Java_org_lwjgl_opengl_EXTStencilTwoSide_glActiveStencilFaceEXT, "glActiveStencilFaceEXT", (void**)&glActiveStencilFaceEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTStencilTwoSide");
+	if (extgl_Extensions.GL_EXT_stencil_two_side)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_stencil_two_side", num_functions, functions);
 }

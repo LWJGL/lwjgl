@@ -34,36 +34,22 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTFogCoord
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTFogCoord.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
 typedef void (APIENTRY * glFogCoordfEXTPROC) (GLfloat coord);
-typedef void (APIENTRY * glFogCoordfvEXTPROC) (const GLfloat *coord);
 typedef void (APIENTRY * glFogCoordPointerEXTPROC) (GLenum type, GLsizei stride, const GLvoid *pointer);
 
 static glFogCoordfEXTPROC glFogCoordfEXT;
-static glFogCoordfvEXTPROC glFogCoordfvEXT;
 static glFogCoordPointerEXTPROC glFogCoordPointerEXT;
-
-void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_fog_coord)
-		return;
-	glFogCoordfEXT = (glFogCoordfEXTPROC) extgl_GetProcAddress("glFogCoordfEXT");
-	glFogCoordfvEXT = (glFogCoordfvEXTPROC) extgl_GetProcAddress("glFogCoordfvEXT");
-	glFogCoordPointerEXT = (glFogCoordPointerEXTPROC) extgl_GetProcAddress("glFogCoordPointerEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_fog_coord)
-}
 
 /*
  * Class:	org.lwjgl.opengl.EXTFogCoord
  * Method:	glFogCoordfEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT
 	(JNIEnv * env, jclass clazz, jfloat coord)
 {
-	CHECK_EXISTS(glFogCoordfEXT)
 	glFogCoordfEXT(coord);
 	CHECK_GL_ERROR
 }
@@ -72,10 +58,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT
  * Class:	org.lwjgl.opengl.EXTFogCoord
  * Method:	nglFogCoordPointerEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT
 	(JNIEnv * env, jclass clazz, jint type, jint stride, jobject data, jint data_offset)
 {
-	CHECK_EXISTS(glFogCoordPointerEXT)
 	GLvoid *data_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(data) + data_offset);
 	glFogCoordPointerEXT(type, stride, data_ptr);
 	CHECK_GL_ERROR
@@ -85,10 +70,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT
  * Class:	org.lwjgl.opengl.EXTFogCoord
  * Method:	nglFogCoordPointerEXTVBO
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO
 	(JNIEnv * env, jclass clazz, jint type, jint stride, jint buffer_offset)
 {
-	CHECK_EXISTS(glFogCoordPointerEXT)
 	glFogCoordPointerEXT(type, stride, (GLvoid *)buffer_offset);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitEXTFogCoord(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glFogCoordfEXT", "(F)V", (void*)&Java_org_lwjgl_opengl_EXTFogCoord_glFogCoordfEXT, "glFogCoordfEXT", (void**)&glFogCoordfEXT},
+		{"nglFogCoordPointerEXT", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXT, "glFogCoordPointerEXT", (void**)&glFogCoordPointerEXT},
+		{"nglFogCoordPointerEXTVBO", "(III)V", (void*)&Java_org_lwjgl_opengl_EXTFogCoord_nglFogCoordPointerEXTVBO, NULL, NULL}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTFogCoord");
+	if (extgl_Extensions.GL_EXT_fog_coord)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_fog_coord", num_functions, functions);
+}
+

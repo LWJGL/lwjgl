@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBMatrixPalette
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBMatrixPalette.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -50,26 +49,13 @@ static glMatrixIndexusvARBPROC glMatrixIndexusvARB;
 static glMatrixIndexuivARBPROC glMatrixIndexuivARB;
 static glMatrixIndexPointerARBPROC glMatrixIndexPointerARB;
 
-void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_matrix_palette)
-		return;
-	glCurrentPaletteMatrixARB = (glCurrentPaletteMatrixARBPROC) extgl_GetProcAddress("glCurrentPaletteMatrixARB");
-	glMatrixIndexubvARB = (glMatrixIndexubvARBPROC) extgl_GetProcAddress("glMatrixIndexubvARB");
-	glMatrixIndexusvARB = (glMatrixIndexusvARBPROC) extgl_GetProcAddress("glMatrixIndexusvARB");
-	glMatrixIndexuivARB = (glMatrixIndexuivARBPROC) extgl_GetProcAddress("glMatrixIndexuivARB");
-	glMatrixIndexPointerARB = (glMatrixIndexPointerARBPROC) extgl_GetProcAddress("glMatrixIndexPointerARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_matrix_palette)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	glCurrentPaletteMatrixARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB
 	(JNIEnv * env, jclass clazz, jint index)
 {
-	CHECK_EXISTS(glCurrentPaletteMatrixARB)
 	glCurrentPaletteMatrixARB(index);
 	CHECK_GL_ERROR
 }
@@ -78,10 +64,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMa
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexPointerARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jobject pPointer, jint pPointer_offset)
 {
-	CHECK_EXISTS(glMatrixIndexPointerARB)
 	GLvoid *pPointer_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(pPointer) + pPointer_offset);
 	glMatrixIndexPointerARB(size, type, stride, pPointer_ptr);
 	CHECK_GL_ERROR
@@ -91,10 +76,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPoin
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexPointerARBVBO
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBVBO
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBVBO
 	(JNIEnv * env, jclass clazz, jint size, jint type, jint stride, jint buffer_offset)
 {
-	CHECK_EXISTS(glMatrixIndexPointerARB)
 	glMatrixIndexPointerARB(size, type, stride, (GLvoid *)buffer_offset);
 	CHECK_GL_ERROR
 }
@@ -103,10 +87,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPoin
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexubvARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB
 	(JNIEnv * env, jclass clazz, jint size, jobject pIndices, jint pIndices_offset)
 {
-	CHECK_EXISTS(glMatrixIndexubvARB)
 	GLubyte *pIndices_ptr = (GLubyte *)env->GetDirectBufferAddress(pIndices) + pIndices_offset;
 	glMatrixIndexubvARB(size, pIndices_ptr);
 	CHECK_GL_ERROR
@@ -116,10 +99,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvA
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexuivARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB
 	(JNIEnv * env, jclass clazz, jint size, jobject piIndices, jint piIndices_offset)
 {
-	CHECK_EXISTS(glMatrixIndexuivARB)
 	GLuint *piIndices_ptr = (GLuint *)env->GetDirectBufferAddress(piIndices) + piIndices_offset;
 	glMatrixIndexuivARB(size, piIndices_ptr);
 	CHECK_GL_ERROR
@@ -129,11 +111,27 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivA
  * Class:	org.lwjgl.opengl.ARBMatrixPalette
  * Method:	nglMatrixIndexusvARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB
 	(JNIEnv * env, jclass clazz, jint size, jobject psIndices, jint psIndices_offset)
 {
-	CHECK_EXISTS(glMatrixIndexusvARB)
 	GLushort *psIndices_ptr = (GLushort *)env->GetDirectBufferAddress(psIndices) + psIndices_offset;
 	glMatrixIndexusvARB(size, psIndices_ptr);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitARBMatrixPalette(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glCurrentPaletteMatrixARB", "(I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_glCurrentPaletteMatrixARB, "glCurrentPaletteMatrixARB", (void**)&glCurrentPaletteMatrixARB},
+		{"nglMatrixIndexPointerARB", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARB, "glMatrixIndexPointerARB", (void**)&glMatrixIndexPointerARB},
+		{"nglMatrixIndexPointerARBVBO", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexPointerARBVBO, NULL, NULL},
+		{"nglMatrixIndexubvARB", "(ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexubvARB, "glMatrixIndexubvARB", (void**)&glMatrixIndexubvARB},
+		{"nglMatrixIndexuivARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexuivARB, "glMatrixIndexuivARB", (void**)&glMatrixIndexuivARB},
+		{"nglMatrixIndexusvARB", "(ILjava/nio/ShortBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBMatrixPalette_nglMatrixIndexusvARB, "glMatrixIndexusvARB", (void**)&glMatrixIndexusvARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBMatrixPalette");
+	if (extgl_Extensions.GL_ARB_matrix_palette)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_matrix_palette", num_functions, functions);
+}
+

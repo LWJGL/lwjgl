@@ -34,35 +34,34 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.EXTMultiDrawArrays
 // ----------------------------------
 
-#include "org_lwjgl_opengl_EXTMultiDrawArrays.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
 typedef void (APIENTRY * glMultiDrawArraysEXTPROC) (GLenum mode, GLint *first, GLsizei *count, GLsizei primcount);
-typedef void (APIENTRY * glMultiDrawElementsEXTPROC) (GLenum mode, GLsizei *count, GLenum type, const GLvoid **indices, GLsizei primcount);
 
 static glMultiDrawArraysEXTPROC glMultiDrawArraysEXT;
-static glMultiDrawElementsEXTPROC glMultiDrawElementsEXT;
-
-void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_EXT_multi_draw_arrays)
-		return;
-	glMultiDrawArraysEXT = (glMultiDrawArraysEXTPROC) extgl_GetProcAddress("glMultiDrawArraysEXT");
-	glMultiDrawElementsEXT = (glMultiDrawElementsEXTPROC) extgl_GetProcAddress("glMultiDrawElementsEXT");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_EXT_multi_draw_arrays)
-}
 
 /*
  * Class:	org.lwjgl.opengl.EXTMultiDrawArrays
  * Method:	nglMultiDrawArraysEXT
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT
 	(JNIEnv * env, jclass clazz, jint mode, jobject piFirst, jint piFirst_offset, jobject piCount, jint piCount_offset, jint primcount)
 {
-	CHECK_EXISTS(glMultiDrawArraysEXT)
 	GLint *piFirst_ptr = (GLint *)env->GetDirectBufferAddress(piFirst) + piFirst_offset;
 	GLint *piCount_ptr = (GLint *)env->GetDirectBufferAddress(piCount) + piCount_offset;
 	glMultiDrawArraysEXT(mode, piFirst_ptr, piCount_ptr, primcount);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitEXTMultiDrawArrays(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglMultiDrawArraysEXT", "(ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;II)V", (void*)&Java_org_lwjgl_opengl_EXTMultiDrawArrays_nglMultiDrawArraysEXT, "glMultiDrawArraysEXT", (void**)&glMultiDrawArraysEXT}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/EXTMultiDrawArrays");
+	if (extgl_Extensions.GL_EXT_multi_draw_arrays)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_EXT_multi_draw_arrays", num_functions, functions);
+}
+

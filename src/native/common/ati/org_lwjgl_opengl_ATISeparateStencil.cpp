@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATISeparateStencil
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATISeparateStencil.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,23 +43,13 @@ typedef void (APIENTRY * glStencilFuncSeparateATIPROC) (GLenum frontfunc, GLenum
 static glStencilOpSeparateATIPROC glStencilOpSeparateATI;
 static glStencilFuncSeparateATIPROC glStencilFuncSeparateATI;
 
-void extgl_InitATISeparateStencil(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_separate_stencil)
-		return;
-	glStencilOpSeparateATI = (glStencilOpSeparateATIPROC)extgl_GetProcAddress("glStencilOpSeparateATI");
-	glStencilFuncSeparateATI = (glStencilFuncSeparateATIPROC)extgl_GetProcAddress("glStencilFuncSeparateATI");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_separate_stencil)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATISeparateStencil
  * Method:	glStencilOpSeparateATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSeparateATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSeparateATI
 	(JNIEnv * env, jclass clazz, jint face, jint sfail, jint dpfail, jint dppass)
 {
-	CHECK_EXISTS(glStencilOpSeparateATI)
 	glStencilOpSeparateATI(face, sfail, dpfail, dppass);
 	CHECK_GL_ERROR
 }
@@ -69,10 +58,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSepar
  * Class:	org.lwjgl.opengl.ATISeparateStencil
  * Method:	glStencilFuncSeparateATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSeparateATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSeparateATI
 	(JNIEnv * env, jclass clazz, jint frontfunc, jint backfunc, jint ref, jint mask)
 {
-	CHECK_EXISTS(glStencilFuncSeparateATI)
 	glStencilFuncSeparateATI(frontfunc, backfunc, ref, mask);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATISeparateStencil(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glStencilOpSeparateATI", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ATISeparateStencil_glStencilOpSeparateATI, "glStencilOpSeparateATI", (void**)&glStencilOpSeparateATI},
+		{"glStencilFuncSeparateATI", "(IIII)V", (void*)&Java_org_lwjgl_opengl_ATISeparateStencil_glStencilFuncSeparateATI, "glStencilFuncSeparateATI", (void**)&glStencilFuncSeparateATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATISeparateStencil");
+	if (extgl_Extensions.GL_ATI_separate_stencil)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_separate_stencil", num_functions, functions);
 }

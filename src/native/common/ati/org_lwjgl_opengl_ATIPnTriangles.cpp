@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ATIPnTriangles
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ATIPnTriangles.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,23 +43,13 @@ typedef void (APIENTRY * glPNTrianglesfATIPROC) (GLenum pname, GLfloat param);
 static glPNTrianglesiATIPROC glPNTrianglesiATI;
 static glPNTrianglesfATIPROC glPNTrianglesfATI;
 
-void extgl_InitATIPNTriangles(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ATI_pn_triangles)
-		return;
-	glPNTrianglesiATI = (glPNTrianglesiATIPROC) extgl_GetProcAddress("glPNTrianglesiATI");
-	glPNTrianglesfATI = (glPNTrianglesfATIPROC) extgl_GetProcAddress("glPNTrianglesfATI");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ATI_pn_triangles)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ATIPnTriangles
  * Method:	glPNTrianglesfATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI
 	(JNIEnv * env, jclass clazz, jint pname, jfloat param)
 {
-	CHECK_EXISTS(glPNTrianglesfATI)
 	glPNTrianglesfATI(pname, param);
 	CHECK_GL_ERROR
 }
@@ -69,10 +58,21 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI
  * Class:	org.lwjgl.opengl.ATIPnTriangles
  * Method:	glPNTrianglesiATI
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI
 	(JNIEnv * env, jclass clazz, jint pname, jint param)
 {
-	CHECK_EXISTS(glPNTrianglesiATI)
 	glPNTrianglesiATI(pname, param);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitATIPNTriangles(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"glPNTrianglesfATI", "(IF)V", (void*)&Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesfATI, "glPNTrianglesfATI", (void**)&glPNTrianglesfATI},
+		{"glPNTrianglesiATI", "(II)V", (void*)&Java_org_lwjgl_opengl_ATIPnTriangles_glPNTrianglesiATI, "glPNTrianglesiATI", (void**)&glPNTrianglesiATI}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ATIPnTriangles");
+	if (extgl_Extensions.GL_ATI_pn_triangles)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ATI_pn_triangles", num_functions, functions);
 }

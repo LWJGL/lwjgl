@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBVertexShader
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBVertexShader.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -49,26 +48,13 @@ static glBindAttribLocationARBPROC glBindAttribLocationARB;
 static glGetActiveAttribARBPROC glGetActiveAttribARB;
 static glGetAttribLocationARBPROC glGetAttribLocationARB;
 
-void extgl_InitARBVertexShader(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_vertex_shader)
-		return;
-
-	glBindAttribLocationARB = (glBindAttribLocationARBPROC) extgl_GetProcAddress("glBindAttribLocationARB");
-	glGetActiveAttribARB = (glGetActiveAttribARBPROC) extgl_GetProcAddress("glGetActiveAttribARB");
-	glGetAttribLocationARB = (glGetAttribLocationARBPROC) extgl_GetProcAddress("glGetAttribLocationARB");
-
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_vertex_shader)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ARBVertexShader
  * Method:	nglBindAttribLocationARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocationARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocationARB
 	(JNIEnv * env, jclass clazz, jint programObj, jint index, jobject name, jint nameOffset)
 {
-	CHECK_EXISTS(glBindAttribLocationARB)
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	glBindAttribLocationARB(programObj, index, name_ptr);
 	CHECK_GL_ERROR
@@ -78,10 +64,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocati
  * Class:	org.lwjgl.opengl.ARBVertexShader
  * Method:	nglGetActiveAttribARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribARB
 	(JNIEnv * env, jclass clazz, jint programObj, jint index, jint maxLength, jobject length, jint lengthOffset, jobject size, jint sizeOffset, jobject type, jint typeOffset, jobject name, jint nameOffset)
 {
-	CHECK_EXISTS(glGetActiveAttribARB)
 
 	GLint *size_ptr = (GLint *)env->GetDirectBufferAddress(size) + sizeOffset;
 	GLenum *type_ptr = (GLenum *)env->GetDirectBufferAddress(type) + typeOffset;
@@ -101,12 +86,25 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribA
  * Class:	org.lwjgl.opengl.ARBVertexShader
  * Method:	nglGetAttribLocationARB
  */
-JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationARB
+static JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationARB
 	(JNIEnv * env, jclass clazz, jint programObj, jobject name, jint nameOffset)
 {
-	CHECK_EXISTS(glGetAttribLocationARB)
 	GLubyte *name_ptr = (GLubyte *)env->GetDirectBufferAddress(name) + nameOffset;
 	GLuint result = glGetAttribLocationARB(programObj, name_ptr);
 	CHECK_GL_ERROR
 	return result;
 }
+
+void extgl_InitARBVertexShader(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglBindAttribLocationARB", "(IILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexShader_nglBindAttribLocationARB, "glBindAttribLocationARB", (void**)&glBindAttribLocationARB},
+		{"nglGetActiveAttribARB", "(IIILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/IntBuffer;ILjava/nio/ByteBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBVertexShader_nglGetActiveAttribARB, "glGetActiveAttribARB", (void**)&glGetActiveAttribARB},
+		{"nglGetAttribLocationARB", "(ILjava/nio/ByteBuffer;I)I", (void*)&Java_org_lwjgl_opengl_ARBVertexShader_nglGetAttribLocationARB, "glGetAttribLocationARB", (void**)&glGetAttribLocationARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBVertexShader");
+	if (extgl_Extensions.GL_ARB_vertex_shader)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_vertex_shader", num_functions, functions);
+}
+

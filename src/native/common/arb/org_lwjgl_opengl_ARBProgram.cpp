@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBProgram
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBProgram.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -67,34 +66,13 @@ static glGetProgramivARBPROC glGetProgramivARB;
 static glGetProgramStringARBPROC glGetProgramStringARB;
 static glIsProgramARBPROC glIsProgramARB;
 
-void extgl_InitARBProgram(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_fragment_program)
-		return;
-	glProgramStringARB = (glProgramStringARBPROC) extgl_GetProcAddress("glProgramStringARB");
-	glBindProgramARB = (glBindProgramARBPROC) extgl_GetProcAddress("glBindProgramARB");
-	glDeleteProgramsARB = (glDeleteProgramsARBPROC) extgl_GetProcAddress("glDeleteProgramsARB");
-	glGenProgramsARB = (glGenProgramsARBPROC) extgl_GetProcAddress("glGenProgramsARB");
-	glProgramEnvParameter4fARB = (glProgramEnvParameter4fARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fARB");
-	glProgramEnvParameter4fvARB = (glProgramEnvParameter4fvARBPROC) extgl_GetProcAddress("glProgramEnvParameter4fvARB");
-	glProgramLocalParameter4fARB = (glProgramLocalParameter4fARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fARB");
-	glProgramLocalParameter4fvARB = (glProgramLocalParameter4fvARBPROC) extgl_GetProcAddress("glProgramLocalParameter4fvARB");
-	glGetProgramEnvParameterfvARB = (glGetProgramEnvParameterfvARBPROC) extgl_GetProcAddress("glGetProgramEnvParameterfvARB");
-	glGetProgramLocalParameterfvARB = (glGetProgramLocalParameterfvARBPROC) extgl_GetProcAddress("glGetProgramLocalParameterfvARB");
-	glGetProgramivARB = (glGetProgramivARBPROC) extgl_GetProcAddress("glGetProgramivARB");
-	glGetProgramStringARB = (glGetProgramStringARBPROC) extgl_GetProcAddress("glGetProgramStringARB");
-	glIsProgramARB = (glIsProgramARBPROC) extgl_GetProcAddress("glIsProgramARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_fragment_program)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglProgramStringARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB
 	(JNIEnv * env, jclass clazz, jint target, jint format, jint length, jobject string, jint stringOffset)
 {
-	CHECK_EXISTS(glProgramStringARB)
 	GLvoid *string_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(string) + stringOffset);
 	glProgramStringARB(target, format, length, string_ptr);
 	CHECK_GL_ERROR
@@ -104,10 +82,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glBindProgramARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB
 	(JNIEnv * env, jclass clazz, jint target, jint program)
 {
-	CHECK_EXISTS(glBindProgramARB)
 	glBindProgramARB(target, program);
 	CHECK_GL_ERROR
 }
@@ -116,10 +93,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglDeleteProgramsARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB
 	(JNIEnv * env, jclass clazz, jint n, jobject programs, jint programsOffset)
 {
-	CHECK_EXISTS(glDeleteProgramsARB)
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glDeleteProgramsARB(n, programs_ptr);
 	CHECK_GL_ERROR
@@ -129,10 +105,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGenProgramsARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB
 	(JNIEnv * env, jclass clazz, jint n, jobject programs, jint programsOffset)
 {
-	CHECK_EXISTS(glGenProgramsARB)
 	GLuint *programs_ptr = (GLuint *)env->GetDirectBufferAddress(programs) + programsOffset;
 	glGenProgramsARB(n, programs_ptr);
 	CHECK_GL_ERROR
@@ -142,10 +117,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glProgramEnvParameter4fARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParameter4fARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParameter4fARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
-	CHECK_EXISTS(glProgramEnvParameter4fARB)
 	glProgramEnvParameter4fARB(target, index, x, y, z, w);
 	CHECK_GL_ERROR
 }
@@ -154,10 +128,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParameter4fA
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglProgramEnvParameter4fvARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvParameter4fvARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvParameter4fvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glProgramEnvParameter4fvARB)
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glProgramEnvParameter4fvARB(target, index, params_ptr);
 	CHECK_GL_ERROR
@@ -167,10 +140,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvParameter4f
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glProgramLocalParameter4fARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramLocalParameter4fARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramLocalParameter4fARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jfloat x, jfloat y, jfloat z, jfloat w)
 {
-	CHECK_EXISTS(glProgramLocalParameter4fARB)
 	glProgramLocalParameter4fARB(target, index, x, y, z, w);
 	CHECK_GL_ERROR
 }
@@ -179,10 +151,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_glProgramLocalParameter4
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglProgramLocalParameter4fvARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalParameter4fvARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalParameter4fvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glProgramLocalParameter4fvARB)
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glProgramLocalParameter4fvARB(target, index, params_ptr);
 	CHECK_GL_ERROR
@@ -192,10 +163,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalParameter
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramEnvParameterfvARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvParameterfvARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvParameterfvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetProgramEnvParameterfvARB)
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramEnvParameterfvARB(target, index, params_ptr);
 	CHECK_GL_ERROR
@@ -205,10 +175,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvParamete
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramLocalParameterfvARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLocalParameterfvARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLocalParameterfvARB
 	(JNIEnv * env, jclass clazz, jint target, jint index, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetProgramLocalParameterfvARB)
 	GLfloat *params_ptr = (GLfloat *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramLocalParameterfvARB(target, index, params_ptr);
 	CHECK_GL_ERROR
@@ -218,10 +187,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLocalParame
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramivARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivARB
 	(JNIEnv * env, jclass clazz, jint target, jint parameterName, jobject params, jint paramsOffset)
 {
-	CHECK_EXISTS(glGetProgramivARB)
 	GLint *params_ptr = (GLint *)env->GetDirectBufferAddress(params) + paramsOffset;
 	glGetProgramivARB(target, parameterName, params_ptr);
 	CHECK_GL_ERROR
@@ -231,10 +199,9 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	nglGetProgramStringARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStringARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStringARB
 	(JNIEnv * env, jclass clazz, jint target, jint parameterName, jobject paramString, jint paramStringOffset)
 {
-	CHECK_EXISTS(glGetProgramStringARB)
 	GLvoid *paramString_ptr = (GLvoid *)((GLubyte *)env->GetDirectBufferAddress(paramString) + paramStringOffset);
 	glGetProgramStringARB(target, parameterName, paramString_ptr);
 	CHECK_GL_ERROR
@@ -244,11 +211,33 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStringARB
  * Class:	org.lwjgl.opengl.ARBProgram
  * Method:	glIsProgramARB
  */
-JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB
+static JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB
 	(JNIEnv * env, jclass clazz, jint program)
 {
-	CHECK_EXISTS(glIsProgramARB)
 	GLboolean result = glIsProgramARB(program);
 	CHECK_GL_ERROR
 	return result;
 }
+
+void extgl_InitARBProgram(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglProgramStringARB", "(IIILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglProgramStringARB, "glProgramStringARB", (void**)&glProgramStringARB},
+		{"glBindProgramARB", "(II)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_glBindProgramARB, "glBindProgramARB", (void**)&glBindProgramARB},
+		{"nglDeleteProgramsARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglDeleteProgramsARB, "glDeleteProgramsARB", (void**)&glDeleteProgramsARB},
+		{"nglGenProgramsARB", "(ILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglGenProgramsARB, "glGenProgramsARB", (void**)&glGenProgramsARB},
+		{"glProgramEnvParameter4fARB", "(IIFFFF)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_glProgramEnvParameter4fARB, "glProgramEnvParameter4fARB", (void**)&glProgramEnvParameter4fARB},
+		{"nglProgramEnvParameter4fvARB", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglProgramEnvParameter4fvARB, "glProgramEnvParameter4fvARB", (void**)&glProgramEnvParameter4fvARB},
+		{"glProgramLocalParameter4fARB", "(IIFFFF)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_glProgramLocalParameter4fARB, "glProgramLocalParameter4fARB", (void**)&glProgramLocalParameter4fARB},
+		{"nglProgramLocalParameter4fvARB", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglProgramLocalParameter4fvARB, "glProgramLocalParameter4fvARB", (void**)&glProgramLocalParameter4fvARB},
+		{"nglGetProgramEnvParameterfvARB", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglGetProgramEnvParameterfvARB, "glGetProgramEnvParameterfvARB", (void**)&glGetProgramEnvParameterfvARB},
+		{"nglGetProgramLocalParameterfvARB", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglGetProgramLocalParameterfvARB, "glGetProgramLocalParameterfvARB", (void**)&glGetProgramLocalParameterfvARB},
+		{"nglGetProgramivARB", "(IILjava/nio/IntBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglGetProgramivARB, "glGetProgramivARB", (void**)&glGetProgramivARB},
+		{"nglGetProgramStringARB", "(IILjava/nio/Buffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBProgram_nglGetProgramStringARB, "glGetProgramStringARB", (void**)&glGetProgramStringARB},
+		{"glIsProgramARB", "(I)Z", (void*)&Java_org_lwjgl_opengl_ARBProgram_glIsProgramARB, "glIsProgramARB", (void**)&glIsProgramARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBProgram");
+	extgl_InitializeClass(env, clazz, NULL, "<ARBProgram>", num_functions, functions);
+}
+

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.NVRegisterCombiners2
 // ----------------------------------
 
-#include "org_lwjgl_opengl_NVRegisterCombiners2.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,23 +43,13 @@ typedef void (APIENTRY * glGetCombinerStageParameterfvNVPROC) (GLenum stage, GLe
 static glCombinerStageParameterfvNVPROC glCombinerStageParameterfvNV;
 static glGetCombinerStageParameterfvNVPROC glGetCombinerStageParameterfvNV;
 
-void extgl_InitNVRegisterCombiners2(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_NV_register_combiners2)
-		return;
-	glCombinerStageParameterfvNV = (glCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glCombinerStageParameterfvNV");
-	glGetCombinerStageParameterfvNV = (glGetCombinerStageParameterfvNVPROC) extgl_GetProcAddress("glGetCombinerStageParameterfvNV");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_NV_register_combiners2)
-}
-
 /*
  * Class:	org.lwjgl.opengl.NVRegisterCombiners2
  * Method:	nglCombinerStageParameterfvNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerStageParameterfvNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerStageParameterfvNV
 	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
 {
-	CHECK_EXISTS(glCombinerStageParameterfvNV)
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
 	CHECK_GL_ERROR
@@ -70,11 +59,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerSta
  * Class:	org.lwjgl.opengl.NVRegisterCombiners2
  * Method:	nglGetCombinerStageParameterfvNV
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerStageParameterfvNV
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerStageParameterfvNV
 	(JNIEnv * env, jclass clazz, jint stage, jint pname, jobject pfParams, jint pfParams_offset)
 {
-	CHECK_EXISTS(glGetCombinerStageParameterfvNV)
 	GLfloat *pfParams_ptr = (GLfloat *)env->GetDirectBufferAddress(pfParams) + pfParams_offset;
 	glGetCombinerStageParameterfvNV(stage, pname, pfParams_ptr);
 	CHECK_GL_ERROR
+}
+
+void extgl_InitNVRegisterCombiners2(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglCombinerStageParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners2_nglCombinerStageParameterfvNV, "glCombinerStageParameterfvNV", (void**)&glCombinerStageParameterfvNV},
+		{"nglGetCombinerStageParameterfvNV", "(IILjava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_NVRegisterCombiners2_nglGetCombinerStageParameterfvNV, "glGetCombinerStageParameterfvNV", (void**)&glGetCombinerStageParameterfvNV}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/NVRegisterCombiners2");
+	if (extgl_Extensions.GL_NV_register_combiners2)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_NV_register_combiners2", num_functions, functions);
 }

@@ -34,7 +34,6 @@
 // IMPLEMENTATION OF NATIVE METHODS FOR CLASS: org.lwjgl.opengl.ARBTransposeMatrix
 // ----------------------------------
 
-#include "org_lwjgl_opengl_ARBTransposeMatrix.h"
 #include "extgl.h"
 #include "checkGLerror.h"
 
@@ -44,23 +43,13 @@ typedef void (APIENTRY * glMultTransposeMatrixfARBPROC) (const GLfloat m[16] );
 static glLoadTransposeMatrixfARBPROC glLoadTransposeMatrixfARB;
 static glMultTransposeMatrixfARBPROC glMultTransposeMatrixfARB;
 
-void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set)
-{
-	if (!extgl_Extensions.GL_ARB_transpose_matrix)
-		return;
-	glLoadTransposeMatrixfARB = (glLoadTransposeMatrixfARBPROC) extgl_GetProcAddress("glLoadTransposeMatrixfARB");
-	glMultTransposeMatrixfARB = (glMultTransposeMatrixfARBPROC) extgl_GetProcAddress("glMultTransposeMatrixfARB");
-	EXTGL_SANITY_CHECK(env, ext_set, GL_ARB_transpose_matrix)
-}
-
 /*
  * Class:	org.lwjgl.opengl.ARBTransposeMatrix
  * Method:	nglLoadTransposeMatrixfARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTransposeMatrixfARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTransposeMatrixfARB
 	(JNIEnv * env, jclass clazz, jobject pfMtx, jint pfMtx_offset)
 {
-	CHECK_EXISTS(glLoadTransposeMatrixfARB)
 	GLfloat *pfMtx_ptr = (GLfloat *)env->GetDirectBufferAddress(pfMtx) + pfMtx_offset;
 	glLoadTransposeMatrixfARB(pfMtx_ptr);
 	CHECK_GL_ERROR
@@ -70,11 +59,23 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTranspose
  * Class:	org.lwjgl.opengl.ARBTransposeMatrix
  * Method:	nglMultTransposeMatrixfARB
  */
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMatrixfARB
+static JNIEXPORT void JNICALL Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMatrixfARB
 	(JNIEnv * env, jclass clazz, jobject pfMtx, jint pfMtx_offset)
 {
-	CHECK_EXISTS(glMultTransposeMatrixfARB)
 	GLfloat *pfMtx_ptr = (GLfloat *)env->GetDirectBufferAddress(pfMtx) + pfMtx_offset;
 	glMultTransposeMatrixfARB(pfMtx_ptr);
 	CHECK_GL_ERROR
 }
+
+void extgl_InitARBTransposeMatrix(JNIEnv *env, jobject ext_set)
+{
+	JavaMethodAndGLFunction functions[] = {
+		{"nglLoadTransposeMatrixfARB", "(Ljava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBTransposeMatrix_nglLoadTransposeMatrixfARB, "glLoadTransposeMatrixfARB", (void**)&glLoadTransposeMatrixfARB},
+		{"nglMultTransposeMatrixfARB", "(Ljava/nio/FloatBuffer;I)V", (void*)&Java_org_lwjgl_opengl_ARBTransposeMatrix_nglMultTransposeMatrixfARB, "glMultTransposeMatrixfARB", (void**)&glMultTransposeMatrixfARB}
+	};
+	int num_functions = NUMFUNCTIONS(functions);
+	jclass clazz = extgl_ResetClass(env, "org/lwjgl/opengl/ARBTransposeMatrix");
+	if (extgl_Extensions.GL_ARB_transpose_matrix)
+		extgl_InitializeClass(env, clazz, ext_set, "GL_ARB_transpose_matrix", num_functions, functions);
+}
+
