@@ -110,10 +110,10 @@ static void resetCursor(int x, int y) {
 	last_y = y;
 }
 
-static bool blankCursor(void) {
+static bool blankCursor(JNIEnv *env) {
 	unsigned int best_width, best_height;
 	if (XQueryBestCursor(getDisplay(), getCurrentWindow(), 1, 1, &best_width, &best_height) == 0) {
-		printfDebug("Could not query best cursor size\n");
+		throwException(env, "Could not query best cursor size");
 		return false;
 	}
 	Pixmap mask = XCreatePixmap(getDisplay(), getCurrentWindow(), best_width, best_height, 1);
@@ -259,9 +259,8 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createMouse
 	reset();
 	for (i = 0; i < NUM_BUTTONS; i++)
 		buttons[i] = 0;
-	if (!blankCursor()) {
+	if (!blankCursor(env)) {
 		decDisplay();
-		throwException(env, "Could not create blank cursor");
 		return;
 	}
 	current_cursor = None;
@@ -367,7 +366,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_pollMouse(JNIEnv * env
 	int buttons_length = (*env)->GetDirectBufferCapacity(env, button_buffer_obj);
 	handleMessages(env);
 	if (coords_length < 3) {
-		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
+		printfDebugJava(env, "ERROR: Not enough space in coords array: %d < 3", coords_length);
 		return;
 	}
 	if (isGrabbed()) {

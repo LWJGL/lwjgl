@@ -115,7 +115,7 @@ bool checkXError(JNIEnv *env) {
 		if (env != NULL)
 			throwException(env, error_message);
 		else
-			printfDebug(error_message);
+			printfDebugJava(env, error_message);
 		return false;
 	} else
 		return true;
@@ -145,7 +145,7 @@ Display *incDisplay(JNIEnv *env) {
 			if (env != NULL)
 				throwException(env, "Could not open X display connection");
 			else
-				printfDebug("Could not open X display connection\n");
+				printfDebugJava(env, "Could not open X display connection");
 			return NULL;
 		}
 		warp_atom = XInternAtom(display_connection, "_LWJGL_WARP", False);
@@ -179,12 +179,12 @@ static void updateInputGrab(void) {
 	updateKeyboardGrab();
 }
 
-static void setRepeatMode(int mode) {
+static void setRepeatMode(JNIEnv *env, int mode) {
 	XKeyboardControl repeat_mode;
 	repeat_mode.auto_repeat_mode = mode;
 	Display *disp = XOpenDisplay(NULL);
 	if (disp == NULL) {
-		printfDebug("Could not open display to set repeat mode\n");
+		printfDebugJava(env, "Could not open display to set repeat mode");
 		return;
 	}
 	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
@@ -203,7 +203,7 @@ static bool releaseInput(JNIEnv *env) {
 	if (isLegacyFullscreen() || input_released)
 		return false;
 	input_released = true;
-	setRepeatMode(AutoRepeatModeDefault);
+	setRepeatMode(env, AutoRepeatModeDefault);
 	updateInputGrab();
 	if (current_window_mode == FULLSCREEN_NETWM) {
 		XIconifyWindow(getDisplay(), getCurrentWindow(), getCurrentScreen());
@@ -216,7 +216,7 @@ static void acquireInput(JNIEnv *env) {
 	if (isLegacyFullscreen() || !input_released)
 		return;
 	input_released = false;
-	setRepeatMode(AutoRepeatModeOff);
+	setRepeatMode(env, AutoRepeatModeOff);
 	updateInputGrab();
 	if (current_window_mode == FULLSCREEN_NETWM) {
 		temporaryRestoreMode(env, getCurrentScreen());
@@ -323,15 +323,15 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_setTitle(JNIEnv * env,
 	free(title);
 }
 
-static void destroyWindow(void) {
+static void destroyWindow(JNIEnv *env) {
 	if (USEGLX13)
 		glXDestroyWindow(getDisplay(), glx_window);
 	XDestroyWindow(getDisplay(), current_win);
 	XFreeColormap(getDisplay(), cmap);
-	setRepeatMode(AutoRepeatModeDefault);
+	setRepeatMode(env, AutoRepeatModeDefault);
 }
 
-static bool isNetWMFullscreenSupported() {
+static bool isNetWMFullscreenSupported(JNIEnv *env) {
 	unsigned long nitems;
 	Atom actual_type;
 	int actual_format;
@@ -340,7 +340,7 @@ static bool isNetWMFullscreenSupported() {
 	Atom netwm_supported_atom = XInternAtom(getDisplay(), "_NET_SUPPORTED", False);
 	int result = XGetWindowProperty(getDisplay(), RootWindow(getDisplay(), getCurrentScreen()), netwm_supported_atom, 0, 10000, False, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, (void *)&supported_list);
 	if (result != Success) {
-		printfDebug("Unable to query _NET_SUPPORTED window property\n");
+		printfDebugJava(env, "Unable to query _NET_SUPPORTED window property");
 		return false;
 	}
 	Atom fullscreen_atom = XInternAtom(getDisplay(), "_NET_WM_STATE_FULLSCREEN", False);
@@ -392,7 +392,7 @@ static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 		XFreeColormap(getDisplay(), cmap);
 		return false;
 	}
-	printfDebug("Created window\n");
+	printfDebugJava(env, "Created window");
 	current_win = win;
 	if (current_window_mode != WINDOWED || undecorated) {
 		// Use Motif decoration hint property and hope the window manager respects them
@@ -416,9 +416,9 @@ static bool createWindow(JNIEnv* env, int x, int y, int width, int height) {
 	XMapRaised(getDisplay(), win);
 	waitMapped(win);
 	XClearWindow(getDisplay(), win);
-	setRepeatMode(AutoRepeatModeOff);
+	setRepeatMode(env, AutoRepeatModeOff);
 	if (!checkXError(env)) {
-		destroyWindow();
+		destroyWindow(env);
 		return false;
 	}
 	return true;
@@ -575,7 +575,7 @@ static XVisualInfo *chooseVisualGLX(JNIEnv *env, jobject pixel_format) {
 	return glXChooseVisual(getDisplay(), getCurrentScreen(), attrib_list.attribs);
 }
 
-static void dumpVisualInfo(XVisualInfo *vis_info) {
+static void dumpVisualInfo(JNIEnv *env, XVisualInfo *vis_info) {
 	int alpha, depth, stencil, r, g, b;
 	int sample_buffers = 0;
 	int samples = 0;
@@ -589,7 +589,7 @@ static void dumpVisualInfo(XVisualInfo *vis_info) {
 		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLE_BUFFERS_ARB, &sample_buffers);
 		glXGetConfig(getDisplay(), vis_info, GLX_SAMPLES_ARB, &samples);
 	}
-	printfDebug("Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d\n", r, g, b, alpha, depth, stencil, sample_buffers, samples);
+	printfDebugJava(env, "Pixel format info: r = %d, g = %d, b = %d, a = %d, depth = %d, stencil = %d, sample buffers = %d, samples = %d", r, g, b, alpha, depth, stencil, sample_buffers, samples);
 }
 
 static void destroyContext(void) {
@@ -645,7 +645,7 @@ static bool initWindowGLX(JNIEnv *env, jobject pixel_format) {
 		return false;
 	}
 	if (isDebugEnabled())
-		dumpVisualInfo(vis_info);
+		dumpVisualInfo(env, vis_info);
 	context = glXCreateContext(getDisplay(), vis_info, NULL, True);
 	if (context == NULL) {
 		XFree(vis_info);
@@ -726,7 +726,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyContext(JNIEnv 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createWindow(JNIEnv *env, jobject this, jobject mode, jboolean fullscreen, int x, int y) {
 	bool current_fullscreen = fullscreen == JNI_TRUE;
 	if (current_fullscreen) {
-		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported())
+		if (getCurrentDisplayModeExtension() == XRANDR && isNetWMFullscreenSupported(env))
 			current_window_mode = FULLSCREEN_NETWM;
 		else
 			current_window_mode = FULLSCREEN_LEGACY;
@@ -742,17 +742,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_createWindow(JNIEnv *e
 		return;
 	}
 	if (isDebugEnabled())
-		dumpVisualInfo(vis_info);
+		dumpVisualInfo(env, vis_info);
 	if (USEGLX13)
 		glx_window = glXCreateWindow(getDisplay(), configs[0], getCurrentWindow(), NULL);
 	if (!makeCurrent() || !checkXError(env)) {
 		glXDestroyWindow(getDisplay(), glx_window);
-		destroyWindow();
+		destroyWindow(env);
 	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_destroyWindow(JNIEnv *env, jobject this) {
-	destroyWindow();
+	destroyWindow(env);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_swapBuffers(JNIEnv * env, jobject this)
