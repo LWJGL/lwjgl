@@ -66,10 +66,10 @@ public class CoreGL11 implements CoreGL11Constants {
 	private static native void nglCallLists(int n, int type, Buffer lists, int lists_offset);
 	public static native void glCallList(int list);
 	public static native void glBlendFunc(int sfactor, int dfactor);
-	private static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap) {
+	public static void glBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap) {
 		nglBitmap(width, height, xorig, yorig, xmove, ymove, bitmap, bitmap.position());
 	}
-	public static native void nglBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap, int bitmap_offset);
+	private static native void nglBitmap(int width, int height, float xorig, float yorig, float xmove, float ymove, ByteBuffer bitmap, int bitmap_offset);
 	public static native void glBindTexture(int target, int texture);
 	public static native void glBegin(int mode);
 	public static native void glEnd();
@@ -89,7 +89,7 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static void glColorPointer(int size, int stride, FloatBuffer pointer) {
 		nglColorPointer(size, GL_FLOAT, stride, pointer, pointer.position() << 2);
 	}
-	public static native void nglColorPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
+	private static native void nglColorPointer(int size, int type, int stride, Buffer pointer, int pointer_offset);
 	public static native void glColorMaterial(int face, int mode);
 	public static native void glColorMask(boolean red, boolean green, boolean blue, boolean alpha);
 	public static native void glColor3b(byte red, byte green, byte blue);
@@ -235,6 +235,15 @@ public class CoreGL11 implements CoreGL11Constants {
 	public static native boolean glIsEnabled(int cap);
 	public static void glInterleavedArrays(int format, int stride, ByteBuffer pointer) {
 		nglInterleavedArrays(format, stride, pointer, pointer.position());
+	}
+	public static void glInterleavedArrays(int format, int stride, ShortBuffer pointer) {
+		nglInterleavedArrays(format, stride, pointer, pointer.position() << 1);
+	}
+	public static void glInterleavedArrays(int format, int stride, IntBuffer pointer) {
+		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
+	}
+	public static void glInterleavedArrays(int format, int stride, FloatBuffer pointer) {
+		nglInterleavedArrays(format, stride, pointer, pointer.position() << 2);
 	}
 	private static native void nglInterleavedArrays(int format, int stride, Buffer pointer, int pointer_offset);
 	public static native void glInitNames();

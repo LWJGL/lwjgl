@@ -47,23 +47,6 @@ import java.nio.Buffer;
  */
 public class CoreGL12 extends CoreGL11 implements CoreGL12Constants {
 	
-	/**
-	 * A helper function which is used to get the byte offset in an arbitrary buffer
-	 * based on its position
-	 * @return the position of the buffer, in BYTES
-	 */
-	static int getOffset(Buffer buffer) {
-		if (buffer instanceof FloatBuffer || buffer instanceof IntBuffer)
-			return buffer.position() << 2;
-		else if (buffer instanceof ShortBuffer || buffer instanceof CharBuffer)
-			return buffer.position() << 1;
-		else if (buffer instanceof DoubleBuffer || buffer instanceof LongBuffer)
-			return buffer.position() << 3;
-		else
-			return buffer.position();
-	}
-	
-	
 	public static void glColorTable(int target, int internalFormat, int width, int format, int type, ByteBuffer data) {
 		nglColorTable(target, internalFormat, width, format, type, data, data.position());
 	}
@@ -200,11 +183,11 @@ public class CoreGL12 extends CoreGL11 implements CoreGL12Constants {
 	}
 	private static native void nglGetConvolutionParameteriv(int target, int pname, IntBuffer params, int params_offset);
 	public static void glSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, Buffer column) {
-		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, getOffset(row), column, getOffset(column));
+		nglSeparableFilter2D(target, internalformat, width, height, format, type, row, Util.getOffset(row), column, Util.getOffset(column));
 	}
 	private static native void nglSeparableFilter2D(int target, int internalformat, int width, int height, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset);
 	public static void glGetSeparableFilter(int target, int format, int type, Buffer row, Buffer column, Buffer span) {
-		nglGetSeparableFilter(target, format, type, row, getOffset(row), column, getOffset(column), span, getOffset(span));
+		nglGetSeparableFilter(target, format, type, row, Util.getOffset(row), column, Util.getOffset(column), span, Util.getOffset(span));
 	}
 	private static native void nglGetSeparableFilter(int target, int format, int type, Buffer row, int row_offset, Buffer column, int column_offset, Buffer span, int span_offset);
 	public static void glDrawRangeElements(int mode, int start, int end, int count, int type, ByteBuffer indices) {
