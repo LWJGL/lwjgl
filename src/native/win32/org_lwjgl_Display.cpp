@@ -51,7 +51,6 @@ WORD* originalGamma = new WORD[256 * 3]; // Original gamma settings
 WORD* currentGamma = new WORD[256 * 3]; // Current gamma settings
 DEVMODE devmode; // Now we'll remember this value for the future
 
-
 /*
  * Class:     org_lwjgl_Display
  * Method:    nGetAvailableDisplayModes
@@ -467,7 +466,149 @@ JNIEXPORT void JNICALL Java_org_lwjgl_Display_init
 	}
 
 	ReleaseDC(NULL, screenDC);
+
 }
+
+char * getDriver() {
+    #define MY_BUFSIZE 256
+
+    HKEY hKey;
+    static TCHAR szAdapterKey[MY_BUFSIZE], szDriverValue[MY_BUFSIZE];
+    DWORD dwBufLen = MY_BUFSIZE;
+    LONG lRet;
+
+    if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+        TEXT("HARDWARE\\DeviceMap\\Video"),
+                    0,
+                    KEY_QUERY_VALUE,
+                    &hKey) != ERROR_SUCCESS) return NULL;
+
+    lRet = RegQueryValueEx(hKey,
+                    TEXT("\\Device\\Video0"),
+                    NULL,
+                    NULL,
+                    (LPBYTE)szAdapterKey,
+                    &dwBufLen);
+
+    RegCloseKey(hKey);
+
+    if(lRet != ERROR_SUCCESS) return NULL;
+
+#ifdef _DEBUG
+	printf("Adapter key: %s\n", szAdapterKey);
+#endif
+
+	// szAdapterKey now contains something like \Registry\Machine\System\CurrentControlSet\Control\Video\{B70DBD2A-90C4-41CF-A58E-F3BA69F1A6BC}\0000
+	// We'll check for the first chunk:
+	if (strncmp("\\Registry\\Machine", szAdapterKey, 17) == 0) {
+		// Yes, it's right, so let's look for that key now
+
+		TCHAR szDriverKey[MY_BUFSIZE];
+		strcpy(szDriverKey, &szAdapterKey[18]);
+#ifdef _DEBUG
+		printf("Driver key: %s\n", szDriverKey);
+#endif
+
+		if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+			TEXT(szDriverKey),
+						0,
+						KEY_QUERY_VALUE,
+						&hKey) != ERROR_SUCCESS) return NULL;
+
+		lRet = RegQueryValueEx(hKey,
+						TEXT("InstalledDisplayDrivers"),
+						NULL,
+						NULL,
+						(LPBYTE)szDriverValue,
+						&dwBufLen);
+
+		RegCloseKey(hKey);
+
+	}
+
+	if(lRet != ERROR_SUCCESS) return NULL;
+
+	return szDriverValue;
+}
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    getAdapter
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getAdapter
+  (JNIEnv * env, jclass clazz)
+{
+
+	jstring ret = NULL;
+	char * driver = getDriver();
+	if (driver == NULL) {
+		return NULL;
+	}
+	ret = env->NewStringUTF(
+		driver
+	);
+	return ret;
+}
+
+
+
+/*
+ * Class:     org_lwjgl_Display
+ * Method:    getVersion
+ */
+JNIEXPORT jstring JNICALL Java_org_lwjgl_Display_getVersion
+  (JNIEnv * env, jclass clazz)
+{
+	jstring ret = NULL;
+
+	TCHAR driverDLL[256] = "\0";
+
+	char * driver = getDriver();
+	if (driver == NULL) {
+		return NULL;
+	}
+	strcat(driverDLL, driver);
+	strcat(driverDLL, ".dll");
+#ifdef _DEBUG
+	printf("Driver dll = %s\n", driverDLL);
+#endif
+	DWORD var = 0;
+	DWORD dwInfoSize = GetFileVersionInfoSize(driverDLL, &var);
+	LPVOID lpInfoBuff = new unsigned char[dwInfoSize];
+	BOOL bRetval = GetFileVersionInfo(driverDLL, NULL, dwInfoSize, lpInfoBuff);
+	if (bRetval == 0) {
+#ifdef _DEBUG
+		printf("GetFileVersionInfo failed\n");
+#endif
+	} else {
+		VS_FIXEDFILEINFO * fxdFileInfo;
+
+		UINT uiLen = 0;
+		bRetval = VerQueryValue(lpInfoBuff, TEXT("\\"), (void **) &fxdFileInfo, &uiLen);
+		if (bRetval == 0) {
+#ifdef _DEBUG
+			printf("VerQueryValue failed\n");
+#endif
+		} else {
+			TCHAR version[256];
+			TCHAR ms[10], ls[10];
+			sprintf(ms, "%d.%d\0", fxdFileInfo->dwProductVersionMS >> 16, fxdFileInfo->dwProductVersionMS & 0xFFFF);
+			sprintf(ls, "%d.%d\0", fxdFileInfo->dwProductVersionLS >> 16, fxdFileInfo->dwProductVersionLS & 0xFFFF);
+			sprintf(version, "%s.%s\0", ms, ls);
+			ret = env->NewStringUTF(
+				version
+			);
+		}
+	}
+
+	delete lpInfoBuff;
+
+	return ret;
+}
+
+
+
+
 
 
 

@@ -80,6 +80,9 @@ public final class Display {
 	static {
 		System.loadLibrary(Sys.getLibraryName());
 		init();
+		if (Sys.DEBUG) {
+			System.out.println("Adapter: "+getAdapter()+" Version: "+getVersion());
+		}
 	}
 
 	/**
@@ -254,4 +257,19 @@ public final class Display {
 	 * Native method to set the gamma ramp.
 	 */
 	private static native boolean setGammaRamp(FloatBuffer gammaRamp);
+	
+	/**
+	 * Get the driver adapter string. This is a unique string describing the actual card's hardware, eg. "Geforce2", "PS2",
+	 * "Radeon9700". If the adapter cannot be determined, this function returns null.
+	 * @return a String
+	 */
+	public static native String getAdapter();
+	
+	/**
+	 * Get the driver version. This is a vendor/adapter specific version string. If the version cannot be determined,
+	 * this function returns null.
+	 * @return a String
+	 */
+	public static native String getVersion();
+	
 }
