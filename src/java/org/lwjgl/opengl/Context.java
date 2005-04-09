@@ -74,15 +74,19 @@ final class Context {
 	static {
 		Sys.initialize();
 		String class_name;
-		String OS_NAME = System.getProperty("os.name");
-		if (OS_NAME.startsWith("Linux")) {
-			class_name = "org.lwjgl.opengl.LinuxContextImplementation";
-		} else if (OS_NAME.startsWith("Windows")) {
-			class_name = "org.lwjgl.opengl.Win32ContextImplementation";
-		} else if (OS_NAME.startsWith("Mac")) {
-			class_name = "org.lwjgl.opengl.MacOSXContextImplementation";
-		} else
-			throw new IllegalStateException("The platform " + OS_NAME + " is not supported");
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_LINUX:
+				class_name = "org.lwjgl.opengl.LinuxContextImplementation";
+				break;
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				class_name = "org.lwjgl.opengl.Win32ContextImplementation";
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				class_name = "org.lwjgl.opengl.MacOSXContextImplementation";
+				break;
+			default:
+				throw new IllegalStateException("Unsupported platform");
+		}
 		try {
 			Class impl_class = Class.forName(class_name);
 			implementation = (ContextImplementation)impl_class.newInstance();

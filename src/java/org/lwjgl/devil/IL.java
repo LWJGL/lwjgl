@@ -300,7 +300,7 @@ public class IL {
 	public static final int		IL_SEEK_CUR									= 1;
 	public static final int		IL_SEEK_END									= 2;
 	public static final int		IL_EOF											= -1;
-	
+
 	/** Have we been created? */
 	protected static boolean	created;
 
@@ -311,8 +311,8 @@ public class IL {
 	public static native boolean ilApplyProfile(String InProfile, String OutProfile);
 	public static native void ilBindImage(int image);
 	public static native boolean ilBlit(int Source, int DestX, int DestY, 
-																			int DestZ, int SrcX, int SrcY, int SrcZ,
-																			int Width, int Height, int Depth);
+			int DestZ, int SrcX, int SrcY, int SrcZ,
+			int Width, int Height, int Depth);
 	public static native void ilClearColour(float Red, float Green, float Blue, float Alpha);
 	public static native boolean ilClearImage();
 	public static native int ilCloneCurImage();
@@ -321,15 +321,15 @@ public class IL {
 	public static native boolean ilConvertPal(int DestFormat);
 	public static native boolean ilCopyImage(int Src);
 	public static int ilCopyPixels(	int XOff, int YOff, int ZOff, 
-																	int Width, int Height, int Depth, 
-																	int Format, int Type,	ByteBuffer Data) {
+			int Width, int Height, int Depth, 
+			int Format, int Type,	ByteBuffer Data) {
 		BufferChecks.checkDirect(Data);
 		return nilCopyPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
 	}
 
 	private static native int nilCopyPixels(int XOff, int YOff, int ZOff, int Width, 
-																					int Height, int Depth, int Format,
-																					int Type, ByteBuffer Data, int data_offset);
+			int Height, int Depth, int Format,
+			int Type, ByteBuffer Data, int data_offset);
 
 	public static native int ilCreateSubImage(int Type, int Num);
 	public static native boolean ilDefaultImage();
@@ -352,14 +352,14 @@ public class IL {
 	public static native void ilModAlpha(int AlphaValue);
 	public static native void ilSetAlpha(int AlphaValue);
 	public static native boolean ilGetBoolean(int Mode);
-  public static void ilGetBooleanv(int mode, ByteBuffer param) {
-    nilGetBooleanv(mode, param, param.position());
-  }
-  private static native void nilGetBooleanv(int mode, ByteBuffer param, int position);
-  public static void ilGetIntegerv(int mode, IntBuffer param) {
-    nilGetIntegerv(mode, param, param.position());
-  }
-  private static native void nilGetIntegerv(int mode, IntBuffer param, int position);
+	public static void ilGetBooleanv(int mode, ByteBuffer param) {
+		nilGetBooleanv(mode, param, param.position());
+	}
+	private static native void nilGetBooleanv(int mode, ByteBuffer param, int position);
+	public static void ilGetIntegerv(int mode, IntBuffer param) {
+		nilGetIntegerv(mode, param, param.position());
+	}
+	private static native void nilGetIntegerv(int mode, IntBuffer param, int position);
 
 	public static native ByteBuffer ilGetData();
 	public static native int ilGetError();
@@ -416,24 +416,24 @@ public class IL {
 	public static native boolean ilSetDuration(int Duration);
 	public static native void ilSetInteger(int Mode, int Param);
 	public static void ilSetPixels(	int XOff, int YOff, int ZOff, int Width, 
-																	int Height, int Depth, int Format, int Type, ByteBuffer Data) {
+			int Height, int Depth, int Format, int Type, ByteBuffer Data) {
 		BufferChecks.checkDirect(Data);
 		nilSetPixels(XOff, YOff, ZOff, Width, Height, Depth, Format, Type, Data, Data.position());
 	}
 	private static native void nilSetPixels(int XOff, int YOff, int ZOff, int Width, 
-																					int Height, int Depth, int Format,
-																					int Type, ByteBuffer Data, int data_offset);
+			int Height, int Depth, int Format,
+			int Type, ByteBuffer Data, int data_offset);
 
 	public static native void ilSetString(int Mode, String string);
 	public static native void ilShutDown();
 	public static boolean ilTexImage(	int Width, int Height, int Depth, byte Bpp, 
-																		int Format, int Type, ByteBuffer Data) {
+			int Format, int Type, ByteBuffer Data) {
 		BufferChecks.checkDirect(Data);
 		return nilTexImage(Width, Height, Depth, Bpp, Format, Type, Data, Data.position());
 	}
 
 	private static native boolean nilTexImage(int Width, int Height, int Depth, byte Bpp,
-																						int Format, int Type, ByteBuffer Data, int data_offset);
+			int Format, int Type, ByteBuffer Data, int data_offset);
 
 	public static native boolean ilTypeFunc(int Mode);
 	public static native boolean ilLoadData(String FileName, int Width, int Height, int Depth, byte Bpp);
@@ -446,7 +446,7 @@ public class IL {
 			int Depth, byte Bpp);
 
 	public static native boolean ilSaveData(String FileName);	
-	
+
 	/**
 	 * Loads an image from the specified url
 	 * 
@@ -524,12 +524,12 @@ public class IL {
 		byte[] buffer = new byte[4096];
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		BufferedInputStream buf = new BufferedInputStream(stream);
-		
+
 		try {
 			while((lastRead = buf.read(buffer, 0, buffer.length)) != -1) {
 				baos.write(buffer, 0, lastRead);
 			}
-			
+
 			buffer = baos.toByteArray();
 			ByteBuffer lump = ByteBuffer.allocateDirect(buffer.length);
 			lump.put(buffer);
@@ -542,12 +542,12 @@ public class IL {
 
 		return result;
 	}
-	
+
 	//    public static native int ilGetDXTCData(ILvoid *Buffer, int BufferSize, int DXTCFormat);
 	//    public static native boolean ilIsValidF(int Type, ILHANDLE File);
 	//    public static native boolean ilLoadF(int Type, ILHANDLE File);
-  //    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);
-  //    public static native int ilSaveF(int Type, ILHANDLE File);
+	//    public static native boolean ilLoadDataF(ILHANDLE File, int Width, int Height, int Depth, ILubyte Bpp);
+	//    public static native int ilSaveF(int Type, ILHANDLE File);
 	//    public static native void ilRegisterFormat(int Format);
 	//    public static native boolean ilRegisterLoad(String Ext, IL_LOADPROC Load);
 	//    public static native boolean ilRegisterMipNum(int Num);
@@ -587,9 +587,9 @@ public class IL {
 		}
 
 		String[] illPaths = LWJGLUtil.getLibraryPaths(new String[]{
-                                                  "DevIL", "DevIL.dll",
-                                                  "IL", "libIL.so",
-                                                  "IL", "IL"}, IL.class.getClassLoader());
+			"DevIL", "DevIL.dll",
+			"IL", "libIL.so",
+			"IL", "IL"}, IL.class.getClassLoader());
 		nCreate(illPaths);
 		created = true;
 
@@ -597,14 +597,14 @@ public class IL {
 			IL.initNativeStubs();
 			IL.ilInit();
 
-      // We need to initialize everything in one fell swoop on mac
-      if(System.getProperty("os.name").startsWith("Mac")) {
-        ILU.initNativeStubs();
-        ILU.setCreated(true);
+			// We need to initialize everything in one fell swoop on mac
+			if(LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {
+				ILU.initNativeStubs();
+				ILU.setCreated(true);
 
-        ILUT.initNativeStubs();
-        ILUT.setCreated(true);
-      }
+				ILUT.initNativeStubs();
+				ILUT.setCreated(true);
+			}
 
 			created = true;
 		} catch (LWJGLException e) {
@@ -619,16 +619,16 @@ public class IL {
 	public static void destroy() {
 		resetNativeStubs(IL.class);
 
-    // We need to destroy everything on mac in one go
-    if(System.getProperty("os.name").startsWith("Mac")) {
-      ILU.resetNativeStubs(ILU.class);
-      ILU.nDestroy();
-      ILU.setCreated(false);
+		// We need to destroy everything on mac in one go
+		if(LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {
+			ILU.resetNativeStubs(ILU.class);
+			ILU.nDestroy();
+			ILU.setCreated(false);
 
-      ILUT.resetNativeStubs(ILUT.class);
-      ILUT.nDestroy();
-      ILUT.setCreated(false);
-    }
+			ILUT.resetNativeStubs(ILUT.class);
+			ILUT.nDestroy();
+			ILUT.setCreated(false);
+		}
 
 		if (created) {
 			nDestroy();

@@ -53,9 +53,6 @@ public final class Sys {
 	/** The native library name */
 	private static final String LIBRARY_NAME = "lwjgl";
 
-	/** OS Name */
-	private final static String OS_NAME = System.getProperty("os.name");
-
 	/** The implementation instance to delegate platform specific behavior to */
 	private final static SysImplementation implementation;
   
@@ -71,14 +68,19 @@ public final class Sys {
 
 	private static SysImplementation createImplementation() {
 		String class_name;
-		if (OS_NAME.startsWith("Linux")) {
-			class_name = "org.lwjgl.LinuxSysImplementation";
-		} else if (OS_NAME.startsWith("Windows")) {
-			class_name = "org.lwjgl.Win32SysImplementation";
-		} else if (OS_NAME.startsWith("Mac")) {
-			class_name = "org.lwjgl.MacOSXSysImplementation";
-		} else
-			throw new IllegalStateException("The platform " + OS_NAME + " is not supported");
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_LINUX:
+				class_name = "org.lwjgl.LinuxSysImplementation";
+				break;
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				class_name = "org.lwjgl.Win32SysImplementation";
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				class_name = "org.lwjgl.MacOSXSysImplementation";
+				break;
+			default:
+				throw new IllegalStateException("Unsupported platform");
+		}
 		try {
 			Class impl_class = Class.forName(class_name);
 			return (SysImplementation)impl_class.newInstance();

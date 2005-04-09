@@ -129,7 +129,7 @@ public class Mouse {
 	private static boolean		isGrabbed;
   
   /** Whether we're running windows - which need to manually update cursor animation */
-  private static final boolean isWindows = System.getProperty("os.name").startsWith("Win");
+  private static final boolean isWindows = LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_WINDOWS;
 
 	/**
 	 * Mouse cannot be constructed.

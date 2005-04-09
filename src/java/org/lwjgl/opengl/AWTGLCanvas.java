@@ -37,6 +37,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 import java.awt.Point;
@@ -61,15 +62,19 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	static {
 		Sys.initialize();
 		String class_name;
-		String OS_NAME = System.getProperty("os.name");
-		if (OS_NAME.startsWith("Linux")) {
-			class_name = "org.lwjgl.opengl.LinuxCanvasImplementation";
-		} else if (OS_NAME.startsWith("Windows")) {
-			class_name = "org.lwjgl.opengl.Win32CanvasImplementation";
-		} else if (OS_NAME.startsWith("Mac")) {
-			class_name = "org.lwjgl.opengl.MacOSXCanvasImplementation";
-		} else
-			throw new IllegalStateException("The platform " + OS_NAME + " is not supported");
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_LINUX:
+				class_name = "org.lwjgl.opengl.LinuxCanvasImplementation";
+				break;
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				class_name = "org.lwjgl.opengl.Win32CanvasImplementation";
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				class_name = "org.lwjgl.opengl.MacOSXCanvasImplementation";
+				break;
+			default:
+				throw new IllegalStateException("Unsupported platform");
+		}
 		try {
 			Class impl_class = Class.forName(class_name);
 			implementation = (AWTCanvasImplementation)impl_class.newInstance();

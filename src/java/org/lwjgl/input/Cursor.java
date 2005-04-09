@@ -36,6 +36,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferChecks;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 
@@ -155,27 +156,31 @@ public class Cursor {
 		// Win32 or X and do accordingly. This hasn't been implemented on Mac, but we
 		// might want to split it into a X/Win/Mac cursor if it gets too cluttered
 		
-		String osName = System.getProperty("os.name", "");
 		CursorElement[] cursors;
-		if (osName.startsWith("Win") || osName.startsWith("Mac")) {
-			// create our cursor elements
-			cursors = new CursorElement[numImages];
-			for(int i=0; i<numImages; i++) {
-				Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
-				long delay = (delays != null) ? delays.get(i) : 0;
-				long timeout = System.currentTimeMillis();
-				cursors[i] = new CursorElement(handle, delay, timeout);
-			
-				// offset to next image
-				images_copy.position(width*height*(i+1));
-			}
-		} else if (osName.startsWith("Lin")) {
-			// create our cursor elements
-			Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, numImages, images_copy, delays);
-			CursorElement cursor_element = new CursorElement(handle, -1, -1);
-			cursors = new CursorElement[]{cursor_element};
-		} else {
-			throw new RuntimeException("Unknown OS");
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_MACOSX:
+				/* Fall through */
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				// create our cursor elements
+				cursors = new CursorElement[numImages];
+				for(int i=0; i<numImages; i++) {
+					Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, 1, images_copy, null);
+					long delay = (delays != null) ? delays.get(i) : 0;
+					long timeout = System.currentTimeMillis();
+					cursors[i] = new CursorElement(handle, delay, timeout);
+
+					// offset to next image
+					images_copy.position(width*height*(i+1));
+				}
+				break;
+			case LWJGLUtil.PLATFORM_LINUX:
+				// create our cursor elements
+				Object handle = Display.getImplementation().createCursor(width, height, xHotspot, yHotspot, numImages, images_copy, delays);
+				CursorElement cursor_element = new CursorElement(handle, -1, -1);
+				cursors = new CursorElement[]{cursor_element};
+				break;
+			default:
+				throw new RuntimeException("Unknown OS");
 		}
 		return cursors;
 	} 

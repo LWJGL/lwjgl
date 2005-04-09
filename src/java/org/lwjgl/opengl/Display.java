@@ -127,15 +127,19 @@ public final class Display {
 
 	private static DisplayImplementation createDisplayImplementation() {
 		String class_name;
-		String os_name = System.getProperty("os.name");
-		if (os_name.startsWith("Linux")) {
-			class_name = "org.lwjgl.opengl.LinuxDisplay";
-		} else if (os_name.startsWith("Windows")) {
-			class_name = "org.lwjgl.opengl.Win32Display";
-		} else if (os_name.startsWith("Mac")) {
-			class_name = "org.lwjgl.opengl.MacOSXDisplay";
-		} else
-			throw new IllegalStateException("The platform " + os_name + " is not supported");
+		switch (LWJGLUtil.getPlatform()) {
+			case LWJGLUtil.PLATFORM_LINUX:
+				class_name = "org.lwjgl.opengl.LinuxDisplay";
+				break;
+			case LWJGLUtil.PLATFORM_WINDOWS:
+				class_name = "org.lwjgl.opengl.Win32Display";
+				break;
+			case LWJGLUtil.PLATFORM_MACOSX:
+				class_name = "org.lwjgl.opengl.MacOSXDisplay";
+				break;
+			default:
+				throw new IllegalStateException("Unsupported platform");
+		}
 		try {
 			Class display_class = Class.forName(class_name);
 			return (DisplayImplementation)display_class.newInstance();

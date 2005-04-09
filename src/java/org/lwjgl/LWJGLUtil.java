@@ -49,37 +49,59 @@ import java.util.StringTokenizer;
  * @version $Revision$
  */
 public class LWJGLUtil {
+	public static final int PLATFORM_LINUX = 1;
+	public static final int PLATFORM_MACOSX = 2;
+	public static final int PLATFORM_WINDOWS = 3;
 
-  /** Debug flag. */
+	/** Debug flag. */
 	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.util.Debug");
 
 	/**
-   * Locates the paths required by a library.
-   *
-   * @param libNames List of library names to look for, in the form of Local Library name, Platform library name.
-   *        At least 6 names must be passed. 2 for each supported platform in the following order: Windows, Linux, MacOSX.
-   * @param classloader The classloader to ask for librariy paths
-   * @return Paths to located libraries, if any
-   */
-  public static String[] getLibraryPaths(String[] libNames, ClassLoader classloader) throws LWJGLException {
+	 * Get the current platform
+	 */
+	public static int getPlatform() {
+		String osName = System.getProperty("os.name");
+
+		if (osName.startsWith("Windows")) {
+			return PLATFORM_WINDOWS;
+		} else if (osName.startsWith("Linux") || osName.startsWith("FreeBSD")) {
+			return PLATFORM_LINUX;
+		} else if (osName.startsWith("Mac OS X")) {
+			return PLATFORM_MACOSX;
+		} else {
+			throw new LinkageError("Unknown platform: " + osName);
+		}
+	}
+
+	/**
+	 * Locates the paths required by a library.
+	 *
+	 * @param libNames List of library names to look for, in the form of Local Library name, Platform library name.
+	 *        At least 6 names must be passed. 2 for each supported platform in the following order: Windows, Linux, MacOSX.
+	 * @param classloader The classloader to ask for librariy paths
+	 * @return Paths to located libraries, if any
+	 */
+	public static String[] getLibraryPaths(String[] libNames, ClassLoader classloader) throws LWJGLException {
 		// need to pass path of possible locations of IL to native side
 		List possible_paths = new ArrayList();
 
-		String osName = System.getProperty("os.name");
-
 		String libname;
 		String platform_lib_name;
-		if (osName.startsWith("Win")) {
-			libname = libNames[0];
-			platform_lib_name = libNames[1];
-		} else if (osName.startsWith("Lin")) {
-			libname = libNames[2];
-			platform_lib_name = libNames[3];
-		} else if (osName.startsWith("Mac")) {
-			libname = libNames[4];
-			platform_lib_name = libNames[5];
-		} else {
-			throw new LWJGLException("Unknown platform: " + osName);
+		switch (getPlatform()) {
+			case PLATFORM_WINDOWS:
+				libname = libNames[0];
+				platform_lib_name = libNames[1];
+				break;
+			case PLATFORM_LINUX:
+				libname = libNames[2];
+				platform_lib_name = libNames[3];
+				break;
+			case PLATFORM_MACOSX:
+				libname = libNames[4];
+				platform_lib_name = libNames[5];
+				break;
+			default:
+				throw new LWJGLException("Unknown platform: " + getPlatform());
 		}
 
 		// Add all possible paths from java.library.path
@@ -95,7 +117,7 @@ public class LWJGLUtil {
 			possible_paths.add(classloader_path);
 		}
 
-	  String lwjgl_classloader_path = LWJGLUtil.getPathFromClassLoader("lwjgl", classloader);
+		String lwjgl_classloader_path = LWJGLUtil.getPathFromClassLoader("lwjgl", classloader);
 		if (lwjgl_classloader_path != null) {
 			LWJGLUtil.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
 			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
@@ -120,7 +142,7 @@ public class LWJGLUtil {
 	 * locate it.
 	 *
 	 * @param libname Name of library to search for
-   * @param classloader Classloader to use
+	 * @param classloader Classloader to use
 	 * @return Absolute path to library if found, otherwise null
 	 */
 	public static String getPathFromClassLoader(String libname, ClassLoader classloader) {
