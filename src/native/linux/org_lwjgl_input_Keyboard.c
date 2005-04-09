@@ -42,6 +42,7 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/keysym.h>
 #include <string.h>
 #include <assert.h>
 #include <iconv.h>
@@ -56,7 +57,6 @@
 #define KEY_EVENT_BACKLOG 40
 
 static unsigned char key_buf[KEYBOARD_SIZE];
-static unsigned char key_map[KEYBOARD_SIZE];
 
 static event_queue_t event_queue;
 
@@ -64,7 +64,7 @@ static bool keyboard_grabbed;
 static bool created = false;
 
 // X input manager values
-static iconv_t iconv_descriptor;
+static iconv_t iconv_descriptor = (iconv_t)-1;
 static XIM xim = NULL;
 static XIC xic = NULL;
 
@@ -121,28 +121,6 @@ static void setupIMEventMask() {
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
   (JNIEnv * env, jclass clazz)
 {
-	int i;
-	for (i =  0; i < KEYBOARD_SIZE; i++)
-		key_map[i] = i;
-	key_map[0x6b] = 0xdb; // Left doze key
-	key_map[0x6c] = 0xdc; // Right doze key
-	key_map[0x6d] = 0xdd; // Apps key
-	key_map[0x5a] = 0xc8; // Up arrow
-	key_map[0x5c] = 0xcb; // Left arrow
-	key_map[0x5e] = 0xcd; // Right arrow
-	key_map[0x60] = 0xd0; // Down arrow
-	key_map[0x59] = 0xc7; // Home
-	key_map[0x62] = 0xd2; // Insert
-	key_map[0x63] = 0xd3; // Delete
-	key_map[0x5f] = 0xcf; // End
-	key_map[0x5b] = 0xc9; // Page up
-	key_map[0x61] = 0xd1; // Page down
-	key_map[0x67] = 0xb7; // SysRQ
-	key_map[0x66] = 0xc5; // Pause
-	key_map[0x64] = 0x9c; // Numpad enter
-	key_map[0x65] = 0x9d; // Right control
-	key_map[0x68] = 0xb5; // Numpad divide
-	
 	memset(key_buf, 0, KEYBOARD_SIZE*sizeof(unsigned char));
 	created = true;
 	keyboard_grabbed = false;
@@ -173,9 +151,309 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyKeyboard
 	created = false;
 }
 
+static unsigned char mapKeySymToLWJGLKeyCode(KeySym keysym) {
+	switch (keysym) {
+		case XK_BackSpace:
+			return org_lwjgl_input_Keyboard_KEY_BACK;
+		case XK_Tab:
+			return org_lwjgl_input_Keyboard_KEY_TAB;
+		case XK_Return:
+			return org_lwjgl_input_Keyboard_KEY_RETURN;
+		case XK_Pause:
+			return org_lwjgl_input_Keyboard_KEY_PAUSE;
+		case XK_Scroll_Lock:
+			return org_lwjgl_input_Keyboard_KEY_SCROLL;
+		case XK_Sys_Req:
+			return org_lwjgl_input_Keyboard_KEY_SYSRQ;
+		case XK_Escape:
+			return org_lwjgl_input_Keyboard_KEY_ESCAPE;
+		case XK_Delete:
+			return org_lwjgl_input_Keyboard_KEY_DELETE;
+
+/* Japanese keyboard support */
+
+		case XK_Kanji:
+			return org_lwjgl_input_Keyboard_KEY_KANJI;
+
+/* Cursor control & motion */
+
+		case XK_Home:
+			return org_lwjgl_input_Keyboard_KEY_HOME;
+		case XK_Left:
+			return org_lwjgl_input_Keyboard_KEY_LEFT;
+		case XK_Up:
+			return org_lwjgl_input_Keyboard_KEY_UP;
+		case XK_Right:
+			return org_lwjgl_input_Keyboard_KEY_RIGHT;
+		case XK_Down:
+			return org_lwjgl_input_Keyboard_KEY_DOWN;
+		case XK_Page_Up:
+			return org_lwjgl_input_Keyboard_KEY_PRIOR;
+		case XK_Page_Down:
+			return org_lwjgl_input_Keyboard_KEY_NEXT;
+		case XK_End:
+			return org_lwjgl_input_Keyboard_KEY_END;
+
+
+/* Misc Functions */
+
+		case XK_Break:
+			return org_lwjgl_input_Keyboard_KEY_PAUSE;
+		case XK_Insert:
+			return org_lwjgl_input_Keyboard_KEY_INSERT;
+		case XK_Num_Lock:
+			return org_lwjgl_input_Keyboard_KEY_NUMLOCK;
+
+/* Keypad Functions, keypad numbers cleverly chosen to map to ascii */
+
+		case XK_KP_Space:
+			return org_lwjgl_input_Keyboard_KEY_SPACE;
+		case XK_KP_Tab:
+			return org_lwjgl_input_Keyboard_KEY_TAB;
+		case XK_KP_Enter:
+			return org_lwjgl_input_Keyboard_KEY_NUMPADENTER;
+		case XK_KP_F1:
+			return org_lwjgl_input_Keyboard_KEY_F1;
+		case XK_KP_F2:
+			return org_lwjgl_input_Keyboard_KEY_F2;
+		case XK_KP_F3:
+			return org_lwjgl_input_Keyboard_KEY_F3;
+		case XK_KP_F4:
+			return org_lwjgl_input_Keyboard_KEY_F4;
+		case XK_KP_Home:
+			return org_lwjgl_input_Keyboard_KEY_HOME;
+		case XK_KP_Left:
+			return org_lwjgl_input_Keyboard_KEY_LEFT;
+		case XK_KP_Up:
+			return org_lwjgl_input_Keyboard_KEY_UP;
+		case XK_KP_Right:
+			return org_lwjgl_input_Keyboard_KEY_RIGHT;
+		case XK_KP_Down:
+			return org_lwjgl_input_Keyboard_KEY_DOWN;
+		case XK_KP_Page_Up:
+			return org_lwjgl_input_Keyboard_KEY_PRIOR;
+		case XK_KP_Page_Down:
+			return org_lwjgl_input_Keyboard_KEY_NEXT;
+		case XK_KP_End:
+			return org_lwjgl_input_Keyboard_KEY_END;
+		case XK_KP_Insert:
+			return org_lwjgl_input_Keyboard_KEY_INSERT;
+		case XK_KP_Delete:
+			return org_lwjgl_input_Keyboard_KEY_DELETE;
+		case XK_KP_Equal:
+			return org_lwjgl_input_Keyboard_KEY_NUMPADEQUALS;
+		case XK_KP_Multiply:
+			return org_lwjgl_input_Keyboard_KEY_MULTIPLY;
+		case XK_KP_Add:
+			return org_lwjgl_input_Keyboard_KEY_ADD;
+		case XK_KP_Subtract:
+			return org_lwjgl_input_Keyboard_KEY_SUBTRACT;
+		case XK_KP_Decimal:
+			return org_lwjgl_input_Keyboard_KEY_DECIMAL;
+		case XK_KP_Divide:
+			return org_lwjgl_input_Keyboard_KEY_DIVIDE;
+
+		case XK_KP_0:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD0;
+		case XK_KP_1:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD1;
+		case XK_KP_2:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD2;
+		case XK_KP_3:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD3;
+		case XK_KP_4:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD4;
+		case XK_KP_5:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD5;
+		case XK_KP_6:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD6;
+		case XK_KP_7:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD7;
+		case XK_KP_8:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD8;
+		case XK_KP_9:
+			return org_lwjgl_input_Keyboard_KEY_NUMPAD9;
+
+/*
+ * Auxilliary Functions; note the duplicate definitions for left and right
+ * function keys;  Sun keyboards and a few other manufactures have such
+ * function key groups on the left and/or right sides of the keyboard.
+ * We've not found a keyboard with more than 35 function keys total.
+ */
+
+		case XK_F1:
+			return org_lwjgl_input_Keyboard_KEY_F1;
+		case XK_F2:
+			return org_lwjgl_input_Keyboard_KEY_F2;
+		case XK_F3:
+			return org_lwjgl_input_Keyboard_KEY_F3;
+		case XK_F4:
+			return org_lwjgl_input_Keyboard_KEY_F4;
+		case XK_F5:
+			return org_lwjgl_input_Keyboard_KEY_F5;
+		case XK_F6:
+			return org_lwjgl_input_Keyboard_KEY_F6;
+		case XK_F7:
+			return org_lwjgl_input_Keyboard_KEY_F7;
+		case XK_F8:
+			return org_lwjgl_input_Keyboard_KEY_F8;
+		case XK_F9:
+			return org_lwjgl_input_Keyboard_KEY_F9;
+		case XK_F10:
+			return org_lwjgl_input_Keyboard_KEY_F10;
+		case XK_F11:
+			return org_lwjgl_input_Keyboard_KEY_F11;
+		case XK_F12:
+			return org_lwjgl_input_Keyboard_KEY_F12;
+		case XK_F13:
+			return org_lwjgl_input_Keyboard_KEY_F13;
+		case XK_F14:
+			return org_lwjgl_input_Keyboard_KEY_F14;
+		case XK_F15:
+			return org_lwjgl_input_Keyboard_KEY_F15;
+
+/* Modifiers */
+
+		case XK_Shift_L:
+			return org_lwjgl_input_Keyboard_KEY_LSHIFT;
+		case XK_Shift_R:
+			return org_lwjgl_input_Keyboard_KEY_RSHIFT;
+		case XK_Control_L:
+			return org_lwjgl_input_Keyboard_KEY_LCONTROL;
+		case XK_Control_R:
+			return org_lwjgl_input_Keyboard_KEY_RCONTROL;
+		case XK_Caps_Lock:
+			return org_lwjgl_input_Keyboard_KEY_CAPITAL;
+
+		case XK_Meta_L:
+			return org_lwjgl_input_Keyboard_KEY_LMENU;
+		case XK_Meta_R:
+			return org_lwjgl_input_Keyboard_KEY_RMENU;
+		case XK_Alt_L:
+			return org_lwjgl_input_Keyboard_KEY_LMENU;
+		case XK_Alt_R:
+			return org_lwjgl_input_Keyboard_KEY_RMENU;
+
+		case XK_dead_grave:
+			return org_lwjgl_input_Keyboard_KEY_GRAVE;
+		case XK_dead_circumflex:
+			return org_lwjgl_input_Keyboard_KEY_CIRCUMFLEX;
+
+		/*
+		 *  Latin 1
+		 *  Byte 3 = 0
+		 */
+		case XK_space:
+			return org_lwjgl_input_Keyboard_KEY_SPACE;
+		case XK_apostrophe:
+			return org_lwjgl_input_Keyboard_KEY_APOSTROPHE;
+		case XK_comma:
+			return org_lwjgl_input_Keyboard_KEY_COMMA;
+		case XK_minus:
+			return org_lwjgl_input_Keyboard_KEY_MINUS;
+		case XK_period:
+			return org_lwjgl_input_Keyboard_KEY_PERIOD;
+		case XK_slash:
+			return org_lwjgl_input_Keyboard_KEY_SLASH;
+		case XK_0:
+			return org_lwjgl_input_Keyboard_KEY_0;
+		case XK_1:
+			return org_lwjgl_input_Keyboard_KEY_1;
+		case XK_2:
+			return org_lwjgl_input_Keyboard_KEY_2;
+		case XK_3:
+			return org_lwjgl_input_Keyboard_KEY_3;
+		case XK_4:
+			return org_lwjgl_input_Keyboard_KEY_4;
+		case XK_5:
+			return org_lwjgl_input_Keyboard_KEY_5;
+		case XK_6:
+			return org_lwjgl_input_Keyboard_KEY_6;
+		case XK_7:
+			return org_lwjgl_input_Keyboard_KEY_7;
+		case XK_8:
+			return org_lwjgl_input_Keyboard_KEY_8;
+		case XK_9:
+			return org_lwjgl_input_Keyboard_KEY_9;
+		case XK_colon:
+			return org_lwjgl_input_Keyboard_KEY_COLON;
+		case XK_semicolon:
+			return org_lwjgl_input_Keyboard_KEY_SEMICOLON;
+		case XK_equal:
+			return org_lwjgl_input_Keyboard_KEY_EQUALS;
+		case XK_at:
+			return org_lwjgl_input_Keyboard_KEY_AT;
+		case XK_bracketleft:
+			return org_lwjgl_input_Keyboard_KEY_LBRACKET;
+		case XK_bracketright:
+			return org_lwjgl_input_Keyboard_KEY_RBRACKET;
+		case XK_asciicircum:
+			return org_lwjgl_input_Keyboard_KEY_CIRCUMFLEX;
+		case XK_underscore:
+			return org_lwjgl_input_Keyboard_KEY_UNDERLINE;
+		case XK_grave:
+			return org_lwjgl_input_Keyboard_KEY_GRAVE;
+		case XK_a:
+			return org_lwjgl_input_Keyboard_KEY_A;
+		case XK_b:
+			return org_lwjgl_input_Keyboard_KEY_B;
+		case XK_c:
+			return org_lwjgl_input_Keyboard_KEY_C;
+		case XK_d:
+			return org_lwjgl_input_Keyboard_KEY_D;
+		case XK_e:
+			return org_lwjgl_input_Keyboard_KEY_E;
+		case XK_f:
+			return org_lwjgl_input_Keyboard_KEY_F;
+		case XK_g:
+			return org_lwjgl_input_Keyboard_KEY_G;
+		case XK_h:
+			return org_lwjgl_input_Keyboard_KEY_H;
+		case XK_i:
+			return org_lwjgl_input_Keyboard_KEY_I;
+		case XK_j:
+			return org_lwjgl_input_Keyboard_KEY_J;
+		case XK_k:
+			return org_lwjgl_input_Keyboard_KEY_K;
+		case XK_l:
+			return org_lwjgl_input_Keyboard_KEY_L;
+		case XK_m:
+			return org_lwjgl_input_Keyboard_KEY_M;
+		case XK_n:
+			return org_lwjgl_input_Keyboard_KEY_N;
+		case XK_o:
+			return org_lwjgl_input_Keyboard_KEY_O;
+		case XK_p:
+			return org_lwjgl_input_Keyboard_KEY_P;
+		case XK_q:
+			return org_lwjgl_input_Keyboard_KEY_Q;
+		case XK_r:
+			return org_lwjgl_input_Keyboard_KEY_R;
+		case XK_s:
+			return org_lwjgl_input_Keyboard_KEY_S;
+		case XK_t:
+			return org_lwjgl_input_Keyboard_KEY_T;
+		case XK_u:
+			return org_lwjgl_input_Keyboard_KEY_U;
+		case XK_v:
+			return org_lwjgl_input_Keyboard_KEY_V;
+		case XK_w:
+			return org_lwjgl_input_Keyboard_KEY_W;
+		case XK_x:
+			return org_lwjgl_input_Keyboard_KEY_X;
+		case XK_y:
+			return org_lwjgl_input_Keyboard_KEY_Y;
+		case XK_z:
+			return org_lwjgl_input_Keyboard_KEY_Z;
+		default:
+			return org_lwjgl_input_Keyboard_KEY_NONE;
+	}
+}
+
 static unsigned char getKeycode(XKeyEvent *event) {
 	unsigned char keycode = (unsigned char)((event->keycode - 8) & 0xff);
-	keycode = key_map[keycode];
+	KeySym keysym = XLookupKeysym(event, 0);
+	keycode = mapKeySymToLWJGLKeyCode(keysym);
 	return keycode;
 }
 
