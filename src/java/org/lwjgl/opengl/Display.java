@@ -326,7 +326,7 @@ public final class Display {
 	 * to prevent just missing the frame time if vsync is set.
 	 * @param fps The desired frame rate, in frames per second
 	 */
-	public static void sync(int fps) {
+	public static void sync3(int fps) {
 		float frameTime = 1.0f / (float) (fps > 1 ? fps - 1 : 1);
 		timeNow = Sys.getTime();
 		while (timeNow > timeThen && (float) (timeNow - timeThen) / (float) Sys.getTimerResolution() < frameTime) {
@@ -361,6 +361,31 @@ public final class Display {
 		timeThen = timeNow;
 	}
 
+	/**
+	 * Best sync method that works reliably.
+	 *
+	 * @param fps The desired frame rate, in frames per second
+	 */
+	public static void sync(int fps) {
+		long gapTo = Sys.getTimerResolution() / fps + timeThen;
+		timeNow = Sys.getTime();
+
+		while (gapTo > timeNow + timeLate) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+			}
+			timeNow = Sys.getTime();
+		}
+
+		if (gapTo < timeNow)
+			timeLate = timeNow - gapTo;
+		else
+			timeLate = 0;
+
+		timeThen = timeNow;
+	}
+	
 	/**
 	 * @return the X coordinate of the window (always 0 for fullscreen)
 	 */
@@ -514,7 +539,7 @@ public final class Display {
 		if (isVisible() || isDirty()) {
 			Util.checkGLError();
 			try {
-				context.swapBuffers();
+				Context.swapBuffers();
 			} catch (LWJGLException e) {
 				throw new RuntimeException(e);
 			}
@@ -707,7 +732,7 @@ public final class Display {
 	public static void setVSyncEnabled(boolean sync) {
 		vsync = sync;
 		if (isCreated())
-			context.setVSync(vsync);
+			Context.setVSync(vsync);
 	}
 
 	/**
