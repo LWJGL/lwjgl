@@ -106,6 +106,36 @@ static void* extal_GetProcAddress(const char* function) {
 	return p;
 }
 
+static void tryLoadLibrary(JNIEnv *env, jstring path) {
+#ifdef _WIN32
+		char *path_str = GetStringNativeChars(env, path);
+		printfDebug("Testing '%s'\n", path_str);
+		handleOAL = LoadLibrary(path_str);
+		if (handleOAL != NULL) {
+			printfDebugJava(env, "Found OpenAL at '%s'\n", path_str);
+		}
+		free(path_str);
+#endif
+#ifdef _X11
+		char *path_str = GetStringNativeChars(env, path);
+		printfDebug("Testing '%s'\n", path_str);
+		handleOAL = dlopen(path_str, RTLD_LAZY);
+		if (handleOAL != NULL) {
+			printfDebugJava(env, "Found OpenAL at '%s'\n", path_str);
+		}
+		free(path_str);
+#endif
+#ifdef _MACOSX
+		const char *path_str = (*env)->GetStringUTFChars(env, path, NULL);
+		printfDebug("Testing '%s'\n", path_str);
+		handleOAL = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+		if (handleOAL != NULL) {
+			printfDebugJava(env, "Found OpenAL at '%s'\n", path_str);
+		}
+		(*env)->ReleaseStringUTFChars(env, path, path_str);
+#endif
+}
+
 /**
  * Loads the OpenAL Library
  */
@@ -113,32 +143,11 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 	jsize pathcount = (*env)->GetArrayLength(env, oalPaths);
 	int i;
 	jstring path;
-	const char *path_str;
 
 	printfDebug("Found %d OpenAL paths\n", (int)pathcount);
 	for(i=0;i<pathcount;i++) {
 		path = (jstring) (*env)->GetObjectArrayElement(env, oalPaths, i);
-#ifdef _WIN32
-		path_str = GetStringNativeChars(env, path);
-		printfDebug("Testing '%s'\n", path_str);
-		handleOAL = LoadLibrary(path_str);
-		free(path_str);
-#endif
-#ifdef _X11
-		path_str = GetStringNativeChars(env, path);
-		printfDebug("Testing '%s'\n", path_str);
-		handleOAL = dlopen(path_str, RTLD_LAZY);
-		free(path_str);
-#endif
-#ifdef _MACOSX
-		path_str = (*env)->GetStringUTFChars(env, path, NULL);
-		printfDebug("Testing '%s'\n", path_str);
-		handleOAL = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
-		(*env)->ReleaseStringUTFChars(env, path, path_str);
-#endif
-		if (handleOAL != NULL) {
-			printfDebug("Found OpenAL at '%s'\n", path_str);
-		}
+		tryLoadLibrary(env, path);
 		if (handleOAL != NULL) {
 			return true;
 		}
