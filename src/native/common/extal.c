@@ -113,26 +113,32 @@ static bool LoadOpenAL(JNIEnv *env, jobjectArray oalPaths) {
 	jsize pathcount = (*env)->GetArrayLength(env, oalPaths);
 	int i;
 	jstring path;
-	char *path_str;
+	const char *path_str;
 
 	printfDebug("Found %d OpenAL paths\n", (int)pathcount);
 	for(i=0;i<pathcount;i++) {
 		path = (jstring) (*env)->GetObjectArrayElement(env, oalPaths, i);
+#ifdef _WIN32
 		path_str = GetStringNativeChars(env, path);
 		printfDebug("Testing '%s'\n", path_str);
-#ifdef _WIN32
 		handleOAL = LoadLibrary(path_str);
+		free(path_str);
 #endif
 #ifdef _X11
+		path_str = GetStringNativeChars(env, path);
+		printfDebug("Testing '%s'\n", path_str);
 		handleOAL = dlopen(path_str, RTLD_LAZY);
+		free(path_str);
 #endif
 #ifdef _MACOSX
+		path_str = (*env)->GetStringUTFChars(env, path, NULL);
+		printfDebug("Testing '%s'\n", path_str);
 		handleOAL = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+		(*env)->ReleaseStringUTFChars(env, path, path_str);
 #endif
 		if (handleOAL != NULL) {
 			printfDebug("Found OpenAL at '%s'\n", path_str);
 		}
-		free(path_str);
 		if (handleOAL != NULL) {
 			return true;
 		}
