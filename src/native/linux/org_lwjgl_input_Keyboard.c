@@ -57,6 +57,10 @@
 #define KEY_EVENT_BACKLOG 40
 
 static unsigned char key_buf[KEYBOARD_SIZE];
+static int numlock_mask;
+static int modeswitch_mask;
+static int caps_lock_mask;
+static int shift_lock_mask;
 
 static event_queue_t event_queue;
 
@@ -93,7 +97,7 @@ void updateKeyboardGrab(void) {
 	}
 }
 
-static void closeUnicodeStructs() {
+static void cleanup() {
 	if (iconv_descriptor != (iconv_t)-1) {
 		iconv_close(iconv_descriptor);
 		iconv_descriptor = (iconv_t)-1;
@@ -126,7 +130,44 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
 	keyboard_grabbed = false;
 	initEventQueue(&event_queue, 3);
 	updateKeyboardGrab();
-	
+	XModifierKeymap *modifier_map = XGetModifierMapping(getDisplay());
+	numlock_mask = 0;
+	modeswitch_mask = 0;
+	caps_lock_mask = 0;
+	shift_lock_mask = 0;
+	if (modifier_map != NULL) {
+		// Find modifier masks
+		int i, j;
+		for (i = 0; i < 8; i++) {
+			for (j = 0; j < modifier_map->max_keypermod; j++) {
+				KeyCode key_code = modifier_map->modifiermap[i*modifier_map->max_keypermod + j];
+				KeySym key_sym = XKeycodeToKeysym(getDisplay(), key_code, 0);
+				int mask = 1 << i;
+				switch (key_sym) {
+					case XK_Num_Lock:
+						numlock_mask |= mask;
+						break;
+					case XK_Mode_switch:
+						modeswitch_mask |= mask;
+						break;
+					case XK_Caps_Lock:
+						if (i == LockMapIndex) {
+							caps_lock_mask = mask;
+							shift_lock_mask = 0;
+						}
+						break;
+					case XK_Shift_Lock:
+						if (i == LockMapIndex && caps_lock_mask == 0)
+							shift_lock_mask = mask;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		XFreeModifiermap(modifier_map);
+	}
+
 	// Allocate unicode structures
 	iconv_descriptor = iconv_open("UCS-2", "UTF-8");
 	if (iconv_descriptor != (iconv_t)-1) {
@@ -136,17 +177,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateKeyboard
 			if (xic != NULL) {
 				setupIMEventMask();
 			} else {
-				closeUnicodeStructs();
+				cleanup();
 			}
 		} else
-			closeUnicodeStructs();
+			cleanup();
 	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nDestroyKeyboard
   (JNIEnv * env, jclass clazz)
 {
-	closeUnicodeStructs();
+	cleanup();
 	ungrabKeyboard();
 	created = false;
 }
@@ -394,65 +435,142 @@ static unsigned char mapKeySymToLWJGLKeyCode(KeySym keysym) {
 		case XK_grave:
 			return org_lwjgl_input_Keyboard_KEY_GRAVE;
 		case XK_a:
+		case XK_A:
 			return org_lwjgl_input_Keyboard_KEY_A;
 		case XK_b:
+		case XK_B:
 			return org_lwjgl_input_Keyboard_KEY_B;
 		case XK_c:
+		case XK_C:
 			return org_lwjgl_input_Keyboard_KEY_C;
 		case XK_d:
+		case XK_D:
 			return org_lwjgl_input_Keyboard_KEY_D;
 		case XK_e:
+		case XK_E:
 			return org_lwjgl_input_Keyboard_KEY_E;
 		case XK_f:
+		case XK_F:
 			return org_lwjgl_input_Keyboard_KEY_F;
 		case XK_g:
+		case XK_G:
 			return org_lwjgl_input_Keyboard_KEY_G;
 		case XK_h:
+		case XK_H:
 			return org_lwjgl_input_Keyboard_KEY_H;
 		case XK_i:
+		case XK_I:
 			return org_lwjgl_input_Keyboard_KEY_I;
 		case XK_j:
+		case XK_J:
 			return org_lwjgl_input_Keyboard_KEY_J;
 		case XK_k:
+		case XK_K:
 			return org_lwjgl_input_Keyboard_KEY_K;
 		case XK_l:
+		case XK_L:
 			return org_lwjgl_input_Keyboard_KEY_L;
 		case XK_m:
+		case XK_M:
 			return org_lwjgl_input_Keyboard_KEY_M;
 		case XK_n:
+		case XK_N:
 			return org_lwjgl_input_Keyboard_KEY_N;
 		case XK_o:
+		case XK_O:
 			return org_lwjgl_input_Keyboard_KEY_O;
 		case XK_p:
+		case XK_P:
 			return org_lwjgl_input_Keyboard_KEY_P;
 		case XK_q:
+		case XK_Q:
 			return org_lwjgl_input_Keyboard_KEY_Q;
 		case XK_r:
+		case XK_R:
 			return org_lwjgl_input_Keyboard_KEY_R;
 		case XK_s:
+		case XK_S:
 			return org_lwjgl_input_Keyboard_KEY_S;
 		case XK_t:
+		case XK_T:
 			return org_lwjgl_input_Keyboard_KEY_T;
 		case XK_u:
+		case XK_U:
 			return org_lwjgl_input_Keyboard_KEY_U;
 		case XK_v:
+		case XK_V:
 			return org_lwjgl_input_Keyboard_KEY_V;
 		case XK_w:
+		case XK_W:
 			return org_lwjgl_input_Keyboard_KEY_W;
 		case XK_x:
+		case XK_X:
 			return org_lwjgl_input_Keyboard_KEY_X;
 		case XK_y:
+		case XK_Y:
 			return org_lwjgl_input_Keyboard_KEY_Y;
 		case XK_z:
+		case XK_Z:
 			return org_lwjgl_input_Keyboard_KEY_Z;
 		default:
 			return org_lwjgl_input_Keyboard_KEY_NONE;
 	}
 }
 
+static bool isKeypadKeysym(KeySym keysym) {
+	return (0xFF80 <= keysym && keysym <= 0xFFBD) ||
+		(0x11000000 <= keysym && keysym <= 0x1100FFFF);
+}
+
+static KeySym getKeySym(XKeyEvent *event, int group, int index) {
+	KeySym keysym = XLookupKeysym(event, group*2 + index);
+	if (keysym == NoSymbol && index == 1)
+		keysym = XLookupKeysym(event, group*2 + 0);
+	if (keysym == NoSymbol && group == 1)
+		keysym = getKeySym(event, 0, index);
+	return keysym;
+}
+
+static KeySym toUpper(KeySym keysym) {
+	KeySym lower_case, upper_case;
+	XConvertCase(keysym, &lower_case, &upper_case);
+	return upper_case;
+}
+
+/* Map an event to a KeySym. Use the rules described in
+ * http://tronche.com/gui/x/xlib/input/keyboard-encoding.html
+ */
+static KeySym mapEventToKeySym(XKeyEvent *event) {
+	int group;
+	KeySym keysym;
+	if ((event->state & modeswitch_mask) != 0)
+		group = 1;
+	else
+		group = 0;
+	if ((event->state & numlock_mask) != 0 && isKeypadKeysym(keysym = getKeySym(event, group, 1))) {
+		if ((event->state & (ShiftMask | shift_lock_mask)) != 0) {
+			return getKeySym(event, group, 0);
+		} else {
+			return keysym;
+		}
+	} else if ((event->state & (ShiftMask | LockMask)) == 0) {
+		return getKeySym(event, group, 0);
+	} else if ((event->state & ShiftMask) == 0) {
+		KeySym keysym = getKeySym(event, group, 0);
+		if ((event->state & caps_lock_mask) != 0)
+			keysym = toUpper(keysym);
+		return keysym;
+	} else {
+		KeySym keysym = getKeySym(event, group, 1);
+		if ((event->state & caps_lock_mask) != 0)
+			keysym = toUpper(keysym);
+		return keysym;
+	}
+}
+
 static unsigned char getKeycode(XKeyEvent *event) {
-	unsigned char keycode = (unsigned char)((event->keycode - 8) & 0xff);
-	KeySym keysym = XLookupKeysym(event, 0);
+	unsigned char keycode;
+	KeySym keysym = mapEventToKeySym(event);
 	keycode = mapKeySymToLWJGLKeyCode(keysym);
 	return keycode;
 }
@@ -543,7 +661,6 @@ static unsigned char eventState(XKeyEvent *event) {
 static void bufferEvent(XKeyEvent *key_event) {
 	unsigned char keycode = getKeycode(key_event);
 	unsigned char state = eventState(key_event);
-	//printf("Reading a key %d %d count %d\n", (int)keycode, (int)state, num_events);
 	translateEvent(key_event, keycode, state);
 }
 
