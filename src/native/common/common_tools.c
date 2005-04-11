@@ -122,7 +122,6 @@ void initEventQueue(event_queue_t *queue, int event_size) {
 bool putEvent(event_queue_t *queue, jint *event) {
 	int i;
 	if (getElementCapacity(queue) < queue->event_size) {
-		printfDebug("Event buffer overflow!\n");
 		return false;
 	}
 	for (i = 0; i < queue->event_size; i++) {
