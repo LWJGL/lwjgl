@@ -36,7 +36,11 @@
 #include <jni.h>
 #include "../common_tools.h"
 
+#ifdef _MACOSX
+#include "fmoddyn_mac.h"
+#else
 #include "fmoddyn.h"
+#endif
 #include "fmod_errors.h"
 
 // Called to create an FMOD instance
