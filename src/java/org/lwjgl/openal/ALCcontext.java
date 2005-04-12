@@ -46,14 +46,14 @@ import org.lwjgl.BufferUtils;
 final class ALCcontext {
 
 	/** address of actual context */
-	final int context;
+	final long context;
 
 	/** 
 	 * Creates a new instance of ALCcontext 
 	 * 
 	 * @param context address of actual context
 	 */
-	ALCcontext(int context) {
+	ALCcontext(long context) {
 		this.context = context;
 	}
 

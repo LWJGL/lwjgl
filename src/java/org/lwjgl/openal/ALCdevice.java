@@ -42,14 +42,14 @@ package org.lwjgl.openal;
 final class ALCdevice {
     
     /** address of actual device */
-    final int device;
+    final long device;
     
     /** 
      * Creates a new instance of ALCdevice 
      *
      * @param device address of actual device
      */
-    ALCdevice(int device) {
+    ALCdevice(long device) {
         this.device = device;
     }   
 }
