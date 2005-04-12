@@ -53,6 +53,7 @@ static char *concatenate(const char *str1, const char *str2) {
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_getNativeLibraryVersion(JNIEnv * env, jclass clazz) {
+	printfDebug("getNativeLibrary: %s", VERSION);
   return NewStringNative(env, VERSION);
 }
 
@@ -75,10 +76,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nCreate(JNIEnv *env, jclass cla
 		lib_str = concatenate(path_str, "fmod.dll");
 #endif
 #ifdef _X11
-    lib_str = concatenate(path_str, "libfmod.so");
+		lib_str = concatenate(path_str, "libfmod.so");
 #endif
 #ifdef _MACOSX
-    lib_str = concatenate(path_str, "fmod_cfm.shlb");
+		lib_str = concatenate(path_str, "ignored");
 #endif	
 		printfDebug("Testing '%s'\n", lib_str);
 		fmod_create(env, lib_str);
