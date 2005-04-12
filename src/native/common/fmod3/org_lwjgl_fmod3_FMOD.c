@@ -53,7 +53,6 @@ static char *concatenate(const char *str1, const char *str2) {
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_org_lwjgl_fmod3_FMOD_getNativeLibraryVersion(JNIEnv * env, jclass clazz) {
-	printfDebug("getNativeLibrary: %s", VERSION);
   return NewStringNative(env, VERSION);
 }
 
