@@ -1,0 +1,19 @@
+CC=gcc
+LINKER=gcc
+STRIP=strip
+CFLAGS_LINK=-dynamiclib -framework JavaVM -framework Carbon
+STATIC_LIBS=${FMOD}/api/lib/libfmod.a
+CFLAGS_O=-fPIC -O2 -D_MACOSX -Wall -c -I.. -I${FMOD}/api/inc -I. -I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers
+SRC=$(wildcard *.c) ../common_tools.c
+OBJECTS=$(subst .c,.o,$(SRC))
+LIBRARY=liblwjgl-fmod3.jnilib
+
+$(LIBRARY): $(OBJECTS)
+	$(LINKER) $(CFLAGS_LINK) -o $@ $(OBJECTS) $(STATIC_LIBS)
+	$(STRIP) -S -X $@
+
+.c.o:
+	$(CC) $(CFLAGS_O) $< -o $@
+
+clean:
+	rm -f $(OBJECTS) $(LIBRARY)
