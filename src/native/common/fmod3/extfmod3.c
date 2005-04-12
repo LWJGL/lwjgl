@@ -42,26 +42,26 @@
 FMOD_INSTANCE * fmod_instance = NULL;
 
 // jnienvs
-JNIEnv *mixer_jnienv;
-JNIEnv *stream_jnienv;
+JNIEnv *mixer_jnienv = NULL;
+JNIEnv *stream_jnienv = NULL;
 
 // FMusic cached fields
-jmethodID music_instcallback;
-jmethodID music_ordercallback;
-jmethodID music_rowcallback;
-jmethodID music_zxxcallback;
-jclass fmusic;
+jmethodID music_instcallback = NULL;
+jmethodID music_ordercallback = NULL;
+jmethodID music_rowcallback = NULL;
+jmethodID music_zxxcallback= NULL;
+jclass fmusic = NULL;
 
 // FSound cached fields
-jmethodID sound_dspcallback;
-jmethodID sound_stream_endcallback;
-jmethodID sound_stream_synccallback;
-jmethodID sound_stream_callback;
-jmethodID sound_metadata_callback;
-jclass fsound;
+jmethodID sound_dspcallback = NULL;
+jmethodID sound_stream_endcallback = NULL;
+jmethodID sound_stream_synccallback = NULL;
+jmethodID sound_stream_callback = NULL;
+jmethodID sound_metadata_callback = NULL;
+jclass fsound = NULL;
 
 // size of dsp buffer (in bytes)
-int fsound_dsp_buffer_size;
+int fsound_dsp_buffer_size = 0;
 
 #ifdef _WIN32
 /**
@@ -80,7 +80,7 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 void fmod_create(JNIEnv *env, const char* path) {
   // try to create an instance using the supplied path
   fmod_instance = FMOD_CreateInstance((char *)path);
-  
+
   // if we got one, we need to locate and cache jni stuff used for callbacks
   if (fmod_instance != NULL) {
     
@@ -115,7 +115,7 @@ void fmod_create(JNIEnv *env, const char* path) {
 				fsound_dsp_buffer_size = 4;
 				break;
 		}
-  }
+  	}
 }
 
 /**
