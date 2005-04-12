@@ -162,6 +162,9 @@ public interface DisplayImplementation {
 	 */
 	int getNativeCursorCapabilities();
 
+	/** Method to set the native cursor position */
+	void setCursorPosition(int x, int y);
+	
 	/** Method to set the native cursor */
 	void setNativeCursor(Object handle) throws LWJGLException;
 

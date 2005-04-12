@@ -306,6 +306,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 		return 0;
 	}
 
+	public void setCursorPosition(int x, int y) {
+		throw new UnsupportedOperationException();
+	}
+
 	public void setNativeCursor(Object handle) throws LWJGLException {
 		Cursor awt_cursor = (Cursor)handle;
 		frame.setCursor(awt_cursor);

@@ -268,6 +268,13 @@ final class LinuxDisplay implements DisplayImplementation {
 	}
 	private static native int nReadMouse(IntBuffer buffer, int buffer_position);
 	
+	public void setCursorPosition(int x, int y) {
+		lockAWT();
+		nSetCursorPosition(x, y);
+		unlockAWT();
+	}
+	private native void nSetCursorPosition(int x, int y);
+	
 	public void grabMouse(boolean grab) {
 		lockAWT();
 		nGrabMouse(grab);

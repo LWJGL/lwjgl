@@ -106,6 +106,7 @@ final class Win32Display implements DisplayImplementation {
 		return Cursor.CURSOR_ONE_BIT_TRANSPARENCY;
 	}
 
+	public native void setCursorPosition(int x, int y);
 	public native void setNativeCursor(Object handle) throws LWJGLException;
 	public native int getMinCursorSize();
 	public native int getMaxCursorSize();

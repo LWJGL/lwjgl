@@ -152,10 +152,6 @@ public class Mouse {
 	 *
 	 * NOTE: The native cursor is not constrained to the window, but
 	 * relative events will not be generated if the cursor is outside.
-	 * The initial position of the cursor is the middle of the window,
-	 * that is, {window_width/2, window_height/2}.
-	 * The cursor will be moved to this origin when a
-	 * native cursor is set and the previous cursor is null.
 	 *
 	 * @param cursor the native cursor object to bind. May be null.
 	 * @return The previous Cursor object set, or null.
@@ -177,6 +173,21 @@ public class Mouse {
 		return oldCursor;
 	}
 
+	/**
+	 * Set the position of the native cursor. This method is only valid when
+	 * the cursor is not grabbed and native cursors are supported.
+	 *
+	 * @param x The x coordinate of the new cursor position in OpenGL coordinates relative
+	 *			to the window origin.
+	 * @param y The y coordinate of the new cursor position in OpenGL coordinates relative
+	 *			to the window origin.
+	 */
+	public static void setCursorPosition(int x, int y) {
+		if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0)
+			throw new IllegalStateException("Mouse doesn't support native cursors");
+		Display.getImplementation().setCursorPosition(x, y);
+	}
+	
 	/**
 	 * Static initialization
 	 */
@@ -200,6 +211,7 @@ public class Mouse {
 		x = width / 2;
 		y = height / 2;
 		readBuffer.clear();
+		setCursorPosition(x, y);
 	}
 
 	/**

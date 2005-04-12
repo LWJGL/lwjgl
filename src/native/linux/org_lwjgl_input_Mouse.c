@@ -342,6 +342,17 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nReadMouse(JNIEnv *env
 	return copyEvents(&event_queue, buffer_ptr + buffer_position, buffer_size);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetCursorPosition(JNIEnv * env, jclass clazz, jint x, jint y) {
+	XWindowAttributes attributes;
+	if (!XGetWindowAttributes(getDisplay(), getCurrentWindow(), &attributes)) {
+		printfDebugJava(env, "XGetWindowAttributes failed");
+		return;
+	}
+	int transformed_x = attributes.x + x;
+	int transformed_y = attributes.y + transformY(y);
+	XWarpPointer(getDisplay(), None, getCurrentWindow(), 0, 0, 0, 0, transformed_x, transformed_y);
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabMouse(JNIEnv * env, jclass clazz, jboolean new_grab) {
 	Window root_return, child_return;
 	int root_x, root_y, win_x, win_y;
