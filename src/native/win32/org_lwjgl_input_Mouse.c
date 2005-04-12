@@ -352,6 +352,20 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollMouse(JNIEnv * env
 	UpdateMouseFields(env, coord_buffer_obj, button_buffer_obj);
 }
 
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setCursorPosition
+(JNIEnv * env, jobject self, jint x, jint y) {
+	int transformed_x, transformed_y;
+	RECT window_rect;
+	if (!GetWindowRect(getCurrentHWND(), &window_rect)) {
+		printfDebugJava(env, "GetWindowRect failed");
+		return;
+	}
+	transformed_x = window_rect.left + x;
+	transformed_y = window_rect.bottom - y;
+	if (!SetCursorPos(transformed_x, transformed_y))
+		printfDebugJava(env, "SetCursorPos failed");
+}
+
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 (JNIEnv * env, jobject self, jboolean grab) {
 	HRESULT di_res;
