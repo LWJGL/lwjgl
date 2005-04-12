@@ -185,6 +185,10 @@ public class Mouse {
 	public static void setCursorPosition(int x, int y) {
 		if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0)
 			throw new IllegalStateException("Mouse doesn't support native cursors");
+		if (isGrabbed())
+			throw new IllegalStateException("Cursor is grabbed");
+		if (!isCreated())
+			throw new IllegalStateException("Mouse is not created");
 		Display.getImplementation().setCursorPosition(x, y);
 	}
 	
@@ -211,6 +215,7 @@ public class Mouse {
 		x = width / 2;
 		y = height / 2;
 		readBuffer.clear();
+		if (!isGrabbed() && (Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
 		setCursorPosition(x, y);
 	}
 
