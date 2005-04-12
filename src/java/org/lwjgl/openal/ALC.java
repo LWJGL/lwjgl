@@ -164,10 +164,11 @@ public final class ALC {
 	 * @return String property from device
 	 */
 	public static String alcGetString(int pname) {
-		return nalcGetString(AL.device.device, pname);
+		String result = nalcGetString(AL.device.device, pname);
+		Util.checkALCError();
+		return result;
 	}
-
-	native static String nalcGetString(long device, int pname);
+	private native static String nalcGetString(long device, int pname);
 
 	/**
 	 * The application can query ALC for information using an integer query function.
@@ -192,9 +193,9 @@ public final class ALC {
 	public static void alcGetInteger(int pname, IntBuffer integerdata) {
 		BufferChecks.checkDirect(integerdata);
 		nalcGetIntegerv(AL.device.device, pname, integerdata.remaining(), integerdata, integerdata.position());
+		Util.checkALCError();
 	}
-
-	native static void nalcGetIntegerv(long device, int pname, int size, Buffer integerdata, int offset);
+	private native static void nalcGetIntegerv(long device, int pname, int size, Buffer integerdata, int offset);
 
 	/**
 	 * The <code>alcOpenDevice</code> function allows the application (i.e. the client program) to
@@ -236,7 +237,12 @@ public final class ALC {
 	 * @param attrList Buffer to read attributes from
 	 * @return New context, or null if creation failed
 	 */
-	native static ALCcontext alcCreateContext(long device, IntBuffer attrList);
+	static ALCcontext alcCreateContext(long device, IntBuffer attrList) {
+		ALCcontext result = nalcCreateContext(device, attrList);
+		Util.checkALCError();
+		return result;
+	}
+	private native static ALCcontext nalcCreateContext(long device, IntBuffer attrList);
 
 	/**
 	 * To make a Context current with respect to AL Operation (state changes by issueing
@@ -268,8 +274,7 @@ public final class ALC {
 	public static void alcProcessContext() {
 		nalcProcessContext(AL.context.context);
 	}
-
-	native static void nalcProcessContext(long context);
+	private native static void nalcProcessContext(long context);
 
 	/**
 	 * The application can query for, and obtain an handle to, the current context for the
@@ -299,10 +304,10 @@ public final class ALC {
 	 *
 	 * @param context address of context to suspend
 	 */
-  public static void alcSuspendContext() {
-  	nalcSuspendContext(AL.context.context);
-  }
-	native static void nalcSuspendContext(long context);
+	public static void alcSuspendContext() {
+		nalcSuspendContext(AL.context.context);
+	}
+	private native static void nalcSuspendContext(long context);
 
 	/**
 	 * The correct way to destroy a context is to first release it using <code>alcMakeCurrent</code> and
@@ -330,8 +335,7 @@ public final class ALC {
 	public static int alcGetError() {
 		return nalcGetError(AL.device.device);
 	}
-
-	native static int nalcGetError(long device);
+	private native static int nalcGetError(long device);
 
 	/**
 	* Verify that a given extension is available for the current context and the device it
@@ -343,10 +347,11 @@ public final class ALC {
 	 * @return true if extension is available, false if not
 	 */
 	public static boolean alcIsExtensionPresent(String extName) {
-		return nalcIsExtensionPresent(AL.device.device, extName);
+		boolean result = nalcIsExtensionPresent(AL.device.device, extName);
+		Util.checkALCError();
+		return result;
 	}
-
-	native static boolean nalcIsExtensionPresent(long device, String extName);
+	private native static boolean nalcIsExtensionPresent(long device, String extName);
 
 	/**
 	 * Enumeration/token values are device independend, but tokens defined for
@@ -359,8 +364,9 @@ public final class ALC {
 	 * @return value of enumeration
 	 */
 	public static int alcGetEnumValue(String enumName) {
-		return nalcGetEnumValue(AL.device.device, enumName);
+		int result = nalcGetEnumValue(AL.device.device, enumName);
+		Util.checkALCError();
+		return result;
 	}
-
-	native static int nalcGetEnumValue(long device, String enumName);
+	private native static int nalcGetEnumValue(long device, String enumName);
 }

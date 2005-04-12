@@ -47,6 +47,12 @@ public final class Util {
 	private Util() {
 	}
 
+	public static void checkALCError() {
+		int err = ALC.alcGetError();
+		if (err != ALC.ALC_NO_ERROR)
+			throw new OpenALException(ALC.alcGetString(err));
+	}
+	
 	public static void checkALError() {
 		int err = AL10.alGetError();
 		if (err != AL10.AL_NO_ERROR)

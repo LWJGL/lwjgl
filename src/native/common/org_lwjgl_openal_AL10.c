@@ -1,7 +1,6 @@
 /* MACHINE GENERATED FILE, DO NOT EDIT */
 
 #include <jni.h>
-#include "checkALerror.h"
 #include "extal.h"
 
 typedef ALvoid (ALAPIENTRY *alDopplerVelocityPROC) (ALfloat value);

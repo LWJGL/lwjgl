@@ -33,7 +33,6 @@
 #include "org_lwjgl_openal_AL.h"
 
 /* OpenAL includes */
-#include "checkALerror.h"
 #include "extal.h"
 
 JNIEXPORT void JNICALL Java_org_lwjgl_openal_AL_nCreate (JNIEnv *env, jclass clazz, jobjectArray oalPaths) {
