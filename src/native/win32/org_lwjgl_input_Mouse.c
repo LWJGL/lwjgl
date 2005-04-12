@@ -336,10 +336,10 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
 	if (handle_buffer != NULL) {
 		cursor_handle = (HCURSOR *)(*env)->GetDirectBufferAddress(env, handle_buffer);
 		cursor = *cursor_handle;
-		SetClassLong(getCurrentHWND(), GCL_HCURSOR, (LONG)cursor);
+		SetClassLongPtr(getCurrentHWND(), GCL_HCURSOR, (LONG_PTR)cursor);
 		SetCursor(cursor);
 	} else {
-		SetClassLong(getCurrentHWND(), GCL_HCURSOR, (LONG)NULL);
+		SetClassLongPtr(getCurrentHWND(), GCL_HCURSOR, (LONG_PTR)NULL);
 		SetCursor(LoadCursor(NULL, IDC_ARROW));
 	}
 }
