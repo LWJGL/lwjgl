@@ -522,11 +522,16 @@ static bool isKeypadKeysym(KeySym keysym) {
 		(0x11000000 <= keysym && keysym <= 0x1100FFFF);
 }
 
+static bool isNoSymbolOrVendorSpecific(KeySym keysym) {
+	return keysym == NoSymbol || (keysym & (1 << 28)) != 0;
+}
+
 static KeySym getKeySym(XKeyEvent *event, int group, int index) {
 	KeySym keysym = XLookupKeysym(event, group*2 + index);
-	if (keysym == NoSymbol && index == 1)
+	if (isNoSymbolOrVendorSpecific(keysym) && index == 1) {
 		keysym = XLookupKeysym(event, group*2 + 0);
-	if (keysym == NoSymbol && group == 1)
+	}
+	if (isNoSymbolOrVendorSpecific(keysym) && group == 1)
 		keysym = getKeySym(event, 0, index);
 	return keysym;
 }
