@@ -196,6 +196,7 @@ static unsigned char mapKeySymToLWJGLKeyCode(KeySym keysym) {
 	switch (keysym) {
 		case XK_BackSpace:
 			return org_lwjgl_input_Keyboard_KEY_BACK;
+		case XK_ISO_Left_Tab:
 		case XK_Tab:
 			return org_lwjgl_input_Keyboard_KEY_TAB;
 		case XK_Return:
