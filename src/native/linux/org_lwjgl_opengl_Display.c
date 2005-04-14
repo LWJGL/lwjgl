@@ -333,12 +333,19 @@ static void destroyWindow(JNIEnv *env) {
 	setRepeatMode(env, AutoRepeatModeDefault);
 }
 
+static bool isNetWMForceDisabled() {
+	char *supported_env = getenv("LWJGL_DISABLE_NETWM");
+	return supported_env != NULL;
+}
+
 static bool isNetWMFullscreenSupported(JNIEnv *env) {
 	unsigned long nitems;
 	Atom actual_type;
 	int actual_format;
 	unsigned long bytes_after;
 	Atom *supported_list;
+	if (isNetWMForceDisabled())
+		return false;
 	Atom netwm_supported_atom = XInternAtom(getDisplay(), "_NET_SUPPORTED", False);
 	int result = XGetWindowProperty(getDisplay(), RootWindow(getDisplay(), getCurrentScreen()), netwm_supported_atom, 0, 10000, False, AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, (void *)&supported_list);
 	if (result != Success) {
