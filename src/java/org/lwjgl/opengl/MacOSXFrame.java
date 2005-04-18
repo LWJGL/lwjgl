@@ -89,6 +89,7 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 		requestFocus();
 		canvas.requestFocus();
 		canvas.initializeCanvas();
+		updateBounds();
 	}
 
 	public void resize(int x, int y, int width, int height) {
