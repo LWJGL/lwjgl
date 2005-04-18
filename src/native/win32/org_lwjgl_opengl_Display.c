@@ -134,6 +134,9 @@ LRESULT CALLBACK lwjglWindowProc(HWND hWnd,
 		case WM_SYSCOMMAND:
 		{
 			switch (wParam) {
+			case SC_KEYMENU:
+			case SC_MOUSEMENU:
+				// Ignore system menu retrieval
 			case SC_SCREENSAVE:
 			case SC_MONITORPOWER:
 				return 0L;
