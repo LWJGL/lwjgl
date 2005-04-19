@@ -578,6 +578,11 @@ static unsigned char getKeycode(XKeyEvent *event) {
 	unsigned char keycode;
 	KeySym keysym = mapEventToKeySym(event);
 	keycode = mapKeySymToLWJGLKeyCode(keysym);
+	if (keycode == org_lwjgl_input_Keyboard_KEY_NONE) {
+		// Try unshifted keysym mapping
+		keysym = XLookupKeysym(event, 0);
+		keycode = mapKeySymToLWJGLKeyCode(keysym);
+	}
 	return keycode;
 }
 
