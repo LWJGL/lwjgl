@@ -306,17 +306,33 @@ final class LinuxDisplay implements DisplayImplementation {
 	
 	public int getMinCursorSize() {
 		lockAWT();
-		int min_size = nGetMinCursorSize();
-		unlockAWT();
-		return min_size;
+		try {
+			incDisplay();
+			int min_size = nGetMinCursorSize();
+			decDisplay();
+			return min_size;
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Exception occurred in getMinCursorSize: " + e);
+			return 0;
+		} finally {
+			unlockAWT();
+		}
 	}
 	private static native int nGetMinCursorSize();
 
 	public int getMaxCursorSize() {
 		lockAWT();
-		int max_size = nGetMaxCursorSize();
-		unlockAWT();
-		return max_size;
+		try {
+			incDisplay();
+			int max_size = nGetMaxCursorSize();
+			decDisplay();
+			return max_size;
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Exception occurred in getMaxCursorSize: " + e);
+			return 0;
+		} finally {
+			unlockAWT();
+		}
 	}
 	private static native int nGetMaxCursorSize();
 	
