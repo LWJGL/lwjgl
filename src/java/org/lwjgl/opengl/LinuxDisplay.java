@@ -66,6 +66,7 @@ final class LinuxDisplay implements DisplayImplementation {
 	 */
 	static void incDisplay() throws LWJGLException {
 		if (display_connection_usage_count == 0) {
+			GLContext.loadOpenGLLibrary();
 			openDisplay();
 		}
 		display_connection_usage_count++;
@@ -77,6 +78,7 @@ final class LinuxDisplay implements DisplayImplementation {
 			throw new InternalError("display_connection_usage_count < 0: " + display_connection_usage_count);
 		if (display_connection_usage_count == 0) {
 			closeDisplay();
+			GLContext.unloadOpenGLLibrary();	
 		}
 	}
 
