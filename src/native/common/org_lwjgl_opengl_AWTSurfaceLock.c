@@ -39,63 +39,49 @@
 
 #include <jni.h>
 #include <jawt.h>
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
 #include "org_lwjgl_opengl_AWTSurfaceLock.h"
 #include "awt_tools.h"
 #include "common_tools.h"
-
-#define WAIT_DELAY 100
 
 JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_createHandle
   (JNIEnv *env, jclass clazz) {
 	return newJavaManagedByteBuffer(env, sizeof(AWTSurfaceLock));
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle
+JNIEXPORT jboolean JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle
   (JNIEnv *env, jclass clazz, jobject lock_buffer_handle, jobject canvas) {
 	JAWT awt;
 	JAWT_DrawingSurface* ds;
 	JAWT_DrawingSurfaceInfo *dsi;
 	AWTSurfaceLock *awt_lock = (AWTSurfaceLock *)(*env)->GetDirectBufferAddress(env, lock_buffer_handle);
 	awt.version = JAWT_VERSION_1_4;
-	while (true) {
-		if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
-			throwException(env, "Could not get the JAWT interface");
-			return;
-		}
-
-		ds = awt.GetDrawingSurface(env, canvas);
-		if (ds == NULL) {
-			throwException(env, "Could not get the drawing surface");
-			return;
-		}
-
-		if((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
-			awt.FreeDrawingSurface(ds);
-			throwException(env, "Could not lock the drawing surface");
-			return;
-		}
-
-		dsi = ds->GetDrawingSurfaceInfo(ds);
-		if (dsi != NULL)
-			break;
-
-		printfDebug("Could not get drawing surface info, retrying... \n");
-		ds->Unlock(ds);
-		awt.FreeDrawingSurface(ds);
-#ifdef _WIN32
-		Sleep(WAIT_DELAY);
-#else
-		usleep(WAIT_DELAY*1000);
-#endif
+	if (JAWT_GetAWT(env, &awt) == JNI_FALSE) {
+		throwException(env, "Could not get the JAWT interface");
+		return JNI_FALSE;
 	}
-	awt_lock->awt = awt;
-	awt_lock->ds = ds;
-	awt_lock->dsi = dsi;
+
+	ds = awt.GetDrawingSurface(env, canvas);
+	if (ds == NULL) {
+		throwException(env, "Could not get the drawing surface");
+		return JNI_FALSE;
+	}
+
+	if((ds->Lock(ds) & JAWT_LOCK_ERROR) != 0) {
+		awt.FreeDrawingSurface(ds);
+		throwException(env, "Could not lock the drawing surface");
+		return JNI_FALSE;
+	}
+
+	dsi = ds->GetDrawingSurfaceInfo(ds);
+	if (dsi != NULL) {
+		awt_lock->awt = awt;
+		awt_lock->ds = ds;
+		awt_lock->dsi = dsi;
+		return JNI_TRUE;
+  	}
+	ds->Unlock(ds);
+	awt.FreeDrawingSurface(ds);
+	return JNI_FALSE;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_AWTSurfaceLock_nUnlock

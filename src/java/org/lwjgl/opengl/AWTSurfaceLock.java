@@ -35,6 +35,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 
 import java.awt.Canvas;
@@ -46,6 +47,8 @@ import java.awt.Canvas;
  * @version $Revision$
  */
 final class AWTSurfaceLock {
+	private final static int WAIT_DELAY_MILLIS = 100;
+	
 	private final ByteBuffer lock_buffer;
 
 	public AWTSurfaceLock() {
@@ -54,10 +57,17 @@ final class AWTSurfaceLock {
 	private static native ByteBuffer createHandle();
 
 	public ByteBuffer lockAndGetHandle(Canvas canvas) throws LWJGLException {
-		lockAndInitHandle(lock_buffer, canvas);
+		while (!lockAndInitHandle(lock_buffer, canvas)) {
+			LWJGLUtil.log("Could not get drawing surface info, retrying...");
+			try {
+				Thread.sleep(WAIT_DELAY_MILLIS);
+			} catch (InterruptedException e) {
+				LWJGLUtil.log("Interrupted while retrying: " + e);
+			}
+		}
 		return lock_buffer;
 	}
-	private static native void lockAndInitHandle(ByteBuffer lock_buffer, Canvas canvas) throws LWJGLException;
+	private static native boolean lockAndInitHandle(ByteBuffer lock_buffer, Canvas canvas) throws LWJGLException;
 
 	protected void unlock() throws LWJGLException {
 		nUnlock(lock_buffer);
