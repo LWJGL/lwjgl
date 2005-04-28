@@ -214,9 +214,9 @@ public class Mouse {
 		height = Display.getDisplayMode().getHeight();
 		x = width / 2;
 		y = height / 2;
-		readBuffer.clear();
+		readBuffer.position(readBuffer.limit());
 		if (!isGrabbed() && (Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
-		setCursorPosition(x, y);
+			setCursorPosition(x, y);
 	}
 
 	/**

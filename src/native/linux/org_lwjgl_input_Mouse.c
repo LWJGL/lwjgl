@@ -201,6 +201,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nSetNativeCursor(JNIEn
 
 static void reset(void) {
 	initEventQueue(&event_queue, EVENT_SIZE);
+	accum_dx = accum_dy = 0;
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nCreateMouse
@@ -360,7 +361,6 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxDisplay_nGrabMouse(JNIEnv * en
 	
 	setGrab(new_grab == JNI_TRUE ? true : false);
 	reset();
-	accum_dx = accum_dy = 0;
 	XQueryPointer(getDisplay(), getCurrentWindow(), &root_return, &child_return, &root_x, &root_y, &win_x, &win_y, &mask_return);
 	doHandlePointerMotion(root_x, root_y, win_x, win_y);
 }
