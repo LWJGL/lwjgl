@@ -212,7 +212,6 @@ public class Mouse {
 		width = Display.getDisplayMode().getWidth();
 		height = Display.getDisplayMode().getHeight();
 		readBuffer.position(readBuffer.limit());
-		setCursorPosition(width/2, height/2);
 	}
 
 	/**
