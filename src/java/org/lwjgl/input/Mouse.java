@@ -59,9 +59,6 @@ import org.lwjgl.opengl.Display;
  * @version $Revision$
  */
 public class Mouse {
-	/** Mouse constraint */
-	private static int width, height;
-
 	/** Has the mouse been created? */
 	private static boolean		created;
 
@@ -299,8 +296,8 @@ public class Mouse {
 			x = poll_coord1;
 			y = poll_coord2;
 		}
-		x = Math.min(width - 1, Math.max(0, x));
-		y = Math.min(height - 1, Math.max(0, y));
+		x = Math.min(Display.getDisplayMode().getWidth() - 1, Math.max(0, x));
+		y = Math.min(Display.getDisplayMode().getHeight() - 1, Math.max(0, y));
 		dwheel += poll_dwheel;
 		read();
 	}
@@ -373,8 +370,8 @@ public class Mouse {
 				event_x = readBuffer.get();
 				event_y = readBuffer.get();
 			}
-			event_x = Math.min(width - 1, Math.max(0, event_x));
-			event_y = Math.min(height - 1, Math.max(0, event_y));
+			event_x = Math.min(Display.getDisplayMode().getWidth() - 1, Math.max(0, event_x));
+			event_y = Math.min(Display.getDisplayMode().getHeight() - 1, Math.max(0, event_y));
 			event_dwheel = readBuffer.get();
 			return true;
 		} else
