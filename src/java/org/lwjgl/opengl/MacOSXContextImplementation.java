@@ -81,6 +81,18 @@ final class MacOSXContextImplementation implements ContextImplementation {
 
 	private static native void clearDrawable(ByteBuffer handle) throws LWJGLException;
 
+	static void resetView(PeerInfo peer_info, Context context) throws LWJGLException {
+		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
+		try {
+			synchronized (context) {
+				clearDrawable(context.getHandle());
+				setView(peer_handle, context.getHandle());
+			}
+		} finally {
+			peer_info.unlock();
+		}
+	}
+	
 	public void makeCurrent(PeerInfo peer_info, ByteBuffer handle) throws LWJGLException {
 		ByteBuffer peer_handle = peer_info.lockAndGetHandle();
 		try {

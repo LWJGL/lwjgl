@@ -208,7 +208,36 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public void update() {
-		if (frame.getCanvas().syncShouldUpdateContext()) {
+		boolean should_update = frame.getCanvas().syncShouldUpdateContext();
+		/*
+		 * Workaround for the "white screen in fullscreen mode" problem
+		 *
+		 * Sometimes, switching from windowed mode to fullscreen or simply creating the Display
+		 * in fullscreen mode will result in the context not being bound to the window correctly.
+		 * The program runs fine, but the canvas background (white) is shown instead of the context
+		 * front buffer.
+		 *
+		 * I've discovered that re-binding the context with another setView() won't fix the problem, while a
+		 * clearDrawable() followed by a setView() does work. A straightforward workaround would be
+		 * to simply run the combination at every update(). This is not sufficient, since the clearDrawable()
+		 * call makes the the background appear shortly, causing visual artifacts.
+		 * What we really need is a way to detect that a setView() failed, and then do the magic combo. I've not
+		 * been able to find such a detection so alternatively I'm triggering the combo if the display is fullscreen
+		 * (I've not seen the white screen problem in windowed mode) and if the canvas has gotten a paint message or
+		 * if its update flag was set.
+		 *
+		 * My testing seems to indicate that the workaround works, since I've not seen the problem after the fix.
+		 *
+		 * - elias
+		 */
+		if (Display.isFullscreen() && (frame.getCanvas().syncCanvasPainted() || should_update)) {
+			try {
+				MacOSXContextImplementation.resetView(Display.getContext().getPeerInfo(), Display.getContext());
+			} catch (LWJGLException e) {
+				LWJGLUtil.log("Failed to reset context: " + e);
+			}
+		}
+		if (should_update) {
 			Display.getContext().update();
 			/* This is necessary to make sure the context won't "forget" about the view size */
 			GL11.glViewport(0, 0, frame.getCanvas().syncGetWidth(), frame.getCanvas().syncGetHeight());

@@ -50,6 +50,7 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener, Hierarch
 	private int width;
 	private int height;
 	private boolean context_update;
+	private boolean canvas_painted;
 	private boolean dirty;
 
 	public void update(Graphics g) {
@@ -59,6 +60,7 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener, Hierarch
 	public void paint(Graphics g) {
 		synchronized ( this ) {
 			dirty = true;
+			canvas_painted = true;
 		}
 	}
 
@@ -73,6 +75,15 @@ final class MacOSXGLCanvas extends Canvas implements ComponentListener, Hierarch
 		addHierarchyListener(this);
 //		((MacOSXDisplay)Display.getImplementation()).setView(this);
 		setUpdate();
+	}
+
+	public boolean syncCanvasPainted() {
+		boolean result;
+		synchronized (this) {
+			result = canvas_painted;
+			canvas_painted = false;
+		}
+		return result;
 	}
 
 	public boolean syncIsDirty() {
