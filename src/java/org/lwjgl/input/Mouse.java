@@ -174,22 +174,21 @@ public class Mouse {
 	}
 
 	/**
-	 * Set the position of the native cursor. This method is only valid when
-	 * the cursor is not grabbed and native cursors are supported.
+	 * Set the position of the cursor. If the cursor is not grabbed,
+	 * the native cursor is moved to the new position.
 	 *
 	 * @param x The x coordinate of the new cursor position in OpenGL coordinates relative
 	 *			to the window origin.
 	 * @param y The y coordinate of the new cursor position in OpenGL coordinates relative
 	 *			to the window origin.
 	 */
-	public static void setCursorPosition(int x, int y) {
-		if ((Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) == 0)
-			throw new IllegalStateException("Mouse doesn't support native cursors");
-		if (isGrabbed())
-			throw new IllegalStateException("Cursor is grabbed");
+	public static void setCursorPosition(int new_x, int new_y) {
 		if (!isCreated())
 			throw new IllegalStateException("Mouse is not created");
-		Display.getImplementation().setCursorPosition(x, y);
+		x = event_x = new_x;
+		y = event_y = new_y;
+		if (!isGrabbed() && (Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
+			Display.getImplementation().setCursorPosition(x, y);
 	}
 	
 	/**
@@ -212,11 +211,8 @@ public class Mouse {
 		dx = dy = dwheel = 0;
 		width = Display.getDisplayMode().getWidth();
 		height = Display.getDisplayMode().getHeight();
-		x = width / 2;
-		y = height / 2;
 		readBuffer.position(readBuffer.limit());
-		if (!isGrabbed() && (Cursor.getCapabilities() & Cursor.CURSOR_ONE_BIT_TRANSPARENCY) != 0)
-			setCursorPosition(x, y);
+		setCursorPosition(width/2, height/2);
 	}
 
 	/**
