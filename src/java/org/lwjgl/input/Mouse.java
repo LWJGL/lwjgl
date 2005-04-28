@@ -209,8 +209,6 @@ public class Mouse {
 
 	private static void resetMouse() {
 		dx = dy = dwheel = 0;
-		width = Display.getDisplayMode().getWidth();
-		height = Display.getDisplayMode().getHeight();
 		readBuffer.position(readBuffer.limit());
 	}
 
