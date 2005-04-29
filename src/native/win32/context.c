@@ -140,7 +140,7 @@ HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height
 	DWORD exstyle, windowflags;
 	HWND new_hwnd;
 	
-	getWindowFlags(&windowflags, &exstyle, fullscreen, indecorated);
+	getWindowFlags(&windowflags, &exstyle, fullscreen, undecorated);
 
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar (unless undecorated)

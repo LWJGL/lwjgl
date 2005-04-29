@@ -54,10 +54,6 @@
 		#define WINDOW_H_API
 	#else
 		#define WINDOW_H_API extern
-		extern bool		isFullScreen;				// Whether we're fullscreen or not
-		extern bool		isMinimized;				// Whether we're minimized or not
-		extern bool		isFocused;					// Whether we're focused or not
-		extern bool		isDirty;					  // Whether we're dirty or not
 	#endif /* _PRIVATE_WINDOW_H_ */
 
 	WINDOW_H_API HWND getCurrentHWND();
@@ -72,6 +68,7 @@
 
 	WINDOW_H_API void handleMessages(void);
 
+	WINDOW_H_API bool getCurrentFullscreen();
 	/*
 	 * Handle native Win32 messages
 	 */

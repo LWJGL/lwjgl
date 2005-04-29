@@ -63,6 +63,10 @@ static bool closerequested;
 
 #define WINDOWCLASSNAME "LWJGL"
 
+bool getCurrentFullscreen() {
+	return isFullScreen;
+}
+
 HDC getCurrentHDC() {
 	return display_hdc;
 }
@@ -378,7 +382,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_reshape(JNIEnv *env, j
 		return;
 	}
 
-	getWindowFlags(&windowflags, &exstyle, isFullscreen, getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
+	getWindowFlags(&windowflags, &exstyle, isFullScreen, getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
 	
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar:

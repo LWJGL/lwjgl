@@ -363,7 +363,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setCursorPosition
 	int left_border_width;
 	int bottom_border_width;
 
-	getWindowFlags(&windowflags, &extyle, isFullscreen, getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
+	getWindowFlags(&windowflags, &exstyle, getCurrentFullscreen(), getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
 	if (!GetClientRect(getCurrentHWND(), &client_rect)) {
 		printfDebugJava(env, "GetClientRect failed");
 		return;
@@ -383,7 +383,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setCursorPosition
 	bottom_border_width = adjusted_client_rect.bottom - client_rect.bottom;
 	
 	transformed_x = window_rect.left + left_border_width + x;
-	transformed_y = window_rect.bottom - bottom_border_width - y;
+	transformed_y = window_rect.bottom - bottom_border_width - 1 - y;
 	if (!SetCursorPos(transformed_x, transformed_y))
 		printfDebugJava(env, "SetCursorPos failed");
 }
