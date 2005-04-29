@@ -110,18 +110,8 @@ void closeWindow(HWND *hwnd, HDC *hdc)
 	}
 }
 
-/*
- * Create a window with the specified title, position, size, and
- * fullscreen attribute. The window will have DirectInput associated
- * with it.
- * 
- * Returns true for success, or false for failure
- */
-HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated)
-{
-	RECT clientSize;
-	int exstyle, windowflags;
-	HWND new_hwnd;
+void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fullscreen, bool undecorated) {
+	DWORD exstyle, windowflags;
 	if (fullscreen) {
 		exstyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
 		windowflags = WS_POPUP;
@@ -133,6 +123,24 @@ HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height
 		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 	}
 	windowflags = windowflags | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+	*windowflags_return = windowflags;
+	*exstyle_return = exstyle;
+}
+
+/*
+ * Create a window with the specified title, position, size, and
+ * fullscreen attribute. The window will have DirectInput associated
+ * with it.
+ * 
+ * Returns true for success, or false for failure
+ */
+HWND createWindow(LPCTSTR window_class_name, int x, int y, int width, int height, bool fullscreen, bool undecorated)
+{
+	RECT clientSize;
+	DWORD exstyle, windowflags;
+	HWND new_hwnd;
+	
+	getWindowFlags(&windowflags, &exstyle, fullscreen, indecorated);
 
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar (unless undecorated)

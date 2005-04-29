@@ -79,6 +79,11 @@ extern void closeWindow(HWND *hwnd, HDC *hdc);
  */
 extern HWND createDummyWindow(int x, int y);
 
+/**
+ * Return appropriate window and extended style flags from the given fullscreen and undecorated property
+ */
+extern void getWindowFlags(DWORD *windowflags_return, DWORD *exstyle_return, bool fullscreen, bool undecorated);
+
 /*
  * Create a window with the specified position, size, and
  * fullscreen attribute. The window will have DirectInput associated

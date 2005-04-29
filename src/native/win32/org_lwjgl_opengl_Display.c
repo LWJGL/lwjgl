@@ -371,24 +371,14 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32Display_init(JNIEnv *env, j
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_reshape(JNIEnv *env, jobject self, jint x, jint y, jint width, jint height) {
-	int exstyle, windowflags;
+	DWORD exstyle, windowflags;
 	RECT clientSize;
 
 	if (isFullScreen) {
 		return;
 	}
 
-	if (isFullScreen) {
-		exstyle = WS_EX_APPWINDOW | WS_EX_TOPMOST;
-		windowflags = WS_POPUP;
-	} else if (getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated")) {
-		exstyle = WS_EX_APPWINDOW;
-		windowflags = WS_POPUP;
-	} else {
-		exstyle = WS_EX_APPWINDOW;
-		windowflags = WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
-	}
-	windowflags = windowflags | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+	getWindowFlags(&windowflags, &exstyle, isFullscreen, getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
 	
 	// If we're not a fullscreen window, adjust the height to account for the
 	// height of the title bar:

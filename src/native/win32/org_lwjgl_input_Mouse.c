@@ -354,14 +354,36 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollMouse(JNIEnv * env
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setCursorPosition
 (JNIEnv * env, jobject self, jint x, jint y) {
+	DWORD windowflags, exstyle;
 	int transformed_x, transformed_y;
 	RECT window_rect;
+	RECT client_rect;
+	RECT adjusted_client_rect;
+
+	int left_border_width;
+	int bottom_border_width;
+
+	getWindowFlags(&windowflags, &extyle, isFullscreen, getBooleanProperty(env, "org.lwjgl.opengl.Window.undecorated"));
+	if (!GetClientRect(getCurrentHWND(), &client_rect)) {
+		printfDebugJava(env, "GetClientRect failed");
+		return;
+	}
+
+	adjusted_client_rect = client_rect;
+	if (!AdjustWindowRectEx(&adjusted_client_rect, windowflags, FALSE, exstyle)) {
+		printfDebugJava(env, "AdjustWindowRectEx failed");
+		return;
+	}
+	
 	if (!GetWindowRect(getCurrentHWND(), &window_rect)) {
 		printfDebugJava(env, "GetWindowRect failed");
 		return;
 	}
-	transformed_x = window_rect.left + x;
-	transformed_y = window_rect.bottom - y;
+	left_border_width = -adjusted_client_rect.left;
+	bottom_border_width = adjusted_client_rect.bottom - client_rect.bottom;
+	
+	transformed_x = window_rect.left + left_border_width + x;
+	transformed_y = window_rect.bottom - bottom_border_width - y;
 	if (!SetCursorPos(transformed_x, transformed_y))
 		printfDebugJava(env, "SetCursorPos failed");
 }
