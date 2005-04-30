@@ -192,7 +192,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	
 	/**
 	 * Make the canvas' context current. It is highly recommended that the context
-	 * is only made current inside the AWT thread (for example in an overridden paint()).
+	 * is only made current inside the AWT thread (for example in an overridden paintGL()).
 	 */
 	public synchronized void makeCurrent() throws LWJGLException {
 		if (context == null)
@@ -222,6 +222,10 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	protected void paintGL() {
 	}
 
+	/**
+	 * The default paint() operation makes the context current and calls paintGL() which should
+	 * be overridden to do GL operations.
+	 */
 	public final void paint(Graphics g) {
 		try {
 			if (peer_info == null)
