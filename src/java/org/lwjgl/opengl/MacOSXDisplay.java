@@ -260,8 +260,29 @@ final class MacOSXDisplay implements DisplayImplementation {
 	 * This is an interface to the native Carbon call
 	 * SetSystemUIMode. It is used to hide the dock in a way
 	 * that will prevent AWT from shifting the fullscreen window
+	 *
+	 * The workaround is not necessary on 10.4, and since 10.4 shows
+	 * instability problems calling SetSystemUIMode, we'll only call it
+	 * when the OS version is 10.3 or lower.
 	 */
-	private native void hideUI(boolean hide);
+	private void hideUI(boolean hide) {
+		String os_version = System.getProperty("os.version");
+		StringTokenizer version_tokenizer = new StringTokenizer(os_version, ".");
+		int major = 10;
+		int minor = 4;
+		try {
+			String major_str = version_tokenizer.nextToken();
+			String minor_str = version_tokenizer.nextToken();
+			major = Integer.parseInt(major_str);
+			minor = Integer.parseInt(minor_str);
+		} catch (Exception e) {
+			LWJGLUtil.log("Exception occurred while trying to determine OS version: " + e);
+		}
+		if (major == 10 && minor <= 3)
+			nHideUI(hide);
+	}
+	
+	private native void nHideUI(boolean hide);
 
 	native void getMouseDeltas(IntBuffer delta_buffer);
 

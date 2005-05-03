@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_setGammaRamp(JNIEnv *
 	}
 }
 
-JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_hideUI(JNIEnv *env, jobject this, jboolean hide) {
+JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_nHideUI(JNIEnv *env, jobject this, jboolean hide) {
 	if (hide == JNI_TRUE) {
 		SetSystemUIMode(kUIModeContentSuppressed, 0);
 	} else {
