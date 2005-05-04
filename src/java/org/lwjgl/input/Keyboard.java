@@ -309,6 +309,11 @@ public class Keyboard {
 			return;
 		created = false;
 		Display.getImplementation().destroyKeyboard();
+		keyDownBuffer.clear();
+		readBuffer.clear();
+		eventCharacter = 0;
+		eventKey = 0;
+		eventState = false;
 	}
 
 	/**
