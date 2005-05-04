@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVTextureShader {
 	public static final int GL_TEXTURE_MAG_SIZE_NV = 0x871f;

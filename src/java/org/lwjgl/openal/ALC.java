@@ -34,9 +34,9 @@ package org.lwjgl.openal;
 import java.nio.Buffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.Sys;
-import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 
 /**
  * $Id$

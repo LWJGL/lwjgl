@@ -38,11 +38,11 @@
 
 package org.lwjgl.test.opengl.shaders;
 
+import java.nio.ByteBuffer;
+
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.GL11;
-
-import java.nio.ByteBuffer;
 
 final class ShaderVSH extends Shader {
 

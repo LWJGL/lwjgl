@@ -31,8 +31,6 @@
  */
 package org.lwjgl;
 
-import org.lwjgl.LWJGLException;
-
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

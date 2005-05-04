@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.ShortBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVHalfFloat {
 	public static final int GL_HALF_FLOAT_NV = 0x140b;

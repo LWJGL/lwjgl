@@ -37,17 +37,17 @@
  */
 package org.lwjgl.test.opengl.shaders;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ARBProgram;
-import org.lwjgl.opengl.ARBShaderObjects;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Util;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.ARBProgram;
+import org.lwjgl.opengl.ARBShaderObjects;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.Util;
 
 abstract class Shader {
 

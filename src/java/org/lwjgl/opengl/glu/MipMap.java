@@ -31,10 +31,10 @@
  */
 package org.lwjgl.opengl.glu;
 
+import java.nio.ByteBuffer;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-
-import java.nio.ByteBuffer;
 
 /**
  * MipMap.java

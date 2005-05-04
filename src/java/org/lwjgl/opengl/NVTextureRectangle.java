@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVTextureRectangle {
 	public static final int GL_MAX_RECTANGLE_TEXTURE_SIZE_NV = 0x84f8;

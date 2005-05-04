@@ -38,7 +38,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.util.Color;
-import org.lwjgl.util.model.*;
+import org.lwjgl.util.model.BoneFrame;
+import org.lwjgl.util.model.BonedModel;
+import org.lwjgl.util.model.BonedVertex;
+import org.lwjgl.util.model.MeshFrame;
+import org.lwjgl.util.model.MeshedModel;
+import org.lwjgl.util.model.Model;
+import org.lwjgl.util.model.Triangle;
+import org.lwjgl.util.model.Vertex;
+import org.lwjgl.util.model.Weight;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

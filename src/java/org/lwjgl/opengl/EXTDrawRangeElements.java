@@ -2,9 +2,12 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class EXTDrawRangeElements {
 	public static final int GL_MAX_ELEMENTS_INDICES_EXT = 0x80e9;

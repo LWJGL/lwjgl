@@ -31,15 +31,11 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.lang.reflect.Method;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferUtils;
-
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsConfiguration;
-
-import java.lang.reflect.Method;
 
 /**
  * $Id$

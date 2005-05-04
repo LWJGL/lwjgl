@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ATIDrawBuffers {
 	public static final int GL_DRAW_BUFFER15_ATI = 0x8834;

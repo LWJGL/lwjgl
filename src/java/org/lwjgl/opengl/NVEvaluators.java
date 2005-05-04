@@ -2,9 +2,11 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVEvaluators {
 	public static final int GL_MAX_RATIONAL_EVAL_ORDER_NV = 0x86d7;

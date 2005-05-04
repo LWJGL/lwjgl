@@ -2,9 +2,14 @@
 
 package org.lwjgl.openal;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
+import org.lwjgl.LWJGLException;
 
 public final class AL10 {
 	/**

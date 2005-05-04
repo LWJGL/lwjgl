@@ -31,7 +31,11 @@
  */
 package org.lwjgl.util;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 /**
  * $Id$ This is an interface describing an Object that can render using

@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ARBPixelBufferObject extends ARBBufferObject {
 	public static final int PIXEL_UNPACK_BUFFER_BINDING_ARB = 0x88ef;

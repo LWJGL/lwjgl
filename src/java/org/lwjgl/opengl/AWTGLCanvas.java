@@ -32,20 +32,19 @@
 package org.lwjgl.opengl;
 
 import java.awt.Canvas;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
-
-import java.awt.Point;
-import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.HierarchyListener;
 
 /**
  * $Id$
@@ -171,7 +170,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	public synchronized void setVSyncEnabled(boolean enabled) throws LWJGLException {
 		if (context == null)
 			throw new IllegalStateException("Canvas not yet displayable");
-		context.setVSync(enabled);
+		Context.setVSync(enabled);
 	}
 	
 	/**
@@ -180,7 +179,7 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	public synchronized void swapBuffers() throws LWJGLException {
 		if (context == null)
 			throw new IllegalStateException("Canvas not yet displayable");
-		context.swapBuffers();
+		Context.swapBuffers();
 	}
 	
 	public synchronized void releaseContext() throws LWJGLException {

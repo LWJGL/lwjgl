@@ -31,9 +31,6 @@
  */
 package org.lwjgl.opengl;
 
-import java.util.WeakHashMap;
-import java.util.Map;
-
 import java.nio.IntBuffer;
 
 /** Track Vertex Buffer Objects by context. */

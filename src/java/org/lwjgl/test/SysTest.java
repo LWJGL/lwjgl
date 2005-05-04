@@ -31,10 +31,10 @@
  */
 package org.lwjgl.test;
 
-import org.lwjgl.opengl.Display;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
-import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
 
 /**
  * $Id$

@@ -2,9 +2,10 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class EXTFogCoord {
 	public static final int GL_FOG_COORDINATE_ARRAY_EXT = 0x8457;

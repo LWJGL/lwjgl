@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVPointSprite {
 	public static final int GL_POINT_SPRITE_R_MODE_NV = 0x8863;

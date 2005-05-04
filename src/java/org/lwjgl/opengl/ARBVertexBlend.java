@@ -2,9 +2,13 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ARBVertexBlend {
 	public static final int GL_MODELVIEW31_ARB = 0x873f;

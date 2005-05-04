@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ARBTextureFloat {
 	public static final int LUMINANCE_ALPHA16F_ARB = 0x881f;

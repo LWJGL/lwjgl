@@ -31,16 +31,10 @@
  */
 package org.lwjgl.devil;
 
-import java.io.File;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
 import org.lwjgl.LWJGLUtil;
 
 /**

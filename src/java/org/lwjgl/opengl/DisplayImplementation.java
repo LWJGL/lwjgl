@@ -38,9 +38,10 @@ package org.lwjgl.opengl;
  * @author elias_naur
  */
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.ByteBuffer;
+
 import org.lwjgl.LWJGLException;
 
 public interface DisplayImplementation {

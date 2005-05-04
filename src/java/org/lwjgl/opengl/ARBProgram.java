@@ -2,9 +2,12 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public class ARBProgram {
 	public static final int GL_MATRIX31_ARB = 0x88df;

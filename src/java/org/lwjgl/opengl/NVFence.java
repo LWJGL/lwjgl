@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVFence {
 	public static final int GL_FENCE_CONDITION_NV = 0x84f4;

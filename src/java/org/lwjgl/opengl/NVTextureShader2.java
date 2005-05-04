@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVTextureShader2 {
 	public static final int GL_DSDT8_MAG8_INTENSITY8_NV = 0x870b;

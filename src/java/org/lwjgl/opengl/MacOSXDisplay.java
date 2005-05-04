@@ -56,7 +56,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
 

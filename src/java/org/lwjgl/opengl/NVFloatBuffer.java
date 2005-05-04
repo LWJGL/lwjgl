@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVFloatBuffer {
 	public static final int GL_FLOAT_RGBA_MODE_NV = 0x888e;

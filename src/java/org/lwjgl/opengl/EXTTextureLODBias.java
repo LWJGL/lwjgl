@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class EXTTextureLODBias {
 	public static final int GL_MAX_TEXTURE_LOD_BIAS_EXT = 0x84fd;

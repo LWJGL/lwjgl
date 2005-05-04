@@ -31,9 +31,45 @@
  */
 package org.lwjgl.util;
 
-import org.lwjgl.opengl.*;
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
-import java.nio.*;
+import org.lwjgl.opengl.ARBBufferObject;
+import org.lwjgl.opengl.ARBFragmentProgram;
+import org.lwjgl.opengl.ARBImaging;
+import org.lwjgl.opengl.ARBMatrixPalette;
+import org.lwjgl.opengl.ARBMultisample;
+import org.lwjgl.opengl.ARBMultitexture;
+import org.lwjgl.opengl.ARBOcclusionQuery;
+import org.lwjgl.opengl.ARBPointParameters;
+import org.lwjgl.opengl.ARBShaderObjects;
+import org.lwjgl.opengl.ARBTextureCompression;
+import org.lwjgl.opengl.ARBTransposeMatrix;
+import org.lwjgl.opengl.ARBVertexBlend;
+import org.lwjgl.opengl.ARBVertexProgram;
+import org.lwjgl.opengl.ARBVertexShader;
+import org.lwjgl.opengl.ARBWindowPos;
+import org.lwjgl.opengl.EXTBlendEquationSeparate;
+import org.lwjgl.opengl.EXTBlendFuncSeparate;
+import org.lwjgl.opengl.EXTCompiledVertexArray;
+import org.lwjgl.opengl.EXTDepthBoundsTest;
+import org.lwjgl.opengl.EXTDrawRangeElements;
+import org.lwjgl.opengl.EXTFogCoord;
+import org.lwjgl.opengl.EXTMultiDrawArrays;
+import org.lwjgl.opengl.EXTPointParameters;
+import org.lwjgl.opengl.EXTSecondaryColor;
+import org.lwjgl.opengl.EXTStencilTwoSide;
+import org.lwjgl.opengl.EXTVertexShader;
+import org.lwjgl.opengl.EXTVertexWeighting;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL14;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 
 /**
  * $Id$

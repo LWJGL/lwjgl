@@ -31,18 +31,9 @@
  */
 package org.lwjgl.openal;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.StringTokenizer;
-
-import java.util.List;
-import java.util.ArrayList;
-
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
-import org.lwjgl.LWJGLUtil;
-import org.lwjgl.devil.ILU;
-import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$

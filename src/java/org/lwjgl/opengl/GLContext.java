@@ -31,12 +31,16 @@
  */
 package org.lwjgl.opengl;
 
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.WeakHashMap;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
-
-import java.lang.reflect.Method;
-import java.util.*;
 
 /**
  * $Id$

@@ -31,8 +31,9 @@
  */
 package org.lwjgl.opengl;
 
+import java.nio.Buffer;
+
 import org.lwjgl.BufferUtils;
-import java.nio.*;
 
 /**
  * $Id$ A class to check buffer boundaries in GL methods. Many GL

@@ -2,9 +2,11 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ARBShaderObjects {
 	public static final int GL_SAMPLER_2D_RECT_SHADOW_ARB = 0x8b64;

@@ -31,7 +31,6 @@
  */
 package org.lwjgl.util;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;

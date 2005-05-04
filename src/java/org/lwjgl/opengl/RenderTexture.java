@@ -31,9 +31,9 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.BufferUtils;
-
 import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
 
 /** This class represents the state necessary for render-to-texture. */
 public final class RenderTexture {

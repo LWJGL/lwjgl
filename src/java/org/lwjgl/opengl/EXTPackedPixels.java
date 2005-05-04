@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class EXTPackedPixels {
 	public static final int GL_UNSIGNED_INT_10_10_10_2_EXT = 0x8036;

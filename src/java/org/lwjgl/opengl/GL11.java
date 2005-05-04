@@ -2,9 +2,14 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class GL11 {
 	public static final int GL_TEXTURE_COMPONENTS = 0x1003;

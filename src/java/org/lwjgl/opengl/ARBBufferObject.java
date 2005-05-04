@@ -2,9 +2,13 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public class ARBBufferObject {
 	public static final int GL_BUFFER_MAP_POINTER_ARB = 0x88bd;

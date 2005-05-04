@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class EXTStencilWrap {
 	public static final int GL_DECR_WRAP_EXT = 0x8508;

@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ARBDepthTexture {
 	public static final int GL_DEPTH_TEXTURE_MODE_ARB = 0x884b;

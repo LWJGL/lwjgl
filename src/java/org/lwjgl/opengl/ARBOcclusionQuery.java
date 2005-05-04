@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ARBOcclusionQuery {
 	public static final int GL_QUERY_RESULT_AVAILABLE_ARB = 0x8867;

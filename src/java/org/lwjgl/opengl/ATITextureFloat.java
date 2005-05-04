@@ -2,9 +2,6 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ATITextureFloat {
 	public static final int GL_LUMINANCE_ALPHA_FLOAT16_ATI = 0x881f;

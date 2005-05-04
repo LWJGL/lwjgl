@@ -2,9 +2,11 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class EXTSecondaryColor {
 	public static final int GL_SECONDARY_COLOR_ARRAY_EXT = 0x845e;

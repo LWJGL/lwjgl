@@ -33,14 +33,13 @@ package org.lwjgl.test.devil;
 
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.devil.IL;
 import org.lwjgl.devil.ILU;
 import org.lwjgl.devil.ILUT;
 import org.lwjgl.devil.ILinfo;
-import org.lwjgl.BufferUtils;
 
 /**
  * $Id$

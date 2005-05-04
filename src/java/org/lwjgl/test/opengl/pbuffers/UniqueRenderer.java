@@ -31,11 +31,11 @@
  */
 package org.lwjgl.test.opengl.pbuffers;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.LWJGLException;
 
 final class UniqueRenderer extends TextureRenderer {
 

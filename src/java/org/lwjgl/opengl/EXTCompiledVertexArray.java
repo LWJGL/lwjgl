@@ -2,9 +2,7 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class EXTCompiledVertexArray {
 	public static final int GL_ARRAY_ELEMENT_LOCK_COUNT_EXT = 0x81a9;

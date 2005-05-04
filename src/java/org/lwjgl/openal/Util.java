@@ -31,9 +31,6 @@
  */
 package org.lwjgl.openal;
 
-import java.nio.*;
-
-import org.lwjgl.BufferUtils;
 
 /**
  * Simple utility class.

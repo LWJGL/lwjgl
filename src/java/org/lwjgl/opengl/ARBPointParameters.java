@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class ARBPointParameters {
 	public static final int GL_POINT_DISTANCE_ATTENUATION_ARB = 0x8129;

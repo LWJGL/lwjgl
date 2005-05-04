@@ -32,10 +32,10 @@
 package org.lwjgl.test;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.input.Keyboard;
 
 /**
  * Small class for testing that the Window is creatable

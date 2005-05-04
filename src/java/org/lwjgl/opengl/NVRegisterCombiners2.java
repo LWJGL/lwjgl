@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import org.lwjgl.LWJGLException;
+import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferChecks;
-import java.nio.*;
 
 public final class NVRegisterCombiners2 {
 	public static final int GL_PER_STAGE_CONSTANTS_NV = 0x8535;
