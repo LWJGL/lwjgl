@@ -129,13 +129,13 @@ public final class Display {
 		String class_name;
 		switch (LWJGLUtil.getPlatform()) {
 			case LWJGLUtil.PLATFORM_LINUX:
-				class_name = "org.lwjgl.opengl.LinuxDisplay";
+			class_name = "org.lwjgl.opengl.LinuxDisplay";
 				break;
 			case LWJGLUtil.PLATFORM_WINDOWS:
-				class_name = "org.lwjgl.opengl.Win32Display";
+			class_name = "org.lwjgl.opengl.Win32Display";
 				break;
 			case LWJGLUtil.PLATFORM_MACOSX:
-				class_name = "org.lwjgl.opengl.MacOSXDisplay";
+			class_name = "org.lwjgl.opengl.MacOSXDisplay";
 				break;
 			default:
 				throw new IllegalStateException("Unsupported platform");
@@ -231,8 +231,9 @@ public final class Display {
 	 * A native context must exist, and it will be attached to the window.
 	 */
 	private static void createWindow() throws LWJGLException {
-		if (window_created)
-			throw new InternalError("Window already created");
+		if (window_created) {
+			return;
+		}
 		int window_x;
 		int window_y;
 		if (!fullscreen) {
@@ -255,19 +256,22 @@ public final class Display {
 		initControls();
 		setVSyncEnabled(vsync);
 		window_created = true;
+		update();
 	}
 
 	private static void destroyWindow() {
+		if (!window_created) {
+			return;
+		}
 		try {
-		if (context.isCurrent())
-			Context.releaseCurrentContext();
+			if (context.isCurrent()) {
+				Context.releaseCurrentContext();
+			}
 		} catch (LWJGLException e) {
 			LWJGLUtil.log("Exception occurred while trying to release context");
 		}
 
-		if (!window_created)
-			throw new InternalError("Window already created");
-		// Automatically destroy keyboard, mouse, and controller
+		// Automatically destroy keyboard & mouse
 		if (Mouse.isCreated()) {
 			Mouse.destroy();
 		}
@@ -279,8 +283,10 @@ public final class Display {
 	}
 
 	private static void switchDisplayMode() throws LWJGLException {
-		if (!current_mode.isFullscreen())
-			throw new LWJGLException("The current DisplayMode instance cannot be used for fullscreen mode");
+		if (!current_mode.isFullscreen()) {
+			System.out.println("Switching to "+initial_mode);
+			setDisplayMode(initial_mode);
+		}
 		display_impl.switchDisplayMode(current_mode);
 	}
 
