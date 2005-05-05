@@ -39,6 +39,8 @@ package org.lwjgl.opengl;
  */
 
 import java.awt.Cursor;
+import java.awt.Robot;
+import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -265,10 +267,15 @@ final class MacOSXDisplay implements DisplayImplementation {
 	 * when the OS version is 10.3 or lower.
 	 */
 	private void hideUI(boolean hide) {
+		if (!isMacOSXEqualsOrBetterThan(10, 4))
+			nHideUI(hide);
+	}
+
+	private static boolean isMacOSXEqualsOrBetterThan(int major_required, int minor_required) {
 		String os_version = System.getProperty("os.version");
 		StringTokenizer version_tokenizer = new StringTokenizer(os_version, ".");
-		int major = 10;
-		int minor = 4;
+		int major;
+		int minor;
 		try {
 			String major_str = version_tokenizer.nextToken();
 			String minor_str = version_tokenizer.nextToken();
@@ -276,9 +283,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 			minor = Integer.parseInt(minor_str);
 		} catch (Exception e) {
 			LWJGLUtil.log("Exception occurred while trying to determine OS version: " + e);
+			// Best guess, no
+			return false;
 		}
-		if (major == 10 && minor <= 3)
-			nHideUI(hide);
+		return major > major_required || (major == major_required && minor >= minor_required);
 	}
 	
 	private native void nHideUI(boolean hide);
@@ -336,27 +344,35 @@ final class MacOSXDisplay implements DisplayImplementation {
 	private native void nGrabMouse(boolean grab);
 
 	public int getNativeCursorCapabilities() {
-		/*
-		int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
-		boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
-		int caps = supported ? Mouse.CURSOR_8_BIT_ALPHA | Mouse.CURSOR_ONE_BIT_TRANSPARENCY: 0;
-		return caps;
-		*/
-		/* Return no capability, as there are two unsolved bugs (both reported to apple along with
-		   minimal test case):
-		   1. When a custom cursor (or some standard) java.awt.Cursor is assigned to a
-		      Componennt, it is reset to the default pointer cursor when the window is de-
-			  activated and the re-activated. The Cursor can not be reset to the custom cursor,
-			  with another setCursor.
-		   2. When the cursor is moving in the top pixel row (y = 0 in AWT coordinates) in fullscreen
-		   	  mode, no mouse moved events are reported, even though mouse pressed/released and dragged
-			  events are reported
-		*/
-		return 0;
+		if (isMacOSXEqualsOrBetterThan(10, 4)) {
+			int cursor_colors = Toolkit.getDefaultToolkit().getMaximumCursorColors();
+			boolean supported = cursor_colors >= Short.MAX_VALUE && getMaxCursorSize() > 0;
+			int caps = supported ? org.lwjgl.input.Cursor.CURSOR_8_BIT_ALPHA | org.lwjgl.input.Cursor.CURSOR_ONE_BIT_TRANSPARENCY: 0;
+			return caps;
+		} else {
+			/* Return no capability in Mac OS X 10.3 and earlier , as there are two unsolved bugs (both reported to apple along with
+			   minimal test case):
+			   1. When a custom cursor (or some standard) java.awt.Cursor is assigned to a
+			   Componennt, it is reset to the default pointer cursor when the window is de-
+			   activated and the re-activated. The Cursor can not be reset to the custom cursor,
+			   with another setCursor.
+			   2. When the cursor is moving in the top pixel row (y = 0 in AWT coordinates) in fullscreen
+			   mode, no mouse moved events are reported, even though mouse pressed/released and dragged
+			   events are reported
+			 */
+			return 0;
+		}
 	}
 
 	public void setCursorPosition(int x, int y) {
-		throw new UnsupportedOperationException();
+		try {
+			Robot robot = new Robot(frame.getGraphicsConfiguration().getDevice());
+			int transformed_x = frame.getX() + x;
+			int transformed_y = frame.getY() + frame.getHeight() - 1 - y;
+			robot.mouseMove(transformed_x, transformed_y);
+		} catch (AWTException e) {
+			LWJGLUtil.log("Got exception while setting mouse cursor position: " + e);
+		}
 	}
 
 	public void setNativeCursor(Object handle) throws LWJGLException {
@@ -419,19 +435,10 @@ final class MacOSXDisplay implements DisplayImplementation {
 	}
 
 	public int getPbufferCapabilities() {
-		int major_version;
-		int minor_version;
-		String os_version = System.getProperty("os.version");
-		StringTokenizer tokenizer = new StringTokenizer(os_version, ".");
-		try  {
-			major_version = Integer.parseInt(tokenizer.nextToken());
-			minor_version = Integer.parseInt(tokenizer.nextToken());
-			if (major_version > 10 || (major_version == 10 && minor_version >= 3))
-				return Pbuffer.PBUFFER_SUPPORTED;
-		} catch (Exception e) {
-			LWJGLUtil.log("Exception occurred when trying to determine OS version: " + e);
-		}
-		return 0;
+		if (isMacOSXEqualsOrBetterThan(10, 3))
+			return Pbuffer.PBUFFER_SUPPORTED;
+		else
+			return 0;
 	}
 
 	/**
