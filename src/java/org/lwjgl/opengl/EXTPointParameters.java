@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.FloatBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class EXTPointParameters {
 	public static final int GL_DISTANCE_ATTENUATION_EXT = 0x8129;

@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBFragmentShader {
 	public static final int GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB = 0x8b8b;

@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class NVVertexProgram2Option {
 	public static final int GL_MAX_PROGRAM_CALL_DEPTH_NV = 0x88f5;

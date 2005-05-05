@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.FloatBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBTransposeMatrix {
 	public static final int GL_TRANSPOSE_COLOR_MATRIX_ARB = 0x84e6;

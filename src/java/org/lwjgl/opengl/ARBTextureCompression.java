@@ -2,13 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBTextureCompression {
 	public static final int GL_COMPRESSED_TEXTURE_FORMATS_ARB = 0x86a3;

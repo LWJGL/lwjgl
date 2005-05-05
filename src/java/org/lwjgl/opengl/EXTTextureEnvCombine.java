@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class EXTTextureEnvCombine {
 	public static final int GL_PREVIOUS_EXT = 0x8578;

@@ -2,7 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class EXTDepthBoundsTest {
 	public static final int GL_DEPTH_BOUNDS_EXT = 0x8891;

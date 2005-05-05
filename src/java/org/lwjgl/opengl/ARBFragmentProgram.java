@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBFragmentProgram extends ARBProgram {
 	public static final int GL_MAX_TEXTURE_IMAGE_UNITS_ARB = 0x8872;

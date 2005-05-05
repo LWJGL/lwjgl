@@ -2,10 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBVertexShader {
 	public static final int GL_FLOAT_MAT4_ARB = 0x8b5c;

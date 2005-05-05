@@ -2,10 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ATIEnvmapBumpmap {
 	public static final int GL_BUMP_TARGET_ATI = 0x877c;

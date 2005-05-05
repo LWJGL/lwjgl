@@ -2,13 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class NVPixelDataRange {
 	public static final int GL_READ_PIXEL_DATA_RANGE_POINTER_NV = 0x887d;

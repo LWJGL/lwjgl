@@ -2,10 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class EXTVertexWeighting {
 	public static final int GL_VERTEX_WEIGHT_ARRAY_POINTER_EXT = 0x8510;

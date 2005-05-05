@@ -2,7 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBMultitexture {
 	public static final int GL_MAX_TEXTURE_UNITS_ARB = 0x84e2;

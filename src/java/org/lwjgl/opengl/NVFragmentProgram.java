@@ -2,10 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class NVFragmentProgram extends NVProgram {
 	public static final int GL_MAX_FRAGMENT_PROGRAM_LOCAL_PARAMETERS_NV = 0x8868;

@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class EXTAbgr {
 	public static final int GL_ABGR_EXT = 0x8000;

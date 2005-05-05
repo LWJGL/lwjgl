@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class NVOcclusionQuery {
 	public static final int GL_PIXEL_COUNT_AVAILABLE_NV = 0x8867;

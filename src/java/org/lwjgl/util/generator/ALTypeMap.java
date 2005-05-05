@@ -173,7 +173,6 @@ public class ALTypeMap implements TypeMap {
 	}
 
 	public void printNativeIncludes(PrintWriter writer) {
-		writer.println("#include \"checkALerror.h\"");
 		writer.println("#include \"extal.h\"");
 	}
 

@@ -2,11 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public class NVProgram {
 	public static final int GL_PROGRAM_ERROR_STRING_NV = 0x8874;

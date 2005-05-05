@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class EXTCgShader {
 	public static final int GL_CG_FRAGMENT_SHADER_EXT = 0x890f;

@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.IntBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBDrawBuffers {
 	public static final int GL_DRAW_BUFFER15_ARB = 0x8834;

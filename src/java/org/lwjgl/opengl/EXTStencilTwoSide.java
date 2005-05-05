@@ -2,7 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class EXTStencilTwoSide {
 	public static final int GL_ACTIVE_STENCIL_FACE_EXT = 0x8911;

@@ -2,7 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ATISeparateStencil {
 	public static final int GL_STENCIL_BACK_PASS_DEPTH_PASS_ATI = 0x8803;

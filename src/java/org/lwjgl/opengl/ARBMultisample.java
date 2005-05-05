@@ -2,7 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBMultisample {
 	public static final int GL_MULTISAMPLE_BIT_ARB = 0x20000000;

@@ -2,7 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ATIVertexStreams {
 	public static final int GL_VERTEX_STREAM7_ATI = 0x8774;

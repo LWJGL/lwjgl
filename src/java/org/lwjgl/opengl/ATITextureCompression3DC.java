@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ATITextureCompression3DC {
 	public static final int GL_COMPRESSED_LUMINANCE_ALPHA_3DC_ATI = 0x8837;

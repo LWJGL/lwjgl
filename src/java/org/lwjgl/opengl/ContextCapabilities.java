@@ -2,9 +2,8 @@
 
 package org.lwjgl.opengl;
 
-import java.util.Set;
-
 import org.lwjgl.LWJGLException;
+import java.util.Set;
 
 public class ContextCapabilities {
 	final StateTracker tracker;

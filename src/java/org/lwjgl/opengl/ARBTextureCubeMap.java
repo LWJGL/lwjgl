@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ARBTextureCubeMap {
 	public static final int GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB = 0x851c;

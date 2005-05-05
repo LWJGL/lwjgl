@@ -2,9 +2,9 @@
 
 package org.lwjgl.opengl;
 
-import java.nio.FloatBuffer;
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class ATIFragmentShader {
 	public static final int GL_BIAS_BIT_ATI = 0x8;

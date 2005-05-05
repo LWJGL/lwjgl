@@ -2,6 +2,9 @@
 
 package org.lwjgl.opengl;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.BufferChecks;
+import java.nio.*;
 
 public final class NVFogDistance {
 	public static final int GL_EYE_PLANE_ABSOLUTE_NV = 0x855c;
