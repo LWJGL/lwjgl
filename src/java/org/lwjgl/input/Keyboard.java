@@ -291,7 +291,16 @@ public class Keyboard {
 		Display.getImplementation().createKeyboard();
 		created = true;
 		readBuffer = BufferUtils.createIntBuffer(EVENT_SIZE*BUFFER_SIZE);
+		reset();
+	}
+
+	private static void reset() {
 		readBuffer.limit(0);
+		for (int i = 0; i < keyDownBuffer.remaining(); i++)
+			keyDownBuffer.put(i, (byte)0);
+		eventCharacter = 0;
+		eventKey = 0;
+		eventState = false;
 	}
 
 	/**
@@ -309,11 +318,7 @@ public class Keyboard {
 			return;
 		created = false;
 		Display.getImplementation().destroyKeyboard();
-		keyDownBuffer.clear();
-		readBuffer.clear();
-		eventCharacter = 0;
-		eventKey = 0;
-		eventState = false;
+		reset();
 	}
 
 	/**
