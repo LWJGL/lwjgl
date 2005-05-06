@@ -256,7 +256,6 @@ public final class Display {
 		initControls();
 		setVSyncEnabled(vsync);
 		window_created = true;
-		update();
 	}
 
 	private static void destroyWindow() {

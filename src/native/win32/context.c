@@ -63,7 +63,7 @@ bool registerWindow(WNDPROC win_proc, LPCTSTR class_name)
 	windowClass.hInstance = dll_handle;
 	windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hbrBackground = NULL;
+	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	windowClass.lpszMenuName = NULL;
 	windowClass.lpszClassName = class_name;
 
