@@ -351,6 +351,94 @@ public class FSound {
   
   /** Stream has suffered a fatal error */
   public static final int FSOUND_STREAM_NET_ERROR = 4;
+  
+  public static final int FSOUND_FX_CHORUS 				= 0;
+  public static final int FSOUND_FX_COMPRESSOR 			= 1;
+  public static final int FSOUND_FX_DISTORTION			= 2;
+  public static final int FSOUND_FX_ECHO				= 3;
+  public static final int FSOUND_FX_FLANGER				= 4;
+  public static final int FSOUND_FX_GARGLE				= 5;
+  public static final int FSOUND_FX_I3DL2REVERB			= 6;
+  public static final int FSOUND_FX_PARAMEQ				= 7;
+  public static final int FSOUND_FX_WAVES_REVERB		= 8;
+  public static final int FSOUND_FX_MAX					= 9;
+  
+  /** Dolby Digital Output (XBOX or PC only). */
+  public static final int FSOUND_SPEAKERMODE_DOLBYDIGITAL			= 0;
+  
+  /** The speakers are headphones. */
+  public static final int FSOUND_SPEAKERMODE_HEADPHONES				= 1;
+  
+  /** The speakers are monaural. */
+  public static final int FSOUND_SPEAKERMODE_MONO					= 2;
+  
+  /** The speakers are quadraphonic.  */
+  public static final int FSOUND_SPEAKERMODE_QUAD					= 3;
+  
+  /** The speakers are stereo (default value). */
+  public static final int FSOUND_SPEAKERMODE_STEREO					= 4;
+  
+  /** The speakers are surround sound. */
+  public static final int FSOUND_SPEAKERMODE_SURROUND				= 5;
+  
+  /** DTS output (XBOX only). */
+  public static final int FSOUND_SPEAKERMODE_DTS					= 6;
+  
+  /** Dolby Prologic 2.  Playstation 2 and Gamecube only.  PlayStation 2 doesnt support interior panning, but supports 48 voices simultaneously. */
+  public static final int FSOUND_SPEAKERMODE_PROLOGIC2				= 7;
+    
+  /* Dolby Prologic 2.  Playstation 2 and Gamecube only.  PlayStation 2 does support interior panning, but only supports 24 voices simultaneously. */
+  public static final int FSOUND_SPEAKERMODE_PROLOGIC2_INTERIOR		= 8;
+  
+  /** Win32 only - Causes MIDI playback to force software decoding. */
+  public static final int FSOUND_INIT_USEDEFAULTMIDISYNTH     		= 0x0001;
+  
+  /** Win32 only - For DirectSound output - sound is not muted when window is out of focus. */
+  public static final int FSOUND_INIT_GLOBALFOCUS             		= 0x0002;
+  
+  /** Win32 only - For DirectSound output - Allows FSOUND_FX api to be used on global software mixer output! (use FSOUND_SYSTEMCHANNEL as channel id) */
+  public static final int FSOUND_INIT_ENABLESYSTEMCHANNELFX   		= 0x0004;
+  
+  /** This latency adjusts FSOUND_GetCurrentLevels, but incurs a small cpu and memory hit */
+  public static final int FSOUND_INIT_ACCURATEVULEVELS        		= 0x0008;
+  
+  /** PS2 only   - Disable reverb on CORE 0 to regain SRAM */
+  public static final int FSOUND_INIT_PS2_DISABLECORE0REVERB  		= 0x0010;
+  
+  /** PS2 only   - Disable reverb on CORE 1 to regain SRAM */
+  public static final int FSOUND_INIT_PS2_DISABLECORE1REVERB  		= 0x0020;
+  
+  /** PS2 only   - By default FMOD uses DMA CH0 for mixing, CH1 for uploads, this flag swaps them around */
+  public static final int FSOUND_INIT_PS2_SWAPDMACORES        		= 0x0040;
+  
+  /** Callbacks are not latency adjusted, and are called at mix time.  Also information functions are immediate */
+  public static final int FSOUND_INIT_DONTLATENCYADJUST       		= 0x0080;
+  
+  /** GC only    - Initializes GC audio libraries */
+  public static final int FSOUND_INIT_GC_INITLIBS             		= 0x0100;
+  
+  /** Turns off fmod streamer thread, and makes streaming update from FSOUND_Update called by the user */
+  public static final int FSOUND_INIT_STREAM_FROM_MAIN_THREAD 		= 0x0200;
+  
+  /** PS2 only   - Turns on volume ramping system to remove hardware clicks. */
+  public static final int FSOUND_INIT_PS2_USEVOLUMERAMPING    		= 0x0400;
+  
+  /** Win32 only - For DirectSound output.  3D commands are batched together and executed at FSOUND_Update. */
+  public static final int FSOUND_INIT_DSOUND_DEFERRED         		= 0x0800;
+  
+  /** Win32 only - For DirectSound output.  FSOUND_HW3D buffers use a slightly higher quality algorithm when 3d hardware acceleration is not present. */
+  public static final int FSOUND_INIT_DSOUND_HRTF_LIGHT       		= 0x1000;
+  
+  /** Win32 only - For DirectSound output.  FSOUND_HW3D buffers use full quality 3d playback when 3d hardware acceleration is not present. */
+  public static final int FSOUND_INIT_DSOUND_HRTF_FULL        		= 0x2000;
+  
+  public static final int FSOUND_PROTOCOL_SHOUTCAST  				= 0x00000001;
+  public static final int FSOUND_PROTOCOL_ICECAST    				= 0x00000002;
+  public static final int FSOUND_PROTOCOL_HTTP      				= 0x00000004;
+  public static final int FSOUND_FORMAT_MPEG         				= 0x00010000;
+  public static final int FSOUND_FORMAT_OGGVORBIS    				= 0x00020000; 
+  
+  
 
   // Pre Initialization / Initialization / Enumeration
   // ======================================================
