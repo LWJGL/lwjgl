@@ -475,11 +475,7 @@
 	<!-- Compiles LWJGL on Linux platforms -->
 	<target name="-compile_native_linux" if="lwjgl.platform.linux">
 		<echo>Compiling Linux LWJGL version</echo>
-		<apply executable="sh" dir="${lwjgl.src.native}">
-			<fileset dir="${lwjgl.src.native}">
-				<include name="build.sh" />
-			</fileset>
-		</apply>
+		<exec executable="make" dir="${lwjgl.src.native}/linux"/>
 		<move file="${lwjgl.src.native}/linux/liblwjgl.so" tofile="${lwjgl.lib}/liblwjgl.so" />
 	</target>
 
