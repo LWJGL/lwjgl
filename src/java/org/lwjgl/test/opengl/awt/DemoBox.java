@@ -299,19 +299,21 @@ public class DemoBox extends Frame {
 		}
 
 		public void run() {
+			long sleep_time = 1000;
 			while (renderThread != null) {
 
 				// check for change of demo
 				synchronized (this) {
 					// if no demo set, just sleep
 					if (activeDemo == null) {
-						sleep(1000);
+						sleep_time = 1000;
 					} else {
 						// we have a demo!
-						sleep(16);
+						sleep_time = 16;
 						repaint();
 					}
 				}
+				sleep(sleep_time);
 			}
 			System.out.println("dead");
 		}
