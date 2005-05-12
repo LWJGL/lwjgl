@@ -57,6 +57,7 @@ import org.lwjgl.Sys;
 public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, HierarchyListener {
 	private final static AWTCanvasImplementation implementation;
 	private boolean update_context;
+	private Object SYNC_LOCK = new Object();
 
 	static {
 		Sys.initialize();
@@ -97,8 +98,10 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	private Context context;
 	
 
-	private synchronized void setUpdate() {
-		update_context = true;
+	private void setUpdate() {
+		synchronized(SYNC_LOCK) {
+			update_context = true;
+		}
 	}
 
 	/**
@@ -167,51 +170,61 @@ public class AWTGLCanvas extends Canvas implements Drawable, ComponentListener, 
 	/**
 	 * Enable vsync
 	 */
-	public synchronized void setVSyncEnabled(boolean enabled) throws LWJGLException {
-		if (context == null)
-			throw new IllegalStateException("Canvas not yet displayable");
-		Context.setVSync(enabled);
+	public void setVSyncEnabled(boolean enabled) throws LWJGLException {
+		synchronized(SYNC_LOCK) {
+			if (context == null)
+				throw new IllegalStateException("Canvas not yet displayable");
+			Context.setVSync(enabled);
+		}
 	}
 	
 	/**
 	 * Swap the canvas' buffer
 	 */
-	public synchronized void swapBuffers() throws LWJGLException {
-		if (context == null)
-			throw new IllegalStateException("Canvas not yet displayable");
-		Context.swapBuffers();
+	public void swapBuffers() throws LWJGLException {
+		synchronized(SYNC_LOCK) {
+			if (context == null)
+				throw new IllegalStateException("Canvas not yet displayable");
+			Context.swapBuffers();
+		}
 	}
 	
-	public synchronized void releaseContext() throws LWJGLException {
-		if (context == null)
-			throw new IllegalStateException("Canvas not yet displayable");
-		if (context.isCurrent())
-			Context.releaseCurrentContext();
+	public void releaseContext() throws LWJGLException {
+		synchronized(SYNC_LOCK) {
+			if (context == null)
+				throw new IllegalStateException("Canvas not yet displayable");
+			if (context.isCurrent())
+				Context.releaseCurrentContext();
+		}
 	}
 	
 	/**
 	 * Make the canvas' context current. It is highly recommended that the context
 	 * is only made current inside the AWT thread (for example in an overridden paintGL()).
 	 */
-	public synchronized void makeCurrent() throws LWJGLException {
-		if (context == null)
-			throw new IllegalStateException("Canvas not yet displayable");
-		context.makeCurrent();
+	public void makeCurrent() throws LWJGLException {
+		synchronized(SYNC_LOCK) {
+			if (context == null)
+				throw new IllegalStateException("Canvas not yet displayable");
+			context.makeCurrent();
+		}
 	}
 	
 	/**
 	 * Destroy the OpenGL context. This happens when the component becomes undisplayable
 	 */
-	private synchronized void destroyContext() {
-		try {
-			if (context != null) {
-				context.forceDestroy();
-				context = null;
-				peer_info.destroy();
-				peer_info = null;
+	private void destroyContext() {
+		synchronized(SYNC_LOCK) {
+			try {
+				if (context != null) {
+					context.forceDestroy();
+					context = null;
+					peer_info.destroy();
+					peer_info = null;
+				}
+			} catch (LWJGLException e) {
+				throw new RuntimeException(e);
 			}
-		} catch (LWJGLException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
