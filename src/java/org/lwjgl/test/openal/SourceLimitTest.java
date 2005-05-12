@@ -99,18 +99,18 @@ public class SourceLimitTest extends BasicTest {
 		IntBuffer sources = BufferUtils.createIntBuffer(sourcesToCreate);
 
 		//Create sourcesToCreate sources in one fell swoop
-    sources.position(0).limit(sourcesToCreate);
-		AL10.alGenSources(sources);
-		if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
-			System.out.println("failed to create " + sourcesToCreate + " sources (" + AL10.alGetString(lastError) + ")");
-			return;
+		try {
+			sources.position(0).limit(sourcesToCreate);
+			AL10.alGenSources(sources);
+	
+			//delete sources
+			sources.position(0).limit(sourcesToCreate);
+			AL10.alDeleteSources(sources);
+
+			System.out.println("created " + sourcesToCreate + " sources successfully!");
+		} catch (OpenALException oale) {
+			System.out.println("Unable to create " + sourcesToCreate + " sources");
 		}
-
-		//delete sources
-    sources.position(0).limit(sourcesToCreate);
-		AL10.alDeleteSources(sources);
-
-		System.out.println("created " + sourcesToCreate + " sources successfully!");
 	}
 
 	/**
@@ -123,34 +123,33 @@ public class SourceLimitTest extends BasicTest {
 		//make bytbuffer that can hold sourcesToCreate sources
 		IntBuffer[] sources = new IntBuffer[sourcesToCreate];
 
-    //create the sources
-		for (int i = 0; i < sourcesToCreate; i++) {
-      sources[i] = BufferUtils.createIntBuffer(1);
-      sources[i].position(0).limit(1);
-			AL10.alGenSources(sources[i]);
-			if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
-				System.out.println("failed to create source: " + (i + 1));
-				break;
+		//create the sources
+		try {
+			for (int i = 0; i < sourcesToCreate; i++) {
+				sources[i] = BufferUtils.createIntBuffer(1);
+				sources[i].position(0).limit(1);
+				AL10.alGenSources(sources[i]);
+				if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
+					break;
+				}
+				sourcesCreated++;
 			}
-      sourcesCreated++;
+		} catch (OpenALException oale) {
+			System.out.println("failed to create source: " + (sourcesCreated + 1));			
 		}
     
-    //delete allocated sources
+		//delete allocated sources
 		for (int i = 0; i < sourcesCreated; i++) {
 			//delete buffers and sources
-      sources[i].position(0).limit(1);
+			sources[i].position(0).limit(1);
 			AL10.alDeleteSources(sources[i]);
-			if ((lastError = AL10.alGetError()) != AL10.AL_NO_ERROR) {
-				System.out.println("failed to delete source: " + i + "(" + AL10.alGetString(lastError) + ")");
-				break;
-			}
 		}
     
-    if(sourcesCreated != sourcesToCreate) {
-      System.out.println("created " + sourcesCreated + " sources before failing");
-    } else {
-      System.out.println("created " + sourcesCreated + " sources successfully!");
-    }
+	    if(sourcesCreated != sourcesToCreate) {
+	      System.out.println("created " + sourcesCreated + " sources before failing");
+	    } else {
+	      System.out.println("created " + sourcesCreated + " sources successfully!");
+	    }
 	}
 
 	/**
