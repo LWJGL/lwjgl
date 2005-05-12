@@ -93,7 +93,7 @@ static bool getExtensions(JNIEnv *env, WGLExtensions *extensions, jobject pixel_
 	}
 	extgl_InitWGL(extensions);
 	if (!wglMakeCurrent(saved_hdc, saved_context))
-		printfDebug("ERROR: Could not restore current context\n");
+		printfDebugJava(env, "ERROR: Could not restore current context");
 	closeWindow(&dummy_hwnd, &dummy_hdc);
 	wglDeleteContext(dummy_context);
 	return true;

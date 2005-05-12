@@ -137,6 +137,7 @@ public final class AL {
                                                   "lwjglaudio", "lwjglaudio.dll",
                                                   "openal", "libopenal.so",
                                                   "openal", "openal.dylib"}, AL.class.getClassLoader());
+		LWJGLUtil.log("Found " + oalPaths.length + " OpenAL paths");
 		nCreate(oalPaths);
 		created = true;
 

@@ -75,7 +75,7 @@ static event_queue_t event_queue;
 
 // Function prototypes (defined in the cpp file, since header file is generic across platforms
 BOOL CALLBACK EnumMouseObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
-void ShutdownMouse();
+void ShutdownMouse(JNIEnv *env);
 void InitializeMouseFields();
 void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject button_buffer_obj);
 
@@ -123,7 +123,7 @@ static bool EnumerateMouseCapabilities(JNIEnv *env) {
 	//check for > 4 buttons - need to clamp since we're using dx 5
 	if(mButtoncount > 4) {
 		mButtoncount = 4;
-		printfDebug("WARNING: Clamping to 4 mouse buttons\n");
+		printfDebugJava(env, "WARNING: Clamping to 4 mouse buttons\n");
 	}
 	return true;	
 }
@@ -194,14 +194,14 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createMouse(JNIEnv *en
 	if (mFirstTimeInitialization) {
 		/* Enumerate capabilities of Mouse */
 		if (!EnumerateMouseCapabilities(env)) {
-			ShutdownMouse();
+			ShutdownMouse(env);
 			return;
 		}
 		mFirstTimeInitialization = false;
 	}
 	/* Do setup of Mouse */
 	if (!SetupMouse(env)) {
-		ShutdownMouse();
+		ShutdownMouse(env);
 		return;
 	}
 	created = true;
@@ -280,7 +280,7 @@ static void copyDXEvents(int num_di_events, DIDEVICEOBJECTDATA *di_buffer) {
 		putMouseEventWithCoords(-1, 0, dx, -dy, dwheel);
 }
 
-static void readDXBuffer() {
+static void readDXBuffer(JNIEnv *env) {
 	DIDEVICEOBJECTDATA rgdod[EVENT_BUFFER_SIZE];
 	DWORD num_di_events = EVENT_BUFFER_SIZE;
 
@@ -299,19 +299,19 @@ static void readDXBuffer() {
 	if (ret == DI_OK) {
 		copyDXEvents(num_di_events, rgdod);
 	} else if (ret == DI_BUFFEROVERFLOW) { 
-		printfDebug("Buffer overflowed\n");
+		printfDebugJava(env, "Buffer overflowed");
 	} else if (ret == DIERR_INPUTLOST) {
-		printfDebug("Input lost\n");
+		printfDebugJava(env, "Input lost");
 	} else if (ret == DIERR_NOTACQUIRED) {
-		printfDebug("not acquired\n");
+		printfDebugJava(env, "not acquired");
 	} else if (ret == DIERR_INVALIDPARAM) {
-		printfDebug("invalid parameter\n");
+		printfDebugJava(env, "invalid parameter");
 	} else if (ret == DIERR_NOTBUFFERED) {
-		printfDebug("not buffered\n");
+		printfDebugJava(env, "not buffered");
 	} else if (ret == DIERR_NOTINITIALIZED) {
-		printfDebug("not inited\n");
+		printfDebugJava(env, "not inited");
 	} else {
-		printfDebug("unknown keyboard error\n");
+		printfDebugJava(env, "unknown keyboard error");
 	}
 }
 
@@ -321,7 +321,7 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readMouse
 	jint* buffer_ptr = (jint *)(*env)->GetDirectBufferAddress(env, buffer_obj) + buffer_position;
 	int buffer_size = ((*env)->GetDirectBufferCapacity(env, buffer_obj))/sizeof(jint) - buffer_position;
 	if (mouse_grabbed) {
-		readDXBuffer();
+		readDXBuffer(env);
 	} else {
 		handleMessages();
 	}
@@ -345,7 +345,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_setNativeCursor
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyMouse(JNIEnv *env, jobject self) {
-	ShutdownMouse();
+	ShutdownMouse(env);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_pollMouse(JNIEnv * env, jobject self, jobject coord_buffer_obj, jobject button_buffer_obj) {
@@ -408,17 +408,17 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_grabMouse
 /**
  * Shutdown DI
  */
-static void ShutdownMouse() {
+static void ShutdownMouse(JNIEnv *env) {
 	// release device
 	if (mDIDevice != NULL) {
-		printfDebug("Releasing mouse DI device\n");
+		printfDebugJava(env, "Releasing mouse DI device");
 		IDirectInputDevice_Unacquire(mDIDevice);
 		IDirectInputDevice_Release(mDIDevice);
 		mDIDevice = NULL;
 	}
 	// Release DirectInput
 	if (lpdi != NULL) {
-		printfDebug("Releasing directinput\n");
+		printfDebugJava(env, "Releasing directinput");
 		IDirectInput_Release(lpdi);
 		lpdi = NULL;
 	}
@@ -465,7 +465,7 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 	int num_buttons;
 	int buttons_length = (int)(*env)->GetDirectBufferCapacity(env, button_buffer_obj);
 	if (coords_length < 3) {
-		printfDebug("ERROR: Not enough space in coords array: %d < 3\n", coords_length);
+		printfDebugJava(env, "ERROR: Not enough space in coords array: %d < 3", coords_length);
 		return;
 	}
 
@@ -485,7 +485,7 @@ static void UpdateMouseFields(JNIEnv *env, jobject coord_buffer_obj, jobject but
 				if (hRes != DI_OK)
 					return;
 			} else {
-				printfDebug("Error getting mouse state: %d\n", hRes);
+				printfDebugJava(env, "Error getting mouse state: %d", hRes);
 				return;
 			}
 		}

@@ -76,11 +76,11 @@ public class LWJGLUtil {
 	 *
 	 * @param libNames List of library names to look for, in the form of Local Library name, Platform library name.
 	 *        At least 6 names must be passed. 2 for each supported platform in the following order: Windows, Linux, MacOSX.
-	 * @param classloader The classloader to ask for librariy paths
+	 * @param classloader The classloader to ask for library paths
 	 * @return Paths to located libraries, if any
 	 */
 	public static String[] getLibraryPaths(String[] libNames, ClassLoader classloader) throws LWJGLException {
-		// need to pass path of possible locations of IL to native side
+		// need to pass path of possible locations of library to native side
 		List possible_paths = new ArrayList();
 
 		String libname;
@@ -102,13 +102,6 @@ public class LWJGLUtil {
 				throw new LWJGLException("Unknown platform: " + getPlatform());
 		}
 
-		// Add all possible paths from java.library.path
-		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
-		while (st.hasMoreTokens()) {
-			String path = st.nextToken();
-			possible_paths.add(path + File.separator + platform_lib_name);
-		}
-
 		String classloader_path = LWJGLUtil.getPathFromClassLoader(libname, classloader);
 		if (classloader_path != null) {
 			LWJGLUtil.log("getPathFromClassLoader: Path found: " + classloader_path);
@@ -124,6 +117,13 @@ public class LWJGLUtil {
 
 		//add cwd path
 		possible_paths.add(platform_lib_name);
+
+		// Add all possible paths from java.library.path
+		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
+		while (st.hasMoreTokens()) {
+			String path = st.nextToken();
+			possible_paths.add(path + File.separator + platform_lib_name);
+		}
 
 		//create needed string array
 		String[] paths = new String[possible_paths.size()];

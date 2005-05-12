@@ -69,7 +69,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_MacOSXDisplay_getMouseDeltas(JNIEnv
 	CGGetLastMouseDelta(&dx, &dy);
 	int buffer_length = (*env)->GetDirectBufferCapacity(env, delta_buffer);
 	if (buffer_length != 2) {
-		printfDebug("Delta buffer not large enough!\n");
+		printfDebugJava(env, "Delta buffer not large enough!");
 		return;
 	}
 	jint *buffer = (*env)->GetDirectBufferAddress(env, delta_buffer);

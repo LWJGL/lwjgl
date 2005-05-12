@@ -98,7 +98,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_createKeyboard
 
         ret = IDirectInputDevice_Acquire(lpdiKeyboard);
 	if(FAILED(ret)) {
-		printfDebug("Failed to acquire keyboard\n");
+		printfDebugJava(env, "Failed to acquire keyboard");
 	}
 	osvi.dwOSVersionInfoSize = sizeof(osvi);
 	GetVersionEx(&osvi);
@@ -126,7 +126,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_Win32Display_destroyKeyboard
 	}
 	// Release DirectInput
 	if (lpdi != NULL) {
-		printfDebug("Destroying directinput\n");
+		printfDebugJava(env, "Destroying directinput");
                 IDirectInput_Release(lpdi);
 		lpdi = NULL;
 	}
@@ -260,19 +260,19 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_opengl_Win32Display_readKeyboard
 			current_di_event++;
 		}
 	} else if (ret == DI_BUFFEROVERFLOW) { 
-		printfDebug("Keyboard buffer overflowed\n");
+		printfDebugJava(env, "Keyboard buffer overflowed");
 	} else if (ret == DIERR_INPUTLOST) {
-		printfDebug("Input lost\n");
+		printfDebugJava(env, "Input lost");
 	} else if (ret == DIERR_NOTACQUIRED) {
-		printfDebug("not acquired\n");
+		printfDebugJava(env, "not acquired");
 	} else if (ret == DIERR_INVALIDPARAM) {
-		printfDebug("invalid parameter\n");
+		printfDebugJava(env, "invalid parameter");
 	} else if (ret == DIERR_NOTBUFFERED) {
-		printfDebug("not buffered\n");
+		printfDebugJava(env, "not buffered");
 	} else if (ret == DIERR_NOTINITIALIZED) {
-		printfDebug("not inited\n");
+		printfDebugJava(env, "not inited");
 	} else {
-		printfDebug("unknown keyboard error\n");
+		printfDebugJava(env, "unknown keyboard error");
 	}
 	return num_events;
 }

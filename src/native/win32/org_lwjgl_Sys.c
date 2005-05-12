@@ -87,7 +87,7 @@ JNIEXPORT void JNICALL Java_org_lwjgl_NativeSysImplementation_alert
 	char * cTitleBarText = GetStringNativeChars(env, title);
 	MessageBox(getCurrentHWND(), eMessageText, cTitleBarText, MB_OK | MB_TOPMOST);
 
-	printfDebug("*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
+	printfDebugJava(env, "*** Alert ***%s\n%s\n", cTitleBarText, eMessageText);
 	
 	free(eMessageText);
 	free(cTitleBarText);
@@ -129,7 +129,7 @@ JNIEXPORT jboolean JNICALL Java_org_lwjgl_NativeSysImplementation_openURL
 		&pi )			 // Pointer to PROCESS_INFORMATION structure.
 	) 
 	{
-		printfDebug("Failed to open URL %s\n", urlString);
+		printfDebugJava(env, "Failed to open URL %s", urlString);
 		return JNI_FALSE;
 	}
 

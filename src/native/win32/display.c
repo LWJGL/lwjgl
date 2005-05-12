@@ -118,7 +118,7 @@ static jobjectArray GetAvailableDisplayModesEx(JNIEnv * env) {
 			}
 		}
 	}
-	printfDebug("Found %d displaymodes\n", n);
+	printfDebugJava(env, "Found %d displaymodes", n);
   
       ret = (*env)->NewObjectArray(env, n, displayModeClass, NULL);
 	for (i = 0; i < n; i++) {
@@ -155,12 +155,12 @@ void switchDisplayMode(JNIEnv * env, jobject mode)
 
 	if (cdsret != DISP_CHANGE_SUCCESSFUL) {
 		// Failed: so let's check to see if it's a wierd dual screen display
-		printfDebug("Failed to set display mode... assuming dual monitors\n");
+		printfDebugJava(env, "Failed to set display mode... assuming dual monitors");
 		devmode.dmPelsWidth = width * 2;
 		cdsret = ChangeDisplaySettings(&devmode, CDS_FULLSCREEN);
 
 		if (cdsret != DISP_CHANGE_SUCCESSFUL) {
-			printfDebug("Failed to set display mode using dual monitors\n");
+			printfDebugJava(env, "Failed to set display mode using dual monitors");
 			throwException(env, "Failed to set display mode.");
 			return;
 		}
@@ -227,7 +227,7 @@ jobject initDisplay(JNIEnv * env)
 
 	// Get the default gamma ramp
 	if (GetDeviceGammaRamp(screenDC, originalGamma) == FALSE) {
-		printfDebug("Failed to get initial device gamma\n");
+		printfDebugJava(env, "Failed to get initial device gamma");
 	}
 	memcpy(currentGamma, originalGamma, sizeof(WORD)*GAMMA_SIZE);
 	ReleaseDC(NULL, screenDC);
@@ -238,7 +238,7 @@ void resetDisplayMode(JNIEnv * env) {
 	// Return device gamma to normal
 	HDC screenDC = GetDC(NULL);
 	if (!SetDeviceGammaRamp(screenDC, originalGamma)) {
-		printfDebug("Could not reset device gamma\n");
+		printfDebugJava(env, "Could not reset device gamma");
 	}
 	ReleaseDC(NULL, screenDC);	
 

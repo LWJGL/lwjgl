@@ -88,7 +88,7 @@ JNIEXPORT jobject JNICALL Java_org_lwjgl_opengl_Win32ContextImplementation_nCrea
 	}
 	extgl_InitWGL(&extensions);
 	if (!wglMakeCurrent(saved_hdc, saved_context))
-		printfDebug("Failed to restore current context\n");
+		printfDebugJava(env, "Failed to restore current context");
 	context_info = (Win32Context *)(*env)->GetDirectBufferAddress(env, context_handle);
 	context_info->context = context;
 	context_info->extensions = extensions;
