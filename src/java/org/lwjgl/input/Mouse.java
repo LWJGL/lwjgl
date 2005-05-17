@@ -293,6 +293,8 @@ public class Mouse {
 			x += poll_coord1;
 			y += poll_coord2;
 		} else {
+			dx = poll_coord1 - x;
+			dy = poll_coord2 - y;
 			x = poll_coord1;
 			y = poll_coord2;
 		}
@@ -367,8 +369,12 @@ public class Mouse {
 				event_x += event_dx;
 				event_y += event_dy;
 			} else {
-				event_x = readBuffer.get();
-				event_y = readBuffer.get();
+				int new_event_x = readBuffer.get();
+				int new_event_y = readBuffer.get();
+				event_dx = new_event_x - event_x;
+				event_dy = new_event_y - event_y;
+				event_x = new_event_x;
+				event_y = new_event_y;
 			}
 			event_x = Math.min(Display.getDisplayMode().getWidth() - 1, Math.max(0, event_x));
 			event_y = Math.min(Display.getDisplayMode().getHeight() - 1, Math.max(0, event_y));
@@ -400,8 +406,6 @@ public class Mouse {
 	 * @return Current events delta x. Only valid when the mouse is grabbed.
 	 */
 	public static int getEventDX() {
-		if (!isGrabbed())
-			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		return event_dx;
 	}
 
@@ -409,8 +413,6 @@ public class Mouse {
 	 * @return Current events delta y. Only valid when the mouse is grabbed.
 	 */
 	public static int getEventDY() {
-		if (!isGrabbed())
-			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		return event_dy;
 	}
 
@@ -459,8 +461,6 @@ public class Mouse {
 	 * @return Movement on the x axis since last time getDX() was called. Only valid when the mouse is grabbed.
 	 */
 	public static int getDX() {
-		if (!isGrabbed())
-			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		int result = dx;
 		dx = 0;
 		return result;
@@ -470,8 +470,6 @@ public class Mouse {
 	 * @return Movement on the y axis since last time getDY() was called. Only valid when the mouse is grabbed.
 	 */
 	public static int getDY() {
-		if (!isGrabbed())
-			throw new IllegalStateException("X, Y deltas are only available when the mouse is grabbed. Use getEventX()/getEventY() instead.");
 		int result = dy;
 		dy = 0;
 		return result;
