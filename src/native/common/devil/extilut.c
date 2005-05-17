@@ -1,5 +1,3 @@
-#include "extilut.h"
-
 /* Handle to ilut Library */
 #ifdef _WIN32
 static HMODULE devILUThandle;
@@ -15,6 +13,7 @@ static void* devILUThandle;
 extern const struct mach_header* devILhandle;
 static const struct mach_header* devILUThandle; // never actually used, just makes it shut up
 #endif
+#include "extilut.h"
 
 /**
  * Retrieves a function pointer from the ilut library

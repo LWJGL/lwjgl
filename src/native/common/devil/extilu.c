@@ -1,5 +1,3 @@
-#include "extilu.h"
-
 /* Handle to ilu Library */
 #ifdef _WIN32
 static HMODULE devILUhandle;
@@ -15,6 +13,7 @@ static void* devILUhandle;
 extern const struct mach_header* devILhandle;
 static const struct mach_header* devILUhandle; // never actually used, just makes it shut up
 #endif
+#include "extilu.h"
 
 /**
  * Retrieves a function pointer from the ilu library
