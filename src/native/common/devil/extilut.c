@@ -1,8 +1,10 @@
 /* Handle to ilut Library */
 #ifdef _WIN32
+#include "extilut.h"
 static HMODULE devILUThandle;
 #endif
 #ifdef _X11
+#include "extilut.h"
 static void* devILUThandle;
 #endif
 #ifdef _MACOSX
@@ -12,8 +14,8 @@ static void* devILUThandle;
 // note, we use the IL handle since it's all in one lib
 extern const struct mach_header* devILhandle;
 static const struct mach_header* devILUThandle; // never actually used, just makes it shut up
-#endif
 #include "extilut.h"
+#endif
 
 /**
  * Retrieves a function pointer from the ilut library

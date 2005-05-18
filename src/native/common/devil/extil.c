@@ -1,8 +1,10 @@
 /* Handle to devil Library */
 #ifdef _WIN32
+#include "extil.h"
 static HMODULE devILhandle;
 #endif
 #ifdef _X11
+#include "extil.h"
 static void* devILhandle;
 #endif
 #ifdef _MACOSX
@@ -10,8 +12,8 @@ static void* devILhandle;
 #include <stdlib.h>
 #include <string.h>
 const struct mach_header* devILhandle = NULL;
-#endif
 #include "extil.h"
+#endif
 
 /**
  * Retrieves a function pointer from the devil library
