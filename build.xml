@@ -623,8 +623,12 @@
 		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>		
 		
 		<exec executable="make" dir="${lwjgl.src.native}/linux"/>
-		<exec executable="make" dir="${lwjgl.src.native}/common/devil"/>
-		<exec executable="make" dir="${lwjgl.src.native}/common/fmod3"/>
+		<exec executable="make" dir="${lwjgl.src.native}/common/devil">
+			<arg line="-f Makefile.linux"/>
+		</exec>
+		<exec executable="make" dir="${lwjgl.src.native}/common/fmod3">
+                        <arg line="-f Makefile.linux"/>
+                </exec>
 		<move file="${lwjgl.src.native}/linux/liblwjgl.so" tofile="${lwjgl.lib}/linux/liblwjgl.so" />
 		<move file="${lwjgl.src.native}/common/devil/liblwjgl-devil.so" tofile="${lwjgl.lib}/linux/liblwjgl-devil.so" />
 		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.so" tofile="${lwjgl.lib}/linux/liblwjgl-fmod3.so" />
