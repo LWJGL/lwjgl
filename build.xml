@@ -642,10 +642,14 @@
 		<fail message="Missing AL path environment property" unless="env.AL"/>		
 		<fail message="Missing FMOD path environment property" unless="env.FMOD"/>			
 	
-    <exec executable="make" dir="${lwjgl.src.native}/macosx" failonerror="true"/>
-		<exec executable="make" dir="${lwjgl.src.native}/common/devil" failonerror="true"/>
-		<exec executable="make" dir="${lwjgl.src.native}/common/fmod3" failonerror="true"/>
-    <move file="${lwjgl.src.native}/macosx/liblwjgl.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl.jnilib" />   
+    		<exec executable="make" dir="${lwjgl.src.native}/macosx" failonerror="true"/>
+		<exec executable="make" dir="${lwjgl.src.native}/common/devil">
+                        <arg line="-f Makefile.macosx"/>
+                </exec>
+                <exec executable="make" dir="${lwjgl.src.native}/common/fmod3">
+                        <arg line="-f Makefile.macosx"/>
+                </exec>
+    		<move file="${lwjgl.src.native}/macosx/liblwjgl.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl.jnilib" />   
 		<move file="${lwjgl.src.native}/common/devil/liblwjgl-devil.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-devil.jnilib" />
 		<move file="${lwjgl.src.native}/common/fmod3/liblwjgl-fmod3.jnilib" tofile="${lwjgl.lib}/macosx/liblwjgl-fmod3.jnilib" />
   </target> 	
