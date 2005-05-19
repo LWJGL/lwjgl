@@ -205,7 +205,16 @@
 		<antcall target="-distribute_win32" />
 		<antcall target="-distribute_linux" />
 		<antcall target="-distribute_macosx" />
-	</target>		
+	</target>
+
+	<!-- Create ONLY the jar archives -->
+	<target name="jars" description="Creates the Java archives ONLY and places them in libs/" depends="clean, -initialize, compile, -createjars">
+		<move todir="libs/">
+			<fileset dir="${lwjgl.temp}/jar">
+				<include name="*.jar"/>
+			</fileset>
+		</move>
+	</target>
 
 	<!-- Packages the java files -->
 	<target name="-createjars">
