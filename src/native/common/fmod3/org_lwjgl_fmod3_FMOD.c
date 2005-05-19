@@ -35,18 +35,6 @@
 
 static const char* VERSION = "0.97";
 
-/**
- * Concatenate two strings
- */
-static char *concatenate(const char *str1, const char *str2) {
-	int length1 = strlen(str1);
-	int length2 = strlen(str2);
-	char *str = (char *)calloc(length1 + length2 + 1, sizeof(char));
-	strncpy(str, str1, length1);
-	strncpy(str + length1, str2, length2 + 1);
-	return str;
-}
-
 /*
  * Class:     org_lwjgl_fmod3_FMOD
  * Method:    getNativeLibraryVersion
@@ -66,23 +54,12 @@ JNIEXPORT void JNICALL Java_org_lwjgl_fmod3_FMOD_nCreate(JNIEnv *env, jclass cla
 	int i;
 	jstring path;
 	char *path_str;
-	char *lib_str;
 	
 	for(i=0;i<pathcount;i++) {
 		path = (jstring) (*env)->GetObjectArrayElement(env, paths, i);
 		path_str = GetStringNativeChars(env, path);
-#ifdef _WIN32
-		lib_str = concatenate(path_str, "fmod.dll");
-#endif
-#ifdef _X11
-		lib_str = concatenate(path_str, "libfmod.so");
-#endif
-#ifdef _MACOSX
-		lib_str = concatenate(path_str, "ignored");
-#endif	
-		printfDebug("Testing '%s'\n", lib_str);
-		fmod_create(env, lib_str);
-		free(lib_str);
+		printfDebug("Testing '%s'\n", path_str);
+		fmod_create(env, path_str);
 		free(path_str);
 
 		if(fmod_instance != NULL) {

@@ -31,13 +31,12 @@
  */
 package org.lwjgl.fmod3;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
 /**
@@ -251,57 +250,18 @@ public class FMOD {
 			return;
 		}
 
-		// create, passing potential locations for native fmod library
-		nCreate(constructFMODSearchPaths());
-		created = true;
-	}
-
-	/**
-	 * Retrieves an array of strings, with potential locations for
-	 * the native fmod library
-	 * @return array of strings, with potential locations for the native fmod library
-	 */
-	private static String[] constructFMODSearchPaths() {
-		// miscellaneous values
-		String libpath = System.getProperty("java.library.path");
-		String seperator = System.getProperty("path.separator");
-
-		// determine os library name
-		String dllName = FMOD_WIN32_LIBRARY_NAME;
-		switch (LWJGLUtil.getPlatform()) {
-			case LWJGLUtil.PLATFORM_MACOSX:
-				dllName = FMOD_OSX_LIBRARY_NAME;
-				break;
-			case LWJGLUtil.PLATFORM_LINUX:
-				dllName = FMOD_LINUX_LIBRARY_NAME;
-				break;
-			default:
-				throw new LinkageError("Unsupported platform");
+		try {
+			String[] fmodPaths = LWJGLUtil.getLibraryPaths(new String[]{
+	                "fmod", "fmod.dll",
+	                "fmod", "libfmod.so",
+	                "fmod", "static-ignored"}, 
+	                	FMOD.class.getClassLoader());
+			LWJGLUtil.log("Found " + fmodPaths.length + " FMOD paths");
+			nCreate(fmodPaths);
+			created = true;
+		} catch (LWJGLException le) {
+			throw new FMODException(le.getMessage());
 		}
-
-		String jwsPath = getPathFromJWS(dllName);
-		LWJGLUtil.log("getPathFromJWS: Paths found: " + jwsPath);
-		if (jwsPath != null) {
-			libpath += seperator
-				+ jwsPath.substring(0, jwsPath.lastIndexOf(File.separator));
-		}
-
-		// split, and rebuild library path to path + dll
-		StringTokenizer st = new StringTokenizer(libpath, seperator);
-		String[] paths = new String[st.countTokens() + 1];
-
-		//build paths
-		for (int i = 0; i < paths.length - 1; i++) {
-			paths[i] = st.nextToken() + File.separator;
-		}
-
-		for(int i=0 ; i<paths.length; i++) {
-			LWJGLUtil.log("Will search " + paths[i] + " for " + dllName);
-		}
-
-		//add cwd path
-		paths[paths.length - 1] = dllName;   
-		return paths;
 	}
 
 	/**
