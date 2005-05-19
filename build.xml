@@ -677,4 +677,42 @@
 		<ant dir="LWJGL" target="compile_native" />
 		<ant dir="LWJGL" target="release" />
 	</target>	 
+	
+	<!-- -->
+	<target name="sign" description="Using relased files, creates the nescesarry files used for jnlp demos">
+		<!-- delete existing temp -->
+		<delete dir="${lwjgl.temp}"/>		
+		
+		<!-- unzip common files -->
+		<unzip src="${lwjgl.dist}/lwjgl-win32-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		<unzip src="${lwjgl.dist}/lwjgl-linux-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		<unzip src="${lwjgl.dist}/lwjgl-macosx-${lwjgl.version}.zip" dest="${lwjgl.temp}/jnlp/temp" overwrite="true"/>
+		
+		<!-- move relevant files to root -->
+		<move todir="${lwjgl.temp}/jnlp" flatten="true">
+			<fileset dir="${lwjgl.temp}/jnlp/temp">
+				<include name="**/**.jar"/>
+			</fileset>
+		</move>
+		
+		<!-- create native jars -->
+		<jar destfile="${lwjgl.temp}/jnlp/native_win32.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-win32-${lwjgl.version}/native/"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_linux.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-linux-${lwjgl.version}/native/"/>
+		<jar destfile="${lwjgl.temp}/jnlp/native_macosx.jar" basedir="${lwjgl.temp}/jnlp/temp/lwjgl-macosx-${lwjgl.version}/native/"/>
+		
+		<!-- create media jar -->
+		<jar destfile="${lwjgl.temp}/jnlp/media.jar" basedir="${lwjgl.res}"/>	
+	
+		<!-- sign 'em -->
+		<input message="Please enter store password:" addproperty="store.pwd" />
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl.jar" 				alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_devil.jar" 	alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_fmod3.jar" 	alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_test.jar" 		alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/lwjgl_util.jar" 		alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/media.jar" 				alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_linux.jar" 	alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="matzon" storepass="${store.pwd}"/>
+		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="matzon" storepass="${store.pwd}"/>
+	</target>
 </project>
