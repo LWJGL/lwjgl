@@ -213,5 +213,6 @@ public class MovingSoundTest extends BasicTest {
 	public static void main(String[] args) {
 		MovingSoundTest movingSoundTest = new MovingSoundTest();
 		movingSoundTest.execute(args);
+		System.exit(0);
 	}
 }

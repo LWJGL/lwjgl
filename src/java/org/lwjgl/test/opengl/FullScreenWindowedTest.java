@@ -271,5 +271,6 @@ public class FullScreenWindowedTest {
 		System.out.println("Move quad using arrowkeys, and change rotation using +/-");
 		FullScreenWindowedTest fswTest = new FullScreenWindowedTest();
 		fswTest.execute();
+		System.exit(0);
 	}
 }

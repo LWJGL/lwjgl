@@ -395,5 +395,6 @@ public class PbufferTest {
     System.out.println("Move quad using arrowkeys, and change rotation using +/-");
     PbufferTest fswTest = new PbufferTest();
     fswTest.execute();
+    System.exit(0);
   }
 }

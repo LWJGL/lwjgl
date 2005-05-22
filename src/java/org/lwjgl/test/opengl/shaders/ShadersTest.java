@@ -116,6 +116,7 @@ public final class ShadersTest {
 		}
 
 		cleanup();
+		System.exit(0);
 	}
 
 	private static void initialize(String[] args) {

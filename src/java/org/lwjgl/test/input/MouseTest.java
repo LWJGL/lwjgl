@@ -411,5 +411,6 @@ public class MouseTest {
   public static void main(String[] args) {
     MouseTest mt = new MouseTest();
     mt.executeTest();
+    System.exit(0);
   }
 }

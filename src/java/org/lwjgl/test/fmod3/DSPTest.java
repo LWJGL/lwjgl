@@ -67,21 +67,21 @@ public class DSPTest {
 		File file = new File(args[0]);
 		if (!file.exists()) {
 			System.out.println("No such file: " + args[0]);
-			return;
+			System.exit(0);
 		}
 
 		try {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
-			return;
+			System.exit(0);
 		}
 
 		System.out.println("Initializing FMOD");
 		if (!FSound.FSOUND_Init(44100, 32, 0)) {
 			System.out.println("Failed to initialize FMOD");
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-			return;
+			System.exit(0);
 		}
 
 		System.out.println("Loading " + args[0]);
@@ -156,6 +156,7 @@ public class DSPTest {
 
 		FSound.FSOUND_Close();
 		FMOD.destroy();
+		System.exit(0);
 	}
 
 	public class TestDspCallback implements FSoundDSPCallback {

@@ -110,6 +110,7 @@ public class NetTest {
 			stop();
 			FSound.FSOUND_Close();
 			FMOD.destroy();
+			System.exit(0);
 		}
 	}
 	

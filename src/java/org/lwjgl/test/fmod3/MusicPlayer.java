@@ -60,14 +60,14 @@ public class MusicPlayer {
 		File file = new File(args[0]);
 		if (!file.exists()) {
 			System.out.println("No such file: " + args[0]);
-			return;
+			System.exit(0);
 		}
 		
 		try {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
-			return;
+			System.exit(0);
 		}
 		
 		System.out.println("Initializing FMOD");
@@ -101,5 +101,6 @@ public class MusicPlayer {
 		
 		FSound.FSOUND_Close();
 		FMOD.destroy();
+		System.exit(0);
 	}
 }

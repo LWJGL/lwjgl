@@ -220,5 +220,6 @@ public class OpenALCreationTest {
 	public static void main(String[] args) {
 		OpenALCreationTest oalCreationTest = new OpenALCreationTest();
 		oalCreationTest.execute(args);
+		System.exit(0);
 	}
 }

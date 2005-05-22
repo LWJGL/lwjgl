@@ -152,6 +152,7 @@ public class DemoBox extends Frame {
 			public void windowClosing(WindowEvent e) {
 				demoCanvas.destroy();
 				dispose();
+				System.exit(0);
 			}
 		});
 

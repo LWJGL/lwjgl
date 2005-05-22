@@ -109,7 +109,7 @@ public class SyncTest {
 		File file = new File(args[0]);
 		if (!file.exists()) {
 			System.out.println("No such file: " + args[0]);
-			return;
+			System.exit(0);
 		}
 		
 		// initialize FMOD
@@ -118,7 +118,7 @@ public class SyncTest {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
-			return;
+			System.exit(0);
 		}
 		
 		// start actual test
@@ -254,5 +254,6 @@ public class SyncTest {
 		}
 		FSound.FSOUND_Close();
 		FMOD.destroy();
+		System.exit(0);
 	}
 }

@@ -130,6 +130,7 @@ public final class VBOIndexTest {
 		} finally {
 			cleanup();
 		}
+		System.exit(0);
 	}
 
 	/**

@@ -71,6 +71,7 @@ public class Gears {
 
 	public static void main(String[] args) {
 		new Gears().execute();
+		System.exit(0);
 	}
 
 	/**

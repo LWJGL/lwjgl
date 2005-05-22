@@ -204,5 +204,6 @@ public class MouseCreationTest {
 	public static void main(String[] args) {
 		MouseCreationTest mt = new MouseCreationTest();
 		mt.executeTest();
+		System.exit(0);
 	}
 }

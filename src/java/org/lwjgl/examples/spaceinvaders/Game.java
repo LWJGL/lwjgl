@@ -576,8 +576,9 @@ public class Game {
 	 * @param argv The arguments that are passed into our game
 	 */
 	public static void main(String argv[]) {
-    System.out.println("Use -fullscreen for fullscreen mode");
+		System.out.println("Use -fullscreen for fullscreen mode");
 		new Game((argv.length > 0 && argv[0].equalsIgnoreCase("-fullscreen"))).execute();
+		System.exit(0);
 	}
 
 	/**

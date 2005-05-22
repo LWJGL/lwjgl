@@ -78,6 +78,8 @@ public class Game {
 		} finally {
 			cleanup();
 		}
+		
+		System.exit(0);
 	}
 	
 	/**

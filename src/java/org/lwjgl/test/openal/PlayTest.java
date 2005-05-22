@@ -216,5 +216,6 @@ public class PlayTest extends BasicTest {
     public static void main(String[] args) {
         PlayTest playTest = new PlayTest();
         playTest.execute(args);
+        System.exit(0);
     }
 }

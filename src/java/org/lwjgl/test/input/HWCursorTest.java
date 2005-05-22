@@ -393,5 +393,6 @@ public class HWCursorTest {
 		System.out.println("Change between fullscreen and windowed mode, by pressing F and W respectively. Enable hw cursor with N and disable it with M.");
 		HWCursorTest cursorTest = new HWCursorTest();
 		cursorTest.execute();
+		System.exit(0);
 	}
 }

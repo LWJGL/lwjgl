@@ -236,5 +236,6 @@ public class KeyboardTest {
   public static void main(String[] args) {
     KeyboardTest kt = new KeyboardTest();
     kt.executeTest();
+    System.exit(0);
   }
 }

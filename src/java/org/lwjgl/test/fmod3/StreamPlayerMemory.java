@@ -62,14 +62,14 @@ public class StreamPlayerMemory {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
-			return;
+			System.exit(0);
 		}
 		
 		System.out.println("Initializing FMOD");
 		if (!FSound.FSOUND_Init(44100, 32, 0)) {
 			System.out.println("Failed to initialize FMOD");
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-			return;
+			System.exit(0);
 		}
 		
 		ByteBuffer data = getData(args[0]);
@@ -97,6 +97,7 @@ public class StreamPlayerMemory {
 		
 		FSound.FSOUND_Close();
 		FMOD.destroy();
+		System.exit(0);
 	}
 	
 	/**

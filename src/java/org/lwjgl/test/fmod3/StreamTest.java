@@ -51,7 +51,7 @@ public class StreamTest {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
-			return;
+			System.exit(0);
 		}
 		
 		IntBuffer caps = BufferUtils.createIntBuffer(1);
@@ -68,7 +68,7 @@ public class StreamTest {
 		if (!FSound.FSOUND_Init(44100, 32, 0)) {
 			System.out.println("Failed to initialize FMOD");
 			System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
-			return;
+			System.exit(0);
 		}
 		
 		IntBuffer mem = BufferUtils.createIntBuffer(2);

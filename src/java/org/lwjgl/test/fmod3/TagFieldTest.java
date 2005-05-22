@@ -75,11 +75,11 @@ public class TagFieldTest {
 				System.out.println("Failed to initialize FMOD");
 				System.out.println("Error: " + FMOD.FMOD_ErrorString(FSound.FSOUND_GetError()));
 				FMOD.destroy();
-				return;
+				System.exit(0);
 			}
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
-			return;
+			System.exit(0);
 		}
 
 		// scan the supplied arg 
@@ -89,6 +89,7 @@ public class TagFieldTest {
 		// shutdown
 		FSound.FSOUND_Close();
 		FMOD.destroy();
+		System.exit(0);
 	}
 
   /**

@@ -160,5 +160,6 @@ public class SourceLimitTest extends BasicTest {
 	public static void main(String[] args) {
 		SourceLimitTest sourceLimitTest = new SourceLimitTest();
 		sourceLimitTest.execute(args);
+		System.exit(0);
 	}
 }

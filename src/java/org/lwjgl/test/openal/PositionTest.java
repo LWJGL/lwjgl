@@ -484,6 +484,7 @@ public class PositionTest extends BasicTest {
   public static void main(String[] args) {
     PositionTest positionTest = new PositionTest();
     positionTest.execute(args);
+    System.exit(0);
   }
 
   /**

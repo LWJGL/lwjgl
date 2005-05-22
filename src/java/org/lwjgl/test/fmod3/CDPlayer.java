@@ -52,13 +52,13 @@ public class CDPlayer {
 			FMOD.create();
 		} catch (FMODException fmode) {
 			fmode.printStackTrace();
-			return;
+			System.exit(0);
 		}
 
 		System.out.println("Initializing FMOD");
 		if (!FSound.FSOUND_Init(44100, 32, 0)) {
 			System.out.println("Failed to initialize FMOD");
-			return;
+			System.exit(0);
 		}
 
 		boolean running = true;
@@ -132,5 +132,6 @@ public class CDPlayer {
 
 		FSound.FSOUND_Close();
 		FMOD.destroy();
+		System.exit(0);
 	}
 }

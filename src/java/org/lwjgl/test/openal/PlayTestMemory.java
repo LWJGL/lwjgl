@@ -229,5 +229,6 @@ public class PlayTestMemory extends BasicTest {
     public static void main(String[] args) {
         PlayTestMemory playTestMemory = new PlayTestMemory();
         playTestMemory.execute(args);
+        System.exit(0);
     }
 }

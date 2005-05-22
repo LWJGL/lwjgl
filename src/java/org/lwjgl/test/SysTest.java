@@ -175,5 +175,6 @@ public class SysTest {
    */
   public static void main(String[] args) {
     new SysTest().executeTest();
+    System.exit(0);
   }
 }

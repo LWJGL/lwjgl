@@ -243,5 +243,6 @@ public class DisplayTest {
    */
   public static void main(String[] args) throws LWJGLException {
     new DisplayTest().executeTest();
+    System.exit(0);
   }
 }

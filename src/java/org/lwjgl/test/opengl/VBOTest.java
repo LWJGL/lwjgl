@@ -126,6 +126,7 @@ public final class VBOTest {
 		} finally {
 			cleanup();
 		}
+		System.exit(0);
 	}
 
 	/**

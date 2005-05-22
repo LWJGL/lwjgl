@@ -115,7 +115,7 @@ public class BasicTest {
 			IL.destroy();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
 		}
+		System.exit(0);
 	}
 }

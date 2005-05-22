@@ -218,5 +218,6 @@ public class StressTest extends BasicTest {
   public static void main(String[] args) {
     StressTest stressTest = new StressTest();
     stressTest.execute(args);
+    System.exit(0);
   }
 }

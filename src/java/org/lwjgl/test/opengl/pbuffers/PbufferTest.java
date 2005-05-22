@@ -422,6 +422,7 @@ public final class PbufferTest {
 		PbufferTest test = new PbufferTest(mode);
 
 		test.execute();
+		System.exit(0);
 	}
 
 	private static void kill(final String msg) {

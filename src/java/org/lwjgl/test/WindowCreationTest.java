@@ -287,6 +287,7 @@ public class WindowCreationTest {
 			wct.execute();
 			wct.destroy();
 		}
+		System.exit(0);
 	}
 
 	/**

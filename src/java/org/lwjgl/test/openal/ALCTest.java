@@ -104,5 +104,6 @@ public class ALCTest extends BasicTest {
 	public static void main(String[] args) {
 		ALCTest alcTest = new ALCTest();
 		alcTest.execute(args);
+		System.exit(0);
 	}
 }
