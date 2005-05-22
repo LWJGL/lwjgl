@@ -128,15 +128,10 @@ public class ILUT {
 			throw new LWJGLException("Cannot create ILUT without having created IL instance");
 		}
 
-		// We need to do nothing when running on mac, since all is loaded in IL
-		if(LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {
-			return;
-		}
-
 		String[] ilutPaths = LWJGLUtil.getLibraryPaths(new String[]{
 			"ILUT", "ILUT.dll",
 			"ILUT", "libILUT.so",
-			"ILUT", "IL"}, ILU.class.getClassLoader());
+			"ILUT", "libILUT.dylib"}, ILUT.class.getClassLoader());
 		nCreate(ilutPaths);
 		created = true;
 
@@ -158,12 +153,6 @@ public class ILUT {
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
-
-		// We need to do nothing when running on mac, since all is destroyed in IL
-		if(LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {
-			return;
-		}
-
 		resetNativeStubs(ILUT.class);
 		if (created) {
 			nDestroy();

@@ -163,15 +163,10 @@ public class ILU {
 			throw new LWJGLException("Cannot create ILU without having created IL instance");
 		}
 
-		// We need to do nothing when running on mac, since all is loaded in IL
-		if(LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {
-			return;
-		}
-
 		String[] iluPaths = LWJGLUtil.getLibraryPaths(new String[]{
 			"ILU", "ILU.dll",
 			"ILU", "libILU.so",
-			"ILU", "ILU"}, ILU.class.getClassLoader());
+			"ILU", "libILU.dylib"}, ILU.class.getClassLoader());
 		nCreate(iluPaths);
 		created = true;
 
@@ -193,12 +188,6 @@ public class ILU {
 	 * Exit cleanly by calling destroy.
 	 */
 	public static void destroy() {
-
-		// We need to do nothing when running on mac, since all is destroyed in IL
-		if(LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_MACOSX) {
-			return;
-		}
-
 		resetNativeStubs(ILU.class);
 		if (created) {
 			nDestroy();
