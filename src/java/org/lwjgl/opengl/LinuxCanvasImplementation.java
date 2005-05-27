@@ -36,6 +36,7 @@ import java.awt.GraphicsDevice;
 import java.lang.reflect.Method;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -74,15 +75,19 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 	 * @return The GraphicsConfiguration corresponding to a visual that matches the pixel format.
 	 */
 	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
-		int screen = getScreenFromDevice(device);
-		int visual_id_matching_format = findVisualIDFromFormat(screen, pixel_format);
-		GraphicsConfiguration[] configurations = device.getConfigurations();
-		for (int i = 0; i < configurations.length; i++) {
-			int visual_id = getVisualIDFromConfiguration(configurations[i]);
-			if (visual_id == visual_id_matching_format)
-				return configurations[i];
+		try {
+			int screen = getScreenFromDevice(device);
+			int visual_id_matching_format = findVisualIDFromFormat(screen, pixel_format);
+			GraphicsConfiguration[] configurations = device.getConfigurations();
+			for (int i = 0; i < configurations.length; i++) {
+				int visual_id = getVisualIDFromConfiguration(configurations[i]);
+				if (visual_id == visual_id_matching_format)
+					return configurations[i];
+			}
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Got exception while trying to determine configuration: " + e);
 		}
-		throw new LWJGLException("Could not find the matching GraphicsConfiguration to visual id");
+		return null; // In case we failed to locate the visual, or if we're not on a SUN JDK
 	}
 
 	private static int findVisualIDFromFormat(int screen, PixelFormat pixel_format) throws LWJGLException {

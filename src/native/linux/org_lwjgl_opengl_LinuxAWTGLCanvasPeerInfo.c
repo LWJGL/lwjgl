@@ -60,6 +60,22 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_nInitHandl
 	// Get the platform-specific drawing info
 	JAWT_X11DrawingSurfaceInfo *dsi_x11 = (JAWT_X11DrawingSurfaceInfo*)awt_lock->dsi->platformInfo;
 
+	// If we couldn't get a screen from java side, attempt to determine a sane screen
+	// from the information we do have, namely the visualid and the depth
+	if (screen == -1) {
+		XVisualInfo template;
+		int num_infos;
+		template.visualid = dsi_x11->visualID;
+		template.depth = dsi_x11->depth;
+		XVisualInfo *vis_info = XGetVisualInfo(peer_info->display, VisualIDMask | VisualDepthMask, &template, &num_infos);
+		if (vis_info == NULL) {
+			throwException(env, "Could not determine screen");
+			return;
+		}
+		screen = vis_info[0].screen;
+		XFree(vis_info);
+	}
+	
 	peer_info->display = dsi_x11->display;
 	peer_info->screen = screen;
 	peer_info->drawable = dsi_x11->drawable;

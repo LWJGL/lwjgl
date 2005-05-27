@@ -34,6 +34,7 @@ package org.lwjgl.opengl;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * $Id$
@@ -50,7 +51,12 @@ final class LinuxAWTGLCanvasPeerInfo extends LinuxPeerInfo {
 	}
 	
 	protected void doLockAndInitHandle() throws LWJGLException {
-		int screen = LinuxCanvasImplementation.getScreenFromDevice(canvas.getGraphicsConfiguration().getDevice());
+		int screen = -1;
+		try {
+			screen = LinuxCanvasImplementation.getScreenFromDevice(canvas.getGraphicsConfiguration().getDevice());
+		} catch (LWJGLException e) {
+			LWJGLUtil.log("Got exception while trying to determine screen: " + e);
+		}
 		nInitHandle(screen, awt_surface.lockAndGetHandle(canvas), getHandle());
 	}
 	private static native void nInitHandle(int screen, ByteBuffer surface_buffer, ByteBuffer peer_info_handle) throws LWJGLException;

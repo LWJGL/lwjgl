@@ -58,7 +58,7 @@ final class Win32CanvasImplementation implements AWTCanvasImplementation {
 	 */
 	public GraphicsConfiguration findConfiguration(GraphicsDevice device, PixelFormat pixel_format) throws LWJGLException {
 		/*
-		 * It seems like the best way is to simply return null and let
+		 * It seems like the best way is to simply return null and
 		 * use SetPixelFormat in JNI later.
 		 */
 		return null;
