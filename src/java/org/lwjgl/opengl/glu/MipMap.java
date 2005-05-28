@@ -186,6 +186,9 @@ public class MipMap extends Util {
 			case GL11.GL_UNSIGNED_BYTE:
 				sizein = 1;
 				break;
+			case GL11.GL_FLOAT:
+				sizein = 4;
+				break;				
 			default:
 				return GL11.GL_INVALID_ENUM;
 		}
@@ -195,6 +198,9 @@ public class MipMap extends Util {
 			case GL11.GL_UNSIGNED_BYTE:
 				sizeout = 1;
 				break;
+			case GL11.GL_FLOAT:
+				sizeout = 4;
+				break;				
 			default:
 				return GL11.GL_INVALID_ENUM;
 		}
@@ -224,6 +230,19 @@ public class MipMap extends Util {
 					}
 				}
 				break;
+			case GL11.GL_FLOAT:
+				k = 0;
+				dataIn.rewind();
+				for ( i = 0; i < heightIn; i++ )
+				{
+					int fptr = 4 * (i * rowstride + pss.unpackSkipRows * rowstride + pss.unpackSkipPixels * components);
+					for ( j = 0; j < widthIn * components; j++ )
+					{
+						tempIn[k++] = dataIn.getFloat(fptr);
+						fptr += 4;
+					}
+				}
+				break;				
 			default:
 				return GLU.GLU_INVALID_ENUM;
 		}
@@ -304,6 +323,17 @@ public class MipMap extends Util {
 					}
 				}
 				break;
+			case GL11.GL_FLOAT:
+				k = 0;
+				for ( i = 0; i < heightOut; i++ ) {
+					int fptr = 4 * (i * rowstride + pss.unpackSkipRows * rowstride + pss.unpackSkipPixels * components);
+					
+					for ( j = 0; j < widthOut * components; j++ ) {
+						dataOut.putFloat(fptr, tempOut[k++]);
+						fptr += 4;
+					}
+				}
+				break;				
 			default:
 				return GLU.GLU_INVALID_ENUM;
 		}
