@@ -440,6 +440,54 @@ public class IL {
 			int Depth, byte Bpp);
 
 	public static native boolean ilSaveData(String FileName);	
+	
+	public static int getILType(String filename) {
+		int index = filename.lastIndexOf('.');
+		if (index != -1) {
+			String extension = filename.substring(index + 1);
+			if (extension.equalsIgnoreCase("bmp")) {
+				return IL_BMP;
+			} else if (extension.equalsIgnoreCase("cut")) {
+				return IL_CUT;
+			} else if (extension.equalsIgnoreCase("gif")) {
+				return IL_GIF;
+			} else if (extension.equalsIgnoreCase("ico")) {
+				return IL_ICO;
+			} else if (extension.equalsIgnoreCase("jpg")
+					|| extension.equalsIgnoreCase("jpeg")
+					|| extension.equalsIgnoreCase("jpe")) {
+				return IL.IL_JPG;
+			} else if (extension.equalsIgnoreCase("lif")) {
+				return IL_LIF;
+			} else if (extension.equalsIgnoreCase("mng")) {
+				return IL_MNG;
+			} else if (extension.equalsIgnoreCase("pcd")) {
+				return IL_PCD;
+			} else if (extension.equalsIgnoreCase("pcx")) {
+				return IL_PCX;
+			} else if (extension.equalsIgnoreCase("pic")) {
+				return IL_PIC;
+			} else if (extension.equalsIgnoreCase("png")) {
+				return IL_PNG;
+			} else if (extension.equalsIgnoreCase("pbm") || extension.equalsIgnoreCase("pgm")
+					|| extension.equalsIgnoreCase("ppm")) {
+				return IL_PNM;
+			} else if (extension.equalsIgnoreCase("psd")) {
+				return IL_PSD;
+			} else if (extension.equalsIgnoreCase("psp")) {
+				return IL_PSP;
+			} else if (extension.equalsIgnoreCase("bw") || extension.equalsIgnoreCase("rgb")
+					|| extension.equalsIgnoreCase("rgba") || extension.equalsIgnoreCase("sgi")) {
+				return IL_SGI;
+			} else if (extension.equalsIgnoreCase("tga")) {
+				return IL_TGA;
+			} else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff")) {
+				return IL_TIF;
+			}
+		}
+		return IL_TYPE_UNKNOWN;
+	}
+
 
 	/**
 	 * Loads an image from the specified url
@@ -449,54 +497,12 @@ public class IL {
 	 */
 	public static boolean ilLoadFromURL(URL url) {
 		boolean result = false;
-		int type = IL_TYPE_UNKNOWN;
 
 		String file = url.toString();
-		int index = file.lastIndexOf('.');
-		if (index != -1) {
-			String extension = file.substring(index + 1);
-			if (extension.equalsIgnoreCase("bmp")) {
-				type = IL_BMP;
-			} else if (extension.equalsIgnoreCase("cut")) {
-				type = IL_CUT;
-			} else if (extension.equalsIgnoreCase("gif")) {
-				type = IL_GIF;
-			} else if (extension.equalsIgnoreCase("ico")) {
-				type = IL_ICO;
-			} else if (extension.equalsIgnoreCase("jpg")) {
-				type = IL_JPG;
-			} else if (extension.equalsIgnoreCase("lif")) {
-				type = IL_LIF;
-			} else if (extension.equalsIgnoreCase("mng")) {
-				type = IL_MNG;
-			} else if (extension.equalsIgnoreCase("pcd")) {
-				type = IL_PCD;
-			} else if (extension.equalsIgnoreCase("pcx")) {
-				type = IL_PCX;
-			} else if (extension.equalsIgnoreCase("pic")) {
-				type = IL_PIC;
-			} else if (extension.equalsIgnoreCase("png")) {
-				type = IL_PNG;
-			} else if (extension.equalsIgnoreCase("pbm") || extension.equalsIgnoreCase("pgm")
-					|| extension.equalsIgnoreCase("ppm")) {
-				type = IL_PNM;
-			} else if (extension.equalsIgnoreCase("psd")) {
-				type = IL_PSD;
-			} else if (extension.equalsIgnoreCase("psp")) {
-				type = IL_PSP;
-			} else if (extension.equalsIgnoreCase("bw") || extension.equalsIgnoreCase("rgb")
-					|| extension.equalsIgnoreCase("rgba") || extension.equalsIgnoreCase("sgi")) {
-				type = IL_SGI;
-			} else if (extension.equalsIgnoreCase("tga")) {
-				type = IL_TGA;
-			} else if (extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff")) {
-				type = IL_TIF;
-			}
-		}
 
 		// read stream
 		try {
-			result = ilLoadFromStream(url.openStream(), type);
+			result = ilLoadFromStream(url.openStream(), getILType(file));
 		} catch (IOException e) {
 			e.printStackTrace();
 			result = false;
