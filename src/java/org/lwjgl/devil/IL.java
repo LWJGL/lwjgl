@@ -441,6 +441,12 @@ public class IL {
 
 	public static native boolean ilSaveData(String FileName);	
 	
+	/**
+	 * Determines the IL type for file passed
+	 * 
+	 * @param filename File to determine type for
+	 * @return IL type, or IL_TYPE_UNKNOWN if undeterminable
+	 */
 	public static int getILType(String filename) {
 		int index = filename.lastIndexOf('.');
 		if (index != -1) {
