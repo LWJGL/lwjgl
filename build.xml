@@ -103,7 +103,9 @@
 		<include name="liblwjgl-devil.jnilib" />
 		
 		<include name="openal.dylib" />
-		<include name="IL" />
+		<include name="libIL.dylib" />
+		<include name="libILU.dylib" />
+		<include name="libILUT.dylib" />
 	</patternset>
 
 	<!-- Files to include in source distribution -->
