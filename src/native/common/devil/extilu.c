@@ -1,18 +1,11 @@
 /* Handle to ilu Library */
 #ifdef _WIN32
-#include "extilu.h"
-static HMODULE devILUhandle;
-#endif
-#ifdef _X11
-#include "extilu.h"
-static void* devILUhandle;
-#endif
-#ifdef _MACOSX
-#include <mach-o/dyld.h>
-#include <stdlib.h>
-#include <string.h>
-static const struct mach_header* devILUhandle;
-#include "extilu.h"
+ #include "extilu.h"
+ static HMODULE devILUhandle;
+#else
+ #include <dlfcn.h>
+ #include "extilu.h"
+ static void* devILUhandle;
 #endif
 
 /**
@@ -22,21 +15,8 @@ static const struct mach_header* devILUhandle;
 static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _WIN32
 	return GetProcAddress(devILUhandle, function);
-#endif
-#ifdef _X11
+#else
 	return dlsym(devILUhandle, function);
-#endif
-#ifdef _MACOSX
-	char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
-	if (mac_symbol_name == NULL)
-		return NULL;
-	mac_symbol_name[0] = '_';
-	strcpy(&(mac_symbol_name[1]), function);
-	NSSymbol symbol = NSLookupSymbolInImage(devILUhandle, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
-	free(mac_symbol_name);
-	if (symbol == NULL)
-		return NULL;
-	return NSAddressOfSymbol(symbol);
 #endif
 }
 
@@ -77,12 +57,11 @@ bool extilu_Open(JNIEnv *env, jobjectArray ilPaths) {
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
 		devILUhandle = LoadLibrary(path_str);
-#endif
-#ifdef _X11
+#else
 		devILUhandle = dlopen(path_str, RTLD_LAZY);
-#endif
-#ifdef _MACOSX
-		devILUhandle = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+		if(devILUhandle == NULL) {
+			printfDebug("dlopen failure: %s", dlerror());
+		}
 #endif
 		if (devILUhandle != NULL) {
 			printfDebug("Found ilu at '%s'\n", path_str);
@@ -103,14 +82,10 @@ bool extilu_Open(JNIEnv *env, jobjectArray ilPaths) {
 void extilu_Close(void) {
 #ifdef _WIN32
 	FreeLibrary(devILUhandle);
-#endif
-#ifdef _X11
+#else
 	if (devILUhandle != NULL) {
 		dlclose(devILUhandle);
 	}
-#endif
-#ifdef _MACOSX
-	// Cannot remove the image
 #endif
 	devILUhandle = NULL;
 }

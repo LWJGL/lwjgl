@@ -1,18 +1,11 @@
 /* Handle to ilut Library */
 #ifdef _WIN32
-#include "extilut.h"
-static HMODULE devILUThandle;
-#endif
-#ifdef _X11
-#include "extilut.h"
-static void* devILUThandle;
-#endif
-#ifdef _MACOSX
-#include <mach-o/dyld.h>
-#include <stdlib.h>
-#include <string.h>
-static const struct mach_header* devILUThandle;
-#include "extilut.h"
+ #include "extilut.h"
+ static HMODULE devILUThandle;
+#else
+ #include <dlfcn.h>
+ #include "extilut.h"
+ static void* devILUThandle;
 #endif
 
 /**
@@ -22,21 +15,8 @@ static const struct mach_header* devILUThandle;
 static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _WIN32
 	return GetProcAddress(devILUThandle, function);
-#endif
-#ifdef _X11
+#else
 	return dlsym(devILUThandle, function);
-#endif
-#ifdef _MACOSX
-	char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
-	if (mac_symbol_name == NULL)
-		return NULL;
-	mac_symbol_name[0] = '_';
-	strcpy(&(mac_symbol_name[1]), function);
-	NSSymbol symbol = NSLookupSymbolInImage(devILUThandle, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
-	free(mac_symbol_name);
-	if (symbol == NULL)
-		return NULL;
-	return NSAddressOfSymbol(symbol);
 #endif
 }
 
@@ -77,12 +57,11 @@ bool extilut_Open(JNIEnv *env, jobjectArray ilPaths) {
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
 		devILUThandle = LoadLibrary(path_str);
-#endif
-#ifdef _X11
+#else
 		devILUThandle = dlopen(path_str, RTLD_LAZY);
-#endif
-#ifdef _MACOSX
-		devILUThandle = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+		if(devILUThandle == NULL) {
+			printfDebug("dlopen failure: %s", dlerror());
+		}
 #endif
 		if (devILUThandle != NULL) {
 			printfDebug("Found ilut at '%s'\n", path_str);
@@ -103,14 +82,10 @@ bool extilut_Open(JNIEnv *env, jobjectArray ilPaths) {
 void extilut_Close(void) {
 #ifdef _WIN32
 	FreeLibrary(devILUThandle);
-#endif
-#ifdef _X11
+#else
 	if (devILUThandle != NULL) {
 		dlclose(devILUThandle);
 	}
-#endif
-#ifdef _MACOSX
-	// Cannot remove the image
 #endif
 	devILUThandle = NULL;
 }

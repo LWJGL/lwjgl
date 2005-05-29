@@ -1,18 +1,11 @@
 /* Handle to devil Library */
 #ifdef _WIN32
-#include "extil.h"
-static HMODULE devILhandle;
-#endif
-#ifdef _X11
-#include "extil.h"
-static void* devILhandle;
-#endif
-#ifdef _MACOSX
-#include <mach-o/dyld.h>
-#include <stdlib.h>
-#include <string.h>
-const struct mach_header* devILhandle = NULL;
-#include "extil.h"
+ #include "extil.h"
+ static HMODULE devILhandle;
+#else
+ #include <dlfcn.h>
+ #include "extil.h"
+ static void* devILhandle;
 #endif
 
 /**
@@ -22,21 +15,8 @@ const struct mach_header* devILhandle = NULL;
 static void *NativeGetFunctionPointer(const char *function) {
 #ifdef _WIN32
 	return GetProcAddress(devILhandle, function);
-#endif
-#ifdef _X11
+#else
 	return dlsym(devILhandle, function);
-#endif
-#ifdef _MACOSX
-	char *mac_symbol_name = (char *)malloc((strlen(function) + 2)*sizeof(char));
-	if (mac_symbol_name == NULL)
-		return NULL;
-	mac_symbol_name[0] = '_';
-	strcpy(&(mac_symbol_name[1]), function);
-	NSSymbol symbol = NSLookupSymbolInImage(devILhandle, mac_symbol_name, NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR);
-	free(mac_symbol_name);
-	if (symbol == NULL)
-		return NULL;
-	return NSAddressOfSymbol(symbol);
 #endif
 }
 
@@ -77,12 +57,11 @@ bool extil_Open(JNIEnv *env, jobjectArray ilPaths) {
 		printfDebug("Testing '%s'\n", path_str);
 #ifdef _WIN32
 		devILhandle = LoadLibrary(path_str);
-#endif
-#ifdef _X11
+#else
 		devILhandle = dlopen(path_str, RTLD_LAZY);
-#endif
-#ifdef _MACOSX
-		devILhandle = NSAddImage(path_str, NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+		if(devILhandle == NULL) {
+			printfDebug("dlopen failure: %s", dlerror());
+		}
 #endif
 		if (devILhandle != NULL) {
 			printfDebug("Found devil at '%s'\n", path_str);
@@ -103,14 +82,10 @@ bool extil_Open(JNIEnv *env, jobjectArray ilPaths) {
 void extil_Close(void) {
 #ifdef _WIN32
 	FreeLibrary(devILhandle);
-#endif
-#ifdef _X11
+#else
 	if (devILhandle != NULL) {
 		dlclose(devILhandle);
 	}
-#endif
-#ifdef _MACOSX
-	// Cannot remove the image
 #endif
 	devILhandle = NULL;
 }
