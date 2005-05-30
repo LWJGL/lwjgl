@@ -33,6 +33,9 @@ package org.lwjgl;
 
 import java.lang.reflect.Method;
 
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+
 /**
  * $Id$
  *
@@ -42,11 +45,21 @@ import java.lang.reflect.Method;
 class MacOSXSysImplementation extends J2SESysImplementation {
 	public boolean openURL(String url) {
 		try {
-			Class com_apple_eio_FileManager = Class.forName("com.apple.eio.FileManager");
-			Method openURL_method = com_apple_eio_FileManager.getMethod("openURL", new Class[]{String.class});
+			Method openURL_method = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					try {
+						Class com_apple_eio_FileManager = Class.forName("com.apple.eio.FileManager");
+						return com_apple_eio_FileManager.getMethod("openURL", new Class[]{String.class});
+					} catch (Exception e) {
+						LWJGLUtil.log("Exception occurred while trying to invoke browser: " + e);
+						return null;
+					}
+				}
+			});
 			openURL_method.invoke(null, new Object[]{url});
 			return true;
 		} catch (Exception e) {
+			LWJGLUtil.log("Exception occurred while trying to invoke browser: " + e);
 			return false;
 		}
 	}

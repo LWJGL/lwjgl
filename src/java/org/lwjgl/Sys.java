@@ -37,6 +37,10 @@ import java.net.URL;
 
 import org.lwjgl.input.Mouse;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+
 /**
  * $Id$
  * <p>
@@ -58,7 +62,12 @@ public final class Sys {
   
 	static {
 		implementation = createImplementation();
-		System.loadLibrary(LIBRARY_NAME);
+		AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				System.loadLibrary(LIBRARY_NAME);
+				return null;
+			}
+		});
 		String native_version = implementation.getNativeLibraryVersion();
 		if (!native_version.equals(VERSION))
 			throw new LinkageError("Version mismatch: jar version is '" + VERSION +
@@ -176,11 +185,19 @@ public final class Sys {
 		// Attempt to use Webstart if we have it available
 		try {
 			// Lookup the javax.jnlp.BasicService object
-			Class serviceManagerClass = Class.forName("javax.jnlp.ServiceManager");
-			Method lookupMethod = serviceManagerClass.getMethod("lookup", new Class[] {String.class});
+			final Class serviceManagerClass = Class.forName("javax.jnlp.ServiceManager");
+			Method lookupMethod = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					return serviceManagerClass.getMethod("lookup", new Class[] {String.class});
+				}
+			});
 			Object basicService = lookupMethod.invoke(serviceManagerClass, new Object[] {"javax.jnlp.BasicService"});
-			Class basicServiceClass = Class.forName("javax.jnlp.BasicService");
-			Method showDocumentMethod = basicServiceClass.getMethod("showDocument", new Class[] {URL.class});
+			final Class basicServiceClass = Class.forName("javax.jnlp.BasicService");
+			Method showDocumentMethod = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					return basicServiceClass.getMethod("showDocument", new Class[] {URL.class});
+				}
+			});
 			try {
 				Boolean ret = (Boolean) showDocumentMethod.invoke(basicService, new Object[] {new URL(url)});
 				return ret.booleanValue();

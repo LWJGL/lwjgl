@@ -47,6 +47,9 @@ import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
@@ -98,9 +101,14 @@ public final class Display {
 		try {
 			current_mode = initial_mode = display_impl.init();
 			LWJGLUtil.log("Initial mode: " + initial_mode);
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					reset();
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					Runtime.getRuntime().addShutdownHook(new Thread() {
+						public void run() {
+							reset();
+						}
+					});
+					return null;
 				}
 			});
 		} catch (LWJGLException e) {
@@ -656,10 +664,22 @@ public final class Display {
 		return display_impl;
 	}
 
+	/**
+	 * Gets a boolean property as a privileged action.
+	 */
+	static boolean getPrivilegedBoolean(final String property_name) {
+		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {	
+				return new Boolean(Boolean.getBoolean(property_name));
+			}
+		});
+		return value.booleanValue();
+	}
+	
 	private static void initControls() {
 		// Automatically create mouse, keyboard and controller
-		if (!Boolean.getBoolean("org.lwjgl.opengl.Display.noinput")) {
-			if (!Mouse.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nomouse")) {
+		if (!getPrivilegedBoolean("org.lwjgl.opengl.Display.noinput")) {
+			if (!Mouse.isCreated() && !getPrivilegedBoolean("org.lwjgl.opengl.Display.nomouse")) {
 				try {
 					Mouse.create();
 				} catch (LWJGLException e) {
@@ -670,7 +690,7 @@ public final class Display {
 					}
 				}
 			}
-			if (!Keyboard.isCreated() && !Boolean.getBoolean("org.lwjgl.opengl.Display.nokeyboard")) {
+			if (!Keyboard.isCreated() && !getPrivilegedBoolean("org.lwjgl.opengl.Display.nokeyboard")) {
 				try {
 					Keyboard.create();
 				} catch (LWJGLException e) {

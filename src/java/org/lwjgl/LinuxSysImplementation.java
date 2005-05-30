@@ -33,6 +33,10 @@ package org.lwjgl;
 
 import java.io.IOException;
 
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
+
 /**
  * $Id$
  *
@@ -44,17 +48,23 @@ class LinuxSysImplementation extends J2SESysImplementation {
 		java.awt.Toolkit.getDefaultToolkit(); // This will make sure libjawt.so is loaded
 	}
 
-	public boolean openURL(String url) {
+	public boolean openURL(final String url) {
 		// Linux may as well resort to pure Java hackery, as there's no Linux native way of doing it
 		// right anyway.
 
 		String[] browsers = {"firefox", "mozilla", "opera", "konqueror", "nautilus", "galeon", "netscape"};
 
 		for (int i = 0; i < browsers.length; i ++) {
+			final String browser = browsers[i];
 			try {
-				Runtime.getRuntime().exec(new String[] { browsers[i], url });
+				AccessController.doPrivileged(new PrivilegedExceptionAction() {
+					public Object run() throws Exception {
+						Runtime.getRuntime().exec(new String[] { browser, url });
+						return null;
+					}
+				});
 				return true;
-			} catch (IOException e) {
+			} catch (PrivilegedActionException e) {
 				// Ignore
 				e.printStackTrace(System.err);
 			}

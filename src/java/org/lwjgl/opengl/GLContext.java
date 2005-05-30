@@ -38,6 +38,11 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
@@ -93,7 +98,11 @@ public final class GLContext {
 	 * with a name dependent on the current platform
 	 */
 	static long getPlatformSpecificFunctionAddress(String function_prefix, String[] os_prefixes, String[] os_function_prefixes, String function) {
-		String os_name = System.getProperty("os.name");
+		String os_name = (String)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return System.getProperty("os.name");
+			}
+		});
 		for (int i = 0; i < os_prefixes.length; i++)
 			if (os_name.startsWith(os_prefixes[i])) {
 				String platform_function_name = function.replaceFirst(function_prefix, os_function_prefixes[i]);
@@ -167,12 +176,17 @@ public final class GLContext {
 	 * Helper method to ContextCapabilities. It will try to initialize the native stubs,
 	 * and remove the given extension name from the extension set if the initialization fails.
 	 */
-	static void initNativeStubs(Class extension_class, Set supported_extensions, String ext_name) {
+	static void initNativeStubs(final Class extension_class, Set supported_extensions, String ext_name) {
 		resetNativeStubs(extension_class);
 		if (supported_extensions.contains(ext_name)) {
 			try {
-				Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
-				init_stubs_method.invoke(null, null);
+				AccessController.doPrivileged(new PrivilegedExceptionAction() {
+					public Object run() throws Exception {
+						Method init_stubs_method = extension_class.getDeclaredMethod("initNativeStubs", null);
+						init_stubs_method.invoke(null, null);
+						return null;
+					}
+				});
 			} catch (Exception e) {
 				LWJGLUtil.log("Failed to initialize extension " + extension_class + " - exception: " + e);
 				supported_extensions.remove(ext_name);

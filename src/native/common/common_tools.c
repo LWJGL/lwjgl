@@ -314,9 +314,9 @@ void ext_InitializeClass(JNIEnv *env, jclass clazz, ExtGetProcAddressPROC gpa, i
 
 bool getBooleanProperty(JNIEnv *env, const char* propertyName) {
   jstring property = NewStringNative(env, propertyName);
-  jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
-  jmethodID getBoolean = (*env)->GetStaticMethodID(env, booleanClass, "getBoolean", "(Ljava/lang/String;)Z");
-  return (*env)->CallStaticBooleanMethod(env, booleanClass, getBoolean, property) ? true : false;
+  jclass org_lwjgl_LWJGLUtil_class = (*env)->FindClass(env, "org/lwjgl/LWJGLUtil");
+  jmethodID getBoolean = (*env)->GetStaticMethodID(env, org_lwjgl_LWJGLUtil_class, "getPrivilegedBoolean", "(Ljava/lang/String;)Z");
+  return (*env)->CallStaticBooleanMethod(env, org_lwjgl_LWJGLUtil_class, getBoolean, property) ? true : false;
 }
 
 JavaVM *getJVM() {

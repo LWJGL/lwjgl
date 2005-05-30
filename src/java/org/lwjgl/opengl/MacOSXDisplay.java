@@ -57,6 +57,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
@@ -96,9 +101,13 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void destroyWindow() {
 		if (frame != null) {
-			if (MacOSXFrame.getDevice().getFullScreenWindow() == frame)
-				MacOSXFrame.getDevice().setFullScreenWindow(null);
-//			setView(null);
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					if (MacOSXFrame.getDevice().getFullScreenWindow() == frame)
+						MacOSXFrame.getDevice().setFullScreenWindow(null);
+					return null;
+				}
+			});
 			if (frame.isDisplayable())
 				frame.dispose();
 			frame = null;
@@ -450,26 +459,24 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 		public MacOSXApplicationListener() {
 			try {
-				/* Get the com.apple.eawt.Application class */
-				Class com_apple_eawt_Application = Class.forName("com.apple.eawt.Application");
-				/* Call the static Application.getApplication() method */
-				Object application = com_apple_eawt_Application.getMethod("getApplication", null).invoke(null, null);
-				/* Create a proxy implementing com.apple.eawt.ApplicationListener */
-				Class com_apple_eawt_ApplicationListener = Class.forName("com.apple.eawt.ApplicationListener");
-				Object listener_proxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {com_apple_eawt_ApplicationListener}, this);
-				/* Invoke the method application.addApplicationListener(proxy) */
-				Method addApplicationListener = com_apple_eawt_Application.getMethod("addApplicationListener", new Class[]{com_apple_eawt_ApplicationListener});
-				addApplicationListener.invoke(application, new Object[]{listener_proxy});
-				/* Finally, get the handleQuit method we want to react to */
-				Class com_apple_eawt_ApplicationEvent = Class.forName("com.apple.eawt.ApplicationEvent");
-				handleQuit = com_apple_eawt_ApplicationListener.getMethod("handleQuit", new Class[]{com_apple_eawt_ApplicationEvent});
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException(e);
-			} catch (NoSuchMethodException e) {
-				throw new RuntimeException(e);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
+				handleQuit = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+					public Object run() throws Exception {
+						/* Get the com.apple.eawt.Application class */
+						Class com_apple_eawt_Application = Class.forName("com.apple.eawt.Application");
+						/* Call the static Application.getApplication() method */
+						Object application = com_apple_eawt_Application.getMethod("getApplication", null).invoke(null, null);
+						/* Create a proxy implementing com.apple.eawt.ApplicationListener */
+						Class com_apple_eawt_ApplicationListener = Class.forName("com.apple.eawt.ApplicationListener");
+						Object listener_proxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {com_apple_eawt_ApplicationListener}, MacOSXApplicationListener.this);
+						/* Invoke the method application.addApplicationListener(proxy) */
+						Method addApplicationListener = com_apple_eawt_Application.getMethod("addApplicationListener", new Class[]{com_apple_eawt_ApplicationListener});
+						addApplicationListener.invoke(application, new Object[]{listener_proxy});
+						/* Finally, get the handleQuit method we want to react to */
+						Class com_apple_eawt_ApplicationEvent = Class.forName("com.apple.eawt.ApplicationEvent");
+						return com_apple_eawt_ApplicationListener.getMethod("handleQuit", new Class[]{com_apple_eawt_ApplicationEvent});
+					}
+				});
+			} catch (PrivilegedActionException e) {
 				throw new RuntimeException(e);
 			}
 		}

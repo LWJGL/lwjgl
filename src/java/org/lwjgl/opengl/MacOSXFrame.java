@@ -48,6 +48,10 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
+
 import org.lwjgl.LWJGLException;
 
 final class MacOSXFrame extends Frame implements WindowListener, ComponentListener {
@@ -62,25 +66,34 @@ final class MacOSXFrame extends Frame implements WindowListener, ComponentListen
 	private boolean minimized;
 	private boolean should_warp_cursor;
 
-	MacOSXFrame(DisplayMode mode, java.awt.DisplayMode requested_mode, boolean fullscreen, int x, int y) throws LWJGLException {
+	MacOSXFrame(DisplayMode mode, final java.awt.DisplayMode requested_mode, boolean fullscreen, int x, int y) throws LWJGLException {
 		setResizable(false);
 		addWindowListener(this);
 		addComponentListener(this);
 		canvas = new MacOSXGLCanvas();
 		add(canvas, BorderLayout.CENTER);
-		boolean undecorated = Boolean.getBoolean("org.lwjgl.opengl.Window.undecorated");
+		boolean undecorated = Display.getPrivilegedBoolean("org.lwjgl.opengl.Window.undecorated");
 		setUndecorated(fullscreen || undecorated);
 		if ( fullscreen ) {
-			getDevice().setFullScreenWindow(this);
-			getDevice().setDisplayMode(requested_mode);
-			java.awt.DisplayMode real_mode = getDevice().getDisplayMode();
-			/** For some strange reason, the display mode is sometimes silently capped even though the mode is reported as supported */
-			if ( requested_mode.getWidth() != real_mode.getWidth() || requested_mode.getHeight() != real_mode.getHeight() ) {
-				getDevice().setFullScreenWindow(null);
-				if (isDisplayable())
-					dispose();
-				throw new LWJGLException("AWT capped mode: requested mode = " + requested_mode.getWidth() + "x" + requested_mode.getHeight() +
-				                         " but got " + real_mode.getWidth() + " " + real_mode.getHeight());
+			try {
+				AccessController.doPrivileged(new PrivilegedExceptionAction() {
+					public Object run() throws Exception {
+						getDevice().setFullScreenWindow(MacOSXFrame.this);
+						getDevice().setDisplayMode(requested_mode);
+						java.awt.DisplayMode real_mode = getDevice().getDisplayMode();
+						/** For some strange reason, the display mode is sometimes silently capped even though the mode is reported as supported */
+						if ( requested_mode.getWidth() != real_mode.getWidth() || requested_mode.getHeight() != real_mode.getHeight() ) {
+							getDevice().setFullScreenWindow(null);
+							if (isDisplayable())
+								dispose();
+							throw new LWJGLException("AWT capped mode: requested mode = " + requested_mode.getWidth() + "x" + requested_mode.getHeight() +
+								" but got " + real_mode.getWidth() + " " + real_mode.getHeight());
+						}
+						return null;
+					}
+				});
+			} catch (PrivilegedActionException e) {
+				throw new LWJGLException(e);
 			}
 		}
 		pack();

@@ -35,6 +35,9 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.lang.reflect.Method;
 
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 
@@ -45,9 +48,13 @@ import org.lwjgl.LWJGLUtil;
  * @version $Revision$
  */
 final class LinuxCanvasImplementation implements AWTCanvasImplementation {
-	static int getScreenFromDevice(GraphicsDevice device) throws LWJGLException {
+	static int getScreenFromDevice(final GraphicsDevice device) throws LWJGLException {
 		try {
-			Method getScreen_method = device.getClass().getMethod("getScreen", null);
+			Method getScreen_method = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					return device.getClass().getMethod("getScreen", null);
+				}
+			});
 			Integer screen = (Integer)getScreen_method.invoke(device, null);
 			return screen.intValue();
 		} catch (Exception e) {
@@ -55,9 +62,13 @@ final class LinuxCanvasImplementation implements AWTCanvasImplementation {
 		}
 	}
 
-	private static int getVisualIDFromConfiguration(GraphicsConfiguration configuration) throws LWJGLException {
+	private static int getVisualIDFromConfiguration(final GraphicsConfiguration configuration) throws LWJGLException {
 		try {
-			Method getVisual_method = configuration.getClass().getMethod("getVisual", null);
+			Method getVisual_method = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					return configuration.getClass().getMethod("getVisual", null);
+				}
+			});
 			Integer visual = (Integer)getVisual_method.invoke(configuration, null);
 			return visual.intValue();
 		} catch (Exception e) {

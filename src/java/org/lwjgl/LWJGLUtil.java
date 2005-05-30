@@ -37,6 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+
 /**
  * $Id$
  * <p>
@@ -52,8 +57,8 @@ public class LWJGLUtil {
 	public static final int PLATFORM_WINDOWS = 3;
 
 	/** Debug flag. */
-	public static final boolean DEBUG = Boolean.getBoolean("org.lwjgl.util.Debug");
-
+	public static final boolean DEBUG = getPrivilegedBoolean("org.lwjgl.util.Debug");
+	
 	/**
 	 * Get the current platform
 	 */
@@ -102,15 +107,15 @@ public class LWJGLUtil {
 				throw new LWJGLException("Unknown platform: " + getPlatform());
 		}
 
-		String classloader_path = LWJGLUtil.getPathFromClassLoader(libname, classloader);
+		String classloader_path = getPathFromClassLoader(libname, classloader);
 		if (classloader_path != null) {
-			LWJGLUtil.log("getPathFromClassLoader: Path found: " + classloader_path);
+			log("getPathFromClassLoader: Path found: " + classloader_path);
 			possible_paths.add(classloader_path);
 		}
 
-		String lwjgl_classloader_path = LWJGLUtil.getPathFromClassLoader("lwjgl", classloader);
+		String lwjgl_classloader_path = getPathFromClassLoader("lwjgl", classloader);
 		if (lwjgl_classloader_path != null) {
-			LWJGLUtil.log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
+			log("getPathFromClassLoader: Path found: " + lwjgl_classloader_path);
 			possible_paths.add(lwjgl_classloader_path.substring(0, lwjgl_classloader_path.lastIndexOf(File.separator))
 					+ File.separator + platform_lib_name);
 		}
@@ -119,7 +124,12 @@ public class LWJGLUtil {
 		possible_paths.add(platform_lib_name);
 
 		// Add all possible paths from java.library.path
-		StringTokenizer st = new StringTokenizer(System.getProperty("java.library.path"), File.pathSeparator);
+		String java_library_path = (String)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return System.getProperty("java.library.path");
+			}
+		});
+		StringTokenizer st = new StringTokenizer(java_library_path, File.pathSeparator);
 		while (st.hasMoreTokens()) {
 			String path = st.nextToken();
 			possible_paths.add(path + File.separator + platform_lib_name);
@@ -145,32 +155,51 @@ public class LWJGLUtil {
 	 */
 	public static String getPathFromClassLoader(String libname, ClassLoader classloader) {
 		try {
-			LWJGLUtil.log("getPathFromClassLoader: searching for: " + libname);
+			log("getPathFromClassLoader: searching for: " + libname);
 			Object o = classloader;
 			Class c = o.getClass();
 			while (c != null) {
+				final Class clazz = c;
 				try {
-					Method findLibrary = c.getDeclaredMethod("findLibrary", new Class[] { String.class});
-					findLibrary.setAccessible(true);
+					Method findLibrary = (Method)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+						public Object run() throws Exception {
+							Method m = clazz.getDeclaredMethod("findLibrary", new Class[]{String.class});
+							m.setAccessible(true);
+							return m;
+						}
+					});
 					Object[] arguments = new Object[] {libname};
-					return (String) findLibrary.invoke(o, arguments);
-				} catch (NoSuchMethodException e) {
+					return (String)findLibrary.invoke(o, arguments);
+				} catch (PrivilegedActionException e) {
 					c = c.getSuperclass();
 				}
 			}
 		} catch (Exception e) {
-			LWJGLUtil.log("Failure locating " + e + " using classloader:" + e);
+			log("Failure locating " + e + " using classloader:" + e);
 		}
 		return null;
 	}
 
+	/**
+	 * Gets a boolean property as a privileged action. Helper method
+	 * for native.
+	 */
+	private static boolean getPrivilegedBoolean(final String property_name) {
+		Boolean value = (Boolean)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {	
+				return new Boolean(Boolean.getBoolean(property_name));
+			}
+		});
+		return value.booleanValue();
+	}
+	
 	/**
 	 * Prints the given message to System.err if DEBUG is true.
 	 * 
 	 * @param msg Message to print
 	 */
 	public static void log(String msg) {
-		if (LWJGLUtil.DEBUG) {
+		if (DEBUG) {
 			System.err.println(msg);
 		}
 	}
