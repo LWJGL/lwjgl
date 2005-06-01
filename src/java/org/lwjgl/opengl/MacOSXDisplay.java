@@ -375,11 +375,15 @@ final class MacOSXDisplay implements DisplayImplementation {
 
 	public void setCursorPosition(int x, int y) {
 		try {
-			Robot robot = new Robot(frame.getGraphicsConfiguration().getDevice());
+			Robot robot = (Robot)AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws Exception {
+					return new Robot(frame.getGraphicsConfiguration().getDevice());
+				}
+			});
 			int transformed_x = frame.getX() + x;
 			int transformed_y = frame.getY() + frame.getHeight() - 1 - y;
 			robot.mouseMove(transformed_x, transformed_y);
-		} catch (AWTException e) {
+		} catch (PrivilegedActionException e) {
 			LWJGLUtil.log("Got exception while setting mouse cursor position: " + e);
 		}
 	}
