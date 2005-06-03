@@ -106,6 +106,7 @@ NSOpenGLPixelFormat *choosePixelFormat(JNIEnv *env, jobject pixel_format, bool u
 		putAttrib(&attribs, NSOpenGLPFAAccelerated);
 	if (double_buffered)
 		putAttrib(&attribs, NSOpenGLPFADoubleBuffer);
+	putAttrib(&attribs, NSOpenGLPFAMinimumPolicy);
 	putAttrib(&attribs, NSOpenGLPFAColorSize); putAttrib(&attribs, bpp);
 	putAttrib(&attribs, NSOpenGLPFAAlphaSize); putAttrib(&attribs, alpha);
 	putAttrib(&attribs, NSOpenGLPFADepthSize); putAttrib(&attribs, depth);
