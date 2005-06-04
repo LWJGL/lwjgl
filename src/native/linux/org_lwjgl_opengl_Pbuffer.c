@@ -75,9 +75,11 @@ JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nInitHandle
 
 	X11PeerInfo *peer_info = (X11PeerInfo *)(*env)->GetDirectBufferAddress(env, peer_info_handle);
 	GLXFBConfig *config = getFBConfigFromPeerInfo(env, peer_info);
-	GLXPbuffer buffer = _glXCreatePbuffer(peer_info->display, *config, buffer_attribs);
-	XFree(config);
-	peer_info->drawable = buffer;
+	if (config != NULL) {
+		GLXPbuffer buffer = _glXCreatePbuffer(peer_info->display, *config, buffer_attribs);
+		XFree(config);
+		peer_info->drawable = buffer;
+	}
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_LinuxPbufferPeerInfo_nDestroy
