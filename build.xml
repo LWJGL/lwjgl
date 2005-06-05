@@ -36,6 +36,18 @@
 		<include name="org/lwjgl/test/**" />
 		<include name="org/lwjgl/examples/**" />
 	</fileset>
+  
+  <!-- More files to include in the lwjgl_test.jar file -->
+	<fileset id="lwjgl_test_extra.fileset" dir="${lwjgl.src}/java">
+		<exclude name="**.*" />
+		<include name="org/lwjgl/test/opengl/shaders/shaderFP.fp" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderFP.vp" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderFSH.fsh" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderFSH.vsh" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderVP.vp" />
+    <include name="org/lwjgl/test/opengl/shaders/shaderVSH.vsh" />
+	</fileset>
+  
 
 	<!-- Files to include in the lwjgl_util.jar file -->
 	<fileset id="lwjgl_util.fileset" dir="${lwjgl.bin}">
@@ -228,6 +240,7 @@
 		<!-- Create lwjgl_test.jar -->
 		<jar destfile="${lwjgl.temp}/jar/lwjgl_test.jar" taskname="lwjgl_test.jar">
 			<fileset refid="lwjgl_test.fileset" />
+      <fileset refid="lwjgl_test_extra.fileset" />
 		</jar>
 
 		<!-- Create lwjgl_util.jar -->
@@ -717,4 +730,13 @@
 		<signjar jar="${lwjgl.temp}/jnlp/native_macosx.jar" alias="matzon" storepass="${store.pwd}"/>
 		<signjar jar="${lwjgl.temp}/jnlp/native_win32.jar" 	alias="matzon" storepass="${store.pwd}"/>
 	</target>
+	
+	<target name="changelog">
+		<cvschangelog destfile="changelog.xml"/>
+		<style in="changelog.xml" out="changelog.html" style="${ant.home}/etc/changelog.xsl">
+			<param name="title" expression="LWJGL ChangeLog"/>
+			<param name="module" expression="LWJGL"/>
+			<param name="cvsweb" expression="http://cvs.sourceforge.net/viewcvs.py/java-game-lib/"/>
+		</style>         
+	</target> 	
 </project>
