@@ -139,11 +139,10 @@ public final class ShadersTest {
 			System.out.println("Setting display mode to: " + displayMode);
 			Display.setDisplayMode(displayMode);
 			Display.create(new PixelFormat(8, 24, 0));
+			ShadersTest.displayMode = displayMode;
 		} catch (LWJGLException e) {
 			kill(e.getMessage());
 		}
-
-		ShadersTest.displayMode = displayMode;
 
 		if ( "NONE".equalsIgnoreCase(args[0]) ) {
 			shader = null;
