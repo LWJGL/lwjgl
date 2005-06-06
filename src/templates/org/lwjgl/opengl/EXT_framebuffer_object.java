@@ -36,21 +36,22 @@ import org.lwjgl.util.generator.*;
 import java.nio.IntBuffer;
 
 public interface EXT_framebuffer_object {
-	/*
+
+	/**
 	 * Accepted by the &lt;target&gt; parameter of BindFramebufferEXT,
 	 * CheckFramebufferStatusEXT, FramebufferTexture{1D|2D|3D}EXT, and
 	 * FramebufferRenderbufferEXT:
 	 */
 	int GL_FRAMEBUFFER_EXT = 0x8D40;
 
-	/*
+	/**
 	 * Accepted by the &lt;target&gt; parameter of BindRenderbufferEXT,
 	 * RenderbufferStorageEXT, and GetRenderbufferParameterivEXT, and
 	 * returned by GetFramebufferAttachmentParameterivEXT:
 	 */
 	int GL_RENDERBUFFER_EXT = 0x8D41;
 
-	/*
+	/**
 	 * Accepted by the &lt;internalformat&gt; parameter of
 	 * RenderbufferStorageEXT:
 	 */
@@ -60,14 +61,20 @@ public interface EXT_framebuffer_object {
 	int GL_STENCIL_INDEX8_EXT = 0x8D48;
 	int GL_STENCIL_INDEX16_EXT = 0x8D49;
 
-	/*
-	 * Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT:
-	 */
-	int GL_RENDERBUFFER_WIDTH_EXT = 0x8D42;
-	int GL_RENDERBUFFER_HEIGHT_EXT = 0x8D43;
-	int GL_RENDERBUFFER_INTERNAL_FORMAT_EXT = 0x8D44;
+	/**
+     * Accepted by the &lt;pname&gt; parameter of GetRenderbufferParameterivEXT:
+    */
+	int RENDERBUFFER_WIDTH_EXT = 0x8D42;
+	int RENDERBUFFER_HEIGHT_EXT =0x8D43;
+	int RENDERBUFFER_INTERNAL_FORMAT_EXT = 0x8D44;
+	int RENDERBUFFER_RED_SIZE_EXT = 0x8D50;
+	int RENDERBUFFER_GREEN_SIZE_EXT = 0x8D51;
+	int RENDERBUFFER_BLUE_SIZE_EXT = 0x8D52;
+	int RENDERBUFFER_ALPHA_SIZE_EXT = 0x8D53;
+	int RENDERBUFFER_DEPTH_SIZE_EXT = 0x8D54;
+	int RENDERBUFFER_STENCIL_SIZE_EXT = 0x8D55;
 
-	/*
+	/**
 	 * Accepted by the &lt;pname&gt; parameter of
 	 * GetFramebufferAttachmentParameterivEXT:
 	 */
@@ -77,7 +84,7 @@ public interface EXT_framebuffer_object {
 	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT = 0x8CD3;
 	int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT = 0x8CD4;
 
-	/*
+	/**
 	 * Accepted by the &lt;attachment&gt; parameter of
 	 * FramebufferTexture{1D|2D|3D}EXT, FramebufferRenderbufferEXT, and
 	 * GetFramebufferAttachmentParameterivEXT
@@ -113,7 +120,6 @@ public interface EXT_framebuffer_object {
 	int GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT = 0x8CDB;
 	int GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT = 0x8CDC;
 	int GL_FRAMEBUFFER_UNSUPPORTED_EXT = 0x8CDD;
-	int GL_FRAMEBUFFER_STATUS_ERROR_EXT = 0x8CDE;
 
 	/**
 	 * Accepted by GetIntegerv():
