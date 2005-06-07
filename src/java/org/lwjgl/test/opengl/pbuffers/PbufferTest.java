@@ -413,7 +413,7 @@ public final class PbufferTest {
 			kill("Invalid mode.");
 		}
 
-		if ( mode < 1 || mode > 4 )
+		if ( mode != 1 && mode != 2 )
 			kill("Invalid mode.");
 
 		System.out.println("Change between fullscreen and windowed mode, by pressing F and W respectively");
@@ -429,7 +429,7 @@ public final class PbufferTest {
 		System.out.println(msg);
 		System.out.println("-------");
 		System.out.println("Usage: java org.lwjgl.test.opengl.pbuffer.PbufferTest <mode>");
-		System.out.println("\n<mode>\tA number in the range 1-4.");
+		System.out.println("\n<mode>.");
 		System.out.println("\t1: no render-to-texture");
 		System.out.println("\t2: with render-to-texture");
 
