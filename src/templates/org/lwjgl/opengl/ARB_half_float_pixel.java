@@ -40,5 +40,5 @@ public interface ARB_half_float_pixel {
      * SeparableFilter2D, GetSeparableFilter, ColorTable, ColorSubTable,
      * and GetColorTable:
      */
-	int HALF_FLOAT_ARB = 0x140B;
+	int GL_HALF_FLOAT_ARB = 0x140B;
 }
