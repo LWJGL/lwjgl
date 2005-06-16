@@ -625,12 +625,14 @@ public final class Display {
 	 * <p>The window created will be set up in orthographic 2D projection, with 1:1 pixel ratio with GL coordinates.
 	 *
 	 * @param pixel_format Describes the minimum specifications the context must fulfill.
-	 * @param shared_drawable The Drawable to share context with.
+	 * @param shared_drawable The Drawable to share context with or null.
 	 * @throws LWJGLException
 	 */
 	public static void create(PixelFormat pixel_format, Drawable shared_drawable) throws LWJGLException {
 		if (isCreated())
 			throw new IllegalStateException("Only one LWJGL context may be instantiated at any one time.");
+		if (pixel_format == null)
+			throw new NullPointerException("pixel_format cannot be null");
 		if (fullscreen)
 			switchDisplayMode();
 		try {
