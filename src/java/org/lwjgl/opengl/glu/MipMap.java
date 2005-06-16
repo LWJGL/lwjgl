@@ -112,6 +112,14 @@ public class MipMap extends Util {
 
 		int level = 0;
 		while ( !done ) {
+			if (image != data) {
+				/* set pixel unpacking */
+				GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, 0);
+				GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_ROWS, 0);
+				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_PIXELS, 0);
+			} 			
+			
 			GL11.glTexImage2D(target, level, components, w, h, 0, format, type, image);
 
 			if ( w == 1 && h == 1 )
