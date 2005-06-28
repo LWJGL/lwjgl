@@ -163,13 +163,17 @@ static void setRepeatMode(JNIEnv *env, int mode) {
 	XKeyboardControl repeat_mode;
 	repeat_mode.auto_repeat_mode = mode;
 	Display *disp = XOpenDisplay(NULL);
-	if (disp == NULL) {
+	if (disp == NULL && env != NULL) {
 		printfDebugJava(env, "Could not open display to set repeat mode");
 		return;
 	}
 	XChangeKeyboardControl(disp, KBAutoRepeatMode, &repeat_mode);
 	XCloseDisplay(disp);
 }
+
+void __attribute__ ((destructor)) my_fini(void) { 
+	setRepeatMode(NULL, AutoRepeatModeDefault);
+} 
 
 static void setDecorations(int dec) {
 	Atom motif_hints_atom = XInternAtom(getDisplay(), "_MOTIF_WM_HINTS", False);
